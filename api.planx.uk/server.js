@@ -1,12 +1,138 @@
+require("isomorphic-fetch");
 const { json, urlencoded } = require("body-parser");
 const cookieSession = require("cookie-session");
 const cors = require("cors");
 const express = require("express");
 const jwt = require("express-jwt");
-const request = require("graphql-request");
+const { GraphQLClient } = require("graphql-request");
 const { Server } = require("http");
 const passport = require("passport");
-const authRoutes = require("./routes");
+const { sign } = require("jsonwebtoken");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+
+const router = express.Router();
+
+// when login failed, send failed msg
+router.get("/login/failed", (_req, res) => {
+  res.status(401).json({
+    message: "user failed to authenticate.",
+    success: false,
+  });
+});
+
+// When logout, redirect to client
+router.get("/logout", (req, res) => {
+  req.logout();
+  res.redirect(process.env.EDITOR_URL_EXT);
+});
+
+// GET /google
+
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  The first step in Google authentication will involve
+//   redirecting the user to google.com.  After authorization, Google
+//   will redirect the user back to this application at /auth/google/callback
+
+const handleSuccess = (req, res) => {
+  if (req.user) {
+    res.cookie("jwt", req.user.jwt, {
+      maxAge: 1000 * 60 * 10,
+      httpOnly: false,
+    });
+    res.redirect(decodeURIComponent(process.env.EDITOR_URL_EXT));
+    // const url = process.env.EDITOR_URL_EXT;
+    // res.redirect(decodeURIComponent(`${url}#${req.user.jwt}`));
+  } else {
+    res.json({
+      message: "no user",
+      success: true,
+    });
+  }
+};
+
+router.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+  })
+);
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/auth/login/failed" }),
+  handleSuccess
+);
+
+const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
+  headers: {
+    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+  },
+});
+
+const buildJWT = async (profile, done) => {
+  const { email } = profile._json;
+
+  const { users } = await client.request(
+    `
+    query ($email: String!) {
+      users(where: {email: {_eq: $email}}, limit: 1) {
+        id
+      }
+    }`,
+    { email }
+  );
+
+  if (users.length === 1) {
+    const { id, is_admin = true } = users[0];
+
+    const hasura = {
+      "x-hasura-allowed-roles": ["editor"],
+      "x-hasura-default-role": "editor",
+      "x-hasura-user-id": id.toString(),
+    };
+
+    if (is_admin) {
+      hasura["x-hasura-allowed-roles"] = ["admin"];
+      hasura["x-hasura-default-role"] = "admin";
+    }
+
+    const data = {
+      sub: id.toString(),
+      // admin: is_admin,
+      "https://hasura.io/jwt/claims": hasura,
+    };
+
+    console.log({ data });
+
+    return done(null, {
+      jwt: sign(data, process.env.JWT_SECRET),
+    });
+  } else {
+    return done(new Error("User not found"));
+  }
+};
+
+passport.use(
+  "google",
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: `${process.env.API_URL_EXT}/auth/google/callback`,
+    },
+    async function (_accessToken, _refreshToken, profile, done) {
+      await buildJWT(profile, done);
+    }
+  )
+);
+
+passport.serializeUser(function (user, cb) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function (obj, cb) {
+  cb(null, obj);
+});
 
 const PORT = process.env.PORT || 8001;
 
@@ -50,13 +176,13 @@ app.use(
   })
 );
 
-app.use("/auth", authRoutes);
+app.use("/auth", router);
 
 app.get("/hasura", async function (req, res) {
   const data = await request(
     process.env.HASURA_GRAPHQL_URL,
     `query {
-      v1_teams {
+      teams {
         id
       }
     }`
@@ -66,12 +192,12 @@ app.get("/hasura", async function (req, res) {
 
 app.get(
   "/me",
-  jwt({ secret: process.env.JWT_SECRET, algorithms: ["RS256"] }),
+  jwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }),
   async function (req, res) {
     const user = await request(
       process.env.HASURA_GRAPHQL_URL,
       `query ($id: Int!) {
-      v1_users_by_pk(id: $id) {
+      users_by_pk(id: $id) {
         id
         email
         created_at
@@ -79,7 +205,7 @@ app.get(
     }`,
       { id: req.user.id }
     );
-    res.json(user.v1_users_by_pk);
+    res.json(user.users_by_pk);
   }
 );
 
