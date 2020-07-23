@@ -1,6 +1,7 @@
 const { request } = require("graphql-request");
 const { sign } = require("jsonwebtoken");
 const passport = require("passport");
+require("./auth");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 const buildJWT = async (profile, done) => {

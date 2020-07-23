@@ -6,7 +6,6 @@ const jwt = require("express-jwt");
 const request = require("graphql-request");
 const { Server } = require("http");
 const passport = require("passport");
-require("./auth");
 const authRoutes = require("./routes");
 
 const PORT = process.env.PORT || 8001;
@@ -65,23 +64,24 @@ app.get("/hasura", async function (req, res) {
   res.json(data);
 });
 
-app.get("/me", jwt({ secret: process.env.JWT_SECRET }), async function (
-  req,
-  res
-) {
-  const user = await request(
-    process.env.HASURA_GRAPHQL_URL,
-    `query ($id: Int!) {
+app.get(
+  "/me",
+  jwt({ secret: process.env.JWT_SECRET, algorithms: ["RS256"] }),
+  async function (req, res) {
+    const user = await request(
+      process.env.HASURA_GRAPHQL_URL,
+      `query ($id: Int!) {
       v1_users_by_pk(id: $id) {
         id
         email
         created_at
       }
     }`,
-    { id: req.user.id }
-  );
-  res.json(user.v1_users_by_pk);
-});
+      { id: req.user.id }
+    );
+    res.json(user.v1_users_by_pk);
+  }
+);
 
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
