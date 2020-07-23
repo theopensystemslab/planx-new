@@ -33,5 +33,45 @@ services:
       HASURA_GRAPHQL_JWT_SECRET: '{ "type": "HS256", "key": "${JWT_SECRET}" }'
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "user"
 
+  api:
+    restart: always
+    build:
+      context: ./api.planx.uk
+      dockerfile: Dockerfile
+    depends_on:
+      - hasura
+    volumes:
+      - "./api.planx.uk:/api"
+      - "/api.planx.uk/node_modules"
+    ports:
+      - ${API_PORT}:8001
+    stdin_open: true
+    tty: true
+    environment:
+      HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
+      JWT_SECRET: ${JWT_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      API_URL_EXT: ${API_URL_EXT}
+      EDITOR_URL_EXT: ${EDITOR_URL_EXT}
+      SESSION_SECRET: ${SESSION_SECRET}
+
+  sharedb:
+    restart: always
+    build:
+      context: ./sharedb.planx.uk
+      dockerfile: Dockerfile
+    volumes:
+      - "./sharedb.planx.uk:/sharedb"
+      - "/sharedb.planx.uk/node_modules"
+    depends_on:
+      - hasura
+    ports:
+      - ${SHAREDB_PORT}:8000
+    stdin_open: true
+    tty: true
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+
 volumes:
   data:

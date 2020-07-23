@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const ShareDB = require("sharedb");
 const WebSocketJSONStream = require("@teamwork/websocket-json-stream");
 
-const { PORT = 8080, JWT_SECRET = "shh" } = process.env;
+const { PORT = 8000, JWT_SECRET = "shh" } = process.env;
 
 const backend = new ShareDB();
 

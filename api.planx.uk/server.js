@@ -9,6 +9,8 @@ const passport = require("passport");
 require("./auth");
 const authRoutes = require("./routes");
 
+const PORT = process.env.PORT || 8001;
+
 const app = express();
 
 app.set("trust proxy", 1);
@@ -87,6 +89,6 @@ app.get("/", (_req, res) => {
 
 const server = new Server(app);
 
-server.listen(process.env.API_PORT);
+server.listen(PORT);
 
-console.info(`api listening ${process.env.API_URL}`);
+console.info(`api listening http://localhost:${PORT}`);
