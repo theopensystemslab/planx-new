@@ -1,0 +1,13 @@
+{
+  "name": "sharedb.planx.uk",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@teamwork/websocket-json-stream": "^2.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "sharedb": "^1.4.1",
+    "ws": "^7.3.1"
+  }
+}
