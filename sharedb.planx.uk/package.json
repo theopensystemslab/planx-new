@@ -1,12 +1,14 @@
 {
   "name": "sharedb.planx.uk",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
+  "license": "MPL-2.0",
+  "private": true,
   "dependencies": {
     "@teamwork/websocket-json-stream": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "sharedb": "^1.4.1",
     "ws": "^7.3.1"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }
