@@ -35,7 +35,7 @@ function startServer() {
     backend.listen(stream, req.user);
   });
 
-  console.log(`Listening on http://127.0.0.1:${PORT}`);
+  console.info(`sharedb listening ws://localhost:${PORT}`);
 }
 
 startServer();

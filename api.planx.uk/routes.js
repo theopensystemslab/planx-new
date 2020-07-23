@@ -53,4 +53,4 @@ router.get(
   handleSuccess
 );
 
-export default router;
+module.exports = router;

@@ -11,8 +11,7 @@
     "graphql-request": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "passport": "^0.4.1",
-    "passport-google-oauth20": "^2.0.0",
-    "pg": "^8.3.0"
+    "passport-google-oauth20": "^2.0.0"
   },
   "scripts": {
     "start": "node server.js"
