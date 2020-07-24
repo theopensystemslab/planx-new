@@ -5,6 +5,23 @@ import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
 import { makeTitle } from "./utils";
 
+const NodeForm: React.FC<{ type: string }> = ({ type }) => <h1>FORM {type}</h1>;
+
+const newNode = route(async (req) => {
+  const { type = "question" } = req.params;
+  return {
+    title: makeTitle(`New ${type}`),
+    view: <NodeForm type={type} />,
+  };
+});
+
+const nodeRoutes = mount({
+  "/new/:before": newNode,
+  "/new": newNode,
+  "/:parent/nodes/new/:before": newNode,
+  "/:parent/nodes/new": newNode,
+});
+
 const routes = compose(
   withData((req) => ({
     flow: req.params.flow,
@@ -41,6 +58,8 @@ const routes = compose(
         view: <FlowEditor id={flow.id} />,
       };
     }),
+
+    "/nodes": nodeRoutes,
   })
 );
 
