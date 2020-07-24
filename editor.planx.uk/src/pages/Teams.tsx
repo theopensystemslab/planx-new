@@ -1,9 +1,12 @@
 import React from "react";
+import { Link } from "react-navi";
 
 const Teams: React.FC<{ teams: any }> = ({ teams }) => (
   <>
-    {teams.map(({ name }: any) => (
-      <div key={name}>{name}</div>
+    {teams.map(({ name, slug }: any) => (
+      <Link href={`/${slug}`} key={slug} prefetch={false}>
+        {name}
+      </Link>
     ))}
   </>
 );

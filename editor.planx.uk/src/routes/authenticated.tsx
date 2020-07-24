@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { compose, mount, route, withView } from "navi";
+import { compose, lazy, mount, route, withView } from "navi";
 import React from "react";
 import AuthenticatedLayout from "../components/AuthenticatedLayout";
 import { client } from "../lib/graphql";
@@ -28,6 +28,8 @@ const editorRoutes = compose(
         view: <Teams teams={data.teams} />,
       };
     }),
+
+    "/:team": lazy(() => import("./team")),
   })
 );
 
