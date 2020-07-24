@@ -17,6 +17,7 @@
     "react-navi-helmet-async": "^0.14.4",
     "react-scripts": "3.4.1",
     "rxjs": "^6.6.0",
+    "scroll-into-view-if-needed": "^2.2.25",
     "subscriptions-transport-ws": "^0.9.17"
   },
   "devDependencies": {
