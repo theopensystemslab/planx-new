@@ -8,6 +8,7 @@
     "classnames": "^2.2.6",
     "graphql": "^15.3.0",
     "js-cookie": "^2.2.1",
+    "natsort": "^2.0.2",
     "navi": "^0.14.0",
     "react": "^0.0.0-experimental-4c8c98ab9",
     "react-dnd": "^11.1.3",

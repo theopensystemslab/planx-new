@@ -7624,6 +7624,11 @@ nanomatch@^1.2.9:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
+natsort@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/natsort/-/natsort-2.0.2.tgz#3358b7af00f155c8ce181289ede79e18d81e6c52"
+  integrity sha512-McY0uA4rDU7GkkoQ1oU8bH9P13onCIrPWxpOjlt792ccFZFkenFm29AHyRCdhbbbfhPfTsjTDagBqjpphD3R7Q==
+
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
