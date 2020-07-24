@@ -36,7 +36,12 @@ router.get("/logout", (req, res) => {
 const handleSuccess = (req, res) => {
   if (req.user) {
     res.cookie("jwt", req.user.jwt, {
-      maxAge: 1000 * 60 * 10,
+      // maxAge: 1000 * 60 * 10,
+      // maxAge: new Date(253402300000000) ,
+      // expires: false,
+
+      // expire a year from now
+      maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       httpOnly: false,
     });
     res.redirect(decodeURIComponent(process.env.EDITOR_URL_EXT));
