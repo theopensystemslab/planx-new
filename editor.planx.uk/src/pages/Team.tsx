@@ -1,10 +1,13 @@
 import React from "react";
+import { Link } from "react-navi";
 
 const Team: React.FC<{ name: string; flows: any }> = ({ name, flows }) => (
   <>
     <h1>{name}</h1>
     {flows.map((flow) => (
-      <h1 key={flow.id}>{flow.id}</h1>
+      <Link key={flow.slug} href={`./${flow.slug}`}>
+        {flow.slug}
+      </Link>
     ))}
   </>
 );

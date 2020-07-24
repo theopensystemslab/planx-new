@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { compose, mount, NotFoundError, route, withData } from "navi";
+import { compose, lazy, mount, NotFoundError, route, withData } from "navi";
 import React from "react";
 import { client } from "../lib/graphql";
 import Team from "../pages/Team";
@@ -44,6 +44,8 @@ const routes = compose(
         view: <Team {...team} />,
       };
     }),
+
+    "/:flow": lazy(() => import("./flow")),
   })
 );
 

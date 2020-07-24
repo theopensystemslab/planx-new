@@ -24,14 +24,10 @@ export default compose(
           })
     ),
 
-    "/logout": map(async (req, context: RoutingContext) => {
-      // context.gqlClient.resetStore();
-      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-      Cookies.remove("jwt");
+    "/logout": map((): any => {
       client.resetStore();
+      Cookies.remove("jwt");
       window.location.href = "/";
-      // never actually called
-      return redirect("/");
     }),
 
     "*": map(async (req, context: RoutingContext) =>
