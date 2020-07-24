@@ -11,7 +11,7 @@ import {
 } from "rxjs/operators";
 import { rootFlowPath } from "../../../routes/utils";
 
-export const useScrollControlsAndRememberPosition = (
+const useScrollControlsAndRememberPosition = (
   scrollContainerRef: React.RefObject<HTMLDivElement>
 ) => {
   useEffect(() => {
@@ -106,3 +106,5 @@ export const useScrollControlsAndRememberPosition = (
     };
   }, [scrollContainerRef]);
 };
+
+export default useScrollControlsAndRememberPosition;
