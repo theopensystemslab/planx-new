@@ -1,3 +1,4 @@
+import { unstable_createMuiStrictModeTheme } from "@material-ui/core/styles";
 import { TransitionFunction, unstable_useTransition } from "react";
 import { unstable_createRoot } from "react-dom";
 
@@ -11,3 +12,5 @@ export const useTransition: () => [
   (fn: TransitionFunction) => void,
   boolean
 ] = unstable_useTransition;
+
+export const createMuiStrictModeTheme = unstable_createMuiStrictModeTheme;
