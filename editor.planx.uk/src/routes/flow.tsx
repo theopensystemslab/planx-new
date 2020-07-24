@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 import { compose, mount, NotFoundError, route, withData } from "navi";
 import React from "react";
 import { client } from "../lib/graphql";
-import Flow from "../pages/Flow";
+import FlowEditor from "../pages/FlowEditor";
 import { makeTitle } from "./utils";
 
 const routes = compose(
@@ -38,7 +38,7 @@ const routes = compose(
 
       return {
         title: makeTitle([req.params.team, req.params.flow].join("/")),
-        view: <Flow id={flow.id} />,
+        view: <FlowEditor id={flow.id} />,
       };
     }),
   })

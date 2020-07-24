@@ -1,4 +1,6 @@
 import React from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { Link, View } from "react-navi";
 
 const Layout: React.FC = () => (
@@ -9,7 +11,9 @@ const Layout: React.FC = () => (
         logout
       </Link>
     </header>
-    <View />
+    <DndProvider backend={HTML5Backend}>
+      <View />
+    </DndProvider>
   </div>
 );
 
