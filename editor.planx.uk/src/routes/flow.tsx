@@ -3,15 +3,19 @@ import { compose, mount, NotFoundError, route, withData } from "navi";
 import React from "react";
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
+import FormModal from "../pages/FlowEditor/components/forms/FormModal";
+import Question from "../pages/FlowEditor/components/forms/Question";
 import { makeTitle } from "./utils";
-
-const NodeForm: React.FC<{ type: string }> = ({ type }) => <h1>FORM {type}</h1>;
 
 const newNode = route(async (req) => {
   const { type = "question" } = req.params;
   return {
     title: makeTitle(`New ${type}`),
-    view: <NodeForm type={type} />,
+    view: (
+      <FormModal type={type}>
+        <Question />
+      </FormModal>
+    ),
   };
 });
 
