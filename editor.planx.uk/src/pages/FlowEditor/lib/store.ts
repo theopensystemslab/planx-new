@@ -162,22 +162,26 @@ export const [useStore, api] = create((set, get) => ({
     );
   },
 
-  removeNode: (id) => {
+  removeNode: (id, parent) => {
     const { flow } = get();
     const index = flow.edges.findIndex(
-      ([src, tgt]) => src === null && tgt === id
+      ([src, tgt]) => src === parent && tgt === id
     );
 
-    send([
-      {
-        p: ["edges", index],
-        ld: flow.edges[index],
-      },
-      {
-        p: ["nodes", id],
-        od: flow.nodes[id],
-      },
-    ]);
+    console.log(index);
+
+    if (index >= 0) {
+      send([
+        {
+          p: ["edges", index],
+          ld: flow.edges[index],
+        },
+        {
+          p: ["nodes", id],
+          od: flow.nodes[id],
+        },
+      ]);
+    }
   },
 
   moveNode(id: any, parent = null, toBefore = null, toParent = null) {

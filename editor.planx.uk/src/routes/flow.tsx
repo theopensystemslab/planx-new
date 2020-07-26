@@ -32,7 +32,7 @@ const editNode = route((req) => {
         Component={Question}
         id={id}
         handleDelete={() => {
-          api.getState().removeNode(id);
+          api.getState().removeNode(id, parent);
         }}
         before={before}
         parent={parent}

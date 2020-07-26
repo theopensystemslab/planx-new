@@ -36,6 +36,7 @@ const FormModal: React.FC<{
     store.addNode,
     store.flow.nodes[id],
   ]);
+  const handleClose = () => navigate(rootFlowPath(true));
 
   return (
     <Dialog
@@ -43,9 +44,7 @@ const FormModal: React.FC<{
       fullWidth
       maxWidth="md"
       disableScrollLock
-      onClose={() => {
-        navigate(rootFlowPath(true));
-      }}
+      onClose={handleClose}
     >
       <DialogTitle>
         {!handleDelete && (
@@ -92,7 +91,7 @@ const FormModal: React.FC<{
         <IconButton
           aria-label="close"
           className={classes.closeButton}
-          onClick={console.log}
+          onClick={handleClose}
         >
           <Close />
         </IconButton>
