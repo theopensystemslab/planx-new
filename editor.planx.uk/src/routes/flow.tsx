@@ -1,20 +1,73 @@
+import { gql } from "@apollo/client";
+import natsort from "natsort";
 import { compose, mount, route, withData, withView } from "navi";
 import React from "react";
 import { View } from "react-navi";
+import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
+import Checklist from "../pages/FlowEditor/components/forms/Checklist";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
+import Portal from "../pages/FlowEditor/components/forms/Portal";
 import Question from "../pages/FlowEditor/components/forms/Question";
-import { api } from "../pages/FlowEditor/lib/store";
+import { api, TYPES } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
 
-const newNode = route((req) => {
+const components = {
+  portal: Portal,
+  question: Question,
+  checklist: Checklist,
+};
+
+const newNode = route(async (req) => {
   const { type = "question", before = null, parent = null } = req.params;
+
+  const extraProps = {} as any;
+
+  if (type === "portal") {
+    const { data } = await client.query({
+      query: gql`
+        query GetFlows {
+          flows(order_by: { name: asc }) {
+            id
+            name
+            slug
+            team {
+              slug
+            }
+          }
+        }
+      `,
+    });
+
+    const sorter = natsort({ insensitive: true });
+
+    extraProps.externalFlows = data.flows
+      .filter(
+        (flow) =>
+          !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
+      )
+      .sort(sorter);
+
+    extraProps.internalFlows = Object.entries(api.getState().flow.nodes)
+      .filter(
+        ([id, v]: any) =>
+          v.$t === TYPES.Portal &&
+          !window.location.pathname.includes(id) &&
+          v.text
+      )
+      .map(([id, { text }]: any) => ({ id, text }))
+      .sort((a, b) =>
+        sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""))
+      );
+  }
+
   return {
     title: makeTitle(`New ${type}`),
     view: (
       <FormModal
         type={type}
-        Component={Question}
+        Component={components[type]}
+        extraProps={extraProps}
         before={before}
         parent={parent}
       />
@@ -23,13 +76,28 @@ const newNode = route((req) => {
 });
 
 const editNode = route((req) => {
-  const { id, type = "question", before = null, parent = null } = req.params;
+  const { id, before = null, parent = null } = req.params;
+
+  const { $t } = api.getState().getNode(id);
+
+  let type;
+  switch ($t) {
+    case TYPES.Portal:
+      type = "portal";
+      break;
+    case TYPES.Checklist:
+      type = "checklist";
+      break;
+    default:
+      type = "question";
+  }
+
   return {
     title: makeTitle(`Edit ${type}`),
     view: (
       <FormModal
         type={type}
-        Component={Question}
+        Component={components[type]}
         id={id}
         handleDelete={() => {
           api.getState().removeNode(id, parent);
@@ -55,7 +123,7 @@ const nodeRoutes = mount({
 
 const routes = compose(
   withData((req) => ({
-    flow: req.params.flow,
+    flow: req.params.flow.split(",")[0],
   })),
 
   withView((req) => {

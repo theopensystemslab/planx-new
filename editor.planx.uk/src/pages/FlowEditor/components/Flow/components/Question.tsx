@@ -2,16 +2,13 @@ import classNames from "classnames";
 import React from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
-import { useStore } from "../../../lib/store";
+import { api, useStore } from "../../../lib/store";
 import { getParentId } from "../../../lib/utils";
 import Hanger from "./Hanger";
 import Node from "./Node";
 
 const Question: React.FC<any> = React.memo((props) => {
-  const [childNodes, copyNode] = useStore((state) => [
-    state.childNodesOf(props.id),
-    state.copyNode,
-  ]);
+  const childNodes = useStore((state) => state.childNodesOf(props.id));
 
   const parent = getParentId(props.parent);
 
@@ -35,7 +32,7 @@ const Question: React.FC<any> = React.memo((props) => {
   const handleContext = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    copyNode(props.id);
+    api.getState().copyNode(props.id);
   };
 
   return (

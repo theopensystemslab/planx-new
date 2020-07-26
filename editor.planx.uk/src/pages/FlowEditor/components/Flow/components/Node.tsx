@@ -1,8 +1,8 @@
 import React from "react";
 import { TYPES, useStore } from "../../../lib/store";
-// import Breadcrumb from "./Breadcrumb";
+import Breadcrumb from "./Breadcrumb";
 import Option from "./Option";
-// import Portal from "./Portal";
+import Portal from "./Portal";
 import Question from "./Question";
 
 const Node: React.FC<any> = (props) => {
@@ -18,8 +18,8 @@ const Node: React.FC<any> = (props) => {
     //   return <Question {...props} text="Property information" />;
     // case TYPES.FindProperty:
     //   return <Question {...props} text="Find property" />;
-    // case TYPES.Portal:
-    //   return props.href ? <Breadcrumb {...props} /> : <Portal {...props} />;
+    case TYPES.Portal:
+      return props.href ? <Breadcrumb {...props} /> : <Portal {...props} />;
     // case undefined:
     //   return <Option {...props} />;
     default:

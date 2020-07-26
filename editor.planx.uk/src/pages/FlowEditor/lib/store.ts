@@ -1,7 +1,10 @@
+import { gql } from "@apollo/client";
 import debounce from "lodash/debounce";
 import flattenDeep from "lodash/flattenDeep";
+import natsort from "natsort";
 import { v4 } from "uuid";
 import create from "zustand";
+import { client } from "../../../lib/graphql";
 import { removeNodeOp } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
@@ -124,6 +127,60 @@ export const [useStore, api] = create((set, get) => ({
     try {
       doc.destroy();
     } catch (e) {}
+  },
+
+  flowData: async () => {
+    const { data } = await client.query({
+      query: gql`
+        query GetFlows {
+          flows(order_by: { name: asc }) {
+            id
+            name
+            slug
+            team {
+              slug
+            }
+          }
+        }
+      `,
+    });
+
+    const sorter = natsort({ insensitive: true });
+
+    const externalFlows = data.flows
+      .filter(
+        (flow) =>
+          !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
+      )
+      .sort(sorter);
+
+    const internalFlows = Object.entries(api.getState().flow.nodes)
+      .filter(
+        ([id, v]: any) =>
+          v.$t === TYPES.Portal &&
+          !window.location.pathname.includes(id) &&
+          v.text
+      )
+      .map(([id, { text }]: any) => ({ id, text }))
+      .sort((a, b) =>
+        sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""))
+      );
+
+    return {
+      externalFlows,
+      internalFlows,
+    };
+  },
+
+  getNode(id: any) {
+    const { flow } = get();
+    return {
+      id,
+      ...flow.nodes[id],
+      // options: flow.edges
+      //   .filter(([src]: any) => src === id)
+      //   .map(([, id]: any) => ({ id, ...flow.nodes[id] })),
+    };
   },
 
   addNode: (

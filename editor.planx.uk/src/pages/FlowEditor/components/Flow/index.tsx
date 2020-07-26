@@ -10,14 +10,26 @@ export enum FlowLayout {
 }
 
 const Flow = ({ flow, breadcrumbs = [] }) => {
-  const childNodes = useStore((state) =>
-    state.childNodesOf(breadcrumbs.pop() || null)
-  );
+  const [childNodes, getNode] = useStore((state) => [
+    state.childNodesOf(breadcrumbs[breadcrumbs.length - 1] || null),
+    state.getNode,
+  ]);
+
+  breadcrumbs = breadcrumbs.map((id) => ({
+    id,
+    ...getNode(id),
+    href: `${window.location.pathname.split(id)[0]}${id}`,
+  }));
 
   return (
     <>
       <ol id="flow" data-layout={FlowLayout.TOP_DOWN}>
         <EndPoint text="start" />
+
+        {breadcrumbs.map((bc) => (
+          <Node key={bc.id} {...bc} />
+        ))}
+
         {childNodes.map((node) => (
           <Node key={node.id} {...node} />
         ))}

@@ -29,7 +29,8 @@ const FormModal: React.FC<{
   id?: any;
   before?: any;
   parent?: any;
-}> = ({ type, handleDelete, Component, id, before, parent }) => {
+  extraProps?: any;
+}> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
   const { navigate } = useNavigation();
   const classes = useStyles();
   const [addNode, node] = useStore((store) => [
@@ -79,8 +80,12 @@ const FormModal: React.FC<{
               </option>
             </optgroup>
             <optgroup label="Location">
-              <option value="find-property">Find property</option>
-              <option value="property-information">Property information</option>
+              <option disabled value="find-property">
+                Find property
+              </option>
+              <option disabled value="property-information">
+                Property information
+              </option>
             </optgroup>
             <optgroup label="Navigation">
               <option value="portal">Portal</option>
@@ -99,6 +104,7 @@ const FormModal: React.FC<{
       <DialogContent dividers>
         <Component
           {...node}
+          {...extraProps}
           handleSubmit={(data, options = []) => {
             const parsed = parseFormValues(Object.entries(data));
             const parsedOptions = options.map((o) =>
