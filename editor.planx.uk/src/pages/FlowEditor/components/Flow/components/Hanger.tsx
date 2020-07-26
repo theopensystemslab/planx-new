@@ -3,6 +3,7 @@ import React from "react";
 import { useDrop } from "react-dnd";
 import { Link } from "react-navi";
 import { rootFlowPath } from "../../../../../routes/utils";
+import { api } from "../../../lib/store";
 import { getParentId } from "../../../lib/utils";
 
 interface HangerProps {
@@ -22,17 +23,10 @@ const buildHref = (before: any, parent: any) => {
 const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
 
-  // const [moveNode, pasteNode] = useStore((state) => [
-  //   state.moveNode,
-  //   state.pasteNode,
-  // ]);
-  const moveNode = console.log;
-  const pasteNode = console.log;
-
   const [{ canDrop, item }, drop] = useDrop({
     accept: ["DECISION", "PORTAL"],
     drop: () => {
-      moveNode(item.id, item.parent, before, parent);
+      api.getState().moveNode(item.id, item.parent, before, parent);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -43,7 +37,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   const handleContext = (e: React.MouseEvent) => {
     e.preventDefault();
-    pasteNode(parent, before);
+    // pasteNode(parent, before);
   };
 
   return (

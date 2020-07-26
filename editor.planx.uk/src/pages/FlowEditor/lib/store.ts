@@ -180,6 +180,28 @@ export const [useStore, api] = create((set, get) => ({
     ]);
   },
 
+  moveNode(id: any, parent = null, toBefore = null, toParent = null) {
+    const { flow } = get();
+
+    const fromIndex = flow.edges.findIndex(
+      ([src, tgt]: any) => src === parent && tgt === id
+    );
+
+    let toIndex = flow.edges.findIndex(
+      ([src, tgt]: any) => src === toParent && tgt === toBefore
+    );
+    if (toIndex === -1) toIndex = flow.edges.length;
+
+    if (parent === toParent) {
+      send([{ lm: toIndex, p: ["edges", fromIndex] }]);
+    } else {
+      send([
+        { ld: flow.edges[fromIndex], p: ["edges", fromIndex] },
+        { li: [toParent, id], p: ["edges", toIndex] },
+      ]);
+    }
+  },
+
   childNodesOf(id: any, onlyPublic = false) {
     const { flow } = get();
 
