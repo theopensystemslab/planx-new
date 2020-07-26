@@ -13,7 +13,11 @@ const newNode = route(async (req) => {
     title: makeTitle(`New ${type}`),
     view: (
       <FormModal type={type}>
-        <Question />
+        <Question
+          handleSubmit={(e) => {
+            e.preventDefault();
+          }}
+        />
       </FormModal>
     ),
   };
