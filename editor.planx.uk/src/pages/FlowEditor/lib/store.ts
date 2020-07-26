@@ -2,6 +2,7 @@ import debounce from "lodash/debounce";
 import flattenDeep from "lodash/flattenDeep";
 import { v4 } from "uuid";
 import create from "zustand";
+import { removeNodeOp } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
 let doc;
@@ -162,25 +163,25 @@ export const [useStore, api] = create((set, get) => ({
     );
   },
 
-  removeNode: (id, parent) => {
+  removeNode: (id, parent = null) => {
     const { flow } = get();
-    const index = flow.edges.findIndex(
-      ([src, tgt]) => src === parent && tgt === id
-    );
 
-    console.log(index);
+    const relevantEdges = flow.edges.filter(([, tgt]) => tgt === id);
 
-    if (index >= 0) {
-      send([
-        {
-          p: ["edges", index],
-          ld: flow.edges[index],
-        },
-        {
-          p: ["nodes", id],
-          od: flow.nodes[id],
-        },
-      ]);
+    if (relevantEdges.length > 1) {
+      // node is in multiple places in the graph so just delete the edge
+      // that is connecting it
+      const index = relevantEdges.findIndex(
+        ([src, tgt]) => src === parent && tgt === id
+      );
+      if (index < 0) {
+        console.error("edge not found");
+      } else {
+        send([{ ld: flow.edges[index], p: ["edges", index] }]);
+      }
+    } else {
+      // remove the node entirely
+      send(removeNodeOp(id, flow));
     }
   },
 
@@ -206,6 +207,27 @@ export const [useStore, api] = create((set, get) => ({
         { li: [toParent, id], p: ["edges", toIndex] },
       ];
       if (fromIndex < toIndex) ops = ops.reverse();
+      send(ops);
+    }
+  },
+
+  copyNode(id) {
+    localStorage.setItem("clipboard", id);
+  },
+
+  pasteNode(parent = null, before = null) {
+    const { flow } = get();
+    const id = localStorage.getItem("clipboard");
+    if (id && flow.nodes[id]) {
+      const ops = [{ li: [parent, id], p: ["edges", flow.edges.length] }];
+      if (before) {
+        const index = flow.edges.findIndex(
+          ([src, tgt]: any) => src === parent && tgt === before
+        );
+        if (index >= 0) {
+          ops[0] = { li: [parent, id], p: ["edges", index] };
+        }
+      }
       send(ops);
     }
   },

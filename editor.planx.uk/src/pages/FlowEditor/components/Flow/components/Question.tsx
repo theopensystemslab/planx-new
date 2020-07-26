@@ -8,7 +8,10 @@ import Hanger from "./Hanger";
 import Node from "./Node";
 
 const Question: React.FC<any> = React.memo((props) => {
-  const childNodes = useStore((state) => state.childNodesOf(props.id));
+  const [childNodes, copyNode] = useStore((state) => [
+    state.childNodesOf(props.id),
+    state.copyNode,
+  ]);
 
   const parent = getParentId(props.parent);
 
@@ -24,12 +27,6 @@ const Question: React.FC<any> = React.memo((props) => {
     }),
   });
 
-  // const [isClone, childNodesOf, copyNode] = useStore((state) => [
-  //   state.isClone,
-  //   state.childNodesOf,
-  //   state.copyNode,
-  // ]);
-
   let href = `${window.location.pathname}/nodes/${props.id}/edit`;
   if (parent) {
     href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
@@ -38,7 +35,7 @@ const Question: React.FC<any> = React.memo((props) => {
   const handleContext = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // copyNode(props.id);
+    copyNode(props.id);
   };
 
   return (
