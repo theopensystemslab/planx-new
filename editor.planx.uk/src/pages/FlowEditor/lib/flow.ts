@@ -63,22 +63,31 @@ export const setFlowOp = (flow: Flow, prevFlow: Flow): Array<Op> => [
   { p: [], od: prevFlow, oi: flow },
 ];
 
-export const connectOp = (src: string, tgt: string, flow: Flow): Array<Op> => {
+export const isValidOp = (flow, src, tgt) => {
   if (src === tgt) {
-    return [];
+    return false;
   }
+
   if (flow.edges.find(([s, t]) => s === src && t === tgt)) {
-    return [];
+    return false;
   }
+
   const graph = toGraphlib(flow);
   graph.setEdge(src, tgt);
+
   if (!alg.isAcyclic(graph)) {
-    return [];
+    return false;
   }
-  return [
-    {
-      p: ["edges", flow.edges.length],
-      li: [src, tgt],
-    },
-  ];
+
+  return true;
 };
+
+export const connectOp = (src: string, tgt: string, flow: Flow): Array<Op> =>
+  isValidOp
+    ? [
+        {
+          p: ["edges", flow.edges.length],
+          li: [src, tgt],
+        },
+      ]
+    : [];

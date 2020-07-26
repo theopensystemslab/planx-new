@@ -5,7 +5,7 @@ import natsort from "natsort";
 import { v4 } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
-import { removeNodeOp } from "./flow";
+import { isValidOp, removeNodeOp } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
 let doc;
@@ -189,7 +189,9 @@ export const [useStore, api] = create((set, get) => ({
     parent = null,
     before = null
   ) => {
-    const { edges } = get().flow;
+    const flow = get();
+    const { edges } = flow;
+
     let position = edges.length;
 
     const addNode = ({ id = v4(), ...data }, parent, before = null) => {
@@ -243,7 +245,8 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   moveNode(id: any, parent = null, toBefore = null, toParent = null) {
-    const { edges } = get().flow;
+    const flow = get();
+    const { edges } = flow;
 
     const fromIndex = edges.findIndex(
       ([src, tgt]: any) => src === parent && tgt === id
@@ -254,6 +257,11 @@ export const [useStore, api] = create((set, get) => ({
     );
     if (toIndex === -1) {
       toIndex = edges.length;
+    }
+
+    if (!isValidOp(flow, toParent, id)) {
+      console.error("invalid op");
+      return;
     }
 
     if (parent === toParent) {
@@ -275,7 +283,13 @@ export const [useStore, api] = create((set, get) => ({
   pasteNode(parent = null, before = null) {
     const { flow } = get();
     const id = localStorage.getItem("clipboard");
+
     if (id && flow.nodes[id]) {
+      if (!isValidOp(flow, parent, id)) {
+        console.error("invalid op");
+        return;
+      }
+
       const ops = [{ li: [parent, id], p: ["edges", flow.edges.length] }];
       if (before) {
         const index = flow.edges.findIndex(
