@@ -1,9 +1,72 @@
 import debounce from "lodash/debounce";
+import flattenDeep from "lodash/flattenDeep";
 import { v4 } from "uuid";
 import create from "zustand";
 import { connectToDB, getConnection } from "./sharedb";
 
 let doc;
+
+const send = (...ops) => {
+  doc.submitOp(flattenDeep(ops));
+};
+
+export const flags = [
+  {
+    value: "LB-DE_MINIMIS",
+    text: "De minimis",
+    category: "Listed Buildings",
+  },
+  {
+    value: "LB-LIKELY_APPROVAL",
+    text: "Likely approval",
+    category: "Listed Buildings",
+  },
+  {
+    value: "LB-ADVICE_RECOMMENDED",
+    text: "Advice recommended",
+    category: "Listed Buildings",
+  },
+  {
+    value: "LB-LIKELY_REFUSAL",
+    text: "Likely refusal",
+    category: "Listed Buildings",
+  },
+  {
+    value: "MISSING_INFO",
+    text: "Missing information",
+    category: "Planning Permission",
+  },
+  {
+    value: "LIKELY_FAIL",
+    text: "Likely refusal",
+    category: "Planning Permission",
+  },
+  {
+    value: "EDGE_CASE",
+    text: "Advice recommended",
+    category: "Planning Permission",
+  },
+  {
+    value: "LIKELY_PASS",
+    text: "Likely approval",
+    category: "Planning Permission",
+  },
+  {
+    value: "PLANNING_PERMISSION_REQUIRED",
+    text: "Planning permission required",
+    category: "Planning Permission",
+  },
+  {
+    value: "PRIOR_APPROVAL",
+    text: "Prior approval required",
+    category: "Planning Permission",
+  },
+  {
+    value: "NO_APP_REQUIRED",
+    text: "Permitted development",
+    category: "Planning Permission",
+  },
+];
 
 export enum TYPES {
   Flow = 1,
@@ -62,20 +125,41 @@ export const [useStore, api] = create((set, get) => ({
     } catch (e) {}
   },
 
-  addNode: () => {
-    const id = v4();
+  addNode: (
+    { id = v4(), ...data },
+    children = [],
+    parent = null,
+    before = null
+  ) => {
     const { edges } = get().flow;
+    let position = edges.length;
 
-    doc.submitOp([
-      {
-        p: ["nodes", id],
-        oi: {
-          $t: TYPES.Statement,
-          text: id,
+    const addNode = ({ id = v4(), ...data }, parent, before = null) => {
+      if (before) {
+        const index = edges.findIndex(
+          ([src, tgt]: any) => src === parent && tgt === before
+        );
+        console.log({ parent, before, index });
+        if (index >= 0) {
+          position = index;
+        }
+      } else {
+        position++;
+      }
+
+      return [
+        {
+          p: ["nodes", id],
+          oi: data,
         },
-      },
-      { p: ["edges", edges.length], li: [null, id] },
-    ]);
+        { p: ["edges", position], li: [parent, id] },
+      ];
+    };
+
+    send(
+      addNode({ id, ...data }, parent, before),
+      children.map((child) => addNode(child, id))
+    );
   },
 
   removeNode: (id) => {
@@ -99,7 +183,7 @@ export const [useStore, api] = create((set, get) => ({
   childNodesOf(id: any, onlyPublic = false) {
     const { flow } = get();
 
-    console.log(`child nodes of ${id}`);
+    // console.log(`child nodes of ${id}`);
 
     let edges = flow.edges.filter(([src]: any) => src === id);
     if (onlyPublic) {

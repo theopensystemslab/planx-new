@@ -7,25 +7,35 @@ import Question from "../pages/FlowEditor/components/forms/Question";
 import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
 
-const newNode = route(async (req) => {
-  const { type = "question" } = req.params;
+const newNode = route((req) => {
+  const { type = "question", before = null, parent = null } = req.params;
   return {
     title: makeTitle(`New ${type}`),
-    view: <FormModal type={type} Component={Question} />,
+    view: (
+      <FormModal
+        type={type}
+        Component={Question}
+        before={before}
+        parent={parent}
+      />
+    ),
   };
 });
 
-const editNode = route(async (req) => {
-  const { id, type = "question" } = req.params;
+const editNode = route((req) => {
+  const { id, type = "question", before = null, parent = null } = req.params;
   return {
     title: makeTitle(`Edit ${type}`),
     view: (
       <FormModal
         type={type}
         Component={Question}
+        id={id}
         handleDelete={() => {
           api.getState().removeNode(id);
         }}
+        before={before}
+        parent={parent}
       />
     ),
   };

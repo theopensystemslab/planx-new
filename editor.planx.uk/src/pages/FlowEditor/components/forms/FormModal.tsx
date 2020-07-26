@@ -11,6 +11,7 @@ import React from "react";
 import { useNavigation } from "react-navi";
 import { rootFlowPath } from "../../../../routes/utils";
 import { useStore } from "../../lib/store";
+import { parseFormValues } from "./shared";
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -25,10 +26,16 @@ const FormModal: React.FC<{
   type: string;
   handleDelete?;
   Component: any;
-}> = ({ type, handleDelete, Component }) => {
+  id?: any;
+  before?: any;
+  parent?: any;
+}> = ({ type, handleDelete, Component, id, before, parent }) => {
   const { navigate } = useNavigation();
   const classes = useStyles();
-  const addNode = useStore((store) => store.addNode);
+  const [addNode, node] = useStore((store) => [
+    store.addNode,
+    store.flow.nodes[id],
+  ]);
 
   return (
     <Dialog
@@ -92,10 +99,15 @@ const FormModal: React.FC<{
       </DialogTitle>
       <DialogContent dividers>
         <Component
-          handleSubmit={(e) => {
-            e.preventDefault();
-            // flow.insertNode();
-            addNode();
+          {...node}
+          handleSubmit={(data, options = []) => {
+            const parsed = parseFormValues(Object.entries(data));
+            const parsedOptions = options.map((o) =>
+              parseFormValues(Object.entries(o))
+            );
+
+            addNode(parsed, parsedOptions, parent, before);
+
             navigate(rootFlowPath(true));
           }}
         />
