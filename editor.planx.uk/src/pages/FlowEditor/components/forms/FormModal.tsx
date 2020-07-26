@@ -7,8 +7,9 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/CloseOutlined";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigation } from "react-navi";
+import { FlowContext } from "../..";
 import { rootFlowPath } from "../../../../routes/utils";
 
 const useStyles = makeStyles((theme) => ({
@@ -22,11 +23,13 @@ const useStyles = makeStyles((theme) => ({
 
 const FormModal: React.FC<{
   type: string;
-  children: React.ReactNode;
   handleDelete?;
-}> = ({ type, handleDelete, children }) => {
+  Component: any;
+}> = ({ type, handleDelete, Component }) => {
   const { navigate } = useNavigation();
   const classes = useStyles();
+  const flow = useContext(FlowContext);
+  console.log({ flow });
 
   return (
     <Dialog
@@ -88,7 +91,15 @@ const FormModal: React.FC<{
           <Close />
         </IconButton>
       </DialogTitle>
-      <DialogContent dividers>{children}</DialogContent>
+      <DialogContent dividers>
+        <Component
+          handleSubmit={(e) => {
+            e.preventDefault();
+            flow.insertNode();
+            navigate(rootFlowPath(true));
+          }}
+        />
+      </DialogContent>
       <DialogActions>
         <Grid container justify="flex-end">
           {handleDelete && (

@@ -6,7 +6,10 @@ import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndReme
 
 export const FlowContext = createContext(null);
 
-const FlowEditor: React.FC<{ id: number }> = ({ id }) => {
+const FlowEditor: React.FC<{ id: number; children?: React.ReactNode }> = ({
+  id,
+  children,
+}) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
 
@@ -15,13 +18,14 @@ const FlowEditor: React.FC<{ id: number }> = ({ id }) => {
   if (flow.state === null) return <p>Loading...</p>;
 
   return (
-    <div id="editor-container">
-      <FlowContext.Provider value={flow}>
+    <FlowContext.Provider value={flow}>
+      <div id="editor-container">
         <div id="editor" ref={scrollContainerRef}>
           <Flow />
         </div>
-      </FlowContext.Provider>
-    </div>
+      </div>
+      {children}
+    </FlowContext.Provider>
   );
 };
 

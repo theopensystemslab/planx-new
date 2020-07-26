@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
-import { compose, mount, NotFoundError, route, withData } from "navi";
+import { compose, mount, NotFoundError, route, withData, withView } from "navi";
 import React from "react";
+import { View } from "react-navi";
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
@@ -11,15 +12,7 @@ const newNode = route(async (req) => {
   const { type = "question" } = req.params;
   return {
     title: makeTitle(`New ${type}`),
-    view: (
-      <FormModal type={type}>
-        <Question
-          handleSubmit={(e) => {
-            e.preventDefault();
-          }}
-        />
-      </FormModal>
-    ),
+    view: <FormModal type={type} Component={Question} />,
   };
 });
 
@@ -30,13 +23,18 @@ const nodeRoutes = mount({
   "/:parent/nodes/new": newNode,
 });
 
+let cached = {
+  params: undefined,
+  id: undefined,
+};
+
 const routes = compose(
   withData((req) => ({
     flow: req.params.flow,
   })),
 
-  mount({
-    "/": route(async (req) => {
+  withView(async (req) => {
+    if (JSON.stringify(cached.params) !== JSON.stringify(req.params)) {
       const { data } = await client.query({
         query: gql`
           query GetFlow($flowSlug: String!, $teamSlug: String!) {
@@ -61,9 +59,22 @@ const routes = compose(
 
       if (!flow) throw new NotFoundError();
 
+      cached.params = req.params;
+      cached.id = flow.id;
+    }
+
+    return (
+      <FlowEditor id={cached.id}>
+        <View />
+      </FlowEditor>
+    );
+  }),
+
+  mount({
+    "/": route(async (req) => {
       return {
         title: makeTitle([req.params.team, req.params.flow].join("/")),
-        view: <FlowEditor id={flow.id} />,
+        view: <span />,
       };
     }),
 
