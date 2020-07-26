@@ -15,6 +15,10 @@
     "passport-google-oauth20": "^2.0.0"
   },
   "scripts": {
+    "dev": "node-dev server.js",
     "start": "node server.js"
+  },
+  "devDependencies": {
+    "node-dev": "^5.0.0"
   }
 }
