@@ -1,20 +1,16 @@
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Link, View } from "react-navi";
+import { View } from "react-navi";
+import Header from "./Header";
 
 const Layout: React.FC = () => (
-  <div>
-    <header>
-      HEADER{" "}
-      <Link href="/logout" prefetch={false}>
-        logout
-      </Link>
-    </header>
+  <>
+    <Header />
     <DndProvider backend={HTML5Backend}>
       <View />
     </DndProvider>
-  </div>
+  </>
 );
 
 export default Layout;
