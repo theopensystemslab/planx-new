@@ -7,10 +7,10 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/CloseOutlined";
-import React, { useContext } from "react";
+import React from "react";
 import { useNavigation } from "react-navi";
-import { FlowContext } from "../..";
 import { rootFlowPath } from "../../../../routes/utils";
+import { useStore } from "../../lib/store";
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -28,8 +28,7 @@ const FormModal: React.FC<{
 }> = ({ type, handleDelete, Component }) => {
   const { navigate } = useNavigation();
   const classes = useStyles();
-  const flow = useContext(FlowContext);
-  console.log({ flow });
+  const addNode = useStore((store) => store.addNode);
 
   return (
     <Dialog
@@ -95,7 +94,8 @@ const FormModal: React.FC<{
         <Component
           handleSubmit={(e) => {
             e.preventDefault();
-            flow.insertNode();
+            // flow.insertNode();
+            addNode();
             navigate(rootFlowPath(true));
           }}
         />

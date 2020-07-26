@@ -2,8 +2,14 @@ import gql from "graphql-tag";
 import { compose, lazy, mount, NotFoundError, route, withData } from "navi";
 import React from "react";
 import { client } from "../lib/graphql";
+import { api } from "../pages/FlowEditor/lib/store";
 import Team from "../pages/Team";
 import { makeTitle } from "./utils";
+
+let cached = {
+  flowSlug: undefined,
+  teamSlug: undefined,
+};
 
 const routes = compose(
   withData((req) => ({
@@ -45,7 +51,43 @@ const routes = compose(
       };
     }),
 
-    "/:flow": lazy(() => import("./flow")),
+    "/:flow": lazy(async (req) => {
+      const [slug] = req.params.flow.split(",");
+
+      const variables = {
+        flowSlug: slug,
+        teamSlug: req.params.team,
+      };
+
+      if (JSON.stringify(cached) !== JSON.stringify(variables)) {
+        cached = variables;
+
+        const { data } = await client.query({
+          query: gql`
+            query GetFlow($flowSlug: String!, $teamSlug: String!) {
+              flows(
+                limit: 1
+                where: {
+                  slug: { _eq: $flowSlug }
+                  team: { slug: { _eq: $teamSlug } }
+                }
+              ) {
+                id
+              }
+            }
+          `,
+          variables,
+        });
+
+        const flow = data.flows[0];
+
+        if (!flow) throw new NotFoundError();
+
+        await api.getState().connectTo(flow.id);
+      }
+
+      return import("./flow");
+    }),
   })
 );
 
