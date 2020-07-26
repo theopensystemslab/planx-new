@@ -1,7 +1,7 @@
 import React from "react";
 import { TYPES, useStore } from "../../../lib/store";
 // import Breadcrumb from "./Breadcrumb";
-// import Option from "./Option";
+import Option from "./Option";
 // import Portal from "./Portal";
 import Question from "./Question";
 
@@ -12,12 +12,12 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Statement:
     case TYPES.Checklist:
       return <Question {...props} {...node} />;
+    case TYPES.Response:
+      return <Option {...props} />;
     // case TYPES.PropertyInformation:
     //   return <Question {...props} text="Property information" />;
     // case TYPES.FindProperty:
     //   return <Question {...props} text="Find property" />;
-    // case TYPES.Response:
-    //   return <Option {...props} />;
     // case TYPES.Portal:
     //   return props.href ? <Breadcrumb {...props} /> : <Portal {...props} />;
     // case undefined:

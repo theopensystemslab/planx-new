@@ -64,6 +64,8 @@ export const [useStore, api] = create((set, get) => ({
 
   addNode: () => {
     const id = v4();
+    const { edges } = get().flow;
+
     doc.submitOp([
       {
         p: ["nodes", id],
@@ -72,7 +74,7 @@ export const [useStore, api] = create((set, get) => ({
           text: id,
         },
       },
-      { p: ["edges", 0], li: [null, id] },
+      { p: ["edges", edges.length], li: [null, id] },
     ]);
   },
 
