@@ -1,10 +1,6 @@
-import Cookies from "js-cookie";
 import ReconnectingWebSocket from "reconnecting-websocket";
 import sharedb from "sharedb/lib/client";
 
-Cookies.set("X-Authorization", Cookies.get("jwt"), {
-  domain: new URL(process.env.REACT_APP_SHAREDB_URL).origin,
-});
 const socket = new ReconnectingWebSocket(process.env.REACT_APP_SHAREDB_URL);
 
 const connection = new sharedb.Connection(socket, {});

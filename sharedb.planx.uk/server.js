@@ -11,21 +11,27 @@ function startServer() {
   const wss = new Server({
     port: PORT,
     verifyClient: (info, cb) => {
-      // checks if JWT is included in cookies, does not allow connection if invalid
-      const [, token] = info.req.headers.cookie.match(/Authorization\=([^;]+)/);
+      console.log({ cookie: info.req.headers.cookie });
+      try {
+        // checks if JWT is included in cookies, does not allow connection if invalid
+        const [, token] = info.req.headers.cookie.match(/jwt\=([^;]+)/);
 
-      if (!token) {
-        cb(false, 401, "Unauthorized");
-      } else {
-        jwt.verify(token, JWT_SECRET, (err, decoded) => {
-          if (err) {
-            cb(false, 401, "Unauthorized");
-          } else {
-            console.log({ newConnection: decoded });
-            info.req.user = decoded;
-            cb(true);
-          }
-        });
+        if (!token) {
+          cb(false, 401, "Unauthorized");
+        } else {
+          jwt.verify(token, JWT_SECRET, (err, decoded) => {
+            if (err) {
+              cb(false, 401, "Unauthorized");
+            } else {
+              console.log({ newConnection: decoded });
+              info.req.user = decoded;
+              cb(true);
+            }
+          });
+        }
+      } catch (err) {
+        console.error({ err });
+        cb(false, 500, err.message);
       }
     },
   });
