@@ -48,6 +48,9 @@ const nodeRoutes = mount({
   "/:parent/nodes/new": newNode,
 
   "/:id/edit": editNode,
+  "/:id/edit/:before": editNode,
+  "/:parent/nodes/:id/edit/:before": editNode,
+  "/:parent/nodes/:id/edit": editNode,
 });
 
 const routes = compose(

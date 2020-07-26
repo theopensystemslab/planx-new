@@ -168,7 +168,7 @@ export const [useStore, api] = create((set, get) => ({
       ([src, tgt]) => src === null && tgt === id
     );
 
-    doc.submitOp([
+    send([
       {
         p: ["edges", index],
         ld: flow.edges[index],
@@ -181,24 +181,28 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   moveNode(id: any, parent = null, toBefore = null, toParent = null) {
-    const { flow } = get();
+    const { edges } = get().flow;
 
-    const fromIndex = flow.edges.findIndex(
+    const fromIndex = edges.findIndex(
       ([src, tgt]: any) => src === parent && tgt === id
     );
 
-    let toIndex = flow.edges.findIndex(
+    let toIndex = edges.findIndex(
       ([src, tgt]: any) => src === toParent && tgt === toBefore
     );
-    if (toIndex === -1) toIndex = flow.edges.length;
+    if (toIndex === -1) {
+      toIndex = edges.length;
+    }
 
     if (parent === toParent) {
       send([{ lm: toIndex, p: ["edges", fromIndex] }]);
     } else {
-      send([
-        { ld: flow.edges[fromIndex], p: ["edges", fromIndex] },
+      let ops = [
+        { ld: edges[fromIndex], p: ["edges", fromIndex] },
         { li: [toParent, id], p: ["edges", toIndex] },
-      ]);
+      ];
+      if (fromIndex < toIndex) ops = ops.reverse();
+      send(ops);
     }
   },
 
