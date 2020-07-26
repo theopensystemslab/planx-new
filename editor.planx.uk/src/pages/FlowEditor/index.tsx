@@ -3,14 +3,14 @@ import Flow from "./components/Flow";
 import "./floweditor.scss";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
-const FlowEditor: React.FC = () => {
+const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
 
   return (
     <div id="editor-container">
       <div id="editor" ref={scrollContainerRef}>
-        <Flow />
+        <Flow flow={flow} breadcrumbs={breadcrumbs} />
       </div>
     </div>
   );

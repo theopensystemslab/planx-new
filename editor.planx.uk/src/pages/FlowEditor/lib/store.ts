@@ -5,7 +5,7 @@ import { connectToDB, getConnection } from "./sharedb";
 
 let doc;
 
-enum TYPES {
+export enum TYPES {
   Flow = 1,
   SignIn = 2,
   Result = 3,
@@ -96,6 +96,8 @@ export const [useStore, api] = create((set, get) => ({
 
   childNodesOf(id: any, onlyPublic = false) {
     const { flow } = get();
+
+    console.log(`child nodes of ${id}`);
 
     let edges = flow.edges.filter(([src]: any) => src === id);
     if (onlyPublic) {
