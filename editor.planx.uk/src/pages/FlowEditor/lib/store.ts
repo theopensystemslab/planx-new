@@ -1,6 +1,9 @@
 import { gql } from "@apollo/client";
+import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
+import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
+import omit from "lodash/omit";
 import natsort from "natsort";
 import { v4 } from "uuid";
 import create from "zustand";
@@ -9,6 +12,17 @@ import { isValidOp, removeNodeOp } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
 let doc;
+
+const jdiff = jsondiffpatch.create({
+  objectHash: (obj: any) => obj.id || JSON.stringify(obj),
+});
+
+const safeKeys = (ob: any) =>
+  Object.keys(ob).reduce((acc, curr) => {
+    if (!curr.startsWith("$") && typeof ob[curr] === "string")
+      (acc as any)[curr] = ob[curr];
+    return acc;
+  }, {});
 
 const send = (...ops) => {
   doc.submitOp(flattenDeep(ops));
@@ -172,6 +186,9 @@ export const [useStore, api] = create((set, get) => ({
     };
   },
 
+  isClone: (id: any) =>
+    get().flow.edges.filter(([, tgt]: any) => tgt === id).length > 1,
+
   getNode(id: any) {
     const { flow } = get();
     return {
@@ -187,9 +204,10 @@ export const [useStore, api] = create((set, get) => ({
     { id = v4(), ...data },
     children = [],
     parent = null,
-    before = null
+    before = null,
+    cb = send
   ) => {
-    const flow = get();
+    const { flow } = get();
     const { edges } = flow;
 
     let position = edges.length;
@@ -216,13 +234,96 @@ export const [useStore, api] = create((set, get) => ({
       ];
     };
 
-    send(
+    cb(
       addNode({ id, ...data }, parent, before),
       children.map((child) => addNode(child, id))
     );
   },
 
-  removeNode: (id, parent = null) => {
+  updateNode: ({ id, ...newNode }, newOptions) => {
+    const { flow, addNode, moveNode, removeNode } = get();
+
+    const oldNode = flow.nodes[id];
+
+    const patch = jdiff.diff(safeKeys(oldNode), safeKeys(newNode)) || {};
+
+    // 1. update the node itself
+
+    const getOps = (p: any, _id: any) =>
+      Object.entries(p).reduce((ops: any, [k, v]: any) => {
+        const p = ["nodes", _id, k];
+        // https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md
+        if (Array.isArray(v)) {
+          if (v.length === 1) {
+            // data was added
+            ops.push({ oi: v[0], p });
+          } else if (v.length === 2) {
+            // data was replaced
+            ops.push({ od: v[0], oi: v[1], p });
+          } else if (v.length === 3 && v[1] === 0 && v[2] === 0) {
+            // data was removed
+            ops.push({ od: oldNode[k], p });
+          }
+        }
+        return ops;
+      }, []);
+    const ops = getOps(patch, id);
+
+    const currentOptions = flow.edges
+      .filter(([src]: any) => src === id)
+      .map(([, tgt]: any) => ({ id: tgt, ...flow.nodes[tgt] }));
+    const currentOptionIds = currentOptions.map(({ id }: any) => id);
+
+    const newOptionIds = newOptions.map((o) => o.id);
+
+    // 3. update or create any direct children that have been added
+
+    newOptions.reverse().forEach((option) => {
+      if (flow.nodes[option.id]) {
+        // if the option already exists...
+        // check for changes and add update patches accordingly
+        const patch =
+          jdiff.diff(
+            safeKeys(flow.nodes[option.id]),
+            safeKeys(omit(option, "id"))
+          ) || {};
+        getOps(patch, option.id).forEach((op: any) => ops.push(op));
+      } else {
+        // otherwise create the option node
+
+        addNode({ ...option, $t: TYPES.Response }, [], id, null, (op) =>
+          ops.push(op)
+        );
+      }
+    });
+
+    // 4. reorder nodes if necessary
+
+    if (currentOptionIds.join(",") !== newOptionIds.join(",")) {
+      console.log([
+        currentOptionIds.map((id: any) => flow.nodes[id]),
+        newOptionIds.map((id) => flow.nodes[id]),
+      ]);
+      let before: any = null;
+      newOptionIds.reverse().forEach((oId) => {
+        moveNode(oId, id, before, id, (op) => ops.push(op));
+        before = oId;
+      });
+    }
+
+    // 2. remove any direct children that have been removed
+
+    const removedIds = difference(currentOptionIds, newOptionIds);
+
+    // removedIds.reverse().forEach((tgt) => {
+    removedIds.forEach((tgt) => {
+      removeNode(tgt, id, (op) => ops.push(op));
+    });
+
+    send(ops);
+  },
+
+  removeNode: (id, parent = null, cb = send) => {
     const { flow } = get();
 
     const relevantEdges = flow.edges.filter(([, tgt]) => tgt === id);
@@ -230,22 +331,28 @@ export const [useStore, api] = create((set, get) => ({
     if (relevantEdges.length > 1) {
       // node is in multiple places in the graph so just delete the edge
       // that is connecting it
-      const index = relevantEdges.findIndex(
+      const index = flow.edges.findIndex(
         ([src, tgt]) => src === parent && tgt === id
       );
       if (index < 0) {
         console.error("edge not found");
       } else {
-        send([{ ld: flow.edges[index], p: ["edges", index] }]);
+        cb([{ ld: flow.edges[index], p: ["edges", index] }]);
       }
     } else {
       // remove the node entirely
-      send(removeNodeOp(id, flow));
+      cb(removeNodeOp(id, flow));
     }
   },
 
-  moveNode(id: any, parent = null, toBefore = null, toParent = null) {
-    const flow = get();
+  moveNode(
+    id: any,
+    parent = null,
+    toBefore = null,
+    toParent = null,
+    cb = send
+  ) {
+    const { flow } = get();
     const { edges } = flow;
 
     const fromIndex = edges.findIndex(
@@ -265,14 +372,14 @@ export const [useStore, api] = create((set, get) => ({
     }
 
     if (parent === toParent) {
-      send([{ lm: toIndex, p: ["edges", fromIndex] }]);
+      cb([{ lm: toIndex, p: ["edges", fromIndex] }]);
     } else {
       let ops = [
         { ld: edges[fromIndex], p: ["edges", fromIndex] },
         { li: [toParent, id], p: ["edges", toIndex] },
       ];
       if (fromIndex < toIndex) ops = ops.reverse();
-      send(ops);
+      cb(ops);
     }
   },
 
@@ -308,7 +415,7 @@ export const [useStore, api] = create((set, get) => ({
 
     // console.log(`child nodes of ${id}`);
 
-    let edges = flow.edges.filter(([src]: any) => src === id);
+    let edges = flow.edges.filter(Boolean).filter(([src]: any) => src === id);
     if (onlyPublic) {
       edges = edges.filter(
         ([, tgt]: any) =>
@@ -316,5 +423,71 @@ export const [useStore, api] = create((set, get) => ({
       );
     }
     return edges.map(([, id]: any) => ({ id, ...flow.nodes[id] }));
+  },
+
+  createFlow: async (teamId, newName) => {
+    const data = {
+      nodes: {},
+      edges: [],
+    };
+
+    let response = (await client.mutate({
+      mutation: gql`
+        mutation CreateFlow(
+          $name: String
+          $data: jsonb
+          $slug: String
+          $teamId: Int
+        ) {
+          insert_flows_one(
+            object: {
+              name: $name
+              data: $data
+              slug: $slug
+              team_id: $teamId
+              version: 1
+            }
+          ) {
+            id
+            data
+          }
+        }
+      `,
+      variables: {
+        name: newName,
+        slug: newName,
+        teamId,
+        data,
+      },
+    })) as any;
+
+    const { id } = response.data.insert_flows_one;
+
+    response = await client.mutate({
+      mutation: gql`
+        mutation MyMutation($flow_id: uuid, $data: jsonb) {
+          insert_operations_one(
+            object: { flow_id: $flow_id, data: $data, version: 1 }
+          ) {
+            id
+          }
+        }
+      `,
+      variables: {
+        flow_id: id,
+        data: {
+          m: { ts: 1592485241858 },
+          v: 0,
+          seq: 1,
+          src: "143711878a0ab64c35c32c6055358f5e",
+          create: {
+            data,
+            type: "http://sharejs.org/types/JSONv0",
+          },
+        },
+      },
+    });
+
+    window.location.reload();
   },
 }));

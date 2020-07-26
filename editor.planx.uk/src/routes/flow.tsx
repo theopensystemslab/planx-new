@@ -80,6 +80,8 @@ const editNode = route((req) => {
 
   const { $t } = api.getState().getNode(id);
 
+  const extraProps = {} as any;
+
   let type;
   switch ($t) {
     case TYPES.Portal:
@@ -92,12 +94,17 @@ const editNode = route((req) => {
       type = "question";
   }
 
+  if (type === "checklist" || type === "question") {
+    extraProps.options = api.getState().childNodesOf(id);
+  }
+
   return {
     title: makeTitle(`Edit ${type}`),
     view: (
       <FormModal
         type={type}
         Component={components[type]}
+        extraProps={extraProps}
         id={id}
         handleDelete={() => {
           api.getState().removeNode(id, parent);

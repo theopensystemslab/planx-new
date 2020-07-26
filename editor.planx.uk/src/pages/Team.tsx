@@ -1,7 +1,12 @@
 import React from "react";
 import { Link } from "react-navi";
+import { api } from "./FlowEditor/lib/store";
 
-const Team: React.FC<{ name: string; flows: any }> = ({ name, flows }) => (
+const Team: React.FC<{ name: string; flows: any; id }> = ({
+  name,
+  flows,
+  id,
+}) => (
   <>
     <h1>{name}</h1>
     {flows.map((flow) => (
@@ -9,6 +14,14 @@ const Team: React.FC<{ name: string; flows: any }> = ({ name, flows }) => (
         {flow.slug}
       </Link>
     ))}
+    <button
+      onClick={() => {
+        const newFlowName = prompt("Flow name");
+        if (newFlowName) api.getState().createFlow(id, newFlowName);
+      }}
+    >
+      New Flow
+    </button>
   </>
 );
 

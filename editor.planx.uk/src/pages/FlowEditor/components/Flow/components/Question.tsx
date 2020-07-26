@@ -8,7 +8,10 @@ import Hanger from "./Hanger";
 import Node from "./Node";
 
 const Question: React.FC<any> = React.memo((props) => {
-  const childNodes = useStore((state) => state.childNodesOf(props.id));
+  const [isClone, childNodes] = useStore((state) => [
+    state.isClone,
+    state.childNodesOf(props.id),
+  ]);
 
   const parent = getParentId(props.parent);
 
@@ -41,7 +44,7 @@ const Question: React.FC<any> = React.memo((props) => {
       <li
         className={classNames("card", "decision", {
           isDragging,
-          // isClone: isClone(props.id),
+          isClone: isClone(props.id),
         })}
       >
         <Link href={href} prefetch={false} onContextMenu={handleContext}>

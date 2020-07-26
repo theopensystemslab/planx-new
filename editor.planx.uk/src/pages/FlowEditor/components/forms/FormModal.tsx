@@ -33,8 +33,9 @@ const FormModal: React.FC<{
 }> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
   const { navigate } = useNavigation();
   const classes = useStyles();
-  const [addNode, node] = useStore((store) => [
+  const [addNode, updateNode, node] = useStore((store) => [
     store.addNode,
+    store.updateNode,
     store.flow.nodes[id],
   ]);
   const handleClose = () => navigate(rootFlowPath(true));
@@ -111,7 +112,11 @@ const FormModal: React.FC<{
               parseFormValues(Object.entries(o))
             );
 
-            addNode(parsed, parsedOptions, parent, before);
+            if (handleDelete) {
+              updateNode({ id, ...parsed }, parsedOptions);
+            } else {
+              addNode(parsed, parsedOptions, parent, before);
+            }
 
             navigate(rootFlowPath(true));
           }}
