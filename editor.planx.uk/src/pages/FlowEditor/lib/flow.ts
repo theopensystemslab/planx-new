@@ -1,4 +1,5 @@
 import { alg, Graph } from "graphlib";
+import difference from "lodash/difference";
 import randomWords from "random-words";
 import { v4 as uuid } from "uuid";
 
@@ -37,25 +38,35 @@ export const insertNodeOp = (): Array<Op> => [
 
 export const removeNodeOp = (id: string, flow: Flow): Array<Op> => {
   const graph = toGraphlib(flow);
-  const [, ...children] = alg.preorder(graph, [id]);
-  const affectedNodes = [id, ...children];
+  const [root, ...children] = alg.preorder(graph, [id]);
+
+  graph.removeNode(root);
+  const rootInEdgeIdx = flow.edges.findIndex(([, tgt]) => tgt === id);
+
+  const [, ...remaining] = alg.preorder(graph, ["null"]);
+  const affectedNodes = difference(children, remaining);
+
   const affectedEdgeIndices = flow.edges
     .map(([src, tgt], index) =>
       affectedNodes.includes(src) || affectedNodes.includes(tgt) ? index : null
     )
-    .filter((val) => val !== null)
-    // Sort in descending order so that indices don't shift after each ShareDB operation
-    .sort((a, b) => b - a);
+    .filter((val) => val !== null);
+
+  affectedEdgeIndices.push(rootInEdgeIdx);
+
   return [
     { p: ["nodes", id], od: flow.nodes[id] },
-    ...children.map((childId) => ({
-      p: ["nodes", childId],
-      od: flow.nodes[childId],
+    ...affectedNodes.map((nodeId) => ({
+      p: ["nodes", nodeId],
+      od: flow.nodes[nodeId],
     })),
-    ...affectedEdgeIndices.map((edgeIndex) => ({
-      p: ["edges", edgeIndex],
-      ld: flow.edges[edgeIndex],
-    })),
+    // Sort in descending order so that indices don't shift after each ShareDB operation
+    ...affectedEdgeIndices
+      .sort((a, b) => b - a)
+      .map((edgeIndex) => ({
+        p: ["edges", edgeIndex],
+        ld: flow.edges[edgeIndex],
+      })),
   ];
 };
 
@@ -65,10 +76,12 @@ export const setFlowOp = (flow: Flow, prevFlow: Flow): Array<Op> => [
 
 export const isValidOp = (flow, src, tgt) => {
   if (src === tgt) {
+    console.error(`${src} === ${tgt}`);
     return false;
   }
 
   if (flow.edges.find(([s, t]) => s === src && t === tgt)) {
+    console.error(`edge exists (${src}, ${tgt})`);
     return false;
   }
 
@@ -76,6 +89,7 @@ export const isValidOp = (flow, src, tgt) => {
   graph.setEdge(src, tgt);
 
   if (!alg.isAcyclic(graph)) {
+    console.error(`cycle in graph`);
     return false;
   }
 

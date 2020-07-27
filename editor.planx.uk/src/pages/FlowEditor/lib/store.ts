@@ -327,7 +327,6 @@ export const [useStore, api] = create((set, get) => ({
     const { flow } = get();
 
     const relevantEdges = flow.edges.filter(([, tgt]) => tgt === id);
-
     if (relevantEdges.length > 1) {
       // node is in multiple places in the graph so just delete the edge
       // that is connecting it
@@ -340,7 +339,6 @@ export const [useStore, api] = create((set, get) => ({
         cb([{ ld: flow.edges[index], p: ["edges", index] }]);
       }
     } else {
-      // remove the node entirely
       cb(removeNodeOp(id, flow));
     }
   },
@@ -366,14 +364,11 @@ export const [useStore, api] = create((set, get) => ({
       toIndex = edges.length;
     }
 
-    if (!isValidOp(flow, toParent, id)) {
-      console.error("invalid op");
-      return;
-    }
-
     if (parent === toParent) {
+      if (!isValidOp(flow, toParent, id)) return;
       cb([{ lm: toIndex, p: ["edges", fromIndex] }]);
     } else {
+      if (!isValidOp(flow, toParent, id)) return;
       let ops = [
         { ld: edges[fromIndex], p: ["edges", fromIndex] },
         { li: [toParent, id], p: ["edges", toIndex] },
@@ -392,10 +387,7 @@ export const [useStore, api] = create((set, get) => ({
     const id = localStorage.getItem("clipboard");
 
     if (id && flow.nodes[id]) {
-      if (!isValidOp(flow, parent, id)) {
-        console.error("invalid op");
-        return;
-      }
+      if (!isValidOp(flow, parent, id)) return;
 
       const ops = [{ li: [parent, id], p: ["edges", flow.edges.length] }];
       if (before) {
