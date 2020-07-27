@@ -2,90 +2,90 @@
     schema: public
     name: flows
   object_relationships:
-    - name: creator
-      using:
-        foreign_key_constraint_on: creator_id
-    - name: team
-      using:
-        foreign_key_constraint_on: team_id
+  - name: creator
+    using:
+      foreign_key_constraint_on: creator_id
+  - name: team
+    using:
+      foreign_key_constraint_on: team_id
   array_relationships:
-    - name: operations
-      using:
-        foreign_key_constraint_on:
-          column: flow_id
-          table:
-            schema: public
-            name: operations
+  - name: operations
+    using:
+      foreign_key_constraint_on:
+        column: flow_id
+        table:
+          schema: public
+          name: operations
 - table:
     schema: public
     name: operations
   object_relationships:
-    - name: actor
-      using:
-        foreign_key_constraint_on: actor_id
-    - name: flow
-      using:
-        foreign_key_constraint_on: flow_id
+  - name: actor
+    using:
+      foreign_key_constraint_on: actor_id
+  - name: flow
+    using:
+      foreign_key_constraint_on: flow_id
 - table:
     schema: public
     name: team_members
   object_relationships:
-    - name: creator
-      using:
-        foreign_key_constraint_on: creator_id
-    - name: team
-      using:
-        foreign_key_constraint_on: team_id
-    - name: user
-      using:
-        foreign_key_constraint_on: user_id
+  - name: creator
+    using:
+      foreign_key_constraint_on: creator_id
+  - name: team
+    using:
+      foreign_key_constraint_on: team_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
 - table:
     schema: public
     name: teams
   array_relationships:
-    - name: flows
-      using:
-        foreign_key_constraint_on:
-          column: team_id
-          table:
-            schema: public
-            name: flows
-    - name: members
-      using:
-        foreign_key_constraint_on:
-          column: team_id
-          table:
-            schema: public
-            name: team_members
+  - name: flows
+    using:
+      foreign_key_constraint_on:
+        column: team_id
+        table:
+          schema: public
+          name: flows
+  - name: members
+    using:
+      foreign_key_constraint_on:
+        column: team_id
+        table:
+          schema: public
+          name: team_members
 - table:
     schema: public
     name: users
   array_relationships:
-    - name: created_flows
-      using:
-        foreign_key_constraint_on:
-          column: creator_id
-          table:
-            schema: public
-            name: flows
-    - name: created_team_members
-      using:
-        foreign_key_constraint_on:
-          column: creator_id
-          table:
-            schema: public
-            name: team_members
-    - name: operations
-      using:
-        foreign_key_constraint_on:
-          column: actor_id
-          table:
-            schema: public
-            name: operations
-    - name: team_members
-      using:
-        foreign_key_constraint_on:
-          column: user_id
-          table:
-            schema: public
-            name: team_members
+  - name: created_flows
+    using:
+      foreign_key_constraint_on:
+        column: creator_id
+        table:
+          schema: public
+          name: flows
+  - name: created_team_members
+    using:
+      foreign_key_constraint_on:
+        column: creator_id
+        table:
+          schema: public
+          name: team_members
+  - name: operations
+    using:
+      foreign_key_constraint_on:
+        column: actor_id
+        table:
+          schema: public
+          name: operations
+  - name: team_members
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: team_members
