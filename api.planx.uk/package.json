@@ -15,7 +15,7 @@
     "passport-google-oauth20": "^2.0.0"
   },
   "scripts": {
-    "dev": "npx node-dev server.js",
+    "dev": "node-dev server.js",
     "start": "node server.js"
   },
   "devDependencies": {

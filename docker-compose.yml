@@ -42,7 +42,6 @@ services:
       - hasura
     volumes:
       - "./api.planx.uk:/api"
-      - "/api.planx.uk/node_modules"
     ports:
       - ${API_PORT}:8001
     stdin_open: true
@@ -64,7 +63,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - "./sharedb.planx.uk:/sharedb"
-      - "/sharedb.planx.uk/node_modules"
     depends_on:
       - hasura
     ports:
