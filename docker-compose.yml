@@ -21,8 +21,8 @@ services:
     depends_on:
       - postgres
     volumes:
-      - "./hasura.planx.uk/metadata:/metadata"
-      - "./hasura.planx.uk/migrations:/migrations"
+      - "./hasura.planx.uk/metadata:/hasura-metadata"
+      - "./hasura.planx.uk/migrations:/hasura-migrations"
     restart: always
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
