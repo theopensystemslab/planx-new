@@ -1,0 +1,81 @@
+version: "3.7"
+
+services:
+  hasura:
+    environment:
+      VIRTUAL_HOST: ${HASURA_GRAPHQL_HOST_PROD}
+      LETSENCRYPT_HOST: ${HASURA_GRAPHQL_HOST_PROD}
+      VIRTUAL_PORT: ${HASURA_GRAPHQL_PORT}
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+
+  api:
+    stdin_open: false
+    tty: false
+    build:
+      dockerfile: Dockerfile.prod
+    volumes:
+      - "./api:/api"
+      - "/api/node_modules"
+      - "/api/build"
+    environment:
+      VIRTUAL_HOST: ${API_HOST_PROD}
+      LETSENCRYPT_HOST: ${API_HOST_PROD}
+      VIRTUAL_PORT: ${API_PORT}
+
+  sharedb:
+    stdin_open: false
+    tty: false
+    build:
+      dockerfile: Dockerfile.prod
+    volumes:
+      - "./sharedb:/sharedb"
+      - "/sharedb/node_modules"
+      - "/sharedb/build"
+    environment:
+      VIRTUAL_HOST: ${SHAREDB_HOST_PROD}
+      LETSENCRYPT_HOST: ${SHAREDB_HOST_PROD}
+      VIRTUAL_PORT: ${SHAREDB_PORT}
+
+  static:
+    image: nginx:alpine
+    ports:
+      - ${STATIC_PORT}:80
+    volumes:
+      - ./nginx/static:/usr/share/nginx/html
+    environment:
+      VIRTUAL_HOST: ${STATIC_HOST_PROD}
+      LETSENCRYPT_HOST: ${STATIC_HOST_PROD}
+      VIRTUAL_PORT: ${STATIC_PORT}
+
+  nginx-proxy:
+    restart: always
+    container_name: planx-nginx-proxy
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs
+      - ./nginx/nginx_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx/static.planx.uk:/etc/nginx/vhost.d/static.planx.uk
+
+  letsencrypt-nginx-proxy-companion:
+    restart: always
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    volumes:
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      DEBUG: "true"
+      NGINX_PROXY_CONTAINER: planx-nginx-proxy
+      DEFAULT_EMAIL: ${LETSENCRYPT_EMAIL}
+
+volumes:
+  vhost:
+  html:
+  certs:
