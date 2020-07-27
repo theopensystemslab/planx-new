@@ -10,7 +10,7 @@ const Team: React.FC<{ name: string; flows: any; id }> = ({
   <>
     <h1>{name}</h1>
     {flows.map((flow) => (
-      <Link key={flow.slug} href={`./${flow.slug}`}>
+      <Link key={flow.slug} href={`./${flow.slug}`} prefetch={false}>
         {flow.slug}
       </Link>
     ))}
