@@ -2,46 +2,62 @@ const { Server } = require("ws");
 const jwt = require("jsonwebtoken");
 const ShareDB = require("sharedb");
 const WebSocketJSONStream = require("@teamwork/websocket-json-stream");
+const PostgresDB = require("./sharedb-postgresql");
+const access = require("sharedb-access");
 
-const { PORT = 8000, JWT_SECRET = "shh" } = process.env;
+const { PORT = 8000, JWT_SECRET = "shh", PG_URL = "" } = process.env;
 
-const backend = new ShareDB();
+const sharedb = new ShareDB({
+  db: new PostgresDB({
+    connectionString: PG_URL,
+    ssl: false,
+  }),
+});
 
-function startServer() {
-  const wss = new Server({
-    port: PORT,
-    verifyClient: (info, cb) => {
-      console.log({ cookie: info.req.headers.cookie });
-      try {
-        // checks if JWT is included in cookies, does not allow connection if invalid
-        const [, token] = info.req.headers.cookie.match(/jwt\=([^;]+)/);
+sharedb.use("connect", (request, next) => {
+  try {
+    request.agent.connectSession = { userId: request.req.uId.sub };
+  } catch (e) {}
+  next();
+});
 
-        if (!token) {
-          cb(false, 401, "Unauthorized");
-        } else {
-          jwt.verify(token, JWT_SECRET, (err, decoded) => {
-            if (err) {
-              cb(false, 401, "Unauthorized");
-            } else {
-              console.log({ newConnection: decoded });
-              info.req.user = decoded;
-              cb(true);
-            }
-          });
-        }
-      } catch (err) {
-        console.error({ err });
-        cb(false, 500, err.message);
+access(sharedb);
+
+sharedb.allowCreate("flows", async (docId, doc, session) => true);
+sharedb.allowRead("flows", async (docId, doc, session) => true);
+sharedb.allowUpdate("flows", async (docId, doc, session) => true);
+sharedb.allowDelete("flows", async (docId, doc, session) => true);
+
+const wss = new Server({
+  port: PORT,
+  verifyClient: (info, cb) => {
+    try {
+      // checks if JWT is included in cookies, does not allow connection if invalid
+      const [, token] = info.req.headers.cookie.match(/jwt\=([^;]+)/);
+
+      if (!token) {
+        cb(false, 401, "Unauthorized");
+      } else {
+        jwt.verify(token, JWT_SECRET, (err, decoded) => {
+          if (err) {
+            cb(false, 401, "Unauthorized");
+          } else {
+            console.log({ newConnection: decoded });
+            info.req.uId = decoded;
+            cb(true);
+          }
+        });
       }
-    },
-  });
+    } catch (err) {
+      console.error({ err });
+      cb(false, 500, err.message);
+    }
+  },
+});
 
-  wss.on("connection", function (ws, req) {
-    const stream = new WebSocketJSONStream(ws);
-    backend.listen(stream, req.user);
-  });
+wss.on("connection", function (ws, req) {
+  const stream = new WebSocketJSONStream(ws);
+  sharedb.listen(stream, req);
+});
 
-  console.info(`sharedb listening ws://localhost:${PORT}`);
-}
-
-startServer();
+console.info(`sharedb listening ws://localhost:${PORT}`);
