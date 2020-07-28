@@ -74,13 +74,16 @@ export const setFlowOp = (flow: Flow, prevFlow: Flow): Array<Op> => [
   { p: [], od: prevFlow, oi: flow },
 ];
 
-export const isValidOp = (flow, src, tgt) => {
+export const isValidOp = (flow, src, tgt, shouldCheckForDuplicate = true) => {
   if (src === tgt) {
     console.error(`${src} === ${tgt}`);
     return false;
   }
 
-  if (flow.edges.find(([s, t]) => s === src && t === tgt)) {
+  if (
+    shouldCheckForDuplicate &&
+    flow.edges.find(([s, t]) => s === src && t === tgt)
+  ) {
     console.error(`edge exists (${src}, ${tgt})`);
     return false;
   }

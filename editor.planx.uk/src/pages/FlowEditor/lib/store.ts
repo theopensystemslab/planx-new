@@ -365,7 +365,7 @@ export const [useStore, api] = create((set, get) => ({
     }
 
     if (parent === toParent) {
-      if (!isValidOp(flow, toParent, id)) return;
+      if (!isValidOp(flow, toParent, id, false)) return;
       cb([{ lm: toIndex, p: ["edges", fromIndex] }]);
     } else {
       if (!isValidOp(flow, toParent, id)) return;
