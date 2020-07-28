@@ -120,6 +120,7 @@ export const [useStore, api] = create((set, get) => ({
 
     await connectToDB(doc);
 
+    // set the ID of the flow to assist with deciding what to render
     set({ id });
 
     const cloneStateFromShareDb = () => {
@@ -129,20 +130,19 @@ export const [useStore, api] = create((set, get) => ({
       set({ flow });
     };
 
-    // same fn as above but waits for 1/4 second of 'silence' before running
-    const debouncedCloneStateFromShareDb = debounce(cloneStateFromShareDb, 250);
-
+    // set state from initial load
     cloneStateFromShareDb();
 
-    doc.on("op", (_op, isLocalOp) => {
-      if (isLocalOp) {
-        // local operation so we can assume that multiple ops are bundled together
-        cloneStateFromShareDb();
-      } else {
-        // remote operation, it's likely that each operation will arrive sequentially
-        debouncedCloneStateFromShareDb();
-      }
-    });
+    // local operation so we can assume that multiple ops will arrive
+    // almost instantaneously so wait for 100ms of 'silence' before running
+    const cloneStateFromLocalOps = debounce(cloneStateFromShareDb, 100);
+
+    // remote operation, there might be network latency so wait for 0.5s
+    const cloneStateFromRemoteOps = debounce(cloneStateFromShareDb, 500);
+
+    doc.on("op", (_op, isLocalOp) =>
+      isLocalOp ? cloneStateFromLocalOps() : cloneStateFromRemoteOps()
+    );
   },
 
   disconnect: () => {
