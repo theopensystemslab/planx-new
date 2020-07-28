@@ -32,6 +32,12 @@ const routes = compose(
               flows(order_by: { updated_at: desc }) {
                 slug
                 updated_at
+                operations(limit: 1, order_by: { id: desc }) {
+                  actor {
+                    first_name
+                    last_name
+                  }
+                }
               }
             }
           }
