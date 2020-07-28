@@ -118,6 +118,10 @@ export const [useStore, api] = create((set, get) => ({
 
     doc = getConnection(id);
 
+    await connectToDB(doc);
+
+    set({ id });
+
     const cloneStateFromShareDb = () => {
       console.log("setting state");
       const flow = JSON.parse(JSON.stringify(doc.data));
@@ -125,15 +129,20 @@ export const [useStore, api] = create((set, get) => ({
       set({ flow });
     };
 
-    await connectToDB(doc);
-
-    set({ id });
+    // same fn as above but waits for 1/4 second of 'silence' before running
+    const debouncedCloneStateFromShareDb = debounce(cloneStateFromShareDb, 250);
 
     cloneStateFromShareDb();
 
-    // wait 1/4 second after receiving any operation(s) before setting state, in case
-    // more come down the wire. (doc.on seems to get called per individual operation)
-    doc.on("op", debounce(cloneStateFromShareDb, 250));
+    doc.on("op", (_op, isLocalOp) => {
+      if (isLocalOp) {
+        // local operation so we can assume that multiple ops are bundled together
+        cloneStateFromShareDb();
+      } else {
+        // remote operation, it's likely that each operation will arrive sequentially
+        debouncedCloneStateFromShareDb();
+      }
+    });
   },
 
   disconnect: () => {
