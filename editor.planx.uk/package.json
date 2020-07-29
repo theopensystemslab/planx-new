@@ -50,7 +50,6 @@
     "@types/uuid": "^8.0.0",
     "@types/ws": "^7.2.6",
     "husky": "^4.2.5",
-    "jest-websocket-mock": "^2.1.0",
     "lint-staged": "^10.2.11",
     "node-sass": "^4.14.1",
     "prettier": "^2.0.5",
