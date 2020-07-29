@@ -25,7 +25,6 @@ const safeKeys = (ob: any) =>
   }, {});
 
 const send = (...ops) => {
-  console.log(ops);
   doc.submitOp(flattenDeep(ops));
 };
 
@@ -105,7 +104,7 @@ export const [useStore, api] = create((set, get) => ({
     set({ id });
 
     const cloneStateFromShareDb = () => {
-      console.log("setting state", doc.data);
+      console.log("[NF]:", JSON.stringify(doc.data, null, 0));
       const flow = JSON.parse(JSON.stringify(doc.data));
       flow.edges = flow.edges.filter((val) => !!val);
       (window as any).flow = flow;
@@ -317,22 +316,8 @@ export const [useStore, api] = create((set, get) => ({
 
   removeNode: (id, parent = null, cb = send) => {
     const { flow } = get();
-
-    const relevantEdges = flow.edges.filter(([, tgt]) => tgt === id);
-    if (relevantEdges.length > 1) {
-      // node is in multiple places in the graph so just delete the edge
-      // that is connecting it
-      const index = flow.edges.findIndex(
-        ([src, tgt]) => src === parent && tgt === id
-      );
-      if (index < 0) {
-        console.error("edge not found");
-      } else {
-        cb([{ ld: flow.edges[index], p: ["edges", index] }]);
-      }
-    } else {
-      cb(removeNodeOp(id, flow));
-    }
+    console.log(`[OP]: removeNodeOp("${id}", "${parent}", flow);`);
+    cb(removeNodeOp(id, parent, flow));
   },
 
   moveNode(

@@ -47,7 +47,7 @@ function useFlow(config: {
 
   const removeNode = useCallback(
     (id) => {
-      doc.submitOp(removeNodeOp(id, doc.data));
+      doc.submitOp(removeNodeOp(id, null, doc.data));
     },
     [doc]
   );
