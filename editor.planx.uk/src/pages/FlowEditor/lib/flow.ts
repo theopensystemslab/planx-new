@@ -57,7 +57,25 @@ export const insertNodeOp = (): Array<Op> => [
   { p: ["nodes", uuid()], oi: { text: randomWords() } },
 ];
 
-export const removeNodeOp = (id: string, flow: Flow): Array<Op> => {
+export const removeNodeOp = (
+  id: string,
+  parent: null | string = null,
+  flow: Flow
+): Array<Op> => {
+  const relevantEdges = flow.edges.filter(([, tgt]) => tgt === id);
+  if (relevantEdges.length > 1) {
+    // node is in multiple places in the graph so just delete the edge
+    // that is connecting it
+    const index = flow.edges.findIndex(
+      ([src, tgt]) => src === parent && tgt === id
+    );
+    if (index < 0) {
+      console.warn("edge not found");
+      return [];
+    }
+    return [{ ld: flow.edges[index], p: ["edges", index] }];
+  }
+
   const graph = toGraphlib(flow);
   const [root, ...children] = alg.preorder(graph, [id]);
 
