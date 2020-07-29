@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import React from "react";
-import { TYPES } from "../../lib/store";
+import { TYPES } from "../../lib/flow";
 import InputField from "./components/InputField";
 
 const PortalForm: React.FC<{
