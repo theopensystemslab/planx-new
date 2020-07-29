@@ -25,6 +25,7 @@ const safeKeys = (ob: any) =>
   }, {});
 
 const send = (...ops) => {
+  console.log(ops);
   doc.submitOp(flattenDeep(ops));
 };
 
@@ -472,5 +473,21 @@ export const [useStore, api] = create((set, get) => ({
     });
 
     window.location.reload();
+  },
+
+  deleteFlow: async (teamId, flowSlug: string) => {
+    const response = await client.mutate({
+      mutation: gql`
+        mutation MyMutation($flow_slug: String) {
+          delete_flows(where: { slug: { _eq: $flow_slug } }) {
+            affected_rows
+          }
+        }
+      `,
+      variables: {
+        flow_slug: flowSlug,
+      },
+    });
+    return response;
   },
 }));

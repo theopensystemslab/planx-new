@@ -95,7 +95,12 @@ export const setFlowOp = (flow: Flow, prevFlow: Flow): Array<Op> => [
   { p: [], od: prevFlow, oi: flow },
 ];
 
-export const isValidOp = (flow, src, tgt, shouldCheckForDuplicate = true) => {
+export const isValidOp = (
+  flow: Flow,
+  src: string,
+  tgt: string,
+  shouldCheckForDuplicate = true
+) => {
   if (src === tgt) {
     console.error(`${src} === ${tgt}`);
     return false;

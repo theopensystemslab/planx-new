@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { compose, lazy, mount, NotFoundError, route, withData } from "navi";
+import { compose, lazy, mount, route, withData } from "navi";
 import React from "react";
 import { client } from "../lib/graphql";
 import { api } from "../pages/FlowEditor/lib/store";
@@ -49,7 +49,12 @@ const routes = compose(
 
       const team = data.teams[0];
 
-      if (!team) throw new NotFoundError();
+      if (!team) {
+        return {
+          title: "Team Not Found",
+          view: <p>Team not found</p>,
+        };
+      }
 
       return {
         title: makeTitle(team.name),
@@ -87,7 +92,12 @@ const routes = compose(
 
         const flow = data.flows[0];
 
-        if (!flow) throw new NotFoundError();
+        if (!flow) {
+          return route({
+            title: "Flow Not Found",
+            view: <p>Flow Not Found</p>,
+          }) as any;
+        }
 
         await api.getState().connectTo(flow.id);
       }
