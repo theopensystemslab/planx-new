@@ -8,7 +8,7 @@ import natsort from "natsort";
 import { v4 } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
-import { isValidOp, removeNodeOp } from "./flow";
+import { Node, isValidOp, removeNodeOp, TYPES } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
 let doc;
@@ -86,26 +86,6 @@ export const flags = [
   },
 ];
 
-export enum TYPES {
-  Flow = 1,
-  SignIn = 2,
-  Result = 3,
-  Report = 4,
-  PropertyInformation = 5,
-  FindProperty = 6,
-  TaskList = 7,
-  Notice = 8,
-  Statement = 100, // Question/DropDown
-  Checklist = 105,
-  TextInput = 110,
-  DateInput = 120,
-  AddressInput = 130,
-  FileUpload = 140,
-  NumberInput = 150,
-  Response = 200,
-  Portal = 300,
-}
-
 export const [useStore, api] = create((set, get) => ({
   flow: undefined,
 
@@ -124,8 +104,9 @@ export const [useStore, api] = create((set, get) => ({
     set({ id });
 
     const cloneStateFromShareDb = () => {
-      console.log("setting state");
+      console.log("setting state", doc.data);
       const flow = JSON.parse(JSON.stringify(doc.data));
+      flow.edges = flow.edges.filter((val) => !!val);
       (window as any).flow = flow;
       set({ flow });
     };
@@ -179,7 +160,7 @@ export const [useStore, api] = create((set, get) => ({
 
     const internalFlows = Object.entries(api.getState().flow.nodes)
       .filter(
-        ([id, v]: any) =>
+        ([id, v]: [string, Node]) =>
           v.$t === TYPES.Portal &&
           !window.location.pathname.includes(id) &&
           v.text
@@ -195,8 +176,9 @@ export const [useStore, api] = create((set, get) => ({
     };
   },
 
-  isClone: (id: any) =>
-    get().flow.edges.filter(([, tgt]: any) => tgt === id).length > 1,
+  isClone: (id: string) => {
+    return get().flow.edges.filter(([, tgt]: any) => tgt === id).length > 1;
+  },
 
   getNode(id: any) {
     const { flow } = get();
@@ -249,7 +231,7 @@ export const [useStore, api] = create((set, get) => ({
     );
   },
 
-  updateNode: ({ id, ...newNode }, newOptions) => {
+  updateNode: ({ id, ...newNode }, newOptions: any[]) => {
     const { flow, addNode, moveNode, removeNode } = get();
 
     const oldNode = flow.nodes[id];
@@ -353,7 +335,7 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   moveNode(
-    id: any,
+    id: string,
     parent = null,
     toBefore = null,
     toParent = null,
@@ -387,7 +369,7 @@ export const [useStore, api] = create((set, get) => ({
     }
   },
 
-  copyNode(id) {
+  copyNode(id: string) {
     localStorage.setItem("clipboard", id);
   },
 

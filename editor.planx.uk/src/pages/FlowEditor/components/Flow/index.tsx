@@ -9,7 +9,7 @@ export enum FlowLayout {
   LEFT_RIGHT = "left-right",
 }
 
-const Flow = ({ flow, breadcrumbs = [] }) => {
+const Flow = ({ breadcrumbs = [] }: any) => {
   const [childNodes, getNode] = useStore((state) => [
     state.childNodesOf(breadcrumbs[breadcrumbs.length - 1] || null),
     state.getNode,

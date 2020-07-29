@@ -9,7 +9,8 @@ import Checklist from "../pages/FlowEditor/components/forms/Checklist";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import Portal from "../pages/FlowEditor/components/forms/Portal";
 import Question from "../pages/FlowEditor/components/forms/Question";
-import { api, TYPES } from "../pages/FlowEditor/lib/store";
+import { api } from "../pages/FlowEditor/lib/store";
+import { TYPES } from "../pages/FlowEditor/lib/flow";
 import { makeTitle } from "./utils";
 
 const components = {
