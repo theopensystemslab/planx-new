@@ -58,7 +58,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --no-watchman",
+    "test": "sh -c 'node ./testShareDbServer & react-scripts test --no-watchman'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
