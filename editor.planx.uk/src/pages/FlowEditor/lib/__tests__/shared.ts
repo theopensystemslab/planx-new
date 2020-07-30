@@ -1,5 +1,5 @@
 import { Flow, Op } from "../flow";
-import { createDoc, getConnection } from "../sharedb";
+import Backend from "sharedb";
 
 export const createTest = (
   documentName: string,
@@ -8,13 +8,21 @@ export const createTest = (
   expected: Flow
 ) => {
   const testFn = async (done) => {
-    const doc = getConnection(documentName);
-    await createDoc(doc, initial);
+    const backend = new Backend();
+    const connection = backend.connect();
+    const doc = connection.get("flows", documentName);
+
+    await new Promise(async (res, rej) => {
+      doc.create(initial, (err) => {
+        if (err) rej(err);
+        res();
+      });
+    });
 
     doc.on("op", () => {
       expect(doc.data).toEqual(expected);
-      // cleanup, i.e. call done after removing the created doc
-      doc.del(done);
+      backend.close();
+      done();
     });
 
     doc.submitOp(ops);
