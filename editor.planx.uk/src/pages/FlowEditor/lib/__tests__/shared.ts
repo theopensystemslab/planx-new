@@ -1,5 +1,5 @@
-import { createDoc, getConnection } from "../sharedb";
 import { Flow, Op } from "../flow";
+import { createDoc, getConnection } from "../sharedb";
 
 export const createTest = (
   documentName: string,
@@ -13,8 +13,8 @@ export const createTest = (
 
     doc.on("op", () => {
       expect(doc.data).toEqual(expected);
-      done();
-      return;
+      // cleanup, i.e. call done after removing the created doc
+      doc.del(done);
     });
 
     doc.submitOp(ops);
