@@ -2,6 +2,7 @@ import { alg, Graph } from "graphlib";
 import difference from "lodash/difference";
 import randomWords from "random-words";
 import { v4 as uuid } from "uuid";
+import flattenDeep from "lodash/flattenDeep";
 
 export enum TYPES {
   Flow = 1,
@@ -24,6 +25,7 @@ export enum TYPES {
 }
 
 export interface Node {
+  id?: string;
   text: string;
   $t?: TYPES;
 }
@@ -36,6 +38,7 @@ export type Flow = {
 export interface Op {
   p: Array<any>;
   li?: any;
+  lm?: any;
   ld?: any;
   od?: any;
   oi?: any;
@@ -56,6 +59,45 @@ const toGraphlib = (flow: Flow): Graph => {
 export const insertNodeOp = (): Array<Op> => [
   { p: ["nodes", uuid()], oi: { text: randomWords() } },
 ];
+
+export const addNodeWithChildrenOp = (
+  { id = uuid(), ...data },
+  children = [],
+  parent: string | null = null,
+  before: string | null = null,
+  flow: Flow
+): Array<Op> => {
+  const { edges } = flow;
+
+  let position = edges.length;
+
+  const addNode = ({ id = uuid(), ...data }, parent, before = null) => {
+    if (before) {
+      const index = edges.findIndex(
+        ([src, tgt]: any) => src === parent && tgt === before
+      );
+      console.log({ parent, before, index });
+      if (index >= 0) {
+        position = index;
+      }
+    } else {
+      position++;
+    }
+
+    return [
+      {
+        p: ["nodes", id],
+        oi: data,
+      },
+      { p: ["edges", position], li: [parent, id] },
+    ];
+  };
+
+  return flattenDeep([
+    addNode({ id, ...data }, parent, before),
+    children.map((child) => addNode(child, id)),
+  ]);
+};
 
 export const removeNodeOp = (
   id: string,
@@ -107,6 +149,40 @@ export const removeNodeOp = (
         ld: flow.edges[edgeIndex],
       })),
   ];
+};
+
+export const moveNodeOp = (
+  id: string,
+  parent = null,
+  toBefore = null,
+  toParent = null,
+  flow: Flow
+): Array<Op> => {
+  const { edges } = flow;
+
+  const fromIndex = edges.findIndex(
+    ([src, tgt]: any) => src === parent && tgt === id
+  );
+
+  let toIndex = edges.findIndex(
+    ([src, tgt]: any) => src === toParent && tgt === toBefore
+  );
+  if (toIndex === -1) {
+    toIndex = edges.length;
+  }
+
+  if (parent === toParent) {
+    if (!isValidOp(flow, toParent, id, false)) return [];
+    return [{ lm: toIndex, p: ["edges", fromIndex] }];
+  } else {
+    if (!isValidOp(flow, toParent, id)) return;
+    let ops = [
+      { ld: edges[fromIndex], p: ["edges", fromIndex] },
+      { li: [toParent, id], p: ["edges", toIndex] },
+    ];
+    if (fromIndex < toIndex) ops = ops.reverse();
+    return ops;
+  }
 };
 
 export const setFlowOp = (flow: Flow, prevFlow: Flow): Array<Op> => [
