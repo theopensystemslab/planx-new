@@ -1,42 +1,18 @@
 import { createTest } from "./shared";
-import { Flow, removeNodeOp } from "../flow";
+import { Flow, addNodeWithChildrenOp } from "../flow";
 
-const beforeFlow: Flow = {
+const beforeFlow: Flow = { edges: [], nodes: {} };
+
+const afterFlow: Flow = {
   edges: [
     [null, "q1"],
     ["q1", "a1"],
     ["q1", "a2"],
   ],
   nodes: {
-    a2: {
-      $t: 200,
-      text: "A2",
-    },
-    q1: {
-      $t: 100,
-      text: "Q1",
-    },
-    a1: {
-      $t: 200,
-      text: "A1",
-    },
-  },
-};
-
-const afterFlow: Flow = {
-  edges: [
-    [null, "q1"],
-    ["q1", "a1"],
-  ],
-  nodes: {
-    q1: {
-      $t: 100,
-      text: "Q1",
-    },
-    a1: {
-      $t: 200,
-      text: "A1",
-    },
+    q1: { $t: 100, text: "Q1" },
+    a1: { text: "A1", $t: 200 },
+    a2: { text: "A2", $t: 200 },
   },
 };
 
@@ -45,7 +21,16 @@ test(
   createTest(
     "simple2",
     beforeFlow,
-    removeNodeOp("a2", "q1", beforeFlow),
+    addNodeWithChildrenOp(
+      { id: "q1", $t: 100, text: "Q1" },
+      [
+        { id: "a1", text: "A1", $t: 200 },
+        { id: "a2", text: "A2", $t: 200 },
+      ],
+      null,
+      null,
+      beforeFlow
+    ),
     afterFlow
   )
 );

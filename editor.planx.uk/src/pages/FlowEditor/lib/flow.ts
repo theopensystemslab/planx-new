@@ -25,6 +25,7 @@ export enum TYPES {
 }
 
 export interface Node {
+  id?: string;
   text: string;
   $t?: TYPES;
 }
