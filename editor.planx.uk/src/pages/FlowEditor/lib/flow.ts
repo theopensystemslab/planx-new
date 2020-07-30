@@ -38,6 +38,7 @@ export type Flow = {
 export interface Op {
   p: Array<any>;
   li?: any;
+  lm?: any;
   ld?: any;
   od?: any;
   oi?: any;
@@ -148,6 +149,40 @@ export const removeNodeOp = (
         ld: flow.edges[edgeIndex],
       })),
   ];
+};
+
+export const moveNodeOp = (
+  id: string,
+  parent = null,
+  toBefore = null,
+  toParent = null,
+  flow: Flow
+): Array<Op> => {
+  const { edges } = flow;
+
+  const fromIndex = edges.findIndex(
+    ([src, tgt]: any) => src === parent && tgt === id
+  );
+
+  let toIndex = edges.findIndex(
+    ([src, tgt]: any) => src === toParent && tgt === toBefore
+  );
+  if (toIndex === -1) {
+    toIndex = edges.length;
+  }
+
+  if (parent === toParent) {
+    if (!isValidOp(flow, toParent, id, false)) return [];
+    return [{ lm: toIndex, p: ["edges", fromIndex] }];
+  } else {
+    if (!isValidOp(flow, toParent, id)) return;
+    let ops = [
+      { ld: edges[fromIndex], p: ["edges", fromIndex] },
+      { li: [toParent, id], p: ["edges", toIndex] },
+    ];
+    if (fromIndex < toIndex) ops = ops.reverse();
+    return ops;
+  }
 };
 
 export const setFlowOp = (flow: Flow, prevFlow: Flow): Array<Op> => [

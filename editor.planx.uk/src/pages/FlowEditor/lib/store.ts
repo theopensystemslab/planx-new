@@ -11,6 +11,7 @@ import {
   Node,
   isValidOp,
   removeNodeOp,
+  moveNodeOp,
   addNodeWithChildrenOp,
   TYPES,
 } from "./flow";
@@ -199,19 +200,21 @@ export const [useStore, api] = create((set, get) => ({
   addNode: (data, children = [], parent = null, before = null, cb = send) => {
     const { flow } = get();
     console.log(
-      `[OP]: addNodeWithChildrenOp(${JSON.stringify(
-        data,
-        null,
-        0
-      )}, ${JSON.stringify(children, null, 0)}, ${JSON.stringify(
-        parent
-      )}, ${JSON.stringify(before)}, flow);`
+      `[OP]: addNodeWithChildrenOp(${JSON.stringify(data)}, ${JSON.stringify(
+        children
+      )}, ${JSON.stringify(parent)}, ${JSON.stringify(before)}, beforeFlow);`
     );
     cb(addNodeWithChildrenOp(data, children, parent, before, flow));
   },
 
-  updateNode: ({ id, ...newNode }, newOptions: any[]) => {
+  updateNode: ({ id, ...newNode }, newOptions: any[], cb = send) => {
     const { flow, addNode, moveNode, removeNode } = get();
+
+    console.log(
+      `[OP]: updateNodeOp(${JSON.stringify(newNode)}, ${JSON.stringify(
+        newOptions
+      )}, beforeFlow);`
+    );
 
     const oldNode = flow.nodes[id];
 
@@ -290,12 +293,16 @@ export const [useStore, api] = create((set, get) => ({
       removeNode(tgt, id, (op) => ops.push(op));
     });
 
-    send(ops);
+    cb(ops);
   },
 
   removeNode: (id, parent = null, cb = send) => {
     const { flow } = get();
-    console.log(`[OP]: removeNodeOp("${id}", "${parent}", flow);`);
+    console.log(
+      `[OP]: removeNodeOp(${JSON.stringify(id)}, ${JSON.stringify(
+        parent
+      )}, beforeFlow);`
+    );
     cb(removeNodeOp(id, parent, flow));
   },
 
@@ -307,38 +314,21 @@ export const [useStore, api] = create((set, get) => ({
     cb = send
   ) {
     const { flow } = get();
-    const { edges } = flow;
-
-    const fromIndex = edges.findIndex(
-      ([src, tgt]: any) => src === parent && tgt === id
+    console.log(
+      `[OP]: moveNodeOp(${JSON.stringify(id)}, ${JSON.stringify(
+        parent
+      )}, ${JSON.stringify(toBefore)}, ${JSON.stringify(
+        toParent
+      )}, beforeFlow);`
     );
-
-    let toIndex = edges.findIndex(
-      ([src, tgt]: any) => src === toParent && tgt === toBefore
-    );
-    if (toIndex === -1) {
-      toIndex = edges.length;
-    }
-
-    if (parent === toParent) {
-      if (!isValidOp(flow, toParent, id, false)) return;
-      cb([{ lm: toIndex, p: ["edges", fromIndex] }]);
-    } else {
-      if (!isValidOp(flow, toParent, id)) return;
-      let ops = [
-        { ld: edges[fromIndex], p: ["edges", fromIndex] },
-        { li: [toParent, id], p: ["edges", toIndex] },
-      ];
-      if (fromIndex < toIndex) ops = ops.reverse();
-      cb(ops);
-    }
+    cb(moveNodeOp(id, parent, toBefore, toParent, flow));
   },
 
   copyNode(id: string) {
     localStorage.setItem("clipboard", id);
   },
 
-  pasteNode(parent = null, before = null) {
+  pasteNode(parent = null, before = null, cb = send) {
     const { flow } = get();
     const id = localStorage.getItem("clipboard");
 
@@ -354,7 +344,7 @@ export const [useStore, api] = create((set, get) => ({
           ops[0] = { li: [parent, id], p: ["edges", index] };
         }
       }
-      send(ops);
+      cb(ops);
     }
   },
 
