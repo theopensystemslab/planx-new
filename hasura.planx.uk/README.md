@@ -1,0 +1,3 @@
+# hasura.planx.uk
+
+This the configuration directory for [Hasura](https://hasura.io), which is our GraphQL API layer that securely exposes data in our postgres database.
