@@ -2,6 +2,7 @@ import { alg, Graph } from "graphlib";
 import difference from "lodash/difference";
 import randomWords from "random-words";
 import { v4 as uuid } from "uuid";
+import flattenDeep from "lodash/flattenDeep";
 
 export enum TYPES {
   Flow = 1,
@@ -56,6 +57,45 @@ const toGraphlib = (flow: Flow): Graph => {
 export const insertNodeOp = (): Array<Op> => [
   { p: ["nodes", uuid()], oi: { text: randomWords() } },
 ];
+
+export const addNodeWithChildrenOp = (
+  { id = uuid(), ...data },
+  children = [],
+  parent: string | null = null,
+  before: string | null = null,
+  flow: Flow
+): Array<Op> => {
+  const { edges } = flow;
+
+  let position = edges.length;
+
+  const addNode = ({ id = uuid(), ...data }, parent, before = null) => {
+    if (before) {
+      const index = edges.findIndex(
+        ([src, tgt]: any) => src === parent && tgt === before
+      );
+      console.log({ parent, before, index });
+      if (index >= 0) {
+        position = index;
+      }
+    } else {
+      position++;
+    }
+
+    return [
+      {
+        p: ["nodes", id],
+        oi: data,
+      },
+      { p: ["edges", position], li: [parent, id] },
+    ];
+  };
+
+  return flattenDeep([
+    addNode({ id, ...data }, parent, before),
+    children.map((child) => addNode(child, id)),
+  ]);
+};
 
 export const removeNodeOp = (
   id: string,

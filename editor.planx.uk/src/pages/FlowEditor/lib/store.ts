@@ -5,10 +5,15 @@ import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
 import omit from "lodash/omit";
 import natsort from "natsort";
-import { v4 } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
-import { Node, isValidOp, removeNodeOp, TYPES } from "./flow";
+import {
+  Node,
+  isValidOp,
+  removeNodeOp,
+  addNodeWithChildrenOp,
+  TYPES,
+} from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
 let doc;
@@ -191,44 +196,18 @@ export const [useStore, api] = create((set, get) => ({
     };
   },
 
-  addNode: (
-    { id = v4(), ...data },
-    children = [],
-    parent = null,
-    before = null,
-    cb = send
-  ) => {
+  addNode: (data, children = [], parent = null, before = null, cb = send) => {
     const { flow } = get();
-    const { edges } = flow;
-
-    let position = edges.length;
-
-    const addNode = ({ id = v4(), ...data }, parent, before = null) => {
-      if (before) {
-        const index = edges.findIndex(
-          ([src, tgt]: any) => src === parent && tgt === before
-        );
-        console.log({ parent, before, index });
-        if (index >= 0) {
-          position = index;
-        }
-      } else {
-        position++;
-      }
-
-      return [
-        {
-          p: ["nodes", id],
-          oi: data,
-        },
-        { p: ["edges", position], li: [parent, id] },
-      ];
-    };
-
-    cb(
-      addNode({ id, ...data }, parent, before),
-      children.map((child) => addNode(child, id))
+    console.log(
+      `[OP]: addNodeWithChildrenOp(${JSON.stringify(
+        data,
+        null,
+        0
+      )}, ${JSON.stringify(children, null, 0)}, ${JSON.stringify(
+        parent
+      )}, ${JSON.stringify(before)}, flow);`
     );
+    cb(addNodeWithChildrenOp(data, children, parent, before, flow));
   },
 
   updateNode: ({ id, ...newNode }, newOptions: any[]) => {
