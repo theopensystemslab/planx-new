@@ -40,7 +40,7 @@ const optionButtonStyles = makeStyles((theme) => ({
   }),
 }));
 
-export default ({ selected, children, color, ...props }) => {
+export default ({ selected, children, color = "#000", ...props }) => {
   const colorProps = { backgroundColor: color };
   const classes = optionButtonStyles(colorProps);
 

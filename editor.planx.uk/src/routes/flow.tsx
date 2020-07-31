@@ -5,6 +5,7 @@ import React from "react";
 import { View } from "react-navi";
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
+import FlowSettings from "../pages/FlowEditor/components/Settings";
 import Checklist from "../pages/FlowEditor/components/forms/Checklist";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import Portal from "../pages/FlowEditor/components/forms/Portal";
@@ -154,6 +155,12 @@ const routes = compose(
     }),
 
     "/nodes": nodeRoutes,
+    "/settings": route(async (req) => ({
+      title: makeTitle(
+        [req.params.team, req.params.flow, "Settings"].join("/")
+      ),
+      view: <FlowSettings />,
+    })),
   })
 );
 

@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import Flow from "./components/Flow";
 import "./floweditor.scss";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
+import "./components/Settings";
 
 const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
