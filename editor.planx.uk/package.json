@@ -33,11 +33,9 @@
     "sharedb": "^1.4.1",
     "subscriptions-transport-ws": "^0.9.17",
     "uuid": "^8.2.0",
-    "ws": "^7.3.1",
     "zustand": "^2.2.3"
   },
   "devDependencies": {
-    "@teamwork/websocket-json-stream": "^2.0.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -48,7 +46,6 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/uuid": "^8.0.0",
-    "@types/ws": "^7.2.6",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "node-sass": "^4.14.1",
