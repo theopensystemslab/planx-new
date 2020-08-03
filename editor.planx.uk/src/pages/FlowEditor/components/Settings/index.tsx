@@ -1,3 +1,4 @@
+import { Link, useNavigation, useCurrentRoute } from "react-navi";
 import AppBar from "@material-ui/core/AppBar";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
@@ -70,7 +71,9 @@ function LinkTab(props: LinkTabProps) {
       className={classes.tab}
       disableRipple
       onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        event.preventDefault();
+        if (!event.metaKey) {
+          event.preventDefault();
+        }
       }}
       {...props}
     />
@@ -93,13 +96,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function NavTabs() {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+const tabsOrder = [undefined, "flags", "design", "data-manager"];
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue);
+const NavTabs: React.FC<{ tab?: string }> = (props) => {
+  const classes = useStyles();
+  const navigation = useNavigation();
+
+  const route = useCurrentRoute();
+
+  const flowBaseRoute = `/${route.data.team}/${route.data.flow}`;
+  const settingsBaseRoute = `${flowBaseRoute}/settings`;
+
+  const handleChange = (event: React.ChangeEvent<{}>, newTabIndex: number) => {
+    const newTab = tabsOrder[newTabIndex];
+    navigation.navigate(`${settingsBaseRoute}${newTab ? `/${newTab}` : ""}`);
   };
+
+  const value = tabsOrder.indexOf(props.tab);
 
   return (
     <div className={classes.root}>
@@ -117,18 +130,30 @@ export default function NavTabs() {
                 indicator: classes.tabIndicator,
               }}
             >
-              <LinkTab label="Team" href="/team" {...a11yProps(0)} />
-              <LinkTab label="Flags" href="/flags" {...a11yProps(1)} />
-              <LinkTab label="Design" href="/design" {...a11yProps(2)} />
+              <LinkTab
+                label="Team"
+                href={settingsBaseRoute}
+                {...a11yProps(0)}
+              />
+              <LinkTab
+                label="Flags"
+                href={`${settingsBaseRoute}/flags`}
+                {...a11yProps(1)}
+              />
+              <LinkTab
+                label="Design"
+                href={`${settingsBaseRoute}/design`}
+                {...a11yProps(2)}
+              />
               <LinkTab
                 label="Data Manager"
-                href="/data-manager"
+                href={`${settingsBaseRoute}/data-manager`}
                 {...a11yProps(3)}
               />
             </Tabs>
           </Grid>
           <Grid item>
-            <IconButton>
+            <IconButton component={Link} href={flowBaseRoute}>
               <Close />
             </IconButton>
           </Grid>
@@ -168,4 +193,6 @@ export default function NavTabs() {
       </TabPanel>
     </div>
   );
-}
+};
+
+export default NavTabs;

@@ -1,8 +1,7 @@
 import { gql } from "@apollo/client";
 import natsort from "natsort";
-import { compose, mount, route, withData, withView } from "navi";
+import { compose, mount, route, withData } from "navi";
 import React from "react";
-import { View } from "react-navi";
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
 import FlowSettings from "../pages/FlowEditor/components/Settings";
@@ -24,6 +23,8 @@ const newNode = route(async (req) => {
   const { type = "question", before = null, parent = null } = req.params;
 
   const extraProps = {} as any;
+
+  const [flow, ...breadcrumbs] = req.params.flow.split(",");
 
   if (type === "portal") {
     const { data } = await client.query({
@@ -66,19 +67,24 @@ const newNode = route(async (req) => {
   return {
     title: makeTitle(`New ${type}`),
     view: (
-      <FormModal
-        type={type}
-        Component={components[type]}
-        extraProps={extraProps}
-        before={before}
-        parent={parent}
-      />
+      <>
+        <FlowEditor flow={flow} breadcrumbs={breadcrumbs} />,
+        <FormModal
+          type={type}
+          Component={components[type]}
+          extraProps={extraProps}
+          before={before}
+          parent={parent}
+        />
+      </>
     ),
   };
 });
 
 const editNode = route((req) => {
   const { id, before = null, parent = null } = req.params;
+
+  const [flow, ...breadcrumbs] = req.params.flow.split(",");
 
   const { $t } = api.getState().getNode(id);
 
@@ -103,17 +109,20 @@ const editNode = route((req) => {
   return {
     title: makeTitle(`Edit ${type}`),
     view: (
-      <FormModal
-        type={type}
-        Component={components[type]}
-        extraProps={extraProps}
-        id={id}
-        handleDelete={() => {
-          api.getState().removeNode(id, parent);
-        }}
-        before={before}
-        parent={parent}
-      />
+      <>
+        <FlowEditor flow={flow} breadcrumbs={breadcrumbs} />,
+        <FormModal
+          type={type}
+          Component={components[type]}
+          extraProps={extraProps}
+          id={id}
+          handleDelete={() => {
+            api.getState().removeNode(id, parent);
+          }}
+          before={before}
+          parent={parent}
+        />
+      </>
     ),
   };
 });
@@ -135,32 +144,32 @@ const routes = compose(
     flow: req.params.flow.split(",")[0],
   })),
 
-  withView((req) => {
-    const [flow, ...breadcrumbs] = req.params.flow.split(",");
-
-    return (
-      <>
-        <FlowEditor flow={flow} breadcrumbs={breadcrumbs} />
-        <View />
-      </>
-    );
-  }),
-
   mount({
     "/": route(async (req) => {
+      const [flow, ...breadcrumbs] = req.params.flow.split(",");
       return {
         title: makeTitle([req.params.team, req.params.flow].join("/")),
-        view: <span />,
+        view: <FlowEditor flow={flow} breadcrumbs={breadcrumbs} />,
       };
     }),
 
     "/nodes": nodeRoutes,
-    "/settings": route(async (req) => ({
-      title: makeTitle(
-        [req.params.team, req.params.flow, "Settings"].join("/")
-      ),
-      view: <FlowSettings />,
-    })),
+    "/settings": route(async (req) => {
+      return {
+        title: makeTitle(
+          [req.params.team, req.params.flow, "Settings"].join("/")
+        ),
+        view: <FlowSettings />,
+      };
+    }),
+    "/settings/:tab": route(async (req) => {
+      return {
+        title: makeTitle(
+          [req.params.team, req.params.flow, "Settings"].join("/")
+        ),
+        view: <FlowSettings tab={req.params.tab} />,
+      };
+    }),
   })
 );
 

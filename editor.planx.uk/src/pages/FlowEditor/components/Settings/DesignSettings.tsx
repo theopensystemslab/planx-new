@@ -12,26 +12,10 @@ import {
   InputRowLabel,
   OptionButton,
 } from "../forms/components";
-import { makeStyles } from "@material-ui/core/styles";
 
 interface IDesignSettings {}
 
-const designSettingsStyles = makeStyles((theme) => ({
-  root: {
-    color: "currentColor",
-  },
-  swatch: {
-    background: "#fff",
-
-    top: 0,
-    left: 0,
-    width: 18,
-    height: 18,
-  },
-}));
-
 const Team: React.FC<IDesignSettings> = () => {
-  const classes = designSettingsStyles();
   const formik = useFormik({
     initialValues: {},
     onSubmit: (values) => {
