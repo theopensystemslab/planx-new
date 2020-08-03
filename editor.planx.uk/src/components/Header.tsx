@@ -134,7 +134,7 @@ const Header: React.FC<{ bgcolor?: string; logo?: string }> = ({
           </Box>
           {data.username && (
             <Box className={classes.profileSection}>
-              <Box mr={3}>{data.username}</Box>
+              {/* <Box mr={3}>{data.username}</Box> */}
               <Box mr={3}>
                 <Avatar>{data.username[0]}</Avatar>
               </Box>
@@ -162,9 +162,22 @@ const Header: React.FC<{ bgcolor?: string; logo?: string }> = ({
         }}
       >
         <Paper className={classes.paper}>
-          {/* <MenuItem onClick={() => handleClick("/")}>Service settings</MenuItem>
+          {/*
+          <MenuItem onClick={() => handleClick("/")}>Service settings</MenuItem>
           <MenuItem onClick={() => handleClick("/")}>My dashboard</MenuItem>
-          <MenuItem onClick={() => handleClick("/")}>Account</MenuItem> */}
+           */}
+
+          {/* only show flow settings link if inside a flow route  */}
+          {data.flow && (
+            <MenuItem
+              onClick={() =>
+                handleClick([rootFlowPath(true), "settings"].join("/"))
+              }
+            >
+              Settings
+            </MenuItem>
+          )}
+
           <MenuItem onClick={() => navigate("/logout")}>Log out</MenuItem>
         </Paper>
       </Popover>
