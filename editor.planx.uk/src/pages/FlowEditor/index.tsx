@@ -1,11 +1,9 @@
-import React, { useRef } from "react";
-import { Link, useCurrentRoute } from "react-navi";
 import { makeStyles, Theme } from "@material-ui/core/styles";
+import React, { useRef } from "react";
 import Flow from "./components/Flow";
-import "./floweditor.scss";
-import MuiLink from "@material-ui/core/Link";
-import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 import "./components/Settings";
+import "./floweditor.scss";
+import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
 const useStyles = makeStyles((theme: Theme) => ({
   editor: {
@@ -24,20 +22,9 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
 
   const classes = useStyles();
 
-  const route = useCurrentRoute();
-
-  const flowBaseRoute = `/${route.data.team}/${route.data.flow}`;
-
   return (
     <div id="editor-container">
       <div id="editor" className={classes.editor}>
-        <MuiLink
-          href={`${flowBaseRoute}/settings`}
-          component={Link}
-          className={classes.sideLink}
-        >
-          Settings
-        </MuiLink>
         <Flow flow={flow} breadcrumbs={breadcrumbs} />
       </div>
     </div>

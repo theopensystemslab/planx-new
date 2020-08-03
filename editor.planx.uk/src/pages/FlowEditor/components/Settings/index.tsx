@@ -1,4 +1,3 @@
-import { Link, useNavigation, useCurrentRoute } from "react-navi";
 import AppBar from "@material-ui/core/AppBar";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
@@ -10,6 +9,8 @@ import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
 import Close from "@material-ui/icons/Close";
 import React from "react";
+import { Link, useCurrentRoute, useNavigation } from "react-navi";
+import { rootFlowPath } from "../../../../routes/utils";
 import DataManagerSettings from "./DataManagerSettings";
 import DesignSettings from "./DesignSettings";
 import ServiceFlags from "./ServiceFlags";
@@ -96,20 +97,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const tabsOrder = [undefined, "flags", "design", "data-manager"];
+const tabsOrder = ["team", "flags", "design", "data-manager"];
 
 const NavTabs: React.FC<{ tab?: string }> = (props) => {
   const classes = useStyles();
-  const navigation = useNavigation();
+  const { navigate } = useNavigation();
+  const { data } = useCurrentRoute();
 
-  const route = useCurrentRoute();
+  const flowBaseRoute = rootFlowPath(true);
 
-  const flowBaseRoute = `/${route.data.team}/${route.data.flow}`;
-  const settingsBaseRoute = `${flowBaseRoute}/settings`;
+  const makeHref = (path) => [data.mountpath, path].filter(Boolean).join("/");
 
-  const handleChange = (event: React.ChangeEvent<{}>, newTabIndex: number) => {
-    const newTab = tabsOrder[newTabIndex];
-    navigation.navigate(`${settingsBaseRoute}${newTab ? `/${newTab}` : ""}`);
+  const handleChange = (event: React.ChangeEvent<any>) => {
+    navigate(event.currentTarget.pathname);
   };
 
   const value = tabsOrder.indexOf(props.tab);
@@ -130,24 +130,20 @@ const NavTabs: React.FC<{ tab?: string }> = (props) => {
                 indicator: classes.tabIndicator,
               }}
             >
-              <LinkTab
-                label="Team"
-                href={settingsBaseRoute}
-                {...a11yProps(0)}
-              />
+              <LinkTab label="Team" href={makeHref("")} {...a11yProps(0)} />
               <LinkTab
                 label="Flags"
-                href={`${settingsBaseRoute}/flags`}
+                href={makeHref("flags")}
                 {...a11yProps(1)}
               />
               <LinkTab
                 label="Design"
-                href={`${settingsBaseRoute}/design`}
+                href={makeHref("design")}
                 {...a11yProps(2)}
               />
               <LinkTab
                 label="Data Manager"
-                href={`${settingsBaseRoute}/data-manager`}
+                href={makeHref("data-manager")}
                 {...a11yProps(3)}
               />
             </Tabs>

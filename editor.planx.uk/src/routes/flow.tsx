@@ -1,16 +1,15 @@
 import { gql } from "@apollo/client";
 import natsort from "natsort";
-import { compose, mount, route, withData } from "navi";
+import { compose, lazy, mount, route, withData } from "navi";
 import React from "react";
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
-import FlowSettings from "../pages/FlowEditor/components/Settings";
 import Checklist from "../pages/FlowEditor/components/forms/Checklist";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import Portal from "../pages/FlowEditor/components/forms/Portal";
 import Question from "../pages/FlowEditor/components/forms/Question";
-import { api } from "../pages/FlowEditor/lib/store";
 import { TYPES } from "../pages/FlowEditor/lib/flow";
+import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
 
 const components = {
@@ -154,22 +153,8 @@ const routes = compose(
     }),
 
     "/nodes": nodeRoutes,
-    "/settings": route(async (req) => {
-      return {
-        title: makeTitle(
-          [req.params.team, req.params.flow, "Settings"].join("/")
-        ),
-        view: <FlowSettings />,
-      };
-    }),
-    "/settings/:tab": route(async (req) => {
-      return {
-        title: makeTitle(
-          [req.params.team, req.params.flow, "Settings"].join("/")
-        ),
-        view: <FlowSettings tab={req.params.tab} />,
-      };
-    }),
+
+    "/settings": lazy(() => import("./flowSettings")),
   })
 );
 
