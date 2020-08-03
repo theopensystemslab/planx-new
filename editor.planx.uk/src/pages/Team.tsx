@@ -1,19 +1,30 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Typography from "@material-ui/core/Typography";
-import MoreVert from "@material-ui/icons/MoreVert";
+import {
+  MoreVert,
+  Add,
+  CallSplitOutlined,
+  FolderOutlined,
+  DeleteOutline,
+} from "@material-ui/icons";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  ButtonBase,
+  List,
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Typography,
+} from "@material-ui/core";
 import React from "react";
 import { Link } from "react-navi";
 import { api } from "./FlowEditor/lib/store";
@@ -43,10 +54,12 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
     width: "100%",
     maxWidth: 600,
+    margin: "auto",
+    padding: theme.spacing(8, 0, 4, 0),
   },
   dashboardList: {
     padding: theme.spacing(0, 0, 3),
-    // borderBottom: "1px solid #fff",
+    borderBottom: "1px solid #fff",
     margin: 0,
     "& li": {
       listStyle: "none",
@@ -67,8 +80,8 @@ const useStyles = makeStyles((theme) => ({
   },
   menu: {
     position: "absolute",
-    top: theme.spacing(4),
-    right: theme.spacing(4),
+    top: theme.spacing(2),
+    right: theme.spacing(1),
   },
   linkSubText: {
     color: "#aaa",
@@ -128,6 +141,54 @@ const Confirm = ({
   </Dialog>
 );
 
+const useAddButtonStyles = makeStyles((theme) => ({
+  addButton: {
+    width: "100%",
+    padding: theme.spacing(6),
+    fontSize: 20,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    display: "block",
+    textAlign: "left",
+    marginTop: theme.spacing(2),
+  },
+  icon: {
+    marginRight: theme.spacing(3),
+    verticalAlign: "middle",
+  },
+}));
+
+const AddButton = ({ children, ...props }) => {
+  const classes = useAddButtonStyles();
+  return (
+    <ButtonBase className={classes.addButton} {...props}>
+      <Add className={classes.icon} /> {children}
+    </ButtonBase>
+  );
+};
+
+const FooterLinks = () => (
+  <List>
+    <ListItem button>
+      <ListItemIcon>
+        <CallSplitOutlined />
+      </ListItemIcon>
+      <ListItemText>Flows</ListItemText>
+    </ListItem>
+    <ListItem button>
+      <ListItemIcon>
+        <FolderOutlined />
+      </ListItemIcon>
+      <ListItemText>Archive</ListItemText>
+    </ListItem>
+    <ListItem button>
+      <ListItemIcon>
+        <DeleteOutline />
+      </ListItemIcon>
+      <ListItemText>Trash</ListItemText>
+    </ListItem>
+  </List>
+);
+
 const FlowItem = ({ flow, teamId }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -156,54 +217,41 @@ const FlowItem = ({ flow, teamId }) => {
         />
       )}
       <li key={flow.slug} className={classes.dashboardListItem}>
-        <Card>
-          <CardContent>
-            <h2 className={classes.dashboardLink}>{flow.slug}</h2>
-            <Box className={classes.linkSubText}>
-              {flowInfoHelper(flow.updated_at, flow.operations)}
-            </Box>
-            <div>
-              <IconButton
-                color="inherit"
-                className={classes.menu}
-                size="small"
-                onClick={(ev) => {
-                  setAnchorEl(ev.currentTarget);
-                }}
-              >
-                <MoreVert />
-              </IconButton>
-              <Menu
-                id="long-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={() => {
-                  setAnchorEl(null);
-                }}
-              >
-                <MenuItem
-                  onClick={() => {
-                    setDeleting(true);
-                  }}
-                >
-                  Delete
-                </MenuItem>
-              </Menu>
-            </div>
-            <Box mt={2}>
-              <Button
-                variant="contained"
-                color="default"
-                disableElevation
-                href={`./${flow.slug}`}
-                component={Link}
-              >
-                Edit
-              </Button>
-            </Box>
-          </CardContent>
-        </Card>
+        <Link href={`./${flow.slug}`} className={classes.dashboardLink}>
+          {flow.slug}
+        </Link>
+        <Box className={classes.linkSubText}>
+          {flowInfoHelper(flow.updated_at, flow.operations)}
+        </Box>
+        <div>
+          <IconButton
+            color="inherit"
+            className={classes.menu}
+            size="small"
+            onClick={(ev) => {
+              setAnchorEl(ev.currentTarget);
+            }}
+          >
+            <MoreVert />
+          </IconButton>
+          <Menu
+            id="long-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={() => {
+              setAnchorEl(null);
+            }}
+          >
+            <MenuItem
+              onClick={() => {
+                setDeleting(true);
+              }}
+            >
+              Delete
+            </MenuItem>
+          </Menu>
+        </div>
       </li>
     </>
   );
@@ -220,23 +268,19 @@ const Team: React.FC<{ flows: any[]; id }> = ({ flows, id }) => {
           </Typography>
         </Box>
         <ul className={classes.dashboardList}>
-          <li className={classes.dashboardListItem}>
-            <Button
-              variant="contained"
-              color="primary"
-              disableElevation
-              onClick={() => {
-                const newFlowName = prompt("Service name");
-                if (newFlowName) api.getState().createFlow(id, newFlowName);
-              }}
-            >
-              Create a new Service
-            </Button>
-          </li>
           {flows.map((flow: any) => (
             <FlowItem flow={flow} key={flow.slug} teamId={id} />
           ))}
+          <AddButton
+            onClick={() => {
+              const newFlowName = prompt("Service name");
+              if (newFlowName) api.getState().createFlow(id, newFlowName);
+            }}
+          >
+            Add a new service
+          </AddButton>
         </ul>
+        <FooterLinks />
       </Box>
     </Box>
   );
