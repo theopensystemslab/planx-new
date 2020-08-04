@@ -14,7 +14,7 @@ services:
     build:
       dockerfile: Dockerfile.prod
     volumes:
-      - "./api:/api"
+      - "./api.planx.uk:/api"
       - "/api/node_modules"
       - "/api/build"
     environment:
@@ -28,7 +28,7 @@ services:
     build:
       dockerfile: Dockerfile.prod
     volumes:
-      - "./sharedb:/sharedb"
+      - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
       - "/sharedb/build"
     environment:
