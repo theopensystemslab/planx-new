@@ -1,3 +1,4 @@
 node_modules/
 /.envrc
 /.env.prod
+nginx/static/*
