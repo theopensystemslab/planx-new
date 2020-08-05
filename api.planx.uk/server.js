@@ -41,8 +41,7 @@ const handleSuccess = (req, res) => {
       // expires: false,
 
       // expire a year from now
-      domain:
-        process.env.NODE_ENV === "development" ? "localhost" : ".planx.uk",
+      domain: process.env.NODE_ENV === "production" ? ".planx.uk" : "localhost",
       maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       httpOnly: false,
     };

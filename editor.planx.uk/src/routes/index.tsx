@@ -26,7 +26,10 @@ export default compose(
 
     "/logout": map((): any => {
       client.resetStore();
-      Cookies.remove("jwt");
+      Cookies.remove("jwt", {
+        domain:
+          process.env.NODE_ENV === "production" ? ".planx.uk" : "localhost",
+      });
       window.location.href = "/";
     }),
 
