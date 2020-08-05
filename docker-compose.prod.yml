@@ -16,7 +16,6 @@ services:
     volumes:
       - "./api.planx.uk:/api"
       - "/api/node_modules"
-      - "/api/build"
     environment:
       VIRTUAL_HOST: ${API_HOST_PROD}
       LETSENCRYPT_HOST: ${API_HOST_PROD}
@@ -30,7 +29,6 @@ services:
     volumes:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
-      - "/sharedb/build"
     environment:
       VIRTUAL_HOST: ${SHAREDB_HOST_PROD}
       LETSENCRYPT_HOST: ${SHAREDB_HOST_PROD}
