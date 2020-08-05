@@ -1,30 +1,30 @@
-import makeStyles from "@material-ui/core/styles/makeStyles";
-import {
-  MoreVert,
-  Add,
-  CallSplitOutlined,
-  FolderOutlined,
-  DeleteOutline,
-} from "@material-ui/icons";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import {
   Box,
   Button,
+  ButtonBase,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  ButtonBase,
-  List,
   IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   Menu,
   MenuItem,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
   Typography,
 } from "@material-ui/core";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import {
+  Add,
+  CallSplitOutlined,
+  DeleteOutline,
+  FolderOutlined,
+  MoreVert,
+} from "@material-ui/icons";
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React from "react";
 import { Link } from "react-navi";
 import { api } from "./FlowEditor/lib/store";
@@ -168,19 +168,19 @@ const AddButton = ({ children, ...props }) => {
 
 const FooterLinks = () => (
   <List>
-    <ListItem button>
+    <ListItem button disabled>
       <ListItemIcon>
         <CallSplitOutlined />
       </ListItemIcon>
       <ListItemText>Flows</ListItemText>
     </ListItem>
-    <ListItem button>
+    <ListItem button disabled>
       <ListItemIcon>
         <FolderOutlined />
       </ListItemIcon>
       <ListItemText>Archive</ListItemText>
     </ListItem>
-    <ListItem button>
+    <ListItem button disabled>
       <ListItemIcon>
         <DeleteOutline />
       </ListItemIcon>
