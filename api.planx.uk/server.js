@@ -35,15 +35,19 @@ router.get("/logout", (req, res) => {
 
 const handleSuccess = (req, res) => {
   if (req.user) {
-    res.cookie("jwt", req.user.jwt, {
+    const cookie = {
       // maxAge: 1000 * 60 * 10,
       // maxAge: new Date(253402300000000) ,
       // expires: false,
 
       // expire a year from now
+      domain:
+        process.env.NODE_ENV === "development" ? "localhost" : ".planx.uk",
       maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       httpOnly: false,
-    });
+    };
+    res.cookie("jwt", req.user.jwt, cookie);
+    console.log({ cookie });
     res.redirect(decodeURIComponent(process.env.EDITOR_URL_EXT));
     // const url = process.env.EDITOR_URL_EXT;
     // res.redirect(decodeURIComponent(`${url}#${req.user.jwt}`));
