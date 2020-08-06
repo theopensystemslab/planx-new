@@ -200,6 +200,9 @@ const FlowItem = ({ flow, teamId }) => {
       .then(() => {
         setDeleting(false);
         setAnchorEl(null);
+
+        // TODO: remove flow from list rather than this hard refresh
+        window.location.reload();
       });
   };
   return (
