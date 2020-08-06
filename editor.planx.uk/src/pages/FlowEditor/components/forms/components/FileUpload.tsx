@@ -1,7 +1,12 @@
 import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import ImageIcon from "@material-ui/icons/Image";
-import React from "react";
+import React, { useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+
+interface Props {
+  onChange?: (image: string) => void;
+}
 
 const fileUploadStyles = makeStyles((theme) => ({
   inputIconButton: {
@@ -16,15 +21,25 @@ const fileUploadStyles = makeStyles((theme) => ({
   },
 }));
 
-const FileUpload = () => {
+const FileUpload: React.FC<Props> = (props) => {
+  const onDrop = useCallback((sth) => {
+    // Do something here
+    console.log(sth);
+  }, []);
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
   const classes = fileUploadStyles();
   return (
     <ButtonBase
+      onClick={() => {
+        props.onChange && props.onChange("image");
+      }}
       classes={{
         root: classes.inputIconButton,
         focusVisible: classes.focused,
       }}
+      {...getRootProps()}
     >
+      <input {...getInputProps()} />
       <ImageIcon />
     </ButtonBase>
   );

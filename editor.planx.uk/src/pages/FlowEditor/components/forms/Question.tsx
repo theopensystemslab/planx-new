@@ -54,14 +54,18 @@ const renderMenuItem = (category: string) => {
     ));
 };
 
-const ImgInput = ({ img }) => (
+const ImgInput: React.FC<{ img?: string }> = ({ img }) => (
   <InputRowItem width={50}>
     {img ? (
       <a target="_blank" rel="noopener noreferrer" href={img}>
         <img src={img} alt="embedded img" />
       </a>
     ) : (
-      <FileUpload />
+      <FileUpload
+        onChange={(img) => {
+          console.log(img);
+        }}
+      />
     )}
   </InputRowItem>
 );
