@@ -43,57 +43,37 @@ const uploadRequest = (
     } catch (err) {
       reject(err);
     }
-
-    // const formData = new FormData();
-    // formData.append("file", file);
-    // const xhr = new XMLHttpRequest();
-    // xhr.onreadystatechange = () => {
-    //   if (xhr.readyState !== 4) {
-    //     return;
-    //   }
-    //   if (xhr.status !== 200) {
-    //     reject({
-    //       error: true,
-    //       readyState: xhr.readyState,
-    //       status: xhr.status,
-    //     });
-    //     return;
-    //   }
-    //   resolve(signedUrlResponse.public_readonly_url_will_be);
-    // };
-    // xhr.open("PUT", signedUrlResponse.upload_to, true);
-    // // xhr.setRequestHeader("Content-Type", signedUrlResponse.file_type);
-    // // xhr.setRequestHeader("Content-Disposition", `inline;filename=${file.name}`);
-    // xhr.send(formData);
   });
 
 const FileUpload: React.FC<Props> = (props) => {
-  const onDrop = useCallback((files) => {
-    const file: File = files[0];
-    if (!file) {
-      return;
-    }
-    // Do something here
-    fetch(`${process.env.REACT_APP_API_URL}/sign-s3-upload`, {
-      method: "POST",
-      body: JSON.stringify({
-        filename: file.name,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        return uploadRequest(res, file);
+  const { onChange } = props;
+  const onDrop = useCallback(
+    (files) => {
+      const file: File = files[0];
+      if (!file) {
+        return;
+      }
+      // Do something here
+      fetch(`${process.env.REACT_APP_API_URL}/sign-s3-upload`, {
+        method: "POST",
+        body: JSON.stringify({
+          filename: file.name,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
-      .then((res) => {
-        console.log({ uploaded: res });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+        .then((res) => res.json())
+        .then((res) => {
+          return uploadRequest(res, file);
+        })
+        .then((res) => {
+          onChange && onChange(res);
+        });
+      // TODO: error handling
+    },
+    [onChange]
+  );
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   const classes = fileUploadStyles();
   return (

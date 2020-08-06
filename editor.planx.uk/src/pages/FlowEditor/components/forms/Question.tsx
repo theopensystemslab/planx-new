@@ -54,18 +54,17 @@ const renderMenuItem = (category: string) => {
     ));
 };
 
-const ImgInput: React.FC<{ img?: string }> = ({ img }) => (
+const ImgInput: React.FC<{
+  img?: string;
+  onChange?: (newUrl: string) => void;
+}> = ({ img, onChange }) => (
   <InputRowItem width={50}>
     {img ? (
       <a target="_blank" rel="noopener noreferrer" href={img}>
-        <img src={img} alt="embedded img" />
+        <img width={50} height={50} src={img} alt="embedded img" />
       </a>
     ) : (
-      <FileUpload
-        onChange={(img) => {
-          console.log(img);
-        }}
-      />
+      <FileUpload onChange={onChange} />
     )}
   </InputRowItem>
 );
@@ -189,6 +188,7 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
       description,
       fn,
       options,
+      img,
     },
     onSubmit: ({ options, ...values }) => {
       if (handleSubmit) {
@@ -218,7 +218,12 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
                 autoFocus
               />
 
-              <ImgInput img={img} />
+              <ImgInput
+                img={formik.values.img}
+                onChange={(newUrl) => {
+                  formik.setFieldValue("img", newUrl);
+                }}
+              />
             </InputRow>
 
             <InputRow>
