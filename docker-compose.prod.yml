@@ -3,23 +3,17 @@ version: "3.7"
 services:
   hasura:
     environment:
-      VIRTUAL_HOST: ${HASURA_GRAPHQL_HOST_PROD}
-      LETSENCRYPT_HOST: ${HASURA_GRAPHQL_HOST_PROD}
-      VIRTUAL_PORT: ${HASURA_GRAPHQL_PORT}
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
 
   api:
     stdin_open: false
     tty: false
     build:
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.dev
     volumes:
       - "./api.planx.uk:/api"
       - "/api/node_modules"
     environment:
-      VIRTUAL_HOST: ${API_HOST_PROD}
-      LETSENCRYPT_HOST: ${API_HOST_PROD}
-      VIRTUAL_PORT: ${API_PORT}
 
   sharedb:
     stdin_open: false
@@ -30,9 +24,6 @@ services:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
     environment:
-      VIRTUAL_HOST: ${SHAREDB_HOST_PROD}
-      LETSENCRYPT_HOST: ${SHAREDB_HOST_PROD}
-      VIRTUAL_PORT: ${SHAREDB_PORT}
 
   static:
     restart: always

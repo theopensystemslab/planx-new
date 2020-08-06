@@ -1,0 +1,15 @@
+config:
+  aws:region: eu-west-2
+  cloudflare:apiToken:
+    secure: AAABAK68YnjqFz9dIlX87WYm54yfHyKBSflMzLMIFRzT1xNkmdEwtXHgeJBsW+cn4XQeWfNcudS9Q35KvIqls5tsJU4/pcwO
+  planx:cloudflareZoneId:
+    secure: AAABABM/7Wod8z0i9ttQ+9Z/IaHlo38YWERob5pxNvloWY+Gu54sb8Bz6vAA7G7II8qYD5rSStHOWR200VkPQw==
+  planx:dbPassword:
+    secure: AAABALyeHtnQZk4OJCMo+AYpCcIjccD3WtWrep4ybpIHRbemw/a5nelM62y/x3syGhfyB74Xa6PyjnU=
+  planx:dbUsername:
+    secure: AAABAPCiIKELtOjcEnrr7L9vdrgGLn5JF6hwswui6NksRMCTcAxkka1QYruBKVaFOYi8zVk=
+  planx:domain: planx.dev
+  planx:hasuraAdminSecret:
+    secure: AAABACvBzGNf4HT5Bq+VLq8yoPgWXgDDcZovF7sXm37JF996dA==
+  planx:jwtSecret:
+    secure: AAABAMjmRjDkfK2ypOvpmRywBiqBR7UPEHnKGeSIcFDyEHt2uDqjUEO5OidetL6Be+IYbqThDY29qZTHeTXxtQB97mOl
