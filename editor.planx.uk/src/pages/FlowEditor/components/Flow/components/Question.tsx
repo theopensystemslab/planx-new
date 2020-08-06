@@ -45,6 +45,7 @@ const Question: React.FC<any> = React.memo((props) => {
         className={classNames("card", "decision", {
           isDragging,
           isClone: isClone(props.id),
+          isNote: childNodes.length === 0,
         })}
       >
         <Link href={href} prefetch={false} onContextMenu={handleContext}>
