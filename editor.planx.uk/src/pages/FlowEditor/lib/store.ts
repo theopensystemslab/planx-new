@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { mostReadable } from "@ctrl/tinycolor";
 import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
 import difference from "lodash/difference";
@@ -8,11 +9,11 @@ import natsort from "natsort";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
 import {
-  Node,
-  isValidOp,
-  removeNodeOp,
-  moveNodeOp,
   addNodeWithChildrenOp,
+  isValidOp,
+  moveNodeOp,
+  Node,
+  removeNodeOp,
   TYPES,
 } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
@@ -39,58 +40,72 @@ export const flags = [
     value: "LB-DE_MINIMIS",
     text: "De minimis",
     category: "Listed Buildings",
+    bgColor: "#C7DEF0",
   },
   {
     value: "LB-LIKELY_APPROVAL",
     text: "Likely approval",
     category: "Listed Buildings",
+    bgColor: "#287DBC",
   },
   {
     value: "LB-ADVICE_RECOMMENDED",
     text: "Advice recommended",
     category: "Listed Buildings",
+    bgColor: "#7D70B3",
   },
   {
     value: "LB-LIKELY_REFUSAL",
     text: "Likely refusal",
     category: "Listed Buildings",
+    bgColor: "#574898",
   },
   {
     value: "MISSING_INFO",
     text: "Missing information",
     category: "Planning Permission",
+    bgColor: "#D4D4D4",
   },
   {
     value: "LIKELY_FAIL",
     text: "Likely refusal",
     category: "Planning Permission",
+    bgColor: "#FF0814",
   },
   {
     value: "EDGE_CASE",
     text: "Advice recommended",
     category: "Planning Permission",
+    bgColor: "#FF8C1F",
   },
   {
     value: "LIKELY_PASS",
     text: "Likely approval",
     category: "Planning Permission",
+    bgColor: "#00FA2A",
   },
   {
     value: "PLANNING_PERMISSION_REQUIRED",
     text: "Planning permission required",
     category: "Planning Permission",
+    bgColor: "#000000",
   },
   {
     value: "PRIOR_APPROVAL",
     text: "Prior approval required",
     category: "Planning Permission",
+    bgColor: "#FFFB2E",
   },
   {
     value: "NO_APP_REQUIRED",
     text: "Permitted development",
     category: "Planning Permission",
+    bgColor: "#FFFFFF",
   },
-];
+].map((f: any) => ({
+  ...f,
+  color: mostReadable(f.bgColor, ["#000", "#FFF"]),
+}));
 
 export const [useStore, api] = create((set, get) => ({
   flow: undefined,

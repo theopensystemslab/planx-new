@@ -1113,6 +1113,11 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
+"@ctrl/tinycolor@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-3.1.3.tgz#3406f90fd04a394a83fe874b763b7d89edffd4c1"
+  integrity sha512-dHamDINLG/gF4Q6m3Ndnn4nGfLUCmvhY6Oweudqr2hMAMTIB2NvFrNW5HyjtdbqjNz9Z/unvA+/GI9QqBRgX0g==
+
 "@emotion/hash@^0.8.0":
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@emotion/hash/-/hash-0.8.0.tgz#bbbff68978fefdbe68ccb533bc8cbe1d1afb5413"
