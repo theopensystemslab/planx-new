@@ -16,18 +16,23 @@ const signS3Upload = (filename) =>
     };
     const s3 = new S3(opts);
 
+    const fileType = getType(filename);
+
     const params = {
-      Bucket: process.env.AWS_S3_BUCKET,
       ACL: process.env.AWS_S3_ACL,
       Key: `${process.env.NODE_ENV}/${nanoid()}/${filename}`,
-      ContentType: getType(filename),
+      ContentType: fileType,
     };
 
-    console.log({ opts, params });
+    console.log(params);
 
     s3.getSignedUrl("putObject", params, (err, url) => {
       if (err) return rej(err);
-      return res(url);
+      return res({
+        fileType,
+        acl: process.env.AWS_S3_ACL,
+        url,
+      });
     });
   });
 

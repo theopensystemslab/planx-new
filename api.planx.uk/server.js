@@ -224,13 +224,16 @@ app.get("/", (_req, res) => {
 
 app.post("/sign-s3-upload", async (req, res) => {
   if (!req.body.filename) res.status(422).json({ error: "missing filename" });
-  const url = await signS3Upload(req.body.filename);
+  const { fileType, url, acl } = await signS3Upload(req.body.filename);
   try {
     res.json({
       upload_to: url,
       public_readonly_url_will_be: url.split("?")[0],
+      file_type: fileType,
+      acl,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error });
   }
 });
