@@ -28,9 +28,7 @@ export default compose(
       client.resetStore();
       Cookies.remove("jwt", {
         domain:
-          window.location.hostname === "localhost"
-            ? "localhost"
-            : `.${window.location.hostname}`,
+          process.env.NODE_ENV === "production" ? ".planx.uk" : "localhost",
       });
       window.location.href = "/";
     }),
