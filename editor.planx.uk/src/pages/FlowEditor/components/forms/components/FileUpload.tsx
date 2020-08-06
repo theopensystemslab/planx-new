@@ -21,10 +21,63 @@ const fileUploadStyles = makeStyles((theme) => ({
   },
 }));
 
+interface SignedUrlResponse {
+  upload_to: string;
+  public_readonly_url_will_be: string;
+}
+
+const uploadRequest = (
+  signedUrlResponse: SignedUrlResponse,
+  file: File
+): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState !== 4) {
+        return;
+      }
+      if (xhr.status !== 200) {
+        reject({
+          error: true,
+          readyState: xhr.readyState,
+          status: xhr.status,
+        });
+        return;
+      }
+      resolve(signedUrlResponse.public_readonly_url_will_be);
+    };
+    xhr.open("POST", signedUrlResponse.upload_to, true);
+    xhr.send(formData);
+  });
+
 const FileUpload: React.FC<Props> = (props) => {
-  const onDrop = useCallback((sth) => {
+  const onDrop = useCallback((files) => {
+    const file: File = files[0];
+    if (!file) {
+      return;
+    }
     // Do something here
-    console.log(sth);
+    fetch(`${process.env.REACT_APP_API_URL}/sign-s3-upload`, {
+      method: "POST",
+      body: JSON.stringify({
+        filename: file.name,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        return uploadRequest(res, file);
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   const classes = fileUploadStyles();
