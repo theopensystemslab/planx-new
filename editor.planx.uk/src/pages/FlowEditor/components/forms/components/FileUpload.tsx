@@ -1,6 +1,7 @@
 import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import ImageIcon from "@material-ui/icons/Image";
+import axios from "axios";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -30,26 +31,40 @@ const uploadRequest = (
   signedUrlResponse: SignedUrlResponse,
   file: File
 ): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState !== 4) {
-        return;
-      }
-      if (xhr.status !== 200) {
-        reject({
-          error: true,
-          readyState: xhr.readyState,
-          status: xhr.status,
-        });
-        return;
-      }
+  new Promise(async (resolve, reject) => {
+    try {
+      await axios.put(signedUrlResponse.upload_to, file, {
+        headers: {
+          "Content-Type": file.type,
+          "Content-Disposition": `inline;filename="${file.name}"`,
+        },
+      });
       resolve(signedUrlResponse.public_readonly_url_will_be);
-    };
-    xhr.open("POST", signedUrlResponse.upload_to, true);
-    xhr.send(formData);
+    } catch (err) {
+      reject(err);
+    }
+
+    // const formData = new FormData();
+    // formData.append("file", file);
+    // const xhr = new XMLHttpRequest();
+    // xhr.onreadystatechange = () => {
+    //   if (xhr.readyState !== 4) {
+    //     return;
+    //   }
+    //   if (xhr.status !== 200) {
+    //     reject({
+    //       error: true,
+    //       readyState: xhr.readyState,
+    //       status: xhr.status,
+    //     });
+    //     return;
+    //   }
+    //   resolve(signedUrlResponse.public_readonly_url_will_be);
+    // };
+    // xhr.open("PUT", signedUrlResponse.upload_to, true);
+    // // xhr.setRequestHeader("Content-Type", signedUrlResponse.file_type);
+    // // xhr.setRequestHeader("Content-Disposition", `inline;filename=${file.name}`);
+    // xhr.send(formData);
   });
 
 const FileUpload: React.FC<Props> = (props) => {
@@ -73,7 +88,7 @@ const FileUpload: React.FC<Props> = (props) => {
         return uploadRequest(res, file);
       })
       .then((res) => {
-        console.log(res);
+        console.log({ uploaded: res });
       })
       .catch((err) => {
         console.log(err);

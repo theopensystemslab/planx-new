@@ -17,11 +17,12 @@ const signS3Upload = (filename) =>
     const s3 = new S3(opts);
 
     const fileType = getType(filename);
+    const key = `${process.env.NODE_ENV}/${nanoid()}/${filename}`;
 
     const params = {
       ACL: process.env.AWS_S3_ACL,
-      Key: `${process.env.NODE_ENV}/${nanoid()}/${filename}`,
-      ContentType: fileType,
+      Key: key,
+      // ContentType: fileType,
     };
 
     console.log(params);
@@ -30,6 +31,7 @@ const signS3Upload = (filename) =>
       if (err) return rej(err);
       return res({
         fileType,
+        key,
         acl: process.env.AWS_S3_ACL,
         url,
       });
