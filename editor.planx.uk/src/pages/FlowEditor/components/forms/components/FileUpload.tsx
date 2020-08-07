@@ -7,6 +7,7 @@ import { useDropzone } from "react-dropzone";
 
 interface Props {
   onChange?: (image: string) => void;
+  onError?: (err: string) => void;
 }
 
 const fileUploadStyles = makeStyles((theme) => ({
@@ -31,22 +32,17 @@ const uploadRequest = (
   signedUrlResponse: SignedUrlResponse,
   file: File
 ): Promise<string> =>
-  new Promise(async (resolve, reject) => {
-    try {
-      await axios.put(signedUrlResponse.upload_to, file, {
-        headers: {
-          "Content-Type": file.type,
-          "Content-Disposition": `inline;filename="${file.name}"`,
-        },
-      });
-      resolve(signedUrlResponse.public_readonly_url_will_be);
-    } catch (err) {
-      reject(err);
-    }
-  });
+  axios
+    .put(signedUrlResponse.upload_to, file, {
+      headers: {
+        "Content-Type": file.type,
+        "Content-Disposition": `inline;filename="${file.name}"`,
+      },
+    })
+    .then(() => signedUrlResponse.public_readonly_url_will_be);
 
 const FileUpload: React.FC<Props> = (props) => {
-  const { onChange } = props;
+  const { onChange, onError } = props;
   const onDrop = useCallback(
     (files) => {
       const file: File = files[0];
@@ -69,10 +65,12 @@ const FileUpload: React.FC<Props> = (props) => {
         })
         .then((res) => {
           onChange && onChange(res);
+        })
+        .catch((res) => {
+          onError && onError(res);
         });
-      // TODO: error handling
     },
-    [onChange]
+    [onChange, onError]
   );
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   const classes = fileUploadStyles();
