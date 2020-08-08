@@ -91,9 +91,7 @@ const FileUpload: React.FC<Props> = (props) => {
           setStatus({
             type: "none",
           });
-          setTimeout(() => {
-            onChange && onChange(res);
-          });
+          onChange && onChange(res);
         })
         .catch(() => {
           setStatus({
