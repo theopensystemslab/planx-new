@@ -9,7 +9,7 @@ import {
 import { MoreVert, CallSplit } from "@material-ui/icons";
 import arrayMove from "array-move";
 import { useFormik } from "formik";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { flags } from "../../lib/store";
 import { TYPES } from "../../lib/flow";
 import FileUpload from "./components/FileUpload";
@@ -84,14 +84,7 @@ const ImgInput: React.FC<{
 }> = ({ img, onChange }) => {
   const classes = useStyles();
 
-  const [error, setError] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState(null);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setError(null);
-    }, 1500);
-  }, [error, setError]);
 
   return img ? (
     <div className={classes.imageUploadContainer}>
@@ -114,13 +107,15 @@ const ImgInput: React.FC<{
           setAnchorEl(null);
         }}
       >
-        <MenuItem href={img}>View</MenuItem>
+        <MenuItem component="a" href={img} target="_blank">
+          View
+        </MenuItem>
         <MenuItem
           onClick={() => {
             onChange && onChange(undefined);
           }}
         >
-          Delete
+          Remove
         </MenuItem>
       </Menu>
       <img width={50} height={50} src={img} alt="embedded img" />
@@ -128,7 +123,7 @@ const ImgInput: React.FC<{
   ) : (
     <Tooltip title="Drop file here">
       <div className={classes.imageUploadContainer}>
-        <FileUpload onChange={onChange} onError={setError} />
+        <FileUpload onChange={onChange} />
       </div>
     </Tooltip>
   );

@@ -1,13 +1,11 @@
-import ButtonBase from "@material-ui/core/ButtonBase";
-import { makeStyles } from "@material-ui/core/styles";
-import ImageIcon from "@material-ui/icons/Image";
+import { ButtonBase, makeStyles, Tooltip } from "@material-ui/core";
+import { Image, Error } from "@material-ui/icons";
 import axios from "axios";
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 
 interface Props {
   onChange?: (image: string) => void;
-  onError?: (err: string) => void;
 }
 
 const fileUploadStyles = makeStyles((theme) => ({
@@ -20,6 +18,9 @@ const fileUploadStyles = makeStyles((theme) => ({
   },
   focused: {
     boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
+  },
+  dragging: {
+    border: `2px dashed ${theme.palette.primary.dark}`,
   },
 }));
 
@@ -42,7 +43,16 @@ const uploadRequest = (
     .then(() => signedUrlResponse.public_readonly_url_will_be);
 
 const FileUpload: React.FC<Props> = (props) => {
-  const { onChange, onError } = props;
+  const { onChange } = props;
+
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setError(null);
+    }, 1500);
+  }, [error, setError]);
+
   const onDrop = useCallback(
     (files) => {
       const file: File = files[0];
@@ -66,27 +76,41 @@ const FileUpload: React.FC<Props> = (props) => {
         .then((res) => {
           onChange && onChange(res);
         })
-        .catch((res) => {
-          onError && onError(res);
+        .catch(() => {
+          setError("Something went wrong. Please try again.");
         });
     },
-    [onChange, onError]
+    [onChange, setError]
   );
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const classes = fileUploadStyles();
+
+  if (error) {
+    return (
+      <Tooltip open title={error}>
+        <ButtonBase
+          classes={{
+            root: classes.inputIconButton,
+          }}
+        >
+          <Error />
+        </ButtonBase>
+      </Tooltip>
+    );
+  }
   return (
     <ButtonBase
-      onClick={() => {
-        props.onChange && props.onChange("image");
-      }}
       classes={{
-        root: classes.inputIconButton,
+        root: `${classes.inputIconButton} ${
+          isDragActive ? classes.dragging : ""
+        }`,
         focusVisible: classes.focused,
       }}
       {...getRootProps()}
     >
       <input {...getInputProps()} />
-      <ImageIcon />
+      <Image />
     </ButtonBase>
   );
 };
