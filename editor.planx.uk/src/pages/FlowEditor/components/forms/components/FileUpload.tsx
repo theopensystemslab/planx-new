@@ -1,4 +1,9 @@
-import { ButtonBase, makeStyles, Tooltip } from "@material-ui/core";
+import {
+  ButtonBase,
+  makeStyles,
+  Tooltip,
+  CircularProgress,
+} from "@material-ui/core";
 import { Image, Error } from "@material-ui/icons";
 import axios from "axios";
 import React, { useCallback, useState, useEffect } from "react";
@@ -45,13 +50,20 @@ const uploadRequest = (
 const FileUpload: React.FC<Props> = (props) => {
   const { onChange } = props;
 
-  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<
+    { type: "none" } | { type: "loading" } | { type: "error"; msg: string }
+  >({ type: "none" });
 
   useEffect(() => {
-    setTimeout(() => {
-      setError(null);
-    }, 1500);
-  }, [error, setError]);
+    if (status.type === "error") {
+      const timeout = setTimeout(() => {
+        setStatus({ type: "none" });
+      }, 1500);
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [status, setStatus]);
 
   const onDrop = useCallback(
     (files) => {
@@ -59,7 +71,9 @@ const FileUpload: React.FC<Props> = (props) => {
       if (!file) {
         return;
       }
-      // Do something here
+      setStatus({
+        type: "loading",
+      });
       fetch(`${process.env.REACT_APP_API_URL}/sign-s3-upload`, {
         method: "POST",
         body: JSON.stringify({
@@ -74,21 +88,42 @@ const FileUpload: React.FC<Props> = (props) => {
           return uploadRequest(res, file);
         })
         .then((res) => {
-          onChange && onChange(res);
+          setStatus({
+            type: "none",
+          });
+          setTimeout(() => {
+            onChange && onChange(res);
+          });
         })
         .catch(() => {
-          setError("Something went wrong. Please try again.");
+          setStatus({
+            type: "error",
+            msg: "Something went wrong. Please try again.",
+          });
         });
     },
-    [onChange, setError]
+    [onChange, setStatus]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const classes = fileUploadStyles();
 
-  if (error) {
+  if (status.type === "loading") {
     return (
-      <Tooltip open title={error}>
+      <ButtonBase
+        key="status-loading"
+        classes={{
+          root: classes.inputIconButton,
+        }}
+      >
+        <CircularProgress size={24} />
+      </ButtonBase>
+    );
+  }
+
+  if (status.type === "error") {
+    return (
+      <Tooltip open title={status.msg}>
         <ButtonBase
           classes={{
             root: classes.inputIconButton,
@@ -99,8 +134,10 @@ const FileUpload: React.FC<Props> = (props) => {
       </Tooltip>
     );
   }
+
   return (
     <ButtonBase
+      key="status-none"
       classes={{
         root: `${classes.inputIconButton} ${
           isDragActive ? classes.dragging : ""

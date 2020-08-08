@@ -79,9 +79,10 @@ const renderMenuItem = (category: string) => {
 };
 
 const ImgInput: React.FC<{
+  menuId?: string;
   img?: string;
   onChange?: (newUrl?: string) => void;
-}> = ({ img, onChange }) => {
+}> = ({ menuId, img, onChange }) => {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -99,7 +100,7 @@ const ImgInput: React.FC<{
         <MoreVert />
       </IconButton>
       <Menu
-        id="long-menu"
+        id={menuId || "long-menu"}
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
@@ -189,6 +190,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                 </InputRowItem>
 
                 <ImgInput
+                  menuId={`option-image-menu-${index}`}
                   img={option.img}
                   onChange={(img) => {
                     formik.setFieldValue(`options[${index}].img`, img);
@@ -284,6 +286,7 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
               />
 
               <ImgInput
+                menuId="main-image-id"
                 img={formik.values.img}
                 onChange={(newUrl) => {
                   formik.setFieldValue("img", newUrl);
