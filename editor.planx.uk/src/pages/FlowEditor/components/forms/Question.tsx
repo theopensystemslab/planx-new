@@ -1,21 +1,30 @@
-import Button from "@material-ui/core/Button";
-import MenuItem from "@material-ui/core/MenuItem";
-import CallSplitIcon from "@material-ui/icons/CallSplit";
+import {
+  makeStyles,
+  IconButton,
+  Tooltip,
+  Button,
+  Menu,
+  MenuItem,
+} from "@material-ui/core";
+import { MoreVert, CallSplit } from "@material-ui/icons";
 import arrayMove from "array-move";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { flags } from "../../lib/store";
 import { TYPES } from "../../lib/flow";
 import FileUpload from "./components/FileUpload";
-import Input from "./components/Input";
-import InputGroup from "./components/InputGroup";
-import InputRow from "./components/InputRow";
-import InputRowItem from "./components/InputRowItem";
-import InternalNotes from "./components/InternalNotes";
-import ModalSection from "./components/ModalSection";
-import ModalSectionContent from "./components/ModalSectionContent";
-import MoreInformation from "./components/MoreInformation";
-import SelectInput from "./components/SelectInput";
+import {
+  Input,
+  InputGroup,
+  InputRow,
+  InputRowItem,
+  InternalNotes,
+  ModalSection,
+  ModalSectionContent,
+  MoreInformation,
+  SelectInput,
+} from "./components";
+import { FormikHookReturn } from "../../../../types";
 
 interface Option {
   val?: string;
@@ -44,6 +53,21 @@ interface IQuestion {
   img?: string;
 }
 
+const useStyles = makeStyles((theme) => ({
+  imageUploadContainer: {
+    height: 50,
+    width: 50,
+    position: "relative",
+  },
+  menu: {
+    position: "absolute",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    color: theme.palette.common.white,
+    top: 0,
+    right: 0,
+  },
+}));
+
 const renderMenuItem = (category: string) => {
   return flags
     .filter((flag) => flag.category === category)
@@ -54,19 +78,69 @@ const renderMenuItem = (category: string) => {
     ));
 };
 
-const ImgInput = ({ img }) => (
-  <InputRowItem width={50}>
-    {img ? (
-      <a target="_blank" rel="noopener noreferrer" href={img}>
-        <img src={img} alt="embedded img" />
-      </a>
-    ) : (
-      <FileUpload />
-    )}
-  </InputRowItem>
-);
+const ImgInput: React.FC<{
+  img?: string;
+  onChange?: (newUrl?: string) => void;
+}> = ({ img, onChange }) => {
+  const classes = useStyles();
 
-const Options: React.FC<{ formik: any }> = ({ formik }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  // Auto-generate a random ID on mount
+  const menuId = useMemo(() => {
+    return `menu-${Math.floor(Math.random() * 1000000)}`;
+  }, []);
+
+  return img ? (
+    <div className={classes.imageUploadContainer}>
+      <IconButton
+        id={`${menuId}-trigger`}
+        color="inherit"
+        className={classes.menu}
+        size="small"
+        onClick={(ev) => {
+          setAnchorEl(ev.currentTarget);
+        }}
+      >
+        <MoreVert />
+      </IconButton>
+      <Menu
+        id={`${menuId}`}
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={() => {
+          setAnchorEl(null);
+        }}
+      >
+        <MenuItem component="a" href={img} target="_blank">
+          View
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            onChange && onChange(undefined);
+          }}
+        >
+          Remove
+        </MenuItem>
+      </Menu>
+      <img width={50} height={50} src={img} alt="embedded img" />
+    </div>
+  ) : (
+    <Tooltip title="Drop file here">
+      <div className={classes.imageUploadContainer}>
+        <FileUpload
+          onChange={(newUrl) => {
+            setAnchorEl(null);
+            onChange(newUrl);
+          }}
+        />
+      </div>
+    </Tooltip>
+  );
+};
+
+const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   const addRow = () => {
     formik.setFieldValue("options", [
       ...formik.values.options,
@@ -125,7 +199,12 @@ const Options: React.FC<{ formik: any }> = ({ formik }) => {
                   />
                 </InputRowItem>
 
-                <ImgInput img={option.img} />
+                <ImgInput
+                  img={option.img}
+                  onChange={(img) => {
+                    formik.setFieldValue(`options[${index}].img`, img);
+                  }}
+                />
 
                 <SelectInput
                   name={`options[${index}].flag`}
@@ -185,6 +264,7 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
       description,
       fn,
       options,
+      img,
     },
     onSubmit: ({ options, ...values }) => {
       if (handleSubmit) {
@@ -214,7 +294,12 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
                 autoFocus
               />
 
-              <ImgInput img={img} />
+              <ImgInput
+                img={formik.values.img}
+                onChange={(newUrl) => {
+                  formik.setFieldValue("img", newUrl);
+                }}
+              />
             </InputRow>
 
             <InputRow>
@@ -265,7 +350,7 @@ const Question = (props) => (
   <GeneralQuestion
     {...props}
     headerTextField="Question"
-    Icon={CallSplitIcon}
+    Icon={CallSplit}
     $t={TYPES.Statement}
   />
 );
