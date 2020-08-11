@@ -1,12 +1,12 @@
 import {
   ButtonBase,
+  CircularProgress,
   makeStyles,
   Tooltip,
-  CircularProgress,
 } from "@material-ui/core";
-import { Image, Error } from "@material-ui/icons";
+import { Error, Image } from "@material-ui/icons";
 import axios from "axios";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 interface Props {
@@ -103,7 +103,10 @@ const FileUpload: React.FC<Props> = (props) => {
     [onChange, setStatus]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: "image/*",
+  });
   const classes = fileUploadStyles();
 
   if (status.type === "loading") {
