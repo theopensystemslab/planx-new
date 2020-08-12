@@ -53,6 +53,7 @@
     "lint-staged": "^10.2.11",
     "node-sass": "^4.14.1",
     "prettier": "^2.0.5",
+    "react-cosmos": "^5.4.0",
     "typescript": "^3.9.7"
   },
   "scripts": {
