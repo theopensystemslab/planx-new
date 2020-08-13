@@ -79,6 +79,18 @@ const theme = createMuiStrictModeTheme({
         borderRadius: 0,
       },
     },
+    ...({
+      MUIRichTextEditor: {
+        editor: {
+          backgroundColor: "#fafafa",
+          padding: "4px 10px",
+        },
+        inlineToolbar: {
+          boxShadow: "0 1px 6px 0 rgba(0, 0, 0, 0.2)",
+        },
+      },
+      // Make TypeScript happy by 'casting away' unrecognized override keys
+    } as {}),
   },
 });
 

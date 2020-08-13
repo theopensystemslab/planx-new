@@ -1,9 +1,10 @@
-import InputBase, { InputBaseProps } from "@material-ui/core/InputBase";
-import { makeStyles } from "@material-ui/core/styles";
+import { InputBase, InputBaseProps, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import MUIRichTextEditor from "mui-rte";
 import React from "react";
-// import { editorTheme } from "../../themes/tooltipEditor";
+import { stateToMarkdown } from "draft-js-export-markdown";
+import { stateFromMarkdown } from "draft-js-import-markdown";
+import { convertToRaw } from "draft-js";
 
 interface IInput extends InputBaseProps {
   allowFormat?: boolean;
@@ -57,37 +58,47 @@ export const inputStyles = makeStyles((theme) => ({
 
 const Input: React.FC<IInput> = ({ format, allowFormat, ...props }) => {
   const classes = inputStyles();
-  return (
-    <React.Fragment>
-      {allowFormat ? (
-        // <MuiThemeProvider theme={editorTheme}>
-        <MUIRichTextEditor
-          toolbarButtonSize="small"
-          inlineToolbar={true}
-          toolbar={false}
-          inlineToolbarControls={["bold", "italic", "underline"]}
-          label={props.placeholder}
-          onChange={props.changeEditor}
-          onSave={props.saveEditor}
-        />
-      ) : (
-        // </MuiThemeProvider>
-        <InputBase
-          className={classNames(
-            classes.input,
-            format === "large" && classes.questionInput,
-            format === "bold" && classes.bold,
-            format === "data" && classes.data
-          )}
-          classes={{
-            multiline: classes.inputMultiline,
-            adornedEnd: classes.adornedEnd,
-            focused: classes.focused,
-          }}
-          {...props}
-        />
+
+  const initialDefaultValue = React.useRef(
+    convertToRaw(stateFromMarkdown(props.value))
+  );
+
+  return allowFormat ? (
+    <MUIRichTextEditor
+      defaultValue={JSON.stringify(initialDefaultValue.current)}
+      toolbarButtonSize="small"
+      inlineToolbar={true}
+      toolbar={false}
+      inlineToolbarControls={["bold", "italic", "underline"]}
+      label={props.placeholder}
+      onChange={(newState) => {
+        const md = stateToMarkdown(newState.getCurrentContent());
+        if (md !== props.value) {
+          props.onChange({
+            target: {
+              name: props.name,
+              value: md,
+            },
+          });
+        }
+      }}
+      onSave={props.saveEditor}
+    />
+  ) : (
+    <InputBase
+      className={classNames(
+        classes.input,
+        format === "large" && classes.questionInput,
+        format === "bold" && classes.bold,
+        format === "data" && classes.data
       )}
-    </React.Fragment>
+      classes={{
+        multiline: classes.inputMultiline,
+        adornedEnd: classes.adornedEnd,
+        focused: classes.focused,
+      }}
+      {...props}
+    />
   );
 };
 export default Input;

@@ -306,9 +306,9 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
 
             <InputRow>
               <Input
-                // required
                 name="description"
                 value={formik.values.description}
+                allowFormat
                 placeholder="Description"
                 onChange={formik.handleChange}
               />
