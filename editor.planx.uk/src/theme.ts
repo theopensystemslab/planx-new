@@ -83,7 +83,11 @@ const theme = createMuiStrictModeTheme({
       MUIRichTextEditor: {
         editor: {
           backgroundColor: "#fafafa",
-          padding: "4px 10px",
+          padding: "4px 12px",
+          minHeight: 48,
+        },
+        placeHolder: {
+          padding: "4px 12px",
         },
         inlineToolbar: {
           boxShadow: "0 1px 6px 0 rgba(0, 0, 0, 0.2)",

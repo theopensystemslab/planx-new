@@ -69,7 +69,13 @@ const Input: React.FC<IInput> = ({ format, allowFormat, ...props }) => {
       toolbarButtonSize="small"
       inlineToolbar={true}
       toolbar={false}
-      inlineToolbarControls={["bold", "italic", "underline"]}
+      inlineToolbarControls={[
+        "bold",
+        "italic",
+        "underline",
+        "link",
+        "bulletList",
+      ]}
       label={props.placeholder}
       onChange={(newState) => {
         const md = stateToMarkdown(newState.getCurrentContent());
