@@ -70,6 +70,7 @@ const rteContainerStyles = makeStyles((theme) => ({
 }));
 
 const RichTextInput: React.FC<IInput> = ({ format, allowFormat, ...props }) => {
+  // Set the initial `value` prop and ignore updated values to avoid infinite loops
   const initialDefaultValue = useRef(
     convertToRaw(stateFromMarkdown(props.value))
   );
