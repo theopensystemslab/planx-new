@@ -139,7 +139,7 @@ const FormModal: React.FC<{
               </Button>
             </Grid>
           )}
-          {handleDelete && type !== "portal" && (
+          {handleDelete && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth

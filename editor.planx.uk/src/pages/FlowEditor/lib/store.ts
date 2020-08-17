@@ -315,6 +315,10 @@ export const [useStore, api] = create((set, get) => ({
   individualise: (id, parent = null) => {
     const { addNode, flow, childNodesOf } = get();
 
+    if (flow.nodes[id].$t === TYPES.Portal) {
+      return alert("Portals not yet supported");
+    }
+
     const children = childNodesOf(id);
 
     const newChildren = children.map((node) => ({ ...node, id: uuid() }));
