@@ -317,17 +317,29 @@ export const [useStore, api] = create((set, get) => ({
 
     const children = childNodesOf(id);
 
+    const newChildren = children.map((node) => ({ ...node, id: uuid() }));
+
+    const allOps = [];
+
     addNode(
       {
         ...flow.nodes[id],
         id: uuid(),
       },
-      children.map(({ id, ...node }) => node),
+      newChildren,
       parent,
-      id
+      id,
+      (ops) => ops.forEach((op) => allOps.push(op))
     );
 
-    // children.map(({id}) => )
+    children.forEach((child, idx) => {
+      const { id } = newChildren[idx];
+      childNodesOf(child.id).forEach((c) => {
+        allOps.push({ li: [id, c.id], p: ["edges", flow.edges.length] });
+      });
+    });
+
+    send(allOps);
   },
 
   removeNode: (id, parent = null, cb = send) => {
