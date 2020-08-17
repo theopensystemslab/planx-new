@@ -81,13 +81,20 @@ const theme = createMuiStrictModeTheme({
     },
     ...({
       MUIRichTextEditor: {
+        container: {
+          // Disable margins to allow a container <Box/>
+          margin: 0,
+        },
         editor: {
           backgroundColor: "#fafafa",
-          padding: "4px 12px",
+          padding: "4px 10px",
           minHeight: 48,
+          fontSize: 15,
         },
         placeHolder: {
-          padding: "4px 12px",
+          fontSize: 15,
+          padding: "4px 10px",
+          color: "#9a9a9a",
         },
         inlineToolbar: {
           boxShadow: "0 1px 6px 0 rgba(0, 0, 0, 0.2)",

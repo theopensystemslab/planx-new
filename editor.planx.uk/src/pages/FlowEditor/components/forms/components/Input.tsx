@@ -1,7 +1,7 @@
-import { InputBase, InputBaseProps, makeStyles } from "@material-ui/core";
+import { InputBase, InputBaseProps, makeStyles, Box } from "@material-ui/core";
 import classNames from "classnames";
 import MUIRichTextEditor from "mui-rte";
-import React from "react";
+import React, { useState, useRef, ChangeEvent } from "react";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
 import { convertToRaw } from "draft-js";
@@ -13,9 +13,8 @@ interface IInput extends InputBaseProps {
   className?: string;
   grow?: boolean;
   large?: boolean;
-  changeEditor?;
   saveEditor?;
-  onChange?;
+  onChange?: (ev: ChangeEvent) => void;
 }
 
 export const inputStyles = makeStyles((theme) => ({
@@ -56,40 +55,79 @@ export const inputStyles = makeStyles((theme) => ({
   },
 }));
 
-const Input: React.FC<IInput> = ({ format, allowFormat, ...props }) => {
-  const classes = inputStyles();
+const rteContainerStyles = makeStyles((theme) => ({
+  regular: {
+    position: "relative",
+    boxSizing: "border-box",
+    padding: 2,
+  },
+  focused: {
+    position: "relative",
+    boxSizing: "border-box",
+    padding: 2,
+    boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
+  },
+}));
 
-  const initialDefaultValue = React.useRef(
+const RichTextInput: React.FC<IInput> = ({ format, allowFormat, ...props }) => {
+  const initialDefaultValue = useRef(
     convertToRaw(stateFromMarkdown(props.value))
   );
 
-  return allowFormat ? (
-    <MUIRichTextEditor
-      defaultValue={JSON.stringify(initialDefaultValue.current)}
-      toolbarButtonSize="small"
-      inlineToolbar={true}
-      toolbar={false}
-      inlineToolbarControls={[
-        "bold",
-        "italic",
-        "underline",
-        "link",
-        "bulletList",
-      ]}
-      label={props.placeholder}
-      onChange={(newState) => {
-        const md = stateToMarkdown(newState.getCurrentContent());
-        if (md !== props.value) {
-          props.onChange({
-            target: {
-              name: props.name,
-              value: md,
-            },
-          });
-        }
+  const [focused, setFocused] = useState(false);
+
+  const classes = rteContainerStyles();
+
+  return (
+    <Box
+      onFocus={() => {
+        setFocused(true);
       }}
-      onSave={props.saveEditor}
-    />
+      onBlur={() => {
+        setFocused(false);
+      }}
+      tabIndex={-1}
+      className={focused ? classes.focused : classes.regular}
+    >
+      <MUIRichTextEditor
+        defaultValue={JSON.stringify(initialDefaultValue.current)}
+        toolbarButtonSize="small"
+        inlineToolbar={true}
+        toolbar={false}
+        inlineToolbarControls={[
+          "bold",
+          "italic",
+          "underline",
+          "link",
+          "bulletList",
+        ]}
+        label={props.placeholder}
+        onChange={(newState) => {
+          const md = stateToMarkdown(newState.getCurrentContent());
+          if (md !== props.value) {
+            // Construct and cast as a change event so the component stays compatible with formik helpers
+            const changeEvent = ({
+              target: {
+                name: props.name,
+                value: md,
+              },
+            } as unknown) as ChangeEvent;
+            props.onChange(changeEvent);
+          }
+        }}
+        onSave={props.saveEditor}
+      />
+    </Box>
+  );
+};
+
+const Input: React.FC<IInput> = (props) => {
+  const classes = inputStyles();
+
+  const { format, allowFormat, ...restProps } = props;
+
+  return allowFormat ? (
+    <RichTextInput {...props} />
   ) : (
     <InputBase
       className={classNames(
@@ -103,7 +141,7 @@ const Input: React.FC<IInput> = ({ format, allowFormat, ...props }) => {
         adornedEnd: classes.adornedEnd,
         focused: classes.focused,
       }}
-      {...props}
+      {...restProps}
     />
   );
 };
