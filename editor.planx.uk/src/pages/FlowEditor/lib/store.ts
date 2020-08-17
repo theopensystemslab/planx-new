@@ -6,6 +6,7 @@ import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
 import omit from "lodash/omit";
 import natsort from "natsort";
+import { v4 as uuid } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
 import {
@@ -309,6 +310,24 @@ export const [useStore, api] = create((set, get) => ({
     });
 
     cb(ops);
+  },
+
+  individualise: (id, parent = null) => {
+    const { addNode, flow, childNodesOf } = get();
+
+    const children = childNodesOf(id);
+
+    addNode(
+      {
+        ...flow.nodes[id],
+        id: uuid(),
+      },
+      children.map(({ id, ...node }) => node),
+      parent,
+      id
+    );
+
+    // children.map(({id}) => )
   },
 
   removeNode: (id, parent = null, cb = send) => {

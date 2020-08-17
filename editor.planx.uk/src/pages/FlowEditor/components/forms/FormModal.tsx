@@ -33,10 +33,11 @@ const FormModal: React.FC<{
 }> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
   const { navigate } = useNavigation();
   const classes = useStyles();
-  const [addNode, updateNode, node] = useStore((store) => [
+  const [addNode, updateNode, node, individualise] = useStore((store) => [
     store.addNode,
     store.updateNode,
     store.flow.nodes[id],
+    store.individualise,
   ]);
   const handleClose = () => navigate(rootFlowPath(true));
 
@@ -135,6 +136,20 @@ const FormModal: React.FC<{
                 }}
               >
                 Delete
+              </Button>
+            </Grid>
+          )}
+          {handleDelete && type !== "portal" && (
+            <Grid item xs={6} sm={4} md={3}>
+              <Button
+                fullWidth
+                size="large"
+                onClick={() => {
+                  individualise(id, parent);
+                  navigate(rootFlowPath(true));
+                }}
+              >
+                Individualise
               </Button>
             </Grid>
           )}
