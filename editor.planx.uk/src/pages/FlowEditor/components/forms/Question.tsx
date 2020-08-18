@@ -1,18 +1,18 @@
 import {
-  makeStyles,
-  IconButton,
-  Tooltip,
   Button,
+  IconButton,
+  makeStyles,
   Menu,
   MenuItem,
+  Tooltip,
 } from "@material-ui/core";
-import { MoreVert, CallSplit } from "@material-ui/icons";
+import { CallSplit, MoreVert } from "@material-ui/icons";
 import arrayMove from "array-move";
 import { useFormik } from "formik";
-import React, { useState, useMemo } from "react";
-import { flags } from "../../lib/store";
+import React, { useMemo, useState } from "react";
+import { FormikHookReturn } from "../../../../types";
 import { TYPES } from "../../lib/flow";
-import FileUpload from "./components/FileUpload";
+import { flags } from "../../lib/store";
 import {
   Input,
   InputGroup,
@@ -24,7 +24,7 @@ import {
   MoreInformation,
   SelectInput,
 } from "./components";
-import { FormikHookReturn } from "../../../../types";
+import FileUpload from "./components/FileUpload";
 
 interface Option {
   val?: string;
@@ -270,7 +270,9 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
       if (handleSubmit) {
         handleSubmit(
           { $t, ...values },
-          options.map((o) => ({ ...o, $t: TYPES.Response }))
+          options
+            .filter((o) => o.text)
+            .map((o) => ({ ...o, $t: TYPES.Response }))
         );
       } else {
         alert(JSON.stringify({ $t, ...values, options }, null, 2));
