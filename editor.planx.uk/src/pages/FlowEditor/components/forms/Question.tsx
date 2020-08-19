@@ -15,6 +15,7 @@ import { TYPES } from "../../lib/flow";
 import { flags } from "../../lib/store";
 import {
   Input,
+  RichTextInput,
   InputGroup,
   InputRow,
   InputRowItem,
@@ -305,10 +306,9 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
             </InputRow>
 
             <InputRow>
-              <Input
+              <RichTextInput
                 name="description"
                 value={formik.values.description}
-                allowFormat
                 placeholder="Description"
                 onChange={formik.handleChange}
               />
