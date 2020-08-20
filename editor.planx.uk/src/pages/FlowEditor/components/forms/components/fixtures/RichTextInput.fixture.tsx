@@ -18,7 +18,8 @@ const RichTextSnippet: React.FC<{}> = () => {
         />
       </ThemeProvider>
 
-      <p>Markdown result: {value}</p>
+      <p>Markdown result:</p>
+      <pre>{value}</pre>
     </div>
   );
 };
