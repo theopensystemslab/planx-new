@@ -107,6 +107,7 @@ const FormModal: React.FC<{
         <Component
           {...node}
           {...extraProps}
+          id={id}
           handleSubmit={(data, options = []) => {
             const parsed = parseFormValues(Object.entries(data));
             const parsedOptions = options.map((o) =>

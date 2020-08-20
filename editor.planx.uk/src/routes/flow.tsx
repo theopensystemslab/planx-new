@@ -80,7 +80,7 @@ const newNode = route(async (req) => {
   };
 });
 
-const editNode = route((req) => {
+const editNode = route(async (req) => {
   const { id, before = null, parent = null } = req.params;
 
   const [flow, ...breadcrumbs] = req.params.flow.split(",");
@@ -93,6 +93,31 @@ const editNode = route((req) => {
   switch ($t) {
     case TYPES.Portal:
       type = "portal";
+
+      const { data } = await client.query({
+        query: gql`
+          query GetFlows {
+            flows(order_by: { name: asc }) {
+              id
+              name
+              slug
+              team {
+                slug
+              }
+            }
+          }
+        `,
+      });
+
+      const sorter = natsort({ insensitive: true });
+
+      extraProps.externalFlows = data.flows
+        .filter(
+          (flow) =>
+            !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
+        )
+        .sort(sorter);
+
       break;
     case TYPES.Checklist:
       type = "checklist";
