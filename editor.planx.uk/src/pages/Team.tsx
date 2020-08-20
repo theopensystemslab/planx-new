@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import {
   Box,
   Button,
@@ -27,6 +28,7 @@ import {
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React from "react";
 import { Link } from "react-navi";
+import { client } from "../lib/graphql";
 import { api } from "./FlowEditor/lib/store";
 
 const useStyles = makeStyles((theme) => ({
@@ -247,6 +249,43 @@ const FlowItem = ({ flow, teamId }) => {
             }}
           >
             <MenuItem
+              onClick={async () => {
+                const newSlug = prompt("New name", flow.slug);
+                if (newSlug && newSlug !== flow.slug) {
+                  await client.mutate({
+                    mutation: gql`
+                      mutation MyMutation(
+                        $teamId: Int
+                        $slug: String
+                        $newSlug: String
+                      ) {
+                        update_flows(
+                          where: {
+                            team: { id: { _eq: $teamId } }
+                            slug: { _eq: $slug }
+                          }
+                          _set: { slug: $newSlug }
+                        ) {
+                          affected_rows
+                        }
+                      }
+                    `,
+                    variables: {
+                      teamId: teamId,
+                      slug: flow.slug,
+                      newSlug: newSlug,
+                    },
+                  });
+
+                  window.location.reload();
+                }
+              }}
+            >
+              Rename
+            </MenuItem>
+
+            <MenuItem
+              style={{ color: "red" }}
               onClick={() => {
                 setDeleting(true);
               }}
