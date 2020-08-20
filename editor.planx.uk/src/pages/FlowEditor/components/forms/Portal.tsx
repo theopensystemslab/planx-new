@@ -44,32 +44,37 @@ const PortalForm: React.FC<{
           required={!formik.values.flowId}
         />
       </div>
-
-      <div>
-        or
+      {internalFlows.length + externalFlows.length > 0 && (
         <div>
-          <select
-            name="flowId"
-            value={formik.values.flowId}
-            onChange={formik.handleChange}
-          >
-            <option value="" />
-            {internalFlows.map((flow) => (
-              <option key={flow.id} value={flow.id}>
-                {flow.text}
-              </option>
-            ))}
+          or
+          <div>
+            <select
+              name="flowId"
+              value={formik.values.flowId}
+              onChange={formik.handleChange}
+            >
+              <option value="" />
 
-            <optgroup label="External Flows">
-              {externalFlows.map((flow) => (
-                <option key={flow.id} value={flow.id}>
-                  {flow.team.slug}/{flow.slug}
-                </option>
-              ))}
-            </optgroup>
-          </select>
+              {internalFlows.length > 0 &&
+                internalFlows.map((flow) => (
+                  <option key={flow.id} value={flow.id}>
+                    {flow.text}
+                  </option>
+                ))}
+
+              {externalFlows.length > 0 && (
+                <optgroup label="External Flows">
+                  {externalFlows.map((flow) => (
+                    <option key={flow.id} value={flow.id}>
+                      {flow.team.slug}/{flow.slug}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+            </select>
+          </div>
         </div>
-      </div>
+      )}
     </form>
   );
 };
