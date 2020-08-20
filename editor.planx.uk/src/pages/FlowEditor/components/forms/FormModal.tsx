@@ -33,11 +33,11 @@ const FormModal: React.FC<{
 }> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
   const { navigate } = useNavigation();
   const classes = useStyles();
-  const [addNode, updateNode, node, individualise] = useStore((store) => [
+  const [addNode, updateNode, node, makeUnique] = useStore((store) => [
     store.addNode,
     store.updateNode,
     store.flow.nodes[id],
-    store.individualise,
+    store.makeUnique,
   ]);
   const handleClose = () => navigate(rootFlowPath(true));
 
@@ -145,7 +145,7 @@ const FormModal: React.FC<{
                 fullWidth
                 size="large"
                 onClick={() => {
-                  individualise(id, parent);
+                  makeUnique(id, parent);
                   navigate(rootFlowPath(true));
                 }}
               >

@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import { mostReadable } from "@ctrl/tinycolor";
+import { alg } from "graphlib";
 import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
 import difference from "lodash/difference";
@@ -15,6 +16,7 @@ import {
   moveNodeOp,
   Node,
   removeNodeOp,
+  toGraphlib,
   TYPES,
 } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
@@ -126,7 +128,7 @@ export const [useStore, api] = create((set, get) => ({
     set({ id });
 
     const cloneStateFromShareDb = () => {
-      console.log("[NF]:", JSON.stringify(doc.data, null, 0));
+      console.debug("[NF]:", JSON.stringify(doc.data, null, 0));
       const flow = JSON.parse(JSON.stringify(doc.data));
       flow.edges = flow.edges.filter((val) => !!val);
       (window as any).flow = flow;
@@ -215,7 +217,7 @@ export const [useStore, api] = create((set, get) => ({
 
   addNode: (data, children = [], parent = null, before = null, cb = send) => {
     const { flow } = get();
-    console.log(
+    console.debug(
       `[OP]: addNodeWithChildrenOp(${JSON.stringify(data)}, ${JSON.stringify(
         children
       )}, ${JSON.stringify(parent)}, ${JSON.stringify(before)}, beforeFlow);`
@@ -226,7 +228,7 @@ export const [useStore, api] = create((set, get) => ({
   updateNode: ({ id, ...newNode }, newOptions: any[], cb = send) => {
     const { flow, addNode, moveNode, removeNode } = get();
 
-    console.log(
+    console.debug(
       `[OP]: updateNodeOp(${JSON.stringify(newNode)}, ${JSON.stringify(
         newOptions
       )}, beforeFlow);`
@@ -312,43 +314,52 @@ export const [useStore, api] = create((set, get) => ({
     cb(ops);
   },
 
-  individualise: (id, parent = null) => {
-    const { addNode, flow, childNodesOf } = get();
+  makeUnique: (id, parent = null) => {
+    const { flow, isClone } = get();
 
     if (flow.nodes[id].$t === TYPES.Portal) {
       return alert("Portals not yet supported");
     }
 
-    const children = childNodesOf(id);
+    const graph = toGraphlib(flow);
 
-    const newChildren = children.map((node) => ({ ...node, id: uuid() }));
+    const keys = alg.preorder(graph, [id]).reduce((acc, nodeId) => {
+      acc[nodeId] = isClone(nodeId) ? nodeId : uuid();
+      return acc;
+    }, {});
 
-    const allOps = [];
+    const ops = Object.entries(keys).reduce(
+      (acc, [existingId, newId]: [string, string]) => {
+        if (!flow.nodes[newId]) {
+          acc.push({
+            p: ["nodes", newId],
+            oi: flow.nodes[existingId],
+          });
+        }
 
-    addNode(
-      {
-        ...flow.nodes[id],
-        id: uuid(),
+        flow.edges
+          .filter(([src]) => src === existingId)
+          .reverse()
+          .forEach(([src, tgt]) => {
+            acc.push({ li: [keys[src], keys[tgt]], p: ["edges", Infinity] });
+          });
+
+        return acc;
       },
-      newChildren,
-      parent,
-      id,
-      (ops) => ops.forEach((op) => allOps.push(op))
+      [
+        {
+          li: [parent, keys[id]],
+          p: ["edges", Infinity],
+        },
+      ] as any
     );
 
-    children.forEach((child, idx) => {
-      const { id } = newChildren[idx];
-      childNodesOf(child.id).forEach((c) => {
-        allOps.push({ li: [id, c.id], p: ["edges", flow.edges.length] });
-      });
-    });
-
-    send(allOps);
+    send(ops);
   },
 
   removeNode: (id, parent = null, cb = send) => {
     const { flow } = get();
-    console.log(
+    console.debug(
       `[OP]: removeNodeOp(${JSON.stringify(id)}, ${JSON.stringify(
         parent
       )}, beforeFlow);`
@@ -364,7 +375,7 @@ export const [useStore, api] = create((set, get) => ({
     cb = send
   ) {
     const { flow } = get();
-    console.log(
+    console.debug(
       `[OP]: moveNodeOp(${JSON.stringify(id)}, ${JSON.stringify(
         parent
       )}, ${JSON.stringify(toBefore)}, ${JSON.stringify(

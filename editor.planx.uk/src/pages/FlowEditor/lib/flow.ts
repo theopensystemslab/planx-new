@@ -1,8 +1,8 @@
 import { alg, Graph } from "graphlib";
 import difference from "lodash/difference";
+import flattenDeep from "lodash/flattenDeep";
 import randomWords from "random-words";
 import { v4 as uuid } from "uuid";
-import flattenDeep from "lodash/flattenDeep";
 
 export enum TYPES {
   Flow = 1,
@@ -44,7 +44,7 @@ export interface Op {
   oi?: any;
 }
 
-const toGraphlib = (flow: Flow): Graph => {
+export const toGraphlib = (flow: Flow): Graph => {
   // create a graph with the existing nodes and edges
   const g = new Graph({ directed: true, multigraph: false });
   Object.keys(flow.nodes).forEach((key) => {
