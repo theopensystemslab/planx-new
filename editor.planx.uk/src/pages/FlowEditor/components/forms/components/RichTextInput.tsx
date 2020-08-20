@@ -1,6 +1,6 @@
 import { InputBaseProps, makeStyles, Box } from "@material-ui/core";
 import MUIRichTextEditor from "mui-rte";
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
 import { convertToRaw } from "draft-js";
@@ -13,7 +13,6 @@ import { convertToRaw } from "draft-js";
  */
 
 interface IRichTextInput extends InputBaseProps {
-  classes?: any;
   className?: string;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -23,11 +22,13 @@ const rteContainerStyles = makeStyles((theme) => ({
     position: "relative",
     boxSizing: "border-box",
     padding: 2,
+    outline: "none",
   },
   focused: {
     position: "relative",
     boxSizing: "border-box",
     padding: 2,
+    outline: "none",
     boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
   },
 }));
@@ -43,6 +44,14 @@ const RichTextInput: React.FC<IRichTextInput> = (props) => {
 
   const classes = rteContainerStyles();
 
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    if (focused && editorRef.current) {
+      editorRef.current.focus();
+    }
+  }, [focused]);
+
   return (
     <Box
       onFocus={() => {
@@ -55,6 +64,7 @@ const RichTextInput: React.FC<IRichTextInput> = (props) => {
       className={focused ? classes.focused : classes.regular}
     >
       <MUIRichTextEditor
+        ref={editorRef}
         defaultValue={JSON.stringify(defaultValue)}
         toolbarButtonSize="small"
         inlineToolbar={true}

@@ -84,6 +84,9 @@ const theme = createMuiStrictModeTheme({
         container: {
           // Disable margins to allow a container <Box/>
           margin: 0,
+          focus: {
+            outline: "none",
+          },
         },
         editor: {
           backgroundColor: "#fafafa",
