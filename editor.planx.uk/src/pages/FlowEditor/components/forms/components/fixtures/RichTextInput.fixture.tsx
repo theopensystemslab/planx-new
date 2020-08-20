@@ -19,13 +19,6 @@ const RichTextSnippet: React.FC<{}> = () => {
       </ThemeProvider>
 
       <p>Markdown result: {value}</p>
-      <button
-        onClick={() => {
-          setValue("Something else");
-        }}
-      >
-        Set to something else (tests controlled input behavior)
-      </button>
     </div>
   );
 };
