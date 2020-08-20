@@ -324,7 +324,11 @@ export const [useStore, api] = create((set, get) => ({
     const graph = toGraphlib(flow);
 
     const keys = alg.preorder(graph, [id]).reduce((acc, nodeId) => {
-      acc[nodeId] = isClone(nodeId) ? nodeId : uuid();
+      acc[nodeId] = isClone(nodeId)
+        ? id === nodeId
+          ? uuid()
+          : nodeId
+        : uuid();
       return acc;
     }, {});
 
@@ -338,7 +342,7 @@ export const [useStore, api] = create((set, get) => ({
         }
 
         flow.edges
-          .filter(([src]) => src === existingId)
+          .filter(([src, tgt]) => src === existingId)
           .reverse()
           .forEach(([src, tgt]) => {
             acc.push({ li: [keys[src], keys[tgt]], p: ["edges", Infinity] });
@@ -353,6 +357,16 @@ export const [useStore, api] = create((set, get) => ({
         },
       ] as any
     );
+
+    if (isClone(id)) {
+      const idx = flow.edges.findIndex(
+        ([src, tgt]) => src === parent && tgt === id
+      );
+      ops.unshift({
+        p: ["edges", idx],
+        ld: flow.edges[idx],
+      });
+    }
 
     send(ops);
   },
