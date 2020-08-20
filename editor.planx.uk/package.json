@@ -11,6 +11,9 @@
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "date-fns": "^2.15.0",
+    "draft-js": "^0.11.6",
+    "draft-js-export-markdown": "^1.4.0",
+    "draft-js-import-markdown": "^1.4.0",
     "formik": "^2.1.5",
     "graphlib": "^2.1.8",
     "graphql": "^15.3.0",
@@ -60,6 +63,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --no-watchman",
+    "cosmos": "cosmos",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

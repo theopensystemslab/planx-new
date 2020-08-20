@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { CircularProgress, makeStyles } from "@material-ui/core";
+
+const useClasses = makeStyles({
+  container: {
+    padding: 30,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
 
 const DelayedLoadingIndicator: React.FC<{ msDelayBeforeVisible: number }> = ({
   msDelayBeforeVisible = 0,
 }) => {
   const [visible, setVisible] = useState(false);
+
+  const classes = useClasses();
 
   useEffect(() => {
     const timeout = setTimeout(() => setVisible(true), msDelayBeforeVisible);
@@ -12,7 +24,11 @@ const DelayedLoadingIndicator: React.FC<{ msDelayBeforeVisible: number }> = ({
     };
   }, [msDelayBeforeVisible]);
 
-  return visible ? <h1>Loading</h1> : null;
+  return visible ? (
+    <div className={classes.container}>
+      <CircularProgress />
+    </div>
+  ) : null;
 };
 
 export default DelayedLoadingIndicator;

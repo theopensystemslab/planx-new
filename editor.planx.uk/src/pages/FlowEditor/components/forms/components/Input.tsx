@@ -1,20 +1,14 @@
-import InputBase, { InputBaseProps } from "@material-ui/core/InputBase";
-import { makeStyles } from "@material-ui/core/styles";
+import { InputBase, InputBaseProps, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
-import MUIRichTextEditor from "mui-rte";
-import React from "react";
-// import { editorTheme } from "../../themes/tooltipEditor";
+import React, { ChangeEvent } from "react";
 
 interface IInput extends InputBaseProps {
-  allowFormat?: boolean;
   format?: "large" | "bold" | "data";
   classes?: any;
   className?: string;
   grow?: boolean;
   large?: boolean;
-  changeEditor?;
-  saveEditor?;
-  onChange?;
+  onChange?: (ev: ChangeEvent) => void;
 }
 
 export const inputStyles = makeStyles((theme) => ({
@@ -55,39 +49,26 @@ export const inputStyles = makeStyles((theme) => ({
   },
 }));
 
-const Input: React.FC<IInput> = ({ format, allowFormat, ...props }) => {
+const Input: React.FC<IInput> = (props) => {
   const classes = inputStyles();
+
+  const { format, ...restProps } = props;
+
   return (
-    <React.Fragment>
-      {allowFormat ? (
-        // <MuiThemeProvider theme={editorTheme}>
-        <MUIRichTextEditor
-          toolbarButtonSize="small"
-          inlineToolbar={true}
-          toolbar={false}
-          inlineToolbarControls={["bold", "italic", "underline"]}
-          label={props.placeholder}
-          onChange={props.changeEditor}
-          onSave={props.saveEditor}
-        />
-      ) : (
-        // </MuiThemeProvider>
-        <InputBase
-          className={classNames(
-            classes.input,
-            format === "large" && classes.questionInput,
-            format === "bold" && classes.bold,
-            format === "data" && classes.data
-          )}
-          classes={{
-            multiline: classes.inputMultiline,
-            adornedEnd: classes.adornedEnd,
-            focused: classes.focused,
-          }}
-          {...props}
-        />
+    <InputBase
+      className={classNames(
+        classes.input,
+        format === "large" && classes.questionInput,
+        format === "bold" && classes.bold,
+        format === "data" && classes.data
       )}
-    </React.Fragment>
+      classes={{
+        multiline: classes.inputMultiline,
+        adornedEnd: classes.adornedEnd,
+        focused: classes.focused,
+      }}
+      {...restProps}
+    />
   );
 };
 export default Input;

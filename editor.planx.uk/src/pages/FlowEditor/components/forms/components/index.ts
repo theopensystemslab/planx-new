@@ -2,6 +2,7 @@ export { default as ColorPicker } from "./ColorPicker";
 export { default as FileUpload } from "./FileUpload";
 export { default as FormButtons } from "./FormButtons";
 export { default as Input } from "./Input";
+export { default as RichTextInput } from "./RichTextInput";
 export { default as InputField } from "./InputField";
 export { default as InputGroup } from "./InputGroup";
 export { default as InputRow } from "./InputRow";
