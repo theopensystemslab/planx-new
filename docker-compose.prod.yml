@@ -59,7 +59,7 @@ services:
       - certs:/etc/nginx/certs
       - ./nginx/nginx_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./nginx/static.planx.uk:/etc/nginx/vhost.d/static.planx.uk
+      - ./nginx/cdn.planx.uk:/etc/nginx/vhost.d/cdn.planx.uk
 
   letsencrypt-nginx-proxy-companion:
     restart: always
