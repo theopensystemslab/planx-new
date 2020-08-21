@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import Flow from "./components/Flow";
 import "./components/Settings";
 import "./floweditor.scss";
@@ -22,9 +22,15 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
 
   const classes = useStyles();
 
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    console.log("mounted");
+  }, []);
+
   return (
     <div id="editor-container">
-      <div id="editor" className={classes.editor}>
+      <div id="editor" className={classes.editor} ref={editorRef}>
         <Flow flow={flow} breadcrumbs={breadcrumbs} />
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import natsort from "natsort";
-import { compose, lazy, mount, route, withData } from "navi";
+import { compose, lazy, mount, route, withData, withView } from "navi";
+import { View } from "react-navi";
 import React from "react";
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
@@ -22,8 +23,6 @@ const newNode = route(async (req) => {
   const { type = "question", before = null, parent = null } = req.params;
 
   const extraProps = {} as any;
-
-  const [flow, ...breadcrumbs] = req.params.flow.split(",");
 
   if (type === "portal") {
     const { data } = await client.query({
@@ -66,24 +65,19 @@ const newNode = route(async (req) => {
   return {
     title: makeTitle(`New ${type}`),
     view: (
-      <>
-        <FlowEditor flow={flow} breadcrumbs={breadcrumbs} />,
-        <FormModal
-          type={type}
-          Component={components[type]}
-          extraProps={extraProps}
-          before={before}
-          parent={parent}
-        />
-      </>
+      <FormModal
+        type={type}
+        Component={components[type]}
+        extraProps={extraProps}
+        before={before}
+        parent={parent}
+      />
     ),
   };
 });
 
 const editNode = route(async (req) => {
   const { id, before = null, parent = null } = req.params;
-
-  const [flow, ...breadcrumbs] = req.params.flow.split(",");
 
   const { $t } = api.getState().getNode(id);
 
@@ -133,20 +127,17 @@ const editNode = route(async (req) => {
   return {
     title: makeTitle(`Edit ${type}`),
     view: (
-      <>
-        <FlowEditor flow={flow} breadcrumbs={breadcrumbs} />,
-        <FormModal
-          type={type}
-          Component={components[type]}
-          extraProps={extraProps}
-          id={id}
-          handleDelete={() => {
-            api.getState().removeNode(id, parent);
-          }}
-          before={before}
-          parent={parent}
-        />
-      </>
+      <FormModal
+        type={type}
+        Component={components[type]}
+        extraProps={extraProps}
+        id={id}
+        handleDelete={() => {
+          api.getState().removeNode(id, parent);
+        }}
+        before={before}
+        parent={parent}
+      />
     ),
   };
 });
@@ -168,12 +159,21 @@ const routes = compose(
     flow: req.params.flow.split(",")[0],
   })),
 
+  withView((req) => {
+    const [flow, ...breadcrumbs] = req.params.flow.split(",");
+    return (
+      <>
+        <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
+        <View />
+      </>
+    );
+  }),
+
   mount({
     "/": route(async (req) => {
-      const [flow, ...breadcrumbs] = req.params.flow.split(",");
       return {
         title: makeTitle([req.params.team, req.params.flow].join("/")),
-        view: <FlowEditor flow={flow} breadcrumbs={breadcrumbs} />,
+        view: <span />,
       };
     }),
 
