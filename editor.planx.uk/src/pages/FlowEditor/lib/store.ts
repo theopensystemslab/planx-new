@@ -222,7 +222,24 @@ export const [useStore, api] = create((set, get) => ({
         children
       )}, ${JSON.stringify(parent)}, ${JSON.stringify(before)}, beforeFlow);`
     );
-    cb(addNodeWithChildrenOp(data, children, parent, before, flow));
+
+    if (data.flowId && flow.nodes[data.flowId]) {
+      let position = flow.edges.length;
+      if (before) {
+        const index = flow.edges.findIndex(
+          ([src, tgt]: any) => src === parent && tgt === before
+        );
+        console.log({ parent, before, index });
+        if (index >= 0) {
+          position = index;
+        }
+      } else {
+        position++;
+      }
+      cb([{ p: ["edges", position], li: [parent, data.flowId] }]);
+    } else {
+      cb(addNodeWithChildrenOp(data, children, parent, before, flow));
+    }
   },
 
   updateNode: ({ id, ...newNode }, newOptions: any[], cb = send) => {
