@@ -167,8 +167,11 @@ export const moveNodeOp = (
   let toIndex = edges.findIndex(
     ([src, tgt]: any) => src === toParent && tgt === toBefore
   );
-  if (toIndex === -1) {
+
+  if (toIndex < 0) {
     toIndex = edges.length;
+  } else if (fromIndex < toIndex) {
+    toIndex -= 1;
   }
 
   if (parent === toParent) {
