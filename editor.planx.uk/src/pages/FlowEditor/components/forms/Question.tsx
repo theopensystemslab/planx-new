@@ -15,7 +15,6 @@ import { TYPES } from "../../lib/flow";
 import { flags } from "../../lib/store";
 import {
   Input,
-  RichTextInput,
   InputGroup,
   InputRow,
   InputRowItem,
@@ -23,6 +22,7 @@ import {
   ModalSection,
   ModalSectionContent,
   MoreInformation,
+  RichTextInput,
   SelectInput,
 } from "./components";
 import FileUpload from "./components/FileUpload";
@@ -294,7 +294,7 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
                 value={formik.values.text}
                 placeholder="Text"
                 onChange={formik.handleChange}
-                autoFocus
+                // autoFocus
               />
 
               <ImgInput
