@@ -1,9 +1,9 @@
-import { InputBaseProps, makeStyles, Box } from "@material-ui/core";
-import MUIRichTextEditor from "mui-rte";
-import React, { useState, useEffect, useRef, ChangeEvent } from "react";
+import { Box, InputBaseProps, makeStyles } from "@material-ui/core";
+import { convertToRaw } from "draft-js";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
-import { convertToRaw } from "draft-js";
+import MUIRichTextEditor from "mui-rte";
+import React, { ChangeEvent, useState } from "react";
 
 /**
  * Important: if the `value` prop changes for a reason other than changes in the editor,
@@ -44,27 +44,15 @@ const RichTextInput: React.FC<IRichTextInput> = (props) => {
 
   const classes = rteContainerStyles();
 
-  const editorRef = useRef(null);
-
-  useEffect(() => {
-    if (focused && editorRef.current) {
-      editorRef.current.focus();
-    }
-  }, [focused]);
-
   return (
-    <Box
-      onFocus={() => {
-        setFocused(true);
-      }}
-      onBlur={() => {
-        setFocused(false);
-      }}
-      tabIndex={-1}
-      className={focused ? classes.focused : classes.regular}
-    >
+    <Box tabIndex={-1} className={focused ? classes.focused : classes.regular}>
       <MUIRichTextEditor
-        ref={editorRef}
+        onFocus={() => {
+          setFocused(true);
+        }}
+        onBlur={() => {
+          setFocused(false);
+        }}
         defaultValue={JSON.stringify(defaultValue)}
         toolbarButtonSize="small"
         inlineToolbar={true}
@@ -82,6 +70,7 @@ const RichTextInput: React.FC<IRichTextInput> = (props) => {
             return;
           }
           const md = stateToMarkdown(newState.getCurrentContent());
+
           if (md !== props.value) {
             // Construct and cast as a change event so the component stays compatible with formik helpers
             const changeEvent = ({

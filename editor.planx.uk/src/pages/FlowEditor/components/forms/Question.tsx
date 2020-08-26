@@ -9,7 +9,7 @@ import {
 import { CallSplit, MoreVert } from "@material-ui/icons";
 import arrayMove from "array-move";
 import { useFormik } from "formik";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FormikHookReturn } from "../../../../types";
 import { TYPES } from "../../lib/flow";
 import { flags } from "../../lib/store";
@@ -282,6 +282,16 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
     validate: () => {},
   });
 
+  const focusRef = useRef(null);
+
+  // horrible hack to remove focus from Rich Text Editor
+  useEffect(() => {
+    setTimeout(() => {
+      (document.activeElement as any).blur();
+      focusRef.current?.focus();
+    }, 50);
+  }, []);
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -294,7 +304,7 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
                 value={formik.values.text}
                 placeholder="Text"
                 onChange={formik.handleChange}
-                // autoFocus
+                inputRef={focusRef}
               />
 
               <ImgInput

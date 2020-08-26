@@ -5,6 +5,7 @@ import InputGroup from "./InputGroup";
 import InputRow from "./InputRow";
 import ModalSection from "./ModalSection";
 import ModalSectionContent from "./ModalSectionContent";
+import RichTextInput from "./RichTextInput";
 
 const MoreInformation = ({
   whyName,
@@ -20,9 +21,8 @@ const MoreInformation = ({
       <ModalSectionContent title="More Information" Icon={InfoOutlinedIcon}>
         <InputGroup label="Why it matters">
           <InputRow>
-            <Input
+            <RichTextInput
               multiline
-              // required
               name={whyName}
               value={whyValue}
               onChange={changeField}
