@@ -171,9 +171,9 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
         {formik.values.options.map((option, index) => {
           return (
             <InputGroup
-              deletable
+              deletable={false}
+              draggable={false}
               deleteInputGroup={() => deleteRow(index)}
-              draggable
               key={index}
               index={index}
               id={option.id}

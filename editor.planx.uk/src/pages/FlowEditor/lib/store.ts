@@ -4,6 +4,7 @@ import { alg } from "graphlib";
 import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
 import flattenDeep from "lodash/flattenDeep";
+import omit from "lodash/omit";
 import natsort from "natsort";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
@@ -33,7 +34,9 @@ const safeKeys = (ob: any) =>
   }, {});
 
 const send = (...ops) => {
-  doc.submitOp(flattenDeep(ops));
+  ops = flattenDeep(ops);
+  console.info({ ops });
+  doc.submitOp(ops);
 };
 
 export const flags = [
@@ -241,7 +244,7 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   updateNode: ({ id, ...newNode }, newOptions: any[], cb = send) => {
-    const { flow, addNode, moveNode, removeNode } = get();
+    const { flow, addNode } = get();
 
     console.debug(
       `[OP]: updateNodeOp(${JSON.stringify(newNode)}, ${JSON.stringify(
@@ -276,57 +279,62 @@ export const [useStore, api] = create((set, get) => ({
 
     const ops = getOps(patch, id);
 
-    // const currentOptions = flow.edges
-    //   .filter(([src]: any) => src === id)
-    //   .map(([, tgt]: any) => ({ id: tgt, ...flow.nodes[tgt] }));
-
-    // const currentOptionIds = currentOptions.map(({ id }: any) => id);
-
-    // const newOptionIds = newOptions.map((o) => o.id);
-
-    // // 2. update or create any direct children that have been added
-
-    // newOptions.reverse().forEach((option) => {
-    //   if (flow.nodes[option.id]) {
-    //     // if the option already exists...
-    //     // check for changes and add update patches accordingly
-    //     const patch =
-    //       jdiff.diff(
-    //         safeKeys(flow.nodes[option.id]),
-    //         safeKeys(omit(option, "id"))
-    //       ) || {};
-    //     getOps(patch, option.id).forEach((op: any) => ops.push(op));
-    //   } else {
-    //     // otherwise create the option node
-
-    //     addNode({ ...option, $t: TYPES.Response }, [], id, null, (op) =>
-    //       ops.push(op)
-    //     );
-    //   }
-    // });
-
-    // // 3. reorder nodes if necessary
-
-    // if (currentOptionIds.join(",") !== newOptionIds.join(",")) {
-    //   console.log([
-    //     currentOptionIds.map((id: any) => flow.nodes[id]),
-    //     newOptionIds.map((id) => flow.nodes[id]),
-    //   ]);
-    //   let before: any = null;
-    //   newOptionIds.reverse().forEach((oId) => {
-    //     moveNode(oId, id, before, id, (op) => ops.push(op));
-    //     before = oId;
-    //   });
-    // }
+    // 2. update or create any direct children that have been added
+    newOptions.forEach((option) => {
+      if (flow.nodes[option.id]) {
+        // if the option already exists...
+        // check for changes and add update patches accordingly
+        const patch =
+          jdiff.diff(
+            safeKeys(flow.nodes[option.id]),
+            safeKeys(omit(option, "id"))
+          ) || {};
+        getOps(patch, option.id).forEach((op: any) => ops.push(op));
+      } else {
+        // otherwise create the option node
+        addNode({ ...option, $t: TYPES.Response }, [], id, null, (op) =>
+          ops.push(op)
+        );
+      }
+    });
 
     // // 4. remove any direct children that have been removed
-
     // const removedIds = difference(currentOptionIds, newOptionIds);
-
-    // // removedIds.reverse().forEach((tgt) => {
     // removedIds.forEach((tgt) => {
     //   removeNode(tgt, id, (op) => ops.push(op));
     // });
+
+    // // 3. reorder nodes if necessary
+    // if (currentOptionIds.join(",") !== newOptionIds.join(",")) {
+    //   console.log({
+    //     currentOptionIds,
+    //     newOptionIds,
+    //   });
+
+    //   let initialIdx = flow.edges.findIndex(
+    //     ([src, tgt]: any) => src === id && tgt === currentOptionIds[0]
+    //   );
+
+    //   // const sortOps = [];
+
+    //   // let before: any = null;
+    //   [...newOptionIds].forEach((oId, count) => {
+    //     const fromIndex = flow.edges.findIndex(
+    //       ([src, tgt]: any) => src === id && tgt === oId
+    //     );
+    //     let toIndex = initialIdx + count;
+
+    //     if (fromIndex < toIndex) toIndex -= 1;
+
+    //     // sortOps.push({ lm: toIndex, p: ["edges", fromIndex] });
+    //     // moveNode(oId, id, before, id, (op) => ops.push(op));
+    //     // ops.push(moveNodeOp(oId, id, null, id, flow));
+    //     // before = oId;
+    //   });
+    //   // console.log(sortOps.sort((a, b): any => a.p[1] - b.p[2]));
+    //   // console.log(sortOps);
+    //   // ops.push(sortOps);
+    // }
 
     cb(ops);
   },
