@@ -11,7 +11,7 @@ const infoSectionStyles = makeStyles((theme) => ({
     },
   },
   title: {
-    paddingBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(4),
   },
   content: {
     "& img, & p": {

@@ -12,8 +12,8 @@ export const parseFormValues = (ob, defaultValues = {}) =>
   ob.reduce((acc, [k, v]) => {
     if (typeof v === "string") {
       // Remove trailing lines (whitespace)
-      // and non-ASCII characters https://stackoverflow.com/a/24231346
-      v = trim(v).replace(/[^ -~]+/g, "");
+      // and non-ASCII characters https://stackoverflow.com/a/44472084
+      v = trim(v).replace(/[\u{0080}-\u{FFFF}]/gu, "");
       // don't store empty fields
       if (v) acc[k] = v;
     } else if (Array.isArray(v)) {

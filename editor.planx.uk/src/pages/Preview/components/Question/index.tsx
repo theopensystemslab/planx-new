@@ -14,6 +14,7 @@ interface IQuestion {
     description?: string;
   }[];
   handleClick?;
+  info?: string;
 }
 
 const Question: React.FC<IQuestion> = ({
@@ -21,6 +22,7 @@ const Question: React.FC<IQuestion> = ({
   description = "",
   responses,
   handleClick,
+  info,
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -35,7 +37,9 @@ const Question: React.FC<IQuestion> = ({
   return (
     <Card>
       <form onSubmit={formik.handleSubmit}>
-        <InnerQuestion description={description}>{title}</InnerQuestion>
+        <InnerQuestion description={description} info={info}>
+          {title}
+        </InnerQuestion>
         {!title.startsWith("Sorry") &&
           responses.map((response) => {
             return (

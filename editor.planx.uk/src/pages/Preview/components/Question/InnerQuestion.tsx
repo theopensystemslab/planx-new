@@ -5,8 +5,9 @@ import HelpIcon from "@material-ui/icons/HelpOutlineOutlined";
 import React from "react";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
+import ReactMarkdown from "react-markdown";
 
-const InnerQuestion = ({ children, description }) => {
+const InnerQuestion = ({ children, description, info }) => {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -18,19 +19,17 @@ const InnerQuestion = ({ children, description }) => {
           </Box>
           <Box pb={2}>{description}</Box>
         </Grid>
-        <Grid item>
-          <IconButton edge="end">
-            <HelpIcon />
-          </IconButton>
-        </Grid>
+        {!!info && (
+          <Grid item>
+            <IconButton edge="end" onClick={() => setOpen(true)}>
+              <HelpIcon />
+            </IconButton>
+          </Grid>
+        )}
       </Grid>
       <MoreInfo open={open} handleClose={() => setOpen(false)}>
         <MoreInfoSection title="More information">
-          <p>Further information</p>
-          <a href="#!">Policy source</a>
-        </MoreInfoSection>
-        <MoreInfoSection title="Even more information">
-          <div>Further information</div>
+          <ReactMarkdown source={info} />
         </MoreInfoSection>
       </MoreInfo>
     </>

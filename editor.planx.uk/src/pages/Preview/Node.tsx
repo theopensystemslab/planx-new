@@ -18,6 +18,7 @@ const Node: React.FC<any> = (props) => {
           handleClick={props.handleSubmit}
           description={props.description}
           title={props.text}
+          info={props.info}
           responses={childNodesOf(props.id).map((n, i) => ({
             id: n.id,
             responseKey: i + 1,
