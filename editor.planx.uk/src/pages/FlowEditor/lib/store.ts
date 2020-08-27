@@ -3,6 +3,7 @@ import { mostReadable } from "@ctrl/tinycolor";
 import { alg } from "graphlib";
 import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
+import flatten from "lodash/flatten";
 import flattenDeep from "lodash/flattenDeep";
 import omit from "lodash/omit";
 import natsort from "natsort";
@@ -543,5 +544,69 @@ export const [useStore, api] = create((set, get) => ({
       },
     });
     return response;
+  },
+
+  // Preview
+
+  breadcrumbs: {},
+
+  setFlow(id, flow) {
+    set({ id, flow });
+  },
+
+  upcomingCardIds() {
+    const { flow, breadcrumbs } = get();
+
+    const ids = new Set();
+
+    const idsForParent = (parent: any) =>
+      flow.edges
+        .filter(([src]: any) => src === parent)
+        .filter(
+          ([, tgt]: any) =>
+            [TYPES.FindProperty, TYPES.PropertyInformation].includes(
+              flow.nodes[tgt].$t
+            ) || flow.edges.filter(([src]: any) => src === tgt).length > 0
+        )
+        .map(([, tgt]: any) => tgt)
+        .filter((id: any) => !Object.keys(breadcrumbs).includes(id))
+        .forEach((id: any) => {
+          if (flow.nodes[id].$t === TYPES.Portal) {
+            idsForParent(id);
+          } else {
+            ids.add(id);
+          }
+        });
+
+    flatten(Object.values(breadcrumbs))
+      .reverse()
+      .forEach((id) => idsForParent(id));
+
+    idsForParent(null);
+
+    return Array.from(ids);
+  },
+
+  record(id: any, vals: any) {
+    const { breadcrumbs } = get();
+    if (vals) {
+      set({ breadcrumbs: { ...breadcrumbs, [id]: vals } });
+    } else {
+      set({ breadcrumbs: omit(breadcrumbs, id) });
+    }
+  },
+
+  currentCard() {
+    const { upcomingCardIds, flow } = get();
+    const upcoming = upcomingCardIds();
+
+    if (upcoming.length > 0) {
+      return {
+        id: upcoming[0],
+        ...flow.nodes[upcoming[0]],
+      };
+    } else {
+      return null;
+    }
   },
 }));

@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { compose, lazy, map, mount, redirect, route } from "navi";
+import { lazy, map, mount, redirect, route } from "navi";
 import * as React from "react";
 import { client } from "../lib/graphql";
 import Login from "../pages/Login";
@@ -9,37 +9,38 @@ type RoutingContext = {
   currentUser?: any;
 };
 
-export default compose(
-  mount({
-    "/login": map(async (req, context: RoutingContext) =>
-      context.currentUser
-        ? redirect(
-            req.params.redirectTo
-              ? decodeURIComponent(req.params.redirectTo)
-              : "/"
-          )
-        : route({
-            title: makeTitle("Login"),
-            view: <Login />,
-          })
-    ),
+const editorRoutes = mount({
+  "/login": map(async (req, context: RoutingContext) =>
+    context.currentUser
+      ? redirect(
+          req.params.redirectTo
+            ? decodeURIComponent(req.params.redirectTo)
+            : "/"
+        )
+      : route({
+          title: makeTitle("Login"),
+          view: <Login />,
+        })
+  ),
 
-    "/logout": map((): any => {
-      client.resetStore();
-      Cookies.remove("jwt", {
-        domain:
-          process.env.NODE_ENV === "production" ? ".planx.uk" : "localhost",
-      });
-      window.location.href = "/";
-    }),
+  "/logout": map((): any => {
+    client.resetStore();
+    Cookies.remove("jwt", {
+      domain: process.env.NODE_ENV === "production" ? ".planx.uk" : "localhost",
+    });
+    window.location.href = "/";
+  }),
 
-    "*": map(async (req, context: RoutingContext) =>
-      context.currentUser
-        ? lazy(() => import("./authenticated"))
-        : redirect(
-            `/login/?redirectTo=${encodeURIComponent(req.originalUrl)}`,
-            { exact: false }
-          )
-    ),
-  })
-);
+  "*": map(async (req, context: RoutingContext) =>
+    context.currentUser
+      ? lazy(() => import("./authenticated"))
+      : redirect(`/login/?redirectTo=${encodeURIComponent(req.originalUrl)}`, {
+          exact: false,
+        })
+  ),
+});
+
+export default mount({
+  "/:team/:flow/preview": lazy(() => import("./preview")),
+  "*": editorRoutes,
+});
