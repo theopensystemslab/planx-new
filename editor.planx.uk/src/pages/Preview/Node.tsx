@@ -1,8 +1,8 @@
 import React from "react";
 import { TYPES } from "../FlowEditor/lib/flow";
 import { useStore } from "../FlowEditor/lib/store";
+import Checklist from "./components/Checklist";
 import Question from "./components/Question";
-// import Checklist from "./components/Checklist";
 // import FindProperty from "./components/FindProperty";
 // import PropertyInformation from "./components/PropertyInformation";
 
@@ -25,6 +25,18 @@ const Node: React.FC<any> = (props) => {
           }))}
         />
       );
+    case TYPES.Checklist:
+      return (
+        <Checklist
+          text={props.text}
+          description={props.description}
+          handleSubmit={props.handleSubmit}
+          checkBoxes={childNodesOf(props.id).map((n, i) => ({
+            id: n.id,
+            name: n.text,
+          }))}
+        />
+      );
     // case TYPES.FindProperty:
     //   return (
     //     <FindProperty
@@ -39,18 +51,6 @@ const Node: React.FC<any> = (props) => {
     //     <PropertyInformation
     //       UPRN={uprn}
     //       handleSubmit={() => props.handleSubmit([props.id])}
-    //     />
-    //   );
-    // case TYPES.Checklist:
-    //   return (
-    //     <Checklist
-    //       text={props.text}
-    //       description={props.description}
-    //       handleSubmit={props.handleSubmit}
-    //       checkBoxes={childNodesOf(props.id).map((n, i) => ({
-    //         id: n.id,
-    //         name: n.text,
-    //       }))}
     //     />
     //   );
     default:
