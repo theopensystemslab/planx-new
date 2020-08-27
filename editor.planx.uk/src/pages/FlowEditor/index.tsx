@@ -1,6 +1,8 @@
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import React, { useRef, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { rootFlowPath } from "../../routes/utils";
 import Flow from "./components/Flow";
+import PreviewBrowser from "./components/PreviewBrowser";
 import "./components/Settings";
 import "./floweditor.scss";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
@@ -33,6 +35,10 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
       <div id="editor" className={classes.editor} ref={editorRef}>
         <Flow flow={flow} breadcrumbs={breadcrumbs} />
       </div>
+
+      <PreviewBrowser
+        url={`${window.location.origin}${rootFlowPath(false)}/preview`}
+      />
     </div>
   );
 };
