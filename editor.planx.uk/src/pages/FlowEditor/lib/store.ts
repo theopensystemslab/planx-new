@@ -3,9 +3,7 @@ import { mostReadable } from "@ctrl/tinycolor";
 import { alg } from "graphlib";
 import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
-import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
-import omit from "lodash/omit";
 import natsort from "natsort";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
@@ -275,58 +273,60 @@ export const [useStore, api] = create((set, get) => ({
         }
         return ops;
       }, []);
+
     const ops = getOps(patch, id);
 
-    const currentOptions = flow.edges
-      .filter(([src]: any) => src === id)
-      .map(([, tgt]: any) => ({ id: tgt, ...flow.nodes[tgt] }));
-    const currentOptionIds = currentOptions.map(({ id }: any) => id);
+    // const currentOptions = flow.edges
+    //   .filter(([src]: any) => src === id)
+    //   .map(([, tgt]: any) => ({ id: tgt, ...flow.nodes[tgt] }));
 
-    const newOptionIds = newOptions.map((o) => o.id);
+    // const currentOptionIds = currentOptions.map(({ id }: any) => id);
 
-    // 3. update or create any direct children that have been added
+    // const newOptionIds = newOptions.map((o) => o.id);
 
-    newOptions.reverse().forEach((option) => {
-      if (flow.nodes[option.id]) {
-        // if the option already exists...
-        // check for changes and add update patches accordingly
-        const patch =
-          jdiff.diff(
-            safeKeys(flow.nodes[option.id]),
-            safeKeys(omit(option, "id"))
-          ) || {};
-        getOps(patch, option.id).forEach((op: any) => ops.push(op));
-      } else {
-        // otherwise create the option node
+    // // 2. update or create any direct children that have been added
 
-        addNode({ ...option, $t: TYPES.Response }, [], id, null, (op) =>
-          ops.push(op)
-        );
-      }
-    });
+    // newOptions.reverse().forEach((option) => {
+    //   if (flow.nodes[option.id]) {
+    //     // if the option already exists...
+    //     // check for changes and add update patches accordingly
+    //     const patch =
+    //       jdiff.diff(
+    //         safeKeys(flow.nodes[option.id]),
+    //         safeKeys(omit(option, "id"))
+    //       ) || {};
+    //     getOps(patch, option.id).forEach((op: any) => ops.push(op));
+    //   } else {
+    //     // otherwise create the option node
 
-    // 4. reorder nodes if necessary
+    //     addNode({ ...option, $t: TYPES.Response }, [], id, null, (op) =>
+    //       ops.push(op)
+    //     );
+    //   }
+    // });
 
-    if (currentOptionIds.join(",") !== newOptionIds.join(",")) {
-      console.log([
-        currentOptionIds.map((id: any) => flow.nodes[id]),
-        newOptionIds.map((id) => flow.nodes[id]),
-      ]);
-      let before: any = null;
-      newOptionIds.reverse().forEach((oId) => {
-        moveNode(oId, id, before, id, (op) => ops.push(op));
-        before = oId;
-      });
-    }
+    // // 3. reorder nodes if necessary
 
-    // 2. remove any direct children that have been removed
+    // if (currentOptionIds.join(",") !== newOptionIds.join(",")) {
+    //   console.log([
+    //     currentOptionIds.map((id: any) => flow.nodes[id]),
+    //     newOptionIds.map((id) => flow.nodes[id]),
+    //   ]);
+    //   let before: any = null;
+    //   newOptionIds.reverse().forEach((oId) => {
+    //     moveNode(oId, id, before, id, (op) => ops.push(op));
+    //     before = oId;
+    //   });
+    // }
 
-    const removedIds = difference(currentOptionIds, newOptionIds);
+    // // 4. remove any direct children that have been removed
 
-    // removedIds.reverse().forEach((tgt) => {
-    removedIds.forEach((tgt) => {
-      removeNode(tgt, id, (op) => ops.push(op));
-    });
+    // const removedIds = difference(currentOptionIds, newOptionIds);
+
+    // // removedIds.reverse().forEach((tgt) => {
+    // removedIds.forEach((tgt) => {
+    //   removeNode(tgt, id, (op) => ops.push(op));
+    // });
 
     cb(ops);
   },
