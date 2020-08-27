@@ -117,6 +117,8 @@ export const [useStore, api] = create((set, get) => ({
 
   id: undefined,
 
+  showPreview: true,
+
   connectTo: async (id: string) => {
     if (id === get().id) return; // already connected to this ID
 

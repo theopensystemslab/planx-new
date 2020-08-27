@@ -5,6 +5,7 @@ import Flow from "./components/Flow";
 import PreviewBrowser from "./components/PreviewBrowser";
 import "./components/Settings";
 import "./floweditor.scss";
+import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -22,6 +23,8 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
 
+  const showPreview = useStore((state) => state.showPreview);
+
   const classes = useStyles();
 
   const editorRef = useRef(null);
@@ -35,10 +38,11 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
       <div id="editor" className={classes.editor} ref={editorRef}>
         <Flow flow={flow} breadcrumbs={breadcrumbs} />
       </div>
-
-      <PreviewBrowser
-        url={`${window.location.origin}${rootFlowPath(false)}/preview`}
-      />
+      {showPreview && (
+        <PreviewBrowser
+          url={`${window.location.origin}${rootFlowPath(false)}/preview`}
+        />
+      )}
     </div>
   );
 };

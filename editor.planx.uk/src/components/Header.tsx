@@ -9,7 +9,9 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import Toolbar from "@material-ui/core/Toolbar";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import React, { useRef, useState } from "react";
+import Play from "react-feather/dist/icons/play";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
+import { api } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
 
 const useStyles = makeStyles((theme) => ({
@@ -81,6 +83,10 @@ const Header: React.FC<{ bgcolor?: string; logo?: string }> = ({
     setOpen(!open);
   };
 
+  const togglePreview = () => {
+    api.setState({ showPreview: !api.getState().showPreview });
+  };
+
   return (
     <>
       <AppBar
@@ -134,6 +140,12 @@ const Header: React.FC<{ bgcolor?: string; logo?: string }> = ({
           </Box>
           {data.username && (
             <Box className={classes.profileSection}>
+              {data.flow && (
+                <Box mr={3}>
+                  <Play onClick={togglePreview} style={{ cursor: "pointer" }} />
+                </Box>
+              )}
+
               {/* <Box mr={3}>{data.username}</Box> */}
               <Box mr={3}>
                 <Avatar>{data.username[0]}</Avatar>
