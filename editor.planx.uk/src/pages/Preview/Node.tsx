@@ -12,6 +12,7 @@ const Node: React.FC<any> = (props) => {
   const childNodesOf = useStore((state) => state.childNodesOf);
 
   switch (props.$t) {
+    // check SUPPORTED_TYPES in store
     case TYPES.Statement:
       return (
         <Question

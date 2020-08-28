@@ -21,6 +21,8 @@ import {
 } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
+const SUPPORTED_TYPES = [TYPES.Statement, TYPES.Checklist];
+
 let doc;
 
 const jdiff = jsondiffpatch.create({
@@ -589,7 +591,9 @@ export const [useStore, api] = create((set, get) => ({
 
     idsForParent(null);
 
-    return Array.from(ids);
+    return Array.from(ids).filter((id: any) =>
+      SUPPORTED_TYPES.includes(flow.nodes[id].$t)
+    );
   },
 
   record(id: any, vals: any) {
