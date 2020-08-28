@@ -25,6 +25,9 @@ let doc;
 
 const jdiff = jsondiffpatch.create({
   objectHash: (obj: any) => obj.id || JSON.stringify(obj),
+  textDiff: {
+    minLength: Infinity,
+  },
 });
 
 const safeKeys = (ob: any) =>
