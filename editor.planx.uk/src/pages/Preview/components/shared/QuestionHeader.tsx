@@ -21,7 +21,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   const [open, setOpen] = React.useState(false);
 
   return (
-    <Grid container justify="space-between" wrap="nowrap">
+    <Grid>
       <Grid item>
         <Box
           fontSize="h3.fontSize"
