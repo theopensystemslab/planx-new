@@ -29,6 +29,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Checklist:
       return (
         <Checklist
+          info={props.info}
           text={props.text}
           description={props.description}
           handleSubmit={props.handleSubmit}

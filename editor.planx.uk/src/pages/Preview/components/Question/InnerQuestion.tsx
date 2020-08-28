@@ -3,9 +3,9 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import HelpIcon from "@material-ui/icons/HelpOutlineOutlined";
 import React from "react";
+import ReactMarkdown from "react-markdown";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
-import ReactMarkdown from "react-markdown";
 
 const InnerQuestion = ({ children, description, info }) => {
   const [open, setOpen] = React.useState(false);

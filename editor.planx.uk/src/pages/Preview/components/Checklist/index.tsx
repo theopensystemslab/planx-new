@@ -15,6 +15,7 @@ interface ICheckboxes {
   }[];
   handleSubmit?;
   description?: string;
+  info?: string;
 }
 
 const Checkboxes: React.FC<ICheckboxes> = ({
@@ -22,6 +23,7 @@ const Checkboxes: React.FC<ICheckboxes> = ({
   text,
   handleSubmit,
   description = "",
+  info,
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -52,7 +54,9 @@ const Checkboxes: React.FC<ICheckboxes> = ({
   return (
     <Card>
       <form onSubmit={formik.handleSubmit}>
-        <QuestionHeader description={description}>{text}</QuestionHeader>
+        <QuestionHeader description={description} info={info}>
+          {text}
+        </QuestionHeader>
 
         {hasImages(checkBoxes) ? (
           <Grid container spacing={2}>
