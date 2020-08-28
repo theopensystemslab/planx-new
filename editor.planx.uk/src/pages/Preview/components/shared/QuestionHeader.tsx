@@ -21,31 +21,33 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   const [open, setOpen] = React.useState(false);
 
   return (
-    <Grid>
-      <Grid item>
-        <Box
-          fontSize="h3.fontSize"
-          fontWeight="h3.fontWeight"
-          letterSpacing="-0.02em"
-          pb={1}
-        >
-          {children}
-        </Box>
-        <Box pb={2}>{description}</Box>
-      </Grid>
-      {!!info && (
+    <>
+      <Grid container justify="space-between" wrap="nowrap">
         <Grid item>
-          <IconButton edge="end" onClick={() => setOpen(true)}>
-            <HelpIcon />
-          </IconButton>
+          <Box
+            fontSize="h3.fontSize"
+            fontWeight="h3.fontWeight"
+            letterSpacing="-0.02em"
+            pb={1}
+          >
+            {children}
+          </Box>
+          <Box pb={2}>{description}</Box>
         </Grid>
-      )}
+        {!!info && (
+          <Grid item>
+            <IconButton edge="end" onClick={() => setOpen(true)}>
+              <HelpIcon />
+            </IconButton>
+          </Grid>
+        )}
+      </Grid>
       <MoreInfo open={open} handleClose={() => setOpen(false)}>
         <MoreInfoSection title="More information">
           <ReactMarkdown source={info} />
         </MoreInfoSection>
       </MoreInfo>
-    </Grid>
+    </>
   );
 };
 export default QuestionHeader;
