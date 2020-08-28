@@ -40,7 +40,6 @@
     "rxjs": "^6.6.0",
     "scroll-into-view-if-needed": "^2.2.25",
     "sharedb": "^1.4.1",
-    "styled-components": "^5.1.1",
     "subscriptions-transport-ws": "^0.9.17",
     "uuid": "^8.2.0",
     "zustand": "^2.2.3"
