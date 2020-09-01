@@ -1,6 +1,5 @@
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import React from "react";
-import Input from "./Input";
 import InputGroup from "./InputGroup";
 import InputRow from "./InputRow";
 import ModalSection from "./ModalSection";
@@ -27,25 +26,24 @@ const MoreInformation = ({
               value={whyValue}
               onChange={changeField}
               placeholder="Why it matters"
-              rows={3}
             />
           </InputRow>
         </InputGroup>
         <InputGroup label="Policy source">
           <InputRow>
-            <Input
-              // required
-              onChange={changeField}
-              value={policyValue}
+            <RichTextInput
+              multiline
               name={policyName}
+              value={policyValue}
+              onChange={changeField}
               placeholder="Policy source"
             />
           </InputRow>
         </InputGroup>
         <InputGroup label="Definition / How it is measured">
           <InputRow>
-            <Input
-              // required
+            <RichTextInput
+              multiline
               name={definitionName}
               value={definitionValue}
               onChange={changeField}
