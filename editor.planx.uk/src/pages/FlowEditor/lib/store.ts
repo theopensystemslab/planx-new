@@ -24,6 +24,7 @@ import { connectToDB, getConnection } from "./sharedb";
 const SUPPORTED_TYPES = [TYPES.Statement, TYPES.Checklist];
 
 let doc;
+window["doc"] = doc;
 
 const jdiff = jsondiffpatch.create({
   objectHash: (obj: any) => obj.id || JSON.stringify(obj),
