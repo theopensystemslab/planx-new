@@ -213,10 +213,20 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                   onChange={formik.handleChange}
                 >
                   {option.flag && <MenuItem value="">Remove Flag</MenuItem>}
-                  <MenuItem disabled>Listed Buildings</MenuItem>
-                  {renderMenuItem("Listed Buildings")}
-                  <MenuItem disabled>Planning Permission</MenuItem>
-                  {renderMenuItem("Planning Permission")}
+                  <MenuItem disabled>Planning permission</MenuItem>
+                  {renderMenuItem("Planning permission")}
+                  <MenuItem disabled>Listed building consent</MenuItem>
+                  {renderMenuItem("Listed building consent")}
+                  <MenuItem disabled>Works to trees</MenuItem>
+                  {renderMenuItem("Works to trees")}
+                  <MenuItem disabled>
+                    Demolition in a conservation area
+                  </MenuItem>
+                  {renderMenuItem("Demolition in a conservation area")}
+                  <MenuItem disabled>Planning policy</MenuItem>
+                  {renderMenuItem("Planning policy")}
+                  <MenuItem disabled>Community infrastructure levy</MenuItem>
+                  {renderMenuItem("Community infrastructure levy")}
                 </SelectInput>
               </InputRow>
 
