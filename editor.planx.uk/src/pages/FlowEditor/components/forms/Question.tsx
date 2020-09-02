@@ -11,8 +11,8 @@ import arrayMove from "array-move";
 import { useFormik } from "formik";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FormikHookReturn } from "../../../../types";
+import flags from "../../data/flags";
 import { TYPES } from "../../lib/flow";
-import { flags } from "../../lib/store";
 import {
   Input,
   InputGroup,
