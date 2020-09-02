@@ -181,7 +181,7 @@ export const flags = [
     value: "EDGE_CASE",
     text: "Edge case",
     category: "Planning policy",
-    bgColor: "##FFA800",
+    bgColor: "#FFA800",
   },
   {
     value: "LIKELY_FAIL",
