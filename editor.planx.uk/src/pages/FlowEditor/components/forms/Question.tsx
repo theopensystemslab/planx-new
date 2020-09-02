@@ -12,7 +12,7 @@ import { useFormik } from "formik";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FormikHookReturn } from "../../../../types";
 import flags from "../../data/flags";
-import { TYPES } from "../../lib/flow";
+import { TYPES } from "../../data/types";
 import {
   Input,
   InputGroup,

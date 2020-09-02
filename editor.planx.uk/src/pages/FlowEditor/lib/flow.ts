@@ -3,26 +3,7 @@ import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
 import randomWords from "random-words";
 import { v4 as uuid } from "uuid";
-
-export enum TYPES {
-  Flow = 1,
-  SignIn = 2,
-  Result = 3,
-  Report = 4,
-  PropertyInformation = 5,
-  FindProperty = 6,
-  TaskList = 7,
-  Notice = 8,
-  Statement = 100, // Question/DropDown
-  Checklist = 105,
-  TextInput = 110,
-  DateInput = 120,
-  AddressInput = 130,
-  FileUpload = 140,
-  NumberInput = 150,
-  Response = 200,
-  Portal = 300,
-}
+import { TYPES } from "../data/types";
 
 export interface Node {
   id?: string;

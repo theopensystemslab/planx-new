@@ -1,5 +1,5 @@
 import React from "react";
-import { TYPES } from "../FlowEditor/lib/flow";
+import { TYPES } from "../FlowEditor/data/types";
 import { useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";
 import Question from "./components/Question";

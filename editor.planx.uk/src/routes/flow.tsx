@@ -1,15 +1,15 @@
 import { gql } from "@apollo/client";
 import natsort from "natsort";
 import { compose, lazy, mount, route, withData, withView } from "navi";
-import { View } from "react-navi";
 import React from "react";
+import { View } from "react-navi";
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
 import Checklist from "../pages/FlowEditor/components/forms/Checklist";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import Portal from "../pages/FlowEditor/components/forms/Portal";
 import Question from "../pages/FlowEditor/components/forms/Question";
-import { TYPES } from "../pages/FlowEditor/lib/flow";
+import { TYPES } from "../pages/FlowEditor/data/types";
 import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
 

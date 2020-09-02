@@ -1,6 +1,6 @@
 import React from "react";
+import { TYPES } from "../../../data/types";
 import { useStore } from "../../../lib/store";
-import { TYPES } from "../../../lib/flow";
 import Breadcrumb from "./Breadcrumb";
 import Option from "./Option";
 import Portal from "./Portal";

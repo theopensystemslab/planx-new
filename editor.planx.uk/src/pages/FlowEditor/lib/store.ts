@@ -9,6 +9,7 @@ import natsort from "natsort";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
+import { TYPES } from "../data/types";
 import {
   addNodeWithChildrenOp,
   isValidOp,
@@ -16,7 +17,6 @@ import {
   Node,
   removeNodeOp,
   toGraphlib,
-  TYPES,
 } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
