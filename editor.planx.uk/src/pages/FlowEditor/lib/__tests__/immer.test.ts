@@ -31,21 +31,22 @@ const patchToOP = (flow) => ([patch, inverse]) => {
   }
 };
 
-const addNode = (flow, { id, ...node }) => {
-  const [next, patches, inverse] = produceWithPatches(flow, (draft) => {
-    draft.nodes[id] = node;
-    draft.edges.push([null, id]);
-  });
+const getOps = (flow, fn) => {
+  const [next, patches, inverse]: any = produceWithPatches(flow, fn);
   return zip(patches, inverse).map(patchToOP(next));
 };
 
-const removeNode = (flow, id) => {
-  const [next, patches, inverse] = produceWithPatches(flow, (draft) => {
+const addNode = (flow, { id, ...node }) =>
+  getOps(flow, (draft) => {
+    draft.nodes[id] = node;
+    draft.edges.push([null, id]);
+  });
+
+const removeNode = (flow, id) =>
+  getOps(flow, (draft) => {
     delete draft.nodes[id];
     draft.edges.splice(0, 1);
   });
-  return zip(patches, inverse).map(patchToOP(next));
-};
 
 test("add node", () => {
   const ops = addNode(
@@ -71,8 +72,6 @@ test("remove node", () => {
     },
     "aaa"
   );
-
-  console.log({ ops });
 
   expect(ops).toEqual([
     { od: "test", p: ["nodes", "aaa"] },
