@@ -27,15 +27,13 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
 
   const classes = useStyles();
 
-  const editorRef = useRef(null);
-
   useEffect(() => {
     console.log("mounted");
   }, []);
 
   return (
     <div id="editor-container">
-      <div id="editor" className={classes.editor} ref={editorRef}>
+      <div id="editor" className={classes.editor} ref={scrollContainerRef}>
         <Flow flow={flow} breadcrumbs={breadcrumbs} />
       </div>
       {showPreview && (
