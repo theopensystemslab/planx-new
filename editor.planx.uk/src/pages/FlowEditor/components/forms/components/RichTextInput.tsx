@@ -6,7 +6,7 @@ import MUIRichTextEditor, {
   TAsyncAtomicBlockResponse,
   TMUIRichTextEditorRef,
 } from "mui-rte";
-import React, { ChangeEvent, useState, useRef } from "react";
+import React, { ChangeEvent, useState, useRef, useEffect } from "react";
 
 /**
  * Important: if the `value` prop changes for a reason other than changes in the editor,
@@ -48,6 +48,27 @@ const RichTextInput: React.FC<IRichTextInput> = (props) => {
 
   const editorRef = useRef<TMUIRichTextEditorRef>(null);
 
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const globalClickHandler = (ev: any) => {
+      if (!containerRef.current) {
+      }
+      const container = containerRef.current;
+      if (
+        container.contains(ev.target) &&
+        container.contains(document.querySelector(".DraftEditor-root"))
+      ) {
+        editorRef.current.focus();
+        setFocused(true);
+      }
+    };
+    document.addEventListener("click", globalClickHandler);
+    return () => {
+      document.removeEventListener("click", globalClickHandler);
+    };
+  }, []);
+
   const handleFileUpload = async (file: File) => {
     await editorRef.current?.insertAtomicBlockAsync(
       "IMAGE",
@@ -73,7 +94,10 @@ const RichTextInput: React.FC<IRichTextInput> = (props) => {
   const classes = rteContainerStyles();
 
   return (
-    <Box tabIndex={-1} className={focused ? classes.focused : classes.regular}>
+    <Box
+      ref={containerRef}
+      className={focused ? classes.focused : classes.regular}
+    >
       <MUIRichTextEditor
         onFocus={() => {
           setFocused(true);
