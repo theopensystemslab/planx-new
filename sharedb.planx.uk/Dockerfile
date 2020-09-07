@@ -1,8 +1,8 @@
 FROM node:14.4.0-alpine
 
-ENV ENV_NAME development
-ENV NODE_ENV development
-ENV NODE_CONFIG_ENV development
+ENV ENV_NAME production
+ENV NODE_ENV production
+ENV NODE_CONFIG_ENV production
 
 WORKDIR /sharedb
 
@@ -15,4 +15,4 @@ RUN yarn install
 
 COPY . ./
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "start"]
