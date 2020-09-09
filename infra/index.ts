@@ -57,7 +57,7 @@ const hasuraService = new awsx.ecs.FargateService("planx-hasura", {
   cluster,
   taskDefinitionArgs: {
     container: {
-      image: repo.buildAndPushImage("./hasura.planx.uk"),
+      image: repo.buildAndPushImage("../hasura.planx.uk"),
       memory: 512 /*MB*/,
       portMappings: [hasuraListener],
       environment: [
@@ -99,7 +99,7 @@ const apiService = new awsx.ecs.FargateService("planx-api", {
   cluster,
   taskDefinitionArgs: {
     container: {
-      image: repo.buildAndPushImage("./api.planx.uk"),
+      image: repo.buildAndPushImage("../api.planx.uk"),
       memory: 512 /*MB*/,
       portMappings: [apiListener],
       environment: [
@@ -137,7 +137,7 @@ const sharedbService = new awsx.ecs.FargateService("planx-sharedb", {
   cluster,
   taskDefinitionArgs: {
     container: {
-      image: repo.buildAndPushImage("./sharedb.planx.uk"),
+      image: repo.buildAndPushImage("../sharedb.planx.uk"),
       memory: 512 /*MB*/,
       environment: [
         { name: "JWT_SECRET", value: JWT_SECRET },
