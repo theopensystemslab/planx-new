@@ -20,7 +20,12 @@ import {
 } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
-const SUPPORTED_TYPES = [TYPES.Statement, TYPES.Checklist];
+const SUPPORTED_TYPES = [
+  TYPES.Checklist,
+  TYPES.FindProperty,
+  TYPES.PropertyInformation,
+  TYPES.Statement,
+];
 
 let doc;
 

@@ -10,6 +10,10 @@ const Node: React.FC<any> = (props) => {
   const node = useStore((state) => state.flow.nodes[props.id]);
 
   switch (props.$t) {
+    case TYPES.PropertyInformation:
+      return <Question {...props} text="Property information" />;
+    case TYPES.FindProperty:
+      return <Question {...props} text="Find property" />;
     case TYPES.Statement:
     case TYPES.Checklist:
       return <Question {...props} {...node} />;
