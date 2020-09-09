@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
 
-const InnerQuestion = ({ children, description, info }) => {
+const InnerQuestion = ({ children, description, info }: any) => {
   const [open, setOpen] = React.useState(false);
 
   return (

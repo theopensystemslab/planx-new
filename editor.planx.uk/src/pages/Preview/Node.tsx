@@ -2,11 +2,11 @@ import React from "react";
 import { TYPES } from "../FlowEditor/data/types";
 import { useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";
+import FindProperty from "./components/FindProperty";
+import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
-// import FindProperty from "./components/FindProperty";
-// import PropertyInformation from "./components/PropertyInformation";
 
-// let uprn;
+let uprn;
 
 const Node: React.FC<any> = (props) => {
   const childNodesOf = useStore((state) => state.childNodesOf);
@@ -40,22 +40,22 @@ const Node: React.FC<any> = (props) => {
           }))}
         />
       );
-    // case TYPES.FindProperty:
-    //   return (
-    //     <FindProperty
-    //       handleSubmit={(data) => {
-    //         uprn = data;
-    //         props.handleSubmit([props.id]);
-    //       }}
-    //     />
-    //   );
-    // case TYPES.PropertyInformation:
-    //   return (
-    //     <PropertyInformation
-    //       UPRN={uprn}
-    //       handleSubmit={() => props.handleSubmit([props.id])}
-    //     />
-    //   );
+    case TYPES.FindProperty:
+      return (
+        <FindProperty
+          handleSubmit={(data) => {
+            uprn = data;
+            props.handleSubmit([props.id]);
+          }}
+        />
+      );
+    case TYPES.PropertyInformation:
+      return (
+        <PropertyInformation
+          UPRN={uprn}
+          handleSubmit={() => props.handleSubmit([props.id])}
+        />
+      );
     default:
       console.error({ nodeNotFound: props });
       return null;

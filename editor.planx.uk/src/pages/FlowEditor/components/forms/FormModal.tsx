@@ -82,12 +82,8 @@ const FormModal: React.FC<{
               </option>
             </optgroup>
             <optgroup label="Location">
-              <option disabled value="find-property">
-                Find property
-              </option>
-              <option disabled value="property-information">
-                Property information
-              </option>
+              <option value="find-property">Find property</option>
+              <option value="property-information">Property information</option>
             </optgroup>
             <optgroup label="Navigation">
               <option value="portal">Portal</option>

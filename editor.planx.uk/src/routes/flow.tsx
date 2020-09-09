@@ -6,17 +6,21 @@ import { View } from "react-navi";
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
 import Checklist from "../pages/FlowEditor/components/forms/Checklist";
+import FindProperty from "../pages/FlowEditor/components/forms/FindProperty";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import Portal from "../pages/FlowEditor/components/forms/Portal";
+import PropertyInformation from "../pages/FlowEditor/components/forms/PropertyInformation";
 import Question from "../pages/FlowEditor/components/forms/Question";
 import { TYPES } from "../pages/FlowEditor/data/types";
 import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
 
 const components = {
+  "find-property": FindProperty,
+  "property-information": PropertyInformation,
+  checklist: Checklist,
   portal: Portal,
   question: Question,
-  checklist: Checklist,
 };
 
 const newNode = route(async (req) => {
@@ -85,6 +89,12 @@ const editNode = route(async (req) => {
 
   let type;
   switch ($t) {
+    case TYPES.Checklist:
+      type = "checklist";
+      break;
+    case TYPES.FindProperty:
+      type = "find-property";
+      break;
     case TYPES.Portal:
       type = "portal";
 
@@ -113,8 +123,8 @@ const editNode = route(async (req) => {
         .sort(sorter);
 
       break;
-    case TYPES.Checklist:
-      type = "checklist";
+    case TYPES.PropertyInformation:
+      type = "property-information";
       break;
     default:
       type = "question";
