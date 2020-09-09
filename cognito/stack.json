@@ -1,0 +1,249 @@
+{
+    "version": 3,
+    "deployment": {
+        "manifest": {
+            "time": "2020-09-09T12:52:07.645496608+01:00",
+            "magic": "8dc0d2b336553a78d948e123547fb6d039f8b908347e6331ccbb33bb44bb2f9d",
+            "version": "v2.9.2"
+        },
+        "secrets_providers": {
+            "type": "service",
+            "state": {
+                "url": "https://api.pulumi.com",
+                "owner": "osl",
+                "project": "cognito",
+                "stack": "dev"
+            }
+        },
+        "resources": [
+            {
+                "urn": "urn:pulumi:dev::cognito::pulumi:pulumi:Stack::cognito-dev",
+                "custom": false,
+                "type": "pulumi:pulumi:Stack"
+            },
+            {
+                "urn": "urn:pulumi:dev::cognito::pulumi:providers:aws::default_3_2_1",
+                "custom": true,
+                "id": "22657813-e099-4e42-a612-4db20c8d8bff",
+                "type": "pulumi:providers:aws",
+                "inputs": {
+                    "region": "eu-west-2",
+                    "version": "3.2.1"
+                },
+                "outputs": {
+                    "region": "eu-west-2",
+                    "version": "3.2.1"
+                }
+            },
+            {
+                "urn": "urn:pulumi:dev::cognito::aws:iam/role:Role::lambdaRole",
+                "custom": true,
+                "id": "lambdaRole-f5a86c5",
+                "type": "aws:iam/role:Role",
+                "inputs": {
+                    "__defaults": [
+                        "forceDetachPolicies",
+                        "maxSessionDuration",
+                        "name",
+                        "path"
+                    ],
+                    "assumeRolePolicy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"AllowAssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
+                    "description": "",
+                    "forceDetachPolicies": false,
+                    "maxSessionDuration": 3600,
+                    "name": "lambdaRole-f5a86c5",
+                    "path": "/",
+                    "tags": {}
+                },
+                "outputs": {
+                    "arn": "arn:aws:iam::381969277568:role/lambdaRole-f5a86c5",
+                    "assumeRolePolicy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"AllowAssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
+                    "createDate": "2020-09-07T17:21:46Z",
+                    "description": "",
+                    "forceDetachPolicies": false,
+                    "id": "lambdaRole-f5a86c5",
+                    "maxSessionDuration": 3600,
+                    "name": "lambdaRole-f5a86c5",
+                    "path": "/",
+                    "tags": {},
+                    "uniqueId": "AROAVR3ZEUKADJQVOCWQA"
+                },
+                "parent": "urn:pulumi:dev::cognito::pulumi:pulumi:Stack::cognito-dev",
+                "provider": "urn:pulumi:dev::cognito::pulumi:providers:aws::default_3_2_1::22657813-e099-4e42-a612-4db20c8d8bff",
+                "propertyDependencies": {
+                    "assumeRolePolicy": null
+                }
+            },
+            {
+                "urn": "urn:pulumi:dev::cognito::aws:cloudwatch/logGroup:LogGroup::example",
+                "custom": true,
+                "id": "example-9bb1686",
+                "type": "aws:cloudwatch/logGroup:LogGroup",
+                "inputs": {
+                    "__defaults": [
+                        "name"
+                    ],
+                    "kmsKeyId": "",
+                    "name": "example-9bb1686",
+                    "retentionInDays": 14,
+                    "tags": {}
+                },
+                "outputs": {
+                    "arn": "arn:aws:logs:eu-west-2:381969277568:log-group:example-9bb1686",
+                    "id": "example-9bb1686",
+                    "kmsKeyId": "",
+                    "name": "example-9bb1686",
+                    "retentionInDays": 14,
+                    "tags": {}
+                },
+                "parent": "urn:pulumi:dev::cognito::pulumi:pulumi:Stack::cognito-dev",
+                "provider": "urn:pulumi:dev::cognito::pulumi:providers:aws::default_3_2_1::22657813-e099-4e42-a612-4db20c8d8bff",
+                "propertyDependencies": {
+                    "retentionInDays": null
+                }
+            },
+            {
+                "urn": "urn:pulumi:dev::cognito::aws:iam/policy:Policy::lambdaLogging",
+                "custom": true,
+                "id": "arn:aws:iam::381969277568:policy/lambdaLogging-abb9ad4",
+                "type": "aws:iam/policy:Policy",
+                "inputs": {
+                    "__defaults": [
+                        "name"
+                    ],
+                    "description": "IAM policy for logging from a lambda",
+                    "name": "lambdaLogging-abb9ad4",
+                    "path": "/",
+                    "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": [\n        \"logs:CreateLogGroup\",\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\"\n      ],\n      \"Resource\": \"arn:aws:logs:*:*:*\",\n      \"Effect\": \"Allow\"\n    }\n  ]\n}\n"
+                },
+                "outputs": {
+                    "arn": "arn:aws:iam::381969277568:policy/lambdaLogging-abb9ad4",
+                    "description": "IAM policy for logging from a lambda",
+                    "id": "arn:aws:iam::381969277568:policy/lambdaLogging-abb9ad4",
+                    "name": "lambdaLogging-abb9ad4",
+                    "path": "/",
+                    "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": [\n        \"logs:CreateLogGroup\",\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\"\n      ],\n      \"Resource\": \"arn:aws:logs:*:*:*\",\n      \"Effect\": \"Allow\"\n    }\n  ]\n}\n"
+                },
+                "parent": "urn:pulumi:dev::cognito::pulumi:pulumi:Stack::cognito-dev",
+                "provider": "urn:pulumi:dev::cognito::pulumi:providers:aws::default_3_2_1::22657813-e099-4e42-a612-4db20c8d8bff",
+                "propertyDependencies": {
+                    "description": null,
+                    "path": null,
+                    "policy": null
+                }
+            },
+            {
+                "urn": "urn:pulumi:dev::cognito::aws:iam/rolePolicyAttachment:RolePolicyAttachment::lambdaLogs",
+                "custom": true,
+                "id": "lambdaRole-f5a86c5-20200907172149772300000001",
+                "type": "aws:iam/rolePolicyAttachment:RolePolicyAttachment",
+                "inputs": {
+                    "__defaults": [],
+                    "policyArn": "arn:aws:iam::381969277568:policy/lambdaLogging-abb9ad4",
+                    "role": "lambdaRole-f5a86c5"
+                },
+                "outputs": {
+                    "id": "lambdaRole-f5a86c5-20200907172149772300000001",
+                    "policyArn": "arn:aws:iam::381969277568:policy/lambdaLogging-abb9ad4",
+                    "role": "lambdaRole-f5a86c5"
+                },
+                "parent": "urn:pulumi:dev::cognito::pulumi:pulumi:Stack::cognito-dev",
+                "dependencies": [
+                    "urn:pulumi:dev::cognito::aws:iam/policy:Policy::lambdaLogging",
+                    "urn:pulumi:dev::cognito::aws:iam/role:Role::lambdaRole"
+                ],
+                "provider": "urn:pulumi:dev::cognito::pulumi:providers:aws::default_3_2_1::22657813-e099-4e42-a612-4db20c8d8bff",
+                "propertyDependencies": {
+                    "policyArn": [
+                        "urn:pulumi:dev::cognito::aws:iam/policy:Policy::lambdaLogging"
+                    ],
+                    "role": [
+                        "urn:pulumi:dev::cognito::aws:iam/role:Role::lambdaRole"
+                    ]
+                }
+            },
+            {
+                "urn": "urn:pulumi:dev::cognito::aws:lambda/function:Function::foo",
+                "custom": true,
+                "id": "foo-3a65604",
+                "type": "aws:lambda/function:Function",
+                "inputs": {
+                    "__defaults": [
+                        "memorySize",
+                        "name",
+                        "publish",
+                        "reservedConcurrentExecutions"
+                    ],
+                    "code": "/tmp/pulumi-asset-9c6e59e330b5f8ef28159c1cd319d3322926beaa4080a8b69efa88fe28177c7d",
+                    "deadLetterConfig": null,
+                    "description": "",
+                    "environment": null,
+                    "fileSystemConfig": null,
+                    "handler": "__index.handler",
+                    "kmsKeyArn": "",
+                    "layers": [],
+                    "memorySize": 128,
+                    "name": "foo-3a65604",
+                    "publish": false,
+                    "reservedConcurrentExecutions": -1,
+                    "role": "arn:aws:iam::381969277568:role/lambdaRole-f5a86c5",
+                    "runtime": "nodejs12.x",
+                    "sourceCodeHash": "4B2mOiyIehSaXMvdx+1n1KX6KGN6FY6/5cDPo/UyhYs=",
+                    "tags": {},
+                    "timeout": 180,
+                    "tracingConfig": {
+                        "mode": "PassThrough"
+                    },
+                    "vpcConfig": null
+                },
+                "outputs": {
+                    "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":600000000000}}",
+                    "arn": "arn:aws:lambda:eu-west-2:381969277568:function:foo-3a65604",
+                    "code": "/tmp/pulumi-asset-9c6e59e330b5f8ef28159c1cd319d3322926beaa4080a8b69efa88fe28177c7d",
+                    "deadLetterConfig": null,
+                    "description": "",
+                    "environment": null,
+                    "fileSystemConfig": null,
+                    "handler": "__index.handler",
+                    "id": "foo-3a65604",
+                    "invokeArn": "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:381969277568:function:foo-3a65604/invocations",
+                    "kmsKeyArn": "",
+                    "lastModified": "2020-09-07T17:42:18.009+0000",
+                    "layers": [],
+                    "memorySize": 128,
+                    "name": "foo-3a65604",
+                    "publish": false,
+                    "qualifiedArn": "arn:aws:lambda:eu-west-2:381969277568:function:foo-3a65604:$LATEST",
+                    "reservedConcurrentExecutions": -1,
+                    "role": "arn:aws:iam::381969277568:role/lambdaRole-f5a86c5",
+                    "runtime": "nodejs12.x",
+                    "sourceCodeHash": "4B2mOiyIehSaXMvdx+1n1KX6KGN6FY6/5cDPo/UyhYs=",
+                    "sourceCodeSize": 508,
+                    "tags": {},
+                    "timeout": 180,
+                    "tracingConfig": {
+                        "mode": "PassThrough"
+                    },
+                    "version": "$LATEST",
+                    "vpcConfig": null
+                },
+                "parent": "urn:pulumi:dev::cognito::pulumi:pulumi:Stack::cognito-dev",
+                "dependencies": [
+                    "urn:pulumi:dev::cognito::aws:iam/rolePolicyAttachment:RolePolicyAttachment::lambdaLogs",
+                    "urn:pulumi:dev::cognito::aws:cloudwatch/logGroup:LogGroup::example",
+                    "urn:pulumi:dev::cognito::aws:iam/role:Role::lambdaRole"
+                ],
+                "provider": "urn:pulumi:dev::cognito::pulumi:providers:aws::default_3_2_1::22657813-e099-4e42-a612-4db20c8d8bff",
+                "propertyDependencies": {
+                    "code": null,
+                    "handler": null,
+                    "role": [
+                        "urn:pulumi:dev::cognito::aws:iam/role:Role::lambdaRole"
+                    ],
+                    "runtime": null,
+                    "timeout": null
+                }
+            }
+        ]
+    }
+}

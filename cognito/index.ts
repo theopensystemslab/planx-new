@@ -2,10 +2,14 @@ import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 
+const CALLBACK_URLS = ["http://localhost:3000/cognito-callback"];
+const LOGOUT_URLS = ["http://localhost:3000/logout"];
+
 // This is to optionally manage the CloudWatch Log Group for the Lambda Function.
 // If skipping this resource configuration, also add "logs:CreateLogGroup" to the IAM policy below.
-const example = new aws.cloudwatch.LogGroup("example", { retentionInDays: 14 });
-// See also the following AWS managed policy: AWSLambdaBasicExecutionRole
+const lambdaLogGroup = new aws.cloudwatch.LogGroup("lambdaLogGroup", {
+  retentionInDays: 14
+});
 const lambdaLogging = new aws.iam.Policy("lambdaLogging", {
   path: "/",
   description: "IAM policy for logging from a lambda",
@@ -34,9 +38,8 @@ const lambdaLogs = new aws.iam.RolePolicyAttachment("lambdaLogs", {
   role: lambdaRole.name,
   policyArn: lambdaLogging.arn
 });
-
 const lambda = new aws.lambda.CallbackFunction(
-  "foo",
+  "preTokenGenerationLambda",
   {
     role: lambdaRole,
     callback: (event: any, context, callback) => {
@@ -56,38 +59,46 @@ const lambda = new aws.lambda.CallbackFunction(
     }
   },
 
-  { dependsOn: [lambdaLogs, example] }
+  { dependsOn: [lambdaLogs, lambdaLogGroup] }
 );
-const pool = new aws.cognito.UserPool("pool", {
-  usernameAttributes: ["email", "phone_number"],
-  usernameConfiguration: {
-    caseSensitive: true
-  },
-  lambdaConfig: {
-    preTokenGeneration: lambda.arn
-  }
-});
 
-const DOMAIN = "osl-test-1";
+const pool = new aws.cognito.UserPool(
+  "pool",
+  {
+    usernameAttributes: ["email" /* , "phone_number" */],
+    autoVerifiedAttributes: ["email"],
+    usernameConfiguration: {
+      caseSensitive: true
+    },
+    lambdaConfig: {
+      preTokenGeneration: lambda.arn
+    },
+    passwordPolicy: {
+      requireLowercase: false,
+      requireNumbers: false,
+      requireSymbols: false,
+      requireUppercase: false,
+      minimumLength: 12
+    }
+  },
+  { dependsOn: [lambda] }
+);
+
+const DOMAIN = "osl-planx";
 const domain = new aws.cognito.UserPoolDomain("main", {
   domain: DOMAIN,
   userPoolId: pool.id
 });
 
 const allowedOauthScopes = ["email", "phone", "openid", "profile"];
-const callbackUrl = "http://localhost:3000/cognito-callback";
 const client = new aws.cognito.UserPoolClient("client", {
   userPoolId: pool.id,
   allowedOauthFlows: ["implicit"],
-  callbackUrls: [callbackUrl],
-  logoutUrls: ["http://localhost:3000/logout"],
+  callbackUrls: CALLBACK_URLS,
+  logoutUrls: LOGOUT_URLS,
   allowedOauthScopes,
   allowedOauthFlowsUserPoolClient: true,
   generateSecret: false,
   // The following are supported: COGNITO, Facebook, Google and LoginWithAmazon.
   supportedIdentityProviders: ["COGNITO"]
 });
-
-// export const authURL = `https://${DOMAIN}.auth.${new pulumi.Config(
-//   "aws"
-// ).require("region")}.amazoncognito.com/login?client_id=${}&scope=${allowedOauthScopes.join("+")}&redirect_uri=${callbackUrl}`;

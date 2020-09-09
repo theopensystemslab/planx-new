@@ -1,0 +1,5 @@
+Cognito is being bitch-y
+
+After signing up, we have to manually go to the Cognito dashboard and Enable the account
+
+And then it seems that I have to manually disable the preTokenGeneration trigger, and enable it again, for it to work (otherwise aws cognito returns an error)
