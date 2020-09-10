@@ -115,19 +115,23 @@ const getOps = (flow, fn) => {
   );
 };
 
-const addNode = (flow, { id, ...node }) =>
+export const addNode = (flow) => ({ id, ...node }) =>
   getOps(flow, (draft) => {
     draft.nodes[id] = node;
     draft.edges.push([null, id]);
   });
 
-const removeNode = (flow, id) =>
+export const removeNode = (flow) => (id) =>
   getOps(flow, (draft) => {
     delete draft.nodes[id];
     draft.edges.splice(0, 1);
   });
 
-const moveNode = (flow, src, tgt, { toSrc = null, beforeId = null }) =>
+export const moveNode = (flow) => (
+  src,
+  tgt,
+  { toSrc = null, beforeId = null }
+) =>
   getOps(flow, (draft) => {
     const fromIdx = draft.edges.findIndex(([s, t]) => s === src && t === tgt);
     let toIdx = draft.edges.findIndex(
@@ -141,60 +145,3 @@ const moveNode = (flow, src, tgt, { toSrc = null, beforeId = null }) =>
     // const toMove = draft.edges.splice(fromIdx, 1)[0];
     // draft.edges.splice(toIdx, 0, toMove);
   });
-
-test("move node", () => {
-  const ops = moveNode(
-    {
-      nodes: {
-        aaa: "",
-        bbb: "",
-        ccc: "",
-        ddd: "",
-      },
-      edges: [
-        [null, "aaa"],
-        [null, "bbb"],
-        [null, "ccc"],
-        [null, "ddd"],
-      ],
-    },
-    null,
-    "ccc",
-    {
-      beforeId: "aaa",
-    }
-  );
-
-  expect(ops).toEqual([{ p: ["edges", 2], lm: 0 }]);
-});
-
-test("add node", () => {
-  const ops = addNode(
-    {
-      nodes: {},
-      edges: [],
-    },
-    { id: "test", foo: "bar" }
-  );
-  expect(ops).toEqual([
-    { oi: { foo: "bar" }, p: ["nodes", "test"] },
-    { li: [null, "test"], p: ["edges", 0] },
-  ]);
-});
-
-test("remove node", () => {
-  const ops = removeNode(
-    {
-      nodes: {
-        aaa: "test",
-      },
-      edges: [[null, "aaa"]],
-    },
-    "aaa"
-  );
-
-  expect(ops).toEqual([
-    { od: "test", p: ["nodes", "aaa"] },
-    { ld: [null, "aaa"], p: ["edges", 0] },
-  ]);
-});
