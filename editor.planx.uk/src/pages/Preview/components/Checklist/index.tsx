@@ -34,19 +34,26 @@ const Checkboxes: React.FC<ICheckboxes> = ({
     },
     validate: () => {},
   });
+
   const changeCheckbox = (input) => {
     const { current } = input;
+
+    let newCheckedIds;
+
     if (formik.values.checked.includes(current.value)) {
-      formik.setFieldValue(
-        "checked",
-        formik.values.checked.filter((x) => x !== current.value)
-      );
+      newCheckedIds = formik.values.checked.filter((x) => x !== current.value);
     } else {
-      formik.setFieldValue("checked", [
-        ...formik.values.checked,
-        current.value,
-      ]);
+      newCheckedIds = [...formik.values.checked, current.value];
     }
+
+    formik.setFieldValue(
+      "checked",
+      newCheckedIds.sort((a, b) => {
+        const originalIds = checkBoxes.map((cb) => cb.id);
+        return originalIds.indexOf(b) - originalIds.indexOf(a);
+      })
+    );
+
     return (current.checked = !current.checked);
   };
   const hasImages = (checkBoxes) => checkBoxes.every((val) => val.image);
