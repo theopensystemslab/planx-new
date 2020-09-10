@@ -23,6 +23,7 @@ const rteContainerStyles = makeStyles((theme) => ({
     boxSizing: "border-box",
     padding: 2,
     outline: "none",
+    width: "100%",
   },
   focused: {
     position: "relative",
@@ -30,6 +31,7 @@ const rteContainerStyles = makeStyles((theme) => ({
     padding: 2,
     outline: "none",
     boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
+    width: "100%",
   },
 }));
 

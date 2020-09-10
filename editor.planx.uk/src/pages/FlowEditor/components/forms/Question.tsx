@@ -1,19 +1,13 @@
-import {
-  Button,
-  IconButton,
-  makeStyles,
-  Menu,
-  MenuItem,
-  Tooltip,
-} from "@material-ui/core";
-import { CallSplit, MoreVert } from "@material-ui/icons";
+import { Button, MenuItem } from "@material-ui/core";
+import { CallSplit } from "@material-ui/icons";
 import arrayMove from "array-move";
 import { useFormik } from "formik";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { FormikHookReturn } from "../../../../types";
 import flags from "../../data/flags";
 import { TYPES } from "../../data/types";
 import {
+  ImgInput,
   Input,
   InputGroup,
   InputRow,
@@ -25,7 +19,6 @@ import {
   RichTextInput,
   SelectInput,
 } from "./components";
-import FileUpload from "./components/FileUpload";
 
 interface Option {
   val?: string;
@@ -52,22 +45,8 @@ interface IQuestion {
   Icon;
   $t: number;
   img?: string;
+  definitionImg?: string;
 }
-
-const useStyles = makeStyles((theme) => ({
-  imageUploadContainer: {
-    height: 50,
-    width: 50,
-    position: "relative",
-  },
-  menu: {
-    position: "absolute",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    color: theme.palette.common.white,
-    top: 0,
-    right: 0,
-  },
-}));
 
 const renderMenuItem = (category: string) => {
   return flags
@@ -77,68 +56,6 @@ const renderMenuItem = (category: string) => {
         {flag.text}
       </MenuItem>
     ));
-};
-
-const ImgInput: React.FC<{
-  img?: string;
-  onChange?: (newUrl?: string) => void;
-}> = ({ img, onChange }) => {
-  const classes = useStyles();
-
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  // Auto-generate a random ID on mount
-  const menuId = useMemo(() => {
-    return `menu-${Math.floor(Math.random() * 1000000)}`;
-  }, []);
-
-  return img ? (
-    <div className={classes.imageUploadContainer}>
-      <IconButton
-        id={`${menuId}-trigger`}
-        color="inherit"
-        className={classes.menu}
-        size="small"
-        onClick={(ev) => {
-          setAnchorEl(ev.currentTarget);
-        }}
-      >
-        <MoreVert />
-      </IconButton>
-      <Menu
-        id={`${menuId}`}
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={() => {
-          setAnchorEl(null);
-        }}
-      >
-        <MenuItem component="a" href={img} target="_blank">
-          View
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            onChange && onChange(undefined);
-          }}
-        >
-          Remove
-        </MenuItem>
-      </Menu>
-      <img width={50} height={50} src={img} alt="embedded img" />
-    </div>
-  ) : (
-    <Tooltip title="Drop file here">
-      <div className={classes.imageUploadContainer}>
-        <FileUpload
-          onChange={(newUrl) => {
-            setAnchorEl(null);
-            onChange(newUrl);
-          }}
-        />
-      </div>
-    </Tooltip>
-  );
 };
 
 const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
@@ -264,6 +181,7 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
   Icon,
   $t,
   img = "",
+  definitionImg = "",
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -276,6 +194,7 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
       fn,
       options,
       img,
+      definitionImg,
     },
     onSubmit: ({ options, ...values }) => {
       if (handleSubmit) {
@@ -351,12 +270,14 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
       </ModalSection>
 
       <MoreInformation
-        whyName="info"
-        policyName="policyRef"
-        definitionName="howMeasured"
         changeField={formik.handleChange}
-        policyValue={formik.values.policyRef}
+        definitionImg={formik.values.definitionImg}
+        definitionName="howMeasured"
         definitionValue={formik.values.howMeasured}
+        formik={formik}
+        policyName="policyRef"
+        policyValue={formik.values.policyRef}
+        whyName="info"
         whyValue={formik.values.info}
       />
       <InternalNotes

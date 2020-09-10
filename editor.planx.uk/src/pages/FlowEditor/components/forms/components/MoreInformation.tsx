@@ -1,5 +1,6 @@
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import React from "react";
+import ImgInput from "./ImgInput";
 import InputGroup from "./InputGroup";
 import InputRow from "./InputRow";
 import ModalSection from "./ModalSection";
@@ -7,13 +8,15 @@ import ModalSectionContent from "./ModalSectionContent";
 import RichTextInput from "./RichTextInput";
 
 const MoreInformation = ({
-  whyName,
-  whyValue,
-  policyName,
-  policyValue,
+  changeField,
+  definitionImg,
   definitionName,
   definitionValue,
-  changeField,
+  formik,
+  policyName,
+  policyValue,
+  whyName,
+  whyValue,
 }) => {
   return (
     <ModalSection>
@@ -40,14 +43,20 @@ const MoreInformation = ({
             />
           </InputRow>
         </InputGroup>
-        <InputGroup label="Definition / How it is measured">
+        <InputGroup label="How it is defined?">
           <InputRow>
             <RichTextInput
               multiline
               name={definitionName}
               value={definitionValue}
               onChange={changeField}
-              placeholder="Definition / How it is measured"
+              placeholder="How it is defined?"
+            />
+            <ImgInput
+              img={definitionImg}
+              onChange={(newUrl) => {
+                formik.setFieldValue("definitionImg", newUrl);
+              }}
             />
           </InputRow>
         </InputGroup>

@@ -249,19 +249,4 @@ const PropertyInformation: React.FC<IPropertyInformation> = ({
   );
 };
 
-// <MoreInformation
-//           whyName="whyItMatters"
-//           policyName="policyField"
-//           definitionName="definition"
-//           changeField={formik.handleChange}
-//           policyValue={formik.values.policyField}
-//           definitionValue={formik.values.definition}
-//           whyValue={formik.values.whyItMatters}
-//         />
-//         <InternalNotes
-//           name="notes"
-//           onChange={formik.handleChange}
-//           value={formik.values.notes}
-//         />
-
 export default PropertyInformation;
