@@ -11,7 +11,7 @@ import {
   InputRowItem,
   InputRowLabel,
   OptionButton,
-} from "../forms/components";
+} from "../../../../ui";
 
 interface IDesignSettings {}
 
@@ -51,7 +51,7 @@ const Team: React.FC<IDesignSettings> = () => {
               <ColorPicker
                 inline
                 color=""
-                changeColor={(color) => formik.setFieldValue("bgColor", color)}
+                onChange={(color) => formik.setFieldValue("bgColor", color)}
               ></ColorPicker>
             </InputRowItem>
           </InputRow>
@@ -98,7 +98,7 @@ const Team: React.FC<IDesignSettings> = () => {
               <ColorPicker
                 inline
                 color=""
-                changeColor={(color) =>
+                onChange={(color) =>
                   formik.setFieldValue("phaseBannerColor", color)
                 }
               ></ColorPicker>

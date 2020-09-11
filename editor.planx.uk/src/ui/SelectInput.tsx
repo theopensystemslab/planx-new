@@ -4,6 +4,12 @@ import ArrowIcon from "@material-ui/icons/KeyboardArrowDown";
 import React from "react";
 import Input from "./Input";
 
+interface Props extends SelectProps {
+  name?: string;
+  children?;
+  onChange?;
+}
+
 export const selectInputStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -55,13 +61,7 @@ export const selectInputStyles = makeStyles((theme) => ({
   },
 }));
 
-interface ISelectInput extends SelectProps {
-  name?: string;
-  children?;
-  onChange?;
-}
-
-const SelectInput: React.FC<ISelectInput> = ({
+const SelectInput: React.FC<Props> = ({
   children,
   value,
   name,

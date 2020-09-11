@@ -7,13 +7,15 @@ import React from "react";
 import { useNavigation } from "react-navi";
 import { rootFlowPath } from "../../../../routes/utils";
 import { TYPES } from "../../data/types";
-import ColorPicker from "./components/ColorPicker";
-import Input from "./components/Input";
-import InputGroup from "./components/InputGroup";
-import InputRow from "./components/InputRow";
-import ModalSection from "./components/ModalSection";
-import ModalSectionContent from "./components/ModalSectionContent";
-import VisibilityToggle from "./components/VisibilityToggle";
+import {
+  ColorPicker,
+  Input,
+  InputGroup,
+  InputRow,
+  ModalSection,
+  ModalSectionContent,
+  VisibilityToggle,
+} from "../../../../ui";
 import { IEditor, parseFormValues } from "./shared";
 
 interface IPropertyInformation extends IEditor {
@@ -197,7 +199,8 @@ const PropertyInformation: React.FC<IPropertyInformation> = ({
                               endAdornment={
                                 <InputAdornment position="end">
                                   <VisibilityToggle
-                                    toggleVisibility={(visible) =>
+                                    visible={item.hasDescriptionAndColor}
+                                    onChange={(visible) =>
                                       toggleVisibility(visible, index, subindex)
                                     }
                                   />
@@ -215,7 +218,7 @@ const PropertyInformation: React.FC<IPropertyInformation> = ({
                                 <ColorPicker
                                   inline
                                   color={item.valueColor}
-                                  changeColor={(color) =>
+                                  onChange={(color) =>
                                     formik.setFieldValue(
                                       `fieldsList[${index}].values[${subindex}].valueColor`,
                                       color

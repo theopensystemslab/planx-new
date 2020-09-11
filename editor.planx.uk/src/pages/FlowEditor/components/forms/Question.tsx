@@ -18,7 +18,7 @@ import {
   MoreInformation,
   RichTextInput,
   SelectInput,
-} from "./components";
+} from "../../../../ui";
 
 interface Option {
   val?: string;

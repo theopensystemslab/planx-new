@@ -9,7 +9,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-interface Props {
+export interface Props {
   onChange?: (image: string) => void;
 }
 

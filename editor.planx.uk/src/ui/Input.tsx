@@ -2,7 +2,7 @@ import { InputBase, InputBaseProps, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import React, { ChangeEvent } from "react";
 
-interface IInput extends InputBaseProps {
+interface Props extends InputBaseProps {
   format?: "large" | "bold" | "data";
   classes?: any;
   className?: string;
@@ -49,7 +49,7 @@ export const inputStyles = makeStyles((theme) => ({
   },
 }));
 
-const Input: React.FC<IInput> = (props) => {
+const Input: React.FC<Props> = (props) => {
   const classes = inputStyles();
 
   const { format, ...restProps } = props;

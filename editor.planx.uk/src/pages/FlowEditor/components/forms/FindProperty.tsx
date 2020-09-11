@@ -5,11 +5,13 @@ import React from "react";
 import { useNavigation } from "react-navi";
 import { rootFlowPath } from "../../../../routes/utils";
 import { TYPES } from "../../data/types";
-import Input from "./components/Input";
-import InputGroup from "./components/InputGroup";
-import InputRow from "./components/InputRow";
-import ModalSectionContent from "./components/ModalSectionContent";
-import OptionButton from "./components/OptionButton";
+import {
+  Input,
+  InputGroup,
+  InputRow,
+  ModalSectionContent,
+  OptionButton,
+} from "../../../../ui";
 import { IEditor, parseFormValues } from "./shared";
 
 interface IFindProperty extends IEditor {

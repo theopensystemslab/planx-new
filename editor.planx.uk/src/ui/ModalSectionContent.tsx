@@ -3,6 +3,13 @@ import Grid from "@material-ui/core/Grid";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
+interface Props {
+  title?: string;
+  children: JSX.Element[] | JSX.Element;
+  author?: string;
+  Icon?: any;
+}
+
 export const modalSectionContentStyles = makeStyles((theme) => ({
   sectionContentGrid: {
     position: "relative",
@@ -27,14 +34,7 @@ export const modalSectionContentStyles = makeStyles((theme) => ({
   },
 }));
 
-interface IModalSectionContent {
-  title?: string;
-  children: JSX.Element[] | JSX.Element;
-  author?: string;
-  Icon?: any;
-}
-
-const ModalSectionContent: React.FC<IModalSectionContent> = ({
+const ModalSectionContent: React.FC<Props> = ({
   title,
   children,
   author,

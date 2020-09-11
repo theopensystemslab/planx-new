@@ -12,7 +12,7 @@ import React, { ChangeEvent, useState } from "react";
  * focus.
  */
 
-interface IRichTextInput extends InputBaseProps {
+interface Props extends InputBaseProps {
   className?: string;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -38,7 +38,7 @@ const rteContainerStyles = makeStyles((theme) => ({
 const mdToEditorRawContent = (str: unknown) =>
   convertToRaw(stateFromMarkdown(str));
 
-const RichTextInput: React.FC<IRichTextInput> = (props) => {
+const RichTextInput: React.FC<Props> = (props) => {
   // Set the initial `value` prop and ignore updated values to avoid infinite loops
   const [defaultValue] = useState(mdToEditorRawContent(props.value));
 

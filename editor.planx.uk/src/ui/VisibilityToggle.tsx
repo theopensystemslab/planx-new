@@ -3,11 +3,14 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import React from "react";
 
-const VisibilityToggle = ({ toggleVisibility }) => {
-  const [visible, setVisible] = React.useState(true);
+export interface Props {
+  visible: boolean;
+  onChange: (newVisible: boolean) => void;
+}
+
+const VisibilityToggle: React.FC<Props> = (props) => {
   const toggle = () => {
-    setVisible(!visible);
-    toggleVisibility(visible);
+    props.onChange(!props.visible);
   };
   return (
     <IconButton
@@ -15,8 +18,9 @@ const VisibilityToggle = ({ toggleVisibility }) => {
       style={{ height: 46 }}
       // style={{ backgroundColor: visible ? "transparent" : "#fff", height: 46 }}
     >
-      {!visible ? <Visibility /> : <VisibilityOff />}
+      {!props.visible ? <Visibility /> : <VisibilityOff />}
     </IconButton>
   );
 };
+
 export default VisibilityToggle;

@@ -9,7 +9,7 @@ import {
   InputRow,
   InputRowItem,
   InputRowLabel,
-} from "../forms/components";
+} from "../../../../ui";
 import { makeStyles } from "@material-ui/core/styles";
 
 export const serviceFlagsStyles = makeStyles((theme) => ({
@@ -159,7 +159,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
                             <ColorPicker
                               inline
                               color={flag.color}
-                              changeColor={(color) =>
+                              onChange={(color) =>
                                 formik.setFieldValue(
                                   `flagSets[${i}].flags[${j}].color`,
                                   color

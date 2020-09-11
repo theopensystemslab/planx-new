@@ -1,12 +1,19 @@
 import ButtonBase from "@material-ui/core/ButtonBase";
 import classNames from "classnames";
-import React from "react";
+import React, { useState } from "react";
 import { ChromePicker } from "react-color";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+
+export interface Props {
+  inline?: boolean;
+  color?: string;
+  onChange?: (newColor: string) => void;
+}
 
 const colorPickerStyles = makeStyles((theme) => ({
   root: {
     padding: 0,
+    position: "relative",
   },
   inline: {
     height: 50,
@@ -55,38 +62,29 @@ const colorPickerStyles = makeStyles((theme) => ({
   },
 }));
 
-const ColorPicker = ({ inline, color, changeColor }) => {
+const ColorPicker: React.FC<Props> = (props) => {
   const classes = colorPickerStyles();
-  const [state, setState] = React.useState({
-    displayColorPicker: false,
-    color: color || "#f00",
-  });
-  React.useEffect(() => {
-    setState((state) => ({ ...state, color }));
-  }, [color]);
+  const [show, setShow] = useState(false);
+
+  const color = props.color || "#f00";
+
   const handleClick = () => {
-    setState({
-      ...state,
-      displayColorPicker: !state.displayColorPicker,
-    });
+    setShow((prevShow) => !prevShow);
   };
 
   const handleClose = () => {
-    setState({ ...state, displayColorPicker: false });
+    setShow(false);
   };
 
-  const handleChange = (color) => {
-    setState((state) => ({ ...state, color: color.hex }));
-    changeColor(color.hex);
+  const handleChange = (newColor: any) => {
+    props.onChange && props.onChange(newColor.hex);
   };
+
   return (
-    <div className={classNames(classes.root, inline && classes.inline)}>
+    <div className={classNames(classes.root, props.inline && classes.inline)}>
       <ButtonBase
         classes={{
-          root: classNames(
-            classes.button,
-            state.displayColorPicker && classes.focused
-          ),
+          root: classNames(classes.button, show && classes.focused),
           focusVisible: classes.focused,
         }}
         onClick={handleClick}
@@ -95,15 +93,15 @@ const ColorPicker = ({ inline, color, changeColor }) => {
         <div
           className={classes.swatch}
           style={{
-            backgroundColor: state.color,
+            backgroundColor: color,
           }}
         />
-        {state.color || "Select a colour"}
+        {color || "Select a colour"}
       </ButtonBase>
-      {state.displayColorPicker ? (
+      {show ? (
         <div className={classes.popover}>
           <div className={classes.cover} onClick={handleClose} />
-          <ChromePicker color={state.color} onChange={handleChange} />
+          <ChromePicker color={color} onChange={handleChange} />
         </div>
       ) : null}
     </div>
