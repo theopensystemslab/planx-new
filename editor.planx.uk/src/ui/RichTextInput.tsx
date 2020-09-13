@@ -1,16 +1,9 @@
 import { Box, InputBaseProps, makeStyles } from "@material-ui/core";
-import { convertToRaw } from "draft-js";
+import { convertToRaw, EditorState } from "draft-js";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
 import MUIRichTextEditor, { TMUIRichTextEditorRef } from "mui-rte";
-import React, { ChangeEvent, useState, useRef, useEffect } from "react";
-
-/**
- * Important: if the `value` prop changes for a reason other than changes in the editor,
- * this component will not react to the changes and will send new data based on its previous state.
- * Having the component work as a controlled input field causes bugs on cursor position and
- * focus.
- */
+import React, { ChangeEvent, useState, useRef, useEffect, Ref } from "react";
 
 interface Props extends InputBaseProps {
   className?: string;
@@ -38,9 +31,11 @@ const rteContainerStyles = makeStyles((theme) => ({
 const mdToEditorRawContent = (str: unknown) =>
   convertToRaw(stateFromMarkdown(str));
 
-const RichTextInput: React.FC<Props> = (props) => {
+const RichTextInput: React.FC<
+  Props & { editorStateRef: Ref<EditorState | null> }
+> = (props) => {
   // Set the initial `value` prop and ignore updated values to avoid infinite loops
-  const [defaultValue] = useState(mdToEditorRawContent(props.value));
+  const [initialValue] = useState(mdToEditorRawContent(props.value));
 
   const [focused, setFocused] = useState(false);
 
@@ -80,7 +75,7 @@ const RichTextInput: React.FC<Props> = (props) => {
         onBlur={() => {
           setFocused(false);
         }}
-        defaultValue={JSON.stringify(defaultValue)}
+        defaultValue={JSON.stringify(initialValue)}
         ref={editorRef}
         toolbarButtonSize="small"
         inlineToolbar={true}
@@ -94,6 +89,8 @@ const RichTextInput: React.FC<Props> = (props) => {
         ]}
         label={props.placeholder}
         onChange={(newState) => {
+          props.editorStateRef.current = newState;
+
           if (!props.onChange) {
             return;
           }
@@ -115,4 +112,62 @@ const RichTextInput: React.FC<Props> = (props) => {
   );
 };
 
-export default RichTextInput;
+const normalizeMdForEquality = (md: string): string =>
+  md
+    .split("\n")
+    .filter((line) => line !== "")
+    .map((line) => line.trim())
+    .join("\n");
+
+/**
+ * Crude, permissive checker for markdown equality.
+ * It is meant to return true more often than not to prevent editor remounting.
+ */
+const mdEqual = (md1: string, md2: string): boolean => {
+  const n1 = normalizeMdForEquality(md1);
+  const n2 = normalizeMdForEquality(md2);
+
+  if (n1.indexOf(n2) > -1 || n2.indexOf(n1) > -1) {
+    return true;
+  }
+  return false;
+};
+
+/**
+ * This component wraps the main rich text input component in order to check if the editor state
+ * and the value are in sync (this may not be the case if the editor was inside a rearranged list,
+ * or a new value was available through ShareDB), turning the editor into a proper controlled input.
+ * mui-rte should be doing this automatically through https://github.com/niuware/mui-rte/issues/42
+ * and the referenced https://github.com/niuware/mui-rte/blob/master/examples/reset-value/index.tsx,
+ * but this leads to a jagged editing experience with ignored keystrokes and infinite loops.
+ *
+ * The way this component works is that if there is a mismatch, the RichTextEditor component is
+ * unmounted and reinserted immediately afterwards to start with a clean slate.
+ *
+ * It is lame but it is works 🙃
+ */
+const ControlledRichTextInput: React.FC<Props> = (props) => {
+  const editorStateRef = useRef<EditorState | null>(null);
+  const [unmounted, setUnmounted] = useState(false);
+  useEffect(() => {
+    if (editorStateRef.current !== null && typeof props.value === "string") {
+      const md = stateToMarkdown(editorStateRef.current.getCurrentContent());
+      if (!mdEqual(md, props.value)) {
+        setUnmounted(true);
+      }
+    }
+  }, [props.value, editorStateRef]);
+
+  useEffect(() => {
+    if (unmounted) {
+      setTimeout(() => {
+        setUnmounted(false);
+      });
+    }
+  }, [unmounted, setUnmounted]);
+  return unmounted ? null : (
+    <RichTextInput {...props} editorStateRef={editorStateRef} />
+  );
+};
+
+export default ControlledRichTextInput;
