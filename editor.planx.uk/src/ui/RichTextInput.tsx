@@ -2,8 +2,8 @@ import { Box, InputBaseProps, makeStyles } from "@material-ui/core";
 import { convertToRaw } from "draft-js";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
-import MUIRichTextEditor from "mui-rte";
-import React, { ChangeEvent, useState } from "react";
+import MUIRichTextEditor, { TMUIRichTextEditorRef } from "mui-rte";
+import React, { ChangeEvent, useState, useRef, useEffect } from "react";
 
 /**
  * Important: if the `value` prop changes for a reason other than changes in the editor,
@@ -44,10 +44,35 @@ const RichTextInput: React.FC<Props> = (props) => {
 
   const [focused, setFocused] = useState(false);
 
+  const editorRef = useRef<TMUIRichTextEditorRef>(null);
+
+  const containerRef = useRef(null);
+  useEffect(() => {
+    const globalClickHandler = (ev: any) => {
+      if (!containerRef.current) {
+      }
+      const container = containerRef.current;
+      if (
+        container.contains(ev.target) &&
+        container.contains(document.querySelector(".DraftEditor-root"))
+      ) {
+        editorRef.current.focus();
+        setFocused(true);
+      }
+    };
+    document.addEventListener("click", globalClickHandler);
+    return () => {
+      document.removeEventListener("click", globalClickHandler);
+    };
+  }, []);
+
   const classes = rteContainerStyles();
 
   return (
-    <Box tabIndex={-1} className={focused ? classes.focused : classes.regular}>
+    <Box
+      ref={containerRef}
+      className={focused ? classes.focused : classes.regular}
+    >
       <MUIRichTextEditor
         onFocus={() => {
           setFocused(true);
@@ -56,6 +81,7 @@ const RichTextInput: React.FC<Props> = (props) => {
           setFocused(false);
         }}
         defaultValue={JSON.stringify(defaultValue)}
+        ref={editorRef}
         toolbarButtonSize="small"
         inlineToolbar={true}
         toolbar={false}

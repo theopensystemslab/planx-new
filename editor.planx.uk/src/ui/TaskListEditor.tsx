@@ -1,14 +1,14 @@
-import { Button } from "@material-ui/core";
 import { useFormik } from "formik";
-import React from "react";
+import React, { ChangeEvent } from "react";
+import { makeStyles } from "@material-ui/core";
 import Input from "./Input";
-import arrayMove from "array-move";
-import InputGroup from "./InputGroup";
 import InputRow from "./InputRow";
+import RichTextInput from "./RichTextInput";
 import InternalNotes from "./InternalNotes";
 import ModalCard from "./ModalCard";
 import ModalSection from "./ModalSection";
 import ModalSectionContent from "./ModalSectionContent";
+import ListManager, { EditorProps } from "./ListManager";
 
 //Shared interface between all the editor components
 export interface Props {
@@ -27,13 +27,55 @@ export interface Task {
   description: string;
 }
 
-function removeAt<T>(index: number, arr: Array<T>): Array<T> {
-  return arr.filter((_task, i) => {
-    return i !== index;
-  });
-}
+const useTaskEditorStyles = makeStyles((theme) => ({
+  container: {
+    flex: "1",
+  },
+}));
 
-const TaskList: React.FC<Props> = (props) => {
+const TaskEditor: React.FC<EditorProps<Task>> = (props) => {
+  const classes = useTaskEditorStyles();
+  return (
+    <div className={classes.container}>
+      <InputRow>
+        <Input
+          autoFocus
+          required
+          name="title"
+          value={props.value.title}
+          onChange={(ev: ChangeEvent<HTMLInputElement>) => {
+            props.onChange({
+              ...props.value,
+              title: ev.target.value,
+            });
+          }}
+          placeholder="Title"
+        />
+      </InputRow>
+      <InputRow>
+        <RichTextInput
+          required
+          name="description"
+          value={props.value.description}
+          onChange={(ev: ChangeEvent<HTMLInputElement>) => {
+            props.onChange({
+              ...props.value,
+              description: ev.target.value,
+            });
+          }}
+          placeholder="Description"
+        />
+      </InputRow>
+    </div>
+  );
+};
+
+const newTask = (): Task => ({
+  title: "",
+  description: "",
+});
+
+const TaskListEditor: React.FC<Props> = (props) => {
   const formik = useFormik<TaskList>({
     initialValues: props.value,
     onSubmit: (values) => {
@@ -42,65 +84,19 @@ const TaskList: React.FC<Props> = (props) => {
     validate: () => {},
   });
 
-  const addRow = () => {
-    formik.setFieldValue("tasks", [
-      ...formik.values.tasks,
-      { title: "", description: "" },
-    ]);
-  };
-
-  const handleMove = (dragIndex: number, hoverIndex: number) => {
-    formik.setFieldValue(
-      "tasks",
-      arrayMove(formik.values.tasks, dragIndex, hoverIndex)
-    );
-  };
-
-  const deleteRow = (index: number) => {
-    formik.setFieldValue("tasks", removeAt(index, formik.values.tasks));
-  };
-
   return (
     <form onSubmit={formik.handleSubmit}>
       <ModalCard>
         <ModalSection>
           <ModalSectionContent>
-            <>
-              {formik.values.tasks.map((task, index) => {
-                return (
-                  <InputGroup
-                    deletable
-                    draggable
-                    index={index}
-                    key={index}
-                    handleMove={handleMove}
-                    deleteInputGroup={() => deleteRow(index)}
-                  >
-                    <InputRow>
-                      <Input
-                        autoFocus
-                        required
-                        name={`tasks[${index}].title`}
-                        value={task.title}
-                        onChange={formik.handleChange}
-                        placeholder="Title"
-                      />
-                    </InputRow>
-                    <InputRow>
-                      <Input
-                        required
-                        name={`tasks[${index}].description`}
-                        onChange={formik.handleChange}
-                        placeholder="Description"
-                      />
-                    </InputRow>
-                  </InputGroup>
-                );
-              })}
-              <Button color="primary" variant="contained" onClick={addRow}>
-                Add another Task
-              </Button>
-            </>
+            <ListManager
+              values={formik.values.tasks}
+              onChange={(newTasks: Array<Task>) => {
+                formik.setFieldValue("tasks", newTasks);
+              }}
+              Editor={TaskEditor}
+              newValue={newTask}
+            />
           </ModalSectionContent>
         </ModalSection>
         <InternalNotes
@@ -112,4 +108,4 @@ const TaskList: React.FC<Props> = (props) => {
     </form>
   );
 };
-export default TaskList;
+export default TaskListEditor;

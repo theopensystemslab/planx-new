@@ -2,8 +2,9 @@ import React, { useState } from "react";
 
 import RichTextInput from "../RichTextInput";
 import FixtureContainer from "./FixtureContainer";
+import { Box } from "@material-ui/core";
 
-const RichTextSnippet: React.FC<{}> = () => {
+const Fixture: React.FC<{}> = () => {
   const [value, setValue] = useState("Something");
 
   return (
@@ -14,12 +15,19 @@ const RichTextSnippet: React.FC<{}> = () => {
           setValue(ev.target.value);
         }}
       />
-      <p>Markdown result:</p>
-      <pre>{value}</pre>
+      <Box>
+        <p>Markdown result:</p>
+        <pre>{value}</pre>
+        <button
+          onClick={() => {
+            setValue("Something");
+          }}
+        >
+          Reset
+        </button>
+      </Box>
     </FixtureContainer>
   );
 };
 
-export default {
-  RichText: <RichTextSnippet />,
-};
+export default Fixture;
