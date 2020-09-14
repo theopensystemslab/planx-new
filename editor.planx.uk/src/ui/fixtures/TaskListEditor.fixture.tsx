@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import FixtureContainer from "./FixtureContainer";
 
-import TaskListEditor from "../TaskListEditor";
+import TaskListEditor, { TaskList } from "../TaskListEditor";
 
 const Fixture = () => {
-  const [taskList, setTaskList] = useState({
+  const [taskList, setTaskList] = useState<TaskList>({
     notes: "",
     tasks: [],
   });

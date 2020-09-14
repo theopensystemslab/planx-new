@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { Box, IconButton, Button, makeStyles } from "@material-ui/core";
 import { Delete, DragHandle } from "@material-ui/icons";
 import arrayMove from "array-move";
+import { removeAt, setAt } from "../utils";
 import {
   DragDropContext,
   Droppable,
@@ -30,16 +31,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
   },
 }));
-
-function removeAt<T>(index: number, arr: Array<T>): Array<T> {
-  return arr.filter((_item, i) => {
-    return i !== index;
-  });
-}
-
-function setAt<T>(index: number, newItem: T, arr: Array<T>): Array<T> {
-  return arr.map((item, i) => (i === index ? newItem : item));
-}
 
 function ListManager<T>(props: Props<T>) {
   const { Editor } = props;

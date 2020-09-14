@@ -4,6 +4,7 @@ import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
 import MUIRichTextEditor, { TMUIRichTextEditorRef } from "mui-rte";
 import React, { ChangeEvent, useState, useRef, useEffect, Ref } from "react";
+import { levenshteinDistance } from "../utils";
 
 interface Props extends InputBaseProps {
   className?: string;
@@ -127,10 +128,8 @@ const mdEqual = (md1: string, md2: string): boolean => {
   const n1 = normalizeMdForEquality(md1);
   const n2 = normalizeMdForEquality(md2);
 
-  if (n1.indexOf(n2) > -1 || n2.indexOf(n1) > -1) {
-    return true;
-  }
-  return false;
+  // Check for regular equality first as it may be faster - default to Levenshtein distance
+  return n1 === n2 || levenshteinDistance(n1, n2) <= 2;
 };
 
 /**
@@ -152,6 +151,7 @@ const ControlledRichTextInput: React.FC<Props> = (props) => {
   useEffect(() => {
     if (editorStateRef.current !== null && typeof props.value === "string") {
       const md = stateToMarkdown(editorStateRef.current.getCurrentContent());
+      console.log(md, props.value, mdEqual(md, props.value));
       if (!mdEqual(md, props.value)) {
         setUnmounted(true);
       }
