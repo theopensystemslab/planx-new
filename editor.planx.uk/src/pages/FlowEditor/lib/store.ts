@@ -4,13 +4,13 @@ import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
 import flatten from "lodash/flatten";
 import flattenDeep from "lodash/flattenDeep";
-import getPath from "lodash/get";
 import omit from "lodash/omit";
 import natsort from "natsort";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
 import { TYPES } from "../data/types";
+import { getOps as getImmerOps } from "./adapters/immer";
 import {
   addNodeWithChildrenOp,
   isValidOp,
@@ -186,97 +186,17 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   updateNode: ({ id, ...newNode }, newOptions: any[], cb = send) => {
-    const { flow, addNode } = get();
+    const { flow } = get();
 
-    console.debug(
-      `[OP]: updateNodeOp(${JSON.stringify(newNode)}, ${JSON.stringify(
-        newOptions
-      )}, beforeFlow);`
-    );
-
-    const oldNode = flow.nodes[id];
-
-    const patch = jdiff.diff(safeKeys(oldNode), safeKeys(newNode)) || {};
-
-    // 1. update the node itself
-
-    const getOps = (p: any, _id: any) =>
-      Object.entries(p).reduce((ops: any, [k, v]: any) => {
-        const p = ["nodes", _id, k];
-        // https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md
-        if (Array.isArray(v)) {
-          if (v.length === 1) {
-            // data was added
-            ops.push({ oi: v[0], p });
-          } else if (v.length === 2) {
-            // data was replaced
-            ops.push({ od: v[0], oi: v[1], p });
-          } else if (v.length === 3 && v[1] === 0 && v[2] === 0) {
-            // data was removed
-            ops.push({ od: getPath(flow, p), p });
-          }
-        }
-        return ops;
-      }, []);
-
-    const ops = getOps(patch, id);
-
-    // 2. update or create any direct children that have been added
-    newOptions.forEach((option) => {
-      if (flow.nodes[option.id]) {
-        // if the option already exists...
-        // check for changes and add update patches accordingly
-        const patch =
-          jdiff.diff(
-            safeKeys(flow.nodes[option.id]),
-            safeKeys(omit(option, "id"))
-          ) || {};
-        getOps(patch, option.id).forEach((op: any) => ops.push(op));
-      } else {
-        // otherwise create the option node
-        addNode({ ...option, $t: TYPES.Response }, [], id, null, (op) =>
-          ops.push(op)
-        );
-      }
+    const ops = getImmerOps(flow, (draft) => {
+      const originalNode = JSON.parse(JSON.stringify(draft.nodes[id]));
+      console.log(newNode);
+      const delta = jdiff.diff(
+        { nodes: { [id]: originalNode } },
+        { nodes: { [id]: newNode } }
+      );
+      jdiff.patch(draft, delta);
     });
-
-    // // 4. remove any direct children that have been removed
-    // const removedIds = difference(currentOptionIds, newOptionIds);
-    // removedIds.forEach((tgt) => {
-    //   removeNode(tgt, id, (op) => ops.push(op));
-    // });
-
-    // // 3. reorder nodes if necessary
-    // if (currentOptionIds.join(",") !== newOptionIds.join(",")) {
-    //   console.log({
-    //     currentOptionIds,
-    //     newOptionIds,
-    //   });
-
-    //   let initialIdx = flow.edges.findIndex(
-    //     ([src, tgt]: any) => src === id && tgt === currentOptionIds[0]
-    //   );
-
-    //   // const sortOps = [];
-
-    //   // let before: any = null;
-    //   [...newOptionIds].forEach((oId, count) => {
-    //     const fromIndex = flow.edges.findIndex(
-    //       ([src, tgt]: any) => src === id && tgt === oId
-    //     );
-    //     let toIndex = initialIdx + count;
-
-    //     if (fromIndex < toIndex) toIndex -= 1;
-
-    //     // sortOps.push({ lm: toIndex, p: ["edges", fromIndex] });
-    //     // moveNode(oId, id, before, id, (op) => ops.push(op));
-    //     // ops.push(moveNodeOp(oId, id, null, id, flow));
-    //     // before = oId;
-    //   });
-    //   // console.log(sortOps.sort((a, b): any => a.p[1] - b.p[2]));
-    //   // console.log(sortOps);
-    //   // ops.push(sortOps);
-    // }
 
     cb(ops);
   },

@@ -43,13 +43,15 @@ const patchToOP = (flow) => ([patch, inverse]) => {
         return { oi: patch.value, p: patch.path };
       case "remove":
         return { od: inverse.value, p: patch.path };
+      case "replace":
+        return { od: inverse.value, oi: patch.value, p: patch.path };
       default:
         throw new Error(`unsupported object op (${JSON.stringify(patch)})`);
     }
   }
 };
 
-const getOps = (flow, fn) => {
+export const getOps = (flow, fn) => {
   const [next, patches, inverse]: any = produceWithPatches(flow, fn);
   const patchesAndInverse = zip(patches, inverse);
 
