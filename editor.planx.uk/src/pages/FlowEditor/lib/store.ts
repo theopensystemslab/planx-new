@@ -4,6 +4,7 @@ import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
 import flatten from "lodash/flatten";
 import flattenDeep from "lodash/flattenDeep";
+import getPath from "lodash/get";
 import omit from "lodash/omit";
 import natsort from "natsort";
 import { v4 as uuid } from "uuid";
@@ -212,7 +213,7 @@ export const [useStore, api] = create((set, get) => ({
             ops.push({ od: v[0], oi: v[1], p });
           } else if (v.length === 3 && v[1] === 0 && v[2] === 0) {
             // data was removed
-            ops.push({ od: oldNode[k], p });
+            ops.push({ od: getPath(flow, p), p });
           }
         }
         return ops;
