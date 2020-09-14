@@ -2,8 +2,14 @@ import { Box, InputBaseProps, makeStyles } from "@material-ui/core";
 import { convertToRaw, EditorState } from "draft-js";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
-import MUIRichTextEditor, { TMUIRichTextEditorRef } from "mui-rte";
-import React, { ChangeEvent, useState, useRef, useEffect, Ref } from "react";
+import MUIRichTextEditor from "mui-rte";
+import React, {
+  ChangeEvent,
+  useState,
+  useRef,
+  useEffect,
+  MutableRefObject,
+} from "react";
 import { levenshteinDistance } from "../utils";
 
 interface Props extends InputBaseProps {
@@ -33,19 +39,21 @@ const mdToEditorRawContent = (str: unknown) =>
   convertToRaw(stateFromMarkdown(str));
 
 const RichTextInput: React.FC<
-  Props & { editorStateRef: Ref<EditorState | null> }
+  Props & { editorStateRef: MutableRefObject<EditorState | null> }
 > = (props) => {
   // Set the initial `value` prop and ignore updated values to avoid infinite loops
   const [initialValue] = useState(mdToEditorRawContent(props.value));
 
   const [focused, setFocused] = useState(false);
 
-  const editorRef = useRef<TMUIRichTextEditorRef>(null);
+  const editorRef = useRef<any>(null);
 
   const containerRef = useRef(null);
+
   useEffect(() => {
     const globalClickHandler = (ev: any) => {
       if (!containerRef.current) {
+        return;
       }
       const container = containerRef.current;
       if (
@@ -66,7 +74,13 @@ const RichTextInput: React.FC<
 
   return (
     <Box
-      ref={containerRef}
+      {
+        /**
+         * This hack is necessary because <Box/> component ref attribute is not typed.
+         * See https://github.com/mui-org/material-ui/issues/17010
+         */
+        ...({ ref: containerRef } as any)
+      }
       className={focused ? classes.focused : classes.regular}
     >
       <MUIRichTextEditor
@@ -151,7 +165,6 @@ const ControlledRichTextInput: React.FC<Props> = (props) => {
   useEffect(() => {
     if (editorStateRef.current !== null && typeof props.value === "string") {
       const md = stateToMarkdown(editorStateRef.current.getCurrentContent());
-      console.log(md, props.value, mdEqual(md, props.value));
       if (!mdEqual(md, props.value)) {
         setUnmounted(true);
       }
