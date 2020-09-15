@@ -2,7 +2,7 @@ const assert = require("assert");
 
 const fetch = require("isomorphic-fetch");
 
-const HASURA_ADMIN_SECRET = "admin";
+const HASURA_ADMIN_SECRET = "TODO";
 const HASURA_PORT = 7000;
 
 describe("sessions", () => {
