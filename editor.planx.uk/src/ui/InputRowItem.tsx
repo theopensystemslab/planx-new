@@ -3,6 +3,11 @@ import classNames from "classnames";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
+interface Props {
+  width?: number | string;
+  children: JSX.Element[] | JSX.Element;
+}
+
 export const inputRowItemStyles = makeStyles((theme) => ({
   inputRowItem: {
     "& > *": {
@@ -17,16 +22,7 @@ export const inputRowItemStyles = makeStyles((theme) => ({
   },
 }));
 
-interface IInputRowItem {
-  width?: number | string;
-  children: JSX.Element[] | JSX.Element;
-}
-
-const InputRowItem: React.FC<IInputRowItem> = ({
-  width,
-  children,
-  ...props
-}) => {
+const InputRowItem: React.FC<Props> = ({ width, children, ...props }) => {
   const classes = inputRowItemStyles();
   return (
     <Box

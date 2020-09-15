@@ -17,7 +17,7 @@ import {
   InputRowItem,
   OptionButton,
   SelectInput,
-} from "../forms/components";
+} from "../../../../ui";
 import { makeStyles } from "@material-ui/core/styles";
 
 interface ITeam {}

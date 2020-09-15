@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import React from "react";
 import { TYPES } from "../../data/types";
-import InputField from "./components/InputField";
+import { InputField } from "../../../../ui";
 
 const PortalForm: React.FC<{
   id?: string;
