@@ -16,6 +16,13 @@
         table:
           schema: public
           name: operations
+  - name: sessions
+    using:
+      foreign_key_constraint_on:
+        column: flow_id
+        table:
+          schema: public
+          name: sessions
 - table:
     schema: public
     name: operations
@@ -26,6 +33,60 @@
   - name: flow
     using:
       foreign_key_constraint_on: flow_id
+- table:
+    schema: public
+    name: session_events
+  object_relationships:
+  - name: session
+    using:
+      foreign_key_constraint_on: session_id
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - chosen_node_ids
+      - session_id
+      - type
+      backend_only: false
+- table:
+    schema: public
+    name: sessions
+  object_relationships:
+  - name: flow
+    using:
+      foreign_key_constraint_on: flow_id
+  array_relationships:
+  - name: session_events
+    using:
+      foreign_key_constraint_on:
+        column: session_id
+        table:
+          schema: public
+          name: session_events
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - flow_data
+      - flow_id
+      - flow_version
+      - passport
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - completed_at
+      filter: {}
+      check: null
 - table:
     schema: public
     name: team_members

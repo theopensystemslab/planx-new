@@ -76,7 +76,7 @@ const hasuraService = new awsx.ecs.FargateService("planx-hasura", {
           name: "HASURA_GRAPHQL_JWT_SECRET",
           value: `{ "type": "HS256", "key": "${JWT_SECRET}" }`
         },
-        { name: "HASURA_GRAPHQL_UNAUTHORIZED_ROLE", value: "user" },
+        { name: "HASURA_GRAPHQL_UNAUTHORIZED_ROLE", value: "public" },
         {
           name: "HASURA_GRAPHQL_DATABASE_URL",
           value: dbRootUrl

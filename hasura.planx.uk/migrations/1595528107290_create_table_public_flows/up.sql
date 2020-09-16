@@ -1,5 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
-CREATE EXTENSION postgis;
+CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE TABLE "public"."flows"("id" uuid NOT NULL DEFAULT gen_random_uuid(), "team_id" integer NOT NULL, "slug" text NOT NULL, "name" text, "creator_id" integer, "data" jsonb, "version" integer, "created_at" timestamptz NOT NULL DEFAULT now(), "updated_at" timestamptz NOT NULL DEFAULT now(), PRIMARY KEY ("id") , FOREIGN KEY ("team_id") REFERENCES "public"."teams"("id") ON UPDATE restrict ON DELETE restrict, FOREIGN KEY ("creator_id") REFERENCES "public"."users"("id") ON UPDATE restrict ON DELETE restrict, UNIQUE ("team_id", "slug"));
 CREATE OR REPLACE FUNCTION "public"."set_current_timestamp_updated_at"()
 RETURNS TRIGGER AS $$

@@ -4,6 +4,7 @@ services:
   hasura:
     environment:
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
 
   api:
     stdin_open: false
