@@ -15,5 +15,6 @@ export { default as ModalSectionContent } from "./ModalSectionContent";
 export { default as MoreInformation } from "./MoreInformation";
 export { default as OptionButton } from "./OptionButton";
 export { default as RichTextInput } from "./RichTextInput";
+export { default as TaskListEditor } from "./TaskListEditor";
 export { default as SelectInput } from "./SelectInput";
 export { default as VisibilityToggle } from "./VisibilityToggle";

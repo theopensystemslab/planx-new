@@ -26,6 +26,7 @@ const SUPPORTED_TYPES = [
   TYPES.FindProperty,
   TYPES.PropertyInformation,
   TYPES.Statement,
+  TYPES.TaskList,
 ];
 
 let doc;

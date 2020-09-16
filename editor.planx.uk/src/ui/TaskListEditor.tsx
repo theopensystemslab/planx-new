@@ -1,4 +1,3 @@
-import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
 import { makeStyles } from "@material-ui/core";
 import Input from "./Input";
@@ -15,6 +14,7 @@ export interface Props {
   definition?: string;
   value: TaskList;
   onChange: (newValue: TaskList) => void;
+  onSubmit?: () => void;
 }
 
 export interface TaskList {
@@ -27,7 +27,7 @@ export interface Task {
   description: string;
 }
 
-const useTaskEditorStyles = makeStyles((theme) => ({
+const useTaskEditorStyles = makeStyles((_theme) => ({
   container: {
     flex: "1",
   },
@@ -76,23 +76,24 @@ const newTask = (): Task => ({
 });
 
 const TaskListEditor: React.FC<Props> = (props) => {
-  const formik = useFormik<TaskList>({
-    initialValues: props.value,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-    validate: () => {},
-  });
-
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <form
+      onSubmit={() => {
+        if (props.onSubmit) {
+          props.onSubmit();
+        }
+      }}
+    >
       <ModalCard>
         <ModalSection>
           <ModalSectionContent>
             <ListManager
-              values={formik.values.tasks}
-              onChange={(newTasks: Array<Task>) => {
-                formik.setFieldValue("tasks", newTasks);
+              values={props.value.tasks}
+              onChange={(tasks: Array<Task>) => {
+                props.onChange({
+                  ...props.value,
+                  tasks,
+                });
               }}
               Editor={TaskEditor}
               newValue={newTask}
@@ -101,8 +102,13 @@ const TaskListEditor: React.FC<Props> = (props) => {
         </ModalSection>
         <InternalNotes
           name="notes"
-          onChange={formik.handleChange}
-          value={formik.values.notes}
+          onChange={(ev) => {
+            props.onChange({
+              ...props.value,
+              notes: ev.target.value,
+            });
+          }}
+          value={props.value.notes}
         />
       </ModalCard>
     </form>
