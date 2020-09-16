@@ -4,6 +4,7 @@ import React from "react";
 import { client } from "../lib/graphql";
 import { api } from "../pages/FlowEditor/lib/store";
 import Preview from "../pages/Preview";
+import { PreviewContext } from "../pages/Preview/Context";
 
 const routes = route(async (req) => {
   const { data } = await client.query({
@@ -17,6 +18,7 @@ const routes = route(async (req) => {
           }
         ) {
           id
+          version
           data
           team {
             theme
@@ -38,7 +40,13 @@ const routes = route(async (req) => {
 
   api.getState().setFlow(flow.id, flow.data);
 
-  return { view: <Preview theme={flow.team.theme} /> };
+  return {
+    view: (
+      <PreviewContext.Provider value={flow}>
+        <Preview theme={flow.team.theme} />
+      </PreviewContext.Provider>
+    ),
+  };
 });
 
 export default routes;
