@@ -10,19 +10,27 @@ services:
     stdin_open: false
     tty: false
     build:
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     volumes:
       - "./api.planx.uk:/api"
       - "/api/node_modules"
+    environment:
+      VIRTUAL_HOST: ${API_HOST_PROD}
+      LETSENCRYPT_HOST: ${API_HOST_PROD}
+      VIRTUAL_PORT: ${API_PORT}
 
   sharedb:
     stdin_open: false
     tty: false
     build:
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     volumes:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
+    environment:
+      VIRTUAL_HOST: ${SHAREDB_HOST_PROD}
+      LETSENCRYPT_HOST: ${SHAREDB_HOST_PROD}
+      VIRTUAL_PORT: ${SHAREDB_PORT}
 
   static:
     restart: always
