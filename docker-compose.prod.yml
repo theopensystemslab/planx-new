@@ -14,7 +14,6 @@ services:
     volumes:
       - "./api.planx.uk:/api"
       - "/api/node_modules"
-    environment:
 
   sharedb:
     stdin_open: false
@@ -24,7 +23,6 @@ services:
     volumes:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
-    environment:
 
   static:
     restart: always
