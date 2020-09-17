@@ -5,6 +5,9 @@ services:
     environment:
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
+      VIRTUAL_HOST: ${HASURA_GRAPHQL_HOST_PROD}
+      LETSENCRYPT_HOST: ${HASURA_GRAPHQL_HOST_PROD}
+      VIRTUAL_PORT: ${HASURA_GRAPHQL_PORT}
 
   api:
     stdin_open: false
