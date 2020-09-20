@@ -5,7 +5,6 @@ import debounce from "lodash/debounce";
 import flatten from "lodash/flatten";
 import flattenDeep from "lodash/flattenDeep";
 import omit from "lodash/omit";
-import natsort from "natsort";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
@@ -15,7 +14,6 @@ import {
   addNodeWithChildrenOp,
   isValidOp,
   moveNodeOp,
-  Node,
   removeNodeOp,
   toGraphlib,
 } from "./flow";
@@ -86,49 +84,6 @@ export const [useStore, api] = create((set, get) => ({
     );
   },
 
-  flowData: async () => {
-    const { data } = await client.query({
-      query: gql`
-        query GetFlows {
-          flows(order_by: { name: asc }) {
-            id
-            name
-            slug
-            team {
-              slug
-            }
-          }
-        }
-      `,
-    });
-
-    const sorter = natsort({ insensitive: true });
-
-    const externalFlows = data.flows
-      .filter(
-        (flow) =>
-          !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
-      )
-      .sort(sorter);
-
-    const internalFlows = Object.entries(api.getState().flow.nodes)
-      .filter(
-        ([id, v]: [string, Node]) =>
-          v.$t === TYPES.Portal &&
-          !window.location.pathname.includes(id) &&
-          v.text
-      )
-      .map(([id, { text }]: any) => ({ id, text }))
-      .sort((a, b) =>
-        sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""))
-      );
-
-    return {
-      externalFlows,
-      internalFlows,
-    };
-  },
-
   isClone: (id: string) => {
     return get().flow.edges.filter(([, tgt]: any) => tgt === id).length > 1;
   },
@@ -138,9 +93,6 @@ export const [useStore, api] = create((set, get) => ({
     return {
       id,
       ...flow.nodes[id],
-      // options: flow.edges
-      //   .filter(([src]: any) => src === id)
-      //   .map(([, id]: any) => ({ id, ...flow.nodes[id] })),
     };
   },
 
@@ -298,8 +250,6 @@ export const [useStore, api] = create((set, get) => ({
 
   childNodesOf(id: any, onlyPublic = false) {
     const { flow } = get();
-
-    // console.log(`child nodes of ${id}`);
 
     let edges = flow.edges.filter(Boolean).filter(([src]: any) => src === id);
     if (onlyPublic) {
