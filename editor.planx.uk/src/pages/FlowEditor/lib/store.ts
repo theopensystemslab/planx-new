@@ -37,13 +37,6 @@ const jdiff = jsondiffpatch.create({
   },
 });
 
-const safeKeys = (ob: any) =>
-  Object.keys(ob).reduce((acc, curr) => {
-    if (!curr.startsWith("$") && typeof ob[curr] === "string")
-      (acc as any)[curr] = ob[curr];
-    return acc;
-  }, {});
-
 const send = (...ops) => {
   ops = flattenDeep(ops);
   console.info({ ops });

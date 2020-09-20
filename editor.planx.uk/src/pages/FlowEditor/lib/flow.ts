@@ -1,7 +1,6 @@
 import { alg, Graph } from "graphlib";
 import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
-import randomWords from "random-words";
 import { v4 as uuid } from "uuid";
 import { TYPES } from "../data/types";
 
@@ -36,10 +35,6 @@ export const toGraphlib = (flow: Flow): Graph => {
   });
   return g;
 };
-
-export const insertNodeOp = (): Array<Op> => [
-  { p: ["nodes", uuid()], oi: { text: randomWords() } },
-];
 
 export const addNodeWithChildrenOp = (
   { id = uuid(), ...data },
@@ -169,10 +164,6 @@ export const moveNodeOp = (
   }
 };
 
-export const setFlowOp = (flow: Flow, prevFlow: Flow): Array<Op> => [
-  { p: [], od: prevFlow, oi: flow },
-];
-
 export const isValidOp = (
   flow: Flow,
   src: string,
@@ -202,13 +193,3 @@ export const isValidOp = (
 
   return true;
 };
-
-export const connectOp = (src: string, tgt: string, flow: Flow): Array<Op> =>
-  isValidOp
-    ? [
-        {
-          p: ["edges", flow.edges.length],
-          li: [src, tgt],
-        },
-      ]
-    : [];
