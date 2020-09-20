@@ -86,13 +86,6 @@ export const [useStore, api] = create((set, get) => ({
     );
   },
 
-  disconnect: () => {
-    set({ flow: undefined, id: undefined });
-    try {
-      doc.destroy();
-    } catch (e) {}
-  },
-
   flowData: async () => {
     const { data } = await client.query({
       query: gql`
