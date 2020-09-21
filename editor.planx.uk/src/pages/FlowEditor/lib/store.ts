@@ -15,6 +15,7 @@ import {
   addNodeWithChildrenOp,
   isValidOp,
   moveNodeOp,
+  removeNode,
   removeNodeOp,
   toGraphlib,
 } from "./flow";
@@ -37,15 +38,7 @@ const jdiff = jsondiffpatch.create({
 });
 
 const send = (...ops) => {
-  ops = flattenDeep(ops)
-    .sort((a) => (a.p[0] === "edges" ? 1 : -1))
-    .sort((a, b) => {
-      if (b?.p[0] === "edges" && a?.p[0] === "edges") {
-        return b.p[b.p.length - 1] - a.p[a.p.length - 1];
-      } else {
-        return -1;
-      }
-    });
+  ops = flattenDeep(ops);
   console.log(ops);
   doc.submitOp(ops);
 };
@@ -133,75 +126,56 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   updateNode: ({ id, ...newNode }, newOptions: any[], cb = send) => {
-    const { flow, childNodesOf } = get();
+    const { flow } = get();
 
-    // 1. update the node itself
+    const ops = getImmerOps(flow, (draft) => {
+      // 1. update the node itself
+      const originalNode = JSON.parse(JSON.stringify(draft.nodes[id]));
+      const delta = jdiff.diff(originalNode, newNode);
+      jdiff.patch(draft.nodes[id], delta);
 
-    const update = (id, newNode) =>
-      getImmerOps(flow, (draft) => {
-        const originalNode = JSON.parse(JSON.stringify(draft.nodes[id]));
-        const delta = jdiff.diff(
-          { nodes: { [id]: originalNode } },
-          { nodes: { [id]: newNode } }
-        );
-        jdiff.patch(draft, delta);
+      // 2. remove responses/options that no longer exist
+
+      let existingOptionIds = draft.edges
+        .filter(([src]: any) => src === id)
+        .map(([, tgt]) => tgt);
+
+      let newOptionIds = newOptions.filter((o) => o.text).map((o) => o.id);
+
+      let removedIds = difference(existingOptionIds, newOptionIds);
+
+      removedIds.forEach((rId) => {
+        removeNode(rId, id, draft);
       });
 
-    const ops = [update(id, newNode)];
+      // 3. update/create children that have been added
 
-    // 2. remove responses/options that no longer exist
+      const optionsChanged =
+        existingOptionIds.join(",") !== newOptionIds.join(",");
 
-    const existingOptionIds = childNodesOf(id).map((o) => o.id);
-    const newOptionIds = newOptions.filter((o) => o.text).map((o) => o.id);
+      const usableNewOptions = newOptions
+        .filter((o) => o.text && !removedIds.includes(o.id))
+        .map((option) => ({ id: option.id || uuid(), ...option }));
 
-    const optionsChanged =
-      existingOptionIds.join(",") !== newOptionIds.join(",");
-
-    const removedIds = difference(existingOptionIds, newOptionIds);
-
-    if (removedIds.length > 0) {
-      ops.push(removedIds.map((tgt) => removeNodeOp(tgt, id, flow)));
-    }
-
-    // 3. update/create children that have been added
-
-    let count = 1000000; // arbitarily high number that is > flow.edges.length
-
-    newOptions
-      .filter((o) => o.text && !removedIds.includes(o.id))
-      .forEach((option) => {
-        const { id: oId = uuid(), ...node } = option;
-
-        if (flow.nodes[oId]) {
+      usableNewOptions.forEach(({ id: oId, ...node }) => {
+        if (draft.nodes[oId]) {
           // option already exists, update it
-          ops.push(update(oId, node));
+          const originalNode = JSON.parse(JSON.stringify(draft.nodes[oId]));
+          const delta = jdiff.diff(originalNode, node);
+          jdiff.patch(draft.nodes[oId], delta);
 
           if (optionsChanged) {
-            const pos = flow.edges.findIndex(
+            const pos = draft.edges.findIndex(
               ([src, tgt]) => src === id && tgt === oId
             );
-            ops.push([
-              {
-                p: ["edges", pos],
-                ld: flow.edges[pos],
-              } as any,
-              {
-                p: ["edges", count--],
-                li: flow.edges[pos],
-              } as any,
-            ]);
+            draft.edges.push(draft.edges.splice(pos, 1)[0]);
           }
         } else {
-          // option does not exist, create it
-          ops.push([
-            { p: ["edges", count--], li: [id, oId] },
-            {
-              p: ["nodes", oId],
-              oi: node,
-            },
-          ]);
+          draft.nodes[oId] = { $t: TYPES.Response, ...node };
+          draft.edges.push([id, oId]);
         }
       });
+    });
 
     cb(ops);
   },
@@ -426,8 +400,8 @@ export const [useStore, api] = create((set, get) => ({
 
     const ids = new Set();
 
-    const idsForParent = (parent: any) =>
-      flow.edges
+    const idsForParent = (parent: any) => {
+      return flow.edges
         .filter(([src]: any) => src === parent)
         .filter(
           ([, tgt]: any) =>
@@ -444,6 +418,7 @@ export const [useStore, api] = create((set, get) => ({
             ids.add(id);
           }
         });
+    };
 
     flatten(Object.values(breadcrumbs))
       .reverse()
