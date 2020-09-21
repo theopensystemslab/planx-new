@@ -4,8 +4,6 @@ import arrayMove from "array-move";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import { FormikHookReturn } from "../../../../types";
-import flags from "../../data/flags";
-import { TYPES } from "../../data/types";
 import {
   ImgInput,
   Input,
@@ -19,6 +17,8 @@ import {
   RichTextInput,
   SelectInput,
 } from "../../../../ui";
+import flags from "../../data/flags";
+import { TYPES } from "../../data/types";
 
 interface Option {
   val?: string;
@@ -88,8 +88,8 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
         {formik.values.options.map((option, index) => {
           return (
             <InputGroup
-              deletable={false}
-              draggable={false}
+              deletable
+              draggable
               deleteInputGroup={() => deleteRow(index)}
               key={index}
               index={index}

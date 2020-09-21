@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { alg } from "graphlib";
 import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
+import difference from "lodash/difference";
 import flatten from "lodash/flatten";
 import flattenDeep from "lodash/flattenDeep";
 import omit from "lodash/omit";
@@ -36,8 +37,16 @@ const jdiff = jsondiffpatch.create({
 });
 
 const send = (...ops) => {
-  ops = flattenDeep(ops);
-  console.info({ ops });
+  ops = flattenDeep(ops)
+    .sort((a) => (a.p[0] === "edges" ? 1 : -1))
+    .sort((a, b) => {
+      if (b?.p[0] === "edges" && a?.p[0] === "edges") {
+        return b.p[b.p.length - 1] - a.p[a.p.length - 1];
+      } else {
+        return -1;
+      }
+    });
+  console.log(ops);
   doc.submitOp(ops);
 };
 
@@ -124,17 +133,75 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   updateNode: ({ id, ...newNode }, newOptions: any[], cb = send) => {
-    const { flow } = get();
+    const { flow, childNodesOf } = get();
 
-    const ops = getImmerOps(flow, (draft) => {
-      const originalNode = JSON.parse(JSON.stringify(draft.nodes[id]));
-      console.log(newNode);
-      const delta = jdiff.diff(
-        { nodes: { [id]: originalNode } },
-        { nodes: { [id]: newNode } }
-      );
-      jdiff.patch(draft, delta);
-    });
+    // 1. update the node itself
+
+    const update = (id, newNode) =>
+      getImmerOps(flow, (draft) => {
+        const originalNode = JSON.parse(JSON.stringify(draft.nodes[id]));
+        const delta = jdiff.diff(
+          { nodes: { [id]: originalNode } },
+          { nodes: { [id]: newNode } }
+        );
+        jdiff.patch(draft, delta);
+      });
+
+    const ops = [update(id, newNode)];
+
+    // 2. remove responses/options that no longer exist
+
+    const existingOptionIds = childNodesOf(id).map((o) => o.id);
+    const newOptionIds = newOptions.filter((o) => o.text).map((o) => o.id);
+
+    const optionsChanged =
+      existingOptionIds.join(",") !== newOptionIds.join(",");
+
+    const removedIds = difference(existingOptionIds, newOptionIds);
+
+    if (removedIds.length > 0) {
+      ops.push(removedIds.map((tgt) => removeNodeOp(tgt, id, flow)));
+    }
+
+    // 3. update/create children that have been added
+
+    let count = 1000000; // arbitarily high number that is > flow.edges.length
+
+    newOptions
+      .filter((o) => o.text && !removedIds.includes(o.id))
+      .forEach((option) => {
+        const { id: oId = uuid(), ...node } = option;
+
+        if (flow.nodes[oId]) {
+          // option already exists, update it
+          ops.push(update(oId, node));
+
+          if (optionsChanged) {
+            const pos = flow.edges.findIndex(
+              ([src, tgt]) => src === id && tgt === oId
+            );
+            ops.push([
+              {
+                p: ["edges", pos],
+                ld: flow.edges[pos],
+              } as any,
+              {
+                p: ["edges", count--],
+                li: flow.edges[pos],
+              } as any,
+            ]);
+          }
+        } else {
+          // option does not exist, create it
+          ops.push([
+            { p: ["edges", count--], li: [id, oId] },
+            {
+              p: ["nodes", oId],
+              oi: node,
+            },
+          ]);
+        }
+      });
 
     cb(ops);
   },
