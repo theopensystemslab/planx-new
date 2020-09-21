@@ -76,13 +76,7 @@ const newTask = (): Task => ({
 
 const TaskListEditor: React.FC<Props> = (props) => {
   return (
-    <form
-      onSubmit={() => {
-        if (props.onSubmit) {
-          props.onSubmit();
-        }
-      }}
-    >
+    <>
       <ModalSection>
         <ModalSectionContent>
           <ListManager
@@ -108,7 +102,7 @@ const TaskListEditor: React.FC<Props> = (props) => {
         }}
         value={props.value.notes}
       />
-    </form>
+    </>
   );
 };
 export default TaskListEditor;
