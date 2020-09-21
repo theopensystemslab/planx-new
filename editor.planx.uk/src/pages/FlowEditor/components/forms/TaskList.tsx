@@ -1,5 +1,5 @@
 import React from "react";
-import TaskListEditor, { TaskList } from "../../../../ui/TaskListEditor";
+import TaskListEditor from "../../../../ui/TaskListEditor";
 import { useFormik } from "formik";
 import { TYPES } from "../../data/types";
 
@@ -12,9 +12,10 @@ export interface Props {
 const TaskListComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
-      taskList: (props.node && (props.node.taskList as TaskList)) || {
-        notes: "",
-        tasks: [],
+      taskList: {
+        // TODO: improve runtime validation here (joi, io-ts)
+        notes: props.node?.taskList?.notes || "",
+        tasks: props.node?.taskList?.tasks || [],
       },
     },
     onSubmit: (newValues) => {

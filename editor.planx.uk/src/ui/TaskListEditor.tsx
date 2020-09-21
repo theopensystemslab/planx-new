@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from "react";
 import { makeStyles } from "@material-ui/core";
+import { List } from "@material-ui/icons";
 import Input from "./Input";
 import InputRow from "./InputRow";
 import RichTextInput from "./RichTextInput";
@@ -78,7 +79,7 @@ const TaskListEditor: React.FC<Props> = (props) => {
   return (
     <>
       <ModalSection>
-        <ModalSectionContent>
+        <ModalSectionContent title="Task List" Icon={List}>
           <ListManager
             values={props.value.tasks}
             onChange={(tasks: Array<Task>) => {
