@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { rootFlowPath } from "../../routes/utils";
 import Flow from "./components/Flow";
 import PreviewBrowser from "./components/PreviewBrowser";
@@ -26,10 +26,6 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
   const showPreview = useStore((state) => state.showPreview);
 
   const classes = useStyles();
-
-  useEffect(() => {
-    console.log("mounted");
-  }, []);
 
   return (
     <div id="editor-container">

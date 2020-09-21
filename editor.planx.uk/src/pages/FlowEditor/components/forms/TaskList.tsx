@@ -1,8 +1,39 @@
 import React from "react";
+import TaskListEditor, { TaskList } from "../../../../ui/TaskListEditor";
+import { useFormik } from "formik";
+import { TYPES } from "../../data/types";
 
-const TaskList: React.FC<any> = (props) => {
-  console.log(props);
-  return <p>Hello</p>;
+export interface Props {
+  id?: string;
+  handleSubmit?: (d: any) => void;
+  node?: any;
+}
+
+const TaskListComponent: React.FC<Props> = (props) => {
+  const formik = useFormik({
+    initialValues: {
+      taskList: (props.node && (props.node.taskList as TaskList)) || {
+        notes: "",
+        tasks: [],
+      },
+    },
+    onSubmit: (newValues) => {
+      if (props.handleSubmit) {
+        props.handleSubmit({ $t: TYPES.TaskList, ...newValues });
+      }
+    },
+    validate: () => {},
+  });
+  return (
+    <form onSubmit={formik.handleSubmit} id="modal">
+      <TaskListEditor
+        value={formik.values.taskList}
+        onChange={(newTaskList) => {
+          formik.setFieldValue("taskList", newTaskList);
+        }}
+      />
+    </form>
+  );
 };
 
-export default TaskList;
+export default TaskListComponent;

@@ -102,6 +102,7 @@ const FormModal: React.FC<{
       </DialogTitle>
       <DialogContent dividers>
         <Component
+          node={node}
           {...node}
           {...extraProps}
           id={id}

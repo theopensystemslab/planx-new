@@ -46,6 +46,7 @@ interface IQuestion {
   $t: number;
   img?: string;
   definitionImg?: string;
+  node?: any;
 }
 
 const renderMenuItem = (category: string) => {
@@ -161,7 +162,9 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
             </InputGroup>
           );
         })}
-        <Button onClick={addRow}>add option</Button>
+        <Button onClick={addRow} color="primary" variant="contained">
+          Add option
+        </Button>
       </React.Fragment>
     </ModalSectionContent>
   );

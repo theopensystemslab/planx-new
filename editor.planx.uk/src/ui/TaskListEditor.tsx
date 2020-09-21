@@ -4,7 +4,6 @@ import Input from "./Input";
 import InputRow from "./InputRow";
 import RichTextInput from "./RichTextInput";
 import InternalNotes from "./InternalNotes";
-import ModalCard from "./ModalCard";
 import ModalSection from "./ModalSection";
 import ModalSectionContent from "./ModalSectionContent";
 import ListManager, { EditorProps } from "./ListManager";
@@ -84,33 +83,31 @@ const TaskListEditor: React.FC<Props> = (props) => {
         }
       }}
     >
-      <ModalCard>
-        <ModalSection>
-          <ModalSectionContent>
-            <ListManager
-              values={props.value.tasks}
-              onChange={(tasks: Array<Task>) => {
-                props.onChange({
-                  ...props.value,
-                  tasks,
-                });
-              }}
-              Editor={TaskEditor}
-              newValue={newTask}
-            />
-          </ModalSectionContent>
-        </ModalSection>
-        <InternalNotes
-          name="notes"
-          onChange={(ev) => {
-            props.onChange({
-              ...props.value,
-              notes: ev.target.value,
-            });
-          }}
-          value={props.value.notes}
-        />
-      </ModalCard>
+      <ModalSection>
+        <ModalSectionContent>
+          <ListManager
+            values={props.value.tasks}
+            onChange={(tasks: Array<Task>) => {
+              props.onChange({
+                ...props.value,
+                tasks,
+              });
+            }}
+            Editor={TaskEditor}
+            newValue={newTask}
+          />
+        </ModalSectionContent>
+      </ModalSection>
+      <InternalNotes
+        name="notes"
+        onChange={(ev) => {
+          props.onChange({
+            ...props.value,
+            notes: ev.target.value,
+          });
+        }}
+        value={props.value.notes}
+      />
     </form>
   );
 };
