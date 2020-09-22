@@ -5,6 +5,7 @@ import Checklist from "./components/Checklist";
 import FindProperty from "./components/FindProperty";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
+import TaskList from "./components/TaskList";
 
 let uprn;
 
@@ -25,6 +26,13 @@ const Node: React.FC<any> = (props) => {
             responseKey: i + 1,
             title: n.text,
           }))}
+        />
+      );
+    case TYPES.TaskList:
+      return (
+        <TaskList
+          node={props.node}
+          handleSubmit={() => props.handleSubmit([props.id])}
         />
       );
     case TYPES.Checklist:

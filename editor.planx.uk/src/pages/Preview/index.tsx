@@ -43,6 +43,7 @@ const Questions = () => {
               handleSubmit={(values) => {
                 record(item.id, values);
               }}
+              node={node}
               {...item}
             />
           )}
