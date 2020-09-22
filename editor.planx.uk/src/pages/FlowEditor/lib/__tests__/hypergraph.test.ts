@@ -1,12 +1,26 @@
-import produce from "immer";
+import { enablePatches, produceWithPatches } from "immer";
+import colorize from "json-colorizer";
+
+// ---- SETUP
+
+enablePatches();
+
+let count = 0;
+const guid = () => (count++).toString();
+
+const jlog = (json) => console.log(colorize(JSON.stringify(json, null, 2)));
+
+// ----
+
+type Graph = Record<string, Node>;
 
 interface Node {
-  id: string;
-  text: string;
+  id?: string;
+  text?: string;
 }
 
-const addNode = (graph) => (
-  { id, ...node }: Node,
+const addNode = (graph: Graph) => (
+  { id = guid(), ...node }: Node,
   {
     // before = null,
     children = [],
@@ -17,57 +31,57 @@ const addNode = (graph) => (
     parent?: string;
   }
 ) => {
-  produce(graph, () => {
+  const [next, fwd, rev] = produceWithPatches(graph, (draft) => {
     const parentId = parent ? parent : "_";
 
-    graph[parentId][">"] = graph[parentId][">"] = [];
-    graph[parentId][">"].push(id);
+    draft[parentId][">"] = draft[parentId][">"] = [];
+    draft[parentId][">"].push(id);
 
-    graph[id] = node;
+    draft[id] = node;
 
-    children.forEach(({ id: childId, ...child }) => {
-      graph[childId] = child;
-      graph[id][">"] = graph[id][">"] || [];
-      graph[id][">"].push(childId);
+    children.forEach(({ id: childId = guid(), ...child }: Node) => {
+      draft[childId] = child;
+      draft[id][">"] = draft[id][">"] || [];
+      draft[id][">"].push(childId);
     });
   });
+
+  jlog({ fwd, rev });
+
+  return next;
 };
 
-it("can add node", () => {
-  const graph = { _: {} };
-  addNode(graph)(
-    { id: "favecolour", text: "favourite colour" },
+it("can add node with children", () => {
+  let graph: Graph = { _: {} };
+  graph = addNode(graph)(
+    { text: "favourite colour" },
     {
-      children: [
-        { id: "red", text: "red" },
-        { id: "green", text: "green" },
-        { id: "blue", text: "blue" },
-      ],
+      children: [{ text: "red" }, { text: "green" }, { text: "blue" }],
     }
   );
   expect(graph).toMatchInlineSnapshot(`
     Object {
-      "_": Object {
+      "0": Object {
         ">": Array [
-          "favecolour",
-        ],
-      },
-      "blue": Object {
-        "text": "blue",
-      },
-      "favecolour": Object {
-        ">": Array [
-          "red",
-          "green",
-          "blue",
+          "1",
+          "2",
+          "3",
         ],
         "text": "favourite colour",
       },
-      "green": Object {
+      "1": Object {
+        "text": "red",
+      },
+      "2": Object {
         "text": "green",
       },
-      "red": Object {
-        "text": "red",
+      "3": Object {
+        "text": "blue",
+      },
+      "_": Object {
+        ">": Array [
+          "0",
+        ],
       },
     }
   `);
