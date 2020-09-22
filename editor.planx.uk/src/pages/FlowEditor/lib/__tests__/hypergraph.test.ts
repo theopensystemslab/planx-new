@@ -1,9 +1,10 @@
-import { enablePatches, produceWithPatches } from "immer";
+import { enableMapSet, enablePatches, produceWithPatches } from "immer";
 import colorize from "json-colorizer";
 
 // ---- SETUP
 
 enablePatches();
+enableMapSet();
 
 let count = 0;
 const guid = () => (count++).toString();
@@ -12,14 +13,37 @@ const jlog = (json) => console.log(colorize(JSON.stringify(json, null, 2)));
 
 // ----
 
-type Graph = Record<string, Node>;
+type Graph = Map<string, Node>;
 
 interface Node {
   id?: string;
   text?: string;
 }
 
-const addNode = (graph: Graph) => (
+const removeNode = (graph: Graph = new Map([["_", {}]])) => (
+  idToRemove: string
+): Graph => {
+  const [next, fwd, rev] = produceWithPatches(graph, (draft) => {
+    draft.delete(idToRemove);
+
+    draft.forEach((node, _id) => {
+      if (Array.isArray(node[">"])) {
+        let index;
+        // using a for loop because indexOf/findIndex doesn't work with proxy
+        for (let i = 0; i < node[">"].length; i++) {
+          if (node[">"][i] === idToRemove) index = i;
+        }
+        if (index >= 0) node[">"].splice(index, 1);
+      }
+    });
+  });
+
+  jlog({ fwd, rev });
+
+  return next;
+};
+
+const addNode = (graph: Graph = new Map([["_", {}]])) => (
   { id = guid(), ...node }: Node,
   {
     // before = null,
@@ -30,19 +54,21 @@ const addNode = (graph: Graph) => (
     children?: Array<Node>;
     parent?: string;
   }
-) => {
+): Graph => {
   const [next, fwd, rev] = produceWithPatches(graph, (draft) => {
     const parentId = parent ? parent : "_";
 
-    draft[parentId][">"] = draft[parentId][">"] = [];
-    draft[parentId][">"].push(id);
+    if (!draft.has(parentId)) draft.set(parentId, {});
+    draft.get(parentId)[">"] = draft.get(parentId)[">"] || [];
 
-    draft[id] = node;
+    draft.get(parentId)[">"].push(id);
+
+    draft.set(id, node);
 
     children.forEach(({ id: childId = guid(), ...child }: Node) => {
-      draft[childId] = child;
-      draft[id][">"] = draft[id][">"] || [];
-      draft[id][">"].push(childId);
+      draft.set(childId, child);
+      draft.get(id)[">"] = draft.get(id)[">"] || [];
+      draft.get(id)[">"].push(childId);
     });
   });
 
@@ -52,16 +78,20 @@ const addNode = (graph: Graph) => (
 };
 
 it("can add node with children", () => {
-  let graph: Graph = { _: {} };
-  graph = addNode(graph)(
+  const graph = addNode()(
     { text: "favourite colour" },
     {
       children: [{ text: "red" }, { text: "green" }, { text: "blue" }],
     }
   );
   expect(graph).toMatchInlineSnapshot(`
-    Object {
-      "0": Object {
+    Map {
+      "_" => Object {
+        ">": Array [
+          "0",
+        ],
+      },
+      "0" => Object {
         ">": Array [
           "1",
           "2",
@@ -69,20 +99,42 @@ it("can add node with children", () => {
         ],
         "text": "favourite colour",
       },
-      "1": Object {
+      "1" => Object {
         "text": "red",
       },
-      "2": Object {
+      "2" => Object {
         "text": "green",
       },
-      "3": Object {
+      "3" => Object {
         "text": "blue",
       },
-      "_": Object {
+    }
+  `);
+});
+
+it("can remove node", () => {
+  const graph = removeNode(
+    new Map([
+      ["_", { ">": ["a"] }],
+      ["a", { ">": ["b", "c"] }],
+      ["b", {}],
+      ["c", {}],
+    ]) as Graph
+  )("b");
+
+  expect(graph).toMatchInlineSnapshot(`
+    Map {
+      "_" => Object {
         ">": Array [
-          "0",
+          "a",
         ],
       },
+      "a" => Object {
+        ">": Array [
+          "c",
+        ],
+      },
+      "c" => Object {},
     }
   `);
 });
