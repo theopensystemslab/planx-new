@@ -13,7 +13,7 @@ const jlog = (json) => console.log(colorize(JSON.stringify(json, null, 2)));
 
 // ----
 
-type Graph = Map<string, Node>;
+type Graph = Map<Pick<Node, "id"> | string, Omit<Node, "id">>;
 
 interface Node {
   id?: string;
@@ -52,7 +52,7 @@ const addNode = (graph: Graph = new Map([["_", {}]])) => (
   }: {
     // before?: string;
     children?: Array<Node>;
-    parent?: string;
+    parent?: Pick<Node, "id">;
   }
 ): Graph => {
   const [next, fwd, rev] = produceWithPatches(graph, (draft) => {
