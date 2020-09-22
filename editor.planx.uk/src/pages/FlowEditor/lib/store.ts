@@ -406,9 +406,12 @@ export const [useStore, api] = create((set, get) => ({
         .filter(([src]: any) => src === parent)
         .filter(
           ([, tgt]: any) =>
-            [TYPES.FindProperty, TYPES.PropertyInformation].includes(
-              flow.nodes[tgt].$t
-            ) || flow.edges.filter(([src]: any) => src === tgt).length > 0
+            [
+              TYPES.FindProperty,
+              TYPES.PropertyInformation,
+              TYPES.TaskList,
+            ].includes(flow.nodes[tgt].$t) ||
+            flow.edges.filter(([src]: any) => src === tgt).length > 0
         )
         .map(([, tgt]: any) => tgt)
         .filter((id: any) => !Object.keys(breadcrumbs).includes(id))

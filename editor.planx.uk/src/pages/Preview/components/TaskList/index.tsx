@@ -1,4 +1,4 @@
-import { useFormik } from "formik";
+import Button from "@material-ui/core/Button";
 import React from "react";
 import Card from "../shared/Card";
 
@@ -7,21 +7,20 @@ interface Props {
   handleSubmit?;
 }
 
-const TaskList: React.FC<Props> = () => {
-  const formik = useFormik({
-    initialValues: {
-      selected: { a: "" },
-    },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-    validate: () => {},
-  });
+const TaskList: React.FC<Props> = ({ node, handleSubmit }) => {
   return (
     <Card>
-      <form onSubmit={formik.handleSubmit}>
-        <p>TaskList placeholder</p>
-      </form>
+      <pre>{JSON.stringify(node, null, 2)}</pre>
+
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        type="submit"
+        onClick={handleSubmit}
+      >
+        Continue
+      </Button>
     </Card>
   );
 };
