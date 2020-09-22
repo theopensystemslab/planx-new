@@ -7,8 +7,7 @@ interface Props {
   handleSubmit?;
 }
 
-const TaskList: React.FC<Props> = (props) => {
-  console.log(props.node);
+const TaskList: React.FC<Props> = () => {
   const formik = useFormik({
     initialValues: {
       selected: { a: "" },
@@ -18,11 +17,10 @@ const TaskList: React.FC<Props> = (props) => {
     },
     validate: () => {},
   });
-  const { a } = formik.values.selected;
   return (
     <Card>
       <form onSubmit={formik.handleSubmit}>
-        <p>abcd</p>
+        <p>TaskList placeholder</p>
       </form>
     </Card>
   );
