@@ -1,7 +1,6 @@
 import { alg, Graph } from "graphlib";
 import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
-import randomWords from "random-words";
 import { v4 as uuid } from "uuid";
 import { TYPES } from "../data/types";
 
@@ -36,10 +35,6 @@ export const toGraphlib = (flow: Flow): Graph => {
   });
   return g;
 };
-
-export const insertNodeOp = (): Array<Op> => [
-  { p: ["nodes", uuid()], oi: { text: randomWords() } },
-];
 
 export const addNodeWithChildrenOp = (
   { id = uuid(), ...data },
@@ -78,6 +73,37 @@ export const addNodeWithChildrenOp = (
     addNode({ id, ...data }, parent, before),
     children.map((child) => addNode(child, id)),
   ]);
+};
+
+export const removeNode = (
+  id: string,
+  parent: null | string = null,
+  flow: Flow
+) => {
+  const edges = JSON.parse(JSON.stringify(flow.edges));
+
+  const relevantEdges = edges.filter(([, tgt]) => tgt === id);
+
+  const index = edges.findIndex(([src, tgt]) => src === parent && tgt === id);
+
+  if (index < 0) {
+    console.warn("edge not found");
+  } else {
+    flow.edges.splice(index, 1);
+
+    if (relevantEdges.length > 1) {
+      console.log({ relevantEdges });
+      // node is in multiple places in the graph so just delete the edge
+      // that is connecting it
+    } else {
+      delete flow.nodes[id];
+      edges
+        .filter(([src]) => src === id)
+        .forEach(([, tgt]) => {
+          removeNode(tgt, id, flow);
+        });
+    }
+  }
 };
 
 export const removeNodeOp = (
@@ -169,10 +195,6 @@ export const moveNodeOp = (
   }
 };
 
-export const setFlowOp = (flow: Flow, prevFlow: Flow): Array<Op> => [
-  { p: [], od: prevFlow, oi: flow },
-];
-
 export const isValidOp = (
   flow: Flow,
   src: string,
@@ -202,13 +224,3 @@ export const isValidOp = (
 
   return true;
 };
-
-export const connectOp = (src: string, tgt: string, flow: Flow): Array<Op> =>
-  isValidOp
-    ? [
-        {
-          p: ["edges", flow.edges.length],
-          li: [src, tgt],
-        },
-      ]
-    : [];

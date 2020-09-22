@@ -2,20 +2,20 @@ import { gql } from "@apollo/client";
 import { alg } from "graphlib";
 import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
+import difference from "lodash/difference";
 import flatten from "lodash/flatten";
 import flattenDeep from "lodash/flattenDeep";
-import getPath from "lodash/get";
 import omit from "lodash/omit";
-import natsort from "natsort";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
 import { TYPES } from "../data/types";
+import { getOps as getImmerOps } from "./adapters/immer";
 import {
   addNodeWithChildrenOp,
   isValidOp,
   moveNodeOp,
-  Node,
+  removeNode,
   removeNodeOp,
   toGraphlib,
 } from "./flow";
@@ -38,16 +38,9 @@ const jdiff = jsondiffpatch.create({
   },
 });
 
-const safeKeys = (ob: any) =>
-  Object.keys(ob).reduce((acc, curr) => {
-    if (!curr.startsWith("$") && typeof ob[curr] === "string")
-      (acc as any)[curr] = ob[curr];
-    return acc;
-  }, {});
-
 const send = (...ops) => {
   ops = flattenDeep(ops);
-  console.info({ ops });
+  console.log(ops);
   doc.submitOp(ops);
 };
 
@@ -94,56 +87,6 @@ export const [useStore, api] = create((set, get) => ({
     );
   },
 
-  disconnect: () => {
-    set({ flow: undefined, id: undefined });
-    try {
-      doc.destroy();
-    } catch (e) {}
-  },
-
-  flowData: async () => {
-    const { data } = await client.query({
-      query: gql`
-        query GetFlows {
-          flows(order_by: { name: asc }) {
-            id
-            name
-            slug
-            team {
-              slug
-            }
-          }
-        }
-      `,
-    });
-
-    const sorter = natsort({ insensitive: true });
-
-    const externalFlows = data.flows
-      .filter(
-        (flow) =>
-          !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
-      )
-      .sort(sorter);
-
-    const internalFlows = Object.entries(api.getState().flow.nodes)
-      .filter(
-        ([id, v]: [string, Node]) =>
-          v.$t === TYPES.Portal &&
-          !window.location.pathname.includes(id) &&
-          v.text
-      )
-      .map(([id, { text }]: any) => ({ id, text }))
-      .sort((a, b) =>
-        sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""))
-      );
-
-    return {
-      externalFlows,
-      internalFlows,
-    };
-  },
-
   isClone: (id: string) => {
     return get().flow.edges.filter(([, tgt]: any) => tgt === id).length > 1;
   },
@@ -153,9 +96,6 @@ export const [useStore, api] = create((set, get) => ({
     return {
       id,
       ...flow.nodes[id],
-      // options: flow.edges
-      //   .filter(([src]: any) => src === id)
-      //   .map(([, id]: any) => ({ id, ...flow.nodes[id] })),
     };
   },
 
@@ -187,97 +127,56 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   updateNode: ({ id, ...newNode }, newOptions: any[], cb = send) => {
-    const { flow, addNode } = get();
+    const { flow } = get();
 
-    console.debug(
-      `[OP]: updateNodeOp(${JSON.stringify(newNode)}, ${JSON.stringify(
-        newOptions
-      )}, beforeFlow);`
-    );
+    const ops = getImmerOps(flow, (draft) => {
+      // 1. update the node itself
+      const originalNode = JSON.parse(JSON.stringify(draft.nodes[id]));
+      const delta = jdiff.diff(originalNode, newNode);
+      jdiff.patch(draft.nodes[id], delta);
 
-    const oldNode = flow.nodes[id];
+      // 2. remove responses/options that no longer exist
 
-    const patch = jdiff.diff(safeKeys(oldNode), safeKeys(newNode)) || {};
+      let existingOptionIds = draft.edges
+        .filter(([src]: any) => src === id)
+        .map(([, tgt]) => tgt);
 
-    // 1. update the node itself
+      let newOptionIds = newOptions.filter((o) => o.text).map((o) => o.id);
 
-    const getOps = (p: any, _id: any) =>
-      Object.entries(p).reduce((ops: any, [k, v]: any) => {
-        const p = ["nodes", _id, k];
-        // https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md
-        if (Array.isArray(v)) {
-          if (v.length === 1) {
-            // data was added
-            ops.push({ oi: v[0], p });
-          } else if (v.length === 2) {
-            // data was replaced
-            ops.push({ od: v[0], oi: v[1], p });
-          } else if (v.length === 3 && v[1] === 0 && v[2] === 0) {
-            // data was removed
-            ops.push({ od: getPath(flow, p), p });
-          }
+      let removedIds = difference(existingOptionIds, newOptionIds);
+
+      removedIds.forEach((rId) => {
+        removeNode(rId, id, draft);
+      });
+
+      // 3. update/create children that have been added
+
+      // const optionsChanged =
+      //   existingOptionIds.join(",") !== newOptionIds.join(",");
+
+      const usableNewOptions = newOptions
+        .filter((o) => o.text && !removedIds.includes(o.id))
+        .map((option) => ({ id: option.id || uuid(), ...option }));
+
+      usableNewOptions.forEach(({ id: oId, ...node }) => {
+        if (draft.nodes[oId]) {
+          // option already exists, update it
+          const originalNode = JSON.parse(JSON.stringify(draft.nodes[oId]));
+          const delta = jdiff.diff(originalNode, node);
+          jdiff.patch(draft.nodes[oId], delta);
+
+          // if (optionsChanged) {
+          //   const pos = draft.edges.findIndex(
+          //     ([src, tgt]) => src === id && tgt === oId
+          //   );
+          //   draft.edges.push(draft.edges.splice(pos, 1)[0]);
+          // }
+        } else {
+          draft.nodes[oId] = { $t: TYPES.Response, ...node };
+          draft.edges.push([id, oId]);
         }
-        return ops;
-      }, []);
-
-    const ops = getOps(patch, id);
-
-    // 2. update or create any direct children that have been added
-    newOptions.forEach((option) => {
-      if (flow.nodes[option.id]) {
-        // if the option already exists...
-        // check for changes and add update patches accordingly
-        const patch =
-          jdiff.diff(
-            safeKeys(flow.nodes[option.id]),
-            safeKeys(omit(option, "id"))
-          ) || {};
-        getOps(patch, option.id).forEach((op: any) => ops.push(op));
-      } else {
-        // otherwise create the option node
-        addNode({ ...option, $t: TYPES.Response }, [], id, null, (op) =>
-          ops.push(op)
-        );
-      }
+      });
     });
-
-    // // 4. remove any direct children that have been removed
-    // const removedIds = difference(currentOptionIds, newOptionIds);
-    // removedIds.forEach((tgt) => {
-    //   removeNode(tgt, id, (op) => ops.push(op));
-    // });
-
-    // // 3. reorder nodes if necessary
-    // if (currentOptionIds.join(",") !== newOptionIds.join(",")) {
-    //   console.log({
-    //     currentOptionIds,
-    //     newOptionIds,
-    //   });
-
-    //   let initialIdx = flow.edges.findIndex(
-    //     ([src, tgt]: any) => src === id && tgt === currentOptionIds[0]
-    //   );
-
-    //   // const sortOps = [];
-
-    //   // let before: any = null;
-    //   [...newOptionIds].forEach((oId, count) => {
-    //     const fromIndex = flow.edges.findIndex(
-    //       ([src, tgt]: any) => src === id && tgt === oId
-    //     );
-    //     let toIndex = initialIdx + count;
-
-    //     if (fromIndex < toIndex) toIndex -= 1;
-
-    //     // sortOps.push({ lm: toIndex, p: ["edges", fromIndex] });
-    //     // moveNode(oId, id, before, id, (op) => ops.push(op));
-    //     // ops.push(moveNodeOp(oId, id, null, id, flow));
-    //     // before = oId;
-    //   });
-    //   // console.log(sortOps.sort((a, b): any => a.p[1] - b.p[2]));
-    //   // console.log(sortOps);
-    //   // ops.push(sortOps);
-    // }
 
     cb(ops);
   },
@@ -394,8 +293,6 @@ export const [useStore, api] = create((set, get) => ({
   childNodesOf(id: any, onlyPublic = false) {
     const { flow } = get();
 
-    // console.log(`child nodes of ${id}`);
-
     let edges = flow.edges.filter(Boolean).filter(([src]: any) => src === id);
     if (onlyPublic) {
       edges = edges.filter(
@@ -475,14 +372,17 @@ export const [useStore, api] = create((set, get) => ({
   deleteFlow: async (teamId, flowSlug: string) => {
     const response = await client.mutate({
       mutation: gql`
-        mutation MyMutation($flow_slug: String) {
-          delete_flows(where: { slug: { _eq: $flow_slug } }) {
+        mutation MyMutation($team_id: Int, $flow_slug: String) {
+          delete_flows(
+            where: { team_id: { _eq: $team_id }, slug: { _eq: $flow_slug } }
+          ) {
             affected_rows
           }
         }
       `,
       variables: {
         flow_slug: flowSlug,
+        team_id: teamId,
       },
     });
     return response;
@@ -501,8 +401,8 @@ export const [useStore, api] = create((set, get) => ({
 
     const ids = new Set();
 
-    const idsForParent = (parent: any) =>
-      flow.edges
+    const idsForParent = (parent: any) => {
+      return flow.edges
         .filter(([src]: any) => src === parent)
         .filter(
           ([, tgt]: any) =>
@@ -519,6 +419,7 @@ export const [useStore, api] = create((set, get) => ({
             ids.add(id);
           }
         });
+    };
 
     flatten(Object.values(breadcrumbs))
       .reverse()
