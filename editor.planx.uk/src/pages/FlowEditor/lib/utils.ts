@@ -6,3 +6,10 @@ export const getParentId = (parent: any) => {
   }
   return correctParent;
 };
+
+// export const safeKeys = (ob: any) =>
+//   Object.keys(ob).reduce((acc, curr) => {
+//     if (!curr.startsWith("$") && typeof ob[curr] === "string")
+//       (acc as any)[curr] = ob[curr];
+//     return acc;
+//   }, {});
