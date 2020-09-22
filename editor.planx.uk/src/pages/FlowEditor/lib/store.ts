@@ -150,8 +150,8 @@ export const [useStore, api] = create((set, get) => ({
 
       // 3. update/create children that have been added
 
-      const optionsChanged =
-        existingOptionIds.join(",") !== newOptionIds.join(",");
+      // const optionsChanged =
+      //   existingOptionIds.join(",") !== newOptionIds.join(",");
 
       const usableNewOptions = newOptions
         .filter((o) => o.text && !removedIds.includes(o.id))
@@ -164,12 +164,12 @@ export const [useStore, api] = create((set, get) => ({
           const delta = jdiff.diff(originalNode, node);
           jdiff.patch(draft.nodes[oId], delta);
 
-          if (optionsChanged) {
-            const pos = draft.edges.findIndex(
-              ([src, tgt]) => src === id && tgt === oId
-            );
-            draft.edges.push(draft.edges.splice(pos, 1)[0]);
-          }
+          // if (optionsChanged) {
+          //   const pos = draft.edges.findIndex(
+          //     ([src, tgt]) => src === id && tgt === oId
+          //   );
+          //   draft.edges.push(draft.edges.splice(pos, 1)[0]);
+          // }
         } else {
           draft.nodes[oId] = { $t: TYPES.Response, ...node };
           draft.edges.push([id, oId]);

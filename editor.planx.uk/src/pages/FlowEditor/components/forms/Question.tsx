@@ -89,7 +89,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           return (
             <InputGroup
               deletable
-              draggable
+              draggable={false}
               deleteInputGroup={() => deleteRow(index)}
               key={index}
               index={index}
