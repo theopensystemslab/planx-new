@@ -6,10 +6,11 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import classNames from "classnames";
 import React from "react";
+import { Task as ITask } from "../../../../ui/TaskListEditor";
 import Card from "../shared/Card";
 
 interface Props {
-  node: any;
+  tasks: Array<ITask>;
   handleSubmit?;
 }
 
@@ -194,17 +195,17 @@ const Task = ({ title, description, index, isLast }) => {
   );
 };
 
-const TaskList: React.FC<Props> = ({ node, handleSubmit }) => {
+const TaskList: React.FC<Props> = ({ tasks, handleSubmit }) => {
   const classes = taskStyles();
   return (
     <Card>
       <Box className={classes.taskList}>
-        {node.taskList.tasks.map((task, index) => (
+        {tasks.map((task, index) => (
           <Task
             {...task}
             key={index}
             index={index}
-            isLast={index === node.taskList.tasks.length}
+            isLast={index === tasks.length}
           />
         ))}
       </Box>
