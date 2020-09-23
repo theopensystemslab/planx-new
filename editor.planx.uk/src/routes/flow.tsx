@@ -11,6 +11,7 @@ import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import Portal from "../pages/FlowEditor/components/forms/Portal";
 import PropertyInformation from "../pages/FlowEditor/components/forms/PropertyInformation";
 import Question from "../pages/FlowEditor/components/forms/Question";
+import TaskList from "../pages/FlowEditor/components/forms/TaskList";
 import { TYPES } from "../pages/FlowEditor/data/types";
 import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
@@ -18,6 +19,7 @@ import { makeTitle } from "./utils";
 const components = {
   "find-property": FindProperty,
   "property-information": PropertyInformation,
+  "task-list": TaskList,
   checklist: Checklist,
   portal: Portal,
   question: Question,
@@ -94,6 +96,9 @@ const editNode = route(async (req) => {
       break;
     case TYPES.FindProperty:
       type = "find-property";
+      break;
+    case TYPES.TaskList:
+      type = "task-list";
       break;
     case TYPES.Portal:
       type = "portal";

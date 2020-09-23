@@ -60,7 +60,11 @@ function ListManager<T>(props: Props<T>) {
           >
             {props.values.map((item, index) => {
               return (
-                <Draggable draggableId={String(index)} index={index}>
+                <Draggable
+                  draggableId={String(index)}
+                  index={index}
+                  key={index}
+                >
                   {(provided: DraggableProvided) => (
                     <div
                       className={classes.item}

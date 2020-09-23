@@ -1,5 +1,4 @@
 import React from "react";
-import { animated, useTransition } from "react-spring";
 import Header from "../../components/Header";
 import { useStore } from "../FlowEditor/lib/store";
 import Node from "./Node";
@@ -11,44 +10,16 @@ const Questions = () => {
   ]);
   const node = currentCard();
 
-  const defaultStyles = {
-    // position: "absolute",
-    width: "100%",
-  } as any;
-
-  const transitions = useTransition(node, (node) => node?.id, {
-    from: {
-      opacity: 0,
-      // transform: "translate3d(100%,0,0)",
-    },
-    enter: {
-      opacity: 1,
-      // transform: "translate3d(0,0,0)",
-    },
-    leave: {
-      display: "none",
-      opacity: 0,
-      // transform: "translate3d(-50%,0,0)",
-    },
-    // trail: 500,
-  });
+  if (!node) return null;
 
   return (
-    <>
-      {transitions.map(({ item, props, key }) => (
-        <animated.div key={key} style={{ ...defaultStyles, ...props }}>
-          {item && (
-            <Node
-              key={item.id}
-              handleSubmit={(values) => {
-                record(item.id, values);
-              }}
-              {...item}
-            />
-          )}
-        </animated.div>
-      ))}
-    </>
+    <Node
+      key={node.id}
+      handleSubmit={(values) => {
+        record(node.id, values);
+      }}
+      {...node}
+    />
   );
 };
 
