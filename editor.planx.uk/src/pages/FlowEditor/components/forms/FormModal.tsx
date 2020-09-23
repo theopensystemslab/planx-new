@@ -80,6 +80,8 @@ const FormModal: React.FC<{
               <option disabled value="address-inputs">
                 Address Input
               </option>
+            </optgroup>
+            <optgroup label="Information">
               <option value="task-list">Task List</option>
             </optgroup>
             <optgroup label="Location">
