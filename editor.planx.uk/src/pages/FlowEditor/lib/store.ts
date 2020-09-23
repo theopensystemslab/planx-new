@@ -398,6 +398,14 @@ export const [useStore, api] = create((set, get) => ({
     set({ id, flow });
   },
 
+  flagResult() {
+    const { flow, breadcrumbs } = get();
+
+    return Object.values(breadcrumbs)
+      .map((id: string) => flow.nodes[id].flag)
+      .filter(Boolean);
+  },
+
   upcomingCardIds() {
     const { flow, breadcrumbs } = get();
 
