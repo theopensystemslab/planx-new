@@ -21,19 +21,15 @@ const Node: React.FC<any> = (props) => {
           text={`Tasks (${node.taskList?.tasks?.length || 0})`}
         />
       );
+    case TYPES.Notice:
+      return <Question {...props} text={"Notice"} />;
     case TYPES.Statement:
     case TYPES.Checklist:
       return <Question {...props} {...node} />;
     case TYPES.Response:
       return <Option {...props} />;
-    // case TYPES.PropertyInformation:
-    //   return <Question {...props} text="Property information" />;
-    // case TYPES.FindProperty:
-    //   return <Question {...props} text="Find property" />;
     case TYPES.Portal:
       return props.href ? <Breadcrumb {...props} /> : <Portal {...props} />;
-    // case undefined:
-    //   return <Option {...props} />;
     default:
       console.error({ nodeNotFound: props });
       return null;
