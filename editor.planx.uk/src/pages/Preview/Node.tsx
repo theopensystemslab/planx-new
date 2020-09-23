@@ -31,7 +31,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.TaskList:
       return (
         <TaskList
-          tasks={props.node.taskList.tasks}
+          tasks={props.taskList.tasks}
           handleSubmit={props.handleSubmit}
         />
       );

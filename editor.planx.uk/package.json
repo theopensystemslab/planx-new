@@ -44,7 +44,6 @@
     "react-navi": "^0.14.4",
     "react-navi-helmet-async": "^0.14.4",
     "react-scripts": "3.4.1",
-    "react-spring": "^8.0.27",
     "reconnecting-websocket": "^4.4.0",
     "rxjs": "^6.6.0",
     "scroll-into-view-if-needed": "^2.2.25",
