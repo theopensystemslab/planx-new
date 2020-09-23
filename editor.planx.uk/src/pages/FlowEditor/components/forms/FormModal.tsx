@@ -84,6 +84,7 @@ const FormModal: React.FC<{
             <optgroup label="Information">
               <option value="task-list">Task List</option>
               <option value="notice">Notice</option>
+              <option value="result">Result</option>
             </optgroup>
             <optgroup label="Location">
               <option value="find-property">Find property</option>

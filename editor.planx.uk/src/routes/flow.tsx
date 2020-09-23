@@ -8,11 +8,12 @@ import FlowEditor from "../pages/FlowEditor";
 import Checklist from "../pages/FlowEditor/components/forms/Checklist";
 import FindProperty from "../pages/FlowEditor/components/forms/FindProperty";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
+import Notice from "../pages/FlowEditor/components/forms/Notice";
 import Portal from "../pages/FlowEditor/components/forms/Portal";
 import PropertyInformation from "../pages/FlowEditor/components/forms/PropertyInformation";
 import Question from "../pages/FlowEditor/components/forms/Question";
+import Result from "../pages/FlowEditor/components/forms/Result";
 import TaskList from "../pages/FlowEditor/components/forms/TaskList";
-import Notice from "../pages/FlowEditor/components/forms/Notice";
 import { TYPES } from "../pages/FlowEditor/data/types";
 import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
@@ -22,6 +23,7 @@ const components = {
   "property-information": PropertyInformation,
   "task-list": TaskList,
   notice: Notice,
+  result: Result,
   checklist: Checklist,
   portal: Portal,
   question: Question,
@@ -104,6 +106,9 @@ const editNode = route(async (req) => {
       break;
     case TYPES.Notice:
       type = "notice";
+      break;
+    case TYPES.Result:
+      type = "result";
       break;
     case TYPES.Portal:
       type = "portal";
