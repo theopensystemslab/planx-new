@@ -29,6 +29,8 @@ const Node: React.FC<any> = (props) => {
           }))}
         />
       );
+    case TYPES.Result:
+      return <h1>RESULT</h1>;
     case TYPES.TaskList:
       return (
         <TaskList

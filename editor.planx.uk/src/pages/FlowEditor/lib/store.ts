@@ -17,7 +17,7 @@ import {
   moveNodeOp,
   removeNode,
   removeNodeOp,
-  toGraphlib,
+  toGraphlib
 } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
@@ -28,6 +28,7 @@ const SUPPORTED_TYPES = [
   TYPES.Statement,
   TYPES.TaskList,
   TYPES.Notice,
+  TYPES.Result,
 ];
 
 let doc;
@@ -412,6 +413,7 @@ export const [useStore, api] = create((set, get) => ({
               TYPES.PropertyInformation,
               TYPES.TaskList,
               TYPES.Notice,
+              TYPES.Result,
             ].includes(flow.nodes[tgt].$t) ||
             flow.edges.filter(([src]: any) => src === tgt).length > 0
         )
