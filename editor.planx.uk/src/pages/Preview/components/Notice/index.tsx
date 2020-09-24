@@ -1,5 +1,5 @@
 import { mostReadable } from "@ctrl/tinycolor";
-import { makeStyles, Theme } from "@material-ui/core";
+import { makeStyles, Theme, Button } from "@material-ui/core";
 import { ErrorOutline } from "@material-ui/icons";
 import React from "react";
 import ReactMarkdown from "react-markdown";
@@ -8,6 +8,8 @@ interface Props {
   title: string;
   description: string;
   color?: string;
+  resetButton?: boolean;
+  handleSubmit?: any;
 }
 
 interface StyleProps {
@@ -58,16 +60,33 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 const Notice: React.FC<Props> = (props) => {
   const styles = useStyles({ color: props.color || "#EFEFEF" });
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <h3 className={styles.title}>{props.title}</h3>
-        <ReactMarkdown
-          className={styles.description}
-          source={props.description}
-        />
+    <>
+      <div className={styles.container}>
+        <div className={styles.content}>
+          <h3 className={styles.title}>{props.title}</h3>
+          <ReactMarkdown
+            className={styles.description}
+            source={props.description}
+          />
+        </div>
+        <ErrorOutline />
       </div>
-      <ErrorOutline />
-    </div>
+      {props.resetButton ? (
+        <Button variant="contained" color="default" size="large" type="submit">
+          Back to start
+        </Button>
+      ) : (
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          type="submit"
+          onClick={props.handleSubmit}
+        >
+          Continue
+        </Button>
+      )}
+    </>
   );
 };
 

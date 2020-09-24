@@ -37,4 +37,5 @@ export interface Notice {
   description: string;
   color: string;
   notes?: string;
+  resetButton?: boolean;
 }

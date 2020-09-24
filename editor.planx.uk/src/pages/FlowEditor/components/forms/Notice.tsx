@@ -53,12 +53,26 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
               }}
             />
           </InputRow>
-          <ColorPicker
-            color={props.value.color}
-            onChange={(color) => {
+          <div>
+            <span>Color: </span>
+            <ColorPicker
+              inline
+              color={props.value.color}
+              onChange={(color) => {
+                props.onChange({
+                  ...props.value,
+                  color,
+                });
+              }}
+            />
+          </div>
+          <input
+            type="checkbox"
+            checked={!!props.value.resetButton}
+            onChange={() => {
               props.onChange({
                 ...props.value,
-                color,
+                resetButton: !props.value.resetButton,
               });
             }}
           />
@@ -87,6 +101,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
         description: props.node?.description || "",
         color: props.node?.color || "",
         notes: props.node?.notes || "",
+        resetButton: props.node?.resetButton || false,
       },
     },
     onSubmit: (newValues) => {
