@@ -6,6 +6,7 @@ import FindProperty from "./components/FindProperty";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
 import TaskList from "./components/TaskList";
+import Notice from "./components/Notice";
 
 let uprn;
 
@@ -35,6 +36,8 @@ const Node: React.FC<any> = (props) => {
           handleSubmit={props.handleSubmit}
         />
       );
+    case TYPES.Notice:
+      return <Notice {...props} handleSubmit={props.handleSubmit} />;
     case TYPES.Checklist:
       return (
         <Checklist

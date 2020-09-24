@@ -17,3 +17,25 @@ export enum TYPES {
   Response = 200,
   Portal = 300,
 }
+
+// Task list
+
+export interface TaskList {
+  tasks: Array<Task>;
+  notes?: string;
+}
+
+export interface Task {
+  title: string;
+  description: string;
+}
+
+// Notice
+
+export interface Notice {
+  title: string;
+  description: string;
+  color: string;
+  notes?: string;
+  resetButton?: boolean;
+}

@@ -27,6 +27,7 @@ const SUPPORTED_TYPES = [
   TYPES.PropertyInformation,
   TYPES.Statement,
   TYPES.TaskList,
+  TYPES.Notice,
 ];
 
 let doc;
@@ -410,6 +411,7 @@ export const [useStore, api] = create((set, get) => ({
               TYPES.FindProperty,
               TYPES.PropertyInformation,
               TYPES.TaskList,
+              TYPES.Notice,
             ].includes(flow.nodes[tgt].$t) ||
             flow.edges.filter(([src]: any) => src === tgt).length > 0
         )

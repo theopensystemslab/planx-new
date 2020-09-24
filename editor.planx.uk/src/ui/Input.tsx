@@ -8,7 +8,7 @@ interface Props extends InputBaseProps {
   className?: string;
   grow?: boolean;
   large?: boolean;
-  onChange?: (ev: ChangeEvent) => void;
+  onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const inputStyles = makeStyles((theme) => ({
