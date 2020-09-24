@@ -17,6 +17,7 @@ interface StyleProps {
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   container: {
     position: "relative",
+    width: "100%",
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "space-between",
@@ -29,7 +30,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
       left: 0,
       width: 10,
       bottom: 0,
-      backgroundColor: "rgba(255, 255, 255, 0.2)",
+      backgroundColor: "rgba(255, 255, 255, 0.3)",
     },
     padding: theme.spacing(2),
     paddingLeft: theme.spacing(2) + 10,
