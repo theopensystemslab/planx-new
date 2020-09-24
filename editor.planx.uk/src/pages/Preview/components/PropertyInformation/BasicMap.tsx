@@ -143,7 +143,7 @@ class Map extends React.Component<
     const map = this.map;
     map.on("load", function () {
       map.style.stylesheet.layers.forEach(function (layer) {
-        console.log(layer);
+        // console.log(layer);
         if (!["aeroway-line", "inspire-polygons"].includes(layer.id)) {
           map.removeLayer(layer.id);
         }

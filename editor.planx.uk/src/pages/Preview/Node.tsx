@@ -5,6 +5,7 @@ import Checklist from "./components/Checklist";
 import FindProperty from "./components/FindProperty";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
+import Result from "./components/Result";
 import TaskList from "./components/TaskList";
 import Notice from "./components/Notice";
 
@@ -27,6 +28,62 @@ const Node: React.FC<any> = (props) => {
             responseKey: i + 1,
             title: n.text,
           }))}
+        />
+      );
+    case TYPES.Result:
+      return (
+        <Result
+          handleSubmit={props.handleSubmit}
+          headingColor={{ text: "#fff", background: "#FF5959" }}
+          headingTitle="Heading"
+          subheading="Subheading if used"
+          reasonsTitle="Reasons"
+          responses={[
+            {
+              "Issue tag 1": [
+                {
+                  text:
+                    "Tag 1 Flagging question followed by <strong>answer</strong>",
+                },
+                {
+                  text:
+                    "Tag 1 Flagging question followed by <strong>answer</strong>",
+                },
+                {
+                  text:
+                    "Tag 1 Flagging question followed by <strong>answer</strong>",
+                },
+                {
+                  text:
+                    "Tag 1 Flagging question followed by <strong>answer</strong>",
+                },
+                {
+                  text:
+                    "Tag 1 Flagging question followed by <strong>answer</strong>",
+                },
+              ],
+            },
+            {
+              "Issue tag 2": [
+                {
+                  text:
+                    "Tag 2 Flagging question followed by <strong>answer</strong>",
+                },
+              ],
+            },
+            {
+              "Issue tag 3": [
+                {
+                  text:
+                    "Tag 3 Flagging question followed by <strong>answer</strong>",
+                },
+                {
+                  text:
+                    "Tag 3 Flagging question followed by <strong>answer</strong>",
+                },
+              ],
+            },
+          ]}
         />
       );
     case TYPES.TaskList:

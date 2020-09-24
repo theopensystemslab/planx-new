@@ -23,7 +23,8 @@ const Questions = () => {
   );
 };
 
-const Preview: React.FC<{ theme?: any }> = ({
+const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
+  embedded = false,
   theme = {
     primary: "#2c2c2c",
   },
@@ -37,7 +38,7 @@ const Preview: React.FC<{ theme?: any }> = ({
 
   return (
     <>
-      <Header bgcolor={theme.primary} logo={theme.logo} />
+      {!embedded && <Header bgcolor={theme.primary} logo={theme.logo} />}
       <div
         style={{
           paddingTop: 40,

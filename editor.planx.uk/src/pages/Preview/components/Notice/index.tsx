@@ -1,8 +1,9 @@
 import { mostReadable } from "@ctrl/tinycolor";
-import { makeStyles, Theme, Button } from "@material-ui/core";
+import { Button, makeStyles, Theme } from "@material-ui/core";
 import { ErrorOutline } from "@material-ui/icons";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import { useStore } from "../../../FlowEditor/lib/store";
 
 interface Props {
   title: string;
@@ -59,6 +60,8 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 const Notice: React.FC<Props> = (props) => {
   const styles = useStyles({ color: props.color || "#EFEFEF" });
+  const resetPreview = useStore((state) => state.resetPreview);
+
   return (
     <>
       <div className={styles.container}>
@@ -72,7 +75,13 @@ const Notice: React.FC<Props> = (props) => {
         <ErrorOutline />
       </div>
       {props.resetButton ? (
-        <Button variant="contained" color="default" size="large" type="submit">
+        <Button
+          variant="contained"
+          color="default"
+          size="large"
+          type="submit"
+          onClick={resetPreview}
+        >
           Back to start
         </Button>
       ) : (

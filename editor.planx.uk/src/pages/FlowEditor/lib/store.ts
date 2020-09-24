@@ -28,6 +28,7 @@ const SUPPORTED_TYPES = [
   TYPES.Statement,
   TYPES.TaskList,
   TYPES.Notice,
+  TYPES.Result,
 ];
 
 let doc;
@@ -256,7 +257,7 @@ export const [useStore, api] = create((set, get) => ({
     toParent = null,
     cb = send
   ) {
-    const { flow } = get();
+    const { flow, resetPreview } = get();
     console.debug(
       `[OP]: moveNodeOp(${JSON.stringify(id)}, ${JSON.stringify(
         parent
@@ -265,6 +266,8 @@ export const [useStore, api] = create((set, get) => ({
       )}, beforeFlow);`
     );
     cb(moveNodeOp(id, parent, toBefore, toParent, flow));
+
+    resetPreview();
   },
 
   copyNode(id: string) {
@@ -391,10 +394,29 @@ export const [useStore, api] = create((set, get) => ({
 
   // Preview
 
+  passport: {},
+
   breadcrumbs: {},
+
+  resetPreview() {
+    set({ breadcrumbs: {}, passport: {} });
+  },
 
   setFlow(id, flow) {
     set({ id, flow });
+  },
+
+  setPassport(passport) {
+    alert(JSON.stringify(passport));
+    set({ passport });
+  },
+
+  flagResult() {
+    const { flow, breadcrumbs } = get();
+
+    return Object.values(breadcrumbs)
+      .map((id: string) => flow.nodes[id].flag)
+      .filter(Boolean);
   },
 
   upcomingCardIds() {
@@ -412,6 +434,7 @@ export const [useStore, api] = create((set, get) => ({
               TYPES.PropertyInformation,
               TYPES.TaskList,
               TYPES.Notice,
+              TYPES.Result,
             ].includes(flow.nodes[tgt].$t) ||
             flow.edges.filter(([src]: any) => src === tgt).length > 0
         )
