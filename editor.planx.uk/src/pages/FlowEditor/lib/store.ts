@@ -17,7 +17,7 @@ import {
   moveNodeOp,
   removeNode,
   removeNodeOp,
-  toGraphlib
+  toGraphlib,
 } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
@@ -399,7 +399,7 @@ export const [useStore, api] = create((set, get) => ({
   breadcrumbs: {},
 
   resetPreview() {
-    set({ breadcrumbs: {} });
+    set({ breadcrumbs: {}, passport: {} });
   },
 
   setFlow(id, flow) {
