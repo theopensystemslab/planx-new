@@ -1,8 +1,8 @@
-import React from "react";
-import { ErrorOutline } from "@material-ui/icons";
-import ReactMarkdown from "react-markdown";
-import { Theme, makeStyles } from "@material-ui/core";
 import { mostReadable } from "@ctrl/tinycolor";
+import { makeStyles, Theme } from "@material-ui/core";
+import { ErrorOutline } from "@material-ui/icons";
+import React from "react";
+import ReactMarkdown from "react-markdown";
 
 interface Props {
   title: string;
@@ -30,7 +30,9 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
       left: 0,
       width: 10,
       bottom: 0,
-      backgroundColor: "rgba(255, 255, 255, 0.3)",
+      backgroundColor: (props) =>
+        mostReadable(props.color, ["#fff", "#000"]).toHexString(),
+      opacity: 0.3,
     },
     padding: theme.spacing(2),
     paddingLeft: theme.spacing(2) + 10,
