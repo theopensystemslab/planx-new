@@ -2,9 +2,29 @@ import React, { useRef, useState } from "react";
 import ExternalLink from "react-feather/dist/icons/external-link";
 import RefreshCw from "react-feather/dist/icons/refresh-cw";
 import Terminal from "react-feather/dist/icons/terminal";
+import Preview from "../../Preview";
+import { useStore } from "../lib/store";
+
+const DebugTable = ({ ob }) => (
+  <table>
+    {Object.keys(ob)
+      .sort()
+      .map((k) => (
+        <tr key={k}>
+          <th>{k}</th>
+          <td>{JSON.stringify(ob[k]?.value)}</td>
+        </tr>
+      ))}
+  </table>
+);
 
 const DebugConsole = () => {
-  return <div>DebugConsole</div>;
+  const passport = useStore((state) => state.passport);
+  return (
+    <div style={{ overflow: "auto", padding: 20, maxHeight: "50%" }}>
+      <DebugTable ob={passport.data} />
+    </div>
+  );
 };
 
 const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
@@ -30,7 +50,10 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
           <ExternalLink />
         </a>
       </header>
-      <iframe src={props.url} frameBorder="none" title="Preview" ref={ref} />
+      <div style={{ overflow: "auto", flex: 1, background: "#fff" }}>
+        <Preview embedded />
+      </div>
+      {/* <iframe src={props.url} frameBorder="none" title="Preview" ref={ref} /> */}
       {showDebugConsole && <DebugConsole />}
     </div>
   );

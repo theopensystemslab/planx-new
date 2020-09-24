@@ -257,7 +257,7 @@ export const [useStore, api] = create((set, get) => ({
     toParent = null,
     cb = send
   ) {
-    const { flow } = get();
+    const { flow, resetPreview } = get();
     console.debug(
       `[OP]: moveNodeOp(${JSON.stringify(id)}, ${JSON.stringify(
         parent
@@ -266,6 +266,8 @@ export const [useStore, api] = create((set, get) => ({
       )}, beforeFlow);`
     );
     cb(moveNodeOp(id, parent, toBefore, toParent, flow));
+
+    resetPreview();
   },
 
   copyNode(id: string) {
@@ -392,10 +394,21 @@ export const [useStore, api] = create((set, get) => ({
 
   // Preview
 
+  passport: {},
+
   breadcrumbs: {},
+
+  resetPreview() {
+    set({ breadcrumbs: {} });
+  },
 
   setFlow(id, flow) {
     set({ id, flow });
+  },
+
+  setPassport(passport) {
+    alert(JSON.stringify(passport));
+    set({ passport });
   },
 
   flagResult() {

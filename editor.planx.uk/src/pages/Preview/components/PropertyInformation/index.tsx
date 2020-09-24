@@ -1,17 +1,17 @@
 import { useMutation } from "@apollo/client";
-import gql from "graphql-tag";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import useAxios from "axios-hooks";
+import gql from "graphql-tag";
 import capitalize from "lodash/capitalize";
-import React, { useEffect, useContext } from "react";
+import React, { useEffect } from "react";
+import { api, useStore } from "../../../FlowEditor/lib/store";
 import InnerQuestion from "../Question/InnerQuestion";
 import Card from "../shared/Card";
 import BasicMap from "./BasicMap";
 import "./map.css";
 import { convertOrdnanceSurveyToStandard } from "./maputils";
 import PropertyConstraints from "./PropertyConstraints";
-import { PreviewContext } from "../../Context";
 import PropertyDetail from "./PropertyDetail";
 import { propertyInformationStyles } from "./styles";
 
@@ -65,8 +65,9 @@ const PropertyInformation = ({
 const PropWithConstraints = ({ info, handleSubmit }) => {
   const url = `https://local-authority-api.planx.uk/${info.team}?x=${info.x}&y=${info.y}&cacheBuster=10`;
   const [{ data }] = useAxios(url);
+  const [id, flow] = useStore((state) => [state.id, state.flow]);
 
-  const flow = useContext(PreviewContext);
+  // const flow = useContext(PreviewContext);
   const MUTATION = gql`
     mutation CreateSession(
       $flow_data: jsonb
@@ -86,22 +87,26 @@ const PropWithConstraints = ({ info, handleSubmit }) => {
       }
     }
   `;
+
   const [createSessionMutation] = useMutation(MUTATION);
   useEffect(() => {
     if (flow && data && info) {
+      const passport = { data, info };
+      api.setState({ passport });
+
       // TODO: Store the returned session id into the context provider
       //       so that we can reference it in subsequent calls
       //       that will register session events (i.e. insert_session_event)
       createSessionMutation({
         variables: {
-          flow_data: flow.data,
-          flow_id: flow.id,
-          flow_version: flow.version,
-          passport: { info, data },
+          flow_data: flow,
+          flow_id: id,
+          flow_version: 0, // TODO: fix this!
+          passport,
         },
       });
     }
-  }, [createSessionMutation, flow, data, info]);
+  }, [createSessionMutation, flow, data, info, id]);
 
   if (!data) return null;
 
