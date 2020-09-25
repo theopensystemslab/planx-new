@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import tinycolor from "@ctrl/tinycolor";
 import { alg } from "graphlib";
 import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
@@ -9,6 +10,7 @@ import omit from "lodash/omit";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
+import flags from "../data/flags";
 import { TYPES } from "../data/types";
 import { getOps as getImmerOps } from "./adapters/immer";
 import {
@@ -414,9 +416,30 @@ export const [useStore, api] = create((set, get) => ({
   flagResult() {
     const { flow, breadcrumbs } = get();
 
-    return Object.values(breadcrumbs)
-      .map((id: string) => flow.nodes[id].flag)
-      .filter(Boolean);
+    const possibleFlags = flags.filter(
+      (f) => f.category === "Planning permission"
+    );
+
+    const keys = possibleFlags.map((f) => f.value);
+
+    const collectedFlags = Object.entries(breadcrumbs)
+      .map(([k, v]: any) => flow.nodes[v].flag)
+      .filter(Boolean)
+      .sort((a, b) => keys.indexOf(b.flag) - keys.indexOf(a.flag));
+
+    console.log(collectedFlags);
+
+    const flag = possibleFlags.find((f) => f.value === collectedFlags[0]);
+
+    return (
+      flag || {
+        value: "PP-NO_RESULT",
+        text: "No result",
+        category: "Planning permission",
+        bgColor: "#EEEEEE",
+        color: tinycolor("black"),
+      }
+    );
   },
 
   upcomingCardIds() {
@@ -467,6 +490,17 @@ export const [useStore, api] = create((set, get) => ({
     } else {
       set({ breadcrumbs: omit(breadcrumbs, id) });
     }
+  },
+
+  responsesForReport() {
+    const { breadcrumbs, flow } = get();
+    return Object.entries(breadcrumbs)
+      .map(([k, v]: any) => {
+        return {
+          text: `${flow.nodes[k]?.text} <strong>${flow.nodes[v]?.text}</strong>`,
+        };
+      })
+      .filter((o) => !o.text.includes("undefined"));
   },
 
   currentCard() {

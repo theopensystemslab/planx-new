@@ -1,7 +1,6 @@
 import { Box, Button, Typography } from "@material-ui/core";
 import React from "react";
 import ReactHtmlParser from "react-html-parser";
-import { useStore } from "../../../FlowEditor/lib/store";
 import Card from "../shared/Card";
 import SimpleExpand from "../shared/SimpleExpand";
 import ResultReason from "./ResultReason";
@@ -33,10 +32,8 @@ const Result: React.FC<IResult> = ({
   reasonsTitle = "",
   responses,
 }) => {
-  const flagResult = useStore((state) => state.flagResult);
   return (
     <Card>
-      <pre>{JSON.stringify(flagResult(), null, 2)}</pre>
       <ResultSummary
         subheading={subheading}
         color={headingColor}

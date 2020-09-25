@@ -3,16 +3,20 @@ import { TYPES } from "../FlowEditor/data/types";
 import { useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";
 import FindProperty from "./components/FindProperty";
+import Notice from "./components/Notice";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
 import Result from "./components/Result";
 import TaskList from "./components/TaskList";
-import Notice from "./components/Notice";
 
 let uprn;
 
 const Node: React.FC<any> = (props) => {
-  const childNodesOf = useStore((state) => state.childNodesOf);
+  const [childNodesOf, flagResult, responsesForReport] = useStore((state) => [
+    state.childNodesOf,
+    state.flagResult,
+    state.responsesForReport,
+  ]);
 
   switch (props.$t) {
     // check SUPPORTED_TYPES in store
@@ -31,57 +35,21 @@ const Node: React.FC<any> = (props) => {
         />
       );
     case TYPES.Result:
+      const flag = flagResult();
+
       return (
         <Result
           handleSubmit={props.handleSubmit}
-          headingColor={{ text: "#fff", background: "#FF5959" }}
-          headingTitle="Heading"
-          subheading="Subheading if used"
-          reasonsTitle="Reasons"
+          headingColor={{
+            text: flag.color.toHexString(),
+            background: flag.bgColor,
+          }}
+          headingTitle={flag.text}
+          subheading=""
+          reasonsTitle="Responses"
           responses={[
             {
-              "Issue tag 1": [
-                {
-                  text:
-                    "Tag 1 Flagging question followed by <strong>answer</strong>",
-                },
-                {
-                  text:
-                    "Tag 1 Flagging question followed by <strong>answer</strong>",
-                },
-                {
-                  text:
-                    "Tag 1 Flagging question followed by <strong>answer</strong>",
-                },
-                {
-                  text:
-                    "Tag 1 Flagging question followed by <strong>answer</strong>",
-                },
-                {
-                  text:
-                    "Tag 1 Flagging question followed by <strong>answer</strong>",
-                },
-              ],
-            },
-            {
-              "Issue tag 2": [
-                {
-                  text:
-                    "Tag 2 Flagging question followed by <strong>answer</strong>",
-                },
-              ],
-            },
-            {
-              "Issue tag 3": [
-                {
-                  text:
-                    "Tag 3 Flagging question followed by <strong>answer</strong>",
-                },
-                {
-                  text:
-                    "Tag 3 Flagging question followed by <strong>answer</strong>",
-                },
-              ],
+              "Planning permission": responsesForReport(),
             },
           ]}
         />
