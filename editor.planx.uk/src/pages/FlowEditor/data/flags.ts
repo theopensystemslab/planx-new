@@ -27,16 +27,16 @@ const flags = [
     bgColor: "#FAFF00",
   },
   {
-    value: "PLANNING_PERMISSION_REQUIRED",
-    text: "Permission needed",
-    category: "Planning permission",
-    bgColor: "#919191",
-  },
-  {
     value: "MISSING_INFO",
     text: "Missing information",
     category: "Planning permission",
     bgColor: "#DBDBDB",
+  },
+  {
+    value: "PLANNING_PERMISSION_REQUIRED",
+    text: "Permission needed",
+    category: "Planning permission",
+    bgColor: "#919191",
   },
   // Listed building consent
   {
