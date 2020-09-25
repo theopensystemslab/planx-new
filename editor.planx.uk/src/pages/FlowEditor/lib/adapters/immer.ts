@@ -11,7 +11,7 @@ const jdiff = jsondiffpatch.create({
   },
 });
 
-const patchToOP = (flow) => ([patch, inverse]) => {
+export const patchToOP = (flow) => ([patch, inverse]) => {
   if (Array.isArray(get(flow, patch.path.slice(0, -1)))) {
     // list
     switch (patch.op) {
@@ -83,7 +83,7 @@ export const getOps = (flow, fn) => {
 
   const allPatches = zip(fwd, rev.reverse());
 
-  console.log({ flow, next, delta, allPatches });
+  // console.log({ flow, next, delta, allPatches });
 
   return allPatches.map((p) => patchToOP(flow)(p)).filter(Boolean);
 };

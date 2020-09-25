@@ -1,5 +1,6 @@
 import { enableMapSet, enablePatches, produceWithPatches } from "immer";
-import colorize from "json-colorizer";
+import zip from "lodash/zip";
+import { patchToOP } from "../adapters/immer";
 
 // ---- SETUP
 
@@ -8,8 +9,6 @@ enableMapSet();
 
 let count = 0;
 const guid = () => (count++).toString();
-
-const jlog = (json) => console.log(colorize(JSON.stringify(json, null, 2)));
 
 // ----
 
@@ -20,10 +19,17 @@ interface Node {
   text?: string;
 }
 
+const doStuff = (graph: Graph, fn): [Graph, any[]] => {
+  const [next, fwd, rev] = produceWithPatches(graph, fn);
+  const ops = zip(fwd, rev.reverse()).map(patchToOP(next));
+
+  return [next, ops];
+};
+
 const removeNode = (graph: Graph = new Map([["_", {}]])) => (
   idToRemove: string
-): Graph => {
-  const [next, fwd, rev] = produceWithPatches(graph, (draft) => {
+) =>
+  doStuff(graph, (draft) => {
     draft.delete(idToRemove);
 
     draft.forEach((node, _id) => {
@@ -38,11 +44,6 @@ const removeNode = (graph: Graph = new Map([["_", {}]])) => (
     });
   });
 
-  jlog({ fwd, rev });
-
-  return next;
-};
-
 const addNode = (graph: Graph = new Map([["_", {}]])) => (
   { id = guid(), ...node }: Node,
   {
@@ -54,8 +55,8 @@ const addNode = (graph: Graph = new Map([["_", {}]])) => (
     children?: Array<Node>;
     parent?: Pick<Node, "id">;
   }
-): Graph => {
-  const [next, fwd, rev] = produceWithPatches(graph, (draft) => {
+) =>
+  doStuff(graph, (draft) => {
     const parentId = parent ? parent : "_";
 
     if (!draft.has(parentId)) draft.set(parentId, {});
@@ -72,13 +73,8 @@ const addNode = (graph: Graph = new Map([["_", {}]])) => (
     });
   });
 
-  jlog({ fwd, rev });
-
-  return next;
-};
-
 it("can add node with children", () => {
-  const graph = addNode()(
+  const [graph] = addNode()(
     { text: "favourite colour" },
     {
       children: [{ text: "red" }, { text: "green" }, { text: "blue" }],
@@ -113,7 +109,7 @@ it("can add node with children", () => {
 });
 
 it("can remove node", () => {
-  const graph = removeNode(
+  const [graph] = removeNode(
     new Map([
       ["_", { ">": ["a"] }],
       ["a", { ">": ["b", "c"] }],

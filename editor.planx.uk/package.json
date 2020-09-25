@@ -75,7 +75,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --no-watchman",
+    "test": "react-scripts test",
     "cosmos": "cosmos",
     "eject": "react-scripts eject"
   },

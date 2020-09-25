@@ -18,7 +18,17 @@ test("move node", () => {
     beforeId: "aaa",
   });
 
-  expect(ops).toEqual([{ p: ["edges", 2], lm: 0 }]);
+  expect(ops).toMatchInlineSnapshot(`
+    Array [
+      Object {
+        "lm": 0,
+        "p": Array [
+          "edges",
+          2,
+        ],
+      },
+    ]
+  `);
 });
 
 test("add node", () => {
@@ -26,10 +36,29 @@ test("add node", () => {
     nodes: {},
     edges: [],
   })({ id: "test", foo: "bar" });
-  expect(ops).toEqual([
-    { oi: { foo: "bar" }, p: ["nodes", "test"] },
-    { li: [null, "test"], p: ["edges", 0] },
-  ]);
+  expect(ops).toMatchInlineSnapshot(`
+    Array [
+      Object {
+        "li": Array [
+          null,
+          "test",
+        ],
+        "p": Array [
+          "edges",
+          0,
+        ],
+      },
+      Object {
+        "oi": Object {
+          "foo": "bar",
+        },
+        "p": Array [
+          "nodes",
+          "test",
+        ],
+      },
+    ]
+  `);
 });
 
 test("remove node", () => {
@@ -40,8 +69,25 @@ test("remove node", () => {
     edges: [[null, "aaa"]],
   })("aaa");
 
-  expect(ops).toEqual([
-    { od: "test", p: ["nodes", "aaa"] },
-    { ld: [null, "aaa"], p: ["edges", 0] },
-  ]);
+  expect(ops).toMatchInlineSnapshot(`
+    Array [
+      Object {
+        "ld": "test",
+        "p": Array [
+          "edges",
+          0,
+        ],
+      },
+      Object {
+        "od": Array [
+          null,
+          "aaa",
+        ],
+        "p": Array [
+          "nodes",
+          "aaa",
+        ],
+      },
+    ]
+  `);
 });
