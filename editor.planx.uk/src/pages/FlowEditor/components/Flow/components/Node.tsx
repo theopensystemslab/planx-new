@@ -5,6 +5,7 @@ import Breadcrumb from "./Breadcrumb";
 import Option from "./Option";
 import Portal from "./Portal";
 import Question from "./Question";
+import Result from "./Result";
 
 const Node: React.FC<any> = (props) => {
   const node = useStore((state) => state.flow.nodes[props.id]);
@@ -15,7 +16,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.FindProperty:
       return <Question {...props} text="Find property" />;
     case TYPES.Result:
-      return <Question {...props} text="RESULT" />;
+      return <Result {...props} text="RESULT" />;
     case TYPES.TaskList:
       return (
         <Question
