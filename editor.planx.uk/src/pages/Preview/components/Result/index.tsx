@@ -63,7 +63,7 @@ const Result: React.FC<IResult> = ({
                   <SimpleExpand
                     buttonText={{
                       open: "See all responses",
-                      closed: "See less responses",
+                      closed: "See fewer responses",
                     }}
                   >
                     {hiddenResponses.map((y) => {
