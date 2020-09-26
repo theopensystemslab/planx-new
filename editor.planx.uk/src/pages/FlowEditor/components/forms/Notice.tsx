@@ -3,6 +3,7 @@ import { ReportProblemOutlined } from "@material-ui/icons";
 import {
   Input,
   InputRow,
+  OptionButton,
   RichTextInput,
   InternalNotes,
   ModalSection,
@@ -66,16 +67,17 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
               }}
             />
           </div>
-          <input
-            type="checkbox"
-            checked={!!props.value.resetButton}
-            onChange={() => {
+          <OptionButton
+            selected={Boolean(props.value.resetButton)}
+            onClick={() => {
               props.onChange({
                 ...props.value,
                 resetButton: !props.value.resetButton,
               });
             }}
-          />
+          >
+            Reset
+          </OptionButton>
         </ModalSectionContent>
       </ModalSection>
       <InternalNotes
