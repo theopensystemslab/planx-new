@@ -6,7 +6,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 
 export interface Props {
   inline?: boolean;
-  color?: string;
+  color: string;
   onChange?: (newColor: string) => void;
 }
 
@@ -66,8 +66,6 @@ const ColorPicker: React.FC<Props> = (props) => {
   const classes = colorPickerStyles();
   const [show, setShow] = useState(false);
 
-  const color = props.color || "#f00";
-
   const handleClick = () => {
     setShow((prevShow) => !prevShow);
   };
@@ -93,15 +91,15 @@ const ColorPicker: React.FC<Props> = (props) => {
         <div
           className={classes.swatch}
           style={{
-            backgroundColor: color,
+            backgroundColor: props.color,
           }}
         />
-        {color || "Select a colour"}
+        {props.color}
       </ButtonBase>
       {show ? (
         <div className={classes.popover}>
           <div className={classes.cover} onClick={handleClose} />
-          <ChromePicker color={color} onChange={handleChange} />
+          <ChromePicker color={props.color} onChange={handleChange} />
         </div>
       ) : null}
     </div>

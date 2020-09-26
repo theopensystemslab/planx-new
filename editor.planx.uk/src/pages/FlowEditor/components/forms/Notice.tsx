@@ -99,7 +99,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
         // TODO: improve runtime validation here (joi, io-ts)
         title: props.node?.title || "",
         description: props.node?.description || "",
-        color: props.node?.color || "",
+        color: props.node?.color || "#EFEFEF",
         notes: props.node?.notes || "",
         resetButton: props.node?.resetButton || false,
       },
