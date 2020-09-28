@@ -28,6 +28,7 @@
     "mui-rte": "^1.23.1",
     "natsort": "^2.0.2",
     "navi": "^0.14.0",
+    "pg-array": "^0.5.0",
     "postcode": "^5.0.0",
     "proj4": "^2.6.2",
     "react": "^0.0.0-experimental-4c8c98ab9",

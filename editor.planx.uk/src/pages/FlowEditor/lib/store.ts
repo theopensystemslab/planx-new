@@ -13,6 +13,7 @@ import { client } from "../../../lib/graphql";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
 import { getOps as getImmerOps } from "./adapters/immer";
+import pgarray from "pg-array";
 import {
   addNodeWithChildrenOp,
   isValidOp,
@@ -398,7 +399,43 @@ export const [useStore, api] = create((set, get) => ({
 
   passport: {},
 
+  sessionId: "",
+
   breadcrumbs: {},
+
+  async startSession({ passport }) {
+    set({ passport });
+
+    const response = await client.mutate({
+      mutation: gql`
+        mutation CreateSession(
+          $flow_data: jsonb
+          $flow_id: uuid
+          $flow_version: Int
+          $passport: jsonb
+        ) {
+          insert_sessions_one(
+            object: {
+              flow_data: $flow_data
+              flow_id: $flow_id
+              flow_version: $flow_version
+              passport: $passport
+            }
+          ) {
+            id
+          }
+        }
+      `,
+      variables: {
+        flow_data: get().flow,
+        flow_id: get().id,
+        flow_version: 0, // TODO: add flow version
+        passport,
+      },
+    });
+    const sessionId = response.data.insert_sessions_one.id;
+    set({ sessionId });
+  },
 
   resetPreview() {
     set({ breadcrumbs: {}, passport: {} });
@@ -485,10 +522,75 @@ export const [useStore, api] = create((set, get) => ({
 
   record(id: any, vals: any) {
     const { breadcrumbs } = get();
+    // vals may be string or string[]
     if (vals) {
       set({ breadcrumbs: { ...breadcrumbs, [id]: vals } });
+
+      // XXX: Catch-22 situation where to create a session event you need a session id
+      //      but we create a session event only when you answer the first question (i.e. find-property).
+      //      For now it seems safe to ignore event created by the find-property node
+      //      as its answer/data is stored in the passport anyway.
+      if (get().sessionId) {
+        addSessionEvent();
+        if (get().upcomingCardIds().length === 0) {
+          endSession();
+        }
+      }
     } else {
       set({ breadcrumbs: omit(breadcrumbs, id) });
+    }
+
+    function addSessionEvent() {
+      client.mutate({
+        mutation: gql`
+          mutation CreateSessionEvent(
+            $chosen_node_ids: _text
+            $type: session_event_type
+            $session_id: uuid
+            $parent_node_id: String
+          ) {
+            insert_session_events_one(
+              object: {
+                chosen_node_ids: $chosen_node_ids
+                session_id: $session_id
+                type: $type
+                parent_node_id: $parent_node_id
+              }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          chosen_node_ids: Array.isArray(vals)
+            ? pgarray(vals)
+            : pgarray([vals]),
+          session_id: get().sessionId,
+          type: "human_decision", // TODO
+          parent_node_id: id,
+        },
+      });
+    }
+
+    function endSession() {
+      client.mutate({
+        mutation: gql`
+          mutation EndSession($id: uuid!, $completed_at: timestamptz!) {
+            update_sessions_by_pk(
+              pk_columns: { id: $id }
+              _set: { completed_at: $completed_at }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id: get().sessionId,
+          // TODO: Move this logic to the backend
+          //       Could be done with a SQL Function exposed through Hasura as a mutation (e.g. end_session)
+          completed_at: new Date(),
+        },
+      });
     }
   },
 
