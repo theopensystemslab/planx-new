@@ -1,7 +1,12 @@
-import ButtonBase from "@material-ui/core/ButtonBase";
+import ButtonBase, { ButtonBaseProps } from "@material-ui/core/ButtonBase";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import classNames from "classnames";
 import React from "react";
+
+interface Props extends ButtonBaseProps {
+  selected?: boolean;
+  color?: string;
+}
 
 const optionButtonStyles = makeStyles((theme) => ({
   root: {
@@ -40,8 +45,10 @@ const optionButtonStyles = makeStyles((theme) => ({
   }),
 }));
 
-export default ({ selected, children, color = "#000", ...props }) => {
-  const colorProps = { backgroundColor: color };
+const OptionButton: React.FC<Props> = (props) => {
+  const { selected, color, ...restProps } = props;
+
+  const colorProps = { backgroundColor: color || "#0ECE83" };
   const classes = optionButtonStyles(colorProps);
 
   return (
@@ -49,9 +56,11 @@ export default ({ selected, children, color = "#000", ...props }) => {
       classes={{
         root: classNames(classes.root, selected && classes.selected),
       }}
-      {...props}
+      {...restProps}
     >
-      {children}
+      {restProps.children}
     </ButtonBase>
   );
 };
+
+export default OptionButton;
