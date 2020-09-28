@@ -1,4 +1,4 @@
-import { Button, MenuItem } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { CallSplit } from "@material-ui/icons";
 import arrayMove from "array-move";
 import { useFormik } from "formik";
@@ -15,10 +15,9 @@ import {
   ModalSectionContent,
   MoreInformation,
   RichTextInput,
-  SelectInput,
 } from "../../../../ui";
-import flags from "../../data/flags";
 import { TYPES } from "../../data/types";
+import { PermissionSelect } from "./shared";
 
 interface Option {
   val?: string;
@@ -29,35 +28,22 @@ interface Option {
   img?: string;
 }
 
-interface IQuestion {
+interface Props {
   fn?: string;
   howMeasured?: string;
   description?: string;
   handleClose?: Function;
   handleSubmit?: Function;
-  headerTextField?: string;
   notes?: string;
   options?: Option[];
   policyRef?: string;
   text?: string;
   type?: string;
   info?: string;
-  Icon;
-  $t: number;
   img?: string;
   definitionImg?: string;
   node?: any;
 }
-
-const renderMenuItem = (category: string) => {
-  return flags
-    .filter((flag) => flag.category === category)
-    .map((flag, index) => (
-      <MenuItem key={index} value={flag.value}>
-        {flag.text}
-      </MenuItem>
-    ));
-};
 
 const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   const addRow = () => {
@@ -85,7 +71,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
 
   return (
     <ModalSectionContent title="Options">
-      <React.Fragment>
+      <>
         {formik.values.options.map((option, index) => {
           return (
             <InputGroup
@@ -125,27 +111,11 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                   }}
                 />
 
-                <SelectInput
+                <PermissionSelect
                   name={`options[${index}].flag`}
                   value={option.flag || ""}
                   onChange={formik.handleChange}
-                >
-                  {option.flag && <MenuItem value="">Remove Flag</MenuItem>}
-                  <MenuItem disabled>Planning permission</MenuItem>
-                  {renderMenuItem("Planning permission")}
-                  <MenuItem disabled>Listed building consent</MenuItem>
-                  {renderMenuItem("Listed building consent")}
-                  <MenuItem disabled>Works to trees</MenuItem>
-                  {renderMenuItem("Works to trees")}
-                  <MenuItem disabled>
-                    Demolition in a conservation area
-                  </MenuItem>
-                  {renderMenuItem("Demolition in a conservation area")}
-                  <MenuItem disabled>Planning policy</MenuItem>
-                  {renderMenuItem("Planning policy")}
-                  <MenuItem disabled>Community infrastructure levy</MenuItem>
-                  {renderMenuItem("Community infrastructure levy")}
-                </SelectInput>
+                />
               </InputRow>
 
               <InputRow>
@@ -165,27 +135,26 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
         <Button onClick={addRow} color="primary" variant="contained">
           Add option
         </Button>
-      </React.Fragment>
+      </>
     </ModalSectionContent>
   );
 };
 
-export const GeneralQuestion: React.FC<IQuestion> = ({
+export const Question: React.FC<Props> = ({
   fn = "",
   howMeasured = "",
   description = "",
-  headerTextField = "Question",
   text = "",
   notes = "",
   policyRef = "",
   info = "",
   options = [],
   handleSubmit,
-  Icon,
-  $t,
   img = "",
   definitionImg = "",
 }) => {
+  const $t = TYPES.Statement;
+
   const formik = useFormik({
     initialValues: {
       info,
@@ -227,7 +196,7 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title={headerTextField} Icon={Icon}>
+        <ModalSectionContent title="Question" Icon={CallSplit}>
           <InputGroup deletable={false}>
             <InputRow>
               <Input
@@ -291,14 +260,5 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
     </form>
   );
 };
-
-const Question = (props) => (
-  <GeneralQuestion
-    {...props}
-    headerTextField="Question"
-    Icon={CallSplit}
-    $t={TYPES.Statement}
-  />
-);
 
 export default Question;
