@@ -438,7 +438,7 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   resetPreview() {
-    set({ breadcrumbs: {}, passport: {} });
+    set({ breadcrumbs: {}, passport: {}, sessionId: "" });
   },
 
   setFlow(id, flow) {
