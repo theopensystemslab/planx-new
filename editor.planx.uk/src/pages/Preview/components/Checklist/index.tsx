@@ -13,6 +13,7 @@ interface ICheckboxes {
     name: string;
     image?: string;
   }[];
+  allRequired?: boolean;
   handleSubmit?;
   description?: string;
   info?: string;
@@ -23,17 +24,20 @@ const Checkboxes: React.FC<ICheckboxes> = ({
   text,
   handleSubmit,
   description = "",
+  allRequired,
   info,
 }) => {
   const formik = useFormik({
     initialValues: {
-      checked: [] as any,
+      checked: [],
     },
     onSubmit: (values) => {
       if (handleSubmit) handleSubmit(values.checked);
     },
     validate: () => {},
   });
+
+  const allChecked = formik.values.checked.length === checkBoxes.length;
 
   const changeCheckbox = (input) => {
     const { current } = input;
@@ -88,7 +92,13 @@ const Checkboxes: React.FC<ICheckboxes> = ({
             />
           ))
         )}
-        <Button variant="contained" color="primary" size="large" type="submit">
+        <Button
+          disabled={allRequired && !allChecked}
+          variant="contained"
+          color="primary"
+          size="large"
+          type="submit"
+        >
           Continue
         </Button>
       </form>

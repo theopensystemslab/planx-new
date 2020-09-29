@@ -17,4 +17,5 @@ export { default as MoreInformation } from "./MoreInformation";
 export { default as OptionButton } from "./OptionButton";
 export { default as RichTextInput } from "./RichTextInput";
 export { default as SelectInput } from "./SelectInput";
+export type { Props as SelectInputProps } from "./SelectInput";
 export { default as VisibilityToggle } from "./VisibilityToggle";

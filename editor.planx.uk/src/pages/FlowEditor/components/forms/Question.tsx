@@ -1,6 +1,4 @@
-import { Button, MenuItem } from "@material-ui/core";
 import { CallSplit } from "@material-ui/icons";
-import arrayMove from "array-move";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import { FormikHookReturn } from "../../../../types";
@@ -15,10 +13,10 @@ import {
   ModalSectionContent,
   MoreInformation,
   RichTextInput,
-  SelectInput,
+  ListManager,
 } from "../../../../ui";
-import flags from "../../data/flags";
 import { TYPES } from "../../data/types";
+import { PermissionSelect } from "./shared";
 
 interface Option {
   val?: string;
@@ -29,163 +27,129 @@ interface Option {
   img?: string;
 }
 
-interface IQuestion {
+interface Props {
   fn?: string;
   howMeasured?: string;
   description?: string;
   handleClose?: Function;
   handleSubmit?: Function;
-  headerTextField?: string;
   notes?: string;
   options?: Option[];
   policyRef?: string;
   text?: string;
   type?: string;
   info?: string;
-  Icon;
-  $t: number;
   img?: string;
   definitionImg?: string;
   node?: any;
 }
 
-const renderMenuItem = (category: string) => {
-  return flags
-    .filter((flag) => flag.category === category)
-    .map((flag, index) => (
-      <MenuItem key={index} value={flag.value}>
-        {flag.text}
-      </MenuItem>
-    ));
-};
+const OptionEditor: React.FC<{
+  value: Option;
+  onChange: (newVal: Option) => void;
+  fn?: string;
+}> = (props) => (
+  <div style={{ width: "100%" }}>
+    <InputRow>
+      <InputRowItem width="50%">
+        {props.value.id && (
+          <input type="hidden" value={props.value.id} readOnly />
+        )}
 
-const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
-  const addRow = () => {
-    formik.setFieldValue("options", [
-      ...formik.values.options,
-      { text: "", description: "", val: "", flag: "" },
-    ]);
-  };
+        <Input
+          // required
+          format="bold"
+          value={props.value.text || ""}
+          onChange={(ev) => {
+            props.onChange({
+              ...props.value,
+              text: ev.target.value,
+            });
+          }}
+          placeholder="Option"
+        />
+      </InputRowItem>
 
-  const deleteRow = (index) => {
-    formik.setFieldValue(
-      "options",
-      formik.values.options.filter((option, i) => {
-        return i !== index;
-      })
-    );
-  };
+      <ImgInput
+        img={props.value.img}
+        onChange={(img) => {
+          props.onChange({
+            ...props.value,
+            img,
+          });
+        }}
+      />
 
-  const handleMove = (dragIndex: number, hoverIndex: number): void => {
-    formik.setFieldValue(
-      "options",
-      arrayMove(formik.values.options, dragIndex, hoverIndex)
-    );
-  };
+      <PermissionSelect
+        value={props.value.flag || ""}
+        onChange={(ev) => {
+          props.onChange({
+            ...props.value,
+            flag: ev.target.value,
+          });
+        }}
+      />
+    </InputRow>
 
+    <InputRow>
+      <Input
+        disabled={!props.fn}
+        format="data"
+        value={props.value.val || ""}
+        placeholder="Data Value"
+        onChange={(ev) => {
+          props.onChange({
+            ...props.value,
+            val: ev.target.value,
+          });
+        }}
+      />
+    </InputRow>
+  </div>
+);
+
+const Options: React.FC<{ formik: FormikHookReturn; fn?: string }> = ({
+  formik,
+  fn,
+}) => {
   return (
     <ModalSectionContent title="Options">
-      <React.Fragment>
-        {formik.values.options.map((option, index) => {
-          return (
-            <InputGroup
-              deletable
-              draggable={false}
-              deleteInputGroup={() => deleteRow(index)}
-              key={index}
-              index={index}
-              id={option.id}
-              handleMove={handleMove}
-            >
-              <InputRow>
-                <InputRowItem width="50%">
-                  {option.id && (
-                    <input
-                      type="hidden"
-                      name={`options[${index}].id`}
-                      value={option.id}
-                      readOnly
-                    />
-                  )}
-
-                  <Input
-                    // required
-                    format="bold"
-                    name={`options[${index}].text`}
-                    value={option.text || ""}
-                    onChange={formik.handleChange}
-                    placeholder="Option"
-                  />
-                </InputRowItem>
-
-                <ImgInput
-                  img={option.img}
-                  onChange={(img) => {
-                    formik.setFieldValue(`options[${index}].img`, img);
-                  }}
-                />
-
-                <SelectInput
-                  name={`options[${index}].flag`}
-                  value={option.flag || ""}
-                  onChange={formik.handleChange}
-                >
-                  {option.flag && <MenuItem value="">Remove Flag</MenuItem>}
-                  <MenuItem disabled>Planning permission</MenuItem>
-                  {renderMenuItem("Planning permission")}
-                  <MenuItem disabled>Listed building consent</MenuItem>
-                  {renderMenuItem("Listed building consent")}
-                  <MenuItem disabled>Works to trees</MenuItem>
-                  {renderMenuItem("Works to trees")}
-                  <MenuItem disabled>
-                    Demolition in a conservation area
-                  </MenuItem>
-                  {renderMenuItem("Demolition in a conservation area")}
-                  <MenuItem disabled>Planning policy</MenuItem>
-                  {renderMenuItem("Planning policy")}
-                  <MenuItem disabled>Community infrastructure levy</MenuItem>
-                  {renderMenuItem("Community infrastructure levy")}
-                </SelectInput>
-              </InputRow>
-
-              <InputRow>
-                <Input
-                  // required
-                  disabled={!formik.values.fn}
-                  format="data"
-                  name={`options[${index}].val`}
-                  value={option.val || ""}
-                  placeholder="Data Value"
-                  onChange={formik.handleChange}
-                />
-              </InputRow>
-            </InputGroup>
-          );
-        })}
-        <Button onClick={addRow} color="primary" variant="contained">
-          Add option
-        </Button>
-      </React.Fragment>
+      <ListManager
+        values={formik.values.options}
+        onChange={(newOptions) => {
+          formik.setFieldValue("options", newOptions);
+        }}
+        disableDragAndDrop
+        newValue={() =>
+          ({
+            text: "",
+            description: "",
+            val: "",
+            flag: "",
+          } as Option)
+        }
+        Editor={OptionEditor}
+        editorExtraProps={{ fn }}
+      />
     </ModalSectionContent>
   );
 };
 
-export const GeneralQuestion: React.FC<IQuestion> = ({
+export const Question: React.FC<Props> = ({
   fn = "",
   howMeasured = "",
   description = "",
-  headerTextField = "Question",
   text = "",
   notes = "",
   policyRef = "",
   info = "",
   options = [],
   handleSubmit,
-  Icon,
-  $t,
   img = "",
   definitionImg = "",
 }) => {
+  const $t = TYPES.Statement;
+
   const formik = useFormik({
     initialValues: {
       info,
@@ -227,7 +191,7 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title={headerTextField} Icon={Icon}>
+        <ModalSectionContent title="Question" Icon={CallSplit}>
           <InputGroup deletable={false}>
             <InputRow>
               <Input
@@ -269,7 +233,7 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
           </InputGroup>
         </ModalSectionContent>
 
-        <Options formik={formik} />
+        <Options formik={formik} fn={fn} />
       </ModalSection>
 
       <MoreInformation
@@ -291,14 +255,5 @@ export const GeneralQuestion: React.FC<IQuestion> = ({
     </form>
   );
 };
-
-const Question = (props) => (
-  <GeneralQuestion
-    {...props}
-    headerTextField="Question"
-    Icon={CallSplit}
-    $t={TYPES.Statement}
-  />
-);
 
 export default Question;

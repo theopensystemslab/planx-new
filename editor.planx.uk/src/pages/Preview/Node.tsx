@@ -69,6 +69,7 @@ const Node: React.FC<any> = (props) => {
           info={props.info}
           text={props.text}
           description={props.description}
+          allRequired={props.allRequired}
           handleSubmit={props.handleSubmit}
           checkBoxes={childNodesOf(props.id).map((n, i) => ({
             id: n.id,

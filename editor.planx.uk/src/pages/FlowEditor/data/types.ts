@@ -39,3 +39,30 @@ export interface Notice {
   notes?: string;
   resetButton?: boolean;
 }
+
+// Checkbox
+
+export interface Checklist {
+  fn?: string;
+  howMeasured?: string;
+  description?: string;
+  text?: string;
+  notes?: string;
+  policyRef?: string;
+  info?: string;
+  options?: Array<Option>;
+  img?: string;
+  definitionImg?: string;
+  allRequired?: boolean;
+}
+
+// Shared
+
+export interface Option {
+  val?: string;
+  description?: string;
+  id?: string;
+  flag?: string;
+  text?: string;
+  img?: string;
+}
