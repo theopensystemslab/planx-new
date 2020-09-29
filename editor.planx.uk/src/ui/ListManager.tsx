@@ -17,11 +17,13 @@ export interface EditorProps<T> {
   onChange: (newValue: T) => void;
 }
 
-export interface Props<T> {
+export interface Props<T, EditorExtraProps = {}> {
   values: Array<T>;
   onChange: (newValues: Array<T>) => void;
   newValue: () => T;
-  Editor: React.FC<EditorProps<T>>;
+  Editor: React.FC<EditorProps<T> & EditorExtraProps>;
+  editorExtraProps?: EditorExtraProps;
+  disableDragAndDrop?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ListManager<T>(props: Props<T>) {
+function ListManager<T, EditorExtraProps>(props: Props<T, EditorExtraProps>) {
   const { Editor } = props;
   // Initialize a random ID when the component mounts
   const randomId = useRef(String(Math.random()));
@@ -72,7 +74,12 @@ function ListManager<T>(props: Props<T>) {
                       ref={provided.innerRef}
                     >
                       <Box>
-                        <IconButton disableRipple {...provided.dragHandleProps}>
+                        <IconButton
+                          disableRipple
+                          {...(!props.disableDragAndDrop
+                            ? provided.dragHandleProps
+                            : { disabled: true })}
+                        >
                           <DragHandle />
                         </IconButton>
                       </Box>
@@ -81,7 +88,8 @@ function ListManager<T>(props: Props<T>) {
                         onChange={(newItem) => {
                           props.onChange(setAt(index, newItem, props.values));
                         }}
-                      ></Editor>
+                        {...props.editorExtraProps}
+                      />
                       <Box>
                         <IconButton
                           onClick={() => {

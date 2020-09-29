@@ -1,6 +1,4 @@
-import { Button } from "@material-ui/core";
 import { CheckBoxOutlined } from "@material-ui/icons";
-import arrayMove from "array-move";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import { FormikHookReturn } from "../../../../types";
@@ -11,13 +9,14 @@ import {
   InputGroup,
   InputRow,
   InputRowItem,
+  ListManager,
   InternalNotes,
   ModalSection,
   ModalSectionContent,
   MoreInformation,
   RichTextInput,
 } from "../../../../ui";
-import { TYPES, Checklist } from "../../data/types";
+import { TYPES, Checklist, Option } from "../../data/types";
 import { PermissionSelect } from "./shared";
 
 interface ChecklistProps extends Checklist {
@@ -25,97 +24,93 @@ interface ChecklistProps extends Checklist {
   node?: any;
 }
 
-const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
-  const addRow = () => {
-    formik.setFieldValue("options", [
-      ...formik.values.options,
-      { text: "", description: "", val: "", flag: "" },
-    ]);
-  };
+const OptionEditor: React.FC<{
+  value: Option;
+  onChange: (newVal: Option) => void;
+  fn?: string;
+}> = (props) => (
+  <div style={{ width: "100%" }}>
+    <InputRow>
+      <InputRowItem width="50%">
+        {props.value.id && (
+          <input type="hidden" value={props.value.id} readOnly />
+        )}
 
-  const deleteRow = (index) => {
-    formik.setFieldValue(
-      "options",
-      formik.values.options.filter((option, i) => {
-        return i !== index;
-      })
-    );
-  };
+        <Input
+          // required
+          format="bold"
+          value={props.value.text || ""}
+          onChange={(ev) => {
+            props.onChange({
+              ...props.value,
+              text: ev.target.value,
+            });
+          }}
+          placeholder="Option"
+        />
+      </InputRowItem>
 
-  const handleMove = (dragIndex: number, hoverIndex: number): void => {
-    formik.setFieldValue(
-      "options",
-      arrayMove(formik.values.options, dragIndex, hoverIndex)
-    );
-  };
+      <ImgInput
+        img={props.value.img}
+        onChange={(img) => {
+          props.onChange({
+            ...props.value,
+            img,
+          });
+        }}
+      />
 
+      <PermissionSelect
+        value={props.value.flag || ""}
+        onChange={(ev) => {
+          props.onChange({
+            ...props.value,
+            flag: ev.target.value,
+          });
+        }}
+      />
+    </InputRow>
+
+    <InputRow>
+      <Input
+        disabled={!props.fn}
+        format="data"
+        value={props.value.val || ""}
+        placeholder="Data Value"
+        onChange={(ev) => {
+          props.onChange({
+            ...props.value,
+            val: ev.target.value,
+          });
+        }}
+      />
+    </InputRow>
+  </div>
+);
+
+const Options: React.FC<{ formik: FormikHookReturn; fn?: string }> = ({
+  fn,
+  formik,
+}) => {
   return (
     <ModalSectionContent title="Options">
-      <>
-        {formik.values.options.map((option, index) => {
-          return (
-            <InputGroup
-              deletable
-              draggable={false}
-              deleteInputGroup={() => deleteRow(index)}
-              key={index}
-              index={index}
-              id={option.id}
-              handleMove={handleMove}
-            >
-              <InputRow>
-                <InputRowItem width="50%">
-                  {option.id && (
-                    <input
-                      type="hidden"
-                      name={`options[${index}].id`}
-                      value={option.id}
-                      readOnly
-                    />
-                  )}
-
-                  <Input
-                    // required
-                    format="bold"
-                    name={`options[${index}].text`}
-                    value={option.text || ""}
-                    onChange={formik.handleChange}
-                    placeholder="Option"
-                  />
-                </InputRowItem>
-
-                <ImgInput
-                  img={option.img}
-                  onChange={(img) => {
-                    formik.setFieldValue(`options[${index}].img`, img);
-                  }}
-                />
-
-                <PermissionSelect
-                  name={`options[${index}].flag`}
-                  value={option.flag || ""}
-                  onChange={formik.handleChange}
-                />
-              </InputRow>
-
-              <InputRow>
-                <Input
-                  // required
-                  disabled={!formik.values.fn}
-                  format="data"
-                  name={`options[${index}].val`}
-                  value={option.val || ""}
-                  placeholder="Data Value"
-                  onChange={formik.handleChange}
-                />
-              </InputRow>
-            </InputGroup>
-          );
-        })}
-        <Button onClick={addRow} color="primary" variant="contained">
-          Add option
-        </Button>
-      </>
+      <ListManager
+        values={formik.values.options}
+        onChange={(newOptions) => {
+          formik.setFieldValue("options", newOptions);
+        }}
+        disableDragAndDrop
+        newValue={() =>
+          ({
+            text: "",
+            description: "",
+            val: "",
+            flag: "",
+          } as Option)
+        }
+        Editor={OptionEditor}
+        editorExtraProps={{ fn }}
+      />
     </ModalSectionContent>
   );
 };
@@ -229,7 +224,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
           </InputGroup>
         </ModalSectionContent>
 
-        <Options formik={formik} />
+        <Options formik={formik} fn={fn} />
       </ModalSection>
 
       <MoreInformation
