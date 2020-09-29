@@ -217,6 +217,15 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
                 onChange={formik.handleChange}
               />
             </InputRow>
+
+            <OptionButton
+              selected={formik.values.allRequired}
+              onClick={() => {
+                formik.setFieldValue("allRequired", !formik.values.allRequired);
+              }}
+            >
+              All required
+            </OptionButton>
           </InputGroup>
         </ModalSectionContent>
 
