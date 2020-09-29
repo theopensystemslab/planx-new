@@ -7,13 +7,13 @@ import difference from "lodash/difference";
 import flatten from "lodash/flatten";
 import flattenDeep from "lodash/flattenDeep";
 import omit from "lodash/omit";
+import pgarray from "pg-array";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
 import { getOps as getImmerOps } from "./adapters/immer";
-import pgarray from "pg-array";
 import {
   addNodeWithChildrenOp,
   isValidOp,
