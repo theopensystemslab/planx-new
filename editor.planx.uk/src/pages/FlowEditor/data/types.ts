@@ -15,6 +15,7 @@ export enum TYPES {
   FileUpload = 140,
   NumberInput = 150,
   Response = 200,
+  Content = 250,
   Portal = 300,
 }
 
@@ -42,7 +43,7 @@ export interface Notice {
 
 // Checkbox
 
-export interface Checklist {
+export interface Checklist extends MoreInformation {
   fn?: string;
   howMeasured?: string;
   description?: string;
@@ -56,7 +57,20 @@ export interface Checklist {
   allRequired?: boolean;
 }
 
+// Content
+
+export interface Content extends MoreInformation {
+  content: string;
+}
+
 // Shared
+
+export interface MoreInformation {
+  howMeasured?: string;
+  policyRef?: string;
+  notes?: string;
+  definitionImg?: string;
+}
 
 export interface Option {
   val?: string;

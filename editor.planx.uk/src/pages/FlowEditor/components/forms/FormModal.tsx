@@ -22,6 +22,53 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const NodeTypeSelect: React.FC<{
+  value: string;
+  onChange: (newValue: string) => void;
+}> = (props) => (
+  <select
+    value={props.value}
+    onChange={(ev) => {
+      props.onChange(ev.target.value);
+    }}
+  >
+    <optgroup label="Question">
+      <option value="question">Question</option>
+      <option value="checklist">Checklist</option>
+    </optgroup>
+    <optgroup label="Inputs">
+      <option disabled value="text-inputs">
+        Text Input
+      </option>
+      <option disabled value="number-inputs">
+        Number Input
+      </option>
+      <option disabled value="date-inputs">
+        Date Input
+      </option>
+      <option disabled value="file-uploaders">
+        File Upload
+      </option>
+      <option disabled value="address-inputs">
+        Address Input
+      </option>
+    </optgroup>
+    <optgroup label="Information">
+      <option value="task-list">Task List</option>
+      <option value="notice">Notice</option>
+      <option value="result">Result</option>
+      <option value="content">Content</option>
+    </optgroup>
+    <optgroup label="Location">
+      <option value="find-property">Find property</option>
+      <option value="property-information">Property information</option>
+    </optgroup>
+    <optgroup label="Navigation">
+      <option value="portal">Portal</option>
+    </optgroup>
+  </select>
+);
+
 const FormModal: React.FC<{
   type: string;
   handleDelete?;
@@ -51,49 +98,14 @@ const FormModal: React.FC<{
     >
       <DialogTitle>
         {!handleDelete && (
-          <select
+          <NodeTypeSelect
             value={type}
-            onChange={(e) => {
-              const type = e.target.value;
+            onChange={(type) => {
               const url = new URL(window.location.href);
               url.searchParams.set("type", type);
               navigate([url.pathname, url.search].join(""));
             }}
-          >
-            <optgroup label="Question">
-              <option value="question">Question</option>
-              <option value="checklist">Checklist</option>
-            </optgroup>
-            <optgroup label="Inputs">
-              <option disabled value="text-inputs">
-                Text Input
-              </option>
-              <option disabled value="number-inputs">
-                Number Input
-              </option>
-              <option disabled value="date-inputs">
-                Date Input
-              </option>
-              <option disabled value="file-uploaders">
-                File Upload
-              </option>
-              <option disabled value="address-inputs">
-                Address Input
-              </option>
-            </optgroup>
-            <optgroup label="Information">
-              <option value="task-list">Task List</option>
-              <option value="notice">Notice</option>
-              <option value="result">Result</option>
-            </optgroup>
-            <optgroup label="Location">
-              <option value="find-property">Find property</option>
-              <option value="property-information">Property information</option>
-            </optgroup>
-            <optgroup label="Navigation">
-              <option value="portal">Portal</option>
-            </optgroup>
-          </select>
+          />
         )}
 
         <IconButton
