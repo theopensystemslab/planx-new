@@ -1,8 +1,6 @@
-import { useMutation } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import useAxios from "axios-hooks";
-import gql from "graphql-tag";
 import capitalize from "lodash/capitalize";
 import React, { useEffect } from "react";
 import { api, useStore } from "../../../FlowEditor/lib/store";
