@@ -9554,6 +9554,13 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
+pg-array@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/pg-array/-/pg-array-0.5.0.tgz#e75935cb54595eed2c5abb7b8bbf07c99729b2b7"
+  integrity sha1-51k1y1RZXu0sWrt7i78HyZcpsrc=
+  dependencies:
+    to-array.js "^0.6.0"
+
 picomatch@^2.0.4, picomatch@^2.0.5, picomatch@^2.2.1:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.2.2.tgz#21f333e9b6b8eaff02468f5146ea406d345f4dad"
@@ -12643,6 +12650,11 @@ tmpl@1.0.x:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.4.tgz#23640dd7b42d00433911140820e5cf440e521dd1"
   integrity sha1-I2QN17QtAEM5ERQIIOXPRA5SHdE=
+
+to-array.js@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/to-array.js/-/to-array.js-0.6.0.tgz#30372613432d0a5acdcb218297147df53d600ba1"
+  integrity sha1-MDcmE0MtClrNyyGClxR99T1gC6E=
 
 to-array@0.1.4:
   version "0.1.4"

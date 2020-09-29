@@ -1,8 +1,6 @@
-import { useMutation } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import useAxios from "axios-hooks";
-import gql from "graphql-tag";
 import capitalize from "lodash/capitalize";
 import React, { useEffect } from "react";
 import { api, useStore } from "../../../FlowEditor/lib/store";
@@ -68,45 +66,11 @@ const PropWithConstraints = ({ info, handleSubmit }) => {
   const [id, flow] = useStore((state) => [state.id, state.flow]);
 
   // const flow = useContext(PreviewContext);
-  const MUTATION = gql`
-    mutation CreateSession(
-      $flow_data: jsonb
-      $flow_id: uuid
-      $flow_version: Int
-      $passport: jsonb
-    ) {
-      insert_sessions_one(
-        object: {
-          flow_data: $flow_data
-          flow_id: $flow_id
-          flow_version: $flow_version
-          passport: $passport
-        }
-      ) {
-        id
-      }
-    }
-  `;
-
-  const [createSessionMutation] = useMutation(MUTATION);
   useEffect(() => {
     if (flow && data && info) {
-      const passport = { data, info };
-      api.setState({ passport });
-
-      // TODO: Store the returned session id into the context provider
-      //       so that we can reference it in subsequent calls
-      //       that will register session events (i.e. insert_session_event)
-      createSessionMutation({
-        variables: {
-          flow_data: flow,
-          flow_id: id,
-          flow_version: 0, // TODO: fix this!
-          passport,
-        },
-      });
+      api.getState().startSession({ passport: { data, info } });
     }
-  }, [createSessionMutation, flow, data, info, id]);
+  }, [flow, data, info, id]);
 
   if (!data) return null;
 
