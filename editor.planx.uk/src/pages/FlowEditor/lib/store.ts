@@ -521,18 +521,19 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   record(id: any, vals: any) {
-    const { breadcrumbs } = get();
+    const { breadcrumbs, sessionId, upcomingCardIds, flow } = get();
     // vals may be string or string[]
     if (vals) {
       set({ breadcrumbs: { ...breadcrumbs, [id]: vals } });
 
-      // XXX: Catch-22 situation where to create a session event you need a session id
-      //      but we create a session event only when you answer the first question (i.e. find-property).
-      //      For now it seems safe to ignore event created by the find-property node
-      //      as its answer/data is stored in the passport anyway.
-      if (get().sessionId) {
+      // only store breadcrumbs in the backend if they are answers provided for
+      // either a Statement or Checklist type. TODO: make this more robust
+      if (
+        [TYPES.Statement, TYPES.Checklist].includes(flow.nodes[id].$t) &&
+        sessionId
+      ) {
         addSessionEvent();
-        if (get().upcomingCardIds().length === 0) {
+        if (upcomingCardIds().length === 0) {
           endSession();
         }
       }
