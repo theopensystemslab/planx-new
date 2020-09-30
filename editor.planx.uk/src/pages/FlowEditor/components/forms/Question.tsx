@@ -94,7 +94,6 @@ const OptionEditor: React.FC<{
     {props.showValueField && (
       <InputRow>
         <Input
-          disabled={!props.showValueField}
           format="data"
           value={props.value.val || ""}
           placeholder="Data Value"
