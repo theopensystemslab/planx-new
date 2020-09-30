@@ -64,6 +64,14 @@
         table:
           schema: public
           name: session_events
+  computed_fields:
+  - name: session_events_compiled
+    definition:
+      function:
+        schema: public
+        name: compile_session_events
+    comment: Filters out events with duplicated parent_node_id (e.g. clicking "back"
+      and changing the answer)
   insert_permissions:
   - role: public
     permission:
