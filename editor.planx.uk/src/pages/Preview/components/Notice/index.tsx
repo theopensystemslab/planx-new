@@ -4,12 +4,9 @@ import { ErrorOutline } from "@material-ui/icons";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { useStore } from "../../../FlowEditor/lib/store";
+import { Notice } from "../../../FlowEditor/data/types";
 
-interface Props {
-  title: string;
-  description: string;
-  color?: string;
-  resetButton?: boolean;
+interface Props extends Notice {
   handleSubmit?: any;
 }
 
@@ -58,7 +55,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   },
 }));
 
-const Notice: React.FC<Props> = (props) => {
+const NoticeComponent: React.FC<Props> = (props) => {
   const styles = useStyles({ color: props.color || "#EFEFEF" });
   const resetPreview = useStore((state) => state.resetPreview);
 
@@ -99,4 +96,4 @@ const Notice: React.FC<Props> = (props) => {
   );
 };
 
-export default Notice;
+export default NoticeComponent;

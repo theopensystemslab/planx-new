@@ -26,6 +26,8 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.Notice:
       return <Question {...props} text={"Notice"} />;
+    case TYPES.Content:
+      return <Question {...props} text={"Content"} />;
     case TYPES.Statement:
     case TYPES.Checklist:
       return <Question {...props} {...node} />;

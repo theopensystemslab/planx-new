@@ -32,6 +32,7 @@ const SUPPORTED_TYPES = [
   TYPES.TaskList,
   TYPES.Notice,
   TYPES.Result,
+  TYPES.Content,
 ];
 
 let doc;
@@ -495,6 +496,7 @@ export const [useStore, api] = create((set, get) => ({
               TYPES.TaskList,
               TYPES.Notice,
               TYPES.Result,
+              TYPES.Content,
             ].includes(flow.nodes[tgt].$t) ||
             flow.edges.filter(([src]: any) => src === tgt).length > 0
         )

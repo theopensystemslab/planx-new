@@ -14,6 +14,7 @@ import PropertyInformation from "../pages/FlowEditor/components/forms/PropertyIn
 import Question from "../pages/FlowEditor/components/forms/Question";
 import Result from "../pages/FlowEditor/components/forms/Result";
 import TaskList from "../pages/FlowEditor/components/forms/TaskList";
+import Content from "../pages/FlowEditor/components/forms/Content";
 import { TYPES } from "../pages/FlowEditor/data/types";
 import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
@@ -27,6 +28,7 @@ const components = {
   checklist: Checklist,
   portal: Portal,
   question: Question,
+  content: Content,
 };
 
 const newNode = route(async (req) => {
@@ -106,6 +108,9 @@ const editNode = route(async (req) => {
       break;
     case TYPES.Notice:
       type = "notice";
+      break;
+    case TYPES.Content:
+      type = "content";
       break;
     case TYPES.Result:
       type = "result";
