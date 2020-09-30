@@ -5,18 +5,18 @@ import { FormikHookReturn } from "../../../../types";
 import {
   ImgInput,
   Input,
-  OptionButton,
   InputGroup,
   InputRow,
   InputRowItem,
-  ListManager,
   InternalNotes,
+  ListManager,
   ModalSection,
   ModalSectionContent,
   MoreInformation,
+  OptionButton,
   RichTextInput,
 } from "../../../../ui";
-import { TYPES, Checklist, Option } from "../../data/types";
+import { Checklist, Option, TYPES } from "../../data/types";
 import { PermissionSelect } from "./shared";
 
 interface ChecklistProps extends Checklist {
@@ -27,7 +27,7 @@ interface ChecklistProps extends Checklist {
 const OptionEditor: React.FC<{
   value: Option;
   onChange: (newVal: Option) => void;
-  fn?: string;
+  showValueField?: boolean;
 }> = (props) => (
   <div style={{ width: "100%" }}>
     <InputRow>
@@ -71,27 +71,26 @@ const OptionEditor: React.FC<{
       />
     </InputRow>
 
-    <InputRow>
-      <Input
-        disabled={!props.fn}
-        format="data"
-        value={props.value.val || ""}
-        placeholder="Data Value"
-        onChange={(ev) => {
-          props.onChange({
-            ...props.value,
-            val: ev.target.value,
-          });
-        }}
-      />
-    </InputRow>
+    {props.showValueField && (
+      <InputRow>
+        <Input
+          disabled={!props.showValueField}
+          format="data"
+          value={props.value.val || ""}
+          placeholder="Data Value"
+          onChange={(ev) => {
+            props.onChange({
+              ...props.value,
+              val: ev.target.value,
+            });
+          }}
+        />
+      </InputRow>
+    )}
   </div>
 );
 
-const Options: React.FC<{ formik: FormikHookReturn; fn?: string }> = ({
-  fn,
-  formik,
-}) => {
+const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   return (
     <ModalSectionContent title="Options">
       <ListManager
@@ -109,7 +108,7 @@ const Options: React.FC<{ formik: FormikHookReturn; fn?: string }> = ({
           } as Option)
         }
         Editor={OptionEditor}
-        editorExtraProps={{ fn }}
+        editorExtraProps={{ showValueField: !!formik.values.fn }}
       />
     </ModalSectionContent>
   );
@@ -224,7 +223,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
           </InputGroup>
         </ModalSectionContent>
 
-        <Options formik={formik} fn={fn} />
+        <Options formik={formik} />
       </ModalSection>
 
       <MoreInformation

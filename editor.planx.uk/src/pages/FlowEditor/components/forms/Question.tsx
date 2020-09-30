@@ -9,11 +9,11 @@ import {
   InputRow,
   InputRowItem,
   InternalNotes,
+  ListManager,
   ModalSection,
   ModalSectionContent,
   MoreInformation,
   RichTextInput,
-  ListManager,
 } from "../../../../ui";
 import { TYPES } from "../../data/types";
 import { PermissionSelect } from "./shared";
@@ -47,7 +47,7 @@ interface Props {
 const OptionEditor: React.FC<{
   value: Option;
   onChange: (newVal: Option) => void;
-  fn?: string;
+  showValueField?: boolean;
 }> = (props) => (
   <div style={{ width: "100%" }}>
     <InputRow>
@@ -91,27 +91,26 @@ const OptionEditor: React.FC<{
       />
     </InputRow>
 
-    <InputRow>
-      <Input
-        disabled={!props.fn}
-        format="data"
-        value={props.value.val || ""}
-        placeholder="Data Value"
-        onChange={(ev) => {
-          props.onChange({
-            ...props.value,
-            val: ev.target.value,
-          });
-        }}
-      />
-    </InputRow>
+    {props.showValueField && (
+      <InputRow>
+        <Input
+          disabled={!props.showValueField}
+          format="data"
+          value={props.value.val || ""}
+          placeholder="Data Value"
+          onChange={(ev) => {
+            props.onChange({
+              ...props.value,
+              val: ev.target.value,
+            });
+          }}
+        />
+      </InputRow>
+    )}
   </div>
 );
 
-const Options: React.FC<{ formik: FormikHookReturn; fn?: string }> = ({
-  formik,
-  fn,
-}) => {
+const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   return (
     <ModalSectionContent title="Options">
       <ListManager
@@ -129,7 +128,7 @@ const Options: React.FC<{ formik: FormikHookReturn; fn?: string }> = ({
           } as Option)
         }
         Editor={OptionEditor}
-        editorExtraProps={{ fn }}
+        editorExtraProps={{ showValueField: !!formik.values.fn }}
       />
     </ModalSectionContent>
   );
@@ -233,7 +232,7 @@ export const Question: React.FC<Props> = ({
           </InputGroup>
         </ModalSectionContent>
 
-        <Options formik={formik} fn={fn} />
+        <Options formik={formik} />
       </ModalSection>
 
       <MoreInformation
