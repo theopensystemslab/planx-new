@@ -1,5 +1,4 @@
 import React from "react";
-import { TextFields } from "@material-ui/icons";
 import {
   InputRow,
   RichTextInput,
@@ -9,6 +8,7 @@ import {
 } from "../../../../ui";
 import { useFormik } from "formik";
 import { Content, TYPES } from "../../data/types";
+import { nodeIcon } from "../shared";
 
 export interface Props {
   id?: string;
@@ -25,7 +25,7 @@ const ContentEditor: React.FC<ContentEditorProps> = (props) => {
   return (
     <>
       <ModalSection>
-        <ModalSectionContent title="Content" Icon={TextFields}>
+        <ModalSectionContent title="Content" Icon={nodeIcon(TYPES.Content)}>
           <InputRow>
             <RichTextInput
               placeholder="Content"
