@@ -1,4 +1,5 @@
 import React from "react";
+import { ReportProblemOutlined } from "@material-ui/icons";
 import {
   Input,
   InputRow,
@@ -11,7 +12,6 @@ import {
 } from "../../../../ui";
 import { useFormik } from "formik";
 import { Notice, TYPES } from "../../data/types";
-import { nodeIcon } from "../shared";
 
 export interface Props {
   id?: string;
@@ -28,7 +28,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
   return (
     <>
       <ModalSection>
-        <ModalSectionContent title="Notice" Icon={nodeIcon(TYPES.Notice)}>
+        <ModalSectionContent title="Notice" Icon={ReportProblemOutlined}>
           <InputRow>
             <Input
               format="large"
@@ -54,16 +54,19 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
               }}
             />
           </InputRow>
-          <ColorPicker
-            inline
-            color={props.value.color}
-            onChange={(color) => {
-              props.onChange({
-                ...props.value,
-                color,
-              });
-            }}
-          />
+          <div>
+            <span>Color: </span>
+            <ColorPicker
+              inline
+              color={props.value.color}
+              onChange={(color) => {
+                props.onChange({
+                  ...props.value,
+                  color,
+                });
+              }}
+            />
+          </div>
           <OptionButton
             selected={Boolean(props.value.resetButton)}
             onClick={() => {

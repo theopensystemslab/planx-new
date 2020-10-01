@@ -1,3 +1,4 @@
+import { CheckBoxOutlined } from "@material-ui/icons";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import { FormikHookReturn } from "../../../../types";
@@ -17,7 +18,6 @@ import {
 } from "../../../../ui";
 import { Checklist, Option, TYPES } from "../../data/types";
 import { PermissionSelect } from "./shared";
-import { nodeIcon } from "../shared";
 
 interface ChecklistProps extends Checklist {
   handleSubmit?: Function;
@@ -171,7 +171,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Checklist" Icon={nodeIcon($t)}>
+        <ModalSectionContent title="Checklist" Icon={CheckBoxOutlined}>
           <InputGroup deletable={false}>
             <InputRow>
               <Input

@@ -1,10 +1,10 @@
-import { ButtonBase, makeStyles, Typography } from "@material-ui/core";
+import ButtonBase from "@material-ui/core/ButtonBase";
 import classNames from "classnames";
 import React, { useState } from "react";
 import { ChromePicker } from "react-color";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 export interface Props {
-  label?: string;
   inline?: boolean;
   color: string;
   onChange?: (newColor: string) => void;
@@ -14,18 +14,13 @@ const colorPickerStyles = makeStyles((theme) => ({
   root: {
     padding: 0,
     position: "relative",
-    display: "flex",
-    alignItems: "center",
   },
   inline: {
     height: 50,
-    padding: `${theme.spacing(2)}px 0`,
+    padding: theme.spacing(2),
     "& $popover": {
       top: "calc(100% - 4px)",
     },
-  },
-  label: {
-    marginRight: theme.spacing(2),
   },
   button: {
     fontFamily: "inherit",
@@ -85,9 +80,6 @@ const ColorPicker: React.FC<Props> = (props) => {
 
   return (
     <div className={classNames(classes.root, props.inline && classes.inline)}>
-      <Typography className={classes.label} variant="body1">
-        {props.label || "Colour"}:{" "}
-      </Typography>
       <ButtonBase
         classes={{
           root: classNames(classes.button, show && classes.focused),

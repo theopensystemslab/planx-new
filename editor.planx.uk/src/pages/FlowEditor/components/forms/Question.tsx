@@ -1,3 +1,4 @@
+import { CallSplit } from "@material-ui/icons";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import { FormikHookReturn } from "../../../../types";
@@ -16,7 +17,6 @@ import {
 } from "../../../../ui";
 import { TYPES } from "../../data/types";
 import { PermissionSelect } from "./shared";
-import { nodeIcon } from "../shared";
 
 interface Option {
   val?: string;
@@ -189,7 +189,7 @@ export const Question: React.FC<Props> = ({
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Question" Icon={nodeIcon($t)}>
+        <ModalSectionContent title="Question" Icon={CallSplit}>
           <InputGroup deletable={false}>
             <InputRow>
               <Input

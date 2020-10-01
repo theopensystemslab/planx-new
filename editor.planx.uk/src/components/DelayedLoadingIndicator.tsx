@@ -3,7 +3,7 @@ import { CircularProgress, makeStyles } from "@material-ui/core";
 
 const useClasses = makeStyles({
   container: {
-    padding: 60,
+    padding: 30,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
