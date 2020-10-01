@@ -222,7 +222,11 @@ const FlowItem = ({ flow, teamId }) => {
         />
       )}
       <li key={flow.slug} className={classes.dashboardListItem}>
-        <Link href={`./${flow.slug}`} className={classes.dashboardLink}>
+        <Link
+          href={`./${flow.slug}`}
+          className={classes.dashboardLink}
+          prefetch={false}
+        >
           {flow.slug}
         </Link>
         <Box className={classes.linkSubText}>
