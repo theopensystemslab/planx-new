@@ -6,8 +6,11 @@ import { api, useStore } from "../../../lib/store";
 import { getParentId } from "../../../lib/utils";
 import Hanger from "./Hanger";
 import Node from "./Node";
+import { nodeIcon } from "../../shared";
 
-const Question: React.FC<any> = React.memo((props) => {
+type Props = any;
+
+const Question: React.FC<Props> = React.memo((props) => {
   const [isClone, childNodes] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
@@ -38,6 +41,8 @@ const Question: React.FC<any> = React.memo((props) => {
     api.getState().copyNode(props.id);
   };
 
+  const Icon = nodeIcon(props.$t);
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
@@ -49,6 +54,7 @@ const Question: React.FC<any> = React.memo((props) => {
         })}
       >
         <Link href={href} prefetch={false} onContextMenu={handleContext}>
+          {Icon && <Icon />}
           <span ref={drag}>{props.text}</span>
         </Link>
         <ol>

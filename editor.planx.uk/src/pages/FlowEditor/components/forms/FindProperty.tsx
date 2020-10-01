@@ -1,5 +1,4 @@
 import { Typography } from "@material-ui/core";
-import SearchOutlinedIcon from "@material-ui/icons/SearchOutlined";
 import { useFormik } from "formik";
 import React from "react";
 import { useNavigation } from "react-navi";
@@ -13,6 +12,7 @@ import {
   OptionButton,
 } from "../../../../ui";
 import { IEditor, parseFormValues } from "./shared";
+import { nodeIcon } from "../shared";
 
 interface IFindProperty extends IEditor {
   addressLineOne?: boolean;
@@ -104,7 +104,10 @@ const FindProperty: React.FC<IFindProperty> = ({
     validate: () => {},
   });
   return (
-    <ModalSectionContent title={headerTextField} Icon={SearchOutlinedIcon}>
+    <ModalSectionContent
+      title={headerTextField}
+      Icon={nodeIcon(TYPES.FindProperty)}
+    >
       <form onSubmit={formik.handleSubmit} id="modal">
         <Typography variant="subtitle2" gutterBottom>
           Data to be collected about the property

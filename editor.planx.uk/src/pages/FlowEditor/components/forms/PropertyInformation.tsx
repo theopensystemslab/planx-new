@@ -1,6 +1,5 @@
 import Button from "@material-ui/core/Button";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
 import SubIcon from "@material-ui/icons/SubdirectoryArrowRight";
 import { useFormik } from "formik";
 import React from "react";
@@ -17,6 +16,7 @@ import {
   VisibilityToggle,
 } from "../../../../ui";
 import { IEditor, parseFormValues } from "./shared";
+import { nodeIcon } from "../shared";
 
 interface IPropertyInformation extends IEditor {
   aboutField?: string;
@@ -127,7 +127,7 @@ const PropertyInformation: React.FC<IPropertyInformation> = ({
       <ModalSection>
         <ModalSectionContent
           title={headerTextField}
-          Icon={LocationOnOutlinedIcon}
+          Icon={nodeIcon(TYPES.PropertyInformation)}
         >
           <InputRow>
             <Input
