@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
 import React from "react";
 import { InputField } from "../../../../ui";
+import { TYPES } from "../../data/types";
 
 const PortalForm: React.FC<{
   id?: string;
@@ -24,8 +25,11 @@ const PortalForm: React.FC<{
     },
     onSubmit: (values) => {
       if (handleSubmit) {
-        alert("portal updates currently disabled (sorry!)");
-        // handleSubmit({ $t: TYPES.Portal, ...values });
+        if (id) {
+          alert("portal updates currently disabled (sorry!)");
+        } else {
+          handleSubmit({ $t: TYPES.Portal, ...values });
+        }
       } else {
         alert(JSON.stringify(values, null, 2));
       }
