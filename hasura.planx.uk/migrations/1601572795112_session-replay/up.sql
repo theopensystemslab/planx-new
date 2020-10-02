@@ -1,0 +1,97 @@
+DROP FUNCTION compile_session_replay;
+
+--
+-- The following function produces rows that contain the following data:
+-- {
+--  "node": {},           // the text of the question
+--  "options": [{}],      // the possible answers
+--  "chosen_nodes": [{}], // the answer(s) selected (NB: a checkbox accepts more than one answer)
+--  "created_at": Date,   // timestamp when the question was answered 
+-- }
+--
+-- Try it out:
+-- > SELECT compile_session_replay((SELECT sessions FROM sessions limit 1));
+CREATE OR REPLACE FUNCTION compile_session_replay(session_row sessions)
+RETURNS json LANGUAGE sql STABLE AS $$
+--
+-- The output of `distinct_events` is the same as compile_session_events().
+-- It was inlined here as to avoid dependencies between postgres functions.
+--
+-- It filters out duplicate events for the same question,
+-- which happens when the user clicks "back" to change an answer.
+--
+WITH distinct_events AS (
+  SELECT
+    DISTINCT ON (parent_node_id) null,
+    session_events as event
+  FROM session_events
+  WHERE session_events.session_id = session_row.id
+  ORDER BY
+    session_events.parent_node_id ASC,
+    session_events.created_at DESC
+),
+-- Note that `flow_data.nodes` has the following structure:
+-- {
+--   [uuid]: {},
+-- }
+-- We need to *filter by the keys* (i.e. the uuid) and *return the value* (i.e. the object)
+-- but Postgres doesn't provide a jsonpath filter expression that works like that,
+-- so instead what we do is:
+--   Step 1. Transform each node into a { key, value } object
+--   Step 2. Convert the JSONB from (1) into a RecordSet (i.e. tabulated data)
+--   Step 3. Ignore `key` and return only `value` with `SELECT value`
+--   Step 4. Filter using `WHERE key IN ()`
+--
+-- The same pattern is applied for the `choices` output key.
+--
+replay_rows AS (
+  SELECT
+  -- Output: node
+  sessions.flow_data->'nodes'->(event).parent_node_id as node
+  -- Output: options
+  , ARRAY(
+    --     vvvvv Step 3
+    SELECT value
+    --   vvvvvvvvvvvvvvvvvv Step 2
+    FROM jsonb_to_recordset(
+      -- vvvvvvvvvvvvvvvvvvv Step 1
+      jsonb_path_query_array(sessions.flow_data, '$.nodes[*].keyvalue()'))
+    AS (key text, value jsonb)
+    --    vvvvvv Step 4
+    WHERE key IN (
+        SELECT * FROM jsonb_array_elements_text(
+          jsonb_path_query_array(
+            -- ## data to be filtered ##
+            sessions.flow_data,
+            -- ## jsonpath query ##
+            -- Edges have the following structure: [source_id, target_id]
+            -- The jsonpath below finds all edges in which the source_id === parent_node_id
+            '$.edges ? (@[0] == $parent_node_id)[1]',
+            -- ## variables for the query ##
+            -- Creates an object like { parent_node_id: uuid }
+            -- which is injected into the jsonpath query above
+            jsonb_build_object('parent_node_id', (event).parent_node_id))
+        )
+      )
+  ) as options
+  -- Output: chosen_nodes
+  , array(
+    --     vvvvv Step 3
+    SELECT value
+    --   vvvvvvvvvvvvvvvvvv Step 2
+    FROM jsonb_to_recordset(
+      -- vvvvvvvvvvvvvvvvvvv Step 1
+      jsonb_path_query_array(sessions.flow_data, '$.nodes[*].keyvalue()'))
+    AS (key text, value jsonb)
+    --    vvvvvv Step 4
+    WHERE key = ANY((event).chosen_node_ids)
+  ) as chosen_nodes
+  -- Output: created_at
+  , (event).created_at
+  FROM distinct_events
+  JOIN sessions ON sessions.id = session_row.id
+  ORDER BY (event).created_at ASC
+)
+-- Convert RecordSet (tabular data) into JSON Array
+SELECT json_agg(replay_rows) FROM replay_rows;
+$$;
