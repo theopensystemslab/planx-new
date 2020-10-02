@@ -132,23 +132,29 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   }
 
   & > a {
-    display: block;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
     text-decoration: none;
     cursor: pointer;
     color: $black;
     border: 1px solid $lineColor;
     background: white;
     user-select: none;
+    padding: 6px 12px;
 
     > span {
-      // flex: 1;
-      // flex-grow: 1;
-      display: block;
-      padding: 10px 12px;
+      max-width: 170px;
+    }
 
-      [data-layout="left-right"] & {
-        max-width: 170px;
-      }
+    > svg {
+      margin-left: -6px;
+      width: 16px;
+      height: 16px;
+    }
+
+    > span:not(:first-child) {
+      margin-left: 6px;
     }
   }
 }

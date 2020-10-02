@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     color: theme.palette.grey[600],
   },
+  actions: {
+    padding: 0,
+  },
 }));
 
 const NodeTypeSelect: React.FC<{
@@ -138,7 +141,7 @@ const FormModal: React.FC<{
           }}
         />
       </DialogContent>
-      <DialogActions>
+      <DialogActions className={classes.actions}>
         <Grid container justify="flex-end">
           {handleDelete && (
             <Grid item xs={6} sm={4} md={3}>
@@ -150,7 +153,7 @@ const FormModal: React.FC<{
                   navigate(rootFlowPath(true));
                 }}
               >
-                Delete
+                delete
               </Button>
             </Grid>
           )}
@@ -164,7 +167,7 @@ const FormModal: React.FC<{
                   navigate(rootFlowPath(true));
                 }}
               >
-                Make unique
+                make unique
               </Button>
             </Grid>
           )}

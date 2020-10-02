@@ -1,5 +1,4 @@
 import React, { ChangeEvent } from "react";
-import { List } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core";
 import { EditorProps } from "../../../../ui/ListManager";
 import {
@@ -13,6 +12,7 @@ import {
 } from "../../../../ui";
 import { useFormik } from "formik";
 import { Task, TaskList, TYPES } from "../../data/types";
+import { nodeIcon } from "../shared";
 
 export interface Props {
   id?: string;
@@ -77,7 +77,7 @@ const TaskListEditor: React.FC<TaskListEditorProps> = (props) => {
   return (
     <>
       <ModalSection>
-        <ModalSectionContent title="Task List" Icon={List}>
+        <ModalSectionContent title="Task List" Icon={nodeIcon(TYPES.TaskList)}>
           <ListManager
             values={props.value.tasks}
             onChange={(tasks: Array<Task>) => {
