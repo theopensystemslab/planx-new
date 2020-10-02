@@ -1,6 +1,6 @@
-import { createMuiStrictModeTheme } from "./react-experimental";
+import { createMuiTheme } from "@material-ui/core";
 
-const theme = createMuiStrictModeTheme({
+const theme = createMuiTheme({
   typography: {
     fontFamily: "'Inter', Arial",
     h1: {
