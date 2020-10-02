@@ -231,12 +231,10 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 }
 
 .portal {
-  background: $black;
   justify-content: center !important;
   > a {
-    background: inherit;
+    background: $black;
     color: white;
-    height: 100%;
     border: none;
   }
   &.breadcrumb {
@@ -251,13 +249,13 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 .portal,
 .decision {
   display: flex;
-  align-items: center;
   flex-shrink: 1;
   // https://github.com/philipwalton/flexbugs#flexbug-1
   flex-shrink: 0;
 }
 
 .decision {
+  align-items: center;
   [data-layout="top-down"] & {
     flex-direction: column;
   }
