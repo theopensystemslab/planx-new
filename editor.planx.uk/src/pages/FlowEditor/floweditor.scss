@@ -231,20 +231,33 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 }
 
 .portal {
+  background: $black;
+  justify-content: center !important;
   > a {
-    background: $black;
+    background: inherit;
     color: white;
+    height: 100%;
+    border: none;
+  }
+  &.breadcrumb {
+    background: none;
+    > a {
+      background: #666;
+      margin: 5px 0;
+    }
   }
 }
-.portal.breadcrumb > a {
-  background: #666;
-}
 
+.portal,
 .decision {
   display: flex;
   align-items: center;
   flex-shrink: 1;
+  // https://github.com/philipwalton/flexbugs#flexbug-1
+  flex-shrink: 0;
+}
 
+.decision {
   [data-layout="top-down"] & {
     flex-direction: column;
   }
@@ -252,10 +265,6 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   [data-layout="left-right"] & {
     flex-direction: row;
   }
-
-  // https://github.com/philipwalton/flexbugs#flexbug-1
-  flex-shrink: 0;
-
   &.isNote {
     > a {
       background: yellow !important;
