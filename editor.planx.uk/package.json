@@ -44,7 +44,7 @@
     "react-markdown": "^4.3.1",
     "react-navi": "^0.14.4",
     "react-navi-helmet-async": "^0.14.4",
-    "react-scripts": "3.4.1",
+    "react-scripts": "3.4.3",
     "reconnecting-websocket": "^4.4.0",
     "rxjs": "^6.6.0",
     "scroll-into-view-if-needed": "^2.2.25",
@@ -70,7 +70,7 @@
     "lint-staged": "^10.2.11",
     "node-sass": "^4.14.1",
     "prettier": "^2.0.5",
-    "typescript": "^4.0.3"
+    "typescript": "^3.9"
   },
   "scripts": {
     "start": "react-scripts start",
