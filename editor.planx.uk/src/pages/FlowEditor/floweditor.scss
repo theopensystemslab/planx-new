@@ -256,8 +256,13 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   // https://github.com/philipwalton/flexbugs#flexbug-1
   flex-shrink: 0;
 
-  &.isNote > a {
-    background: yellow !important;
+  &.isNote {
+    > a {
+      background: yellow !important;
+    }
+    svg {
+      display: none;
+    }
   }
 
   // (options)
