@@ -191,7 +191,12 @@ export const [useStore, api] = create((set, get) => ({
     const { flow, isClone } = get();
 
     if (flow.nodes[id].$t === TYPES.Portal) {
-      return alert("Portals not yet supported");
+      if (
+        !window.confirm(
+          "Making portals unique isn't officially supported yet, are you sure that you want to do this?"
+        )
+      )
+        return;
     }
 
     const graph = toGraphlib(flow);
