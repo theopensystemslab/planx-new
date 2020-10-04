@@ -11,12 +11,11 @@ import {
   ListManager,
   ModalSection,
   ModalSectionContent,
-  MoreInformation,
   OptionButton,
   RichTextInput,
 } from "../../../../ui";
 import { Checklist, Option, TYPES } from "../../data/types";
-import { PermissionSelect } from "./shared";
+import { MoreInformation, PermissionSelect } from "./shared";
 import { nodeIcon } from "../shared";
 
 interface ChecklistProps extends Checklist {
@@ -230,7 +229,6 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
         definitionImg={formik.values.definitionImg}
         definitionName="howMeasured"
         definitionValue={formik.values.howMeasured}
-        formik={formik}
         policyName="policyRef"
         policyValue={formik.values.policyRef}
         whyName="info"

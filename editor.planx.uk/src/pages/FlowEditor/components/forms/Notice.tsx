@@ -12,6 +12,7 @@ import {
 import { useFormik } from "formik";
 import { Notice, TYPES } from "../../data/types";
 import { nodeIcon } from "../shared";
+import { MoreInformation } from "./shared";
 
 export interface Props {
   id?: string;
@@ -77,6 +78,21 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
           </OptionButton>
         </ModalSectionContent>
       </ModalSection>
+      <MoreInformation
+        changeField={(ev: any) => {
+          props.onChange({
+            ...props.value,
+            [ev.target.name]: ev.target.value,
+          });
+        }}
+        definitionImg={props.value.definitionImg}
+        definitionName="howMeasured"
+        definitionValue={props.value.howMeasured}
+        policyName="policyRef"
+        policyValue={props.value.policyRef}
+        whyName="info"
+        whyValue={props.value.info}
+      />
       <InternalNotes
         name="notes"
         onChange={(ev) => {
@@ -92,7 +108,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
 };
 
 const NoticeComponent: React.FC<Props> = (props) => {
-  const formik = useFormik({
+  const formik = useFormik<{ notice: Notice }>({
     initialValues: {
       notice: {
         // TODO: improve runtime validation here (joi, io-ts)
@@ -101,6 +117,10 @@ const NoticeComponent: React.FC<Props> = (props) => {
         color: props.node?.color || "#EFEFEF",
         notes: props.node?.notes || "",
         resetButton: props.node?.resetButton || false,
+        definitionImg: props.node?.definitionImg,
+        howMeasured: props.node?.howMeasured,
+        policyRef: props.node?.policyRef,
+        info: props.node?.info,
       },
     },
     onSubmit: (newValues) => {

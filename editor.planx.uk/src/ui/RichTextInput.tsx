@@ -21,6 +21,8 @@ const rteContainerStyles = makeStyles((theme) => ({
   regular: {
     position: "relative",
     boxSizing: "border-box",
+    // This is necessary for the focus styles to be visible. Breaks the layout a bit
+    // unfortunately. TODO: find a better solution.
     padding: 2,
     outline: "none",
     width: "100%",
@@ -28,10 +30,15 @@ const rteContainerStyles = makeStyles((theme) => ({
   focused: {
     position: "relative",
     boxSizing: "border-box",
+    // This is necessary for the focus styles to be visible. Breaks the layout a bit
+    // unfortunately. TODO: find a better solution.
     padding: 2,
     outline: "none",
     boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
     width: "100%",
+  },
+  editorFocus: {
+    boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
   },
 }));
 
@@ -42,7 +49,7 @@ const RichTextInput: React.FC<
   Props & { editorStateRef: MutableRefObject<EditorState | null> }
 > = (props) => {
   // Set the initial `value` prop and ignore updated values to avoid infinite loops
-  const [initialValue] = useState(mdToEditorRawContent(props.value));
+  const [initialValue] = useState(mdToEditorRawContent(props.value || ""));
 
   const [focused, setFocused] = useState(false);
 

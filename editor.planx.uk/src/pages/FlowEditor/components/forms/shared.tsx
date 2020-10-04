@@ -1,8 +1,18 @@
 import React from "react";
 import { MenuItem } from "@material-ui/core";
+import { InfoOutlined } from "@material-ui/icons";
 import trim from "lodash/trim";
 import flags from "../../data/flags";
-import { SelectInput, SelectInputProps } from "../../../../ui";
+import {
+  ModalSection,
+  ModalSectionContent,
+  InputGroup,
+  InputRow,
+  SelectInput,
+  SelectInputProps,
+  RichTextInput,
+  ImgInput,
+} from "../../../../ui";
 
 export interface IEditor {
   headerTextField?: string;
@@ -20,6 +30,65 @@ const renderMenuItem = (category: string) => {
         {flag.text}
       </MenuItem>
     ));
+};
+
+export const MoreInformation = ({
+  changeField,
+  definitionImg,
+  definitionName,
+  definitionValue,
+  policyName,
+  policyValue,
+  whyName,
+  whyValue,
+}) => {
+  return (
+    <ModalSection>
+      <ModalSectionContent title="More Information" Icon={InfoOutlined}>
+        <InputGroup label="Why it matters">
+          <InputRow>
+            <RichTextInput
+              multiline
+              name={whyName}
+              value={whyValue}
+              onChange={changeField}
+              placeholder="Why it matters"
+            />
+          </InputRow>
+        </InputGroup>
+        <InputGroup label="Policy source">
+          <InputRow>
+            <RichTextInput
+              multiline
+              name={policyName}
+              value={policyValue}
+              onChange={changeField}
+              placeholder="Policy source"
+            />
+          </InputRow>
+        </InputGroup>
+        <InputGroup label="How it is defined?">
+          <InputRow>
+            <RichTextInput
+              multiline
+              name={definitionName}
+              value={definitionValue}
+              onChange={changeField}
+              placeholder="How it is defined?"
+            />
+            <ImgInput
+              img={definitionImg}
+              onChange={(newUrl) => {
+                changeField({
+                  target: { name: "definitionImg", value: newUrl },
+                });
+              }}
+            />
+          </InputRow>
+        </InputGroup>
+      </ModalSectionContent>
+    </ModalSection>
+  );
 };
 
 export const PermissionSelect: React.FC<SelectInputProps> = (props) => (

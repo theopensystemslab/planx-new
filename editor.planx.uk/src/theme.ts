@@ -81,6 +81,9 @@ const theme = createMuiTheme({
     },
     ...({
       MUIRichTextEditor: {
+        root: {
+          padding: 0,
+        },
         container: {
           // Disable margins to allow a container <Box/>
           margin: 0,
@@ -89,7 +92,7 @@ const theme = createMuiTheme({
           },
         },
         editor: {
-          backgroundColor: "#fafafa",
+          backgroundColor: "#fff",
           padding: "4px 10px",
           minHeight: 48,
           fontSize: 15,

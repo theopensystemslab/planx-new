@@ -33,7 +33,7 @@ export interface Task {
 
 // Notice
 
-export interface Notice {
+export interface Notice extends MoreInformation {
   title: string;
   description: string;
   color: string;
@@ -45,15 +45,11 @@ export interface Notice {
 
 export interface Checklist extends MoreInformation {
   fn?: string;
-  howMeasured?: string;
   description?: string;
   text?: string;
   notes?: string;
-  policyRef?: string;
-  info?: string;
   options?: Array<Option>;
   img?: string;
-  definitionImg?: string;
   allRequired?: boolean;
 }
 
@@ -68,6 +64,7 @@ export interface Content extends MoreInformation {
 export interface MoreInformation {
   howMeasured?: string;
   policyRef?: string;
+  info?: string;
   notes?: string;
   definitionImg?: string;
 }
