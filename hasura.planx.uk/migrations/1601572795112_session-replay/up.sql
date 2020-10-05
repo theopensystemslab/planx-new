@@ -3,7 +3,7 @@
 -- {
 --  "node": {},                       // the text of the question
 --  "options": [{}],                  // the possible answers
---  "selections": [],                 // the answer id(s) selected (NB: a checkbox accepts more than one answer)
+--  "selected_ids": [],               // the answer id(s) selected (NB: a checkbox accepts more than one answer)
 --  "selected_at": Date,              // timestamp when the question was answered
 --  "event_id": UUID,                 // id of the event that recorded the selections
 --  "event_type": session_event_type  // what created the event i.e. human 'click' or automated decision
@@ -42,8 +42,6 @@ WITH distinct_events AS (
 --   Step 3. Ignore `key` and return only `value` with `SELECT value`
 --   Step 4. Filter using `WHERE key IN ()`
 --
--- The same pattern is applied for the `selections` output key.
---
 replay_rows AS (
   SELECT
   -- Output: node (i.e. the question, including its id)
@@ -78,18 +76,7 @@ replay_rows AS (
         )
       )
   ) as options
-  -- Output: selections
-  , array(
-    --     vvvvv Step 3
-    SELECT id
-    --   vvvvvvvvvvvvvvvvvv Step 2
-    FROM jsonb_to_recordset(
-      -- vvvvvvvvvvvvvvvvvvv Step 1
-      jsonb_path_query_array(sessions.flow_data, '$.nodes[*].keyvalue()'))
-    AS (key text, value jsonb)
-    --    vvvvvv Step 4
-    WHERE key = ANY((event).chosen_node_ids)
-  ) as selections
+  , (event).chosen_node_ids AS selected_ids
   -- Output: event_id
   , (event).id AS event_id
   -- Output: event_type
