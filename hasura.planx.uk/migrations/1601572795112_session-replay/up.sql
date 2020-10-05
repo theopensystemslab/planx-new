@@ -3,10 +3,12 @@ DROP FUNCTION IF EXISTS compile_session_replay;
 --
 -- The following function produces rows that contain the following data:
 -- {
---  "node": {},           // the text of the question
---  "options": [{}],      // the possible answers
---  "selections": [],     // the answer id(s) selected (NB: a checkbox accepts more than one answer)
---  "selected_at": Date,  // timestamp when the question was answered
+--  "node": {},                       // the text of the question
+--  "options": [{}],                  // the possible answers
+--  "selections": [],                 // the answer id(s) selected (NB: a checkbox accepts more than one answer)
+--  "selected_at": Date,              // timestamp when the question was answered
+--  "event_id": UUID,                 // id of the event that recorded the selections
+--  "event_type": session_event_type  // what created the event i.e. human 'click' or automated decision
 -- }
 --
 -- Try it out:
@@ -90,10 +92,10 @@ replay_rows AS (
     --    vvvvvv Step 4
     WHERE key = ANY((event).chosen_node_ids)
   ) as selections
-  -- Output: selection_id
-  , (event).id AS selection_id
-  -- Output: selection_type
-  , (event).type AS selection_type
+  -- Output: event_id
+  , (event).id AS event_id
+  -- Output: event_type
+  , (event).type AS event_type
   -- Output: selected_at
   , (event).created_at AS selected_at
   FROM distinct_events
