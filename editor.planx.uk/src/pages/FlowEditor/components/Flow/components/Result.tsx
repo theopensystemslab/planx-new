@@ -48,8 +48,13 @@ const Result: React.FC<any> = React.memo((props) => {
           isNote: childNodes.length === 0,
         })}
       >
-        <Link href={href} prefetch={false} onContextMenu={handleContext}>
-          <span ref={drag}>{props.text}</span>
+        <Link
+          href={href}
+          prefetch={false}
+          onContextMenu={handleContext}
+          ref={drag}
+        >
+          <span>{props.text}</span>
         </Link>
         <ol>
           {flags

@@ -143,6 +143,10 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     user-select: none;
     padding: 6px 12px;
 
+    * {
+      pointer-events: none;
+    }
+
     > span {
       max-width: 170px;
     }

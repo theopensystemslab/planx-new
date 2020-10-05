@@ -53,9 +53,14 @@ const Question: React.FC<Props> = React.memo((props) => {
           isNote: childNodes.length === 0,
         })}
       >
-        <Link href={href} prefetch={false} onContextMenu={handleContext}>
+        <Link
+          href={href}
+          prefetch={false}
+          onContextMenu={handleContext}
+          ref={drag}
+        >
           {Icon && <Icon />}
-          <span ref={drag}>{props.text}</span>
+          <span>{props.text}</span>
         </Link>
         <ol>
           {childNodes.map((child: any) => (

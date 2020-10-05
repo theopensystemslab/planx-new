@@ -54,8 +54,8 @@ const ExternalPortal: React.FC<any> = React.memo(
       <>
         <Hanger hidden={isDragging} before={props.id} parent={parent} />
         <li className={classNames("card", "portal", { isDragging })}>
-          <Link href={`/${href}`} prefetch={false}>
-            <span ref={drag}>{href}</span>
+          <Link href={`/${href}`} prefetch={false} ref={drag}>
+            <span>{href}</span>
           </Link>
           <Link href={editHref} prefetch={false}>
             <MoreVertical />
@@ -93,8 +93,8 @@ const InternalPortal: React.FC<any> = (props) => {
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li className={classNames("card", "portal", { isDragging })}>
-        <Link href={href} prefetch={false}>
-          <span ref={drag}>{props.text}</span>
+        <Link href={href} prefetch={false} ref={drag}>
+          <span>{props.text}</span>
         </Link>
         <Link href={editHref} prefetch={false}>
           <MoreVertical />
