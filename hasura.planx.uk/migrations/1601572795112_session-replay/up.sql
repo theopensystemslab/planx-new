@@ -1,4 +1,4 @@
-DROP FUNCTION compile_session_replay;
+DROP FUNCTION IF EXISTS compile_session_replay;
 
 --
 -- The following function produces rows that contain the following data:
@@ -6,7 +6,7 @@ DROP FUNCTION compile_session_replay;
 --  "node": {},           // the text of the question
 --  "options": [{}],      // the possible answers
 --  "chosen_nodes": [{}], // the answer(s) selected (NB: a checkbox accepts more than one answer)
---  "created_at": Date,   // timestamp when the question was answered 
+--  "created_at": Date,   // timestamp when the question was answered
 -- }
 --
 -- Try it out:
