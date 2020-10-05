@@ -46,8 +46,12 @@ WITH distinct_events AS (
 --
 replay_rows AS (
   SELECT
-  -- Output: node
-  sessions.flow_data->'nodes'->(event).parent_node_id as node
+  -- Output: node (i.e. the question, including its id)
+  jsonb_set(
+    sessions.flow_data->'nodes'->(event).parent_node_id,
+    '{id}',
+    to_jsonb((event).parent_node_id)
+  ) as node
   -- Output: options
   , ARRAY(
     --     vvvvv Step 3
