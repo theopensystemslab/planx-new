@@ -53,7 +53,7 @@ replay_rows AS (
   -- Output: options
   , ARRAY(
     --     vvvvv Step 3
-    SELECT value
+    SELECT jsonb_set(value,'{id}',to_jsonb(key))
     --   vvvvvvvvvvvvvvvvvv Step 2
     FROM jsonb_to_recordset(
       -- vvvvvvvvvvvvvvvvvvv Step 1
