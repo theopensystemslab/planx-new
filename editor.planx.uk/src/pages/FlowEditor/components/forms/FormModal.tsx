@@ -14,6 +14,12 @@ import { useStore } from "../../lib/store";
 import { parseFormValues } from "./shared";
 
 const useStyles = makeStyles((theme) => ({
+  dialog: {
+    // Target all modal sections (the direct child is the backdrop, hence the double child selector)
+    "& > * > *": {
+      backgroundColor: theme.palette.grey[100],
+    },
+  },
   closeButton: {
     float: "right",
     margin: 0,
@@ -98,6 +104,7 @@ const FormModal: React.FC<{
       maxWidth="md"
       disableScrollLock
       onClose={handleClose}
+      className={classes.dialog}
     >
       <DialogTitle>
         {!handleDelete && (

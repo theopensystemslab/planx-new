@@ -11,11 +11,10 @@ import {
   ListManager,
   ModalSection,
   ModalSectionContent,
-  MoreInformation,
   RichTextInput,
 } from "../../../../ui";
 import { TYPES } from "../../data/types";
-import { PermissionSelect } from "./shared";
+import { MoreInformation, PermissionSelect } from "./shared";
 import { nodeIcon } from "../shared";
 
 interface Option {
@@ -239,7 +238,6 @@ export const Question: React.FC<Props> = ({
         definitionImg={formik.values.definitionImg}
         definitionName="howMeasured"
         definitionValue={formik.values.howMeasured}
-        formik={formik}
         policyName="policyRef"
         policyValue={formik.values.policyRef}
         whyName="info"
