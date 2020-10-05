@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS compile_session_replay;
 -- {
 --  "node": {},           // the text of the question
 --  "options": [{}],      // the possible answers
---  "chosen_nodes": [{}], // the answer(s) selected (NB: a checkbox accepts more than one answer)
---  "created_at": Date,   // timestamp when the question was answered
+--  "selections": [{}],   // the answer(s) selected (NB: a checkbox accepts more than one answer)
+--  "selected_at": Date,    // timestamp when the question was answered
 -- }
 --
 -- Try it out:
@@ -42,7 +42,7 @@ WITH distinct_events AS (
 --   Step 3. Ignore `key` and return only `value` with `SELECT value`
 --   Step 4. Filter using `WHERE key IN ()`
 --
--- The same pattern is applied for the `choices` output key.
+-- The same pattern is applied for the `selections` output key.
 --
 replay_rows AS (
   SELECT
@@ -74,7 +74,7 @@ replay_rows AS (
         )
       )
   ) as options
-  -- Output: chosen_nodes
+  -- Output: selections
   , array(
     --     vvvvv Step 3
     SELECT value
@@ -85,9 +85,13 @@ replay_rows AS (
     AS (key text, value jsonb)
     --    vvvvvv Step 4
     WHERE key = ANY((event).chosen_node_ids)
-  ) as chosen_nodes
-  -- Output: created_at
-  , (event).created_at
+  ) as selections
+  -- Output: selection_id
+  , (event).id AS selection_id
+  -- Output: selection_type
+  , (event).type AS selection_type
+  -- Output: selected_at
+  , (event).created_at AS selected_at
   FROM distinct_events
   JOIN sessions ON sessions.id = session_row.id
   ORDER BY (event).created_at ASC
