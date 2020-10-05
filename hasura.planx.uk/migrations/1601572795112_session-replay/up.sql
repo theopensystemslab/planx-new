@@ -11,8 +11,8 @@ DROP FUNCTION IF EXISTS compile_session_replay;
 --
 -- Try it out:
 -- > SELECT compile_session_replay((SELECT sessions FROM sessions limit 1));
-CREATE OR REPLACE FUNCTION compile_session_replay(session_row sessions)
-RETURNS json LANGUAGE sql STABLE AS $$
+CREATE FUNCTION compile_session_replay(session_row sessions)
+RETURNS jsonb LANGUAGE sql STABLE AS $$
 --
 -- The output of `distinct_events` is the same as compile_session_events().
 -- It was inlined here as to avoid dependencies between postgres functions.
@@ -93,5 +93,5 @@ replay_rows AS (
   ORDER BY (event).created_at ASC
 )
 -- Convert RecordSet (tabular data) into JSON Array
-SELECT json_agg(replay_rows) FROM replay_rows;
+SELECT jsonb_agg(replay_rows) FROM replay_rows;
 $$;
