@@ -1,5 +1,3 @@
-DROP FUNCTION IF EXISTS compile_session_replay;
-
 --
 -- The following function produces rows that contain the following data:
 -- {
@@ -13,7 +11,7 @@ DROP FUNCTION IF EXISTS compile_session_replay;
 --
 -- Try it out:
 -- > SELECT compile_session_replay((SELECT sessions FROM sessions limit 1));
-CREATE FUNCTION compile_session_replay(session_row sessions)
+CREATE OR REPLACE FUNCTION compile_session_replay(session_row sessions)
 RETURNS jsonb LANGUAGE sql STABLE AS $$
 --
 -- The output of `distinct_events` is the same as compile_session_events().
