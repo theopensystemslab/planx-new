@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS compile_session_replay;
 -- {
 --  "node": {},           // the text of the question
 --  "options": [{}],      // the possible answers
---  "selections": [{}],   // the answer(s) selected (NB: a checkbox accepts more than one answer)
---  "selected_at": Date,    // timestamp when the question was answered
+--  "selections": [],     // the answer id(s) selected (NB: a checkbox accepts more than one answer)
+--  "selected_at": Date,  // timestamp when the question was answered
 -- }
 --
 -- Try it out:
@@ -81,7 +81,7 @@ replay_rows AS (
   -- Output: selections
   , array(
     --     vvvvv Step 3
-    SELECT value
+    SELECT id
     --   vvvvvvvvvvvvvvvvvv Step 2
     FROM jsonb_to_recordset(
       -- vvvvvvvvvvvvvvvvvvv Step 1
