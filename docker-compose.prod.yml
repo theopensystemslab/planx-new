@@ -1,6 +1,12 @@
 version: "3.7"
 
 services:
+  postgrest:
+    environment:
+      VIRTUAL_HOST: ${POSTGREST_HOST_PROD}
+      LETSENCRYPT_HOST: ${POSTGREST_HOST_PROD}
+      VIRTUAL_PORT: ${POSTGREST_PORT}
+
   hasura:
     environment:
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
