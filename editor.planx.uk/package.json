@@ -67,9 +67,11 @@
     "@types/react-dom": "^16.9.0",
     "@types/uuid": "^8.0.0",
     "husky": "^4.2.5",
+    "import-sort-style-module": "^6.0.0",
     "lint-staged": "^10.2.11",
     "node-sass": "^4.14.1",
     "prettier": "^2.0.5",
+    "prettier-plugin-import-sort": "^0.0.6",
     "typescript": "^3.9"
   },
   "scripts": {
@@ -81,6 +83,11 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "importSort": {
+    ".js, .jsx, .ts, .tsx": {
+      "style": "module"
+    }
   },
   "browserslist": {
     "production": [
