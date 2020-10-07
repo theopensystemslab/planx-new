@@ -496,34 +496,64 @@ export const [useStore, api] = create((set, get) => ({
 
     const ids = new Set();
 
-    const idsForParent = (parent: any) => {
-      return flow.edges
-        .filter(([src]: any) => src === parent)
+    // TODO: this can be greatly simplified and optimised!
+
+    const idsForParent = (parent: any) =>
+      flow.edges
+        // 3. find all outgoing edges from the node 'parent' and ensure that the
+        //    target ids returned are of supported node types
+        .filter(
+          ([src, tgt]: any) =>
+            src === parent && SUPPORTED_TYPES.includes(flow.nodes[tgt].$t)
+        )
+        // 4. return 'information type' nodes, or, if the node is something else
+        //    i.e. a 'question type', then only include it if it has one
+        //    or more answers/options for the user to choose.
+        //    TLDR; don't include questions with no possible answers
         .filter(
           ([, tgt]: any) =>
             SUPPORTED_INFORMATION_TYPES.includes(flow.nodes[tgt].$t) ||
             flow.edges.filter(([src]: any) => src === tgt).length > 0
         )
+        // 5. return an array of the nodes filtered above
         .map(([, tgt]: any) => tgt)
+        // 6. exclude nodes which have already been 'visited' in the graph
+        //    i.e. stored in the breadcrumbs
         .filter((id: any) => !Object.keys(breadcrumbs).includes(id))
         .forEach((id: any) => {
+          // 7a.  if the node is a portal, don't add it node to the list of
+          //      upcoming nodes, instead check/add all of the nodes it connects to
           if (flow.nodes[id].$t === TYPES.Portal) {
             idsForParent(id);
           } else {
+            // 7b.  if the node is not a portal, we now know that it is either
+            //      informational e.g. TaskList or a question e.g. Question, and
+            //      that it hasn't been visited already (because it's not been
+            //      stored in the 'breadcrumbs'), so add it to the upcoming list
             ids.add(id);
           }
         });
-    };
 
+    // 1. get all of the values of breadcrumbs. breadcrumbs looks like this
+    //   {
+    //     [QUESTION_ID_1]: [CHOSEN_ANSWER_ID_1],
+    //     [QUESTION_ID_2]: [CHOSEN_ANSWER_ID_2, CHOSEN_ANSWER_ID_3],
+    //   }
     flatten(Object.values(breadcrumbs))
       .reverse()
-      .forEach((id) => idsForParent(id));
+      // 2. so, in this example case, we would now iterate through
+      //    (CHOSEN_ANSWER_ID_3, CHOSEN_ANSWER_ID_2, CHOSEN_ANSWER_ID_1)
+      .forEach((id) => idsForParent(id)); // (steps 3-7 in idsForParent function)
 
+    // 8. now we have checked for any follow-up questions for answers we
+    //    have already visited, let's check for any 'root' questions that might
+    //    still need to be answered. i.e. questions with no parent, that appear
+    //    on the main thread below root questions we have already answered
     idsForParent(null);
 
-    return Array.from(ids).filter((id: any) =>
-      SUPPORTED_TYPES.includes(flow.nodes[id].$t)
-    );
+    // 9. we stored 'ids' as a Set() to ensure that they were unqiue, let's
+    //    now make that a unique array before returning it
+    return Array.from(ids);
   },
 
   record(id: any, vals: any) {
