@@ -10,6 +10,7 @@ import omit from "lodash/omit";
 import pgarray from "pg-array";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
+
 import { client } from "../../../lib/graphql";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
@@ -24,15 +25,20 @@ import {
 } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
-const SUPPORTED_TYPES = [
-  TYPES.Checklist,
-  TYPES.FindProperty,
-  TYPES.PropertyInformation,
-  TYPES.Statement,
-  TYPES.TaskList,
-  TYPES.Notice,
-  TYPES.Result,
+const SUPPORTED_INFORMATION_TYPES = [
   TYPES.Content,
+  TYPES.FindProperty,
+  TYPES.Notice,
+  TYPES.PropertyInformation,
+  TYPES.Result,
+  TYPES.TaskList,
+];
+
+const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
+
+const SUPPORTED_TYPES = [
+  ...SUPPORTED_INFORMATION_TYPES,
+  ...SUPPORTED_DECISION_TYPES,
 ];
 
 let doc;
@@ -495,14 +501,7 @@ export const [useStore, api] = create((set, get) => ({
         .filter(([src]: any) => src === parent)
         .filter(
           ([, tgt]: any) =>
-            [
-              TYPES.FindProperty,
-              TYPES.PropertyInformation,
-              TYPES.TaskList,
-              TYPES.Notice,
-              TYPES.Result,
-              TYPES.Content,
-            ].includes(flow.nodes[tgt].$t) ||
+            SUPPORTED_INFORMATION_TYPES.includes(flow.nodes[tgt].$t) ||
             flow.edges.filter(([src]: any) => src === tgt).length > 0
         )
         .map(([, tgt]: any) => tgt)
@@ -535,10 +534,7 @@ export const [useStore, api] = create((set, get) => ({
 
       // only store breadcrumbs in the backend if they are answers provided for
       // either a Statement or Checklist type. TODO: make this more robust
-      if (
-        [TYPES.Statement, TYPES.Checklist].includes(flow.nodes[id].$t) &&
-        sessionId
-      ) {
+      if (SUPPORTED_DECISION_TYPES.includes(flow.nodes[id].$t) && sessionId) {
         addSessionEvent();
         if (upcomingCardIds().length === 0) {
           endSession();
