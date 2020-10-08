@@ -293,12 +293,13 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
             <OptionButton
               selected={!!formik.values.groupedOptions}
               onClick={() => {
-                formik.setValues(
-                  toggleExpandableChecklist({
+                formik.setValues({
+                  ...formik.values,
+                  ...toggleExpandableChecklist({
                     options: formik.values.options,
                     groupedOptions: formik.values.groupedOptions,
-                  })
-                );
+                  }),
+                });
               }}
             >
               Expandable
