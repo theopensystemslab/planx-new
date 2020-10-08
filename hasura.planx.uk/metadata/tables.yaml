@@ -23,6 +23,13 @@
         table:
           schema: public
           name: sessions
+  computed_fields:
+  - name: data_merged
+    definition:
+      function:
+        schema: public
+        name: compile_flow_portals
+    comment: Flow data with portals merged in
 - table:
     schema: public
     name: operations
