@@ -4,7 +4,6 @@ import { alg } from "graphlib";
 import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
 import difference from "lodash/difference";
-import flatten from "lodash/flatten";
 import flattenDeep from "lodash/flattenDeep";
 import omit from "lodash/omit";
 import pgarray from "pg-array";
@@ -457,11 +456,6 @@ export const [useStore, api] = create((set, get) => ({
     set({ id, flow });
   },
 
-  setPassport(passport) {
-    alert(JSON.stringify(passport));
-    set({ passport });
-  },
-
   flagResult() {
     const { flow, breadcrumbs } = get();
 
@@ -492,64 +486,94 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   upcomingCardIds() {
-    const { flow, breadcrumbs } = get();
+    const { flow, breadcrumbs, passport } = get();
 
     const ids = new Set();
+    // TODO: this can be GREATLY simplified and optimised!
 
-    // TODO: this can be greatly simplified and optimised!
+    const nodeIdsConnectedFrom = (
+      source: string | null,
+      sourceParent: string = undefined
+    ) => {
+      return (
+        flow.edges
+          // 3. find all outgoing edges from the node 'source' and ensure that the
+          //    target ids returned are of supported node types
+          .filter(
+            ([src, tgt]: any) =>
+              src === source && SUPPORTED_TYPES.includes(flow.nodes[tgt].$t)
+          )
+          // 4. return 'information type' nodes, or, if the node is something else
+          //    i.e. a 'question type', then only include it if it has one
+          //    or more answers/options for the user to choose.
+          //    TLDR; don't include questions with no possible answers
+          .filter(
+            ([, tgt]: any) =>
+              SUPPORTED_INFORMATION_TYPES.includes(flow.nodes[tgt].$t) ||
+              flow.edges.filter(([src]: any) => src === tgt).length > 0
+          )
+          // 5. return an array of the nodes filtered above
+          .map(([, tgt]: any) => tgt)
+          // 6. exclude nodes which have already been 'visited' in the graph
+          //    i.e. stored in the breadcrumbs
+          .filter((id: any) => !Object.keys(breadcrumbs).includes(id))
+          .forEach((id: any) => {
+            if (flow.nodes[id].$t === TYPES.Portal) {
+              // 7a.  if the node is a portal, don't add it node to the list of
+              //      upcoming nodes, instead check/add all of the nodes it connects to
+              nodeIdsConnectedFrom(id);
+            } else {
+              // 7b.  if the node is not a portal, we now know that it is either
+              //      informational e.g. TaskList or a question e.g. Question, and
+              //      that it hasn't been visited already (because it's not been
+              //      stored in the 'breadcrumbs'), so add it to the upcoming list
 
-    const idsForParent = (parent: any) =>
-      flow.edges
-        // 3. find all outgoing edges from the node 'parent' and ensure that the
-        //    target ids returned are of supported node types
-        .filter(
-          ([src, tgt]: any) =>
-            src === parent && SUPPORTED_TYPES.includes(flow.nodes[tgt].$t)
-        )
-        // 4. return 'information type' nodes, or, if the node is something else
-        //    i.e. a 'question type', then only include it if it has one
-        //    or more answers/options for the user to choose.
-        //    TLDR; don't include questions with no possible answers
-        .filter(
-          ([, tgt]: any) =>
-            SUPPORTED_INFORMATION_TYPES.includes(flow.nodes[tgt].$t) ||
-            flow.edges.filter(([src]: any) => src === tgt).length > 0
-        )
-        // 5. return an array of the nodes filtered above
-        .map(([, tgt]: any) => tgt)
-        // 6. exclude nodes which have already been 'visited' in the graph
-        //    i.e. stored in the breadcrumbs
-        .filter((id: any) => !Object.keys(breadcrumbs).includes(id))
-        .forEach((id: any) => {
-          // 7a.  if the node is a portal, don't add it node to the list of
-          //      upcoming nodes, instead check/add all of the nodes it connects to
-          if (flow.nodes[id].$t === TYPES.Portal) {
-            idsForParent(id);
-          } else {
-            // 7b.  if the node is not a portal, we now know that it is either
-            //      informational e.g. TaskList or a question e.g. Question, and
-            //      that it hasn't been visited already (because it's not been
-            //      stored in the 'breadcrumbs'), so add it to the upcoming list
-            ids.add(id);
-          }
-        });
+              const fn = flow.nodes[id]?.fn;
+              if (fn && passport[fn] !== undefined) {
+                // TODO: add much-needed docs here
+                const responses = flow.edges
+                  .filter(([src]) => src === id)
+                  .map(([_, tgt]) => ({ id: tgt, ...flow.nodes[tgt] }));
+
+                const responseThatCanBeAutoAnswered = responses.find(
+                  (n) => n.val === passport[fn]
+                );
+
+                if (responseThatCanBeAutoAnswered) {
+                  nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id);
+                } else {
+                  ids.add(id);
+                }
+              } else {
+                ids.add(id);
+              }
+            }
+          })
+      );
+    };
 
     // 1. get all of the values of breadcrumbs. breadcrumbs looks like this
     //   {
-    //     [QUESTION_ID_1]: [CHOSEN_ANSWER_ID_1],
+    //     [QUESTION_ID_1]: CHOSEN_ANSWER_ID_1,
     //     [QUESTION_ID_2]: [CHOSEN_ANSWER_ID_2, CHOSEN_ANSWER_ID_3],
     //   }
-    flatten(Object.values(breadcrumbs))
+    Object.entries(breadcrumbs)
       .reverse()
       // 2. so, in this example case, we would now iterate through
       //    (CHOSEN_ANSWER_ID_3, CHOSEN_ANSWER_ID_2, CHOSEN_ANSWER_ID_1)
-      .forEach((id) => idsForParent(id)); // (steps 3-7 in idsForParent function)
+      .forEach(([question, answers]: [string, string | string[]]) => {
+        if (Array.isArray(answers)) {
+          answers.forEach((answer) => nodeIdsConnectedFrom(answer, question));
+        } else {
+          nodeIdsConnectedFrom(answers, question);
+        }
+      }); // (steps 3-7 in nodeIdsConnectedFrom function)
 
     // 8. now we have checked for any follow-up questions for answers we
     //    have already visited, let's check for any 'root' questions that might
     //    still need to be answered. i.e. questions with no parent, that appear
     //    on the main thread below root questions we have already answered
-    idsForParent(null);
+    nodeIdsConnectedFrom(null);
 
     // 9. we stored 'ids' as a Set() to ensure that they were unqiue, let's
     //    now make that a unique array before returning it
@@ -557,10 +581,28 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   record(id: any, vals: any) {
-    const { breadcrumbs, sessionId, upcomingCardIds, flow } = get();
+    const { breadcrumbs, sessionId, upcomingCardIds, flow, passport } = get();
     // vals may be string or string[]
     if (vals) {
       set({ breadcrumbs: { ...breadcrumbs, [id]: vals } });
+
+      if (flow.nodes[id].fn) {
+        let passportValue;
+        if (Array.isArray(vals)) {
+          passportValue = vals
+            .map((id) => flow.nodes[id].val)
+            .filter((v) => v !== undefined);
+        } else {
+          passportValue = flow.nodes[vals].val;
+        }
+
+        set({
+          passport: {
+            ...passport,
+            [flow.nodes[id].fn]: passportValue,
+          },
+        });
+      }
 
       // only store breadcrumbs in the backend if they are answers provided for
       // either a Statement or Checklist type. TODO: make this more robust
@@ -653,3 +695,5 @@ export const [useStore, api] = create((set, get) => ({
     }
   },
 }));
+
+window["api"] = api;
