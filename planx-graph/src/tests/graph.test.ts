@@ -11,6 +11,12 @@ test("add a node with children", () => {
   expect(graph).toMatchSnapshot();
 });
 
+test("move a node", () => {
+  graph.move("c", { fromParent: "a", toBefore: "b" });
+
+  expect(graph).toMatchSnapshot();
+});
+
 test("remove a child node", () => {
   graph.remove("c");
 

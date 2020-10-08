@@ -38,6 +38,31 @@ class Graph {
       if (idx >= 0) node.edges.splice(idx, 1);
     });
   }
+
+  move(
+    id,
+    { fromParent = ROOT_NODE_KEY, toBefore = undefined, toParent = undefined }
+  ) {
+    toParent = toParent || fromParent;
+
+    const idx = this.nodes.get(fromParent).edges.indexOf(id);
+    if (idx >= 0) {
+      this.nodes.get(fromParent).edges.splice(idx, 1);
+    } else {
+      throw new Error(`'${id}' not found in '${fromParent}'`);
+    }
+
+    if (toBefore) {
+      let idx = this.nodes.get(toParent).edges.indexOf(toBefore);
+      if (idx >= 0) {
+        this.nodes.get(toParent).edges.splice(idx, 0, id);
+      } else {
+        throw new Error(`'${toBefore}' not found in '${toParent}'`);
+      }
+    } else {
+      this.nodes.get(toParent).edges.push(id);
+    }
+  }
 }
 
 export default Graph;
