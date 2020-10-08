@@ -9,6 +9,7 @@ import Question from "./components/Question";
 import Result from "./components/Result";
 import TaskList from "./components/TaskList";
 import Content from "./components/Content";
+import mapAccum from "ramda/src/mapAccum";
 
 let uprn;
 
@@ -67,6 +68,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Content:
       return <Content {...props} handleSubmit={props.handleSubmit} />;
     case TYPES.Checklist:
+      const childNodes = childNodesOf(props.node.id);
       return (
         <Checklist
           info={props.info}
@@ -74,7 +76,25 @@ const Node: React.FC<any> = (props) => {
           description={props.description}
           allRequired={props.allRequired}
           handleSubmit={props.handleSubmit}
-          checkBoxes={childNodesOf(props.id)}
+          options={props.node.categories ? undefined : childNodes}
+          groupedOptions={
+            !props.node.categories
+              ? undefined
+              : mapAccum(
+                  (
+                    index: number,
+                    category: { title: string; count: number }
+                  ) => [
+                    index + category.count,
+                    {
+                      title: category.title,
+                      children: childNodes.slice(index, index + category.count),
+                    },
+                  ],
+                  0,
+                  props.node.categories
+                )[1]
+          }
         />
       );
     case TYPES.FindProperty:

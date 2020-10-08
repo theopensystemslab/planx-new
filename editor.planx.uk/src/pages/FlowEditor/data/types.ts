@@ -43,7 +43,7 @@ export interface Notice extends MoreInformation {
 
 // Checkbox
 
-interface Group<T> {
+export interface Group<T> {
   title: string;
   children: Array<T>;
 }

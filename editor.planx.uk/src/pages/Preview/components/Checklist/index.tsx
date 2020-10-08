@@ -4,14 +4,12 @@ import React from "react";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 import InnerCheckbox from "./InnerCheckbox";
+import { Group, Option } from "../../../FlowEditor/data/types";
 
 interface ICheckboxes {
   text: string;
-  checkBoxes: {
-    id: string;
-    text: string;
-    img?: string;
-  }[];
+  options?: Array<Option>;
+  groupedOptions?: Array<Group<Option>>;
   allRequired?: boolean;
   handleSubmit?;
   description?: string;
@@ -19,7 +17,8 @@ interface ICheckboxes {
 }
 
 const Checkboxes: React.FC<ICheckboxes> = ({
-  checkBoxes,
+  options,
+  groupedOptions,
   text,
   handleSubmit,
   description = "",
@@ -36,7 +35,9 @@ const Checkboxes: React.FC<ICheckboxes> = ({
     validate: () => {},
   });
 
-  const allChecked = formik.values.checked.length === checkBoxes.length;
+  const allChecked = options
+    ? formik.values.checked.length === options.length
+    : false;
 
   const changeCheckbox = (input) => {
     const { current } = input;
@@ -52,7 +53,7 @@ const Checkboxes: React.FC<ICheckboxes> = ({
     formik.setFieldValue(
       "checked",
       newCheckedIds.sort((a, b) => {
-        const originalIds = checkBoxes.map((cb) => cb.id);
+        const originalIds = options.map((cb) => cb.id);
         return originalIds.indexOf(b) - originalIds.indexOf(a);
       })
     );
@@ -67,14 +68,32 @@ const Checkboxes: React.FC<ICheckboxes> = ({
           {text}
         </QuestionHeader>
 
-        {checkBoxes.map((cb) => (
-          <InnerCheckbox
-            changeCheckbox={changeCheckbox}
-            key={cb.text}
-            label={cb.text}
-            value={cb.id}
-          />
-        ))}
+        {options ? (
+          options.map((cb) => (
+            <InnerCheckbox
+              changeCheckbox={changeCheckbox}
+              key={cb.text}
+              label={cb.text}
+              value={cb.id}
+            />
+          ))
+        ) : groupedOptions ? (
+          <ul>
+            {groupedOptions.map((group) => (
+              <li>
+                {group.title}
+                {group.children.map((option) => (
+                  <InnerCheckbox
+                    changeCheckbox={changeCheckbox}
+                    key={option.text}
+                    label={option.text}
+                    value={option.id}
+                  />
+                ))}
+              </li>
+            ))}
+          </ul>
+        ) : null}
         <Button
           disabled={allRequired && !allChecked}
           variant="contained"

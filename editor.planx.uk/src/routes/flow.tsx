@@ -18,6 +18,7 @@ import Content from "../pages/FlowEditor/components/forms/Content";
 import { TYPES } from "../pages/FlowEditor/data/types";
 import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
+import mapAccum from "ramda/src/mapAccum";
 
 const components = {
   "find-property": FindProperty,
@@ -151,7 +152,22 @@ const editNode = route(async (req) => {
   }
 
   if (type === "checklist" || type === "question") {
-    extraProps.options = api.getState().childNodesOf(id);
+    const childNodes = api.getState().childNodesOf(id);
+    if (node.categories) {
+      extraProps.groupedOptions = mapAccum(
+        (index: number, category: { title: string; count: number }) => [
+          index + category.count,
+          {
+            title: category.title,
+            children: childNodes.slice(index, index + category.count),
+          },
+        ],
+        0,
+        node.categories
+      )[1];
+    } else {
+      extraProps.options = childNodes;
+    }
   }
 
   return {

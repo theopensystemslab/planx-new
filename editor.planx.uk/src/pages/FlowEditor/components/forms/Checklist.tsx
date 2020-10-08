@@ -183,8 +183,8 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
   notes = "",
   policyRef = "",
   info = "",
-  options = [],
-  groupedOptions = undefined,
+  options,
+  groupedOptions,
   handleSubmit,
   img = "",
   definitionImg = "",
@@ -220,7 +220,9 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
                     count: gr.children.length,
                   })),
                 }
-              : {}),
+              : {
+                  categories: undefined,
+                }),
           },
           options
             ? options
