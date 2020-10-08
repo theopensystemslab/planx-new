@@ -37,11 +37,14 @@ const DebugTable = ({ ob = {} }) => (
 );
 
 const DebugConsole = () => {
-  const passport = useStore((state) => state.passport);
+  const [passport, breadcrumbs] = useStore((state) => [
+    state.passport,
+    state.breadcrumbs,
+  ]);
   const classes = useStyles();
   return (
     <div className={classes.console}>
-      <pre>{JSON.stringify(passport, null, 2)}</pre>
+      <pre>{JSON.stringify({ passport, breadcrumbs }, null, 2)}</pre>
     </div>
   );
 };
