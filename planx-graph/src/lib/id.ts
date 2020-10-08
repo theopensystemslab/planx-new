@@ -1,6 +1,4 @@
-let id = 0;
+const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-export const autoIncrementingId = (): string => (id++).toString();
-
-const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
-export const alphabetId = (): string => alphabet[id++];
+export const alphabetId = (x: number): string =>
+  (x >= 26 ? alphabetId(((x / 26) >> 0) - 1) : "") + alphabet[x % 26 >> 0];

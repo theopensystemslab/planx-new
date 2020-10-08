@@ -2,8 +2,13 @@ import { alphabetId } from "./lib/id";
 
 class Graph {
   protected nodes = new Map();
+  private counter = 0;
 
-  constructor(private generateId = alphabetId) {}
+  constructor(private idFunction = alphabetId) {}
+
+  private generateId() {
+    return this.idFunction(this.counter++);
+  }
 
   add({ id = this.generateId(), type, ...data }, children = []) {
     const edges = children.map((child) => this.add({ type: 200, ...child }));

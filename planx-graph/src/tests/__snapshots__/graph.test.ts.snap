@@ -2,7 +2,8 @@
 
 exports[`can add a node with children 1`] = `
 Graph {
-  "generateId": [Function],
+  "counter": 3,
+  "idFunction": [Function],
   "nodes": Map {
     "b" => Object {
       "data": Object {
@@ -34,7 +35,8 @@ Graph {
 
 exports[`remove a child node 1`] = `
 Graph {
-  "generateId": [Function],
+  "counter": 3,
+  "idFunction": [Function],
   "nodes": Map {
     "b" => Object {
       "data": Object {
@@ -58,7 +60,8 @@ Graph {
 
 exports[`remove a node with children 1`] = `
 Graph {
-  "generateId": [Function],
+  "counter": 3,
+  "idFunction": [Function],
   "nodes": Map {},
 }
 `;
