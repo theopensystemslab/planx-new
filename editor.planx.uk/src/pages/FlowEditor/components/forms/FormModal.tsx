@@ -82,6 +82,7 @@ const FormModal: React.FC<{
   type: string;
   handleDelete?;
   Component: any;
+  node?: any;
   id?: any;
   before?: any;
   parent?: any;

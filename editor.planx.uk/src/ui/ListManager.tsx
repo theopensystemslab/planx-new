@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Box, IconButton, Button, makeStyles } from "@material-ui/core";
-import { Delete, DragHandle } from "@material-ui/icons";
+import { Delete, DragHandle, Add } from "@material-ui/icons";
 import arrayMove from "array-move";
 import { removeAt, setAt } from "../utils";
 import {
@@ -21,6 +21,7 @@ export interface Props<T, EditorExtraProps = {}> {
   values: Array<T>;
   onChange: (newValues: Array<T>) => void;
   newValue: () => T;
+  newValueLabel?: string;
   Editor: React.FC<EditorProps<T> & EditorExtraProps>;
   editorExtraProps?: EditorExtraProps;
   disableDragAndDrop?: boolean;
@@ -110,12 +111,15 @@ function ListManager<T, EditorExtraProps>(props: Props<T, EditorExtraProps>) {
       </Droppable>
       <Button
         color="primary"
-        variant="contained"
+        variant="outlined"
+        size="large"
+        fullWidth
+        startIcon={<Add />}
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
         }}
       >
-        Add new
+        {props.newValueLabel || "Add new"}
       </Button>
     </DragDropContext>
   );

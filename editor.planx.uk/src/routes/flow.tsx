@@ -91,12 +91,12 @@ const newNode = route(async (req) => {
 const editNode = route(async (req) => {
   const { id, before = null, parent = null } = req.params;
 
-  const { $t } = api.getState().getNode(id);
+  const node = api.getState().getNode(id);
 
   const extraProps = {} as any;
 
   let type;
-  switch ($t) {
+  switch (node.$t) {
     case TYPES.Checklist:
       type = "checklist";
       break;
@@ -161,6 +161,7 @@ const editNode = route(async (req) => {
         type={type}
         Component={components[type]}
         extraProps={extraProps}
+        node={node}
         id={id}
         handleDelete={() => {
           api.getState().removeNode(id, parent);
