@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import ExternalLink from "react-feather/dist/icons/external-link";
 import RefreshCw from "react-feather/dist/icons/refresh-cw";
 import Terminal from "react-feather/dist/icons/terminal";
+
 import Preview from "../../Preview";
 import { useStore } from "../lib/store";
 
@@ -36,11 +37,14 @@ const DebugTable = ({ ob = {} }) => (
 );
 
 const DebugConsole = () => {
-  const passport = useStore((state) => state.passport);
+  const [passport, breadcrumbs] = useStore((state) => [
+    state.passport,
+    state.breadcrumbs,
+  ]);
   const classes = useStyles();
   return (
     <div className={classes.console}>
-      <DebugTable ob={passport.data} />
+      <pre>{JSON.stringify({ passport, breadcrumbs }, null, 2)}</pre>
     </div>
   );
 };
