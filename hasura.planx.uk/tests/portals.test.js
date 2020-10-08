@@ -130,16 +130,16 @@ describe("portals", () => {
         ["c", "d"],
         [null, "f"],
         // portal edges with null replaced by 'd'
-        ["d", "x"],
-        ["x", "y"],
-        ["x", "z"],
-        ["d", "another"],
-        ["d", "sub"],
-        ["another", "1"],
-        ["another", "2"],
+        ["d", `${portal}:x`],
+        [`${portal}:x`, `${portal}:y`],
+        [`${portal}:x`, `${portal}:z`],
+        [`${portal}:d`, `${portal}:another`],
+        [`${portal}:d`, `${portal}:sub`],
+        [`${portal}:another`, `${portal}:1`],
+        [`${portal}:another`, `${portal}:2`],
         // subportal edges
-        ["sub", "s1"],
-        ["s1", "s2"],
+        [`${portal}:sub`, `${subportal}:s1`],
+        [`${subportal}:s1`, `${subportal}:s2`],
       ],
       nodes: {
         // root nodes
@@ -153,19 +153,19 @@ describe("portals", () => {
         e: {},
         f: {},
         // portal nodes
-        x: {},
-        y: {},
-        sub: {
+        [`${portal}:x`]: {},
+        [`${portal}:y`]: {},
+        [`${portal}:sub`]: {
           $t: 300,
           flowId: subportal,
         },
-        z: {},
-        another: {},
-        1: {},
-        2: {},
+        [`${portal}:z`]: {},
+        [`${portal}:another`]: {},
+        [`${portal}:1`]: {},
+        [`${portal}:2`]: {},
         // subportal nodes
-        s1: {},
-        s2: {},
+        [`${subportal}:s1`]: {},
+        [`${portal}:s2`]: {},
       },
     });
   });
