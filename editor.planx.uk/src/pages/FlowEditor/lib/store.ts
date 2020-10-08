@@ -36,6 +36,7 @@ const SUPPORTED_INFORMATION_TYPES = [
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
 const SUPPORTED_TYPES = [
+  TYPES.Portal,
   ...SUPPORTED_INFORMATION_TYPES,
   ...SUPPORTED_DECISION_TYPES,
 ];
@@ -509,10 +510,13 @@ export const [useStore, api] = create((set, get) => ({
         flow.edges
           // 3. find all outgoing edges from the node 'source' and ensure that the
           //    target ids returned are of supported node types
-          .filter(
-            ([src, tgt]: any) =>
-              src === source && SUPPORTED_TYPES.includes(flow.nodes[tgt].$t)
-          )
+          .filter(([src, tgt]: any) => {
+            return (
+              src === source &&
+              flow.nodes[tgt] &&
+              SUPPORTED_TYPES.includes(flow.nodes[tgt].$t)
+            );
+          })
           // 4. return 'information type' nodes, or, if the node is something else
           //    i.e. a 'question type', then only include it if it has one
           //    or more answers/options for the user to choose.

@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 import { NotFoundError, route } from "navi";
 import React from "react";
+
 import { client } from "../lib/graphql";
 import { api } from "../pages/FlowEditor/lib/store";
 import Preview from "../pages/Preview";
@@ -19,7 +20,7 @@ const routes = route(async (req) => {
         ) {
           id
           version
-          data
+          data_merged
           team {
             theme
           }
@@ -38,7 +39,7 @@ const routes = route(async (req) => {
     throw new NotFoundError();
   }
 
-  api.getState().setFlow(flow.id, flow.data);
+  api.getState().setFlow(flow.id, flow.data_merged);
 
   return {
     view: (
