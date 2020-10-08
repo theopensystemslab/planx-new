@@ -96,7 +96,6 @@ const OptionEditor: React.FC<{
 );
 
 const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
-  console.log(formik.values.groupedOptions);
   return (
     <ModalSectionContent title="Options">
       {formik.values.options ? (
@@ -203,17 +202,34 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
       description,
       fn,
       options,
+      groupedOptions,
       img,
       definitionImg,
       allRequired,
     },
-    onSubmit: ({ options, ...values }) => {
+    onSubmit: ({ options, groupedOptions, ...values }) => {
       if (handleSubmit) {
         handleSubmit(
-          { $t, ...values },
+          {
+            $t,
+            ...values,
+            ...(groupedOptions
+              ? {
+                  categories: groupedOptions.map((gr) => ({
+                    title: gr.title,
+                    count: gr.children.length,
+                  })),
+                }
+              : {}),
+          },
           options
-            .filter((o) => o.text)
-            .map((o) => ({ ...o, $t: TYPES.Response }))
+            ? options
+                .filter((o) => o.text)
+                .map((o) => ({ ...o, $t: TYPES.Response }))
+            : groupedOptions
+                .flatMap((gr) => gr.children)
+                .filter((o) => o.text)
+                .map((o) => ({ ...o, $t: TYPES.Response }))
         );
       } else {
         alert(JSON.stringify({ $t, ...values, options }, null, 2));

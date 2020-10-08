@@ -82,6 +82,7 @@ export const toggleExpandableChecklist = (
     return {
       ...checklist,
       options: checklist.groupedOptions.flatMap((opt) => opt.children),
+      groupedOptions: undefined,
     };
   }
   return checklist;

@@ -42,7 +42,51 @@ function ListManager<T, EditorExtraProps>(props: Props<T, EditorExtraProps>) {
 
   const classes = useStyles();
 
-  return (
+  return props.disableDragAndDrop ? (
+    <>
+      <div className={classes.list}>
+        {props.values.map((item, index) => {
+          return (
+            <div className={classes.item} key={index}>
+              <Box>
+                <IconButton disableRipple disabled={true}>
+                  <DragHandle />
+                </IconButton>
+              </Box>
+              <Editor
+                value={item}
+                onChange={(newItem) => {
+                  props.onChange(setAt(index, newItem, props.values));
+                }}
+                {...props.editorExtraProps}
+              />
+              <Box>
+                <IconButton
+                  onClick={() => {
+                    props.onChange(removeAt(index, props.values));
+                  }}
+                >
+                  <Delete />
+                </IconButton>
+              </Box>
+            </div>
+          );
+        })}
+      </div>
+      <Button
+        color="primary"
+        variant="outlined"
+        size="large"
+        fullWidth
+        startIcon={<Add />}
+        onClick={() => {
+          props.onChange([...props.values, props.newValue()]);
+        }}
+      >
+        {props.newValueLabel || "Add new"}
+      </Button>
+    </>
+  ) : (
     <DragDropContext
       onDragEnd={(dropResult: DropResult) => {
         props.onChange(

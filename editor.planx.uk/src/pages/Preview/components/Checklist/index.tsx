@@ -1,5 +1,4 @@
 import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
 import { useFormik } from "formik";
 import React from "react";
 import Card from "../shared/Card";
@@ -11,7 +10,7 @@ interface ICheckboxes {
   checkBoxes: {
     id: string;
     text: string;
-    image?: string;
+    img?: string;
   }[];
   allRequired?: boolean;
   handleSubmit?;
@@ -60,7 +59,6 @@ const Checkboxes: React.FC<ICheckboxes> = ({
 
     return (current.checked = !current.checked);
   };
-  const hasImages = (checkBoxes) => checkBoxes.every((val) => val.image);
 
   return (
     <Card>
@@ -69,29 +67,14 @@ const Checkboxes: React.FC<ICheckboxes> = ({
           {text}
         </QuestionHeader>
 
-        {hasImages(checkBoxes) ? (
-          <Grid container spacing={2}>
-            {checkBoxes.map((cb) => (
-              <Grid item xs={6} sm={4} key={cb.text}>
-                <InnerCheckbox
-                  changeCheckbox={changeCheckbox}
-                  image={<img src={cb.image} alt="" />}
-                  label={cb.text}
-                  value={cb.id}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          checkBoxes.map((cb) => (
-            <InnerCheckbox
-              changeCheckbox={changeCheckbox}
-              key={cb.text}
-              label={cb.text}
-              value={cb.id}
-            />
-          ))
-        )}
+        {checkBoxes.map((cb) => (
+          <InnerCheckbox
+            changeCheckbox={changeCheckbox}
+            key={cb.text}
+            label={cb.text}
+            value={cb.id}
+          />
+        ))}
         <Button
           disabled={allRequired && !allChecked}
           variant="contained"
