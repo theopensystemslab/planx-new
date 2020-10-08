@@ -1,9 +1,6 @@
 const assert = require("assert");
 
-const fetch = require("isomorphic-fetch");
-
-const HASURA_ADMIN_SECRET = "TODO";
-const HASURA_PORT = 7000;
+const { gqlAdmin, gqlPublic } = require("./utils");
 
 describe("sessions", () => {
   let flowId, sessionId;
@@ -12,11 +9,11 @@ describe("sessions", () => {
     ({
       data: {
         insert_flows: {
-          returning: [{ id: flowId }]
-        }
-      }
+          returning: [{ id: flowId }],
+        },
+      },
     } = await gqlAdmin(`
-      mutation InsertTFlow {
+      mutation InsertFlow {
         insert_flows(objects: {slug: "test"}) {
           returning { id }
         }
@@ -62,12 +59,13 @@ describe("sessions", () => {
         insert_session_events(objects: {
           session_id: "${sessionId}",
           type: "human_decision",
-          chosen_node_ids: "{}"
-          }) {
+          chosen_node_ids: "{}",
+          parent_node_id: "something-that-is-not-null"
+        }) {
           affected_rows
         }
       }
-  `;
+    `;
 
     const res = await gqlPublic(query);
 
@@ -96,22 +94,3 @@ describe("sessions", () => {
     );
   });
 });
-
-async function gqlAdmin(query) {
-  const res = await fetch(`http://0.0.0.0:${HASURA_PORT}/v1/graphql`, {
-    method: "POST",
-    headers: {
-      "X-Hasura-Admin-Secret": HASURA_ADMIN_SECRET
-    },
-    body: JSON.stringify({ query })
-  });
-  return await res.json();
-}
-
-async function gqlPublic(query) {
-  const res = await fetch(`http://0.0.0.0:${HASURA_PORT}/v1/graphql`, {
-    method: "POST",
-    body: JSON.stringify({ query })
-  });
-  return await res.json();
-}
