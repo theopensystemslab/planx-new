@@ -14,6 +14,7 @@ const Questions = () => {
 
   return (
     <Node
+      node={node}
       key={node.id}
       handleSubmit={(values) => {
         record(node.id, values);

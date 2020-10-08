@@ -10,7 +10,7 @@ interface ICheckboxes {
   text: string;
   checkBoxes: {
     id: string;
-    name: string;
+    text: string;
     image?: string;
   }[];
   allRequired?: boolean;
@@ -72,11 +72,11 @@ const Checkboxes: React.FC<ICheckboxes> = ({
         {hasImages(checkBoxes) ? (
           <Grid container spacing={2}>
             {checkBoxes.map((cb) => (
-              <Grid item xs={6} sm={4} key={cb.name}>
+              <Grid item xs={6} sm={4} key={cb.text}>
                 <InnerCheckbox
                   changeCheckbox={changeCheckbox}
                   image={<img src={cb.image} alt="" />}
-                  label={cb.name}
+                  label={cb.text}
                   value={cb.id}
                 />
               </Grid>
@@ -86,8 +86,8 @@ const Checkboxes: React.FC<ICheckboxes> = ({
           checkBoxes.map((cb) => (
             <InnerCheckbox
               changeCheckbox={changeCheckbox}
-              key={cb.name}
-              label={cb.name}
+              key={cb.text}
+              label={cb.text}
               value={cb.id}
             />
           ))

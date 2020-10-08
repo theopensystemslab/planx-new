@@ -74,10 +74,7 @@ const Node: React.FC<any> = (props) => {
           description={props.description}
           allRequired={props.allRequired}
           handleSubmit={props.handleSubmit}
-          checkBoxes={childNodesOf(props.id).map((n, i) => ({
-            id: n.id,
-            name: n.text,
-          }))}
+          checkBoxes={childNodesOf(props.id)}
         />
       );
     case TYPES.FindProperty:
