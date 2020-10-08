@@ -408,14 +408,24 @@ export const [useStore, api] = create((set, get) => ({
 
   // Preview
 
-  passport: {},
+  passport: {
+    data: {},
+  },
 
   sessionId: "",
 
   breadcrumbs: {},
 
   async startSession({ passport }) {
-    set({ passport });
+    set({
+      passport: {
+        ...passport,
+        data: {
+          ...(get().passport.data || {}),
+          ...(passport.data || {}),
+        },
+      },
+    });
 
     const response = await client.mutate({
       mutation: gql`
@@ -449,7 +459,7 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   resetPreview() {
-    set({ breadcrumbs: {}, passport: {}, sessionId: "" });
+    set({ breadcrumbs: {}, passport: { data: {} }, sessionId: "" });
   },
 
   setFlow(id, flow) {
@@ -529,14 +539,14 @@ export const [useStore, api] = create((set, get) => ({
               //      stored in the 'breadcrumbs'), so add it to the upcoming list
 
               const fn = flow.nodes[id]?.fn;
-              if (fn && passport[fn] !== undefined) {
+              if (fn && passport.data[fn]?.value !== undefined) {
                 // TODO: add much-needed docs here
                 const responses = flow.edges
                   .filter(([src]) => src === id)
                   .map(([_, tgt]) => ({ id: tgt, ...flow.nodes[tgt] }));
 
                 const responseThatCanBeAutoAnswered = responses.find(
-                  (n) => n.val === passport[fn]
+                  (n) => n.val === passport.data[fn].value
                 );
 
                 if (responseThatCanBeAutoAnswered) {
@@ -599,7 +609,10 @@ export const [useStore, api] = create((set, get) => ({
         set({
           passport: {
             ...passport,
-            [flow.nodes[id].fn]: passportValue,
+            data: {
+              ...passport.data,
+              [flow.nodes[id].fn]: { value: passportValue },
+            },
           },
         });
       }
