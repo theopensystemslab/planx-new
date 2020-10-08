@@ -1,18 +1,32 @@
 import { alphabetId } from "./lib/id";
 
+const ROOT_NODE_KEY = "_root";
+
+interface Node {
+  type?: number;
+  data?: Object;
+  edges: Set<string>;
+}
+
 class Graph {
-  protected nodes = new Map();
+  protected nodes: Map<string, Node> = new Map();
   private counter = 0;
 
-  constructor(private idFunction = alphabetId) {}
+  constructor(private idFunction = alphabetId) {
+    this.nodes.set(ROOT_NODE_KEY, { edges: new Set() });
+  }
 
   private generateId() {
     return this.idFunction(this.counter++);
   }
 
-  add({ id = this.generateId(), type, ...data }, children = []) {
-    const edges = children.map((child) => this.add({ type: 200, ...child }));
-    this.nodes.set(id, { type, data, edges: new Set(edges) });
+  add(
+    { id = this.generateId(), type, ...data },
+    { parent = ROOT_NODE_KEY, children = [] } = {}
+  ) {
+    this.nodes.get(parent).edges.add(id);
+    this.nodes.set(id, { type, data, edges: new Set() });
+    children.map((child) => this.add({ type: 200, ...child }, { parent: id }));
     return id;
   }
 

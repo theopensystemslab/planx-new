@@ -1,10 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`can add a node with children 1`] = `
+exports[`add a node with children 1`] = `
 Graph {
   "counter": 3,
   "idFunction": [Function],
   "nodes": Map {
+    "_root" => Object {
+      "edges": Set {
+        "a",
+      },
+    },
+    "a" => Object {
+      "data": Object {
+        "text": "question",
+      },
+      "edges": Set {
+        "b",
+        "c",
+      },
+      "type": 100,
+    },
     "b" => Object {
       "data": Object {
         "text": "a1",
@@ -19,16 +34,6 @@ Graph {
       "edges": Set {},
       "type": 200,
     },
-    "a" => Object {
-      "data": Object {
-        "text": "question",
-      },
-      "edges": Set {
-        "b",
-        "c",
-      },
-      "type": 100,
-    },
   },
 }
 `;
@@ -38,12 +43,10 @@ Graph {
   "counter": 3,
   "idFunction": [Function],
   "nodes": Map {
-    "b" => Object {
-      "data": Object {
-        "text": "a1",
+    "_root" => Object {
+      "edges": Set {
+        "a",
       },
-      "edges": Set {},
-      "type": 200,
     },
     "a" => Object {
       "data": Object {
@@ -54,6 +57,13 @@ Graph {
       },
       "type": 100,
     },
+    "b" => Object {
+      "data": Object {
+        "text": "a1",
+      },
+      "edges": Set {},
+      "type": 200,
+    },
   },
 }
 `;
@@ -62,6 +72,10 @@ exports[`remove a node with children 1`] = `
 Graph {
   "counter": 3,
   "idFunction": [Function],
-  "nodes": Map {},
+  "nodes": Map {
+    "_root" => Object {
+      "edges": Set {},
+    },
+  },
 }
 `;
