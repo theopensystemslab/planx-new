@@ -5,7 +5,7 @@ const ROOT_NODE_KEY = "_root";
 interface Node {
   type?: number;
   data?: Object;
-  edges: Set<string>;
+  edges: string[];
 }
 
 class Graph {
@@ -13,7 +13,7 @@ class Graph {
   private counter = 0;
 
   constructor(private idFunction = alphabetId) {
-    this.nodes.set(ROOT_NODE_KEY, { edges: new Set() });
+    this.nodes.set(ROOT_NODE_KEY, { edges: [] });
   }
 
   private generateId() {
@@ -24,8 +24,8 @@ class Graph {
     { id = this.generateId(), type, ...data },
     { parent = ROOT_NODE_KEY, children = [] } = {}
   ) {
-    this.nodes.get(parent).edges.add(id);
-    this.nodes.set(id, { type, data, edges: new Set() });
+    this.nodes.get(parent).edges.push(id);
+    this.nodes.set(id, { type, data, edges: [] });
     children.map((child) => this.add({ type: 200, ...child }, { parent: id }));
     return id;
   }
@@ -34,7 +34,8 @@ class Graph {
     this.nodes.get(id).edges.forEach((child) => this.remove(child));
     this.nodes.delete(id);
     this.nodes.forEach((node: any) => {
-      if (node.edges.has(id)) node.edges.delete(id);
+      const idx = node.edges.indexOf(id);
+      if (idx >= 0) node.edges.splice(idx, 1);
     });
   }
 }

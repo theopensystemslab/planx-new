@@ -6,32 +6,32 @@ Graph {
   "idFunction": [Function],
   "nodes": Map {
     "_root" => Object {
-      "edges": Set {
+      "edges": Array [
         "a",
-      },
+      ],
     },
     "a" => Object {
       "data": Object {
         "text": "question",
       },
-      "edges": Set {
+      "edges": Array [
         "b",
         "c",
-      },
+      ],
       "type": 100,
     },
     "b" => Object {
       "data": Object {
         "text": "a1",
       },
-      "edges": Set {},
+      "edges": Array [],
       "type": 200,
     },
     "c" => Object {
       "data": Object {
         "text": "a2",
       },
-      "edges": Set {},
+      "edges": Array [],
       "type": 200,
     },
   },
@@ -44,24 +44,24 @@ Graph {
   "idFunction": [Function],
   "nodes": Map {
     "_root" => Object {
-      "edges": Set {
+      "edges": Array [
         "a",
-      },
+      ],
     },
     "a" => Object {
       "data": Object {
         "text": "question",
       },
-      "edges": Set {
+      "edges": Array [
         "b",
-      },
+      ],
       "type": 100,
     },
     "b" => Object {
       "data": Object {
         "text": "a1",
       },
-      "edges": Set {},
+      "edges": Array [],
       "type": 200,
     },
   },
@@ -74,7 +74,7 @@ Graph {
   "idFunction": [Function],
   "nodes": Map {
     "_root" => Object {
-      "edges": Set {},
+      "edges": Array [],
     },
   },
 }
