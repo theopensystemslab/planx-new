@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`can add a node with children 1`] = `
+Graph {
+  "generateId": [Function],
+  "nodes": Map {
+    "b" => Object {
+      "data": Object {
+        "text": "a1",
+      },
+      "edges": Set {},
+      "type": 200,
+    },
+    "c" => Object {
+      "data": Object {
+        "text": "a2",
+      },
+      "edges": Set {},
+      "type": 200,
+    },
+    "a" => Object {
+      "data": Object {
+        "text": "question",
+      },
+      "edges": Set {
+        "b",
+        "c",
+      },
+      "type": 100,
+    },
+  },
+}
+`;
+
+exports[`remove a child node 1`] = `
+Graph {
+  "generateId": [Function],
+  "nodes": Map {
+    "b" => Object {
+      "data": Object {
+        "text": "a1",
+      },
+      "edges": Set {},
+      "type": 200,
+    },
+    "a" => Object {
+      "data": Object {
+        "text": "question",
+      },
+      "edges": Set {
+        "b",
+      },
+      "type": 100,
+    },
+  },
+}
+`;
+
+exports[`remove a node with children 1`] = `
+Graph {
+  "generateId": [Function],
+  "nodes": Map {},
+}
+`;
