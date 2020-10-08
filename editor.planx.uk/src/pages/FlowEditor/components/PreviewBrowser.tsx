@@ -23,19 +23,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const DebugTable = ({ ob = {} }) => (
-  <table>
-    {Object.keys(ob)
-      .sort()
-      .map((k) => (
-        <tr key={k}>
-          <th>{k}</th>
-          <td>{JSON.stringify(ob[k]?.value)}</td>
-        </tr>
-      ))}
-  </table>
-);
-
 const DebugConsole = () => {
   const [passport, breadcrumbs] = useStore((state) => [
     state.passport,
