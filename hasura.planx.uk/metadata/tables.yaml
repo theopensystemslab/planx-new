@@ -46,6 +46,7 @@
       check: {}
       columns:
       - chosen_node_ids
+      - parent_node_id
       - session_id
       - type
       backend_only: false
