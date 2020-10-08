@@ -11,7 +11,11 @@ async function gqlAdmin(query) {
     },
     body: JSON.stringify({ query }),
   });
-  return await res.json();
+  const json = await res.json();
+  if (json.errors && json.errors[0].message.includes("x-hasura-admin-secret")) {
+    throw Error("Invalid HASURA_SECRET");
+  }
+  return json;
 }
 
 async function gqlPublic(query) {
