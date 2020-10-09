@@ -98,26 +98,7 @@ const OptionEditor: React.FC<{
 const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   return (
     <ModalSectionContent title="Options">
-      {formik.values.options ? (
-        <ListManager
-          values={formik.values.options}
-          onChange={(newOptions) => {
-            formik.setFieldValue("options", newOptions);
-          }}
-          disableDragAndDrop
-          newValueLabel="add new option"
-          newValue={() =>
-            ({
-              text: "",
-              description: "",
-              val: "",
-              flag: "",
-            } as Option)
-          }
-          Editor={OptionEditor}
-          editorExtraProps={{ showValueField: !!formik.values.fn }}
-        />
-      ) : formik.values.groupedOptions ? (
+      {formik.values.groupedOptions ? (
         <Box>
           {formik.values.groupedOptions.map((groupedOption, index) => (
             <Box key={index} mt={index === 0 ? 0 : 4}>
@@ -170,7 +151,26 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
             add new group
           </Button>
         </Box>
-      ) : null}
+      ) : (
+        <ListManager
+          values={formik.values.options || []}
+          onChange={(newOptions) => {
+            formik.setFieldValue("options", newOptions);
+          }}
+          disableDragAndDrop
+          newValueLabel="add new option"
+          newValue={() =>
+            ({
+              text: "",
+              description: "",
+              val: "",
+              flag: "",
+            } as Option)
+          }
+          Editor={OptionEditor}
+          editorExtraProps={{ showValueField: !!formik.values.fn }}
+        />
+      )}
     </ModalSectionContent>
   );
 };
@@ -229,9 +229,11 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
                 .filter((o) => o.text)
                 .map((o) => ({ ...o, $t: TYPES.Response }))
             : groupedOptions
+            ? groupedOptions
                 .flatMap((gr) => gr.children)
                 .filter((o) => o.text)
                 .map((o) => ({ ...o, $t: TYPES.Response }))
+            : []
         );
       } else {
         alert(JSON.stringify({ $t, ...values, options }, null, 2));
