@@ -2,7 +2,6 @@ import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import { FormikHookReturn } from "../../../../types";
 import { Box, Button } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
 import {
   ImgInput,
   Input,
@@ -105,6 +104,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
             formik.setFieldValue("options", newOptions);
           }}
           disableDragAndDrop
+          newValueLabel="add new option"
           newValue={() =>
             ({
               text: "",
@@ -119,44 +119,43 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
       ) : formik.values.groupedOptions ? (
         <Box>
           {formik.values.groupedOptions.map((groupedOption, index) => (
-            <Box key={index}>
+            <Box key={index} mt={index === 0 ? 0 : 4}>
               <InputRow>
                 <Input
-                  format="large"
+                  format="bold"
                   name={`groupedOptions[${index}].title`}
                   value={groupedOption.title}
-                  placeholder="Text"
+                  placeholder="Section Title"
                   onChange={formik.handleChange}
                 />
               </InputRow>
-              <ListManager
-                values={groupedOption.children}
-                onChange={(newOptions) => {
-                  formik.setFieldValue(
-                    `groupedOptions[${index}].children`,
-                    newOptions
-                  );
-                }}
-                disableDragAndDrop
-                newValue={() =>
-                  ({
-                    text: "",
-                    description: "",
-                    val: "",
-                    flag: "",
-                  } as Option)
-                }
-                Editor={OptionEditor}
-                editorExtraProps={{ showValueField: !!formik.values.fn }}
-              />
+              <Box pl={4}>
+                <ListManager
+                  values={groupedOption.children}
+                  onChange={(newOptions) => {
+                    formik.setFieldValue(
+                      `groupedOptions[${index}].children`,
+                      newOptions
+                    );
+                  }}
+                  disableDragAndDrop
+                  newValue={() =>
+                    ({
+                      text: "",
+                      description: "",
+                      val: "",
+                      flag: "",
+                    } as Option)
+                  }
+                  newValueLabel="add new option"
+                  Editor={OptionEditor}
+                  editorExtraProps={{ showValueField: !!formik.values.fn }}
+                />
+              </Box>
             </Box>
           ))}
           <Button
-            color="primary"
-            variant="outlined"
             size="large"
-            fullWidth
-            startIcon={<Add />}
             onClick={() => {
               formik.setFieldValue(`groupedOptions`, [
                 ...formik.values.groupedOptions,
@@ -167,7 +166,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
               ]);
             }}
           >
-            Add new group
+            add new group
           </Button>
         </Box>
       ) : null}

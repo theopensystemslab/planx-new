@@ -1,10 +1,11 @@
 import Button from "@material-ui/core/Button";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 import InnerCheckbox from "./InnerCheckbox";
 import { Group, Option } from "../../../FlowEditor/data/types";
+import { ExpandableList, ExpandableListItem } from "../../../../ui";
 
 interface ICheckboxes {
   text: string;
@@ -14,6 +15,12 @@ interface ICheckboxes {
   handleSubmit?;
   description?: string;
   info?: string;
+}
+
+function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
+  return arr.includes(value)
+    ? arr.filter((val) => val !== value)
+    : [...arr, value];
 }
 
 const Checkboxes: React.FC<ICheckboxes> = ({
@@ -34,6 +41,8 @@ const Checkboxes: React.FC<ICheckboxes> = ({
     },
     validate: () => {},
   });
+
+  const [expandedGroups, setExpandedGroups] = useState<Array<number>>([0]);
 
   const allChecked = options
     ? formik.values.checked.length === options.length
@@ -78,21 +87,33 @@ const Checkboxes: React.FC<ICheckboxes> = ({
             />
           ))
         ) : groupedOptions ? (
-          <ul>
-            {groupedOptions.map((group) => (
-              <li>
-                {group.title}
-                {group.children.map((option) => (
-                  <InnerCheckbox
-                    changeCheckbox={changeCheckbox}
-                    key={option.text}
-                    label={option.text}
-                    value={option.id}
-                  />
-                ))}
-              </li>
-            ))}
-          </ul>
+          <ExpandableList>
+            {groupedOptions.map((group, index) => {
+              const isExpanded = expandedGroups.includes(index);
+              return (
+                <ExpandableListItem
+                  expanded={isExpanded}
+                  onToggle={() => {
+                    setExpandedGroups((previous) =>
+                      toggleInArray(index, previous)
+                    );
+                  }}
+                  title={group.title}
+                >
+                  <div>
+                    {group.children.map((option) => (
+                      <InnerCheckbox
+                        changeCheckbox={changeCheckbox}
+                        key={option.text}
+                        label={option.text}
+                        value={option.id}
+                      />
+                    ))}
+                  </div>
+                </ExpandableListItem>
+              );
+            })}
+          </ExpandableList>
         ) : null}
         <Button
           disabled={allRequired && !allChecked}

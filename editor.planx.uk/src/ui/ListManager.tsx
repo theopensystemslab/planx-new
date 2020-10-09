@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Box, IconButton, Button, makeStyles } from "@material-ui/core";
-import { Delete, DragHandle, Add } from "@material-ui/icons";
+import { Delete, DragHandle } from "@material-ui/icons";
 import arrayMove from "array-move";
 import { removeAt, setAt } from "../utils";
 import {
@@ -74,16 +74,12 @@ function ListManager<T, EditorExtraProps>(props: Props<T, EditorExtraProps>) {
         })}
       </div>
       <Button
-        color="primary"
-        variant="outlined"
         size="large"
-        fullWidth
-        startIcon={<Add />}
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
         }}
       >
-        {props.newValueLabel || "Add new"}
+        {props.newValueLabel || "add new"}
       </Button>
     </>
   ) : (
@@ -158,12 +154,11 @@ function ListManager<T, EditorExtraProps>(props: Props<T, EditorExtraProps>) {
         variant="outlined"
         size="large"
         fullWidth
-        startIcon={<Add />}
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
         }}
       >
-        {props.newValueLabel || "Add new"}
+        {props.newValueLabel || "add new"}
       </Button>
     </DragDropContext>
   );
