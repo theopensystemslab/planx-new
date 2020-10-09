@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/CloseOutlined";
 import React from "react";
 import { useNavigation } from "react-navi";
+
 import { rootFlowPath } from "../../../../routes/utils";
 import { useStore } from "../../lib/store";
 import { parseFormValues } from "./shared";
@@ -82,6 +83,7 @@ const FormModal: React.FC<{
   type: string;
   handleDelete?;
   Component: any;
+  node?: any;
   id?: any;
   before?: any;
   parent?: any;

@@ -1,5 +1,7 @@
+import { Box, Button } from "@material-ui/core";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
+
 import { FormikHookReturn } from "../../../../types";
 import {
   ImgInput,
@@ -14,9 +16,14 @@ import {
   OptionButton,
   RichTextInput,
 } from "../../../../ui";
-import { Checklist, Option, TYPES } from "../../data/types";
-import { MoreInformation, PermissionSelect } from "./shared";
+import {
+  Checklist,
+  Option,
+  TYPES,
+  toggleExpandableChecklist,
+} from "../../data/types";
 import { nodeIcon } from "../shared";
+import { MoreInformation, PermissionSelect } from "./shared";
 
 interface ChecklistProps extends Checklist {
   handleSubmit?: Function;
@@ -91,23 +98,79 @@ const OptionEditor: React.FC<{
 const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   return (
     <ModalSectionContent title="Options">
-      <ListManager
-        values={formik.values.options}
-        onChange={(newOptions) => {
-          formik.setFieldValue("options", newOptions);
-        }}
-        disableDragAndDrop
-        newValue={() =>
-          ({
-            text: "",
-            description: "",
-            val: "",
-            flag: "",
-          } as Option)
-        }
-        Editor={OptionEditor}
-        editorExtraProps={{ showValueField: !!formik.values.fn }}
-      />
+      {formik.values.options ? (
+        <ListManager
+          values={formik.values.options}
+          onChange={(newOptions) => {
+            formik.setFieldValue("options", newOptions);
+          }}
+          disableDragAndDrop
+          newValueLabel="add new option"
+          newValue={() =>
+            ({
+              text: "",
+              description: "",
+              val: "",
+              flag: "",
+            } as Option)
+          }
+          Editor={OptionEditor}
+          editorExtraProps={{ showValueField: !!formik.values.fn }}
+        />
+      ) : formik.values.groupedOptions ? (
+        <Box>
+          {formik.values.groupedOptions.map((groupedOption, index) => (
+            <Box key={index} mt={index === 0 ? 0 : 4}>
+              <InputRow>
+                <Input
+                  format="bold"
+                  name={`groupedOptions[${index}].title`}
+                  value={groupedOption.title}
+                  placeholder="Section Title"
+                  onChange={formik.handleChange}
+                />
+              </InputRow>
+              <Box pl={4}>
+                <ListManager
+                  values={groupedOption.children}
+                  onChange={(newOptions) => {
+                    formik.setFieldValue(
+                      `groupedOptions[${index}].children`,
+                      newOptions
+                    );
+                  }}
+                  disableDragAndDrop
+                  newValue={() =>
+                    ({
+                      text: "",
+                      description: "",
+                      val: "",
+                      flag: "",
+                    } as Option)
+                  }
+                  newValueLabel="add new option"
+                  Editor={OptionEditor}
+                  editorExtraProps={{ showValueField: !!formik.values.fn }}
+                />
+              </Box>
+            </Box>
+          ))}
+          <Button
+            size="large"
+            onClick={() => {
+              formik.setFieldValue(`groupedOptions`, [
+                ...formik.values.groupedOptions,
+                {
+                  title: "",
+                  children: [],
+                },
+              ]);
+            }}
+          >
+            add new group
+          </Button>
+        </Box>
+      ) : null}
     </ModalSectionContent>
   );
 };
@@ -120,7 +183,8 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
   notes = "",
   policyRef = "",
   info = "",
-  options = [],
+  options,
+  groupedOptions,
   handleSubmit,
   img = "",
   definitionImg = "",
@@ -138,17 +202,36 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
       description,
       fn,
       options,
+      groupedOptions,
       img,
       definitionImg,
       allRequired,
     },
-    onSubmit: ({ options, ...values }) => {
+    onSubmit: ({ options, groupedOptions, ...values }) => {
       if (handleSubmit) {
         handleSubmit(
-          { $t, ...values },
+          {
+            $t,
+            ...values,
+            ...(groupedOptions
+              ? {
+                  categories: groupedOptions.map((gr) => ({
+                    title: gr.title,
+                    count: gr.children.length,
+                  })),
+                }
+              : {
+                  categories: undefined,
+                }),
+          },
           options
-            .filter((o) => o.text)
-            .map((o) => ({ ...o, $t: TYPES.Response }))
+            ? options
+                .filter((o) => o.text)
+                .map((o) => ({ ...o, $t: TYPES.Response }))
+            : groupedOptions
+                .flatMap((gr) => gr.children)
+                .filter((o) => o.text)
+                .map((o) => ({ ...o, $t: TYPES.Response }))
         );
       } else {
         alert(JSON.stringify({ $t, ...values, options }, null, 2));
@@ -209,6 +292,20 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
                 onChange={formik.handleChange}
               />
             </InputRow>
+            <OptionButton
+              selected={!!formik.values.groupedOptions}
+              onClick={() => {
+                formik.setValues({
+                  ...formik.values,
+                  ...toggleExpandableChecklist({
+                    options: formik.values.options,
+                    groupedOptions: formik.values.groupedOptions,
+                  }),
+                });
+              }}
+            >
+              Expandable
+            </OptionButton>
 
             <OptionButton
               selected={formik.values.allRequired}

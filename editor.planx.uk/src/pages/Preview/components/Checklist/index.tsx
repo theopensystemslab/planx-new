@@ -1,26 +1,32 @@
 import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
+
+import { ExpandableList, ExpandableListItem } from "../../../../ui";
+import { Group, Option } from "../../../FlowEditor/data/types";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 import InnerCheckbox from "./InnerCheckbox";
 
 interface ICheckboxes {
   text: string;
-  checkBoxes: {
-    id: string;
-    name: string;
-    image?: string;
-  }[];
+  options?: Array<Option>;
+  groupedOptions?: Array<Group<Option>>;
   allRequired?: boolean;
   handleSubmit?;
   description?: string;
   info?: string;
 }
 
+function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
+  return arr.includes(value)
+    ? arr.filter((val) => val !== value)
+    : [...arr, value];
+}
+
 const Checkboxes: React.FC<ICheckboxes> = ({
-  checkBoxes,
+  options,
+  groupedOptions,
   text,
   handleSubmit,
   description = "",
@@ -37,7 +43,11 @@ const Checkboxes: React.FC<ICheckboxes> = ({
     validate: () => {},
   });
 
-  const allChecked = formik.values.checked.length === checkBoxes.length;
+  const [expandedGroups, setExpandedGroups] = useState<Array<number>>([0]);
+
+  const allChecked = options
+    ? formik.values.checked.length === options.length
+    : false;
 
   const changeCheckbox = (input) => {
     const { current } = input;
@@ -53,14 +63,13 @@ const Checkboxes: React.FC<ICheckboxes> = ({
     formik.setFieldValue(
       "checked",
       newCheckedIds.sort((a, b) => {
-        const originalIds = checkBoxes.map((cb) => cb.id);
+        const originalIds = options.map((cb) => cb.id);
         return originalIds.indexOf(b) - originalIds.indexOf(a);
       })
     );
 
     return (current.checked = !current.checked);
   };
-  const hasImages = (checkBoxes) => checkBoxes.every((val) => val.image);
 
   return (
     <Card>
@@ -69,29 +78,44 @@ const Checkboxes: React.FC<ICheckboxes> = ({
           {text}
         </QuestionHeader>
 
-        {hasImages(checkBoxes) ? (
-          <Grid container spacing={2}>
-            {checkBoxes.map((cb) => (
-              <Grid item xs={6} sm={4} key={cb.name}>
-                <InnerCheckbox
-                  changeCheckbox={changeCheckbox}
-                  image={<img src={cb.image} alt="" />}
-                  label={cb.name}
-                  value={cb.id}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          checkBoxes.map((cb) => (
+        {options ? (
+          options.map((cb) => (
             <InnerCheckbox
               changeCheckbox={changeCheckbox}
-              key={cb.name}
-              label={cb.name}
+              key={cb.text}
+              label={cb.text}
               value={cb.id}
             />
           ))
-        )}
+        ) : groupedOptions ? (
+          <ExpandableList>
+            {groupedOptions.map((group, index) => {
+              const isExpanded = expandedGroups.includes(index);
+              return (
+                <ExpandableListItem
+                  expanded={isExpanded}
+                  onToggle={() => {
+                    setExpandedGroups((previous) =>
+                      toggleInArray(index, previous)
+                    );
+                  }}
+                  title={group.title}
+                >
+                  <div>
+                    {group.children.map((option) => (
+                      <InnerCheckbox
+                        changeCheckbox={changeCheckbox}
+                        key={option.text}
+                        label={option.text}
+                        value={option.id}
+                      />
+                    ))}
+                  </div>
+                </ExpandableListItem>
+              );
+            })}
+          </ExpandableList>
+        ) : null}
         <Button
           disabled={allRequired && !allChecked}
           variant="contained"
