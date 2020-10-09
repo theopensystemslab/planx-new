@@ -1,6 +1,6 @@
+import { ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
 import theme from "../../theme";
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
 
 export default (props) => (
   <div style={{ padding: 80 }}>

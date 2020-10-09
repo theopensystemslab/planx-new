@@ -1,6 +1,6 @@
 import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import { ThemeProvider } from "@material-ui/core/styles";
 import Cookies from "js-cookie";
 import React, { Suspense } from "react";
 import { render } from "react-dom";
