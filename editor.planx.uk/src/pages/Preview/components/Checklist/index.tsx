@@ -45,9 +45,13 @@ const Checkboxes: React.FC<ICheckboxes> = ({
 
   const [expandedGroups, setExpandedGroups] = useState<Array<number>>([0]);
 
-  const allChecked = options
-    ? formik.values.checked.length === options.length
-    : false;
+  const flatOptions = options
+    ? options
+    : groupedOptions
+    ? groupedOptions.flatMap((group) => group.children)
+    : [];
+
+  const allChecked = formik.values.checked.length === flatOptions.length;
 
   const changeCheckbox = (input) => {
     const { current } = input;
@@ -63,7 +67,7 @@ const Checkboxes: React.FC<ICheckboxes> = ({
     formik.setFieldValue(
       "checked",
       newCheckedIds.sort((a, b) => {
-        const originalIds = options.map((cb) => cb.id);
+        const originalIds = flatOptions.map((cb) => cb.id);
         return originalIds.indexOf(b) - originalIds.indexOf(a);
       })
     );
