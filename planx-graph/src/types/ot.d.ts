@@ -10,11 +10,7 @@ export namespace OT {
       p: OT.path;
       od: any;
     }
-    export interface Replace {
-      p: OT.path;
-      od: any;
-      oi: any;
-    }
+    export type Replace = OT.Object.Remove & OT.Object.Add;
   }
 
   export namespace Array {
@@ -26,11 +22,7 @@ export namespace OT {
       p: OT.path;
       ld: any;
     }
-    export interface Replace {
-      p: OT.path;
-      ld: any;
-      li: any;
-    }
+    export type Replace = OT.Array.Remove & OT.Array.Add;
   }
 
   export type Op =

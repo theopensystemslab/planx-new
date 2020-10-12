@@ -101,24 +101,56 @@ class Graph {
     const ops = [];
 
     const fromIdx = this.nodes.get(fromParent).edges.indexOf(id);
+    let originalNode;
+
     if (fromIdx >= 0) {
+      originalNode = this.nodes.get(fromParent).edges[fromIdx];
       this.nodes.get(fromParent).edges.splice(fromIdx, 1);
     } else {
       throw new Error(`'${id}' not found in '${fromParent}'`);
+    }
+
+    if (fromParent !== toParent) {
+      ops.push({
+        ld: originalNode,
+        p: [fromParent, "edges", fromIdx],
+      });
     }
 
     if (toBefore) {
       let toIdx = this.nodes.get(toParent).edges.indexOf(toBefore);
       if (toIdx >= 0) {
         this.nodes.get(toParent).edges.splice(toIdx, 0, id);
-        ops.push({ lm: toIdx, p: [fromParent, "edges", fromIdx] });
+        if (fromParent === toParent) {
+          ops.push({ lm: toIdx, p: [fromParent, "edges", fromIdx] });
+        } else {
+          ops.push({
+            li: originalNode,
+            p: [toParent, "edges", toIdx],
+          });
+        }
       } else {
         throw new Error(`'${toBefore}' not found in '${toParent}'`);
       }
     } else {
+      if (!this.nodes.get(toParent).edges) {
+        ops.push({ p: [toParent, "edges"], oi: [] });
+        this.nodes.get(toParent).edges = [];
+      }
+
+      if (fromParent === toParent) {
+        ops.push({
+          lm: this.nodes.get(toParent).edges.length,
+          p: [fromParent, "edges", fromIdx],
+        });
+      } else {
+        ops.push({
+          li: originalNode,
+          p: [toParent, "edges", this.nodes.get(toParent).edges.length],
+        });
+      }
+
       this.nodes.get(toParent).edges.push(id);
-      // TODO: check this
-      ops.push({ lm: Infinity, p: [fromParent, "edges", fromIdx] });
     }
 
     return ops;
