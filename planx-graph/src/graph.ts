@@ -26,10 +26,6 @@ class Graph {
     });
   }
 
-  toObject() {
-    return Object.fromEntries(this.nodes);
-  }
-
   add(
     { id = this.generateId(), type, ...data },
     { parent = ROOT_NODE_KEY, children = [] } = {}
@@ -89,6 +85,20 @@ class Graph {
     } else {
       this.nodes.get(toParent).edges.push(id);
     }
+  }
+
+  // reading the graph
+
+  toObject(): Record<string, Node> {
+    return Object.fromEntries(this.nodes);
+  }
+
+  get upcomingNodeIds(): string[] {
+    return this.nodes.get("_root").edges;
+  }
+
+  get currentNodeId(): string | null {
+    return this.upcomingNodeIds.length > 0 ? this.upcomingNodeIds[0] : null;
   }
 }
 
