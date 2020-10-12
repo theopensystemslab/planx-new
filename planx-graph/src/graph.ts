@@ -47,16 +47,27 @@ class Graph {
   update(id, newData) {
     const node = this.nodes.get(id);
 
+    const ops = [];
+
+    // TODO: make this work with a nested data structure
     const data = Object.entries(newData).reduce((acc, [k, v]) => {
       if (v === null || v === undefined) {
+        ops.push({ p: [id, "data", k], od: acc[k] });
         delete acc[k];
       } else {
+        if (acc[k]) {
+          ops.push({ p: [id, "data", k], od: acc[k], oi: v });
+        } else {
+          ops.push({ p: [id, "data", k], oi: v });
+        }
         acc[k] = v;
       }
       return acc;
     }, JSON.parse(JSON.stringify(node.data)));
 
     this.nodes.set(id, { ...node, data });
+
+    return ops;
   }
 
   remove(id, ops = []) {

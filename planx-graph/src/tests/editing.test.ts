@@ -142,7 +142,9 @@ describe("updating a node", () => {
       b: {},
     });
 
-    graph.update("a", { foo: "bar" });
+    const ops = graph.update("a", { foo: "bar" });
+
+    expect(ops).toEqual([{ p: ["a", "data", "foo"], oi: "bar" }]);
 
     expect(graph.toObject()).toMatchObject({
       _root: {
@@ -174,7 +176,9 @@ describe("updating a node", () => {
       b: {},
     });
 
-    graph.update("a", { foo: "bar2" });
+    const ops = graph.update("a", { foo: "bar2" });
+
+    expect(ops).toEqual([{ p: ["a", "data", "foo"], oi: "bar2", od: "bar" }]);
 
     expect(graph.toObject()).toMatchObject({
       _root: {
@@ -206,7 +210,9 @@ describe("updating a node", () => {
       b: {},
     });
 
-    graph.update("a", { foo: null });
+    const ops = graph.update("a", { foo: null });
+
+    expect(ops).toEqual([{ p: ["a", "data", "foo"], od: "bar" }]);
 
     expect(graph.toObject()).toMatchObject({
       _root: {
