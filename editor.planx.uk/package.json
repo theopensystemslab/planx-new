@@ -66,18 +66,20 @@
     "@types/lodash": "^4.14.162",
     "@types/node": "^12.19.1",
     "@types/ramda": "^0.27.30",
-    "@types/react": "^16.9.53",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-color": "^3.0.4",
     "@types/react-dom": "^16.9.8",
+    "@types/react": "^16.9.53",
     "@types/uuid": "^8.3.0",
+    "ajv": "^6.12.6",
     "husky": "^4.3.0",
     "import-sort-style-module": "^6.0.0",
     "lint-staged": "^10.4.2",
     "node-sass": "^4.14.1",
-    "prettier": "^2.1.2",
     "prettier-plugin-import-sort": "^0.0.6",
+    "prettier": "^2.1.2",
     "react-app-rewired": "^2.1.6",
+    "typescript-json-validator": "^2.4.2",
     "typescript": "^3.9.7"
   },
   "scripts": {
@@ -85,7 +87,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --no-watchman",
     "cosmos": "cosmos",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "compile-types": "typescript-json-validator src/types/index.d.ts --collection --useNamedExport"
   },
   "eslintConfig": {
     "extends": "react-app"
