@@ -1,4 +1,5 @@
 import { alphabetId } from "./lib/id";
+import { OT } from "./types/ot";
 
 const ROOT_NODE_KEY = "_root";
 
@@ -30,7 +31,7 @@ class Graph {
     { id = this.generateId(), type, ...data },
     { parent = ROOT_NODE_KEY, children = [] } = {},
     ops = []
-  ) {
+  ): Array<OT.Op> {
     this.nodes.get(parent).edges.push(id);
     ops.push({ p: [parent, "edges"], li: id });
 
@@ -44,7 +45,7 @@ class Graph {
     return ops;
   }
 
-  update(id, newData) {
+  update(id, newData): Array<OT.Op> {
     const node = this.nodes.get(id);
 
     const ops = [];
@@ -70,7 +71,7 @@ class Graph {
     return ops;
   }
 
-  remove(id, ops = []) {
+  remove(id, ops = []): Array<OT.Op> {
     (this.nodes.get(id).edges || []).forEach((child) =>
       this.remove(child, ops)
     );
@@ -94,7 +95,7 @@ class Graph {
   move(
     id,
     { fromParent = ROOT_NODE_KEY, toBefore = undefined, toParent = undefined }
-  ) {
+  ): Array<OT.Op> {
     toParent = toParent || fromParent;
 
     const ops = [];
