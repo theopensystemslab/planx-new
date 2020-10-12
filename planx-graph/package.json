@@ -2,7 +2,7 @@
   "name": "planx-graph",
   "private": true,
   "scripts": {
-    "test": "jest"
+    "test": "jest --watchAll"
   },
   "license": "MPL-2.0",
   "devDependencies": {

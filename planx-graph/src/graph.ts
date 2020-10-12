@@ -30,6 +30,21 @@ class Graph {
     return id;
   }
 
+  update(id, newData) {
+    const node = this.nodes.get(id);
+
+    const data = Object.entries(newData).reduce((acc, [k, v]) => {
+      if (v === null || v === undefined) {
+        delete acc[k];
+      } else {
+        acc[k] = v;
+      }
+      return acc;
+    }, JSON.parse(JSON.stringify(node.data)));
+
+    this.nodes.set(id, { ...node, data });
+  }
+
   remove(id) {
     this.nodes.get(id).edges.forEach((child) => this.remove(child));
     this.nodes.delete(id);

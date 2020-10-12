@@ -117,3 +117,119 @@ Graph {
   },
 }
 `;
+
+exports[`updating a node add a field to a without affecting existing data 1`] = `
+Graph {
+  "counter": 3,
+  "idFunction": [Function],
+  "nodes": Map {
+    "_root" => Object {
+      "edges": Array [
+        "a",
+      ],
+    },
+    "a" => Object {
+      "data": Object {
+        "text": "question",
+      },
+      "edges": Array [
+        "b",
+        "c",
+      ],
+      "type": 100,
+    },
+    "b" => Object {
+      "data": Object {
+        "foo": "bar",
+        "text": "a1",
+      },
+      "edges": Array [],
+      "type": 200,
+    },
+    "c" => Object {
+      "data": Object {
+        "text": "a2",
+      },
+      "edges": Array [],
+      "type": 200,
+    },
+  },
+}
+`;
+
+exports[`updating a node remove existing data 1`] = `
+Graph {
+  "counter": 3,
+  "idFunction": [Function],
+  "nodes": Map {
+    "_root" => Object {
+      "edges": Array [
+        "a",
+      ],
+    },
+    "a" => Object {
+      "data": Object {
+        "text": "question",
+      },
+      "edges": Array [
+        "b",
+        "c",
+      ],
+      "type": 100,
+    },
+    "b" => Object {
+      "data": Object {
+        "text": "a1",
+      },
+      "edges": Array [],
+      "type": 200,
+    },
+    "c" => Object {
+      "data": Object {
+        "text": "a2",
+      },
+      "edges": Array [],
+      "type": 200,
+    },
+  },
+}
+`;
+
+exports[`updating a node replace existing data 1`] = `
+Graph {
+  "counter": 3,
+  "idFunction": [Function],
+  "nodes": Map {
+    "_root" => Object {
+      "edges": Array [
+        "a",
+      ],
+    },
+    "a" => Object {
+      "data": Object {
+        "text": "question",
+      },
+      "edges": Array [
+        "b",
+        "c",
+      ],
+      "type": 100,
+    },
+    "b" => Object {
+      "data": Object {
+        "foo": "bar2",
+        "text": "a1",
+      },
+      "edges": Array [],
+      "type": 200,
+    },
+    "c" => Object {
+      "data": Object {
+        "text": "a2",
+      },
+      "edges": Array [],
+      "type": 200,
+    },
+  },
+}
+`;

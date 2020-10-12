@@ -11,6 +11,26 @@ test("add a node with children", () => {
   expect(graph).toMatchSnapshot();
 });
 
+describe("updating a node", () => {
+  test("add a field to a without affecting existing data", () => {
+    graph.update("b", { foo: "bar" });
+
+    expect(graph).toMatchSnapshot();
+  });
+
+  test("replace existing data", () => {
+    graph.update("b", { foo: "bar2" });
+
+    expect(graph).toMatchSnapshot();
+  });
+
+  test("remove existing data", () => {
+    graph.update("b", { foo: null });
+
+    expect(graph).toMatchSnapshot();
+  });
+});
+
 test("move a node", () => {
   graph.move("c", { fromParent: "a", toBefore: "b" });
 
