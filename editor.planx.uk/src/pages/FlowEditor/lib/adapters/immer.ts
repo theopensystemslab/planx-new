@@ -83,8 +83,6 @@ export const getOps = (flow, fn) => {
 
   const allPatches = zip(fwd, rev.reverse());
 
-  console.log({ flow, next, delta, allPatches });
-
   return allPatches.map((p) => patchToOP(flow)(p)).filter(Boolean);
 };
 
