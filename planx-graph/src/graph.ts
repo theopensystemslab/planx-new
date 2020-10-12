@@ -28,12 +28,20 @@ class Graph {
 
   add(
     { id = this.generateId(), type, ...data },
-    { parent = ROOT_NODE_KEY, children = [] } = {}
+    { parent = ROOT_NODE_KEY, children = [] } = {},
+    ops = []
   ) {
     this.nodes.get(parent).edges.push(id);
+    ops.push({ p: [parent, "edges"], li: id });
+
     this.nodes.set(id, { type, data, edges: [] });
-    children.map((child) => this.add({ type: 200, ...child }, { parent: id }));
-    return id;
+    ops.push({ p: [id], oi: { type, data, edges: [] } });
+
+    children.map((child) =>
+      this.add({ type: 200, ...child }, { parent: id }, ops)
+    );
+
+    return ops;
   }
 
   update(id, newData) {
@@ -51,15 +59,25 @@ class Graph {
     this.nodes.set(id, { ...node, data });
   }
 
-  remove(id) {
-    (this.nodes.get(id).edges || []).forEach((child) => this.remove(child));
+  remove(id, ops = []) {
+    (this.nodes.get(id).edges || []).forEach((child) =>
+      this.remove(child, ops)
+    );
+
+    ops.push({ p: id, od: this.nodes.get(id) });
     this.nodes.delete(id);
-    this.nodes.forEach((node: any) => {
+
+    this.nodes.forEach((node: any, nodeId: string) => {
       if (node.edges) {
         const idx = node.edges.indexOf(id);
-        if (idx >= 0) node.edges.splice(idx, 1);
+        if (idx >= 0) {
+          ops.push({ p: [nodeId, "edges", idx], ld: node.edges[idx] });
+          node.edges.splice(idx, 1);
+        }
       }
     });
+
+    return ops;
   }
 
   move(
@@ -68,23 +86,30 @@ class Graph {
   ) {
     toParent = toParent || fromParent;
 
-    const idx = this.nodes.get(fromParent).edges.indexOf(id);
-    if (idx >= 0) {
-      this.nodes.get(fromParent).edges.splice(idx, 1);
+    const ops = [];
+
+    const fromIdx = this.nodes.get(fromParent).edges.indexOf(id);
+    if (fromIdx >= 0) {
+      this.nodes.get(fromParent).edges.splice(fromIdx, 1);
     } else {
       throw new Error(`'${id}' not found in '${fromParent}'`);
     }
 
     if (toBefore) {
-      let idx = this.nodes.get(toParent).edges.indexOf(toBefore);
-      if (idx >= 0) {
-        this.nodes.get(toParent).edges.splice(idx, 0, id);
+      let toIdx = this.nodes.get(toParent).edges.indexOf(toBefore);
+      if (toIdx >= 0) {
+        this.nodes.get(toParent).edges.splice(toIdx, 0, id);
+        ops.push({ lm: toIdx, p: [fromParent, "edges", fromIdx] });
       } else {
         throw new Error(`'${toBefore}' not found in '${toParent}'`);
       }
     } else {
       this.nodes.get(toParent).edges.push(id);
+      // TODO: check this
+      ops.push({ lm: Infinity, p: [fromParent, "edges", fromIdx] });
     }
+
+    return ops;
   }
 
   // reading the graph

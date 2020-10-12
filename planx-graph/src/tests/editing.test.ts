@@ -20,10 +20,22 @@ beforeEach(() => {
 
 describe("adding nodes", () => {
   test("add a node with children", () => {
-    graph.add(
+    const ops = graph.add(
       { id: "d", text: "question", type: 100 },
       { children: [{ text: "a1" }, { text: "a2" }] }
     );
+
+    expect(ops).toEqual([
+      { p: ["_root", "edges"], li: "d" },
+      {
+        p: ["d"],
+        oi: { data: { text: "question" }, edges: [], type: 100 },
+      },
+      { p: ["d", "edges"], li: "a" },
+      { p: ["a"], oi: { data: { text: "a1" }, edges: [], type: 200 } },
+      { p: ["d", "edges"], li: "b" },
+      { p: ["b"], oi: { data: { text: "a2" }, edges: [], type: 200 } },
+    ]);
 
     expect(graph.toObject()).toMatchObject({
       _root: {
@@ -58,7 +70,10 @@ describe("moving nodes", () => {
   beforeEach(loadGraph);
 
   test("move a node", () => {
-    graph.move("c", { fromParent: "a", toBefore: "b" });
+    const ops = graph.move("c", { fromParent: "a", toBefore: "b" });
+
+    expect(ops).toEqual([{ p: ["a", "edges", 1], lm: 0 }]);
+
     expect(graph.toObject()).toMatchObject({
       _root: {
         edges: ["a"],
@@ -76,7 +91,12 @@ describe("removing nodes", () => {
   beforeEach(loadGraph);
 
   test("remove a child node", () => {
-    graph.remove("c");
+    const ops = graph.remove("c");
+
+    expect(ops).toEqual([
+      { p: "c", od: {} },
+      { p: ["a", "edges", 1], ld: "c" },
+    ]);
 
     expect(graph.toObject()).toMatchObject({
       _root: {
@@ -90,7 +110,15 @@ describe("removing nodes", () => {
   });
 
   test("remove a node with children", () => {
-    graph.remove("a");
+    const ops = graph.remove("a");
+
+    expect(ops).toEqual([
+      { p: "b", od: {} },
+      { p: ["a", "edges", 0], ld: "b" },
+      { p: "a", od: { edges: ["c"] } },
+      { p: ["_root", "edges", 0], ld: "a" },
+    ]);
+
     expect(graph.toObject()).toMatchObject({
       _root: {
         edges: [],
