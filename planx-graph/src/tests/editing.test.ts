@@ -140,6 +140,42 @@ describe("moving nodes", () => {
   });
 });
 
+describe("cloning nodes", () => {
+  test("to different parent", () => {
+    graph.load({
+      _root: {
+        edges: ["a", "d"],
+      },
+      a: {
+        edges: ["b", "c"],
+      },
+      b: {},
+      c: {},
+      d: {},
+    });
+
+    const ops = graph.move("d", {
+      fromParent: "_root",
+      toParent: "a",
+      clone: true,
+    });
+
+    expect(ops).toEqual([{ p: ["a", "edges", 2], li: "d" }]);
+
+    expect(graph.toObject()).toMatchObject({
+      _root: {
+        edges: ["a", "d"],
+      },
+      a: {
+        edges: ["b", "c", "d"],
+      },
+      b: {},
+      c: {},
+      d: {},
+    });
+  });
+});
+
 describe("removing nodes", () => {
   beforeEach(loadGraph);
 

@@ -94,7 +94,12 @@ class Graph {
 
   move(
     id,
-    { fromParent = ROOT_NODE_KEY, toBefore = undefined, toParent = undefined }
+    {
+      fromParent = ROOT_NODE_KEY,
+      toBefore = undefined,
+      toParent = undefined,
+      clone = false,
+    }
   ): Array<OT.Op> {
     toParent = toParent || fromParent;
 
@@ -105,12 +110,12 @@ class Graph {
 
     if (fromIdx >= 0) {
       originalNode = this.nodes.get(fromParent).edges[fromIdx];
-      this.nodes.get(fromParent).edges.splice(fromIdx, 1);
+      if (!clone) this.nodes.get(fromParent).edges.splice(fromIdx, 1);
     } else {
       throw new Error(`'${id}' not found in '${fromParent}'`);
     }
 
-    if (fromParent !== toParent) {
+    if (!clone && fromParent !== toParent) {
       ops.push({
         ld: originalNode,
         p: [fromParent, "edges", fromIdx],
