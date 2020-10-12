@@ -20,6 +20,16 @@ class Graph {
     return this.idFunction(this.counter++);
   }
 
+  load(nodes) {
+    Object.entries(nodes).forEach(([id, data]: [string, Node]) => {
+      this.nodes.set(id, data);
+    });
+  }
+
+  toObject() {
+    return Object.fromEntries(this.nodes);
+  }
+
   add(
     { id = this.generateId(), type, ...data },
     { parent = ROOT_NODE_KEY, children = [] } = {}
@@ -46,11 +56,13 @@ class Graph {
   }
 
   remove(id) {
-    this.nodes.get(id).edges.forEach((child) => this.remove(child));
+    (this.nodes.get(id).edges || []).forEach((child) => this.remove(child));
     this.nodes.delete(id);
     this.nodes.forEach((node: any) => {
-      const idx = node.edges.indexOf(id);
-      if (idx >= 0) node.edges.splice(idx, 1);
+      if (node.edges) {
+        const idx = node.edges.indexOf(id);
+        if (idx >= 0) node.edges.splice(idx, 1);
+      }
     });
   }
 
