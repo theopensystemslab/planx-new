@@ -79,18 +79,35 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 // ------------------------------------------------
 
 .card {
+  > ol {
+    overflow: hidden;
+    [data-layout="left-right"] & {
+      transform: scaleY(1);
+      transform-origin: left;
+      transition: transform, max-width 0.2s ease-out;
+    }
+    [data-layout="top-down"] & {
+      transform: scaleX(1);
+      transform-origin: top;
+      transition: transform, max-height 0.2s ease-out;
+    }
+  }
+
   &.isDragging {
     opacity: 0.3;
+
     & + .hanger {
       @include disabledHanger();
     }
+
     > ol {
-      visibility: hidden;
       [data-layout="left-right"] & {
-        width: 0;
+        transform: scaleY(0.2);
+        max-width: 0 !important;
       }
       [data-layout="top-down"] & {
-        height: 0;
+        transform: scaleX(0.2);
+        max-height: 0 !important;
       }
     }
   }
