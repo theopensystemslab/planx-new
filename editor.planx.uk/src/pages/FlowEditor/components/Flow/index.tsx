@@ -16,8 +16,6 @@ const Flow = ({ breadcrumbs = [] }: any) => {
     state.flowLayout,
   ]);
 
-  console.log({ childNodes });
-
   breadcrumbs = breadcrumbs.map((id) => ({
     id,
     ...getNode(id),

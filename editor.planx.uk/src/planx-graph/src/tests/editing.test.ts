@@ -29,12 +29,13 @@ describe("adding nodes", () => {
       { p: ["_root", "edges", 0], li: "d" },
       {
         p: ["d"],
-        oi: { data: { text: "question" }, edges: [], type: 100 },
+        oi: { data: { text: "question" }, type: 100 },
       },
+      { p: ["d", "edges"], oi: [] },
       { p: ["d", "edges", 0], li: "a" },
-      { p: ["a"], oi: { data: { text: "a1" }, edges: [], type: 200 } },
+      { p: ["a"], oi: { data: { text: "a1" }, type: 200 } },
       { p: ["d", "edges", 1], li: "b" },
-      { p: ["b"], oi: { data: { text: "a2" }, edges: [], type: 200 } },
+      { p: ["b"], oi: { data: { text: "a2" }, type: 200 } },
     ]);
 
     expect(graph.toObject()).toMatchObject({
@@ -45,14 +46,12 @@ describe("adding nodes", () => {
         data: {
           text: "a1",
         },
-        edges: [],
         type: 200,
       },
       b: {
         data: {
           text: "a2",
         },
-        edges: [],
         type: 200,
       },
       d: {
@@ -206,12 +205,11 @@ describe("removing nodes", () => {
       { p: ["a", "edges", 0], ld: "b" },
       { p: "a", od: { edges: ["c"] } },
       { p: ["_root", "edges", 0], ld: "a" },
+      { p: ["_root", "edges"], ld: [] },
     ]);
 
     expect(graph.toObject()).toMatchObject({
-      _root: {
-        edges: [],
-      },
+      _root: {},
     });
   });
 });

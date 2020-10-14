@@ -324,7 +324,7 @@ const Team: React.FC<{ flows: any[]; id }> = ({ flows, id }) => {
                 api
                   .getState()
                   // .createFlow(id, newFlowName);
-                  .createFlow(id, newFlowName, { _root: { edges: [] } });
+                  .createFlow(id, newFlowName, { _root: {} });
               }
             }}
           >

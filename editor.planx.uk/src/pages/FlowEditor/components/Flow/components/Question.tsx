@@ -11,7 +11,6 @@ import Node from "./Node";
 type Props = any;
 
 const Question: React.FC<Props> = React.memo((props) => {
-  console.log({ props });
   const [isClone, childNodes] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),

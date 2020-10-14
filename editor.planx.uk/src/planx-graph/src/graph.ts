@@ -6,7 +6,7 @@ const ROOT_NODE_KEY = "_root";
 interface Node {
   type?: number;
   data?: Object;
-  edges: string[];
+  edges?: string[];
 }
 
 class Graph {
@@ -32,14 +32,19 @@ class Graph {
     { parent = ROOT_NODE_KEY, children = [] } = {},
     ops = []
   ): Array<OT.Op> {
+    if (!this.nodes.get(parent).edges) {
+      ops.push({ p: [parent, "edges"], oi: [] });
+      this.nodes.get(parent).edges = [];
+    }
+
     ops.push({
       p: [parent, "edges", this.nodes.get(parent).edges.length],
       li: id,
     });
     this.nodes.get(parent).edges.push(id);
 
-    ops.push({ p: [id], oi: { type, data, edges: [] } });
-    this.nodes.set(id, { type, data, edges: [] });
+    ops.push({ p: [id], oi: { type, data } });
+    this.nodes.set(id, { type, data });
 
     children.map((child) =>
       this.add({ type: 200, ...child }, { parent: id }, ops)
@@ -88,6 +93,10 @@ class Graph {
         if (idx >= 0) {
           ops.push({ p: [nodeId, "edges", idx], ld: node.edges[idx] });
           node.edges.splice(idx, 1);
+        }
+        if (node.edges.length === 0) {
+          ops.push({ p: [nodeId, "edges"], ld: [] });
+          delete node.edges;
         }
       }
     });

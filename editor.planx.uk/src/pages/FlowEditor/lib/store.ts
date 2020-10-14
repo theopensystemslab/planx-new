@@ -327,8 +327,7 @@ export const [useStore, api] = create((set, get) => ({
 
   childNodesOf(id: string = "_root") {
     const { flow } = get();
-    console.log({ _root: flow["_root"] });
-    return flow[id].edges.map((id) => ({ id, ...flow[id] }));
+    return (flow[id]?.edges || []).map((id) => ({ id, ...flow[id] }));
   },
 
   createFlow: async (teamId, newName, data = { nodes: {}, edges: [] }) => {
