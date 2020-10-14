@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import "./app.scss";
@@ -6,21 +6,28 @@ import Card from "./components/Card";
 import Endpoint from "./components/Endpoint";
 import Flow from "./components/Flow";
 import Hanger from "./components/Hanger";
-import data from "./data.json";
 
-const map = new Map(Object.entries(data)) as any;
-
-export const FlowContext = React.createContext(map);
+export const FlowContext = React.createContext(null);
 
 function App() {
+  const [flow, setFlow] = useState<Map<string, any>>();
+
+  useEffect(() => {
+    fetch("/flows/a.json")
+      .then((response) => response.json())
+      .then((data) => setFlow(new Map(Object.entries(data))));
+  }, []);
+
+  if (!flow) return <h1>Loading</h1>;
+
   return (
-    <FlowContext.Provider value={map}>
+    <FlowContext.Provider value={flow}>
       <div id="editor-container">
         <div id="editor">
           <DndProvider backend={HTML5Backend}>
             <Flow>
               <Endpoint label="start" />
-              {map.get("_root").edges.map((id) => (
+              {flow.get("_root").edges.map((id) => (
                 <Card key={id} id={id} type="decision" />
               ))}
               <Hanger />
