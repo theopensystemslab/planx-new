@@ -32,11 +32,14 @@ class Graph {
     { parent = ROOT_NODE_KEY, children = [] } = {},
     ops = []
   ): Array<OT.Op> {
+    ops.push({
+      p: [parent, "edges", this.nodes.get(parent).edges.length],
+      li: id,
+    });
     this.nodes.get(parent).edges.push(id);
-    ops.push({ p: [parent, "edges"], li: id });
 
-    this.nodes.set(id, { type, data, edges: [] });
     ops.push({ p: [id], oi: { type, data, edges: [] } });
+    this.nodes.set(id, { type, data, edges: [] });
 
     children.map((child) =>
       this.add({ type: 200, ...child }, { parent: id }, ops)

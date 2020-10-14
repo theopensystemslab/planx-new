@@ -9,9 +9,9 @@ import Question from "./Question";
 import Result from "./Result";
 
 const Node: React.FC<any> = (props) => {
-  const node = useStore((state) => state.flow.nodes[props.id]);
+  const node = useStore((state) => state.flow[props.id]);
 
-  switch (props.$t) {
+  switch (props.type) {
     case TYPES.PropertyInformation:
       return <Question {...props} text="Property information" />;
     case TYPES.FindProperty:

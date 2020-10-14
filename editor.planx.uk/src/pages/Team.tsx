@@ -320,7 +320,12 @@ const Team: React.FC<{ flows: any[]; id }> = ({ flows, id }) => {
           <AddButton
             onClick={() => {
               const newFlowName = prompt("Service name");
-              if (newFlowName) api.getState().createFlow(id, newFlowName);
+              if (newFlowName) {
+                api
+                  .getState()
+                  // .createFlow(id, newFlowName);
+                  .createFlow(id, newFlowName, { _root: { edges: [] } });
+              }
             }}
           >
             Add a new service

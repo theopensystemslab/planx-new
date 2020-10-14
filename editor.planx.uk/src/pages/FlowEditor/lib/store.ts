@@ -11,12 +11,12 @@ import pgarray from "pg-array";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
+import Graph from "../../../planx-graph/src/graph";
 import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
 import { getOps as getImmerOps } from "./adapters/immer";
 import {
-  addNodeWithChildrenOp,
   isValidOp,
   moveNodeOp,
   removeNode,
@@ -55,7 +55,7 @@ const jdiff = jsondiffpatch.create({
 
 const send = (...ops) => {
   ops = flattenDeep(ops);
-  console.log(ops);
+  console.log({ ops });
   doc.submitOp(ops);
 };
 
@@ -84,8 +84,6 @@ export const [useStore, api] = create((set, get) => ({
     const cloneStateFromShareDb = () => {
       console.debug("[NF]:", JSON.stringify(doc.data, null, 0));
       const flow = JSON.parse(JSON.stringify(doc.data));
-      flow.edges = flow.edges.filter((val) => !!val);
-      (window as any).flow = flow;
       set({ flow });
     };
 
@@ -105,42 +103,55 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   isClone: (id: string) => {
-    return get().flow.edges.filter(([, tgt]: any) => tgt === id).length > 1;
+    return false;
+    // return get().flow.edges.filter(([, tgt]: any) => tgt === id).length > 1;
   },
 
   getNode(id: any) {
     const { flow } = get();
     return {
       id,
-      ...flow.nodes[id],
+      ...flow[id],
     };
   },
 
-  addNode: (data, children = [], parent = null, before = null, cb = send) => {
+  addNode: (
+    data,
+    children = [],
+    parent = undefined,
+    before = undefined,
+    cb = send
+  ) => {
     const { flow } = get();
-    console.debug(
-      `[OP]: addNodeWithChildrenOp(${JSON.stringify(data)}, ${JSON.stringify(
-        children
-      )}, ${JSON.stringify(parent)}, ${JSON.stringify(before)}, beforeFlow);`
-    );
 
-    if (data.flowId && flow.nodes[data.flowId]) {
-      let position = flow.edges.length;
-      if (before) {
-        const index = flow.edges.findIndex(
-          ([src, tgt]: any) => src === parent && tgt === before
-        );
-        console.log({ parent, before, index });
-        if (index >= 0) {
-          position = index;
-        }
-      } else {
-        position++;
-      }
-      cb([{ p: ["edges", position], li: [parent, data.flowId] }]);
-    } else {
-      cb(addNodeWithChildrenOp(data, children, parent, before, flow));
-    }
+    const { $t: type, ...node } = data;
+    const g = new Graph();
+    g.load(flow);
+    const ops = g.add({ id: uuid(), type, ...node });
+    cb(ops);
+    // console.debug(
+    //   `[OP]: addNodeWithChildrenOp(${JSON.stringify(data)}, ${JSON.stringify(
+    //     children
+    //   )}, ${JSON.stringify(parent)}, ${JSON.stringify(before)}, beforeFlow);`
+    // );
+
+    // if (data.flowId && flow.nodes[data.flowId]) {
+    //   let position = flow.edges.length;
+    //   if (before) {
+    //     const index = flow.edges.findIndex(
+    //       ([src, tgt]: any) => src === parent && tgt === before
+    //     );
+    //     console.log({ parent, before, index });
+    //     if (index >= 0) {
+    //       position = index;
+    //     }
+    //   } else {
+    //     position++;
+    //   }
+    //   cb([{ p: ["edges", position], li: [parent, data.flowId] }]);
+    // } else {
+    //   cb(addNodeWithChildrenOp(data, children, parent, before, flow));
+    // }
   },
 
   updateNode: ({ id, ...newNode }, newOptions: any[], cb = send) => {
@@ -314,25 +325,13 @@ export const [useStore, api] = create((set, get) => ({
     }
   },
 
-  childNodesOf(id: any, onlyPublic = false) {
+  childNodesOf(id: string = "_root") {
     const { flow } = get();
-
-    let edges = flow.edges.filter(Boolean).filter(([src]: any) => src === id);
-    if (onlyPublic) {
-      edges = edges.filter(
-        ([, tgt]: any) =>
-          flow.edges.filter(([src]: any) => src === tgt).length > 0
-      );
-    }
-    return edges.map(([, id]: any) => ({ id, ...flow.nodes[id] }));
+    console.log({ _root: flow["_root"] });
+    return flow[id].edges.map((id) => ({ id, ...flow[id] }));
   },
 
-  createFlow: async (teamId, newName) => {
-    const data = {
-      nodes: {},
-      edges: [],
-    };
-
+  createFlow: async (teamId, newName, data = { nodes: {}, edges: [] }) => {
     let response = (await client.mutate({
       mutation: gql`
         mutation CreateFlow(
@@ -390,6 +389,7 @@ export const [useStore, api] = create((set, get) => ({
       },
     });
 
+    // TODO: change this to window.location.href = `/${team.slug}/${flow.slug}`
     window.location.reload();
   },
 
@@ -519,6 +519,8 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   upcomingCardIds() {
+    return [];
+
     const { flow, breadcrumbs, passport } = get();
 
     const ids = new Set();

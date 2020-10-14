@@ -9,7 +9,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/CloseOutlined";
 import React from "react";
 import { useNavigation } from "react-navi";
-
 import { rootFlowPath } from "../../../../routes/utils";
 import { TYPES, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
@@ -94,7 +93,7 @@ const FormModal: React.FC<{
   const [addNode, updateNode, node, makeUnique] = useStore((store) => [
     store.addNode,
     store.updateNode,
-    store.flow.nodes[id],
+    store.flow[id],
     store.makeUnique,
   ]);
   const handleClose = () => navigate(rootFlowPath(true));

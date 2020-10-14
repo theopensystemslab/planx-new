@@ -4,13 +4,14 @@ import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
 import { api, useStore } from "../../../lib/store";
 import { getParentId } from "../../../lib/utils";
+import { ICONS } from "../../shared";
 import Hanger from "./Hanger";
 import Node from "./Node";
-import { ICONS } from "../../shared";
 
 type Props = any;
 
 const Question: React.FC<Props> = React.memo((props) => {
+  console.log({ props });
   const [isClone, childNodes] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
@@ -22,7 +23,7 @@ const Question: React.FC<Props> = React.memo((props) => {
     item: {
       id: props.id,
       parent,
-      text: props.text,
+      text: props.data.text,
       type: "DECISION",
     },
     collect: (monitor) => ({
@@ -41,7 +42,7 @@ const Question: React.FC<Props> = React.memo((props) => {
     api.getState().copyNode(props.id);
   };
 
-  const Icon = ICONS[props.$t];
+  const Icon = ICONS[props.type];
 
   return (
     <>
@@ -60,7 +61,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           ref={drag}
         >
           {Icon && <Icon />}
-          <span>{props.text || "Question"}</span>
+          <span>{props.data.text || "Question"}</span>
         </Link>
         <ol>
           {childNodes.map((child: any) => (

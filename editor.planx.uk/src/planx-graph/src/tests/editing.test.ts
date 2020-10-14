@@ -26,14 +26,14 @@ describe("adding nodes", () => {
     );
 
     expect(ops).toEqual([
-      { p: ["_root", "edges"], li: "d" },
+      { p: ["_root", "edges", 0], li: "d" },
       {
         p: ["d"],
         oi: { data: { text: "question" }, edges: [], type: 100 },
       },
-      { p: ["d", "edges"], li: "a" },
+      { p: ["d", "edges", 0], li: "a" },
       { p: ["a"], oi: { data: { text: "a1" }, edges: [], type: 200 } },
-      { p: ["d", "edges"], li: "b" },
+      { p: ["d", "edges", 1], li: "b" },
       { p: ["b"], oi: { data: { text: "a2" }, edges: [], type: 200 } },
     ]);
 

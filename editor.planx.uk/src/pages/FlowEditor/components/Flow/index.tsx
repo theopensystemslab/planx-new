@@ -10,11 +10,13 @@ export enum FlowLayout {
 }
 
 const Flow = ({ breadcrumbs = [] }: any) => {
-  const [childNodes, getNode, flowLayout] = useStore((state) => [
-    state.childNodesOf(breadcrumbs[breadcrumbs.length - 1] || null),
+  const [childNodes, getNode] = useStore((state) => [
+    state.childNodesOf(breadcrumbs[breadcrumbs.length - 1] || "_root"),
     state.getNode,
     state.flowLayout,
   ]);
+
+  console.log({ childNodes });
 
   breadcrumbs = breadcrumbs.map((id) => ({
     id,
