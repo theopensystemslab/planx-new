@@ -2,6 +2,7 @@ import classNames from "classnames";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useDrag } from "react-dnd";
 import { FlowContext } from "../App";
+import { flowDirection } from "../config";
 import Hanger from "./Hanger";
 
 const Card = ({ id, type }) => {
@@ -17,7 +18,11 @@ const Card = ({ id, type }) => {
   });
 
   useEffect(() => {
-    setMaxSize({ maxHeight: olRef.current.getBoundingClientRect().height });
+    if (flowDirection === "top-down") {
+      setMaxSize({ maxHeight: olRef.current.getBoundingClientRect().height });
+    } else {
+      setMaxSize({ maxWidth: olRef.current.getBoundingClientRect().width });
+    }
   }, []);
 
   return (
