@@ -1,1 +1,1 @@
-export const flowDirection: "top-down" | "left-right" = "left-right";
+export const flowDirection: "top-down" | "left-right" = "top-down";
