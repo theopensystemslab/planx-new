@@ -12,8 +12,5 @@
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
-  },
-  "dependencies": {
-    "urql": "^1.10.1"
   }
 }
