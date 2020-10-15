@@ -37,7 +37,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   const handleContext = (e: React.MouseEvent) => {
     e.preventDefault();
-    api.getState().pasteNode(parent || null, before || null);
+    api.getState().pasteNode(parent || undefined, before || undefined);
   };
 
   return (

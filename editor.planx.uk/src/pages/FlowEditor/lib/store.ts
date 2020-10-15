@@ -16,7 +16,7 @@ import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
 import { getOps as getImmerOps } from "./adapters/immer";
-import { isValidOp, moveNodeOp, removeNode, toGraphlib } from "./flow";
+import { isValidOp, removeNode, toGraphlib } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
 const SUPPORTED_INFORMATION_TYPES = [
@@ -275,20 +275,17 @@ export const [useStore, api] = create((set, get) => ({
 
   moveNode(
     id: string,
-    parent = null,
-    toBefore = null,
-    toParent = null,
+    parent = undefined,
+    toBefore = undefined,
+    toParent = undefined,
     cb = send
   ) {
     const { flow, resetPreview } = get();
-    console.debug(
-      `[OP]: moveNodeOp(${JSON.stringify(id)}, ${JSON.stringify(
-        parent
-      )}, ${JSON.stringify(toBefore)}, ${JSON.stringify(
-        toParent
-      )}, beforeFlow);`
-    );
-    cb(moveNodeOp(id, parent, toBefore, toParent, flow));
+
+    const g = new Graph();
+    g.load(flow);
+    const ops = g.move(id, { fromParent: parent, toBefore, toParent });
+    cb(ops);
 
     resetPreview();
   },
