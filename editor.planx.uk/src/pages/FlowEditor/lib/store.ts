@@ -16,13 +16,7 @@ import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
 import { getOps as getImmerOps } from "./adapters/immer";
-import {
-  isValidOp,
-  moveNodeOp,
-  removeNode,
-  removeNodeOp,
-  toGraphlib,
-} from "./flow";
+import { isValidOp, moveNodeOp, removeNode, toGraphlib } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
 const SUPPORTED_INFORMATION_TYPES = [
@@ -272,13 +266,11 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   removeNode: (id, parent = null, cb = send) => {
-    const { flow } = get();
-    console.debug(
-      `[OP]: removeNodeOp(${JSON.stringify(id)}, ${JSON.stringify(
-        parent
-      )}, beforeFlow);`
-    );
-    cb(removeNodeOp(id, parent, flow));
+    // TODO: pass parent to remove
+    const g = new Graph();
+    g.load(get().flow);
+    const ops = g.remove(id);
+    cb(ops);
   },
 
   moveNode(
