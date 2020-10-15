@@ -84,7 +84,7 @@ class Graph {
       this.remove(child, ops)
     );
 
-    ops.push({ p: id, od: this.nodes.get(id) });
+    ops.push({ p: [id], od: this.nodes.get(id) });
     this.nodes.delete(id);
 
     this.nodes.forEach((node: any, nodeId: string) => {

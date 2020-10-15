@@ -182,7 +182,7 @@ describe("removing nodes", () => {
     const ops = graph.remove("c");
 
     expect(ops).toEqual([
-      { p: "c", od: {} },
+      { p: ["c"], od: {} },
       { p: ["a", "edges", 1], ld: "c" },
     ]);
 
@@ -201,9 +201,9 @@ describe("removing nodes", () => {
     const ops = graph.remove("a");
 
     expect(ops).toEqual([
-      { p: "b", od: {} },
+      { p: ["b"], od: {} },
       { p: ["a", "edges", 0], ld: "b" },
-      { p: "a", od: { edges: ["c"] } },
+      { p: ["a"], od: { edges: ["c"] } },
       { p: ["_root", "edges", 0], ld: "a" },
       { p: ["_root", "edges"], ld: [] },
     ]);
