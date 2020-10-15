@@ -29,7 +29,7 @@ class Graph {
 
   add(
     { id = this.generateId(), type, ...data },
-    { parent = ROOT_NODE_KEY, children = [] } = {},
+    { parent = ROOT_NODE_KEY, before = undefined, children = [] } = {},
     ops = []
   ): Array<OT.Op> {
     if (!this.nodes.get(parent).edges) {
@@ -37,11 +37,20 @@ class Graph {
       this.nodes.get(parent).edges = [];
     }
 
-    ops.push({
-      p: [parent, "edges", this.nodes.get(parent).edges.length],
-      li: id,
-    });
-    this.nodes.get(parent).edges.push(id);
+    const idx = this.nodes.get(parent).edges.indexOf(before);
+    if (idx >= 0) {
+      ops.push({
+        p: [parent, "edges", idx],
+        li: id,
+      });
+      this.nodes.get(parent).edges.splice(idx, 0, id);
+    } else {
+      ops.push({
+        p: [parent, "edges", this.nodes.get(parent).edges.length],
+        li: id,
+      });
+      this.nodes.get(parent).edges.push(id);
+    }
 
     ops.push({ p: [id], oi: { type, data } });
     this.nodes.set(id, { type, data });

@@ -19,6 +19,29 @@ beforeEach(() => {
 });
 
 describe("adding nodes", () => {
+  test("nested, before another node", () => {
+    loadGraph();
+
+    const ops = graph.add({ id: "d", type: 100 }, { parent: "a", before: "c" });
+
+    expect(ops).toEqual([
+      { p: ["a", "edges", 1], li: "d" },
+      { p: ["d"], oi: { type: 100, data: {} } },
+    ]);
+
+    expect(graph.toObject()).toMatchObject({
+      _root: {
+        edges: ["a"],
+      },
+      a: {
+        edges: ["b", "d", "c"],
+      },
+      b: {},
+      c: {},
+      d: { type: 100 },
+    });
+  });
+
   test("add a node with children", () => {
     const ops = graph.add(
       { id: "d", text: "question", type: 100 },
@@ -197,7 +220,7 @@ describe("removing nodes", () => {
     });
   });
 
-  test.only("remove a node with children", () => {
+  test("remove a node with children", () => {
     graph.load({
       _root: {
         edges: ["a"],

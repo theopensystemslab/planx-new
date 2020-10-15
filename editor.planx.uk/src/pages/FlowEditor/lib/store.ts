@@ -104,7 +104,7 @@ export const [useStore, api] = create((set, get) => ({
   addNode: (
     data,
     children = [],
-    parent = undefined,
+    parent = ROOT_NODE_KEY,
     before = undefined,
     cb = send
   ) => {
@@ -113,7 +113,10 @@ export const [useStore, api] = create((set, get) => ({
     const { $t: type, ...node } = data;
     const g = new Graph();
     g.load(flow);
-    const ops = g.add({ id: uuid(), type, ...node }, { children });
+    const ops = g.add(
+      { id: uuid(), type, ...node },
+      { children, before, parent }
+    );
 
     cb(ops);
     // console.debug(
