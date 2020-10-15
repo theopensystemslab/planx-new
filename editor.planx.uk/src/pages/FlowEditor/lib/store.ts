@@ -9,8 +9,8 @@ import omit from "lodash/omit";
 import pgarray from "pg-array";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
-
 import { client } from "../../../lib/graphql";
+import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
 import { getOps as getImmerOps } from "./adapters/immer";
@@ -62,6 +62,8 @@ export const [useStore, api] = create((set, get) => ({
   id: undefined,
 
   showPreview: true,
+
+  flowLayout: FlowLayout.TOP_DOWN,
 
   connectTo: async (id: string) => {
     if (id === get().id) return; // already connected to this ID
