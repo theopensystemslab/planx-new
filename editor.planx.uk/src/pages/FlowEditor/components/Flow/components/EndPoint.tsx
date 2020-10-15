@@ -3,12 +3,12 @@ import { Link } from "react-navi";
 import scrollIntoView from "scroll-into-view-if-needed";
 import { FlowLayout } from "..";
 import { rootFlowPath } from "../../../../../routes/utils";
+import { useStore } from "../../../lib/store";
 
-const EndPoint: React.FC<{ text: string; layout?: FlowLayout }> = ({
-  text,
-  layout,
-}) => {
+const EndPoint: React.FC<{ text: string }> = ({ text }) => {
   const el = useRef<HTMLLIElement>(null);
+  const flowLayout = useStore((state) => state.flowLayout);
+
   const isStart = text === "start";
 
   const href = rootFlowPath(false);
@@ -17,7 +17,7 @@ const EndPoint: React.FC<{ text: string; layout?: FlowLayout }> = ({
     if (isStart && el.current) {
       scrollIntoView(
         el.current,
-        layout === FlowLayout.TOP_DOWN
+        flowLayout === FlowLayout.TOP_DOWN
           ? {
               scrollMode: "if-needed",
               block: "nearest",
@@ -30,7 +30,7 @@ const EndPoint: React.FC<{ text: string; layout?: FlowLayout }> = ({
             }
       );
     }
-  }, [layout, isStart]);
+  }, [flowLayout, isStart]);
 
   return (
     <li
