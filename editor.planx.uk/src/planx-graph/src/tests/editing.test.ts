@@ -314,4 +314,44 @@ describe("updating a node", () => {
       b: {},
     });
   });
+
+  test("remove data if missing from newData", () => {
+    graph.load({
+      _root: {
+        edges: ["a"],
+      },
+      a: {
+        data: {
+          xyz: 1,
+          foo: "bar",
+        },
+        edges: ["b"],
+      },
+      b: {},
+    });
+
+    const ops = graph.update(
+      "a",
+      { foo: "bar2" },
+      { removeKeyIfMissing: true }
+    );
+
+    expect(ops).toEqual([
+      { p: ["a", "data", "xyz"], od: 1 },
+      { p: ["a", "data", "foo"], oi: "bar2", od: "bar" },
+    ]);
+
+    expect(graph.toObject()).toMatchObject({
+      _root: {
+        edges: ["a"],
+      },
+      a: {
+        data: {
+          foo: "bar2",
+        },
+        edges: ["b"],
+      },
+      b: {},
+    });
+  });
 });

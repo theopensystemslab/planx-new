@@ -130,7 +130,7 @@ const FormModal: React.FC<{
       <DialogContent dividers>
         <Component
           node={node}
-          {...node}
+          {...node?.data}
           {...extraProps}
           id={id}
           handleSubmit={(data, options = []) => {

@@ -14,8 +14,8 @@ import {
   RichTextInput,
 } from "../../../../ui";
 import { TYPES } from "../../data/types";
-import { MoreInformation, PermissionSelect } from "./shared";
 import { ICONS } from "../shared";
+import { MoreInformation, PermissionSelect } from "./shared";
 
 interface Option {
   val?: string;
@@ -40,7 +40,6 @@ interface Props {
   info?: string;
   img?: string;
   definitionImg?: string;
-  node?: any;
 }
 
 const OptionEditor: React.FC<{

@@ -1,9 +1,7 @@
 import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
 import { alg } from "graphlib";
-import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
-import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
 import omit from "lodash/omit";
 import uniq from "lodash/uniq";
@@ -15,8 +13,7 @@ import Graph from "../../../planx-graph/src/graph";
 import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
-import { getOps as getImmerOps } from "./adapters/immer";
-import { isValidOp, removeNode, toGraphlib } from "./flow";
+import { isValidOp, toGraphlib } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
 const SUPPORTED_INFORMATION_TYPES = [
@@ -40,17 +37,12 @@ const SUPPORTED_TYPES = [
 
 let doc;
 
-const jdiff = jsondiffpatch.create({
-  objectHash: (obj: any) => obj.id || JSON.stringify(obj),
-  textDiff: {
-    minLength: Infinity,
-  },
-});
-
 const send = (...ops) => {
   ops = flattenDeep(ops);
-  console.log({ ops });
-  doc.submitOp(ops);
+  if (ops.length > 0) {
+    console.log({ ops });
+    doc.submitOp(ops);
+  }
 };
 
 export const [useStore, api] = create((set, get) => ({
@@ -149,58 +141,62 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   updateNode: ({ id, ...newNode }, newOptions: any[], cb = send) => {
-    const { flow } = get();
-
-    const ops = getImmerOps(flow, (draft) => {
-      // 1. update the node itself
-      const originalNode = JSON.parse(JSON.stringify(draft.nodes[id]));
-      const delta = jdiff.diff(originalNode, newNode);
-      jdiff.patch(draft.nodes[id], delta);
-
-      // 2. remove responses/options that no longer exist
-
-      let existingOptionIds = draft.edges
-        .filter(([src]: any) => src === id)
-        .map(([, tgt]) => tgt);
-
-      let newOptionIds = newOptions.filter((o) => o.text).map((o) => o.id);
-
-      let removedIds = difference(existingOptionIds, newOptionIds);
-
-      removedIds.forEach((rId) => {
-        removeNode(rId, id, draft);
-      });
-
-      // 3. update/create children that have been added
-
-      // const optionsChanged =
-      //   existingOptionIds.join(",") !== newOptionIds.join(",");
-
-      const usableNewOptions = newOptions
-        .filter((o) => o.text && !removedIds.includes(o.id))
-        .map((option) => ({ id: option.id || uuid(), ...option }));
-
-      usableNewOptions.forEach(({ id: oId, ...node }) => {
-        if (draft.nodes[oId]) {
-          // option already exists, update it
-          const originalNode = JSON.parse(JSON.stringify(draft.nodes[oId]));
-          const delta = jdiff.diff(originalNode, node);
-          jdiff.patch(draft.nodes[oId], delta);
-
-          // if (optionsChanged) {
-          //   const pos = draft.edges.findIndex(
-          //     ([src, tgt]) => src === id && tgt === oId
-          //   );
-          //   draft.edges.push(draft.edges.splice(pos, 1)[0]);
-          // }
-        } else {
-          draft.nodes[oId] = { $t: TYPES.Response, ...node };
-          draft.edges.push([id, oId]);
-        }
-      });
-    });
-
+    const g = new Graph();
+    g.load(get().flow);
+    const { $t, ...newData } = newNode;
+    const ops = g.update(id, newData, { removeKeyIfMissing: true });
     cb(ops);
+
+    // const ops = getImmerOps(flow, (draft) => {
+    //   // 1. update the node itself
+    //   const originalNode = JSON.parse(JSON.stringify(draft.nodes[id]));
+    //   const delta = jdiff.diff(originalNode, newNode);
+    //   jdiff.patch(draft.nodes[id], delta);
+
+    //   // 2. remove responses/options that no longer exist
+
+    //   let existingOptionIds = draft.edges
+    //     .filter(([src]: any) => src === id)
+    //     .map(([, tgt]) => tgt);
+
+    //   let newOptionIds = newOptions.filter((o) => o.text).map((o) => o.id);
+
+    //   let removedIds = difference(existingOptionIds, newOptionIds);
+
+    //   removedIds.forEach((rId) => {
+    //     removeNode(rId, id, draft);
+    //   });
+
+    //   // 3. update/create children that have been added
+
+    //   // const optionsChanged =
+    //   //   existingOptionIds.join(",") !== newOptionIds.join(",");
+
+    //   const usableNewOptions = newOptions
+    //     .filter((o) => o.text && !removedIds.includes(o.id))
+    //     .map((option) => ({ id: option.id || uuid(), ...option }));
+
+    //   usableNewOptions.forEach(({ id: oId, ...node }) => {
+    //     if (draft.nodes[oId]) {
+    //       // option already exists, update it
+    //       const originalNode = JSON.parse(JSON.stringify(draft.nodes[oId]));
+    //       const delta = jdiff.diff(originalNode, node);
+    //       jdiff.patch(draft.nodes[oId], delta);
+
+    //       // if (optionsChanged) {
+    //       //   const pos = draft.edges.findIndex(
+    //       //     ([src, tgt]) => src === id && tgt === oId
+    //       //   );
+    //       //   draft.edges.push(draft.edges.splice(pos, 1)[0]);
+    //       // }
+    //     } else {
+    //       draft.nodes[oId] = { $t: TYPES.Response, ...node };
+    //       draft.edges.push([id, oId]);
+    //     }
+    //   });
+    // });
+
+    // cb(ops);
   },
 
   makeUnique: (id, parent = null) => {

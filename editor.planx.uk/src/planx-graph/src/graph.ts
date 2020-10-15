@@ -53,17 +53,34 @@ class Graph {
     return ops;
   }
 
-  update(id, newData): Array<OT.Op> {
+  update(id, newData, { removeKeyIfMissing = false } = {}): Array<OT.Op> {
     const node = this.nodes.get(id);
 
     const ops = [];
+
+    if (removeKeyIfMissing) {
+      // if a value exists in the current data, but is null, undefined or "" in the
+      // new data then remove it
+      Object.entries(node.data).forEach(([k, v]) => {
+        if (v !== null && v !== undefined) {
+          if (
+            newData[k] === null ||
+            newData[k] === undefined ||
+            newData[k] === ""
+          ) {
+            ops.push({ p: [id, "data", k], od: v });
+            delete node.data[k];
+          }
+        }
+      });
+    }
 
     // TODO: make this work with a nested data structure
     const data = Object.entries(newData).reduce((acc, [k, v]) => {
       if (v === null || v === undefined) {
         ops.push({ p: [id, "data", k], od: acc[k] });
         delete acc[k];
-      } else {
+      } else if (v !== acc[k]) {
         if (acc[k]) {
           ops.push({ p: [id, "data", k], od: acc[k], oi: v });
         } else {
