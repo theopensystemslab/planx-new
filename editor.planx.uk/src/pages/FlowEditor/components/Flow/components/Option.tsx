@@ -13,7 +13,7 @@ const Option: React.FC<any> = (props) => {
   let background = "#AEAEAE"; // no flag color
   let color = "#000";
   try {
-    const flag = flags.find(({ value }) => value === props.flag);
+    const flag = flags.find(({ value }) => value === props.data.flag);
     background = flag.bgColor;
     color = flag.color;
   } catch (e) {}
@@ -26,7 +26,7 @@ const Option: React.FC<any> = (props) => {
         onClick={(e) => e.preventDefault()}
         style={{ background, color }}
       >
-        <span>{props.text}</span>
+        <span>{props.data.text}</span>
       </Link>
       <ol>
         {childNodes.map((child: any) => (

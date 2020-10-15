@@ -113,7 +113,8 @@ export const [useStore, api] = create((set, get) => ({
     const { $t: type, ...node } = data;
     const g = new Graph();
     g.load(flow);
-    const ops = g.add({ id: uuid(), type, ...node });
+    const ops = g.add({ id: uuid(), type, ...node }, { children });
+
     cb(ops);
     // console.debug(
     //   `[OP]: addNodeWithChildrenOp(${JSON.stringify(data)}, ${JSON.stringify(
