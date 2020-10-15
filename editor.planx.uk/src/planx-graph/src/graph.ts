@@ -97,9 +97,7 @@ class Graph {
   }
 
   remove(id, ops = []): Array<OT.Op> {
-    (this.nodes.get(id).edges || []).forEach((child) =>
-      this.remove(child, ops)
-    );
+    const { edges = [] } = this.nodes.get(id);
 
     ops.push({ p: [id], od: this.nodes.get(id) });
     this.nodes.delete(id);
@@ -110,13 +108,16 @@ class Graph {
         if (idx >= 0) {
           ops.push({ p: [nodeId, "edges", idx], ld: node.edges[idx] });
           node.edges.splice(idx, 1);
-        }
-        if (node.edges.length === 0) {
-          ops.push({ p: [nodeId, "edges"], od: [] });
-          delete node.edges;
+
+          if (node.edges.length === 0) {
+            ops.push({ p: [nodeId, "edges"], od: [] });
+            delete node.edges;
+          }
         }
       }
     });
+
+    edges.forEach((child) => this.remove(child, ops));
 
     return ops;
   }

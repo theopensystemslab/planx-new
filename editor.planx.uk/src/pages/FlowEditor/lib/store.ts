@@ -141,11 +141,12 @@ export const [useStore, api] = create((set, get) => ({
     // }
   },
 
-  updateNode: ({ id, ...newNode }, newOptions: any[], cb = send) => {
+  updateNode: ({ id, ...newNode }, options: any[], cb = send) => {
     const g = new Graph();
     g.load(get().flow);
     const { $t, ...newData } = newNode;
     const ops = g.update(id, newData, { removeKeyIfMissing: true });
+    console.log({ options });
     cb(ops);
 
     // const ops = getImmerOps(flow, (draft) => {

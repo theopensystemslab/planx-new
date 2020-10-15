@@ -176,9 +176,9 @@ describe("cloning nodes", () => {
 });
 
 describe("removing nodes", () => {
-  beforeEach(loadGraph);
-
   test("remove a child node", () => {
+    loadGraph();
+
     const ops = graph.remove("c");
 
     expect(ops).toEqual([
@@ -197,15 +197,28 @@ describe("removing nodes", () => {
     });
   });
 
-  test("remove a node with children", () => {
+  test.only("remove a node with children", () => {
+    graph.load({
+      _root: {
+        edges: ["a"],
+      },
+      a: {
+        edges: ["b", "c", "d"],
+      },
+      b: {},
+      c: {},
+      d: {},
+    });
+
     const ops = graph.remove("a");
 
     expect(ops).toEqual([
-      { p: ["b"], od: {} },
-      { p: ["a", "edges", 0], ld: "b" },
-      { p: ["a"], od: { edges: ["c"] } },
+      { p: ["a"], od: { edges: ["b", "c", "d"] } },
       { p: ["_root", "edges", 0], ld: "a" },
       { p: ["_root", "edges"], od: [] },
+      { p: ["b"], od: {} },
+      { p: ["c"], od: {} },
+      { p: ["d"], od: {} },
     ]);
 
     expect(graph.toObject()).toMatchObject({
