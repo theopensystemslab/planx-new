@@ -1,7 +1,7 @@
 import { alphabetId } from "./lib/id";
 import { OT } from "./types/ot";
 
-const ROOT_NODE_KEY = "_root";
+export const ROOT_NODE_KEY = "_root";
 
 interface Node {
   type?: number;
@@ -139,16 +139,25 @@ class Graph {
 
     if (fromIdx >= 0) {
       originalNode = this.nodes.get(fromParent).edges[fromIdx];
-      if (!clone) this.nodes.get(fromParent).edges.splice(fromIdx, 1);
     } else {
       throw new Error(`'${id}' not found in '${fromParent}'`);
     }
 
-    if (!clone && fromParent !== toParent) {
-      ops.push({
-        ld: originalNode,
-        p: [fromParent, "edges", fromIdx],
-      });
+    if (!clone) {
+      this.nodes.get(fromParent).edges.splice(fromIdx, 1);
+      if (fromParent !== toParent) {
+        if (this.nodes.get(fromParent).edges.length === 0) {
+          ops.push({
+            od: [],
+            p: [fromParent, "edges"],
+          });
+        } else {
+          ops.push({
+            ld: originalNode,
+            p: [fromParent, "edges", fromIdx],
+          });
+        }
+      }
     }
 
     if (toBefore) {
@@ -197,7 +206,7 @@ class Graph {
   }
 
   get upcomingNodeIds(): string[] {
-    return this.nodes.get("_root").edges;
+    return this.nodes.get(ROOT_NODE_KEY).edges;
   }
 
   get currentNodeId(): string | null {

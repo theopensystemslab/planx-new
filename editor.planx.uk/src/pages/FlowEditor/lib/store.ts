@@ -9,11 +9,11 @@ import pgarray from "pg-array";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
-import Graph from "../../../planx-graph/src/graph";
+import Graph, { ROOT_NODE_KEY } from "../../../planx-graph/src/graph";
 import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
-import { isValidOp, toGraphlib } from "./flow";
+import { toGraphlib } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
 const SUPPORTED_INFORMATION_TYPES = [
@@ -68,7 +68,7 @@ export const [useStore, api] = create((set, get) => ({
     set({ id });
 
     const cloneStateFromShareDb = () => {
-      console.debug("[NF]:", JSON.stringify(doc.data, null, 0));
+      // console.debug("[NF]:", JSON.stringify(doc.data, null, 0));
       const flow = JSON.parse(JSON.stringify(doc.data));
       set({ flow });
     };
@@ -275,13 +275,14 @@ export const [useStore, api] = create((set, get) => ({
     parent = undefined,
     toBefore = undefined,
     toParent = undefined,
+    clone = false,
     cb = send
   ) {
     const { flow, resetPreview } = get();
 
     const g = new Graph();
     g.load(flow);
-    const ops = g.move(id, { fromParent: parent, toBefore, toParent });
+    const ops = g.move(id, { fromParent: parent, toBefore, toParent, clone });
     cb(ops);
 
     resetPreview();
@@ -291,27 +292,29 @@ export const [useStore, api] = create((set, get) => ({
     localStorage.setItem("clipboard", id);
   },
 
-  pasteNode(parent = null, before = null, cb = send) {
-    const { flow } = get();
+  pasteNode(parent = undefined, before = undefined, cb = send) {
+    const { moveNode } = get();
     const id = localStorage.getItem("clipboard");
 
-    if (id && flow.nodes[id]) {
-      if (!isValidOp(flow, parent, id)) return;
+    moveNode(id, undefined, before, parent, true);
 
-      const ops = [{ li: [parent, id], p: ["edges", flow.edges.length] }];
-      if (before) {
-        const index = flow.edges.findIndex(
-          ([src, tgt]: any) => src === parent && tgt === before
-        );
-        if (index >= 0) {
-          ops[0] = { li: [parent, id], p: ["edges", index] };
-        }
-      }
-      cb(ops);
-    }
+    // if (id && flow.nodes[id]) {
+    //   if (!isValidOp(flow, parent, id)) return;
+
+    //   const ops = [{ li: [parent, id], p: ["edges", flow.edges.length] }];
+    //   if (before) {
+    //     const index = flow.edges.findIndex(
+    //       ([src, tgt]: any) => src === parent && tgt === before
+    //     );
+    //     if (index >= 0) {
+    //       ops[0] = { li: [parent, id], p: ["edges", index] };
+    //     }
+    //   }
+    //   cb(ops);
+    // }
   },
 
-  childNodesOf(id: string = "_root") {
+  childNodesOf(id: string = ROOT_NODE_KEY) {
     const { flow } = get();
     return (flow[id]?.edges || []).map((id) => ({ id, ...flow[id] }));
   },

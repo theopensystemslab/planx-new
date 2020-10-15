@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { ROOT_NODE_KEY } from "../../planx-graph/src/graph";
 import "./app.scss";
 import Card from "./components/Card";
 import Endpoint from "./components/Endpoint";
@@ -27,7 +28,7 @@ function App() {
           <DndProvider backend={HTML5Backend}>
             <Flow>
               <Endpoint label="start" />
-              {flow.get("_root").edges.map((id) => (
+              {flow.get(ROOT_NODE_KEY).edges.map((id) => (
                 <Card key={id} id={id} type="decision" />
               ))}
               <Hanger />

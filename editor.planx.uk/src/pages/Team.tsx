@@ -29,6 +29,7 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React from "react";
 import { Link } from "react-navi";
 import { client } from "../lib/graphql";
+import { ROOT_NODE_KEY } from "../planx-graph/src/graph";
 import { api } from "./FlowEditor/lib/store";
 
 const useStyles = makeStyles((theme) => ({
@@ -324,7 +325,7 @@ const Team: React.FC<{ flows: any[]; id }> = ({ flows, id }) => {
                 api
                   .getState()
                   // .createFlow(id, newFlowName);
-                  .createFlow(id, newFlowName, { _root: {} });
+                  .createFlow(id, newFlowName, { [ROOT_NODE_KEY]: {} });
               }
             }}
           >

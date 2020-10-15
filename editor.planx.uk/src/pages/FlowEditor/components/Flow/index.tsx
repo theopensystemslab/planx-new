@@ -1,4 +1,5 @@
 import React from "react";
+import { ROOT_NODE_KEY } from "../../../../planx-graph/src/graph";
 import { useStore } from "../../lib/store";
 import EndPoint from "./components/EndPoint";
 import Hanger from "./components/Hanger";
@@ -11,7 +12,7 @@ export enum FlowLayout {
 
 const Flow = ({ breadcrumbs = [] }: any) => {
   const [childNodes, getNode, flowLayout] = useStore((state) => [
-    state.childNodesOf(breadcrumbs[breadcrumbs.length - 1] || "_root"),
+    state.childNodesOf(breadcrumbs[breadcrumbs.length - 1] || ROOT_NODE_KEY),
     state.getNode,
     state.flowLayout,
   ]);
