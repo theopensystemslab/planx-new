@@ -95,7 +95,7 @@ class Graph {
           node.edges.splice(idx, 1);
         }
         if (node.edges.length === 0) {
-          ops.push({ p: [nodeId, "edges"], ld: [] });
+          ops.push({ p: [nodeId, "edges"], od: [] });
           delete node.edges;
         }
       }

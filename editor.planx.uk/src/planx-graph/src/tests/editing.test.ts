@@ -205,7 +205,7 @@ describe("removing nodes", () => {
       { p: ["a", "edges", 0], ld: "b" },
       { p: ["a"], od: { edges: ["c"] } },
       { p: ["_root", "edges", 0], ld: "a" },
-      { p: ["_root", "edges"], ld: [] },
+      { p: ["_root", "edges"], od: [] },
     ]);
 
     expect(graph.toObject()).toMatchObject({
