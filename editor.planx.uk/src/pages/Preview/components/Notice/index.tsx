@@ -1,5 +1,6 @@
 import { mostReadable } from "@ctrl/tinycolor";
 import { Button, makeStyles, Theme } from "@material-ui/core";
+import Card from "../shared/Card";
 import { ErrorOutline } from "@material-ui/icons";
 import React from "react";
 import ReactMarkdown from "react-markdown";
@@ -60,7 +61,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
   const resetPreview = useStore((state) => state.resetPreview);
 
   return (
-    <>
+    <Card>
       <div className={styles.container}>
         <div className={styles.content}>
           <h3 className={styles.title}>{props.title}</h3>
@@ -92,7 +93,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
           Continue
         </Button>
       )}
-    </>
+    </Card>
   );
 };
 

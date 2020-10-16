@@ -1,23 +1,16 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { Button, makeStyles, Theme } from "@material-ui/core";
+import Card from "../shared/Card";
+import { Button } from "@material-ui/core";
 import { Content } from "../../../FlowEditor/data/types";
 
 interface Props extends Content {
   handleSubmit?: any;
 }
 
-const useStyles = makeStyles<Theme>(() => ({
-  container: {
-    width: "100%",
-    padding: 20,
-  },
-}));
-
 const ContentComponent: React.FC<Props> = (props) => {
-  const styles = useStyles();
   return (
-    <div className={styles.container}>
+    <Card>
       <ReactMarkdown source={props.content} />
       <Button
         variant="contained"
@@ -28,7 +21,7 @@ const ContentComponent: React.FC<Props> = (props) => {
       >
         Continue
       </Button>
-    </div>
+    </Card>
   );
 };
 

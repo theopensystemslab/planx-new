@@ -235,13 +235,13 @@ export const Question: React.FC<Props> = ({
 
       <MoreInformation
         changeField={formik.handleChange}
+        whyName="info"
+        whyValue={formik.values.info}
+        policyName="policyRef"
+        policyValue={formik.values.policyRef}
         definitionImg={formik.values.definitionImg}
         definitionName="howMeasured"
         definitionValue={formik.values.howMeasured}
-        policyName="policyRef"
-        policyValue={formik.values.policyRef}
-        whyName="info"
-        whyValue={formik.values.info}
       />
       <InternalNotes
         name="notes"

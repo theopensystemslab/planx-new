@@ -77,12 +77,11 @@ const FindProperty = ({ handleSubmit }) => {
   return (
     <Card>
       <QuestionHeader
+        title="Find the property"
         description={
           useMap ? "Please select the property or draw its boundary" : ""
         }
-      >
-        Find the property
-      </QuestionHeader>
+      />
       {useMap ? (
         <Box>
           <Map

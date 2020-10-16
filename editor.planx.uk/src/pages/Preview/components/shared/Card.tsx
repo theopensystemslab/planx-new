@@ -1,9 +1,19 @@
-import Box from "@material-ui/core/Box";
 import React from "react";
+import { Box, makeStyles, Theme } from "@material-ui/core";
+
+const useStyles = makeStyles<Theme>(() => ({
+  container: {
+    "& > * + *": {
+      marginTop: 20,
+    },
+  },
+}));
 
 const Card: React.FC<any> = ({ children, ...props }) => {
+  const classes = useStyles();
   return (
     <Box
+      className={classes.container}
       bgcolor="background.default"
       py={{ xs: 2, md: 4 }}
       px={{ xs: 2, md: 5 }}

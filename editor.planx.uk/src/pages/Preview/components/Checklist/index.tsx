@@ -9,6 +9,7 @@ import QuestionHeader from "../shared/QuestionHeader";
 import InnerCheckbox from "./InnerCheckbox";
 
 interface ICheckboxes {
+  node: any;
   text: string;
   options?: Array<Option>;
   groupedOptions?: Array<Group<Option>>;
@@ -25,13 +26,13 @@ function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
 }
 
 const Checkboxes: React.FC<ICheckboxes> = ({
+  node,
   options,
   groupedOptions,
   text,
   handleSubmit,
   description = "",
   allRequired,
-  info,
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -78,9 +79,13 @@ const Checkboxes: React.FC<ICheckboxes> = ({
   return (
     <Card>
       <form onSubmit={formik.handleSubmit}>
-        <QuestionHeader description={description} info={info}>
-          {text}
-        </QuestionHeader>
+        <QuestionHeader
+          title={text}
+          description={description}
+          info={node.info}
+          policyRef={node.policyRef}
+          howMeasured={node.howMeasured}
+        />
 
         {options ? (
           options.map((cb) => (

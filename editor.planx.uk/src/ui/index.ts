@@ -13,7 +13,6 @@ export { default as ListManager } from "./ListManager";
 export { default as ModalCard } from "./ModalCard";
 export { default as ModalSection } from "./ModalSection";
 export { default as ModalSectionContent } from "./ModalSectionContent";
-export { default as MoreInformation } from "./MoreInformation";
 export { default as OptionButton } from "./OptionButton";
 export { default as RichTextInput } from "./RichTextInput";
 export { default as SelectInput } from "./SelectInput";
