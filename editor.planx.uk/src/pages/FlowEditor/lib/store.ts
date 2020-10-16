@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
 import { alg } from "graphlib";
 import debounce from "lodash/debounce";
+import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
 import omit from "lodash/omit";
 import uniq from "lodash/uniq";
@@ -16,24 +17,7 @@ import { TYPES } from "../data/types";
 import { toGraphlib } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
-const SUPPORTED_INFORMATION_TYPES = [
-  TYPES.Content,
-  TYPES.FindProperty,
-  TYPES.Notice,
-  TYPES.PropertyInformation,
-  TYPES.Result,
-  TYPES.TaskList,
-  TYPES.FileUpload,
-  TYPES.TextInput,
-];
-
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
-
-const SUPPORTED_TYPES = [
-  TYPES.Portal,
-  ...SUPPORTED_INFORMATION_TYPES,
-  ...SUPPORTED_DECISION_TYPES,
-];
 
 let doc;
 
@@ -119,29 +103,6 @@ export const [useStore, api] = create((set, get) => ({
     );
 
     cb(ops);
-    // console.debug(
-    //   `[OP]: addNodeWithChildrenOp(${JSON.stringify(data)}, ${JSON.stringify(
-    //     children
-    //   )}, ${JSON.stringify(parent)}, ${JSON.stringify(before)}, beforeFlow);`
-    // );
-
-    // if (data.flowId && flow.nodes[data.flowId]) {
-    //   let position = flow.edges.length;
-    //   if (before) {
-    //     const index = flow.edges.findIndex(
-    //       ([src, tgt]: any) => src === parent && tgt === before
-    //     );
-    //     console.log({ parent, before, index });
-    //     if (index >= 0) {
-    //       position = index;
-    //     }
-    //   } else {
-    //     position++;
-    //   }
-    //   cb([{ p: ["edges", position], li: [parent, data.flowId] }]);
-    // } else {
-    //   cb(addNodeWithChildrenOp(data, children, parent, before, flow));
-    // }
   },
 
   updateNode: ({ id, ...newNode }, children: any[], cb = send) => {
@@ -150,57 +111,6 @@ export const [useStore, api] = create((set, get) => ({
     const { $t, ...newData } = newNode;
     const ops = g.update(id, newData, { children, removeKeyIfMissing: true });
     cb(ops);
-
-    // const ops = getImmerOps(flow, (draft) => {
-    //   // 1. update the node itself
-    //   const originalNode = JSON.parse(JSON.stringify(draft.nodes[id]));
-    //   const delta = jdiff.diff(originalNode, newNode);
-    //   jdiff.patch(draft.nodes[id], delta);
-
-    //   // 2. remove responses/options that no longer exist
-
-    //   let existingOptionIds = draft.edges
-    //     .filter(([src]: any) => src === id)
-    //     .map(([, tgt]) => tgt);
-
-    //   let newOptionIds = newOptions.filter((o) => o.text).map((o) => o.id);
-
-    //   let removedIds = difference(existingOptionIds, newOptionIds);
-
-    //   removedIds.forEach((rId) => {
-    //     removeNode(rId, id, draft);
-    //   });
-
-    //   // 3. update/create children that have been added
-
-    //   // const optionsChanged =
-    //   //   existingOptionIds.join(",") !== newOptionIds.join(",");
-
-    //   const usableNewOptions = newOptions
-    //     .filter((o) => o.text && !removedIds.includes(o.id))
-    //     .map((option) => ({ id: option.id || uuid(), ...option }));
-
-    //   usableNewOptions.forEach(({ id: oId, ...node }) => {
-    //     if (draft.nodes[oId]) {
-    //       // option already exists, update it
-    //       const originalNode = JSON.parse(JSON.stringify(draft.nodes[oId]));
-    //       const delta = jdiff.diff(originalNode, node);
-    //       jdiff.patch(draft.nodes[oId], delta);
-
-    //       // if (optionsChanged) {
-    //       //   const pos = draft.edges.findIndex(
-    //       //     ([src, tgt]) => src === id && tgt === oId
-    //       //   );
-    //       //   draft.edges.push(draft.edges.splice(pos, 1)[0]);
-    //       // }
-    //     } else {
-    //       draft.nodes[oId] = { $t: TYPES.Response, ...node };
-    //       draft.edges.push([id, oId]);
-    //     }
-    //   });
-    // });
-
-    // cb(ops);
   },
 
   makeUnique: (id, parent = null) => {
@@ -300,21 +210,6 @@ export const [useStore, api] = create((set, get) => ({
     const id = localStorage.getItem("clipboard");
 
     moveNode(id, undefined, before, parent, true);
-
-    // if (id && flow.nodes[id]) {
-    //   if (!isValidOp(flow, parent, id)) return;
-
-    //   const ops = [{ li: [parent, id], p: ["edges", flow.edges.length] }];
-    //   if (before) {
-    //     const index = flow.edges.findIndex(
-    //       ([src, tgt]: any) => src === parent && tgt === before
-    //     );
-    //     if (index >= 0) {
-    //       ops[0] = { li: [parent, id], p: ["edges", index] };
-    //     }
-    //   }
-    //   cb(ops);
-    // }
   },
 
   childNodesOf(id: string = ROOT_NODE_KEY) {
@@ -511,107 +406,6 @@ export const [useStore, api] = create((set, get) => ({
 
   upcomingCardIds() {
     return [];
-
-    const { flow, breadcrumbs, passport } = get();
-
-    const ids = new Set();
-    // TODO: this can be GREATLY simplified and optimised!
-
-    const nodeIdsConnectedFrom = (source: string | null) => {
-      return (
-        flow.edges
-          // 3. find all outgoing edges from the node 'source' and ensure that the
-          //    target ids returned are of supported node types
-          .filter(([src, tgt]: any) => {
-            return (
-              src === source &&
-              flow.nodes[tgt] &&
-              SUPPORTED_TYPES.includes(flow.nodes[tgt].$t)
-            );
-          })
-          // 4. return 'information type' nodes, or, if the node is something else
-          //    i.e. a 'question type', then only include it if it has one
-          //    or more answers/options for the user to choose.
-          //    TLDR; don't include questions with no possible answers
-          .filter(
-            ([, tgt]: any) =>
-              SUPPORTED_INFORMATION_TYPES.includes(flow.nodes[tgt].$t) ||
-              flow.edges.filter(([src]: any) => src === tgt).length > 0
-          )
-          // 5. return an array of the nodes filtered above
-          .map(([, tgt]: any) => tgt)
-          // 6. exclude nodes which have already been 'visited' in the graph
-          //    i.e. stored in the breadcrumbs
-          .filter((id: any) => !Object.keys(breadcrumbs).includes(id))
-          .forEach((id: any) => {
-            if (flow.nodes[id].$t === TYPES.Portal) {
-              // 7a.  if the node is a portal, don't add it node to the list of
-              //      upcoming nodes, instead check/add all of the nodes it connects to
-              nodeIdsConnectedFrom(id);
-            } else {
-              // 7b.  if the node is not a portal, we now know that it is either
-              //      informational e.g. TaskList or a question e.g. Question, and
-              //      that it hasn't been visited already (because it's not been
-              //      stored in the 'breadcrumbs'), so add it to the upcoming list
-              const fn = flow.nodes[id]?.fn;
-              if (fn && passport.data[fn]?.value !== undefined) {
-                // TODO: add much-needed docs here
-                const responses = flow.edges
-                  .filter(([src]) => src === id)
-                  .map(([_, tgt]) => ({ id: tgt, ...flow.nodes[tgt] }));
-
-                const responseThatCanBeAutoAnswered = responses.find((n) => {
-                  const val = String(n.val);
-                  if (Array.isArray(passport.data[fn].value)) {
-                    // multiple string values are stored (array)
-                    return passport.data[fn].value
-                      .map((v) => String(v))
-                      .includes(val);
-                  } else {
-                    // string
-                    return val === String(passport.data[fn].value);
-                  }
-                });
-
-                if (responseThatCanBeAutoAnswered) {
-                  nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id);
-                } else {
-                  ids.add(id);
-                }
-              } else {
-                ids.add(id);
-              }
-            }
-          })
-      );
-    };
-
-    // 1. get all of the values of breadcrumbs. breadcrumbs looks like this
-    //   {
-    //     [QUESTION_ID_1]: CHOSEN_ANSWER_ID_1,
-    //     [QUESTION_ID_2]: [CHOSEN_ANSWER_ID_2, CHOSEN_ANSWER_ID_3],
-    //   }
-    Object.entries(breadcrumbs)
-      .reverse()
-      // 2. so, in this example case, we would now iterate through
-      //    (CHOSEN_ANSWER_ID_3, CHOSEN_ANSWER_ID_2, CHOSEN_ANSWER_ID_1)
-      .forEach(([, answers]: [string, string | string[]]) => {
-        if (Array.isArray(answers)) {
-          answers.forEach((answer) => nodeIdsConnectedFrom(answer));
-        } else {
-          nodeIdsConnectedFrom(answers);
-        }
-      }); // (steps 3-7 in nodeIdsConnectedFrom function)
-
-    // 8. now we have checked for any follow-up questions for answers we
-    //    have already visited, let's check for any 'root' questions that might
-    //    still need to be answered. i.e. questions with no parent, that appear
-    //    on the main thread below root questions we have already answered
-    nodeIdsConnectedFrom(null);
-
-    // 9. we stored 'ids' as a Set() to ensure that they were unqiue, let's
-    //    now make that a unique array before returning it
-    return Array.from(ids);
   },
 
   record(id: any, vals: any) {
