@@ -67,6 +67,8 @@ devDependencies:
   '@types/react-dom': 16.9.8
   '@types/uuid': 8.3.0
   ajv: 6.12.6
+  esbuild: 0.7.21
+  esbuild-jest: 0.3.0-beta.0_esbuild@0.7.21
   husky: 4.3.0
   import-sort-style-module: 6.0.0
   lint-staged: 10.4.2
@@ -5945,6 +5947,20 @@ packages:
     dev: false
     resolution:
       integrity: sha512-NJ6Yn3FuDinBaBRWl/q5X/s4koRHBrgKAu+yGI6JCBeiu3qrcbJhwT2GeR/EXVfylRk8dpQVJoLEFhK+Mu31NA==
+  /esbuild-jest/0.3.0-beta.0_esbuild@0.7.21:
+    dependencies:
+      esbuild: 0.7.21
+    dev: true
+    peerDependencies:
+      esbuild: '>=0.7.8'
+    resolution:
+      integrity: sha512-eC9J5QlQnDD9iCKvXvdTOGNSZFKsGuqbbXQa93Zs1BkFO0IZLasmHwfG+J5Jtd910AwBd0AY9m3og4dBNutAdQ==
+  /esbuild/0.7.21:
+    dev: true
+    hasBin: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-qEnJdj+6Mdpt5kZwwCqO6PDNXSHNDDOPbnF4pduS3nub1v5GfgZfi8ysZ2DN4Q65WWgx6hz1a237ZETEHZpR0Q==
   /escalade/3.1.1:
     dev: false
     engines:
@@ -15116,6 +15132,8 @@ specifiers:
   draft-js: ^0.11.7
   draft-js-export-markdown: ^1.4.0
   draft-js-import-markdown: ^1.4.0
+  esbuild: ^0.7.15
+  esbuild-jest: ^0.3.0-beta.0
   formik: ^2.2.0
   graphlib: ^2.1.8
   graphql: ^15.3.0
