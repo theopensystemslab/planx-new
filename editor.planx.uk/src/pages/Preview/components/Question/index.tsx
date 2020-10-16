@@ -40,7 +40,7 @@ const Question: React.FC<IQuestion> = ({
         <InnerQuestion description={description} info={info}>
           {title}
         </InnerQuestion>
-        {!title.startsWith("Sorry") &&
+        {!(title && title.startsWith("Sorry")) &&
           responses.map((response) => {
             return (
               <DecisionButton
