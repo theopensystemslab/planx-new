@@ -5,8 +5,13 @@ import DecisionButton from "./DecisionButton";
 import QuestionHeader from "../shared/QuestionHeader";
 
 interface IQuestion {
-  title: string;
-  description?: string;
+  node: {
+    text?: string;
+    description?: string;
+    info?: string;
+    policyRef?: string;
+    howMeasured?: string;
+  };
   responses: {
     id: string;
     responseKey: string;
@@ -14,16 +19,9 @@ interface IQuestion {
     description?: string;
   }[];
   handleClick?;
-  info?: string;
 }
 
-const Question: React.FC<IQuestion> = ({
-  title,
-  description = "",
-  responses,
-  handleClick,
-  info,
-}) => {
+const Question: React.FC<IQuestion> = ({ responses, handleClick, node }) => {
   const formik = useFormik({
     initialValues: {
       selected: { a: "" },
@@ -37,8 +35,14 @@ const Question: React.FC<IQuestion> = ({
   return (
     <Card>
       <form onSubmit={formik.handleSubmit}>
-        <QuestionHeader title={title} description={description} info={info} />
-        {!(title && title.startsWith("Sorry")) &&
+        <QuestionHeader
+          title={node.text}
+          description={node.description}
+          info={node.info}
+          policyRef={node.policyRef}
+          howMeasured={node.howMeasured}
+        />
+        {!(node.text && node.text.startsWith("Sorry")) &&
           responses.map((response) => {
             return (
               <DecisionButton

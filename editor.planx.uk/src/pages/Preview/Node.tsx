@@ -26,10 +26,8 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Statement:
       return (
         <Question
+          node={props.node}
           handleClick={props.handleSubmit}
-          description={props.description}
-          title={props.text}
-          info={props.info}
           responses={childNodesOf(props.id).map((n, i) => ({
             id: n.id,
             responseKey: i + 1,
@@ -73,6 +71,7 @@ const Node: React.FC<any> = (props) => {
       const childNodes = childNodesOf(props.node.id);
       return (
         <Checklist
+          node={props.node}
           info={props.info}
           text={props.text}
           description={props.description}

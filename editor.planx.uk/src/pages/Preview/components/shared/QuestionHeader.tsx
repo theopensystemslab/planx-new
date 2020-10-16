@@ -11,12 +11,16 @@ interface IQuestionHeader {
   title?: string;
   description?: string;
   info?: string;
+  policyRef?: string;
+  howMeasured?: string;
 }
 
 const QuestionHeader: React.FC<IQuestionHeader> = ({
   title,
   description,
   info,
+  policyRef,
+  howMeasured,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -36,7 +40,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           )}
           <Box pb={2}>{description}</Box>
         </Grid>
-        {!!info && (
+        {!!(info || policyRef || howMeasured) && (
           <Grid item>
             <IconButton edge="end" onClick={() => setOpen(true)}>
               <HelpIcon />
@@ -45,9 +49,21 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         )}
       </Grid>
       <MoreInfo open={open} handleClose={() => setOpen(false)}>
-        <MoreInfoSection title="More information">
-          <ReactMarkdown source={info} />
-        </MoreInfoSection>
+        {info && (
+          <MoreInfoSection title="More information">
+            <ReactMarkdown source={info} />
+          </MoreInfoSection>
+        )}
+        {policyRef && (
+          <MoreInfoSection title="Policy source">
+            <ReactMarkdown source={policyRef} />
+          </MoreInfoSection>
+        )}
+        {howMeasured && (
+          <MoreInfoSection title="How it is defined">
+            <ReactMarkdown source={howMeasured} />
+          </MoreInfoSection>
+        )}
       </MoreInfo>
     </>
   );
