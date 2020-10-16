@@ -60,7 +60,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           ref={drag}
         >
           {Icon && <Icon />}
-          <span>{props.text}</span>
+          <span>{props.text || "Question"}</span>
         </Link>
         <ol>
           {childNodes.map((child: any) => (
