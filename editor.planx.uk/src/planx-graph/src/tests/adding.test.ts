@@ -26,7 +26,7 @@ describe("adding nodes", () => {
 
   test("add a node with children", () => {
     const ops = graph.add(
-      { id: "d", text: "question", type: 100 },
+      { id: "d", text: "question", emptySoIgnore: "", type: 100 },
       { children: [{ text: "a1" }, { text: "a2" }] }
     );
 

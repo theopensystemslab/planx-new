@@ -53,8 +53,15 @@ class Graph {
       this.nodes.get(parent).edges.push(id);
     }
 
-    ops.push({ p: [id], oi: { type, data } });
-    this.nodes.set(id, { type, data });
+    const filteredData = Object.entries(data).reduce((acc, [k, v]) => {
+      if (v !== null && v !== undefined && v !== "") {
+        acc[k] = v;
+      }
+      return acc;
+    }, {});
+
+    ops.push({ p: [id], oi: { type, data: filteredData } });
+    this.nodes.set(id, { type, data: filteredData });
 
     children.map((child) =>
       this.add({ type: 200, ...child }, { parent: id }, ops)
@@ -97,11 +104,17 @@ class Graph {
 
     // TODO: make this work with a nested data structure
     const data = Object.entries(newData).reduce((acc, [k, v]) => {
-      if (v === null || v === undefined) {
-        ops.push({ p: [id, "data", k], od: acc[k] });
-        delete acc[k];
+      if (
+        v === null ||
+        v === undefined ||
+        (typeof v === "string" && v.trim() === "")
+      ) {
+        if (acc.hasOwnProperty(k)) {
+          ops.push({ p: [id, "data", k], od: acc[k] });
+          delete acc[k];
+        }
       } else if (v !== acc[k]) {
-        if (acc[k]) {
+        if (acc.hasOwnProperty(k)) {
           ops.push({ p: [id, "data", k], od: acc[k], oi: v });
         } else {
           ops.push({ p: [id, "data", k], oi: v });

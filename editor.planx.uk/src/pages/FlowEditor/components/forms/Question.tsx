@@ -18,12 +18,14 @@ import { ICONS } from "../shared";
 import { MoreInformation, PermissionSelect } from "./shared";
 
 interface Option {
-  val?: string;
-  description?: string;
   id?: string;
-  flag?: string;
-  text?: string;
-  img?: string;
+  data: {
+    description?: string;
+    flag?: string;
+    img?: string;
+    text?: string;
+    val?: string;
+  };
 }
 
 interface Props {
@@ -57,11 +59,14 @@ const OptionEditor: React.FC<{
         <Input
           // required
           format="bold"
-          value={props.value.text || ""}
+          value={props.value.data.text || ""}
           onChange={(ev) => {
             props.onChange({
               ...props.value,
-              text: ev.target.value,
+              data: {
+                ...props.value.data,
+                text: ev.target.value,
+              },
             });
           }}
           placeholder="Option"
@@ -69,21 +74,27 @@ const OptionEditor: React.FC<{
       </InputRowItem>
 
       <ImgInput
-        img={props.value.img}
+        img={props.value.data.img}
         onChange={(img) => {
           props.onChange({
             ...props.value,
-            img,
+            data: {
+              ...props.value.data,
+              img,
+            },
           });
         }}
       />
 
       <PermissionSelect
-        value={props.value.flag || ""}
+        value={props.value.data.flag || ""}
         onChange={(ev) => {
           props.onChange({
             ...props.value,
-            flag: ev.target.value,
+            data: {
+              ...props.value.data,
+              flag: ev.target.value,
+            },
           });
         }}
       />
@@ -93,12 +104,15 @@ const OptionEditor: React.FC<{
       <InputRow>
         <Input
           format="data"
-          value={props.value.val || ""}
+          value={props.value.data.val || ""}
           placeholder="Data Value"
           onChange={(ev) => {
             props.onChange({
               ...props.value,
-              val: ev.target.value,
+              data: {
+                ...props.value.data,
+                val: ev.target.value,
+              },
             });
           }}
         />
@@ -118,10 +132,12 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
         disableDragAndDrop
         newValue={() =>
           ({
-            text: "",
-            description: "",
-            val: "",
-            flag: "",
+            data: {
+              text: "",
+              description: "",
+              val: "",
+              flag: "",
+            },
           } as Option)
         }
         Editor={OptionEditor}
@@ -144,7 +160,7 @@ export const Question: React.FC<Props> = ({
   img = "",
   definitionImg = "",
 }) => {
-  const $t = TYPES.Statement;
+  const type = TYPES.Statement;
 
   const formik = useFormik({
     initialValues: {
@@ -160,15 +176,19 @@ export const Question: React.FC<Props> = ({
       definitionImg,
     },
     onSubmit: ({ options, ...values }) => {
+      const children = options
+        .filter((o) => o.data.text)
+        .map((o) => ({
+          type: TYPES.Response,
+          ...o,
+        }));
+
+      console.log(children);
+
       if (handleSubmit) {
-        handleSubmit(
-          { $t, ...values },
-          []
-          // options.filter((o: any) => o?.data?.text)
-          // .map((o) => ({ ...o, $t: TYPES.Response }))
-        );
+        handleSubmit({ type, data: values }, children);
       } else {
-        alert(JSON.stringify({ $t, ...values, options }, null, 2));
+        alert(JSON.stringify({ type, ...values, children }, null, 2));
       }
     },
     validate: () => {},
@@ -187,7 +207,7 @@ export const Question: React.FC<Props> = ({
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Question" Icon={ICONS[$t]}>
+        <ModalSectionContent title="Question" Icon={ICONS[type]}>
           <InputGroup deletable={false}>
             <InputRow>
               <Input

@@ -1,6 +1,25 @@
 import { graph } from "./setup.test";
 
 describe("updating a node", () => {
+  test("doesn't save empty fields", () => {
+    graph.load({
+      a: {
+        data: {
+          xyz: 1,
+        },
+      },
+    });
+    const ops = graph.update("a", { foo: "" });
+    expect(ops).toEqual([]);
+    expect(graph.toObject()).toMatchObject({
+      a: {
+        data: {
+          xyz: 1,
+        },
+      },
+    });
+  });
+
   test("add a field to a without affecting existing data", () => {
     graph.load({
       a: {

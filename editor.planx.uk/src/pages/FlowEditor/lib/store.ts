@@ -86,30 +86,25 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   addNode: (
-    data,
+    { id = uuid(), type, data },
     children = [],
     parent = ROOT_NODE_KEY,
     before = undefined,
     cb = send
   ) => {
     const { flow } = get();
-
-    const { $t: type, ...node } = data;
     const g = new Graph();
     g.load(flow);
-    const ops = g.add(
-      { id: uuid(), type, ...node },
-      { children, before, parent }
-    );
+
+    const ops = g.add({ id, type, ...data }, { children: [], before, parent });
 
     cb(ops);
   },
 
-  updateNode: ({ id, ...newNode }, children: any[], cb = send) => {
+  updateNode: ({ id, data }, children: any[], cb = send) => {
     const g = new Graph();
     g.load(get().flow);
-    const { $t, ...newData } = newNode;
-    const ops = g.update(id, newData, { children, removeKeyIfMissing: true });
+    const ops = g.update(id, data, { children, removeKeyIfMissing: true });
     cb(ops);
   },
 
