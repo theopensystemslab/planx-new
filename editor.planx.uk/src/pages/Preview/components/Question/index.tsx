@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import React from "react";
 import Card from "../shared/Card";
 import DecisionButton from "./DecisionButton";
-import InnerQuestion from "./InnerQuestion";
+import QuestionHeader from "../shared/QuestionHeader";
 
 interface IQuestion {
   title: string;
@@ -37,9 +37,7 @@ const Question: React.FC<IQuestion> = ({
   return (
     <Card>
       <form onSubmit={formik.handleSubmit}>
-        <InnerQuestion description={description} info={info}>
-          {title}
-        </InnerQuestion>
+        <QuestionHeader title={title} description={description} info={info} />
         {!(title && title.startsWith("Sorry")) &&
           responses.map((response) => {
             return (

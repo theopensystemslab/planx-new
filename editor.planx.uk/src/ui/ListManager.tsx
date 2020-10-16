@@ -151,10 +151,7 @@ function ListManager<T, EditorExtraProps>(props: Props<T, EditorExtraProps>) {
         )}
       </Droppable>
       <Button
-        color="primary"
-        variant="outlined"
         size="large"
-        fullWidth
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
         }}

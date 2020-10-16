@@ -4,7 +4,7 @@ import useAxios from "axios-hooks";
 import capitalize from "lodash/capitalize";
 import React, { useEffect } from "react";
 import { api, useStore } from "../../../FlowEditor/lib/store";
-import InnerQuestion from "../Question/InnerQuestion";
+import QuestionHeader from "../shared/QuestionHeader";
 import Card from "../shared/Card";
 import BasicMap from "./BasicMap";
 import "./map.css";
@@ -26,7 +26,7 @@ const PropertyInformation = ({
 
   return (
     <Card>
-      <InnerQuestion description={description}>{title}</InnerQuestion>
+      <QuestionHeader title={title} description={description} />
       <Box className={classes.map}>
         <BasicMap zoom={18} lat={lat} lng={lng} setBoundary={console.log} />
         <Box color="text.secondary" textAlign="right">

@@ -78,9 +78,7 @@ const Checkboxes: React.FC<ICheckboxes> = ({
   return (
     <Card>
       <form onSubmit={formik.handleSubmit}>
-        <QuestionHeader description={description} info={info}>
-          {text}
-        </QuestionHeader>
+        <QuestionHeader title={text} description={description} info={info} />
 
         {options ? (
           options.map((cb) => (

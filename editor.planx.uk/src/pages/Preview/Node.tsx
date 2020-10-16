@@ -60,6 +60,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.TaskList:
       return (
         <TaskList
+          node={props.node}
           tasks={props.taskList.tasks}
           handleSubmit={props.handleSubmit}
         />

@@ -4,17 +4,17 @@ import IconButton from "@material-ui/core/IconButton";
 import HelpIcon from "@material-ui/icons/HelpOutlineOutlined";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import MoreInfo from "../Question/MoreInfo";
-import MoreInfoSection from "../Question/MoreInfoSection";
+import MoreInfo from "./MoreInfo";
+import MoreInfoSection from "./MoreInfoSection";
 
 interface IQuestionHeader {
-  children?: string;
+  title?: string;
   description?: string;
   info?: string;
 }
 
 const QuestionHeader: React.FC<IQuestionHeader> = ({
-  children,
+  title,
   description,
   info,
 }) => {
@@ -24,14 +24,16 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
     <>
       <Grid container justify="space-between" wrap="nowrap">
         <Grid item>
-          <Box
-            fontSize="h3.fontSize"
-            fontWeight="h3.fontWeight"
-            letterSpacing="-0.02em"
-            pb={1}
-          >
-            {children}
-          </Box>
+          {title && (
+            <Box
+              fontSize="h3.fontSize"
+              fontWeight="h3.fontWeight"
+              letterSpacing="-0.02em"
+              pb={1}
+            >
+              {title}
+            </Box>
+          )}
           <Box pb={2}>{description}</Box>
         </Grid>
         {!!info && (
