@@ -163,7 +163,7 @@ export const Question: React.FC<Props> = ({
       if (handleSubmit) {
         handleSubmit(
           { $t, ...values },
-          options.filter((o) => o.text)
+          options.filter((o: any) => o?.data?.text)
           // .map((o) => ({ ...o, $t: TYPES.Response }))
         );
       } else {

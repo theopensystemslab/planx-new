@@ -1,10 +1,4 @@
-import Graph from "../graph";
-
-let graph;
-
-beforeEach(() => {
-  graph = new Graph();
-});
+import { graph } from "./setup.test";
 
 test.only("reading nodes", () => {
   graph.load({

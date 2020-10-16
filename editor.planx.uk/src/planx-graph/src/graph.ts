@@ -1,3 +1,4 @@
+import difference from "lodash/difference";
 import { alphabetId } from "./lib/id";
 import { OT } from "./types/ot";
 
@@ -62,12 +63,22 @@ class Graph {
     return ops;
   }
 
-  update(id, newData, { removeKeyIfMissing = false } = {}): Array<OT.Op> {
+  update(
+    id,
+    newData,
+    { children = [], removeKeyIfMissing = false } = {}
+  ): Array<OT.Op> {
     const node = this.nodes.get(id);
 
     const ops = [];
 
     if (removeKeyIfMissing) {
+      const removedChildrenIds = difference(
+        node.edges,
+        children.map((c) => c.id)
+      );
+      removedChildrenIds.forEach((id) => this.remove(id, ops));
+
       // if a value exists in the current data, but is null, undefined or "" in the
       // new data then remove it
       Object.entries(node.data).forEach(([k, v]) => {
