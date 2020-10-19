@@ -1,23 +1,16 @@
-import React from "react";
 import { useFormik } from "formik";
-
+import React from "react";
 import {
-  ColorPicker,
-  ImgInput,
   Input,
-  InputGroup,
   InputRow,
-  InputRowItem,
   InternalNotes,
-  ListManager,
   ModalSection,
   ModalSectionContent,
-  OptionButton,
   RichTextInput,
 } from "ui";
-import { MoreInformation } from "../shared";
-import { nodeIcon } from "../../shared";
 import { TYPES } from "../../../data/types";
+import { nodeIcon } from "../../shared";
+import { MoreInformation } from "../shared";
 
 function Component(props) {
   const formik = useFormik<any>({
