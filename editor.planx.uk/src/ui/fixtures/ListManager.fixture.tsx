@@ -1,9 +1,8 @@
-import React, { ChangeEvent, useState } from "react";
 import { Box } from "@material-ui/core";
-import FixtureContainer from "./FixtureContainer";
-import ListManager from "../ListManager";
-import Input from "../Input";
+import React, { ChangeEvent, useState } from "react";
 import ColorPicker from "../ColorPicker";
+import Input from "../Input";
+import ListManager from "../ListManager";
 
 interface Item {
   name: string;
@@ -38,17 +37,15 @@ const Editor = (props: { value: Item; onChange: (newVal: Item) => void }) => (
 const Fixture = () => {
   const [tasks, setTasks] = useState<Array<Item>>([]);
   return (
-    <FixtureContainer>
-      <ListManager
-        values={tasks}
-        onChange={setTasks}
-        Editor={Editor}
-        newValue={() => ({
-          name: "",
-          color: "#fff",
-        })}
-      />
-    </FixtureContainer>
+    <ListManager
+      values={tasks}
+      onChange={setTasks}
+      Editor={Editor}
+      newValue={() => ({
+        name: "",
+        color: "#fff",
+      })}
+    />
   );
 };
 

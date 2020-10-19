@@ -1,14 +1,12 @@
-import React, { useState } from "react";
-
-import RichTextInput from "../RichTextInput";
-import FixtureContainer from "./FixtureContainer";
 import { Box } from "@material-ui/core";
+import React, { useState } from "react";
+import RichTextInput from "../RichTextInput";
 
 const Fixture: React.FC<{}> = () => {
   const [value, setValue] = useState("Something");
 
   return (
-    <FixtureContainer>
+    <>
       <RichTextInput
         value={value}
         onChange={(ev) => {
@@ -26,7 +24,7 @@ const Fixture: React.FC<{}> = () => {
           Reset
         </button>
       </Box>
-    </FixtureContainer>
+    </>
   );
 };
 

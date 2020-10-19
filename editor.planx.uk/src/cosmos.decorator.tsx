@@ -1,13 +1,13 @@
 import { ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
-import theme from "../../theme";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import theme from "./theme";
 
-export default (props) => (
+export default ({ children }) => (
   <div style={{ padding: 80 }}>
     <DndProvider backend={HTML5Backend}>
-      <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </DndProvider>
   </div>
 );
