@@ -129,7 +129,6 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
         onChange={(newOptions) => {
           formik.setFieldValue("options", newOptions);
         }}
-        disableDragAndDrop
         newValue={() =>
           ({
             data: {
@@ -179,11 +178,10 @@ export const Question: React.FC<Props> = ({
       const children = options
         .filter((o) => o.data.text)
         .map((o) => ({
+          id: o.id || undefined,
           type: TYPES.Response,
-          ...o,
+          ...o.data,
         }));
-
-      console.log(children);
 
       if (handleSubmit) {
         handleSubmit({ type, data: values }, children);

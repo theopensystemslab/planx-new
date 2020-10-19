@@ -171,4 +171,34 @@ describe("updating a node", () => {
       d: {},
     });
   });
+
+  test("reorder children", () => {
+    graph.load({
+      a: {
+        data: {},
+        edges: ["b", "c"],
+      },
+      b: {},
+      c: {},
+    });
+
+    const ops = graph.update(
+      "a",
+      {},
+      { children: [{ id: "c" }, { id: "b" }], removeKeyIfMissing: true }
+    );
+
+    expect(ops).toMatchObject([
+      { p: ["a", "edges"], od: ["b", "c"] },
+      { p: ["a", "edges"], oi: ["c", "b"] },
+    ]);
+
+    expect(graph.toObject()).toMatchObject({
+      a: {
+        edges: ["c", "b"],
+      },
+      b: {},
+      c: {},
+    });
+  });
 });

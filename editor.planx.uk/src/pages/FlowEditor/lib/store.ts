@@ -6,8 +6,8 @@ import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
 import omit from "lodash/omit";
 import uniq from "lodash/uniq";
+import { customAlphabet } from "nanoid";
 import pgarray from "pg-array";
-import { v4 as uuid } from "uuid";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
 import Graph, { ROOT_NODE_KEY } from "../../../planx-graph/src/graph";
@@ -16,6 +16,10 @@ import flags from "../data/flags";
 import { TYPES } from "../data/types";
 import { toGraphlib } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
+
+const alphabet =
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+const uid = customAlphabet(alphabet, 12);
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
@@ -86,23 +90,23 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   addNode: (
-    { id = uuid(), type, data },
+    { id = uid(), type, data },
     children = [],
     parent = ROOT_NODE_KEY,
     before = undefined,
     cb = send
   ) => {
     const { flow } = get();
-    const g = new Graph();
+    const g = new Graph(uid);
     g.load(flow);
 
-    const ops = g.add({ id, type, ...data }, { children: [], before, parent });
+    const ops = g.add({ id, type, ...data }, { children, before, parent });
 
     cb(ops);
   },
 
   updateNode: ({ id, data }, children: any[], cb = send) => {
-    const g = new Graph();
+    const g = new Graph(uid);
     g.load(get().flow);
     const ops = g.update(id, data, { children, removeKeyIfMissing: true });
     cb(ops);
@@ -123,11 +127,7 @@ export const [useStore, api] = create((set, get) => ({
     const graph = toGraphlib(flow);
 
     const keys = alg.preorder(graph, [id]).reduce((acc, nodeId) => {
-      acc[nodeId] = isClone(nodeId)
-        ? id === nodeId
-          ? uuid()
-          : nodeId
-        : uuid();
+      acc[nodeId] = isClone(nodeId) ? (id === nodeId ? uid() : nodeId) : uid();
       return acc;
     }, {});
 
@@ -172,7 +172,7 @@ export const [useStore, api] = create((set, get) => ({
 
   removeNode: (id, parent = null, cb = send) => {
     // TODO: pass parent to remove
-    const g = new Graph();
+    const g = new Graph(uid);
     g.load(get().flow);
     const ops = g.remove(id);
     cb(ops);
@@ -188,7 +188,7 @@ export const [useStore, api] = create((set, get) => ({
   ) {
     const { flow, resetPreview } = get();
 
-    const g = new Graph();
+    const g = new Graph(uid);
     g.load(flow);
     const ops = g.move(id, { fromParent: parent, toBefore, toParent, clone });
     cb(ops);

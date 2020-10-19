@@ -1,4 +1,5 @@
 import difference from "lodash/difference";
+import trim from "lodash/trim";
 import { alphabetId } from "./lib/id";
 import { OT } from "./types/ot";
 
@@ -10,11 +11,14 @@ interface Node {
   edges?: string[];
 }
 
+const sanitise = (str) =>
+  typeof str === "string" ? trim(str.replace(/↵/g, "")) : str;
+
 class Graph {
   protected nodes: Map<string, Node> = new Map();
   private counter = 0;
 
-  constructor(private idFunction = alphabetId) {
+  constructor(private idFunction: Function = alphabetId) {
     this.nodes.set(ROOT_NODE_KEY, { edges: [] });
   }
 
@@ -54,7 +58,7 @@ class Graph {
     }
 
     const filteredData = Object.entries(data).reduce((acc, [k, v]) => {
-      if (v !== null && v !== undefined && v !== "") {
+      if (v !== null && v !== undefined && sanitise(v) !== "") {
         acc[k] = v;
       }
       return acc;
@@ -100,15 +104,22 @@ class Graph {
           }
         }
       });
+
+      if (
+        children.map((c) => c.id).toString() !== (node.edges || []).toString()
+      ) {
+        if (node.edges) {
+          ops.push({ p: [id, "edges"], od: node.edges });
+          delete node.edges;
+        }
+        ops.push({ p: [id, "edges"], oi: children.map((c) => c.id) });
+        node.edges = children.map((c) => c.id);
+      }
     }
 
     // TODO: make this work with a nested data structure
     const data = Object.entries(newData).reduce((acc, [k, v]) => {
-      if (
-        v === null ||
-        v === undefined ||
-        (typeof v === "string" && v.trim() === "")
-      ) {
+      if (v === null || v === undefined || sanitise(v) === "") {
         if (acc.hasOwnProperty(k)) {
           ops.push({ p: [id, "data", k], od: acc[k] });
           delete acc[k];
