@@ -31,8 +31,6 @@ export interface Task {
   description: string;
 }
 
-// Notice
-
 export interface Notice extends MoreInformation {
   title: string;
   description: string;
