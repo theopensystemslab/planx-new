@@ -81,9 +81,23 @@ class Graph {
   ): Array<OT.Op> {
     const node = this.nodes.get(id);
 
+    children = children.map((c) => ({ ...c, id: c.id || this.generateId() }));
+
     const ops = [];
 
     if (removeKeyIfMissing) {
+      const addedChildrenIds = difference(
+        children.map((c) => c.id),
+        node.edges
+      );
+      addedChildrenIds.forEach((cId) =>
+        this.add(
+          children.find((c) => c.id === cId),
+          { parent: id },
+          ops
+        )
+      );
+
       const removedChildrenIds = difference(
         node.edges,
         children.map((c) => c.id)

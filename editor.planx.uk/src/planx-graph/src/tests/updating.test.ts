@@ -172,6 +172,39 @@ describe("updating a node", () => {
     });
   });
 
+  test("add children", () => {
+    graph.load({
+      x: {
+        data: {},
+        edges: ["y", "z"],
+      },
+      y: {},
+      z: {},
+    });
+
+    const ops = graph.update(
+      "x",
+      {},
+      { children: [{ id: "y" }, {}, { id: "z" }], removeKeyIfMissing: true }
+    );
+
+    expect(ops).toMatchObject([
+      { p: ["x", "edges", 2], li: "a" },
+      { p: ["a"], oi: { type: undefined, data: {} } },
+      { p: ["x", "edges"], od: ["y", "z", "a"], oi: ["y", "a", "z"] },
+    ]);
+
+    expect(graph.toObject()).toMatchObject({
+      x: {
+        data: {},
+        edges: ["y", "a", "z"],
+      },
+      y: {},
+      z: {},
+      a: {},
+    });
+  });
+
   test("reorder children", () => {
     graph.load({
       a: {
