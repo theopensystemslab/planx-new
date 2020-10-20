@@ -31,9 +31,14 @@ const SUPPORTED_INFORMATION_TYPES = [
   TYPES.PropertyInformation,
   TYPES.Result,
   TYPES.TaskList,
+  TYPES.FileUpload,
 ];
 
-const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
+const SUPPORTED_DECISION_TYPES = [
+  TYPES.Checklist,
+  TYPES.Statement,
+  TYPES.FileUpload,
+];
 
 const SUPPORTED_TYPES = [
   TYPES.Portal,
