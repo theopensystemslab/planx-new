@@ -13,14 +13,22 @@ import { nodeIcon } from "../../shared";
 import { MoreInformation } from "../shared";
 
 function Component(props) {
-  const formik = useFormik<any>({
+  const formik = useFormik<{
+    title: string;
+    description: string;
+    color: string;
+    notes: string;
+    definitionImg: string;
+    howMeasured: string;
+    policyRef: string;
+    info: string;
+  }>({
     initialValues: {
       // TODO: improve runtime validation here (joi, io-ts)
       title: props.node?.title || "",
       description: props.node?.description || "",
       color: props.node?.color || "#EFEFEF",
       notes: props.node?.notes || "",
-      resetButton: props.node?.resetButton || false,
       definitionImg: props.node?.definitionImg,
       howMeasured: props.node?.howMeasured,
       policyRef: props.node?.policyRef,
