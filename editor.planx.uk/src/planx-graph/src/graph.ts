@@ -108,12 +108,13 @@ class Graph {
       if (
         children.map((c) => c.id).toString() !== (node.edges || []).toString()
       ) {
+        const oi = children.map((c) => c.id);
         if (node.edges) {
-          ops.push({ p: [id, "edges"], od: node.edges });
-          delete node.edges;
+          ops.push({ p: [id, "edges"], od: node.edges, oi });
+        } else {
+          ops.push({ p: [id, "edges"], oi });
         }
-        ops.push({ p: [id, "edges"], oi: children.map((c) => c.id) });
-        node.edges = children.map((c) => c.id);
+        node.edges = oi;
       }
     }
 

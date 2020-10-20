@@ -189,8 +189,7 @@ describe("updating a node", () => {
     );
 
     expect(ops).toMatchObject([
-      { p: ["a", "edges"], od: ["b", "c"] },
-      { p: ["a", "edges"], oi: ["c", "b"] },
+      { p: ["a", "edges"], od: ["b", "c"], oi: ["c", "b"] },
     ]);
 
     expect(graph.toObject()).toMatchObject({
