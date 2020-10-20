@@ -46,7 +46,7 @@ services:
       - "./api.planx.uk:/api"
       - "/api/node_modules"
     ports:
-      - ${API_PORT}:8001
+      - ${API_PORT}:${API_PORT}
     stdin_open: true
     tty: true
     environment:
@@ -63,6 +63,7 @@ services:
       AWS_SECRET_KEY: ${AWS_SECRET_KEY}
       AWS_S3_BUCKET: ${AWS_S3_BUCKET}
       AWS_S3_ACL: ${AWS_S3_ACL}
+      PORT: ${API_PORT}
 
   sharedb:
     restart: always
