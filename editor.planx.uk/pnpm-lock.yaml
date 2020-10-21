@@ -48,6 +48,7 @@ dependencies:
   rxjs: 6.6.3
   scroll-into-view-if-needed: 2.2.26
   sharedb: 1.4.1
+  shortid: 2.2.15
   subscriptions-transport-ws: 0.9.18_graphql@15.3.0
   uuid: 8.3.1
   zustand: 2.2.4_react@16.13.1
@@ -8227,6 +8228,7 @@ packages:
     resolution:
       integrity: sha512-KXPvOm8K9IJKFM0bmdn8QXh7udDh1g/giieX0NLCaMnb4hEiVFqnop2ImTXCc5e0/oHz3LTqmHGtExn5hfMkOA==
   /jsondiffpatch/0.4.1:
+    bundledDependencies: []
     dependencies:
       chalk: 2.4.2
       diff-match-patch: 1.0.5
@@ -9118,6 +9120,10 @@ packages:
   /nan/2.14.1:
     resolution:
       integrity: sha512-isWHgVjnFjh2x2yuJ/tj3JbwoHu3UC2dX5G/88Cm24yB6YopVgxvBObDY7n5xW6ExmFhJpSEQqFPvq9zaXc8Jw==
+  /nanoid/2.1.11:
+    dev: false
+    resolution:
+      integrity: sha512-s/snB+WGm6uwi0WjsZdaVcuf3KJXlfGl2LcxgwkEwJF0D/BWzVWAZW/XY4bFaiR7s0Jk3FPvlnepg1H1b1UwlA==
   /nanomatch/1.2.13:
     dependencies:
       arr-diff: 4.0.0
@@ -12337,6 +12343,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==
+  /shortid/2.2.15:
+    dependencies:
+      nanoid: 2.1.11
+    dev: false
+    resolution:
+      integrity: sha512-5EaCy2mx2Jgc/Fdn9uuDuNIIfWBpzY4XIlhoqtXF6qsf+/+SGZ+FxDdX/ZsMZiWupIWNqAEmiNY4RC+LSmCeOw==
   /side-channel/1.0.3:
     dependencies:
       es-abstract: 1.18.0-next.1
@@ -14412,6 +14424,7 @@ specifiers:
   rxjs: ^6.6.3
   scroll-into-view-if-needed: ^2.2.26
   sharedb: ^1.4.1
+  shortid: ^2.2.15
   subscriptions-transport-ws: ^0.9.18
   typescript: ^3.9.7
   uuid: ^8.3.1

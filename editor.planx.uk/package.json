@@ -52,6 +52,7 @@
     "rxjs": "^6.6.3",
     "scroll-into-view-if-needed": "^2.2.26",
     "sharedb": "^1.4.1",
+    "shortid": "^2.2.15",
     "subscriptions-transport-ws": "^0.9.18",
     "uuid": "^8.3.1",
     "zustand": "^2.2.4"
