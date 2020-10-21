@@ -28,6 +28,7 @@
     "lodash": "^4.17.20",
     "mapbox-gl": "^1.12.0",
     "mui-rte": "^1.25.0",
+    "nanoid": "^3.1.12",
     "natsort": "^2.0.2",
     "navi": "^0.14.0",
     "pg-array": "^0.5.0",
@@ -52,7 +53,6 @@
     "rxjs": "^6.6.3",
     "scroll-into-view-if-needed": "^2.2.26",
     "sharedb": "^1.4.1",
-    "shortid": "^2.2.15",
     "subscriptions-transport-ws": "^0.9.18",
     "uuid": "^8.3.1",
     "zustand": "^2.2.4"

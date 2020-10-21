@@ -24,6 +24,7 @@ dependencies:
   lodash: 4.17.20
   mapbox-gl: 1.12.0_mapbox-gl@1.12.0
   mui-rte: 1.25.0_05b372b4524862ce1b70ee12b30675bc
+  nanoid: 3.1.12
   natsort: 2.0.2
   navi: 0.14.0
   pg-array: 0.5.0
@@ -48,7 +49,6 @@ dependencies:
   rxjs: 6.6.3
   scroll-into-view-if-needed: 2.2.26
   sharedb: 1.4.1
-  shortid: 2.2.15
   subscriptions-transport-ws: 0.9.18_graphql@15.3.0
   uuid: 8.3.1
   zustand: 2.2.4_react@16.13.1
@@ -9120,10 +9120,13 @@ packages:
   /nan/2.14.1:
     resolution:
       integrity: sha512-isWHgVjnFjh2x2yuJ/tj3JbwoHu3UC2dX5G/88Cm24yB6YopVgxvBObDY7n5xW6ExmFhJpSEQqFPvq9zaXc8Jw==
-  /nanoid/2.1.11:
+  /nanoid/3.1.12:
     dev: false
+    engines:
+      node: ^10 || ^12 || >=13.7
+    hasBin: true
     resolution:
-      integrity: sha512-s/snB+WGm6uwi0WjsZdaVcuf3KJXlfGl2LcxgwkEwJF0D/BWzVWAZW/XY4bFaiR7s0Jk3FPvlnepg1H1b1UwlA==
+      integrity: sha512-1qstj9z5+x491jfiC4Nelk+f8XBad7LN20PmyWINJEMRSf3wcAjAWysw1qaA8z6NSKe2sjq1hRSDpBH5paCb6A==
   /nanomatch/1.2.13:
     dependencies:
       arr-diff: 4.0.0
@@ -12343,12 +12346,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==
-  /shortid/2.2.15:
-    dependencies:
-      nanoid: 2.1.11
-    dev: false
-    resolution:
-      integrity: sha512-5EaCy2mx2Jgc/Fdn9uuDuNIIfWBpzY4XIlhoqtXF6qsf+/+SGZ+FxDdX/ZsMZiWupIWNqAEmiNY4RC+LSmCeOw==
   /side-channel/1.0.3:
     dependencies:
       es-abstract: 1.18.0-next.1
@@ -14397,6 +14394,7 @@ specifiers:
   lodash: ^4.17.20
   mapbox-gl: ^1.12.0
   mui-rte: ^1.25.0
+  nanoid: ^3.1.12
   natsort: ^2.0.2
   navi: ^0.14.0
   node-sass: ^4.14.1
@@ -14424,7 +14422,6 @@ specifiers:
   rxjs: ^6.6.3
   scroll-into-view-if-needed: ^2.2.26
   sharedb: ^1.4.1
-  shortid: ^2.2.15
   subscriptions-transport-ws: ^0.9.18
   typescript: ^3.9.7
   uuid: ^8.3.1

@@ -1,4 +1,4 @@
-import shortid from "shortid";
+import { nanoid } from "nanoid";
 import { Button } from "@material-ui/core";
 import Card from "../shared/Card";
 import React from "react";
@@ -182,7 +182,7 @@ function Dropzone(props) {
               file,
               status: "uploading",
               progress: 0,
-              id: shortid.generate(),
+              id: nanoid(),
             };
           }),
         ];
