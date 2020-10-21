@@ -2,7 +2,10 @@ import axios from "axios";
 
 export { uploadFile };
 
-async function uploadFile(file, { onProgress } = { onProgress: (p) => null }) {
+async function uploadFile(
+  file,
+  { onProgress }: { onProgress?: (p) => void } = {}
+) {
   const res = await fetch(`${process.env.REACT_APP_API_URL}/sign-s3-upload`, {
     method: "POST",
     body: JSON.stringify({
@@ -19,7 +22,9 @@ async function uploadFile(file, { onProgress } = { onProgress: (p) => null }) {
       "Content-Disposition": `inline;filename="${file.name}"`,
     },
     onUploadProgress: ({ loaded, total }) => {
-      onProgress(loaded / total);
+      if (onProgress) {
+        onProgress(loaded / total);
+      }
     },
   });
   return token.public_readonly_url_will_be;
