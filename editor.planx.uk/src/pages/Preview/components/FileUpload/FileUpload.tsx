@@ -1,17 +1,17 @@
-import { nanoid } from "nanoid";
-import { Button } from "@material-ui/core";
-import Card from "../shared/Card";
-import React from "react";
-import { MoreInformation } from "../../../FlowEditor/data/types";
-
 import Box from "@material-ui/core/Box";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import FileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Close";
+import FileIcon from "@material-ui/icons/AttachFile";
+import IconButton from "@material-ui/core/IconButton";
+import React from "react";
 import classNames from "classnames";
+import { Button } from "@material-ui/core";
+import { CloudUpload } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
+import { nanoid } from "nanoid";
 import { useDropzone } from "react-dropzone";
 
+import Card from "../shared/Card";
+import { MoreInformation } from "../../../FlowEditor/data/types";
 import { uploadFile } from "api/upload";
 
 export default Component;
@@ -240,7 +240,7 @@ function Dropzone(props) {
       >
         <input {...getInputProps()} />
         <Box pl={3} pr={4} color="text.secondary">
-          <UploadIcon />
+          <CloudUpload />
         </Box>
         <Box flexGrow={1}>
           <Box>
@@ -277,25 +277,5 @@ function formatBytes(a, b = 2) {
     parseFloat((a / Math.pow(1024, d)).toFixed(c)) +
     " " +
     ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"][d]
-  );
-}
-
-function UploadIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="33"
-      height="41"
-      fill="none"
-      viewBox="0 0 33 41"
-      style={{ display: "block" }}
-    >
-      <path stroke="#000" d="M29.553 3.29H32V40H3.447v-2.447" />
-      <path stroke="#000" d="M1 0.842H29.553V37.553H1z" />
-      <path
-        fill="#000"
-        d="M15.593 20.661a.5.5 0 00-.707 0l-3.182 3.182a.5.5 0 00.707.707l2.828-2.828 2.829 2.828a.5.5 0 10.707-.707l-3.182-3.182zm.146 16.966V21.014h-1v16.613h1z"
-      />
-    </svg>
   );
 }
