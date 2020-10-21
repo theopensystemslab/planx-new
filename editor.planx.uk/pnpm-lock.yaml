@@ -24,6 +24,7 @@ dependencies:
   lodash: 4.17.20
   mapbox-gl: 1.12.0_mapbox-gl@1.12.0
   mui-rte: 1.25.0_05b372b4524862ce1b70ee12b30675bc
+  nanoid: 3.1.12
   natsort: 2.0.2
   navi: 0.14.0
   pg-array: 0.5.0
@@ -8227,6 +8228,7 @@ packages:
     resolution:
       integrity: sha512-KXPvOm8K9IJKFM0bmdn8QXh7udDh1g/giieX0NLCaMnb4hEiVFqnop2ImTXCc5e0/oHz3LTqmHGtExn5hfMkOA==
   /jsondiffpatch/0.4.1:
+    bundledDependencies: []
     dependencies:
       chalk: 2.4.2
       diff-match-patch: 1.0.5
@@ -9118,6 +9120,13 @@ packages:
   /nan/2.14.1:
     resolution:
       integrity: sha512-isWHgVjnFjh2x2yuJ/tj3JbwoHu3UC2dX5G/88Cm24yB6YopVgxvBObDY7n5xW6ExmFhJpSEQqFPvq9zaXc8Jw==
+  /nanoid/3.1.12:
+    dev: false
+    engines:
+      node: ^10 || ^12 || >=13.7
+    hasBin: true
+    resolution:
+      integrity: sha512-1qstj9z5+x491jfiC4Nelk+f8XBad7LN20PmyWINJEMRSf3wcAjAWysw1qaA8z6NSKe2sjq1hRSDpBH5paCb6A==
   /nanomatch/1.2.13:
     dependencies:
       arr-diff: 4.0.0
@@ -14385,6 +14394,7 @@ specifiers:
   lodash: ^4.17.20
   mapbox-gl: ^1.12.0
   mui-rte: ^1.25.0
+  nanoid: ^3.1.12
   natsort: ^2.0.2
   navi: ^0.14.0
   node-sass: ^4.14.1

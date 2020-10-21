@@ -56,9 +56,7 @@ const NodeTypeSelect: React.FC<{
       <option disabled value="date-inputs">
         Date Input
       </option>
-      <option disabled value="file-uploaders">
-        File Upload
-      </option>
+      <option value="file-upload">File Upload</option>
       <option disabled value="address-inputs">
         Address Input
       </option>

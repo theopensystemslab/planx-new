@@ -16,6 +16,7 @@ import Portal from "../pages/FlowEditor/components/forms/Portal";
 import PropertyInformation from "../pages/FlowEditor/components/forms/PropertyInformation";
 import Question from "../pages/FlowEditor/components/forms/Question";
 import Result from "../pages/FlowEditor/components/forms/Result";
+import FileUpload from "../pages/FlowEditor/components/forms/FileUpload";
 import TaskList from "../pages/FlowEditor/components/forms/TaskList";
 import { TYPES } from "../pages/FlowEditor/data/types";
 import { api } from "../pages/FlowEditor/lib/store";
@@ -26,6 +27,7 @@ const components = {
   "property-information": PropertyInformation,
   "task-list": TaskList,
   notice: Notice,
+  "file-upload": FileUpload,
   result: Result,
   checklist: Checklist,
   portal: Portal,
@@ -117,6 +119,9 @@ const editNode = route(async (req) => {
       break;
     case TYPES.Result:
       type = "result";
+      break;
+    case TYPES.FileUpload:
+      type = "file-upload";
       break;
     case TYPES.Portal:
       type = "portal";

@@ -32,6 +32,16 @@ const renderMenuItem = (category: string) => {
     ));
 };
 
+interface IMoreInformation {
+  changeField: (any) => any;
+  definitionImg: string;
+  definitionName: string;
+  definitionValue: string;
+  policyName: string;
+  policyValue: string;
+  whyName: string;
+  whyValue: string;
+}
 export const MoreInformation = ({
   changeField,
   definitionImg,
@@ -41,7 +51,7 @@ export const MoreInformation = ({
   policyValue,
   whyName,
   whyValue,
-}) => {
+}: IMoreInformation) => {
   return (
     <ModalSection>
       <ModalSectionContent title="More Information" Icon={InfoOutlined}>

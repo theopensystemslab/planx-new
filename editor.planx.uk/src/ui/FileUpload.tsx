@@ -5,9 +5,10 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { Error, Image } from "@material-ui/icons";
-import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+
+import { uploadFile } from "api/upload";
 
 export interface Props {
   onChange?: (image: string) => void;
@@ -28,24 +29,6 @@ const fileUploadStyles = makeStyles((theme) => ({
     border: `2px dashed ${theme.palette.primary.dark}`,
   },
 }));
-
-interface SignedUrlResponse {
-  upload_to: string;
-  public_readonly_url_will_be: string;
-}
-
-const uploadRequest = (
-  signedUrlResponse: SignedUrlResponse,
-  file: File
-): Promise<string> =>
-  axios
-    .put(signedUrlResponse.upload_to, file, {
-      headers: {
-        "Content-Type": file.type,
-        "Content-Disposition": `inline;filename="${file.name}"`,
-      },
-    })
-    .then(() => signedUrlResponse.public_readonly_url_will_be);
 
 const FileUpload: React.FC<Props> = (props) => {
   const { onChange } = props;
@@ -74,19 +57,7 @@ const FileUpload: React.FC<Props> = (props) => {
       setStatus({
         type: "loading",
       });
-      fetch(`${process.env.REACT_APP_API_URL}/sign-s3-upload`, {
-        method: "POST",
-        body: JSON.stringify({
-          filename: file.name,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          return uploadRequest(res, file);
-        })
+      uploadFile(file)
         .then((res) => {
           setStatus({
             type: "none",
