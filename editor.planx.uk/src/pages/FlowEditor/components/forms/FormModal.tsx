@@ -62,7 +62,7 @@ const NodeTypeSelect: React.FC<{
       </option>
     </optgroup>
     <optgroup label="Information">
-      <option value="text">Text</option>
+      <option value="text-input">Text Input</option>
       <option value="task-list">Task List</option>
       <option value="notice">Notice</option>
       <option value="result">Result</option>

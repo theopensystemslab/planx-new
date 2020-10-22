@@ -7,7 +7,6 @@ export enum TYPES {
   FindProperty = 6,
   TaskList = 7,
   Notice = 8,
-  Text = 10,
   Statement = 100, // Question/DropDown
   Checklist = 105,
   TextInput = 110,
@@ -97,9 +96,10 @@ export interface Content extends MoreInformation {
 
 // Text
 
-export interface Text extends MoreInformation {
+export interface TextInput extends MoreInformation {
   title: string;
   description?: string;
+  placeholder?: string;
 }
 
 // Shared

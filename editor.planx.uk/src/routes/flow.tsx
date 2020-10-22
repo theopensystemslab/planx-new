@@ -18,7 +18,7 @@ import PropertyInformation from "../pages/FlowEditor/components/forms/PropertyIn
 import Question from "../pages/FlowEditor/components/forms/Question";
 import Result from "../pages/FlowEditor/components/forms/Result";
 import TaskList from "../pages/FlowEditor/components/forms/TaskList";
-import Text from "../pages/FlowEditor/components/forms/Text";
+import TextInput from "../pages/FlowEditor/components/forms/TextInput";
 import { TYPES } from "../pages/FlowEditor/data/types";
 import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
@@ -27,7 +27,7 @@ const components = {
   "find-property": FindProperty,
   "property-information": PropertyInformation,
   "task-list": TaskList,
-  text: Text,
+  "text-input": TextInput,
   notice: Notice,
   "file-upload": FileUpload,
   result: Result,
@@ -115,6 +115,9 @@ const editNode = route(async (req) => {
       break;
     case TYPES.Notice:
       type = "notice";
+      break;
+    case TYPES.TextInput:
+      type = "text-input";
       break;
     case TYPES.Content:
       type = "content";

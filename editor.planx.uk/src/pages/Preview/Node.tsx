@@ -12,7 +12,7 @@ import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
 import Result from "./components/Result";
 import TaskList from "./components/TaskList";
-import Text from "./components/Text";
+import TextInput from "./components/TextInput";
 
 let uprn;
 
@@ -65,8 +65,8 @@ const Node: React.FC<any> = (props) => {
           handleSubmit={props.handleSubmit}
         />
       );
-    case TYPES.Text:
-      return <Text node={props.node} handleSubmit={props.handleSubmit} />;
+    case TYPES.TextInput:
+      return <TextInput node={props.node} handleSubmit={props.handleSubmit} />;
     case TYPES.Notice:
       return <Notice {...props} handleSubmit={props.handleSubmit} />;
     case TYPES.FileUpload:

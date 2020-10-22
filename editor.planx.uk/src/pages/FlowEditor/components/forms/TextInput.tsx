@@ -9,8 +9,9 @@ import {
   ModalSectionContent,
   RichTextInput,
 } from "../../../../ui";
-import { TYPES, Text } from "../../data/types";
+import { TYPES, TextInput } from "../../data/types";
 import { nodeIcon } from "../shared";
+import { MoreInformation } from "./shared";
 
 export interface Props {
   id?: string;
@@ -18,22 +19,25 @@ export interface Props {
   node?: any;
 }
 
-export interface ContentEditorProps {
-  value: Text;
-  onChange: (newValue: Text) => void;
+export interface TextInputEditorProps {
+  value: TextInput;
+  onChange: (newValue: TextInput) => void;
 }
 
-const ContentEditor: React.FC<ContentEditorProps> = (props) => {
+const TextInputEditor: React.FC<TextInputEditorProps> = (props) => {
   return (
     <>
       <ModalSection>
-        <ModalSectionContent title="Content" Icon={nodeIcon(TYPES.Content)}>
+        <ModalSectionContent
+          title="Text Input"
+          Icon={nodeIcon(TYPES.TextInput)}
+        >
           <InputRow>
             <Input
               format="large"
               name="text"
               value={props.value.title}
-              placeholder="Text"
+              placeholder="Title"
               onChange={(ev) => {
                 props.onChange({
                   ...props.value,
@@ -41,8 +45,10 @@ const ContentEditor: React.FC<ContentEditorProps> = (props) => {
                 });
               }}
             />
+          </InputRow>
+          <InputRow>
             <RichTextInput
-              placeholder="Content"
+              placeholder="Description"
               value={props.value.description}
               onChange={(ev) => {
                 props.onChange({
@@ -52,8 +58,35 @@ const ContentEditor: React.FC<ContentEditorProps> = (props) => {
               }}
             />
           </InputRow>
+          <InputRow>
+            <RichTextInput
+              placeholder="Placeholder"
+              value={props.value.placeholder}
+              onChange={(ev) => {
+                props.onChange({
+                  ...props.value,
+                  placeholder: ev.target.value,
+                });
+              }}
+            />
+          </InputRow>
         </ModalSectionContent>
       </ModalSection>
+      <MoreInformation
+        changeField={(ev: any) => {
+          props.onChange({
+            ...props.value,
+            [ev.target.name]: ev.target.value,
+          });
+        }}
+        definitionImg={props.value.definitionImg}
+        definitionName="howMeasured"
+        definitionValue={props.value.howMeasured}
+        policyName="policyRef"
+        policyValue={props.value.policyRef}
+        whyName="info"
+        whyValue={props.value.info}
+      />
       <InternalNotes
         name="notes"
         onChange={(ev) => {
@@ -68,25 +101,30 @@ const ContentEditor: React.FC<ContentEditorProps> = (props) => {
   );
 };
 
-const ContentComponent: React.FC<Props> = (props) => {
+const TextInputComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
       text: {
         // TODO: improve runtime validation here (joi, io-ts)
         title: props.node?.title || "",
         description: props.node?.description || "",
+        placeholder: props.node?.placeholder || "",
+        definitionImg: props.node?.definitionImg,
+        howMeasured: props.node?.howMeasured,
+        policyRef: props.node?.policyRef,
+        info: props.node?.info,
       },
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ $t: TYPES.Text, ...newValues.text });
+        props.handleSubmit({ $t: TYPES.TextInput, ...newValues.text });
       }
     },
     validate: () => {},
   });
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
-      <ContentEditor
+      <TextInputEditor
         value={formik.values.text}
         onChange={(content) => {
           formik.setFieldValue("text", content);
@@ -96,4 +134,4 @@ const ContentComponent: React.FC<Props> = (props) => {
   );
 };
 
-export default ContentComponent;
+export default TextInputComponent;

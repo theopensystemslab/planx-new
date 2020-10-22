@@ -33,7 +33,7 @@ const SUPPORTED_INFORMATION_TYPES = [
   TYPES.Result,
   TYPES.TaskList,
   TYPES.FileUpload,
-  TYPES.Text,
+  TYPES.TextInput,
 ];
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];

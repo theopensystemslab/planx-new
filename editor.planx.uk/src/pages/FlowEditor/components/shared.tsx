@@ -26,7 +26,7 @@ export const nodeIcon = (type: TYPES): React.FC | undefined => {
       return LocationOnOutlined;
     case TYPES.Notice:
       return ReportProblemOutlined;
-    case TYPES.Text:
+    case TYPES.TextInput:
       return Create;
     case TYPES.TaskList:
       return List;
