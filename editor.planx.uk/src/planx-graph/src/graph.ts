@@ -58,7 +58,8 @@ class Graph {
     }
 
     const filteredData = Object.entries(data).reduce((acc, [k, v]) => {
-      if (v !== null && v !== undefined && sanitise(v) !== "") {
+      v = sanitise(v);
+      if (v !== null && v !== undefined && v !== "") {
         acc[k] = v;
       }
       return acc;
@@ -134,7 +135,8 @@ class Graph {
 
     // TODO: make this work with a nested data structure
     const data = Object.entries(newData).reduce((acc, [k, v]) => {
-      if (v === null || v === undefined || sanitise(v) === "") {
+      v = sanitise(v);
+      if (v === null || v === undefined || v === "") {
         if (acc.hasOwnProperty(k)) {
           ops.push({ p: [id, "data", k], od: acc[k] });
           delete acc[k];
