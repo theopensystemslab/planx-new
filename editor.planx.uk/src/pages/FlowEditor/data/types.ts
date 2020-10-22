@@ -7,6 +7,7 @@ export enum TYPES {
   FindProperty = 6,
   TaskList = 7,
   Notice = 8,
+  Text = 10,
   Statement = 100, // Question/DropDown
   Checklist = 105,
   TextInput = 110,
@@ -30,6 +31,8 @@ export interface Task {
   title: string;
   description: string;
 }
+
+// Notice
 
 export interface Notice extends MoreInformation {
   title: string;
@@ -90,6 +93,13 @@ export const toggleExpandableChecklist = (
 
 export interface Content extends MoreInformation {
   content: string;
+}
+
+// Text
+
+export interface Text extends MoreInformation {
+  title: string;
+  description?: string;
 }
 
 // Shared

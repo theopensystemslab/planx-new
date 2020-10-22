@@ -5,13 +5,14 @@ import { TYPES } from "../FlowEditor/data/types";
 import { useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";
 import Content from "./components/Content";
+import FileUpload from "./components/FileUpload";
 import FindProperty from "./components/FindProperty";
 import Notice from "./components/Notice";
-import FileUpload from "./components/FileUpload";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
 import Result from "./components/Result";
 import TaskList from "./components/TaskList";
+import Text from "./components/Text";
 
 let uprn;
 
@@ -64,6 +65,8 @@ const Node: React.FC<any> = (props) => {
           handleSubmit={props.handleSubmit}
         />
       );
+    case TYPES.Text:
+      return <Text node={props.node} handleSubmit={props.handleSubmit} />;
     case TYPES.Notice:
       return <Notice {...props} handleSubmit={props.handleSubmit} />;
     case TYPES.FileUpload:
