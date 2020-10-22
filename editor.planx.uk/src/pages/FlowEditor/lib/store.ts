@@ -695,9 +695,15 @@ export const [useStore, api] = create((set, get) => ({
   responsesForReport() {
     const { breadcrumbs, flow } = get();
     return Object.entries(breadcrumbs)
-      .map(([k, v]: any) => {
+      .map(([k, v]: [string, string | Array<string>]) => {
+        const responses = (Array.isArray(v)
+          ? v.map((id) => flow.nodes[id]?.text)
+          : [flow.nodes[v]?.text]
+        ).filter(Boolean);
         return {
-          text: `${flow.nodes[k]?.text} <strong>${flow.nodes[v]?.text}</strong>`,
+          text: `${flow.nodes[k]?.text} <strong>${responses.join(
+            ", "
+          )}</strong>`,
         };
       })
       .filter((o) => !o.text.includes("undefined"));
