@@ -701,6 +701,7 @@ export const [useStore, api] = create((set, get) => ({
           : [flow.nodes[v]?.text]
         ).filter(Boolean);
         return {
+          id: k,
           text: `${flow.nodes[k]?.text} <strong>${responses.join(
             ", "
           )}</strong>`,

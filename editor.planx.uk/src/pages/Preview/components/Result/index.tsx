@@ -56,9 +56,9 @@ const Result: React.FC<IResult> = ({
                 <Box mb={1} color="text.secondary">
                   {key}
                 </Box>
-                {visibleResponses.map((y) => {
+                {visibleResponses.map((y: any) => {
                   return (
-                    <ResultReason key={y.text}>
+                    <ResultReason key={y.text} id={y.id}>
                       {ReactHtmlParser(y.text)}
                     </ResultReason>
                   );
@@ -70,9 +70,9 @@ const Result: React.FC<IResult> = ({
                       closed: "See fewer responses",
                     }}
                   >
-                    {hiddenResponses.map((y) => {
+                    {hiddenResponses.map((y: any) => {
                       return (
-                        <ResultReason key={y.text}>
+                        <ResultReason key={y.text} id={y.id}>
                           {ReactHtmlParser(y.text)}
                         </ResultReason>
                       );
