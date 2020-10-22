@@ -47,7 +47,7 @@ const newNode = route(async (req) => {
       )
       .sort(sorter);
 
-    extraProps.internalFlows = Object.entries(api.getState().flow.nodes)
+    extraProps.internalFlows = Object.entries(api.getState().flow)
       .filter(
         ([id, v]: any) =>
           v.$t === TYPES.Portal &&
