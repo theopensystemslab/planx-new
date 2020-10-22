@@ -1,12 +1,12 @@
+import { useFormik } from "formik";
 import React from "react";
 import {
   InputRow,
-  RichTextInput,
   InternalNotes,
   ModalSection,
   ModalSectionContent,
+  RichTextInput,
 } from "../../../../ui";
-import { useFormik } from "formik";
 import { Content, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 
@@ -64,7 +64,7 @@ const ContentComponent: React.FC<Props> = (props) => {
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ $t: TYPES.Content, ...newValues.content });
+        props.handleSubmit({ type: TYPES.Content, data: newValues.content });
       }
     },
     validate: () => {},

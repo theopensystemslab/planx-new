@@ -13,7 +13,7 @@ const ResultComponent: React.FC<Props> = (props) => {
     initialValues: {},
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ $t: TYPES.Result, ...newValues });
+        props.handleSubmit({ type: TYPES.Result, data: newValues });
       }
     },
     validate: () => {},

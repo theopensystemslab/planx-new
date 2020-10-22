@@ -37,7 +37,7 @@ function Component(props) {
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ $t: TYPES.FileUpload, ...newValues });
+        props.handleSubmit({ type: TYPES.FileUpload, data: newValues });
       }
     },
     validate: () => {},

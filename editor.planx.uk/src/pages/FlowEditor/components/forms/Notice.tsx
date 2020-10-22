@@ -1,15 +1,15 @@
+import { useFormik } from "formik";
 import React from "react";
 import {
+  ColorPicker,
   Input,
   InputRow,
-  OptionButton,
-  RichTextInput,
   InternalNotes,
   ModalSection,
   ModalSectionContent,
-  ColorPicker,
+  OptionButton,
+  RichTextInput,
 } from "../../../../ui";
-import { useFormik } from "formik";
 import { Notice, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
@@ -125,7 +125,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ $t: TYPES.Notice, ...newValues.notice });
+        props.handleSubmit({ type: TYPES.Notice, data: newValues.notice });
       }
     },
     validate: () => {},
