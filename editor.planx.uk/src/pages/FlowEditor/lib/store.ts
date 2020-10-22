@@ -479,12 +479,14 @@ export const [useStore, api] = create((set, get) => ({
 
     const keys = possibleFlags.map((f) => f.value);
 
-    const collectedFlags = Object.entries(breadcrumbs)
-      .map(([k, v]: any) => flow.nodes[v].flag)
+    const collectedFlags = Object.values(breadcrumbs)
+      .flatMap((v: string) =>
+        Array.isArray(v)
+          ? v.map((id) => flow.nodes[id]?.flag)
+          : flow.nodes[v]?.flag
+      )
       .filter(Boolean)
-      .sort((a, b) => keys.indexOf(b.flag) - keys.indexOf(a.flag));
-
-    console.log(collectedFlags);
+      .sort((a, b) => keys.indexOf(a) - keys.indexOf(b));
 
     const flag = possibleFlags.find((f) => f.value === collectedFlags[0]);
 
