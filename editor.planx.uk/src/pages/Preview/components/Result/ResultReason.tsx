@@ -1,12 +1,15 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 interface IResultReason {
+  id: string;
   children: (string | Element)[];
 }
 
-const ResultReason: React.FC<IResultReason> = ({ children }) => {
+const ResultReason: React.FC<IResultReason> = ({ id, children }) => {
+  const record = useStore((state) => state.record);
   return (
     <Box
       bgcolor="background.paper"
@@ -18,7 +21,9 @@ const ResultReason: React.FC<IResultReason> = ({ children }) => {
         {children}
       </Box>
       <Box color="text.secondary">
-        <Button color="inherit">change</Button>
+        <Button color="inherit" onClick={() => record(id)}>
+          change
+        </Button>
       </Box>
     </Box>
   );

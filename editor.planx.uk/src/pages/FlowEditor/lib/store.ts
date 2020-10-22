@@ -479,12 +479,14 @@ export const [useStore, api] = create((set, get) => ({
 
     const keys = possibleFlags.map((f) => f.value);
 
-    const collectedFlags = Object.entries(breadcrumbs)
-      .map(([k, v]: any) => flow.nodes[v].flag)
+    const collectedFlags = Object.values(breadcrumbs)
+      .flatMap((v: string) =>
+        Array.isArray(v)
+          ? v.map((id) => flow.nodes[id]?.flag)
+          : flow.nodes[v]?.flag
+      )
       .filter(Boolean)
-      .sort((a, b) => keys.indexOf(b.flag) - keys.indexOf(a.flag));
-
-    console.log(collectedFlags);
+      .sort((a, b) => keys.indexOf(a) - keys.indexOf(b));
 
     const flag = possibleFlags.find((f) => f.value === collectedFlags[0]);
 
@@ -505,10 +507,7 @@ export const [useStore, api] = create((set, get) => ({
     const ids = new Set();
     // TODO: this can be GREATLY simplified and optimised!
 
-    const nodeIdsConnectedFrom = (
-      source: string | null,
-      sourceParent: string = undefined
-    ) => {
+    const nodeIdsConnectedFrom = (source: string | null) => {
       return (
         flow.edges
           // 3. find all outgoing edges from the node 'source' and ensure that the
@@ -544,7 +543,6 @@ export const [useStore, api] = create((set, get) => ({
               //      informational e.g. TaskList or a question e.g. Question, and
               //      that it hasn't been visited already (because it's not been
               //      stored in the 'breadcrumbs'), so add it to the upcoming list
-
               const fn = flow.nodes[id]?.fn;
               if (fn && passport.data[fn]?.value !== undefined) {
                 // TODO: add much-needed docs here
@@ -552,9 +550,15 @@ export const [useStore, api] = create((set, get) => ({
                   .filter(([src]) => src === id)
                   .map(([_, tgt]) => ({ id: tgt, ...flow.nodes[tgt] }));
 
-                const responseThatCanBeAutoAnswered = responses.find(
-                  (n) => n.val === passport.data[fn].value
-                );
+                const responseThatCanBeAutoAnswered = responses.find((n) => {
+                  if (Array.isArray(passport.data[fn].value)) {
+                    // multiple string values are stored (array)
+                    return passport.data[fn].value.includes(n.val);
+                  } else {
+                    // string
+                    return n.val === passport.data[fn].value;
+                  }
+                });
 
                 if (responseThatCanBeAutoAnswered) {
                   nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id);
@@ -578,11 +582,11 @@ export const [useStore, api] = create((set, get) => ({
       .reverse()
       // 2. so, in this example case, we would now iterate through
       //    (CHOSEN_ANSWER_ID_3, CHOSEN_ANSWER_ID_2, CHOSEN_ANSWER_ID_1)
-      .forEach(([question, answers]: [string, string | string[]]) => {
+      .forEach(([, answers]: [string, string | string[]]) => {
         if (Array.isArray(answers)) {
-          answers.forEach((answer) => nodeIdsConnectedFrom(answer, question));
+          answers.forEach((answer) => nodeIdsConnectedFrom(answer));
         } else {
-          nodeIdsConnectedFrom(answers, question);
+          nodeIdsConnectedFrom(answers);
         }
       }); // (steps 3-7 in nodeIdsConnectedFrom function)
 
@@ -633,7 +637,32 @@ export const [useStore, api] = create((set, get) => ({
         }
       }
     } else {
-      set({ breadcrumbs: omit(breadcrumbs, id) });
+      // remove breadcrumbs that were stored from id onwards
+      let keepBreadcrumb = true;
+      const fns = [];
+      const newFns = [];
+      const newBreadcrumbs = Object.entries(breadcrumbs).reduce(
+        (acc, [k, v]) => {
+          const fn = flow.nodes[k]?.fn;
+          if (fn) fns.push(fn);
+          if (k === id) {
+            keepBreadcrumb = false;
+          } else if (keepBreadcrumb) {
+            if (fn) newFns.push(fn);
+            acc[k] = v;
+          }
+          return acc;
+        },
+        {}
+      );
+
+      set({
+        breadcrumbs: newBreadcrumbs,
+        passport: {
+          ...passport,
+          data: omit(passport.data, ...difference(fns, newFns)),
+        },
+      });
     }
 
     function addSessionEvent() {
@@ -693,9 +722,16 @@ export const [useStore, api] = create((set, get) => ({
   responsesForReport() {
     const { breadcrumbs, flow } = get();
     return Object.entries(breadcrumbs)
-      .map(([k, v]: any) => {
+      .map(([k, v]: [string, string | Array<string>]) => {
+        const responses = (Array.isArray(v)
+          ? v.map((id) => flow.nodes[id]?.text)
+          : [flow.nodes[v]?.text]
+        ).filter(Boolean);
         return {
-          text: `${flow.nodes[k]?.text} <strong>${flow.nodes[v]?.text}</strong>`,
+          id: k,
+          text: `${flow.nodes[k]?.text} <strong>${responses.join(
+            ", "
+          )}</strong>`,
         };
       })
       .filter((o) => !o.text.includes("undefined"));

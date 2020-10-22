@@ -52,12 +52,16 @@ const Result: React.FC<IResult> = ({
             const hiddenResponses = x[key].filter((y, j) => j > 1);
 
             return (
-              <React.Fragment>
+              <React.Fragment key={key}>
                 <Box mb={1} color="text.secondary">
                   {key}
                 </Box>
-                {visibleResponses.map((y) => {
-                  return <ResultReason>{ReactHtmlParser(y.text)}</ResultReason>;
+                {visibleResponses.map((y: any) => {
+                  return (
+                    <ResultReason key={y.text} id={y.id}>
+                      {ReactHtmlParser(y.text)}
+                    </ResultReason>
+                  );
                 })}
                 {hiddenResponses.length !== 0 ? (
                   <SimpleExpand
@@ -66,9 +70,11 @@ const Result: React.FC<IResult> = ({
                       closed: "See fewer responses",
                     }}
                   >
-                    {hiddenResponses.map((y) => {
+                    {hiddenResponses.map((y: any) => {
                       return (
-                        <ResultReason>{ReactHtmlParser(y.text)}</ResultReason>
+                        <ResultReason key={y.text} id={y.id}>
+                          {ReactHtmlParser(y.text)}
+                        </ResultReason>
                       );
                     })}
                   </SimpleExpand>

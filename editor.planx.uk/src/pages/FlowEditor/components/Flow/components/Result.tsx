@@ -60,7 +60,7 @@ const Result: React.FC<any> = React.memo((props) => {
           {flags
             .filter((f) => f.category === "Planning permission")
             .map((flag: any) => (
-              <li className="card option">
+              <li className="card option" key={flag.value}>
                 <Link
                   href={href}
                   prefetch={false}
