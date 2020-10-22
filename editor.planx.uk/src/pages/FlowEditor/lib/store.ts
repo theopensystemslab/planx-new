@@ -506,10 +506,7 @@ export const [useStore, api] = create((set, get) => ({
     const ids = new Set();
     // TODO: this can be GREATLY simplified and optimised!
 
-    const nodeIdsConnectedFrom = (
-      source: string | null,
-      sourceParent: string = undefined
-    ) => {
+    const nodeIdsConnectedFrom = (source: string | null) => {
       return (
         flow.edges
           // 3. find all outgoing edges from the node 'source' and ensure that the
@@ -545,7 +542,6 @@ export const [useStore, api] = create((set, get) => ({
               //      informational e.g. TaskList or a question e.g. Question, and
               //      that it hasn't been visited already (because it's not been
               //      stored in the 'breadcrumbs'), so add it to the upcoming list
-
               const fn = flow.nodes[id]?.fn;
               if (fn && passport.data[fn]?.value !== undefined) {
                 // TODO: add much-needed docs here
@@ -553,9 +549,15 @@ export const [useStore, api] = create((set, get) => ({
                   .filter(([src]) => src === id)
                   .map(([_, tgt]) => ({ id: tgt, ...flow.nodes[tgt] }));
 
-                const responseThatCanBeAutoAnswered = responses.find(
-                  (n) => n.val === passport.data[fn].value
-                );
+                const responseThatCanBeAutoAnswered = responses.find((n) => {
+                  if (Array.isArray(passport.data[fn].value)) {
+                    // multiple string values are stored (array)
+                    return passport.data[fn].value.includes(n.val);
+                  } else {
+                    // string
+                    return n.val === passport.data[fn].value;
+                  }
+                });
 
                 if (responseThatCanBeAutoAnswered) {
                   nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id);
@@ -579,11 +581,11 @@ export const [useStore, api] = create((set, get) => ({
       .reverse()
       // 2. so, in this example case, we would now iterate through
       //    (CHOSEN_ANSWER_ID_3, CHOSEN_ANSWER_ID_2, CHOSEN_ANSWER_ID_1)
-      .forEach(([question, answers]: [string, string | string[]]) => {
+      .forEach(([, answers]: [string, string | string[]]) => {
         if (Array.isArray(answers)) {
-          answers.forEach((answer) => nodeIdsConnectedFrom(answer, question));
+          answers.forEach((answer) => nodeIdsConnectedFrom(answer));
         } else {
-          nodeIdsConnectedFrom(answers, question);
+          nodeIdsConnectedFrom(answers);
         }
       }); // (steps 3-7 in nodeIdsConnectedFrom function)
 
