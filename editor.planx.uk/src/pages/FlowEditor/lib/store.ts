@@ -551,12 +551,15 @@ export const [useStore, api] = create((set, get) => ({
                   .map(([_, tgt]) => ({ id: tgt, ...flow.nodes[tgt] }));
 
                 const responseThatCanBeAutoAnswered = responses.find((n) => {
+                  const val = String(n.val);
                   if (Array.isArray(passport.data[fn].value)) {
                     // multiple string values are stored (array)
-                    return passport.data[fn].value.includes(n.val);
+                    return passport.data[fn].value
+                      .map((v) => String(v))
+                      .includes(val);
                   } else {
                     // string
-                    return n.val === passport.data[fn].value;
+                    return val === String(passport.data[fn].value);
                   }
                 });
 
