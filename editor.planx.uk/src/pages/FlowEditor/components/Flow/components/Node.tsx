@@ -24,6 +24,8 @@ const Node: React.FC<any> = (props) => {
           text={`Tasks (${node.taskList?.tasks?.length || 0})`}
         />
       );
+    case TYPES.Text:
+      return <Question {...props} text="Text" />;
     case TYPES.Notice:
       return <Question {...props} text={"Notice"} />;
     case TYPES.FileUpload:
