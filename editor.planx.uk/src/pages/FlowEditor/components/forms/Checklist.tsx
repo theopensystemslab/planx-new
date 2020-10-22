@@ -2,7 +2,6 @@ import { Box, Button, IconButton } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
-
 import { FormikHookReturn } from "../../../../types";
 import {
   ImgInput,
@@ -21,8 +20,8 @@ import { removeAt } from "../../../../utils";
 import {
   Checklist,
   Option,
-  TYPES,
   toggleExpandableChecklist,
+  TYPES,
 } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation, PermissionSelect } from "./shared";
@@ -230,18 +229,20 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
       if (handleSubmit) {
         handleSubmit(
           {
-            $t,
-            ...values,
-            ...(groupedOptions
-              ? {
-                  categories: groupedOptions.map((gr) => ({
-                    title: gr.title,
-                    count: gr.children.length,
-                  })),
-                }
-              : {
-                  categories: undefined,
-                }),
+            type: $t,
+            data: {
+              ...values,
+              ...(groupedOptions
+                ? {
+                    categories: groupedOptions.map((gr) => ({
+                      title: gr.title,
+                      count: gr.children.length,
+                    })),
+                  }
+                : {
+                    categories: undefined,
+                  }),
+            },
           },
           options
             ? options
