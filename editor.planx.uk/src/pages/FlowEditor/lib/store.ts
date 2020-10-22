@@ -5,6 +5,7 @@ import * as jsondiffpatch from "jsondiffpatch";
 import debounce from "lodash/debounce";
 import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
+import omit from "lodash/omit";
 import pgarray from "pg-array";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
@@ -638,18 +639,30 @@ export const [useStore, api] = create((set, get) => ({
     } else {
       // remove breadcrumbs that were stored from id onwards
       let keepBreadcrumb = true;
+      const fns = [];
+      const newFns = [];
       const newBreadcrumbs = Object.entries(breadcrumbs).reduce(
         (acc, [k, v]) => {
+          const fn = flow.nodes[k]?.fn;
+          if (fn) fns.push(fn);
           if (k === id) {
             keepBreadcrumb = false;
           } else if (keepBreadcrumb) {
+            if (fn) newFns.push(fn);
             acc[k] = v;
           }
           return acc;
         },
         {}
       );
-      set({ breadcrumbs: newBreadcrumbs });
+
+      set({
+        breadcrumbs: newBreadcrumbs,
+        passport: {
+          ...passport,
+          data: omit(passport.data, ...difference(fns, newFns)),
+        },
+      });
     }
 
     function addSessionEvent() {
