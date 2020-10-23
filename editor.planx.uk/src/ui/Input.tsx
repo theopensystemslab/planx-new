@@ -8,6 +8,7 @@ interface Props extends InputBaseProps {
   className?: string;
   grow?: boolean;
   large?: boolean;
+  bordered?: boolean;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -20,6 +21,9 @@ export const inputStyles = makeStyles((theme) => ({
     "& input": {
       fontWeight: "inherit",
     },
+  },
+  bordered: {
+    border: `2px solid #000`,
   },
   inputMultiline: {
     height: "auto",
@@ -52,7 +56,7 @@ export const inputStyles = makeStyles((theme) => ({
 const Input: React.FC<Props> = (props) => {
   const classes = inputStyles();
 
-  const { format, ...restProps } = props;
+  const { format, bordered, ...restProps } = props;
 
   return (
     <InputBase
@@ -60,7 +64,8 @@ const Input: React.FC<Props> = (props) => {
         classes.input,
         format === "large" && classes.questionInput,
         format === "bold" && classes.bold,
-        format === "data" && classes.data
+        format === "data" && classes.data,
+        bordered && classes.bordered
       )}
       classes={{
         multiline: classes.inputMultiline,

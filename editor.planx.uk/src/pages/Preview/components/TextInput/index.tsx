@@ -26,6 +26,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
         <Input
           value={value}
           placeholder={props.node.placeholder || "Type your answer"}
+          bordered
           onChange={(ev) => {
             setValue(ev.target.value);
           }}

@@ -1,4 +1,5 @@
-import { Box, Button } from "@material-ui/core";
+import { Box, Button, IconButton } from "@material-ui/core";
+import { Delete } from "@material-ui/icons";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 
@@ -16,6 +17,7 @@ import {
   OptionButton,
   RichTextInput,
 } from "../../../../ui";
+import { removeAt } from "../../../../utils";
 import {
   Checklist,
   Option,
@@ -102,15 +104,30 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
         <Box>
           {formik.values.groupedOptions.map((groupedOption, index) => (
             <Box key={index} mt={index === 0 ? 0 : 4}>
-              <InputRow>
-                <Input
-                  format="bold"
-                  name={`groupedOptions[${index}].title`}
-                  value={groupedOption.title}
-                  placeholder="Section Title"
-                  onChange={formik.handleChange}
-                />
-              </InputRow>
+              <Box display="flex" pb={1}>
+                <InputRow>
+                  <Input
+                    format="bold"
+                    name={`groupedOptions[${index}].title`}
+                    value={groupedOption.title}
+                    placeholder="Section Title"
+                    onChange={formik.handleChange}
+                  />
+                </InputRow>
+                <Box flex={0}>
+                  <IconButton
+                    title="Delete group"
+                    onClick={() => {
+                      formik.setFieldValue(
+                        `groupedOptions`,
+                        removeAt(index, formik.values.groupedOptions)
+                      );
+                    }}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Box>
+              </Box>
               <Box pl={4}>
                 <ListManager
                   values={groupedOption.children}
@@ -136,20 +153,22 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
               </Box>
             </Box>
           ))}
-          <Button
-            size="large"
-            onClick={() => {
-              formik.setFieldValue(`groupedOptions`, [
-                ...formik.values.groupedOptions,
-                {
-                  title: "",
-                  children: [],
-                },
-              ]);
-            }}
-          >
-            add new group
-          </Button>
+          <Box mt={1}>
+            <Button
+              size="large"
+              onClick={() => {
+                formik.setFieldValue(`groupedOptions`, [
+                  ...formik.values.groupedOptions,
+                  {
+                    title: "",
+                    children: [],
+                  },
+                ]);
+              }}
+            >
+              add new group
+            </Button>
+          </Box>
         </Box>
       ) : (
         <ListManager
