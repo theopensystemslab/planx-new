@@ -1,9 +1,29 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
+import {
+  ApolloClient,
+  createHttpLink,
+  from,
+  InMemoryCache,
+} from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { onError } from "@apollo/client/link/error";
+import { navigation } from "index";
 import Cookies from "js-cookie";
 
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_HASURA_URL,
+});
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.map(({ message, locations, path }) =>
+      console.error(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+      )
+    );
+
+  if (networkError) {
+    navigation.navigate("/network-error");
+  }
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -26,6 +46,6 @@ const authLink = setContext((_, { headers }) => {
 });
 
 export const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: from([errorLink, authLink, httpLink]),
   cache: new InMemoryCache(),
 });

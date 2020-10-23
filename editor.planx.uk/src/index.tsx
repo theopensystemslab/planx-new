@@ -2,6 +2,7 @@ import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Cookies from "js-cookie";
+import { createBrowserNavigation } from "navi";
 import React, { Suspense } from "react";
 import { render } from "react-dom";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
@@ -13,7 +14,7 @@ import routes from "./routes";
 import * as serviceWorker from "./serviceWorker";
 import theme from "./theme";
 
-const rootEl = document.getElementById("root") as HTMLElement;
+export const rootEl = document.getElementById("root") as HTMLElement;
 
 const Layout: React.FC<{
   children: React.ReactNode;
@@ -32,16 +33,21 @@ const Layout: React.FC<{
   );
 };
 
+export const navigation = createBrowserNavigation({
+  routes,
+});
+
 render(
   <ApolloProvider client={client}>
-    <Router routes={routes} context={{ currentUser: Cookies.get("jwt") }}>
+    <Router
+      context={{ currentUser: Cookies.get("jwt") }}
+      navigation={navigation}
+    >
       <HelmetProvider>
         <Layout>
           <CssBaseline />
           <Suspense fallback={null}>
-            <ApolloProvider client={client}>
-              <View />
-            </ApolloProvider>
+            <View />
           </Suspense>
         </Layout>
       </HelmetProvider>

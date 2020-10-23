@@ -10,6 +10,11 @@ type RoutingContext = {
 };
 
 const editorRoutes = mount({
+  "/network-error": route({
+    title: makeTitle("Network Error"),
+    view: <h1>Network error :(</h1>,
+  }),
+
   "/login": map(async (req, context: RoutingContext) =>
     context.currentUser
       ? redirect(
