@@ -15,3 +15,10 @@ Then install the project's dependencies
 and start the development server
 
 `pnpm start`
+
+
+### Disabling type-checking
+
+If you're IDE does type checking for you and you want to save some CPU resources,
+you can opt-out of type checking by setting the environment variable
+`DISABLE_TYPE_CHECKING=true`.
