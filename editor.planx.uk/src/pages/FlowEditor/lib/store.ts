@@ -625,37 +625,42 @@ export const [useStore, api] = create((set, get) => ({
     const { breadcrumbs, sessionId, upcomingCardIds, flow, passport } = get();
     // vals may be string or string[]
     if (vals) {
-      const val = flow.nodes[vals].val;
       const key = flow.nodes[id].fn;
-      if (
-        key &&
-        val !== undefined &&
-        val !== null &&
-        String(val).trim() !== ""
-      ) {
+      if (key) {
         let passportValue;
         if (Array.isArray(vals)) {
-          passportValue = vals
-            .map((id) => flow.nodes[id].val)
-            .filter((v) => v !== undefined);
+          passportValue = vals.map((id) => flow.nodes[id].val);
         } else {
           passportValue = [flow.nodes[vals].val];
         }
 
-        if (passport.data[key] && Array.isArray(passport.data[key].value)) {
-          passportValue = uniq(passport.data[key].value.concat(passportValue));
-        }
+        passportValue = passportValue.filter(
+          (val) =>
+            val !== undefined && val !== null && String(val).trim() !== ""
+        );
 
-        set({
-          breadcrumbs: { ...breadcrumbs, [id]: vals },
-          passport: {
-            ...passport,
-            data: {
-              ...passport.data,
-              [key]: { value: passportValue },
+        if (passportValue.length > 0) {
+          if (passport.data[key] && Array.isArray(passport.data[key].value)) {
+            passportValue = uniq(
+              passport.data[key].value.concat(passportValue)
+            );
+          }
+
+          set({
+            breadcrumbs: { ...breadcrumbs, [id]: vals },
+            passport: {
+              ...passport,
+              data: {
+                ...passport.data,
+                [key]: { value: passportValue },
+              },
             },
-          },
-        });
+          });
+        } else {
+          set({
+            breadcrumbs: { ...breadcrumbs, [id]: vals },
+          });
+        }
       } else {
         set({ breadcrumbs: { ...breadcrumbs, [id]: vals } });
       }
