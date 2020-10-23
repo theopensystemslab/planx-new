@@ -14,14 +14,15 @@ import { MoreInformation } from "../shared";
 
 function Component(props) {
   const formik = useFormik<{
-    title: string;
-    description: string;
     color: string;
-    notes: string;
     definitionImg: string;
+    description: string;
+    fn?: string;
     howMeasured: string;
-    policyRef: string;
     info: string;
+    notes: string;
+    policyRef: string;
+    title: string;
   }>({
     initialValues: {
       // TODO: improve runtime validation here (joi, io-ts)
@@ -63,6 +64,16 @@ function Component(props) {
               placeholder="Description"
               name="description"
               value={formik.values.description}
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+          <InputRow>
+            <Input
+              // required
+              format="data"
+              name="fn"
+              value={formik.values.fn}
+              placeholder="Data Field"
               onChange={formik.handleChange}
             />
           </InputRow>
