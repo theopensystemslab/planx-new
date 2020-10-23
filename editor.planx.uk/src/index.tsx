@@ -14,7 +14,7 @@ import routes from "./routes";
 import * as serviceWorker from "./serviceWorker";
 import theme from "./theme";
 
-export const rootEl = document.getElementById("root") as HTMLElement;
+const rootEl = document.getElementById("root") as HTMLElement;
 
 const Layout: React.FC<{
   children: React.ReactNode;
