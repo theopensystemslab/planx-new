@@ -9,7 +9,6 @@ import omit from "lodash/omit";
 import pgarray from "pg-array";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
-
 import { client } from "../../../lib/graphql";
 import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
@@ -423,6 +422,21 @@ export const [useStore, api] = create((set, get) => ({
   breadcrumbs: {},
 
   async startSession({ passport }) {
+    // convert data to format described in google sheet:
+    // https://docs.google.com/spreadsheets/d/1ePihRD37-2071Wq6t2Y7QtBt7juySWuVP6SAF6T-0vo/edit#gid=1877209331
+    const keys = Object.entries(passport.data)
+      .filter(([, { value }]: any) => value)
+      .map(([k]) => k);
+    console.log({ keys });
+
+    const value = [];
+    if (keys.includes("property.landConservation"))
+      value.push("designated.conservationArea");
+    if (keys.includes("property.landTPO")) value.push("TPO");
+    if (keys.includes("property.buildingListed")) value.push("listed");
+
+    passport.data["property.constraints.planning"] = { value };
+
     set({
       passport: {
         ...passport,
