@@ -6,6 +6,7 @@ import debounce from "lodash/debounce";
 import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
 import omit from "lodash/omit";
+import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
@@ -624,27 +625,39 @@ export const [useStore, api] = create((set, get) => ({
     const { breadcrumbs, sessionId, upcomingCardIds, flow, passport } = get();
     // vals may be string or string[]
     if (vals) {
-      set({ breadcrumbs: { ...breadcrumbs, [id]: vals } });
-
-      if (flow.nodes[id].fn) {
+      const val = flow.nodes[vals].val;
+      const key = flow.nodes[id].fn;
+      if (
+        key &&
+        val !== undefined &&
+        val !== null &&
+        String(val).trim() !== ""
+      ) {
         let passportValue;
         if (Array.isArray(vals)) {
           passportValue = vals
             .map((id) => flow.nodes[id].val)
             .filter((v) => v !== undefined);
         } else {
-          passportValue = flow.nodes[vals].val;
+          passportValue = [flow.nodes[vals].val];
+        }
+
+        if (passport.data[key] && Array.isArray(passport.data[key].value)) {
+          passportValue = uniq(passport.data[key].value.concat(passportValue));
         }
 
         set({
+          breadcrumbs: { ...breadcrumbs, [id]: vals },
           passport: {
             ...passport,
             data: {
               ...passport.data,
-              [flow.nodes[id].fn]: { value: passportValue },
+              [key]: { value: passportValue },
             },
           },
         });
+      } else {
+        set({ breadcrumbs: { ...breadcrumbs, [id]: vals } });
       }
 
       // only store breadcrumbs in the backend if they are answers provided for
