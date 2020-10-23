@@ -1,4 +1,5 @@
 import React from "react";
+
 import { TYPES } from "../../../data/types";
 import { useStore } from "../../../lib/store";
 import Breadcrumb from "./Breadcrumb";
@@ -24,6 +25,8 @@ const Node: React.FC<any> = (props) => {
           text={`Tasks (${node.taskList?.tasks?.length || 0})`}
         />
       );
+    case TYPES.TextInput:
+      return <Question {...props} text="Text" />;
     case TYPES.Notice:
       return <Question {...props} text={"Notice"} />;
     case TYPES.FileUpload:

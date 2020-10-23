@@ -9,6 +9,7 @@ import omit from "lodash/omit";
 import pgarray from "pg-array";
 import { v4 as uuid } from "uuid";
 import create from "zustand";
+
 import { client } from "../../../lib/graphql";
 import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
@@ -32,6 +33,7 @@ const SUPPORTED_INFORMATION_TYPES = [
   TYPES.Result,
   TYPES.TaskList,
   TYPES.FileUpload,
+  TYPES.TextInput,
 ];
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];

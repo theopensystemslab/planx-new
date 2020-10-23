@@ -31,6 +31,8 @@ export interface Task {
   description: string;
 }
 
+// Notice
+
 export interface Notice extends MoreInformation {
   title: string;
   description: string;
@@ -90,6 +92,14 @@ export const toggleExpandableChecklist = (
 
 export interface Content extends MoreInformation {
   content: string;
+}
+
+// Text
+
+export interface TextInput extends MoreInformation {
+  title: string;
+  description?: string;
+  placeholder?: string;
 }
 
 // Shared

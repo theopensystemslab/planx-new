@@ -4,6 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import HelpIcon from "@material-ui/icons/HelpOutlineOutlined";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
 
@@ -38,7 +39,11 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               {title}
             </Box>
           )}
-          <Box pb={2}>{description}</Box>
+          {description && (
+            <Box>
+              <ReactMarkdown source={description} />
+            </Box>
+          )}
         </Grid>
         {!!(info || policyRef || howMeasured) && (
           <Grid item>
