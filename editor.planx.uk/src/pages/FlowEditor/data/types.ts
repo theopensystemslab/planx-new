@@ -19,6 +19,53 @@ export enum TYPES {
   Portal = 300,
 }
 
+// Utility function to make TypeScript detect a non-exhaustive switch statement.
+function assertUnreachable(_x: never): never {
+  throw new Error("Didn't expect to get here");
+}
+
+export const toSlug = (type: TYPES): string => {
+  switch (type) {
+    case TYPES.Flow:
+      return "flow";
+    case TYPES.Checklist:
+      return "checklist";
+    case TYPES.FindProperty:
+      return "find-property";
+    case TYPES.TaskList:
+      return "task-list";
+    case TYPES.Notice:
+      return "notice";
+    case TYPES.TextInput:
+      return "text-input";
+    case TYPES.Content:
+      return "content";
+    case TYPES.Result:
+      return "result";
+    case TYPES.FileUpload:
+      return "file-upload";
+    case TYPES.Portal:
+      return "portal";
+    case TYPES.PropertyInformation:
+      return "property-information";
+    case TYPES.SignIn:
+      return "question";
+    case TYPES.Report:
+      return "question";
+    case TYPES.NumberInput:
+      return "question";
+    case TYPES.DateInput:
+      return "question";
+    case TYPES.AddressInput:
+      return "question";
+    case TYPES.Statement:
+      return "question";
+    case TYPES.Response:
+      return "question";
+  }
+  return assertUnreachable(type);
+};
+
 // Task list
 
 export interface TaskList {
