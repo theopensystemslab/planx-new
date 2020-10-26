@@ -20,7 +20,7 @@ export enum TYPES {
 }
 
 export const SLUGS: {
-  [key: number]: string;
+  [key in TYPES]: string;
 } = {
   [TYPES.Flow]: "flow",
   [TYPES.Checklist]: "checklist",
@@ -41,6 +41,12 @@ export const SLUGS: {
   [TYPES.Statement]: "question",
   [TYPES.Response]: "question",
 };
+
+// XXX: Type guard
+for (const t of Object.values(TYPES)) {
+  if (SLUGS[t]) {
+  }
+}
 
 // Task list
 
