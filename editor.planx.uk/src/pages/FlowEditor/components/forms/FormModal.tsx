@@ -11,7 +11,7 @@ import React from "react";
 import { useNavigation } from "react-navi";
 
 import { rootFlowPath } from "../../../../routes/utils";
-import { TYPES, toSlug } from "../../data/types";
+import { TYPES, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
 import { parseFormValues } from "./shared";
 
@@ -114,7 +114,7 @@ const FormModal: React.FC<{
             value={type}
             onChange={($t) => {
               const url = new URL(window.location.href);
-              url.searchParams.set("type", toSlug(Number($t)));
+              url.searchParams.set("type", SLUGS[Number($t)]);
               navigate([url.pathname, url.search].join(""));
             }}
           />
