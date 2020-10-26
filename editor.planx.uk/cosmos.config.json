@@ -3,6 +3,6 @@
   "hostname": "0.0.0.0",
   "webpack": {
     "configPath": "react-scripts/config/webpack.config",
-    "overridePath": "./webpack.config.override.js"
+    "overridePath": "./config-overrides.js"
   }
 }
