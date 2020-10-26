@@ -74,7 +74,7 @@ const newNode = route(async (req) => {
 const editNode = route(async (req) => {
   const { id, before = null, parent = null } = req.params;
 
-  const node = api.getState().getNode(id);
+  const node = api.getState().getNode(id) as { $t: TYPES; [key: string]: any };
 
   const extraProps = {} as any;
 

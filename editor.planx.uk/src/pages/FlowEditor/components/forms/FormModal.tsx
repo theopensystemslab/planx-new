@@ -114,7 +114,7 @@ const FormModal: React.FC<{
             value={type}
             onChange={($t) => {
               const url = new URL(window.location.href);
-              url.searchParams.set("type", SLUGS[Number($t)]);
+              url.searchParams.set("type", SLUGS[Number($t) as TYPES]);
               navigate([url.pathname, url.search].join(""));
             }}
           />
