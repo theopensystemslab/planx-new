@@ -11,6 +11,7 @@ import React from "react";
 import { useNavigation } from "react-navi";
 
 import { rootFlowPath } from "../../../../routes/utils";
+import { TYPES, toSlug } from "../../data/types";
 import { useStore } from "../../lib/store";
 import { parseFormValues } from "./shared";
 
@@ -43,8 +44,8 @@ const NodeTypeSelect: React.FC<{
     }}
   >
     <optgroup label="Question">
-      <option value="question">Question</option>
-      <option value="checklist">Checklist</option>
+      <option value={TYPES.Statement}>Question</option>
+      <option value={TYPES.Checklist}>Checklist</option>
     </optgroup>
     <optgroup label="Inputs">
       <option disabled value="text-inputs">
@@ -56,24 +57,24 @@ const NodeTypeSelect: React.FC<{
       <option disabled value="date-inputs">
         Date Input
       </option>
-      <option value="file-upload">File Upload</option>
+      <option value={TYPES.FileUpload}>File Upload</option>
       <option disabled value="address-inputs">
         Address Input
       </option>
     </optgroup>
     <optgroup label="Information">
-      <option value="text-input">Text Input</option>
-      <option value="task-list">Task List</option>
-      <option value="notice">Notice</option>
-      <option value="result">Result</option>
-      <option value="content">Content</option>
+      <option value={TYPES.TextInput}>Text Input</option>
+      <option value={TYPES.TaskList}>Task List</option>
+      <option value={TYPES.Notice}>Notice</option>
+      <option value={TYPES.Result}>Result</option>
+      <option value={TYPES.Content}>Content</option>
     </optgroup>
     <optgroup label="Location">
-      <option value="find-property">Find property</option>
-      <option value="property-information">Property information</option>
+      <option value={TYPES.FindProperty}>Find property</option>
+      <option value={TYPES.PropertyInformation}>Property information</option>
     </optgroup>
     <optgroup label="Navigation">
-      <option value="portal">Portal</option>
+      <option value={TYPES.Portal}>Portal</option>
     </optgroup>
   </select>
 );
@@ -111,9 +112,9 @@ const FormModal: React.FC<{
         {!handleDelete && (
           <NodeTypeSelect
             value={type}
-            onChange={(type) => {
+            onChange={($t) => {
               const url = new URL(window.location.href);
-              url.searchParams.set("type", type);
+              url.searchParams.set("type", toSlug(Number($t)));
               navigate([url.pathname, url.search].join(""));
             }}
           />

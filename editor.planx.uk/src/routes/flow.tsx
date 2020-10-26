@@ -7,35 +7,11 @@ import { View } from "react-navi";
 
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
-import Checklist from "../pages/FlowEditor/components/forms/Checklist";
-import Content from "../pages/FlowEditor/components/forms/Content";
-import FileUpload from "../pages/FlowEditor/components/forms/FileUpload";
-import FindProperty from "../pages/FlowEditor/components/forms/FindProperty";
+import components from "../pages/FlowEditor/components/forms";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
-import Notice from "../pages/FlowEditor/components/forms/Notice";
-import Portal from "../pages/FlowEditor/components/forms/Portal";
-import PropertyInformation from "../pages/FlowEditor/components/forms/PropertyInformation";
-import Question from "../pages/FlowEditor/components/forms/Question";
-import Result from "../pages/FlowEditor/components/forms/Result";
-import TaskList from "../pages/FlowEditor/components/forms/TaskList";
-import TextInput from "../pages/FlowEditor/components/forms/TextInput";
-import { TYPES } from "../pages/FlowEditor/data/types";
+import { TYPES, toSlug } from "../pages/FlowEditor/data/types";
 import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
-
-const components = {
-  "find-property": FindProperty,
-  "property-information": PropertyInformation,
-  "task-list": TaskList,
-  "text-input": TextInput,
-  notice: Notice,
-  "file-upload": FileUpload,
-  result: Result,
-  checklist: Checklist,
-  portal: Portal,
-  question: Question,
-  content: Content,
-};
 
 const newNode = route(async (req) => {
   const { type = "question", before = null, parent = null } = req.params;
@@ -102,66 +78,33 @@ const editNode = route(async (req) => {
 
   const extraProps = {} as any;
 
-  let type;
-  switch (node.$t) {
-    case TYPES.Checklist:
-      type = "checklist";
-      break;
-    case TYPES.FindProperty:
-      type = "find-property";
-      break;
-    case TYPES.TaskList:
-      type = "task-list";
-      break;
-    case TYPES.Notice:
-      type = "notice";
-      break;
-    case TYPES.TextInput:
-      type = "text-input";
-      break;
-    case TYPES.Content:
-      type = "content";
-      break;
-    case TYPES.Result:
-      type = "result";
-      break;
-    case TYPES.FileUpload:
-      type = "file-upload";
-      break;
-    case TYPES.Portal:
-      type = "portal";
+  const type = toSlug(node.$t);
 
-      const { data } = await client.query({
-        query: gql`
-          query GetFlows {
-            flows(order_by: { name: asc }) {
-              id
-              name
+  if (node.$t === TYPES.Portal) {
+    const { data } = await client.query({
+      query: gql`
+        query GetFlows {
+          flows(order_by: { name: asc }) {
+            id
+            name
+            slug
+            team {
               slug
-              team {
-                slug
-              }
             }
           }
-        `,
-      });
+        }
+      `,
+    });
 
-      const sorter = natsort({ insensitive: true });
+    const sorter = natsort({ insensitive: true });
 
-      extraProps.externalFlows = data.flows
-        .filter(
-          (flow) =>
-            flow.team &&
-            !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
-        )
-        .sort(sorter);
-
-      break;
-    case TYPES.PropertyInformation:
-      type = "property-information";
-      break;
-    default:
-      type = "question";
+    extraProps.externalFlows = data.flows
+      .filter(
+        (flow) =>
+          flow.team &&
+          !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
+      )
+      .sort(sorter);
   }
 
   if (type === "checklist" || type === "question") {
