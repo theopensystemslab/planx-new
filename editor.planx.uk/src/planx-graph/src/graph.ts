@@ -220,7 +220,14 @@ class Graph {
       throw new Error(`'${id}' not found in '${fromParent}'`);
     }
 
-    if (!clone) {
+    if (clone) {
+      if (
+        Array.isArray(this.nodes.get(toParent).edges) &&
+        this.nodes.get(toParent).edges.includes(id)
+      ) {
+        throw new Error("cannot clone to same parent");
+      }
+    } else {
       this.nodes.get(fromParent).edges.splice(fromIdx, 1);
       if (fromParent !== toParent) {
         if (this.nodes.get(fromParent).edges.length === 0) {

@@ -25,7 +25,7 @@ describe("cloning nodes", () => {
     });
   });
 
-  test.only("from child to root", () => {
+  test("from child to root", () => {
     graph.load({
       _root: {
         edges: ["a"],
@@ -95,6 +95,26 @@ describe("cloning nodes", () => {
       },
       e: {},
       f: {},
+    });
+  });
+
+  describe("validation", () => {
+    test("cannot clone to same parent", () => {
+      graph.load({
+        _root: {
+          edges: ["a", "b"],
+        },
+        a: {},
+        b: {},
+      });
+
+      expect(() =>
+        graph.move("b", {
+          fromParent: "_root",
+          toParent: "_root",
+          clone: true,
+        })
+      ).toThrowError("same parent");
     });
   });
 });
