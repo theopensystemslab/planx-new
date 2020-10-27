@@ -1,3 +1,5 @@
+import React from "react";
+
 import Checklist from "./Checklist";
 import Content from "./Content";
 import FileUpload from "./FileUpload";
@@ -9,8 +11,12 @@ import Question from "./Question";
 import Result from "./Result";
 import TaskList from "./TaskList";
 import TextInput from "./TextInput";
+import { SLUGS, TYPES } from "../../data/types";
 
-export default {
+const components: {
+  [key in typeof SLUGS[TYPES]]: React.FC<any>;
+} = {
+  flow: () => null,
   "find-property": FindProperty,
   "property-information": PropertyInformation,
   "task-list": TaskList,
@@ -23,3 +29,5 @@ export default {
   question: Question,
   content: Content,
 };
+
+export default components;

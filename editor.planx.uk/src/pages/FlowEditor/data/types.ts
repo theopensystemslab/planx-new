@@ -19,9 +19,7 @@ export enum TYPES {
   Portal = 300,
 }
 
-export const SLUGS: {
-  [key in TYPES]: string;
-} = {
+export const SLUGS = {
   [TYPES.Flow]: "flow",
   [TYPES.Checklist]: "checklist",
   [TYPES.FindProperty]: "find-property",
@@ -40,9 +38,8 @@ export const SLUGS: {
   [TYPES.AddressInput]: "question",
   [TYPES.Statement]: "question",
   [TYPES.Response]: "question",
-};
+} as const;
 
-// XXX: Type guard
 // XXX: Type guard to make sure all available keys are covered in the object above.
 //      It can be removed once we type all consumers of SLUGS
 for (const t of Object.values(TYPES)) {
