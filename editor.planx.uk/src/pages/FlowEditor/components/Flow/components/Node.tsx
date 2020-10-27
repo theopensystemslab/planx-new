@@ -30,7 +30,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Notice:
       return <Question {...props} text={"Notice"} />;
     case TYPES.FileUpload:
-      return <Question {...props} text={"File Upload"} />;
+      return <Question {...props} text={node?.description ?? "File Upload"} />;
     case TYPES.Content:
       return <Question {...props} text={"Content"} />;
     case TYPES.Statement:
