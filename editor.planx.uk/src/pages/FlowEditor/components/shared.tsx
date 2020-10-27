@@ -1,6 +1,7 @@
 import {
   CallSplit,
   CheckBoxOutlined,
+  CloudUpload,
   Create,
   List,
   LocationOnOutlined,
@@ -30,6 +31,8 @@ export const nodeIcon = (type: TYPES): React.FC | undefined => {
       return Create;
     case TYPES.TaskList:
       return List;
+    case TYPES.FileUpload:
+      return CloudUpload;
     default:
       return undefined;
   }
