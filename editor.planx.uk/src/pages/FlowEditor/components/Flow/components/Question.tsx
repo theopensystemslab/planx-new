@@ -38,7 +38,7 @@ const Question: React.FC<Props> = React.memo((props) => {
   const handleContext = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    api.getState().copyNode(props.id);
+    api.getState().copyNode(props.id, parent);
   };
 
   const Icon = ICONS[props.type];

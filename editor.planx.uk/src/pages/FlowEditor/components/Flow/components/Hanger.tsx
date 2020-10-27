@@ -26,10 +26,6 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   const [{ canDrop, item }, drop] = useDrop({
     accept: ["DECISION", "PORTAL"],
     drop: () => {
-      // id: string,
-      // parent = undefined
-      // toBefore = undefined
-      // toParent = undefined
       api.getState().moveNode(item.id, item.parent, before, parent);
     },
     collect: (monitor) => ({

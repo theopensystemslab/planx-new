@@ -195,15 +195,17 @@ export const [useStore, api] = create((set, get) => ({
     resetPreview();
   },
 
-  copyNode(id: string) {
-    localStorage.setItem("clipboard", id);
+  copyNode(id: string, parent: string = undefined) {
+    localStorage.setItem("clipboard", JSON.stringify({ id, parent }));
   },
 
-  pasteNode(parent = undefined, before = undefined, cb = send) {
-    const { moveNode } = get();
-    const id = localStorage.getItem("clipboard");
-
-    moveNode(id, undefined, before, parent, true);
+  pasteNode(newParent, before) {
+    try {
+      const { id, parent } = JSON.parse(localStorage.getItem("clipboard"));
+      get().moveNode(id, parent, before, newParent, true);
+    } catch (err) {
+      console.error(err);
+    }
   },
 
   childNodesOf(id: string = ROOT_NODE_KEY) {

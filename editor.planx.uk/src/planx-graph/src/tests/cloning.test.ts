@@ -1,6 +1,58 @@
 import { graph } from "./setup.test";
 
 describe("cloning nodes", () => {
+  test("from root to child", () => {
+    graph.load({
+      _root: {
+        edges: ["a", "b"],
+      },
+      a: {},
+      b: {},
+    });
+
+    graph.move("b", {
+      fromParent: "_root",
+      toParent: "a",
+      clone: true,
+    });
+
+    expect(graph.toObject()).toMatchObject({
+      _root: {
+        edges: ["a", "b"],
+      },
+      a: { edges: ["b"] },
+      b: {},
+    });
+  });
+
+  test.only("from child to root", () => {
+    graph.load({
+      _root: {
+        edges: ["a"],
+      },
+      a: {
+        edges: ["b"],
+      },
+      b: {},
+    });
+
+    graph.move("b", {
+      fromParent: "a",
+      toParent: "_root",
+      clone: true,
+    });
+
+    expect(graph.toObject()).toMatchObject({
+      _root: {
+        edges: ["a", "b"],
+      },
+      a: {
+        edges: ["b"],
+      },
+      b: {},
+    });
+  });
+
   test("to different parent", () => {
     graph.load({
       _root: {
