@@ -43,8 +43,11 @@ export const SLUGS: {
 };
 
 // XXX: Type guard
+// XXX: Type guard to make sure all available keys are covered in the object above.
+//      It can be removed once we type all consumers of SLUGS
 for (const t of Object.values(TYPES)) {
   if (SLUGS[t]) {
+    // NOOP
   }
 }
 
