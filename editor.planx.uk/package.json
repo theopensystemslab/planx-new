@@ -87,7 +87,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-scripts build",
-    "test": "react-scripts test --no-watchman",
+    "test": "react-scripts test",
     "cosmos": "cosmos",
     "eject": "react-scripts eject",
     "compile-types": "typescript-json-validator src/types/index.d.ts --collection --useNamedExport"
