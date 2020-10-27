@@ -22,7 +22,7 @@ const ExternalPortal: React.FC<any> = React.memo(
           }
         }
       `,
-      { variables: { id: props.flowId } }
+      { variables: { id: props.data.flowId } }
     );
 
     const parent = getParentId(props.parent);
@@ -31,7 +31,7 @@ const ExternalPortal: React.FC<any> = React.memo(
       item: {
         id: props.id,
         parent,
-        text: props.text,
+        text: props.data.text,
         type: "PORTAL",
       },
       collect: (monitor) => ({
@@ -68,7 +68,7 @@ const ExternalPortal: React.FC<any> = React.memo(
 );
 
 const InternalPortal: React.FC<any> = (props) => {
-  let href = props.href || `${rootFlowPath(true)},${props.id}`;
+  let href = props.data.href || `${rootFlowPath(true)},${props.id}`;
 
   const parent = getParentId(props.parent);
 
@@ -81,7 +81,7 @@ const InternalPortal: React.FC<any> = (props) => {
     item: {
       id: props.id,
       parent,
-      text: props.text,
+      text: props.data.text,
       type: "PORTAL",
     },
     collect: (monitor) => ({
@@ -94,7 +94,7 @@ const InternalPortal: React.FC<any> = (props) => {
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li className={classNames("card", "portal", { isDragging })}>
         <Link href={href} prefetch={false} ref={drag}>
-          <span>{props.text}</span>
+          <span>{props.data.text}</span>
         </Link>
         <Link href={editHref} prefetch={false}>
           <MoreVertical />
@@ -105,7 +105,7 @@ const InternalPortal: React.FC<any> = (props) => {
 };
 
 const Portal: React.FC<any> = (props) => {
-  if (props.flowId) {
+  if (props.data.flowId) {
     return <ExternalPortal {...props} />;
   } else {
     return <InternalPortal {...props} />;
