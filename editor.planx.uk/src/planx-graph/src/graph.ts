@@ -103,7 +103,7 @@ class Graph {
         node.edges,
         children.map((c) => c.id)
       );
-      removedChildrenIds.forEach((id) => this.remove(id, ops));
+      removedChildrenIds.forEach((id) => this.remove(id, {}, ops));
 
       // if a value exists in the current data, but is null, undefined or "" in the
       // new data then remove it
@@ -157,28 +157,43 @@ class Graph {
     return ops;
   }
 
-  remove(id, ops = []): Array<OT.Op> {
-    const { edges = [] } = this.nodes.get(id);
-
-    ops.push({ p: [id], od: this.nodes.get(id) });
-    this.nodes.delete(id);
-
-    this.nodes.forEach((node: any, nodeId: string) => {
-      if (node.edges) {
-        const idx = node.edges.indexOf(id);
-        if (idx >= 0) {
-          ops.push({ p: [nodeId, "edges", idx], ld: node.edges[idx] });
+  remove(id, { parent = ROOT_NODE_KEY } = {}, ops = []): Array<OT.Op> {
+    if (this.isClone(id)) {
+      const node = this.nodes.get(parent);
+      node.edges = node.edges || [];
+      const idx = node.edges.indexOf(id);
+      if (idx >= 0) {
+        if (node.edges.length === 1) {
+          ops.push({ p: [parent, "edges"], od: node.edges });
+          delete node.edges;
+        } else {
+          ops.push({ p: [parent, "edges", idx], ld: node.edges[idx] });
           node.edges.splice(idx, 1);
-
-          if (node.edges.length === 0) {
-            ops.push({ p: [nodeId, "edges"], od: [] });
-            delete node.edges;
-          }
         }
       }
-    });
+    } else {
+      const { edges = [] } = this.nodes.get(id);
 
-    edges.forEach((child) => this.remove(child, ops));
+      ops.push({ p: [id], od: this.nodes.get(id) });
+      this.nodes.delete(id);
+
+      this.nodes.forEach((node: any, nodeId: string) => {
+        if (node.edges) {
+          const idx = node.edges.indexOf(id);
+          if (idx >= 0) {
+            if (node.edges.length === 1) {
+              ops.push({ p: [nodeId, "edges"], od: node.edges });
+              delete node.edges;
+            } else {
+              ops.push({ p: [nodeId, "edges", idx], ld: node.edges[idx] });
+              node.edges.splice(idx, 1);
+            }
+          }
+        }
+      });
+
+      edges.forEach((child) => this.remove(child, {}, ops));
+    }
 
     return ops;
   }
@@ -259,6 +274,14 @@ class Graph {
     }
 
     return ops;
+  }
+
+  isClone(id: string): boolean {
+    let occurrences = 0;
+    this.nodes.forEach(({ edges = [] }) => {
+      if (edges.includes(id)) occurrences++;
+    });
+    return occurrences > 1;
   }
 
   // reading the graph

@@ -39,8 +39,7 @@ describe("removing nodes", () => {
 
     expect(ops).toEqual([
       { p: ["a"], od: { edges: ["b", "c", "d"] } },
-      { p: ["_root", "edges", 0], ld: "a" },
-      { p: ["_root", "edges"], od: [] },
+      { p: ["_root", "edges"], od: ["a"] },
       { p: ["b"], od: {} },
       { p: ["c"], od: {} },
       { p: ["d"], od: {} },
@@ -48,6 +47,37 @@ describe("removing nodes", () => {
 
     expect(graph.toObject()).toMatchObject({
       _root: {},
+    });
+  });
+
+  test("removing clones", () => {
+    const data = {
+      _root: {
+        edges: ["a", "b"],
+      },
+      a: {
+        edges: ["c"],
+      },
+      b: {
+        edges: ["c"],
+      },
+      c: {},
+    };
+
+    graph.load(data);
+    const ops = graph.remove("c", { parent: "a" });
+
+    expect(ops).toEqual([{ p: ["a", "edges"], od: ["c"] }]);
+
+    expect(graph.toObject()).toMatchObject({
+      _root: {
+        edges: ["a", "b"],
+      },
+      a: {},
+      b: {
+        edges: ["c"],
+      },
+      c: {},
     });
   });
 });

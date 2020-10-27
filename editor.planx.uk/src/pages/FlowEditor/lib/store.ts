@@ -170,11 +170,10 @@ export const [useStore, api] = create((set, get) => ({
     send(ops);
   },
 
-  removeNode: (id, parent = null, cb = send) => {
-    // TODO: pass parent to remove
+  removeNode: (id, parent = undefined, cb = send) => {
     const g = new Graph(uid);
     g.load(get().flow);
-    const ops = g.remove(id);
+    const ops = g.remove(id, { parent });
     cb(ops);
   },
 
