@@ -189,10 +189,14 @@ export const [useStore, api] = create((set, get) => ({
 
     const g = new Graph(uid);
     g.load(flow);
-    const ops = g.move(id, { fromParent: parent, toBefore, toParent, clone });
-    cb(ops);
 
-    resetPreview();
+    try {
+      const ops = g.move(id, { fromParent: parent, toBefore, toParent, clone });
+      cb(ops);
+      resetPreview();
+    } catch (err) {
+      alert(err.message);
+    }
   },
 
   copyNode(id: string, parent: string = undefined) {
@@ -204,7 +208,7 @@ export const [useStore, api] = create((set, get) => ({
       const { id, parent } = JSON.parse(localStorage.getItem("clipboard"));
       get().moveNode(id, parent, before, newParent, true);
     } catch (err) {
-      console.error(err);
+      alert(err.message);
     }
   },
 

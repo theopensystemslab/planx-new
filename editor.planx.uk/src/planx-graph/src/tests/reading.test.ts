@@ -1,6 +1,6 @@
 import { graph } from "./setup.test";
 
-test.only("reading nodes", () => {
+test("reading nodes", () => {
   graph.load({
     _root: {
       edges: ["a"],

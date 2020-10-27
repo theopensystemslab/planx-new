@@ -1,7 +1,10 @@
+import produce, { enableMapSet } from "immer";
 import difference from "lodash/difference";
 import trim from "lodash/trim";
 import { alphabetId } from "./lib/id";
 import { OT } from "./types/ot";
+
+enableMapSet();
 
 export const ROOT_NODE_KEY = "_root";
 
@@ -220,65 +223,77 @@ class Graph {
       throw new Error(`'${id}' not found in '${fromParent}'`);
     }
 
-    if (clone) {
-      if (
-        Array.isArray(this.nodes.get(toParent).edges) &&
-        this.nodes.get(toParent).edges.includes(id)
-      ) {
-        throw new Error("cannot clone to same parent");
-      }
-    } else {
-      this.nodes.get(fromParent).edges.splice(fromIdx, 1);
-      if (fromParent !== toParent) {
-        if (this.nodes.get(fromParent).edges.length === 0) {
-          ops.push({
-            od: [],
-            p: [fromParent, "edges"],
-          });
-        } else {
-          ops.push({
-            ld: originalNode,
-            p: [fromParent, "edges", fromIdx],
-          });
+    this.nodes = produce(this.nodes, (draft) => {
+      if (clone) {
+        if (
+          Array.isArray(draft.get(toParent).edges) &&
+          draft.get(toParent).edges.includes(id)
+        ) {
+          throw new Error("cannot clone to same parent");
+        }
+      } else {
+        draft.get(fromParent).edges.splice(fromIdx, 1);
+        if (fromParent !== toParent) {
+          if (
+            Array.isArray(draft.get(toParent).edges) &&
+            draft.get(toParent).edges.includes(id)
+          ) {
+            throw new Error("cannot move to same parent");
+          }
+
+          if (draft.get(fromParent).edges.length === 0) {
+            ops.push({
+              od: [],
+              p: [fromParent, "edges"],
+            });
+          } else {
+            ops.push({
+              ld: originalNode,
+              p: [fromParent, "edges", fromIdx],
+            });
+          }
         }
       }
-    }
 
-    if (toBefore) {
-      let toIdx = this.nodes.get(toParent).edges.indexOf(toBefore);
-      if (toIdx >= 0) {
-        this.nodes.get(toParent).edges.splice(toIdx, 0, id);
+      if (toBefore) {
+        let toIdx = draft.get(toParent).edges.indexOf(toBefore);
+        if (toIdx >= 0) {
+          draft.get(toParent).edges.splice(toIdx, 0, id);
+          if (fromParent === toParent) {
+            ops.push({ lm: toIdx, p: [fromParent, "edges", fromIdx] });
+          } else {
+            ops.push({
+              li: originalNode,
+              p: [toParent, "edges", toIdx],
+            });
+          }
+        } else {
+          throw new Error(`'${toBefore}' not found in '${toParent}'`);
+        }
+      } else {
+        if (!draft.get(toParent).edges) {
+          ops.push({ p: [toParent, "edges"], oi: [] });
+          draft.get(toParent).edges = [];
+        }
+
         if (fromParent === toParent) {
-          ops.push({ lm: toIdx, p: [fromParent, "edges", fromIdx] });
+          ops.push({
+            lm: draft.get(toParent).edges.length,
+            p: [fromParent, "edges", fromIdx],
+          });
         } else {
           ops.push({
             li: originalNode,
-            p: [toParent, "edges", toIdx],
+            p: [toParent, "edges", draft.get(toParent).edges.length],
           });
         }
-      } else {
-        throw new Error(`'${toBefore}' not found in '${toParent}'`);
-      }
-    } else {
-      if (!this.nodes.get(toParent).edges) {
-        ops.push({ p: [toParent, "edges"], oi: [] });
-        this.nodes.get(toParent).edges = [];
+        draft.get(toParent).edges.push(id);
       }
 
-      if (fromParent === toParent) {
-        ops.push({
-          lm: this.nodes.get(toParent).edges.length,
-          p: [fromParent, "edges", fromIdx],
-        });
-      } else {
-        ops.push({
-          li: originalNode,
-          p: [toParent, "edges", this.nodes.get(toParent).edges.length],
-        });
+      if (this.isCyclic(draft)) {
+        throw new Error("cannot create cycle in graph");
       }
-
-      this.nodes.get(toParent).edges.push(id);
-    }
+    });
 
     return ops;
   }
@@ -289,6 +304,36 @@ class Graph {
       if (edges.includes(id)) occurrences++;
     });
     return occurrences > 1;
+  }
+
+  private isCyclicUtil(src, visited, recStack, graph): boolean {
+    if (recStack[src]) return true;
+    else if (visited[src]) return false;
+
+    visited[src] = true;
+    recStack[src] = true;
+
+    const { edges = [] } = graph.get(src);
+    for (let tgt of edges) {
+      if (this.isCyclicUtil(tgt, visited, recStack, graph)) return true;
+    }
+    recStack[src] = false;
+    return false;
+  }
+
+  isCyclic(graph = this.nodes): boolean {
+    const visited = {};
+    const recStack = {};
+
+    graph.forEach((_value, key) => {
+      visited[key] = false;
+      recStack[key] = false;
+    });
+
+    for (let key of Object.keys(visited)) {
+      if (this.isCyclicUtil(key, visited, recStack, graph)) return true;
+    }
+    return false;
   }
 
   // reading the graph

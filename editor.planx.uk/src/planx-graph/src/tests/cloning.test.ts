@@ -97,24 +97,4 @@ describe("cloning nodes", () => {
       f: {},
     });
   });
-
-  describe("validation", () => {
-    test("cannot clone to same parent", () => {
-      graph.load({
-        _root: {
-          edges: ["a", "b"],
-        },
-        a: {},
-        b: {},
-      });
-
-      expect(() =>
-        graph.move("b", {
-          fromParent: "_root",
-          toParent: "_root",
-          clone: true,
-        })
-      ).toThrowError("same parent");
-    });
-  });
 });
