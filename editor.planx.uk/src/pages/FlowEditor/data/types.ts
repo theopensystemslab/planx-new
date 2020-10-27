@@ -19,52 +19,34 @@ export enum TYPES {
   Portal = 300,
 }
 
-// Utility function to make TypeScript detect a non-exhaustive switch statement.
-function assertUnreachable(_x: never): never {
-  throw new Error("Didn't expect to get here");
-}
+export const SLUGS = {
+  [TYPES.Flow]: "flow",
+  [TYPES.Checklist]: "checklist",
+  [TYPES.FindProperty]: "find-property",
+  [TYPES.TaskList]: "task-list",
+  [TYPES.Notice]: "notice",
+  [TYPES.TextInput]: "text-input",
+  [TYPES.Content]: "content",
+  [TYPES.Result]: "result",
+  [TYPES.FileUpload]: "file-upload",
+  [TYPES.Portal]: "portal",
+  [TYPES.PropertyInformation]: "property-information",
+  [TYPES.SignIn]: "question",
+  [TYPES.Report]: "question",
+  [TYPES.NumberInput]: "question",
+  [TYPES.DateInput]: "question",
+  [TYPES.AddressInput]: "question",
+  [TYPES.Statement]: "question",
+  [TYPES.Response]: "question",
+} as const;
 
-export const toSlug = (type: TYPES): string => {
-  switch (type) {
-    case TYPES.Flow:
-      return "flow";
-    case TYPES.Checklist:
-      return "checklist";
-    case TYPES.FindProperty:
-      return "find-property";
-    case TYPES.TaskList:
-      return "task-list";
-    case TYPES.Notice:
-      return "notice";
-    case TYPES.TextInput:
-      return "text-input";
-    case TYPES.Content:
-      return "content";
-    case TYPES.Result:
-      return "result";
-    case TYPES.FileUpload:
-      return "file-upload";
-    case TYPES.Portal:
-      return "portal";
-    case TYPES.PropertyInformation:
-      return "property-information";
-    case TYPES.SignIn:
-      return "question";
-    case TYPES.Report:
-      return "question";
-    case TYPES.NumberInput:
-      return "question";
-    case TYPES.DateInput:
-      return "question";
-    case TYPES.AddressInput:
-      return "question";
-    case TYPES.Statement:
-      return "question";
-    case TYPES.Response:
-      return "question";
+// XXX: Type guard to make sure all available keys are covered in the object above.
+//      It can be removed once we type all consumers of SLUGS
+for (const t of Object.values(TYPES)) {
+  if (SLUGS[t]) {
+    // NOOP
   }
-  return assertUnreachable(type);
-};
+}
 
 // Task list
 

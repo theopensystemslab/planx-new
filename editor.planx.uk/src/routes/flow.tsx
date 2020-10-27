@@ -9,7 +9,7 @@ import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
 import components from "../pages/FlowEditor/components/forms";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
-import { TYPES, toSlug } from "../pages/FlowEditor/data/types";
+import { TYPES, SLUGS } from "../pages/FlowEditor/data/types";
 import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
 
@@ -74,11 +74,9 @@ const newNode = route(async (req) => {
 const editNode = route(async (req) => {
   const { id, before = null, parent = null } = req.params;
 
-  const node = api.getState().getNode(id);
+  const node = api.getState().getNode(id) as { $t: TYPES; [key: string]: any };
 
   const extraProps = {} as any;
-
-  const type = toSlug(node.$t);
 
   if (node.$t === TYPES.Portal) {
     const { data } = await client.query({
@@ -106,6 +104,8 @@ const editNode = route(async (req) => {
       )
       .sort(sorter);
   }
+
+  const type = SLUGS[node.$t];
 
   if (type === "checklist" || type === "question") {
     const childNodes = api.getState().childNodesOf(id);
