@@ -12,7 +12,7 @@ import {
   OptionButton,
 } from "../../../../ui";
 import { IEditor, parseFormValues } from "./shared";
-import { nodeIcon } from "../shared";
+import { ICONS } from "../shared";
 
 interface IFindProperty extends IEditor {
   addressLineOne?: boolean;
@@ -106,7 +106,7 @@ const FindProperty: React.FC<IFindProperty> = ({
   return (
     <ModalSectionContent
       title={headerTextField}
-      Icon={nodeIcon(TYPES.FindProperty)}
+      Icon={ICONS[TYPES.FindProperty]}
     >
       <form onSubmit={formik.handleSubmit} id="modal">
         <Typography variant="subtitle2" gutterBottom>

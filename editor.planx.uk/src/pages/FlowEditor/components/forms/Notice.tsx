@@ -11,7 +11,7 @@ import {
 } from "../../../../ui";
 import { useFormik } from "formik";
 import { Notice, TYPES } from "../../data/types";
-import { nodeIcon } from "../shared";
+import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 
 export interface Props {
@@ -29,7 +29,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
   return (
     <>
       <ModalSection>
-        <ModalSectionContent title="Notice" Icon={nodeIcon(TYPES.Notice)}>
+        <ModalSectionContent title="Notice" Icon={ICONS[TYPES.Notice]}>
           <InputRow>
             <Input
               format="large"

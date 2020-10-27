@@ -16,7 +16,7 @@ import {
   VisibilityToggle,
 } from "../../../../ui";
 import { IEditor, parseFormValues } from "./shared";
-import { nodeIcon } from "../shared";
+import { ICONS } from "../shared";
 
 interface IPropertyInformation extends IEditor {
   aboutField?: string;
@@ -127,7 +127,7 @@ const PropertyInformation: React.FC<IPropertyInformation> = ({
       <ModalSection>
         <ModalSectionContent
           title={headerTextField}
-          Icon={nodeIcon(TYPES.PropertyInformation)}
+          Icon={ICONS[TYPES.PropertyInformation]}
         >
           <InputRow>
             <Input
