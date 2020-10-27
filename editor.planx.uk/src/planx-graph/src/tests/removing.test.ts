@@ -80,4 +80,34 @@ describe("removing nodes", () => {
       c: {},
     });
   });
+
+  test("don't remove child clones if they exist elsewhere", () => {
+    const data = {
+      _root: {
+        edges: ["a", "b"],
+      },
+      a: {
+        edges: ["c"],
+      },
+      b: {
+        edges: ["c"],
+      },
+      c: {},
+    };
+
+    graph.load(data);
+    const ops = graph.remove("a");
+
+    // expect(ops).toEqual([{ p: ["a", "edges"], od: ["c"] }]);
+
+    expect(graph.toObject()).toMatchObject({
+      _root: {
+        edges: ["b"],
+      },
+      b: {
+        edges: ["c"],
+      },
+      c: {},
+    });
+  });
 });

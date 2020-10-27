@@ -106,7 +106,9 @@ class Graph {
         node.edges,
         children.map((c) => c.id)
       );
-      removedChildrenIds.forEach((id) => this.remove(id, {}, ops));
+      removedChildrenIds.forEach((childId) =>
+        this.remove(childId, { parent: id }, ops)
+      );
 
       // if a value exists in the current data, but is null, undefined or "" in the
       // new data then remove it
@@ -160,18 +162,33 @@ class Graph {
     return ops;
   }
 
-  remove(id, { parent = ROOT_NODE_KEY } = {}, ops = []): Array<OT.Op> {
-    if (this.isClone(id)) {
+  remove(
+    id,
+    { parent = ROOT_NODE_KEY, clones = undefined } = {},
+    ops = []
+  ): Array<OT.Op> {
+    if (!clones) {
+      // TODO: wrap this in immer so we don't need to pass down
+      // a list of existing clones to recursive calls
+      clones = new Set();
+      this.nodes.forEach((_, id) => {
+        if (this.isClone(id)) clones.add(id);
+      });
+    }
+
+    if (clones.has(id)) {
       const node = this.nodes.get(parent);
-      node.edges = node.edges || [];
-      const idx = node.edges.indexOf(id);
-      if (idx >= 0) {
-        if (node.edges.length === 1) {
-          ops.push({ p: [parent, "edges"], od: node.edges });
-          delete node.edges;
-        } else {
-          ops.push({ p: [parent, "edges", idx], ld: node.edges[idx] });
-          node.edges.splice(idx, 1);
+      if (node) {
+        node.edges = node.edges || [];
+        const idx = node.edges.indexOf(id);
+        if (idx >= 0) {
+          if (node.edges.length === 1) {
+            ops.push({ p: [parent, "edges"], od: node.edges });
+            delete node.edges;
+          } else {
+            ops.push({ p: [parent, "edges", idx], ld: node.edges[idx] });
+            node.edges.splice(idx, 1);
+          }
         }
       }
     } else {
@@ -195,7 +212,7 @@ class Graph {
         }
       });
 
-      edges.forEach((child) => this.remove(child, {}, ops));
+      edges.forEach((child) => this.remove(child, { parent: id, clones }, ops));
     }
 
     return ops;
