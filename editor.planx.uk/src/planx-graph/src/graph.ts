@@ -38,23 +38,23 @@ class Graph {
     ops = []
   ): Array<OT.Op> {
     if (!this.nodes.get(parent).edges) {
-      ops.push({ p: [parent, "edges"], oi: [] });
-      this.nodes.get(parent).edges = [];
-    }
-
-    const idx = this.nodes.get(parent).edges.indexOf(before);
-    if (idx >= 0) {
-      ops.push({
-        p: [parent, "edges", idx],
-        li: id,
-      });
-      this.nodes.get(parent).edges.splice(idx, 0, id);
+      ops.push({ p: [parent, "edges"], oi: [id] });
+      this.nodes.get(parent).edges = [id];
     } else {
-      ops.push({
-        p: [parent, "edges", this.nodes.get(parent).edges.length],
-        li: id,
-      });
-      this.nodes.get(parent).edges.push(id);
+      const idx = this.nodes.get(parent).edges.indexOf(before);
+      if (idx >= 0) {
+        ops.push({
+          p: [parent, "edges", idx],
+          li: id,
+        });
+        this.nodes.get(parent).edges.splice(idx, 0, id);
+      } else {
+        ops.push({
+          p: [parent, "edges", this.nodes.get(parent).edges.length],
+          li: id,
+        });
+        this.nodes.get(parent).edges.push(id);
+      }
     }
 
     const filteredData = sanitize(data);
