@@ -9,7 +9,6 @@ import {
   SearchOutlined,
   TextFields,
 } from "@material-ui/icons";
-import React from "react";
 
 import { TYPES } from "../data/types";
 
