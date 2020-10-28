@@ -1,5 +1,4 @@
 import React from "react";
-
 import { TYPES } from "../../../data/types";
 import { useStore } from "../../../lib/store";
 import Breadcrumb from "./Breadcrumb";
@@ -35,7 +34,9 @@ const Node: React.FC<any> = (props) => {
       return <Question {...props} text={"Content"} />;
     case TYPES.Statement:
     case TYPES.Checklist:
-      return <Question {...props} {...node} />;
+      return (
+        <Question {...props} {...node} text={node?.data?.text ?? "[Empty]"} />
+      );
     case TYPES.Response:
       return <Option {...props} />;
     case TYPES.Portal:

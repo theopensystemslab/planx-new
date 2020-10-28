@@ -22,7 +22,7 @@ const Question: React.FC<Props> = React.memo((props) => {
     item: {
       id: props.id,
       parent,
-      text: props.data.text,
+      text: props.text,
       type: "DECISION",
     },
     collect: (monitor) => ({
@@ -60,7 +60,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           ref={drag}
         >
           {Icon && <Icon />}
-          <span>{props.data.text || "Question"}</span>
+          <span>{props.text}</span>
         </Link>
         <ol>
           {childNodes.map((child: any) => (
