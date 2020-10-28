@@ -15,7 +15,7 @@ import {
 } from "../../../../ui";
 import { TYPES } from "../../data/types";
 import { MoreInformation, PermissionSelect } from "./shared";
-import { nodeIcon } from "../shared";
+import { ICONS } from "../shared";
 
 interface Option {
   val?: string;
@@ -188,7 +188,7 @@ export const Question: React.FC<Props> = ({
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Question" Icon={nodeIcon($t)}>
+        <ModalSectionContent title="Question" Icon={ICONS[$t]}>
           <InputGroup deletable={false}>
             <InputRow>
               <Input

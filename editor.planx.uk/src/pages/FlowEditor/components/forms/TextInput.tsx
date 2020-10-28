@@ -10,7 +10,7 @@ import {
   RichTextInput,
 } from "../../../../ui";
 import { TYPES, TextInput } from "../../data/types";
-import { nodeIcon } from "../shared";
+import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 
 export interface Props {
@@ -28,10 +28,7 @@ const TextInputEditor: React.FC<TextInputEditorProps> = (props) => {
   return (
     <>
       <ModalSection>
-        <ModalSectionContent
-          title="Text Input"
-          Icon={nodeIcon(TYPES.TextInput)}
-        >
+        <ModalSectionContent title="Text Input" Icon={ICONS[TYPES.TextInput]}>
           <InputRow>
             <Input
               format="large"

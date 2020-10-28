@@ -12,7 +12,7 @@ import {
 } from "../../../../ui";
 import { useFormik } from "formik";
 import { Task, TaskList, TYPES } from "../../data/types";
-import { nodeIcon } from "../shared";
+import { ICONS } from "../shared";
 
 export interface Props {
   id?: string;
@@ -77,7 +77,7 @@ const TaskListEditor: React.FC<TaskListEditorProps> = (props) => {
   return (
     <>
       <ModalSection>
-        <ModalSectionContent title="Task List" Icon={nodeIcon(TYPES.TaskList)}>
+        <ModalSectionContent title="Task List" Icon={ICONS[TYPES.TaskList]}>
           <ListManager
             values={props.value.tasks}
             onChange={(tasks: Array<Task>) => {

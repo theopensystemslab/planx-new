@@ -6,7 +6,7 @@ import { api, useStore } from "../../../lib/store";
 import { getParentId } from "../../../lib/utils";
 import Hanger from "./Hanger";
 import Node from "./Node";
-import { nodeIcon } from "../../shared";
+import { ICONS } from "../../shared";
 
 type Props = any;
 
@@ -41,7 +41,7 @@ const Question: React.FC<Props> = React.memo((props) => {
     api.getState().copyNode(props.id);
   };
 
-  const Icon = nodeIcon(props.$t);
+  const Icon = ICONS[props.$t];
 
   return (
     <>

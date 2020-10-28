@@ -9,7 +9,7 @@ import {
   RichTextInput,
 } from "ui";
 import { TYPES } from "../../../data/types";
-import { nodeIcon } from "../../shared";
+import { ICONS } from "../../shared";
 import { MoreInformation } from "../shared";
 
 function Component(props) {
@@ -46,10 +46,7 @@ function Component(props) {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent
-          title="File upload"
-          Icon={nodeIcon(TYPES.FileUpload)}
-        >
+        <ModalSectionContent title="File upload" Icon={ICONS[TYPES.FileUpload]}>
           <InputRow>
             <Input
               format="large"

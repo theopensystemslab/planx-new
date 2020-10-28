@@ -8,7 +8,7 @@ import {
 } from "../../../../ui";
 import { useFormik } from "formik";
 import { Content, TYPES } from "../../data/types";
-import { nodeIcon } from "../shared";
+import { ICONS } from "../shared";
 
 export interface Props {
   id?: string;
@@ -25,7 +25,7 @@ const ContentEditor: React.FC<ContentEditorProps> = (props) => {
   return (
     <>
       <ModalSection>
-        <ModalSectionContent title="Content" Icon={nodeIcon(TYPES.Content)}>
+        <ModalSectionContent title="Content" Icon={ICONS[TYPES.Content]}>
           <InputRow>
             <RichTextInput
               placeholder="Content"

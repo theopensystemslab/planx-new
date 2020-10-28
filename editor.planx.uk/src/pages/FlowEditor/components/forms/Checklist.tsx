@@ -24,7 +24,7 @@ import {
   TYPES,
   toggleExpandableChecklist,
 } from "../../data/types";
-import { nodeIcon } from "../shared";
+import { ICONS } from "../shared";
 import { MoreInformation, PermissionSelect } from "./shared";
 
 interface ChecklistProps extends Checklist {
@@ -274,7 +274,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Checklist" Icon={nodeIcon($t)}>
+        <ModalSectionContent title="Checklist" Icon={ICONS[$t]}>
           <InputGroup deletable={false}>
             <InputRow>
               <Input
