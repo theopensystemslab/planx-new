@@ -1,6 +1,5 @@
 import { useFormik } from "formik";
 import React from "react";
-
 import {
   Input,
   InputRow,
@@ -9,7 +8,7 @@ import {
   ModalSectionContent,
   RichTextInput,
 } from "../../../../ui";
-import { TYPES, TextInput } from "../../data/types";
+import { TextInput, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 
@@ -114,7 +113,10 @@ const TextInputComponent: React.FC<Props> = (props) => {
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ $t: TYPES.TextInput, ...newValues.text });
+        props.handleSubmit({
+          type: TYPES.TextInput,
+          data: newValues.text,
+        });
       }
     },
     validate: () => {},
