@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
-import { alg } from "graphlib";
 import debounce from "lodash/debounce";
 import difference from "lodash/difference";
 import flattenDeep from "lodash/flattenDeep";
@@ -14,7 +13,6 @@ import Graph, { ROOT_NODE_KEY } from "../../../planx-graph/src/graph";
 import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
-import { toGraphlib } from "./flow";
 import { connectToDB, getConnection } from "./sharedb";
 
 const alphabet =
@@ -77,15 +75,14 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   isClone: (id: string) => {
+    // TODO: reimplement this!
     return false;
-    // return get().flow.edges.filter(([, tgt]: any) => tgt === id).length > 1;
   },
 
   getNode(id: any) {
-    const { flow } = get();
     return {
       id,
-      ...flow[id],
+      ...get().flow[id],
     };
   },
 
@@ -113,61 +110,8 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   makeUnique: (id, parent = null) => {
-    const { flow, isClone } = get();
-
-    if (flow.nodes[id].type === TYPES.Portal) {
-      if (
-        !window.confirm(
-          "Making portals unique isn't officially supported yet, are you sure that you want to do this?"
-        )
-      )
-        return;
-    }
-
-    const graph = toGraphlib(flow);
-
-    const keys = alg.preorder(graph, [id]).reduce((acc, nodeId) => {
-      acc[nodeId] = isClone(nodeId) ? (id === nodeId ? uid() : nodeId) : uid();
-      return acc;
-    }, {});
-
-    const ops = Object.entries(keys).reduce(
-      (acc, [existingId, newId]: [string, string]) => {
-        if (!flow.nodes[newId]) {
-          acc.push({
-            p: ["nodes", newId],
-            oi: flow.nodes[existingId],
-          });
-        }
-
-        flow.edges
-          .filter(([src, tgt]) => src === existingId)
-          .reverse()
-          .forEach(([src, tgt]) => {
-            acc.push({ li: [keys[src], keys[tgt]], p: ["edges", Infinity] });
-          });
-
-        return acc;
-      },
-      [
-        {
-          li: [parent, keys[id]],
-          p: ["edges", Infinity],
-        },
-      ] as any
-    );
-
-    if (isClone(id)) {
-      const idx = flow.edges.findIndex(
-        ([src, tgt]) => src === parent && tgt === id
-      );
-      ops.unshift({
-        p: ["edges", idx],
-        ld: flow.edges[idx],
-      });
-    }
-
-    send(ops);
+    // TODO: reimplement this!
+    alert("not implemented");
   },
 
   removeNode: (id, parent = undefined, cb = send) => {
