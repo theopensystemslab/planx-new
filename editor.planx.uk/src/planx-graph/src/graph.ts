@@ -1,7 +1,7 @@
 import produce, { enableMapSet } from "immer";
 import difference from "lodash/difference";
-import trim from "lodash/trim";
 import { alphabetId } from "./lib/id";
+import { isSomething, sanitize } from "./lib/utils";
 import { OT } from "./types/ot";
 
 enableMapSet();
@@ -13,9 +13,6 @@ interface Node {
   data?: Object;
   edges?: string[];
 }
-
-const sanitise = (str) =>
-  typeof str === "string" ? trim(str.replace(/↵/g, "")) : str;
 
 class Graph {
   protected nodes: Map<string, Node> = new Map();
@@ -60,13 +57,7 @@ class Graph {
       this.nodes.get(parent).edges.push(id);
     }
 
-    const filteredData = Object.entries(data).reduce((acc, [k, v]) => {
-      v = sanitise(v);
-      if (v !== null && v !== undefined && v !== "") {
-        acc[k] = v;
-      }
-      return acc;
-    }, {});
+    const filteredData = sanitize(data);
 
     ops.push({ p: [id], oi: { type, data: filteredData } });
     this.nodes.set(id, { type, data: filteredData });
@@ -114,11 +105,7 @@ class Graph {
       // new data then remove it
       Object.entries(node.data).forEach(([k, v]) => {
         if (v !== null && v !== undefined) {
-          if (
-            newData[k] === null ||
-            newData[k] === undefined ||
-            newData[k] === ""
-          ) {
+          if (!isSomething(newData[k])) {
             ops.push({ p: [id, "data", k], od: v });
             delete node.data[k];
           }
@@ -140,8 +127,8 @@ class Graph {
 
     // TODO: make this work with a nested data structure
     const data = Object.entries(newData).reduce((acc, [k, v]) => {
-      v = sanitise(v);
-      if (v === null || v === undefined || v === "") {
+      v = sanitize(v);
+      if (!isSomething(v)) {
         if (acc.hasOwnProperty(k)) {
           ops.push({ p: [id, "data", k], od: acc[k] });
           delete acc[k];

@@ -24,6 +24,32 @@ describe("adding nodes", () => {
     });
   });
 
+  test("ignores empty values", () => {
+    graph.add({
+      id: "test",
+      type: 100,
+      info: "\u200B​",
+      policyRef: "​\n",
+      empty: "​",
+      another: "↵",
+      howMeasured: undefined,
+      text: "efef",
+      description: " ​",
+    });
+
+    expect(graph.toObject()).toMatchObject({
+      _root: {
+        edges: ["test"],
+      },
+      test: {
+        type: 100,
+        data: {
+          text: "efef",
+        },
+      },
+    });
+  });
+
   test("add a node with children", () => {
     const ops = graph.add(
       {

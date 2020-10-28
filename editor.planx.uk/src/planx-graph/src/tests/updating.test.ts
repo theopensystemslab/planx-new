@@ -9,7 +9,11 @@ describe("updating a node", () => {
         },
       },
     });
-    const ops = graph.update("a", { foo: "" });
+    const ops = graph.update("a", {
+      ignoreBlank: "",
+      ignore2: "↵",
+      ignore3: "\u200B",
+    });
     expect(ops).toEqual([]);
     expect(graph.toObject()).toMatchObject({
       a: {
