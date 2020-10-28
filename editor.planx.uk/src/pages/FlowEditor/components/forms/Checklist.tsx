@@ -17,14 +17,20 @@ import {
   RichTextInput,
 } from "../../../../ui";
 import { removeAt } from "../../../../utils";
-import {
-  Checklist,
-  Option,
-  toggleExpandableChecklist,
-  TYPES,
-} from "../../data/types";
+import { Checklist, toggleExpandableChecklist, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation, PermissionSelect } from "./shared";
+
+interface Option {
+  id?: string;
+  data: {
+    description?: string;
+    flag?: string;
+    img?: string;
+    text?: string;
+    val?: string;
+  };
+}
 
 interface ChecklistProps extends Checklist {
   handleSubmit?: Function;
@@ -46,11 +52,14 @@ const OptionEditor: React.FC<{
         <Input
           // required
           format="bold"
-          value={props.value.text || ""}
+          value={props.value.data.text || ""}
           onChange={(ev) => {
             props.onChange({
               ...props.value,
-              text: ev.target.value,
+              data: {
+                ...props.value.data,
+                text: ev.target.value,
+              },
             });
           }}
           placeholder="Option"
@@ -58,21 +67,27 @@ const OptionEditor: React.FC<{
       </InputRowItem>
 
       <ImgInput
-        img={props.value.img}
+        img={props.value.data.img}
         onChange={(img) => {
           props.onChange({
             ...props.value,
-            img,
+            data: {
+              ...props.value.data,
+              img,
+            },
           });
         }}
       />
 
       <PermissionSelect
-        value={props.value.flag || ""}
+        value={props.value.data.flag || ""}
         onChange={(ev) => {
           props.onChange({
             ...props.value,
-            flag: ev.target.value,
+            data: {
+              ...props.value.data,
+              flag: ev.target.value,
+            },
           });
         }}
       />
@@ -82,12 +97,15 @@ const OptionEditor: React.FC<{
       <InputRow>
         <Input
           format="data"
-          value={props.value.val || ""}
+          value={props.value.data.val || ""}
           placeholder="Data Value"
           onChange={(ev) => {
             props.onChange({
               ...props.value,
-              val: ev.target.value,
+              data: {
+                ...props.value.data,
+                val: ev.target.value,
+              },
             });
           }}
         />
@@ -139,10 +157,12 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                   disableDragAndDrop
                   newValue={() =>
                     ({
-                      text: "",
-                      description: "",
-                      val: "",
-                      flag: "",
+                      data: {
+                        text: "",
+                        description: "",
+                        val: "",
+                        flag: "",
+                      },
                     } as Option)
                   }
                   newValueLabel="add new option"
@@ -179,10 +199,12 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           newValueLabel="add new option"
           newValue={() =>
             ({
-              text: "",
-              description: "",
-              val: "",
-              flag: "",
+              data: {
+                text: "",
+                description: "",
+                val: "",
+                flag: "",
+              },
             } as Option)
           }
           Editor={OptionEditor}
@@ -246,13 +268,21 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
           },
           options
             ? options
-                .filter((o) => o.text)
-                .map((o) => ({ ...o, type: TYPES.Response }))
+                .filter((o: Option) => o.data.text)
+                .map((o) => ({
+                  id: o.id || undefined,
+                  ...o,
+                  type: TYPES.Response,
+                }))
             : groupedOptions
             ? groupedOptions
                 .flatMap((gr) => gr.children)
-                .filter((o) => o.text)
-                .map((o) => ({ ...o, type: TYPES.Response }))
+                .filter((o: Option) => o.data.text)
+                .map((o) => ({
+                  id: o.id || undefined,
+                  ...o,
+                  type: TYPES.Response,
+                }))
             : []
         );
       } else {
