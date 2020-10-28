@@ -4,7 +4,7 @@ import { useDrop } from "react-dnd";
 import { Link } from "react-navi";
 import { rootFlowPath } from "../../../../../routes/utils";
 import { api } from "../../../lib/store";
-import { getParentId } from "../../../lib/utils";
+import { getParentId } from "../lib/utils";
 
 interface HangerProps {
   hidden?: boolean;

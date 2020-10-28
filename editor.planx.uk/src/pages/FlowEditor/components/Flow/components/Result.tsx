@@ -4,7 +4,7 @@ import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
 import flags from "../../../data/flags";
 import { useStore } from "../../../lib/store";
-import { getParentId } from "../../../lib/utils";
+import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 
 const Result: React.FC<any> = React.memo((props) => {

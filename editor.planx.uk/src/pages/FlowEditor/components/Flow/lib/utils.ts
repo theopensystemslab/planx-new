@@ -1,4 +1,4 @@
-import { ROOT_NODE_KEY } from "../../../planx-graph/src/graph";
+import { ROOT_NODE_KEY } from "../../../../../planx-graph/src/graph";
 
 export const getParentId = (parent: any) => {
   const [, ...ids] = window.location.pathname.split(",");
