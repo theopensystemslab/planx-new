@@ -50,7 +50,7 @@ const newNode = route(async (req) => {
     extraProps.internalFlows = Object.entries(api.getState().flow)
       .filter(
         ([id, v]: any) =>
-          v.$t === TYPES.Portal &&
+          v.type === TYPES.Portal &&
           !window.location.pathname.includes(id) &&
           v.text
       )
@@ -77,7 +77,10 @@ const newNode = route(async (req) => {
 const editNode = route(async (req) => {
   const { id, before = undefined, parent = undefined } = req.params;
 
-  const node = api.getState().getNode(id) as { $t: TYPES; [key: string]: any };
+  const node = api.getState().getNode(id) as {
+    type: TYPES;
+    [key: string]: any;
+  };
 
   const extraProps = {} as any;
 

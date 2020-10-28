@@ -115,7 +115,7 @@ export const [useStore, api] = create((set, get) => ({
   makeUnique: (id, parent = null) => {
     const { flow, isClone } = get();
 
-    if (flow.nodes[id].$t === TYPES.Portal) {
+    if (flow.nodes[id].type === TYPES.Portal) {
       if (
         !window.confirm(
           "Making portals unique isn't officially supported yet, are you sure that you want to do this?"
@@ -454,7 +454,7 @@ export const [useStore, api] = create((set, get) => ({
 
       // only store breadcrumbs in the backend if they are answers provided for
       // either a Statement or Checklist type. TODO: make this more robust
-      if (SUPPORTED_DECISION_TYPES.includes(flow.nodes[id].$t) && sessionId) {
+      if (SUPPORTED_DECISION_TYPES.includes(flow.nodes[id].type) && sessionId) {
         addSessionEvent();
         if (upcomingCardIds().length === 0) {
           endSession();

@@ -1,13 +1,12 @@
 import { Button } from "@material-ui/core";
 import React, { useState } from "react";
-
 import { Input, InputRow } from "../../../../ui";
-import { TYPES, TextInput } from "../../../FlowEditor/data/types";
+import { TextInput, TYPES } from "../../../FlowEditor/data/types";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 
 interface Props {
-  node: TextInput & { $t: TYPES.TextInput };
+  node: TextInput & { type: TYPES.TextInput };
   handleSubmit?: (value?: any) => void;
 }
 

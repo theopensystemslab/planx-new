@@ -10,7 +10,7 @@ import Close from "@material-ui/icons/CloseOutlined";
 import React from "react";
 import { useNavigation } from "react-navi";
 import { rootFlowPath } from "../../../../routes/utils";
-import { TYPES, SLUGS } from "../../data/types";
+import { SLUGS, TYPES } from "../../data/types";
 import { useStore } from "../../lib/store";
 import { parseFormValues } from "./shared";
 
@@ -111,9 +111,9 @@ const FormModal: React.FC<{
         {!handleDelete && (
           <NodeTypeSelect
             value={type}
-            onChange={($t) => {
+            onChange={(type) => {
               const url = new URL(window.location.href);
-              url.searchParams.set("type", SLUGS[Number($t) as TYPES]);
+              url.searchParams.set("type", SLUGS[Number(type) as TYPES]);
               navigate([url.pathname, url.search].join(""));
             }}
           />

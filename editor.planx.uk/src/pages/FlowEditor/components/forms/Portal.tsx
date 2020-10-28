@@ -28,7 +28,6 @@ const PortalForm: React.FC<{
         if (id) {
           alert("portal updates currently disabled (sorry!)");
         } else {
-          // handleSubmit({ $t: TYPES.Portal, ...values });
           handleSubmit({ type: TYPES.Portal, data: values });
         }
       } else {

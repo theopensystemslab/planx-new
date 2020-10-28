@@ -208,7 +208,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
   definitionImg = "",
   allRequired = false,
 }) => {
-  const $t = TYPES.Checklist;
+  const type = TYPES.Checklist;
 
   const formik = useFormik<Checklist>({
     initialValues: {
@@ -229,7 +229,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
       if (handleSubmit) {
         handleSubmit(
           {
-            type: $t,
+            type,
             data: {
               ...values,
               ...(groupedOptions
@@ -247,16 +247,16 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
           options
             ? options
                 .filter((o) => o.text)
-                .map((o) => ({ ...o, $t: TYPES.Response }))
+                .map((o) => ({ ...o, type: TYPES.Response }))
             : groupedOptions
             ? groupedOptions
                 .flatMap((gr) => gr.children)
                 .filter((o) => o.text)
-                .map((o) => ({ ...o, $t: TYPES.Response }))
+                .map((o) => ({ ...o, type: TYPES.Response }))
             : []
         );
       } else {
-        alert(JSON.stringify({ $t, ...values, options }, null, 2));
+        alert(JSON.stringify({ type, ...values, options }, null, 2));
       }
     },
     validate: () => {},
@@ -275,7 +275,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Checklist" Icon={ICONS[$t]}>
+        <ModalSectionContent title="Checklist" Icon={ICONS[type]}>
           <InputGroup deletable={false}>
             <InputRow>
               <Input

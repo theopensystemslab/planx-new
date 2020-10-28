@@ -7,7 +7,7 @@ import { TYPES } from "../data/types";
 export interface Node {
   id?: string;
   text: string;
-  $t?: TYPES;
+  type?: TYPES;
 }
 
 export type Flow = {

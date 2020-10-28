@@ -1,6 +1,5 @@
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-
 import { TYPES } from "../FlowEditor/data/types";
 import { useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";
@@ -23,7 +22,7 @@ const Node: React.FC<any> = (props) => {
     state.responsesForReport,
   ]);
 
-  switch (props.$t) {
+  switch (props.type) {
     // check SUPPORTED_TYPES in store
     case TYPES.Statement:
       return (
