@@ -1,11 +1,5 @@
 import produce from "immer";
-import { Graph } from "./types";
-// import clone from "lodash/clone"
-
-const connections = (id, graph): number =>
-  Object.values(graph).filter(({ edges = [] }) => edges.includes(id)).length;
-
-// const isClone = (id, graph): boolean => connections(id, graph) > 1;
+import { connections, Graph } from "./types";
 
 const remove = (id: string, parent: string) => (graph = {}): Graph => {
   return produce(graph, (draft) => {
@@ -15,11 +9,12 @@ const remove = (id: string, parent: string) => (graph = {}): Graph => {
 
       const idx = draft[parent].edges.indexOf(id);
       if (idx >= 0) {
-        draft[parent].edges.splice(idx, 1);
+        if (draft[parent].edges.length === 1) delete draft[parent].edges;
+        else draft[parent].edges.splice(idx, 1);
       } else {
         throw new Error("not found in parent");
       }
-      if (draft[parent].edges.length === 0) delete draft[parent].edges;
+
       if (Object.keys(draft[parent]).length === 0) delete draft[parent];
 
       if (connections(id, draft) === 0) {

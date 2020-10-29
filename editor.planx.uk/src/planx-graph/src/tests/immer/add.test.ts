@@ -15,8 +15,9 @@ const add = (
       if (draft[parent].edges) {
         if (before) {
           const idx = draft[parent].edges.indexOf(before);
-          if (idx >= 0) draft[parent].edges.splice(idx, 0, id);
-          else throw new Error("before not found");
+          if (idx >= 0) {
+            draft[parent].edges.splice(idx, 0, id);
+          } else throw new Error("before not found");
         } else {
           draft[parent].edges.push(id);
         }
