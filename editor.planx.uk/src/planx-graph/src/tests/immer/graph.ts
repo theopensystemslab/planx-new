@@ -25,10 +25,10 @@ interface Node {
 
 type Graph = Record<string, Node>;
 
-const connections = (id: string, graph: Graph): number =>
+const numberOfEdgesTo = (id: string, graph: Graph): number =>
   Object.values(graph).filter(({ edges = [] }) => edges.includes(id)).length;
 
-// export const isClone = (id, graph): boolean => connections(id, graph) > 1;
+// export const isClone = (id, graph): boolean => numberOfEdgesTo(id, graph) > 1;
 
 const convertPatchesToOps = (
   patches: Array<Patch>,
@@ -163,7 +163,7 @@ export const remove = (id: string, parent: string) => (
 
       if (Object.keys(draft[parent]).length === 0) delete draft[parent];
 
-      if (connections(id, draft) === 0) {
+      if (numberOfEdgesTo(id, draft) === 0) {
         if (draft[id].edges) {
           // must be a copy, for some reason?
           [...draft[id].edges].forEach((child) => {
