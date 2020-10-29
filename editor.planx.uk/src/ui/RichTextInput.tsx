@@ -1,15 +1,16 @@
 import { Box, InputBaseProps, makeStyles } from "@material-ui/core";
-import { convertToRaw, EditorState } from "draft-js";
+import { EditorState, convertToRaw } from "draft-js";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
 import MUIRichTextEditor from "mui-rte";
 import React, {
   ChangeEvent,
-  useState,
-  useRef,
-  useEffect,
   MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
 } from "react";
+
 import { levenshteinDistance } from "../utils";
 
 interface Props extends InputBaseProps {
@@ -67,7 +68,7 @@ const RichTextInput: React.FC<
         container.contains(ev.target) &&
         container.contains(document.querySelector(".DraftEditor-root"))
       ) {
-        editorRef.current.focus();
+        editorRef.current?.focus();
         setFocused(true);
       }
     };
