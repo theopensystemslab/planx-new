@@ -212,7 +212,7 @@ class Graph {
       toBefore = undefined,
       toParent = undefined,
       clone = false,
-    }
+    } = {}
   ): Array<OT.Op> {
     toParent = toParent || fromParent;
 
@@ -298,6 +298,40 @@ class Graph {
         throw new Error("cannot create cycle in graph");
       }
     });
+
+    return ops;
+  }
+
+  makeUnique(
+    id: string,
+    { parent = ROOT_NODE_KEY } = {},
+    ops = [],
+    first = true
+  ): Array<OT.Op> {
+    const { type, edges = [], data } = this.nodes.get(id);
+
+    if (!first && this.isClone(id)) {
+      const node = this.nodes.get(parent);
+      if (node.edges) {
+        node.edges.push(id);
+        ops.push({
+          li: id,
+          p: [parent, "edges", node.edges.length],
+        });
+      } else {
+        node.edges = [];
+        ops.push({
+          oi: [id],
+          p: [parent, "edges", node.edges.length],
+        });
+      }
+    } else {
+      const newId = this.generateId();
+      this.add({ id: newId, type, ...data }, { parent }, ops);
+      edges.forEach((tgt) =>
+        this.makeUnique(tgt, { parent: newId }, ops, false)
+      );
+    }
 
     return ops;
   }

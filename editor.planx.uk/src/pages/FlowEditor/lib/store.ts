@@ -109,9 +109,12 @@ export const [useStore, api] = create((set, get) => ({
     cb(ops);
   },
 
-  makeUnique: (id, parent = null) => {
+  makeUnique: (id, parent = undefined, cb = send) => {
     // TODO: reimplement this!
-    alert("not implemented");
+    const g = new Graph(uid);
+    g.load(get().flow);
+    const ops = g.makeUnique(id, { parent });
+    cb(ops);
   },
 
   removeNode: (id, parent = undefined, cb = send) => {
