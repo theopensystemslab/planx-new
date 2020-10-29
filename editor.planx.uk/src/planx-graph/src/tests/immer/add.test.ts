@@ -2,7 +2,7 @@ import produce from "immer";
 import { Graph } from "./types";
 
 const add = (
-  { id = String(Math.random()) },
+  { id = String(Math.random()), ...nodeData },
   { children = [], parent = "_root", before = undefined } = {}
 ) => (graph = {}): Graph => {
   return produce(graph, (draft) => {
@@ -10,9 +10,8 @@ const add = (
 
     const _add = ({ id }, { children = [], parent, before = undefined }) => {
       if (draft[id]) throw new Error("id exists");
-      if (!draft[parent]) throw new Error("parent not found");
-
-      if (draft[parent].edges) {
+      else if (!draft[parent]) throw new Error("parent not found");
+      else if (draft[parent].edges) {
         if (before) {
           const idx = draft[parent].edges.indexOf(before);
           if (idx >= 0) {
@@ -24,7 +23,7 @@ const add = (
       } else {
         draft[parent].edges = [id];
       }
-      draft[id] = {};
+      draft[id] = nodeData;
       children.forEach((child) => _add(child, { parent: id }));
     };
 
@@ -33,7 +32,7 @@ const add = (
 };
 
 test("without id", () => {
-  const data = add({})();
+  const data = add({ type: 100, data: { foo: "bar" } })();
   const {
     _root: {
       edges: [id],
@@ -44,7 +43,12 @@ test("without id", () => {
     _root: {
       edges: [id],
     },
-    [id]: {},
+    [id]: {
+      type: 100,
+      data: {
+        foo: "bar",
+      },
+    },
   });
 });
 
