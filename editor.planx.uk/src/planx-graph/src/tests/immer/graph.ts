@@ -16,11 +16,14 @@ interface Op {
   od?;
 }
 
-type Graph = {
-  _root?: {
-    edges: Array<string>;
-  };
-};
+interface Node {
+  id?: string;
+  data?: object;
+  edges?: Array<string>;
+  type?: number;
+}
+
+type Graph = Record<string, Node>;
 
 const connections = (id: string, graph: Graph): number =>
   Object.values(graph).filter(({ edges = [] }) => edges.includes(id)).length;
@@ -71,7 +74,7 @@ export const add = (
     children = [],
     parent = "_root",
     before = undefined,
-  }: { children?: Array<any>; parent?: string; before?: string } = {}
+  }: { children?: Array<Node>; parent?: string; before?: string } = {}
 ) => (graph: Graph = {}): [Graph, Array<Op>] =>
   wrap(graph, (draft) => {
     draft._root = draft._root || {};
