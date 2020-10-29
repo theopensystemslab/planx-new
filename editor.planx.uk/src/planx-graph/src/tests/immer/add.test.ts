@@ -1,7 +1,4 @@
-import { enablePatches } from "immer";
 import { Graph, Op, wrap } from "./types";
-
-enablePatches();
 
 const add = (
   { id = String(Math.random()), ...nodeData },
