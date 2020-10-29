@@ -180,7 +180,7 @@ export const Question: React.FC<Props> = ({
         .map((o) => ({
           id: o.id || undefined,
           type: TYPES.Response,
-          ...o.data,
+          data: o.data,
         }));
 
       if (handleSubmit) {
