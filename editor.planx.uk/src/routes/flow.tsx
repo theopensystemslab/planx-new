@@ -52,9 +52,9 @@ const newNode = route(async (req) => {
         ([id, v]: any) =>
           v.type === TYPES.Portal &&
           !window.location.pathname.includes(id) &&
-          v.text
+          v.data?.text
       )
-      .map(([id, { text }]: any) => ({ id, text }))
+      .map(([id, { data }]: any) => ({ id, text: data.text }))
       .sort((a, b) =>
         sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""))
       );
