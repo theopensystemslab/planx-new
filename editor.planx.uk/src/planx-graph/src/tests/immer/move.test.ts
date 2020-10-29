@@ -1,5 +1,25 @@
 import { move } from "./graph";
 
+test("move within same parent", () => {
+  const [graph, ops] = move("b", "_root", "_root", { toBefore: "a" })({
+    _root: {
+      edges: ["a", "b"],
+    },
+    a: {},
+    b: {},
+  });
+  expect(graph).toEqual({
+    _root: {
+      edges: ["b", "a"],
+    },
+    a: {},
+    b: {},
+  });
+  expect(ops).toEqual([
+    { od: ["a", "b"], oi: ["b", "a"], p: ["_root", "edges"] },
+  ]);
+});
+
 describe("different parent", () => {
   test("move", () => {
     const [graph, ops] = move(

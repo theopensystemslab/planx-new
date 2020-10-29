@@ -57,6 +57,11 @@ const convertPatchesToOps = (
         if (bak.op === "add") {
           op.od = bak.value;
         }
+      } else if (fwd.op === "replace") {
+        if (bak.op === "replace") {
+          op.oi = fwd.value;
+          op.od = bak.value;
+        }
       }
     }
     // console.log({ fwd, bak, op });
