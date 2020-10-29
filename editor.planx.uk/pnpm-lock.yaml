@@ -2221,7 +2221,7 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.3
       '@types/istanbul-reports': 3.0.0
-      '@types/node': 12.19.1
+      '@types/node': 12.19.3
       '@types/yargs': 15.0.9
       chalk: 4.1.0
     dev: true
@@ -2876,6 +2876,10 @@ packages:
   /@types/node/12.19.1:
     resolution:
       integrity: sha512-/xaVmBBjOGh55WCqumLAHXU9VhjGtmyTGqJzFBXRWZzByOXI5JAJNx9xPVGEsNizrNwcec92fQMj458MWfjN1A==
+  /@types/node/12.19.3:
+    dev: true
+    resolution:
+      integrity: sha512-8Jduo8wvvwDzEVJCOvS/G6sgilOLvvhn1eMmK3TW8/T217O7u1jdrK6ImKLv80tVryaPSVeKu6sjDEiFjd4/eg==
   /@types/parse-json/4.0.0:
     resolution:
       integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==

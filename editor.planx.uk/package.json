@@ -66,10 +66,10 @@
     "@types/lodash": "^4.14.162",
     "@types/node": "^12.19.1",
     "@types/ramda": "^0.27.30",
+    "@types/react": "^16.9.53",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-color": "^3.0.4",
     "@types/react-dom": "^16.9.8",
-    "@types/react": "^16.9.53",
     "@types/uuid": "^8.3.0",
     "ajv": "^6.12.6",
     "esbuild": "^0.7.15",
@@ -78,11 +78,11 @@
     "import-sort-style-module": "^6.0.0",
     "lint-staged": "^10.4.2",
     "node-sass": "^4.14.1",
-    "prettier-plugin-import-sort": "^0.0.6",
     "prettier": "^2.1.2",
+    "prettier-plugin-import-sort": "^0.0.6",
     "react-app-rewired": "^2.1.6",
-    "typescript-json-validator": "^2.4.2",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "typescript-json-validator": "^2.4.2"
   },
   "scripts": {
     "start": "react-app-rewired start",
