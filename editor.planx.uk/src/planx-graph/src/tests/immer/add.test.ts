@@ -1,41 +1,4 @@
-import { Graph, Op, wrap } from "./types";
-
-const add = (
-  { id = String(Math.random()), ...nodeData },
-  { children = [], parent = "_root", before = undefined } = {}
-) => (graph = {}): [Graph, Array<Op>] =>
-  wrap(graph, (draft) => {
-    draft._root = draft._root || {};
-
-    const _add = (
-      { id, ...nodeData },
-      { children = [], parent, before = undefined }
-    ) => {
-      if (draft[id]) throw new Error("id exists");
-      else if (!draft[parent]) throw new Error("parent not found");
-
-      draft[id] = nodeData;
-
-      if (draft[parent].edges) {
-        if (before) {
-          const idx = draft[parent].edges.indexOf(before);
-          if (idx >= 0) {
-            draft[parent].edges.splice(idx, 0, id);
-          } else throw new Error("before not found");
-        } else {
-          draft[parent].edges.push(id);
-        }
-      } else {
-        draft[parent].edges = [id];
-      }
-
-      children.forEach((child) => {
-        _add(child, { parent: id });
-      });
-    };
-
-    _add({ id, ...nodeData }, { children, parent, before });
-  });
+import { add } from "./graph";
 
 test("without id", () => {
   const [graph, ops] = add({ type: 100, data: { foo: "bar" } })();

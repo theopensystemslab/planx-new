@@ -1,36 +1,4 @@
-import { connections, Graph, Op, wrap } from "./types";
-
-const remove = (id: string, parent: string) => (
-  graph = {}
-): [Graph, Array<Op>] =>
-  wrap(graph, (draft) => {
-    const _remove = (id, parent) => {
-      if (!draft[id]) throw new Error("id not found");
-      else if (!draft[parent]) throw new Error("parent not found");
-
-      const idx = draft[parent].edges.indexOf(id);
-      if (idx >= 0) {
-        if (draft[parent].edges.length === 1) delete draft[parent].edges;
-        else draft[parent].edges.splice(idx, 1);
-      } else {
-        throw new Error("not found in parent");
-      }
-
-      if (Object.keys(draft[parent]).length === 0) delete draft[parent];
-
-      if (connections(id, draft) === 0) {
-        if (draft[id].edges) {
-          // must be a copy, for some reason?
-          [...draft[id].edges].forEach((child) => {
-            _remove(child, id);
-          });
-        }
-        delete draft[id];
-      }
-    };
-
-    _remove(id, parent);
-  });
+import { remove } from "./graph";
 
 test("with clones", () => {
   const [graph, ops] = remove(

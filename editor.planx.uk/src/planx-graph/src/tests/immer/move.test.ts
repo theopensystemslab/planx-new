@@ -1,35 +1,4 @@
-import { Graph, Op, wrap } from "./types";
-
-const move = (
-  id: string,
-  parent: string,
-  toParent: string,
-  { toBefore = undefined } = {}
-) => (graph = {}): [Graph, Array<Op>] =>
-  wrap(graph, (draft) => {
-    if (!draft[id]) throw new Error("id not found");
-    else if (!draft[parent]) throw new Error("parent not found");
-    else if (!draft[toParent]) throw new Error("toParent not found");
-
-    let idx = draft[parent].edges.indexOf(id);
-    if (idx >= 0) {
-      if (draft[parent].edges.length === 1) delete draft[parent].edges;
-      else draft[parent].edges.splice(idx, 1);
-    } else throw new Error("parent does not connect to id");
-
-    draft[toParent].edges = draft[toParent].edges || [];
-
-    if (toBefore) {
-      idx = draft[toParent].edges.indexOf(toBefore);
-      if (idx >= 0) {
-        draft[toParent].edges.splice(idx, 0, id);
-      } else {
-        throw new Error("toBefore does not exist in toParent");
-      }
-    } else {
-      draft[toParent].edges.push(id);
-    }
-  });
+import { move } from "./graph";
 
 describe("different parent", () => {
   test("move", () => {
