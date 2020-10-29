@@ -1,13 +1,12 @@
-import produce from "immer";
-import { Graph } from "./types";
+import { Graph, Op, wrap } from "./types";
 
 const move = (
   id: string,
   parent: string,
   toParent: string,
   { toBefore = undefined } = {}
-) => (graph = {}): Graph => {
-  return produce(graph, (draft) => {
+) => (graph = {}): [Graph, Array<Op>] =>
+  wrap(graph, (draft) => {
     if (!draft[id]) throw new Error("id not found");
     else if (!draft[parent]) throw new Error("parent not found");
     else if (!draft[toParent]) throw new Error("toParent not found");
@@ -31,11 +30,10 @@ const move = (
       draft[toParent].edges.push(id);
     }
   });
-};
 
-test("move", () => {
-  expect(
-    move(
+describe("different parent", () => {
+  test("move", () => {
+    const [graph, ops] = move(
       "b",
       "_root",
       "a"
@@ -45,21 +43,24 @@ test("move", () => {
       },
       a: {},
       b: {},
-    })
-  ).toEqual({
-    _root: {
-      edges: ["a"],
-    },
-    a: {
-      edges: ["b"],
-    },
-    b: {},
+    });
+    expect(graph).toEqual({
+      _root: {
+        edges: ["a"],
+      },
+      a: {
+        edges: ["b"],
+      },
+      b: {},
+    });
+    expect(ops).toEqual([
+      { p: ["_root", "edges", 1], ld: "b" },
+      { oi: ["b"], p: ["a", "edges"] },
+    ]);
   });
-});
 
-test("toBefore", () => {
-  expect(
-    move("c", "b", "_root", { toBefore: "b" })({
+  test("toBefore", () => {
+    const [graph, ops] = move("c", "b", "_root", { toBefore: "b" })({
       _root: {
         edges: ["a", "b"],
       },
@@ -68,14 +69,20 @@ test("toBefore", () => {
         edges: ["c"],
       },
       c: {},
-    })
-  ).toEqual({
-    _root: {
-      edges: ["a", "c", "b"],
-    },
-    a: {},
-    b: {},
-    c: {},
+    });
+    expect(graph).toEqual({
+      _root: {
+        edges: ["a", "c", "b"],
+      },
+      a: {},
+      b: {},
+      c: {},
+    });
+    expect(ops).toEqual([
+      { ld: "b", li: "c", p: ["_root", "edges", 1] },
+      { li: "b", p: ["_root", "edges", 2] },
+      { od: ["c"], p: ["b", "edges"] },
+    ]);
   });
 });
 

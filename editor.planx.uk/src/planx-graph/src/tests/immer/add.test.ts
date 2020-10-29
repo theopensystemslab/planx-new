@@ -1,17 +1,25 @@
-import produce from "immer";
-import { Graph } from "./types";
+import { enablePatches } from "immer";
+import { Graph, Op, wrap } from "./types";
+
+enablePatches();
 
 const add = (
   { id = String(Math.random()), ...nodeData },
   { children = [], parent = "_root", before = undefined } = {}
-) => (graph = {}): Graph => {
-  return produce(graph, (draft) => {
+) => (graph = {}): [Graph, Array<Op>] =>
+  wrap(graph, (draft) => {
     draft._root = draft._root || {};
 
-    const _add = ({ id }, { children = [], parent, before = undefined }) => {
+    const _add = (
+      { id, ...nodeData },
+      { children = [], parent, before = undefined }
+    ) => {
       if (draft[id]) throw new Error("id exists");
       else if (!draft[parent]) throw new Error("parent not found");
-      else if (draft[parent].edges) {
+
+      draft[id] = nodeData;
+
+      if (draft[parent].edges) {
         if (before) {
           const idx = draft[parent].edges.indexOf(before);
           if (idx >= 0) {
@@ -23,23 +31,24 @@ const add = (
       } else {
         draft[parent].edges = [id];
       }
-      draft[id] = nodeData;
-      children.forEach((child) => _add(child, { parent: id }));
+
+      children.forEach((child) => {
+        _add(child, { parent: id });
+      });
     };
 
-    _add({ id }, { children, parent, before });
+    _add({ id, ...nodeData }, { children, parent, before });
   });
-};
 
 test("without id", () => {
-  const data = add({ type: 100, data: { foo: "bar" } })();
+  const [graph, ops] = add({ type: 100, data: { foo: "bar" } })();
   const {
     _root: {
       edges: [id],
     },
-  } = data;
+  } = graph;
 
-  expect(data).toMatchObject({
+  expect(graph).toMatchObject({
     _root: {
       edges: [id],
     },
@@ -50,12 +59,20 @@ test("without id", () => {
       },
     },
   });
+
+  expect(ops).toEqual([
+    { oi: { edges: [id] }, p: ["_root"] },
+    { oi: { data: { foo: "bar" }, type: 100 }, p: [id] },
+  ]);
 });
 
 test("with children", () => {
-  expect(
-    add({ id: "a" }, { children: [{ id: "a-a" }, { id: "a-b" }] })()
-  ).toMatchObject({
+  const [graph, ops] = add(
+    { id: "a" },
+    { children: [{ id: "a-a" }, { id: "a-b" }] }
+  )();
+
+  expect(graph).toEqual({
     _root: {
       edges: ["a"],
     },
@@ -65,34 +82,54 @@ test("with children", () => {
     "a-a": {},
     "a-b": {},
   });
+
+  expect(ops).toEqual([
+    { p: ["_root"], oi: { edges: ["a"] } },
+    { p: ["a"], oi: { edges: ["a-a", "a-b"] } },
+    { p: ["a-a"], oi: {} },
+    { p: ["a-b"], oi: {} },
+  ]);
 });
 
 test("empty graph", () => {
-  expect(add({ id: "a" })()).toMatchObject({
+  const [graph, ops] = add({ id: "a" })();
+  expect(graph).toEqual({
     _root: {
       edges: ["a"],
     },
     a: {},
   });
+  expect(ops).toEqual([
+    { oi: { edges: ["a"] }, p: ["_root"] },
+    { oi: {}, p: ["a"] },
+  ]);
 });
 
 test("existing graph", () => {
-  expect(add({ id: "b" })({ _root: { edges: ["a"] }, a: {} })).toMatchObject({
+  const [graph, ops] = add({ id: "b" })({ _root: { edges: ["a"] }, a: {} });
+  expect(graph).toEqual({
     _root: {
       edges: ["a", "b"],
     },
     a: {},
     b: {},
   });
+  expect(ops).toEqual([
+    { li: "b", p: ["_root", "edges", 1] },
+    { p: ["b"], oi: {} },
+  ]);
 });
 
 test("before item", () => {
-  const graph = {
+  const [graph, ops] = add(
+    { id: "c" },
+    { before: "b" }
+  )({
     _root: { edges: ["a", "b"] },
     a: {},
     b: {},
-  };
-  expect(add({ id: "c" }, { before: "b" })(graph)).toMatchObject({
+  });
+  expect(graph).toEqual({
     _root: {
       edges: ["a", "c", "b"],
     },
@@ -100,17 +137,25 @@ test("before item", () => {
     b: {},
     c: {},
   });
+  expect(ops).toEqual([
+    { ld: "b", li: "c", p: ["_root", "edges", 1] },
+    { li: "b", p: ["_root", "edges", 2] },
+    { p: ["c"], oi: {} },
+  ]);
 });
 
 test("with parent, before item", () => {
-  const graph = {
+  const [graph, ops] = add(
+    { id: "c" },
+    { before: "b", parent: "a" }
+  )({
     _root: { edges: ["a"] },
     a: {
       edges: ["b"],
     },
     b: {},
-  };
-  expect(add({ id: "c" }, { before: "b", parent: "a" })(graph)).toMatchObject({
+  });
+  expect(graph).toEqual({
     _root: {
       edges: ["a"],
     },
@@ -120,6 +165,11 @@ test("with parent, before item", () => {
     b: {},
     c: {},
   });
+  expect(ops).toEqual([
+    { ld: "b", li: "c", p: ["a", "edges", 0] },
+    { li: "b", p: ["a", "edges", 1] },
+    { oi: {}, p: ["c"] },
+  ]);
 });
 
 describe("error handling", () => {
@@ -138,13 +188,15 @@ describe("error handling", () => {
   });
 
   test("invalid before item", () => {
-    const graph = {
-      _root: { edges: ["a", "b"] },
-      a: {},
-      b: {},
-    };
-    expect(() => add({ id: "c" }, { before: "x" })(graph)).toThrowError(
-      "before not found"
-    );
+    expect(() =>
+      add(
+        { id: "c" },
+        { before: "x" }
+      )({
+        _root: { edges: ["a", "b"] },
+        a: {},
+        b: {},
+      })
+    ).toThrowError("before not found");
   });
 });
