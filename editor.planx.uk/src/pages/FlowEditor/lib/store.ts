@@ -10,6 +10,7 @@ import pgarray from "pg-array";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
 import Graph, { ROOT_NODE_KEY } from "../../../planx-graph/src/graph";
+import { add, move, remove } from "../../../planx-graph/src/tests/immer/graph";
 import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
@@ -93,12 +94,10 @@ export const [useStore, api] = create((set, get) => ({
     before = undefined,
     cb = send
   ) => {
-    const { flow } = get();
-    const g = new Graph(uid);
-    g.load(flow);
-
-    const ops = g.add({ id, type, ...data }, { children, before, parent });
-
+    const [, ops] = add(
+      { id, type, data },
+      { children: [], parent, before }
+    )(get().flow);
     cb(ops);
   },
 
@@ -118,9 +117,7 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   removeNode: (id, parent = undefined, cb = send) => {
-    const g = new Graph(uid);
-    g.load(get().flow);
-    const ops = g.remove(id, { parent });
+    const [, ops] = remove(id, parent)(get().flow);
     cb(ops);
   },
 
@@ -132,15 +129,10 @@ export const [useStore, api] = create((set, get) => ({
     clone = false,
     cb = send
   ) {
-    const { flow, resetPreview } = get();
-
-    const g = new Graph(uid);
-    g.load(flow);
-
     try {
-      const ops = g.move(id, { fromParent: parent, toBefore, toParent, clone });
+      const [, ops] = move(id, parent, { toParent, toBefore })(get().flow);
       cb(ops);
-      resetPreview();
+      get().resetPreview();
     } catch (err) {
       alert(err.message);
     }

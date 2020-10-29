@@ -117,10 +117,14 @@ export const add = (
 export const move = (
   id: string,
   parent: string,
-  toParent: string,
-  { toBefore = undefined }: { toBefore?: string } = {}
+  {
+    toParent = undefined,
+    toBefore = undefined,
+  }: { toParent?: string; toBefore?: string } = {}
 ) => (graph: Graph = {}): [Graph, Array<Op>] =>
   wrap(graph, (draft) => {
+    toParent = toParent || parent;
+
     if (!draft[id]) throw new Error("id not found");
     else if (!draft[parent]) throw new Error("parent not found");
     else if (!draft[toParent]) throw new Error("toParent not found");

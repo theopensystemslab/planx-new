@@ -1,7 +1,7 @@
 import { move } from "./graph";
 
 test("move within same parent", () => {
-  const [graph, ops] = move("b", "_root", "_root", { toBefore: "a" })({
+  const [graph, ops] = move("b", "_root", { toBefore: "a" })({
     _root: {
       edges: ["a", "b"],
     },
@@ -22,11 +22,7 @@ test("move within same parent", () => {
 
 describe("different parent", () => {
   test("move", () => {
-    const [graph, ops] = move(
-      "b",
-      "_root",
-      "a"
-    )({
+    const [graph, ops] = move("b", "_root", { toParent: "a" })({
       _root: {
         edges: ["a", "b"],
       },
@@ -49,7 +45,7 @@ describe("different parent", () => {
   });
 
   test("toBefore", () => {
-    const [graph, ops] = move("c", "b", "_root", { toBefore: "b" })({
+    const [graph, ops] = move("c", "b", { toParent: "_root", toBefore: "b" })({
       _root: {
         edges: ["a", "b"],
       },
@@ -78,11 +74,7 @@ describe("different parent", () => {
 describe("error handling", () => {
   test("invalid id", () => {
     expect(() =>
-      move(
-        "x",
-        "_root",
-        "a"
-      )({
+      move("x", "_root", { toParent: "a" })({
         _root: {
           edges: ["a"],
         },
@@ -93,11 +85,7 @@ describe("error handling", () => {
 
   test("invalid parent", () => {
     expect(() =>
-      move(
-        "b",
-        "x",
-        "a"
-      )({
+      move("b", "x", { toParent: "a" })({
         _root: {
           edges: ["a", "b"],
         },
@@ -109,11 +97,7 @@ describe("error handling", () => {
 
   test("invalid toParent", () => {
     expect(() =>
-      move(
-        "a",
-        "_root",
-        "x"
-      )({
+      move("a", "_root", { toParent: "x" })({
         _root: {
           edges: ["a"],
         },
@@ -124,7 +108,7 @@ describe("error handling", () => {
 
   test("invalid toBefore", () => {
     expect(() =>
-      move("a", "_root", "b", { toBefore: "foo" })({
+      move("a", "_root", { toParent: "b", toBefore: "foo" })({
         _root: {
           edges: ["a"],
         },
@@ -136,11 +120,7 @@ describe("error handling", () => {
 
   test("parent does not connect to id", () => {
     expect(() =>
-      move(
-        "b",
-        "_root",
-        "a"
-      )({
+      move("b", "_root", { toParent: "a" })({
         _root: {
           edges: ["a"],
         },
