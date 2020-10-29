@@ -149,4 +149,6 @@ describe("error handling", () => {
       })
     ).toThrowError("parent does not connect to id");
   });
+
+  test.todo("prevent cycles");
 });
