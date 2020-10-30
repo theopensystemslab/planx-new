@@ -37,9 +37,10 @@ const sanitize = (x) => {
   } else if ((x && typeof x === "object") || x instanceof Object) {
     return Object.entries(x).reduce((acc, [k, v]) => {
       v = sanitize(v);
-      if (isSomething(v)) acc[k] = v;
+      // if (isSomething(v)) acc[k] = v;
+      if (!isSomething(v)) delete acc[k];
       return acc;
-    }, {});
+    }, x);
   } else {
     return x;
   }
@@ -265,6 +266,70 @@ export const remove = (id: string, parent: string) => (
     _remove(draft, id, parent);
   });
 
+const _update = (
+  draft,
+  id: string,
+  newData: object,
+  {
+    children = [],
+    removeKeyIfMissing = false,
+  }: { children?: Array<Node>; removeKeyIfMissing?: boolean } = {}
+) => {
+  const node = draft[id];
+  children = children.map((c) => ({ ...c, id: c.id || uniqueId() }));
+
+  const newChildIds = children.map((c) => c.id);
+
+  if (removeKeyIfMissing) {
+    if (newChildIds.toString() !== [...(node.edges || [])].toString()) {
+      const addedChildrenIds = difference(newChildIds, node.edges);
+      addedChildrenIds.forEach((cId) =>
+        _add(
+          draft,
+          children.find((c) => c.id === cId),
+          { parent: id }
+        )
+      );
+
+      const removedChildrenIds = difference(node.edges, newChildIds);
+      removedChildrenIds.forEach((childId) => _remove(draft, childId, id));
+
+      if (node.edges) {
+        if (newChildIds.length === 0) delete node.edges;
+        else {
+          node.edges = newChildIds;
+        }
+      }
+    }
+
+    if (node.data) {
+      // if a value exists in the current data, but is null, undefined or "" in the
+      // new data then remove it
+      Object.entries(node.data).forEach(([k, v]) => {
+        if (v !== null && v !== undefined && !isSomething(newData[k]))
+          delete node.data[k];
+      });
+    }
+  }
+
+  if (node.data) {
+    Object.entries(newData).reduce((existingData, [k, v]) => {
+      v = sanitize(v);
+      if (!isSomething(v)) {
+        if (existingData.hasOwnProperty(k)) delete existingData[k];
+      } else if (v !== existingData[k]) {
+        existingData[k] = v;
+      }
+      return existingData;
+    }, node.data);
+  } else {
+    node.data = newData;
+  }
+  if (Object.keys(node.data).length === 0) delete node.data;
+
+  children.forEach(({ id, ...newData }) => _update(draft, id, newData));
+};
+
 export const update = (
   id: string,
   newData: object,
@@ -274,52 +339,7 @@ export const update = (
   }: { children?: Array<Node>; removeKeyIfMissing?: boolean } = {}
 ) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
   wrap(graph, (draft) => {
-    const node = draft[id];
-    children = children.map((c) => ({ ...c, id: c.id || uniqueId() }));
-
-    if (removeKeyIfMissing) {
-      const newChildIds = children.map((c) => c.id);
-      if (newChildIds.toString() !== [...(node.edges || [])].toString()) {
-        const addedChildrenIds = difference(newChildIds, node.edges);
-        addedChildrenIds.forEach((cId) =>
-          _add(
-            draft,
-            children.find((c) => c.id === cId),
-            { parent: id }
-          )
-        );
-
-        const removedChildrenIds = difference(node.edges, newChildIds);
-        removedChildrenIds.forEach((childId) => _remove(draft, childId, id));
-
-        if (node.edges) {
-          if (newChildIds.length === 0) delete node.edges;
-          else {
-            node.edges = newChildIds;
-          }
-        }
-      }
-
-      if (node.data) {
-        // if a value exists in the current data, but is null, undefined or "" in the
-        // new data then remove it
-        Object.entries(node.data).forEach(([k, v]) => {
-          if (v !== null && v !== undefined && !isSomething(newData[k]))
-            delete node.data[k];
-        });
-      }
-    }
-
-    // TODO: make this work with a nested data structure
-    Object.entries(newData).reduce((acc, [k, v]) => {
-      v = sanitize(v);
-      if (!isSomething(v)) {
-        if (acc.hasOwnProperty(k)) delete acc[k];
-      } else if (v !== acc[k]) {
-        acc[k] = v;
-      }
-      return acc;
-    }, node.data);
+    _update(draft, id, newData, { children, removeKeyIfMissing });
   });
 
 export const makeUnique = (

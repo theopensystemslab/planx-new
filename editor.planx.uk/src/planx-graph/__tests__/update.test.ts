@@ -173,11 +173,16 @@ describe("updating", () => {
     test("add children", () => {
       const [graph, ops] = update(
         "x",
-        {},
+        { foo: "bar" },
         { children: [{ id: "y" }, {}, { id: "z" }], removeKeyIfMissing: true }
       )({
+        _root: {
+          edges: ["x"],
+        },
         x: {
-          data: {},
+          data: {
+            foo: "bar",
+          },
           edges: ["y", "z"],
         },
         y: {},
@@ -191,8 +196,13 @@ describe("updating", () => {
       } = graph;
 
       expect(graph).toEqual({
+        _root: {
+          edges: ["x"],
+        },
         x: {
-          data: {},
+          data: {
+            foo: "bar",
+          },
           edges: ["y", newChildId, "z"],
         },
         y: {},
@@ -204,6 +214,50 @@ describe("updating", () => {
         { od: ["y", "z"], oi: ["y", newChildId, "z"], p: ["x", "edges"] },
         { oi: {}, p: [newChildId] },
       ]);
+    });
+
+    test("update children", () => {
+      const [graph, ops] = update(
+        "a",
+        {},
+        {
+          children: [
+            {
+              id: "b",
+              text: "bar",
+            },
+          ],
+          removeKeyIfMissing: true,
+        }
+      )({
+        _root: {
+          edges: ["a"],
+        },
+        a: {
+          edges: ["b"],
+        },
+        b: {
+          data: {
+            text: "foo",
+          },
+        },
+      });
+
+      expect(graph).toEqual({
+        _root: {
+          edges: ["a"],
+        },
+        a: {
+          edges: ["b"],
+        },
+        b: {
+          data: {
+            text: "bar",
+          },
+        },
+      });
+
+      expect(ops).toEqual([{ od: "foo", oi: "bar", p: ["b", "data", "text"] }]);
     });
 
     test("reorder children", () => {
