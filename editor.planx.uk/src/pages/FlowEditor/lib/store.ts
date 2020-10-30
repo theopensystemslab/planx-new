@@ -8,6 +8,7 @@ import pgarray from "pg-array";
 import {
   add,
   clone,
+  isClone,
   makeUnique,
   move,
   remove,
@@ -75,8 +76,8 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   isClone: (id: string) => {
-    // TODO: reimplement this!
-    return false;
+    // TODO: this can be faster!
+    return isClone(id, get().flow);
   },
 
   getNode(id: any) {
