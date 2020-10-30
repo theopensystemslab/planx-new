@@ -59,7 +59,7 @@ const ContentComponent: React.FC<Props> = (props) => {
     initialValues: {
       content: {
         // TODO: improve runtime validation here (joi, io-ts)
-        content: props.node?.content || "",
+        content: props.node?.data?.content || "",
       },
     },
     onSubmit: (newValues) => {
