@@ -114,6 +114,33 @@ export const add = (
     _add({ id, ...nodeData }, { children, parent, before });
   });
 
+export const clone = (
+  id: string,
+  {
+    toParent = "_root",
+    toBefore = undefined,
+  }: { toParent?: string; toBefore?: string } = {}
+) => (graph: Graph = {}): [Graph, Array<Op>] =>
+  wrap(graph, (draft) => {
+    if (!draft[id]) throw new Error("id not found");
+    else if (!draft[toParent]) throw new Error("toParent not found");
+    else if (draft[toParent].edges?.includes(id))
+      throw new Error("cannot clone to same parent");
+
+    draft[toParent].edges = draft[toParent].edges || [];
+
+    if (toBefore) {
+      const idx = draft[toParent].edges.indexOf(toBefore);
+      if (idx >= 0) {
+        draft[toParent].edges.splice(idx, 0, id);
+      } else {
+        throw new Error("toBefore does not exist in toParent");
+      }
+    } else {
+      draft[toParent].edges.push(id);
+    }
+  });
+
 export const move = (
   id: string,
   parent: string,
