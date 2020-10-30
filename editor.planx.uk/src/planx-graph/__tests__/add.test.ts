@@ -51,6 +51,37 @@ test("with children", () => {
   ]);
 });
 
+test("ignores empty values", () => {
+  const [graph, ops] = add({
+    id: "test",
+    type: 100,
+    data: {
+      info: "\u200B​",
+      policyRef: "​\n",
+      empty: "​",
+      another: "↵",
+      howMeasured: undefined,
+      text: "efef",
+      description: " ​",
+    },
+  })({});
+  expect(graph).toEqual({
+    _root: {
+      edges: ["test"],
+    },
+    test: {
+      type: 100,
+      data: {
+        text: "efef",
+      },
+    },
+  });
+  expect(ops).toEqual([
+    { oi: { edges: ["test"] }, p: ["_root"] },
+    { oi: { data: { text: "efef" }, type: 100 }, p: ["test"] },
+  ]);
+});
+
 test("empty graph", () => {
   const [graph, ops] = add({ id: "a" })();
   expect(graph).toEqual({

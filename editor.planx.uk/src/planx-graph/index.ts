@@ -1,4 +1,5 @@
 import { enablePatches, produceWithPatches } from "immer";
+import difference from "lodash/difference";
 import trim from "lodash/trim";
 import zip from "lodash/zip";
 import { customAlphabet } from "nanoid-good";
@@ -131,7 +132,7 @@ const _add = (
   if (draft[id]) throw new Error("id exists");
   else if (!draft[parent]) throw new Error("parent not found");
 
-  draft[id] = nodeData;
+  draft[id] = sanitize(nodeData);
 
   if (draft[parent].edges) {
     if (before) {
@@ -162,75 +163,6 @@ export const add = (
   wrap(graph, (draft) => {
     draft[ROOT_NODE_KEY] = draft[ROOT_NODE_KEY] || {};
     _add(draft, { id, ...nodeData }, { children, parent, before });
-  });
-
-export const update = (
-  id: string,
-  newData: object,
-  {
-    children = [],
-    removeKeyIfMissing = false,
-  }: { children?: Array<Node>; removeKeyIfMissing?: boolean } = {}
-) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
-  wrap(graph, (draft) => {
-    const node = draft[id];
-    children = children.map((c) => ({ ...c, id: c.id || uniqueId() }));
-
-    // if (removeKeyIfMissing) {
-    //   const addedChildrenIds = difference(
-    //     children.map((c) => c.id),
-    //     node.edges
-    //   );
-    //   addedChildrenIds.forEach((cId) =>
-    //     this.add(
-    //       children.find((c) => c.id === cId),
-    //       { parent: id },
-    //       ops
-    //     )
-    //   );
-
-    //   const removedChildrenIds = difference(
-    //     node.edges,
-    //     children.map((c) => c.id)
-    //   );
-    //   removedChildrenIds.forEach((childId) =>
-    //     this.remove(childId, { parent: id }, ops)
-    //   );
-
-    //   // if a value exists in the current data, but is null, undefined or "" in the
-    //   // new data then remove it
-    //   Object.entries(node.data).forEach(([k, v]) => {
-    //     if (v !== null && v !== undefined) {
-    //       if (!isSomething(newData[k])) {
-    //         ops.push({ p: [id, "data", k], od: v });
-    //         delete node.data[k];
-    //       }
-    //     }
-    //   });
-
-    //   if (
-    //     children.map((c) => c.id).toString() !== (node.edges || []).toString()
-    //   ) {
-    //     const oi = children.map((c) => c.id);
-    //     if (node.edges) {
-    //       ops.push({ p: [id, "edges"], od: node.edges, oi });
-    //     } else {
-    //       ops.push({ p: [id, "edges"], oi });
-    //     }
-    //     node.edges = oi;
-    //   }
-    // }
-
-    // TODO: make this work with a nested data structure
-    Object.entries(newData).reduce((acc, [k, v]) => {
-      v = sanitize(v);
-      if (!isSomething(v)) {
-        if (acc.hasOwnProperty(k)) delete acc[k];
-      } else if (v !== acc[k]) {
-        acc[k] = v;
-      }
-      return acc;
-    }, node.data);
   });
 
 export const clone = (
@@ -299,36 +231,93 @@ export const move = (
     if (isCyclic(draft)) throw new Error("cannot create cycle in graph");
   });
 
+const _remove = (draft, id, parent) => {
+  if (!draft[id]) throw new Error("id not found");
+  else if (!draft[parent]) throw new Error("parent not found");
+
+  const idx = draft[parent].edges.indexOf(id);
+  if (idx >= 0) {
+    if (draft[parent].edges.length === 1) delete draft[parent].edges;
+    else draft[parent].edges.splice(idx, 1);
+  } else {
+    throw new Error("not found in parent");
+  }
+
+  if (Object.keys(draft[parent]).length === 0) delete draft[parent];
+
+  if (numberOfEdgesTo(id, draft) === 0) {
+    if (draft[id].edges) {
+      // must be a copy, for some reason?
+      [...draft[id].edges].forEach((child) => {
+        _remove(draft, child, id);
+      });
+    }
+    delete draft[id];
+  }
+};
+
 export const remove = (id: string, parent: string) => (
   graph: Graph = {}
 ): [Graph, Array<OT.Op>] =>
   wrap(graph, (draft) => {
-    const _remove = (id, parent) => {
-      if (!draft[id]) throw new Error("id not found");
-      else if (!draft[parent]) throw new Error("parent not found");
+    _remove(draft, id, parent);
+  });
 
-      const idx = draft[parent].edges.indexOf(id);
-      if (idx >= 0) {
-        if (draft[parent].edges.length === 1) delete draft[parent].edges;
-        else draft[parent].edges.splice(idx, 1);
-      } else {
-        throw new Error("not found in parent");
-      }
+export const update = (
+  id: string,
+  newData: object,
+  {
+    children = [],
+    removeKeyIfMissing = false,
+  }: { children?: Array<Node>; removeKeyIfMissing?: boolean } = {}
+) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
+  wrap(graph, (draft) => {
+    const node = draft[id];
+    children = children.map((c) => ({ ...c, id: c.id || uniqueId() }));
 
-      if (Object.keys(draft[parent]).length === 0) delete draft[parent];
+    if (removeKeyIfMissing) {
+      const newChildIds = children.map((c) => c.id);
+      if (newChildIds.toString() !== [...(node.edges || [])].toString()) {
+        const addedChildrenIds = difference(newChildIds, node.edges);
+        addedChildrenIds.forEach((cId) =>
+          _add(
+            draft,
+            children.find((c) => c.id === cId),
+            { parent: id }
+          )
+        );
 
-      if (numberOfEdgesTo(id, draft) === 0) {
-        if (draft[id].edges) {
-          // must be a copy, for some reason?
-          [...draft[id].edges].forEach((child) => {
-            _remove(child, id);
-          });
+        const removedChildrenIds = difference(node.edges, newChildIds);
+        removedChildrenIds.forEach((childId) => _remove(draft, childId, id));
+
+        if (node.edges) {
+          if (newChildIds.length == 0) delete node.edges;
+          else {
+            node.edges = newChildIds;
+          }
         }
-        delete draft[id];
       }
-    };
 
-    _remove(id, parent);
+      if (node.data) {
+        // if a value exists in the current data, but is null, undefined or "" in the
+        // new data then remove it
+        Object.entries(node.data).forEach(([k, v]) => {
+          if (v !== null && v !== undefined && !isSomething(newData[k]))
+            delete node.data[k];
+        });
+      }
+    }
+
+    // TODO: make this work with a nested data structure
+    Object.entries(newData).reduce((acc, [k, v]) => {
+      v = sanitize(v);
+      if (!isSomething(v)) {
+        if (acc.hasOwnProperty(k)) delete acc[k];
+      } else if (v !== acc[k]) {
+        acc[k] = v;
+      }
+      return acc;
+    }, node.data);
   });
 
 export const makeUnique = (
