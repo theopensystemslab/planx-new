@@ -77,14 +77,6 @@ const styles = (theme) =>
 mapboxgl.accessToken =
   "pk.eyJ1Ijoib3BlbnN5c3RlbXNsYWIiLCJhIjoiY2sybHJ6cnY2MGFkaTNjcHIwanV1eGRlbCJ9.xAHUuQo1RAnzwOlN90SGVQ";
 
-interface IMap {
-  lng: number;
-  lat: number;
-  zoom: number;
-  boundary?: { area: number; polygon: number[][] };
-  setBoundary: Function;
-}
-
 class Map extends React.Component<
   {
     lng: number;

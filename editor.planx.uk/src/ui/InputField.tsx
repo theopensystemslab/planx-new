@@ -30,7 +30,7 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles) as any;
 
-export default ({ ...props }) => {
+const InputField = ({ ...props }) => {
   const classes = useStyles();
   return (
     <InputBase
@@ -44,3 +44,5 @@ export default ({ ...props }) => {
     />
   );
 };
+
+export default InputField;
