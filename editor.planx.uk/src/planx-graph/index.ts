@@ -327,7 +327,9 @@ const _update = (
   }
   if (Object.keys(node.data).length === 0) delete node.data;
 
-  children.forEach(({ id, ...newData }) => _update(draft, id, newData));
+  children.forEach(({ id, ...newData }) =>
+    _update(draft, id, newData.data || newData)
+  );
 };
 
 export const update = (

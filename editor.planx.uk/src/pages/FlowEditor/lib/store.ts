@@ -13,6 +13,7 @@ import {
   move,
   remove,
   ROOT_NODE_KEY,
+  update,
 } from "planx-graph";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
@@ -100,12 +101,11 @@ export const [useStore, api] = create((set, get) => ({
     send(ops);
   },
 
-  updateNode: ({ id, data }, children: any[], cb = send) => {
-    alert("not implemented");
-    // const g = new Graph(uid);
-    // g.load(get().flow);
-    // const ops = g.update(id, data, { children, removeKeyIfMissing: true });
-    // cb(ops);
+  updateNode: ({ id, data }, children: any[]) => {
+    const [, ops] = update(id, data, { children, removeKeyIfMissing: true })(
+      get().flow
+    );
+    send(ops);
   },
 
   makeUnique: (id, parent = undefined) => {
