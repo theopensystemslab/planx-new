@@ -58,7 +58,7 @@ devDependencies:
   '@testing-library/react': 11.1.0_react-dom@16.14.0+react@16.14.0
   '@testing-library/user-event': 12.1.10
   '@types/graphlib': 2.1.7
-  '@types/jest': 24.9.1
+  '@types/jest': 26.0.15
   '@types/lodash': 4.14.164
   '@types/node': 12.19.3
   '@types/ramda': 0.27.31
@@ -68,8 +68,6 @@ devDependencies:
   '@types/react-dom': 16.9.9
   '@types/uuid': 8.3.0
   ajv: 6.12.6
-  esbuild: 0.7.22
-  esbuild-jest: 0.3.0-beta.0_esbuild@0.7.22
   husky: 4.3.0
   import-sort-style-module: 6.0.0
   lint-staged: 10.5.0
@@ -2292,6 +2290,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Fb38HkXSVA4L8fGKEZ6le5bB8r6MRWlOCZbVuWZcmOMSCd2wCYOwN1ibj8daIoV9naq7aaOZjrLCoCMptKU/4Q==
+  /@types/jest/26.0.15:
+    dependencies:
+      jest-diff: 26.6.1
+      pretty-format: 26.6.1
+    dev: true
+    resolution:
+      integrity: sha512-s2VMReFXRg9XXxV+CW9e5Nz8fH2K1aEhwgjUqPPbQd7g95T0laAcvLv032EhFHIa5GHsZ8W7iJEQVaJq6k3Gog==
   /@types/json-schema/7.0.6:
     dev: false
     resolution:
@@ -5065,7 +5070,6 @@ packages:
     resolution:
       integrity: sha512-Dj6Wk3tWyTE+Fo1rW8v0Xhwk80um6yFYKbuAxc9c3EZxIHFDYwbi34Uk42u1CdnIiVorvt4RmlSDjIPyzGC2ew==
   /diff-sequences/26.5.0:
-    dev: false
     engines:
       node: '>= 10.14.2'
     resolution:
@@ -5549,20 +5553,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-NJ6Yn3FuDinBaBRWl/q5X/s4koRHBrgKAu+yGI6JCBeiu3qrcbJhwT2GeR/EXVfylRk8dpQVJoLEFhK+Mu31NA==
-  /esbuild-jest/0.3.0-beta.0_esbuild@0.7.22:
-    dependencies:
-      esbuild: 0.7.22
-    dev: true
-    peerDependencies:
-      esbuild: '>=0.7.8'
-    resolution:
-      integrity: sha512-eC9J5QlQnDD9iCKvXvdTOGNSZFKsGuqbbXQa93Zs1BkFO0IZLasmHwfG+J5Jtd910AwBd0AY9m3og4dBNutAdQ==
-  /esbuild/0.7.22:
-    dev: true
-    hasBin: true
-    requiresBuild: true
-    resolution:
-      integrity: sha512-B43SYg8LGWYTCv9Gs0RnuLNwjzpuWOoCaZHTWEDEf5AfrnuDMerPVMdCEu7xOdhFvQ+UqfP2MGU9lxEy0JzccA==
   /escalade/3.1.1:
     dev: false
     engines:
@@ -8088,7 +8078,6 @@ packages:
       diff-sequences: 26.5.0
       jest-get-type: 26.3.0
       pretty-format: 26.6.1
-    dev: false
     engines:
       node: '>= 10.14.2'
     resolution:
@@ -8147,7 +8136,6 @@ packages:
     resolution:
       integrity: sha512-lUseMzAley4LhIcpSP9Jf+fTrQ4a1yHQwLNeeVa2cEmbCGeoZAtYPOIv8JaxLD/sUpKxetKGP+gsHl8f8TSj8Q==
   /jest-get-type/26.3.0:
-    dev: false
     engines:
       node: '>= 10.14.2'
     resolution:
@@ -15074,7 +15062,7 @@ specifiers:
   '@testing-library/user-event': ^12.1.10
   '@turf/area': ^6.0.1
   '@types/graphlib': ^2.1.7
-  '@types/jest': ^24.9.1
+  '@types/jest': ^26.0.15
   '@types/lodash': ^4.14.162
   '@types/node': ^12.19.1
   '@types/ramda': ^0.27.30
@@ -15092,8 +15080,6 @@ specifiers:
   draft-js: ^0.11.7
   draft-js-export-markdown: ^1.4.0
   draft-js-import-markdown: ^1.4.0
-  esbuild: ^0.7.15
-  esbuild-jest: ^0.3.0-beta.0
   formik: ^2.2.0
   graphlib: ^2.1.8
   graphql: ^15.3.0
