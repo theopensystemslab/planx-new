@@ -4,25 +4,14 @@ import debounce from "lodash/debounce";
 import difference from "lodash/difference";
 import omit from "lodash/omit";
 import uniq from "lodash/uniq";
-import { customAlphabet } from "nanoid";
 import pgarray from "pg-array";
+import { add, clone, move, remove, ROOT_NODE_KEY } from "planx-graph";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
-import {
-  add,
-  clone,
-  move,
-  remove,
-  ROOT_NODE_KEY,
-} from "../../../lib/planx-graph/graph";
 import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
 import { connectToDB, getConnection } from "./sharedb";
-
-const alphabet =
-  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-const uid = customAlphabet(alphabet, 12);
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
@@ -91,7 +80,7 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   addNode: (
-    { id = uid(), type, data },
+    { id = undefined, type, data },
     children = [],
     parent = ROOT_NODE_KEY,
     before = undefined

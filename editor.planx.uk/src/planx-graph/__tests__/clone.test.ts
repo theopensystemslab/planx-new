@@ -1,4 +1,4 @@
-import { clone } from "./graph";
+import { clone } from "..";
 
 describe("cloning", () => {
   test("from root to child", () => {

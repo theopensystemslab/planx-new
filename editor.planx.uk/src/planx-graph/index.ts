@@ -1,9 +1,9 @@
 import { enablePatches, produceWithPatches } from "immer";
 import zip from "lodash/zip";
+import { customAlphabet } from "nanoid";
 import { ImmerJSONPatch, OT } from "./types";
-enablePatches();
 
-export const ROOT_NODE_KEY = "_root";
+enablePatches();
 
 interface Node {
   id?: string;
@@ -14,7 +14,12 @@ interface Node {
 
 type Graph = Record<string, Node>;
 
-const uniqueId = (): string => String(Math.random());
+export const ROOT_NODE_KEY = "_root";
+
+const uniqueId = customAlphabet(
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+  10
+);
 
 const numberOfEdgesTo = (id: string, graph: Graph): number =>
   Object.values(graph).filter(({ edges = [] }) => edges.includes(id)).length;
