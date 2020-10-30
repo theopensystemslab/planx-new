@@ -231,7 +231,6 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
 };
 
 export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
-  console.log({ props });
   const type = TYPES.Checklist;
 
   const formik = useFormik<Checklist>({

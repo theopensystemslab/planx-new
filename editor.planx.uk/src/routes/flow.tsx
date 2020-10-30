@@ -115,7 +115,7 @@ const editNode = route(async (req) => {
 
   if (type === "checklist" || type === "question") {
     const childNodes = api.getState().childNodesOf(id);
-    if (node.categories) {
+    if (node.data.categories) {
       extraProps.groupedOptions = mapAccum(
         (index: number, category: { title: string; count: number }) => [
           index + category.count,
@@ -125,7 +125,7 @@ const editNode = route(async (req) => {
           },
         ],
         0,
-        node.categories
+        node.data.categories
       )[1];
     } else {
       extraProps.options = childNodes;
