@@ -1,8 +1,26 @@
 import { enablePatches, produceWithPatches } from "immer";
+import trim from "lodash/trim";
 import zip from "lodash/zip";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import { ImmerJSONPatch, OT } from "./types";
+
+const isSomething = (x: any): boolean =>
+  x !== null && x !== undefined && x !== "";
+
+const sanitize = (x) => {
+  if ((x && typeof x === "string") || x instanceof String) {
+    return trim(x.replace(/[\u200B-\u200D\uFEFF↵]/g, ""));
+  } else if ((x && typeof x === "object") || x instanceof Object) {
+    return Object.entries(x).reduce((acc, [k, v]) => {
+      v = sanitize(v);
+      if (isSomething(v)) acc[k] = v;
+      return acc;
+    }, {});
+  } else {
+    return x;
+  }
+};
 
 enablePatches();
 
@@ -144,6 +162,75 @@ export const add = (
   wrap(graph, (draft) => {
     draft[ROOT_NODE_KEY] = draft[ROOT_NODE_KEY] || {};
     _add(draft, { id, ...nodeData }, { children, parent, before });
+  });
+
+export const update = (
+  id: string,
+  newData: object,
+  {
+    children = [],
+    removeKeyIfMissing = false,
+  }: { children?: Array<Node>; removeKeyIfMissing?: boolean } = {}
+) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
+  wrap(graph, (draft) => {
+    const node = draft[id];
+    children = children.map((c) => ({ ...c, id: c.id || uniqueId() }));
+
+    // if (removeKeyIfMissing) {
+    //   const addedChildrenIds = difference(
+    //     children.map((c) => c.id),
+    //     node.edges
+    //   );
+    //   addedChildrenIds.forEach((cId) =>
+    //     this.add(
+    //       children.find((c) => c.id === cId),
+    //       { parent: id },
+    //       ops
+    //     )
+    //   );
+
+    //   const removedChildrenIds = difference(
+    //     node.edges,
+    //     children.map((c) => c.id)
+    //   );
+    //   removedChildrenIds.forEach((childId) =>
+    //     this.remove(childId, { parent: id }, ops)
+    //   );
+
+    //   // if a value exists in the current data, but is null, undefined or "" in the
+    //   // new data then remove it
+    //   Object.entries(node.data).forEach(([k, v]) => {
+    //     if (v !== null && v !== undefined) {
+    //       if (!isSomething(newData[k])) {
+    //         ops.push({ p: [id, "data", k], od: v });
+    //         delete node.data[k];
+    //       }
+    //     }
+    //   });
+
+    //   if (
+    //     children.map((c) => c.id).toString() !== (node.edges || []).toString()
+    //   ) {
+    //     const oi = children.map((c) => c.id);
+    //     if (node.edges) {
+    //       ops.push({ p: [id, "edges"], od: node.edges, oi });
+    //     } else {
+    //       ops.push({ p: [id, "edges"], oi });
+    //     }
+    //     node.edges = oi;
+    //   }
+    // }
+
+    // TODO: make this work with a nested data structure
+    Object.entries(newData).reduce((acc, [k, v]) => {
+      v = sanitize(v);
+      if (!isSomething(v)) {
+        if (acc.hasOwnProperty(k)) delete acc[k];
+      } else if (v !== acc[k]) {
+        acc[k] = v;
+      }
+      return acc;
+    }, node.data);
   });
 
 export const clone = (
