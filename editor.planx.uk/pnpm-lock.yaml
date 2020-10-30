@@ -25,6 +25,7 @@ dependencies:
   mapbox-gl: 1.12.0
   mui-rte: 1.25.0_105f397d79457dc9365b4e349380b9b3
   nanoid: 3.1.16
+  nanoid-good: 3.1.0
   natsort: 2.0.2
   navi: 0.14.0
   pg-array: 0.5.0
@@ -9544,6 +9545,13 @@ packages:
   /nan/2.14.2:
     resolution:
       integrity: sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
+  /nanoid-good/3.1.0:
+    dependencies:
+      nanoid: 3.1.16
+      naughty-words: 1.2.0
+    dev: false
+    resolution:
+      integrity: sha512-gG9D+AVHAZ+t2mAk3sw+Bx08VzOBc8fc+JylIzCLbEoRYakvQK9RiI3U+bXjdlMc5Ec4W9zUQsZZKngjifv7Vw==
   /nanoid/3.1.16:
     dev: false
     engines:
@@ -9583,6 +9591,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
+  /naughty-words/1.2.0:
+    dev: false
+    resolution:
+      integrity: sha512-0iadX6fN+3NsfvIRtWmmpEX9VsoIQ6n9FwyIxmew9w5yzFNqMgs/Ky0eAC/z5xXSHtqlVoByiovdROikwH9SXQ==
   /navi/0.14.0:
     dependencies:
       history: 4.10.1
@@ -15096,6 +15108,7 @@ specifiers:
   mapbox-gl: ^1.12.0
   mui-rte: ^1.25.0
   nanoid: ^3.1.16
+  nanoid-good: ^3.1.0
   natsort: ^2.0.2
   navi: ^0.14.0
   node-sass: ^4.14.1

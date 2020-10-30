@@ -1,6 +1,7 @@
 import { enablePatches, produceWithPatches } from "immer";
 import zip from "lodash/zip";
-import { customAlphabet } from "nanoid";
+import { customAlphabet } from "nanoid-good";
+import en from "nanoid-good/locale/en";
 import { ImmerJSONPatch, OT } from "./types";
 
 enablePatches();
@@ -16,7 +17,7 @@ type Graph = Record<string, Node>;
 
 export const ROOT_NODE_KEY = "_root";
 
-const uniqueId = customAlphabet(
+const uniqueId = customAlphabet(en)(
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
   10
 );
