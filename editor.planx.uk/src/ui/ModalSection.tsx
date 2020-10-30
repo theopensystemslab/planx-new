@@ -1,7 +1,6 @@
 import Box from "@material-ui/core/Box";
-import React from "react";
-
 import { makeStyles } from "@material-ui/core/styles";
+import React from "react";
 
 const modalSectionStyles = makeStyles((theme) => ({
   section: {
@@ -12,7 +11,9 @@ const modalSectionStyles = makeStyles((theme) => ({
   },
 }));
 
-export default ({ children }) => {
+const ModalSection = ({ children }) => {
   const classes = modalSectionStyles();
   return <Box className={classes.section}>{children}</Box>;
 };
+
+export default ModalSection;

@@ -1,15 +1,15 @@
+import { useFormik } from "formik";
 import React from "react";
 import {
+  ColorPicker,
   Input,
   InputRow,
-  OptionButton,
-  RichTextInput,
   InternalNotes,
   ModalSection,
   ModalSectionContent,
-  ColorPicker,
+  OptionButton,
+  RichTextInput,
 } from "../../../../ui";
-import { useFormik } from "formik";
 import { Notice, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
@@ -112,20 +112,20 @@ const NoticeComponent: React.FC<Props> = (props) => {
     initialValues: {
       notice: {
         // TODO: improve runtime validation here (joi, io-ts)
-        title: props.node?.title || "",
-        description: props.node?.description || "",
-        color: props.node?.color || "#EFEFEF",
-        notes: props.node?.notes || "",
-        resetButton: props.node?.resetButton || false,
-        definitionImg: props.node?.definitionImg,
-        howMeasured: props.node?.howMeasured,
-        policyRef: props.node?.policyRef,
-        info: props.node?.info,
+        title: props.node?.data?.title || "",
+        description: props.node?.data?.description || "",
+        color: props.node?.data?.color || "#EFEFEF",
+        notes: props.node?.data?.notes || "",
+        resetButton: props.node?.data?.resetButton || false,
+        definitionImg: props.node?.data?.definitionImg,
+        howMeasured: props.node?.data?.howMeasured,
+        policyRef: props.node?.data?.policyRef,
+        info: props.node?.data?.info,
       },
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ $t: TYPES.Notice, ...newValues.notice });
+        props.handleSubmit({ type: TYPES.Notice, data: newValues.notice });
       }
     },
     validate: () => {},

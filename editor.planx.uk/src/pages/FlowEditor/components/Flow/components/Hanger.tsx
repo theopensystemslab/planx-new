@@ -4,7 +4,7 @@ import { useDrop } from "react-dnd";
 import { Link } from "react-navi";
 import { rootFlowPath } from "../../../../../routes/utils";
 import { api } from "../../../lib/store";
-import { getParentId } from "../../../lib/utils";
+import { getParentId } from "../lib/utils";
 
 interface HangerProps {
   hidden?: boolean;
@@ -37,7 +37,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   const handleContext = (e: React.MouseEvent) => {
     e.preventDefault();
-    api.getState().pasteNode(parent || null, before || null);
+    api.getState().pasteNode(parent || undefined, before || undefined);
   };
 
   return (

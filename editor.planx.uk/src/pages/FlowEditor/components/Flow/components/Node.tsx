@@ -1,5 +1,4 @@
 import React from "react";
-
 import { TYPES } from "../../../data/types";
 import { useStore } from "../../../lib/store";
 import Breadcrumb from "./Breadcrumb";
@@ -9,9 +8,9 @@ import Question from "./Question";
 import Result from "./Result";
 
 const Node: React.FC<any> = (props) => {
-  const node = useStore((state) => state.flow.nodes[props.id]);
+  const node = useStore((state) => state.flow[props.id]);
 
-  switch (props.$t) {
+  switch (props.type) {
     case TYPES.PropertyInformation:
       return <Question {...props} text="Property information" />;
     case TYPES.FindProperty:
@@ -22,7 +21,7 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question
           {...props}
-          text={`Tasks (${node.taskList?.tasks?.length || 0})`}
+          text={`Tasks (${node.data?.taskList?.tasks?.length || 0})`}
         />
       );
     case TYPES.TextInput:
@@ -30,12 +29,16 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Notice:
       return <Question {...props} text={"Notice"} />;
     case TYPES.FileUpload:
-      return <Question {...props} text={node?.description ?? "File Upload"} />;
+      return (
+        <Question {...props} text={node?.data?.description ?? "File Upload"} />
+      );
     case TYPES.Content:
       return <Question {...props} text={"Content"} />;
     case TYPES.Statement:
     case TYPES.Checklist:
-      return <Question {...props} {...node} />;
+      return (
+        <Question {...props} {...node} text={node?.data?.text ?? "[Empty]"} />
+      );
     case TYPES.Response:
       return <Option {...props} />;
     case TYPES.Portal:

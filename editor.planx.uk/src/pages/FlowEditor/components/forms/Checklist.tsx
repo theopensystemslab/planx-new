@@ -2,7 +2,6 @@ import { Box, Button, IconButton } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
-
 import { FormikHookReturn } from "../../../../types";
 import {
   ImgInput,
@@ -18,18 +17,40 @@ import {
   RichTextInput,
 } from "../../../../ui";
 import { removeAt } from "../../../../utils";
-import {
-  Checklist,
-  Option,
-  TYPES,
-  toggleExpandableChecklist,
-} from "../../data/types";
+import { Checklist, toggleExpandableChecklist, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation, PermissionSelect } from "./shared";
 
+interface Option {
+  id?: string;
+  data: {
+    description?: string;
+    flag?: string;
+    img?: string;
+    text?: string;
+    val?: string;
+  };
+}
+
 interface ChecklistProps extends Checklist {
   handleSubmit?: Function;
-  node?: any;
+  node?: {
+    data?: {
+      allRequired?: boolean;
+      categories?: any;
+      definitionImg?: string;
+      description?: string;
+      fn?: string;
+      howMeasured?: string;
+      img?: string;
+      info?: string;
+      notes?: string;
+      policyRef?: string;
+      text?: string;
+    };
+  };
+  groupedOptions?: any;
+  options?: any;
 }
 
 const OptionEditor: React.FC<{
@@ -47,11 +68,14 @@ const OptionEditor: React.FC<{
         <Input
           // required
           format="bold"
-          value={props.value.text || ""}
+          value={props.value.data.text || ""}
           onChange={(ev) => {
             props.onChange({
               ...props.value,
-              text: ev.target.value,
+              data: {
+                ...props.value.data,
+                text: ev.target.value,
+              },
             });
           }}
           placeholder="Option"
@@ -59,21 +83,27 @@ const OptionEditor: React.FC<{
       </InputRowItem>
 
       <ImgInput
-        img={props.value.img}
+        img={props.value.data.img}
         onChange={(img) => {
           props.onChange({
             ...props.value,
-            img,
+            data: {
+              ...props.value.data,
+              img,
+            },
           });
         }}
       />
 
       <PermissionSelect
-        value={props.value.flag || ""}
+        value={props.value.data.flag || ""}
         onChange={(ev) => {
           props.onChange({
             ...props.value,
-            flag: ev.target.value,
+            data: {
+              ...props.value.data,
+              flag: ev.target.value,
+            },
           });
         }}
       />
@@ -83,12 +113,15 @@ const OptionEditor: React.FC<{
       <InputRow>
         <Input
           format="data"
-          value={props.value.val || ""}
+          value={props.value.data.val || ""}
           placeholder="Data Value"
           onChange={(ev) => {
             props.onChange({
               ...props.value,
-              val: ev.target.value,
+              data: {
+                ...props.value.data,
+                val: ev.target.value,
+              },
             });
           }}
         />
@@ -140,10 +173,12 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                   disableDragAndDrop
                   newValue={() =>
                     ({
-                      text: "",
-                      description: "",
-                      val: "",
-                      flag: "",
+                      data: {
+                        text: "",
+                        description: "",
+                        val: "",
+                        flag: "",
+                      },
                     } as Option)
                   }
                   newValueLabel="add new option"
@@ -176,14 +211,15 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           onChange={(newOptions) => {
             formik.setFieldValue("options", newOptions);
           }}
-          disableDragAndDrop
           newValueLabel="add new option"
           newValue={() =>
             ({
-              text: "",
-              description: "",
-              val: "",
-              flag: "",
+              data: {
+                text: "",
+                description: "",
+                val: "",
+                flag: "",
+              },
             } as Option)
           }
           Editor={OptionEditor}
@@ -194,68 +230,64 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   );
 };
 
-export const ChecklistComponent: React.FC<ChecklistProps> = ({
-  fn = "",
-  howMeasured = "",
-  description = "",
-  text = "",
-  notes = "",
-  policyRef = "",
-  info = "",
-  options,
-  groupedOptions,
-  handleSubmit,
-  img = "",
-  definitionImg = "",
-  allRequired = false,
-}) => {
-  const $t = TYPES.Checklist;
+export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
+  const type = TYPES.Checklist;
 
   const formik = useFormik<Checklist>({
     initialValues: {
-      info,
-      policyRef,
-      howMeasured,
-      notes,
-      text,
-      description,
-      fn,
-      options,
-      groupedOptions,
-      img,
-      definitionImg,
-      allRequired,
+      allRequired: props.node?.data?.allRequired || false,
+      definitionImg: props.node?.data?.definitionImg || "",
+      description: props.node?.data?.description || "",
+      fn: props.node?.data?.fn || "",
+      groupedOptions: props.groupedOptions,
+      howMeasured: props.node?.data?.howMeasured || "",
+      img: props.node?.data?.img || "",
+      info: props.node?.data?.info || "",
+      notes: props.node?.data?.notes || "",
+      options: props.options,
+      policyRef: props.node?.data?.policyRef || "",
+      text: props.node?.data?.text || "",
     },
     onSubmit: ({ options, groupedOptions, ...values }) => {
-      if (handleSubmit) {
-        handleSubmit(
+      if (props.handleSubmit) {
+        props.handleSubmit(
           {
-            $t,
-            ...values,
-            ...(groupedOptions
-              ? {
-                  categories: groupedOptions.map((gr) => ({
-                    title: gr.title,
-                    count: gr.children.length,
-                  })),
-                }
-              : {
-                  categories: undefined,
-                }),
+            type,
+            data: {
+              ...values,
+              ...(groupedOptions
+                ? {
+                    categories: groupedOptions.map((gr) => ({
+                      title: gr.title,
+                      count: gr.children.length,
+                    })),
+                  }
+                : {
+                    categories: undefined,
+                  }),
+            },
           },
           options
             ? options
-                .filter((o) => o.text)
-                .map((o) => ({ ...o, $t: TYPES.Response }))
+                .filter((o: Option) => o.data.text)
+                .map((o) => ({
+                  ...o,
+                  id: o.id || undefined,
+                  type: TYPES.Response,
+                }))
             : groupedOptions
             ? groupedOptions
                 .flatMap((gr) => gr.children)
-                .filter((o) => o.text)
-                .map((o) => ({ ...o, $t: TYPES.Response }))
+                .filter((o: Option) => o.data.text)
+                .map((o) => ({
+                  ...o,
+                  id: o.id || undefined,
+                  type: TYPES.Response,
+                }))
             : []
         );
       } else {
-        alert(JSON.stringify({ $t, ...values, options }, null, 2));
+        alert(JSON.stringify({ type, ...values, options }, null, 2));
       }
     },
     validate: () => {},
@@ -274,7 +306,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Checklist" Icon={ICONS[$t]}>
+        <ModalSectionContent title="Checklist" Icon={ICONS[type]}>
           <InputGroup deletable={false}>
             <InputRow>
               <Input

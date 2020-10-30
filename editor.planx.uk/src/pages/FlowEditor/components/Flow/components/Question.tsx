@@ -3,10 +3,10 @@ import React from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
 import { api, useStore } from "../../../lib/store";
-import { getParentId } from "../../../lib/utils";
+import { ICONS } from "../../shared";
+import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Node from "./Node";
-import { ICONS } from "../../shared";
 
 type Props = any;
 
@@ -41,7 +41,7 @@ const Question: React.FC<Props> = React.memo((props) => {
     api.getState().copyNode(props.id);
   };
 
-  const Icon = ICONS[props.$t];
+  const Icon = ICONS[props.type];
 
   return (
     <>
@@ -60,7 +60,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           ref={drag}
         >
           {Icon && <Icon />}
-          <span>{props.text || "Question"}</span>
+          <span>{props.text}</span>
         </Link>
         <ol>
           {childNodes.map((child: any) => (

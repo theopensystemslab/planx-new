@@ -1,12 +1,13 @@
 import { useQuery } from "@apollo/client";
 import classNames from "classnames";
 import gql from "graphql-tag";
+import { api } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useDrag } from "react-dnd";
 import MoreVertical from "react-feather/dist/icons/more-vertical";
 import { Link } from "react-navi";
 import { rootFlowPath } from "../../../../../routes/utils";
-import { getParentId } from "../../../lib/utils";
+import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 
 const ExternalPortal: React.FC<any> = React.memo(
@@ -22,7 +23,7 @@ const ExternalPortal: React.FC<any> = React.memo(
           }
         }
       `,
-      { variables: { id: props.flowId } }
+      { variables: { id: props.data.flowId } }
     );
 
     const parent = getParentId(props.parent);
@@ -31,7 +32,7 @@ const ExternalPortal: React.FC<any> = React.memo(
       item: {
         id: props.id,
         parent,
-        text: props.text,
+        text: props.data.text,
         type: "PORTAL",
       },
       collect: (monitor) => ({
@@ -43,6 +44,12 @@ const ExternalPortal: React.FC<any> = React.memo(
       return null;
     }
 
+    const handleContext = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      api.getState().copyNode(props.id);
+    };
+
     const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join("/");
 
     let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
@@ -53,7 +60,10 @@ const ExternalPortal: React.FC<any> = React.memo(
     return (
       <>
         <Hanger hidden={isDragging} before={props.id} parent={parent} />
-        <li className={classNames("card", "portal", { isDragging })}>
+        <li
+          className={classNames("card", "portal", { isDragging })}
+          onContextMenu={handleContext}
+        >
           <Link href={`/${href}`} prefetch={false} ref={drag}>
             <span>{href}</span>
           </Link>
@@ -68,7 +78,7 @@ const ExternalPortal: React.FC<any> = React.memo(
 );
 
 const InternalPortal: React.FC<any> = (props) => {
-  let href = props.href || `${rootFlowPath(true)},${props.id}`;
+  let href = props.data.href || `${rootFlowPath(true)},${props.id}`;
 
   const parent = getParentId(props.parent);
 
@@ -81,7 +91,7 @@ const InternalPortal: React.FC<any> = (props) => {
     item: {
       id: props.id,
       parent,
-      text: props.text,
+      text: props.data.text,
       type: "PORTAL",
     },
     collect: (monitor) => ({
@@ -89,12 +99,23 @@ const InternalPortal: React.FC<any> = (props) => {
     }),
   });
 
+  const handleContext = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    api.getState().copyNode(props.id);
+  };
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li className={classNames("card", "portal", { isDragging })}>
-        <Link href={href} prefetch={false} ref={drag}>
-          <span>{props.text}</span>
+        <Link
+          href={href}
+          prefetch={false}
+          ref={drag}
+          onContextMenu={handleContext}
+        >
+          <span>{props.data.text}</span>
         </Link>
         <Link href={editHref} prefetch={false}>
           <MoreVertical />
@@ -105,7 +126,7 @@ const InternalPortal: React.FC<any> = (props) => {
 };
 
 const Portal: React.FC<any> = (props) => {
-  if (props.flowId) {
+  if (props.data.flowId) {
     return <ExternalPortal {...props} />;
   } else {
     return <InternalPortal {...props} />;

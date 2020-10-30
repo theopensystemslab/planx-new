@@ -4,17 +4,20 @@ import { compose, lazy, mount, route, withData, withView } from "navi";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 import { View } from "react-navi";
-
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
 import components from "../pages/FlowEditor/components/forms";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
-import { TYPES, SLUGS } from "../pages/FlowEditor/data/types";
+import { SLUGS, TYPES } from "../pages/FlowEditor/data/types";
 import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
 
 const newNode = route(async (req) => {
-  const { type = "question", before = null, parent = null } = req.params;
+  const {
+    type = "question",
+    before = undefined,
+    parent = undefined,
+  } = req.params;
 
   const extraProps = {} as any;
 
@@ -44,14 +47,14 @@ const newNode = route(async (req) => {
       )
       .sort(sorter);
 
-    extraProps.internalFlows = Object.entries(api.getState().flow.nodes)
+    extraProps.internalFlows = Object.entries(api.getState().flow)
       .filter(
         ([id, v]: any) =>
-          v.$t === TYPES.Portal &&
+          v.type === TYPES.Portal &&
           !window.location.pathname.includes(id) &&
-          v.text
+          v.data?.text
       )
-      .map(([id, { text }]: any) => ({ id, text }))
+      .map(([id, { data }]: any) => ({ id, text: data.text }))
       .sort((a, b) =>
         sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""))
       );
@@ -72,13 +75,16 @@ const newNode = route(async (req) => {
 });
 
 const editNode = route(async (req) => {
-  const { id, before = null, parent = null } = req.params;
+  const { id, before = undefined, parent = undefined } = req.params;
 
-  const node = api.getState().getNode(id) as { $t: TYPES; [key: string]: any };
+  const node = api.getState().getNode(id) as {
+    type: TYPES;
+    [key: string]: any;
+  };
 
   const extraProps = {} as any;
 
-  if (node.$t === TYPES.Portal) {
+  if (node.type === TYPES.Portal) {
     const { data } = await client.query({
       query: gql`
         query GetFlows {
@@ -105,11 +111,11 @@ const editNode = route(async (req) => {
       .sort(sorter);
   }
 
-  const type = SLUGS[node.$t];
+  const type = SLUGS[node.type];
 
   if (type === "checklist" || type === "question") {
     const childNodes = api.getState().childNodesOf(id);
-    if (node.categories) {
+    if (node.data.categories) {
       extraProps.groupedOptions = mapAccum(
         (index: number, category: { title: string; count: number }) => [
           index + category.count,
@@ -119,7 +125,7 @@ const editNode = route(async (req) => {
           },
         ],
         0,
-        node.categories
+        node.data.categories
       )[1];
     } else {
       extraProps.options = childNodes;

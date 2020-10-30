@@ -3,7 +3,6 @@ import { useFormik } from "formik";
 import React from "react";
 import { useNavigation } from "react-navi";
 import { rootFlowPath } from "../../../../routes/utils";
-import { TYPES } from "../../data/types";
 import {
   Input,
   InputGroup,
@@ -11,8 +10,9 @@ import {
   ModalSectionContent,
   OptionButton,
 } from "../../../../ui";
-import { IEditor, parseFormValues } from "./shared";
+import { TYPES } from "../../data/types";
 import { ICONS } from "../shared";
+import { IEditor, parseFormValues } from "./shared";
 
 interface IFindProperty extends IEditor {
   addressLineOne?: boolean;
@@ -90,12 +90,11 @@ const FindProperty: React.FC<IFindProperty> = ({
       handleSubmit,
     },
     onSubmit: (values) => {
-      const parsed = parseFormValues(Object.entries(values), {
-        $t: TYPES.FindProperty,
-      });
+      const parsed = parseFormValues(Object.entries(values));
 
       if (handleSubmit) {
-        handleSubmit(parsed);
+        handleSubmit({ type: TYPES.FindProperty, data: parsed });
+
         navigate(rootFlowPath(true));
       } else {
         alert(JSON.stringify(parsed, null, 2));

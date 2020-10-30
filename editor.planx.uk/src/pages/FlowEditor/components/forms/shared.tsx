@@ -1,18 +1,18 @@
-import React from "react";
 import { MenuItem } from "@material-ui/core";
 import { InfoOutlined } from "@material-ui/icons";
 import trim from "lodash/trim";
-import flags from "../../data/flags";
+import React from "react";
 import {
-  ModalSection,
-  ModalSectionContent,
+  ImgInput,
   InputGroup,
   InputRow,
+  ModalSection,
+  ModalSectionContent,
+  RichTextInput,
   SelectInput,
   SelectInputProps,
-  RichTextInput,
-  ImgInput,
 } from "../../../../ui";
+import flags from "../../data/flags";
 
 export interface IEditor {
   headerTextField?: string;

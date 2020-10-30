@@ -5,7 +5,6 @@ import { useFormik } from "formik";
 import React from "react";
 import { useNavigation } from "react-navi";
 import { rootFlowPath } from "../../../../routes/utils";
-import { TYPES } from "../../data/types";
 import {
   ColorPicker,
   Input,
@@ -15,8 +14,9 @@ import {
   ModalSectionContent,
   VisibilityToggle,
 } from "../../../../ui";
-import { IEditor, parseFormValues } from "./shared";
+import { TYPES } from "../../data/types";
 import { ICONS } from "../shared";
+import { IEditor, parseFormValues } from "./shared";
 
 interface IPropertyInformation extends IEditor {
   aboutField?: string;
@@ -61,11 +61,10 @@ const PropertyInformation: React.FC<IPropertyInformation> = ({
       ],
     },
     onSubmit: (values) => {
-      const parsed = parseFormValues(Object.entries(values), {
-        $t: TYPES.PropertyInformation,
-      });
+      const parsed = parseFormValues(Object.entries(values));
       if (handleSubmit) {
-        handleSubmit(parsed);
+        handleSubmit({ type: TYPES.PropertyInformation, data: parsed });
+
         navigate(rootFlowPath(true));
       } else {
         alert(JSON.stringify(parsed, null, 2));

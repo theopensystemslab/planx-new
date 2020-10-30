@@ -6,11 +6,10 @@ import {
   DragDropContext,
   Draggable,
   DraggableProvided,
-  DropResult,
   Droppable,
   DroppableProvided,
+  DropResult,
 } from "react-beautiful-dnd";
-
 import { removeAt, setAt } from "../utils";
 
 export interface EditorProps<T> {

@@ -1,10 +1,12 @@
+import { ROOT_NODE_KEY } from "planx-graph";
+
 export const getParentId = (parent: any) => {
   const [, ...ids] = window.location.pathname.split(",");
-  let correctParent = parent || null;
+  let correctParent = parent;
   if (!correctParent && ids.length > 0) {
     correctParent = ids.pop();
   }
-  return correctParent;
+  return correctParent || ROOT_NODE_KEY;
 };
 
 // export const safeKeys = (ob: any) =>

@@ -3,8 +3,8 @@ import React from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
 import flags from "../../../data/flags";
-import { api, useStore } from "../../../lib/store";
-import { getParentId } from "../../../lib/utils";
+import { useStore } from "../../../lib/store";
+import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 
 const Result: React.FC<any> = React.memo((props) => {
@@ -32,12 +32,6 @@ const Result: React.FC<any> = React.memo((props) => {
     href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
   }
 
-  const handleContext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    api.getState().copyNode(props.id);
-  };
-
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
@@ -48,12 +42,7 @@ const Result: React.FC<any> = React.memo((props) => {
           isNote: childNodes.length === 0,
         })}
       >
-        <Link
-          href={href}
-          prefetch={false}
-          onContextMenu={handleContext}
-          ref={drag}
-        >
+        <Link href={href} prefetch={false} ref={drag}>
           <span>{props.text}</span>
         </Link>
         <ol>

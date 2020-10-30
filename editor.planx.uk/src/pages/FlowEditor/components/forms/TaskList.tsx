@@ -1,16 +1,16 @@
-import React, { ChangeEvent } from "react";
 import { makeStyles } from "@material-ui/core";
-import { EditorProps } from "../../../../ui/ListManager";
+import { useFormik } from "formik";
+import React, { ChangeEvent } from "react";
 import {
-  ListManager,
   Input,
   InputRow,
-  RichTextInput,
   InternalNotes,
+  ListManager,
   ModalSection,
   ModalSectionContent,
+  RichTextInput,
 } from "../../../../ui";
-import { useFormik } from "formik";
+import { EditorProps } from "../../../../ui/ListManager";
 import { Task, TaskList, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 
@@ -110,13 +110,13 @@ const TaskListComponent: React.FC<Props> = (props) => {
     initialValues: {
       taskList: {
         // TODO: improve runtime validation here (joi, io-ts)
-        notes: props.node?.taskList?.notes || "",
-        tasks: props.node?.taskList?.tasks || [],
+        notes: props.node?.data?.taskList?.notes || "",
+        tasks: props.node?.data?.taskList?.tasks || [],
       },
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ $t: TYPES.TaskList, ...newValues });
+        props.handleSubmit({ type: TYPES.TaskList, data: newValues });
       }
     },
     validate: () => {},
