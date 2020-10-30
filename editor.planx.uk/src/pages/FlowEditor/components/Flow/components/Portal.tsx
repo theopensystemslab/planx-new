@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import classNames from "classnames";
 import gql from "graphql-tag";
+import { api } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useDrag } from "react-dnd";
 import MoreVertical from "react-feather/dist/icons/more-vertical";
@@ -43,6 +44,12 @@ const ExternalPortal: React.FC<any> = React.memo(
       return null;
     }
 
+    const handleContext = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      api.getState().copyNode(props.id);
+    };
+
     const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join("/");
 
     let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
@@ -53,7 +60,10 @@ const ExternalPortal: React.FC<any> = React.memo(
     return (
       <>
         <Hanger hidden={isDragging} before={props.id} parent={parent} />
-        <li className={classNames("card", "portal", { isDragging })}>
+        <li
+          className={classNames("card", "portal", { isDragging })}
+          onContextMenu={handleContext}
+        >
           <Link href={`/${href}`} prefetch={false} ref={drag}>
             <span>{href}</span>
           </Link>
@@ -89,11 +99,22 @@ const InternalPortal: React.FC<any> = (props) => {
     }),
   });
 
+  const handleContext = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    api.getState().copyNode(props.id);
+  };
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li className={classNames("card", "portal", { isDragging })}>
-        <Link href={href} prefetch={false} ref={drag}>
+        <Link
+          href={href}
+          prefetch={false}
+          ref={drag}
+          onContextMenu={handleContext}
+        >
           <span>{props.data.text}</span>
         </Link>
         <Link href={editHref} prefetch={false}>
