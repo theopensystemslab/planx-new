@@ -1,20 +1,9 @@
 import { enablePatches, produceWithPatches } from "immer";
 import zip from "lodash/zip";
+import { ImmerJSONPatch, OT } from "./types";
 enablePatches();
 
-interface Patch {
-  op: "add" | "remove" | "replace";
-  path: Array<string | number>;
-  value?: any;
-}
-
-interface Op {
-  p: Array<string | number>;
-  li?;
-  ld?;
-  oi?;
-  od?;
-}
+export const ROOT_NODE_KEY = "_root";
 
 interface Node {
   id?: string;
@@ -33,11 +22,11 @@ const numberOfEdgesTo = (id: string, graph: Graph): number =>
 // export const isClone = (id, graph): boolean => numberOfEdgesTo(id, graph) > 1;
 
 const convertPatchesToOps = (
-  patches: Array<Patch>,
-  inversePatches: Array<Patch>
-): Array<Op> =>
+  patches: Array<ImmerJSONPatch>,
+  inversePatches: Array<ImmerJSONPatch>
+): Array<OT.Op> =>
   zip(patches, inversePatches).map(([fwd, bak]) => {
-    let op: Op = {
+    let op: any = {
       p: fwd.path,
     };
 
@@ -70,7 +59,7 @@ const convertPatchesToOps = (
     return op;
   });
 
-const wrap = (graph: Graph, fn: (draft) => void): [Graph, Array<Op>] => {
+const wrap = (graph: Graph, fn: (draft) => void): [Graph, Array<OT.Op>] => {
   const [result, patches, inversePatches] = produceWithPatches(graph, fn);
   return [result, convertPatchesToOps(patches, inversePatches)];
 };
@@ -114,12 +103,12 @@ export const add = (
   { id = uniqueId(), ...nodeData },
   {
     children = [],
-    parent = "_root",
+    parent = ROOT_NODE_KEY,
     before = undefined,
   }: { children?: Array<Node>; parent?: string; before?: string } = {}
-) => (graph: Graph = {}): [Graph, Array<Op>] =>
+) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
   wrap(graph, (draft) => {
-    draft._root = draft._root || {};
+    draft[ROOT_NODE_KEY] = draft[ROOT_NODE_KEY] || {};
 
     const _add = (
       { id = uniqueId(), ...nodeData },
@@ -154,10 +143,10 @@ export const add = (
 export const clone = (
   id: string,
   {
-    toParent = "_root",
+    toParent = ROOT_NODE_KEY,
     toBefore = undefined,
   }: { toParent?: string; toBefore?: string } = {}
-) => (graph: Graph = {}): [Graph, Array<Op>] =>
+) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
   wrap(graph, (draft) => {
     if (!draft[id]) throw new Error("id not found");
     else if (!draft[toParent]) throw new Error("toParent not found");
@@ -187,7 +176,7 @@ export const move = (
     toParent = undefined,
     toBefore = undefined,
   }: { toParent?: string; toBefore?: string } = {}
-) => (graph: Graph = {}): [Graph, Array<Op>] =>
+) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
   wrap(graph, (draft) => {
     toParent = toParent || parent;
 
@@ -219,7 +208,7 @@ export const move = (
 
 export const remove = (id: string, parent: string) => (
   graph: Graph = {}
-): [Graph, Array<Op>] =>
+): [Graph, Array<OT.Op>] =>
   wrap(graph, (draft) => {
     const _remove = (id, parent) => {
       if (!draft[id]) throw new Error("id not found");

@@ -1,5 +1,5 @@
 import React from "react";
-import { ROOT_NODE_KEY } from "../../../../planx-graph/src/graph";
+import { ROOT_NODE_KEY } from "../../../../lib/planx-graph/graph";
 import { useStore } from "../../lib/store";
 import EndPoint from "./components/EndPoint";
 import Hanger from "./components/Hanger";

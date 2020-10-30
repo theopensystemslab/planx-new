@@ -9,13 +9,13 @@ import { customAlphabet } from "nanoid";
 import pgarray from "pg-array";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
-import Graph, { ROOT_NODE_KEY } from "../../../planx-graph/src/graph";
 import {
   add,
   clone,
   move,
   remove,
-} from "../../../planx-graph/src/tests/immer/graph";
+  ROOT_NODE_KEY,
+} from "../../../lib/planx-graph/graph";
 import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
@@ -106,18 +106,20 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   updateNode: ({ id, data }, children: any[], cb = send) => {
-    const g = new Graph(uid);
-    g.load(get().flow);
-    const ops = g.update(id, data, { children, removeKeyIfMissing: true });
-    cb(ops);
+    alert("not implemented");
+    // const g = new Graph(uid);
+    // g.load(get().flow);
+    // const ops = g.update(id, data, { children, removeKeyIfMissing: true });
+    // cb(ops);
   },
 
   makeUnique: (id, parent = undefined, cb = send) => {
-    // TODO: reimplement this!
-    const g = new Graph(uid);
-    g.load(get().flow);
-    const ops = g.makeUnique(id, { parent });
-    cb(ops);
+    alert("not implemented");
+    // // TODO: reimplement this!
+    // const g = new Graph(uid);
+    // g.load(get().flow);
+    // const ops = g.makeUnique(id, { parent });
+    // cb(ops);
   },
 
   removeNode: (id, parent = undefined) => {

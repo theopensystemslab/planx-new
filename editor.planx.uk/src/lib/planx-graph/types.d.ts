@@ -33,3 +33,9 @@ export namespace OT {
     | OT.Array.Remove
     | OT.Array.Replace;
 }
+
+export interface ImmerJSONPatch {
+  op: "add" | "remove" | "replace";
+  path: Array<string | number>;
+  value?: any;
+}
