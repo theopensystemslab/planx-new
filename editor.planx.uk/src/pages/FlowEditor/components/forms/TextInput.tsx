@@ -102,13 +102,13 @@ const TextInputComponent: React.FC<Props> = (props) => {
     initialValues: {
       text: {
         // TODO: improve runtime validation here (joi, io-ts)
-        title: props.node?.title || "",
-        description: props.node?.description || "",
-        placeholder: props.node?.placeholder || "",
-        definitionImg: props.node?.definitionImg,
-        howMeasured: props.node?.howMeasured,
-        policyRef: props.node?.policyRef,
-        info: props.node?.info,
+        title: props.node?.data?.title || "",
+        description: props.node?.data?.description || "",
+        placeholder: props.node?.data?.placeholder || "",
+        definitionImg: props.node?.data?.definitionImg,
+        howMeasured: props.node?.data?.howMeasured,
+        policyRef: props.node?.data?.policyRef,
+        info: props.node?.data?.info,
       },
     },
     onSubmit: (newValues) => {

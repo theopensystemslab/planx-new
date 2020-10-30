@@ -110,8 +110,8 @@ const TaskListComponent: React.FC<Props> = (props) => {
     initialValues: {
       taskList: {
         // TODO: improve runtime validation here (joi, io-ts)
-        notes: props.node?.taskList?.notes || "",
-        tasks: props.node?.taskList?.tasks || [],
+        notes: props.node?.data?.taskList?.notes || "",
+        tasks: props.node?.data?.taskList?.tasks || [],
       },
     },
     onSubmit: (newValues) => {

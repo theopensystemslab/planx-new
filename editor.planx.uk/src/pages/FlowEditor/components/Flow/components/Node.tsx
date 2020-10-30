@@ -21,7 +21,7 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question
           {...props}
-          text={`Tasks (${node.taskList?.tasks?.length || 0})`}
+          text={`Tasks (${node.data?.taskList?.tasks?.length || 0})`}
         />
       );
     case TYPES.TextInput:
@@ -29,7 +29,9 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Notice:
       return <Question {...props} text={"Notice"} />;
     case TYPES.FileUpload:
-      return <Question {...props} text={node?.description ?? "File Upload"} />;
+      return (
+        <Question {...props} text={node?.data?.description ?? "File Upload"} />
+      );
     case TYPES.Content:
       return <Question {...props} text={"Content"} />;
     case TYPES.Statement:
