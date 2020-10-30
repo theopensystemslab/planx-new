@@ -47,22 +47,19 @@ const NodeTypeSelect: React.FC<{
       <option value={TYPES.Checklist}>Checklist</option>
     </optgroup>
     <optgroup label="Inputs">
-      <option disabled value="text-inputs">
-        Text Input
-      </option>
+      <option value={TYPES.TextInput}>Text Input</option>
+      <option value={TYPES.FileUpload}>File Upload</option>
       <option disabled value="number-inputs">
         Number Input
       </option>
       <option disabled value="date-inputs">
         Date Input
       </option>
-      <option value={TYPES.FileUpload}>File Upload</option>
       <option disabled value="address-inputs">
         Address Input
       </option>
     </optgroup>
     <optgroup label="Information">
-      <option value={TYPES.TextInput}>Text Input</option>
       <option value={TYPES.TaskList}>Task List</option>
       <option value={TYPES.Notice}>Notice</option>
       <option value={TYPES.Result}>Result</option>
