@@ -208,6 +208,9 @@ export const move = (
     if (!draft[id]) throw new Error("id not found");
     else if (!draft[parent]) throw new Error("parent not found");
     else if (!draft[toParent]) throw new Error("toParent not found");
+    else if (parent !== toParent && draft[toParent].edges?.includes(id)) {
+      throw new Error("cannot move to same parent");
+    }
 
     let idx = draft[parent].edges.indexOf(id);
     if (idx >= 0) {

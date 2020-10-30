@@ -143,4 +143,18 @@ describe("error handling", () => {
       })
     ).toThrowError("cycle");
   });
+
+  test("cannot move a clone to same parent", () => {
+    expect(() =>
+      move("clone", "_root", { toParent: "a" })({
+        _root: {
+          edges: ["a", "clone"],
+        },
+        a: {
+          edges: ["clone"],
+        },
+        clone: {},
+      })
+    ).toThrowError("same parent");
+  });
 });
