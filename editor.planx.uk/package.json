@@ -28,7 +28,7 @@
     "lodash": "^4.17.20",
     "mapbox-gl": "^1.12.0",
     "mui-rte": "^1.25.0",
-    "nanoid": "^3.1.15",
+    "nanoid": "^3.1.16",
     "natsort": "^2.0.2",
     "navi": "^0.14.0",
     "pg-array": "^0.5.0",
@@ -48,7 +48,7 @@
     "react-markdown": "^4.3.1",
     "react-navi": "^0.14.4",
     "react-navi-helmet-async": "^0.14.4",
-    "react-scripts": "3.4.3",
+    "react-scripts": "^4.0.0",
     "reconnecting-websocket": "^4.4.0",
     "rxjs": "^6.6.3",
     "scroll-into-view-if-needed": "^2.2.26",
@@ -58,9 +58,9 @@
     "zustand": "^2.2.4"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
     "@types/graphlib": "^2.1.7",
     "@types/jest": "^24.9.1",
     "@types/lodash": "^4.14.162",
@@ -81,6 +81,7 @@
     "prettier": "^2.1.2",
     "prettier-plugin-import-sort": "^0.0.6",
     "react-app-rewired": "^2.1.6",
+    "react-refresh": "^0.9.0",
     "typescript": "^3.9.7",
     "typescript-json-validator": "^2.4.2"
   },
@@ -93,7 +94,10 @@
     "compile-types": "typescript-json-validator src/types/index.d.ts --collection --useNamedExport"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {

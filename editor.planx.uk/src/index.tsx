@@ -11,7 +11,6 @@ import "./app.css";
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import { client } from "./lib/graphql";
 import routes from "./routes";
-import * as serviceWorker from "./serviceWorker";
 import theme from "./theme";
 
 const rootEl = document.getElementById("root") as HTMLElement;
@@ -55,8 +54,3 @@ render(
   </ApolloProvider>,
   rootEl
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
