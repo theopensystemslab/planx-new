@@ -2,7 +2,6 @@ import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
 import debounce from "lodash/debounce";
 import difference from "lodash/difference";
-import flattenDeep from "lodash/flattenDeep";
 import omit from "lodash/omit";
 import uniq from "lodash/uniq";
 import { customAlphabet } from "nanoid";
@@ -29,8 +28,7 @@ const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
 let doc;
 
-const send = (...ops) => {
-  ops = flattenDeep(ops);
+const send = (ops) => {
   if (ops.length > 0) {
     console.log({ ops });
     doc.submitOp(ops);
@@ -131,13 +129,11 @@ export const [useStore, api] = create((set, get) => ({
     id: string,
     parent = undefined,
     toBefore = undefined,
-    toParent = undefined,
-    clone = false,
-    cb = send
+    toParent = undefined
   ) {
     try {
       const [, ops] = move(id, parent, { toParent, toBefore })(get().flow);
-      cb(ops);
+      send(ops);
       get().resetPreview();
     } catch (err) {
       alert(err.message);
