@@ -73,6 +73,41 @@ const wrap = (graph: Graph, fn: (draft) => void): [Graph, Array<Op>] => {
   return [result, convertPatchesToOps(patches, inversePatches)];
 };
 
+const isCyclicUtil = (
+  src: string,
+  visited: Record<string, boolean>,
+  recStack: Record<string, boolean>,
+  graph: Graph
+): boolean => {
+  if (recStack[src]) return true;
+  else if (visited[src]) return false;
+
+  visited[src] = true;
+  recStack[src] = true;
+
+  const { edges = [] } = graph[src];
+  for (let tgt of edges) {
+    if (isCyclicUtil(tgt, visited, recStack, graph)) return true;
+  }
+  recStack[src] = false;
+  return false;
+};
+
+const isCyclic = (graph: Graph): boolean => {
+  const visited: Record<string, boolean> = {};
+  const recStack: Record<string, boolean> = {};
+
+  Object.keys(graph).forEach((key) => {
+    visited[key] = false;
+    recStack[key] = false;
+  });
+
+  for (let key of Object.keys(visited)) {
+    if (isCyclicUtil(key, visited, recStack, graph)) return true;
+  }
+  return false;
+};
+
 export const add = (
   { id = String(Math.random()), ...nodeData },
   {
@@ -139,6 +174,8 @@ export const clone = (
     } else {
       draft[toParent].edges.push(id);
     }
+
+    if (isCyclic(draft)) throw new Error("cannot create cycle in graph");
   });
 
 export const move = (
@@ -174,6 +211,8 @@ export const move = (
     } else {
       draft[toParent].edges.push(id);
     }
+
+    if (isCyclic(draft)) throw new Error("cannot create cycle in graph");
   });
 
 export const remove = (id: string, parent: string) => (

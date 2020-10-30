@@ -130,5 +130,17 @@ describe("error handling", () => {
     ).toThrowError("parent does not connect to id");
   });
 
-  test.todo("prevent cycles");
+  test("cannot create cycles", () => {
+    expect(() =>
+      move("a", "_root", { toParent: "b" })({
+        _root: {
+          edges: ["a"],
+        },
+        a: {
+          edges: ["b"],
+        },
+        b: {},
+      })
+    ).toThrowError("cycle");
+  });
 });

@@ -82,9 +82,21 @@ describe("error handling", () => {
     ).toThrowError("toBefore does not exist in toParent");
   });
 
-  test.todo("prevent cycles");
+  test("cannot create cycles", () => {
+    expect(() =>
+      clone("a", { toParent: "b" })({
+        _root: {
+          edges: ["a"],
+        },
+        a: {
+          edges: ["b"],
+        },
+        b: {},
+      })
+    ).toThrowError("cycle");
+  });
 
-  test.only("cannot share same parent", () => {
+  test("cannot share same parent", () => {
     expect(() =>
       clone("a", { toParent: "_root" })({
         _root: {
