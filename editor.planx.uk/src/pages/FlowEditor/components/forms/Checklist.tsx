@@ -34,7 +34,23 @@ interface Option {
 
 interface ChecklistProps extends Checklist {
   handleSubmit?: Function;
-  node?: any;
+  node?: {
+    data?: {
+      allRequired?: boolean;
+      categories?: any;
+      definitionImg?: string;
+      description?: string;
+      fn?: string;
+      howMeasured?: string;
+      img?: string;
+      info?: string;
+      notes?: string;
+      policyRef?: string;
+      text?: string;
+    };
+  };
+  groupedOptions?: any;
+  options?: any;
 }
 
 const OptionEditor: React.FC<{
@@ -214,41 +230,28 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   );
 };
 
-export const ChecklistComponent: React.FC<ChecklistProps> = ({
-  fn = "",
-  howMeasured = "",
-  description = "",
-  text = "",
-  notes = "",
-  policyRef = "",
-  info = "",
-  options,
-  groupedOptions,
-  handleSubmit,
-  img = "",
-  definitionImg = "",
-  allRequired = false,
-}) => {
+export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
+  console.log({ props });
   const type = TYPES.Checklist;
 
   const formik = useFormik<Checklist>({
     initialValues: {
-      info,
-      policyRef,
-      howMeasured,
-      notes,
-      text,
-      description,
-      fn,
-      options,
-      groupedOptions,
-      img,
-      definitionImg,
-      allRequired,
+      allRequired: props.node?.data?.allRequired || false,
+      definitionImg: props.node?.data?.definitionImg || "",
+      description: props.node?.data?.description || "",
+      fn: props.node?.data?.fn || "",
+      groupedOptions: props.groupedOptions,
+      howMeasured: props.node?.data?.howMeasured || "",
+      img: props.node?.data?.img || "",
+      info: props.node?.data?.info || "",
+      notes: props.node?.data?.notes || "",
+      options: props.options,
+      policyRef: props.node?.data?.policyRef || "",
+      text: props.node?.data?.text || "",
     },
     onSubmit: ({ options, groupedOptions, ...values }) => {
-      if (handleSubmit) {
-        handleSubmit(
+      if (props.handleSubmit) {
+        props.handleSubmit(
           {
             type,
             data: {
@@ -269,8 +272,8 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
             ? options
                 .filter((o: Option) => o.data.text)
                 .map((o) => ({
-                  id: o.id || undefined,
                   ...o,
+                  id: o.id || undefined,
                   type: TYPES.Response,
                 }))
             : groupedOptions
@@ -278,8 +281,8 @@ export const ChecklistComponent: React.FC<ChecklistProps> = ({
                 .flatMap((gr) => gr.children)
                 .filter((o: Option) => o.data.text)
                 .map((o) => ({
-                  id: o.id || undefined,
                   ...o,
+                  id: o.id || undefined,
                   type: TYPES.Response,
                 }))
             : []

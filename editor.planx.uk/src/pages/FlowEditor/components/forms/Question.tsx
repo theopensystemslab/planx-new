@@ -29,19 +29,22 @@ interface Option {
 }
 
 interface Props {
-  fn?: string;
-  howMeasured?: string;
-  description?: string;
-  handleClose?: Function;
-  handleSubmit?: Function;
-  notes?: string;
+  node: {
+    data?: {
+      definitionImg?: string;
+      description?: string;
+      fn?: string;
+      howMeasured?: string;
+      img?: string;
+      info?: string;
+      notes?: string;
+      policyRef?: string;
+      text?: string;
+      type?: string;
+    };
+  };
   options?: Option[];
-  policyRef?: string;
-  text?: string;
-  type?: string;
-  info?: string;
-  img?: string;
-  definitionImg?: string;
+  handleSubmit?: Function;
 }
 
 const OptionEditor: React.FC<{
@@ -146,33 +149,21 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   );
 };
 
-export const Question: React.FC<Props> = ({
-  fn = "",
-  howMeasured = "",
-  description = "",
-  text = "",
-  notes = "",
-  policyRef = "",
-  info = "",
-  options = [],
-  handleSubmit,
-  img = "",
-  definitionImg = "",
-}) => {
+export const Question: React.FC<Props> = (props) => {
   const type = TYPES.Statement;
 
   const formik = useFormik({
     initialValues: {
-      info,
-      policyRef,
-      howMeasured,
-      notes,
-      text,
-      description,
-      fn,
-      options,
-      img,
-      definitionImg,
+      definitionImg: props.node?.data?.definitionImg || "",
+      description: props.node?.data?.description || "",
+      fn: props.node?.data?.fn || "",
+      howMeasured: props.node?.data?.howMeasured || "",
+      img: props.node?.data?.img || "",
+      info: props.node?.data?.info || "",
+      notes: props.node?.data?.notes || "",
+      options: props.options || [],
+      policyRef: props.node?.data?.policyRef || "",
+      text: props.node?.data?.text || "",
     },
     onSubmit: ({ options, ...values }) => {
       const children = options
@@ -183,8 +174,8 @@ export const Question: React.FC<Props> = ({
           data: o.data,
         }));
 
-      if (handleSubmit) {
-        handleSubmit({ type, data: values }, children);
+      if (props.handleSubmit) {
+        props.handleSubmit({ type, data: values }, children);
       } else {
         alert(JSON.stringify({ type, ...values, children }, null, 2));
       }
