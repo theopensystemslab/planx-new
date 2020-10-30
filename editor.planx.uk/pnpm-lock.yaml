@@ -15,12 +15,10 @@ dependencies:
   draft-js-export-markdown: 1.4.0_draft-js@0.11.7
   draft-js-import-markdown: 1.4.0_draft-js@0.11.7
   formik: 2.2.1_react@16.14.0
-  graphlib: 2.1.8
   graphql: 15.4.0
   graphql-tag: 2.11.0_graphql@15.4.0
   immer: 7.0.14
   js-cookie: 2.2.1
-  jsondiffpatch: 0.4.1
   lodash: 4.17.20
   mapbox-gl: 1.12.0
   mui-rte: 1.25.0_105f397d79457dc9365b4e349380b9b3
@@ -50,13 +48,11 @@ dependencies:
   scroll-into-view-if-needed: 2.2.26
   sharedb: 1.4.2
   subscriptions-transport-ws: 0.9.18_graphql@15.4.0
-  uuid: 8.3.1
   zustand: 2.2.4_react@16.14.0
 devDependencies:
   '@testing-library/jest-dom': 5.11.5
   '@testing-library/react': 11.1.0_react-dom@16.14.0+react@16.14.0
   '@testing-library/user-event': 12.1.10
-  '@types/graphlib': 2.1.7
   '@types/jest': 26.0.15
   '@types/lodash': 4.14.164
   '@types/node': 12.19.3
@@ -65,8 +61,6 @@ devDependencies:
   '@types/react-beautiful-dnd': 13.0.0
   '@types/react-color': 3.0.4
   '@types/react-dom': 16.9.9
-  '@types/uuid': 8.3.0
-  ajv: 6.12.6
   husky: 4.3.0
   import-sort-style-module: 6.0.0
   lint-staged: 10.5.0
@@ -2229,10 +2223,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-mWA/4zFQhfvOA8zWkXobwJvBD7vzcxgrOQ0J5CH1votGqdq9m7+FwtGaqyCZqC3NyyBkc9z4m+iry4LlqcMWJg==
-  /@types/graphlib/2.1.7:
-    dev: true
-    resolution:
-      integrity: sha512-K7T1n6U2HbTYu+SFHlBjz/RH74OA2D/zF1qlzn8uXbvB4uRg7knOM85ugS2bbXI1TXMh7rLqk4OVRwIwEBaixg==
   /@types/history/4.7.8:
     dev: false
     resolution:
@@ -2397,10 +2387,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-FvUupuM3rlRsRtCN+fDudtmytGO6iHJuuRKS1Ss0pG5z8oX0diNEw94UEL7hgDbpN94rgaK5R7sWm6RrSkZuAQ==
-  /@types/uuid/8.3.0:
-    dev: true
-    resolution:
-      integrity: sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
   /@types/webpack-sources/2.0.0:
     dependencies:
       '@types/node': 12.19.3
@@ -5007,10 +4993,6 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-5tQykt+LqfJFBEYaDITx7S7cR7mJ/zQmLXZ2qt5w04ainYZw6tBf9dBunMjVeVOdYVRUzUOE4HkY5J7+uttb5Q==
-  /diff-match-patch/1.0.5:
-    dev: false
-    resolution:
-      integrity: sha512-IayShXAgj/QMXgB0IWmKx+rOPuGMhqm5w6jvFxmVenXKIzRqTAAsbBPT3kWQeGANj3jGgvcvv4yK6SxqYmikgw==
   /diff-sequences/26.5.0:
     engines:
       node: '>= 10.14.2'
@@ -6682,12 +6664,6 @@ packages:
   /graceful-fs/4.2.4:
     resolution:
       integrity: sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
-  /graphlib/2.1.8:
-    dependencies:
-      lodash: 4.17.20
-    dev: false
-    resolution:
-      integrity: sha512-jcLLfkpoVGmH7/InMC/1hIvOPSUh38oJtGhvrOFGzioE1DZ+0YW16RgmOJhHiuWTvGiJQ9Z1Ik43JvkRPRvE+A==
   /graphql-tag/2.11.0_graphql@15.4.0:
     dependencies:
       graphql: 15.4.0
@@ -8487,16 +8463,6 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-KXPvOm8K9IJKFM0bmdn8QXh7udDh1g/giieX0NLCaMnb4hEiVFqnop2ImTXCc5e0/oHz3LTqmHGtExn5hfMkOA==
-  /jsondiffpatch/0.4.1:
-    dependencies:
-      chalk: 2.4.2
-      diff-match-patch: 1.0.5
-    dev: false
-    engines:
-      node: '>=8.17.0'
-    hasBin: true
-    resolution:
-      integrity: sha512-t0etAxTUk1w5MYdNOkZBZ8rvYYN5iL+2dHCCx/DpkFm/bW28M6y5nUS83D4XdZiHy35Fpaw6LBb+F88fHZnVCw==
   /jsonfile/4.0.0:
     optionalDependencies:
       graceful-fs: 4.2.4
@@ -14145,6 +14111,7 @@ packages:
   /uuid/8.3.1:
     dev: false
     hasBin: true
+    optional: true
     resolution:
       integrity: sha512-FOmRr+FmWEIG8uhZv6C2bTgEVXsHk08kE7mPlrBbEe+c3r9pjceVPgupIfNIhc4yx55H69OXANrUaSuu9eInKg==
   /v8-compile-cache/2.2.0:
@@ -14890,7 +14857,6 @@ specifiers:
   '@testing-library/react': ^11.1.0
   '@testing-library/user-event': ^12.1.10
   '@turf/area': ^6.0.1
-  '@types/graphlib': ^2.1.7
   '@types/jest': ^26.0.15
   '@types/lodash': ^4.14.162
   '@types/node': ^12.19.1
@@ -14899,8 +14865,6 @@ specifiers:
   '@types/react-beautiful-dnd': ^13.0.0
   '@types/react-color': ^3.0.4
   '@types/react-dom': ^16.9.8
-  '@types/uuid': ^8.3.0
-  ajv: ^6.12.6
   array-move: ^3.0.1
   axios: ^0.19.2
   axios-hooks: ^2.1.0
@@ -14910,14 +14874,12 @@ specifiers:
   draft-js-export-markdown: ^1.4.0
   draft-js-import-markdown: ^1.4.0
   formik: ^2.2.0
-  graphlib: ^2.1.8
   graphql: ^15.3.0
   graphql-tag: ^2.11.0
   husky: ^4.3.0
   immer: ^7.0.14
   import-sort-style-module: ^6.0.0
   js-cookie: ^2.2.1
-  jsondiffpatch: ^0.4.1
   lint-staged: ^10.4.2
   lodash: ^4.17.20
   mapbox-gl: ^1.12.0
@@ -14956,5 +14918,4 @@ specifiers:
   subscriptions-transport-ws: ^0.9.18
   typescript: ^3.9.7
   typescript-json-validator: ^2.4.2
-  uuid: ^8.3.1
   zustand: ^2.2.4
