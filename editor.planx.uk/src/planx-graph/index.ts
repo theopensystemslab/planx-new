@@ -25,7 +25,7 @@ const uniqueId = customAlphabet(en)(
 const numberOfEdgesTo = (id: string, graph: Graph): number =>
   Object.values(graph).filter(({ edges = [] }) => edges.includes(id)).length;
 
-// export const isClone = (id, graph): boolean => numberOfEdgesTo(id, graph) > 1;
+export const isClone = (id, graph): boolean => numberOfEdgesTo(id, graph) > 1;
 
 const convertPatchesToOps = (
   patches: Array<ImmerJSONPatch>,
@@ -105,6 +105,34 @@ const isCyclic = (graph: Graph): boolean => {
   return false;
 };
 
+const _add = (
+  draft,
+  { id = uniqueId(), ...nodeData },
+  { children = [], parent, before = undefined }
+) => {
+  if (draft[id]) throw new Error("id exists");
+  else if (!draft[parent]) throw new Error("parent not found");
+
+  draft[id] = nodeData;
+
+  if (draft[parent].edges) {
+    if (before) {
+      const idx = draft[parent].edges.indexOf(before);
+      if (idx >= 0) {
+        draft[parent].edges.splice(idx, 0, id);
+      } else throw new Error("before not found");
+    } else {
+      draft[parent].edges.push(id);
+    }
+  } else {
+    draft[parent].edges = [id];
+  }
+
+  children.forEach((child) => {
+    _add(draft, child, { parent: id });
+  });
+};
+
 export const add = (
   { id = uniqueId(), ...nodeData },
   {
@@ -115,35 +143,7 @@ export const add = (
 ) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
   wrap(graph, (draft) => {
     draft[ROOT_NODE_KEY] = draft[ROOT_NODE_KEY] || {};
-
-    const _add = (
-      { id = uniqueId(), ...nodeData },
-      { children = [], parent, before = undefined }
-    ) => {
-      if (draft[id]) throw new Error("id exists");
-      else if (!draft[parent]) throw new Error("parent not found");
-
-      draft[id] = nodeData;
-
-      if (draft[parent].edges) {
-        if (before) {
-          const idx = draft[parent].edges.indexOf(before);
-          if (idx >= 0) {
-            draft[parent].edges.splice(idx, 0, id);
-          } else throw new Error("before not found");
-        } else {
-          draft[parent].edges.push(id);
-        }
-      } else {
-        draft[parent].edges = [id];
-      }
-
-      children.forEach((child) => {
-        _add(child, { parent: id });
-      });
-    };
-
-    _add({ id, ...nodeData }, { children, parent, before });
+    _add(draft, { id, ...nodeData }, { children, parent, before });
   });
 
 export const clone = (
@@ -242,4 +242,32 @@ export const remove = (id: string, parent: string) => (
     };
 
     _remove(id, parent);
+  });
+
+export const makeUnique = (
+  id: string,
+  parent: string = ROOT_NODE_KEY,
+  { idFn = uniqueId } = {}
+) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
+  wrap(graph, (draft) => {
+    const _makeUnique = (
+      id: string,
+      parent: string,
+      { idFn },
+      firstCall: boolean
+    ) => {
+      const { edges = [], ...nodeData } = draft[id];
+      if (!firstCall && isClone(id, draft)) {
+        const node = draft[parent];
+        node.edges = node.edges || [];
+        node.edges.push(id);
+      } else {
+        const newId = idFn();
+        _add(draft, { id: newId, ...nodeData }, { parent });
+        edges.forEach((tgt) => {
+          _makeUnique(tgt, newId, { idFn }, false);
+        });
+      }
+    };
+    _makeUnique(id, parent, { idFn }, true);
   });

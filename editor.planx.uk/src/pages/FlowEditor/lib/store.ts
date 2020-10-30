@@ -5,7 +5,14 @@ import difference from "lodash/difference";
 import omit from "lodash/omit";
 import uniq from "lodash/uniq";
 import pgarray from "pg-array";
-import { add, clone, move, remove, ROOT_NODE_KEY } from "planx-graph";
+import {
+  add,
+  clone,
+  makeUnique,
+  move,
+  remove,
+  ROOT_NODE_KEY,
+} from "planx-graph";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
 import { FlowLayout } from "../components/Flow";
@@ -100,13 +107,9 @@ export const [useStore, api] = create((set, get) => ({
     // cb(ops);
   },
 
-  makeUnique: (id, parent = undefined, cb = send) => {
-    alert("not implemented");
-    // // TODO: reimplement this!
-    // const g = new Graph(uid);
-    // g.load(get().flow);
-    // const ops = g.makeUnique(id, { parent });
-    // cb(ops);
+  makeUnique: (id, parent = undefined) => {
+    const [, ops] = makeUnique(id, parent)(get().flow);
+    send(ops);
   },
 
   removeNode: (id, parent = undefined) => {
