@@ -195,7 +195,6 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           onChange={(newOptions) => {
             formik.setFieldValue("options", newOptions);
           }}
-          disableDragAndDrop
           newValueLabel="add new option"
           newValue={() =>
             ({
