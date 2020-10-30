@@ -88,7 +88,7 @@
     "start": "react-app-rewired start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "cosmos": "cosmos",
+    "cosmos": "FAST_REFRESH=false cosmos",
     "eject": "react-scripts eject",
     "compile-types": "typescript-json-validator src/types/index.d.ts --collection --useNamedExport"
   },
