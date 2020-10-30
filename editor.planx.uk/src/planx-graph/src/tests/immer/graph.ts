@@ -25,6 +25,8 @@ interface Node {
 
 type Graph = Record<string, Node>;
 
+const uniqueId = (): string => String(Math.random());
+
 const numberOfEdgesTo = (id: string, graph: Graph): number =>
   Object.values(graph).filter(({ edges = [] }) => edges.includes(id)).length;
 
@@ -109,7 +111,7 @@ const isCyclic = (graph: Graph): boolean => {
 };
 
 export const add = (
-  { id = String(Math.random()), ...nodeData },
+  { id = uniqueId(), ...nodeData },
   {
     children = [],
     parent = "_root",
@@ -120,7 +122,7 @@ export const add = (
     draft._root = draft._root || {};
 
     const _add = (
-      { id, ...nodeData },
+      { id = uniqueId(), ...nodeData },
       { children = [], parent, before = undefined }
     ) => {
       if (draft[id]) throw new Error("id exists");

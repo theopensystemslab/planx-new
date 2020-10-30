@@ -10,7 +10,12 @@ import pgarray from "pg-array";
 import create from "zustand";
 import { client } from "../../../lib/graphql";
 import Graph, { ROOT_NODE_KEY } from "../../../planx-graph/src/graph";
-import { add, move, remove } from "../../../planx-graph/src/tests/immer/graph";
+import {
+  add,
+  clone,
+  move,
+  remove,
+} from "../../../planx-graph/src/tests/immer/graph";
 import { FlowLayout } from "../components/Flow";
 import flags from "../data/flags";
 import { TYPES } from "../data/types";
@@ -91,14 +96,13 @@ export const [useStore, api] = create((set, get) => ({
     { id = uid(), type, data },
     children = [],
     parent = ROOT_NODE_KEY,
-    before = undefined,
-    cb = send
+    before = undefined
   ) => {
     const [, ops] = add(
       { id, type, data },
-      { children: [], parent, before }
+      { children, parent, before }
     )(get().flow);
-    cb(ops);
+    send(ops);
   },
 
   updateNode: ({ id, data }, children: any[], cb = send) => {
@@ -116,9 +120,9 @@ export const [useStore, api] = create((set, get) => ({
     cb(ops);
   },
 
-  removeNode: (id, parent = undefined, cb = send) => {
+  removeNode: (id, parent = undefined) => {
     const [, ops] = remove(id, parent)(get().flow);
-    cb(ops);
+    send(ops);
   },
 
   moveNode(
@@ -138,14 +142,15 @@ export const [useStore, api] = create((set, get) => ({
     }
   },
 
-  copyNode(id: string, parent: string = undefined) {
-    localStorage.setItem("clipboard", JSON.stringify({ id, parent }));
+  copyNode(id: string) {
+    localStorage.setItem("clipboard", id);
   },
 
-  pasteNode(newParent, before) {
+  pasteNode(toParent, toBefore) {
     try {
-      const { id, parent } = JSON.parse(localStorage.getItem("clipboard"));
-      get().moveNode(id, parent, before, newParent, true);
+      const id = localStorage.getItem("clipboard");
+      const [, ops] = clone(id, { toParent, toBefore })(get().flow);
+      send(ops);
     } catch (err) {
       alert(err.message);
     }
@@ -156,7 +161,7 @@ export const [useStore, api] = create((set, get) => ({
     return (flow[id]?.edges || []).map((id) => ({ id, ...flow[id] }));
   },
 
-  createFlow: async (teamId, newName, data = { nodes: {}, edges: [] }) => {
+  createFlow: async (teamId, newName, data = {}) => {
     let response = (await client.mutate({
       mutation: gql`
         mutation CreateFlow(
