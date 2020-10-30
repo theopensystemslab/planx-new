@@ -26,14 +26,14 @@ function Component(props) {
   }>({
     initialValues: {
       // TODO: improve runtime validation here (joi, io-ts)
-      title: props.node?.title || "",
-      description: props.node?.description || "",
-      color: props.node?.color || "#EFEFEF",
-      notes: props.node?.notes || "",
-      definitionImg: props.node?.definitionImg,
-      howMeasured: props.node?.howMeasured,
-      policyRef: props.node?.policyRef,
-      info: props.node?.info,
+      title: props.node?.data?.title || "",
+      description: props.node?.data?.description || "",
+      color: props.node?.data?.color || "#EFEFEF",
+      notes: props.node?.data?.notes || "",
+      definitionImg: props.node?.data?.definitionImg,
+      howMeasured: props.node?.data?.howMeasured,
+      policyRef: props.node?.data?.policyRef,
+      info: props.node?.data?.info,
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
