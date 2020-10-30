@@ -37,8 +37,12 @@ const sanitize = (x) => {
   } else if ((x && typeof x === "object") || x instanceof Object) {
     return Object.entries(x).reduce((acc, [k, v]) => {
       v = sanitize(v);
-      // if (isSomething(v)) acc[k] = v;
-      if (!isSomething(v)) delete acc[k];
+      if (
+        !isSomething(v) ||
+        (typeof v === "object" && Object.keys(v).length === 0)
+      ) {
+        delete acc[k];
+      }
       return acc;
     }, x);
   } else {
