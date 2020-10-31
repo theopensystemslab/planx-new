@@ -66,6 +66,7 @@
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-color": "^3.0.4",
     "@types/react-dom": "^16.9.8",
+    "cypress": "^5.5.0",
     "husky": "^4.3.0",
     "import-sort-style-module": "^6.0.0",
     "lint-staged": "^10.4.2",
@@ -84,7 +85,8 @@
     "test": "react-scripts test",
     "cosmos": "FAST_REFRESH=false cosmos",
     "eject": "react-scripts eject",
-    "compile-types": "typescript-json-validator src/types/index.d.ts --collection --useNamedExport"
+    "compile-types": "typescript-json-validator src/types/index.d.ts --collection --useNamedExport",
+    "cy:open": "cypress open"
   },
   "eslintConfig": {
     "extends": [
