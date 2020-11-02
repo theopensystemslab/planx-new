@@ -69,3 +69,7 @@ test("changing an external portal", async () => {
     },
   });
 });
+
+test.todo(
+  "don't add external portal if same external portal already in parent"
+);
