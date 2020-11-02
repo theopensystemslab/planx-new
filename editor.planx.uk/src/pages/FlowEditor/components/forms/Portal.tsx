@@ -73,7 +73,7 @@ const PortalForm: React.FC<{
 
                 {internalFlows.length > 0 &&
                   internalFlows.map((flow) => (
-                    <option key={flow.id} value={flow.id}>
+                    <option key={flow.id} value={flow.id} disabled>
                       {flow.text}
                     </option>
                   ))}
