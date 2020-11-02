@@ -70,7 +70,8 @@ const NodeTypeSelect: React.FC<{
       <option value={TYPES.PropertyInformation}>Property information</option>
     </optgroup>
     <optgroup label="Navigation">
-      <option value={TYPES.Portal}>Portal</option>
+      <option value={TYPES.InternalPortal}>Internal Portal</option>
+      <option value={TYPES.ExternalPortal}>External Portal</option>
     </optgroup>
   </select>
 );
@@ -87,11 +88,12 @@ const FormModal: React.FC<{
 }> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
   const { navigate } = useNavigation();
   const classes = useStyles();
-  const [addNode, updateNode, node, makeUnique] = useStore((store) => [
+  const [addNode, updateNode, node, makeUnique, connect] = useStore((store) => [
     store.addNode,
     store.updateNode,
     store.flow[id],
     store.makeUnique,
+    store.connect,
   ]);
   const handleClose = () => navigate(rootFlowPath(true));
 
@@ -131,15 +133,19 @@ const FormModal: React.FC<{
           {...extraProps}
           id={id}
           handleSubmit={(data, options = []) => {
-            const parsed = parseFormValues(Object.entries(data));
-            const parsedOptions = options.map((o) =>
-              parseFormValues(Object.entries(o))
-            );
-
-            if (handleDelete) {
-              updateNode({ id, ...parsed }, parsedOptions);
+            if (typeof data === "string") {
+              connect(parent, data, before);
             } else {
-              addNode(parsed, parsedOptions, parent, before);
+              const parsed = parseFormValues(Object.entries(data));
+              const parsedOptions = options.map((o) =>
+                parseFormValues(Object.entries(o))
+              );
+
+              if (handleDelete) {
+                updateNode({ id, ...parsed }, parsedOptions);
+              } else {
+                addNode(parsed, parsedOptions, parent, before);
+              }
             }
 
             navigate(rootFlowPath(true));

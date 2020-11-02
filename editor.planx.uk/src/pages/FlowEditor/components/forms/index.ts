@@ -1,17 +1,17 @@
 import React from "react";
-
+import { SLUGS, TYPES } from "../../data/types";
 import Checklist from "./Checklist";
 import Content from "./Content";
+import ExternalPortal from "./ExternalPortal";
 import FileUpload from "./FileUpload";
 import FindProperty from "./FindProperty";
+import InternalPortal from "./InternalPortal";
 import Notice from "./Notice";
-import Portal from "./Portal";
 import PropertyInformation from "./PropertyInformation";
 import Question from "./Question";
 import Result from "./Result";
 import TaskList from "./TaskList";
 import TextInput from "./TextInput";
-import { SLUGS, TYPES } from "../../data/types";
 
 const components: {
   [key in typeof SLUGS[TYPES]]: React.FC<any>;
@@ -25,7 +25,8 @@ const components: {
   "file-upload": FileUpload,
   result: Result,
   checklist: Checklist,
-  portal: Portal,
+  "external-portal": ExternalPortal,
+  "internal-portal": InternalPortal,
   question: Question,
   content: Content,
 };

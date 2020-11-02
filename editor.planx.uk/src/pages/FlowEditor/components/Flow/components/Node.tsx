@@ -41,7 +41,9 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.Response:
       return <Option {...props} />;
-    case TYPES.Portal:
+    case TYPES.ExternalPortal:
+      return <Portal {...props} />;
+    case TYPES.InternalPortal:
       return props.href ? <Breadcrumb {...props} /> : <Portal {...props} />;
     default:
       console.error({ nodeNotFound: props });

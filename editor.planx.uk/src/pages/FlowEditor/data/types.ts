@@ -16,7 +16,8 @@ export enum TYPES {
   NumberInput = 150,
   Response = 200,
   Content = 250,
-  Portal = 300,
+  InternalPortal = 300,
+  ExternalPortal = 310,
 }
 
 export const SLUGS = {
@@ -29,7 +30,8 @@ export const SLUGS = {
   [TYPES.Content]: "content",
   [TYPES.Result]: "result",
   [TYPES.FileUpload]: "file-upload",
-  [TYPES.Portal]: "portal",
+  [TYPES.InternalPortal]: "internal-portal",
+  [TYPES.ExternalPortal]: "external-portal",
   [TYPES.PropertyInformation]: "property-information",
   [TYPES.SignIn]: "question",
   [TYPES.Report]: "question",
