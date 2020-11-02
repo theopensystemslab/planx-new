@@ -128,6 +128,17 @@ const isCyclic = (graph: Graph): boolean => {
   return false;
 };
 
+export const connect = (src: string, tgt: string) => (
+  graph: Graph = {}
+): [Graph, Array<OT.Op>] =>
+  wrap(graph, (draft) => {
+    draft[src].edges = draft[src].edges || [];
+    if (!draft[tgt]) throw new Error("existing node not found");
+    else if (draft[src].edges.includes(tgt))
+      throw new Error("already connected to that node");
+    draft[src].edges.push(tgt);
+  });
+
 const _add = (
   draft,
   { id = uniqueId(), ...nodeData },
@@ -136,19 +147,17 @@ const _add = (
   if (draft[id]) throw new Error("id exists");
   else if (!draft[parent]) throw new Error("parent not found");
 
+  draft[parent].edges = draft[parent].edges || [];
+
   draft[id] = sanitize(nodeData);
 
-  if (draft[parent].edges) {
-    if (before) {
-      const idx = draft[parent].edges.indexOf(before);
-      if (idx >= 0) {
-        draft[parent].edges.splice(idx, 0, id);
-      } else throw new Error("before not found");
-    } else {
-      draft[parent].edges.push(id);
-    }
+  if (before) {
+    const idx = draft[parent].edges.indexOf(before);
+    if (idx >= 0) {
+      draft[parent].edges.splice(idx, 0, id);
+    } else throw new Error("before not found");
   } else {
-    draft[parent].edges = [id];
+    draft[parent].edges.push(id);
   }
 
   children.forEach((child) => {
@@ -162,7 +171,11 @@ export const add = (
     children = [],
     parent = ROOT_NODE_KEY,
     before = undefined,
-  }: { children?: Array<Node>; parent?: string; before?: string } = {}
+  }: {
+    children?: Array<Node>;
+    parent?: string;
+    before?: string;
+  } = {}
 ) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
   wrap(graph, (draft) => {
     draft[ROOT_NODE_KEY] = draft[ROOT_NODE_KEY] || {};
