@@ -20,8 +20,9 @@ const newNode = route(async (req) => {
   } = req.params;
 
   const extraProps = {} as any;
+  const sorter = natsort({ insensitive: true });
 
-  if (type === "portal") {
+  if (type === "external-portal") {
     const { data } = await client.query({
       query: gql`
         query GetFlows {
@@ -37,9 +38,7 @@ const newNode = route(async (req) => {
       `,
     });
 
-    const sorter = natsort({ insensitive: true });
-
-    extraProps.externalFlows = data.flows
+    extraProps.flows = data.flows
       .filter(
         (flow) =>
           flow.team &&
@@ -49,11 +48,11 @@ const newNode = route(async (req) => {
       .sort((a, b) =>
         sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""))
       );
-
-    extraProps.internalFlows = Object.entries(api.getState().flow)
+  } else if (type === "internal-portal") {
+    extraProps.flows = Object.entries(api.getState().flow)
       .filter(
         ([id, v]: any) =>
-          v.type === TYPES.Portal &&
+          v.type === TYPES.InternalPortal &&
           !window.location.pathname.includes(id) &&
           v.data?.text
       )
@@ -87,7 +86,7 @@ const editNode = route(async (req) => {
 
   const extraProps = {} as any;
 
-  if (node.type === TYPES.Portal) {
+  if (node.type === TYPES.ExternalPortal) {
     const { data } = await client.query({
       query: gql`
         query GetFlows {
@@ -105,7 +104,7 @@ const editNode = route(async (req) => {
 
     const sorter = natsort({ insensitive: true });
 
-    extraProps.externalFlows = data.flows
+    extraProps.flows = data.flows
       .filter(
         (flow) =>
           flow.team &&

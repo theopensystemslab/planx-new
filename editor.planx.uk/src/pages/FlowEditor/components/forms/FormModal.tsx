@@ -70,7 +70,8 @@ const NodeTypeSelect: React.FC<{
       <option value={TYPES.PropertyInformation}>Property information</option>
     </optgroup>
     <optgroup label="Navigation">
-      <option value={TYPES.Portal}>Portal</option>
+      <option value={TYPES.InternalPortal}>Internal Portal</option>
+      <option value={TYPES.ExternalPortal}>External Portal</option>
     </optgroup>
   </select>
 );

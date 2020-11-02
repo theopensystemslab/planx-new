@@ -9,7 +9,6 @@ import {
   SearchOutlined,
   TextFields,
 } from "@material-ui/icons";
-
 import { TYPES } from "../data/types";
 
 // XXX: We define the Icon type in terms of one of the Icons so as not to have to repeat ourselves
@@ -27,7 +26,8 @@ export const ICONS: {
   [TYPES.Flow]: undefined,
   [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NumberInput]: undefined,
-  [TYPES.Portal]: undefined,
+  [TYPES.InternalPortal]: undefined,
+  [TYPES.ExternalPortal]: undefined,
   [TYPES.PropertyInformation]: LocationOnOutlined,
   [TYPES.Report]: undefined,
   [TYPES.Response]: undefined,
