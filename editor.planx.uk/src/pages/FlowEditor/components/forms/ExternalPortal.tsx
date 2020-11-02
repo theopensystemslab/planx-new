@@ -35,13 +35,11 @@ const ExternalPortalForm: React.FC<{
         onChange={formik.handleChange}
       >
         {!id && <option value="" />}
-        <optgroup label="External Flows">
-          {flows.map((flow) => (
-            <option key={flow.id} value={flow.id}>
-              {flow.text}
-            </option>
-          ))}
-        </optgroup>
+        {flows.map((flow) => (
+          <option key={flow.id} value={flow.id}>
+            {flow.text}
+          </option>
+        ))}
       </select>
     </form>
   );
