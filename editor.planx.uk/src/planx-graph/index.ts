@@ -128,17 +128,6 @@ const isCyclic = (graph: Graph): boolean => {
   return false;
 };
 
-export const connect = (src: string, tgt: string) => (
-  graph: Graph = {}
-): [Graph, Array<OT.Op>] =>
-  wrap(graph, (draft) => {
-    draft[src].edges = draft[src].edges || [];
-    if (!draft[tgt]) throw new Error("existing node not found");
-    else if (draft[src].edges.includes(tgt))
-      throw new Error("already connected to that node");
-    draft[src].edges.push(tgt);
-  });
-
 const _add = (
   draft,
   { id = uniqueId(), ...nodeData },

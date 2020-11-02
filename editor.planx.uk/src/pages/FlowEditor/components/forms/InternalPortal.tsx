@@ -21,10 +21,13 @@ const InternalPortalForm: React.FC<{
       flowId,
     },
     onSubmit: (values) => {
+      const payload = values.flowId
+        ? values.flowId
+        : { type: TYPES.InternalPortal, data: values };
       if (handleSubmit) {
-        handleSubmit({ type: TYPES.InternalPortal, data: values });
+        handleSubmit(payload);
       } else {
-        alert(JSON.stringify(values, null, 2));
+        alert(JSON.stringify(payload, null, 2));
       }
     },
   });
@@ -39,8 +42,7 @@ const InternalPortalForm: React.FC<{
           placeholder="Portal name"
           rows={2}
           value={formik.values.text}
-          // disabled={!!formik.values.flowId}
-          // required={!formik.values.flowId}
+          disabled={!!formik.values.flowId}
         />
       </div>
       {flows?.length > 0 && (

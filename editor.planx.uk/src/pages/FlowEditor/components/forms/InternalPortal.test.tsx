@@ -50,6 +50,8 @@ test("updating an internal portal", async () => {
     <InternalPortalForm id="test" text="val" handleSubmit={handleSubmit} />
   );
 
+  expect(screen.queryByTestId("flowId")).toBeNull();
+
   const textInput = screen.getByPlaceholderText("Portal name");
 
   expect(textInput).toHaveValue("val");
@@ -63,13 +65,13 @@ test("updating an internal portal", async () => {
   expect(handleSubmit).toHaveBeenCalledWith({
     type: TYPES.InternalPortal,
     data: {
-      flowId: "", // will be removed when saving
+      flowId: "", // will be removed when saving the data
       text: "new val",
     },
   });
 });
 
-test.skip("adding an existing internal portal", async () => {
+test("adding an existing internal portal", async () => {
   const handleSubmit = jest.fn();
 
   render(
@@ -89,5 +91,5 @@ test.skip("adding an existing internal portal", async () => {
     fireEvent.submit(screen.getByTestId("form"));
   });
 
-  expect(handleSubmit).toHaveBeenCalledWith(["portal"]);
+  expect(handleSubmit).toHaveBeenCalledWith("portal");
 });

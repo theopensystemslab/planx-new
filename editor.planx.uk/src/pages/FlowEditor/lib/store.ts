@@ -88,6 +88,15 @@ export const [useStore, api] = create((set, get) => ({
     };
   },
 
+  connect: (src: string, tgt: string) => {
+    try {
+      const [, ops] = clone(tgt, { toParent: src })(get().flow);
+      send(ops);
+    } catch (err) {
+      alert(err.message);
+    }
+  },
+
   addNode: (
     { id = undefined, type, data },
     children = [],
