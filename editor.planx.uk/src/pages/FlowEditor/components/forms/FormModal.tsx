@@ -134,7 +134,7 @@ const FormModal: React.FC<{
           id={id}
           handleSubmit={(data, options = []) => {
             if (typeof data === "string") {
-              connect(parent, data);
+              connect(parent, data, before);
             } else {
               const parsed = parseFormValues(Object.entries(data));
               const parsedOptions = options.map((o) =>

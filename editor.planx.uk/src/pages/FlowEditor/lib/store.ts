@@ -88,9 +88,11 @@ export const [useStore, api] = create((set, get) => ({
     };
   },
 
-  connect: (src: string, tgt: string) => {
+  connect: (src: string, tgt: string, before = undefined) => {
     try {
-      const [, ops] = clone(tgt, { toParent: src })(get().flow);
+      const [, ops] = clone(tgt, { toParent: src, toBefore: before })(
+        get().flow
+      );
       send(ops);
     } catch (err) {
       alert(err.message);
