@@ -3,13 +3,18 @@ import React from "react";
 import { InputField } from "../../../../ui";
 import { TYPES } from "../../data/types";
 
+interface Flow {
+  id: string;
+  text: string;
+}
+
 const PortalForm: React.FC<{
   id?: string;
   text?: string;
   flowId?: string;
   handleSubmit?;
-  internalFlows;
-  externalFlows;
+  internalFlows?: Array<Flow>;
+  externalFlows?: Array<Flow>;
 }> = ({
   id,
   handleSubmit,
@@ -43,7 +48,7 @@ const PortalForm: React.FC<{
     isNewPortal || (!isNewPortal && !isExternalPortal);
 
   return (
-    <form id="modal" onSubmit={formik.handleSubmit}>
+    <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">
       {isNewOrIsExistingInternal && (
         <div>
           <InputField
@@ -65,6 +70,7 @@ const PortalForm: React.FC<{
             {isNewOrIsExistingInternal && "or"}
             <div>
               <select
+                data-testid="flowId"
                 name="flowId"
                 value={formik.values.flowId}
                 onChange={formik.handleChange}
@@ -82,7 +88,7 @@ const PortalForm: React.FC<{
                   <optgroup label="External Flows">
                     {externalFlows.map((flow) => (
                       <option key={flow.id} value={flow.id}>
-                        {flow.team.slug}/{flow.slug}
+                        {flow.text}
                       </option>
                     ))}
                   </optgroup>

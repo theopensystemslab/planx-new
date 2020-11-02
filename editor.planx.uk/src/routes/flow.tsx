@@ -45,7 +45,10 @@ const newNode = route(async (req) => {
           flow.team &&
           !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
       )
-      .sort(sorter);
+      .map(({ id, team, slug }) => ({ id, text: [team.slug, slug].join("/") }))
+      .sort((a, b) =>
+        sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""))
+      );
 
     extraProps.internalFlows = Object.entries(api.getState().flow)
       .filter(
