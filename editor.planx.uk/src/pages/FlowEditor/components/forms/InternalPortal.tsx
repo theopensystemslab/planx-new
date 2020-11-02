@@ -21,13 +21,8 @@ const InternalPortalForm: React.FC<{
       flowId,
     },
     onSubmit: (values) => {
-      console.log(values);
       if (handleSubmit) {
-        if (id) {
-          alert("portal updates currently disabled (sorry!)");
-        } else {
-          handleSubmit({ type: TYPES.InternalPortal, data: values });
-        }
+        handleSubmit({ type: TYPES.InternalPortal, data: values });
       } else {
         alert(JSON.stringify(values, null, 2));
       }
@@ -48,21 +43,25 @@ const InternalPortalForm: React.FC<{
           // required={!formik.values.flowId}
         />
       </div>
-
-      <select
-        data-testid="flowId"
-        name="flowId"
-        value={formik.values.flowId}
-        onChange={formik.handleChange}
-      >
-        {!id && <option value="" />}
-
-        {flows.map((flow) => (
-          <option key={flow.id} value={flow.id}>
-            {flow.text}
-          </option>
-        ))}
-      </select>
+      {flows?.length > 0 && (
+        <>
+          <span> OR </span>
+          <select
+            data-testid="flowId"
+            name="flowId"
+            value={formik.values.flowId}
+            onChange={formik.handleChange}
+            disabled={!!formik.values.text}
+          >
+            {!id && <option value="" />}
+            {flows.map((flow) => (
+              <option key={flow.id} value={flow.id}>
+                {flow.text}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
     </form>
   );
 };
