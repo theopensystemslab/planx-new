@@ -12,6 +12,36 @@ import { SLUGS, TYPES } from "../pages/FlowEditor/data/types";
 import { api } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
 
+const sorter = natsort({ insensitive: true });
+const sortFlows = (a, b) =>
+  sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""));
+
+const getExternalPortals = async () => {
+  const { data } = await client.query({
+    query: gql`
+      query GetFlows {
+        flows(order_by: { name: asc }) {
+          id
+          name
+          slug
+          team {
+            slug
+          }
+        }
+      }
+    `,
+  });
+
+  return data.flows
+    .filter(
+      (flow) =>
+        flow.team &&
+        !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
+    )
+    .map(({ id, team, slug }) => ({ id, text: [team.slug, slug].join("/") }))
+    .sort(sortFlows);
+};
+
 const newNode = route(async (req) => {
   const {
     type = "question",
@@ -20,34 +50,9 @@ const newNode = route(async (req) => {
   } = req.params;
 
   const extraProps = {} as any;
-  const sorter = natsort({ insensitive: true });
 
   if (type === "external-portal") {
-    const { data } = await client.query({
-      query: gql`
-        query GetFlows {
-          flows(order_by: { name: asc }) {
-            id
-            name
-            slug
-            team {
-              slug
-            }
-          }
-        }
-      `,
-    });
-
-    extraProps.flows = data.flows
-      .filter(
-        (flow) =>
-          flow.team &&
-          !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
-      )
-      .map(({ id, team, slug }) => ({ id, text: [team.slug, slug].join("/") }))
-      .sort((a, b) =>
-        sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""))
-      );
+    extraProps.flows = await getExternalPortals();
   } else if (type === "internal-portal") {
     extraProps.flows = Object.entries(api.getState().flow)
       .filter(
@@ -57,9 +62,7 @@ const newNode = route(async (req) => {
           v.data?.text
       )
       .map(([id, { data }]: any) => ({ id, text: data.text }))
-      .sort((a, b) =>
-        sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""))
-      );
+      .sort(sortFlows);
   }
 
   return {
@@ -86,32 +89,8 @@ const editNode = route(async (req) => {
 
   const extraProps = {} as any;
 
-  if (node.type === TYPES.ExternalPortal) {
-    const { data } = await client.query({
-      query: gql`
-        query GetFlows {
-          flows(order_by: { name: asc }) {
-            id
-            name
-            slug
-            team {
-              slug
-            }
-          }
-        }
-      `,
-    });
-
-    const sorter = natsort({ insensitive: true });
-
-    extraProps.flows = data.flows
-      .filter(
-        (flow) =>
-          flow.team &&
-          !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
-      )
-      .sort(sorter);
-  }
+  if (node.type === TYPES.ExternalPortal)
+    extraProps.flows = await getExternalPortals();
 
   const type = SLUGS[node.type];
 
