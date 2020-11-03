@@ -151,7 +151,7 @@ const _add = (
     draft[parent].edges.push(id);
   }
 
-  children.forEach((child) => {
+  children?.forEach((child) => {
     _add(draft, child, { parent: id });
   });
 };
@@ -279,19 +279,17 @@ const _update = (
   id: string,
   newData: object,
   {
-    children = [],
+    children = undefined,
     removeKeyIfMissing = false,
-    affectChildren = true,
   }: {
     children?: Array<Node>;
     removeKeyIfMissing?: boolean;
-    affectChildren?: boolean;
   } = {}
 ) => {
   const node = draft[id];
 
-  if (affectChildren) {
-    if (removeKeyIfMissing) {
+  if (removeKeyIfMissing) {
+    if (children) {
       children = children.map((c) => ({ ...c, id: c.id || uniqueId() }));
       const newChildIds = children.map((c) => c.id);
       if (newChildIds.toString() !== [...(node.edges || [])].toString()) {
@@ -315,19 +313,19 @@ const _update = (
         }
       }
 
-      if (node.data) {
-        // if a value exists in the current data, but is null, undefined or "" in the
-        // new data then remove it
-        Object.entries(node.data).forEach(([k, v]) => {
-          if (v !== null && v !== undefined && !isSomething(newData[k]))
-            delete node.data[k];
-        });
-      }
+      children.forEach(({ id, ...newData }) =>
+        _update(draft, id, newData.data || newData)
+      );
     }
 
-    children.forEach(({ id, ...newData }) =>
-      _update(draft, id, newData.data || newData)
-    );
+    if (node.data) {
+      // if a value exists in the current data, but is null, undefined or "" in the
+      // new data then remove it
+      Object.entries(node.data).forEach(([k, v]) => {
+        if (v !== null && v !== undefined && !isSomething(newData[k]))
+          delete node.data[k];
+      });
+    }
   }
 
   if (node.data) {
@@ -350,20 +348,17 @@ export const update = (
   id: string,
   newData: object,
   {
-    children = [],
+    children = undefined,
     removeKeyIfMissing = false,
-    affectChildren = true,
   }: {
     children?: Array<Node>;
     removeKeyIfMissing?: boolean;
-    affectChildren?: boolean;
   } = {}
 ) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
   wrap(graph, (draft) => {
     _update(draft, id, newData, {
       children,
       removeKeyIfMissing,
-      affectChildren,
     });
   });
 

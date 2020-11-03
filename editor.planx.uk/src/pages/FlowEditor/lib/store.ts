@@ -102,7 +102,7 @@ export const [useStore, api] = create((set, get) => ({
 
   addNode: (
     { id = undefined, type, data },
-    { children = [], parent = ROOT_NODE_KEY, before = undefined } = {}
+    { children = undefined, parent = ROOT_NODE_KEY, before = undefined } = {}
   ) => {
     const [, ops] = add(
       { id, type, data },
@@ -111,13 +111,9 @@ export const [useStore, api] = create((set, get) => ({
     send(ops);
   },
 
-  updateNode: (
-    { id, data },
-    { children = [], affectChildren = false } = {}
-  ) => {
+  updateNode: ({ id, data }, { children = undefined } = {}) => {
     const [, ops] = update(id, data, {
       children,
-      affectChildren,
       removeKeyIfMissing: true,
     })(get().flow);
     send(ops);

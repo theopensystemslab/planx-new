@@ -176,10 +176,7 @@ export const Question: React.FC<Props> = (props) => {
         }));
 
       if (props.handleSubmit) {
-        props.handleSubmit(
-          { type, data: values },
-          { affectChildren: true, children }
-        );
+        props.handleSubmit({ type, data: values }, children);
       } else {
         alert(JSON.stringify({ type, ...values, children }, null, 2));
       }
