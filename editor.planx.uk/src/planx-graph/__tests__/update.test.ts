@@ -285,5 +285,41 @@ describe("updating", () => {
         { od: ["b", "c"], oi: ["c", "b"], p: ["a", "edges"] },
       ]);
     });
+
+    test("don't affect children when affectChildren === false", () => {
+      const [graph, ops] = update(
+        "a",
+        { text: "new portal name" },
+        { affectChildren: false, removeKeyIfMissing: true }
+      )({
+        _root: { edges: ["a"] },
+        a: {
+          type: 300,
+          data: {
+            text: "a portal",
+          },
+          edges: ["b", "c"],
+        },
+        b: {},
+        c: {},
+      });
+
+      expect(graph).toEqual({
+        _root: { edges: ["a"] },
+        a: {
+          type: 300,
+          data: {
+            text: "new portal name",
+          },
+          edges: ["b", "c"],
+        },
+        b: {},
+        c: {},
+      });
+
+      expect(ops).toEqual([
+        { od: "a portal", oi: "new portal name", p: ["a", "data", "text"] },
+      ]);
+    });
   });
 });

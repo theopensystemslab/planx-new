@@ -45,7 +45,7 @@ test("no select field when there are no flows", () => {
   expect(screen.queryByTestId("flowId")).toBeNull();
 });
 
-test.skip("updating an internal portal", async () => {
+test("updating an internal portal", async () => {
   const handleSubmit = jest.fn();
 
   render(

@@ -6,6 +6,7 @@ import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 
 import { ImmerJSONPatch, OT } from "./types";
+
 enablePatches();
 
 interface Node {
@@ -280,43 +281,53 @@ const _update = (
   {
     children = [],
     removeKeyIfMissing = false,
-  }: { children?: Array<Node>; removeKeyIfMissing?: boolean } = {}
+    affectChildren = true,
+  }: {
+    children?: Array<Node>;
+    removeKeyIfMissing?: boolean;
+    affectChildren?: boolean;
+  } = {}
 ) => {
   const node = draft[id];
-  children = children.map((c) => ({ ...c, id: c.id || uniqueId() }));
 
-  const newChildIds = children.map((c) => c.id);
+  if (affectChildren) {
+    if (removeKeyIfMissing) {
+      children = children.map((c) => ({ ...c, id: c.id || uniqueId() }));
+      const newChildIds = children.map((c) => c.id);
+      if (newChildIds.toString() !== [...(node.edges || [])].toString()) {
+        const addedChildrenIds = difference(newChildIds, node.edges);
+        addedChildrenIds.forEach((cId) =>
+          _add(
+            draft,
+            children.find((c) => c.id === cId),
+            { parent: id }
+          )
+        );
 
-  if (removeKeyIfMissing) {
-    if (newChildIds.toString() !== [...(node.edges || [])].toString()) {
-      const addedChildrenIds = difference(newChildIds, node.edges);
-      addedChildrenIds.forEach((cId) =>
-        _add(
-          draft,
-          children.find((c) => c.id === cId),
-          { parent: id }
-        )
-      );
+        const removedChildrenIds = difference(node.edges, newChildIds);
+        removedChildrenIds.forEach((childId) => _remove(draft, childId, id));
 
-      const removedChildrenIds = difference(node.edges, newChildIds);
-      removedChildrenIds.forEach((childId) => _remove(draft, childId, id));
-
-      if (node.edges) {
-        if (newChildIds.length === 0) delete node.edges;
-        else {
-          node.edges = newChildIds;
+        if (node.edges) {
+          if (newChildIds.length === 0) delete node.edges;
+          else {
+            node.edges = newChildIds;
+          }
         }
+      }
+
+      if (node.data) {
+        // if a value exists in the current data, but is null, undefined or "" in the
+        // new data then remove it
+        Object.entries(node.data).forEach(([k, v]) => {
+          if (v !== null && v !== undefined && !isSomething(newData[k]))
+            delete node.data[k];
+        });
       }
     }
 
-    if (node.data) {
-      // if a value exists in the current data, but is null, undefined or "" in the
-      // new data then remove it
-      Object.entries(node.data).forEach(([k, v]) => {
-        if (v !== null && v !== undefined && !isSomething(newData[k]))
-          delete node.data[k];
-      });
-    }
+    children.forEach(({ id, ...newData }) =>
+      _update(draft, id, newData.data || newData)
+    );
   }
 
   if (node.data) {
@@ -333,10 +344,6 @@ const _update = (
     node.data = newData;
   }
   if (Object.keys(node.data).length === 0) delete node.data;
-
-  children.forEach(({ id, ...newData }) =>
-    _update(draft, id, newData.data || newData)
-  );
 };
 
 export const update = (
@@ -345,10 +352,19 @@ export const update = (
   {
     children = [],
     removeKeyIfMissing = false,
-  }: { children?: Array<Node>; removeKeyIfMissing?: boolean } = {}
+    affectChildren = true,
+  }: {
+    children?: Array<Node>;
+    removeKeyIfMissing?: boolean;
+    affectChildren?: boolean;
+  } = {}
 ) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
   wrap(graph, (draft) => {
-    _update(draft, id, newData, { children, removeKeyIfMissing });
+    _update(draft, id, newData, {
+      children,
+      removeKeyIfMissing,
+      affectChildren,
+    });
   });
 
 export const makeUnique = (
