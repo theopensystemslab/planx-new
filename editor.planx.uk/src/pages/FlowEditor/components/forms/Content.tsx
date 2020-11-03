@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import React from "react";
+
 import {
   InputRow,
   InternalNotes,
@@ -60,6 +61,7 @@ const ContentComponent: React.FC<Props> = (props) => {
       content: {
         // TODO: improve runtime validation here (joi, io-ts)
         content: props.node?.data?.content || "",
+        notes: props.node?.data?.notes || "",
       },
     },
     onSubmit: (newValues) => {
