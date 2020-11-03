@@ -3,26 +3,28 @@ import { Graph, ROOT_NODE_KEY } from ".";
 
 class Crawler {
   public readonly breadcrumbs: Record<string, Array<string>> = {};
-  public onVisit: (id: string) => {};
+  public onRecord: (id: string) => {};
 
-  constructor(public readonly graph: Graph, { onVisit = undefined } = {}) {
-    this.onVisit = onVisit;
+  constructor(public readonly graph: Graph, { onRecord = undefined } = {}) {
+    this.onRecord = onRecord;
   }
 
-  visit(id: string) {
+  record(id: string, vals: Array<string>) {
     if (!this.graph[id]) throw new Error("id not found");
-    else if (this.breadcrumbs[id]) throw new Error("already visited");
-    this.breadcrumbs[id] = [];
-    if (this.onVisit) this.onVisit(id);
+    else if (this.breadcrumbs[id]) throw new Error("already recorded");
+    this.breadcrumbs[id] = vals;
+    if (this.onRecord) this.onRecord(id);
   }
 
   get upcomingIds(): Array<string> {
     const ids: Set<string> = new Set();
 
-    const nodeIdsConnectedFrom = (source: string) =>
-      this.graph[source].edges
-        .filter(
-          (id) => this.graph[id] && !Object.keys(this.breadcrumbs).includes(id)
+    const nodeIdsConnectedFrom = (source: string) => {
+      return this.graph[source].edges
+        ?.filter(
+          (id) =>
+            this.graph[id]?.edges?.length > 0 &&
+            !Object.keys(this.breadcrumbs).includes(id)
         )
         .forEach((id) => {
           if (this.graph[id]?.type === TYPES.InternalPortal) {
@@ -31,6 +33,7 @@ class Crawler {
             ids.add(id);
           }
         });
+    };
 
     Object.entries(this.breadcrumbs)
       .reverse()

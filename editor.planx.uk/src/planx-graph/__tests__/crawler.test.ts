@@ -7,20 +7,31 @@ test("crawling a basic graph", () => {
       edges: ["a", "b"],
     },
     a: {
+      type: TYPES.Statement,
       edges: ["c"],
     },
-    b: {},
-    c: {},
-    d: {},
+    b: {
+      type: TYPES.Statement,
+    },
+    c: {
+      type: TYPES.Response,
+      edges: ["d"],
+    },
+    d: {
+      type: TYPES.Statement,
+      edges: ["e", "f"],
+    },
+    e: { type: TYPES.Response },
+    f: { type: TYPES.Response },
   });
 
-  expect(crawler.upcomingIds).toEqual(["a", "b"]);
+  expect(crawler.upcomingIds).toEqual(["a"]);
 
-  crawler.visit("a");
+  crawler.record("a", ["c"]);
 
-  expect(crawler.upcomingIds).toEqual(["b"]);
+  expect(crawler.upcomingIds).toEqual(["d"]);
 
-  crawler.visit("b");
+  crawler.record("d", ["e", "f"]);
 
   expect(crawler.upcomingIds).toEqual([]);
 });
@@ -34,8 +45,12 @@ test("crawling with portals", () => {
       type: TYPES.InternalPortal,
       edges: ["c"],
     },
-    b: {},
-    c: {},
+    b: {
+      edges: ["d"],
+    },
+    c: {
+      edges: ["d"],
+    },
     d: {},
   });
 
@@ -43,28 +58,31 @@ test("crawling with portals", () => {
 });
 
 describe("callbacks", () => {
-  test("calls onVisit when visiting a node", () => {
-    const onVisit = jest.fn();
+  test("calls onrecord when recording a node", () => {
+    const onRecord = jest.fn();
     const crawler = new Crawler(
       {
         _root: {
           edges: ["a"],
         },
-        a: {},
+        a: {
+          edges: ["b"],
+        },
+        b: {},
       },
       {
-        onVisit,
+        onRecord,
       }
     );
 
-    crawler.visit("a");
+    crawler.record("a", ["b"]);
 
-    expect(onVisit).toHaveBeenCalledWith("a");
+    expect(onRecord).toHaveBeenCalledWith("a");
   });
 });
 
 describe("error handling", () => {
-  test("cannot visit id that doesn't exist", () => {
+  test("cannot record id that doesn't exist", () => {
     const crawler = new Crawler({
       _root: {
         edges: ["a"],
@@ -72,10 +90,10 @@ describe("error handling", () => {
       a: {},
     });
 
-    expect(() => crawler.visit("x")).toThrowError("id not found");
+    expect(() => crawler.record("x", [])).toThrowError("id not found");
   });
 
-  test("cannot visit id that's already been visited", () => {
+  test("cannot record id that's already been recorded", () => {
     const crawler = new Crawler({
       _root: {
         edges: ["a"],
@@ -83,8 +101,8 @@ describe("error handling", () => {
       a: {},
     });
 
-    crawler.visit("a");
+    crawler.record("a", []);
 
-    expect(() => crawler.visit("a")).toThrowError("already visited");
+    expect(() => crawler.record("a", [])).toThrowError("already recorded");
   });
 });
