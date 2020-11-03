@@ -18,6 +18,7 @@ export enum TYPES {
   Content = 250,
   InternalPortal = 300,
   ExternalPortal = 310,
+  Page = 350,
   Pay = 400,
   Filter = 500,
 }
@@ -43,6 +44,7 @@ export const SLUGS = {
   [TYPES.AddressInput]: "question",
   [TYPES.Statement]: "question",
   [TYPES.Response]: "question",
+  [TYPES.Page]: "page",
   [TYPES.Pay]: "pay",
 } as const;
 

@@ -38,4 +38,5 @@ export const ICONS: {
   [TYPES.Statement]: CallSplit,
   [TYPES.TaskList]: List,
   [TYPES.TextInput]: Create,
+  [TYPES.Page]: undefined,
 } as const;

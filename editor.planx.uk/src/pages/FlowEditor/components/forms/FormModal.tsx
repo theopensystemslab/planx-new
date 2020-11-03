@@ -9,7 +9,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/CloseOutlined";
 import React from "react";
 import { useNavigation } from "react-navi";
-
 import { rootFlowPath } from "../../../../routes/utils";
 import { fromSlug, SLUGS, TYPES } from "../../data/types";
 import { useStore } from "../../lib/store";
@@ -75,6 +74,7 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.Filter}>Filter</option>
         <option value={TYPES.InternalPortal}>Internal Portal</option>
         <option value={TYPES.ExternalPortal}>External Portal</option>
+        <option value={TYPES.Page}>Page</option>
       </optgroup>
       <optgroup label="Payment">
         <option value={TYPES.Pay}>Pay</option>

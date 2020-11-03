@@ -164,6 +164,16 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   }
 }
 
+.page {
+  border: 1px solid #aaa;
+  background: rgba(0, 0, 0, 0.1);
+  > a.title {
+    text-decoration: none;
+    color: black;
+    padding: 10px;
+  }
+}
+
 .endpoint > a {
   @include circle($endpointRadius);
   display: block;

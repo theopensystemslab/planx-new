@@ -1,11 +1,11 @@
 import React from "react";
-
 import { TYPES } from "../../../data/types";
 import { useStore } from "../../../lib/store";
 import Breadcrumb from "./Breadcrumb";
 import Checklist from "./Checklist";
 import Filter from "./Filter";
 import Option from "./Option";
+import Page from "./Page";
 import Portal from "./Portal";
 import Question from "./Question";
 
@@ -29,6 +29,8 @@ const Node: React.FC<any> = (props) => {
       return <Question {...props} text="Find property" />;
     case TYPES.Notice:
       return <Question {...props} text="Notice" />;
+    case TYPES.Page:
+      return <Page {...props} />;
     case TYPES.Pay:
       return <Question {...props} text={node?.data?.description ?? "Pay"} />;
     case TYPES.PropertyInformation:
