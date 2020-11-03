@@ -140,24 +140,18 @@ const FormModal: React.FC<{
               connect(parent, data, { before });
             } else {
               const parsedData = parseFormValues(Object.entries(data));
-              const parsedChildren = children?.map((o) =>
-                parseFormValues(Object.entries(o))
-              );
+              const parsedChildren =
+                children?.map((o) => parseFormValues(Object.entries(o))) ||
+                undefined;
 
               if (handleDelete) {
-                updateNode(
-                  { id, ...parsedData },
-                  { children: parsedChildren || undefined }
-                );
+                updateNode({ id, ...parsedData }, { children: parsedChildren });
               } else {
-                const childData = parsedChildren
-                  ? {
-                      children: parsedChildren,
-                      parent,
-                      before,
-                    }
-                  : undefined;
-                addNode(parsedData, childData);
+                addNode(parsedData, {
+                  children: parsedChildren,
+                  parent,
+                  before,
+                });
               }
             }
 
