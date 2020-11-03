@@ -1,5 +1,6 @@
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
+
 import { TYPES } from "../FlowEditor/data/types";
 import { useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";

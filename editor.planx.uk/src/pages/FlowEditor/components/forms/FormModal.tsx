@@ -11,7 +11,7 @@ import React from "react";
 import { useNavigation } from "react-navi";
 
 import { rootFlowPath } from "../../../../routes/utils";
-import { SLUGS, TYPES, fromSlug } from "../../data/types";
+import { fromSlug, SLUGS, TYPES } from "../../data/types";
 import { useStore } from "../../lib/store";
 import { parseFormValues } from "./shared";
 

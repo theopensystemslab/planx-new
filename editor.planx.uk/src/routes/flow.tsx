@@ -4,6 +4,7 @@ import { compose, lazy, mount, route, withData, withView } from "navi";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 import { View } from "react-navi";
+
 import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
 import components from "../pages/FlowEditor/components/forms";

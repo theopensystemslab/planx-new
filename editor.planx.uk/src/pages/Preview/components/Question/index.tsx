@@ -1,8 +1,9 @@
 import { useFormik } from "formik";
 import React from "react";
+
 import Card from "../shared/Card";
-import DecisionButton from "./DecisionButton";
 import QuestionHeader from "../shared/QuestionHeader";
+import DecisionButton from "./DecisionButton";
 
 interface IQuestion {
   node: {

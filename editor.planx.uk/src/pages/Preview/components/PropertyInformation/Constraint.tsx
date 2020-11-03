@@ -1,6 +1,7 @@
 import Box from "@material-ui/core/Box";
 import useTheme from "@material-ui/core/styles/useTheme";
 import React from "react";
+
 import { constraintsStyles } from "./styles";
 
 const Constraint = ({ children, color, ...props }) => {

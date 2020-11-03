@@ -1,4 +1,5 @@
 import React from "react";
+
 import { SLUGS, TYPES } from "../../data/types";
 import Checklist from "./Checklist";
 import Content from "./Content";

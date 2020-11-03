@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 import { compose, lazy, mount, route, withData, withView } from "navi";
 import React from "react";
+
 import AuthenticatedLayout from "../components/AuthenticatedLayout";
 import { client } from "../lib/graphql";
 import Teams from "../pages/Teams";

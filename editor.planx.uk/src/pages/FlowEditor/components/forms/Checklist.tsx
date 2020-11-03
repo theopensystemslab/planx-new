@@ -18,7 +18,7 @@ import {
   RichTextInput,
 } from "../../../../ui";
 import { removeAt } from "../../../../utils";
-import { Checklist, TYPES, toggleExpandableChecklist } from "../../data/types";
+import { Checklist, toggleExpandableChecklist, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation, PermissionSelect } from "./shared";
 

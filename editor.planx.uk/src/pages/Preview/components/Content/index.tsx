@@ -1,8 +1,9 @@
+import { Button } from "@material-ui/core";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import Card from "../shared/Card";
-import { Button } from "@material-ui/core";
+
 import { Content } from "../../../FlowEditor/data/types";
+import Card from "../shared/Card";
 
 interface Props extends Content {
   handleSubmit?: any;

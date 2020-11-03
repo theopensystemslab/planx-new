@@ -5,11 +5,13 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Add from "@material-ui/icons/Add";
 import Close from "@material-ui/icons/Close";
 import { useFormik } from "formik";
 import React from "react";
+
 import {
   Input,
   InputGroup,
@@ -18,7 +20,6 @@ import {
   OptionButton,
   SelectInput,
 } from "../../../../ui";
-import { makeStyles } from "@material-ui/core/styles";
 
 interface ITeam {}
 
