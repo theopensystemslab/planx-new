@@ -2,6 +2,6 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["simple-import-sort"],
   "rules": {
-    "simple-import-sort/sort": "error"
+    "simple-import-sort/sort": "warn"
   }
 }
