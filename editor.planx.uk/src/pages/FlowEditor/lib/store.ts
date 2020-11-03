@@ -111,7 +111,10 @@ export const [useStore, api] = create((set, get) => ({
     send(ops);
   },
 
-  updateNode: ({ id, data }, { children = [], affectChildren = true } = {}) => {
+  updateNode: (
+    { id, data },
+    { children = [], affectChildren = false } = {}
+  ) => {
     const [, ops] = update(id, data, {
       children,
       affectChildren,

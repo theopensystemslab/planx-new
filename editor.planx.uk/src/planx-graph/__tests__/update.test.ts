@@ -287,6 +287,10 @@ describe("updating", () => {
     });
 
     test("don't affect children when affectChildren === false", () => {
+      // This means that if a node X has children/edges, and update(X) is
+      // called without the children included, then the update function
+      // won't assume the children have been removed by the user and delete
+      // them. Instead it will ignore all operations on node X's children.
       const [graph, ops] = update(
         "a",
         { text: "new portal name" },
