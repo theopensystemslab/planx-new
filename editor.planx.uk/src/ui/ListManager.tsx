@@ -6,10 +6,11 @@ import {
   DragDropContext,
   Draggable,
   DraggableProvided,
+  DropResult,
   Droppable,
   DroppableProvided,
-  DropResult,
 } from "react-beautiful-dnd";
+
 import { removeAt, setAt } from "../utils";
 
 export interface EditorProps<T> {
@@ -85,6 +86,9 @@ function ListManager<T, EditorExtraProps>(props: Props<T, EditorExtraProps>) {
   ) : (
     <DragDropContext
       onDragEnd={(dropResult: DropResult) => {
+        if (!dropResult.source || !dropResult.destination) {
+          return;
+        }
         props.onChange(
           arrayMove(
             props.values,
