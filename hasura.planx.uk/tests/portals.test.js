@@ -48,66 +48,62 @@ describe("portals", () => {
     await gqlAdmin(query, {
       id: root,
       data: {
-        nodes: {
-          a: {},
-          b: {},
-          c: {},
-          d: {
-            $t: 300,
+        _root: {
+          edges: ["a", "d", "f"],
+        },
+        a: {
+          edges: ["b", "c"],
+        },
+        b: {},
+        c: {
+          edges: ["d"],
+        },
+        d: {
+          type: 320,
+          data: {
             flowId: portal,
           },
-          e: {},
-          f: {},
         },
-        edges: [
-          [null, "a"],
-          [null, "d"],
-          ["a", "b"],
-          ["a", "c"],
-          ["c", "d"],
-          [null, "f"],
-        ],
+        e: {},
+        f: {},
       },
     });
 
     await gqlAdmin(query, {
       id: portal,
       data: {
-        nodes: {
-          x: {},
-          y: {},
-          sub: {
-            $t: 300,
+        _root: {
+          edges: ["x", "another", "sub"],
+        },
+        x: {
+          edges: ["y", "z"],
+        },
+        y: {},
+        sub: {
+          type: 320,
+          data: {
             flowId: subportal,
           },
-          z: {},
-          another: {},
-          1: {},
-          2: {},
         },
-        edges: [
-          [null, "x"],
-          ["x", "y"],
-          ["x", "z"],
-          [null, "another"],
-          [null, "sub"],
-          ["another", "1"],
-          ["another", "2"],
-        ],
+        z: {},
+        another: {
+          edges: ["1", "2"],
+        },
+        1: {},
+        2: {},
       },
     });
 
     await gqlAdmin(query, {
       id: subportal,
       data: {
-        nodes: {
-          s1: {},
-          s2: {},
+        _root: {
+          edges: ["s1"],
         },
-        edges: [
-          [null, "s1"],
-          ["s1", "s2"],
-        ],
+        s1: {
+          edges: ["s2"],
+        },
+        s2: {},
       },
     });
 
@@ -120,53 +116,49 @@ describe("portals", () => {
     `);
 
     expect(res.data.flows_by_pk.data_merged).toMatchObject({
-      // edges order is significant, nodes does not matter
-      edges: [
-        // root edges
-        [null, "a"],
-        [null, "d"],
-        ["a", "b"],
-        ["a", "c"],
-        ["c", "d"],
-        [null, "f"],
-        // portal edges with null replaced by 'd'
-        ["d", "x"],
-        ["x", "y"],
-        ["x", "z"],
-        ["d", "another"],
-        ["d", "sub"],
-        ["another", "1"],
-        ["another", "2"],
-        // subportal edges
-        ["sub", "s1"],
-        ["s1", "s2"],
-      ],
-      nodes: {
-        // root nodes
-        a: {},
-        b: {},
-        c: {},
-        d: {
-          $t: 300,
-          flowId: portal,
-        },
-        e: {},
-        f: {},
-        // portal nodes
-        x: {},
-        y: {},
-        sub: {
-          $t: 300,
-          flowId: subportal,
-        },
-        z: {},
-        another: {},
-        1: {},
-        2: {},
-        // subportal nodes
-        s1: {},
-        s2: {},
+      // root nodes
+      _root: {
+        edges: ["a", "d", "f"],
       },
+      a: {
+        edges: ["b", "c"],
+      },
+      b: {},
+      c: {
+        edges: ["d"],
+      },
+      d: {
+        type: 300,
+        edges: ["d._root"],
+      },
+      e: {},
+      f: {},
+      // portal nodes
+      "d._root": {
+        edges: ["d.x", "d.another", "d.sub"],
+      },
+      "d.x": {
+        edges: ["d.y", "d.z"],
+      },
+      "d.y": {},
+      "d.sub": {
+        type: 300,
+        edges: ["d.sub.subportal"],
+      },
+      "d.z": {},
+      "d.another": {
+        edges: ["d.1", "d.2"],
+      },
+      "d.1": {},
+      "d.2": {},
+      // subportal nodes
+      "d.sub._root": {
+        edges: ["d.sub.s1"],
+      },
+      "d.sub.s1": {
+        edges: ["d.sub.s2"],
+      },
+      "d.sub.s2": {},
     });
   });
 });
