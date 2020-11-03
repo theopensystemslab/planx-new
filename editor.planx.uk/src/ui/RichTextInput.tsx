@@ -60,7 +60,7 @@ const RichTextInput: React.FC<
 
   useEffect(() => {
     const globalClickHandler = (ev: any) => {
-      if (!containerRef.current) {
+      if (!containerRef.current || !editorRef.current) {
         return;
       }
       const container = containerRef.current;
