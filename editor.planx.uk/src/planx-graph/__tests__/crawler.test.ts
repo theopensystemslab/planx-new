@@ -1,29 +1,45 @@
+import { TYPES } from "../../pages/FlowEditor/data/types";
 import Crawler from "../crawler";
 
-describe("navigating a basic graph", () => {
-  test("simple navigation", () => {
-    const crawler = new Crawler({
-      _root: {
-        edges: ["a", "b"],
-      },
-      a: {
-        edges: ["c"],
-      },
-      b: {},
-      c: {},
-      d: {},
-    });
-
-    expect(crawler.upcomingIds).toEqual(["a", "b"]);
-
-    crawler.visit("a");
-
-    expect(crawler.upcomingIds).toEqual(["b"]);
-
-    crawler.visit("b");
-
-    expect(crawler.upcomingIds).toEqual([]);
+test("crawling a basic graph", () => {
+  const crawler = new Crawler({
+    _root: {
+      edges: ["a", "b"],
+    },
+    a: {
+      edges: ["c"],
+    },
+    b: {},
+    c: {},
+    d: {},
   });
+
+  expect(crawler.upcomingIds).toEqual(["a", "b"]);
+
+  crawler.visit("a");
+
+  expect(crawler.upcomingIds).toEqual(["b"]);
+
+  crawler.visit("b");
+
+  expect(crawler.upcomingIds).toEqual([]);
+});
+
+test("crawling with portals", () => {
+  const crawler = new Crawler({
+    _root: {
+      edges: ["a", "b"],
+    },
+    a: {
+      type: TYPES.InternalPortal,
+      edges: ["c"],
+    },
+    b: {},
+    c: {},
+    d: {},
+  });
+
+  expect(crawler.upcomingIds).toEqual(["c", "b"]);
 });
 
 describe("callbacks", () => {

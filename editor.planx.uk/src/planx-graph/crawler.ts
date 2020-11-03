@@ -1,3 +1,4 @@
+import { TYPES } from "../pages/FlowEditor/data/types";
 import { Graph, ROOT_NODE_KEY } from ".";
 
 class Crawler {
@@ -24,7 +25,11 @@ class Crawler {
           (id) => this.graph[id] && !Object.keys(this.breadcrumbs).includes(id)
         )
         .forEach((id) => {
-          ids.add(id);
+          if (this.graph[id]?.type === TYPES.InternalPortal) {
+            nodeIdsConnectedFrom(id);
+          } else {
+            ids.add(id);
+          }
         });
 
     Object.entries(this.breadcrumbs)
