@@ -141,3 +141,6 @@ export const parseFormValues = (ob, defaultValues = {}) =>
     }
     return acc;
   }, defaultValues);
+
+export const FormError: React.FC<{ message: string }> = ({ message }) =>
+  message ? <span className="error">{message}</span> : null;
