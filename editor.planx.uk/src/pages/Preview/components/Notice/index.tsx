@@ -1,11 +1,12 @@
 import { mostReadable } from "@ctrl/tinycolor";
 import { Button, makeStyles, Theme } from "@material-ui/core";
-import Card from "../shared/Card";
 import { ErrorOutline } from "@material-ui/icons";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { useStore } from "../../../FlowEditor/lib/store";
+
 import { Notice } from "../../../FlowEditor/data/types";
+import { useStore } from "../../../FlowEditor/lib/store";
+import Card from "../shared/Card";
 
 interface Props extends Notice {
   handleSubmit?: any;

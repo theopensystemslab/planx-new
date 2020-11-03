@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import { lazy, map, mount, redirect, route } from "navi";
 import * as React from "react";
+
 import { client } from "../lib/graphql";
 import Login from "../pages/Login";
 import { makeTitle } from "./utils";

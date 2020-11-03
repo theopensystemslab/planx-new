@@ -1,6 +1,6 @@
+import { Box, Card, makeStyles, Theme, Typography } from "@material-ui/core";
 import React from "react";
 import { Link } from "react-navi";
-import { Box, Card, Typography, makeStyles, Theme } from "@material-ui/core";
 
 interface Props {
   teams: Array<{

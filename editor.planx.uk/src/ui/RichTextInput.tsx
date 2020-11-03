@@ -5,11 +5,12 @@ import { stateFromMarkdown } from "draft-js-import-markdown";
 import MUIRichTextEditor from "mui-rte";
 import React, {
   ChangeEvent,
-  useState,
-  useRef,
-  useEffect,
   MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
 } from "react";
+
 import { levenshteinDistance } from "../utils";
 
 interface Props extends InputBaseProps {

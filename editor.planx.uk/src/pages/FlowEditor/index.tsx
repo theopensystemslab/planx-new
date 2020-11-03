@@ -1,10 +1,12 @@
+import "./components/Settings";
+import "./floweditor.scss";
+
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import React, { useRef } from "react";
+
 import { rootFlowPath } from "../../routes/utils";
 import Flow from "./components/Flow";
 import PreviewBrowser from "./components/PreviewBrowser";
-import "./components/Settings";
-import "./floweditor.scss";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 

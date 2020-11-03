@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import React from "react";
+
 import { TYPES } from "../../data/types";
 
 export interface Props {

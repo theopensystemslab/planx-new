@@ -1,5 +1,7 @@
-import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+import "mapbox-gl/dist/mapbox-gl.css";
+
+import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import ButtonBase from "@material-ui/core/ButtonBase";
@@ -10,8 +12,8 @@ import DrawIcon from "@material-ui/icons/Create";
 import LayersIcon from "@material-ui/icons/LayersOutlined";
 import turfArea from "@turf/area";
 import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
 import React from "react";
+
 import MapStyleSwitcher from "../FindProperty/MapStyleSwitcher";
 
 const styles = (theme) =>

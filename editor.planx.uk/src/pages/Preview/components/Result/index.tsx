@@ -1,6 +1,7 @@
 import { Box, Button, Typography } from "@material-ui/core";
 import React from "react";
 import ReactHtmlParser from "react-html-parser";
+
 import Card from "../shared/Card";
 import SimpleExpand from "../shared/SimpleExpand";
 import ResultReason from "./ResultReason";

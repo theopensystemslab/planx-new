@@ -1,7 +1,9 @@
 import { Box, Button } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import React from "react";
+
 import {
   ColorPicker,
   Input,
@@ -10,7 +12,6 @@ import {
   InputRowItem,
   InputRowLabel,
 } from "../../../../ui";
-import { makeStyles } from "@material-ui/core/styles";
 
 export const serviceFlagsStyles = makeStyles((theme) => ({
   root: {

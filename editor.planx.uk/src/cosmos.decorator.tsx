@@ -2,6 +2,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+
 import theme from "./theme";
 
 const Decorator = ({ children }) => (

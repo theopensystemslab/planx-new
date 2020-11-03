@@ -1,5 +1,6 @@
 import { Box } from "@material-ui/core";
 import React, { useState } from "react";
+
 import RichTextInput from "../RichTextInput";
 
 const Fixture: React.FC<{}> = () => {

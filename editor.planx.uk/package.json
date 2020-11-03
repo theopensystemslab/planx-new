@@ -83,7 +83,8 @@
     "test": "react-scripts test",
     "cosmos": "FAST_REFRESH=false cosmos",
     "eject": "react-scripts eject",
-    "compile-types": "typescript-json-validator src/types/index.d.ts --collection --useNamedExport"
+    "compile-types": "typescript-json-validator src/types/index.d.ts --collection --useNamedExport",
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix"
   },
   "eslintConfig": {
     "extends": [

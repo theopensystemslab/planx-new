@@ -1,5 +1,6 @@
 import { compose, mount, redirect, route, withData } from "navi";
 import React from "react";
+
 import FlowSettings from "../pages/FlowEditor/components/Settings";
 import { makeTitle } from "./utils";
 

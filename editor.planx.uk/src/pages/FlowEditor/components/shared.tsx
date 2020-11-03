@@ -9,6 +9,7 @@ import {
   SearchOutlined,
   TextFields,
 } from "@material-ui/icons";
+
 import { TYPES } from "../data/types";
 
 // XXX: We define the Icon type in terms of one of the Icons so as not to have to repeat ourselves

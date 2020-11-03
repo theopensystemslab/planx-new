@@ -1,18 +1,18 @@
-import Box from "@material-ui/core/Box";
-import DeleteIcon from "@material-ui/icons/Close";
-import FileIcon from "@material-ui/icons/AttachFile";
-import IconButton from "@material-ui/core/IconButton";
-import React from "react";
-import classNames from "classnames";
 import { Button } from "@material-ui/core";
-import { CloudUpload } from "@material-ui/icons";
+import Box from "@material-ui/core/Box";
+import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
+import { CloudUpload } from "@material-ui/icons";
+import FileIcon from "@material-ui/icons/AttachFile";
+import DeleteIcon from "@material-ui/icons/Close";
+import { uploadFile } from "api/upload";
+import classNames from "classnames";
 import { nanoid } from "nanoid";
+import React from "react";
 import { useDropzone } from "react-dropzone";
 
-import Card from "../shared/Card";
 import { MoreInformation } from "../../../FlowEditor/data/types";
-import { uploadFile } from "api/upload";
+import Card from "../shared/Card";
 
 export default Component;
 
