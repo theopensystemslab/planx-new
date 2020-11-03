@@ -3,6 +3,7 @@ import React from "react";
 import InputField from "ui/InputField";
 
 import { TYPES } from "../../data/types";
+import { FormError } from "./shared";
 
 interface Flow {
   id: string;
@@ -21,11 +22,17 @@ const InternalPortalForm: React.FC<{
       text,
       flowId,
     },
-    onSubmit: (values) => {
-      if (id) {
-        return alert("Sorry, you can't update internal portals right now");
+    validate: (values) => {
+      const errors: Record<string, string> = {};
+
+      if (!values.flowId && !values.text) {
+        errors.text =
+          flows.length > 0 ? "Required if no flow is selected" : "Required.";
       }
 
+      return errors;
+    },
+    onSubmit: (values) => {
       const payload = values.flowId
         ? values.flowId
         : { type: TYPES.InternalPortal, data: values };
@@ -48,7 +55,9 @@ const InternalPortalForm: React.FC<{
           rows={2}
           value={formik.values.text}
           disabled={!!formik.values.flowId}
+          // required={!formik.values.flowId} (was ignored by @testing-library?)
         />
+        <FormError message={formik.errors.text} />
       </div>
       {flows?.length > 0 && (
         <>

@@ -135,19 +135,23 @@ const FormModal: React.FC<{
           {...node?.data}
           {...extraProps}
           id={id}
-          handleSubmit={(data, options = []) => {
+          handleSubmit={(data, children = undefined) => {
             if (typeof data === "string") {
-              connect(parent, data, before);
+              connect(parent, data, { before });
             } else {
-              const parsed = parseFormValues(Object.entries(data));
-              const parsedOptions = options.map((o) =>
-                parseFormValues(Object.entries(o))
-              );
+              const parsedData = parseFormValues(Object.entries(data));
+              const parsedChildren =
+                children?.map((o) => parseFormValues(Object.entries(o))) ||
+                undefined;
 
               if (handleDelete) {
-                updateNode({ id, ...parsed }, parsedOptions);
+                updateNode({ id, ...parsedData }, { children: parsedChildren });
               } else {
-                addNode(parsed, parsedOptions, parent, before);
+                addNode(parsedData, {
+                  children: parsedChildren,
+                  parent,
+                  before,
+                });
               }
             }
 
