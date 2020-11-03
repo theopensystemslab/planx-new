@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import React from "react";
 
 import { TYPES } from "../../data/types";
 import InternalPortalForm from "./InternalPortal";
@@ -44,7 +45,7 @@ test("no select field when there are no flows", () => {
   expect(screen.queryByTestId("flowId")).toBeNull();
 });
 
-test("updating an internal portal", async () => {
+test.skip("updating an internal portal", async () => {
   const handleSubmit = jest.fn();
 
   render(
