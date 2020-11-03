@@ -2,6 +2,7 @@ import { Box, Button, IconButton } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
+
 import { FormikHookReturn } from "../../../../types";
 import {
   ImgInput,
@@ -17,7 +18,7 @@ import {
   RichTextInput,
 } from "../../../../ui";
 import { removeAt } from "../../../../utils";
-import { Checklist, toggleExpandableChecklist, TYPES } from "../../data/types";
+import { Checklist, TYPES, toggleExpandableChecklist } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation, PermissionSelect } from "./shared";
 
@@ -170,7 +171,6 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                       newOptions
                     );
                   }}
-                  disableDragAndDrop
                   newValue={() =>
                     ({
                       data: {
