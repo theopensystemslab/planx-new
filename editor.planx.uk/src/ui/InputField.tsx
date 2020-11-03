@@ -1,4 +1,4 @@
-import InputBase from "@material-ui/core/InputBase";
+import InputBase, { InputBaseProps } from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
@@ -30,7 +30,9 @@ const styles = (theme) =>
 
 const useStyles = makeStyles(styles) as any;
 
-const InputField = ({ ...props }) => {
+interface Props extends InputBaseProps {}
+
+const InputField = (props: Props) => {
   const classes = useStyles();
   return (
     <InputBase
