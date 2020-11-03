@@ -22,6 +22,10 @@ const InternalPortalForm: React.FC<{
       flowId,
     },
     onSubmit: (values) => {
+      if (id) {
+        return alert("Sorry, you can't update internal portals right now");
+      }
+
       const payload = values.flowId
         ? values.flowId
         : { type: TYPES.InternalPortal, data: values };
