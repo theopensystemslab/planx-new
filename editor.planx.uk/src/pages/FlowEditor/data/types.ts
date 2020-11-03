@@ -42,6 +42,13 @@ export const SLUGS = {
   [TYPES.Response]: "question",
 } as const;
 
+export const fromSlug = (slug: string): TYPES | undefined => {
+  const entry = Object.entries(SLUGS).find(
+    ([_typeString, currentSlug]) => currentSlug === slug
+  );
+  return entry && Number(entry[0]);
+};
+
 // Task list
 
 export interface TaskList {
