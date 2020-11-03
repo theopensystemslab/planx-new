@@ -9,8 +9,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/CloseOutlined";
 import React from "react";
 import { useNavigation } from "react-navi";
+
 import { rootFlowPath } from "../../../../routes/utils";
-import { SLUGS, TYPES } from "../../data/types";
+import { SLUGS, TYPES, fromSlug } from "../../data/types";
 import { useStore } from "../../lib/store";
 import { parseFormValues } from "./shared";
 
@@ -35,46 +36,48 @@ const useStyles = makeStyles((theme) => ({
 const NodeTypeSelect: React.FC<{
   value: string;
   onChange: (newValue: string) => void;
-}> = (props) => (
-  <select
-    value={props.value}
-    onChange={(ev) => {
-      props.onChange(ev.target.value);
-    }}
-  >
-    <optgroup label="Question">
-      <option value={TYPES.Statement}>Question</option>
-      <option value={TYPES.Checklist}>Checklist</option>
-    </optgroup>
-    <optgroup label="Inputs">
-      <option value={TYPES.TextInput}>Text Input</option>
-      <option value={TYPES.FileUpload}>File Upload</option>
-      <option disabled value="number-inputs">
-        Number Input
-      </option>
-      <option disabled value="date-inputs">
-        Date Input
-      </option>
-      <option disabled value="address-inputs">
-        Address Input
-      </option>
-    </optgroup>
-    <optgroup label="Information">
-      <option value={TYPES.TaskList}>Task List</option>
-      <option value={TYPES.Notice}>Notice</option>
-      <option value={TYPES.Result}>Result</option>
-      <option value={TYPES.Content}>Content</option>
-    </optgroup>
-    <optgroup label="Location">
-      <option value={TYPES.FindProperty}>Find property</option>
-      <option value={TYPES.PropertyInformation}>Property information</option>
-    </optgroup>
-    <optgroup label="Navigation">
-      <option value={TYPES.InternalPortal}>Internal Portal</option>
-      <option value={TYPES.ExternalPortal}>External Portal</option>
-    </optgroup>
-  </select>
-);
+}> = (props) => {
+  return (
+    <select
+      value={fromSlug(props.value)}
+      onChange={(ev) => {
+        props.onChange(ev.target.value);
+      }}
+    >
+      <optgroup label="Question">
+        <option value={TYPES.Statement}>Question</option>
+        <option value={TYPES.Checklist}>Checklist</option>
+      </optgroup>
+      <optgroup label="Inputs">
+        <option value={TYPES.TextInput}>Text Input</option>
+        <option value={TYPES.FileUpload}>File Upload</option>
+        <option disabled value="number-inputs">
+          Number Input
+        </option>
+        <option disabled value="date-inputs">
+          Date Input
+        </option>
+        <option disabled value="address-inputs">
+          Address Input
+        </option>
+      </optgroup>
+      <optgroup label="Information">
+        <option value={TYPES.TaskList}>Task List</option>
+        <option value={TYPES.Notice}>Notice</option>
+        <option value={TYPES.Result}>Result</option>
+        <option value={TYPES.Content}>Content</option>
+      </optgroup>
+      <optgroup label="Location">
+        <option value={TYPES.FindProperty}>Find property</option>
+        <option value={TYPES.PropertyInformation}>Property information</option>
+      </optgroup>
+      <optgroup label="Navigation">
+        <option value={TYPES.InternalPortal}>Internal Portal</option>
+        <option value={TYPES.ExternalPortal}>External Portal</option>
+      </optgroup>
+    </select>
+  );
+};
 
 const FormModal: React.FC<{
   type: string;
