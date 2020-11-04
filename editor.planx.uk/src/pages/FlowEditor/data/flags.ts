@@ -2,23 +2,24 @@ import { mostReadable } from "@ctrl/tinycolor";
 
 const flags = [
   // Planning permission
+
   {
-    value: "PP-NOT_DEVELOPMENT",
-    text: "Not development",
+    value: "MISSING_INFO",
+    text: "Missing information",
     category: "Planning permission",
-    bgColor: "#FFFFFF",
+    bgColor: "#DBDBDB",
   },
   {
-    value: "NO_APP_REQUIRED",
-    text: "Permitted development",
+    value: "IMMUNE",
+    text: "Immune",
     category: "Planning permission",
-    bgColor: "#FFFFFF",
+    bgColor: "#EFFFDA",
   },
   {
-    value: "PP-NOTICE",
-    text: "Notice",
+    value: "PLANNING_PERMISSION_REQUIRED",
+    text: "Permission needed",
     category: "Planning permission",
-    bgColor: "#FEFFC1",
+    bgColor: "#909090",
   },
   {
     value: "PRIOR_APPROVAL",
@@ -27,66 +28,58 @@ const flags = [
     bgColor: "#FAFF00",
   },
   {
-    value: "MISSING_INFO",
-    text: "Missing information",
+    value: "PP-NOTICE",
+    text: "Notice",
     category: "Planning permission",
-    bgColor: "#DBDBDB",
+    bgColor: "#FEFFC1",
   },
   {
-    value: "PLANNING_PERMISSION_REQUIRED",
-    text: "Permission needed",
+    value: "NO_APP_REQUIRED",
+    text: "Permitted development",
     category: "Planning permission",
-    bgColor: "#919191",
+    bgColor: "#B6EE7E",
   },
-  // Listed building consent
   {
-    value: "LB-NOT_REQUIRED",
-    text: "Not required",
-    category: "Listed building consent",
+    value: "PP-NOT_DEVELOPMENT",
+    text: "Not development",
+    category: "Planning permission",
     bgColor: "#FFFFFF",
   },
-  {
-    value: "LB-DE_MINIMIS",
-    text: "De minimis",
-    category: "Listed building consent",
-    bgColor: "#E2AEFB",
-  },
-  {
-    value: "LB-REQUIRED",
-    text: "Required",
-    category: "Listed building consent",
-    bgColor: "#AD00FF",
-  },
-  // {
-  //   value: "LB-ADVICE_RECOMMENDED",
-  //   text: "Advice recommended",
-  //   category: "Listed Buildings",
-  //   bgColor: "#7D70B3",
-  // },
-  // {
-  //   value: "LB-LIKELY_REFUSAL",
-  //   text: "Likely refusal",
-  //   category: "Listed Buildings",
-  //   bgColor: "#574898",
-  // },
+
+  // Listed building consent
+
   {
     value: "LB-MISSING_INFO",
     text: "Missing information",
     category: "Listed building consent",
     bgColor: "#DBDBDB",
   },
-  // Works to trees
   {
-    value: "TR-NOT_REQUIRED",
-    text: "Not required",
-    category: "Works to trees",
-    bgColor: "#FFF",
+    value: "LB-REQUIRED",
+    text: "Required",
+    category: "Listed building consent",
+    bgColor: "#FAFF00",
   },
   {
-    value: "TR-DE_MINIMIS",
+    value: "LB-DE_MINIMIS",
     text: "De minimis",
+    category: "Listed building consent",
+    bgColor: "#B6EE7E",
+  },
+  {
+    value: "LB-NOT_REQUIRED",
+    text: "Not required",
+    category: "Listed building consent",
+    bgColor: "#FFFFFF",
+  },
+
+  // Works to trees
+
+  {
+    value: "TR-MISSING_INFO",
+    text: "Missing information",
     category: "Works to trees",
-    bgColor: "#B4BBFF",
+    bgColor: "#DBDBDB",
   },
   {
     value: "TR-REQUIRED",
@@ -95,23 +88,25 @@ const flags = [
     bgColor: "#FAFF00",
   },
   {
-    value: "TR-MISSING_INFO",
-    text: "Missing information",
+    value: "TR-DE_MINIMIS",
+    text: "De minimis",
     category: "Works to trees",
-    bgColor: "#DBDBDB",
+    bgColor: "#B4BBFF",
   },
-  // Demolition in a conservation area
   {
-    value: "DC-NOT_REQUIRED",
+    value: "TR-NOT_REQUIRED",
     text: "Not required",
-    category: "Demolition in a conservation area",
+    category: "Works to trees",
     bgColor: "#FFF",
   },
+
+  // Demolition in a conservation area
+
   {
-    value: "DC-DE_MINIMIS",
-    text: "De minimis",
+    value: "DC-MISSING_INFO",
+    text: "Missing information",
     category: "Demolition in a conservation area",
-    bgColor: "#FFC2A0",
+    bgColor: "#DBDBDB",
   },
   {
     value: "DC-REQUIRED",
@@ -120,23 +115,25 @@ const flags = [
     bgColor: "#FF5C00",
   },
   {
-    value: "DC-MISSING_INFO",
-    text: "Missing information",
+    value: "DC-DE_MINIMIS",
+    text: "De minimis",
     category: "Demolition in a conservation area",
-    bgColor: "#DBDBDB",
+    bgColor: "#FFC2A0",
   },
+  {
+    value: "DC-NOT_REQUIRED",
+    text: "Not required",
+    category: "Demolition in a conservation area",
+    bgColor: "#FFF",
+  },
+
   // Planning policy
+
   {
-    value: "LIKELY_PASS",
-    text: "Meets policy",
+    value: "PO_MISSING_INFO",
+    text: "Missing information",
     category: "Planning policy",
-    bgColor: "#63C501",
-  },
-  {
-    value: "EDGE_CASE",
-    text: "Edge case",
-    category: "Planning policy",
-    bgColor: "#FFA800",
+    bgColor: "#DBDBDB",
   },
   {
     value: "LIKELY_FAIL",
@@ -145,41 +142,25 @@ const flags = [
     bgColor: "#FF001F",
   },
   {
-    value: "PO_MISSING_INFO",
-    text: "Missing information",
+    value: "EDGE_CASE",
+    text: "Edge case",
     category: "Planning policy",
-    bgColor: "#DBDBDB",
+    bgColor: "#FFA800",
   },
+  {
+    value: "LIKELY_PASS",
+    text: "Meets policy",
+    category: "Planning policy",
+    bgColor: "#63C501",
+  },
+
   // Community infrastructure levy
+
   {
-    value: "CO_NOT_LIABLE",
-    text: "Not liable",
+    value: "CO_MISSING_INFO",
+    text: "Missing information",
     category: "Community infrastructure levy",
-    bgColor: "#FFF",
-  },
-  {
-    value: "CO_LIABLE",
-    text: "Liable",
-    category: "Community infrastructure levy",
-    bgColor: "#FF0099",
-  },
-  {
-    value: "CO_RELIEF",
-    text: "Relief",
-    category: "Community infrastructure levy",
-    bgColor: "#FFA4DA",
-  },
-  {
-    value: "CO_RELIEF_VOID",
-    text: "Relief void",
-    category: "Community infrastructure levy",
-    bgColor: "#A4698C",
-  },
-  {
-    value: "CO_EXEMPT",
-    text: "Exempt",
-    category: "Community infrastructure levy",
-    bgColor: "#FFDEF2",
+    bgColor: "#DBDBDB",
   },
   {
     value: "CO_EXEMPTION_VOID",
@@ -188,10 +169,34 @@ const flags = [
     bgColor: "#CDB1C2",
   },
   {
-    value: "CO_MISSING_INFO",
-    text: "Missing information",
+    value: "CO_EXEMPT",
+    text: "Exempt",
     category: "Community infrastructure levy",
-    bgColor: "#DBDBDB",
+    bgColor: "#FFDEF2",
+  },
+  {
+    value: "CO_RELIEF_VOID",
+    text: "Relief void",
+    category: "Community infrastructure levy",
+    bgColor: "#A4698C",
+  },
+  {
+    value: "CO_RELIEF",
+    text: "Relief",
+    category: "Community infrastructure levy",
+    bgColor: "#FFA4DA",
+  },
+  {
+    value: "CO_LIABLE",
+    text: "Liable",
+    category: "Community infrastructure levy",
+    bgColor: "#FF0099",
+  },
+  {
+    value: "CO_NOT_LIABLE",
+    text: "Not liable",
+    category: "Community infrastructure levy",
+    bgColor: "#FFF",
   },
 ].map((f: any) => ({
   ...f,
