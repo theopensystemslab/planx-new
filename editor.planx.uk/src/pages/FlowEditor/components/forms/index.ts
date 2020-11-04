@@ -8,6 +8,7 @@ import FileUpload from "./FileUpload";
 import FindProperty from "./FindProperty";
 import InternalPortal from "./InternalPortal";
 import Notice from "./Notice";
+import Pay from "./Pay";
 import PropertyInformation from "./PropertyInformation";
 import Question from "./Question";
 import Result from "./Result";
@@ -30,6 +31,7 @@ const components: {
   "internal-portal": InternalPortal,
   question: Question,
   content: Content,
+  pay: Pay,
 };
 
 export default components;

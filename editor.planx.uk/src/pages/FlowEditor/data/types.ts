@@ -18,6 +18,7 @@ export enum TYPES {
   Content = 250,
   InternalPortal = 300,
   ExternalPortal = 310,
+  Pay = 400,
 }
 
 export const SLUGS = {
@@ -40,6 +41,7 @@ export const SLUGS = {
   [TYPES.AddressInput]: "question",
   [TYPES.Statement]: "question",
   [TYPES.Response]: "question",
+  [TYPES.Pay]: "pay",
 } as const;
 
 export const fromSlug = (slug: string): TYPES | undefined => {

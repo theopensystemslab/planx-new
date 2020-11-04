@@ -46,6 +46,8 @@ const Node: React.FC<any> = (props) => {
       return <Portal {...props} />;
     case TYPES.InternalPortal:
       return props.href ? <Breadcrumb {...props} /> : <Portal {...props} />;
+    case TYPES.Pay:
+      return <Question {...props} text={node?.data?.description ?? "Pay"} />;
     case TYPES.Flow:
     case TYPES.SignIn:
     case TYPES.Report:

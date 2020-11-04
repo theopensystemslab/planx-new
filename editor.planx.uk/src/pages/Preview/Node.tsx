@@ -8,6 +8,7 @@ import Content from "./components/Content";
 import FileUpload from "./components/FileUpload";
 import FindProperty from "./components/FindProperty";
 import Notice from "./components/Notice";
+import Pay from "./components/Pay";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
 import Result from "./components/Result";
@@ -122,6 +123,8 @@ const Node: React.FC<any> = (props) => {
           handleSubmit={() => props.handleSubmit([props.id])}
         />
       );
+    case TYPES.Pay:
+      return <Pay handleSubmit={() => props.handleSubmit([props.id])} />;
     case TYPES.Flow:
     case TYPES.SignIn:
     case TYPES.Report:
