@@ -26,7 +26,4 @@ module.exports = {
   alias: {
     /* ... */
   },
-  scripts: {
-    "mount:api": "mount src/api --to /_dist_/api",
-  },
 };
