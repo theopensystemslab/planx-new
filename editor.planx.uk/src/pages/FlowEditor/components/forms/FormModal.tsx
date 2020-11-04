@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/CloseOutlined";
 import React from "react";
 import { useNavigation } from "react-navi";
+
 import { rootFlowPath } from "../../../../routes/utils";
 import { fromSlug, SLUGS, TYPES } from "../../data/types";
 import { useStore } from "../../lib/store";

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-navi";
+
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 
