@@ -10,8 +10,8 @@ import Result from "./Result";
 
 const Node: React.FC<any> = (props) => {
   const node = useStore((state) => state.flow[props.id]);
-
-  switch (props.type) {
+  const type = props.type as TYPES;
+  switch (type) {
     case TYPES.PropertyInformation:
       return <Question {...props} text="Property information" />;
     case TYPES.FindProperty:
@@ -46,10 +46,21 @@ const Node: React.FC<any> = (props) => {
       return <Portal {...props} />;
     case TYPES.InternalPortal:
       return props.href ? <Breadcrumb {...props} /> : <Portal {...props} />;
+    case TYPES.Flow:
+    case TYPES.SignIn:
+    case TYPES.Report:
+    case TYPES.DateInput:
+    case TYPES.AddressInput:
+    case TYPES.NumberInput:
+      return null;
     default:
       console.error({ nodeNotFound: props });
-      return null;
+      return exhaustiveCheck(type);
   }
 };
+
+function exhaustiveCheck(type: never): never {
+  throw new Error("Missing type");
+}
 
 export default Node;
