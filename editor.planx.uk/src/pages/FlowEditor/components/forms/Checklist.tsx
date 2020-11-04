@@ -1,6 +1,9 @@
 import { Box, Button, IconButton } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { useFormik } from "formik";
+import adjust from "ramda/src/adjust";
+import compose from "ramda/src/compose";
+import remove from "ramda/src/remove";
 import React, { useEffect, useRef } from "react";
 
 import { FormikHookReturn } from "../../../../types";
@@ -16,13 +19,19 @@ import {
   ModalSectionContent,
   OptionButton,
   RichTextInput,
+  SimpleMenu,
 } from "../../../../ui";
-import { removeAt } from "../../../../utils";
-import { Checklist, toggleExpandableChecklist, TYPES } from "../../data/types";
+import {
+  Checklist,
+  Group,
+  Option,
+  toggleExpandableChecklist,
+  TYPES,
+} from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation, PermissionSelect } from "./shared";
 
-interface Option {
+interface ChecklistOption {
   id?: string;
   data: {
     description?: string;
@@ -50,99 +59,118 @@ interface ChecklistProps extends Checklist {
       text?: string;
     };
   };
-  groupedOptions?: any;
-  options?: any;
 }
 
 const OptionEditor: React.FC<{
-  value: Option;
-  onChange: (newVal: Option) => void;
+  index?: number;
+  value: ChecklistOption;
+  onChange: (newVal: ChecklistOption) => void;
+  groupIndex?: number;
+  groups?: Array<string>;
+  onMoveToGroup?: (itemIndex: number, groupIndex: number) => void;
   showValueField?: boolean;
-}> = (props) => (
-  <div style={{ width: "100%" }}>
-    <InputRow>
-      <InputRowItem width="50%">
-        {props.value.id && (
-          <input type="hidden" value={props.value.id} readOnly />
-        )}
-
-        <Input
-          // required
-          format="bold"
-          value={props.value.data.text || ""}
-          onChange={(ev) => {
-            props.onChange({
-              ...props.value,
-              data: {
-                ...props.value.data,
-                text: ev.target.value,
-              },
-            });
-          }}
-          placeholder="Option"
-        />
-      </InputRowItem>
-
-      <ImgInput
-        img={props.value.data.img}
-        onChange={(img) => {
-          props.onChange({
-            ...props.value,
-            data: {
-              ...props.value.data,
-              img,
-            },
-          });
-        }}
-      />
-
-      <PermissionSelect
-        value={props.value.data.flag || ""}
-        onChange={(ev) => {
-          props.onChange({
-            ...props.value,
-            data: {
-              ...props.value.data,
-              flag: ev.target.value,
-            },
-          });
-        }}
-      />
-    </InputRow>
-
-    {props.showValueField && (
+}> = (props) => {
+  return (
+    <div style={{ width: "100%" }}>
       <InputRow>
-        <Input
-          format="data"
-          value={props.value.data.val || ""}
-          placeholder="Data Value"
+        <InputRowItem width="50%">
+          {props.value.id && (
+            <input type="hidden" value={props.value.id} readOnly />
+          )}
+
+          <Input
+            // required
+            format="bold"
+            value={props.value.data.text || ""}
+            onChange={(ev) => {
+              props.onChange({
+                ...props.value,
+                data: {
+                  ...props.value.data,
+                  text: ev.target.value,
+                },
+              });
+            }}
+            placeholder="Option"
+          />
+        </InputRowItem>
+
+        <ImgInput
+          img={props.value.data.img}
+          onChange={(img) => {
+            props.onChange({
+              ...props.value,
+              data: {
+                ...props.value.data,
+                img,
+              },
+            });
+          }}
+        />
+
+        <PermissionSelect
+          value={props.value.data.flag || ""}
           onChange={(ev) => {
             props.onChange({
               ...props.value,
               data: {
                 ...props.value.data,
-                val: ev.target.value,
+                flag: ev.target.value,
               },
             });
           }}
         />
+
+        {typeof props.index !== "undefined" &&
+          props.groups &&
+          props.onMoveToGroup && (
+            <SimpleMenu
+              items={props.groups.map((group, groupIndex) => ({
+                label: `Move to ${group || `group ${groupIndex}`}`,
+                onClick: () => {
+                  props.onMoveToGroup &&
+                    props.onMoveToGroup(props.index, groupIndex);
+                },
+                disabled: groupIndex === props.groupIndex,
+              }))}
+            />
+          )}
       </InputRow>
-    )}
-  </div>
-);
+
+      {props.showValueField && (
+        <InputRow>
+          <Input
+            format="data"
+            value={props.value.data.val || ""}
+            placeholder="Data Value"
+            onChange={(ev) => {
+              props.onChange({
+                ...props.value,
+                data: {
+                  ...props.value.data,
+                  val: ev.target.value,
+                },
+              });
+            }}
+          />
+        </InputRow>
+      )}
+    </div>
+  );
+};
 
 const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   return (
     <ModalSectionContent title="Options">
       {formik.values.groupedOptions ? (
         <Box>
-          {formik.values.groupedOptions.map((groupedOption, index) => (
-            <Box key={index} mt={index === 0 ? 0 : 4}>
+          {formik.values.groupedOptions.map((groupedOption, groupIndex) => (
+            <Box key={groupIndex} mt={groupIndex === 0 ? 0 : 4}>
               <Box display="flex" pb={1}>
                 <InputRow>
                   <Input
                     format="bold"
-                    name={`groupedOptions[${index}].title`}
+                    name={`groupedOptions[${groupIndex}].title`}
                     value={groupedOption.title}
                     placeholder="Section Title"
                     onChange={formik.handleChange}
@@ -154,7 +182,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                     onClick={() => {
                       formik.setFieldValue(
                         `groupedOptions`,
-                        removeAt(index, formik.values.groupedOptions)
+                        remove(groupIndex, 1, formik.values.groupedOptions)
                       );
                     }}
                   >
@@ -167,7 +195,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                   values={groupedOption.children}
                   onChange={(newOptions) => {
                     formik.setFieldValue(
-                      `groupedOptions[${index}].children`,
+                      `groupedOptions[${groupIndex}].children`,
                       newOptions
                     );
                   }}
@@ -179,11 +207,40 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                         val: "",
                         flag: "",
                       },
-                    } as Option)
+                    } as ChecklistOption)
                   }
                   newValueLabel="add new option"
                   Editor={OptionEditor}
-                  editorExtraProps={{ showValueField: !!formik.values.fn }}
+                  editorExtraProps={{
+                    groupIndex,
+                    showValueField: !!formik.values.fn,
+                    onMoveToGroup: (
+                      movedItemIndex: number,
+                      moveToGroupIndex: number
+                    ) => {
+                      const item = groupedOption.children[movedItemIndex];
+                      formik.setFieldValue(
+                        "groupedOptions",
+                        compose(
+                          adjust(moveToGroupIndex, (option: Group<Option>) => ({
+                            ...option,
+                            children: [...option.children, item],
+                          })),
+                          adjust(groupIndex, (option: Group<Option>) => ({
+                            ...option,
+                            children: remove(
+                              movedItemIndex,
+                              1,
+                              option.children
+                            ),
+                          }))
+                        )(formik.values.groupedOptions)
+                      );
+                    },
+                    groups: formik.values.groupedOptions.map(
+                      (opt) => opt.title
+                    ),
+                  }}
                 />
               </Box>
             </Box>
@@ -220,7 +277,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                 val: "",
                 flag: "",
               },
-            } as Option)
+            } as ChecklistOption)
           }
           Editor={OptionEditor}
           editorExtraProps={{ showValueField: !!formik.values.fn }}
@@ -269,7 +326,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
           },
           options
             ? options
-                .filter((o: Option) => o.data.text)
+                .filter((o: ChecklistOption) => o.data.text)
                 .map((o) => ({
                   ...o,
                   id: o.id || undefined,
@@ -278,7 +335,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
             : groupedOptions
             ? groupedOptions
                 .flatMap((gr) => gr.children)
-                .filter((o: Option) => o.data.text)
+                .filter((o: ChecklistOption) => o.data.text)
                 .map((o) => ({
                   ...o,
                   id: o.id || undefined,

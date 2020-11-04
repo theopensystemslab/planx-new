@@ -14,6 +14,7 @@ import {
 import { removeAt, setAt } from "../utils";
 
 export interface EditorProps<T> {
+  index?: number;
   value: T;
   onChange: (newValue: T) => void;
 }
@@ -55,6 +56,7 @@ function ListManager<T, EditorExtraProps>(props: Props<T, EditorExtraProps>) {
                 </IconButton>
               </Box>
               <Editor
+                index={index}
                 value={item}
                 onChange={(newItem) => {
                   props.onChange(setAt(index, newItem, props.values));
@@ -129,6 +131,7 @@ function ListManager<T, EditorExtraProps>(props: Props<T, EditorExtraProps>) {
                         </IconButton>
                       </Box>
                       <Editor
+                        index={index}
                         value={item}
                         onChange={(newItem) => {
                           props.onChange(setAt(index, newItem, props.values));

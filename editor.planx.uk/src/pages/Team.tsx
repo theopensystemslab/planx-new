@@ -8,13 +8,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Menu,
-  MenuItem,
   Typography,
 } from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -23,13 +20,13 @@ import {
   CallSplitOutlined,
   DeleteOutline,
   FolderOutlined,
-  MoreVert,
 } from "@material-ui/icons";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React from "react";
 import { Link } from "react-navi";
 
 import { client } from "../lib/graphql";
+import SimpleMenu from "../ui/SimpleMenu";
 import { api } from "./FlowEditor/lib/store";
 
 const useStyles = makeStyles((theme) => ({
@@ -194,7 +191,6 @@ const FooterLinks = () => (
 
 const FlowItem = ({ flow, teamId }) => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [deleting, setDeleting] = React.useState(false);
   const handleDelete = () => {
     api
@@ -202,7 +198,6 @@ const FlowItem = ({ flow, teamId }) => {
       .deleteFlow(teamId, flow.slug)
       .then(() => {
         setDeleting(false);
-        setAnchorEl(null);
 
         // TODO: remove flow from list rather than this hard refresh
         window.location.reload();
@@ -233,28 +228,11 @@ const FlowItem = ({ flow, teamId }) => {
         <Box className={classes.linkSubText}>
           {flowInfoHelper(flow.updated_at, flow.operations)}
         </Box>
-        <div>
-          <IconButton
-            color="inherit"
-            className={classes.menu}
-            size="small"
-            onClick={(ev) => {
-              setAnchorEl(ev.currentTarget);
-            }}
-          >
-            <MoreVert />
-          </IconButton>
-          <Menu
-            id="long-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={() => {
-              setAnchorEl(null);
-            }}
-          >
-            <MenuItem
-              onClick={async () => {
+        <SimpleMenu
+          className={classes.menu}
+          items={[
+            {
+              onClick: async () => {
                 const newSlug = prompt("New name", flow.slug);
                 if (newSlug && newSlug !== flow.slug) {
                   await client.mutate({
@@ -284,21 +262,18 @@ const FlowItem = ({ flow, teamId }) => {
 
                   window.location.reload();
                 }
-              }}
-            >
-              Rename
-            </MenuItem>
-
-            <MenuItem
-              style={{ color: "red" }}
-              onClick={() => {
+              },
+              label: "Rename",
+            },
+            {
+              label: "Delete",
+              onClick: () => {
                 setDeleting(true);
-              }}
-            >
-              Delete
-            </MenuItem>
-          </Menu>
-        </div>
+              },
+              error: true,
+            },
+          ]}
+        />
       </li>
     </>
   );
