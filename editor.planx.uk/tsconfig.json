@@ -5,17 +5,20 @@
     "baseUrl": "src",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "importsNotUsedAsValues": "error", //--
     "isolatedModules": true,
-    "jsx": "react",
+    "jsx": "preserve", //--
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
+    // "paths": {
+    // },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": false,
-    "target": "es6",
+    "target": "esnext",
     "typeRoots": ["src/types"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
