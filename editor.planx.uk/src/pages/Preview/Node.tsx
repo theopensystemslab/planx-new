@@ -1,6 +1,5 @@
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-
 import { TYPES } from "../FlowEditor/data/types";
 import { useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";
@@ -145,6 +144,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Flow:
     case TYPES.InternalPortal:
     case TYPES.NumberInput:
+    case TYPES.Page:
     case TYPES.Report:
     case TYPES.Response:
     case TYPES.SignIn:
