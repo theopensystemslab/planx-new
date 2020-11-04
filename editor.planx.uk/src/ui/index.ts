@@ -1,6 +1,5 @@
 export { default as ColorPicker } from "./ColorPicker";
 export { default as FileUpload } from "./FileUpload";
-export { default as FormButtons } from "./FormButtons";
 export { default as ImgInput } from "./ImgInput";
 export { default as Input } from "./Input";
 export { default as InputField } from "./InputField";

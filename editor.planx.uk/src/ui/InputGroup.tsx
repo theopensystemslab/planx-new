@@ -6,6 +6,7 @@ import DragHandle from "@material-ui/icons/DragHandle";
 import classNames from "classnames";
 import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import InputRow from "ui/InputRow";
 
 const inputGroupStyles = makeStyles((theme) => ({
   inputGroup: {
@@ -74,7 +75,7 @@ const inputGroupStyles = makeStyles((theme) => ({
   },
 }));
 
-interface IInputGroup {
+interface Props {
   children: JSX.Element[] | JSX.Element;
   label?: string;
   grow?: boolean;
@@ -83,10 +84,10 @@ interface IInputGroup {
   draggable?: boolean;
   id?;
   index?: number;
-  handleMove?;
+  handleMove?: (dragIndex: number, hoverIndex: number) => void;
 }
 
-const InputGroup: React.FC<IInputGroup> = ({
+const InputGroup: React.FC<Props> = ({
   children,
   label,
   deletable,
