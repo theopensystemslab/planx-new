@@ -2,8 +2,15 @@ const assert = require("assert");
 
 const { gqlAdmin } = require("./utils");
 
-describe("portals", () => {
-  let ids;
+const TYPES = {
+  Statement: 100,
+  Response: 200,
+  InternalPortal: 300,
+  ExternalPortal: 310,
+};
+
+describe("merging nested external portals", () => {
+  let uuids, result;
 
   beforeAll(async () => {
     let res = await gqlAdmin(`
@@ -19,23 +26,10 @@ describe("portals", () => {
         }
       }
     `);
-    ids = res.data.insert_flows.returning.map((row) => row.id);
-    assert.strictEqual(ids.length, 3);
-  });
+    uuids = res.data.insert_flows.returning.map((row) => row.id);
+    assert.strictEqual(uuids.length, 3);
 
-  afterAll(async () => {
-    const res = await gqlAdmin(`
-    mutation {
-      delete_flows(where: {id: {_in: ${JSON.stringify(ids)}}}) {
-        affected_rows
-      }
-    }
-  `);
-    assert.strictEqual(res.data.delete_flows.affected_rows, ids.length);
-  });
-
-  test("data_merged field includes child and grandchild portals", async () => {
-    const [root, portal, subportal] = ids;
+    const [root, child, grandchild] = uuids;
 
     const query = `
       mutation Insert($data: jsonb!, $id: uuid!){
@@ -45,120 +39,403 @@ describe("portals", () => {
       }
     `;
 
+    // create the root, top-level flow
+
     await gqlAdmin(query, {
       id: root,
       data: {
         _root: {
-          edges: ["a", "d", "f"],
+          edges: ["root_q1", "root_q2"],
         },
-        a: {
-          edges: ["b", "c"],
-        },
-        b: {},
-        c: {
-          edges: ["d"],
-        },
-        d: {
-          type: 320,
+        root_q1: {
+          type: TYPES.Statement,
           data: {
-            flowId: portal,
+            text: "Root Q1",
+          },
+          edges: ["root_a1", "root_a2"],
+        },
+        root_a1: {
+          type: TYPES.Response,
+          data: {
+            text: "Root A1",
           },
         },
-        e: {},
-        f: {},
+        root_a2: {
+          type: TYPES.Response,
+          data: {
+            text: "Root A2",
+            edges: ["root_p1"],
+          },
+        },
+        root_p1: {
+          type: TYPES.ExternalPortal,
+          data: {
+            flowId: child, // link to child flow, created below
+          },
+        },
+        root_q2: {
+          type: TYPES.Statement,
+          data: {
+            text: "Root Q2",
+          },
+        },
       },
     });
 
     await gqlAdmin(query, {
-      id: portal,
+      id: child,
       data: {
         _root: {
-          edges: ["x", "another", "sub"],
+          edges: ["child_q1"],
         },
-        x: {
-          edges: ["y", "z"],
+        child_q1: {
+          edges: ["child_p1"],
         },
-        y: {},
-        sub: {
-          type: 320,
+        child_p1: {
+          type: TYPES.ExternalPortal,
           data: {
-            flowId: subportal,
+            flowId: grandchild, // link to grandchild flow, created below
           },
         },
-        z: {},
-        another: {
-          edges: ["1", "2"],
-        },
-        1: {},
-        2: {},
       },
     });
 
     await gqlAdmin(query, {
-      id: subportal,
+      id: grandchild,
       data: {
         _root: {
-          edges: ["s1"],
+          edges: ["grandchild_q1"],
         },
-        s1: {
-          edges: ["s2"],
+        grandchild_q1: {
+          edges: ["grandchild_a1"],
         },
-        s2: {},
+        grandchild_a1: {},
       },
     });
 
-    const res = await gqlAdmin(`
+    result = await gqlAdmin(`
       query {
         flows_by_pk(id: "${root}") {
           data_merged
         }
       }
     `);
+  });
 
-    expect(res.data.flows_by_pk.data_merged).toMatchObject({
-      // root nodes
+  afterAll(async () => {
+    const res = await gqlAdmin(`
+    mutation {
+      delete_flows(where: {id: {_in: ${JSON.stringify(uuids)}}}) {
+        affected_rows
+      }
+    }
+  `);
+    assert.strictEqual(res.data.delete_flows.affected_rows, uuids.length);
+  });
+
+  test.skip("OPTION 1 - chain ancestor parent id(s) into descendent ids", async () => {
+    expect(result.data.flows_by_pk.data_merged).toMatchObject({
+      // root flow
       _root: {
-        edges: ["a", "d", "f"],
+        edges: ["root_q1", "root_q2"],
       },
-      a: {
-        edges: ["b", "c"],
+      root_q1: {
+        type: TYPES.Statement,
+        data: {
+          text: "Root Q1",
+        },
+        edges: ["root_a1", "root_a2"],
       },
-      b: {},
-      c: {
-        edges: ["d"],
+      root_a1: {
+        type: TYPES.Response,
+        data: {
+          text: "Root A1",
+        },
       },
-      d: {
-        type: 300,
-        edges: ["d._root"],
+      root_a2: {
+        type: TYPES.Response,
+        data: {
+          text: "Root A2",
+          edges: ["root_p1"],
+        },
       },
-      e: {},
-      f: {},
-      // portal nodes
-      "d._root": {
-        edges: ["d.x", "d.another", "d.sub"],
+      root_p1: {
+        // 1. Remove the following fields
+        //
+        //    -- type: TYPES.ExternalPortal,
+        //    -- data: {
+        //    --   flowId: child,
+        //    -- },
+        //
+        // 2. Add TYPES.InternalPortal and take edges from child._root.edges, prepend
+        //    all of the ids with the id of this node
+        //
+        type: TYPES.InternalPortal,
+        edges: ["root_p1.child_q1"],
       },
-      "d.x": {
-        edges: ["d.y", "d.z"],
+      root_q2: {
+        type: TYPES.Statement,
+        data: {
+          text: "Root Q2",
+        },
       },
-      "d.y": {},
-      "d.sub": {
-        type: 300,
-        edges: ["d.sub.subportal"],
+
+      // child flow
+
+      // The _root node is removed, its edges went to root_p1
+      //
+      //    -- _root: {
+      //    --   edges: ["child_q1"],
+      //    -- },
+
+      "root_p1.child_q1": {
+        edges: ["root_p1.child_p1"],
       },
-      "d.z": {},
-      "d.another": {
-        edges: ["d.1", "d.2"],
+
+      "root_p1.child_p1": {
+        //    -- type: TYPES.ExternalPortal,
+        //    -- data: {
+        //    --   flowId: grandchild,
+        //    -- },
+        type: TYPES.InternalPortal,
+        edges: ["root_p1.child_q1.grandchild_q1"],
       },
-      "d.1": {},
-      "d.2": {},
-      // subportal nodes
-      "d.sub._root": {
-        edges: ["d.sub.s1"],
+
+      // grandchild flow
+
+      // The _root node is removed, its edges went to root_p1.child_p1
+      //
+      //    -- _root: {
+      //    --   edges: ["grandchild_q1"],
+      //    -- },
+      "root_p1.child_q1.grandchild_q1": {
+        edges: ["root_p1.child_q1.grandchild_a1"],
       },
-      "d.sub.s1": {
-        edges: ["d.sub.s2"],
+      "root_p1.child_q1.grandchild_a1": {},
+    });
+  });
+
+  test.skip("OPTION 2A - replace imported flow._root with the flow's uuid", async () => {
+    const [, child, grandchild] = uuids;
+
+    expect(result.data.flows_by_pk.data_merged).toMatchObject({
+      // root flow - everything untouched
+      _root: {
+        edges: ["root_q1", "root_q2"],
       },
-      "d.sub.s2": {},
+      root_q1: {
+        type: TYPES.Statement,
+        data: {
+          text: "Root Q1",
+        },
+        edges: ["root_a1", "root_a2"],
+      },
+      root_a1: {
+        type: TYPES.Response,
+        data: {
+          text: "Root A1",
+        },
+      },
+      root_a2: {
+        type: TYPES.Response,
+        data: {
+          text: "Root A2",
+          edges: ["root_p1"],
+        },
+      },
+      root_p1: {
+        type: TYPES.ExternalPortal,
+        data: {
+          // flowId is a uuid e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx,
+          // we will merge this flow into the object and replace the imported
+          // _root node id with this uuid
+          flowId: child,
+        },
+      },
+      root_q2: {
+        type: TYPES.Statement,
+        data: {
+          text: "Root Q2",
+        },
+      },
+
+      // child flow - everything untouched except changing _root node id to uuid e.g.
+
+      // _root: {
+      //   edges: ["child_q1"],
+      // },
+      //
+      // becomes
+      //
+      // xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx: {
+      //   edges: ["child_q1"],
+      // }
+      [child]: {
+        edges: ["child_q1"],
+      },
+      child_q1: {
+        edges: ["child_p1"],
+      },
+      child_p1: {
+        type: TYPES.ExternalPortal,
+        data: {
+          flowId: grandchild,
+        },
+      },
+
+      // grandchild flow
+
+      // everything untouched except changing _root node id
+      [grandchild]: {
+        edges: ["grandchild_q1"],
+      },
+      grandchild_q1: {
+        edges: ["grandchild_a1"],
+      },
+      grandchild_a1: {},
+    });
+  });
+
+  test.skip("OPTION 2B - same as 2A but ALSO scope the ids by prepending the uuid", async () => {
+    const [, child, grandchild] = uuids;
+
+    expect(result.data.flows_by_pk.data_merged).toMatchObject({
+      // root flow - everything untouched
+      _root: {
+        edges: ["root_q1", "root_q2"],
+      },
+      root_q1: {
+        type: TYPES.Statement,
+        data: {
+          text: "Root Q1",
+        },
+        edges: ["root_a1", "root_a2"],
+      },
+      root_a1: {
+        type: TYPES.Response,
+        data: {
+          text: "Root A1",
+        },
+      },
+      root_a2: {
+        type: TYPES.Response,
+        data: {
+          text: "Root A2",
+          edges: ["root_p1"],
+        },
+      },
+      root_p1: {
+        type: TYPES.ExternalPortal,
+        data: {
+          // flowId is a uuid e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx,
+          // we will merge this flow into the object and replace the imported
+          // _root node id with this uuid
+          flowId: child,
+        },
+      },
+      root_q2: {
+        type: TYPES.Statement,
+        data: {
+          text: "Root Q2",
+        },
+      },
+
+      // child flow
+
+      [child]: {
+        edges: [`${child}.child_q1`],
+      },
+      [`${child}.child_q1`]: {
+        edges: [`${child}.child_p1`],
+      },
+      [`${child}.child_p1`]: {
+        type: TYPES.ExternalPortal,
+        data: {
+          flowId: grandchild,
+        },
+      },
+
+      // grandchild flow
+
+      [grandchild]: {
+        edges: [`${grandchild}.grandchild_q1`],
+      },
+      [`${grandchild}.grandchild_q1`]: {
+        edges: [`${grandchild}.grandchild_a1`],
+      },
+      [`${grandchild}.grandchild_a1`]: {},
+    });
+  });
+
+  test.skip("OPTION 3 - 'wrap' each flow in a nested object", async () => {
+    const [, child, grandchild] = uuids;
+
+    expect(result.data.flows_by_pk.data_merged).toMatchObject({
+      _root: {
+        // root flow
+        _root: {
+          edges: ["root_q1", "root_q2"],
+        },
+        root_q1: {
+          type: TYPES.Statement,
+          data: {
+            text: "Root Q1",
+          },
+          edges: ["root_a1", "root_a2"],
+        },
+        root_a1: {
+          type: TYPES.Response,
+          data: {
+            text: "Root A1",
+          },
+        },
+        root_a2: {
+          type: TYPES.Response,
+          data: {
+            text: "Root A2",
+            edges: ["root_p1"],
+          },
+        },
+        root_p1: {
+          type: TYPES.ExternalPortal,
+          data: {
+            flowId: child,
+          },
+        },
+        root_q2: {
+          type: TYPES.Statement,
+          data: {
+            text: "Root Q2",
+          },
+        },
+      },
+
+      [child]: {
+        // child flow
+        _root: {
+          edges: ["child_q1"],
+        },
+        child_q1: {
+          edges: ["child_p1"],
+        },
+        child_p1: {
+          type: TYPES.ExternalPortal,
+          data: {
+            flowId: grandchild,
+          },
+        },
+      },
+
+      [grandchild]: {
+        // grandchild flow
+        _root: {
+          edges: ["grandchild_q1"],
+        },
+        grandchild_q1: {
+          edges: ["grandchild_a1"],
+        },
+        grandchild_a1: {},
+      },
     });
   });
 });
