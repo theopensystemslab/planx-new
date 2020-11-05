@@ -105,6 +105,7 @@ const Checklist: React.FC<Props> = ({
               const isExpanded = expandedGroups.includes(index);
               return (
                 <ExpandableListItem
+                  key={index}
                   expanded={isExpanded}
                   onToggle={() => {
                     setExpandedGroups((previous) =>
