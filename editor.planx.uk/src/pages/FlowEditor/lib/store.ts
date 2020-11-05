@@ -15,6 +15,7 @@ import {
   ROOT_NODE_KEY,
   update,
 } from "planx-graph";
+import Crawler from "planx-graph/crawler";
 import create from "zustand";
 
 import { client } from "../../../lib/graphql";
@@ -351,7 +352,24 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   upcomingCardIds() {
-    return [];
+    return new Crawler(get().flow).upcomingIds;
+  },
+
+  currentCard() {
+    const { upcomingCardIds, flow } = get();
+    const upcoming = upcomingCardIds();
+
+    console.log({ upcoming });
+
+    if (upcoming.length > 0) {
+      const id = upcoming[0];
+      return {
+        id,
+        ...flow[id],
+      };
+    } else {
+      return null;
+    }
   },
 
   record(id: any, vals: any) {
@@ -505,20 +523,6 @@ export const [useStore, api] = create((set, get) => ({
         };
       })
       .filter((o) => !o.text.includes("undefined"));
-  },
-
-  currentCard() {
-    const { upcomingCardIds, flow } = get();
-    const upcoming = upcomingCardIds();
-
-    if (upcoming.length > 0) {
-      return {
-        id: upcoming[0],
-        ...flow.nodes[upcoming[0]],
-      };
-    } else {
-      return null;
-    }
   },
 }));
 
