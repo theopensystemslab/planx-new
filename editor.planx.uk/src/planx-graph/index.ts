@@ -16,7 +16,7 @@ interface Node {
   type?: number;
 }
 
-type Graph = Record<string, Node>;
+export type Graph = Record<string, Node>;
 
 export const ROOT_NODE_KEY = "_root";
 

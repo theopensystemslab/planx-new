@@ -11,8 +11,9 @@ import { Task as ITask } from "../../../FlowEditor/data/types";
 import Card from "../shared/Card";
 
 interface Props {
-  node: any;
-  tasks: Array<ITask>;
+  taskList: {
+    tasks: Array<ITask>;
+  };
   handleSubmit?;
 }
 
@@ -197,7 +198,7 @@ const Task = ({ title, description, index, isLast }) => {
   );
 };
 
-const TaskList: React.FC<Props> = ({ tasks, handleSubmit, node }) => {
+const TaskList: React.FC<Props> = ({ taskList: { tasks }, handleSubmit }) => {
   const classes = taskStyles();
   return (
     <Card>

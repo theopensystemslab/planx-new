@@ -4,13 +4,11 @@ import Question from "./Question";
 
 export default (
   <Question
-    node={{
-      text: "To be (murderer) or not to be",
-      description: "That is the question",
-      info: "Some info here",
-      policyRef: "Policy ref here",
-      howMeasured: "How is it measured",
-    }}
+    text="To be (murderer) or not to be"
+    description="That is the question"
+    info="Some info here"
+    policyRef="Policy ref here"
+    howMeasured="How is it measured"
     responses={[
       {
         id: "a",
@@ -25,6 +23,6 @@ export default (
         description: "No, I shan't",
       },
     ]}
-    handleClick={window.alert}
+    handleSubmit={window.alert}
   />
 );

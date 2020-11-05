@@ -127,8 +127,6 @@ const PropWithConstraints = ({ info, handleSubmit }) => {
 const PropertyInformationWithData: React.FC<any> = ({
   UPRN = 10009795450,
   handleSubmit = console.log,
-  flowId,
-  flowData,
 }) => {
   const [{ data }] = useAxios(
     `https://llpg.planx.uk/addresses?limit=1&UPRN=eq.${UPRN}&nocache`

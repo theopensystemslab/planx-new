@@ -2,12 +2,11 @@ import { Button } from "@material-ui/core";
 import React, { useState } from "react";
 
 import { Input, InputRow } from "../../../../ui";
-import { TextInput, TYPES } from "../../../FlowEditor/data/types";
+import { TextInput } from "../../../FlowEditor/data/types";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 
-interface Props {
-  node: TextInput & { type: TYPES.TextInput };
+interface Props extends TextInput {
   handleSubmit?: (value?: any) => void;
 }
 
@@ -16,16 +15,16 @@ const TextInputComponent: React.FC<Props> = (props) => {
   return (
     <Card>
       <QuestionHeader
-        title={props.node.title}
-        description={props.node.description}
-        info={props.node.info}
-        policyRef={props.node.policyRef}
-        howMeasured={props.node.howMeasured}
+        title={props.title}
+        description={props.description}
+        info={props.info}
+        policyRef={props.policyRef}
+        howMeasured={props.howMeasured}
       />
       <InputRow>
         <Input
           value={value}
-          placeholder={props.node.placeholder || "Type your answer"}
+          placeholder={props.placeholder || "Type your answer"}
           bordered
           onChange={(ev) => {
             setValue(ev.target.value);

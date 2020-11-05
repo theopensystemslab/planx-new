@@ -6,23 +6,21 @@ import QuestionHeader from "../shared/QuestionHeader";
 import DecisionButton from "./DecisionButton";
 
 interface IQuestion {
-  node: {
-    text?: string;
-    description?: string;
-    info?: string;
-    policyRef?: string;
-    howMeasured?: string;
-  };
+  text?: string;
+  description?: string;
+  info?: string;
+  policyRef?: string;
+  howMeasured?: string;
   responses: {
     id: string;
     responseKey: string;
     title: string;
     description?: string;
   }[];
-  handleClick?;
+  handleSubmit?;
 }
 
-const Question: React.FC<IQuestion> = ({ responses, handleClick, node }) => {
+const Question: React.FC<IQuestion> = (props) => {
   const formik = useFormik({
     initialValues: {
       selected: { a: "" },
@@ -37,22 +35,22 @@ const Question: React.FC<IQuestion> = ({ responses, handleClick, node }) => {
     <Card>
       <form onSubmit={formik.handleSubmit}>
         <QuestionHeader
-          title={node.text}
-          description={node.description}
-          info={node.info}
-          policyRef={node.policyRef}
-          howMeasured={node.howMeasured}
+          title={props.text}
+          description={props.description}
+          info={props.info}
+          policyRef={props.policyRef}
+          howMeasured={props.howMeasured}
         />
-        {!(node.text && node.text.startsWith("Sorry")) &&
-          responses.map((response) => {
+        {!props.text?.startsWith("Sorry") &&
+          props.responses?.map((response) => {
             return (
               <DecisionButton
                 key={response.id}
                 selected={a === response.responseKey}
                 responseKey={response.responseKey}
                 onClick={() => {
-                  handleClick(response.id);
                   formik.setFieldValue("selected.a", response.responseKey);
+                  props.handleSubmit(response.id);
                 }}
               >
                 {response.title}

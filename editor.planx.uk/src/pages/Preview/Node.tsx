@@ -26,20 +26,69 @@ const Node: React.FC<any> = (props) => {
 
   const type = props.type as TYPES;
 
+  const allProps = {
+    ...props.node.data,
+    handleSubmit: props.handleSubmit,
+  };
+
   switch (type) {
-    // check SUPPORTED_TYPES in store
-    case TYPES.Statement:
+    case TYPES.Checklist:
+      const childNodes = childNodesOf(props.node.id);
       return (
-        <Question
-          node={props.node}
-          handleClick={props.handleSubmit}
-          responses={childNodesOf(props.id).map((n, i) => ({
-            id: n.id,
-            responseKey: i + 1,
-            title: n.text,
-          }))}
+        <Checklist
+          {...allProps}
+          options={allProps.categories ? undefined : childNodes}
+          groupedOptions={
+            !allProps.categories
+              ? undefined
+              : mapAccum(
+                  (
+                    index: number,
+                    category: { title: string; count: number }
+                  ) => [
+                    index + category.count,
+                    {
+                      title: category.title,
+                      children: childNodes.slice(index, index + category.count),
+                    },
+                  ],
+                  0,
+                  allProps.categories
+                )[1]
+          }
         />
       );
+
+    case TYPES.Content:
+      return <Content {...allProps} />;
+
+    case TYPES.FileUpload:
+      return <FileUpload {...allProps} />;
+
+    case TYPES.FindProperty:
+      return (
+        <FindProperty
+          handleSubmit={(data) => {
+            uprn = data;
+            props.handleSubmit([props.id]);
+          }}
+        />
+      );
+
+    case TYPES.Notice:
+      return <Notice {...allProps} />;
+
+    case TYPES.Pay:
+      return <Pay handleSubmit={() => props.handleSubmit([props.id])} />;
+
+    case TYPES.PropertyInformation:
+      return (
+        <PropertyInformation
+          UPRN={uprn}
+          handleSubmit={() => props.handleSubmit([props.id])}
+        />
+      );
+
     case TYPES.Result:
       const flag = flagResult();
 
@@ -60,80 +109,34 @@ const Node: React.FC<any> = (props) => {
           ]}
         />
       );
+
+    case TYPES.Statement:
+      return (
+        <Question
+          {...allProps}
+          responses={childNodesOf(props.id).map((n, i) => ({
+            id: n.id,
+            responseKey: i + 1,
+            title: n.data?.text,
+          }))}
+        />
+      );
+
     case TYPES.TaskList:
-      return (
-        <TaskList
-          node={props.node}
-          tasks={props.taskList.tasks}
-          handleSubmit={props.handleSubmit}
-        />
-      );
+      return <TaskList {...allProps} />;
+
     case TYPES.TextInput:
-      return <TextInput node={props.node} handleSubmit={props.handleSubmit} />;
-    case TYPES.Notice:
-      return <Notice {...props} handleSubmit={props.handleSubmit} />;
-    case TYPES.FileUpload:
-      return <FileUpload {...props} handleSubmit={props.handleSubmit} />;
-    case TYPES.Content:
-      return <Content {...props} handleSubmit={props.handleSubmit} />;
-    case TYPES.Checklist:
-      const childNodes = childNodesOf(props.node.id);
-      return (
-        <Checklist
-          node={props.node}
-          info={props.info}
-          text={props.text}
-          description={props.description}
-          allRequired={props.allRequired}
-          handleSubmit={props.handleSubmit}
-          options={props.node.categories ? undefined : childNodes}
-          groupedOptions={
-            !props.node.categories
-              ? undefined
-              : mapAccum(
-                  (
-                    index: number,
-                    category: { title: string; count: number }
-                  ) => [
-                    index + category.count,
-                    {
-                      title: category.title,
-                      children: childNodes.slice(index, index + category.count),
-                    },
-                  ],
-                  0,
-                  props.node.categories
-                )[1]
-          }
-        />
-      );
-    case TYPES.FindProperty:
-      return (
-        <FindProperty
-          handleSubmit={(data) => {
-            uprn = data;
-            props.handleSubmit([props.id]);
-          }}
-        />
-      );
-    case TYPES.PropertyInformation:
-      return (
-        <PropertyInformation
-          UPRN={uprn}
-          handleSubmit={() => props.handleSubmit([props.id])}
-        />
-      );
-    case TYPES.Pay:
-      return <Pay handleSubmit={() => props.handleSubmit([props.id])} />;
-    case TYPES.Flow:
-    case TYPES.SignIn:
-    case TYPES.Report:
-    case TYPES.DateInput:
+      return <TextInput {...allProps} />;
+
     case TYPES.AddressInput:
-    case TYPES.NumberInput:
-    case TYPES.InternalPortal:
+    case TYPES.DateInput:
     case TYPES.ExternalPortal:
+    case TYPES.Flow:
+    case TYPES.InternalPortal:
+    case TYPES.NumberInput:
+    case TYPES.Report:
     case TYPES.Response:
+    case TYPES.SignIn:
       return null;
     default:
       console.error({ nodeNotFound: props });
