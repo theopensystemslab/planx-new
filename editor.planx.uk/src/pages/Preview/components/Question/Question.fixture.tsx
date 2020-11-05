@@ -23,6 +23,6 @@ export default (
         description: "No, I shan't",
       },
     ]}
-    handleClick={window.alert}
+    handleSubmit={window.alert}
   />
 );

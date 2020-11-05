@@ -17,7 +17,7 @@ interface IQuestion {
     title: string;
     description?: string;
   }[];
-  handleClick?;
+  handleSubmit?;
 }
 
 const Question: React.FC<IQuestion> = (props) => {
@@ -49,8 +49,8 @@ const Question: React.FC<IQuestion> = (props) => {
                 selected={a === response.responseKey}
                 responseKey={response.responseKey}
                 onClick={() => {
-                  props.handleClick(response.id);
                   formik.setFieldValue("selected.a", response.responseKey);
+                  props.handleSubmit(response.id);
                 }}
               >
                 {response.title}

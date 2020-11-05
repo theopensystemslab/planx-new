@@ -87,7 +87,7 @@ function Init(props) {
           responseKey: value.letter,
           title: value.label,
         }))}
-        handleClick={(option) => {
+        handleSubmit={(option) => {
           props.setState(option);
         }}
       />
