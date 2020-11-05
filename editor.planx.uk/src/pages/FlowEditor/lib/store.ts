@@ -15,7 +15,6 @@ import {
   ROOT_NODE_KEY,
   update,
 } from "planx-graph";
-import Crawler from "planx-graph/crawler";
 import create from "zustand";
 
 import { client } from "../../../lib/graphql";
@@ -332,8 +331,8 @@ export const [useStore, api] = create((set, get) => ({
     const collectedFlags = Object.values(breadcrumbs)
       .flatMap((v: string) =>
         Array.isArray(v)
-          ? v.map((id) => flow.nodes[id]?.flag)
-          : flow.nodes[v]?.flag
+          ? v.map((id) => flow[id]?.data?.flag)
+          : flow[v]?.data?.flag
       )
       .filter(Boolean)
       .sort((a, b) => keys.indexOf(a) - keys.indexOf(b));
@@ -352,11 +351,38 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   upcomingCardIds() {
-    try {
-      return new Crawler(get().flow).upcomingIds;
-    } catch (err) {
-      return [];
-    }
+    const { flow, breadcrumbs } = get();
+
+    const ids: Set<string> = new Set();
+
+    const nodeIdsConnectedFrom = (source: string) => {
+      return (
+        flow[source]?.edges
+          ?.filter(
+            (id) =>
+              !Object.keys(breadcrumbs).includes(id) &&
+              (!SUPPORTED_DECISION_TYPES.includes(flow[id].type) ||
+                flow[id]?.edges?.length > 0)
+          )
+          .forEach((id) => {
+            if (flow[id]?.type === TYPES.InternalPortal) {
+              nodeIdsConnectedFrom(id);
+            } else {
+              ids.add(id);
+            }
+          }) || []
+      );
+    };
+
+    Object.entries(breadcrumbs)
+      .reverse()
+      .forEach(([, answers]: [string, Array<string>]) => {
+        answers.forEach((answer) => nodeIdsConnectedFrom(answer));
+      });
+
+    nodeIdsConnectedFrom(ROOT_NODE_KEY);
+
+    return Array.from(ids);
   },
 
   currentCard() {
@@ -374,18 +400,16 @@ export const [useStore, api] = create((set, get) => ({
     }
   },
 
-  record(id: any, vals: any) {
+  record(id: string, vals: string | Array<string>) {
+    vals = Array.isArray(vals) ? vals : [vals];
+
     const { breadcrumbs, sessionId, upcomingCardIds, flow, passport } = get();
     // vals may be string or string[]
     if (vals) {
-      const key = flow.nodes[id].fn;
+      const key = flow[id].fn;
       if (key) {
         let passportValue;
-        if (Array.isArray(vals)) {
-          passportValue = vals.map((id) => flow.nodes[id].val);
-        } else {
-          passportValue = [flow.nodes[vals].val];
-        }
+        passportValue = vals.map((id) => flow[id].val);
 
         passportValue = passportValue.filter(
           (val) =>
@@ -420,7 +444,7 @@ export const [useStore, api] = create((set, get) => ({
 
       // only store breadcrumbs in the backend if they are answers provided for
       // either a Statement or Checklist type. TODO: make this more robust
-      if (SUPPORTED_DECISION_TYPES.includes(flow.nodes[id].type) && sessionId) {
+      if (SUPPORTED_DECISION_TYPES.includes(flow[id].type) && sessionId) {
         addSessionEvent();
         if (upcomingCardIds().length === 0) {
           endSession();
@@ -433,7 +457,7 @@ export const [useStore, api] = create((set, get) => ({
       const newFns = [];
       const newBreadcrumbs = Object.entries(breadcrumbs).reduce(
         (acc, [k, v]) => {
-          const fn = flow.nodes[k]?.fn;
+          const fn = flow[k]?.data?.fn;
           if (fn) fns.push(fn);
           if (k === id) {
             keepBreadcrumb = false;
@@ -514,12 +538,12 @@ export const [useStore, api] = create((set, get) => ({
     return Object.entries(breadcrumbs)
       .map(([k, v]: [string, string | Array<string>]) => {
         const responses = (Array.isArray(v)
-          ? v.map((id) => flow.nodes[id]?.text)
-          : [flow.nodes[v]?.text]
+          ? v.map((id) => flow[id]?.data?.text)
+          : [flow[v]?.data?.text]
         ).filter(Boolean);
         return {
           id: k,
-          text: `${flow.nodes[k]?.text} <strong>${responses.join(
+          text: `${flow[k]?.data?.text} <strong>${responses.join(
             ", "
           )}</strong>`,
         };
