@@ -401,11 +401,11 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   record(id: string, vals: string | Array<string>) {
-    vals = Array.isArray(vals) ? vals : [vals];
-
     const { breadcrumbs, sessionId, upcomingCardIds, flow, passport } = get();
-    // vals may be string or string[]
+
     if (vals) {
+      vals = Array.isArray(vals) ? vals : [vals];
+
       const key = flow[id].fn;
       if (key) {
         let passportValue;
