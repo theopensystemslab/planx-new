@@ -5,11 +5,13 @@ import Question from "./Question";
 export default (
   <Question
     node={{
-      text: "To be (murderer) or not to be",
-      description: "That is the question",
-      info: "Some info here",
-      policyRef: "Policy ref here",
-      howMeasured: "How is it measured",
+      data: {
+        text: "To be (murderer) or not to be",
+        description: "That is the question",
+        info: "Some info here",
+        policyRef: "Policy ref here",
+        howMeasured: "How is it measured",
+      },
     }}
     responses={[
       {

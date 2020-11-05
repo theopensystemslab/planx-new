@@ -36,6 +36,19 @@ test("crawling a basic graph", () => {
   expect(crawler.upcomingIds).toEqual([]);
 });
 
+test("notice", () => {
+  const crawler = new Crawler({
+    _root: {
+      edges: ["a"],
+    },
+    a: {
+      type: TYPES.Notice,
+    },
+  });
+
+  expect(crawler.upcomingIds).toEqual(["a"]);
+});
+
 test("crawling with portals", () => {
   const crawler = new Crawler({
     _root: {

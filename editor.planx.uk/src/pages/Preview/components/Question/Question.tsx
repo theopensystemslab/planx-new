@@ -7,11 +7,13 @@ import DecisionButton from "./DecisionButton";
 
 interface IQuestion {
   node: {
-    text?: string;
-    description?: string;
-    info?: string;
-    policyRef?: string;
-    howMeasured?: string;
+    data: {
+      text?: string;
+      description?: string;
+      info?: string;
+      policyRef?: string;
+      howMeasured?: string;
+    };
   };
   responses: {
     id: string;
@@ -37,13 +39,13 @@ const Question: React.FC<IQuestion> = ({ responses, handleClick, node }) => {
     <Card>
       <form onSubmit={formik.handleSubmit}>
         <QuestionHeader
-          title={node.text}
-          description={node.description}
-          info={node.info}
-          policyRef={node.policyRef}
-          howMeasured={node.howMeasured}
+          title={node.data.text}
+          description={node.data.description}
+          info={node.data.info}
+          policyRef={node.data.policyRef}
+          howMeasured={node.data.howMeasured}
         />
-        {!(node.text && node.text.startsWith("Sorry")) &&
+        {!(node.data.text && node.data.text.startsWith("Sorry")) &&
           responses.map((response) => {
             return (
               <DecisionButton

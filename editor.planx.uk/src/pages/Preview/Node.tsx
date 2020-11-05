@@ -36,7 +36,7 @@ const Node: React.FC<any> = (props) => {
           responses={childNodesOf(props.id).map((n, i) => ({
             id: n.id,
             responseKey: i + 1,
-            title: n.text,
+            title: n.data?.text,
           }))}
         />
       );
@@ -81,14 +81,14 @@ const Node: React.FC<any> = (props) => {
       return (
         <Checklist
           node={props.node}
-          info={props.info}
-          text={props.text}
-          description={props.description}
-          allRequired={props.allRequired}
+          info={props.data.info}
+          text={props.data.text}
+          description={props.data.description}
+          allRequired={props.data.allRequired}
           handleSubmit={props.handleSubmit}
-          options={props.node.categories ? undefined : childNodes}
+          options={props.node.data.categories ? undefined : childNodes}
           groupedOptions={
-            !props.node.categories
+            !props.node.data.categories
               ? undefined
               : mapAccum(
                   (
@@ -102,7 +102,7 @@ const Node: React.FC<any> = (props) => {
                     },
                   ],
                   0,
-                  props.node.categories
+                  props.node.data.categories
                 )[1]
           }
         />

@@ -1,6 +1,8 @@
 import { TYPES } from "../pages/FlowEditor/data/types";
 import { Graph, ROOT_NODE_KEY } from ".";
 
+const QUESTION_TYPES = [TYPES.Statement, TYPES.Checklist];
+
 class Crawler {
   public readonly breadcrumbs: Record<string, Array<string>> = {};
   public onRecord: (id: string) => {};
@@ -23,8 +25,9 @@ class Crawler {
       return this.graph[source].edges
         ?.filter(
           (id) =>
-            this.graph[id]?.edges?.length > 0 &&
-            !Object.keys(this.breadcrumbs).includes(id)
+            !Object.keys(this.breadcrumbs).includes(id) &&
+            (!QUESTION_TYPES.includes(this.graph[id].type) ||
+              this.graph[id]?.edges?.length > 0)
         )
         .forEach((id) => {
           if (this.graph[id]?.type === TYPES.InternalPortal) {
