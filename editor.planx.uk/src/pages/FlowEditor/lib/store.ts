@@ -320,7 +320,7 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   upcomingCardIds() {
-    const { flow, breadcrumbs } = get();
+    const { flow, breadcrumbs, passport } = get();
 
     const ids: Set<string> = new Set();
 
@@ -337,7 +337,35 @@ export const [useStore, api] = create((set, get) => ({
             if (flow[id]?.type === TYPES.InternalPortal) {
               nodeIdsConnectedFrom(id);
             } else {
-              ids.add(id);
+              const fn = flow[id]?.data?.fn;
+              if (fn && passport.data[fn]?.value !== undefined) {
+                // TODO: add much-needed docs here
+                const responses = flow[id]?.edges.map((id) => ({
+                  id,
+                  ...flow[id],
+                }));
+
+                const responseThatCanBeAutoAnswered = responses.find((n) => {
+                  const val = String(n.data?.val);
+                  if (Array.isArray(passport.data[fn].value)) {
+                    // multiple string values are stored (array)
+                    return passport.data[fn].value
+                      .map((v) => String(v))
+                      .includes(val);
+                  } else {
+                    // string
+                    return val === String(passport.data[fn].value);
+                  }
+                });
+
+                if (responseThatCanBeAutoAnswered) {
+                  nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id);
+                } else {
+                  ids.add(id);
+                }
+              } else {
+                ids.add(id);
+              }
             }
           }) || []
       );
@@ -375,10 +403,10 @@ export const [useStore, api] = create((set, get) => ({
     if (vals) {
       vals = Array.isArray(vals) ? vals : [vals];
 
-      const key = flow[id].fn;
+      const key = flow[id].data?.fn;
       if (key) {
         let passportValue;
-        passportValue = vals.map((id) => flow[id].val);
+        passportValue = vals.map((id) => flow[id].data?.val);
 
         passportValue = passportValue.filter(
           (val) =>
