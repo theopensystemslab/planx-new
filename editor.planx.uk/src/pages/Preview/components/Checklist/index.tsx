@@ -8,15 +8,16 @@ import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 import InnerCheckbox from "./InnerCheckbox";
 
-interface ICheckboxes {
-  node: any;
-  text: string;
-  options?: Array<Option>;
-  groupedOptions?: Array<Group<Option>>;
+interface Props {
   allRequired?: boolean;
-  handleSubmit?;
   description?: string;
+  groupedOptions?: Array<Group<Option>>;
+  handleSubmit?;
+  howMeasured?: string;
   info?: string;
+  options?: Array<Option>;
+  policyRef?: string;
+  text: string;
 }
 
 function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
@@ -25,14 +26,16 @@ function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
     : [...arr, value];
 }
 
-const Checkboxes: React.FC<ICheckboxes> = ({
-  node,
-  options,
-  groupedOptions,
-  text,
-  handleSubmit,
-  description = "",
+const Checklist: React.FC<Props> = ({
   allRequired,
+  description = "",
+  groupedOptions,
+  handleSubmit,
+  howMeasured,
+  info,
+  options,
+  policyRef,
+  text,
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -82,17 +85,17 @@ const Checkboxes: React.FC<ICheckboxes> = ({
         <QuestionHeader
           title={text}
           description={description}
-          info={node.info}
-          policyRef={node.policyRef}
-          howMeasured={node.howMeasured}
+          info={info}
+          policyRef={policyRef}
+          howMeasured={howMeasured}
         />
 
         {options ? (
-          options.map((cb) => (
+          options.map((cb: any) => (
             <InnerCheckbox
               changeCheckbox={changeCheckbox}
-              key={cb.text}
-              label={cb.text}
+              key={cb.data.text}
+              label={cb.data.text}
               value={cb.id}
             />
           ))
@@ -111,11 +114,11 @@ const Checkboxes: React.FC<ICheckboxes> = ({
                   title={group.title}
                 >
                   <div>
-                    {group.children.map((option) => (
+                    {group.children.map((option: any) => (
                       <InnerCheckbox
                         changeCheckbox={changeCheckbox}
-                        key={option.text}
-                        label={option.text}
+                        key={option.data.text}
+                        label={option.data.text}
                         value={option.id}
                       />
                     ))}
@@ -138,4 +141,4 @@ const Checkboxes: React.FC<ICheckboxes> = ({
     </Card>
   );
 };
-export default Checkboxes;
+export default Checklist;

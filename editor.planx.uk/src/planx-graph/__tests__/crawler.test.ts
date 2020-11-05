@@ -95,6 +95,10 @@ describe("callbacks", () => {
 });
 
 describe("error handling", () => {
+  test("empty graph object", () => {
+    expect(() => new Crawler({})).toThrowError("invalid graph");
+  });
+
   test("cannot record id that doesn't exist", () => {
     const crawler = new Crawler({
       _root: {

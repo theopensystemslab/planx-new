@@ -7,7 +7,7 @@ import SimpleExpand from "../shared/SimpleExpand";
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
 
-interface IResult {
+interface Props {
   handleSubmit;
   headingColor: {
     text: string;
@@ -24,7 +24,7 @@ interface IResult {
   }[];
 }
 
-const Result: React.FC<IResult> = ({
+const Result: React.FC<Props> = ({
   handleSubmit,
   headingColor,
   headingTitle = "",

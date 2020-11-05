@@ -4,10 +4,13 @@ import { Graph, ROOT_NODE_KEY } from ".";
 const QUESTION_TYPES = [TYPES.Statement, TYPES.Checklist];
 
 class Crawler {
+  public readonly graph: Graph;
   public readonly breadcrumbs: Record<string, Array<string>> = {};
   public onRecord: (id: string) => {};
 
-  constructor(public readonly graph: Graph, { onRecord = undefined } = {}) {
+  constructor(graph, { onRecord = undefined } = {}) {
+    if (!graph._root) throw new Error("invalid graph");
+    this.graph = graph;
     this.onRecord = onRecord;
   }
 

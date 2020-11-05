@@ -4,15 +4,11 @@ import Question from "./Question";
 
 export default (
   <Question
-    node={{
-      data: {
-        text: "To be (murderer) or not to be",
-        description: "That is the question",
-        info: "Some info here",
-        policyRef: "Policy ref here",
-        howMeasured: "How is it measured",
-      },
-    }}
+    text="To be (murderer) or not to be"
+    description="That is the question"
+    info="Some info here"
+    policyRef="Policy ref here"
+    howMeasured="How is it measured"
     responses={[
       {
         id: "a",

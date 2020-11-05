@@ -14,11 +14,9 @@ import { useDropzone } from "react-dropzone";
 import { MoreInformation } from "../../../FlowEditor/data/types";
 import Card from "../shared/Card";
 
-export default Component;
-
 interface Props extends MoreInformation {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   handleSubmit: (any) => any;
 }
 
@@ -115,7 +113,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Component(props: Props) {
+const FileUpload: React.FC<Props> = (props) => {
   const [slots, setSlots] = React.useState([]);
   return (
     <Card>
@@ -136,7 +134,7 @@ function Component(props: Props) {
       </Button>
     </Card>
   );
-}
+};
 
 function Dropzone(props) {
   const { slots, setSlots } = props;
@@ -279,3 +277,5 @@ function formatBytes(a, b = 2) {
     ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"][d]
   );
 }
+
+export default FileUpload;

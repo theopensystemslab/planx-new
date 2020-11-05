@@ -352,14 +352,16 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   upcomingCardIds() {
-    return new Crawler(get().flow).upcomingIds;
+    try {
+      return new Crawler(get().flow).upcomingIds;
+    } catch (err) {
+      return [];
+    }
   },
 
   currentCard() {
     const { upcomingCardIds, flow } = get();
     const upcoming = upcomingCardIds();
-
-    console.log({ upcoming });
 
     if (upcoming.length > 0) {
       const id = upcoming[0];

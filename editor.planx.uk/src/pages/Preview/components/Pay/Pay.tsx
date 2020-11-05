@@ -81,11 +81,7 @@ function Init(props) {
   return (
     <div className={c.root}>
       <Question
-        node={{
-          data: {
-            text: "How would you like to pay?",
-          },
-        }}
+        text="How would you like to pay?"
         responses={Object.entries(OPTIONS).map(([key, value]) => ({
           id: key,
           responseKey: value.letter,
