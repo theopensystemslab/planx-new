@@ -39,7 +39,7 @@ export const [useStore, api] = create((set, get) => ({
 
   id: undefined,
 
-  showPreview: false,
+  showPreview: true,
 
   flowLayout: FlowLayout.TOP_DOWN,
 
