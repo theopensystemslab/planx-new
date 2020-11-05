@@ -319,39 +319,8 @@ export const [useStore, api] = create((set, get) => ({
     set({ id, flow });
   },
 
-  flagResult() {
-    const { flow, breadcrumbs } = get();
-
-    const possibleFlags = flags.filter(
-      (f) => f.category === "Planning permission"
-    );
-
-    const keys = possibleFlags.map((f) => f.value);
-
-    const collectedFlags = Object.values(breadcrumbs)
-      .flatMap((v: string) =>
-        Array.isArray(v)
-          ? v.map((id) => flow[id]?.data?.flag)
-          : flow[v]?.data?.flag
-      )
-      .filter(Boolean)
-      .sort((a, b) => keys.indexOf(a) - keys.indexOf(b));
-
-    const flag = possibleFlags.find((f) => f.value === collectedFlags[0]);
-
-    return (
-      flag || {
-        // value: "PP-NO_RESULT",
-        text: "No result",
-        category: "Planning permission",
-        bgColor: "#EEEEEE",
-        color: tinycolor("black"),
-      }
-    );
-  },
-
   upcomingCardIds() {
-    const { flow, breadcrumbs } = get();
+    const { flow, breadcrumbs, passport } = get();
 
     const ids: Set<string> = new Set();
 
@@ -368,7 +337,35 @@ export const [useStore, api] = create((set, get) => ({
             if (flow[id]?.type === TYPES.InternalPortal) {
               nodeIdsConnectedFrom(id);
             } else {
-              ids.add(id);
+              const fn = flow[id]?.data?.fn;
+              if (fn && passport.data[fn]?.value !== undefined) {
+                // TODO: add much-needed docs here
+                const responses = flow[id]?.edges.map((id) => ({
+                  id,
+                  ...flow[id],
+                }));
+
+                const responseThatCanBeAutoAnswered = responses.find((n) => {
+                  const val = String(n.data?.val);
+                  if (Array.isArray(passport.data[fn].value)) {
+                    // multiple string values are stored (array)
+                    return passport.data[fn].value
+                      .map((v) => String(v))
+                      .includes(val);
+                  } else {
+                    // string
+                    return val === String(passport.data[fn].value);
+                  }
+                });
+
+                if (responseThatCanBeAutoAnswered) {
+                  nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id);
+                } else {
+                  ids.add(id);
+                }
+              } else {
+                ids.add(id);
+              }
             }
           }) || []
       );
@@ -406,10 +403,10 @@ export const [useStore, api] = create((set, get) => ({
     if (vals) {
       vals = Array.isArray(vals) ? vals : [vals];
 
-      const key = flow[id].fn;
+      const key = flow[id].data?.fn;
       if (key) {
         let passportValue;
-        passportValue = vals.map((id) => flow[id].val);
+        passportValue = vals.map((id) => flow[id].data?.val);
 
         passportValue = passportValue.filter(
           (val) =>
@@ -533,22 +530,67 @@ export const [useStore, api] = create((set, get) => ({
     }
   },
 
-  responsesForReport(flag) {
+  reportData() {
     const { breadcrumbs, flow } = get();
-    return Object.entries(breadcrumbs).map(
-      ([k, v]: [string, string | Array<string>]) => {
-        v = Array.isArray(v) ? v : [v];
 
-        const selections = v.map((id) => ({ id, ...flow[id] }));
-        const hidden = !selections.some((r) => r.data?.flag === flag);
+    // const categories = Array.from(new Set(flags.map((f) => f.category)));
+    const categories = ["Planning permission"];
 
-        return {
-          question: { id: k, ...flow[k] },
-          selections,
-          hidden,
-        };
-      }
-    );
+    return categories.reduce((acc, category) => {
+      const possibleFlags = flags.filter((f) => f.category === category);
+      const keys = possibleFlags.map((f) => f.value);
+
+      const collectedFlags = Object.values(breadcrumbs).flatMap((v: string) =>
+        Array.isArray(v)
+          ? v.map((id) => flow[id]?.data?.flag)
+          : flow[v]?.data?.flag
+      );
+
+      const filteredCollectedFlags = collectedFlags
+        .filter((flag) => flag && keys.includes(flag))
+        .sort((a, b) => keys.indexOf(a) - keys.indexOf(b));
+
+      const flag = possibleFlags.find(
+        (f) => f.value === filteredCollectedFlags[0]
+      ) || {
+        // value: "PP-NO_RESULT",
+        text: "No result",
+        category,
+        bgColor: "#EEEEEE",
+        color: tinycolor("black"),
+      };
+
+      const responses = Object.entries(breadcrumbs)
+        .map(([k, v]: [string, string | Array<string>]) => {
+          const question = { id: k, ...flow[k] };
+
+          if (!SUPPORTED_DECISION_TYPES.includes(question?.type)) return null;
+
+          v = Array.isArray(v) ? v : [v];
+
+          const selections = v.map((id) => ({ id, ...flow[id] }));
+          const hidden = !selections.some(
+            (r) => r.data?.flag && r.data.flag === flag?.value
+            // possibleFlags.includes(r.data.flag)
+          );
+
+          return {
+            question,
+            selections,
+            hidden,
+          };
+        })
+        .filter(Boolean);
+
+      acc[category] = {
+        flag,
+        responses: responses.every((r) => r.hidden)
+          ? responses.map((r) => ({ ...r, hidden: false }))
+          : responses,
+      };
+
+      return acc;
+    }, {});
   },
 }));
 

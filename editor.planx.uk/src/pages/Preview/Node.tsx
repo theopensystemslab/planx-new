@@ -18,10 +18,10 @@ import TextInput from "./components/TextInput";
 let uprn;
 
 const Node: React.FC<any> = (props) => {
-  const [childNodesOf, flagResult, responsesForReport] = useStore((state) => [
+  const [childNodesOf, flagResult, reportData] = useStore((state) => [
     state.childNodesOf,
     state.flagResult,
-    state.responsesForReport,
+    state.reportData,
   ]);
 
   const type = props.type as TYPES;
@@ -90,8 +90,10 @@ const Node: React.FC<any> = (props) => {
       );
 
     case TYPES.Result:
-      const flag = flagResult();
-      const responses = responsesForReport(flag.value);
+      const data = reportData();
+      console.log(data);
+
+      const { flag, responses } = data["Planning permission"];
 
       return (
         <Result
