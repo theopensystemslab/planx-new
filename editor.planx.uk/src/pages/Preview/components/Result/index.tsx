@@ -1,11 +1,18 @@
 import { Box, Button, Typography } from "@material-ui/core";
 import React from "react";
-import ReactHtmlParser from "react-html-parser";
 
 import Card from "../shared/Card";
 import SimpleExpand from "../shared/SimpleExpand";
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
+
+interface Node {
+  id: string;
+  data: {
+    text: string;
+    flag?: string;
+  };
+}
 
 interface Props {
   handleSubmit;
@@ -17,12 +24,23 @@ interface Props {
   subheading?: string;
   headingDescription?: string;
   reasonsTitle?: string;
-  responses: {
-    [key: string]: {
-      text: string;
-    }[];
-  }[];
+  responses: Array<{
+    question: Node;
+    selections?: Array<Node>;
+    hidden: boolean;
+  }>;
 }
+
+const Responses = ({ responses }) => (
+  <>
+    {responses.map(({ question, selections }) => (
+      <ResultReason key={question.id} id={question.id}>
+        {question.data.text}{" "}
+        <strong>{selections.map((s) => s.data.text).join(",")}</strong>
+      </ResultReason>
+    ))}
+  </>
+);
 
 const Result: React.FC<Props> = ({
   handleSubmit,
@@ -33,6 +51,9 @@ const Result: React.FC<Props> = ({
   reasonsTitle = "",
   responses,
 }) => {
+  const visibleResponses = responses.filter((r) => !r.hidden);
+  const hiddenResponses = responses.filter((r) => r.hidden);
+
   return (
     <Card>
       <ResultSummary
@@ -47,42 +68,22 @@ const Result: React.FC<Props> = ({
           {reasonsTitle}
         </Typography>
         <Box mb={3}>
-          {responses.map((x, i) => {
-            const key = Object.keys(x) as any;
-            const visibleResponses = x[key].filter((y, j) => j <= 1);
-            const hiddenResponses = x[key].filter((y, j) => j > 1);
+          <Box mb={1} color="text.secondary">
+            Planning Permission
+          </Box>
 
-            return (
-              <React.Fragment key={key}>
-                <Box mb={1} color="text.secondary">
-                  {key}
-                </Box>
-                {visibleResponses.map((y: any) => {
-                  return (
-                    <ResultReason key={y.text} id={y.id}>
-                      {ReactHtmlParser(y.text)}
-                    </ResultReason>
-                  );
-                })}
-                {hiddenResponses.length !== 0 ? (
-                  <SimpleExpand
-                    buttonText={{
-                      open: "See all responses",
-                      closed: "See fewer responses",
-                    }}
-                  >
-                    {hiddenResponses.map((y: any) => {
-                      return (
-                        <ResultReason key={y.text} id={y.id}>
-                          {ReactHtmlParser(y.text)}
-                        </ResultReason>
-                      );
-                    })}
-                  </SimpleExpand>
-                ) : null}
-              </React.Fragment>
-            );
-          })}
+          <Responses responses={visibleResponses} />
+
+          {hiddenResponses.length > 0 && (
+            <SimpleExpand
+              buttonText={{
+                open: "See all responses",
+                closed: "See fewer responses",
+              }}
+            >
+              <Responses responses={hiddenResponses} />
+            </SimpleExpand>
+          )}
         </Box>
       </Box>
       <Button

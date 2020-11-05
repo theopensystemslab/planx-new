@@ -91,6 +91,7 @@ const Node: React.FC<any> = (props) => {
 
     case TYPES.Result:
       const flag = flagResult();
+      const responses = responsesForReport(flag.value);
 
       return (
         <Result
@@ -102,11 +103,7 @@ const Node: React.FC<any> = (props) => {
           headingTitle={flag.text}
           subheading=""
           reasonsTitle="Responses"
-          responses={[
-            {
-              "Planning permission": responsesForReport(),
-            },
-          ]}
+          responses={responses}
         />
       );
 

@@ -341,7 +341,7 @@ export const [useStore, api] = create((set, get) => ({
 
     return (
       flag || {
-        value: "PP-NO_RESULT",
+        // value: "PP-NO_RESULT",
         text: "No result",
         category: "Planning permission",
         bgColor: "#EEEEEE",
@@ -533,22 +533,22 @@ export const [useStore, api] = create((set, get) => ({
     }
   },
 
-  responsesForReport() {
+  responsesForReport(flag) {
     const { breadcrumbs, flow } = get();
-    return Object.entries(breadcrumbs)
-      .map(([k, v]: [string, string | Array<string>]) => {
-        const responses = (Array.isArray(v)
-          ? v.map((id) => flow[id]?.data?.text)
-          : [flow[v]?.data?.text]
-        ).filter(Boolean);
+    return Object.entries(breadcrumbs).map(
+      ([k, v]: [string, string | Array<string>]) => {
+        v = Array.isArray(v) ? v : [v];
+
+        const selections = v.map((id) => ({ id, ...flow[id] }));
+        const hidden = !selections.some((r) => r.data?.flag === flag);
+
         return {
-          id: k,
-          text: `${flow[k]?.data?.text} <strong>${responses.join(
-            ", "
-          )}</strong>`,
+          question: { id: k, ...flow[k] },
+          selections,
+          hidden,
         };
-      })
-      .filter((o) => !o.text.includes("undefined"));
+      }
+    );
   },
 }));
 
