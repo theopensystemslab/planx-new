@@ -14,7 +14,9 @@ const Option: React.FC<any> = (props) => {
   let background = "#AEAEAE"; // no flag color
   let color = "#000";
   try {
-    const flag = flags.find(({ value }) => value === props.data.flag);
+    const flag = flags.find(({ value }) =>
+      [props.data?.flag, props.data?.val].filter(Boolean).includes(value)
+    );
     background = flag.bgColor;
     color = flag.color;
   } catch (e) {}

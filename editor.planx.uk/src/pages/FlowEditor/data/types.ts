@@ -19,9 +19,11 @@ export enum TYPES {
   InternalPortal = 300,
   ExternalPortal = 310,
   Pay = 400,
+  Filter = 500,
 }
 
 export const SLUGS = {
+  [TYPES.Filter]: "filter",
   [TYPES.Flow]: "flow",
   [TYPES.Checklist]: "checklist",
   [TYPES.FindProperty]: "find-property",

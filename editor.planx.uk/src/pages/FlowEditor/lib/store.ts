@@ -26,6 +26,7 @@ import { connectToDB, getConnection } from "./sharedb";
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
 let doc;
+let globalFlag;
 
 const send = (ops) => {
   if (ops.length > 0) {
@@ -338,7 +339,10 @@ export const [useStore, api] = create((set, get) => ({
               nodeIdsConnectedFrom(id);
             } else {
               const fn = flow[id]?.data?.fn;
-              if (fn && passport.data[fn]?.value !== undefined) {
+              const value =
+                fn === "flag" ? globalFlag : passport.data[fn]?.value;
+
+              if (fn && (fn === "flag" || value !== undefined)) {
                 // TODO: add much-needed docs here
                 const responses = flow[id]?.edges.map((id) => ({
                   id,
@@ -347,14 +351,12 @@ export const [useStore, api] = create((set, get) => ({
 
                 const responseThatCanBeAutoAnswered = responses.find((n) => {
                   const val = String(n.data?.val);
-                  if (Array.isArray(passport.data[fn].value)) {
+                  if (Array.isArray(val)) {
                     // multiple string values are stored (array)
-                    return passport.data[fn].value
-                      .map((v) => String(v))
-                      .includes(val);
+                    return val.map((v) => String(v)).includes(value);
                   } else {
                     // string
-                    return val === String(passport.data[fn].value);
+                    return val === String(value);
                   }
                 });
 
@@ -554,11 +556,13 @@ export const [useStore, api] = create((set, get) => ({
         (f) => f.value === filteredCollectedFlags[0]
       ) || {
         // value: "PP-NO_RESULT",
+        value: undefined,
         text: "No result",
         category,
         bgColor: "#EEEEEE",
         color: tinycolor("black"),
       };
+      globalFlag = flag.value;
 
       const responses = Object.entries(breadcrumbs)
         .map(([k, v]: [string, string | Array<string>]) => {

@@ -25,6 +25,7 @@ export const ICONS: {
   [TYPES.DateInput]: undefined,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: CloudUpload,
+  [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: SearchOutlined,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,

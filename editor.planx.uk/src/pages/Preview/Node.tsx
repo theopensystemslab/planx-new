@@ -18,9 +18,8 @@ import TextInput from "./components/TextInput";
 let uprn;
 
 const Node: React.FC<any> = (props) => {
-  const [childNodesOf, flagResult, reportData] = useStore((state) => [
+  const [childNodesOf, reportData] = useStore((state) => [
     state.childNodesOf,
-    state.flagResult,
     state.reportData,
   ]);
 
@@ -91,7 +90,6 @@ const Node: React.FC<any> = (props) => {
 
     case TYPES.Result:
       const data = reportData();
-      console.log(data);
 
       const { flag, responses } = data["Planning permission"];
 
@@ -130,6 +128,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.AddressInput:
     case TYPES.DateInput:
     case TYPES.ExternalPortal:
+    case TYPES.Filter:
     case TYPES.Flow:
     case TYPES.InternalPortal:
     case TYPES.NumberInput:

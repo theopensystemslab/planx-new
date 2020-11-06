@@ -5,6 +5,7 @@ import Checklist from "./Checklist";
 import Content from "./Content";
 import ExternalPortal from "./ExternalPortal";
 import FileUpload from "./FileUpload";
+import Filter from "./Filter";
 import FindProperty from "./FindProperty";
 import InternalPortal from "./InternalPortal";
 import Notice from "./Notice";
@@ -18,20 +19,21 @@ import TextInput from "./TextInput";
 const components: {
   [key in typeof SLUGS[TYPES]]: React.FC<any>;
 } = {
-  flow: () => null,
+  checklist: Checklist,
+  content: Content,
+  "external-portal": ExternalPortal,
+  "file-upload": FileUpload,
+  filter: Filter,
   "find-property": FindProperty,
+  flow: () => null,
+  "internal-portal": InternalPortal,
+  notice: Notice,
+  pay: Pay,
   "property-information": PropertyInformation,
+  question: Question,
+  result: Result,
   "task-list": TaskList,
   "text-input": TextInput,
-  notice: Notice,
-  "file-upload": FileUpload,
-  result: Result,
-  checklist: Checklist,
-  "external-portal": ExternalPortal,
-  "internal-portal": InternalPortal,
-  question: Question,
-  content: Content,
-  pay: Pay,
 };
 
 export default components;
