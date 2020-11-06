@@ -296,7 +296,7 @@ describe("merging nested external portals", () => {
     });
   });
 
-  test.skip("OPTION 2B - same as 2A but ALSO scope the ids by prepending the uuid", async () => {
+  test("OPTION 2B - same as 2A but ALSO scope the ids by prepending the uuid", async () => {
     const [, child, grandchild] = uuids;
 
     expect(result.data.flows_by_pk.data_merged).toMatchObject({
