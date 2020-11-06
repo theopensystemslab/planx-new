@@ -361,6 +361,18 @@ export const [useStore, api] = create((set, get) => ({
                 });
 
                 if (responseThatCanBeAutoAnswered) {
+                  if (fn !== "flag") {
+                    set({
+                      breadcrumbs: {
+                        ...breadcrumbs,
+                        [id]: {
+                          answers: [responseThatCanBeAutoAnswered.id],
+                          auto: true,
+                        },
+                      },
+                    });
+                  }
+
                   nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id);
                 } else {
                   ids.add(id);
@@ -375,7 +387,7 @@ export const [useStore, api] = create((set, get) => ({
 
     Object.entries(breadcrumbs)
       .reverse()
-      .forEach(([, answers]: [string, Array<string>]) => {
+      .forEach(([, { answers }]: any) => {
         answers.forEach((answer) => nodeIdsConnectedFrom(answer));
       });
 
@@ -423,7 +435,10 @@ export const [useStore, api] = create((set, get) => ({
           }
 
           set({
-            breadcrumbs: { ...breadcrumbs, [id]: vals },
+            breadcrumbs: {
+              ...breadcrumbs,
+              [id]: { answers: vals, auto: false },
+            },
             passport: {
               ...passport,
               data: {
@@ -434,11 +449,16 @@ export const [useStore, api] = create((set, get) => ({
           });
         } else {
           set({
-            breadcrumbs: { ...breadcrumbs, [id]: vals },
+            breadcrumbs: {
+              ...breadcrumbs,
+              [id]: { answers: vals, auto: false },
+            },
           });
         }
       } else {
-        set({ breadcrumbs: { ...breadcrumbs, [id]: vals } });
+        set({
+          breadcrumbs: { ...breadcrumbs, [id]: { answers: vals, auto: true } },
+        });
       }
 
       // only store breadcrumbs in the backend if they are answers provided for
@@ -542,10 +562,10 @@ export const [useStore, api] = create((set, get) => ({
       const possibleFlags = flags.filter((f) => f.category === category);
       const keys = possibleFlags.map((f) => f.value);
 
-      const collectedFlags = Object.values(breadcrumbs).flatMap((v: string) =>
-        Array.isArray(v)
-          ? v.map((id) => flow[id]?.data?.flag)
-          : flow[v]?.data?.flag
+      const collectedFlags = Object.values(breadcrumbs).flatMap(({ answers }) =>
+        Array.isArray(answers)
+          ? answers.map((id) => flow[id]?.data?.flag)
+          : flow[answers]?.data?.flag
       );
 
       const filteredCollectedFlags = collectedFlags
@@ -565,25 +585,27 @@ export const [useStore, api] = create((set, get) => ({
       globalFlag = flag.value;
 
       const responses = Object.entries(breadcrumbs)
-        .map(([k, v]: [string, string | Array<string>]) => {
-          const question = { id: k, ...flow[k] };
+        .map(
+          ([k, { answers }]: [string, { answers: string | Array<string> }]) => {
+            const question = { id: k, ...flow[k] };
 
-          if (!SUPPORTED_DECISION_TYPES.includes(question?.type)) return null;
+            if (!SUPPORTED_DECISION_TYPES.includes(question?.type)) return null;
 
-          v = Array.isArray(v) ? v : [v];
+            answers = Array.isArray(answers) ? answers : [answers];
 
-          const selections = v.map((id) => ({ id, ...flow[id] }));
-          const hidden = !selections.some(
-            (r) => r.data?.flag && r.data.flag === flag?.value
-            // possibleFlags.includes(r.data.flag)
-          );
+            const selections = answers.map((id) => ({ id, ...flow[id] }));
+            const hidden = !selections.some(
+              (r) => r.data?.flag && r.data.flag === flag?.value
+              // possibleFlags.includes(r.data.flag)
+            );
 
-          return {
-            question,
-            selections,
-            hidden,
-          };
-        })
+            return {
+              question,
+              selections,
+              hidden,
+            };
+          }
+        )
         .filter(Boolean);
 
       acc[category] = {

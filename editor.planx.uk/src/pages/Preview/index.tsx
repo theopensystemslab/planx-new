@@ -36,7 +36,11 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
     state.record,
   ]);
 
-  const canGoBack = Object.keys(breadcrumbs).length > 0;
+  const goBackable = Object.entries(breadcrumbs)
+    .filter(([k, v]: any) => !v.auto)
+    .map(([k]) => k);
+
+  const canGoBack = goBackable.length > 0;
 
   return (
     <>
@@ -52,7 +56,7 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
         }}
       >
         <span
-          onClick={() => record(Object.keys(breadcrumbs).pop())}
+          onClick={() => record(goBackable.pop())}
           style={{
             padding: "0 10px 10px",
             visibility: canGoBack ? "visible" : "hidden",
