@@ -77,12 +77,9 @@ const TextInputEditor: React.FC<TextInputEditorProps> = (props) => {
           });
         }}
         definitionImg={props.value.definitionImg}
-        definitionName="howMeasured"
-        definitionValue={props.value.howMeasured}
-        policyName="policyRef"
-        policyValue={props.value.policyRef}
-        whyName="info"
-        whyValue={props.value.info}
+        howMeasured={props.value.howMeasured}
+        policyRef={props.value.policyRef}
+        info={props.value.info}
       />
       <InternalNotes
         name="notes"

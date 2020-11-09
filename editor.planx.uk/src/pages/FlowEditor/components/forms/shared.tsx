@@ -5,7 +5,6 @@ import React from "react";
 
 import {
   ImgInput,
-  Input,
   InputGroup,
   InputRow,
   ModalSection,
@@ -34,26 +33,21 @@ const renderMenuItem = (category: string) => {
     ));
 };
 
-interface IMoreInformation {
+interface MoreInformationProps {
   changeField: (any) => any;
+  howMeasured: string;
+  policyRef: string;
+  info: string;
   definitionImg: string;
-  definitionName: string;
-  definitionValue: string;
-  policyName: string;
-  policyValue: string;
-  whyName: string;
-  whyValue: string;
 }
+
 export const MoreInformation = ({
   changeField,
   definitionImg,
-  definitionName,
-  definitionValue,
-  policyName,
-  policyValue,
-  whyName,
-  whyValue,
-}: IMoreInformation) => {
+  howMeasured,
+  policyRef,
+  info,
+}: MoreInformationProps) => {
   return (
     <ModalSection>
       <ModalSectionContent title="More Information" Icon={InfoOutlined}>
@@ -61,8 +55,8 @@ export const MoreInformation = ({
           <InputRow>
             <RichTextInput
               multiline
-              name={whyName}
-              value={whyValue}
+              name="info"
+              value={info}
               onChange={changeField}
               placeholder="Why it matters"
             />
@@ -72,8 +66,8 @@ export const MoreInformation = ({
           <InputRow>
             <RichTextInput
               multiline
-              name={policyName}
-              value={policyValue}
+              name="policyRef"
+              value={policyRef}
               onChange={changeField}
               placeholder="Policy source"
             />
@@ -83,8 +77,8 @@ export const MoreInformation = ({
           <InputRow>
             <RichTextInput
               multiline
-              name={definitionName}
-              value={definitionValue}
+              name="howMeasured"
+              value={howMeasured}
               onChange={changeField}
               placeholder="How it is defined?"
             />

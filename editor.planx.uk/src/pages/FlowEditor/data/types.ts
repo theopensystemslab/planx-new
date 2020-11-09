@@ -55,9 +55,8 @@ export const fromSlug = (slug: string): TYPES | undefined => {
 
 // Task list
 
-export interface TaskList {
+export interface TaskList extends MoreInformation {
   tasks: Array<Task>;
-  notes?: string;
 }
 
 export interface Task {
