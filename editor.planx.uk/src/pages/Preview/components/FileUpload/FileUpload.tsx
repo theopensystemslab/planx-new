@@ -13,6 +13,7 @@ import { useDropzone } from "react-dropzone";
 
 import { MoreInformation } from "../../../FlowEditor/data/types";
 import Card from "../shared/Card";
+import QuestionHeader from "../shared/QuestionHeader";
 
 interface Props extends MoreInformation {
   title?: string;
@@ -117,8 +118,13 @@ const FileUpload: React.FC<Props> = (props) => {
   const [slots, setSlots] = React.useState([]);
   return (
     <Card>
-      <h1>{props.title}</h1>
-      <p>{props.description}</p>
+      <QuestionHeader
+        title={props.title}
+        description={props.description}
+        info={props.info}
+        howMeasured={props.howMeasured}
+        policyRef={props.policyRef}
+      />
       <Dropzone slots={slots} setSlots={setSlots} />
       <Button
         variant="contained"

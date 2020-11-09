@@ -9,6 +9,7 @@ import React from "react";
 
 import { TaskList } from "../../../FlowEditor/data/types";
 import Card from "../shared/Card";
+import QuestionHeader from "../shared/QuestionHeader";
 
 interface Props extends TaskList {
   handleSubmit?;
@@ -195,17 +196,22 @@ const Task = ({ title, description, index, isLast }) => {
   );
 };
 
-const TaskListComponent: React.FC<Props> = ({ tasks, handleSubmit }) => {
+const TaskListComponent: React.FC<Props> = (props) => {
   const classes = taskStyles();
   return (
     <Card>
+      <QuestionHeader
+        info={props.info}
+        policyRef={props.policyRef}
+        howMeasured={props.howMeasured}
+      />
       <Box className={classes.taskList}>
-        {tasks.map((task, index) => (
+        {props.tasks.map((task, index) => (
           <Task
             {...task}
             key={index}
             index={index}
-            isLast={index === tasks.length}
+            isLast={index === props.tasks.length}
           />
         ))}
       </Box>
@@ -215,7 +221,7 @@ const TaskListComponent: React.FC<Props> = ({ tasks, handleSubmit }) => {
         color="primary"
         size="large"
         type="submit"
-        onClick={handleSubmit}
+        onClick={props.handleSubmit}
       >
         Continue
       </Button>
