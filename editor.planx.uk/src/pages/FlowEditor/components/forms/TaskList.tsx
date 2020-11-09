@@ -70,40 +70,14 @@ const TaskEditor: React.FC<EditorProps<Task>> = (props) => {
   );
 };
 
-export interface TaskListEditorProps {
-  value: TaskList;
-  onChange: (newValue: TaskList) => void;
-}
-
-const TaskListEditor: React.FC<TaskListEditorProps> = (props) => {
-  return (
-    <>
-      <ModalSection>
-        <ModalSectionContent title="Task List" Icon={ICONS[TYPES.TaskList]}>
-          <ListManager
-            values={props.value.tasks}
-            onChange={(tasks: Array<Task>) => {
-              props.onChange({
-                ...props.value,
-                tasks,
-              });
-            }}
-            Editor={TaskEditor}
-            newValue={newTask}
-          />
-        </ModalSectionContent>
-      </ModalSection>
-    </>
-  );
-};
-
 const TaskListComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
-      taskList: {
-        // TODO: improve runtime validation here (joi, io-ts)
-        tasks: props.node?.data?.taskList?.tasks || [],
-      },
+      // TODO: improve runtime validation here (joi, io-ts)
+      tasks:
+        /* remove once migrated */ props.node?.data?.taskList?.tasks ||
+        props.node?.data?.tasks ||
+        [],
       notes: props.node?.data?.notes || props.node?.date?.taskList?.notes || "",
       definitionImg: props.node?.data?.definitionImg,
       howMeasured: props.node?.data?.howMeasured,
@@ -119,12 +93,18 @@ const TaskListComponent: React.FC<Props> = (props) => {
   });
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
-      <TaskListEditor
-        value={formik.values.taskList}
-        onChange={(newTaskList) => {
-          formik.setFieldValue("taskList", newTaskList);
-        }}
-      />
+      <ModalSection>
+        <ModalSectionContent title="Task List" Icon={ICONS[TYPES.TaskList]}>
+          <ListManager
+            values={formik.values.tasks}
+            onChange={(tasks: Array<Task>) => {
+              formik.setFieldValue("tasks", tasks);
+            }}
+            Editor={TaskEditor}
+            newValue={newTask}
+          />
+        </ModalSectionContent>
+      </ModalSection>
       <MoreInformation
         changeField={formik.handleChange}
         definitionImg={formik.values.definitionImg}

@@ -7,13 +7,10 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import classNames from "classnames";
 import React from "react";
 
-import { Task as ITask } from "../../../FlowEditor/data/types";
+import { TaskList } from "../../../FlowEditor/data/types";
 import Card from "../shared/Card";
 
-interface Props {
-  taskList: {
-    tasks: Array<ITask>;
-  };
+interface Props extends TaskList {
   handleSubmit?;
 }
 
@@ -198,7 +195,7 @@ const Task = ({ title, description, index, isLast }) => {
   );
 };
 
-const TaskList: React.FC<Props> = ({ taskList: { tasks }, handleSubmit }) => {
+const TaskListComponent: React.FC<Props> = ({ tasks, handleSubmit }) => {
   const classes = taskStyles();
   return (
     <Card>
@@ -226,4 +223,4 @@ const TaskList: React.FC<Props> = ({ taskList: { tasks }, handleSubmit }) => {
   );
 };
 
-export default TaskList;
+export default TaskListComponent;

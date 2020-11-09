@@ -120,7 +120,15 @@ const Node: React.FC<any> = (props) => {
       );
 
     case TYPES.TaskList:
-      return <TaskList {...allProps} />;
+      return (
+        <TaskList
+          {...allProps}
+          tasks={
+            // Remove once migrated
+            allProps.taskList?.tasks || allProps.tasks
+          }
+        />
+      );
 
     case TYPES.TextInput:
       return <TextInput {...allProps} />;
