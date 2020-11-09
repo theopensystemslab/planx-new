@@ -1,6 +1,7 @@
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
+import Link from "@material-ui/core/Link";
 import HelpIcon from "@material-ui/icons/HelpOutlineOutlined";
 import React from "react";
 import ReactMarkdown from "react-markdown";
@@ -55,17 +56,13 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
       </Grid>
       <MoreInfo open={open} handleClose={() => setOpen(false)}>
         {info && (
-          <MoreInfoSection title="More information">
+          <MoreInfoSection title="Why does it matter?">
             <ReactMarkdown source={info} />
           </MoreInfoSection>
         )}
-        {policyRef && (
-          <MoreInfoSection title="Policy source">
-            <ReactMarkdown source={policyRef} />
-          </MoreInfoSection>
-        )}
+        {policyRef && <ReactMarkdown source={policyRef} />}
         {howMeasured && (
-          <MoreInfoSection title="How it is defined">
+          <MoreInfoSection title="How is it defined?">
             <ReactMarkdown source={howMeasured} />
           </MoreInfoSection>
         )}

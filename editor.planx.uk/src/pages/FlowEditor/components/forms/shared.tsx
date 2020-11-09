@@ -5,6 +5,7 @@ import React from "react";
 
 import {
   ImgInput,
+  Input,
   InputGroup,
   InputRow,
   ModalSection,
