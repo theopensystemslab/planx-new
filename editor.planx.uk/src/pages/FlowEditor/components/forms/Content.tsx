@@ -18,7 +18,7 @@ export interface Props {
 }
 
 const ContentComponent: React.FC<Props> = (props) => {
-  const formik = useFormik({
+  const formik = useFormik<Content>({
     initialValues: {
       // TODO: improve runtime validation here (joi, io-ts)
       content: props.node?.data?.content || "",
