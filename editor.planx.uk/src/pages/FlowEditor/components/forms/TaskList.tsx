@@ -14,6 +14,7 @@ import {
 import { EditorProps } from "../../../../ui/ListManager";
 import { Task, TaskList, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
+import { MoreInformation } from "./shared";
 
 export interface Props {
   id?: string;
@@ -92,16 +93,6 @@ const TaskListEditor: React.FC<TaskListEditorProps> = (props) => {
           />
         </ModalSectionContent>
       </ModalSection>
-      <InternalNotes
-        name="notes"
-        onChange={(ev) => {
-          props.onChange({
-            ...props.value,
-            notes: ev.target.value,
-          });
-        }}
-        value={props.value.notes}
-      />
     </>
   );
 };
@@ -111,9 +102,13 @@ const TaskListComponent: React.FC<Props> = (props) => {
     initialValues: {
       taskList: {
         // TODO: improve runtime validation here (joi, io-ts)
-        notes: props.node?.data?.taskList?.notes || "",
         tasks: props.node?.data?.taskList?.tasks || [],
       },
+      notes: props.node?.data?.notes || props.node?.date?.taskList?.notes || "",
+      definitionImg: props.node?.data?.definitionImg,
+      howMeasured: props.node?.data?.howMeasured,
+      policyRef: props.node?.data?.policyRef,
+      info: props.node?.data?.info,
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
@@ -129,6 +124,18 @@ const TaskListComponent: React.FC<Props> = (props) => {
         onChange={(newTaskList) => {
           formik.setFieldValue("taskList", newTaskList);
         }}
+      />
+      <MoreInformation
+        changeField={formik.handleChange}
+        definitionImg={formik.values.definitionImg}
+        howMeasured={formik.values.howMeasured}
+        policyRef={formik.values.policyRef}
+        info={formik.values.info}
+      />
+      <InternalNotes
+        name="notes"
+        onChange={formik.handleChange}
+        value={formik.values.notes}
       />
     </form>
   );

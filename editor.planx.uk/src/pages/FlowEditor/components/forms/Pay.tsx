@@ -80,12 +80,9 @@ function Component(props) {
       <MoreInformation
         changeField={formik.handleChange}
         definitionImg={formik.values.definitionImg}
-        definitionName="howMeasured"
-        definitionValue={formik.values.howMeasured}
-        policyName="policyRef"
-        policyValue={formik.values.policyRef}
-        whyName="info"
-        whyValue={formik.values.info}
+        howMeasured={formik.values.howMeasured}
+        policyRef={formik.values.policyRef}
+        info={formik.values.info}
       />
       <InternalNotes
         name="notes"

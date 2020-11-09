@@ -293,17 +293,17 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
   const formik = useFormik<Checklist>({
     initialValues: {
       allRequired: props.node?.data?.allRequired || false,
-      definitionImg: props.node?.data?.definitionImg || "",
       description: props.node?.data?.description || "",
       fn: props.node?.data?.fn || "",
       groupedOptions: props.groupedOptions,
-      howMeasured: props.node?.data?.howMeasured || "",
       img: props.node?.data?.img || "",
-      info: props.node?.data?.info || "",
       notes: props.node?.data?.notes || "",
       options: props.options,
-      policyRef: props.node?.data?.policyRef || "",
       text: props.node?.data?.text || "",
+      policyRef: props.node?.data?.policyRef || "",
+      howMeasured: props.node?.data?.howMeasured || "",
+      info: props.node?.data?.info || "",
+      definitionImg: props.node?.data?.definitionImg || "",
     },
     onSubmit: ({ options, groupedOptions, ...values }) => {
       if (props.handleSubmit) {
@@ -434,12 +434,9 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
       <MoreInformation
         changeField={formik.handleChange}
         definitionImg={formik.values.definitionImg}
-        definitionName="howMeasured"
-        definitionValue={formik.values.howMeasured}
-        policyName="policyRef"
-        policyValue={formik.values.policyRef}
-        whyName="info"
-        whyValue={formik.values.info}
+        howMeasured={formik.values.howMeasured}
+        policyRef={formik.values.policyRef}
+        info={formik.values.info}
       />
       <InternalNotes
         name="notes"

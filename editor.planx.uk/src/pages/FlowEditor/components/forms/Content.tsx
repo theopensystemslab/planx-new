@@ -17,67 +17,42 @@ export interface Props {
   node?: any;
 }
 
-export interface ContentEditorProps {
-  value: Content;
-  onChange: (newValue: Content) => void;
-}
-
-const ContentEditor: React.FC<ContentEditorProps> = (props) => {
-  return (
-    <>
-      <ModalSection>
-        <ModalSectionContent title="Content" Icon={ICONS[TYPES.Content]}>
-          <InputRow>
-            <RichTextInput
-              placeholder="Content"
-              value={props.value.content}
-              onChange={(ev) => {
-                props.onChange({
-                  ...props.value,
-                  content: ev.target.value,
-                });
-              }}
-            />
-          </InputRow>
-        </ModalSectionContent>
-      </ModalSection>
-      <InternalNotes
-        name="notes"
-        onChange={(ev) => {
-          props.onChange({
-            ...props.value,
-            notes: ev.target.value,
-          });
-        }}
-        value={props.value.notes}
-      />
-    </>
-  );
-};
-
 const ContentComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
-      content: {
-        // TODO: improve runtime validation here (joi, io-ts)
-        content: props.node?.data?.content || "",
-        notes: props.node?.data?.notes || "",
-      },
+      // TODO: improve runtime validation here (joi, io-ts)
+      content: props.node?.data?.content || "",
+      notes: props.node?.data?.notes || "",
+      policyRef: props.node?.data?.policyRef || "",
+      howMeasured: props.node?.data?.howMeasured || "",
+      info: props.node?.data?.info || "",
+      definitionImg: props.node?.data?.definitionImg || "",
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.Content, data: newValues.content });
+        props.handleSubmit({ type: TYPES.Content, data: newValues });
       }
     },
     validate: () => {},
   });
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
-      <ContentEditor
-        value={formik.values.content}
-        onChange={(content) => {
-          formik.setFieldValue("content", content);
-        }}
+      <ModalSection>
+        <ModalSectionContent title="Content" Icon={ICONS[TYPES.Content]}>
+          <InputRow>
+            <RichTextInput
+              placeholder="Content"
+              name="content"
+              value={formik.values.content}
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+        </ModalSectionContent>
+      </ModalSection>
+      <InternalNotes
+        name="notes"
+        value={formik.values.notes}
+        onChange={formik.handleChange}
       />
     </form>
   );
