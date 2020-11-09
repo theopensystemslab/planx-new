@@ -123,7 +123,10 @@ const Node: React.FC<any> = (props) => {
       return (
         <TaskList
           {...allProps}
-          tasks={allProps.taskList?.tasks || allProps.tasks}
+          tasks={
+            // Remove once migrated
+            allProps.taskList?.tasks || allProps.tasks
+          }
         />
       );
 

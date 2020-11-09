@@ -74,7 +74,10 @@ const TaskListComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
       // TODO: improve runtime validation here (joi, io-ts)
-      tasks: props.node?.data?.taskList?.tasks || props.node?.data?.tasks || [],
+      tasks:
+        /* remove once migrated */ props.node?.data?.taskList?.tasks ||
+        props.node?.data?.tasks ||
+        [],
       notes: props.node?.data?.notes || props.node?.date?.taskList?.notes || "",
       definitionImg: props.node?.data?.definitionImg,
       howMeasured: props.node?.data?.howMeasured,
