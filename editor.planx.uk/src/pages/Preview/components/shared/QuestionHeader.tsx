@@ -60,7 +60,11 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             <ReactMarkdown source={info} />
           </MoreInfoSection>
         )}
-        {policyRef && <ReactMarkdown source={policyRef} />}
+        {policyRef && (
+          <MoreInfoSection title="Policy Source">
+            <ReactMarkdown source={policyRef} />
+          </MoreInfoSection>
+        )}
         {howMeasured && (
           <MoreInfoSection title="How is it defined?">
             <ReactMarkdown source={howMeasured} />

@@ -1,9 +1,9 @@
 import { Button } from "@material-ui/core";
 import React from "react";
-import ReactMarkdown from "react-markdown";
 
 import { Content } from "../../../FlowEditor/data/types";
 import Card from "../shared/Card";
+import QuestionHeader from "../shared/QuestionHeader";
 
 interface Props extends Content {
   handleSubmit?: any;
@@ -12,7 +12,12 @@ interface Props extends Content {
 const ContentComponent: React.FC<Props> = (props) => {
   return (
     <Card>
-      <ReactMarkdown source={props.content} />
+      <QuestionHeader
+        description={props.content}
+        info={props.info}
+        policyRef={props.policyRef}
+        howMeasured={props.howMeasured}
+      />
       <Button
         variant="contained"
         color="primary"

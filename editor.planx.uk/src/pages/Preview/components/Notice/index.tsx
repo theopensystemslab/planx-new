@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { Notice } from "../../../FlowEditor/data/types";
 import { useStore } from "../../../FlowEditor/lib/store";
 import Card from "../shared/Card";
+import QuestionHeader from "../shared/QuestionHeader";
 
 interface Props extends Notice {
   handleSubmit?: any;
@@ -63,6 +64,11 @@ const NoticeComponent: React.FC<Props> = (props) => {
 
   return (
     <Card>
+      <QuestionHeader
+        info={props.info}
+        policyRef={props.policyRef}
+        howMeasured={props.howMeasured}
+      />
       <div className={styles.container}>
         <div className={styles.content}>
           <h3 className={styles.title}>{props.title}</h3>

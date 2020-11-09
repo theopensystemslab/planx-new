@@ -38,7 +38,7 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question
           {...props}
-          text={`Tasks (${node.data?.taskList?.tasks?.length || 0})`}
+          text={`Tasks (${node.data?.tasks?.length || 0})`}
         />
       );
     case TYPES.TextInput:

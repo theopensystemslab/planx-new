@@ -10,6 +10,7 @@ import {
 } from "../../../../ui";
 import { Content, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
+import { MoreInformation } from "./shared";
 
 export interface Props {
   id?: string;
@@ -49,6 +50,13 @@ const ContentComponent: React.FC<Props> = (props) => {
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
+      <MoreInformation
+        changeField={formik.handleChange}
+        definitionImg={formik.values.definitionImg}
+        howMeasured={formik.values.howMeasured}
+        policyRef={formik.values.policyRef}
+        info={formik.values.info}
+      />
       <InternalNotes
         name="notes"
         value={formik.values.notes}
