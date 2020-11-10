@@ -164,7 +164,37 @@ export const [useStore, api] = create((set, get) => ({
     return (flow[id]?.edges || []).map((id) => ({ id, ...flow[id] }));
   },
 
-  createFlow: async (teamId, newName, data = {}) => {
+  getFlows: async (teamId: number) => {
+    client.cache.reset();
+    const { data } = await client.query({
+      query: gql`
+        query GetFlow($teamId: Int!) {
+          flows(
+            order_by: { updated_at: desc }
+            where: { team: { id: { _eq: $teamId } } }
+          ) {
+            id
+            name
+            slug
+            updated_at
+            operations(limit: 1, order_by: { id: desc }) {
+              actor {
+                first_name
+                last_name
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        teamId,
+      },
+    });
+
+    return data;
+  },
+
+  createFlow: async (teamId, newName, data = {}): Promise<string> => {
     let response = (await client.mutate({
       mutation: gql`
         mutation CreateFlow(
@@ -222,8 +252,7 @@ export const [useStore, api] = create((set, get) => ({
       },
     });
 
-    // TODO: change this to window.location.href = `/${team.slug}/${flow.slug}`
-    window.location.reload();
+    return newName;
   },
 
   deleteFlow: async (teamId, flowSlug: string) => {
