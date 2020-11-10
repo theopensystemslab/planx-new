@@ -22,8 +22,8 @@ import {
   FolderOutlined,
 } from "@material-ui/icons";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import React from "react";
-import { Link } from "react-navi";
+import React, { useCallback, useEffect, useState } from "react";
+import { Link, useNavigation } from "react-navi";
 
 import { client } from "../lib/graphql";
 import SimpleMenu from "../ui/SimpleMenu";
@@ -189,18 +189,29 @@ const FooterLinks = () => (
   </List>
 );
 
-const FlowItem = ({ flow, teamId }) => {
+interface FlowItemProps {
+  flow: any;
+  teamId: number;
+  onDeleteSuccess: () => void;
+  onRenameSuccess: () => void;
+}
+
+const FlowItem: React.FC<FlowItemProps> = ({
+  flow,
+  teamId,
+  onDeleteSuccess,
+  onRenameSuccess,
+}) => {
   const classes = useStyles();
-  const [deleting, setDeleting] = React.useState(false);
+  const [deleting, setDeleting] = useState(false);
   const handleDelete = () => {
     api
       .getState()
       .deleteFlow(teamId, flow.slug)
       .then(() => {
+        console.log("DELETE SUCCESS");
         setDeleting(false);
-
-        // TODO: remove flow from list rather than this hard refresh
-        window.location.reload();
+        onDeleteSuccess();
       });
   };
   return (
@@ -260,7 +271,7 @@ const FlowItem = ({ flow, teamId }) => {
                     },
                   });
 
-                  window.location.reload();
+                  onRenameSuccess();
                 }
               },
               label: "Rename",
@@ -279,8 +290,21 @@ const FlowItem = ({ flow, teamId }) => {
   );
 };
 
-const Team: React.FC<{ flows: any[]; id }> = ({ flows, id }) => {
+const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
   const classes = useStyles();
+  const [flows, setFlows] = useState<any[] | null>(null);
+  const navigation = useNavigation();
+  const fetchFlows = useCallback(() => {
+    api
+      .getState()
+      .getFlows(id)
+      .then((res: { flows: any[] }) => {
+        setFlows(res.flows);
+      });
+  }, [id, setFlows]);
+  useEffect(() => {
+    fetchFlows();
+  }, [fetchFlows]);
   return (
     <Box className={classes.root}>
       <Box className={classes.dashboard}>
@@ -289,24 +313,42 @@ const Team: React.FC<{ flows: any[]; id }> = ({ flows, id }) => {
             My services
           </Typography>
         </Box>
-        <ul className={classes.dashboardList}>
-          {flows.map((flow: any) => (
-            <FlowItem flow={flow} key={flow.slug} teamId={id} />
-          ))}
-          <AddButton
-            onClick={() => {
-              const newFlowName = prompt("Service name");
-              if (newFlowName) {
-                api
-                  .getState()
-                  // .createFlow(id, newFlowName, { nodes: {}, edges: [] });
-                  .createFlow(id, newFlowName);
-              }
-            }}
-          >
-            Add a new service
-          </AddButton>
-        </ul>
+        {flows && (
+          <ul className={classes.dashboardList}>
+            {flows.map((flow: any) => (
+              <FlowItem
+                flow={flow}
+                key={flow.slug}
+                teamId={id}
+                onDeleteSuccess={() => {
+                  // TODO: fetching flows here doesn't update the list, even with a generous timeout
+                  window.location.reload();
+                  // setTimeout(fetchFlows, 1500);
+                }}
+                onRenameSuccess={() => {
+                  // TODO: fetching flows here doesn't update the list, even with a generous timeout
+                  window.location.reload();
+                  // setTimeout(fetchFlows, 1500);
+                }}
+              />
+            ))}
+            <AddButton
+              onClick={() => {
+                const newFlowName = prompt("Service name");
+                if (newFlowName) {
+                  api
+                    .getState()
+                    .createFlow(id, newFlowName)
+                    .then((newId) => {
+                      navigation.navigate(`/${slug}/${newId}`);
+                    });
+                }
+              }}
+            >
+              Add a new service
+            </AddButton>
+          </ul>
+        )}
         <FooterLinks />
       </Box>
     </Box>
