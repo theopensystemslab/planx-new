@@ -321,14 +321,10 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
                 key={flow.slug}
                 teamId={id}
                 onDeleteSuccess={() => {
-                  // TODO: fetching flows here doesn't update the list, even with a generous timeout
-                  window.location.reload();
-                  // setTimeout(fetchFlows, 1500);
+                  fetchFlows();
                 }}
                 onRenameSuccess={() => {
-                  // TODO: fetching flows here doesn't update the list, even with a generous timeout
-                  window.location.reload();
-                  // setTimeout(fetchFlows, 1500);
+                  fetchFlows();
                 }}
               />
             ))}

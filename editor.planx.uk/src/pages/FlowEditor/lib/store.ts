@@ -165,6 +165,7 @@ export const [useStore, api] = create((set, get) => ({
   },
 
   getFlows: async (teamId: number) => {
+    client.cache.reset();
     const { data } = await client.query({
       query: gql`
         query GetFlow($teamId: Int!) {
