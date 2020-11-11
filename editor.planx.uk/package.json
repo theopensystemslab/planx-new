@@ -90,7 +90,7 @@
     "typescript": "^4.0.0"
   },
   "scripts": {
-    "start": "snowpack dev",
+    "start": "snowpack dev --polyfill-node",
     "build": "snowpack build",
     "test": "react-scripts test",
     "cosmos": "FAST_REFRESH=false cosmos",

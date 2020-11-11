@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import React from "react";
-import InputField from "ui/InputField";
+import InputField from "src/ui/InputField";
 
 import { TYPES } from "../../data/types";
 import { FormError } from "./shared";

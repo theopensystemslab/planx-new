@@ -1,5 +1,5 @@
 import React from "react";
-import InputField from "ui/InputField";
+import InputField from "src/ui/InputField";
 
 export default (
   <InputField

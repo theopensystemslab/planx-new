@@ -1,5 +1,5 @@
-import { ROOT_NODE_KEY } from "planx-graph";
 import React from "react";
+import { ROOT_NODE_KEY } from "src/planx-graph";
 
 import { useStore } from "../../lib/store";
 import EndPoint from "./components/EndPoint";

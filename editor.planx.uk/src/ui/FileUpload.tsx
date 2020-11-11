@@ -5,9 +5,9 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { Error, Image } from "@material-ui/icons";
-import { uploadFile } from "api/upload";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { uploadFile } from "src/api/upload";
 
 export interface Props {
   onChange?: (image: string) => void;

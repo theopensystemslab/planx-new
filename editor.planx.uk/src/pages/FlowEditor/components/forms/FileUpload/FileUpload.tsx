@@ -7,7 +7,7 @@ import {
   ModalSection,
   ModalSectionContent,
   RichTextInput,
-} from "ui";
+} from "src/ui";
 
 import { TYPES } from "../../../data/types";
 import { ICONS } from "../../shared";

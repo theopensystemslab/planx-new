@@ -1,7 +1,7 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { useStore } from "src/pages/FlowEditor/lib/store";
 
 interface IResultReason {
   id: string;

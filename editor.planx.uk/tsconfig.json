@@ -2,10 +2,10 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "src",
+    "baseUrl": ".",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error", //--
+    // "importsNotUsedAsValues": "error", //--
     "isolatedModules": true,
     "jsx": "preserve", //--
     "lib": ["dom", "dom.iterable", "esnext"],

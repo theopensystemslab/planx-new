@@ -14,7 +14,7 @@ import {
   remove,
   ROOT_NODE_KEY,
   update,
-} from "planx-graph";
+} from "src/planx-graph";
 import create from "zustand";
 
 import { client } from "../../../lib/graphql";

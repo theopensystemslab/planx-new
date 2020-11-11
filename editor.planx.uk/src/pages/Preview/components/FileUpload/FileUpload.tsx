@@ -5,11 +5,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { CloudUpload } from "@material-ui/icons";
 import FileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Close";
-import { uploadFile } from "api/upload";
 import classNames from "classnames";
 import { nanoid } from "nanoid";
 import React from "react";
 import { useDropzone } from "react-dropzone";
+import { uploadFile } from "src/api/upload";
 
 import { MoreInformation } from "../../../FlowEditor/data/types";
 import Card from "../shared/Card";

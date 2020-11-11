@@ -7,7 +7,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import React, { Suspense } from "react";
-import Input from "ui/Input";
+import Input from "src/ui/Input";
 
 import { MoreInformation } from "../../../FlowEditor/data/types";
 import Question from "../Question";
