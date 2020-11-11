@@ -1,12 +1,13 @@
 import { useQuery } from "@apollo/client";
 import classNames from "classnames";
 import gql from "graphql-tag";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useDrag } from "react-dnd";
 import MoreVertical from "react-feather/dist/icons/more-vertical";
 import { Link } from "react-navi";
+import { useStore } from "src/pages/FlowEditor/lib/store";
 import { rootFlowPath } from "src/routes/utils";
+
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 
