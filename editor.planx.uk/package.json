@@ -91,7 +91,7 @@
   },
   "scripts": {
     "start": "snowpack dev",
-    "build": "snowpack build",
+    "build": "snowpack build --polyfill-node",
     "test": "web-test-runner \"src/**/*.test.ts\"",
     "cosmos": "FAST_REFRESH=false cosmos",
     "compile-types": "typescript-json-validator src/types/index.d.ts --collection --useNamedExport",
