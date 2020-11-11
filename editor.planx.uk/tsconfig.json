@@ -21,6 +21,6 @@
     "target": "esnext",
     "typeRoots": ["src/types"]
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "types"],
   "exclude": ["node_modules"]
 }
