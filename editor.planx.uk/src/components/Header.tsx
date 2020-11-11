@@ -12,7 +12,7 @@ import React, { useRef, useState } from "react";
 import Play from "react-feather/dist/icons/play";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 
-import { api } from "../pages/FlowEditor/lib/store";
+import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
 
 const useStyles = makeStyles((theme) => ({
@@ -68,6 +68,7 @@ const Header: React.FC<{ bgcolor?: string; logo?: string }> = ({
   const [open, setOpen] = useState(false);
   const headerRef = useRef(null);
   const { navigate } = useNavigation();
+  const togglePreview = useStore((state) => state.togglePreview);
 
   const { data } = useCurrentRoute();
 
@@ -82,10 +83,6 @@ const Header: React.FC<{ bgcolor?: string; logo?: string }> = ({
 
   const handleMenuToggle = () => {
     setOpen(!open);
-  };
-
-  const togglePreview = () => {
-    api.setState({ showPreview: !api.getState().showPreview });
   };
 
   return (

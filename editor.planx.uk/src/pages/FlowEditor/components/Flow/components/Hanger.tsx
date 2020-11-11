@@ -4,7 +4,7 @@ import { useDrop } from "react-dnd";
 import { Link } from "react-navi";
 
 import { rootFlowPath } from "../../../../../routes/utils";
-import { api } from "../../../lib/store";
+import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
 
 interface HangerProps {
@@ -24,10 +24,15 @@ const buildHref = (before: any, parent: any) => {
 const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
 
+  const [moveNode, pasteNode] = useStore((state) => [
+    state.moveNode,
+    state.pasteNode,
+  ]);
+
   const [{ canDrop, item }, drop] = useDrop({
     accept: ["DECISION", "PORTAL"],
     drop: () => {
-      api.getState().moveNode(item.id, item.parent, before, parent);
+      moveNode(item.id, item.parent, before, parent);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -38,7 +43,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   const handleContext = (e: React.MouseEvent) => {
     e.preventDefault();
-    api.getState().pasteNode(parent || undefined, before || undefined);
+    pasteNode(parent || undefined, before || undefined);
   };
 
   return (

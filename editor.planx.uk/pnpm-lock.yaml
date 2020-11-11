@@ -48,7 +48,7 @@ dependencies:
   scroll-into-view-if-needed: 2.2.26
   sharedb: 1.4.2
   subscriptions-transport-ws: 0.9.18_graphql@15.4.0
-  zustand: 2.2.4_react@16.14.0
+  zustand: 3.1.4_react@16.14.0
 devDependencies:
   '@testing-library/jest-dom': 5.11.5
   '@testing-library/react': 11.1.0_react-dom@16.14.0+react@16.14.0
@@ -14798,14 +14798,14 @@ packages:
     dev: false
     resolution:
       integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
-  /zustand/2.2.4_react@16.14.0:
+  /zustand/3.1.4_react@16.14.0:
     dependencies:
       react: 16.14.0
     dev: false
     peerDependencies:
       react: '>=16.8'
     resolution:
-      integrity: sha512-THkjmdAT3h7WzLGDFmC7LVdDOxplYXOdXy0rIEIe/Yn5NDUZNEpywurVdereUlL/hR0Yxm/P7uiSGNYw1eYxBA==
+      integrity: sha512-DB/r73Dm3YsUEo9KilbGWsKXQLOrM41aYItznvD68f44P2hYo+FY65D7N8m2ojKVzg6eIPgXZWqkFO60Utko8A==
 specifiers:
   '@apollo/client': ^3.2.5
   '@ctrl/tinycolor': ^3.1.6
@@ -14877,4 +14877,4 @@ specifiers:
   subscriptions-transport-ws: ^0.9.18
   typescript: ^3.9.7
   typescript-json-validator: ^2.4.2
-  zustand: ^2.2.4
+  zustand: ^3.1.4

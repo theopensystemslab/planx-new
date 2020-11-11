@@ -27,7 +27,7 @@ import { Link, useNavigation } from "react-navi";
 
 import { client } from "../lib/graphql";
 import SimpleMenu from "../ui/SimpleMenu";
-import { api } from "./FlowEditor/lib/store";
+import { useStore } from "./FlowEditor/lib/store";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -205,7 +205,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
   const classes = useStyles();
   const [deleting, setDeleting] = useState(false);
   const handleDelete = () => {
-    api
+    useStore
       .getState()
       .deleteFlow(teamId, flow.slug)
       .then(() => {
@@ -295,7 +295,7 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
   const [flows, setFlows] = useState<any[] | null>(null);
   const navigation = useNavigation();
   const fetchFlows = useCallback(() => {
-    api
+    useStore
       .getState()
       .getFlows(id)
       .then((res: { flows: any[] }) => {
@@ -332,7 +332,7 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
               onClick={() => {
                 const newFlowName = prompt("Service name");
                 if (newFlowName) {
-                  api
+                  useStore
                     .getState()
                     .createFlow(id, newFlowName)
                     .then((newId) => {

@@ -6,7 +6,7 @@ import useAxios from "axios-hooks";
 import capitalize from "lodash/capitalize";
 import React, { useEffect } from "react";
 
-import { api, useStore } from "../../../FlowEditor/lib/store";
+import { useStore } from "../../../FlowEditor/lib/store";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 import BasicMap from "./BasicMap";
@@ -65,12 +65,16 @@ const PropertyInformation = ({
 const PropWithConstraints = ({ info, handleSubmit }) => {
   const url = `https://local-authority-api.planx.uk/${info.team}?x=${info.x}&y=${info.y}&cacheBuster=10`;
   const [{ data }] = useAxios(url);
-  const [id, flow] = useStore((state) => [state.id, state.flow]);
+  const [id, flow, startSession] = useStore((state) => [
+    state.id,
+    state.flow,
+    state.startSession,
+  ]);
 
   // const flow = useContext(PreviewContext);
   useEffect(() => {
     if (flow && data && info) {
-      api.getState().startSession({ passport: { data, info } });
+      startSession({ passport: { data, info } });
     }
   }, [flow, data, info, id]);
 
