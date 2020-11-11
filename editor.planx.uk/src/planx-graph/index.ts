@@ -28,7 +28,8 @@ const uniqueId = customAlphabet(en)(
 const numberOfEdgesTo = (id: string, graph: Graph): number =>
   Object.values(graph).filter(({ edges = [] }) => edges.includes(id)).length;
 
-export const isClone = (id, graph): boolean => numberOfEdgesTo(id, graph) > 1;
+export const isClone = (id: string, graph: Graph): boolean =>
+  numberOfEdgesTo(id, graph) > 1;
 
 const isSomething = (x: any): boolean =>
   x !== null && x !== undefined && x !== "";
@@ -41,7 +42,7 @@ const sanitize = (x) => {
       v = sanitize(v);
       if (
         !isSomething(v) ||
-        (typeof v === "object" && Object.keys(v).length === 0)
+        (typeof v === "object" && Object.keys(v as object).length === 0)
       ) {
         delete acc[k];
       }
@@ -53,44 +54,49 @@ const sanitize = (x) => {
 };
 
 const convertPatchesToOps = (
-  patches: Array<ImmerJSONPatch>,
-  inversePatches: Array<ImmerJSONPatch>
+  patches: ImmerJSONPatch[],
+  inversePatches: ImmerJSONPatch[]
 ): Array<OT.Op> =>
-  zip(patches, inversePatches).map(([fwd, bak]) => {
-    let op: any = {
-      p: fwd.path,
-    };
+  (zip(patches, inversePatches) as [ImmerJSONPatch, ImmerJSONPatch][]).map(
+    ([fwd, bak]) => {
+      let op: any = {
+        p: fwd.path,
+      };
 
-    if (fwd.path[1] === "edges" && fwd.path.length > 2) {
-      if (fwd.op === "add") {
-        op.li = fwd.value;
-      } else if (fwd.op === "replace") {
-        op.ld = bak.value;
-        if (bak.op === "replace") {
+      if (fwd.path[1] === "edges" && fwd.path.length > 2) {
+        if (fwd.op === "add") {
           op.li = fwd.value;
-        } else if (bak.op === "add") {
-          op.p = bak.path;
+        } else if (fwd.op === "replace") {
+          op.ld = bak.value;
+          if (bak.op === "replace") {
+            op.li = fwd.value;
+          } else if (bak.op === "add") {
+            op.p = bak.path;
+          }
         }
-      }
-    } else {
-      if (fwd.op === "add") {
-        op.oi = fwd.value;
-      } else if (fwd.op === "remove") {
-        if (bak.op === "add") {
-          op.od = bak.value;
-        }
-      } else if (fwd.op === "replace") {
-        if (bak.op === "replace") {
+      } else {
+        if (fwd.op === "add") {
           op.oi = fwd.value;
-          op.od = bak.value;
+        } else if (fwd.op === "remove") {
+          if (bak.op === "add") {
+            op.od = bak.value;
+          }
+        } else if (fwd.op === "replace") {
+          if (bak.op === "replace") {
+            op.oi = fwd.value;
+            op.od = bak.value;
+          }
         }
       }
+      // console.log({ fwd, bak, op });
+      return op;
     }
-    // console.log({ fwd, bak, op });
-    return op;
-  });
+  );
 
-const wrap = (graph: Graph, fn: (draft) => void): [Graph, Array<OT.Op>] => {
+const wrap = (
+  graph: Graph,
+  fn: (draft: Graph) => void
+): [Graph, Array<OT.Op>] => {
   const [result, patches, inversePatches] = produceWithPatches(graph, fn);
   return [result, convertPatchesToOps(patches, inversePatches)];
 };
@@ -131,24 +137,30 @@ const isCyclic = (graph: Graph): boolean => {
 };
 
 const _add = (
-  draft,
-  { id = uniqueId(), ...nodeData },
-  { children = [], parent, before = undefined }
+  draft: Graph,
+  { id = uniqueId(), ...nodeData }: { id?: string },
+  {
+    children = [],
+    parent,
+    before = undefined,
+  }: { children?: any[]; parent: string; before?: string }
 ) => {
   if (draft[id]) throw new Error("id exists");
   else if (!draft[parent]) throw new Error("parent not found");
 
-  draft[parent].edges = draft[parent].edges || [];
+  const parentNode = draft[parent];
+
+  parentNode.edges = parentNode.edges || [];
 
   draft[id] = sanitize(nodeData);
 
   if (before) {
-    const idx = draft[parent].edges.indexOf(before);
+    const idx = parentNode.edges.indexOf(before);
     if (idx >= 0) {
-      draft[parent].edges.splice(idx, 0, id);
+      parentNode.edges.splice(idx, 0, id);
     } else throw new Error("before not found");
   } else {
-    draft[parent].edges.push(id);
+    parentNode.edges.push(id);
   }
 
   children?.forEach((child) => {
@@ -186,17 +198,19 @@ export const clone = (
     else if (draft[toParent].edges?.includes(id))
       throw new Error("cannot clone to same parent");
 
-    draft[toParent].edges = draft[toParent].edges || [];
+    const toParentNode = draft[toParent];
+
+    toParentNode.edges = toParentNode.edges || [];
 
     if (toBefore) {
-      const idx = draft[toParent].edges.indexOf(toBefore);
+      const idx = toParentNode.edges.indexOf(toBefore);
       if (idx >= 0) {
-        draft[toParent].edges.splice(idx, 0, id);
+        toParentNode.edges.splice(idx, 0, id);
       } else {
         throw new Error("toBefore does not exist in toParent");
       }
     } else {
-      draft[toParent].edges.push(id);
+      toParentNode.edges.push(id);
     }
 
     if (isCyclic(draft)) throw new Error("cannot create cycle in graph");
@@ -242,7 +256,7 @@ export const move = (
     if (isCyclic(draft)) throw new Error("cannot create cycle in graph");
   });
 
-const _remove = (draft, id, parent) => {
+const _remove = (draft: Graph, id: string, parent: string) => {
   if (!draft[id]) throw new Error("id not found");
   else if (!draft[parent]) throw new Error("parent not found");
 
@@ -371,7 +385,7 @@ export const makeUnique = (
     const _makeUnique = (
       id: string,
       parent: string,
-      { idFn },
+      { idFn }: { idFn: Function },
       firstCall: boolean
     ) => {
       const { edges = [], ...nodeData } = draft[id];
@@ -382,7 +396,7 @@ export const makeUnique = (
       } else {
         const newId = idFn();
         _add(draft, { id: newId, ...nodeData }, { parent });
-        edges.forEach((tgt) => {
+        edges.forEach((tgt: string) => {
           _makeUnique(tgt, newId, { idFn }, false);
         });
       }

@@ -1,3 +1,5 @@
+declare module "nanoid-good";
+
 interface BaseNode {
   /**
    * A human-readable label for distinguishing the
