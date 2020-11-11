@@ -1,6 +1,9 @@
 name: Editor
 
 on:
+  push:
+    branches:
+      - master
   pull_request:
     types: [opened, synchronize]
 
@@ -85,6 +88,7 @@ jobs:
           enable-pull-request-comment: true
           enable-commit-comment: true
           overwrites-pull-request-comment: true
+          alias: ${{ github.head_ref }}
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
