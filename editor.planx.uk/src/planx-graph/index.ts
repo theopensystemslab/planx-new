@@ -3,6 +3,7 @@ import difference from "lodash/difference";
 import trim from "lodash/trim";
 import zip from "lodash/zip";
 import { customAlphabet } from "nanoid-good";
+// const customAlphabet = (lang) => (alph, num) => Math.random();
 import en from "nanoid-good/locale/en";
 
 import { ImmerJSONPatch, OT } from "./types";

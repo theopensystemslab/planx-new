@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 import { navigation } from "../.";
 
 const httpLink = createHttpLink({
-  uri: (import.meta as any).env.REACT_APP_HASURA_URL,
+  uri: (import.meta as any).env.SNOWPACK_PUBLIC_HASURA_URL,
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {

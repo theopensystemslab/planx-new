@@ -7,7 +7,7 @@ async function uploadFile(
   { onProgress }: { onProgress?: (p) => void } = {}
 ) {
   const res = await fetch(
-    `${(import.meta as any).env.REACT_APP_API_URL}/sign-s3-upload`,
+    `${(import.meta as any).env.SNOWPACK_PUBLIC_API_URL}/sign-s3-upload`,
     {
       method: "POST",
       body: JSON.stringify({

@@ -2,7 +2,7 @@ import ReconnectingWebSocket from "reconnecting-websocket";
 import sharedb from "sharedb/lib/client";
 
 const socket = new ReconnectingWebSocket(
-  (import.meta as any).env.REACT_APP_SHAREDB_URL
+  (import.meta as any).env.SNOWPACK_PUBLIC_SHAREDB_URL
 );
 
 const connection = new sharedb.Connection(socket, {});
