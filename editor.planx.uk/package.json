@@ -115,6 +115,9 @@
     ],
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
       "prettier --write"
+    ],
+    "src/**/*.{ts,tsx}": [
+      "tsc --noEmit --jsx react --esModuleInterop"
     ]
   }
 }
