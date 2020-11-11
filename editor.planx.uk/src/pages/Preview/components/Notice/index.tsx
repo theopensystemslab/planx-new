@@ -1,6 +1,7 @@
 import { mostReadable } from "@ctrl/tinycolor";
 import Button from "@material-ui/core/Button";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { Theme } from "@material-ui/core/styles/createMuiTheme";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import ErrorOutline from "@material-ui/icons/ErrorOutline";
 import React from "react";
 import ReactMarkdown from "react-markdown";

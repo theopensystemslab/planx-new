@@ -1,5 +1,5 @@
 import InputBase, { InputBaseProps } from "@material-ui/core/InputBase";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import classNames from "classnames";
 import React, { ChangeEvent } from "react";
 

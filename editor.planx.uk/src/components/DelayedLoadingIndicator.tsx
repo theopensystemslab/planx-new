@@ -1,5 +1,5 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import React, { useEffect, useState } from "react";
 
 const useClasses = makeStyles({

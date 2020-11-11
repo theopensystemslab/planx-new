@@ -1,7 +1,7 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import FileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Close";
 import CloudUpload from "@material-ui/icons/CloudUpload";

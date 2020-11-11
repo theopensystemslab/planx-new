@@ -1,5 +1,5 @@
 import Select, { SelectProps } from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import ArrowIcon from "@material-ui/icons/KeyboardArrowDown";
 import React from "react";
 

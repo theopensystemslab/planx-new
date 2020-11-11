@@ -1,6 +1,6 @@
 import ButtonBase from "@material-ui/core/ButtonBase";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import Tooltip from "@material-ui/core/Tooltip";
 import ErrorIcon from "@material-ui/icons/Error";
 import Image from "@material-ui/icons/Image";

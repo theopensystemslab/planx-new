@@ -1,12 +1,11 @@
 import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import Delete from "@material-ui/icons/Delete";
 import DragHandle from "@material-ui/icons/DragHandle";
 import classNames from "classnames";
 import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
-import InputRow from "ui/InputRow";
 
 const inputGroupStyles = makeStyles((theme) => ({
   inputGroup: {

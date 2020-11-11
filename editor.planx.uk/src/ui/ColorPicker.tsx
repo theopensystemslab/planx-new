@@ -1,5 +1,5 @@
 import ButtonBase from "@material-ui/core/ButtonBase";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
 import classNames from "classnames";
 import React, { useState } from "react";
