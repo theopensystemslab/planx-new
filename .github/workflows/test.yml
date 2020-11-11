@@ -49,3 +49,11 @@ jobs:
       - run: pnpm install
 
       - run: pnpm test
+
+      - run: pnpm build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: editor-build
+          path: build
