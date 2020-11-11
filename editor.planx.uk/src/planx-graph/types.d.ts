@@ -1,3 +1,5 @@
+declare module "nanoid-good";
+
 export namespace OT {
   export type path = Array<string | number>;
 

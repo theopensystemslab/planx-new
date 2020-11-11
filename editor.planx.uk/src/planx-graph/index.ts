@@ -16,6 +16,9 @@ interface Node {
   type?: number;
 }
 
+// TODO: make this type more useful
+type Child = Record<string, any>;
+
 export type Graph = Record<string, Node>;
 
 export const ROOT_NODE_KEY = "_root";
@@ -34,7 +37,7 @@ export const isClone = (id: string, graph: Graph): boolean =>
 const isSomething = (x: any): boolean =>
   x !== null && x !== undefined && x !== "";
 
-const sanitize = (x) => {
+const sanitize = (x: any) => {
   if ((x && typeof x === "string") || x instanceof String) {
     return trim(x.replace(/[\u200B-\u200D\uFEFF↵]/g, ""));
   } else if ((x && typeof x === "object") || x instanceof Object) {
@@ -143,7 +146,7 @@ const _add = (
     children = [],
     parent,
     before = undefined,
-  }: { children?: any[]; parent: string; before?: string }
+  }: { children?: Child[]; parent: string; before?: string }
 ) => {
   if (draft[id]) throw new Error("id exists");
   else if (!draft[parent]) throw new Error("parent not found");
@@ -175,7 +178,7 @@ export const add = (
     parent = ROOT_NODE_KEY,
     before = undefined,
   }: {
-    children?: Array<Node>;
+    children?: Child[];
     parent?: string;
     before?: string;
   } = {}
@@ -234,23 +237,27 @@ export const move = (
       throw new Error("cannot move to same parent");
     }
 
-    let idx = draft[parent].edges.indexOf(id);
+    const parentNode = draft[parent];
+    parentNode.edges = parentNode.edges || [];
+
+    let idx = parentNode.edges.indexOf(id);
     if (idx >= 0) {
-      if (draft[parent].edges.length === 1) delete draft[parent].edges;
-      else draft[parent].edges.splice(idx, 1);
+      if (parentNode.edges.length === 1) delete draft[parent].edges;
+      else parentNode.edges.splice(idx, 1);
     } else throw new Error("parent does not connect to id");
 
-    draft[toParent].edges = draft[toParent].edges || [];
+    const toParentNode = draft[toParent];
+    toParentNode.edges = toParentNode.edges || [];
 
     if (toBefore) {
-      idx = draft[toParent].edges.indexOf(toBefore);
+      idx = toParentNode.edges.indexOf(toBefore);
       if (idx >= 0) {
-        draft[toParent].edges.splice(idx, 0, id);
+        toParentNode.edges.splice(idx, 0, id);
       } else {
         throw new Error("toBefore does not exist in toParent");
       }
     } else {
-      draft[toParent].edges.push(id);
+      toParentNode.edges.push(id);
     }
 
     if (isCyclic(draft)) throw new Error("cannot create cycle in graph");
@@ -260,10 +267,13 @@ const _remove = (draft: Graph, id: string, parent: string) => {
   if (!draft[id]) throw new Error("id not found");
   else if (!draft[parent]) throw new Error("parent not found");
 
-  const idx = draft[parent].edges.indexOf(id);
+  const parentNode = draft[parent];
+  parentNode.edges = parentNode.edges || [];
+
+  const idx = parentNode.edges.indexOf(id);
   if (idx >= 0) {
-    if (draft[parent].edges.length === 1) delete draft[parent].edges;
-    else draft[parent].edges.splice(idx, 1);
+    if (parentNode.edges.length === 1) delete parentNode.edges;
+    else parentNode.edges.splice(idx, 1);
   } else {
     throw new Error("not found in parent");
   }
@@ -271,9 +281,10 @@ const _remove = (draft: Graph, id: string, parent: string) => {
   if (Object.keys(draft[parent]).length === 0) delete draft[parent];
 
   if (numberOfEdgesTo(id, draft) === 0) {
-    if (draft[id].edges) {
+    const { edges } = draft[id];
+    if (edges) {
       // must be a copy, for some reason?
-      [...draft[id].edges].forEach((child) => {
+      [...edges].forEach((child) => {
         _remove(draft, child, id);
       });
     }
@@ -289,14 +300,14 @@ export const remove = (id: string, parent: string) => (
   });
 
 const _update = (
-  draft,
+  draft: Graph,
   id: string,
   newData: object,
   {
     children = undefined,
     removeKeyIfMissing = false,
   }: {
-    children?: Array<Node>;
+    children?: Child[];
     removeKeyIfMissing?: boolean;
   } = {}
 ) => {
@@ -306,38 +317,44 @@ const _update = (
     if (children) {
       children = children.map((c) => ({ ...c, id: c.id || uniqueId() }));
       const newChildIds = children.map((c) => c.id);
-      if (newChildIds.toString() !== [...(node.edges || [])].toString()) {
+      if (
+        node.edges &&
+        newChildIds.toString() !== [...(node.edges || [])].toString()
+      ) {
         const addedChildrenIds = difference(newChildIds, node.edges);
         addedChildrenIds.forEach((cId) =>
           _add(
             draft,
-            children.find((c) => c.id === cId),
+            (children as any).find((c: Child) => c.id === cId),
             { parent: id }
           )
         );
 
-        const removedChildrenIds = difference(node.edges, newChildIds);
+        const removedChildrenIds = difference(
+          node.edges,
+          newChildIds
+        ) as string[];
         removedChildrenIds.forEach((childId) => _remove(draft, childId, id));
 
         if (node.edges) {
           if (newChildIds.length === 0) delete node.edges;
           else {
-            node.edges = newChildIds;
+            node.edges = newChildIds as string[];
           }
         }
       }
 
       children.forEach(({ id, ...newData }) =>
-        _update(draft, id, newData.data || newData)
+        _update(draft, id as string, newData.data || newData)
       );
     }
 
     if (node.data) {
       // if a value exists in the current data, but is null, undefined or "" in the
       // new data then remove it
-      Object.entries(node.data).forEach(([k, v]) => {
-        if (v !== null && v !== undefined && !isSomething(newData[k]))
-          delete node.data[k];
+      Object.entries(node.data).forEach(([k, v]: [string, any]) => {
+        if (v !== null && v !== undefined && !isSomething((newData as any)[k]))
+          delete (node as any).data[k];
       });
     }
   }
@@ -346,9 +363,9 @@ const _update = (
     Object.entries(newData).reduce((existingData, [k, v]) => {
       v = sanitize(v);
       if (!isSomething(v)) {
-        if (existingData.hasOwnProperty(k)) delete existingData[k];
-      } else if (v !== existingData[k]) {
-        existingData[k] = v;
+        if (existingData.hasOwnProperty(k)) delete (existingData as any)[k];
+      } else if (v !== (existingData as any)[k]) {
+        (existingData as any)[k] = v;
       }
       return existingData;
     }, node.data);
@@ -365,7 +382,7 @@ export const update = (
     children = undefined,
     removeKeyIfMissing = false,
   }: {
-    children?: Array<Node>;
+    children?: Child[];
     removeKeyIfMissing?: boolean;
   } = {}
 ) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>

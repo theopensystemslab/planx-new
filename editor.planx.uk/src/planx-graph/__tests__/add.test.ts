@@ -6,7 +6,7 @@ test("without id", () => {
     _root: {
       edges: [id],
     },
-  } = graph;
+  } = graph as any;
 
   expect(graph).toMatchObject({
     _root: {
