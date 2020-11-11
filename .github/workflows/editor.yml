@@ -62,28 +62,27 @@ jobs:
           name: build
           path: build
 
-    deploy_to_netlify:
-      name: Deploy to Netlify
+  deploy_to_netlify:
+    name: Deploy to Netlify
+    runs-on: ubuntu-latest
 
-      runs-on: ubuntu-latest
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build
 
-      steps:
-        - name: Download Build Artifact
-          uses: actions/download-artifact@v2
-          with:
-            name: build
-
-        - name: Deploy to Netlify
-          uses: nwtgck/actions-netlify@v1.1
-          with:
-            publish-dir: "./build"
-            production-branch: master
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            deploy-message: "Deploy from GitHub Actions"
-            enable-pull-request-comment: true
-            enable-commit-comment: true
-            overwrites-pull-request-comment: true
-          env:
-            NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-            NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          timeout-minutes: 1
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1.1
+        with:
+          publish-dir: "./build"
+          production-branch: master
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: true
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
