@@ -1,4 +1,4 @@
-import { makeUnique } from "..";
+import { makeUnique } from "../.";
 
 let count = 0;
 let deterministicId = () => `TEST_ID_${count++}`;

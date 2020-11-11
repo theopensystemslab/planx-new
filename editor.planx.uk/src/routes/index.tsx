@@ -32,7 +32,10 @@ const editorRoutes = mount({
   "/logout": map((): any => {
     client.resetStore();
     Cookies.remove("jwt", {
-      domain: process.env.NODE_ENV === "production" ? ".planx.uk" : "localhost",
+      domain:
+        (import.meta as any).env.NODE_ENV === "production"
+          ? ".planx.uk"
+          : "localhost",
     });
     window.location.href = "/";
   }),

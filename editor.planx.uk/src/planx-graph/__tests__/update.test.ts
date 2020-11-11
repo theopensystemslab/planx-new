@@ -1,4 +1,4 @@
-import { update } from "..";
+import { update } from "../.";
 
 describe("updating", () => {
   describe("removeKeyIfMissing === false", () => {

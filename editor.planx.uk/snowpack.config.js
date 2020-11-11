@@ -1,4 +1,11 @@
 module.exports = {
+  // extends: "@snowpack/app-scripts-react",
+  devOptions: {
+    port: 8080,
+    src: "src",
+    bundle: process.env.NODE_ENV === "production",
+    fallback: "public/index.html",
+  },
   mount: {
     public: "/",
     src: "/_dist_",
@@ -12,9 +19,6 @@ module.exports = {
     /* ... */
   ],
   installOptions: {
-    /* ... */
-  },
-  devOptions: {
     /* ... */
   },
   buildOptions: {

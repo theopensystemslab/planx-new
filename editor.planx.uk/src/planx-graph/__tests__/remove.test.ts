@@ -1,4 +1,4 @@
-import { remove } from "..";
+import { remove } from "../.";
 
 test("with clones", () => {
   const [graph, ops] = remove(

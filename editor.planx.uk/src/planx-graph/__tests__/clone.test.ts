@@ -1,4 +1,4 @@
-import { clone } from "..";
+import { clone } from "../.";
 
 describe("cloning", () => {
   test("from root to child", () => {

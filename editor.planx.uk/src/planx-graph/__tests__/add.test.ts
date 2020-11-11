@@ -1,4 +1,4 @@
-import { add } from "..";
+import { add } from "../.";
 
 test("without id", () => {
   const [graph, ops] = add({ type: 100, data: { foo: "bar" } })();

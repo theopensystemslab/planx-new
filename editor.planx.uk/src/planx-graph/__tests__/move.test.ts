@@ -1,4 +1,4 @@
-import { move } from "..";
+import { move } from "../.";
 
 test("move within same parent", () => {
   const [graph, ops] = move("b", "_root", { toBefore: "a" })({

@@ -8,10 +8,10 @@ import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import Cookies from "js-cookie";
 
-import { navigation } from "..";
+import { navigation } from "../.";
 
 const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_HASURA_URL,
+  uri: (import.meta as any).env.REACT_APP_HASURA_URL,
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {

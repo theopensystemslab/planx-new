@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Link } from "react-navi";
 import scrollIntoView from "scroll-into-view-if-needed";
 
-import { FlowLayout } from "..";
+import { FlowLayout } from "../.";
 import { rootFlowPath } from "../../../../../routes/utils";
 import { useStore } from "../../../lib/store";
 
