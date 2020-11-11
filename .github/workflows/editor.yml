@@ -1,14 +1,19 @@
-name: Test
+name: Editor
 
-on: push
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize]
+
+defaults:
+  run:
+    working-directory: editor.planx.uk
 
 jobs:
-  jest:
-    name: Jest
+  test_build_and_deploy:
+    name: Test, Build and Deploy
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: editor.planx.uk
+
     steps:
       - uses: actions/checkout@v2
 
@@ -52,8 +57,17 @@ jobs:
 
       - run: pnpm build
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v2
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1.1
         with:
-          name: editor-build
-          path: build
+          publish-dir: "./build"
+          production-branch: master
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: true
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
