@@ -10,7 +10,7 @@ import FlowEditor from "../pages/FlowEditor";
 import components from "../pages/FlowEditor/components/forms";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import { SLUGS, TYPES } from "../pages/FlowEditor/data/types";
-import { api } from "../pages/FlowEditor/lib/store";
+import { useStore } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
 
 const sorter = natsort({ insensitive: true });
@@ -55,7 +55,7 @@ const newNode = route(async (req) => {
   if (type === "external-portal") {
     extraProps.flows = await getExternalPortals();
   } else if (type === "internal-portal") {
-    extraProps.flows = Object.entries(api.getState().flow)
+    extraProps.flows = Object.entries(useStore.getState().flow)
       .filter(
         ([id, v]: any) =>
           v.type === TYPES.InternalPortal &&
@@ -83,7 +83,7 @@ const newNode = route(async (req) => {
 const editNode = route(async (req) => {
   const { id, before = undefined, parent = undefined } = req.params;
 
-  const node = api.getState().getNode(id) as {
+  const node = useStore.getState().getNode(id) as {
     type: TYPES;
     [key: string]: any;
   };
@@ -96,7 +96,7 @@ const editNode = route(async (req) => {
   const type = SLUGS[node.type];
 
   if (type === "checklist" || type === "question") {
-    const childNodes = api.getState().childNodesOf(id);
+    const childNodes = useStore.getState().childNodesOf(id);
     if (node.data.categories) {
       extraProps.groupedOptions = mapAccum(
         (index: number, category: { title: string; count: number }) => [
@@ -124,7 +124,7 @@ const editNode = route(async (req) => {
         node={node}
         id={id}
         handleDelete={() => {
-          api.getState().removeNode(id, parent);
+          useStore.getState().removeNode(id, parent);
         }}
         before={before}
         parent={parent}

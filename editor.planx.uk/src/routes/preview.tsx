@@ -4,7 +4,7 @@ import React from "react";
 
 import { dataMerged } from "../lib/dataMergedHotfix";
 import { client } from "../lib/graphql";
-import { api } from "../pages/FlowEditor/lib/store";
+import { useStore } from "../pages/FlowEditor/lib/store";
 import Preview from "../pages/Preview";
 import { PreviewContext } from "../pages/Preview/Context";
 
@@ -36,11 +36,11 @@ const routes = route(async (req) => {
 
   if (!flow) throw new NotFoundError();
 
-  api.getState().setFlow(flow.id, await dataMerged(flow.id));
+  useStore.getState().setFlow(flow.id, await dataMerged(flow.id));
   // TODO: Replace with below after merging
   // https://github.com/theopensystemslab/planx-new/pull/116
   //
-  // api.getState().setFlow(flow.id, flow.data_merged);
+  // useStore.getState().setFlow(flow.id, flow.data_merged);
 
   return {
     view: (

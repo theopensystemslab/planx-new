@@ -3,7 +3,7 @@ import React from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
 
-import { api, useStore } from "../../../lib/store";
+import { useStore } from "../../../lib/store";
 import { ICONS } from "../../shared";
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
@@ -12,9 +12,10 @@ import Node from "./Node";
 type Props = any;
 
 const Filter: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes] = useStore((state) => [
+  const [isClone, childNodes, copyNode] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
+    state.copyNode,
   ]);
 
   const parent = getParentId(props.parent);
@@ -39,7 +40,7 @@ const Filter: React.FC<Props> = React.memo((props) => {
   const handleContext = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    api.getState().copyNode(props.id);
+    copyNode(props.id);
   };
 
   const Icon = ICONS[props.type];

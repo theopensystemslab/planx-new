@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import classNames from "classnames";
 import gql from "graphql-tag";
-import { api } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useDrag } from "react-dnd";
 import MoreVertical from "react-feather/dist/icons/more-vertical";
@@ -13,6 +13,8 @@ import Hanger from "./Hanger";
 
 const ExternalPortal: React.FC<any> = React.memo(
   (props) => {
+    const copyNode = useStore((state) => state.copyNode);
+
     const { data } = useQuery(
       gql`
         query GetFlow($id: uuid!) {
@@ -48,7 +50,7 @@ const ExternalPortal: React.FC<any> = React.memo(
     const handleContext = (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      api.getState().copyNode(props.id);
+      copyNode(props.id);
     };
 
     const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join("/");
@@ -83,6 +85,8 @@ const InternalPortal: React.FC<any> = (props) => {
 
   const parent = getParentId(props.parent);
 
+  const copyNode = useStore((state) => state.copyNode);
+
   let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
   if (parent) {
     editHref = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
@@ -103,7 +107,7 @@ const InternalPortal: React.FC<any> = (props) => {
   const handleContext = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    api.getState().copyNode(props.id);
+    copyNode(props.id);
   };
 
   return (

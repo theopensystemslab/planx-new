@@ -3,7 +3,7 @@ import { compose, lazy, mount, route, withData } from "navi";
 import React from "react";
 
 import { client } from "../lib/graphql";
-import { api } from "../pages/FlowEditor/lib/store";
+import { useStore } from "../pages/FlowEditor/lib/store";
 import Team from "../pages/Team";
 import { makeTitle } from "./utils";
 
@@ -100,7 +100,7 @@ const routes = compose(
           }) as any;
         }
 
-        await api.getState().connectTo(flow.id);
+        await useStore.getState().connectTo(flow.id);
       }
 
       return import("./flow");

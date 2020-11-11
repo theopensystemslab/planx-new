@@ -35,12 +35,50 @@ const send = (ops) => {
   }
 };
 
-export const [useStore, api] = create((set, get) => ({
+// TODO: finish typing store
+interface Store extends Record<string | number | symbol, unknown> {
+  addNode: any; //: () => void;
+  breadcrumbs: Record<string, { answers: string[]; auto?: boolean }>;
+  childNodesOf: (string) => Record<string, any>[];
+  connect: (src: string, tgt: string, object?) => void;
+  connectTo: (string) => void;
+  copyNode: (string) => void;
+  createFlow: any; //: () => Promise<string>;
+  currentCard: () => Record<string, any> | null;
+  deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
+  flow: Record<string, any>;
+  flowLayout: FlowLayout;
+  getFlows: any; //: () => any;
+  getNode: (string) => Record<string, any>;
+  id: string;
+  isClone: (string) => boolean;
+  makeUnique: any; //: () => void;
+  moveNode: any; //: () => void;
+  passport: any; //: any;
+  pasteNode: any; //: () => void;
+  record: any; //: () => void;
+  removeNode: any; //: () => void;
+  reportData: any; //: () => any;
+  resetPreview: any; //: () => void;
+  sessionId: any; //: string;
+  setFlow: any; //: () => void;
+  showPreview: boolean;
+  startSession: any; //: () => void;
+  togglePreview: () => void;
+  upcomingCardIds: any; //: () => string[];
+  updateNode: any; //: () => void;
+}
+
+export const useStore = create<Store>((set, get) => ({
   flow: undefined,
 
   id: undefined,
 
   showPreview: true,
+
+  togglePreview: () => {
+    set({ showPreview: !get().showPreview });
+  },
 
   flowLayout: FlowLayout.TOP_DOWN,
 
@@ -255,7 +293,7 @@ export const [useStore, api] = create((set, get) => ({
     return newName;
   },
 
-  deleteFlow: async (teamId, flowSlug: string) => {
+  deleteFlow: async (teamId, flowSlug) => {
     const response = await client.mutate({
       mutation: gql`
         mutation MyMutation($team_id: Int, $flow_slug: String) {
@@ -649,4 +687,4 @@ export const [useStore, api] = create((set, get) => ({
   },
 }));
 
-window["api"] = api;
+window["api"] = useStore;
