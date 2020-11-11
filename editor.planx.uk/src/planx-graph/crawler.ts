@@ -1,5 +1,5 @@
 import { TYPES } from "../pages/FlowEditor/data/types";
-import { Graph, ROOT_NODE_KEY } from ".";
+import { Graph, ROOT_NODE_KEY } from "./index";
 
 const QUESTION_TYPES = [TYPES.Statement, TYPES.Checklist];
 
