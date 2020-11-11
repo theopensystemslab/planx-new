@@ -33,7 +33,10 @@ const useStyles = makeStyles({
   },
   table: {
     display: "grid",
-    gridTemplateColumns: "220px 1fr 100px",
+    "& *": {
+      overflow: "hidden",
+    },
+    gridTemplateColumns: "220px 1fr",
     borderBottom: "1px solid #D6D6D6",
     "& div": {
       borderTop: "1px solid #D6D6D6",
@@ -41,19 +44,14 @@ const useStyles = makeStyles({
       alignItems: "center",
       padding: "10px 0",
     },
-    "& :nth-child(3n+1)": {
+    "& :nth-child(2n+1)": {
       fontSize: "20px",
       color: "#000B",
     },
-    "& :nth-child(3n+2)": {
-      fontSize: "20px",
+    "& :nth-child(2n+2)": {
+      fontSize: "21px",
       color: "#000B",
       fontWeight: 700,
-    },
-    "& :nth-child(3n+3)": {
-      fontSize: "15px",
-      color: "#0005",
-      textAlign: "right",
     },
   },
   cancel: {
@@ -78,20 +76,25 @@ function Component(props) {
       <h1 className={c.h1}>Confirm your payment</h1>
       <div className={c.table}>
         <div>Card number:</div>
-        <div>************6511</div>
-        <div>change</div>
+        <div>
+          <span
+            style={{
+              // XXX: Fix for asterisks getting out of alignment 🤷
+              fontFamily: "monospace",
+            }}
+          >
+            ************
+          </span>
+          6511
+        </div>
         <div>Expiry date:</div>
         <div>10/20</div>
-        <div>change</div>
         <div>Name on card:</div>
         <div>Aisha Appleton</div>
-        <div>change</div>
         <div>Billing address:</div>
         <div>24 Right Way, London, SE1 2EZ, United Kingdom</div>
-        <div>change</div>
         <div>Confirmation email:</div>
         <div>aisha.a@test.com</div>
-        <div>change</div>
       </div>
       <p style={{ margin: "24px 0" }}>
         <Button onClick={() => window.alert("This feature is coming soon")}>
