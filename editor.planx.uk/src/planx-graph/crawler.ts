@@ -8,10 +8,10 @@ class Crawler {
   public readonly breadcrumbs: Record<string, Array<string>> = {};
   public onRecord: (id: string) => {};
 
-  constructor(graph, { onRecord = undefined } = {}) {
+  constructor(graph: Graph, { onRecord = undefined } = {}) {
     if (!graph._root) throw new Error("invalid graph");
     this.graph = graph;
-    this.onRecord = onRecord;
+    this.onRecord = onRecord!;
   }
 
   record(id: string, vals: Array<string>) {
@@ -26,12 +26,13 @@ class Crawler {
 
     const nodeIdsConnectedFrom = (source: string) => {
       return this.graph[source].edges
-        ?.filter(
-          (id) =>
+        ?.filter((id) => {
+          const { type, edges = [] } = this.graph[id];
+          return (
             !Object.keys(this.breadcrumbs).includes(id) &&
-            (!QUESTION_TYPES.includes(this.graph[id].type) ||
-              this.graph[id]?.edges?.length > 0)
-        )
+            ((type && !QUESTION_TYPES.includes(type)) || edges.length > 0)
+          );
+        })
         .forEach((id) => {
           if (this.graph[id]?.type === TYPES.InternalPortal) {
             nodeIdsConnectedFrom(id);

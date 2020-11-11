@@ -193,7 +193,7 @@ describe("updating", () => {
         x: {
           edges: [, newChildId],
         },
-      } = graph;
+      } = graph as any;
 
       expect(graph).toEqual({
         _root: {

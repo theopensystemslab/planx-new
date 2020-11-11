@@ -72,7 +72,7 @@ test("crawling with portals", () => {
 
 describe("callbacks", () => {
   test("calls onrecord when recording a node", () => {
-    const onRecord = jest.fn();
+    const onRecord = jest.fn() as any;
     const crawler = new Crawler(
       {
         _root: {
