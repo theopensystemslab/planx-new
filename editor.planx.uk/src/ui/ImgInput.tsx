@@ -1,11 +1,9 @@
-import {
-  IconButton,
-  makeStyles,
-  Menu,
-  MenuItem,
-  Tooltip,
-} from "@material-ui/core";
-import { MoreVert } from "@material-ui/icons";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import { makeStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
+import MoreVert from "@material-ui/icons/MoreVert";
 import React, { useMemo, useState } from "react";
 
 import FileUpload from "./FileUpload";

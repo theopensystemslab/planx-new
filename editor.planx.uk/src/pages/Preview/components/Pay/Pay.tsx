@@ -1,10 +1,10 @@
-import { makeStyles } from "@material-ui/core";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Checkbox from "@material-ui/core/Checkbox";
 import Drawer from "@material-ui/core/Drawer";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import React, { Suspense } from "react";
 import Input from "ui/Input";

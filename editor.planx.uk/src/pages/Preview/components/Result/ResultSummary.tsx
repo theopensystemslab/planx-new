@@ -1,11 +1,8 @@
-import {
-  Box,
-  IconButton,
-  makeStyles,
-  Typography,
-  useTheme,
-} from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import IconButton from "@material-ui/core/IconButton";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { fade } from "@material-ui/core/styles/colorManipulator";
+import Typography from "@material-ui/core/Typography";
 import HelpIcon from "@material-ui/icons/HelpOutlineOutlined";
 import classNames from "classnames";
 import React from "react";

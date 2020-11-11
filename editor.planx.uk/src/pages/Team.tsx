@@ -1,26 +1,22 @@
 import { gql } from "@apollo/client";
-import {
-  Box,
-  Button,
-  ButtonBase,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import ButtonBase from "@material-ui/core/ButtonBase";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {
-  Add,
-  CallSplitOutlined,
-  DeleteOutline,
-  FolderOutlined,
-} from "@material-ui/icons";
+import Typography from "@material-ui/core/Typography";
+import Add from "@material-ui/icons/Add";
+import CallSplitOutlined from "@material-ui/icons/CallSplitOutlined";
+import DeleteOutline from "@material-ui/icons/DeleteOutline";
+import FolderOutlined from "@material-ui/icons/FolderOutlined";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";

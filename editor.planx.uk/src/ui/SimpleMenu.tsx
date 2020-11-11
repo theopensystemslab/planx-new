@@ -1,5 +1,7 @@
-import { IconButton, Menu, MenuItem } from "@material-ui/core";
-import { MoreVert } from "@material-ui/icons";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVert from "@material-ui/icons/MoreVert";
 import React, { useState } from "react";
 
 interface Props {

@@ -1,10 +1,9 @@
-import {
-  ButtonBase,
-  CircularProgress,
-  makeStyles,
-  Tooltip,
-} from "@material-ui/core";
-import { Error, Image } from "@material-ui/icons";
+import ButtonBase from "@material-ui/core/ButtonBase";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { makeStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
+import ErrorIcon from "@material-ui/icons/Error";
+import Image from "@material-ui/icons/Image";
 import { uploadFile } from "api/upload";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -100,7 +99,7 @@ const FileUpload: React.FC<Props> = (props) => {
             root: classes.inputIconButton,
           }}
         >
-          <Error />
+          <ErrorIcon />
         </ButtonBase>
       </Tooltip>
     );

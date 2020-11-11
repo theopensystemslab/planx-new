@@ -1,5 +1,5 @@
-import { MenuItem } from "@material-ui/core";
-import { InfoOutlined } from "@material-ui/icons";
+import MenuItem from "@material-ui/core/MenuItem";
+import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import trim from "lodash/trim";
 import React from "react";
 
