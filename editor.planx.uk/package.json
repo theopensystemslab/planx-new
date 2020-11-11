@@ -79,6 +79,7 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
+    "prebuild": "[[ $CI = true ]] && npx pnpm install --store=node_modules/.pnpm-store || echo skipping pnpm install",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "cosmos": "FAST_REFRESH=false cosmos",
