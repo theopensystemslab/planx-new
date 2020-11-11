@@ -1,0 +1,13 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  job: jest
+    runs-on: ubuntu-latest
+    working-directory: editor.planx.uk
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
+      - uses: pnpm/action-setup@v1.2.1
+      - run: pnpm run test
