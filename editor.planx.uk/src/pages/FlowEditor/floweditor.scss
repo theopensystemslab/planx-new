@@ -167,6 +167,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 .page {
   border: 1px solid #aaa;
   background: rgba(0, 0, 0, 0.1);
+  text-align: center;
   > a.title {
     text-decoration: none;
     color: black;
