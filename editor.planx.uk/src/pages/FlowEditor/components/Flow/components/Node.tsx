@@ -31,7 +31,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Notice:
       return <Question {...props} text="Notice" />;
     case TYPES.Page:
-      return <Page {...props} />;
+      return <Page {...props} text={node?.data?.title ?? "Page"} />;
     case TYPES.Pay:
       return <Question {...props} text={node?.data?.description ?? "Pay"} />;
     case TYPES.PropertyInformation:
