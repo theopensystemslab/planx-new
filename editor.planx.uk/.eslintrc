@@ -6,6 +6,16 @@
     "no-restricted-imports": [
       "error",
       {
+        "paths": [
+          {
+            "name": "@material-ui/core",
+            "message": "See https://github.com/theopensystemslab/planx-new/pull/140"
+          },
+          {
+            "name": "@material-ui/icons",
+            "message": "See https://github.com/theopensystemslab/planx-new/pull/140"
+          }
+        ],
         "patterns": ["@material-ui/*/*/*", "!@material-ui/core/test-utils/*"]
       }
     ]
