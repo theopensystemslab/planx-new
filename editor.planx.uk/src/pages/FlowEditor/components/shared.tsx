@@ -1,15 +1,13 @@
-import {
-  CallSplit,
-  CheckBoxOutlined,
-  CloudUpload,
-  Create,
-  List,
-  LocationOnOutlined,
-  PaymentOutlined,
-  ReportProblemOutlined,
-  SearchOutlined,
-  TextFields,
-} from "@material-ui/icons";
+import CallSplit from "@material-ui/icons/CallSplit";
+import CheckBoxOutlined from "@material-ui/icons/CheckBoxOutlined";
+import CloudUpload from "@material-ui/icons/CloudUpload";
+import Create from "@material-ui/icons/Create";
+import List from "@material-ui/icons/List";
+import LocationOnOutlined from "@material-ui/icons/LocationOnOutlined";
+import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
+import ReportProblemOutlined from "@material-ui/icons/ReportProblemOutlined";
+import SearchOutlined from "@material-ui/icons/SearchOutlined";
+import TextFields from "@material-ui/icons/TextFields";
 
 import { TYPES } from "../data/types";
 

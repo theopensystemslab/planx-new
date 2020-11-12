@@ -6,7 +6,6 @@ import DragHandle from "@material-ui/icons/DragHandle";
 import classNames from "classnames";
 import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
-import InputRow from "ui/InputRow";
 
 const inputGroupStyles = makeStyles((theme) => ({
   inputGroup: {

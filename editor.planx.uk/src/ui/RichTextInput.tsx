@@ -1,4 +1,6 @@
-import { Box, InputBaseProps, makeStyles } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import { InputBaseProps } from "@material-ui/core/InputBase";
+import { makeStyles } from "@material-ui/core/styles";
 import { convertToRaw, EditorState } from "draft-js";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";

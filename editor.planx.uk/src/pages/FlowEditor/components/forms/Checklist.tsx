@@ -1,5 +1,7 @@
-import { Box, Button, IconButton } from "@material-ui/core";
-import { Delete } from "@material-ui/icons";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import Delete from "@material-ui/icons/Delete";
 import { useFormik } from "formik";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";

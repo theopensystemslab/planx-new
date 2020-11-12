@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
 import React, { ChangeEvent, useState } from "react";
 
 import ColorPicker from "../ColorPicker";

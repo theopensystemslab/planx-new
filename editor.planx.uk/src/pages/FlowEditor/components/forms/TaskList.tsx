@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
 
@@ -12,7 +12,7 @@ import {
   RichTextInput,
 } from "../../../../ui";
 import { EditorProps } from "../../../../ui/ListManager";
-import { Task, TaskList, TYPES } from "../../data/types";
+import { Task, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 

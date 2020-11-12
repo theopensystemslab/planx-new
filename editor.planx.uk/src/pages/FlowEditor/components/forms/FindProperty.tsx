@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import React from "react";
 import { useNavigation } from "react-navi";
