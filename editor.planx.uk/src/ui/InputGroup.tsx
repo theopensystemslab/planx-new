@@ -1,6 +1,6 @@
 import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
-import makeStyles from "@material-ui/core/styles/makeStyles";
+import { makeStyles } from "@material-ui/core/styles";
 import Delete from "@material-ui/icons/Delete";
 import DragHandle from "@material-ui/icons/DragHandle";
 import classNames from "classnames";

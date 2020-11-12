@@ -2,6 +2,12 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["simple-import-sort"],
   "rules": {
-    "simple-import-sort/sort": "warn"
+    "simple-import-sort/sort": "warn",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["@material-ui/*/*/*", "!@material-ui/core/test-utils/*"]
+      }
+    ]
   }
 }

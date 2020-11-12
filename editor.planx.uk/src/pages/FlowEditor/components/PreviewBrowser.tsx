@@ -1,4 +1,4 @@
-import makeStyles from "@material-ui/core/styles/makeStyles";
+import { makeStyles } from "@material-ui/core/styles";
 import React, { useState } from "react";
 import ExternalLink from "react-feather/dist/icons/external-link";
 import RefreshCw from "react-feather/dist/icons/refresh-cw";

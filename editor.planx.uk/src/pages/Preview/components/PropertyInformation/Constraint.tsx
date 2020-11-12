@@ -1,5 +1,5 @@
 import Box from "@material-ui/core/Box";
-import useTheme from "@material-ui/core/styles/useTheme";
+import { useTheme } from "@material-ui/core/styles";
 import React from "react";
 
 import { constraintsStyles } from "./styles";

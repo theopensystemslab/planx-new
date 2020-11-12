@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 
 export const darkPalette: PaletteOptions = {

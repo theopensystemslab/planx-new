@@ -1,4 +1,4 @@
-import makeStyles from "@material-ui/core/styles/makeStyles";
+import { makeStyles } from "@material-ui/core/styles";
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
 

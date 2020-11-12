@@ -1,6 +1,6 @@
 import FormHelperText from "@material-ui/core/FormHelperText";
 import InputBase from "@material-ui/core/InputBase";
-import makeStyles from "@material-ui/core/styles/makeStyles";
+import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
 export const useInputStyles = makeStyles((theme) => ({
