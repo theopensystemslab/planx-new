@@ -6,12 +6,14 @@ import { Link } from "react-navi";
 
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
+import Node from "./Node";
 
 const Page: React.FC = (props: any) => {
   const parent = getParentId(props.parent);
 
-  const [isClone, copyNode] = useStore((state) => [
+  const [isClone, childNodes, copyNode] = useStore((state) => [
     state.isClone,
+    state.childNodesOf(props.id),
     state.copyNode,
   ]);
 
@@ -48,7 +50,6 @@ const Page: React.FC = (props: any) => {
         })}
       >
         <Link
-          className="title"
           href={href}
           prefetch={false}
           onContextMenu={handleContext}
@@ -57,6 +58,9 @@ const Page: React.FC = (props: any) => {
           <span>{props.text}</span>
         </Link>
         <ol>
+          {childNodes.map((child: any) => (
+            <Node key={child.id} parent={props.id} {...child} />
+          ))}
           <Hanger parent={props.id} />
         </ol>
       </li>
