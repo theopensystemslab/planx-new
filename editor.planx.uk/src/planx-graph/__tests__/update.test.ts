@@ -170,50 +170,116 @@ describe("updating", () => {
       ]);
     });
 
-    test("add children", () => {
-      const [graph, ops] = update(
-        "x",
-        { foo: "bar" },
-        { children: [{ id: "y" }, {}, { id: "z" }], removeKeyIfMissing: true }
-      )({
-        _root: {
-          edges: ["x"],
-        },
-        x: {
-          data: {
-            foo: "bar",
+    describe("adding children", () => {
+      test("node with children", () => {
+        const [graph, ops] = update(
+          "x",
+          { foo: "bar" },
+          {
+            children: [
+              { id: "y", text: "newtext" },
+              { type: 2, data: { text: "xyz" } },
+              { id: "z" },
+            ],
+            removeKeyIfMissing: true,
+          }
+        )({
+          _root: {
+            edges: ["x"],
           },
-          edges: ["y", "z"],
-        },
-        y: {},
-        z: {},
+          x: {
+            data: {
+              foo: "bar",
+            },
+            edges: ["y", "z"],
+          },
+          y: {},
+          z: {},
+        });
+
+        const {
+          x: {
+            edges: [, newChildId],
+          },
+        } = graph as any;
+
+        expect(graph).toEqual({
+          _root: {
+            edges: ["x"],
+          },
+          x: {
+            data: {
+              foo: "bar",
+            },
+            edges: ["y", newChildId, "z"],
+          },
+          y: {
+            data: {
+              text: "newtext",
+            },
+          },
+          z: {},
+          [newChildId]: {
+            type: 2,
+            data: { text: "xyz" },
+          },
+        });
+
+        expect(ops).toEqual([
+          { od: ["y", "z"], oi: ["y", newChildId, "z"], p: ["x", "edges"] },
+          { oi: { text: "newtext" }, p: ["y", "data"] },
+          { oi: { data: { text: "xyz" }, type: 2 }, p: [newChildId] },
+        ]);
       });
 
-      const {
-        x: {
-          edges: [, newChildId],
-        },
-      } = graph as any;
-
-      expect(graph).toEqual({
-        _root: {
-          edges: ["x"],
-        },
-        x: {
-          data: {
-            foo: "bar",
+      test("node without children", () => {
+        const [graph, ops] = update(
+          "x",
+          { foo: "bar" },
+          {
+            children: [{ type: 1, data: { text: "foo" } }],
+            removeKeyIfMissing: true,
+          }
+        )({
+          _root: {
+            edges: ["x"],
           },
-          edges: ["y", newChildId, "z"],
-        },
-        y: {},
-        z: {},
-        [newChildId]: {},
-      });
+          x: {
+            data: {
+              foo: "bar",
+            },
+          },
+        });
 
-      expect(ops).toEqual([
-        { od: ["y", "z"], oi: ["y", newChildId, "z"], p: ["x", "edges"] },
-        { oi: {}, p: [newChildId] },
-      ]);
+        const {
+          x: {
+            edges: [newChildId],
+          },
+        } = graph as any;
+
+        expect(graph).toEqual({
+          _root: {
+            edges: ["x"],
+          },
+          x: {
+            data: {
+              foo: "bar",
+            },
+            edges: [newChildId],
+          },
+          [newChildId]: {
+            type: 1,
+            data: {
+              text: "foo",
+            },
+          },
+        });
+
+        expect(ops).toEqual([
+          { oi: [newChildId], p: ["x", "edges"] },
+          { oi: { data: { text: "foo" }, type: 1 }, p: [newChildId] },
+        ]);
+      });
     });
 
     test("update children", () => {
@@ -321,5 +387,21 @@ describe("updating", () => {
         { od: "a portal", oi: "new portal name", p: ["a", "data", "text"] },
       ]);
     });
+  });
+});
+
+describe("error handling", () => {
+  test("invalid id", () => {
+    expect(() =>
+      update(
+        "x",
+        {}
+      )({
+        _root: {
+          edges: ["a"],
+        },
+        a: {},
+      })
+    ).toThrowError("id not found");
   });
 });
