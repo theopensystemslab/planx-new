@@ -16,6 +16,7 @@ import {
   update,
 } from "planx-graph";
 import create from "zustand";
+import vanillaCreate from "zustand/vanilla";
 
 import { client } from "../../../lib/graphql";
 import { FlowLayout } from "../components/Flow";
@@ -35,16 +36,13 @@ const send = (ops) => {
   }
 };
 
-// TODO: finish typing store
 interface Store extends Record<string | number | symbol, unknown> {
   addNode: any; //: () => void;
-  breadcrumbs: Record<string, { answers: string[]; auto?: boolean }>;
   childNodesOf: (string) => Record<string, any>[];
   connect: (src: string, tgt: string, object?) => void;
   connectTo: (string) => void;
   copyNode: (string) => void;
   createFlow: any; //: () => Promise<string>;
-  currentCard: () => Record<string, any> | null;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   flow: Record<string, any>;
   flowLayout: FlowLayout;
@@ -54,22 +52,25 @@ interface Store extends Record<string | number | symbol, unknown> {
   isClone: (string) => boolean;
   makeUnique: any; //: () => void;
   moveNode: any; //: () => void;
-  passport: any; //: any;
   pasteNode: any; //: () => void;
-  record: any; //: () => void;
   removeNode: any; //: () => void;
+  showPreview: boolean;
+  togglePreview: () => void;
+  updateNode: any; //: () => void;
+  // preview
+  breadcrumbs: Record<string, { answers: string[]; auto?: boolean }>;
+  currentCard: () => Record<string, any> | null;
+  passport: any; //: any;
+  record: any; //: () => void;
   reportData: any; //: () => any;
   resetPreview: any; //: () => void;
   sessionId: any; //: string;
   setFlow: any; //: () => void;
-  showPreview: boolean;
   startSession: any; //: () => void;
-  togglePreview: () => void;
-  upcomingCardIds: any; //: () => string[];
-  updateNode: any; //: () => void;
+  upcomingCardIds: () => string[];
 }
 
-export const useStore = create<Store>((set, get) => ({
+export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   flow: undefined,
 
   id: undefined,
@@ -481,6 +482,8 @@ export const useStore = create<Store>((set, get) => ({
   record(id: string, vals: string | Array<string>) {
     const { breadcrumbs, sessionId, upcomingCardIds, flow, passport } = get();
 
+    if (!flow[id]) throw new Error("id not found");
+
     if (vals) {
       vals = Array.isArray(vals) ? vals : [vals];
 
@@ -686,5 +689,7 @@ export const useStore = create<Store>((set, get) => ({
     }, {});
   },
 }));
+
+export const useStore = create(vanillaStore);
 
 window["api"] = useStore;

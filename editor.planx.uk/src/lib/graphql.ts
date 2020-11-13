@@ -8,7 +8,7 @@ import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import Cookies from "js-cookie";
 
-import { navigation } from "..";
+import navigation from "./navigation";
 
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_HASURA_URL,
