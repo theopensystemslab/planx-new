@@ -31,7 +31,7 @@ const Option: React.FC<any> = (props) => {
       >
         <span>{props.data.text}</span>
       </Link>
-      <ol>
+      <ol className="decisions">
         {childNodes.map((child: any) => (
           <Node key={child.id} parent={props.id} {...child} />
         ))}

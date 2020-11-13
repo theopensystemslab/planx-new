@@ -251,15 +251,20 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
 }
 
 .portal,
-.decision {
+.decision,
+.category {
   display: flex;
   flex-shrink: 1;
   // https://github.com/philipwalton/flexbugs#flexbug-1
   flex-shrink: 0;
 }
 
-.decision {
-  align-items: center;
+.decision > ol.options > li.option:only-child .hanger {
+  display: none;
+}
+
+.decision,
+.category {
   [data-layout="top-down"] & {
     flex-direction: column;
   }
@@ -267,14 +272,20 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   [data-layout="left-right"] & {
     flex-direction: row;
   }
+
+  ol {
+    flex: 1;
+  }
+  align-items: center;
+
   &.isNote {
     > a {
       background: yellow !important;
     }
   }
 
-  // (options)
-  > ol {
+  > ol.options,
+  > ol.categories {
     display: inline-flex;
 
     background-image: $pixel;
@@ -287,6 +298,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
       background-position: center top;
       background-size: $lineWidth 5px;
     }
+
     [data-layout="left-right"] & {
       flex-direction: column;
       padding-left: 5px !important;
@@ -299,22 +311,11 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
       display: none;
     }
 
-    > li.option {
-      display: flex;
-      align-items: center;
+    > li {
       background-image: $pixel, $pixel, $pixel;
-      > a {
-        pointer-events: none;
-      }
-
       [data-layout="top-down"] & {
-        // padding: 5px 5px 0 5px;
         padding: 5px 5px 0 5px !important;
         flex-direction: column;
-
-        &:only-child {
-          padding-top: 0 !important;
-        }
 
         background-position: top center, top center, bottom center;
         background-size: $lineWidth 5px, $lineWidth, $lineWidth;
@@ -332,14 +333,9 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
           background-repeat: no-repeat, no-repeat, no-repeat;
         }
       }
-
       [data-layout="left-right"] & {
         padding: 5px 0 5px 5px !important;
         flex-direction: row;
-
-        &:only-child {
-          padding-left: 0 !important;
-        }
 
         background-position: left center, left top, right top;
         background-repeat: no-repeat, no-repeat, no-repeat;
@@ -355,6 +351,26 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
         &:last-child {
           background-position: left center, left top, right top;
           background-size: 5px $lineWidth, $lineWidth 50%, $lineWidth 50%;
+        }
+      }
+    }
+
+    > li.option {
+      display: flex;
+      align-items: center;
+      > a {
+        pointer-events: none;
+      }
+
+      [data-layout="top-down"] & {
+        &:only-child {
+          padding-top: 0 !important;
+        }
+      }
+
+      [data-layout="left-right"] & {
+        &:only-child {
+          padding-left: 0 !important;
         }
       }
 
@@ -373,13 +389,6 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
       &:only-child {
         // padding-top: 0;
         background: none;
-        .hanger {
-          display: none;
-        }
-      }
-
-      > a {
-        background: lightblue;
       }
     }
   }

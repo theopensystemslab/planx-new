@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
@@ -11,7 +12,7 @@ import Node from "./Node";
 
 type Props = any;
 
-const Question: React.FC<Props> = React.memo((props) => {
+const Checklist: React.FC<Props> = React.memo((props) => {
   const [isClone, childNodes, copyNode] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
@@ -19,6 +20,20 @@ const Question: React.FC<Props> = React.memo((props) => {
   ]);
 
   const parent = getParentId(props.parent);
+
+  const groupedOptions = !props.data.categories
+    ? undefined
+    : mapAccum(
+        (index: number, category: { title: string; count: number }) => [
+          index + category.count,
+          {
+            title: category.title,
+            children: childNodes.slice(index, index + category.count),
+          },
+        ],
+        0,
+        props.data.categories
+      )[1];
 
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -64,14 +79,29 @@ const Question: React.FC<Props> = React.memo((props) => {
           {Icon && <Icon />}
           <span>{props.text}</span>
         </Link>
-        <ol className="options">
-          {childNodes.map((child: any) => (
-            <Node key={child.id} {...child} />
-          ))}
-        </ol>
+        {groupedOptions ? (
+          <ol className="categories">
+            {groupedOptions.map(({ title, children }, i) => (
+              <li key={i} className="card category">
+                <span>{title}</span>
+                <ol className="options">
+                  {children.map((child: any) => (
+                    <Node key={child.id} {...child} />
+                  ))}
+                </ol>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <ol className="options">
+            {childNodes.map((child: any) => (
+              <Node key={child.id} {...child} />
+            ))}
+          </ol>
+        )}
       </li>
     </>
   );
 });
 
-export default Question;
+export default Checklist;

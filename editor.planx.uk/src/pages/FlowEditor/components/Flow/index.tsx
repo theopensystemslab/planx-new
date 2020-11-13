@@ -26,7 +26,7 @@ const Flow = ({ breadcrumbs = [] }: any) => {
 
   return (
     <>
-      <ol id="flow" data-layout={flowLayout}>
+      <ol id="flow" data-layout={flowLayout} className="decisions">
         <EndPoint text="start" />
 
         {breadcrumbs.map((bc) => (
