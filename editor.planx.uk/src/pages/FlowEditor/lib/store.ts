@@ -650,7 +650,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         text: "No result",
         category,
         bgColor: "#EEEEEE",
-        color: tinycolor("black"),
+        color: tinycolor("black").toHexString(),
       };
       globalFlag = flag.value;
 
