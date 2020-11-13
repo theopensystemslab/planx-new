@@ -94,7 +94,11 @@ export const PermissionSelect: React.FC<SelectInputProps> = (props) => {
       {category}
     </MenuItem>,
     Object.entries(flags).map(([id, flag]) => (
-      <MenuItem key={id} value={id}>
+      <MenuItem
+        key={id}
+        value={id}
+        style={{ borderLeft: `1em solid ${flag.bgColor || "transparent"}` }}
+      >
         {flag.text}
       </MenuItem>
     )),
