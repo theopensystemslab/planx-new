@@ -3,6 +3,7 @@ import React from "react";
 import { TYPES } from "../../../data/types";
 import { useStore } from "../../../lib/store";
 import Breadcrumb from "./Breadcrumb";
+import Checklist from "./Checklist";
 import Filter from "./Filter";
 import Option from "./Option";
 import Portal from "./Portal";
@@ -49,7 +50,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Statement:
     case TYPES.Checklist:
       return (
-        <Question {...props} {...node} text={node?.data?.text ?? "[Empty]"} />
+        <Checklist {...props} {...node} text={node?.data?.text ?? "[Empty]"} />
       );
     case TYPES.AddressInput:
     case TYPES.DateInput:
