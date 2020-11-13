@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import mapAccum from "ramda/src/mapAccum";
-import React from "react";
+import React, { useMemo } from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
 
@@ -21,19 +21,23 @@ const Checklist: React.FC<Props> = React.memo((props) => {
 
   const parent = getParentId(props.parent);
 
-  const groupedOptions = !props.data.categories
-    ? undefined
-    : mapAccum(
-        (index: number, category: { title: string; count: number }) => [
-          index + category.count,
-          {
-            title: category.title,
-            children: childNodes.slice(index, index + category.count),
-          },
-        ],
-        0,
-        props.data.categories
-      )[1];
+  const groupedOptions = useMemo(
+    () =>
+      !props.data.categories
+        ? undefined
+        : mapAccum(
+            (index: number, category: { title: string; count: number }) => [
+              index + category.count,
+              {
+                title: category.title,
+                children: childNodes.slice(index, index + category.count),
+              },
+            ],
+            0,
+            props.data.categories
+          )[1],
+    [childNodes]
+  );
 
   const [{ isDragging }, drag] = useDrag({
     item: {
