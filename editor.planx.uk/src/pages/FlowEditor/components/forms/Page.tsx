@@ -2,6 +2,7 @@ import { useFormik } from "formik";
 import React from "react";
 
 import {
+  Input,
   InputRow,
   ModalSection,
   ModalSectionContent,
@@ -13,13 +14,19 @@ import { ICONS } from "../shared";
 interface Props {
   id?: string;
   handleSubmit?;
-  node?: any;
+  node?: {
+    data?: {
+      title?: string;
+      description?: string;
+    };
+  };
 }
 
 const PageForm: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
       title: props.node?.data?.title || "",
+      description: props.node?.data?.description || "",
     },
     onSubmit: (values) => {
       if (props.handleSubmit) {
@@ -35,11 +42,21 @@ const PageForm: React.FC<Props> = (props) => {
       <ModalSection>
         <ModalSectionContent title="Page" Icon={ICONS[TYPES.Page]}>
           <InputRow>
-            <RichTextInput
-              placeholder="Title"
+            <Input
+              format="large"
               name="title"
-              value={formik.values.title}
               onChange={formik.handleChange}
+              placeholder="Title"
+              value={formik.values.title}
+            />
+          </InputRow>
+
+          <InputRow>
+            <RichTextInput
+              name="description"
+              onChange={formik.handleChange}
+              placeholder="Description"
+              value={formik.values.description}
             />
           </InputRow>
         </ModalSectionContent>
