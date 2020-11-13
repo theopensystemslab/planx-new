@@ -43,6 +43,12 @@ export interface Notice extends BaseNode {
   };
 }
 
+export interface Page extends BaseNode {
+  data: {
+    title: string;
+  };
+}
+
 export type FlowNode = Checklist | Notice;
 
 export type Flow = Map<string, FlowNode>;

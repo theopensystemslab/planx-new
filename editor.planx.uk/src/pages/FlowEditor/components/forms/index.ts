@@ -9,6 +9,7 @@ import Filter from "./Filter";
 import FindProperty from "./FindProperty";
 import InternalPortal from "./InternalPortal";
 import Notice from "./Notice";
+import Page from "./Page";
 import Pay from "./Pay";
 import PropertyInformation from "./PropertyInformation";
 import Question from "./Question";
@@ -30,6 +31,7 @@ const components: {
   flow: EmptyComponent,
   "internal-portal": InternalPortal,
   notice: Notice,
+  page: Page,
   pay: Pay,
   "property-information": PropertyInformation,
   question: Question,

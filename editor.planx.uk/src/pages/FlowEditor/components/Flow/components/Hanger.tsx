@@ -30,7 +30,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   ]);
 
   const [{ canDrop, item }, drop] = useDrop({
-    accept: ["DECISION", "PORTAL"],
+    accept: ["DECISION", "PORTAL", "PAGE"],
     drop: () => {
       moveNode(item.id, item.parent, before, parent);
     },

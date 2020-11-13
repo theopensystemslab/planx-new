@@ -2,6 +2,7 @@ import CallSplit from "@material-ui/icons/CallSplit";
 import CheckBoxOutlined from "@material-ui/icons/CheckBoxOutlined";
 import CloudUpload from "@material-ui/icons/CloudUpload";
 import Create from "@material-ui/icons/Create";
+import Description from "@material-ui/icons/Description";
 import List from "@material-ui/icons/List";
 import LocationOnOutlined from "@material-ui/icons/LocationOnOutlined";
 import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
@@ -29,6 +30,7 @@ export const ICONS: {
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NumberInput]: undefined,
+  [TYPES.Page]: Description,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PropertyInformation]: LocationOnOutlined,
   [TYPES.Report]: undefined,

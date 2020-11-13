@@ -402,7 +402,7 @@ export const useStore = create<Store>((set, get) => ({
                 flow[id]?.edges?.length > 0)
           )
           .forEach((id) => {
-            if (flow[id]?.type === TYPES.InternalPortal) {
+            if ([TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type)) {
               nodeIdsConnectedFrom(id);
             } else {
               const fn = flow[id]?.data?.fn;

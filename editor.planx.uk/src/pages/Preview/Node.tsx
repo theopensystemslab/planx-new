@@ -145,6 +145,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Flow:
     case TYPES.InternalPortal:
     case TYPES.NumberInput:
+    case TYPES.Page:
     case TYPES.Report:
     case TYPES.Response:
     case TYPES.SignIn:
