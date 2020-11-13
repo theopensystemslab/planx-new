@@ -23,16 +23,6 @@ export interface IEditor {
   notes?: string;
 }
 
-const renderMenuItem = (category: string) => {
-  return flags
-    .filter((flag) => flag.category === category)
-    .map((flag, index) => (
-      <MenuItem key={index} value={flag.value}>
-        {flag.text}
-      </MenuItem>
-    ));
-};
-
 interface MoreInformationProps {
   changeField: (any) => any;
   howMeasured: string;
@@ -97,23 +87,30 @@ export const MoreInformation = ({
   );
 };
 
-export const PermissionSelect: React.FC<SelectInputProps> = (props) => (
-  <SelectInput {...props}>
-    {props.value && <MenuItem value="">Remove Flag</MenuItem>}
-    <MenuItem disabled>Planning permission</MenuItem>
-    {renderMenuItem("Planning permission")}
-    <MenuItem disabled>Listed building consent</MenuItem>
-    {renderMenuItem("Listed building consent")}
-    <MenuItem disabled>Works to trees</MenuItem>
-    {renderMenuItem("Works to trees")}
-    <MenuItem disabled>Demolition in a conservation area</MenuItem>
-    {renderMenuItem("Demolition in a conservation area")}
-    <MenuItem disabled>Planning policy</MenuItem>
-    {renderMenuItem("Planning policy")}
-    <MenuItem disabled>Community infrastructure levy</MenuItem>
-    {renderMenuItem("Community infrastructure levy")}
-  </SelectInput>
-);
+export const PermissionSelect: React.FC<SelectInputProps> = (props) => {
+  // Material-ui doesn't like Fragments so this needs to be an array
+  const flagMenuItems = Object.entries(flags).flatMap(([category, flags]) => [
+    <MenuItem disabled key={category}>
+      {category}
+    </MenuItem>,
+    Object.entries(flags).map(([id, flag]) => (
+      <MenuItem
+        key={id}
+        value={id}
+        style={{ borderLeft: `1em solid ${flag.bgColor || "transparent"}` }}
+      >
+        {flag.text}
+      </MenuItem>
+    )),
+  ]);
+
+  return (
+    <SelectInput {...props}>
+      {props.value && <MenuItem value="">Remove Flag</MenuItem>}
+      {flagMenuItems}
+    </SelectInput>
+  );
+};
 
 export const parseFormValues = (ob, defaultValues = {}) =>
   ob.reduce((acc, [k, v]) => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-navi";
 
-import flags from "../../../data/flags";
+import { flatFlags } from "../../../data/flags";
 import { useStore } from "../../../lib/store";
 import Hanger from "./Hanger";
 import Node from "./Node";
@@ -14,7 +14,7 @@ const Option: React.FC<any> = (props) => {
   let background = "#AEAEAE"; // no flag color
   let color = "#000";
   try {
-    const flag = flags.find(({ value }) =>
+    const flag = flatFlags.find(({ value }) =>
       [props.data?.flag, props.data?.val].filter(Boolean).includes(value)
     );
     background = flag.bgColor;

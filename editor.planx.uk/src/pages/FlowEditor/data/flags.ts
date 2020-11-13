@@ -1,206 +1,80 @@
 import { mostReadable } from "@ctrl/tinycolor";
 
-const flags = [
-  // Planning permission
+// flags grouped by categories, order is significant, earlier flags === more important
+// https://www.figma.com/file/bnUUrsVRG6qPwDkTmVKACI/Design?node-id=1971%3A0
+const categoriesAndFlags = {
+  "Planning permission": {
+    MISSING_INFO: ["Missing information", "#DBDBDB"],
+    IMMUNE: ["Immune", "#EFFFDA"],
+    PLANNING_PERMISSION_REQUIRED: ["Permission needed", "#909090"],
+    PRIOR_APPROVAL: ["Prior approval", "#FAFF00"],
+    "PP-NOTICE": ["Notice", "#FEFFC1"],
+    NO_APP_REQUIRED: ["Permitted development", "#B6EE7E"],
+    "PP-NOT_DEVELOPMENT": ["Not development", "#FFFFFF"],
+  },
+  "Listed building consent": {
+    "LB-MISSING_INFO": ["Missing information", "#DBDBDB"],
+    "LB-REQUIRED": ["Required", "#FAFF00"],
+    "LB-DE_MINIMIS": ["De minimis", "#B6EE7E"],
+    "LB-NOT_REQUIRED": ["Not required", "#FFFFFF"],
+  },
+  "Works to trees & hedges": {
+    "TR-MISSING_INFO": ["Missing information", "#DBDBDB"],
+    "TR-REQUIRED": ["Required", "#FAFF00"],
+    "TR-DE_MINIMIS": ["De minimis", "#B4BBFF"],
+    "TR-NOT_REQUIRED": ["Not required", "#FFF"],
+  },
+  "Demolition in a conservation area": {
+    "DC-MISSING_INFO": ["Missing information", "#DBDBDB"],
+    "DC-REQUIRED": ["Required", "#FF5C00"],
+    "DC-DE_MINIMIS": ["De minimis", "#FFC2A0"],
+    "DC-NOT_REQUIRED": ["Not required", "#FFF"],
+  },
+  "Planning policy": {
+    PO_MISSING_INFO: ["Missing information", "#DBDBDB"],
+    LIKELY_FAIL: ["Fails to meet policy", "#FF001F"],
+    EDGE_CASE: ["Edge case", "#FFA800"],
+    LIKELY_PASS: ["Meets policy", "#63C501"],
+  },
+  "Community infrastructure levy": {
+    CO_MISSING_INFO: ["Missing information", "#DBDBDB"],
+    CO_EXEMPTION_VOID: ["Exemption void", "#CDB1C2"],
+    CO_EXEMPT: ["Exempt", "#FFDEF2"],
+    CO_RELIEF_VOID: ["Relief void", "#A4698C"],
+    CO_RELIEF: ["Relief", "#FFA4DA"],
+    CO_LIABLE: ["Liable", "#FF0099"],
+    CO_NOT_LIABLE: ["Not liable", "#FFF"],
+  },
+};
 
-  {
-    value: "MISSING_INFO",
-    text: "Missing information",
-    category: "Planning permission",
-    bgColor: "#DBDBDB",
-  },
-  {
-    value: "IMMUNE",
-    text: "Immune",
-    category: "Planning permission",
-    bgColor: "#EFFFDA",
-  },
-  {
-    value: "PLANNING_PERMISSION_REQUIRED",
-    text: "Permission needed",
-    category: "Planning permission",
-    bgColor: "#909090",
-  },
-  {
-    value: "PRIOR_APPROVAL",
-    text: "Prior approval",
-    category: "Planning permission",
-    bgColor: "#FAFF00",
-  },
-  {
-    value: "PP-NOTICE",
-    text: "Notice",
-    category: "Planning permission",
-    bgColor: "#FEFFC1",
-  },
-  {
-    value: "NO_APP_REQUIRED",
-    text: "Permitted development",
-    category: "Planning permission",
-    bgColor: "#B6EE7E",
-  },
-  {
-    value: "PP-NOT_DEVELOPMENT",
-    text: "Not development",
-    category: "Planning permission",
-    bgColor: "#FFFFFF",
-  },
+export const flatFlags = [];
 
-  // Listed building consent
+export default Object.entries(categoriesAndFlags).reduce(
+  (acc, [category, flags]) => {
+    acc[category] = Object.entries(flags).reduce(
+      (acc, [id, [text, bgColor]]) => {
+        // loop through all the flags and add a text color which is
+        // white if it's a dark background or black if it's light
+        const color = mostReadable(bgColor, ["#000", "#FFF"]).toHexString();
 
-  {
-    value: "LB-MISSING_INFO",
-    text: "Missing information",
-    category: "Listed building consent",
-    bgColor: "#DBDBDB",
-  },
-  {
-    value: "LB-REQUIRED",
-    text: "Required",
-    category: "Listed building consent",
-    bgColor: "#FAFF00",
-  },
-  {
-    value: "LB-DE_MINIMIS",
-    text: "De minimis",
-    category: "Listed building consent",
-    bgColor: "#B6EE7E",
-  },
-  {
-    value: "LB-NOT_REQUIRED",
-    text: "Not required",
-    category: "Listed building consent",
-    bgColor: "#FFFFFF",
-  },
+        acc[id] = {
+          text,
+          bgColor,
+          color,
+        };
 
-  // Works to trees
+        // check that no other flags share the same ID
+        if (flatFlags.find((f) => f.id === id))
+          throw new Error(`Multiple flags with same id (${id})`);
 
-  {
-    value: "TR-MISSING_INFO",
-    text: "Missing information",
-    category: "Works to trees",
-    bgColor: "#DBDBDB",
-  },
-  {
-    value: "TR-REQUIRED",
-    text: "Required",
-    category: "Works to trees",
-    bgColor: "#FAFF00",
-  },
-  {
-    value: "TR-DE_MINIMIS",
-    text: "De minimis",
-    category: "Works to trees",
-    bgColor: "#B4BBFF",
-  },
-  {
-    value: "TR-NOT_REQUIRED",
-    text: "Not required",
-    category: "Works to trees",
-    bgColor: "#FFF",
-  },
+        // push the flag object to a flattened array for convenience
+        flatFlags.push({ ...acc[id], value: id, category });
 
-  // Demolition in a conservation area
-
-  {
-    value: "DC-MISSING_INFO",
-    text: "Missing information",
-    category: "Demolition in a conservation area",
-    bgColor: "#DBDBDB",
+        return acc;
+      },
+      {}
+    );
+    return acc;
   },
-  {
-    value: "DC-REQUIRED",
-    text: "Required",
-    category: "Demolition in a conservation area",
-    bgColor: "#FF5C00",
-  },
-  {
-    value: "DC-DE_MINIMIS",
-    text: "De minimis",
-    category: "Demolition in a conservation area",
-    bgColor: "#FFC2A0",
-  },
-  {
-    value: "DC-NOT_REQUIRED",
-    text: "Not required",
-    category: "Demolition in a conservation area",
-    bgColor: "#FFF",
-  },
-
-  // Planning policy
-
-  {
-    value: "PO_MISSING_INFO",
-    text: "Missing information",
-    category: "Planning policy",
-    bgColor: "#DBDBDB",
-  },
-  {
-    value: "LIKELY_FAIL",
-    text: "Fails to meet policy",
-    category: "Planning policy",
-    bgColor: "#FF001F",
-  },
-  {
-    value: "EDGE_CASE",
-    text: "Edge case",
-    category: "Planning policy",
-    bgColor: "#FFA800",
-  },
-  {
-    value: "LIKELY_PASS",
-    text: "Meets policy",
-    category: "Planning policy",
-    bgColor: "#63C501",
-  },
-
-  // Community infrastructure levy
-
-  {
-    value: "CO_MISSING_INFO",
-    text: "Missing information",
-    category: "Community infrastructure levy",
-    bgColor: "#DBDBDB",
-  },
-  {
-    value: "CO_EXEMPTION_VOID",
-    text: "Exemption void",
-    category: "Community infrastructure levy",
-    bgColor: "#CDB1C2",
-  },
-  {
-    value: "CO_EXEMPT",
-    text: "Exempt",
-    category: "Community infrastructure levy",
-    bgColor: "#FFDEF2",
-  },
-  {
-    value: "CO_RELIEF_VOID",
-    text: "Relief void",
-    category: "Community infrastructure levy",
-    bgColor: "#A4698C",
-  },
-  {
-    value: "CO_RELIEF",
-    text: "Relief",
-    category: "Community infrastructure levy",
-    bgColor: "#FFA4DA",
-  },
-  {
-    value: "CO_LIABLE",
-    text: "Liable",
-    category: "Community infrastructure levy",
-    bgColor: "#FF0099",
-  },
-  {
-    value: "CO_NOT_LIABLE",
-    text: "Not liable",
-    category: "Community infrastructure levy",
-    bgColor: "#FFF",
-  },
-].map((f: any) => ({
-  ...f,
-  color: mostReadable(f.bgColor, ["#000", "#FFF"]),
-}));
-
-export default flags;
+  {}
+);

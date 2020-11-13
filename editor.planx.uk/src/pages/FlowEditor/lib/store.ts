@@ -20,7 +20,7 @@ import vanillaCreate from "zustand/vanilla";
 
 import { client } from "../../../lib/graphql";
 import { FlowLayout } from "../components/Flow";
-import flags from "../data/flags";
+import { flatFlags } from "../data/flags";
 import { TYPES } from "../data/types";
 import { connectToDB, getConnection } from "./sharedb";
 
@@ -629,7 +629,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     const categories = ["Planning permission"];
 
     return categories.reduce((acc, category) => {
-      const possibleFlags = flags.filter((f) => f.category === category);
+      const possibleFlags = flatFlags.filter((f) => f.category === category);
       const keys = possibleFlags.map((f) => f.value);
 
       const collectedFlags = Object.values(breadcrumbs).flatMap(({ answers }) =>
