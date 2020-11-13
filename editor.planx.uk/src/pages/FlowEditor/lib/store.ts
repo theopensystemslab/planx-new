@@ -16,6 +16,7 @@ import {
   update,
 } from "planx-graph";
 import create from "zustand";
+import vanillaCreate from "zustand/vanilla";
 
 import { client } from "../../../lib/graphql";
 import { FlowLayout } from "../components/Flow";
@@ -65,11 +66,11 @@ interface Store extends Record<string | number | symbol, unknown> {
   showPreview: boolean;
   startSession: any; //: () => void;
   togglePreview: () => void;
-  upcomingCardIds: any; //: () => string[];
+  upcomingCardIds: () => string[];
   updateNode: any; //: () => void;
 }
 
-export const useStore = create<Store>((set, get) => ({
+export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   flow: undefined,
 
   id: undefined,
@@ -481,6 +482,8 @@ export const useStore = create<Store>((set, get) => ({
   record(id: string, vals: string | Array<string>) {
     const { breadcrumbs, sessionId, upcomingCardIds, flow, passport } = get();
 
+    if (!flow[id]) throw new Error("id not found");
+
     if (vals) {
       vals = Array.isArray(vals) ? vals : [vals];
 
@@ -686,5 +689,7 @@ export const useStore = create<Store>((set, get) => ({
     }, {});
   },
 }));
+
+export const useStore = create(vanillaStore);
 
 window["api"] = useStore;
