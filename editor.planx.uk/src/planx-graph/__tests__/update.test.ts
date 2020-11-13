@@ -323,3 +323,19 @@ describe("updating", () => {
     });
   });
 });
+
+describe("error handling", () => {
+  test("invalid id", () => {
+    expect(() =>
+      update(
+        "x",
+        {}
+      )({
+        _root: {
+          edges: ["a"],
+        },
+        a: {},
+      })
+    ).toThrowError("id not found");
+  });
+});

@@ -313,6 +313,8 @@ const _update = (
 ) => {
   const node = draft[id];
 
+  if (!node) throw new Error("id not found");
+
   if (removeKeyIfMissing) {
     if (children) {
       children = children.map((c) => ({ ...c, id: c.id || uniqueId() }));
