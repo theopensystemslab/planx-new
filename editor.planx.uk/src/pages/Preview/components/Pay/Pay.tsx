@@ -5,6 +5,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import React, { Suspense } from "react";
 import Input from "ui/Input";
@@ -19,6 +20,18 @@ const useStyles = makeStyles((theme) => ({
   root: {
     "& *": {
       fontFamily: "Inter, sans-serif",
+    },
+  },
+  banner: {
+    background: theme.palette.primary.dark,
+    color: theme.palette.primary.contrastText,
+    textAlign: "center",
+    padding: 20,
+    "& p": {
+      textAlign: "left",
+    },
+    "& a": {
+      color: theme.palette.primary.contrastText,
     },
   },
   drawerPaper: {
@@ -48,6 +61,7 @@ const OPTIONS = {
 };
 
 const Summary = React.lazy(() => import("./Summary"));
+const Paid = React.lazy(() => import("./Paid"));
 
 interface Props extends MoreInformation {
   handleSubmit: (any) => any;
@@ -85,7 +99,17 @@ function Component(props: Props) {
           goBack={() => {
             setState("init");
           }}
+          submit={() => {
+            setState("paid");
+          }}
         />
+      </Suspense>
+    );
+  }
+  if (state === "paid") {
+    return (
+      <Suspense fallback={<>Loading...</>}>
+        <Paid />
       </Suspense>
     );
   }
@@ -121,6 +145,21 @@ function Init(props) {
 
   return (
     <div className={classes.root}>
+      <div className={classes.banner}>
+        <Typography variant="subtitle1" gutterBottom>
+          The fee for this application is
+        </Typography>
+        <br />
+        <br />
+        <Typography variant="h1" gutterBottom>
+          £206
+        </Typography>
+        <br />
+        <br />
+        <Typography>
+          <a href="#">How are the planning fees calculated? ↗︎</a>
+        </Typography>
+      </div>
       <Question
         text="How would you like to pay?"
         responses={Object.entries(OPTIONS).map(([key, value]) => ({
@@ -170,7 +209,7 @@ function Init(props) {
                   if (event.target) {
                     setCheckboxes((acc) => ({
                       ...acc,
-                      [event.target.name]: event.target.checked,
+                      [p.name]: event.target.checked,
                     }));
                   }
                 }}

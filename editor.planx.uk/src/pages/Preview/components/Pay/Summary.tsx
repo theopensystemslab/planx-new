@@ -66,11 +66,7 @@ function Component(props) {
     <div className={c.root}>
       <div className={c.topBanner}>
         <h2>Payment summary</h2>
-        <p>
-          Householder planning application
-          <br />
-          Total amount due:
-        </p>
+        <p>Amount</p>
         <h2>£206</h2>
       </div>
       <h1 className={c.h1}>Confirm your payment</h1>
@@ -97,9 +93,7 @@ function Component(props) {
         <div>aisha.a@test.com</div>
       </div>
       <p style={{ margin: "24px 0" }}>
-        <Button onClick={() => window.alert("This feature is coming soon")}>
-          Pay & submit
-        </Button>
+        <Button onClick={props.submit}>Pay & submit</Button>
       </p>
       <p>
         <a href="#" className={c.cancel} onClick={props.goBack}>
