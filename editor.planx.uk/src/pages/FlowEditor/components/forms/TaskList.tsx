@@ -12,7 +12,7 @@ import {
   RichTextInput,
 } from "../../../../ui";
 import { EditorProps } from "../../../../ui/ListManager";
-import { Task, TYPES } from "../../data/types";
+import { parseMoreInformation, Task, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 
@@ -78,11 +78,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
         /* remove once migrated */ props.node?.data?.taskList?.tasks ||
         props.node?.data?.tasks ||
         [],
-      notes: props.node?.data?.notes || props.node?.date?.taskList?.notes || "",
-      definitionImg: props.node?.data?.definitionImg,
-      howMeasured: props.node?.data?.howMeasured,
-      policyRef: props.node?.data?.policyRef,
-      info: props.node?.data?.info,
+      ...parseMoreInformation(props.node?.data),
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {

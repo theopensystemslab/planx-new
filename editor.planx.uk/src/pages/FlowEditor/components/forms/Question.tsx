@@ -14,7 +14,7 @@ import {
   ModalSectionContent,
   RichTextInput,
 } from "../../../../ui";
-import { TYPES } from "../../data/types";
+import { parseMoreInformation, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation, PermissionSelect } from "./shared";
 
@@ -155,16 +155,12 @@ export const Question: React.FC<Props> = (props) => {
 
   const formik = useFormik({
     initialValues: {
-      definitionImg: props.node?.data?.definitionImg || "",
       description: props.node?.data?.description || "",
       fn: props.node?.data?.fn || "",
-      howMeasured: props.node?.data?.howMeasured || "",
       img: props.node?.data?.img || "",
-      info: props.node?.data?.info || "",
-      notes: props.node?.data?.notes || "",
       options: props.options || [],
-      policyRef: props.node?.data?.policyRef || "",
       text: props.node?.data?.text || "",
+      ...parseMoreInformation(props.node?.data),
     },
     onSubmit: ({ options, ...values }) => {
       const children = options

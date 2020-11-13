@@ -11,7 +11,7 @@ import {
   OptionButton,
   RichTextInput,
 } from "../../../../ui";
-import { Notice, TYPES } from "../../data/types";
+import { Notice, parseMoreInformation, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 
@@ -113,12 +113,8 @@ const NoticeComponent: React.FC<Props> = (props) => {
         title: props.node?.data?.title || "",
         description: props.node?.data?.description || "",
         color: props.node?.data?.color || "#EFEFEF",
-        notes: props.node?.data?.notes || "",
         resetButton: props.node?.data?.resetButton || false,
-        definitionImg: props.node?.data?.definitionImg,
-        howMeasured: props.node?.data?.howMeasured,
-        policyRef: props.node?.data?.policyRef,
-        info: props.node?.data?.info,
+        ...parseMoreInformation(props.node?.data),
       },
     },
     onSubmit: (newValues) => {

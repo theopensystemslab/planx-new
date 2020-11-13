@@ -27,6 +27,7 @@ import {
   Checklist,
   Group,
   Option,
+  parseMoreInformation,
   toggleExpandableChecklist,
   TYPES,
 } from "../../data/types";
@@ -299,13 +300,9 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
       fn: props.node?.data?.fn || "",
       groupedOptions: props.groupedOptions,
       img: props.node?.data?.img || "",
-      notes: props.node?.data?.notes || "",
       options: props.options,
       text: props.node?.data?.text || "",
-      policyRef: props.node?.data?.policyRef || "",
-      howMeasured: props.node?.data?.howMeasured || "",
-      info: props.node?.data?.info || "",
-      definitionImg: props.node?.data?.definitionImg || "",
+      ...parseMoreInformation(props.node?.data),
     },
     onSubmit: ({ options, groupedOptions, ...values }) => {
       if (props.handleSubmit) {

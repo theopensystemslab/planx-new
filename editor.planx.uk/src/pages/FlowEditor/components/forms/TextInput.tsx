@@ -9,7 +9,7 @@ import {
   ModalSectionContent,
   RichTextInput,
 } from "../../../../ui";
-import { TextInput, TYPES } from "../../data/types";
+import { parseMoreInformation, TextInput, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 
@@ -103,10 +103,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
         title: props.node?.data?.title || "",
         description: props.node?.data?.description || "",
         placeholder: props.node?.data?.placeholder || "",
-        definitionImg: props.node?.data?.definitionImg,
-        howMeasured: props.node?.data?.howMeasured,
-        policyRef: props.node?.data?.policyRef,
-        info: props.node?.data?.info,
+        ...parseMoreInformation(props.node?.data),
       },
     },
     onSubmit: (newValues) => {

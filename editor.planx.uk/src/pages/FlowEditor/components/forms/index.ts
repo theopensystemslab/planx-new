@@ -16,6 +16,8 @@ import Result from "./Result";
 import TaskList from "./TaskList";
 import TextInput from "./TextInput";
 
+const EmptyComponent: React.FC<any> = () => null;
+
 const components: {
   [key in typeof SLUGS[TYPES]]: React.FC<any>;
 } = {
@@ -25,7 +27,7 @@ const components: {
   "file-upload": FileUpload,
   filter: Filter,
   "find-property": FindProperty,
-  flow: () => null,
+  flow: EmptyComponent,
   "internal-portal": InternalPortal,
   notice: Notice,
   pay: Pay,

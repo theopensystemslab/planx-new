@@ -135,6 +135,15 @@ export interface TextInput extends MoreInformation {
   placeholder?: string;
 }
 
+// Pay
+
+export interface Pay extends MoreInformation {
+  title: string;
+  description: string;
+  color: string;
+  fn?: string;
+}
+
 // Shared
 
 export interface MoreInformation {
@@ -144,6 +153,16 @@ export interface MoreInformation {
   notes?: string;
   definitionImg?: string;
 }
+
+export const parseMoreInformation = (
+  data: Record<string, any> | undefined
+): MoreInformation => ({
+  notes: data?.notes,
+  definitionImg: data?.definitionImg,
+  howMeasured: data?.howMeasured,
+  policyRef: data?.policyRef,
+  info: data?.info,
+});
 
 export interface Option {
   val?: string;

@@ -78,7 +78,12 @@ const Node: React.FC<any> = (props) => {
       return <Notice {...allProps} />;
 
     case TYPES.Pay:
-      return <Pay handleSubmit={() => props.handleSubmit([props.id])} />;
+      return (
+        <Pay
+          {...allProps}
+          handleSubmit={() => props.handleSubmit([props.id])}
+        />
+      );
 
     case TYPES.PropertyInformation:
       return (
