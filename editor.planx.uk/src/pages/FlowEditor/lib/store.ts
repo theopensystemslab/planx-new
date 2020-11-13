@@ -36,16 +36,13 @@ const send = (ops) => {
   }
 };
 
-// TODO: finish typing store
 interface Store extends Record<string | number | symbol, unknown> {
   addNode: any; //: () => void;
-  breadcrumbs: Record<string, { answers: string[]; auto?: boolean }>;
   childNodesOf: (string) => Record<string, any>[];
   connect: (src: string, tgt: string, object?) => void;
   connectTo: (string) => void;
   copyNode: (string) => void;
   createFlow: any; //: () => Promise<string>;
-  currentCard: () => Record<string, any> | null;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   flow: Record<string, any>;
   flowLayout: FlowLayout;
@@ -55,19 +52,22 @@ interface Store extends Record<string | number | symbol, unknown> {
   isClone: (string) => boolean;
   makeUnique: any; //: () => void;
   moveNode: any; //: () => void;
-  passport: any; //: any;
   pasteNode: any; //: () => void;
-  record: any; //: () => void;
   removeNode: any; //: () => void;
+  showPreview: boolean;
+  togglePreview: () => void;
+  updateNode: any; //: () => void;
+  // preview
+  breadcrumbs: Record<string, { answers: string[]; auto?: boolean }>;
+  currentCard: () => Record<string, any> | null;
+  passport: any; //: any;
+  record: any; //: () => void;
   reportData: any; //: () => any;
   resetPreview: any; //: () => void;
   sessionId: any; //: string;
   setFlow: any; //: () => void;
-  showPreview: boolean;
   startSession: any; //: () => void;
-  togglePreview: () => void;
   upcomingCardIds: () => string[];
-  updateNode: any; //: () => void;
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
