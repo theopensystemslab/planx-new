@@ -102,7 +102,7 @@ const Node: React.FC<any> = (props) => {
         <Result
           handleSubmit={props.handleSubmit}
           headingColor={{
-            text: flag.color.toHexString(),
+            text: flag.color,
             background: flag.bgColor,
           }}
           headingTitle={flag.text}
