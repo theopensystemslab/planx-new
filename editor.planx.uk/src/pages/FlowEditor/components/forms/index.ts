@@ -3,6 +3,7 @@ import React from "react";
 import { SLUGS, TYPES } from "../../data/types";
 import Checklist from "./Checklist";
 import Content from "./Content";
+import DateInput from "./DateInput";
 import ExternalPortal from "./ExternalPortal";
 import FileUpload from "./FileUpload";
 import Filter from "./Filter";
@@ -34,6 +35,7 @@ const components: {
   result: Result,
   "task-list": TaskList,
   "text-input": TextInput,
+  "date-input": DateInput,
 };
 
 export default components;

@@ -2,6 +2,7 @@ import CallSplit from "@material-ui/icons/CallSplit";
 import CheckBoxOutlined from "@material-ui/icons/CheckBoxOutlined";
 import CloudUpload from "@material-ui/icons/CloudUpload";
 import Create from "@material-ui/icons/Create";
+import EventAvailable from "@material-ui/icons/EventAvailable";
 import List from "@material-ui/icons/List";
 import LocationOnOutlined from "@material-ui/icons/LocationOnOutlined";
 import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
@@ -20,7 +21,7 @@ export const ICONS: {
   [TYPES.AddressInput]: undefined,
   [TYPES.Checklist]: CheckBoxOutlined,
   [TYPES.Content]: TextFields,
-  [TYPES.DateInput]: undefined,
+  [TYPES.DateInput]: EventAvailable,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: CloudUpload,
   [TYPES.Filter]: undefined,

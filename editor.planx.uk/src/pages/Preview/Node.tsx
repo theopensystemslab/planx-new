@@ -5,6 +5,7 @@ import { TYPES } from "../FlowEditor/data/types";
 import { useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";
 import Content from "./components/Content";
+import DateInput from "./components/DateInput";
 import FileUpload from "./components/FileUpload";
 import FindProperty from "./components/FindProperty";
 import Notice from "./components/Notice";
@@ -76,6 +77,9 @@ const Node: React.FC<any> = (props) => {
 
     case TYPES.Notice:
       return <Notice {...allProps} />;
+
+    case TYPES.DateInput:
+      return <DateInput {...allProps} />;
 
     case TYPES.Pay:
       return <Pay handleSubmit={() => props.handleSubmit([props.id])} />;

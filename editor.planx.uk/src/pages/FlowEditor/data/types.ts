@@ -44,6 +44,7 @@ export const SLUGS = {
   [TYPES.Statement]: "question",
   [TYPES.Response]: "question",
   [TYPES.Pay]: "pay",
+  [TYPES.DateInput]: "date-input",
 } as const;
 
 export const fromSlug = (slug: string): TYPES | undefined => {
@@ -121,6 +122,46 @@ export const toggleExpandableChecklist = (
   return checklist;
 };
 
+// DateInput
+
+export interface DateInput extends MoreInformation {
+  title: string;
+  description?: string;
+  earliest?: string;
+  latest?: string;
+  ranges: Array<DateRange>;
+}
+
+export type DateRange =
+  | {
+      type: "EQ";
+      val: string;
+    }
+  | {
+      type: "LTE";
+      val: string;
+    }
+  | {
+      type: "GTE";
+      val: string;
+    }
+  | {
+      type: "BETWEEN";
+      start: string;
+      end: string;
+    };
+
+export const parseDateInput = (
+  data: Record<string, any> | undefined
+): DateInput => ({
+  title: data?.title || "",
+  description: data?.description,
+  earliest: data?.earliest,
+  latest: data?.latest,
+  ranges: data?.ranges || [],
+  ...parseMoreInformation(data),
+});
+
 // Content
 
 export interface Content extends MoreInformation {
@@ -144,6 +185,16 @@ export interface MoreInformation {
   notes?: string;
   definitionImg?: string;
 }
+
+export const parseMoreInformation = (
+  data: Record<string, any> | undefined
+): MoreInformation => ({
+  notes: data?.notes,
+  definitionImg: data?.definitionImg,
+  howMeasured: data?.howMeasured,
+  policyRef: data?.policyRef,
+  info: data?.info,
+});
 
 export interface Option {
   val?: string;
