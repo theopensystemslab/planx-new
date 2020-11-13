@@ -141,7 +141,10 @@ const isCyclic = (graph: Graph): boolean => {
 
 const _add = (
   draft: Graph,
-  { id = uniqueId(), ...nodeData }: { id?: string },
+  {
+    id = uniqueId(),
+    ...nodeData
+  }: { id?: string; type?: number; data?: object },
   {
     children = [],
     parent,
@@ -172,7 +175,10 @@ const _add = (
 };
 
 export const add = (
-  { id = uniqueId(), ...nodeData },
+  {
+    id = uniqueId(),
+    ...nodeData
+  }: { id?: string; type?: number; data?: object },
   {
     children = [],
     parent = ROOT_NODE_KEY,
@@ -346,9 +352,15 @@ const _update = (
         }
       }
 
-      children.forEach(({ id, ...newData }) =>
-        _update(draft, id as string, newData.data || newData)
-      );
+      children.forEach(({ id: childId, ...newData }) => {
+        if (draft[childId]) {
+          _update(draft, childId as string, newData.data || newData, {
+            removeKeyIfMissing,
+          });
+        } else {
+          _add(draft, { id: childId as string, ...newData }, { parent: id });
+        }
+      });
     }
 
     if (node.data) {
