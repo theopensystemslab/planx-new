@@ -1,10 +1,10 @@
 import { useQuery } from "@apollo/client";
+import MoreVert from "@material-ui/icons/MoreVert";
 import classNames from "classnames";
 import gql from "graphql-tag";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useDrag } from "react-dnd";
-import MoreVertical from "react-feather/dist/icons/more-vertical";
 import { Link } from "react-navi";
 
 import { rootFlowPath } from "../../../../../routes/utils";
@@ -71,7 +71,7 @@ const ExternalPortal: React.FC<any> = React.memo(
             <span>{href}</span>
           </Link>
           <Link href={editHref} prefetch={false}>
-            <MoreVertical />
+            <MoreVert />
           </Link>
         </li>
       </>
@@ -123,7 +123,7 @@ const InternalPortal: React.FC<any> = (props) => {
           <span>{props.data.text}</span>
         </Link>
         <Link href={editHref} prefetch={false}>
-          <MoreVertical />
+          <MoreVert />
         </Link>
       </li>
     </>
