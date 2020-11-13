@@ -91,7 +91,11 @@ function Component(props: Props) {
   }
   return (
     <Card>
-      <Init setState={setState} setOtherPayments={setOtherPayments} />
+      <Init
+        setState={setState}
+        setOtherPayments={setOtherPayments}
+        {...props}
+      />
     </Card>
   );
 }
@@ -131,6 +135,9 @@ function Init(props) {
           });
           props.setState(option);
         }}
+        info={props.info}
+        policyRef={props.policyRef}
+        howMeasured={props.howMeasured}
       />
       <p style={{ textAlign: "right", cursor: "pointer" }}>
         <a style={{ color: "#000A" }} onClick={() => setIsOpen((x) => !x)}>

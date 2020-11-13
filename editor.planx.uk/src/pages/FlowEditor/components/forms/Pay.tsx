@@ -9,32 +9,19 @@ import {
   RichTextInput,
 } from "ui";
 
-import { TYPES } from "../../data/types";
+import { parseMoreInformation, Pay, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 
 function Component(props) {
-  const formik = useFormik<{
-    color: string;
-    definitionImg: string;
-    description: string;
-    fn?: string;
-    howMeasured: string;
-    info: string;
-    notes: string;
-    policyRef: string;
-    title: string;
-  }>({
+  const formik = useFormik<Pay>({
     initialValues: {
       // TODO: improve runtime validation here (joi, io-ts)
       title: props.node?.data?.title || "",
       description: props.node?.data?.description || "",
       color: props.node?.data?.color || "#EFEFEF",
-      notes: props.node?.data?.notes || "",
-      definitionImg: props.node?.data?.definitionImg,
-      howMeasured: props.node?.data?.howMeasured,
-      policyRef: props.node?.data?.policyRef,
-      info: props.node?.data?.info,
+      fn: props.node?.data?.fn,
+      ...parseMoreInformation(props.node?.data),
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {

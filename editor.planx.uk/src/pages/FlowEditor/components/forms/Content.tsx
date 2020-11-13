@@ -8,7 +8,7 @@ import {
   ModalSectionContent,
   RichTextInput,
 } from "../../../../ui";
-import { Content, TYPES } from "../../data/types";
+import { Content, parseMoreInformation, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 
@@ -23,11 +23,7 @@ const ContentComponent: React.FC<Props> = (props) => {
     initialValues: {
       // TODO: improve runtime validation here (joi, io-ts)
       content: props.node?.data?.content || "",
-      notes: props.node?.data?.notes || "",
-      policyRef: props.node?.data?.policyRef || "",
-      howMeasured: props.node?.data?.howMeasured || "",
-      info: props.node?.data?.info || "",
-      definitionImg: props.node?.data?.definitionImg || "",
+      ...parseMoreInformation(props.node?.data),
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
