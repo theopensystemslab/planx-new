@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import React from "react";
 
-import flags from "../../data/flags";
+import { flatFlags } from "../../data/flags";
 import { TYPES } from "../../data/types";
 
 export interface Props {
@@ -18,7 +18,7 @@ const Filter: React.FC<Props> = (props) => {
         const children = props.id
           ? undefined
           : [
-              ...flags,
+              ...flatFlags,
               {
                 category: "Planning permission",
                 text: "(No Result)",
