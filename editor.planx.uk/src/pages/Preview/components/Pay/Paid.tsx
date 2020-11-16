@@ -45,7 +45,7 @@ function Component(props) {
         <span>Paid</span>11th November 2020 14.32
       </p>
       <p>
-        <span>GOV.UK Paymente reference</span>JG669323
+        <span>GOV.UK Payment reference</span>JG669323
       </p>
       <p>
         <span>Application reference</span>LBH-2020-LDC-100
