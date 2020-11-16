@@ -1,6 +1,7 @@
 import Box from "@material-ui/core/Box";
 import { InputBaseProps } from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
+import classNames from "classnames";
 import { convertToRaw, EditorState } from "draft-js";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
@@ -18,6 +19,7 @@ import { levenshteinDistance } from "../utils";
 interface Props extends InputBaseProps {
   className?: string;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
+  bordered?: boolean;
 }
 
 const rteContainerStyles = makeStyles((theme) => ({
@@ -39,6 +41,9 @@ const rteContainerStyles = makeStyles((theme) => ({
     outline: "none",
     boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
     width: "100%",
+  },
+  bordered: {
+    border: `2px solid #000`,
   },
   editorFocus: {
     boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
@@ -91,7 +96,10 @@ const RichTextInput: React.FC<
          */
         ...({ ref: containerRef } as any)
       }
-      className={focused ? classes.focused : classes.regular}
+      className={classNames(
+        focused && classes.focused,
+        props.bordered && classes.bordered
+      )}
     >
       <MUIRichTextEditor
         onFocus={() => {

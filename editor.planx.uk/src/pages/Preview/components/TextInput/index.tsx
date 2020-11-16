@@ -1,7 +1,9 @@
 import Button from "@material-ui/core/Button";
 import React, { useMemo, useState } from "react";
 
-import { Input, InputRow } from "../../../../ui";
+import Input from "../../../../ui/Input";
+import InputRow from "../../../../ui/InputRow";
+import RichTextInput from "../../../../ui/RichTextInput";
 import { TextInput } from "../../../FlowEditor/data/types";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
@@ -34,16 +36,26 @@ const TextInputComponent: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
       />
       <InputRow>
-        <Input
-          type={props.type === "email" ? "email" : "text"}
-          grow={props.type === "long"}
-          value={value}
-          placeholder={props.placeholder || "Type your answer"}
-          bordered
-          onChange={(ev) => {
-            setValue(ev.target.value);
-          }}
-        />
+        {props.type === "long" ? (
+          <RichTextInput
+            value={value}
+            placeholder={props.placeholder || "Type your answer"}
+            bordered
+            onChange={(ev) => {
+              setValue(ev.target.value);
+            }}
+          />
+        ) : (
+          <Input
+            type={props.type === "email" ? "email" : "text"}
+            value={value}
+            placeholder={props.placeholder || "Type your answer"}
+            bordered
+            onChange={(ev) => {
+              setValue(ev.target.value);
+            }}
+          />
+        )}
       </InputRow>
       <Button
         variant="contained"
