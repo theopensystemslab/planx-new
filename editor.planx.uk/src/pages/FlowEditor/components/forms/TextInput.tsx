@@ -1,15 +1,14 @@
 import { useFormik } from "formik";
 import React from "react";
 
-import {
-  Input,
-  InputRow,
-  InternalNotes,
-  ModalSection,
-  ModalSectionContent,
-  RichTextInput,
-} from "../../../../ui";
-import { parseMoreInformation, TextInput, TYPES } from "../../data/types";
+import Input from "../../../../ui/Input";
+import InputRow from "../../../../ui/InputRow";
+import InternalNotes from "../../../../ui/InternalNotes";
+import ModalSection from "../../../../ui/ModalSection";
+import ModalSectionContent from "../../../../ui/ModalSectionContent";
+import OptionButton from "../../../../ui/OptionButton";
+import RichTextInput from "../../../../ui/RichTextInput";
+import { parseTextInput, TYPES } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 
@@ -19,98 +18,38 @@ export interface Props {
   node?: any;
 }
 
-export interface TextInputEditorProps {
-  value: TextInput;
-  onChange: (newValue: TextInput) => void;
+interface RadioProps<T> {
+  value?: T;
+  options: Array<{ label: string; value: T }>;
+  onChange: (newValue: T) => void;
 }
 
-const TextInputEditor: React.FC<TextInputEditorProps> = (props) => {
+function Radio<T>(props: RadioProps<T>) {
   return (
-    <>
-      <ModalSection>
-        <ModalSectionContent title="Text Input" Icon={ICONS[TYPES.TextInput]}>
-          <InputRow>
-            <Input
-              format="large"
-              name="text"
-              value={props.value.title}
-              placeholder="Title"
-              onChange={(ev) => {
-                props.onChange({
-                  ...props.value,
-                  title: ev.target.value,
-                });
-              }}
-            />
-          </InputRow>
-          <InputRow>
-            <RichTextInput
-              placeholder="Description"
-              value={props.value.description}
-              onChange={(ev) => {
-                props.onChange({
-                  ...props.value,
-                  description: ev.target.value,
-                });
-              }}
-            />
-          </InputRow>
-          <InputRow>
-            <RichTextInput
-              placeholder="Placeholder"
-              value={props.value.placeholder}
-              onChange={(ev) => {
-                props.onChange({
-                  ...props.value,
-                  placeholder: ev.target.value,
-                });
-              }}
-            />
-          </InputRow>
-        </ModalSectionContent>
-      </ModalSection>
-      <MoreInformation
-        changeField={(ev: any) => {
-          props.onChange({
-            ...props.value,
-            [ev.target.name]: ev.target.value,
-          });
-        }}
-        definitionImg={props.value.definitionImg}
-        howMeasured={props.value.howMeasured}
-        policyRef={props.value.policyRef}
-        info={props.value.info}
-      />
-      <InternalNotes
-        name="notes"
-        onChange={(ev) => {
-          props.onChange({
-            ...props.value,
-            notes: ev.target.value,
-          });
-        }}
-        value={props.value.notes}
-      />
-    </>
+    <div>
+      {props.options.map((option, index) => (
+        <OptionButton
+          selected={props.value === option.value}
+          key={index}
+          onClick={() => {
+            props.onChange(option.value);
+          }}
+        >
+          {option.label}
+        </OptionButton>
+      ))}
+    </div>
   );
-};
+}
 
 const TextInputComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
-    initialValues: {
-      text: {
-        // TODO: improve runtime validation here (joi, io-ts)
-        title: props.node?.data?.title || "",
-        description: props.node?.data?.description || "",
-        placeholder: props.node?.data?.placeholder || "",
-        ...parseMoreInformation(props.node?.data),
-      },
-    },
+    initialValues: parseTextInput(props.node?.data),
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
         props.handleSubmit({
           type: TYPES.TextInput,
-          data: newValues.text,
+          data: newValues,
         });
       }
     },
@@ -118,11 +57,78 @@ const TextInputComponent: React.FC<Props> = (props) => {
   });
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
-      <TextInputEditor
-        value={formik.values.text}
-        onChange={(content) => {
-          formik.setFieldValue("text", content);
-        }}
+      <ModalSection>
+        <ModalSectionContent title="Text Input" Icon={ICONS[TYPES.TextInput]}>
+          <InputRow>
+            <Input
+              format="large"
+              name="title"
+              value={formik.values.title}
+              placeholder="Title"
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+          <InputRow>
+            <RichTextInput
+              placeholder="Description"
+              name="description"
+              value={formik.values.description}
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+          <InputRow>
+            <RichTextInput
+              placeholder="Placeholder"
+              name="placeholder"
+              value={formik.values.placeholder}
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+          <InputRow>
+            <Input
+              // required
+              format="data"
+              name="fn"
+              value={formik.values.fn}
+              placeholder="Data Field"
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+          <InputRow>
+            <Radio
+              options={[
+                {
+                  value: "short",
+                  label: "Short",
+                },
+                {
+                  value: "long",
+                  label: "Long",
+                },
+                {
+                  value: "email",
+                  label: "Email",
+                },
+              ]}
+              value={formik.values.type}
+              onChange={(newType) => {
+                formik.setFieldValue("type", newType);
+              }}
+            />
+          </InputRow>
+        </ModalSectionContent>
+      </ModalSection>
+      <MoreInformation
+        changeField={formik.handleChange}
+        definitionImg={formik.values.definitionImg}
+        howMeasured={formik.values.howMeasured}
+        policyRef={formik.values.policyRef}
+        info={formik.values.info}
+      />
+      <InternalNotes
+        name="notes"
+        value={formik.values.notes}
+        onChange={formik.handleChange}
       />
     </form>
   );
