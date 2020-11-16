@@ -1,4 +1,6 @@
 import { useFormik } from "formik";
+import { parseTextInput } from "planx-nodes/TextInput/types";
+import { TYPES } from "planx-nodes/types";
 import React from "react";
 
 import Input from "../../../../ui/Input";
@@ -8,8 +10,6 @@ import ModalSection from "../../../../ui/ModalSection";
 import ModalSectionContent from "../../../../ui/ModalSectionContent";
 import OptionButton from "../../../../ui/OptionButton";
 import RichTextInput from "../../../../ui/RichTextInput";
-import { parseTextInput } from "planx-nodes/TextInput/types";
-import { TYPES } from "planx-nodes/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 

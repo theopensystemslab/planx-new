@@ -1,10 +1,10 @@
 import Button from "@material-ui/core/Button";
+import { TextInput } from "planx-nodes/TextInput/types";
 import React, { useMemo, useState } from "react";
 
 import Input from "../../../../ui/Input";
 import InputRow from "../../../../ui/InputRow";
 import RichTextInput from "../../../../ui/RichTextInput";
-import { TextInput } from "planx-nodes/TextInput/types";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 
