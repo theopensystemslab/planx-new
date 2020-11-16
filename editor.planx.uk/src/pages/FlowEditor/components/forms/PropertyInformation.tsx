@@ -1,13 +1,13 @@
 import { useFormik } from "formik";
 import React from "react";
 
+import { parseMoreInformation } from "../../../../planx-nodes/shared";
 import { TYPES } from "../../../../planx-nodes/types";
 import {
   InternalNotes,
   ModalSection,
   ModalSectionContent,
 } from "../../../../ui";
-import { parseMoreInformation } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 

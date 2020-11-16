@@ -10,7 +10,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import React, { Suspense } from "react";
 import Input from "ui/Input";
 
-import { MoreInformation } from "../../../FlowEditor/data/types";
+import { Pay } from "../../../../planx-nodes/Pay/types";
 import Question from "../Question";
 import Card from "../shared/Card";
 
@@ -66,7 +66,7 @@ const OPTIONS = {
 const Summary = React.lazy(() => import("./Summary"));
 const Paid = React.lazy(() => import("./Paid"));
 
-interface Props extends MoreInformation {
+interface Props extends Pay {
   handleSubmit: (any) => any;
 }
 

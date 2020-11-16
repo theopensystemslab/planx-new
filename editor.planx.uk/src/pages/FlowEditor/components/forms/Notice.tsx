@@ -1,6 +1,8 @@
 import { useFormik } from "formik";
 import React from "react";
 
+import { Notice } from "../../../../planx-nodes/Notice/types";
+import { parseMoreInformation } from "../../../../planx-nodes/shared";
 import { TYPES } from "../../../../planx-nodes/types";
 import {
   ColorPicker,
@@ -12,7 +14,6 @@ import {
   OptionButton,
   RichTextInput,
 } from "../../../../ui";
-import { Notice, parseMoreInformation } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 

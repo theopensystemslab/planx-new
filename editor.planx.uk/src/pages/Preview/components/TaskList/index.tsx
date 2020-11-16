@@ -7,7 +7,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import classNames from "classnames";
 import React from "react";
 
-import { TaskList } from "../../../FlowEditor/data/types";
+import { TaskList } from "../../../../planx-nodes/TaskList/types";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 

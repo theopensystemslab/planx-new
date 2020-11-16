@@ -5,7 +5,7 @@ import ErrorOutline from "@material-ui/icons/ErrorOutline";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
-import { Notice } from "../../../FlowEditor/data/types";
+import { Notice } from "../../../../planx-nodes/Notice/types";
 import { useStore } from "../../../FlowEditor/lib/store";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";

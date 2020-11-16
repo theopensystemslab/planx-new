@@ -8,8 +8,8 @@ import ModalSection from "../../../../ui/ModalSection";
 import ModalSectionContent from "../../../../ui/ModalSectionContent";
 import OptionButton from "../../../../ui/OptionButton";
 import RichTextInput from "../../../../ui/RichTextInput";
-import { TYPES } from "planx-nodes/types";
 import { parseTextInput } from "planx-nodes/TextInput/types";
+import { TYPES } from "planx-nodes/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 

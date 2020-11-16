@@ -2,8 +2,9 @@ import Button from "@material-ui/core/Button";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 
+import { Group } from "../../../../planx-nodes/Checklist/types";
+import { Option } from "../../../../planx-nodes/shared";
 import { ExpandableList, ExpandableListItem } from "../../../../ui";
-import { Group, Option } from "../../../FlowEditor/data/types";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 import InnerCheckbox from "./InnerCheckbox";

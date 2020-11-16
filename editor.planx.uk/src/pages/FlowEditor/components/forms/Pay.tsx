@@ -9,8 +9,9 @@ import {
   RichTextInput,
 } from "ui";
 
+import { Pay } from "../../../../planx-nodes/Pay/types";
+import { parseMoreInformation } from "../../../../planx-nodes/shared";
 import { TYPES } from "../../../../planx-nodes/types";
-import { parseMoreInformation, Pay } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 

@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 
+import { parseMoreInformation } from "../../../../planx-nodes/shared";
 import { TYPES } from "../../../../planx-nodes/types";
 import { FormikHookReturn } from "../../../../types";
 import {
@@ -15,7 +16,6 @@ import {
   ModalSectionContent,
   RichTextInput,
 } from "../../../../ui";
-import { parseMoreInformation } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation, PermissionSelect } from "./shared";
 

@@ -11,7 +11,7 @@ import { nanoid } from "nanoid";
 import React from "react";
 import { useDropzone } from "react-dropzone";
 
-import { MoreInformation } from "../../../FlowEditor/data/types";
+import { MoreInformation } from "../../../../planx-nodes/shared";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 

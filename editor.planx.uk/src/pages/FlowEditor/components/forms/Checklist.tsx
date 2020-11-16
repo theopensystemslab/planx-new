@@ -8,6 +8,12 @@ import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
 import React, { useEffect, useRef } from "react";
 
+import {
+  Checklist,
+  Group,
+  toggleExpandableChecklist,
+} from "../../../../planx-nodes/Checklist/types";
+import { Option, parseMoreInformation } from "../../../../planx-nodes/shared";
 import { TYPES } from "../../../../planx-nodes/types";
 import { FormikHookReturn } from "../../../../types";
 import {
@@ -24,13 +30,6 @@ import {
   RichTextInput,
   SimpleMenu,
 } from "../../../../ui";
-import {
-  Checklist,
-  Group,
-  Option,
-  parseMoreInformation,
-  toggleExpandableChecklist,
-} from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation, PermissionSelect } from "./shared";
 
