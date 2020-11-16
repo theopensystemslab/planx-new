@@ -6,7 +6,7 @@ import { TYPES } from "@planx/components/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
-import { useStore } from "../FlowEditor/lib/store";
+import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";
 import FileUpload from "./components/FileUpload";
 import FindProperty from "./components/FindProperty";
@@ -17,7 +17,13 @@ import Result from "./components/Result";
 
 let uprn;
 
-const Node: React.FC<any> = (props) => {
+export type handleSubmit = (_?: componentOutput) => void;
+interface Props {
+  handleSubmit: handleSubmit;
+  node: node;
+}
+
+const Node: React.FC<any> = (props: Props) => {
   const [childNodesOf, reportData] = useStore((state) => [
     state.childNodesOf,
     state.reportData,
@@ -25,15 +31,13 @@ const Node: React.FC<any> = (props) => {
 
   const resetPreview = useStore((state) => state.resetPreview);
 
-  const type = props.type as TYPES;
-
   const allProps = {
     ...props.node.data,
     resetPreview,
     handleSubmit: props.handleSubmit,
   };
 
-  switch (type) {
+  switch (props.node.type) {
     case TYPES.Checklist:
       const childNodes = childNodesOf(props.node.id);
       return (
@@ -72,19 +76,24 @@ const Node: React.FC<any> = (props) => {
         <FindProperty
           handleSubmit={(data) => {
             uprn = data;
-            props.handleSubmit([props.id]);
+            props.handleSubmit([props.node.id]);
           }}
         />
       );
 
     case TYPES.Notice:
-      return <Notice {...allProps} />;
+      return (
+        <Notice
+          {...allProps}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
+      );
 
     case TYPES.Pay:
       return (
         <Pay
           {...allProps}
-          handleSubmit={() => props.handleSubmit([props.id])}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
         />
       );
 
@@ -92,7 +101,7 @@ const Node: React.FC<any> = (props) => {
       return (
         <PropertyInformation
           UPRN={uprn}
-          handleSubmit={() => props.handleSubmit([props.id])}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
         />
       );
 
@@ -103,7 +112,7 @@ const Node: React.FC<any> = (props) => {
 
       return (
         <Result
-          handleSubmit={props.handleSubmit}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
           headingColor={{
             text: flag.color,
             background: flag.bgColor,
@@ -119,7 +128,7 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question
           {...allProps}
-          responses={childNodesOf(props.id).map((n, i) => ({
+          responses={childNodesOf(props.node.id).map((n, i) => ({
             id: n.id,
             responseKey: i + 1,
             title: n.data?.text,
@@ -155,7 +164,7 @@ const Node: React.FC<any> = (props) => {
       return null;
     default:
       console.error({ nodeNotFound: props });
-      return exhaustiveCheck(type);
+      return exhaustiveCheck(props.node.type);
   }
 };
 

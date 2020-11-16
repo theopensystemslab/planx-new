@@ -9,6 +9,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { TaskList } from "@planx/components/TaskList/types";
 import { PublicProps } from "@planx/components/ui";
 import classNames from "classnames";
+import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
 export type Props = PublicProps<TaskList>;
@@ -219,7 +220,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
         color="primary"
         size="large"
         type="submit"
-        onClick={props.handleSubmit}
+        onClick={() => props.handleSubmit([])}
       >
         Continue
       </Button>

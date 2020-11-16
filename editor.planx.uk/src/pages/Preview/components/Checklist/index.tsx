@@ -3,13 +3,14 @@ import { Checklist } from "@planx/components/Checklist/types";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
+import type { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import Checkbox from "ui/Checkbox";
 
 import { ExpandableList, ExpandableListItem } from "../../../../ui";
 
 interface Props extends Checklist {
-  handleSubmit?;
+  handleSubmit: handleSubmit;
 }
 
 function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {

@@ -1,6 +1,7 @@
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
+import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
 import DecisionButton from "./DecisionButton";
@@ -17,7 +18,7 @@ interface IQuestion {
     title: string;
     description?: string;
   }[];
-  handleSubmit?;
+  handleSubmit: handleSubmit;
 }
 
 const Question: React.FC<IQuestion> = (props) => {

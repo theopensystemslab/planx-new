@@ -1,7 +1,7 @@
 import React from "react";
 
 import Header from "../../components/Header";
-import { useStore } from "../FlowEditor/lib/store";
+import { componentOutput, useStore } from "../FlowEditor/lib/store";
 import Node from "./Node";
 
 const Questions = () => {
@@ -17,7 +17,7 @@ const Questions = () => {
     <Node
       node={node}
       key={node.id}
-      handleSubmit={(values) => {
+      handleSubmit={(values: componentOutput) => {
         record(node.id, values);
       }}
       {...node}

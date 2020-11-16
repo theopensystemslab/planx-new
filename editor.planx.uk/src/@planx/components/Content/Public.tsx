@@ -21,7 +21,7 @@ const ContentComponent: React.FC<Props> = (props) => {
         color="primary"
         size="large"
         type="submit"
-        onClick={props.handleSubmit}
+        onClick={() => props.handleSubmit()}
       >
         Continue
       </Button>
