@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import React from "react";
 
-import { TYPES } from "../../data/types";
+import { TYPES } from "../../../../planx-nodes/types";
 
 export interface Props {
   id?: string;

@@ -19,9 +19,9 @@ import create from "zustand";
 import vanillaCreate from "zustand/vanilla";
 
 import { client } from "../../../lib/graphql";
+import { TYPES } from "../../../planx-nodes/types";
 import { FlowLayout } from "../components/Flow";
 import { flatFlags } from "../data/flags";
-import { TYPES } from "../data/types";
 import { connectToDB, getConnection } from "./sharedb";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];

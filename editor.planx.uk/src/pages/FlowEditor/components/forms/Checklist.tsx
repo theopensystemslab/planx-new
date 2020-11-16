@@ -8,6 +8,7 @@ import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
 import React, { useEffect, useRef } from "react";
 
+import { TYPES } from "../../../../planx-nodes/types";
 import { FormikHookReturn } from "../../../../types";
 import {
   ImgInput,
@@ -29,7 +30,6 @@ import {
   Option,
   parseMoreInformation,
   toggleExpandableChecklist,
-  TYPES,
 } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation, PermissionSelect } from "./shared";

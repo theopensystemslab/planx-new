@@ -10,7 +10,7 @@ import ReportProblemOutlined from "@material-ui/icons/ReportProblemOutlined";
 import SearchOutlined from "@material-ui/icons/SearchOutlined";
 import TextFields from "@material-ui/icons/TextFields";
 
-import { TYPES } from "../data/types";
+import { TYPES } from "../../../planx-nodes/types";
 
 // XXX: We define the Icon type in terms of one of the Icons so as not to have to repeat ourselves
 type Icon = typeof CheckBoxOutlined;

@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
 import React from "react";
 
+import { TYPES } from "../../../../planx-nodes/types";
 import {
   InputRow,
   InternalNotes,
@@ -8,7 +9,7 @@ import {
   ModalSectionContent,
   RichTextInput,
 } from "../../../../ui";
-import { Content, parseMoreInformation, TYPES } from "../../data/types";
+import { Content, parseMoreInformation } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 

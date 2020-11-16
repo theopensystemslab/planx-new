@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 import { client } from "../lib/graphql";
-import { TYPES } from "../pages/FlowEditor/data/types";
+import { TYPES } from "../planx-nodes/types";
 
 const getFlowData = async (id) => {
   const { data } = await client.query({

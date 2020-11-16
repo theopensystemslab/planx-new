@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 
-import { TYPES } from "../../data/types";
+import { TYPES } from "../../../../planx-nodes/types";
 import ExternalPortalForm from "./ExternalPortal";
 
 test("adding an external portal", async () => {

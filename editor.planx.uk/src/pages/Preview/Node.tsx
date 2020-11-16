@@ -1,7 +1,7 @@
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
-import { TYPES } from "../FlowEditor/data/types";
+import { TYPES } from "../../planx-nodes/types";
 import { useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";
 import Content from "./components/Content";

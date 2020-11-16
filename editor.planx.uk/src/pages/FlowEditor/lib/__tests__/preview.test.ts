@@ -1,5 +1,4 @@
-import { TYPES } from "pages/FlowEditor/data/types";
-
+import { TYPES } from "../../../../planx-nodes/types";
 import { vanillaStore } from "../store";
 
 const { getState, setState } = vanillaStore;

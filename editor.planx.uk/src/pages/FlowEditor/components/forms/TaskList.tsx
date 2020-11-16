@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
 
+import { TYPES } from "../../../../planx-nodes/types";
 import {
   Input,
   InputRow,
@@ -12,7 +13,7 @@ import {
   RichTextInput,
 } from "../../../../ui";
 import { EditorProps } from "../../../../ui/ListManager";
-import { parseMoreInformation, Task, TYPES } from "../../data/types";
+import { parseMoreInformation, Task } from "../../data/types";
 import { ICONS } from "../shared";
 import { MoreInformation } from "./shared";
 

@@ -10,8 +10,9 @@ import Close from "@material-ui/icons/CloseOutlined";
 import React from "react";
 import { useNavigation } from "react-navi";
 
+import { TYPES } from "../../../../planx-nodes/types";
 import { rootFlowPath } from "../../../../routes/utils";
-import { fromSlug, SLUGS, TYPES } from "../../data/types";
+import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
 import { parseFormValues } from "./shared";
 
