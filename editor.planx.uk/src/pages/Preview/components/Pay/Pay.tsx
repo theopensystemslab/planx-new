@@ -68,7 +68,7 @@ interface Props extends MoreInformation {
 }
 
 function Component(props: Props) {
-  const [state, setState] = React.useState("init");
+  const [state, setState] = React.useState<"init" | "summary" | "paid">("init");
   const [otherPayments, setOtherPayments] = React.useState({});
   const Route = OPTIONS[state]?.component;
   // TODO: When connecting this component to the flow and to the backend
