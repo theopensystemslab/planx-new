@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     "& a": {
       color: theme.palette.primary.contrastText,
     },
+    "& .marginBottom": {
+      marginBottom: theme.spacing(4),
+    },
   },
   drawerPaper: {
     boxSizing: "border-box",
@@ -146,16 +149,12 @@ function Init(props) {
   return (
     <div className={classes.root}>
       <div className={classes.banner}>
-        <Typography variant="subtitle1" gutterBottom>
+        <Typography variant="subtitle1" gutterBottom className="marginBottom">
           The fee for this application is
         </Typography>
-        <br />
-        <br />
-        <Typography variant="h1" gutterBottom>
+        <Typography variant="h1" gutterBottom className="marginBottom">
           £206
         </Typography>
-        <br />
-        <br />
         <Typography>
           <a href="#">How are the planning fees calculated? ↗︎</a>
         </Typography>
