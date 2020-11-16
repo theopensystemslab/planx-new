@@ -1,7 +1,7 @@
 import Button from "@material-ui/core/Button";
+import { Content } from "planx-nodes/Content/types";
 import React from "react";
 
-import { Content } from "../../../../planx-nodes/Content/types";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 

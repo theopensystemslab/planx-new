@@ -5,9 +5,9 @@ import Collapse from "@material-ui/core/Collapse";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import classNames from "classnames";
+import { TaskList } from "planx-nodes/TaskList/types";
 import React from "react";
 
-import { TaskList } from "../../../../planx-nodes/TaskList/types";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 

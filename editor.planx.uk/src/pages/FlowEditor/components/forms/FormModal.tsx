@@ -7,10 +7,10 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/CloseOutlined";
+import { TYPES } from "planx-nodes/types";
 import React from "react";
 import { useNavigation } from "react-navi";
 
-import { TYPES } from "../../../../planx-nodes/types";
 import { rootFlowPath } from "../../../../routes/utils";
 import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";

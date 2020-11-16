@@ -3,18 +3,18 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Delete from "@material-ui/icons/Delete";
 import { useFormik } from "formik";
+import {
+  Checklist,
+  Group,
+  toggleExpandableChecklist,
+} from "planx-nodes/Checklist/types";
+import { Option, parseMoreInformation } from "planx-nodes/shared";
+import { TYPES } from "planx-nodes/types";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
 import React, { useEffect, useRef } from "react";
 
-import {
-  Checklist,
-  Group,
-  toggleExpandableChecklist,
-} from "../../../../planx-nodes/Checklist/types";
-import { Option, parseMoreInformation } from "../../../../planx-nodes/shared";
-import { TYPES } from "../../../../planx-nodes/types";
 import { FormikHookReturn } from "../../../../types";
 import {
   ImgInput,

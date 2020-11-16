@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { TYPES } from "planx-nodes/types";
 import React from "react";
 import {
   Input,
@@ -9,7 +10,6 @@ import {
   RichTextInput,
 } from "ui";
 
-import { TYPES } from "../../../../../planx-nodes/types";
 import { ICONS } from "../../shared";
 import { MoreInformation } from "../shared";
 

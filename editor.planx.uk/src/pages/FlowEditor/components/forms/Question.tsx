@@ -1,8 +1,8 @@
 import { useFormik } from "formik";
+import { parseMoreInformation } from "planx-nodes/shared";
+import { TYPES } from "planx-nodes/types";
 import React, { useEffect, useRef } from "react";
 
-import { parseMoreInformation } from "../../../../planx-nodes/shared";
-import { TYPES } from "../../../../planx-nodes/types";
 import { FormikHookReturn } from "../../../../types";
 import {
   ImgInput,

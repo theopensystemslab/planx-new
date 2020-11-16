@@ -1,8 +1,8 @@
 import { useFormik } from "formik";
+import { TYPES } from "planx-nodes/types";
 import React from "react";
 import InputField from "ui/InputField";
 
-import { TYPES } from "../../../../planx-nodes/types";
 import { FormError } from "./shared";
 
 interface Flow {

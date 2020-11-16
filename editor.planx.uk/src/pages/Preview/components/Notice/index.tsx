@@ -2,10 +2,10 @@ import { mostReadable } from "@ctrl/tinycolor";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import ErrorOutline from "@material-ui/icons/ErrorOutline";
+import { Notice } from "planx-nodes/Notice/types";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
-import { Notice } from "../../../../planx-nodes/Notice/types";
 import { useStore } from "../../../FlowEditor/lib/store";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";

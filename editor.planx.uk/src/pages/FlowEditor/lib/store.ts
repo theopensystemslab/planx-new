@@ -15,11 +15,11 @@ import {
   ROOT_NODE_KEY,
   update,
 } from "planx-graph";
+import { TYPES } from "planx-nodes/types";
 import create from "zustand";
 import vanillaCreate from "zustand/vanilla";
 
 import { client } from "../../../lib/graphql";
-import { TYPES } from "../../../planx-nodes/types";
 import { FlowLayout } from "../components/Flow";
 import { flatFlags } from "../data/flags";
 import { connectToDB, getConnection } from "./sharedb";

@@ -1,4 +1,5 @@
-import { TYPES } from "../../../../planx-nodes/types";
+import { TYPES } from "planx-nodes/types";
+
 import { vanillaStore } from "../store";
 
 const { getState, setState } = vanillaStore;

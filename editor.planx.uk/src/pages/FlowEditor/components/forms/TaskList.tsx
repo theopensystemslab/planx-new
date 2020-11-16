@@ -1,10 +1,10 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { useFormik } from "formik";
+import { parseMoreInformation } from "planx-nodes/shared";
+import { Task } from "planx-nodes/TaskList/types";
+import { TYPES } from "planx-nodes/types";
 import React, { ChangeEvent } from "react";
 
-import { parseMoreInformation } from "../../../../planx-nodes/shared";
-import { Task } from "../../../../planx-nodes/TaskList/types";
-import { TYPES } from "../../../../planx-nodes/types";
 import {
   Input,
   InputRow,

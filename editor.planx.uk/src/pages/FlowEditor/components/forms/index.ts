@@ -1,6 +1,6 @@
+import { TYPES } from "planx-nodes/types";
 import React from "react";
 
-import { TYPES } from "../../../../planx-nodes/types";
 import { SLUGS } from "../../data/types";
 import Checklist from "./Checklist";
 import Content from "./Content";

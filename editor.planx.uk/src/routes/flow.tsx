@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import natsort from "natsort";
 import { compose, lazy, mount, route, withData, withView } from "navi";
+import { TYPES } from "planx-nodes/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 import { View } from "react-navi";
@@ -11,7 +12,6 @@ import components from "../pages/FlowEditor/components/forms";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import { SLUGS } from "../pages/FlowEditor/data/types";
 import { useStore } from "../pages/FlowEditor/lib/store";
-import { TYPES } from "../planx-nodes/types";
 import { makeTitle } from "./utils";
 
 const sorter = natsort({ insensitive: true });

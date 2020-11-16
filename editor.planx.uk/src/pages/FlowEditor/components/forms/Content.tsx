@@ -1,9 +1,9 @@
 import { useFormik } from "formik";
+import { Content } from "planx-nodes/Content/types";
+import { parseMoreInformation } from "planx-nodes/shared";
+import { TYPES } from "planx-nodes/types";
 import React from "react";
 
-import { Content } from "../../../../planx-nodes/Content/types";
-import { parseMoreInformation } from "../../../../planx-nodes/shared";
-import { TYPES } from "../../../../planx-nodes/types";
 import {
   InputRow,
   InternalNotes,

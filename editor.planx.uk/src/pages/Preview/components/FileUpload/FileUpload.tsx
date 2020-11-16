@@ -8,10 +8,10 @@ import CloudUpload from "@material-ui/icons/CloudUpload";
 import { uploadFile } from "api/upload";
 import classNames from "classnames";
 import { nanoid } from "nanoid";
+import { MoreInformation } from "planx-nodes/shared";
 import React from "react";
 import { useDropzone } from "react-dropzone";
 
-import { MoreInformation } from "../../../../planx-nodes/shared";
 import Card from "../shared/Card";
 import QuestionHeader from "../shared/QuestionHeader";
 
