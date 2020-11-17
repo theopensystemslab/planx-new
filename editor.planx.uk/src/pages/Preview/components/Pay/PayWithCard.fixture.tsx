@@ -1,6 +1,6 @@
+import Card from "planx-nodes/shared/Preview/Card";
 import React from "react";
 
-import Card from "../shared/Card";
 import PayWithCard from "./PayWithCard";
 
 export default function Fixture(props) {

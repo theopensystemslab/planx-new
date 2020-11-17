@@ -1,12 +1,12 @@
 import Button from "@material-ui/core/Button";
+import Card from "planx-nodes/shared/Preview/Card";
+import QuestionHeader from "planx-nodes/shared/Preview/QuestionHeader";
 import { TextInput } from "planx-nodes/TextInput/types";
 import React, { useMemo, useState } from "react";
 
 import Input from "../../../../ui/Input";
 import InputRow from "../../../../ui/InputRow";
 import RichTextInput from "../../../../ui/RichTextInput";
-import Card from "../shared/Card";
-import QuestionHeader from "../shared/QuestionHeader";
 
 interface Props extends TextInput {
   handleSubmit?: (value?: any) => void;

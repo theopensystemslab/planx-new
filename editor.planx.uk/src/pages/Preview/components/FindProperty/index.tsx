@@ -4,12 +4,12 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import useAxios from "axios-hooks";
 import natsort from "natsort";
+import Card from "planx-nodes/shared/Preview/Card";
+import FormInput from "planx-nodes/shared/Preview/FormInput";
+import QuestionHeader from "planx-nodes/shared/Preview/QuestionHeader";
 import { parse, toNormalised } from "postcode";
 import React from "react";
 
-import Card from "../shared/Card";
-import FormInput from "../shared/FormInput";
-import QuestionHeader from "../shared/QuestionHeader";
 import Map from "./Map";
 
 const sorter = natsort({ insensitive: true });

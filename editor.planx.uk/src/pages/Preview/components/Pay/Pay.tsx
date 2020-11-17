@@ -8,11 +8,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import { Pay } from "planx-nodes/Pay/types";
+import Card from "planx-nodes/shared/Preview/Card";
 import React, { Suspense } from "react";
 import Input from "ui/Input";
 
 import Question from "../Question";
-import Card from "../shared/Card";
 
 export default Component;
 
