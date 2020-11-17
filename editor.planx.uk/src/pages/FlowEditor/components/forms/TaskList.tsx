@@ -3,6 +3,8 @@ import { useFormik } from "formik";
 import { parseMoreInformation } from "planx-nodes/shared";
 import { Task } from "planx-nodes/TaskList/types";
 import { TYPES } from "planx-nodes/types";
+import { ICONS } from "planx-nodes/ui";
+import { InternalNotes, MoreInformation } from "planx-nodes/ui";
 import React, { ChangeEvent } from "react";
 
 import {
@@ -14,8 +16,6 @@ import {
   RichTextInput,
 } from "../../../../ui";
 import { EditorProps } from "../../../../ui/ListManager";
-import { ICONS } from "../shared";
-import { InternalNotes, MoreInformation } from "./shared";
 
 export interface Props {
   id?: string;

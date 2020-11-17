@@ -1,3 +1,5 @@
+import trim from "lodash/trim";
+
 export interface MoreInformation {
   howMeasured?: string;
   policyRef?: string;
@@ -24,3 +26,25 @@ export interface Option {
   text?: string;
   img?: string;
 }
+
+export const parseFormValues = (ob, defaultValues = {}) =>
+  ob.reduce((acc, [k, v]) => {
+    if (typeof v === "string") {
+      // Remove trailing lines (whitespace)
+      // and non-ASCII characters https://stackoverflow.com/a/44472084
+      v = trim(v).replace(/[\u{0080}-\u{FFFF}]/gu, "");
+      // don't store empty fields
+      if (v) acc[k] = v;
+    } else if (Array.isArray(v)) {
+      // if it's an array (i.e. options)
+      acc[k] = v
+        // only store fields that have values
+        .map((o) => parseFormValues(Object.entries(o)))
+        // don't store options with no values
+        .filter((o) => Object.keys(o).length > 0);
+    } else {
+      // it's a number or boolean etc
+      acc[k] = v;
+    }
+    return acc;
+  }, defaultValues);

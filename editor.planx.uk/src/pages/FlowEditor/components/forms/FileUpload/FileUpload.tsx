@@ -1,5 +1,7 @@
 import { useFormik } from "formik";
 import { TYPES } from "planx-nodes/types";
+import { ICONS } from "planx-nodes/ui";
+import { InternalNotes, MoreInformation } from "planx-nodes/ui";
 import React from "react";
 import {
   Input,
@@ -8,9 +10,6 @@ import {
   ModalSectionContent,
   RichTextInput,
 } from "ui";
-
-import { ICONS } from "../../shared";
-import { InternalNotes, MoreInformation } from "../shared";
 
 function Component(props) {
   const formik = useFormik<{

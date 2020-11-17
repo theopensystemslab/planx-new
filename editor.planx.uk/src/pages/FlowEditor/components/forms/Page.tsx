@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import { TYPES } from "planx-nodes/types";
+import { ICONS } from "planx-nodes/ui";
 import React from "react";
 
 import {
@@ -9,7 +10,6 @@ import {
   ModalSectionContent,
   RichTextInput,
 } from "../../../../ui";
-import { ICONS } from "../shared";
 
 interface Props {
   id?: string;

@@ -10,6 +10,8 @@ import {
 } from "planx-nodes/Checklist/types";
 import { Option, parseMoreInformation } from "planx-nodes/shared";
 import { TYPES } from "planx-nodes/types";
+import { ICONS } from "planx-nodes/ui";
+import { InternalNotes, MoreInformation } from "planx-nodes/ui";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -29,8 +31,7 @@ import {
   RichTextInput,
   SimpleMenu,
 } from "../../../../ui";
-import { ICONS } from "../shared";
-import { InternalNotes, MoreInformation, PermissionSelect } from "./shared";
+import { PermissionSelect } from "./shared";
 
 interface ChecklistOption {
   id?: string;

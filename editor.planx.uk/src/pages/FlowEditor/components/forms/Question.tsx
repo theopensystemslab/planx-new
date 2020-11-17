@@ -1,6 +1,8 @@
 import { useFormik } from "formik";
 import { parseMoreInformation } from "planx-nodes/shared";
 import { TYPES } from "planx-nodes/types";
+import { ICONS } from "planx-nodes/ui";
+import { InternalNotes, MoreInformation } from "planx-nodes/ui";
 import React, { useEffect, useRef } from "react";
 
 import { FormikHookReturn } from "../../../../types";
@@ -15,8 +17,7 @@ import {
   ModalSectionContent,
   RichTextInput,
 } from "../../../../ui";
-import { ICONS } from "../shared";
-import { InternalNotes, MoreInformation, PermissionSelect } from "./shared";
+import { PermissionSelect } from "./shared";
 
 interface Option {
   id?: string;
