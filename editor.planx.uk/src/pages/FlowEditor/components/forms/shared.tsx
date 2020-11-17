@@ -1,10 +1,12 @@
 import MenuItem from "@material-ui/core/MenuItem";
+import BorderColorIcon from "@material-ui/icons/BorderColor";
 import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import trim from "lodash/trim";
-import React from "react";
+import React, { ChangeEvent } from "react";
 
 import {
   ImgInput,
+  Input,
   InputGroup,
   InputRow,
   ModalSection,
@@ -82,6 +84,36 @@ export const MoreInformation = ({
             />
           </InputRow>
         </InputGroup>
+      </ModalSectionContent>
+    </ModalSection>
+  );
+};
+
+export interface InternalNotesProps {
+  name?: string;
+  value: string;
+  onChange: (ev: ChangeEvent<HTMLInputElement>) => void;
+}
+
+export const InternalNotes: React.FC<InternalNotesProps> = ({
+  name,
+  value,
+  onChange,
+}) => {
+  return (
+    <ModalSection>
+      <ModalSectionContent title="Internal Notes" Icon={BorderColorIcon}>
+        <InputRow>
+          <Input
+            // required
+            name={name}
+            value={value}
+            onChange={onChange}
+            multiline
+            placeholder="Internal Notes"
+            rows={3}
+          />
+        </InputRow>
       </ModalSectionContent>
     </ModalSection>
   );

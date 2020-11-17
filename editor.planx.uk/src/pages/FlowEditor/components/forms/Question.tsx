@@ -10,14 +10,13 @@ import {
   InputGroup,
   InputRow,
   InputRowItem,
-  InternalNotes,
   ListManager,
   ModalSection,
   ModalSectionContent,
   RichTextInput,
 } from "../../../../ui";
 import { ICONS } from "../shared";
-import { MoreInformation, PermissionSelect } from "./shared";
+import { InternalNotes, MoreInformation, PermissionSelect } from "./shared";
 
 interface Option {
   id?: string;

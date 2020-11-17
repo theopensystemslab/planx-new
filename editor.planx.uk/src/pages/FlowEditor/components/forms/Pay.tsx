@@ -6,14 +6,13 @@ import React from "react";
 import {
   Input,
   InputRow,
-  InternalNotes,
   ModalSection,
   ModalSectionContent,
   RichTextInput,
 } from "ui";
 
 import { ICONS } from "../shared";
-import { MoreInformation } from "./shared";
+import { InternalNotes, MoreInformation } from "./shared";
 
 function Component(props) {
   const formik = useFormik<Pay>({

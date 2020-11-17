@@ -8,14 +8,13 @@ import {
   ColorPicker,
   Input,
   InputRow,
-  InternalNotes,
   ModalSection,
   ModalSectionContent,
   OptionButton,
   RichTextInput,
 } from "../../../../ui";
 import { ICONS } from "../shared";
-import { MoreInformation } from "./shared";
+import { InternalNotes, MoreInformation } from "./shared";
 
 export interface Props {
   id?: string;

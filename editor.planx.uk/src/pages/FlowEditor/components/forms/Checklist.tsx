@@ -22,7 +22,6 @@ import {
   InputGroup,
   InputRow,
   InputRowItem,
-  InternalNotes,
   ListManager,
   ModalSection,
   ModalSectionContent,
@@ -31,7 +30,7 @@ import {
   SimpleMenu,
 } from "../../../../ui";
 import { ICONS } from "../shared";
-import { MoreInformation, PermissionSelect } from "./shared";
+import { InternalNotes, MoreInformation, PermissionSelect } from "./shared";
 
 interface ChecklistOption {
   id?: string;

@@ -7,7 +7,6 @@ export { default as InputGroup } from "./InputGroup";
 export { default as InputRow } from "./InputRow";
 export { default as InputRowItem } from "./InputRowItem";
 export { default as InputRowLabel } from "./InputRowLabel";
-export { default as InternalNotes } from "./InternalNotes";
 export { default as ListManager } from "./ListManager";
 export { default as ModalCard } from "./ModalCard";
 export { default as ModalSection } from "./ModalSection";

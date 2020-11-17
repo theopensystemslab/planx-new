@@ -3,13 +3,9 @@ import { parseMoreInformation } from "planx-nodes/shared";
 import { TYPES } from "planx-nodes/types";
 import React from "react";
 
-import {
-  InternalNotes,
-  ModalSection,
-  ModalSectionContent,
-} from "../../../../ui";
+import { ModalSection, ModalSectionContent } from "../../../../ui";
 import { ICONS } from "../shared";
-import { MoreInformation } from "./shared";
+import { InternalNotes, MoreInformation } from "./shared";
 
 export interface Props {
   id?: string;

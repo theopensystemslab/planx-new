@@ -8,7 +8,6 @@ import React, { ChangeEvent } from "react";
 import {
   Input,
   InputRow,
-  InternalNotes,
   ListManager,
   ModalSection,
   ModalSectionContent,
@@ -16,7 +15,7 @@ import {
 } from "../../../../ui";
 import { EditorProps } from "../../../../ui/ListManager";
 import { ICONS } from "../shared";
-import { MoreInformation } from "./shared";
+import { InternalNotes, MoreInformation } from "./shared";
 
 export interface Props {
   id?: string;
