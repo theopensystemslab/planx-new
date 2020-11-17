@@ -23,6 +23,16 @@ import {
   RichTextInput,
 } from "ui";
 
+export interface EditorProps<Type, Data> {
+  id?: string;
+  handleSubmit?: (data: { type: Type; data: Data }) => void;
+  node?: any;
+}
+
+export type PublicProps<Data, UserData> = Data & {
+  handleSubmit?: (value?: UserData) => void;
+};
+
 // XXX: We define the Icon type in terms of one of the Icons so as not to have to repeat ourselves
 type Icon = typeof CheckBoxOutlined;
 

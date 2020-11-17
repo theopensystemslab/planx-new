@@ -1,6 +1,6 @@
 import { parseTextInput, TextInput } from "@planx/components/TextInput/types";
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
+import { EditorProps, ICONS } from "@planx/components/ui";
 import { InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
@@ -11,11 +11,7 @@ import ModalSectionContent from "ui/ModalSectionContent";
 import OptionButton from "ui/OptionButton";
 import RichTextInput from "ui/RichTextInput";
 
-export interface Props {
-  id?: string;
-  handleSubmit?: (data: { type: TYPES.TextInput; data: TextInput }) => void;
-  node?: any;
-}
+export type Props = EditorProps<TYPES.TextInput, TextInput>;
 
 interface RadioProps<T> {
   value?: T;
