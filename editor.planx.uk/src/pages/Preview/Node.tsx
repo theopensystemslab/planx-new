@@ -1,4 +1,4 @@
-import Notice from "@planx/components/Notice/Preview";
+import Notice from "@planx/components/Notice/Public";
 import { TYPES } from "@planx/components/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
