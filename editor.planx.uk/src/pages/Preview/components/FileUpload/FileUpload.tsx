@@ -9,11 +9,10 @@ import { uploadFile } from "api/upload";
 import classNames from "classnames";
 import { nanoid } from "nanoid";
 import { MoreInformation } from "planx-nodes/shared";
+import Card from "planx-nodes/shared/Preview/Card";
+import QuestionHeader from "planx-nodes/shared/Preview/QuestionHeader";
 import React from "react";
 import { useDropzone } from "react-dropzone";
-
-import Card from "../shared/Card";
-import QuestionHeader from "../shared/QuestionHeader";
 
 interface Props extends MoreInformation {
   title?: string;

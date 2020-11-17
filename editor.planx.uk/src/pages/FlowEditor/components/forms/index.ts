@@ -1,3 +1,4 @@
+import Notice from "planx-nodes/Notice/Editor";
 import { TYPES } from "planx-nodes/types";
 import React from "react";
 
@@ -9,7 +10,6 @@ import FileUpload from "./FileUpload";
 import Filter from "./Filter";
 import FindProperty from "./FindProperty";
 import InternalPortal from "./InternalPortal";
-import Notice from "./Notice";
 import Page from "./Page";
 import Pay from "./Pay";
 import PropertyInformation from "./PropertyInformation";
