@@ -2,6 +2,15 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Delete from "@material-ui/icons/Delete";
+import {
+  Checklist,
+  Group,
+  toggleExpandableChecklist,
+} from "@planx/components/Checklist/types";
+import { Option, parseMoreInformation } from "@planx/components/shared";
+import { TYPES } from "@planx/components/types";
+import { ICONS } from "@planx/components/ui";
+import { InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
@@ -15,7 +24,6 @@ import {
   InputGroup,
   InputRow,
   InputRowItem,
-  InternalNotes,
   ListManager,
   ModalSection,
   ModalSectionContent,
@@ -23,16 +31,7 @@ import {
   RichTextInput,
   SimpleMenu,
 } from "../../../../ui";
-import {
-  Checklist,
-  Group,
-  Option,
-  parseMoreInformation,
-  toggleExpandableChecklist,
-  TYPES,
-} from "../../data/types";
-import { ICONS } from "../shared";
-import { MoreInformation, PermissionSelect } from "./shared";
+import { PermissionSelect } from "./shared";
 
 interface ChecklistOption {
   id?: string;

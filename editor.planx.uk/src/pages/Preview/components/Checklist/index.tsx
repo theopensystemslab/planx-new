@@ -1,11 +1,12 @@
 import Button from "@material-ui/core/Button";
+import { Group } from "@planx/components/Checklist/types";
+import { Option } from "@planx/components/shared";
+import Card from "@planx/components/shared/Preview/Card";
+import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 
 import { ExpandableList, ExpandableListItem } from "../../../../ui";
-import { Group, Option } from "../../../FlowEditor/data/types";
-import Card from "../shared/Card";
-import QuestionHeader from "../shared/QuestionHeader";
 import InnerCheckbox from "./InnerCheckbox";
 
 interface Props {

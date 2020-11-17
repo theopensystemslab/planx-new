@@ -2,13 +2,13 @@ import "./map.css";
 
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import Card from "@planx/components/shared/Preview/Card";
+import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import useAxios from "axios-hooks";
 import capitalize from "lodash/capitalize";
 import React, { useEffect } from "react";
 
 import { useStore } from "../../../FlowEditor/lib/store";
-import Card from "../shared/Card";
-import QuestionHeader from "../shared/QuestionHeader";
 import BasicMap from "./BasicMap";
 import { convertOrdnanceSurveyToStandard } from "./maputils";
 import PropertyConstraints from "./PropertyConstraints";

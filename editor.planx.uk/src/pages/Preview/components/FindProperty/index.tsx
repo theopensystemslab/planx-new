@@ -2,14 +2,14 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import Card from "@planx/components/shared/Preview/Card";
+import FormInput from "@planx/components/shared/Preview/FormInput";
+import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import useAxios from "axios-hooks";
 import natsort from "natsort";
 import { parse, toNormalised } from "postcode";
 import React from "react";
 
-import Card from "../shared/Card";
-import FormInput from "../shared/FormInput";
-import QuestionHeader from "../shared/QuestionHeader";
 import Map from "./Map";
 
 const sorter = natsort({ insensitive: true });

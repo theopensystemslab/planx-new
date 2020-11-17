@@ -1,20 +1,21 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { parseMoreInformation } from "@planx/components/shared";
+import { Task } from "@planx/components/TaskList/types";
+import { TYPES } from "@planx/components/types";
+import { ICONS } from "@planx/components/ui";
+import { InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
 
 import {
   Input,
   InputRow,
-  InternalNotes,
   ListManager,
   ModalSection,
   ModalSectionContent,
   RichTextInput,
 } from "../../../../ui";
 import { EditorProps } from "../../../../ui/ListManager";
-import { parseMoreInformation, Task, TYPES } from "../../data/types";
-import { ICONS } from "../shared";
-import { MoreInformation } from "./shared";
 
 export interface Props {
   id?: string;

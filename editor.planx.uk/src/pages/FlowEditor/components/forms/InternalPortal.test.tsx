@@ -1,8 +1,8 @@
+import { TYPES } from "@planx/components/types";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 
-import { TYPES } from "../../data/types";
 import InternalPortalForm from "./InternalPortal";
 
 describe("adding an internal portal", () => {

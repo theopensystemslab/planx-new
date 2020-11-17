@@ -1,13 +1,13 @@
+import Notice from "@planx/components/Notice/Public";
+import { TYPES } from "@planx/components/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
-import { TYPES } from "../FlowEditor/data/types";
 import { useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";
 import Content from "./components/Content";
 import FileUpload from "./components/FileUpload";
 import FindProperty from "./components/FindProperty";
-import Notice from "./components/Notice";
 import Pay from "./components/Pay";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
@@ -23,10 +23,13 @@ const Node: React.FC<any> = (props) => {
     state.reportData,
   ]);
 
+  const resetPreview = useStore((state) => state.resetPreview);
+
   const type = props.type as TYPES;
 
   const allProps = {
     ...props.node.data,
+    resetPreview,
     handleSubmit: props.handleSubmit,
   };
 

@@ -1,7 +1,6 @@
+import { TYPES } from "@planx/components/types";
 import { useFormik } from "formik";
 import React from "react";
-
-import { TYPES } from "../../data/types";
 
 interface Flow {
   id: string;

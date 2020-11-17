@@ -1,8 +1,8 @@
+import { TYPES } from "@planx/components/types";
 import { useFormik } from "formik";
 import React from "react";
 
 import { flatFlags } from "../../data/flags";
-import { TYPES } from "../../data/types";
 
 export interface Props {
   id?: string;

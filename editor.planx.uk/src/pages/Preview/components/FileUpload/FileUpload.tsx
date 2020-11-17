@@ -5,15 +5,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import FileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Close";
 import CloudUpload from "@material-ui/icons/CloudUpload";
+import { MoreInformation } from "@planx/components/shared";
+import Card from "@planx/components/shared/Preview/Card";
+import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { uploadFile } from "api/upload";
 import classNames from "classnames";
 import { nanoid } from "nanoid";
 import React from "react";
 import { useDropzone } from "react-dropzone";
-
-import { MoreInformation } from "../../../FlowEditor/data/types";
-import Card from "../shared/Card";
-import QuestionHeader from "../shared/QuestionHeader";
 
 interface Props extends MoreInformation {
   title?: string;

@@ -7,12 +7,12 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
+import { Pay } from "@planx/components/Pay/types";
+import Card from "@planx/components/shared/Preview/Card";
 import React, { Suspense } from "react";
 import Input from "ui/Input";
 
-import { MoreInformation } from "../../../FlowEditor/data/types";
 import Question from "../Question";
-import Card from "../shared/Card";
 
 export default Component;
 
@@ -66,7 +66,7 @@ const OPTIONS = {
 const Summary = React.lazy(() => import("./Summary"));
 const Paid = React.lazy(() => import("./Paid"));
 
-interface Props extends MoreInformation {
+interface Props extends Pay {
   handleSubmit: (any) => any;
 }
 

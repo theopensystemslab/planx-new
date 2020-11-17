@@ -1,6 +1,6 @@
+import { TYPES } from "@planx/components/types";
 import React from "react";
 
-import { TYPES } from "../../../data/types";
 import { useStore } from "../../../lib/store";
 import Breadcrumb from "./Breadcrumb";
 import Checklist from "./Checklist";

@@ -1,16 +1,16 @@
+import { parseTextInput } from "@planx/components/TextInput/types";
+import { TYPES } from "@planx/components/types";
+import { ICONS } from "@planx/components/ui";
+import { InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 
 import Input from "../../../../ui/Input";
 import InputRow from "../../../../ui/InputRow";
-import InternalNotes from "../../../../ui/InternalNotes";
 import ModalSection from "../../../../ui/ModalSection";
 import ModalSectionContent from "../../../../ui/ModalSectionContent";
 import OptionButton from "../../../../ui/OptionButton";
 import RichTextInput from "../../../../ui/RichTextInput";
-import { parseTextInput, TYPES } from "../../data/types";
-import { ICONS } from "../shared";
-import { MoreInformation } from "./shared";
 
 export interface Props {
   id?: string;

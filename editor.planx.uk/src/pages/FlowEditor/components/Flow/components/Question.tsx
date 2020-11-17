@@ -1,10 +1,10 @@
+import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
 import React from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
 
 import { useStore } from "../../../lib/store";
-import { ICONS } from "../../shared";
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Node from "./Node";

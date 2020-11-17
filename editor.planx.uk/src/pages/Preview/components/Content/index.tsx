@@ -1,9 +1,8 @@
 import Button from "@material-ui/core/Button";
+import { Content } from "@planx/components/Content/types";
+import Card from "@planx/components/shared/Preview/Card";
+import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import React from "react";
-
-import { Content } from "../../../FlowEditor/data/types";
-import Card from "../shared/Card";
-import QuestionHeader from "../shared/QuestionHeader";
 
 interface Props extends Content {
   handleSubmit?: any;

@@ -4,12 +4,11 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Card from "@planx/components/shared/Preview/Card";
+import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import { TaskList } from "@planx/components/TaskList/types";
 import classNames from "classnames";
 import React from "react";
-
-import { TaskList } from "../../../FlowEditor/data/types";
-import Card from "../shared/Card";
-import QuestionHeader from "../shared/QuestionHeader";
 
 interface Props extends TaskList {
   handleSubmit?;

@@ -1,16 +1,17 @@
+import { Content } from "@planx/components/Content/types";
+import { parseMoreInformation } from "@planx/components/shared";
+import { TYPES } from "@planx/components/types";
+import { ICONS } from "@planx/components/ui";
+import { InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 
 import {
   InputRow,
-  InternalNotes,
   ModalSection,
   ModalSectionContent,
   RichTextInput,
 } from "../../../../ui";
-import { Content, parseMoreInformation, TYPES } from "../../data/types";
-import { ICONS } from "../shared";
-import { MoreInformation } from "./shared";
 
 export interface Props {
   id?: string;

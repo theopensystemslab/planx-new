@@ -1,6 +1,8 @@
+import Notice from "@planx/components/Notice/Editor";
+import { TYPES } from "@planx/components/types";
 import React from "react";
 
-import { SLUGS, TYPES } from "../../data/types";
+import { SLUGS } from "../../data/types";
 import Checklist from "./Checklist";
 import Content from "./Content";
 import ExternalPortal from "./ExternalPortal";
@@ -8,7 +10,6 @@ import FileUpload from "./FileUpload";
 import Filter from "./Filter";
 import FindProperty from "./FindProperty";
 import InternalPortal from "./InternalPortal";
-import Notice from "./Notice";
 import Page from "./Page";
 import Pay from "./Pay";
 import PropertyInformation from "./PropertyInformation";

@@ -1,10 +1,6 @@
 import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
-import debounce from "lodash/debounce";
-import difference from "lodash/difference";
-import omit from "lodash/omit";
-import uniq from "lodash/uniq";
-import pgarray from "pg-array";
+import { TYPES } from "@planx/components/types";
 import {
   add,
   clone,
@@ -14,14 +10,18 @@ import {
   remove,
   ROOT_NODE_KEY,
   update,
-} from "planx-graph";
+} from "@planx/graph";
+import debounce from "lodash/debounce";
+import difference from "lodash/difference";
+import omit from "lodash/omit";
+import uniq from "lodash/uniq";
+import pgarray from "pg-array";
 import create from "zustand";
 import vanillaCreate from "zustand/vanilla";
 
 import { client } from "../../../lib/graphql";
 import { FlowLayout } from "../components/Flow";
 import { flatFlags } from "../data/flags";
-import { TYPES } from "../data/types";
 import { connectToDB, getConnection } from "./sharedb";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];

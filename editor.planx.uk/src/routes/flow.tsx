@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { TYPES } from "@planx/components/types";
 import natsort from "natsort";
 import { compose, lazy, mount, route, withData, withView } from "navi";
 import mapAccum from "ramda/src/mapAccum";
@@ -9,7 +10,7 @@ import { client } from "../lib/graphql";
 import FlowEditor from "../pages/FlowEditor";
 import components from "../pages/FlowEditor/components/forms";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
-import { SLUGS, TYPES } from "../pages/FlowEditor/data/types";
+import { SLUGS } from "../pages/FlowEditor/data/types";
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
 

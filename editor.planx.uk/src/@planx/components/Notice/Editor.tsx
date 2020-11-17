@@ -1,11 +1,9 @@
-import { Notice } from "@planx/components/Notice/types";
-import { parseMoreInformation } from "@planx/components/shared";
+import { Notice, parseNotice } from "@planx/components/Notice/types";
 import { TYPES } from "@planx/components/types";
 import { ICONS } from "@planx/components/ui";
 import { InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-
 import {
   ColorPicker,
   Input,
@@ -14,7 +12,7 @@ import {
   ModalSectionContent,
   OptionButton,
   RichTextInput,
-} from "../../../../ui";
+} from "ui";
 
 export interface Props {
   id?: string;
@@ -109,14 +107,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
 const NoticeComponent: React.FC<Props> = (props) => {
   const formik = useFormik<{ notice: Notice }>({
     initialValues: {
-      notice: {
-        // TODO: improve runtime validation here (joi, io-ts)
-        title: props.node?.data?.title || "",
-        description: props.node?.data?.description || "",
-        color: props.node?.data?.color || "#EFEFEF",
-        resetButton: props.node?.data?.resetButton || false,
-        ...parseMoreInformation(props.node?.data),
-      },
+      notice: parseNotice(props.node?.data),
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {

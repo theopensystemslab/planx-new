@@ -1,4 +1,4 @@
-import { TYPES } from "pages/FlowEditor/data/types";
+import { TYPES } from "@planx/components/types";
 
 import { vanillaStore } from "../store";
 

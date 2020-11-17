@@ -1,14 +1,11 @@
+import { parseMoreInformation } from "@planx/components/shared";
+import { TYPES } from "@planx/components/types";
+import { ICONS } from "@planx/components/ui";
+import { InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 
-import {
-  InternalNotes,
-  ModalSection,
-  ModalSectionContent,
-} from "../../../../ui";
-import { parseMoreInformation, TYPES } from "../../data/types";
-import { ICONS } from "../shared";
-import { MoreInformation } from "./shared";
+import { ModalSection, ModalSectionContent } from "../../../../ui";
 
 export interface Props {
   id?: string;

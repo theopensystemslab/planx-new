@@ -2,16 +2,15 @@ import { mostReadable } from "@ctrl/tinycolor";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import ErrorOutline from "@material-ui/icons/ErrorOutline";
+import { Notice } from "@planx/components/Notice/types";
+import Card from "@planx/components/shared/Preview/Card";
+import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
-import { Notice } from "../../../FlowEditor/data/types";
-import { useStore } from "../../../FlowEditor/lib/store";
-import Card from "../shared/Card";
-import QuestionHeader from "../shared/QuestionHeader";
-
 interface Props extends Notice {
   handleSubmit?: any;
+  resetPreview: () => void;
 }
 
 interface StyleProps {
@@ -61,7 +60,6 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 const NoticeComponent: React.FC<Props> = (props) => {
   const styles = useStyles({ color: props.color || "#EFEFEF" });
-  const resetPreview = useStore((state) => state.resetPreview);
 
   return (
     <Card>
@@ -86,7 +84,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
           color="default"
           size="large"
           type="submit"
-          onClick={resetPreview}
+          onClick={props.resetPreview}
         >
           Back to start
         </Button>
