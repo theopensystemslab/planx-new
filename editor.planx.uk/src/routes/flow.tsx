@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
+import { TYPES } from "@planx/components/types";
 import natsort from "natsort";
 import { compose, lazy, mount, route, withData, withView } from "navi";
-import { TYPES } from "planx-nodes/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 import { View } from "react-navi";

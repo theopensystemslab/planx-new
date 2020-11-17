@@ -7,8 +7,8 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import { Pay } from "planx-nodes/Pay/types";
-import Card from "planx-nodes/shared/Preview/Card";
+import { Pay } from "@planx/components/Pay/types";
+import Card from "@planx/components/shared/Preview/Card";
 import React, { Suspense } from "react";
 import Input from "ui/Input";
 

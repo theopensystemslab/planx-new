@@ -2,16 +2,16 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Delete from "@material-ui/icons/Delete";
-import { useFormik } from "formik";
 import {
   Checklist,
   Group,
   toggleExpandableChecklist,
-} from "planx-nodes/Checklist/types";
-import { Option, parseMoreInformation } from "planx-nodes/shared";
-import { TYPES } from "planx-nodes/types";
-import { ICONS } from "planx-nodes/ui";
-import { InternalNotes, MoreInformation } from "planx-nodes/ui";
+} from "@planx/components/Checklist/types";
+import { Option, parseMoreInformation } from "@planx/components/shared";
+import { TYPES } from "@planx/components/types";
+import { ICONS } from "@planx/components/ui";
+import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import { useFormik } from "formik";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";

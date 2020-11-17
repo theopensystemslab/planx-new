@@ -1,5 +1,5 @@
-import Notice from "planx-nodes/Notice/Preview";
-import { TYPES } from "planx-nodes/types";
+import Notice from "@planx/components/Notice/Preview";
+import { TYPES } from "@planx/components/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 

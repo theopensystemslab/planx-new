@@ -1,7 +1,7 @@
+import { TYPES } from "@planx/components/types";
+import { ICONS } from "@planx/components/ui";
+import { InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
-import { TYPES } from "planx-nodes/types";
-import { ICONS } from "planx-nodes/ui";
-import { InternalNotes, MoreInformation } from "planx-nodes/ui";
 import React from "react";
 import {
   Input,

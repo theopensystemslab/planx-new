@@ -1,6 +1,6 @@
+import Card from "@planx/components/shared/Preview/Card";
+import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
-import Card from "planx-nodes/shared/Preview/Card";
-import QuestionHeader from "planx-nodes/shared/Preview/QuestionHeader";
 import React from "react";
 
 import DecisionButton from "./DecisionButton";

@@ -1,4 +1,4 @@
-import { TYPES } from "planx-nodes/types";
+import { TYPES } from "@planx/components/types";
 
 export const SLUGS = {
   [TYPES.Filter]: "filter",

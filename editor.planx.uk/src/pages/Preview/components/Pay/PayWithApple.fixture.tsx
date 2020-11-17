@@ -1,4 +1,4 @@
-import Card from "planx-nodes/shared/Preview/Card";
+import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 
 import PayWithApple from "./PayWithApple";

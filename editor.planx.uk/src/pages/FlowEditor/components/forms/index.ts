@@ -1,5 +1,5 @@
-import Notice from "planx-nodes/Notice/Editor";
-import { TYPES } from "planx-nodes/types";
+import Notice from "@planx/components/Notice/Editor";
+import { TYPES } from "@planx/components/types";
 import React from "react";
 
 import { SLUGS } from "../../data/types";

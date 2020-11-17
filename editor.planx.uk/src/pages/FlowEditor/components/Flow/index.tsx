@@ -1,4 +1,4 @@
-import { ROOT_NODE_KEY } from "planx-graph";
+import { ROOT_NODE_KEY } from "@planx/graph";
 import React from "react";
 
 import { useStore } from "../../lib/store";

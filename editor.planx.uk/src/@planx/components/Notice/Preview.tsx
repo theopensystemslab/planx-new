@@ -2,9 +2,9 @@ import { mostReadable } from "@ctrl/tinycolor";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import ErrorOutline from "@material-ui/icons/ErrorOutline";
-import { Notice } from "planx-nodes/Notice/types";
-import Card from "planx-nodes/shared/Preview/Card";
-import QuestionHeader from "planx-nodes/shared/Preview/QuestionHeader";
+import { Notice } from "@planx/components/Notice/types";
+import Card from "@planx/components/shared/Preview/Card";
+import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 

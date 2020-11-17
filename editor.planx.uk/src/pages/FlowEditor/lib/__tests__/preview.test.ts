@@ -1,4 +1,4 @@
-import { TYPES } from "planx-nodes/types";
+import { TYPES } from "@planx/components/types";
 
 import { vanillaStore } from "../store";
 

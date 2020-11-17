@@ -1,10 +1,6 @@
 import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
-import debounce from "lodash/debounce";
-import difference from "lodash/difference";
-import omit from "lodash/omit";
-import uniq from "lodash/uniq";
-import pgarray from "pg-array";
+import { TYPES } from "@planx/components/types";
 import {
   add,
   clone,
@@ -14,8 +10,12 @@ import {
   remove,
   ROOT_NODE_KEY,
   update,
-} from "planx-graph";
-import { TYPES } from "planx-nodes/types";
+} from "@planx/graph";
+import debounce from "lodash/debounce";
+import difference from "lodash/difference";
+import omit from "lodash/omit";
+import uniq from "lodash/uniq";
+import pgarray from "pg-array";
 import create from "zustand";
 import vanillaCreate from "zustand/vanilla";
 

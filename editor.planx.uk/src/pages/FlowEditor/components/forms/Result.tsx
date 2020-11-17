@@ -1,5 +1,5 @@
+import { TYPES } from "@planx/components/types";
 import { useFormik } from "formik";
-import { TYPES } from "planx-nodes/types";
 import React from "react";
 
 export interface Props {

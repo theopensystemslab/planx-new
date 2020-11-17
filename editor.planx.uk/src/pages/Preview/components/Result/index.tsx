@@ -1,8 +1,8 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import Card from "planx-nodes/shared/Preview/Card";
-import SimpleExpand from "planx-nodes/shared/Preview/SimpleExpand";
+import Card from "@planx/components/shared/Preview/Card";
+import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import React from "react";
 
 import ResultReason from "./ResultReason";

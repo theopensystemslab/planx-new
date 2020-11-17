@@ -1,5 +1,5 @@
+import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
-import { ICONS } from "planx-nodes/ui";
 import mapAccum from "ramda/src/mapAccum";
 import React, { useMemo } from "react";
 import { useDrag } from "react-dnd";

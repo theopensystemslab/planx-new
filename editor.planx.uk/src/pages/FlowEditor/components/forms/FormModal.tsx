@@ -7,8 +7,8 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/CloseOutlined";
-import { parseFormValues } from "planx-nodes/shared";
-import { TYPES } from "planx-nodes/types";
+import { parseFormValues } from "@planx/components/shared";
+import { TYPES } from "@planx/components/types";
 import React from "react";
 import { useNavigation } from "react-navi";
 

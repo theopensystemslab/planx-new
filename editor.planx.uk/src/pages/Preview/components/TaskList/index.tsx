@@ -4,10 +4,10 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Card from "@planx/components/shared/Preview/Card";
+import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import { TaskList } from "@planx/components/TaskList/types";
 import classNames from "classnames";
-import Card from "planx-nodes/shared/Preview/Card";
-import QuestionHeader from "planx-nodes/shared/Preview/QuestionHeader";
-import { TaskList } from "planx-nodes/TaskList/types";
 import React from "react";
 
 interface Props extends TaskList {
