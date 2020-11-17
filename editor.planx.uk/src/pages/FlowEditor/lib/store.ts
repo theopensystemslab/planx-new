@@ -527,7 +527,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         }
       } else {
         set({
-          breadcrumbs: { ...breadcrumbs, [id]: { answers: vals, auto: true } },
+          breadcrumbs: { ...breadcrumbs, [id]: { answers: vals, auto: false } },
         });
       }
 
