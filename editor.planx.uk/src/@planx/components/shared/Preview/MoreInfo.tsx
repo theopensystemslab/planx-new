@@ -38,7 +38,6 @@ const moreInfoStyles = makeStyles((theme) => ({
     width: props.drawerWidth,
     backgroundColor: theme.palette.background.default,
     border: 0,
-    // position: "absolute",
     boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
     [theme.breakpoints.only("xs")]: {
       width: "100%",
