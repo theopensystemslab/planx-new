@@ -1,5 +1,7 @@
 import { MoreInformation, parseMoreInformation } from "../shared";
 
+export type UserData = string;
+
 export interface TextInput extends MoreInformation {
   title: string;
   description?: string;
