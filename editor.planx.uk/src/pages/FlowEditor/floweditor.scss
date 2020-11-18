@@ -32,6 +32,7 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
   flex: 1;
   display: flex;
   overflow: hidden;
+  word-break: break-all;
 }
 
 #fake-browser {
