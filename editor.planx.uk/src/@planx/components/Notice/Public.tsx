@@ -9,7 +9,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 
 interface Props extends Notice {
-  handleSubmit?: any;
+  handleSubmit?: () => void;
   resetPreview: () => void;
 }
 

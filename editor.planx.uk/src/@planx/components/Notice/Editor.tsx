@@ -16,7 +16,7 @@ import {
 
 export interface Props {
   id?: string;
-  handleSubmit?: (d: any) => void;
+  handleSubmit?: (data: { type: TYPES.Notice; data: Notice }) => void;
   node?: any;
 }
 

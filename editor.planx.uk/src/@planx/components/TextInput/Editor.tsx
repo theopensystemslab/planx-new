@@ -1,22 +1,17 @@
-import { parseTextInput } from "@planx/components/TextInput/types";
+import { parseTextInput, TextInput } from "@planx/components/TextInput/types";
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
+import { EditorProps, ICONS } from "@planx/components/ui";
 import { InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
+import Input from "ui/Input";
+import InputRow from "ui/InputRow";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
+import OptionButton from "ui/OptionButton";
+import RichTextInput from "ui/RichTextInput";
 
-import Input from "../../../../ui/Input";
-import InputRow from "../../../../ui/InputRow";
-import ModalSection from "../../../../ui/ModalSection";
-import ModalSectionContent from "../../../../ui/ModalSectionContent";
-import OptionButton from "../../../../ui/OptionButton";
-import RichTextInput from "../../../../ui/RichTextInput";
-
-export interface Props {
-  id?: string;
-  handleSubmit?: (d: any) => void;
-  node?: any;
-}
+export type Props = EditorProps<TYPES.TextInput, TextInput>;
 
 interface RadioProps<T> {
   value?: T;

@@ -1,4 +1,5 @@
 import Notice from "@planx/components/Notice/Editor";
+import TextInput from "@planx/components/TextInput/Editor";
 import { TYPES } from "@planx/components/types";
 import React from "react";
 
@@ -16,7 +17,6 @@ import PropertyInformation from "./PropertyInformation";
 import Question from "./Question";
 import Result from "./Result";
 import TaskList from "./TaskList";
-import TextInput from "./TextInput";
 
 const EmptyComponent: React.FC<any> = () => null;
 

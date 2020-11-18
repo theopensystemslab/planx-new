@@ -1,16 +1,14 @@
 import Button from "@material-ui/core/Button";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import { TextInput } from "@planx/components/TextInput/types";
+import { TextInput, UserData } from "@planx/components/TextInput/types";
+import { PublicProps } from "@planx/components/ui";
 import React, { useMemo, useState } from "react";
+import Input from "ui/Input";
+import InputRow from "ui/InputRow";
+import RichTextInput from "ui/RichTextInput";
 
-import Input from "../../../../ui/Input";
-import InputRow from "../../../../ui/InputRow";
-import RichTextInput from "../../../../ui/RichTextInput";
-
-interface Props extends TextInput {
-  handleSubmit?: (value?: any) => void;
-}
+export type Props = PublicProps<TextInput, UserData>;
 
 const isValidEmail = (str: string) => {
   // eslint-disable-next-line
