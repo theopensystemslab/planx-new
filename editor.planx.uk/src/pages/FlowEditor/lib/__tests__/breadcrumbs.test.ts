@@ -10,31 +10,70 @@ beforeEach(() => {
 
 describe("storing breadcrumbs", () => {
   describe("human decisions", () => {
-    test("single choice", () => {
+    beforeEach(() => {
       setState({
         flow: {
           _root: {
-            edges: ["first_question"],
+            edges: ["i_want_to"],
           },
-          first_question: {
+          i_want_to: {
             type: TYPES.Statement,
-            edges: ["option_a", "option_b"],
+            edges: ["demolish", "extend"],
+            data: {
+              fn: "proposal.projectType",
+            },
           },
-          option_a: {
+          demolish: {
             type: TYPES.Response,
+            edges: ["q1a1q1", "q1a1q2"],
+            data: {
+              val: "demolish",
+            },
           },
-          option_b: {
+          extend: {
             type: TYPES.Response,
+            data: {
+              val: "extend",
+            },
           },
         },
       });
+    });
 
-      getState().record("first_question", ["option_a"]);
+    test("single choice", () => {
+      getState().record("i_want_to", ["demolish"]);
 
       expect(getState().breadcrumbs).toEqual({
-        first_question: {
-          answers: ["option_a"],
+        i_want_to: {
+          answers: ["demolish"],
           auto: false,
+        },
+      });
+
+      expect(getState().passport).toEqual({
+        data: {
+          "proposal.projectType": {
+            value: ["demolish"],
+          },
+        },
+      });
+    });
+
+    test("multiple choice", () => {
+      getState().record("i_want_to", ["demolish", "extend"]);
+
+      expect(getState().breadcrumbs).toEqual({
+        i_want_to: {
+          answers: ["demolish", "extend"],
+          auto: false,
+        },
+      });
+
+      expect(getState().passport).toEqual({
+        data: {
+          "proposal.projectType": {
+            value: ["demolish", "extend"],
+          },
         },
       });
     });
