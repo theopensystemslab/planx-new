@@ -1,6 +1,7 @@
 export default Component;
 
 import { makeStyles } from "@material-ui/core/styles";
+import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 
 import Button from "./Button";
@@ -76,71 +77,73 @@ const useStyles = makeStyles({
 function Component(props) {
   const c = useStyles();
   return (
-    <div className={c.root}>
-      <h1 className={c.h1}>Enter card details</h1>
-      <label className={c.label}>Card number</label>
-      <input
-        className={c.input}
-        name="card-number"
-        type="text"
-        placeholder="enter the long number on your card"
-        style={{ width: 400 }}
-      />
-      <p style={{ marginTop: "8px" }}>
-        <CardsImage />
-      </p>
-      <label className={c.label}>Expiry date</label>
-      <p className={c.example}>For example, 10/20</p>
-      <div className={c.expiry}>
-        <span>Month</span>
-        <div>
-          <input className={c.input} type="text" placeholder="10" />
-        </div>
-        <div>/</div>
-        <span>Year</span>
-        <div>
-          <input className={c.input} type="text" placeholder="20" />
-        </div>
-      </div>
-      <label className={c.label}>Name on card</label>
-      <input className={c.input} placeholder="Name" />
-      <label className={c.label}>Card security code</label>
-      <p className={c.example}>The last 3 digits on the back</p>
-      <div>
+    <Card>
+      <div className={c.root}>
+        <h1 className={c.h1}>Enter card details</h1>
+        <label className={c.label}>Card number</label>
         <input
           className={c.input}
+          name="card-number"
           type="text"
-          placeholder="000"
-          style={{ width: "83px" }}
+          placeholder="enter the long number on your card"
+          style={{ width: 400 }}
         />
-        <SecurityCodeImage style={{ marginLeft: "16px" }} />
+        <p style={{ marginTop: "8px" }}>
+          <CardsImage />
+        </p>
+        <label className={c.label}>Expiry date</label>
+        <p className={c.example}>For example, 10/20</p>
+        <div className={c.expiry}>
+          <span>Month</span>
+          <div>
+            <input className={c.input} type="text" placeholder="10" />
+          </div>
+          <div>/</div>
+          <span>Year</span>
+          <div>
+            <input className={c.input} type="text" placeholder="20" />
+          </div>
+        </div>
+        <label className={c.label}>Name on card</label>
+        <input className={c.input} placeholder="Name" />
+        <label className={c.label}>Card security code</label>
+        <p className={c.example}>The last 3 digits on the back</p>
+        <div>
+          <input
+            className={c.input}
+            type="text"
+            placeholder="000"
+            style={{ width: "83px" }}
+          />
+          <SecurityCodeImage style={{ marginLeft: "16px" }} />
+        </div>
+        <h2 className={c.h2}>Billing address</h2>
+        <label className={c.label}>Country or territory</label>
+        <input className={c.input} placeholder="United Kingdom" />
+        <label className={c.label}>Building number or name and street</label>
+        <p style={{ marginBottom: "8px" }}>
+          <input className={c.input} placeholder="" />
+        </p>
+        <p>
+          <input className={c.input} placeholder="" />
+        </p>
+        <label className={c.label}>Town or city</label>
+        <input className={c.input} placeholder="" />
+        <label className={c.label}>Postcode</label>
+        <input className={c.input} placeholder="" style={{ width: "100px" }} />
+        <label className={c.label}>Email</label>
+        <p className={c.example}>We'll send your payment confirmation here</p>
+        <input className={c.input} placeholder="" />
+        <p style={{ margin: "24px 0" }}>
+          <Button onClick={props.goToSummary}>Continue</Button>
+        </p>
+        <p>
+          <a href="#" className={c.cancel} onClick={props.goBack}>
+            Cancel payment
+          </a>
+        </p>
       </div>
-      <h2 className={c.h2}>Billing address</h2>
-      <label className={c.label}>Country or territory</label>
-      <input className={c.input} placeholder="United Kingdom" />
-      <label className={c.label}>Building number or name and street</label>
-      <p style={{ marginBottom: "8px" }}>
-        <input className={c.input} placeholder="" />
-      </p>
-      <p>
-        <input className={c.input} placeholder="" />
-      </p>
-      <label className={c.label}>Town or city</label>
-      <input className={c.input} placeholder="" />
-      <label className={c.label}>Postcode</label>
-      <input className={c.input} placeholder="" style={{ width: "100px" }} />
-      <label className={c.label}>Email</label>
-      <p className={c.example}>We'll send your payment confirmation here</p>
-      <input className={c.input} placeholder="" />
-      <p style={{ margin: "24px 0" }}>
-        <Button onClick={props.goToSummary}>Continue</Button>
-      </p>
-      <p>
-        <a href="#" className={c.cancel} onClick={props.goBack}>
-          Cancel payment
-        </a>
-      </p>
-    </div>
+    </Card>
   );
 }
 

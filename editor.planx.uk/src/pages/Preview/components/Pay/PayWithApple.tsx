@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 
 import Button from "./Button";
@@ -38,25 +39,27 @@ const useStyles = makeStyles({
 function Component(props) {
   const c = useStyles();
   return (
-    <div className={c.root}>
-      <h1 className={c.h1}>Pay by Apple Pay</h1>
-      <p>
-        <button
-          className={c.pay}
-          onClick={() => window.alert("This feature is coming soon")}
-        >
-          Pay with <AppleLogo /> Pay
-        </button>
-      </p>
-      <p style={{ margin: "24px 0" }}>
-        <Button onClick={props.goToSummary}>Continue</Button>
-      </p>
-      <p>
-        <a href="#" className={c.cancel} onClick={props.goBack}>
-          Cancel payment
-        </a>
-      </p>
-    </div>
+    <Card>
+      <div className={c.root}>
+        <h1 className={c.h1}>Pay by Apple Pay</h1>
+        <p>
+          <button
+            className={c.pay}
+            onClick={() => window.alert("This feature is coming soon")}
+          >
+            Pay with <AppleLogo /> Pay
+          </button>
+        </p>
+        <p style={{ margin: "24px 0" }}>
+          <Button onClick={props.goToSummary}>Continue</Button>
+        </p>
+        <p>
+          <a href="#" className={c.cancel} onClick={props.goBack}>
+            Cancel payment
+          </a>
+        </p>
+      </div>
+    </Card>
   );
 }
 
