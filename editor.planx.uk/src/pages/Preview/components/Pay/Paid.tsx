@@ -4,6 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import DownloadIcon from "@material-ui/icons/GetApp";
+import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 
 export default Component;
@@ -35,28 +36,30 @@ const useStyles = makeStyles({
 function Component(props) {
   const c = useStyles();
   return (
-    <div className={c.root}>
-      <div className={c.banner}>
-        <Typography variant="h3">Payment summary</Typography>
-        <Typography>Amount</Typography>
-        <Typography variant="h1">£206</Typography>
+    <Card>
+      <div className={c.root}>
+        <div className={c.banner}>
+          <Typography variant="h3">Payment summary</Typography>
+          <Typography>Amount</Typography>
+          <Typography variant="h1">£206</Typography>
+        </div>
+        <p>
+          <span>Paid</span>11th November 2020 14.32
+        </p>
+        <p>
+          <span>GOV.UK Payment reference</span>JG669323
+        </p>
+        <p>
+          <span>Application reference</span>LBH-2020-LDC-100
+        </p>
+        <br />
+        <br />
+        <div style={{ textAlign: "right" }}>
+          <Button endIcon={<DownloadIcon />} color="default">
+            Download this application
+          </Button>
+        </div>
       </div>
-      <p>
-        <span>Paid</span>11th November 2020 14.32
-      </p>
-      <p>
-        <span>GOV.UK Payment reference</span>JG669323
-      </p>
-      <p>
-        <span>Application reference</span>LBH-2020-LDC-100
-      </p>
-      <br />
-      <br />
-      <div style={{ textAlign: "right" }}>
-        <Button endIcon={<DownloadIcon />} color="default">
-          Download this application
-        </Button>
-      </div>
-    </div>
+    </Card>
   );
 }
