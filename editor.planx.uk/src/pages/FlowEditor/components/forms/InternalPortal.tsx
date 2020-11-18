@@ -46,6 +46,7 @@ const InternalPortalForm: React.FC<{
   return (
     <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">
       <div>
+        Create new internal portal:{" "}
         <InputField
           autoFocus
           name="text"
@@ -60,7 +61,12 @@ const InternalPortalForm: React.FC<{
       </div>
       {flows?.length > 0 && (
         <>
-          <span> OR </span>
+          <span>
+            <br /> OR
+            <br />
+            <br />
+            Point to an existing portal: <br />
+          </span>
           <select
             data-testid="flowId"
             name="flowId"
