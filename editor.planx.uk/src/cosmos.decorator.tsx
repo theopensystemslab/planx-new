@@ -7,7 +7,7 @@ import theme from "./theme";
 
 const Decorator = ({ children }) => (
   <div style={{ padding: 80 }}>
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={HTML5Backend} key={Date.now()}>
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </DndProvider>
   </div>
