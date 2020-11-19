@@ -1,5 +1,6 @@
 import Content from "@planx/components/Content/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
+import DateInput from "@planx/components/DateInput/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import PropertyInformation from "@planx/components/PropertyInformation/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
@@ -41,6 +42,7 @@ const components: {
   review: Review,
   "task-list": TaskList,
   "text-input": TextInput,
+  "date-input": DateInput,
 };
 
 export default components;

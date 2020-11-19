@@ -1,4 +1,5 @@
 import Content from "@planx/components/Content/Public";
+import DateInput from "@planx/components/DateInput/Public";
 import Notice from "@planx/components/Notice/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
@@ -158,6 +159,9 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.TextInput:
       return <TextInput {...allProps} />;
+
+    case TYPES.DateInput:
+      return <DateInput {...allProps} />;
 
     case TYPES.AddressInput:
     case TYPES.DateInput:
