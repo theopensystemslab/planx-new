@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import ColorPicker from "../ColorPicker";
+import DateInput from "../DateInput";
 import OptionButton from "../OptionButton";
 import VisibilityToggle from "../VisibilityToggle";
 
@@ -10,6 +11,8 @@ const UiExample1: React.FC<{}> = () => {
   const [color, setColor] = useState("#000");
 
   const [optionButtonSelected, setOptionButtonSelected] = useState(false);
+
+  const [date, setDate] = useState("");
 
   return (
     <>
@@ -23,6 +26,7 @@ const UiExample1: React.FC<{}> = () => {
       >
         Selected
       </OptionButton>
+      <DateInput bordered value={date} onChange={setDate} />
     </>
   );
 };

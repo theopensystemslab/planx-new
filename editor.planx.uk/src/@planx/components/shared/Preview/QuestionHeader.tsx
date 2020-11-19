@@ -1,7 +1,6 @@
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
-import Link from "@material-ui/core/Link";
 import HelpIcon from "@material-ui/icons/HelpOutlineOutlined";
 import React from "react";
 import ReactMarkdown from "react-markdown";

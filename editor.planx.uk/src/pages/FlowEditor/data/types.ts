@@ -17,7 +17,7 @@ export const SLUGS = {
   [TYPES.SignIn]: "question",
   [TYPES.Report]: "question",
   [TYPES.NumberInput]: "question",
-  [TYPES.DateInput]: "question",
+  [TYPES.DateInput]: "date-input",
   [TYPES.AddressInput]: "question",
   [TYPES.Statement]: "question",
   [TYPES.Response]: "question",

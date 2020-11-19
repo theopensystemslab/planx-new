@@ -55,9 +55,7 @@ const NodeTypeSelect: React.FC<{
         <option disabled value="number-inputs">
           Number Input
         </option>
-        <option disabled value="date-inputs">
-          Date Input
-        </option>
+        <option value={TYPES.DateInput}>Date Input</option>
         <option disabled value="address-inputs">
           Address Input
         </option>

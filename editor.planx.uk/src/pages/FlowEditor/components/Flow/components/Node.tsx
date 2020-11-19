@@ -47,6 +47,8 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.TextInput:
       return <Question {...props} text="Text" />;
+    case TYPES.DateInput:
+      return <Question {...props} text="Date" />;
 
     case TYPES.Response:
       return <Option {...props} />;
