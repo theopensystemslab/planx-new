@@ -1,31 +1,19 @@
-import { Content } from "@planx/components/Content/types";
-import { parseMoreInformation } from "@planx/components/shared";
+import { Content, parseContent } from "@planx/components/Content/types";
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
+import { EditorProps, ICONS } from "@planx/components/ui";
 import { InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
+import InputRow from "ui/InputRow";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
+import RichTextInput from "ui/RichTextInput";
 
-import {
-  InputRow,
-  ModalSection,
-  ModalSectionContent,
-  RichTextInput,
-} from "../../../../ui";
-
-export interface Props {
-  id?: string;
-  handleSubmit?: (d: any) => void;
-  node?: any;
-}
+export type Props = EditorProps<TYPES.Content, Content>;
 
 const ContentComponent: React.FC<Props> = (props) => {
   const formik = useFormik<Content>({
-    initialValues: {
-      // TODO: improve runtime validation here (joi, io-ts)
-      content: props.node?.data?.content || "",
-      ...parseMoreInformation(props.node?.data),
-    },
+    initialValues: parseContent(props.node?.data),
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
         props.handleSubmit({ type: TYPES.Content, data: newValues });
