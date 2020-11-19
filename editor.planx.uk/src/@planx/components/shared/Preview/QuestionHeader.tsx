@@ -61,7 +61,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           </MoreInfoSection>
         )}
         {policyRef && (
-          <MoreInfoSection title="Policy Source">
+          <MoreInfoSection title="Source">
             <ReactMarkdown source={policyRef} />
           </MoreInfoSection>
         )}
