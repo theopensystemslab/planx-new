@@ -64,19 +64,16 @@ export const checkboxesStyles = makeStyles((theme) => ({
 }));
 
 interface ICheckbox {
-  image?: JSX.Element;
   id?: string;
   label: string;
-  value: string;
-  changeCheckbox: Function;
-  props?: any;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
 }
 
 const Checkbox: React.FC<ICheckbox> = ({
   label,
-  value,
-  image,
-  changeCheckbox,
+  onChange,
+  checked,
   id,
   ...props
 }) => {
@@ -86,22 +83,20 @@ const Checkbox: React.FC<ICheckbox> = ({
   return (
     <Box mb={1}>
       <input
-        value={value}
+        checked={checked}
         className={classes.input}
         type="checkbox"
         ref={input}
+        id={id}
         {...props}
       />
       <label
-        className={classNames(classes.checkBoxRoot, image && classes.withImage)}
+        className={classNames(classes.checkBoxRoot)}
         htmlFor={id}
-        onClick={() => changeCheckbox(input)}
+        onClick={() => {
+          onChange(!checked);
+        }}
       >
-        {image && (
-          <Box bgcolor="#fff" width="100%">
-            {image}
-          </Box>
-        )}
         <Box className={classes.text}>
           <span className={classNames(classes.icon)} />
           {label}

@@ -5,6 +5,7 @@ export { default as Input } from "./Input";
 export { default as InputField } from "./InputField";
 export { default as InputGroup } from "./InputGroup";
 export { default as InputRow } from "./InputRow";
+export { default as Checkbox } from "./Checkbox";
 export { default as InputRowItem } from "./InputRowItem";
 export { default as InputRowLabel } from "./InputRowLabel";
 export { default as ListManager } from "./ListManager";
