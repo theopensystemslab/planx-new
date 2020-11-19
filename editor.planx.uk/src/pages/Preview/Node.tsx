@@ -9,6 +9,7 @@ import Checklist from "./components/Checklist";
 import Content from "./components/Content";
 import FileUpload from "./components/FileUpload";
 import FindProperty from "./components/FindProperty";
+import Page from "./components/Page";
 import Pay from "./components/Pay";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
@@ -79,6 +80,10 @@ const Node: React.FC<any> = (props) => {
 
     case TYPES.Notice:
       return <Notice {...allProps} />;
+
+    case TYPES.Page:
+      console.log({ props });
+      return <Page {...allProps} />;
 
     case TYPES.Pay:
       return (

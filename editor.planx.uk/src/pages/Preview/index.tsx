@@ -4,12 +4,12 @@ import Header from "../../components/Header";
 import { useStore } from "../FlowEditor/lib/store";
 import Node from "./Node";
 
-const Questions = () => {
-  const [currentCard, record] = useStore((state) => [
-    state.currentCard,
+const Nodes = () => {
+  const [currentNode, record] = useStore((state) => [
+    state.currentNode,
     state.record,
   ]);
-  const node = currentCard();
+  const node = currentNode();
 
   if (!node) return null;
 
@@ -37,7 +37,7 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
   ]);
 
   const goBackable = Object.entries(breadcrumbs)
-    .filter(([k, v]: any) => !v.auto)
+    .filter(([, v]: any) => !v.auto)
     .map(([k]) => k);
 
   const canGoBack = goBackable.length > 0;
@@ -70,7 +70,7 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
           ⭠ Back
         </span>
 
-        <Questions />
+        <Nodes />
       </div>
     </>
   );

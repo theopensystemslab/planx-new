@@ -34,60 +34,94 @@ test("it lists upcoming cards", () => {
     },
   });
 
-  expect(getState().upcomingCardIds()).toEqual([["a"]]);
+  expect(getState().upcomingNodeIds()).toEqual(["a"]);
 
   getState().record("a", ["c"]);
 
-  expect(getState().upcomingCardIds()).toEqual([["d"]]);
+  expect(getState().upcomingNodeIds()).toEqual(["d"]);
 
   getState().record("d", ["e", "f"]);
 
-  expect(getState().upcomingCardIds()).toEqual([]);
+  expect(getState().upcomingNodeIds()).toEqual([]);
 });
 
-test("display all upcomingCards when inside a page", () => {
+test("only return page's children when page is the node that's currently active", () => {
   setState({
     flow: {
       _root: {
-        edges: ["intro", "page", "last"],
+        edges: ["root_node1", "page", "root_node2"],
       },
-      intro: {
+      root_node1: {
         type: TYPES.Content,
       },
       page: {
         type: TYPES.Page,
-        edges: ["a", "b"],
+        edges: ["page_node1", "page_node2"],
       },
-      a: {
+      page_node1: {
         type: TYPES.Content,
       },
-      b: {
+      page_node2: {
         type: TYPES.Content,
       },
-      last: {
+      root_node2: {
         type: TYPES.Content,
       },
     },
   });
 
-  expect(getState().upcomingCardIds()).toEqual([
-    ["intro"],
-    ["page", "a", "b"],
-    ["last"],
+  // list all upcoming nodes, don't explore children of page node
+  // as it is not the current (1st) node
+
+  expect(getState().upcomingNodeIds()).toEqual([
+    "root_node1",
+    "page", // this node has children, but we don't expand it and list them yet
+    "root_node2",
   ]);
 
-  getState().record("intro", []);
+  // user visits the first root_node and clicks 'Continue'
 
-  expect(getState().upcomingCardIds()).toEqual([["page", "a", "b"], ["last"]]);
-  getState().record("a", []);
-  expect(getState().upcomingCardIds()).toEqual([["page", "b"], ["last"]]);
-  getState().record("b", []);
-  expect(getState().upcomingCardIds()).toEqual([["last"]]);
-  getState().record("last", []);
-  expect(getState().upcomingCardIds()).toEqual([]);
+  getState().record("root_node1", []);
 
-  getState().record("a");
-  expect(getState().upcomingCardIds()).toEqual([["page", "a", "b"], ["last"]]);
+  // now open up the page node and include its 2 children in the upcoming list
+
+  // upcoming nodes = [a,b,PAGE,c,d] <- PAGE not first upcomingId, don't expand it
+
+  // after visiting a,b, PAGE reaches the 0th index, so open it into an array -
+
+  // upcoming nodes = [[PAGE, ...pageChildren],c,d] <- PAGE now first so we expand it into array
+
+  expect(getState().upcomingNodeIds()).toEqual([
+    ["page", "page_node1", "page_node2"],
+    "root_node2",
+  ]);
+
+  getState().record("page_node1", []);
+
+  expect(getState().upcomingNodeIds()).toEqual([
+    ["page", "page_node2"],
+    "root_node2",
+  ]);
+
+  getState().record("page_node2", []);
+
+  // after there are no more nodes inside page, we then just show the nodes after it
+  // upcoming nodes = [[PAGE, (no children)],c,d] => [c,d]
+
+  expect(getState().upcomingNodeIds()).toEqual(["root_node2"]);
+
+  // user clicks continue on the final node
+  getState().record("root_node2", []);
+
+  // no more nodes left to visit
+  expect(getState().upcomingNodeIds()).toEqual([]);
+
+  getState().record("page_node1");
+
+  expect(getState().upcomingNodeIds()).toEqual([
+    ["page", "page_node1", "page_node2"],
+    "root_node2",
+  ]);
 });
 
 test("notice", () => {
@@ -102,7 +136,7 @@ test("notice", () => {
     },
   });
 
-  expect(getState().upcomingCardIds()).toEqual([["a"]]);
+  expect(getState().upcomingNodeIds()).toEqual(["a"]);
 });
 
 test("crawling with portals", () => {
@@ -125,7 +159,7 @@ test("crawling with portals", () => {
     },
   });
 
-  expect(getState().upcomingCardIds()).toEqual([["c", "b"]]);
+  expect(getState().upcomingNodeIds()).toEqual(["c", "b"]);
 });
 
 describe("error handling", () => {

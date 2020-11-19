@@ -59,7 +59,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   updateNode: any; //: () => void;
   // preview
   breadcrumbs: Record<string, { answers: string[]; auto?: boolean }>;
-  currentCard: () => Record<string, any> | null;
+  currentNode: () => Record<string, any> | null;
   passport: any; //: any;
   record: any; //: () => void;
   reportData: any; //: () => any;
@@ -67,7 +67,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   sessionId: any; //: string;
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
-  upcomingCardIds: () => Array<String | Array<String>>;
+  upcomingNodeIds: () => Array<String | Array<String>>;
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
@@ -388,11 +388,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     set({ id, flow });
   },
 
-  upcomingCardIds() {
+  upcomingNodeIds() {
     const { flow, breadcrumbs, passport } = get();
 
-    const pages = [];
-    const ids: Set<string> = new Set();
+    const ids: Set<string | Array<string>> = new Set();
 
     const nodeIdsConnectedFrom = (source: string) => {
       return (
@@ -405,12 +404,15 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
           )
           .forEach((id) => {
             if (flow[id]?.type === TYPES.Page) {
-              pages.push(Array.from(ids));
-              ids.clear();
-              nodeIdsConnectedFrom(id);
-              if (ids.size > 0) {
-                pages.push([id, ...Array.from(ids)]);
-                ids.clear();
+              if (ids.size === 0) {
+                nodeIdsConnectedFrom(id);
+                const pageIds: Array<string> = [id, ...ids];
+                if (pageIds.length > 1) {
+                  ids.clear();
+                  ids.add(pageIds);
+                }
+              } else {
+                ids.add(id);
               }
             } else if (flow[id]?.type === TYPES.InternalPortal) {
               nodeIdsConnectedFrom(id);
@@ -470,27 +472,35 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
     nodeIdsConnectedFrom(ROOT_NODE_KEY);
 
-    return [...pages, Array.from(ids)].filter((a) => a.length > 0);
+    return Array.from(ids);
   },
 
-  currentCard() {
-    const { upcomingCardIds, flow } = get();
-    const upcoming = upcomingCardIds();
+  currentNode() {
+    const { upcomingNodeIds, flow } = get();
+    const upcoming = upcomingNodeIds();
 
     if (upcoming.length > 0) {
       let id = upcoming[0];
-      if (Array.isArray(id)) id = id[0];
-      return {
-        id,
-        ...flow[id as string],
-      };
+      if (Array.isArray(id)) {
+        const [pageId, ...childIds] = id as Array<string>;
+        return {
+          id: pageId,
+          ...flow[pageId],
+          childIds,
+        };
+      } else {
+        return {
+          id,
+          ...flow[id as string],
+        };
+      }
     } else {
       return null;
     }
   },
 
   record(id: string, vals: string | Array<string>) {
-    const { breadcrumbs, sessionId, upcomingCardIds, flow, passport } = get();
+    const { breadcrumbs, sessionId, upcomingNodeIds, flow, passport } = get();
 
     if (!flow[id]) throw new Error("id not found");
 
@@ -545,7 +555,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       // either a Statement or Checklist type. TODO: make this more robust
       if (SUPPORTED_DECISION_TYPES.includes(flow[id].type) && sessionId) {
         addSessionEvent();
-        if (upcomingCardIds().length === 0) {
+        if (upcomingNodeIds().length === 0) {
           endSession();
         }
       }
