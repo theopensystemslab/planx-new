@@ -34,15 +34,60 @@ test("it lists upcoming cards", () => {
     },
   });
 
-  expect(getState().upcomingCardIds()).toEqual(["a"]);
+  expect(getState().upcomingCardIds()).toEqual([["a"]]);
 
   getState().record("a", ["c"]);
 
-  expect(getState().upcomingCardIds()).toEqual(["d"]);
+  expect(getState().upcomingCardIds()).toEqual([["d"]]);
 
   getState().record("d", ["e", "f"]);
 
   expect(getState().upcomingCardIds()).toEqual([]);
+});
+
+test("display all upcomingCards when inside a page", () => {
+  setState({
+    flow: {
+      _root: {
+        edges: ["intro", "page", "last"],
+      },
+      intro: {
+        type: TYPES.Content,
+      },
+      page: {
+        type: TYPES.Page,
+        edges: ["a", "b"],
+      },
+      a: {
+        type: TYPES.Content,
+      },
+      b: {
+        type: TYPES.Content,
+      },
+      last: {
+        type: TYPES.Content,
+      },
+    },
+  });
+
+  expect(getState().upcomingCardIds()).toEqual([
+    ["intro"],
+    ["page", "a", "b"],
+    ["last"],
+  ]);
+
+  getState().record("intro", []);
+
+  expect(getState().upcomingCardIds()).toEqual([["page", "a", "b"], ["last"]]);
+  getState().record("a", []);
+  expect(getState().upcomingCardIds()).toEqual([["page", "b"], ["last"]]);
+  getState().record("b", []);
+  expect(getState().upcomingCardIds()).toEqual([["last"]]);
+  getState().record("last", []);
+  expect(getState().upcomingCardIds()).toEqual([]);
+
+  getState().record("a");
+  expect(getState().upcomingCardIds()).toEqual([["page", "a", "b"], ["last"]]);
 });
 
 test("notice", () => {
@@ -57,7 +102,7 @@ test("notice", () => {
     },
   });
 
-  expect(getState().upcomingCardIds()).toEqual(["a"]);
+  expect(getState().upcomingCardIds()).toEqual([["a"]]);
 });
 
 test("crawling with portals", () => {
@@ -80,7 +125,7 @@ test("crawling with portals", () => {
     },
   });
 
-  expect(getState().upcomingCardIds()).toEqual(["c", "b"]);
+  expect(getState().upcomingCardIds()).toEqual([["c", "b"]]);
 });
 
 describe("error handling", () => {

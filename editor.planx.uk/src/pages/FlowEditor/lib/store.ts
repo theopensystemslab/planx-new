@@ -67,7 +67,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   sessionId: any; //: string;
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
-  upcomingCardIds: () => string[];
+  upcomingCardIds: () => Array<String | Array<String>>;
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
@@ -391,6 +391,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   upcomingCardIds() {
     const { flow, breadcrumbs, passport } = get();
 
+    const pages = [];
     const ids: Set<string> = new Set();
 
     const nodeIdsConnectedFrom = (source: string) => {
@@ -403,7 +404,15 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                 flow[id]?.edges?.length > 0)
           )
           .forEach((id) => {
-            if ([TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type)) {
+            if (flow[id]?.type === TYPES.Page) {
+              pages.push(Array.from(ids));
+              ids.clear();
+              nodeIdsConnectedFrom(id);
+              if (ids.size > 0) {
+                pages.push([id, ...Array.from(ids)]);
+                ids.clear();
+              }
+            } else if (flow[id]?.type === TYPES.InternalPortal) {
               nodeIdsConnectedFrom(id);
             } else {
               const fn = flow[id]?.data?.fn;
@@ -461,7 +470,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
     nodeIdsConnectedFrom(ROOT_NODE_KEY);
 
-    return Array.from(ids);
+    return [...pages, Array.from(ids)].filter((a) => a.length > 0);
   },
 
   currentCard() {
@@ -469,10 +478,11 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     const upcoming = upcomingCardIds();
 
     if (upcoming.length > 0) {
-      const id = upcoming[0];
+      let id = upcoming[0];
+      if (Array.isArray(id)) id = id[0];
       return {
         id,
-        ...flow[id],
+        ...flow[id as string],
       };
     } else {
       return null;
