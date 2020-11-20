@@ -70,9 +70,9 @@ const Result: React.FC<Props> = ({
           {reasonsTitle}
         </Typography>
         <Box mb={3}>
-          <Box mb={1} color="text.secondary">
+          {/* <Box mb={1} color="text.secondary">
             Planning Permission
-          </Box>
+          </Box> */}
 
           <Responses responses={visibleResponses} />
 
