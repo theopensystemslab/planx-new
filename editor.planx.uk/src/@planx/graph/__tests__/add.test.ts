@@ -51,6 +51,61 @@ test("with children", () => {
   ]);
 });
 
+test("with grandchildren and great-grandchildren", () => {
+  const [graph, ops] = add(
+    { id: "a" },
+    {
+      children: [
+        {
+          id: "a-a",
+          children: [
+            {
+              id: "a-a-a",
+              children: [
+                {
+                  id: "a-a-a-a",
+                },
+                {
+                  id: "a-a-a-b",
+                },
+              ],
+            },
+          ],
+        },
+        { id: "a-b" },
+      ],
+    }
+  )();
+
+  expect(graph).toEqual({
+    _root: {
+      edges: ["a"],
+    },
+    a: {
+      edges: ["a-a", "a-b"],
+    },
+    "a-a": {
+      edges: ["a-a-a"],
+    },
+    "a-b": {},
+    "a-a-a": {
+      edges: ["a-a-a-a", "a-a-a-b"],
+    },
+    "a-a-a-a": {},
+    "a-a-a-b": {},
+  });
+
+  expect(ops).toEqual([
+    { oi: { edges: ["a"] }, p: ["_root"] },
+    { oi: { edges: ["a-a", "a-b"] }, p: ["a"] },
+    { oi: { edges: ["a-a-a"] }, p: ["a-a"] },
+    { oi: { edges: ["a-a-a-a", "a-a-a-b"] }, p: ["a-a-a"] },
+    { oi: {}, p: ["a-a-a-a"] },
+    { oi: {}, p: ["a-a-a-b"] },
+    { oi: {}, p: ["a-b"] },
+  ]);
+});
+
 test("ignores empty values", () => {
   const [graph, ops] = add({
     id: "test",

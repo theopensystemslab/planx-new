@@ -170,7 +170,8 @@ const _add = (
   }
 
   children?.forEach((child) => {
-    _add(draft, child, { parent: id });
+    const { children: grandChildren = [], ...childNode } = child;
+    _add(draft, childNode, { children: grandChildren, parent: id });
   });
 };
 
