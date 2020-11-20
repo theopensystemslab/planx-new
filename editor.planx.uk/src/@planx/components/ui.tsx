@@ -6,6 +6,7 @@ import Create from "@material-ui/icons/Create";
 import Description from "@material-ui/icons/Description";
 import Event from "@material-ui/icons/Event";
 import ExposureZero from "@material-ui/icons/ExposureZero";
+import Home from "@material-ui/icons/Home";
 import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import List from "@material-ui/icons/List";
 import LocationOnOutlined from "@material-ui/icons/LocationOnOutlined";
@@ -43,7 +44,7 @@ type Icon = typeof CheckBoxOutlined;
 export const ICONS: {
   [key in TYPES]: Icon | undefined;
 } = {
-  [TYPES.AddressInput]: undefined,
+  [TYPES.AddressInput]: Home,
   [TYPES.Checklist]: CheckBoxOutlined,
   [TYPES.Content]: TextFields,
   [TYPES.DateInput]: Event,

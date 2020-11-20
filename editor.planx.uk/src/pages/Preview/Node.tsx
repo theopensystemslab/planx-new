@@ -1,3 +1,4 @@
+import AddressInput from "@planx/components/AddressInput/Public";
 import Checklist from "@planx/components/Checklist/Public";
 import Content from "@planx/components/Content/Public";
 import DateInput from "@planx/components/DateInput/Public";
@@ -182,6 +183,8 @@ const Node: React.FC<any> = (props: Props) => {
       return <TextInput {...allProps} />;
 
     case TYPES.AddressInput:
+      return <AddressInput {...allProps} />;
+
     case TYPES.ExternalPortal:
     case TYPES.Filter:
     case TYPES.Flow:
