@@ -1,24 +1,15 @@
 import Button from "@material-ui/core/Button";
-import { Group } from "@planx/components/Checklist/types";
-import { Option } from "@planx/components/shared";
+import { Checklist } from "@planx/components/Checklist/types";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
 import React, { useState } from "react";
+import Checkbox from "ui/Checkbox";
 
 import { ExpandableList, ExpandableListItem } from "../../../../ui";
-import InnerCheckbox from "./InnerCheckbox";
 
-interface Props {
-  allRequired?: boolean;
-  description?: string;
-  groupedOptions?: Array<Group<Option>>;
+interface Props extends Checklist {
   handleSubmit?;
-  howMeasured?: string;
-  info?: string;
-  options?: Array<Option>;
-  policyRef?: string;
-  text: string;
 }
 
 function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
@@ -27,7 +18,7 @@ function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
     : [...arr, value];
 }
 
-const Checklist: React.FC<Props> = ({
+const ChecklistComponent: React.FC<Props> = ({
   allRequired,
   description = "",
   groupedOptions,
@@ -58,15 +49,13 @@ const Checklist: React.FC<Props> = ({
 
   const allChecked = formik.values.checked.length === flatOptions.length;
 
-  const changeCheckbox = (input) => {
-    const { current } = input;
-
+  const changeCheckbox = (id: string) => (_checked: boolean) => {
     let newCheckedIds;
 
-    if (formik.values.checked.includes(current.value)) {
-      newCheckedIds = formik.values.checked.filter((x) => x !== current.value);
+    if (formik.values.checked.includes(id)) {
+      newCheckedIds = formik.values.checked.filter((x) => x !== id);
     } else {
-      newCheckedIds = [...formik.values.checked, current.value];
+      newCheckedIds = [...formik.values.checked, id];
     }
 
     formik.setFieldValue(
@@ -76,8 +65,6 @@ const Checklist: React.FC<Props> = ({
         return originalIds.indexOf(b) - originalIds.indexOf(a);
       })
     );
-
-    return (current.checked = !current.checked);
   };
 
   return (
@@ -92,12 +79,13 @@ const Checklist: React.FC<Props> = ({
         />
 
         {options ? (
-          options.map((cb: any) => (
-            <InnerCheckbox
-              changeCheckbox={changeCheckbox}
-              key={cb.data.text}
-              label={cb.data.text}
-              value={cb.id}
+          options.map((option: any) => (
+            <Checkbox
+              onChange={changeCheckbox(option.id)}
+              key={option.data.text}
+              label={option.data.text}
+              id={option.id}
+              checked={formik.values.checked.includes(option.id)}
             />
           ))
         ) : groupedOptions ? (
@@ -117,11 +105,12 @@ const Checklist: React.FC<Props> = ({
                 >
                   <div>
                     {group.children.map((option: any) => (
-                      <InnerCheckbox
-                        changeCheckbox={changeCheckbox}
+                      <Checkbox
+                        onChange={changeCheckbox(option.id)}
                         key={option.data.text}
                         label={option.data.text}
-                        value={option.id}
+                        id={option.id}
+                        checked={formik.values.checked.includes(option.id)}
                       />
                     ))}
                   </div>
@@ -143,4 +132,4 @@ const Checklist: React.FC<Props> = ({
     </Card>
   );
 };
-export default Checklist;
+export default ChecklistComponent;

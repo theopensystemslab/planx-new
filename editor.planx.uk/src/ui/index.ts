@@ -1,4 +1,6 @@
+export { default as Checkbox } from "./Checkbox";
 export { default as ColorPicker } from "./ColorPicker";
+export { ExpandableList, ExpandableListItem } from "./ExpandableList";
 export { default as FileUpload } from "./FileUpload";
 export { default as ImgInput } from "./ImgInput";
 export { default as Input } from "./Input";
@@ -14,7 +16,6 @@ export { default as ModalSectionContent } from "./ModalSectionContent";
 export { default as OptionButton } from "./OptionButton";
 export { default as RichTextInput } from "./RichTextInput";
 export { default as SelectInput } from "./SelectInput";
-export { default as SimpleMenu } from "./SimpleMenu";
-export { ExpandableList, ExpandableListItem } from "./ExpandableList";
 export type { Props as SelectInputProps } from "./SelectInput";
+export { default as SimpleMenu } from "./SimpleMenu";
 export { default as VisibilityToggle } from "./VisibilityToggle";
