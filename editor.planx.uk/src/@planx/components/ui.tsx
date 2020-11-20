@@ -11,6 +11,7 @@ import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import List from "@material-ui/icons/List";
 import LocationOnOutlined from "@material-ui/icons/LocationOnOutlined";
 import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
+import PlaylistAddCheck from "@material-ui/icons/PlaylistAddCheck";
 import RateReview from "@material-ui/icons/RateReview";
 import ReportProblemOutlined from "@material-ui/icons/ReportProblemOutlined";
 import SearchOutlined from "@material-ui/icons/SearchOutlined";
@@ -61,7 +62,7 @@ export const ICONS: {
   [TYPES.PropertyInformation]: LocationOnOutlined,
   [TYPES.Report]: undefined,
   [TYPES.Response]: undefined,
-  [TYPES.Result]: undefined,
+  [TYPES.Result]: PlaylistAddCheck,
   [TYPES.Review]: RateReview,
   [TYPES.Send]: Send,
   [TYPES.SignIn]: undefined,
