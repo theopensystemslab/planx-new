@@ -1,6 +1,5 @@
 import { TYPES } from "@planx/components/types";
 import React from "react";
-
 import { useStore } from "../../../lib/store";
 import Breadcrumb from "./Breadcrumb";
 import Checklist from "./Checklist";
@@ -41,7 +40,15 @@ const Node: React.FC<any> = (props) => {
     case TYPES.PropertyInformation:
       return <Question {...props} text="Property information" />;
     case TYPES.Result:
-      return <Question {...props} text="(Result)" />;
+      return (
+        <Question
+          {...props}
+          text={[
+            node?.data?.flagSet ?? "Result",
+            !node?.data?.visible ? "*" : "",
+          ].join("")}
+        />
+      );
     case TYPES.Review:
       return <Question {...props} text={node?.data?.description ?? "Review"} />;
     case TYPES.Send:
