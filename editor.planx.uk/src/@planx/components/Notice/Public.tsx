@@ -5,13 +5,11 @@ import ErrorOutline from "@material-ui/icons/ErrorOutline";
 import { Notice } from "@planx/components/Notice/types";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import { PublicProps } from "@planx/components/ui";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
-interface Props extends Notice {
-  handleSubmit?: () => void;
-  resetPreview: () => void;
-}
+export type Props = PublicProps<Notice>;
 
 interface StyleProps {
   color: string;

@@ -1,3 +1,4 @@
+import Content from "@planx/components/Content/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import TextInput from "@planx/components/TextInput/Editor";
 import { TYPES } from "@planx/components/types";
@@ -5,7 +6,6 @@ import React from "react";
 
 import { SLUGS } from "../../data/types";
 import Checklist from "./Checklist";
-import Content from "./Content";
 import ExternalPortal from "./ExternalPortal";
 import FileUpload from "./FileUpload";
 import Filter from "./Filter";

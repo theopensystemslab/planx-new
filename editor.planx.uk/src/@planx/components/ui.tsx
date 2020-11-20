@@ -29,8 +29,10 @@ export interface EditorProps<Type, Data> {
   node?: any;
 }
 
-export type PublicProps<Data, UserData> = Data & {
+export type PublicProps<Data, UserData = {}> = Data & {
   handleSubmit?: (value?: UserData) => void;
+  resetButton?: boolean;
+  resetPreview?: () => void;
 };
 
 // XXX: We define the Icon type in terms of one of the Icons so as not to have to repeat ourselves

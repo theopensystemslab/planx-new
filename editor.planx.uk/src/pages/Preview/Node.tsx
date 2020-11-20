@@ -1,3 +1,4 @@
+import Content from "@planx/components/Content/Public";
 import Notice from "@planx/components/Notice/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
@@ -6,7 +7,6 @@ import React from "react";
 
 import { useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";
-import Content from "./components/Content";
 import FileUpload from "./components/FileUpload";
 import FindProperty from "./components/FindProperty";
 import Pay from "./components/Pay";
