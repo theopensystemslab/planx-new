@@ -28,7 +28,7 @@ export const useInputStyles = makeStyles((theme) => ({
   },
 }));
 
-interface IFormInput {
+export interface IFormInput {
   helperText?: string;
   placeholder?: string;
   name?: string;
