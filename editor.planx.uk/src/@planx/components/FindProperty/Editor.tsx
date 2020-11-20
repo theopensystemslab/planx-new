@@ -1,29 +1,23 @@
-import { parseMoreInformation } from "@planx/components/shared";
+import {
+  FindProperty,
+  parseFindProperty,
+} from "@planx/components/FindProperty/types";
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
+import { EditorProps, ICONS } from "@planx/components/ui";
 import { InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
 
-import { ModalSection, ModalSectionContent } from "../../../../ui";
+export type Props = EditorProps<TYPES.FindProperty, FindProperty>;
 
-export interface Props {
-  id?: string;
-  handleSubmit?: (d: any) => void;
-  node?: any;
-}
-
-const ContentComponent: React.FC<Props> = (props) => {
+const FindPropertyComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
-    initialValues: {
-      ...parseMoreInformation(props.node?.data),
-    },
+    initialValues: parseFindProperty(props.node?.data),
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({
-          type: TYPES.PropertyInformation,
-          data: newValues,
-        });
+        props.handleSubmit({ type: TYPES.FindProperty, data: newValues });
       }
     },
     validate: () => {},
@@ -32,8 +26,8 @@ const ContentComponent: React.FC<Props> = (props) => {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent
-          title="Property Information"
-          Icon={ICONS[TYPES.PropertyInformation]}
+          title="Find Property"
+          Icon={ICONS[TYPES.FindProperty]}
         >
           <></>
         </ModalSectionContent>
@@ -54,4 +48,4 @@ const ContentComponent: React.FC<Props> = (props) => {
   );
 };
 
-export default ContentComponent;
+export default FindPropertyComponent;

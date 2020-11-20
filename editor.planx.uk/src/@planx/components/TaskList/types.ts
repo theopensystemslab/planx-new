@@ -1,4 +1,4 @@
-import { MoreInformation } from "../shared";
+import { MoreInformation, parseMoreInformation } from "../shared";
 
 export interface TaskList extends MoreInformation {
   tasks: Array<Task>;
@@ -8,3 +8,10 @@ export interface Task {
   title: string;
   description: string;
 }
+
+export const parseTaskList = (
+  data: Record<string, any> | undefined
+): TaskList => ({
+  tasks: /* remove once migrated */ data?.taskList?.tasks || data?.tasks || [],
+  ...parseMoreInformation(data),
+});
