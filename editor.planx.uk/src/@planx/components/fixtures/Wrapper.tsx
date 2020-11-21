@@ -13,10 +13,9 @@ function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
 
   return (
     <div style={{ display: "flex" }}>
-      <div>
+      <div style={{ minWidth: 380 }}>
         <props.Editor
           handleSubmit={(newNode) => {
-            console.log(newNode);
             setData(newNode.data);
           }}
         />
