@@ -26,21 +26,21 @@ const components: {
 } = {
   checklist: Checklist,
   content: Content,
+  "date-input": DateInput,
   "external-portal": ExternalPortal,
   "file-upload": FileUpload,
   filter: Filter,
   "find-property": FindProperty,
   flow: EmptyComponent,
   "internal-portal": InternalPortal,
+  "property-information": PropertyInformation,
   notice: Notice,
   page: Page,
   pay: Pay,
-  "property-information": PropertyInformation,
   question: Question,
   result: Result,
   "task-list": TaskList,
   "text-input": TextInput,
-  "date-input": DateInput,
 };
 
 export default components;
