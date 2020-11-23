@@ -7,12 +7,11 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { TaskList } from "@planx/components/TaskList/types";
+import { PublicProps } from "@planx/components/ui";
 import classNames from "classnames";
 import React from "react";
 
-interface Props extends TaskList {
-  handleSubmit?;
-}
+export type Props = PublicProps<TaskList>;
 
 const taskStyles = makeStyles((theme) => ({
   taskList: { maxWidth: 768 },

@@ -1,5 +1,6 @@
 import Content from "@planx/components/Content/Public";
 import Notice from "@planx/components/Notice/Public";
+import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
 import mapAccum from "ramda/src/mapAccum";
@@ -13,7 +14,6 @@ import Pay from "./components/Pay";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
 import Result from "./components/Result";
-import TaskList from "./components/TaskList";
 
 let uprn;
 

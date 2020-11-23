@@ -1,27 +1,27 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { parseMoreInformation } from "@planx/components/shared";
-import { Task } from "@planx/components/TaskList/types";
+import {
+  parseTaskList,
+  Task,
+  TaskList,
+} from "@planx/components/TaskList/types";
 import { TYPES } from "@planx/components/types";
 import { ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import {
+  EditorProps,
+  InternalNotes,
+  MoreInformation,
+} from "@planx/components/ui";
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
+import Input from "ui/Input";
+import InputRow from "ui/InputRow";
+import ListManager from "ui/ListManager";
+import { EditorProps as ListManagerEditorProps } from "ui/ListManager";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
+import RichTextInput from "ui/RichTextInput";
 
-import {
-  Input,
-  InputRow,
-  ListManager,
-  ModalSection,
-  ModalSectionContent,
-  RichTextInput,
-} from "../../../../ui";
-import { EditorProps } from "../../../../ui/ListManager";
-
-export interface Props {
-  id?: string;
-  handleSubmit?: (d: any) => void;
-  node?: any;
-}
+export type Props = EditorProps<TYPES.TaskList, TaskList>;
 
 const useTaskEditorStyles = makeStyles((_theme) => ({
   container: {
@@ -34,7 +34,7 @@ const newTask = (): Task => ({
   description: "",
 });
 
-const TaskEditor: React.FC<EditorProps<Task>> = (props) => {
+const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
   const classes = useTaskEditorStyles();
   return (
     <div className={classes.container}>
@@ -73,14 +73,7 @@ const TaskEditor: React.FC<EditorProps<Task>> = (props) => {
 
 const TaskListComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
-    initialValues: {
-      // TODO: improve runtime validation here (joi, io-ts)
-      tasks:
-        /* remove once migrated */ props.node?.data?.taskList?.tasks ||
-        props.node?.data?.tasks ||
-        [],
-      ...parseMoreInformation(props.node?.data),
-    },
+    initialValues: parseTaskList(props.node?.data),
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
         props.handleSubmit({ type: TYPES.TaskList, data: newValues });
