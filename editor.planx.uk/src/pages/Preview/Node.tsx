@@ -164,7 +164,6 @@ const Node: React.FC<any> = (props: Props) => {
       return <TextInput {...allProps} />;
 
     case TYPES.AddressInput:
-    case TYPES.DateInput:
     case TYPES.ExternalPortal:
     case TYPES.Filter:
     case TYPES.Flow:

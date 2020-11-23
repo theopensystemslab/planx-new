@@ -60,7 +60,6 @@ const Node: React.FC<any> = (props) => {
         <Checklist {...props} {...node} text={node?.data?.text ?? "[Empty]"} />
       );
     case TYPES.AddressInput:
-    case TYPES.DateInput:
     case TYPES.Flow:
     case TYPES.NumberInput:
     case TYPES.Report:
