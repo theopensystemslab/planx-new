@@ -43,15 +43,8 @@ describe("Validations", () => {
     });
 
     test("the date is out of bounds (< min or > max)", async () => {
-      const handleSubmit = jest.fn();
-
       render(
-        <DateInput
-          title="Minmax date"
-          min="2020-01-02"
-          max="2020-01-03"
-          handleSubmit={handleSubmit}
-        />
+        <DateInput title="Minmax date" min="2020-01-02" max="2020-01-03" />
       );
 
       const dayInput = screen.getByPlaceholderText("DD");
