@@ -3,6 +3,7 @@ import { DateInput, UserData } from "@planx/components/DateInput/types";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
+import parseISO from "date-fns/parseISO";
 import React, { useMemo, useState } from "react";
 import DateInputUi from "ui/DateInput";
 import InputRow from "ui/InputRow";
@@ -14,12 +15,16 @@ const DateInputComponent: React.FC<Props> = (props) => {
   const isValid = useMemo(() => {
     if (
       (props.min && value && value < props.min) ||
-      (props.max && value && value > props.max)
+      (props.max && value && value > props.max) ||
+      // TODO: don't use string equality check here?
+      parseISO(value).toString() === "Invalid Date"
     ) {
       return false;
     }
+    console.log({ value });
     return true;
   }, [value, props.min, props.max]);
+
   return (
     <Card>
       <QuestionHeader
@@ -33,6 +38,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
         <DateInputUi value={value} bordered onChange={setValue} />
       </InputRow>
       <Button
+        data-testid="submit"
         variant="contained"
         color="primary"
         size="large"
