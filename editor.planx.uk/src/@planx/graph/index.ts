@@ -37,7 +37,7 @@ export const isClone = (id: string, graph: Graph): boolean =>
 const isSomething = (x: any): boolean =>
   x !== null && x !== undefined && x !== "";
 
-const sanitize = (x: any) => {
+export const sanitize = (x: any) => {
   if ((x && typeof x === "string") || x instanceof String) {
     return trim(x.replace(/[\u200B-\u200D\uFEFF↵]/g, ""));
   } else if ((x && typeof x === "object") || x instanceof Object) {

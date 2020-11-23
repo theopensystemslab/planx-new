@@ -1,7 +1,12 @@
 import { DateInput, parseDateInput } from "@planx/components/DateInput/types";
 import { TYPES } from "@planx/components/types";
-import { EditorProps, ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import {
+  EditorProps,
+  ICONS,
+  InternalNotes,
+  MoreInformation,
+} from "@planx/components/ui";
+import { sanitize } from "@planx/graph";
 import { useFormik } from "formik";
 import React from "react";
 import DateInputUi from "ui/DateInput";
@@ -20,14 +25,14 @@ const DateInputComponent: React.FC<Props> = (props) => {
       if (props.handleSubmit) {
         props.handleSubmit({
           type: TYPES.DateInput,
-          data: newValues,
+          data: sanitize(newValues),
         });
       }
     },
     validate: () => {},
   });
   return (
-    <form onSubmit={formik.handleSubmit} id="modal">
+    <form onSubmit={formik.handleSubmit} id="modal" data-testid="form">
       <ModalSection>
         <ModalSectionContent title="Text Input" Icon={ICONS[TYPES.DateInput]}>
           <InputRow>
