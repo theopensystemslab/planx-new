@@ -44,7 +44,6 @@ const components: {
   review: Review,
   "task-list": TaskList,
   "text-input": TextInput,
-  "date-input": DateInput,
 };
 
 export default components;
