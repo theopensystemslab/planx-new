@@ -14,14 +14,17 @@ const DateInputComponent: React.FC<Props> = (props) => {
   const [value, setValue] = useState<string>("");
   const isValid = useMemo(() => {
     if (
-      (props.min && value && value < props.min) ||
-      (props.max && value && value > props.max) ||
+      !value ||
       // TODO: don't use string equality check here?
       parseISO(value).toString() === "Invalid Date"
     ) {
       return false;
     }
-    console.log({ value });
+    // In following conditions, values like '2020-10-05' and '2020-11-02' are compared character by character.
+    // Because of the YYYY-MM-DD format, this is a cheap and reliable way to compare dates.
+    if ((props.min && value < props.min) || (props.max && value > props.max)) {
+      return false;
+    }
     return true;
   }, [value, props.min, props.max]);
 

@@ -1,5 +1,6 @@
 import { MoreInformation, parseMoreInformation } from "../shared";
 
+// Expected format: YYYY-MM-DD
 export type UserData = string;
 
 export interface DateInput extends MoreInformation {
