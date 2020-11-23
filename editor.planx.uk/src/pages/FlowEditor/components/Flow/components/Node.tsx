@@ -16,6 +16,8 @@ const Node: React.FC<any> = (props) => {
   switch (type) {
     case TYPES.Content:
       return <Question {...props} text={"Content"} />;
+    case TYPES.DateInput:
+      return <Question {...props} text="Date" />;
     case TYPES.ExternalPortal:
       return <Portal {...props} />;
     case TYPES.InternalPortal:
@@ -49,8 +51,6 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.TextInput:
       return <Question {...props} text="Text" />;
-    case TYPES.DateInput:
-      return <Question {...props} text="Date" />;
 
     case TYPES.Response:
       return <Option {...props} />;

@@ -70,6 +70,9 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Content:
       return <Content {...allProps} />;
 
+    case TYPES.DateInput:
+      return <DateInput {...allProps} />;
+
     case TYPES.FileUpload:
       return <FileUpload {...allProps} />;
 
@@ -159,9 +162,6 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.TextInput:
       return <TextInput {...allProps} />;
-
-    case TYPES.DateInput:
-      return <DateInput {...allProps} />;
 
     case TYPES.AddressInput:
     case TYPES.DateInput:
