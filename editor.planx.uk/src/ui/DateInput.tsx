@@ -16,6 +16,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     alignItems: "center",
+    // Adds a uniform horizontal spacing between all child elements.
+    // The `* + *` selector makes sure the first element doesn't get this margin.
     "& > * + *": {
       marginLeft: theme.spacing(1),
     },
