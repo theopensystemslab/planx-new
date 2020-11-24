@@ -1,4 +1,4 @@
-import { Content, parseContent } from "@planx/components/Content/types";
+import { Content } from "@planx/components/Content/types";
 import { TYPES } from "@planx/components/types";
 import { EditorProps, ICONS } from "@planx/components/ui";
 import { InternalNotes, MoreInformation } from "@planx/components/ui";
@@ -8,6 +8,14 @@ import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
+
+import { parseMoreInformation } from "../shared";
+
+const parseContent = (data: Record<string, any> | undefined) => ({
+  // TODO: improve runtime validation here (joi, io-ts)
+  content: data?.content || "",
+  ...parseMoreInformation(data),
+});
 
 export type Props = EditorProps<TYPES.Content, Content>;
 
