@@ -28,14 +28,17 @@ export const useInputStyles = makeStyles((theme) => ({
   },
 }));
 
-interface IFormInput {
+export interface IFormInput {
   helperText?: string;
   placeholder?: string;
   name?: string;
-  onChange?: any;
+  onChange?: (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => void;
   value?: any;
 }
 
+/** General-purpose styled text input */
 const FormInput: React.FC<IFormInput> = ({ helperText, ...props }) => {
   const classes = useInputStyles();
   return (

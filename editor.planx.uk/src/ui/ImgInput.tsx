@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/** Uploads an image and returns corresponding URL */
 const ImgInput: React.FC<{
   img?: string;
   onChange?: (newUrl?: string) => void;
