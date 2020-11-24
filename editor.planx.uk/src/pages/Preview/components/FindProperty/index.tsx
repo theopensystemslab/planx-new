@@ -7,6 +7,7 @@ import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import useAxios from "axios-hooks";
 import natsort from "natsort";
+import { handleSubmit } from "pages/Preview/Node";
 import { parse, toNormalised } from "postcode";
 import React from "react";
 
@@ -14,10 +15,10 @@ import Map from "./Map";
 
 const sorter = natsort({ insensitive: true });
 
-const AddressList: React.FC<{ postcode: string; handleSubmit }> = ({
-  postcode,
-  handleSubmit,
-}) => {
+const AddressList: React.FC<{
+  postcode: string;
+  handleSubmit: handleSubmit;
+}> = ({ postcode, handleSubmit }) => {
   const [address, setAddress] = React.useState(undefined);
   const [{ data }] = useAxios(
     `https://llpg.planx.uk/addresses?limit=100&postcode=eq.${escape(postcode)}`
@@ -69,7 +70,7 @@ const AddressList: React.FC<{ postcode: string; handleSubmit }> = ({
   );
 };
 
-const FindProperty = ({ handleSubmit }) => {
+const FindProperty = ({ handleSubmit: handleSubmit }) => {
   const [boundary, setBoundary] = React.useState(null);
   const [useMap, setUseMap] = React.useState(false);
   const [address, setAddress] = React.useState("");

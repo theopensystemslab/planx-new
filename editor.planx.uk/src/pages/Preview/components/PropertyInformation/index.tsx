@@ -22,7 +22,7 @@ const PropertyInformation = ({
   propertyConstraints,
   lat,
   lng,
-  handleSubmit,
+  handleSubmit: handleSubmit,
 }) => {
   const classes = propertyInformationStyles();
 
@@ -54,7 +54,7 @@ const PropertyInformation = ({
         variant="contained"
         color="primary"
         size="large"
-        onClick={handleSubmit}
+        onClick={() => handleSubmit()}
       >
         Continue
       </Button>
@@ -62,7 +62,7 @@ const PropertyInformation = ({
   );
 };
 
-const PropWithConstraints = ({ info, handleSubmit }) => {
+const PropWithConstraints = ({ info, handleSubmit: handleSubmit }) => {
   const url = `https://local-authority-api.planx.uk/${info.team}?x=${info.x}&y=${info.y}&cacheBuster=10`;
   const [{ data }] = useAxios(url);
   const [id, flow, startSession] = useStore((state) => [
@@ -130,7 +130,7 @@ const PropWithConstraints = ({ info, handleSubmit }) => {
 
 const PropertyInformationWithData: React.FC<any> = ({
   UPRN = 10009795450,
-  handleSubmit = console.log,
+  handleSubmit: handleSubmit = console.log,
 }) => {
   const [{ data }] = useAxios(
     `https://llpg.planx.uk/addresses?limit=1&UPRN=eq.${UPRN}&nocache`

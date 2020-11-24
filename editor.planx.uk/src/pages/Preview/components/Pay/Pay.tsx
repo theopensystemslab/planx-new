@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import { Pay } from "@planx/components/Pay/types";
 import Card from "@planx/components/shared/Preview/Card";
+import { handleSubmit } from "pages/Preview/Node";
 import React, { Suspense } from "react";
 import Input from "ui/Input";
 
@@ -67,7 +68,7 @@ const Summary = React.lazy(() => import("./Summary"));
 const Paid = React.lazy(() => import("./Paid"));
 
 interface Props extends Pay {
-  handleSubmit: (any) => any;
+  handleSubmit: handleSubmit;
 }
 
 function Component(props: Props) {

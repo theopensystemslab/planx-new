@@ -36,6 +36,17 @@ const send = (ops) => {
   }
 };
 
+export type componentOutput = undefined | null | any | Array<any>;
+export type userData = { answers: componentOutput; auto?: boolean };
+export type breadcrumbs = Record<string, userData>;
+type nodeId = string;
+export type node = { id?: nodeId; type?: TYPES; data?: any; edges?: nodeId[] };
+export type flow = Record<string, node>;
+export interface passport {
+  data?: any;
+  info?: any;
+}
+
 interface Store extends Record<string | number | symbol, unknown> {
   addNode: any; //: () => void;
   childNodesOf: (string) => Record<string, any>[];
@@ -44,7 +55,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   copyNode: (string) => void;
   createFlow: any; //: () => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
-  flow: Record<string, any>;
+  flow: flow;
   flowLayout: FlowLayout;
   getFlows: any; //: () => any;
   getNode: (string) => Record<string, any>;
@@ -58,16 +69,16 @@ interface Store extends Record<string | number | symbol, unknown> {
   togglePreview: () => void;
   updateNode: any; //: () => void;
   // preview
-  breadcrumbs: Record<string, { answers: string[]; auto?: boolean }>;
+  breadcrumbs: breadcrumbs;
   currentCard: () => Record<string, any> | null;
-  passport: any; //: any;
+  passport: passport;
   record: any; //: () => void;
   reportData: any; //: () => any;
   resetPreview: any; //: () => void;
   sessionId: any; //: string;
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
-  upcomingCardIds: () => string[];
+  upcomingCardIds: () => nodeId[];
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
@@ -394,63 +405,60 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     const ids: Set<string> = new Set();
 
     const nodeIdsConnectedFrom = (source: string) => {
-      return (
-        flow[source]?.edges
-          ?.filter(
-            (id) =>
-              !Object.keys(breadcrumbs).includes(id) &&
-              (!SUPPORTED_DECISION_TYPES.includes(flow[id].type) ||
-                flow[id]?.edges?.length > 0)
-          )
-          .forEach((id) => {
-            if ([TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type)) {
-              nodeIdsConnectedFrom(id);
-            } else {
-              const fn = flow[id]?.data?.fn;
-              const value =
-                fn === "flag" ? globalFlag : passport.data[fn]?.value;
+      return (flow[source]?.edges ?? [])
+        .filter(
+          (id) =>
+            !Object.keys(breadcrumbs).includes(id) &&
+            (!SUPPORTED_DECISION_TYPES.includes(flow[id].type) ||
+              flow[id]?.edges?.length > 0)
+        )
+        .forEach((id) => {
+          if ([TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type)) {
+            nodeIdsConnectedFrom(id);
+          } else {
+            const fn = flow[id]?.data?.fn;
+            const value = fn === "flag" ? globalFlag : passport.data[fn]?.value;
 
-              if (fn && (fn === "flag" || value !== undefined)) {
-                // TODO: add much-needed docs here
-                const responses = flow[id]?.edges.map((id) => ({
-                  id,
-                  ...flow[id],
-                }));
+            if (fn && (fn === "flag" || value !== undefined)) {
+              // TODO: add much-needed docs here
+              const responses = flow[id]?.edges.map((id) => ({
+                id,
+                ...flow[id],
+              }));
 
-                const responseThatCanBeAutoAnswered = responses.find((n) => {
-                  const val = String(n.data?.val);
-                  if (Array.isArray(val)) {
-                    // multiple string values are stored (array)
-                    return val.map((v) => String(v)).includes(value);
-                  } else {
-                    // string
-                    return val === String(value);
-                  }
-                });
-
-                if (responseThatCanBeAutoAnswered) {
-                  if (fn !== "flag") {
-                    set({
-                      breadcrumbs: {
-                        ...breadcrumbs,
-                        [id]: {
-                          answers: [responseThatCanBeAutoAnswered.id],
-                          auto: true,
-                        },
-                      },
-                    });
-                  }
-
-                  nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id);
+              const responseThatCanBeAutoAnswered = responses.find((n) => {
+                const val = String(n.data?.val);
+                if (Array.isArray(val)) {
+                  // multiple string values are stored (array)
+                  return val.map((v) => String(v)).includes(value);
                 } else {
-                  ids.add(id);
+                  // string
+                  return val === String(value);
                 }
+              });
+
+              if (responseThatCanBeAutoAnswered) {
+                if (fn !== "flag") {
+                  set({
+                    breadcrumbs: {
+                      ...breadcrumbs,
+                      [id]: {
+                        answers: [responseThatCanBeAutoAnswered.id],
+                        auto: true,
+                      },
+                    },
+                  });
+                }
+
+                nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id);
               } else {
                 ids.add(id);
               }
+            } else {
+              ids.add(id);
             }
-          }) || []
-      );
+          }
+        });
     };
 
     Object.entries(breadcrumbs)
@@ -479,7 +487,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     }
   },
 
-  record(id: string, vals: string | Array<string>) {
+  record(id: nodeId, vals: componentOutput) {
     const { breadcrumbs, sessionId, upcomingCardIds, flow, passport } = get();
 
     if (!flow[id]) throw new Error("id not found");

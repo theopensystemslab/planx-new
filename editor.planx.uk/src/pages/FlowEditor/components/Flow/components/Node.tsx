@@ -38,6 +38,8 @@ const Node: React.FC<any> = (props) => {
       return <Question {...props} text="Property information" />;
     case TYPES.Result:
       return <Question {...props} text="(Result)" />;
+    case TYPES.Review:
+      return <Question {...props} text={node?.data?.description ?? "Review"} />;
     case TYPES.TaskList:
       return (
         <Question

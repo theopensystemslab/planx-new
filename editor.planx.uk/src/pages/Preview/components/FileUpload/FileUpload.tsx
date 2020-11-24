@@ -11,13 +11,14 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { uploadFile } from "api/upload";
 import classNames from "classnames";
 import { nanoid } from "nanoid";
+import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import { useDropzone } from "react-dropzone";
 
 interface Props extends MoreInformation {
   title?: string;
   description?: string;
-  handleSubmit: (any) => any;
+  handleSubmit: handleSubmit;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -132,7 +133,9 @@ const FileUpload: React.FC<Props> = (props) => {
         type="submit"
         disabled={slots.some((slot) => slot.status === "uploading")}
         onClick={() => {
-          props.handleSubmit(slots.map((slot) => slot.url));
+          props.handleSubmit(
+            slots.map((slot) => ({ url: slot.url, filename: slot.file.path }))
+          );
         }}
       >
         Continue

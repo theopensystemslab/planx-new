@@ -3,6 +3,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
+import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
 import ResultReason from "./ResultReason";
@@ -17,7 +18,7 @@ interface Node {
 }
 
 interface Props {
-  handleSubmit;
+  handleSubmit: handleSubmit;
   headingColor: {
     text: string;
     background: string;
@@ -92,7 +93,7 @@ const Result: React.FC<Props> = ({
         variant="contained"
         color="primary"
         size="large"
-        onClick={handleSubmit}
+        onClick={() => handleSubmit()}
       >
         Continue
       </Button>
