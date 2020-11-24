@@ -23,7 +23,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
 
   const groupedOptions = useMemo(
     () =>
-      !props.data.categories
+      !props.data?.categories
         ? undefined
         : mapAccum(
             (index: number, category: { title: string; count: number }) => [
