@@ -12,7 +12,13 @@ import {
   RichTextInput,
 } from "ui";
 
-function Component(props) {
+interface Props {
+  id?: string;
+  handleSubmit?: (data: { type: TYPES.Review; data: Review }) => void;
+  node?: any;
+}
+
+function Component(props: Props) {
   const formik = useFormik<Review>({
     initialValues: {
       // TODO: improve runtime validation here (joi, io-ts)
