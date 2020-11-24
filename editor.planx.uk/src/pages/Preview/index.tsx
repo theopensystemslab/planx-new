@@ -53,8 +53,6 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
           flexDirection: "column",
           alignItems: "center",
           background: "#fff",
-          position: embedded ? "static" : "relative",
-          overflow: "hidden",
         }}
       >
         <span

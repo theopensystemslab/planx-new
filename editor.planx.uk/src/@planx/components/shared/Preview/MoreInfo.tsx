@@ -36,7 +36,6 @@ const moreInfoStyles = makeStyles((theme) => ({
   },
   drawerPaper: (props: { drawerWidth: 400 }) => ({
     width: props.drawerWidth,
-    position: "absolute",
     backgroundColor: theme.palette.background.default,
     border: 0,
     boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
