@@ -1,7 +1,7 @@
 import { MoreInformation } from "@planx/components/shared";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
-import React, { Suspense } from "react";
+import React from "react";
 
 import Presentational from "./Presentational";
 
