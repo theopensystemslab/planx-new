@@ -51,12 +51,13 @@ dependencies:
   zustand: 3.1.4_react@16.14.0
 devDependencies:
   '@babel/core': 7.12.3
-  '@react-theming/storybook-addon': 1.0.3_1591b097820053af6427d20925204c7c
+  '@react-theming/storybook-addon': 1.0.3_eae6d0a06bad4528ae270ef7823703b3
   '@storybook/addon-actions': 6.1.1_9f48369ed4321469d5d721870f4dbdbc
   '@storybook/addon-essentials': 6.1.1_a3596cf61f65b05445c1af0534562469
   '@storybook/addon-links': 6.1.1_react-dom@16.14.0+react@16.14.0
   '@storybook/node-logger': 6.1.1
   '@storybook/react': 6.1.3_a3596cf61f65b05445c1af0534562469
+  '@storybook/theming': 6.1.4_react-dom@16.14.0+react@16.14.0
   '@testing-library/jest-dom': 5.11.5
   '@testing-library/react': 11.1.2_react-dom@16.14.0+react@16.14.0
   '@testing-library/user-event': 12.2.2
@@ -278,7 +279,7 @@ packages:
       integrity: sha512-DCsuPyeWxeHgh1Dus7APn7iza42i/qXqiFPWyBDdOFtvS581JQePsc1F/nD+fHrcswhLlRc2UpYS1NwERxZhHw==
   /@babel/helper-module-imports/7.12.5:
     dependencies:
-      '@babel/types': 7.12.6
+      '@babel/types': 7.12.7
     resolution:
       integrity: sha512-SR713Ogqg6++uexFRORf/+nPXMmWIn80TALu0uaFb+iQIUoR7bOC7zBWyzBs5b3tBBJXuyD0cRu1F15GyzjOWA==
   /@babel/helper-module-transforms/7.12.1:
@@ -2300,13 +2301,14 @@ packages:
     dev: true
     resolution:
       integrity: sha512-cieWCbO4xTgl8/LAUTEgiafEiFIcheARteyxXddnUHm/+7POCmRvSE/woHGXlVH7dFBlCbI4y/e5ikMzwBA3CA==
-  /@react-theming/storybook-addon/1.0.3_1591b097820053af6427d20925204c7c:
+  /@react-theming/storybook-addon/1.0.3_eae6d0a06bad4528ae270ef7823703b3:
     dependencies:
       '@react-theming/flatten': 0.1.1
       '@react-theming/theme-name': 1.0.2
       '@react-theming/theme-swatch': 0.2.0_react@16.14.0
       '@storybook/addon-devkit': 1.3.7_1591b097820053af6427d20925204c7c
       '@storybook/react': 6.1.3_a3596cf61f65b05445c1af0534562469
+      '@storybook/theming': 6.1.4_react-dom@16.14.0+react@16.14.0
       '@usulpro/react-json-view': 2.0.0_react-dom@16.14.0+react@16.14.0
       react: 16.14.0
       react-color: 2.19.3_react@16.14.0
@@ -2959,6 +2961,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-oMNoHHtRnDF/VSxm+odr88fc7X41q5OIQtKLCw3wIMyV+UA/bIRRo30q+rUgOung99lk/aVxlmJ7nyFJpZMVfQ==
+  /@storybook/client-logger/6.1.4:
+    dependencies:
+      core-js: 3.7.0
+      global: 4.4.0
+    dev: true
+    resolution:
+      integrity: sha512-PHzxqOqM8jyZYDoq9MGxClKoDNG6A2HU40NWv8LTmctWY+er2GQYICGPLWYZEGH745tyg2J+2e5lCCYgEtLVaw==
   /@storybook/components/6.1.1_9f48369ed4321469d5d721870f4dbdbc:
     dependencies:
       '@popperjs/core': 2.5.4
@@ -3485,6 +3494,28 @@ packages:
       react-dom: ^16.8.0 || ^17.0.0
     resolution:
       integrity: sha512-geshl3P0ZBhGIRsear/PXhmfribdAAl1W8bFD9Wiec8M+81SMOGGEan+RRHjnf6MngjWQqVagbPhmJnDbMLKYA==
+  /@storybook/theming/6.1.4_react-dom@16.14.0+react@16.14.0:
+    dependencies:
+      '@emotion/core': 10.1.1_react@16.14.0
+      '@emotion/is-prop-valid': 0.8.8
+      '@emotion/styled': 10.0.27_5f216699bc8c1f24088b3bf77b7cbbdf
+      '@storybook/client-logger': 6.1.4
+      core-js: 3.7.0
+      deep-object-diff: 1.1.0
+      emotion-theming: 10.0.27_5f216699bc8c1f24088b3bf77b7cbbdf
+      global: 4.4.0
+      memoizerific: 1.11.3
+      polished: 3.6.7
+      react: 16.14.0
+      react-dom: 16.14.0_react@16.14.0
+      resolve-from: 5.0.0
+      ts-dedent: 2.0.0
+    dev: true
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0
+      react-dom: ^16.8.0 || ^17.0.0
+    resolution:
+      integrity: sha512-Vrf5yMio0l4al0ex/CU1E9nwJXYYh+OwmPFmKX8RkFykVYarOsokLGGQNMSejh+ymI0kLQ0fs3vNnH0f5MWrzQ==
   /@storybook/ui/6.1.1_9f48369ed4321469d5d721870f4dbdbc:
     dependencies:
       '@emotion/core': 10.1.1_react@16.14.0
@@ -18430,6 +18461,7 @@ specifiers:
   '@storybook/addon-links': ^6.1.1
   '@storybook/node-logger': ^6.1.1
   '@storybook/react': ^6.1.3
+  '@storybook/theming': ^6.1.4
   '@testing-library/jest-dom': ^5.11.5
   '@testing-library/react': ^11.1.2
   '@testing-library/user-event': ^12.2.2

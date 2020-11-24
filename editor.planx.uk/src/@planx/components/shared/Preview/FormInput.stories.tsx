@@ -4,7 +4,8 @@ import React from "react";
 import FormInput, { IFormInput } from "./FormInput";
 
 export default {
-  title: "Forms/Input",
+  title: "Forms/Text",
+  component: FormInput,
 } as Meta;
 
 const Template: Story<IFormInput> = (args) => <FormInput {...args} />;
@@ -14,8 +15,8 @@ const basicSetup = {
   helperText: "",
 };
 
-export const Primary = Template.bind({});
-Primary.args = basicSetup;
+export const Simple = Template.bind({});
+Simple.args = basicSetup;
 
 export const WithHelperText = Template.bind({});
 WithHelperText.args = { ...basicSetup, helperText: "e.g. house, garden, flat" };
