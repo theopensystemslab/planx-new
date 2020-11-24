@@ -98,14 +98,6 @@ const Node: React.FC<any> = (props: Props) => {
         />
       );
 
-    case TYPES.Review:
-      return (
-        <Review
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
-
     case TYPES.PropertyInformation:
       return (
         <PropertyInformation
@@ -130,6 +122,14 @@ const Node: React.FC<any> = (props: Props) => {
           subheading=""
           reasonsTitle="Responses"
           responses={responses}
+        />
+      );
+
+    case TYPES.Review:
+      return (
+        <Review
+          {...allProps}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
         />
       );
 

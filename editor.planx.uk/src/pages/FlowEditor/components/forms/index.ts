@@ -35,10 +35,10 @@ const components: {
   notice: Notice,
   page: Page,
   pay: Pay,
-  review: Review,
   "property-information": PropertyInformation,
   question: Question,
   result: Result,
+  review: Review,
   "task-list": TaskList,
   "text-input": TextInput,
 };
