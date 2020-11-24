@@ -1,4 +1,5 @@
 import Content from "@planx/components/Content/Editor";
+import DateInput from "@planx/components/DateInput/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import PropertyInformation from "@planx/components/PropertyInformation/Editor";
@@ -26,16 +27,17 @@ const components: {
 } = {
   checklist: Checklist,
   content: Content,
+  "date-input": DateInput,
   "external-portal": ExternalPortal,
   "file-upload": FileUpload,
   filter: Filter,
   "find-property": FindProperty,
   flow: EmptyComponent,
   "internal-portal": InternalPortal,
+  "property-information": PropertyInformation,
   notice: Notice,
   page: Page,
   pay: Pay,
-  "property-information": PropertyInformation,
   question: Question,
   result: Result,
   review: Review,

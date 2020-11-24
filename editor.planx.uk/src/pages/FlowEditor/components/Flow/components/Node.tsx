@@ -16,6 +16,8 @@ const Node: React.FC<any> = (props) => {
   switch (type) {
     case TYPES.Content:
       return <Question {...props} text={"Content"} />;
+    case TYPES.DateInput:
+      return <Question {...props} text="Date" />;
     case TYPES.ExternalPortal:
       return <Portal {...props} />;
     case TYPES.InternalPortal:
@@ -58,7 +60,6 @@ const Node: React.FC<any> = (props) => {
         <Checklist {...props} {...node} text={node?.data?.text ?? "[Empty]"} />
       );
     case TYPES.AddressInput:
-    case TYPES.DateInput:
     case TYPES.Flow:
     case TYPES.NumberInput:
     case TYPES.Report:

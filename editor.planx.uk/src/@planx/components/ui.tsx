@@ -4,6 +4,7 @@ import CheckBoxOutlined from "@material-ui/icons/CheckBoxOutlined";
 import CloudUpload from "@material-ui/icons/CloudUpload";
 import Create from "@material-ui/icons/Create";
 import Description from "@material-ui/icons/Description";
+import Event from "@material-ui/icons/Event";
 import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import List from "@material-ui/icons/List";
 import LocationOnOutlined from "@material-ui/icons/LocationOnOutlined";
@@ -45,7 +46,7 @@ export const ICONS: {
   [TYPES.AddressInput]: undefined,
   [TYPES.Checklist]: CheckBoxOutlined,
   [TYPES.Content]: TextFields,
-  [TYPES.DateInput]: undefined,
+  [TYPES.DateInput]: Event,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: CloudUpload,
   [TYPES.Filter]: undefined,

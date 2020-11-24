@@ -1,4 +1,5 @@
 import Content from "@planx/components/Content/Public";
+import DateInput from "@planx/components/DateInput/Public";
 import Notice from "@planx/components/Notice/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
@@ -68,6 +69,9 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.Content:
       return <Content {...allProps} />;
+
+    case TYPES.DateInput:
+      return <DateInput {...allProps} />;
 
     case TYPES.FileUpload:
       return <FileUpload {...allProps} />;
@@ -160,7 +164,6 @@ const Node: React.FC<any> = (props: Props) => {
       return <TextInput {...allProps} />;
 
     case TYPES.AddressInput:
-    case TYPES.DateInput:
     case TYPES.ExternalPortal:
     case TYPES.Filter:
     case TYPES.Flow:
