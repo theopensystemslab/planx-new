@@ -1,6 +1,5 @@
-import { MoreInformation } from "../shared";
-
-export interface Review extends MoreInformation {
+export interface Review {
   title: string;
   description: string;
+  notes: string;
 }

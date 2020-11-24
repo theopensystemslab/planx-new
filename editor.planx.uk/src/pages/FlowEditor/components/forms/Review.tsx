@@ -1,7 +1,6 @@
 import type { Review } from "@planx/components/Review/types";
-import { parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
-import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
+import { ICONS, InternalNotes } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import {
@@ -21,10 +20,9 @@ interface Props {
 function Component(props: Props) {
   const formik = useFormik<Review>({
     initialValues: {
-      // TODO: improve runtime validation here (joi, io-ts)
-      title: props.node?.data?.title || "",
-      description: props.node?.data?.description || "",
-      ...parseMoreInformation(props.node?.data),
+      title: props.node?.data?.title ?? "",
+      description: props.node?.data?.description ?? "",
+      notes: props.node?.data?.notes ?? "",
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
@@ -57,13 +55,6 @@ function Component(props: Props) {
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
-      <MoreInformation
-        changeField={formik.handleChange}
-        definitionImg={formik.values.definitionImg}
-        howMeasured={formik.values.howMeasured}
-        policyRef={formik.values.policyRef}
-        info={formik.values.info}
-      />
       <InternalNotes
         name="notes"
         onChange={formik.handleChange}
