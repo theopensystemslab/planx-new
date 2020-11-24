@@ -14,6 +14,7 @@ import Pay from "./components/Pay";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
 import Result from "./components/Result";
+import Review from "./components/Review";
 
 let uprn;
 
@@ -92,6 +93,14 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Pay:
       return (
         <Pay
+          {...allProps}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
+      );
+
+    case TYPES.Review:
+      return (
+        <Review
           {...allProps}
           handleSubmit={() => props.handleSubmit([props.node.id])}
         />

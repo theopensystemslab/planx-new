@@ -67,6 +67,7 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.Notice}>Notice</option>
         <option value={TYPES.Result}>Result</option>
         <option value={TYPES.Content}>Content</option>
+        <option value={TYPES.Review}>Review</option>
       </optgroup>
       <optgroup label="Location">
         <option value={TYPES.FindProperty}>Find property</option>

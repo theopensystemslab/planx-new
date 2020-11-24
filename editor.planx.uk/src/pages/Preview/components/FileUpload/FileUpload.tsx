@@ -133,7 +133,9 @@ const FileUpload: React.FC<Props> = (props) => {
         type="submit"
         disabled={slots.some((slot) => slot.status === "uploading")}
         onClick={() => {
-          props.handleSubmit(slots.map((slot) => slot.url));
+          props.handleSubmit(
+            slots.map((slot) => ({ url: slot.url, filename: slot.file.path }))
+          );
         }}
       >
         Continue

@@ -8,6 +8,7 @@ import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import List from "@material-ui/icons/List";
 import LocationOnOutlined from "@material-ui/icons/LocationOnOutlined";
 import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
+import RateReview from "@material-ui/icons/RateReview";
 import ReportProblemOutlined from "@material-ui/icons/ReportProblemOutlined";
 import SearchOutlined from "@material-ui/icons/SearchOutlined";
 import TextFields from "@material-ui/icons/TextFields";
@@ -59,6 +60,7 @@ export const ICONS: {
   [TYPES.Report]: undefined,
   [TYPES.Response]: undefined,
   [TYPES.Result]: undefined,
+  [TYPES.Review]: RateReview,
   [TYPES.SignIn]: undefined,
   [TYPES.Statement]: CallSplit,
   [TYPES.TaskList]: List,

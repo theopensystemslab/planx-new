@@ -23,6 +23,7 @@ export const SLUGS = {
   [TYPES.Response]: "question",
   [TYPES.Page]: "page",
   [TYPES.Pay]: "pay",
+  [TYPES.Review]: "review",
 } as const;
 
 export const fromSlug = (slug: string): TYPES | undefined => {

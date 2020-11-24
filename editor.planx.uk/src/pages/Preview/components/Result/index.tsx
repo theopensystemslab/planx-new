@@ -93,7 +93,7 @@ const Result: React.FC<Props> = ({
         variant="contained"
         color="primary"
         size="large"
-        onClick={handleSubmit}
+        onClick={() => handleSubmit()}
       >
         Continue
       </Button>

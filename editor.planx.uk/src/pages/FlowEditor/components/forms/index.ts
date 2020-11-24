@@ -17,6 +17,7 @@ import Page from "./Page";
 import Pay from "./Pay";
 import Question from "./Question";
 import Result from "./Result";
+import Review from "./Review";
 
 const EmptyComponent: React.FC<any> = () => null;
 
@@ -34,6 +35,7 @@ const components: {
   notice: Notice,
   page: Page,
   pay: Pay,
+  review: Review,
   "property-information": PropertyInformation,
   question: Question,
   result: Result,

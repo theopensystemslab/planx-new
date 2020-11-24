@@ -20,7 +20,6 @@ const Questions = () => {
       handleSubmit={(values: componentOutput) => {
         record(node.id, values);
       }}
-      {...node}
     />
   );
 };
