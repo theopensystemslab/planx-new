@@ -214,7 +214,7 @@ PostgresDB.prototype.getSnapshot = function (
 //
 // Callback should be called as callback(error, [list of ops]);
 PostgresDB.prototype.getOps = function (
-  _collection,
+  collection,
   id,
   from,
   to,
