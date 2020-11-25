@@ -108,8 +108,8 @@ function Component(props: Props) {
         <div className={grid}>
           {
             // XXX: This works because since ES2015 key order is guaranteed to be the insertion order
-            Object.entries(props.breadcrumbs).map(([key, value], i) => {
-              const node = props.flow[key];
+            Object.entries(props.breadcrumbs).map(([nodeId, value], i) => {
+              const node = props.flow[nodeId];
               const Component = components[node.type];
               if (Component === undefined) {
                 return null;
@@ -117,7 +117,7 @@ function Component(props: Props) {
               return (
                 <>
                   <Component
-                    key={i}
+                    nodeId={i}
                     node={node}
                     userData={value}
                     flow={props.flow}
@@ -126,7 +126,7 @@ function Component(props: Props) {
                   <div>
                     <a
                       onClick={() => {
-                        props.change(node.id);
+                        props.change(nodeId);
                       }}
                     >
                       Change
@@ -225,11 +225,13 @@ function FileUpload(props: ComponentProps) {
       <div>{props.node.data.title ?? "File upload"}</div>
 
       <div>
-        {props.userData.answers.map((file, i) => (
-          <a key={i} href={file.url}>
-            {file.filename}
-          </a>
-        ))}
+        {props.userData.answers.length > 0
+          ? props.userData.answers.map((file, i) => (
+              <a key={i} href={file.url}>
+                {file.filename}
+              </a>
+            ))
+          : "No file"}
       </div>
     </>
   );
