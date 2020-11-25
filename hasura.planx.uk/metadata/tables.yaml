@@ -1,5 +1,15 @@
 - table:
     schema: public
+    name: flow_operations
+  object_relationships:
+  - name: actor
+    using:
+      foreign_key_constraint_on: actor_id
+  - name: flow
+    using:
+      foreign_key_constraint_on: flow_id
+- table:
+    schema: public
     name: flows
   object_relationships:
   - name: creator
@@ -15,7 +25,7 @@
         column: flow_id
         table:
           schema: public
-          name: operations
+          name: flow_operations
   - name: sessions
     using:
       foreign_key_constraint_on:
@@ -30,16 +40,6 @@
         schema: public
         name: compile_flow_portals
     comment: Flow data with portals merged in
-- table:
-    schema: public
-    name: operations
-  object_relationships:
-  - name: actor
-    using:
-      foreign_key_constraint_on: actor_id
-  - name: flow
-    using:
-      foreign_key_constraint_on: flow_id
 - table:
     schema: public
     name: session_events
@@ -164,7 +164,7 @@
         column: actor_id
         table:
           schema: public
-          name: operations
+          name: flow_operations
   - name: team_members
     using:
       foreign_key_constraint_on:

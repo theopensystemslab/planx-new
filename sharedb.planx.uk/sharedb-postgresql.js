@@ -1,7 +1,16 @@
 const { Pool } = require("pg");
 const { DB } = require("sharedb");
 
-const [OPS_TABLE, DATA_TABLE] = ["operations", "flows"];
+const PERMITTED_TABLES = ["flows"];
+
+const singularName = (collection) => {
+  if (!PERMITTED_TABLES.includes(collection)) {
+    throw new Error("table name not allowed");
+  }
+  return collection.replace(/s$/, "");
+};
+const opsTable = (collection) => `${singularName(collection)}_operations`;
+const relation = (collection) => `${singularName(collection)}_id`;
 
 function PostgresDB(options) {
   if (!(this instanceof PostgresDB)) {
@@ -30,7 +39,7 @@ function rollback(client, done) {
 // Persists an op and snapshot if it is for the next version. Calls back with
 // callback(err, succeeded)
 PostgresDB.prototype.commit = function (
-  _collection,
+  collection,
   id,
   op,
   snapshot,
@@ -68,7 +77,9 @@ PostgresDB.prototype.commit = function (
 
     // START  ------------------------------------------------------------
     client.query(
-      `SELECT max(version) AS max_version FROM ${OPS_TABLE} WHERE flow_id = $1`,
+      `SELECT max(version) AS max_version FROM ${opsTable(
+        collection
+      )} WHERE ${relation(collection)} = $1`,
       [id],
       (err, res) => {
         let max_version = res.rows[0].max_version;
@@ -81,8 +92,8 @@ PostgresDB.prototype.commit = function (
 
         client.query("BEGIN", (err) => {
           client.query(
-            `INSERT INTO ${DATA_TABLE} (id, slug) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
-            [id, id],
+            `INSERT INTO ${collection} (id) VALUES ($1) ON CONFLICT DO NOTHING`,
+            [id],
             (err, _res) => {
               if (err) {
                 rollback(client, done);
@@ -91,7 +102,9 @@ PostgresDB.prototype.commit = function (
               }
 
               client.query(
-                `INSERT INTO ${OPS_TABLE} (flow_id, version, data, actor_id) VALUES ($1, $2, $3, $4)`,
+                `INSERT INTO ${opsTable(collection)} (${relation(
+                  collection
+                )}, version, data, actor_id) VALUES ($1, $2, $3, $4)`,
                 [id, snapshot.v, op, actorId],
                 (err, _res) => {
                   if (err) {
@@ -102,7 +115,7 @@ PostgresDB.prototype.commit = function (
                   }
                   if (snapshot.v === 1) {
                     client.query(
-                      `UPDATE ${DATA_TABLE} SET version = $1, data = $2 WHERE id = $3`,
+                      `UPDATE ${collection} SET version = $1, data = $2 WHERE id = $3`,
                       [snapshot.v, snapshot.data, id],
                       (err, _res) => {
                         // TODO:
@@ -119,7 +132,7 @@ PostgresDB.prototype.commit = function (
                     );
                   } else {
                     client.query(
-                      `UPDATE ${DATA_TABLE} SET version = $2, data = $3 WHERE id = $1 AND version = ($2 - 1)`,
+                      `UPDATE ${collection} SET version = $2, data = $3 WHERE id = $1 AND version = ($2 - 1)`,
                       [id, snapshot.v, snapshot.data],
                       (err, _res) => {
                         // TODO:
@@ -149,7 +162,7 @@ PostgresDB.prototype.commit = function (
 // snapshot). A snapshot with a version of zero is returned if the docuemnt
 // has never been created in the database.
 PostgresDB.prototype.getSnapshot = function (
-  _collection,
+  collection,
   id,
   _fields,
   _options,
@@ -162,7 +175,7 @@ PostgresDB.prototype.getSnapshot = function (
       return;
     }
     client.query(
-      `SELECT version, data FROM ${DATA_TABLE} WHERE id = $1 LIMIT 1`,
+      `SELECT version, data FROM ${collection} WHERE id = $1 LIMIT 1`,
       [id],
       (err, res) => {
         done();
@@ -216,7 +229,9 @@ PostgresDB.prototype.getOps = function (
       return;
     }
     client.query(
-      `SELECT version, data FROM ${OPS_TABLE} WHERE flow_id = $1 AND version >= $2 AND version < $3`,
+      `SELECT version, data FROM ${opsTable(collection)} WHERE ${relation(
+        collection
+      )} = $1 AND version >= $2 AND version < $3`,
       [id, from, to],
       (err, res) => {
         done();
