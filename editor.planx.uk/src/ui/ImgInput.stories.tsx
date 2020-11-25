@@ -1,7 +1,5 @@
-/// Docs?
-
 import Box from "@material-ui/core/Box";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import React, { useState } from "react";
 
 import ImgInput from "./ImgInput";
@@ -11,7 +9,7 @@ export default {
   component: ImgInput, // DocsPage will infer props from the component for generated documentation
 } as Meta;
 
-export const Primary = () => {
+export const Basic = () => {
   const [imageUrl, setImageUrl] = useState<string>();
 
   return (

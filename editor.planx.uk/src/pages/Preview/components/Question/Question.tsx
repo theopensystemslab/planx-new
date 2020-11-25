@@ -6,7 +6,7 @@ import React from "react";
 
 import DecisionButton from "./DecisionButton";
 
-interface IQuestion {
+export interface IQuestion {
   text?: string;
   description?: string;
   info?: string;

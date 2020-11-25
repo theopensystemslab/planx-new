@@ -1,5 +1,4 @@
 import { MoreInformation, Option } from "../shared";
-
 export interface Group<T> {
   title: string;
   children: Array<T>;

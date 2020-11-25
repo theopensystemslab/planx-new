@@ -1,5 +1,6 @@
 import Button from "@material-ui/core/Button";
 import { Checklist } from "@planx/components/Checklist/types";
+import { Option } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
@@ -9,7 +10,7 @@ import Checkbox from "ui/Checkbox";
 
 import { ExpandableList, ExpandableListItem } from "../../../../ui";
 
-interface Props extends Checklist {
+export interface Props extends Checklist {
   handleSubmit: handleSubmit;
 }
 
@@ -80,7 +81,7 @@ const ChecklistComponent: React.FC<Props> = ({
         />
 
         {options ? (
-          options.map((option: any) => (
+          options.map((option: Option) => (
             <Checkbox
               onChange={changeCheckbox(option.id)}
               key={option.data.text}
@@ -105,7 +106,7 @@ const ChecklistComponent: React.FC<Props> = ({
                   title={group.title}
                 >
                   <div>
-                    {group.children.map((option: any) => (
+                    {group.children.map((option: Option) => (
                       <Checkbox
                         onChange={changeCheckbox(option.id)}
                         key={option.data.text}

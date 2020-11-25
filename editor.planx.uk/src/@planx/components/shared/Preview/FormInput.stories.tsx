@@ -6,17 +6,15 @@ import FormInput, { IFormInput } from "./FormInput";
 export default {
   title: "Forms/Text",
   component: FormInput,
+  argTypes: {
+    value: { control: { disable: true } },
+  },
 } as Meta;
 
 const Template: Story<IFormInput> = (args) => <FormInput {...args} />;
 
-const basicSetup = {
+export const Basic = Template.bind({});
+Basic.args = {
   placeholder: "Kantstraße 152, 10623 Berlin, Germany",
-  helperText: "",
+  helperText: "e.g. house, garden, flat",
 };
-
-export const Simple = Template.bind({});
-Simple.args = basicSetup;
-
-export const WithHelperText = Template.bind({});
-WithHelperText.args = { ...basicSetup, helperText: "e.g. house, garden, flat" };
