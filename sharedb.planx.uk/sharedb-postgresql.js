@@ -1,6 +1,8 @@
 const { Pool } = require("pg");
 const { DB } = require("sharedb");
 
+const [OPS_TABLE, DATA_TABLE] = ["operations", "flows"];
+
 function PostgresDB(options) {
   if (!(this instanceof PostgresDB)) {
     return new PostgresDB(options);
@@ -66,9 +68,7 @@ PostgresDB.prototype.commit = function (
 
     // START  ------------------------------------------------------------
     client.query(
-      // "SELECT max(version) AS max_version FROM operations WHERE collection = $1 AND doc_id = $2",
-      // [collection, id],
-      "SELECT max(version) AS max_version FROM operations WHERE flow_id = $1",
+      `SELECT max(version) AS max_version FROM ${OPS_TABLE} WHERE flow_id = $1`,
       [id],
       (err, res) => {
         let max_version = res.rows[0].max_version;
@@ -81,7 +81,7 @@ PostgresDB.prototype.commit = function (
 
         client.query("BEGIN", (err) => {
           client.query(
-            "INSERT INTO flows (id, slug) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+            `INSERT INTO ${DATA_TABLE} (id, slug) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
             [id, id],
             (err, _res) => {
               if (err) {
@@ -91,8 +91,7 @@ PostgresDB.prototype.commit = function (
               }
 
               client.query(
-                // "INSERT INTO operations (collection, doc_id, version, operation) VALUES ($1, $2, $3, $4)",
-                "INSERT INTO operations (flow_id, version, data, actor_id) VALUES ($1, $2, $3, $4)",
+                `INSERT INTO ${OPS_TABLE} (flow_id, version, data, actor_id) VALUES ($1, $2, $3, $4)`,
                 [id, snapshot.v, op, actorId],
                 (err, _res) => {
                   if (err) {
@@ -103,12 +102,7 @@ PostgresDB.prototype.commit = function (
                   }
                   if (snapshot.v === 1) {
                     client.query(
-                      // "INSERT INTO snapshots (collection, doc_id, doc$t, version, data) VALUES ($1, $2, $3, $4, $5)",
-                      // "INSERT INTO flows (doc_id, doc$t, version, data) VALUES ($1, $2, $3, $4)",
-
-                      // 'UPDATE flows SET version = $1, data = $2, updated_at = $4 WHERE id = $3',
-                      // [snapshot.v, snapshot.data, id, new Date().toISOString()],
-                      "UPDATE flows SET version = $1, data = $2 WHERE id = $3",
+                      `UPDATE ${DATA_TABLE} SET version = $1, data = $2 WHERE id = $3`,
                       [snapshot.v, snapshot.data, id],
                       (err, _res) => {
                         // TODO:
@@ -125,11 +119,7 @@ PostgresDB.prototype.commit = function (
                     );
                   } else {
                     client.query(
-                      // "UPDATE snapshots SET doc$t = $3, version = $4, data = $5 WHERE collection = $1 AND doc_id = $2 AND version = ($4 - 1)",
-
-                      // 'UPDATE flows SET version = $2, data = $3, updated_at = $4 WHERE id = $1 AND version = ($2 - 1)',
-                      // [id, snapshot.v, snapshot.data, new Date().toISOString()],
-                      "UPDATE flows SET version = $2, data = $3 WHERE id = $1 AND version = ($2 - 1)",
+                      `UPDATE ${DATA_TABLE} SET version = $2, data = $3 WHERE id = $1 AND version = ($2 - 1)`,
                       [id, snapshot.v, snapshot.data],
                       (err, _res) => {
                         // TODO:
@@ -172,8 +162,7 @@ PostgresDB.prototype.getSnapshot = function (
       return;
     }
     client.query(
-      // "SELECT version, data, doc$t FROM snapshots WHERE collection = $1 AND doc_id = $2 LIMIT 1",
-      "SELECT version, data FROM flows WHERE id = $1 LIMIT 1",
+      `SELECT version, data FROM ${DATA_TABLE} WHERE id = $1 LIMIT 1`,
       [id],
       (err, res) => {
         done();
@@ -203,12 +192,12 @@ PostgresDB.prototype.getSnapshot = function (
   });
 };
 
-// Get operations between [from, to) noninclusively. (Ie, the range should
+// Get OPS_TABLE between [from, to) noninclusively. (Ie, the range should
 // contain start but not end).
 //
-// If end is null, this function should return all operations from start onwards.
+// If end is null, this function should return all OPS_TABLE from start onwards.
 //
-// The operations that getOps returns don't need to have a version: field.
+// The OPS_TABLE that getOps returns don't need to have a version: field.
 // The version will be inferred from the parameters if it is missing.
 //
 // Callback should be called as callback(error, [list of ops]);
@@ -227,8 +216,7 @@ PostgresDB.prototype.getOps = function (
       return;
     }
     client.query(
-      // "SELECT version, operation FROM operations WHERE collection = $1 AND doc_id = $2 AND version >= $3 AND version < $4",
-      "SELECT version, data FROM operations WHERE flow_id = $1 AND version >= $2 AND version < $3",
+      `SELECT version, data FROM ${OPS_TABLE} WHERE flow_id = $1 AND version >= $2 AND version < $3`,
       [id, from, to],
       (err, res) => {
         done();
