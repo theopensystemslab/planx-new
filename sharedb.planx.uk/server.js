@@ -2,8 +2,10 @@ const { Server } = require("ws");
 const jwt = require("jsonwebtoken");
 const ShareDB = require("sharedb");
 const WebSocketJSONStream = require("@teamwork/websocket-json-stream");
-const PostgresDB = require("./sharedb-postgresql");
+const { PostgresDB, PERMITTED_TABLES } = require("./sharedb-postgresql");
 const access = require("sharedb-access");
+
+console.log({ PERMITTED_TABLES });
 
 const { PORT = 8000, JWT_SECRET = "shh", PG_URL = "" } = process.env;
 
@@ -23,10 +25,13 @@ sharedb.use("connect", (request, next) => {
 
 access(sharedb);
 
-sharedb.allowCreate("flows", async (docId, doc, session) => true);
-sharedb.allowRead("flows", async (docId, doc, session) => true);
-sharedb.allowUpdate("flows", async (docId, doc, session) => true);
-sharedb.allowDelete("flows", async (docId, doc, session) => true);
+// TODO: make this useful!
+PERMITTED_TABLES.forEach((table) => {
+  sharedb.allowCreate(table, async (docId, doc, session) => true);
+  sharedb.allowRead(table, async (docId, doc, session) => true);
+  sharedb.allowUpdate(table, async (docId, doc, session) => true);
+  sharedb.allowDelete(table, async (docId, doc, session) => true);
+});
 
 const wss = new Server({
   port: PORT,

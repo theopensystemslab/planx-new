@@ -47,7 +47,6 @@ PostgresDB.prototype.commit = function (
   callback
 ) {
   const { uId: actorId } = op.m;
-
   /*
    * op: CreateOp {
    *   src: '24545654654646',
@@ -258,4 +257,4 @@ function PostgresSnapshot(id, version, type, data, meta) {
   this.m = meta;
 }
 
-module.exports = PostgresDB;
+module.exports = { PostgresDB, PERMITTED_TABLES };
