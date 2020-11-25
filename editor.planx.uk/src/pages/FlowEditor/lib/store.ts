@@ -39,7 +39,7 @@ const send = (ops) => {
 export type componentOutput = undefined | null | any | Array<any>;
 export type userData = { answers: componentOutput; auto?: boolean };
 export type breadcrumbs = Record<string, userData>;
-type nodeId = string;
+export type nodeId = string;
 export type node = { id?: nodeId; type?: TYPES; data?: any; edges?: nodeId[] };
 export type flow = Record<string, node>;
 export interface passport {

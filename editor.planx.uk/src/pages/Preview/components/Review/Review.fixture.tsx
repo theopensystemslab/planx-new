@@ -264,6 +264,7 @@ export default function Fixture(props) {
       flow={flow}
       passport={passport}
       handleSubmit={console.log}
+      change={window.alert}
     />
   );
 }

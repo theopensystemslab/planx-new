@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Card from "@planx/components/shared/Preview/Card";
 import { TYPES } from "@planx/components/types";
+import type { nodeId } from "pages/FlowEditor/lib/store";
 import type {
   breadcrumbs,
   flow,
@@ -31,25 +32,33 @@ const useStyles = makeStyles((theme) => ({
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "1fr 2fr",
+    gridTemplateColumns: "1fr 2fr 100px",
     gridRowGap: "10px",
     marginBottom: theme.spacing(8),
     "& > *": {
       borderBottom: "1px solid grey",
       paddingBottom: theme.spacing(1),
       paddingTop: theme.spacing(2),
+      verticalAlign: "top",
     },
     "& ul": {
       listStylePosition: "inside",
       padding: 0,
       margin: 0,
     },
-    "& >:nth-child(odd)": {
+    "& >:nth-child(3n+1)": {
       // left column
       fontWeight: 700,
     },
-    "& >:nth-child(even)": {
+    "& >:nth-child(3n+2)": {
+      // middle column
+    },
+    "& >:nth-child(3n+3)": {
       // right column
+      "& a": {
+        textDecoration: "underline",
+        cursor: "pointer",
+      },
     },
   },
 }));
@@ -57,29 +66,29 @@ const useStyles = makeStyles((theme) => ({
 const components: {
   [key in TYPES]: React.FC<any>;
 } = {
-  [TYPES.Filter]: DontShow,
-  [TYPES.Flow]: DontShow,
+  [TYPES.Filter]: undefined,
+  [TYPES.Flow]: undefined,
   [TYPES.Checklist]: Checklist,
   [TYPES.FindProperty]: FindProperty,
-  [TYPES.TaskList]: TaskList,
-  [TYPES.Notice]: DontShow,
+  [TYPES.TaskList]: undefined,
+  [TYPES.Notice]: undefined,
   [TYPES.TextInput]: TextInput,
-  [TYPES.Content]: DontShow,
-  [TYPES.Result]: DontShow,
+  [TYPES.Content]: undefined,
+  [TYPES.Result]: undefined,
   [TYPES.FileUpload]: FileUpload,
-  [TYPES.InternalPortal]: DontShow,
-  [TYPES.ExternalPortal]: DontShow,
-  [TYPES.PropertyInformation]: DontShow,
-  [TYPES.SignIn]: DontShow,
-  [TYPES.Report]: DontShow,
+  [TYPES.InternalPortal]: undefined,
+  [TYPES.ExternalPortal]: undefined,
+  [TYPES.PropertyInformation]: undefined,
+  [TYPES.SignIn]: undefined,
+  [TYPES.Report]: undefined,
   [TYPES.NumberInput]: Debug,
   [TYPES.DateInput]: Debug,
   [TYPES.AddressInput]: Debug,
   [TYPES.Statement]: Question,
   [TYPES.Response]: Debug,
-  [TYPES.Page]: DontShow,
-  [TYPES.Pay]: DontShow,
-  [TYPES.Review]: DontShow,
+  [TYPES.Page]: undefined,
+  [TYPES.Pay]: undefined,
+  [TYPES.Review]: undefined,
 };
 
 interface Props {
@@ -87,7 +96,9 @@ interface Props {
   flow: flow;
   passport: passport;
   handleSubmit: handleSubmit;
+  change: (id: nodeId) => void;
 }
+
 function Component(props: Props) {
   const { grid, root } = useStyles();
   return (
@@ -97,17 +108,31 @@ function Component(props: Props) {
         <div className={grid}>
           {
             // XXX: This works because since ES2015 key order is guaranteed to be the insertion order
-            Object.entries(props.breadcrumbs).map(([key, value], i) => {
-              const node = props.flow[key];
+            Object.entries(props.breadcrumbs).map(([nodeId, value], i) => {
+              const node = props.flow[nodeId];
               const Component = components[node.type];
+              if (Component === undefined) {
+                return null;
+              }
               return (
-                <Component
-                  key={i}
-                  node={node}
-                  userData={value}
-                  flow={props.flow}
-                  passport={props.passport}
-                />
+                <>
+                  <Component
+                    nodeId={i}
+                    node={node}
+                    userData={value}
+                    flow={props.flow}
+                    passport={props.passport}
+                  />
+                  <div>
+                    <a
+                      onClick={() => {
+                        props.change(nodeId);
+                      }}
+                    >
+                      Change
+                    </a>
+                  </div>
+                </>
               );
             })
           }
@@ -154,10 +179,6 @@ function Question(props: ComponentProps) {
   }
 }
 
-function DontShow(props: ComponentProps) {
-  return null;
-}
-
 function FindProperty(props: ComponentProps) {
   const { postcode, street, pao, town } = props.passport.info;
   return (
@@ -198,26 +219,19 @@ function TextInput(props: ComponentProps) {
   );
 }
 
-function TaskList(props: ComponentProps) {
-  return props.node.data.tasks.map((task) => (
-    <>
-      <div>{task.title ?? "Tasks"}</div>
-      <div>{task.description}</div>
-    </>
-  ));
-}
-
 function FileUpload(props: ComponentProps) {
   return (
     <>
       <div>{props.node.data.title ?? "File upload"}</div>
 
       <div>
-        {props.userData.answers.map((file, i) => (
-          <a key={i} href={file.url}>
-            {file.filename}
-          </a>
-        ))}
+        {props.userData.answers.length > 0
+          ? props.userData.answers.map((file, i) => (
+              <a key={i} href={file.url}>
+                {file.filename}
+              </a>
+            ))
+          : "No file"}
       </div>
     </>
   );

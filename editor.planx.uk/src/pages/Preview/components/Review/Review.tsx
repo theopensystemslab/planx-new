@@ -1,5 +1,5 @@
 import { MoreInformation } from "@planx/components/shared";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { nodeId, useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
@@ -12,10 +12,11 @@ interface Props extends MoreInformation {
 }
 
 function Component(props: Props) {
-  const [breadcrumbs, flow, passport] = useStore((state) => [
+  const [breadcrumbs, flow, passport, record] = useStore((state) => [
     state.breadcrumbs,
     state.flow,
     state.passport,
+    state.record,
   ]);
   return (
     <Presentational
@@ -23,6 +24,12 @@ function Component(props: Props) {
       flow={flow}
       passport={passport}
       handleSubmit={props.handleSubmit}
+      change={change}
     />
   );
+
+  function change(id: nodeId) {
+    // XXX: Remove the node `id` and all subsequent ones from breadcrumbs
+    record(id, undefined);
+  }
 }

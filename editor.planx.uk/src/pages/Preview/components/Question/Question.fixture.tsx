@@ -4,7 +4,7 @@ import Question from "./Question";
 
 export default (
   <Question
-    text="To be (murderer) or not to be"
+    text="To be a (murderer) or not to be"
     description="That is the question"
     info="Some info here"
     policyRef="Policy ref here"
