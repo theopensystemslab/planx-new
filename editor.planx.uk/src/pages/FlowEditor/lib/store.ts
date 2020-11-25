@@ -280,7 +280,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     response = await client.mutate({
       mutation: gql`
         mutation MyMutation($flow_id: uuid, $data: jsonb) {
-          insert_operations_one(
+          insert_flow_operations_one(
             object: { flow_id: $flow_id, data: $data, version: 1 }
           ) {
             id
