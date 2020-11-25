@@ -18,7 +18,6 @@ import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import create from "zustand";
 import vanillaCreate from "zustand/vanilla";
-
 import { client } from "../../../lib/graphql";
 import { FlowLayout } from "../components/Flow";
 import { flatFlags } from "../data/flags";
@@ -79,7 +78,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   sessionId: any; //: string;
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
-  upcomingCardIds: () => nodeId[];
+  upcomingCardIds: () => Array<nodeId | Array<nodeId>>;
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
@@ -418,13 +417,13 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   upcomingCardIds() {
     const { flow, breadcrumbs, passport } = get();
 
-    const ids: Set<string> = new Set();
+    const ids: Set<nodeId | Array<nodeId>> = new Set();
 
     const mostToLeastNumberOfValues = (b, a) =>
       String(a.data?.val).split(",").length -
       String(b.data?.val).split(",").length;
 
-    const nodeIdsConnectedFrom = (source: string) => {
+    const nodeIdsConnectedFrom = (source: nodeId) => {
       return (flow[source]?.edges ?? [])
         .filter(
           (id) =>
@@ -433,7 +432,18 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               flow[id]?.edges?.length > 0)
         )
         .forEach((id) => {
-          if ([TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type)) {
+          if (flow[id]?.type === TYPES.Page) {
+            if (ids.size === 0) {
+              nodeIdsConnectedFrom(id);
+              const pageIds: Array<nodeId> = [id, ...ids] as any;
+              if (pageIds.length > 1) {
+                ids.clear();
+                ids.add(pageIds);
+              }
+            } else {
+              ids.add(id);
+            }
+          } else if (flow[id]?.type === TYPES.InternalPortal) {
             nodeIdsConnectedFrom(id);
           } else {
             const fn = flow[id]?.data?.fn;
@@ -556,11 +566,20 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     const upcoming = upcomingCardIds();
 
     if (upcoming.length > 0) {
-      const id = upcoming[0];
-      return {
-        id,
-        ...flow[id],
-      };
+      let id = upcoming[0];
+      if (Array.isArray(id)) {
+        const [pageId, ...childIds] = id as Array<string>;
+        return {
+          id: pageId,
+          ...flow[pageId],
+          childIds,
+        };
+      } else {
+        return {
+          id,
+          ...flow[id as string],
+        };
+      }
     } else {
       return null;
     }
