@@ -46,7 +46,7 @@ dependencies:
   reconnecting-websocket: 4.4.0
   rxjs: 6.6.3
   scroll-into-view-if-needed: 2.2.26
-  sharedb: 1.4.2
+  sharedb: 1.5.0
   subscriptions-transport-ws: 0.9.18_graphql@15.4.0
   zustand: 3.1.4_react@16.14.0
 devDependencies:
@@ -16396,7 +16396,7 @@ packages:
   /shallowequal/1.1.0:
     resolution:
       integrity: sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
-  /sharedb/1.4.2:
+  /sharedb/1.5.0:
     dependencies:
       arraydiff: 0.1.3
       async: 2.6.3
@@ -16405,7 +16405,7 @@ packages:
       ot-json0: 1.1.0
     dev: false
     resolution:
-      integrity: sha512-yNat+f8oFBkisL+HdlcTSGi15F10zCSrioAT3doTpmqIWE7b2n7jsaNKqXRYmZ87WbNRN4K0cr6Gw4NL7MGIlQ==
+      integrity: sha512-ELAxqYzhIRvRRpbOu7cnO16Odmg6676yPINNAiOTtT0FdoWXNQIwDNYEf2V+nlPBmTmCuC7Oq5If0tgfPgw+4g==
   /shebang-command/1.2.0:
     dependencies:
       shebang-regex: 1.0.0
