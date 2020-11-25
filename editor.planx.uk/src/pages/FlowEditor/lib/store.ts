@@ -335,20 +335,35 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   breadcrumbs: {},
 
   async startSession({ passport }) {
-    // convert data to format described in google sheet:
-    // https://docs.google.com/spreadsheets/d/1ePihRD37-2071Wq6t2Y7QtBt7juySWuVP6SAF6T-0vo/edit#gid=1877209331
+    // ------ BEGIN PASSPORT DATA OVERRIDES ------
+
+    // TODO: move all of the logic in this block out of here and update the API
+
+    // In this block we are converting the vars stored in passport.data object
+    // from the old boolean values style to the new array style. This should be
+    // done on a server but as a temporary fix the data is currently being
+    // converted here.
+
+    // More info:
+    // GitHub comment explaining what's happening here https://bit.ly/2HFnxX2
+    // Google sheet with new passport schema https://bit.ly/39eYp4A
+
     const keys = Object.entries(passport.data)
       .filter(([, { value }]: any) => value)
       .map(([k]) => k);
-    console.log({ keys });
 
-    const value = [];
+    const constraints = [];
+
     if (keys.includes("property.landConservation"))
-      value.push("designated.conservationArea");
-    if (keys.includes("property.landTPO")) value.push("TPO");
-    if (keys.includes("property.buildingListed")) value.push("listed");
+      constraints.push("designated.conservationArea");
+    if (keys.includes("property.landTPO")) constraints.push("TPO");
+    if (keys.includes("property.buildingListed")) constraints.push("listed");
 
-    passport.data["property.constraints.planning"] = { value };
+    passport.data =
+      constraints.length > 0
+        ? { "property.constraints.planning": constraints }
+        : {};
+    // ------ END PASSPORT DATA OVERRIDES ------
 
     set({
       passport: {
