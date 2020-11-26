@@ -11,7 +11,18 @@ const useStyles = makeStyles<Theme>(() => ({
   },
 }));
 
-const Card: React.FC<any> = ({ children, isValid, handleSubmit, ...props }) => {
+/**
+ * Card which acts as a wrapper for public components
+ * @param {object} props Component props
+ * @param {bool} props.handleSubmit if included then show the Continue button
+ * @param {bool} props.isValid if falsey then disable Continue button, otherwise enable
+ */
+const Card: React.FC<any> = ({
+  children,
+  isValid = true,
+  handleSubmit,
+  ...props
+}) => {
   const classes = useStyles();
 
   return (
