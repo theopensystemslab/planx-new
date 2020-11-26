@@ -1,4 +1,5 @@
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import React from "react";
 
@@ -10,8 +11,9 @@ const useStyles = makeStyles<Theme>(() => ({
   },
 }));
 
-const Card: React.FC<any> = ({ children, ...props }) => {
+const Card: React.FC<any> = ({ children, isValid, handleSubmit, ...props }) => {
   const classes = useStyles();
+
   return (
     <Box
       className={classes.container}
@@ -24,6 +26,19 @@ const Card: React.FC<any> = ({ children, ...props }) => {
       {...props}
     >
       {children}
+
+      {handleSubmit && (
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          type="submit"
+          disabled={!isValid}
+          onClick={handleSubmit}
+        >
+          Continue
+        </Button>
+      )}
     </Box>
   );
 };
