@@ -27,7 +27,7 @@ const PropertyInformation = ({
   const classes = propertyInformationStyles();
 
   return (
-    <Card>
+    <Card handleSubmit={handleSubmit}>
       <QuestionHeader title={title} description={description} />
       <Box className={classes.map}>
         <BasicMap zoom={18} lat={lat} lng={lng} setBoundary={console.log} />
@@ -50,14 +50,6 @@ const PropertyInformation = ({
           Report an inaccuracy
         </Button>
       </Box>
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        onClick={() => handleSubmit()}
-      >
-        Continue
-      </Button>
     </Card>
   );
 };

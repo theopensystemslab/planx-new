@@ -1,4 +1,3 @@
-import Button from "@material-ui/core/Button";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { TextInput, UserData } from "@planx/components/TextInput/types";
@@ -24,8 +23,12 @@ const TextInputComponent: React.FC<Props> = (props) => {
     }
     return true;
   }, [value, props.type]);
+
   return (
-    <Card>
+    <Card
+      handleSubmit={() => props.handleSubmit && props.handleSubmit(value)}
+      isValid={isValid}
+    >
       <QuestionHeader
         title={props.title}
         description={props.description}
@@ -55,18 +58,6 @@ const TextInputComponent: React.FC<Props> = (props) => {
           />
         )}
       </InputRow>
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        type="submit"
-        disabled={!isValid}
-        onClick={() => {
-          props.handleSubmit && props.handleSubmit(value);
-        }}
-      >
-        Continue
-      </Button>
     </Card>
   );
 };
