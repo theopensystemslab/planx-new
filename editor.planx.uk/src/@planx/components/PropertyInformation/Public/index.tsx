@@ -8,7 +8,7 @@ import useAxios from "axios-hooks";
 import capitalize from "lodash/capitalize";
 import React, { useEffect } from "react";
 
-import { useStore } from "../../../FlowEditor/lib/store";
+import { useStore } from "../../../../pages/FlowEditor/lib/store";
 import BasicMap from "./BasicMap";
 import { convertOrdnanceSurveyToStandard } from "./maputils";
 import PropertyConstraints from "./PropertyConstraints";
@@ -27,7 +27,7 @@ const PropertyInformation = ({
   const classes = propertyInformationStyles();
 
   return (
-    <Card handleSubmit={handleSubmit}>
+    <Card handleSubmit={handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
       <Box className={classes.map}>
         <BasicMap zoom={18} lat={lat} lng={lng} setBoundary={console.log} />
