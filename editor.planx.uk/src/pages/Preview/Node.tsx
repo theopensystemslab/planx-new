@@ -1,15 +1,15 @@
+import Checklist from "@planx/components/Checklist/Public";
 import Content from "@planx/components/Content/Public";
 import DateInput from "@planx/components/DateInput/Public";
 import Notice from "@planx/components/Notice/Public";
+import Result from "@planx/components/Result/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
-import Result from "../../@planx/components/Result/Public";
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
-import Checklist from "./components/Checklist";
 import FileUpload from "./components/FileUpload";
 import FindProperty from "./components/FindProperty";
 import Pay from "./components/Pay";
