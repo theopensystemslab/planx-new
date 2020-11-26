@@ -1,12 +1,18 @@
 import { MoreInformation, parseMoreInformation } from "../shared";
 
-export type UserData = string;
+export type UserData = {
+  line1: string;
+  line2: string;
+  town: string;
+  county: string;
+  postcode: string;
+};
 
 export interface AddressInput extends MoreInformation {
   title: string;
   description?: string;
   placeholder?: string;
-  fn?: string;
+  fn: string;
 }
 
 export const parseAddressInput = (
@@ -15,6 +21,6 @@ export const parseAddressInput = (
   title: data?.title || "",
   description: data?.description,
   placeholder: data?.placeholder,
-  fn: data?.fn,
+  fn: data?.fn || "",
   ...parseMoreInformation(data),
 });

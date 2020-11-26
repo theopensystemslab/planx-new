@@ -6,11 +6,18 @@ import { PublicProps } from "@planx/components/ui";
 import React, { useMemo, useState } from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
+import InputRowItem from "ui/InputRowItem";
 
 export type Props = PublicProps<AddressInput, UserData>;
 
 const AddressInputComponent: React.FC<Props> = (props) => {
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<UserData>({
+    line1: "",
+    line2: "",
+    town: "",
+    county: "",
+    postcode: "",
+  });
   const isValid = useMemo(() => {
     return true;
   }, [value]);
@@ -25,15 +32,70 @@ const AddressInputComponent: React.FC<Props> = (props) => {
       />
       <InputRow>
         <Input
-          value={value}
-          placeholder={props.placeholder || "Type your answer"}
+          value={value.line1}
+          placeholder="Line 1"
           bordered
-          multiline
-          rows={3}
           onChange={(ev) => {
-            setValue(ev.target.value);
+            setValue((prev) => ({
+              ...prev,
+              line1: ev.target.value,
+            }));
           }}
         />
+      </InputRow>
+      <InputRow>
+        <Input
+          value={value.line2}
+          placeholder="Line 2"
+          bordered
+          onChange={(ev) => {
+            setValue((prev) => ({
+              ...prev,
+              line2: ev.target.value,
+            }));
+          }}
+        />
+      </InputRow>
+      <InputRow>
+        <Input
+          value={value.town}
+          placeholder="Town"
+          bordered
+          onChange={(ev) => {
+            setValue((prev) => ({
+              ...prev,
+              town: ev.target.value,
+            }));
+          }}
+        />
+      </InputRow>
+      <InputRow>
+        <Input
+          value={value.county}
+          placeholder="County"
+          bordered
+          onChange={(ev) => {
+            setValue((prev) => ({
+              ...prev,
+              county: ev.target.value,
+            }));
+          }}
+        />
+      </InputRow>
+      <InputRow>
+        <InputRowItem width="40%">
+          <Input
+            value={value.postcode}
+            placeholder="Postal code"
+            bordered
+            onChange={(ev) => {
+              setValue((prev) => ({
+                ...prev,
+                county: ev.target.value,
+              }));
+            }}
+          />
+        </InputRowItem>
       </InputRow>
       <Button
         variant="contained"
