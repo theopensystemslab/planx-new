@@ -1,5 +1,4 @@
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import FileIcon from "@material-ui/icons/AttachFile";
@@ -117,7 +116,14 @@ const useStyles = makeStyles((theme) => ({
 const FileUpload: React.FC<Props> = (props) => {
   const [slots, setSlots] = React.useState([]);
   return (
-    <Card>
+    <Card
+      isValid={!slots.some((slot) => slot.status === "uploading")}
+      handleSubmit={() => {
+        props.handleSubmit(
+          slots.map((slot) => ({ url: slot.url, filename: slot.file.path }))
+        );
+      }}
+    >
       <QuestionHeader
         title={props.title}
         description={props.description}
@@ -126,20 +132,6 @@ const FileUpload: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
       />
       <Dropzone slots={slots} setSlots={setSlots} />
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        type="submit"
-        disabled={slots.some((slot) => slot.status === "uploading")}
-        onClick={() => {
-          props.handleSubmit(
-            slots.map((slot) => ({ url: slot.url, filename: slot.file.path }))
-          );
-        }}
-      >
-        Continue
-      </Button>
     </Card>
   );
 };
