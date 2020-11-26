@@ -7,12 +7,12 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
+import Question from "@planx/components/Question/Public";
 import Card from "@planx/components/shared/Preview/Card";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { Suspense } from "react";
 import Input from "ui/Input";
 
-import Question from "../../../../pages/Preview/components/Question";
 import { Pay } from "../types";
 
 export default Component;

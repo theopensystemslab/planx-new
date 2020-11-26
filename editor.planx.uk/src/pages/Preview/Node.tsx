@@ -6,6 +6,7 @@ import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
 import Pay from "@planx/components/Pay/Public";
 import PropertyInformation from "@planx/components/PropertyInformation/Public";
+import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
 import Review from "@planx/components/Review/Public";
 import TaskList from "@planx/components/TaskList/Public";
@@ -15,7 +16,6 @@ import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
-import Question from "./components/Question";
 
 let uprn;
 
