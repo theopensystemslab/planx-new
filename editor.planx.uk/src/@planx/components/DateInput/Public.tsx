@@ -10,9 +10,7 @@ import InputRow from "ui/InputRow";
 
 export type Props = PublicProps<DateInput, UserData>;
 
-export default function DateInputComponent(
-  props: Props
-): React.FunctionComponentElement<Props> {
+export default function DateInputComponent(props: Props): React.ReactElement {
   const [value, setValue] = useState<string>("");
   const isValid = useMemo(() => {
     if (
