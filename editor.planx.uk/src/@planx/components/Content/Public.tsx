@@ -8,7 +8,7 @@ export type Props = PublicProps<Content>;
 
 const ContentComponent: React.FC<Props> = (props) => {
   return (
-    <Card handleSubmit={() => props.handleSubmit()}>
+    <Card handleSubmit={props.handleSubmit} isValid>
       <QuestionHeader
         description={props.content}
         info={props.info}

@@ -34,7 +34,7 @@ const Card: React.FC<any> = ({ children, isValid, handleSubmit, ...props }) => {
           size="large"
           type="submit"
           disabled={!isValid}
-          onClick={handleSubmit}
+          onClick={() => handleSubmit()}
         >
           Continue
         </Button>
