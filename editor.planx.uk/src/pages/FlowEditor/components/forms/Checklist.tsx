@@ -9,8 +9,7 @@ import {
 } from "@planx/components/Checklist/types";
 import { Option, parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
@@ -33,17 +32,6 @@ import {
 } from "../../../../ui";
 import { PermissionSelect } from "./shared";
 
-interface ChecklistOption {
-  id?: string;
-  data: {
-    description?: string;
-    flag?: string;
-    img?: string;
-    text?: string;
-    val?: string;
-  };
-}
-
 interface ChecklistProps extends Checklist {
   handleSubmit?: Function;
   node?: {
@@ -65,8 +53,8 @@ interface ChecklistProps extends Checklist {
 
 const OptionEditor: React.FC<{
   index?: number;
-  value: ChecklistOption;
-  onChange: (newVal: ChecklistOption) => void;
+  value: Option;
+  onChange: (newVal: Option) => void;
   groupIndex?: number;
   groups?: Array<string>;
   onMoveToGroup?: (itemIndex: number, groupIndex: number) => void;
@@ -209,7 +197,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                         val: "",
                         flag: "",
                       },
-                    } as ChecklistOption)
+                    } as Option)
                   }
                   newValueLabel="add new option"
                   Editor={OptionEditor}
@@ -279,7 +267,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                 val: "",
                 flag: "",
               },
-            } as ChecklistOption)
+            } as Option)
           }
           Editor={OptionEditor}
           editorExtraProps={{ showValueField: !!formik.values.fn }}
@@ -324,7 +312,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
           },
           options
             ? options
-                .filter((o: ChecklistOption) => o.data.text)
+                .filter((o) => o.data.text)
                 .map((o) => ({
                   ...o,
                   id: o.id || undefined,
@@ -333,7 +321,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
             : groupedOptions
             ? groupedOptions
                 .flatMap((gr) => gr.children)
-                .filter((o: ChecklistOption) => o.data.text)
+                .filter((o) => o.data.text)
                 .map((o) => ({
                   ...o,
                   id: o.id || undefined,

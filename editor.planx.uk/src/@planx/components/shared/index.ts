@@ -19,12 +19,14 @@ export const parseMoreInformation = (
 });
 
 export interface Option {
-  val?: string;
-  description?: string;
   id?: string;
-  flag?: string;
-  text?: string;
-  img?: string;
+  data: {
+    description?: string;
+    flag?: string;
+    img?: string;
+    text?: string;
+    val?: string;
+  };
 }
 
 export const parseFormValues = (ob, defaultValues = {}) =>

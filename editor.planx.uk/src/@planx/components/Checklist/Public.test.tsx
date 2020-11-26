@@ -13,34 +13,32 @@ test("answers are submitted in order they were supplied", async () => {
       description=""
       text="home type?"
       handleSubmit={handleSubmit}
-      options={
-        [
-          {
-            id: "flat_id",
-            data: {
-              text: "Flat",
-            },
+      options={[
+        {
+          id: "flat_id",
+          data: {
+            text: "Flat",
           },
-          {
-            id: "caravan_id",
-            data: {
-              text: "Caravan",
-            },
+        },
+        {
+          id: "caravan_id",
+          data: {
+            text: "Caravan",
           },
-          {
-            id: "house_id",
-            data: {
-              text: "House",
-            },
+        },
+        {
+          id: "house_id",
+          data: {
+            text: "House",
           },
-          {
-            id: "spaceship_id",
-            data: {
-              text: "Spaceship",
-            },
+        },
+        {
+          id: "spaceship_id",
+          data: {
+            text: "Spaceship",
           },
-        ] as any /* TODO: fix this 'any' type :( */
-      }
+        },
+      ]}
     />
   );
 
