@@ -1,26 +1,15 @@
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import Drawer from "@material-ui/core/Drawer";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import CloseIcon from "@material-ui/icons/Close";
 import Card from "@planx/components/shared/Preview/Card";
 import { TYPES } from "@planx/components/types";
-import type { nodeId } from "pages/FlowEditor/lib/store";
 import type {
   breadcrumbs,
   flow,
+  nodeId,
   passport,
   userData,
 } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React from "react";
-import Input from "ui/Input";
-
-import { SLUGS } from "../../../FlowEditor/data/types";
 
 export default Component;
 
@@ -66,29 +55,29 @@ const useStyles = makeStyles((theme) => ({
 const components: {
   [key in TYPES]: React.FC<any>;
 } = {
-  [TYPES.Filter]: undefined,
-  [TYPES.Flow]: undefined,
-  [TYPES.Checklist]: Checklist,
-  [TYPES.FindProperty]: FindProperty,
-  [TYPES.TaskList]: undefined,
-  [TYPES.Notice]: undefined,
-  [TYPES.TextInput]: TextInput,
-  [TYPES.Content]: undefined,
-  [TYPES.Result]: undefined,
-  [TYPES.FileUpload]: FileUpload,
-  [TYPES.InternalPortal]: undefined,
-  [TYPES.ExternalPortal]: undefined,
-  [TYPES.PropertyInformation]: undefined,
-  [TYPES.SignIn]: undefined,
-  [TYPES.Report]: undefined,
-  [TYPES.NumberInput]: Debug,
-  [TYPES.DateInput]: Debug,
   [TYPES.AddressInput]: Debug,
-  [TYPES.Statement]: Question,
-  [TYPES.Response]: Debug,
+  [TYPES.Checklist]: Checklist,
+  [TYPES.Content]: undefined,
+  [TYPES.DateInput]: Debug,
+  [TYPES.ExternalPortal]: undefined,
+  [TYPES.FileUpload]: FileUpload,
+  [TYPES.Filter]: undefined,
+  [TYPES.FindProperty]: FindProperty,
+  [TYPES.Flow]: undefined,
+  [TYPES.InternalPortal]: undefined,
+  [TYPES.Notice]: undefined,
+  [TYPES.NumberInput]: Debug,
   [TYPES.Page]: undefined,
   [TYPES.Pay]: undefined,
+  [TYPES.PropertyInformation]: undefined,
+  [TYPES.Report]: undefined,
+  [TYPES.Response]: Debug,
+  [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,
+  [TYPES.SignIn]: undefined,
+  [TYPES.Statement]: Question,
+  [TYPES.TaskList]: undefined,
+  [TYPES.TextInput]: TextInput,
 };
 
 interface Props {
@@ -102,7 +91,7 @@ interface Props {
 function Component(props: Props) {
   const { grid, root } = useStyles();
   return (
-    <Card>
+    <Card isValid handleSubmit={props.handleSubmit}>
       <div className={root}>
         <h1>Check your answers before sending your application</h1>
         <div className={grid}>
@@ -142,18 +131,6 @@ function Component(props: Props) {
           By submitting this notification you are confirming that, to the best
           of your knowledge, the details you are providing are correct.
         </p>
-
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          type="submit"
-          onClick={() => {
-            props.handleSubmit();
-          }}
-        >
-          Accept and send
-        </Button>
       </div>
     </Card>
   );

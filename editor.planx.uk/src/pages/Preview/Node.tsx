@@ -5,6 +5,7 @@ import FileUpload from "@planx/components/FileUpload/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
 import Result from "@planx/components/Result/Public";
+import Review from "@planx/components/Review/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
@@ -15,7 +16,6 @@ import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
 import Pay from "./components/Pay";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
-import Review from "./components/Review";
 
 let uprn;
 
