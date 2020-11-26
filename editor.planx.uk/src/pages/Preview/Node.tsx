@@ -6,6 +6,7 @@ import FileUpload from "@planx/components/FileUpload/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
+import Page from "@planx/components/Page/Public";
 import Pay from "@planx/components/Pay/Public";
 import PropertyInformation from "@planx/components/PropertyInformation/Public";
 import Question from "@planx/components/Question/Public";
@@ -17,7 +18,6 @@ import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
 
 let uprn;
@@ -104,6 +104,10 @@ const Node: React.FC<any> = (props: Props) => {
           handleSubmit={() => props.handleSubmit([props.node.id])}
         />
       );
+
+    case TYPES.Page:
+      console.log({ props });
+      return <Page {...allProps} />;
 
     case TYPES.Pay:
       return (
