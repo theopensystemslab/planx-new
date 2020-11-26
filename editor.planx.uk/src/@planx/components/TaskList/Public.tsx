@@ -196,7 +196,7 @@ const Task = ({ title, description, index, isLast }) => {
 const TaskListComponent: React.FC<Props> = (props) => {
   const classes = taskStyles();
   return (
-    <Card handleSubmit={() => props.handleSubmit([])}>
+    <Card handleSubmit={() => props.handleSubmit([])} isValid>
       <QuestionHeader
         info={props.info}
         policyRef={props.policyRef}
