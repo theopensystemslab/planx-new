@@ -19,7 +19,6 @@ const AddressList: React.FC<{
   postcode: string;
   handleSubmit: handleSubmit;
 }> = ({ postcode, handleSubmit }) => {
-  const [address, setAddress] = React.useState(undefined);
   const [{ data }] = useAxios(
     `https://llpg.planx.uk/addresses?limit=100&postcode=eq.${escape(postcode)}`
   );
@@ -38,46 +37,37 @@ const AddressList: React.FC<{
   }));
 
   return (
-    <>
-      <Autocomplete
-        options={options.sort((a: any, b: any) => sorter(a.title, b.title))}
-        getOptionLabel={(option: any) => option.title}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Address"
-            variant="outlined"
-            style={{ marginTop: 20 }}
-            autoFocus
-          />
-        )}
-        onChange={(_e, option) => {
-          setAddress(option);
-        }}
-      />
-      {address && (
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
+    <Autocomplete
+      options={options.sort((a: any, b: any) => sorter(a.title, b.title))}
+      getOptionLabel={(option: any) => option.title}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Address"
+          variant="outlined"
           style={{ marginTop: 20 }}
-          onClick={() => handleSubmit((address as any).uprn)}
-        >
-          Continue
-        </Button>
+          autoFocus
+        />
       )}
-    </>
+      onChange={(_e, option) => {
+        handleSubmit(option);
+      }}
+    />
   );
 };
 
 const FindProperty = ({ handleSubmit: handleSubmit }) => {
   const [boundary, setBoundary] = React.useState(null);
   const [useMap, setUseMap] = React.useState(false);
-  const [address, setAddress] = React.useState("");
+  const [postcode, setPostcode] = React.useState("");
+  const [address, setAddress] = React.useState(undefined);
   const [validPostcode, setValidPostcode] = React.useState(false);
 
   return (
-    <Card>
+    <Card
+      handleSubmit={() => handleSubmit((address as any).uprn)}
+      isValid={!!address}
+    >
       <QuestionHeader
         title="Find the property"
         description={
@@ -112,20 +102,20 @@ const FindProperty = ({ handleSubmit: handleSubmit }) => {
           <Box pb={2}>
             <FormInput
               placeholder="Enter the postcode of the property"
-              value={address}
+              value={postcode}
               onChange={(e: any) => {
                 const postcode = parse(e.target.value);
                 if (postcode.valid) {
                   setValidPostcode(true);
-                  setAddress(toNormalised(e.target.value) as string);
+                  setPostcode(toNormalised(e.target.value) as string);
                 } else {
                   setValidPostcode(false);
-                  setAddress(e.target.value.toUpperCase());
+                  setPostcode(e.target.value.toUpperCase());
                 }
               }}
             />
             {validPostcode && (
-              <AddressList postcode={address} handleSubmit={handleSubmit} />
+              <AddressList postcode={postcode} handleSubmit={setAddress} />
             )}
           </Box>
 
