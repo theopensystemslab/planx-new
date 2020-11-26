@@ -83,6 +83,9 @@ const Checkbox: React.FC<ICheckbox> = ({
   return (
     <Box mb={1}>
       <input
+        onChange={() => {
+          onChange(!checked);
+        }}
         checked={checked}
         className={classes.input}
         type="checkbox"
@@ -90,13 +93,7 @@ const Checkbox: React.FC<ICheckbox> = ({
         id={id}
         {...props}
       />
-      <label
-        className={classNames(classes.checkBoxRoot)}
-        htmlFor={id}
-        onClick={() => {
-          onChange(!checked);
-        }}
-      >
+      <label className={classNames(classes.checkBoxRoot)} htmlFor={id}>
         <Box className={classes.text}>
           <span className={classNames(classes.icon)} />
           {label}
