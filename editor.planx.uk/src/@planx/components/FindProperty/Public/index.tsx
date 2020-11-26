@@ -91,12 +91,8 @@ const FindProperty = ({ handleSubmit: handleSubmit }) => {
             lat={51.2754385}
             lng={1.0848595}
             setBoundary={(val: any) => setBoundary(val)}
-          ></Map>
-          {/* <Box pt={2} mb={1} color="text.secondary" textAlign="right">
-            <a href="!#" style={{ color: "inherit" }}>
-              Upload a PDF instead
-            </a>
-          </Box> */}
+          />
+
           {boundary && (
             <>
               <Box mb={3}>
