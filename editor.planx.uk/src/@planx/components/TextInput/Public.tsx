@@ -21,7 +21,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
     if (props.type === "email") {
       return isValidEmail(value);
     }
-    return true;
+    return !!value;
   }, [value, props.type]);
 
   return (
