@@ -7,13 +7,13 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import { Pay } from "@planx/components/Pay/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { Suspense } from "react";
 import Input from "ui/Input";
 
-import Question from "../Question";
+import Question from "../../../../pages/Preview/components/Question";
+import { Pay } from "../types";
 
 export default Component;
 
@@ -113,7 +113,7 @@ function Component(props: Props) {
   if (state === "paid") {
     return (
       <Suspense fallback={<>Loading...</>}>
-        <Paid />
+        <Paid handleSubmit={() => props.handleSubmit()} />
       </Suspense>
     );
   }
@@ -217,17 +217,17 @@ function Init(props) {
             ))}
           </FormGroup>
           <p>Why would you prefer to use this form of payment?</p>
-          <p>
-            <Input
-              multiline={true}
-              rows={3}
-              style={{ width: "100%" }}
-              onChange={(ev) => {
-                setText(ev.target.value);
-              }}
-              value={text}
-            />
-          </p>
+
+          <Input
+            multiline={true}
+            rows={3}
+            style={{ width: "100%" }}
+            onChange={(ev) => {
+              setText(ev.target.value);
+            }}
+            value={text}
+          />
+
           <p style={{ textAlign: "right" }}>
             <ButtonBase onClick={() => setIsOpen(false)}>Save</ButtonBase>
           </p>

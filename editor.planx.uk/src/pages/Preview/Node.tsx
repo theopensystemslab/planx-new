@@ -4,6 +4,7 @@ import DateInput from "@planx/components/DateInput/Public";
 import FileUpload from "@planx/components/FileUpload/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
+import Pay from "@planx/components/Pay/Public";
 import Result from "@planx/components/Result/Public";
 import Review from "@planx/components/Review/Public";
 import TaskList from "@planx/components/TaskList/Public";
@@ -13,7 +14,6 @@ import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
-import Pay from "./components/Pay";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
 
