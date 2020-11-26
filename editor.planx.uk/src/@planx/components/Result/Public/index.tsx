@@ -57,7 +57,7 @@ const Result: React.FC<Props> = ({
   const hiddenResponses = responses.filter((r) => r.hidden);
 
   return (
-    <Card handleSubmit={handleSubmit}>
+    <Card handleSubmit={handleSubmit} isValid>
       <ResultSummary
         subheading={subheading}
         color={headingColor}

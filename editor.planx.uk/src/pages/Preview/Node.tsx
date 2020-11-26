@@ -7,6 +7,7 @@ import { TYPES } from "@planx/components/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
+import Result from "../../@planx/components/Result/Public";
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
 import Checklist from "./components/Checklist";
 import FileUpload from "./components/FileUpload";
@@ -14,7 +15,6 @@ import FindProperty from "./components/FindProperty";
 import Pay from "./components/Pay";
 import PropertyInformation from "./components/PropertyInformation";
 import Question from "./components/Question";
-import Result from "./components/Result";
 import Review from "./components/Review";
 
 let uprn;
