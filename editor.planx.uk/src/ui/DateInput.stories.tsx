@@ -4,7 +4,7 @@ import React from "react";
 import DateInput from "./DateInput";
 
 export default {
-  title: "Components/DateInput",
+  title: "Design System/Atoms/DateInput",
   component: DateInput,
   argTypes: {
     onChange: { action: true, control: { disable: true } },

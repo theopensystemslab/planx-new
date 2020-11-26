@@ -4,7 +4,7 @@ import React from "react";
 import Checklist, { Props } from "./index";
 
 export default {
-  title: "Preview/Checklist",
+  title: "PlanX Components/Checklist",
   component: Checklist,
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },

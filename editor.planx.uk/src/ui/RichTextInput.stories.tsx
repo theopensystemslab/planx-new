@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import RichTextInput from "./RichTextInput";
 
 export default {
-  title: "Components/RichTextInput",
+  title: "Design System/Atoms/RichTextInput",
   component: RichTextInput,
   parameters: {
     controls: { hideNoControlsWarning: true },

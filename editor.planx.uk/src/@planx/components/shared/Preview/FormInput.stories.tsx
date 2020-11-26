@@ -4,7 +4,7 @@ import React from "react";
 import FormInput, { IFormInput } from "./FormInput";
 
 export default {
-  title: "Forms/Text",
+  title: "Design System/Atoms/Text",
   component: FormInput,
   argTypes: {
     value: { control: { disable: true } },

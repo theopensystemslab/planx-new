@@ -4,7 +4,7 @@ import React from "react";
 import Question, { IQuestion } from "./Question";
 
 export default {
-  title: "Preview/Question",
+  title: "PlanX Components/Question",
   component: Question,
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },

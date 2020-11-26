@@ -4,7 +4,7 @@ import React from "react";
 import FindProperty from "./index";
 
 export default {
-  title: "Preview/FindProperty",
+  title: "PlanX Components/FindProperty",
   component: FindProperty,
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },

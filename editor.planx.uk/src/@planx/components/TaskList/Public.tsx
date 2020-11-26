@@ -210,7 +210,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
             {...task}
             key={index}
             index={index}
-            isLast={index === props.tasks.length}
+            isLast={index === props.tasks.length - 1}
           />
         ))}
       </Box>

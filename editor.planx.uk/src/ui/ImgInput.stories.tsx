@@ -5,8 +5,8 @@ import React, { useState } from "react";
 import ImgInput from "./ImgInput";
 
 export default {
-  title: "Forms/Image Upload", // Stories will be organized based on hierarchy specified with `/` in the `title`
-  component: ImgInput, // DocsPage will infer props from the component for generated documentation
+  title: "Design System/Atoms/Image Upload",
+  component: ImgInput,
 } as Meta;
 
 export const Basic = () => {
