@@ -4,26 +4,19 @@ import React from "react";
 
 import Pay from "./Public";
 
+const waitForThenClick = async (text: string) => {
+  userEvent.click(await waitFor(async () => screen.getByText(text)));
+};
+
 test("apple pay", async () => {
   const handleSubmit = jest.fn();
 
   render(<Pay handleSubmit={handleSubmit} />);
 
-  await waitFor(async () => {
-    userEvent.click(screen.getByText("Apple Pay"));
-  });
-
-  await waitFor(async () => {
-    userEvent.click(screen.getByText("Continue"));
-  });
-
-  await waitFor(async () => {
-    userEvent.click(screen.getByText("Pay & submit"));
-  });
-
-  await waitFor(async () => {
-    userEvent.click(screen.getByText("Continue"));
-  });
+  await waitForThenClick("Apple Pay");
+  await waitForThenClick("Continue");
+  await waitForThenClick("Pay & submit");
+  await waitForThenClick("Continue");
 
   expect(handleSubmit).toHaveBeenCalled();
 });
@@ -33,21 +26,10 @@ test("credit card", async () => {
 
   render(<Pay handleSubmit={handleSubmit} />);
 
-  await waitFor(async () => {
-    userEvent.click(screen.getByText("Credit or debit card"));
-  });
-
-  await waitFor(async () => {
-    userEvent.click(screen.getByText("Continue"));
-  });
-
-  await waitFor(async () => {
-    userEvent.click(screen.getByText("Pay & submit"));
-  });
-
-  await waitFor(async () => {
-    userEvent.click(screen.getByText("Continue"));
-  });
+  await waitForThenClick("Credit or debit card");
+  await waitForThenClick("Continue");
+  await waitForThenClick("Pay & submit");
+  await waitForThenClick("Continue");
 
   expect(handleSubmit).toHaveBeenCalled();
 });
