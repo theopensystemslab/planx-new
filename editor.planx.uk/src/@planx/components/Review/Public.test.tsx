@@ -12,7 +12,7 @@ test("renders correctly", async () => {
       flow={{}}
       breadcrumbs={{}}
       passport={{}}
-      change={() => {}}
+      changeAnswer={() => {}}
       handleSubmit={handleSubmit}
     />
   );
