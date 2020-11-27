@@ -1,5 +1,4 @@
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
@@ -58,7 +57,7 @@ const Result: React.FC<Props> = ({
   const hiddenResponses = responses.filter((r) => r.hidden);
 
   return (
-    <Card>
+    <Card handleSubmit={handleSubmit} isValid>
       <ResultSummary
         subheading={subheading}
         color={headingColor}
@@ -89,14 +88,6 @@ const Result: React.FC<Props> = ({
           )}
         </Box>
       </Box>
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        onClick={() => handleSubmit()}
-      >
-        Continue
-      </Button>
       {/* <Box color="text.secondary" pt={2}>
         You will not be able to make further changes
       </Box> */}

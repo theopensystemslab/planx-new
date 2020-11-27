@@ -1,6 +1,6 @@
 import React from "react";
 
-import Presentational from "./Presentational";
+import Presentational from "./Public/Presentational";
 
 const passport = {
   data: {

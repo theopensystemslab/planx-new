@@ -1,6 +1,6 @@
 import React from "react";
 
-import FileUpload from "./FileUpload";
+import FileUpload from "./Public";
 
 export default (
   <FileUpload

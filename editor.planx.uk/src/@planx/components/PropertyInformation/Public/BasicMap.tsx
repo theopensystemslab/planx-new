@@ -10,11 +10,10 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { withStyles } from "@material-ui/core/styles";
 import DrawIcon from "@material-ui/icons/Create";
 import LayersIcon from "@material-ui/icons/LayersOutlined";
+import MapStyleSwitcher from "@planx/components/FindProperty/Public/MapStyleSwitcher";
 import turfArea from "@turf/area";
 import mapboxgl from "mapbox-gl";
 import React from "react";
-
-import MapStyleSwitcher from "../FindProperty/MapStyleSwitcher";
 
 const styles = (theme) =>
   ({

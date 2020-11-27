@@ -35,12 +35,13 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               fontWeight="h3.fontWeight"
               letterSpacing="-0.02em"
               pb={1}
+              role="heading"
             >
               {title}
             </Box>
           )}
           {description && (
-            <Box>
+            <Box role="description">
               <ReactMarkdown source={description} />
             </Box>
           )}

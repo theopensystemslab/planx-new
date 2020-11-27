@@ -1,7 +1,6 @@
-import { parseMoreInformation } from "@planx/components/shared";
+import { Option, parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 
@@ -18,17 +17,6 @@ import {
   RichTextInput,
 } from "../../../../ui";
 import { PermissionSelect } from "./shared";
-
-interface Option {
-  id?: string;
-  data: {
-    description?: string;
-    flag?: string;
-    img?: string;
-    text?: string;
-    val?: string;
-  };
-}
 
 interface Props {
   node: {

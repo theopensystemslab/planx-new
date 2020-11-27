@@ -1,6 +1,4 @@
 import Button from "@material-ui/core/Button";
-import Icon from "@material-ui/core/Icon";
-import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import DownloadIcon from "@material-ui/icons/GetApp";
@@ -36,7 +34,7 @@ const useStyles = makeStyles({
 function Component(props) {
   const c = useStyles();
   return (
-    <Card>
+    <Card isValid handleSubmit={props.handleSubmit}>
       <div className={c.root}>
         <div className={c.banner}>
           <Typography variant="h3">Payment summary</Typography>
