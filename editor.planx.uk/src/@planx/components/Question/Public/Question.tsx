@@ -23,6 +23,7 @@ export interface IQuestion {
     img?: string;
   }[];
   handleSubmit: handleSubmit;
+  handleBackClick?;
 }
 
 enum Layout {
@@ -53,7 +54,7 @@ const Question: React.FC<IQuestion> = (props) => {
   }
 
   return (
-    <Card>
+    <Card handleBackClick={props.handleBackClick}>
       <form onSubmit={formik.handleSubmit}>
         <QuestionHeader
           title={props.text}

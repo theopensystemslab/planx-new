@@ -14,30 +14,47 @@ const useStyles = makeStyles<Theme>(() => ({
 /**
  * Card which acts as a wrapper for public components
  * @param {object} props Component props
+ * @param {bool} props.handleBackClick if included then show the Back button
  * @param {bool} props.handleSubmit if included then show the Continue button
  * @param {bool} props.isValid if falsey then disable Continue button, otherwise enable
  */
 const Card: React.FC<any> = ({
   children,
   isValid = true,
+  handleBackClick,
   handleSubmit,
   ...props
 }) => {
   const classes = useStyles();
 
   return (
-    <Box
-      className={classes.container}
-      bgcolor="background.default"
-      py={{ xs: 2, md: 4 }}
-      px={{ xs: 2, md: 5 }}
-      mb={4}
-      width="100%"
-      maxWidth={768}
-      {...props}
-    >
-      {children}
-
+    <>
+      {handleBackClick && (
+        <span
+          onClick={() => handleBackClick()}
+          style={{
+            padding: "0 10px 10px",
+            display: "block",
+            cursor: "pointer",
+            userSelect: "none",
+            alignSelf: "start",
+          }}
+        >
+          ⭠ Back
+        </span>
+      )}
+      <Box
+        className={classes.container}
+        bgcolor="background.default"
+        py={{ xs: 2, md: 4 }}
+        px={{ xs: 2, md: 5 }}
+        mb={4}
+        width="100%"
+        maxWidth={768}
+        {...props}
+      >
+        {children}
+      </Box>
       {handleSubmit && (
         <Button
           variant="contained"
@@ -50,7 +67,7 @@ const Card: React.FC<any> = ({
           Continue
         </Button>
       )}
-    </Box>
+    </>
   );
 };
 export default Card;

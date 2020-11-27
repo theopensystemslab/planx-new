@@ -18,6 +18,7 @@ import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
+
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
 
 let uprn;
@@ -29,17 +30,36 @@ interface Props {
 }
 
 const Node: React.FC<any> = (props: Props) => {
-  const [childNodesOf, reportData] = useStore((state) => [
+  const [
+    breadcrumbs,
+    childNodesOf,
+    getNode,
+    record,
+    reportData,
+    resetPreview,
+  ] = useStore((state) => [
+    state.breadcrumbs,
     state.childNodesOf,
+    state.getNode,
+    state.record,
     state.reportData,
+    state.resetPreview,
   ]);
 
-  const resetPreview = useStore((state) => state.resetPreview);
+  const goBackable = Object.entries(breadcrumbs)
+    // .filter(([k, v]: any) => !v.auto)
+    .map(([k]) => k);
 
   const allProps = {
     ...props.node.data,
     resetPreview,
     handleSubmit: props.handleSubmit,
+    handleBackClick:
+      goBackable.length > 0
+        ? () => {
+            record(goBackable.pop());
+          }
+        : undefined,
   };
 
   switch (props.node.type) {
@@ -107,7 +127,19 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.Page:
       console.log({ props });
-      return <Page {...allProps} />;
+      return (
+        <Page {...allProps}>
+          {(props.node as any).childIds.map((id) => (
+            <Node
+              node={getNode(id)}
+              key={id}
+              handleSubmit={(values: componentOutput) => {
+                record(id, values);
+              }}
+            />
+          ))}
+        </Page>
+      );
 
     case TYPES.Pay:
       return (

@@ -8,10 +8,10 @@ export type Props = PublicProps<Page>;
 
 const PageComponent: React.FC<Props> = (props) => {
   return (
-    <Card handleSubmit={props.handleSubmit} isValid>
+    <Card>
       <h1>{props.title}</h1>
       <p role="description">{props.description}</p>
-      <pre>{JSON.stringify(props)}</pre>
+      {props.children}
     </Card>
   );
 };
