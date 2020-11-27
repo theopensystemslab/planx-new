@@ -115,7 +115,12 @@ function Component(props: Props) {
                   <div>
                     <a
                       onClick={() => {
-                        props.changeAnswer(nodeId);
+                        const confirmed = window.confirm(
+                          `This action can't be undone.`
+                        );
+                        if (confirmed) {
+                          props.changeAnswer(nodeId);
+                        }
                       }}
                     >
                       Change
