@@ -1,7 +1,7 @@
-import { Notice, parseNotice } from "@planx/components/Notice/types";
+import type { Notice } from "@planx/components/Notice/model";
+import { parseNotice } from "@planx/components/Notice/model";
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import {

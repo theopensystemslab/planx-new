@@ -1,4 +1,5 @@
-import { MoreInformation, parseMoreInformation } from "../shared";
+import type { MoreInformation } from "../shared";
+import { parseMoreInformation } from "../shared";
 
 export interface TaskList extends MoreInformation {
   tasks: Array<Task>;

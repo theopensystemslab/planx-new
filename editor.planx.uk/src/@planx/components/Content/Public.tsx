@@ -1,4 +1,4 @@
-import { Content } from "@planx/components/Content/types";
+import type { Content } from "@planx/components/Content/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";

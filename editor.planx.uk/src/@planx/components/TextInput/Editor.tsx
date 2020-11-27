@@ -1,7 +1,11 @@
-import { parseTextInput, TextInput } from "@planx/components/TextInput/types";
+import { parseTextInput, TextInput } from "@planx/components/TextInput/model";
 import { TYPES } from "@planx/components/types";
-import { EditorProps, ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import {
+  EditorProps,
+  ICONS,
+  InternalNotes,
+  MoreInformation,
+} from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";

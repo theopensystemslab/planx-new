@@ -1,4 +1,4 @@
-import { DateInput, UserData } from "@planx/components/DateInput/types";
+import type { DateInput, UserData } from "@planx/components/DateInput/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";

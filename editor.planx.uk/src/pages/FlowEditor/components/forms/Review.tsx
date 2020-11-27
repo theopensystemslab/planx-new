@@ -1,4 +1,4 @@
-import type { Review } from "@planx/components/Review/types";
+import type { Review } from "@planx/components/Review/model";
 import { TYPES } from "@planx/components/types";
 import { ICONS, InternalNotes } from "@planx/components/ui";
 import { useFormik } from "formik";
