@@ -15,9 +15,7 @@ test("requires a value before being able to continue", async () => {
 
   expect(screen.getByText("Continue").closest("button")).toBeDisabled();
 
-  await waitFor(() => {
-    userEvent.type(screen.getByPlaceholderText("what?"), "something");
-  });
+  userEvent.type(screen.getByPlaceholderText("what?"), "something");
 
   userEvent.click(screen.getByText("Continue"));
 
