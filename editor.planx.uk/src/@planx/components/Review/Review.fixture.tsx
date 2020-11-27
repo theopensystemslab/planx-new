@@ -264,7 +264,9 @@ export default function Fixture(props) {
       flow={flow}
       passport={passport}
       handleSubmit={console.log}
-      changeAnswer={window.alert}
+      changeAnswer={(nodeId) => {
+        window.alert(`nodeId=${nodeId}`);
+      }}
     />
   );
 }
