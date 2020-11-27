@@ -1,1 +1,1 @@
-declare type TSX = ReturnType<React.FC>
+declare type ReactNode = ReturnType<React.FC>
