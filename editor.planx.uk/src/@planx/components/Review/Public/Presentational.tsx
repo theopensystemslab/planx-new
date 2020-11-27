@@ -85,7 +85,7 @@ interface Props {
   flow: flow;
   passport: passport;
   handleSubmit: handleSubmit;
-  change: (id: nodeId) => void;
+  changeAnswer: (id: nodeId) => void;
 }
 
 function Component(props: Props) {
@@ -115,7 +115,7 @@ function Component(props: Props) {
                   <div>
                     <a
                       onClick={() => {
-                        props.change(nodeId);
+                        props.changeAnswer(nodeId);
                       }}
                     >
                       Change

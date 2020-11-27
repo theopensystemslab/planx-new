@@ -24,11 +24,11 @@ function Component(props: Props) {
       flow={flow}
       passport={passport}
       handleSubmit={props.handleSubmit}
-      change={change}
+      changeAnswer={changeAnswer}
     />
   );
 
-  function change(id: nodeId) {
+  function changeAnswer(id: nodeId) {
     // XXX: Remove the node `id` and all subsequent ones from breadcrumbs
     record(id, undefined);
   }
