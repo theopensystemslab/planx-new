@@ -15,15 +15,13 @@ import SearchOutlined from "@material-ui/icons/SearchOutlined";
 import TextFields from "@material-ui/icons/TextFields";
 import { TYPES } from "@planx/components/types";
 import React, { ChangeEvent } from "react";
-import {
-  ImgInput,
-  Input,
-  InputGroup,
-  InputRow,
-  ModalSection,
-  ModalSectionContent,
-  RichTextInput,
-} from "ui";
+import ImgInput from "ui/ImgInput";
+import Input from "ui/Input";
+import InputGroup from "ui/InputGroup";
+import InputRow from "ui/InputRow";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
+import RichTextInput from "ui/RichTextInput";
 
 export interface EditorProps<Type, Data> {
   id?: string;

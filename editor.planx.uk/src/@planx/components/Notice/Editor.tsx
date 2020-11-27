@@ -4,15 +4,13 @@ import { TYPES } from "@planx/components/types";
 import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import {
-  ColorPicker,
-  Input,
-  InputRow,
-  ModalSection,
-  ModalSectionContent,
-  OptionButton,
-  RichTextInput,
-} from "ui";
+import ColorPicker from "ui/ColorPicker";
+import Input from "ui/Input";
+import InputRow from "ui/InputRow";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
+import OptionButton from "ui/OptionButton";
+import RichTextInput from "ui/RichTextInput";
 
 export interface Props {
   id?: string;

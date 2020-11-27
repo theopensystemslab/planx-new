@@ -2,17 +2,14 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import React from "react";
-
-import {
-  ColorPicker,
-  FileUpload,
-  Input,
-  InputGroup,
-  InputRow,
-  InputRowItem,
-  InputRowLabel,
-  OptionButton,
-} from "../../../../ui";
+import ColorPicker from "ui/ColorPicker";
+import FileUpload from "ui/FileUpload";
+import Input from "ui/Input";
+import InputGroup from "ui/InputGroup";
+import InputRow from "ui/InputRow";
+import InputRowItem from "ui/InputRowItem";
+import InputRowLabel from "ui/InputRowLabel";
+import OptionButton from "ui/OptionButton";
 
 interface IDesignSettings {}
 
