@@ -8,7 +8,7 @@ interface Props extends ButtonBaseProps {
   color?: string;
 }
 
-const optionButtonStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   root: {
     height: 50,
     paddingLeft: 50,
@@ -49,7 +49,7 @@ export default function OptionButton(props: Props): FCReturn {
   const { selected, color, ...restProps } = props;
 
   const colorProps = { backgroundColor: color || "#0ECE83" };
-  const classes = optionButtonStyles(colorProps);
+  const classes = useClasses(colorProps);
 
   return (
     <ButtonBase

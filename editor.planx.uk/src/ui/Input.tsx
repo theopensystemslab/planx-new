@@ -13,7 +13,7 @@ interface Props extends InputBaseProps {
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const inputStyles = makeStyles((theme) => ({
+export const useClasses = makeStyles((theme) => ({
   input: {
     backgroundColor: "#fff",
     fontSize: 15,
@@ -55,7 +55,7 @@ export const inputStyles = makeStyles((theme) => ({
 }));
 
 export default function Input(props: Props): FCReturn {
-  const classes = inputStyles();
+  const classes = useClasses();
 
   const { format, bordered, ...restProps } = props;
 

@@ -2,7 +2,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { ReactNode } from "react";
 
-const inputRowLabelStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   label: {
     flexShrink: 1,
     flexGrow: 0,
@@ -14,7 +14,7 @@ const inputRowLabelStyles = makeStyles((theme) => ({
 }));
 
 export default function InputRowLabel({ children }: { children: ReactNode }) {
-  const classes = inputRowLabelStyles();
+  const classes = useClasses();
   return (
     <Box alignSelf="center" className={classes.label}>
       {children}

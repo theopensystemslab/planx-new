@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/CloseOutlined";
 import React, { ReactNode } from "react";
 
-const modalCardStyles = makeStyles({
+const useClasses = makeStyles({
   root: {
     width: "100%",
     maxWidth: 900,
@@ -24,7 +24,7 @@ export default function ModalCard({
 }: {
   children: ReactNode;
 }): FCReturn {
-  const classes = modalCardStyles();
+  const classes = useClasses();
   return (
     <Box className={classes.root} bgcolor="grey.200">
       <IconButton

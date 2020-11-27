@@ -8,7 +8,7 @@ import React, { useMemo, useState } from "react";
 
 import FileUpload from "./FileUpload";
 
-const useStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   imageUploadContainer: {
     height: 50,
     width: 50,
@@ -31,7 +31,7 @@ export default function ImgInput({
   img?: string;
   onChange?: (newUrl?: string) => void;
 }): FCReturn {
-  const classes = useStyles();
+  const classes = useClasses();
 
   const [anchorEl, setAnchorEl] = useState(null);
 

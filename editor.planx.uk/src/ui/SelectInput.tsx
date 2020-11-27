@@ -11,7 +11,7 @@ export interface Props extends SelectProps {
   onChange?;
 }
 
-const selectInputStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   root: {
     width: "100%",
     backgroundColor: "#fff",
@@ -69,7 +69,7 @@ export default function SelectInput({
   onChange,
   ...props
 }: Props): FCReturn {
-  const classes = selectInputStyles();
+  const classes = useClasses();
   return (
     <Select
       value={value}

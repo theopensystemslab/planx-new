@@ -7,7 +7,7 @@ import classNames from "classnames";
 import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
-const inputGroupStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   inputGroup: {
     border: 0,
     margin: 0,
@@ -96,7 +96,7 @@ export default function InputGroup({
   index = 0,
   handleMove,
 }: Props): FCReturn {
-  const classes = inputGroupStyles();
+  const classes = useClasses();
   const [deleteHover, setDeleteHover] = React.useState(false);
 
   const ref = useRef<HTMLFieldSetElement>(null);

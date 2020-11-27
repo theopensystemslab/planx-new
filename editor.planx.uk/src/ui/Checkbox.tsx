@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import * as React from "react";
 
-export const checkboxesStyles = makeStyles((theme) => ({
+export const useClasses = makeStyles((theme) => ({
   checkBoxRoot: {
     borderRadius: 0,
     padding: 0,
@@ -77,7 +77,7 @@ export default function Checkbox({
   id,
   ...props
 }: Props): FCReturn {
-  const classes = checkboxesStyles();
+  const classes = useClasses();
   const input = React.createRef<HTMLInputElement>();
 
   return (

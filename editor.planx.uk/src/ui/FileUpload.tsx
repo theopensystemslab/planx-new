@@ -13,7 +13,7 @@ export interface Props {
   onChange?: (image: string) => void;
 }
 
-const fileUploadStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   inputIconButton: {
     borderRadius: 0,
     height: 50,
@@ -77,7 +77,7 @@ export default function FileUpload(props: Props): FCReturn {
     onDrop,
     accept: "image/*",
   });
-  const classes = fileUploadStyles();
+  const classes = useClasses();
 
   if (status.type === "loading") {
     return (
