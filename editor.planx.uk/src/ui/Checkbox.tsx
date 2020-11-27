@@ -70,13 +70,13 @@ interface ICheckbox {
   onChange: (checked: boolean) => void;
 }
 
-const Checkbox: React.FC<ICheckbox> = ({
+export default function Checkbox({
   label,
   onChange,
   checked,
   id,
   ...props
-}) => {
+}: ICheckbox): ReactNode {
   const classes = checkboxesStyles();
   const input = React.createRef<HTMLInputElement>();
 
@@ -101,6 +101,4 @@ const Checkbox: React.FC<ICheckbox> = ({
       </label>
     </Box>
   );
-};
-
-export default Checkbox;
+}
