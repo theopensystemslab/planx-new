@@ -62,13 +62,13 @@ const selectInputStyles = makeStyles((theme) => ({
   },
 }));
 
-const SelectInput: React.FC<Props> = ({
+export default function SelectInput({
   children,
   value,
   name,
   onChange,
   ...props
-}) => {
+}: Props): FCReturn {
   const classes = selectInputStyles();
   return (
     <Select
@@ -102,5 +102,4 @@ const SelectInput: React.FC<Props> = ({
       {children}
     </Select>
   );
-};
-export default SelectInput;
+}

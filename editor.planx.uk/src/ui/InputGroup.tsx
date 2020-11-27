@@ -86,7 +86,7 @@ interface Props {
   handleMove?: (dragIndex: number, hoverIndex: number) => void;
 }
 
-const InputGroup: React.FC<Props> = ({
+export default function InputGroup({
   children,
   label,
   deletable,
@@ -95,7 +95,7 @@ const InputGroup: React.FC<Props> = ({
   id,
   index = 0,
   handleMove,
-}) => {
+}: Props): FCReturn {
   const classes = inputGroupStyles();
   const [deleteHover, setDeleteHover] = React.useState(false);
 
@@ -189,5 +189,4 @@ const InputGroup: React.FC<Props> = ({
       </div>
     </fieldset>
   );
-};
-export default InputGroup;
+}

@@ -69,7 +69,7 @@ const colorPickerStyles = makeStyles((theme) => ({
   },
 }));
 
-const ColorPicker: React.FC<Props> = (props) => {
+export default function ColorPicker(props: Props): FCReturn {
   const classes = colorPickerStyles();
   const [show, setShow] = useState(false);
 
@@ -114,6 +114,4 @@ const ColorPicker: React.FC<Props> = (props) => {
       ) : null}
     </div>
   );
-};
-
-export default ColorPicker;
+}

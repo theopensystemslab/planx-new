@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
-import React from "react";
+import React, { ReactNode } from "react";
 
 const useListClasses = makeStyles(() => ({
   root: {
@@ -25,16 +25,17 @@ const useItemClasses = makeStyles(() => ({
   },
 }));
 
-export const ExpandableList: React.FC = (props) => {
+export function ExpandableList(props: { children: ReactNode }): FCReturn {
   const classes = useListClasses();
   return <ul className={classes.root}>{props.children}</ul>;
-};
+}
 
-export const ExpandableListItem: React.FC<{
+export function ExpandableListItem(props: {
   title: string;
   expanded?: boolean;
   onToggle?: () => void;
-}> = (props) => {
+  children?: ReactNode;
+}): FCReturn {
   const classes = useItemClasses();
 
   return (
@@ -51,4 +52,4 @@ export const ExpandableListItem: React.FC<{
       {props.expanded && props.children}
     </li>
   );
-};
+}

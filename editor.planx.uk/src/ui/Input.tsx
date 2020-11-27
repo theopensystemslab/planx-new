@@ -54,7 +54,7 @@ export const inputStyles = makeStyles((theme) => ({
   },
 }));
 
-const Input: React.FC<Props> = (props) => {
+export default function Input(props: Props): FCReturn {
   const classes = inputStyles();
 
   const { format, bordered, ...restProps } = props;
@@ -76,5 +76,4 @@ const Input: React.FC<Props> = (props) => {
       {...restProps}
     />
   );
-};
-export default Input;
+}

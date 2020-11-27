@@ -22,7 +22,11 @@ export const inputRowItemStyles = makeStyles((theme) => ({
   },
 }));
 
-const InputRowItem: React.FC<Props> = ({ width, children, ...props }) => {
+export default function InputRowItem({
+  width,
+  children,
+  ...props
+}: Props): FCReturn {
   const classes = inputRowItemStyles();
   return (
     <Box
@@ -34,6 +38,4 @@ const InputRowItem: React.FC<Props> = ({ width, children, ...props }) => {
       {children}
     </Box>
   );
-};
-
-export default InputRowItem;
+}

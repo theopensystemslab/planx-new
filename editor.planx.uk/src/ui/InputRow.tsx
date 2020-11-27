@@ -37,13 +37,17 @@ const inputRowStyles = makeStyles((theme) => ({
   },
 }));
 
-interface IInputRow {
+interface Props {
   RowIcon?: any;
   childRow?: boolean;
   children: React.ReactNode;
 }
 
-const InputRow: React.FC<IInputRow> = ({ children, RowIcon, childRow }) => {
+export default function InputRow({
+  children,
+  RowIcon,
+  childRow,
+}: Props): FCReturn {
   const classes = inputRowStyles();
   return (
     <div
@@ -57,5 +61,4 @@ const InputRow: React.FC<IInputRow> = ({ children, RowIcon, childRow }) => {
       {children}
     </div>
   );
-};
-export default InputRow;
+}

@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DateInput: React.FC<Props> = (props) => {
+export default function DateInput(props: Props): FCReturn {
   const [year, month, day] = (props.value || "").split("-");
   const classes = useStyles();
   return (
@@ -64,6 +64,4 @@ const DateInput: React.FC<Props> = (props) => {
       />
     </Box>
   );
-};
-
-export default DateInput;
+}

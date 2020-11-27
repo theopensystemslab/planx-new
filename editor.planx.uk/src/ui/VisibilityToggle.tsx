@@ -8,7 +8,7 @@ export interface Props {
   onChange: (newVisible: boolean) => void;
 }
 
-const VisibilityToggle: React.FC<Props> = (props) => {
+export default function VisibilityToggle(props: Props): FCReturn {
   const toggle = () => {
     props.onChange(!props.visible);
   };
@@ -21,6 +21,4 @@ const VisibilityToggle: React.FC<Props> = (props) => {
       {!props.visible ? <Visibility /> : <VisibilityOff />}
     </IconButton>
   );
-};
-
-export default VisibilityToggle;
+}

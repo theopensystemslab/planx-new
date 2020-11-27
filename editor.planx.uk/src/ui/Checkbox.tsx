@@ -63,7 +63,7 @@ export const checkboxesStyles = makeStyles((theme) => ({
   },
 }));
 
-interface ICheckbox {
+interface Props {
   id?: string;
   label: string;
   checked: boolean;
@@ -76,7 +76,7 @@ export default function Checkbox({
   checked,
   id,
   ...props
-}: ICheckbox): ReactNode {
+}: Props): FCReturn {
   const classes = checkboxesStyles();
   const input = React.createRef<HTMLInputElement>();
 

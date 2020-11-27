@@ -1,6 +1,6 @@
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
+import React, { ReactNode } from "react";
 
 const inputRowLabelStyles = makeStyles((theme) => ({
   label: {
@@ -13,13 +13,11 @@ const inputRowLabelStyles = makeStyles((theme) => ({
   },
 }));
 
-const InputRowLabel = ({ children }) => {
+export default function InputRowLabel({ children }: { children: ReactNode }) {
   const classes = inputRowLabelStyles();
   return (
     <Box alignSelf="center" className={classes.label}>
       {children}
     </Box>
   );
-};
-
-export default InputRowLabel;
+}

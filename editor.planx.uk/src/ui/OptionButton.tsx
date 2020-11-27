@@ -45,7 +45,7 @@ const optionButtonStyles = makeStyles((theme) => ({
   }),
 }));
 
-const OptionButton: React.FC<Props> = (props) => {
+export default function OptionButton(props: Props): FCReturn {
   const { selected, color, ...restProps } = props;
 
   const colorProps = { backgroundColor: color || "#0ECE83" };
@@ -61,6 +61,4 @@ const OptionButton: React.FC<Props> = (props) => {
       {restProps.children}
     </ButtonBase>
   );
-};
-
-export default OptionButton;
+}

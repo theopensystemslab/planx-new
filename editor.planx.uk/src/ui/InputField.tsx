@@ -32,7 +32,7 @@ const useStyles = makeStyles(styles) as any;
 
 interface Props extends InputBaseProps {}
 
-const InputField = (props: Props) => {
+export default function InputField(props: Props): FCReturn {
   const classes = useStyles();
   return (
     <InputBase
@@ -45,6 +45,4 @@ const InputField = (props: Props) => {
       {...props}
     />
   );
-};
-
-export default InputField;
+}

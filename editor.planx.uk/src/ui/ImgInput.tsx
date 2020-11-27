@@ -24,10 +24,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /** Uploads an image and returns corresponding URL */
-const ImgInput: React.FC<{
+export default function ImgInput({
+  img,
+  onChange,
+}: {
   img?: string;
   onChange?: (newUrl?: string) => void;
-}> = ({ img, onChange }) => {
+}): FCReturn {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -84,6 +87,4 @@ const ImgInput: React.FC<{
       </div>
     </Tooltip>
   );
-};
-
-export default ImgInput;
+}

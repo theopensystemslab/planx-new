@@ -34,12 +34,12 @@ export const modalSectionContentStyles = makeStyles((theme) => ({
   },
 }));
 
-const ModalSectionContent: React.FC<Props> = ({
+export default function ModalSectionContent({
   title,
   children,
   author,
   Icon,
-}) => {
+}: Props): FCReturn {
   const classes = modalSectionContentStyles();
   return (
     <Grid container wrap="nowrap" className={classes.sectionContentGrid}>
@@ -57,5 +57,4 @@ const ModalSectionContent: React.FC<Props> = ({
       </Grid>
     </Grid>
   );
-};
-export default ModalSectionContent;
+}

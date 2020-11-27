@@ -29,7 +29,7 @@ const fileUploadStyles = makeStyles((theme) => ({
   },
 }));
 
-const FileUpload: React.FC<Props> = (props) => {
+export default function FileUpload(props: Props): FCReturn {
   const { onChange } = props;
 
   const [status, setStatus] = useState<
@@ -121,6 +121,4 @@ const FileUpload: React.FC<Props> = (props) => {
       <Image />
     </ButtonBase>
   );
-};
-
-export default FileUpload;
+}
