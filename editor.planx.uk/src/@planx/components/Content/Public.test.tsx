@@ -9,6 +9,8 @@ test("renders correctly", async () => {
 
   render(<Content content="hello" handleSubmit={handleSubmit} />);
 
+  expect(screen.getByRole("description")).toHaveTextContent("hello");
+
   userEvent.click(screen.getByText("Continue"));
 
   expect(handleSubmit).toHaveBeenCalled();

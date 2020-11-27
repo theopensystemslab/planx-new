@@ -41,7 +41,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             </Box>
           )}
           {description && (
-            <Box>
+            <Box role="description">
               <ReactMarkdown source={description} />
             </Box>
           )}
