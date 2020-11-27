@@ -1,10 +1,12 @@
-import {
-  FindProperty,
-  parseFindProperty,
-} from "@planx/components/FindProperty/types";
+import type { FindProperty } from "@planx/components/FindProperty/model";
+import { parseFindProperty } from "@planx/components/FindProperty/model";
 import { TYPES } from "@planx/components/types";
-import { EditorProps, ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import {
+  EditorProps,
+  ICONS,
+  InternalNotes,
+  MoreInformation,
+} from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import ModalSection from "ui/ModalSection";

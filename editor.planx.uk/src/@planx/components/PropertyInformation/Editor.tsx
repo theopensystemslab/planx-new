@@ -1,10 +1,12 @@
-import {
-  parsePropertyInformation,
-  PropertyInformation,
-} from "@planx/components/PropertyInformation/types";
+import type { PropertyInformation } from "@planx/components/PropertyInformation/model";
+import { parsePropertyInformation } from "@planx/components/PropertyInformation/model";
 import { TYPES } from "@planx/components/types";
-import { EditorProps, ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import {
+  EditorProps,
+  ICONS,
+  InternalNotes,
+  MoreInformation,
+} from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import ModalSection from "ui/ModalSection";

@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import { TaskList } from "@planx/components/TaskList/types";
+import type { TaskList } from "@planx/components/TaskList/model";
 import { PublicProps } from "@planx/components/ui";
 import classNames from "classnames";
 import React from "react";

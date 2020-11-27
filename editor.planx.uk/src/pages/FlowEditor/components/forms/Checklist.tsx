@@ -2,11 +2,8 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Delete from "@material-ui/icons/Delete";
-import {
-  Checklist,
-  Group,
-  toggleExpandableChecklist,
-} from "@planx/components/Checklist/types";
+import type { Checklist, Group } from "@planx/components/Checklist/model";
+import { toggleExpandableChecklist } from "@planx/components/Checklist/model";
 import { Option, parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
 import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";

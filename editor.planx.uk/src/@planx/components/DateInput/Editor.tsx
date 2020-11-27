@@ -1,7 +1,12 @@
-import { DateInput, parseDateInput } from "@planx/components/DateInput/types";
+import type { DateInput } from "@planx/components/DateInput/model";
+import { parseDateInput } from "@planx/components/DateInput/model";
 import { TYPES } from "@planx/components/types";
-import { EditorProps, ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import {
+  EditorProps,
+  ICONS,
+  InternalNotes,
+  MoreInformation,
+} from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import DateInputUi from "ui/DateInput";
