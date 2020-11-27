@@ -5,6 +5,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import React, { useMemo, useState } from "react";
 import Input from "ui/Input";
+import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
 
@@ -30,7 +31,7 @@ const AddressInputComponent: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
-      <InputRow>
+      <InputLabel label="building and street">
         <Input
           value={value.line1}
           placeholder="Line 1"
@@ -42,7 +43,7 @@ const AddressInputComponent: React.FC<Props> = (props) => {
             }));
           }}
         />
-      </InputRow>
+      </InputLabel>
       <InputRow>
         <Input
           value={value.line2}
@@ -56,7 +57,7 @@ const AddressInputComponent: React.FC<Props> = (props) => {
           }}
         />
       </InputRow>
-      <InputRow>
+      <InputLabel label="town">
         <Input
           value={value.town}
           placeholder="Town"
@@ -68,8 +69,8 @@ const AddressInputComponent: React.FC<Props> = (props) => {
             }));
           }}
         />
-      </InputRow>
-      <InputRow>
+      </InputLabel>
+      <InputLabel label="county">
         <Input
           value={value.county}
           placeholder="County"
@@ -81,8 +82,8 @@ const AddressInputComponent: React.FC<Props> = (props) => {
             }));
           }}
         />
-      </InputRow>
-      <InputRow>
+      </InputLabel>
+      <InputLabel label="postal code">
         <InputRowItem width="40%">
           <Input
             value={value.postcode}
@@ -96,7 +97,7 @@ const AddressInputComponent: React.FC<Props> = (props) => {
             }}
           />
         </InputRowItem>
-      </InputRow>
+      </InputLabel>
       <Button
         variant="contained"
         color="primary"
