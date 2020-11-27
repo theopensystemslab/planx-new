@@ -12,21 +12,19 @@ import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
 import React, { useEffect, useRef } from "react";
+import ImgInput from "ui/ImgInput";
+import Input from "ui/Input";
+import InputGroup from "ui/InputGroup";
+import InputRow from "ui/InputRow";
+import InputRowItem from "ui/InputRowItem";
+import ListManager from "ui/ListManager";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
+import OptionButton from "ui/OptionButton";
+import RichTextInput from "ui/RichTextInput";
+import SimpleMenu from "ui/SimpleMenu";
 
 import { FormikHookReturn } from "../../../../types";
-import {
-  ImgInput,
-  Input,
-  InputGroup,
-  InputRow,
-  InputRowItem,
-  ListManager,
-  ModalSection,
-  ModalSectionContent,
-  OptionButton,
-  RichTextInput,
-  SimpleMenu,
-} from "../../../../ui";
 import { PermissionSelect } from "./shared";
 
 interface ChecklistProps extends Checklist {

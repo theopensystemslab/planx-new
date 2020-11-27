@@ -11,15 +11,12 @@ import Add from "@material-ui/icons/Add";
 import Close from "@material-ui/icons/Close";
 import { useFormik } from "formik";
 import React from "react";
-
-import {
-  Input,
-  InputGroup,
-  InputRow,
-  InputRowItem,
-  OptionButton,
-  SelectInput,
-} from "../../../../ui";
+import Input from "ui/Input";
+import InputGroup from "ui/InputGroup";
+import InputRow from "ui/InputRow";
+import InputRowItem from "ui/InputRowItem";
+import OptionButton from "ui/OptionButton";
+import SelectInput from "ui/SelectInput";
 
 interface ITeam {}
 

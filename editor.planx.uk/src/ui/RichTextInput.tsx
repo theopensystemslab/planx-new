@@ -22,7 +22,7 @@ interface Props extends InputBaseProps {
   bordered?: boolean;
 }
 
-const rteContainerStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   regular: {
     position: "relative",
     boxSizing: "border-box",
@@ -85,7 +85,7 @@ const RichTextInput: React.FC<
     };
   }, []);
 
-  const classes = rteContainerStyles();
+  const classes = useClasses();
 
   return (
     <Box

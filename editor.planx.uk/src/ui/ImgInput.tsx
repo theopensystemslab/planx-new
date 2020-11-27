@@ -8,7 +8,7 @@ import React, { useMemo, useState } from "react";
 
 import FileUpload from "./FileUpload";
 
-const useStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   imageUploadContainer: {
     height: 50,
     width: 50,
@@ -24,11 +24,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /** Uploads an image and returns corresponding URL */
-const ImgInput: React.FC<{
+export default function ImgInput({
+  img,
+  onChange,
+}: {
   img?: string;
   onChange?: (newUrl?: string) => void;
-}> = ({ img, onChange }) => {
-  const classes = useStyles();
+}): FCReturn {
+  const classes = useClasses();
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -84,6 +87,4 @@ const ImgInput: React.FC<{
       </div>
     </Tooltip>
   );
-};
-
-export default ImgInput;
+}

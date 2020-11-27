@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import React from "react";
 
-const inputRowStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   inputRow: {
     display: "flex",
     width: "100%",
@@ -37,14 +37,18 @@ const inputRowStyles = makeStyles((theme) => ({
   },
 }));
 
-interface IInputRow {
+interface Props {
   RowIcon?: any;
   childRow?: boolean;
   children: React.ReactNode;
 }
 
-const InputRow: React.FC<IInputRow> = ({ children, RowIcon, childRow }) => {
-  const classes = inputRowStyles();
+export default function InputRow({
+  children,
+  RowIcon,
+  childRow,
+}: Props): FCReturn {
+  const classes = useClasses();
   return (
     <div
       className={classNames(
@@ -57,5 +61,4 @@ const InputRow: React.FC<IInputRow> = ({ children, RowIcon, childRow }) => {
       {children}
     </div>
   );
-};
-export default InputRow;
+}

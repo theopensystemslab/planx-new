@@ -12,7 +12,7 @@ export interface Props {
   onChange?: (newColor: string) => void;
 }
 
-const colorPickerStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   root: {
     padding: 0,
     position: "relative",
@@ -69,8 +69,8 @@ const colorPickerStyles = makeStyles((theme) => ({
   },
 }));
 
-const ColorPicker: React.FC<Props> = (props) => {
-  const classes = colorPickerStyles();
+export default function ColorPicker(props: Props): FCReturn {
+  const classes = useClasses();
   const [show, setShow] = useState(false);
 
   const handleClick = () => {
@@ -114,6 +114,4 @@ const ColorPicker: React.FC<Props> = (props) => {
       ) : null}
     </div>
   );
-};
-
-export default ColorPicker;
+}

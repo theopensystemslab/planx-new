@@ -41,7 +41,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ListManager<T, EditorExtraProps>(props: Props<T, EditorExtraProps>) {
+export default function ListManager<T, EditorExtraProps>(
+  props: Props<T, EditorExtraProps>
+) {
   const { Editor } = props;
   // Initialize a random ID when the component mounts
   const randomId = useRef(String(Math.random()));
@@ -171,5 +173,3 @@ function ListManager<T, EditorExtraProps>(props: Props<T, EditorExtraProps>) {
     </DragDropContext>
   );
 }
-
-export default ListManager;

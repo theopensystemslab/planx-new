@@ -4,15 +4,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import React from "react";
-
-import {
-  ColorPicker,
-  Input,
-  InputGroup,
-  InputRow,
-  InputRowItem,
-  InputRowLabel,
-} from "../../../../ui";
+import ColorPicker from "ui/ColorPicker";
+import Input from "ui/Input";
+import InputGroup from "ui/InputGroup";
+import InputRow from "ui/InputRow";
+import InputRowItem from "ui/InputRowItem";
+import InputRowLabel from "ui/InputRowLabel";
 
 export const serviceFlagsStyles = makeStyles((theme) => ({
   root: {

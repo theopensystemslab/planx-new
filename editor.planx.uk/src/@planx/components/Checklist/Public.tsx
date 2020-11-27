@@ -5,8 +5,7 @@ import { useFormik } from "formik";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import Checkbox from "ui/Checkbox";
-
-import { ExpandableList, ExpandableListItem } from "../../../ui";
+import { ExpandableList, ExpandableListItem } from "ui/ExpandableList";
 
 interface Props extends Checklist {
   handleSubmit: handleSubmit;

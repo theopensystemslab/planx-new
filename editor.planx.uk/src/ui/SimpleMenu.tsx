@@ -14,7 +14,7 @@ interface Props {
   }>;
 }
 
-const SimpleMenu: React.FC<Props> = ({ items, ...restProps }) => {
+export default function SimpleMenu({ items, ...restProps }: Props): FCReturn {
   const [anchorEl, setAnchorEl] = useState(null);
   return (
     <div {...restProps}>
@@ -51,6 +51,4 @@ const SimpleMenu: React.FC<Props> = ({ items, ...restProps }) => {
       </Menu>
     </div>
   );
-};
-
-export default SimpleMenu;
+}

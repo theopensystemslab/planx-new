@@ -1,7 +1,7 @@
 import MenuItem from "@material-ui/core/MenuItem";
 import React from "react";
+import SelectInput, { Props as SelectInputProps } from "ui/SelectInput";
 
-import { SelectInput, SelectInputProps } from "../../../../ui";
 import flags from "../../data/flags";
 
 export const PermissionSelect: React.FC<SelectInputProps> = (props) => {
