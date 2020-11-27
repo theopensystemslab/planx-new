@@ -1,13 +1,10 @@
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  parseTaskList,
-  Task,
-  TaskList,
-} from "@planx/components/TaskList/types";
+import type { Task, TaskList } from "@planx/components/TaskList/model";
+import { parseTaskList } from "@planx/components/TaskList/model";
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
 import {
   EditorProps,
+  ICONS,
   InternalNotes,
   MoreInformation,
 } from "@planx/components/ui";
@@ -15,8 +12,9 @@ import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
-import ListManager from "ui/ListManager";
-import { EditorProps as ListManagerEditorProps } from "ui/ListManager";
+import ListManager, {
+  EditorProps as ListManagerEditorProps,
+} from "ui/ListManager";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";

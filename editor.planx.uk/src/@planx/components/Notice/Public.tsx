@@ -2,7 +2,7 @@ import { mostReadable } from "@ctrl/tinycolor";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import ErrorOutline from "@material-ui/icons/ErrorOutline";
-import { Notice } from "@planx/components/Notice/types";
+import type { Notice } from "@planx/components/Notice/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";

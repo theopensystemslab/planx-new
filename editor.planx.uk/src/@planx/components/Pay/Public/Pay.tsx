@@ -13,7 +13,7 @@ import { handleSubmit } from "pages/Preview/Node";
 import React, { Suspense } from "react";
 import Input from "ui/Input";
 
-import { Pay } from "../types";
+import type { Pay } from "../model";
 
 export default Component;
 

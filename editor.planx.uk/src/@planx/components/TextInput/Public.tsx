@@ -1,6 +1,6 @@
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import { TextInput, UserData } from "@planx/components/TextInput/types";
+import type { TextInput, UserData } from "@planx/components/TextInput/model";
 import { PublicProps } from "@planx/components/ui";
 import React, { useMemo, useState } from "react";
 import Input from "ui/Input";
