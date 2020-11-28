@@ -5,6 +5,7 @@ import CloudUpload from "@material-ui/icons/CloudUpload";
 import Create from "@material-ui/icons/Create";
 import Description from "@material-ui/icons/Description";
 import Event from "@material-ui/icons/Event";
+import ExposureZero from "@material-ui/icons/ExposureZero";
 import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import List from "@material-ui/icons/List";
 import LocationOnOutlined from "@material-ui/icons/LocationOnOutlined";
@@ -52,7 +53,7 @@ export const ICONS: {
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: ReportProblemOutlined,
-  [TYPES.NumberInput]: undefined,
+  [TYPES.NumberInput]: ExposureZero,
   [TYPES.Page]: Description,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PropertyInformation]: LocationOnOutlined,
