@@ -32,6 +32,8 @@ const Node: React.FC<any> = (props) => {
       return <Question {...props} text="Find property" />;
     case TYPES.Notice:
       return <Question {...props} text="Notice" />;
+    case TYPES.NumberInput:
+      return <Question {...props} text="Number" />;
     case TYPES.Page:
       return <Page {...props} text={node?.data?.title ?? "Page"} />;
     case TYPES.Pay:
@@ -61,7 +63,6 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.AddressInput:
     case TYPES.Flow:
-    case TYPES.NumberInput:
     case TYPES.Report:
 
     case TYPES.SignIn:

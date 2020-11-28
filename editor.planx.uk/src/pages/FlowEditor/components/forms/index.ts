@@ -2,6 +2,7 @@ import Content from "@planx/components/Content/Editor";
 import DateInput from "@planx/components/DateInput/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
 import Notice from "@planx/components/Notice/Editor";
+import NumberInput from "@planx/components/NumberInput/Editor";
 import PropertyInformation from "@planx/components/PropertyInformation/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
 import TextInput from "@planx/components/TextInput/Editor";
@@ -36,6 +37,7 @@ const components: {
   "internal-portal": InternalPortal,
   "property-information": PropertyInformation,
   notice: Notice,
+  "number-input": NumberInput,
   page: Page,
   pay: Pay,
   question: Question,
