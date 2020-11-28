@@ -1,7 +1,3 @@
-import {
-  AddressInput,
-  parseAddressInput,
-} from "@planx/components/AddressInput/types";
 import { TYPES } from "@planx/components/types";
 import { EditorProps, ICONS } from "@planx/components/ui";
 import { InternalNotes, MoreInformation } from "@planx/components/ui";
@@ -13,9 +9,11 @@ import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
 
+import { AddressInput, parseAddressInput } from "./model";
+
 export type Props = EditorProps<TYPES.AddressInput, AddressInput>;
 
-const AddressInputComponent: React.FC<Props> = (props) => {
+export default function AddressInputComponent(props: Props): FCReturn {
   const formik = useFormik({
     initialValues: parseAddressInput(props.node?.data),
     onSubmit: (newValues) => {
@@ -86,6 +84,4 @@ const AddressInputComponent: React.FC<Props> = (props) => {
       />
     </form>
   );
-};
-
-export default AddressInputComponent;
+}

@@ -1,5 +1,4 @@
 import Button from "@material-ui/core/Button";
-import { AddressInput, UserData } from "@planx/components/AddressInput/types";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
@@ -9,9 +8,11 @@ import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
 
+import { AddressInput, UserData } from "./model";
+
 export type Props = PublicProps<AddressInput, UserData>;
 
-const AddressInputComponent: React.FC<Props> = (props) => {
+export default function AddressInputComponent(props: Props): FCReturn {
   const [value, setValue] = useState<UserData>({
     line1: "",
     line2: "",
@@ -112,6 +113,4 @@ const AddressInputComponent: React.FC<Props> = (props) => {
       </Button>
     </Card>
   );
-};
-
-export default AddressInputComponent;
+}
