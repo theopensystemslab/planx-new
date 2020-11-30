@@ -4,6 +4,7 @@ import DateInput from "@planx/components/DateInput/Public";
 import FileUpload from "@planx/components/FileUpload/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
+import NumberInput from "@planx/components/NumberInput/Public";
 import Pay from "@planx/components/Pay/Public";
 import PropertyInformation from "@planx/components/PropertyInformation/Public";
 import Question from "@planx/components/Question/Public";
@@ -94,6 +95,14 @@ const Node: React.FC<any> = (props: Props) => {
         />
       );
 
+    case TYPES.NumberInput:
+      return (
+        <NumberInput
+          {...allProps}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
+      );
+
     case TYPES.Pay:
       return (
         <Pay
@@ -168,7 +177,6 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Filter:
     case TYPES.Flow:
     case TYPES.InternalPortal:
-    case TYPES.NumberInput:
     case TYPES.Page:
     case TYPES.Report:
     case TYPES.Response:
