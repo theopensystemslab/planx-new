@@ -33,7 +33,7 @@ const ContentComponent: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
-      <div className={classes.content}>
+      <div className={classes.content} role="main">
         <ReactMarkdown source={props.content} />
       </div>
     </Card>
