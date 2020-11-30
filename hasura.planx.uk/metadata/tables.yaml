@@ -30,6 +30,16 @@
         schema: public
         name: compile_flow_portals
     comment: Flow data with portals merged in
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - data
+      - id
+      - name
+      - slug
+      - team_id
+      filter: {}
 - table:
     schema: public
     name: operations
@@ -140,6 +150,15 @@
         table:
           schema: public
           name: team_members
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - name
+      - slug
+      - theme
+      filter: {}
 - table:
     schema: public
     name: users
