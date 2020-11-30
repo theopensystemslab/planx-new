@@ -12,6 +12,7 @@ export const SLUGS = {
   [TYPES.Flow]: "flow",
   [TYPES.InternalPortal]: "internal-portal",
   [TYPES.Notice]: "notice",
+  [TYPES.Notify]: "notify",
   [TYPES.NumberInput]: "number-input",
   [TYPES.Page]: "page",
   [TYPES.Pay]: "pay",

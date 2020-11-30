@@ -22,4 +22,5 @@ export enum TYPES {
   Pay = 400,
   Filter = 500,
   Review = 600,
+  Notify = 650,
 }

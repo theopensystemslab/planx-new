@@ -4,6 +4,7 @@ import DateInput from "@planx/components/DateInput/Public";
 import FileUpload from "@planx/components/FileUpload/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
+import Notify from "@planx/components/Notify/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
 import Pay from "@planx/components/Pay/Public";
 import PropertyInformation from "@planx/components/PropertyInformation/Public";
@@ -90,6 +91,14 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Notice:
       return (
         <Notice
+          {...allProps}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
+      );
+
+    case TYPES.Notify:
+      return (
+        <Notify
           {...allProps}
           handleSubmit={() => props.handleSubmit([props.node.id])}
         />
