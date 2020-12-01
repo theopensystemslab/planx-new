@@ -120,7 +120,13 @@ const FileUpload: React.FC<Props> = (props) => {
       isValid={!slots.some((slot) => slot.status === "uploading")}
       handleSubmit={() => {
         props.handleSubmit(
-          slots.map((slot) => ({ url: slot.url, filename: slot.file.path }))
+          slots.map((slot) => ({
+            url: slot.url,
+            filename: slot.file.path,
+            // XXX: We're keeping `file` in memory so that the Review component can use it
+            //      to generate the zip file
+            file: slot.file,
+          }))
         );
       }}
     >

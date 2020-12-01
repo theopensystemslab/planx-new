@@ -1,6 +1,9 @@
+import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@planx/components/shared/Preview/Card";
 import { TYPES } from "@planx/components/types";
+import html2canvas from "html2canvas";
+import JSZip from "jszip";
 import type {
   breadcrumbs,
   flow,
@@ -90,9 +93,10 @@ interface Props {
 
 function Component(props: Props) {
   const { grid, root } = useStyles();
+  const rootRef = React.useRef<HTMLDivElement>();
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
-      <div className={root}>
+      <div ref={rootRef} className={root}>
         <h1>Check your answers before sending your application</h1>
         <div className={grid}>
           {
@@ -135,6 +139,38 @@ function Component(props: Props) {
         <p>
           By submitting this notification you are confirming that, to the best
           of your knowledge, the details you are providing are correct.
+        </p>
+
+        <p>
+          <Button
+            onClick={async () => {
+              const canvas = await html2canvas(rootRef.current);
+              const screenshot = (await new Promise((res) =>
+                canvas.toBlob(res, "image/jpeg", 0.95)
+              )) as Blob;
+              const zip = new JSZip();
+              Object.entries(props.breadcrumbs)
+                .filter(
+                  ([nodeId]) => props.flow[nodeId].type === TYPES.FileUpload
+                )
+                .flatMap(([nodeId, value]) => value.answers)
+                .forEach((slot) => {
+                  // TODO: Instead of keeping `slot.file` in memory,
+                  //       we could re-download the file from AWS S3
+                  zip.file(slot.filename, slot.file);
+                });
+              zip.file("application.jpg", screenshot);
+              const blob = await zip.generateAsync({ type: "blob" });
+              const link = document.createElement("a");
+              link.href = URL.createObjectURL(blob);
+              link.download = "application.zip";
+              link.click();
+              link.remove();
+              URL.revokeObjectURL(link.href);
+            }}
+          >
+            Download a copy of your application
+          </Button>
         </p>
       </div>
     </Card>

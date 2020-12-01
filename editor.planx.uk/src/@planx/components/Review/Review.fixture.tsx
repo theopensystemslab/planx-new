@@ -53,9 +53,12 @@ const breadcrumbs = {
   "0q9S6JfcZh": {
     answers: [
       {
-        filename: "planx.png",
+        filename: "user_uploaded_file.txt",
         url:
           "https://planx-temp.s3.eu-west-2.amazonaws.com/development/11q1npcp/planx.png",
+        file: new File(["Here be user content"], "user_uploaded_file.txt", {
+          type: "text/plain",
+        }),
       },
     ],
     auto: true,
