@@ -73,7 +73,6 @@ devDependencies:
   husky: 4.3.0
   lint-staged: 10.5.1
   node-sass: 4.14.1
-  pnpm: 5.13.5
   prettier: 2.1.2
   react-app-rewired: 2.1.6_react-scripts@4.0.0
   react-cosmos: 5.5.1_react-dom@16.14.0+react@16.14.0
@@ -13749,13 +13748,6 @@ packages:
       typescript: '*'
     resolution:
       integrity: sha512-7Wjy+9E3WwLOEL30D+m8TSTF7qJJUJLONBnwQp0518siuMxUQUbgZwssaFX+QKlZkjHZcw/IpZCt/H0srrntSg==
-  /pnpm/5.13.5:
-    dev: true
-    engines:
-      node: '>=10.16'
-    hasBin: true
-    resolution:
-      integrity: sha512-EJO8eYZyNpOvW+JhjBnLtxD2xcC6YlrzH8jxjETj8bevLATFa9vnGq614ada6o1XOIMq31JWtj1WyPJNogAzLA==
   /polished/3.6.7:
     dependencies:
       '@babel/runtime': 7.12.5
@@ -18950,7 +18942,6 @@ specifiers:
   navi: ^0.14.0
   node-sass: ^4.14.1
   pg-array: ^0.5.0
-  pnpm: ^5.13.5
   postcode: ^5.0.0
   prettier: ^2.1.2
   proj4: ^2.6.2
