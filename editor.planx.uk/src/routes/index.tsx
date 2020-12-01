@@ -31,10 +31,7 @@ const editorRoutes = mount({
 
   "/logout": map((): any => {
     client.resetStore();
-    localStorage.removeItem("jwt");
-    Cookies.remove("jwt", {
-      domain: process.env.NODE_ENV === "production" ? ".planx.uk" : "localhost",
-    });
+    Cookies.remove("jwt");
     window.location.href = "/";
   }),
 

@@ -17,7 +17,7 @@ import theme from "./theme";
 const rootEl = document.getElementById("root") as HTMLElement;
 
 const hasJWT = (): boolean | void => {
-  if (Cookies.get("jwt") || localStorage.getItem("jwt")) {
+  if (Cookies.get("jwt")) {
     // TODO: return true if jwt is valid
     return true;
   } else {
@@ -25,9 +25,9 @@ const hasJWT = (): boolean | void => {
     // We can't set the cookie on a netlify.app domain (staging), but we can
     // pass the JWT back as a url param, but this is not a good look. Let's
     // try to improve this situation with pulumi deploys etc.
-    const param = new URLSearchParams(window.location.search).get("jwt");
-    if (param) {
-      localStorage.setItem("jwt", param);
+    const jwt = new URLSearchParams(window.location.search).get("jwt");
+    if (jwt) {
+      Cookies.set("jwt", jwt);
       // set the jwt, and remove it from the url, then re-run this function
       window.location.href = "/";
     } else {
