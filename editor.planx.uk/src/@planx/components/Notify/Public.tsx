@@ -13,9 +13,10 @@ const NotifyComponent: React.FC<Props> = (props) => {
     <Card
       handleSubmit={async () => {
         try {
-          await axios.post(props.url, {
-            hello: "world",
-          });
+          const { data } = await axios.get(
+            "https://raw.githubusercontent.com/unboxed/bops-schemas/ae89456ab861b22c21d60c959fce00986cc276c8/minimum-request.json"
+          );
+          await axios.post(props.url, data);
           props.handleSubmit();
         } catch (err) {
           alert("There was an error");

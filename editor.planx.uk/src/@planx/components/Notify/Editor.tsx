@@ -47,6 +47,7 @@ const ContentComponent: React.FC<Props> = (props) => {
           </InputRow>
           <InputRow>
             <Input
+              required
               type="url"
               placeholder="url"
               name="url"

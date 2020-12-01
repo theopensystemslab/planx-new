@@ -9,19 +9,22 @@ jest.mock("axios");
 
 test("renders correctly", async () => {
   const handleSubmit = jest.fn();
+  const data = { hello: "world" };
 
   render(<Notify url="http://example.com" handleSubmit={handleSubmit} />);
 
-  const spy = jest.spyOn(axios, "post");
-
+  (axios.get as any).mockImplementationOnce(() => Promise.resolve({ data }));
   (axios.post as any).mockImplementationOnce(() => Promise.resolve({}));
+
+  const spy = jest.spyOn(axios, "post");
 
   userEvent.click(screen.getByText("Continue"));
 
   // Why is Promise.resolve here? https://stackoverflow.com/a/54897128
   await Promise.resolve();
+  await Promise.resolve();
 
-  expect(spy).toHaveBeenCalledWith("http://example.com", { hello: "world" });
+  expect(spy).toHaveBeenCalledWith("http://example.com", data);
 
   expect(handleSubmit).toHaveBeenCalled();
 });
