@@ -1,8 +1,8 @@
 # PlanX
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/5856b13f-3fad-44ec-ae6c-2c6502df1356/deploy-status)](https://app.netlify.com/sites/planx-new/deploys)
-
 ## https://editor.planx.uk
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/5856b13f-3fad-44ec-ae6c-2c6502df1356/deploy-status)](https://app.netlify.com/sites/planx-new/deploys)
 
 ### Running Locally
 
@@ -17,3 +17,7 @@
 5. Seed the database
 
 6. Start the dev server! `pnpm start`, open http://localhost:3000 and login with Google
+
+## https://storybook.planx.uk
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/59207299-9639-463c-b983-e78a4485e45b/deploy-status)](https://app.netlify.com/sites/planx-storybook/deploys)
