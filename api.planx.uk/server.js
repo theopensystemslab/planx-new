@@ -34,20 +34,33 @@ router.get("/logout", (req, res) => {
 //   redirecting the user to google.com.  After authorization, Google
 //   will redirect the user back to this application at /auth/google/callback
 
+// TODO: don't hardcode stuff in here
+const cookieDomain = (returnTo) => {
+  if (process.env.NODE_ENV === "production") {
+    if (returnTo && returnTo.includes("netlify.app")) {
+      return ".netlify.app";
+    } else {
+      return ".planx.uk";
+    }
+  } else {
+    return "localhost";
+  }
+};
+
 const handleSuccess = (req, res) => {
   if (req.user) {
-    const cookie = {
+    const { returnTo = process.env.EDITOR_URL_EXT } = req.session;
+
+    res.cookie("jwt", req.user.jwt, {
       // maxAge: 1000 * 60 * 10,
       // maxAge: new Date(253402300000000) ,
       // expires: false,
 
       // expire a year from now
-      domain: process.env.NODE_ENV === "production" ? ".planx.uk" : "localhost",
+      domain: cookieDomain(returnTo),
       maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       httpOnly: false,
-    };
-    res.cookie("jwt", req.user.jwt, cookie);
-    const { returnTo = process.env.EDITOR_URL_EXT } = req.session;
+    });
 
     res.redirect(returnTo);
   } else {
