@@ -47,10 +47,9 @@ const handleSuccess = (req, res) => {
       httpOnly: false,
     };
     res.cookie("jwt", req.user.jwt, cookie);
-    console.log({ cookie });
-    res.redirect(decodeURIComponent(process.env.EDITOR_URL_EXT));
-    // const url = process.env.EDITOR_URL_EXT;
-    // res.redirect(decodeURIComponent(`${url}#${req.user.jwt}`));
+    const { returnTo = process.env.EDITOR_URL_EXT } = req.session;
+
+    res.redirect(returnTo);
   } else {
     res.json({
       message: "no user",
@@ -59,12 +58,12 @@ const handleSuccess = (req, res) => {
   }
 };
 
-router.get(
-  "/google",
-  passport.authenticate("google", {
+router.get("/google", (req, res, next) => {
+  req.session.returnTo = req.get("Referrer");
+  return passport.authenticate("google", {
     scope: ["profile", "email"],
-  })
-);
+  })(req, res, next);
+});
 
 router.get(
   "/google/callback",
