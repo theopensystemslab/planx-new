@@ -3,7 +3,7 @@ import sharedb from "sharedb/lib/client";
 
 const socket = new ReconnectingWebSocket(process.env.REACT_APP_SHAREDB_URL);
 
-const connection = new sharedb.Connection(socket, {});
+const connection = new sharedb.Connection(socket);
 
 export const getConnection = (id) => connection.get("flows", id);
 
