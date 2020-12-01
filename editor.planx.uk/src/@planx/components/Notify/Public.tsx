@@ -1,8 +1,9 @@
-import Card from "@planx/components/shared/Preview/Card";
-import { PublicProps } from "@planx/components/ui";
 import axios from "axios";
 import React from "react";
+import ReactMarkdown from "react-markdown";
 
+import Card from "../shared/Preview/Card";
+import { PublicProps } from "../ui";
 import type { Notify } from "./model";
 
 export type Props = PublicProps<Notify>;
@@ -23,7 +24,8 @@ const NotifyComponent: React.FC<Props> = (props) => {
       }}
       isValid
     >
-      <h1>Notify</h1>
+      <h1>{props.title}</h1>
+      <ReactMarkdown source={props.description} />
     </Card>
   );
 };
