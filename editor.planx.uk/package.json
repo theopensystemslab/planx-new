@@ -88,7 +88,7 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "prebuild": "test \"$CI\" = true && npx pnpm install -r --store=node_modules/.pnpm-store || echo skipping pnpm install",
+    "netlify": "npx pnpm install -r --store=node_modules/.pnpm-store && pnpm i && pnpm test && pnpm build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "cosmos": "FAST_REFRESH=false cosmos",
