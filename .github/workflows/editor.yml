@@ -81,6 +81,7 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v1.1
         with:
+          # enable branch deploys
           alias: ${{ github.head_ref }}
           publish-dir: ./build
           production-branch: master
