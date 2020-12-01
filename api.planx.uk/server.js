@@ -37,8 +37,8 @@ router.get("/logout", (req, res) => {
 // TODO: don't hardcode stuff in here
 const cookieDomain = (returnTo) => {
   if (process.env.NODE_ENV === "production") {
-    if (returnTo && returnTo.includes("netlify.app")) {
-      return ".netlify.app";
+    if (returnTo && returnTo.includes("planx.dev")) {
+      return ".planx.dev";
     } else {
       return ".planx.uk";
     }
