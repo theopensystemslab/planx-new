@@ -34,12 +34,10 @@ router.get("/logout", (req, res) => {
 //   redirecting the user to google.com.  After authorization, Google
 //   will redirect the user back to this application at /auth/google/callback
 
-// TODO: don't hardcode stuff in here
 const cookieDomain = (returnTo) => {
   if (process.env.NODE_ENV === "production") {
-    if (returnTo && returnTo.includes("planx.dev")) {
-      return ".planx.dev";
-    } else {
+    // TODO: don't hardcode domain in here
+    if (returnTo && returnTo.includes("planx.uk")) {
       return ".planx.uk";
     }
   } else {
@@ -51,18 +49,26 @@ const handleSuccess = (req, res) => {
   if (req.user) {
     const { returnTo = process.env.EDITOR_URL_EXT } = req.session;
 
-    res.cookie("jwt", req.user.jwt, {
-      // maxAge: 1000 * 60 * 10,
-      // maxAge: new Date(253402300000000) ,
-      // expires: false,
+    const domain = cookieDomain(returnTo);
 
-      // expire a year from now
-      domain: cookieDomain(returnTo),
-      maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-      httpOnly: false,
-    });
+    if (domain) {
+      res.cookie("jwt", req.user.jwt, {
+        // maxAge: 1000 * 60 * 10,
+        // maxAge: new Date(253402300000000) ,
+        // expires: false,
 
-    res.redirect(returnTo);
+        // expire a year from now
+        domain,
+        maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+        httpOnly: false,
+      });
+
+      res.redirect(returnTo);
+    } else {
+      // TODO:  build the url correctly with URLSearchParams, this
+      //        assumes the existing url doesn't have any search params.
+      res.redirect([returnTo, req.user.jwt].join("?jwt="));
+    }
   } else {
     res.json({
       message: "no user",
