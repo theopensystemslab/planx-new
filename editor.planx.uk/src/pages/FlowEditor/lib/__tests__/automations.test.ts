@@ -149,3 +149,53 @@ describe("somewhat less basic behaviour", () => {
     });
   });
 });
+
+describe("Ok, quite a bit less basic now", () => {
+  [
+    ["food.fruit", "food.fruit"],
+    ["food.dairy", "food"],
+    ["clothes", "other"],
+  ].forEach(([item, expected]) => {
+    test(item, () => {
+      setState({
+        passport: {
+          data: {
+            item: {
+              value: [item],
+            },
+          },
+        },
+        flow: {
+          _root: {
+            edges: ["item"],
+          },
+          item: {
+            type: TYPES.Statement,
+            data: { fn: "item" },
+            edges: ["food.fruit", "food", "other"],
+          },
+          "food.fruit": {
+            type: TYPES.Response,
+            data: { val: "food.fruit" },
+          },
+          food: {
+            type: TYPES.Response,
+            data: { val: "food" },
+          },
+          other: {
+            type: TYPES.Response,
+          },
+        },
+      });
+
+      getState().upcomingCardIds();
+
+      expect(getState().breadcrumbs).toEqual({
+        item: {
+          answers: [expected],
+          auto: true,
+        },
+      });
+    });
+  });
+});
