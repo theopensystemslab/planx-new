@@ -51,18 +51,18 @@ const handleSuccess = (req, res) => {
 
     const domain = cookieDomain(returnTo);
 
+    res.cookie("jwt", req.user.jwt, {
+      // maxAge: 1000 * 60 * 10,
+      // maxAge: new Date(253402300000000) ,
+      // expires: false,
+
+      // expire a year from now
+      domain: domain || ".planx.uk",
+      maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+      httpOnly: false,
+    });
+
     if (domain) {
-      res.cookie("jwt", req.user.jwt, {
-        // maxAge: 1000 * 60 * 10,
-        // maxAge: new Date(253402300000000) ,
-        // expires: false,
-
-        // expire a year from now
-        domain,
-        maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-        httpOnly: false,
-      });
-
       res.redirect(returnTo);
     } else {
       // TODO:  build the url correctly with URLSearchParams, this
