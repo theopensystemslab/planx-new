@@ -441,14 +441,24 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                 ...flow[id],
               }));
 
-              let responseThatCanBeAutoAnswered = responses.find((n) => {
-                const val = String(n.data?.val);
-                if (Array.isArray(value)) {
-                  return value.some((v) => String(v).startsWith(val));
-                } else {
-                  return value.startsWith(val);
-                }
-              });
+              const sortVals = (b, a) =>
+                String(a.data?.val).split(",").length -
+                String(b.data?.val).split(",").length;
+
+              let responseThatCanBeAutoAnswered = responses
+                .sort(sortVals)
+                .find((n) => {
+                  const val = String(n.data?.val);
+                  if (!val) return;
+                  const vals = val.split(",");
+                  for (const val of vals) {
+                    if (Array.isArray(value)) {
+                      return value.some((v) => String(v).startsWith(val));
+                    } else {
+                      return value.startsWith(val);
+                    }
+                  }
+                });
 
               if (!responseThatCanBeAutoAnswered) {
                 responseThatCanBeAutoAnswered = responses.find(

@@ -199,3 +199,53 @@ describe("Ok, quite a bit less basic now", () => {
     });
   });
 });
+
+describe.only("Boss level: multiple values", () => {
+  [
+    [["food.bread"], "food.bread"],
+    [["food.fruit.apple", "food.bread"], "apples_and_bread"],
+    [["clothes"], "other"],
+  ].forEach(([item, expected]: [string[], string]) => {
+    test(item.join(" and "), () => {
+      setState({
+        passport: {
+          data: {
+            item: {
+              value: item,
+            },
+          },
+        },
+        flow: {
+          _root: {
+            edges: ["item"],
+          },
+          item: {
+            type: TYPES.Statement,
+            data: { fn: "item" },
+            edges: ["food.bread", "apples_and_bread", "other"],
+          },
+          "food.bread": {
+            type: TYPES.Response,
+            data: { val: "food.bread" },
+          },
+          apples_and_bread: {
+            type: TYPES.Response,
+            data: { val: ["food.fruit.apple", "food.bread"] },
+          },
+          other: {
+            type: TYPES.Response,
+          },
+        },
+      });
+
+      getState().upcomingCardIds();
+
+      expect(getState().breadcrumbs).toEqual({
+        item: {
+          answers: [expected],
+          auto: true,
+        },
+      });
+    });
+  });
+});
