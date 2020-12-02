@@ -38,7 +38,7 @@ const cookieDomain = (returnTo) => {
   if (process.env.NODE_ENV === "production") {
     // TODO: don't hardcode domain in here
     if (returnTo && returnTo.includes("planx.uk")) {
-      return ".planx.uk";
+      return "planx.uk";
     }
   } else {
     return "localhost";
@@ -57,7 +57,7 @@ const handleSuccess = (req, res) => {
       // expires: false,
 
       // expire a year from now
-      domain: domain || ".planx.uk",
+      domain: domain || "planx.uk",
       maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       httpOnly: false,
     });
