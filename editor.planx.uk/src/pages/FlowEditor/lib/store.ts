@@ -441,7 +441,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                 ...flow[id],
               }));
 
-              const responseThatCanBeAutoAnswered = responses.find((n) => {
+              let responseThatCanBeAutoAnswered = responses.find((n) => {
                 const val = String(n.data?.val);
                 if (Array.isArray(val)) {
                   // multiple string values are stored (array)
@@ -451,6 +451,12 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                   return val === String(value);
                 }
               });
+
+              if (!responseThatCanBeAutoAnswered) {
+                responseThatCanBeAutoAnswered = responses.find(
+                  (n) => !n.data?.val
+                );
+              }
 
               if (responseThatCanBeAutoAnswered) {
                 if (fn !== "flag") {
