@@ -16,6 +16,26 @@ import theme from "./theme";
 
 const rootEl = document.getElementById("root") as HTMLElement;
 
+const hasJWT = (): boolean | void => {
+  let jwt: string = Cookies.get("jwt");
+  if (jwt) {
+    return true;
+  } else {
+    // TODO: don't pass jwt in url params like this
+    // We can't set the cookie on a netlify.app domain (staging), but we can
+    // pass the JWT back as a url param, but this is not a good look. Let's
+    // try to improve this situation with pulumi deploys etc.
+    jwt = new URLSearchParams(window.location.search).get("jwt");
+    if (jwt) {
+      Cookies.set("jwt", jwt);
+      // set the jwt, and remove it from the url, then re-run this function
+      window.location.href = "/";
+    } else {
+      return false;
+    }
+  }
+};
+
 const Layout: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
@@ -35,10 +55,7 @@ const Layout: React.FC<{
 
 render(
   <ApolloProvider client={client}>
-    <Router
-      context={{ currentUser: Cookies.get("jwt") }}
-      navigation={navigation}
-    >
+    <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
       <HelmetProvider>
         <Layout>
           <CssBaseline />
