@@ -445,20 +445,29 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                 String(a.data?.val).split(",").length -
                 String(b.data?.val).split(",").length;
 
-              let responseThatCanBeAutoAnswered = responses
+              const sortedResponses = responses
                 .sort(sortVals)
-                .find((n) => {
-                  const val = String(n.data?.val);
-                  if (!val) return;
-                  const vals = val.split(",");
+                .filter((r) => r.data?.val);
+
+              let responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
+                const vals = String(r.data.val).split(",").sort();
+                return String(vals) === String(value);
+              });
+
+              if (!responseThatCanBeAutoAnswered) {
+                responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
+                  const vals = String(r.data.val).split(",").sort();
                   for (const val of vals) {
                     if (Array.isArray(value)) {
-                      return value.some((v) => String(v).startsWith(val));
+                      return value
+                        .sort()
+                        .some((v) => String(v).startsWith(val));
                     } else {
                       return value.startsWith(val);
                     }
                   }
                 });
+              }
 
               if (!responseThatCanBeAutoAnswered) {
                 responseThatCanBeAutoAnswered = responses.find(
