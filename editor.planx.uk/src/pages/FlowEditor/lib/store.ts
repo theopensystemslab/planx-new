@@ -443,12 +443,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
               let responseThatCanBeAutoAnswered = responses.find((n) => {
                 const val = String(n.data?.val);
-                if (Array.isArray(val)) {
-                  // multiple string values are stored (array)
-                  return val.map((v) => String(v)).includes(value);
+                if (Array.isArray(value)) {
+                  return value.some((v) => String(v).startsWith(val));
                 } else {
-                  // string
-                  return val === String(value);
+                  return value.startsWith(val);
                 }
               });
 

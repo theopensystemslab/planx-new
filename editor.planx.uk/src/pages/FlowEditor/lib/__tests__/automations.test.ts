@@ -53,3 +53,53 @@ describe("basic behaviour", () => {
     });
   });
 });
+
+describe("less basic behaviour", () => {
+  [
+    ["food.fruit", "food"],
+    ["hardware", "hardware"],
+    ["stationary", "other"],
+  ].forEach(([item, expected]) => {
+    test(item, () => {
+      setState({
+        passport: {
+          data: {
+            item: {
+              value: [item],
+            },
+          },
+        },
+        flow: {
+          _root: {
+            edges: ["item"],
+          },
+          item: {
+            type: TYPES.Statement,
+            data: { fn: "item" },
+            edges: ["food", "hardware", "other"],
+          },
+          food: {
+            type: TYPES.Response,
+            data: { val: "food" },
+          },
+          hardware: {
+            type: TYPES.Response,
+            data: { val: "hardware" },
+          },
+          other: {
+            type: TYPES.Response,
+          },
+        },
+      });
+
+      getState().upcomingCardIds();
+
+      expect(getState().breadcrumbs).toEqual({
+        item: {
+          answers: [expected],
+          auto: true,
+        },
+      });
+    });
+  });
+});
