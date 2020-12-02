@@ -57,7 +57,14 @@ jobs:
 
       - run: pnpm test
 
+      - name: Set ENV Vars
+        if: endsWith(github.ref, '/master') != true
+        run: echo "SHORT_BRANCH_NAME=${GITHUB_HEAD_REF#refs/heads/}" >> $GITHUB_ENV
+
       - run: pnpm build
+        env:
+          REACT_APP_GIT_BRANCH: ${{ env.SHORT_BRANCH_NAME }}
+          REACT_APP_PULL_REQUEST: https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
