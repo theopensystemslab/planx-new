@@ -4,6 +4,7 @@ import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Cookies from "js-cookie";
+import jwtDecode from "jwt-decode";
 import React, { Suspense } from "react";
 import { render } from "react-dom";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
@@ -19,7 +20,19 @@ const rootEl = document.getElementById("root") as HTMLElement;
 const hasJWT = (): boolean | void => {
   let jwt: string = Cookies.get("jwt");
   if (jwt) {
-    return true;
+    // TODO: make this more robust
+    // checks if stored jwt is valid and includes a numeric user id
+    // otherwise it logs out the user
+    try {
+      if (
+        Number(
+          jwtDecode(jwt)["https://hasura.io/jwt/claims"]["x-hasura-user-id"]
+        ) > 0
+      ) {
+        return true;
+      }
+    } catch (e) {}
+    window.location.href = "/logout";
   } else {
     // TODO: don't pass jwt in url params like this
     // We can't set the cookie on a netlify.app domain (staging), but we can
