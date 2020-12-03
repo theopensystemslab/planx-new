@@ -438,7 +438,9 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
             const fn = flow[id]?.data?.fn;
 
             let passportValues =
-              fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
+              fn === "flag"
+                ? globalFlag
+                : (passport.data[fn]?.value || []).sort();
 
             if (fn && (fn === "flag" || passportValues !== undefined)) {
               const responses = flow[id]?.edges.map((id) => ({
