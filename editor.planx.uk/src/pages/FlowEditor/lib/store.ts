@@ -450,7 +450,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                 .sort(mostToLeastNumberOfValues)
                 .filter((response) => response.data?.val);
 
-              passportValues = passportValues.filter((pv) =>
+              passportValues = (passportValues || []).filter((pv) =>
                 sortedResponses.some((r) => pv.startsWith(r.data.val))
               );
 
