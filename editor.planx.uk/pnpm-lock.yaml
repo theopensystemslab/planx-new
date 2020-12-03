@@ -19,6 +19,7 @@ dependencies:
   graphql-tag: 2.11.0_graphql@15.4.0
   immer: 7.0.14
   js-cookie: 2.2.1
+  jwt-decode: 3.1.2
   lodash: 4.17.20
   mapbox-gl: 1.12.0
   mui-rte: 1.26.2_105f397d79457dc9365b4e349380b9b3
@@ -11871,6 +11872,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-pBxcB3LFc8QVgdggvZWyeys+hnrNWg4OcZIU/1X59k5jQdLBlCsYGRQaz234SqoRLTCgMH00fY0xRJH+F9METQ==
+  /jwt-decode/3.1.2:
+    dev: false
+    resolution:
+      integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
   /kdbush/3.0.0:
     dev: false
     resolution:
@@ -18938,6 +18943,7 @@ specifiers:
   husky: ^4.3.0
   immer: ^7.0.14
   js-cookie: ^2.2.1
+  jwt-decode: ^3.1.2
   lint-staged: ^10.5.1
   lodash: ^4.17.20
   mapbox-gl: ^1.12.0

@@ -2,47 +2,30 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Delete from "@material-ui/icons/Delete";
-import {
-  Checklist,
-  Group,
-  toggleExpandableChecklist,
-} from "@planx/components/Checklist/types";
+import type { Checklist, Group } from "@planx/components/Checklist/model";
+import { toggleExpandableChecklist } from "@planx/components/Checklist/model";
 import { Option, parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
 import React, { useEffect, useRef } from "react";
+import ImgInput from "ui/ImgInput";
+import Input from "ui/Input";
+import InputGroup from "ui/InputGroup";
+import InputRow from "ui/InputRow";
+import InputRowItem from "ui/InputRowItem";
+import ListManager from "ui/ListManager";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
+import OptionButton from "ui/OptionButton";
+import RichTextInput from "ui/RichTextInput";
+import SimpleMenu from "ui/SimpleMenu";
 
 import { FormikHookReturn } from "../../../../types";
-import {
-  ImgInput,
-  Input,
-  InputGroup,
-  InputRow,
-  InputRowItem,
-  ListManager,
-  ModalSection,
-  ModalSectionContent,
-  OptionButton,
-  RichTextInput,
-  SimpleMenu,
-} from "../../../../ui";
 import { PermissionSelect } from "./shared";
-
-interface ChecklistOption {
-  id?: string;
-  data: {
-    description?: string;
-    flag?: string;
-    img?: string;
-    text?: string;
-    val?: string;
-  };
-}
 
 interface ChecklistProps extends Checklist {
   handleSubmit?: Function;
@@ -65,8 +48,8 @@ interface ChecklistProps extends Checklist {
 
 const OptionEditor: React.FC<{
   index?: number;
-  value: ChecklistOption;
-  onChange: (newVal: ChecklistOption) => void;
+  value: Option;
+  onChange: (newVal: Option) => void;
   groupIndex?: number;
   groups?: Array<string>;
   onMoveToGroup?: (itemIndex: number, groupIndex: number) => void;
@@ -209,7 +192,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                         val: "",
                         flag: "",
                       },
-                    } as ChecklistOption)
+                    } as Option)
                   }
                   newValueLabel="add new option"
                   Editor={OptionEditor}
@@ -279,7 +262,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                 val: "",
                 flag: "",
               },
-            } as ChecklistOption)
+            } as Option)
           }
           Editor={OptionEditor}
           editorExtraProps={{ showValueField: !!formik.values.fn }}
@@ -324,7 +307,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
           },
           options
             ? options
-                .filter((o: ChecklistOption) => o.data.text)
+                .filter((o) => o.data.text)
                 .map((o) => ({
                   ...o,
                   id: o.id || undefined,
@@ -333,7 +316,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
             : groupedOptions
             ? groupedOptions
                 .flatMap((gr) => gr.children)
-                .filter((o: ChecklistOption) => o.data.text)
+                .filter((o) => o.data.text)
                 .map((o) => ({
                   ...o,
                   id: o.id || undefined,

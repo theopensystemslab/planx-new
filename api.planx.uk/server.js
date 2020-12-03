@@ -34,23 +34,43 @@ router.get("/logout", (req, res) => {
 //   redirecting the user to google.com.  After authorization, Google
 //   will redirect the user back to this application at /auth/google/callback
 
+const cookieDomain = (returnTo) => {
+  if (process.env.NODE_ENV === "production") {
+    // TODO: don't hardcode domain in here
+    if (returnTo && returnTo.includes("planx.uk")) {
+      return ".planx.uk";
+    }
+  } else {
+    return "localhost";
+  }
+};
+
 const handleSuccess = (req, res) => {
   if (req.user) {
-    const cookie = {
+    const { returnTo = process.env.EDITOR_URL_EXT } = req.session;
+
+    const domain = cookieDomain(returnTo);
+
+    res.cookie("jwt", req.user.jwt, {
       // maxAge: 1000 * 60 * 10,
       // maxAge: new Date(253402300000000) ,
       // expires: false,
 
       // expire a year from now
-      domain: process.env.NODE_ENV === "production" ? ".planx.uk" : "localhost",
+      domain: domain || ".planx.uk",
       maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       httpOnly: false,
-    };
-    res.cookie("jwt", req.user.jwt, cookie);
-    console.log({ cookie });
-    res.redirect(decodeURIComponent(process.env.EDITOR_URL_EXT));
-    // const url = process.env.EDITOR_URL_EXT;
-    // res.redirect(decodeURIComponent(`${url}#${req.user.jwt}`));
+      secure: true,
+      sameSite: "none",
+    });
+
+    if (domain) {
+      res.redirect(returnTo);
+    } else {
+      // TODO:  build the url correctly with URLSearchParams, this
+      //        assumes the existing url doesn't have any search params.
+      res.redirect([returnTo, req.user.jwt].join("?jwt="));
+    }
   } else {
     res.json({
       message: "no user",
@@ -59,12 +79,12 @@ const handleSuccess = (req, res) => {
   }
 };
 
-router.get(
-  "/google",
-  passport.authenticate("google", {
+router.get("/google", (req, res, next) => {
+  req.session.returnTo = req.get("Referrer");
+  return passport.authenticate("google", {
     scope: ["profile", "email"],
-  })
-);
+  })(req, res, next);
+});
 
 router.get(
   "/google/callback",

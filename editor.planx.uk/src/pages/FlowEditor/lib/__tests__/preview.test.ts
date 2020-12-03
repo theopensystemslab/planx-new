@@ -107,3 +107,40 @@ describe("error handling", () => {
     expect(() => getState().record("x", [])).toThrowError("id not found");
   });
 });
+
+test("record(id, undefined) clears up breadcrumbs", () => {
+  setState({
+    flow: {
+      _root: {
+        edges: ["a", "b"],
+      },
+      a: {
+        type: TYPES.Statement,
+        edges: ["c"],
+      },
+      b: {
+        type: TYPES.Statement,
+      },
+      c: {
+        type: TYPES.Response,
+        edges: ["d"],
+      },
+      d: {
+        type: TYPES.Statement,
+        edges: ["e", "f"],
+      },
+      e: { type: TYPES.Response },
+      f: { type: TYPES.Response },
+    },
+  });
+  getState().record("a", ["c"]);
+  getState().record("d", ["e", "f"]);
+  expect(getState().breadcrumbs).toEqual({
+    a: { answers: ["c"], auto: true },
+    d: { answers: ["e", "f"], auto: true },
+  });
+
+  getState().record("a");
+
+  expect(getState().breadcrumbs).toEqual({});
+});

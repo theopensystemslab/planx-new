@@ -1,5 +1,4 @@
-import Button from "@material-ui/core/Button";
-import { DateInput, UserData } from "@planx/components/DateInput/types";
+import type { DateInput, UserData } from "@planx/components/DateInput/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
@@ -29,7 +28,12 @@ const DateInputComponent: React.FC<Props> = (props) => {
   }, [value, props.min, props.max]);
 
   return (
-    <Card>
+    <Card
+      isValid={isValid}
+      handleSubmit={() => {
+        props.handleSubmit && props.handleSubmit(value);
+      }}
+    >
       <QuestionHeader
         title={props.title}
         description={props.description}
@@ -40,19 +44,6 @@ const DateInputComponent: React.FC<Props> = (props) => {
       <InputRow>
         <DateInputUi value={value} bordered onChange={setValue} />
       </InputRow>
-      <Button
-        data-testid="submit"
-        variant="contained"
-        color="primary"
-        size="large"
-        type="submit"
-        disabled={!isValid}
-        onClick={() => {
-          props.handleSubmit && props.handleSubmit(value);
-        }}
-      >
-        Continue
-      </Button>
     </Card>
   );
 };

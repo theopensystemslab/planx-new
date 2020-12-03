@@ -12,7 +12,7 @@ export interface Props {
   onChange?: (image: string) => void;
 }
 
-const fileUploadStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   inputIconButton: {
     borderRadius: 0,
     height: 50,
@@ -28,7 +28,7 @@ const fileUploadStyles = makeStyles((theme) => ({
   },
 }));
 
-const FileUpload: React.FC<Props> = (props) => {
+export default function FileUpload(props: Props): FCReturn {
   const { onChange } = props;
 
   const [status, setStatus] = useState<
@@ -76,7 +76,7 @@ const FileUpload: React.FC<Props> = (props) => {
     onDrop,
     accept: "image/*",
   });
-  const classes = fileUploadStyles();
+  const classes = useClasses();
 
   if (status.type === "loading") {
     return (
@@ -120,6 +120,4 @@ const FileUpload: React.FC<Props> = (props) => {
       <Image />
     </ButtonBase>
   );
-};
-
-export default FileUpload;
+}

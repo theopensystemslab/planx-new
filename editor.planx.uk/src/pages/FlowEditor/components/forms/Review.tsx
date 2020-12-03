@@ -1,15 +1,13 @@
-import type { Review } from "@planx/components/Review/types";
+import type { Review } from "@planx/components/Review/model";
 import { TYPES } from "@planx/components/types";
 import { ICONS, InternalNotes } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import {
-  Input,
-  InputRow,
-  ModalSection,
-  ModalSectionContent,
-  RichTextInput,
-} from "ui";
+import Input from "ui/Input";
+import InputRow from "ui/InputRow";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
+import RichTextInput from "ui/RichTextInput";
 
 interface Props {
   id?: string;

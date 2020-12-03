@@ -2,7 +2,7 @@ import { mostReadable } from "@ctrl/tinycolor";
 import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import ErrorOutline from "@material-ui/icons/ErrorOutline";
-import { Notice } from "@planx/components/Notice/types";
+import type { Notice } from "@planx/components/Notice/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
@@ -58,9 +58,9 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 const NoticeComponent: React.FC<Props> = (props) => {
   const styles = useStyles({ color: props.color || "#EFEFEF" });
-
+  const handleSubmit = !props.resetButton ? props.handleSubmit : undefined;
   return (
-    <Card>
+    <Card handleSubmit={handleSubmit} isValid>
       <QuestionHeader
         info={props.info}
         policyRef={props.policyRef}
@@ -76,7 +76,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
         </div>
         <ErrorOutline />
       </div>
-      {props.resetButton ? (
+      {props.resetButton && (
         <Button
           variant="contained"
           color="default"
@@ -85,16 +85,6 @@ const NoticeComponent: React.FC<Props> = (props) => {
           onClick={props.resetPreview}
         >
           Back to start
-        </Button>
-      ) : (
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          type="submit"
-          onClick={() => props.handleSubmit()}
-        >
-          Continue
         </Button>
       )}
     </Card>

@@ -11,7 +11,7 @@ export interface Props extends SelectProps {
   onChange?;
 }
 
-const selectInputStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   root: {
     width: "100%",
     backgroundColor: "#fff",
@@ -62,14 +62,14 @@ const selectInputStyles = makeStyles((theme) => ({
   },
 }));
 
-const SelectInput: React.FC<Props> = ({
+export default function SelectInput({
   children,
   value,
   name,
   onChange,
   ...props
-}) => {
-  const classes = selectInputStyles();
+}: Props): FCReturn {
+  const classes = useClasses();
   return (
     <Select
       value={value}
@@ -102,5 +102,4 @@ const SelectInput: React.FC<Props> = ({
       {children}
     </Select>
   );
-};
-export default SelectInput;
+}

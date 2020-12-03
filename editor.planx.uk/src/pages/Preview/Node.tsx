@@ -1,6 +1,15 @@
+import Checklist from "@planx/components/Checklist/Public";
 import Content from "@planx/components/Content/Public";
 import DateInput from "@planx/components/DateInput/Public";
+import FileUpload from "@planx/components/FileUpload/Public";
+import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
+import NumberInput from "@planx/components/NumberInput/Public";
+import Pay from "@planx/components/Pay/Public";
+import PropertyInformation from "@planx/components/PropertyInformation/Public";
+import Question from "@planx/components/Question/Public";
+import Result from "@planx/components/Result/Public";
+import Review from "@planx/components/Review/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
@@ -8,14 +17,6 @@ import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
-import Checklist from "./components/Checklist";
-import FileUpload from "./components/FileUpload";
-import FindProperty from "./components/FindProperty";
-import Pay from "./components/Pay";
-import PropertyInformation from "./components/PropertyInformation";
-import Question from "./components/Question";
-import Result from "./components/Result";
-import Review from "./components/Review";
 
 let uprn;
 
@@ -89,6 +90,14 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Notice:
       return (
         <Notice
+          {...allProps}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
+      );
+
+    case TYPES.NumberInput:
+      return (
+        <NumberInput
           {...allProps}
           handleSubmit={() => props.handleSubmit([props.node.id])}
         />
@@ -168,7 +177,6 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Filter:
     case TYPES.Flow:
     case TYPES.InternalPortal:
-    case TYPES.NumberInput:
     case TYPES.Page:
     case TYPES.Report:
     case TYPES.Response:

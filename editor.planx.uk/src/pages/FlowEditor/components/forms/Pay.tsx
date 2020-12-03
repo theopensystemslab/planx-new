@@ -1,17 +1,14 @@
-import { Pay } from "@planx/components/Pay/types";
+import type { Pay } from "@planx/components/Pay/model";
 import { parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import {
-  Input,
-  InputRow,
-  ModalSection,
-  ModalSectionContent,
-  RichTextInput,
-} from "ui";
+import Input from "ui/Input";
+import InputRow from "ui/InputRow";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
+import RichTextInput from "ui/RichTextInput";
 
 function Component(props) {
   const formik = useFormik<Pay>({

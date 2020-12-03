@@ -10,7 +10,7 @@ interface Props {
   Icon?: any;
 }
 
-export const modalSectionContentStyles = makeStyles((theme) => ({
+export const useClasses = makeStyles((theme) => ({
   sectionContentGrid: {
     position: "relative",
     paddingTop: theme.spacing(2),
@@ -34,13 +34,13 @@ export const modalSectionContentStyles = makeStyles((theme) => ({
   },
 }));
 
-const ModalSectionContent: React.FC<Props> = ({
+export default function ModalSectionContent({
   title,
   children,
   author,
   Icon,
-}) => {
-  const classes = modalSectionContentStyles();
+}: Props): FCReturn {
+  const classes = useClasses();
   return (
     <Grid container wrap="nowrap" className={classes.sectionContentGrid}>
       <Grid item className={classes.leftGutter}>
@@ -57,5 +57,4 @@ const ModalSectionContent: React.FC<Props> = ({
       </Grid>
     </Grid>
   );
-};
-export default ModalSectionContent;
+}

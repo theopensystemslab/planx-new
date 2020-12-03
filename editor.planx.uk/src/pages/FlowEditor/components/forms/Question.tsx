@@ -1,34 +1,20 @@
-import { parseMoreInformation } from "@planx/components/shared";
+import { Option, parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
+import ImgInput from "ui/ImgInput";
+import Input from "ui/Input";
+import InputGroup from "ui/InputGroup";
+import InputRow from "ui/InputRow";
+import InputRowItem from "ui/InputRowItem";
+import ListManager from "ui/ListManager";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
+import RichTextInput from "ui/RichTextInput";
 
 import { FormikHookReturn } from "../../../../types";
-import {
-  ImgInput,
-  Input,
-  InputGroup,
-  InputRow,
-  InputRowItem,
-  ListManager,
-  ModalSection,
-  ModalSectionContent,
-  RichTextInput,
-} from "../../../../ui";
 import { PermissionSelect } from "./shared";
-
-interface Option {
-  id?: string;
-  data: {
-    description?: string;
-    flag?: string;
-    img?: string;
-    text?: string;
-    val?: string;
-  };
-}
 
 interface Props {
   node: {

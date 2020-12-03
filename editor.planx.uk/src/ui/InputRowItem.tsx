@@ -8,7 +8,7 @@ interface Props {
   children: JSX.Element[] | JSX.Element;
 }
 
-export const inputRowItemStyles = makeStyles((theme) => ({
+export const useClasses = makeStyles((theme) => ({
   inputRowItem: {
     "& > *": {
       width: "100%",
@@ -22,8 +22,12 @@ export const inputRowItemStyles = makeStyles((theme) => ({
   },
 }));
 
-const InputRowItem: React.FC<Props> = ({ width, children, ...props }) => {
-  const classes = inputRowItemStyles();
+export default function InputRowItem({
+  width,
+  children,
+  ...props
+}: Props): FCReturn {
+  const classes = useClasses();
   return (
     <Box
       className={classNames(classes.inputRowItem, width && classes.fixWidth)}
@@ -34,6 +38,4 @@ const InputRowItem: React.FC<Props> = ({ width, children, ...props }) => {
       {children}
     </Box>
   );
-};
-
-export default InputRowItem;
+}

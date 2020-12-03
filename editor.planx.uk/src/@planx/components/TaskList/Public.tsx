@@ -1,15 +1,13 @@
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import { TaskList } from "@planx/components/TaskList/types";
+import type { TaskList } from "@planx/components/TaskList/model";
 import { PublicProps } from "@planx/components/ui";
 import classNames from "classnames";
-import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
 export type Props = PublicProps<TaskList>;
@@ -198,7 +196,7 @@ const Task = ({ title, description, index, isLast }) => {
 const TaskListComponent: React.FC<Props> = (props) => {
   const classes = taskStyles();
   return (
-    <Card>
+    <Card handleSubmit={() => props.handleSubmit([])} isValid>
       <QuestionHeader
         info={props.info}
         policyRef={props.policyRef}
@@ -214,16 +212,6 @@ const TaskListComponent: React.FC<Props> = (props) => {
           />
         ))}
       </Box>
-
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        type="submit"
-        onClick={() => props.handleSubmit([])}
-      >
-        Continue
-      </Button>
     </Card>
   );
 };

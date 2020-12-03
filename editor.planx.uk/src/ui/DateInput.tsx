@@ -12,7 +12,7 @@ interface Props {
   onChange: (newDate: string) => void;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   root: {
     display: "flex",
     alignItems: "center",
@@ -27,9 +27,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DateInput: React.FC<Props> = (props) => {
+export default function DateInput(props: Props): FCReturn {
   const [year, month, day] = (props.value || "").split("-");
-  const classes = useStyles();
+  const classes = useClasses();
   return (
     <Box className={classes.root}>
       <Typography className={classes.label} variant="body1">
@@ -64,6 +64,4 @@ const DateInput: React.FC<Props> = (props) => {
       />
     </Box>
   );
-};
-
-export default DateInput;
+}

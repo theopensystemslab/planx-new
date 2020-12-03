@@ -52,9 +52,7 @@ const NodeTypeSelect: React.FC<{
       <optgroup label="Inputs">
         <option value={TYPES.TextInput}>Text Input</option>
         <option value={TYPES.FileUpload}>File Upload</option>
-        <option disabled value="number-inputs">
-          Number Input
-        </option>
+        <option value={TYPES.NumberInput}>Number Input</option>
         <option value={TYPES.DateInput}>Date Input</option>
         <option disabled value="address-inputs">
           Address Input

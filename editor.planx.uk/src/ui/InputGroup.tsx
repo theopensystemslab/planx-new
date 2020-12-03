@@ -7,7 +7,7 @@ import classNames from "classnames";
 import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
-const inputGroupStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   inputGroup: {
     border: 0,
     margin: 0,
@@ -86,7 +86,7 @@ interface Props {
   handleMove?: (dragIndex: number, hoverIndex: number) => void;
 }
 
-const InputGroup: React.FC<Props> = ({
+export default function InputGroup({
   children,
   label,
   deletable,
@@ -95,8 +95,8 @@ const InputGroup: React.FC<Props> = ({
   id,
   index = 0,
   handleMove,
-}) => {
-  const classes = inputGroupStyles();
+}: Props): FCReturn {
+  const classes = useClasses();
   const [deleteHover, setDeleteHover] = React.useState(false);
 
   const ref = useRef<HTMLFieldSetElement>(null);
@@ -189,5 +189,4 @@ const InputGroup: React.FC<Props> = ({
       </div>
     </fieldset>
   );
-};
-export default InputGroup;
+}

@@ -1,9 +1,15 @@
-import { Content, parseContent } from "@planx/components/Content/types";
+import type { Content } from "@planx/components/Content/model";
+import { parseContent } from "@planx/components/Content/model";
 import { TYPES } from "@planx/components/types";
-import { EditorProps, ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import {
+  EditorProps,
+  ICONS,
+  InternalNotes,
+  MoreInformation,
+} from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
+import ColorPicker from "ui/ColorPicker";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
@@ -33,6 +39,13 @@ const ContentComponent: React.FC<Props> = (props) => {
               onChange={formik.handleChange}
             />
           </InputRow>
+          <ColorPicker
+            inline
+            color={formik.values.color}
+            onChange={(color) => {
+              formik.setFieldValue("color", color);
+            }}
+          />
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation

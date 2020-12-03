@@ -1,7 +1,5 @@
-import { Meta } from "@storybook/react/types-6-0";
+import Checklist from "@planx/components/Checklist/Public";
 import React from "react";
-
-import Checklist, { Props } from "./index";
 
 export default {
   title: "PlanX Components/Checklist",
@@ -14,9 +12,9 @@ export default {
         "Toggles whether or not all checks must be selected before proceeding",
     },
   },
-} as Meta;
+};
 
-const Template = (args: Props) => <Checklist {...args} />;
+const Template = (args) => <Checklist {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {
@@ -31,7 +29,7 @@ Basic.args = {
     { id: "b", data: { val: "b", text: "Bananas" } },
     { id: "c", data: { val: "c", text: "Canteloupes" } },
   ],
-} as Props;
+};
 
 export const Grouped = Template.bind({});
 Grouped.args = {
@@ -59,4 +57,4 @@ Grouped.args = {
       ],
     },
   ],
-} as Props;
+};
