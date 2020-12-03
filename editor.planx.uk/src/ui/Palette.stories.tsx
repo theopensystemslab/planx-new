@@ -1,6 +1,5 @@
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
@@ -37,7 +36,6 @@ const ColorSwatch: React.FC<{ color: string; title: string }> = (props) => (
 const ColorGrid: React.FC<{ option: PaletteOption }> = (props) => {
   const colors = (() => {
     switch (props.option) {
-      //TODO: Fix rendering of divider color (it's an rgba value)
       case "divider":
         return [theme.palette[props.option]];
       case "type":
@@ -53,13 +51,18 @@ const ColorGrid: React.FC<{ option: PaletteOption }> = (props) => {
     <>
       <Typography variant="h5">{props.option}</Typography>
       <Grid container spacing={1}>
-        {colors.map((color, i) => (
-          <ColorSwatch
-            color={`${props.option}.${color}`}
-            title={color}
-            key={i}
-          />
-        ))}
+        {colors.map((color, i) => {
+          return (
+            // TODO: A nice way to show opacities
+            !color.match(/opacity/i) && (
+              <ColorSwatch
+                color={color.match(/rgba/) ? color : `${props.option}.${color}`}
+                title={color}
+                key={i}
+              />
+            )
+          );
+        })}
       </Grid>
     </>
   );
@@ -69,8 +72,8 @@ export const Index = () => {
   const options = Object.keys(theme.palette) as PaletteOption[];
   return (
     <>
-      {options.map((option) => (
-        <ColorGrid option={option} />
+      {options.map((option, i) => (
+        <ColorGrid option={option} key={i} />
       ))}
     </>
   );
