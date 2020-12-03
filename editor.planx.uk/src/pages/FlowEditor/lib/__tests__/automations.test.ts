@@ -1,4 +1,5 @@
 import { TYPES } from "@planx/components/types";
+import shuffle from "lodash/shuffle";
 
 import { vanillaStore } from "../store";
 
@@ -6,52 +7,6 @@ const { getState, setState } = vanillaStore;
 
 beforeEach(() => {
   getState().resetPreview();
-});
-
-describe("basic behaviour", () => {
-  ["food", "cosmetics", "other"].forEach((item) => {
-    test(item, () => {
-      setState({
-        passport: {
-          data: {
-            item: {
-              value: [item],
-            },
-          },
-        },
-        flow: {
-          _root: {
-            edges: ["item"],
-          },
-          item: {
-            type: TYPES.Statement,
-            data: { fn: "item" },
-            edges: ["food", "cosmetics", "other"],
-          },
-          food: {
-            type: TYPES.Response,
-            data: { val: "food" },
-          },
-          cosmetics: {
-            type: TYPES.Response,
-            data: { val: "cosmetics" },
-          },
-          other: {
-            type: TYPES.Response,
-          },
-        },
-      });
-
-      getState().upcomingCardIds();
-
-      expect(getState().breadcrumbs).toEqual({
-        item: {
-          answers: [item],
-          auto: true,
-        },
-      });
-    });
-  });
 });
 
 describe("less basic behaviour", () => {
@@ -85,52 +40,6 @@ describe("less basic behaviour", () => {
           hardware: {
             type: TYPES.Response,
             data: { val: "hardware" },
-          },
-          other: {
-            type: TYPES.Response,
-          },
-        },
-      });
-
-      getState().upcomingCardIds();
-
-      expect(getState().breadcrumbs).toEqual({
-        item: {
-          answers: [expected],
-          auto: true,
-        },
-      });
-    });
-  });
-});
-
-describe("somewhat less basic behaviour", () => {
-  [
-    ["food.fruit", "food.fruit"],
-    ["food.vegetables", "other"],
-    ["clothes", "other"],
-  ].forEach(([item, expected]) => {
-    test(item, () => {
-      setState({
-        passport: {
-          data: {
-            item: {
-              value: [item],
-            },
-          },
-        },
-        flow: {
-          _root: {
-            edges: ["item"],
-          },
-          item: {
-            type: TYPES.Statement,
-            data: { fn: "item" },
-            edges: ["food.fruit", "other"],
-          },
-          "food.fruit": {
-            type: TYPES.Response,
-            data: { val: "food.fruit" },
           },
           other: {
             type: TYPES.Response,
@@ -200,39 +109,60 @@ describe("Ok, quite a bit less basic now", () => {
   });
 });
 
-describe.only("Boss level: multiple values", () => {
+describe("advanced automations", () => {
   [
-    [["food.bread"], "food.bread"],
+    [["food.fruit.banana"], "neither_apples_nor_bread"],
+
+    [["food.bread"], "bread"],
+
+    [["food.fruit.apple"], "apples"],
+
+    [["food.fruit.apple", "food.fruit.banana"], "apples"],
     [["food.fruit.apple", "food.bread"], "apples_and_bread"],
-    [["clothes"], "other"],
+
+    [
+      ["food.fruit.apple", "food.fruit.banana", "food.bread"],
+      "apples_and_bread",
+    ],
+
+    [["food.fruit.banana", "food.bread"], "bread"],
   ].forEach(([item, expected]: [string[], string]) => {
-    test(item.join(" and "), () => {
+    test([item.join(" + "), expected].join(" = "), () => {
       setState({
         passport: {
           data: {
             item: {
-              value: item,
+              value: shuffle(item),
             },
           },
         },
         flow: {
           _root: {
-            edges: ["item"],
+            edges: ["contains"],
           },
-          item: {
+          contains: {
             type: TYPES.Statement,
             data: { fn: "item" },
-            edges: ["food.bread", "apples_and_bread", "other"],
+            edges: shuffle([
+              "apples",
+              "bread",
+              "apples_and_bread",
+              "neither_apples_nor_bread",
+            ]),
           },
-          "food.bread": {
+          apples: {
+            type: TYPES.Response,
+            data: { val: "food.fruit.apple" },
+          },
+          bread: {
             type: TYPES.Response,
             data: { val: "food.bread" },
           },
           apples_and_bread: {
             type: TYPES.Response,
-            data: { val: ["food.fruit.apple", "food.bread"] },
+            data: { val: "food.fruit.apple,food.bread" },
           },
-          other: {
+          neither_apples_nor_bread: {
             type: TYPES.Response,
           },
         },
@@ -241,7 +171,7 @@ describe.only("Boss level: multiple values", () => {
       getState().upcomingCardIds();
 
       expect(getState().breadcrumbs).toEqual({
-        item: {
+        contains: {
           answers: [expected],
           auto: true,
         },

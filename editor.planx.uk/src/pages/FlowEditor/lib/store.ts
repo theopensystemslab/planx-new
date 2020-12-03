@@ -419,6 +419,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
     const ids: Set<string> = new Set();
 
+    const mostToLeastNumberOfValues = (b, a) =>
+      String(a.data?.val).split(",").length -
+      String(b.data?.val).split(",").length;
+
     const nodeIdsConnectedFrom = (source: string) => {
       return (flow[source]?.edges ?? [])
         .filter(
@@ -432,46 +436,48 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
             nodeIdsConnectedFrom(id);
           } else {
             const fn = flow[id]?.data?.fn;
-            const value = fn === "flag" ? globalFlag : passport.data[fn]?.value;
 
-            if (fn && (fn === "flag" || value !== undefined)) {
-              // TODO: add much-needed docs here
+            let passportValues =
+              fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
+
+            if (fn && (fn === "flag" || passportValues !== undefined)) {
               const responses = flow[id]?.edges.map((id) => ({
                 id,
                 ...flow[id],
               }));
 
-              const sortVals = (b, a) =>
-                String(a.data?.val).split(",").length -
-                String(b.data?.val).split(",").length;
-
               const sortedResponses = responses
-                .sort(sortVals)
-                .filter((r) => r.data?.val);
+                .sort(mostToLeastNumberOfValues)
+                .filter((response) => response.data?.val);
 
-              let responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
-                const vals = String(r.data.val).split(",").sort();
-                return String(vals) === String(value);
-              });
+              passportValues = passportValues.filter((pv) =>
+                sortedResponses.some((r) => pv.startsWith(r.data.val))
+              );
 
-              if (!responseThatCanBeAutoAnswered) {
+              let responseThatCanBeAutoAnswered;
+
+              if (passportValues.length > 0) {
                 responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
-                  const vals = String(r.data.val).split(",").sort();
-                  for (const val of vals) {
-                    if (Array.isArray(value)) {
-                      return value
-                        .sort()
-                        .some((v) => String(v).startsWith(val));
-                    } else {
-                      return value.startsWith(val);
-                    }
-                  }
+                  const responseValues = String(r.data.val).split(",").sort();
+                  return String(responseValues) === String(passportValues);
                 });
+
+                if (!responseThatCanBeAutoAnswered) {
+                  responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
+                    const responseValues = String(r.data.val).split(",").sort();
+                    for (const responseValue of responseValues) {
+                      // console.log({ value, val });
+                      return passportValues.every((passportValue) =>
+                        String(passportValue).startsWith(responseValue)
+                      );
+                    }
+                  });
+                }
               }
 
               if (!responseThatCanBeAutoAnswered) {
                 responseThatCanBeAutoAnswered = responses.find(
-                  (n) => !n.data?.val
+                  (r) => !r.data?.val
                 );
               }
 
