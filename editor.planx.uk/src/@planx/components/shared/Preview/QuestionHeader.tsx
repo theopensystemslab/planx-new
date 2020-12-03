@@ -1,9 +1,9 @@
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
-import HelpIcon from "@material-ui/icons/HelpOutlineOutlined";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import MoreInfoIcon from "ui/icons/MoreInfo";
 
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
@@ -49,7 +49,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         {!!(info || policyRef || howMeasured) && (
           <Grid item>
             <IconButton edge="end" onClick={() => setOpen(true)}>
-              <HelpIcon />
+              <MoreInfoIcon />
             </IconButton>
           </Grid>
         )}
