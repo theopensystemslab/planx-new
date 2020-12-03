@@ -4,11 +4,11 @@ import ReactMarkdown from "react-markdown";
 
 import Card from "../shared/Preview/Card";
 import { PublicProps } from "../ui";
-import type { Notify } from "./model";
+import type { Send } from "./model";
 
-export type Props = PublicProps<Notify>;
+export type Props = PublicProps<Send>;
 
-const NotifyComponent: React.FC<Props> = (props) => {
+const SendComponent: React.FC<Props> = (props) => {
   return (
     <Card
       handleSubmit={async () => {
@@ -31,4 +31,4 @@ const NotifyComponent: React.FC<Props> = (props) => {
   );
 };
 
-export default NotifyComponent;
+export default SendComponent;

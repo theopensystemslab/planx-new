@@ -4,13 +4,13 @@ import DateInput from "@planx/components/DateInput/Public";
 import FileUpload from "@planx/components/FileUpload/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
-import Notify from "@planx/components/Notify/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
 import Pay from "@planx/components/Pay/Public";
 import PropertyInformation from "@planx/components/PropertyInformation/Public";
 import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
 import Review from "@planx/components/Review/Public";
+import Send from "@planx/components/Send/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
@@ -96,14 +96,6 @@ const Node: React.FC<any> = (props: Props) => {
         />
       );
 
-    case TYPES.Notify:
-      return (
-        <Notify
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
-
     case TYPES.NumberInput:
       return (
         <NumberInput
@@ -150,6 +142,14 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Review:
       return (
         <Review
+          {...allProps}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
+      );
+
+    case TYPES.Send:
+      return (
+        <Send
           {...allProps}
           handleSubmit={() => props.handleSubmit([props.node.id])}
         />

@@ -32,8 +32,6 @@ const Node: React.FC<any> = (props) => {
       return <Question {...props} text="Find property" />;
     case TYPES.Notice:
       return <Question {...props} text="Notice" />;
-    case TYPES.Notify:
-      return <Question {...props} text="Notify" />;
     case TYPES.NumberInput:
       return <Question {...props} text="Number" />;
     case TYPES.Page:
@@ -46,6 +44,8 @@ const Node: React.FC<any> = (props) => {
       return <Question {...props} text="(Result)" />;
     case TYPES.Review:
       return <Question {...props} text={node?.data?.description ?? "Review"} />;
+    case TYPES.Send:
+      return <Question {...props} text="Send" />;
     case TYPES.TaskList:
       return (
         <Question

@@ -8,17 +8,17 @@ import RichTextInput from "ui/RichTextInput";
 
 import { TYPES } from "../types";
 import { EditorProps, ICONS } from "../ui";
-import type { Notify } from "./model";
+import type { Send } from "./model";
 import { parseContent } from "./model";
 
-export type Props = EditorProps<TYPES.Notify, Notify>;
+export type Props = EditorProps<TYPES.Send, Send>;
 
 const ContentComponent: React.FC<Props> = (props) => {
-  const formik = useFormik<Notify>({
+  const formik = useFormik<Send>({
     initialValues: parseContent(props.node?.data),
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.Notify, data: newValues });
+        props.handleSubmit({ type: TYPES.Send, data: newValues });
       }
     },
     validate: () => {},
@@ -27,7 +27,7 @@ const ContentComponent: React.FC<Props> = (props) => {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Notify" Icon={ICONS[TYPES.Notify]}>
+        <ModalSectionContent title="Send" Icon={ICONS[TYPES.Send]}>
           <InputRow>
             <Input
               format="large"

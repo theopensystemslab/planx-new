@@ -2,9 +2,9 @@ import Content from "@planx/components/Content/Editor";
 import DateInput from "@planx/components/DateInput/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
 import Notice from "@planx/components/Notice/Editor";
-import Notify from "@planx/components/Notify/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
 import PropertyInformation from "@planx/components/PropertyInformation/Editor";
+import Send from "@planx/components/Send/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
 import TextInput from "@planx/components/TextInput/Editor";
 import { TYPES } from "@planx/components/types";
@@ -38,13 +38,13 @@ const components: {
   "internal-portal": InternalPortal,
   "property-information": PropertyInformation,
   notice: Notice,
-  notify: Notify,
   "number-input": NumberInput,
   page: Page,
   pay: Pay,
   question: Question,
   result: Result,
   review: Review,
+  send: Send,
   "task-list": TaskList,
   "text-input": TextInput,
 };

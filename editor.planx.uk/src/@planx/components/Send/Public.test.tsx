@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import axios from "axios";
 import React from "react";
 
-import Notify from "./Public";
+import Send from "./Public";
 
 jest.mock("axios");
 
@@ -11,7 +11,7 @@ test("renders correctly", async () => {
   const handleSubmit = jest.fn();
   const data = { hello: "world" };
 
-  render(<Notify url="http://example.com" handleSubmit={handleSubmit} />);
+  render(<Send url="http://example.com" handleSubmit={handleSubmit} />);
 
   (axios.get as any).mockImplementationOnce(() => Promise.resolve({ data }));
   (axios.post as any).mockImplementationOnce(() => Promise.resolve({}));
@@ -34,7 +34,7 @@ test("does not proceed if request fails", async () => {
   window.alert = jest.fn();
   console.error = jest.fn(); // hide error from logs
 
-  render(<Notify url="http://example.com" handleSubmit={handleSubmit} />);
+  render(<Send url="http://example.com" handleSubmit={handleSubmit} />);
 
   (axios.post as any).mockImplementationOnce(() => Promise.reject());
 
