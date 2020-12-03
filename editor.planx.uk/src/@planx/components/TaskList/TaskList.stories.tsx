@@ -5,13 +5,13 @@ import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
 import Public from "./Public";
 
-export default {
+const metadata: Meta = {
   title: "PlanX Components/TaskList",
   component: Public,
   argTypes: {
     handleSubmit: { control: { disable: true }, action: true },
   },
-} as Meta;
+};
 
 export const Frontend = (args) => <Public {...args} />;
 Frontend.args = {
@@ -26,3 +26,5 @@ Frontend.args = {
 };
 
 export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;
+
+export default metadata;

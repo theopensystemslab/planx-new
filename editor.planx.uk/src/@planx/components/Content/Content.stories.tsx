@@ -5,7 +5,7 @@ import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
 import Public from "./Public";
 
-export default {
+const metadata: Meta = {
   title: "PlanX Components/Content",
   component: Public,
   argTypes: {
@@ -15,7 +15,10 @@ export default {
 
 export const Frontend = (args) => <Public {...args} />;
 Frontend.args = {
-  content: "Lots of information here",
+  content: `**Good Morning** _Bom dia_`,
+  color: "white",
 };
 
 export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;
+
+export default metadata;

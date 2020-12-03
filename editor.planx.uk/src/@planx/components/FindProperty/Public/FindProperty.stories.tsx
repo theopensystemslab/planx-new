@@ -3,12 +3,14 @@ import React from "react";
 
 import FindProperty from "./index";
 
-export default {
+const metadata: Meta = {
   title: "PlanX Components/FindProperty",
   component: FindProperty,
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },
   },
-} as Meta;
+};
 
 export const Basic = (args) => <FindProperty {...args} />;
+
+export default metadata;

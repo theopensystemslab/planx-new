@@ -3,13 +3,13 @@ import React from "react";
 
 import FormInput, { IFormInput } from "./FormInput";
 
-export default {
-  title: "Design System/Atoms/Text",
+const metadata: Meta = {
+  title: "Design System/Atoms/Form Elements/Input",
   component: FormInput,
   argTypes: {
     value: { control: { disable: true } },
   },
-} as Meta;
+};
 
 const Template: Story<IFormInput> = (args) => <FormInput {...args} />;
 
@@ -18,3 +18,5 @@ Basic.args = {
   placeholder: "Kantstraße 152, 10623 Berlin, Germany",
   helperText: "e.g. house, garden, flat",
 };
+
+export default metadata;

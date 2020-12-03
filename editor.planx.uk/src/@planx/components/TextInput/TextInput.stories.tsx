@@ -5,13 +5,13 @@ import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
 import Public, { Props } from "./Public";
 
-export default {
+const metadata: Meta = {
   title: "PlanX Components/TextInput",
   component: Public,
   argTypes: {
     type: { control: { type: "radio", options: ["short", "long"] } },
   },
-} as Meta;
+};
 
 const Template = (args: Props) => <Public {...args} />;
 
@@ -21,7 +21,7 @@ Frontend.args = {
   description: "Be as descriptive as you can.",
   placeholder: "I started with a long stroll...",
   type: "short",
-} as Props;
+};
 
 export const FrontendEmail = Template.bind({});
 FrontendEmail.args = {
@@ -36,3 +36,5 @@ FrontendEmail.argTypes = {
 };
 
 export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;
+
+export default metadata;

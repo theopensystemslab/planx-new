@@ -4,13 +4,13 @@ import React, { useState } from "react";
 
 import RichTextInput from "./RichTextInput";
 
-export default {
-  title: "Design System/Atoms/RichTextInput",
+const metadata: Meta = {
+  title: "Design System/Atoms/Form Elements/RichTextInput",
   component: RichTextInput,
   parameters: {
     controls: { hideNoControlsWarning: true },
   },
-} as Meta;
+};
 
 export const Basic = () => {
   const [value, setValue] = useState<string>();
@@ -29,3 +29,5 @@ export const Basic = () => {
     </Box>
   );
 };
+
+export default metadata;

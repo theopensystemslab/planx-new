@@ -4,10 +4,10 @@ import React, { useState } from "react";
 
 import ImgInput from "./ImgInput";
 
-export default {
-  title: "Design System/Atoms/Image Upload",
+const metadata: Meta = {
+  title: "Design System/Atoms/Form Elements/Image Upload",
   component: ImgInput,
-} as Meta;
+};
 
 export const Basic = () => {
   const [imageUrl, setImageUrl] = useState<string>();
@@ -29,3 +29,5 @@ export const Basic = () => {
     </>
   );
 };
+
+export default metadata;
