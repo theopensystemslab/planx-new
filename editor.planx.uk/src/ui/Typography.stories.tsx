@@ -1,6 +1,3 @@
-//TODO: Maybe shouldn't use the restricted import
-/* eslint-disable no-restricted-imports */
-// import { Variant } from "@material-ui/core/styles/createTypography";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
