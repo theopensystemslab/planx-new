@@ -5,8 +5,10 @@ import React from "react";
 
 const useStyles = makeStyles<Theme>(() => ({
   container: {
+    // TODO: Consider removing this because it adds unwanted margins to collapsed/invisible
+    // components as well (e.g. Drawer)
     "& > * + *": {
-      marginTop: 20,
+      marginTop: 16,
     },
   },
 }));

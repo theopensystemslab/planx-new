@@ -13,7 +13,7 @@ export const useClasses = makeStyles((theme) => ({
     width: "100%",
     cursor: "pointer",
     fontSize: 15,
-    marginBottom: 24,
+    marginBottom: 12,
   },
   icon: {
     height: 32,

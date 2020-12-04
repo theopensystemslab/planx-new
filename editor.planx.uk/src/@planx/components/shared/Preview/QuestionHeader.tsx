@@ -1,13 +1,13 @@
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
-
 interface IQuestionHeader {
   title?: string;
   description?: string;
@@ -15,6 +15,13 @@ interface IQuestionHeader {
   policyRef?: string;
   howMeasured?: string;
 }
+
+const useStyles = makeStyles((theme) => ({
+  iconButton: {
+    padding: 0,
+    borderRadius: 12,
+  },
+}));
 
 const QuestionHeader: React.FC<IQuestionHeader> = ({
   title,
@@ -24,6 +31,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   howMeasured,
 }) => {
   const [open, setOpen] = React.useState(false);
+  const classes = useStyles();
 
   return (
     <>
@@ -34,7 +42,6 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               fontSize="h3.fontSize"
               fontWeight="h3.fontWeight"
               letterSpacing="-0.02em"
-              pb={1}
               role="heading"
             >
               {title}
@@ -48,7 +55,10 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         </Grid>
         {!!(info || policyRef || howMeasured) && (
           <Grid item>
-            <IconButton edge="end" onClick={() => setOpen(true)}>
+            <IconButton
+              className={classes.iconButton}
+              onClick={() => setOpen(true)}
+            >
               <MoreInfoIcon />
             </IconButton>
           </Grid>

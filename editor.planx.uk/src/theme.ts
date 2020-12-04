@@ -17,6 +17,10 @@ const theme = createMuiTheme({
       fontSize: 20,
       fontWeight: 700,
     },
+    h6: {
+      fontSize: 15,
+      fontWeight: 600,
+    },
     subtitle1: {
       fontSize: 20,
     },
@@ -32,6 +36,9 @@ const theme = createMuiTheme({
     },
     text: {
       secondary: "rgba(0,0,0,0.4)",
+    },
+    action: {
+      selected: "#F8F8F8",
     },
   },
   props: {
