@@ -78,6 +78,9 @@ const NodeTypeSelect: React.FC<{
       <optgroup label="Payment">
         <option value={TYPES.Pay}>Pay</option>
       </optgroup>
+      <optgroup label="Outputs">
+        <option value={TYPES.Send}>Send (Prototype)</option>
+      </optgroup>
     </select>
   );
 };

@@ -13,6 +13,7 @@ import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
 import RateReview from "@material-ui/icons/RateReview";
 import ReportProblemOutlined from "@material-ui/icons/ReportProblemOutlined";
 import SearchOutlined from "@material-ui/icons/SearchOutlined";
+import Send from "@material-ui/icons/Send";
 import TextFields from "@material-ui/icons/TextFields";
 import { TYPES } from "@planx/components/types";
 import React, { ChangeEvent } from "react";
@@ -61,6 +62,7 @@ export const ICONS: {
   [TYPES.Response]: undefined,
   [TYPES.Result]: undefined,
   [TYPES.Review]: RateReview,
+  [TYPES.Send]: Send,
   [TYPES.SignIn]: undefined,
   [TYPES.Statement]: CallSplit,
   [TYPES.TaskList]: List,

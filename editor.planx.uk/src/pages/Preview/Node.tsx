@@ -10,6 +10,7 @@ import PropertyInformation from "@planx/components/PropertyInformation/Public";
 import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
 import Review from "@planx/components/Review/Public";
+import Send from "@planx/components/Send/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
@@ -141,6 +142,14 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Review:
       return (
         <Review
+          {...allProps}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
+      );
+
+    case TYPES.Send:
+      return (
+        <Send
           {...allProps}
           handleSubmit={() => props.handleSubmit([props.node.id])}
         />

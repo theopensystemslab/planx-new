@@ -44,6 +44,8 @@ const Node: React.FC<any> = (props) => {
       return <Question {...props} text="(Result)" />;
     case TYPES.Review:
       return <Question {...props} text={node?.data?.description ?? "Review"} />;
+    case TYPES.Send:
+      return <Question {...props} text="Send" />;
     case TYPES.TaskList:
       return (
         <Question
@@ -61,11 +63,11 @@ const Node: React.FC<any> = (props) => {
       return (
         <Checklist {...props} {...node} text={node?.data?.text ?? "[Empty]"} />
       );
-    case TYPES.AddressInput:
+
     case TYPES.Flow:
     case TYPES.Report:
-
     case TYPES.SignIn:
+    case TYPES.AddressInput:
       return null;
     default:
       console.error({ nodeNotFound: props });
