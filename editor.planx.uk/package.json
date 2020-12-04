@@ -84,6 +84,7 @@
     "react-cosmos": "^5.5.1",
     "react-refresh": "^0.9.0",
     "storybook-addon-material-ui": "^0.9.0-alpha.21",
+    "tsconfig-paths-webpack-plugin": "^3.3.0",
     "typescript": "^4.0.5"
   },
   "scripts": {

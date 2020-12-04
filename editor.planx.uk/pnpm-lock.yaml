@@ -79,6 +79,7 @@ devDependencies:
   react-cosmos: 5.5.1_react-dom@16.14.0+react@16.14.0
   react-refresh: 0.9.0
   storybook-addon-material-ui: 0.9.0-alpha.21_f590a8c6b8950fe366111cf967cd522e
+  tsconfig-paths-webpack-plugin: 3.3.0
   typescript: 4.0.5
 lockfileVersion: 5.2
 packages:
@@ -4456,7 +4457,6 @@ packages:
     resolution:
       integrity: sha512-3c+yGKvVP5Y9TYBEibGNR+kLtijnj7mYrXRg+WpFb2X9xm04g/DXYkfg4hmzJQosc9snFNUPkbYIhu+KAm6jJw==
   /@types/json5/0.0.29:
-    dev: false
     resolution:
       integrity: sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
   /@types/lodash/4.14.165:
@@ -17034,7 +17034,6 @@ packages:
     resolution:
       integrity: sha1-YhmoVhZSBJHzV4i9vxRHqZx+aw4=
   /strip-bom/3.0.0:
-    dev: false
     engines:
       node: '>=4'
     resolution:
@@ -17619,13 +17618,20 @@ packages:
     dev: true
     resolution:
       integrity: sha512-FZIXf1ksVyLcfr7M317jbB67XFJhOO1YqdTcuGaq9q5jLUoTikukZ+98TPjKiP2jC5CgmYdWWYs0s2nLSU0/1A==
+  /tsconfig-paths-webpack-plugin/3.3.0:
+    dependencies:
+      chalk: 2.4.2
+      enhanced-resolve: 4.3.0
+      tsconfig-paths: 3.9.0
+    dev: true
+    resolution:
+      integrity: sha512-MpQeZpwPY4gYASCUjY4yt2Zj8yv86O8f++3Ai4o0yI0fUC6G1syvnL9VuY71PBgimRYDQU47f12BEmJq9wRaSw==
   /tsconfig-paths/3.9.0:
     dependencies:
       '@types/json5': 0.0.29
       json5: 1.0.1
       minimist: 1.2.5
       strip-bom: 3.0.0
-    dev: false
     resolution:
       integrity: sha512-dRcuzokWhajtZWkQsDVKbWyY+jgcLC5sqJhg2PSgf4ZkH2aHPvaOY8YWGhmjb68b5qqTfasSsDO9k7RUiEmZAw==
   /tslib/1.14.1:
@@ -18974,5 +18980,6 @@ specifiers:
   sharedb: ^1.4.2
   storybook-addon-material-ui: ^0.9.0-alpha.21
   subscriptions-transport-ws: ^0.9.18
+  tsconfig-paths-webpack-plugin: ^3.3.0
   typescript: ^4.0.5
   zustand: ^3.1.4

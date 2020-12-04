@@ -1,17 +1,15 @@
-/// Docs?
-
 import Box from "@material-ui/core/Box";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import React, { useState } from "react";
 
 import ImgInput from "./ImgInput";
 
-export default {
-  title: "Forms/Image Upload", // Stories will be organized based on hierarchy specified with `/` in the `title`
-  component: ImgInput, // DocsPage will infer props from the component for generated documentation
-} as Meta;
+const metadata: Meta = {
+  title: "Design System/Atoms/Form Elements/Image Upload",
+  component: ImgInput,
+};
 
-export const Primary = () => {
+export const Basic = () => {
   const [imageUrl, setImageUrl] = useState<string>();
 
   return (
@@ -31,3 +29,5 @@ export const Primary = () => {
     </>
   );
 };
+
+export default metadata;

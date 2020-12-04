@@ -3,20 +3,20 @@ import React from "react";
 
 import FormInput, { IFormInput } from "./FormInput";
 
-export default {
-  title: "Forms/Text",
+const metadata: Meta = {
+  title: "Design System/Atoms/Form Elements/Input",
   component: FormInput,
-} as Meta;
+  argTypes: {
+    value: { control: { disable: true } },
+  },
+};
 
 const Template: Story<IFormInput> = (args) => <FormInput {...args} />;
 
-const basicSetup = {
+export const Basic = Template.bind({});
+Basic.args = {
   placeholder: "Kantstraße 152, 10623 Berlin, Germany",
-  helperText: "",
+  helperText: "e.g. house, garden, flat",
 };
 
-export const Simple = Template.bind({});
-Simple.args = basicSetup;
-
-export const WithHelperText = Template.bind({});
-WithHelperText.args = { ...basicSetup, helperText: "e.g. house, garden, flat" };
+export default metadata;

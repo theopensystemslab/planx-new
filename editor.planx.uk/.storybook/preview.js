@@ -1,16 +1,17 @@
-import { ThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import theme from '../src/theme'
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { ThemeProvider } from "@material-ui/core/styles";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
-export const parameters = {
-  actions: { argTypesRegex: '^on[A-Z].*' },
-}
+import theme from "../src/theme";
 
 export const decorators = [
   (Story) => (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Story />
+      <DndProvider backend={HTML5Backend} key={Date.now()}>
+        <Story />
+      </DndProvider>
     </ThemeProvider>
   ),
-]
+];

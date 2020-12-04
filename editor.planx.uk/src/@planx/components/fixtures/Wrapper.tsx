@@ -7,6 +7,7 @@ interface Props<Type, Data, UserData> {
   Public: React.FC<PublicProps<Data, UserData>>;
 }
 
+// TODO: move out of fixtures/ when we're done with cosmos
 function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
   const [data, setData] = useState<Data | null>(null);
   const [_userData, setUserData] = useState<UserData | null>(null);
