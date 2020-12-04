@@ -441,7 +441,12 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
             let passportValues =
               fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
 
-            if (fn && (fn === "flag" || passportValues !== undefined)) {
+            // TODO: come back and rewrite/refactor ALL of this!
+            if (fn && passportValues !== undefined) {
+              if (!Array.isArray(passportValues)) {
+                passportValues = [passportValues];
+              }
+
               const responses = flow[id]?.edges.map((id) => ({
                 id,
                 ...flow[id],
@@ -451,7 +456,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                 .sort(mostToLeastNumberOfValues)
                 .filter((response) => response.data?.val);
 
-              passportValues = (passportValues || []).filter((pv) =>
+              passportValues = passportValues.filter((pv) =>
                 sortedResponses.some((r) => pv.startsWith(r.data.val))
               );
 
