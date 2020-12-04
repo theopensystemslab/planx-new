@@ -441,43 +441,46 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
             let passportValues =
               fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
 
-            // TODO: come back and rewrite/refactor ALL of this!
-            if (fn && passportValues !== undefined) {
-              if (!Array.isArray(passportValues)) {
-                passportValues = [passportValues];
-              }
-
+            if (fn && (fn === "flag" || passportValues !== undefined)) {
               const responses = flow[id]?.edges.map((id) => ({
                 id,
                 ...flow[id],
               }));
 
+              let responseThatCanBeAutoAnswered;
               const sortedResponses = responses
                 .sort(mostToLeastNumberOfValues)
                 .filter((response) => response.data?.val);
 
-              passportValues = passportValues.filter((pv) =>
-                sortedResponses.some((r) => pv.startsWith(r.data.val))
-              );
+              if (passportValues !== undefined) {
+                if (!Array.isArray(passportValues))
+                  passportValues = [passportValues];
 
-              let responseThatCanBeAutoAnswered;
+                passportValues = (passportValues || []).filter((pv) =>
+                  sortedResponses.some((r) => pv.startsWith(r.data.val))
+                );
 
-              if (passportValues.length > 0) {
-                responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
-                  const responseValues = String(r.data.val).split(",").sort();
-                  return String(responseValues) === String(passportValues);
-                });
-
-                if (!responseThatCanBeAutoAnswered) {
+                if (passportValues.length > 0) {
                   responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
                     const responseValues = String(r.data.val).split(",").sort();
-                    for (const responseValue of responseValues) {
-                      // console.log({ value, val });
-                      return passportValues.every((passportValue) =>
-                        String(passportValue).startsWith(responseValue)
-                      );
-                    }
+                    return String(responseValues) === String(passportValues);
                   });
+
+                  if (!responseThatCanBeAutoAnswered) {
+                    responseThatCanBeAutoAnswered = sortedResponses.find(
+                      (r) => {
+                        const responseValues = String(r.data.val)
+                          .split(",")
+                          .sort();
+                        for (const responseValue of responseValues) {
+                          // console.log({ value, val });
+                          return passportValues.every((passportValue) =>
+                            String(passportValue).startsWith(responseValue)
+                          );
+                        }
+                      }
+                    );
+                  }
                 }
               }
 
