@@ -70,6 +70,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   updateNode: any; //: () => void;
   // preview
   breadcrumbs: breadcrumbs;
+  replay: () => object;
   currentCard: () => Record<string, any> | null;
   passport: passport;
   record: any; //: () => void;
@@ -485,6 +486,32 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     nodeIdsConnectedFrom(ROOT_NODE_KEY);
 
     return Array.from(ids);
+  },
+
+  replay() {
+    const { flow, breadcrumbs } = get();
+    return Object.entries(breadcrumbs)
+      .map(([id, bc]) => {
+        const { edges = [], ...question } = flow[id];
+
+        const options = edges.map((id) => {
+          const { edges, ...node } = flow[id];
+          return {
+            id,
+            ...node,
+          };
+        });
+
+        if (options.length === 0) return null;
+
+        return {
+          question: { id, ...question },
+          options,
+          choices: bc.answers,
+          auto: bc.auto,
+        };
+      })
+      .filter(Boolean);
   },
 
   currentCard() {
