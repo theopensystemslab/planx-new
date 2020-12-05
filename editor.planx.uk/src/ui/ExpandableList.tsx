@@ -24,12 +24,6 @@ const useItemClasses = makeStyles((theme) => ({
   expanded: {
     background: theme.palette.action.selected,
   },
-  caret: {
-    width: 12,
-  },
-  caretUp: {
-    transform: "scaleY(-1)",
-  },
 }));
 
 export function ExpandableList(props: { children: ReactNode }): FCReturn {
@@ -60,12 +54,7 @@ export function ExpandableListItem(props: {
         }}
       >
         <Typography variant="h6">{props.title}</Typography>
-        <Caret
-          className={classnames(
-            classes.caret,
-            props.expanded && classes.caretUp
-          )}
-        />
+        <Caret expanded={props.expanded} />
       </Box>
       {props.expanded && props.children}
     </li>

@@ -21,6 +21,11 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     borderRadius: 12,
   },
+  description: {
+    "& p": {
+      margin: `${theme.spacing(1)} 0`,
+    },
+  },
 }));
 
 const QuestionHeader: React.FC<IQuestionHeader> = ({
@@ -48,7 +53,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             </Box>
           )}
           {description && (
-            <Box role="description">
+            <Box role="description" className={classes.description}>
               <ReactMarkdown source={description} />
             </Box>
           )}
