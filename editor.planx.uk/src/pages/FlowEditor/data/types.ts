@@ -1,7 +1,7 @@
 import { TYPES } from "@planx/components/types";
 
 export const SLUGS = {
-  [TYPES.AddressInput]: "question",
+  [TYPES.AddressInput]: "address-input",
   [TYPES.Checklist]: "checklist",
   [TYPES.Content]: "content",
   [TYPES.DateInput]: "date-input",

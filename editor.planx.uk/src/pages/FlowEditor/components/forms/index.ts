@@ -1,3 +1,4 @@
+import AddressInput from "@planx/components/AddressInput/Editor";
 import Content from "@planx/components/Content/Editor";
 import DateInput from "@planx/components/DateInput/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
@@ -27,6 +28,7 @@ const EmptyComponent: React.FC<any> = () => null;
 const components: {
   [key in typeof SLUGS[TYPES]]: React.FC<any>;
 } = {
+  "address-input": AddressInput,
   checklist: Checklist,
   content: Content,
   "date-input": DateInput,
