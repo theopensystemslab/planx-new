@@ -60,7 +60,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
           </InputRow>
           <InputRow>
             <Input
-              // required
+              required
               format="data"
               name="fn"
               value={formik.values.fn}
