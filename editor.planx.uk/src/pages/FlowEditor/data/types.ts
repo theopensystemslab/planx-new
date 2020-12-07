@@ -1,6 +1,8 @@
 import { TYPES } from "@planx/components/types";
 
-export const SLUGS = {
+export const SLUGS: {
+  [key in TYPES]: string;
+} = {
   [TYPES.AddressInput]: "address-input",
   [TYPES.Checklist]: "checklist",
   [TYPES.Content]: "content",
