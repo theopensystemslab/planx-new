@@ -12,6 +12,14 @@ defaults:
     working-directory: editor.planx.uk
 
 jobs:
+  remove_old_artifacts:
+    name: Remove old artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: c-hive/gha-remove-artifacts@v1
+        with:
+          age: "3 days"
+
   test_and_build:
     name: Test and Build
     runs-on: ubuntu-latest
