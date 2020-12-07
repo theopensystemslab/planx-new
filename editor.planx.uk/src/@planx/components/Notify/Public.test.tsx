@@ -1,0 +1,25 @@
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import React from "react";
+
+import Public from "./Public";
+
+test("renders", async () => {
+  const handleSubmit = jest.fn();
+  render(
+    <Public
+      handleSubmit={handleSubmit}
+      token="placeholder"
+      templateId="placeholder"
+      personalisation={{}}
+      addressee="placeholder"
+    />
+  );
+});
+
+// XXX: Further tests such as
+//      1) It throws an error
+//      2) It shows the loading screen
+//      3) It sends an email
+//      are not being written today as this whole logic will be deprecated
+//      in favour of a backend-based implementation.

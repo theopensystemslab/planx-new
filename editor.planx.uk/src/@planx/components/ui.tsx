@@ -10,6 +10,7 @@ import Home from "@material-ui/icons/Home";
 import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import List from "@material-ui/icons/List";
 import LocationOnOutlined from "@material-ui/icons/LocationOnOutlined";
+import MailOutlined from "@material-ui/icons/MailOutlined";
 import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
 import RateReview from "@material-ui/icons/RateReview";
 import ReportProblemOutlined from "@material-ui/icons/ReportProblemOutlined";
@@ -55,6 +56,7 @@ export const ICONS: {
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: ReportProblemOutlined,
+  [TYPES.Notify]: MailOutlined,
   [TYPES.NumberInput]: ExposureZero,
   [TYPES.Page]: Description,
   [TYPES.Pay]: PaymentOutlined,
