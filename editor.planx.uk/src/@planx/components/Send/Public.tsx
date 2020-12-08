@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
+import { v4 as uuid } from "uuid";
 import Card from "../shared/Preview/Card";
 import { PublicProps } from "../ui";
 import type { Send } from "./model";
