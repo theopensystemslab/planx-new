@@ -13,26 +13,39 @@ function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
   const [_userData, setUserData] = useState<UserData | null>(null);
 
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ minWidth: 380 }}>
-        <props.Editor
-          handleSubmit={(newNode) => {
-            setData(newNode.data);
-          }}
-        />
-        <Button type="submit" variant="contained" color="primary" form="modal">
-          Submit
-        </Button>
+    <>
+      <p>
+        <small>
+          Tip: Click the "Submit" button at the end of this page to generate a
+          preview of the Public component.
+        </small>
+      </p>
+      <div style={{ display: "flex" }}>
+        <div style={{ minWidth: 380 }}>
+          <props.Editor
+            handleSubmit={(newNode) => {
+              setData(newNode.data);
+            }}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            form="modal"
+          >
+            Submit
+          </Button>
+        </div>
+        {data && (
+          <props.Public
+            {...data}
+            handleSubmit={(newUserData) => {
+              setUserData(newUserData);
+            }}
+          />
+        )}
       </div>
-      {data && (
-        <props.Public
-          {...data}
-          handleSubmit={(newUserData) => {
-            setUserData(newUserData);
-          }}
-        />
-      )}
-    </div>
+    </>
   );
 }
 
