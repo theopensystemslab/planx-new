@@ -70,6 +70,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   updateNode: any; //: () => void;
   // preview
   breadcrumbs: breadcrumbs;
+  replay: () => object;
   currentCard: () => Record<string, any> | null;
   passport: passport;
   record: any; //: () => void;
@@ -419,6 +420,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
     const ids: Set<string> = new Set();
 
+    const mostToLeastNumberOfValues = (b, a) =>
+      String(a.data?.val).split(",").length -
+      String(b.data?.val).split(",").length;
+
     const nodeIdsConnectedFrom = (source: string) => {
       return (flow[source]?.edges ?? [])
         .filter(
@@ -432,25 +437,58 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
             nodeIdsConnectedFrom(id);
           } else {
             const fn = flow[id]?.data?.fn;
-            const value = fn === "flag" ? globalFlag : passport.data[fn]?.value;
 
-            if (fn && (fn === "flag" || value !== undefined)) {
-              // TODO: add much-needed docs here
+            let passportValues =
+              fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
+
+            if (fn && (fn === "flag" || passportValues !== undefined)) {
               const responses = flow[id]?.edges.map((id) => ({
                 id,
                 ...flow[id],
               }));
 
-              const responseThatCanBeAutoAnswered = responses.find((n) => {
-                const val = String(n.data?.val);
-                if (Array.isArray(val)) {
-                  // multiple string values are stored (array)
-                  return val.map((v) => String(v)).includes(value);
-                } else {
-                  // string
-                  return val === String(value);
+              let responseThatCanBeAutoAnswered;
+              const sortedResponses = responses
+                .sort(mostToLeastNumberOfValues)
+                .filter((response) => response.data?.val);
+
+              if (passportValues !== undefined) {
+                if (!Array.isArray(passportValues))
+                  passportValues = [passportValues];
+
+                passportValues = (passportValues || []).filter((pv) =>
+                  sortedResponses.some((r) => pv.startsWith(r.data.val))
+                );
+
+                if (passportValues.length > 0) {
+                  responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
+                    const responseValues = String(r.data.val).split(",").sort();
+                    return String(responseValues) === String(passportValues);
+                  });
+
+                  if (!responseThatCanBeAutoAnswered) {
+                    responseThatCanBeAutoAnswered = sortedResponses.find(
+                      (r) => {
+                        const responseValues = String(r.data.val)
+                          .split(",")
+                          .sort();
+                        for (const responseValue of responseValues) {
+                          // console.log({ value, val });
+                          return passportValues.every((passportValue) =>
+                            String(passportValue).startsWith(responseValue)
+                          );
+                        }
+                      }
+                    );
+                  }
                 }
-              });
+              }
+
+              if (!responseThatCanBeAutoAnswered) {
+                responseThatCanBeAutoAnswered = responses.find(
+                  (r) => !r.data?.val
+                );
+              }
 
               if (responseThatCanBeAutoAnswered) {
                 if (fn !== "flag") {
@@ -485,6 +523,32 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     nodeIdsConnectedFrom(ROOT_NODE_KEY);
 
     return Array.from(ids);
+  },
+
+  replay() {
+    const { flow, breadcrumbs } = get();
+    return Object.entries(breadcrumbs)
+      .map(([id, bc]) => {
+        const { edges = [], ...question } = flow[id];
+
+        const options = edges.map((id) => {
+          const { edges, ...node } = flow[id];
+          return {
+            id,
+            ...node,
+          };
+        });
+
+        if (options.length === 0) return null;
+
+        return {
+          question: { id, ...question },
+          options,
+          choices: bc.answers,
+          auto: bc.auto,
+        };
+      })
+      .filter(Boolean);
   },
 
   currentCard() {

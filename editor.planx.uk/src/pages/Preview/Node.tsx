@@ -1,3 +1,4 @@
+import AddressInput from "@planx/components/AddressInput/Public";
 import Checklist from "@planx/components/Checklist/Public";
 import Content from "@planx/components/Content/Public";
 import DateInput from "@planx/components/DateInput/Public";
@@ -10,6 +11,7 @@ import PropertyInformation from "@planx/components/PropertyInformation/Public";
 import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
 import Review from "@planx/components/Review/Public";
+import Send from "@planx/components/Send/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
@@ -146,6 +148,14 @@ const Node: React.FC<any> = (props: Props) => {
         />
       );
 
+    case TYPES.Send:
+      return (
+        <Send
+          {...allProps}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
+      );
+
     case TYPES.Statement:
       return (
         <Question
@@ -173,6 +183,8 @@ const Node: React.FC<any> = (props: Props) => {
       return <TextInput {...allProps} />;
 
     case TYPES.AddressInput:
+      return <AddressInput {...allProps} />;
+
     case TYPES.ExternalPortal:
     case TYPES.Filter:
     case TYPES.Flow:

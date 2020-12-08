@@ -44,6 +44,8 @@ const Node: React.FC<any> = (props) => {
       return <Question {...props} text="(Result)" />;
     case TYPES.Review:
       return <Question {...props} text={node?.data?.description ?? "Review"} />;
+    case TYPES.Send:
+      return <Question {...props} text="Send" />;
     case TYPES.TaskList:
       return (
         <Question
@@ -62,9 +64,9 @@ const Node: React.FC<any> = (props) => {
         <Checklist {...props} {...node} text={node?.data?.text ?? "[Empty]"} />
       );
     case TYPES.AddressInput:
+      return <Question {...props} text="Address" />;
     case TYPES.Flow:
     case TYPES.Report:
-
     case TYPES.SignIn:
       return null;
     default:

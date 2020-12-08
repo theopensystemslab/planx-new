@@ -47,7 +47,7 @@ const Card: React.FC<any> = ({
           size="large"
           type="submit"
           disabled={!isValid}
-          onClick={() => handleSubmit()}
+          onClick={async () => await handleSubmit()}
         >
           Continue
         </Button>
