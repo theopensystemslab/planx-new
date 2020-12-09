@@ -81,7 +81,7 @@ interface Props {
   deleteInputGroup?: any;
   deletable?: boolean;
   draggable?: boolean;
-  id?;
+  id?: string;
   index?: number;
   handleMove?: (dragIndex: number, hoverIndex: number) => void;
 }

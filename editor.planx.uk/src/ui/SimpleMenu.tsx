@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function SimpleMenu({ items, ...restProps }: Props): FCReturn {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   return (
     <div {...restProps}>
       <IconButton

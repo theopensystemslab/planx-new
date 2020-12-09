@@ -10,11 +10,11 @@ const metadata: Meta = {
 };
 
 export const Basic = () => {
-  const [imageUrl, setImageUrl] = useState<string>();
+  const [imageUrl, setImageUrl] = useState<string | undefined>();
 
   return (
     <>
-      <ImgInput onChange={(url: string) => setImageUrl(url)} />
+      <ImgInput onChange={setImageUrl} />
       {imageUrl && (
         <Box
           width="20rem"

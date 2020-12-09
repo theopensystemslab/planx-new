@@ -100,7 +100,7 @@ const OptionEditor: React.FC<{
               ...props.value,
               data: {
                 ...props.value.data,
-                flag: ev.target.value,
+                flag: ev.target.value as string,
               },
             });
           }}

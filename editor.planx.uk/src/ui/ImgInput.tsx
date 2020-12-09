@@ -33,7 +33,7 @@ export default function ImgInput({
 }): FCReturn {
   const classes = useClasses();
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   // Auto-generate a random ID on mount
   const menuId = useMemo(() => {
@@ -81,7 +81,7 @@ export default function ImgInput({
         <FileUpload
           onChange={(newUrl) => {
             setAnchorEl(null);
-            onChange(newUrl);
+            onChange && onChange(newUrl);
           }}
         />
       </div>
