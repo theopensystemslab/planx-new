@@ -110,7 +110,8 @@ const taskStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
   },
   content: {
-    backgroundColor: theme.palette.background.paper,
+    //TODO: Should extend to edges of card & be a darker colour
+    backgroundColor: theme.palette.background.default,
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(3),
     paddingLeft: theme.spacing(7),
