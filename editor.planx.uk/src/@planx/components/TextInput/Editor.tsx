@@ -1,4 +1,3 @@
-import { parseTextInput, TextInput } from "@planx/components/TextInput/model";
 import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
@@ -14,6 +13,8 @@ import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import OptionButton from "ui/OptionButton";
 import RichTextInput from "ui/RichTextInput";
+
+import { parseTextInput, TextInput } from "./model";
 
 export type Props = EditorProps<TYPES.TextInput, TextInput>;
 
