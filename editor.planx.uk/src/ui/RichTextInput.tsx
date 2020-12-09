@@ -63,15 +63,13 @@ const RichTextInput: React.FC<
 
   const editorRef = useRef<any>(null);
 
-  const containerRef = useRef(null);
+  const containerRef = useRef<any>(null);
 
   useEffect(() => {
     const globalClickHandler = (ev: any) => {
-      if (!containerRef.current) {
-        return;
-      }
       const container = containerRef.current;
       if (
+        container !== null &&
         container.contains(ev.target) &&
         container.contains(document.querySelector(".DraftEditor-root"))
       ) {

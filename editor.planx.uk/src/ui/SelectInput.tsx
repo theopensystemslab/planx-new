@@ -1,14 +1,14 @@
 import Select, { SelectProps } from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowIcon from "@material-ui/icons/KeyboardArrowDown";
-import React from "react";
+import React, { ReactNode } from "react";
 
 import Input from "./Input";
 
 export interface Props extends SelectProps {
   name?: string;
-  children?;
-  onChange?;
+  children?: ReactNode;
+  onChange?: SelectProps["onChange"];
 }
 
 const useClasses = makeStyles((theme) => ({

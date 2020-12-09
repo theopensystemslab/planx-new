@@ -28,7 +28,7 @@ export interface Props<T, EditorExtraProps = {}> {
   onChange: (newValues: Array<T>) => void;
   newValue: () => T;
   newValueLabel?: string;
-  Editor: React.FC<EditorProps<T> & EditorExtraProps>;
+  Editor: React.FC<EditorProps<T> & (EditorExtraProps | {})>;
   editorExtraProps?: EditorExtraProps;
   disableDragAndDrop?: boolean;
 }
@@ -67,7 +67,7 @@ export default function ListManager<T, EditorExtraProps>(
                 onChange={(newItem) => {
                   props.onChange(setAt(index, newItem, props.values));
                 }}
-                {...props.editorExtraProps}
+                {...(props.editorExtraProps || {})}
               />
               <Box>
                 <IconButton
@@ -142,7 +142,7 @@ export default function ListManager<T, EditorExtraProps>(
                         onChange={(newItem) => {
                           props.onChange(setAt(index, newItem, props.values));
                         }}
-                        {...props.editorExtraProps}
+                        {...(props.editorExtraProps || {})}
                       />
                       <Box>
                         <IconButton
