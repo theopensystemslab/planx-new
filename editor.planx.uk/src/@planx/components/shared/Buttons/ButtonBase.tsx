@@ -16,8 +16,6 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "left",
     position: "relative",
     height: "100%",
-    marginBottom: theme.spacing(1),
-    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
   },
   selected: {
     backgroundColor: theme.palette.primary.main,
@@ -35,13 +33,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props {
+export interface Props {
   selected: boolean;
-  onClick: Function;
+  onClick: (MouseEvent) => void;
+  children?: React.ReactNode;
 }
 
-export default function ButtonBase(props: Props) {
-  const { selected, onClick } = props;
+export default function ButtonBase(props: Props): FCReturn {
+  const { selected, onClick, children } = props;
   const classes = useStyles();
 
   return (
@@ -50,6 +49,8 @@ export default function ButtonBase(props: Props) {
       className={classNames(classes.root, selected && classes.selected)}
       classes={{ focusVisible: classes.onFocus }}
       onClick={onClick}
-    ></MuiButtonBase>
+    >
+      {children}
+    </MuiButtonBase>
   );
 }

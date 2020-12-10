@@ -8,17 +8,16 @@ import ImageButton from "./ImageButton";
 
 const Wrapper = (Story, props) => {
   const [selected, setSelected] = useState<boolean>();
-  const args = {
-    args: {
-      selected,
-      onClick: () => setSelected(!selected),
-      ...props.args,
-    },
-  };
 
   return (
     <Box maxWidth={300}>
-      <Story {...args} />
+      <Story
+        args={{
+          selected,
+          onClick: () => setSelected(!selected),
+          ...props.args,
+        }}
+      />
     </Box>
   );
 };
