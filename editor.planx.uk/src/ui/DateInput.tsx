@@ -5,7 +5,7 @@ import React, { ChangeEvent } from "react";
 
 import Input from "./Input";
 
-interface Props {
+export interface Props {
   label?: string;
   value?: string;
   bordered?: boolean;
