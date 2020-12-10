@@ -55,14 +55,14 @@ test("only return page's children when page is the node that's currently active"
   // upcoming nodes = [[PAGE, ...pageChildren],c,d] <- PAGE now first so we expand it into array
 
   expect(getState().upcomingCardIds()).toEqual([
-    ["page_node1", ["page", "page_node1", "page_node2"]],
+    ["page", ["page_node1", "page_node2"], "page_node1"],
     "root_node2",
   ]);
 
   getState().record("page_node1", []);
 
   expect(getState().upcomingCardIds()).toEqual([
-    ["page_node2", ["page", "page_node1", "page_node2"]],
+    ["page", ["page_node1", "page_node2"], "page_node2"],
     "root_node2",
   ]);
 
@@ -82,7 +82,7 @@ test("only return page's children when page is the node that's currently active"
   getState().record("page_node1");
 
   expect(getState().upcomingCardIds()).toEqual([
-    ["page", "page_node1", "page_node2"],
+    ["page", ["page_node1", "page_node2"], "page_node1"],
     "root_node2",
   ]);
 });

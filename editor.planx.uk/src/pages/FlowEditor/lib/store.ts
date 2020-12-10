@@ -18,6 +18,7 @@ import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import create from "zustand";
 import vanillaCreate from "zustand/vanilla";
+
 import { client } from "../../../lib/graphql";
 import { FlowLayout } from "../components/Flow";
 import { flatFlags } from "../data/flags";
@@ -417,41 +418,56 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   upcomingCardIds() {
     const { flow, breadcrumbs, passport } = get();
 
-    const ids: Set<nodeId | Array<nodeId>> = new Set();
-
     const mostToLeastNumberOfValues = (b, a) =>
       String(a.data?.val).split(",").length -
       String(b.data?.val).split(",").length;
 
-    const nodeIdsConnectedFrom = (source: nodeId) => {
+    let pids;
+
+    const nodeIdsConnectedFrom = (
+      source: nodeId,
+      ids: Set<nodeId | Array<nodeId>>,
+      _breadcrumbs = breadcrumbs
+    ) => {
       return (flow[source]?.edges ?? [])
         .filter(
           (id) =>
-            !Object.keys(breadcrumbs).includes(id) &&
+            !Object.keys(_breadcrumbs).includes(id) &&
             (!SUPPORTED_DECISION_TYPES.includes(flow[id].type) ||
               flow[id]?.edges?.length > 0)
         )
         .forEach((id) => {
           if (flow[id]?.type === TYPES.Page) {
             if (ids.size === 0) {
-              nodeIdsConnectedFrom(id);
-              const pageIds: Array<nodeId> = [id, ...ids] as any;
-              if (pageIds.length > 1) {
+              if (!pids) {
+                pids = new Set();
+                nodeIdsConnectedFrom(id, pids, {});
+                pids = [...pids];
+              }
+
+              nodeIdsConnectedFrom(id, ids);
+
+              const all = [...ids];
+              if (all.length > 0) {
                 ids.clear();
-                ids.add(pageIds);
+                ids.add([id, pids, all[0]] as any);
               }
             } else {
               ids.add(id);
             }
           } else if (flow[id]?.type === TYPES.InternalPortal) {
-            nodeIdsConnectedFrom(id);
+            nodeIdsConnectedFrom(id, ids);
           } else {
             const fn = flow[id]?.data?.fn;
 
             let passportValues =
               fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
 
-            if (fn && (fn === "flag" || passportValues !== undefined)) {
+            // TODO: refactor ALL of this!
+            if (fn && passportValues !== undefined) {
+              if (!Array.isArray(passportValues))
+                passportValues = [passportValues];
+
               const responses = flow[id]?.edges.map((id) => ({
                 id,
                 ...flow[id],
@@ -504,7 +520,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                 if (fn !== "flag") {
                   set({
                     breadcrumbs: {
-                      ...breadcrumbs,
+                      ..._breadcrumbs,
                       [id]: {
                         answers: [responseThatCanBeAutoAnswered.id],
                         auto: true,
@@ -513,7 +529,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                   });
                 }
 
-                nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id);
+                nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id, ids);
               } else {
                 ids.add(id);
               }
@@ -524,13 +540,15 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         });
     };
 
+    const ids: Set<nodeId | Array<nodeId>> = new Set();
+
     Object.entries(breadcrumbs)
       .reverse()
       .forEach(([, { answers }]: any) => {
-        answers.forEach((answer) => nodeIdsConnectedFrom(answer));
+        answers.forEach((answer) => nodeIdsConnectedFrom(answer, ids));
       });
 
-    nodeIdsConnectedFrom(ROOT_NODE_KEY);
+    nodeIdsConnectedFrom(ROOT_NODE_KEY, ids);
 
     return Array.from(ids);
   },
