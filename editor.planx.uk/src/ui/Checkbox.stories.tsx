@@ -10,7 +10,6 @@ const metadata: Meta = {
 
 export const Basic = (args) => <Checkbox {...args} />;
 Basic.args = {
-  label: "Option",
   checked: false,
 };
 

@@ -2,25 +2,10 @@ import Box from "@material-ui/core/Box";
 import { Meta } from "@storybook/react/types-6-0";
 import React, { useState } from "react";
 
+import ButtonBase from "./ButtonBase";
 import DecisionButton from "./DecisionButton";
 import DescriptionButton from "./DescriptionButton";
 import ImageButton from "./ImageButton";
-
-const Wrapper = (Story, props) => {
-  const [selected, setSelected] = useState<boolean>();
-
-  return (
-    <Box maxWidth={300}>
-      <Story
-        args={{
-          selected,
-          onClick: () => setSelected(!selected),
-          ...props.args,
-        }}
-      />
-    </Box>
-  );
-};
 
 const metadata: Meta = {
   title: "Design System/Atoms/Buttons",
@@ -29,7 +14,14 @@ const metadata: Meta = {
       default: "dark",
     },
   },
-  decorators: [Wrapper],
+  component: ButtonBase,
+  decorators: [
+    (Story) => (
+      <Box maxWidth={300}>
+        <Story />
+      </Box>
+    ),
+  ],
 };
 
 export const Image = (args) => <ImageButton {...args} />;

@@ -4,7 +4,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
-import Checkbox from "ui/Checkbox";
+import ChecklistItem from "ui/ChecklistItem";
 import { ExpandableList, ExpandableListItem } from "ui/ExpandableList";
 
 interface Props extends Checklist {
@@ -84,7 +84,7 @@ const ChecklistComponent: React.FC<Props> = ({
 
       {options ? (
         options.map((option: any) => (
-          <Checkbox
+          <ChecklistItem
             onChange={changeCheckbox(option.id)}
             key={option.data.text}
             label={option.data.text}
@@ -109,7 +109,7 @@ const ChecklistComponent: React.FC<Props> = ({
               >
                 <div>
                   {group.children.map((option: any) => (
-                    <Checkbox
+                    <ChecklistItem
                       onChange={changeCheckbox(option.id)}
                       key={option.data.text}
                       label={option.data.text}
