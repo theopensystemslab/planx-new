@@ -19,6 +19,15 @@ export const useStyles = makeStyles((theme) => ({
     position: "relative",
     height: "100%",
     marginBottom: theme.spacing(1),
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+  },
+  descriptionButton: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    height: 0,
+    padding: 0,
+    paddingTop: "100%",
+    position: "relative",
   },
   decision: {
     minHeight: 200,
@@ -56,58 +65,38 @@ interface Props {
   onClick: Function;
 }
 
-const Response: React.FC<Props> = ({ response, selected, ...props }) => {
-  const classes = useStyles();
-  return (
-    <ButtonBase
-      href=""
-      className={classNames(classes.button, selected && classes.selected)}
-      classes={{ focusVisible: classes.onFocus }}
-      {...(props as any)}
-    >
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        flex={1}
-        py={1}
-        px={2}
-      >
-        <Typography variant="body2">{response.title}</Typography>
-        <Box className={classes.key}>{response.responseKey.toUpperCase()}</Box>
-      </Box>
-    </ButtonBase>
-  );
-};
-
-export function DescriptionResponse(props: Props) {
+export default function DescriptionButton(props: Props) {
   const { response, selected } = props;
   const classes = useStyles();
 
   return (
     <ButtonBase
       href=""
-      className={classNames(classes.button, selected && classes.selected)}
+      className={classNames(
+        classes.button,
+        classes.descriptionButton,
+        selected && classes.selected
+      )}
       classes={{ focusVisible: classes.onFocus }}
+      {...(props as any)}
     >
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        flex={1}
-        py={1}
-        px={2}
-      >
-        <Typography variant="h6">{response.title}</Typography>
-        <Typography variant="body2">
-          {response.responseKey.toUpperCase()}
+      <Box position="absolute" top={0} left={0} width="100%" px={2} py={1}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          width="100%"
+          pb={1}
+        >
+          <Typography variant="h6">{response.title}</Typography>
+          <Typography variant="body2">
+            {response.responseKey.toUpperCase()}
+          </Typography>
+        </Box>
+        <Typography align="left" variant="body2">
+          {response.description}
         </Typography>
       </Box>
-      {/* <Typography>
-          {response.description}
-        </Typography> */}
     </ButtonBase>
   );
 }
-
-export default Response;

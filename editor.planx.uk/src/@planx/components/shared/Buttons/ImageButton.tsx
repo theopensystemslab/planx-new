@@ -1,15 +1,21 @@
 import Box from "@material-ui/core/Box";
 import ButtonBase from "@material-ui/core/ButtonBase";
-// import ImageIcon from "@material-ui/icons/Image";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import classnames from "classnames";
-import React from "react";
+import ImageIcon from "@material-ui/icons/Image";
+import React, { useState } from "react";
 
 import theme from "../../../../theme";
 
 export interface Props {
-  selected?: boolean;
+  response: {
+    id: string;
+    responseKey: string;
+    title: string;
+    img?: string;
+  };
+  onClick: Function;
+  selected: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -35,17 +41,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ImageResponse(props: Props) {
-  const { selected } = props;
+  const { selected, response } = props;
+  const [imgError, setImgError] = useState(false);
+
   const bgColor = selected
     ? theme.palette.primary.main
     : theme.palette.secondary.main;
   const classes = useStyles();
 
+  const onError = () => {
+    if (!imgError) {
+      setImgError(true);
+    }
+  };
+
   return (
-    <ButtonBase className={classes.root}>
+    <ButtonBase className={classes.root} {...(props as any)}>
       <Box
         width="100%"
-        paddingTop={"100%"}
+        paddingTop="100%"
         position="relative"
         height={0}
         overflow="hidden"
@@ -53,11 +67,18 @@ function ImageResponse(props: Props) {
         borderBottom="none"
         bgcolor="background.default"
       >
-        {/* <img width="100%" height="auto" src="https://i.scdn.co/image/ab67616d00001e027159c7cb4d150eb7479c4cf7" /> */}
-        <img
-          className={classes.img}
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Candle.jpg/1200px-Candle.jpg"
-        />
+        {imgError ? (
+          <Box
+            className={classes.img}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <ImageIcon />
+          </Box>
+        ) : (
+          <img className={classes.img} src={response.img} onError={onError} />
+        )}
       </Box>
       <Box
         width="100%"
@@ -68,12 +89,12 @@ function ImageResponse(props: Props) {
         px={2.25}
         py={1.75}
       >
-        <Typography variant="body2">This option</Typography>
+        <Typography variant="body2">{response.title}</Typography>
         <Typography
           variant="body2"
           className={selected ? classes.keySelected : classes.key}
         >
-          A
+          {response.responseKey.toUpperCase()}
         </Typography>
       </Box>
     </ButtonBase>

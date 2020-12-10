@@ -1,13 +1,13 @@
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
+import DecisionButton from "@planx/components/shared/Buttons/DecisionButton";
+import DescriptionButton from "@planx/components/shared/Buttons/DescriptionButton";
+import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
-import ImageResponse from "@planx/components/shared/Preview/ImageResponse";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
-
-import Response, { DescriptionResponse } from "./Response";
 
 export interface IQuestion {
   text?: string;
@@ -62,7 +62,7 @@ const Question: React.FC<IQuestion> = (props) => {
           policyRef={props.policyRef}
           howMeasured={props.howMeasured}
         />
-        <Grid container spacing={1}>
+        <Grid container spacing={layout === Layout.Descriptions ? 2 : 1}>
           {!props.text?.startsWith("Sorry") &&
             props.responses?.map((response) => {
               const onClick = () => {
@@ -70,33 +70,30 @@ const Question: React.FC<IQuestion> = (props) => {
                 props.handleSubmit(response.id);
               };
               const selected = a === response.responseKey;
+              const buttonProps = {
+                response,
+                selected,
+                onClick,
+              };
 
               switch (layout) {
                 case Layout.Basic:
                   return (
                     <Grid item xs={12} key={response.id}>
-                      <Response
-                        response={response}
-                        selected={selected}
-                        onClick={onClick}
-                      />
+                      <DecisionButton {...buttonProps} />
                     </Grid>
                   );
                 case Layout.Descriptions:
                   return (
-                    <Grid item xs={4} key={response.id}>
-                      <DescriptionResponse
-                        selected={selected}
-                        response={response}
-                        onClick={onClick}
-                      />
+                    <Grid item xs={6} sm={4} key={response.id}>
+                      <DescriptionButton {...buttonProps} />
                     </Grid>
                   );
 
                 case Layout.Images:
                   return (
                     <Grid item xs={12} sm={6} key={response.id}>
-                      <ImageResponse />
+                      <ImageButton {...buttonProps} />
                     </Grid>
                   );
               }
