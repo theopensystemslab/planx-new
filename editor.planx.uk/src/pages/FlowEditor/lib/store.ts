@@ -438,19 +438,20 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         )
         .forEach((id) => {
           if (flow[id]?.type === TYPES.Page) {
+            if (!pids) {
+              pids = new Set();
+              nodeIdsConnectedFrom(id, pids, {});
+              pids = [...pids];
+            }
+
             if (ids.size === 0) {
-              if (!pids) {
-                pids = new Set();
-                nodeIdsConnectedFrom(id, pids, {});
-                pids = [...pids];
-              }
-
               nodeIdsConnectedFrom(id, ids);
-
               const all = [...ids];
               if (all.length > 0) {
                 ids.clear();
                 ids.add([id, pids, all[0]] as any);
+              } else {
+                // console.log("donezo");
               }
             } else {
               ids.add(id);
@@ -586,7 +587,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     if (upcoming.length > 0) {
       let id = upcoming[0];
       if (Array.isArray(id)) {
-        const [pageId, ...childIds] = id as Array<string>;
+        const [pageId, childIds] = id as Array<string>;
         return {
           id: pageId,
           ...flow[pageId],

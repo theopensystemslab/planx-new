@@ -19,12 +19,23 @@ test("only return page's children when page is the node that's currently active"
       },
       page: {
         type: TYPES.Page,
-        edges: ["page_node1", "page_node2"],
+        edges: ["page_node1", "page_node3"],
       },
       page_node1: {
-        type: TYPES.Content,
+        type: TYPES.Statement,
+        edges: ["page_node1_a", "page_node1_b"],
+      },
+      page_node1_a: {
+        type: TYPES.Response,
+        edges: ["page_node2"],
+      },
+      page_node1_b: {
+        type: TYPES.Response,
       },
       page_node2: {
+        type: TYPES.Content,
+      },
+      page_node3: {
         type: TYPES.Content,
       },
       root_node2: {
@@ -55,18 +66,26 @@ test("only return page's children when page is the node that's currently active"
   // upcoming nodes = [[PAGE, ...pageChildren],c,d] <- PAGE now first so we expand it into array
 
   expect(getState().upcomingCardIds()).toEqual([
-    ["page", ["page_node1", "page_node2"], "page_node1"],
+    ["page", ["page_node1", "page_node3"], "page_node1"],
     "root_node2",
   ]);
 
-  getState().record("page_node1", []);
+  getState().record("page_node1", ["page_node1_a"]);
 
-  expect(getState().upcomingCardIds()).toEqual([
-    ["page", ["page_node1", "page_node2"], "page_node2"],
-    "root_node2",
-  ]);
+  // expect(getState().upcomingCardIds()).toEqual([
+  //   ["page", ["page_node1", "page_node2", "page_node3"], "page_node2"],
+  //   "root_node2",
+  // ]);
+  expect(getState().upcomingCardIds()).toEqual(1);
 
   getState().record("page_node2", []);
+
+  expect(getState().upcomingCardIds()).toEqual([
+    ["page", ["page_node1", "page_node2", "page_node3"], "page_node3"],
+    "root_node2",
+  ]);
+
+  getState().record("page_node3", []);
 
   // after there are no more nodes inside page, we then just show the nodes after it
   // upcoming nodes = [[PAGE, (no children)],c,d] => [c,d]
@@ -82,7 +101,7 @@ test("only return page's children when page is the node that's currently active"
   getState().record("page_node1");
 
   expect(getState().upcomingCardIds()).toEqual([
-    ["page", ["page_node1", "page_node2"], "page_node1"],
+    ["page", ["page_node1", "page_node3"], "page_node1"],
     "root_node2",
   ]);
 });
