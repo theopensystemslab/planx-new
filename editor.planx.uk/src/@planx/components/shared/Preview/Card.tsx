@@ -22,6 +22,7 @@ const Card: React.FC<any> = ({
   children,
   isValid = true,
   handleBackClick,
+  inner = false,
   handleSubmit,
   ...props
 }) => {

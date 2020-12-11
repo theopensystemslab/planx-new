@@ -446,7 +446,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
             if (ids.size === 0) {
               nodeIdsConnectedFrom(id, ids);
+
               const all = [...ids];
+              console.log({ pids, all });
+
               if (all.length > 0) {
                 ids.clear();
                 ids.add([id, pids, all[0]] as any);

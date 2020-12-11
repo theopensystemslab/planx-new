@@ -33,6 +33,7 @@ export interface EditorProps<Type, Data> {
 }
 
 export type PublicProps<Data, UserData = {}> = Data & {
+  handleBackClick?: () => void;
   handleSubmit?: (value?: UserData) => void;
   resetButton?: boolean;
   resetPreview?: () => void;

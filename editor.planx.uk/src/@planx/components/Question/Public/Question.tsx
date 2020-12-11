@@ -24,6 +24,7 @@ export interface IQuestion {
   }[];
   handleSubmit: handleSubmit;
   handleBackClick?;
+  selected?;
 }
 
 enum Layout {
@@ -35,7 +36,7 @@ enum Layout {
 const Question: React.FC<IQuestion> = (props) => {
   const formik = useFormik({
     initialValues: {
-      selected: { a: "" },
+      selected: { a: (props.selected || [])[0] },
     },
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));

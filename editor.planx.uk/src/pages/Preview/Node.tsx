@@ -27,6 +27,8 @@ export type handleSubmit = (_?: componentOutput) => void;
 interface Props {
   handleSubmit: handleSubmit;
   node: node;
+  id: string;
+  inner?: boolean;
 }
 
 const Node: React.FC<any> = (props: Props) => {
@@ -54,13 +56,16 @@ const Node: React.FC<any> = (props: Props) => {
     ...props.node.data,
     resetPreview,
     handleSubmit: props.handleSubmit,
-    handleBackClick:
-      goBackable.length > 0
-        ? () => {
-            record(goBackable.pop());
-          }
-        : undefined,
+    selected: breadcrumbs[props.node.id]?.answers || [],
   };
+
+  if (!props.inner) {
+    if (goBackable.length > 0) {
+      allProps.handleBackClick = () => {
+        record(goBackable.pop());
+      };
+    }
+  }
 
   switch (props.node.type) {
     case TYPES.Checklist:
@@ -126,7 +131,6 @@ const Node: React.FC<any> = (props: Props) => {
       );
 
     case TYPES.Page:
-      console.log({ props });
       return (
         <Page {...allProps}>
           {(props.node as any).childIds.map((id) => (
@@ -136,6 +140,7 @@ const Node: React.FC<any> = (props: Props) => {
               handleSubmit={(values: componentOutput) => {
                 record(id, values);
               }}
+              inner
             />
           ))}
         </Page>
@@ -226,7 +231,6 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Filter:
     case TYPES.Flow:
     case TYPES.InternalPortal:
-    case TYPES.Page:
     case TYPES.Report:
     case TYPES.Response:
     case TYPES.SignIn:
