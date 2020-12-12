@@ -71,7 +71,6 @@ const Question: React.FC<IQuestion> = (props) => {
               };
               const selected = a === response.responseKey;
               const buttonProps = {
-                response,
                 selected,
                 onClick,
               };
@@ -80,20 +79,20 @@ const Question: React.FC<IQuestion> = (props) => {
                 case Layout.Basic:
                   return (
                     <Grid item xs={12} key={response.id}>
-                      <DecisionButton {...buttonProps} />
+                      <DecisionButton {...buttonProps} {...response} />
                     </Grid>
                   );
                 case Layout.Descriptions:
                   return (
                     <Grid item xs={6} sm={4} key={response.id}>
-                      <DescriptionButton {...buttonProps} />
+                      <DescriptionButton {...buttonProps} {...response} />
                     </Grid>
                   );
 
                 case Layout.Images:
                   return (
                     <Grid item xs={12} sm={6} key={response.id}>
-                      <ImageButton {...buttonProps} />
+                      <ImageButton {...buttonProps} {...response} />
                     </Grid>
                   );
               }

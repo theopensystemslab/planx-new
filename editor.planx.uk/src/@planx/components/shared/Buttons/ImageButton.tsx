@@ -3,17 +3,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ImageIcon from "@material-ui/icons/Image";
 import React, { useState } from "react";
+import Checkbox from "ui/Checkbox";
 
 import theme from "../../../../theme";
 import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
 
 export interface Props extends ButtonProps {
-  response: {
-    id: string;
-    responseKey: string;
-    title: string;
-    img?: string;
-  };
+  title: string;
+  responseKey?: string;
+  img?: string;
   checkbox?: boolean;
 }
 
@@ -32,13 +30,14 @@ const useStyles = makeStyles((theme) => ({
   keySelected: {
     opacity: 0.7,
   },
+  title: {
+    marginLeft: theme.spacing(1.5),
+  },
 }));
 
 function ImageResponse(props: Props) {
-  const { selected, response } = props;
-  const [imgError, setImgError] = useState(
-    !(response.img && response.img.length)
-  );
+  const { selected, title, responseKey, img, checkbox } = props;
+  const [imgError, setImgError] = useState(!(img && img.length));
 
   const bgColor = selected
     ? theme.palette.primary.main
@@ -75,7 +74,7 @@ function ImageResponse(props: Props) {
               <ImageIcon />
             </Box>
           ) : (
-            <img className={classes.img} src={response.img} onError={onError} />
+            <img className={classes.img} src={img} onError={onError} />
           )}
         </Box>
         <Box
@@ -84,15 +83,25 @@ function ImageResponse(props: Props) {
           color={selected ? "primary.contrastText" : "text.primary"}
           display="flex"
           justifyContent="space-between"
-          px={2.25}
-          py={1.75}
+          px={checkbox ? 1 : 2.25}
+          py={checkbox ? 1 : 1.75}
         >
-          <Typography variant="body2">{response.title}</Typography>
+          <Box display="flex" alignItems="center">
+            {checkbox && (
+              <Checkbox
+                checked={selected}
+                color={selected ? "primary.contrastText" : "text.primary"}
+              />
+            )}
+            <Typography variant="body2" className={checkbox && classes.title}>
+              {title}
+            </Typography>
+          </Box>
           <Typography
             variant="body2"
             className={selected ? classes.keySelected : classes.key}
           >
-            {response.responseKey.toUpperCase()}
+            {responseKey?.toUpperCase()}
           </Typography>
         </Box>
       </Box>

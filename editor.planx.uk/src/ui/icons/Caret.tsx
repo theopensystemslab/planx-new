@@ -5,7 +5,8 @@ import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 15,
+    height: 8,
+    width: 19,
     transition: "transform 0.25s ease-out",
   },
   expanded: {

@@ -6,6 +6,9 @@ import Checkbox from "./Checkbox";
 const metadata: Meta = {
   title: "Design System/Atoms/Form Elements/Checkbox",
   component: Checkbox,
+  argTypes: {
+    color: { control: "color" },
+  },
 };
 
 export const Basic = (args) => <Checkbox {...args} />;

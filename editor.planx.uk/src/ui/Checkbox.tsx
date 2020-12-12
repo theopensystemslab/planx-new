@@ -1,34 +1,42 @@
 import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
-import classNames from "classnames";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import * as React from "react";
 
-export const useClasses = makeStyles((theme) => ({
+import theme from "../theme";
+
+export const useClasses = makeStyles<Theme, Props>((theme) => ({
   icon: {
+    display: (props) => (props.checked ? "block" : "none"),
     content: "''",
-    display: "block",
     position: "absolute",
     height: 18,
     width: 10,
-    borderBottom: `2.5px solid ${theme.palette.text.primary}`,
-    borderRight: `2.5px solid ${theme.palette.text.primary}`,
+    borderColor: (props) => props.color || theme.palette.text.primary,
+    borderBottom: "2.5px solid",
+    borderRight: "2.5px solid",
     left: "50%",
     top: "42%",
     transform: "translate(-50%, -50%) rotate(45deg)",
   },
-  hide: {
-    display: "none",
-  },
 }));
 
-export default function Checkbox({ checked }: { checked: boolean }): FCReturn {
-  const classes = useClasses();
+interface Props {
+  checked: boolean;
+  color?: string;
+}
+
+export default function Checkbox({ checked, color }: Props): FCReturn {
+  const classes = useClasses({ checked, color });
 
   return (
-    <Box position="relative" border="1px solid black" height={32} width={32}>
-      <span
-        className={classNames(classes.icon, { [classes.hide]: !checked })}
-      />
+    <Box
+      position="relative"
+      border="1px solid"
+      borderColor={color || "text.primary"}
+      height={32}
+      width={32}
+    >
+      <span className={classes.icon} />
     </Box>
   );
 }

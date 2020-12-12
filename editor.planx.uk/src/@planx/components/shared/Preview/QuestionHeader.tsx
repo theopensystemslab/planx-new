@@ -48,6 +48,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               fontWeight="h3.fontWeight"
               letterSpacing="-0.02em"
               role="heading"
+              mr={1}
             >
               {title}
             </Box>

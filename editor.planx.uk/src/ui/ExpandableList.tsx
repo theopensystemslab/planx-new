@@ -16,7 +16,7 @@ const useListClasses = makeStyles(() => ({
 
 const useItemClasses = makeStyles((theme) => ({
   root: {
-    padding: `theme.spacing(1)`,
+    padding: `${theme.spacing(1)}px ${theme.spacing(1.5)}px`,
   },
   title: {
     cursor: "pointer",
@@ -45,9 +45,8 @@ export function ExpandableListItem(props: {
     >
       <Box
         display="flex"
-        alignItems="center"
+        alignItems="flex-start"
         justifyContent="space-between"
-        pb={2}
         className={classes.title}
         onClick={() => {
           props.onToggle && props.onToggle();

@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme) => ({
 
 export interface Props {
   selected: boolean;
-  onClick: (MouseEvent) => void;
   children?: React.ReactNode;
+  onClick?: (MouseEvent) => void;
 }
 
 export default function ButtonBase(props: Props): FCReturn {

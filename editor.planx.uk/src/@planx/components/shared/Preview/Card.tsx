@@ -4,12 +4,8 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import React from "react";
 
 const useStyles = makeStyles<Theme>(() => ({
-  container: {
-    // TODO: Consider removing this because it adds unwanted margins to collapsed/invisible
-    // components as well (e.g. Drawer)
-    "& > * + *": {
-      marginTop: 16,
-    },
+  button: {
+    marginTop: 16,
   },
 }));
 
@@ -29,7 +25,6 @@ const Card: React.FC<any> = ({
 
   return (
     <Box
-      className={classes.container}
       bgcolor="background.default"
       py={{ xs: 2, md: 4 }}
       px={{ xs: 2, md: 5 }}
@@ -42,6 +37,7 @@ const Card: React.FC<any> = ({
 
       {handleSubmit && (
         <Button
+          className={classes.button}
           variant="contained"
           color="primary"
           size="large"

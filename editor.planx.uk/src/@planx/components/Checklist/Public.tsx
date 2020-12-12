@@ -1,4 +1,7 @@
+import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
 import type { Checklist } from "@planx/components/Checklist/model";
+import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
@@ -9,6 +12,12 @@ import { ExpandableList, ExpandableListItem } from "ui/ExpandableList";
 
 interface Props extends Checklist {
   handleSubmit: handleSubmit;
+}
+
+enum Layout {
+  Basic,
+  Grouped,
+  Images,
 }
 
 function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
@@ -42,6 +51,14 @@ const ChecklistComponent: React.FC<Props> = ({
   });
 
   const [expandedGroups, setExpandedGroups] = useState<Array<number>>([0]);
+
+  const layout = options
+    ? options.find((o) => o.data.img)
+      ? Layout.Images
+      : Layout.Basic
+    : groupedOptions
+    ? Layout.Grouped
+    : Layout.Basic;
 
   const flatOptions = options
     ? options
@@ -82,47 +99,65 @@ const ChecklistComponent: React.FC<Props> = ({
         howMeasured={howMeasured}
       />
 
-      {options ? (
-        options.map((option: any) => (
-          <ChecklistItem
-            onChange={changeCheckbox(option.id)}
-            key={option.data.text}
-            label={option.data.text}
-            id={option.id}
-            checked={formik.values.checked.includes(option.id)}
-          />
-        ))
-      ) : groupedOptions ? (
-        <ExpandableList>
-          {groupedOptions.map((group, index) => {
-            const isExpanded = expandedGroups.includes(index);
-            return (
-              <ExpandableListItem
-                key={index}
-                expanded={isExpanded}
-                onToggle={() => {
-                  setExpandedGroups((previous) =>
-                    toggleInArray(index, previous)
-                  );
-                }}
-                title={group.title}
-              >
-                <div>
-                  {group.children.map((option: any) => (
-                    <ChecklistItem
-                      onChange={changeCheckbox(option.id)}
-                      key={option.data.text}
-                      label={option.data.text}
-                      id={option.id}
-                      checked={formik.values.checked.includes(option.id)}
-                    />
-                  ))}
-                </div>
-              </ExpandableListItem>
-            );
-          })}
-        </ExpandableList>
-      ) : null}
+      <Grid container spacing={layout === Layout.Images ? 1 : 0}>
+        {options ? (
+          options.map((option: any) =>
+            layout === Layout.Basic ? (
+              <Grid item xs={12}>
+                <ChecklistItem
+                  onChange={changeCheckbox(option.id)}
+                  key={option.data.text}
+                  label={option.data.text}
+                  id={option.id}
+                  checked={formik.values.checked.includes(option.id)}
+                />
+              </Grid>
+            ) : (
+              <Grid item xs={12} sm={6}>
+                <ImageButton
+                  title={option.data.text}
+                  img={option.data.img}
+                  selected={formik.values.checked.includes(option.id)}
+                  onClick={changeCheckbox(option.id)}
+                  checkbox
+                />
+              </Grid>
+            )
+          )
+        ) : groupedOptions ? (
+          <Grid item xs={12}>
+            <ExpandableList>
+              {groupedOptions.map((group, index) => {
+                const isExpanded = expandedGroups.includes(index);
+                return (
+                  <ExpandableListItem
+                    key={index}
+                    expanded={isExpanded}
+                    onToggle={() => {
+                      setExpandedGroups((previous) =>
+                        toggleInArray(index, previous)
+                      );
+                    }}
+                    title={group.title}
+                  >
+                    <Box py={2}>
+                      {group.children.map((option: any) => (
+                        <ChecklistItem
+                          onChange={changeCheckbox(option.id)}
+                          key={option.data.text}
+                          label={option.data.text}
+                          id={option.id}
+                          checked={formik.values.checked.includes(option.id)}
+                        />
+                      ))}
+                    </Box>
+                  </ExpandableListItem>
+                );
+              })}
+            </ExpandableList>
+          </Grid>
+        ) : null}
+      </Grid>
     </Card>
   );
 };

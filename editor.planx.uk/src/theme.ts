@@ -43,6 +43,9 @@ const theme = createMuiTheme({
     action: {
       selected: "#F8F8F8",
     },
+    background: {
+      default: "#fff",
+    },
   },
   props: {
     // MuiButton: {

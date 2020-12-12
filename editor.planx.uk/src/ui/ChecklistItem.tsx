@@ -53,7 +53,7 @@ export default function ChecklistItem({
   const input = React.createRef<HTMLInputElement>();
 
   return (
-    <Box mb={1}>
+    <Box mb={0.5}>
       <input
         onChange={() => {
           onChange(!checked);

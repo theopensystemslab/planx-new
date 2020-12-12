@@ -5,16 +5,13 @@ import React from "react";
 import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
 
 interface Props extends ButtonProps {
-  response: {
-    id: string;
-    responseKey: string;
-    title: string;
-    description?: string;
-  };
+  responseKey: string;
+  title: string;
+  description?: string;
 }
 
 export default function DescriptionButton(props: Props) {
-  const { response } = props;
+  const { responseKey, title, description } = props;
 
   return (
     <ButtonBase {...props}>
@@ -35,13 +32,11 @@ export default function DescriptionButton(props: Props) {
             width="100%"
             pb={1}
           >
-            <Typography variant="h6">{response.title}</Typography>
-            <Typography variant="body2">
-              {response.responseKey.toUpperCase()}
-            </Typography>
+            <Typography variant="h6">{title}</Typography>
+            <Typography variant="body2">{responseKey.toUpperCase()}</Typography>
           </Box>
           <Typography align="left" variant="body2">
-            {response.description}
+            {description}
           </Typography>
         </Box>
       </Box>

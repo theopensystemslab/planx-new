@@ -12,15 +12,16 @@ export const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props extends ButtonProps {
-  response: {
-    id: string;
-    responseKey: string;
-    title: string;
-    description?: string;
-  };
+  responseKey: string;
+  title: string;
 }
 
-const DecisionButton: React.FC<Props> = ({ response, selected, ...props }) => {
+const DecisionButton: React.FC<Props> = ({
+  responseKey,
+  title,
+  selected,
+  ...props
+}) => {
   const classes = useStyles();
   return (
     <ButtonBase selected={selected} {...props}>
@@ -32,8 +33,8 @@ const DecisionButton: React.FC<Props> = ({ response, selected, ...props }) => {
         py={1}
         px={2}
       >
-        <Typography variant="body2">{response.title}</Typography>
-        <Box className={classes.key}>{response.responseKey.toUpperCase()}</Box>
+        <Typography variant="body2">{title}</Typography>
+        <Box className={classes.key}>{responseKey.toUpperCase()}</Box>
       </Box>
     </ButtonBase>
   );
