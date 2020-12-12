@@ -34,7 +34,7 @@ const DecisionButton: React.FC<Props> = ({
         px={2}
       >
         <Typography variant="body2">{title}</Typography>
-        <Box className={classes.key}>{responseKey?.toUpperCase()}</Box>
+        <Box className={classes.key}>{responseKey}</Box>
       </Box>
     </ButtonBase>
   );

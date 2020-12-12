@@ -101,7 +101,7 @@ function ImageResponse(props: Props) {
             variant="body2"
             className={selected ? classes.keySelected : classes.key}
           >
-            {responseKey?.toUpperCase()}
+            {responseKey}
           </Typography>
         </Box>
       </Box>

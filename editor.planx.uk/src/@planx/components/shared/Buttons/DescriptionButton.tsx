@@ -33,9 +33,7 @@ export default function DescriptionButton(props: Props) {
             pb={1}
           >
             <Typography variant="h6">{title}</Typography>
-            <Typography variant="body2">
-              {responseKey?.toUpperCase()}
-            </Typography>
+            <Typography variant="body2">{responseKey}</Typography>
           </Box>
           <Typography align="left" variant="body2">
             {description}
