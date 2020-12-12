@@ -68,7 +68,15 @@ WithImages.args = {
   policyRef: "Policy ref here",
   howMeasured: "How it is measured",
   options: [
-    { id: "a", data: { val: "a", text: "Apples" } },
+    {
+      id: "a",
+      data: {
+        val: "a",
+        text: "Apples",
+        img:
+          "https://www.applesfromny.com/wp-content/uploads/2020/05/Jonagold_NYAS-Apples2.png",
+      },
+    },
     {
       id: "b",
       data: {

@@ -4,8 +4,10 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import React from "react";
 
 const useStyles = makeStyles<Theme>(() => ({
-  button: {
-    marginTop: 16,
+  container: {
+    "& > * + *": {
+      marginTop: 20,
+    },
   },
 }));
 
@@ -25,6 +27,7 @@ const Card: React.FC<any> = ({
 
   return (
     <Box
+      className={classes.container}
       bgcolor="background.default"
       py={{ xs: 2, md: 4 }}
       px={{ xs: 2, md: 5 }}
@@ -37,7 +40,6 @@ const Card: React.FC<any> = ({
 
       {handleSubmit && (
         <Button
-          className={classes.button}
           variant="contained"
           color="primary"
           size="large"
