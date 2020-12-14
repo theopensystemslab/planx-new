@@ -71,11 +71,11 @@ export const ICONS: {
 } as const;
 
 interface MoreInformationProps {
-  changeField: (any) => any;
-  howMeasured: string;
-  policyRef: string;
-  info: string;
-  definitionImg: string;
+  changeField: (changes: any) => any;
+  howMeasured?: string;
+  policyRef?: string;
+  info?: string;
+  definitionImg?: string;
 }
 
 export const MoreInformation = ({
@@ -136,7 +136,7 @@ export const MoreInformation = ({
 
 export interface InternalNotesProps {
   name?: string;
-  value: string;
+  value?: string;
   onChange: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
 

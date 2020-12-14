@@ -8,7 +8,7 @@ import { ChromePicker } from "react-color";
 export interface Props {
   label?: string;
   inline?: boolean;
-  color: string;
+  color?: string;
   onChange?: (newColor: string) => void;
 }
 

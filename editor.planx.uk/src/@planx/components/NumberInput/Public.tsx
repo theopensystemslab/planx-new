@@ -18,7 +18,7 @@ export default function ContentComponent(props: Props): FCReturn {
   return (
     <Card
       handleSubmit={() => {
-        props.handleSubmit(parsed || 0);
+        props.handleSubmit && props.handleSubmit(parsed || 0);
       }}
       isValid={parsed !== null}
     >
