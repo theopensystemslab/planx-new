@@ -103,17 +103,16 @@ const ChecklistComponent: React.FC<Props> = ({
         {options ? (
           options.map((option: any) =>
             layout === Layout.Basic ? (
-              <Grid item xs={12}>
+              <Grid item xs={12} key={option.data.text}>
                 <ChecklistItem
                   onChange={changeCheckbox(option.id)}
-                  key={option.data.text}
                   label={option.data.text}
                   id={option.id}
                   checked={formik.values.checked.includes(option.id)}
                 />
               </Grid>
             ) : (
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} key={option.data.text}>
                 <ImageButton
                   title={option.data.text}
                   img={option.data.img}

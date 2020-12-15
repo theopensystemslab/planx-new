@@ -35,6 +35,7 @@ export default function Checkbox({ checked, color }: Props): FCReturn {
       borderColor={color || "text.primary"}
       height={32}
       width={32}
+      flexShrink={0}
     >
       <span className={classes.icon} />
     </Box>

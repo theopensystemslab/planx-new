@@ -17,7 +17,7 @@ export interface IQuestion {
   howMeasured?: string;
   responses: {
     id: string;
-    responseKey: string;
+    responseKey: string | number;
     title: string;
     description?: string;
     img?: string;

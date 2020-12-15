@@ -12,7 +12,7 @@ export const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props extends ButtonProps {
-  responseKey: string;
+  responseKey: string | number;
   title: string;
 }
 
@@ -34,7 +34,9 @@ const DecisionButton: React.FC<Props> = ({
         px={2}
       >
         <Typography variant="body2">{title}</Typography>
-        <Box className={classes.key}>{responseKey}</Box>
+        {responseKey && (
+          <Box className={classes.key}>{String(responseKey).toUpperCase()}</Box>
+        )}
       </Box>
     </ButtonBase>
   );

@@ -5,7 +5,7 @@ import React from "react";
 import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
 
 interface Props extends ButtonProps {
-  responseKey: string;
+  responseKey: string | number;
   title: string;
   description?: string;
 }
@@ -33,7 +33,11 @@ export default function DescriptionButton(props: Props) {
             pb={1}
           >
             <Typography variant="h6">{title}</Typography>
-            <Typography variant="body2">{responseKey}</Typography>
+            {responseKey && (
+              <Typography variant="body2">
+                {String(responseKey).toUpperCase()}
+              </Typography>
+            )}
           </Box>
           <Typography align="left" variant="body2">
             {description}

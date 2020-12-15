@@ -2,7 +2,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ImageIcon from "@material-ui/icons/Image";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useRef,useState } from "react";
 import Checkbox from "ui/Checkbox";
 
 import theme from "../../../../theme";
@@ -10,7 +10,7 @@ import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
 
 export interface Props extends ButtonProps {
   title: string;
-  responseKey?: string;
+  responseKey?: string | number;
   img?: string;
   checkbox?: boolean;
 }
@@ -38,6 +38,22 @@ const useStyles = makeStyles((theme) => ({
 function ImageResponse(props: Props) {
   const { selected, title, responseKey, img, checkbox } = props;
   const [imgError, setImgError] = useState(!(img && img.length));
+  const [multiline, setMultiline] = useState(false);
+
+  const textContentEl = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (textContentEl.current) {
+      const totalHeight = textContentEl.current.offsetHeight;
+
+      // It's possible to calculate the number of lines of text, but we need this
+      // to align differently even if there is only one line of text in this
+      // component but more in its neighbor
+      if (totalHeight > 50) {
+        setMultiline(true);
+      }
+    }
+  });
 
   const bgColor = selected
     ? theme.palette.primary.main
@@ -52,7 +68,7 @@ function ImageResponse(props: Props) {
 
   return (
     <ButtonBase {...props}>
-      <Box display="flex" flexDirection="column" width="100%">
+      <Box display="flex" flexDirection="column" width="100%" height="100%">
         <Box
           width="100%"
           paddingTop="100%"
@@ -77,8 +93,16 @@ function ImageResponse(props: Props) {
             <img className={classes.img} src={img} onError={onError} />
           )}
         </Box>
+        {/*
+          ref doesn't exist in the MUI type definitions, should be
+          available in v5, sigh.
+
+         https://github.com/mui-org/material-ui/issues/17010 
+        */}
         <Box
+          {...({ ref: textContentEl } as any)}
           width="100%"
+          flexGrow={1}
           bgcolor={bgColor}
           color={selected ? "primary.contrastText" : "text.primary"}
           display="flex"
@@ -86,7 +110,11 @@ function ImageResponse(props: Props) {
           px={checkbox ? 1 : 2.25}
           py={checkbox ? 1 : 1.75}
         >
-          <Box display="flex" alignItems="center">
+          <Box
+            display="flex"
+            alignItems={multiline ? "flex-start" : "center"}
+            height="100%"
+          >
             {checkbox && (
               <Checkbox
                 checked={selected}
@@ -97,12 +125,14 @@ function ImageResponse(props: Props) {
               {title}
             </Typography>
           </Box>
-          <Typography
-            variant="body2"
-            className={selected ? classes.keySelected : classes.key}
-          >
-            {responseKey}
-          </Typography>
+          {responseKey && (
+            <Typography
+              variant="body2"
+              className={selected ? classes.keySelected : classes.key}
+            >
+              {String(responseKey).toUpperCase()}
+            </Typography>
+          )}
         </Box>
       </Box>
     </ButtonBase>

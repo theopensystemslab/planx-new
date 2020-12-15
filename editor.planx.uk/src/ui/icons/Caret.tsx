@@ -19,8 +19,9 @@ export default function Caret(props: SvgIconProps & { expanded?: boolean }) {
 
   return (
     <SvgIcon
-      {...props}
-      className={classnames(classes.root, props.expanded && classes.expanded)}
+      className={classnames(classes.root, {
+        [classes.expanded]: props.expanded,
+      })}
       viewBox="0 0 14 8"
     >
       <path d="M1 1L7 7L13 1" stroke="black" fill="none" />
