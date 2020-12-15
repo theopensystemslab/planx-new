@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import type { TaskList } from "@planx/components/TaskList/model";
+import type { Task as ITask, TaskList } from "@planx/components/TaskList/model";
 import { PublicProps } from "@planx/components/ui";
 import classNames from "classnames";
 import React from "react";
@@ -151,7 +151,12 @@ const taskStyles = makeStyles((theme) => ({
   },
 }));
 
-const Task = ({ title, description, index, isLast }) => {
+const Task = ({
+  title,
+  description,
+  index,
+  isLast,
+}: ITask & { index: number; isLast: boolean }) => {
   const [expanded, setExpanded] = React.useState(false);
   const handleChange = () => {
     setExpanded(!expanded);
@@ -196,7 +201,12 @@ const Task = ({ title, description, index, isLast }) => {
 const TaskListComponent: React.FC<Props> = (props) => {
   const classes = taskStyles();
   return (
-    <Card handleSubmit={() => props.handleSubmit([])} isValid>
+    <Card
+      handleSubmit={() => {
+        props.handleSubmit && props.handleSubmit([]);
+      }}
+      isValid
+    >
       <QuestionHeader
         info={props.info}
         policyRef={props.policyRef}

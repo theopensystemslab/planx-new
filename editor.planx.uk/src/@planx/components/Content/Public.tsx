@@ -18,7 +18,9 @@ const useClasses = makeStyles<Theme, StyleProps>((theme) => ({
   content: {
     padding: theme.spacing(2),
     backgroundColor: (props) => props.color,
-    color: (props) => mostReadable(props.color, ["#fff", "#000"]).toHexString(),
+    color: (props) =>
+      mostReadable(props.color || "#fff", ["#fff", "#000"])?.toHexString() ||
+      "#000",
   },
 }));
 

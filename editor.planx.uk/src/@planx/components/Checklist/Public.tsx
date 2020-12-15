@@ -30,7 +30,7 @@ const ChecklistComponent: React.FC<Props> = ({
 }) => {
   // TODO: do we still need formik here?
 
-  const formik = useFormik({
+  const formik = useFormik<{ checked: Array<string> }>({
     initialValues: {
       checked: [],
     },
