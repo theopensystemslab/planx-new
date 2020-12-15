@@ -2,13 +2,14 @@ import Box from "@material-ui/core/Box";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles } from "@material-ui/core/styles";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { Task as ITask, TaskList } from "@planx/components/TaskList/model";
 import { PublicProps } from "@planx/components/ui";
 import classNames from "classnames";
 import React from "react";
+import Caret from "ui/icons/Caret";
 
 export type Props = PublicProps<TaskList>;
 
@@ -25,12 +26,11 @@ const taskStyles = makeStyles((theme) => ({
     textAlign: "center",
     top: 0,
     left: 0,
-    paddingTop: theme.spacing(2),
+    paddingTop: theme.spacing(1.25),
     overflow: "hidden",
     [theme.breakpoints.up("sm")]: {
       paddingTop: theme.spacing(1.25),
       width: theme.spacing(13.5),
-      paddingLeft: theme.spacing(5.25),
       textAlign: "left",
     },
     "&::after": {
@@ -41,16 +41,16 @@ const taskStyles = makeStyles((theme) => ({
       height: "100%",
       top: 0,
       position: "absolute",
-      left: "50%",
+      left: "48%",
       [theme.breakpoints.up("sm")]: {
-        left: theme.spacing(7.5),
+        left: "16%",
       },
     },
     "& > i": {
-      width: theme.spacing(3),
-      height: theme.spacing(3),
+      width: theme.spacing(4.5),
+      height: theme.spacing(4.5),
       display: "inline-block",
-      lineHeight: `${theme.spacing(3)}px`,
+      lineHeight: `${theme.spacing(4.5)}px`,
       border: `1px solid ${theme.palette.text.primary}`,
       backgroundColor: theme.palette.background.default,
       borderRadius: "50%",
@@ -63,13 +63,6 @@ const taskStyles = makeStyles((theme) => ({
         width: theme.spacing(4.5),
         height: theme.spacing(4.5),
       },
-    },
-  },
-  stepIndicatorExpanded: {
-    "& > i": {
-      backgroundColor: theme.palette.secondary.main,
-      color: theme.palette.secondary.contrastText,
-      borderColor: theme.palette.text.primary,
     },
   },
   isFirst: {
@@ -90,9 +83,7 @@ const taskStyles = makeStyles((theme) => ({
     width: "100%",
     display: "flex",
     justifyContent: "space-between",
-    [theme.breakpoints.up("sm")]: {
-      paddingLeft: theme.spacing(13.5),
-    },
+    [theme.breakpoints.up("sm")]: {},
   },
   expandIcon: {
     position: "relative",
@@ -119,7 +110,8 @@ const taskStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
   },
   content: {
-    backgroundColor: theme.palette.background.paper,
+    //TODO: Should extend to edges of card & be a darker colour
+    backgroundColor: theme.palette.background.default,
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(3),
     paddingLeft: theme.spacing(7),
@@ -168,8 +160,7 @@ const Task = ({
         className={classNames(
           classes.stepIndicator,
           index === 0 && classes.isFirst,
-          isLast && classes.isLast,
-          expanded && classes.stepIndicatorExpanded
+          isLast && classes.isLast
         )}
       >
         <i>{index + 1}</i>
@@ -179,15 +170,10 @@ const Task = ({
         classes={{ focusVisible: classes.onFocus }}
         onClick={handleChange}
       >
-        <Box fontSize={16} fontWeight={700}>
-          {title}
+        <Box>
+          <Typography variant="h5">{title}</Typography>
         </Box>
-        <ExpandMoreIcon
-          className={classNames(
-            classes.expandIcon,
-            expanded && classes.iconExpanded
-          )}
-        />
+        <Caret expanded={expanded} />
       </ButtonBase>
       {description && (
         <Collapse in={expanded}>
@@ -208,6 +194,8 @@ const TaskListComponent: React.FC<Props> = (props) => {
       isValid
     >
       <QuestionHeader
+        title={props.title}
+        description={props.description}
         info={props.info}
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}

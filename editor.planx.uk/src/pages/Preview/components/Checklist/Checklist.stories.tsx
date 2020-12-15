@@ -58,3 +58,34 @@ Grouped.args = {
     },
   ],
 };
+
+export const WithImages = Template.bind({});
+WithImages.args = {
+  text: "Which fruits are you interested in?",
+  description:
+    "A fruit is the sweet and fleshy product of a tree or other plant that contains seed and can be eaten as food.",
+  info: "Some info here",
+  policyRef: "Policy ref here",
+  howMeasured: "How it is measured",
+  options: [
+    {
+      id: "a",
+      data: {
+        val: "a",
+        text: "Apples",
+        img:
+          "https://www.applesfromny.com/wp-content/uploads/2020/05/Jonagold_NYAS-Apples2.png",
+      },
+    },
+    {
+      id: "b",
+      data: {
+        val: "b",
+        text: "Bananas",
+        img:
+          "https://images.everydayhealth.com/images/diet-nutrition/how-many-calories-are-in-a-banana-1440x810.jpg",
+      },
+    },
+    { id: "c", data: { val: "c", text: "Canteloupes" } },
+  ],
+};

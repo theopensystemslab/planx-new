@@ -119,7 +119,7 @@ const FindProperty = ({ handleSubmit: handleSubmit }) => {
             )}
           </Box>
 
-          <Box pb={2} color="text.secondary">
+          <Box pb={2} color="text.primary">
             <a
               href="!#"
               style={{ color: "inherit" }}

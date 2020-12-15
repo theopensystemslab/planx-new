@@ -15,6 +15,8 @@ const metadata: Meta = {
 
 export const Frontend = (args) => <Public {...args} />;
 Frontend.args = {
+  title: "Your Next Steps",
+  description: "To reverse climate change",
   tasks: [
     { title: "Do this first", description: "It's a very important task." },
     { title: "Do this next", description: "It's also very important." },

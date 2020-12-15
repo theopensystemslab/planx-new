@@ -2,6 +2,8 @@ import type { MoreInformation } from "../shared";
 import { parseMoreInformation } from "../shared";
 
 export interface TaskList extends MoreInformation {
+  title?: string;
+  description?: string;
   tasks: Array<Task>;
 }
 

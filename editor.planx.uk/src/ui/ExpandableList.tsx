@@ -1,8 +1,10 @@
+import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
-import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
+import classnames from "classnames";
 import React, { ReactNode } from "react";
+
+import Caret from "./icons/Caret";
 
 const useListClasses = makeStyles(() => ({
   root: {
@@ -12,16 +14,15 @@ const useListClasses = makeStyles(() => ({
   },
 }));
 
-const useItemClasses = makeStyles(() => ({
+const useItemClasses = makeStyles((theme) => ({
+  root: {
+    padding: `${theme.spacing(1)}px ${theme.spacing(1.5)}px`,
+  },
   title: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    padding: "12px 0",
-    "& > * + *": {
-      marginLeft: 10,
-    },
     cursor: "pointer",
+  },
+  expanded: {
+    background: theme.palette.action.selected,
   },
 }));
 
@@ -39,16 +40,21 @@ export function ExpandableListItem(props: {
   const classes = useItemClasses();
 
   return (
-    <li>
-      <div
+    <li
+      className={classnames(classes.root, props.expanded && classes.expanded)}
+    >
+      <Box
+        display="flex"
+        alignItems="flex-start"
+        justifyContent="space-between"
         className={classes.title}
         onClick={() => {
           props.onToggle && props.onToggle();
         }}
       >
-        {props.expanded ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-        <Typography variant="body2">{props.title}</Typography>
-      </div>
+        <Typography variant="h6">{props.title}</Typography>
+        <Caret expanded={props.expanded} />
+      </Box>
       {props.expanded && props.children}
     </li>
   );
