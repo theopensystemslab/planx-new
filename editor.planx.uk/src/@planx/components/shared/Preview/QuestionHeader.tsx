@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     "& p": {
-      margin: `${theme.spacing(1)} 0`,
+      margin: `${theme.spacing(1)}px 0`,
     },
   },
 }));
@@ -39,7 +39,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   const classes = useStyles();
 
   return (
-    <>
+    <Box mb={2}>
       <Grid container justify="space-between" wrap="nowrap">
         <Grid item>
           {title && (
@@ -87,7 +87,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           </MoreInfoSection>
         )}
       </MoreInfo>
-    </>
+    </Box>
   );
 };
 export default QuestionHeader;
