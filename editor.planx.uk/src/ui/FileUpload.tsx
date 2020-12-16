@@ -18,7 +18,8 @@ const useClasses = makeStyles((theme) => ({
     height: 50,
     width: 50,
     backgroundColor: "#fff",
-    color: theme.palette.text.secondary,
+    // TODO: use theme color here
+    color: "#BBB",
   },
   focused: {
     boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
