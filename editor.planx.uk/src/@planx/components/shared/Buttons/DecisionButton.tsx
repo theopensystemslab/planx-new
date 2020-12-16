@@ -8,6 +8,7 @@ import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
 export const useStyles = makeStyles((theme) => ({
   key: {
     opacity: 0.5,
+    backgroundColor: "inherit",
   },
 }));
 
