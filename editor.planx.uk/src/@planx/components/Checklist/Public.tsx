@@ -36,6 +36,7 @@ const ChecklistComponent: React.FC<Props> = ({
   options,
   policyRef,
   text,
+  img,
 }) => {
   // TODO: do we still need formik here?
 
@@ -97,6 +98,7 @@ const ChecklistComponent: React.FC<Props> = ({
         info={info}
         policyRef={policyRef}
         howMeasured={howMeasured}
+        img={img}
       />
 
       <Grid container spacing={layout === Layout.Images ? 1 : 0}>

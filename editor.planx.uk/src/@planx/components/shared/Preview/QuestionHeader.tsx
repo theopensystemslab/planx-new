@@ -8,12 +8,14 @@ import MoreInfoIcon from "ui/icons/MoreInfo";
 
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
+
 interface IQuestionHeader {
   title?: string;
   description?: string;
   info?: string;
   policyRef?: string;
   howMeasured?: string;
+  img?: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -26,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
       margin: `${theme.spacing(1)}px 0`,
     },
   },
+  image: {
+    maxWidth: "100%",
+  },
 }));
 
 const QuestionHeader: React.FC<IQuestionHeader> = ({
@@ -34,6 +39,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   info,
   policyRef,
   howMeasured,
+  img,
 }) => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
@@ -87,6 +93,8 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           </MoreInfoSection>
         )}
       </MoreInfo>
+
+      {img && <img src={img} alt="question image" className={classes.image} />}
     </Box>
   );
 };
