@@ -109,8 +109,10 @@ interface Store extends Record<string | number | symbol, unknown> {
   // /** removes key from breadcrumbs and any that were added after it  */
   unvisit: (id: string) => void;
   // reset: () => void;
-  dfs: (start: string) => string[];
+  dfs: (start: string, useBreadcrumbs?: boolean) => string[];
   page?: string;
+  sections: (id: string) => any[];
+  setPage: (page: string) => void;
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
@@ -857,6 +859,13 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   page: undefined,
 
   upcomingCardIds() {
+    const thingsForPage = (k) =>
+      get()
+        .dfs(k)
+        .filter((x) =>
+          [TYPES.Statement, TYPES.Checklist].includes(flow[x].type)
+        );
+
     const walk = (
       id: string,
       ids: Set<string | Page>,
@@ -872,7 +881,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               if (ids.size === 0) {
                 // set({ page: k });
                 globalPage = k;
-                ids.add([k, get().dfs(k)]);
+                ids.add([k, thingsForPage(k)]);
               } else {
                 ids.add(k);
               }
@@ -985,7 +994,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     if (page) {
       const idx = allIds.indexOf(page);
       if (idx >= 0) {
-        allIds.splice(0, idx + 1, [page, get().dfs(page)]);
+        allIds.splice(0, idx + 1, [page, thingsForPage(page)]);
       }
     }
 
@@ -1016,7 +1025,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     });
   },
 
-  dfs(start) {
+  dfs(start, useBreadcrumbs = true) {
     const { flow, breadcrumbs } = get();
 
     const visited: Set<string> = new Set();
@@ -1026,9 +1035,14 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     const listToExplore: string[] = [start];
     visited.add(start);
 
-    const flatBreadcrumbs = Object.entries(breadcrumbs)
-      .reduce((acc, [k, v]) => acc.concat([k, ...v.answers]), [] as string[])
-      .concat(start);
+    const flatBreadcrumbs = useBreadcrumbs
+      ? Object.entries(breadcrumbs)
+          .reduce(
+            (acc, [k, v]) => acc.concat([k, ...v.answers]),
+            [] as string[]
+          )
+          .concat(start)
+      : [];
 
     while (listToExplore.length) {
       const next = listToExplore.pop();
@@ -1037,7 +1051,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
         list.add(next);
 
-        if (flatBreadcrumbs.includes(next)) {
+        if (!useBreadcrumbs || flatBreadcrumbs.includes(next)) {
           [...edges].reverse().forEach((childIndex: string, i) => {
             if (!visited.has(childIndex)) {
               listToExplore.push(childIndex);
@@ -1048,11 +1062,25 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       }
     }
 
-    const all = Array.from(list).filter((x) =>
-      [TYPES.Statement, TYPES.Checklist].includes(flow[x].type)
-    );
+    return Array.from(list);
+  },
 
-    return all;
+  sections(id) {
+    const { dfs, flow } = get();
+    const ids = dfs(id, false).slice(1);
+    console.log({ ids });
+
+    return ids
+      .filter((_id) => flow[_id].type === TYPES.Page)
+      .map((_id) => ({
+        id: _id,
+        title: flow[_id].data.title,
+        status: "not started",
+      }));
+  },
+
+  setPage(page) {
+    page = page;
   },
 }));
 

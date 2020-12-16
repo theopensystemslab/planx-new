@@ -11,3 +11,10 @@ export const parsePage = (data: Record<string, any> | undefined) => ({
   description: data?.description || "",
   ...parseMoreInformation(data),
 });
+
+export enum STATE {
+  CannotStart,
+  ReadyToStart,
+  InProgress,
+  Complete,
+}

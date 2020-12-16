@@ -7,6 +7,7 @@ import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
 import Page from "@planx/components/Page/Public";
+import PageWithSections from "@planx/components/PageWithSections/Public";
 import Pay from "@planx/components/Pay/Public";
 import PropertyInformation from "@planx/components/PropertyInformation/Public";
 import Question from "@planx/components/Question/Public";
@@ -27,7 +28,6 @@ export type handleSubmit = (_?: componentOutput) => void;
 interface Props {
   handleSubmit: handleSubmit;
   node: node;
-  id: string;
   inner?: boolean;
 }
 
@@ -39,6 +39,7 @@ const Node: React.FC<any> = (props: Props) => {
     record,
     reportData,
     resetPreview,
+    sections,
   ] = useStore((state) => [
     state.breadcrumbs,
     state.childNodesOf,
@@ -46,6 +47,7 @@ const Node: React.FC<any> = (props: Props) => {
     state.record,
     state.reportData,
     state.resetPreview,
+    state.sections,
   ]);
 
   const goBackable = Object.entries(breadcrumbs)
@@ -144,6 +146,16 @@ const Node: React.FC<any> = (props: Props) => {
             />
           ))}
         </Page>
+      );
+
+    case TYPES.PageWithSections:
+      const s = sections(props.node.id);
+      return (
+        <PageWithSections
+          {...allProps}
+          sections={s}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
       );
 
     case TYPES.Pay:

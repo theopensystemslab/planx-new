@@ -68,6 +68,7 @@ const components: {
   [TYPES.Notice]: undefined,
   [TYPES.NumberInput]: Debug,
   [TYPES.Page]: undefined,
+  [TYPES.PageWithSections]: undefined,
   [TYPES.Pay]: undefined,
   [TYPES.PropertyInformation]: undefined,
   [TYPES.Report]: undefined,

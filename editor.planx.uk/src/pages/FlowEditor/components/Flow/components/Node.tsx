@@ -7,6 +7,7 @@ import Checklist from "./Checklist";
 import Filter from "./Filter";
 import Option from "./Option";
 import Page from "./Page";
+import PageWithSections from "./PageWithSections";
 import Portal from "./Portal";
 import Question from "./Question";
 
@@ -36,6 +37,13 @@ const Node: React.FC<any> = (props) => {
       return <Question {...props} text="Number" />;
     case TYPES.Page:
       return <Page {...props} text={node?.data?.title ?? "Page"} />;
+    case TYPES.PageWithSections:
+      return (
+        <PageWithSections
+          {...props}
+          text={node?.data?.title ?? "Page with Sections"}
+        />
+      );
     case TYPES.Pay:
       return <Question {...props} text={node?.data?.description ?? "Pay"} />;
     case TYPES.PropertyInformation:

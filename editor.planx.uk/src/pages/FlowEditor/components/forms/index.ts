@@ -5,12 +5,14 @@ import FindProperty from "@planx/components/FindProperty/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
 import Page from "@planx/components/Page/Editor";
+import PageWithSections from "@planx/components/PageWithSections/Editor";
 import PropertyInformation from "@planx/components/PropertyInformation/Editor";
 import Send from "@planx/components/Send/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
 import TextInput from "@planx/components/TextInput/Editor";
 import { TYPES } from "@planx/components/types";
 import React from "react";
+
 import { SLUGS } from "../../data/types";
 import Checklist from "./Checklist";
 import ExternalPortal from "./ExternalPortal";
@@ -41,6 +43,7 @@ const components: {
   notice: Notice,
   "number-input": NumberInput,
   page: Page,
+  "page-with-sections": PageWithSections,
   pay: Pay,
   question: Question,
   result: Result,

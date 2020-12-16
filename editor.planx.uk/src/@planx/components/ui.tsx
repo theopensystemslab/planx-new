@@ -16,6 +16,7 @@ import ReportProblemOutlined from "@material-ui/icons/ReportProblemOutlined";
 import SearchOutlined from "@material-ui/icons/SearchOutlined";
 import Send from "@material-ui/icons/Send";
 import TextFields from "@material-ui/icons/TextFields";
+import VerticalSplit from "@material-ui/icons/VerticalSplit";
 import { TYPES } from "@planx/components/types";
 import React, { ChangeEvent } from "react";
 import ImgInput from "ui/ImgInput";
@@ -58,6 +59,7 @@ export const ICONS: {
   [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NumberInput]: ExposureZero,
   [TYPES.Page]: Description,
+  [TYPES.PageWithSections]: VerticalSplit,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PropertyInformation]: LocationOnOutlined,
   [TYPES.Report]: undefined,
