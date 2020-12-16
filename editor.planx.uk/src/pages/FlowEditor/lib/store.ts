@@ -28,12 +28,33 @@ const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
 let doc;
 let globalFlag;
+let globalPage: string;
 
 const send = (ops) => {
   if (ops.length > 0) {
     console.log({ ops });
     doc.submitOp(ops);
   }
+};
+
+const mostToLeastNumberOfValues = (b: Node, a: Node) =>
+  String(a.data?.val).split(",").length - String(b.data?.val).split(",").length;
+
+type Page = [string, string[]];
+// type Breadcrumbs = Record<
+//   string,
+//   {
+//     answers: Array<string>;
+//     auto: boolean;
+//   }
+// >;
+type Node = {
+  type?: number;
+  edges?: Array<string>;
+  data?: {
+    val?: string;
+    fn?: string;
+  };
 };
 
 export type componentOutput = undefined | null | any | Array<any>;
@@ -79,7 +100,17 @@ interface Store extends Record<string | number | symbol, unknown> {
   sessionId: any; //: string;
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
-  upcomingCardIds: () => Array<nodeId | Array<nodeId>>;
+  upcomingCardIds: () => Array<nodeId | Page>;
+  // page stuff
+  // /** nodes that are yet to be visited */
+  // upcoming: () => Array<string | Page>;
+  // /** adds key to breadcrumbs */
+  visit: (id: string, answers?: string[]) => void;
+  // /** removes key from breadcrumbs and any that were added after it  */
+  unvisit: (id: string) => void;
+  // reset: () => void;
+  dfs: (start: string) => string[];
+  page?: string;
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
@@ -408,154 +439,158 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   },
 
   resetPreview() {
-    set({ breadcrumbs: {}, passport: { data: {} }, sessionId: "" });
+    set({
+      breadcrumbs: {},
+      passport: { data: {} },
+      sessionId: "",
+      page: undefined,
+    });
   },
 
   setFlow(id, flow) {
     set({ id, flow });
   },
 
-  upcomingCardIds() {
-    const { flow, breadcrumbs, passport } = get();
+  // upcomingCardIds() {
+  //   const { flow, breadcrumbs, passport } = get();
 
-    const mostToLeastNumberOfValues = (b, a) =>
-      String(a.data?.val).split(",").length -
-      String(b.data?.val).split(",").length;
+  //   let pids;
 
-    let pids;
+  //   const nodeIdsConnectedFrom = (
+  //     source: nodeId,
+  //     ids: Set<nodeId | Array<nodeId>>,
+  //     _breadcrumbs = breadcrumbs
+  //   ) => {
+  //     return (flow[source]?.edges ?? [])
+  //       .filter(
+  //         (id) =>
+  //           !Object.keys(_breadcrumbs).includes(id) &&
+  //           (!SUPPORTED_DECISION_TYPES.includes(flow[id].type) ||
+  //             flow[id]?.edges?.length > 0)
+  //       )
+  //       .forEach((id) => {
+  //         if (flow[id]?.type === TYPES.Page) {
+  //           if (ids.size === 0) {
+  //             // page is the first item in the list
 
-    const nodeIdsConnectedFrom = (
-      source: nodeId,
-      ids: Set<nodeId | Array<nodeId>>,
-      _breadcrumbs = breadcrumbs
-    ) => {
-      return (flow[source]?.edges ?? [])
-        .filter(
-          (id) =>
-            !Object.keys(_breadcrumbs).includes(id) &&
-            (!SUPPORTED_DECISION_TYPES.includes(flow[id].type) ||
-              flow[id]?.edges?.length > 0)
-        )
-        .forEach((id) => {
-          if (flow[id]?.type === TYPES.Page) {
-            if (!pids) {
-              pids = new Set();
-              nodeIdsConnectedFrom(id, pids, {});
-              pids = [...pids];
-            }
+  //             if (!pids) {
+  //               pids = new Set();
+  //               nodeIdsConnectedFrom(id, pids, {});
+  //               pids = [...pids];
+  //             }
 
-            if (ids.size === 0) {
-              nodeIdsConnectedFrom(id, ids);
+  //             nodeIdsConnectedFrom(id, ids);
 
-              const all = [...ids];
-              console.log({ pids, all });
+  //             const [current] = [...ids];
 
-              if (all.length > 0) {
-                ids.clear();
-                ids.add([id, pids, all[0]] as any);
-              } else {
-                // console.log("donezo");
-              }
-            } else {
-              ids.add(id);
-            }
-          } else if (flow[id]?.type === TYPES.InternalPortal) {
-            nodeIdsConnectedFrom(id, ids);
-          } else {
-            const fn = flow[id]?.data?.fn;
+  //             if (current) {
+  //               // submit answer but page is not complete
+  //               ids.clear();
+  //               ids.add([id, pids, current] as any);
+  //             } else {
+  //               // submit answer and now page is complete
+  //             }
+  //           } else {
+  //             // page is in the list of upcoming, but it is not the first item
+  //             ids.add(id);
+  //           }
+  //         } else if (flow[id]?.type === TYPES.InternalPortal) {
+  //           nodeIdsConnectedFrom(id, ids);
+  //         } else {
+  //           const fn = flow[id]?.data?.fn;
 
-            let passportValues =
-              fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
+  //           let passportValues =
+  //             fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
 
-            // TODO: refactor ALL of this!
-            if (fn && passportValues !== undefined) {
-              if (!Array.isArray(passportValues))
-                passportValues = [passportValues];
+  //           // TODO: refactor ALL of this!
+  //           if (fn && passportValues !== undefined) {
+  //             if (!Array.isArray(passportValues))
+  //               passportValues = [passportValues];
 
-              const responses = flow[id]?.edges.map((id) => ({
-                id,
-                ...flow[id],
-              }));
+  //             const responses = flow[id]?.edges.map((id) => ({
+  //               id,
+  //               ...flow[id],
+  //             }));
 
-              let responseThatCanBeAutoAnswered;
-              const sortedResponses = responses
-                .sort(mostToLeastNumberOfValues)
-                .filter((response) => response.data?.val);
+  //             let responseThatCanBeAutoAnswered;
+  //             const sortedResponses = responses
+  //               .sort(mostToLeastNumberOfValues)
+  //               .filter((response) => response.data?.val);
 
-              if (passportValues !== undefined) {
-                if (!Array.isArray(passportValues))
-                  passportValues = [passportValues];
+  //             if (passportValues !== undefined) {
+  //               if (!Array.isArray(passportValues))
+  //                 passportValues = [passportValues];
 
-                passportValues = (passportValues || []).filter((pv) =>
-                  sortedResponses.some((r) => pv.startsWith(r.data.val))
-                );
+  //               passportValues = (passportValues || []).filter((pv) =>
+  //                 sortedResponses.some((r) => pv.startsWith(r.data.val))
+  //               );
 
-                if (passportValues.length > 0) {
-                  responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
-                    const responseValues = String(r.data.val).split(",").sort();
-                    return String(responseValues) === String(passportValues);
-                  });
+  //               if (passportValues.length > 0) {
+  //                 responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
+  //                   const responseValues = String(r.data.val).split(",").sort();
+  //                   return String(responseValues) === String(passportValues);
+  //                 });
 
-                  if (!responseThatCanBeAutoAnswered) {
-                    responseThatCanBeAutoAnswered = sortedResponses.find(
-                      (r) => {
-                        const responseValues = String(r.data.val)
-                          .split(",")
-                          .sort();
-                        for (const responseValue of responseValues) {
-                          // console.log({ value, val });
-                          return passportValues.every((passportValue) =>
-                            String(passportValue).startsWith(responseValue)
-                          );
-                        }
-                      }
-                    );
-                  }
-                }
-              }
+  //                 if (!responseThatCanBeAutoAnswered) {
+  //                   responseThatCanBeAutoAnswered = sortedResponses.find(
+  //                     (r) => {
+  //                       const responseValues = String(r.data.val)
+  //                         .split(",")
+  //                         .sort();
+  //                       for (const responseValue of responseValues) {
+  //                         // console.log({ value, val });
+  //                         return passportValues.every((passportValue) =>
+  //                           String(passportValue).startsWith(responseValue)
+  //                         );
+  //                       }
+  //                     }
+  //                   );
+  //                 }
+  //               }
+  //             }
 
-              if (!responseThatCanBeAutoAnswered) {
-                responseThatCanBeAutoAnswered = responses.find(
-                  (r) => !r.data?.val
-                );
-              }
+  //             if (!responseThatCanBeAutoAnswered) {
+  //               responseThatCanBeAutoAnswered = responses.find(
+  //                 (r) => !r.data?.val
+  //               );
+  //             }
 
-              if (responseThatCanBeAutoAnswered) {
-                if (fn !== "flag") {
-                  set({
-                    breadcrumbs: {
-                      ..._breadcrumbs,
-                      [id]: {
-                        answers: [responseThatCanBeAutoAnswered.id],
-                        auto: true,
-                      },
-                    },
-                  });
-                }
+  //             if (responseThatCanBeAutoAnswered) {
+  //               if (fn !== "flag") {
+  //                 set({
+  //                   breadcrumbs: {
+  //                     ..._breadcrumbs,
+  //                     [id]: {
+  //                       answers: [responseThatCanBeAutoAnswered.id],
+  //                       auto: true,
+  //                     },
+  //                   },
+  //                 });
+  //               }
 
-                nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id, ids);
-              } else {
-                ids.add(id);
-              }
-            } else {
-              ids.add(id);
-            }
-          }
-        });
-    };
+  //               nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id, ids);
+  //             } else {
+  //               ids.add(id);
+  //             }
+  //           } else {
+  //             ids.add(id);
+  //           }
+  //         }
+  //       });
+  //   };
 
-    const ids: Set<nodeId | Array<nodeId>> = new Set();
+  //   const ids: Set<nodeId | Array<nodeId>> = new Set();
 
-    Object.entries(breadcrumbs)
-      .reverse()
-      .forEach(([, { answers }]: any) => {
-        answers.forEach((answer) => nodeIdsConnectedFrom(answer, ids));
-      });
+  //   Object.entries(breadcrumbs)
+  //     .reverse()
+  //     .forEach(([, { answers }]: any) => {
+  //       answers.forEach((answer) => nodeIdsConnectedFrom(answer, ids));
+  //     });
 
-    nodeIdsConnectedFrom(ROOT_NODE_KEY, ids);
+  //   nodeIdsConnectedFrom(ROOT_NODE_KEY, ids);
 
-    return Array.from(ids);
-  },
+  //   return Array.from(ids);
+  // },
 
   replay() {
     const { flow, breadcrumbs } = get();
@@ -815,6 +850,209 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
       return acc;
     }, {});
+  },
+
+  // ------ page stuff ------
+
+  page: undefined,
+
+  upcomingCardIds() {
+    const walk = (
+      id: string,
+      ids: Set<string | Page>,
+      breadcrumbs: breadcrumbs,
+      keep: boolean
+    ): void => {
+      (flow[id]?.edges || [])
+        .filter((k) => keep || !breadcrumbs[k])
+        .forEach((k) => {
+          const { type, edges = [] } = flow[k];
+          if (type === TYPES.Page) {
+            if (!edges.every((x) => breadcrumbs[x])) {
+              if (ids.size === 0) {
+                // set({ page: k });
+                globalPage = k;
+                ids.add([k, get().dfs(k)]);
+              } else {
+                ids.add(k);
+              }
+            } else {
+              globalPage = undefined;
+              // set({ page: undefined });
+            }
+          } else if (type === TYPES.InternalPortal) {
+            // skip past portal node and walk through its children
+            walk(k, ids, breadcrumbs, keep);
+          } else {
+            const fn = flow[k]?.data?.fn;
+
+            if (fn) {
+              let passportValues = passport.data[fn]?.value?.sort();
+
+              if (passportValues) {
+                const responses = (flow[k]?.edges || []).map((id) => ({
+                  id,
+                  ...flow[id],
+                }));
+
+                const sortedResponses = responses
+                  .sort(mostToLeastNumberOfValues)
+                  .filter((response) => response.data?.val)
+                  .map((r) => ({ ...r, v: String(r.data?.val) }));
+
+                passportValues = (passportValues || []).filter((pv) =>
+                  sortedResponses.some((r) => pv.startsWith(r.v))
+                );
+
+                let responseThatCanBeAutoAnswered;
+
+                if (passportValues.length > 0) {
+                  responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
+                    const responseValues = r.v.split(",").sort();
+                    return String(responseValues) === String(passportValues);
+                  });
+
+                  if (!responseThatCanBeAutoAnswered) {
+                    responseThatCanBeAutoAnswered = sortedResponses.find(
+                      (r) => {
+                        const responseValues = r.v.split(",").sort();
+                        for (const responseValue of responseValues) {
+                          // console.log({ value, val });
+                          return passportValues.every((passportValue) =>
+                            String(passportValue).startsWith(responseValue)
+                          );
+                        }
+                      }
+                    );
+                  }
+                }
+
+                if (!responseThatCanBeAutoAnswered) {
+                  responseThatCanBeAutoAnswered = responses.find(
+                    (r) => !r.data?.val
+                  );
+                }
+
+                if (responseThatCanBeAutoAnswered) {
+                  if (
+                    breadcrumbs[k]?.answers !==
+                    [responseThatCanBeAutoAnswered.id]
+                  ) {
+                    set({
+                      breadcrumbs: {
+                        ...breadcrumbs,
+                        [k]: {
+                          answers: [responseThatCanBeAutoAnswered.id],
+                          auto: true,
+                        },
+                      },
+                    });
+                  }
+
+                  walk(
+                    responseThatCanBeAutoAnswered.id,
+                    ids,
+                    breadcrumbs,
+                    keep
+                  );
+                } else {
+                  ids.add(id);
+                }
+              } else {
+                ids.add(k);
+              }
+            } else {
+              ids.add(k);
+            }
+          }
+        });
+    };
+
+    const { flow, breadcrumbs, passport } = get();
+
+    const ids: Set<string | Page> = new Set([]);
+
+    Object.values(breadcrumbs)
+      .flatMap((x) => x.answers)
+      .forEach((id) => walk(id, ids, breadcrumbs, false));
+
+    walk("_root", ids, breadcrumbs, false);
+
+    let allIds: any = Array.from(ids).filter(Boolean);
+
+    const page = globalPage; // get().page;
+
+    if (page) {
+      const idx = allIds.indexOf(page);
+      if (idx >= 0) {
+        allIds.splice(0, idx + 1, [page, get().dfs(page)]);
+      }
+    }
+
+    return allIds;
+  },
+
+  visit(id, answers = []) {
+    const { breadcrumbs, flow } = get();
+
+    if (!flow[id]) throw new Error("id not found");
+
+    set({
+      breadcrumbs: {
+        ...breadcrumbs,
+        [id]: {
+          answers,
+          auto: false,
+        },
+      },
+    });
+  },
+
+  unvisit(id) {
+    let remove = false;
+    Object.keys(this.breadcrumbs).forEach((k) => {
+      if (k === id) remove = true;
+      if (remove) delete this.breadcrumbs[k];
+    });
+  },
+
+  dfs(start) {
+    const { flow, breadcrumbs } = get();
+
+    const visited: Set<string> = new Set();
+
+    const list: Set<string> = new Set();
+
+    const listToExplore: string[] = [start];
+    visited.add(start);
+
+    const flatBreadcrumbs = Object.entries(breadcrumbs)
+      .reduce((acc, [k, v]) => acc.concat([k, ...v.answers]), [] as string[])
+      .concat(start);
+
+    while (listToExplore.length) {
+      const next = listToExplore.pop();
+      if (next) {
+        const { edges = [] } = flow[next];
+
+        list.add(next);
+
+        if (flatBreadcrumbs.includes(next)) {
+          [...edges].reverse().forEach((childIndex: string, i) => {
+            if (!visited.has(childIndex)) {
+              listToExplore.push(childIndex);
+              visited.add(childIndex);
+            }
+          });
+        }
+      }
+    }
+
+    const all = Array.from(list).filter((x) =>
+      [TYPES.Statement, TYPES.Checklist].includes(flow[x].type)
+    );
+
+    return all;
   },
 }));
 

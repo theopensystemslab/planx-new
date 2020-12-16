@@ -56,7 +56,7 @@ const Node: React.FC<any> = (props: Props) => {
     ...props.node.data,
     resetPreview,
     handleSubmit: props.handleSubmit,
-    selected: breadcrumbs[props.node.id]?.answers || [],
+    selected: () => breadcrumbs[props.node.id]?.answers || [],
   };
 
   if (!props.inner) {
