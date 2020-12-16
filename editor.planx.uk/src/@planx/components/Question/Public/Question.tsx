@@ -1,4 +1,3 @@
-import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import DecisionButton from "@planx/components/shared/Buttons/DecisionButton";
 import DescriptionButton from "@planx/components/shared/Buttons/DescriptionButton";
@@ -15,6 +14,7 @@ export interface IQuestion {
   info?: string;
   policyRef?: string;
   howMeasured?: string;
+  img?: string;
   responses: {
     id: string;
     responseKey: string | number;
@@ -61,7 +61,9 @@ const Question: React.FC<IQuestion> = (props) => {
           info={props.info}
           policyRef={props.policyRef}
           howMeasured={props.howMeasured}
+          img={props.img}
         />
+
         <Grid container spacing={layout === Layout.Descriptions ? 2 : 1}>
           {!props.text?.startsWith("Sorry") &&
             props.responses?.map((response) => {
