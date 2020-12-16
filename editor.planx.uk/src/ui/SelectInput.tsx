@@ -23,7 +23,7 @@ const useClasses = makeStyles((theme) => ({
     height: 50,
     boxSizing: "border-box",
     backgroundColor: "#fff",
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
     paddingLeft: theme.spacing(1.5),
     display: "flex",
     alignItems: "center",
