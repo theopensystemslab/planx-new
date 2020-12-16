@@ -163,6 +163,7 @@ const Node: React.FC<any> = (props: Props) => {
           responses={childNodesOf(props.node.id).map((n, i) => ({
             id: n.id,
             responseKey: i + 1,
+            title: n.data?.text,
             ...n.data,
           }))}
         />
