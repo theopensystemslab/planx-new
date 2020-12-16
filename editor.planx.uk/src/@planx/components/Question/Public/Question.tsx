@@ -32,8 +32,6 @@ enum Layout {
 }
 
 const Question: React.FC<IQuestion> = (props) => {
-  const { text, description, info, policyRef, howMeasured, responses } = props;
-
   const formik = useFormik({
     initialValues: {
       selected: { a: "" },
@@ -46,9 +44,11 @@ const Question: React.FC<IQuestion> = (props) => {
   const { a } = formik.values.selected;
 
   let layout = Layout.Basic;
-  if (responses.find((r) => r.img && r.img.length)) {
+  if (props.responses.find((r) => r.img && r.img.length)) {
     layout = Layout.Images;
-  } else if (responses.find((r) => r.description && r.description.length)) {
+  } else if (
+    props.responses.find((r) => r.description && r.description.length)
+  ) {
     layout = Layout.Descriptions;
   }
 
