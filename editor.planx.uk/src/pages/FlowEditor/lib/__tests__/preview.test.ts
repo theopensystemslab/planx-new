@@ -8,7 +8,7 @@ beforeEach(() => {
   getState().resetPreview();
 });
 
-test("it lists upcoming cards", () => {
+test.skip("it lists upcoming cards", () => {
   setState({
     flow: {
       _root: {
