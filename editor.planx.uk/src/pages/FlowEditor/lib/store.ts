@@ -79,7 +79,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   sessionId: any; //: string;
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
-  upcomingCardIds: () => nodeId[];
+  upcomingCardIds: (id?: string) => nodeId[];
 
   page: string;
   setPage: (page: string) => void;
@@ -569,7 +569,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     const { upcomingCardIds, flow, page } = get();
     const upcoming = upcomingCardIds();
 
-    console.log(upcoming.map((id) => flow[id]));
+    // console.log(upcoming.map((id) => flow[id]));
 
     if (upcoming.length > 0) {
       const id = upcoming[0];
@@ -577,6 +577,11 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
       if (node.type === TYPES.Page) {
         if (page !== id) set({ page: id });
+        return {
+          id,
+          ...node,
+          children: upcomingCardIds(id),
+        };
       } else if (page !== ROOT_NODE_KEY) {
         set({ page: ROOT_NODE_KEY });
       }

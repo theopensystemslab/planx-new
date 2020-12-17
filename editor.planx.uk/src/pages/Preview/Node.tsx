@@ -30,9 +30,10 @@ interface Props {
 }
 
 const Node: React.FC<any> = (props: Props) => {
-  const [childNodesOf, reportData] = useStore((state) => [
+  const [childNodesOf, reportData, flow] = useStore((state) => [
     state.childNodesOf,
     state.reportData,
+    state.flow,
   ]);
 
   const resetPreview = useStore((state) => state.resetPreview);
@@ -107,7 +108,25 @@ const Node: React.FC<any> = (props: Props) => {
       );
 
     case TYPES.Page:
-      return <Page {...allProps} />;
+      const children = (props.node as any).children.map((id) => ({
+        id,
+        ...flow[id],
+      }));
+
+      return (
+        <Page {...allProps}>
+          {children.map((node) => (
+            <Node
+              node={node}
+              key={node.id}
+              handleSubmit={(values: componentOutput) => {
+                // record(node.id, values);
+              }}
+            />
+          ))}
+        </Page>
+      );
+
     case TYPES.Pay:
       return (
         <Pay
