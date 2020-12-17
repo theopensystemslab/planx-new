@@ -86,7 +86,7 @@ interface Store extends Record<string | number | symbol, unknown> {
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
-  page: "_root",
+  page: ROOT_NODE_KEY,
 
   setPage: (page) => {
     set({ page });
@@ -417,7 +417,12 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   },
 
   resetPreview() {
-    set({ breadcrumbs: {}, passport: { data: {} }, sessionId: "" });
+    set({
+      breadcrumbs: {},
+      passport: { data: {} },
+      sessionId: "",
+      page: ROOT_NODE_KEY,
+    });
   },
 
   setFlow(id, flow) {
