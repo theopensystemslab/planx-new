@@ -90,6 +90,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
   setPage: (page) => {
     set({ page });
+    console.info({ setPage: page, page: get().page });
   },
 
   flow: undefined,
@@ -506,6 +507,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
               if (responseThatCanBeAutoAnswered) {
                 if (fn !== "flag") {
+                  console.log("eee");
                   set({
                     breadcrumbs: {
                       ...breadcrumbs,
@@ -576,15 +578,16 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       const node = flow[id];
 
       if (node.type === TYPES.Page) {
-        if (page !== id) set({ page: id });
+        // if (page !== id) set({ page: id });
         return {
           id,
           ...node,
           children: upcomingCardIds(id),
         };
-      } else if (page !== ROOT_NODE_KEY) {
-        set({ page: ROOT_NODE_KEY });
       }
+      // else if (page !== ROOT_NODE_KEY) {
+      //   // set({ page: ROOT_NODE_KEY });
+      // }
       return {
         id,
         ...node,
@@ -618,7 +621,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               passport.data[key].value.concat(passportValue)
             );
           }
-
+          console.log("AAA");
           set({
             breadcrumbs: {
               ...breadcrumbs,
@@ -633,6 +636,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
             },
           });
         } else {
+          console.log("bbb");
           set({
             breadcrumbs: {
               ...breadcrumbs,
@@ -641,8 +645,17 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
           });
         }
       } else {
+        console.log("ccc");
+        let page = ROOT_NODE_KEY;
+        const upcoming = upcomingCardIds();
+
+        if (upcoming.length > 1 && flow[upcoming[1]].type === TYPES.Page) {
+          page = upcoming[1];
+        }
+
         set({
           breadcrumbs: { ...breadcrumbs, [id]: { answers: vals, auto: true } },
+          page,
         });
       }
 
@@ -674,6 +687,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         {}
       );
 
+      console.log("ddd");
       set({
         breadcrumbs: newBreadcrumbs,
         passport: {

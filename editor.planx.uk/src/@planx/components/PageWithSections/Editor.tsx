@@ -8,16 +8,13 @@ import RichTextInput from "ui/RichTextInput";
 
 import { TYPES } from "../types";
 import { EditorProps, ICONS } from "../ui";
-import { PageWithSections } from "./model";
+import { PageWithSections, parsePageWithSections } from "./model";
 
 type Props = EditorProps<TYPES.PageWithSections, PageWithSections>;
 
 const Form: React.FC<Props> = (props) => {
   const formik = useFormik({
-    initialValues: {
-      title: props.node?.data?.title || "",
-      description: props.node?.data?.description || "",
-    },
+    initialValues: parsePageWithSections(props.node?.data),
     onSubmit: (values) => {
       if (props.handleSubmit) {
         props.handleSubmit({ type: TYPES.PageWithSections, data: values });

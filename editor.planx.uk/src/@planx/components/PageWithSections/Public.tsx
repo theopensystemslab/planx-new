@@ -1,5 +1,4 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import Card from "../shared/Preview/Card";
@@ -23,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
 export type Props = PublicProps<PageWithSections>;
 
 const Component: React.FC<Props> = (props) => {
-  const setPage = useStore((state) => state.setPage);
   const classes = useStyles();
   return (
     <Card isValid handleSubmit={() => props.handleSubmit([])}>
@@ -32,10 +30,8 @@ const Component: React.FC<Props> = (props) => {
       <table className={classes.table}>
         <tbody>
           {props.sections.map((section) => (
-            <tr key={section.id}>
-              <td onClick={() => setPage(section.id)} className={classes.cell}>
-                {section.title}
-              </td>
+            <tr key={section.id} onClick={section.handleClick}>
+              <td className={classes.cell}>{section.title}</td>
               <td className={classes.cell}>{section.status}</td>
             </tr>
           ))}

@@ -31,10 +31,11 @@ interface Props {
 }
 
 const Node: React.FC<any> = (props: Props) => {
-  const [childNodesOf, reportData, flow] = useStore((state) => [
+  const [childNodesOf, reportData, flow, setPage] = useStore((state) => [
     state.childNodesOf,
     state.reportData,
     state.flow,
+    state.setPage,
   ]);
 
   const resetPreview = useStore((state) => state.resetPreview);
@@ -130,10 +131,20 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.PageWithSections:
       // const s = sections(props.node.id);
+      const sections = flow[props.node.id].edges.map((id) => {
+        const node = flow[id];
+        return {
+          id,
+          title: node.data.title,
+          status: "ready",
+          handleClick: () => setPage(id),
+        };
+      });
+
       return (
         <PageWithSections
           {...allProps}
-          sections={[]}
+          sections={sections}
           handleSubmit={() => props.handleSubmit([props.node.id])}
         />
       );
