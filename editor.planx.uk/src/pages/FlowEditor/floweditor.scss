@@ -420,19 +420,21 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     > li {
       padding: 0 !important;
 
-      background-image: $pixel, $pixel, $pixel;
-      [data-layout="top-down"] & {
-        padding: 5px 5px 0 5px !important;
-        flex-direction: column;
+      &.hanger {
+        background-image: $pixel, $pixel, $pixel;
+        [data-layout="top-down"] & {
+          padding: 5px 5px 0 5px !important;
+          flex-direction: column;
 
-        background-repeat: repeat-y, repeat-x, repeat-x;
-        &:first-child,
-        &:last-child {
-          background-repeat: repeat-y, no-repeat, no-repeat;
-        }
-        &:only-child {
-          background-image: $pixel;
-          background-repeat: repeat-y;
+          background-repeat: repeat-y, repeat-x, repeat-x;
+          &:first-child,
+          &:last-child {
+            background-repeat: repeat-y, no-repeat, no-repeat;
+          }
+          &:only-child {
+            background-image: $pixel;
+            background-repeat: repeat-y;
+          }
         }
       }
     }
