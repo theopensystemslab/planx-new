@@ -80,9 +80,18 @@ interface Store extends Record<string | number | symbol, unknown> {
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
   upcomingCardIds: () => nodeId[];
+
+  page: string;
+  setPage: (page: string) => void;
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
+  page: "_root",
+
+  setPage: (page) => {
+    set({ page });
+  },
+
   flow: undefined,
 
   id: undefined,
@@ -415,7 +424,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     set({ id, flow });
   },
 
-  upcomingCardIds() {
+  upcomingCardIds(start = ROOT_NODE_KEY) {
     const { flow, breadcrumbs, passport } = get();
 
     const ids: Set<string> = new Set();
@@ -433,7 +442,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               flow[id]?.edges?.length > 0)
         )
         .forEach((id) => {
-          if ([TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type)) {
+          if ([TYPES.InternalPortal].includes(flow[id]?.type)) {
             nodeIdsConnectedFrom(id);
           } else {
             const fn = flow[id]?.data?.fn;
@@ -520,7 +529,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         answers.forEach((answer) => nodeIdsConnectedFrom(answer));
       });
 
-    nodeIdsConnectedFrom(ROOT_NODE_KEY);
+    nodeIdsConnectedFrom(start);
 
     return Array.from(ids);
   },
@@ -552,14 +561,18 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   },
 
   currentCard() {
-    const { upcomingCardIds, flow } = get();
+    const { upcomingCardIds, flow, page } = get();
     const upcoming = upcomingCardIds();
+
+    console.log(upcoming.map((id) => flow[id]));
 
     if (upcoming.length > 0) {
       const id = upcoming[0];
+      const node = flow[id];
+      if (node.type === TYPES.Page && page !== id) set({ page: id });
       return {
         id,
-        ...flow[id],
+        ...node,
       };
     } else {
       return null;
