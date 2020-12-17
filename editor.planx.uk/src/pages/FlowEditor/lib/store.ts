@@ -96,7 +96,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
   id: undefined,
 
-  showPreview: true,
+  showPreview: false,
 
   togglePreview: () => {
     set({ showPreview: !get().showPreview });
