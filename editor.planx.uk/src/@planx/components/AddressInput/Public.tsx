@@ -38,9 +38,10 @@ export default function AddressInputComponent(props: Props): FCReturn {
           placeholder="Line 1"
           bordered
           onChange={(ev) => {
+            const { value } = ev.currentTarget;
             setValue((prev) => ({
               ...prev,
-              line1: ev.target.value,
+              line1: value,
             }));
           }}
         />
@@ -51,9 +52,10 @@ export default function AddressInputComponent(props: Props): FCReturn {
           placeholder="Line 2"
           bordered
           onChange={(ev) => {
+            const { value } = ev.currentTarget;
             setValue((prev) => ({
               ...prev,
-              line2: ev.target.value,
+              line2: value,
             }));
           }}
         />
@@ -64,9 +66,10 @@ export default function AddressInputComponent(props: Props): FCReturn {
           placeholder="Town"
           bordered
           onChange={(ev) => {
+            const { value } = ev.currentTarget;
             setValue((prev) => ({
               ...prev,
-              town: ev.target.value,
+              town: value,
             }));
           }}
         />
@@ -77,9 +80,10 @@ export default function AddressInputComponent(props: Props): FCReturn {
           placeholder="County"
           bordered
           onChange={(ev) => {
+            const { value } = ev.currentTarget;
             setValue((prev) => ({
               ...prev,
-              county: ev.target.value,
+              county: value,
             }));
           }}
         />
@@ -91,9 +95,10 @@ export default function AddressInputComponent(props: Props): FCReturn {
             placeholder="Postal code"
             bordered
             onChange={(ev) => {
+              const { value } = ev.currentTarget;
               setValue((prev) => ({
                 ...prev,
-                county: ev.target.value,
+                postcode: value,
               }));
             }}
           />
