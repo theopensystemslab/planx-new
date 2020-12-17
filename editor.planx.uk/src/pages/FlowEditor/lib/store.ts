@@ -71,7 +71,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   // preview
   breadcrumbs: breadcrumbs;
   replay: () => object;
-  currentCard: () => Record<string, any> | null;
+  currentCard: (start: string) => Record<string, any> | null;
   passport: passport;
   record: any; //: () => void;
   reportData: any; //: () => any;
@@ -90,7 +90,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
   setPage: (page) => {
     set({ page });
-    console.info({ setPage: page, page: get().page });
   },
 
   flow: undefined,
@@ -567,27 +566,23 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       .filter(Boolean);
   },
 
-  currentCard() {
-    const { upcomingCardIds, flow, page } = get();
-    const upcoming = upcomingCardIds();
+  currentCard(start) {
+    const { upcomingCardIds, flow } = get();
+    const upcoming = upcomingCardIds(start);
 
-    // console.log(upcoming.map((id) => flow[id]));
+    console.log(upcoming.map((i) => flow[i]));
 
     if (upcoming.length > 0) {
       const id = upcoming[0];
       const node = flow[id];
 
       if (node.type === TYPES.Page) {
-        // if (page !== id) set({ page: id });
         return {
           id,
           ...node,
           children: upcomingCardIds(id),
         };
       }
-      // else if (page !== ROOT_NODE_KEY) {
-      //   // set({ page: ROOT_NODE_KEY });
-      // }
       return {
         id,
         ...node,

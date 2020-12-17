@@ -31,11 +31,18 @@ interface Props {
 }
 
 const Node: React.FC<any> = (props: Props) => {
-  const [childNodesOf, reportData, flow, setPage] = useStore((state) => [
+  const [
+    childNodesOf,
+    reportData,
+    flow,
+    setPage,
+    breadcrumbs,
+  ] = useStore((state) => [
     state.childNodesOf,
     state.reportData,
     state.flow,
     state.setPage,
+    state.breadcrumbs,
   ]);
 
   const resetPreview = useStore((state) => state.resetPreview);
@@ -136,7 +143,7 @@ const Node: React.FC<any> = (props: Props) => {
         return {
           id,
           title: node.data.title,
-          status: "ready",
+          status: breadcrumbs[id] ? "complete" : "ready",
           handleClick: () => setPage(id),
         };
       });

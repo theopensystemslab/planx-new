@@ -4,19 +4,30 @@ import Header from "../../components/Header";
 import { componentOutput, useStore } from "../FlowEditor/lib/store";
 import Node from "./Node";
 
+const Title = ({ id }) => {
+  if (id === "_root") return null;
+  const page = useStore((state) => state.flow[id]);
+  return (
+    <>
+      <h1>{page.data.title}</h1>
+      <p>{page.data.description}</p>
+    </>
+  );
+};
+
 const Questions = () => {
   const [currentCard, record, page] = useStore((state) => [
     state.currentCard,
     state.record,
     state.page,
   ]);
-  const node = currentCard();
+  const node = currentCard(page);
 
   if (!node) return null;
 
   return (
     <>
-      {JSON.stringify({ page })}
+      <Title id={page} />
       <Node
         node={node}
         key={node.id}
