@@ -6,7 +6,6 @@ import FileUpload from "@planx/components/FileUpload/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
-import Page from "@planx/components/Page/Public";
 import PageWithSections from "@planx/components/PageWithSections/Public";
 import Pay from "@planx/components/Pay/Public";
 import PropertyInformation from "@planx/components/PropertyInformation/Public";
@@ -119,24 +118,25 @@ const Node: React.FC<any> = (props: Props) => {
       );
 
     case TYPES.Page:
-      const children = (props.node as any).children.map((id) => ({
-        id,
-        ...flow[id],
-      }));
+      return null;
+    // const children = (props.node as any).children.map((id) => ({
+    //   id,
+    //   ...flow[id],
+    // }));
 
-      return (
-        <Page {...allProps}>
-          {children.map((node) => (
-            <Node
-              node={node}
-              key={node.id}
-              handleSubmit={(values: componentOutput) => {
-                record(node.id, values);
-              }}
-            />
-          ))}
-        </Page>
-      );
+    // return (
+    //   <Page {...allProps} />
+    //     {children.map((node) => (
+    //       <Node
+    //         node={node}
+    //         key={node.id}
+    //         handleSubmit={(values: componentOutput) => {
+    //           record(node.id, values);
+    //         }}
+    //       />
+    //     ))}
+    //   </Page>
+    // );
 
     case TYPES.PageWithSections:
       // const s = sections(props.node.id);

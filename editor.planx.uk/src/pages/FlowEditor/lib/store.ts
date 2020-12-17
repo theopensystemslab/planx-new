@@ -572,9 +572,19 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   currentNodes(start) {
     const { flow, dfs, breadcrumbs } = get();
 
+    const types = [TYPES.Response, TYPES.InternalPortal, TYPES.ExternalPortal];
+
     let upcoming = dfs(start)
       .map((id) => ({ id, ...flow[id] }))
-      .filter((x) => x.type !== TYPES.Response);
+      .filter((x) => {
+        if (start === ROOT_NODE_KEY) {
+          return !breadcrumbs[x.id] && !types.includes(x.type);
+        } else {
+          return !types.includes(x.type) && x.edges?.length > 0;
+        }
+      });
+
+    console.log(dfs(start));
 
     const showContinue = upcoming
       .map((x) => x.id)
@@ -831,11 +841,15 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     while (listToExplore.length) {
       const next = listToExplore.pop();
       if (next) {
-        const { edges = [] } = flow[next];
+        const { type, edges = [] } = flow[next];
 
         list.add(next);
 
-        if (!useBreadcrumbs || flatBreadcrumbs.includes(next)) {
+        if (
+          type === TYPES.InternalPortal ||
+          !useBreadcrumbs ||
+          flatBreadcrumbs.includes(next)
+        ) {
           [...edges].reverse().forEach((childIndex: string, i) => {
             if (!visited.has(childIndex)) {
               listToExplore.push(childIndex);
