@@ -574,7 +574,12 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     if (upcoming.length > 0) {
       const id = upcoming[0];
       const node = flow[id];
-      if (node.type === TYPES.Page && page !== id) set({ page: id });
+
+      if (node.type === TYPES.Page) {
+        if (page !== id) set({ page: id });
+      } else if (page !== ROOT_NODE_KEY) {
+        set({ page: ROOT_NODE_KEY });
+      }
       return {
         id,
         ...node,

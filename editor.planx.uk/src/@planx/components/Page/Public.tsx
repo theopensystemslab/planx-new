@@ -8,7 +8,7 @@ export type Props = PublicProps<Page>;
 
 const PageComponent: React.FC<Props> = (props) => {
   return (
-    <Card>
+    <Card isValid handleSubmit={() => props.handleSubmit([])}>
       <h1>{props.title}</h1>
       <p role="description">{props.description}</p>
       {props.children}
