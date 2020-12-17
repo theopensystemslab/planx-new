@@ -1,3 +1,4 @@
+import { ROOT_NODE_KEY } from "@planx/graph";
 import React from "react";
 
 import Header from "../../components/Header";
@@ -5,7 +6,8 @@ import { componentOutput, useStore } from "../FlowEditor/lib/store";
 import Node from "./Node";
 
 const Title = ({ id }) => {
-  if (id === "_root") return null;
+  if (id === ROOT_NODE_KEY) return null;
+
   const page = useStore((state) => state.flow[id]);
   return (
     <>
@@ -16,25 +18,37 @@ const Title = ({ id }) => {
 };
 
 const Questions = () => {
-  const [currentCard, record, page] = useStore((state) => [
-    state.currentCard,
+  const [nodes, record, page, setPage] = useStore((state) => [
+    state.currentNodes(state.page),
     state.record,
     state.page,
+    state.setPage,
   ]);
-  const node = currentCard(page);
 
-  if (!node) return null;
+  if (!nodes) return null;
 
   return (
     <>
       <Title id={page} />
-      <Node
-        node={node}
-        key={node.id}
-        handleSubmit={(values: componentOutput) => {
-          record(node.id, values);
-        }}
-      />
+      {nodes.upcoming.map((node) => (
+        <Node
+          node={node}
+          key={node.id}
+          handleSubmit={(values: componentOutput) => {
+            record(node.id, values);
+          }}
+        />
+      ))}
+      {nodes.showContinue && (
+        <button
+          onClick={() => {
+            record(page, []);
+            setPage(ROOT_NODE_KEY);
+          }}
+        >
+          Continue
+        </button>
+      )}
     </>
   );
 };

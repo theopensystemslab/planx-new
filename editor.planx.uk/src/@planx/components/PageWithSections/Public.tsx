@@ -24,7 +24,7 @@ export type Props = PublicProps<PageWithSections>;
 const Component: React.FC<Props> = (props) => {
   const classes = useStyles();
   return (
-    <Card isValid handleSubmit={() => props.handleSubmit([])}>
+    <Card isValid={props.isValid} handleSubmit={() => props.handleSubmit([])}>
       <h1>{props.title}</h1>
       <p role="description">{props.description}</p>
       <table className={classes.table}>

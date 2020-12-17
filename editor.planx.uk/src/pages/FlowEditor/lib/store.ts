@@ -71,7 +71,9 @@ interface Store extends Record<string | number | symbol, unknown> {
   // preview
   breadcrumbs: breadcrumbs;
   replay: () => object;
-  currentCard: (start: string) => Record<string, any> | null;
+  currentNodes: (
+    start: string
+  ) => { showContinue: boolean; upcoming: Array<Record<string, any>> } | null;
   passport: passport;
   record: any; //: () => void;
   reportData: any; //: () => any;
@@ -83,6 +85,7 @@ interface Store extends Record<string | number | symbol, unknown> {
 
   page: string;
   setPage: (page: string) => void;
+  dfs: (start: string, useBreadcrumbs?: boolean) => any[];
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
@@ -96,7 +99,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
   id: undefined,
 
-  showPreview: false,
+  showPreview: true,
 
   togglePreview: () => {
     set({ showPreview: !get().showPreview });
@@ -566,27 +569,20 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       .filter(Boolean);
   },
 
-  currentCard(start) {
-    const { upcomingCardIds, flow } = get();
-    const upcoming = upcomingCardIds(start);
+  currentNodes(start) {
+    const { flow, dfs, breadcrumbs } = get();
 
-    console.log(upcoming.map((i) => flow[i]));
+    let upcoming = dfs(start)
+      .map((id) => ({ id, ...flow[id] }))
+      .filter((x) => x.type !== TYPES.Response);
+
+    const showContinue = upcoming
+      .map((x) => x.id)
+      .every((id) => breadcrumbs[id]);
 
     if (upcoming.length > 0) {
-      const id = upcoming[0];
-      const node = flow[id];
-
-      if (node.type === TYPES.Page) {
-        return {
-          id,
-          ...node,
-          children: upcomingCardIds(id),
-        };
-      }
-      return {
-        id,
-        ...node,
-      };
+      upcoming = start === "_root" ? upcoming.slice(0, 1) : upcoming;
+      return { showContinue, upcoming };
     } else {
       return null;
     }
@@ -640,7 +636,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
           });
         }
       } else {
-        console.log("ccc");
+        // console.log("ccc");
         let page = ROOT_NODE_KEY;
         const upcoming = upcomingCardIds();
 
@@ -650,7 +646,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
         set({
           breadcrumbs: { ...breadcrumbs, [id]: { answers: vals, auto: true } },
-          page,
+          // page,
         });
       }
 
@@ -811,6 +807,47 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
       return acc;
     }, {});
+  },
+
+  dfs(start = "_root", useBreadcrumbs = true) {
+    const { flow, breadcrumbs } = get();
+
+    const visited: Set<string> = new Set();
+
+    const list: Set<string> = new Set();
+
+    const listToExplore: string[] = [start];
+    visited.add(start);
+
+    const flatBreadcrumbs = useBreadcrumbs
+      ? Object.entries(breadcrumbs)
+          .reduce(
+            (acc, [k, v]) => acc.concat([k, ...v.answers]),
+            [] as string[]
+          )
+          .concat(start)
+      : [];
+
+    while (listToExplore.length) {
+      const next = listToExplore.pop();
+      if (next) {
+        const { edges = [] } = flow[next];
+
+        list.add(next);
+
+        if (!useBreadcrumbs || flatBreadcrumbs.includes(next)) {
+          [...edges].reverse().forEach((childIndex: string, i) => {
+            if (!visited.has(childIndex)) {
+              listToExplore.push(childIndex);
+              visited.add(childIndex);
+            }
+          });
+        }
+      }
+    }
+
+    return Array.from(list).slice(1);
+    // .map((id) => ({ id, ...flow[id] }));
   },
 }));
 

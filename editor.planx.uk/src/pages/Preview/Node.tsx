@@ -37,12 +37,14 @@ const Node: React.FC<any> = (props: Props) => {
     flow,
     setPage,
     breadcrumbs,
+    record,
   ] = useStore((state) => [
     state.childNodesOf,
     state.reportData,
     state.flow,
     state.setPage,
     state.breadcrumbs,
+    state.record,
   ]);
 
   const resetPreview = useStore((state) => state.resetPreview);
@@ -129,7 +131,7 @@ const Node: React.FC<any> = (props: Props) => {
               node={node}
               key={node.id}
               handleSubmit={(values: componentOutput) => {
-                // record(node.id, values);
+                record(node.id, values);
               }}
             />
           ))}
@@ -138,8 +140,10 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.PageWithSections:
       // const s = sections(props.node.id);
+
       const sections = flow[props.node.id].edges.map((id) => {
         const node = flow[id];
+
         return {
           id,
           title: node.data.title,
@@ -152,7 +156,8 @@ const Node: React.FC<any> = (props: Props) => {
         <PageWithSections
           {...allProps}
           sections={sections}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
+          isValid={sections.every((s) => s.status === "complete")}
+          handleSubmit={() => record(props.node.id, [])}
         />
       );
 
