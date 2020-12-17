@@ -4,6 +4,7 @@ import DateInput from "@planx/components/DateInput/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
+import PageWithSections from "@planx/components/PageWithSections/Editor";
 import PropertyInformation from "@planx/components/PropertyInformation/Editor";
 import Send from "@planx/components/Send/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
@@ -42,6 +43,7 @@ const components: {
   notice: Notice,
   "number-input": NumberInput,
   page: Page,
+  "page-with-sections": PageWithSections,
   pay: Pay,
   question: Question,
   result: Result,

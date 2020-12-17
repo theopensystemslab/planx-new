@@ -14,6 +14,7 @@ export const SLUGS = {
   [TYPES.Notice]: "notice",
   [TYPES.NumberInput]: "number-input",
   [TYPES.Page]: "page",
+  [TYPES.PageWithSections]: "page-with-sections",
   [TYPES.Pay]: "pay",
   [TYPES.PropertyInformation]: "property-information",
   [TYPES.Report]: "question",

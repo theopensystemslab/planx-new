@@ -7,6 +7,7 @@ import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
 import Page from "@planx/components/Page/Public";
+import PageWithSections from "@planx/components/PageWithSections/Public";
 import Pay from "@planx/components/Pay/Public";
 import PropertyInformation from "@planx/components/PropertyInformation/Public";
 import Question from "@planx/components/Question/Public";
@@ -125,6 +126,16 @@ const Node: React.FC<any> = (props: Props) => {
             />
           ))}
         </Page>
+      );
+
+    case TYPES.PageWithSections:
+      // const s = sections(props.node.id);
+      return (
+        <PageWithSections
+          {...allProps}
+          sections={[]}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
       );
 
     case TYPES.Pay:
