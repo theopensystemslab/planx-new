@@ -4,7 +4,9 @@ import type { Checklist } from "@planx/components/Checklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import { ROOT_NODE_KEY } from "@planx/graph";
 import { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import ChecklistItem from "ui/ChecklistItem";
@@ -38,6 +40,7 @@ const ChecklistComponent: React.FC<Props> = ({
   text,
   img,
 }) => {
+  const page = useStore((state) => state.page);
   // TODO: do we still need formik here?
 
   const formik = useFormik<{ checked: Array<string> }>({
@@ -78,19 +81,24 @@ const ChecklistComponent: React.FC<Props> = ({
       newCheckedIds = [...formik.values.checked, id];
     }
 
-    formik.setFieldValue(
-      "checked",
-      newCheckedIds.sort((a, b) => {
-        const originalIds = flatOptions.map((cb) => cb.id);
-        return originalIds.indexOf(a) - originalIds.indexOf(b);
-      })
-    );
+    const newValues = newCheckedIds.sort((a, b) => {
+      const originalIds = flatOptions.map((cb) => cb.id);
+      return originalIds.indexOf(a) - originalIds.indexOf(b);
+    });
+
+    formik.setFieldValue("checked", newValues);
+
+    if (page !== ROOT_NODE_KEY) handleSubmit(newValues);
   };
 
   return (
     <Card
       isValid={!allRequired || allChecked}
-      handleSubmit={() => handleSubmit(formik.values.checked)}
+      handleSubmit={
+        page === ROOT_NODE_KEY
+          ? () => handleSubmit(formik.values.checked)
+          : undefined
+      }
     >
       <QuestionHeader
         title={text}
