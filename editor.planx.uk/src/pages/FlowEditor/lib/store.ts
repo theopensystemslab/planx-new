@@ -840,7 +840,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
     while (listToExplore.length) {
       const next = listToExplore.pop();
-      if (next) {
+      if (next && flow[next]) {
         const { type, edges = [] } = flow[next];
 
         list.add(next);

@@ -98,7 +98,7 @@ const editNode = route(async (req) => {
 
   if (type === "checklist" || type === "question") {
     const childNodes = useStore.getState().childNodesOf(id);
-    if (node.data.categories) {
+    if (node.data?.categories) {
       extraProps.groupedOptions = mapAccum(
         (index: number, category: { title: string; count: number }) => [
           index + category.count,

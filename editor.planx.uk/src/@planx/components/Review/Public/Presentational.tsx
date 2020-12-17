@@ -101,6 +101,7 @@ function Component(props: Props) {
             // XXX: This works because since ES2015 key order is guaranteed to be the insertion order
             Object.entries(props.breadcrumbs).map(([nodeId, value], i) => {
               const node = props.flow[nodeId];
+              if (!node) return null;
               const Component = components[node.type];
               if (Component === undefined) {
                 return null;
