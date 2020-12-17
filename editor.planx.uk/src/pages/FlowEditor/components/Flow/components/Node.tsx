@@ -16,7 +16,7 @@ const Node: React.FC<any> = (props) => {
   const type = props.type as TYPES;
   switch (type) {
     case TYPES.Content:
-      return <Question {...props} text={"Content"} />;
+      return <Question {...props} text={node?.data?.content ?? "Content"} />;
     case TYPES.DateInput:
       return <Question {...props} text="Date" />;
     case TYPES.ExternalPortal:
@@ -32,7 +32,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.FindProperty:
       return <Question {...props} text="Find property" />;
     case TYPES.Notice:
-      return <Question {...props} text="Notice" />;
+      return <Question {...props} text={node?.data?.title ?? "Notice"} />;
     case TYPES.NumberInput:
       return <Question {...props} text="Number" />;
     case TYPES.Page:
@@ -62,7 +62,7 @@ const Node: React.FC<any> = (props) => {
         />
       );
     case TYPES.TextInput:
-      return <Question {...props} text="Text" />;
+      return <Question {...props} text={node?.data?.title ?? "Text"} />;
 
     case TYPES.Response:
       return <Option {...props} />;
