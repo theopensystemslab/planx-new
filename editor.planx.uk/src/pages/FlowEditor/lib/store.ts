@@ -609,7 +609,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       const key = flow[id].data?.fn;
       if (key) {
         let passportValue;
-        passportValue = vals.map((id) => flow[id].data?.val);
+        passportValue = vals.map((id) => flow[id]?.data?.val);
 
         passportValue = passportValue.filter(
           (val) =>
