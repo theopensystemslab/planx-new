@@ -1,3 +1,4 @@
+import Button from "@material-ui/core/Button";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import React from "react";
 
@@ -40,14 +41,19 @@ const Questions = () => {
         />
       ))}
       {nodes.showContinue && (
-        <button
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          type="submit"
           onClick={() => {
             record(page, []);
             setPage(ROOT_NODE_KEY);
           }}
+          style={{ marginBottom: 40 }}
         >
           Continue
-        </button>
+        </Button>
       )}
     </>
   );
