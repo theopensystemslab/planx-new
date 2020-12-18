@@ -41,6 +41,9 @@ const Questions = () => {
             }}
           />
         ))}
+      {!nodes && (
+        <h2>You do not need to provide any information in this section</h2>
+      )}
       {(!nodes || nodes.showContinue) && (
         <Button
           variant="contained"
