@@ -2,6 +2,8 @@ import Button from "@material-ui/core/Button";
 import { EditorProps, PublicProps } from "@planx/components/ui";
 import React, { useState } from "react";
 
+export default Wrapper;
+
 interface Props<Type, Data, UserData> {
   Editor: React.FC<EditorProps<Type, Data>>;
   Public: React.FC<PublicProps<Data, UserData>>;
@@ -13,27 +15,67 @@ function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
   const [_userData, setUserData] = useState<UserData | null>(null);
 
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ minWidth: 380 }}>
-        <props.Editor
-          handleSubmit={(newNode) => {
-            setData(newNode.data);
-          }}
-        />
-        <Button type="submit" variant="contained" color="primary" form="modal">
-          Submit
-        </Button>
+    <>
+      <p>
+        <small>
+          Tip: Click the "Submit" button at the end of this page to update the
+          preview of the Public component.
+        </small>
+      </p>
+      <div style={{ display: "flex" }}>
+        <div style={{ minWidth: 380 }}>
+          <props.Editor
+            handleSubmit={(newNode) => {
+              setData(newNode.data);
+            }}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            form="modal"
+          >
+            Submit
+          </Button>
+        </div>
+        <ErrorBoundary hasInitData={Boolean(data)}>
+          <props.Public
+            {...data}
+            handleSubmit={(newUserData) => {
+              setUserData(newUserData);
+            }}
+          />
+        </ErrorBoundary>
       </div>
-      {data && (
-        <props.Public
-          {...data}
-          handleSubmit={(newUserData) => {
-            setUserData(newUserData);
-          }}
-        />
-      )}
-    </div>
+    </>
   );
 }
 
-export default Wrapper;
+type ErrorProps = { hasInitData: boolean };
+type ErrorState = { hasError: boolean };
+class ErrorBoundary extends React.Component<ErrorProps, ErrorState> {
+  state: ErrorState = {
+    hasError: false,
+  };
+  constructor(props) {
+    super(props);
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.props.hasInitData) {
+      return this.props.children;
+    }
+    if (this.state.hasError) {
+      return (
+        <p>
+          <small>Awaiting initial data…</small>
+        </p>
+      );
+    }
+    return this.props.children;
+  }
+}
