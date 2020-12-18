@@ -90,7 +90,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-scripts build",
-    "test": "react-scripts test --silent",
+    "test": "react-scripts test",
     "cosmos": "FAST_REFRESH=false cosmos",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",

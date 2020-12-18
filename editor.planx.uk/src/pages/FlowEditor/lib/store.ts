@@ -508,7 +508,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
               if (responseThatCanBeAutoAnswered) {
                 if (fn !== "flag") {
-                  console.log("eee");
                   set({
                     breadcrumbs: {
                       ...breadcrumbs,
@@ -832,14 +831,16 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     }, {});
   },
 
-  dfs(start = "_root") {
-    const { flow, breadcrumbs } = get();
+  dfs(start) {
+    const { flow, breadcrumbs, passport } = get();
 
     const visited: Set<string> = new Set();
 
     const list: Set<string> = new Set();
+    const hidden: Set<string> = new Set();
 
     const listToExplore: string[] = [start];
+    console.log({ listToExplore });
     visited.add(start);
 
     const flatBreadcrumbs = Object.entries(breadcrumbs)
@@ -849,22 +850,52 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     while (listToExplore.length) {
       const next = listToExplore.pop();
       if (next && flow[next]) {
-        const { type, edges = [] } = flow[next];
+        const { type, edges = [], data: { fn } = {} } = flow[next];
 
         list.add(next);
 
-        if (type === TYPES.InternalPortal || flatBreadcrumbs.includes(next)) {
-          [...edges].reverse().forEach((childIndex: string, i) => {
-            if (!visited.has(childIndex)) {
+        if (
+          type === TYPES.InternalPortal ||
+          flatBreadcrumbs.includes(next) ||
+          hidden.has(next)
+        ) {
+          [...edges]
+            .reverse()
+            .filter((i) => !visited.has(i))
+            .forEach((childIndex: string) => {
               listToExplore.push(childIndex);
               visited.add(childIndex);
+            });
+        } else if (
+          passport.data &&
+          passport.data[fn] &&
+          passport.data[fn].value
+        ) {
+          let passportValues = passport.data[fn].value.sort();
+          if (fn && passportValues !== undefined) {
+            for (
+              let i = 0;
+              i < edges.filter((i) => !visited.has(i)).length;
+              i++
+            ) {
+              const id = edges[i];
+              const { data: { val } = {} } = flow[id];
+              if (String(val).startsWith(String(passportValues))) {
+                hidden.add(next);
+                hidden.add(id);
+                listToExplore.push(id);
+                visited.add(id);
+                break;
+              }
             }
-          });
+          }
         }
       }
     }
 
-    return Array.from(list).slice(1);
+    return Array.from(list)
+      .slice(1)
+      .filter((i) => !hidden.has(i));
   },
 }));
 
