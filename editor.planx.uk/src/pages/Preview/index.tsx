@@ -33,6 +33,7 @@ const Questions = () => {
       <Title
         id={page}
         onClick={() => {
+          (nodes.upcoming || []).forEach(({ id }) => record(id, []));
           record(page, []);
           setPage(ROOT_NODE_KEY);
         }}
