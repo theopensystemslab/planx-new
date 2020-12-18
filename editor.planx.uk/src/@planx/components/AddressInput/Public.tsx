@@ -2,7 +2,7 @@ import Button from "@material-ui/core/Button";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
-import React, { useMemo, useState } from "react";
+import React, { ChangeEvent,useMemo, useState } from "react";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
@@ -20,9 +20,21 @@ export default function AddressInputComponent(props: Props): FCReturn {
     county: "",
     postcode: "",
   });
+
+  type AddressLine = keyof UserData;
+
   const isValid = useMemo(() => {
     return true;
   }, [value]);
+
+  const update = (line: AddressLine, ev: ChangeEvent<HTMLInputElement>) => {
+    ev.persist();
+    setValue((prev) => ({
+      ...prev,
+      [line]: ev.target.value,
+    }));
+  };
+
   return (
     <Card>
       <QuestionHeader
@@ -37,12 +49,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
           value={value.line1}
           placeholder="Line 1"
           bordered
-          onChange={(ev) => {
-            setValue((prev) => ({
-              ...prev,
-              line1: ev.target.value,
-            }));
-          }}
+          onChange={(ev) => update("line1", ev)}
         />
       </InputLabel>
       <InputRow>
@@ -50,12 +57,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
           value={value.line2}
           placeholder="Line 2"
           bordered
-          onChange={(ev) => {
-            setValue((prev) => ({
-              ...prev,
-              line2: ev.target.value,
-            }));
-          }}
+          onChange={(ev) => update("line2", ev)}
         />
       </InputRow>
       <InputLabel label="town">
@@ -63,12 +65,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
           value={value.town}
           placeholder="Town"
           bordered
-          onChange={(ev) => {
-            setValue((prev) => ({
-              ...prev,
-              town: ev.target.value,
-            }));
-          }}
+          onChange={(ev) => update("town", ev)}
         />
       </InputLabel>
       <InputLabel label="county">
@@ -76,12 +73,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
           value={value.county}
           placeholder="County"
           bordered
-          onChange={(ev) => {
-            setValue((prev) => ({
-              ...prev,
-              county: ev.target.value,
-            }));
-          }}
+          onChange={(ev) => update("county", ev)}
         />
       </InputLabel>
       <InputLabel label="postal code">
@@ -90,12 +82,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
             value={value.postcode}
             placeholder="Postal code"
             bordered
-            onChange={(ev) => {
-              setValue((prev) => ({
-                ...prev,
-                county: ev.target.value,
-              }));
-            }}
+            onChange={(ev) => update("postcode", ev)}
           />
         </InputRowItem>
       </InputLabel>

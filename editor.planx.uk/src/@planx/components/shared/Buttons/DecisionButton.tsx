@@ -33,7 +33,7 @@ const DecisionButton: React.FC<Props> = ({
         justifyContent="space-between"
         alignItems="center"
         flex={1}
-        py={1}
+        py={1.25}
         px={2}
       >
         <Typography variant="body2">{title}</Typography>

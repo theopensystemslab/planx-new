@@ -1,5 +1,6 @@
 import React from "react";
 
+import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { componentOutput, useStore } from "../FlowEditor/lib/store";
 import Node from "./Node";
@@ -41,6 +42,23 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
 
   const canGoBack = goBackable.length > 0;
 
+  // TODO: are these configurable in settings?
+
+  const leftFooterItems = [
+    {
+      title: "Privacy",
+      href: "",
+    },
+  ];
+
+  const rightFooterItems = [
+    {
+      title: "Help",
+      href: "",
+      bold: true,
+    },
+  ];
+
   return (
     <>
       {!embedded && <Header bgcolor={theme.primary} logo={theme.logo} />}
@@ -71,6 +89,9 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
 
         <Questions />
       </div>
+      {!embedded && (
+        <Footer leftItems={leftFooterItems} rightItems={rightFooterItems} />
+      )}
     </>
   );
 };

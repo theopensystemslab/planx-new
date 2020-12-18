@@ -54,9 +54,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   logo: {
-    height: 70,
+    maxHeight: 70,
     width: "100%",
     maxWidth: 140,
+    objectFit: "contain",
   },
 }));
 
