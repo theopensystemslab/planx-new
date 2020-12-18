@@ -570,31 +570,46 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   },
 
   currentNodes(start) {
-    const { flow, dfs, breadcrumbs } = get();
+    const { flow, dfs, breadcrumbs, upcomingCardIds } = get();
 
-    const types = [TYPES.Response, TYPES.InternalPortal, TYPES.ExternalPortal];
-
-    let upcoming = dfs(start)
-      .map((id) => ({ id, ...flow[id] }))
-      .filter((x) => {
-        if (start === ROOT_NODE_KEY) {
-          return !breadcrumbs[x.id] && !types.includes(x.type);
-        } else {
-          return !types.includes(x.type) && x.edges?.length > 0;
-        }
-      });
-
-    console.log(dfs(start));
-
-    const showContinue = upcoming
-      .map((x) => x.id)
-      .every((id) => breadcrumbs[id]);
-
-    if (upcoming.length > 0) {
-      upcoming = start === "_root" ? upcoming.slice(0, 1) : upcoming;
-      return { showContinue, upcoming };
+    if (start === ROOT_NODE_KEY) {
+      let upcoming = upcomingCardIds().map((id) => ({ id, ...flow[id] }));
+      if (upcoming.length > 0) {
+        return { showContinue: false, upcoming: upcoming.slice(0, 1) };
+      } else {
+        return null;
+      }
     } else {
-      return null;
+      const types = [
+        TYPES.Response,
+        TYPES.InternalPortal,
+        TYPES.ExternalPortal,
+      ];
+
+      let upcoming = dfs(start)
+        .map((id) => ({ id, ...flow[id] }))
+        .filter((x) => {
+          if (start === ROOT_NODE_KEY) {
+            return !breadcrumbs[x.id] && !types.includes(x.type);
+          } else {
+            return (
+              !types.includes(x.type) &&
+              (!SUPPORTED_DECISION_TYPES.includes(x.type) ||
+                x.edges?.length > 0)
+            );
+            // x.edges?.length > 0;
+          }
+        });
+
+      const showContinue = upcoming
+        .map((x) => x.id)
+        .every((id) => breadcrumbs[id]);
+
+      if (upcoming.length > 0) {
+        return { showContinue, upcoming };
+      } else {
+        return null;
+      }
     }
   },
 

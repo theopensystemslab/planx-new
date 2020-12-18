@@ -44,6 +44,8 @@ const TextInputComponent: React.FC<Props> = (props) => {
             bordered
             onChange={(ev) => {
               setValue(ev.target.value);
+
+              props.handleSubmit && props.handleSubmit(value);
             }}
           />
         ) : (

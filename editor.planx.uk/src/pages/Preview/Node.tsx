@@ -83,7 +83,12 @@ const Node: React.FC<any> = (props: Props) => {
       );
 
     case TYPES.Content:
-      return <Content {...allProps} />;
+      return (
+        <Content
+          {...allProps}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
+      );
 
     case TYPES.DateInput:
       return <DateInput {...allProps} />;
