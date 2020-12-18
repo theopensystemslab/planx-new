@@ -146,12 +146,14 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.PageWithSections:
       // const s = sections(props.node.id);
 
-      const sections = flow[props.node.id].edges.map((id) => {
+      const { edges = [] } = flow[props.node.id];
+
+      const sections = edges.map((id) => {
         const node = flow[id];
 
         return {
           id,
-          title: node.data.title,
+          title: node.data?.title || "Untitled Page",
           status: breadcrumbs[id] ? "complete" : "ready",
           handleClick: () => setPage(id),
         };

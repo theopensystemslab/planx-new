@@ -11,8 +11,8 @@ const Title = ({ id }) => {
   const page = useStore((state) => state.flow[id]);
   return (
     <>
-      <h1>{page.data.title}</h1>
-      <p>{page.data.description}</p>
+      <h1>{page.data?.title}</h1>
+      <p>{page.data?.description}</p>
     </>
   );
 };
