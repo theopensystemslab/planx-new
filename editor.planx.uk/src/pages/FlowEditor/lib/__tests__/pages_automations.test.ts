@@ -13,7 +13,7 @@ test("thing", () => {
     passport: {
       data: {
         animal: {
-          value: ["dog"],
+          value: ["dog", "foo"],
         },
       },
     },

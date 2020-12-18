@@ -871,15 +871,25 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
           passport.data[fn].value
         ) {
           let passportValues = passport.data[fn].value.sort();
+
           if (fn && passportValues !== undefined) {
-            for (
-              let i = 0;
-              i < edges.filter((i) => !visited.has(i)).length;
-              i++
-            ) {
-              const id = edges[i];
-              const { data: { val } = {} } = flow[id];
-              if (String(val).startsWith(String(passportValues))) {
+            const sortedResponses = [...edges]
+              .filter((i) => !visited.has(i))
+              .map((id) => ({ id, ...flow[id] }))
+              .sort(mostToLeastNumberOfValues)
+              .filter((response) => response.data?.val);
+
+            if (!Array.isArray(passportValues))
+              passportValues = [passportValues];
+
+            passportValues = (passportValues || []).filter((pv) =>
+              sortedResponses.some((r) => pv.startsWith(r.data.val))
+            );
+
+            for (let i = 0; i < sortedResponses.length; i++) {
+              const { id, data: { val } = {} } = sortedResponses[i];
+              const responseValues = String(val).split(",").sort();
+              if (String(responseValues) === String(passportValues)) {
                 hidden.add(next);
                 hidden.add(id);
                 listToExplore.push(id);
