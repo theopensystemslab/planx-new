@@ -36,6 +36,9 @@ const send = (ops) => {
   }
 };
 
+const mostToLeastNumberOfValues = (b, a) =>
+  String(a.data?.val).split(",").length - String(b.data?.val).split(",").length;
+
 export type componentOutput = undefined | null | any | Array<any>;
 export type userData = { answers: componentOutput; auto?: boolean };
 export type breadcrumbs = Record<string, userData>;
@@ -437,10 +440,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
     const ids: Set<string> = new Set();
 
-    const mostToLeastNumberOfValues = (b, a) =>
-      String(a.data?.val).split(",").length -
-      String(b.data?.val).split(",").length;
-
     const nodeIdsConnectedFrom = (source: string) => {
       return (flow[source]?.edges ?? [])
         .filter(
@@ -597,7 +596,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               (!SUPPORTED_DECISION_TYPES.includes(x.type) ||
                 x.edges?.length > 0)
             );
-            // x.edges?.length > 0;
           }
         });
 
@@ -662,12 +660,12 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         }
       } else {
         // console.log("ccc");
-        let page = ROOT_NODE_KEY;
-        const upcoming = upcomingCardIds();
+        // let page = ROOT_NODE_KEY;
+        // const upcoming = upcomingCardIds();
 
-        if (upcoming.length > 1 && flow[upcoming[1]].type === TYPES.Page) {
-          page = upcoming[1];
-        }
+        // if (upcoming.length > 1 && flow[upcoming[1]].type === TYPES.Page) {
+        //   page = upcoming[1];
+        // }
 
         set({
           breadcrumbs: { ...breadcrumbs, [id]: { answers: vals, auto: true } },
@@ -834,7 +832,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     }, {});
   },
 
-  dfs(start = "_root", useBreadcrumbs = true) {
+  dfs(start = "_root") {
     const { flow, breadcrumbs } = get();
 
     const visited: Set<string> = new Set();
@@ -844,14 +842,9 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     const listToExplore: string[] = [start];
     visited.add(start);
 
-    const flatBreadcrumbs = useBreadcrumbs
-      ? Object.entries(breadcrumbs)
-          .reduce(
-            (acc, [k, v]) => acc.concat([k, ...v.answers]),
-            [] as string[]
-          )
-          .concat(start)
-      : [];
+    const flatBreadcrumbs = Object.entries(breadcrumbs)
+      .reduce((acc, [k, v]) => acc.concat([k, ...v.answers]), [] as string[])
+      .concat(start);
 
     while (listToExplore.length) {
       const next = listToExplore.pop();
@@ -860,11 +853,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
         list.add(next);
 
-        if (
-          type === TYPES.InternalPortal ||
-          !useBreadcrumbs ||
-          flatBreadcrumbs.includes(next)
-        ) {
+        if (type === TYPES.InternalPortal || flatBreadcrumbs.includes(next)) {
           [...edges].reverse().forEach((childIndex: string, i) => {
             if (!visited.has(childIndex)) {
               listToExplore.push(childIndex);
@@ -876,7 +865,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     }
 
     return Array.from(list).slice(1);
-    // .map((id) => ({ id, ...flow[id] }));
   },
 }));
 
