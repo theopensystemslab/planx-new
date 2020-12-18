@@ -160,7 +160,11 @@ function Question(props: ComponentProps) {
 
   function getNodeText() {
     const answerId = props.userData.answers[0];
-    return props.flow[answerId].data.text;
+    try {
+      return props.flow[answerId].data.text;
+    } catch (e) {
+      return "";
+    }
   }
 }
 

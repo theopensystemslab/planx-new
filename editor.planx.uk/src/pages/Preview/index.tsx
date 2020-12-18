@@ -1,4 +1,5 @@
 import Button from "@material-ui/core/Button";
+import { TYPES } from "@planx/components/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import React from "react";
 
@@ -33,7 +34,11 @@ const Questions = () => {
       <Title
         id={page}
         onClick={() => {
-          (nodes.upcoming || []).forEach(({ id }) => record(id, []));
+          (nodes.upcoming || []).forEach(({ id, type }) => {
+            if (type !== TYPES.Response) {
+              record(id, []);
+            }
+          });
           record(page, []);
           setPage(ROOT_NODE_KEY);
         }}
