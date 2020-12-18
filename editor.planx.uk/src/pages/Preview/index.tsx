@@ -59,16 +59,20 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
     primary: "#2c2c2c",
   },
 }) => {
-  const [breadcrumbs, record] = useStore((state) => [
+  const [breadcrumbs, record, page, setPage] = useStore((state) => [
     state.breadcrumbs,
     state.record,
+    state.page,
+    state.setPage,
   ]);
 
-  const goBackable = Object.entries(breadcrumbs)
-    .filter(([k, v]: any) => !v.auto)
-    .map(([k]) => k);
+  // const goBackable = Object.entries(breadcrumbs)
+  //   .filter(([k, v]: any) => !v.auto)
+  //   .map(([k]) => k);
 
-  const canGoBack = goBackable.length > 0;
+  // const canGoBack = goBackable.length > 0;
+
+  const canGoBack = page !== ROOT_NODE_KEY;
 
   return (
     <>
@@ -84,7 +88,10 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
         }}
       >
         <span
-          onClick={() => record(goBackable.pop())}
+          // onClick={() => record(goBackable.pop())}
+          onClick={() => {
+            setPage(ROOT_NODE_KEY);
+          }}
           style={{
             padding: "0 10px 10px",
             visibility: canGoBack ? "visible" : "hidden",
