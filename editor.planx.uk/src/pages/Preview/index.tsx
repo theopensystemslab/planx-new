@@ -6,13 +6,13 @@ import Header from "../../components/Header";
 import { componentOutput, useStore } from "../FlowEditor/lib/store";
 import Node from "./Node";
 
-const Title = ({ id }) => {
+const Title = ({ id, onClick }) => {
   if (id === ROOT_NODE_KEY) return null;
 
   const page = useStore((state) => state.flow[id]);
   return (
     <>
-      <h1>{page.data?.title}</h1>
+      <h1 onClick={onClick}>{page.data?.title}</h1>
       <p>{page.data?.description}</p>
     </>
   );
@@ -30,7 +30,13 @@ const Questions = () => {
 
   return (
     <>
-      <Title id={page} />
+      <Title
+        id={page}
+        onClick={() => {
+          record(page, []);
+          setPage(ROOT_NODE_KEY);
+        }}
+      />
       {nodes &&
         nodes.upcoming.map((node) => (
           <Node
