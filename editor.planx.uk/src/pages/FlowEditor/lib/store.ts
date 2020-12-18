@@ -840,7 +840,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     const hidden: Set<string> = new Set();
 
     const listToExplore: string[] = [start];
-    console.log({ listToExplore });
     visited.add(start);
 
     const flatBreadcrumbs = Object.entries(breadcrumbs)

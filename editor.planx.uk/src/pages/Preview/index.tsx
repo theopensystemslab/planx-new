@@ -26,21 +26,22 @@ const Questions = () => {
     state.setPage,
   ]);
 
-  if (!nodes) return null;
+  if (page === ROOT_NODE_KEY && !nodes) return null;
 
   return (
     <>
       <Title id={page} />
-      {nodes.upcoming.map((node) => (
-        <Node
-          node={node}
-          key={node.id}
-          handleSubmit={(values: componentOutput) => {
-            record(node.id, values);
-          }}
-        />
-      ))}
-      {nodes.showContinue && (
+      {nodes &&
+        nodes.upcoming.map((node) => (
+          <Node
+            node={node}
+            key={node.id}
+            handleSubmit={(values: componentOutput) => {
+              record(node.id, values);
+            }}
+          />
+        ))}
+      {(!nodes || nodes.showContinue) && (
         <Button
           variant="contained"
           color="primary"
