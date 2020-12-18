@@ -2,6 +2,8 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { TextInput, UserData } from "@planx/components/TextInput/model";
 import { PublicProps } from "@planx/components/ui";
+import { ROOT_NODE_KEY } from "@planx/graph";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useState } from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
@@ -16,6 +18,7 @@ const isValidEmail = (str: string) => {
 };
 
 const TextInputComponent: React.FC<Props> = (props) => {
+  const page = useStore((state) => state.page);
   const [value, setValue] = useState<string>("");
   const isValid = useMemo(() => {
     if (props.type === "email") {
@@ -24,11 +27,13 @@ const TextInputComponent: React.FC<Props> = (props) => {
     return !!value;
   }, [value, props.type]);
 
+  const handleSubmit =
+    page === ROOT_NODE_KEY
+      ? () => props.handleSubmit && props.handleSubmit(value)
+      : undefined;
+
   return (
-    <Card
-      handleSubmit={() => props.handleSubmit && props.handleSubmit(value)}
-      isValid={isValid}
-    >
+    <Card handleSubmit={handleSubmit} isValid={isValid}>
       <QuestionHeader
         title={props.title}
         description={props.description}
@@ -44,8 +49,9 @@ const TextInputComponent: React.FC<Props> = (props) => {
             bordered
             onChange={(ev) => {
               setValue(ev.target.value);
-
-              props.handleSubmit && props.handleSubmit(value);
+              if (isValid) {
+                props.handleSubmit && props.handleSubmit(value);
+              }
             }}
           />
         ) : (
@@ -56,6 +62,9 @@ const TextInputComponent: React.FC<Props> = (props) => {
             bordered
             onChange={(ev) => {
               setValue(ev.target.value);
+              if (isValid) {
+                props.handleSubmit && props.handleSubmit(value);
+              }
             }}
           />
         )}
