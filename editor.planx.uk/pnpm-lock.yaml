@@ -6,6 +6,7 @@ dependencies:
   '@material-ui/icons': 4.9.1_a86b7d24d2481968855f45294417fbec
   '@material-ui/lab': 4.0.0-alpha.56_a86b7d24d2481968855f45294417fbec
   '@turf/area': 6.0.1
+  '@types/sharedb': 1.0.10
   array-move: 3.0.1
   axios: 0.19.2
   axios-hooks: 2.1.0_axios@0.19.2+react@16.14.0
@@ -4497,6 +4498,10 @@ packages:
   /@types/node/12.19.6:
     resolution:
       integrity: sha512-U2VopDdmBoYBmtm8Rz340mvvSz34VgX/K9+XCuckvcLGMkt3rbMX8soqFOikIPlPBc5lmw8By9NUK7bEFSBFlQ==
+  /@types/node/12.19.9:
+    dev: false
+    resolution:
+      integrity: sha512-yj0DOaQeUrk3nJ0bd3Y5PeDRJ6W0r+kilosLA+dzF3dola/o9hxhMSg2sFvVcA2UHS5JSOsZp4S0c1OEXc4m1Q==
   /@types/normalize-package-data/2.4.0:
     dev: false
     resolution:
@@ -4605,6 +4610,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-auApPaJf3NPfe18hSoJkp8EbZzer2ISk7o8mCC3M9he/a04+gbMF97NkpD2S8riMGvm4BMRI59/SZQSaLTKpsQ==
+  /@types/sharedb/1.0.10:
+    dependencies:
+      '@types/ws': 7.4.0
+    dev: false
+    resolution:
+      integrity: sha512-O8SC8HQDJmgTmf86HipylQAJoq+xi5jcFQWC4HGmgJSrtdz2Dw3vhXBzqemyGmg4QHxRfSvYakTOchg8box0nQ==
   /@types/source-list-map/0.1.2:
     resolution:
       integrity: sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==
@@ -4650,6 +4661,12 @@ packages:
       source-map: 0.6.1
     resolution:
       integrity: sha512-cr6kZ+4m9lp86ytQc1jPOJXgINQyz3kLLunZ57jznW+WIAL0JqZbGubQk4GlD42MuQL5JGOABrxdpqqWeovlVQ==
+  /@types/ws/7.4.0:
+    dependencies:
+      '@types/node': 12.19.9
+    dev: false
+    resolution:
+      integrity: sha512-Y29uQ3Uy+58bZrFLhX36hcI3Np37nqWE7ky5tjiDoy1GDZnIwVxS0CgF+s+1bXMzjKBFy+fqaRfb708iNzdinw==
   /@types/yargs-parser/15.0.0:
     resolution:
       integrity: sha512-FA/BWv8t8ZWJ+gEOnLLd8ygxH/2UFbAvgEonyfN6yWGLKc7zVjbpl2Y4CTjid9h2RfgPP6SEt6uHwEOply00yw==
@@ -18928,6 +18945,7 @@ specifiers:
   '@types/react-beautiful-dnd': ^13.0.0
   '@types/react-color': ^3.0.4
   '@types/react-dom': ^16.9.9
+  '@types/sharedb': ^1.0.10
   array-move: ^3.0.1
   axios: ^0.19.2
   axios-hooks: ^2.1.0

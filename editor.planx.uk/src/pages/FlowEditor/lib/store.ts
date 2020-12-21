@@ -49,18 +49,18 @@ export interface passport {
 
 interface Store extends Record<string | number | symbol, unknown> {
   addNode: any; //: () => void;
-  childNodesOf: (string) => Record<string, any>[];
+  childNodesOf: (id: string) => Record<string, any>[];
   connect: (src: string, tgt: string, object?) => void;
-  connectTo: (string) => void;
-  copyNode: (string) => void;
+  connectTo: (id: string) => void;
+  copyNode: (id: string) => void;
   createFlow: any; //: () => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   flow: flow;
   flowLayout: FlowLayout;
   getFlows: any; //: () => any;
-  getNode: (string) => Record<string, any>;
+  getNode: (id: string) => Record<string, any>;
   id: string;
-  isClone: (string) => boolean;
+  isClone: (id: string) => boolean;
   makeUnique: any; //: () => void;
   moveNode: any; //: () => void;
   pasteNode: any; //: () => void;
@@ -748,11 +748,11 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
             const questionType = question?.type;
 
-            if (!questionType) {
+            if (
+              !questionType ||
+              !SUPPORTED_DECISION_TYPES.includes(questionType)
+            )
               return null;
-            }
-
-            if (!SUPPORTED_DECISION_TYPES.includes(questionType)) return null;
 
             answers = Array.isArray(answers) ? answers : [answers];
 

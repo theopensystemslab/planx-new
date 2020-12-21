@@ -157,7 +157,7 @@ function AddButton({
   children,
   onClick,
 }: {
-  children: string | JSX.Element | JSX.Element[];
+  children: string;
   onClick: () => void;
 }): FCReturn {
   const classes = useAddButtonStyles();
