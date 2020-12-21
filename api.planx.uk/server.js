@@ -9,6 +9,7 @@ const { Server } = require("http");
 const passport = require("passport");
 const { sign } = require("jsonwebtoken");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const { createProxyMiddleware } = require("http-proxy-middleware");
 const { signS3Upload } = require("./s3");
 
 const router = express.Router();
@@ -131,8 +132,6 @@ const buildJWT = async (profile, done) => {
       "https://hasura.io/jwt/claims": hasura,
     };
 
-    console.log({ data });
-
     return done(null, {
       jwt: sign(data, process.env.JWT_SECRET),
     });
@@ -192,6 +191,19 @@ app.use(
       }
     },
   })
+);
+
+app.use("/bops/:localAuthority", (req, res) =>
+  createProxyMiddleware({
+    headers: {
+      ...req.headers,
+      Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
+    },
+    pathRewrite: (path) => path.replace(/^\/bops.*$/, ""),
+    target: `https://${req.params.localAuthority}.preview.bops.services/api/v1/planning_applications`,
+    changeOrigin: true,
+    logLevel: "debug",
+  })(req, res)
 );
 
 app.use(
