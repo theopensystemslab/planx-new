@@ -20,7 +20,7 @@ export const useClasses = makeStyles<Theme, Props>((theme) => ({
   },
 }));
 
-interface Props {
+export interface Props {
   checked: boolean;
   color?: string;
 }

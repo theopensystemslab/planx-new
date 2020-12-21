@@ -1,6 +1,7 @@
 import { Meta } from "@storybook/react/types-6-0";
-import React, { useState } from "react";
+import React from "react";
 
+import type { Props } from "./Checkbox";
 import Checkbox from "./Checkbox";
 
 const metadata: Meta = {
@@ -11,7 +12,7 @@ const metadata: Meta = {
   },
 };
 
-export const Basic = (args) => <Checkbox {...args} />;
+export const Basic = (args: Props) => <Checkbox {...args} />;
 Basic.args = {
   checked: false,
 };

@@ -1,4 +1,5 @@
 import ButtonBase, { ButtonBaseProps } from "@material-ui/core/ButtonBase";
+import type { Theme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import React from "react";
@@ -8,7 +9,7 @@ interface Props extends ButtonBaseProps {
   color?: string;
 }
 
-const useClasses = makeStyles((theme) => ({
+const useClasses = makeStyles<Theme, { backgroundColor: string }>((theme) => ({
   root: {
     height: 50,
     paddingLeft: 50,
@@ -34,7 +35,7 @@ const useClasses = makeStyles((theme) => ({
       backgroundColor: theme.palette.grey[500],
     },
   },
-  selected: (props: { backgroundColor: "" }) => ({
+  selected: (props) => ({
     backgroundColor: theme.palette.grey[300],
     "&::before": {
       color: "#fff",
