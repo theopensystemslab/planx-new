@@ -200,19 +200,6 @@ app.use("/bops/:localAuthority", (req, res) =>
 );
 
 app.use(
-  "/bops",
-  createProxyMiddleware({
-    pathRewrite: {
-      "^/bops": "",
-    },
-    target:
-      "https://southwark.preview.bops.services/api/v1/planning_applications",
-    changeOrigin: true,
-    logLevel: "debug",
-  })
-);
-
-app.use(
   cookieSession({
     maxAge: 24 * 60 * 60 * 100,
     name: "session",
