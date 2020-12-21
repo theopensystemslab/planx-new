@@ -159,7 +159,7 @@ const SendComponent: React.FC<Props> = (props) => {
 
         data.site.postcode = passport.info.postcode;
 
-        data.questions = replay;
+        data.questions = { replay: replay() };
 
         data.constraints = (
           passport.data["property.constraints.planning"] || []
@@ -186,7 +186,7 @@ const SendComponent: React.FC<Props> = (props) => {
     send();
   }, []);
 
-  return <Card>Sending data...</Card>;
+  return <Card>Sending data</Card>;
 };
 
 export default SendComponent;
