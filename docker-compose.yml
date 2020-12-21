@@ -64,6 +64,7 @@ services:
       AWS_S3_BUCKET: ${AWS_S3_BUCKET}
       AWS_S3_ACL: ${AWS_S3_ACL}
       PORT: ${API_PORT}
+      BOPS_API_TOKEN: ${BOPS_API_TOKEN}
 
   sharedb:
     restart: always
