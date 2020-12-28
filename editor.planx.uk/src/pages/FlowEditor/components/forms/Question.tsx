@@ -42,11 +42,10 @@ const OptionEditor: React.FC<{
 }> = (props) => (
   <div style={{ width: "100%" }}>
     <InputRow>
+      {props.value.id && (
+        <input type="hidden" value={props.value.id} readOnly />
+      )}
       <InputRowItem width="50%">
-        {props.value.id && (
-          <input type="hidden" value={props.value.id} readOnly />
-        )}
-
         <Input
           // required
           format="bold"
@@ -112,31 +111,6 @@ const OptionEditor: React.FC<{
   </div>
 );
 
-const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
-  return (
-    <ModalSectionContent title="Options">
-      <ListManager
-        values={formik.values.options}
-        onChange={(newOptions) => {
-          formik.setFieldValue("options", newOptions);
-        }}
-        newValue={() =>
-          ({
-            data: {
-              text: "",
-              description: "",
-              val: "",
-              flag: "",
-            },
-          } as Option)
-        }
-        Editor={OptionEditor}
-        editorExtraProps={{ showValueField: !!formik.values.fn }}
-      />
-    </ModalSectionContent>
-  );
-};
-
 export const Question: React.FC<Props> = (props) => {
   const type = TYPES.Statement;
 
@@ -167,7 +141,7 @@ export const Question: React.FC<Props> = (props) => {
     validate: () => {},
   });
 
-  const focusRef = useRef(null);
+  const focusRef = useRef<HTMLInputElement | null>(null);
 
   // horrible hack to remove focus from Rich Text Editor
   useEffect(() => {
@@ -222,7 +196,26 @@ export const Question: React.FC<Props> = (props) => {
           </InputGroup>
         </ModalSectionContent>
 
-        <Options formik={formik} />
+        <ModalSectionContent title="Options">
+          <ListManager
+            values={formik.values.options}
+            onChange={(newOptions) => {
+              formik.setFieldValue("options", newOptions);
+            }}
+            newValue={() =>
+              ({
+                data: {
+                  text: "",
+                  description: "",
+                  val: "",
+                  flag: "",
+                },
+              } as Option)
+            }
+            Editor={OptionEditor}
+            editorExtraProps={{ showValueField: !!formik.values.fn }}
+          />
+        </ModalSectionContent>
       </ModalSection>
 
       <MoreInformation

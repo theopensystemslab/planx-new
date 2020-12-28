@@ -53,7 +53,7 @@ const moreInfoStyles = makeStyles((theme) => ({
 
 interface IMoreInfo {
   open: boolean;
-  children: JSX.Element[] | JSX.Element;
+  children: (JSX.Element | string | undefined)[] | JSX.Element;
   handleClose: Function;
 }
 

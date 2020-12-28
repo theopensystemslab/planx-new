@@ -12,9 +12,11 @@ export const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props extends ButtonProps {
+export interface Props extends ButtonProps {
+  id?: string;
   responseKey: string | number;
   title: string;
+  description?: string;
 }
 
 const DecisionButton: React.FC<Props> = ({

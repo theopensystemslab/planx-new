@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import React, { useRef, useState } from "react";
-import Play from "react-feather/dist/icons/play";
+import { Play } from "react-feather";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 
 import { useStore } from "../pages/FlowEditor/lib/store";

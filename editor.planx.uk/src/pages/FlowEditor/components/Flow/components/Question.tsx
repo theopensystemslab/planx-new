@@ -1,3 +1,4 @@
+import { TYPES } from "@planx/components/types";
 import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
 import React from "react";
@@ -9,7 +10,10 @@ import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Node from "./Node";
 
-type Props = any;
+type Props = {
+  type: TYPES;
+  [key: string]: any;
+};
 
 const Question: React.FC<Props> = React.memo((props) => {
   const [isClone, childNodes, copyNode] = useStore((state) => [

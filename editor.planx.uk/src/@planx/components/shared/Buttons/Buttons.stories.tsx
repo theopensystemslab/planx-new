@@ -1,11 +1,13 @@
 import Box from "@material-ui/core/Box";
-import { Meta } from "@storybook/react/types-6-0";
-import React, { useState } from "react";
+import { Meta, Story } from "@storybook/react/types-6-0";
+import React from "react";
 
 import ButtonBase from "./ButtonBase";
-import DecisionButton from "./DecisionButton";
-import DescriptionButton from "./DescriptionButton";
-import ImageButton from "./ImageButton";
+import DecisionButton, { Props as DecisionButtonProps } from "./DecisionButton";
+import DescriptionButton, {
+  Props as DescriptionButtonProps,
+} from "./DescriptionButton";
+import ImageButton, { Props as ImageButtonProps } from "./ImageButton";
 
 const metadata: Meta = {
   title: "Design System/Atoms/Buttons",
@@ -24,53 +26,53 @@ const metadata: Meta = {
   ],
 };
 
-export const Image = (args) => <ImageButton {...args} />;
+export const Image: Story<ImageButtonProps> = (args) => (
+  <ImageButton {...args} />
+);
 Image.args = {
-  response: {
-    id: "a",
-    responseKey: "a",
-    title: "Apple",
-    img:
-      "https://i2.wp.com/ceklog.kindel.com/wp-content/uploads/2013/02/firefox_2018-07-10_07-50-11.png",
-  },
+  id: "a",
+  responseKey: "a",
+  title: "Apple",
+  img:
+    "https://i2.wp.com/ceklog.kindel.com/wp-content/uploads/2013/02/firefox_2018-07-10_07-50-11.png",
 };
 
-export const MissingImage = (args) => <ImageButton {...args} />;
+export const MissingImage: Story<ImageButtonProps> = (args) => (
+  <ImageButton {...args} />
+);
 MissingImage.args = {
-  response: {
-    id: "a",
-    responseKey: "a",
-    title: "Apple",
-    img: "",
-  },
+  id: "a",
+  responseKey: "a",
+  title: "Apple",
+  img: "",
 };
 
-export const Decision = (args) => <DecisionButton {...args} />;
+export const Decision: Story<DecisionButtonProps> = (args) => (
+  <DecisionButton {...args} />
+);
 Decision.args = {
-  response: {
-    id: "a",
-    responseKey: "a",
-    title: "Apple",
-  },
+  id: "a",
+  responseKey: "a",
+  title: "Apple",
 };
 
-export const Description = (args) => <DescriptionButton {...args} />;
+export const Description: Story<DescriptionButtonProps> = (args) => (
+  <DescriptionButton {...args} />
+);
 Description.args = {
-  response: {
-    id: "a",
-    responseKey: "a",
-    title: "Apple",
-    description: "A delicious fruit",
-  },
+  id: "a",
+  responseKey: "a",
+  title: "Apple",
+  description: "A delicious fruit",
 };
 
-export const MissingDescription = (args) => <DescriptionButton {...args} />;
+export const MissingDescription: Story<DescriptionButtonProps> = (args) => (
+  <DescriptionButton {...args} />
+);
 MissingDescription.args = {
-  response: {
-    id: "a",
-    responseKey: "a",
-    title: "Apple",
-  },
+  id: "a",
+  responseKey: "a",
+  title: "Apple",
 };
 
 export default metadata;

@@ -55,7 +55,9 @@ describe("adding an internal portal", () => {
 
     expect(dropdown).toHaveValue("");
 
-    userEvent.selectOptions(dropdown, "portal");
+    if (dropdown) {
+      userEvent.selectOptions(dropdown, "portal");
+    }
 
     await waitFor(() => {
       fireEvent.submit(screen.getByTestId("form"));
@@ -75,7 +77,9 @@ describe("adding an internal portal", () => {
     );
 
     const dropdown = screen.queryByTestId("flowId");
-    userEvent.selectOptions(dropdown, "portal");
+    if (dropdown) {
+      userEvent.selectOptions(dropdown, "portal");
+    }
 
     await waitFor(() => {
       fireEvent.submit(screen.getByTestId("form"));

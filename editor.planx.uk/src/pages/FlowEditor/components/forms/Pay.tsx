@@ -10,7 +10,7 @@ import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
 
-function Component(props) {
+function Component(props: any) {
   const formik = useFormik<Pay>({
     initialValues: {
       // TODO: improve runtime validation here (joi, io-ts)

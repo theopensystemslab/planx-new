@@ -44,6 +44,7 @@ const Node: React.FC<any> = (props: Props) => {
 
   switch (props.node.type) {
     case TYPES.Checklist:
+      // TODO: sensitive fix for strict mode
       const childNodes = childNodesOf(props.node.id);
       return (
         <Checklist
@@ -157,6 +158,7 @@ const Node: React.FC<any> = (props: Props) => {
       );
 
     case TYPES.Statement:
+      // TODO: sensitive fix for strict mode
       return (
         <Question
           {...allProps}

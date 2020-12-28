@@ -1,8 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useState } from "react";
-import ExternalLink from "react-feather/dist/icons/external-link";
-import RefreshCw from "react-feather/dist/icons/refresh-cw";
-import Terminal from "react-feather/dist/icons/terminal";
+import { ExternalLink, RefreshCw, Terminal } from "react-feather";
 
 import Preview from "../../Preview";
 import { useStore } from "../lib/store";

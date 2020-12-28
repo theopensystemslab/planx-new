@@ -2,13 +2,14 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ImageIcon from "@material-ui/icons/Image";
-import React, { useLayoutEffect, useRef,useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import Checkbox from "ui/Checkbox";
 
 import theme from "../../../../theme";
 import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
 
 export interface Props extends ButtonProps {
+  id?: string;
   title: string;
   responseKey?: string | number;
   img?: string;
@@ -121,7 +122,10 @@ function ImageResponse(props: Props) {
                 color={selected ? "primary.contrastText" : "text.primary"}
               />
             )}
-            <Typography variant="body2" className={checkbox && classes.title}>
+            <Typography
+              variant="body2"
+              className={checkbox ? classes.title : undefined}
+            >
               {title}
             </Typography>
           </Box>

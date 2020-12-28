@@ -58,11 +58,10 @@ const OptionEditor: React.FC<{
   return (
     <div style={{ width: "100%" }}>
       <InputRow>
+        {props.value.id ? (
+          <input type="hidden" value={props.value.id} readOnly />
+        ) : null}
         <InputRowItem width="50%">
-          {props.value.id && (
-            <input type="hidden" value={props.value.id} readOnly />
-          )}
-
           <Input
             // required
             format="bold"
@@ -114,6 +113,7 @@ const OptionEditor: React.FC<{
                 label: `Move to ${group || `group ${groupIndex}`}`,
                 onClick: () => {
                   props.onMoveToGroup &&
+                    typeof props.index === "number" &&
                     props.onMoveToGroup(props.index, groupIndex);
                 },
                 disabled: groupIndex === props.groupIndex,
@@ -149,87 +149,92 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
     <ModalSectionContent title="Options">
       {formik.values.groupedOptions ? (
         <Box>
-          {formik.values.groupedOptions.map((groupedOption, groupIndex) => (
-            <Box key={groupIndex} mt={groupIndex === 0 ? 0 : 4}>
-              <Box display="flex" pb={1}>
-                <InputRow>
-                  <Input
-                    format="bold"
-                    name={`groupedOptions[${groupIndex}].title`}
-                    value={groupedOption.title}
-                    placeholder="Section Title"
-                    onChange={formik.handleChange}
-                  />
-                </InputRow>
-                <Box flex={0}>
-                  <IconButton
-                    title="Delete group"
-                    onClick={() => {
+          {formik.values.groupedOptions.map(
+            (groupedOption: Group<Option>, groupIndex: number) => (
+              <Box key={groupIndex} mt={groupIndex === 0 ? 0 : 4}>
+                <Box display="flex" pb={1}>
+                  <InputRow>
+                    <Input
+                      format="bold"
+                      name={`groupedOptions[${groupIndex}].title`}
+                      value={groupedOption.title}
+                      placeholder="Section Title"
+                      onChange={formik.handleChange}
+                    />
+                  </InputRow>
+                  <Box flex={0}>
+                    <IconButton
+                      title="Delete group"
+                      onClick={() => {
+                        formik.setFieldValue(
+                          `groupedOptions`,
+                          remove(groupIndex, 1, formik.values.groupedOptions)
+                        );
+                      }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Box>
+                </Box>
+                <Box pl={4}>
+                  <ListManager
+                    values={groupedOption.children}
+                    onChange={(newOptions) => {
                       formik.setFieldValue(
-                        `groupedOptions`,
-                        remove(groupIndex, 1, formik.values.groupedOptions)
+                        `groupedOptions[${groupIndex}].children`,
+                        newOptions
                       );
                     }}
-                  >
-                    <Delete />
-                  </IconButton>
+                    newValue={() =>
+                      ({
+                        data: {
+                          text: "",
+                          description: "",
+                          val: "",
+                          flag: "",
+                        },
+                      } as Option)
+                    }
+                    newValueLabel="add new option"
+                    Editor={OptionEditor}
+                    editorExtraProps={{
+                      groupIndex,
+                      showValueField: !!formik.values.fn,
+                      onMoveToGroup: (
+                        movedItemIndex: number,
+                        moveToGroupIndex: number
+                      ) => {
+                        const item = groupedOption.children[movedItemIndex];
+                        formik.setFieldValue(
+                          "groupedOptions",
+                          compose(
+                            adjust(
+                              moveToGroupIndex,
+                              (option: Group<Option>) => ({
+                                ...option,
+                                children: [...option.children, item],
+                              })
+                            ),
+                            adjust(groupIndex, (option: Group<Option>) => ({
+                              ...option,
+                              children: remove(
+                                movedItemIndex,
+                                1,
+                                option.children
+                              ),
+                            }))
+                          )(formik.values.groupedOptions)
+                        );
+                      },
+                      groups: formik.values.groupedOptions.map(
+                        (opt: Group<Option>) => opt.title
+                      ),
+                    }}
+                  />
                 </Box>
               </Box>
-              <Box pl={4}>
-                <ListManager
-                  values={groupedOption.children}
-                  onChange={(newOptions) => {
-                    formik.setFieldValue(
-                      `groupedOptions[${groupIndex}].children`,
-                      newOptions
-                    );
-                  }}
-                  newValue={() =>
-                    ({
-                      data: {
-                        text: "",
-                        description: "",
-                        val: "",
-                        flag: "",
-                      },
-                    } as Option)
-                  }
-                  newValueLabel="add new option"
-                  Editor={OptionEditor}
-                  editorExtraProps={{
-                    groupIndex,
-                    showValueField: !!formik.values.fn,
-                    onMoveToGroup: (
-                      movedItemIndex: number,
-                      moveToGroupIndex: number
-                    ) => {
-                      const item = groupedOption.children[movedItemIndex];
-                      formik.setFieldValue(
-                        "groupedOptions",
-                        compose(
-                          adjust(moveToGroupIndex, (option: Group<Option>) => ({
-                            ...option,
-                            children: [...option.children, item],
-                          })),
-                          adjust(groupIndex, (option: Group<Option>) => ({
-                            ...option,
-                            children: remove(
-                              movedItemIndex,
-                              1,
-                              option.children
-                            ),
-                          }))
-                        )(formik.values.groupedOptions)
-                      );
-                    },
-                    groups: formik.values.groupedOptions.map(
-                      (opt) => opt.title
-                    ),
-                  }}
-                />
-              </Box>
-            </Box>
-          ))}
+            )
+          )}
           <Box mt={1}>
             <Button
               size="large"
@@ -331,7 +336,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
     validate: () => {},
   });
 
-  const focusRef = useRef(null);
+  const focusRef = useRef<HTMLInputElement | null>(null);
 
   // horrible hack to remove focus from Rich Text Editor
   useEffect(() => {

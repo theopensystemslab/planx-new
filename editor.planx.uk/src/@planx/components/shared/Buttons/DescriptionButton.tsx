@@ -4,7 +4,8 @@ import React from "react";
 
 import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
 
-interface Props extends ButtonProps {
+export interface Props extends ButtonProps {
+  id?: string;
   responseKey: string | number;
   title: string;
   description?: string;

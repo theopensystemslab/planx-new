@@ -10,7 +10,7 @@ export const PermissionSelect: React.FC<SelectInputProps> = (props) => {
     <MenuItem disabled key={category}>
       {category}
     </MenuItem>,
-    Object.entries(flags).map(([id, flag]) => (
+    Object.entries(flags).map(([id, flag]: [any, any]) => (
       <MenuItem
         key={id}
         value={id}

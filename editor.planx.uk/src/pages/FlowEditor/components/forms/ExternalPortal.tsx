@@ -10,7 +10,7 @@ interface Flow {
 const ExternalPortalForm: React.FC<{
   id?: string;
   flowId?: string;
-  handleSubmit?;
+  handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
 }> = ({ id, handleSubmit, flowId = "", flows = [] }) => {
   const formik = useFormik({

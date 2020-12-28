@@ -1,8 +1,9 @@
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
+import type { Props as PublicProps } from "./Public";
 import Public from "./Public";
 
 const metadata: Meta = {
@@ -13,7 +14,7 @@ const metadata: Meta = {
   },
 };
 
-export const Frontend = (args) => <Public {...args} />;
+export const Frontend: Story<PublicProps> = (args) => <Public {...args} />;
 Frontend.args = {
   content: `**Good Morning** _Bom dia_`,
   color: "white",

@@ -18,7 +18,7 @@ const Flow = ({ breadcrumbs = [] }: any) => {
     state.flowLayout,
   ]);
 
-  breadcrumbs = breadcrumbs.map((id) => ({
+  breadcrumbs = breadcrumbs.map((id: any) => ({
     id,
     ...getNode(id),
     href: `${window.location.pathname.split(id)[0]}${id}`,
@@ -29,7 +29,7 @@ const Flow = ({ breadcrumbs = [] }: any) => {
       <ol id="flow" data-layout={flowLayout} className="decisions">
         <EndPoint text="start" />
 
-        {breadcrumbs.map((bc) => (
+        {breadcrumbs.map((bc: any) => (
           <Node key={bc.id} {...bc} />
         ))}
 

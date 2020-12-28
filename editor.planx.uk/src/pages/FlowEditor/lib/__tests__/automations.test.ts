@@ -110,7 +110,7 @@ describe("Ok, quite a bit less basic now", () => {
 });
 
 describe("advanced automations", () => {
-  [
+  const data: Array<[string[], string]> = [
     [["food.fruit.banana"], "neither_apples_nor_bread"],
 
     [["food.bread"], "bread"],
@@ -126,7 +126,8 @@ describe("advanced automations", () => {
     ],
 
     [["food.fruit.banana", "food.bread"], "bread"],
-  ].forEach(([item, expected]: [string[], string]) => {
+  ];
+  data.forEach(([item, expected]: [string[], string]) => {
     test([item.join(" + "), expected].join(" = "), () => {
       setState({
         passport: {

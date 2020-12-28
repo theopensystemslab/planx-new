@@ -107,13 +107,14 @@ const NavTabs: React.FC<{ tab?: string }> = (props) => {
 
   const flowBaseRoute = rootFlowPath(true);
 
-  const makeHref = (path) => [data.mountpath, path].filter(Boolean).join("/");
+  const makeHref = (path: any) =>
+    [data.mountpath, path].filter(Boolean).join("/");
 
   const handleChange = (event: React.ChangeEvent<any>) => {
     navigate(event.currentTarget.pathname);
   };
 
-  const value = tabsOrder.indexOf(props.tab);
+  const value = tabsOrder.indexOf(props.tab || "");
 
   return (
     <div className={classes.root}>
