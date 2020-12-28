@@ -15,8 +15,17 @@ import { useStore } from "../pages/FlowEditor/lib/store";
 import { makeTitle } from "./utils";
 
 const sorter = natsort({ insensitive: true });
-const sortFlows = (a, b) =>
+const sortFlows = (a: { text: string }, b: { text: string }) =>
   sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""));
+
+interface Flow {
+  id: string;
+  name: string;
+  slug: string;
+  team: {
+    slug: string;
+  };
+}
 
 const getExternalPortals = async () => {
   const { data } = await client.query({
@@ -36,11 +45,14 @@ const getExternalPortals = async () => {
 
   return data.flows
     .filter(
-      (flow) =>
+      (flow: Flow) =>
         flow.team &&
         !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`)
     )
-    .map(({ id, team, slug }) => ({ id, text: [team.slug, slug].join("/") }))
+    .map(({ id, team, slug }: Flow) => ({
+      id,
+      text: [team.slug, slug].join("/"),
+    }))
     .sort(sortFlows);
 };
 

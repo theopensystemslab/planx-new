@@ -49,18 +49,18 @@ export interface passport {
 
 interface Store extends Record<string | number | symbol, unknown> {
   addNode: any; //: () => void;
-  childNodesOf: (string) => Record<string, any>[];
+  childNodesOf: (id: string) => Record<string, any>[];
   connect: (src: string, tgt: string, object?) => void;
-  connectTo: (string) => void;
-  copyNode: (string) => void;
+  connectTo: (id: string) => void;
+  copyNode: (id: string) => void;
   createFlow: any; //: () => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   flow: flow;
   flowLayout: FlowLayout;
   getFlows: any; //: () => any;
-  getNode: (string) => Record<string, any>;
+  getNode: (id: string) => Record<string, any>;
   id: string;
-  isClone: (string) => boolean;
+  isClone: (id: string) => boolean;
   makeUnique: any; //: () => void;
   moveNode: any; //: () => void;
   pasteNode: any; //: () => void;
@@ -715,7 +715,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     // const categories = Array.from(new Set(flags.map((f) => f.category)));
     const categories = ["Planning permission"];
 
-    return categories.reduce((acc, category) => {
+    return categories.reduce((acc: any, category: any) => {
       const possibleFlags = flatFlags.filter((f) => f.category === category);
       const keys = possibleFlags.map((f) => f.value);
 
@@ -746,7 +746,13 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
           ([k, { answers }]: [string, { answers: string | Array<string> }]) => {
             const question = { id: k, ...flow[k] };
 
-            if (!SUPPORTED_DECISION_TYPES.includes(question?.type)) return null;
+            const questionType = question?.type;
+
+            if (
+              !questionType ||
+              !SUPPORTED_DECISION_TYPES.includes(questionType)
+            )
+              return null;
 
             answers = Array.isArray(answers) ? answers : [answers];
 
@@ -767,8 +773,8 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
       acc[category] = {
         flag,
-        responses: responses.every((r) => r.hidden)
-          ? responses.map((r) => ({ ...r, hidden: false }))
+        responses: responses.every((r: any) => r.hidden)
+          ? responses.map((r: any) => ({ ...r, hidden: false }))
           : responses,
       };
 
@@ -779,4 +785,4 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
 export const useStore = create(vanillaStore);
 
-window["api"] = useStore;
+(window as any)["api"] = useStore;

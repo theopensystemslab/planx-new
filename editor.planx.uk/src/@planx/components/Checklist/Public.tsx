@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import ChecklistItem from "ui/ChecklistItem";
 import { ExpandableList, ExpandableListItem } from "ui/ExpandableList";
 
-interface Props extends Checklist {
+export interface Props extends Checklist {
   handleSubmit: handleSubmit;
 }
 

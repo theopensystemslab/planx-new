@@ -1,4 +1,6 @@
+import type { Props } from "@planx/components/Checklist/Public";
 import Checklist from "@planx/components/Checklist/Public";
+import type { Story } from "@storybook/react/types-6-0";
 import React from "react";
 
 export default {
@@ -14,7 +16,7 @@ export default {
   },
 };
 
-const Template = (args) => <Checklist {...args} />;
+const Template: Story<Props> = (args: Props) => <Checklist {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {

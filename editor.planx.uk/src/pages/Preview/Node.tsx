@@ -20,7 +20,7 @@ import React from "react";
 
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
 
-let uprn;
+let uprn: any;
 
 export type handleSubmit = (_?: componentOutput) => void;
 interface Props {
@@ -82,7 +82,7 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.FindProperty:
       return (
         <FindProperty
-          handleSubmit={(data) => {
+          handleSubmit={(data: componentOutput) => {
             uprn = data;
             props.handleSubmit([props.node.id]);
           }}
@@ -194,6 +194,7 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Report:
     case TYPES.Response:
     case TYPES.SignIn:
+    case undefined:
       return null;
     default:
       console.error({ nodeNotFound: props });

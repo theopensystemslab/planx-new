@@ -7,7 +7,7 @@ import { useStore } from "../pages/FlowEditor/lib/store";
 import Team from "../pages/Team";
 import { makeTitle } from "./utils";
 
-let cached = {
+let cached: { flowSlug?: string; teamSlug?: string } = {
   flowSlug: undefined,
   teamSlug: undefined,
 };

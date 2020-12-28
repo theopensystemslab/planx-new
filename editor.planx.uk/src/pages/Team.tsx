@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const flowInfoHelper = (time, operations = []) => {
+const flowInfoHelper = (time: any, operations: any[] = []) => {
   let str = `Edited ${formatDistanceToNow(new Date(time))} ago`;
   // there will always be an user attached to every sharedb
   // operation soon, so the if statement won't be necessary
@@ -153,14 +153,20 @@ const useAddButtonStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddButton = ({ children, ...props }) => {
+function AddButton({
+  children,
+  onClick,
+}: {
+  children: string;
+  onClick: () => void;
+}): FCReturn {
   const classes = useAddButtonStyles();
   return (
-    <ButtonBase className={classes.addButton} {...props}>
+    <ButtonBase className={classes.addButton} onClick={onClick}>
       <Add className={classes.icon} /> {children}
     </ButtonBase>
   );
-};
+}
 
 const FooterLinks = () => (
   <List>
@@ -331,7 +337,7 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
                   useStore
                     .getState()
                     .createFlow(id, newFlowName)
-                    .then((newId) => {
+                    .then((newId: string) => {
                       navigation.navigate(`/${slug}/${newId}`);
                     });
                 }
