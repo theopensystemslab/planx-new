@@ -6,18 +6,18 @@ import ReactHtmlParser from "react-html-parser";
 import Constraint from "./Constraint";
 import SimpleExpand from "./SimpleExpand";
 
-const PropertyConstraints = ({ constraintsData }) => {
+const PropertyConstraints = ({ constraintsData }: any) => {
   const { title, constraints } = constraintsData;
   const visibleConstraints = constraints
-    .filter((x, i) => i < 3)
-    .map((con) => (
+    .filter((x: any, i: number) => i < 3)
+    .map((con: any) => (
       <Constraint key={con.text} color={con.color || ""}>
         {ReactHtmlParser(con.text)}
       </Constraint>
     ));
   const hiddenConstraints = constraints
-    .filter((x, i) => i >= 3)
-    .map((con) => (
+    .filter((x: any, i: number) => i >= 3)
+    .map((con: any) => (
       <Constraint key={con.text} color={con.color || ""}>
         {ReactHtmlParser(con.text)}
       </Constraint>

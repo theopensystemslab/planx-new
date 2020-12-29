@@ -48,7 +48,7 @@ const resultSummaryStyles = makeStyles((theme) => ({
   },
 }));
 
-const ResultSummary = ({ heading, subheading, children, color }) => {
+const ResultSummary = ({ heading, subheading, children, color }: any) => {
   const theme = useTheme();
   const classes = resultSummaryStyles();
   return (

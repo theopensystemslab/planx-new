@@ -3,7 +3,7 @@ import React from "react";
 
 import PayWithCard from "./PayWithCard";
 
-export default function Fixture(props) {
+export default function Fixture() {
   return (
     <Card>
       <PayWithCard />

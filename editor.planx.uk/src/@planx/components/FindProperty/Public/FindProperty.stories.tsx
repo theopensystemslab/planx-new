@@ -1,4 +1,4 @@
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
 import FindProperty from "./index";
@@ -11,6 +11,6 @@ const metadata: Meta = {
   },
 };
 
-export const Basic = (args) => <FindProperty {...args} />;
+export const Basic: Story<any> = (args) => <FindProperty {...args} />;
 
 export default metadata;

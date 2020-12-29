@@ -51,7 +51,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const OPTIONS = {
+const OPTIONS: Record<
+  string,
+  { label: string; letter: string; component: React.FC<any> }
+> = {
   card: {
     label: "Credit or debit card",
     letter: "A",
@@ -128,7 +131,7 @@ function Component(props: Props) {
   );
 }
 
-function Init(props) {
+function Init(props: any) {
   const OTHER_OPTIONS = [
     { name: "BACs", label: "Bank transfer by BACs" },
     { name: "Cheque", label: "Cheque" },
@@ -205,11 +208,11 @@ function Init(props) {
                 key={i}
                 control={<Checkbox name={p.name} />}
                 label={p.label}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                onChange={(event: React.ChangeEvent<{}>) => {
                   if (event.target) {
                     setCheckboxes((acc) => ({
                       ...acc,
-                      [p.name]: event.target.checked,
+                      [p.name]: (event.target as any).checked,
                     }));
                   }
                 }}

@@ -74,7 +74,7 @@ const useStyles = makeStyles({
   },
 });
 
-function Component(props) {
+function Component(props: any) {
   const c = useStyles();
   return (
     <Card>

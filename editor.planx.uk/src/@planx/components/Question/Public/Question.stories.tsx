@@ -1,4 +1,4 @@
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
 import Question, { IQuestion } from "./Question";
@@ -13,7 +13,7 @@ const metadata: Meta = {
 
 const Template = (args: IQuestion) => <Question {...args} />;
 
-export const Basic = Template.bind({});
+export const Basic: Story<IQuestion> = Template.bind({});
 const basicArgs: IQuestion = {
   text: "What is your favorite fruit?",
   description:
@@ -30,7 +30,7 @@ const basicArgs: IQuestion = {
 };
 Basic.args = basicArgs;
 
-export const WithDescriptions = Template.bind({});
+export const WithDescriptions: Story<IQuestion> = Template.bind({});
 const descArgs: IQuestion = {
   ...basicArgs,
   responses: [
@@ -41,7 +41,7 @@ const descArgs: IQuestion = {
 };
 WithDescriptions.args = descArgs;
 
-export const WithImages = Template.bind({});
+export const WithImages: Story<IQuestion> = Template.bind({});
 const imagesArgs: IQuestion = {
   ...basicArgs,
   responses: [

@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
 import React from "react";
 
-const SimpleExpand = ({ children, buttonText }) => {
+const SimpleExpand = ({ children, buttonText }: any) => {
   const [show, setShow] = React.useState(false);
   return (
     <>

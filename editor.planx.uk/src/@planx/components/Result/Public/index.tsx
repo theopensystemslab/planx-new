@@ -33,12 +33,12 @@ interface Props {
   }>;
 }
 
-const Responses = ({ responses }) => (
+const Responses = ({ responses }: any) => (
   <>
-    {responses.map(({ question, selections }) => (
+    {responses.map(({ question, selections }: any) => (
       <ResultReason key={question.id} id={question.id}>
         {question.data.text}{" "}
-        <strong>{selections.map((s) => s.data.text).join(",")}</strong>
+        <strong>{selections.map((s: any) => s.data.text).join(",")}</strong>
       </ResultReason>
     ))}
   </>
