@@ -183,15 +183,6 @@ app.use(
   cors({
     credentials: true,
     methods: "*",
-    origin: function (origin, callback) {
-      if (process.env.NODE_ENV === "production") {
-        callback(null, origin === process.env.EDITOR_URL_EXT);
-      } else {
-        // This is necessary so that file upload works in a react-cosmos fixture
-        // and generally allows us to avoid any and whatever cors problems in dev env
-        callback(null, true);
-      }
-    },
   })
 );
 
