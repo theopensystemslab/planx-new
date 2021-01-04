@@ -29,8 +29,8 @@ export interface Option {
   };
 }
 
-export const parseFormValues = (ob, defaultValues = {}) =>
-  ob.reduce((acc, [k, v]) => {
+export const parseFormValues = (ob: any, defaultValues = {}) =>
+  ob.reduce((acc: any, [k, v]: any) => {
     if (typeof v === "string") {
       // Remove trailing lines (whitespace)
       // and non-ASCII characters https://stackoverflow.com/a/44472084

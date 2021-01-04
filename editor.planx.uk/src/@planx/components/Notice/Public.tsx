@@ -23,7 +23,8 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     alignItems: "flex-start",
     justifyContent: "space-between",
     backgroundColor: (props) => props.color,
-    color: (props) => mostReadable(props.color, ["#fff", "#000"]).toHexString(),
+    color: (props) =>
+      mostReadable(props.color, ["#fff", "#000"])?.toHexString(),
     "&:before": {
       content: "' '",
       position: "absolute",
@@ -32,7 +33,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
       width: 10,
       bottom: 0,
       backgroundColor: (props) =>
-        mostReadable(props.color, ["#fff", "#000"]).toHexString(),
+        mostReadable(props.color, ["#fff", "#000"])?.toHexString(),
       opacity: 0.3,
     },
     padding: theme.spacing(2),

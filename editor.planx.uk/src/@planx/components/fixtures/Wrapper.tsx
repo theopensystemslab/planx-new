@@ -14,6 +14,15 @@ function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
   const [data, setData] = useState<Data | null>(null);
   const [_userData, setUserData] = useState<UserData | null>(null);
 
+  // TODO: strict mode doesn't compile this without the `as unknown as ...` trick
+  // To solve this easily, consider not spreading data into other props like `handleSubmit`
+  const publicProps: PublicProps<Data, UserData> = ({
+    ...data,
+    handleSubmit: (newUserData?: UserData) => {
+      setUserData(newUserData || null);
+    },
+  } as unknown) as PublicProps<Data, UserData>;
+
   return (
     <>
       <p>
@@ -39,12 +48,7 @@ function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
           </Button>
         </div>
         <ErrorBoundary hasInitData={Boolean(data)}>
-          <props.Public
-            {...data}
-            handleSubmit={(newUserData) => {
-              setUserData(newUserData);
-            }}
-          />
+          <props.Public {...publicProps} />
         </ErrorBoundary>
       </div>
     </>
@@ -57,11 +61,11 @@ class ErrorBoundary extends React.Component<ErrorProps, ErrorState> {
   state: ErrorState = {
     hasError: false,
   };
-  constructor(props) {
+  constructor(props: ErrorProps) {
     super(props);
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 

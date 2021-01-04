@@ -3,7 +3,7 @@ import React from "react";
 
 import Summary from "./Summary";
 
-export default function Fixture(props) {
+export default function Fixture() {
   return (
     <Card>
       <Summary />

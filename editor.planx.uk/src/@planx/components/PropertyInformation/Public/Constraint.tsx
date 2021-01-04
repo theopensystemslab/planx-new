@@ -4,7 +4,7 @@ import React from "react";
 
 import { constraintsStyles } from "./styles";
 
-const Constraint = ({ children, color, ...props }) => {
+const Constraint = ({ children, color, ...props }: any) => {
   const classes = constraintsStyles();
   const theme = useTheme();
   return (

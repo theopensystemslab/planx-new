@@ -49,7 +49,7 @@ export interface passport {
 
 interface Store extends Record<string | number | symbol, unknown> {
   addNode: any; //: () => void;
-  childNodesOf: (id: string) => Record<string, any>[];
+  childNodesOf: (id: string | undefined) => Record<string, any>[];
   connect: (src: string, tgt: string, object?: any) => void;
   connectTo: (id: string) => void;
   copyNode: (id: string) => void;
@@ -83,9 +83,9 @@ interface Store extends Record<string | number | symbol, unknown> {
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
-  flow: undefined,
+  flow: (undefined as unknown) as flow,
 
-  id: undefined,
+  id: (undefined as unknown) as string,
 
   showPreview: true,
 
@@ -101,7 +101,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     console.log("connecting to", id, get().id);
 
     doc = getConnection(id);
-    window["doc"] = doc;
+    (window as any)["doc"] = doc;
 
     await connectToDB(doc);
 
@@ -188,7 +188,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     toParent = undefined
   ) {
     try {
-      const [, ops] = move(id, parent, { toParent, toBefore })(get().flow);
+      const [, ops] = move(id, (parent as unknown) as string, {
+        toParent,
+        toBefore,
+      })(get().flow);
       send(ops);
       get().resetPreview();
     } catch (err) {
@@ -200,17 +203,19 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     localStorage.setItem("clipboard", id);
   },
 
-  pasteNode(toParent, toBefore) {
+  pasteNode(toParent: any, toBefore: any) {
     try {
       const id = localStorage.getItem("clipboard");
-      const [, ops] = clone(id, { toParent, toBefore })(get().flow);
-      send(ops);
+      if (id) {
+        const [, ops] = clone(id, { toParent, toBefore })(get().flow);
+        send(ops);
+      }
     } catch (err) {
       alert(err.message);
     }
   },
 
-  childNodesOf(id: string = ROOT_NODE_KEY) {
+  childNodesOf(id: string | undefined = ROOT_NODE_KEY) {
     const { flow } = get();
     return (flow[id]?.edges || []).map((id) => ({ id, ...flow[id] }));
   },
@@ -429,11 +434,13 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         .filter(
           (id) =>
             !Object.keys(breadcrumbs).includes(id) &&
-            (!SUPPORTED_DECISION_TYPES.includes(flow[id]?.type) ||
-              flow[id]?.edges?.length > 0)
+            (!SUPPORTED_DECISION_TYPES.includes(flow[id]?.type as TYPES) ||
+              (flow[id]?.edges as any)?.length > 0)
         )
         .forEach((id) => {
-          if ([TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type)) {
+          if (
+            [TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type as TYPES)
+          ) {
             nodeIdsConnectedFrom(id);
           } else {
             const fn = flow[id]?.data?.fn;
@@ -442,21 +449,23 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
 
             if (fn && (fn === "flag" || passportValues !== undefined)) {
-              const responses = flow[id]?.edges.map((id) => ({
+              const responses = flow[id]?.edges?.map((id) => ({
                 id,
                 ...flow[id],
               }));
 
               let responseThatCanBeAutoAnswered;
               const sortedResponses = responses
-                .sort(mostToLeastNumberOfValues)
-                .filter((response) => response.data?.val);
+                ? responses
+                    .sort(mostToLeastNumberOfValues)
+                    .filter((response) => response.data?.val)
+                : [];
 
               if (passportValues !== undefined) {
                 if (!Array.isArray(passportValues))
                   passportValues = [passportValues];
 
-                passportValues = (passportValues || []).filter((pv) =>
+                passportValues = (passportValues || []).filter((pv: any) =>
                   sortedResponses.some((r) => pv.startsWith(r.data.val))
                 );
 
@@ -474,7 +483,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                           .sort();
                         for (const responseValue of responseValues) {
                           // console.log({ value, val });
-                          return passportValues.every((passportValue) =>
+                          return passportValues.every((passportValue: any) =>
                             String(passportValue).startsWith(responseValue)
                           );
                         }
@@ -485,7 +494,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               }
 
               if (!responseThatCanBeAutoAnswered) {
-                responseThatCanBeAutoAnswered = responses.find(
+                responseThatCanBeAutoAnswered = responses?.find(
                   (r) => !r.data?.val
                 );
               }

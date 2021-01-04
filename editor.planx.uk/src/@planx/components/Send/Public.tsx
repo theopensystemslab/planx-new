@@ -21,7 +21,7 @@ const SendComponent: React.FC<Props> = (props) => {
           passport,
           replay: replay(),
         });
-        props.handleSubmit();
+        props.handleSubmit && props.handleSubmit();
       } catch (err) {
         alert("There was an error sending the data");
         console.error(err);

@@ -117,10 +117,13 @@ const FileUpload: React.FC<Props> = (props) => {
   const [slots, setSlots] = React.useState([]);
   return (
     <Card
-      isValid={!slots.some((slot) => slot.status === "uploading")}
+      isValid={!slots.some((slot: any) => slot.status === "uploading")}
       handleSubmit={() => {
         props.handleSubmit(
-          slots.map((slot) => ({ url: slot.url, filename: slot.file.path }))
+          slots.map((slot: any) => ({
+            url: slot.url,
+            filename: slot.file.path,
+          }))
         );
       }}
     >
@@ -136,14 +139,14 @@ const FileUpload: React.FC<Props> = (props) => {
   );
 };
 
-function Dropzone(props) {
+function Dropzone(props: any) {
   const { slots, setSlots } = props;
   const classes = useStyles();
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: ["image/*", "text/*", "application/pdf"],
     multiple: true,
     onDrop: (acceptedFiles) => {
-      setSlots((slots) => {
+      setSlots((slots: any) => {
         return [
           ...slots,
           ...acceptedFiles.map((file) => {
@@ -151,16 +154,16 @@ function Dropzone(props) {
             //      If a file is removed while it's being uploaded, nothing should break because we're using map()
             uploadFile(file, {
               onProgress: (progress) => {
-                setSlots((_files) =>
-                  _files.map((_file) =>
+                setSlots((_files: any) =>
+                  _files.map((_file: any) =>
                     _file.file === file ? { ..._file, progress } : _file
                   )
                 );
               },
             })
               .then((url) => {
-                setSlots((_files) =>
-                  _files.map((_file) =>
+                setSlots((_files: any) =>
+                  _files.map((_file: any) =>
                     _file.file === file
                       ? { ..._file, url, status: "success" }
                       : _file
@@ -170,8 +173,8 @@ function Dropzone(props) {
               .catch((error) => {
                 // TODO: Handle error
                 console.error(error);
-                setSlots((_files) =>
-                  _files.map((_file) =>
+                setSlots((_files: any) =>
+                  _files.map((_file: any) =>
                     _file.file === file ? { ..._file, status: "error" } : _file
                   )
                 );
@@ -193,14 +196,16 @@ function Dropzone(props) {
 
   return (
     <>
-      {slots.map(({ id, file, status, progress, url }, index) => {
+      {slots.map(({ id, file, status, progress, url }: any, index: number) => {
         return (
           <Box key={id} className={classes.file}>
             <IconButton
               size="small"
               className={classes.deleteIcon}
               onClick={() => {
-                setSlots((slots) => slots.filter((slot) => slot.file !== file));
+                setSlots((slots: any) =>
+                  slots.filter((slot: any) => slot.file !== file)
+                );
               }}
             >
               <DeleteIcon />
@@ -256,7 +261,7 @@ function Dropzone(props) {
   );
 }
 
-function ImagePreview({ file }) {
+function ImagePreview({ file }: any) {
   const { current: url } = React.useRef(URL.createObjectURL(file));
   React.useEffect(() => {
     return () => {
@@ -267,7 +272,7 @@ function ImagePreview({ file }) {
   return <img src={url} alt="" />;
 }
 
-function formatBytes(a, b = 2) {
+function formatBytes(a: any, b = 2) {
   if (0 === a) return "0 Bytes";
   const c = 0 > b ? 0 : b,
     d = Math.floor(Math.log(a) / Math.log(1024));
