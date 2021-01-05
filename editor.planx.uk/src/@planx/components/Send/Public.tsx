@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
-import { v4 as uuid } from "uuid";
+
 import Card from "../shared/Preview/Card";
 import { PublicProps } from "../ui";
 import type { Send } from "./model";
@@ -27,125 +27,61 @@ const placeholderize = (x: any) => {
   }
 };
 
-const date = new Date().toUTCString();
+interface File {
+  filename: string;
+  tags: string;
+}
 
-const json = {
-  id: uuid(),
-  reference: null,
-  related_cases: null,
-  ownership_type: null,
-  owner_first_name: null,
-  owner_second_name: null,
-  applicant_first_name: "John",
-  applicant_last_name: "Rees",
-  applicant_phone: null,
-  applicant_email: "john@example.com",
-  agent_first_name: null,
-  agent_last_name: null,
-  agent_phone: null,
-  agent_email: null,
-  owner_company: null,
-  owner_shares: null,
-  owner_types: null,
-  owners_notified: null,
-  nonnotification_reason: null,
-  visit_contact_name: null,
-  visit_contact_phone: null,
-  visit_contact_email: null,
-  pre_app_advice: false,
-  pre_app_reference: null,
-  pre_app_officer: null,
-  advice_date: null,
-  advice_summary: null,
-  fee: 0,
-  disability_exemption: false,
-  fee_paid: true,
-  refund_requested: false,
-  fee_refunded: false,
-  description: null,
-  recommendation: null,
-  started: false,
-  start_date: date,
-  completed: false,
-  completion_date: null,
-  footprint_removed: null,
-  new_footprint: null,
-  net_footprint: null,
-  internal_area_removed: null,
-  new_internal_area: null,
-  net_internal_area: null,
-  uses: null,
-  uses_areas: null,
-  uses_percentages: null,
-  new_home: null,
-  case_officer: null,
-  community_council: "Southwark",
-  ward: "Southwark",
-  last_advert_date: date,
-  advert_expiry_date: date,
-  last_posted_date: date,
-  site_expiry_date: date,
+// const date = new Date().toUTCString();
+
+const minimum = {
+  application_type: "lawfulness_certificate",
   site: {
-    uprn: "200003453480",
-    property_name: null,
-    address_1: "47 COBOURG ROAD",
-    address_2: null,
-    address_3: null,
-    town: "London",
-    postcode: "SE5 0HU",
-    easting: null,
-    northing: null,
-    property_boundary: null,
-    property_area: null,
-    boundary: null,
-    area: null,
-    description: "HMO Parent",
-    number_buildings: null,
-    property_type: "RH01",
-    building_type: null,
-    storeys: null,
-    uses: null,
-    uses_areas: null,
-    uses_percentages: null,
-    uses_status: null,
-    uses_evidence: null,
-    photographs: null,
-  },
-  applicant: {
-    type: 0,
-    title: "Mr",
-    first_name: "John",
-    last_name: "Rees",
-    company_name: "Open Systems Lab",
-    company_number: null,
-    resident_status: true,
-    address_1: "47 COBOURG ROAD",
+    uprn: "",
+    address_1: "",
     address_2: "Southwark",
-    address_3: null,
     town: "London",
-    postcode: "SE5 0HU",
-    country: "United Kingdom",
-    phone: null,
-    phone_2: null,
-    email: "john@example.com",
+    postcode: "",
   },
-  agent: {},
-  plans: [],
-  constraints: {},
-  declarations: {},
+};
+
+const full = {
+  ...minimum,
+
+  // "ward": "",
+
+  // "description": "",
+  // "work_status": "",
+
+  applicant_first_name: "",
+  applicant_last_name: "",
+  applicant_email: "",
+  // "applicant_phone": "",
+
+  // "agent_first_name": "",
+  // "agent_last_name": "",
+  // "agent_phone": "",
+  // "agent_email": "",
+
+  payment_reference: "JG669323",
+
   questions: {},
+  constraints: {},
+  files: [] as Array<File>,
 };
 
 const SendComponent: React.FC<Props> = (props) => {
-  const [replay, passport] = useStore((state) => [
+  const [replay, flow, passport, breadcrumbs] = useStore((state) => [
     state.replay,
+    state.flow,
     state.passport,
+    state.breadcrumbs,
   ]);
 
   useEffect(() => {
     async function send() {
       try {
-        const data = json;
+        const data = full;
 
         data.site.uprn = passport.info.UPRN.toString();
 
@@ -159,7 +95,7 @@ const SendComponent: React.FC<Props> = (props) => {
 
         data.site.postcode = passport.info.postcode;
 
-        data.questions = { replay: replay() };
+        data.questions = { flow: replay() };
 
         data.constraints = (
           passport.data["property.constraints.planning"] || []
@@ -168,11 +104,37 @@ const SendComponent: React.FC<Props> = (props) => {
           return acc;
         }, {});
 
-        data.site.easting = passport.info.x;
-        data.site.northing = passport.info.y;
+        const files = [] as Array<File>;
 
-        data.site.description = passport.info.planx_description;
-        data.site.property_type = passport.info.blpu_code;
+        Object.values(breadcrumbs).forEach(({ answers = [] }) => {
+          answers.forEach((x: any) => {
+            if (x.filename && x.url) {
+              files.push({
+                filename: x.url,
+                tags: x.filename,
+              });
+            }
+          });
+        });
+
+        const answer = (key: string): string => {
+          const id = Object.keys(flow).find((id) => flow[id].data?.fn === key);
+
+          return id ? breadcrumbs[id].answers[0] : "";
+        };
+
+        data.applicant_first_name = answer("firstname");
+        data.applicant_last_name = answer("lastname");
+        data.applicant_email = answer("email");
+
+        data.files = files;
+
+        // console.log({
+        //   data,
+        //   flow,
+        //   breadcrumbs,
+        //   passport,
+        // });
 
         await axios.post(props.url, data);
 
