@@ -41,6 +41,8 @@ export default function Footer(props: Props) {
   const { leftItems, rightItems } = props;
   const classes = useClasses();
 
+  const feedbackFishId = process.env.REACT_APP_FEEDBACK_FISH_ID;
+
   return (
     <footer className={classes.root}>
       {leftItems.map((item, i) => (
@@ -50,9 +52,11 @@ export default function Footer(props: Props) {
         {rightItems.map((item, i) => (
           <FooterItem {...item} key={i} />
         ))}
-        <FeedbackFish projectId="f2b6edaccca43d">
-          <Typography className={classes.link}>Feedback</Typography>
-        </FeedbackFish>
+        {feedbackFishId && (
+          <FeedbackFish projectId={feedbackFishId}>
+            <Typography className={classes.link}>Feedback</Typography>
+          </FeedbackFish>
+        )}
       </Box>
     </footer>
   );
@@ -63,9 +67,7 @@ function FooterItem(props: { title: string; href: string; bold?: boolean }) {
 
   return (
     <Link href={props.href} className={classes.link}>
-      <Typography variant="body1" className={props.bold && classes.bold}>
-        {props.title}
-      </Typography>
+      <Typography variant="body1">{props.title}</Typography>
     </Link>
   );
 }
