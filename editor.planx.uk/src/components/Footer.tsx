@@ -67,7 +67,9 @@ function FooterItem(props: { title: string; href: string; bold?: boolean }) {
 
   return (
     <Link href={props.href} className={classes.link}>
-      <Typography variant="body1">{props.title}</Typography>
+      <Typography variant="body1" className={props.bold ? classes.bold : ""}>
+        {props.title}
+      </Typography>
     </Link>
   );
 }
