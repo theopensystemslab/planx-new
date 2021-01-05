@@ -11,9 +11,8 @@ const metadata: Meta = {
   },
 };
 
-// Test commit
 export const Basic = (args: { value: string }) => (
-  <DateInput {...args} onChange={() => {}} />
+  <DateInput {...args} bordered onChange={() => {}} />
 );
 Basic.args = { value: "2020-20-02" };
 

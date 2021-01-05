@@ -1,6 +1,7 @@
 dependencies:
   '@apollo/client': 3.2.5_7f7b2e3b73795d1ad7365d948d85a29e
   '@ctrl/tinycolor': 3.1.6
+  '@feedback-fish/react': 1.2.1_react@16.14.0
   '@mapbox/mapbox-gl-draw': 1.2.0_mapbox-gl@1.12.0
   '@material-ui/core': 4.11.0_9f48369ed4321469d5d721870f4dbdbc
   '@material-ui/icons': 4.9.1_a86b7d24d2481968855f45294417fbec
@@ -2400,6 +2401,16 @@ packages:
       node: ^10.12.0 || >=12.0.0
     resolution:
       integrity: sha512-XRUeBZ5zBWLYgSANMpThFddrZZkEbGHgUdt5UJjZfnlN9BGCiUBrf+nvbRupSjMvqzwnQN0qwCmOxITt1cfywA==
+  /@feedback-fish/react/1.2.1_react@16.14.0:
+    dependencies:
+      react: 16.14.0
+    dev: false
+    engines:
+      node: '>=10.16.0'
+    peerDependencies:
+      react: ^16.8.0
+    resolution:
+      integrity: sha512-4YFD2hE93xBIT/Ko0x0l6UB0OyaxJcWKLGrnznsUVoLE5Q9vB8I1LEbMySYyuvbU9ul3yM3FjGkVZhYVPdwEyA==
   /@graphql-typed-document-node/core/3.1.0_graphql@15.4.0:
     dependencies:
       graphql: 15.4.0
@@ -18922,6 +18933,7 @@ specifiers:
   '@apollo/client': ^3.2.5
   '@babel/core': ^7.12.3
   '@ctrl/tinycolor': ^3.1.6
+  '@feedback-fish/react': ^1.2.1
   '@mapbox/mapbox-gl-draw': ^1.2.0
   '@material-ui/core': ^4.11.0
   '@material-ui/icons': ^4.9.1

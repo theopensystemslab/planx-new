@@ -24,6 +24,9 @@ const theme = createMuiTheme({
     subtitle1: {
       fontSize: 20,
     },
+    body1: {
+      fontSize: 18,
+    },
     body2: {
       fontSize: 15,
     },
@@ -34,11 +37,15 @@ const theme = createMuiTheme({
       dark: "#0D6E6B",
       contrastText: "#fff",
     },
+    background: {
+      default: "#fff",
+      paper: "#EFEFEF",
+    },
     secondary: {
       main: "#EFEFEF",
     },
     text: {
-      secondary: "rgba(255,255,255,0.6)",
+      secondary: "rgba(0,0,0,0.75)",
     },
     action: {
       selected: "#F8F8F8",
