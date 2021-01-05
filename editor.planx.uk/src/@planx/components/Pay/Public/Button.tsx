@@ -12,7 +12,7 @@ export default styled(Component)({
 import { styled } from "@material-ui/core/styles";
 import React from "react";
 
-function Component(props) {
+function Component(props: any) {
   const { children, ...rest } = props;
   return <button {...rest}>{children}</button>;
 }

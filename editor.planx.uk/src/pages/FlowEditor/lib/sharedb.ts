@@ -17,7 +17,7 @@ export const createDoc = async (
   return new Promise(async (res, rej) => {
     doc.create(initialData, (err) => {
       if (err) rej(err);
-      res();
+      res({});
     });
   });
 };
@@ -31,6 +31,6 @@ export const connectToDB = (doc: Doc) =>
         console.log("creating doc");
         await createDoc(doc);
       }
-      return res();
+      return res({});
     });
   });

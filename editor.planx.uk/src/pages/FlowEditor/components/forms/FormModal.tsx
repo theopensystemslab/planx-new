@@ -85,7 +85,7 @@ const NodeTypeSelect: React.FC<{
 
 const FormModal: React.FC<{
   type: string;
-  handleDelete?;
+  handleDelete?: () => void;
   Component: any;
   node?: any;
   id?: any;
@@ -139,13 +139,16 @@ const FormModal: React.FC<{
           {...node?.data}
           {...extraProps}
           id={id}
-          handleSubmit={(data, children = undefined) => {
+          handleSubmit={(
+            data: any,
+            children: Array<any> | undefined = undefined
+          ) => {
             if (typeof data === "string") {
               connect(parent, data, { before });
             } else {
               const parsedData = parseFormValues(Object.entries(data));
               const parsedChildren =
-                children?.map((o) => parseFormValues(Object.entries(o))) ||
+                children?.map((o: any) => parseFormValues(Object.entries(o))) ||
                 undefined;
 
               if (handleDelete) {

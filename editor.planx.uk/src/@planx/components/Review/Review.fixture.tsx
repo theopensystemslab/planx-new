@@ -257,7 +257,7 @@ const flow = {
   },
 };
 
-export default function Fixture(props) {
+export default function Fixture() {
   return (
     <Presentational
       breadcrumbs={breadcrumbs}

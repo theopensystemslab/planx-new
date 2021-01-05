@@ -10,7 +10,7 @@ import RichTextInput from "ui/RichTextInput";
 
 interface Props {
   id?: string;
-  handleSubmit?;
+  handleSubmit?: (val: any) => void;
   node?: {
     data?: {
       title?: string;

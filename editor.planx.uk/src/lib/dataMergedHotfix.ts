@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 
 import { client } from "../lib/graphql";
 
-const getFlowData = async (id) => {
+const getFlowData = async (id: string) => {
   const { data } = await client.query({
     query: gql`
       query GetFlowData($id: uuid!) {
@@ -19,7 +19,7 @@ const getFlowData = async (id) => {
   return data.flows_by_pk.data;
 };
 
-export const dataMerged = async (id, ob = {}) => {
+export const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
   const data: Promise<Record<string, object>> = await getFlowData(id);
   for (let [nodeId, node] of Object.entries(data)) {
     if (nodeId === "_root" && Object.keys(ob).length > 0) {

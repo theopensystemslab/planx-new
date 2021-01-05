@@ -47,15 +47,16 @@ const categoriesAndFlags = {
   },
 };
 
-export const flatFlags = [];
+export const flatFlags: Array<any> = [];
 
 export default Object.entries(categoriesAndFlags).reduce(
-  (acc, [category, flags]) => {
+  (acc: Record<string, any>, [category, flags]) => {
     acc[category] = Object.entries(flags).reduce(
-      (acc, [id, [text, bgColor]]) => {
+      (acc: Record<string, any>, [id, [text, bgColor]]) => {
         // loop through all the flags and add a text color which is
         // white if it's a dark background or black if it's light
-        const color = mostReadable(bgColor, ["#000", "#FFF"]).toHexString();
+        const color =
+          mostReadable(bgColor, ["#000", "#FFF"])?.toHexString() || "#000";
 
         acc[id] = {
           text,
@@ -64,7 +65,7 @@ export default Object.entries(categoriesAndFlags).reduce(
         };
 
         // check that no other flags share the same ID
-        if (flatFlags.find((f) => f.id === id))
+        if (flatFlags.find((f: any) => f.id === id))
           throw new Error(`Multiple flags with same id (${id})`);
 
         // push the flag object to a flattened array for convenience

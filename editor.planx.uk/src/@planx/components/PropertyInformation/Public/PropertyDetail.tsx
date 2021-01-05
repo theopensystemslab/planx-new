@@ -3,7 +3,7 @@ import React from "react";
 
 import { propertyDetailStyles } from "./styles";
 
-const PropertyDetail = ({ heading, detail, ...props }) => {
+const PropertyDetail = ({ heading, detail, ...props }: any) => {
   const classes = propertyDetailStyles();
   return (
     <Box className={classes.propertyDetail} {...props}>

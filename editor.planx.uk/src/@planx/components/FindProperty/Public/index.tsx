@@ -56,7 +56,7 @@ const AddressList: React.FC<{
   );
 };
 
-const FindProperty = ({ handleSubmit: handleSubmit }) => {
+const FindProperty = ({ handleSubmit }: any) => {
   const [boundary, setBoundary] = React.useState(null);
   const [useMap, setUseMap] = React.useState(false);
   const [postcode, setPostcode] = React.useState("");

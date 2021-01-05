@@ -3,8 +3,8 @@ import axios from "axios";
 export { uploadFile };
 
 async function uploadFile(
-  file,
-  { onProgress }: { onProgress?: (p) => void } = {}
+  file: any,
+  { onProgress }: { onProgress?: (p: any) => void } = {}
 ) {
   const res = await fetch(`${process.env.REACT_APP_API_URL}/sign-s3-upload`, {
     method: "POST",

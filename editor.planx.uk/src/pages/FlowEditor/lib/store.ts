@@ -26,10 +26,10 @@ import { connectToDB, getConnection } from "./sharedb";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
-let doc;
-let globalFlag;
+let doc: any;
+let globalFlag: any;
 
-const send = (ops) => {
+const send = (ops: Array<any>) => {
   if (ops.length > 0) {
     console.log({ ops });
     doc.submitOp(ops);
@@ -49,8 +49,8 @@ export interface passport {
 
 interface Store extends Record<string | number | symbol, unknown> {
   addNode: any; //: () => void;
-  childNodesOf: (id: string) => Record<string, any>[];
-  connect: (src: string, tgt: string, object?) => void;
+  childNodesOf: (id: string | undefined) => Record<string, any>[];
+  connect: (src: string, tgt: string, object?: any) => void;
   connectTo: (id: string) => void;
   copyNode: (id: string) => void;
   createFlow: any; //: () => Promise<string>;
@@ -83,9 +83,9 @@ interface Store extends Record<string | number | symbol, unknown> {
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
-  flow: undefined,
+  flow: (undefined as unknown) as flow,
 
-  id: undefined,
+  id: (undefined as unknown) as string,
 
   showPreview: true,
 
@@ -101,7 +101,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     console.log("connecting to", id, get().id);
 
     doc = getConnection(id);
-    window["doc"] = doc;
+    (window as any)["doc"] = doc;
 
     await connectToDB(doc);
 
@@ -124,7 +124,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     // remote operation, there might be network latency so wait for 0.5s
     const cloneStateFromRemoteOps = debounce(cloneStateFromShareDb, 500);
 
-    doc.on("op", (_op, isLocalOp) =>
+    doc.on("op", (_op: any, isLocalOp?: boolean) =>
       isLocalOp ? cloneStateFromLocalOps() : cloneStateFromRemoteOps()
     );
   },
@@ -153,7 +153,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   },
 
   addNode: (
-    { id = undefined, type, data },
+    { id = undefined, type, data }: any,
     { children = undefined, parent = ROOT_NODE_KEY, before = undefined } = {}
   ) => {
     const [, ops] = add(
@@ -163,7 +163,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     send(ops);
   },
 
-  updateNode: ({ id, data }, { children = undefined } = {}) => {
+  updateNode: ({ id, data }: any, { children = undefined } = {}) => {
     const [, ops] = update(id, data, {
       children,
       removeKeyIfMissing: true,
@@ -171,12 +171,12 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     send(ops);
   },
 
-  makeUnique: (id, parent = undefined) => {
+  makeUnique: (id: any, parent = undefined) => {
     const [, ops] = makeUnique(id, parent)(get().flow);
     send(ops);
   },
 
-  removeNode: (id, parent = undefined) => {
+  removeNode: (id: any, parent: any = undefined) => {
     const [, ops] = remove(id, parent)(get().flow);
     send(ops);
   },
@@ -188,7 +188,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     toParent = undefined
   ) {
     try {
-      const [, ops] = move(id, parent, { toParent, toBefore })(get().flow);
+      const [, ops] = move(id, (parent as unknown) as string, {
+        toParent,
+        toBefore,
+      })(get().flow);
       send(ops);
       get().resetPreview();
     } catch (err) {
@@ -200,17 +203,19 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     localStorage.setItem("clipboard", id);
   },
 
-  pasteNode(toParent, toBefore) {
+  pasteNode(toParent: any, toBefore: any) {
     try {
       const id = localStorage.getItem("clipboard");
-      const [, ops] = clone(id, { toParent, toBefore })(get().flow);
-      send(ops);
+      if (id) {
+        const [, ops] = clone(id, { toParent, toBefore })(get().flow);
+        send(ops);
+      }
     } catch (err) {
       alert(err.message);
     }
   },
 
-  childNodesOf(id: string = ROOT_NODE_KEY) {
+  childNodesOf(id: string | undefined = ROOT_NODE_KEY) {
     const { flow } = get();
     return (flow[id]?.edges || []).map((id) => ({ id, ...flow[id] }));
   },
@@ -245,7 +250,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     return data;
   },
 
-  createFlow: async (teamId, newName, data = {}): Promise<string> => {
+  createFlow: async (teamId: any, newName: any, data = {}): Promise<string> => {
     let response = (await client.mutate({
       mutation: gql`
         mutation CreateFlow(
@@ -335,7 +340,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
   breadcrumbs: {},
 
-  async startSession({ passport }) {
+  async startSession({ passport }: any) {
     // ------ BEGIN PASSPORT DATA OVERRIDES ------
 
     // TODO: move all of the logic in this block out of here and update the API
@@ -411,7 +416,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     set({ breadcrumbs: {}, passport: { data: {} }, sessionId: "" });
   },
 
-  setFlow(id, flow) {
+  setFlow(id: any, flow: any) {
     set({ id, flow });
   },
 
@@ -420,7 +425,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
     const ids: Set<string> = new Set();
 
-    const mostToLeastNumberOfValues = (b, a) =>
+    const mostToLeastNumberOfValues = (b: any, a: any) =>
       String(a.data?.val).split(",").length -
       String(b.data?.val).split(",").length;
 
@@ -429,11 +434,13 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         .filter(
           (id) =>
             !Object.keys(breadcrumbs).includes(id) &&
-            (!SUPPORTED_DECISION_TYPES.includes(flow[id].type) ||
-              flow[id]?.edges?.length > 0)
+            (!SUPPORTED_DECISION_TYPES.includes(flow[id]?.type as TYPES) ||
+              (flow[id]?.edges as any)?.length > 0)
         )
         .forEach((id) => {
-          if ([TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type)) {
+          if (
+            [TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type as TYPES)
+          ) {
             nodeIdsConnectedFrom(id);
           } else {
             const fn = flow[id]?.data?.fn;
@@ -442,21 +449,23 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
 
             if (fn && (fn === "flag" || passportValues !== undefined)) {
-              const responses = flow[id]?.edges.map((id) => ({
+              const responses = flow[id]?.edges?.map((id) => ({
                 id,
                 ...flow[id],
               }));
 
               let responseThatCanBeAutoAnswered;
               const sortedResponses = responses
-                .sort(mostToLeastNumberOfValues)
-                .filter((response) => response.data?.val);
+                ? responses
+                    .sort(mostToLeastNumberOfValues)
+                    .filter((response) => response.data?.val)
+                : [];
 
               if (passportValues !== undefined) {
                 if (!Array.isArray(passportValues))
                   passportValues = [passportValues];
 
-                passportValues = (passportValues || []).filter((pv) =>
+                passportValues = (passportValues || []).filter((pv: any) =>
                   sortedResponses.some((r) => pv.startsWith(r.data.val))
                 );
 
@@ -474,7 +483,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                           .sort();
                         for (const responseValue of responseValues) {
                           // console.log({ value, val });
-                          return passportValues.every((passportValue) =>
+                          return passportValues.every((passportValue: any) =>
                             String(passportValue).startsWith(responseValue)
                           );
                         }
@@ -485,7 +494,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               }
 
               if (!responseThatCanBeAutoAnswered) {
-                responseThatCanBeAutoAnswered = responses.find(
+                responseThatCanBeAutoAnswered = responses?.find(
                   (r) => !r.data?.val
                 );
               }
@@ -517,7 +526,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     Object.entries(breadcrumbs)
       .reverse()
       .forEach(([, { answers }]: any) => {
-        answers.forEach((answer) => nodeIdsConnectedFrom(answer));
+        answers.forEach((answer: any) => nodeIdsConnectedFrom(answer));
       });
 
     nodeIdsConnectedFrom(ROOT_NODE_KEY);
@@ -577,10 +586,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       const key = flow[id].data?.fn;
       if (key) {
         let passportValue;
-        passportValue = vals.map((id) => flow[id].data?.val);
+        passportValue = vals.map((id: any) => flow[id].data?.val);
 
         passportValue = passportValue.filter(
-          (val) =>
+          (val: any) =>
             val !== undefined && val !== null && String(val).trim() !== ""
         );
 
@@ -618,9 +627,15 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         });
       }
 
+      const flowIdType = flow[id]?.type;
+
       // only store breadcrumbs in the backend if they are answers provided for
       // either a Statement or Checklist type. TODO: make this more robust
-      if (SUPPORTED_DECISION_TYPES.includes(flow[id].type) && sessionId) {
+      if (
+        flowIdType &&
+        SUPPORTED_DECISION_TYPES.includes(flowIdType) &&
+        sessionId
+      ) {
         addSessionEvent();
         if (upcomingCardIds().length === 0) {
           endSession();
@@ -629,10 +644,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     } else {
       // remove breadcrumbs that were stored from id onwards
       let keepBreadcrumb = true;
-      const fns = [];
-      const newFns = [];
+      const fns: Array<any> = [];
+      const newFns: Array<any> = [];
       const newBreadcrumbs = Object.entries(breadcrumbs).reduce(
-        (acc, [k, v]) => {
+        (acc: Record<string, any>, [k, v]) => {
           const fn = flow[k]?.data?.fn;
           if (fn) fns.push(fn);
           if (k === id) {

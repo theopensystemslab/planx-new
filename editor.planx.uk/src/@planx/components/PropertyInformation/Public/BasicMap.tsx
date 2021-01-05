@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import type { Theme } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
 import DrawIcon from "@material-ui/icons/Create";
 import LayersIcon from "@material-ui/icons/LayersOutlined";
@@ -15,7 +16,7 @@ import turfArea from "@turf/area";
 import mapboxgl from "mapbox-gl";
 import React from "react";
 
-const styles = (theme) =>
+const styles = (theme: Theme) =>
   ({
     container: {
       position: "relative",
@@ -79,21 +80,23 @@ const styles = (theme) =>
 mapboxgl.accessToken =
   "pk.eyJ1Ijoib3BlbnN5c3RlbXNsYWIiLCJhIjoiY2sybHJ6cnY2MGFkaTNjcHIwanV1eGRlbCJ9.xAHUuQo1RAnzwOlN90SGVQ";
 
+interface Props {
+  lng: number;
+  lat: number;
+  zoom: number;
+  setBoundary: Function;
+  classes: Record<never, string>;
+}
+
 class Map extends React.Component<
-  {
-    lng: number;
-    lat: number;
-    zoom: number;
-    setBoundary: Function;
-    classes: Object[];
-  },
+  Props,
   { loading: Boolean; help: Boolean; showStyles: Boolean; layer: String }
 > {
   draw: any;
   map: any;
   mapContainer: any;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       loading: true,
@@ -108,7 +111,7 @@ class Map extends React.Component<
     this.draw.changeMode("draw_polygon");
   };
 
-  switchLayer = (layer) => {
+  switchLayer = (layer: any) => {
     if (layer !== "") {
       this.map.setStyle("mapbox://styles/mapbox/" + layer);
     } else {
@@ -135,7 +138,7 @@ class Map extends React.Component<
     });
     const map = this.map;
     map.on("load", function () {
-      map.style.stylesheet.layers.forEach(function (layer) {
+      map.style.stylesheet.layers.forEach(function (layer: any) {
         // console.log(layer);
         if (!["aeroway-line", "inspire-polygons"].includes(layer.id)) {
           map.removeLayer(layer.id);
@@ -303,7 +306,7 @@ class Map extends React.Component<
               <Box className={classes.mapStyles} style={{ minHeight: 300 }}>
                 {this.state.showStyles ? (
                   <MapStyleSwitcher
-                    handleChange={(e) => {
+                    handleChange={(e: any) => {
                       this.setState({ layer: e.target.value });
                       this.switchLayer(e.target.value);
                     }}

@@ -19,7 +19,7 @@ import theme from "./theme";
 const rootEl = document.getElementById("root") as HTMLElement;
 
 const hasJWT = (): boolean | void => {
-  let jwt: string = Cookies.get("jwt");
+  let jwt: string | null = Cookies.get("jwt");
   if (jwt) {
     // TODO: make this more robust
     // checks if stored jwt is valid and includes a numeric user id
@@ -27,7 +27,9 @@ const hasJWT = (): boolean | void => {
     try {
       if (
         Number(
-          jwtDecode(jwt)["https://hasura.io/jwt/claims"]["x-hasura-user-id"]
+          (jwtDecode(jwt) as any)["https://hasura.io/jwt/claims"][
+            "x-hasura-user-id"
+          ]
         ) > 0
       ) {
         return true;

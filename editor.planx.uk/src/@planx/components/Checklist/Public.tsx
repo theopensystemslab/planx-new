@@ -69,7 +69,7 @@ const ChecklistComponent: React.FC<Props> = ({
 
   const allChecked = formik.values.checked.length === flatOptions.length;
 
-  const changeCheckbox = (id: string) => (_checked: boolean) => {
+  const changeCheckbox = (id: string) => (_checked: any) => {
     let newCheckedIds;
 
     if (formik.values.checked.includes(id)) {

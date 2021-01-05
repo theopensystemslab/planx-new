@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const components: {
-  [key in TYPES]: React.FC<any>;
+  [key in TYPES]: React.FC<any> | undefined;
 } = {
   [TYPES.AddressInput]: Debug,
   [TYPES.Checklist]: Checklist,
@@ -100,7 +100,7 @@ function Component(props: Props) {
             // XXX: This works because since ES2015 key order is guaranteed to be the insertion order
             Object.entries(props.breadcrumbs).map(([nodeId, value], i) => {
               const node = props.flow[nodeId];
-              const Component = components[node.type];
+              const Component = node.type && components[node.type];
               if (Component === undefined) {
                 return null;
               }
@@ -157,7 +157,7 @@ function Question(props: ComponentProps) {
   );
 
   function getNodeText() {
-    const answerId = props.userData.answers[0];
+    const answerId = props.userData?.answers[0];
     return props.flow[answerId].data.text;
   }
 }
@@ -184,7 +184,7 @@ function Checklist(props: ComponentProps) {
       <div>{props.node.data.text ?? "Checklist"}</div>
       <div>
         <ul>
-          {props.userData.answers.map((nodeId) => (
+          {props.userData?.answers.map((nodeId: string) => (
             <li>{props.flow[nodeId].data.text}</li>
           ))}
         </ul>
@@ -197,7 +197,7 @@ function TextInput(props: ComponentProps) {
   return (
     <>
       <div>{props.node.data.title ?? "Text"}</div>
-      <div>{props.userData.answers[0]}</div>
+      <div>{props.userData?.answers[0]}</div>
     </>
   );
 }
@@ -208,8 +208,8 @@ function FileUpload(props: ComponentProps) {
       <div>{props.node.data.title ?? "File upload"}</div>
 
       <div>
-        {props.userData.answers.length > 0
-          ? props.userData.answers.map((file, i) => (
+        {props.userData?.answers.length > 0
+          ? props.userData?.answers.map((file: any, i: number) => (
               <a key={i} href={file.url}>
                 {file.filename}
               </a>
@@ -224,7 +224,7 @@ function Debug(props: ComponentProps) {
   return (
     <>
       <div>{JSON.stringify(props.node.data)}</div>
-      <div>{JSON.stringify(props.userData.answers)}</div>
+      <div>{JSON.stringify(props.userData?.answers)}</div>
     </>
   );
 }

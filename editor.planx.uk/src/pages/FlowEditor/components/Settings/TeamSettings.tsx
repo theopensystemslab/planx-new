@@ -39,7 +39,7 @@ export const teamStyles = makeStyles((theme) => ({
   },
 }));
 
-const TeamMember = ({ name, email, role }) => {
+const TeamMember = ({ name, email, role }: any) => {
   const [userRole, setRole] = React.useState(role);
   const classes = teamStyles();
   return (

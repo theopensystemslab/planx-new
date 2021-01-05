@@ -13,7 +13,7 @@ const InternalPortalForm: React.FC<{
   id?: string;
   text?: string;
   flowId?: string;
-  handleSubmit?;
+  handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
 }> = ({ id, handleSubmit, text = "", flowId = "", flows = [] }) => {
   const formik = useFormik({
@@ -57,7 +57,7 @@ const InternalPortalForm: React.FC<{
           disabled={!!formik.values.flowId}
           // required={!formik.values.flowId} (was ignored by @testing-library?)
         />
-        <FormError message={formik.errors.text} />
+        {formik.errors.text && <FormError message={formik.errors.text} />}
       </div>
       {flows?.length > 0 && (
         <>

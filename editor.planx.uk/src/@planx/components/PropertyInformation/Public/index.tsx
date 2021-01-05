@@ -23,7 +23,7 @@ const PropertyInformation = ({
   lat,
   lng,
   handleSubmit: handleSubmit,
-}) => {
+}: any) => {
   const classes = propertyInformationStyles();
 
   return (
@@ -38,7 +38,7 @@ const PropertyInformation = ({
         </Box>
       </Box>
       <Box mb={6}>
-        {propertyDetails.map(({ heading, detail }) => {
+        {propertyDetails.map(({ heading, detail }: any) => {
           return (
             <PropertyDetail key={heading} heading={heading} detail={detail} />
           );
@@ -54,7 +54,7 @@ const PropertyInformation = ({
   );
 };
 
-const PropWithConstraints = ({ info, handleSubmit: handleSubmit }) => {
+const PropWithConstraints = ({ info, handleSubmit: handleSubmit }: any) => {
   const url = `https://local-authority-api.planx.uk/${info.team}?x=${info.x}&y=${info.y}&cacheBuster=10`;
   const [{ data }] = useAxios(url);
   const [id, flow, startSession] = useStore((state) => [
