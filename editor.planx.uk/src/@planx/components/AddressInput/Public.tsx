@@ -27,11 +27,12 @@ export default function AddressInputComponent(props: Props): FCReturn {
     return true;
   }, [value]);
 
-  const update = (line: AddressLine, ev: ChangeEvent<HTMLInputElement>) => {
-    ev.persist();
+  const update = (line: AddressLine) => ({
+    target: { value },
+  }: ChangeEvent<HTMLInputElement>) => {
     setValue((prev) => ({
       ...prev,
-      [line]: ev.target.value,
+      [line]: value,
     }));
   };
 
@@ -49,7 +50,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
           value={value.line1}
           placeholder="Line 1"
           bordered
-          onChange={(ev) => update("line1", ev)}
+          onChange={update("line1")}
         />
       </InputLabel>
       <InputRow>
@@ -57,7 +58,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
           value={value.line2}
           placeholder="Line 2"
           bordered
-          onChange={(ev) => update("line2", ev)}
+          onChange={update("line2")}
         />
       </InputRow>
       <InputLabel label="town">
@@ -65,7 +66,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
           value={value.town}
           placeholder="Town"
           bordered
-          onChange={(ev) => update("town", ev)}
+          onChange={update("town")}
         />
       </InputLabel>
       <InputLabel label="county">
@@ -73,7 +74,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
           value={value.county}
           placeholder="County"
           bordered
-          onChange={(ev) => update("county", ev)}
+          onChange={update("county")}
         />
       </InputLabel>
       <InputLabel label="postal code">
@@ -82,7 +83,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
             value={value.postcode}
             placeholder="Postal code"
             bordered
-            onChange={(ev) => update("postcode", ev)}
+            onChange={update("postcode")}
           />
         </InputRowItem>
       </InputLabel>
