@@ -29,7 +29,7 @@ const placeholderize = (x: any) => {
 
 interface File {
   filename: string;
-  tags: string;
+  tags?: string;
 }
 
 // const date = new Date().toUTCString();
@@ -111,7 +111,7 @@ const SendComponent: React.FC<Props> = (props) => {
             if (x.filename && x.url) {
               files.push({
                 filename: x.url,
-                tags: x.filename,
+                // tags: x.filename,
               });
             }
           });
