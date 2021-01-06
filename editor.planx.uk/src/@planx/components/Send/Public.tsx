@@ -50,18 +50,18 @@ const full = {
 
   // "ward": "",
 
-  // "description": "",
+  description: "",
   // "work_status": "",
 
   applicant_first_name: "",
   applicant_last_name: "",
   applicant_email: "",
-  // "applicant_phone": "",
+  applicant_phone: "",
 
-  // "agent_first_name": "",
-  // "agent_last_name": "",
-  // "agent_phone": "",
-  // "agent_email": "",
+  agent_first_name: "",
+  agent_last_name: "",
+  agent_phone: "",
+  agent_email: "",
 
   payment_reference: "JG669323",
 
@@ -119,13 +119,23 @@ const SendComponent: React.FC<Props> = (props) => {
 
         const answer = (key: string): string => {
           const id = Object.keys(flow).find((id) => flow[id].data?.fn === key);
-
           return id ? breadcrumbs[id].answers[0] : "";
         };
 
-        data.applicant_first_name = answer("firstname");
-        data.applicant_last_name = answer("lastname");
-        data.applicant_email = answer("email");
+        const fields: Array<keyof typeof data> = [
+          "applicant_first_name",
+          "applicant_last_name",
+          "applicant_email",
+          "applicant_phone",
+          "agent_first_name",
+          "agent_last_name",
+          "agent_email",
+          "agent_phone",
+          "description",
+        ];
+        fields.forEach((field) => {
+          data[field] = answer(field) as any;
+        });
 
         data.files = files;
 
