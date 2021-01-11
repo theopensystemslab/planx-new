@@ -14,6 +14,8 @@ function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
   const [data, setData] = useState<Data | null>(null);
   const [_userData, setUserData] = useState<UserData | null>(null);
 
+  console.log(data);
+
   // TODO: strict mode doesn't compile this without the `as unknown as ...` trick
   // To solve this easily, consider not spreading data into other props like `handleSubmit`
   const publicProps: PublicProps<Data, UserData> = ({
@@ -80,6 +82,6 @@ class ErrorBoundary extends React.Component<ErrorProps, ErrorState> {
         </p>
       );
     }
-    return this.props.children;
+    return null;
   }
 }

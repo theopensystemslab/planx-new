@@ -51,6 +51,7 @@ dependencies:
   scroll-into-view-if-needed: 2.2.26
   sharedb: 1.4.2
   subscriptions-transport-ws: 0.9.18_graphql@15.4.0
+  yup: 0.32.8
   zustand: 3.1.4_react@16.14.0
 devDependencies:
   '@babel/core': 7.12.8
@@ -4472,7 +4473,6 @@ packages:
     resolution:
       integrity: sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
   /@types/lodash/4.14.165:
-    dev: true
     resolution:
       integrity: sha512-tjSSOTHhI5mCHTy/OOXYIhi2Wt1qcbHmuXD1Ha7q70CgI/I71afO4XtLb/cVexki1oVYchpul/TOuu3Arcdxrg==
   /@types/markdown-to-jsx/6.11.3:
@@ -12153,6 +12153,10 @@ packages:
   /lodash-es/4.17.15:
     resolution:
       integrity: sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
+  /lodash-es/4.17.20:
+    dev: false
+    resolution:
+      integrity: sha512-JD1COMZsq8maT6mnuz1UMV0jvYD0E0aUsSOdrr1/nAG3dhqQXwRRgeW0cSqH1U43INKcqxaiVIQNOUDld7gRDA==
   /lodash._reinterpolate/3.0.0:
     dev: false
     resolution:
@@ -12794,6 +12798,10 @@ packages:
   /nan/2.14.2:
     resolution:
       integrity: sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
+  /nanoclone/0.2.1:
+    dev: false
+    resolution:
+      integrity: sha512-wynEP02LmIbLpcYw8uBKpcfF6dmg2vcpKqxeH5UcoKEYdExslsdUA4ugFauuaeYdTB76ez6gJW8XAZ6CgkXYxA==
   /nanoid-good/3.1.0:
     dependencies:
       nanoid: 3.1.16
@@ -14673,6 +14681,10 @@ packages:
       react-is: 16.13.1
     resolution:
       integrity: sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
+  /property-expr/2.0.4:
+    dev: false
+    resolution:
+      integrity: sha512-sFPkHQjVKheDNnPvotjQmm3KD3uk1fWKUN7CrpdbwmUx3CrG3QiM8QpTSimvig5vTXmTvjz7+TDvXOI9+4rkcg==
   /property-information/5.6.0:
     dependencies:
       xtend: 4.0.2
@@ -17553,6 +17565,10 @@ packages:
       node: '>=0.6'
     resolution:
       integrity: sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
+  /toposort/2.0.2:
+    dev: false
+    resolution:
+      integrity: sha1-riF2gXXRVZ1IvvNUILL0li8JwzA=
   /tough-cookie/2.5.0:
     dependencies:
       psl: 1.8.0
@@ -18913,6 +18929,20 @@ packages:
     dev: true
     resolution:
       integrity: sha1-AI4G2AlDIMNy28L47XagymyKxBk=
+  /yup/0.32.8:
+    dependencies:
+      '@babel/runtime': 7.12.5
+      '@types/lodash': 4.14.165
+      lodash: 4.17.20
+      lodash-es: 4.17.20
+      nanoclone: 0.2.1
+      property-expr: 2.0.4
+      toposort: 2.0.2
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-SZulv5FIZ9d5H99EN5tRCRPXL0eyoYxWIP1AacCrjC9d4DfP13J1dROdKGfpfRHT3eQB6/ikBl5jG21smAfCkA==
   /zen-observable/0.8.15:
     dev: false
     resolution:
@@ -19012,4 +19042,5 @@ specifiers:
   subscriptions-transport-ws: ^0.9.18
   tsconfig-paths-webpack-plugin: ^3.3.0
   typescript: ^4.0.5
+  yup: ^0.32.8
   zustand: ^3.1.4

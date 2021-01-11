@@ -8,6 +8,7 @@ import Input from "./Input";
 export interface Props {
   label?: string;
   value?: string;
+  error?: string;
   bordered?: boolean;
   onChange: (newDate: string) => void;
 }
