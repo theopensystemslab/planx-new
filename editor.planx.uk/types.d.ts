@@ -11,4 +11,4 @@ declare module "mapbox-gl";
 declare module "react-html-parser";
 declare module "proj4";
 declare module "notifications-node-client";
-
+declare module "draftjs-to-html";

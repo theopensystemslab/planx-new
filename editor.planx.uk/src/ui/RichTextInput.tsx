@@ -1,20 +1,28 @@
+import "@draft-js-plugins/inline-toolbar/lib/plugin.css";
+
+import createLinkPlugin from "@draft-js-plugins/anchor";
+import {
+  BoldButton,
+  HeadlineOneButton,
+  HeadlineTwoButton,
+  ItalicButton,
+  OrderedListButton,
+  UnorderedListButton,
+} from "@draft-js-plugins/buttons";
+import PluginsEditor from "@draft-js-plugins/editor";
+import createInlineToolbarPlugin from "@draft-js-plugins/inline-toolbar";
 import Box from "@material-ui/core/Box";
 import { InputBaseProps } from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
-import { convertToRaw, EditorState } from "draft-js";
-import { stateToMarkdown } from "draft-js-export-markdown";
-import { stateFromMarkdown } from "draft-js-import-markdown";
-import MUIRichTextEditor from "mui-rte";
-import React, {
-  ChangeEvent,
-  MutableRefObject,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-
-import { levenshteinDistance } from "../utils";
+import {
+  ContentState,
+  convertFromHTML,
+  convertToRaw,
+  EditorState,
+} from "draft-js";
+import draftToHtml from "draftjs-to-html";
+import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
 
 interface Props extends InputBaseProps {
   className?: string;
@@ -28,175 +36,105 @@ const useClasses = makeStyles((theme) => ({
     boxSizing: "border-box",
     // This is necessary for the focus styles to be visible. Breaks the layout a bit
     // unfortunately. TODO: find a better solution.
-    padding: 2,
+    padding: 10,
     outline: "none",
+    backgroundColor: theme.palette.background.default,
     width: "100%",
-  },
-  focused: {
-    position: "relative",
-    boxSizing: "border-box",
-    // This is necessary for the focus styles to be visible. Breaks the layout a bit
-    // unfortunately. TODO: find a better solution.
-    padding: 2,
-    outline: "none",
-    boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
-    width: "100%",
+    "&:focus-within": {
+      boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
+    },
   },
   bordered: {
     border: `2px solid #000`,
   },
-  editorFocus: {
-    boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
-  },
 }));
 
-const mdToEditorRawContent = (str: unknown) =>
-  convertToRaw(stateFromMarkdown(str));
+const valueToEditorState = (value: string): EditorState => {
+  const blocksFromHTML = convertFromHTML(value);
+  const state = ContentState.createFromBlockArray(
+    blocksFromHTML.contentBlocks,
+    blocksFromHTML.entityMap
+  );
+  return EditorState.createWithContent(state);
+};
 
-const RichTextInput: React.FC<
-  Props & { editorStateRef: MutableRefObject<EditorState | null> }
-> = (props) => {
-  // Set the initial `value` prop and ignore updated values to avoid infinite loops
-  const [initialValue] = useState(mdToEditorRawContent(props.value || ""));
+const Link: React.FC<any> = (props) => {
+  return <a href="https://peterszerzo.com" {...props} />;
+};
 
-  const [focused, setFocused] = useState(false);
+const RichTextInput: React.FC<Props> = (props) => {
+  const [editorState, setEditorState] = useState(
+    valueToEditorState((props.value as string) || "")
+  );
 
-  const editorRef = useRef<any>(null);
-
-  const containerRef = useRef<any>(null);
-
+  // If the editor is changed from the outside, synchronize internal state
   useEffect(() => {
-    const globalClickHandler = (ev: any) => {
-      const container = containerRef.current;
-      if (
-        container !== null &&
-        container.contains(ev.target) &&
-        container.contains(document.querySelector(".DraftEditor-root"))
-      ) {
-        editorRef.current.focus();
-        setFocused(true);
-      }
-    };
-    document.addEventListener("click", globalClickHandler);
-    return () => {
-      document.removeEventListener("click", globalClickHandler);
-    };
-  }, []);
+    const currentHtml = draftToHtml(
+      convertToRaw(editorState.getCurrentContent())
+    );
+    if (currentHtml !== props.value) {
+      setEditorState(valueToEditorState((props.value as string) || ""));
+    }
+  }, [props.value]);
+
+  const linkPlugin = useMemo(
+    () =>
+      createLinkPlugin({
+        placeholder: "https://",
+        Link,
+      }),
+    []
+  );
+
+  const inlineToolbarPlugin = useMemo(() => createInlineToolbarPlugin(), [
+    linkPlugin,
+  ]);
 
   const classes = useClasses();
 
   return (
     <Box
-      {
-        /**
-         * This hack is necessary because <Box/> component ref attribute is not typed.
-         * See https://github.com/mui-org/material-ui/issues/17010
-         */
-        ...({ ref: containerRef } as any)
-      }
       className={classNames(
-        focused && classes.focused,
-        props.bordered && classes.bordered
+        classes.regular,
+        props.bordered ? classes.bordered : undefined
       )}
     >
-      <MUIRichTextEditor
-        onFocus={() => {
-          setFocused(true);
-        }}
-        onBlur={() => {
-          setFocused(false);
-        }}
-        defaultValue={JSON.stringify(initialValue)}
-        ref={editorRef}
-        toolbarButtonSize="small"
-        inlineToolbar={true}
-        toolbar={false}
-        inlineToolbarControls={[
-          "bold",
-          "italic",
-          "underline",
-          "link",
-          "bulletList",
-        ]}
-        label={props.placeholder}
-        onChange={(newState) => {
-          props.editorStateRef.current = newState;
+      <PluginsEditor
+        plugins={[inlineToolbarPlugin, linkPlugin]}
+        editorState={editorState}
+        onChange={(newEditorState) => {
+          const newHtmlContent = draftToHtml(
+            convertToRaw(newEditorState.getCurrentContent())
+          );
 
-          if (!props.onChange) {
-            return;
-          }
-          const md = stateToMarkdown(newState.getCurrentContent());
-
-          if (md !== props.value) {
-            // Construct and cast as a change event so the component stays compatible with formik helpers
+          if (props.onChange && newHtmlContent !== props.value) {
             const changeEvent = ({
               target: {
                 name: props.name,
-                value: md,
+                value: newHtmlContent,
               },
             } as unknown) as ChangeEvent<HTMLInputElement>;
             props.onChange(changeEvent);
           }
+          setEditorState(newEditorState);
         }}
+        spellCheck={false}
       />
+      <inlineToolbarPlugin.InlineToolbar>
+        {(externalProps: any) => (
+          <>
+            <HeadlineOneButton {...externalProps} />
+            <HeadlineTwoButton {...externalProps} />
+            <BoldButton {...externalProps} />
+            <ItalicButton {...externalProps} />
+            <UnorderedListButton {...externalProps} />
+            <OrderedListButton {...externalProps} />
+            <linkPlugin.LinkButton {...externalProps} />
+          </>
+        )}
+      </inlineToolbarPlugin.InlineToolbar>
     </Box>
   );
 };
 
-const normalizeMdForEquality = (md: string): string =>
-  md
-    .split("\n")
-    .filter((line) => line !== "")
-    .map((line) => line.trim())
-    .join("\n");
-
-/**
- * Crude, permissive checker for markdown equality.
- * It is meant to return true more often than not to prevent editor remounting.
- */
-const mdEqual = (md1: string, md2: string): boolean => {
-  const n1 = normalizeMdForEquality(md1);
-  const n2 = normalizeMdForEquality(md2);
-
-  // Check for regular equality first as it may be faster - default to Levenshtein distance
-  return n1 === n2 || levenshteinDistance(n1, n2) <= 2;
-};
-
-/**
- * This component wraps the main rich text input component in order to check if the editor state
- * and the value are in sync (this may not be the case if the editor was inside a rearranged list,
- * or a new value was available through ShareDB), turning the editor into a proper controlled input.
- * mui-rte should be doing this automatically through https://github.com/niuware/mui-rte/issues/42
- * and the referenced https://github.com/niuware/mui-rte/blob/master/examples/reset-value/index.tsx,
- * but this leads to a jagged editing experience with ignored keystrokes and infinite loops.
- *
- * The way this component works is that if there is a mismatch, the RichTextEditor component is
- * unmounted and reinserted immediately afterwards to start with a clean slate.
- *
- * It is lame but it is works 🙃
- */
-const ControlledRichTextInput: React.FC<Props> = (props) => {
-  const editorStateRef = useRef<EditorState | null>(null);
-  const [unmounted, setUnmounted] = useState(false);
-  useEffect(() => {
-    if (editorStateRef.current !== null && typeof props.value === "string") {
-      const md = stateToMarkdown(editorStateRef.current.getCurrentContent());
-      if (!mdEqual(md, props.value)) {
-        setUnmounted(true);
-      }
-    }
-  }, [props.value, editorStateRef]);
-
-  useEffect(() => {
-    if (unmounted) {
-      setTimeout(() => {
-        setUnmounted(false);
-      });
-    }
-  }, [unmounted, setUnmounted]);
-  return unmounted ? null : (
-    <RichTextInput {...props} editorStateRef={editorStateRef} />
-  );
-};
-
-export default ControlledRichTextInput;
+export default RichTextInput;
