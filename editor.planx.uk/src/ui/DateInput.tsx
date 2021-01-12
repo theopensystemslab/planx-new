@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React, { ChangeEvent } from "react";
 
+import ErrorWrapper from "./ErrorWrapper";
 import Input from "./Input";
 
 export interface Props {
@@ -14,7 +15,8 @@ export interface Props {
 }
 
 const useClasses = makeStyles((theme) => ({
-  root: {
+  root: {},
+  editor: {
     display: "flex",
     alignItems: "center",
     // Adds a uniform horizontal spacing between all child elements.
@@ -32,37 +34,47 @@ export default function DateInput(props: Props): FCReturn {
   const [year, month, day] = (props.value || "").split("-");
   const classes = useClasses();
   return (
-    <Box className={classes.root}>
-      <Typography className={classes.label} variant="body1">
-        {props.label || "Date"}:
-      </Typography>
-      <Input
-        style={{ width: 60 }}
-        value={day || ""}
-        placeholder="DD"
-        bordered={props.bordered}
-        onInput={(ev: ChangeEvent<HTMLInputElement>) => {
-          props.onChange([year || "", month || "", ev.target.value].join("-"));
-        }}
-      />
-      <Input
-        style={{ width: 60 }}
-        value={month || ""}
-        placeholder="MM"
-        bordered={props.bordered}
-        onInput={(ev: ChangeEvent<HTMLInputElement>) => {
-          props.onChange([year || "", ev.target.value, day || ""].join("-"));
-        }}
-      />
-      <Input
-        style={{ width: 90 }}
-        value={year || ""}
-        placeholder="YYYY"
-        bordered={props.bordered}
-        onInput={(ev: ChangeEvent<HTMLInputElement>) => {
-          props.onChange([ev.target.value, month || "", day || ""].join("-"));
-        }}
-      />
-    </Box>
+    <ErrorWrapper error={props.error}>
+      <div className={classes.root}>
+        <div className={classes.editor}>
+          <Typography className={classes.label} variant="body1">
+            {props.label || "Date"}:
+          </Typography>
+          <Input
+            style={{ width: 60 }}
+            value={day || ""}
+            placeholder="DD"
+            bordered={props.bordered}
+            onInput={(ev: ChangeEvent<HTMLInputElement>) => {
+              props.onChange(
+                [year || "", month || "", ev.target.value].join("-")
+              );
+            }}
+          />
+          <Input
+            style={{ width: 60 }}
+            value={month || ""}
+            placeholder="MM"
+            bordered={props.bordered}
+            onInput={(ev: ChangeEvent<HTMLInputElement>) => {
+              props.onChange(
+                [year || "", ev.target.value, day || ""].join("-")
+              );
+            }}
+          />
+          <Input
+            style={{ width: 90 }}
+            value={year || ""}
+            placeholder="YYYY"
+            bordered={props.bordered}
+            onInput={(ev: ChangeEvent<HTMLInputElement>) => {
+              props.onChange(
+                [ev.target.value, month || "", day || ""].join("-")
+              );
+            }}
+          />
+        </div>
+      </div>
+    </ErrorWrapper>
   );
 }

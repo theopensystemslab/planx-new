@@ -1,5 +1,5 @@
 import parseISO from "date-fns/parseISO";
-import { SchemaOf,string } from "yup";
+import { SchemaOf, string } from "yup";
 
 import { MoreInformation, parseMoreInformation } from "../shared";
 
@@ -15,20 +15,44 @@ export interface DateInput extends MoreInformation {
   max?: string;
 }
 
+const isDateValid = (date: string) =>
+  // TODO: don't use string equality check here?
+  parseISO(date).toString() !== "Invalid Date";
+
+const displayDate = (date: string): string | undefined => {
+  if (!isDateValid(date)) {
+    return undefined;
+  }
+  const [year, month, day] = date.split("-");
+  return `${day}.${month}.${year}`;
+};
+
 export const dateSchema: (params: {
   min?: string;
   max?: string;
 }) => SchemaOf<string> = (params) =>
   string()
     .required()
-    .test("valid", "date is not valid", (date: string | undefined) => {
-      return Boolean(
-        date &&
-          // TODO: don't use string equality check here?
-          parseISO(date).toString() !== "Invalid Date" &&
-          !(params.min && date < params.min) &&
-          !(params.max && date > params.max)
-      );
+    .test("valid", "Enter a valid date", (date: string | undefined) => {
+      return Boolean(date && isDateValid(date));
+    })
+    .test({
+      name: "too soon",
+      message: `Enter a date later than ${
+        params.min && displayDate(params.min)
+      }`,
+      test: (date: string | undefined) => {
+        return Boolean(date && !(params.min && date < params.min));
+      },
+    })
+    .test({
+      name: "too late",
+      message: `Enter a date earlier than ${
+        params.max && displayDate(params.max)
+      }`,
+      test: (date: string | undefined) => {
+        return Boolean(date && !(params.max && date > params.max));
+      },
     });
 
 export const parseDateInput = (

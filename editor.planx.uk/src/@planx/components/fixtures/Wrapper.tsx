@@ -14,16 +14,12 @@ function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
   const [data, setData] = useState<Data | null>(null);
   const [_userData, setUserData] = useState<UserData | null>(null);
 
-  console.log(data);
-
-  // TODO: strict mode doesn't compile this without the `as unknown as ...` trick
-  // To solve this easily, consider not spreading data into other props like `handleSubmit`
-  const publicProps: PublicProps<Data, UserData> = ({
+  const publicProps: PublicProps<Data, UserData> | null = data && {
     ...data,
     handleSubmit: (newUserData?: UserData) => {
       setUserData(newUserData || null);
     },
-  } as unknown) as PublicProps<Data, UserData>;
+  };
 
   return (
     <>
@@ -49,9 +45,11 @@ function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
             Submit
           </Button>
         </div>
-        <ErrorBoundary hasInitData={Boolean(data)}>
-          <props.Public {...publicProps} />
-        </ErrorBoundary>
+        {publicProps && (
+          <ErrorBoundary hasInitData={Boolean(data)}>
+            <props.Public {...publicProps} />
+          </ErrorBoundary>
+        )}
       </div>
     </>
   );
