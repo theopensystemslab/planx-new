@@ -5,19 +5,18 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React, { useMemo, useState } from "react";
-import DateInputUi from "ui/DateInput";
+import DateInputComponent from "ui/DateInput";
 import InputRow from "ui/InputRow";
 import { object } from "yup";
 
 export type Props = PublicProps<DateInput, UserData>;
 
-const DateInputComponent: React.FC<Props> = (props) => {
+const DateInputPublic: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
       date: "",
     },
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
       props.handleSubmit && props.handleSubmit(values.date);
     },
     validateOnBlur: false,
@@ -37,10 +36,10 @@ const DateInputComponent: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
       />
       <InputRow>
-        <DateInputUi
+        <DateInputComponent
           value={formik.values.date}
           bordered
-          onChange={(newDate) => {
+          onChange={(newDate: string) => {
             formik.setFieldValue("date", newDate);
           }}
           error={formik.errors.date}
@@ -50,4 +49,4 @@ const DateInputComponent: React.FC<Props> = (props) => {
   );
 };
 
-export default DateInputComponent;
+export default DateInputPublic;
