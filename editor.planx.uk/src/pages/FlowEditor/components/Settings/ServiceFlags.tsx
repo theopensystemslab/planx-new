@@ -48,7 +48,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
     },
-    validate: () => {},
+    validate: () => { },
   });
   const deleteFlagSet = (index: number) => {
     formik.setFieldValue(
@@ -107,7 +107,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
       <Box>
         {formik.values.flagSets.map((flagSet, i) => {
           return (
-            <Box py={3} width="100%" borderBottom={1}>
+            <Box py={3} width="100%" borderBottom={1} key={i}>
               <Box pb={3}>
                 <InputGroup
                   deletable={flagSet.id ? false : true}
@@ -136,7 +136,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
               </Box>
               {flagSet.flags.map((flag, j) => {
                 return (
-                  <Box pl={6.5} pb={2}>
+                  <Box pl={6.5} pb={2} key={j}>
                     <InputGroup
                       deletable={flag.new ? true : flagSet.id ? false : true}
                       draggable={flagSet.id ? false : true}
@@ -167,14 +167,14 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
                             />
                           </InputRowItem>
                         ) : (
-                          <InputRowLabel>
-                            <Box
-                              className={classes.swatch}
-                              bgcolor={flag.color}
-                            />
-                            {flag.color}
-                          </InputRowLabel>
-                        )}
+                            <InputRowLabel>
+                              <Box
+                                className={classes.swatch}
+                                bgcolor={flag.color}
+                              />
+                              {flag.color}
+                            </InputRowLabel>
+                          )}
                       </InputRow>
                       <InputRow>
                         <Input

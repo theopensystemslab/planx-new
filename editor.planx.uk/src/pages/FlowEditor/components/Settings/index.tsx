@@ -37,7 +37,7 @@ function TabPanel(props: TabPanelProps) {
       {value === index && (
         <Container maxWidth="sm" disableGutters>
           <Box py={7}>
-            <Typography>{children}</Typography>
+            {children}
           </Box>
         </Container>
       )}
@@ -100,7 +100,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const tabsOrder = ["team", "flags", "design", "data-manager"];
 
-const NavTabs: React.FC<{ tab?: string }> = (props) => {
+const NavTabs: React.FC<{ tab?: string; }> = (props) => {
   const classes = useStyles();
   const { navigate } = useNavigation();
   const { data } = useCurrentRoute();

@@ -11,7 +11,7 @@ import InputRowItem from "ui/InputRowItem";
 import InputRowLabel from "ui/InputRowLabel";
 import OptionButton from "ui/OptionButton";
 
-interface IDesignSettings {}
+interface IDesignSettings { }
 
 const Team: React.FC<IDesignSettings> = () => {
   const formik = useFormik({
@@ -19,7 +19,7 @@ const Team: React.FC<IDesignSettings> = () => {
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
     },
-    validate: () => {},
+    validate: () => { },
   });
   return (
     <form onSubmit={formik.handleSubmit}>
