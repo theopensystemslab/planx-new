@@ -20,7 +20,7 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-export default function DateInput(props: Props): FCReturn {
+export default function ErrorWrapper(props: Props): FCReturn {
   const classes = useClasses();
   if (!props.error) {
     return props.children || null;
