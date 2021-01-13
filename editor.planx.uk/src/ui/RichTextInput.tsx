@@ -1,4 +1,5 @@
 import "@draft-js-plugins/inline-toolbar/lib/plugin.css";
+import "draft-js/dist/Draft.css";
 
 import createLinkPlugin from "@draft-js-plugins/anchor";
 import {
@@ -16,13 +17,20 @@ import { InputBaseProps } from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import {
+  CompositeDecorator,
   ContentState,
   convertFromHTML,
   convertToRaw,
   EditorState,
 } from "draft-js";
 import draftToHtml from "draftjs-to-html";
-import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
+import React, {
+  ChangeEvent,
+  ReactElement,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 interface Props extends InputBaseProps {
   className?: string;
@@ -49,22 +57,51 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-const valueToEditorState = (value: string): EditorState => {
+function findLinkEntities(contentBlock: any, callback: any, contentState: any) {
+  contentBlock.findEntityRanges((character: any) => {
+    const entityKey = character.getEntity();
+    return (
+      entityKey !== null &&
+      contentState.getEntity(entityKey).getType() === "LINK"
+    );
+  }, callback);
+}
+
+const Link = (props: {
+  contentState: ContentState;
+  entityKey: any;
+  children: ReactElement;
+}) => {
+  const { url } = props.contentState.getEntity(props.entityKey).getData();
+  return (
+    <a href={url} style={{ color: "inherit" }}>
+      {props.children}
+    </a>
+  );
+};
+
+const decorators = new CompositeDecorator([
+  {
+    strategy: findLinkEntities,
+    component: Link,
+  },
+]);
+
+const valueToContentState = (value: string): ContentState => {
   const blocksFromHTML = convertFromHTML(value);
   const state = ContentState.createFromBlockArray(
     blocksFromHTML.contentBlocks,
     blocksFromHTML.entityMap
   );
-  return EditorState.createWithContent(state);
-};
-
-const Link: React.FC<any> = (props) => {
-  return <a href="https://peterszerzo.com" {...props} />;
+  return state;
 };
 
 const RichTextInput: React.FC<Props> = (props) => {
-  const [editorState, setEditorState] = useState(
-    valueToEditorState((props.value as string) || "")
+  const [editorState, setEditorState] = useState<EditorState>(
+    EditorState.createWithContent(
+      valueToContentState((props.value as string) || ""),
+      decorators
+    )
   );
 
   // If the editor is changed from the outside, synchronize internal state
@@ -73,7 +110,12 @@ const RichTextInput: React.FC<Props> = (props) => {
       convertToRaw(editorState.getCurrentContent())
     );
     if (currentHtml !== props.value) {
-      setEditorState(valueToEditorState((props.value as string) || ""));
+      setEditorState(
+        EditorState.createWithContent(
+          valueToContentState((props.value as string) || ""),
+          decorators
+        )
+      );
     }
   }, [props.value]);
 
@@ -81,7 +123,6 @@ const RichTextInput: React.FC<Props> = (props) => {
     () =>
       createLinkPlugin({
         placeholder: "https://",
-        Link,
       }),
     []
   );
@@ -102,6 +143,7 @@ const RichTextInput: React.FC<Props> = (props) => {
       <PluginsEditor
         plugins={[inlineToolbarPlugin, linkPlugin]}
         editorState={editorState}
+        placeholder={props.placeholder}
         onChange={(newEditorState) => {
           const newHtmlContent = draftToHtml(
             convertToRaw(newEditorState.getCurrentContent())

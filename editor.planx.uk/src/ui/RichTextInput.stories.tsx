@@ -28,6 +28,7 @@ export const Basic = () => {
         Reset from the outside
       </Button>
       <RichTextInput
+        placeholder="Add something"
         value={value}
         onChange={(ev) => {
           setValue(ev.target.value);
