@@ -38,6 +38,7 @@ router.get("/logout", (req, res) => {
 const cookieDomain = (returnTo) => {
   if (process.env.NODE_ENV === "production") {
     // TODO: don't hardcode domain in here
+    // this is either going to be a planx.uk or netlify.app domain
     if (returnTo && returnTo.includes("planx.uk")) {
       return ".planx.uk";
     }
@@ -52,18 +53,19 @@ const handleSuccess = (req, res) => {
 
     const domain = cookieDomain(returnTo);
 
-    res.cookie("jwt", req.user.jwt, {
-      // maxAge: 1000 * 60 * 10,
-      // maxAge: new Date(253402300000000) ,
-      // expires: false,
-
-      // expire a year from now
+    const cookie = {
       domain: domain || ".planx.uk",
       maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       httpOnly: false,
-      secure: true,
-      sameSite: "none",
-    });
+    };
+
+    // TODO: remove this conditional, improve the cookieDomain fn
+    if (process.env.NODE_ENV === "production") {
+      cookie.secure = true;
+      cookie.sameSite = "none";
+    }
+
+    res.cookie("jwt", req.user.jwt, cookie);
 
     if (domain) {
       res.redirect(returnTo);
@@ -181,15 +183,6 @@ app.use(
   cors({
     credentials: true,
     methods: "*",
-    origin: function (origin, callback) {
-      if (process.env.NODE_ENV === "production") {
-        callback(null, origin === process.env.EDITOR_URL_EXT);
-      } else {
-        // This is necessary so that file upload works in a react-cosmos fixture
-        // and generally allows us to avoid any and whatever cors problems in dev env
-        callback(null, true);
-      }
-    },
   })
 );
 
