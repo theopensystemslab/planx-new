@@ -20,7 +20,7 @@ test("adding a date with no constraints", async () => {
 
 describe.skip("Validations", () => {
   describe("continue button should be disabled when", () => {
-    test.only("there is no date value", () => {
+    test("there is no date value", () => {
       render(<DateInput title="Empty date" />);
 
       // need .closest() because of the way @material-ui does Buttons
