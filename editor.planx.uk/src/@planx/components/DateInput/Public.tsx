@@ -1,39 +1,33 @@
 import type { DateInput, UserData } from "@planx/components/DateInput/model";
+import { dateSchema } from "@planx/components/DateInput/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
-import parseISO from "date-fns/parseISO";
+import { useFormik } from "formik";
 import React, { useMemo, useState } from "react";
-import DateInputUi from "ui/DateInput";
+import DateInputComponent from "ui/DateInput";
 import InputRow from "ui/InputRow";
+import { object } from "yup";
 
 export type Props = PublicProps<DateInput, UserData>;
 
-const DateInputComponent: React.FC<Props> = (props) => {
-  const [value, setValue] = useState<string>("");
-  const isValid = useMemo(() => {
-    if (
-      !value ||
-      // TODO: don't use string equality check here?
-      parseISO(value).toString() === "Invalid Date"
-    ) {
-      return false;
-    }
-    // In following conditions, values like '2020-10-05' and '2020-11-02' are compared character by character.
-    // Because of the YYYY-MM-DD format, this is a cheap and reliable way to compare dates.
-    if ((props.min && value < props.min) || (props.max && value > props.max)) {
-      return false;
-    }
-    return true;
-  }, [value, props.min, props.max]);
+const DateInputPublic: React.FC<Props> = (props) => {
+  const formik = useFormik({
+    initialValues: {
+      date: "",
+    },
+    onSubmit: (values) => {
+      props.handleSubmit && props.handleSubmit(values.date);
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: object({
+      date: dateSchema({ min: props.min, max: props.max }),
+    }),
+  });
 
   return (
-    <Card
-      isValid={isValid}
-      handleSubmit={() => {
-        props.handleSubmit && props.handleSubmit(value);
-      }}
-    >
+    <Card handleSubmit={formik.handleSubmit}>
       <QuestionHeader
         title={props.title}
         description={props.description}
@@ -42,10 +36,17 @@ const DateInputComponent: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
       />
       <InputRow>
-        <DateInputUi value={value} bordered onChange={setValue} />
+        <DateInputComponent
+          value={formik.values.date}
+          bordered
+          onChange={(newDate: string) => {
+            formik.setFieldValue("date", newDate);
+          }}
+          error={formik.errors.date}
+        />
       </InputRow>
     </Card>
   );
 };
 
-export default DateInputComponent;
+export default DateInputPublic;
