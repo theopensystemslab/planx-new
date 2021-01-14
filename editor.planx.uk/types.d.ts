@@ -10,3 +10,5 @@ declare module "@mapbox/mapbox-gl-draw";
 declare module "mapbox-gl";
 declare module "react-html-parser";
 declare module "proj4";
+declare module "notifications-node-client";
+

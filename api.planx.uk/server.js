@@ -186,6 +186,7 @@ app.use(
   })
 );
 
+// XXX: These must be placed after CORS and before body-parser middlewares
 app.use("/bops/:localAuthority", (req, res) =>
   createProxyMiddleware({
     headers: {
@@ -197,6 +198,17 @@ app.use("/bops/:localAuthority", (req, res) =>
     changeOrigin: true,
     logLevel: "debug",
   })(req, res)
+);
+app.use(
+  "/notify/*",
+  createProxyMiddleware({
+    pathRewrite: {
+      "^/notify": "",
+    },
+    target: "https://api.notifications.service.gov.uk",
+    changeOrigin: true,
+    logLevel: "debug",
+  })
 );
 
 app.use(

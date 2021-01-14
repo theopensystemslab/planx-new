@@ -66,6 +66,7 @@ const components: {
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: undefined,
+  [TYPES.Notify]: undefined,
   [TYPES.NumberInput]: Debug,
   [TYPES.Page]: undefined,
   [TYPES.Pay]: undefined,
