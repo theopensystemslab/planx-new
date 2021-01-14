@@ -149,11 +149,14 @@ const RichTextInput: React.FC<Props> = (props) => {
             convertToRaw(newEditorState.getCurrentContent())
           );
 
+          const newHtmlContentNonEmpty =
+            newHtmlContent === "<p></p>" ? "" : newHtmlContent;
+
           if (props.onChange && newHtmlContent !== props.value) {
             const changeEvent = ({
               target: {
                 name: props.name,
-                value: newHtmlContent,
+                value: newHtmlContentNonEmpty,
               },
             } as unknown) as ChangeEvent<HTMLInputElement>;
             props.onChange(changeEvent);
