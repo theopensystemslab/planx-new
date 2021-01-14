@@ -11,16 +11,17 @@ import InputRowItem from "ui/InputRowItem";
 import InputRowLabel from "ui/InputRowLabel";
 import OptionButton from "ui/OptionButton";
 
-interface IDesignSettings { }
+import { DesignSettings } from "./model";
 
-const Team: React.FC<IDesignSettings> = () => {
-  const formik = useFormik({
-    initialValues: {},
+const Team: React.FC<DesignSettings> = (props) => {
+  const formik = useFormik<DesignSettings>({
+    initialValues: props,
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
     },
-    validate: () => { },
+    validate: () => {},
   });
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box pb={3} borderBottom={1}>
@@ -44,7 +45,9 @@ const Team: React.FC<IDesignSettings> = () => {
         </InputGroup>
         <InputGroup>
           <InputRow>
-            <InputRowLabel>Background color</InputRowLabel>
+            <InputRowLabel>
+              <Typography variant="h5">Background</Typography>
+            </InputRowLabel>
             <InputRowItem width="70%">
               <ColorPicker
                 inline
@@ -54,7 +57,9 @@ const Team: React.FC<IDesignSettings> = () => {
             </InputRowItem>
           </InputRow>
           <InputRow>
-            <InputRowLabel>Logo</InputRowLabel>
+            <InputRowLabel>
+              <Typography variant="h5">Logo</Typography>
+            </InputRowLabel>
             <InputRowItem width={50}>
               <FileUpload></FileUpload>
             </InputRowItem>
@@ -109,22 +114,30 @@ const Team: React.FC<IDesignSettings> = () => {
           </InputRow>
           <InputRow>
             <InputRowItem>
-              <OptionButton selected>Feedback</OptionButton>
-            </InputRowItem>
-          </InputRow>
-          <InputRow>
-            <InputRowItem>
               <OptionButton selected>Help</OptionButton>
             </InputRowItem>
           </InputRow>
           <InputRow>
             <InputRowItem>
-              <Input placeholder="Header" format="bold" />
+              <Input
+                placeholder="Header"
+                format="bold"
+                name="help.header"
+                value={formik.values.help?.header}
+                onChange={formik.handleChange}
+              />
             </InputRowItem>
           </InputRow>
           <InputRow>
             <InputRowItem>
-              <Input placeholder="Text" multiline rows={6} />
+              <Input
+                placeholder="Text"
+                multiline
+                rows={6}
+                name="help.content"
+                value={formik.values.help?.content}
+                onChange={formik.handleChange}
+              />
             </InputRowItem>
           </InputRow>
           <InputRow>
@@ -134,12 +147,25 @@ const Team: React.FC<IDesignSettings> = () => {
           </InputRow>
           <InputRow>
             <InputRowItem>
-              <Input placeholder="Header" format="bold" />
+              <Input
+                placeholder="Header"
+                format="bold"
+                name="privacy.header"
+                value={formik.values.privacy?.header}
+                onChange={formik.handleChange}
+              />
             </InputRowItem>
           </InputRow>
           <InputRow>
             <InputRowItem>
-              <Input placeholder="Text" multiline rows={6} />
+              <Input
+                placeholder="Text"
+                multiline
+                rows={6}
+                name="privacy.content"
+                value={formik.values.privacy?.content}
+                onChange={formik.handleChange}
+              />
             </InputRowItem>
           </InputRow>
         </InputGroup>

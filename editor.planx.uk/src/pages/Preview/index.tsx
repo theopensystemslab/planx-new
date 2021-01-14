@@ -42,8 +42,6 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
 
   const canGoBack = goBackable.length > 0;
 
-  // TODO: are these configurable in settings?
-
   const leftFooterItems = [
     {
       title: "Privacy",
