@@ -74,7 +74,7 @@ const Link = (props: {
 }) => {
   const { url } = props.contentState.getEntity(props.entityKey).getData();
   return (
-    <a href={url} style={{ color: "inherit" }}>
+    <a href={url} target="_blank" style={{ color: "inherit" }}>
       {props.children}
     </a>
   );
