@@ -8,50 +8,33 @@ import type { Send } from "./model";
 
 export type Props = PublicProps<Send>;
 
-const placeholderize = (x: any) => {
-  if ((x && typeof x === "string") || x instanceof String) {
-    if (new Date(String(x)).toString() === "Invalid Date") {
-      return "PLACEHOLDER";
-    } else {
-      return new Date().toISOString();
-    }
-  } else if ((x && typeof x === "number") || x instanceof Number) {
-    return 0;
-  } else if ((x && typeof x === "object") || x instanceof Object) {
-    return Object.entries(x).reduce((acc, [k, v]) => {
-      acc[k] = placeholderize(v);
-      return acc;
-    }, x);
-  } else {
-    return x;
-  }
-};
-
 interface File {
   filename: string;
   tags?: string;
 }
 
-// const date = new Date().toUTCString();
+// minimumPayload and fullPayload are the minimum and full expected
+// POST data payloads accepted by the BOPS API, see:
+// https://southwark.preview.bops.services/api-docs/index.html
 
-const minimum = {
+const minimumPayload = {
   application_type: "lawfulness_certificate",
   site: {
     uprn: "",
     address_1: "",
-    address_2: "Southwark",
-    town: "London",
+    address_2: "",
+    town: "",
     postcode: "",
   },
 };
 
-const full = {
-  ...minimum,
+const fullPayload = {
+  ...minimumPayload,
 
   // "ward": "",
+  // "work_status": "",
 
   description: "",
-  // "work_status": "",
 
   applicant_first_name: "",
   applicant_last_name: "",
@@ -63,7 +46,7 @@ const full = {
   agent_phone: "",
   agent_email: "",
 
-  payment_reference: "JG669323",
+  payment_reference: "JG669323", // hardcoded demo value
 
   questions: {},
   constraints: {},
@@ -71,17 +54,17 @@ const full = {
 };
 
 const SendComponent: React.FC<Props> = (props) => {
-  const [replay, flow, passport, breadcrumbs] = useStore((state) => [
-    state.replay,
+  const [breadcrumbs, flow, passport, replay] = useStore((state) => [
+    state.breadcrumbs,
     state.flow,
     state.passport,
-    state.breadcrumbs,
+    state.replay,
   ]);
 
   useEffect(() => {
     async function send() {
       try {
-        const data = full;
+        const data = fullPayload;
 
         data.site.uprn = passport.info.UPRN.toString();
 
@@ -95,6 +78,8 @@ const SendComponent: React.FC<Props> = (props) => {
 
         data.site.postcode = passport.info.postcode;
 
+        // TODO: shape this into the object described in
+        // https://southwark.preview.bops.services/api-docs/index.html
         data.questions = { flow: replay() };
 
         data.constraints = (
@@ -123,14 +108,14 @@ const SendComponent: React.FC<Props> = (props) => {
         };
 
         const fields: Array<keyof typeof data> = [
-          "applicant_first_name",
-          "applicant_last_name",
-          "applicant_email",
-          "applicant_phone",
+          "agent_email",
           "agent_first_name",
           "agent_last_name",
-          "agent_email",
           "agent_phone",
+          "applicant_email",
+          "applicant_first_name",
+          "applicant_last_name",
+          "applicant_phone",
           "description",
         ];
         fields.forEach((field) => {
@@ -138,13 +123,6 @@ const SendComponent: React.FC<Props> = (props) => {
         });
 
         data.files = files;
-
-        // console.log({
-        //   data,
-        //   flow,
-        //   breadcrumbs,
-        //   passport,
-        // });
 
         await axios.post(props.url, data);
 
