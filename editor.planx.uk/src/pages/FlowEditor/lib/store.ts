@@ -381,35 +381,37 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       },
     });
 
-    const response = await client.mutate({
-      mutation: gql`
-        mutation CreateSession(
-          $flow_data: jsonb
-          $flow_id: uuid
-          $flow_version: Int
-          $passport: jsonb
-        ) {
-          insert_sessions_one(
-            object: {
-              flow_data: $flow_data
-              flow_id: $flow_id
-              flow_version: $flow_version
-              passport: $passport
-            }
+    try {
+      const response = await client.mutate({
+        mutation: gql`
+          mutation CreateSession(
+            $flow_data: jsonb
+            $flow_id: uuid
+            $flow_version: Int
+            $passport: jsonb
           ) {
-            id
+            insert_sessions_one(
+              object: {
+                flow_data: $flow_data
+                flow_id: $flow_id
+                flow_version: $flow_version
+                passport: $passport
+              }
+            ) {
+              id
+            }
           }
-        }
-      `,
-      variables: {
-        flow_data: get().flow,
-        flow_id: get().id,
-        flow_version: 0, // TODO: add flow version
-        passport,
-      },
-    });
-    const sessionId = response.data.insert_sessions_one.id;
-    set({ sessionId });
+        `,
+        variables: {
+          flow_data: get().flow,
+          flow_id: get().id,
+          flow_version: 0, // TODO: add flow version
+          passport,
+        },
+      });
+      const sessionId = response.data.insert_sessions_one.id;
+      set({ sessionId });
+    } catch (e) {}
   },
 
   resetPreview() {
@@ -586,7 +588,8 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       const key = flow[id].data?.fn;
       if (key) {
         let passportValue;
-        passportValue = vals.map((id: any) => flow[id].data?.val);
+
+        passportValue = vals.map((id: string) => flow[id]?.data?.val);
 
         passportValue = passportValue.filter(
           (val: any) =>
