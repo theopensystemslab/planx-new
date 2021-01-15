@@ -68,7 +68,14 @@ function InformationalModal(props: {
       >
         <Close />
       </IconButton>
-      <Box maxWidth="768px" width="100%" pt={5} px={2} overflow="scroll">
+      <Box
+        maxWidth="768px"
+        width="100%"
+        pt={5}
+        px={2}
+        overflow="scroll"
+        maxHeight="90%"
+      >
         <Typography variant="h1">{props.header}</Typography>
         <Typography variant="body2" className={classes.content}>
           {props.content}
