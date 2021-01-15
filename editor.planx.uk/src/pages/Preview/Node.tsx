@@ -4,6 +4,7 @@ import Content from "@planx/components/Content/Public";
 import DateInput from "@planx/components/DateInput/Public";
 import FileUpload from "@planx/components/FileUpload/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
+import FindPropertyMerged from "@planx/components/FindPropertyMerged/Public";
 import Notice from "@planx/components/Notice/Public";
 import Notify from "@planx/components/Notify/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
@@ -91,6 +92,22 @@ const Node: React.FC<any> = (props: Props) => {
         />
       );
 
+    case TYPES.PropertyInformation:
+      return (
+        <PropertyInformation
+          UPRN={uprn}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
+      );
+
+
+    case TYPES.FindPropertyMerged:
+      return (
+        <FindPropertyMerged
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
+      );
+
     case TYPES.Notice:
       return (
         <Notice
@@ -119,14 +136,6 @@ const Node: React.FC<any> = (props: Props) => {
       return (
         <Pay
           {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
-
-    case TYPES.PropertyInformation:
-      return (
-        <PropertyInformation
-          UPRN={uprn}
           handleSubmit={() => props.handleSubmit([props.node.id])}
         />
       );
