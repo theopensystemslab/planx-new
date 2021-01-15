@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
+import Modal from "../../components/InformationalModal";
+import {
+  InformationalModal,
+  Settings,
+} from "../FlowEditor/components/Settings/model";
 import { componentOutput, useStore } from "../FlowEditor/lib/store";
 import Node from "./Node";
 
@@ -25,16 +30,41 @@ const Questions = () => {
   );
 };
 
-const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
+const Preview: React.FC<{
+  theme?: any;
+  embedded?: boolean;
+  settings?: Settings;
+}> = ({
   embedded = false,
   theme = {
     primary: "#2c2c2c",
   },
+  settings,
 }) => {
   const [breadcrumbs, record] = useStore((state) => [
     state.breadcrumbs,
     state.record,
   ]);
+
+  // TODO: replace with actual routing
+  const [currentModal, setCurrentModal] = useState<
+    InformationalModal | undefined
+  >(undefined);
+  const openModal = (type: "help" | "privacy") => {
+    if (!settings) return;
+
+    switch (type) {
+      case "help":
+        settings.design?.help && setCurrentModal(settings.design.help);
+        break;
+      case "privacy":
+        settings.design?.privacy && setCurrentModal(settings.design.privacy);
+        break;
+      default:
+        return;
+    }
+  };
+  const closeModal = () => setCurrentModal(undefined);
 
   const goBackable = Object.entries(breadcrumbs)
     .filter(([k, v]: any) => !v.auto)
@@ -46,6 +76,7 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
     {
       title: "Privacy",
       href: "",
+      onClick: () => openModal("privacy"),
     },
   ];
 
@@ -54,6 +85,7 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
       title: "Help",
       href: "",
       bold: true,
+      onClick: () => openModal("help"),
     },
   ];
 
@@ -86,6 +118,15 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
         </span>
 
         <Questions />
+
+        {/* TODO: this shouldn't be here; will be routed properly */}
+        {currentModal && (
+          <Modal
+            header={currentModal.header}
+            content={currentModal.content}
+            onClose={closeModal}
+          />
+        )}
       </div>
       {!embedded && (
         <Footer leftItems={leftFooterItems} rightItems={rightFooterItems} />

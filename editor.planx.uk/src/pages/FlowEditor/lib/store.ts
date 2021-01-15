@@ -21,6 +21,7 @@ import vanillaCreate from "zustand/vanilla";
 
 import { client } from "../../../lib/graphql";
 import { FlowLayout } from "../components/Flow";
+import { Settings } from "../components/Settings/model";
 import { flatFlags } from "../data/flags";
 import { connectToDB, getConnection } from "./sharedb";
 
@@ -80,6 +81,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
   upcomingCardIds: () => nodeId[];
+  updateSettings: (teamId: string, newSettings: Settings) => Promise<any>;
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
@@ -796,8 +798,52 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       return acc;
     }, {});
   },
+
+  updateSettings: async (
+    teamSlug: string,
+    newSettings: Settings
+  ): Promise<any> => {
+    let response = await client.mutate({
+      mutation: gql`
+        mutation UpdateSettings($slug: String, $settings: jsonb) {
+          update_teams(
+            where: { slug: { _eq: $slug } }
+            _set: { settings: $settings }
+          ) {
+            affected_rows
+            returning {
+              slug
+              settings
+            }
+          }
+        }
+      `,
+      variables: {
+        slug: teamSlug,
+        settings: newSettings,
+      },
+    });
+
+    return teamSlug;
+  },
 }));
 
 export const useStore = create(vanillaStore);
 
 (window as any)["api"] = useStore;
+
+// {
+//   "slug": "my-team",
+//   "settings": {
+//     	"design" : {
+//         "help": {
+//           "header": "SENDHELP",
+//           "content": "pls"
+//         },
+//         "privacy": {
+//           "header": "Privacy Notice",
+//           "content": "Importante information abt ur privacy"
+//         }
+//     }
+//   }
+// }

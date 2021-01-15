@@ -1,4 +1,5 @@
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import React from "react";
@@ -11,13 +12,30 @@ import InputRowItem from "ui/InputRowItem";
 import InputRowLabel from "ui/InputRowLabel";
 import OptionButton from "ui/OptionButton";
 
+import { useStore } from "../../lib/store";
 import { DesignSettings } from "./model";
 
-const Team: React.FC<DesignSettings> = (props) => {
+interface Props {
+  settings?: DesignSettings;
+  teamId: string;
+}
+
+const Team: React.FC<Props> = (props) => {
   const formik = useFormik<DesignSettings>({
-    initialValues: props,
+    initialValues: {
+      privacy: {
+        header: props.settings?.privacy?.header || "",
+        content: props.settings?.privacy?.content || "",
+      },
+      help: {
+        header: props.settings?.help?.header || "",
+        content: props.settings?.help?.content || "",
+      },
+    },
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      useStore.getState().updateSettings(props.teamId, {
+        design: { ...values },
+      });
     },
     validate: () => {},
   });
@@ -81,39 +99,6 @@ const Team: React.FC<DesignSettings> = (props) => {
         <InputGroup>
           <InputRow>
             <InputRowItem>
-              <OptionButton selected>Progress bar</OptionButton>
-            </InputRowItem>
-            <InputRowItem>
-              <OptionButton selected>Use top level flows as steps</OptionButton>
-            </InputRowItem>
-          </InputRow>
-          <InputRow>
-            <InputRowItem>
-              <OptionButton selected>Phase banner</OptionButton>
-            </InputRowItem>
-          </InputRow>
-          <InputRow>
-            <InputRowItem>
-              <Input placeholder="Title" />
-            </InputRowItem>
-            <InputRowLabel>Colour</InputRowLabel>
-            <InputRowItem width={180}>
-              <ColorPicker
-                inline
-                color=""
-                onChange={(color) =>
-                  formik.setFieldValue("phaseBannerColor", color)
-                }
-              ></ColorPicker>
-            </InputRowItem>
-          </InputRow>
-          <InputRow>
-            <InputRowItem>
-              <Input placeholder="Text" />
-            </InputRowItem>
-          </InputRow>
-          <InputRow>
-            <InputRowItem>
               <OptionButton selected>Help</OptionButton>
             </InputRowItem>
           </InputRow>
@@ -169,6 +154,46 @@ const Team: React.FC<DesignSettings> = (props) => {
             </InputRowItem>
           </InputRow>
         </InputGroup>
+        <Box py={2} justifyContent="flex-end" mb={4}>
+          <Button type="submit" variant="contained" color="primary">
+            Submit
+          </Button>
+        </Box>
+
+        {/* TODO: Bring back when they're hooked up to settings */}
+        {/* <InputRow>
+          <InputRowItem>
+            <OptionButton selected>Progress bar</OptionButton>
+          </InputRowItem>
+          <InputRowItem>
+            <OptionButton selected>Use top level flows as steps</OptionButton>
+          </InputRowItem>
+        </InputRow>
+        <InputRow>
+          <InputRowItem>
+            <OptionButton selected>Phase banner</OptionButton>
+          </InputRowItem>
+        </InputRow>
+        <InputRow>
+          <InputRowItem>
+            <Input placeholder="Title" />
+          </InputRowItem>
+          <InputRowLabel>Colour</InputRowLabel>
+          <InputRowItem width={180}>
+            <ColorPicker
+              inline
+              color=""
+              onChange={(color) =>
+                formik.setFieldValue("phaseBannerColor", color)
+              }
+            ></ColorPicker>
+          </InputRowItem>
+        </InputRow>
+        <InputRow>
+          <InputRowItem>
+            <Input placeholder="Text" />
+          </InputRowItem>
+        </InputRow> */}
       </Box>
     </form>
   );

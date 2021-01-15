@@ -22,6 +22,7 @@ const routes = route(async (req) => {
           id
           team {
             theme
+            settings
           }
         }
       }
@@ -42,10 +43,11 @@ const routes = route(async (req) => {
   //
   // useStore.getState().setFlow(flow.id, flow.data_merged);
 
+  // TODO: `theme` should fall under `settings.design`
   return {
     view: (
       <PreviewContext.Provider value={flow}>
-        <Preview theme={flow.team.theme} />
+        <Preview theme={flow.team.theme} settings={flow.team.settings} />
       </PreviewContext.Provider>
     ),
   };

@@ -4,11 +4,11 @@ export interface Settings {
 
 export interface DesignSettings {
   color?: string;
-  privacy?: FooterModal;
-  help?: FooterModal;
+  privacy?: InformationalModal;
+  help?: InformationalModal;
 }
 
-interface FooterModal {
+export interface InformationalModal {
   header: string;
   content: string;
 }

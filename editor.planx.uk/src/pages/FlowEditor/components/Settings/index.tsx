@@ -187,7 +187,7 @@ const NavTabs: React.FC<{ tab?: string; settings?: Settings }> = (props) => {
         />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <DesignSettings {...props.settings?.design} />
+        <DesignSettings settings={props.settings?.design} teamId={data.team} />
       </TabPanel>
       <TabPanel value={value} index={3}>
         <DataManagerSettings />
