@@ -1,11 +1,12 @@
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import type { TextInput, UserData } from "@planx/components/TextInput/model";
 import { PublicProps } from "@planx/components/ui";
 import React, { useMemo, useState } from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import RichTextInput from "ui/RichTextInput";
+
+import type { TextInput, UserData } from "./model";
 
 export type Props = PublicProps<TextInput, UserData>;
 

@@ -1,4 +1,4 @@
-import { MoreInformation } from "../shared";
+import type { MoreInformation } from "../shared";
 
 export interface Pay extends MoreInformation {
   title?: string;

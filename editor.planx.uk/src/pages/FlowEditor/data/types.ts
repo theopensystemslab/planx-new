@@ -15,6 +15,7 @@ export const SLUGS: {
   [TYPES.InternalPortal]: "internal-portal",
   [TYPES.Notice]: "notice",
   [TYPES.NumberInput]: "number-input",
+  [TYPES.Notify]: "notify",
   [TYPES.Page]: "page",
   [TYPES.Pay]: "pay",
   [TYPES.PropertyInformation]: "property-information",
