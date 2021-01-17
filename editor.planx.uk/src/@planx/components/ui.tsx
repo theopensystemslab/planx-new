@@ -53,6 +53,7 @@ export const ICONS: {
   [TYPES.FileUpload]: CloudUpload,
   [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: SearchOutlined,
+  [TYPES.FindPropertyMerged]: SearchOutlined,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: ReportProblemOutlined,
