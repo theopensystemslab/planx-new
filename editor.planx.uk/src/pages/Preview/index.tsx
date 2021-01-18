@@ -31,16 +31,10 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
     primary: "#2c2c2c",
   },
 }) => {
-  const [breadcrumbs, record] = useStore((state) => [
-    state.breadcrumbs,
+  const [record, previousCard] = useStore((state) => [
     state.record,
+    state.previousCard(),
   ]);
-
-  const goBackable = Object.entries(breadcrumbs)
-    .filter(([k, v]: any) => !v.auto)
-    .map(([k]) => k);
-
-  const canGoBack = goBackable.length > 0;
 
   // TODO: are these configurable in settings?
 
@@ -73,11 +67,11 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
         }}
       >
         <span
-          onClick={() => record(goBackable.pop())}
+          onClick={() => record(previousCard)}
           style={{
             padding: "0 10px 10px",
-            visibility: canGoBack ? "visible" : "hidden",
-            pointerEvents: canGoBack ? "auto" : "none",
+            visibility: previousCard ? "visible" : "hidden",
+            pointerEvents: previousCard ? "auto" : "none",
             display: "block",
             cursor: "pointer",
             userSelect: "none",

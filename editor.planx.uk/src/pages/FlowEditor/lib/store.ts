@@ -79,6 +79,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   sessionId: any; //: string;
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
+  previousCard: () => nodeId | undefined;
   upcomingCardIds: () => nodeId[];
 }
 
@@ -422,6 +423,14 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     set({ id, flow });
   },
 
+  previousCard: () => {
+    const goBackable = Object.entries(get().breadcrumbs)
+      .filter(([k, v]: any) => !v.auto)
+      .map(([k]) => k);
+
+    return goBackable.pop();
+  },
+
   upcomingCardIds() {
     const { flow, breadcrumbs, passport } = get();
 
@@ -626,7 +635,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         }
       } else {
         set({
-          breadcrumbs: { ...breadcrumbs, [id]: { answers: vals, auto: true } },
+          breadcrumbs: { ...breadcrumbs, [id]: { answers: vals, auto: false } },
         });
       }
 
