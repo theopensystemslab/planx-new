@@ -14,7 +14,9 @@ import ModalSectionContent from "ui/ModalSectionContent";
 
 export type Props = EditorProps<TYPES.FindProperty, FindProperty>;
 
-const FindPropertyComponent: React.FC<Props> = (props) => {
+export default FindPropertyComponent;
+
+function FindPropertyComponent(props: Props) {
   const formik = useFormik({
     initialValues: parseFindProperty(props.node?.data),
     onSubmit: (newValues) => {
@@ -48,6 +50,4 @@ const FindPropertyComponent: React.FC<Props> = (props) => {
       />
     </form>
   );
-};
-
-export default FindPropertyComponent;
+}
