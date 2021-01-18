@@ -28,7 +28,7 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.Filter:
       return <Filter {...props} text="(Flags Filter)" />;
-    case TYPES.FindPropertyMerged:
+    case TYPES.FindProperty:
       return <Question {...props} text="Find property" />;
     case TYPES.Notice:
       return <Question {...props} text="Notice" />;

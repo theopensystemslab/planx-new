@@ -5,7 +5,7 @@ export enum TYPES {
   Report = 4,
   TaskList = 7,
   Notice = 8,
-  FindPropertyMerged = 9,
+  FindProperty = 9,
   Statement = 100, // Question/DropDown
   Checklist = 105,
   TextInput = 110,

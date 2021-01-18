@@ -1,5 +1,5 @@
-import type { FindPropertyMerged } from "@planx/components/FindPropertyMerged/model";
-import { parseFindPropertyMerged } from "@planx/components/FindPropertyMerged/model";
+import type { FindProperty } from "@planx/components/FindProperty/model";
+import { parseFindProperty } from "@planx/components/FindProperty/model";
 import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
@@ -12,16 +12,16 @@ import React from "react";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 
-export type Props = EditorProps<TYPES.FindPropertyMerged, FindPropertyMerged>;
+export type Props = EditorProps<TYPES.FindProperty, FindProperty>;
 
-export default FindPropertyMergedComponent;
+export default FindPropertyComponent;
 
-function FindPropertyMergedComponent(props: Props) {
+function FindPropertyComponent(props: Props) {
   const formik = useFormik({
-    initialValues: parseFindPropertyMerged(props.node?.data),
+    initialValues: parseFindProperty(props.node?.data),
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.FindPropertyMerged, data: newValues });
+        props.handleSubmit({ type: TYPES.FindProperty, data: newValues });
       }
     },
     validate: () => {},
@@ -31,7 +31,7 @@ function FindPropertyMergedComponent(props: Props) {
       <ModalSection>
         <ModalSectionContent
           title="Find Property"
-          Icon={ICONS[TYPES.FindPropertyMerged]}
+          Icon={ICONS[TYPES.FindProperty]}
         >
           <></>
         </ModalSectionContent>

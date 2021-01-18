@@ -52,7 +52,7 @@ export const ICONS: {
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: CloudUpload,
   [TYPES.Filter]: undefined,
-  [TYPES.FindPropertyMerged]: SearchOutlined,
+  [TYPES.FindProperty]: SearchOutlined,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: ReportProblemOutlined,

@@ -1,16 +1,16 @@
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
-import FindPropertyMerged from "./index";
+import FindProperty from "./index";
 
 const metadata: Meta = {
-  title: "PlanX Components/FindPropertyMerged",
-  component: FindPropertyMerged,
+  title: "PlanX Components/FindProperty",
+  component: FindProperty,
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },
   },
 };
 
-export const Basic: Story<any> = (args) => <FindPropertyMerged {...args} />;
+export const Basic: Story<any> = (args) => <FindProperty {...args} />;
 
 export default metadata;

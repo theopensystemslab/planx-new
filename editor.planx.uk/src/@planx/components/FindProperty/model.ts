@@ -1,9 +1,9 @@
 import { MoreInformation, parseMoreInformation } from "../shared";
 
-export interface FindPropertyMerged extends MoreInformation {}
+export interface FindProperty extends MoreInformation {}
 
-export const parseFindPropertyMerged = (
+export const parseFindProperty = (
   data: Record<string, any> | undefined
-): FindPropertyMerged => ({
+): FindProperty => ({
   ...parseMoreInformation(data),
 });

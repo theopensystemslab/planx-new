@@ -10,7 +10,7 @@ export const SLUGS: {
   [TYPES.ExternalPortal]: "external-portal",
   [TYPES.FileUpload]: "file-upload",
   [TYPES.Filter]: "filter",
-  [TYPES.FindPropertyMerged]: "find-property-merged",
+  [TYPES.FindProperty]: "find-property-merged",
   [TYPES.Flow]: "flow",
   [TYPES.InternalPortal]: "internal-portal",
   [TYPES.Notice]: "notice",

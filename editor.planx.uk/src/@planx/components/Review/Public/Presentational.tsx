@@ -62,7 +62,7 @@ const components: {
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: FileUpload,
   [TYPES.Filter]: undefined,
-  [TYPES.FindPropertyMerged]: FindPropertyMerged,
+  [TYPES.FindProperty]: FindProperty,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: undefined,
@@ -176,10 +176,6 @@ function FindProperty(props: ComponentProps) {
       </div>
     </>
   );
-}
-
-function FindPropertyMerged(props: ComponentProps) {
-  return FindProperty(props);
 }
 
 function Checklist(props: ComponentProps) {

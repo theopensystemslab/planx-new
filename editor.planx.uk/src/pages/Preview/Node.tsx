@@ -3,7 +3,7 @@ import Checklist from "@planx/components/Checklist/Public";
 import Content from "@planx/components/Content/Public";
 import DateInput from "@planx/components/DateInput/Public";
 import FileUpload from "@planx/components/FileUpload/Public";
-import FindPropertyMerged from "@planx/components/FindPropertyMerged/Public";
+import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
 import Notify from "@planx/components/Notify/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
@@ -78,9 +78,9 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.FileUpload:
       return <FileUpload {...allProps} />;
 
-    case TYPES.FindPropertyMerged:
+    case TYPES.FindProperty:
       return (
-        <FindPropertyMerged
+        <FindProperty
           handleSubmit={() => props.handleSubmit([props.node.id])}
         />
       );
