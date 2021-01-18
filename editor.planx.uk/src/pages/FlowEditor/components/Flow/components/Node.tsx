@@ -28,10 +28,6 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.Filter:
       return <Filter {...props} text="(Flags Filter)" />;
-    case TYPES.FindProperty:
-      return <Question {...props} text="Find property (deprecation notice)" />;
-    case TYPES.PropertyInformation:
-      return <Question {...props} text="Property information (deprecation notice)" />;
     case TYPES.FindPropertyMerged:
       return <Question {...props} text="Find property" />;
     case TYPES.Notice:

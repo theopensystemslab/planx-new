@@ -62,7 +62,6 @@ const components: {
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: FileUpload,
   [TYPES.Filter]: undefined,
-  [TYPES.FindProperty]: FindProperty,
   [TYPES.FindPropertyMerged]: FindPropertyMerged,
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
@@ -71,7 +70,6 @@ const components: {
   [TYPES.NumberInput]: Debug,
   [TYPES.Page]: undefined,
   [TYPES.Pay]: undefined,
-  [TYPES.PropertyInformation]: undefined,
   [TYPES.Report]: undefined,
   [TYPES.Response]: Debug,
   [TYPES.Result]: undefined,
@@ -181,7 +179,7 @@ function FindProperty(props: ComponentProps) {
 }
 
 function FindPropertyMerged(props: ComponentProps) {
-  return FindProperty(props)
+  return FindProperty(props);
 }
 
 function Checklist(props: ComponentProps) {

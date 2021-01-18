@@ -3,15 +3,8 @@ export enum TYPES {
   SignIn = 2,
   Result = 3,
   Report = 4,
-  PropertyInformation = 5,
-  FindProperty = 6,
   TaskList = 7,
   Notice = 8,
-  // XXX: We're merging components 5 (PropertyInformation) and 6 (FindProperty) into 9 (FindPropertyMerged).
-  //      Here's what will happen:
-  //        1. Add 9 (this PR)
-  //        2. Edit all flows to replace 5 and 6 with 9
-  //        3. Remove 5 and 6 from the codebase, and rename 9 to FindProperty (second PR)
   FindPropertyMerged = 9,
   Statement = 100, // Question/DropDown
   Checklist = 105,

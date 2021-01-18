@@ -64,8 +64,6 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.Review}>Review</option>
       </optgroup>
       <optgroup label="Location">
-        <option value={TYPES.FindProperty}>Find property (deprecation notice)</option>
-        <option value={TYPES.PropertyInformation}>Property information (deprecation notice)</option>
         <option value={TYPES.FindPropertyMerged}>Find property</option>
       </optgroup>
       <optgroup label="Navigation">
