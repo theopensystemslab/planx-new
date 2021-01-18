@@ -136,8 +136,8 @@ test("record(id, undefined) clears up breadcrumbs", () => {
   getState().record("a", ["c"]);
   getState().record("d", ["e", "f"]);
   expect(getState().breadcrumbs).toEqual({
-    a: { answers: ["c"], auto: true },
-    d: { answers: ["e", "f"], auto: true },
+    a: { answers: ["c"], auto: false },
+    d: { answers: ["e", "f"], auto: false },
   });
 
   getState().record("a");
