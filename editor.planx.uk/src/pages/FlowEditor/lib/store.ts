@@ -525,6 +525,13 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               }
 
               if (responsesThatCanBeAutoAnswered.length > 0) {
+                if (flow[id]?.type !== TYPES.Checklist) {
+                  responsesThatCanBeAutoAnswered = responsesThatCanBeAutoAnswered.slice(
+                    0,
+                    1
+                  );
+                }
+
                 if (fn !== "flag") {
                   set({
                     breadcrumbs: {

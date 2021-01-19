@@ -21,6 +21,7 @@ const flow = {
       text: "food",
     },
     type: 200,
+    edges: ["mOPogpQa7V"],
   },
   "2PT6bTPTqj": {
     data: {
@@ -44,6 +45,7 @@ const flow = {
       text: "tools",
     },
     type: 200,
+    edges: ["KcLGMm3UWw"],
   },
   "52ZNXBMLDP": {
     data: {
@@ -122,6 +124,14 @@ const flow = {
     type: 105,
     edges: ["EqfqaqZ6CH", "I8DznYCKVg", "pXFKKRG6lE", "7tV1uvR9ng"],
   },
+  KcLGMm3UWw: {
+    data: {
+      color: "#EFEFEF",
+      title: "🔧",
+      resetButton: false,
+    },
+    type: 8,
+  },
   LwozLZdXCA: {
     data: {
       text: "neither apples nor bread",
@@ -165,6 +175,14 @@ const flow = {
     },
     type: 200,
   },
+  mOPogpQa7V: {
+    data: {
+      color: "#EFEFEF",
+      title: "🍌🍏🥖",
+      resetButton: false,
+    },
+    type: 8,
+  },
   oB2vfxQs4D: {
     data: {
       val: "food.fruit.apple",
@@ -206,7 +224,7 @@ beforeEach(() => {
   getState().resetPreview();
 });
 
-test("one", () => {
+test("apple", () => {
   setState({
     flow,
   });
@@ -222,24 +240,27 @@ test("one", () => {
   // record apple
   getState().record("Imks7j68BD", ["EqfqaqZ6CH"]);
 
-  expect(getState().upcomingCardIds()).toEqual(["6RR1J1lmrM"]);
+  expect(getState().upcomingCardIds()).toEqual(["6RR1J1lmrM", "mOPogpQa7V"]);
 });
 
-test("two", () => {
+test("apple and spanner", () => {
   setState({
     flow,
   });
 
-  expect(getState().upcomingCardIds()).toEqual([
-    "Imks7j68BD",
-    "HV0gV8DOil",
-    "2PT6bTPTqj",
-    "3H2bGdzpIN",
-    "AFX3QwbOCd",
-  ]);
+  // record apple and spanner
+  getState().record("Imks7j68BD", ["EqfqaqZ6CH", "7tV1uvR9ng"]);
+
+  expect(getState().upcomingCardIds()).toEqual(["6RR1J1lmrM", "KcLGMm3UWw"]);
+});
+
+test("apple and bread", () => {
+  setState({
+    flow,
+  });
 
   // record apple and bread
   getState().record("Imks7j68BD", ["EqfqaqZ6CH", "pXFKKRG6lE"]);
 
-  expect(getState().upcomingCardIds()).toEqual(["t3SCqQKeUK"]);
+  expect(getState().upcomingCardIds()).toEqual(["t3SCqQKeUK", "mOPogpQa7V"]);
 });
