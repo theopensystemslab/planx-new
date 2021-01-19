@@ -73,6 +73,7 @@ devDependencies:
   '@testing-library/jest-dom': 5.11.5
   '@testing-library/react': 11.1.2_react-dom@16.14.0+react@16.14.0
   '@testing-library/user-event': 12.2.2
+  '@types/draft-js': 0.10.44
   '@types/highlight-words-core': 1.2.0
   '@types/jest': 26.0.15
   '@types/lodash': 4.14.165
@@ -4452,6 +4453,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-TbH79tcyi9FHwbyboOKeRachRq63mSuWYXOflsNO9ZyE5ClQ/JaozNKl+aWUq87qPNsXasXxi2AbgfwIJ+8GQw==
+  /@types/draft-js/0.10.44:
+    dependencies:
+      '@types/react': 16.14.2
+      immutable: 3.7.6
+    dev: true
+    resolution:
+      integrity: sha512-6p3FZED91yPf+KQinlzFz1HuqSQ5zRXqU3RUsaP2oQYZTtrm5HDf2kwYnF5IihsleHR3jlQAwdSZt0zlJw3VGQ==
   /@types/eslint/7.2.4:
     dependencies:
       '@types/estree': 0.0.45
@@ -4676,7 +4684,7 @@ packages:
   /@types/react/16.14.2:
     dependencies:
       '@types/prop-types': 15.7.3
-      csstype: 3.0.5
+      csstype: 3.0.6
     dev: true
     resolution:
       integrity: sha512-BzzcAlyDxXl2nANlabtT4thtvbbnhee8hMmH/CcJrISDBVcJS1iOsP1f0OAgSdGE0MsY9tqcrb9YoZcOFv9dbQ==
@@ -7664,12 +7672,7 @@ packages:
   /csstype/3.0.4:
     resolution:
       integrity: sha512-xc8DUsCLmjvCfoD7LTGE0ou2MIWLx0K9RCZwSHMOdynqRsP4MtUcLeqh1HcQ2dInwDTqn+3CE0/FZh1et+p4jA==
-  /csstype/3.0.5:
-    dev: true
-    resolution:
-      integrity: sha512-uVDi8LpBUKQj6sdxNaTetL6FpeCqTjOvAQuQUa/qAqq8oOd4ivkbhgnqayl0dnPal8Tb/yB1tF+gOvCBiicaiQ==
   /csstype/3.0.6:
-    dev: false
     resolution:
       integrity: sha512-+ZAmfyWMT7TiIlzdqJgjMb7S4f1beorDbWbsocyK4RaiqA5RTX3K14bnBWmmA9QEM0gRdsjyyrEmcyga8Zsxmw==
   /currently-unhandled/0.4.1:
@@ -10555,7 +10558,6 @@ packages:
     resolution:
       integrity: sha512-Vs/gxoM4DqNAYR7pugIxi0Xc8XAun/uy7AQu4fLLqaTBHxjOP9pJ266Q9MWA/ly4z6rAFZbvViOtihxUZ7O28A==
   /immutable/3.7.6:
-    dev: false
     engines:
       node: '>=0.8.0'
     resolution:
@@ -19441,6 +19443,7 @@ specifiers:
   '@testing-library/react': ^11.1.2
   '@testing-library/user-event': ^12.2.2
   '@turf/area': ^6.0.1
+  '@types/draft-js': ^0.10.44
   '@types/highlight-words-core': ^1.2.0
   '@types/jest': ^26.0.15
   '@types/lodash': ^4.14.165
