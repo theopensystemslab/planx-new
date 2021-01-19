@@ -51,7 +51,7 @@ const ChecklistComponent: React.FC<Props> = ({
     validate: () => {},
   });
 
-  const [expandedGroups, setExpandedGroups] = useState<Array<number>>([0]);
+  const [expandedGroups, setExpandedGroups] = useState<Array<number>>([]);
 
   const layout = options
     ? options.find((o) => o.data.img)
