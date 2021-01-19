@@ -27,7 +27,7 @@ const Team: React.FC<IDesignSettings> = () => {
         <Typography variant="h3" gutterBottom>
           <strong>Design</strong>
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1">
           How your service appears to public users
         </Typography>
       </Box>
@@ -68,7 +68,7 @@ const Team: React.FC<IDesignSettings> = () => {
         <Typography variant="h3" gutterBottom>
           <strong>Elements</strong>
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1">
           Manage the features that users will be able to see
         </Typography>
       </Box>

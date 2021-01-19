@@ -2,6 +2,7 @@ import React from "react";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
+import PhaseBanner from "../../components/PhaseBanner";
 import { componentOutput, useStore } from "../FlowEditor/lib/store";
 import Node from "./Node";
 
