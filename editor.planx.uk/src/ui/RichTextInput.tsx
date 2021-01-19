@@ -24,6 +24,7 @@ import {
   EditorState,
 } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import marked from "marked";
 import React, {
   ChangeEvent,
   ReactElement,
@@ -88,7 +89,9 @@ const decorators = new CompositeDecorator([
 ]);
 
 const valueToContentState = (value: string): ContentState => {
-  const blocksFromHTML = convertFromHTML(value);
+  const blocksFromHTML = convertFromHTML(
+    value.includes("<p>") ? value : marked(value)
+  );
   const state = ContentState.createFromBlockArray(
     blocksFromHTML.contentBlocks,
     blocksFromHTML.entityMap

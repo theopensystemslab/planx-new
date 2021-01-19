@@ -30,7 +30,7 @@ dependencies:
   jwt-decode: 3.1.2
   lodash: 4.17.20
   mapbox-gl: 1.12.0
-  mui-rte: 1.26.2_105f397d79457dc9365b4e349380b9b3
+  marked: 1.2.7
   nanoid: 3.1.16
   nanoid-good: 3.1.0
   natsort: 2.0.2
@@ -76,6 +76,7 @@ devDependencies:
   '@types/highlight-words-core': 1.2.0
   '@types/jest': 26.0.15
   '@types/lodash': 4.14.165
+  '@types/marked': 1.2.1
   '@types/node': 12.19.4
   '@types/ramda': 0.27.32
   '@types/react': 16.9.56
@@ -4451,17 +4452,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-TbH79tcyi9FHwbyboOKeRachRq63mSuWYXOflsNO9ZyE5ClQ/JaozNKl+aWUq87qPNsXasXxi2AbgfwIJ+8GQw==
-  /@types/classnames/2.2.11:
-    dev: false
-    resolution:
-      integrity: sha512-2koNhpWm3DgWRp5tpkiJ8JGc1xTn2q0l+jUNUE7oMKXUf5NpI9AIdC4kbjGNFBdHtcxBD18LAksoudAVhFKCjw==
-  /@types/draft-js/0.10.44:
-    dependencies:
-      '@types/react': 16.9.56
-      immutable: 3.7.6
-    dev: false
-    resolution:
-      integrity: sha512-6p3FZED91yPf+KQinlzFz1HuqSQ5zRXqU3RUsaP2oQYZTtrm5HDf2kwYnF5IihsleHR3jlQAwdSZt0zlJw3VGQ==
   /@types/eslint/7.2.4:
     dependencies:
       '@types/estree': 0.0.45
@@ -4564,6 +4554,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-30nFYpceM/ZEvhGiqWjm5quLUxNeld0HCzJEXMZZDpq53FPkS85mTwkWtCXzCqq8s5JYLgM5W392a02xn8Bdaw==
+  /@types/marked/1.2.1:
+    dev: true
+    resolution:
+      integrity: sha512-d5adCgRHB+NAme23hkiTkvpfZUDqoNtL2Sr2nZBJqSj3zyHLxsfFWsGQ2sK2z9aX6L1xkJzon2c0jTPcsEjpaQ==
   /@types/mdast/3.0.3:
     dependencies:
       '@types/unist': 2.0.3
@@ -12628,6 +12622,13 @@ packages:
       react: '>= 0.14.0'
     resolution:
       integrity: sha512-3lRCD5Sh+tfA52iGgfs/XZiw33f7fFX9Bn55aNnVNUd2GzLDkOWyKYYD8Yju2B1Vn+feiEdgJs8T6Tg0xNokPw==
+  /marked/1.2.7:
+    dev: false
+    engines:
+      node: '>= 8.16.2'
+    hasBin: true
+    resolution:
+      integrity: sha512-No11hFYcXr/zkBvL6qFmAp1z6BKY3zqLMHny/JN/ey+al7qwCM2+CMBL9BOgqMxZU36fz4cCWfn2poWIf7QRXA==
   /material-colors/1.2.6:
     resolution:
       integrity: sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==
@@ -13001,25 +13002,6 @@ packages:
   /ms/2.1.2:
     resolution:
       integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
-  /mui-rte/1.26.2_105f397d79457dc9365b4e349380b9b3:
-    dependencies:
-      '@material-ui/core': 4.11.0_9f48369ed4321469d5d721870f4dbdbc
-      '@material-ui/icons': 4.9.1_a86b7d24d2481968855f45294417fbec
-      '@types/classnames': 2.2.11
-      '@types/draft-js': 0.10.44
-      classnames: 2.2.6
-      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
-      immutable: 3.8.2
-      react: 16.14.0
-      react-dom: 16.14.0_react@16.14.0
-    dev: false
-    peerDependencies:
-      '@material-ui/core': '>=4.1.0 <5'
-      '@material-ui/icons': '>=4.1.0 <5'
-      react: ^16.8.6
-      react-dom: ^16.8.6
-    resolution:
-      integrity: sha512-sZ+lSLbS2EMlIPW4lc0WaCpfGFRNWlm7ciFSl86AOkag9VJj5DlASjoOBZiPfK+rsw43+npBxMZz0hlk5CC2+A==
   /multicast-dns-service-types/1.1.0:
     dev: false
     resolution:
@@ -19462,6 +19444,7 @@ specifiers:
   '@types/highlight-words-core': ^1.2.0
   '@types/jest': ^26.0.15
   '@types/lodash': ^4.14.165
+  '@types/marked': ^1.2.1
   '@types/node': ^12.19.4
   '@types/ramda': ^0.27.32
   '@types/react': ^16.9.56
@@ -19491,8 +19474,8 @@ specifiers:
   lint-staged: ^10.5.1
   lodash: ^4.17.20
   mapbox-gl: ^1.12.0
+  marked: ^1.2.7
   mini-css-extract-plugin: ^1.3.4
-  mui-rte: ^1.26.2
   nanoid: ^3.1.16
   nanoid-good: ^3.1.0
   natsort: ^2.0.2
