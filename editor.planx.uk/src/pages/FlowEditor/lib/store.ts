@@ -843,19 +843,3 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 export const useStore = create(vanillaStore);
 
 (window as any)["api"] = useStore;
-
-// {
-//   "slug": "my-team",
-//   "settings": {
-//     	"design" : {
-//         "help": {
-//           "header": "SENDHELP",
-//           "content": "pls"
-//         },
-//         "privacy": {
-//           "header": "Privacy Notice",
-//           "content": "Importante information abt ur privacy"
-//         }
-//     }
-//   }
-// }
