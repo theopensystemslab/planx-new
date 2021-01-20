@@ -41,9 +41,9 @@ const Preview: React.FC<{
   },
   settings,
 }) => {
-  const [breadcrumbs, record] = useStore((state) => [
-    state.breadcrumbs,
+  const [record, previousCard] = useStore((state) => [
     state.record,
+    state.previousCard(),
   ]);
 
   // TODO: replace with actual routing
@@ -65,12 +65,6 @@ const Preview: React.FC<{
     }
   };
   const closeModal = () => setCurrentModal(undefined);
-
-  const goBackable = Object.entries(breadcrumbs)
-    .filter(([k, v]: any) => !v.auto)
-    .map(([k]) => k);
-
-  const canGoBack = goBackable.length > 0;
 
   const leftFooterItems = [
     {
@@ -104,11 +98,11 @@ const Preview: React.FC<{
         }}
       >
         <span
-          onClick={() => record(goBackable.pop())}
+          onClick={() => record(previousCard)}
           style={{
             padding: "0 10px 10px",
-            visibility: canGoBack ? "visible" : "hidden",
-            pointerEvents: canGoBack ? "auto" : "none",
+            visibility: previousCard ? "visible" : "hidden",
+            pointerEvents: previousCard ? "auto" : "none",
             display: "block",
             cursor: "pointer",
             userSelect: "none",

@@ -70,7 +70,6 @@ const components: {
   [TYPES.NumberInput]: Debug,
   [TYPES.Page]: undefined,
   [TYPES.Pay]: undefined,
-  [TYPES.PropertyInformation]: undefined,
   [TYPES.Report]: undefined,
   [TYPES.Response]: Debug,
   [TYPES.Result]: undefined,

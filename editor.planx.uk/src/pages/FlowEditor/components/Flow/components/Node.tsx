@@ -15,48 +15,46 @@ const Node: React.FC<any> = (props) => {
   const type = props.type as TYPES;
   switch (type) {
     case TYPES.Content:
-      return <Question {...props} text={"Content"} />;
+      return <Question {...props} text={node?.data?.content ?? "Content"} />;
     case TYPES.DateInput:
-      return <Question {...props} text="Date" />;
+      return <Question {...props} text={node?.data?.title ?? "Date"} />;
     case TYPES.ExternalPortal:
       return <Portal {...props} />;
     case TYPES.InternalPortal:
       return props.href ? <Breadcrumb {...props} /> : <Portal {...props} />;
     case TYPES.FileUpload:
-      return (
-        <Question {...props} text={node?.data?.description ?? "File Upload"} />
-      );
+      return <Question {...props} text={node?.data?.title ?? "File upload"} />;
     case TYPES.Filter:
       return <Filter {...props} text="(Flags Filter)" />;
     case TYPES.FindProperty:
       return <Question {...props} text="Find property" />;
     case TYPES.Notice:
-      return <Question {...props} text="Notice" />;
+      return <Question {...props} text={node?.data?.title ?? "Notice"} />;
     case TYPES.Notify:
       return <Question {...props} text="Notify" />;
     case TYPES.NumberInput:
-      return <Question {...props} text="Number" />;
+      return <Question {...props} text={node?.data?.title ?? "Number"} />;
     case TYPES.Page:
       return <Page {...props} text={node?.data?.title ?? "Page"} />;
     case TYPES.Pay:
-      return <Question {...props} text={node?.data?.description ?? "Pay"} />;
-    case TYPES.PropertyInformation:
-      return <Question {...props} text="Property information" />;
+      return <Question {...props} text={node?.data?.title ?? "Pay"} />;
     case TYPES.Result:
       return <Question {...props} text="(Result)" />;
     case TYPES.Review:
-      return <Question {...props} text={node?.data?.description ?? "Review"} />;
+      return <Question {...props} text={node?.data?.title ?? "Review"} />;
     case TYPES.Send:
       return <Question {...props} text="Send" />;
     case TYPES.TaskList:
       return (
         <Question
           {...props}
-          text={`Tasks (${node.data?.tasks?.length || 0})`}
+          text={`${node?.data?.title ?? "Tasks"} (${
+            node.data?.tasks?.length || 0
+          })`}
         />
       );
     case TYPES.TextInput:
-      return <Question {...props} text="Text" />;
+      return <Question {...props} text={node?.data?.title ?? "Text input"} />;
 
     case TYPES.Response:
       return <Option {...props} />;
@@ -66,7 +64,7 @@ const Node: React.FC<any> = (props) => {
         <Checklist {...props} {...node} text={node?.data?.text ?? "[Empty]"} />
       );
     case TYPES.AddressInput:
-      return <Question {...props} text="Address" />;
+      return <Question {...props} text={node?.data?.title ?? "Address"} />;
     case TYPES.Flow:
     case TYPES.Report:
     case TYPES.SignIn:

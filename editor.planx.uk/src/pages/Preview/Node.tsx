@@ -8,7 +8,6 @@ import Notice from "@planx/components/Notice/Public";
 import Notify from "@planx/components/Notify/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
 import Pay from "@planx/components/Pay/Public";
-import PropertyInformation from "@planx/components/PropertyInformation/Public";
 import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
 import Review from "@planx/components/Review/Public";
@@ -20,8 +19,6 @@ import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
-
-let uprn: any;
 
 export type handleSubmit = (_?: componentOutput) => void;
 interface Props {
@@ -84,10 +81,7 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.FindProperty:
       return (
         <FindProperty
-          handleSubmit={(data: componentOutput) => {
-            uprn = data;
-            props.handleSubmit([props.node.id]);
-          }}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
         />
       );
 
@@ -119,14 +113,6 @@ const Node: React.FC<any> = (props: Props) => {
       return (
         <Pay
           {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
-
-    case TYPES.PropertyInformation:
-      return (
-        <PropertyInformation
-          UPRN={uprn}
           handleSubmit={() => props.handleSubmit([props.node.id])}
         />
       );

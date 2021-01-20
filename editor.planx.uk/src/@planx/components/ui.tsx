@@ -60,7 +60,6 @@ export const ICONS: {
   [TYPES.NumberInput]: ExposureZero,
   [TYPES.Page]: Description,
   [TYPES.Pay]: PaymentOutlined,
-  [TYPES.PropertyInformation]: LocationOnOutlined,
   [TYPES.Report]: undefined,
   [TYPES.Response]: undefined,
   [TYPES.Result]: undefined,

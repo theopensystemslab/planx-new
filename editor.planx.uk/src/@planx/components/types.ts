@@ -3,10 +3,9 @@ export enum TYPES {
   SignIn = 2,
   Result = 3,
   Report = 4,
-  PropertyInformation = 5,
-  FindProperty = 6,
   TaskList = 7,
   Notice = 8,
+  FindProperty = 9,
   Statement = 100, // Question/DropDown
   Checklist = 105,
   TextInput = 110,

@@ -5,7 +5,6 @@ import FindProperty from "@planx/components/FindProperty/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import Notify from "@planx/components/Notify/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
-import PropertyInformation from "@planx/components/PropertyInformation/Editor";
 import Send from "@planx/components/Send/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
 import TextInput from "@planx/components/TextInput/Editor";
@@ -36,10 +35,9 @@ const components: {
   "external-portal": ExternalPortal,
   "file-upload": FileUpload,
   filter: Filter,
-  "find-property": FindProperty,
+  "find-property-merged": FindProperty,
   flow: EmptyComponent,
   "internal-portal": InternalPortal,
-  "property-information": PropertyInformation,
   notice: Notice,
   notify: Notify,
   "number-input": NumberInput,
