@@ -14,6 +14,7 @@ import { Link, useCurrentRoute, useNavigation } from "react-navi";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
+import PhaseBanner from "./PhaseBanner";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
   },
   toolbar: {
+    marginTop: theme.spacing(1),
     height: 75,
     display: "flex",
     justifyContent: "space-between",
@@ -61,10 +63,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header: React.FC<{ bgcolor?: string; logo?: string }> = ({
-  bgcolor = "#2c2c2c",
-  logo,
-}) => {
+const Header: React.FC<{
+  bgcolor?: string;
+  logo?: string;
+  phaseBanner?: boolean;
+}> = ({ bgcolor = "#2c2c2c", logo, phaseBanner = false }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const headerRef = useRef(null);
@@ -98,6 +101,7 @@ const Header: React.FC<{ bgcolor?: string; logo?: string }> = ({
           backgroundColor: bgcolor,
         }}
       >
+        {phaseBanner && <PhaseBanner />}
         <Toolbar className={classes.toolbar}>
           <Box className={classes.breadcrumbs} fontSize={20}>
             {logo ? (

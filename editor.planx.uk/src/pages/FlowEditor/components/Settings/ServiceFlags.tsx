@@ -99,7 +99,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
         <Typography variant="h3" gutterBottom>
           <strong>Service flags</strong>
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1">
           Manage the flag sets that this service uses. Flags at the top of a set
           override flags below.
         </Typography>

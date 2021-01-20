@@ -88,8 +88,8 @@ const Team: React.FC<ITeam> = () => {
         <Typography variant="h3" gutterBottom>
           <strong>Team</strong>
         </Typography>
-        <Typography variant="body1" color="textSecondary">
-          Team Manage who has permission to edit this service
+        <Typography variant="body1">
+          Manage who has permission to edit this service
         </Typography>
       </Box>
       <Box py={4} borderBottom={1}>
@@ -144,9 +144,8 @@ const Team: React.FC<ITeam> = () => {
         <Typography variant="h3" gutterBottom>
           <strong>Sharing</strong>
         </Typography>
-        <Typography variant="body1" color="textSecondary" gutterBottom>
-          Sharing Allow other teams on Plan✕ to find and use your service
-          pattern
+        <Typography variant="body1" gutterBottom>
+          Allow other teams on Plan✕ to find and use your service pattern
         </Typography>
         <Box pt={2}>
           <InputGroup>
