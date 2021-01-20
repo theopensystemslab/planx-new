@@ -100,6 +100,7 @@ const Preview: React.FC<{
           flexDirection: "column",
           alignItems: "center",
           background: "#fff",
+          position: "relative",
         }}
       >
         <span

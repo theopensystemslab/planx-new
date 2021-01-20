@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     backgroundColor: "#f2f2f2",
     position: "absolute",
-    // TODO: neater way to do this
+    // TODO: neater way to do this; relies on hard-coded header height
     top: 75,
     left: 0,
     right: 0,
