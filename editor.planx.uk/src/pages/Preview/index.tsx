@@ -2,7 +2,6 @@ import React from "react";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import PhaseBanner from "../../components/PhaseBanner";
 import { componentOutput, useStore } from "../FlowEditor/lib/store";
 import Node from "./Node";
 
@@ -56,7 +55,9 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
 
   return (
     <>
-      {!embedded && <Header bgcolor={theme.primary} logo={theme.logo} />}
+      {!embedded && (
+        <Header bgcolor={theme.primary} logo={theme.logo} phaseBanner />
+      )}
       <div
         style={{
           paddingTop: 40,

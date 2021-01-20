@@ -63,10 +63,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header: React.FC<{ bgcolor?: string; logo?: string }> = ({
-  bgcolor = "#2c2c2c",
-  logo,
-}) => {
+const Header: React.FC<{
+  bgcolor?: string;
+  logo?: string;
+  phaseBanner?: boolean;
+}> = ({ bgcolor = "#2c2c2c", logo, phaseBanner = false }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const headerRef = useRef(null);
@@ -100,7 +101,7 @@ const Header: React.FC<{ bgcolor?: string; logo?: string }> = ({
           backgroundColor: bgcolor,
         }}
       >
-        <PhaseBanner />
+        {phaseBanner && <PhaseBanner />}
         <Toolbar className={classes.toolbar}>
           <Box className={classes.breadcrumbs} fontSize={20}>
             {logo ? (
