@@ -1,3 +1,6 @@
+import type { SchemaOf } from "yup";
+import { object, string } from "yup";
+
 import { MoreInformation, parseMoreInformation } from "../shared";
 
 export type UserData = {
@@ -7,6 +10,14 @@ export type UserData = {
   county: string;
   postcode: string;
 };
+
+export const userDataSchema: SchemaOf<UserData> = object({
+  line1: string().required(),
+  line2: string().required(),
+  town: string().required(),
+  county: string().required(),
+  postcode: string().required(),
+});
 
 export interface AddressInput extends MoreInformation {
   title: string;

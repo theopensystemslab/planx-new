@@ -8,6 +8,7 @@ export interface Props {
 
 const useClasses = makeStyles((theme) => ({
   rootError: {
+    width: "100%",
     paddingLeft: theme.spacing(2),
     borderLeft: `3px solid ${theme.palette.error.main}`,
   },
