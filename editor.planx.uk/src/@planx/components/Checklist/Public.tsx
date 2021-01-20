@@ -28,6 +28,22 @@ function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
     : [...arr, value];
 }
 
+function getFlatOptions({
+  options,
+  groupedOptions,
+}: {
+  options: Checklist["options"];
+  groupedOptions: Checklist["groupedOptions"];
+}) {
+  if (options) {
+    return options;
+  }
+  if (groupedOptions) {
+    return groupedOptions.flatMap((group: any) => group.children);
+  }
+  return [];
+}
+
 const ChecklistComponent: React.FC<Props> = ({
   allRequired,
   description = "",
@@ -58,13 +74,12 @@ const ChecklistComponent: React.FC<Props> = ({
           name: "notAllChecked",
           message: "All options must be checked",
           test: (checked?: Array<string>) => {
-            const flatOptions = options
-              ? options
-              : groupedOptions
-              ? groupedOptions.flatMap((group) => group.children)
-              : [];
+            if (!allRequired) {
+              return true;
+            }
+            const flatOptions = getFlatOptions({ options, groupedOptions });
             const allChecked = checked && checked.length === flatOptions.length;
-            return Boolean(!allRequired || allChecked);
+            return Boolean(allChecked);
           },
         }),
     }),
@@ -80,11 +95,7 @@ const ChecklistComponent: React.FC<Props> = ({
     ? Layout.Grouped
     : Layout.Basic;
 
-  const flatOptions = options
-    ? options
-    : groupedOptions
-    ? groupedOptions.flatMap((group) => group.children)
-    : [];
+  const flatOptions = getFlatOptions({ options, groupedOptions });
 
   const changeCheckbox = (id: string) => (_checked: any) => {
     let newCheckedIds;
