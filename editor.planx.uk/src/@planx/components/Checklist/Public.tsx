@@ -8,7 +8,9 @@ import { useFormik } from "formik";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import ChecklistItem from "ui/ChecklistItem";
+import ErrorWrapper from "ui/ErrorWrapper";
 import { ExpandableList, ExpandableListItem } from "ui/ExpandableList";
+import { array, object } from "yup";
 
 export interface Props extends Checklist {
   handleSubmit: handleSubmit;
@@ -45,10 +47,27 @@ const ChecklistComponent: React.FC<Props> = ({
       checked: [],
     },
     onSubmit: (values) => {
-      // submit handled by Card component
-      // TODO: check if there are any async requirements
+      handleSubmit && handleSubmit(values.checked);
     },
-    validate: () => {},
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: object({
+      checked: array()
+        .required()
+        .test({
+          name: "notAllChecked",
+          message: "All options must be checked",
+          test: (checked?: Array<string>) => {
+            const flatOptions = options
+              ? options
+              : groupedOptions
+              ? groupedOptions.flatMap((group) => group.children)
+              : [];
+            const allChecked = checked && checked.length === flatOptions.length;
+            return Boolean(!allRequired || allChecked);
+          },
+        }),
+    }),
   });
 
   const [expandedGroups, setExpandedGroups] = useState<Array<number>>([]);
@@ -66,8 +85,6 @@ const ChecklistComponent: React.FC<Props> = ({
     : groupedOptions
     ? groupedOptions.flatMap((group) => group.children)
     : [];
-
-  const allChecked = formik.values.checked.length === flatOptions.length;
 
   const changeCheckbox = (id: string) => (_checked: any) => {
     let newCheckedIds;
@@ -88,10 +105,7 @@ const ChecklistComponent: React.FC<Props> = ({
   };
 
   return (
-    <Card
-      isValid={!allRequired || allChecked}
-      handleSubmit={() => handleSubmit(formik.values.checked)}
-    >
+    <Card handleSubmit={formik.handleSubmit}>
       <QuestionHeader
         title={text}
         description={description}
@@ -101,64 +115,66 @@ const ChecklistComponent: React.FC<Props> = ({
         img={img}
       />
 
-      <Grid container spacing={layout === Layout.Images ? 1 : 0}>
-        {options ? (
-          options.map((option: any) =>
-            layout === Layout.Basic ? (
-              <Grid item xs={12} key={option.data.text}>
-                <ChecklistItem
-                  onChange={changeCheckbox(option.id)}
-                  label={option.data.text}
-                  id={option.id}
-                  checked={formik.values.checked.includes(option.id)}
-                />
-              </Grid>
-            ) : (
-              <Grid item xs={12} sm={6} key={option.data.text}>
-                <ImageButton
-                  title={option.data.text}
-                  img={option.data.img}
-                  selected={formik.values.checked.includes(option.id)}
-                  onClick={changeCheckbox(option.id)}
-                  checkbox
-                />
-              </Grid>
+      <ErrorWrapper error={formik.errors.checked}>
+        <Grid container spacing={layout === Layout.Images ? 1 : 0}>
+          {options ? (
+            options.map((option: any) =>
+              layout === Layout.Basic ? (
+                <Grid item xs={12} key={option.data.text}>
+                  <ChecklistItem
+                    onChange={changeCheckbox(option.id)}
+                    label={option.data.text}
+                    id={option.id}
+                    checked={formik.values.checked.includes(option.id)}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={12} sm={6} key={option.data.text}>
+                  <ImageButton
+                    title={option.data.text}
+                    img={option.data.img}
+                    selected={formik.values.checked.includes(option.id)}
+                    onClick={changeCheckbox(option.id)}
+                    checkbox
+                  />
+                </Grid>
+              )
             )
-          )
-        ) : groupedOptions ? (
-          <Grid item xs={12}>
-            <ExpandableList>
-              {groupedOptions.map((group, index) => {
-                const isExpanded = expandedGroups.includes(index);
-                return (
-                  <ExpandableListItem
-                    key={index}
-                    expanded={isExpanded}
-                    onToggle={() => {
-                      setExpandedGroups((previous) =>
-                        toggleInArray(index, previous)
-                      );
-                    }}
-                    title={group.title}
-                  >
-                    <Box py={2}>
-                      {group.children.map((option: any) => (
-                        <ChecklistItem
-                          onChange={changeCheckbox(option.id)}
-                          key={option.data.text}
-                          label={option.data.text}
-                          id={option.id}
-                          checked={formik.values.checked.includes(option.id)}
-                        />
-                      ))}
-                    </Box>
-                  </ExpandableListItem>
-                );
-              })}
-            </ExpandableList>
-          </Grid>
-        ) : null}
-      </Grid>
+          ) : groupedOptions ? (
+            <Grid item xs={12}>
+              <ExpandableList>
+                {groupedOptions.map((group, index) => {
+                  const isExpanded = expandedGroups.includes(index);
+                  return (
+                    <ExpandableListItem
+                      key={index}
+                      expanded={isExpanded}
+                      onToggle={() => {
+                        setExpandedGroups((previous) =>
+                          toggleInArray(index, previous)
+                        );
+                      }}
+                      title={group.title}
+                    >
+                      <Box py={2}>
+                        {group.children.map((option: any) => (
+                          <ChecklistItem
+                            onChange={changeCheckbox(option.id)}
+                            key={option.data.text}
+                            label={option.data.text}
+                            id={option.id}
+                            checked={formik.values.checked.includes(option.id)}
+                          />
+                        ))}
+                      </Box>
+                    </ExpandableListItem>
+                  );
+                })}
+              </ExpandableList>
+            </Grid>
+          ) : null}
+        </Grid>
+      </ErrorWrapper>
     </Card>
   );
 };
