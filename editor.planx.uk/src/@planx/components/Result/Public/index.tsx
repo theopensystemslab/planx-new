@@ -5,18 +5,11 @@ import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
+import type { Node } from "./model";
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
 
-interface Node {
-  id: string;
-  data: {
-    text: string;
-    flag?: string;
-  };
-}
-
-interface Props {
+export interface Props {
   handleSubmit: handleSubmit;
   headingColor: {
     text: string;
@@ -36,9 +29,17 @@ interface Props {
 const Responses = ({ responses }: any) => (
   <>
     {responses.map(({ question, selections }: any) => (
-      <ResultReason key={question.id} id={question.id}>
-        {question.data.text}{" "}
-        <strong>{selections.map((s: any) => s.data.text).join(",")}</strong>
+      <ResultReason
+        key={question.id}
+        id={question.id}
+        question={question}
+        response={selections.map((s: any) => s.data.text).join(",")}
+      >
+        {question.data.info && (
+          <Box>
+            <Typography variant="body2">Why it matters text</Typography>
+          </Box>
+        )}
       </ResultReason>
     ))}
   </>
@@ -70,7 +71,8 @@ const Result: React.FC<Props> = ({
           {reasonsTitle}
         </Typography>
         <Box mb={3}>
-          <Box mb={1} color="text.secondary">
+          {/* TODO: Figure out the theme colors */}
+          <Box mb={1} color="secondary.dark">
             Planning Permission
           </Box>
 
