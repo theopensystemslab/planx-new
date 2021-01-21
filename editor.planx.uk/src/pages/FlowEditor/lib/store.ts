@@ -465,7 +465,8 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                 ...flow[id],
               }));
 
-              let responseThatCanBeAutoAnswered;
+              let responsesThatCanBeAutoAnswered = [] as any[];
+
               const sortedResponses = responses
                 ? responses
                     .sort(mostToLeastNumberOfValues)
@@ -481,49 +482,73 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                 );
 
                 if (passportValues.length > 0) {
-                  responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
+                  responsesThatCanBeAutoAnswered = (
+                    sortedResponses || []
+                  ).filter((r) => {
                     const responseValues = String(r.data.val).split(",").sort();
+                    // if (id === "HV0gV8DOil") {
+                    //   console.log({ responseValues, passportValues });
+                    // }
                     return String(responseValues) === String(passportValues);
                   });
 
-                  if (!responseThatCanBeAutoAnswered) {
-                    responseThatCanBeAutoAnswered = sortedResponses.find(
-                      (r) => {
-                        const responseValues = String(r.data.val)
-                          .split(",")
-                          .sort();
-                        for (const responseValue of responseValues) {
-                          // console.log({ value, val });
-                          return passportValues.every((passportValue: any) =>
-                            String(passportValue).startsWith(responseValue)
-                          );
-                        }
+                  if (responsesThatCanBeAutoAnswered.length === 0) {
+                    responsesThatCanBeAutoAnswered = (
+                      sortedResponses || []
+                    ).filter((r) => {
+                      const responseValues = String(r.data.val)
+                        .split(",")
+                        .sort();
+
+                      for (const responseValue of responseValues) {
+                        // console.log({ value, val });
+                        return passportValues.some((passportValue: any) =>
+                          String(passportValue).startsWith(responseValue)
+                        );
                       }
-                    );
+                    });
+
+                    // console.log(
+                    //   id,
+                    //   sortedResponses,
+                    //   passportValues,
+                    //   responsesThatCanBeAutoAnswered
+                    // );
                   }
                 }
               }
 
-              if (!responseThatCanBeAutoAnswered) {
-                responseThatCanBeAutoAnswered = responses?.find(
+              if (responsesThatCanBeAutoAnswered.length === 0) {
+                responsesThatCanBeAutoAnswered = (responses || []).filter(
                   (r) => !r.data?.val
                 );
               }
 
-              if (responseThatCanBeAutoAnswered) {
+              if (responsesThatCanBeAutoAnswered.length > 0) {
+                if (flow[id]?.type !== TYPES.Checklist) {
+                  responsesThatCanBeAutoAnswered = responsesThatCanBeAutoAnswered.slice(
+                    0,
+                    1
+                  );
+                }
+
                 if (fn !== "flag") {
                   set({
                     breadcrumbs: {
                       ...breadcrumbs,
                       [id]: {
-                        answers: [responseThatCanBeAutoAnswered.id],
+                        answers: responsesThatCanBeAutoAnswered.map(
+                          (r) => r.id
+                        ),
                         auto: true,
                       },
                     },
                   });
                 }
 
-                nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id);
+                responsesThatCanBeAutoAnswered.forEach((r) =>
+                  nodeIdsConnectedFrom(r.id)
+                );
               } else {
                 ids.add(id);
               }
