@@ -80,7 +80,11 @@ function FindProperty({ handleSubmit }: any) {
             )}
           </Box>
 
-          <Box pb={2} color="text.primary">
+          {/*
+
+          TODO: unhide this when it's usable
+
+          <Box pb={2} color="text.primary" style={{ display: "none" }}>
             <a
               href="!#"
               style={{ color: "inherit" }}
@@ -92,6 +96,8 @@ function FindProperty({ handleSubmit }: any) {
               Find the property on a map
             </a>
           </Box>
+
+          */}
         </>
       )}
     </Card>
