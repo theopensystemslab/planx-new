@@ -116,7 +116,7 @@ const ChecklistComponent: React.FC<Props> = ({
   };
 
   return (
-    <Card handleSubmit={formik.handleSubmit}>
+    <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader
         title={text}
         description={description}
