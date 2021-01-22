@@ -1,6 +1,10 @@
 dependencies:
   '@apollo/client': 3.2.5_7f7b2e3b73795d1ad7365d948d85a29e
   '@ctrl/tinycolor': 3.1.6
+  '@draft-js-plugins/anchor': 4.0.0_81b8b0ad9777e2b0f63d571d3e717da7
+  '@draft-js-plugins/buttons': 4.0.0_81b8b0ad9777e2b0f63d571d3e717da7
+  '@draft-js-plugins/editor': 4.0.0_draft-js@0.11.7+react@16.14.0
+  '@draft-js-plugins/inline-toolbar': 4.0.0_81b8b0ad9777e2b0f63d571d3e717da7
   '@feedback-fish/react': 1.2.1_react@16.14.0
   '@mapbox/mapbox-gl-draw': 1.2.0_mapbox-gl@1.12.0
   '@material-ui/core': 4.11.0_9f48369ed4321469d5d721870f4dbdbc
@@ -14,8 +18,7 @@ dependencies:
   classnames: 2.2.6
   date-fns: 2.16.1
   draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
-  draft-js-export-markdown: 1.4.0_draft-js@0.11.7
-  draft-js-import-markdown: 1.4.0_draft-js@0.11.7
+  draftjs-to-html: 0.9.1
   formik: 2.2.4_react@16.14.0
   graphql: 15.4.0
   graphql-tag: 2.11.0_graphql@15.4.0
@@ -25,7 +28,7 @@ dependencies:
   jwt-decode: 3.1.2
   lodash: 4.17.20
   mapbox-gl: 1.12.0
-  mui-rte: 1.26.2_105f397d79457dc9365b4e349380b9b3
+  marked: 1.2.7
   nanoid: 3.1.16
   nanoid-good: 3.1.0
   natsort: 2.0.2
@@ -68,9 +71,11 @@ devDependencies:
   '@testing-library/jest-dom': 5.11.5
   '@testing-library/react': 11.1.2_react-dom@16.14.0+react@16.14.0
   '@testing-library/user-event': 12.2.2
+  '@types/draft-js': 0.10.44
   '@types/highlight-words-core': 1.2.0
   '@types/jest': 26.0.15
   '@types/lodash': 4.14.165
+  '@types/marked': 1.2.1
   '@types/node': 12.19.4
   '@types/ramda': 0.27.32
   '@types/react': 16.9.56
@@ -2292,6 +2297,69 @@ packages:
       node: '>=10.19.0'
     resolution:
       integrity: sha512-9RUTT3omv+5mSYFVsX143R7cTDQmT1FibCzoUVmO294mRIT0Sc8dk5srN27BTH0JKzQDWKkNCKh6q/+EkNfpkA==
+  /@draft-js-plugins/anchor/4.0.0_81b8b0ad9777e2b0f63d571d3e717da7:
+    dependencies:
+      '@draft-js-plugins/utils': 4.0.0_draft-js@0.11.7
+      clsx: 1.1.1
+      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
+      prepend-http: 3.0.1
+      prop-types: 15.7.2
+      react: 16.14.0
+      react-dom: 16.14.0_react@16.14.0
+      tlds: 1.216.0
+    dev: false
+    peerDependencies:
+      draft-js: ^0.10.1 || ^0.11.0
+      react: ^15.5.0 || ^16.0.0-rc
+      react-dom: ^15.5.0 || ^16.0.0-rc
+    resolution:
+      integrity: sha512-Ywbt8o3euTtsUDZkrqz6yRXRe5KDGQSVQWEIzQYiNxJW43CiRZHd3ZzmifiUD9QiyKWzP2g8ZorvPlczVXmmLQ==
+  /@draft-js-plugins/buttons/4.0.0_81b8b0ad9777e2b0f63d571d3e717da7:
+    dependencies:
+      clsx: 1.1.1
+      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
+      react: 16.14.0
+      react-dom: 16.14.0_react@16.14.0
+    dev: false
+    peerDependencies:
+      draft-js: ^0.10.1 || ^0.11.0
+      react: ^15.5.0 || ^16.0.0-rc
+      react-dom: ^15.5.0 || ^16.0.0-rc
+    resolution:
+      integrity: sha512-BYfEpVgCi/pIPmf05fRGxADpzfsYbtXb2R0kM48huLORYcOZ4wpMfCeNe0zzp8EfqwG+z8aAd6+pcjc9BcO/Bg==
+  /@draft-js-plugins/editor/4.0.0_draft-js@0.11.7+react@16.14.0:
+    dependencies:
+      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
+      immutable: 3.8.2
+      prop-types: 15.7.2
+      react: 16.14.0
+    dev: false
+    peerDependencies:
+      draft-js: ^0.11.0
+      react: ^16.3.0
+    resolution:
+      integrity: sha512-yt8jDqGrbRRgPKY/x3MHuVm2N1Lu33ILAAOfjl8BU2IPQVYPpO/fMu+/hnRvUmHJsj0nMOGbiDzAmIlZ3A/KMA==
+  /@draft-js-plugins/inline-toolbar/4.0.0_81b8b0ad9777e2b0f63d571d3e717da7:
+    dependencies:
+      '@draft-js-plugins/buttons': 4.0.0_81b8b0ad9777e2b0f63d571d3e717da7
+      '@draft-js-plugins/utils': 4.0.0_draft-js@0.11.7
+      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
+      react: 16.14.0
+    dev: false
+    peerDependencies:
+      draft-js: ^0.10.1 || ^0.11.0
+      react: ^16.3.0
+      react-dom: '*'
+    resolution:
+      integrity: sha512-gjcPB2agiMLOpXoADKek9/xUMJzt9f+KythpjYtxk6Jlwwyd3h85+k2jC1pNFOc4kTRdqluyI13OB/nbCwK60g==
+  /@draft-js-plugins/utils/4.0.0_draft-js@0.11.7:
+    dependencies:
+      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
+    dev: false
+    peerDependencies:
+      draft-js: ^0.10.1 || ^0.11.0
+    resolution:
+      integrity: sha512-PPzXns3xmEyTu66ZXEvfGi5uYhKaS5VynQ3S5BBokfjV0uTRLQEf2DN5jLl9QFPfrQXRQCgcqcSR4YppbkOh/g==
   /@emotion/cache/10.0.29:
     dependencies:
       '@emotion/sheet': 0.9.4
@@ -4383,15 +4451,11 @@ packages:
     dev: true
     resolution:
       integrity: sha512-TbH79tcyi9FHwbyboOKeRachRq63mSuWYXOflsNO9ZyE5ClQ/JaozNKl+aWUq87qPNsXasXxi2AbgfwIJ+8GQw==
-  /@types/classnames/2.2.11:
-    dev: false
-    resolution:
-      integrity: sha512-2koNhpWm3DgWRp5tpkiJ8JGc1xTn2q0l+jUNUE7oMKXUf5NpI9AIdC4kbjGNFBdHtcxBD18LAksoudAVhFKCjw==
   /@types/draft-js/0.10.44:
     dependencies:
-      '@types/react': 16.9.56
+      '@types/react': 16.14.2
       immutable: 3.7.6
-    dev: false
+    dev: true
     resolution:
       integrity: sha512-6p3FZED91yPf+KQinlzFz1HuqSQ5zRXqU3RUsaP2oQYZTtrm5HDf2kwYnF5IihsleHR3jlQAwdSZt0zlJw3VGQ==
   /@types/eslint/7.2.4:
@@ -4496,6 +4560,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-30nFYpceM/ZEvhGiqWjm5quLUxNeld0HCzJEXMZZDpq53FPkS85mTwkWtCXzCqq8s5JYLgM5W392a02xn8Bdaw==
+  /@types/marked/1.2.1:
+    dev: true
+    resolution:
+      integrity: sha512-d5adCgRHB+NAme23hkiTkvpfZUDqoNtL2Sr2nZBJqSj3zyHLxsfFWsGQ2sK2z9aX6L1xkJzon2c0jTPcsEjpaQ==
   /@types/mdast/3.0.3:
     dependencies:
       '@types/unist': 2.0.3
@@ -4614,7 +4682,7 @@ packages:
   /@types/react/16.14.2:
     dependencies:
       '@types/prop-types': 15.7.3
-      csstype: 3.0.5
+      csstype: 3.0.6
     dev: true
     resolution:
       integrity: sha512-BzzcAlyDxXl2nANlabtT4thtvbbnhee8hMmH/CcJrISDBVcJS1iOsP1f0OAgSdGE0MsY9tqcrb9YoZcOFv9dbQ==
@@ -7093,12 +7161,12 @@ packages:
     resolution:
       integrity: sha512-EZD2ckZysv8MMt4J6HSvS9K2GdtlZtdBncKAmF9lr2n0c9dJUaUN88PSTjvgwCgQPWKTkERXITgS6JJRAnljtg==
   /core-js/1.2.7:
-    deprecated: 'core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.'
+    deprecated: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
     dev: true
     resolution:
       integrity: sha1-ZSKUwUZR2yj6k70tX/KYOk8IxjY=
   /core-js/2.6.11:
-    deprecated: 'core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.'
+    deprecated: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
     requiresBuild: true
     resolution:
       integrity: sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
@@ -7602,12 +7670,7 @@ packages:
   /csstype/3.0.4:
     resolution:
       integrity: sha512-xc8DUsCLmjvCfoD7LTGE0ou2MIWLx0K9RCZwSHMOdynqRsP4MtUcLeqh1HcQ2dInwDTqn+3CE0/FZh1et+p4jA==
-  /csstype/3.0.5:
-    dev: true
-    resolution:
-      integrity: sha512-uVDi8LpBUKQj6sdxNaTetL6FpeCqTjOvAQuQUa/qAqq8oOd4ivkbhgnqayl0dnPal8Tb/yB1tF+gOvCBiicaiQ==
   /csstype/3.0.6:
-    dev: false
     resolution:
       integrity: sha512-+ZAmfyWMT7TiIlzdqJgjMb7S4f1beorDbWbsocyK4RaiqA5RTX3K14bnBWmmA9QEM0gRdsjyyrEmcyga8Zsxmw==
   /currently-unhandled/0.4.1:
@@ -8128,47 +8191,6 @@ packages:
       react: '>=16.8.0'
     resolution:
       integrity: sha512-tmLab3cXCn6PtZYl9V8r/nB2m+7/nCNrwo0B3kTHo/2lRBHr+1en1VNOQt2wIt0ajanAnxquZ00WPCyxe6cNFQ==
-  /draft-js-export-markdown/1.4.0_draft-js@0.11.7:
-    dependencies:
-      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
-      draft-js-utils: 1.4.0_draft-js@0.11.7
-    dev: false
-    peerDependencies:
-      draft-js: '>=0.10.0'
-      immutable: 3.x.x
-    resolution:
-      integrity: sha512-blfAvlhGhjVlHNaZ5WJKlrXhcftnwwC5VC+Eu3ztOGpGLaOom4hxhBjbKEWjvbQZJ9zL+xo57ukm39prYZMG5Q==
-  /draft-js-import-element/1.4.0_draft-js@0.11.7:
-    dependencies:
-      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
-      draft-js-utils: 1.4.0_draft-js@0.11.7
-      synthetic-dom: 1.4.0
-    dev: false
-    peerDependencies:
-      draft-js: '>=0.10.0'
-      immutable: 3.x.x
-    resolution:
-      integrity: sha512-WmYT5PrCm47lGL5FkH6sRO3TTAcn7qNHsD3igiPqLG/RXrqyKrqN4+wBgbcT2lhna/yfWTRtgzAbQsSJoS1Meg==
-  /draft-js-import-markdown/1.4.0_draft-js@0.11.7:
-    dependencies:
-      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
-      draft-js-import-element: 1.4.0_draft-js@0.11.7
-      synthetic-dom: 1.4.0
-    dev: false
-    peerDependencies:
-      draft-js: '>=0.10.0'
-      immutable: 3.x.x
-    resolution:
-      integrity: sha512-mpKUxzDM+x7W+eCZegCAxl3QJzNGA3Y+DbBMMekzCdPHONLJAZ1QYYjegbXa6+pZGq8FAIhgWaVbfKWMb8M8dQ==
-  /draft-js-utils/1.4.0_draft-js@0.11.7:
-    dependencies:
-      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
-    dev: false
-    peerDependencies:
-      draft-js: '>=0.10.0'
-      immutable: 3.x.x
-    resolution:
-      integrity: sha512-8s9FFuKC+lOWGwJ0b3om2PF+uXrqQPaEQlPJI7UxdzxTYGMeKouMPA9+YlPn52zcAVElIZtd2tXj6eQmvlKelw==
   /draft-js/0.11.7_react-dom@16.14.0+react@16.14.0:
     dependencies:
       fbjs: 2.0.0
@@ -8182,6 +8204,10 @@ packages:
       react-dom: '>=0.14.0'
     resolution:
       integrity: sha512-ne7yFfN4sEL82QPQEn80xnADR8/Q6ALVworbC5UOSzOvjffmYfFsr3xSZtxbIirti14R7Y33EZC5rivpLgIbsg==
+  /draftjs-to-html/0.9.1:
+    dev: false
+    resolution:
+      integrity: sha512-fFstE6+IayaVFBEvaFt/wN8vdj8FsTRzij7dy7LI9QIwf5LgfHFi9zSpvCg+feJ2tbYVqHxUkjcibwpsTpgFVQ==
   /duplexer/0.1.2:
     resolution:
       integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
@@ -10489,7 +10515,6 @@ packages:
     resolution:
       integrity: sha512-Vs/gxoM4DqNAYR7pugIxi0Xc8XAun/uy7AQu4fLLqaTBHxjOP9pJ266Q9MWA/ly4z6rAFZbvViOtihxUZ7O28A==
   /immutable/3.7.6:
-    dev: false
     engines:
       node: '>=0.8.0'
     resolution:
@@ -12556,6 +12581,13 @@ packages:
       react: '>= 0.14.0'
     resolution:
       integrity: sha512-3lRCD5Sh+tfA52iGgfs/XZiw33f7fFX9Bn55aNnVNUd2GzLDkOWyKYYD8Yju2B1Vn+feiEdgJs8T6Tg0xNokPw==
+  /marked/1.2.7:
+    dev: false
+    engines:
+      node: '>= 8.16.2'
+    hasBin: true
+    resolution:
+      integrity: sha512-No11hFYcXr/zkBvL6qFmAp1z6BKY3zqLMHny/JN/ey+al7qwCM2+CMBL9BOgqMxZU36fz4cCWfn2poWIf7QRXA==
   /material-colors/1.2.6:
     resolution:
       integrity: sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==
@@ -12929,25 +12961,6 @@ packages:
   /ms/2.1.2:
     resolution:
       integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
-  /mui-rte/1.26.2_105f397d79457dc9365b4e349380b9b3:
-    dependencies:
-      '@material-ui/core': 4.11.0_9f48369ed4321469d5d721870f4dbdbc
-      '@material-ui/icons': 4.9.1_a86b7d24d2481968855f45294417fbec
-      '@types/classnames': 2.2.11
-      '@types/draft-js': 0.10.44
-      classnames: 2.2.6
-      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
-      immutable: 3.8.2
-      react: 16.14.0
-      react-dom: 16.14.0_react@16.14.0
-    dev: false
-    peerDependencies:
-      '@material-ui/core': '>=4.1.0 <5'
-      '@material-ui/icons': '>=4.1.0 <5'
-      react: ^16.8.6
-      react-dom: ^16.8.6
-    resolution:
-      integrity: sha512-sZ+lSLbS2EMlIPW4lc0WaCpfGFRNWlm7ciFSl86AOkag9VJj5DlASjoOBZiPfK+rsw43+npBxMZz0hlk5CC2+A==
   /multicast-dns-service-types/1.1.0:
     dev: false
     resolution:
@@ -14826,6 +14839,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-1PRWKwzjaW5BrFLQ4ALlemNdxtw=
+  /prepend-http/3.0.1:
+    dev: false
+    engines:
+      node: '>=8'
+    resolution:
+      integrity: sha512-BLxfZh+m6UiAiCPZFJ4+vYoL7NrRs5XgCTRrjseATAggXhdZKKxn+JUNmuVYWY23bDHgaEHodxw8mnmtVEDtHw==
   /prettier/2.0.5:
     dev: true
     engines:
@@ -16161,7 +16180,7 @@ packages:
       request-promise-core: 1.1.4_request@2.88.2
       stealthy-require: 1.1.1
       tough-cookie: 2.5.0
-    deprecated: 'request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142'
+    deprecated: request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
     dev: false
     engines:
       node: '>=0.12.0'
@@ -16191,7 +16210,7 @@ packages:
       tough-cookie: 2.5.0
       tunnel-agent: 0.6.0
       uuid: 3.4.0
-    deprecated: 'request has been deprecated, see https://github.com/request/request/issues/3142'
+    deprecated: request has been deprecated, see https://github.com/request/request/issues/3142
     engines:
       node: '>= 6'
     resolution:
@@ -16270,7 +16289,7 @@ packages:
     resolution:
       integrity: sha512-QEb4A76c8Mi7I3xNKXlRKQSlLBwjUV/ULFMP+G7n3/7tJZ8MG5wsZ3ucxP1Jz8Vevn6fnJsxDx9cIls+utGzPQ==
   /resolve-url/0.2.1:
-    deprecated: 'https://github.com/lydell/resolve-url#deprecated'
+    deprecated: https://github.com/lydell/resolve-url#deprecated
     resolution:
       integrity: sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
   /resolve/1.18.1:
@@ -17645,10 +17664,6 @@ packages:
       node: '>= 0.11.15'
     resolution:
       integrity: sha512-NvwWb5AdyTtmFNa1x0ksJakFUV/WJ+z7iRrYGU1xZew77Qd+kMrZKsk3uatCckk6yPNpbHhRcOO+JBU+ohcMBw==
-  /synthetic-dom/1.4.0:
-    dev: false
-    resolution:
-      integrity: sha512-mHv51ZsmZ+ShT/4s5kg+MGUIhY7Ltq4v03xpN1c8T1Krb5pScsh/lzEjyhrVD0soVDbThbd2e+4dD9vnDG4rhg==
   /table/5.4.6:
     dependencies:
       ajv: 6.12.6
@@ -17884,6 +17899,11 @@ packages:
     dev: false
     resolution:
       integrity: sha512-ppJZNDuKGgxzkHihX8v9v9G5f+18gzaTfrukGrq6ueg0lmH4nqVnA2IPG0AEH3jKEk2GRJCUhDoqpoiw3PHLBA==
+  /tlds/1.216.0:
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-y9A+eMRKLdAOclcFRTk3durpvCWiEdWcQhCOopCO654pckH9+o5Z5VgBsTTAFqtyxB8yFRXSG1q7BCCeHyrm0w==
   /tmp/0.0.33:
     dependencies:
       os-tmpdir: 1.0.2
@@ -18388,7 +18408,7 @@ packages:
     resolution:
       integrity: sha512-B0yRTzYdUCCn9n+F4+Gh4yIDtMQcaJsmYBDsTSG8g/OejKBodLQ2IHfN3bM7jUsRXndopT7OIXWdYqc1fjmV6g==
   /urix/0.1.0:
-    deprecated: 'Please see https://github.com/lydell/urix#deprecated'
+    deprecated: Please see https://github.com/lydell/urix#deprecated
     resolution:
       integrity: sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
   /url-loader/4.1.1_file-loader@6.1.1+webpack@4.44.2:
@@ -19356,6 +19376,10 @@ specifiers:
   '@apollo/client': ^3.2.5
   '@babel/core': ^7.12.3
   '@ctrl/tinycolor': ^3.1.6
+  '@draft-js-plugins/anchor': ^4.0.0
+  '@draft-js-plugins/buttons': ^4.0.0
+  '@draft-js-plugins/editor': ^4.0.0
+  '@draft-js-plugins/inline-toolbar': ^4.0.0
   '@feedback-fish/react': ^1.2.1
   '@mapbox/mapbox-gl-draw': ^1.2.0
   '@material-ui/core': ^4.11.0
@@ -19372,9 +19396,11 @@ specifiers:
   '@testing-library/react': ^11.1.2
   '@testing-library/user-event': ^12.2.2
   '@turf/area': ^6.0.1
+  '@types/draft-js': ^0.10.44
   '@types/highlight-words-core': ^1.2.0
   '@types/jest': ^26.0.15
   '@types/lodash': ^4.14.165
+  '@types/marked': ^1.2.1
   '@types/node': ^12.19.4
   '@types/ramda': ^0.27.32
   '@types/react': ^16.9.56
@@ -19389,8 +19415,7 @@ specifiers:
   css-loader: ^5.0.1
   date-fns: ^2.16.1
   draft-js: ^0.11.7
-  draft-js-export-markdown: ^1.4.0
-  draft-js-import-markdown: ^1.4.0
+  draftjs-to-html: ^0.9.1
   eslint-plugin-simple-import-sort: ^5.0.3
   formik: ^2.2.4
   graphql: ^15.4.0
@@ -19403,8 +19428,8 @@ specifiers:
   lint-staged: ^10.5.1
   lodash: ^4.17.20
   mapbox-gl: ^1.12.0
+  marked: ^1.2.7
   mini-css-extract-plugin: ^1.3.4
-  mui-rte: ^1.26.2
   nanoid: ^3.1.16
   nanoid-good: ^3.1.0
   natsort: ^2.0.2

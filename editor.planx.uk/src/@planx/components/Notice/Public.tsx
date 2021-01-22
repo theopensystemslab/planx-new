@@ -7,7 +7,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 export type Props = PublicProps<Notice>;
 
@@ -70,7 +70,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
       <div className={styles.container}>
         <div className={styles.content}>
           <h3 className={styles.title}>{props.title}</h3>
-          <ReactMarkdown
+          <ReactMarkdownOrHtml
             className={styles.description}
             source={props.description}
           />
