@@ -153,7 +153,10 @@ const RichTextInput: React.FC<Props> = (props) => {
           );
 
           const newHtmlContentNonEmpty =
-            newHtmlContent === "<p></p>" ? "" : newHtmlContent;
+            typeof newHtmlContent === "string" &&
+            newHtmlContent.trim() === "<p></p>"
+              ? ""
+              : newHtmlContent;
 
           if (props.onChange && newHtmlContent !== props.value) {
             const changeEvent = ({
