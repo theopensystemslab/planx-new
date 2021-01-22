@@ -14,6 +14,7 @@ export interface IQuestion {
   info?: string;
   policyRef?: string;
   howMeasured?: string;
+  definitionImg?: string;
   img?: string;
   responses: {
     id: string;
@@ -61,6 +62,7 @@ const Question: React.FC<IQuestion> = (props) => {
           info={props.info}
           policyRef={props.policyRef}
           howMeasured={props.howMeasured}
+          definitionImg={props.definitionImg}
           img={props.img}
         />
 
