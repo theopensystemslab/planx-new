@@ -34,13 +34,7 @@ const Responses = ({ responses }: any) => (
         id={question.id}
         question={question}
         response={selections.map((s: any) => s.data.text).join(",")}
-      >
-        {question.data.info && (
-          <Box>
-            <Typography variant="body2">Why it matters text</Typography>
-          </Box>
-        )}
-      </ResultReason>
+      />
     ))}
   </>
 );

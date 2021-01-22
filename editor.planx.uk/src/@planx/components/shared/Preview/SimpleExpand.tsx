@@ -10,7 +10,7 @@ const SimpleExpand = ({ children, buttonText }: any) => {
       <Collapse in={show}>
         <div>{children}</div>
       </Collapse>
-      <Box color="text.secondary">
+      <Box color="background.dark">
         <Button
           size="large"
           fullWidth

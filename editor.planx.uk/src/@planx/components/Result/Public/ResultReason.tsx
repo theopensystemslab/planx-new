@@ -14,6 +14,12 @@ interface IResultReason {
 }
 
 const useClasses = makeStyles((theme: Theme) => ({
+  root: {
+    cursor: "pointer",
+    "&:hover": {
+      background: theme.palette.grey,
+    },
+  },
   moreInfo: {
     "& a": {
       color: theme.palette.text.disabled,
@@ -23,7 +29,7 @@ const useClasses = makeStyles((theme: Theme) => ({
 
 const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
   const record = useStore((state) => state.record);
-  const [show, setShow] = React.useState(true);
+  const [show, setShow] = React.useState(false);
 
   const classes = useClasses();
 
@@ -42,6 +48,8 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
       flexDirection="column"
       mb={0.5}
       pl={1.5}
+      py={0.5}
+      className={classes.root}
     >
       <Box
         display="flex"
@@ -51,7 +59,9 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
         onClick={toggleAdditionalInfo}
       >
         <Box flexGrow={1}>
-          {question.data.text} <strong>{response}</strong>
+          <Typography variant="body2">
+            {question.data.text} <strong>{response}</strong>
+          </Typography>
         </Box>
         <Box color="secondary.dark">
           <Button color="inherit" onClick={handleChange}>
@@ -62,7 +72,9 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
       {question.data.info && (
         <Collapse in={show}>
           <Box py={1.5} color="background.dark" className={classes.moreInfo}>
-            <Typography color="inherit">{question.data.info}</Typography>
+            <Typography color="inherit" variant="body2">
+              {question.data.info}
+            </Typography>
             {question.data.policyRef && (
               <a href={question.data.policyRef} target="_blank">
                 {question.data.policyRef}
