@@ -48,7 +48,7 @@ test("answers are submitted in order they were supplied", async () => {
   userEvent.click(screen.getByText("Flat"));
   userEvent.click(screen.getByText("House"));
 
-  waitFor(async () => {
+  await waitFor(async () => {
     userEvent.click(screen.getByText("Continue"));
   });
 

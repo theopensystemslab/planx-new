@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import React, { ReactElement } from "react";
 
 export interface Props {
-  error?: string;
+  error: string | string[] | undefined;
   children?: ReactElement;
 }
 
