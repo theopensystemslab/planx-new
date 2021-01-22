@@ -13,7 +13,9 @@ test("renders correctly", () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("Numberwang!");
 
-  expect(screen.getByText("Continue").closest("button")).toBeDisabled();
+  userEvent.click(screen.getByText("Continue"));
+
+  expect(screen.getByText("Enter a number")).toBeTruthy();
 
   userEvent.type(screen.getByPlaceholderText("enter value"), "3");
 
