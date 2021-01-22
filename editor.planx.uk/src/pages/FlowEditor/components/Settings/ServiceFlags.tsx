@@ -48,7 +48,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
     },
-    validate: () => { },
+    validate: () => {},
   });
   const deleteFlagSet = (index: number) => {
     formik.setFieldValue(
@@ -99,7 +99,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
         <Typography variant="h3" gutterBottom>
           <strong>Service flags</strong>
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1">
           Manage the flag sets that this service uses. Flags at the top of a set
           override flags below.
         </Typography>
@@ -167,14 +167,14 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
                             />
                           </InputRowItem>
                         ) : (
-                            <InputRowLabel>
-                              <Box
-                                className={classes.swatch}
-                                bgcolor={flag.color}
-                              />
-                              {flag.color}
-                            </InputRowLabel>
-                          )}
+                          <InputRowLabel>
+                            <Box
+                              className={classes.swatch}
+                              bgcolor={flag.color}
+                            />
+                            {flag.color}
+                          </InputRowLabel>
+                        )}
                       </InputRow>
                       <InputRow>
                         <Input

@@ -17,7 +17,7 @@ const DataManagerSettings = () => {
         <Typography variant="h3" gutterBottom>
           <strong>Data Manager</strong>
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1">
           Manage the data that your service uses and makes available via its API
         </Typography>
       </Box>

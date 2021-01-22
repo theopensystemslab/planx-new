@@ -85,7 +85,9 @@ const Preview: React.FC<{
 
   return (
     <>
-      {!embedded && <Header bgcolor={theme.primary} logo={theme.logo} />}
+      {!embedded && (
+        <Header bgcolor={theme.primary} logo={theme.logo} phaseBanner />
+      )}
       <div
         style={{
           paddingTop: 40,
