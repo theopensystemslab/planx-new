@@ -18,8 +18,6 @@ dependencies:
   classnames: 2.2.6
   date-fns: 2.16.1
   draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
-  draft-js-export-markdown: 1.4.0_draft-js@0.11.7
-  draft-js-import-markdown: 1.4.0_draft-js@0.11.7
   draftjs-to-html: 0.9.1
   formik: 2.2.4_react@16.14.0
   graphql: 15.4.0
@@ -7163,12 +7161,12 @@ packages:
     resolution:
       integrity: sha512-EZD2ckZysv8MMt4J6HSvS9K2GdtlZtdBncKAmF9lr2n0c9dJUaUN88PSTjvgwCgQPWKTkERXITgS6JJRAnljtg==
   /core-js/1.2.7:
-    deprecated: 'core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.'
+    deprecated: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
     dev: true
     resolution:
       integrity: sha1-ZSKUwUZR2yj6k70tX/KYOk8IxjY=
   /core-js/2.6.11:
-    deprecated: 'core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.'
+    deprecated: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
     requiresBuild: true
     resolution:
       integrity: sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
@@ -8193,47 +8191,6 @@ packages:
       react: '>=16.8.0'
     resolution:
       integrity: sha512-tmLab3cXCn6PtZYl9V8r/nB2m+7/nCNrwo0B3kTHo/2lRBHr+1en1VNOQt2wIt0ajanAnxquZ00WPCyxe6cNFQ==
-  /draft-js-export-markdown/1.4.0_draft-js@0.11.7:
-    dependencies:
-      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
-      draft-js-utils: 1.4.0_draft-js@0.11.7
-    dev: false
-    peerDependencies:
-      draft-js: '>=0.10.0'
-      immutable: 3.x.x
-    resolution:
-      integrity: sha512-blfAvlhGhjVlHNaZ5WJKlrXhcftnwwC5VC+Eu3ztOGpGLaOom4hxhBjbKEWjvbQZJ9zL+xo57ukm39prYZMG5Q==
-  /draft-js-import-element/1.4.0_draft-js@0.11.7:
-    dependencies:
-      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
-      draft-js-utils: 1.4.0_draft-js@0.11.7
-      synthetic-dom: 1.4.0
-    dev: false
-    peerDependencies:
-      draft-js: '>=0.10.0'
-      immutable: 3.x.x
-    resolution:
-      integrity: sha512-WmYT5PrCm47lGL5FkH6sRO3TTAcn7qNHsD3igiPqLG/RXrqyKrqN4+wBgbcT2lhna/yfWTRtgzAbQsSJoS1Meg==
-  /draft-js-import-markdown/1.4.0_draft-js@0.11.7:
-    dependencies:
-      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
-      draft-js-import-element: 1.4.0_draft-js@0.11.7
-      synthetic-dom: 1.4.0
-    dev: false
-    peerDependencies:
-      draft-js: '>=0.10.0'
-      immutable: 3.x.x
-    resolution:
-      integrity: sha512-mpKUxzDM+x7W+eCZegCAxl3QJzNGA3Y+DbBMMekzCdPHONLJAZ1QYYjegbXa6+pZGq8FAIhgWaVbfKWMb8M8dQ==
-  /draft-js-utils/1.4.0_draft-js@0.11.7:
-    dependencies:
-      draft-js: 0.11.7_react-dom@16.14.0+react@16.14.0
-    dev: false
-    peerDependencies:
-      draft-js: '>=0.10.0'
-      immutable: 3.x.x
-    resolution:
-      integrity: sha512-8s9FFuKC+lOWGwJ0b3om2PF+uXrqQPaEQlPJI7UxdzxTYGMeKouMPA9+YlPn52zcAVElIZtd2tXj6eQmvlKelw==
   /draft-js/0.11.7_react-dom@16.14.0+react@16.14.0:
     dependencies:
       fbjs: 2.0.0
@@ -16223,7 +16180,7 @@ packages:
       request-promise-core: 1.1.4_request@2.88.2
       stealthy-require: 1.1.1
       tough-cookie: 2.5.0
-    deprecated: 'request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142'
+    deprecated: request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
     dev: false
     engines:
       node: '>=0.12.0'
@@ -16253,7 +16210,7 @@ packages:
       tough-cookie: 2.5.0
       tunnel-agent: 0.6.0
       uuid: 3.4.0
-    deprecated: 'request has been deprecated, see https://github.com/request/request/issues/3142'
+    deprecated: request has been deprecated, see https://github.com/request/request/issues/3142
     engines:
       node: '>= 6'
     resolution:
@@ -16332,7 +16289,7 @@ packages:
     resolution:
       integrity: sha512-QEb4A76c8Mi7I3xNKXlRKQSlLBwjUV/ULFMP+G7n3/7tJZ8MG5wsZ3ucxP1Jz8Vevn6fnJsxDx9cIls+utGzPQ==
   /resolve-url/0.2.1:
-    deprecated: 'https://github.com/lydell/resolve-url#deprecated'
+    deprecated: https://github.com/lydell/resolve-url#deprecated
     resolution:
       integrity: sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
   /resolve/1.18.1:
@@ -17707,10 +17664,6 @@ packages:
       node: '>= 0.11.15'
     resolution:
       integrity: sha512-NvwWb5AdyTtmFNa1x0ksJakFUV/WJ+z7iRrYGU1xZew77Qd+kMrZKsk3uatCckk6yPNpbHhRcOO+JBU+ohcMBw==
-  /synthetic-dom/1.4.0:
-    dev: false
-    resolution:
-      integrity: sha512-mHv51ZsmZ+ShT/4s5kg+MGUIhY7Ltq4v03xpN1c8T1Krb5pScsh/lzEjyhrVD0soVDbThbd2e+4dD9vnDG4rhg==
   /table/5.4.6:
     dependencies:
       ajv: 6.12.6
@@ -18455,7 +18408,7 @@ packages:
     resolution:
       integrity: sha512-B0yRTzYdUCCn9n+F4+Gh4yIDtMQcaJsmYBDsTSG8g/OejKBodLQ2IHfN3bM7jUsRXndopT7OIXWdYqc1fjmV6g==
   /urix/0.1.0:
-    deprecated: 'Please see https://github.com/lydell/urix#deprecated'
+    deprecated: Please see https://github.com/lydell/urix#deprecated
     resolution:
       integrity: sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
   /url-loader/4.1.1_file-loader@6.1.1+webpack@4.44.2:
@@ -19462,8 +19415,6 @@ specifiers:
   css-loader: ^5.0.1
   date-fns: ^2.16.1
   draft-js: ^0.11.7
-  draft-js-export-markdown: ^1.4.0
-  draft-js-import-markdown: ^1.4.0
   draftjs-to-html: ^0.9.1
   eslint-plugin-simple-import-sort: ^5.0.3
   formik: ^2.2.4
