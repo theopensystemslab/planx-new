@@ -62,7 +62,7 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
         style={{
           paddingTop: 40,
           display: "flex",
-          flex: 1,
+          flex: "1 0 auto",
           flexDirection: "column",
           alignItems: "center",
           background: "#fff",
