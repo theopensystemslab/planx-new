@@ -341,7 +341,11 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
   breadcrumbs: {},
 
-  async startSession({ passport }: any) {
+  async startSession({
+    passport,
+  }: {
+    passport: { data: object; info: object };
+  }) {
     // ------ BEGIN PASSPORT DATA OVERRIDES ------
 
     // TODO: move all of the logic in this block out of here and update the API

@@ -200,7 +200,7 @@ const Node: React.FC<any> = (props: Props) => {
 };
 
 function exhaustiveCheck(type: never): never {
-  throw new Error("Missing type");
+  throw new Error(`Missing type ${type}`);
 }
 
 export default Node;
