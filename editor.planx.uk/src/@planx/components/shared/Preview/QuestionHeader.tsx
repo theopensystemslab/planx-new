@@ -15,6 +15,7 @@ interface IQuestionHeader {
   info?: string;
   policyRef?: string;
   howMeasured?: string;
+  definitionImg?: string;
   img?: string;
 }
 
@@ -39,6 +40,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   info,
   policyRef,
   howMeasured,
+  definitionImg,
   img,
 }) => {
   const [open, setOpen] = React.useState(false);
@@ -89,7 +91,16 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         )}
         {howMeasured && (
           <MoreInfoSection title="How is it defined?">
-            <ReactMarkdownOrHtml source={howMeasured} />
+            <>
+              {definitionImg && (
+                <img
+                  src={definitionImg}
+                  alt="definition image"
+                  className={classes.image}
+                />
+              )}
+              <ReactMarkdownOrHtml source={howMeasured} />
+            </>
           </MoreInfoSection>
         )}
       </MoreInfo>
