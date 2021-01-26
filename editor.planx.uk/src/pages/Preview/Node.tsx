@@ -17,13 +17,13 @@ import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
 
 export type handleSubmit = (_?: componentOutput) => void;
 interface Props {
   handleSubmit: handleSubmit;
   node: node;
+  data?: any;
 }
 
 const Node: React.FC<any> = (props: Props) => {
@@ -118,9 +118,9 @@ const Node: React.FC<any> = (props: Props) => {
       );
 
     case TYPES.Result:
-      const data = reportData();
+      const data = reportData(props.data.flagSet);
 
-      const { flag, responses } = data["Planning permission"];
+      const { flag, responses } = data[props.data.flagSet];
 
       return (
         <Result
@@ -130,8 +130,8 @@ const Node: React.FC<any> = (props: Props) => {
             background: flag.bgColor,
           }}
           headingTitle={flag.text}
-          subheading=""
-          reasonsTitle="Reasons"
+          subheading={props.data.flagSet}
+          reasonsTitle="Responses"
           responses={responses}
         />
       );
