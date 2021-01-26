@@ -129,4 +129,11 @@ const theme = createMuiTheme({
   },
 });
 
+theme.props = {
+  MuiButton: {
+    // Removes default box shadow on buttons
+    disableElevation: true,
+  },
+};
+
 export default theme;
