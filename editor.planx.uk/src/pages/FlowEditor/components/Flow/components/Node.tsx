@@ -46,7 +46,15 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Pay:
       return <Question {...props} text={node?.data?.title ?? "Pay"} />;
     case TYPES.Result:
-      return <Question {...props} text="(Result)" />;
+      return (
+        <Question
+          {...props}
+          text={[
+            node?.data?.flagSet ?? "Result",
+            !node?.data?.visible ? "*" : "",
+          ].join("")}
+        />
+      );
     case TYPES.Review:
       return <Question {...props} text={node?.data?.title ?? "Review"} />;
     case TYPES.Send:
