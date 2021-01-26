@@ -299,7 +299,7 @@ class Map extends React.Component<
   }
 
   render() {
-    const classes = this.props.classes as any;
+    const classes = this.props as any;
     const { layer, help, showStyles, loading } = this.state;
     return (
       <div>
