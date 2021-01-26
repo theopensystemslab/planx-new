@@ -62,6 +62,7 @@ dependencies:
   zustand: 3.1.4_react@17.0.1
 devDependencies:
   '@babel/core': 7.12.8
+  '@craco/craco': 6.0.0_react-scripts@4.0.1
   '@react-theming/storybook-addon': 1.0.3_54a30fc4c43e38dd78603ca5e62f7bcd
   '@storybook/addon-actions': 6.1.5_4695a47c40ef995f48f8c834d2fb82ec
   '@storybook/addon-essentials': 6.1.5_c3e406ee5bcc6acacf5461173b7ebf72
@@ -83,6 +84,7 @@ devDependencies:
   '@types/react-beautiful-dnd': 13.0.0
   '@types/react-color': 3.0.4
   '@types/react-dom': 17.0.0
+  craco-esbuild: 0.2.0_958940a2393ce5331932c17671f9ad20
   css-loader: 5.0.1
   eslint-plugin-simple-import-sort: 5.0.3
   husky: 4.3.0
@@ -3113,6 +3115,21 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-v9kIhKwjeZThiWrLmj0y17CWoyddASLj9O2yvbZkbvw/N3rWOYy9zkV66ursAoVr0mV15bL8g0c4QZUE6cdDoQ==
+  /@craco/craco/6.0.0_react-scripts@4.0.1:
+    dependencies:
+      cross-spawn: 7.0.3
+      lodash: 4.17.20
+      react-scripts: 4.0.1_25cdfeca2612d82db237d04dbdcb46c9
+      semver: 7.3.4
+      webpack-merge: 4.2.2
+    dev: true
+    engines:
+      node: '>=6'
+    hasBin: true
+    peerDependencies:
+      react-scripts: ^4.0.0
+    resolution:
+      integrity: sha512-NSgcGqTlQ+XTBJ/AhE0ngdfab5xIyx/06yrRPkvDH02V90ejrL6bSM54k3+h3OjGE/SO7nmF1MqfFwemPo8kVw==
   /@csstools/convert-colors/1.4.0:
     dev: false
     engines:
@@ -8099,12 +8116,12 @@ packages:
     resolution:
       integrity: sha512-V5qQZVAr9K0xu7jXg1M7qTEwuxUgqr7dUOezGaNa7i+Xn9oXAU/d1fzqD9ObuwpVQOaorO5s70ckyi1woP9lVA==
   /core-js/1.2.7:
-    deprecated: 'core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.'
+    deprecated: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
     dev: true
     resolution:
       integrity: sha1-ZSKUwUZR2yj6k70tX/KYOk8IxjY=
   /core-js/2.6.11:
-    deprecated: 'core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.'
+    deprecated: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
     requiresBuild: true
     resolution:
       integrity: sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
@@ -8179,6 +8196,18 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-vqHT+9o67sMwJ5hUd/BAOYeemkU+MuFRsK2c36Xc3eefQpAsp1kAsyDxEDcc5JS1+y9l/XHPrIsVTcyGGmkUUQ==
+  /craco-esbuild/0.2.0_958940a2393ce5331932c17671f9ad20:
+    dependencies:
+      '@craco/craco': 6.0.0_react-scripts@4.0.1
+      esbuild-jest: 0.3.0
+      esbuild-loader: 2.8.0
+      react-scripts: 4.0.1_25cdfeca2612d82db237d04dbdcb46c9
+    dev: true
+    peerDependencies:
+      '@craco/craco': ^5.5.0
+      react-scripts: ^3.3.0
+    resolution:
+      integrity: sha512-BjY+pLbXPGGlK1Lpo0VUvqkeD0NNMIkwLG2XknJ31o5sdqwX0dPn9YbnD9eWo9cASkdTr7N9qtVNDj1AKfMikA==
   /create-ecdh/4.0.4:
     dependencies:
       bn.js: 4.11.9
@@ -9494,6 +9523,29 @@ packages:
       ext: 1.4.0
     resolution:
       integrity: sha512-NJ6Yn3FuDinBaBRWl/q5X/s4koRHBrgKAu+yGI6JCBeiu3qrcbJhwT2GeR/EXVfylRk8dpQVJoLEFhK+Mu31NA==
+  /esbuild-jest/0.3.0:
+    dev: true
+    peerDependencies:
+      esbuild: '>=0.8.16'
+    resolution:
+      integrity: sha512-J1ZHN4IbQiLJAsCMK2XkPYZsTrD8ius+1B09RVqfrvmT+BnwGdR6CLvRq6DGopOaEmdkr4AIk/J6LQUhRQDsSg==
+  /esbuild-loader/2.8.0:
+    dependencies:
+      esbuild: 0.8.35
+      loader-utils: 2.0.0
+      type-fest: 0.20.2
+      webpack-sources: 2.2.0
+    dev: true
+    peerDependencies:
+      webpack: ^4.40.0 || ^5.0.0
+    resolution:
+      integrity: sha512-Pv8WPtSozaGLryTi4c91fMmho7DRhy6zRyh6v3R5DGMPBuXhyVoBdMY4we9uCa0m/CvM5v/XvWyltAsjQ+Wx8w==
+  /esbuild/0.8.35:
+    dev: true
+    hasBin: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-iYCFo2XylOcyVRFK/mjZ8PLRaVJ956IYYzeP39weG4FEHMvXMw/M+Z1OCapXq7bnKMC/0bWjYO/d0CoNbOf1GA==
   /escalade/3.1.1:
     engines:
       node: '>=6'
@@ -17311,7 +17363,7 @@ packages:
       request-promise-core: 1.1.4_request@2.88.2
       stealthy-require: 1.1.1
       tough-cookie: 2.5.0
-    deprecated: 'request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142'
+    deprecated: request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
     dev: false
     engines:
       node: '>=0.12.0'
@@ -17341,7 +17393,7 @@ packages:
       tough-cookie: 2.5.0
       tunnel-agent: 0.6.0
       uuid: 3.4.0
-    deprecated: 'request has been deprecated, see https://github.com/request/request/issues/3142'
+    deprecated: request has been deprecated, see https://github.com/request/request/issues/3142
     engines:
       node: '>= 6'
     resolution:
@@ -17426,7 +17478,7 @@ packages:
     resolution:
       integrity: sha512-QEb4A76c8Mi7I3xNKXlRKQSlLBwjUV/ULFMP+G7n3/7tJZ8MG5wsZ3ucxP1Jz8Vevn6fnJsxDx9cIls+utGzPQ==
   /resolve-url/0.2.1:
-    deprecated: 'https://github.com/lydell/resolve-url#deprecated'
+    deprecated: https://github.com/lydell/resolve-url#deprecated
     resolution:
       integrity: sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
   /resolve/1.18.1:
@@ -19253,6 +19305,12 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-OdjXJxnCN1AvyLSzeKIgXTXxV+99ZuXl3Hpo9XpJAv9MBcHrrJOQ5kV7ypXOuQie+AmWG25hLbiKdwYTifzcfQ==
+  /type-fest/0.20.2:
+    dev: true
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-Ne+eE4r0/iWnpAxD852z3A+N0Bt5RN//NjJwRd2VFHEmrywxf5vsZlh4R6lixl6B+wz/8d+maTSAkN1FIkI3LQ==
   /type-fest/0.3.1:
     dev: false
     engines:
@@ -19527,7 +19585,7 @@ packages:
     resolution:
       integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   /urix/0.1.0:
-    deprecated: 'Please see https://github.com/lydell/urix#deprecated'
+    deprecated: Please see https://github.com/lydell/urix#deprecated
     resolution:
       integrity: sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
   /url-loader/4.1.1_file-loader@6.1.1+webpack@4.44.2:
@@ -19994,12 +20052,27 @@ packages:
       webpack: 2 || 3 || 4
     resolution:
       integrity: sha512-9S6YyKKKh/Oz/eryM1RyLVDVmy3NSPV0JXMRhZ18fJsq+AwGxUY34X54VNwkzYcEmEkDwNxuEOboCZEebJXBAQ==
+  /webpack-merge/4.2.2:
+    dependencies:
+      lodash: 4.17.20
+    dev: true
+    resolution:
+      integrity: sha512-TUE1UGoTX2Cd42j3krGYqObZbOD+xF7u28WB7tfUordytSjbWTIjK/8V0amkBfTYN4/pB/GIDlJZZ657BGG19g==
   /webpack-sources/1.4.3:
     dependencies:
       source-list-map: 2.0.1
       source-map: 0.6.1
     resolution:
       integrity: sha512-lgTS3Xhv1lCOKo7SA5TjKXMjpSM4sBjNV5+q2bqesbSPs5FjGmU6jjtBSkX9b4qW87vDIsCIlUPOEhbZrMdjeQ==
+  /webpack-sources/2.2.0:
+    dependencies:
+      source-list-map: 2.0.1
+      source-map: 0.6.1
+    dev: true
+    engines:
+      node: '>=10.13.0'
+    resolution:
+      integrity: sha512-bQsA24JLwcnWGArOKUxYKhX3Mz/nK1Xf6hxullKERyktjNMC4x8koOeaDNTA2fEJ09BdWLbM/iTW0ithREUP0w==
   /webpack-virtual-modules/0.2.2:
     dependencies:
       debug: 3.2.7
@@ -20518,6 +20591,7 @@ packages:
 specifiers:
   '@apollo/client': ^3.2.5
   '@babel/core': ^7.12.3
+  '@craco/craco': ^6.0.0
   '@ctrl/tinycolor': ^3.1.6
   '@draft-js-plugins/anchor': ^4.0.0
   '@draft-js-plugins/buttons': ^4.0.0
@@ -20555,6 +20629,7 @@ specifiers:
   axios: ^0.19.2
   axios-hooks: ^2.1.0
   classnames: ^2.2.6
+  craco-esbuild: ^0.2.0
   css-loader: ^5.0.1
   date-fns: ^2.16.1
   draft-js: ^0.11.7
