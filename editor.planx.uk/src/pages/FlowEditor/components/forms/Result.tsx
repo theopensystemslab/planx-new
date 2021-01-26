@@ -3,7 +3,9 @@ import { ICONS } from "@planx/components/ui";
 import { useFormik } from "formik";
 import flags, { flatFlags } from "pages/FlowEditor/data/flags";
 import React from "react";
-import { InputRow, ModalSection, ModalSectionContent } from "ui";
+import InputRow from "ui/InputRow";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
 
 export interface Props {
   id?: string;

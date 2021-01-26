@@ -1,10 +1,10 @@
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import Card from "@planx/components/shared/Preview/Card";
-import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
+import Card from "../../shared/Preview/Card";
+import SimpleExpand from "../../shared/Preview/SimpleExpand";
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
 
@@ -70,10 +70,6 @@ const Result: React.FC<Props> = ({
           {reasonsTitle}
         </Typography>
         <Box mb={3}>
-          {/* <Box mb={1} color="text.secondary">
-            Planning Permission
-          </Box> */}
-
           <Responses responses={visibleResponses} />
 
           {hiddenResponses.length > 0 && (
@@ -88,9 +84,6 @@ const Result: React.FC<Props> = ({
           )}
         </Box>
       </Box>
-      {/* <Box color="text.secondary" pt={2}>
-        You will not be able to make further changes
-      </Box> */}
     </Card>
   );
 };

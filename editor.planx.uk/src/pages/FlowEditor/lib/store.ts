@@ -18,6 +18,7 @@ import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import create from "zustand";
 import vanillaCreate from "zustand/vanilla";
+
 import { client } from "../../../lib/graphql";
 import { FlowLayout } from "../components/Flow";
 import { flatFlags } from "../data/flags";
@@ -26,6 +27,7 @@ import { connectToDB, getConnection } from "./sharedb";
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
 let doc;
+let globalFlag;
 
 const send = (ops) => {
   if (ops.length > 0) {
@@ -73,7 +75,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   currentCard: () => Record<string, any> | null;
   passport: passport;
   record: any; //: () => void;
-  reportData: any; //: () => any;
+  reportData: (string) => any;
   resetPreview: any; //: () => void;
   sessionId: any; //: string;
   setFlow: any; //: () => void;
@@ -415,8 +417,112 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   },
 
   upcomingCardIds() {
-    // const { flow, breadcrumbs, passport, collectedFlags } = get();
+    const { flow, breadcrumbs, passport } = get();
+
     const ids: Set<string> = new Set();
+
+    const mostToLeastNumberOfValues = (b, a) =>
+      String(a.data?.val).split(",").length -
+      String(b.data?.val).split(",").length;
+
+    const nodeIdsConnectedFrom = (source: string) => {
+      return (flow[source]?.edges ?? [])
+        .filter(
+          (id) =>
+            !Object.keys(breadcrumbs).includes(id) &&
+            (!SUPPORTED_DECISION_TYPES.includes(flow[id].type) ||
+              flow[id]?.edges?.length > 0)
+        )
+        .forEach((id) => {
+          if ([TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type)) {
+            nodeIdsConnectedFrom(id);
+          } else {
+            const fn = flow[id]?.data?.fn;
+
+            let passportValues =
+              fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
+
+            if (fn && (fn === "flag" || passportValues !== undefined)) {
+              const responses = flow[id]?.edges.map((id) => ({
+                id,
+                ...flow[id],
+              }));
+
+              let responseThatCanBeAutoAnswered;
+              const sortedResponses = responses
+                .sort(mostToLeastNumberOfValues)
+                .filter((response) => response.data?.val);
+
+              if (passportValues !== undefined) {
+                if (!Array.isArray(passportValues))
+                  passportValues = [passportValues];
+
+                passportValues = (passportValues || []).filter((pv) =>
+                  sortedResponses.some((r) => pv.startsWith(r.data.val))
+                );
+
+                if (passportValues.length > 0) {
+                  responseThatCanBeAutoAnswered = sortedResponses.find((r) => {
+                    const responseValues = String(r.data.val).split(",").sort();
+                    return String(responseValues) === String(passportValues);
+                  });
+
+                  if (!responseThatCanBeAutoAnswered) {
+                    responseThatCanBeAutoAnswered = sortedResponses.find(
+                      (r) => {
+                        const responseValues = String(r.data.val)
+                          .split(",")
+                          .sort();
+                        for (const responseValue of responseValues) {
+                          // console.log({ value, val });
+                          return passportValues.every((passportValue) =>
+                            String(passportValue).startsWith(responseValue)
+                          );
+                        }
+                      }
+                    );
+                  }
+                }
+              }
+
+              if (!responseThatCanBeAutoAnswered) {
+                responseThatCanBeAutoAnswered = responses.find(
+                  (r) => !r.data?.val
+                );
+              }
+
+              if (responseThatCanBeAutoAnswered) {
+                if (fn !== "flag") {
+                  set({
+                    breadcrumbs: {
+                      ...breadcrumbs,
+                      [id]: {
+                        answers: [responseThatCanBeAutoAnswered.id],
+                        auto: true,
+                      },
+                    },
+                  });
+                }
+
+                nodeIdsConnectedFrom(responseThatCanBeAutoAnswered.id);
+              } else {
+                ids.add(id);
+              }
+            } else {
+              ids.add(id);
+            }
+          }
+        });
+    };
+
+    Object.entries(breadcrumbs)
+      .reverse()
+      .forEach(([, { answers }]: any) => {
+        answers.forEach((answer) => nodeIdsConnectedFrom(answer));
+      });
+
+    nodeIdsConnectedFrom(ROOT_NODE_KEY);
+
     return Array.from(ids);
   },
 
@@ -446,13 +552,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       .filter(Boolean);
   },
 
-  // collectedFlags(upToNodeId) {
-  //   const { breadcrumbs, flow } = get();
-  //   return Object.values(breadcrumbs)
-  //     .flatMap((bc) => bc.answers)
-  //     .map((id) => flow[id]?.data?.flag)
-  //     .filter(Boolean);
-  // },
+  // currently only used by tests
   collectedFlags(upToNodeId) {
     const { breadcrumbs, flow } = get();
     let include = true;
@@ -628,7 +728,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     }
   },
 
-  reportData(flagSet = "Planning permission") {
+  reportData(flagSet) {
     const { breadcrumbs, flow } = get();
 
     // const categories = Array.from(new Set(flags.map((f) => f.category)));
@@ -658,6 +758,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         bgColor: "#EEEEEE",
         color: tinycolor("black").toHexString(),
       };
+      globalFlag = flag.value;
 
       const responses = Object.entries(breadcrumbs)
         .map(
