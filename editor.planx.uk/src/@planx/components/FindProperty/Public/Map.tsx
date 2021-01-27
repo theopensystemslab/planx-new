@@ -14,7 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import DrawIcon from "@material-ui/icons/Create";
 import LayersIcon from "@material-ui/icons/LayersOutlined";
 import turfArea from "@turf/area";
-import React, { useEffect, useRef,useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactMapboxGl, { Feature, Layer, Source } from "react-mapbox-gl";
 
 export default Map;
@@ -77,10 +77,8 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-// TODO: Move to env var
 const Mapbox = ReactMapboxGl({
-  accessToken:
-    "pk.eyJ1Ijoib3BlbnN5c3RlbXNsYWIiLCJhIjoiY2sybHJ6cnY2MGFkaTNjcHIwanV1eGRlbCJ9.xAHUuQo1RAnzwOlN90SGVQ",
+  accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN ?? "",
 });
 
 interface Props {
@@ -119,8 +117,7 @@ function Map(props: Props) {
             tileJsonSource={{
               type: "raster",
               tiles: [
-                // TODO: Move key to env var
-                "https://api.os.uk/maps/raster/v1/zxy/Road_3857/{z}/{x}/{y}.png?key=se00yjrqJx8ypuQZ84GGdvYrzOEXJzOU",
+                `https://api.os.uk/maps/raster/v1/zxy/Road_3857/{z}/{x}/{y}.png?key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`,
               ],
               tileSize: 256,
             }}
