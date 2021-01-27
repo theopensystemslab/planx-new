@@ -34,7 +34,23 @@ const sorter = natsort({ insensitive: true });
 export default Component;
 
 function Component(props: Props) {
-  const [address, setAddress] = useState<Address | undefined>(undefined);
+  const [address, setAddress] = useState<Address | undefined>();
+  // Mock data:
+  // {
+  // UPRN: 200003453486,
+  // team: "southwark",
+  // organisation: null,
+  // sao: null,
+  // pao: "59",
+  // street: "COBOURG ROAD",
+  // town: "LONDON",
+  // postcode: "SE5 0HU",
+  // blpu_code: "RD04",
+  // planx_description: "Terrace",
+  // planx_value: "residential.dwelling.house.terrace",
+  // x: 533671,
+  // y: 178044,
+  // }
   const [id, flow, startSession] = useStore((state) => [
     state.id,
     state.flow,
@@ -48,8 +64,7 @@ function Component(props: Props) {
   if (!address) {
     return <GetAddress setAddress={setAddress} />;
   } else if (constraints) {
-    // Example data of `contraints`:
-    //  {
+    // const mockConstraints = {
     //   "property.c31": {
     //     value: false,
     //   },
@@ -266,7 +281,6 @@ function GetAddress({
             lat={51.2754385}
             lng={1.0848595}
             setBoundary={(val: any) => setBoundary(val)}
-            isDrawable
           />
 
           {boundary && (
@@ -359,7 +373,7 @@ interface Option extends Address {
   title: string;
 }
 
-const propertyInformationStyles = makeStyles((theme) => ({
+const useClasses = makeStyles((theme) => ({
   map: {
     padding: theme.spacing(1, 0),
   },
@@ -384,12 +398,12 @@ export function PropertyInformation(props: any) {
     lng,
     handleSubmit,
   } = props;
-  const styles = propertyInformationStyles();
+  const styles = useClasses();
   return (
     <Card handleSubmit={handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
       <Box className={styles.map}>
-        <Map zoom={18} lat={lat} lng={lng} setBoundary={console.log} />
+        <Map zoom={18} lat={lat} lng={lng} />
         <Box color="text.secondary" textAlign="right">
           <Button variant="text" color="inherit">
             Redraw boundary
@@ -451,11 +465,11 @@ function PropertyConstraints({ constraintsData }: any) {
 }
 
 function Constraint({ children, color, ...props }: any) {
-  const styles = propertyInformationStyles();
+  const classes = useClasses();
   const theme = useTheme();
   return (
     <Box
-      className={styles.constraint}
+      className={classes.constraint}
       bgcolor={color ? color : "background.paper"}
       color={
         color

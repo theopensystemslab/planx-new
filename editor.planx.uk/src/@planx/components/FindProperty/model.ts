@@ -11,7 +11,7 @@ export const parseFindProperty = (
 export interface Address {
   UPRN: number;
   team: string;
-  sao: string;
+  sao: string | null;
   pao: string;
   organisation: string | null;
   street: string;
