@@ -7,11 +7,14 @@ import Button from "@material-ui/core/Button";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
 import type { Theme } from "@material-ui/core/styles";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import DrawIcon from "@material-ui/icons/Create";
 import LayersIcon from "@material-ui/icons/LayersOutlined";
-import MapStyleSwitcher from "@planx/components/FindProperty/Public/FindProperty/MapStyleSwitcher";
 import turfArea from "@turf/area";
 import mapboxgl from "mapbox-gl";
 import React from "react";
@@ -22,9 +25,8 @@ const styles = (theme: Theme) =>
       position: "relative",
       width: "100%",
       minHeight: 200,
-      // height: "50vh",
-      // maxHeight: 500,
-      // height: 300,
+      height: "50vh",
+      maxHeight: 500,
     },
     map: {
       position: "absolute",
@@ -77,6 +79,7 @@ const styles = (theme: Theme) =>
     },
   } as any);
 
+// TODO: Move to env var
 mapboxgl.accessToken =
   "pk.eyJ1Ijoib3BlbnN5c3RlbXNsYWIiLCJhIjoiY2sybHJ6cnY2MGFkaTNjcHIwanV1eGRlbCJ9.xAHUuQo1RAnzwOlN90SGVQ";
 
@@ -86,6 +89,7 @@ interface Props {
   zoom: number;
   setBoundary: Function;
   classes: Record<never, string>;
+  isDrawable?: boolean;
 }
 
 class Map extends React.Component<
@@ -100,7 +104,7 @@ class Map extends React.Component<
     super(props);
     this.state = {
       loading: true,
-      help: false,
+      help: Boolean(props.isDrawable),
       showStyles: false,
       layer: "",
     };
@@ -116,22 +120,18 @@ class Map extends React.Component<
       this.map.setStyle("mapbox://styles/mapbox/" + layer);
     } else {
       this.map.setStyle(
+        // TODO: move to env var
         "mapbox://styles/opensystemslab/ckbuw2xmi0mum1il33qucl4dv"
       );
     }
   };
 
   componentDidMount() {
+    // const { layer, help } = this.state;
     const { lat, lng, zoom } = this.props;
-    // this.map = new mapboxgl.Map({
-    //   container: this.mapContainer,
-    //   style: "mapbox://styles/opensystemslab/ckbuw2xmi0mum1il33qucl4dv",
-    //   zoom: zoom,
-    //   center: [lng, lat],
-    // });
-
     this.map = new mapboxgl.Map({
       container: this.mapContainer,
+      // TODO: move to env var
       style: "mapbox://styles/opensystemslab/ckbuw2xmi0mum1il33qucl4dv",
       zoom: zoom,
       center: [lng, lat],
@@ -148,6 +148,7 @@ class Map extends React.Component<
       map.addSource("wms-test-source", {
         type: "raster",
         tiles: [
+          // TODO: Move key to env var
           "https://api2.ordnancesurvey.co.uk/mapping_api/v1/service/zxy/EPSG%3A3857/Road 3857/{z}/{x}/{y}.png?key=As5amifxsKGqGC55OmHuqm2p3CGoAv85",
           // "https://imgproxy.planx.in/insecure/fill/256/256/sm/0/"
         ],
@@ -185,10 +186,14 @@ class Map extends React.Component<
 
     this.draw = new MapboxDraw({
       displayControlsDefault: false,
-      controls: {
-        polygon: false,
-        trash: false,
-      },
+      ...(this.props.isDrawable
+        ? {
+            controls: {
+              polygon: true,
+              trash: true,
+            },
+          }
+        : { controls: { polygon: false, trash: false } }),
       styles: [
         // ACTIVE (being drawn)
         // line stroke
@@ -343,6 +348,56 @@ class Map extends React.Component<
       </div>
     );
   }
+}
+
+const mapStyleSwitcherClasses = makeStyles((theme) => ({
+  root: {
+    padding: theme.spacing(0, 1),
+    backgroundColor: "#fff",
+    boxShadow: "0 0 0 2px rgba(0,0,0,.1)",
+    marginBottom: theme.spacing(1),
+  },
+  legend: {
+    fontSize: 12,
+    fontWeight: 700,
+  },
+  radioLabel: {
+    fontSize: 14,
+  },
+}));
+
+function MapStyleSwitcher({ handleChange, layer, options }: any) {
+  const classes = mapStyleSwitcherClasses();
+
+  return (
+    <FormControl component="fieldset" className={classes.root}>
+      <RadioGroup
+        aria-label="Map style"
+        name="mapstyle"
+        value={layer}
+        onChange={handleChange}
+      >
+        <FormControlLabel
+          value=""
+          control={<Radio size="small" />}
+          label="streets"
+          classes={{ label: classes.radioLabel }}
+        />
+        <FormControlLabel
+          value="dark-v10"
+          control={<Radio size="small" />}
+          label="dark"
+          classes={{ label: classes.radioLabel }}
+        />
+        <FormControlLabel
+          value="satellite-v9"
+          control={<Radio size="small" />}
+          label="Satellite"
+          classes={{ label: classes.radioLabel }}
+        />
+      </RadioGroup>
+    </FormControl>
+  );
 }
 
 export default withStyles(styles)(Map);

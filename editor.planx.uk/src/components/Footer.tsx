@@ -6,9 +6,10 @@ import React, { useState } from "react";
 
 const useClasses = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.background.default,
-    padding: `${theme.spacing(3)}px 0`,
+    backgroundColor: "#fff",
+    padding: `${theme.spacing(1.5)}px 0`,
     display: "flex",
+    flex: "0 0 auto",
     justifyContent: "space-between",
   },
   link: {

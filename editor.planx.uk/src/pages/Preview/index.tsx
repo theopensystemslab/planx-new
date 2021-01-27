@@ -92,7 +92,7 @@ const Preview: React.FC<{
         style={{
           paddingTop: 40,
           display: "flex",
-          flex: 1,
+          flex: "1 0 auto",
           flexDirection: "column",
           alignItems: "center",
           background: "#fff",
