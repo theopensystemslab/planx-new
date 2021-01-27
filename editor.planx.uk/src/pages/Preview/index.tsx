@@ -1,27 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { useCurrentRoute } from "react-navi";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import Modal from "../../components/InformationalModal";
-import {
-  InformationalModal,
-  Settings,
-} from "../FlowEditor/components/Settings/model";
-import { componentOutput, useStore } from "../FlowEditor/lib/store";
-import Node from "./Node";
+import { useStore } from "../FlowEditor/lib/store";
+import { PreviewContext } from "./Context";
 
 const Preview: React.FC<{
   children?: any;
   theme?: any;
   embedded?: boolean;
-  settings?: Settings;
 }> = ({
   embedded = false,
   theme = {
     primary: "#2c2c2c",
   },
-  settings,
   children,
 }) => {
   const [record, previousCard] = useStore((state) => [
@@ -30,41 +23,21 @@ const Preview: React.FC<{
   ]);
 
   const { data } = useCurrentRoute();
+  const flow = useContext(PreviewContext);
 
   const makeHref = (path: string) => [data.mountpath, path].join("/");
 
-  // TODO: replace with actual routing
-  const [currentModal, setCurrentModal] = useState<
-    InformationalModal | undefined
-  >(undefined);
-
-  const openModal = (type: "help" | "privacy") => {
-    if (!settings) return;
-
-    switch (type) {
-      case "help":
-        settings.design?.help && setCurrentModal(settings.design.help);
-        break;
-      case "privacy":
-        settings.design?.privacy && setCurrentModal(settings.design.privacy);
-        break;
-      default:
-        return;
-    }
-  };
-  const closeModal = () => setCurrentModal(undefined);
-
-  const leftFooterItems = [
+  const leftFooterItems = flow?.team.settings.design?.privacy && [
     {
       title: "Privacy",
       href: makeHref("privacy"),
     },
   ];
 
-  const rightFooterItems = [
+  const rightFooterItems = flow?.team.settings.design?.help && [
     {
       title: "Help",
-      href: "",
+      href: makeHref("help"),
       bold: true,
     },
   ];
@@ -101,15 +74,6 @@ const Preview: React.FC<{
         </span>
 
         {children}
-
-        {/* TODO: this shouldn't be here; will be routed properly */}
-        {currentModal && (
-          <Modal
-            header={currentModal.header}
-            content={currentModal.content}
-            onClose={closeModal}
-          />
-        )}
       </div>
       {!embedded && (
         <Footer leftItems={leftFooterItems} rightItems={rightFooterItems} />

@@ -35,8 +35,8 @@ interface Item {
 }
 
 interface Props {
-  leftItems: Item[];
-  rightItems: Item[];
+  leftItems?: Item[];
+  rightItems?: Item[];
 }
 
 export default function Footer(props: Props) {
@@ -47,13 +47,13 @@ export default function Footer(props: Props) {
 
   return (
     <footer className={classes.root}>
-      {leftItems.map((item, i) => (
-        <FooterItem {...item} key={i} />
-      ))}
       <Box display="flex">
-        {rightItems.map((item, i) => (
-          <FooterItem {...item} key={i} />
-        ))}
+        {leftItems &&
+          leftItems.map((item, i) => <FooterItem {...item} key={i} />)}
+      </Box>
+      <Box display="flex">
+        {rightItems &&
+          rightItems.map((item, i) => <FooterItem {...item} key={i} />)}
         {feedbackFishId && (
           <FeedbackFish projectId={feedbackFishId}>
             <Typography className={classes.link}>Feedback</Typography>
@@ -68,12 +68,10 @@ function FooterItem(props: { title: string; href: string; bold?: boolean }) {
   const classes = useClasses();
 
   return (
-    <Link href={props.href} prefetch={false}>
-      <div className={classes.link}>
-        <Typography variant="body1" className={props.bold ? classes.bold : ""}>
-          {props.title}
-        </Typography>
-      </div>
+    <Link href={props.href} prefetch={false} className={classes.link}>
+      <Typography variant="body1" className={props.bold ? classes.bold : ""}>
+        {props.title}
+      </Typography>
     </Link>
   );
 }

@@ -1,44 +1,20 @@
 import gql from "graphql-tag";
 import { compose, mount, NotFoundError, route, withData, withView } from "navi";
-import React from "react";
-import { useCurrentRoute,View } from "react-navi";
+import React, { useContext } from "react";
+import { useNavigation, View } from "react-navi";
 
-import Modal from "../components/InformationalModal";
+import InformationPage from "../components/InformationPage";
 import { dataMerged } from "../lib/dataMergedHotfix";
 import { client } from "../lib/graphql";
-import { componentOutput, useStore } from "../pages/FlowEditor/lib/store";
+import { useStore } from "../pages/FlowEditor/lib/store";
 import Preview from "../pages/Preview";
-import { PreviewContext } from "../pages/Preview/Context";
-import Node from "../pages/Preview/Node";
-
-const Questions = () => {
-  const [currentCard, record] = useStore((state) => [
-    state.currentCard,
-    state.record,
-  ]);
-  const node = currentCard();
-
-  if (!node) return null;
-
-  return (
-    <Node
-      node={node}
-      key={node.id}
-      handleSubmit={(values: componentOutput) => {
-        record(node.id, values);
-      }}
-    />
-  );
-};
+import { FlowMetadata, PreviewContext } from "../pages/Preview/Context";
+import Questions from "../pages/Preview/Questions";
 
 const routes = compose(
-  withData((req) => {
-    console.log("withData");
-
-    return {
-      mountpath: req.mountpath,
-    };
-  }),
+  withData((req) => ({
+    mountpath: req.mountpath,
+  })),
 
   withView(async (req) => {
     const { data } = await client.query({
@@ -65,7 +41,7 @@ const routes = compose(
       },
     });
 
-    const flow = data.flows[0];
+    const flow: FlowMetadata = data.flows[0];
 
     if (!flow) throw new NotFoundError();
 
@@ -73,7 +49,7 @@ const routes = compose(
 
     return (
       <PreviewContext.Provider value={flow}>
-        <Preview theme={flow.team.theme} settings={flow.team.settings}>
+        <Preview theme={flow.team.theme}>
           <View />
         </Preview>
       </PreviewContext.Provider>
@@ -84,42 +60,36 @@ const routes = compose(
     "/": route({
       view: <Questions />,
     }),
+    // TODO: Extract privacy & help logic because they're essentially the same
     "/privacy": route({
-      getData: async (req) => {
-        // TODO: extract this into a nice function because this is getting cluttered
-        const { data } = await client.query({
-          query: gql`
-            query GetFlow($flowSlug: String!, $teamSlug: String!) {
-              flows(
-                limit: 1
-                where: {
-                  slug: { _eq: $flowSlug }
-                  team: { slug: { _eq: $teamSlug } }
-                }
-              ) {
-                team {
-                  settings
-                }
-              }
-            }
-          `,
-          variables: {
-            flowSlug: req.params.flow.split(",")[0],
-            teamSlug: req.params.team,
-          },
-        });
+      view: () => {
+        // TODO: Navigate back to flow instead of simply "back"
+        const navigation = useNavigation();
+        const context = useContext(PreviewContext);
 
-        const settings = data.flows[0].team.settings.design.privacy;
-        return { settings };
-      },
-      view: (req: any) => {
-        const { data } = useCurrentRoute();
+        if (!context) throw new NotFoundError();
 
         return (
-          <Modal
-            header={data.settings.header}
-            content={data.settings.content}
-            onClose={() => {}}
+          <InformationPage
+            header={context.team.settings.design?.privacy?.header}
+            content={context.team.settings.design?.privacy?.content}
+            onClose={() => navigation.goBack()}
+          />
+        );
+      },
+    }),
+    "/help": route({
+      view: () => {
+        const navigation = useNavigation();
+        const context = useContext(PreviewContext);
+
+        if (!context) throw new NotFoundError();
+
+        return (
+          <InformationPage
+            header={context.team.settings.design?.help?.header}
+            content={context.team.settings.design?.help?.content}
+            onClose={() => navigation.goBack()}
           />
         );
       },

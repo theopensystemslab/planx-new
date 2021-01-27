@@ -25,22 +25,12 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-function InformationalModal(props: {
+function InformationPage(props: {
   header?: string;
   content?: string;
   onClose: () => void;
 }) {
   const classes = useClasses();
-
-  // Don't let the body do weird stuff while the modal is displayed
-  useLayoutEffect(() => {
-    document.documentElement.style.overflow = "hidden";
-    window.scrollTo(0, 0);
-
-    return function cleanup() {
-      document.documentElement.style.overflow = "scroll";
-    };
-  });
 
   return (
     <Box
@@ -72,4 +62,4 @@ function InformationalModal(props: {
   );
 }
 
-export default InformationalModal;
+export default InformationPage;

@@ -4,11 +4,11 @@ export interface Settings {
 
 export interface DesignSettings {
   color?: string;
-  privacy?: InformationalModal;
-  help?: InformationalModal;
+  privacy?: InformationPageContent;
+  help?: InformationPageContent;
 }
 
-export interface InformationalModal {
+export interface InformationPageContent {
   header: string;
   content: string;
 }
