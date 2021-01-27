@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useCurrentRoute } from "react-navi";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
@@ -10,27 +11,8 @@ import {
 import { componentOutput, useStore } from "../FlowEditor/lib/store";
 import Node from "./Node";
 
-const Questions = () => {
-  const [currentCard, record] = useStore((state) => [
-    state.currentCard,
-    state.record,
-  ]);
-  const node = currentCard();
-
-  if (!node) return null;
-
-  return (
-    <Node
-      node={node}
-      key={node.id}
-      handleSubmit={(values: componentOutput) => {
-        record(node.id, values);
-      }}
-    />
-  );
-};
-
 const Preview: React.FC<{
+  children?: any;
   theme?: any;
   embedded?: boolean;
   settings?: Settings;
@@ -40,16 +22,22 @@ const Preview: React.FC<{
     primary: "#2c2c2c",
   },
   settings,
+  children,
 }) => {
   const [record, previousCard] = useStore((state) => [
     state.record,
     state.previousCard(),
   ]);
 
+  const { data } = useCurrentRoute();
+
+  const makeHref = (path: string) => [data.mountpath, path].join("/");
+
   // TODO: replace with actual routing
   const [currentModal, setCurrentModal] = useState<
     InformationalModal | undefined
   >(undefined);
+
   const openModal = (type: "help" | "privacy") => {
     if (!settings) return;
 
@@ -69,8 +57,7 @@ const Preview: React.FC<{
   const leftFooterItems = [
     {
       title: "Privacy",
-      href: "",
-      onClick: () => openModal("privacy"),
+      href: makeHref("privacy"),
     },
   ];
 
@@ -79,7 +66,6 @@ const Preview: React.FC<{
       title: "Help",
       href: "",
       bold: true,
-      onClick: () => openModal("help"),
     },
   ];
 
@@ -114,7 +100,7 @@ const Preview: React.FC<{
           ⭠ Back
         </span>
 
-        <Questions />
+        {children}
 
         {/* TODO: this shouldn't be here; will be routed properly */}
         {currentModal && (

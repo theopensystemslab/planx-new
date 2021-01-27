@@ -2,7 +2,8 @@ import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import React, { useState } from "react";
+import React from "react";
+import { Link } from "react-navi";
 
 const useClasses = makeStyles((theme) => ({
   root: {
@@ -47,7 +48,7 @@ export default function Footer(props: Props) {
   return (
     <footer className={classes.root}>
       {leftItems.map((item, i) => (
-        <FooterItem {...item} key={i} onClick={item.onClick} />
+        <FooterItem {...item} key={i} />
       ))}
       <Box display="flex">
         {rightItems.map((item, i) => (
@@ -63,19 +64,16 @@ export default function Footer(props: Props) {
   );
 }
 
-function FooterItem(props: {
-  title: string;
-  href: string;
-  bold?: boolean;
-  onClick?: () => void;
-}) {
+function FooterItem(props: { title: string; href: string; bold?: boolean }) {
   const classes = useClasses();
 
   return (
-    <div className={classes.link} onClick={props.onClick}>
-      <Typography variant="body1" className={props.bold ? classes.bold : ""}>
-        {props.title}
-      </Typography>
-    </div>
+    <Link href={props.href} prefetch={false}>
+      <div className={classes.link}>
+        <Typography variant="body1" className={props.bold ? classes.bold : ""}>
+          {props.title}
+        </Typography>
+      </div>
+    </Link>
   );
 }
