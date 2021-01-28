@@ -51,7 +51,11 @@ const Result: React.FC<Props> = ({
   const hiddenResponses = responses.filter((r) => r.hidden);
 
   return (
-    <Card handleSubmit={handleSubmit} isValid fullWidth>
+    <Card
+      handleSubmit={() => handleSubmit && handleSubmit([])}
+      isValid
+      fullWidth
+    >
       <ResultSummary
         subheading={subheading}
         color={headingColor}
