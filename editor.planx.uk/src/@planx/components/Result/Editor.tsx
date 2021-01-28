@@ -1,5 +1,3 @@
-import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
 import { useFormik } from "formik";
 import flags, { flatFlags } from "pages/FlowEditor/data/flags";
 import React from "react";
@@ -7,13 +5,11 @@ import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 
-export interface Props {
-  id?: string;
-  handleSubmit?: (d: any, children: any) => void;
-  node?: any;
-}
+import { TYPES } from "../types";
+import { ICONS } from "../ui";
+import type { Result } from "./model";
 
-const ResultComponent: React.FC<Props> = (props) => {
+const ResultComponent: React.FC<Result> = (props) => {
   const formik = useFormik({
     initialValues: {
       // TODO: maybe don't store string key here as it's likely to change
@@ -21,6 +17,7 @@ const ResultComponent: React.FC<Props> = (props) => {
       visible: !!props.node?.data?.visible,
     },
     onSubmit: (newValues) => {
+      console.log({ newValues });
       if (props.handleSubmit) {
         const children = props.id
           ? undefined
