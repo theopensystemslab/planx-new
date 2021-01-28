@@ -344,7 +344,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   async startSession({
     passport,
   }: {
-    passport: { data: object; info: object };
+    passport: { data: Record<string, any>; info: any };
   }) {
     // ------ BEGIN PASSPORT DATA OVERRIDES ------
 
@@ -374,6 +374,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       constraints.length > 0
         ? { "property.constraints.planning": constraints }
         : {};
+
+    if (passport.info?.planx_value)
+      passport.data["property.type"] = passport.info.planx_value;
+
     // ------ END PASSPORT DATA OVERRIDES ------
 
     set({
