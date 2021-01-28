@@ -118,9 +118,9 @@ const Node: React.FC<any> = (props: Props) => {
       );
 
     case TYPES.Result:
-      const data = reportData(props.data.flagSet);
+      const data = reportData(props.node.data.flagSet);
 
-      const { flag, responses } = data[props.data.flagSet];
+      const { flag, responses } = data[props.node.data.flagSet];
 
       return (
         <Result
@@ -130,7 +130,7 @@ const Node: React.FC<any> = (props: Props) => {
             background: flag.bgColor,
           }}
           headingTitle={flag.text}
-          subheading={props.data.flagSet}
+          subheading={props.node.data.flagSet}
           reasonsTitle="Responses"
           responses={responses}
         />
