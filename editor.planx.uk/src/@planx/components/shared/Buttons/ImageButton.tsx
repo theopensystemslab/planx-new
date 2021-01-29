@@ -1,11 +1,10 @@
 import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ImageIcon from "@material-ui/icons/Image";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import Checkbox from "ui/Checkbox";
 
-import theme from "../../../../theme";
 import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
 
 export interface Props extends ButtonProps {
@@ -16,25 +15,31 @@ export interface Props extends ButtonProps {
   checkbox?: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
-  img: {
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    objectFit: "contain",
-  },
-  key: {
-    opacity: 0.3,
-  },
-  keySelected: {
-    opacity: 0.7,
-  },
-  title: {
-    marginLeft: theme.spacing(1.5),
-  },
-}));
+// TODO: remove this hack monstrosity! Put selected theme inside useStyles?
+let cheatTheme: Theme;
+
+const useStyles = makeStyles((theme) => {
+  cheatTheme = theme;
+  return {
+    img: {
+      width: "100%",
+      height: "100%",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      objectFit: "contain",
+    },
+    key: {
+      opacity: 0.3,
+    },
+    keySelected: {
+      opacity: 0.7,
+    },
+    title: {
+      marginLeft: theme.spacing(1.5),
+    },
+  };
+});
 
 function ImageResponse(props: Props) {
   const { selected, title, responseKey, img, checkbox } = props;
@@ -57,8 +62,9 @@ function ImageResponse(props: Props) {
   });
 
   const bgColor = selected
-    ? theme.palette.primary.main
-    : theme.palette.secondary.main;
+    ? cheatTheme?.palette?.primary?.main
+    : cheatTheme?.palette?.secondary?.main;
+
   const classes = useStyles();
 
   const onError = () => {
@@ -98,7 +104,7 @@ function ImageResponse(props: Props) {
           ref doesn't exist in the MUI type definitions, should be
           available in v5, sigh.
 
-         https://github.com/mui-org/material-ui/issues/17010 
+         https://github.com/mui-org/material-ui/issues/17010
         */}
         <Box
           {...({ ref: textContentEl } as any)}
