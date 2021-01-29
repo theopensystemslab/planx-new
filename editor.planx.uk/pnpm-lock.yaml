@@ -6,7 +6,7 @@ dependencies:
   '@draft-js-plugins/editor': 4.0.0_draft-js@0.11.7+react@17.0.1
   '@draft-js-plugins/inline-toolbar': 4.0.0_225b2ecd41d4c6371fdfe59e40d86bbb
   '@feedback-fish/react': 1.2.1_react@17.0.1
-  '@mapbox/mapbox-gl-draw': 1.2.0_mapbox-gl@1.12.0
+  '@mapbox/mapbox-gl-draw': 1.2.0_mapbox-gl@1.13.0
   '@material-ui/core': 4.11.0_4695a47c40ef995f48f8c834d2fb82ec
   '@material-ui/icons': 4.9.1_ee56c09a62875a4df5ca6931744063b9
   '@material-ui/lab': 4.0.0-alpha.56_ee56c09a62875a4df5ca6931744063b9
@@ -27,7 +27,7 @@ dependencies:
   js-cookie: 2.2.1
   jwt-decode: 3.1.2
   lodash: 4.17.20
-  mapbox-gl: 1.12.0
+  mapbox-gl: 1.13.0
   marked: 1.2.7
   nanoid: 3.1.16
   nanoid-good: 3.1.0
@@ -47,6 +47,7 @@ dependencies:
   react-dropzone: 11.2.4_react@17.0.1
   react-feather: 2.0.8_react@17.0.1
   react-html-parser: 2.0.2_react@17.0.1
+  react-mapbox-gl: 5.1.1_c7c44047a99c9d5dd186e870786cf254
   react-markdown: 4.3.1_react@17.0.1
   react-navi: 0.14.4_navi@0.14.0+react@17.0.1
   react-navi-helmet-async: 0.14.4_9e1187d2fd1b61ae47f82501f8cd8b4d
@@ -3680,7 +3681,7 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-zlblOfg1UrWNENZy6k1vya3HsjQ=
-  /@mapbox/mapbox-gl-draw/1.2.0_mapbox-gl@1.12.0:
+  /@mapbox/mapbox-gl-draw/1.2.0_mapbox-gl@1.13.0:
     dependencies:
       '@mapbox/geojson-area': 0.2.2
       '@mapbox/geojson-extent': 0.3.2
@@ -3690,16 +3691,16 @@ packages:
       eslint-plugin-import: 2.22.1
       hat: 0.0.3
       lodash.isequal: 4.5.0
-      mapbox-gl: 1.12.0
+      mapbox-gl: 1.13.0
       xtend: 4.0.2
     dev: false
     peerDependencies:
       mapbox-gl: '>=0.27.0 <2.0.0'
     resolution:
       integrity: sha512-gMrP2zn8PzDtrs72FMJTPytCumX5vUn9R7IK38qBOVy9UfqbdWr56KYuNA/2X+jKn4FIOpmWf8CWkKpOaQkv7w==
-  /@mapbox/mapbox-gl-supported/1.5.0_mapbox-gl@1.12.0:
+  /@mapbox/mapbox-gl-supported/1.5.0_mapbox-gl@1.13.0:
     dependencies:
-      mapbox-gl: 1.12.0
+      mapbox-gl: 1.13.0
     dev: false
     peerDependencies:
       mapbox-gl: '>=0.32.1 <2.0.0'
@@ -3709,10 +3710,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-ioP5M1x4YO/6Lu7KJUMyqgru2PI=
-  /@mapbox/tiny-sdf/1.1.1:
+  /@mapbox/tiny-sdf/1.2.2:
     dev: false
     resolution:
-      integrity: sha512-Ihn1nZcGIswJ5XGbgFAvVumOgWpvIjBX9jiRlIl46uQG9vJOF51ViBYHF95rEZupuyQbEmhLaDPLQlU7fUTsBg==
+      integrity: sha512-GeJdumh5Do1JvnE2QbbLixZmJg6CzOfpzcAuS+qZadWK1Gj+yY/mj7IOVlgXCBg/yDqDmitGwSius+rrTpm8RA==
   /@mapbox/unitbezier/0.0.0:
     dev: false
     resolution:
@@ -5260,10 +5261,24 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Zv+3N1ep9P5JvR0YOYagLANyapGWQBh8atdeR3bKpWcigVXFsEKNUw03U/5xnh+cKzm7yozHD6MFJkqQv55y0g==
+  /@turf/bbox/4.7.3:
+    dependencies:
+      '@turf/meta': 4.7.4
+    dev: false
+    resolution:
+      integrity: sha1-461PEKfptBtSKIDTMIMZgZkFkGc=
+  /@turf/helpers/4.7.3:
+    dev: false
+    resolution:
+      integrity: sha1-vDEqxDyrPFMqSDFRxMOCxWSUKek=
   /@turf/helpers/6.1.4:
     dev: false
     resolution:
       integrity: sha512-vJvrdOZy1ngC7r3MDA7zIGSoIgyrkWcGnNIEaqn/APmw+bVLF2gAW7HIsdTxd12s5wQMqEpqIQrmrbRRZ0xC7g==
+  /@turf/meta/4.7.4:
+    dev: false
+    resolution:
+      integrity: sha1-beLx6YkLj2S2aeS0fAmyCJMGOXc=
   /@turf/meta/6.0.2:
     dependencies:
       '@turf/helpers': 6.1.4
@@ -5332,6 +5347,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-laIjwTQaD+5DukBZaygQ79K1Z0jb1bPEMRrkXSLjtCcZm+abyp5YbrqpSLzD42FwWW6gK/aS4NYpJ804nG2brg==
+  /@types/geojson/7946.0.7:
+    dev: false
+    resolution:
+      integrity: sha512-wE2v81i4C4Ol09RtsWFAqg3BUitWbHSpSlIo+bNdsCJijO9sjme+zm+73ZMCa/qMC8UEERxzGbvmr1cffo2SiQ==
   /@types/glob-base/0.3.0:
     dev: true
     resolution:
@@ -5590,6 +5609,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw==
+  /@types/supercluster/5.0.2:
+    dependencies:
+      '@types/geojson': 7946.0.7
+    dev: false
+    resolution:
+      integrity: sha512-5PONNyiZXHS6oiW0H1rsNQ+Apkg+cqp3jP4HRhCAcgASIj3ifrFsdj1QB5TvArqT5N8RetK6UH7873COgRZwoQ==
   /@types/tapable/1.0.6:
     resolution:
       integrity: sha512-W+bw9ds02rAQaMvaLYxAbJ6cvguW/iJXNT6lTssS1ps6QdrMKttqEAMEG/b5CR8TZl3/L7/lH0ZV5nNR1LXikA==
@@ -8116,12 +8141,12 @@ packages:
     resolution:
       integrity: sha512-V5qQZVAr9K0xu7jXg1M7qTEwuxUgqr7dUOezGaNa7i+Xn9oXAU/d1fzqD9ObuwpVQOaorO5s70ckyi1woP9lVA==
   /core-js/1.2.7:
-    deprecated: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
+    deprecated: 'core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.'
     dev: true
     resolution:
       integrity: sha1-ZSKUwUZR2yj6k70tX/KYOk8IxjY=
   /core-js/2.6.11:
-    deprecated: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
+    deprecated: 'core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.'
     requiresBuild: true
     resolution:
       integrity: sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
@@ -8756,6 +8781,10 @@ packages:
   /dedent/0.7.0:
     resolution:
       integrity: sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw=
+  /deep-equal/1.0.1:
+    dev: false
+    resolution:
+      integrity: sha1-9dJgKStmDghO/0zbyfCK0yR0SLU=
   /deep-equal/1.1.1:
     dependencies:
       is-arguments: 1.1.0
@@ -13622,14 +13651,14 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-7Nyo8TFE5mDxtb1B8S80edmN+48=
-  /mapbox-gl/1.12.0:
+  /mapbox-gl/1.13.0:
     dependencies:
       '@mapbox/geojson-rewind': 0.5.0
       '@mapbox/geojson-types': 1.0.2
       '@mapbox/jsonlint-lines-primitives': 2.0.2
-      '@mapbox/mapbox-gl-supported': 1.5.0_mapbox-gl@1.12.0
+      '@mapbox/mapbox-gl-supported': 1.5.0_mapbox-gl@1.13.0
       '@mapbox/point-geometry': 0.1.0
-      '@mapbox/tiny-sdf': 1.1.1
+      '@mapbox/tiny-sdf': 1.2.2
       '@mapbox/unitbezier': 0.0.0
       '@mapbox/vector-tile': 1.3.1
       '@mapbox/whoots-js': 3.1.0
@@ -13644,14 +13673,14 @@ packages:
       potpack: 1.0.1
       quickselect: 2.0.0
       rw: 1.3.3
-      supercluster: 7.1.0
+      supercluster: 7.1.2
       tinyqueue: 2.0.3
       vt-pbf: 3.1.1
     dev: false
     engines:
       node: '>=6.4.0'
     resolution:
-      integrity: sha512-B3URR4qY9R/Bx+DKqP8qmGCai8IOZYMSZF7ZSvcCZaYTaOYhQQi8ErTEDZtFMOR0ZPj7HFWOkkhl5SqvDfpJpA==
+      integrity: sha512-g8zlzuJxYJqbOPXT19/UBYpVrcefBQ06F/Cbj0fyEfFnFesDcU3cFTxd75/FZ6Upx2ZEjCsD61CHxrcxZidVpA==
   /markdown-escapes/1.0.4:
     resolution:
       integrity: sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==
@@ -16144,10 +16173,10 @@ packages:
     dev: true
     resolution:
       integrity: sha1-IS1b/hMYMGpCD2QCuOJv85ZHqEk=
-  /protocol-buffers-schema/3.4.0:
+  /protocol-buffers-schema/3.5.1:
     dev: false
     resolution:
-      integrity: sha512-G/2kcamPF2S49W5yaMGdIpkG6+5wZF0fzBteLKgEHjbNzqjZQ85aAs1iJGto31EJaSTkNvHs5IXuHSaTLWBAiA==
+      integrity: sha512-YVCvdhxWNDP8/nJDyXLuM+UFsuPk4+1PB7WGPVDzm3HTHbzFLxQYeW2iZpS4mmnXrQJGBzt230t/BbEb7PrQaw==
   /proxy-addr/2.0.6:
     dependencies:
       forwarded: 0.1.2
@@ -16702,6 +16731,24 @@ packages:
     dev: true
     resolution:
       integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+  /react-mapbox-gl/5.1.1_c7c44047a99c9d5dd186e870786cf254:
+    dependencies:
+      '@turf/bbox': 4.7.3
+      '@turf/helpers': 4.7.3
+      '@types/supercluster': 5.0.2
+      deep-equal: 1.0.1
+      mapbox-gl: 1.13.0
+      react: 17.0.1
+      react-dom: 17.0.1_react@17.0.1
+      supercluster: 7.1.2
+    dev: false
+    peerDependencies:
+      mapbox-gl: ^1.12.0
+      prop-types: ^15.6.2
+      react: ^16.11.0
+      react-dom: ^16.11.0
+    resolution:
+      integrity: sha512-8vGldFQf7pW8T5ZV2OOhwXoaBvfigB2F7dnhzaZ/bD5/KJzP9zprMbn0xMX95W3eqbKzGGHnwyD5DyTTwR6wGw==
   /react-markdown/4.3.1_react@17.0.1:
     dependencies:
       html-to-react: 1.4.5_react@17.0.1
@@ -17363,7 +17410,7 @@ packages:
       request-promise-core: 1.1.4_request@2.88.2
       stealthy-require: 1.1.1
       tough-cookie: 2.5.0
-    deprecated: request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
+    deprecated: 'request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142'
     dev: false
     engines:
       node: '>=0.12.0'
@@ -17393,7 +17440,7 @@ packages:
       tough-cookie: 2.5.0
       tunnel-agent: 0.6.0
       uuid: 3.4.0
-    deprecated: request has been deprecated, see https://github.com/request/request/issues/3142
+    deprecated: 'request has been deprecated, see https://github.com/request/request/issues/3142'
     engines:
       node: '>= 6'
     resolution:
@@ -17456,7 +17503,7 @@ packages:
       integrity: sha512-C7rARubxI8bXFNB/hqcp/4iUeIXJhJZvFPFPiSPRnhU5UPxzMFIl+2E6yY6c4k9giDJAhtV+enfA+G89N6Csng==
   /resolve-protobuf-schema/2.1.0:
     dependencies:
-      protocol-buffers-schema: 3.4.0
+      protocol-buffers-schema: 3.5.1
     dev: false
     resolution:
       integrity: sha512-kI5ffTiZWmJaS/huM8wZfEMer1eRd7oJQhDuxeCLe3t7N7mX3z94CN0xPxBQxFYQTSNz9T0i+v6inKqSdK8xrQ==
@@ -17478,7 +17525,7 @@ packages:
     resolution:
       integrity: sha512-QEb4A76c8Mi7I3xNKXlRKQSlLBwjUV/ULFMP+G7n3/7tJZ8MG5wsZ3ucxP1Jz8Vevn6fnJsxDx9cIls+utGzPQ==
   /resolve-url/0.2.1:
-    deprecated: https://github.com/lydell/resolve-url#deprecated
+    deprecated: 'https://github.com/lydell/resolve-url#deprecated'
     resolution:
       integrity: sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
   /resolve/1.18.1:
@@ -18722,12 +18769,12 @@ packages:
       graphql: '>=0.10.0'
     resolution:
       integrity: sha512-tztzcBTNoEbuErsVQpTN2xUNN/efAZXyCyL5m3x4t6SKrEiTL2N8SaKWBFWM4u56pL79ULif3zjyeq+oV+nOaA==
-  /supercluster/7.1.0:
+  /supercluster/7.1.2:
     dependencies:
       kdbush: 3.0.0
     dev: false
     resolution:
-      integrity: sha512-LDasImUAFMhTqhK+cUXfy9C2KTUqJ3gucLjmNLNFmKWOnDUBxLFLH9oKuXOTCLveecmxh8fbk8kgh6Q0gsfe2w==
+      integrity: sha512-bGA0pk3DYMjLTY1h+rbh0imi/I8k/Lg0rzdBGfyQs0Xkiix7jK2GUmH1qSD8+jq6U0Vu382QHr3+rbbiHqdKJA==
   /supports-color/2.0.0:
     dev: true
     engines:
@@ -19585,7 +19632,7 @@ packages:
     resolution:
       integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   /urix/0.1.0:
-    deprecated: Please see https://github.com/lydell/urix#deprecated
+    deprecated: 'Please see https://github.com/lydell/urix#deprecated'
     resolution:
       integrity: sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
   /url-loader/4.1.1_file-loader@6.1.1+webpack@4.44.2:
@@ -20645,7 +20692,7 @@ specifiers:
   jwt-decode: ^3.1.2
   lint-staged: ^10.5.1
   lodash: ^4.17.20
-  mapbox-gl: ^1.12.0
+  mapbox-gl: ^1.13.0
   marked: ^1.2.7
   mini-css-extract-plugin: ^1.3.4
   nanoid: ^3.1.16
@@ -20670,6 +20717,7 @@ specifiers:
   react-dropzone: ^11.2.4
   react-feather: ^2.0.8
   react-html-parser: ^2.0.2
+  react-mapbox-gl: ^5.1.1
   react-markdown: ^4.3.1
   react-navi: ^0.14.4
   react-navi-helmet-async: ^0.14.4
