@@ -1,3 +1,4 @@
+import { useTheme } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -7,8 +8,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
-
-import theme from "../theme";
 
 const variants = [
   "h1",
@@ -32,18 +31,22 @@ const metadata: Meta = {
   title: "Design System/Typography",
 };
 
-const TypographySwatch: React.FC<{ variant: Variant }> = (props) => (
-  <TableRow>
-    <TableCell>
-      <Typography variant={props.variant}>{props.variant}</Typography>
-    </TableCell>
-    <TableCell>
-      <Typography variant="body2">
-        {theme.typography[props.variant].fontSize}
-      </Typography>
-    </TableCell>
-  </TableRow>
-);
+const TypographySwatch: React.FC<{ variant: Variant }> = (props) => {
+  const theme = useTheme();
+
+  return (
+    <TableRow>
+      <TableCell>
+        <Typography variant={props.variant}>{props.variant}</Typography>
+      </TableCell>
+      <TableCell>
+        <Typography variant="body2">
+          {theme.typography[props.variant].fontSize}
+        </Typography>
+      </TableCell>
+    </TableRow>
+  );
+};
 
 export const Variants = () => {
   return (

@@ -1,11 +1,10 @@
 import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ImageIcon from "@material-ui/icons/Image";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import Checkbox from "ui/Checkbox";
 
-import theme from "../../../../theme";
 import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
 
 export interface Props extends ButtonProps {
@@ -55,6 +54,8 @@ function ImageResponse(props: Props) {
       }
     }
   });
+
+  const theme = useTheme();
 
   const bgColor = selected
     ? theme.palette.primary.main
