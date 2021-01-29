@@ -34,7 +34,6 @@ const flowSettingsRoutes = compose(
         },
       });
 
-      // Feels a lil clumsy; gotta assume this casting works? yolo 🥴
       const settings: Settings = data.teams[0].settings;
 
       return {

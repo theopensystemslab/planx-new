@@ -2,10 +2,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import React, { useState } from "react";
 import { ExternalLink, RefreshCw, Terminal } from "react-feather";
 
-import Preview from "../../Preview";
+import Questions from "../../Preview/Questions";
 import { useStore } from "../lib/store";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   console: {
     overflow: "auto",
     padding: 20,
@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
     overflow: "auto",
     flex: 1,
     background: "#fff",
+    paddingTop: theme.spacing(3),
   },
   refreshButton: {
     color: "inherit",
@@ -57,7 +58,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
         </a>
       </header>
       <div className={classes.previewContainer}>
-        <Preview embedded />
+        <Questions />
       </div>
       {showDebugConsole && <DebugConsole />}
     </div>

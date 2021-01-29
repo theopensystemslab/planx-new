@@ -8,7 +8,7 @@ export interface FlowMetadata {
     theme: {
       primary: string;
     };
-    settings: Settings;
+    settings?: Settings;
   };
 }
 

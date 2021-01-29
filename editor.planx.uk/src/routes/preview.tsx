@@ -7,8 +7,8 @@ import InformationPage from "../components/InformationPage";
 import { dataMerged } from "../lib/dataMergedHotfix";
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
-import Preview from "../pages/Preview";
 import { FlowMetadata, PreviewContext } from "../pages/Preview/Context";
+import Layout from "../pages/Preview/PreviewLayout";
 import Questions from "../pages/Preview/Questions";
 
 const routes = compose(
@@ -49,9 +49,9 @@ const routes = compose(
 
     return (
       <PreviewContext.Provider value={flow}>
-        <Preview theme={flow.team.theme}>
+        <Layout theme={flow.team.theme} settings={flow.team.settings?.design}>
           <View />
-        </Preview>
+        </Layout>
       </PreviewContext.Provider>
     );
   }),
@@ -60,10 +60,8 @@ const routes = compose(
     "/": route({
       view: <Questions />,
     }),
-    // TODO: Extract privacy & help logic because they're essentially the same
     "/privacy": route({
       view: () => {
-        // TODO: Navigate back to flow instead of simply "back"
         const navigation = useNavigation();
         const context = useContext(PreviewContext);
 
@@ -71,8 +69,8 @@ const routes = compose(
 
         return (
           <InformationPage
-            header={context.team.settings.design?.privacy?.header}
-            content={context.team.settings.design?.privacy?.content}
+            header={context.team.settings?.design?.privacy?.header}
+            content={context.team.settings?.design?.privacy?.content}
             onClose={() => navigation.goBack()}
           />
         );
@@ -87,8 +85,8 @@ const routes = compose(
 
         return (
           <InformationPage
-            header={context.team.settings.design?.help?.header}
-            content={context.team.settings.design?.help?.content}
+            header={context.team.settings?.design?.help?.header}
+            content={context.team.settings?.design?.help?.content}
             onClose={() => navigation.goBack()}
           />
         );
