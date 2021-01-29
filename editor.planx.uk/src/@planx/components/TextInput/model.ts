@@ -1,13 +1,61 @@
+import { SchemaOf, string } from "yup";
+
 import { MoreInformation, parseMoreInformation } from "../shared";
 
 export type UserData = string;
+
+export enum TextInputType {
+  Short = "short",
+  Long = "long",
+  Email = "email",
+}
+
+const emailRegex =
+  // eslint-disable-next-line
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
+  string()
+    .required()
+    .test({
+      name: "valid",
+      message: (() => {
+        if (!type) {
+          return "Must provide a value.";
+        }
+        if (type === TextInputType.Short) {
+          return "Must be shorter than 120 characters.";
+        }
+        if (type === TextInputType.Long) {
+          return "Must be shorter than 250 characters.";
+        }
+        if (type === TextInputType.Email) {
+          return "Must be valid email.";
+        }
+      })(),
+      test: (value: string | undefined) => {
+        if (!type) {
+          return true;
+        }
+        if (type === TextInputType.Short) {
+          return Boolean(value && value.length < 120);
+        }
+        if (type === TextInputType.Long) {
+          return Boolean(value && value.length < 250);
+        }
+        if (type === TextInputType.Email) {
+          return Boolean(value && emailRegex.test(value));
+        }
+        return false;
+      },
+    });
 
 export interface TextInput extends MoreInformation {
   title: string;
   description?: string;
   placeholder?: string;
   fn?: string;
-  type?: "short" | "long" | "email";
+  type?: TextInputType;
 }
 
 export const parseTextInput = (
