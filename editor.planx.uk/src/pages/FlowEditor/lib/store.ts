@@ -82,7 +82,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   startSession: any; //: () => void;
   previousCard: () => nodeId | undefined;
   upcomingCardIds: () => nodeId[];
-  updateSettings: (teamId: string, newSettings: Settings) => Promise<any>;
+  updateSettings: (teamId: string, newSettings: Settings) => Promise<number>;
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
@@ -869,7 +869,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       },
     });
 
-    return teamSlug;
+    return response.data.update_teams.affected_rows;
   },
 }));
 

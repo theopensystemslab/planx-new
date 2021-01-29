@@ -9,6 +9,6 @@ export interface DesignSettings {
 }
 
 export interface InformationPageContent {
-  header: string;
+  heading: string;
   content: string;
 }

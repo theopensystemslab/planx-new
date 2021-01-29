@@ -1,13 +1,11 @@
 import Box from "@material-ui/core/Box";
+import { createMuiTheme, Theme, ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
 import { useCurrentRoute } from "react-navi";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import type {
-  DesignSettings,
-  InformationPageContent,
-} from "../FlowEditor/components/Settings/model";
+import type { DesignSettings } from "../FlowEditor/components/Settings/model";
 
 const PreviewLayout: React.FC<{
   children?: any;
@@ -25,7 +23,7 @@ const PreviewLayout: React.FC<{
   const makeHref = (path: string) => [data.mountpath, path].join("/");
 
   const leftFooterItems =
-    settings?.privacy?.header && settings?.privacy?.header.length > 0
+    settings?.privacy?.heading && settings?.privacy?.heading.length > 0
       ? [
           {
             title: "Privacy",
@@ -35,7 +33,7 @@ const PreviewLayout: React.FC<{
       : undefined;
 
   const rightFooterItems =
-    settings?.help?.header && settings?.help?.header.length > 0
+    settings?.help?.heading && settings?.help?.heading.length > 0
       ? [
           {
             title: "Help",
@@ -45,8 +43,19 @@ const PreviewLayout: React.FC<{
         ]
       : undefined;
 
+  const generatePreviewTheme = (baseTheme: Theme) =>
+    createMuiTheme({
+      ...baseTheme,
+      palette: {
+        ...baseTheme.palette,
+        primary: {
+          main: theme.primary,
+        },
+      },
+    });
+
   return (
-    <>
+    <ThemeProvider theme={generatePreviewTheme}>
       <Header bgcolor={theme.primary} logo={theme.logo} phaseBanner />
       <Box
         pt={5}
@@ -61,7 +70,7 @@ const PreviewLayout: React.FC<{
       </Box>
 
       <Footer leftItems={leftFooterItems} rightItems={rightFooterItems} />
-    </>
+    </ThemeProvider>
   );
 };
 

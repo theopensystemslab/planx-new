@@ -46,6 +46,10 @@ const routes = compose(
     if (!flow) throw new NotFoundError();
 
     useStore.getState().setFlow(flow.id, await dataMerged(flow.id));
+    // TODO: Replace with below after merging	    return (
+    // https://github.com/theopensystemslab/planx-new/pull/116
+    //
+    // useStore.getState().setFlow(flow.id, flow.data_merged);
 
     return (
       <PreviewContext.Provider value={flow}>
@@ -69,7 +73,7 @@ const routes = compose(
 
         return (
           <InformationPage
-            header={context.team.settings?.design?.privacy?.header}
+            heading={context.team.settings?.design?.privacy?.heading}
             content={context.team.settings?.design?.privacy?.content}
             onClose={() => navigation.goBack()}
           />
@@ -85,7 +89,7 @@ const routes = compose(
 
         return (
           <InformationPage
-            header={context.team.settings?.design?.help?.header}
+            heading={context.team.settings?.design?.help?.heading}
             content={context.team.settings?.design?.help?.content}
             onClose={() => navigation.goBack()}
           />

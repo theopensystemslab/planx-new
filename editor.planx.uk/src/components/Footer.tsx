@@ -31,7 +31,6 @@ interface Item {
   title: string;
   href: string;
   bold?: boolean;
-  onClick?: () => void;
 }
 
 interface Props {

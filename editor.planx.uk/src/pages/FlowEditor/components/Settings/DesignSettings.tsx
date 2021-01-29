@@ -24,11 +24,11 @@ const Team: React.FC<Props> = (props) => {
   const formik = useFormik<DesignSettings>({
     initialValues: {
       privacy: {
-        header: props.settings?.privacy?.header || "",
+        heading: props.settings?.privacy?.heading || "",
         content: props.settings?.privacy?.content || "",
       },
       help: {
-        header: props.settings?.help?.header || "",
+        heading: props.settings?.help?.heading || "",
         content: props.settings?.help?.content || "",
       },
     },
@@ -105,10 +105,10 @@ const Team: React.FC<Props> = (props) => {
           <InputRow>
             <InputRowItem>
               <Input
-                placeholder="Header"
+                placeholder="Heading"
                 format="bold"
-                name="help.header"
-                value={formik.values.help?.header}
+                name="help.heading"
+                value={formik.values.help?.heading}
                 onChange={formik.handleChange}
               />
             </InputRowItem>
@@ -133,10 +133,10 @@ const Team: React.FC<Props> = (props) => {
           <InputRow>
             <InputRowItem>
               <Input
-                placeholder="Header"
+                placeholder="Heading"
                 format="bold"
-                name="privacy.header"
-                value={formik.values.privacy?.header}
+                name="privacy.heading"
+                value={formik.values.privacy?.heading}
                 onChange={formik.handleChange}
               />
             </InputRowItem>
