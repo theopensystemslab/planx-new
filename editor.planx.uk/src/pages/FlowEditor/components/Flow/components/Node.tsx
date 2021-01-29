@@ -2,6 +2,7 @@ import { TYPES } from "@planx/components/types";
 import React from "react";
 
 import { useStore } from "../../../lib/store";
+import { stripTagsAndLimitLength } from "../lib/utils";
 import Breadcrumb from "./Breadcrumb";
 import Checklist from "./Checklist";
 import Filter from "./Filter";
@@ -15,7 +16,13 @@ const Node: React.FC<any> = (props) => {
   const type = props.type as TYPES;
   switch (type) {
     case TYPES.Content:
-      return <Question {...props} text={node?.data?.content ?? "Content"} />;
+      return (
+        <Question
+          {...props}
+          // TODO: we can probably render HTML here instead. TBD...
+          text={stripTagsAndLimitLength(node?.data?.content, "Content", 100)}
+        />
+      );
     case TYPES.DateInput:
       return <Question {...props} text={node?.data?.title ?? "Date"} />;
     case TYPES.ExternalPortal:
@@ -76,7 +83,7 @@ const Node: React.FC<any> = (props) => {
 };
 
 function exhaustiveCheck(type: never): never {
-  throw new Error("Missing type");
+  throw new Error(`Missing type ${type}`);
 }
 
 export default Node;

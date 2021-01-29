@@ -37,13 +37,19 @@ const DebugConsole = () => {
 const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
   const resetPreview = useStore((state) => state.resetPreview);
+  const [key, setKey] = useState<boolean>(false);
   const classes = useStyles();
 
   return (
     <div id="fake-browser">
       <header>
         <input type="text" disabled value={props.url} />
-        <RefreshCw onClick={resetPreview} />
+        <RefreshCw
+          onClick={() => {
+            resetPreview();
+            setKey((a) => !a);
+          }}
+        />
         <Terminal
           onClick={() => setDebugConsoleVisibility(!showDebugConsole)}
         />
@@ -57,7 +63,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
         </a>
       </header>
       <div className={classes.previewContainer}>
-        <Preview embedded />
+        <Preview key={String(key)} embedded />
       </div>
       {showDebugConsole && <DebugConsole />}
     </div>

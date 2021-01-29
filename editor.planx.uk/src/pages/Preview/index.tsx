@@ -1,3 +1,4 @@
+import { createMuiTheme, Theme, ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
 
 import Footer from "../../components/Footer";
@@ -36,8 +37,6 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
     state.previousCard(),
   ]);
 
-  // TODO: are these configurable in settings?
-
   const leftFooterItems = [
     {
       title: "Privacy",
@@ -53,8 +52,19 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
     },
   ];
 
+  const generatePreviewTheme = (baseTheme: Theme) =>
+    createMuiTheme({
+      ...baseTheme,
+      palette: {
+        ...baseTheme.palette,
+        primary: {
+          main: theme.primary,
+        },
+      },
+    });
+
   return (
-    <>
+    <ThemeProvider theme={generatePreviewTheme}>
       {!embedded && (
         <Header bgcolor={theme.primary} logo={theme.logo} phaseBanner />
       )}
@@ -62,7 +72,7 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
         style={{
           paddingTop: 40,
           display: "flex",
-          flex: 1,
+          flex: "1 0 auto",
           flexDirection: "column",
           alignItems: "center",
           background: "#fff",
@@ -88,7 +98,7 @@ const Preview: React.FC<{ theme?: any; embedded?: boolean }> = ({
       {!embedded && (
         <Footer leftItems={leftFooterItems} rightItems={rightFooterItems} />
       )}
-    </>
+    </ThemeProvider>
   );
 };
 

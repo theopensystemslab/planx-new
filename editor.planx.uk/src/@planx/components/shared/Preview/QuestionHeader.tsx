@@ -3,8 +3,8 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
-import ReactMarkdown from "react-markdown";
 import MoreInfoIcon from "ui/icons/MoreInfo";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
@@ -63,7 +63,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           )}
           {description && (
             <Box role="description" className={classes.description}>
-              <ReactMarkdown source={description} />
+              <ReactMarkdownOrHtml source={description} />
             </Box>
           )}
         </Grid>
@@ -81,22 +81,26 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
       <MoreInfo open={open} handleClose={() => setOpen(false)}>
         {info && (
           <MoreInfoSection title="Why does it matter?">
-            <ReactMarkdown source={info} />
+            <ReactMarkdownOrHtml source={info} />
           </MoreInfoSection>
         )}
         {policyRef && (
           <MoreInfoSection title="Source">
-            <ReactMarkdown source={policyRef} />
+            <ReactMarkdownOrHtml source={policyRef} />
           </MoreInfoSection>
         )}
         {howMeasured && (
           <MoreInfoSection title="How is it defined?">
-            <img
-              src={definitionImg}
-              alt="definition image"
-              className={classes.image}
-            />
-            <ReactMarkdown source={howMeasured} />
+            <>
+              {definitionImg && (
+                <img
+                  src={definitionImg}
+                  alt="definition image"
+                  className={classes.image}
+                />
+              )}
+              <ReactMarkdownOrHtml source={howMeasured} />
+            </>
           </MoreInfoSection>
         )}
       </MoreInfo>

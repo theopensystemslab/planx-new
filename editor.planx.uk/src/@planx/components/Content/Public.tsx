@@ -6,7 +6,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 export type Props = PublicProps<Content>;
 
@@ -29,14 +29,17 @@ const ContentComponent: React.FC<Props> = (props) => {
     color: props.color,
   });
   return (
-    <Card handleSubmit={props.handleSubmit} isValid>
+    <Card
+      handleSubmit={() => props.handleSubmit && props.handleSubmit([])}
+      isValid
+    >
       <QuestionHeader
         info={props.info}
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
       <div className={classes.content} data-testid="content">
-        <ReactMarkdown source={props.content} />
+        <ReactMarkdownOrHtml source={props.content} />
       </div>
     </Card>
   );

@@ -4,7 +4,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
-import React, { useMemo, useState } from "react";
+import React from "react";
 import DateInputComponent from "ui/DateInput";
 import InputRow from "ui/InputRow";
 import { object } from "yup";
