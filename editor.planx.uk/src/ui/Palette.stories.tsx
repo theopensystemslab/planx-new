@@ -1,5 +1,6 @@
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
+import { useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
@@ -34,6 +35,8 @@ const ColorSwatch: React.FC<{ color: string; title: string }> = (props) => (
 );
 
 const ColorGrid: React.FC<{ option: PaletteOption }> = (props) => {
+  const theme = useTheme();
+
   const colors = (() => {
     switch (props.option) {
       case "divider":

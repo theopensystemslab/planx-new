@@ -1,5 +1,5 @@
 import Box from "@material-ui/core/Box";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ImageIcon from "@material-ui/icons/Image";
 import React, { useLayoutEffect, useRef, useState } from "react";
@@ -15,11 +15,7 @@ export interface Props extends ButtonProps {
   checkbox?: boolean;
 }
 
-// TODO: remove this hack monstrosity! Put selected theme inside useStyles?
-let cheatTheme: Theme;
-
 const useStyles = makeStyles((theme) => {
-  cheatTheme = theme;
   return {
     img: {
       width: "100%",
@@ -61,9 +57,11 @@ function ImageResponse(props: Props) {
     }
   });
 
+  const theme = useTheme();
+
   const bgColor = selected
-    ? cheatTheme?.palette?.primary?.main
-    : cheatTheme?.palette?.secondary?.main;
+    ? theme?.palette?.primary?.main
+    : theme?.palette?.secondary?.main;
 
   const classes = useStyles();
 
