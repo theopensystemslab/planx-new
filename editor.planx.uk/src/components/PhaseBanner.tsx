@@ -14,7 +14,6 @@ const useClasses = makeStyles((theme: Theme) => ({
     },
     [theme.breakpoints.up("sm")]: {
       padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-      flexDirection: "row",
     },
   },
   betaIcon: {
@@ -40,7 +39,6 @@ export default function PhaseBanner(): FCReturn {
         className={classes.root}
         bgcolor="background.default"
         display="flex"
-        flexDirection="column"
         alignItems="center"
         borderBottom={`1px solid ${theme.palette.grey[300]}`}
         px={1}
@@ -51,14 +49,17 @@ export default function PhaseBanner(): FCReturn {
           color="white"
           display="flex"
           alignItems="center"
+          flexShrink={3}
+          flexGrow={0}
           px={2}
+          mr={2}
           className={classes.betaIcon}
         >
-          <Typography color="inherit" variant="h6" align="center">
+          <Typography color="inherit" variant="h6">
             BETA
           </Typography>
         </Box>
-        <Typography variant="body2" align="center" color="textPrimary">
+        <Typography variant="body2" color="textPrimary">
           This is a new service. Your <a>feedback</a> will help us improve it.
         </Typography>
       </Box>
