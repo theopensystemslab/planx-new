@@ -49,10 +49,7 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question
           {...props}
-          text={[
-            node?.data?.flagSet ?? "Result",
-            !node?.data?.visible ? "*" : "",
-          ].join("")}
+          text={[node?.data?.flagSet ?? "Result"].join("")}
         />
       );
     case TYPES.Review:

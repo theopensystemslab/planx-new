@@ -1,5 +1,5 @@
 export interface Result {
   id?: string;
-  handleSubmit?: (d: any, children: any) => void;
+  handleSubmit?: (d: any) => void;
   node?: any;
 }

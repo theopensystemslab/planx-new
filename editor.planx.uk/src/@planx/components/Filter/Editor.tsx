@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import flags from "pages/FlowEditor/data/flags";
+import flags, { flatFlags } from "pages/FlowEditor/data/flags";
 import React from "react";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
@@ -7,18 +7,37 @@ import ModalSectionContent from "ui/ModalSectionContent";
 
 import { TYPES } from "../types";
 import { ICONS } from "../ui";
-import type { Result } from "./model";
+import type { Filter } from "./model";
 
-const ResultComponent: React.FC<Result> = (props) => {
+const FilterComponent: React.FC<Filter> = (props) => {
   const formik = useFormik({
     initialValues: {
       // TODO: maybe don't store string key here as it's likely to change
       flagSet: props.node?.data?.flagSet || "",
+      visible: !!props.node?.data?.visible,
     },
     onSubmit: (newValues) => {
       console.log({ newValues });
       if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.Result, data: newValues });
+        const children = props.id
+          ? undefined
+          : [
+              ...flatFlags,
+              {
+                category: newValues.flagSet,
+                text: "(No Filter)",
+              },
+            ]
+              .filter((f) => f.category === newValues.flagSet)
+              .map((f) => ({
+                type: TYPES.Response,
+                data: {
+                  text: f.text,
+                  val: f.value,
+                },
+              }));
+
+        props.handleSubmit({ type: TYPES.Filter, data: newValues }, children);
       }
     },
     validate: () => {},
@@ -26,11 +45,11 @@ const ResultComponent: React.FC<Result> = (props) => {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Result" Icon={ICONS[TYPES.Result]}>
+        <ModalSectionContent title="Filter" Icon={ICONS[TYPES.Filter]}>
           <InputRow>
-            <label htmlFor="result-flagSet">Flag set</label>
+            <label htmlFor="filter-flagSet">Flag set</label>
             <select
-              id="result-flagSet"
+              id="filter-flagSet"
               name="flagSet"
               value={formik.values.flagSet}
               onChange={formik.handleChange}
@@ -51,4 +70,4 @@ const ResultComponent: React.FC<Result> = (props) => {
   );
 };
 
-export default ResultComponent;
+export default FilterComponent;
