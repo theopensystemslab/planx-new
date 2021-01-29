@@ -1,6 +1,6 @@
 import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@material-ui/core/Box";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 
@@ -31,6 +31,7 @@ const useClasses = makeStyles((theme: Theme) => ({
 
 export default function PhaseBanner(): FCReturn {
   const classes = useClasses();
+  const theme = useTheme();
   const feedbackFishId = process.env.REACT_APP_FEEDBACK_FISH_ID || "";
 
   return (
@@ -41,6 +42,7 @@ export default function PhaseBanner(): FCReturn {
         display="flex"
         flexDirection="column"
         alignItems="center"
+        borderBottom={`1px solid ${theme.palette.grey[300]}`}
         px={1}
         py={1}
       >
