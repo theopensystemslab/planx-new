@@ -52,20 +52,20 @@ const Result: React.FC<Props> = ({
   const hiddenResponses = responses.filter((r) => r.hidden);
 
   return (
-    <Card handleSubmit={handleSubmit} isValid>
+    <Card handleSubmit={handleSubmit} isValid fullWidth>
       <ResultSummary
         subheading={subheading}
         color={headingColor}
         heading={headingTitle}
-      >
-        {headingDescription}
-      </ResultSummary>
-      <Box mb={2}>
-        <Typography variant="h3" gutterBottom>
-          {reasonsTitle}
-        </Typography>
+      />
+      <Box mb={2} mt={0} px={{ xs: 2, md: 5 }}>
+        <Typography variant="body2">{headingDescription}</Typography>
+        <Box mt={4}>
+          <Typography variant="h3" gutterBottom>
+            {reasonsTitle}
+          </Typography>
+        </Box>
         <Box mb={3}>
-          {/* TODO: Figure out the theme colors */}
           <Box mb={1} color="secondary.dark">
             Planning Permission
           </Box>

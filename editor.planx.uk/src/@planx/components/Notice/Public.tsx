@@ -62,32 +62,34 @@ const NoticeComponent: React.FC<Props> = (props) => {
   const handleSubmit = !props.resetButton ? props.handleSubmit : undefined;
   return (
     <Card handleSubmit={handleSubmit} isValid>
-      <QuestionHeader
-        info={props.info}
-        policyRef={props.policyRef}
-        howMeasured={props.howMeasured}
-      />
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <h3 className={styles.title}>{props.title}</h3>
-          <ReactMarkdownOrHtml
-            className={styles.description}
-            source={props.description}
-          />
+      <>
+        <QuestionHeader
+          info={props.info}
+          policyRef={props.policyRef}
+          howMeasured={props.howMeasured}
+        />
+        <div className={styles.container}>
+          <div className={styles.content}>
+            <h3 className={styles.title}>{props.title}</h3>
+            <ReactMarkdownOrHtml
+              className={styles.description}
+              source={props.description}
+            />
+          </div>
+          <ErrorOutline />
         </div>
-        <ErrorOutline />
-      </div>
-      {props.resetButton && (
-        <Button
-          variant="contained"
-          color="default"
-          size="large"
-          type="submit"
-          onClick={props.resetPreview}
-        >
-          Back to start
-        </Button>
-      )}
+        {props.resetButton && (
+          <Button
+            variant="contained"
+            color="default"
+            size="large"
+            type="submit"
+            onClick={props.resetPreview}
+          >
+            Back to start
+          </Button>
+        )}
+      </>
     </Card>
   );
 };

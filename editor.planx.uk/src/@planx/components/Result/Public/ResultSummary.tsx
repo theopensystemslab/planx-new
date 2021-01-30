@@ -1,8 +1,6 @@
 import Box from "@material-ui/core/Box";
-import IconButton from "@material-ui/core/IconButton";
-import { fade, makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import HelpIcon from "@material-ui/icons/HelpOutlineOutlined";
 import classNames from "classnames";
 import React from "react";
 
@@ -10,19 +8,11 @@ const resultSummaryStyles = makeStyles((theme) => ({
   root: {
     position: "relative",
     width: "100%",
-    borderTopWidth: "10px",
-    borderTopStyle: "solid",
     minHeight: theme.spacing(10),
-    marginBottom: theme.spacing(3),
   },
   defaultColor: {
     backgroundColor: theme.palette.background.paper,
     color: "currentColor",
-  },
-  helpIcon: {
-    position: "absolute",
-    right: theme.spacing(2),
-    top: theme.spacing(2),
   },
   description: {
     textAlign: "left",
@@ -49,18 +39,15 @@ const resultSummaryStyles = makeStyles((theme) => ({
 }));
 
 const ResultSummary = ({ heading, subheading, children, color }: any) => {
-  const theme = useTheme();
   const classes = resultSummaryStyles();
   return (
     <Box
       className={classNames(classes.root, !color && classes.defaultColor)}
       bgcolor={color && color.background}
       color={color && color.text}
-      borderColor={fade(color ? color.text : theme.palette.text.primary, 0.4)}
       textAlign="center"
       px={2}
-      pt={6}
-      pb={2}
+      py={6}
     >
       <Typography variant="h1" gutterBottom>
         {heading}
@@ -71,10 +58,6 @@ const ResultSummary = ({ heading, subheading, children, color }: any) => {
         </Typography>
       )}
       <Box className={classes.description}>{children}</Box>
-
-      <IconButton className={classes.helpIcon} color="inherit">
-        <HelpIcon />
-      </IconButton>
     </Box>
   );
 };
