@@ -101,7 +101,6 @@ const Header: React.FC<{
           backgroundColor: bgcolor,
         }}
       >
-        {phaseBanner && <PhaseBanner />}
         <Toolbar className={classes.toolbar}>
           <Box className={classes.breadcrumbs} fontSize={20}>
             {logo ? (
@@ -159,6 +158,7 @@ const Header: React.FC<{
             </Box>
           )}
         </Toolbar>
+        {phaseBanner && <PhaseBanner />}
       </AppBar>
       <Popover
         open={open}

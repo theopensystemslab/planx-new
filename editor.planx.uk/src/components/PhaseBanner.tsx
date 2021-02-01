@@ -1,6 +1,6 @@
 import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@material-ui/core/Box";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 
@@ -14,7 +14,6 @@ const useClasses = makeStyles((theme: Theme) => ({
     },
     [theme.breakpoints.up("sm")]: {
       padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-      flexDirection: "row",
     },
   },
   betaIcon: {
@@ -31,6 +30,7 @@ const useClasses = makeStyles((theme: Theme) => ({
 
 export default function PhaseBanner(): FCReturn {
   const classes = useClasses();
+  const theme = useTheme();
   const feedbackFishId = process.env.REACT_APP_FEEDBACK_FISH_ID || "";
 
   return (
@@ -39,8 +39,8 @@ export default function PhaseBanner(): FCReturn {
         className={classes.root}
         bgcolor="background.default"
         display="flex"
-        flexDirection="column"
         alignItems="center"
+        borderBottom={`1px solid ${theme.palette.grey[300]}`}
         px={1}
         py={1}
       >
@@ -49,14 +49,17 @@ export default function PhaseBanner(): FCReturn {
           color="white"
           display="flex"
           alignItems="center"
+          flexShrink={3}
+          flexGrow={0}
           px={2}
+          mr={2}
           className={classes.betaIcon}
         >
-          <Typography color="inherit" variant="h6" align="center">
+          <Typography color="inherit" variant="h6">
             BETA
           </Typography>
         </Box>
-        <Typography variant="body2" align="center" color="textPrimary">
+        <Typography variant="body2" color="textPrimary">
           This is a new service. Your <a>feedback</a> will help us improve it.
         </Typography>
       </Box>
