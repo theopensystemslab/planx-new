@@ -20,6 +20,7 @@ export const useClasses = makeStyles((theme) => ({
   input: {
     backgroundColor: "#fff",
     fontSize: 15,
+    width: "100%",
     padding: theme.spacing(0, 1.5),
     height: 50,
     "& input": {
@@ -60,10 +61,10 @@ export const useClasses = makeStyles((theme) => ({
 export default function Input(props: Props): FCReturn {
   const classes = useClasses();
 
-  const { format, bordered, ...restProps } = props;
+  const { format, bordered, errorMessage, ...restProps } = props;
 
   return (
-    <ErrorWrapper error={props.errorMessage}>
+    <ErrorWrapper error={errorMessage}>
       <InputBase
         className={classNames(
           classes.input,
