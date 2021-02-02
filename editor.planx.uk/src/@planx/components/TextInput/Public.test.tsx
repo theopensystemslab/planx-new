@@ -5,7 +5,7 @@ import React from "react";
 import { TextInputType } from "./model";
 import TextInput from "./Public";
 
-test.skip("requires a value before being able to continue", () => {
+test("requires a value before being able to continue", async () => {
   const handleSubmit = jest.fn();
 
   render(
@@ -14,15 +14,18 @@ test.skip("requires a value before being able to continue", () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("hello");
 
-  act(() => {
-    userEvent.type(screen.getByPlaceholderText("what?"), "something");
-    userEvent.click(screen.getByText("Continue"));
+  await act(async () => {
+    await userEvent.type(
+      await screen.getByPlaceholderText("what?"),
+      "something"
+    );
+    await userEvent.click(screen.getByText("Continue"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith("something");
 });
 
-test.skip("requires a valid email before being able to continue", () => {
+test("requires a valid email before being able to continue", async () => {
   const handleSubmit = jest.fn();
 
   render(
@@ -36,9 +39,9 @@ test.skip("requires a valid email before being able to continue", () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("hello");
 
-  act(() => {
-    userEvent.type(screen.getByPlaceholderText("what?"), "not-an-email");
-    userEvent.click(screen.getByText("Continue"));
+  await act(async () => {
+    await userEvent.type(screen.getByPlaceholderText("what?"), "not-an-email");
+    await userEvent.click(screen.getByText("Continue"));
   });
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
