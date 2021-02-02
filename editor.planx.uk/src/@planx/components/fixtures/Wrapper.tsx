@@ -16,6 +16,7 @@ function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
 
   const publicProps: PublicProps<Data, UserData> | null = data && {
     ...data,
+    autoFocus: true,
     handleSubmit: (newUserData?: UserData) => {
       setUserData(newUserData || null);
     },
