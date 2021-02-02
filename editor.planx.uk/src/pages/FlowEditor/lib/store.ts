@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
+import { Address } from "@planx/components/FindProperty/model";
 import { TYPES } from "@planx/components/types";
 import {
   add,
@@ -341,11 +342,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
   breadcrumbs: {},
 
-  async startSession({
-    passport,
-  }: {
-    passport: { data: Record<string, any>; info: any };
-  }) {
+  async startSession({ passport }: { passport: { data: any; info: Address } }) {
     // ------ BEGIN PASSPORT DATA OVERRIDES ------
 
     // TODO: move all of the logic in this block out of here and update the API
@@ -359,33 +356,26 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     // GitHub comment explaining what's happening here https://bit.ly/2HFnxX2
     // Google sheet with new passport schema https://bit.ly/39eYp4A
 
-    const keys = Object.entries(passport.data)
-      .filter(([, { value }]: any) => value)
-      .map(([k]) => k);
-
-    const constraints = [];
-
-    if (keys.includes("property.landConservation"))
-      constraints.push("designated.conservationArea");
-    if (keys.includes("property.landTPO")) constraints.push("TPO");
-    if (keys.includes("property.buildingListed")) constraints.push("listed");
-
-    passport.data =
-      constraints.length > 0
-        ? { "property.constraints.planning": constraints }
-        : {};
+    const constraints = [
+      passport.data?.["property.landConservation"]?.value === true
+        ? "designated.conservationArea"
+        : undefined,
+      passport.data?.["property.landTPO"]?.value === true ? "TPO" : undefined,
+      passport.data?.["property.buildingListed"]?.value === true
+        ? "listed"
+        : undefined,
+    ].filter((x) => x !== undefined);
 
     if (passport.info?.planx_value)
       passport.data["property.type"] = passport.info.planx_value;
 
     // ------ END PASSPORT DATA OVERRIDES ------
-
     set({
       passport: {
         ...passport,
         data: {
-          ...(get().passport.data || {}),
-          ...(passport.data || {}),
+          "property.constraints.planning":
+            constraints.length > 0 ? constraints : undefined,
         },
       },
     });
