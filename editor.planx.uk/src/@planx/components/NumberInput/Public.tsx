@@ -23,6 +23,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
       if (values.value && props.handleSubmit) {
         const parsed = parseNumber(values.value);
         if (parsed !== null) {
+          console.log("SUBMITTING", parsed);
           props.handleSubmit(parsed);
         }
       }
