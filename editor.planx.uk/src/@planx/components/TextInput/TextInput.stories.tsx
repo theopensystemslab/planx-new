@@ -3,6 +3,7 @@ import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
+import { TextInputType } from "./model";
 import Public, { Props } from "./Public";
 
 const metadata: Meta = {
@@ -20,13 +21,13 @@ Frontend.args = {
   title: "How was your day?",
   description: "Be as descriptive as you can.",
   placeholder: "I started with a long stroll...",
-  type: "short",
+  type: TextInputType.Short,
 };
 
 export const FrontendEmail: Story<Props> = Template.bind({});
 FrontendEmail.args = {
   title: "What's your email?",
-  type: "email",
+  type: TextInputType.Email,
   placeholder: "",
   description: "",
 };

@@ -1,7 +1,7 @@
 import InputBase, { InputBaseProps } from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, forwardRef } from "react";
 
 import ErrorWrapper from "./ErrorWrapper";
 
@@ -20,6 +20,7 @@ export const useClasses = makeStyles((theme) => ({
   input: {
     backgroundColor: "#fff",
     fontSize: 15,
+    width: "100%",
     padding: theme.spacing(0, 1.5),
     height: 50,
     "& input": {
@@ -57,28 +58,30 @@ export const useClasses = makeStyles((theme) => ({
   },
 }));
 
-export default function Input(props: Props): FCReturn {
-  const classes = useClasses();
+export default forwardRef(
+  (props: Props, ref): FCReturn => {
+    const classes = useClasses();
 
-  const { format, bordered, ...restProps } = props;
+    const { format, bordered, errorMessage, ...restProps } = props;
 
-  return (
-    <ErrorWrapper error={props.errorMessage}>
-      <InputBase
-        className={classNames(
-          classes.input,
-          format === "large" && classes.questionInput,
-          format === "bold" && classes.bold,
-          format === "data" && classes.data,
-          bordered && classes.bordered
-        )}
-        classes={{
-          multiline: classes.inputMultiline,
-          adornedEnd: classes.adornedEnd,
-          focused: classes.focused,
-        }}
-        {...restProps}
-      />
-    </ErrorWrapper>
-  );
-}
+    return (
+      <ErrorWrapper error={errorMessage}>
+        <InputBase
+          className={classNames(
+            classes.input,
+            format === "large" && classes.questionInput,
+            format === "bold" && classes.bold,
+            format === "data" && classes.data,
+            bordered && classes.bordered
+          )}
+          classes={{
+            multiline: classes.inputMultiline,
+            adornedEnd: classes.adornedEnd,
+            focused: classes.focused,
+          }}
+          {...restProps}
+        />
+      </ErrorWrapper>
+    );
+  }
+);

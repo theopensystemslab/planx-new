@@ -20,13 +20,6 @@ const useStyles = makeStyles((theme) => ({
   selected: {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
-    "& $key": {
-      color: theme.palette.text.secondary,
-    },
-    "&$decision $key": {
-      color: theme.palette.primary.contrastText,
-      opacity: 0.6,
-    },
   },
   onFocus: {
     outline: `2px solid ${theme.palette.secondary.light}`,

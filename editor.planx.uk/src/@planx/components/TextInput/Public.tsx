@@ -1,35 +1,35 @@
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
-import React, { useMemo, useState } from "react";
+import { useFormik } from "formik";
+import React from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import RichTextInput from "ui/RichTextInput";
+import { object } from "yup";
 
 import type { TextInput, UserData } from "./model";
+import { userDataSchema } from "./model";
 
 export type Props = PublicProps<TextInput, UserData>;
 
-const isValidEmail = (str: string) => {
-  // eslint-disable-next-line
-  let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return regex.test(str);
-};
-
 const TextInputComponent: React.FC<Props> = (props) => {
-  const [value, setValue] = useState<string>("");
-  const isValid = useMemo(() => {
-    if (props.type === "email") {
-      return isValidEmail(value);
-    }
-    return !!value;
-  }, [value, props.type]);
+  const formik = useFormik({
+    initialValues: {
+      text: "",
+    },
+    onSubmit: (values) => {
+      props.handleSubmit && props.handleSubmit(values.text);
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: object({
+      text: userDataSchema(props.type),
+    }),
+  });
 
   return (
-    <Card
-      handleSubmit={() => props.handleSubmit && props.handleSubmit(value)}
-      isValid={isValid}
-    >
+    <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader
         title={props.title}
         description={props.description}
@@ -40,22 +40,22 @@ const TextInputComponent: React.FC<Props> = (props) => {
       <InputRow>
         {props.type === "long" ? (
           <RichTextInput
-            value={value}
+            name="text"
+            value={formik.values.text}
             placeholder={props.placeholder || "Type your answer"}
             bordered
-            onChange={(ev) => {
-              setValue(ev.target.value);
-            }}
+            onChange={formik.handleChange}
+            errorMessage={formik.errors.text}
           />
         ) : (
           <Input
+            name="text"
             type={props.type === "email" ? "email" : "text"}
-            value={value}
+            value={formik.values.text}
             placeholder={props.placeholder || "Type your answer"}
             bordered
-            onChange={(ev) => {
-              setValue(ev.target.value);
-            }}
+            onChange={formik.handleChange}
+            errorMessage={formik.errors.text}
           />
         )}
       </InputRow>

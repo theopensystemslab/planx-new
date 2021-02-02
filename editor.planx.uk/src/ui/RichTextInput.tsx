@@ -33,10 +33,13 @@ import React, {
   useState,
 } from "react";
 
+import ErrorWrapper from "./ErrorWrapper";
+
 interface Props extends InputBaseProps {
   className?: string;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
   bordered?: boolean;
+  errorMessage?: string;
 }
 
 const useClasses = makeStyles((theme) => ({
@@ -137,54 +140,56 @@ const RichTextInput: React.FC<Props> = (props) => {
   const classes = useClasses();
 
   return (
-    <Box
-      className={classNames(
-        classes.regular,
-        props.bordered ? classes.bordered : undefined
-      )}
-    >
-      <PluginsEditor
-        plugins={[inlineToolbarPlugin, linkPlugin]}
-        editorState={editorState}
-        placeholder={props.placeholder}
-        onChange={(newEditorState) => {
-          const newHtmlContent = draftToHtml(
-            convertToRaw(newEditorState.getCurrentContent())
-          );
-
-          const newHtmlContentNonEmpty =
-            typeof newHtmlContent === "string" &&
-            newHtmlContent.trim() === "<p></p>"
-              ? ""
-              : newHtmlContent;
-
-          if (props.onChange && newHtmlContent !== props.value) {
-            const changeEvent = ({
-              target: {
-                name: props.name,
-                value: newHtmlContentNonEmpty,
-              },
-            } as unknown) as ChangeEvent<HTMLInputElement>;
-            props.onChange(changeEvent);
-          }
-          setEditorState(newEditorState);
-        }}
-        spellCheck={false}
-      />
-      <inlineToolbarPlugin.InlineToolbar>
-        {(externalProps: any) => (
-          <>
-            <HeadlineOneButton {...externalProps} />
-            <HeadlineTwoButton {...externalProps} />
-            <BoldButton {...externalProps} />
-            <ItalicButton {...externalProps} />
-            <UnorderedListButton {...externalProps} />
-            <OrderedListButton {...externalProps} />
-            <linkPlugin.LinkButton {...externalProps} />
-          </>
+    <ErrorWrapper error={props.errorMessage}>
+      <Box
+        className={classNames(
+          classes.regular,
+          props.bordered ? classes.bordered : undefined
         )}
-      </inlineToolbarPlugin.InlineToolbar>
-    </Box>
+      >
+        <PluginsEditor
+          plugins={[inlineToolbarPlugin, linkPlugin]}
+          editorState={editorState}
+          placeholder={props.placeholder}
+          onChange={(newEditorState) => {
+            const newHtmlContent = draftToHtml(
+              convertToRaw(newEditorState.getCurrentContent())
+            );
+
+            const newHtmlContentNonEmpty =
+              typeof newHtmlContent === "string" &&
+              newHtmlContent.trim() === "<p></p>"
+                ? ""
+                : newHtmlContent;
+
+            if (props.onChange && newHtmlContent !== props.value) {
+              const changeEvent = ({
+                target: {
+                  name: props.name,
+                  value: newHtmlContentNonEmpty,
+                },
+              } as unknown) as ChangeEvent<HTMLInputElement>;
+              props.onChange(changeEvent);
+            }
+            setEditorState(newEditorState);
+          }}
+          spellCheck={false}
+        />
+        <inlineToolbarPlugin.InlineToolbar>
+          {(externalProps: any) => (
+            <>
+              <HeadlineOneButton {...externalProps} />
+              <HeadlineTwoButton {...externalProps} />
+              <BoldButton {...externalProps} />
+              <ItalicButton {...externalProps} />
+              <UnorderedListButton {...externalProps} />
+              <OrderedListButton {...externalProps} />
+              <linkPlugin.LinkButton {...externalProps} />
+            </>
+          )}
+        </inlineToolbarPlugin.InlineToolbar>
+      </Box>
+    </ErrorWrapper>
   );
 };
 

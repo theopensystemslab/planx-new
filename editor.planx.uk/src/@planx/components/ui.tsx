@@ -37,6 +37,7 @@ export type PublicProps<Data, UserData = {}> = Data & {
   handleSubmit?: (value?: UserData) => void;
   resetButton?: boolean;
   resetPreview?: () => void;
+  autoFocus?: boolean;
 };
 
 // XXX: We define the Icon type in terms of one of the Icons so as not to have to repeat ourselves

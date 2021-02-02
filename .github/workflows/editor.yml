@@ -58,7 +58,7 @@ jobs:
       - run: pnpm test
 
       - name: Set ENV Vars
-        if: endsWith(github.ref, '/master') != true
+        if: endsWith(github.ref, '/main') != true
         run: echo "SHORT_BRANCH_NAME=${GITHUB_HEAD_REF#refs/heads/}" >> $GITHUB_ENV
 
       - run: pnpm build
