@@ -5,7 +5,6 @@ import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
-import InputRowItem from "ui/InputRowItem";
 import InputRowLabel from "ui/InputRowLabel";
 import { object, string } from "yup";
 
@@ -23,7 +22,6 @@ export default function NumberInputComponent(props: Props): FCReturn {
       if (values.value && props.handleSubmit) {
         const parsed = parseNumber(values.value);
         if (parsed !== null) {
-          console.log("SUBMITTING", parsed);
           props.handleSubmit(parsed);
         }
       }
