@@ -35,13 +35,7 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
 
   const classes = useClasses();
 
-  const handleChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation();
-    record(id);
-  };
-
-  const hasMoreInfo = question.data.info || question.data.policyRef;
-
+  const hasMoreInfo = question.data.info ?? question.data.policyRef;
   const toggleAdditionalInfo = () => setShowMoreInfo(!showMoreInfo);
 
   return (
@@ -71,7 +65,13 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
           <Typography variant="body2" color="textPrimary">
             {question.data.text} <strong>{response}</strong>
           </Typography>
-          <Button color="inherit" onClick={handleChange}>
+          <Button
+            color="inherit"
+            onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+              e.stopPropagation();
+              record(id);
+            }}
+          >
             change
           </Button>
         </Box>
