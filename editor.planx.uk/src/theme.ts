@@ -1,6 +1,6 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
-let theme = createMuiTheme({
+const theme = createMuiTheme({
   typography: {
     fontFamily: "'Inter', Arial",
     h1: {
@@ -136,6 +136,4 @@ theme.props = {
   },
 };
 
-theme = responsiveFontSizes(theme);
-
-export default theme;
+export default responsiveFontSizes(theme);
