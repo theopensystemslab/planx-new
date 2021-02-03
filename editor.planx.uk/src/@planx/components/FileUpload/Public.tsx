@@ -9,10 +9,12 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { uploadFile } from "api/upload";
 import classNames from "classnames";
+import { useFormik } from "formik";
 import { nanoid } from "nanoid";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import { useDropzone } from "react-dropzone";
+import { array,object } from "yup";
 
 interface Props extends MoreInformation {
   title?: string;
@@ -114,19 +116,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FileUpload: React.FC<Props> = (props) => {
-  const [slots, setSlots] = React.useState([]);
-  return (
-    <Card
-      isValid={!slots.some((slot: any) => slot.status === "uploading")}
-      handleSubmit={() => {
+  const formik = useFormik({
+    initialValues: {
+      slots: [],
+    },
+    onSubmit: (values) => {
+      props.handleSubmit &&
         props.handleSubmit(
-          slots.map((slot: any) => ({
+          values.slots.map((slot: any) => ({
             url: slot.url,
             filename: slot.file.path,
           }))
         );
-      }}
-    >
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: object({
+      slots: array()
+        .required()
+        .test({
+          name: "allSuccessful",
+          message: "At least one file must be uploaded",
+          test: (slots?: Array<any>) => {
+            if (!slots || slots.length === 0) {
+              return false;
+            }
+            return !slots.some((slot: any) => slot.status === "uploading");
+          },
+        }),
+    }),
+  });
+  return (
+    <Card isValid handleSubmit={formik.handleSubmit}>
       <QuestionHeader
         title={props.title}
         description={props.description}
@@ -134,7 +155,12 @@ const FileUpload: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
         policyRef={props.policyRef}
       />
-      <Dropzone slots={slots} setSlots={setSlots} />
+      <Dropzone
+        slots={formik.values.slots}
+        setSlots={(newSlots: Array<any>) => {
+          formik.setFieldValue("slots", newSlots);
+        }}
+      />
     </Card>
   );
 };
