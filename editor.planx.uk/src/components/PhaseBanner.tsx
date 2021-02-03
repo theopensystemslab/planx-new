@@ -41,7 +41,7 @@ export default function PhaseBanner(): FCReturn {
         display="flex"
         alignItems="center"
         borderBottom={`1px solid ${theme.palette.grey[300]}`}
-        px={1}
+        px={2}
         py={1}
       >
         <Box
@@ -49,13 +49,12 @@ export default function PhaseBanner(): FCReturn {
           color="white"
           display="flex"
           alignItems="center"
-          flexShrink={3}
-          flexGrow={0}
+          flexBasis={0}
           px={2}
           mr={2}
           className={classes.betaIcon}
         >
-          <Typography color="inherit" variant="h6">
+          <Typography color="inherit" variant="h6" align="center">
             BETA
           </Typography>
         </Box>
