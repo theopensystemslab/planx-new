@@ -5,11 +5,10 @@ import Typography from "@material-ui/core/Typography";
 import React from "react";
 import { Link } from "react-navi";
 
+import type { Team } from "../types";
+
 interface Props {
-  teams: Array<{
-    name: string;
-    slug: string;
-  }>;
+  teams: Array<Team>;
 }
 
 const useStyles = makeStyles<Theme>((theme) => ({

@@ -12,20 +12,12 @@ import components from "../pages/FlowEditor/components/forms";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import { SLUGS } from "../pages/FlowEditor/data/types";
 import { useStore } from "../pages/FlowEditor/lib/store";
+import type { Flow } from "../types";
 import { makeTitle } from "./utils";
 
 const sorter = natsort({ insensitive: true });
 const sortFlows = (a: { text: string }, b: { text: string }) =>
   sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""));
-
-interface Flow {
-  id: string;
-  name: string;
-  slug: string;
-  team: {
-    slug: string;
-  };
-}
 
 const getExternalPortals = async () => {
   const { data } = await client.query({

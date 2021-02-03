@@ -1,3 +1,5 @@
 import React from "react";
 
-export const PreviewContext = React.createContext(null);
+import type { Flow } from "../../types";
+
+export const PreviewContext = React.createContext<Flow | undefined>(undefined);

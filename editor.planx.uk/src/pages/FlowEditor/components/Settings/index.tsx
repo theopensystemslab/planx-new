@@ -6,12 +6,12 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
-import Typography from "@material-ui/core/Typography";
 import Close from "@material-ui/icons/Close";
 import React from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 
 import { rootFlowPath } from "../../../../routes/utils";
+import type { Settings } from "../../../../types";
 import DataManagerSettings from "./DataManagerSettings";
 import DesignSettings from "./DesignSettings";
 import ServiceFlags from "./ServiceFlags";
@@ -36,9 +36,7 @@ function TabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Container maxWidth="sm" disableGutters>
-          <Box py={7}>
-            <Typography>{children}</Typography>
-          </Box>
+          <Box py={7}>{children}</Box>
         </Container>
       )}
     </div>
@@ -86,7 +84,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: "#f2f2f2",
-    height: "100%",
+    position: "absolute",
+    // TODO: neater way to do this; relies on hard-coded header height
+    top: 75,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   tabs: {
     backgroundColor: "#ddd",
@@ -100,7 +103,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const tabsOrder = ["team", "flags", "design", "data-manager"];
 
-const NavTabs: React.FC<{ tab?: string }> = (props) => {
+const NavTabs: React.FC<{ tab?: string; settings?: Settings }> = (props) => {
   const classes = useStyles();
   const { navigate } = useNavigation();
   const { data } = useCurrentRoute();
@@ -184,7 +187,7 @@ const NavTabs: React.FC<{ tab?: string }> = (props) => {
         />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <DesignSettings />
+        <DesignSettings settings={props.settings?.design} teamId={data.team} />
       </TabPanel>
       <TabPanel value={value} index={3}>
         <DataManagerSettings />

@@ -107,7 +107,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
       <Box>
         {formik.values.flagSets.map((flagSet, i) => {
           return (
-            <Box py={3} width="100%" borderBottom={1}>
+            <Box py={3} width="100%" borderBottom={1} key={i}>
               <Box pb={3}>
                 <InputGroup
                   deletable={flagSet.id ? false : true}
@@ -136,7 +136,7 @@ const ServiceFlags: React.FC<IServiceFlags> = ({ flagSets }) => {
               </Box>
               {flagSet.flags.map((flag, j) => {
                 return (
-                  <Box pl={6.5} pb={2}>
+                  <Box pl={6.5} pb={2} key={j}>
                     <InputGroup
                       deletable={flag.new ? true : flagSet.id ? false : true}
                       draggable={flagSet.id ? false : true}

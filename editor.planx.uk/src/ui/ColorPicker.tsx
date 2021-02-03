@@ -87,7 +87,7 @@ export default function ColorPicker(props: Props): FCReturn {
 
   return (
     <div className={classNames(classes.root, props.inline && classes.inline)}>
-      <Typography className={classes.label} variant="body1">
+      <Typography className={classes.label} variant="body2">
         {props.label || "Colour"}:{" "}
       </Typography>
       <ButtonBase
