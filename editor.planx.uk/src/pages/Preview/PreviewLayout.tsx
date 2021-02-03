@@ -44,15 +44,17 @@ const PreviewLayout: React.FC<{
       : undefined;
 
   const generatePreviewTheme = (baseTheme: Theme) =>
-    createMuiTheme({
-      ...baseTheme,
-      palette: {
-        ...baseTheme.palette,
-        primary: {
-          main: theme.primary,
-        },
-      },
-    });
+    theme.primary
+      ? createMuiTheme({
+          ...baseTheme,
+          palette: {
+            ...baseTheme.palette,
+            primary: {
+              main: theme.primary,
+            },
+          },
+        })
+      : baseTheme;
 
   return (
     <ThemeProvider theme={generatePreviewTheme}>
