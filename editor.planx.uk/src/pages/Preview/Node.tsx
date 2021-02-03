@@ -131,7 +131,7 @@ const Node: React.FC<any> = (props: Props) => {
           }}
           headingTitle={flag.text}
           subheading=""
-          reasonsTitle="Responses"
+          reasonsTitle="Reasons"
           responses={responses}
         />
       );

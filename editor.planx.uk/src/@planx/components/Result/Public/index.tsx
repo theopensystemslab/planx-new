@@ -5,18 +5,11 @@ import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
+import type { Node } from "./model";
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
 
-interface Node {
-  id: string;
-  data: {
-    text: string;
-    flag?: string;
-  };
-}
-
-interface Props {
+export interface Props {
   handleSubmit: handleSubmit;
   headingColor: {
     text: string;
@@ -36,10 +29,12 @@ interface Props {
 const Responses = ({ responses }: any) => (
   <>
     {responses.map(({ question, selections }: any) => (
-      <ResultReason key={question.id} id={question.id}>
-        {question.data.text}{" "}
-        <strong>{selections.map((s: any) => s.data.text).join(",")}</strong>
-      </ResultReason>
+      <ResultReason
+        key={question.id}
+        id={question.id}
+        question={question}
+        response={selections.map((s: any) => s.data.text).join(",")}
+      />
     ))}
   </>
 );
@@ -57,20 +52,21 @@ const Result: React.FC<Props> = ({
   const hiddenResponses = responses.filter((r) => r.hidden);
 
   return (
-    <Card handleSubmit={handleSubmit} isValid>
+    <Card handleSubmit={handleSubmit} isValid fullWidth>
       <ResultSummary
         subheading={subheading}
         color={headingColor}
         heading={headingTitle}
-      >
-        {headingDescription}
-      </ResultSummary>
-      <Box mb={2}>
-        <Typography variant="h3" gutterBottom>
-          {reasonsTitle}
-        </Typography>
+      />
+      <Box mb={2} mt={0} px={{ xs: 2, md: 5 }}>
+        <Typography variant="body2">{headingDescription}</Typography>
+        <Box mt={4}>
+          <Typography variant="h3" gutterBottom>
+            {reasonsTitle}
+          </Typography>
+        </Box>
         <Box mb={3}>
-          <Box mb={1} color="text.secondary">
+          <Box mb={1} color="secondary.dark">
             Planning Permission
           </Box>
 
