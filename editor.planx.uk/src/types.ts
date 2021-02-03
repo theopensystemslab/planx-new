@@ -23,13 +23,13 @@ export interface Settings {
   design?: DesignSettings;
 }
 
+interface InformationPageContent {
+  heading: string;
+  content: string;
+}
+
 export interface DesignSettings {
   color?: string;
   privacy?: InformationPageContent;
   help?: InformationPageContent;
-}
-
-export interface InformationPageContent {
-  heading: string;
-  content: string;
 }
