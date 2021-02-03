@@ -20,8 +20,8 @@ import create from "zustand";
 import vanillaCreate from "zustand/vanilla";
 
 import { client } from "../../../lib/graphql";
+import type { Settings } from "../../../types";
 import { FlowLayout } from "../components/Flow";
-import { Settings } from "../components/Settings/model";
 import { flatFlags } from "../data/flags";
 import { connectToDB, getConnection } from "./sharedb";
 

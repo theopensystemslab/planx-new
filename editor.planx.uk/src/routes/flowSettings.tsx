@@ -4,7 +4,7 @@ import { compose, mount, redirect, route, withData } from "navi";
 import React from "react";
 
 import FlowSettings from "../pages/FlowEditor/components/Settings";
-import { Settings } from "../pages/FlowEditor/components/Settings/model";
+import type { Settings } from "../types";
 import { makeTitle } from "./utils";
 
 const flowSettingsRoutes = compose(

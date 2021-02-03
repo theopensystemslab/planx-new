@@ -11,9 +11,9 @@ import React from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 
 import { rootFlowPath } from "../../../../routes/utils";
+import type { Settings } from "../../../../types";
 import DataManagerSettings from "./DataManagerSettings";
 import DesignSettings from "./DesignSettings";
-import { Settings } from "./model";
 import ServiceFlags from "./ServiceFlags";
 import TeamSettings from "./TeamSettings";
 

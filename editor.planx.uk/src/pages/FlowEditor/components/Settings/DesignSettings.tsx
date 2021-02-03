@@ -12,8 +12,8 @@ import InputRowItem from "ui/InputRowItem";
 import InputRowLabel from "ui/InputRowLabel";
 import OptionButton from "ui/OptionButton";
 
+import type { DesignSettings } from "../../../../types";
 import { useStore } from "../../lib/store";
-import { DesignSettings } from "./model";
 
 interface Props {
   settings?: DesignSettings;

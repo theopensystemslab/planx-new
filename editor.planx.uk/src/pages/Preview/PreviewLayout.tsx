@@ -5,7 +5,7 @@ import { useCurrentRoute } from "react-navi";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import type { DesignSettings } from "../FlowEditor/components/Settings/model";
+import type { DesignSettings } from "../../types";
 
 const PreviewLayout: React.FC<{
   children?: any;

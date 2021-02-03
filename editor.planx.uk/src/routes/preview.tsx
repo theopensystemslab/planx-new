@@ -7,9 +7,10 @@ import InformationPage from "../components/InformationPage";
 import { dataMerged } from "../lib/dataMergedHotfix";
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
-import { FlowMetadata, PreviewContext } from "../pages/Preview/Context";
+import { PreviewContext } from "../pages/Preview/Context";
 import Layout from "../pages/Preview/PreviewLayout";
 import Questions from "../pages/Preview/Questions";
+import type { Flow } from "../types";
 
 const routes = compose(
   withData((req) => ({
@@ -41,7 +42,7 @@ const routes = compose(
       },
     });
 
-    const flow: FlowMetadata = data.flows[0];
+    const flow: Flow = data.flows[0];
 
     if (!flow) throw new NotFoundError();
 
