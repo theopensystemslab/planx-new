@@ -71,7 +71,7 @@ const Question: React.FC<IQuestion> = (props) => {
             props.responses?.map((response) => {
               const onClick = () => {
                 formik.setFieldValue("selected.a", response.responseKey);
-                props.handleSubmit(response.id);
+                setTimeout(() => props.handleSubmit(response.id), 400);
               };
               const selected = a === response.responseKey;
               const buttonProps = {
