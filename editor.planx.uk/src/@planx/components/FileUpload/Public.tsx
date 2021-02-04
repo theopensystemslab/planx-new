@@ -12,7 +12,7 @@ import classNames from "classnames";
 import { useFormik } from "formik";
 import { nanoid } from "nanoid";
 import { handleSubmit } from "pages/Preview/Node";
-import React from "react";
+import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import ErrorWrapper from "ui/ErrorWrapper";
 import { array, object } from "yup";
@@ -160,8 +160,8 @@ const FileUpload: React.FC<Props> = (props) => {
       <ErrorWrapper error={formik.errors.slots}>
         <Dropzone
           slots={formik.values.slots}
-          setSlots={(setNewSlots: (prevSlots: Array<any>) => Array<any>) => {
-            formik.setFieldValue("slots", setNewSlots(formik.values.slots));
+          setSlots={(updater: any) => {
+            formik.setFieldValue("slots", updater(formik.values.slots));
           }}
         />
       </ErrorWrapper>
@@ -172,14 +172,12 @@ const FileUpload: React.FC<Props> = (props) => {
 function Dropzone(props: any) {
   const { slots, setSlots } = props;
   const classes = useStyles();
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: ["image/*", "text/*", "application/pdf"],
-    multiple: true,
-    onDrop: (acceptedFiles) => {
+  const onDrop = useCallback(
+    (acceptedFiles) => {
       setSlots((slots: any) => {
         return [
           ...slots,
-          ...acceptedFiles.map((file) => {
+          ...acceptedFiles.map((file: any) => {
             // XXX: This is a non-blocking promise chain
             //      If a file is removed while it's being uploaded, nothing should break because we're using map()
             uploadFile(file, {
@@ -219,6 +217,12 @@ function Dropzone(props: any) {
         ];
       });
     },
+    [setSlots]
+  );
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: ["image/*", "text/*", "application/pdf"],
+    multiple: true,
+    onDrop,
     onDropRejected: (fileRejections) => {
       // TODO: Handle invalid file types
     },
