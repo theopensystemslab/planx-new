@@ -14,7 +14,8 @@ import { nanoid } from "nanoid";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import { useDropzone } from "react-dropzone";
-import { array,object } from "yup";
+import ErrorWrapper from "ui/ErrorWrapper";
+import { array, object } from "yup";
 
 interface Props extends MoreInformation {
   title?: string;
@@ -146,6 +147,7 @@ const FileUpload: React.FC<Props> = (props) => {
         }),
     }),
   });
+
   return (
     <Card isValid handleSubmit={formik.handleSubmit}>
       <QuestionHeader
@@ -155,12 +157,14 @@ const FileUpload: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
         policyRef={props.policyRef}
       />
-      <Dropzone
-        slots={formik.values.slots}
-        setSlots={(newSlots: Array<any>) => {
-          formik.setFieldValue("slots", newSlots);
-        }}
-      />
+      <ErrorWrapper error={formik.errors.slots}>
+        <Dropzone
+          slots={formik.values.slots}
+          setSlots={(setNewSlots: (prevSlots: Array<any>) => Array<any>) => {
+            formik.setFieldValue("slots", setNewSlots(formik.values.slots));
+          }}
+        />
+      </ErrorWrapper>
     </Card>
   );
 };
