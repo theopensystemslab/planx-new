@@ -6,7 +6,6 @@ dependencies:
   '@draft-js-plugins/editor': 4.0.0_draft-js@0.11.7+react@17.0.1
   '@draft-js-plugins/inline-toolbar': 4.0.0_225b2ecd41d4c6371fdfe59e40d86bbb
   '@feedback-fish/react': 1.2.1_react@17.0.1
-  '@mapbox/mapbox-gl-draw': 1.2.0_mapbox-gl@1.13.0
   '@material-ui/core': 4.11.0_4695a47c40ef995f48f8c834d2fb82ec
   '@material-ui/icons': 4.9.1_ee56c09a62875a4df5ca6931744063b9
   '@material-ui/lab': 4.0.0-alpha.56_ee56c09a62875a4df5ca6931744063b9
@@ -47,7 +46,7 @@ dependencies:
   react-dropzone: 11.2.4_react@17.0.1
   react-feather: 2.0.8_react@17.0.1
   react-html-parser: 2.0.2_react@17.0.1
-  react-mapbox-gl: 5.1.1_c7c44047a99c9d5dd186e870786cf254
+  react-map-gl: 6.1.4_react@17.0.1
   react-markdown: 4.3.1_react@17.0.1
   react-navi: 0.14.4_navi@0.14.0+react@17.0.1
   react-navi-helmet-async: 0.14.4_9e1187d2fd1b61ae47f82501f8cd8b4d
@@ -3020,6 +3019,12 @@ packages:
       regenerator-runtime: 0.13.7
     resolution:
       integrity: sha512-J5AIf3vPj3UwXaAzb5j1xM4WAQDX3EMgemF8rjCP3SoW09LfRKAXQKt6CoVYl230P6iWdRcBbnLDDdnqWxZSCA==
+  /@babel/runtime/7.12.13:
+    dependencies:
+      regenerator-runtime: 0.13.7
+    dev: false
+    resolution:
+      integrity: sha512-8+3UMPBrjFa/6TtKi/7sehPKqfAm4g6K+YQjyyFOLUTxzOngcRZTlAVY8sc2CORJYqdHQY8gRPHmn+qo15rCBw==
   /@babel/runtime/7.12.5:
     dependencies:
       regenerator-runtime: 0.13.7
@@ -3620,38 +3625,6 @@ packages:
       node: '>= 10.14.2'
     resolution:
       integrity: sha512-fC6QCp7Sc5sX6g8Tvbmj4XUTbyrik0akgRy03yjXbQaBWWNWGE7SGtJk98m0N8nzegD/7SggrUlivxo5ax4KWQ==
-  /@mapbox/extent/0.4.0:
-    dev: false
-    resolution:
-      integrity: sha1-PlkfMuHww5gchkI597CsBuYQ+Kk=
-  /@mapbox/geojson-area/0.2.2:
-    dependencies:
-      wgs84: 0.0.0
-    dev: false
-    resolution:
-      integrity: sha1-GNeBSqNr8j+7zDefjiaiKSfevxA=
-  /@mapbox/geojson-coords/0.0.0:
-    dependencies:
-      '@mapbox/geojson-normalize': 0.0.1
-      geojson-flatten: 0.2.4
-    dev: false
-    resolution:
-      integrity: sha1-SEeluWBZZm5SeiE551412E/Vj1A=
-  /@mapbox/geojson-extent/0.3.2:
-    dependencies:
-      '@mapbox/extent': 0.4.0
-      '@mapbox/geojson-coords': 0.0.0
-      rw: 0.1.4
-      traverse: 0.6.6
-    dev: false
-    hasBin: true
-    resolution:
-      integrity: sha1-ob2yAVr9DgMcGMPyn36yKeThlQ8=
-  /@mapbox/geojson-normalize/0.0.1:
-    dev: false
-    hasBin: true
-    resolution:
-      integrity: sha1-HaHms6et060pkJsw9Dj2BYG3zYA=
   /@mapbox/geojson-rewind/0.5.0:
     dependencies:
       concat-stream: 2.0.0
@@ -3664,40 +3637,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-e9EBqHHv3EORHrSfbR9DqecPNn+AmuAoQxV6aL8Xu30bJMJR1o8PZLZzpk1Wq7/NfCbuhmakHTPYRhoqLsXRnw==
-  /@mapbox/geojsonhint/3.0.0:
-    dependencies:
-      concat-stream: 1.6.2
-      jsonlint-lines: 1.7.1
-      minimist: 1.2.0
-      vfile: 4.2.0
-      vfile-reporter: 5.1.2
-    dev: false
-    hasBin: true
-    resolution:
-      integrity: sha512-zHcyh1rDHYnEBd6NvOWoeHLuvazlDkIjvz9MJx4cKwcKTlfrqgxVnTv1QLnVJnsSU5neJnhQJcgscR/Zl4uYgw==
   /@mapbox/jsonlint-lines-primitives/2.0.2:
     dev: false
     engines:
       node: '>= 0.6'
     resolution:
       integrity: sha1-zlblOfg1UrWNENZy6k1vya3HsjQ=
-  /@mapbox/mapbox-gl-draw/1.2.0_mapbox-gl@1.13.0:
-    dependencies:
-      '@mapbox/geojson-area': 0.2.2
-      '@mapbox/geojson-extent': 0.3.2
-      '@mapbox/geojson-normalize': 0.0.1
-      '@mapbox/geojsonhint': 3.0.0
-      '@mapbox/point-geometry': 0.1.0
-      eslint-plugin-import: 2.22.1
-      hat: 0.0.3
-      lodash.isequal: 4.5.0
-      mapbox-gl: 1.13.0
-      xtend: 4.0.2
-    dev: false
-    peerDependencies:
-      mapbox-gl: '>=0.27.0 <2.0.0'
-    resolution:
-      integrity: sha512-gMrP2zn8PzDtrs72FMJTPytCumX5vUn9R7IK38qBOVy9UfqbdWr56KYuNA/2X+jKn4FIOpmWf8CWkKpOaQkv7w==
   /@mapbox/mapbox-gl-supported/1.5.0_mapbox-gl@1.13.0:
     dependencies:
       mapbox-gl: 1.13.0
@@ -3706,6 +3651,10 @@ packages:
       mapbox-gl: '>=0.32.1 <2.0.0'
     resolution:
       integrity: sha512-/PT1P6DNf7vjEEiPkVIRJkvibbqWtqnyGaBz3nfRdcxclNSnSdaLU5tfAgcD7I8Yt5i+L19s406YLl1koLnLbg==
+  /@mapbox/mapbox-gl-supported/2.0.0:
+    dev: false
+    resolution:
+      integrity: sha512-zu4udqYiBrKMQKwpKJ4hhPON7tz0QR/JZ3iGpHnNWFmH3Sv/ysxlICATUtGCFpsyJf2v1WpFhlzaZ3GhhKmPMA==
   /@mapbox/point-geometry/0.1.0:
     dev: false
     resolution:
@@ -3883,6 +3832,13 @@ packages:
       react-dom: ^16.8.0
     resolution:
       integrity: sha512-eg29v74P7W5r6a4tWWDAAfZldXIzfyO1am2fIsC39hdUUHm/33k6pGOKPbgDjg/U/4ifmgAePy/1OjkKN6rFRw==
+  /@math.gl/web-mercator/3.4.2:
+    dependencies:
+      '@babel/runtime': 7.12.13
+      gl-matrix: 3.3.0
+    dev: false
+    resolution:
+      integrity: sha512-Az/WI8vxbqnrTEcYgqDQ3CgCRoFA2a4XT9mkjVrT7iIlfrUF5lrIXcmpljjKvoFNBldKrng7hFSeHHM2ghgSrg==
   /@mdx-js/loader/1.6.21_react@17.0.1:
     dependencies:
       '@mdx-js/mdx': 1.6.21
@@ -5261,24 +5217,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Zv+3N1ep9P5JvR0YOYagLANyapGWQBh8atdeR3bKpWcigVXFsEKNUw03U/5xnh+cKzm7yozHD6MFJkqQv55y0g==
-  /@turf/bbox/4.7.3:
-    dependencies:
-      '@turf/meta': 4.7.4
-    dev: false
-    resolution:
-      integrity: sha1-461PEKfptBtSKIDTMIMZgZkFkGc=
-  /@turf/helpers/4.7.3:
-    dev: false
-    resolution:
-      integrity: sha1-vDEqxDyrPFMqSDFRxMOCxWSUKek=
   /@turf/helpers/6.1.4:
     dev: false
     resolution:
       integrity: sha512-vJvrdOZy1ngC7r3MDA7zIGSoIgyrkWcGnNIEaqn/APmw+bVLF2gAW7HIsdTxd12s5wQMqEpqIQrmrbRRZ0xC7g==
-  /@turf/meta/4.7.4:
-    dev: false
-    resolution:
-      integrity: sha1-beLx6YkLj2S2aeS0fAmyCJMGOXc=
   /@turf/meta/6.0.2:
     dependencies:
       '@turf/helpers': 6.1.4
@@ -5436,6 +5378,12 @@ packages:
   /@types/lodash/4.14.165:
     resolution:
       integrity: sha512-tjSSOTHhI5mCHTy/OOXYIhi2Wt1qcbHmuXD1Ha7q70CgI/I71afO4XtLb/cVexki1oVYchpul/TOuu3Arcdxrg==
+  /@types/mapbox-gl/2.0.4:
+    dependencies:
+      '@types/geojson': 7946.0.7
+    dev: false
+    resolution:
+      integrity: sha512-0qxx/jK+/t5dcJ9LjTCvtcUamryk8yZUCQcpcOs/mQU6JipW15taAfUKvyNLC/PmhJYLSN5U4GrLFl6cBSGemg==
   /@types/markdown-to-jsx/6.11.3:
     dependencies:
       '@types/react': 16.14.2
@@ -5609,12 +5557,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw==
-  /@types/supercluster/5.0.2:
-    dependencies:
-      '@types/geojson': 7946.0.7
-    dev: false
-    resolution:
-      integrity: sha512-5PONNyiZXHS6oiW0H1rsNQ+Apkg+cqp3jP4HRhCAcgASIj3ifrFsdj1QB5TvArqT5N8RetK6UH7873COgRZwoQ==
   /@types/tapable/1.0.6:
     resolution:
       integrity: sha512-W+bw9ds02rAQaMvaLYxAbJ6cvguW/iJXNT6lTssS1ps6QdrMKttqEAMEG/b5CR8TZl3/L7/lH0ZV5nNR1LXikA==
@@ -5630,6 +5572,7 @@ packages:
     resolution:
       integrity: sha512-7npvPKV+jINLu1SpSYVWG8KvyJBhBa8tmzMMdDoVc2pWUYHN8KIXlPJhjJ4LT97c4dXJA2SHL/q6ADbDriZN+Q==
   /@types/unist/2.0.3:
+    dev: true
     resolution:
       integrity: sha512-FvUupuM3rlRsRtCN+fDudtmytGO6iHJuuRKS1Ss0pG5z8oX0diNEw94UEL7hgDbpN94rgaK5R7sWm6RrSkZuAQ==
   /@types/webpack-env/1.16.0:
@@ -6002,10 +5945,6 @@ packages:
   /@xtuc/long/4.2.2:
     resolution:
       integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
-  /JSV/4.0.2:
-    dev: false
-    resolution:
-      integrity: sha1-0Hf2glVx+CEy+d/67Vh7QCn+/1c=
   /abab/2.0.5:
     dev: false
     resolution:
@@ -6181,6 +6120,7 @@ packages:
     resolution:
       integrity: sha1-w7M6te42DYbg5ijwRorn7yfWVN8=
   /ansi-regex/3.0.0:
+    dev: true
     engines:
       node: '>=4'
     resolution:
@@ -6195,12 +6135,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-bY6fj56OUQ0hU1KjFNDQuJFezqKdrAyFdIevADiqrWHwSlbmBNMHp5ak2f40Pm8JTFyM2mqxkG6ngkHO11f/lg==
-  /ansi-styles/1.0.0:
-    dev: false
-    engines:
-      node: '>=0.8.0'
-    resolution:
-      integrity: sha1-yxAt8cVvUSPquLZ817mAJ6AnkXg=
   /ansi-styles/2.2.1:
     dev: true
     engines:
@@ -7561,16 +7495,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-vlNK021QdI7PNeiUh/lKkC/mNHHfV0m/Ad5JoI0TYtlBnJAslM/JIkm/tGC88bkLIwO6OQ5uV6ztS6kVAtCDlg==
-  /chalk/0.4.0:
-    dependencies:
-      ansi-styles: 1.0.0
-      has-color: 0.1.7
-      strip-ansi: 0.1.1
-    dev: false
-    engines:
-      node: '>=0.8.0'
-    resolution:
-      integrity: sha1-UZmj3c0MHv4jvAjBsCewYXbgxk8=
   /chalk/1.1.3:
     dependencies:
       ansi-styles: 2.2.1
@@ -8781,10 +8705,6 @@ packages:
   /dedent/0.7.0:
     resolution:
       integrity: sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw=
-  /deep-equal/1.0.1:
-    dev: false
-    resolution:
-      integrity: sha1-9dJgKStmDghO/0zbyfCK0yR0SLU=
   /deep-equal/1.1.1:
     dependencies:
       is-arguments: 1.1.0
@@ -9670,28 +9590,6 @@ packages:
       eslint: ^7.1.0
     resolution:
       integrity: sha512-z7ULdTxuhlRJcEe1MVljePXricuPOrsWfScRXFhNzVD5dmTHWjIF57AxD0e7AbEoLSbjSsaA5S+hCg43WvpXJQ==
-  /eslint-plugin-import/2.22.1:
-    dependencies:
-      array-includes: 3.1.1
-      array.prototype.flat: 1.2.3
-      contains-path: 0.1.0
-      debug: 2.6.9
-      doctrine: 1.5.0
-      eslint-import-resolver-node: 0.3.4
-      eslint-module-utils: 2.6.0
-      has: 1.0.3
-      minimatch: 3.0.4
-      object.values: 1.1.1
-      read-pkg-up: 2.0.0
-      resolve: 1.19.0
-      tsconfig-paths: 3.9.0
-    dev: false
-    engines:
-      node: '>=4'
-    peerDependencies:
-      eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0
-    resolution:
-      integrity: sha512-8K7JjINHOpH64ozkAhpT3sd+FswIZTfMZTjdx052pnWrgRCVfp8op9tbjpAk3DdUeI/Ba4C8OjdC0r90erHEOw==
   /eslint-plugin-import/2.22.1_eslint@7.18.0:
     dependencies:
       array-includes: 3.1.1
@@ -10467,19 +10365,6 @@ packages:
       node: '>=4.0'
     resolution:
       integrity: sha512-aq6gF1BEKje4a9i9+5jimNFIpq4Q1WiwBToeRK5NvZBd/TRsmW8BsJfOEGkr76TbOyPVD3OVDN910EcUNtRYEA==
-  /follow-redirects/1.13.1_debug@4.3.1:
-    dependencies:
-      debug: 4.3.1_supports-color@6.1.0
-    dev: false
-    engines:
-      node: '>=4.0'
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    resolution:
-      integrity: sha512-SSG5xmZh1mkPGyKzjZP8zLjltIfpW32Y5QpdNJyjcfGxK3qo3NDDkZOZSFiGn1A6SclQxY9GzEwAHQ3dmYRWpg==
   /follow-redirects/1.5.10:
     dependencies:
       debug: 3.1.0
@@ -10756,14 +10641,6 @@ packages:
       node: '>=6.9.0'
     resolution:
       integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
-  /geojson-flatten/0.2.4:
-    dependencies:
-      get-stdin: 6.0.0
-      minimist: 1.2.0
-    dev: false
-    hasBin: true
-    resolution:
-      integrity: sha512-LiX6Jmot8adiIdZ/fthbcKKPOfWjTQchX/ggHnwMZ2e4b0I243N1ANUos0LvnzepTEsj0+D4fIJ5bKhBrWnAHA==
   /geojson-vt/3.2.1:
     dev: false
     resolution:
@@ -10802,12 +10679,6 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-uWjGsKBDhDJJAui/Gl3zJXmkUP4=
-  /get-stdin/6.0.0:
-    dev: false
-    engines:
-      node: '>=4'
-    resolution:
-      integrity: sha512-jp4tHawyV7+fkkSKyvjuLZswblUtz+SQKzSWnBbii16BuZksJlU1wuBYXY75r+duh/llF1ur6oNwi+2ZzjKZ7g==
   /get-stream/4.1.0:
     dependencies:
       pump: 3.0.0
@@ -11061,6 +10932,12 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-FNHi6mmoHvs1mxZAds4PpdCS6QG8B4C1krxJsMutgxl5t3+GlRTzzI3NEkifXx2pVsOvJdOGSmIgDhQ55FwdPA==
+  /hammerjs/2.0.8:
+    dev: false
+    engines:
+      node: '>=0.8.0'
+    resolution:
+      integrity: sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=
   /handle-thing/2.0.1:
     dev: false
     resolution:
@@ -11097,12 +10974,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-G1LWKhDSvhGeAQ8mPVQlqNcOB2sJdwATtZKl2pDKKHfpf/rYj24lkinxf69blJbnsvtqqNU+L3SL50vzZhXOnw==
-  /has-color/0.1.7:
-    dev: false
-    engines:
-      node: '>=0.10.0'
-    resolution:
-      integrity: sha1-ZxRKUmDDT8PMpnfQQdr1L+e3iy8=
   /has-cors/1.1.0:
     dev: true
     resolution:
@@ -11457,17 +11328,15 @@ packages:
     dev: false
     resolution:
       integrity: sha512-t7hjvef/5HEK7RWTdUzVUhl8zkEu+LlaE0IYzdMuvbSDipxBRpOn4Uhw8ZyECEa808iVT8XCjzo6xmYt4CiLZg==
-  /http-proxy-middleware/0.19.1_debug@4.3.1:
+  /http-proxy-middleware/0.19.1:
     dependencies:
-      http-proxy: 1.18.1_debug@4.3.1
+      http-proxy: 1.18.1
       is-glob: 4.0.1
       lodash: 4.17.20
       micromatch: 3.1.10
     dev: false
     engines:
       node: '>=4.0.0'
-    peerDependencies:
-      debug: '*'
     resolution:
       integrity: sha512-yHYTgWMQO8VvwNS22eLLloAkvungsKdKTLO8AJlftYIKNfJr3GK3zK0ZCfzDDGUBttdGc8xFy1mCitvNKQtC3Q==
   /http-proxy-middleware/1.0.6:
@@ -11487,21 +11356,8 @@ packages:
       eventemitter3: 4.0.7
       follow-redirects: 1.13.0
       requires-port: 1.0.0
-    dev: true
     engines:
       node: '>=8.0.0'
-    resolution:
-      integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==
-  /http-proxy/1.18.1_debug@4.3.1:
-    dependencies:
-      eventemitter3: 4.0.7
-      follow-redirects: 1.13.1_debug@4.3.1
-      requires-port: 1.0.0
-    dev: false
-    engines:
-      node: '>=8.0.0'
-    peerDependencies:
-      debug: '*'
     resolution:
       integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==
   /http-signature/1.2.0:
@@ -11932,6 +11788,7 @@ packages:
     resolution:
       integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==
   /is-buffer/2.0.5:
+    dev: true
     engines:
       node: '>=4'
     resolution:
@@ -13073,16 +12930,6 @@ packages:
       graceful-fs: 4.2.4
     resolution:
       integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==
-  /jsonlint-lines/1.7.1:
-    dependencies:
-      JSV: 4.0.2
-      nomnom: 1.8.1
-    dev: false
-    engines:
-      node: '>= 0.6'
-    hasBin: true
-    resolution:
-      integrity: sha1-UH3mgNP7jEvhZBzFfW9nnynxeP8=
   /jsonwebtoken/8.5.1:
     dependencies:
       jws: 3.2.2
@@ -13459,10 +13306,6 @@ packages:
     dev: false
     resolution:
       integrity: sha1-bC4XHbKiV82WgC/UOwGyDV9YcPY=
-  /lodash.isequal/4.5.0:
-    dev: false
-    resolution:
-      integrity: sha1-QVxEePK8wwEgwizhDtMib30+GOA=
   /lodash.isinteger/4.0.4:
     dev: false
     resolution:
@@ -13681,6 +13524,36 @@ packages:
       node: '>=6.4.0'
     resolution:
       integrity: sha512-g8zlzuJxYJqbOPXT19/UBYpVrcefBQ06F/Cbj0fyEfFnFesDcU3cFTxd75/FZ6Upx2ZEjCsD61CHxrcxZidVpA==
+  /mapbox-gl/2.1.0:
+    dependencies:
+      '@mapbox/geojson-rewind': 0.5.0
+      '@mapbox/geojson-types': 1.0.2
+      '@mapbox/jsonlint-lines-primitives': 2.0.2
+      '@mapbox/mapbox-gl-supported': 2.0.0
+      '@mapbox/point-geometry': 0.1.0
+      '@mapbox/tiny-sdf': 1.2.2
+      '@mapbox/unitbezier': 0.0.0
+      '@mapbox/vector-tile': 1.3.1
+      '@mapbox/whoots-js': 3.1.0
+      csscolorparser: 1.0.3
+      earcut: 2.2.2
+      geojson-vt: 3.2.1
+      gl-matrix: 3.3.0
+      grid-index: 1.1.0
+      minimist: 1.2.5
+      murmurhash-js: 1.0.0
+      pbf: 3.2.1
+      potpack: 1.0.1
+      quickselect: 2.0.0
+      rw: 1.3.3
+      supercluster: 7.1.2
+      tinyqueue: 2.0.3
+      vt-pbf: 3.1.1
+    dev: false
+    engines:
+      node: '>=6.4.0'
+    resolution:
+      integrity: sha512-U2NkB0urGBrt199DDhc9nsabmR2NK4jqtaCj2uhDOEucvq8vMC0oZx/LA4p7wXTUJXLFHcbXX8DyvmagvR8mIQ==
   /markdown-escapes/1.0.4:
     resolution:
       integrity: sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==
@@ -13973,10 +13846,6 @@ packages:
       brace-expansion: 1.1.11
     resolution:
       integrity: sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
-  /minimist/1.2.0:
-    dev: false
-    resolution:
-      integrity: sha1-o1AIsg9BOD7sH7kU9M1d95omQoQ=
   /minimist/1.2.5:
     resolution:
       integrity: sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
@@ -14040,6 +13909,16 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-WRoDn//mXBiJ1H40rqa3vH0toePwSsGb45iInWlTySa+Uu4k3tYUSxa2v1KqAiLtvlrSzaExqS1gtk96A9zvEA==
+  /mjolnir.js/2.5.0:
+    dependencies:
+      '@babel/runtime': 7.12.13
+      hammerjs: 2.0.8
+    dev: false
+    engines:
+      node: '>= 4'
+      npm: '>= 3'
+    resolution:
+      integrity: sha512-YkVoyKs7qm9xvAgRgjx3Md/7eYqmq7VXOgTKQNnmuzcBJzMebjdIWa7FdTd0RZBrw3UL6V6TTktsxJwBMLXUNA==
   /mkdirp/0.5.5:
     dependencies:
       minimist: 1.2.5
@@ -14343,14 +14222,6 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-sjCuOlvGyCJS40R8BscF5vhVlQjNN069NtQ1gSxyK1u9iqvn6tf7O1R4GNowVZfiZUCRt5MmMs1xd+4V/7Yr0g==
-  /nomnom/1.8.1:
-    dependencies:
-      chalk: 0.4.0
-      underscore: 1.6.0
-    deprecated: Package no longer supported. Contact support@npmjs.com for more info.
-    dev: false
-    resolution:
-      integrity: sha1-IVH3Ikcrp55Qp2/BJbuMjy5Nwqc=
   /nopt/3.0.6:
     dependencies:
       abbrev: 1.1.1
@@ -16731,24 +16602,25 @@ packages:
     dev: true
     resolution:
       integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
-  /react-mapbox-gl/5.1.1_c7c44047a99c9d5dd186e870786cf254:
+  /react-map-gl/6.1.4_react@17.0.1:
     dependencies:
-      '@turf/bbox': 4.7.3
-      '@turf/helpers': 4.7.3
-      '@types/supercluster': 5.0.2
-      deep-equal: 1.0.1
-      mapbox-gl: 1.13.0
+      '@babel/runtime': 7.12.13
+      '@types/geojson': 7946.0.7
+      '@types/mapbox-gl': 2.0.4
+      mapbox-gl: 2.1.0
+      mjolnir.js: 2.5.0
+      prop-types: 15.7.2
       react: 17.0.1
-      react-dom: 17.0.1_react@17.0.1
-      supercluster: 7.1.2
+      resize-observer-polyfill: 1.5.1
+      viewport-mercator-project: 7.0.1
     dev: false
+    engines:
+      node: '>= 4'
+      npm: '>= 3'
     peerDependencies:
-      mapbox-gl: ^1.12.0
-      prop-types: ^15.6.2
-      react: ^16.11.0
-      react-dom: ^16.11.0
+      react: '>=16.3.0'
     resolution:
-      integrity: sha512-8vGldFQf7pW8T5ZV2OOhwXoaBvfigB2F7dnhzaZ/bD5/KJzP9zprMbn0xMX95W3eqbKzGGHnwyD5DyTTwR6wGw==
+      integrity: sha512-x0dorLA/5ljZLAbd69vF+vL1u4I6KdCqkWU60uN7vDS7y0WLXZ2UTL14QJZfq2h/nt5pupdb4D8BuLeIdQx86g==
   /react-markdown/4.3.1_react@17.0.1:
     dependencies:
       html-to-react: 1.4.5_react@17.0.1
@@ -17675,10 +17547,6 @@ packages:
       aproba: 1.2.0
     resolution:
       integrity: sha1-6Eg5bwV9Ij8kOGkkYY4laUFh7Ec=
-  /rw/0.1.4:
-    dev: false
-    resolution:
-      integrity: sha1-SQPL2AJIrg7eaFv1j9I2p6mymj4=
   /rw/1.3.3:
     dev: false
     resolution:
@@ -18545,6 +18413,7 @@ packages:
     dependencies:
       is-fullwidth-code-point: 2.0.0
       strip-ansi: 4.0.0
+    dev: true
     engines:
       node: '>=4'
     resolution:
@@ -18629,13 +18498,6 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha512-rHqiFh1elqCQ9WPLIC8I0Q/g/wj5J1eMkyoiD6eoQApWHP0FtlK7rqnhmabL5VUY9JQCcqwwvlOaSuutekgyrw==
-  /strip-ansi/0.1.1:
-    dev: false
-    engines:
-      node: '>=0.8.0'
-    hasBin: true
-    resolution:
-      integrity: sha1-OeipjQRNFQZgq+SmgIrPcLt7yZE=
   /strip-ansi/3.0.1:
     dependencies:
       ansi-regex: 2.1.1
@@ -18646,6 +18508,7 @@ packages:
   /strip-ansi/4.0.0:
     dependencies:
       ansi-regex: 3.0.0
+    dev: true
     engines:
       node: '>=4'
     resolution:
@@ -19208,10 +19071,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-3n1qG+/5kg+jrbTzwAykB5yRYtQCTqOGKq5U5PE3b0a1/mzo6snDhjGS0zJVJunO0NrT3Dg1MLy5TjWP/UJppg==
-  /traverse/0.6.6:
-    dev: false
-    resolution:
-      integrity: sha1-y99WD9e5r2MlAv7UD5GMFX6pcTc=
   /trim-newlines/1.0.0:
     dev: true
     engines:
@@ -19411,10 +19270,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-21rQzss/XPMjolTiIezSu3JAjgagXKROtNrYFEOWK109qY1Uv2tVjPTZ1ci2HgvQDA16gHYSthQIJfB+XId/rQ==
-  /underscore/1.6.0:
-    dev: false
-    resolution:
-      integrity: sha1-izixDKze9jM3uLJOT/htRa6lKag=
   /unfetch/4.2.0:
     dev: true
     resolution:
@@ -19550,6 +19405,7 @@ packages:
   /unist-util-stringify-position/2.0.3:
     dependencies:
       '@types/unist': 2.0.3
+    dev: true
     resolution:
       integrity: sha512-3faScn5I+hy9VleOq/qNbAd6pAx7iH5jYBMS9I1HgQVijz/4mv5Bvw5iw1sC/90CODiKo81G/ps8AJrISn687g==
   /unist-util-visit-parents/1.1.2:
@@ -19842,27 +19698,9 @@ packages:
     dependencies:
       '@types/unist': 2.0.3
       unist-util-stringify-position: 2.0.3
+    dev: true
     resolution:
       integrity: sha512-DjssxRGkMvifUOJre00juHoP9DPWuzjxKuMDrhNbk2TdaYYBNMStsNhEOt3idrtI12VQYM/1+iM0KOzXi4pxwQ==
-  /vfile-reporter/5.1.2:
-    dependencies:
-      repeat-string: 1.6.1
-      string-width: 2.1.1
-      supports-color: 5.5.0
-      unist-util-stringify-position: 2.0.3
-      vfile-sort: 2.2.2
-      vfile-statistics: 1.1.4
-    dev: false
-    resolution:
-      integrity: sha512-b15sTuss1wOPWVlyWOvu+n6wGJ/eTYngz3uqMLimQvxZ+Q5oFQGYZZP1o3dR9sk58G5+wej0UPCZSwQBX/mzrQ==
-  /vfile-sort/2.2.2:
-    dev: false
-    resolution:
-      integrity: sha512-tAyUqD2R1l/7Rn7ixdGkhXLD3zsg+XLAeUDUhXearjfIcpL1Hcsj5hHpCoy/gvfK/Ws61+e972fm0F7up7hfYA==
-  /vfile-statistics/1.1.4:
-    dev: false
-    resolution:
-      integrity: sha512-lXhElVO0Rq3frgPvFBwahmed3X03vjPF8OcjKMy8+F1xU/3Q3QU3tKEDp743SFtb74PdF0UWpxPvtOP0GCLheA==
   /vfile/2.3.0:
     dependencies:
       is-buffer: 1.1.6
@@ -19879,8 +19717,15 @@ packages:
       replace-ext: 1.0.0
       unist-util-stringify-position: 2.0.3
       vfile-message: 2.0.4
+    dev: true
     resolution:
       integrity: sha512-a/alcwCvtuc8OX92rqqo7PflxiCgXRFjdyoGVuYV+qbgCb0GgZJRvIgCD4+U/Kl1yhaRsaTwksF88xbPyGsgpw==
+  /viewport-mercator-project/7.0.1:
+    dependencies:
+      '@math.gl/web-mercator': 3.4.2
+    dev: false
+    resolution:
+      integrity: sha512-WKTuTL7o6WKdPQ+gmZhlXL7UpSdCdPUjxkDTBd/3AayBdAFSQGHxsqdbmPBvmoGwvo9KWo/30HTkNo/Z7ORJpw==
   /vm-browserify/1.1.2:
     resolution:
       integrity: sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
@@ -20009,7 +19854,7 @@ packages:
       del: 4.1.1
       express: 4.17.1
       html-entities: 1.4.0
-      http-proxy-middleware: 0.19.1_debug@4.3.1
+      http-proxy-middleware: 0.19.1
       import-local: 2.0.0
       internal-ip: 4.3.0
       ip: 1.1.5
@@ -20188,10 +20033,6 @@ packages:
       node: '>=0.8.0'
     resolution:
       integrity: sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
-  /wgs84/0.0.0:
-    dev: false
-    resolution:
-      integrity: sha1-NP3FVZF7blfPKigu0ENxDASc3HY=
   /whatwg-encoding/1.0.5:
     dependencies:
       iconv-lite: 0.4.24
@@ -20645,7 +20486,6 @@ specifiers:
   '@draft-js-plugins/editor': ^4.0.0
   '@draft-js-plugins/inline-toolbar': ^4.0.0
   '@feedback-fish/react': ^1.2.1
-  '@mapbox/mapbox-gl-draw': ^1.2.0
   '@material-ui/core': ^4.11.0
   '@material-ui/icons': ^4.9.1
   '@material-ui/lab': ^4.0.0-alpha.56
@@ -20717,7 +20557,7 @@ specifiers:
   react-dropzone: ^11.2.4
   react-feather: ^2.0.8
   react-html-parser: ^2.0.2
-  react-mapbox-gl: ^5.1.1
+  react-map-gl: ^6.1.4
   react-markdown: ^4.3.1
   react-navi: ^0.14.4
   react-navi-helmet-async: ^0.14.4

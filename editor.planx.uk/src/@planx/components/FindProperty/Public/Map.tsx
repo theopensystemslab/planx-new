@@ -15,7 +15,7 @@ import DrawIcon from "@material-ui/icons/Create";
 import LayersIcon from "@material-ui/icons/LayersOutlined";
 import turfArea from "@turf/area";
 import React, { useEffect, useRef, useState } from "react";
-import ReactMapboxGl, { Feature, Layer, Source } from "react-mapbox-gl";
+import ReactMapGL, { Layer,Source } from "react-map-gl";
 
 export default Map;
 
@@ -77,10 +77,6 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-const Mapbox = ReactMapboxGl({
-  accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN ?? "",
-});
-
 interface Props {
   lng: number;
   lat: number;
@@ -88,43 +84,57 @@ interface Props {
   setBoundary?: Function;
 }
 
+const LAYER_ORDNANCE_SURVEY = "ordnance-survey";
 function Map(props: Props) {
   const classes = useClasses();
   const [showStyles, setShowStyles] = useState<Boolean>(false);
   const [isLoading, setIsLoading] = useState<Boolean>(false);
-  const [layer, setLayer] = useState<string>("");
+  const [layer, setLayer] = useState<string>(LAYER_ORDNANCE_SURVEY);
   const [showHelp, setShowHelp] = useState<Boolean>(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [viewport, setViewport] = useState({
+    latitude: props.lat,
+    longitude: props.lng,
+    zoom: props.zoom,
+    bearing: 0,
+    pitch: 0,
+  });
   return (
     <div>
       <div className={classes.container}>
-        <Mapbox
-          style={
-            layer || "mapbox://styles/opensystemslab/ckbuw2xmi0mum1il33qucl4dv"
+        <ReactMapGL
+          {...viewport}
+          width="100%"
+          height="50vh"
+          mapStyle={
+            // XXX: Mapbox only shows the Ordnance Survey layer if we give it a valid mapStyle too.
+            //      Although this is unfortunate, at least the mapbox layerStyle below works as a fallback
+            //      in case Ordnance Survey's API stops working.
+            layer === LAYER_ORDNANCE_SURVEY
+              ? "mapbox://styles/opensystemslab/ckbuw2xmi0mum1il33qucl4dv"
+              : layer
           }
-          center={[props.lng, props.lat]}
-          zoom={[props.zoom]}
-          containerStyle={{
-            position: "relative",
-            width: "100%",
-            minHeight: 200,
-            height: "50vh",
-            maxHeight: 500,
-          }}
+          onViewportChange={setViewport}
+          mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN ?? ""}
         >
           <Source
             id="source_id"
-            tileJsonSource={{
-              type: "raster",
-              tiles: [
-                `https://api.os.uk/maps/raster/v1/zxy/Road_3857/{z}/{x}/{y}.png?key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`,
-              ],
-              tileSize: 256,
-            }}
-          />
-          <Layer type="raster" id="layer_id" sourceId="source_id" />
-        </Mapbox>
-        <div ref={containerRef} className={classes.layersButton}>
+            type="raster"
+            tiles={[
+              `https://api.os.uk/maps/raster/v1/zxy/Road_3857/{z}/{x}/{y}.png?key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`,
+            ]}
+            tileSize={256}
+          >
+            <Layer
+              type="raster"
+              paint={{}}
+              layout={{
+                visibility:
+                  layer === LAYER_ORDNANCE_SURVEY ? "visible" : "none",
+              }}
+            />
+          </Source>
+        </ReactMapGL>
+        <div className={classes.layersButton}>
           <ClickAwayListener onClickAway={() => setShowStyles(false)}>
             <Box className={classes.mapStyles}>
               {showStyles ? (
@@ -195,15 +205,9 @@ function MapStyleSwitcher({ handleChange, layer, options }: any) {
         onChange={handleChange}
       >
         <FormControlLabel
-          value=""
+          value={LAYER_ORDNANCE_SURVEY}
           control={<Radio size="small" />}
           label="Streets"
-          classes={{ label: classes.radioLabel }}
-        />
-        <FormControlLabel
-          value="mapbox://styles/mapbox/dark-v10"
-          control={<Radio size="small" />}
-          label="Dark"
           classes={{ label: classes.radioLabel }}
         />
         <FormControlLabel
