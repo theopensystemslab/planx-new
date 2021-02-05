@@ -1,11 +1,12 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import Switch, { SwitchProps } from "@material-ui/core/Switch";
 import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import React from "react";
 import ColorPicker from "ui/ColorPicker";
 import FileUpload from "ui/FileUpload";
-import Input from "ui/Input";
+import Input, { Props as InputProps } from "ui/Input";
 import InputGroup from "ui/InputGroup";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
@@ -20,16 +21,59 @@ interface Props {
   teamId: string;
 }
 
+const TextInput: React.FC<{
+  title: string;
+  description?: string;
+  switchProps?: SwitchProps;
+  headingInputProps?: InputProps;
+  contentInputProps?: InputProps;
+}> = ({
+  title,
+  description,
+  switchProps,
+  headingInputProps,
+  contentInputProps,
+}) => {
+  return (
+    <Box mb={2} width="100%">
+      <Box my={2} display="flex" alignItems="center">
+        <Switch {...switchProps} color="primary" />
+        <Typography variant="h5">{title}</Typography>
+      </Box>
+      <Box mb={2}>
+        {description && <Typography variant="body2">{description}</Typography>}
+      </Box>
+      <InputRow>
+        <InputRowItem>
+          <Input placeholder="Heading" format="bold" {...headingInputProps} />
+        </InputRowItem>
+      </InputRow>
+      <InputRow>
+        <InputRowItem>
+          <Input placeholder="Text" multiline rows={6} {...contentInputProps} />
+        </InputRowItem>
+      </InputRow>
+    </Box>
+  );
+};
+
 const Team: React.FC<Props> = (props) => {
   const formik = useFormik<DesignSettings>({
     initialValues: {
       privacy: {
-        heading: props.settings?.privacy?.heading || "",
-        content: props.settings?.privacy?.content || "",
+        heading: props.settings?.privacy?.heading ?? "",
+        content: props.settings?.privacy?.content ?? "",
+        show: props.settings?.privacy?.show ?? false,
       },
       help: {
-        heading: props.settings?.help?.heading || "",
-        content: props.settings?.help?.content || "",
+        heading: props.settings?.help?.heading ?? "",
+        content: props.settings?.help?.content ?? "",
+        show: props.settings?.help?.show ?? false,
+      },
+      legalDisclaimer: {
+        heading: props.settings?.legalDisclaimer?.heading ?? "",
+        content: props.settings?.legalDisclaimer?.content ?? "",
+        show: props.settings?.legalDisclaimer?.show ?? false,
       },
     },
     onSubmit: (values) => {
@@ -97,63 +141,67 @@ const Team: React.FC<Props> = (props) => {
       </Box>
       <Box pt={2}>
         <InputGroup>
-          <InputRow>
-            <InputRowItem>
-              <OptionButton selected>Help</OptionButton>
-            </InputRowItem>
-          </InputRow>
-          <InputRow>
-            <InputRowItem>
-              <Input
-                placeholder="Heading"
-                format="bold"
-                name="help.heading"
-                value={formik.values.help?.heading}
-                onChange={formik.handleChange}
-              />
-            </InputRowItem>
-          </InputRow>
-          <InputRow>
-            <InputRowItem>
-              <Input
-                placeholder="Text"
-                multiline
-                rows={6}
-                name="help.content"
-                value={formik.values.help?.content}
-                onChange={formik.handleChange}
-              />
-            </InputRowItem>
-          </InputRow>
-          <InputRow>
-            <InputRowItem>
-              <OptionButton selected>Privacy</OptionButton>
-            </InputRowItem>
-          </InputRow>
-          <InputRow>
-            <InputRowItem>
-              <Input
-                placeholder="Heading"
-                format="bold"
-                name="privacy.heading"
-                value={formik.values.privacy?.heading}
-                onChange={formik.handleChange}
-              />
-            </InputRowItem>
-          </InputRow>
-          <InputRow>
-            <InputRowItem>
-              <Input
-                placeholder="Text"
-                multiline
-                rows={6}
-                name="privacy.content"
-                value={formik.values.privacy?.content}
-                onChange={formik.handleChange}
-              />
-            </InputRowItem>
-          </InputRow>
+          <TextInput
+            title="Help Page"
+            description="A place to communicate FAQs, useful tips, or contact information"
+            switchProps={{
+              name: "help.show",
+              checked: formik.values.help?.show,
+              onChange: formik.handleChange,
+            }}
+            headingInputProps={{
+              name: "help.heading",
+              value: formik.values.help?.heading,
+              onChange: formik.handleChange,
+            }}
+            contentInputProps={{
+              name: "help.content",
+              value: formik.values.help?.content,
+              onChange: formik.handleChange,
+            }}
+          />
+
+          <TextInput
+            title="Privacy Page"
+            description="Your privacy policy"
+            switchProps={{
+              name: "privacy.show",
+              checked: formik.values.privacy?.show,
+              onChange: formik.handleChange,
+            }}
+            headingInputProps={{
+              name: "privacy.heading",
+              value: formik.values.privacy?.heading,
+              onChange: formik.handleChange,
+            }}
+            contentInputProps={{
+              name: "privacy.content",
+              value: formik.values.privacy?.content,
+              onChange: formik.handleChange,
+            }}
+          />
+
+          <TextInput
+            title="Legal Disclaimer"
+            description="Displayed before a user submits their application"
+            switchProps={{
+              name: "legalDisclaimer.show",
+              checked: formik.values.legalDisclaimer?.show,
+              onChange: formik.handleChange,
+            }}
+            headingInputProps={{
+              name: "legalDisclaimer.heading",
+              value: formik.values.legalDisclaimer?.heading,
+              onChange: formik.handleChange,
+            }}
+            contentInputProps={{
+              name: "legalDisclaimer.content",
+              value: formik.values.legalDisclaimer?.content,
+              onChange: formik.handleChange,
+            }}
+          />
         </InputGroup>
+
         <Box py={2} justifyContent="flex-end" mb={4}>
           <Button type="submit" variant="contained" color="primary">
             Submit

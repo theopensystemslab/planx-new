@@ -23,7 +23,7 @@ const PreviewLayout: React.FC<{
   const makeHref = (path: string) => [data.mountpath, path].join("/");
 
   const leftFooterItems =
-    settings?.privacy?.heading && settings?.privacy?.heading.length > 0
+    settings?.privacy?.heading && settings?.privacy?.show
       ? [
           {
             title: "Privacy",
@@ -33,7 +33,7 @@ const PreviewLayout: React.FC<{
       : undefined;
 
   const rightFooterItems =
-    settings?.help?.heading && settings?.help?.heading.length > 0
+    settings?.help?.heading && settings?.help?.show
       ? [
           {
             title: "Help",

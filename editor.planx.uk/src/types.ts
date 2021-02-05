@@ -19,17 +19,20 @@ export interface Team {
   };
 }
 
+// TODO: Break these up into Team settings & Flow settings
 export interface Settings {
   design?: DesignSettings;
 }
 
-interface InformationPageContent {
+interface TextContent {
   heading: string;
   content: string;
+  show: boolean;
 }
 
 export interface DesignSettings {
   color?: string;
-  privacy?: InformationPageContent;
-  help?: InformationPageContent;
+  privacy?: TextContent;
+  help?: TextContent;
+  legalDisclaimer?: TextContent;
 }
