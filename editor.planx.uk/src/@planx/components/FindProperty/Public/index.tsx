@@ -2,6 +2,7 @@ import "./map.css";
 
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -12,6 +13,7 @@ import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import axios from "axios";
 import useAxios from "axios-hooks";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import capitalize from "lodash/capitalize";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -61,6 +63,7 @@ function Component(props: Props) {
       ? `https://local-authority-api.planx.uk/${address.team}?x=${address.x}&y=${address.y}`
       : null
   );
+
   if (!address) {
     return <GetAddress setAddress={setAddress} />;
   } else if (constraints) {
@@ -217,7 +220,11 @@ function Component(props: Props) {
       />
     );
   } else {
-    return <div>Loading…</div>;
+    return (
+      <DelayedLoadingIndicator msDelayBeforeVisible={0}>
+        Waiting for property data…
+      </DelayedLoadingIndicator>
+    );
   }
 }
 
