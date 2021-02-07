@@ -11,7 +11,7 @@ import { uploadFile } from "api/upload";
 import classNames from "classnames";
 import { nanoid } from "nanoid";
 import { handleSubmit } from "pages/Preview/Node";
-import React, { useEffect, useRef,useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import ErrorWrapper from "ui/ErrorWrapper";
 import { array } from "yup";
@@ -151,13 +151,13 @@ const FileUpload: React.FC<Props> = (props) => {
       });
   };
 
-  // Declare a ref to hold the current value of the validation error
-  // REVIEWERS: not 100% sure if this ref is needed. The intention is to prevent
-  // infinite update loops by removing the validation error state dependency from
-  // the effect hook that removes the validation error state if the upload slots
-  // are subsequently changed.
+  /**
+   * Declare a ref to hold a mutably copy the up-to-date validation error.
+   * The intention is to prevent infinite update loops by removing the validation
+   * error state dependency from the effect hook that removes the validation error
+   * state if the upload slots are subsequently changed.
+   */
   const validationErrorRef = useRef(validationError);
-
   useEffect(() => {
     validationErrorRef.current = validationError;
   }, [validationError]);
