@@ -152,10 +152,9 @@ const FileUpload: React.FC<Props> = (props) => {
   };
 
   /**
-   * Declare a ref to hold a mutably copy the up-to-date validation error.
-   * The intention is to prevent infinite update loops by removing the validation
-   * error state dependency from the effect hook that removes the validation error
-   * state if the upload slots are subsequently changed.
+   * Declare a ref to hold a mutable copy the up-to-date validation error.
+   * The intention is to prevent frequent unnecessary update loops that clears the
+   * validation error state if it is already empty.
    */
   const validationErrorRef = useRef(validationError);
   useEffect(() => {
