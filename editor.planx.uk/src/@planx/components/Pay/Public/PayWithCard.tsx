@@ -2,7 +2,10 @@ export default Component;
 
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@planx/components/shared/Preview/Card";
+import { useFormik } from "formik";
 import React from "react";
+import ErrorWrapper from "ui/ErrorWrapper";
+import { object, string } from "yup";
 
 import Button from "./Button";
 
@@ -11,8 +14,9 @@ const useStyles = makeStyles({
     "& *": {
       fontFamily: "Inter, sans-serif",
       boxSizing: "border-box",
-      margin: 0,
-      padding: 0,
+    },
+    "& > * + *": {
+      marginTop: 30,
     },
   },
   h1: {
@@ -74,74 +78,270 @@ const useStyles = makeStyles({
   },
 });
 
+const validateCreditCard = (creditCardNumber: string): boolean => {
+  const regex16Digit = /^\d{16}$/;
+  return creditCardNumber.search(regex16Digit) !== -1;
+};
+
+const validateSecurityCode = (securityCode: string): boolean => {
+  const regex3Digit = /^\d{3}$/;
+  return securityCode.search(regex3Digit) !== -1;
+};
+
+const validateEmail = (email: string) => {
+  // eslint-disable-next-line
+  let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return regex.test(email);
+};
+
 function Component(props: any) {
   const c = useStyles();
+  const formik = useFormik({
+    initialValues: {
+      cardNumber: "",
+      cardSecurityCode: "",
+      name: "",
+      email: "",
+      postcode: "",
+      city: "",
+      number: "",
+      street: "",
+      country: "United Kingdom",
+      expirationMonth: "",
+      expirationYear: "",
+    },
+    onSubmit: () => {
+      props.goToSummary();
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: object({
+      name: string().required(),
+      cardNumber: string()
+        .required()
+        .test({
+          name: "validCreditCard",
+          message: "Must be a valid 16-digit credit card number",
+          test: (creditCardNumber: string | undefined) => {
+            return Boolean(
+              creditCardNumber && validateCreditCard(creditCardNumber)
+            );
+          },
+        }),
+      cardSecurityCode: string()
+        .required()
+        .test({
+          name: "validSecurityCode",
+          message: "Must be a valid security code",
+          test: (securityCode: string | undefined) => {
+            return Boolean(securityCode && validateSecurityCode(securityCode));
+          },
+        }),
+      city: string()
+        .required()
+        .test({
+          name: "validCity",
+          message: "Must be a valid city",
+          test: (city: string | undefined) => {
+            return Boolean(city && city.length > 1);
+          },
+        }),
+      country: string()
+        .required()
+        .test({
+          name: "validCountry",
+          message: "Must be a valid country",
+          test: (country: string | undefined) => {
+            return Boolean(country && country.length > 1);
+          },
+        }),
+      postcode: string()
+        .required()
+        .test({
+          name: "validPostCode",
+          message: "Must be a valid postal code",
+          test: (postcode: string | undefined) => {
+            return Boolean(postcode && postcode.length > 3);
+          },
+        }),
+      number: string().required(),
+      street: string().required(),
+      expirationYear: string().required(),
+      expirationMonth: string().required(),
+      email: string()
+        .required()
+        .test({
+          name: "validEmail",
+          message: "Must be a valid email",
+          test: (email: string | undefined) => {
+            return Boolean(email && validateEmail(email));
+          },
+        }),
+    }),
+  });
   return (
     <Card>
       <div className={c.root}>
         <h1 className={c.h1}>Enter card details</h1>
-        <label className={c.label}>Card number</label>
-        <input
-          className={c.input}
-          name="card-number"
-          type="text"
-          placeholder="enter the long number on your card"
-          style={{ width: 400 }}
-        />
-        <p style={{ marginTop: "8px" }}>
-          <CardsImage />
-        </p>
-        <label className={c.label}>Expiry date</label>
-        <p className={c.example}>For example, 10/20</p>
-        <div className={c.expiry}>
-          <span>Month</span>
+        <ErrorWrapper error={formik.errors.cardNumber}>
           <div>
-            <input className={c.input} type="text" placeholder="10" />
+            <label htmlFor="pay-card-number" className={c.label}>
+              Card number
+            </label>
+            <input
+              className={c.input}
+              id="pay-card-number"
+              name="cardNumber"
+              type="text"
+              value={formik.values.cardNumber}
+              onInput={formik.handleChange}
+              placeholder="enter the long number on your card"
+              style={{ width: 400 }}
+            />
+            <p style={{ marginTop: "8px" }}>
+              <CardsImage />
+            </p>
           </div>
-          <div>/</div>
-          <span>Year</span>
+        </ErrorWrapper>
+        <ErrorWrapper
+          error={formik.errors.expirationMonth || formik.errors.expirationYear}
+        >
           <div>
-            <input className={c.input} type="text" placeholder="20" />
+            <label htmlFor="pay-expiry-month" className={c.label}>
+              Expiry date
+            </label>
+            <p className={c.example}>For example, 10/20</p>
+            <div className={c.expiry}>
+              <span>Month</span>
+              <div>
+                <input
+                  id="pay-expiry-month"
+                  className={c.input}
+                  type="text"
+                  placeholder="10"
+                />
+              </div>
+              <div>/</div>
+              <span>Year</span>
+              <div>
+                <input className={c.input} type="text" placeholder="20" />
+              </div>
+            </div>
           </div>
-        </div>
-        <label className={c.label}>Name on card</label>
-        <input className={c.input} placeholder="Name" />
-        <label className={c.label}>Card security code</label>
-        <p className={c.example}>The last 3 digits on the back</p>
-        <div>
-          <input
-            className={c.input}
-            type="text"
-            placeholder="000"
-            style={{ width: "83px" }}
-          />
-          <SecurityCodeImage style={{ marginLeft: "16px" }} />
-        </div>
+        </ErrorWrapper>
+        <ErrorWrapper error={formik.errors.name}>
+          <div>
+            <label htmlFor="pay-name" className={c.label}>
+              Name on card
+            </label>
+            <input
+              id="pay-name"
+              className={c.input}
+              placeholder="Name"
+              name="name"
+              value={formik.values.name}
+              onInput={formik.handleChange}
+            />
+          </div>
+        </ErrorWrapper>
+        <ErrorWrapper error={formik.errors.cardSecurityCode}>
+          <div>
+            <label className={c.label} htmlFor="pay-security-code">
+              Card security code
+            </label>
+            <p className={c.example}>The last 3 digits on the back</p>
+            <div>
+              <input
+                className={c.input}
+                id="pay-security-code"
+                type="text"
+                placeholder="000"
+                name="cardSecurityCode"
+                value={formik.values.cardSecurityCode}
+                onInput={formik.handleChange}
+                style={{ width: "83px" }}
+              />
+              <SecurityCodeImage style={{ marginLeft: "16px" }} />
+            </div>
+          </div>
+        </ErrorWrapper>
         <h2 className={c.h2}>Billing address</h2>
-        <label className={c.label}>Country or territory</label>
-        <input className={c.input} placeholder="United Kingdom" />
-        <label className={c.label}>Building number or name and street</label>
-        <p style={{ marginBottom: "8px" }}>
-          <input className={c.input} placeholder="" />
-        </p>
-        <p>
-          <input className={c.input} placeholder="" />
-        </p>
-        <label className={c.label}>Town or city</label>
-        <input className={c.input} placeholder="" />
-        <label className={c.label}>Postcode</label>
-        <input className={c.input} placeholder="" style={{ width: "100px" }} />
-        <label className={c.label}>Email</label>
-        <p className={c.example}>We'll send your payment confirmation here</p>
-        <input className={c.input} placeholder="" />
-        <p style={{ margin: "24px 0" }}>
-          <Button onClick={props.goToSummary}>Continue</Button>
-        </p>
-        <p>
+        <ErrorWrapper error={formik.errors.country}>
+          <div>
+            <label className={c.label}>Country or territory</label>
+            <input
+              className={c.input}
+              placeholder="United Kingdom"
+              name="country"
+              value={formik.values.country}
+              onInput={formik.handleChange}
+            />
+          </div>
+        </ErrorWrapper>
+        <ErrorWrapper error={formik.errors.number || formik.errors.street}>
+          <div>
+            <label className={c.label}>
+              Building number or name and street
+            </label>
+            <p style={{ marginBottom: "8px" }}>
+              <input className={c.input} placeholder="" />
+            </p>
+            <p>
+              <input className={c.input} placeholder="" />
+            </p>
+          </div>
+        </ErrorWrapper>
+        <ErrorWrapper error={formik.errors.city}>
+          <div>
+            <label className={c.label}>Town or city</label>
+            <input
+              name="city"
+              value={formik.values.city}
+              onInput={formik.handleChange}
+              className={c.input}
+              placeholder=""
+            />
+          </div>
+        </ErrorWrapper>
+        <ErrorWrapper error={formik.errors.postcode}>
+          <div>
+            <label className={c.label}>Postcode</label>
+            <input
+              className={c.input}
+              placeholder=""
+              style={{ width: "100px" }}
+              name="postcode"
+              value={formik.values.postcode}
+              onInput={formik.handleChange}
+            />
+          </div>
+        </ErrorWrapper>
+        <ErrorWrapper error={formik.errors.email}>
+          <div>
+            <label htmlFor="pay-email" className={c.label}>
+              Email
+            </label>
+            <p className={c.example}>
+              We'll send your payment confirmation here
+            </p>
+            <input
+              id="pay-email"
+              name="email"
+              value={formik.values.email}
+              onInput={formik.handleChange}
+              className={c.input}
+              placeholder=""
+            />
+          </div>
+        </ErrorWrapper>
+        <div>
+          <Button onClick={formik.handleSubmit}>Continue</Button>
+        </div>
+        <div>
           <a href="#" className={c.cancel} onClick={props.goBack}>
             Cancel payment
           </a>
-        </p>
+        </div>
       </div>
     </Card>
   );
