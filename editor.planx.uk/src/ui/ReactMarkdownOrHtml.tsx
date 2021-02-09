@@ -12,11 +12,11 @@ const useClasses = makeStyles({
 });
 
 export default function ReactMarkdownOrHtml(props: {
-  source: string;
+  source?: string;
   className?: string;
 }): FCReturn {
   const classes = useClasses();
-  if (props.source.includes("<p>")) {
+  if (props.source?.includes("<p>")) {
     return (
       <div
         className={classNames(props.className, classes.htmlRoot)}
