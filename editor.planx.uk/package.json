@@ -103,7 +103,8 @@
     "sass-loader": "^10.1.1",
     "storybook-addon-material-ui": "^0.9.0-alpha.21",
     "tsconfig-paths-webpack-plugin": "^3.3.0",
-    "typescript": "^4.0.5"
+    "typescript": "^4.0.5",
+    "wait-for-expect": "^3.0.2"
   },
   "scripts": {
     "start": "craco start",

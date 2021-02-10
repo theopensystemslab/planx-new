@@ -1,6 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
+import waitForExpect from "wait-for-expect";
 
 import Question from "./Public";
 
@@ -28,7 +29,11 @@ test("renders correctly", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("Best food");
 
-  userEvent.click(screen.getByText("Pizza"));
+  await act(async () => {
+    await userEvent.click(screen.getByText("Pizza"));
 
-  expect(handleSubmit).toHaveBeenCalledWith("pizza_id");
+    await waitForExpect(() => {
+      expect(handleSubmit).toHaveBeenCalledWith("pizza_id");
+    });
+  });
 });

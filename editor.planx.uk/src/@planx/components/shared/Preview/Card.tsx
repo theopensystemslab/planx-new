@@ -1,6 +1,7 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import Fade from "@material-ui/core/Fade";
+import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import React from "react";
 
 interface Props {
@@ -33,35 +34,38 @@ const Card: React.FC<Props> = ({
   ...props
 }) => {
   const classes = useStyles();
+  const theme = useTheme();
 
   return (
-    <Box
-      className={classes.container}
-      bgcolor="background.default"
-      py={{ xs: 2, md: 4 }}
-      px={fullWidth ? 0 : { xs: 2, md: 5 }}
-      mb={4}
-      width="100%"
-      maxWidth={768}
-      {...props}
-    >
-      {children}
+    <Fade in={true} timeout={theme.transitions.duration.enteringScreen}>
+      <Box
+        className={classes.container}
+        bgcolor="background.default"
+        py={{ xs: 2, md: 4 }}
+        px={fullWidth ? 0 : { xs: 2, md: 5 }}
+        mb={4}
+        width="100%"
+        maxWidth={768}
+        {...props}
+      >
+        {children}
 
-      {handleSubmit && (
-        <Box px={fullWidth ? { xs: 2, md: 5 } : 0}>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            type="submit"
-            disabled={!isValid}
-            onClick={async () => await handleSubmit()}
-          >
-            Continue
-          </Button>
-        </Box>
-      )}
-    </Box>
+        {handleSubmit && (
+          <Box px={fullWidth ? { xs: 2, md: 5 } : 0}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              type="submit"
+              disabled={!isValid}
+              onClick={async () => await handleSubmit()}
+            >
+              Continue
+            </Button>
+          </Box>
+        )}
+      </Box>
+    </Fade>
   );
 };
 export default Card;
