@@ -73,7 +73,6 @@ const Result: React.FC<Props> = ({
   const visibleResponses = responses.filter((r) => !r.hidden);
   const hiddenResponses = responses.filter((r) => r.hidden);
 
-  // TODO: Disclaimer should come from flow settings
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const classes = useClasses();
   const theme = useTheme();

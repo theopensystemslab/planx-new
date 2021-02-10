@@ -13,15 +13,14 @@ export interface Flow {
 export interface Team {
   name: string;
   slug: string;
-  settings?: Settings;
+  settings?: TeamSettings;
   theme?: {
     primary?: string;
     logo?: string;
   };
 }
 
-// TODO: Break these up into Team settings & Flow settings
-export interface Settings {
+interface TeamSettings {
   design?: DesignSettings;
 }
 
