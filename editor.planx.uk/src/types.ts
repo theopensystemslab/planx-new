@@ -7,6 +7,7 @@ export interface Flow {
   name: string;
   slug: string;
   team: Team;
+  settings?: FlowSettings;
 }
 
 export interface Team {
@@ -24,7 +25,15 @@ export interface Settings {
   design?: DesignSettings;
 }
 
-interface TextContent {
+export interface FlowSettings {
+  elements?: {
+    privacy?: TextContent;
+    help?: TextContent;
+    legalDisclaimer?: TextContent;
+  };
+}
+
+export interface TextContent {
   heading: string;
   content: string;
   show: boolean;

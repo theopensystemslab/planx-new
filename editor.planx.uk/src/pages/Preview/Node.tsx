@@ -18,12 +18,14 @@ import { TYPES } from "@planx/components/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
+import { FlowSettings } from "../../types";
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
 
 export type handleSubmit = (_?: componentOutput) => void;
 interface Props {
   handleSubmit: handleSubmit;
   node: node;
+  settings?: FlowSettings;
 }
 
 const Node: React.FC<any> = (props: Props) => {
@@ -133,6 +135,7 @@ const Node: React.FC<any> = (props: Props) => {
           subheading=""
           reasonsTitle="Reasons"
           responses={responses}
+          disclaimer={props.settings?.elements?.legalDisclaimer}
         />
       );
 

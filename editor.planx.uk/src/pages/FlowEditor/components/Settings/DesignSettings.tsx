@@ -13,14 +13,6 @@ import InputRowItem from "ui/InputRowItem";
 import InputRowLabel from "ui/InputRowLabel";
 import OptionButton from "ui/OptionButton";
 
-import type { DesignSettings } from "../../../../types";
-import { useStore } from "../../lib/store";
-
-interface Props {
-  settings?: DesignSettings;
-  teamId: string;
-}
-
 const TextInput: React.FC<{
   title: string;
   description?: string;
@@ -57,30 +49,13 @@ const TextInput: React.FC<{
   );
 };
 
-const Team: React.FC<Props> = (props) => {
-  const formik = useFormik<DesignSettings>({
+const DesignSettings: React.FC = () => {
+  const formik = useFormik<{ phaseBannerColor: string; bgColor: string }>({
     initialValues: {
-      privacy: {
-        heading: props.settings?.privacy?.heading ?? "",
-        content: props.settings?.privacy?.content ?? "",
-        show: props.settings?.privacy?.show ?? false,
-      },
-      help: {
-        heading: props.settings?.help?.heading ?? "",
-        content: props.settings?.help?.content ?? "",
-        show: props.settings?.help?.show ?? false,
-      },
-      legalDisclaimer: {
-        heading: props.settings?.legalDisclaimer?.heading ?? "",
-        content: props.settings?.legalDisclaimer?.content ?? "",
-        show: props.settings?.legalDisclaimer?.show ?? false,
-      },
+      phaseBannerColor: "#000",
+      bgColor: "#000",
     },
-    onSubmit: (values) => {
-      useStore.getState().updateSettings(props.teamId, {
-        design: { ...values },
-      });
-    },
+    onSubmit: (values) => {},
     validate: () => {},
   });
 
@@ -113,9 +88,9 @@ const Team: React.FC<Props> = (props) => {
             <InputRowItem width="70%">
               <ColorPicker
                 inline
-                color=""
+                color={formik.values.bgColor}
                 onChange={(color) => formik.setFieldValue("bgColor", color)}
-              ></ColorPicker>
+              />
             </InputRowItem>
           </InputRow>
           <InputRow>
@@ -132,84 +107,7 @@ const Team: React.FC<Props> = (props) => {
         </InputGroup>
       </Box>
       <Box py={3} borderBottom={1}>
-        <Typography variant="h3" gutterBottom>
-          <strong>Elements</strong>
-        </Typography>
-        <Typography variant="body1">
-          Manage the features that users will be able to see
-        </Typography>
-      </Box>
-      <Box pt={2}>
-        <InputGroup>
-          <TextInput
-            title="Help Page"
-            description="A place to communicate FAQs, useful tips, or contact information"
-            switchProps={{
-              name: "help.show",
-              checked: formik.values.help?.show,
-              onChange: formik.handleChange,
-            }}
-            headingInputProps={{
-              name: "help.heading",
-              value: formik.values.help?.heading,
-              onChange: formik.handleChange,
-            }}
-            contentInputProps={{
-              name: "help.content",
-              value: formik.values.help?.content,
-              onChange: formik.handleChange,
-            }}
-          />
-
-          <TextInput
-            title="Privacy Page"
-            description="Your privacy policy"
-            switchProps={{
-              name: "privacy.show",
-              checked: formik.values.privacy?.show,
-              onChange: formik.handleChange,
-            }}
-            headingInputProps={{
-              name: "privacy.heading",
-              value: formik.values.privacy?.heading,
-              onChange: formik.handleChange,
-            }}
-            contentInputProps={{
-              name: "privacy.content",
-              value: formik.values.privacy?.content,
-              onChange: formik.handleChange,
-            }}
-          />
-
-          <TextInput
-            title="Legal Disclaimer"
-            description="Displayed before a user submits their application"
-            switchProps={{
-              name: "legalDisclaimer.show",
-              checked: formik.values.legalDisclaimer?.show,
-              onChange: formik.handleChange,
-            }}
-            headingInputProps={{
-              name: "legalDisclaimer.heading",
-              value: formik.values.legalDisclaimer?.heading,
-              onChange: formik.handleChange,
-            }}
-            contentInputProps={{
-              name: "legalDisclaimer.content",
-              value: formik.values.legalDisclaimer?.content,
-              onChange: formik.handleChange,
-            }}
-          />
-        </InputGroup>
-
-        <Box py={2} justifyContent="flex-end" mb={4}>
-          <Button type="submit" variant="contained" color="primary">
-            Submit
-          </Button>
-        </Box>
-
-        {/* TODO: Bring back when they're hooked up to settings */}
-        {/* <InputRow>
+        <InputRow>
           <InputRowItem>
             <OptionButton selected>Progress bar</OptionButton>
           </InputRowItem>
@@ -230,20 +128,26 @@ const Team: React.FC<Props> = (props) => {
           <InputRowItem width={180}>
             <ColorPicker
               inline
-              color=""
+              color={formik.values.phaseBannerColor}
               onChange={(color) =>
                 formik.setFieldValue("phaseBannerColor", color)
               }
-            ></ColorPicker>
+            />
           </InputRowItem>
         </InputRow>
         <InputRow>
           <InputRowItem>
             <Input placeholder="Text" />
           </InputRowItem>
-        </InputRow> */}
+        </InputRow>
+      </Box>
+
+      <Box py={2} justifyContent="flex-end" mb={4}>
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
       </Box>
     </form>
   );
 };
-export default Team;
+export default DesignSettings;

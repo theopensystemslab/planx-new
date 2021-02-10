@@ -1,6 +1,6 @@
 import Box from "@material-ui/core/Box";
 import Collapse from "@material-ui/core/Collapse";
-import { makeStyles,useTheme } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Warning from "@material-ui/icons/WarningOutlined";
 import Card from "@planx/components/shared/Preview/Card";
@@ -8,6 +8,7 @@ import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 
+import type { TextContent } from "../../../../types";
 import type { Node } from "./model";
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
@@ -27,10 +28,7 @@ export interface Props {
     selections?: Array<Node>;
     hidden: boolean;
   }>;
-  disclaimer?: {
-    heading: string;
-    content: string;
-  };
+  disclaimer?: TextContent;
 }
 
 const useClasses = makeStyles((theme) => ({
@@ -70,6 +68,7 @@ const Result: React.FC<Props> = ({
   headingDescription = "",
   reasonsTitle = "",
   responses,
+  disclaimer,
 }) => {
   const visibleResponses = responses.filter((r) => !r.hidden);
   const hiddenResponses = responses.filter((r) => r.hidden);
@@ -111,43 +110,40 @@ const Result: React.FC<Props> = ({
             </SimpleExpand>
           )}
         </Box>
-        <Box
-          bgcolor="background.paper"
-          p={1.25}
-          display="flex"
-          color={theme.palette.grey[600]}
-          className={classes.disclaimer}
-        >
-          <Warning />
-          <Box ml={1}>
-            <Box
-              display="flex"
-              alignItems="center"
-              onClick={() => setShowDisclaimer(!showDisclaimer)}
-            >
-              <Typography variant="h6" color="inherit">
-                For guidance only
-              </Typography>
-              <Typography variant="body2" className={classes.readMore}>
-                read {showDisclaimer ? "less" : "more"}
-              </Typography>
-            </Box>
-            <Collapse in={showDisclaimer}>
-              <Typography
-                variant="body2"
-                color="inherit"
-                className={classes.disclaimerContent}
+        {disclaimer?.show && (
+          <Box
+            bgcolor="background.paper"
+            p={1.25}
+            display="flex"
+            color={theme.palette.grey[600]}
+            className={classes.disclaimer}
+          >
+            <Warning />
+            <Box ml={1}>
+              <Box
+                display="flex"
+                alignItems="center"
+                onClick={() => setShowDisclaimer(!showDisclaimer)}
               >
-                This information is provided for guidance only. It does not
-                represent a planning decision or legal advice. You must obtain
-                all required consents before proceeding with the works. Failure
-                to do so may result in enforcement action. If you are at all
-                unsure, please consult a planning officer or qualified
-                professional.
-              </Typography>
-            </Collapse>
+                <Typography variant="h6" color="inherit">
+                  {disclaimer.heading}
+                </Typography>
+                <Typography variant="body2" className={classes.readMore}>
+                  read {showDisclaimer ? "less" : "more"}
+                </Typography>
+              </Box>
+              <Collapse in={showDisclaimer}>
+                <Typography
+                  variant="body2"
+                  color="inherit"
+                  className={classes.disclaimerContent}
+                >
+                  {disclaimer.content}
+                </Typography>
+              </Collapse>
+            </Box>
           </Box>
-        </Box>
+        )}
       </Box>
     </Card>
   );
