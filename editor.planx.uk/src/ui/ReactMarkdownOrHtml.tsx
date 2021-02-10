@@ -16,7 +16,10 @@ export default function ReactMarkdownOrHtml(props: {
   className?: string;
 }): FCReturn {
   const classes = useClasses();
-  if (props.source?.includes("<p>")) {
+  if (typeof props.source !== "string") {
+    return null;
+  }
+  if (props.source.includes("<p>")) {
     return (
       <div
         className={classNames(props.className, classes.htmlRoot)}
