@@ -22,7 +22,11 @@ interface IQuestionHeader {
 const useStyles = makeStyles((theme) => ({
   iconButton: {
     padding: 0,
-    borderRadius: 12,
+    borderRadius: 15,
+    color: "white",
+    "&:hover": {
+      color: theme.palette.grey[300],
+    },
   },
   description: {
     "& p": {
@@ -73,7 +77,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               className={classes.iconButton}
               onClick={() => setOpen(true)}
             >
-              <MoreInfoIcon />
+              <MoreInfoIcon viewBox="0 0 30 30" />
             </IconButton>
           </Grid>
         )}
