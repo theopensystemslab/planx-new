@@ -26,6 +26,7 @@ dependencies:
   js-cookie: 2.2.1
   jwt-decode: 3.1.2
   lodash: 4.17.20
+  luhn: 2.4.1
   mapbox-gl: 1.13.0
   marked: 1.2.7
   nanoid: 3.1.16
@@ -13463,6 +13464,12 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
+  /luhn/2.4.1:
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-p1eEWSb2RJAfv+BzrPEUqbUXV1H3ylHEAOk9yDM1L12ojD6OQQGrE29DqKLa0XYluJTIwXIOFmyzVOme3QSyww==
   /lz-string/1.4.4:
     dev: true
     hasBin: true
@@ -20550,6 +20557,7 @@ specifiers:
   jwt-decode: ^3.1.2
   lint-staged: ^10.5.1
   lodash: ^4.17.20
+  luhn: ^2.4.1
   mapbox-gl: ^1.13.0
   marked: ^1.2.7
   mini-css-extract-plugin: ^1.3.4

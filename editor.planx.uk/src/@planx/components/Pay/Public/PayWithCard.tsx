@@ -3,6 +3,8 @@ export default Component;
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@planx/components/shared/Preview/Card";
 import { useFormik } from "formik";
+import { validate as validateCreditCard } from "luhn";
+import { isValid as isValidPostcode } from "postcode";
 import React from "react";
 import ErrorWrapper from "ui/ErrorWrapper";
 import { object, string } from "yup";
@@ -78,16 +80,6 @@ const useStyles = makeStyles({
   },
 });
 
-const validateCreditCard = (creditCardNumber: string): boolean => {
-  const regex16Digit = /^\d{16}$/;
-  return creditCardNumber.search(regex16Digit) !== -1;
-};
-
-const validateSecurityCode = (securityCode: string): boolean => {
-  const regex3Digit = /^\d{3}$/;
-  return securityCode.search(regex3Digit) !== -1;
-};
-
 const validateEmail = (email: string) => {
   // eslint-disable-next-line
   let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -98,17 +90,19 @@ function Component(props: any) {
   const c = useStyles();
   const formik = useFormik({
     initialValues: {
-      cardNumber: "",
-      cardSecurityCode: "",
       name: "",
       email: "",
-      postcode: "",
-      city: "",
-      number: "",
-      street: "",
-      country: "United Kingdom",
+      // Card
+      cardNumber: "",
+      cardSecurityCode: "",
       expirationMonth: "",
       expirationYear: "",
+      // Address
+      number: "",
+      street: "",
+      city: "",
+      postcode: "",
+      country: "United Kingdom",
     },
     onSubmit: () => {
       props.goToSummary();
@@ -117,11 +111,21 @@ function Component(props: any) {
     validateOnChange: false,
     validationSchema: object({
       name: string().required(),
+      email: string()
+        .required()
+        .test({
+          name: "validEmail",
+          message: "Must be a valid email",
+          test: (email: string | undefined) => {
+            return Boolean(email && validateEmail(email));
+          },
+        }),
+      // Card
       cardNumber: string()
         .required()
         .test({
           name: "validCreditCard",
-          message: "Must be a valid 16-digit credit card number",
+          message: "Must be a valid credit card number",
           test: (creditCardNumber: string | undefined) => {
             return Boolean(
               creditCardNumber && validateCreditCard(creditCardNumber)
@@ -134,16 +138,22 @@ function Component(props: any) {
           name: "validSecurityCode",
           message: "Must be a valid security code",
           test: (securityCode: string | undefined) => {
-            return Boolean(securityCode && validateSecurityCode(securityCode));
+            return Boolean(securityCode && securityCode.length >= 3);
           },
         }),
-      city: string()
+      expirationYear: string().required(),
+      expirationMonth: string().required(),
+      // Address
+      number: string().required(),
+      street: string().required(),
+      city: string().required(),
+      postcode: string()
         .required()
         .test({
-          name: "validCity",
-          message: "Must be a valid city",
-          test: (city: string | undefined) => {
-            return Boolean(city && city.length > 1);
+          name: "validPostCode",
+          message: "Must be a valid postal code",
+          test: (postcode: string | undefined) => {
+            return Boolean(postcode && isValidPostcode(postcode.trim()));
           },
         }),
       country: string()
@@ -153,28 +163,6 @@ function Component(props: any) {
           message: "Must be a valid country",
           test: (country: string | undefined) => {
             return Boolean(country && country.length > 1);
-          },
-        }),
-      postcode: string()
-        .required()
-        .test({
-          name: "validPostCode",
-          message: "Must be a valid postal code",
-          test: (postcode: string | undefined) => {
-            return Boolean(postcode && postcode.length > 3);
-          },
-        }),
-      number: string().required(),
-      street: string().required(),
-      expirationYear: string().required(),
-      expirationMonth: string().required(),
-      email: string()
-        .required()
-        .test({
-          name: "validEmail",
-          message: "Must be a valid email",
-          test: (email: string | undefined) => {
-            return Boolean(email && validateEmail(email));
           },
         }),
     }),
