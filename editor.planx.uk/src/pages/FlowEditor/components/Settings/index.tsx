@@ -11,10 +11,11 @@ import React from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 
 import { rootFlowPath } from "../../../../routes/utils";
-import type { Settings } from "../../../../types";
+import type { FlowSettings } from "../../../../types";
 import DataManagerSettings from "./DataManagerSettings";
 import DesignSettings from "./DesignSettings";
 import ServiceFlags from "./ServiceFlags";
+import ServiceSettings from "./ServiceSettings";
 import TeamSettings from "./TeamSettings";
 
 interface TabPanelProps {
@@ -101,9 +102,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const tabsOrder = ["team", "flags", "design", "data-manager"];
+const tabsOrder = ["team", "service", "flags", "design", "data-manager"];
 
-const NavTabs: React.FC<{ tab?: string; settings?: Settings }> = (props) => {
+const NavTabs: React.FC<{ tab?: string; settings?: FlowSettings }> = (
+  props
+) => {
   const classes = useStyles();
   const { navigate } = useNavigation();
   const { data } = useCurrentRoute();
@@ -137,19 +140,24 @@ const NavTabs: React.FC<{ tab?: string; settings?: Settings }> = (props) => {
             >
               <LinkTab label="Team" href={makeHref("")} {...a11yProps(0)} />
               <LinkTab
+                label="Service"
+                href={makeHref("service")}
+                {...a11yProps(1)}
+              />
+              <LinkTab
                 label="Flags"
                 href={makeHref("flags")}
-                {...a11yProps(1)}
+                {...a11yProps(2)}
               />
               <LinkTab
                 label="Design"
                 href={makeHref("design")}
-                {...a11yProps(2)}
+                {...a11yProps(3)}
               />
               <LinkTab
                 label="Data Manager"
                 href={makeHref("data-manager")}
-                {...a11yProps(3)}
+                {...a11yProps(4)}
               />
             </Tabs>
           </Grid>
@@ -164,6 +172,9 @@ const NavTabs: React.FC<{ tab?: string; settings?: Settings }> = (props) => {
         <TeamSettings />
       </TabPanel>
       <TabPanel value={value} index={1}>
+        <ServiceSettings settings={props.settings} flowId={data.flow} />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
         <ServiceFlags
           flagSets={[
             {
@@ -186,10 +197,10 @@ const NavTabs: React.FC<{ tab?: string; settings?: Settings }> = (props) => {
           ]}
         />
       </TabPanel>
-      <TabPanel value={value} index={2}>
-        <DesignSettings settings={props.settings?.design} teamId={data.team} />
-      </TabPanel>
       <TabPanel value={value} index={3}>
+        <DesignSettings />
+      </TabPanel>
+      <TabPanel value={value} index={4}>
         <DataManagerSettings />
       </TabPanel>
     </div>

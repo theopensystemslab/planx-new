@@ -156,7 +156,6 @@
       columns:
       - id
       - name
-      - settings
       - slug
       - theme
       filter: {}

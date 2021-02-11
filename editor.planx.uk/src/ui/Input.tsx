@@ -5,7 +5,7 @@ import React, { ChangeEvent, forwardRef } from "react";
 
 import ErrorWrapper from "./ErrorWrapper";
 
-interface Props extends InputBaseProps {
+export interface Props extends InputBaseProps {
   format?: "large" | "bold" | "data";
   classes?: any;
   className?: string;

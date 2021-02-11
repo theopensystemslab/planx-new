@@ -20,7 +20,7 @@ import create from "zustand";
 import vanillaCreate from "zustand/vanilla";
 
 import { client } from "../../../lib/graphql";
-import type { Settings } from "../../../types";
+import type { FlowSettings } from "../../../types";
 import { FlowLayout } from "../components/Flow";
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../data/flags";
 import { connectToDB, getConnection } from "./sharedb";
@@ -86,7 +86,10 @@ interface Store extends Record<string | number | symbol, unknown> {
     visited?: Array<string>
   ) => Array<string>;
   upcomingCardIds: () => nodeId[];
-  updateSettings: (teamId: string, newSettings: Settings) => Promise<number>;
+  updateFlowSettings: (
+    flowId: string,
+    newSettings: FlowSettings
+  ) => Promise<number>;
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
@@ -889,14 +892,14 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     }, {});
   },
 
-  updateSettings: async (
-    teamSlug: string,
-    newSettings: Settings
+  updateFlowSettings: async (
+    flowSlug: string,
+    newSettings: FlowSettings
   ): Promise<any> => {
     let response = await client.mutate({
       mutation: gql`
-        mutation UpdateSettings($slug: String, $settings: jsonb) {
-          update_teams(
+        mutation UpdateFlowSettings($slug: String, $settings: jsonb) {
+          update_flows(
             where: { slug: { _eq: $slug } }
             _set: { settings: $settings }
           ) {
@@ -909,12 +912,12 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         }
       `,
       variables: {
-        slug: teamSlug,
+        slug: flowSlug,
         settings: newSettings,
       },
     });
 
-    return response.data.update_teams.affected_rows;
+    return response.data.update_flows.affected_rows;
   },
 }));
 

@@ -15,7 +15,7 @@ import DrawIcon from "@material-ui/icons/Create";
 import LayersIcon from "@material-ui/icons/LayersOutlined";
 import turfArea from "@turf/area";
 import React, { useEffect, useRef, useState } from "react";
-import ReactMapGL, { Layer,Source } from "react-map-gl";
+import ReactMapGL, { Layer, Source } from "react-map-gl";
 
 export default Map;
 
