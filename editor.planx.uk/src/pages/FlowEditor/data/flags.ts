@@ -79,3 +79,5 @@ export default Object.entries(categoriesAndFlags).reduce(
   },
   {}
 );
+
+export const DEFAULT_FLAG_CATEGORY = flatFlags[0].category;

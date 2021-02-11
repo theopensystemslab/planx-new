@@ -15,6 +15,7 @@ import Send from "@planx/components/Send/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
+import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
@@ -119,9 +120,10 @@ const Node: React.FC<any> = (props: Props) => {
       );
 
     case TYPES.Result:
-      const data = reportData(props.node.data.flagSet);
+      const flagSet = props.node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
+      const data = reportData(flagSet);
 
-      const { flag, responses } = data[props.node.data.flagSet];
+      const { flag, responses } = data[flagSet];
 
       return (
         <Result
@@ -131,7 +133,7 @@ const Node: React.FC<any> = (props: Props) => {
             background: flag.bgColor,
           }}
           headingTitle={flag.text}
-          subheading={props.node.data.flagSet}
+          subheading={flagSet}
           reasonsTitle="Responses"
           responses={responses}
         />

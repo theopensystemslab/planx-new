@@ -22,7 +22,7 @@ import vanillaCreate from "zustand/vanilla";
 import { client } from "../../../lib/graphql";
 import type { Settings } from "../../../types";
 import { FlowLayout } from "../components/Flow";
-import { flatFlags } from "../data/flags";
+import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../data/flags";
 import { connectToDB, getConnection } from "./sharedb";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
@@ -787,10 +787,9 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
   collectedFlags(upToNodeId, visited = []) {
     const { breadcrumbs, flow } = get();
-    // let include = true;
 
     const possibleFlags = flatFlags.filter(
-      (f) => f.category === "Planning permission"
+      (f) => f.category === DEFAULT_FLAG_CATEGORY
     );
     const flagKeys = possibleFlags.map((f) => f.value);
 
@@ -808,8 +807,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       }
     }
 
-    // console.log({ upToNodeId, ids, breadcrumbIds, visited });
-
     const res = ids
       .reduce((acc, k) => {
         breadcrumbs[k].answers.forEach((id: string) => {
@@ -820,20 +817,17 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       .filter((flag) => flag && flagKeys.includes(flag))
       .sort((a, b) => flagKeys.indexOf(a) - flagKeys.indexOf(b));
 
-    // console.log({ ids, breadcrumbIds, upToNodeId, res });
     return res;
   },
 
-  reportData(flagSet = "Planning permission") {
+  reportData(flagSet = DEFAULT_FLAG_CATEGORY) {
     const { breadcrumbs, flow } = get();
 
-    // const categories = Array.from(new Set(flags.map((f) => f.category)));
     const categories = [flagSet];
 
     return categories.reduce((acc: any, category: any) => {
       const possibleFlags = flatFlags.filter((f) => f.category === category);
       const keys = possibleFlags.map((f) => f.value);
-
       const collectedFlags = Object.values(breadcrumbs).flatMap(({ answers }) =>
         Array.isArray(answers)
           ? answers.map((id) => flow[id]?.data?.flag)
