@@ -22,6 +22,7 @@ const Filter: React.FC<Props> = (props) => {
               {
                 category: "Planning permission",
                 text: "(No Result)",
+                value: "",
               },
             ]
               .filter((f) => f.category === "Planning permission")
