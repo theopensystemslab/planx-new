@@ -15,6 +15,7 @@ import Send from "@planx/components/Send/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
+import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
@@ -24,6 +25,7 @@ export type handleSubmit = (_?: componentOutput) => void;
 interface Props {
   handleSubmit: handleSubmit;
   node: node;
+  data?: any;
 }
 
 const Node: React.FC<any> = (props: Props) => {
@@ -119,9 +121,10 @@ const Node: React.FC<any> = (props: Props) => {
       );
 
     case TYPES.Result:
-      const data = reportData();
+      const flagSet = props.node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
+      const data = reportData(flagSet);
 
-      const { flag, responses } = data["Planning permission"];
+      const { flag, responses } = data[flagSet];
 
       return (
         <Result
@@ -131,8 +134,8 @@ const Node: React.FC<any> = (props: Props) => {
             background: flag.bgColor,
           }}
           headingTitle={flag.text}
-          subheading=""
-          reasonsTitle="Reasons"
+          subheading={flagSet}
+          reasonsTitle="Responses"
           responses={responses}
         />
       );

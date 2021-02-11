@@ -2,7 +2,7 @@ import { TYPES } from "@planx/components/types";
 import { useFormik } from "formik";
 import React from "react";
 
-import { flatFlags } from "../../data/flags";
+import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
 
 export interface Props {
   id?: string;
@@ -20,11 +20,11 @@ const Filter: React.FC<Props> = (props) => {
           : [
               ...flatFlags,
               {
-                category: "Planning permission",
+                category: DEFAULT_FLAG_CATEGORY,
                 text: "(No Result)",
               },
             ]
-              .filter((f) => f.category === "Planning permission")
+              .filter((f) => f.category === DEFAULT_FLAG_CATEGORY)
               .map((f) => ({
                 type: TYPES.Response,
                 data: {

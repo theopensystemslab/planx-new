@@ -52,7 +52,11 @@ const Result: React.FC<Props> = ({
   const hiddenResponses = responses.filter((r) => r.hidden);
 
   return (
-    <Card handleSubmit={handleSubmit} isValid fullWidth>
+    <Card
+      handleSubmit={() => handleSubmit && handleSubmit([])}
+      isValid
+      fullWidth
+    >
       <ResultSummary
         subheading={subheading}
         color={headingColor}
@@ -66,10 +70,6 @@ const Result: React.FC<Props> = ({
           </Typography>
         </Box>
         <Box mb={3}>
-          <Box mb={1} color="secondary.dark">
-            Planning Permission
-          </Box>
-
           <Responses responses={visibleResponses} />
 
           {hiddenResponses.length > 0 && (
@@ -84,9 +84,6 @@ const Result: React.FC<Props> = ({
           )}
         </Box>
       </Box>
-      {/* <Box color="text.secondary" pt={2}>
-        You will not be able to make further changes
-      </Box> */}
     </Card>
   );
 };
