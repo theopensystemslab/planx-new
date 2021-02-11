@@ -1,9 +1,16 @@
+import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
 
 import Wrapper from "../fixtures/Wrapper";
 import Editor from "./Editor";
 import Public from "./Public";
 
-export default () => {
+const metadata: Meta = {
+  title: "PlanX Components/Send",
+};
+
+export const Combined = () => {
   return <Wrapper Editor={Editor} Public={Public} />;
 };
+
+export default metadata;

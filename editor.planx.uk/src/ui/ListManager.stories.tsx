@@ -1,9 +1,18 @@
 import Box from "@material-ui/core/Box";
+import { Meta } from "@storybook/react/types-6-0";
 import React, { ChangeEvent, useState } from "react";
 
-import ColorPicker from "../ColorPicker";
-import Input from "../Input";
-import ListManager from "../ListManager";
+import ColorPicker from "./ColorPicker";
+import Input from "./Input";
+import ListManager from "./ListManager";
+
+const metadata: Meta = {
+  title: "Design System/Atoms/Form Elements/ListManager",
+  component: ListManager,
+  parameters: {
+    controls: { hideNoControlsWarning: true },
+  },
+};
 
 interface Item {
   name: string;
@@ -35,7 +44,7 @@ const Editor = (props: { value: Item; onChange: (newVal: Item) => void }) => (
   </Box>
 );
 
-const Fixture = () => {
+export const Basic = () => {
   const [tasks, setTasks] = useState<Array<Item>>([]);
   return (
     <ListManager
@@ -50,4 +59,4 @@ const Fixture = () => {
   );
 };
 
-export default Fixture;
+export default metadata;
