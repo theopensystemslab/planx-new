@@ -313,10 +313,9 @@ function GetAddress({
               value={postcode || ""}
               onChange={(e: any) => {
                 const input = e.target.value;
-                const postcode = parse(input);
-                if (postcode.valid) {
-                  setSanitizedPostcode(toNormalised(input));
-                  setPostcode(toNormalised(input));
+                if (parse(input.trim()).valid) {
+                  setSanitizedPostcode(toNormalised(input.trim()));
+                  setPostcode(toNormalised(input.trim()));
                 } else {
                   setSanitizedPostcode(null);
                   setPostcode(input.toUpperCase());
