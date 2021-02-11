@@ -8,84 +8,77 @@ beforeEach(() => {
   getState().resetPreview();
 });
 
-describe("results", () => {
-  describe("flags", () => {
-    beforeEach(() => {
-      setState({
-        flow: {
-          _root: {
-            edges: ["question", "filter"],
-          },
-          question: {
-            type: TYPES.Statement,
-            edges: ["missing_info_answer", "immune_answer", "noflag_answer"],
-          },
-          missing_info_answer: {
-            type: TYPES.Response,
-            data: {
-              flag: "MISSING_INFO",
-            },
-          },
-          immune_answer: {
-            type: TYPES.Response,
-            data: {
-              flag: "IMMUNE",
-            },
-          },
-          noflag_answer: {
-            type: TYPES.Response,
-          },
-          filter: {
-            type: TYPES.Filter,
-            edges: ["missing_info_flag", "immune_flag", "no_flag"],
-          },
-          missing_info_flag: {
-            type: TYPES.Response,
-            data: {
-              val: "MISSING_INFO",
-            },
-            edges: ["missing_info_followup"],
-          },
-          immune_flag: {
-            type: TYPES.Response,
-            data: {
-              val: "IMMUNE",
-            },
-            edges: ["immune_followup"],
-          },
-          no_flag: {
-            type: TYPES.Response,
-            edges: ["noflag_followup"],
-          },
-          missing_info_followup: { type: TYPES.Content },
-          immune_followup: { type: TYPES.Content },
-          noflag_followup: { type: TYPES.Content },
+// TODO: make these tests simpler and easier to read/understand
+
+test("jumps to result when flag has been collected", () => {
+  setState({
+    flow: {
+      _root: {
+        edges: ["question", "filter"],
+      },
+      question: {
+        type: TYPES.Statement,
+        edges: ["missing_info_answer", "immune_answer", "noflag_answer"],
+      },
+      missing_info_answer: {
+        type: TYPES.Response,
+        data: {
+          flag: "MISSING_INFO",
         },
-      });
-    });
-
-    test("jumps to result when flag has been collected", () => {
-      expect(getState().upcomingCardIds()).toEqual([
-        "question",
-        "noflag_followup",
-      ]);
-
-      getState().record("question", ["missing_info_answer"]);
-      expect(getState().collectedFlags("question")).toEqual(["MISSING_INFO"]);
-      expect(getState().upcomingCardIds()).toEqual(["missing_info_followup"]);
-
-      getState().record("question", ["immune_answer"]);
-      expect(getState().collectedFlags("question")).toEqual(["IMMUNE"]);
-      expect(getState().upcomingCardIds()).toEqual(["immune_followup"]);
-
-      getState().record("question", ["noflag_answer"]);
-      expect(getState().collectedFlags("question")).toEqual([]);
-      expect(getState().upcomingCardIds()).toEqual(["noflag_followup"]);
-    });
+      },
+      immune_answer: {
+        type: TYPES.Response,
+        data: {
+          flag: "IMMUNE",
+        },
+      },
+      noflag_answer: {
+        type: TYPES.Response,
+      },
+      filter: {
+        type: TYPES.Filter,
+        edges: ["missing_info_flag", "immune_flag", "no_flag"],
+      },
+      missing_info_flag: {
+        type: TYPES.Response,
+        data: {
+          val: "MISSING_INFO",
+        },
+        edges: ["missing_info_followup"],
+      },
+      immune_flag: {
+        type: TYPES.Response,
+        data: {
+          val: "IMMUNE",
+        },
+        edges: ["immune_followup"],
+      },
+      no_flag: {
+        type: TYPES.Response,
+        edges: ["noflag_followup"],
+      },
+      missing_info_followup: { type: TYPES.Content },
+      immune_followup: { type: TYPES.Content },
+      noflag_followup: { type: TYPES.Content },
+    },
   });
+
+  expect(getState().upcomingCardIds()).toEqual(["question", "noflag_followup"]);
+
+  getState().record("question", ["missing_info_answer"]);
+  expect(getState().collectedFlags("question")).toEqual(["MISSING_INFO"]);
+  expect(getState().upcomingCardIds()).toEqual(["missing_info_followup"]);
+
+  getState().record("question", ["immune_answer"]);
+  expect(getState().collectedFlags("question")).toEqual(["IMMUNE"]);
+  expect(getState().upcomingCardIds()).toEqual(["immune_followup"]);
+
+  getState().record("question", ["noflag_answer"]);
+  expect(getState().collectedFlags("question")).toEqual([]);
+  expect(getState().upcomingCardIds()).toEqual(["noflag_followup"]);
 });
 
-test("only this one", () => {
+test("changing flag inside flag filter doesn't affect the filter's behaviour", () => {
   setState({
     flow: {
       _root: {
@@ -108,7 +101,7 @@ test("only this one", () => {
       },
       missing_info_content: {
         data: {
-          content: "<p>missing info</p>",
+          content: "missing info",
         },
         type: 250,
       },
