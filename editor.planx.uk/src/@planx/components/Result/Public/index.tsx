@@ -64,7 +64,7 @@ const Result: React.FC<Props> = ({
       />
       <Box mb={2} mt={0} px={{ xs: 2, md: 5 }}>
         <Typography variant="body2">{headingDescription}</Typography>
-        <Box mt={4}>
+        <Box mt={4} mb={3}>
           <Typography variant="h3" gutterBottom>
             {reasonsTitle}
           </Typography>

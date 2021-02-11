@@ -32,6 +32,9 @@ const useClasses = makeStyles((theme: Theme) => ({
       margin: 0,
     },
   },
+  responseText: {
+    whiteSpace: "nowrap",
+  },
 }));
 
 const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
@@ -51,7 +54,7 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
       flexDirection="column"
       mb={0.5}
       px={1.5}
-      py={{ xs: 1, md: 0 }}
+      py={{ xs: 2, md: 0.5 }}
       className={classes.root}
     >
       <Box
@@ -68,7 +71,8 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
           color="secondary.dark"
         >
           <Typography variant="body2" color="textPrimary">
-            {question.data.text} <strong>{response}</strong>
+            {question.data.text}{" "}
+            <strong className={classes.responseText}>{response}</strong>
           </Typography>
           <Button
             color="inherit"
