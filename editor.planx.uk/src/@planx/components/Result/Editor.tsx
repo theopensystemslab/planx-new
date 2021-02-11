@@ -34,10 +34,8 @@ const ResultComponent: React.FC<Result> = (props) => {
               name="flagSet"
               value={formik.values.flagSet}
               onChange={formik.handleChange}
-              disabled={!!props.id}
-              required={!props.id}
+              required
             >
-              <option />
               {Object.keys(flags).map((flagSet) => (
                 <option key={flagSet} value={flagSet}>
                   {flagSet}
