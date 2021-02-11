@@ -78,7 +78,11 @@ const Result: React.FC<Props> = ({
   const theme = useTheme();
 
   return (
-    <Card handleSubmit={handleSubmit} isValid fullWidth>
+    <Card
+      handleSubmit={() => handleSubmit && handleSubmit([])}
+      isValid
+      fullWidth
+    >
       <ResultSummary
         subheading={subheading}
         color={headingColor}
@@ -92,10 +96,6 @@ const Result: React.FC<Props> = ({
           </Typography>
         </Box>
         <Box mb={3}>
-          <Box mb={1} color="secondary.dark">
-            Planning Permission
-          </Box>
-
           <Responses responses={visibleResponses} />
 
           {hiddenResponses.length > 0 && (

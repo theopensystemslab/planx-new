@@ -22,13 +22,13 @@ import vanillaCreate from "zustand/vanilla";
 import { client } from "../../../lib/graphql";
 import type { FlowSettings } from "../../../types";
 import { FlowLayout } from "../components/Flow";
-import { flatFlags } from "../data/flags";
+import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../data/flags";
 import { connectToDB, getConnection } from "./sharedb";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
 let doc: any;
-let globalFlag: any;
+// let globalFlag: any;
 
 const send = (ops: Array<any>) => {
   if (ops.length > 0) {
@@ -81,6 +81,10 @@ interface Store extends Record<string | number | symbol, unknown> {
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
   previousCard: () => nodeId | undefined;
+  collectedFlags: (
+    upToNodeId: string,
+    visited?: Array<string>
+  ) => Array<string>;
   upcomingCardIds: () => nodeId[];
   updateFlowSettings: (
     flowId: string,
@@ -445,7 +449,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   },
 
   upcomingCardIds() {
-    const { flow, breadcrumbs, passport } = get();
+    const { flow, breadcrumbs, passport, collectedFlags } = get();
 
     const ids: Set<string> = new Set();
 
@@ -453,8 +457,14 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       String(a.data?.val).split(",").length -
       String(b.data?.val).split(",").length;
 
+    let visited = new Set();
+
     const nodeIdsConnectedFrom = (source: string) => {
       return (flow[source]?.edges ?? [])
+        .map((id) => {
+          visited.add(id);
+          return id;
+        })
         .filter(
           (id) =>
             !Object.keys(breadcrumbs).includes(id) &&
@@ -462,12 +472,21 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               (flow[id]?.edges as any)?.length > 0)
         )
         .forEach((id) => {
+          // console.log({ checking: id, breadcrumbs, visited });
           if (
             [TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type as TYPES)
           ) {
             nodeIdsConnectedFrom(id);
           } else {
-            const fn = flow[id]?.data?.fn;
+            const useFlag = flow[id]?.type === TYPES.Filter;
+            // const visible = Boolean(flow[id]?.data?.visible);
+
+            const fn = useFlag ? "flag" : flow[id]?.data?.fn;
+
+            const [globalFlag] = collectedFlags(id, [...visited] as Array<
+              string
+            >);
+            // console.log({ checkingFlagFor: id, flag: globalFlag, breadcrumbs });
 
             let passportValues =
               fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
@@ -499,9 +518,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                     sortedResponses || []
                   ).filter((r) => {
                     const responseValues = String(r.data.val).split(",").sort();
-                    // if (id === "HV0gV8DOil") {
-                    //   console.log({ responseValues, passportValues });
-                    // }
                     return String(responseValues) === String(passportValues);
                   });
 
@@ -514,19 +530,11 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                         .sort();
 
                       for (const responseValue of responseValues) {
-                        // console.log({ value, val });
                         return passportValues.some((passportValue: any) =>
                           String(passportValue).startsWith(responseValue)
                         );
                       }
                     });
-
-                    // console.log(
-                    //   id,
-                    //   sortedResponses,
-                    //   passportValues,
-                    //   responsesThatCanBeAutoAnswered
-                    // );
                   }
                 }
               }
@@ -559,12 +567,18 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                   });
                 }
 
+                // if (visible) {
+                //   console.log({ id });
+                //   ids.add(id);
+                // }
+
                 responsesThatCanBeAutoAnswered.forEach((r) =>
                   nodeIdsConnectedFrom(r.id)
                 );
-              } else {
-                ids.add(id);
               }
+              // else if (fn === "flag" && visible) {
+              //   ids.add(id);
+              // }
             } else {
               ids.add(id);
             }
@@ -774,16 +788,47 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     }
   },
 
-  reportData() {
+  collectedFlags(upToNodeId, visited = []) {
     const { breadcrumbs, flow } = get();
 
-    // const categories = Array.from(new Set(flags.map((f) => f.category)));
-    const categories = ["Planning permission"];
+    const possibleFlags = flatFlags.filter(
+      (f) => f.category === DEFAULT_FLAG_CATEGORY
+    );
+    const flagKeys = possibleFlags.map((f) => f.value);
+
+    const breadcrumbIds = Object.keys(breadcrumbs);
+
+    const idx = breadcrumbIds.indexOf(upToNodeId);
+
+    let ids: Array<string> = [];
+
+    if (idx >= 0) {
+      ids = breadcrumbIds.slice(0, idx + 1);
+    } else if (visited.length > 1 && visited.includes(upToNodeId)) {
+      ids = breadcrumbIds.filter((id) => visited.includes(id));
+    }
+
+    const res = ids
+      .reduce((acc, k) => {
+        breadcrumbs[k].answers.forEach((id: string) => {
+          acc.push(flow[id]?.data?.flag);
+        });
+        return acc;
+      }, [] as Array<string>)
+      .filter((flag) => flag && flagKeys.includes(flag))
+      .sort((a, b) => flagKeys.indexOf(a) - flagKeys.indexOf(b));
+
+    return res;
+  },
+
+  reportData(flagSet = DEFAULT_FLAG_CATEGORY) {
+    const { breadcrumbs, flow } = get();
+
+    const categories = [flagSet];
 
     return categories.reduce((acc: any, category: any) => {
       const possibleFlags = flatFlags.filter((f) => f.category === category);
       const keys = possibleFlags.map((f) => f.value);
-
       const collectedFlags = Object.values(breadcrumbs).flatMap(({ answers }) =>
         Array.isArray(answers)
           ? answers.map((id) => flow[id]?.data?.flag)
@@ -804,7 +849,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         bgColor: "#EEEEEE",
         color: tinycolor("black").toHexString(),
       };
-      globalFlag = flag.value;
+      // globalFlag = flag.value;
 
       const responses = Object.entries(breadcrumbs)
         .map(

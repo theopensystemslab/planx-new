@@ -16,9 +16,12 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "left",
     position: "relative",
     height: "100%",
+    "&:hover": {
+      backgroundColor: theme.palette.grey[300],
+    },
   },
   selected: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: `${theme.palette.primary.main} !important`,
     color: theme.palette.primary.contrastText,
   },
   onFocus: {

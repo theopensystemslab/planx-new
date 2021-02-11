@@ -11,8 +11,10 @@ import { uploadFile } from "api/upload";
 import classNames from "classnames";
 import { nanoid } from "nanoid";
 import { handleSubmit } from "pages/Preview/Node";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import ErrorWrapper from "ui/ErrorWrapper";
+import { array } from "yup";
 
 interface Props extends MoreInformation {
   title?: string;
@@ -113,20 +115,60 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const slotsSchema = array()
+  .required()
+  .test({
+    name: "nonUploading",
+    message: "You must have at least one successfully uploaded file.",
+    test: (slots?: Array<any>) => {
+      return Boolean(
+        slots &&
+          slots.length > 0 &&
+          !slots.some((slot: any) => slot.status === "uploading")
+      );
+    },
+  });
+
 const FileUpload: React.FC<Props> = (props) => {
-  const [slots, setSlots] = React.useState([]);
-  return (
-    <Card
-      isValid={!slots.some((slot: any) => slot.status === "uploading")}
-      handleSubmit={() => {
+  const [slots, setSlots] = useState([]);
+  const [validationError, setValidationError] = useState<string | undefined>(
+    undefined
+  );
+
+  const handleSubmit = () => {
+    slotsSchema
+      .validate(slots)
+      .then(() => {
         props.handleSubmit(
           slots.map((slot: any) => ({
             url: slot.url,
             filename: slot.file.path,
           }))
         );
-      }}
-    >
+      })
+      .catch((err) => {
+        setValidationError(err.message);
+      });
+  };
+
+  /**
+   * Declare a ref to hold a mutable copy the up-to-date validation error.
+   * The intention is to prevent frequent unnecessary update loops that clears the
+   * validation error state if it is already empty.
+   */
+  const validationErrorRef = useRef(validationError);
+  useEffect(() => {
+    validationErrorRef.current = validationError;
+  }, [validationError]);
+
+  useEffect(() => {
+    if (validationErrorRef.current) {
+      setValidationError(undefined);
+    }
+  }, [slots]);
+
+  return (
+    <Card isValid handleSubmit={handleSubmit}>
       <QuestionHeader
         title={props.title}
         description={props.description}
@@ -134,7 +176,9 @@ const FileUpload: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
         policyRef={props.policyRef}
       />
-      <Dropzone slots={slots} setSlots={setSlots} />
+      <ErrorWrapper error={validationError}>
+        <Dropzone slots={slots} setSlots={setSlots} />
+      </ErrorWrapper>
     </Card>
   );
 };
@@ -263,7 +307,7 @@ function Dropzone(props: any) {
 
 function ImagePreview({ file }: any) {
   const { current: url } = React.useRef(URL.createObjectURL(file));
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       // Cleanup to free up memory
       URL.revokeObjectURL(url);

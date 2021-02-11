@@ -2,6 +2,7 @@ import "./map.css";
 
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -12,6 +13,7 @@ import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import axios from "axios";
 import useAxios from "axios-hooks";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import capitalize from "lodash/capitalize";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -22,6 +24,7 @@ import ReactHtmlParser from "react-html-parser";
 import useSWR from "swr";
 
 import type { Address, FindProperty } from "../model";
+import { DEFAULT_TITLE } from "../model";
 import Map from "./Map";
 import { convertOrdnanceSurveyToStandard } from "./maputils";
 
@@ -61,8 +64,15 @@ function Component(props: Props) {
       ? `https://local-authority-api.planx.uk/${address.team}?x=${address.x}&y=${address.y}`
       : null
   );
+
   if (!address) {
-    return <GetAddress setAddress={setAddress} />;
+    return (
+      <GetAddress
+        title={props.title}
+        description={props.description}
+        setAddress={setAddress}
+      />
+    );
   } else if (constraints) {
     // const mockConstraints = {
     //   "property.c31": {
@@ -217,14 +227,18 @@ function Component(props: Props) {
       />
     );
   } else {
-    return <div>Loading…</div>;
+    return (
+      <DelayedLoadingIndicator msDelayBeforeVisible={0}>
+        Waiting for property data…
+      </DelayedLoadingIndicator>
+    );
   }
 }
 
-function GetAddress({
-  setAddress,
-}: {
+function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
+  title?: string;
+  description?: string;
 }) {
   const [boundary, setBoundary] = useState(null);
   const [useMap, setUseMap] = useState<Boolean>(false);
@@ -263,14 +277,12 @@ function GetAddress({
 
   return (
     <Card
-      handleSubmit={() => setAddress(selectedOption)}
+      handleSubmit={() => props.setAddress(selectedOption)}
       isValid={Boolean(selectedOption)}
     >
       <QuestionHeader
-        title="Find the property"
-        description={
-          useMap ? "Please select the property or draw its boundary" : ""
-        }
+        title={props.title || DEFAULT_TITLE}
+        description={props.description || ""}
       />
       {useMap ? (
         // Using map
@@ -305,11 +317,12 @@ function GetAddress({
               placeholder="Enter the postcode of the property"
               value={postcode || ""}
               onChange={(e: any) => {
+                // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
+                //      so this code attempts to validate postcodes without blocking any characters.
                 const input = e.target.value;
-                const postcode = parse(input);
-                if (postcode.valid) {
-                  setSanitizedPostcode(toNormalised(input));
-                  setPostcode(toNormalised(input));
+                if (parse(input.trim()).valid) {
+                  setSanitizedPostcode(toNormalised(input.trim()));
+                  setPostcode(toNormalised(input.trim()));
                 } else {
                   setSanitizedPostcode(null);
                   setPostcode(input.toUpperCase());

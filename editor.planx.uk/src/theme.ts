@@ -59,6 +59,11 @@ const theme = createMuiTheme({
       elevation: 0,
     },
   },
+  transitions: {
+    duration: {
+      enteringScreen: 400,
+    },
+  },
   overrides: {
     MuiCssBaseline: {
       "@global": {

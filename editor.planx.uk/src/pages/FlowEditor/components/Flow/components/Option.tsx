@@ -17,8 +17,8 @@ const Option: React.FC<any> = (props) => {
     const flag = flatFlags.find(({ value }) =>
       [props.data?.flag, props.data?.val].filter(Boolean).includes(value)
     );
-    background = flag.bgColor;
-    color = flag.color;
+    background = flag?.bgColor || background;
+    color = flag?.color || color;
   } catch (e) {}
 
   return (

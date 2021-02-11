@@ -1,4 +1,5 @@
 import Grid from "@material-ui/core/Grid";
+import { useTheme } from "@material-ui/core/styles";
 import DecisionButton from "@planx/components/shared/Buttons/DecisionButton";
 import DescriptionButton from "@planx/components/shared/Buttons/DescriptionButton";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
@@ -33,6 +34,8 @@ enum Layout {
 }
 
 const Question: React.FC<IQuestion> = (props) => {
+  const theme = useTheme();
+
   const formik = useFormik({
     initialValues: {
       selected: { a: "" },
@@ -71,7 +74,10 @@ const Question: React.FC<IQuestion> = (props) => {
             props.responses?.map((response) => {
               const onClick = () => {
                 formik.setFieldValue("selected.a", response.responseKey);
-                props.handleSubmit(response.id);
+                setTimeout(
+                  () => props.handleSubmit(response.id),
+                  theme.transitions.duration.standard
+                );
               };
               const selected = a === response.responseKey;
               const buttonProps = {

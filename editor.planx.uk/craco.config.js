@@ -6,4 +6,7 @@ module.exports = {
       plugin: CracoEsbuildPlugin,
     },
   ],
+  typescript: {
+    enableTypeChecking: !Boolean(process.env.DISABLE_TYPE_CHECKING),
+  },
 };
