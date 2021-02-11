@@ -17,6 +17,7 @@ import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
+
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
 
 export type handleSubmit = (_?: componentOutput) => void;
