@@ -37,6 +37,7 @@
       - data
       - id
       - name
+      - settings
       - slug
       - team_id
       filter: {}
