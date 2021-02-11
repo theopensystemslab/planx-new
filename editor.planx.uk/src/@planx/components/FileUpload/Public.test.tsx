@@ -4,14 +4,14 @@ import React from "react";
 
 import FileUpload from "./Public";
 
-test("renders correctly", async () => {
+test("renders correctly and blocks submit if there are no files added", async () => {
   const handleSubmit = jest.fn();
 
   render(<FileUpload handleSubmit={handleSubmit} />);
 
   userEvent.click(screen.getByText("Continue"));
 
-  expect(handleSubmit).toHaveBeenCalled();
+  expect(handleSubmit).toHaveBeenCalledTimes(0);
 });
 
 test.todo("cannot continue until uploads have finished");
