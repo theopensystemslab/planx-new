@@ -24,6 +24,7 @@ import ReactHtmlParser from "react-html-parser";
 import useSWR from "swr";
 
 import type { Address, FindProperty } from "../model";
+import { DEFAULT_TITLE } from "../model";
 import Map from "./Map";
 import { convertOrdnanceSurveyToStandard } from "./maputils";
 
@@ -280,7 +281,7 @@ function GetAddress(props: {
       isValid={Boolean(selectedOption)}
     >
       <QuestionHeader
-        title={props.title || "Find the property"}
+        title={props.title || DEFAULT_TITLE}
         description={props.description || ""}
       />
       {useMap ? (

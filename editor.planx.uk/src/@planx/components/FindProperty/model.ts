@@ -29,3 +29,5 @@ export interface Address {
   x: number;
   y: number;
 }
+
+export const DEFAULT_TITLE = "Find the property" as const;

@@ -1,5 +1,8 @@
 import type { FindProperty } from "@planx/components/FindProperty/model";
-import { parseFindProperty } from "@planx/components/FindProperty/model";
+import {
+  DEFAULT_TITLE,
+  parseFindProperty,
+} from "@planx/components/FindProperty/model";
 import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
@@ -39,7 +42,7 @@ function FindPropertyComponent(props: Props) {
           <InputRow>
             <Input
               format="large"
-              placeholder="Find the property"
+              placeholder={DEFAULT_TITLE}
               name="title"
               value={formik.values.title}
               onChange={formik.handleChange}
