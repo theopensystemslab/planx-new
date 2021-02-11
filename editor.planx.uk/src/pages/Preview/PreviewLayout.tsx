@@ -5,12 +5,12 @@ import { useCurrentRoute } from "react-navi";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import type { FlowSettings } from "../../types";
+import type { DesignSettings } from "../../types";
 
 const PreviewLayout: React.FC<{
   children?: any;
   theme?: any;
-  settings?: FlowSettings;
+  settings?: DesignSettings;
 }> = ({
   theme = {
     primary: "#2c2c2c",
@@ -23,7 +23,7 @@ const PreviewLayout: React.FC<{
   const makeHref = (path: string) => [data.mountpath, path].join("/");
 
   const leftFooterItems =
-    settings?.elements?.privacy?.heading && settings?.elements?.privacy?.show
+    settings?.privacy?.heading && settings?.privacy?.heading.length > 0
       ? [
           {
             title: "Privacy",
@@ -33,7 +33,7 @@ const PreviewLayout: React.FC<{
       : undefined;
 
   const rightFooterItems =
-    settings?.elements?.help?.heading && settings?.elements?.help?.show
+    settings?.help?.heading && settings?.help?.heading.length > 0
       ? [
           {
             title: "Help",

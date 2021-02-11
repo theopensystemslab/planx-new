@@ -31,8 +31,8 @@ const routes = compose(
             id
             team {
               theme
+              settings
             }
-            settings
           }
         }
       `,
@@ -54,7 +54,7 @@ const routes = compose(
 
     return (
       <PreviewContext.Provider value={flow}>
-        <Layout theme={flow.team.theme} settings={flow.settings}>
+        <Layout theme={flow.team.theme} settings={flow.team.settings?.design}>
           <View />
         </Layout>
       </PreviewContext.Provider>
@@ -74,8 +74,8 @@ const routes = compose(
 
         return (
           <InformationPage
-            heading={context.settings?.elements?.privacy?.heading}
-            content={context.settings?.elements?.privacy?.content}
+            heading={context.team.settings?.design?.privacy?.heading}
+            content={context.team.settings?.design?.privacy?.content}
             onClose={() => navigation.goBack()}
           />
         );
@@ -90,8 +90,8 @@ const routes = compose(
 
         return (
           <InformationPage
-            heading={context.settings?.elements?.help?.heading}
-            content={context.settings?.elements?.help?.content}
+            heading={context.team.settings?.design?.help?.heading}
+            content={context.team.settings?.design?.help?.content}
             onClose={() => navigation.goBack()}
           />
         );

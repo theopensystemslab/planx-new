@@ -19,14 +19,12 @@ import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 
-import { FlowSettings } from "../../types";
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
 
 export type handleSubmit = (_?: componentOutput) => void;
 interface Props {
   handleSubmit: handleSubmit;
   node: node;
-  settings?: FlowSettings;
   data?: any;
 }
 
@@ -139,7 +137,6 @@ const Node: React.FC<any> = (props: Props) => {
           subheading={flagSet}
           reasonsTitle="Responses"
           responses={responses}
-          disclaimer={props.settings?.elements?.legalDisclaimer}
         />
       );
 

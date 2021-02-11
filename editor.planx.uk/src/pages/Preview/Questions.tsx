@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import { componentOutput, useStore } from "../FlowEditor/lib/store";
-import { PreviewContext } from "./Context";
 import Node from "./Node";
 
 const Questions = () => {
@@ -11,7 +10,6 @@ const Questions = () => {
     state.record,
   ]);
   const node = currentCard();
-  const flow = useContext(PreviewContext);
 
   return (
     <>
@@ -37,7 +35,6 @@ const Questions = () => {
           handleSubmit={(values: componentOutput) => {
             record(node.id, values);
           }}
-          settings={flow?.settings}
         />
       )}
     </>

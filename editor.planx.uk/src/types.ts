@@ -7,42 +7,31 @@ export interface Flow {
   name: string;
   slug: string;
   team: Team;
-  settings?: FlowSettings;
 }
 
 export interface Team {
   name: string;
   slug: string;
-  settings?: TeamSettings;
+  settings?: Settings;
   theme?: {
     primary?: string;
     logo?: string;
   };
 }
 
-interface TeamSettings {
+export interface Settings {
   design?: DesignSettings;
 }
 
-export interface FlowSettings {
-  elements?: {
-    privacy?: TextContent;
-    help?: TextContent;
-    legalDisclaimer?: TextContent;
-  };
-}
-
-export interface TextContent {
+interface InformationPageContent {
   heading: string;
   content: string;
-  show: boolean;
 }
 
 export interface DesignSettings {
   color?: string;
-  privacy?: TextContent;
-  help?: TextContent;
-  legalDisclaimer?: TextContent;
+  privacy?: InformationPageContent;
+  help?: InformationPageContent;
 }
 
 export interface Flag {

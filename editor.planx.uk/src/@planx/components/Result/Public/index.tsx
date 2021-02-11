@@ -1,14 +1,10 @@
 import Box from "@material-ui/core/Box";
-import Collapse from "@material-ui/core/Collapse";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Warning from "@material-ui/icons/WarningOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { handleSubmit } from "pages/Preview/Node";
-import React, { useState } from "react";
+import React from "react";
 
-import type { TextContent } from "../../../../types";
 import type { Node } from "./model";
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
@@ -28,24 +24,7 @@ export interface Props {
     selections?: Array<Node>;
     hidden: boolean;
   }>;
-  disclaimer?: TextContent;
 }
-
-const useClasses = makeStyles((theme) => ({
-  disclaimer: {
-    cursor: "pointer",
-  },
-  readMore: {
-    marginLeft: theme.spacing(1),
-    color: theme.palette.grey[500],
-    "&:hover": {
-      color: theme.palette.grey[400],
-    },
-  },
-  disclaimerContent: {
-    marginTop: theme.spacing(1),
-  },
-}));
 
 const Responses = ({ responses }: any) => (
   <>
@@ -68,14 +47,9 @@ const Result: React.FC<Props> = ({
   headingDescription = "",
   reasonsTitle = "",
   responses,
-  disclaimer,
 }) => {
   const visibleResponses = responses.filter((r) => !r.hidden);
   const hiddenResponses = responses.filter((r) => r.hidden);
-
-  const [showDisclaimer, setShowDisclaimer] = useState(false);
-  const classes = useClasses();
-  const theme = useTheme();
 
   return (
     <Card
@@ -109,40 +83,6 @@ const Result: React.FC<Props> = ({
             </SimpleExpand>
           )}
         </Box>
-        {disclaimer?.show && (
-          <Box
-            bgcolor="background.paper"
-            p={1.25}
-            display="flex"
-            color={theme.palette.grey[600]}
-            className={classes.disclaimer}
-          >
-            <Warning />
-            <Box ml={1}>
-              <Box
-                display="flex"
-                alignItems="center"
-                onClick={() => setShowDisclaimer(!showDisclaimer)}
-              >
-                <Typography variant="h6" color="inherit">
-                  {disclaimer.heading}
-                </Typography>
-                <Typography variant="body2" className={classes.readMore}>
-                  read {showDisclaimer ? "less" : "more"}
-                </Typography>
-              </Box>
-              <Collapse in={showDisclaimer}>
-                <Typography
-                  variant="body2"
-                  color="inherit"
-                  className={classes.disclaimerContent}
-                >
-                  {disclaimer.content}
-                </Typography>
-              </Collapse>
-            </Box>
-          </Box>
-        )}
       </Box>
     </Card>
   );

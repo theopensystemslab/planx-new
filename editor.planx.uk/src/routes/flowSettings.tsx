@@ -3,8 +3,8 @@ import { client } from "lib/graphql";
 import { compose, mount, redirect, route, withData } from "navi";
 import React from "react";
 
-import Settings from "../pages/FlowEditor/components/Settings";
-import type { FlowSettings } from "../types";
+import FlowSettings from "../pages/FlowEditor/components/Settings";
+import type { Settings } from "../types";
 import { makeTitle } from "./utils";
 
 const flowSettingsRoutes = compose(
@@ -17,29 +17,30 @@ const flowSettingsRoutes = compose(
     "/:tab": route(async (req) => {
       const { data } = await client.query({
         query: gql`
-          query GetFlow($slug: String!) {
-            flows(
+          query GetTeam($slug: String!) {
+            teams(
               order_by: { name: asc }
               limit: 1
               where: { slug: { _eq: $slug } }
             ) {
               id
+              name
               settings
             }
           }
         `,
         variables: {
-          slug: req.params.flow,
+          slug: req.params.team,
         },
       });
 
-      const settings: FlowSettings = data.flows[0].settings;
+      const settings: Settings = data.teams[0].settings;
 
       return {
         title: makeTitle(
           [req.params.team, req.params.flow, "Settings"].join("/")
         ),
-        view: <Settings tab={req.params.tab} settings={settings} />,
+        view: <FlowSettings tab={req.params.tab} settings={settings} />,
       };
     }),
   })

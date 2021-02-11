@@ -175,7 +175,7 @@ const routes = compose(
 
     "/nodes": nodeRoutes,
 
-    "/settings": lazy(() => import("./settings")),
+    "/settings": lazy(() => import("./flowSettings")),
   })
 );
 
