@@ -24,6 +24,7 @@ import ReactHtmlParser from "react-html-parser";
 import useSWR from "swr";
 
 import type { Address, FindProperty } from "../model";
+import { DEFAULT_TITLE } from "../model";
 import Map from "./Map";
 import { convertOrdnanceSurveyToStandard } from "./maputils";
 
@@ -65,7 +66,13 @@ function Component(props: Props) {
   );
 
   if (!address) {
-    return <GetAddress setAddress={setAddress} />;
+    return (
+      <GetAddress
+        title={props.title}
+        description={props.description}
+        setAddress={setAddress}
+      />
+    );
   } else if (constraints) {
     // const mockConstraints = {
     //   "property.c31": {
@@ -228,10 +235,10 @@ function Component(props: Props) {
   }
 }
 
-function GetAddress({
-  setAddress,
-}: {
+function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
+  title?: string;
+  description?: string;
 }) {
   const [boundary, setBoundary] = useState(null);
   const [useMap, setUseMap] = useState<Boolean>(false);
@@ -270,14 +277,12 @@ function GetAddress({
 
   return (
     <Card
-      handleSubmit={() => setAddress(selectedOption)}
+      handleSubmit={() => props.setAddress(selectedOption)}
       isValid={Boolean(selectedOption)}
     >
       <QuestionHeader
-        title="Find the property"
-        description={
-          useMap ? "Please select the property or draw its boundary" : ""
-        }
+        title={props.title || DEFAULT_TITLE}
+        description={props.description || ""}
       />
       {useMap ? (
         // Using map

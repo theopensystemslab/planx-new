@@ -1,5 +1,8 @@
 import type { FindProperty } from "@planx/components/FindProperty/model";
-import { parseFindProperty } from "@planx/components/FindProperty/model";
+import {
+  DEFAULT_TITLE,
+  parseFindProperty,
+} from "@planx/components/FindProperty/model";
 import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
@@ -9,8 +12,11 @@ import {
 } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
+import Input from "ui/Input";
+import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
+import RichTextInput from "ui/RichTextInput";
 
 export type Props = EditorProps<TYPES.FindProperty, FindProperty>;
 
@@ -33,7 +39,23 @@ function FindPropertyComponent(props: Props) {
           title="Find Property"
           Icon={ICONS[TYPES.FindProperty]}
         >
-          <></>
+          <InputRow>
+            <Input
+              format="large"
+              placeholder={DEFAULT_TITLE}
+              name="title"
+              value={formik.values.title}
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+          <InputRow>
+            <RichTextInput
+              name="description"
+              placeholder="Description"
+              value={formik.values.description}
+              onChange={formik.handleChange}
+            />
+          </InputRow>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation
