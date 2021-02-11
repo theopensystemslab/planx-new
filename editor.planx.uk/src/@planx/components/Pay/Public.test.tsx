@@ -28,8 +28,6 @@ test("do not call credit card form that was not filled out", async () => {
 
   await waitForThenClick("Credit or debit card");
   await waitForThenClick("Continue");
-  await waitForThenClick("Pay & submit");
-  await waitForThenClick("Continue");
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
 });
