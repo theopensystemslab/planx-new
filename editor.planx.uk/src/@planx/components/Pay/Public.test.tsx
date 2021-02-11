@@ -21,7 +21,7 @@ test("apple pay", async () => {
   expect(handleSubmit).toHaveBeenCalled();
 });
 
-test("credit card", async () => {
+test("do not call credit card form that was not filled out", async () => {
   const handleSubmit = jest.fn();
 
   render(<Pay handleSubmit={handleSubmit} />);
@@ -31,5 +31,5 @@ test("credit card", async () => {
   await waitForThenClick("Pay & submit");
   await waitForThenClick("Continue");
 
-  expect(handleSubmit).toHaveBeenCalled();
+  expect(handleSubmit).toHaveBeenCalledTimes(0);
 });
