@@ -81,6 +81,7 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.FindProperty:
       return (
         <FindProperty
+          {...allProps}
           handleSubmit={() => props.handleSubmit([props.node.id])}
         />
       );
