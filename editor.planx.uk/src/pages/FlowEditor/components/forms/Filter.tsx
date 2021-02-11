@@ -22,6 +22,7 @@ const Filter: React.FC<Props> = (props) => {
               {
                 category: DEFAULT_FLAG_CATEGORY,
                 text: "(No Result)",
+                value: "",
               },
             ]
               .filter((f) => f.category === DEFAULT_FLAG_CATEGORY)
