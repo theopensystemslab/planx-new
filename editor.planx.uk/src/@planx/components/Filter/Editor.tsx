@@ -27,8 +27,7 @@ const FilterComponent: React.FC<Filter> = (props) => {
               {
                 category: newValues.flagSet,
                 text: "(No Filter)",
-                value: "",
-              },
+              } as Flag,
             ]
               .filter((f) => f.category === newValues.flagSet)
               .map((f) => ({
