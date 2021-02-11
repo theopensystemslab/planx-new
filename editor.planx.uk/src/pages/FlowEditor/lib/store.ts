@@ -801,10 +801,8 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
     if (idx >= 0) {
       ids = breadcrumbIds.slice(0, idx + 1);
-    } else {
-      if (visited.length > 1 && visited.includes(upToNodeId)) {
-        ids = breadcrumbIds.filter((id) => visited.includes(id));
-      }
+    } else if (visited.length > 1 && visited.includes(upToNodeId)) {
+      ids = breadcrumbIds.filter((id) => visited.includes(id));
     }
 
     const res = ids
