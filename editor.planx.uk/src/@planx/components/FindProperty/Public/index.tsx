@@ -312,6 +312,8 @@ function GetAddress({
               placeholder="Enter the postcode of the property"
               value={postcode || ""}
               onChange={(e: any) => {
+                // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
+                //      so this code attempts to validate postcodes without blocking any characters.
                 const input = e.target.value;
                 if (parse(input.trim()).valid) {
                   setSanitizedPostcode(toNormalised(input.trim()));
