@@ -1,6 +1,6 @@
 import { mostReadable } from "@ctrl/tinycolor";
 
-import { Flag } from "../../../types";
+import type { Flag } from "../../../types";
 
 // flags grouped by categories, order is significant, earlier flags === more important
 // https://www.figma.com/file/bnUUrsVRG6qPwDkTmVKACI/Design?node-id=1971%3A0
