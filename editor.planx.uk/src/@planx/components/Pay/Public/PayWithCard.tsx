@@ -9,6 +9,7 @@ import React from "react";
 import ErrorWrapper from "ui/ErrorWrapper";
 import { object, string } from "yup";
 
+import { validateEmail } from "../../shared/utils";
 import Button from "./Button";
 
 const useStyles = makeStyles({
@@ -79,12 +80,6 @@ const useStyles = makeStyles({
     color: "#0008",
   },
 });
-
-const validateEmail = (email: string) => {
-  // eslint-disable-next-line
-  let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return regex.test(email);
-};
 
 function Component(props: any) {
   const c = useStyles();
