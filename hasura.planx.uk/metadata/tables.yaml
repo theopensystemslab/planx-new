@@ -37,6 +37,7 @@
       - data
       - id
       - name
+      - settings
       - slug
       - team_id
       filter: {}
@@ -156,6 +157,7 @@
       columns:
       - id
       - name
+      - settings
       - slug
       - theme
       filter: {}
