@@ -30,6 +30,7 @@
     "js-cookie": "^2.2.1",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.20",
+    "luhn": "^2.4.1",
     "mapbox-gl": "^1.13.0",
     "marked": "^1.2.7",
     "nanoid": "^3.1.16",
