@@ -98,9 +98,7 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
               <ReactMarkdownOrHtml source={question.data.info} />
             )}
             {question.data.policyRef && (
-              <a href={question.data.policyRef} target="_blank">
-                Source
-              </a>
+              <ReactMarkdownOrHtml source={question.data.policyRef} />
             )}
           </Box>
         </Collapse>

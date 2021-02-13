@@ -103,8 +103,7 @@ export const MoreInformation = ({
         </InputGroup>
         <InputGroup label="Policy source">
           <InputRow>
-            {/* URL is intentionally not rich text */}
-            <Input
+            <RichTextInput
               multiline
               name="policyRef"
               value={policyRef}
