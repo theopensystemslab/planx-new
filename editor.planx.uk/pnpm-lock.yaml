@@ -1,5 +1,5 @@
 dependencies:
-  '@apollo/client': 3.2.5_c933677bd974310a9e498a3507664588
+  '@apollo/client': 3.2.5_graphql@15.4.0+react@17.0.1
   '@ctrl/tinycolor': 3.1.6
   '@draft-js-plugins/anchor': 4.0.0_225b2ecd41d4c6371fdfe59e40d86bbb
   '@draft-js-plugins/buttons': 4.0.0_225b2ecd41d4c6371fdfe59e40d86bbb
@@ -10,7 +10,6 @@ dependencies:
   '@material-ui/icons': 4.9.1_ee56c09a62875a4df5ca6931744063b9
   '@material-ui/lab': 4.0.0-alpha.56_ee56c09a62875a4df5ca6931744063b9
   '@turf/area': 6.0.1
-  '@types/sharedb': 1.0.10
   array-move: 3.0.1
   axios: 0.19.2
   axios-hooks: 2.1.0_axios@0.19.2+react@17.0.1
@@ -57,7 +56,6 @@ dependencies:
   rxjs: 6.6.3
   scroll-into-view-if-needed: 2.2.26
   sharedb: 1.4.2
-  subscriptions-transport-ws: 0.9.18_graphql@15.4.0
   swr: 0.4.0_react@17.0.1
   yup: 0.32.8
   zustand: 3.1.4_react@17.0.1
@@ -85,6 +83,7 @@ devDependencies:
   '@types/react-beautiful-dnd': 13.0.0
   '@types/react-color': 3.0.4
   '@types/react-dom': 17.0.0
+  '@types/sharedb': 1.0.14
   craco-esbuild: 0.2.0_966a0abc931e8c2e9a9249d368fff536
   css-loader: 5.0.1
   eslint-plugin-simple-import-sort: 5.0.3
@@ -103,7 +102,7 @@ devDependencies:
   wait-for-expect: 3.0.2
 lockfileVersion: 5.2
 packages:
-  /@apollo/client/3.2.5_c933677bd974310a9e498a3507664588:
+  /@apollo/client/3.2.5_graphql@15.4.0+react@17.0.1:
     dependencies:
       '@graphql-typed-document-node/core': 3.1.0_graphql@15.4.0
       '@types/zen-observable': 0.8.1
@@ -116,7 +115,6 @@ packages:
       optimism: 0.13.0
       prop-types: 15.7.2
       react: 17.0.1
-      subscriptions-transport-ws: 0.9.18_graphql@15.4.0
       symbol-observable: 2.0.3
       ts-invariant: 0.4.4
       tslib: 1.14.1
@@ -5427,10 +5425,6 @@ packages:
   /@types/node/12.19.6:
     resolution:
       integrity: sha512-U2VopDdmBoYBmtm8Rz340mvvSz34VgX/K9+XCuckvcLGMkt3rbMX8soqFOikIPlPBc5lmw8By9NUK7bEFSBFlQ==
-  /@types/node/12.19.9:
-    dev: false
-    resolution:
-      integrity: sha512-yj0DOaQeUrk3nJ0bd3Y5PeDRJ6W0r+kilosLA+dzF3dola/o9hxhMSg2sFvVcA2UHS5JSOsZp4S0c1OEXc4m1Q==
   /@types/normalize-package-data/2.4.0:
     dev: false
     resolution:
@@ -5546,12 +5540,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-auApPaJf3NPfe18hSoJkp8EbZzer2ISk7o8mCC3M9he/a04+gbMF97NkpD2S8riMGvm4BMRI59/SZQSaLTKpsQ==
-  /@types/sharedb/1.0.10:
-    dependencies:
-      '@types/ws': 7.4.0
-    dev: false
+  /@types/sharedb/1.0.14:
+    dev: true
     resolution:
-      integrity: sha512-O8SC8HQDJmgTmf86HipylQAJoq+xi5jcFQWC4HGmgJSrtdz2Dw3vhXBzqemyGmg4QHxRfSvYakTOchg8box0nQ==
+      integrity: sha512-6Py89yxSU/Pl1mVCWS7pP/iiWpRP8vmJQXT1xeVsYPvMOxGDtgSK/8UN9S/4w9oCm7NgkVZ7YLPapGI9tb8l5g==
   /@types/source-list-map/0.1.2:
     resolution:
       integrity: sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==
@@ -5598,12 +5590,6 @@ packages:
       source-map: 0.6.1
     resolution:
       integrity: sha512-7ZyTfxjCRwexh+EJFwRUM+CDB2XvgHl4vfuqf1ZKrgGvcS5BrNvPQqJh3tsZ0P6h6Aa1qClVHaJZszLPzpqHeA==
-  /@types/ws/7.4.0:
-    dependencies:
-      '@types/node': 12.19.9
-    dev: false
-    resolution:
-      integrity: sha512-Y29uQ3Uy+58bZrFLhX36hcI3Np37nqWE7ky5tjiDoy1GDZnIwVxS0CgF+s+1bXMzjKBFy+fqaRfb708iNzdinw==
   /@types/yargs-parser/20.2.0:
     resolution:
       integrity: sha512-37RSHht+gzzgYeobbG+KWryeAW8J33Nhr69cjTqSYymXVZEN9NbRYWoYlRtDhHKPVT1FyNKwaTPC1NynKZpzRA==
@@ -6979,6 +6965,7 @@ packages:
     resolution:
       integrity: sha512-q/UEjfGJ2Cm3oKV71DJz9d25TPnq5rhBVL2Q4fA5wcC3jcrdn7+SssEybFIxwAvvP+YCsCYNKughoF33GxgycQ==
   /backo2/1.0.2:
+    dev: true
     resolution:
       integrity: sha1-MasayLEpNjRj41s+u2n038+6eUc=
   /bail/1.0.5:
@@ -9858,10 +9845,6 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
-  /eventemitter3/3.1.2:
-    dev: false
-    resolution:
-      integrity: sha512-tvtQIeLVHjDkJYnzf2dgVMxfuSGJeM/7UCG17TT4EumTfNtF+0nebF/4zWOIkCreAbtNqhGEboB6BWrwqNaw4Q==
   /eventemitter3/4.0.7:
     resolution:
       integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
@@ -12274,10 +12257,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-9tZvz7AiR3PEDNGiV9vIouQ/EAcqMXFmkcA1CDFTwOB98OZVDL0PH9glHotf5Ugp6GCOTypfzGWI/OqjWNCRUw==
-  /iterall/1.3.0:
-    dev: false
-    resolution:
-      integrity: sha512-QZ9qOMdF+QLHxy1QIpUHUU1D5pS2CG2P69LF6L6CPjPYA/XMOmKV3PZpawHoAjHNyB0swdVTRxdYT4tbBbxqwg==
   /iterate-iterator/1.0.1:
     dev: true
     resolution:
@@ -18640,19 +18619,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-1igcUEmYFBEO14uQHAJhCUelTR5jPztfdVKrYxRnDa5D5Dn3w0NxXupJNPr/VV/yRfZYEAco8sTIRZzH3sRYKg==
-  /subscriptions-transport-ws/0.9.18_graphql@15.4.0:
-    dependencies:
-      backo2: 1.0.2
-      eventemitter3: 3.1.2
-      graphql: 15.4.0
-      iterall: 1.3.0
-      symbol-observable: 1.2.0
-      ws: 5.2.2
-    dev: false
-    peerDependencies:
-      graphql: '>=0.10.0'
-    resolution:
-      integrity: sha512-tztzcBTNoEbuErsVQpTN2xUNN/efAZXyCyL5m3x4t6SKrEiTL2N8SaKWBFWM4u56pL79ULif3zjyeq+oV+nOaA==
   /supercluster/7.1.2:
     dependencies:
       kdbush: 3.0.0
@@ -20340,12 +20306,6 @@ packages:
       typedarray-to-buffer: 3.1.5
     resolution:
       integrity: sha512-AvHcyZ5JnSfq3ioSyjrBkH9yW4m7Ayk8/9My/DD9onKeu/94fwrMocemO2QAJFAlnnDN+ZDS+ZjAR5ua1/PV/Q==
-  /ws/5.2.2:
-    dependencies:
-      async-limiter: 1.0.1
-    dev: false
-    resolution:
-      integrity: sha512-jaHFD6PFv6UgoIVda6qZllptQsMlDEJkTQcybzzXDYM1XO9Y8em691FGMPmM46WGyLU4z9KMgQN+qrux/nhlHA==
   /ws/6.1.4:
     dependencies:
       async-limiter: 1.0.1
@@ -20536,7 +20496,7 @@ specifiers:
   '@types/react-beautiful-dnd': ^13.0.0
   '@types/react-color': ^3.0.4
   '@types/react-dom': ^17.0.0
-  '@types/sharedb': ^1.0.10
+  '@types/sharedb': ^1.0.14
   array-move: ^3.0.1
   axios: ^0.19.2
   axios-hooks: ^2.1.0
@@ -20596,7 +20556,6 @@ specifiers:
   scroll-into-view-if-needed: ^2.2.26
   sharedb: ^1.4.2
   storybook-addon-material-ui: ^0.9.0-alpha.21
-  subscriptions-transport-ws: ^0.9.18
   swr: ^0.4.0
   tsconfig-paths-webpack-plugin: ^3.3.0
   typescript: ^4.0.5

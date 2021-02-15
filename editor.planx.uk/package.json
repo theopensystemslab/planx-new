@@ -14,7 +14,6 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@turf/area": "^6.0.1",
-    "@types/sharedb": "^1.0.10",
     "array-move": "^3.0.1",
     "axios": "^0.19.2",
     "axios-hooks": "^2.1.0",
@@ -61,7 +60,6 @@
     "rxjs": "^6.6.3",
     "scroll-into-view-if-needed": "^2.2.26",
     "sharedb": "^1.4.2",
-    "subscriptions-transport-ws": "^0.9.18",
     "swr": "^0.4.0",
     "yup": "^0.32.8",
     "zustand": "^3.1.4"
@@ -90,6 +88,7 @@
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-color": "^3.0.4",
     "@types/react-dom": "^17.0.0",
+    "@types/sharedb": "^1.0.14",
     "craco-esbuild": "^0.2.0",
     "css-loader": "^5.0.1",
     "eslint-plugin-simple-import-sort": "^5.0.3",
