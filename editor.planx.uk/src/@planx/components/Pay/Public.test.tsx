@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 
@@ -13,10 +13,12 @@ test("apple pay", async () => {
 
   render(<Pay handleSubmit={handleSubmit} />);
 
-  await waitForThenClick("Apple Pay");
-  await waitForThenClick("Continue");
-  await waitForThenClick("Pay & submit");
-  await waitForThenClick("Continue");
+  await act(async () => {
+    await waitForThenClick("Apple Pay");
+    await waitForThenClick("Continue");
+    await waitForThenClick("Pay & submit");
+    await waitForThenClick("Continue");
+  });
 
   expect(handleSubmit).toHaveBeenCalled();
 });
@@ -26,8 +28,10 @@ test("do not call credit card form that was not filled out", async () => {
 
   render(<Pay handleSubmit={handleSubmit} />);
 
-  await waitForThenClick("Credit or debit card");
-  await waitForThenClick("Continue");
+  await act(async () => {
+    await waitForThenClick("Credit or debit card");
+    await waitForThenClick("Continue");
+  });
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
 });
