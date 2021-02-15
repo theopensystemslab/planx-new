@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 
@@ -9,7 +9,9 @@ test("renders correctly and blocks submit if there are no files added", async ()
 
   render(<FileUpload handleSubmit={handleSubmit} />);
 
-  userEvent.click(screen.getByText("Continue"));
+  await act(async () => {
+    await userEvent.click(screen.getByText("Continue"));
+  });
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
 });
