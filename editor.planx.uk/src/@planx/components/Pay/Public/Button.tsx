@@ -14,5 +14,9 @@ import React from "react";
 
 function Component(props: any) {
   const { children, ...rest } = props;
-  return <button {...rest}>{children}</button>;
+  return (
+    <button type="submit" {...rest}>
+      {children}
+    </button>
+  );
 }
