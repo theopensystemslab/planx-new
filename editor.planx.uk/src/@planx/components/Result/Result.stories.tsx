@@ -94,6 +94,26 @@ Frontend.args = {
       ],
       hidden: false,
     },
+    {
+      question: {
+        id: "5555",
+        data: {
+          text:
+            "A question with more information and a policy reference and it's really long",
+          info: "Some more information",
+          policyRef: "https://beta.planx.uk/southwark",
+        },
+      },
+      selections: [
+        {
+          id: "4444",
+          data: {
+            text: "answer is also really, really long",
+          },
+        },
+      ],
+      hidden: false,
+    },
   ],
 };
 

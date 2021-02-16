@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Caret from "ui/icons/Caret";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import type { Node } from "./model";
 
@@ -26,6 +27,13 @@ const useClasses = makeStyles((theme: Theme) => ({
     "& a": {
       color: theme.palette.text.disabled,
     },
+    "& p": {
+      color: theme.palette.text.secondary,
+      margin: 0,
+    },
+  },
+  responseText: {
+    whiteSpace: "nowrap",
   },
 }));
 
@@ -46,7 +54,7 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
       flexDirection="column"
       mb={0.5}
       px={1.5}
-      py={{ xs: 1, md: 0 }}
+      py={{ xs: 2, md: 0.5 }}
       className={classes.root}
     >
       <Box
@@ -63,7 +71,8 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
           color="secondary.dark"
         >
           <Typography variant="body2" color="textPrimary">
-            {question.data.text} <strong>{response}</strong>
+            {question.data.text}{" "}
+            <strong className={classes.responseText}>{response}</strong>
           </Typography>
           <Button
             color="inherit"
@@ -79,16 +88,17 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
       </Box>
       {hasMoreInfo && (
         <Collapse in={showMoreInfo}>
-          <Box py={1.5} color="background.dark" className={classes.moreInfo}>
+          <Box
+            pt={2}
+            pb={4}
+            color="background.dark"
+            className={classes.moreInfo}
+          >
             {question.data.info && (
-              <Typography color="inherit" variant="body2">
-                {question.data.info}
-              </Typography>
+              <ReactMarkdownOrHtml source={question.data.info} />
             )}
             {question.data.policyRef && (
-              <a href={question.data.policyRef} target="_blank">
-                {question.data.policyRef}
-              </a>
+              <ReactMarkdownOrHtml source={question.data.policyRef} />
             )}
           </Box>
         </Collapse>
