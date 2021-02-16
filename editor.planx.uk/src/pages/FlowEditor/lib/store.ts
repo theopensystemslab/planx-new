@@ -19,7 +19,6 @@ import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import create from "zustand";
 import vanillaCreate from "zustand/vanilla";
-
 import { client } from "../../../lib/graphql";
 import type { FlowSettings } from "../../../types";
 import { FlowLayout } from "../components/Flow";
@@ -535,6 +534,13 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                     .filter((response) => response.data?.val)
                 : [];
 
+              // console.log({
+              //   passportValues,
+              //   fn,
+              //   responsesThatCanBeAutoAnswered,
+              //   sortedResponses,
+              // });
+
               if (passportValues !== undefined) {
                 if (!Array.isArray(passportValues))
                   passportValues = [passportValues];
@@ -600,6 +606,8 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                 responsesThatCanBeAutoAnswered.forEach((r) =>
                   nodeIdsConnectedFrom(r.id)
                 );
+              } else {
+                ids.add(id);
               }
             } else {
               ids.add(id);
@@ -644,9 +652,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
       const key = flow[id].data?.fn;
       if (key) {
-        let passportValue;
-
-        passportValue = vals.map((id: string) => flow[id]?.data?.val);
+        let passportValue = vals.map((id: string) => flow[id]?.data?.val);
 
         passportValue = passportValue.filter(
           (val: any) =>
@@ -655,9 +661,16 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
         if (passportValue.length > 0) {
           if (passport.data[key] && Array.isArray(passport.data[key].value)) {
-            passportValue = uniq(
+            const allValues = uniq(
               passport.data[key].value.concat(passportValue)
-            );
+            ).sort() as Array<string>;
+
+            passportValue = allValues.reduce((acc: Array<string>, curr) => {
+              if (allValues.some((x) => !x.startsWith(curr))) {
+                acc.push(curr);
+              }
+              return acc;
+            }, []);
           }
 
           set({
