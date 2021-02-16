@@ -1,5 +1,6 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import React, { useEffect, useState } from "react";
 
 const useClasses = makeStyles({
@@ -9,15 +10,15 @@ const useClasses = makeStyles({
     alignItems: "center",
     justifyContent: "center",
   },
-  children: {
+  text: {
     marginLeft: "1rem",
   },
 });
 
 const DelayedLoadingIndicator: React.FC<{
   msDelayBeforeVisible?: number;
-  children?: React.ReactNode;
-}> = ({ msDelayBeforeVisible = 50, children }) => {
+  text?: string;
+}> = ({ msDelayBeforeVisible = 50, text }) => {
   const [visible, setVisible] = useState(false);
 
   const classes = useClasses();
@@ -32,7 +33,9 @@ const DelayedLoadingIndicator: React.FC<{
   return visible ? (
     <div className={classes.container}>
       <CircularProgress />
-      <div className={classes.children}>{children ?? "Loading…"}</div>
+      <Typography variant="body2" className={classes.text}>
+        {text ?? "Loading…"}
+      </Typography>
     </div>
   ) : null;
 };
