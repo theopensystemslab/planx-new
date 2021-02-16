@@ -13,8 +13,6 @@ import {
 } from "@planx/graph";
 import produce from "immer";
 import debounce from "lodash/debounce";
-import difference from "lodash/difference";
-import omit from "lodash/omit";
 import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import create from "zustand";
@@ -717,28 +715,42 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     } else {
       // remove breadcrumbs that were stored from id onwards
       let keepBreadcrumb = true;
-      const fns: Array<any> = [];
-      const newFns: Array<any> = [];
+
+      const data: Record<string, { value: Array<string> }> = {};
+
       const newBreadcrumbs = Object.entries(breadcrumbs).reduce(
-        (acc: Record<string, any>, [k, v]) => {
-          const fn = flow[k]?.data?.fn;
-          if (fn) fns.push(fn);
-          if (k === id) {
+        (acc: Record<string, any>, [questionId, v]) => {
+          if (questionId === id) {
             keepBreadcrumb = false;
           } else if (keepBreadcrumb) {
-            if (fn) newFns.push(fn);
-            acc[k] = v;
+            acc[questionId] = v;
+
+            const fn = flow[questionId]?.data?.fn;
+            if (fn) {
+              const { answers = [] } = v;
+
+              const value = answers
+                .map((aId: string) => flow[aId]?.data?.val)
+                .filter(Boolean);
+
+              if (value) {
+                // console.log({ questionId, answers, fn, vals });
+                data[fn] = { value };
+              }
+            }
           }
           return acc;
         },
         {}
       );
 
+      // console.log(data);
+
       set({
         breadcrumbs: newBreadcrumbs,
         passport: {
           ...passport,
-          data: omit(passport.data, ...difference(fns, newFns)),
+          data,
         },
       });
     }

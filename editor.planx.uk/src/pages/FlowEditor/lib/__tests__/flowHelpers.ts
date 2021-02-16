@@ -1,50 +1,5 @@
 import { TYPES } from "@planx/components/types";
 
-const flow = {
-  _root: {
-    edges: ["whatisit"],
-  },
-  whatisit: {
-    type: TYPES.Statement,
-    edges: ["food", "tool"],
-    data: {
-      fn: "item",
-    },
-  },
-  food: {
-    type: TYPES.Response,
-    data: {
-      val: "food",
-    },
-    edges: ["whichfood"],
-  },
-  tool: {
-    type: TYPES.Response,
-    data: {
-      val: "tool",
-    },
-  },
-  whichfood: {
-    type: TYPES.Statement,
-    edges: ["fruit", "cake"],
-    data: {
-      fn: "item",
-    },
-  },
-  fruit: {
-    type: TYPES.Response,
-    data: {
-      val: "food.fruit",
-    },
-  },
-  cake: {
-    type: TYPES.Response,
-    data: {
-      val: "food.cake",
-    },
-  },
-};
-
 export const isValid = (
   flow: any,
   onVisit?: (id: string, children: Array<string>) => void
@@ -81,7 +36,51 @@ export const makeGraph = (flow: any) => {
     });
   });
 
-  console.log(graph.slice(1).join("\n"));
+  return graph.slice(1).join("\n");
 };
 
-makeGraph(flow);
+export const toDot = (flow: any) => {
+  const graph: Array<string> = [];
+  const nodes: Array<string> = [];
+
+  isValid(flow, (id, children) => {
+    children.forEach((child) => {
+      graph.push(`"${id}" -> "${child}";`);
+
+      const node = flow[child];
+
+      const label = [child, node.data?.fn || node.data?.val, node.data?.flag]
+        .filter(Boolean)
+        .join("|");
+
+      if (node.type === TYPES.Statement) {
+        nodes.push(`
+        "${child}" [
+          label = "{${label}}"
+        ]
+      `);
+      } else {
+        nodes.push(`
+        "${child}" [
+          label = "{${label}}",
+          fillcolor = "#A8A8A8",
+          style = "filled"
+        ]
+      `);
+      }
+    });
+  });
+
+  const output = `
+  digraph {
+    rankdir = "TD";
+    node [
+      shape = "record";
+    ];
+    ${graph.slice(1).join("\n  ")}
+    ${nodes.join("")}
+  }
+`;
+
+  return output;
+};
