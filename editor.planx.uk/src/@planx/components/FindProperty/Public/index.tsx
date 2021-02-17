@@ -145,8 +145,8 @@ function Component(props: Props) {
             throw Error("Should not have been clickable");
           }
         }}
-        lng={address.longitude}
-        lat={address.latitude}
+        lng={Number(address.longitude)}
+        lat={Number(address.latitude)}
         title="About the property"
         description="This is the information we currently have about the property"
         propertyDetails={[
@@ -216,6 +216,8 @@ function GetAddress(props: {
           pao
           organisation
           blpu_code
+          latitude
+          longitude
         }
       }
     `,
