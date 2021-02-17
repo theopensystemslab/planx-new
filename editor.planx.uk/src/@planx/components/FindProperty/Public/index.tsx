@@ -168,7 +168,7 @@ function Component(props: Props) {
           },
           {
             heading: "District",
-            detail: capitalize(route.data.team),
+            detail: capitalize(team),
           },
           {
             heading: "Building type",
