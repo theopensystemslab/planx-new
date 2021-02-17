@@ -9,8 +9,13 @@ import { TYPES } from "../types";
 import { ICONS } from "../ui";
 import type { Result } from "./model";
 
+interface FormData {
+  flagSet: string;
+  // overrides: Record<string, { heading: string; description: string; }>;
+}
+
 const ResultComponent: React.FC<Result> = (props) => {
-  const formik = useFormik({
+  const formik = useFormik<FormData>({
     initialValues: {
       // TODO: maybe don't store string key here as it's likely to change
       flagSet: props.node?.data?.flagSet || "",

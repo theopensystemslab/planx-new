@@ -31,9 +31,9 @@ interface Props {
 }
 
 const Node: React.FC<any> = (props: Props) => {
-  const [childNodesOf, reportData] = useStore((state) => [
+  const [childNodesOf, resultData] = useStore((state) => [
     state.childNodesOf,
-    state.reportData,
+    state.resultData,
   ]);
 
   const resetPreview = useStore((state) => state.resetPreview);
@@ -124,7 +124,7 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.Result:
       const flagSet = props.node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
-      const data = reportData(flagSet);
+      const data = resultData(flagSet);
 
       const { flag, responses } = data[flagSet];
 
@@ -136,7 +136,7 @@ const Node: React.FC<any> = (props: Props) => {
             background: flag.bgColor,
           }}
           headingTitle={flag.text}
-          subheading={flagSet}
+          description={flagSet}
           reasonsTitle="Reasons"
           responses={responses}
           disclaimer={props.settings?.elements?.legalDisclaimer}

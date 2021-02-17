@@ -8,7 +8,7 @@ import React from "react";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
-import type { Node } from "./model";
+import type { Node } from "../../../../types";
 
 interface IResultReason {
   id: string;

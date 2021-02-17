@@ -8,8 +8,7 @@ import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 
-import type { TextContent } from "../../../../types";
-import type { Node } from "./model";
+import type { Node, TextContent } from "../../../../types";
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
 
@@ -20,8 +19,7 @@ export interface Props {
     background: string;
   };
   headingTitle?: string;
-  subheading?: string;
-  headingDescription?: string;
+  description?: string;
   reasonsTitle?: string;
   responses: Array<{
     question: Node;
@@ -64,8 +62,7 @@ const Result: React.FC<Props> = ({
   handleSubmit,
   headingColor,
   headingTitle = "",
-  subheading = "",
-  headingDescription = "",
+  description = "",
   reasonsTitle = "",
   responses,
   disclaimer,
@@ -84,12 +81,11 @@ const Result: React.FC<Props> = ({
       fullWidth
     >
       <ResultSummary
-        subheading={subheading}
-        color={headingColor}
         heading={headingTitle}
+        description={description}
+        color={headingColor}
       />
       <Box mb={2} mt={0} px={{ xs: 2, md: 5 }}>
-        <Typography variant="body2">{headingDescription}</Typography>
         <Box mt={4} mb={3}>
           <Typography variant="h3" gutterBottom>
             {reasonsTitle}
