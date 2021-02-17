@@ -41,6 +41,7 @@ export type nodeId = string;
 export type node = { id?: nodeId; type?: TYPES; data?: any; edges?: nodeId[] };
 export type flow = Record<string, node>;
 export interface passport {
+  initialData?: any;
   data?: any;
   info?: any;
 }
@@ -420,6 +421,8 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       };
     }
 
+    const data = { ...(get().passport.data || {}), ...(passport.data || {}) };
+
     set({
       passport: {
         ...passport,
@@ -716,7 +719,9 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       // remove breadcrumbs that were stored from id onwards
       let keepBreadcrumb = true;
 
-      const data: Record<string, { value: Array<string> }> = {};
+      const data: Record<string, { value: Array<string> }> = {
+        ...(passport.initialData || {}),
+      };
 
       const newBreadcrumbs = Object.entries(breadcrumbs).reduce(
         (acc: Record<string, any>, [questionId, v]) => {
@@ -743,6 +748,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         },
         {}
       );
+
+      // console.log(
+      //   JSON.stringify({ data, initial: passport.initialData }, null, 2)
+      // );
 
       // console.log(data);
 
