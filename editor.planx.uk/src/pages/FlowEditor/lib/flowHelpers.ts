@@ -49,22 +49,27 @@ export const toDot = (flow: any) => {
 
       const node = flow[child];
 
-      const label = [child, node.data?.fn || node.data?.val, node.data?.flag]
+      const label = [
+        child,
+        node.data?.text || node.data?.title,
+        node.data?.fn || node.data?.val,
+        node.data?.flag,
+      ]
         .filter(Boolean)
         .join("|");
 
-      if (node.type === TYPES.Statement) {
-        nodes.push(`
-        "${child}" [
-          label = "{${label}}"
-        ]
-      `);
-      } else {
+      if (node.type === TYPES.Response) {
         nodes.push(`
         "${child}" [
           label = "{${label}}",
           fillcolor = "#A8A8A8",
           style = "filled"
+        ]
+      `);
+      } else {
+        nodes.push(`
+        "${child}" [
+          label = "{${label}}"
         ]
       `);
       }
@@ -77,7 +82,7 @@ export const toDot = (flow: any) => {
     node [
       shape = "record";
     ];
-    ${graph.slice(1).join("\n  ")}
+    ${graph.join("\n  ")}
     ${nodes.join("")}
   }
 `;
