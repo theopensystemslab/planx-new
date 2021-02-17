@@ -49,9 +49,10 @@ function Component(props: Props) {
   //      https://geoportal.statistics.gov.uk/datasets/fe6bcee87d95476abc84e194fe088abb_0/data?where=LAD20NM%20%3D%20%27Lambeth%27
   //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
   const route = useCurrentRoute();
+  const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
   const { data: constraints } = useSWR(() =>
     address
-      ? `https://local-authority-api.planx.uk/${route.data.team}?x=${address.x}&y=${address.y}`
+      ? `https://local-authority-api.planx.uk/${team}?x=${address.x}&y=${address.y}`
       : null
   );
 
@@ -145,8 +146,8 @@ function Component(props: Props) {
             throw Error("Should not have been clickable");
           }
         }}
-        lng={address.longitude}
-        lat={address.latitude}
+        lng={Number(address.longitude)}
+        lat={Number(address.latitude)}
         title="About the property"
         description="This is the information we currently have about the property"
         propertyDetails={[
@@ -216,6 +217,8 @@ function GetAddress(props: {
           pao
           organisation
           blpu_code
+          latitude
+          longitude
         }
       }
     `,

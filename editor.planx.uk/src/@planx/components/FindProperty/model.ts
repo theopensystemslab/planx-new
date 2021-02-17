@@ -15,10 +15,10 @@ export const parseFindProperty = (
 });
 
 export interface Address {
-  uprn: number;
+  uprn: string;
   blpu_code: string;
-  latitude: number;
-  longitude: number;
+  latitude: string;
+  longitude: string;
   organisation: string | null;
   sao: string | null;
   pao: string;
