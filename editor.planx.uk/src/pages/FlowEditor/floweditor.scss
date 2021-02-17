@@ -127,6 +127,13 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     }
   }
 
+  &.wasVisited > a {
+    span {
+      opacity: 1;
+    }
+    border: 2px solid limegreen;
+  }
+
   &.isClone > a {
     opacity: 0.5;
   }

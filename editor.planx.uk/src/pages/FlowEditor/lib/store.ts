@@ -67,6 +67,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   showPreview: boolean;
   togglePreview: () => void;
   updateNode: any; //: () => void;
+  wasVisited: (id: string) => boolean;
   // preview
   breadcrumbs: breadcrumbs;
   currentCard: () => Record<string, any> | null;
@@ -177,6 +178,17 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       removeKeyIfMissing: true,
     })(get().flow);
     send(ops);
+  },
+
+  wasVisited(id) {
+    const visited = Object.entries(get().breadcrumbs).reduce(
+      (acc: Array<string>, [k, v]) => {
+        acc.push(k);
+        return acc.concat(v.answers || []);
+      },
+      []
+    );
+    return visited.includes(id);
   },
 
   makeUnique: (id: any, parent = undefined) => {
