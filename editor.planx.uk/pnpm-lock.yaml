@@ -88,8 +88,10 @@ devDependencies:
   '@types/react-beautiful-dnd': 13.0.0
   '@types/react-color': 3.0.4
   '@types/react-dom': 17.0.0
-  craco-esbuild: 0.2.0_966a0abc931e8c2e9a9249d368fff536
+  craco-esbuild: 0.2.0_b38da1a5d38bdd24fa236349cd6db183
   css-loader: 5.0.1
+  esbuild: 0.8.46
+  esbuild-jest: 0.4.0_esbuild@0.8.46
   eslint-plugin-simple-import-sort: 5.0.3
   husky: 4.3.0
   lint-staged: 10.5.1
@@ -8415,15 +8417,16 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-vqHT+9o67sMwJ5hUd/BAOYeemkU+MuFRsK2c36Xc3eefQpAsp1kAsyDxEDcc5JS1+y9l/XHPrIsVTcyGGmkUUQ==
-  /craco-esbuild/0.2.0_966a0abc931e8c2e9a9249d368fff536:
+  /craco-esbuild/0.2.0_b38da1a5d38bdd24fa236349cd6db183:
     dependencies:
       '@craco/craco': 6.1.1_react-scripts@4.0.1
-      esbuild-jest: 0.3.0
+      esbuild-jest: 0.3.0_esbuild@0.8.46
       esbuild-loader: 2.9.1
       react-scripts: 4.0.1_25cdfeca2612d82db237d04dbdcb46c9
     dev: true
     peerDependencies:
       '@craco/craco': ^5.5.0
+      esbuild: '*'
       react-scripts: ^3.3.0
     resolution:
       integrity: sha512-BjY+pLbXPGGlK1Lpo0VUvqkeD0NNMIkwLG2XknJ31o5sdqwX0dPn9YbnD9eWo9cASkdTr7N9qtVNDj1AKfMikA==
@@ -9702,12 +9705,22 @@ packages:
       ext: 1.4.0
     resolution:
       integrity: sha512-NJ6Yn3FuDinBaBRWl/q5X/s4koRHBrgKAu+yGI6JCBeiu3qrcbJhwT2GeR/EXVfylRk8dpQVJoLEFhK+Mu31NA==
-  /esbuild-jest/0.3.0:
+  /esbuild-jest/0.3.0_esbuild@0.8.46:
+    dependencies:
+      esbuild: 0.8.46
     dev: true
     peerDependencies:
       esbuild: '>=0.8.16'
     resolution:
       integrity: sha512-J1ZHN4IbQiLJAsCMK2XkPYZsTrD8ius+1B09RVqfrvmT+BnwGdR6CLvRq6DGopOaEmdkr4AIk/J6LQUhRQDsSg==
+  /esbuild-jest/0.4.0_esbuild@0.8.46:
+    dependencies:
+      esbuild: 0.8.46
+    dev: true
+    peerDependencies:
+      esbuild: '>=0.8.36'
+    resolution:
+      integrity: sha512-KpL7u1SyVRme2uBVenAbM4yipDqiy1kjx43EiQQnxz4cEXI4Q6UBRIldaQkBNr3GrqNGDz8xYwb0heUvznxtHA==
   /esbuild-loader/2.9.1:
     dependencies:
       esbuild: 0.8.44
@@ -9727,6 +9740,12 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-m9yyBZMgWuAB7e7tA2g9L4PovoLa5Xb73+Yg9uBBR2w3Fe4P9/nxqj/HLrw1k/rjdjF1eX1kNJRytboqOtRCCQ==
+  /esbuild/0.8.46:
+    dev: true
+    hasBin: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-xck9sXNCNmjDHCCfxTCyhKTiFuEBweh+IDAhMLOJI990v1Fzii6MyIkT1LbkvjgoVgPX2SK1kpi5eZVGNrl8yg==
   /escalade/3.1.1:
     engines:
       node: '>=6'
@@ -20652,6 +20671,8 @@ specifiers:
   date-fns: ^2.16.1
   draft-js: ^0.11.7
   draftjs-to-html: ^0.9.1
+  esbuild: ^0.8.46
+  esbuild-jest: ^0.4.0
   eslint-plugin-simple-import-sort: ^5.0.3
   formik: ^2.2.4
   graphql: ^15.4.0

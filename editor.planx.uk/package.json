@@ -95,6 +95,8 @@
     "@types/react-dom": "^17.0.0",
     "craco-esbuild": "^0.2.0",
     "css-loader": "^5.0.1",
+    "esbuild": "^0.8.46",
+    "esbuild-jest": "^0.4.0",
     "eslint-plugin-simple-import-sort": "^5.0.3",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.1",
@@ -112,7 +114,7 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "classic:start": "react-app-rewired start",
     "classic:build": "react-scripts build",
@@ -126,6 +128,11 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "esbuild-jest"
+    }
   },
   "browserslist": {
     "production": [
