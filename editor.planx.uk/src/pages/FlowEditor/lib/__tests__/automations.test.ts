@@ -9,13 +9,13 @@ beforeEach(() => {
   getState().resetPreview();
 });
 
-describe("less basic behaviour", () => {
+describe("(basic) if the passport contains", () => {
   [
     ["food.fruit", "food"],
     ["hardware", "hardware"],
     ["stationary", "other"],
   ].forEach(([item, expected]) => {
-    test(item, () => {
+    test(`[${item}] it should go down the [${expected}] path`, () => {
       setState({
         passport: {
           data: {
@@ -59,13 +59,13 @@ describe("less basic behaviour", () => {
   });
 });
 
-describe("Ok, quite a bit less basic now", () => {
+describe("(more advanced) if the passport contains", () => {
   [
     ["food.fruit", "food.fruit"],
     ["food.dairy", "food"],
     ["clothes", "other"],
   ].forEach(([item, expected]) => {
-    test(item, () => {
+    test(`[${item}] it should go down the [${expected}] path`, () => {
       setState({
         passport: {
           data: {
@@ -109,7 +109,7 @@ describe("Ok, quite a bit less basic now", () => {
   });
 });
 
-describe("advanced automations", () => {
+describe("(advanced) if the passport contains", () => {
   const data: Array<[string[], string]> = [
     [["food.fruit.banana"], "neither_apples_nor_bread"],
 
@@ -128,7 +128,9 @@ describe("advanced automations", () => {
     [["food.fruit.banana", "food.bread"], "bread"],
   ];
   data.forEach(([item, expected]: [string[], string]) => {
-    test([item.join(" + "), expected].join(" = "), () => {
+    test(`[${item.join(
+      " & "
+    )}] it should go down the [${expected}] path`, () => {
       setState({
         passport: {
           data: {
