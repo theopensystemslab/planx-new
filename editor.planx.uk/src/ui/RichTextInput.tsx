@@ -129,6 +129,7 @@ const RichTextInput: React.FC<Props> = (props) => {
     () =>
       createLinkPlugin({
         placeholder: "https://",
+        linkTarget: "_blank",
       }),
     []
   );
