@@ -1,7 +1,7 @@
 dependencies:
   '@apollo/client': 3.2.5_c933677bd974310a9e498a3507664588
   '@ctrl/tinycolor': 3.1.6
-  '@draft-js-plugins/anchor': 4.0.0_225b2ecd41d4c6371fdfe59e40d86bbb
+  '@draft-js-plugins/anchor': 4.1.1_225b2ecd41d4c6371fdfe59e40d86bbb
   '@draft-js-plugins/buttons': 4.0.0_225b2ecd41d4c6371fdfe59e40d86bbb
   '@draft-js-plugins/editor': 4.0.0_draft-js@0.11.7+react@17.0.1
   '@draft-js-plugins/inline-toolbar': 4.0.0_225b2ecd41d4c6371fdfe59e40d86bbb
@@ -3154,7 +3154,7 @@ packages:
       node: '>=10.19.0'
     resolution:
       integrity: sha512-9RUTT3omv+5mSYFVsX143R7cTDQmT1FibCzoUVmO294mRIT0Sc8dk5srN27BTH0JKzQDWKkNCKh6q/+EkNfpkA==
-  /@draft-js-plugins/anchor/4.0.0_225b2ecd41d4c6371fdfe59e40d86bbb:
+  /@draft-js-plugins/anchor/4.1.1_225b2ecd41d4c6371fdfe59e40d86bbb:
     dependencies:
       '@draft-js-plugins/utils': 4.0.0_draft-js@0.11.7
       clsx: 1.1.1
@@ -3167,10 +3167,10 @@ packages:
     dev: false
     peerDependencies:
       draft-js: ^0.10.1 || ^0.11.0
-      react: ^15.5.0 || ^16.0.0-rc
-      react-dom: ^15.5.0 || ^16.0.0-rc
+      react: ^15.5.0 || ^16.0.0 || ^17.0.0
+      react-dom: ^15.5.0 || ^16.0.0 || ^17.0.0
     resolution:
-      integrity: sha512-Ywbt8o3euTtsUDZkrqz6yRXRe5KDGQSVQWEIzQYiNxJW43CiRZHd3ZzmifiUD9QiyKWzP2g8ZorvPlczVXmmLQ==
+      integrity: sha512-ws/9g8B8UXrtqyLPLtcEtRE2qf3BX1YmYJ0fXVr0lLNzZZqvPreRhuIlDRduhWxsDVf++LQg8I4xhz/RdVS+vA==
   /@draft-js-plugins/buttons/4.0.0_225b2ecd41d4c6371fdfe59e40d86bbb:
     dependencies:
       clsx: 1.1.1
@@ -20506,7 +20506,7 @@ specifiers:
   '@babel/core': ^7.12.3
   '@craco/craco': ^6.1.1
   '@ctrl/tinycolor': ^3.1.6
-  '@draft-js-plugins/anchor': ^4.0.0
+  '@draft-js-plugins/anchor': ^4.1.1
   '@draft-js-plugins/buttons': ^4.0.0
   '@draft-js-plugins/editor': ^4.0.0
   '@draft-js-plugins/inline-toolbar': ^4.0.0

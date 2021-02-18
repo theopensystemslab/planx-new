@@ -5,7 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.2.5",
     "@ctrl/tinycolor": "^3.1.6",
-    "@draft-js-plugins/anchor": "^4.0.0",
+    "@draft-js-plugins/anchor": "^4.1.1",
     "@draft-js-plugins/buttons": "^4.0.0",
     "@draft-js-plugins/editor": "^4.0.0",
     "@draft-js-plugins/inline-toolbar": "^4.0.0",
