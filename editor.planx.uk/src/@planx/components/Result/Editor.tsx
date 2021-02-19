@@ -16,7 +16,6 @@ const ResultComponent: React.FC<Result> = (props) => {
       flagSet: props.node?.data?.flagSet || "",
     },
     onSubmit: (newValues) => {
-      console.log({ newValues });
       if (props.handleSubmit) {
         props.handleSubmit({ type: TYPES.Result, data: newValues });
       }

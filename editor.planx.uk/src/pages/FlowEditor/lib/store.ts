@@ -28,7 +28,6 @@ import { connectToDB, getConnection } from "./sharedb";
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
 let doc: any;
-// let globalFlag: any;
 
 const send = (ops: Array<any>) => {
   if (ops.length > 0) {
@@ -498,27 +497,21 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               (flow[id]?.edges as any)?.length > 0)
         )
         .forEach((id) => {
-          // console.log({ checking: id, breadcrumbs, visited });
-
           if (
             [TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type as TYPES)
           ) {
             nodeIdsConnectedFrom(id);
           } else {
             const useFlag = flow[id]?.type === TYPES.Filter;
-            // const visible = Boolean(flow[id]?.data?.visible);
 
             const fn = useFlag ? "flag" : flow[id]?.data?.fn;
 
             const [globalFlag] = collectedFlags(id, [...visited] as Array<
               string
             >);
-            // console.log({ checkingFlagFor: id, flag: globalFlag, breadcrumbs });
 
             let passportValues =
               fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
-
-            // console.log({ id, fn, passportValues, d: passport.data[fn] });
 
             if (fn && (fn === "flag" || passportValues !== undefined)) {
               const responses = flow[id]?.edges?.map((id) => ({
@@ -596,18 +589,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                   });
                 }
 
-                // if (visible) {
-                //   console.log({ id });
-                //   ids.add(id);
-                // }
-
                 responsesThatCanBeAutoAnswered.forEach((r) =>
                   nodeIdsConnectedFrom(r.id)
                 );
               }
-              // else if (fn === "flag" && visible) {
-              //   ids.add(id);
-              // }
             } else {
               ids.add(id);
             }
@@ -878,7 +863,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         bgColor: "#EEEEEE",
         color: tinycolor("black").toHexString(),
       };
-      // globalFlag = flag.value;
 
       const responses = Object.entries(breadcrumbs)
         .map(
@@ -898,7 +882,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
             const selections = answers.map((id) => ({ id, ...flow[id] }));
             const hidden = !selections.some(
               (r) => r.data?.flag && r.data.flag === flag?.value
-              // possibleFlags.includes(r.data.flag)
             );
 
             return {
