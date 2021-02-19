@@ -398,7 +398,9 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     const newPassportData = Object.entries(constraintsDictionary).reduce(
       (dataObject, [oldName, newName]) => {
         if (passport.data?.[oldName]?.value) {
-          dataObject["property.constraints.planning"] ||= { value: [] };
+          dataObject["property.constraints.planning"] = dataObject[
+            "property.constraints.planning"
+          ] ?? { value: [] };
           dataObject["property.constraints.planning"].value.push(newName);
         }
         return dataObject;
