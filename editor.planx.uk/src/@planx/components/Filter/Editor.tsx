@@ -1,7 +1,6 @@
 import { useFormik } from "formik";
 import flags, { flatFlags } from "pages/FlowEditor/data/flags";
 import React from "react";
-import type { Flag } from "types";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
@@ -18,7 +17,6 @@ const FilterComponent: React.FC<Filter> = (props) => {
       visible: !!props.node?.data?.visible,
     },
     onSubmit: (newValues) => {
-      console.log({ newValues });
       if (props.handleSubmit) {
         const children = props.id
           ? undefined

@@ -211,7 +211,6 @@ const FlowItem: React.FC<FlowItemProps> = ({
       .getState()
       .deleteFlow(teamId, flow.slug)
       .then(() => {
-        console.log("DELETE SUCCESS");
         setDeleting(false);
         onDeleteSuccess();
       });

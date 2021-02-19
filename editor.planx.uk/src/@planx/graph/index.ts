@@ -91,7 +91,6 @@ const convertPatchesToOps = (
           }
         }
       }
-      // console.log({ fwd, bak, op });
       return op;
     }
   );
