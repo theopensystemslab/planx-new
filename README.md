@@ -1,7 +1,5 @@
 # PlanX
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/5856b13f-3fad-44ec-ae6c-2c6502df1356/deploy-status)](https://app.netlify.com/sites/planx-new/deploys)
-
 ## https://editor.planx.uk
 
 ### Running Locally
