@@ -76,8 +76,16 @@ interface Store extends Record<string | number | symbol, unknown> {
   passport: passport;
   record: any; //: () => void;
   resultData: (
-    flagSet?: string
-  ) => Record<string, { flag: Flag; responses: any[] }>;
+    flagSet?: string,
+    overrides?: Record<string, { heading?: string; description?: string }>
+  ) => Record<
+    string,
+    {
+      flag: Flag;
+      responses: any[];
+      displayText: { heading: string; description: string };
+    }
+  >;
   resetPreview: any; //: () => void;
   sessionId: any; //: string;
   setFlow: any; //: () => void;
@@ -823,14 +831,21 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     return res;
   },
 
-  resultData(flagSet = DEFAULT_FLAG_CATEGORY) {
+  resultData(flagSet = DEFAULT_FLAG_CATEGORY, overrides) {
     const { breadcrumbs, flow } = get();
 
     const categories = [flagSet];
 
     return categories.reduce(
       (
-        acc: Record<string, { flag: Flag; responses: any[] }>,
+        acc: Record<
+          string,
+          {
+            flag: Flag;
+            responses: any[];
+            displayText: { heading: string; description: string };
+          }
+        >,
         category: string
       ) => {
         const possibleFlags = flatFlags.filter((f) => f.category === category);
@@ -892,8 +907,16 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
           )
           .filter(Boolean);
 
+        const heading =
+          (flag.value && overrides && overrides[flag.value]?.heading) ||
+          flag.text;
+        const description =
+          (flag.value && overrides && overrides[flag.value]?.description) ||
+          flagSet;
+
         acc[category] = {
           flag,
+          displayText: { heading, description },
           responses: responses.every((r: any) => r.hidden)
             ? responses.map((r: any) => ({ ...r, hidden: false }))
             : responses,

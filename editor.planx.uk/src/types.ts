@@ -49,8 +49,6 @@ export interface Flag {
   category: string;
   value?: string;
   text: string;
-  // TODO: rename text -> title, bring in a subtitle
-  // subtitle?: string;
   bgColor: string;
   color: string;
 }

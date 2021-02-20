@@ -124,9 +124,9 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.Result:
       const flagSet = props.node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
-      const data = resultData(flagSet);
+      const data = resultData(flagSet, props.node?.data?.overrides);
 
-      const { flag, responses } = data[flagSet];
+      const { flag, responses, displayText } = data[flagSet];
 
       return (
         <Result
@@ -135,8 +135,8 @@ const Node: React.FC<any> = (props: Props) => {
             text: flag.color,
             background: flag.bgColor,
           }}
-          headingTitle={flag.text}
-          description={flagSet}
+          headingTitle={displayText.heading}
+          description={displayText.description}
           reasonsTitle="Reasons"
           responses={responses}
           disclaimer={props.settings?.elements?.legalDisclaimer}

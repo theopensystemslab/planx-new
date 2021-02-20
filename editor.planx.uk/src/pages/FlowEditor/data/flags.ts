@@ -51,34 +51,38 @@ const categoriesAndFlags = {
 
 export const flatFlags: Array<Flag> = [];
 
-export default Object.entries(categoriesAndFlags).reduce(
-  (acc: Record<string, any>, [category, flags]) => {
-    acc[category] = Object.entries(flags).reduce(
-      (acc: Record<string, any>, [id, [text, bgColor]]) => {
-        // loop through all the flags and add a text color which is
-        // white if it's a dark background or black if it's light
-        const color =
-          mostReadable(bgColor, ["#000", "#FFF"])?.toHexString() || "#000";
+export type FlagSet = keyof typeof categoriesAndFlags;
 
-        acc[id] = {
-          text,
-          bgColor,
-          color,
-        };
+const parsedFlags: Record<FlagSet, { [id: string]: Flag }> = Object.entries(
+  categoriesAndFlags
+).reduce((acc: Record<string, any>, [category, flags]) => {
+  acc[category] = Object.entries(flags).reduce(
+    (acc: Record<string, Flag>, [id, [text, bgColor]]) => {
+      // loop through all the flags and add a text color which is
+      // white if it's a dark background or black if it's light
+      const color =
+        mostReadable(bgColor, ["#000", "#FFF"])?.toHexString() || "#000";
 
-        // check that no other flags share the same ID
-        if (flatFlags.find((f: any) => f.id === id))
-          throw new Error(`Multiple flags with same id (${id})`);
+      acc[id] = {
+        text,
+        bgColor,
+        color,
+        category,
+      };
 
-        // push the flag object to a flattened array for convenience
-        flatFlags.push({ ...acc[id], value: id, category });
-        return acc;
-      },
-      {}
-    );
-    return acc;
-  },
-  {}
-);
+      // check that no other flags share the same ID
+      if (flatFlags.find((f: any) => f.id === id))
+        throw new Error(`Multiple flags with same id (${id})`);
+
+      // push the flag object to a flattened array for convenience
+      flatFlags.push({ ...acc[id], value: id, category });
+      return acc;
+    },
+    {}
+  );
+  return acc;
+}, {});
+
+export default parsedFlags;
 
 export const DEFAULT_FLAG_CATEGORY = flatFlags[0].category;
