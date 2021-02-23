@@ -3,7 +3,6 @@ import "./map.css";
 import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -12,15 +11,13 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Card from "@planx/components/shared/Preview/Card";
 import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import axios from "axios";
-import useAxios from "axios-hooks";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import capitalize from "lodash/capitalize";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import { parse, toNormalised } from "postcode";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
@@ -28,7 +25,6 @@ import useSWR from "swr";
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
 import Map from "./Map";
-import { convertOrdnanceSurveyToStandard } from "./maputils";
 
 interface Props extends FindProperty {
   handleSubmit: handleSubmit;
@@ -52,7 +48,7 @@ function Component(props: Props) {
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
   const { data: constraints } = useSWR(() =>
     address
-      ? `https://local-authority-api.planx.uk/${team}?x=${address.x}&y=${address.y}`
+      ? `https://local-authority-api.planx.uk/${team}?x=${address.x}&y=${address.y}&version=1`
       : null
   );
 
