@@ -405,7 +405,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         return dataObject;
       },
       {
-        ...(passport.data || {}),
         ...(get().passport.data || {}),
       }
     );
