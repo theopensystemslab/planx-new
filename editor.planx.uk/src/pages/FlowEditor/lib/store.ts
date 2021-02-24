@@ -75,15 +75,14 @@ interface Store extends Record<string | number | symbol, unknown> {
   record: any; //: () => void;
   resultData: (
     flagSet?: string,
-    overrides?: Record<string, { heading?: string; description?: string }>
-  ) => Record<
-    string,
-    {
+    overrides?: { [flagId: string]: { heading?: string; description?: string } }
+  ) => {
+    [category: string]: {
       flag: Flag;
       responses: any[];
       displayText: { heading: string; description: string };
-    }
-  >;
+    };
+  };
   resetPreview: any; //: () => void;
   sessionId: any; //: string;
   setFlow: any; //: () => void;
@@ -789,6 +788,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   collectedFlags(upToNodeId, visited = []) {
     const { breadcrumbs, flow } = get();
 
+    // TODO: Should this be all flags?
     const possibleFlags = flatFlags.filter(
       (f) => f.category === DEFAULT_FLAG_CATEGORY
     );
@@ -826,16 +826,16 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
     return categories.reduce(
       (
-        acc: Record<
-          string,
-          {
+        acc: {
+          [category: string]: {
             flag: Flag;
             responses: any[];
             displayText: { heading: string; description: string };
-          }
-        >,
+          };
+        },
         category: string
       ) => {
+        // TODO: DRY this up with preceding collectedFlags function?
         const possibleFlags = flatFlags.filter((f) => f.category === category);
         const keys = possibleFlags.map((f) => f.value);
         const collectedFlags = Object.values(
