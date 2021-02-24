@@ -103,11 +103,10 @@ const SendComponent: React.FC<Props> = (props) => {
         // 7. submit
 
         await axios.post(props.url, { ...data, ...bopsData });
-
-        if (props.handleSubmit) props.handleSubmit();
       } catch (err) {
-        alert("There was an error sending the data");
         console.error(err);
+      } finally {
+        if (props.handleSubmit) props.handleSubmit([]);
       }
     }
 
