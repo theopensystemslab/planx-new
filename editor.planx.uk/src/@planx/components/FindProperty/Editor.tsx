@@ -1,8 +1,3 @@
-import type { FindProperty } from "@planx/components/FindProperty/model";
-import {
-  DEFAULT_TITLE,
-  parseFindProperty,
-} from "@planx/components/FindProperty/model";
 import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
@@ -17,6 +12,12 @@ import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
+
+import type { FindProperty } from "./model";
+import {
+  DEFAULT_TITLE,
+  parseFindProperty,
+} from "./model";
 
 export type Props = EditorProps<TYPES.FindProperty, FindProperty>;
 
