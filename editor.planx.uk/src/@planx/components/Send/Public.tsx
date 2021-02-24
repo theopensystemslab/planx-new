@@ -4,61 +4,16 @@ import React, { useEffect } from "react";
 
 import Card from "../shared/Preview/Card";
 import { PublicProps } from "../ui";
+import { bopsDictionary, fullPayload, makePayload } from "./bops";
 import type { Send } from "./model";
 
 export type Props = PublicProps<Send>;
 
-interface File {
-  filename: string;
-  tags?: string;
-}
-
-// minimumPayload and fullPayload are the minimum and full expected
-// POST data payloads accepted by the BOPS API, see:
-// https://southwark.preview.bops.services/api-docs/index.html
-
-const minimumPayload = {
-  application_type: "lawfulness_certificate",
-  site: {
-    uprn: "",
-    address_1: "",
-    address_2: "",
-    town: "",
-    postcode: "",
-  },
-};
-
-const fullPayload = {
-  ...minimumPayload,
-
-  // "ward": "",
-  // "work_status": "",
-
-  description: "",
-
-  applicant_first_name: "",
-  applicant_last_name: "",
-  applicant_email: "",
-  applicant_phone: "",
-
-  agent_first_name: "",
-  agent_last_name: "",
-  agent_phone: "",
-  agent_email: "",
-
-  payment_reference: "JG669323", // hardcoded demo value
-
-  questions: {},
-  constraints: {},
-  files: [] as Array<File>,
-};
-
 const SendComponent: React.FC<Props> = (props) => {
-  const [breadcrumbs, flow, passport, replay] = useStore((state) => [
+  const [breadcrumbs, flow, passport] = useStore((state) => [
     state.breadcrumbs,
     state.flow,
     state.passport,
-    state.replay,
   ]);
 
   useEffect(() => {
@@ -66,70 +21,88 @@ const SendComponent: React.FC<Props> = (props) => {
       try {
         const data = fullPayload;
 
-        data.site.uprn = passport.info.UPRN.toString();
+        // 1. address
 
-        data.site.address_1 = [
-          passport.info.sao,
-          passport.info.pao,
-          passport.info.street,
-        ]
-          .filter(Boolean)
-          .join(" ");
+        if (passport.info) {
+          data.site.uprn = String(passport.info.uprn);
 
-        data.site.postcode = passport.info.postcode;
+          data.site.address_1 = [
+            passport.info.sao,
+            passport.info.pao,
+            passport.info.street,
+          ]
+            .filter(Boolean)
+            .join(" ");
 
-        // TODO: shape this into the object described in
-        // https://southwark.preview.bops.services/api-docs/index.html
-        data.questions = { flow: replay() };
+          data.site.town = passport.info.town;
+          data.site.postcode = passport.info.postcode;
 
-        data.constraints = (
-          passport.data["property.constraints.planning"] || []
-        ).reduce((acc: Record<string, boolean>, curr: string) => {
-          acc[curr] = true;
-          return acc;
-        }, {});
+          // TODO: add address_2 and ward
+        }
 
-        const files = [] as Array<File>;
+        // 2. files
 
         Object.values(breadcrumbs).forEach(({ answers = [] }) => {
           answers.forEach((x: any) => {
             if (x.filename && x.url) {
-              files.push({
-                filename: x.url,
-                // tags: x.filename,
+              data.files = data.files || [];
+
+              data.files.push({
+                filename: String(x.url),
+                tags: [],
+                // TODO: replace tags with passport field
               });
             }
           });
         });
 
-        const answer = (key: string): string => {
-          const id = Object.keys(flow).find((id) => flow[id].data?.fn === key);
-          return id ? breadcrumbs[id].answers[0] : "";
-        };
+        // 3. constraints
 
-        const fields: Array<keyof typeof data> = [
-          "agent_email",
-          "agent_first_name",
-          "agent_last_name",
-          "agent_phone",
-          "applicant_email",
-          "applicant_first_name",
-          "applicant_last_name",
-          "applicant_phone",
-          "description",
-        ];
-        fields.forEach((field) => {
-          data[field] = answer(field) as any;
-        });
+        data.constraints = (
+          passport.data["property.constraints.planning"]?.value || []
+        ).reduce((acc: Record<string, boolean>, curr: string) => {
+          // TODO: calculate application_type and payment_reference
+          acc[curr] = true;
+          return acc;
+        }, {});
 
-        data.files = files;
+        // 4. work status
 
-        await axios.post(props.url, data);
+        if (
+          passport?.data["property.constraints.planning"] === "ldc.existing"
+        ) {
+          data.work_status = "existing";
+        }
 
-        if (props.handleSubmit) props.handleSubmit();
+        // 5. keys
+
+        const keys = Object.keys(flow);
+
+        const bopsData = Object.entries(bopsDictionary).reduce(
+          (acc, [bopsField, planxField]) => {
+            const id = keys.find((id) => flow[id].data?.fn === planxField);
+            if (id) {
+              const value = breadcrumbs[id]?.answers[0];
+              if (value) {
+                acc[bopsField] = value;
+              }
+            }
+            return acc;
+          },
+          {} as Record<string, string>
+        );
+
+        // 6. questions+answers array
+
+        data.proposal_details = makePayload(flow, breadcrumbs);
+
+        // 7. submit
+
+        await axios.post(props.url, { ...data, ...bopsData });
       } catch (err) {
-        alert("There was an error sending the data");
-        console.error(err);
+        console.error({ err });
+      } finally {
+        if (props.handleSubmit) props.handleSubmit([]);
       }
     }
 

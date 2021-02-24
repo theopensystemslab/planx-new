@@ -1,8 +1,8 @@
 import "./map.css";
 
+import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -11,22 +11,20 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Card from "@planx/components/shared/Preview/Card";
 import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import axios from "axios";
-import useAxios from "axios-hooks";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import capitalize from "lodash/capitalize";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import { parse, toNormalised } from "postcode";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
+import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
 
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
 import Map from "./Map";
-import { convertOrdnanceSurveyToStandard } from "./maputils";
 
 interface Props extends FindProperty {
   handleSubmit: handleSubmit;
@@ -38,30 +36,19 @@ export default Component;
 
 function Component(props: Props) {
   const [address, setAddress] = useState<Address | undefined>();
-  // Mock data:
-  // {
-  // UPRN: 200003453486,
-  // team: "southwark",
-  // organisation: null,
-  // sao: null,
-  // pao: "59",
-  // street: "COBOURG ROAD",
-  // town: "LONDON",
-  // postcode: "SE5 0HU",
-  // blpu_code: "RD04",
-  // planx_description: "Terrace",
-  // planx_value: "residential.dwelling.house.terrace",
-  // x: 533671,
-  // y: 178044,
-  // }
   const [id, flow, startSession] = useStore((state) => [
     state.id,
     state.flow,
     state.startSession,
   ]);
+  // XXX: In the future, use this API to translate GSS_CODE to Team names (or just pass the GSS_CODE to the API)
+  //      https://geoportal.statistics.gov.uk/datasets/fe6bcee87d95476abc84e194fe088abb_0/data?where=LAD20NM%20%3D%20%27Lambeth%27
+  //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
+  const route = useCurrentRoute();
+  const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
   const { data: constraints } = useSWR(() =>
     address
-      ? `https://local-authority-api.planx.uk/${address.team}?x=${address.x}&y=${address.y}`
+      ? `https://local-authority-api.planx.uk/${team}?x=${address.x}&y=${address.y}&version=1`
       : null
   );
 
@@ -145,53 +132,23 @@ function Component(props: Props) {
     //     value: false,
     //   },
     // };
-    const { lng, lat } = convertOrdnanceSurveyToStandard(address.x, address.y);
     return (
       <PropertyInformation
         handleSubmit={() => {
           if (flow && address && constraints) {
             startSession({ passport: { data: constraints, info: address } });
             props.handleSubmit();
-            // Example data:
-            // {
-            //   "passport": {
-            //     "data": {
-            //       "property.constraints.planning": [
-            //         "designated.conservationArea",
-            //         "listed"
-            //       ]
-            //     },
-            //     "info": {
-            //       "UPRN": 200003453486,
-            //       "team": "southwark",
-            //       "organisation": null,
-            //       "sao": null,
-            //       "pao": "59",
-            //       "street": "COBOURG ROAD",
-            //       "town": "LONDON",
-            //       "postcode": "SE5 0HU",
-            //       "blpu_code": "RD04",
-            //       "planx_description": "Terrace",
-            //       "planx_value": "residential.dwelling.house.terrace",
-            //       "x": 533671,
-            //       "y": 178044
-            //     }
-            //   },
-            //   "breadcrumbs": {}
-            // }
           } else {
             throw Error("Should not have been clickable");
           }
         }}
-        lng={lng}
-        lat={lat}
-        // TODO: Alastair asked for Title and Description fields so perhaps keep these here for now
+        lng={Number(address.longitude)}
+        lat={Number(address.latitude)}
         title="About the property"
         description="This is the information we currently have about the property"
         propertyDetails={[
           {
             heading: "Address",
-            // TODO: dry with `title`
             detail: [
               address.organisation,
               address.sao,
@@ -207,16 +164,12 @@ function Component(props: Props) {
           },
           {
             heading: "District",
-            detail: capitalize(address.team),
+            detail: capitalize(team),
           },
           {
             heading: "Building type",
             detail: address.planx_description,
           },
-          // {
-          //   heading: "UPRN",
-          //   detail: address.UPRN,
-          // },
         ]}
         propertyConstraints={{
           title: "Constraints",
@@ -246,33 +199,31 @@ function GetAddress(props: {
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
   const [selectedOption, setSelectedOption] = useState<Option | undefined>();
 
-  const { data } = useSWR(
-    () =>
-      sanitizedPostcode
-        ? // TODO: Should we add `&nocache` ?
-          `https://llpg.planx.uk/addresses?limit=100&postcode=eq.${escape(
-            sanitizedPostcode
-          )}`
-        : null
-    // Example response
-    //   const data = [
-    //     {
-    //       UPRN: 10009795450,
-    //       team: "southwark",
-    //       organisation: null,
-    //       sao: "FIRST FLOOR AND SECOND FLOOR FLAT",
-    //       pao: "47",
-    //       street: "COBOURG ROAD",
-    //       town: "LONDON",
-    //       postcode: "SE5 0HU",
-    //       blpu_code: "RD06",
-    //       planx_description: "Flat",
-    //       planx_value: "residential.dwelling.flat",
-    //       x: 533683,
-    //       y: 178083,
-    //     },
-    //     // ...
-    //   ];
+  const { loading, error, data } = useQuery(
+    gql`
+      query FindAddress($postcode: String = "") {
+        addresses(where: { postcode: { _eq: $postcode } }) {
+          uprn
+          town
+          y
+          x
+          street
+          sao
+          postcode
+          pao
+          organisation
+          blpu_code
+          latitude
+          longitude
+        }
+      }
+    `,
+    {
+      skip: !Boolean(sanitizedPostcode),
+      variables: {
+        postcode: sanitizedPostcode,
+      },
+    }
   );
 
   return (
@@ -329,9 +280,9 @@ function GetAddress(props: {
                 }
               }}
             />
-            {data && (
+            {Boolean(data?.addresses?.length) && (
               <Autocomplete
-                options={data
+                options={data.addresses
                   .map(
                     (address: Address): Option => ({
                       ...address,

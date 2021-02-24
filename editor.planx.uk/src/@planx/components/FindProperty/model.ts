@@ -15,19 +15,20 @@ export const parseFindProperty = (
 });
 
 export interface Address {
-  UPRN: number;
-  team: string;
+  uprn: string;
+  blpu_code: string;
+  latitude: string;
+  longitude: string;
+  organisation: string | null;
   sao: string | null;
   pao: string;
-  organisation: string | null;
   street: string;
   town: string;
   postcode: string;
-  blpu_code: string;
-  planx_description: string;
-  planx_value: string;
   x: number;
   y: number;
+  planx_description: string;
+  planx_value: string;
 }
 
 export const DEFAULT_TITLE = "Find the property" as const;

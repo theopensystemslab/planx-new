@@ -1,5 +1,27 @@
 - table:
     schema: public
+    name: addresses
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - uprn
+      - blpu_code
+      - latitude
+      - longitude
+      - organisation
+      - sao
+      - pao
+      - street
+      - town
+      - postcode
+      - x
+      - "y"
+      - planx_description
+      - planx_value
+      filter: {}
+- table:
+    schema: public
     name: flows
   object_relationships:
   - name: creator

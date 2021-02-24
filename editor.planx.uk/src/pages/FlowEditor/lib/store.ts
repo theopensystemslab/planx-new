@@ -28,7 +28,6 @@ import { connectToDB, getConnection } from "./sharedb";
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
 let doc: any;
-// let globalFlag: any;
 
 const send = (ops: Array<any>) => {
   if (ops.length > 0) {
@@ -71,7 +70,6 @@ interface Store extends Record<string | number | symbol, unknown> {
   updateNode: any; //: () => void;
   // preview
   breadcrumbs: breadcrumbs;
-  replay: () => object;
   currentCard: () => Record<string, any> | null;
   passport: passport;
   record: any; //: () => void;
@@ -378,36 +376,63 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     // GitHub comment explaining what's happening here https://bit.ly/2HFnxX2
     // Google sheet with new passport schema https://bit.ly/39eYp4A
 
-    const keys = Object.entries(passport.data)
-      .filter(([, { value }]: any) => value)
-      .map(([k]) => k);
+    // https://tinyurl.com/3cdrnr7j
 
-    const constraints = [];
+    // converts what is here
+    // https://gist.github.com/johnrees/e0e3197e3915489a69c743b38faf489e
+    // into { 'property.constraints.planning': { value: ['property.landConservation'] } }
+    const constraintsDictionary = {
+      "property.article4.lambeth.albertsquare": "article4.lambeth.albert",
+      "property.article4.lambeth.hydefarm": "article4.lambeth.hydeFarm",
+      "property.article4.lambeth.lansdowne": "article4.lambeth.lansdowne",
+      "property.article4.lambeth.leighamcourt": "article4.lambeth.leigham",
+      "property.article4.lambeth.parkhallroad": "article4.lambeth.parkHall",
+      "property.article4.lambeth.stockwell": "article4.lambeth.stockwell",
+      "property.article4.lambeth.streatham": "article4.lambeth.streatham",
+      "property.article4s": "article4",
+      "property.buildingListed": "listed",
+      "property.landAONB": "designated.AONB",
+      "property.landBroads": "designated.broads",
+      "property.landConservation": "designated.conservationArea",
+      "property.landExplosivesStorage": "defence.explosives",
+      "property.landNP": "designated.nationalPark",
+      "property.landSafeguarded": "defence.safeguarded",
+      "property.landSafetyHazard": "hazard",
+      "property.landSSI": "nature.SSSI",
+      "property.landTPO": "tpo",
+      "property.landWHS": "designated.WHS",
+      "property.southwarkSunrayEstate": "article4.southwark.sunray",
+    };
 
-    if (keys.includes("property.landConservation"))
-      constraints.push("designated.conservationArea");
-    if (keys.includes("property.landTPO")) constraints.push("TPO");
-    if (keys.includes("property.buildingListed")) constraints.push("listed");
+    const newPassportData = Object.entries(constraintsDictionary).reduce(
+      (dataObject, [oldName, newName]) => {
+        if (passport.data?.[oldName]?.value) {
+          dataObject["property.constraints.planning"] = dataObject[
+            "property.constraints.planning"
+          ] ?? { value: [] };
+          dataObject["property.constraints.planning"].value.push(newName);
+        }
+        return dataObject;
+      },
+      {
+        ...(get().passport.data || {}),
+      }
+    );
 
-    passport.data =
-      constraints.length > 0
-        ? { "property.constraints.planning": constraints }
-        : {};
-
-    if (passport.info?.planx_value)
-      passport.data["property.type"] = passport.info.planx_value;
-
-    // ------ END PASSPORT DATA OVERRIDES ------
+    if (passport.info?.planx_value) {
+      newPassportData["property.type"] = {
+        value: [passport.info.planx_value],
+      };
+    }
 
     set({
       passport: {
         ...passport,
-        data: {
-          ...(get().passport.data || {}),
-          ...(passport.data || {}),
-        },
+        data: newPassportData,
       },
     });
+
+    // ------ END PASSPORT DATA OVERRIDES ------
 
     try {
       const response = await client.mutate({
@@ -482,21 +507,18 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               (flow[id]?.edges as any)?.length > 0)
         )
         .forEach((id) => {
-          // console.log({ checking: id, breadcrumbs, visited });
           if (
             [TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type as TYPES)
           ) {
             nodeIdsConnectedFrom(id);
           } else {
             const useFlag = flow[id]?.type === TYPES.Filter;
-            // const visible = Boolean(flow[id]?.data?.visible);
 
             const fn = useFlag ? "flag" : flow[id]?.data?.fn;
 
             const [globalFlag] = collectedFlags(id, [...visited] as Array<
               string
             >);
-            // console.log({ checkingFlagFor: id, flag: globalFlag, breadcrumbs });
 
             let passportValues =
               fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
@@ -577,18 +599,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                   });
                 }
 
-                // if (visible) {
-                //   console.log({ id });
-                //   ids.add(id);
-                // }
-
                 responsesThatCanBeAutoAnswered.forEach((r) =>
                   nodeIdsConnectedFrom(r.id)
                 );
               }
-              // else if (fn === "flag" && visible) {
-              //   ids.add(id);
-              // }
             } else {
               ids.add(id);
             }
@@ -605,32 +619,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     nodeIdsConnectedFrom(ROOT_NODE_KEY);
 
     return Array.from(ids);
-  },
-
-  replay() {
-    const { flow, breadcrumbs } = get();
-    return Object.entries(breadcrumbs)
-      .map(([id, bc]) => {
-        const { edges = [], ...question } = flow[id];
-
-        const options = edges.map((id) => {
-          const { edges, ...node } = flow[id];
-          return {
-            id,
-            ...node,
-          };
-        });
-
-        if (options.length === 0) return null;
-
-        return {
-          question: { id, ...question },
-          options,
-          choices: bc.answers,
-          auto: bc.auto,
-        };
-      })
-      .filter(Boolean);
   },
 
   currentCard() {

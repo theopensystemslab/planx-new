@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import flags, { FlagSet } from "pages/FlowEditor/data/flags";
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
@@ -89,7 +89,6 @@ const ResultComponent: React.FC<Result> = (props) => {
       overrides: props.node?.data?.overrides || {},
     },
     onSubmit: (newValues) => {
-      console.log({ newValues });
       if (props.handleSubmit) {
         props.handleSubmit({ type: TYPES.Result, data: newValues });
       }
