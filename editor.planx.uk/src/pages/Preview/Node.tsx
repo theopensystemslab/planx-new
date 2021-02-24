@@ -2,6 +2,7 @@ import AddressInput from "@planx/components/AddressInput/Public";
 import Checklist from "@planx/components/Checklist/Public";
 import Content from "@planx/components/Content/Public";
 import DateInput from "@planx/components/DateInput/Public";
+import DrawBoundary from "@planx/components/DrawBoundary/Public";
 import FileUpload from "@planx/components/FileUpload/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
@@ -78,6 +79,14 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.DateInput:
       return <DateInput {...allProps} />;
+
+    case TYPES.DrawBoundary:
+      return (
+        <DrawBoundary
+          {...allProps}
+          handleSubmit={() => props.handleSubmit([props.node.id])}
+        />
+      );
 
     case TYPES.FileUpload:
       return <FileUpload {...allProps} />;

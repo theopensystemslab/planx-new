@@ -16,6 +16,7 @@ import RateReview from "@material-ui/icons/RateReview";
 import ReportProblemOutlined from "@material-ui/icons/ReportProblemOutlined";
 import SearchOutlined from "@material-ui/icons/SearchOutlined";
 import Send from "@material-ui/icons/Send";
+import SquareFoot from "@material-ui/icons/SquareFoot";
 import TextFields from "@material-ui/icons/TextFields";
 import { TYPES } from "@planx/components/types";
 import React, { ChangeEvent } from "react";
@@ -50,6 +51,7 @@ export const ICONS: {
   [TYPES.Checklist]: CheckBoxOutlined,
   [TYPES.Content]: TextFields,
   [TYPES.DateInput]: Event,
+  [TYPES.DrawBoundary]: SquareFoot,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: CloudUpload,
   [TYPES.Filter]: undefined,

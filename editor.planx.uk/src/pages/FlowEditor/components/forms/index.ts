@@ -1,6 +1,7 @@
 import AddressInput from "@planx/components/AddressInput/Editor";
 import Content from "@planx/components/Content/Editor";
 import DateInput from "@planx/components/DateInput/Editor";
+import DrawBoundary from "@planx/components/DrawBoundary/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import Notify from "@planx/components/Notify/Editor";
@@ -32,6 +33,7 @@ const components: {
   checklist: Checklist,
   content: Content,
   "date-input": DateInput,
+  "draw-boundary": DrawBoundary,
   "external-portal": ExternalPortal,
   "file-upload": FileUpload,
   filter: Filter,

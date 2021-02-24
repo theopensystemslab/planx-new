@@ -1,0 +1,94 @@
+import { TYPES } from "@planx/components/types";
+import {
+  EditorProps,
+  ICONS,
+  InternalNotes,
+  MoreInformation,
+} from "@planx/components/ui";
+import { useFormik } from "formik";
+import React from "react";
+import Input from "ui/Input";
+import InputGroup from "ui/InputGroup";
+import InputRow from "ui/InputRow";
+import ModalSection from "ui/ModalSection";
+import ModalSectionContent from "ui/ModalSectionContent";
+import RichTextInput from "ui/RichTextInput";
+
+import type { DrawBoundary } from "./model";
+import { DEFAULT_TITLE, parseDrawBoundary } from "./model";
+
+export type Props = EditorProps<TYPES.DrawBoundary, DrawBoundary>;
+
+export default DrawBoundaryComponent;
+
+function DrawBoundaryComponent(props: Props) {
+  const formik = useFormik({
+    initialValues: parseDrawBoundary(props.node?.data),
+    onSubmit: (newValues) => {
+      if (props.handleSubmit) {
+        props.handleSubmit({ type: TYPES.DrawBoundary, data: newValues });
+      }
+    },
+    validate: () => {},
+  });
+  return (
+    <form onSubmit={formik.handleSubmit} id="modal">
+      <ModalSection>
+        <ModalSectionContent
+          title="Find Property"
+          Icon={ICONS[TYPES.DrawBoundary]}
+        >
+          <InputRow>
+            <Input
+              format="large"
+              placeholder={DEFAULT_TITLE}
+              name="title"
+              value={formik.values.title}
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+          <InputRow>
+            <RichTextInput
+              name="description"
+              placeholder="Description"
+              value={formik.values.description}
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+          <InputGroup label="Boundary data field">
+            <InputRow>
+              <Input
+                name="dataFieldBoundary"
+                placeholder="property.boundary.gis"
+                value={formik.values.dataFieldBoundary}
+                onChange={formik.handleChange}
+              />
+            </InputRow>
+          </InputGroup>
+          <InputGroup label="Area data field">
+            <InputRow>
+              <Input
+                name="dataFieldArea"
+                placeholder="property.boundary.area"
+                value={formik.values.dataFieldArea}
+                onChange={formik.handleChange}
+              />
+            </InputRow>
+          </InputGroup>
+        </ModalSectionContent>
+      </ModalSection>
+      <MoreInformation
+        changeField={formik.handleChange}
+        definitionImg={formik.values.definitionImg}
+        howMeasured={formik.values.howMeasured}
+        policyRef={formik.values.policyRef}
+        info={formik.values.info}
+      />
+      <InternalNotes
+        name="notes"
+        value={formik.values.notes}
+        onChange={formik.handleChange}
+      />
+    </form>
+  );
+}

@@ -59,6 +59,7 @@ const components: {
   [TYPES.Checklist]: Checklist,
   [TYPES.Content]: undefined,
   [TYPES.DateInput]: Debug,
+  [TYPES.DrawBoundary]: Debug,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: FileUpload,
   [TYPES.Filter]: undefined,
