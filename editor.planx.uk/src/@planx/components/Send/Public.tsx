@@ -26,22 +26,18 @@ const SendComponent: React.FC<Props> = (props) => {
         if (passport.info) {
           data.site.uprn = String(passport.info.uprn);
 
-          try {
-            data.site.address_1 = [
-              passport.info.sao,
-              passport.info.pao,
-              passport.info.street,
-            ]
-              .filter(Boolean)
-              .join(" ");
+          data.site.address_1 = [
+            passport.info.sao,
+            passport.info.pao,
+            passport.info.street,
+          ]
+            .filter(Boolean)
+            .join(" ");
 
-            data.site.town = passport.info.town;
-            data.site.postcode = passport.info.postcode;
+          data.site.town = passport.info.town;
+          data.site.postcode = passport.info.postcode;
 
-            // TODO: add address_2 and ward
-          } catch (err) {
-            console.error(err);
-          }
+          // TODO: add address_2 and ward
         }
 
         // 2. files
@@ -49,7 +45,7 @@ const SendComponent: React.FC<Props> = (props) => {
         Object.values(breadcrumbs).forEach(({ answers = [] }) => {
           answers.forEach((x: any) => {
             if (x.filename && x.url) {
-              data.files ||= [];
+              data.files = data.files || [];
 
               data.files.push({
                 filename: String(x.url),
@@ -86,7 +82,7 @@ const SendComponent: React.FC<Props> = (props) => {
           (acc, [bopsField, planxField]) => {
             const id = keys.find((id) => flow[id].data?.fn === planxField);
             if (id) {
-              const value = breadcrumbs[id].answers[0];
+              const value = breadcrumbs[id]?.answers[0];
               if (value) {
                 acc[bopsField] = value;
               }
@@ -104,7 +100,7 @@ const SendComponent: React.FC<Props> = (props) => {
 
         await axios.post(props.url, { ...data, ...bopsData });
       } catch (err) {
-        console.error(err);
+        console.error({ err });
       } finally {
         if (props.handleSubmit) props.handleSubmit([]);
       }
