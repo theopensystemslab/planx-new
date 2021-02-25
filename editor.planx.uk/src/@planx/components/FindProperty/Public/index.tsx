@@ -368,11 +368,6 @@ export function PropertyInformation(props: any) {
       <QuestionHeader title={title} description={description} />
       <Box className={styles.map}>
         <Map zoom={18} lat={lat} lng={lng} />
-        <Box color="text.secondary" textAlign="right">
-          <Button variant="text" color="inherit">
-            Redraw boundary
-          </Button>
-        </Box>
       </Box>
       <Box mb={6}>
         {propertyDetails.map(({ heading, detail }: any) => (

@@ -45,9 +45,11 @@ dependencies:
   react-dnd-html5-backend: 11.1.3
   react-dom: 17.0.1_react@17.0.1
   react-dropzone: 11.2.4_react@17.0.1
+  react-error-boundary: 3.1.0_react@17.0.1
   react-feather: 2.0.8_react@17.0.1
   react-html-parser: 2.0.2_react@17.0.1
   react-map-gl: 6.1.4_react@17.0.1
+  react-map-gl-draw: 0.22.2_9884adb4df409cc5d1263290b49bf79d
   react-markdown: 4.3.1_react@17.0.1
   react-navi: 0.14.4_navi@0.14.0+react@17.0.1
   react-navi-helmet-async: 0.14.4_9e1187d2fd1b61ae47f82501f8cd8b4d
@@ -74,6 +76,7 @@ devDependencies:
   '@testing-library/jest-dom': 5.11.5
   '@testing-library/react': 11.1.2_react-dom@17.0.1+react@17.0.1
   '@testing-library/user-event': 12.2.2
+  '@turf/helpers': 6.3.0
   '@types/draft-js': 0.10.44
   '@types/highlight-words-core': 1.2.0
   '@types/jest': 26.0.15
@@ -3027,11 +3030,23 @@ packages:
     dev: false
     resolution:
       integrity: sha512-8+3UMPBrjFa/6TtKi/7sehPKqfAm4g6K+YQjyyFOLUTxzOngcRZTlAVY8sc2CORJYqdHQY8gRPHmn+qo15rCBw==
+  /@babel/runtime/7.12.18:
+    dependencies:
+      regenerator-runtime: 0.13.7
+    dev: false
+    resolution:
+      integrity: sha512-BogPQ7ciE6SYAUPtlm9tWbgI9+2AgqSam6QivMgXgAT+fKbgppaj4ZX15MHeLC1PVF5sNk70huBu20XxWOs8Cg==
   /@babel/runtime/7.12.5:
     dependencies:
       regenerator-runtime: 0.13.7
     resolution:
       integrity: sha512-plcc+hbExy3McchJCEQG3knOsuh3HH+Prx1P6cLIkET/0dLuQDEnrT+s27Axgc9bqfsmNUNHfscgMUdBpC9xfg==
+  /@babel/runtime/7.13.7:
+    dependencies:
+      regenerator-runtime: 0.13.7
+    dev: false
+    resolution:
+      integrity: sha512-h+ilqoX998mRVM5FtB5ijRuHUDVt5l3yfoOi2uh18Z/O3hvyaHQ39NpxVkCIG5yFs+mLq/ewFp8Bss6zmWv6ZA==
   /@babel/template/7.10.4:
     dependencies:
       '@babel/code-frame': 7.10.4
@@ -3836,7 +3851,7 @@ packages:
       integrity: sha512-eg29v74P7W5r6a4tWWDAAfZldXIzfyO1am2fIsC39hdUUHm/33k6pGOKPbgDjg/U/4ifmgAePy/1OjkKN6rFRw==
   /@math.gl/web-mercator/3.4.2:
     dependencies:
-      '@babel/runtime': 7.12.13
+      '@babel/runtime': 7.12.18
       gl-matrix: 3.3.0
     dev: false
     resolution:
@@ -3896,6 +3911,38 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha512-bPHp6Ji8b41szTOcaP63VlnbbO5Ny6dwAATtY6JTjh5N2OLrb5Qk/Th5cRkRQhkWCt+EJsYrNB0MiL+Gpn6e3g==
+  /@nebula.gl/edit-modes/0.22.2:
+    dependencies:
+      '@turf/area': 6.3.0
+      '@turf/bbox': 6.3.0
+      '@turf/bbox-polygon': 6.3.0
+      '@turf/bearing': 6.3.0
+      '@turf/boolean-point-in-polygon': 6.3.0
+      '@turf/buffer': 6.3.0
+      '@turf/center': 6.3.0
+      '@turf/centroid': 6.3.0
+      '@turf/circle': 6.3.0
+      '@turf/destination': 6.3.0
+      '@turf/difference': 6.3.0
+      '@turf/distance': 6.3.0
+      '@turf/ellipse': 6.3.0
+      '@turf/helpers': 6.3.0
+      '@turf/intersect': 6.3.0
+      '@turf/line-intersect': 6.3.0
+      '@turf/nearest-point-on-line': 6.3.0
+      '@turf/point-to-line-distance': 6.3.0
+      '@turf/polygon-to-line': 6.3.0
+      '@turf/rewind': 6.3.0
+      '@turf/transform-rotate': 6.3.0
+      '@turf/transform-scale': 6.3.0
+      '@turf/transform-translate': 6.3.0
+      '@turf/union': 6.3.0
+      geojson: 0.5.0
+      lodash.throttle: 4.1.1
+      viewport-mercator-project: 7.0.2
+    dev: false
+    resolution:
+      integrity: sha512-3aExaK9Yrs4s6oQuxXITleKlTZaP6khO/rshfMff4WKBXwfA/vUkGBwA1GqELlfc7oATaTj7H74VNAVTqjZiRQ==
   /@nodelib/fs.scandir/2.1.4:
     dependencies:
       '@nodelib/fs.stat': 2.0.4
@@ -5219,16 +5266,285 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Zv+3N1ep9P5JvR0YOYagLANyapGWQBh8atdeR3bKpWcigVXFsEKNUw03U/5xnh+cKzm7yozHD6MFJkqQv55y0g==
+  /@turf/area/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/meta': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-Y1cYyAQ2fk94npdgOeMF4msc2uabHY1m7A7ntixf1I8rkyDd6/iHh1IMy1QsM+VZXAEwDwsXhu+ZFYd3Jkeg4A==
+  /@turf/bbox-polygon/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-CCyTBM8LzGRu/lReNlgDyjRO8NojtJ7EPPvSl3bdKQbNFsCm25gwe7Y3xsaCkWLNn5g89lQJI9Izf9xdEsENjQ==
+  /@turf/bbox/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/meta': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-N4ue5Xopu1qieSHP2MA/CJGWHPKaTrVXQJjzHRNcY1vtsO126xbSaJhWUrFc5x5vVkXp0dcucGryO0r5m4o/KA==
+  /@turf/bearing/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-apuUm9xN6VQLO33m7F2mmzlm3dHfeesJjMSzh9iehGtgmp1IaVndjdcIvs0ieiwm8bN9UhwXpfPtO3pV0n9SFw==
+  /@turf/boolean-clockwise/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-zW0j8uPjBS5QJqNmJIeatTH02E1S7OCuBNBvkoOUPifC/c2xJ120a1r73prBj1zMFr6k3UCjwG9V8whUMxIAYA==
+  /@turf/boolean-point-in-polygon/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-NqFSsoE6OwhDK19IllDQRhEQEkF7UVEOlqH9vgS1fGg4T6NcyKvACJs05c9457tL7QSbV9ZS53f2qiLneFL+qg==
+  /@turf/buffer/6.3.0:
+    dependencies:
+      '@turf/bbox': 6.3.0
+      '@turf/center': 6.3.0
+      '@turf/helpers': 6.3.0
+      '@turf/meta': 6.3.0
+      '@turf/projection': 6.3.0
+      d3-geo: 1.7.1
+      turf-jsts: 1.2.3
+    dev: false
+    resolution:
+      integrity: sha512-B0GWgJzmTaaw1GvTd+Df+ToKSYphz9d6hPCOwXbE2vS5DdZryoxBfxQ32LSX/hW/vx7TLf7E4M0VJBb+Sn1DKA==
+  /@turf/center/6.3.0:
+    dependencies:
+      '@turf/bbox': 6.3.0
+      '@turf/helpers': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-41g/ZYwoBs2PK7tpAHhf4D6llHdRvY827HLXCld5D0IOnzsWPqDk7WnV8P5uq4g/gyH1/WfKQYn5SgfSj4sSfw==
+  /@turf/centroid/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/meta': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-7KTyqhUEqXDoyR/nf/jAXiW8ZVszEnrp5XZkgYyrf2GWdSovSO0iCN1J3bE2jkJv7IWyeDmGYL61GGzuTSZS2Q==
+  /@turf/circle/6.3.0:
+    dependencies:
+      '@turf/destination': 6.3.0
+      '@turf/helpers': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-5N3J4YQr1efidvPgvtIQYpxb7gBVEoo00IFC0JNH6KqIVBMttFZw3Wsqor34ya91m58A5m6HTiz9Cdm1ktrEdw==
+  /@turf/clone/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-GAgN89/9GCqUKECB1oY2hcTs0K2rZj+a2tY6VfM0ef9wwckuQZCKi+kKGUzhKVrmHee15jKV8n6DY0er8OndKg==
+  /@turf/destination/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-aLt3U/XkJWyZW08Ln1qZwBNAGh27yhmYLu892+dBj3gKP6UUiR6ZopXxrBwjBVe00A6k2ktftKDn79qe0hptuw==
+  /@turf/difference/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+      polygon-clipping: 0.15.2
+    dev: false
+    resolution:
+      integrity: sha512-f4P0ra0jBOFk4HO8n/9FZ3NEmOX7FHCXHy/4Z1RSUUQsUQDCkx6/cyqbi8BCy2ZSDUSCGHV+iPgs4fRphMzCHQ==
+  /@turf/distance/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-basi24ssNFnH3iXPFjp/aNUrukjObiFWoIyDRqKyBJxVwVOwAWvfk4d38QQyBj5nDo5IahYRq/Q+T47/5hSs9w==
+  /@turf/ellipse/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+      '@turf/rhumb-destination': 6.3.0
+      '@turf/transform-rotate': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-r+EvUK+IGgc3shvS/T1Wof2uCptS2fYmtcwMSFHnHjRnmUyrD4YFjPZT7ygxcDB91+UClZ6cdozR6vqBYzPAog==
   /@turf/helpers/6.1.4:
     dev: false
     resolution:
       integrity: sha512-vJvrdOZy1ngC7r3MDA7zIGSoIgyrkWcGnNIEaqn/APmw+bVLF2gAW7HIsdTxd12s5wQMqEpqIQrmrbRRZ0xC7g==
+  /@turf/helpers/6.3.0:
+    resolution:
+      integrity: sha512-kr6KuD4Z0GZ30tblTEvi90rvvVNlKieXuMC8CTzE/rVQb0/f/Cb29zCXxTD7giQTEQY/P2nRW23wEqqyNHulCg==
+  /@turf/intersect/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+      polygon-clipping: 0.15.2
+    dev: false
+    resolution:
+      integrity: sha512-1YCIkyKjuTlX7HaTjtyE7ZRxLCmcu0BYr6jqoVl7TjyF2NUiNpPm3m4X1ZrSF6MfjIt5NFSGYCdNMEPgREq19w==
+  /@turf/invariant/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-2OFOi9p+QOrcIMySEnr+WlOiKaFZ1bY56jA98YyECewJHfhPFWUBZEhc4nWGRT0ahK08Vus9+gcuBX8QIpCIIw==
+  /@turf/line-intersect/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+      '@turf/line-segment': 6.3.0
+      '@turf/meta': 6.3.0
+      geojson-rbush: 3.1.2
+    dev: false
+    resolution:
+      integrity: sha512-3naxR7XpkPd2vst3Mw6DFry4C9m3o0/f2n/xu5UAyxb88Ie4m2k+1eqkhzMMx/0L+E6iThWpLx7DASM6q6o9ow==
+  /@turf/line-segment/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+      '@turf/meta': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-M+aDy83V+E7jYWNaf+b+A88yhnMrJhyg/lhAj6mU6UeB2PbruXB2qgSmmVDSE2dIknOvZZuIWNzEzUI07RO2kw==
   /@turf/meta/6.0.2:
     dependencies:
       '@turf/helpers': 6.1.4
     dev: false
     resolution:
       integrity: sha512-VA7HJkx7qF1l3+GNGkDVn2oXy4+QoLP6LktXAaZKjuT1JI0YESat7quUkbCMy4zP9lAUuvS4YMslLyTtr919FA==
+  /@turf/meta/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-qBJjaAJS9H3ap0HlGXyF/Bzfl0qkA9suafX/jnDsZvWMfVLt+s+o6twKrXOGk5t7nnNON2NFRC8+czxpu104EQ==
+  /@turf/nearest-point-on-line/6.3.0:
+    dependencies:
+      '@turf/bearing': 6.3.0
+      '@turf/destination': 6.3.0
+      '@turf/distance': 6.3.0
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+      '@turf/line-intersect': 6.3.0
+      '@turf/meta': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-b4C9Md1VbGn9chMgdSj2grJD4w4t0owEWOKEBwOZfdhrcksyOedVvKB7XqOFdj/8Jitel40EKAC5LQTNu24kEQ==
+  /@turf/point-to-line-distance/6.3.0:
+    dependencies:
+      '@turf/bearing': 6.3.0
+      '@turf/distance': 6.3.0
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+      '@turf/meta': 6.3.0
+      '@turf/projection': 6.3.0
+      '@turf/rhumb-bearing': 6.3.0
+      '@turf/rhumb-distance': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-AqCcj4A0GPzKb3w+q+C9ex0r5mC+u+Ee6VN2jY1p25dxBQJNpMZKDE5LcWtaXeD+pAk3ZGmvea8LR5S0AJukxA==
+  /@turf/polygon-to-line/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-KFGlQlGOBayBvELz+tip1zCa3eB8xyZePZUZ3I3OnU7mk0FFzJzvLTmPUc7MupgqORT4LkNGmyKSVWaz38NTig==
+  /@turf/projection/6.3.0:
+    dependencies:
+      '@turf/clone': 6.3.0
+      '@turf/helpers': 6.3.0
+      '@turf/meta': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-IpSs7Q6G6xi47ynVlYYVegPLy6Jc0yo3/DcIm83jaJa4NnzPFXIFZT0v9Fe1N8MraHZqiqaSPbVnJXCGwR12lg==
+  /@turf/rewind/6.3.0:
+    dependencies:
+      '@turf/boolean-clockwise': 6.3.0
+      '@turf/clone': 6.3.0
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+      '@turf/meta': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-56HwvOZ4r4/wXr8l8zCpdjZ3bxY6Ee7aokuJr/+BlVqikHdRHRx+FJpLGpykZU1YWdO7IiLK7ajX+clYPaqRKg==
+  /@turf/rhumb-bearing/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-/c/BE3huEUrwN6gx7Bg2FzfJqeU+TWk/slQPDHpbVunlIPbS6L28brqSVD+KXfMG8HQIzynz6Pm4Y+j5Iv4aWA==
+  /@turf/rhumb-destination/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-MaQf5wldfERfn8cjtbkD/6GUurAwD+sjedvDgV/chZ83yx7kXmRgrVMpRSGUbmGQ3Ww8dn38sUCapnM6M07+Rg==
+  /@turf/rhumb-distance/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-wMIQVvznusonnp/POeucFdA4Rubn0NrkcEMdxdcCgFK7OmTz0zU4CEnNONF2IUGkQ5WwoKiuS7MOTQ8OuCjSfQ==
+  /@turf/transform-rotate/6.3.0:
+    dependencies:
+      '@turf/centroid': 6.3.0
+      '@turf/clone': 6.3.0
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+      '@turf/meta': 6.3.0
+      '@turf/rhumb-bearing': 6.3.0
+      '@turf/rhumb-destination': 6.3.0
+      '@turf/rhumb-distance': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-6CPfmDdaXjbBoPeyHkui704vz6MD3MoI09LGRVJ/RIo1uH/OL6RDSlCfLxFtkE33FJ7VV4giczc3LF1UP5Oh9w==
+  /@turf/transform-scale/6.3.0:
+    dependencies:
+      '@turf/bbox': 6.3.0
+      '@turf/center': 6.3.0
+      '@turf/centroid': 6.3.0
+      '@turf/clone': 6.3.0
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+      '@turf/meta': 6.3.0
+      '@turf/rhumb-bearing': 6.3.0
+      '@turf/rhumb-destination': 6.3.0
+      '@turf/rhumb-distance': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-UnLWEXAUdZy7JYbylMjYczPUkxXlUK1nMgv7zEzQ+8mczysPVsgB/FDyiexY2bgVEEBMeDqFSHtqLRavXljI0A==
+  /@turf/transform-translate/6.3.0:
+    dependencies:
+      '@turf/clone': 6.3.0
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+      '@turf/meta': 6.3.0
+      '@turf/rhumb-destination': 6.3.0
+    dev: false
+    resolution:
+      integrity: sha512-ZGAK3T6wdYLOIKr/FHl+i09b1vhPV3XWHw4/M27xA6US2rNcO6/jkLjskdME/3JzJDFmGa8F2vlPqlhtWWoRSw==
+  /@turf/union/6.3.0:
+    dependencies:
+      '@turf/helpers': 6.3.0
+      '@turf/invariant': 6.3.0
+      polygon-clipping: 0.15.2
+    dev: false
+    resolution:
+      integrity: sha512-m8yh13Q5E0Y+YC10+iI/Qq0Txt7UmSIFByc7DfNVlMMGTceqLFa8xGwSVdFuB/d6MWwKuzKonQMl1PUx/Vd2Iw==
   /@types/anymatch/1.3.1:
     resolution:
       integrity: sha512-/+CRPXpBDpo2RK9C68N3b2cOvO0Cf5B9aPijHsoDQTHivnGSObdOF2BRQOYjojWTDy6nQvMjmqRXIxH55VjxxA==
@@ -5386,6 +5702,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-0qxx/jK+/t5dcJ9LjTCvtcUamryk8yZUCQcpcOs/mQU6JipW15taAfUKvyNLC/PmhJYLSN5U4GrLFl6cBSGemg==
+  /@types/mapbox-gl/2.1.0:
+    dependencies:
+      '@types/geojson': 7946.0.7
+    dev: false
+    resolution:
+      integrity: sha512-OaLf0MQud7TyEgRYd/JB+ovJjMXJSgeOTFUJspMeJVI/SBEI/2khH7IBM66RiV5x9tpzAnAy68/CkRBLa2NZlw==
   /@types/markdown-to-jsx/6.11.3:
     dependencies:
       '@types/react': 16.14.2
@@ -5502,6 +5824,15 @@ packages:
     dev: false
     resolution:
       integrity: sha512-++KMqwodVBg75hT2ZT4jobvDPi6iPUl/Lhrn0nP1XTcmFLtccaDb4FTAxzrj3egL7WQYTDnpHuPj52FSFkJqzA==
+  /@types/react-map-gl/5.2.2:
+    dependencies:
+      '@types/geojson': 7946.0.7
+      '@types/mapbox-gl': 2.1.0
+      '@types/react': 17.0.2
+      '@types/viewport-mercator-project': 6.1.1
+    dev: false
+    resolution:
+      integrity: sha512-VxPjj2EvmGGjOAXUmFOBRHnvdzhe4FVtic6+tWCfob9w74Vm/ZyVerRXkL03+/I1+Ejk8qhbRDfii3zDzr56Lw==
   /@types/react-syntax-highlighter/11.0.4:
     dependencies:
       '@types/react': 16.14.2
@@ -5534,6 +5865,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-aj/L7RIMsRlWML3YB6KZiXB3fV2t41+5RBGYF8z+tAKU43Px8C3cYUZsDvf1/+Bm4FK21QWBrDutu8ZJ/70qOw==
+  /@types/react/17.0.2:
+    dependencies:
+      '@types/prop-types': 15.7.3
+      csstype: 3.0.6
+    dev: false
+    resolution:
+      integrity: sha512-Xt40xQsrkdvjn1EyWe1Bc0dJLcil/9x2vAuW7ya+PuQip4UYUaXyhzWmAbwRsdMgwOFHpfp7/FFZebDU6Y8VHA==
   /@types/reactcss/1.2.3:
     dependencies:
       '@types/react': 16.9.56
@@ -5577,6 +5915,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-FvUupuM3rlRsRtCN+fDudtmytGO6iHJuuRKS1Ss0pG5z8oX0diNEw94UEL7hgDbpN94rgaK5R7sWm6RrSkZuAQ==
+  /@types/viewport-mercator-project/6.1.1:
+    dependencies:
+      gl-matrix: 3.3.0
+    dev: false
+    resolution:
+      integrity: sha512-s8pFUBSyFil9lPtBbBUlqK1fEPeVIX2nSndRtYEHLs2E2CWR9heAQlmAHBK9f1vVZ+aF7lAwlLcl26bsulJHig==
   /@types/webpack-env/1.16.0:
     dev: true
     resolution:
@@ -8604,6 +8948,16 @@ packages:
       type: 1.2.0
     resolution:
       integrity: sha512-m62ShEObQ39CfralilEQRjH6oAMtNCV1xJyEx5LpRYUVN+EviphDgUc/F3hnYbADmkiNs67Y+3ylmlG7Lnu+FA==
+  /d3-array/1.2.4:
+    dev: false
+    resolution:
+      integrity: sha512-KHW6M86R+FUPYGb3R5XiYjXPq7VzwxZ22buHhAEVG5ztoEcZZMLov530mmccaqA1GghZArjQV46fuc8kUqhhHw==
+  /d3-geo/1.7.1:
+    dependencies:
+      d3-array: 1.2.4
+    dev: false
+    resolution:
+      integrity: sha512-O4AempWAr+P5qbk2bC2FuN/sDW4z+dN2wDf9QV3bxQt4M5HfOEeXLgJ/UKQW0+o1Dj8BE+L5kiDbdWUMjsmQpw==
   /damerau-levenshtein/1.0.6:
     dev: false
     resolution:
@@ -10645,10 +10999,25 @@ packages:
       node: '>=6.9.0'
     resolution:
       integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
+  /geojson-rbush/3.1.2:
+    dependencies:
+      '@turf/bbox': 6.3.0
+      '@turf/helpers': 6.3.0
+      '@turf/meta': 6.3.0
+      rbush: 2.0.2
+    dev: false
+    resolution:
+      integrity: sha512-grkfdg3HIeTjwTfiJe5FT8+fGU3fABCc+vRJDBwdQz9kkLF0Sbif2gs2JUzjewwgmnvLGy9fInySDeADoNuk7w==
   /geojson-vt/3.2.1:
     dev: false
     resolution:
       integrity: sha512-EvGQQi/zPrDA6zr6BnJD/YhwAkBP8nnJ9emh3EnHQKVMfg/MRVtPbMYdgVy/IaEmn4UfagD2a6fafPDL5hbtwg==
+  /geojson/0.5.0:
+    dev: false
+    engines:
+      node: '>= 0.10'
+    resolution:
+      integrity: sha1-PNbJY5m+ZbVu5VWWEW/pGRznAcA=
   /get-caller-file/2.0.5:
     engines:
       node: 6.* || 8.* || >= 10.*
@@ -13370,6 +13739,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-stgLz+i3Aa9mZgnjr/O+v9ruKZsPsndy7qPZOchbqk2cnTU1ZaldKK+v7m54WoKIyxiuMZTKT2H81F8BeAc3ZQ==
+  /lodash.throttle/4.1.1:
+    dev: false
+    resolution:
+      integrity: sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
   /lodash.uniq/4.5.0:
     resolution:
       integrity: sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
@@ -13940,7 +14313,7 @@ packages:
       integrity: sha512-WRoDn//mXBiJ1H40rqa3vH0toePwSsGb45iInWlTySa+Uu4k3tYUSxa2v1KqAiLtvlrSzaExqS1gtk96A9zvEA==
   /mjolnir.js/2.5.0:
     dependencies:
-      '@babel/runtime': 7.12.13
+      '@babel/runtime': 7.12.18
       hammerjs: 2.0.8
     dev: false
     engines:
@@ -15126,6 +15499,12 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-b4OViUOihwV0icb9PHmWbR+vPqaSzSAEbgLskvb7ANPATVXGiYv/TQFHQo65S53WU9i5EQ1I03YDOJW7K0bmYg==
+  /polygon-clipping/0.15.2:
+    dependencies:
+      splaytree: 3.1.0
+    dev: false
+    resolution:
+      integrity: sha512-qsUFQSY4nA++1/b76dy0BJGwL0FZAk05Y4hZprctLIhAddE8KUUr3TxIF4sAxIQtjH9xvaBe3raaRQrcSI4wlA==
   /popper.js/1.16.1-lts:
     dev: false
     resolution:
@@ -16193,6 +16572,10 @@ packages:
   /querystringify/2.2.0:
     resolution:
       integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==
+  /quickselect/1.1.1:
+    dev: false
+    resolution:
+      integrity: sha512-qN0Gqdw4c4KGPsBOQafj6yj/PA6c/L63f6CaZ/DCF/xF4Esu3jVmKLUDYxghFx8Kb/O7y9tI7x2RjTSXwdK1iQ==
   /quickselect/2.0.0:
     dev: false
     resolution:
@@ -16253,6 +16636,12 @@ packages:
       webpack: ^4.0.0 || ^5.0.0
     resolution:
       integrity: sha512-ZnScIV3ag9A4wPX/ZayxL/jZH+euYb6FcUinPcgiQW0+UBtEv0O6Q3lGd3cqJ+GHH+rksEv3Pj99oxJ3u3VIKA==
+  /rbush/2.0.2:
+    dependencies:
+      quickselect: 1.1.1
+    dev: false
+    resolution:
+      integrity: sha512-XBOuALcTm+O/H8G90b6pzu6nX6v2zCKiFG4BJho8a+bY6AER6t8uQUZdi5bomQc0AprCWhEGa7ncAbbRap0bRA==
   /react-app-polyfill/2.0.0:
     dependencies:
       core-js: 3.8.3
@@ -16548,6 +16937,18 @@ packages:
       react-dom: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1
     resolution:
       integrity: sha512-WZbvG72cjLXAxV7VOuSzuHEaI3RHj10DZu8EcKQpkKcAj7+qAkG5XUeSdX5FXrA0vPrlx0QsnAzZEBJwzV0e+w==
+  /react-error-boundary/3.1.0_react@17.0.1:
+    dependencies:
+      '@babel/runtime': 7.13.7
+      react: 17.0.1
+    dev: false
+    engines:
+      node: '>=10'
+      npm: '>=6'
+    peerDependencies:
+      react: '>=16.13.1'
+    resolution:
+      integrity: sha512-lmPrdi5SLRJR+AeJkqdkGlW/CRkAUvZnETahK58J4xb5wpbfDngasEGu+w0T1iXEhVrYBJZeW+c4V1hILCnMWQ==
   /react-error-overlay/6.0.8:
     resolution:
       integrity: sha512-HvPuUQnLp5H7TouGq3kzBeioJmXms1wHy9EGjz2OURWBp4qZO6AfGEcnxts1D/CbwPLRAgTMPCEgYhA3sEM4vw==
@@ -16631,6 +17032,25 @@ packages:
     dev: true
     resolution:
       integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+  /react-map-gl-draw/0.22.2_9884adb4df409cc5d1263290b49bf79d:
+    dependencies:
+      '@math.gl/web-mercator': 3.4.2
+      '@nebula.gl/edit-modes': 0.22.2
+      '@turf/helpers': 6.3.0
+      '@types/react-map-gl': 5.2.2
+      mjolnir.js: 2.5.0
+      prop-types: 15.7.2
+      react: 17.0.1
+      react-dom: 17.0.1_react@17.0.1
+      react-map-gl: 6.1.4_react@17.0.1
+      uuid: 3.4.0
+    dev: false
+    peerDependencies:
+      react: ^16.x
+      react-dom: ^16.x
+      react-map-gl: ^5.x
+    resolution:
+      integrity: sha512-O8zYN8zygjMswXgTmNoxdPQaEzDCs5HG9IUXB3M2fvVcMmcb6gi8k1dXdNfC7qtaEPI8vjiq9ua3fWYJ89emaw==
   /react-map-gl/6.1.4_react@17.0.1:
     dependencies:
       '@babel/runtime': 7.12.13
@@ -18254,6 +18674,10 @@ packages:
       supports-color: '*'
     resolution:
       integrity: sha512-r46gZQZQV+Kl9oItvl1JZZqJKGr+oEkB08A6BzkiR7593/7IbtuncXHd2YoYeTsG4157ZssMu9KYvUHLcjcDoA==
+  /splaytree/3.1.0:
+    dev: false
+    resolution:
+      integrity: sha512-gvUGR7xnOy0fLKTCxDeUZYgU/I1Tdf8M/lM1Qrf8L2TIOR5ipZjGk02uYcdv0o2x7WjVRgpm3iS2clLyuVAt0Q==
   /split-string/3.1.0:
     dependencies:
       extend-shallow: 3.0.2
@@ -19203,6 +19627,10 @@ packages:
       safe-buffer: 5.2.1
     resolution:
       integrity: sha1-J6XeoGs2sEoKmWZ3SykIaPD8QP0=
+  /turf-jsts/1.2.3:
+    dev: false
+    resolution:
+      integrity: sha512-Ja03QIJlPuHt4IQ2FfGex4F4JAr8m3jpaHbFbQrgwr7s7L6U8ocrHiF3J1+wf9jzhGKxvDeaCAnGDot8OjGFyA==
   /tweetnacl/0.14.5:
     resolution:
       integrity: sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q=
@@ -19747,6 +20175,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-WKTuTL7o6WKdPQ+gmZhlXL7UpSdCdPUjxkDTBd/3AayBdAFSQGHxsqdbmPBvmoGwvo9KWo/30HTkNo/Z7ORJpw==
+  /viewport-mercator-project/7.0.2:
+    dependencies:
+      '@math.gl/web-mercator': 3.4.2
+    dev: false
+    resolution:
+      integrity: sha512-gH0pBO4Y5McGCPaKulkpL9MPDg+wtOSXtndwh0467T/WLMerfBi7EkHYw1pp9HE2VeqFqUaAfot98cQPGaIjEA==
   /vm-browserify/1.1.2:
     resolution:
       integrity: sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
@@ -20525,6 +20959,7 @@ specifiers:
   '@testing-library/react': ^11.1.2
   '@testing-library/user-event': ^12.2.2
   '@turf/area': ^6.0.1
+  '@turf/helpers': ^6.3.0
   '@types/draft-js': ^0.10.44
   '@types/highlight-words-core': ^1.2.0
   '@types/jest': ^26.0.15
@@ -20581,9 +21016,11 @@ specifiers:
   react-dnd-html5-backend: ^11.1.3
   react-dom: ^17.0.1
   react-dropzone: ^11.2.4
+  react-error-boundary: ^3.1.0
   react-feather: ^2.0.8
   react-html-parser: ^2.0.2
   react-map-gl: ^6.1.4
+  react-map-gl-draw: ^0.22.2
   react-markdown: ^4.3.1
   react-navi: ^0.14.4
   react-navi-helmet-async: ^0.14.4

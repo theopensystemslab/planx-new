@@ -11,6 +11,7 @@ import {
   ROOT_NODE_KEY,
   update,
 } from "@planx/graph";
+import produce from "immer";
 import debounce from "lodash/debounce";
 import difference from "lodash/difference";
 import omit from "lodash/omit";
@@ -75,6 +76,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   record: any; //: () => void;
   reportData: any; //: () => any;
   resetPreview: any; //: () => void;
+  mutatePassport: (mutation: (passport: passport) => void) => void;
   sessionId: any; //: string;
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
@@ -347,6 +349,12 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   sessionId: "",
 
   breadcrumbs: {},
+
+  mutatePassport(mutation) {
+    set({
+      passport: produce(get().passport, mutation),
+    });
+  },
 
   async startSession({
     passport,

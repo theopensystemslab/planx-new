@@ -25,6 +25,10 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.DateInput:
       return <Question {...props} text={node?.data?.title ?? "Date"} />;
+    case TYPES.DrawBoundary:
+      return (
+        <Question {...props} text={node?.data?.title ?? "Draw boundary"} />
+      );
     case TYPES.ExternalPortal:
       return <Portal {...props} />;
     case TYPES.InternalPortal:

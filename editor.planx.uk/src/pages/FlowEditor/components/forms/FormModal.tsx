@@ -65,6 +65,7 @@ const NodeTypeSelect: React.FC<{
       </optgroup>
       <optgroup label="Location">
         <option value={TYPES.FindProperty}>Find property</option>
+        <option value={TYPES.DrawBoundary}>Draw boundary</option>
       </optgroup>
       <optgroup label="Navigation">
         <option value={TYPES.Filter}>Filter</option>
