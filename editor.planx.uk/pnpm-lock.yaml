@@ -45,6 +45,7 @@ dependencies:
   react-dnd-html5-backend: 11.1.3
   react-dom: 17.0.1_react@17.0.1
   react-dropzone: 11.2.4_react@17.0.1
+  react-error-boundary: 3.1.0_react@17.0.1
   react-feather: 2.0.8_react@17.0.1
   react-html-parser: 2.0.2_react@17.0.1
   react-map-gl: 6.1.4_react@17.0.1
@@ -3040,6 +3041,12 @@ packages:
       regenerator-runtime: 0.13.7
     resolution:
       integrity: sha512-plcc+hbExy3McchJCEQG3knOsuh3HH+Prx1P6cLIkET/0dLuQDEnrT+s27Axgc9bqfsmNUNHfscgMUdBpC9xfg==
+  /@babel/runtime/7.13.7:
+    dependencies:
+      regenerator-runtime: 0.13.7
+    dev: false
+    resolution:
+      integrity: sha512-h+ilqoX998mRVM5FtB5ijRuHUDVt5l3yfoOi2uh18Z/O3hvyaHQ39NpxVkCIG5yFs+mLq/ewFp8Bss6zmWv6ZA==
   /@babel/template/7.10.4:
     dependencies:
       '@babel/code-frame': 7.10.4
@@ -16930,6 +16937,18 @@ packages:
       react-dom: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1
     resolution:
       integrity: sha512-WZbvG72cjLXAxV7VOuSzuHEaI3RHj10DZu8EcKQpkKcAj7+qAkG5XUeSdX5FXrA0vPrlx0QsnAzZEBJwzV0e+w==
+  /react-error-boundary/3.1.0_react@17.0.1:
+    dependencies:
+      '@babel/runtime': 7.13.7
+      react: 17.0.1
+    dev: false
+    engines:
+      node: '>=10'
+      npm: '>=6'
+    peerDependencies:
+      react: '>=16.13.1'
+    resolution:
+      integrity: sha512-lmPrdi5SLRJR+AeJkqdkGlW/CRkAUvZnETahK58J4xb5wpbfDngasEGu+w0T1iXEhVrYBJZeW+c4V1hILCnMWQ==
   /react-error-overlay/6.0.8:
     resolution:
       integrity: sha512-HvPuUQnLp5H7TouGq3kzBeioJmXms1wHy9EGjz2OURWBp4qZO6AfGEcnxts1D/CbwPLRAgTMPCEgYhA3sEM4vw==
@@ -20997,6 +21016,7 @@ specifiers:
   react-dnd-html5-backend: ^11.1.3
   react-dom: ^17.0.1
   react-dropzone: ^11.2.4
+  react-error-boundary: ^3.1.0
   react-feather: ^2.0.8
   react-html-parser: ^2.0.2
   react-map-gl: ^6.1.4
