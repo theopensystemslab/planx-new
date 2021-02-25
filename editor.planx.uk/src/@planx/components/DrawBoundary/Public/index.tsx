@@ -1,20 +1,14 @@
 import "./map.css";
 
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import { makeStyles } from "@material-ui/core/styles";
 import Card from "@planx/components/shared/Preview/Card";
-import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import turfArea from "@turf/area";
 import type { Geometry } from "@turf/helpers";
-import produce from "immer";
 import { useStore } from "pages/FlowEditor/lib/store";
-import type { handleSubmit } from "pages/Preview/Node";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import type { DrawBoundary } from "../model";
 import Map from "./Map";
