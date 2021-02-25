@@ -78,73 +78,71 @@ const Result: React.FC<Props> = ({
   const theme = useTheme();
 
   return (
-    <Card
-      handleSubmit={() => handleSubmit && handleSubmit([])}
-      isValid
-      fullWidth
-    >
+    <Box width="100%" display="flex" flexDirection="column" alignItems="center">
       <ResultSummary
         subheading={subheading}
         color={headingColor}
         heading={headingTitle}
       />
-      <Box mb={2} mt={0} px={{ xs: 2, md: 5 }}>
-        <Typography variant="body2">{headingDescription}</Typography>
-        <Box mt={4} mb={3}>
-          <Typography variant="h3" gutterBottom>
-            {reasonsTitle}
-          </Typography>
-        </Box>
-        <Box mb={3}>
-          <Responses responses={visibleResponses} />
+      <Card handleSubmit={() => handleSubmit && handleSubmit([])} isValid>
+        <Box mb={2} mt={0}>
+          <Typography variant="body2">{headingDescription}</Typography>
+          <Box mt={4} mb={3}>
+            <Typography variant="h3" gutterBottom>
+              {reasonsTitle}
+            </Typography>
+          </Box>
+          <Box mb={3}>
+            <Responses responses={visibleResponses} />
 
-          {hiddenResponses.length > 0 && (
-            <SimpleExpand
-              buttonText={{
-                open: "See all responses",
-                closed: "See fewer responses",
-              }}
+            {hiddenResponses.length > 0 && (
+              <SimpleExpand
+                buttonText={{
+                  open: "See all responses",
+                  closed: "See fewer responses",
+                }}
+              >
+                <Responses responses={hiddenResponses} />
+              </SimpleExpand>
+            )}
+          </Box>
+          {disclaimer?.show && (
+            <Box
+              bgcolor="background.paper"
+              p={1.25}
+              display="flex"
+              color={theme.palette.grey[600]}
+              className={classes.disclaimer}
             >
-              <Responses responses={hiddenResponses} />
-            </SimpleExpand>
+              <Warning />
+              <Box ml={1}>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  onClick={() => setShowDisclaimer(!showDisclaimer)}
+                >
+                  <Typography variant="h6" color="inherit">
+                    {disclaimer.heading}
+                  </Typography>
+                  <Typography variant="body2" className={classes.readMore}>
+                    read {showDisclaimer ? "less" : "more"}
+                  </Typography>
+                </Box>
+                <Collapse in={showDisclaimer}>
+                  <Typography
+                    variant="body2"
+                    color="inherit"
+                    className={classes.disclaimerContent}
+                  >
+                    {disclaimer.content}
+                  </Typography>
+                </Collapse>
+              </Box>
+            </Box>
           )}
         </Box>
-        {disclaimer?.show && (
-          <Box
-            bgcolor="background.paper"
-            p={1.25}
-            display="flex"
-            color={theme.palette.grey[600]}
-            className={classes.disclaimer}
-          >
-            <Warning />
-            <Box ml={1}>
-              <Box
-                display="flex"
-                alignItems="center"
-                onClick={() => setShowDisclaimer(!showDisclaimer)}
-              >
-                <Typography variant="h6" color="inherit">
-                  {disclaimer.heading}
-                </Typography>
-                <Typography variant="body2" className={classes.readMore}>
-                  read {showDisclaimer ? "less" : "more"}
-                </Typography>
-              </Box>
-              <Collapse in={showDisclaimer}>
-                <Typography
-                  variant="body2"
-                  color="inherit"
-                  className={classes.disclaimerContent}
-                >
-                  {disclaimer.content}
-                </Typography>
-              </Collapse>
-            </Box>
-          </Box>
-        )}
-      </Box>
-    </Card>
+      </Card>
+    </Box>
   );
 };
 export default Result;
