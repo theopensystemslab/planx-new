@@ -17,6 +17,7 @@ import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import create from "zustand";
 import vanillaCreate from "zustand/vanilla";
+
 import { client } from "../../../lib/graphql";
 import type { FlowSettings } from "../../../types";
 import { FlowLayout } from "../components/Flow";
@@ -432,8 +433,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         value: [passport.info.planx_value],
       };
     }
-
-    const data = { ...(get().passport.data || {}), ...(passport.data || {}) };
 
     set({
       passport: {
