@@ -90,9 +90,26 @@ interface Store extends Record<string | number | symbol, unknown> {
     flowId: string,
     newSettings: FlowSettings
   ) => Promise<number>;
+  dfs: any;
 }
 
 export const vanillaStore = vanillaCreate<Store>((set, get) => ({
+  dfs: (start: string = ROOT_NODE_KEY) => {
+    const visited = new Set([start]);
+    const { flow } = get();
+
+    const search = (id: string) => {
+      visited.add(id);
+      flow[id].edges?.forEach((childId) => {
+        search(childId);
+      });
+    };
+
+    search(start);
+
+    return [...visited];
+  },
+
   flow: (undefined as unknown) as flow,
 
   id: (undefined as unknown) as string,
@@ -493,7 +510,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   },
 
   upcomingCardIds() {
-    const { flow, breadcrumbs, passport, collectedFlags } = get();
+    const { flow, breadcrumbs, passport, collectedFlags, dfs } = get();
 
     const ids: Set<string> = new Set();
 
@@ -636,7 +653,13 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
     nodeIdsConnectedFrom(ROOT_NODE_KEY);
 
-    return Array.from(ids);
+    const sortingArr = dfs();
+
+    return Array.from(ids).sort(
+      (a, b) => sortingArr.indexOf(a) - sortingArr.indexOf(b)
+    );
+
+    // return Array.from(ids);
   },
 
   currentCard() {
