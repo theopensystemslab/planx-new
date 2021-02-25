@@ -18,7 +18,7 @@ import type { Result } from "./model";
 
 interface FormData {
   flagSet: FlagSet;
-  overrides?: { [flagId: string]: { heading?: string; description?: string } };
+  overrides?: { [flagId: string]: FlagDisplayText };
 }
 
 interface FlagDisplayText {
@@ -40,7 +40,7 @@ const FlagEditor: React.FC<{
   const { flag, existingOverrides, onChange } = props;
   const classes = useClasses();
 
-  const [show, setShow] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const showEditedIndicator = !!existingOverrides;
 
@@ -52,13 +52,13 @@ const FlagEditor: React.FC<{
       color={flag.color}
       mt={1}
     >
-      <Box onClick={() => setShow(!show)}>
+      <Box onClick={() => setExpanded(!expanded)}>
         <Typography variant="body2">
           {flag.text}
           {showEditedIndicator && "*"}
         </Typography>
       </Box>
-      <Collapse in={show}>
+      <Collapse in={expanded}>
         <Box display="flex" mt={1}>
           <Input
             value={existingOverrides?.heading ?? ""}
@@ -96,7 +96,8 @@ const ResultComponent: React.FC<Result> = (props) => {
     validate: () => {},
   });
 
-  const allFlagsForSet: Record<string, Flag> = flags[formik.values.flagSet];
+  const allFlagsForSet: { [flagId: string]: Flag } =
+    flags[formik.values.flagSet];
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
