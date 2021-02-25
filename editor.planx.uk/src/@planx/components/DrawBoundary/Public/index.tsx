@@ -32,6 +32,8 @@ function Component(props: Props) {
   const [boundary, setBoundary] = useState<Boundary>();
   const area = boundary !== undefined ? round(turfArea(boundary)) : 0;
 
+  if (!passport?.info?.latitude || !passport?.info?.longitude) return null;
+
   return (
     <Card handleSubmit={handleSubmit} isValid={Boolean(boundary)}>
       <QuestionHeader title={props.title} description={props.description} />
