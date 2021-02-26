@@ -860,7 +860,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
           bgColor: "#EEEEEE",
           color: tinycolor("black").toHexString(),
         };
-        // globalFlag = flag.value;
 
         const responses = Object.entries(breadcrumbs)
           .map(
@@ -883,7 +882,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
               const selections = answers.map((id) => ({ id, ...flow[id] }));
               const hidden = !selections.some(
                 (r) => r.data?.flag && r.data.flag === flag?.value
-                // possibleFlags.includes(r.data.flag)
               );
 
               return {

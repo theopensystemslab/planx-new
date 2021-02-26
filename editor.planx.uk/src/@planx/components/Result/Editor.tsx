@@ -6,12 +6,12 @@ import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import flags, { FlagSet } from "pages/FlowEditor/data/flags";
 import React, { useEffect, useState } from "react";
+import { Flag } from "types";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 
-import { Flag } from "../../../types";
 import { TYPES } from "../types";
 import { ICONS } from "../ui";
 import type { Result } from "./model";
@@ -37,12 +37,12 @@ const FlagEditor: React.FC<{
   existingOverrides?: FlagDisplayText;
   onChange: (newValues: any) => any;
 }> = (props) => {
-  const { flag, existingOverrides, onChange } = props;
+  const { flag, existingOverrides } = props;
   const classes = useClasses();
 
   const [expanded, setExpanded] = useState(false);
 
-  const showEditedIndicator = !!existingOverrides;
+  const showEditedIndicator = Boolean(existingOverrides);
 
   return (
     <Box
@@ -52,7 +52,7 @@ const FlagEditor: React.FC<{
       color={flag.color}
       mt={1}
     >
-      <Box onClick={() => setExpanded(!expanded)}>
+      <Box onClick={() => setExpanded((x) => !x)}>
         <Typography variant="body2">
           {flag.text}
           {showEditedIndicator && "*"}
@@ -64,7 +64,7 @@ const FlagEditor: React.FC<{
             value={existingOverrides?.heading ?? ""}
             placeholder={"Heading"}
             onChange={(ev) =>
-              onChange({ ...existingOverrides, heading: ev.target.value })
+              props.onChange({ ...existingOverrides, heading: ev.target.value })
             }
           />
           <Box width={10} />
@@ -72,7 +72,10 @@ const FlagEditor: React.FC<{
             value={existingOverrides?.description ?? ""}
             placeholder={"Description"}
             onChange={(ev) =>
-              onChange({ ...existingOverrides, description: ev.target.value })
+              props.onChange({
+                ...existingOverrides,
+                description: ev.target.value,
+              })
             }
           />
         </Box>
@@ -139,10 +142,9 @@ const ResultComponent: React.FC<Result> = (props) => {
                       formik.values.overrides && formik.values.overrides[key]
                     }
                     onChange={(newValues: FlagDisplayText) => {
-                      const newOverride = { [key]: newValues };
                       formik.setFieldValue("overrides", {
                         ...formik.values.overrides,
-                        ...newOverride,
+                        ...{ [key]: newValues },
                       });
                     }}
                   />
