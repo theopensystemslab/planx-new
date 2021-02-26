@@ -1,6 +1,15 @@
+import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
 import Presentational from "./Public/Presentational";
+
+const metadata: Meta = {
+  title: "PlanX Components/Review",
+  component: Presentational,
+  argTypes: {
+    handleSubmit: { control: { disable: true }, action: true },
+  },
+};
 
 const passport = {
   data: {
@@ -257,7 +266,7 @@ const flow = {
   },
 };
 
-export default function Fixture() {
+export const Frontend: Story<{}> = () => {
   return (
     <Presentational
       breadcrumbs={breadcrumbs}
@@ -269,4 +278,6 @@ export default function Fixture() {
       }}
     />
   );
-}
+};
+
+export default metadata;
