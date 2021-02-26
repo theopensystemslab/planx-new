@@ -1,8 +1,0 @@
-{
-  "watchDirs": ["src"],
-  "hostname": "0.0.0.0",
-  "webpack": {
-    "configPath": "react-scripts/config/webpack.config",
-    "overridePath": "./config-overrides.js"
-  }
-}
