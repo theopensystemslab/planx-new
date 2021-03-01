@@ -1,3 +1,5 @@
+import { TYPES } from "@planx/components/types";
+
 import { vanillaStore } from "../store";
 
 const { getState, setState } = vanillaStore;
@@ -7,7 +9,7 @@ const flow = {
     edges: ["P36QH99kvZ", "uYvBtZO8AN"],
   },
   uYvBtZO8AN: {
-    type: 105,
+    type: TYPES.Checklist,
     data: {
       allRequired: false,
       text: "shopping trolley 2",
@@ -20,7 +22,7 @@ const flow = {
       text: "apple",
       val: "food.fruit.apple",
     },
-    type: 200,
+    type: TYPES.Response,
     edges: ["J1u7Gpf8S1", "vR40DW4oAn", "mNzbrbhCsT"],
   },
   "9wMrjIHzW4": {
@@ -28,10 +30,10 @@ const flow = {
       text: "banana",
       val: "food.fruit.banana",
     },
-    type: 200,
+    type: TYPES.Response,
   },
   vR40DW4oAn: {
-    type: 100,
+    type: TYPES.Statement,
     data: {
       text: "did you choose the banana?",
       fn: "item",
@@ -39,59 +41,59 @@ const flow = {
     edges: ["y9sfwmwRG3", "ojPenHnK0K"],
   },
   y9sfwmwRG3: {
-    type: 200,
+    type: TYPES.Response,
     data: {
       text: "yes",
       val: "food.fruit.banana",
     },
   },
   ojPenHnK0K: {
-    type: 200,
+    type: TYPES.Response,
     data: {
       text: "no",
     },
     edges: ["bpbEbD6fHo"],
   },
   mNzbrbhCsT: {
-    type: 250,
+    type: TYPES.Content,
     data: {
       content: "<p>last thing</p>\n",
     },
   },
   bpbEbD6fHo: {
-    type: 100,
+    type: TYPES.Statement,
     data: {
       text: "will you be eating the banana today?",
     },
     edges: ["jUDIdyRnl3", "gDIoLjLoFW"],
   },
   jUDIdyRnl3: {
-    type: 200,
+    type: TYPES.Response,
     data: {
       text: "yes",
     },
   },
   gDIoLjLoFW: {
-    type: 200,
+    type: TYPES.Response,
     data: {
       text: "no",
     },
   },
   J1u7Gpf8S1: {
-    type: 100,
+    type: TYPES.Statement,
     data: {
       text: "you chose apple",
     },
     edges: ["ij94v25xVZ"],
   },
   ij94v25xVZ: {
-    type: 200,
+    type: TYPES.Response,
     data: {
       text: "i did",
     },
   },
   P36QH99kvZ: {
-    type: 100,
+    type: TYPES.Statement,
     data: {
       fn: "item",
       text: "shopping trolley 1",
@@ -99,22 +101,20 @@ const flow = {
     edges: ["TMRY4IGTwG", "3dCm8g4wBY"],
   },
   TMRY4IGTwG: {
-    type: 200,
+    type: TYPES.Response,
     data: {
       text: "apple",
       val: "food.fruit.apple",
     },
   },
   "3dCm8g4wBY": {
-    type: 200,
+    type: TYPES.Response,
     data: {
       text: "banana",
       val: "food.fruit.banana",
     },
   },
 };
-
-// fs.writeFileSync("out.dot", toDot(flow));
 
 beforeEach(() => {
   getState().resetPreview();
@@ -125,9 +125,6 @@ test.only("order", () => {
     flow,
   });
 
-  // console.log(getState().dfs());
-
-  // getState().record("Imks7j68BD", ["EqfqaqZ6CH", "7tV1uvR9ng"]);
   getState().upcomingCardIds();
   expect(getState().upcomingCardIds()).toEqual(["P36QH99kvZ", "uYvBtZO8AN"]);
   getState().record("P36QH99kvZ", ["TMRY4IGTwG"]);
