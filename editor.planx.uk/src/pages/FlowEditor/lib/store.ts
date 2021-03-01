@@ -563,13 +563,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                     .filter((response) => response.data?.val)
                 : [];
 
-              // console.log({
-              //   passportValues,
-              //   fn,
-              //   responsesThatCanBeAutoAnswered,
-              //   sortedResponses,
-              // });
-
               if (passportValues !== undefined) {
                 if (!Array.isArray(passportValues))
                   passportValues = [passportValues];
@@ -658,8 +651,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     return Array.from(ids).sort(
       (a, b) => sortingArr.indexOf(a) - sortingArr.indexOf(b)
     );
-
-    // return Array.from(ids);
   },
 
   currentCard() {
@@ -773,7 +764,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                 .filter(Boolean);
 
               if (value) {
-                // console.log({ questionId, answers, fn, vals });
                 data[fn] = { value };
               }
             }
@@ -782,12 +772,6 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         },
         {}
       );
-
-      // console.log(
-      //   JSON.stringify({ data, initial: passport.initialData }, null, 2)
-      // );
-
-      // console.log(data);
 
       set({
         breadcrumbs: newBreadcrumbs,
