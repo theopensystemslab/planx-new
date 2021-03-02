@@ -12,13 +12,22 @@ import Portal from "./Portal";
 import Question from "./Question";
 
 const Node: React.FC<any> = (props) => {
-  const node = useStore((state) => state.flow[props.id]);
+  const [node, wasVisited] = useStore((state) => [
+    state.flow[props.id],
+    state.wasVisited(props.id),
+  ]);
+
+  const allProps = {
+    ...props,
+    wasVisited,
+  };
+
   const type = props.type as TYPES;
   switch (type) {
     case TYPES.Content:
       return (
         <Question
-          {...props}
+          {...allProps}
           // TODO: we can probably render HTML here instead. TBD...
           text={stripTagsAndLimitLength(node?.data?.content, "Content", 100)}
         />
@@ -30,57 +39,69 @@ const Node: React.FC<any> = (props) => {
         <Question {...props} text={node?.data?.title ?? "Draw boundary"} />
       );
     case TYPES.ExternalPortal:
-      return <Portal {...props} />;
+      return <Portal {...allProps} />;
     case TYPES.InternalPortal:
-      return props.href ? <Breadcrumb {...props} /> : <Portal {...props} />;
+      return props.href ? (
+        <Breadcrumb {...allProps} />
+      ) : (
+        <Portal {...allProps} />
+      );
     case TYPES.FileUpload:
-      return <Question {...props} text={node?.data?.title ?? "File upload"} />;
+      return (
+        <Question {...allProps} text={node?.data?.title ?? "File upload"} />
+      );
     case TYPES.Filter:
-      return <Filter {...props} text="(Flags Filter)" />;
+      return <Filter {...allProps} text="(Flags Filter)" />;
     case TYPES.FindProperty:
-      return <Question {...props} text="Find property" />;
+      return <Question {...allProps} text="Find property" />;
     case TYPES.Notice:
-      return <Question {...props} text={node?.data?.title ?? "Notice"} />;
+      return <Question {...allProps} text={node?.data?.title ?? "Notice"} />;
     case TYPES.Notify:
-      return <Question {...props} text="Notify" />;
+      return <Question {...allProps} text="Notify" />;
     case TYPES.NumberInput:
-      return <Question {...props} text={node?.data?.title ?? "Number"} />;
+      return <Question {...allProps} text={node?.data?.title ?? "Number"} />;
     case TYPES.Page:
-      return <Page {...props} text={node?.data?.title ?? "Page"} />;
+      return <Page {...allProps} text={node?.data?.title ?? "Page"} />;
     case TYPES.Pay:
-      return <Question {...props} text={node?.data?.title ?? "Pay"} />;
+      return <Question {...allProps} text={node?.data?.title ?? "Pay"} />;
     case TYPES.Result:
       return (
         <Question
-          {...props}
+          {...allProps}
           text={[node?.data?.flagSet ?? "Result"].join("")}
         />
       );
     case TYPES.Review:
-      return <Question {...props} text={node?.data?.title ?? "Review"} />;
+      return <Question {...allProps} text={node?.data?.title ?? "Review"} />;
     case TYPES.Send:
-      return <Question {...props} text="Send" />;
+      return <Question {...allProps} text="Send" />;
     case TYPES.TaskList:
       return (
         <Question
-          {...props}
+          {...allProps}
           text={`${node?.data?.title ?? "Tasks"} (${
             node.data?.tasks?.length || 0
           })`}
         />
       );
     case TYPES.TextInput:
-      return <Question {...props} text={node?.data?.title ?? "Text input"} />;
+      return (
+        <Question {...allProps} text={node?.data?.title ?? "Text input"} />
+      );
 
     case TYPES.Response:
-      return <Option {...props} />;
+      return <Option {...allProps} />;
     case TYPES.Statement:
     case TYPES.Checklist:
       return (
-        <Checklist {...props} {...node} text={node?.data?.text ?? "[Empty]"} />
+        <Checklist
+          {...allProps}
+          {...node}
+          text={node?.data?.text ?? "[Empty]"}
+        />
       );
     case TYPES.AddressInput:
-      return <Question {...props} text={node?.data?.title ?? "Address"} />;
+      return <Question {...allProps} text={node?.data?.title ?? "Address"} />;
     case TYPES.Flow:
     case TYPES.Report:
     case TYPES.SignIn:
