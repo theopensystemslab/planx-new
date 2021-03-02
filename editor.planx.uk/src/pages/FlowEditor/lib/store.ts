@@ -271,7 +271,8 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     return data;
   },
 
-  createFlow: async (teamId: any, newName: any, data = {}): Promise<string> => {
+  createFlow: async (teamId: any, newName: any): Promise<string> => {
+    const data = { [ROOT_NODE_KEY]: { edges: [] } };
     let response = (await client.mutate({
       mutation: gql`
         mutation CreateFlow(
