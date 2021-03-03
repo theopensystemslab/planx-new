@@ -77,7 +77,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
             />
           </InputRow>
           <InputRow>
-            <RichTextInput
+            <Input
               placeholder="Placeholder"
               name="placeholder"
               value={formik.values.placeholder}
