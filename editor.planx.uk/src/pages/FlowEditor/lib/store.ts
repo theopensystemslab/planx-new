@@ -11,9 +11,8 @@ import {
   ROOT_NODE_KEY,
   update,
 } from "@planx/graph";
+import produce from "immer";
 import debounce from "lodash/debounce";
-import difference from "lodash/difference";
-import omit from "lodash/omit";
 import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import create from "zustand";
@@ -43,6 +42,7 @@ export type nodeId = string;
 export type node = { id?: nodeId; type?: TYPES; data?: any; edges?: nodeId[] };
 export type flow = Record<string, node>;
 export interface passport {
+  initialData?: any;
   data?: any;
   info?: any;
 }
@@ -68,6 +68,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   showPreview: boolean;
   togglePreview: () => void;
   updateNode: any; //: () => void;
+  wasVisited: (id: string) => boolean;
   // preview
   breadcrumbs: breadcrumbs;
   currentCard: () => Record<string, any> | null;
@@ -84,6 +85,7 @@ interface Store extends Record<string | number | symbol, unknown> {
     };
   };
   resetPreview: any; //: () => void;
+  mutatePassport: (mutation: (passport: passport) => void) => void;
   sessionId: any; //: string;
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
@@ -188,6 +190,17 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     send(ops);
   },
 
+  wasVisited(id) {
+    const visited = Object.entries(get().breadcrumbs).reduce(
+      (acc: Array<string>, [k, v]) => {
+        acc.push(k);
+        return acc.concat(v.answers || []);
+      },
+      []
+    );
+    return visited.includes(id);
+  },
+
   makeUnique: (id: any, parent = undefined) => {
     const [, ops] = makeUnique(id, parent)(get().flow);
     send(ops);
@@ -267,7 +280,8 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     return data;
   },
 
-  createFlow: async (teamId: any, newName: any, data = {}): Promise<string> => {
+  createFlow: async (teamId: any, newName: any): Promise<string> => {
+    const data = { [ROOT_NODE_KEY]: { edges: [] } };
     let response = (await client.mutate({
       mutation: gql`
         mutation CreateFlow(
@@ -356,6 +370,12 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   sessionId: "",
 
   breadcrumbs: {},
+
+  mutatePassport(mutation) {
+    set({
+      passport: produce(get().passport, mutation),
+    });
+  },
 
   async startSession({
     passport,
@@ -601,6 +621,8 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
                 responsesThatCanBeAutoAnswered.forEach((r) =>
                   nodeIdsConnectedFrom(r.id)
                 );
+              } else {
+                ids.add(id);
               }
             } else {
               ids.add(id);
@@ -617,7 +639,29 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
     nodeIdsConnectedFrom(ROOT_NODE_KEY);
 
-    return Array.from(ids);
+    // TODO:  remove nodeIdsConnectedFrom above and merge this
+    //        logic into a single crawling function
+    const dfs = (start: string) => {
+      const visited = new Set([start]);
+
+      const crawlFrom = (id: string) => {
+        visited.add(id);
+        flow[id].edges?.forEach((childId) => {
+          crawlFrom(childId);
+        });
+      };
+
+      crawlFrom(start);
+
+      return [...visited];
+    };
+
+    const sortingArr = dfs(ROOT_NODE_KEY);
+
+    // sort the collected ids in depth-first search order
+    return Array.from(ids).sort(
+      (a, b) => sortingArr.indexOf(a) - sortingArr.indexOf(b)
+    );
   },
 
   currentCard() {
@@ -645,9 +689,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
       const key = flow[id].data?.fn;
       if (key) {
-        let passportValue;
-
-        passportValue = vals.map((id: string) => flow[id]?.data?.val);
+        let passportValue = vals.map((id: string) => flow[id]?.data?.val);
 
         passportValue = passportValue.filter(
           (val: any) =>
@@ -656,9 +698,16 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
 
         if (passportValue.length > 0) {
           if (passport.data[key] && Array.isArray(passport.data[key].value)) {
-            passportValue = uniq(
+            const allValues = uniq(
               passport.data[key].value.concat(passportValue)
-            );
+            ).sort() as Array<string>;
+
+            passportValue = allValues.reduce((acc: Array<string>, curr) => {
+              if (allValues.some((x) => !x.startsWith(curr))) {
+                acc.push(curr);
+              }
+              return acc;
+            }, []);
           }
 
           set({
@@ -705,17 +754,30 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     } else {
       // remove breadcrumbs that were stored from id onwards
       let keepBreadcrumb = true;
-      const fns: Array<any> = [];
-      const newFns: Array<any> = [];
+
+      const data: Record<string, { value: Array<string> }> = {
+        ...(passport.initialData || {}),
+      };
+
       const newBreadcrumbs = Object.entries(breadcrumbs).reduce(
-        (acc: Record<string, any>, [k, v]) => {
-          const fn = flow[k]?.data?.fn;
-          if (fn) fns.push(fn);
-          if (k === id) {
+        (acc: Record<string, any>, [questionId, v]) => {
+          if (questionId === id) {
             keepBreadcrumb = false;
           } else if (keepBreadcrumb) {
-            if (fn) newFns.push(fn);
-            acc[k] = v;
+            acc[questionId] = v;
+
+            const fn = flow[questionId]?.data?.fn;
+            if (fn) {
+              const { answers = [] } = v;
+
+              const value = answers
+                .map((aId: string) => flow[aId]?.data?.val)
+                .filter(Boolean);
+
+              if (value) {
+                data[fn] = { value };
+              }
+            }
           }
           return acc;
         },
@@ -726,7 +788,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
         breadcrumbs: newBreadcrumbs,
         passport: {
           ...passport,
-          data: omit(passport.data, ...difference(fns, newFns)),
+          data,
         },
       });
     }

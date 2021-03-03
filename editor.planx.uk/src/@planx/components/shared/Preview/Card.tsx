@@ -7,7 +7,6 @@ import React from "react";
 interface Props {
   children: React.ReactNode;
   isValid?: boolean;
-  fullWidth?: boolean;
   handleSubmit?: () => any;
 }
 
@@ -24,12 +23,10 @@ const useStyles = makeStyles<Theme>(() => ({
  * @param {object} props Component props
  * @param {bool} props.handleSubmit if included then show the Continue button
  * @param {bool} props.isValid if falsey then disable Continue button, otherwise enable
- * @param {bool} props.fullWidth if truthy then do not add padding to children
  */
 const Card: React.FC<Props> = ({
   children,
   isValid = true,
-  fullWidth = false,
   handleSubmit,
   ...props
 }) => {
@@ -42,7 +39,7 @@ const Card: React.FC<Props> = ({
         className={classes.container}
         bgcolor="background.default"
         py={{ xs: 2, md: 4 }}
-        px={fullWidth ? 0 : { xs: 2, md: 5 }}
+        px={{ xs: 2, md: 5 }}
         mb={4}
         width="100%"
         maxWidth={768}
@@ -51,18 +48,16 @@ const Card: React.FC<Props> = ({
         {children}
 
         {handleSubmit && (
-          <Box px={fullWidth ? { xs: 2, md: 5 } : 0}>
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              type="submit"
-              disabled={!isValid}
-              onClick={async () => await handleSubmit()}
-            >
-              Continue
-            </Button>
-          </Box>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            type="submit"
+            disabled={!isValid}
+            onClick={async () => await handleSubmit()}
+          >
+            Continue
+          </Button>
         )}
       </Box>
     </Fade>

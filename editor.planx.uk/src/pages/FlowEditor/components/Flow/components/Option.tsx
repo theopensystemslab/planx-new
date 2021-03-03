@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import React from "react";
 import { Link } from "react-navi";
 
@@ -22,7 +23,9 @@ const Option: React.FC<any> = (props) => {
   } catch (e) {}
 
   return (
-    <li className="card option">
+    <li
+      className={classNames("card", "option", { wasVisited: props.wasVisited })}
+    >
       <Link
         href={href}
         prefetch={false}

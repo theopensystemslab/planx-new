@@ -29,7 +29,6 @@ const useClasses = makeStyles((theme: Theme) => ({
     },
     "& p": {
       color: theme.palette.text.secondary,
-      margin: 0,
     },
   },
   responseText: {
@@ -54,7 +53,7 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
       flexDirection="column"
       mb={0.5}
       px={1.5}
-      py={{ xs: 2, md: 0.5 }}
+      py={{ xs: 1, md: 0.5 }}
       className={classes.root}
     >
       <Box
@@ -89,8 +88,8 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
       {hasMoreInfo && (
         <Collapse in={showMoreInfo}>
           <Box
-            pt={2}
-            pb={4}
+            pt={{ xs: 1, md: 2 }}
+            pb={{ xs: 1, md: 4 }}
             color="background.dark"
             className={classes.moreInfo}
           >

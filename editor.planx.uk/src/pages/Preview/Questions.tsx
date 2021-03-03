@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { componentOutput, useStore } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
@@ -31,14 +32,18 @@ const Questions = () => {
       </span>
 
       {node && (
-        <Node
-          node={node}
-          key={node.id}
-          handleSubmit={(values: componentOutput) => {
-            record(node.id, values);
-          }}
-          settings={flow?.settings}
-        />
+        <ErrorBoundary
+          FallbackComponent={({ error }) => <pre>{error.stack}</pre>}
+        >
+          <Node
+            node={node}
+            key={node.id}
+            handleSubmit={(values: componentOutput) => {
+              record(node.id, values);
+            }}
+            settings={flow?.settings}
+          />
+        </ErrorBoundary>
       )}
     </>
   );

@@ -7,6 +7,7 @@ export const SLUGS: {
   [TYPES.Checklist]: "checklist",
   [TYPES.Content]: "content",
   [TYPES.DateInput]: "date-input",
+  [TYPES.DrawBoundary]: "draw-boundary",
   [TYPES.ExternalPortal]: "external-portal",
   [TYPES.FileUpload]: "file-upload",
   [TYPES.Filter]: "filter",

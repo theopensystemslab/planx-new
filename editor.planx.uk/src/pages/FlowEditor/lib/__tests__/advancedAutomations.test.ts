@@ -1,3 +1,8 @@
+import { TYPES } from "@planx/components/types";
+
+import { vanillaStore } from "../store";
+const { getState, setState } = vanillaStore;
+
 const flow = {
   _root: {
     edges: [
@@ -13,14 +18,14 @@ const flow = {
       val: "food.bread",
       text: "bread",
     },
-    type: 200,
+    type: TYPES.Response,
   },
   "0vojjvJ6rP": {
     data: {
       val: "food",
       text: "food",
     },
-    type: 200,
+    type: TYPES.Response,
     edges: ["mOPogpQa7V"],
   },
   "2PT6bTPTqj": {
@@ -28,7 +33,7 @@ const flow = {
       fn: "item",
       text: "contains",
     },
-    type: 100,
+    type: TYPES.Statement,
     edges: ["oB2vfxQs4D", "ykhO0drpaY", "U9S73zxy9n", "LwozLZdXCA"],
   },
   "3H2bGdzpIN": {
@@ -36,7 +41,7 @@ const flow = {
       fn: "item",
       text: "Does the basket contain apples?",
     },
-    type: 100,
+    type: TYPES.Statement,
     edges: ["BJpKurp49I", "hKebzlFQDa"],
   },
   "4JPWSgnGtI": {
@@ -44,7 +49,7 @@ const flow = {
       val: "tool",
       text: "tools",
     },
-    type: 200,
+    type: TYPES.Response,
     edges: ["KcLGMm3UWw"],
   },
   "52ZNXBMLDP": {
@@ -53,7 +58,7 @@ const flow = {
       title: "?, so must be a 🍌 or 🔧",
       resetButton: false,
     },
-    type: 8,
+    type: TYPES.Notice,
   },
   "6RR1J1lmrM": {
     data: {
@@ -61,21 +66,21 @@ const flow = {
       title: "🍏",
       resetButton: false,
     },
-    type: 8,
+    type: TYPES.Notice,
   },
   "7tV1uvR9ng": {
     data: {
       val: "tool.spanner",
       text: "spanner",
     },
-    type: 200,
+    type: TYPES.Response,
   },
   AFX3QwbOCd: {
     data: {
       fn: "item",
       text: "Which does the basket contain?",
     },
-    type: 100,
+    type: TYPES.Statement,
     edges: ["4JPWSgnGtI", "0vojjvJ6rP"],
   },
   BJpKurp49I: {
@@ -83,29 +88,29 @@ const flow = {
       val: "food.fruit.apple",
       text: "Yes",
     },
-    type: 200,
+    type: TYPES.Response,
   },
   BloOMLvLJK: {
     data: {
       val: "food.fruit.banana",
       text: "banana",
     },
-    type: 200,
+    type: TYPES.Response,
   },
   EqfqaqZ6CH: {
     data: {
       val: "food.fruit.apple",
       text: "apple",
     },
-    type: 200,
+    type: TYPES.Response,
   },
   HV0gV8DOil: {
     data: {
       fn: "item",
-      text: "shopping trolley",
+      text: "shopping trolley (should be skipped)",
       allRequired: false,
     },
-    type: 105,
+    type: TYPES.Checklist,
     edges: ["lTosE7Xo1j", "BloOMLvLJK", "0LzMSk4JTO", "OvNhSiRfdL"],
   },
   I8DznYCKVg: {
@@ -113,7 +118,7 @@ const flow = {
       val: "food.fruit.banana",
       text: "banana",
     },
-    type: 200,
+    type: TYPES.Response,
   },
   Imks7j68BD: {
     data: {
@@ -121,7 +126,7 @@ const flow = {
       text: "shopping trolley",
       allRequired: false,
     },
-    type: 105,
+    type: TYPES.Checklist,
     edges: ["EqfqaqZ6CH", "I8DznYCKVg", "pXFKKRG6lE", "7tV1uvR9ng"],
   },
   KcLGMm3UWw: {
@@ -130,13 +135,13 @@ const flow = {
       title: "🔧",
       resetButton: false,
     },
-    type: 8,
+    type: TYPES.Notice,
   },
   LwozLZdXCA: {
     data: {
       text: "neither apples nor bread",
     },
-    type: 200,
+    type: TYPES.Response,
     edges: ["52ZNXBMLDP"],
   },
   OvNhSiRfdL: {
@@ -144,14 +149,14 @@ const flow = {
       val: "tool.spanner",
       text: "spanner",
     },
-    type: 200,
+    type: TYPES.Response,
   },
   U9S73zxy9n: {
     data: {
       val: "food.fruit.apple,food.bread",
       text: "apples and bread",
     },
-    type: 200,
+    type: TYPES.Response,
     edges: ["t3SCqQKeUK"],
   },
   g0IAKsBVPQ: {
@@ -160,20 +165,20 @@ const flow = {
       title: "🥖",
       resetButton: false,
     },
-    type: 8,
+    type: TYPES.Notice,
   },
   hKebzlFQDa: {
     data: {
       text: "No",
     },
-    type: 200,
+    type: TYPES.Response,
   },
   lTosE7Xo1j: {
     data: {
       val: "food.fruit.apple",
       text: "apple",
     },
-    type: 200,
+    type: TYPES.Response,
   },
   mOPogpQa7V: {
     data: {
@@ -181,14 +186,14 @@ const flow = {
       title: "🍌🍏🥖",
       resetButton: false,
     },
-    type: 8,
+    type: TYPES.Notice,
   },
   oB2vfxQs4D: {
     data: {
       val: "food.fruit.apple",
       text: "apples",
     },
-    type: 200,
+    type: TYPES.Response,
     edges: ["6RR1J1lmrM"],
   },
   pXFKKRG6lE: {
@@ -196,7 +201,7 @@ const flow = {
       val: "food.bread",
       text: "bread",
     },
-    type: 200,
+    type: TYPES.Response,
   },
   t3SCqQKeUK: {
     data: {
@@ -204,21 +209,17 @@ const flow = {
       title: "🍏🥖",
       resetButton: false,
     },
-    type: 8,
+    type: TYPES.Notice,
   },
   ykhO0drpaY: {
     data: {
       val: "food.bread",
       text: "bread",
     },
-    type: 200,
+    type: TYPES.Response,
     edges: ["g0IAKsBVPQ"],
   },
 };
-
-import { vanillaStore } from "../store";
-
-const { getState, setState } = vanillaStore;
 
 beforeEach(() => {
   getState().resetPreview();

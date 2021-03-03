@@ -13,6 +13,7 @@ import Node from "./Node";
 type Props = {
   type: TYPES;
   [key: string]: any;
+  wasVisited?: boolean;
 };
 
 const Question: React.FC<Props> = React.memo((props) => {
@@ -57,6 +58,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           isDragging,
           isClone: isClone(props.id),
           isNote: childNodes.length === 0,
+          wasVisited: props.wasVisited,
         })}
       >
         <Link

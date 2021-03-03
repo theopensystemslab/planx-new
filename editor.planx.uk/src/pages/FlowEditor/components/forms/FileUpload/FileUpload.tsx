@@ -1,6 +1,5 @@
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
-import { InternalNotes, MoreInformation } from "@planx/components/ui";
+import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
@@ -23,14 +22,15 @@ function Component(props: any) {
   }>({
     initialValues: {
       // TODO: improve runtime validation here (joi, io-ts)
-      title: props.node?.data?.title || "",
-      description: props.node?.data?.description || "",
       color: props.node?.data?.color || "#EFEFEF",
-      notes: props.node?.data?.notes || "",
       definitionImg: props.node?.data?.definitionImg,
+      description: props.node?.data?.description || "",
+      fn: props.node?.data?.fn || "",
       howMeasured: props.node?.data?.howMeasured,
-      policyRef: props.node?.data?.policyRef,
       info: props.node?.data?.info,
+      notes: props.node?.data?.notes || "",
+      policyRef: props.node?.data?.policyRef,
+      title: props.node?.data?.title || "",
     },
     onSubmit: (newValues) => {
       if (props.handleSubmit) {

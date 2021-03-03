@@ -75,17 +75,13 @@ const Result: React.FC<Props> = ({
   const theme = useTheme();
 
   return (
-    <Card
-      handleSubmit={() => handleSubmit && handleSubmit([])}
-      isValid
-      fullWidth
-    >
+    <Box width="100%" display="flex" flexDirection="column" alignItems="center">
       <ResultSummary
         heading={headingTitle}
         description={description}
         color={headingColor}
       />
-      <Box mb={2} mt={0} px={{ xs: 2, md: 5 }}>
+      <Card handleSubmit={() => handleSubmit && handleSubmit([])} isValid>
         <Box mt={4} mb={3}>
           <Typography variant="h3" gutterBottom>
             {reasonsTitle}
@@ -139,8 +135,8 @@ const Result: React.FC<Props> = ({
             </Box>
           </Box>
         )}
-      </Box>
-    </Card>
+      </Card>
+    </Box>
   );
 };
 export default Result;

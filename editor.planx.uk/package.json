@@ -49,9 +49,11 @@
     "react-dnd-html5-backend": "^11.1.3",
     "react-dom": "^17.0.1",
     "react-dropzone": "^11.2.4",
+    "react-error-boundary": "^3.1.0",
     "react-feather": "^2.0.8",
     "react-html-parser": "^2.0.2",
     "react-map-gl": "^6.1.4",
+    "react-map-gl-draw": "^0.22.2",
     "react-markdown": "^4.3.1",
     "react-navi": "^0.14.4",
     "react-navi-helmet-async": "^0.14.4",
@@ -79,6 +81,7 @@
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.2",
     "@testing-library/user-event": "^12.2.2",
+    "@turf/helpers": "^6.3.0",
     "@types/draft-js": "^0.10.44",
     "@types/highlight-words-core": "^1.2.0",
     "@types/jest": "^26.0.15",
@@ -90,8 +93,10 @@
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-color": "^3.0.4",
     "@types/react-dom": "^17.0.0",
-    "craco-esbuild": "^0.2.0",
+    "craco-esbuild": "^0.2.1",
     "css-loader": "^5.0.1",
+    "esbuild": "^0.8.54",
+    "esbuild-jest": "^0.5.0",
     "eslint-plugin-simple-import-sort": "^5.0.3",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.1",
@@ -99,7 +104,6 @@
     "node-sass": "^4.14.1",
     "prettier": "^2.1.2",
     "react-app-rewired": "^2.1.8",
-    "react-cosmos": "^5.5.1",
     "react-refresh": "^0.9.0",
     "sass-loader": "^10.1.1",
     "storybook-addon-material-ui": "^0.9.0-alpha.21",
@@ -110,12 +114,11 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "classic:start": "react-app-rewired start",
     "classic:build": "react-scripts build",
     "classic:test": "react-scripts test",
-    "cosmos": "FAST_REFRESH=false cosmos",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix"
@@ -125,6 +128,11 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "esbuild-jest"
+    }
   },
   "browserslist": {
     "production": [
