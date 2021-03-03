@@ -1,18 +1,63 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { componentOutput, useStore } from "../FlowEditor/lib/store";
+import {
+  componentOutput,
+  useStore,
+  vanillaStore,
+} from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
 import Node from "./Node";
 
 const Questions = () => {
-  const [currentCard, previousCard, record] = useStore((state) => [
+  const [
+    currentCard,
+    previousCard,
+    record,
+    breadcrumbs,
+    passport,
+    sessionId,
+    id,
+  ] = useStore((state) => [
     state.currentCard,
     state.previousCard(),
     state.record,
+    state.breadcrumbs,
+    state.passport,
+    state.sessionId,
+    state.id,
   ]);
+
   const node = currentCard();
   const flow = useContext(PreviewContext);
+
+  useEffect(() => {
+    try {
+      const state = JSON.parse(localStorage.getItem(`flow:${id}`) || "");
+      if (
+        state &&
+        window.confirm("Would you like to resume the last session?")
+      ) {
+        vanillaStore.setState(state);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (id) {
+      localStorage.setItem(
+        `flow:${id}`,
+        JSON.stringify({
+          breadcrumbs,
+          passport,
+          sessionId,
+          id,
+        })
+      );
+    }
+  }, [breadcrumbs, passport, sessionId, id]);
 
   return (
     <>
