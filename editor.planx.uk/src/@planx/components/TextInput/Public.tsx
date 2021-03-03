@@ -5,7 +5,6 @@ import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
-import RichTextInput from "ui/RichTextInput";
 import { object } from "yup";
 
 import type { TextInput, UserData } from "./model";
@@ -38,26 +37,16 @@ const TextInputComponent: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
       />
       <InputRow>
-        {props.type === "long" ? (
-          <RichTextInput
-            name="text"
-            value={formik.values.text}
-            placeholder={props.placeholder || "Type your answer"}
-            bordered
-            onChange={formik.handleChange}
-            errorMessage={formik.errors.text}
-          />
-        ) : (
-          <Input
-            name="text"
-            type={props.type === "email" ? "email" : "text"}
-            value={formik.values.text}
-            placeholder={props.placeholder || "Type your answer"}
-            bordered
-            onChange={formik.handleChange}
-            errorMessage={formik.errors.text}
-          />
-        )}
+        <Input
+          type={props.type === "email" ? "email" : "text"}
+          multiline={props.type === "long"}
+          name="text"
+          value={formik.values.text}
+          placeholder={props.placeholder || "Type your answer"}
+          bordered
+          onChange={formik.handleChange}
+          errorMessage={formik.errors.text}
+        />
       </InputRow>
     </Card>
   );
