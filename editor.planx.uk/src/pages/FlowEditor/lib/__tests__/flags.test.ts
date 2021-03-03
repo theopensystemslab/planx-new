@@ -188,6 +188,7 @@ describe("changing flag inside flag filter doesn't affect the filter's behaviour
 });
 
 describe("displaying flags as result", () => {
+  beforeEach(() => getState().resetPreview());
   it("returns a reasonable default state", () => {
     const defaultState = {
       "Planning permission": {
