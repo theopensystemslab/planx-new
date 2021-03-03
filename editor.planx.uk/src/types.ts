@@ -47,10 +47,18 @@ export interface DesignSettings {
 
 export interface Flag {
   category: string;
-  value: string;
+  value?: string;
   text: string;
-  // TODO: rename text -> title, bring in a subtitle
-  // subtitle?: string;
   bgColor: string;
   color: string;
+}
+
+export interface Node {
+  id: string;
+  data: {
+    text: string;
+    flag?: string;
+    info?: string;
+    policyRef?: string;
+  };
 }

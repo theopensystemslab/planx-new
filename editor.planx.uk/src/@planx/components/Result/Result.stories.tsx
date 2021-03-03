@@ -18,8 +18,7 @@ Frontend.args = {
     text: "#000",
   },
   headingTitle: "Heading",
-  subheading: "Subheading",
-  headingDescription: "Further description",
+  description: "Description",
   reasonsTitle: "Reasons",
   responses: [
     {

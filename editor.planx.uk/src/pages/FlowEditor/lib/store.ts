@@ -19,7 +19,7 @@ import create from "zustand";
 import vanillaCreate from "zustand/vanilla";
 
 import { client } from "../../../lib/graphql";
-import type { FlowSettings } from "../../../types";
+import type { Flag, FlowSettings } from "../../../types";
 import { FlowLayout } from "../components/Flow";
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../data/flags";
 import { connectToDB, getConnection } from "./sharedb";
@@ -74,7 +74,16 @@ interface Store extends Record<string | number | symbol, unknown> {
   currentCard: () => Record<string, any> | null;
   passport: passport;
   record: any; //: () => void;
-  reportData: any; //: () => any;
+  resultData: (
+    flagSet?: string,
+    overrides?: { [flagId: string]: { heading?: string; description?: string } }
+  ) => {
+    [category: string]: {
+      flag: Flag;
+      responses: any[];
+      displayText: { heading: string; description: string };
+    };
+  };
   resetPreview: any; //: () => void;
   mutatePassport: (mutation: (passport: passport) => void) => void;
   sessionId: any; //: string;
@@ -841,6 +850,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   collectedFlags(upToNodeId, visited = []) {
     const { breadcrumbs, flow } = get();
 
+    // TODO: Should this be all flags?
     const possibleFlags = flatFlags.filter(
       (f) => f.category === DEFAULT_FLAG_CATEGORY
     );
@@ -871,73 +881,99 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     return res;
   },
 
-  reportData(flagSet = DEFAULT_FLAG_CATEGORY) {
+  resultData(flagSet = DEFAULT_FLAG_CATEGORY, overrides) {
     const { breadcrumbs, flow } = get();
 
     const categories = [flagSet];
 
-    return categories.reduce((acc: any, category: any) => {
-      const possibleFlags = flatFlags.filter((f) => f.category === category);
-      const keys = possibleFlags.map((f) => f.value);
-      const collectedFlags = Object.values(breadcrumbs).flatMap(({ answers }) =>
-        Array.isArray(answers)
-          ? answers.map((id) => flow[id]?.data?.flag)
-          : flow[answers]?.data?.flag
-      );
+    return categories.reduce(
+      (
+        acc: {
+          [category: string]: {
+            flag: Flag;
+            responses: any[];
+            displayText: { heading: string; description: string };
+          };
+        },
+        category: string
+      ) => {
+        // TODO: DRY this up with preceding collectedFlags function?
+        const possibleFlags = flatFlags.filter((f) => f.category === category);
+        const keys = possibleFlags.map((f) => f.value);
+        const collectedFlags = Object.values(
+          breadcrumbs
+        ).flatMap(({ answers }) =>
+          Array.isArray(answers)
+            ? answers.map((id) => flow[id]?.data?.flag)
+            : flow[answers]?.data?.flag
+        );
 
-      const filteredCollectedFlags = collectedFlags
-        .filter((flag) => flag && keys.includes(flag))
-        .sort((a, b) => keys.indexOf(a) - keys.indexOf(b));
+        const filteredCollectedFlags = collectedFlags
+          .filter((flag) => flag && keys.includes(flag))
+          .sort((a, b) => keys.indexOf(a) - keys.indexOf(b));
 
-      const flag = possibleFlags.find(
-        (f) => f.value === filteredCollectedFlags[0]
-      ) || {
-        // value: "PP-NO_RESULT",
-        value: undefined,
-        text: "No result",
-        category,
-        bgColor: "#EEEEEE",
-        color: tinycolor("black").toHexString(),
-      };
+        const flag = possibleFlags.find(
+          (f) => f.value === filteredCollectedFlags[0]
+        ) || {
+          // value: "PP-NO_RESULT",
+          value: undefined,
+          text: "No result",
+          category,
+          bgColor: "#EEEEEE",
+          color: tinycolor("black").toHexString(),
+        };
 
-      const responses = Object.entries(breadcrumbs)
-        .map(
-          ([k, { answers }]: [string, { answers: string | Array<string> }]) => {
-            const question = { id: k, ...flow[k] };
+        const responses = Object.entries(breadcrumbs)
+          .map(
+            ([k, { answers }]: [
+              string,
+              { answers: string | Array<string> }
+            ]) => {
+              const question = { id: k, ...flow[k] };
 
-            const questionType = question?.type;
+              const questionType = question?.type;
 
-            if (
-              !questionType ||
-              !SUPPORTED_DECISION_TYPES.includes(questionType)
-            )
-              return null;
+              if (
+                !questionType ||
+                !SUPPORTED_DECISION_TYPES.includes(questionType)
+              )
+                return null;
 
-            answers = Array.isArray(answers) ? answers : [answers];
+              answers = Array.isArray(answers) ? answers : [answers];
 
-            const selections = answers.map((id) => ({ id, ...flow[id] }));
-            const hidden = !selections.some(
-              (r) => r.data?.flag && r.data.flag === flag?.value
-            );
+              const selections = answers.map((id) => ({ id, ...flow[id] }));
+              const hidden = !selections.some(
+                (r) => r.data?.flag && r.data.flag === flag?.value
+              );
 
-            return {
-              question,
-              selections,
-              hidden,
-            };
-          }
-        )
-        .filter(Boolean);
+              return {
+                question,
+                selections,
+                hidden,
+              };
+            }
+          )
+          .filter(Boolean);
 
-      acc[category] = {
-        flag,
-        responses: responses.every((r: any) => r.hidden)
-          ? responses.map((r: any) => ({ ...r, hidden: false }))
-          : responses,
-      };
+        const heading =
+          (flag.value && overrides && overrides[flag.value]?.heading) ||
+          flag.text;
+        const description =
+          (flag.value && overrides && overrides[flag.value]?.description) ||
+          flagSet;
 
-      return acc;
-    }, {});
+        acc[category] = {
+          flag,
+          displayText: { heading, description },
+          responses: responses.every((r: any) => r.hidden)
+            ? responses.map((r: any) => ({ ...r, hidden: false }))
+            : responses,
+        };
+
+        return acc;
+      },
+      {}
+    );
   },
 
   updateFlowSettings: async (

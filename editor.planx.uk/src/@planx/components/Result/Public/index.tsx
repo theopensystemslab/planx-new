@@ -7,9 +7,8 @@ import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
+import type { Node, TextContent } from "types";
 
-import type { TextContent } from "../../../../types";
-import type { Node } from "./model";
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
 
@@ -20,8 +19,7 @@ export interface Props {
     background: string;
   };
   headingTitle?: string;
-  subheading?: string;
-  headingDescription?: string;
+  description?: string;
   reasonsTitle?: string;
   responses: Array<{
     question: Node;
@@ -64,8 +62,7 @@ const Result: React.FC<Props> = ({
   handleSubmit,
   headingColor,
   headingTitle = "",
-  subheading = "",
-  headingDescription = "",
+  description = "",
   reasonsTitle = "",
   responses,
   disclaimer,
@@ -80,67 +77,64 @@ const Result: React.FC<Props> = ({
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
       <ResultSummary
-        subheading={subheading}
-        color={headingColor}
         heading={headingTitle}
+        description={description}
+        color={headingColor}
       />
       <Card handleSubmit={() => handleSubmit && handleSubmit([])} isValid>
-        <Box mb={2} mt={0}>
-          <Typography variant="body2">{headingDescription}</Typography>
-          <Box mt={4} mb={3}>
-            <Typography variant="h3" gutterBottom>
-              {reasonsTitle}
-            </Typography>
-          </Box>
-          <Box mb={3}>
-            <Responses responses={visibleResponses} />
+        <Box mt={4} mb={3}>
+          <Typography variant="h3" gutterBottom>
+            {reasonsTitle}
+          </Typography>
+        </Box>
+        <Box mb={3}>
+          <Responses responses={visibleResponses} />
 
-            {hiddenResponses.length > 0 && (
-              <SimpleExpand
-                buttonText={{
-                  open: "See all responses",
-                  closed: "See fewer responses",
-                }}
-              >
-                <Responses responses={hiddenResponses} />
-              </SimpleExpand>
-            )}
-          </Box>
-          {disclaimer?.show && (
-            <Box
-              bgcolor="background.paper"
-              p={1.25}
-              display="flex"
-              color={theme.palette.grey[600]}
-              className={classes.disclaimer}
+          {hiddenResponses.length > 0 && (
+            <SimpleExpand
+              buttonText={{
+                open: "See all responses",
+                closed: "See fewer responses",
+              }}
             >
-              <Warning />
-              <Box ml={1}>
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  onClick={() => setShowDisclaimer(!showDisclaimer)}
-                >
-                  <Typography variant="h6" color="inherit">
-                    {disclaimer.heading}
-                  </Typography>
-                  <Typography variant="body2" className={classes.readMore}>
-                    read {showDisclaimer ? "less" : "more"}
-                  </Typography>
-                </Box>
-                <Collapse in={showDisclaimer}>
-                  <Typography
-                    variant="body2"
-                    color="inherit"
-                    className={classes.disclaimerContent}
-                  >
-                    {disclaimer.content}
-                  </Typography>
-                </Collapse>
-              </Box>
-            </Box>
+              <Responses responses={hiddenResponses} />
+            </SimpleExpand>
           )}
         </Box>
+        {disclaimer?.show && (
+          <Box
+            bgcolor="background.paper"
+            p={1.25}
+            display="flex"
+            color={theme.palette.grey[600]}
+            className={classes.disclaimer}
+          >
+            <Warning />
+            <Box ml={1}>
+              <Box
+                display="flex"
+                alignItems="center"
+                onClick={() => setShowDisclaimer(!showDisclaimer)}
+              >
+                <Typography variant="h6" color="inherit">
+                  {disclaimer.heading}
+                </Typography>
+                <Typography variant="body2" className={classes.readMore}>
+                  read {showDisclaimer ? "less" : "more"}
+                </Typography>
+              </Box>
+              <Collapse in={showDisclaimer}>
+                <Typography
+                  variant="body2"
+                  color="inherit"
+                  className={classes.disclaimerContent}
+                >
+                  {disclaimer.content}
+                </Typography>
+              </Collapse>
+            </Box>
+          </Box>
+        )}
       </Card>
     </Box>
   );

@@ -14,10 +14,7 @@ import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
 
 import type { FindProperty } from "./model";
-import {
-  DEFAULT_TITLE,
-  parseFindProperty,
-} from "./model";
+import { DEFAULT_TITLE, parseFindProperty } from "./model";
 
 export type Props = EditorProps<TYPES.FindProperty, FindProperty>;
 

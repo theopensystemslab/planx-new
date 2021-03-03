@@ -186,3 +186,28 @@ describe("changing flag inside flag filter doesn't affect the filter's behaviour
     expect(getState().upcomingCardIds()).toEqual(["missing_info_content"]);
   });
 });
+
+describe("displaying flags as result", () => {
+  beforeEach(() => getState().resetPreview());
+  it("returns a reasonable default state", () => {
+    const defaultState = {
+      "Planning permission": {
+        displayText: {
+          description: "Planning permission",
+          heading: "No result",
+        },
+        flag: {
+          bgColor: "#EEEEEE",
+          category: "Planning permission",
+          color: "#000000",
+          text: "No result",
+          value: undefined,
+        },
+        responses: [],
+      },
+    };
+
+    const data = getState().resultData();
+    expect(data).toEqual(defaultState);
+  });
+});

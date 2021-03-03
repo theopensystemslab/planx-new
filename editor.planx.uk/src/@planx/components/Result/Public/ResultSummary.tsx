@@ -38,7 +38,7 @@ const resultSummaryStyles = makeStyles((theme) => ({
   },
 }));
 
-const ResultSummary = ({ heading, subheading, children, color }: any) => {
+const ResultSummary = ({ heading, description, children, color }: any) => {
   const classes = resultSummaryStyles();
   return (
     <Box
@@ -52,9 +52,9 @@ const ResultSummary = ({ heading, subheading, children, color }: any) => {
       <Typography variant="h1" gutterBottom>
         {heading}
       </Typography>
-      {subheading && (
+      {description && (
         <Typography variant="h5" gutterBottom>
-          {subheading}
+          {description}
         </Typography>
       )}
       <Box className={classes.description}>{children}</Box>

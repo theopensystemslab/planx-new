@@ -15,7 +15,7 @@ import DrawIcon from "@material-ui/icons/Create";
 import LayersIcon from "@material-ui/icons/LayersOutlined";
 import React, { useEffect, useRef, useState } from "react";
 import ReactMapGL, { Layer, Source } from "react-map-gl";
-import { DrawPolygonMode,Editor } from "react-map-gl-draw";
+import { DrawPolygonMode, Editor } from "react-map-gl-draw";
 
 import type { Boundary } from ".";
 
