@@ -19,11 +19,15 @@ export default function ReactMarkdownOrHtml(props: {
   if (typeof props.source !== "string") {
     return null;
   }
-  if (props.source.includes("<p>")) {
+  if (props.source.includes("<p>") || props.source.includes("<a")) {
+    const replaceTarget = props.source.replace(
+      `target="_self"`,
+      `target="_blank"`
+    );
     return (
       <div
         className={classNames(props.className, classes.htmlRoot)}
-        dangerouslySetInnerHTML={{ __html: props.source }}
+        dangerouslySetInnerHTML={{ __html: replaceTarget }}
       />
     );
   }
