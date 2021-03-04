@@ -1,3 +1,6 @@
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 import type { Pay } from "@planx/components/Pay/model";
 import { parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
@@ -5,6 +8,7 @@ import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
+import InputGroup from "ui/InputGroup";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
@@ -18,6 +22,7 @@ function Component(props: any) {
       description: props.node?.data?.description || "",
       color: props.node?.data?.color || "#EFEFEF",
       fn: props.node?.data?.fn,
+      disableBackButton: props.node?.data?.disableBackButton ?? false,
       ...parseMoreInformation(props.node?.data),
     },
     onSubmit: (newValues) => {
@@ -51,7 +56,6 @@ function Component(props: any) {
           </InputRow>
           <InputRow>
             <Input
-              // required
               format="data"
               name="fn"
               value={formik.values.fn}
@@ -59,6 +63,19 @@ function Component(props: any) {
               onChange={formik.handleChange}
             />
           </InputRow>
+          <FormControl component="fieldset">
+            <FormControlLabel
+              label="Disable back button"
+              control={
+                <Switch
+                  checked={formik.values.disableBackButton}
+                  onChange={formik.handleChange}
+                  name="disableBackButton"
+                  color="primary"
+                />
+              }
+            />
+          </FormControl>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation

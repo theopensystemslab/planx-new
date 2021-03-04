@@ -5,4 +5,5 @@ export interface Pay extends MoreInformation {
   description?: string;
   color?: string;
   fn?: string;
+  disableBackButton?: boolean;
 }

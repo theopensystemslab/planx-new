@@ -71,7 +71,10 @@ const Questions = (props: Props) => {
         onClick={() => record(previousCard)}
         style={{
           padding: "0 10px 10px",
-          visibility: previousCard ? "visible" : "hidden",
+          visibility:
+            previousCard && !node?.data?.disableBackButton
+              ? "hidden"
+              : "visible",
           pointerEvents: previousCard ? "auto" : "none",
           display: "block",
           cursor: "pointer",
