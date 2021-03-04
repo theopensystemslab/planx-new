@@ -80,6 +80,12 @@ interface Store extends Record<string | number | symbol, unknown> {
   sessionId: any; //: string;
   setFlow: any; //: () => void;
   startSession: any; //: () => void;
+  resumeSession: (session: {
+    passport: Store["passport"];
+    breadcrumbs: Store["breadcrumbs"];
+    sessionId: Store["sessionId"];
+    id: Store["id"];
+  }) => void;
   previousCard: () => nodeId | undefined;
   collectedFlags: (
     upToNodeId: string,
@@ -475,6 +481,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       const sessionId = response.data.insert_sessions_one.id;
       set({ sessionId });
     } catch (e) {}
+  },
+
+  resumeSession(args) {
+    set(args);
   },
 
   resetPreview() {

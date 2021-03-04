@@ -4,7 +4,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import {
   componentOutput,
   useStore,
-  vanillaStore,
 } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
 import Node from "./Node";
@@ -18,6 +17,7 @@ const Questions = () => {
     passport,
     sessionId,
     id,
+    resumeSession,
   ] = useStore((state) => [
     state.currentCard,
     state.previousCard(),
@@ -26,6 +26,7 @@ const Questions = () => {
     state.passport,
     state.sessionId,
     state.id,
+    state.resumeSession,
   ]);
 
   const node = currentCard();
@@ -38,7 +39,7 @@ const Questions = () => {
         state &&
         window.confirm("Would you like to resume the last session?")
       ) {
-        vanillaStore.setState(state);
+        resumeSession(state);
       }
     } catch (err) {
       console.error(err);
