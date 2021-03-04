@@ -11,8 +11,8 @@ const metadata: Meta = {
   },
 };
 
-export const Frontend: Story<Props> = (args) => <Public {...args} />;
-Frontend.args = {
+export const Basic: Story<Props> = (args) => <Public {...args} />;
+Basic.args = {
   headingColor: {
     background: "#ADFF00",
     text: "#000",
@@ -95,7 +95,7 @@ Frontend.args = {
     },
     {
       question: {
-        id: "5555",
+        id: "3333",
         data: {
           text:
             "A question with more information and a policy reference and it's really long",
@@ -105,9 +105,40 @@ Frontend.args = {
       },
       selections: [
         {
-          id: "4444",
+          id: "2222",
           data: {
             text: "answer is also really, really long",
+          },
+        },
+      ],
+      hidden: false,
+    },
+  ],
+};
+
+export const WithDisclaimer: Story<Props> = (args) => <Public {...args} />;
+WithDisclaimer.args = {
+  headingTitle: "Heading",
+  headingColor: { background: "palegoldenrod", text: "black" },
+  reasonsTitle: "Reasons",
+  disclaimer: {
+    heading: "For guidance only",
+    content: "Proceed at your own risk!",
+    show: true,
+  },
+  responses: [
+    {
+      question: {
+        id: "1234",
+        data: {
+          text: "A question with no further information",
+        },
+      },
+      selections: [
+        {
+          id: "5678",
+          data: {
+            text: "answer",
           },
         },
       ],
