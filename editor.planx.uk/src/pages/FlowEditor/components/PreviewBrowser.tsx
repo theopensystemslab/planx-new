@@ -64,7 +64,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
         </a>
       </header>
       <div className={classes.previewContainer}>
-        <Questions key={String(key)} />
+        <Questions key={String(key)} isSidebar />
       </div>
       {showDebugConsole && <DebugConsole />}
     </div>

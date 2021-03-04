@@ -1,14 +1,15 @@
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-import {
-  componentOutput,
-  useStore,
-} from "../FlowEditor/lib/store";
+import { componentOutput, useStore } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
 import Node from "./Node";
 
-const Questions = () => {
+interface Props {
+  isSidebar?: Boolean;
+}
+
+const Questions = (props: Props) => {
   const [
     currentCard,
     previousCard,
@@ -33,21 +34,25 @@ const Questions = () => {
   const flow = useContext(PreviewContext);
 
   useEffect(() => {
-    try {
-      const state = JSON.parse(localStorage.getItem(`flow:${id}`) || "");
-      if (
-        state &&
-        window.confirm("Would you like to resume the last session?")
-      ) {
-        resumeSession(state);
+    if (!props.isSidebar) {
+      const entry = `flow:${id}`;
+      try {
+        const state = JSON.parse(localStorage.getItem(entry) || "");
+        if (
+          state &&
+          window.confirm("Would you like to resume the last session?")
+        ) {
+          resumeSession(state);
+        }
+      } catch (err) {
+        // Clean up just in case
+        localStorage.removeItem(entry);
       }
-    } catch (err) {
-      console.error(err);
     }
   }, []);
 
   useEffect(() => {
-    if (id) {
+    if (!props.isSidebar && id) {
       localStorage.setItem(
         `flow:${id}`,
         JSON.stringify({
