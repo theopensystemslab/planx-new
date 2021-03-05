@@ -10,7 +10,6 @@ import { useFormik } from "formik";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import type { Node, TextContent } from "types";
-import Input from "ui/Input";
 
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
@@ -46,12 +45,6 @@ const useClasses = makeStyles((theme) => ({
   disclaimerContent: {
     marginTop: theme.spacing(1),
   },
-  feedbackButton: {
-    color: theme.palette.text.primary,
-  },
-  submitFeedback: {
-    marginTop: theme.spacing(2),
-  },
 }));
 
 const Responses = ({ responses }: any) => (
@@ -76,39 +69,10 @@ const Result: React.FC<Props> = ({
   responses,
   disclaimer,
 }) => {
-  const formik = useFormik({
-    initialValues: {
-      feedback: "",
-    },
-    onSubmit: (values) => {
-      // TODO: move this functionality into a prop so this component can remain ui-only
-      // note: this is a test feedback fish ID; responses will not go to normal
-      // PlanX account
-      const feedbackFishId = "b929227ff0690e";
-      fetch("https://api.feedback.fish/feedback", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          projectId: feedbackFishId,
-          text: values.feedback,
-          category: "other",
-          metadata: {
-            reason: "Wrong result",
-          },
-        }),
-      })
-        .then((r) => console.log(r))
-        .catch((err) => console.error(err));
-    },
-  });
-
   const visibleResponses = responses.filter((r) => !r.hidden);
   const hiddenResponses = responses.filter((r) => r.hidden);
 
   const [showDisclaimer, setShowDisclaimer] = useState(false);
-  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
 
   const classes = useClasses();
   const theme = useTheme();
@@ -176,45 +140,6 @@ const Result: React.FC<Props> = ({
             </Box>
           </Box>
         )}
-
-        <Button
-          className={classes.feedbackButton}
-          onClick={() =>
-            setShowFeedbackForm((showFeedbackForm) => !showFeedbackForm)
-          }
-          disableRipple
-        >
-          <Typography variant="body2">
-            Is this result inaccurate? <b>tell us why</b>
-          </Typography>
-        </Button>
-        <Collapse in={true}>
-          <form onSubmit={formik.handleSubmit}>
-            <Box
-              bgcolor="background.paper"
-              p={2}
-              display="flex"
-              flexDirection="column"
-              alignItems="flex-end"
-            >
-              <Input
-                multiline
-                bordered
-                value={formik.values.feedback}
-                name="feedback"
-                onChange={formik.handleChange}
-              />
-              <Button
-                className={classes.submitFeedback}
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                Submit
-              </Button>
-            </Box>
-          </form>
-        </Collapse>
       </Card>
     </Box>
   );
