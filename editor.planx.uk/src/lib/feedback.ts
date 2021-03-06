@@ -1,5 +1,4 @@
 export const submitFeedback = (
-  feedbackFishId: string,
   text: string,
   metadata?: { [key: string]: any }
 ) => {
@@ -9,7 +8,7 @@ export const submitFeedback = (
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      projectId: feedbackFishId,
+      projectId: process.env.REACT_APP_FEEDBACK_FISH_ID,
       text,
       metadata,
     }),

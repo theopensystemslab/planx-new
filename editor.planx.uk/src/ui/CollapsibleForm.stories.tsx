@@ -11,10 +11,7 @@ const metadata: Meta = {
 };
 
 export const Basic: Story<Props> = (args: Props) => (
-  <CollapsibleForm
-    {...args}
-    onSubmit={(text) => submitFeedback("b929227ff0690e", text)}
-  >
+  <CollapsibleForm {...args} onSubmit={(text) => submitFeedback(text)}>
     <Typography variant="body2">
       Is this result inaccurate? <b>tell us why</b>
     </Typography>
