@@ -34,6 +34,9 @@ const useClasses = makeStyles((theme: Theme) => ({
   responseText: {
     whiteSpace: "nowrap",
   },
+  changeButton: {
+    marginLeft: theme.spacing(1),
+  },
 }));
 
 const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
@@ -75,6 +78,7 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
           </Typography>
           <Button
             color="inherit"
+            className={classes.changeButton}
             onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
               e.stopPropagation();
               record(id);
@@ -88,8 +92,8 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
       {hasMoreInfo && (
         <Collapse in={showMoreInfo}>
           <Box
-            pt={{ xs: 1, md: 2 }}
-            pb={{ xs: 1, md: 4 }}
+            pt={{ xs: 1, md: 0 }}
+            pb={{ xs: 1, md: 3 }}
             color="background.dark"
             className={classes.moreInfo}
           >

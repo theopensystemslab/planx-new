@@ -10,7 +10,7 @@ import DescriptionButton, {
 import ImageButton, { Props as ImageButtonProps } from "./ImageButton";
 
 const metadata: Meta = {
-  title: "Design System/Atoms/Buttons",
+  title: "Design System/Molecules/Selection Buttons",
   parameters: {
     backgrounds: {
       default: "dark",

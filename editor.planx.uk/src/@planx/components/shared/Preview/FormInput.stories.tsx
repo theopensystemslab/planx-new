@@ -4,7 +4,7 @@ import React from "react";
 import FormInput, { IFormInput } from "./FormInput";
 
 const metadata: Meta = {
-  title: "Design System/Atoms/Form Elements/Input",
+  title: "Design System/Atoms/Form Elements/Input/FormInput",
   component: FormInput,
   argTypes: {
     value: { control: { disable: true } },

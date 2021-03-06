@@ -1,10 +1,12 @@
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Warning from "@material-ui/icons/WarningOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
+import { useFormik } from "formik";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import type { Node, TextContent } from "types";
@@ -71,6 +73,7 @@ const Result: React.FC<Props> = ({
   const hiddenResponses = responses.filter((r) => r.hidden);
 
   const [showDisclaimer, setShowDisclaimer] = useState(false);
+
   const classes = useClasses();
   const theme = useTheme();
 
@@ -93,8 +96,8 @@ const Result: React.FC<Props> = ({
           {hiddenResponses.length > 0 && (
             <SimpleExpand
               buttonText={{
-                open: "See all responses",
-                closed: "See fewer responses",
+                open: "Show all responses",
+                closed: "Hide other responses",
               }}
             >
               <Responses responses={hiddenResponses} />
@@ -114,7 +117,9 @@ const Result: React.FC<Props> = ({
               <Box
                 display="flex"
                 alignItems="center"
-                onClick={() => setShowDisclaimer(!showDisclaimer)}
+                onClick={() =>
+                  setShowDisclaimer((showDisclaimer) => !showDisclaimer)
+                }
               >
                 <Typography variant="h6" color="inherit">
                   {disclaimer.heading}
