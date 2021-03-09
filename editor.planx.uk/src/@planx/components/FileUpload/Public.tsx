@@ -10,7 +10,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { uploadFile } from "api/upload";
 import classNames from "classnames";
 import { nanoid } from "nanoid";
-import { handleSubmit } from "pages/Preview/Node";
+import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import ErrorWrapper from "ui/ErrorWrapper";
