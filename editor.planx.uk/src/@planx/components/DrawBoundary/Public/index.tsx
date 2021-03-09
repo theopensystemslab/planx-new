@@ -68,7 +68,7 @@ export default function Component(props: Props) {
         draft.data[props.dataFieldArea] = area;
       }
     });
-    props.handleSubmit && props.handleSubmit([{ url }]);
+    props.handleSubmit && props.handleSubmit([url]);
   }
 }
 
