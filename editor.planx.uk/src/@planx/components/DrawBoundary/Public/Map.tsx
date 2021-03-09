@@ -29,7 +29,6 @@ const useClasses = makeStyles((theme) => ({
     minHeight: 200,
     height: "50vh",
     maxHeight: 500,
-    // cursor: "crosshair",
   },
   modal: {
     cursor: "pointer",
