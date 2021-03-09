@@ -12,6 +12,7 @@ import React, { useState } from "react";
 
 import type { DrawBoundary } from "../model";
 import Map from "./Map";
+import Upload from "./Upload";
 
 export type Props = PublicProps<DrawBoundary>;
 
@@ -21,21 +22,23 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-export default Component;
-
-function Component(props: Props) {
+export default function Component(props: Props) {
   const [passport, mutatePassport] = useStore((state) => [
     state.passport,
     state.mutatePassport,
   ]);
-  const styles = useClasses();
+  const classes = useClasses();
   const [boundary, setBoundary] = useState<Boundary>();
+  const [url, setUrl] = useState<String | undefined>();
   const area = boundary !== undefined ? round(turfArea(boundary)) : 0;
 
   return (
-    <Card handleSubmit={handleSubmit} isValid={Boolean(boundary)}>
-      <QuestionHeader title={props.title} description={props.description} />
-      <Box className={styles.map}>
+    <Card handleSubmit={handleSubmit} isValid={Boolean(boundary || url)}>
+      <QuestionHeader
+        title={props.title ?? "Draw the boundary of the property"}
+        description={props.description}
+      />
+      <Box className={classes.map}>
         <Map
           zoom={18}
           lat={Number(passport?.info?.latitude)}
@@ -44,8 +47,14 @@ function Component(props: Props) {
         />
       </Box>
       <div>
-        <h3>Area selected:</h3>
-        <p>{area ?? 0} m2</p>
+        <p>
+          <strong>Area selected:</strong> {area ?? 0} m²
+        </p>
+      </div>
+      <hr />
+      <div>
+        <h3>Alternatively, upload the PDF location plan:</h3>
+        <Upload setUrl={setUrl} />
       </div>
     </Card>
   );
@@ -59,7 +68,7 @@ function Component(props: Props) {
         draft.data[props.dataFieldArea] = area;
       }
     });
-    props.handleSubmit && props.handleSubmit();
+    props.handleSubmit && props.handleSubmit([{ url }]);
   }
 }
 

@@ -81,12 +81,7 @@ const Node: React.FC<any> = (props: Props) => {
       return <DateInput {...allProps} />;
 
     case TYPES.DrawBoundary:
-      return (
-        <DrawBoundary
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <DrawBoundary {...allProps} />;
 
     case TYPES.FileUpload:
       return <FileUpload {...allProps} />;
