@@ -7,7 +7,7 @@ import CloudUpload from "@material-ui/icons/CloudUpload";
 import { uploadFile } from "api/upload";
 import classNames from "classnames";
 import { nanoid } from "nanoid";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 const useStyles = makeStyles((theme) => ({
