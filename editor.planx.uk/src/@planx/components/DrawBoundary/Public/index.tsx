@@ -52,8 +52,12 @@ function Component(props: Props) {
 
   function handleSubmit() {
     mutatePassport((draft) => {
-      draft.data[props.dataFieldBoundary] = boundary;
-      draft.data[props.dataFieldArea] = area;
+      if (props.dataFieldBoundary) {
+        draft.data[props.dataFieldBoundary] = boundary;
+      }
+      if (props.dataFieldArea) {
+        draft.data[props.dataFieldArea] = area;
+      }
     });
     props.handleSubmit && props.handleSubmit();
   }
