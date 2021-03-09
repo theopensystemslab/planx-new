@@ -29,7 +29,7 @@ const useClasses = makeStyles((theme) => ({
     minHeight: 200,
     height: "50vh",
     maxHeight: 500,
-    cursor: "crosshair",
+    // cursor: "crosshair",
   },
   modal: {
     cursor: "pointer",
@@ -72,7 +72,7 @@ const useClasses = makeStyles((theme) => ({
     padding: "1rem 2rem",
     textAlign: "center",
   },
-  layers: {
+  layersPopover: {
     position: "absolute",
     bottom: 36,
     left: 8,
@@ -201,7 +201,7 @@ function Map(props: Props) {
           />
         </ReactMapGL>
         <ClickAwayListener onClickAway={() => setShowStyles(false)}>
-          <Box className={classes.layers}>
+          <Box className={classes.layersPopover}>
             {showStyles ? (
               <MapStyleSwitcher
                 handleChange={(e: any) => {
