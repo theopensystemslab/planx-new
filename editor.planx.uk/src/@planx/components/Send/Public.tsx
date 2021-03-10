@@ -43,7 +43,7 @@ const SendComponent: React.FC<Props> = (props) => {
         // 2. files
 
         Object.values(breadcrumbs).forEach(({ answers = [] }) => {
-          answers.forEach((x: any) => {
+          answers.filter(Boolean).forEach((x: any) => {
             if (x.filename && x.url) {
               data.files = data.files || [];
 
