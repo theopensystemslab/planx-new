@@ -15,7 +15,11 @@ import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
 
 import type { DrawBoundary } from "./model";
-import { DEFAULT_TITLE, parseDrawBoundary } from "./model";
+import {
+  DEFAULT_TITLE,
+  DEFAULT_TITLE_FOR_UPLOADING,
+  parseDrawBoundary,
+} from "./model";
 
 export type Props = EditorProps<TYPES.DrawBoundary, DrawBoundary>;
 
@@ -35,7 +39,7 @@ function DrawBoundaryComponent(props: Props) {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent
-          title="Find Property"
+          title="Draw boundary"
           Icon={ICONS[TYPES.DrawBoundary]}
         >
           <InputRow>
@@ -75,6 +79,28 @@ function DrawBoundaryComponent(props: Props) {
               />
             </InputRow>
           </InputGroup>
+        </ModalSectionContent>
+        <ModalSectionContent
+          title="Upload the PDF location plan"
+          Icon={ICONS[TYPES.DrawBoundary]}
+        >
+          <InputRow>
+            <Input
+              format="large"
+              placeholder={DEFAULT_TITLE_FOR_UPLOADING}
+              name="titleForUploading"
+              value={formik.values.titleForUploading}
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+          <InputRow>
+            <RichTextInput
+              name="descriptionForUploading"
+              placeholder="Description"
+              value={formik.values.descriptionForUploading}
+              onChange={formik.handleChange}
+            />
+          </InputRow>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation
