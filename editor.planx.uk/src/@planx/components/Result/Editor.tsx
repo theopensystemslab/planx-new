@@ -1,11 +1,10 @@
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import flags, { FlagSet } from "pages/FlowEditor/data/flags";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Flag } from "types";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
@@ -87,8 +86,7 @@ const FlagEditor: React.FC<{
 const ResultComponent: React.FC<Result> = (props) => {
   const formik = useFormik<FormData>({
     initialValues: {
-      // TODO: maybe don't store string key here as it's likely to change
-      flagSet: props.node?.data?.flagSet || "",
+      flagSet: props.node?.data?.flagSet || Object.keys(flags)[0],
       overrides: props.node?.data?.overrides || {},
     },
     onSubmit: (newValues) => {
