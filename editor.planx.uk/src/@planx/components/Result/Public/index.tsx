@@ -6,7 +6,6 @@ import Typography from "@material-ui/core/Typography";
 import Warning from "@material-ui/icons/WarningOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
-import { useFormik } from "formik";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import type { Node, TextContent } from "types";

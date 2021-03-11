@@ -51,6 +51,15 @@ const theme = createMuiTheme({
       selected: "#F8F8F8",
     },
   },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 500,
+      md: 768, // Used with Container as general max-width
+      lg: 1280,
+      xl: 1920,
+    },
+  },
   props: {
     // MuiButton: {
     //   elevation: 0,

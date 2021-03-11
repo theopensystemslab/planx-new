@@ -1,5 +1,6 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
 import Fade from "@material-ui/core/Fade";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import React from "react";
@@ -32,34 +33,34 @@ const Card: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
-
+  console.log(theme.breakpoints);
   return (
     <Fade in={true} timeout={theme.transitions.duration.enteringScreen}>
-      <Box
-        className={classes.container}
-        bgcolor="background.default"
-        py={{ xs: 2, md: 4 }}
-        px={{ xs: 2, md: 5 }}
-        mb={4}
-        width="100%"
-        maxWidth={768}
-        {...props}
-      >
-        {children}
+      <Container maxWidth="md">
+        <Box
+          className={classes.container}
+          bgcolor="background.default"
+          py={{ xs: 2, md: 4 }}
+          px={{ xs: 2, md: 5 }}
+          mb={4}
+          {...props}
+        >
+          {children}
 
-        {handleSubmit && (
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            type="submit"
-            disabled={!isValid}
-            onClick={async () => await handleSubmit()}
-          >
-            Continue
-          </Button>
-        )}
-      </Box>
+          {handleSubmit && (
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              type="submit"
+              disabled={!isValid}
+              onClick={async () => await handleSubmit()}
+            >
+              Continue
+            </Button>
+          )}
+        </Box>
+      </Container>
     </Fade>
   );
 };
