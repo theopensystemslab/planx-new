@@ -33,7 +33,7 @@ const Card: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
-  console.log(theme.breakpoints);
+
   return (
     <Fade in={true} timeout={theme.transitions.duration.enteringScreen}>
       <Container maxWidth="md">
