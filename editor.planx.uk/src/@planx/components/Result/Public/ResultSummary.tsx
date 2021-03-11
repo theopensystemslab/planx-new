@@ -39,7 +39,12 @@ const ResultSummary = ({ heading, description, children, color }: any) => {
           {heading}
         </Typography>
         {description && (
-          <Typography variant="h5" gutterBottom className={classes.description}>
+          <Typography
+            variant="body1"
+            align="left"
+            gutterBottom
+            className={classes.description}
+          >
             {description}
           </Typography>
         )}
