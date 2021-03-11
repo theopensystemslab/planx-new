@@ -36,6 +36,7 @@ const useClasses = makeStyles((theme: Theme) => ({
   },
   changeButton: {
     marginLeft: theme.spacing(1),
+    padding: 0,
   },
 }));
 
@@ -56,7 +57,6 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
       flexDirection="column"
       mb={0.5}
       px={1.5}
-      py={{ xs: 1, md: 0.5 }}
       className={classes.root}
     >
       <Box
@@ -65,6 +65,7 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
         alignItems="center"
         width="100%"
         onClick={toggleAdditionalInfo}
+        py={1}
       >
         <Box
           flexGrow={1}

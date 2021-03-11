@@ -1,4 +1,5 @@
 import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import classNames from "classnames";
@@ -15,49 +16,39 @@ const resultSummaryStyles = makeStyles((theme) => ({
     color: "currentColor",
   },
   description: {
-    textAlign: "left",
-    fontSize: 15,
-    "& a": {
-      textDecoration: "underline",
-      cursor: "pointer",
-      color: "currentColor",
-      "&:hover": {
-        textDecoration: "none",
-      },
-    },
-    "& p": {
-      marginTop: 0,
-      marginBottom: 10,
-      "&:last-child": {
-        marginBottom: 0,
-      },
-    },
-    "& strong": {
-      fontWeight: 700,
-    },
+    marginTop: theme.spacing(4),
   },
 }));
 
 const ResultSummary = ({ heading, description, children, color }: any) => {
   const classes = resultSummaryStyles();
+
   return (
     <Box
       className={classNames(classes.root, !color && classes.defaultColor)}
       bgcolor={color && color.background}
       color={color && color.text}
+      display="flex"
+      justifyContent="center"
       textAlign="center"
       px={2}
       py={6}
     >
-      <Typography variant="h1" gutterBottom>
-        {heading}
-      </Typography>
-      {description && (
-        <Typography variant="h5" gutterBottom>
-          {description}
+      <Container maxWidth="md">
+        <Typography variant="h1" gutterBottom>
+          {heading}
         </Typography>
-      )}
-      <Box className={classes.description}>{children}</Box>
+        {description && (
+          <Typography
+            variant="body1"
+            align="left"
+            gutterBottom
+            className={classes.description}
+          >
+            {description}
+          </Typography>
+        )}
+      </Container>
     </Box>
   );
 };

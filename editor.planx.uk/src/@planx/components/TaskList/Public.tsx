@@ -1,6 +1,7 @@
 import Box from "@material-ui/core/Box";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Collapse from "@material-ui/core/Collapse";
+import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
@@ -10,11 +11,11 @@ import { PublicProps } from "@planx/components/ui";
 import classNames from "classnames";
 import React from "react";
 import Caret from "ui/icons/Caret";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 export type Props = PublicProps<TaskList>;
 
 const taskStyles = makeStyles((theme) => ({
-  taskList: { maxWidth: 768 },
   panel: {
     backgroundColor: theme.palette.background.default,
     position: "relative",
@@ -177,7 +178,9 @@ const Task = ({
       </ButtonBase>
       {description && (
         <Collapse in={expanded}>
-          <Box className={classes.content}>{description}</Box>
+          <Box className={classes.content}>
+            <ReactMarkdownOrHtml source={description} />
+          </Box>
         </Collapse>
       )}
     </Box>
@@ -200,7 +203,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
-      <Box className={classes.taskList}>
+      <Container maxWidth="md">
         {props.tasks.map((task, index) => (
           <Task
             {...task}
@@ -209,7 +212,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
             isLast={index === props.tasks.length - 1}
           />
         ))}
-      </Box>
+      </Container>
     </Card>
   );
 };
