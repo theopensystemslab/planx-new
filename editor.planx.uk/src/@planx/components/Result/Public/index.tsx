@@ -6,9 +6,11 @@ import Typography from "@material-ui/core/Typography";
 import Warning from "@material-ui/icons/WarningOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
+import { useFormik } from "formik";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import type { Node, TextContent } from "types";
+import CollapsibleInput from "ui/CollapsibleInput";
 
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
@@ -68,6 +70,15 @@ const Result: React.FC<Props> = ({
   responses,
   disclaimer,
 }) => {
+  const formik = useFormik({
+    initialValues: {
+      feedback: "",
+    },
+    onSubmit: (values) => {
+      handleSubmit &&
+        handleSubmit(values.feedback.length > 0 && values.feedback);
+    },
+  });
   const visibleResponses = responses.filter((r) => !r.hidden);
   const hiddenResponses = responses.filter((r) => r.hidden);
 
@@ -83,7 +94,7 @@ const Result: React.FC<Props> = ({
         description={description}
         color={headingColor}
       />
-      <Card handleSubmit={() => handleSubmit && handleSubmit([])} isValid>
+      <Card handleSubmit={formik.handleSubmit} isValid>
         <Box mt={4} mb={3}>
           <Typography variant="h3" gutterBottom>
             {reasonsTitle}
@@ -139,6 +150,15 @@ const Result: React.FC<Props> = ({
             </Box>
           </Box>
         )}
+        <CollapsibleInput
+          handleChange={formik.handleChange}
+          name="feedback"
+          value={formik.values.feedback}
+        >
+          <Typography variant="body2">
+            Is this information inaccurate? <b>Tell us why.</b>
+          </Typography>
+        </CollapsibleInput>
       </Card>
     </Box>
   );
