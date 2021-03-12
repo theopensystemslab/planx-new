@@ -23,9 +23,7 @@ const useClasses = makeStyles((theme) => ({
   container: {
     position: "relative",
     width: "100%",
-    minHeight: 200,
     height: "50vh",
-    maxHeight: 500,
   },
   layersButton: {
     position: "absolute",
