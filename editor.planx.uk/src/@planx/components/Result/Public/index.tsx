@@ -7,7 +7,7 @@ import Warning from "@material-ui/icons/WarningOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { useFormik } from "formik";
-import { handleSubmit } from "pages/Preview/Node";
+import type { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import type { Node, TextContent } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
@@ -75,8 +75,8 @@ const Result: React.FC<Props> = ({
       feedback: "",
     },
     onSubmit: (values) => {
-      handleSubmit &&
-        handleSubmit(values.feedback.length > 0 && values.feedback);
+      const feedback = values.feedback.length > 0 ? values.feedback : [];
+      handleSubmit && handleSubmit(feedback);
     },
   });
   const visibleResponses = responses.filter((r) => !r.hidden);

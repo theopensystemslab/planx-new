@@ -18,8 +18,8 @@ test("renders correctly", async () => {
 
   expect(screen.getAllByRole("heading")[0]).toHaveTextContent("AMAZING");
 
-  // await act(async () => {
-  //   await userEvent.click(screen.getByText("Continue"));
-  // });
-  // expect(handleSubmit).toHaveBeenCalled();
+  await act(async () => {
+    await userEvent.click(screen.getByText("Continue"));
+  });
+  expect(handleSubmit).toHaveBeenCalled();
 });
