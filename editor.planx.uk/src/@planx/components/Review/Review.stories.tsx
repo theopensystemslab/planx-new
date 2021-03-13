@@ -276,6 +276,7 @@ export const Frontend: Story<{}> = () => {
       changeAnswer={(nodeId) => {
         window.alert(`nodeId=${nodeId}`);
       }}
+      showChangeButton={true}
     />
   );
 };

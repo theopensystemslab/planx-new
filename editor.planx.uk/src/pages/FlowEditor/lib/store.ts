@@ -49,6 +49,7 @@ export interface passport {
 
 interface Store extends Record<string | number | symbol, unknown> {
   addNode: any; //: () => void;
+  canGoBack: () => boolean;
   childNodesOf: (id: string | undefined) => Record<string, any>[];
   connect: (src: string, tgt: string, object?: any) => void;
   connectTo: (id: string) => void;
@@ -510,6 +511,16 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       .map(([k]) => k);
 
     return goBackable.pop();
+  },
+
+  canGoBack: () => {
+    const { breadcrumbs, flow, previousCard } = get();
+
+    const hasPaid = Object.keys(breadcrumbs).some(
+      (crumb) => flow[crumb].type === TYPES.Pay
+    );
+
+    return !!previousCard() && !hasPaid;
   },
 
   upcomingCardIds() {

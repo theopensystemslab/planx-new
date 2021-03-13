@@ -88,6 +88,7 @@ interface Props {
   passport: passport;
   handleSubmit: handleSubmit;
   changeAnswer: (id: nodeId) => void;
+  showChangeButton: boolean;
 }
 
 function Component(props: Props) {
@@ -106,7 +107,7 @@ function Component(props: Props) {
                 return null;
               }
               return (
-                <>
+                <React.Fragment key={i}>
                   <Component
                     nodeId={i}
                     node={node}
@@ -114,21 +115,23 @@ function Component(props: Props) {
                     flow={props.flow}
                     passport={props.passport}
                   />
-                  <div>
-                    <a
-                      onClick={() => {
-                        const confirmed = window.confirm(
-                          `This action can't be undone.`
-                        );
-                        if (confirmed) {
-                          props.changeAnswer(nodeId);
-                        }
-                      }}
-                    >
-                      Change
-                    </a>
-                  </div>
-                </>
+                  {props.showChangeButton && (
+                    <div>
+                      <a
+                        onClick={() => {
+                          const confirmed = window.confirm(
+                            `This action can't be undone.`
+                          );
+                          if (confirmed) {
+                            props.changeAnswer(nodeId);
+                          }
+                        }}
+                      >
+                        Change
+                      </a>
+                    </div>
+                  )}
+                </React.Fragment>
               );
             })
           }

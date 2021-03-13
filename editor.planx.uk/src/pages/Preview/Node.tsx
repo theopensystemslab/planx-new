@@ -32,9 +32,10 @@ interface Props {
 }
 
 const Node: React.FC<any> = (props: Props) => {
-  const [childNodesOf, resultData] = useStore((state) => [
+  const [childNodesOf, resultData, canGoBack] = useStore((state) => [
     state.childNodesOf,
     state.resultData,
+    state.canGoBack(),
   ]);
 
   const resetPreview = useStore((state) => state.resetPreview);
@@ -134,6 +135,7 @@ const Node: React.FC<any> = (props: Props) => {
 
       return (
         <Result
+          canGoBack={canGoBack}
           handleSubmit={() => props.handleSubmit([props.node.id])}
           headingColor={{
             text: flag.color,
