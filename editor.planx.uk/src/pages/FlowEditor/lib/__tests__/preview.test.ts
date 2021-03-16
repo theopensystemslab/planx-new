@@ -144,3 +144,37 @@ test("record(id, undefined) clears up breadcrumbs", () => {
 
   expect(getState().breadcrumbs).toEqual({});
 });
+
+test("hasPaid is updated if a Pay component has been recorded", () => {
+  setState({
+    flow: {
+      _root: {
+        edges: ["a", "b"],
+      },
+      a: {
+        type: TYPES.Statement,
+        edges: ["c"],
+      },
+      b: {
+        type: TYPES.Statement,
+      },
+      c: {
+        type: TYPES.Pay,
+      },
+
+      d: { type: TYPES.Response },
+      e: { type: TYPES.Review },
+    },
+  });
+
+  getState().record("a", ["c"]);
+  expect(getState().hasPaid()).toBe(false);
+
+  getState().record("c", []);
+  expect(getState().breadcrumbs).toEqual({
+    a: { answers: ["c"], auto: false },
+    c: { answers: [], auto: false },
+  });
+
+  expect(getState().hasPaid()).toBe(true);
+});
