@@ -13,7 +13,6 @@ const Questions = (props: Props) => {
   const [
     currentCard,
     previousCard,
-    canGoBack,
     record,
     breadcrumbs,
     passport,
@@ -23,7 +22,6 @@ const Questions = (props: Props) => {
   ] = useStore((state) => [
     state.currentCard,
     state.previousCard(),
-    state.canGoBack(),
     state.record,
     state.breadcrumbs,
     state.passport,
@@ -73,8 +71,8 @@ const Questions = (props: Props) => {
         onClick={() => record(previousCard)}
         style={{
           padding: "0 10px 10px",
-          visibility: canGoBack ? "visible" : "hidden",
-          pointerEvents: canGoBack ? "auto" : "none",
+          visibility: previousCard ? "visible" : "hidden",
+          pointerEvents: previousCard ? "auto" : "none",
           display: "block",
           cursor: "pointer",
           userSelect: "none",

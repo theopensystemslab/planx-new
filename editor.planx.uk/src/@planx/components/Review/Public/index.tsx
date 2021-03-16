@@ -12,12 +12,12 @@ interface Props extends MoreInformation {
 }
 
 function Component(props: Props) {
-  const [breadcrumbs, flow, passport, record, canGoBack] = useStore((state) => [
+  const [breadcrumbs, flow, passport, record, hasPaid] = useStore((state) => [
     state.breadcrumbs,
     state.flow,
     state.passport,
     state.record,
-    state.canGoBack(),
+    state.hasPaid(),
   ]);
   return (
     <Presentational
@@ -26,7 +26,7 @@ function Component(props: Props) {
       passport={passport}
       handleSubmit={props.handleSubmit}
       changeAnswer={changeAnswer}
-      showChangeButton={canGoBack}
+      showChangeButton={!hasPaid}
     />
   );
 

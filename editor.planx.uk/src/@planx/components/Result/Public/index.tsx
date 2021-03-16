@@ -13,7 +13,7 @@ import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
 
 export interface Props {
-  canGoBack?: boolean;
+  allowChanges?: boolean;
   handleSubmit: handleSubmit;
   headingColor: {
     text: string;
@@ -50,10 +50,10 @@ const useClasses = makeStyles((theme) => ({
 
 const Responses = ({
   responses,
-  canGoBack,
+  allowChanges,
 }: {
   responses: Response[];
-  canGoBack: boolean;
+  allowChanges: boolean;
 }) => (
   <>
     {responses.map(({ question, selections }: Response) => (
@@ -61,7 +61,7 @@ const Responses = ({
         key={question.id}
         id={question.id}
         question={question}
-        showChangeButton={canGoBack}
+        showChangeButton={allowChanges}
         response={selections.map((s: any) => s.data.text).join(",")}
       />
     ))}
@@ -69,7 +69,7 @@ const Responses = ({
 );
 
 const Result: React.FC<Props> = ({
-  canGoBack = false,
+  allowChanges = false,
   handleSubmit,
   headingColor,
   headingTitle = "",
@@ -100,7 +100,7 @@ const Result: React.FC<Props> = ({
           </Typography>
         </Box>
         <Box mb={3}>
-          <Responses responses={visibleResponses} canGoBack={canGoBack} />
+          <Responses responses={visibleResponses} allowChanges={allowChanges} />
 
           {hiddenResponses.length > 0 && (
             <SimpleExpand
@@ -109,7 +109,10 @@ const Result: React.FC<Props> = ({
                 closed: "Hide other responses",
               }}
             >
-              <Responses responses={hiddenResponses} canGoBack={canGoBack} />
+              <Responses
+                responses={hiddenResponses}
+                allowChanges={allowChanges}
+              />
             </SimpleExpand>
           )}
         </Box>

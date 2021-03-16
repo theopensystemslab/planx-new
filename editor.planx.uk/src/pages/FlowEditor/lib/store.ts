@@ -49,7 +49,6 @@ export interface passport {
 
 interface Store extends Record<string | number | symbol, unknown> {
   addNode: any; //: () => void;
-  canGoBack: () => boolean;
   childNodesOf: (id: string | undefined) => Record<string, any>[];
   connect: (src: string, tgt: string, object?: any) => void;
   connectTo: (id: string) => void;
@@ -62,6 +61,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   getNode: (id: string) => Record<string, any>;
   id: string;
   isClone: (id: string) => boolean;
+  hasPaid: () => boolean;
   makeUnique: any; //: () => void;
   moveNode: any; //: () => void;
   pasteNode: any; //: () => void;
@@ -513,14 +513,12 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
     return goBackable.pop();
   },
 
-  canGoBack: () => {
-    const { breadcrumbs, flow, previousCard } = get();
+  hasPaid: () => {
+    const { breadcrumbs, flow } = get();
 
-    const hasPaid = Object.keys(breadcrumbs).some(
+    return Object.keys(breadcrumbs).some(
       (crumb) => flow[crumb].type === TYPES.Pay
     );
-
-    return !!previousCard() && !hasPaid;
   },
 
   upcomingCardIds() {
