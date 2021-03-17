@@ -16,11 +16,12 @@ import Send from "@planx/components/Send/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
+import { submitFeedback } from "lib/feedback";
 import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
+import { FlowSettings } from "types";
 
-import { FlowSettings } from "../../types";
 import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
 
 export type handleSubmit = (_?: componentOutput) => void;
@@ -136,7 +137,11 @@ const Node: React.FC<any> = (props: Props) => {
       return (
         <Result
           allowChanges={!hasPaid}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
+          handleSubmit={(feedback?: string) => {
+            feedback?.length &&
+              submitFeedback(feedback, { reason: "Inaccurate Result" });
+            props.handleSubmit([props.node.id]);
+          }}
           headingColor={{
             text: flag.color,
             background: flag.bgColor,

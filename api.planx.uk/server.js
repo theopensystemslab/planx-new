@@ -194,11 +194,12 @@ app.use("/bops/:localAuthority", (req, res) =>
       Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
     },
     pathRewrite: (path) => path.replace(/^\/bops.*$/, ""),
-    target: `https://${req.params.localAuthority}.preview.bops.services/api/v1/planning_applications`,
+    target: `https://${req.params.localAuthority}.bops-staging.services/api/v1/planning_applications`,
     changeOrigin: true,
     logLevel: "debug",
   })(req, res)
 );
+
 app.use(
   "/notify/*",
   createProxyMiddleware({
