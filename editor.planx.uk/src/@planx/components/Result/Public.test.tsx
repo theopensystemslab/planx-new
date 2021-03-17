@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 
@@ -18,7 +18,8 @@ test("renders correctly", async () => {
 
   expect(screen.getAllByRole("heading")[0]).toHaveTextContent("AMAZING");
 
-  userEvent.click(screen.getByText("Continue"));
-
+  await act(async () => {
+    await userEvent.click(screen.getByText("Continue"));
+  });
   expect(handleSubmit).toHaveBeenCalled();
 });
