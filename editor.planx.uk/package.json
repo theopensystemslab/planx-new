@@ -159,7 +159,7 @@
       "prettier --write"
     ],
     "src/**/*.{ts,tsx}": [
-      "sh -c tsc --noEmit"
+      "scripts/tsc-lint.sh"
     ]
   }
 }
