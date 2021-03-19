@@ -11,6 +11,7 @@ const { sign } = require("jsonwebtoken");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const { signS3Upload } = require("./s3");
+const zlib = require("zlib");
 
 const router = express.Router();
 
@@ -92,7 +93,7 @@ router.get("/google", (req, res, next) => {
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/login/failed" }),
-  handleSuccess
+  handleSuccess,
 );
 
 const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
@@ -111,7 +112,7 @@ const buildJWT = async (profile, done) => {
         id
       }
     }`,
-    { email }
+    { email },
   );
 
   if (users.length === 1) {
@@ -152,8 +153,8 @@ passport.use(
     },
     async function (_accessToken, _refreshToken, profile, done) {
       await buildJWT(profile, done);
-    }
-  )
+    },
+  ),
 );
 
 passport.serializeUser(function (user, cb) {
@@ -174,7 +175,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin);
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept",
   );
   next();
 });
@@ -183,7 +184,7 @@ app.use(
   cors({
     credentials: true,
     methods: "*",
-  })
+  }),
 );
 
 // XXX: These must be placed after CORS and before body-parser middlewares
@@ -197,7 +198,38 @@ app.use("/bops/:localAuthority", (req, res) =>
     target: `https://${req.params.localAuthority}.bops-staging.services/api/v1/planning_applications`,
     changeOrigin: true,
     logLevel: "debug",
-  })(req, res)
+    onProxyRes: (proxyRes, req, res) => {
+      let response = {};
+      proxyRes.on("data", (data) => {
+        // It's a short one-liner now; we can consider using a Buffer if we want to be really careful?
+        response = zlib.gunzipSync(data).toString();
+      });
+
+      let chunks = [];
+      let request = {};
+      req.on("data", (data) => chunks.push(data));
+      req.on("end", () => request = Buffer.concat(chunks).toString());
+
+      const applicationId = await client.request(
+        `
+        mutation InsertApplication($bops_id: String, $destination_url: String, $request: jsonb, $response: jsonb, $session_id: String) {
+          insert_applications_one(object: {bops_id: $bops_id, destination_url: $destination_url, request: $request, response: $response, session_id: $session_id}) {
+            id
+          }
+        }
+      `,
+        { 
+          bops_id: response.id,
+          destination_url: req.url,
+          request,
+          response,
+          session_id: request.sessionId
+         },
+      );
+
+      res.send(applicationId);
+    },
+  })(req, res),
 );
 
 app.use(
@@ -209,7 +241,7 @@ app.use(
     target: "https://api.notifications.service.gov.uk",
     changeOrigin: true,
     logLevel: "debug",
-  })
+  }),
 );
 
 app.use(
@@ -217,7 +249,7 @@ app.use(
     maxAge: 24 * 60 * 60 * 100,
     name: "session",
     secret: process.env.SESSION_SECRET,
-  })
+  }),
 );
 
 app.use(passport.initialize());
@@ -228,7 +260,7 @@ app.use(
   json({
     extended: true,
     limit: "100mb",
-  })
+  }),
 );
 
 app.use("/auth", router);
@@ -240,7 +272,7 @@ app.get("/hasura", async function (req, res) {
       teams {
         id
       }
-    }`
+    }`,
   );
   res.json(data);
 });
@@ -258,10 +290,10 @@ app.get(
         created_at
       }
     }`,
-      { id: req.user.id }
+      { id: req.user.id },
     );
     res.json(user.users_by_pk);
-  }
+  },
 );
 
 app.get("/", (_req, res) => {
