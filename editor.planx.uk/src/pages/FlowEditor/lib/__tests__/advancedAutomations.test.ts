@@ -1,6 +1,7 @@
 import { TYPES } from "@planx/components/types";
 
 import { vanillaStore } from "../store";
+
 const { getState, setState } = vanillaStore;
 
 const flow = {

@@ -9,12 +9,10 @@ import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import type { Theme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
 import DrawIcon from "@material-ui/icons/Create";
 import LayersIcon from "@material-ui/icons/LayersOutlined";
-import turfArea from "@turf/area";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import ReactMapGL, { Layer, Source } from "react-map-gl";
 
 export default Map;

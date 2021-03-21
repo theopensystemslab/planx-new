@@ -2,6 +2,7 @@ import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
 
 import Public from "./Public";
+
 const metadata: Meta = {
   title: "PlanX Components/FileUpload",
 };
