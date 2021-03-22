@@ -13,7 +13,6 @@ dependencies:
   '@types/sharedb': 1.0.10
   array-move: 3.0.1
   axios: 0.19.2
-  axios-hooks: 2.1.0_axios@0.19.2+react@17.0.1
   classnames: 2.2.6
   date-fns: 2.16.1
   draft-js: 0.11.7_react-dom@17.0.1+react@17.0.1
@@ -3272,12 +3271,6 @@ packages:
       regenerator-runtime: 0.13.7
     resolution:
       integrity: sha512-roGr54CsTmNPPzZoCP1AmDXuBoNao7tnSA83TXTwt+UK5QVyh1DIJnrgYRPWKCF2flqZQXwa7Yr8v7VmLzF0YQ==
-  /@babel/runtime/7.10.3:
-    dependencies:
-      regenerator-runtime: 0.13.7
-    dev: false
-    resolution:
-      integrity: sha512-RzGO0RLSdokm9Ipe/YD+7ww8X2Ro79qiXZF3HU9ljrM+qnJmH1Vqth+hbiQZy761LnMJTMitHDuKVYTk3k4dLw==
   /@babel/runtime/7.12.1:
     dependencies:
       regenerator-runtime: 0.13.7
@@ -7072,18 +7065,6 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha512-5Kgy8Cz6LPC9DJcNb3yjAXTu3XihQgEdnIg50c//zOC/MyLP0Clg+Y8Sh9ZjjnvBrDZU4DgXS9C3T9r4/scGZQ==
-  /axios-hooks/2.1.0_axios@0.19.2+react@17.0.1:
-    dependencies:
-      '@babel/runtime': 7.10.3
-      axios: 0.19.2
-      lru-cache: 5.1.1
-      react: 17.0.1
-    dev: false
-    peerDependencies:
-      axios: ^0.18.0 || ^0.19.0
-      react: ^16.8.0-0
-    resolution:
-      integrity: sha512-Vt4wWeE32T7NyaHmFJrHTebADjojk7THTiDsQ+GoEwBg6b4c9xuBuE2gG4a7L6JRPRkASNvTG83/5nKM59u2ZA==
   /axios/0.19.2:
     dependencies:
       follow-redirects: 1.5.10
@@ -20981,7 +20962,6 @@ specifiers:
   '@types/sharedb': ^1.0.10
   array-move: ^3.0.1
   axios: ^0.19.2
-  axios-hooks: ^2.1.0
   classnames: ^2.2.6
   craco-esbuild: ^0.2.1
   css-loader: ^5.0.1

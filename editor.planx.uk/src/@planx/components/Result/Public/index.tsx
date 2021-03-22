@@ -1,5 +1,4 @@
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";

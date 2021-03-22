@@ -1,4 +1,4 @@
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { MoreInformation } from "../shared";
 
 // XXX: No user data because Notify is a side-effect.
 export type UserData = void;

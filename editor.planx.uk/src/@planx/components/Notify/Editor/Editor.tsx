@@ -5,10 +5,6 @@
 //
 
 import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { TYPES } from "@planx/components/types";
 import {
@@ -21,13 +17,10 @@ import { useFormik } from "formik";
 import { NotifyClient } from "notifications-node-client";
 import React from "react";
 import { useAsync } from "react-use";
-import Input from "ui/Input";
 import InputGroup from "ui/InputGroup";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
-import OptionButton from "ui/OptionButton";
-import RichTextInput from "ui/RichTextInput";
 
 import type { Notify } from "../model";
 import type { Template } from "./Templates";

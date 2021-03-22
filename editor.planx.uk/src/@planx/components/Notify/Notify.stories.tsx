@@ -1,7 +1,8 @@
 import type { Meta } from "@storybook/react/types-6-0";
+import { useFormik } from "formik";
 import React from "react";
+import { useAsync } from "react-use";
 
-import Wrapper from "../fixtures/Wrapper";
 import _Editor from "./Editor";
 import _Templates from "./Editor/Templates";
 
@@ -13,9 +14,6 @@ export default metadata;
 export function Editor(props: any) {
   return <_Editor {...props} />;
 }
-
-import { useFormik } from "formik";
-import { useAsync } from "react-use";
 
 const mockTemplateId = "aaaaaaaa";
 const mockTemplates = [

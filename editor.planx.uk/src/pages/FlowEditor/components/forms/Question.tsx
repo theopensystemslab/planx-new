@@ -13,7 +13,6 @@ import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
 
-import { FormikHookReturn } from "../../../../types";
 import { PermissionSelect } from "./shared";
 
 interface Props {

@@ -1,19 +1,16 @@
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import ButtonBase from "@material-ui/core/ButtonBase";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import type { Theme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
 import DrawIcon from "@material-ui/icons/Create";
 import LayersIcon from "@material-ui/icons/LayersOutlined";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactMapGL, { Layer, Source } from "react-map-gl";
 import { DrawPolygonMode, Editor } from "react-map-gl-draw";
 
