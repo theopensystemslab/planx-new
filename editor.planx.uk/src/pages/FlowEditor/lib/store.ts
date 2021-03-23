@@ -655,6 +655,7 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       const visited = new Set([start]);
 
       const crawlFrom = (id: string) => {
+        if (!flow[id]) return;
         visited.add(id);
         flow[id].edges?.forEach((childId) => {
           crawlFrom(childId);
