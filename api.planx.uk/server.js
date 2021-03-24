@@ -188,49 +188,66 @@ app.use(
 );
 
 // XXX: These must be placed after CORS and before body-parser middlewares
-app.use("/bops/:localAuthority", (req, res) =>
+app.use("/bops/:localAuthority", (req, res) => {
+  // Capture request body & headers
+  let reqChunks = [],
+    reqBody = {};
+  req.on("data", (data) => reqChunks.push(data));
+  req.on("end", () => {
+    reqBody = JSON.parse(Buffer.concat(reqChunks).toString());
+  });
+
+  const reqHeaders = req.headers;
+
+  // Create target
+  const target = `https://${req.params.localAuthority}.bops-staging.services/api/v1/planning_applications`;
+
   createProxyMiddleware({
     headers: {
       ...req.headers,
       Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
     },
     pathRewrite: (path) => path.replace(/^\/bops.*$/, ""),
-    target: `https://${req.params.localAuthority}.bops-staging.services/api/v1/planning_applications`,
+    target,
     changeOrigin: true,
     logLevel: "debug",
-    onProxyRes: (proxyRes, req, res) => {
-      let response = {};
+    selfHandleResponse: true,
+    onProxyRes: async (proxyRes, req, res) => {
+      // Capture & decode the response from BOPS
+      let responseChunks = [],
+        bopsResponse;
       proxyRes.on("data", (data) => {
-        // It's a short one-liner now; we can consider using a Buffer if we want to be really careful?
-        response = zlib.gunzipSync(data).toString();
+        responseChunks.push(data);
       });
 
-      let chunks = [];
-      let request = {};
-      req.on("data", (data) => chunks.push(data));
-      req.on("end", () => request = Buffer.concat(chunks).toString());
+      // Create & store application
+      proxyRes.on("end", async () => {
+        bopsResponse = JSON.parse(Buffer.concat(responseChunks).toString());
 
-      const applicationId = await client.request(
-        `
-        mutation InsertApplication($bops_id: String, $destination_url: String, $request: jsonb, $response: jsonb, $session_id: String) {
-          insert_applications_one(object: {bops_id: $bops_id, destination_url: $destination_url, request: $request, response: $response, session_id: $session_id}) {
-            id
+        const applicationId = await client.request(
+          `
+          mutation CreateApplication($bops_id: String, $destination_url: String, $request: jsonb, $response: jsonb = "", $session_id: String = "", $req_headers: jsonb = "") {
+            insert_bops_applications_one(object: {bops_id: $bops_id, destination_url: $destination_url, request: $request, response: $response, session_id: $session_id, req_headers: $req_headers}) {
+              id
+            }
           }
-        }
-      `,
-        { 
-          bops_id: response.id,
-          destination_url: req.url,
-          request,
-          response,
-          session_id: request.sessionId
-         },
-      );
+        `,
+          {
+            bops_id: bopsResponse.id,
+            destination_url: target,
+            request: reqBody,
+            req_headers: req.headers,
+            response: bopsResponse,
+            session_id: reqBody.sessionId,
+          },
+        );
 
-      res.send(applicationId);
+        res.send(applicationId.insert_bops_applications_one);
+        res.end();
+      });
     },
-  })(req, res),
-);
+  })(req, res);
+});
 
 app.use(
   "/notify/*",
