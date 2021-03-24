@@ -192,12 +192,12 @@ app.use("/bops/:localAuthority", (req, res) => {
   // Capture request body & headers
   let reqChunks = [],
     reqBody = {};
-  req.on("data", (data) => reqChunks.push(data));
+  req.on("data", (data) => {
+    reqChunks.push(data);
+  });
   req.on("end", () => {
     reqBody = JSON.parse(Buffer.concat(reqChunks).toString());
   });
-
-  const reqHeaders = req.headers;
 
   // Create target
   const target = `https://${req.params.localAuthority}.bops-staging.services/api/v1/planning_applications`;
@@ -212,6 +212,11 @@ app.use("/bops/:localAuthority", (req, res) => {
     changeOrigin: true,
     logLevel: "debug",
     selfHandleResponse: true,
+    onProxyReq: (proxyReq) => {
+      // Forward request buffer
+      proxyReq.write(Buffer.concat(reqChunks));
+      proxyReq.end();
+    },
     onProxyRes: async (proxyRes, req, res) => {
       // Capture & decode the response from BOPS
       let responseChunks = [],
@@ -222,28 +227,42 @@ app.use("/bops/:localAuthority", (req, res) => {
 
       // Create & store application
       proxyRes.on("end", async () => {
-        bopsResponse = JSON.parse(Buffer.concat(responseChunks).toString());
+        const buffer = Buffer.concat(responseChunks);
 
-        const applicationId = await client.request(
-          `
-          mutation CreateApplication($bops_id: String, $destination_url: String, $request: jsonb, $response: jsonb = "", $session_id: String = "", $req_headers: jsonb = "") {
-            insert_bops_applications_one(object: {bops_id: $bops_id, destination_url: $destination_url, request: $request, response: $response, session_id: $session_id, req_headers: $req_headers}) {
-              id
-            }
+        if (buffer) {
+          try {
+            const unzipped = zlib.gunzipSync(buffer).toString();
+            bopsResponse = JSON.parse(unzipped);
+          } catch (e) {
+            console.error(e);
           }
-        `,
-          {
-            bops_id: bopsResponse.id,
-            destination_url: target,
-            request: reqBody,
-            req_headers: req.headers,
-            response: bopsResponse,
-            session_id: reqBody.sessionId,
-          },
-        );
+        }
 
-        res.send(applicationId.insert_bops_applications_one);
-        res.end();
+        if (bopsResponse && typeof bopsResponse === "object") {
+          const applicationId = await client.request(
+            `
+              mutation CreateApplication($bops_id: String, $destination_url: String, $request: jsonb, $response: jsonb = "", $session_id: String = "", $req_headers: jsonb = "") {
+                insert_bops_applications_one(object: {bops_id: $bops_id, destination_url: $destination_url, request: $request, response: $response, session_id: $session_id, req_headers: $req_headers}) {
+                  id
+                }
+              }
+            `,
+            {
+              bops_id: bopsResponse.id,
+              destination_url: target,
+              request: reqBody,
+              req_headers: req.headers,
+              response: bopsResponse,
+              session_id: reqBody.sessionId,
+            },
+          );
+          res.send({
+            application: {
+              ...applicationId.insert_bops_applications_one,
+              bopsResponse,
+            },
+          });
+        }
       });
     },
   })(req, res);
