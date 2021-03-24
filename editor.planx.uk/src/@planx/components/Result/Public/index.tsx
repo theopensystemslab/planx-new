@@ -15,6 +15,7 @@ import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
 
 export interface Props {
+  allowChanges?: boolean;
   handleSubmit: handleSubmit;
   headingColor: {
     text: string;
@@ -23,12 +24,14 @@ export interface Props {
   headingTitle?: string;
   description?: string;
   reasonsTitle?: string;
-  responses: Array<{
-    question: Node;
-    selections?: Array<Node>;
-    hidden: boolean;
-  }>;
+  responses: Array<Response>;
   disclaimer?: TextContent;
+}
+
+interface Response {
+  question: Node;
+  selections: Array<Node>;
+  hidden: boolean;
 }
 
 const useClasses = makeStyles((theme) => ({
@@ -47,13 +50,20 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-const Responses = ({ responses }: any) => (
+const Responses = ({
+  responses,
+  allowChanges,
+}: {
+  responses: Response[];
+  allowChanges: boolean;
+}) => (
   <>
-    {responses.map(({ question, selections }: any) => (
+    {responses.map(({ question, selections }: Response) => (
       <ResultReason
         key={question.id}
         id={question.id}
         question={question}
+        showChangeButton={allowChanges}
         response={selections.map((s: any) => s.data.text).join(",")}
       />
     ))}
@@ -61,6 +71,7 @@ const Responses = ({ responses }: any) => (
 );
 
 const Result: React.FC<Props> = ({
+  allowChanges = false,
   handleSubmit,
   headingColor,
   headingTitle = "",
@@ -100,7 +111,7 @@ const Result: React.FC<Props> = ({
           </Typography>
         </Box>
         <Box mb={3}>
-          <Responses responses={visibleResponses} />
+          <Responses responses={visibleResponses} allowChanges={allowChanges} />
 
           {hiddenResponses.length > 0 && (
             <SimpleExpand
@@ -109,7 +120,10 @@ const Result: React.FC<Props> = ({
                 closed: "Hide other responses",
               }}
             >
-              <Responses responses={hiddenResponses} />
+              <Responses
+                responses={hiddenResponses}
+                allowChanges={allowChanges}
+              />
             </SimpleExpand>
           )}
         </Box>

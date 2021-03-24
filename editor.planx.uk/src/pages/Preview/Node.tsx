@@ -33,9 +33,10 @@ interface Props {
 }
 
 const Node: React.FC<any> = (props: Props) => {
-  const [childNodesOf, resultData] = useStore((state) => [
+  const [childNodesOf, resultData, hasPaid] = useStore((state) => [
     state.childNodesOf,
     state.resultData,
+    state.hasPaid(),
   ]);
 
   const resetPreview = useStore((state) => state.resetPreview);
@@ -135,6 +136,7 @@ const Node: React.FC<any> = (props: Props) => {
 
       return (
         <Result
+          allowChanges={!hasPaid}
           handleSubmit={(feedback?: string) => {
             feedback?.length &&
               submitFeedback(feedback, { reason: "Inaccurate Result" });

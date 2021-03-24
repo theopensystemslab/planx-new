@@ -14,6 +14,7 @@ test("renders correctly", async () => {
       passport={{}}
       changeAnswer={() => {}}
       handleSubmit={handleSubmit}
+      showChangeButton={true}
     />
   );
 

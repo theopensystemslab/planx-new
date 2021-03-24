@@ -61,6 +61,7 @@ interface Store extends Record<string | number | symbol, unknown> {
   getNode: (id: string) => Record<string, any>;
   id: string;
   isClone: (id: string) => boolean;
+  hasPaid: () => boolean;
   makeUnique: any; //: () => void;
   moveNode: any; //: () => void;
   pasteNode: any; //: () => void;
@@ -510,6 +511,14 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       .map(([k]) => k);
 
     return goBackable.pop();
+  },
+
+  hasPaid: () => {
+    const { breadcrumbs, flow } = get();
+
+    return Object.keys(breadcrumbs).some(
+      (crumb) => flow[crumb].type === TYPES.Pay
+    );
   },
 
   upcomingCardIds() {

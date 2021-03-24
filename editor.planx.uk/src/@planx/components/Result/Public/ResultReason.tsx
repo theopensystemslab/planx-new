@@ -14,6 +14,7 @@ interface IResultReason {
   id: string;
   question: Node;
   response: string;
+  showChangeButton?: boolean;
 }
 
 const useClasses = makeStyles((theme: Theme) => ({
@@ -40,7 +41,12 @@ const useClasses = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
+const ResultReason: React.FC<IResultReason> = ({
+  id,
+  question,
+  response,
+  showChangeButton = false,
+}) => {
   const record = useStore((state) => state.record);
   const [showMoreInfo, setShowMoreInfo] = React.useState(false);
 
@@ -77,16 +83,18 @@ const ResultReason: React.FC<IResultReason> = ({ id, question, response }) => {
             {question.data.text}{" "}
             <strong className={classes.responseText}>{response}</strong>
           </Typography>
-          <Button
-            color="inherit"
-            className={classes.changeButton}
-            onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-              e.stopPropagation();
-              record(id);
-            }}
-          >
-            change
-          </Button>
+          {showChangeButton && (
+            <Button
+              color="inherit"
+              className={classes.changeButton}
+              onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+                e.stopPropagation();
+                record(id);
+              }}
+            >
+              change
+            </Button>
+          )}
         </Box>
         {hasMoreInfo && <Caret expanded={showMoreInfo} />}
       </Box>
