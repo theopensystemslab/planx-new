@@ -241,8 +241,24 @@ app.use("/bops/:localAuthority", (req, res) => {
         if (bopsResponse && typeof bopsResponse === "object") {
           const applicationId = await client.request(
             `
-              mutation CreateApplication($bops_id: String, $destination_url: String, $request: jsonb, $response: jsonb = "", $session_id: String = "", $req_headers: jsonb = "") {
-                insert_bops_applications_one(object: {bops_id: $bops_id, destination_url: $destination_url, request: $request, response: $response, session_id: $session_id, req_headers: $req_headers}) {
+              mutation CreateApplication(
+                $bops_id: String = "",
+                $destination_url: String = "",
+                $request: jsonb = "",
+                $req_headers: jsonb = "",
+                $response: jsonb = "",
+                $response_headers: jsonb = "",
+                $session_id: String = "",
+              ) {
+                insert_bops_applications_one(object: {
+                  bops_id: $bops_id,
+                  destination_url: $destination_url,
+                  request: $request,
+                  req_headers: $req_headers,
+                  response: $response,
+                  response_headers: $response_headers,
+                  session_id: $session_id,
+                }) {
                   id
                 }
               }
@@ -253,6 +269,7 @@ app.use("/bops/:localAuthority", (req, res) => {
               request: reqBody,
               req_headers: req.headers,
               response: bopsResponse,
+              response_headers: proxyRes.headers,
               session_id: reqBody.sessionId,
             },
           );
