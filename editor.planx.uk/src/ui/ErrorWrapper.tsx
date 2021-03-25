@@ -23,13 +23,10 @@ const useClasses = makeStyles((theme) => ({
 
 export default function ErrorWrapper(props: Props): FCReturn {
   const classes = useClasses();
-  if (!props.error) {
-    return props.children || null;
-  }
   return (
-    <div className={classes.rootError}>
+    <div className={props.error ? classes.rootError : undefined}>
       {props.children || null}
-      <p className={classes.errorText}>{props.error}</p>
+      {props.error && <p className={classes.errorText}>{props.error}</p>}
     </div>
   );
 }
