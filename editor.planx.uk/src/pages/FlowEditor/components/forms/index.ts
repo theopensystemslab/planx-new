@@ -1,4 +1,5 @@
 import AddressInput from "@planx/components/AddressInput/Editor";
+import Calculate from "@planx/components/Calculate/Editor";
 import Content from "@planx/components/Content/Editor";
 import DateInput from "@planx/components/DateInput/Editor";
 import DrawBoundary from "@planx/components/DrawBoundary/Editor";
@@ -30,6 +31,7 @@ const components: {
   [key in typeof SLUGS[TYPES]]: React.FC<any>;
 } = {
   "address-input": AddressInput,
+  calculate: Calculate,
   checklist: Checklist,
   content: Content,
   "date-input": DateInput,

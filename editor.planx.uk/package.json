@@ -32,6 +32,7 @@
     "luhn": "^2.4.1",
     "mapbox-gl": "^1.13.0",
     "marked": "^1.2.7",
+    "mathjs": "^9.3.0",
     "nanoid": "^3.1.16",
     "nanoid-good": "^3.1.0",
     "natsort": "^2.0.2",

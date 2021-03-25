@@ -5,7 +5,7 @@ import React from "react";
 
 interface Props {
   title?: string;
-  children: JSX.Element[] | JSX.Element;
+  children?: JSX.Element[] | JSX.Element;
   author?: string;
   Icon?: any;
 }
