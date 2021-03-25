@@ -24,6 +24,8 @@ const Node: React.FC<any> = (props) => {
 
   const type = props.type as TYPES;
   switch (type) {
+    case TYPES.Calculate:
+      return <Question {...allProps} text="Calculate" />;
     case TYPES.Content:
       return (
         <Question

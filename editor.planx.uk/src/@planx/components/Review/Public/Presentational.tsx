@@ -56,6 +56,7 @@ const components: {
   [key in TYPES]: React.FC<any> | undefined;
 } = {
   [TYPES.AddressInput]: Debug,
+  [TYPES.Calculate]: undefined,
   [TYPES.Checklist]: Checklist,
   [TYPES.Content]: undefined,
   [TYPES.DateInput]: Debug,

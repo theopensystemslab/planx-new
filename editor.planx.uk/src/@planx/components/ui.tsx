@@ -6,6 +6,7 @@ import Create from "@material-ui/icons/Create";
 import Description from "@material-ui/icons/Description";
 import Event from "@material-ui/icons/Event";
 import ExposureZero from "@material-ui/icons/ExposureZero";
+import FunctionsIcon from "@material-ui/icons/Functions";
 import Home from "@material-ui/icons/Home";
 import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import List from "@material-ui/icons/List";
@@ -48,6 +49,7 @@ export const ICONS: {
   [key in TYPES]: Icon | undefined;
 } = {
   [TYPES.AddressInput]: Home,
+  [TYPES.Calculate]: FunctionsIcon,
   [TYPES.Checklist]: CheckBoxOutlined,
   [TYPES.Content]: TextFields,
   [TYPES.DateInput]: Event,
