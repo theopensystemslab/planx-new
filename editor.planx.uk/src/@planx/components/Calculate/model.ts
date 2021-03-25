@@ -92,8 +92,8 @@ export function toScope(passport: any): Object {
 
 export function evaluatePassport(
   input: string,
-  passport: any,
-  defaults: any
+  passport: any = {},
+  defaults: any = {}
 ): string {
   return String(evaluate(input, toScope(passport), defaults));
 }
