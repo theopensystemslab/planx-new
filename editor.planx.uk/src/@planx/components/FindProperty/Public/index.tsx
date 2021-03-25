@@ -12,6 +12,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import { useFormik } from "formik";
 import capitalize from "lodash/capitalize";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -21,6 +22,7 @@ import React, { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
+import CollapsibleInput from "ui/CollapsibleInput";
 
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
@@ -134,10 +136,10 @@ function Component(props: Props) {
     // };
     return (
       <PropertyInformation
-        handleSubmit={() => {
+        handleSubmit={(feedback?: string) => {
           if (flow && address && constraints) {
             startSession({ passport: { data: constraints, info: address } });
-            props.handleSubmit();
+            props.handleSubmit(feedback);
           } else {
             throw Error("Should not have been clickable");
           }
@@ -363,8 +365,17 @@ export function PropertyInformation(props: any) {
     handleSubmit,
   } = props;
   const styles = useClasses();
+  const formik = useFormik({
+    initialValues: {
+      feedback: "",
+    },
+    onSubmit: (values) => {
+      handleSubmit && handleSubmit(values.feedback);
+    },
+  });
+
   return (
-    <Card handleSubmit={handleSubmit} isValid>
+    <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
       <Box className={styles.map}>
         <Map zoom={18} lat={lat} lng={lng} />
@@ -383,9 +394,15 @@ export function PropertyInformation(props: any) {
       </Box>
       <PropertyConstraints constraintsData={propertyConstraints} />
       <Box color="text.secondary" textAlign="right">
-        <Button variant="text" color="inherit">
-          Report an inaccuracy
-        </Button>
+        <CollapsibleInput
+          handleChange={formik.handleChange}
+          name="feedback"
+          value={formik.values.feedback}
+        >
+          <Typography variant="body2" color="inherit">
+            Report an inaccuracy
+          </Typography>
+        </CollapsibleInput>
       </Box>
     </Card>
   );

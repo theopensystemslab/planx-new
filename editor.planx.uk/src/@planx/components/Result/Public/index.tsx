@@ -85,8 +85,7 @@ const Result: React.FC<Props> = ({
       feedback: "",
     },
     onSubmit: (values) => {
-      const feedback = values.feedback.length > 0 ? values.feedback : [];
-      handleSubmit && handleSubmit(feedback);
+      handleSubmit && handleSubmit(values.feedback);
     },
   });
   const visibleResponses = responses.filter((r) => !r.hidden);

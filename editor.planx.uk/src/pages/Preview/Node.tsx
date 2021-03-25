@@ -92,7 +92,13 @@ const Node: React.FC<any> = (props: Props) => {
       return (
         <FindProperty
           {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
+          handleSubmit={(feedback?: string) => {
+            feedback?.length &&
+              submitFeedback(feedback, {
+                reason: "Inaccurate property location",
+              });
+            props.handleSubmit([props.node.id]);
+          }}
         />
       );
 
