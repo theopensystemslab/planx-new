@@ -136,11 +136,6 @@ function Component(props: Props) {
             })
           }
         </div>
-        <h2>Now send your application</h2>
-        <p>
-          By submitting this notification you are confirming that, to the best
-          of your knowledge, the details you are providing are correct.
-        </p>
       </div>
     </Card>
   );
