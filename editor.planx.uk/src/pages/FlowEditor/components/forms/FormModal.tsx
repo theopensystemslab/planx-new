@@ -74,6 +74,7 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.Page}>Page</option>
       </optgroup>
       <optgroup label="Payment">
+        <option value={TYPES.Calculate}>Calculate</option>
         <option value={TYPES.Pay}>Pay</option>
       </optgroup>
       <optgroup label="Outputs">

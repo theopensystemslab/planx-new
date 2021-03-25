@@ -1,4 +1,5 @@
 import AddressInput from "@planx/components/AddressInput/Public";
+import Calculate from "@planx/components/Calculate/Public";
 import Checklist from "@planx/components/Checklist/Public";
 import Content from "@planx/components/Content/Public";
 import DateInput from "@planx/components/DateInput/Public";
@@ -48,6 +49,8 @@ const Node: React.FC<any> = (props: Props) => {
   };
 
   switch (props.node.type) {
+    case TYPES.Calculate:
+      return <Calculate {...allProps} />;
     case TYPES.Checklist:
       // TODO: sensitive fix for strict mode
       const childNodes = childNodesOf(props.node.id);

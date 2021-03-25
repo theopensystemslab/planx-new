@@ -24,4 +24,5 @@ export enum TYPES {
   Review = 600,
   Notify = 625,
   Send = 650,
+  Calculate = 700,
 }

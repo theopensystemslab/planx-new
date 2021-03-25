@@ -6,6 +6,7 @@ export const SLUGS: {
   [TYPES.AddressInput]: "address-input",
   [TYPES.Checklist]: "checklist",
   [TYPES.Content]: "content",
+  [TYPES.Calculate]: "calculate",
   [TYPES.DateInput]: "date-input",
   [TYPES.DrawBoundary]: "draw-boundary",
   [TYPES.ExternalPortal]: "external-portal",

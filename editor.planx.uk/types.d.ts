@@ -11,3 +11,4 @@ declare module "proj4";
 declare module "notifications-node-client";
 declare module "draftjs-to-html";
 declare module "wait-for-expect";
+declare module "mathjs";

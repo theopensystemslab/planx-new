@@ -127,6 +127,7 @@ packages:
     dev: false
     resolution:
       integrity: sha512-xfo+yLRM2zVjVEA4p23IjQWzyWl1ZhWOGobsBqRpIarzLvwNH/RAGaoehdxlhx4X92302DrpdIFgTICMN4P38w==
+      tarball: '@pulumi/query/-/query-0.3.0.tgz'
   /@types/aws-lambda/8.10.64:
     dev: false
     resolution:
