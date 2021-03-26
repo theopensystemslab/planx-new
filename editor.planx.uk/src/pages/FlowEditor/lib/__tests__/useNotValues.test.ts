@@ -131,3 +131,27 @@ describe("if I initially pick", () => {
     expect(getState().upcomingCardIds()).toEqual(["pqZK1mpn23"]);
   });
 });
+
+test("back button works as expected", () => {
+  getState().resetPreview();
+  setState({
+    flow,
+    breadcrumbs: {
+      NS7QFc7Cjc: {
+        answers: ["BecasKrIhI"],
+        auto: false,
+      },
+      "3cNtq1pLmt": {
+        answers: ["TnvmCtle0s"],
+        auto: true,
+      },
+      eTBHJsbJKc: {
+        answers: ["nR15Tl0lhC"],
+        auto: false,
+      },
+    },
+  });
+
+  getState().record("eTBHJsbJKc");
+  expect(getState().upcomingCardIds()).toEqual(["eTBHJsbJKc"]);
+});
