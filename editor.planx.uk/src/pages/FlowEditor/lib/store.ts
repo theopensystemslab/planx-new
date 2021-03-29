@@ -534,10 +534,10 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
       (acc, [id, { answers = [] }]) => {
         const _knownNotVals = difference(flow[id].edges, answers);
 
-        acc[flow[id].data?.fn] = flatten(
-          uniq([
+        acc[flow[id].data?.fn] = uniq(
+          flatten([
             ...(acc[flow[id].data?.fn] || []),
-            _knownNotVals.map((n) => flow[n].data?.val),
+            _knownNotVals.flatMap((n) => flow[n].data?.val),
           ])
         ).filter(Boolean) as Array<nodeId>;
 
@@ -631,9 +631,19 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
             }
 
             if (responsesThatCanBeAutoAnswered.length === 0) {
-              responsesThatCanBeAutoAnswered = (responses || []).filter(
-                (r) => !r.data?.val
+              const _responses = (responses || []).filter(
+                (r) => !knownNotVals[fn]?.includes(r.data.val)
               );
+              if (_responses.length === 1) {
+                responsesThatCanBeAutoAnswered = _responses;
+              } else if (
+                !passport.data[fn] ||
+                passport.data[fn].value.length > 0
+              ) {
+                responsesThatCanBeAutoAnswered = (responses || []).filter(
+                  (r) => !r.data?.val
+                );
+              }
             }
 
             if (responsesThatCanBeAutoAnswered.length > 0) {
