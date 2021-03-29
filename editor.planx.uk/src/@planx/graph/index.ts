@@ -434,3 +434,24 @@ export const makeUnique = (
     };
     _makeUnique(id, parent, { idFn }, true);
   });
+
+const dfs = (graph: Graph) => (startId: string) => {
+  const visited = new Set([startId]);
+  const crawlFrom = (id: string) => {
+    visited.add(id);
+    graph[id].edges?.forEach((childId) => {
+      crawlFrom(childId);
+    });
+  };
+  crawlFrom(startId);
+  return [...visited];
+};
+
+export const sortIdsDepthFirst = (graph: Graph) => (
+  nodeIds: Set<string>
+): Array<string> => {
+  const allNodeIdsSorted = dfs(graph)(ROOT_NODE_KEY);
+  return Array.from(nodeIds).sort(
+    (a, b) => allNodeIdsSorted.indexOf(a) - allNodeIdsSorted.indexOf(b)
+  );
+};

@@ -9,10 +9,13 @@ import {
   move,
   remove,
   ROOT_NODE_KEY,
+  sortIdsDepthFirst,
   update,
 } from "@planx/graph";
 import produce from "immer";
 import debounce from "lodash/debounce";
+import difference from "lodash/difference";
+import flatten from "lodash/flatten";
 import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import create from "zustand";
@@ -524,164 +527,193 @@ export const vanillaStore = vanillaCreate<Store>((set, get) => ({
   upcomingCardIds() {
     const { flow, breadcrumbs, passport, collectedFlags } = get();
 
-    const ids: Set<string> = new Set();
+    const ids: Set<nodeId> = new Set();
+    const visited: Set<nodeId> = new Set();
 
-    const mostToLeastNumberOfValues = (b: any, a: any) =>
-      String(a.data?.val).split(",").length -
-      String(b.data?.val).split(",").length;
+    const knownNotVals = Object.entries(breadcrumbs).reduce(
+      (acc, [id, { answers = [] }]) => {
+        const _knownNotVals = difference(flow[id].edges, answers);
 
-    let visited = new Set();
+        acc[flow[id].data?.fn] = flatten(
+          uniq([
+            ...(acc[flow[id].data?.fn] || []),
+            _knownNotVals.map((n) => flow[n].data?.val),
+          ])
+        ).filter(Boolean) as Array<nodeId>;
 
-    const nodeIdsConnectedFrom = (source: string) => {
+        return acc;
+      },
+      {} as Record<nodeId, Array<nodeId>>
+    );
+
+    const nodeIdsConnectedFrom = (source: nodeId): void => {
       return (flow[source]?.edges ?? [])
-        .map((id) => {
+        .filter((id) => {
+          if (visited.has(id)) return false;
+
           visited.add(id);
-          return id;
+
+          const node = flow[id];
+
+          return (
+            node &&
+            !breadcrumbs[id] &&
+            ((node.edges || []).length > 0 ||
+              (node.type && !SUPPORTED_DECISION_TYPES.includes(node.type)))
+          );
         })
-        .filter(
-          (id) =>
-            !Object.keys(breadcrumbs).includes(id) &&
-            (!SUPPORTED_DECISION_TYPES.includes(flow[id]?.type as TYPES) ||
-              (flow[id]?.edges as any)?.length > 0)
-        )
         .forEach((id) => {
+          const node = flow[id];
+
           if (
-            [TYPES.InternalPortal, TYPES.Page].includes(flow[id]?.type as TYPES)
+            node.type &&
+            [TYPES.InternalPortal, TYPES.Page].includes(node.type)
           ) {
-            nodeIdsConnectedFrom(id);
-          } else {
-            const useFlag = flow[id]?.type === TYPES.Filter;
+            return nodeIdsConnectedFrom(id);
+          }
 
-            const fn = useFlag ? "flag" : flow[id]?.data?.fn;
+          const fn = node.type === TYPES.Filter ? "flag" : node.data?.fn;
 
-            const [globalFlag] = collectedFlags(id, [...visited] as Array<
-              string
-            >);
+          const [globalFlag] = collectedFlags(id, Array.from(visited));
 
-            let passportValues =
-              fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
+          let passportValues =
+            fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
 
-            if (fn && (fn === "flag" || passportValues !== undefined)) {
-              const responses = flow[id]?.edges?.map((id) => ({
-                id,
-                ...flow[id],
-              }));
+          if (fn && (fn === "flag" || passportValues !== undefined)) {
+            const responses = node.edges?.map((id) => ({
+              id,
+              ...flow[id],
+            }));
 
-              let responsesThatCanBeAutoAnswered = [] as any[];
+            let responsesThatCanBeAutoAnswered = [] as any[];
 
-              const sortedResponses = responses
-                ? responses
-                    .sort(mostToLeastNumberOfValues)
-                    .filter((response) => response.data?.val)
-                : [];
+            const sortedResponses = responses
+              ? responses
+                  // sort by the most to least number of comma-separated items in data.val
+                  .sort(
+                    (a: any, b: any) =>
+                      String(b.data?.val).split(",").length -
+                      String(a.data?.val).split(",").length
+                  )
+                  .filter((response) => response.data?.val)
+              : [];
 
-              if (passportValues !== undefined) {
-                if (!Array.isArray(passportValues))
-                  passportValues = [passportValues];
+            if (passportValues !== undefined) {
+              if (!Array.isArray(passportValues))
+                passportValues = [passportValues];
 
-                passportValues = (passportValues || []).filter((pv: any) =>
-                  sortedResponses.some((r) => pv.startsWith(r.data.val))
+              passportValues = (passportValues || []).filter((pv: any) =>
+                sortedResponses.some((r) => pv.startsWith(r.data.val))
+              );
+
+              if (passportValues.length > 0) {
+                responsesThatCanBeAutoAnswered = (sortedResponses || []).filter(
+                  (r) => {
+                    const responseValues = String(r.data.val).split(",").sort();
+                    return String(responseValues) === String(passportValues);
+                  }
                 );
 
-                if (passportValues.length > 0) {
+                if (responsesThatCanBeAutoAnswered.length === 0) {
                   responsesThatCanBeAutoAnswered = (
                     sortedResponses || []
                   ).filter((r) => {
                     const responseValues = String(r.data.val).split(",").sort();
-                    return String(responseValues) === String(passportValues);
+
+                    for (const responseValue of responseValues) {
+                      return passportValues.some((passportValue: any) =>
+                        String(passportValue).startsWith(responseValue)
+                      );
+                    }
                   });
-
-                  if (responsesThatCanBeAutoAnswered.length === 0) {
-                    responsesThatCanBeAutoAnswered = (
-                      sortedResponses || []
-                    ).filter((r) => {
-                      const responseValues = String(r.data.val)
-                        .split(",")
-                        .sort();
-
-                      for (const responseValue of responseValues) {
-                        return passportValues.some((passportValue: any) =>
-                          String(passportValue).startsWith(responseValue)
-                        );
-                      }
-                    });
-                  }
                 }
               }
+            }
 
-              if (responsesThatCanBeAutoAnswered.length === 0) {
-                responsesThatCanBeAutoAnswered = (responses || []).filter(
-                  (r) => !r.data?.val
+            if (responsesThatCanBeAutoAnswered.length === 0) {
+              responsesThatCanBeAutoAnswered = (responses || []).filter(
+                (r) => !r.data?.val
+              );
+            }
+
+            if (responsesThatCanBeAutoAnswered.length > 0) {
+              if (node.type !== TYPES.Checklist) {
+                responsesThatCanBeAutoAnswered = responsesThatCanBeAutoAnswered.slice(
+                  0,
+                  1
                 );
               }
 
-              if (responsesThatCanBeAutoAnswered.length > 0) {
-                if (flow[id]?.type !== TYPES.Checklist) {
-                  responsesThatCanBeAutoAnswered = responsesThatCanBeAutoAnswered.slice(
-                    0,
-                    1
-                  );
-                }
-
-                if (fn !== "flag") {
-                  set({
-                    breadcrumbs: {
-                      ...breadcrumbs,
-                      [id]: {
-                        answers: responsesThatCanBeAutoAnswered.map(
-                          (r) => r.id
-                        ),
-                        auto: true,
-                      },
+              if (fn !== "flag") {
+                set({
+                  breadcrumbs: {
+                    ...breadcrumbs,
+                    [id]: {
+                      answers: responsesThatCanBeAutoAnswered.map((r) => r.id),
+                      auto: true,
                     },
-                  });
-                }
-
-                responsesThatCanBeAutoAnswered.forEach((r) =>
-                  nodeIdsConnectedFrom(r.id)
-                );
-              } else {
-                ids.add(id);
+                  },
+                });
               }
-            } else {
-              ids.add(id);
+
+              return responsesThatCanBeAutoAnswered.forEach((r) =>
+                nodeIdsConnectedFrom(r.id)
+              );
+            }
+          } else if (
+            fn &&
+            knownNotVals[fn] &&
+            passportValues === undefined &&
+            Array.isArray(node.edges)
+          ) {
+            const data = node.edges.reduce(
+              (acc, edgeId) => {
+                if (flow[edgeId].data?.val === undefined) {
+                  acc.responseWithNoValueId = edgeId;
+                } else if (!knownNotVals[fn].includes(flow[edgeId].data?.val)) {
+                  acc.edges.push(edgeId);
+                }
+                return acc;
+              },
+              { edges: [] } as {
+                responseWithNoValueId?: nodeId;
+                edges: Array<nodeId>;
+              }
+            );
+
+            if (data.responseWithNoValueId && data.edges.length === 0) {
+              set({
+                breadcrumbs: {
+                  ...breadcrumbs,
+                  [id]: {
+                    answers: [data.responseWithNoValueId],
+                    auto: true,
+                  },
+                },
+              });
+              return nodeIdsConnectedFrom(data.responseWithNoValueId);
             }
           }
+
+          ids.add(id);
         });
     };
 
-    Object.entries(breadcrumbs)
-      .reverse()
-      .forEach(([, { answers }]: any) => {
-        answers.forEach((answer: any) => nodeIdsConnectedFrom(answer));
-      });
+    // with a guaranteed unique set
+    new Set(
+      // of all the answers collected so far
+      Object.values(breadcrumbs)
+        // in reverse order
+        .reverse()
+        .flatMap(({ answers }) => answers)
+        .filter(Boolean)
+        // ending with _root
+        .concat(ROOT_NODE_KEY)
+      // run nodeIdsConnectedFrom(answerId)
+    ).forEach(nodeIdsConnectedFrom);
 
-    nodeIdsConnectedFrom(ROOT_NODE_KEY);
-
-    // TODO:  remove nodeIdsConnectedFrom above and merge this
-    //        logic into a single crawling function
-    const dfs = (start: string) => {
-      const visited = new Set([start]);
-
-      const crawlFrom = (id: string) => {
-        if (!flow[id]) return;
-        visited.add(id);
-        flow[id].edges?.forEach((childId) => {
-          crawlFrom(childId);
-        });
-      };
-
-      crawlFrom(start);
-
-      return [...visited];
-    };
-
-    const sortingArr = dfs(ROOT_NODE_KEY);
-
-    // sort the collected ids in depth-first search order
-    return Array.from(ids).sort(
-      (a, b) => sortingArr.indexOf(a) - sortingArr.indexOf(b)
-    );
+    // then return an array of the upcoming node ids, in depth-first order
+    return sortIdsDepthFirst(flow)(ids);
   },
 
   currentCard() {
