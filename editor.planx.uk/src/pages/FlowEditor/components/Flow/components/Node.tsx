@@ -1,5 +1,6 @@
 import { TYPES } from "@planx/components/types";
 import React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { useStore } from "../../../lib/store";
 import { stripTagsAndLimitLength } from "../lib/utils";
@@ -118,4 +119,14 @@ function exhaustiveCheck(type: never): never {
   throw new Error(`Missing type ${type}`);
 }
 
-export default Node;
+export default function SafeNode(props: any) {
+  return (
+    <ErrorBoundary
+      FallbackComponent={({ error }) => (
+        <Question hasFailed type="Error" id={props.id} text="Corrupted" />
+      )}
+    >
+      <Node {...props} />
+    </ErrorBoundary>
+  );
+}

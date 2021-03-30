@@ -1,3 +1,4 @@
+import ErrorIcon from "@material-ui/icons/Error";
 import { TYPES } from "@planx/components/types";
 import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
@@ -11,7 +12,7 @@ import Hanger from "./Hanger";
 import Node from "./Node";
 
 type Props = {
-  type: TYPES;
+  type: TYPES | "Error";
   [key: string]: any;
   wasVisited?: boolean;
 };
@@ -48,7 +49,7 @@ const Question: React.FC<Props> = React.memo((props) => {
     copyNode(props.id);
   };
 
-  const Icon = ICONS[props.type];
+  const Icon = props.type === "Error" ? ErrorIcon : ICONS[props.type];
 
   return (
     <>
@@ -59,6 +60,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           isClone: isClone(props.id),
           isNote: childNodes.length === 0,
           wasVisited: props.wasVisited,
+          hasFailed: props.hasFailed,
         })}
       >
         <Link

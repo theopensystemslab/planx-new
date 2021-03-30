@@ -4,6 +4,7 @@ import natsort from "natsort";
 import { compose, lazy, mount, route, withData, withView } from "navi";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { View } from "react-navi";
 
 import { client } from "../lib/graphql";
@@ -159,7 +160,11 @@ const routes = compose(
     const [flow, ...breadcrumbs] = req.params.flow.split(",");
     return (
       <>
-        <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
+        <ErrorBoundary
+          FallbackComponent={({ error }) => <pre>{error.stack}</pre>}
+        >
+          <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
+        </ErrorBoundary>
         <View />
       </>
     );
