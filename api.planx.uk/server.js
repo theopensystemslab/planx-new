@@ -10,10 +10,10 @@ const passport = require("passport");
 const { sign } = require("jsonwebtoken");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { createProxyMiddleware } = require("http-proxy-middleware");
-const { signS3Upload } = require("./s3");
 const zlib = require("zlib");
 
-const gis = require('./gis/index');
+const { signS3Upload } = require("./s3");
+const { locationSearch } = require('./gis/index');
 
 const router = express.Router();
 
@@ -359,7 +359,7 @@ app.get("/gis", (_req, res) => {
   });
 });
 
-app.get("/gis/:la", gis.locationSearch());
+app.get("/gis/:la", locationSearch());
 
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });

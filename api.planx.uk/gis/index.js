@@ -51,4 +51,4 @@ const locationSearch = () => async (req, res) => {
   }
 };
 
-exports.locationSearch = locationSearch;
+module.exports = { locationSearch };
