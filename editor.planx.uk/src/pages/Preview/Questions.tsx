@@ -13,6 +13,7 @@ const Questions = (props: Props) => {
   const [
     currentCard,
     previousCard,
+    hasPaid,
     record,
     breadcrumbs,
     passport,
@@ -22,6 +23,7 @@ const Questions = (props: Props) => {
   ] = useStore((state) => [
     state.currentCard,
     state.previousCard(),
+    state.hasPaid(),
     state.record,
     state.breadcrumbs,
     state.passport,
@@ -32,6 +34,7 @@ const Questions = (props: Props) => {
 
   const node = currentCard();
   const flow = useContext(PreviewContext);
+  const showBackButton = previousCard && !hasPaid;
 
   useEffect(() => {
     if (!props.isSidebar) {
@@ -71,8 +74,8 @@ const Questions = (props: Props) => {
         onClick={() => record(previousCard)}
         style={{
           padding: "0 10px 10px",
-          visibility: previousCard ? "visible" : "hidden",
-          pointerEvents: previousCard ? "auto" : "none",
+          visibility: showBackButton ? "visible" : "hidden",
+          pointerEvents: showBackButton ? "auto" : "none",
           display: "block",
           cursor: "pointer",
           userSelect: "none",
