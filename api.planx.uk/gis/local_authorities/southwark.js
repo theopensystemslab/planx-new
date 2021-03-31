@@ -21,7 +21,7 @@ var headers = {
 };
 
 const keys = {
-  landConservation: {
+  "designated.conservationArea": {
     columns: [
       "Conservation_area",
       "Conservation_area_number",
@@ -35,8 +35,7 @@ const keys = {
         : data.Conservation_area
     })
   },
-
-  landTPO: {
+  tpo: {
     columns: ["Location", "TPO_document"],
     neg: "is not in a TPO (Tree Preservation Order) zone",
     pos: data => ({
@@ -44,8 +43,7 @@ const keys = {
       description: data.TPO_document ? data.TPO_document : data.Location
     })
   },
-
-  buildingListed: {
+  listed: {
     columns: [
       "ID",
       "NAME",
@@ -104,17 +102,16 @@ function get(key, table, x, y, radius = 1.5) {
 async function locationSearch(x, y, extras) {
   const responses = await Promise.all(
     [
-      get("landConservation", "Conservation areas", x, y),
+      get("designated.conservationArea", "Conservation areas", x, y),
       // most significant grade last
-      get("buildingListed", "Listed buildings (Southwark) Grade II", x, y),
-      get("buildingListed", "Listed buildings (Southwark) Grade II star", x, y),
-      get("buildingListed", "Listed buildings (Southwark) Grade I", x, y),
-
-      get("landTPO", "TPO_zones___Woodland_type", x, y),
-      get("landTPO", "TPO_zones___Individual_type", x, y),
-      get("landTPO", "TPO_zones___Group_type", x, y),
-      get("landTPO", "TPO_zones___Area_type", x, y),
-      get("landTPO", "TPO_zones___Historic_type", x, y)
+      get("listed", "Listed buildings (Southwark) Grade II", x, y),
+      get("listed", "Listed buildings (Southwark) Grade II star", x, y),
+      get("listed", "Listed buildings (Southwark) Grade I", x, y),
+      get("tpo", "TPO_zones___Woodland_type", x, y),
+      get("tpo", "TPO_zones___Individual_type", x, y),
+      get("tpo", "TPO_zones___Group_type", x, y),
+      get("tpo", "TPO_zones___Area_type", x, y),
+      get("tpo", "TPO_zones___Historic_type", x, y)
     ].map(p => p.catch(e => e))
   );
 
@@ -123,7 +120,7 @@ async function locationSearch(x, y, extras) {
     .reduce(
       (acc, [key, r]) => {
         const data = JSON.parse(r);
-        const k = `property.${key}`;
+        const k = `${key}`;
 
         try {
           if (data.features.length > 0) {
@@ -149,25 +146,25 @@ async function locationSearch(x, y, extras) {
       },
       {
         "property.c31": { value: false },
-        "property.landAONB": { value: false },
-        "property.landBroads": { value: false },
-        "property.landExplosivesStorage": { value: false },
-        "property.landNP": { value: false },
-        "property.landSafeguarded": { value: false },
-        "property.landSafetyHazard": { value: false },
-        "property.landSSI": { value: false },
+        "designated.AONB": { value: false },
+        "designated.broads": { value: false },
+        "defence.explosives": { value: false },
+        "designated.nationalPark": { value: false },
+        "defence.safeguarded": { value: false },
+        "hazard": { value: false },
+        "nature.SSSI": { value: false },
         "property.landWCA": { value: false },
-        "property.landWHS": { value: false },
+        "designated.WHS": { value: false },
         ...extras
       }
     );
 
-  ob["property.southwarkSunrayEstate"] = {
+  ob["article4.southwark.sunray"] = {
     value:
-      ob["property.landConservation"] &&
-      ob["property.landConservation"].data &&
-      ob["property.landConservation"].data.Conservation_area_number &&
-      ob["property.landConservation"].data.Conservation_area_number === 39
+      ob["designated.conservationArea"] &&
+      ob["designated.conservationArea"].data &&
+      ob["designated.conservationArea"].data.Conservation_area_number &&
+      ob["designated.conservationArea"].data.Conservation_area_number === 39
         ? true
         : false
   };
@@ -178,7 +175,7 @@ async function locationSearch(x, y, extras) {
     .filter(([_key, result]) => result instanceof Error)
     .forEach(([key, _result]) => {
       try {
-        delete ob[`property.${key}`];
+        delete ob[`${key}`];
       } catch (e) {}
     });
 

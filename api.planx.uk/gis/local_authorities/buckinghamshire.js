@@ -13,25 +13,25 @@ const articleFours = {};
 const names = {
   CONSERVATION_AREAS: {
     id: "LP19ConsvArea",
-    key: "landConservation",
+    key: "designated.conservationArea",
     neg: "is not in a Conservation Area",
     pos: "is in a Conservation Area",
   },
   LISTED_BUILDINGS: {
     id: "ListedBuilding",
-    key: "buildingListed",
+    key: "listed",
     neg: "is not in, or within, a Listed Building",
     pos: `is, or is within, a Listed Building`,
   },
   ARTICLE_4S: {
     id: "Article4Direction",
-    key: "article4s",
+    key: "article4",
     neg: "is not subject to any Article 4 directions",
     pos: "is subject to Article 4 Restriction(s)",
   },
   TREE_PRESERVATION_ORDERS: {
     id: "TreePreservationOrder",
-    key: "landTPO",
+    key: "tpo",
     neg: "is not in a TPO (Tree Preservation Order) zone",
     pos: "is in a TPO (Tree Preservation Order) zone",
   },
@@ -83,7 +83,7 @@ async function go(x, y, extras) {
       .filter(([_key, result]) => !(result instanceof Error))
       .reduce(
         (acc, [key, result]) => {
-          const k = `property.${names[key].key}`;
+          const k = `${names[key].key}`;
           try {
             const hasValue = !String(result).includes("gml:null");
             if (hasValue) {
@@ -109,15 +109,15 @@ async function go(x, y, extras) {
         },
         {
           "property.c31": { value: false },
-          "property.landAONB": { value: false },
-          "property.landBroads": { value: false },
-          "property.landExplosivesStorage": { value: false },
-          "property.landNP": { value: false },
-          "property.landSafeguarded": { value: false },
-          "property.landSafetyHazard": { value: false },
-          "property.landSSI": { value: false },
+          "designated.AONB": { value: false },
+          "designated.broads": { value: false },
+          "defence.explosives": { value: false },
+          "designated.nationalPark": { value: false },
+          "defence.safeguarded": { value: false },
+          "hazard": { value: false },
+          "nature.SSSI": { value: false },
           "property.landWCA": { value: false },
-          "property.landWHS": { value: false },
+          "designated.WHS": { value: false },
           ...Object.values(articleFours).reduce((acc, curr) => {
             acc[curr] = { value: false };
             return acc;

@@ -12,7 +12,7 @@ const articleFours = {};
 const names = {
   CONSERVATION_AREAS: {
     id: "Open_Data/Conservation_Areas",
-    key: "landConservation",
+    key: "designated.conservationArea",
     neg: "is not in a Conservation Area",
     pos: (data) => ({
       text: "is in a Conservation Area",
@@ -21,7 +21,7 @@ const names = {
   },
   TREE_PRESERVATION_ORDERS: {
     id: "Open_Data/Tree_Preservation_Orders",
-    key: "landTPO",
+    key: "tpo",
     neg: "is not in a TPO (Tree Preservation Order) zone",
     pos: (_data) => ({
       text: "is in a TPO (Tree Preservation Order) zone",
@@ -95,7 +95,7 @@ async function go(x, y, extras) {
       .reduce(
         (acc, [key, result]) => {
           const data = JSON.parse(result);
-          const k = `property.${names[key].key}`;
+          const k = `${names[key].key}`;
 
           try {
             if (data.features.length > 0) {
@@ -122,15 +122,15 @@ async function go(x, y, extras) {
         },
         {
           "property.c31": { value: false },
-          "property.landAONB": { value: false },
-          "property.landBroads": { value: false },
-          "property.landExplosivesStorage": { value: false },
-          "property.landNP": { value: false },
-          "property.landSafeguarded": { value: false },
-          "property.landSafetyHazard": { value: false },
-          "property.landSSI": { value: false },
+          "designated.AONB": { value: false },
+          "designated.broads": { value: false },
+          "defence.explosives": { value: false },
+          "designated.nationalPark": { value: false },
+          "defence.safeguarded": { value: false },
+          "hazard": { value: false },
+          "nature.SSSI": { value: false },
           "property.landWCA": { value: false },
-          "property.landWHS": { value: false },
+          "designated.WHS": { value: false },
           ...Object.values(articleFours).reduce((acc, curr) => {
             acc[curr] = { value: false };
             return acc;
