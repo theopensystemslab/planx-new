@@ -1,6 +1,7 @@
 import Box from "@material-ui/core/Box";
 import { createMuiTheme, Theme, ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useCurrentRoute } from "react-navi";
 
 import Footer from "../../components/Footer";
@@ -68,7 +69,11 @@ const PreviewLayout: React.FC<{
         bgcolor="white"
         position="relative"
       >
-        {children}
+        <ErrorBoundary
+          FallbackComponent={({ error }) => <pre>{error.stack}</pre>}
+        >
+          {children}
+        </ErrorBoundary>
       </Box>
 
       <Footer leftItems={leftFooterItems} rightItems={rightFooterItems} />

@@ -10,6 +10,7 @@ import Close from "@material-ui/icons/CloseOutlined";
 import { parseFormValues } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
 import React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useNavigation } from "react-navi";
 
 import { rootFlowPath } from "../../../../routes/utils";
@@ -136,37 +137,45 @@ const FormModal: React.FC<{
         </IconButton>
       </DialogTitle>
       <DialogContent dividers>
-        <Component
-          node={node}
-          {...node?.data}
-          {...extraProps}
-          id={id}
-          handleSubmit={(
-            data: any,
-            children: Array<any> | undefined = undefined
-          ) => {
-            if (typeof data === "string") {
-              connect(parent, data, { before });
-            } else {
-              const parsedData = parseFormValues(Object.entries(data));
-              const parsedChildren =
-                children?.map((o: any) => parseFormValues(Object.entries(o))) ||
-                undefined;
-
-              if (handleDelete) {
-                updateNode({ id, ...parsedData }, { children: parsedChildren });
+        <ErrorBoundary
+          FallbackComponent={({ error }) => <pre>{error.stack}</pre>}
+        >
+          <Component
+            node={node}
+            {...node?.data}
+            {...extraProps}
+            id={id}
+            handleSubmit={(
+              data: any,
+              children: Array<any> | undefined = undefined
+            ) => {
+              if (typeof data === "string") {
+                connect(parent, data, { before });
               } else {
-                addNode(parsedData, {
-                  children: parsedChildren,
-                  parent,
-                  before,
-                });
-              }
-            }
+                const parsedData = parseFormValues(Object.entries(data));
+                const parsedChildren =
+                  children?.map((o: any) =>
+                    parseFormValues(Object.entries(o))
+                  ) || undefined;
 
-            navigate(rootFlowPath(true));
-          }}
-        />
+                if (handleDelete) {
+                  updateNode(
+                    { id, ...parsedData },
+                    { children: parsedChildren }
+                  );
+                } else {
+                  addNode(parsedData, {
+                    children: parsedChildren,
+                    parent,
+                    before,
+                  });
+                }
+              }
+
+              navigate(rootFlowPath(true));
+            }}
+          />
+        </ErrorBoundary>
       </DialogContent>
       <DialogActions className={classes.actions}>
         <Grid container justify="flex-end">

@@ -138,6 +138,10 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     opacity: 0.5;
   }
 
+  &.hasFailed {
+    border: 1px dashed red;
+  }
+
   & > a {
     display: flex;
     align-items: flex-start;

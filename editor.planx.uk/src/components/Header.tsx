@@ -8,8 +8,8 @@ import Popover from "@material-ui/core/Popover";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
+import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 import React, { useRef, useState } from "react";
-import { Play } from "react-feather";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
@@ -144,11 +144,12 @@ const Header: React.FC<{
             <Box className={classes.profileSection}>
               {data.flow && (
                 <Box mr={3}>
-                  <Play onClick={togglePreview} style={{ cursor: "pointer" }} />
+                  <MenuOpenIcon
+                    onClick={togglePreview}
+                    style={{ cursor: "pointer" }}
+                  />
                 </Box>
               )}
-
-              {/* <Box mr={3}>{data.username}</Box> */}
               <Box mr={3}>
                 <Avatar>{data.username[0]}</Avatar>
               </Box>
