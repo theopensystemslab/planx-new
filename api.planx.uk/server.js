@@ -10,8 +10,10 @@ const passport = require("passport");
 const { sign } = require("jsonwebtoken");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { createProxyMiddleware } = require("http-proxy-middleware");
-const { signS3Upload } = require("./s3");
 const zlib = require("zlib");
+
+const { signS3Upload } = require("./s3");
+const { locationSearch } = require('./gis/index');
 
 const router = express.Router();
 
@@ -318,6 +320,8 @@ app.use(
 
 app.use("/auth", router);
 
+app.use("/gis", router);
+
 app.get("/hasura", async function (req, res) {
   const data = await request(
     process.env.HASURA_GRAPHQL_URL,
@@ -348,6 +352,14 @@ app.get(
     res.json(user.users_by_pk);
   },
 );
+
+app.get("/gis", (_req, res) => {
+  res.json({ 
+    message: "Please specify a Local Authority",
+  });
+});
+
+app.get("/gis/:la", locationSearch());
 
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
