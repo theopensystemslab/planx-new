@@ -130,7 +130,7 @@ const editNode = route(async (req) => {
         node={node}
         id={id}
         handleDelete={() => {
-          useStore.getState().removeNode(id, parent);
+          useStore.getState().removeNode(id, parent!);
         }}
         before={before}
         parent={parent}

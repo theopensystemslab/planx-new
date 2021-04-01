@@ -4,10 +4,7 @@
 
 import { flatFlags } from "pages/FlowEditor/data/flags";
 
-import {
-  breadcrumbs as Breadcrumbs,
-  flow as Flow,
-} from "../../../pages/FlowEditor/lib/store";
+import { Store } from "../../../pages/FlowEditor/lib/store";
 import { TYPES } from "../types";
 
 interface BOPSMinimumPayload {
@@ -110,7 +107,7 @@ const minimumPayload: BOPSMinimumPayload = {
   },
 };
 
-export const makePayload = (flow: Flow, breadcrumbs: Breadcrumbs) =>
+export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
   Object.entries(breadcrumbs)
     .filter(([id]) => {
       if (!flow[id]?.type) return false;
