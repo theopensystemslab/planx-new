@@ -1,6 +1,13 @@
 - table:
     schema: public
     name: addresses
+  computed_fields:
+  - name: full_address
+    definition:
+      function:
+        schema: public
+        name: concat_address_parts
+    comment: ""
   select_permissions:
   - role: public
     permission:
