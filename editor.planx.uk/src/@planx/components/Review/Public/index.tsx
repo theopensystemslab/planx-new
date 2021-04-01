@@ -1,5 +1,6 @@
 import { MoreInformation } from "@planx/components/shared";
-import { nodeId, useStore } from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
@@ -30,7 +31,7 @@ function Component(props: Props) {
     />
   );
 
-  function changeAnswer(id: nodeId) {
+  function changeAnswer(id: Store.nodeId) {
     // XXX: Remove the node `id` and all subsequent ones from breadcrumbs
     record(id, undefined);
   }
