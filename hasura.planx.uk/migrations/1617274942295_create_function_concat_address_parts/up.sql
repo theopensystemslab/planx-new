@@ -6,9 +6,9 @@ RETURNS TEXT AS $$
         nullif(trim(addr_row.sao), ''),
         concat_ws(
             ' ',
-            nullif(trim(addr_row.pao)), 
-            nullif(trim(addr_row.street))
+            nullif(trim(addr_row.pao), ''), 
+            nullif(trim(addr_row.street), '')
         ),
-        nullif(trim(addr_row.town))
+        nullif(trim(addr_row.town), '')
     )
 $$ LANGUAGE sql STABLE;
