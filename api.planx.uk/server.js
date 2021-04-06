@@ -143,19 +143,51 @@ const buildJWT = async (profile, done) => {
   }
 };
 
-passport.use(
-  "google",
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `${process.env.API_URL_EXT}/auth/google/callback`,
+if (
+  process.env.NODE_ENV === "production" ||
+  process.env.NODE_ENV === "development"
+) {
+  passport.use(
+    "google",
+    new GoogleStrategy(
+      {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: `${process.env.API_URL_EXT}/auth/google/callback`,
+      },
+      async function (_accessToken, _refreshToken, profile, done) {
+        await buildJWT(profile, done);
+      },
+    ),
+  );
+
+  app.use(
+    cookieSession({
+      maxAge: 24 * 60 * 60 * 100,
+      name: "session",
+      secret: process.env.SESSION_SECRET,
+    }),
+  );
+
+  app.get(
+    "/me",
+    jwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }),
+    async function (req, res) {
+      const user = await request(
+        process.env.HASURA_GRAPHQL_URL,
+        `query ($id: Int!) {
+        users_by_pk(id: $id) {
+          id
+          email
+          created_at
+        }
+      }`,
+        { id: req.user.id },
+      );
+      res.json(user.users_by_pk);
     },
-    async function (_accessToken, _refreshToken, profile, done) {
-      await buildJWT(profile, done);
-    },
-  ),
-);
+  );
+}
 
 passport.serializeUser(function (user, cb) {
   cb(null, user);
@@ -164,8 +196,6 @@ passport.serializeUser(function (user, cb) {
 passport.deserializeUser(function (obj, cb) {
   cb(null, obj);
 });
-
-const PORT = process.env.PORT || 8001;
 
 const app = express();
 
@@ -297,14 +327,6 @@ app.use(
   }),
 );
 
-app.use(
-  cookieSession({
-    maxAge: 24 * 60 * 60 * 100,
-    name: "session",
-    secret: process.env.SESSION_SECRET,
-  }),
-);
-
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(urlencoded({ extended: true }));
@@ -330,25 +352,6 @@ app.get("/hasura", async function (req, res) {
   res.json(data);
 });
 
-app.get(
-  "/me",
-  jwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }),
-  async function (req, res) {
-    const user = await request(
-      process.env.HASURA_GRAPHQL_URL,
-      `query ($id: Int!) {
-      users_by_pk(id: $id) {
-        id
-        email
-        created_at
-      }
-    }`,
-      { id: req.user.id },
-    );
-    res.json(user.users_by_pk);
-  },
-);
-
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
@@ -371,6 +374,4 @@ app.post("/sign-s3-upload", async (req, res) => {
 
 const server = new Server(app);
 
-server.listen(PORT);
-
-console.info(`api listening http://localhost:${PORT}`);
+module.exports = server;
