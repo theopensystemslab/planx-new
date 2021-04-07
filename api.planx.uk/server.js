@@ -13,7 +13,7 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 const zlib = require("zlib");
 
 const { signS3Upload } = require("./s3");
-const { locationSearch } = require('./gis/index');
+const { locationSearch } = require("./gis/index");
 
 const router = express.Router();
 
@@ -95,7 +95,7 @@ router.get("/google", (req, res, next) => {
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/login/failed" }),
-  handleSuccess,
+  handleSuccess
 );
 
 const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
@@ -114,7 +114,7 @@ const buildJWT = async (profile, done) => {
         id
       }
     }`,
-    { email },
+    { email }
   );
 
   if (users.length === 1) {
@@ -155,8 +155,8 @@ passport.use(
     },
     async function (_accessToken, _refreshToken, profile, done) {
       await buildJWT(profile, done);
-    },
-  ),
+    }
+  )
 );
 
 passport.serializeUser(function (user, cb) {
@@ -177,7 +177,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin);
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept",
+    "Origin, X-Requested-With, Content-Type, Accept"
   );
   next();
 });
@@ -186,8 +186,13 @@ app.use(
   cors({
     credentials: true,
     methods: "*",
-  }),
+  })
 );
+
+if (!process.env.BOPS_API_TOKEN) {
+  console.error("Missing BOPS_API_TOKEN");
+  process.exit(1);
+}
 
 // XXX: These must be placed after CORS and before body-parser middlewares
 app.use("/bops/:localAuthority", (req, res) => {
@@ -273,7 +278,7 @@ app.use("/bops/:localAuthority", (req, res) => {
               response: bopsResponse,
               response_headers: proxyRes.headers,
               session_id: reqBody.sessionId,
-            },
+            }
           );
           res.send({
             application: {
@@ -296,7 +301,7 @@ app.use(
     target: "https://api.notifications.service.gov.uk",
     changeOrigin: true,
     logLevel: "debug",
-  }),
+  })
 );
 
 app.use(
@@ -304,7 +309,7 @@ app.use(
     maxAge: 24 * 60 * 60 * 100,
     name: "session",
     secret: process.env.SESSION_SECRET,
-  }),
+  })
 );
 
 app.use(passport.initialize());
@@ -315,7 +320,7 @@ app.use(
   json({
     extended: true,
     limit: "100mb",
-  }),
+  })
 );
 
 app.use("/auth", router);
@@ -329,7 +334,7 @@ app.get("/hasura", async function (req, res) {
       teams {
         id
       }
-    }`,
+    }`
   );
   res.json(data);
 });
@@ -347,14 +352,14 @@ app.get(
         created_at
       }
     }`,
-      { id: req.user.id },
+      { id: req.user.id }
     );
     res.json(user.users_by_pk);
-  },
+  }
 );
 
 app.get("/gis", (_req, res) => {
-  res.json({ 
+  res.json({
     message: "Please specify a Local Authority",
   });
 });

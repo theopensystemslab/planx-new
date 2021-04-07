@@ -1,3 +1,5 @@
+// API Documentation: https://ripa.bops-staging.services/api-docs/index.html
+
 // minimumPayload and fullPayload are the minimum and full expected
 // POST data payloads accepted by the BOPS API, see:
 // https://southwark.preview.bops.services/api-docs/index.html
