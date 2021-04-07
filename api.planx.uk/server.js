@@ -167,8 +167,6 @@ passport.deserializeUser(function (obj, cb) {
   cb(null, obj);
 });
 
-const PORT = process.env.PORT || 8001;
-
 const app = express();
 
 app.set("trust proxy", 1);
@@ -328,9 +326,8 @@ app.use("/auth", router);
 app.use("/gis", router);
 
 app.get("/hasura", async function (req, res) {
-  const data = await request(
-    process.env.HASURA_GRAPHQL_URL,
-    `query {
+  const data = await client.request(
+    `query GetTeams {
       teams {
         id
       }
@@ -388,6 +385,4 @@ app.post("/sign-s3-upload", async (req, res) => {
 
 const server = new Server(app);
 
-server.listen(PORT);
-
-console.info(`api listening http://localhost:${PORT}`);
+module.exports = server;
