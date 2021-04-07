@@ -217,6 +217,7 @@ function GetAddress(props: {
           blpu_code
           latitude
           longitude
+          full_address
         }
       }
     `,
@@ -288,13 +289,7 @@ function GetAddress(props: {
                   .map(
                     (address: Address): Option => ({
                       ...address,
-                      title: [
-                        address.sao,
-                        [address.pao, address.street].filter(Boolean).join(" "),
-                        address.town,
-                      ]
-                        .filter(Boolean)
-                        .join(", "),
+                      title: address.full_address,
                     })
                   )
                   .sort((a: Option, b: Option) => sorter(a.title, b.title))}

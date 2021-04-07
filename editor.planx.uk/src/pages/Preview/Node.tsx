@@ -23,12 +23,13 @@ import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 import { FlowSettings } from "types";
 
-import { componentOutput, node, useStore } from "../FlowEditor/lib/store";
+import type { Store } from "../FlowEditor/lib/store";
+import { useStore } from "../FlowEditor/lib/store";
 
-export type handleSubmit = (_?: componentOutput) => void;
+export type handleSubmit = (_?: Store.componentOutput) => void;
 interface Props {
   handleSubmit: handleSubmit;
-  node: node;
+  node: Store.node;
   settings?: FlowSettings;
   data?: any;
 }

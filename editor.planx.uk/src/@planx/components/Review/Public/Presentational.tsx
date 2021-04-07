@@ -1,13 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@planx/components/shared/Preview/Card";
 import { TYPES } from "@planx/components/types";
-import type {
-  breadcrumbs,
-  flow,
-  nodeId,
-  passport,
-  userData,
-} from "pages/FlowEditor/lib/store";
+import type { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
@@ -84,11 +78,11 @@ const components: {
 };
 
 interface Props {
-  breadcrumbs: breadcrumbs;
-  flow: flow;
-  passport: passport;
+  breadcrumbs: Store.breadcrumbs;
+  flow: Store.flow;
+  passport: Store.passport;
   handleSubmit: handleSubmit;
-  changeAnswer: (id: nodeId) => void;
+  changeAnswer: (id: Store.nodeId) => void;
   showChangeButton: boolean;
 }
 
@@ -144,9 +138,9 @@ function Component(props: Props) {
 
 interface ComponentProps {
   node: any;
-  userData?: userData;
-  flow: flow;
-  passport: passport;
+  userData?: Store.userData;
+  flow: Store.flow;
+  passport: Store.passport;
 }
 function Question(props: ComponentProps) {
   return (

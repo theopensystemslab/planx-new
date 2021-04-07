@@ -10,8 +10,10 @@ const passport = require("passport");
 const { sign } = require("jsonwebtoken");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { createProxyMiddleware } = require("http-proxy-middleware");
-const { signS3Upload } = require("./s3");
 const zlib = require("zlib");
+
+const { signS3Upload } = require("./s3");
+const { locationSearch } = require("./gis/index");
 
 const router = express.Router();
 
@@ -303,25 +305,6 @@ app.use(
   }),
 );
 
-app.get(
-  "/me",
-  jwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }),
-  async function (req, res) {
-    const user = await request(
-      process.env.HASURA_GRAPHQL_URL,
-      `query ($id: Int!) {
-        users_by_pk(id: $id) {
-          id
-          email
-          created_at
-        }
-      }`,
-      { id: req.user.id },
-    );
-    res.json(user.users_by_pk);
-  },
-);
-
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(urlencoded({ extended: true }));
@@ -335,6 +318,8 @@ app.use(
 
 app.use("/auth", router);
 
+app.use("/gis", router);
+
 app.get("/hasura", async function (req, res) {
   const data = await client.request(
     `query GetTeams {
@@ -345,6 +330,33 @@ app.get("/hasura", async function (req, res) {
   );
   res.json(data);
 });
+
+app.get(
+  "/me",
+  jwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }),
+  async function (req, res) {
+    const user = await request(
+      process.env.HASURA_GRAPHQL_URL,
+      `query ($id: Int!) {
+      users_by_pk(id: $id) {
+        id
+        email
+        created_at
+      }
+    }`,
+      { id: req.user.id },
+    );
+    res.json(user.users_by_pk);
+  },
+);
+
+app.get("/gis", (_req, res) => {
+  res.json({
+    message: "Please specify a Local Authority",
+  });
+});
+
+app.get("/gis/:la", locationSearch());
 
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });

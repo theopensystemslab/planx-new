@@ -1,7 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { componentOutput, useStore } from "../FlowEditor/lib/store";
+import type { Store } from "../FlowEditor/lib/store";
+import { useStore } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
 import Node from "./Node";
 
@@ -68,7 +69,9 @@ const Questions = (props: Props) => {
   return (
     <>
       <span
-        onClick={() => record(previousCard)}
+        onClick={() => {
+          record(previousCard!);
+        }}
         style={{
           padding: "0 10px 10px",
           visibility: previousCard ? "visible" : "hidden",
@@ -89,8 +92,8 @@ const Questions = (props: Props) => {
           <Node
             node={node}
             key={node.id}
-            handleSubmit={(values: componentOutput) => {
-              record(node.id, values);
+            handleSubmit={(values: Store.componentOutput) => {
+              record(node.id!, values);
             }}
             settings={flow?.settings}
           />
