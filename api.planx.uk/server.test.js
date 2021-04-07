@@ -10,3 +10,12 @@ it("works", async () => {
       expect(response.body).toEqual({ hello: "world" });
     });
 });
+
+it("mocks hasura", async () => {
+  await supertest(app)
+    .get("/hasura")
+    .expect(200)
+    .then((res) => {
+      expect(res.body).toEqual({ teams: [{ id: 1 }] });
+    });
+});
