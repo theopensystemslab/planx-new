@@ -1,8 +1,9 @@
-import { TYPES } from "@planx/components/types";
-import { FormError } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import InputField from "ui/InputField";
+
+import { TYPES } from "../types";
+import { FormError } from "../ui";
 
 interface Flow {
   id: string;
