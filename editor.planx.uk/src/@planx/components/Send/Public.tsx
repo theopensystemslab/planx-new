@@ -31,7 +31,7 @@ const SendComponent: React.FC<Props> = (props) => {
     // Throw error so that they're caught by our error boundaries and our error logging tool
     throw request.error;
   } else {
-    return <Card>Finalizing…</Card>;
+    return <Card>Finalising…</Card>;
   }
 
   function getParams() {
