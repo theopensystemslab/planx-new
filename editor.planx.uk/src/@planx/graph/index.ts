@@ -438,6 +438,7 @@ export const makeUnique = (
 const dfs = (graph: Graph) => (startId: string) => {
   const visited = new Set([startId]);
   const crawlFrom = (id: string) => {
+    if (!graph[id]) return;
     visited.add(id);
     graph[id].edges?.forEach((childId) => {
       crawlFrom(childId);
