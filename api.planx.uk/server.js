@@ -189,6 +189,11 @@ app.use(
   })
 );
 
+if (!process.env.BOPS_API_TOKEN) {
+  console.error("Missing BOPS_API_TOKEN");
+  process.exit(1);
+}
+
 // XXX: These must be placed after CORS and before body-parser middlewares
 app.use("/bops/:localAuthority", (req, res) => {
   // Capture request body & headers
