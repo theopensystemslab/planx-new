@@ -96,7 +96,7 @@ const SendComponent: React.FC<Props> = (props) => {
       (acc, [bopsField, planxField]) => {
         const id = keys.find((id) => flow[id].data?.fn === planxField);
         if (id) {
-          const value = breadcrumbs[id]?.answers[0];
+          const value = breadcrumbs[id]?.answers![0];
           if (value) {
             acc[bopsField] = value;
           }
