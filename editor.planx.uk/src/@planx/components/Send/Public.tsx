@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect,useState } from "react";
+import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 
 import Card from "../shared/Preview/Card";
@@ -16,8 +16,6 @@ const SendComponent: React.FC<Props> = (props) => {
     state.flow,
     state.passport,
   ]);
-
-  const [error, setError] = useState<any>();
 
   const request = useAsync(async () => axios.post(props.url, getParams()));
 
