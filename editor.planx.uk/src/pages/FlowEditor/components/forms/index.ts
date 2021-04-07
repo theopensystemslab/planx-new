@@ -1,5 +1,6 @@
 import AddressInput from "@planx/components/AddressInput/Editor";
 import Calculate from "@planx/components/Calculate/Editor";
+import Checklist from "@planx/components/Checklist/Editor";
 import Content from "@planx/components/Content/Editor";
 import DateInput from "@planx/components/DateInput/Editor";
 import DrawBoundary from "@planx/components/DrawBoundary/Editor";
@@ -15,7 +16,6 @@ import { TYPES } from "@planx/components/types";
 import React from "react";
 
 import { SLUGS } from "../../data/types";
-import Checklist from "./Checklist";
 import ExternalPortal from "./ExternalPortal";
 import FileUpload from "./FileUpload";
 import Filter from "./Filter";

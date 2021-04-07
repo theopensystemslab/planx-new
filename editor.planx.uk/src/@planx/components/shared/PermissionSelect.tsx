@@ -1,10 +1,10 @@
 import MenuItem from "@material-ui/core/MenuItem";
+import flags from "pages/FlowEditor/data/flags";
 import React from "react";
-import SelectInput, { Props as SelectInputProps } from "ui/SelectInput";
+import type { Props as SelectInputProps } from "ui/SelectInput";
+import SelectInput from "ui/SelectInput";
 
-import flags from "../../data/flags";
-
-export const PermissionSelect: React.FC<SelectInputProps> = (props) => {
+const PermissionSelect: React.FC<SelectInputProps> = (props) => {
   // Material-ui doesn't like Fragments so this needs to be an array
   const flagMenuItems = Object.entries(flags).flatMap(([category, flags]) => [
     <MenuItem disabled key={category}>
@@ -28,3 +28,5 @@ export const PermissionSelect: React.FC<SelectInputProps> = (props) => {
     </SelectInput>
   );
 };
+
+export default PermissionSelect;
