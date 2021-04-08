@@ -1,8 +1,8 @@
-import { TYPES } from "@planx/components/types";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 
-import ExternalPortalForm from "./ExternalPortal";
+import { TYPES } from "../types";
+import ExternalPortalForm from "./Editor";
 
 test("adding an external portal", async () => {
   const handleSubmit = jest.fn();

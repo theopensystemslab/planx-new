@@ -1,21 +1,17 @@
+import { TYPES } from "@planx/components/types";
 import { useFormik } from "formik";
-import flags, { flatFlags } from "pages/FlowEditor/data/flags";
+import { DEFAULT_FLAG_CATEGORY, flatFlags } from "pages/FlowEditor/data/flags";
 import React from "react";
-import InputRow from "ui/InputRow";
-import ModalSection from "ui/ModalSection";
-import ModalSectionContent from "ui/ModalSectionContent";
 
-import { TYPES } from "../types";
-import { ICONS } from "../ui";
-import type { Filter } from "./model";
+export interface Props {
+  id?: string;
+  handleSubmit?: (d: any, c?: any) => void;
+  node?: any;
+}
 
-const FilterComponent: React.FC<Filter> = (props) => {
+const Filter: React.FC<Props> = (props) => {
   const formik = useFormik({
-    initialValues: {
-      // TODO: maybe don't store string key here as it's likely to change
-      flagSet: props.node?.data?.flagSet || "",
-      visible: !!props.node?.data?.visible,
-    },
+    initialValues: {},
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
         const children = props.id
@@ -23,12 +19,12 @@ const FilterComponent: React.FC<Filter> = (props) => {
           : [
               ...flatFlags,
               {
-                category: newValues.flagSet,
-                text: "(No Filter)",
+                category: DEFAULT_FLAG_CATEGORY,
+                text: "(No Result)",
                 value: "",
               },
             ]
-              .filter((f) => f.category === newValues.flagSet)
+              .filter((f) => f.category === DEFAULT_FLAG_CATEGORY)
               .map((f) => ({
                 type: TYPES.Response,
                 data: {
@@ -37,37 +33,19 @@ const FilterComponent: React.FC<Filter> = (props) => {
                 },
               }));
 
-        props.handleSubmit({ type: TYPES.Filter, data: newValues }, children);
+        props.handleSubmit(
+          { type: TYPES.Filter, data: { newValues, fn: "flag" } },
+          children
+        );
       }
     },
     validate: () => {},
   });
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
-      <ModalSection>
-        <ModalSectionContent title="Filter" Icon={ICONS[TYPES.Filter]}>
-          <InputRow>
-            <label htmlFor="filter-flagSet">Flag set</label>
-            <select
-              id="filter-flagSet"
-              name="flagSet"
-              value={formik.values.flagSet}
-              onChange={formik.handleChange}
-              disabled={!!props.id}
-              required={!props.id}
-            >
-              <option />
-              {Object.keys(flags).map((flagSet) => (
-                <option key={flagSet} value={flagSet}>
-                  {flagSet}
-                </option>
-              ))}
-            </select>
-          </InputRow>
-        </ModalSectionContent>
-      </ModalSection>
+      <h1>Filter Component</h1>
     </form>
   );
 };
 
-export default FilterComponent;
+export default Filter;
