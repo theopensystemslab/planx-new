@@ -85,7 +85,7 @@ export function toScope(passport: any): Object {
   return Object.fromEntries(
     Object.entries(passport.data).map(([key, value]) => [
       key,
-      Number((value as any).value[0]),
+      Number((value as any).value?.[0]),
     ])
   );
 }
@@ -103,7 +103,4 @@ export function evaluatePassport(
 // This complexity should never be exposed to this component's consumers.
 function serialize(x: string) {
   return x.replace(/\./g, "_");
-}
-function parse(x: string) {
-  return x.replace(/_/g, ".");
 }
