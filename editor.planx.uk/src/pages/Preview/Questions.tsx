@@ -34,14 +34,18 @@ const Questions = (props: Props) => {
   const node = currentCard();
   const flow = useContext(PreviewContext);
 
+  // TODO: Check the actual status to ensure payment is successful
+  const hasPaid = Boolean(passport.data["payment"]);
+
   useEffect(() => {
     if (!props.isSidebar) {
       const entry = `flow:${id}`;
       try {
         const state = JSON.parse(localStorage.getItem(entry) || "");
         if (
-          state &&
-          window.confirm("Would you like to resume the last session?")
+          state
+          // TODO: Really solid cookie management
+          // && window.confirm("Would you like to resume the last session?")
         ) {
           resumeSession(state);
         }
@@ -74,8 +78,8 @@ const Questions = (props: Props) => {
         }}
         style={{
           padding: "0 10px 10px",
-          visibility: previousCard ? "visible" : "hidden",
-          pointerEvents: previousCard ? "auto" : "none",
+          visibility: previousCard && !hasPaid ? "visible" : "hidden",
+          pointerEvents: previousCard && !hasPaid ? "auto" : "none",
           display: "block",
           cursor: "pointer",
           userSelect: "none",

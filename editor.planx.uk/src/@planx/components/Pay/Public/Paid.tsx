@@ -29,10 +29,31 @@ const useStyles = makeStyles({
       margin: "20px 0",
     },
   },
+  capitalize: {
+    textTransform: "capitalize",
+  },
 });
 
-function Component(props: any) {
+interface Props {
+  handleSubmit: () => void;
+  amount: number;
+  date: string;
+  govUkRef: string;
+  applicationId?: string;
+  status?: string;
+}
+
+function Component(props: Props) {
   const c = useStyles();
+
+  const formattedDate = () => {
+    const date = new Date(props.date);
+    return date.toLocaleDateString("en-GB", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
       <div className={c.root}>
@@ -42,13 +63,20 @@ function Component(props: any) {
           <Typography variant="h1">{`£${props.amount}`}</Typography>
         </div>
         <p>
-          <span>Paid</span>11th November 2020 14.32
+          <span>Created</span>
+          {formattedDate()}
         </p>
         <p>
-          <span>GOV.UK Payment reference</span>JG669323
+          <span>Status</span>
+          {props.status}
         </p>
         <p>
-          <span>Application reference</span>LBH-2020-LDC-100
+          <span>GOV.UK Payment reference</span>
+          {props.govUkRef}
+        </p>
+        <p>
+          <span>Application reference</span>
+          {props.applicationId}
         </p>
         <br />
         <br />

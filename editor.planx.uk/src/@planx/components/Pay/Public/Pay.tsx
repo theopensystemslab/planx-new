@@ -1,3 +1,4 @@
+import Box from "@material-ui/core/Box";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Checkbox from "@material-ui/core/Checkbox";
 import Drawer from "@material-ui/core/Drawer";
@@ -7,7 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import Question from "@planx/components/Question/Public";
+import DecisionButton from "@planx/components/shared/Buttons/DecisionButton";
 import Card from "@planx/components/shared/Preview/Card";
 import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -16,7 +17,7 @@ import React, { Suspense, useEffect } from "react";
 import { useAsync } from "react-use";
 import Input from "ui/Input";
 
-import type { Pay } from "../model";
+import type { GovUKCreatePaymentPayload, GovUKPayment,Pay } from "../model";
 
 export default Component;
 
@@ -68,7 +69,7 @@ const OPTIONS: Record<
     letter: "B",
     component: React.lazy(() => import("./PayWithApple")),
   },
-  govUk: {
+  govUK: {
     label: "GOV.UK Pay",
     letter: "C",
   },
@@ -78,15 +79,16 @@ const GovUkTemporaryComponent = (props: {
   url: string;
   amount: number;
   flowId: string;
-}) => {
+}): JSX.Element | null => {
   const [passport, mutatePassport] = useStore((state) => [
     state.passport,
     state.mutatePassport,
   ]);
   const [govUrl, setGovUrl] = React.useState<string>();
 
-  const params = {
-    amount: props.amount,
+  const params: GovUKCreatePaymentPayload = {
+    // TODO: Make sure we're always converting this properly
+    amount: props.amount * 100,
     // TODO: Might make more sense to use sessionId, applicationId, or some other PlanX identifier instead
     reference: props.flowId,
     description: "New application",
@@ -99,7 +101,11 @@ const GovUkTemporaryComponent = (props: {
     if (!request.loading && !request.error && request.value) {
       setGovUrl(request.value.data._links.next_url.href);
       mutatePassport((draft) => {
-        draft.data["paymentReference"] = request.value.data.payment_id;
+        const normalizedPayment = {
+          ...request.value.data,
+          amount: request.value.data.amount / 100,
+        };
+        draft.data["payment"] = normalizedPayment;
       });
     }
   }, [request.loading, request.error, request.value]);
@@ -109,12 +115,12 @@ const GovUkTemporaryComponent = (props: {
   } else if (request.error) {
     throw request.error;
   } else {
-    return (
-      <Card>
-        <a href={govUrl}>Click here to pay</a>
-      </Card>
-    );
+    if (govUrl) {
+      window.location.replace(govUrl);
+    }
   }
+
+  return null;
 };
 
 const Summary = React.lazy(() => import("./Summary"));
@@ -126,15 +132,17 @@ interface Props extends Pay {
 
 function Component(props: Props) {
   const [passport, id] = useStore((state) => [state.passport, state.id]);
-  const [state, setState] = React.useState<
-    "init" | "summary" | "paid" | "govUk"
-  >(passport.data.paymentReference ? "paid" : "init");
+  const [state, setState] = React.useState<"init" | "summary" | "paid">(
+    passport.data.payment ? "paid" : "init"
+  );
   const [otherPayments, setOtherPayments] = React.useState({});
   const Route = OPTIONS[state]?.component;
 
+  const govUkPayment: GovUKPayment = passport.data.payment;
+
   // TODO: Error handling for case where fee somehow doesn't exist
-  // TODO: More gracefully store/find this fee
-  const fee = Number(passport.data["application.fee"].value[0]);
+  // TODO: More gracefully store/find this fee; perhaps as input on Pay component in editor
+  const fee = Number(passport.data["application.fee.payable"]?.value[0]);
 
   // TODO: When connecting this component to the flow and to the backend
   //       remember to also pass up the value of `otherPayments`
@@ -157,16 +165,6 @@ function Component(props: Props) {
       </Card>
     );
   }
-  // TODO: If this is the only way to pay at first, remove other options
-  if (state === "govUk") {
-    return (
-      <GovUkTemporaryComponent
-        url="http://localhost:7002/pay"
-        amount={fee}
-        flowId={id}
-      />
-    );
-  }
   if (state === "summary") {
     return (
       <Suspense fallback={<>Loading...</>}>
@@ -185,7 +183,16 @@ function Component(props: Props) {
   if (state === "paid") {
     return (
       <Suspense fallback={<>Loading...</>}>
-        <Paid handleSubmit={() => props.handleSubmit()} amount={fee} />
+        <Paid
+          handleSubmit={() => props.handleSubmit()}
+          amount={fee}
+          date={govUkPayment.created_date}
+          govUkRef={govUkPayment.payment_id}
+          // TODO: Refetch & display actual updated status
+          status={"Success"}
+          // TODO: replace with actual application ID
+          applicationId={id}
+        />
       </Suspense>
     );
   }
@@ -211,10 +218,15 @@ function Init(props: any) {
     { name: "Other", label: "Other" },
   ];
 
+  const [id] = useStore((state) => [state.id]);
+
   const classes = useStyles();
 
   // Regarding the sidebar
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const [paymentFlow, setPaymentFlow] = React.useState(false);
+
   const [checkboxes, setCheckboxes] = React.useState(
     // { [name]: false }
     Object.fromEntries(OTHER_OPTIONS.map(({ name }) => [name, false]))
@@ -234,7 +246,24 @@ function Init(props: any) {
           <a href="#">How are the planning fees calculated? ↗︎</a>
         </Typography>
       </div>
-      <Question
+      <Box py={3}>
+        <DecisionButton
+          onClick={() => setPaymentFlow(true)}
+          selected={false}
+          title={"Pay with Gov.UK"}
+        />
+      </Box>
+
+      {paymentFlow && (
+        // TODO: Input this url from editor
+        <GovUkTemporaryComponent
+          url="http://localhost:7002/pay"
+          amount={props.amount}
+          flowId={id}
+        />
+      )}
+
+      {/* <Question
         text="How would you like to pay?"
         responses={Object.entries(OPTIONS).map(([key, value]) => ({
           id: key,
@@ -251,7 +280,7 @@ function Init(props: any) {
         info={props.info}
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
-      />
+      /> */}
       <p style={{ textAlign: "right", cursor: "pointer" }}>
         <a style={{ color: "#000A" }} onClick={() => setIsOpen((x) => !x)}>
           Tell us other ways you'd like to pay in the future

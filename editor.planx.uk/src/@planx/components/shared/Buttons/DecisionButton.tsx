@@ -14,7 +14,7 @@ export const useStyles = makeStyles((theme) => ({
 
 export interface Props extends ButtonProps {
   id?: string;
-  responseKey: string | number;
+  responseKey?: string | number;
   title: string;
   description?: string;
 }
