@@ -1,7 +1,8 @@
-import type { Props } from "@planx/components/Checklist/Public";
-import Checklist from "@planx/components/Checklist/Public";
 import type { Story } from "@storybook/react/types-6-0";
 import React from "react";
+
+import type { Props } from "./Public";
+import Checklist from "./Public";
 
 export default {
   title: "PlanX Components/Checklist",
