@@ -67,7 +67,7 @@ function Component(props: any) {
       <div className={c.topBanner}>
         <h2>Payment summary</h2>
         <p>Amount</p>
-        <h2>£206</h2>
+        <h2>{`£${props.amount}`}</h2>
       </div>
       <h1 className={c.h1}>Confirm your payment</h1>
       <div className={c.table}>

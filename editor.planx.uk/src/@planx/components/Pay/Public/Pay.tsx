@@ -9,8 +9,11 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Question from "@planx/components/Question/Public";
 import Card from "@planx/components/shared/Preview/Card";
+import axios from "axios";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
+import { useAsync } from "react-use";
 import Input from "ui/Input";
 
 import type { Pay } from "../model";
@@ -53,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 const OPTIONS: Record<
   string,
-  { label: string; letter: string; component: React.FC<any> }
+  { label: string; letter: string; component?: React.FC<any> }
 > = {
   card: {
     label: "Credit or debit card",
@@ -65,6 +68,53 @@ const OPTIONS: Record<
     letter: "B",
     component: React.lazy(() => import("./PayWithApple")),
   },
+  govUk: {
+    label: "GOV.UK Pay",
+    letter: "C",
+  },
+};
+
+const GovUkTemporaryComponent = (props: {
+  url: string;
+  amount: number;
+  flowId: string;
+}) => {
+  const [passport, mutatePassport] = useStore((state) => [
+    state.passport,
+    state.mutatePassport,
+  ]);
+  const [govUrl, setGovUrl] = React.useState<string>();
+
+  const params = {
+    amount: props.amount,
+    // TODO: Might make more sense to use sessionId, applicationId, or some other PlanX identifier instead
+    reference: props.flowId,
+    description: "New application",
+    return_url: window.location.href,
+  };
+
+  const request = useAsync(async () => axios.post(props.url, params));
+
+  useEffect(() => {
+    if (!request.loading && !request.error && request.value) {
+      setGovUrl(request.value.data._links.next_url.href);
+      mutatePassport((draft) => {
+        draft.data["paymentReference"] = request.value.data.payment_id;
+      });
+    }
+  }, [request.loading, request.error, request.value]);
+
+  if (request.loading) {
+    return <Card>Loading...</Card>;
+  } else if (request.error) {
+    throw request.error;
+  } else {
+    return (
+      <Card>
+        <a href={govUrl}>Click here to pay</a>
+      </Card>
+    );
+  }
 };
 
 const Summary = React.lazy(() => import("./Summary"));
@@ -75,9 +125,17 @@ interface Props extends Pay {
 }
 
 function Component(props: Props) {
-  const [state, setState] = React.useState<"init" | "summary" | "paid">("init");
+  const [passport, id] = useStore((state) => [state.passport, state.id]);
+  const [state, setState] = React.useState<
+    "init" | "summary" | "paid" | "govUk"
+  >(passport.data.paymentReference ? "paid" : "init");
   const [otherPayments, setOtherPayments] = React.useState({});
   const Route = OPTIONS[state]?.component;
+
+  // TODO: Error handling for case where fee somehow doesn't exist
+  // TODO: More gracefully store/find this fee
+  const fee = Number(passport.data["application.fee"].value[0]);
+
   // TODO: When connecting this component to the flow and to the backend
   //       remember to also pass up the value of `otherPayments`
   //       to be stored in special data fields, e.g.
@@ -99,6 +157,16 @@ function Component(props: Props) {
       </Card>
     );
   }
+  // TODO: If this is the only way to pay at first, remove other options
+  if (state === "govUk") {
+    return (
+      <GovUkTemporaryComponent
+        url="http://localhost:7002/pay"
+        amount={fee}
+        flowId={id}
+      />
+    );
+  }
   if (state === "summary") {
     return (
       <Suspense fallback={<>Loading...</>}>
@@ -109,6 +177,7 @@ function Component(props: Props) {
           submit={() => {
             setState("paid");
           }}
+          amount={fee}
         />
       </Suspense>
     );
@@ -116,7 +185,7 @@ function Component(props: Props) {
   if (state === "paid") {
     return (
       <Suspense fallback={<>Loading...</>}>
-        <Paid handleSubmit={() => props.handleSubmit()} />
+        <Paid handleSubmit={() => props.handleSubmit()} amount={fee} />
       </Suspense>
     );
   }
@@ -125,12 +194,14 @@ function Component(props: Props) {
       <Init
         setState={setState}
         setOtherPayments={setOtherPayments}
+        amount={fee}
         {...props}
       />
     </Card>
   );
 }
 
+// TODO: type the props
 function Init(props: any) {
   const OTHER_OPTIONS = [
     { name: "BACs", label: "Bank transfer by BACs" },
@@ -157,7 +228,7 @@ function Init(props: any) {
           The fee for this application is
         </Typography>
         <Typography variant="h1" gutterBottom className="marginBottom">
-          £206
+          {`£${props.amount}`}
         </Typography>
         <Typography>
           <a href="#">How are the planning fees calculated? ↗︎</a>
@@ -199,7 +270,7 @@ function Init(props: any) {
             <CloseIcon />
           </IconButton>
           <p>
-            What other types of payment would you lke this service to accept in
+            What other types of payment would you like this service to accept in
             the future:
           </p>
           <FormGroup row>

@@ -293,6 +293,22 @@ app.use("/bops/:localAuthority", (req, res) => {
   })(req, res);
 });
 
+// TODO: A lot of tests + error handling, of course
+app.use("/pay", (req, res) => {
+  createProxyMiddleware({
+    pathRewrite: {
+      "^/pay": "",
+    },
+    target: "https://publicapi.payments.service.gov.uk/v1/payments",
+    changeOrigin: true,
+    logLevel: "debug",
+    headers: {
+      ...req.headers,
+      Authorization: `Bearer api_test_5s0ovp4jt0ksuukkq51ieq4aav7gktth15due135bsq6mrcso1jks43jta`,
+    },
+  })(req, res);
+});
+
 app.use(
   "/notify/*",
   createProxyMiddleware({

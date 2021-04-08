@@ -39,7 +39,7 @@ function Component(props: any) {
         <div className={c.banner}>
           <Typography variant="h3">Payment summary</Typography>
           <Typography>Amount</Typography>
-          <Typography variant="h1">£206</Typography>
+          <Typography variant="h1">{`£${props.amount}`}</Typography>
         </div>
         <p>
           <span>Paid</span>11th November 2020 14.32
