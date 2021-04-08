@@ -104,6 +104,3 @@ export function evaluatePassport(
 function serialize(x: string) {
   return x.replace(/\./g, "_");
 }
-function parse(x: string) {
-  return x.replace(/_/g, ".");
-}
