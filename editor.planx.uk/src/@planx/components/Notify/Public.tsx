@@ -39,9 +39,7 @@ export default function (props: Props): FCReturn {
     );
   }, [props.token, props.addressee, props.templateId, props.personalisation]);
   React.useEffect(() => {
-    if (request.value) {
-      props.handleSubmit && props.handleSubmit();
-    }
+    if (request.value) props.handleSubmit?.();
   }, [request]);
   if (request.error) {
     console.error(request.error);

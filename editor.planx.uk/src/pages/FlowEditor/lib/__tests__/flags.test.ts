@@ -68,11 +68,13 @@ describe("in a flow with no collected flags, the user", () => {
     ]);
   });
 
-  [
+  const scenarios: [string, string[], string][] = [
     ["missing_info_answer", ["MISSING_INFO"], "missing_info_followup"],
     ["immune_answer", ["IMMUNE"], "immune_followup"],
     ["noflag_answer", [], "noflag_followup"],
-  ].forEach(([answer, flags, followup]) => {
+  ];
+
+  scenarios.forEach(([answer, flags, followup]) => {
     it(`but after visiting [${answer}], collects [${flags}] and the next question is [${followup}]`, () => {
       getState().record("question", [answer]);
       expect(getState().collectedFlags("question")).toEqual(flags);

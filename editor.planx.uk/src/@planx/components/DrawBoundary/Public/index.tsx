@@ -41,7 +41,7 @@ export default function Component(props: Props) {
   ]);
   const classes = useClasses();
   const [boundary, setBoundary] = useState<Boundary>();
-  const [url, setUrl] = useState<String | undefined>();
+  const [url, setUrl] = useState<string | undefined>();
   useEffect(() => {
     setUrl(undefined);
     setBoundary(undefined);
@@ -106,7 +106,7 @@ export default function Component(props: Props) {
         draft.data[props.dataFieldArea] = area;
       }
     });
-    props.handleSubmit && props.handleSubmit([url]);
+    props.handleSubmit?.(url ? [url] : undefined);
   }
 }
 

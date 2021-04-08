@@ -25,7 +25,7 @@ export interface PreviewStore extends Store.Store {
   hasPaid: () => boolean;
   passport: Store.passport;
   previousCard: () => Store.nodeId | undefined;
-  record: (id: Store.nodeId, vals?: Store.componentOutput) => void;
+  record: (id: Store.nodeId, answers?: Store.userData["answers"]) => void;
   resultData: (
     flagSet?: string,
     overrides?: { [flagId: string]: { heading?: string; description?: string } }
@@ -75,7 +75,7 @@ export const previewStore = (
 
     const res = ids
       .reduce((acc, k) => {
-        breadcrumbs[k].answers.forEach((id: string) => {
+        breadcrumbs[k].answers?.forEach((id: string) => {
           acc.push(flow[id]?.data?.flag);
         });
         return acc;
@@ -121,17 +121,15 @@ export const previewStore = (
     return goBackable.pop();
   },
 
-  record(id, vals) {
+  record(id, answers) {
     const { breadcrumbs, sessionId, upcomingCardIds, flow, passport } = get();
 
     if (!flow[id]) throw new Error("id not found");
 
-    if (vals) {
-      vals = Array.isArray(vals) ? vals : [vals];
-
+    if (answers) {
       const key = flow[id].data?.fn;
       if (key) {
-        let passportValue = vals.map((id: string) => flow[id]?.data?.val);
+        let passportValue = answers.map((id: string) => flow[id]?.data?.val);
 
         passportValue = passportValue.filter(
           (val: any) =>
@@ -155,7 +153,7 @@ export const previewStore = (
           set({
             breadcrumbs: {
               ...breadcrumbs,
-              [id]: { answers: vals, auto: false },
+              [id]: { answers, auto: false },
             },
             passport: {
               ...passport,
@@ -169,7 +167,7 @@ export const previewStore = (
           set({
             breadcrumbs: {
               ...breadcrumbs,
-              [id]: { answers: vals, auto: false },
+              [id]: { answers, auto: false },
             },
           });
         }
@@ -177,7 +175,7 @@ export const previewStore = (
         set({
           breadcrumbs: {
             ...breadcrumbs,
-            [id]: { answers: vals, auto: false },
+            [id]: { answers, auto: false },
           },
         });
       }
@@ -213,9 +211,9 @@ export const previewStore = (
 
             const fn = flow[questionId]?.data?.fn;
             if (fn) {
-              const { answers = [] } = v;
+              const { answers: localAnswers = [] } = v;
 
-              const value = answers
+              const value = localAnswers
                 .map((aId: string) => flow[aId]?.data?.val)
                 .filter(Boolean);
 
@@ -260,9 +258,7 @@ export const previewStore = (
           }
         `,
         variables: {
-          chosen_node_ids: Array.isArray(vals)
-            ? pgarray(vals)
-            : pgarray([vals]),
+          chosen_node_ids: pgarray(answers ?? []),
           session_id: get().sessionId,
           type: "human_decision", // TODO
           parent_node_id: id,
@@ -313,10 +309,8 @@ export const previewStore = (
         const keys = possibleFlags.map((f) => f.value);
         const collectedFlags = Object.values(
           breadcrumbs
-        ).flatMap(({ answers }) =>
-          Array.isArray(answers)
-            ? answers.map((id) => flow[id]?.data?.flag)
-            : flow[answers]?.data?.flag
+        ).flatMap(({ answers = [] }) =>
+          answers.map((id) => flow[id]?.data?.flag)
         );
 
         const filteredCollectedFlags = collectedFlags
@@ -335,35 +329,28 @@ export const previewStore = (
         };
 
         const responses = Object.entries(breadcrumbs)
-          .map(
-            ([k, { answers }]: [
-              string,
-              { answers: string | Array<string> }
-            ]) => {
-              const question = { id: k, ...flow[k] };
+          .map(([k, { answers = [] }]) => {
+            const question = { id: k, ...flow[k] };
 
-              const questionType = question?.type;
+            const questionType = question?.type;
 
-              if (
-                !questionType ||
-                !SUPPORTED_DECISION_TYPES.includes(questionType)
-              )
-                return null;
+            if (
+              !questionType ||
+              !SUPPORTED_DECISION_TYPES.includes(questionType)
+            )
+              return null;
 
-              answers = Array.isArray(answers) ? answers : [answers];
+            const selections = answers.map((id) => ({ id, ...flow[id] }));
+            const hidden = !selections.some(
+              (r) => r.data?.flag && r.data.flag === flag?.value
+            );
 
-              const selections = answers.map((id) => ({ id, ...flow[id] }));
-              const hidden = !selections.some(
-                (r) => r.data?.flag && r.data.flag === flag?.value
-              );
-
-              return {
-                question,
-                selections,
-                hidden,
-              };
-            }
-          )
+            return {
+              question,
+              selections,
+              hidden,
+            };
+          })
           .filter(Boolean);
 
         const heading =

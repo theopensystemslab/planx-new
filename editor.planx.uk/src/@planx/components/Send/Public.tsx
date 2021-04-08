@@ -20,8 +20,13 @@ const SendComponent: React.FC<Props> = (props) => {
   const request = useAsync(async () => axios.post(props.url, getParams()));
 
   useEffect(() => {
-    if (!request.loading && !request.error && request.value) {
-      props.handleSubmit!([request.value.data.application.id]);
+    if (
+      !request.loading &&
+      !request.error &&
+      request.value &&
+      props.handleSubmit
+    ) {
+      props.handleSubmit([request.value.data.application.id]);
     }
   }, [request.loading, request.error, request.value]);
 
@@ -59,16 +64,20 @@ const SendComponent: React.FC<Props> = (props) => {
     // 2. files
 
     Object.values(breadcrumbs).forEach(({ answers = [] }) => {
-      answers.filter(Boolean).forEach((x: any) => {
-        if (x.filename && x.url) {
-          data.files = data.files || [];
+      answers.filter(Boolean).forEach((str) => {
+        try {
+          // data has been JSON.stringify'd temporarily to adhere to answers: string[] type
+          const { filename, url } = JSON.parse(str);
+          if (filename && url) {
+            data.files = data.files || [];
 
-          data.files.push({
-            filename: String(x.url),
-            tags: [],
-            // TODO: replace tags with passport field
-          });
-        }
+            data.files.push({
+              filename: String(url),
+              tags: [],
+              // TODO: replace tags with passport field
+            });
+          }
+        } catch (err) {}
       });
     });
 
