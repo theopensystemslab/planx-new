@@ -13,6 +13,7 @@ import Notice from "@planx/components/Notice/Editor";
 import Notify from "@planx/components/Notify/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
 import Page from "@planx/components/Page/Editor";
+import Pay from "@planx/components/Pay/Editor";
 import Question from "@planx/components/Question/Editor";
 import Result from "@planx/components/Result/Editor";
 import Review from "@planx/components/Review/Editor";
@@ -23,7 +24,6 @@ import { TYPES } from "@planx/components/types";
 import React from "react";
 
 import { SLUGS } from "../../data/types";
-import Pay from "./Pay";
 
 const EmptyComponent: React.FC<any> = () => null;
 
