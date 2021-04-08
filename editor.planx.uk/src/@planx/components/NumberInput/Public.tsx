@@ -29,7 +29,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
               draft.data[props.fn] = { value: [String(parsed)] };
             });
           }
-          props.handleSubmit(parsed);
+          props.handleSubmit([String(parsed)]);
         }
       }
     },

@@ -91,8 +91,8 @@ const Questions = (props: Props) => {
           <Node
             node={node}
             key={node.id}
-            handleSubmit={(values: Store.componentOutput) => {
-              record(node.id!, values);
+            handleSubmit={(answers: Store.userData["answers"] = []) => {
+              record(node.id!, answers);
             }}
             settings={flow?.settings}
           />

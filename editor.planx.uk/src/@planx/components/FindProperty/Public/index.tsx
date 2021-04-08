@@ -13,6 +13,7 @@ import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
+import { submitFeedback } from "lib/feedback";
 import capitalize from "lodash/capitalize";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -139,7 +140,7 @@ function Component(props: Props) {
         handleSubmit={(feedback?: string) => {
           if (flow && address && constraints) {
             startSession({ passport: { data: constraints, info: address } });
-            props.handleSubmit(feedback);
+            props.handleSubmit(feedback ? [feedback] : []);
           } else {
             throw Error("Should not have been clickable");
           }
@@ -365,7 +366,12 @@ export function PropertyInformation(props: any) {
       feedback: "",
     },
     onSubmit: (values) => {
-      handleSubmit && handleSubmit(values.feedback);
+      if (values.feedback) {
+        submitFeedback(values.feedback, {
+          reason: "Inaccurate property location",
+        });
+      }
+      handleSubmit?.();
     },
   });
 

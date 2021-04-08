@@ -63,7 +63,7 @@ const ChecklistComponent: React.FC<Props> = ({
       checked: [],
     },
     onSubmit: (values) => {
-      handleSubmit && handleSubmit(values.checked);
+      handleSubmit?.(values.checked);
     },
     validateOnBlur: false,
     validateOnChange: false,

@@ -18,7 +18,6 @@ import Send from "@planx/components/Send/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
-import { submitFeedback } from "lib/feedback";
 import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
@@ -27,7 +26,8 @@ import { FlowSettings, GovUKPayment } from "types";
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
 
-export type handleSubmit = (_?: Store.componentOutput) => void;
+export type handleSubmit = (_?: Store.userData["answers"]) => void;
+
 interface Props {
   handleSubmit: handleSubmit;
   node: Store.node;
@@ -124,50 +124,19 @@ const Node: React.FC<any> = (props: Props) => {
       return <FileUpload {...allProps} />;
 
     case TYPES.FindProperty:
-      return (
-        <FindProperty
-          {...allProps}
-          handleSubmit={(feedback?: string) => {
-            feedback?.length &&
-              submitFeedback(feedback, {
-                reason: "Inaccurate property location",
-              });
-            props.handleSubmit([props.node.id]);
-          }}
-        />
-      );
+      return <FindProperty {...allProps} />;
 
     case TYPES.Notice:
-      return (
-        <Notice
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <Notice {...allProps} />;
 
     case TYPES.Notify:
-      return (
-        <Notify
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <Notify {...allProps} />;
 
     case TYPES.NumberInput:
-      return (
-        <NumberInput
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <NumberInput {...allProps} />;
 
     case TYPES.Pay:
-      return (
-        <Pay
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <Pay {...allProps} />;
 
     case TYPES.Result:
       const flagSet = props.node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
@@ -177,12 +146,8 @@ const Node: React.FC<any> = (props: Props) => {
 
       return (
         <Result
+          {...allProps}
           allowChanges={!hasPaid}
-          handleSubmit={(feedback?: string) => {
-            feedback?.length &&
-              submitFeedback(feedback, { reason: "Inaccurate Result" });
-            props.handleSubmit([props.node.id]);
-          }}
           headingColor={{
             text: flag.color,
             background: flag.bgColor,
@@ -196,20 +161,10 @@ const Node: React.FC<any> = (props: Props) => {
       );
 
     case TYPES.Review:
-      return (
-        <Review
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <Review {...allProps} />;
 
     case TYPES.Send:
-      return (
-        <Send
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <Send {...allProps} />;
 
     case TYPES.Statement:
       // TODO: sensitive fix for strict mode

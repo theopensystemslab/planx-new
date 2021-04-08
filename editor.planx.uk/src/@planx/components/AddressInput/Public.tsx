@@ -23,7 +23,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
       postcode: "",
     },
     onSubmit: (values) => {
-      props.handleSubmit && props.handleSubmit(values);
+      props.handleSubmit?.([JSON.stringify(values)]);
     },
     validateOnBlur: false,
     validateOnChange: false,

@@ -13,13 +13,10 @@ export declare namespace Store {
   export type Store = Record<string | number | symbol, unknown>;
   export type nodeId = string;
   export type flow = Record<nodeId, node>;
-  // TODO: fix this silly type!
-  export type componentOutput =
-    | Array<any | undefined | null>
-    | any
-    | undefined
-    | null;
-  export type userData = { answers: componentOutput; auto?: boolean };
+  export type userData = {
+    answers?: Array<string>;
+    auto?: boolean;
+  };
   export type breadcrumbs = Record<nodeId, userData>;
   export type node = {
     id?: nodeId;
