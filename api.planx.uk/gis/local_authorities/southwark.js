@@ -17,7 +17,7 @@ var headers = {
   Accept: "application/json, text/plain, */*",
   Referer: "https://geo.southwark.gov.uk/connect/analyst/mobile/",
   Connection: "keep-alive",
-  DNT: "1"
+  DNT: "1",
 };
 
 const keys = {
@@ -25,23 +25,23 @@ const keys = {
     columns: [
       "Conservation_area",
       "Conservation_area_number",
-      "More_information"
+      "More_information",
     ],
     neg: "is not in a Conservation Area",
-    pos: data => ({
+    pos: (data) => ({
       text: "is in a Conservation Area",
       description: data.More_information
         ? data.More_information
-        : data.Conservation_area
-    })
+        : data.Conservation_area,
+    }),
   },
   tpo: {
     columns: ["Location", "TPO_document"],
     neg: "is not in a TPO (Tree Preservation Order) zone",
-    pos: data => ({
+    pos: (data) => ({
       text: "is in a TPO (Tree Preservation Order) zone",
-      description: data.TPO_document ? data.TPO_document : data.Location
-    })
+      description: data.TPO_document ? data.TPO_document : data.Location,
+    }),
   },
   listed: {
     columns: [
@@ -51,25 +51,26 @@ const keys = {
       "STREET",
       "GRADE",
       "DATE_OF_LISTING",
-      "LISTING_DESCRIPTION"
+      "LISTING_DESCRIPTION",
     ],
     neg: "is not in, or within, a Listed Building",
-    pos: data => ({
+    pos: (data) => ({
       text: `is, or is within, a Grade ${data.GRADE} listed building`,
       description: data.LISTING_DESCRIPTION
         ? data.LISTING_DESCRIPTION
-        : data.NAME
-    })
-  }
+        : data.NAME,
+    }),
+  },
 };
 
 function get(key, table, x, y, radius = 1.5) {
-  const fieldsString = keys[key].columns.map(f => `"${f}"`).join(",");
+  const fieldsString = keys[key].columns.map((f) => `"${f}"`).join(",");
 
   const limit = 1; // 100
 
-  const query = `SELECT ${fieldsString} FROM "/NamedMaps/NamedTables/${table}" WHERE MI_Intersects(obj,MI_Box(${x -
-    radius},${y - radius},${x + radius},${y + radius},'EPSG:27700'))`;
+  const query = `SELECT ${fieldsString} FROM "/NamedMaps/NamedTables/${table}" WHERE MI_Intersects(obj,MI_Box(${
+    x - radius
+  },${y - radius},${x + radius},${y + radius},'EPSG:27700'))`;
 
   return new Promise((resolve, reject) => {
     request(
@@ -83,8 +84,8 @@ function get(key, table, x, y, radius = 1.5) {
         gzip: true,
         form: {
           url: `tables/features.json?q=${query}&page=1&pageLength=${limit}`,
-          encodeSpecialChars: true
-        }
+          encodeSpecialChars: true,
+        },
       },
       (error, response, body) => {
         if (error) {
@@ -111,8 +112,8 @@ async function locationSearch(x, y, extras) {
       get("tpo", "TPO_zones___Individual_type", x, y),
       get("tpo", "TPO_zones___Group_type", x, y),
       get("tpo", "TPO_zones___Area_type", x, y),
-      get("tpo", "TPO_zones___Historic_type", x, y)
-    ].map(p => p.catch(e => e))
+      get("tpo", "TPO_zones___Historic_type", x, y),
+    ].map((p) => p.catch((e) => e))
   );
 
   const ob = responses
@@ -129,7 +130,7 @@ async function locationSearch(x, y, extras) {
               ...keys[key].pos(properties),
               value: true,
               type: "warning",
-              data: properties
+              data: properties,
             };
           } else {
             if (!acc[k]) {
@@ -137,7 +138,7 @@ async function locationSearch(x, y, extras) {
                 value: false,
                 text: keys[key].neg,
                 type: "check",
-                data: {}
+                data: {},
               };
             }
           }
@@ -151,11 +152,11 @@ async function locationSearch(x, y, extras) {
         "defence.explosives": { value: false },
         "designated.nationalPark": { value: false },
         "defence.safeguarded": { value: false },
-        "hazard": { value: false },
+        hazard: { value: false },
         "nature.SSSI": { value: false },
         "property.landWCA": { value: false },
         "designated.WHS": { value: false },
-        ...extras
+        ...extras,
       }
     );
 
@@ -166,7 +167,7 @@ async function locationSearch(x, y, extras) {
       ob["designated.conservationArea"].data.Conservation_area_number &&
       ob["designated.conservationArea"].data.Conservation_area_number === 39
         ? true
-        : false
+        : false,
   };
 
   console.log(responses);

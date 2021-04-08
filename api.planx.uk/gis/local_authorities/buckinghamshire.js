@@ -114,7 +114,7 @@ async function go(x, y, extras) {
           "defence.explosives": { value: false },
           "designated.nationalPark": { value: false },
           "defence.safeguarded": { value: false },
-          "hazard": { value: false },
+          hazard: { value: false },
           "nature.SSSI": { value: false },
           "property.landWCA": { value: false },
           "designated.WHS": { value: false },
