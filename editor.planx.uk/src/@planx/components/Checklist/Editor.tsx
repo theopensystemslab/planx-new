@@ -2,16 +2,12 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Delete from "@material-ui/icons/Delete";
-import type { Checklist, Group } from "@planx/components/Checklist/model";
-import { toggleExpandableChecklist } from "@planx/components/Checklist/model";
-import { Option, parseMoreInformation } from "@planx/components/shared";
-import { TYPES } from "@planx/components/types";
-import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
 import React, { useEffect, useRef } from "react";
+import { FormikHookReturn } from "types";
 import ImgInput from "ui/ImgInput";
 import Input from "ui/Input";
 import InputGroup from "ui/InputGroup";
@@ -24,8 +20,12 @@ import OptionButton from "ui/OptionButton";
 import RichTextInput from "ui/RichTextInput";
 import SimpleMenu from "ui/SimpleMenu";
 
-import { FormikHookReturn } from "../../../../types";
-import { PermissionSelect } from "./shared";
+import { Option, parseMoreInformation } from "../shared";
+import PermissionSelect from "../shared/PermissionSelect";
+import { TYPES } from "../types";
+import { ICONS, InternalNotes, MoreInformation } from "../ui";
+import type { Checklist, Group } from "./model";
+import { toggleExpandableChecklist } from "./model";
 
 interface ChecklistProps extends Checklist {
   handleSubmit?: Function;

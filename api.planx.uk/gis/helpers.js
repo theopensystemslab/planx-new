@@ -19,7 +19,7 @@ const makeObjectFromUrl = (url) => {
   return { root, params };
 };
 
-module.exports = { 
-  makeUrlFromObject, 
+module.exports = {
+  makeUrlFromObject,
   makeObjectFromUrl,
 };

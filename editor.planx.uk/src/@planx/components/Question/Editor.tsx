@@ -1,6 +1,3 @@
-import { Option, parseMoreInformation } from "@planx/components/shared";
-import { TYPES } from "@planx/components/types";
-import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import ImgInput from "ui/ImgInput";
@@ -13,7 +10,10 @@ import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
 
-import { PermissionSelect } from "./shared";
+import { Option, parseMoreInformation } from "../shared";
+import PermissionSelect from "../shared/PermissionSelect";
+import { TYPES } from "../types";
+import { ICONS, InternalNotes, MoreInformation } from "../ui";
 
 interface Props {
   node: {
