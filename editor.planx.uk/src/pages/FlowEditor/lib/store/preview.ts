@@ -24,9 +24,15 @@ export interface PreviewStore extends Store.Store {
   ) => Array<string>;
   currentCard: () => Store.node | null;
   hasPaid: () => boolean;
-  passport: Store.passport;
+  computePassport: () => Readonly<Store.passport>;
   previousCard: () => Store.nodeId | undefined;
-  record: (id: Store.nodeId, answers?: Store.userData["answers"]) => void;
+  record: (
+    id: Store.nodeId,
+    {
+      answers,
+      data,
+    }?: { answers?: Store.userData["answers"]; data?: Store.userData["data"] }
+  ) => void;
   resultData: (
     flagSet?: string,
     overrides?: { [flagId: string]: { heading?: string; description?: string } }
@@ -110,10 +116,6 @@ export const previewStore = (
     );
   },
 
-  passport: {
-    data: {},
-  },
-
   previousCard: () => {
     const goBackable = Object.entries(get().breadcrumbs)
       .filter(([k, v]: any) => !v.auto)
@@ -122,8 +124,35 @@ export const previewStore = (
     return goBackable.pop();
   },
 
-  record(id, answers) {
-    const { breadcrumbs, sessionId, upcomingCardIds, flow, passport } = get();
+  computePassport: () => {
+    return Object.values(get().breadcrumbs).reduce(
+      (acc, { data = {} }) => {
+        return {
+          ...acc,
+          data: {
+            ...acc.data,
+            ...data,
+          },
+        };
+      },
+      {
+        initialData: {},
+        data: {},
+        info: {},
+      } as Store.passport
+    );
+  },
+
+  record(id, { answers, data } = {}) {
+    const {
+      breadcrumbs,
+      sessionId,
+      upcomingCardIds,
+      flow,
+      computePassport,
+    } = get();
+
+    const passport = computePassport();
 
     if (!flow[id]) throw new Error("id not found");
 
@@ -154,7 +183,7 @@ export const previewStore = (
           set({
             breadcrumbs: {
               ...breadcrumbs,
-              [id]: { answers, auto: false },
+              [id]: { answers, data, auto: false },
             },
             passport: {
               ...passport,
@@ -168,7 +197,7 @@ export const previewStore = (
           set({
             breadcrumbs: {
               ...breadcrumbs,
-              [id]: { answers, auto: false },
+              [id]: { answers, data, auto: false },
             },
           });
         }
@@ -176,7 +205,7 @@ export const previewStore = (
         set({
           breadcrumbs: {
             ...breadcrumbs,
-            [id]: { answers, auto: false },
+            [id]: { answers, data, auto: false },
           },
         });
       }
@@ -382,76 +411,76 @@ export const previewStore = (
   sessionId: "",
 
   async startSession({ passport }) {
-    // ------ BEGIN PASSPORT DATA OVERRIDES ------
+    // // ------ BEGIN PASSPORT DATA OVERRIDES ------
 
-    // TODO: move all of the logic in this block out of here and update the API
+    // // TODO: move all of the logic in this block out of here and update the API
 
-    // In this block we are converting the vars stored in passport.data object
-    // from the old boolean values style to the new array style. This should be
-    // done on a server but as a temporary fix the data is currently being
-    // converted here.
+    // // In this block we are converting the vars stored in passport.data object
+    // // from the old boolean values style to the new array style. This should be
+    // // done on a server but as a temporary fix the data is currently being
+    // // converted here.
 
-    // More info:
-    // GitHub comment explaining what's happening here https://bit.ly/2HFnxX2
-    // Google sheet with new passport schema https://bit.ly/39eYp4A
+    // // More info:
+    // // GitHub comment explaining what's happening here https://bit.ly/2HFnxX2
+    // // Google sheet with new passport schema https://bit.ly/39eYp4A
 
-    // https://tinyurl.com/3cdrnr7j
+    // // https://tinyurl.com/3cdrnr7j
 
-    // converts what is here
-    // https://gist.github.com/johnrees/e0e3197e3915489a69c743b38faf489e
-    // into { 'property.constraints.planning': { value: ['property.landConservation'] } }
-    const constraintsDictionary = {
-      "property.article4.lambeth.albertsquare": "article4.lambeth.albert",
-      "property.article4.lambeth.hydefarm": "article4.lambeth.hydeFarm",
-      "property.article4.lambeth.lansdowne": "article4.lambeth.lansdowne",
-      "property.article4.lambeth.leighamcourt": "article4.lambeth.leigham",
-      "property.article4.lambeth.parkhallroad": "article4.lambeth.parkHall",
-      "property.article4.lambeth.stockwell": "article4.lambeth.stockwell",
-      "property.article4.lambeth.streatham": "article4.lambeth.streatham",
-      "property.article4s": "article4",
-      "property.buildingListed": "listed",
-      "property.landAONB": "designated.AONB",
-      "property.landBroads": "designated.broads",
-      "property.landConservation": "designated.conservationArea",
-      "property.landExplosivesStorage": "defence.explosives",
-      "property.landNP": "designated.nationalPark",
-      "property.landSafeguarded": "defence.safeguarded",
-      "property.landSafetyHazard": "hazard",
-      "property.landSSI": "nature.SSSI",
-      "property.landTPO": "tpo",
-      "property.landWHS": "designated.WHS",
-      "property.southwarkSunrayEstate": "article4.southwark.sunray",
-    };
+    // // converts what is here
+    // // https://gist.github.com/johnrees/e0e3197e3915489a69c743b38faf489e
+    // // into { 'property.constraints.planning': { value: ['property.landConservation'] } }
+    // const constraintsDictionary = {
+    //   "property.article4.lambeth.albertsquare": "article4.lambeth.albert",
+    //   "property.article4.lambeth.hydefarm": "article4.lambeth.hydeFarm",
+    //   "property.article4.lambeth.lansdowne": "article4.lambeth.lansdowne",
+    //   "property.article4.lambeth.leighamcourt": "article4.lambeth.leigham",
+    //   "property.article4.lambeth.parkhallroad": "article4.lambeth.parkHall",
+    //   "property.article4.lambeth.stockwell": "article4.lambeth.stockwell",
+    //   "property.article4.lambeth.streatham": "article4.lambeth.streatham",
+    //   "property.article4s": "article4",
+    //   "property.buildingListed": "listed",
+    //   "property.landAONB": "designated.AONB",
+    //   "property.landBroads": "designated.broads",
+    //   "property.landConservation": "designated.conservationArea",
+    //   "property.landExplosivesStorage": "defence.explosives",
+    //   "property.landNP": "designated.nationalPark",
+    //   "property.landSafeguarded": "defence.safeguarded",
+    //   "property.landSafetyHazard": "hazard",
+    //   "property.landSSI": "nature.SSSI",
+    //   "property.landTPO": "tpo",
+    //   "property.landWHS": "designated.WHS",
+    //   "property.southwarkSunrayEstate": "article4.southwark.sunray",
+    // };
 
-    const newPassportData = Object.entries(constraintsDictionary).reduce(
-      (dataObject, [oldName, newName]) => {
-        if (passport.data?.[oldName]?.value) {
-          dataObject["property.constraints.planning"] = dataObject[
-            "property.constraints.planning"
-          ] ?? { value: [] };
-          dataObject["property.constraints.planning"].value.push(newName);
-        }
-        return dataObject;
-      },
-      {
-        ...(get().passport.data || {}),
-      }
-    );
+    // const newPassportData = Object.entries(constraintsDictionary).reduce(
+    //   (dataObject, [oldName, newName]) => {
+    //     if (passport.data?.[oldName]?.value) {
+    //       dataObject["property.constraints.planning"] = dataObject[
+    //         "property.constraints.planning"
+    //       ] ?? { value: [] };
+    //       dataObject["property.constraints.planning"].value.push(newName);
+    //     }
+    //     return dataObject;
+    //   },
+    //   {
+    //     ...(get().passport.data || {}),
+    //   }
+    // );
 
-    if (passport.info?.planx_value) {
-      newPassportData["property.type"] = {
-        value: [passport.info.planx_value],
-      };
-    }
+    // if (passport.info?.planx_value) {
+    //   newPassportData["property.type"] = {
+    //     value: [passport.info.planx_value],
+    //   };
+    // }
 
-    set({
-      passport: {
-        ...passport,
-        data: newPassportData,
-      },
-    });
+    // set({
+    //   passport: {
+    //     ...passport,
+    //     data: newPassportData,
+    //   },
+    // });
 
-    // ------ END PASSPORT DATA OVERRIDES ------
+    // // ------ END PASSPORT DATA OVERRIDES ------
 
     try {
       const response = await client.mutate({
@@ -487,7 +516,9 @@ export const previewStore = (
   },
 
   upcomingCardIds() {
-    const { flow, breadcrumbs, passport, collectedFlags } = get();
+    const { flow, breadcrumbs, computePassport, collectedFlags } = get();
+
+    const passport = computePassport();
 
     const knownNotVals = Object.entries(breadcrumbs).reduce(
       (acc, [id, { answers = [] }]) => {

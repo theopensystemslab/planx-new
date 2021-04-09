@@ -115,19 +115,19 @@ describe("if I initially pick", () => {
   });
 
   test("lion, it should display 'lion'", () => {
-    getState().record("NS7QFc7Cjc", ["TDIbLrdTdd"]);
+    getState().record("NS7QFc7Cjc", { answers: ["TDIbLrdTdd"] });
     expect(getState().upcomingCardIds()).toEqual(["Sd38UCC8Cg"]);
   });
 
   test("tiger, it should display 'tiger or something else'", () => {
-    getState().record("NS7QFc7Cjc", ["UqZo0rGwcY"]);
+    getState().record("NS7QFc7Cjc", { answers: ["UqZo0rGwcY"] });
     expect(getState().upcomingCardIds()).toEqual(["UOefNWg6uf"]);
   });
 
   test("gazelle, it should ask which animal it is", () => {
-    getState().record("NS7QFc7Cjc", ["BecasKrIhI"]);
+    getState().record("NS7QFc7Cjc", { answers: ["BecasKrIhI"] });
     expect(getState().upcomingCardIds()).toEqual(["eTBHJsbJKc"]);
-    getState().record("eTBHJsbJKc", ["nR15Tl0lhC"]);
+    getState().record("eTBHJsbJKc", { answers: ["nR15Tl0lhC"] });
     expect(getState().upcomingCardIds()).toEqual(["pqZK1mpn23"]);
   });
 });

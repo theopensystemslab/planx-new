@@ -38,7 +38,10 @@ export interface EditorProps<Type, Data> {
 
 // TODO: come back to this and reuse UserData
 export type PublicProps<Data, UserData = {}> = Data & {
-  handleSubmit?: (answers?: Store.userData["answers"]) => void;
+  handleSubmit?: (
+    answers?: Store.userData["answers"],
+    data?: Store.userData["data"]
+  ) => void;
   resetButton?: boolean;
   resetPreview?: () => void;
   autoFocus?: boolean;

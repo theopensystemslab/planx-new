@@ -16,7 +16,7 @@ function Component(props: Props) {
   const [breadcrumbs, flow, passport, record, hasPaid] = useStore((state) => [
     state.breadcrumbs,
     state.flow,
-    state.passport,
+    state.computePassport(),
     state.record,
     state.hasPaid(),
   ]);

@@ -76,7 +76,7 @@ describe("in a flow with no collected flags, the user", () => {
 
   scenarios.forEach(([answer, flags, followup]) => {
     it(`but after visiting [${answer}], collects [${flags}] and the next question is [${followup}]`, () => {
-      getState().record("question", [answer]);
+      getState().record("question", { answers: [answer] });
       expect(getState().collectedFlags("question")).toEqual(flags);
       expect(getState().upcomingCardIds()).toEqual([followup]);
     });
@@ -172,19 +172,19 @@ describe("changing flag inside flag filter doesn't affect the filter's behaviour
   });
 
   test("nothing_1 > missing_2", () => {
-    getState().record("q1", ["nothing_1"]);
-    getState().record("q2", ["missing_2"]);
+    getState().record("q1", { answers: ["nothing_1"] });
+    getState().record("q2", { answers: ["missing_2"] });
     expect(getState().upcomingCardIds()).toEqual([]);
   });
 
   test("nothing_1 > nothing_2", () => {
-    getState().record("q1", ["nothing_1"]);
-    getState().record("q2", ["nothing_2"]);
+    getState().record("q1", { answers: ["nothing_1"] });
+    getState().record("q2", { answers: ["nothing_2"] });
     expect(getState().upcomingCardIds()).toEqual([]);
   });
 
   test("missing_1", () => {
-    getState().record("q1", ["missing_1"]);
+    getState().record("q1", { answers: ["missing_1"] });
     expect(getState().upcomingCardIds()).toEqual(["missing_info_content"]);
   });
 });

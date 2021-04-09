@@ -25,7 +25,7 @@ const Questions = (props: Props) => {
     state.previousCard(),
     state.record,
     state.breadcrumbs,
-    state.passport,
+    state.computePassport(),
     state.sessionId,
     state.id,
     state.resumeSession,
@@ -91,8 +91,11 @@ const Questions = (props: Props) => {
           <Node
             node={node}
             key={node.id}
-            handleSubmit={(answers: Store.userData["answers"] = []) => {
-              record(node.id!, answers);
+            handleSubmit={(
+              answers: Store.userData["answers"] = [],
+              data?: Store.userData["data"]
+            ) => {
+              record(node.id!, { answers, data });
             }}
             settings={flow?.settings}
           />

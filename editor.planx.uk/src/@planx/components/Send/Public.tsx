@@ -14,7 +14,7 @@ const SendComponent: React.FC<Props> = (props) => {
   const [breadcrumbs, flow, passport] = useStore((state) => [
     state.breadcrumbs,
     state.flow,
-    state.passport,
+    state.computePassport(),
   ]);
 
   const request = useAsync(async () => axios.post(props.url, getParams()));
