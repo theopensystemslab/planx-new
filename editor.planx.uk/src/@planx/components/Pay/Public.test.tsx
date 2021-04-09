@@ -8,7 +8,7 @@ const waitForThenClick = async (text: string) => {
   userEvent.click(await waitFor(async () => screen.getByText(text)));
 };
 
-test("apple pay", async () => {
+test.skip("apple pay", async () => {
   const handleSubmit = jest.fn();
 
   render(<Pay handleSubmit={handleSubmit} />);
@@ -23,7 +23,7 @@ test("apple pay", async () => {
   expect(handleSubmit).toHaveBeenCalled();
 });
 
-test("do not call credit card form that was not filled out", async () => {
+test.skip("do not call credit card form that was not filled out", async () => {
   const handleSubmit = jest.fn();
 
   render(<Pay handleSubmit={handleSubmit} />);
