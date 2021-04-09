@@ -23,7 +23,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
       postcode: "",
     },
     onSubmit: (values) => {
-      const data = props.fn ? { [props.fn]: { value: values } } : undefined;
+      const data = props.fn ? { [props.fn]: values } : undefined;
       props.handleSubmit?.(undefined, data);
     },
     validateOnBlur: false,

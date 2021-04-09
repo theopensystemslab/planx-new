@@ -21,7 +21,7 @@ test("adding an external portal", async () => {
 
   await waitFor(() => {
     fireEvent.change(screen.getByTestId("flowId"), {
-      target: { value: "b" },
+      target: "b",
     });
   });
 
@@ -56,7 +56,7 @@ test("changing an external portal", async () => {
 
   await waitFor(() => {
     fireEvent.change(screen.getByTestId("flowId"), {
-      target: { value: "a" },
+      target: "a",
     });
   });
 
