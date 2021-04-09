@@ -58,7 +58,7 @@ const PreviewLayout: React.FC<{
         }
       : undefined,
     {
-      title: "New Application",
+      title: "Restart Application",
       onClick: () => {
         localSession && localStorage.removeItem(entry);
         window.location.reload();

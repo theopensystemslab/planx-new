@@ -17,7 +17,7 @@ import React, { Suspense, useEffect } from "react";
 import { useAsync } from "react-use";
 import Input from "ui/Input";
 
-import type { GovUKCreatePaymentPayload, GovUKPayment,Pay } from "../model";
+import type { GovUKCreatePaymentPayload, GovUKPayment, Pay } from "../model";
 
 export default Component;
 
@@ -128,6 +128,7 @@ const Paid = React.lazy(() => import("./Paid"));
 
 interface Props extends Pay {
   handleSubmit: handleSubmit;
+  url?: string;
 }
 
 function Component(props: Props) {
@@ -137,7 +138,6 @@ function Component(props: Props) {
   );
   const [otherPayments, setOtherPayments] = React.useState({});
   const Route = OPTIONS[state]?.component;
-
   const govUkPayment: GovUKPayment = passport.data.payment;
 
   // TODO: Error handling for case where fee somehow doesn't exist
@@ -257,7 +257,7 @@ function Init(props: any) {
       {paymentFlow && (
         // TODO: Input this url from editor
         <GovUkTemporaryComponent
-          url="http://localhost:7002/pay"
+          url={props.url}
           amount={props.amount}
           flowId={id}
         />

@@ -5,6 +5,7 @@ export interface Pay extends MoreInformation {
   description?: string;
   color?: string;
   fn?: string;
+  url?: string;
 }
 
 // https://docs.payments.service.gov.uk/making_payments/#creating-a-payment
