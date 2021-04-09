@@ -123,26 +123,29 @@ export const previewStore = (
     return goBackable.pop();
   },
 
-  computePassport: () => {
-    return Object.values(get().breadcrumbs).reduce(
+  computePassport: () =>
+    Object.values(get().breadcrumbs).reduce(
       (acc, { data = {} }) => {
         return {
           ...acc,
           data: {
             ...acc.data,
-            ...data,
+            ...Object.entries(data).reduce(
+              (_acc, [id, value]) => ({
+                [id]: { value },
+              }),
+              {}
+            ),
           },
         };
       },
       {
-        initialData: {},
         data: {},
         info: {},
       } as Store.passport
-    );
-  },
+    ),
 
-  record(id, { answers, data } = {}) {
+  record(id, userData) {
     const {
       breadcrumbs,
       sessionId,
@@ -155,7 +158,9 @@ export const previewStore = (
 
     if (!flow[id]) throw new Error("id not found");
 
-    if (answers) {
+    if (userData) {
+      const { answers = [], data = {} } = userData;
+
       const key = flow[id].data?.fn;
       if (key) {
         let passportValue = answers.map((id: string) => flow[id]?.data?.val);
@@ -188,7 +193,7 @@ export const previewStore = (
               ...passport,
               data: {
                 ...passport.data,
-                [key]: { value: passportValue },
+                [key]: passportValue,
               },
             },
           });
@@ -287,7 +292,7 @@ export const previewStore = (
           }
         `,
         variables: {
-          chosen_node_ids: pgarray(answers ?? []),
+          chosen_node_ids: pgarray(userData?.answers ?? []),
           session_id: get().sessionId,
           type: "human_decision", // TODO
           parent_node_id: id,

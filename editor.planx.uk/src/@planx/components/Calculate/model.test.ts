@@ -98,9 +98,9 @@ describe("toScope", () => {
   test("converts passport to scope", () => {
     const passport = {
       data: {
-        "data.field.with.dots": { value: ["10"] },
-        "another.data.field": { value: ["5"] },
-        "another.data.field.and.subfield": { value: ["12"] },
+        "data.field.with.dots": ["10"],
+        "another.data.field": ["5"],
+        "another.data.field.and.subfield": ["12"],
       },
     };
 

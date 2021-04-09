@@ -18,7 +18,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
       text: "",
     },
     onSubmit: (values) => {
-      const data = props.fn ? { [props.fn]: { value: values } } : undefined;
+      const data = props.fn ? { [props.fn]: values } : undefined;
       props.handleSubmit?.(undefined, data);
     },
     validateOnBlur: false,

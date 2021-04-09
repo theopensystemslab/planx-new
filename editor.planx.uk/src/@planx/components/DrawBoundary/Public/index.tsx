@@ -98,10 +98,10 @@ export default function Component(props: Props) {
     const data = (() => {
       const ob: Store.userData["data"] = {};
       if (props.dataFieldBoundary) {
-        ob[props.dataFieldBoundary] = { value: boundary };
+        ob[props.dataFieldBoundary] = boundary;
       }
       if (props.dataFieldArea) {
-        ob[props.dataFieldArea] = { value: area };
+        ob[props.dataFieldArea] = area;
       }
       return Object.keys(ob).length > 0 ? ob : undefined;
     })();

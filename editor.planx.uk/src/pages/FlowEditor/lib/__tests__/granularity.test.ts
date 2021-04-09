@@ -60,7 +60,7 @@ describe("starting a flow with no initial data", () => {
   describe("after visiting whatisit->food", () => {
     it("collected the correct passport data", () => {
       expect(getState().passport).toEqual({
-        data: { item: { value: ["food"] } },
+        data: { item: ["food"] },
       });
     });
 
@@ -73,7 +73,7 @@ describe("starting a flow with no initial data", () => {
 
       it("overwrites 'food' with 'food.fruit' (more granular data)", () => {
         expect(getState().passport).toEqual({
-          data: { item: { value: ["food.fruit"] } },
+          data: { item: ["food.fruit"] },
         });
       });
 
@@ -81,7 +81,7 @@ describe("starting a flow with no initial data", () => {
         getState().record("whichfood");
         expect(getState().upcomingCardIds()).toEqual(["whichfood"]);
         expect(getState().passport).toEqual({
-          data: { item: { value: ["food"] } },
+          data: { item: ["food"] },
         });
       });
     });
@@ -92,8 +92,8 @@ it("doesn't overwrite initial data when going back", () => {
   getState().resetPreview();
 
   const initialData = {
-    item: { value: ["food"] },
-    color: { value: ["red"] },
+    item: ["food"],
+    color: ["red"],
   };
 
   setState({
@@ -112,5 +112,5 @@ it("doesn't overwrite initial data when going back", () => {
   getState().record("whatisit");
   getState().upcomingCardIds();
 
-  expect(getState().passport.data).toEqual(initialData);
+  expect(getState().computePassport().data).toEqual(initialData);
 });
