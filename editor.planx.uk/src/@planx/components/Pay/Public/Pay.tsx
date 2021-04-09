@@ -75,54 +75,6 @@ const OPTIONS: Record<
   },
 };
 
-const GovUkTemporaryComponent = (props: {
-  url: string;
-  amount: number;
-  flowId: string;
-}): JSX.Element | null => {
-  const [passport, mutatePassport] = useStore((state) => [
-    state.passport,
-    state.mutatePassport,
-  ]);
-  const [govUrl, setGovUrl] = React.useState<string>();
-
-  const params: GovUKCreatePaymentPayload = {
-    // TODO: Make sure we're always converting this properly
-    amount: props.amount * 100,
-    // TODO: Might make more sense to use sessionId, applicationId, or some other PlanX identifier instead
-    reference: props.flowId,
-    description: "New application",
-    return_url: window.location.href,
-  };
-
-  const request = useAsync(async () => axios.post(props.url, params));
-
-  useEffect(() => {
-    if (!request.loading && !request.error && request.value) {
-      setGovUrl(request.value.data._links.next_url.href);
-      mutatePassport((draft) => {
-        const normalizedPayment = {
-          ...request.value.data,
-          amount: request.value.data.amount / 100,
-        };
-        draft.data["payment"] = normalizedPayment;
-      });
-    }
-  }, [request.loading, request.error, request.value]);
-
-  if (request.loading) {
-    return <Card>Loading...</Card>;
-  } else if (request.error) {
-    throw request.error;
-  } else {
-    if (govUrl) {
-      window.location.replace(govUrl);
-    }
-  }
-
-  return null;
-};
-
 const Summary = React.lazy(() => import("./Summary"));
 const Paid = React.lazy(() => import("./Paid"));
 
@@ -339,4 +291,52 @@ function Init(props: any) {
       </Drawer>
     </div>
   );
+}
+
+function GovUkTemporaryComponent(props: {
+  url: string;
+  amount: number;
+  flowId: string;
+}): JSX.Element | null {
+  const [passport, mutatePassport] = useStore((state) => [
+    state.passport,
+    state.mutatePassport,
+  ]);
+  const [govUrl, setGovUrl] = React.useState<string>();
+
+  const params: GovUKCreatePaymentPayload = {
+    // TODO: Make sure we're always converting this properly
+    amount: props.amount * 100,
+    // TODO: Might make more sense to use sessionId, applicationId, or some other PlanX identifier instead
+    reference: props.flowId,
+    description: "New application",
+    return_url: window.location.href,
+  };
+
+  const request = useAsync(async () => axios.post(props.url, params));
+
+  useEffect(() => {
+    if (!request.loading && !request.error && request.value) {
+      setGovUrl(request.value.data._links.next_url.href);
+      mutatePassport((draft) => {
+        const normalizedPayment = {
+          ...request.value.data,
+          amount: request.value.data.amount / 100,
+        };
+        draft.data["payment"] = normalizedPayment;
+      });
+    }
+  }, [request.loading, request.error, request.value]);
+
+  if (request.loading) {
+    return <Card>Loading...</Card>;
+  } else if (request.error) {
+    throw request.error;
+  } else {
+    if (govUrl) {
+      window.location.replace(govUrl);
+    }
+  }
+
+  return null;
 }
