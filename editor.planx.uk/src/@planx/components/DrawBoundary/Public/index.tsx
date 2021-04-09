@@ -62,8 +62,8 @@ export default function Component(props: Props) {
           <Box className={classes.map}>
             <Map
               zoom={18}
-              lat={Number(passport?.info?.latitude)}
-              lng={Number(passport?.info?.longitude)}
+              lat={Number(passport?.data?._address?.value.latitude)}
+              lng={Number(passport?.data?._address?.value.longitude)}
               setBoundary={setBoundary}
             />
           </Box>

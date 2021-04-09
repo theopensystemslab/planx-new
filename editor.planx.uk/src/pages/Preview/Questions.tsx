@@ -1,10 +1,9 @@
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
-import Node from "./Node";
+import Node, { handleSubmit } from "./Node";
 
 interface Props {
   isSidebar?: Boolean;
@@ -65,6 +64,10 @@ const Questions = (props: Props) => {
     }
   }, [breadcrumbs, passport, sessionId, id]);
 
+  const handleSubmit = (id: string): handleSubmit => (answers = [], data?) => {
+    record(id, { answers, data });
+  };
+
   return (
     <>
       <span
@@ -91,12 +94,7 @@ const Questions = (props: Props) => {
           <Node
             node={node}
             key={node.id}
-            handleSubmit={(
-              answers: Store.userData["answers"] = [],
-              data?: Store.userData["data"]
-            ) => {
-              record(node.id!, { answers, data });
-            }}
+            handleSubmit={handleSubmit(node.id!)}
             settings={flow?.settings}
           />
         </ErrorBoundary>

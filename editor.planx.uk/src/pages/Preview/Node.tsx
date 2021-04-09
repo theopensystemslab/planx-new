@@ -25,7 +25,10 @@ import { FlowSettings } from "types";
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
 
-export type handleSubmit = (_?: Store.userData["answers"]) => void;
+export type handleSubmit = (
+  answers?: Store.userData["answers"],
+  data?: Store.userData["data"]
+) => void;
 
 interface Props {
   handleSubmit: handleSubmit;
