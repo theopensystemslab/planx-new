@@ -31,7 +31,7 @@ export interface PreviewStore extends Store.Store {
     {
       answers,
       data,
-    }?: { answers?: Store.userData["answers"]; data?: Store.userData["data"] }
+    }?: { answers: Store.userData["answers"]; data?: Store.userData["data"] }
   ) => void;
   resultData: (
     flagSet?: string,
@@ -142,7 +142,6 @@ export const previewStore = (
       },
       {
         data: {},
-        info: {},
       } as Store.passport
     ),
 
@@ -172,10 +171,12 @@ export const previewStore = (
         );
 
         if (passportValue.length > 0) {
-          if (passport.data[key] && Array.isArray(passport.data[key].value)) {
-            const allValues = uniq(
-              passport.data[key].value.concat(passportValue)
-            ).sort() as Array<string>;
+          if (passport.data?.[key] && Array.isArray(passport.data[key].value)) {
+            // const allValues = uniq(
+            //   passport.data?[key].value.concat(passportValue)
+            // ).sort() as Array<string>;
+
+            const allValues: Array<string> = [];
 
             passportValue = allValues.reduce((acc: Array<string>, curr) => {
               if (allValues.some((x) => !x.startsWith(curr))) {
@@ -233,9 +234,7 @@ export const previewStore = (
       // remove breadcrumbs that were stored from id onwards
       let keepBreadcrumb = true;
 
-      const data: Record<string, { value: Array<string> }> = {
-        ...(passport.initialData || {}),
-      };
+      const data: Store.passport["data"] = {};
 
       const newBreadcrumbs = Object.entries(breadcrumbs).reduce(
         (acc: Record<string, any>, [questionId, v]) => {
@@ -580,7 +579,7 @@ export const previewStore = (
           const [globalFlag] = collectedFlags(id, Array.from(visited));
 
           let passportValues =
-            fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
+            fn === "flag" ? globalFlag : passport.data?.[fn]?.value?.sort();
 
           if (fn && (fn === "flag" || passportValues !== undefined)) {
             const responses = node.edges?.map((id) => ({
@@ -641,8 +640,8 @@ export const previewStore = (
               if (_responses.length === 1 && isNil(_responses[0].data?.val)) {
                 responsesThatCanBeAutoAnswered = _responses;
               } else if (
-                !passport.data[fn] ||
-                passport.data[fn].value.length > 0
+                !passport.data?.[fn] ||
+                passport.data?.[fn].value.length > 0
               ) {
                 responsesThatCanBeAutoAnswered = (responses || []).filter(
                   (r) => !r.data?.val

@@ -39,11 +39,7 @@ export default Component;
 
 function Component(props: Props) {
   const [address, setAddress] = useState<Address | undefined>();
-  const [id, flow, startSession] = useStore((state) => [
-    state.id,
-    state.flow,
-    state.startSession,
-  ]);
+  const flow = useStore((state) => state.flow);
   // XXX: In the future, use this API to translate GSS_CODE to Team names (or just pass the GSS_CODE to the API)
   //      https://geoportal.statistics.gov.uk/datasets/fe6bcee87d95476abc84e194fe088abb_0/data?where=LAD20NM%20%3D%20%27Lambeth%27
   //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
@@ -139,8 +135,12 @@ function Component(props: Props) {
       <PropertyInformation
         handleSubmit={(feedback?: string) => {
           if (flow && address && constraints) {
-            startSession({ passport: { data: constraints, info: address } });
-            props.handleSubmit(feedback ? [feedback] : []);
+            props.handleSubmit(undefined, {
+              feedback,
+              _address: address,
+              constraints,
+            });
+            // startSession({ passport: { data: constraints, info: address } });
           } else {
             throw Error("Should not have been clickable");
           }

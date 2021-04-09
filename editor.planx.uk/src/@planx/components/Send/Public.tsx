@@ -44,19 +44,19 @@ const SendComponent: React.FC<Props> = (props) => {
 
     // 1. address
 
-    if (passport.info) {
-      data.site.uprn = String(passport.info.uprn);
+    if (passport.data?.address) {
+      data.site.uprn = String(passport.data._address.value.uprn);
 
       data.site.address_1 = [
-        passport.info.sao,
-        passport.info.pao,
-        passport.info.street,
+        passport.data._address.value.sao,
+        passport.data._address.value.pao,
+        passport.data._address.value.street,
       ]
         .filter(Boolean)
         .join(" ");
 
-      data.site.town = passport.info.town;
-      data.site.postcode = passport.info.postcode;
+      data.site.town = passport.data.address.value.town;
+      data.site.postcode = passport.data.address.value.postcode;
 
       // TODO: add address_2 and ward
     }
@@ -84,7 +84,7 @@ const SendComponent: React.FC<Props> = (props) => {
     // 3. constraints
 
     data.constraints = (
-      passport.data["property.constraints.planning"]?.value || []
+      passport.data?.["property.constraints.planning"]?.value || []
     ).reduce((acc: Record<string, boolean>, curr: string) => {
       // TODO: calculate application_type and payment_reference
       acc[curr] = true;
@@ -93,7 +93,9 @@ const SendComponent: React.FC<Props> = (props) => {
 
     // 4. work status
 
-    if (passport?.data["property.constraints.planning"] === "ldc.existing") {
+    if (
+      passport?.data?.["property.constraints.planning"].value === "ldc.existing"
+    ) {
       data.work_status = "existing";
     }
 

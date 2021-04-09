@@ -32,7 +32,7 @@ export default function (props: Props): FCReturn {
     //      which means it exposes the API and the token. #fixme :(
     return notifyClient.sendEmail(
       props.templateId,
-      passport.data[props.addressee].value[0],
+      passport.data?.[props.addressee].value,
       {
         personalisation: getPersonalisation(),
       }
@@ -55,7 +55,7 @@ export default function (props: Props): FCReturn {
     return Object.fromEntries(
       Object.entries(props.personalisation).map(([key, value]) => [
         key,
-        passport.data[value].value[0],
+        passport.data?.[value].value,
       ])
     );
   }
