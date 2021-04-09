@@ -129,6 +129,7 @@ const Paid = React.lazy(() => import("./Paid"));
 interface Props extends Pay {
   handleSubmit: handleSubmit;
   url?: string;
+  fn?: string;
 }
 
 function Component(props: Props) {
@@ -142,7 +143,7 @@ function Component(props: Props) {
 
   // TODO: Error handling for case where fee somehow doesn't exist
   // TODO: More gracefully store/find this fee; perhaps as input on Pay component in editor
-  const fee = Number(passport.data["application.fee.payable"]?.value[0]);
+  const fee = props.fn ? Number(passport.data[props.fn]?.value[0]) : 0;
 
   // TODO: When connecting this component to the flow and to the backend
   //       remember to also pass up the value of `otherPayments`

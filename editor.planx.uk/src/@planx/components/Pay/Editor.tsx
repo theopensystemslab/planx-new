@@ -56,7 +56,7 @@ function Component(props: any) {
               format="data"
               name="fn"
               value={formik.values.fn}
-              placeholder="Data Field"
+              placeholder="Data field for calculated amount"
               onChange={formik.handleChange}
             />
           </InputRow>
