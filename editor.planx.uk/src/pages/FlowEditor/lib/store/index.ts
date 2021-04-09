@@ -15,6 +15,7 @@ export declare namespace Store {
   export type flow = Record<nodeId, node>;
   export type userData = {
     answers?: Array<string>;
+    data?: Record<string, any>;
     auto?: boolean;
   };
   export type breadcrumbs = Record<nodeId, userData>;

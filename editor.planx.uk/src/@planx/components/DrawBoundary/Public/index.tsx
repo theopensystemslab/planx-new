@@ -7,7 +7,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import turfArea from "@turf/area";
 import type { Geometry } from "@turf/helpers";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 
 import type { DrawBoundary } from "../model";
@@ -35,10 +35,7 @@ const useClasses = makeStyles((theme) => ({
 
 export default function Component(props: Props) {
   const [page, setPage] = useState<"draw" | "upload">("draw");
-  const [passport, mutatePassport] = useStore((state) => [
-    state.passport,
-    state.mutatePassport,
-  ]);
+  const passport = useStore((state) => state.computePassport());
   const classes = useClasses();
   const [boundary, setBoundary] = useState<Boundary>();
   const [url, setUrl] = useState<string | undefined>();
@@ -98,15 +95,18 @@ export default function Component(props: Props) {
   }
 
   function handleSubmit() {
-    mutatePassport((draft) => {
+    const data = (() => {
+      const ob: Store.userData["data"] = {};
       if (props.dataFieldBoundary) {
-        draft.data[props.dataFieldBoundary] = boundary;
+        ob[props.dataFieldBoundary] = { value: boundary };
       }
       if (props.dataFieldArea) {
-        draft.data[props.dataFieldArea] = area;
+        ob[props.dataFieldArea] = { value: area };
       }
-    });
-    props.handleSubmit?.(url ? [url] : undefined);
+      return Object.keys(ob).length > 0 ? ob : undefined;
+    })();
+
+    props.handleSubmit?.(undefined, data);
   }
 }
 

@@ -240,7 +240,7 @@ test("apple", () => {
   ]);
 
   // record apple
-  getState().record("Imks7j68BD", ["EqfqaqZ6CH"]);
+  getState().record("Imks7j68BD", { answers: ["EqfqaqZ6CH"] });
 
   expect(getState().upcomingCardIds()).toEqual(["6RR1J1lmrM", "mOPogpQa7V"]);
 });
@@ -251,7 +251,7 @@ test("apple and spanner", () => {
   });
 
   // record apple and spanner
-  getState().record("Imks7j68BD", ["EqfqaqZ6CH", "7tV1uvR9ng"]);
+  getState().record("Imks7j68BD", { answers: ["EqfqaqZ6CH", "7tV1uvR9ng"] });
 
   expect(getState().upcomingCardIds()).toEqual(["6RR1J1lmrM", "KcLGMm3UWw"]);
 });
@@ -262,7 +262,7 @@ test("apple and bread", () => {
   });
 
   // record apple and bread
-  getState().record("Imks7j68BD", ["EqfqaqZ6CH", "pXFKKRG6lE"]);
+  getState().record("Imks7j68BD", { answers: ["EqfqaqZ6CH", "pXFKKRG6lE"] });
 
   expect(getState().upcomingCardIds()).toEqual(["t3SCqQKeUK", "mOPogpQa7V"]);
 });

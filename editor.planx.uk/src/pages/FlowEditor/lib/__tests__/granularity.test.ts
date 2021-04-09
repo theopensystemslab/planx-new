@@ -54,7 +54,7 @@ describe("starting a flow with no initial data", () => {
     getState().resetPreview();
     setState({ flow });
 
-    getState().record("whatisit", ["food"]);
+    getState().record("whatisit", { answers: ["food"] });
   });
 
   describe("after visiting whatisit->food", () => {
@@ -69,7 +69,7 @@ describe("starting a flow with no initial data", () => {
     });
 
     describe("and then whichfood->fruit", () => {
-      beforeEach(() => getState().record("whichfood", ["fruit"]));
+      beforeEach(() => getState().record("whichfood", { answers: ["fruit"] }));
 
       it("overwrites 'food' with 'food.fruit' (more granular data)", () => {
         expect(getState().passport).toEqual({
@@ -106,7 +106,7 @@ it("doesn't overwrite initial data when going back", () => {
 
   getState().upcomingCardIds();
 
-  getState().record("whichfood", ["fruit"]);
+  getState().record("whichfood", { answers: ["fruit"] });
   getState().upcomingCardIds();
 
   getState().record("whatisit");

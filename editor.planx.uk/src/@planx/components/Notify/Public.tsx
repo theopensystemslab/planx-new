@@ -11,7 +11,7 @@ export type Props = PublicProps<Notify, UserData>;
 const DEBUG = false;
 
 export default function (props: Props): FCReturn {
-  const [passport] = useStore((state) => [state.passport]);
+  const passport = useStore((state) => state.computePassport());
   if (DEBUG) {
     return (
       <pre>

@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DebugConsole = () => {
   const [passport, breadcrumbs] = useStore((state) => [
-    state.passport,
+    state.computePassport(),
     state.breadcrumbs,
   ]);
   const classes = useStyles();
