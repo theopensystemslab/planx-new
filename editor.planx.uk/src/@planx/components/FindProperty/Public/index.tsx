@@ -135,11 +135,15 @@ function Component(props: Props) {
       <PropertyInformation
         handleSubmit={(feedback?: string) => {
           if (flow && address && constraints) {
-            props.handleSubmit(undefined, {
-              feedback,
-              _address: address,
-              constraints,
-            });
+            props.handleSubmit(
+              undefined,
+              {
+                constraints,
+                _address: address,
+              }
+              // , feedback
+            );
+
             // startSession({ passport: { data: constraints, info: address } });
           } else {
             throw Error("Should not have been clickable");
