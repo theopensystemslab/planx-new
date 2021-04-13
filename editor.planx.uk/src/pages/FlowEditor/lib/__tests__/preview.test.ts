@@ -175,7 +175,7 @@ test("hasPaid is updated if a Pay component has been recorded", () => {
   getState().record("c", { answers: [] });
   expect(getState().breadcrumbs).toEqual({
     a: { answers: ["c"], auto: false },
-    c: { answers: [], auto: false },
+    c: { auto: false },
   });
 
   expect(getState().hasPaid()).toBe(true);

@@ -158,6 +158,19 @@ export const previewStore = (
     if (userData) {
       const { answers = [], data = {} } = userData;
 
+      function setBreadcrumb(extras = {}) {
+        const breadcrumb: Store.userData = { auto: false };
+        if (answers?.length > 0) breadcrumb.answers = answers;
+        if (Object.keys(data).length > 0) breadcrumb.data = data;
+        set({
+          breadcrumbs: {
+            ...breadcrumbs,
+            [id]: breadcrumb,
+          },
+          ...extras,
+        });
+      }
+
       const key = flow[id].data?.fn;
       if (key) {
         let passportValue = answers.map((id: string) => flow[id]?.data?.val);
@@ -183,11 +196,7 @@ export const previewStore = (
             }, []);
           }
 
-          set({
-            breadcrumbs: {
-              ...breadcrumbs,
-              [id]: { answers, data, auto: false },
-            },
+          setBreadcrumb({
             passport: {
               ...passport,
               data: {
@@ -197,20 +206,10 @@ export const previewStore = (
             },
           });
         } else {
-          set({
-            breadcrumbs: {
-              ...breadcrumbs,
-              [id]: { answers, data, auto: false },
-            },
-          });
+          setBreadcrumb();
         }
       } else {
-        set({
-          breadcrumbs: {
-            ...breadcrumbs,
-            [id]: { answers, data, auto: false },
-          },
-        });
+        setBreadcrumb();
       }
 
       const flowIdType = flow[id]?.type;
