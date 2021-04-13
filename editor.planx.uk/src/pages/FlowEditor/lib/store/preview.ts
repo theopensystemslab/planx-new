@@ -30,7 +30,7 @@ export interface PreviewStore extends Store.Store {
     {
       answers,
       data,
-    }?: { answers: Store.userData["answers"]; data?: Store.userData["data"] }
+    }?: { answers?: Store.userData["answers"]; data?: Store.userData["data"] }
   ) => void;
   resultData: (
     flagSet?: string,
@@ -130,12 +130,10 @@ export const previewStore = (
           ...acc,
           data: {
             ...acc.data,
-            ...Object.entries(data).reduce(
-              (_acc, [id, value]) => ({
-                [id]: { value },
-              }),
-              {}
-            ),
+            ...Object.entries(data).reduce((_acc, [id, value]) => {
+              _acc![id] = { value };
+              return _acc;
+            }, {} as Store.passport["data"]),
           },
         };
       },
