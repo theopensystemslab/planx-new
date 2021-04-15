@@ -56,7 +56,6 @@ const breadcrumbs = {
     auto: true,
   },
   "6RtX4nCoFx": {
-    answers: [],
     auto: true,
   },
   "0q9S6JfcZh": {
@@ -71,11 +70,9 @@ const breadcrumbs = {
     auto: true,
   },
   toSzQ8Afxr: {
-    answers: [],
     auto: true,
   },
   lBhoS6eLky: {
-    answers: [],
     auto: true,
   },
 };

@@ -104,9 +104,7 @@ describe("error handling", () => {
       },
     });
 
-    expect(() => getState().record("x", { answers: [] })).toThrowError(
-      "id not found"
-    );
+    expect(() => getState().record("x", {})).toThrowError("id not found");
   });
 });
 
@@ -172,7 +170,7 @@ test("hasPaid is updated if a Pay component has been recorded", () => {
   getState().record("a", { answers: ["c"] });
   expect(getState().hasPaid()).toBe(false);
 
-  getState().record("c", { answers: [] });
+  getState().record("c", {});
   expect(getState().breadcrumbs).toEqual({
     a: { answers: ["c"], auto: false },
     c: { auto: false },
