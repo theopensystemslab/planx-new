@@ -95,7 +95,7 @@ router.get("/google", (req, res, next) => {
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/login/failed" }),
-  handleSuccess
+  handleSuccess,
 );
 
 const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
@@ -114,7 +114,7 @@ const buildJWT = async (profile, done) => {
         id
       }
     }`,
-    { email }
+    { email },
   );
 
   if (users.length === 1) {
@@ -155,8 +155,8 @@ passport.use(
     },
     async function (_accessToken, _refreshToken, profile, done) {
       await buildJWT(profile, done);
-    }
-  )
+    },
+  ),
 );
 
 passport.serializeUser(function (user, cb) {
@@ -175,7 +175,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin);
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept",
   );
   next();
 });
@@ -184,7 +184,7 @@ app.use(
   cors({
     credentials: true,
     methods: "*",
-  })
+  }),
 );
 
 if (!process.env.BOPS_API_TOKEN) {
@@ -193,15 +193,18 @@ if (!process.env.BOPS_API_TOKEN) {
 }
 
 // XXX: These must be placed after CORS and before body-parser middlewares
-app.use("/bops/:localAuthority", (req, res) => {
+app.use("/bops/:localAuthority", (req, res, next) => {
   // Capture request body & headers
   let reqChunks = [],
     reqBody = {};
+
   req.on("data", (data) => {
     reqChunks.push(data);
-  });
-  req.on("end", () => {
-    reqBody = JSON.parse(Buffer.concat(reqChunks).toString());
+    try {
+      reqBody = JSON.parse(Buffer.concat(reqChunks).toString());
+    } catch (e) {
+      return next("Invalid JSON");
+    }
   });
 
   // Create target
@@ -217,74 +220,80 @@ app.use("/bops/:localAuthority", (req, res) => {
     changeOrigin: true,
     logLevel: "debug",
     selfHandleResponse: true,
+
     onProxyReq: (proxyReq) => {
-      // Forward request buffer
-      proxyReq.write(Buffer.concat(reqChunks));
-      proxyReq.end();
+      // Forward request buffer with session_id removed; it's not something BOPS expects
+      try {
+        const requestBody = JSON.parse(Buffer.concat(reqChunks).toString());
+        // delete requestBody["session_id"];
+        // proxyReq.write(Buffer.concat(reqChunks));
+        // proxyReq.end();
+        // return;
+      } catch (e) {
+        throw e;
+      }
     },
-    onProxyRes: async (proxyRes, req, res) => {
+    onProxyRes: async (proxyRes, req, res, next) => {
       // Capture & decode the response from BOPS
-      let responseChunks = [],
-        bopsResponse;
+      let responseChunks = [];
       proxyRes.on("data", (data) => {
         responseChunks.push(data);
       });
-
       // Create & store application
       proxyRes.on("end", async () => {
         const buffer = Buffer.concat(responseChunks);
-
-        if (buffer) {
+        const bopsResponse = (() => {
           try {
-            const unzipped = zlib.gunzipSync(buffer).toString();
-            bopsResponse = JSON.parse(unzipped);
+            const responseString =
+              proxyRes.headers["content-encoding"] === "gzip"
+                ? zlib.gunzipSync(buffer).toString()
+                : buffer.toString();
+            return responseString ? JSON.parse(responseString) : undefined;
           } catch (e) {
-            console.error(e);
+            throw e;
           }
-        }
+        })();
 
-        if (bopsResponse && typeof bopsResponse === "object") {
-          const applicationId = await client.request(
-            `
-              mutation CreateApplication(
-                $bops_id: String = "",
-                $destination_url: String = "",
-                $request: jsonb = "",
-                $req_headers: jsonb = "",
-                $response: jsonb = "",
-                $response_headers: jsonb = "",
-                $session_id: String = "",
-              ) {
-                insert_bops_applications_one(object: {
-                  bops_id: $bops_id,
-                  destination_url: $destination_url,
-                  request: $request,
-                  req_headers: $req_headers,
-                  response: $response,
-                  response_headers: $response_headers,
-                  session_id: $session_id,
-                }) {
-                  id
-                }
+        const applicationId = await client.request(
+          `
+            mutation CreateApplication(
+              $bops_id: String = "",
+              $destination_url: String = "",
+              $request: jsonb = "",
+              $req_headers: jsonb = "",
+              $response: jsonb = "",
+              $response_headers: jsonb = "",
+              $session_id: String = "",
+            ) {
+              insert_bops_applications_one(object: {
+                bops_id: $bops_id,
+                destination_url: $destination_url,
+                request: $request,
+                req_headers: $req_headers,
+                response: $response,
+                response_headers: $response_headers,
+                session_id: $session_id,
+              }) {
+                id
               }
-            `,
-            {
-              bops_id: bopsResponse.id,
-              destination_url: target,
-              request: reqBody,
-              req_headers: req.headers,
-              response: bopsResponse,
-              response_headers: proxyRes.headers,
-              session_id: reqBody.sessionId,
             }
-          );
-          res.send({
-            application: {
-              ...applicationId.insert_bops_applications_one,
-              bopsResponse,
-            },
-          });
-        }
+          `,
+          {
+            bops_id: bopsResponse && bopsResponse.id,
+            destination_url: target,
+            request: reqBody,
+            req_headers: req.headers,
+            response: bopsResponse,
+            response_headers: proxyRes.headers,
+            session_id: reqBody.sessionId,
+          },
+        );
+        return res.send({
+          application: {
+            ...applicationId.insert_bops_applications_one,
+            bopsResponse,
+          },
+        });
       });
     },
   })(req, res);
@@ -299,7 +308,7 @@ app.use(
     target: "https://api.notifications.service.gov.uk",
     changeOrigin: true,
     logLevel: "debug",
-  })
+  }),
 );
 
 app.use(
@@ -307,7 +316,7 @@ app.use(
     maxAge: 24 * 60 * 60 * 100,
     name: "session",
     secret: process.env.SESSION_SECRET,
-  })
+  }),
 );
 
 app.use(passport.initialize());
@@ -318,7 +327,7 @@ app.use(
   json({
     extended: true,
     limit: "100mb",
-  })
+  }),
 );
 
 app.use("/auth", router);
@@ -331,7 +340,7 @@ app.get("/hasura", async function (req, res) {
       teams {
         id
       }
-    }`
+    }`,
   );
   res.json(data);
 });
@@ -349,10 +358,10 @@ app.get(
         created_at
       }
     }`,
-      { id: req.user.id }
+      { id: req.user.id },
     );
     res.json(user.users_by_pk);
-  }
+  },
 );
 
 app.get("/gis", (_req, res) => {
@@ -381,6 +390,10 @@ app.post("/sign-s3-upload", async (req, res) => {
     console.error(error);
     res.status(500).json({ error });
   }
+});
+
+app.use((error, req, res, next) => {
+  return res.status(500).json({ error: error.toString() });
 });
 
 const server = new Server(app);
