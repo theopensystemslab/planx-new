@@ -144,74 +144,23 @@ export const previewStore = (
     ),
 
   record(id, userData) {
-    const {
-      breadcrumbs,
-      sessionId,
-      upcomingCardIds,
-      flow,
-      computePassport,
-    } = get();
-
-    const passport = computePassport();
+    const { breadcrumbs, flow, sessionId, upcomingCardIds } = get();
 
     if (!flow[id]) throw new Error("id not found");
 
     if (userData) {
+      // add breadcrumb
       const { answers = [], data = {} } = userData;
 
-      function setBreadcrumb(extras = {}) {
-        const breadcrumb: Store.userData = { auto: false };
-        if (answers?.length > 0) breadcrumb.answers = answers;
-        if (Object.keys(data).length > 0) breadcrumb.data = data;
-        set({
-          breadcrumbs: {
-            ...breadcrumbs,
-            [id]: breadcrumb,
-          },
-          ...extras,
-        });
-      }
-
-      const key = flow[id].data?.fn;
-      if (key) {
-        let passportValue = answers.map((id: string) => flow[id]?.data?.val);
-
-        passportValue = passportValue.filter(
-          (val: any) =>
-            val !== undefined && val !== null && String(val).trim() !== ""
-        );
-
-        if (passportValue.length > 0) {
-          if (passport.data?.[key] && Array.isArray(passport.data[key].value)) {
-            // const allValues = uniq(
-            //   passport.data?[key].value.concat(passportValue)
-            // ).sort() as Array<string>;
-
-            const allValues: Array<string> = [];
-
-            passportValue = allValues.reduce((acc: Array<string>, curr) => {
-              if (allValues.some((x) => !x.startsWith(curr))) {
-                acc.push(curr);
-              }
-              return acc;
-            }, []);
-          }
-
-          setBreadcrumb({
-            passport: {
-              ...passport,
-              data: {
-                ...passport.data,
-                [key]: passportValue,
-              },
-            },
-          });
-        } else {
-          setBreadcrumb();
-        }
-      } else {
-        setBreadcrumb();
-      }
+      const breadcrumb: Store.userData = { auto: false };
+      if (answers?.length > 0) breadcrumb.answers = answers;
+      if (Object.keys(data).length > 0) breadcrumb.data = data;
+      set({
+        breadcrumbs: {
+          ...breadcrumbs,
+          [id]: breadcrumb,
+        },
+      });
 
       const flowIdType = flow[id]?.type;
 
@@ -229,42 +178,15 @@ export const previewStore = (
       }
     } else {
       // remove breadcrumbs that were stored from id onwards
-      let keepBreadcrumb = true;
 
-      const data: Store.passport["data"] = {};
+      const breadcrumbIds = Object.keys(breadcrumbs);
+      const idx = breadcrumbIds.indexOf(id);
 
-      const newBreadcrumbs = Object.entries(breadcrumbs).reduce(
-        (acc: Record<string, any>, [questionId, v]) => {
-          if (questionId === id) {
-            keepBreadcrumb = false;
-          } else if (keepBreadcrumb) {
-            acc[questionId] = v;
-
-            const fn = flow[questionId]?.data?.fn;
-            if (fn) {
-              const { answers: localAnswers = [] } = v;
-
-              const value = localAnswers
-                .map((aId: string) => flow[aId]?.data?.val)
-                .filter(Boolean);
-
-              if (value) {
-                data[fn] = { value };
-              }
-            }
-          }
-          return acc;
-        },
-        {}
-      );
-
-      set({
-        breadcrumbs: newBreadcrumbs,
-        passport: {
-          ...passport,
-          data,
-        },
-      });
+      if (idx >= 0) {
+        set({
+          breadcrumbs: pick(breadcrumbs, breadcrumbIds.slice(0, idx)),
+        });
+      }
     }
 
     function addSessionEvent() {
