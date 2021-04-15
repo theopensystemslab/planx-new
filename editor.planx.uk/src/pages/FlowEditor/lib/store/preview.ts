@@ -503,6 +503,8 @@ export const previewStore = (
 
     const knownNotVals = Object.entries(breadcrumbs).reduce(
       (acc, [id, { answers = [] }]) => {
+        if (!flow[id]) return acc;
+
         const _knownNotVals = difference(
           flow[id].edges,
           answers as Array<Store.nodeId>
