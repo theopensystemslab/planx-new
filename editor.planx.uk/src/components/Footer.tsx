@@ -35,7 +35,6 @@ interface Item {
   bold?: boolean;
 }
 
-// TODO: fix this messy TS
 interface Props {
   leftItems?: Array<Item | undefined>;
   rightItems?: Array<Item | undefined>;

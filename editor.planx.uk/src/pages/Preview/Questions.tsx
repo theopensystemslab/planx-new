@@ -34,7 +34,6 @@ const Questions = (props: Props) => {
   const node = currentCard();
   const flow = useContext(PreviewContext);
 
-  // TODO: Check the actual status to ensure payment is successful
   const hasPaid = Boolean(passport.data["payment"]);
 
   useEffect(() => {
@@ -42,11 +41,7 @@ const Questions = (props: Props) => {
       const entry = `flow:${id}`;
       try {
         const state = JSON.parse(localStorage.getItem(entry) || "");
-        if (
-          state
-          // TODO: Really solid cookie management
-          // && window.confirm("Would you like to resume the last session?")
-        ) {
+        if (state) {
           resumeSession(state);
         }
       } catch (err) {

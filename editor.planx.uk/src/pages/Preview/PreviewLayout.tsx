@@ -27,7 +27,6 @@ const PreviewLayout: React.FC<{
   const [id] = useStore((state) => [state.id]);
 
   const entry = `flow:${id}`;
-  // TODO: Move into a localStorage module
   const localSession = (() => {
     try {
       const storage = localStorage.getItem(entry);

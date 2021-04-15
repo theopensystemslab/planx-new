@@ -93,8 +93,6 @@ function Component(props: Props) {
   const Route = OPTIONS[state]?.component;
   const govUkPayment: GovUKPayment = passport.data.payment;
 
-  // TODO: Error handling for case where fee somehow doesn't exist
-  // TODO: More gracefully store/find this fee; perhaps as input on Pay component in editor
   const fee = props.fn ? Number(passport.data[props.fn]?.value[0]) : 0;
 
   // TODO: When connecting this component to the flow and to the backend
@@ -141,9 +139,7 @@ function Component(props: Props) {
           amount={fee}
           date={govUkPayment.created_date}
           govUkRef={govUkPayment.payment_id}
-          // TODO: Refetch & display actual updated status
           status={"Success"}
-          // TODO: replace with actual application ID
           applicationId={id}
         />
       </Suspense>
@@ -161,7 +157,6 @@ function Component(props: Props) {
   );
 }
 
-// TODO: type the props
 function Init(props: any) {
   const OTHER_OPTIONS = [
     { name: "BACs", label: "Bank transfer by BACs" },
@@ -208,7 +203,6 @@ function Init(props: any) {
       </Box>
 
       {paymentFlow && (
-        // TODO: Input this url from editor
         <GovUkTemporaryComponent
           url={props.url}
           amount={props.amount}
@@ -305,9 +299,7 @@ function GovUkTemporaryComponent(props: {
   const [govUrl, setGovUrl] = React.useState<string>();
 
   const params: GovUKCreatePaymentPayload = {
-    // TODO: Make sure we're always converting this properly
     amount: props.amount * 100,
-    // TODO: Might make more sense to use sessionId, applicationId, or some other PlanX identifier instead
     reference: props.flowId,
     description: "New application",
     return_url: window.location.href,

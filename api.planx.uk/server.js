@@ -236,11 +236,8 @@ app.use("/bops/:localAuthority", (req, res) => {
 
         if (buffer) {
           try {
-            const responseString =
-              proxyRes.headers["content-encoding"] === "gzip"
-                ? zlib.gunzipSync(buffer).toString()
-                : buffer.toString();
-            bopsResponse = JSON.parse(responseString);
+            const unzipped = zlib.gunzipSync(buffer).toString();
+            bopsResponse = JSON.parse(unzipped);
           } catch (e) {
             console.error(e);
           }
@@ -293,7 +290,6 @@ app.use("/bops/:localAuthority", (req, res) => {
   })(req, res);
 });
 
-// TODO: A lot of tests + error handling, of course
 app.use("/pay", (req, res) => {
   createProxyMiddleware({
     pathRewrite: {
