@@ -44,19 +44,16 @@ const SendComponent: React.FC<Props> = (props) => {
 
     // 1. address
 
-    if (passport.data?.address) {
-      data.site.uprn = String(passport.data._address.value.uprn);
+    const address = passport.data?._address?.value;
+    if (address) {
+      data.site.uprn = String(address.uprn);
 
-      data.site.address_1 = [
-        passport.data._address.value.sao,
-        passport.data._address.value.pao,
-        passport.data._address.value.street,
-      ]
+      data.site.address_1 = [address.sao, address.pao, address.street]
         .filter(Boolean)
         .join(" ");
 
-      data.site.town = passport.data.address.value.town;
-      data.site.postcode = passport.data.address.value.postcode;
+      data.site.town = address.town;
+      data.site.postcode = address.postcode;
 
       // TODO: add address_2 and ward
     }
