@@ -90,14 +90,6 @@ export function toScope(passport: any): Object {
   );
 }
 
-export function evaluatePassport(
-  input: string,
-  passport: any = {},
-  defaults: any = {}
-): string {
-  return String(evaluate(input, toScope(passport), defaults));
-}
-
 // Serialization is only necessary internally.                     v
 // Mathjs can't handle keys with dots in their names e.g. `property.number`
 // This complexity should never be exposed to this component's consumers.
