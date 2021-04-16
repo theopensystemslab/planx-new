@@ -197,7 +197,7 @@ export const previewStore = (
     return passport;
   },
 
-  record(id, userData = {}) {
+  record(id, userData) {
     const { breadcrumbs, flow, sessionId, upcomingCardIds } = get();
 
     if (!flow[id]) throw new Error("id not found");
