@@ -480,8 +480,15 @@ export const previewStore = (
 
           const [globalFlag] = collectedFlags(id, Array.from(visited));
 
-          let passportValues =
-            fn === "flag" ? globalFlag : passport.data?.[fn]?.value?.sort();
+          let passportValues = (() => {
+            try {
+              return fn === "flag"
+                ? globalFlag
+                : passport.data?.[fn]?.value?.sort();
+            } catch (err) {
+              return [];
+            }
+          })();
 
           // console.log({ fn, passport, _passport: computePassport() });
 
