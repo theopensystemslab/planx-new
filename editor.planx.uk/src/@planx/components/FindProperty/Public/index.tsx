@@ -39,7 +39,11 @@ export default Component;
 
 function Component(props: Props) {
   const [address, setAddress] = useState<Address | undefined>();
-  const flow = useStore((state) => state.flow);
+  const [flow, startSession] = useStore((state) => [
+    state.flow,
+    state.startSession,
+  ]);
+
   // XXX: In the future, use this API to translate GSS_CODE to Team names (or just pass the GSS_CODE to the API)
   //      https://geoportal.statistics.gov.uk/datasets/fe6bcee87d95476abc84e194fe088abb_0/data?where=LAD20NM%20%3D%20%27Lambeth%27
   //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
@@ -135,16 +139,82 @@ function Component(props: Props) {
       <PropertyInformation
         handleSubmit={(feedback?: string) => {
           if (flow && address && constraints) {
+            // ------ BEGIN PASSPORT DATA OVERRIDES ------
+
+            // TODO: move all of the logic in this block out of here and update the API
+
+            // In this block we are converting the vars stored in passport.data object
+            // from the old boolean values style to the new array style. This should be
+            // done on a server but as a temporary fix the data is currently being
+            // converted here.
+
+            // More info:
+            // GitHub comment explaining what's happening here https://bit.ly/2HFnxX2
+            // Google sheet with new passport schema https://bit.ly/39eYp4A
+
+            // https://tinyurl.com/3cdrnr7j
+
+            // converts what is here
+            // https://gist.github.com/johnrees/e0e3197e3915489a69c743b38faf489e
+            // into { 'property.constraints.planning': { value: ['property.landConservation'] } }
+            const constraintsDictionary = {
+              "property.article4.lambeth.albertsquare":
+                "article4.lambeth.albert",
+              "property.article4.lambeth.hydefarm": "article4.lambeth.hydeFarm",
+              "property.article4.lambeth.lansdowne":
+                "article4.lambeth.lansdowne",
+              "property.article4.lambeth.leighamcourt":
+                "article4.lambeth.leigham",
+              "property.article4.lambeth.parkhallroad":
+                "article4.lambeth.parkHall",
+              "property.article4.lambeth.stockwell":
+                "article4.lambeth.stockwell",
+              "property.article4.lambeth.streatham":
+                "article4.lambeth.streatham",
+              "property.article4s": "article4",
+              "property.buildingListed": "listed",
+              "property.landAONB": "designated.AONB",
+              "property.landBroads": "designated.broads",
+              "property.landConservation": "designated.conservationArea",
+              "property.landExplosivesStorage": "defence.explosives",
+              "property.landNP": "designated.nationalPark",
+              "property.landSafeguarded": "defence.safeguarded",
+              "property.landSafetyHazard": "hazard",
+              "property.landSSI": "nature.SSSI",
+              "property.landTPO": "tpo",
+              "property.landWHS": "designated.WHS",
+              "property.southwarkSunrayEstate": "article4.southwark.sunray",
+            };
+
+            const newPassportData = Object.entries(
+              constraintsDictionary
+            ).reduce((dataObject, [oldName, newName]) => {
+              if (constraints?.[oldName]?.value) {
+                dataObject!["property.constraints.planning"] =
+                  dataObject!["property.constraints.planning"] ?? [];
+                dataObject!["property.constraints.planning"].push(newName);
+              }
+              return dataObject;
+            }, {} as Record<string, any>);
+
+            if (address?.planx_value) {
+              newPassportData!["property.type"] = address.planx_value;
+            }
+
+            const passportData = {
+              _address: address,
+              ...newPassportData,
+            };
+
+            // ------ END PASSPORT DATA OVERRIDES ------
+
             props.handleSubmit(
               undefined,
-              {
-                constraints,
-                _address: address,
-              }
+              passportData
               // , feedback
             );
 
-            // startSession({ passport: { data: constraints, info: address } });
+            startSession({ passport: passportData });
           } else {
             throw Error("Should not have been clickable");
           }
