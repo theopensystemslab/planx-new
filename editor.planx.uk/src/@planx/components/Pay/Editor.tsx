@@ -18,6 +18,7 @@ function Component(props: any) {
       description: props.node?.data?.description || "",
       color: props.node?.data?.color || "#EFEFEF",
       fn: props.node?.data?.fn,
+      url: props.node?.data?.url,
       ...parseMoreInformation(props.node?.data),
     },
     onSubmit: (newValues) => {
@@ -55,7 +56,15 @@ function Component(props: any) {
               format="data"
               name="fn"
               value={formik.values.fn}
-              placeholder="Data Field"
+              placeholder="Data field for calculated amount"
+              onChange={formik.handleChange}
+            />
+          </InputRow>
+          <InputRow>
+            <Input
+              name="url"
+              value={formik.values.url}
+              placeholder="https://api2.planx.uk/pay"
               onChange={formik.handleChange}
             />
           </InputRow>

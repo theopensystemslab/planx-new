@@ -2,6 +2,7 @@ import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import classnames from "classnames";
 import React from "react";
 import { Link } from "react-navi";
 
@@ -29,13 +30,14 @@ const useClasses = makeStyles((theme) => ({
 
 interface Item {
   title: string;
-  href: string;
+  href?: string;
+  onClick?: () => void;
   bold?: boolean;
 }
 
 interface Props {
-  leftItems?: Item[];
-  rightItems?: Item[];
+  leftItems?: Array<Item | undefined>;
+  rightItems?: Array<Item | undefined>;
 }
 
 export default function Footer(props: Props) {
@@ -48,11 +50,11 @@ export default function Footer(props: Props) {
     <footer className={classes.root}>
       <Box display="flex">
         {leftItems &&
-          leftItems.map((item, i) => <FooterItem {...item} key={i} />)}
+          leftItems.map((item, i) => item && <FooterItem {...item} key={i} />)}
       </Box>
       <Box display="flex">
         {rightItems &&
-          rightItems.map((item, i) => <FooterItem {...item} key={i} />)}
+          rightItems.map((item, i) => item && <FooterItem {...item} key={i} />)}
         {feedbackFishId && (
           <FeedbackFish projectId={feedbackFishId}>
             <Typography className={classes.link}>Feedback</Typography>
@@ -63,14 +65,28 @@ export default function Footer(props: Props) {
   );
 }
 
-function FooterItem(props: { title: string; href: string; bold?: boolean }) {
+function FooterItem(props: {
+  title: string;
+  href?: string;
+  onClick?: () => void;
+  bold?: boolean;
+}) {
   const classes = useClasses();
 
-  return (
+  const title = (
+    <Typography
+      variant="body1"
+      className={classnames(classes.link, props.bold && classes.bold)}
+    >
+      {props.title}
+    </Typography>
+  );
+
+  return props.href ? (
     <Link href={props.href} prefetch={false} className={classes.link}>
-      <Typography variant="body1" className={props.bold ? classes.bold : ""}>
-        {props.title}
-      </Typography>
+      {title}
     </Link>
+  ) : (
+    <span onClick={props.onClick}>{title}</span>
   );
 }

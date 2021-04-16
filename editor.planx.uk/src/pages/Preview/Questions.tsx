@@ -14,7 +14,6 @@ const Questions = (props: Props) => {
   const [
     currentCard,
     previousCard,
-    hasPaid,
     record,
     breadcrumbs,
     passport,
@@ -24,7 +23,6 @@ const Questions = (props: Props) => {
   ] = useStore((state) => [
     state.currentCard,
     state.previousCard(),
-    state.hasPaid(),
     state.record,
     state.breadcrumbs,
     state.passport,
@@ -35,17 +33,15 @@ const Questions = (props: Props) => {
 
   const node = currentCard();
   const flow = useContext(PreviewContext);
-  const showBackButton = previousCard && !hasPaid;
+
+  const hasPaid = Boolean(passport.data["payment"]);
 
   useEffect(() => {
     if (!props.isSidebar) {
       const entry = `flow:${id}`;
       try {
         const state = JSON.parse(localStorage.getItem(entry) || "");
-        if (
-          state &&
-          window.confirm("Would you like to resume the last session?")
-        ) {
+        if (state) {
           resumeSession(state);
         }
       } catch (err) {
@@ -77,8 +73,8 @@ const Questions = (props: Props) => {
         }}
         style={{
           padding: "0 10px 10px",
-          visibility: showBackButton ? "visible" : "hidden",
-          pointerEvents: showBackButton ? "auto" : "none",
+          visibility: previousCard && !hasPaid ? "visible" : "hidden",
+          pointerEvents: previousCard && !hasPaid ? "auto" : "none",
           display: "block",
           cursor: "pointer",
           userSelect: "none",

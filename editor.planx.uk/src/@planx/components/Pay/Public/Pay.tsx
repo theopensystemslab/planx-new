@@ -1,3 +1,4 @@
+import Box from "@material-ui/core/Box";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Checkbox from "@material-ui/core/Checkbox";
 import Drawer from "@material-ui/core/Drawer";
@@ -7,13 +8,16 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import Question from "@planx/components/Question/Public";
+import DecisionButton from "@planx/components/shared/Buttons/DecisionButton";
 import Card from "@planx/components/shared/Preview/Card";
+import axios from "axios";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
+import { useAsync } from "react-use";
 import Input from "ui/Input";
 
-import type { Pay } from "../model";
+import type { GovUKCreatePaymentPayload, GovUKPayment, Pay } from "../model";
 
 export default Component;
 
@@ -53,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 const OPTIONS: Record<
   string,
-  { label: string; letter: string; component: React.FC<any> }
+  { label: string; letter: string; component?: React.FC<any> }
 > = {
   card: {
     label: "Credit or debit card",
@@ -65,6 +69,10 @@ const OPTIONS: Record<
     letter: "B",
     component: React.lazy(() => import("./PayWithApple")),
   },
+  govUK: {
+    label: "GOV.UK Pay",
+    letter: "C",
+  },
 };
 
 const Summary = React.lazy(() => import("./Summary"));
@@ -72,12 +80,21 @@ const Paid = React.lazy(() => import("./Paid"));
 
 interface Props extends Pay {
   handleSubmit: handleSubmit;
+  url?: string;
+  fn?: string;
 }
 
 function Component(props: Props) {
-  const [state, setState] = React.useState<"init" | "summary" | "paid">("init");
+  const [passport, id] = useStore((state) => [state.passport, state.id]);
+  const [state, setState] = React.useState<"init" | "summary" | "paid">(
+    passport.data.payment ? "paid" : "init"
+  );
   const [otherPayments, setOtherPayments] = React.useState({});
   const Route = OPTIONS[state]?.component;
+  const govUkPayment: GovUKPayment = passport.data.payment;
+
+  const fee = props.fn ? Number(passport.data[props.fn]?.value[0]) : 0;
+
   // TODO: When connecting this component to the flow and to the backend
   //       remember to also pass up the value of `otherPayments`
   //       to be stored in special data fields, e.g.
@@ -109,6 +126,7 @@ function Component(props: Props) {
           submit={() => {
             setState("paid");
           }}
+          amount={fee}
         />
       </Suspense>
     );
@@ -116,7 +134,14 @@ function Component(props: Props) {
   if (state === "paid") {
     return (
       <Suspense fallback={<>Loading...</>}>
-        <Paid handleSubmit={() => props.handleSubmit()} />
+        <Paid
+          handleSubmit={() => props.handleSubmit()}
+          amount={fee}
+          date={govUkPayment.created_date}
+          govUkRef={govUkPayment.payment_id}
+          status={"Success"}
+          applicationId={id}
+        />
       </Suspense>
     );
   }
@@ -125,6 +150,7 @@ function Component(props: Props) {
       <Init
         setState={setState}
         setOtherPayments={setOtherPayments}
+        amount={fee}
         {...props}
       />
     </Card>
@@ -140,10 +166,15 @@ function Init(props: any) {
     { name: "Other", label: "Other" },
   ];
 
+  const [id] = useStore((state) => [state.id]);
+
   const classes = useStyles();
 
   // Regarding the sidebar
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const [paymentFlow, setPaymentFlow] = React.useState(false);
+
   const [checkboxes, setCheckboxes] = React.useState(
     // { [name]: false }
     Object.fromEntries(OTHER_OPTIONS.map(({ name }) => [name, false]))
@@ -157,13 +188,29 @@ function Init(props: any) {
           The fee for this application is
         </Typography>
         <Typography variant="h1" gutterBottom className="marginBottom">
-          £206
+          {`£${props.amount}`}
         </Typography>
         <Typography>
           <a href="#">How are the planning fees calculated? ↗︎</a>
         </Typography>
       </div>
-      <Question
+      <Box py={3}>
+        <DecisionButton
+          onClick={() => setPaymentFlow(true)}
+          selected={false}
+          title={"Pay with Gov.UK"}
+        />
+      </Box>
+
+      {paymentFlow && (
+        <GovUkTemporaryComponent
+          url={props.url}
+          amount={props.amount}
+          flowId={id}
+        />
+      )}
+
+      {/* <Question
         text="How would you like to pay?"
         responses={Object.entries(OPTIONS).map(([key, value]) => ({
           id: key,
@@ -180,7 +227,7 @@ function Init(props: any) {
         info={props.info}
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
-      />
+      /> */}
       <p style={{ textAlign: "right", cursor: "pointer" }}>
         <a style={{ color: "#000A" }} onClick={() => setIsOpen((x) => !x)}>
           Tell us other ways you'd like to pay in the future
@@ -199,7 +246,7 @@ function Init(props: any) {
             <CloseIcon />
           </IconButton>
           <p>
-            What other types of payment would you lke this service to accept in
+            What other types of payment would you like this service to accept in
             the future:
           </p>
           <FormGroup row>
@@ -238,4 +285,50 @@ function Init(props: any) {
       </Drawer>
     </div>
   );
+}
+
+function GovUkTemporaryComponent(props: {
+  url: string;
+  amount: number;
+  flowId: string;
+}): JSX.Element | null {
+  const [passport, mutatePassport] = useStore((state) => [
+    state.passport,
+    state.mutatePassport,
+  ]);
+  const [govUrl, setGovUrl] = React.useState<string>();
+
+  const params: GovUKCreatePaymentPayload = {
+    amount: props.amount * 100,
+    reference: props.flowId,
+    description: "New application",
+    return_url: window.location.href,
+  };
+
+  const request = useAsync(async () => axios.post(props.url, params));
+
+  useEffect(() => {
+    if (!request.loading && !request.error && request.value) {
+      setGovUrl(request.value.data._links.next_url.href);
+      mutatePassport((draft) => {
+        const normalizedPayment = {
+          ...request.value.data,
+          amount: request.value.data.amount / 100,
+        };
+        draft.data["payment"] = normalizedPayment;
+      });
+    }
+  }, [request.loading, request.error, request.value]);
+
+  if (request.loading) {
+    return <Card>Loading...</Card>;
+  } else if (request.error) {
+    throw request.error;
+  } else {
+    if (govUrl) {
+      window.location.replace(govUrl);
+    }
+  }
+
+  return null;
 }

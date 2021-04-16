@@ -1,5 +1,6 @@
 import Box from "@material-ui/core/Box";
 import { createMuiTheme, Theme, ThemeProvider } from "@material-ui/core/styles";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useCurrentRoute } from "react-navi";
@@ -23,6 +24,20 @@ const PreviewLayout: React.FC<{
 
   const makeHref = (path: string) => [data.mountpath, path].join("/");
 
+  const [id] = useStore((state) => [state.id]);
+
+  const entry = `flow:${id}`;
+  const localSession = (() => {
+    try {
+      const storage = localStorage.getItem(entry);
+      if (storage) {
+        return JSON.parse(storage);
+      }
+    } catch (err) {
+      throw err;
+    }
+  })();
+
   const leftFooterItems =
     settings?.elements?.privacy?.heading && settings?.elements?.privacy?.show
       ? [
@@ -33,16 +48,22 @@ const PreviewLayout: React.FC<{
         ]
       : undefined;
 
-  const rightFooterItems =
+  const rightFooterItems = [
     settings?.elements?.help?.heading && settings?.elements?.help?.show
-      ? [
-          {
-            title: "Help",
-            href: makeHref("help"),
-            bold: true,
-          },
-        ]
-      : undefined;
+      ? {
+          title: "Help",
+          href: makeHref("help"),
+          bold: true,
+        }
+      : undefined,
+    {
+      title: "Restart Application",
+      onClick: () => {
+        localSession && localStorage.removeItem(entry);
+        window.location.reload();
+      },
+    },
+  ];
 
   const generatePreviewTheme = (baseTheme: Theme) =>
     theme.primary
