@@ -120,22 +120,19 @@ beforeEach(() => {
   getState().resetPreview();
 });
 
-test.only("order", () => {
+test("order", () => {
   setState({
     flow,
   });
 
-  getState().upcomingCardIds();
   expect(getState().upcomingCardIds()).toEqual(["P36QH99kvZ", "uYvBtZO8AN"]);
   getState().record("P36QH99kvZ", { answers: ["TMRY4IGTwG"] });
-  getState().upcomingCardIds();
   expect(getState().upcomingCardIds()).toEqual([
     "J1u7Gpf8S1",
     "bpbEbD6fHo",
     "mNzbrbhCsT",
   ]);
   getState().record("J1u7Gpf8S1", { answers: ["ij94v25xVZ"] }); // you chose apple - i did
-  getState().upcomingCardIds();
   expect(getState().upcomingCardIds()).toEqual(["bpbEbD6fHo", "mNzbrbhCsT"]);
   expect(getState().breadcrumbs).toEqual({
     J1u7Gpf8S1: { answers: ["ij94v25xVZ"], auto: false },

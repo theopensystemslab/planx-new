@@ -6,13 +6,13 @@ import { client } from "lib/graphql";
 import difference from "lodash/difference";
 import flatten from "lodash/flatten";
 import isNil from "lodash/isNil";
+import pick from "lodash/pick";
 import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import type { Flag } from "types";
 import type { GetState, SetState } from "zustand/vanilla";
-
-import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
 import type { Store } from ".";
+import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
 import type { SharedStore } from "./shared";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
@@ -124,24 +124,78 @@ export const previewStore = (
     return goBackable.pop();
   },
 
-  computePassport: () =>
-    Object.values(get().breadcrumbs).reduce(
-      (acc, { data = {} }) => {
+  computePassport: () => {
+    const { flow, breadcrumbs } = get();
+    const passport = Object.entries(breadcrumbs).reduce(
+      (acc, [id, { data = {}, answers = [] }]) => {
+        if (!flow[id]) return acc;
+
+        const key = flow[id].data?.fn;
+
+        const passportData: Store.passport["data"] = {};
+
+        if (key) {
+          const passportValue = answers
+            .map((id: string) => flow[id]?.data?.val)
+            .filter(
+              (val) =>
+                val !== undefined && val !== null && String(val).trim() !== ""
+            );
+
+          if (passportValue.length > 0) {
+            // console.log({
+            //   id,
+            //   key,
+            //   passportValue,
+            //   v: acc.data?.[key]?.value,
+            // });
+
+            const existingValue = acc.data?.[key]?.value ?? [];
+
+            const combined = existingValue
+              .concat(passportValue)
+              .reduce(
+                (acc: string[], curr: string, _i: number, arr: string[]) => {
+                  if (!arr.some((x) => x !== curr && x.startsWith(curr))) {
+                    acc.push(curr);
+                  }
+                  return acc;
+                },
+                []
+              );
+
+            passportData[key] = { value: combined };
+          }
+        }
+
+        // console.log(passportData);
+
+        const responseData = Object.entries(data).reduce(
+          (_acc, [id, value]) => {
+            _acc![id] = { value };
+            return _acc;
+          },
+          {} as Store.passport["data"]
+        );
+
         return {
           ...acc,
           data: {
             ...acc.data,
-            ...Object.entries(data).reduce((_acc, [id, value]) => {
-              _acc![id] = { value };
-              return _acc;
-            }, {} as Store.passport["data"]),
+            ...responseData,
+            ...passportData,
           },
         };
       },
       {
         data: {},
       } as Store.passport
-    ),
+    );
+
+    // console.log({ passport });
+
+    return passport;
+  },
 
   record(id, userData) {
     const { breadcrumbs, flow, sessionId, upcomingCardIds } = get();
@@ -441,8 +495,6 @@ export const previewStore = (
   upcomingCardIds() {
     const { flow, breadcrumbs, computePassport, collectedFlags } = get();
 
-    const passport = computePassport();
-
     const knownNotVals = Object.entries(breadcrumbs).reduce(
       (acc, [id, { answers = [] }]) => {
         if (!flow[id]) return acc;
@@ -486,6 +538,8 @@ export const previewStore = (
         .forEach((id) => {
           const node = flow[id];
 
+          const passport = computePassport();
+
           if (
             node.type &&
             [TYPES.InternalPortal, TYPES.Page].includes(node.type)
@@ -499,6 +553,8 @@ export const previewStore = (
 
           let passportValues =
             fn === "flag" ? globalFlag : passport.data?.[fn]?.value?.sort();
+
+          // console.log({ fn, passport, _passport: computePassport() });
 
           if (fn && (fn === "flag" || passportValues !== undefined)) {
             const responses = node.edges?.map((id) => ({

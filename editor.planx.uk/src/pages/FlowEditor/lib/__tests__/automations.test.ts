@@ -17,17 +17,11 @@ describe("(basic) if the passport contains", () => {
   ].forEach(([item, expected]) => {
     test(`[${item}] it should go down the [${expected}] path`, () => {
       setState({
-        passport: {
-          data: {
-            item: {
-              value: [item],
-            },
-          },
-        },
         flow: {
           _root: {
-            edges: ["item"],
+            edges: ["_setter", "item"],
           },
+          _setter: {},
           item: {
             type: TYPES.Statement,
             data: { fn: "item" },
@@ -47,9 +41,18 @@ describe("(basic) if the passport contains", () => {
         },
       });
 
+      const defaultPassportData = {
+        data: { item: [item] },
+      };
+      getState().record("_setter", defaultPassportData);
+
       getState().upcomingCardIds();
 
       expect(getState().breadcrumbs).toEqual({
+        _setter: {
+          auto: false,
+          ...defaultPassportData,
+        },
         item: {
           answers: [expected],
           auto: true,
@@ -67,17 +70,11 @@ describe("(more advanced) if the passport contains", () => {
   ].forEach(([item, expected]) => {
     test(`[${item}] it should go down the [${expected}] path`, () => {
       setState({
-        passport: {
-          data: {
-            item: {
-              value: [item],
-            },
-          },
-        },
         flow: {
           _root: {
-            edges: ["item"],
+            edges: ["_setter", "item"],
           },
+          _setter: {},
           item: {
             type: TYPES.Statement,
             data: { fn: "item" },
@@ -97,9 +94,18 @@ describe("(more advanced) if the passport contains", () => {
         },
       });
 
+      const defaultPassportData = {
+        data: { item: [item] },
+      };
+      getState().record("_setter", defaultPassportData);
+
       getState().upcomingCardIds();
 
       expect(getState().breadcrumbs).toEqual({
+        _setter: {
+          auto: false,
+          ...defaultPassportData,
+        },
         item: {
           answers: [expected],
           auto: true,
@@ -132,17 +138,11 @@ describe("(advanced) if the passport contains", () => {
       " & "
     )}] it should go down the [${expected}] path`, () => {
       setState({
-        passport: {
-          data: {
-            item: {
-              value: shuffle(item),
-            },
-          },
-        },
         flow: {
           _root: {
-            edges: ["contains"],
+            edges: ["_setter", "contains"],
           },
+          _setter: {},
           contains: {
             type: TYPES.Statement,
             data: { fn: "item" },
@@ -171,9 +171,17 @@ describe("(advanced) if the passport contains", () => {
         },
       });
 
+      const defaultPassportData = { data: { item: shuffle(item) } };
+
+      getState().record("_setter", defaultPassportData);
+
       getState().upcomingCardIds();
 
       expect(getState().breadcrumbs).toEqual({
+        _setter: {
+          auto: false,
+          ...defaultPassportData,
+        },
         contains: {
           answers: [expected],
           auto: true,
