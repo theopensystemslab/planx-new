@@ -1,66 +1,77 @@
 import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
-import classnames from "classnames";
 import React from "react";
 import Banner from "ui/Banner";
+import NumberedList from "ui/NumberedList";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 const useClasses = makeStyles((theme) => ({
   table: {
     borderCollapse: "collapse",
     "& tr": {
-      borderBottom: "1px solid black",
+      borderBottom: `1px solid ${theme.palette.grey[400]}`,
       "&:last-of-type": {
         border: "none",
       },
-
       "& td": {
-        padding: `${theme.spacing(1)}px ${theme.spacing(0.5)}px`,
+        padding: `${theme.spacing(1.5)}px ${theme.spacing(1)}px`,
       },
     },
   },
+  listHeading: {
+    marginBottom: theme.spacing(2),
+  },
 }));
 
-export default function Confirmation() {
+export interface Props {
+  heading: string;
+  description?: string;
+  color?: { text: string; background: string };
+  details?: { [key: string]: string };
+  nextSteps?: { title: string; description: string }[];
+  moreInfo?: string;
+}
+
+export default function Confirmation(props: Props) {
   const classes = useClasses();
 
   return (
     <Box>
-      <Banner heading="Application sent">
-        <Box mt={4}>
-          <Typography>
-            A payment receipt has been emailed to you. You will also receive an
-            email to confirm when your application has been received.
-          </Typography>
-        </Box>
+      <Banner heading={props.heading} color={props.color}>
+        {props.description && (
+          <Box mt={4}>
+            <Typography>{props.description}</Typography>
+          </Box>
+        )}
       </Banner>
       <Card>
-        <table className={classes.table}>
-          <tbody>
-            <tr>
-              <td>Planning Application Reference</td>
-              <td>
-                <b>LBL-LDCP-123456</b>
-              </td>
-            </tr>
-            <tr>
-              <td>Property Address</td>
-              <td>
-                <b>45, Greenfield Road, London SE22 7FF</b>
-              </td>
-            </tr>
-            <tr>
-              <td>GOV.UK Payment Reference</td>
-              <td>
-                <b>qe817o3kds9474rfkfldfHSK874JB</b>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        {props.details && (
+          <table className={classes.table}>
+            <tbody>
+              {Object.entries(props.details).map((item, i) => (
+                <tr key={i}>
+                  <td>{item[0]}</td>
+                  <td>
+                    <b>{item[1]}</b>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
 
-        <Box height={500}></Box>
+        {props.nextSteps && (
+          <Box pt={3}>
+            <Typography variant="h3" className={classes.listHeading}>
+              What happens next?
+            </Typography>
+            <NumberedList items={props.nextSteps} />
+          </Box>
+        )}
+
+        {props.moreInfo && <ReactMarkdownOrHtml source={props.moreInfo} />}
       </Card>
     </Box>
   );
