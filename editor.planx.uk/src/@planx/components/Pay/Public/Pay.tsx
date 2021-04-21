@@ -189,7 +189,10 @@ function Init(props: any) {
           The fee for this application is
         </Typography>
         <Typography variant="h1" gutterBottom className="marginBottom">
-          {`£${props.amount}`}
+          {new Intl.NumberFormat("en-GB", {
+            style: "currency",
+            currency: "GBP",
+          }).format(props.amount)}
         </Typography>
         <Typography>
           <a href="#">How are the planning fees calculated? ↗︎</a>
