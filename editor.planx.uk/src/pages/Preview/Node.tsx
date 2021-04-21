@@ -1,6 +1,7 @@
 import AddressInput from "@planx/components/AddressInput/Public";
 import Calculate from "@planx/components/Calculate/Public";
 import Checklist from "@planx/components/Checklist/Public";
+import Confirmation from "@planx/components/Confirmation/Public";
 import Content from "@planx/components/Content/Public";
 import DateInput from "@planx/components/DateInput/Public";
 import DrawBoundary from "@planx/components/DrawBoundary/Public";
@@ -79,7 +80,8 @@ const Node: React.FC<any> = (props: Props) => {
           }
         />
       );
-
+    case TYPES.Confirmation:
+      return <Confirmation {...allProps} />;
     case TYPES.Content:
       return <Content {...allProps} />;
 
