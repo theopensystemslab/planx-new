@@ -15,7 +15,6 @@ export interface Props {
 const useClasses = makeStyles((theme) => ({
   button: {
     color: theme.palette.text.primary,
-    // padding: `${theme.spacing(1)}px 0`
     padding: 0,
   },
   submit: {

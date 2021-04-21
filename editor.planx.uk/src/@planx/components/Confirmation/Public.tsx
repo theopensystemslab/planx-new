@@ -2,11 +2,14 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
+import { PublicProps } from "@planx/components/ui";
 import React from "react";
 import Banner from "ui/Banner";
 import CollapsibleInput from "ui/CollapsibleInput";
 import NumberedList from "ui/NumberedList";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+
+import type { Confirmation } from "./model";
 
 const useClasses = makeStyles((theme) => ({
   table: {
@@ -29,23 +32,14 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-export interface Props {
-  heading: string;
-  description?: string;
-  color?: { text: string; background: string };
-  details?: { [key: string]: string };
-  nextSteps?: { title: string; description: string }[];
-  moreInfo?: string;
-  contactInfo?: { heading?: string; content?: string };
-  feedbackCTA?: string;
-}
+export type Props = PublicProps<Confirmation>;
 
-export default function Confirmation(props: Props) {
+export default function ConfirmationComponent(props: Props) {
   const classes = useClasses();
 
   return (
-    <Box>
-      <Banner heading={props.heading} color={props.color}>
+    <Box width="100%">
+      <Banner heading={props.heading || ""} color={props.color}>
         {props.description && (
           <Box mt={4}>
             <Typography>{props.description}</Typography>
@@ -68,7 +62,7 @@ export default function Confirmation(props: Props) {
           </table>
         )}
 
-        {props.nextSteps && (
+        {props.nextSteps && Boolean(props.nextSteps?.length) && (
           <Box pt={3}>
             <Typography variant="h3" className={classes.listHeading}>
               What happens next?
@@ -78,23 +72,25 @@ export default function Confirmation(props: Props) {
         )}
 
         {props.moreInfo && (
-          <Box py={1}>
-            <ReactMarkdownOrHtml source={props.moreInfo} />
-          </Box>
+          <>
+            <Box py={1}>
+              <ReactMarkdownOrHtml source={props.moreInfo} />
+            </Box>
+            <hr />
+          </>
         )}
-
-        <hr />
 
         {props.contactInfo && (
-          <Box py={1}>
-            <Typography variant="h3">
-              {props.contactInfo.heading || "Contact us"}
-            </Typography>
-            <ReactMarkdownOrHtml source={props.contactInfo.content} />
-          </Box>
+          <>
+            <Box py={1}>
+              <Typography variant="h3">
+                {props.contactInfo.heading || "Contact us"}
+              </Typography>
+              <ReactMarkdownOrHtml source={props.contactInfo.content} />
+            </Box>
+            <hr />
+          </>
         )}
-
-        <hr />
 
         {props.feedbackCTA && (
           <CollapsibleInput handleChange={() => {}} name="feedback" value={""}>

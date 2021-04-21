@@ -1,6 +1,8 @@
 import { Story } from "@storybook/react/types-6-0";
 import React from "react";
 
+import Wrapper from "../fixtures/Wrapper";
+import Editor from "./Editor";
 import Confirmation, { Props } from "./Public";
 
 export default {
@@ -44,3 +46,7 @@ Basic.args = {
   },
   feedbackCTA: "What did you think of this service? (takes 30 seconds)",
 };
+
+export const WithEditor = () => (
+  <Wrapper Editor={Editor} Public={Confirmation} />
+);

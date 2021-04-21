@@ -52,6 +52,7 @@ export const ICONS: {
   [TYPES.Calculate]: FunctionsIcon,
   [TYPES.Checklist]: CheckBoxOutlined,
   [TYPES.Content]: TextFields,
+  [TYPES.Confirmation]: TextFields,
   [TYPES.DateInput]: Event,
   [TYPES.DrawBoundary]: SquareFoot,
   [TYPES.ExternalPortal]: undefined,
