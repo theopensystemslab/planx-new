@@ -33,7 +33,7 @@ const Questions = (props: Props) => {
   const node = currentCard();
   const flow = useContext(PreviewContext);
 
-  const hasPaid = Boolean(passport.data["payment"]);
+  const hasPaid = Boolean(passport.data?.payment);
 
   useEffect(() => {
     if (!props.isSidebar) {
