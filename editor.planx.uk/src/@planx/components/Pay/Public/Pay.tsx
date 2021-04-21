@@ -85,15 +85,18 @@ interface Props extends Pay {
 }
 
 function Component(props: Props) {
-  const [passport, id] = useStore((state) => [state.passport, state.id]);
+  const [passport, id] = useStore((state) => [
+    state.computePassport(),
+    state.id,
+  ]);
   const [state, setState] = React.useState<"init" | "summary" | "paid">(
-    passport.data.payment ? "paid" : "init"
+    passport.data?.payment ? "paid" : "init"
   );
   const [otherPayments, setOtherPayments] = React.useState({});
   const Route = OPTIONS[state]?.component;
-  const govUkPayment: GovUKPayment = passport.data.payment;
+  const govUkPayment: GovUKPayment = passport.data?.payment?.value;
 
-  const fee = props.fn ? Number(passport.data[props.fn]?.value[0]) : 0;
+  const fee = props.fn ? Number(passport.data?.[props.fn]?.value) : 0;
 
   // TODO: When connecting this component to the flow and to the backend
   //       remember to also pass up the value of `otherPayments`
@@ -207,6 +210,7 @@ function Init(props: any) {
 
       {paymentFlow && (
         <GovUkTemporaryComponent
+          handleSubmit={props.handleSubmit}
           url={props.url}
           amount={props.amount}
           flowId={id}
@@ -291,14 +295,11 @@ function Init(props: any) {
 }
 
 function GovUkTemporaryComponent(props: {
+  handleSubmit: Props["handleSubmit"];
   url: string;
   amount: number;
   flowId: string;
 }): JSX.Element | null {
-  const [passport, mutatePassport] = useStore((state) => [
-    state.passport,
-    state.mutatePassport,
-  ]);
   const [govUrl, setGovUrl] = React.useState<string>();
 
   const params: GovUKCreatePaymentPayload = {
@@ -313,13 +314,11 @@ function GovUkTemporaryComponent(props: {
   useEffect(() => {
     if (!request.loading && !request.error && request.value) {
       setGovUrl(request.value.data._links.next_url.href);
-      mutatePassport((draft) => {
-        const normalizedPayment = {
-          ...request.value.data,
-          amount: request.value.data.amount / 100,
-        };
-        draft.data["payment"] = normalizedPayment;
-      });
+      const normalizedPayment = {
+        ...request.value.data,
+        amount: request.value.data.amount / 100,
+      };
+      props.handleSubmit(undefined, { payment: normalizedPayment });
     }
   }, [request.loading, request.error, request.value]);
 
