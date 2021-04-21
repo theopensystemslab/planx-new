@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/ui";
+import { useFormik } from "formik";
 import React from "react";
 import Banner from "ui/Banner";
 import CollapsibleInput from "ui/CollapsibleInput";
@@ -35,6 +36,15 @@ const useClasses = makeStyles((theme) => ({
 export type Props = PublicProps<Confirmation>;
 
 export default function ConfirmationComponent(props: Props) {
+  const formik = useFormik({
+    initialValues: {
+      feedback: "",
+    },
+    onSubmit: (values) => {
+      props.handleSubmit && props.handleSubmit(values.feedback);
+    },
+  });
+
   const classes = useClasses();
 
   return (
@@ -46,7 +56,7 @@ export default function ConfirmationComponent(props: Props) {
           </Box>
         )}
       </Banner>
-      <Card>
+      <Card handleSubmit={formik.handleSubmit} isValid>
         {props.details && (
           <table className={classes.table}>
             <tbody>
@@ -93,7 +103,11 @@ export default function ConfirmationComponent(props: Props) {
         )}
 
         {props.feedbackCTA && (
-          <CollapsibleInput handleChange={() => {}} name="feedback" value={""}>
+          <CollapsibleInput
+            handleChange={formik.handleChange}
+            name="feedback"
+            value={formik.values.feedback}
+          >
             <Typography variant="body2" className={classes.feedback}>
               {props.feedbackCTA}
             </Typography>
