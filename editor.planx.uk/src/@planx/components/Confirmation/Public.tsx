@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 import Banner from "ui/Banner";
+import CollapsibleInput from "ui/CollapsibleInput";
 import NumberedList from "ui/NumberedList";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
@@ -23,6 +24,9 @@ const useClasses = makeStyles((theme) => ({
   listHeading: {
     marginBottom: theme.spacing(2),
   },
+  feedback: {
+    textDecoration: "underline",
+  },
 }));
 
 export interface Props {
@@ -32,6 +36,8 @@ export interface Props {
   details?: { [key: string]: string };
   nextSteps?: { title: string; description: string }[];
   moreInfo?: string;
+  contactInfo?: { heading?: string; content?: string };
+  feedbackCTA?: string;
 }
 
 export default function Confirmation(props: Props) {
@@ -71,7 +77,32 @@ export default function Confirmation(props: Props) {
           </Box>
         )}
 
-        {props.moreInfo && <ReactMarkdownOrHtml source={props.moreInfo} />}
+        {props.moreInfo && (
+          <Box py={1}>
+            <ReactMarkdownOrHtml source={props.moreInfo} />
+          </Box>
+        )}
+
+        <hr />
+
+        {props.contactInfo && (
+          <Box py={1}>
+            <Typography variant="h3">
+              {props.contactInfo.heading || "Contact us"}
+            </Typography>
+            <ReactMarkdownOrHtml source={props.contactInfo.content} />
+          </Box>
+        )}
+
+        <hr />
+
+        {props.feedbackCTA && (
+          <CollapsibleInput handleChange={() => {}} name="feedback" value={""}>
+            <Typography variant="body2" className={classes.feedback}>
+              {props.feedbackCTA}
+            </Typography>
+          </CollapsibleInput>
+        )}
       </Card>
     </Box>
   );

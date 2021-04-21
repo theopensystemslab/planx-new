@@ -15,6 +15,8 @@ export interface Props {
 const useClasses = makeStyles((theme) => ({
   button: {
     color: theme.palette.text.primary,
+    // padding: `${theme.spacing(1)}px 0`
+    padding: 0,
   },
   submit: {
     marginTop: theme.spacing(2),
@@ -35,7 +37,7 @@ const CollapsibleInput: React.FC<Props> = (props: Props) => {
         {props.children}
       </Button>
       <Collapse in={expanded}>
-        <Box display="flex" flexDirection="column" alignItems="flex-end">
+        <Box py={0.5}>
           <Input
             multiline
             bordered
