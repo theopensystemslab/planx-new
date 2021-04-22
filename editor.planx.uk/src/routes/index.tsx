@@ -30,9 +30,19 @@ const editorRoutes = mount({
   ),
 
   "/logout": map((): any => {
-    client.resetStore();
-    Cookies.remove("jwt");
-    window.location.href = "/";
+    try {
+      client.resetStore();
+      Cookies.remove("jwt");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      // hack to force-remove cookie on editor.planx.uk
+      const cookieString = `jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      document.cookie = cookieString;
+      document.cookie = cookieString.concat(" domain=.planx.uk;");
+
+      window.location.href = "/";
+    }
   }),
 
   "*": map(async (req, context: RoutingContext) =>
