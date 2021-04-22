@@ -8,11 +8,20 @@ import { evaluate } from "../model";
 export type Props = PublicProps<Calculate>;
 
 export default function Component(props: Props) {
-  const passport = useStore((state) => state.computePassport());
+  // convert passport.data = {[key]: {value: data}} into data = {[key]: data}
+  const data = useStore((state) =>
+    Object.entries(state.computePassport().data || {}).reduce(
+      (acc, [key, { value }]) => ({
+        ...acc,
+        [key]: value,
+      }),
+      {}
+    )
+  );
 
   useEffect(() => {
     props.handleSubmit?.(undefined, {
-      [props.output]: evaluate(props.formula, passport, props.defaults),
+      [props.output]: evaluate(props.formula, data, props.defaults),
     });
   }, []);
 
