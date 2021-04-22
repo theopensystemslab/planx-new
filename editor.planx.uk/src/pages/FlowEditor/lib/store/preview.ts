@@ -29,10 +29,7 @@ export interface PreviewStore extends Store.Store {
   previousCard: () => Store.nodeId | undefined;
   record: (
     id: Store.nodeId,
-    {
-      answers,
-      data,
-    }?: { answers?: Store.userData["answers"]; data?: Store.userData["data"] }
+    { answers, data }?: Pick<Store.userData, "answers" | "data">
   ) => void;
   resultData: (
     flagSet?: string,
