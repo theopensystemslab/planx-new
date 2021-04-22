@@ -1,5 +1,12 @@
 import type { MoreInformation } from "../shared";
 
+export function toGBP(amount: number) {
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP",
+  }).format(amount);
+}
+
 export interface Pay extends MoreInformation {
   title?: string;
   description?: string;
