@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
+import { toGBP } from "../model";
 import Button from "./Button";
 
 export default Component;
@@ -67,7 +68,7 @@ function Component(props: any) {
       <div className={c.topBanner}>
         <h2>Payment summary</h2>
         <p>Amount</p>
-        <h2>{`£${props.amount}`}</h2>
+        <h2>{toGBP(props.amount)}</h2>
       </div>
       <h1 className={c.h1}>Confirm your payment</h1>
       <div className={c.table}>

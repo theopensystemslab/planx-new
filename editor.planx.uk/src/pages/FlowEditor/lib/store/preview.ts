@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
+import { GovUKPayment } from "@planx/components/Pay/model";
 import { TYPES } from "@planx/components/types";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { client } from "lib/graphql";
@@ -52,6 +53,9 @@ export interface PreviewStore extends Store.Store {
   sessionId: string;
   startSession: ({ passport }: { passport: Record<string, any> }) => void;
   upcomingCardIds: () => Store.nodeId[];
+  // temporary measure for storing payment fee & id between gov uk redirect
+  govUkPayment?: GovUKPayment;
+  setGovUkPayment: (govUkPayment: GovUKPayment) => void;
 }
 
 // export const previewStore = vanillaCreate<PreviewStore>((set, get) => ({
@@ -59,6 +63,10 @@ export const previewStore = (
   set: SetState<PreviewStore>,
   get: GetState<SharedStore & PreviewStore>
 ): PreviewStore => ({
+  setGovUkPayment(govUkPayment) {
+    set({ govUkPayment });
+  },
+
   collectedFlags(upToNodeId, visited = []) {
     const { breadcrumbs, flow } = get();
 

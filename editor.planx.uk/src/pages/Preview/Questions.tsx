@@ -19,6 +19,7 @@ const Questions = (props: Props) => {
     sessionId,
     id,
     resumeSession,
+    govUkPayment,
   ] = useStore((state) => [
     state.currentCard,
     state.previousCard(),
@@ -28,6 +29,7 @@ const Questions = (props: Props) => {
     state.sessionId,
     state.id,
     state.resumeSession,
+    state.govUkPayment,
   ]);
 
   const node = currentCard();
@@ -56,13 +58,14 @@ const Questions = (props: Props) => {
         `flow:${id}`,
         JSON.stringify({
           breadcrumbs,
+          id,
           passport,
           sessionId,
-          id,
+          govUkPayment,
         })
       );
     }
-  }, [breadcrumbs, passport, sessionId, id]);
+  }, [breadcrumbs, passport, sessionId, id, govUkPayment]);
 
   const handleSubmit = (id: string): handleSubmit => (answers = [], data?) => {
     record(id, { answers, data });

@@ -5,6 +5,8 @@ import DownloadIcon from "@material-ui/icons/GetApp";
 import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 
+import { toGBP } from "../model";
+
 export default Component;
 
 const useStyles = makeStyles({
@@ -60,7 +62,7 @@ function Component(props: Props) {
         <div className={c.banner}>
           <Typography variant="h3">Payment summary</Typography>
           <Typography>Amount</Typography>
-          <Typography variant="h1">{`£${props.amount}`}</Typography>
+          <Typography variant="h1">{toGBP(props.amount)}</Typography>
         </div>
         <p>
           <span>Created</span>
