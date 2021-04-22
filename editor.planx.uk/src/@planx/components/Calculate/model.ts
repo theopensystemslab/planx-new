@@ -54,6 +54,7 @@ export function getVariables(input: string): Set<string> {
 export function evaluate(input: string, scope = {}, defaults = {}): number {
   const ast = math.parse(input);
   const code = ast.transform(flattenVariables).compile();
+
   return code.evaluate(serializeKeys(applyDefaults(scope, defaults)));
 
   function flattenVariables(node: any) {
@@ -83,7 +84,7 @@ export function evaluate(input: string, scope = {}, defaults = {}): number {
 
 export function toScope(passport: any): Object {
   return Object.fromEntries(
-    Object.entries(passport.data).map(([key, value]) => [
+    Object.entries(passport).map(([key, value]) => [
       key,
       Number((value as any).value?.[0]),
     ])

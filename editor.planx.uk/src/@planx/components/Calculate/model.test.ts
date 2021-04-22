@@ -96,15 +96,13 @@ describe.skip("toScope", () => {
   const { toScope } = model;
 
   test("converts passport to scope", () => {
-    const passport = {
-      data: {
-        "data.field.with.dots": ["10"],
-        "another.data.field": ["5"],
-        "another.data.field.and.subfield": ["12"],
-      },
+    const passportData = {
+      "data.field.with.dots": ["10"],
+      "another.data.field": ["5"],
+      "another.data.field.and.subfield": ["12"],
     };
 
-    const actual = toScope(passport);
+    const actual = toScope(passportData);
 
     const expected = {
       "data.field.with.dots": 10,
