@@ -122,7 +122,7 @@ const SendComponent: React.FC<Props> = (props) => {
     data.proposal_details = makePayload(flow, breadcrumbs);
 
     const paymentReference =
-      passport?.data?.["application.fee.reference.govPay"]?.value?.[0];
+      passport?.data?.["application.fee.reference.govPay"]?.value;
 
     return {
       ...data,

@@ -82,15 +82,6 @@ export function evaluate(input: string, scope = {}, defaults = {}): number {
   }
 }
 
-export function toScope(passport: any): Object {
-  return Object.fromEntries(
-    Object.entries(passport).map(([key, value]) => [
-      key,
-      Number((value as any).value?.[0]),
-    ])
-  );
-}
-
 // Serialization is only necessary internally.                     v
 // Mathjs can't handle keys with dots in their names e.g. `property.number`
 // This complexity should never be exposed to this component's consumers.
