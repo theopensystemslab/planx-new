@@ -46,6 +46,7 @@ const Node: React.FC<any> = (props: Props) => {
   const resetPreview = useStore((state) => state.resetPreview);
 
   const allProps = {
+    id: props.node.id,
     ...props.node.data,
     resetPreview,
     handleSubmit: props.handleSubmit,
