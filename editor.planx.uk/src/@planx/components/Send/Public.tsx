@@ -65,20 +65,23 @@ const SendComponent: React.FC<Props> = (props) => {
     // 2. files
 
     Object.values(breadcrumbs)
-      .flatMap(({ data = {} }) => Object.values(data))
-      .forEach((file) => {
-        try {
-          const { filename, url } = file;
-          if (filename && url) {
-            data.files = data.files || [];
+      .map(({ data = {} }) => Object.values(data))
+      .forEach((files) => {
+        files.forEach((file) => {
+          try {
+            const { filename, url } = file;
+            console.log(file);
+            if (filename && url) {
+              data.files = data.files || [];
 
-            data.files.push({
-              filename: String(url),
-              tags: [],
-              // TODO: replace tags with passport field
-            });
-          }
-        } catch (err) {}
+              data.files.push({
+                filename: String(url),
+                tags: [],
+                // TODO: replace tags with passport field
+              });
+            }
+          } catch (err) {}
+        });
       });
 
     // 3. constraints

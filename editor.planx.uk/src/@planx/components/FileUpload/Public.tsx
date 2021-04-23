@@ -19,6 +19,7 @@ import { array } from "yup";
 interface Props extends MoreInformation {
   id?: string;
   title?: string;
+  fn?: string;
   description?: string;
   handleSubmit: handleSubmit;
 }
@@ -134,9 +135,7 @@ const FileUpload: React.FC<Props> = (props) => {
   const [slots, setSlots] = useState([]);
   const [validationError, setValidationError] = useState<string>();
 
-  // this should be props.fn, but making it a unique value for now until we know
-  // that all file upload components have their own passport field name.
-  const passportKey: string = String(props.id ?? Date.now());
+  const passportKey: string = props.fn ?? String(props.id ?? Date.now());
 
   const handleSubmit = () => {
     slotsSchema
