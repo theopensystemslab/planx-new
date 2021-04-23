@@ -94,10 +94,6 @@ function Component(props: Props) {
   //       - feedback.payment.type
   //       - feedback.payment.reason
 
-  if (!props.url) {
-    return <div>Something has gone terribly wrong...</div>;
-  }
-
   return (
     <Box textAlign="left" width="100%">
       <Container maxWidth="md">
@@ -123,7 +119,7 @@ function Component(props: Props) {
       </div>
 
       <Card>
-        {state === "paying" ? (
+        {props.url && state === "paying" ? (
           <GovUkTemporaryComponent
             url={props.url}
             amount={fee}
