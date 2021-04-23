@@ -64,11 +64,11 @@ const SendComponent: React.FC<Props> = (props) => {
 
     // 2. files
 
-    Object.values(breadcrumbs).forEach(({ answers = [] }) => {
-      answers.filter(Boolean).forEach((str) => {
+    Object.values(breadcrumbs)
+      .flatMap(({ data = {} }) => Object.values(data))
+      .forEach((file) => {
         try {
-          // data has been JSON.stringify'd temporarily to adhere to answers: string[] type
-          const { filename, url } = JSON.parse(str);
+          const { filename, url } = file;
           if (filename && url) {
             data.files = data.files || [];
 
@@ -80,7 +80,6 @@ const SendComponent: React.FC<Props> = (props) => {
           }
         } catch (err) {}
       });
-    });
 
     // 3. constraints
 
