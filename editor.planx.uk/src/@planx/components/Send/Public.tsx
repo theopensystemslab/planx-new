@@ -97,7 +97,8 @@ const SendComponent: React.FC<Props> = (props) => {
     // 4. work status
 
     if (
-      passport?.data?.["property.constraints.planning"].value === "ldc.existing"
+      passport?.data?.["property.constraints.planning"]?.value ===
+      "ldc.existing"
     ) {
       data.work_status = "existing";
     }
