@@ -181,12 +181,14 @@ function GovUkTemporaryComponent(props: {
   handleResponse: (response: GovUKPayment) => void;
 }): JSX.Element | null {
   const params: GovUKCreatePaymentPayload = {
-    amount: props.amount * 100,
+    // TODO: move this into model & test it; messy to keep it here
+    amount: Math.trunc(props.amount * 100),
     reference: props.flowId,
     description: "New application",
     return_url: window.location.href,
   };
 
+  console.log("params", params);
   const request = useAsync(async () => axios.post(props.url, params));
 
   useEffect(() => {
