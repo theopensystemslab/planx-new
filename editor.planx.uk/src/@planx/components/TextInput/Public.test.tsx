@@ -22,7 +22,7 @@ test("requires a value before being able to continue", async () => {
     await userEvent.click(screen.getByText("Continue"));
   });
 
-  expect(handleSubmit).toHaveBeenCalledWith(undefined, undefined);
+  expect(handleSubmit).toHaveBeenCalled();
 });
 
 test("requires a valid email before being able to continue", async () => {
