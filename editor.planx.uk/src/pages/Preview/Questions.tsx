@@ -67,7 +67,16 @@ const Questions = (props: Props) => {
     }
   }, [breadcrumbs, passport, sessionId, id, govUkPayment]);
 
-  const handleSubmit = (id: string): handleSubmit => (answers = [], data?) => {
+  const handleSubmit = (id: string): handleSubmit => (userData) => {
+    const { answers = [], data } = (() => {
+      try {
+        const { answers = [], data } = userData as any;
+        return { answers: answers.filter(Boolean), data };
+      } catch (err) {
+        return {};
+      }
+    })();
+
     record(id, { answers, data });
   };
 

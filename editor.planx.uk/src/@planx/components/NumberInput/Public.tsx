@@ -23,7 +23,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
         const parsed = parseNumber(values.value);
         if (parsed !== null) {
           const data = props.fn ? { [props.fn]: [String(parsed)] } : undefined;
-          props.handleSubmit(undefined, data);
+          props.handleSubmit({ data });
         }
       }
     },

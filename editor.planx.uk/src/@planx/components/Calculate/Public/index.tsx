@@ -20,8 +20,10 @@ export default function Component(props: Props) {
   );
 
   useEffect(() => {
-    props.handleSubmit?.(undefined, {
-      [props.output]: evaluate(props.formula, data, props.defaults),
+    props.handleSubmit?.({
+      data: {
+        [props.output]: evaluate(props.formula, data, props.defaults),
+      },
     });
   }, []);
 

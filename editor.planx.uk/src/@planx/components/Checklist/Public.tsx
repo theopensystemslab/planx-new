@@ -5,16 +5,15 @@ import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
-import type { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import ChecklistItem from "ui/ChecklistItem";
 import ErrorWrapper from "ui/ErrorWrapper";
 import { ExpandableList, ExpandableListItem } from "ui/ExpandableList";
 import { array, object } from "yup";
 
-export interface Props extends Checklist {
-  handleSubmit: handleSubmit;
-}
+import type { PublicProps } from "../ui";
+
+export type Props = PublicProps<Checklist>;
 
 enum Layout {
   Basic,
@@ -63,7 +62,7 @@ const ChecklistComponent: React.FC<Props> = ({
       checked: [],
     },
     onSubmit: (values) => {
-      handleSubmit?.(values.checked);
+      handleSubmit?.({ answers: values.checked });
     },
     validateOnBlur: false,
     validateOnChange: false,

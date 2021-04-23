@@ -139,15 +139,14 @@ const FileUpload: React.FC<Props> = (props) => {
     slotsSchema
       .validate(slots)
       .then(() => {
-        props.handleSubmit(
-          // Temporary measure, to ensure answers are always strings
-          slots.map((slot: any) =>
+        props.handleSubmit({
+          answers: slots.map((slot: any) =>
             JSON.stringify({
               url: slot.url,
               filename: slot.file.path,
             })
-          )
-        );
+          ),
+        });
       })
       .catch((err) => {
         setValidationError(err.message);

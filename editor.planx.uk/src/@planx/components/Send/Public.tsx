@@ -26,7 +26,11 @@ const SendComponent: React.FC<Props> = (props) => {
       request.value &&
       props.handleSubmit
     ) {
-      props.handleSubmit([request.value.data.application.id]);
+      props.handleSubmit({
+        data: {
+          bopsId: request.value.data.application.id,
+        },
+      });
     }
   }, [request.loading, request.error, request.value]);
 

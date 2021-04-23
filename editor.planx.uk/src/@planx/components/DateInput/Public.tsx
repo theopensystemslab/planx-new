@@ -17,7 +17,8 @@ const DateInputPublic: React.FC<Props> = (props) => {
       date: "",
     },
     onSubmit: (values) => {
-      props.handleSubmit?.([values.date]);
+      // TODO: record date in data
+      props.handleSubmit?.();
     },
     validateOnBlur: false,
     validateOnChange: false,
