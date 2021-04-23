@@ -17,6 +17,7 @@ import ErrorWrapper from "ui/ErrorWrapper";
 import { array } from "yup";
 
 interface Props extends MoreInformation {
+  id?: string;
   title?: string;
   description?: string;
   handleSubmit: handleSubmit;
@@ -131,21 +132,23 @@ const slotsSchema = array()
 
 const FileUpload: React.FC<Props> = (props) => {
   const [slots, setSlots] = useState([]);
-  const [validationError, setValidationError] = useState<string | undefined>(
-    undefined
-  );
+  const [validationError, setValidationError] = useState<string>();
+
+  // this should be props.fn, but making it a unique value for now until we know
+  // that all file upload components have their own passport field name.
+  const passportKey: string = String(props.id ?? Date.now());
 
   const handleSubmit = () => {
     slotsSchema
       .validate(slots)
       .then(() => {
         props.handleSubmit({
-          answers: slots.map((slot: any) =>
-            JSON.stringify({
+          data: {
+            [passportKey]: slots.map((slot: any) => ({
               url: slot.url,
               filename: slot.file.path,
-            })
-          ),
+            })),
+          },
         });
       })
       .catch((err) => {
