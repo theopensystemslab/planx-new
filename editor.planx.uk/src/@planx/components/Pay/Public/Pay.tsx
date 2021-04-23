@@ -10,17 +10,17 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import DecisionButton from "@planx/components/shared/Buttons/DecisionButton";
 import Card from "@planx/components/shared/Preview/Card";
 import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
-import React, { Suspense, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 import type { GovUKPayment } from "types";
 import Input from "ui/Input";
 
 import type { GovUKCreatePaymentPayload, Pay } from "../model";
+import { toDecimal,toPence } from "../model";
 
 export default Component;
 
@@ -88,6 +88,13 @@ function Component(props: Props) {
 
   const fee = props.fn ? Number(passport.data[props.fn]?.value[0]) : 0;
 
+  const payload: GovUKCreatePaymentPayload = {
+    amount: toPence(fee),
+    reference: id,
+    description: "New application",
+    return_url: window.location.href,
+  };
+
   // TODO: When connecting this component to the flow and to the backend
   //       remember to also pass up the value of `otherPayments`
   //       to be stored in special data fields, e.g.
@@ -108,7 +115,7 @@ function Component(props: Props) {
             The planning fee for this application is
           </Typography>
           <Typography variant="h1" gutterBottom className="marginBottom">
-            {`£${fee}`}
+            {`£${fee.toFixed(2)}`}
           </Typography>
           <Typography variant="body1" align="left">
             The planning fee covers the cost of processing your application.
@@ -122,13 +129,12 @@ function Component(props: Props) {
         {props.url && state === "paying" ? (
           <GovUkTemporaryComponent
             url={props.url}
-            amount={fee}
-            flowId={id}
+            payload={payload}
             handleResponse={(response) => {
               mutatePassport((draft) => {
                 const normalizedPayment = {
                   ...response,
-                  amount: response.amount / 100,
+                  amount: toDecimal(response.amount),
                 };
                 draft.data["payment"] = normalizedPayment;
               });
@@ -176,20 +182,10 @@ function Init(props: any) {
 
 function GovUkTemporaryComponent(props: {
   url: string;
-  amount: number;
-  flowId: string;
+  payload: GovUKCreatePaymentPayload;
   handleResponse: (response: GovUKPayment) => void;
 }): JSX.Element | null {
-  const params: GovUKCreatePaymentPayload = {
-    // TODO: move this into model & test it; messy to keep it here
-    amount: Math.trunc(props.amount * 100),
-    reference: props.flowId,
-    description: "New application",
-    return_url: window.location.href,
-  };
-
-  console.log("params", params);
-  const request = useAsync(async () => axios.post(props.url, params));
+  const request = useAsync(async () => axios.post(props.url, props.payload));
 
   useEffect(() => {
     if (!request.loading && !request.error && request.value) {
