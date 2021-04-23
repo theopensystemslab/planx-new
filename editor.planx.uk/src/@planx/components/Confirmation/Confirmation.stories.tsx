@@ -41,9 +41,7 @@ Basic.args = {
   - if any additional information is required
   - to arrange a site visit, if required
   - to inform you whether a certificate has been granted or not`,
-  contactInfo: {
-    content: `You can contact us at **planning@lambeth.gov.uk**`,
-  },
+  contactInfo: `You can contact us at **planning@lambeth.gov.uk**`,
   feedbackCTA: "What did you think of this service? (takes 30 seconds)",
 };
 

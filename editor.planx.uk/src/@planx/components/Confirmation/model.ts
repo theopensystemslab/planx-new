@@ -10,7 +10,7 @@ export interface Confirmation {
   details?: { [key: string]: string };
   nextSteps?: Step[];
   moreInfo?: string;
-  contactInfo?: { heading?: string; content?: string };
+  contactInfo?: string;
   feedbackCTA?: string;
 }
 

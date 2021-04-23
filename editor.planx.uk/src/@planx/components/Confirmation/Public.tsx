@@ -1,6 +1,7 @@
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import Check from "@material-ui/icons/CheckCircleOutlineOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
@@ -49,7 +50,7 @@ export default function ConfirmationComponent(props: Props) {
 
   return (
     <Box width="100%">
-      <Banner heading={props.heading || ""} color={props.color}>
+      <Banner heading={props.heading || ""} color={props.color} Icon={Check}>
         {props.description && (
           <Box mt={4}>
             <Typography>{props.description}</Typography>
@@ -92,11 +93,9 @@ export default function ConfirmationComponent(props: Props) {
 
         {props.contactInfo && (
           <>
-            <Box py={1}>
-              <Typography variant="h3">
-                {props.contactInfo.heading || "Contact us"}
-              </Typography>
-              <ReactMarkdownOrHtml source={props.contactInfo.content} />
+            <Box py={1} color="primary.main">
+              <Typography variant="h3">Contact us</Typography>
+              <ReactMarkdownOrHtml source={props.contactInfo} />
             </Box>
             <hr />
           </>
@@ -108,7 +107,11 @@ export default function ConfirmationComponent(props: Props) {
             name="feedback"
             value={formik.values.feedback}
           >
-            <Typography variant="body2" className={classes.feedback}>
+            <Typography
+              variant="body2"
+              color="primary"
+              className={classes.feedback}
+            >
               {props.feedbackCTA}
             </Typography>
           </CollapsibleInput>

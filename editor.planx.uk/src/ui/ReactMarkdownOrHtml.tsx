@@ -19,7 +19,7 @@ export default function ReactMarkdownOrHtml(props: {
   if (typeof props.source !== "string") {
     return null;
   }
-  if (props.source.includes("<p>") || props.source.includes("<a")) {
+  if (props.source.includes("</")) {
     const replaceTarget = props.source.replace(
       `target="_self"`,
       `target="_blank"`

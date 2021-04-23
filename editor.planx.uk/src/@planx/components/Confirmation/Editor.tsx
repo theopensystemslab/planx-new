@@ -56,11 +56,25 @@ export default function ConfirmationEditor(props: Props) {
   const type = TYPES.Confirmation;
   const formik = useFormik({
     initialValues: {
-      heading: props.node?.data?.heading || "",
-      description: props.node?.data?.description || "",
-      moreInfo: props.node?.data?.moreInfo || "",
-      contactInfo: props.node?.data?.contactInfo || "",
-      feedbackCTA: props.node?.data?.feedbackCTA || "",
+      heading: props.node?.data?.heading || "Application sent",
+      description:
+        props.node?.data?.description ||
+        `A payment receipt has been emailed to you. You will also receive an email to confirm when your application has been received.`,
+      moreInfo:
+        props.node?.data?.moreInfo ||
+        `<h2>You will be contacted</h2>
+        <ul>
+        <li>if there is anything missing from the information you have provided so far</li>
+        <li>if any additional information is required</li>
+        <li>to arrange a site visit, if required</li>
+        <li>to inform you whether a certificate has been granted or not</li>
+        </ul>`,
+      contactInfo:
+        props.node?.data?.contactInfo ||
+        "You can contact us at **planning@lambeth.gov.uk**",
+      feedbackCTA:
+        props.node?.data?.feedbackCTA ||
+        "What did you think of this service? (takes 30 seconds)",
       ...parseNextSteps(props.node?.data),
     },
     onSubmit: (values) => {

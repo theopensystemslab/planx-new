@@ -22,7 +22,7 @@ import { submitFeedback } from "lib/feedback";
 import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-import { FlowSettings } from "types";
+import { FlowSettings, GovUKPayment } from "types";
 
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
@@ -36,10 +36,11 @@ interface Props {
 }
 
 const Node: React.FC<any> = (props: Props) => {
-  const [childNodesOf, resultData, hasPaid] = useStore((state) => [
+  const [childNodesOf, resultData, hasPaid, passport] = useStore((state) => [
     state.childNodesOf,
     state.resultData,
     state.hasPaid(),
+    state.passport,
   ]);
 
   const resetPreview = useStore((state) => state.resetPreview);
@@ -81,7 +82,35 @@ const Node: React.FC<any> = (props: Props) => {
         />
       );
     case TYPES.Confirmation:
-      return <Confirmation {...allProps} />;
+      const payment: GovUKPayment = passport.data.payment;
+
+      return (
+        <Confirmation
+          {...allProps}
+          details={{
+            "Planning Application Reference": payment?.reference || "N/A",
+            "Property Address": passport.info?.title || "N/A",
+            "Application type":
+              "Application for a Certificate of Lawfulness - Proposed",
+            Submitted: payment?.created_date
+              ? new Date(payment.created_date).toLocaleDateString("en-gb", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })
+              : "N/A",
+            "GOV.UK Payment reference": payment?.payment_id || "N/A",
+          }}
+          color={{ text: "#000", background: "rgba(1, 99, 96, 0.1)" }}
+          handleSubmit={(feedback?: string) => {
+            feedback?.length &&
+              submitFeedback(feedback, {
+                reason: "Confirmation",
+              });
+            props.handleSubmit([props.node.id]);
+          }}
+        />
+      );
     case TYPES.Content:
       return <Content {...allProps} />;
 

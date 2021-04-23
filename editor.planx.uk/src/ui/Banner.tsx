@@ -15,10 +15,16 @@ const useClasses = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     color: "currentColor",
   },
+  icon: {
+    marginBottom: theme.spacing(2),
+    height: theme.spacing(6),
+    width: theme.spacing(6),
+  },
 }));
 
 function Banner(props: {
   heading: string;
+  Icon?: any;
   color?: { background: string; text: string };
   children?: React.ReactNode;
 }) {
@@ -36,6 +42,7 @@ function Banner(props: {
       py={6}
     >
       <Container maxWidth="md">
+        {props.Icon && <props.Icon className={classes.icon} />}
         <Typography variant="h1">{props.heading}</Typography>
         {props.children}
       </Container>
