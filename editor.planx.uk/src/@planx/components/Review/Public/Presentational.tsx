@@ -53,6 +53,7 @@ const components: {
   [TYPES.Calculate]: undefined,
   [TYPES.Checklist]: Checklist,
   [TYPES.Content]: undefined,
+  [TYPES.Confirmation]: undefined,
   [TYPES.DateInput]: Debug,
   [TYPES.DrawBoundary]: Debug,
   [TYPES.ExternalPortal]: undefined,

@@ -25,4 +25,5 @@ export enum TYPES {
   Notify = 625,
   Send = 650,
   Calculate = 700,
+  Confirmation = 725,
 }

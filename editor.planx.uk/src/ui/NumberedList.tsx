@@ -1,0 +1,173 @@
+import Box from "@material-ui/core/Box";
+import ButtonBase from "@material-ui/core/ButtonBase";
+import Collapse from "@material-ui/core/Collapse";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import classNames from "classnames";
+import React from "react";
+import Caret from "ui/icons/Caret";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+
+const useClasses = makeStyles((theme) => ({
+  panel: {
+    backgroundColor: theme.palette.background.default,
+    position: "relative",
+  },
+  stepIndicator: {
+    position: "absolute",
+    width: theme.spacing(7),
+    height: "100%",
+    textAlign: "center",
+    top: 0,
+    left: 0,
+    paddingTop: theme.spacing(1.25),
+    overflow: "hidden",
+    [theme.breakpoints.up("sm")]: {
+      paddingTop: theme.spacing(1.25),
+      width: theme.spacing(13.5),
+      textAlign: "left",
+    },
+    "&::after": {
+      content: `''`,
+      display: "block",
+      width: 1,
+      backgroundColor: "currentColor",
+      height: "100%",
+      top: 0,
+      position: "absolute",
+      left: "48%",
+      [theme.breakpoints.up("sm")]: {
+        left: "16%",
+      },
+    },
+    "& > i": {
+      width: theme.spacing(4.5),
+      height: theme.spacing(4.5),
+      display: "inline-block",
+      lineHeight: `${theme.spacing(4.5)}px`,
+      border: `1px solid ${theme.palette.text.primary}`,
+      backgroundColor: theme.palette.background.default,
+      borderRadius: "50%",
+      position: "relative",
+      fontStyle: "normal",
+      textAlign: "center",
+      zIndex: 10,
+      [theme.breakpoints.up("sm")]: {
+        lineHeight: `${theme.spacing(4.5)}px`,
+        width: theme.spacing(4.5),
+        height: theme.spacing(4.5),
+      },
+    },
+  },
+  isFirst: {
+    "&::after": {
+      top: theme.spacing(4.5),
+    },
+  },
+  isLast: {
+    "&::after": {
+      height: theme.spacing(4.5),
+    },
+  },
+  summary: {
+    fontWeight: 700,
+    minHeight: theme.spacing(6),
+    padding: theme.spacing(2, 0),
+    paddingLeft: theme.spacing(7),
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    [theme.breakpoints.up("sm")]: {},
+  },
+  content: {
+    backgroundColor: theme.palette.background.default,
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
+    paddingLeft: theme.spacing(7),
+    paddingRight: theme.spacing(2),
+    lineHeight: 1.6,
+    display: "block",
+    [theme.breakpoints.up("sm")]: {
+      paddingLeft: theme.spacing(13.5),
+      paddingRight: theme.spacing(13.5),
+    },
+    "& p": {
+      marginTop: 0,
+      "&:last-child": {
+        marginBottom: 0,
+      },
+    },
+    "& a": {
+      color: "#22589e",
+      fontWeight: 400,
+      textDecoration: "underline",
+      "&:hover": {
+        textDecoration: "none",
+      },
+    },
+  },
+  onFocus: {
+    outline: `2px solid ${theme.palette.secondary.light}`,
+    zIndex: 10,
+  },
+}));
+
+interface Item {
+  title: string;
+  description: string;
+}
+
+function ListItem(props: Item & { index: number; isLast: boolean }) {
+  const [expanded, setExpanded] = React.useState(false);
+  const handleChange = () => {
+    setExpanded(!expanded);
+  };
+  const classes = useClasses();
+  return (
+    <Box className={classes.panel}>
+      <div
+        className={classNames(
+          classes.stepIndicator,
+          props.index === 0 && classes.isFirst,
+          props.isLast && classes.isLast
+        )}
+      >
+        <i>{props.index + 1}</i>
+      </div>
+      <ButtonBase
+        className={classes.summary}
+        classes={{ focusVisible: classes.onFocus }}
+        onClick={handleChange}
+      >
+        <Box>
+          <Typography variant="h5">{props.title}</Typography>
+        </Box>
+        <Caret expanded={expanded} />
+      </ButtonBase>
+      {props.description && (
+        <Collapse in={expanded}>
+          <Box className={classes.content}>
+            <ReactMarkdownOrHtml source={props.description} />
+          </Box>
+        </Collapse>
+      )}
+    </Box>
+  );
+}
+
+function NumberedList(props: { items: Item[] }) {
+  return (
+    <Box>
+      {props.items.map((item, i) => (
+        <ListItem
+          {...item}
+          key={i}
+          index={i}
+          isLast={i === props.items.length - 1}
+        />
+      ))}
+    </Box>
+  );
+}
+
+export default NumberedList;
