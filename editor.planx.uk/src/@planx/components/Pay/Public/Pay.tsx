@@ -18,7 +18,6 @@ import { useAsync } from "react-use";
 import type { GovUKPayment } from "types";
 import Input from "ui/Input";
 import type { GovUKCreatePaymentPayload, Pay } from "../model";
-import { toGBP } from "../model";
 
 export default Component;
 
@@ -86,27 +85,18 @@ interface Props extends Pay {
 }
 
 function Component(props: Props) {
-  const [id, govUkPayment, setGovUkPayment, passport] = useStore((state) => [
-    state.id,
-    state.govUkPayment,
-    state.setGovUkPayment,
+  const [passport, id] = useStore((state) => [
     state.computePassport(),
+    state.id,
   ]);
   const [state, setState] = React.useState<"init" | "summary" | "paid">(
-    govUkPayment ? "paid" : "init"
+    passport.data?.payment ? "paid" : "init"
   );
   const [otherPayments, setOtherPayments] = React.useState({});
   const Route = OPTIONS[state]?.component;
+  const govUkPayment: GovUKPayment = passport.data?.payment?.value;
 
-  const fee = ((): number => {
-    if (govUkPayment?.amount) {
-      return govUkPayment.amount;
-    } else if (props.fn) {
-      return Number(passport?.data?.[props.fn]?.value) ?? 0;
-    } else {
-      return 0;
-    }
-  })();
+  const fee = props.fn ? Number(passport.data?.[props.fn]?.value) : 0;
 
   // TODO: When connecting this component to the flow and to the backend
   //       remember to also pass up the value of `otherPayments`
@@ -148,14 +138,10 @@ function Component(props: Props) {
     return (
       <Suspense fallback={<>Loading...</>}>
         <Paid
-          handleSubmit={() =>
-            props.handleSubmit(undefined, {
-              "application.fee.reference.govPay": govUkPayment!.payment_id,
-            })
-          }
+          handleSubmit={() => props.handleSubmit()}
           amount={fee}
-          date={govUkPayment!.created_date}
-          govUkRef={govUkPayment!.payment_id}
+          date={govUkPayment.created_date}
+          govUkRef={govUkPayment.payment_id}
           status={"Success"}
           applicationId={id}
         />
@@ -163,15 +149,14 @@ function Component(props: Props) {
     );
   }
   return (
-    <Init
-      setState={setState}
-      setOtherPayments={setOtherPayments}
-      amount={fee}
-      {...props}
-      handleSubmit={(paymentData: GovUKPayment) => {
-        setGovUkPayment(paymentData);
-      }}
-    />
+    <Card>
+      <Init
+        setState={setState}
+        setOtherPayments={setOtherPayments}
+        amount={fee}
+        {...props}
+      />
+    </Card>
   );
 }
 
@@ -200,37 +185,39 @@ function Init(props: any) {
   const [text, setText] = React.useState("");
 
   return (
-    <Card>
-      <div className={classes.root}>
-        <div className={classes.banner}>
-          <Typography variant="subtitle1" gutterBottom className="marginBottom">
-            The fee for this application is
-          </Typography>
-          <Typography variant="h1" gutterBottom className="marginBottom">
-            {toGBP(props.amount)}
-          </Typography>
-          <Typography>
-            <a href="#">How are the planning fees calculated? ↗︎</a>
-          </Typography>
-        </div>
-        <Box py={3}>
-          <DecisionButton
-            onClick={() => setPaymentFlow(true)}
-            selected={false}
-            title={"Pay with Gov.UK"}
-          />
-        </Box>
+    <div className={classes.root}>
+      <div className={classes.banner}>
+        <Typography variant="subtitle1" gutterBottom className="marginBottom">
+          The fee for this application is
+        </Typography>
+        <Typography variant="h1" gutterBottom className="marginBottom">
+          {new Intl.NumberFormat("en-GB", {
+            style: "currency",
+            currency: "GBP",
+          }).format(props.amount)}
+        </Typography>
+        <Typography>
+          <a href="#">How are the planning fees calculated? ↗︎</a>
+        </Typography>
+      </div>
+      <Box py={3}>
+        <DecisionButton
+          onClick={() => setPaymentFlow(true)}
+          selected={false}
+          title={"Pay with Gov.UK"}
+        />
+      </Box>
 
-        {paymentFlow && (
-          <GovUkTemporaryComponent
-            handleSubmit={props.handleSubmit}
-            url={props.url}
-            amount={props.amount}
-            flowId={id}
-          />
-        )}
+      {paymentFlow && (
+        <GovUkTemporaryComponent
+          handleSubmit={props.handleSubmit}
+          url={props.url}
+          amount={props.amount}
+          flowId={id}
+        />
+      )}
 
-        {/* <Question
+      {/* <Question
         text="How would you like to pay?"
         responses={Object.entries(OPTIONS).map(([key, value]) => ({
           id: key,
@@ -248,75 +235,73 @@ function Init(props: any) {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       /> */}
-        <p style={{ textAlign: "right", cursor: "pointer" }}>
-          <a style={{ color: "#000A" }} onClick={() => setIsOpen((x) => !x)}>
-            Tell us other ways you'd like to pay in the future
-          </a>
-        </p>
-        <Drawer
-          variant="persistent"
-          anchor="right"
-          open={isOpen}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-        >
-          <div>
-            <IconButton
-              onClick={() => setIsOpen(false)}
-              aria-label="Close Panel"
-            >
-              <CloseIcon />
-            </IconButton>
-            <p>
-              What other types of payment would you like this service to accept
-              in the future:
-            </p>
-            <FormGroup row>
-              {OTHER_OPTIONS.map((p, i) => (
-                <FormControlLabel
-                  key={i}
-                  control={<Checkbox name={p.name} />}
-                  label={p.label}
-                  onChange={(event: React.ChangeEvent<{}>) => {
-                    if (event.target) {
-                      setCheckboxes((acc) => ({
-                        ...acc,
-                        [p.name]: (event.target as any).checked,
-                      }));
-                    }
-                  }}
-                />
-              ))}
-            </FormGroup>
-            <p>Why would you prefer to use this form of payment?</p>
+      <p style={{ textAlign: "right", cursor: "pointer" }}>
+        <a style={{ color: "#000A" }} onClick={() => setIsOpen((x) => !x)}>
+          Tell us other ways you'd like to pay in the future
+        </a>
+      </p>
+      <Drawer
+        variant="persistent"
+        anchor="right"
+        open={isOpen}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <div>
+          <IconButton onClick={() => setIsOpen(false)} aria-label="Close Panel">
+            <CloseIcon />
+          </IconButton>
+          <p>
+            What other types of payment would you like this service to accept in
+            the future:
+          </p>
+          <FormGroup row>
+            {OTHER_OPTIONS.map((p, i) => (
+              <FormControlLabel
+                key={i}
+                control={<Checkbox name={p.name} />}
+                label={p.label}
+                onChange={(event: React.ChangeEvent<{}>) => {
+                  if (event.target) {
+                    setCheckboxes((acc) => ({
+                      ...acc,
+                      [p.name]: (event.target as any).checked,
+                    }));
+                  }
+                }}
+              />
+            ))}
+          </FormGroup>
+          <p>Why would you prefer to use this form of payment?</p>
 
-            <Input
-              multiline={true}
-              rows={3}
-              style={{ width: "100%" }}
-              onChange={(ev) => {
-                setText(ev.target.value);
-              }}
-              value={text}
-            />
+          <Input
+            multiline={true}
+            rows={3}
+            style={{ width: "100%" }}
+            onChange={(ev) => {
+              setText(ev.target.value);
+            }}
+            value={text}
+          />
 
-            <p style={{ textAlign: "right" }}>
-              <ButtonBase onClick={() => setIsOpen(false)}>Save</ButtonBase>
-            </p>
-          </div>
-        </Drawer>
-      </div>
-    </Card>
+          <p style={{ textAlign: "right" }}>
+            <ButtonBase onClick={() => setIsOpen(false)}>Save</ButtonBase>
+          </p>
+        </div>
+      </Drawer>
+    </div>
   );
 }
 
 function GovUkTemporaryComponent(props: {
-  handleSubmit: any;
+  handleSubmit: Props["handleSubmit"];
   url: string;
   amount: number;
   flowId: string;
 }): JSX.Element | null {
+  const [govUrl, setGovUrl] = React.useState<string>();
+
   const params: GovUKCreatePaymentPayload = {
     amount: props.amount * 100,
     reference: props.flowId,
@@ -328,12 +313,12 @@ function GovUkTemporaryComponent(props: {
 
   useEffect(() => {
     if (!request.loading && !request.error && request.value) {
+      setGovUrl(request.value.data._links.next_url.href);
       const normalizedPayment = {
         ...request.value.data,
         amount: request.value.data.amount / 100,
       };
-      props.handleSubmit(normalizedPayment);
-      window.location.replace(request.value.data._links.next_url.href);
+      props.handleSubmit({ data: { payment: normalizedPayment } });
     }
   }, [request.loading, request.error, request.value]);
 
@@ -342,6 +327,10 @@ function GovUkTemporaryComponent(props: {
   } else if (request.error) {
     throw request.error;
   } else {
-    return null;
+    if (govUrl) {
+      window.location.replace(govUrl);
+    }
   }
+
+  return null;
 }

@@ -45,7 +45,7 @@ const Question: React.FC<IQuestion> = (props) => {
     },
     onSubmit: (values) => {
       setTimeout(
-        () => props.handleSubmit([values.selected.id]),
+        () => props.handleSubmit({ answers: [values.selected.id] }),
         theme.transitions.duration.standard
       );
     },

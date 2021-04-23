@@ -106,7 +106,7 @@ export default function Component(props: Props) {
       return Object.keys(ob).length > 0 ? ob : undefined;
     })();
 
-    props.handleSubmit?.(undefined, data);
+    props.handleSubmit?.({ data });
   }
 }
 

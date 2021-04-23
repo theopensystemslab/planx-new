@@ -27,8 +27,7 @@ import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
 
 export type handleSubmit = (
-  answers?: Store.userData["answers"],
-  data?: Store.userData["data"]
+  userData?: Pick<Store.userData, "answers" | "data"> | Event
 ) => void;
 
 interface Props {

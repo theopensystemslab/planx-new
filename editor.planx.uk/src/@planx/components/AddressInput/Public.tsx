@@ -1,6 +1,6 @@
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import { PublicProps } from "@planx/components/ui";
+import type { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
@@ -24,7 +24,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
     },
     onSubmit: (values) => {
       const data = props.fn ? { [props.fn]: values } : undefined;
-      props.handleSubmit?.(undefined, data);
+      props.handleSubmit?.({ data });
     },
     validateOnBlur: false,
     validateOnChange: false,

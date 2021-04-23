@@ -53,11 +53,9 @@ test("answers are submitted in order they were supplied", async () => {
   });
 
   // order matches the order of the options, not order they were clicked
-  expect(handleSubmit).toHaveBeenCalledWith([
-    "flat_id",
-    "house_id",
-    "spaceship_id",
-  ]);
+  expect(handleSubmit).toHaveBeenCalledWith({
+    answers: ["flat_id", "house_id", "spaceship_id"],
+  });
 });
 
 test.todo("expandable checklist");

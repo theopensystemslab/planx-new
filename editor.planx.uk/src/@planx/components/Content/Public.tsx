@@ -28,6 +28,7 @@ const ContentComponent: React.FC<Props> = (props) => {
   const classes = useClasses({
     color: props.color,
   });
+
   return (
     <Card handleSubmit={props.handleSubmit} isValid>
       <QuestionHeader

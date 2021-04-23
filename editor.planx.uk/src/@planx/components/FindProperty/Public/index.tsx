@@ -11,13 +11,13 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Card from "@planx/components/shared/Preview/Card";
 import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
 import capitalize from "lodash/capitalize";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
-import type { handleSubmit } from "pages/Preview/Node";
 import { parse, toNormalised } from "postcode";
 import React, { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
@@ -29,9 +29,7 @@ import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
 import Map from "./Map";
 
-interface Props extends FindProperty {
-  handleSubmit: handleSubmit;
-}
+type Props = PublicProps<FindProperty>;
 
 const sorter = natsort({ insensitive: true });
 
@@ -208,11 +206,10 @@ function Component(props: Props) {
 
             // ------ END PASSPORT DATA OVERRIDES ------
 
-            props.handleSubmit(
-              undefined,
-              passportData
-              // , feedback
-            );
+            props.handleSubmit?.({
+              data: passportData,
+              // feedback
+            });
 
             startSession({ passport: passportData });
           } else {

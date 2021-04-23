@@ -82,7 +82,7 @@ interface Props {
   breadcrumbs: Store.breadcrumbs;
   flow: Store.flow;
   passport: Store.passport;
-  handleSubmit: handleSubmit;
+  handleSubmit?: handleSubmit;
   changeAnswer: (id: Store.nodeId) => void;
   showChangeButton: boolean;
 }
