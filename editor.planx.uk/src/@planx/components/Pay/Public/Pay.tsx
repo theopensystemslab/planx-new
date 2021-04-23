@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   banner: {
-    background: theme.palette.primary.dark,
+    background: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     textAlign: "center",
     padding: theme.spacing(4),
