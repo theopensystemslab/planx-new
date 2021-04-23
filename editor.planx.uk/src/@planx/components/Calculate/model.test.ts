@@ -92,27 +92,6 @@ describe("evaluate", () => {
   });
 });
 
-describe.skip("toScope", () => {
-  const { toScope } = model;
-
-  test("converts passport to scope", () => {
-    const passportData = {
-      "data.field.with.dots": ["10"],
-      "another.data.field": ["5"],
-      "another.data.field.and.subfield": ["12"],
-    };
-
-    const actual = toScope(passportData);
-
-    const expected = {
-      "data.field.with.dots": 10,
-      "another.data.field": 5,
-      "another.data.field.and.subfield": 12,
-    };
-    assert.deepStrictEqual(actual, expected);
-  });
-});
-
 function isSetsEqual(a: Set<string>, b: Set<string>) {
   return a.size === b.size && [...a].every((value) => b.has(value));
 }
