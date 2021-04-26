@@ -15,10 +15,9 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { Suspense, useEffect } from "react";
 import { useAsync } from "react-use";
-import type { GovUKPayment } from "types";
 import Input from "ui/Input";
 
-import type { GovUKCreatePaymentPayload, Pay } from "../model";
+import type { GovUKCreatePaymentPayload, GovUKPayment, Pay } from "../model";
 
 export default Component;
 
