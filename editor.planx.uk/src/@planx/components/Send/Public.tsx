@@ -5,7 +5,12 @@ import { useAsync } from "react-use";
 
 import Card from "../shared/Preview/Card";
 import { PublicProps } from "../ui";
-import { bopsDictionary, fullPayload, makePayload } from "./bops";
+import {
+  bopsDictionary,
+  BOPSFullPayload,
+  fullPayload,
+  makePayload,
+} from "./bops";
 import type { Send } from "./model";
 
 export type Props = PublicProps<Send>;
@@ -70,10 +75,8 @@ const SendComponent: React.FC<Props> = (props) => {
         files.forEach((file) => {
           try {
             const { filename, url } = file;
-            console.log(file);
             if (filename && url) {
               data.files = data.files || [];
-
               data.files.push({
                 filename: String(url),
                 tags: [],
@@ -105,20 +108,15 @@ const SendComponent: React.FC<Props> = (props) => {
 
     // 5. keys
 
-    const keys = Object.keys(flow);
-
     const bopsData = Object.entries(bopsDictionary).reduce(
       (acc, [bopsField, planxField]) => {
-        const id = keys.find((id) => flow[id].data?.fn === planxField);
-        if (id) {
-          const value = breadcrumbs[id]?.answers![0];
-          if (value) {
-            acc[bopsField] = value;
-          }
+        const value = passport.data?.[planxField]?.value;
+        if (value !== undefined && value !== null) {
+          acc[bopsField as keyof BOPSFullPayload] = value;
         }
         return acc;
       },
-      {} as Record<string, string>
+      {} as Partial<BOPSFullPayload>
     );
 
     // 6. questions+answers array
