@@ -10,6 +10,7 @@ import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
 import Notify from "@planx/components/Notify/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
+import type { GovUKPayment } from "@planx/components/Pay/model";
 import Pay from "@planx/components/Pay/Public";
 import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
@@ -21,7 +22,7 @@ import { TYPES } from "@planx/components/types";
 import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-import { FlowSettings, GovUKPayment } from "types";
+import type { FlowSettings } from "types";
 
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
