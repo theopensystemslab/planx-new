@@ -20,7 +20,7 @@ import type { GovUKPayment } from "types";
 import Input from "ui/Input";
 
 import type { GovUKCreatePaymentPayload, Pay } from "../model";
-import { toDecimal,toPence } from "../model";
+import { toDecimal, toPence } from "../model";
 
 export default Component;
 
@@ -67,10 +67,11 @@ interface Props extends Pay {
 }
 
 function Component(props: Props) {
-  const [id, passport, mutatePassport] = useStore((state) => [
+  const [id, passport, mutatePassport, environment] = useStore((state) => [
     state.id,
     state.passport,
     state.mutatePassport,
+    state.previewEnvironment,
   ]);
   const [state, setState] = React.useState<"init" | "paying" | "paid">(
     passport.data.payment ? "paid" : "init"
@@ -149,7 +150,9 @@ function Component(props: Props) {
         ) : (
           <Init
             amount={fee}
-            startPayment={() => setState("paying")}
+            startPayment={() =>
+              setState(environment === "standalone" ? "paying" : "paid")
+            }
             {...props}
           />
         )}

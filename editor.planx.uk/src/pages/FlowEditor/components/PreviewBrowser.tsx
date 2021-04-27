@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ExternalLink, RefreshCw, Terminal } from "react-feather";
 
 import Questions from "../../Preview/Questions";
@@ -37,9 +37,14 @@ const DebugConsole = () => {
 
 const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
-  const resetPreview = useStore((state) => state.resetPreview);
+  const [resetPreview, setPreviewEnvironment] = useStore((state) => [
+    state.resetPreview,
+    state.setPreviewEnvironment,
+  ]);
   const [key, setKey] = useState<boolean>(false);
   const classes = useStyles();
+
+  useEffect(() => setPreviewEnvironment("editor"), []);
 
   return (
     <div id="fake-browser">
@@ -64,7 +69,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
         </a>
       </header>
       <div className={classes.previewContainer}>
-        <Questions key={String(key)} isSidebar />
+        <Questions key={String(key)} />
       </div>
       {showDebugConsole && <DebugConsole />}
     </div>
