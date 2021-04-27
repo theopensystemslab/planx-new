@@ -43,7 +43,7 @@ const Node: React.FC<any> = (props: Props) => {
     state.childNodesOf,
     state.resultData,
     state.hasPaid(),
-    state.passport,
+    state.computePassport(),
   ]);
 
   const resetPreview = useStore((state) => state.resetPreview);
@@ -86,14 +86,14 @@ const Node: React.FC<any> = (props: Props) => {
         />
       );
     case TYPES.Confirmation:
-      const payment: GovUKPayment = passport.data.payment;
+      const payment: GovUKPayment | undefined = passport.data?.payment?.value;
 
       return (
         <Confirmation
           {...allProps}
           details={{
             "Planning Application Reference": payment?.reference || "N/A",
-            "Property Address": passport.info?.title || "N/A",
+            "Property Address": passport.data?._address?.value?.title || "N/A",
             "Application type":
               "Application for a Certificate of Lawfulness - Proposed",
             Submitted: payment?.created_date
@@ -107,11 +107,11 @@ const Node: React.FC<any> = (props: Props) => {
           }}
           color={{ text: "#000", background: "rgba(1, 99, 96, 0.1)" }}
           handleSubmit={(feedback?: string) => {
-            feedback?.length &&
-              submitFeedback(feedback, {
-                reason: "Confirmation",
-              });
-            props.handleSubmit([props.node.id]);
+            // feedback?.length &&
+            //   submitFeedback(feedback, {
+            //     reason: "Confirmation",
+            //   });
+            props.handleSubmit();
           }}
         />
       );
