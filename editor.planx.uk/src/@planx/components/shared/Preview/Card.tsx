@@ -3,7 +3,6 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Fade from "@material-ui/core/Fade";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 interface Props {
@@ -35,8 +34,6 @@ const Card: React.FC<Props> = ({
   const classes = useStyles();
   const theme = useTheme();
 
-  const [upcomingCardIds] = useStore((state) => [state.upcomingCardIds]);
-
   return (
     <Fade in={true} timeout={theme.transitions.duration.enteringScreen}>
       <Container maxWidth="md">
@@ -44,13 +41,13 @@ const Card: React.FC<Props> = ({
           className={classes.container}
           bgcolor="background.default"
           py={{ xs: 2, md: 4 }}
-          px={{ xs: 2, md: 0 }}
+          px={{ xs: 2, md: 5 }}
           mb={4}
           {...props}
         >
           {children}
 
-          {handleSubmit && upcomingCardIds().length > 1 && (
+          {handleSubmit && (
             <Button
               variant="contained"
               color="primary"
