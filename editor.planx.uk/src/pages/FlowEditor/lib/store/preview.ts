@@ -105,7 +105,7 @@ export const previewStore = (
     const { breadcrumbs, flow } = get();
 
     return Object.keys(breadcrumbs).some(
-      (crumb) => flow[crumb].type === TYPES.Pay
+      (crumb) => flow[crumb]?.type === TYPES.Pay
     );
   },
 
