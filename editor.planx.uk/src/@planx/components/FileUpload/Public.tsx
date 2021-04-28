@@ -16,6 +16,8 @@ import { useDropzone } from "react-dropzone";
 import ErrorWrapper from "ui/ErrorWrapper";
 import { array } from "yup";
 
+import { makeData } from "../shared/utils";
+
 interface Props extends MoreInformation {
   id?: string;
   title?: string;
@@ -135,20 +137,19 @@ const FileUpload: React.FC<Props> = (props) => {
   const [slots, setSlots] = useState([]);
   const [validationError, setValidationError] = useState<string>();
 
-  const passportKey: string = props.fn ?? String(props.id ?? Date.now());
-
   const handleSubmit = () => {
     slotsSchema
       .validate(slots)
       .then(() => {
-        props.handleSubmit({
-          data: {
-            [passportKey]: slots.map((slot: any) => ({
+        props.handleSubmit(
+          makeData(
+            props,
+            slots.map((slot: any) => ({
               url: slot.url,
               filename: slot.file.path,
-            })),
-          },
-        });
+            }))
+          )
+        );
       })
       .catch((err) => {
         setValidationError(err.message);

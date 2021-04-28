@@ -2,12 +2,12 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
-import { Store } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import { object } from "yup";
 
+import { makeData } from "../shared/utils";
 import type { TextInput, UserData } from "./model";
 import { userDataSchema } from "./model";
 
@@ -19,15 +19,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
       text: "",
     },
     onSubmit: (values) => {
-      const userData: Store.userData = {};
-
-      if (props.fn) {
-        userData.data = {
-          [props.fn]: values,
-        };
-      }
-
-      props.handleSubmit?.(userData);
+      props.handleSubmit?.(makeData(props, values));
     },
     validateOnBlur: false,
     validateOnChange: false,

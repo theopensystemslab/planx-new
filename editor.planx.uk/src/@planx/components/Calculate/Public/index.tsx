@@ -1,3 +1,4 @@
+import { makeData } from "@planx/components/shared/utils";
 import type { PublicProps } from "@planx/components/ui";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
@@ -20,11 +21,9 @@ export default function Component(props: Props) {
   );
 
   useEffect(() => {
-    props.handleSubmit?.({
-      data: {
-        [props.output]: evaluate(props.formula, data, props.defaults),
-      },
-    });
+    props.handleSubmit?.(
+      makeData(props, evaluate(props.formula, data, props.defaults))
+    );
   }, []);
 
   return <p>Calculating…</p>;

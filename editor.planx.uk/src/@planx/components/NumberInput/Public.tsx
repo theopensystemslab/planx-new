@@ -2,12 +2,14 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
+import isNil from "lodash/isNil";
 import React, { useEffect, useRef } from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import InputRowLabel from "ui/InputRowLabel";
 import { object, string } from "yup";
 
+import { makeData } from "../shared/utils";
 import type { NumberInput, UserData } from "./model";
 import { parseNumber } from "./model";
 
@@ -21,9 +23,8 @@ export default function NumberInputComponent(props: Props): FCReturn {
     onSubmit: (values) => {
       if (values.value && props.handleSubmit) {
         const parsed = parseNumber(values.value);
-        if (parsed !== null) {
-          const data = props.fn ? { [props.fn]: [String(parsed)] } : undefined;
-          props.handleSubmit({ data });
+        if (!isNil(parsed)) {
+          props.handleSubmit(makeData(props, parsed));
         }
       }
     },

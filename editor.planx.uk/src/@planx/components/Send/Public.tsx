@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 
 import Card from "../shared/Preview/Card";
+import { makeData } from "../shared/utils";
 import { PublicProps } from "../ui";
 import {
   bopsDictionary,
@@ -31,11 +32,9 @@ const SendComponent: React.FC<Props> = (props) => {
       request.value &&
       props.handleSubmit
     ) {
-      props.handleSubmit({
-        data: {
-          bopsId: request.value.data.application.id,
-        },
-      });
+      props.handleSubmit(
+        makeData(props, request.value.data.application.id, "bopsId")
+      );
     }
   }, [request.loading, request.error, request.value]);
 

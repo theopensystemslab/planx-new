@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import DecisionButton from "@planx/components/shared/Buttons/DecisionButton";
 import Card from "@planx/components/shared/Preview/Card";
+import { makeData } from "@planx/components/shared/utils";
 import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { PreviewStore } from "pages/FlowEditor/lib/store/preview";
@@ -149,11 +150,13 @@ function Component(props: Props) {
       <Suspense fallback={<>Loading...</>}>
         <Paid
           handleSubmit={() =>
-            props.handleSubmit({
-              data: {
-                "application.fee.reference.govPay": govUkPayment!.payment_id,
-              },
-            })
+            props.handleSubmit(
+              makeData(
+                props,
+                govUkPayment!.payment_id,
+                "application.fee.reference.govPay"
+              )
+            )
           }
           amount={fee}
           date={govUkPayment!.created_date}

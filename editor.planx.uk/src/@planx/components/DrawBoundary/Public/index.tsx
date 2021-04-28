@@ -4,6 +4,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import { makeData } from "@planx/components/shared/utils";
 import type { PublicProps } from "@planx/components/ui";
 import turfArea from "@turf/area";
 import type { Geometry } from "@turf/helpers";
@@ -106,7 +107,7 @@ export default function Component(props: Props) {
       return Object.keys(ob).length > 0 ? ob : undefined;
     })();
 
-    props.handleSubmit?.({ data });
+    props.handleSubmit?.(makeData(props, data));
   }
 }
 

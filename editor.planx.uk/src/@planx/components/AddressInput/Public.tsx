@@ -8,6 +8,7 @@ import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
 
+import { makeData } from "../shared/utils";
 import type { AddressInput, UserData } from "./model";
 import { userDataSchema } from "./model";
 
@@ -23,8 +24,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
       postcode: "",
     },
     onSubmit: (values) => {
-      const data = props.fn ? { [props.fn]: values } : undefined;
-      props.handleSubmit?.({ data });
+      props.handleSubmit?.(makeData(props, values));
     },
     validateOnBlur: false,
     validateOnChange: false,

@@ -25,5 +25,5 @@ test("renders correctly", async () => {
     await userEvent.click(screen.getByText("Continue"));
   });
 
-  expect(handleSubmit).toHaveBeenCalledWith({ data: { num: ["3"] } });
+  expect(handleSubmit).toHaveBeenCalledWith({ data: { num: 3 } });
 });
