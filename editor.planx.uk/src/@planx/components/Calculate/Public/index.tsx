@@ -9,20 +9,15 @@ import { evaluate } from "../model";
 export type Props = PublicProps<Calculate>;
 
 export default function Component(props: Props) {
-  // convert passport.data = {[key]: {value: data}} into data = {[key]: data}
-  const data = useStore((state) =>
-    Object.entries(state.computePassport().data || {}).reduce(
-      (acc, [key, { value }]) => ({
-        ...acc,
-        [key]: value,
-      }),
-      {}
-    )
-  );
+  const passport = useStore((state) => state.computePassport().data);
 
   useEffect(() => {
     props.handleSubmit?.(
-      makeData(props, evaluate(props.formula, data, props.defaults))
+      makeData(
+        props,
+        evaluate(props.formula, passport, props.defaults),
+        props.output
+      )
     );
   }, []);
 

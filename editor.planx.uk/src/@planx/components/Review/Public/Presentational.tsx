@@ -162,7 +162,7 @@ function Question(props: ComponentProps) {
 }
 
 function FindProperty(props: ComponentProps) {
-  const { postcode, street, pao, town } = props.passport.data?._address.value;
+  const { postcode, street, pao, town } = props.passport.data?._address;
   return (
     <>
       <div>Property</div>

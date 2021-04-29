@@ -52,7 +52,7 @@ const SendComponent: React.FC<Props> = (props) => {
 
     // 1. address
 
-    const address = passport.data?._address?.value;
+    const address = passport.data?._address;
     if (address) {
       data.site.uprn = String(address.uprn);
 
@@ -68,20 +68,16 @@ const SendComponent: React.FC<Props> = (props) => {
 
     // 2. files
 
-    Object.values(breadcrumbs)
-      .map(({ data = {} }) => Object.values(data))
-      .forEach((files) => {
-        files.forEach((file) => {
+    Object.entries(passport.data || {})
+      .filter(([, v]: any) => v?.[0]?.url)
+      .forEach(([key, arr]) => {
+        (arr as any[]).forEach(({ url }) => {
           try {
-            const { filename, url } = file;
-            if (filename && url) {
-              data.files = data.files || [];
-              data.files.push({
-                filename: String(url),
-                tags: [],
-                // TODO: replace tags with passport field
-              });
-            }
+            data.files = data.files || [];
+            data.files.push({
+              filename: url,
+              tags: [key],
+            });
           } catch (err) {}
         });
       });
@@ -89,7 +85,7 @@ const SendComponent: React.FC<Props> = (props) => {
     // 3. constraints
 
     data.constraints = (
-      passport.data?.["property.constraints.planning"]?.value || []
+      passport.data?.["property.constraints.planning"] || []
     ).reduce((acc: Record<string, boolean>, curr: string) => {
       // TODO: calculate application_type and payment_reference
       acc[curr] = true;
@@ -98,10 +94,7 @@ const SendComponent: React.FC<Props> = (props) => {
 
     // 4. work status
 
-    if (
-      passport?.data?.["property.constraints.planning"]?.value ===
-      "ldc.existing"
-    ) {
+    if (passport?.data?.["property.constraints.planning"] === "ldc.existing") {
       data.work_status = "existing";
     }
 
@@ -109,7 +102,7 @@ const SendComponent: React.FC<Props> = (props) => {
 
     const bopsData = Object.entries(bopsDictionary).reduce(
       (acc, [bopsField, planxField]) => {
-        const value = passport.data?.[planxField]?.value;
+        const value = passport.data?.[planxField];
         if (value !== undefined && value !== null) {
           acc[bopsField as keyof BOPSFullPayload] = value;
         }
@@ -123,7 +116,7 @@ const SendComponent: React.FC<Props> = (props) => {
     data.proposal_details = makePayload(flow, breadcrumbs);
 
     const paymentReference =
-      passport?.data?.["application.fee.reference.govPay"]?.value;
+      passport?.data?.["application.fee.reference.govPay"];
 
     return {
       ...data,

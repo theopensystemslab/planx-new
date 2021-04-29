@@ -11,7 +11,6 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Card from "@planx/components/shared/Preview/Card";
 import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import { makeData } from "@planx/components/shared/utils";
 import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
@@ -207,7 +206,9 @@ function Component(props: Props) {
 
             // ------ END PASSPORT DATA OVERRIDES ------
 
-            props.handleSubmit?.(makeData(props, passportData));
+            props.handleSubmit?.({
+              data: passportData,
+            });
 
             startSession({ passport: passportData });
           } else {

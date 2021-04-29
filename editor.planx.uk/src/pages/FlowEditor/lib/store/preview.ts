@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
-import { GovUKPayment } from "@planx/components/Pay/model";
 import { TYPES } from "@planx/components/types";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { client } from "lib/graphql";
@@ -10,7 +9,7 @@ import isNil from "lodash/isNil";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
 import pgarray from "pg-array";
-import type { Flag } from "types";
+import type { Flag, GovUKPayment } from "types";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
@@ -170,7 +169,7 @@ export const previewStore = (
                 []
               );
 
-            passportData[key] = combined;
+            passportData[key] = uniq(combined);
           }
         }
 

@@ -103,7 +103,7 @@ function Component(props: Props) {
     if (govUkPayment?.amount) {
       return govUkPayment.amount;
     } else if (props.fn) {
-      return Number(passport?.data?.[props.fn]?.value) ?? 0;
+      return Number(passport?.data?.[props.fn]) ?? 0;
     } else {
       return 0;
     }

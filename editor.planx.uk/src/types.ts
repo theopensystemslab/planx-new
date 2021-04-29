@@ -62,3 +62,42 @@ export interface Node {
     policyRef?: string;
   };
 }
+
+// https://docs.payments.service.gov.uk/making_payments/#receiving-the-api-response
+export interface GovUKPayment {
+  amount: number;
+  reference: string;
+  state: {
+    // https://docs.payments.service.gov.uk/api_reference/#status-and-finished
+    status:
+      | "created"
+      | "started"
+      | "submitted"
+      | "capturable"
+      | "success"
+      | "failed"
+      | "cancelled"
+      | "error";
+    finished: boolean;
+  };
+  payment_id: string;
+  created_date: string;
+  _links: {
+    self: {
+      href: string;
+      method: string;
+    };
+    next_url: {
+      href: string;
+      method: string;
+    };
+    next_url_post: {
+      type: string;
+      params: {
+        chargeTokenId: string;
+      };
+      href: string;
+      method: string;
+    };
+  };
+}
