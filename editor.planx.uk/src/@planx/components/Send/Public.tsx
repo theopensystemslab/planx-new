@@ -76,7 +76,7 @@ const SendComponent: React.FC<Props> = (props) => {
             data.files = data.files || [];
             data.files.push({
               filename: url,
-              tags: [key],
+              tags: [], // should be [key], but BOPS will reject unless it's a specific string
             });
           } catch (err) {}
         });
