@@ -236,8 +236,11 @@ app.use("/bops/:localAuthority", (req, res) => {
 
         if (buffer) {
           try {
-            const unzipped = zlib.gunzipSync(buffer).toString();
-            bopsResponse = JSON.parse(unzipped);
+            const responseString =
+              proxyRes.headers["content-encoding"] === "gzip"
+                ? zlib.gunzipSync(buffer).toString()
+                : buffer.toString();
+            bopsResponse = JSON.parse(responseString);
           } catch (e) {
             console.error(e);
           }
