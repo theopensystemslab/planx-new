@@ -5,6 +5,7 @@ import { sortIdsDepthFirst } from "@planx/graph";
 import { client } from "lib/graphql";
 import difference from "lodash/difference";
 import flatten from "lodash/flatten";
+import isNil from "lodash/isNil";
 import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import type { Flag } from "types";
@@ -611,9 +612,10 @@ export const previewStore = (
 
             if (responsesThatCanBeAutoAnswered.length === 0) {
               const _responses = (responses || []).filter(
-                (r) => !knownNotVals[fn]?.includes(r.data.val)
+                (r) => !knownNotVals[fn]?.includes(r.data?.val)
               );
-              if (_responses.length === 1) {
+
+              if (_responses.length === 1 && isNil(_responses[0].data?.val)) {
                 responsesThatCanBeAutoAnswered = _responses;
               } else if (
                 !passport.data[fn] ||
