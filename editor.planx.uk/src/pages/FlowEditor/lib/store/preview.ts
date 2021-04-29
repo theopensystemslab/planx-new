@@ -12,8 +12,9 @@ import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import type { Flag } from "types";
 import type { GetState, SetState } from "zustand/vanilla";
-import type { Store } from ".";
+
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
+import type { Store } from ".";
 import type { SharedStore } from "./shared";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
