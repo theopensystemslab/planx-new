@@ -6,13 +6,33 @@ export const validateEmail = (email: string) => {
   return regex.test(email);
 };
 
+const isEmpty = (x: any) =>
+  isNil(x) ||
+  (Array.isArray(x) && x.length === 0) ||
+  (typeof x === "string" && x.trim() === "") ||
+  (typeof x === "object" && Object.keys(x).length === 0);
+
 const fnOrDefaultPassportKey = (props: any) =>
   String(props.fn ?? props.id ?? Date.now());
 
-export const makeData = (props: any, data: any, hardCodedKey?: string) => {
-  if (isNil(data)) return {};
+/**
+ * Helper method to return a value wrapped inside an object
+ * that has data as the key
+ *
+ * { data: { [hardCodedKey || (props.fn|props.id|timestamp)]: value } }
+ *
+ * @param {*} props - object that should contain a value for .fn or .id
+ * @param {*} value - the value to be assigned to the inner key/value pair
+ * @param {string=} overwriteKey - if specified, this will be used as the key
+ */
+export const makeData = <T>(
+  props: any,
+  value: T,
+  overwriteKey?: string
+): {} | { data: Record<string, T> } => {
+  if (isEmpty(value)) return {};
   else
     return {
-      data: { [hardCodedKey ?? fnOrDefaultPassportKey(props)]: data },
+      data: { [overwriteKey ?? fnOrDefaultPassportKey(props)]: value },
     };
 };
