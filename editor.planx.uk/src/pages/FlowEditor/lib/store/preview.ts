@@ -155,7 +155,7 @@ export const previewStore = (
             //   v: acc.data?.[key]?.value,
             // });
 
-            const existingValue = acc.data?.[key]?.value ?? [];
+            const existingValue = acc.data?.[key] ?? [];
 
             const combined = existingValue
               .concat(passportValue)
@@ -169,7 +169,7 @@ export const previewStore = (
                 []
               );
 
-            passportData[key] = { value: combined };
+            passportData[key] = combined;
           }
         }
 
@@ -177,7 +177,7 @@ export const previewStore = (
 
         const responseData = Object.entries(data).reduce(
           (_acc, [id, value]) => {
-            _acc![id] = { value };
+            _acc![id] = value;
             return _acc;
           },
           {} as Store.passport["data"]
@@ -487,9 +487,7 @@ export const previewStore = (
 
           let passportValues = (() => {
             try {
-              return fn === "flag"
-                ? globalFlag
-                : passport.data?.[fn]?.value?.sort();
+              return fn === "flag" ? globalFlag : passport.data?.[fn]?.sort();
             } catch (err) {
               return [];
             }
@@ -557,7 +555,7 @@ export const previewStore = (
                 responsesThatCanBeAutoAnswered = _responses;
               } else if (
                 !passport.data?.[fn] ||
-                passport.data?.[fn].value.length > 0
+                passport.data?.[fn].length > 0
               ) {
                 responsesThatCanBeAutoAnswered = (responses || []).filter(
                   (r) => !r.data?.val

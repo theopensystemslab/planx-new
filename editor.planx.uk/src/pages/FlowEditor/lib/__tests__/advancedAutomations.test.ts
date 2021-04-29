@@ -1,10 +1,10 @@
 import { TYPES } from "@planx/components/types";
 
-import { vanillaStore } from "../store";
+import { Store, vanillaStore } from "../store";
 
 const { getState, setState } = vanillaStore;
 
-const flow = {
+const flow: Store.flow = {
   _root: {
     edges: [
       "Imks7j68BD",

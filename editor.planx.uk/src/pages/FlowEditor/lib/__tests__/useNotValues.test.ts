@@ -1,8 +1,8 @@
-import { vanillaStore } from "../store";
+import { Store, vanillaStore } from "../store";
 
 // flow preview: https://i.imgur.com/nCov5CE.png
 
-const flow = {
+const flow: Store.flow = {
   _root: {
     edges: ["NS7QFc7Cjc", "3cNtq1pLmt", "eTBHJsbJKc"],
   },

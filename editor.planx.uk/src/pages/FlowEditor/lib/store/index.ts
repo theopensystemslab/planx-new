@@ -26,12 +26,7 @@ export declare namespace Store {
     edges?: nodeId[];
   };
   export interface passport {
-    data?: Record<
-      string,
-      {
-        value: any;
-      }
-    >;
+    data?: Record<string, any>;
   }
 }
 

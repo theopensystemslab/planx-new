@@ -1,10 +1,10 @@
 import { TYPES } from "@planx/components/types";
 
-import { vanillaStore } from "../store";
+import { Store, vanillaStore } from "../store";
 
 const { getState, setState } = vanillaStore;
 
-const flow = {
+const flow: Store.flow = {
   _root: {
     edges: ["whatisit"],
   },
@@ -60,7 +60,7 @@ describe("starting a flow with no initial data", () => {
   describe("after visiting whatisit->food", () => {
     it("collected the correct passport data", () => {
       expect(getState().computePassport()).toEqual({
-        data: { item: { value: ["food"] } },
+        data: { item: ["food"] },
       });
     });
 
@@ -73,7 +73,7 @@ describe("starting a flow with no initial data", () => {
 
       it("overwrites 'food' with 'food.fruit' (more granular data)", () => {
         expect(getState().computePassport()).toEqual({
-          data: { item: { value: ["food.fruit"] } },
+          data: { item: ["food.fruit"] },
         });
       });
 
@@ -81,7 +81,7 @@ describe("starting a flow with no initial data", () => {
         getState().record("whichfood");
         expect(getState().upcomingCardIds()).toEqual(["whichfood"]);
         expect(getState().computePassport()).toEqual({
-          data: { item: { value: ["food"] } },
+          data: { item: ["food"] },
         });
       });
     });
