@@ -39,7 +39,7 @@ describe("sending an application to BOPS", () => {
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
-          application: { bopsResponse: { application: "0000123" } },
+          application: { id: 22, bopsResponse: { application: "0000123" } },
         });
       });
   });

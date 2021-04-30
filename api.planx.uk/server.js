@@ -9,7 +9,10 @@ const { Server } = require("http");
 const passport = require("passport");
 const { sign } = require("jsonwebtoken");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const { createProxyMiddleware } = require("http-proxy-middleware");
+const {
+  createProxyMiddleware,
+  responseInterceptor,
+} = require("http-proxy-middleware");
 const zlib = require("zlib");
 
 const { signS3Upload } = require("./s3");
@@ -222,74 +225,53 @@ app.use("/bops/:localAuthority", (req, res) => {
       proxyReq.write(Buffer.concat(reqChunks));
       proxyReq.end();
     },
-    onProxyRes: async (proxyRes, req, res) => {
-      // Capture & decode the response from BOPS
-      let responseChunks = [],
-        bopsResponse;
-      proxyRes.on("data", (data) => {
-        responseChunks.push(data);
-      });
+    onProxyRes: responseInterceptor(
+      async (responseBuffer, proxyRes, req, res) => {
+        const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
 
-      // Create & store application
-      proxyRes.on("end", async () => {
-        const buffer = Buffer.concat(responseChunks);
-
-        if (buffer) {
-          try {
-            const responseString =
-              proxyRes.headers["content-encoding"] === "gzip"
-                ? zlib.gunzipSync(buffer).toString()
-                : buffer.toString();
-            bopsResponse = JSON.parse(responseString);
-          } catch (e) {
-            console.error(e);
-          }
-        }
-
-        if (bopsResponse && typeof bopsResponse === "object") {
-          const applicationId = await client.request(
-            `
-              mutation CreateApplication(
-                $bops_id: String = "",
-                $destination_url: String = "",
-                $request: jsonb = "",
-                $req_headers: jsonb = "",
-                $response: jsonb = "",
-                $response_headers: jsonb = "",
-                $session_id: String = "",
-              ) {
-                insert_bops_applications_one(object: {
-                  bops_id: $bops_id,
-                  destination_url: $destination_url,
-                  request: $request,
-                  req_headers: $req_headers,
-                  response: $response,
-                  response_headers: $response_headers,
-                  session_id: $session_id,
-                }) {
-                  id
-                }
+        const applicationId = await client.request(
+          `
+            mutation CreateApplication(
+              $bops_id: String = "",
+              $destination_url: String = "",
+              $request: jsonb = "",
+              $req_headers: jsonb = "",
+              $response: jsonb = "",
+              $response_headers: jsonb = "",
+              $session_id: String = "",
+            ) {
+              insert_bops_applications_one(object: {
+                bops_id: $bops_id,
+                destination_url: $destination_url,
+                request: $request,
+                req_headers: $req_headers,
+                response: $response,
+                response_headers: $response_headers,
+                session_id: $session_id,
+              }) {
+                id
               }
-            `,
-            {
-              bops_id: bopsResponse.id,
-              destination_url: target,
-              request: reqBody,
-              req_headers: req.headers,
-              response: bopsResponse,
-              response_headers: proxyRes.headers,
-              session_id: reqBody.sessionId,
-            },
-          );
-          res.send({
-            application: {
-              ...applicationId.insert_bops_applications_one,
-              bopsResponse,
-            },
-          });
-        }
-      });
-    },
+            }
+          `,
+          {
+            bops_id: bopsResponse.id,
+            destination_url: target,
+            request: reqBody,
+            req_headers: req.headers,
+            response: bopsResponse,
+            response_headers: proxyRes.headers,
+            session_id: reqBody.sessionId,
+          },
+        );
+
+        return JSON.stringify({
+          application: {
+            ...applicationId.insert_bops_applications_one,
+            bopsResponse,
+          },
+        });
+      },
+    ),
   })(req, res);
 });
 
