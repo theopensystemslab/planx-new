@@ -274,9 +274,10 @@ app.use("/pay", (req, res) => {
     target: "https://publicapi.payments.service.gov.uk/v1/payments",
     changeOrigin: true,
     logLevel: "debug",
+    onProxyReq: fixRequestBody,
     headers: {
       ...req.headers,
-      Authorization: `Bearer api_test_5s0ovp4jt0ksuukkq51ieq4aav7gktth15due135bsq6mrcso1jks43jta`,
+      Authorization: `Bearer ${process.env.GOV_UK_PAY_TOKEN}`,
     },
   })(req, res);
 });
