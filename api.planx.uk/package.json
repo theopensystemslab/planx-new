@@ -27,7 +27,8 @@
   "scripts": {
     "dev": "npx node-dev index.js",
     "start": "node index.js",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",

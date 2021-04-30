@@ -32,7 +32,7 @@ describe("sending an application to BOPS", () => {
       .reply(200, mockResponse);
   });
 
-  it("works", async () => {
+  it("proxies request and returns hasura id", async () => {
     await supertest(app)
       .post("/bops/southwark")
       .send({ applicationId: 123 })
@@ -41,6 +41,45 @@ describe("sending an application to BOPS", () => {
         expect(res.body).toEqual({
           application: { id: 22, bopsResponse: { application: "0000123" } },
         });
+      });
+  });
+});
+
+describe("sending a payment to GOV.UK Pay", () => {
+  const govUKResponse = {
+    amount: 12,
+    reference: "a1234",
+    state: {
+      status: "success",
+      finished: true,
+    },
+    payment_id: "a13345",
+    created_date: "2021-04-30T20:26:34.416Z",
+    _links: {
+      next_url: {
+        href: "https://gov.uk/pay/secret_token",
+      },
+    },
+  };
+
+  beforeEach(() => {
+    nock("https://publicapi.payments.service.gov.uk/v1/payments")
+      .post("")
+      .reply(200, govUKResponse);
+  });
+
+  it("proxies request", async () => {
+    await supertest(app)
+      .post("/pay")
+      .send({
+        amount: 100,
+        reference: "12343543",
+        description: "New application",
+        return_url: "https://editor.planx.uk",
+      })
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual(govUKResponse);
       });
   });
 });
