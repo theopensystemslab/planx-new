@@ -12,8 +12,8 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const {
   createProxyMiddleware,
   responseInterceptor,
+  fixRequestBody,
 } = require("http-proxy-middleware");
-const zlib = require("zlib");
 
 const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
@@ -190,24 +190,19 @@ app.use(
   }),
 );
 
+app.use(
+  json({
+    extended: true,
+    limit: "100mb",
+  }),
+);
+
 if (!process.env.BOPS_API_TOKEN) {
   console.error("Missing BOPS_API_TOKEN");
   process.exit(1);
 }
 
-// XXX: These must be placed after CORS and before body-parser middlewares
 app.use("/bops/:localAuthority", (req, res) => {
-  // Capture request body & headers
-  let reqChunks = [],
-    reqBody = {};
-  req.on("data", (data) => {
-    reqChunks.push(data);
-  });
-  req.on("end", () => {
-    reqBody = JSON.parse(Buffer.concat(reqChunks).toString());
-  });
-
-  // Create target
   const target = `https://${req.params.localAuthority}.bops-staging.services/api/v1/planning_applications`;
 
   createProxyMiddleware({
@@ -220,11 +215,7 @@ app.use("/bops/:localAuthority", (req, res) => {
     changeOrigin: true,
     logLevel: "debug",
     selfHandleResponse: true,
-    onProxyReq: (proxyReq) => {
-      // Forward request buffer
-      proxyReq.write(Buffer.concat(reqChunks));
-      proxyReq.end();
-    },
+    onProxyReq: fixRequestBody,
     onProxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {
         const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
@@ -256,11 +247,11 @@ app.use("/bops/:localAuthority", (req, res) => {
           {
             bops_id: bopsResponse.id,
             destination_url: target,
-            request: reqBody,
+            request: req.body,
             req_headers: req.headers,
             response: bopsResponse,
             response_headers: proxyRes.headers,
-            session_id: reqBody.sessionId,
+            session_id: req.body && req.body.sessionId,
           },
         );
 
@@ -313,13 +304,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(urlencoded({ extended: true }));
-
-app.use(
-  json({
-    extended: true,
-    limit: "100mb",
-  }),
-);
 
 app.use("/auth", router);
 
