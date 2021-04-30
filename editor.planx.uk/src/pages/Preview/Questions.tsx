@@ -5,11 +5,7 @@ import { useStore } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
 import Node, { handleSubmit } from "./Node";
 
-interface Props {
-  isSidebar?: Boolean;
-}
-
-const Questions = (props: Props) => {
+const Questions = () => {
   const [
     currentCard,
     previousCard,
@@ -20,6 +16,7 @@ const Questions = (props: Props) => {
     id,
     resumeSession,
     govUkPayment,
+    previewEnvironment,
   ] = useStore((state) => [
     state.currentCard,
     state.previousCard(),
@@ -30,15 +27,17 @@ const Questions = (props: Props) => {
     state.id,
     state.resumeSession,
     state.govUkPayment,
+    state.previewEnvironment,
   ]);
 
   const node = currentCard();
   const flow = useContext(PreviewContext);
 
   const hasPaid = Boolean(passport.data?.payment);
+  const isStandalone = previewEnvironment === "standalone";
 
   useEffect(() => {
-    if (!props.isSidebar) {
+    if (isStandalone) {
       const entry = `flow:${id}`;
       try {
         const state = JSON.parse(localStorage.getItem(entry) || "");
@@ -53,7 +52,7 @@ const Questions = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    if (!props.isSidebar && id) {
+    if (isStandalone && id) {
       localStorage.setItem(
         `flow:${id}`,
         JSON.stringify({

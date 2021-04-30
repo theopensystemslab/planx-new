@@ -3,6 +3,7 @@ import type { GetState, SetState } from "zustand/vanilla";
 
 import type { Store } from ".";
 
+type PreviewEnvironment = "editor" | "standalone";
 export interface SharedStore extends Store.Store {
   breadcrumbs: Store.breadcrumbs;
   childNodesOf: (id?: Store.nodeId) => Store.node[];
@@ -12,6 +13,8 @@ export interface SharedStore extends Store.Store {
   resetPreview: () => void;
   setFlow: (id: string, flow: Store.flow) => void;
   wasVisited: (id: Store.nodeId) => boolean;
+  previewEnvironment: PreviewEnvironment;
+  setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
 }
 
 export const sharedStore = (
@@ -28,6 +31,11 @@ export const sharedStore = (
   flow: {},
 
   id: "",
+  previewEnvironment: "standalone",
+
+  setPreviewEnvironment(previewEnvironment: PreviewEnvironment) {
+    set({ previewEnvironment });
+  },
 
   getNode(id) {
     return {
