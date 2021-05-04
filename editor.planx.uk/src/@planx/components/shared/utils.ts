@@ -13,7 +13,7 @@ const isEmpty = (x: any) =>
   (typeof x === "object" && Object.keys(x).length === 0);
 
 const fnOrDefaultPassportKey = (props: any) =>
-  String(props.fn ?? props.id ?? Date.now());
+  String(props.fn || props.id || Date.now());
 
 /**
  * Helper method to return a value wrapped inside an object
