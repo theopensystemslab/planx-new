@@ -5,7 +5,7 @@ LAD20NMW:
 FID: 285
 */
 
-var request = require("request");
+require("isomorphic-fetch");
 
 const articleFours = {};
 
@@ -66,21 +66,15 @@ async function search(key, outFields, geometry) {
 
   let url = makeUrl(id, { outFields, geometry });
 
-  return new Promise((resolve, reject) => {
-    request(url, (error, response, body) => {
-      if (error) {
-        reject([key, error]);
-      } else if (response.statusCode == 200) {
-        resolve([key, body]);
-      } else {
-        reject([key, Error(response.statusCode)]);
-      }
+  return fetch(url)
+    .then(response => response.text())
+    .then(data => new Array(key, data))
+    .catch((error) => {
+      console.log('Error:', error);
     });
-  });
 }
 
 async function go(x, y, extras) {
-  // const radius = 0.05;
   const radius = 0.05;
   const pt = [x - radius, y + radius, x + radius, y - radius];
 

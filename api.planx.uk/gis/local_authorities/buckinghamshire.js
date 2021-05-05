@@ -5,7 +5,7 @@ LAD20NMW:
 FID: 135
 */
 
-const request = require("request");
+require("isomorphic-fetch");
 const { makeUrlFromObject } = require("../helpers.js");
 
 const articleFours = {};
@@ -55,17 +55,12 @@ async function search(key, bbox) {
     },
   });
 
-  return new Promise((resolve, reject) => {
-    request(url, (error, response, body) => {
-      if (error) {
-        reject([key, error]);
-      } else if (response.statusCode == 200) {
-        resolve([key, body]);
-      } else {
-        reject([key, Error(response.statusCode)]);
-      }
+  return fetch(url)
+    .then(response => response.text())
+    .then(data => new Array(key, data))
+    .catch((error) => {
+      console.log('Error:', error);
     });
-  });
 }
 
 async function go(x, y, extras) {
