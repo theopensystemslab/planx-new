@@ -25,6 +25,7 @@
     "request": "^2.88.2"
   },
   "scripts": {
+    "preinstall": "npx only-allow yarn",
     "dev": "npx node-dev index.js",
     "start": "node index.js",
     "test": "jest",

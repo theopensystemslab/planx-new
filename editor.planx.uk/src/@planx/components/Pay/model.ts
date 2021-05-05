@@ -28,3 +28,6 @@ export interface GovUKCreatePaymentPayload {
   language?: string;
   metadata?: any;
 }
+
+export const toPence = (decimal: number) => Math.trunc(decimal * 100);
+export const toDecimal = (pence: number) => pence / 100;
