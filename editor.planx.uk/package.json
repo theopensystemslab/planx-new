@@ -112,7 +112,6 @@
     "wait-for-expect": "^3.0.2"
   },
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "start": "craco start",
     "build": "craco build",
     "test": "react-scripts test",
