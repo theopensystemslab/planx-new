@@ -2,6 +2,9 @@
   "name": "api.planx.uk",
   "license": "MPL-2.0",
   "private": true,
+  "engines": {
+    "yarn": "*"
+  },
   "jest": {
     "setupFilesAfterEnv": [
       "./jest.setup.js"
