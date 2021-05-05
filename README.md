@@ -12,15 +12,19 @@
 
 1. Move into the hasura directory `cd hasura.planx.uk`
 
-1. Install `hasura-cli`
+1. Install [hasura-cli](https://hasura.io/docs/latest/graphql/core/hasura-cli/index.html) if you don't have it `npm install -g hasura-cli`
 
 1. Seed the database
 
-   `hasura seed apply`
+   `hasura seeds apply`
 
 1. Apply migrations
 
    `hasura migrate apply`
+
+1. Start the database console & graphiql at http://localhost:9695
+
+   `hasura console`
 
 1. Move into the editor directory `cd editor.planx.uk`
 
