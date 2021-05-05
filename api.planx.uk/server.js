@@ -98,7 +98,7 @@ router.get("/google", (req, res, next) => {
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/login/failed" }),
-  handleSuccess,
+  handleSuccess
 );
 
 const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
@@ -117,7 +117,7 @@ const buildJWT = async (profile, done) => {
         id
       }
     }`,
-    { email },
+    { email }
   );
 
   if (users.length === 1) {
@@ -158,8 +158,8 @@ passport.use(
     },
     async function (_accessToken, _refreshToken, profile, done) {
       await buildJWT(profile, done);
-    },
-  ),
+    }
+  )
 );
 
 passport.serializeUser(function (user, cb) {
@@ -178,7 +178,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin);
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept",
+    "Origin, X-Requested-With, Content-Type, Accept"
   );
   next();
 });
@@ -187,18 +187,21 @@ app.use(
   cors({
     credentials: true,
     methods: "*",
-  }),
+  })
 );
 
 app.use(
   json({
     extended: true,
     limit: "100mb",
-  }),
+  })
 );
 
 if (!process.env.BOPS_API_TOKEN) {
   console.error("Missing BOPS_API_TOKEN");
+  process.exit(1);
+} else if (!process.env.GOV_UK_PAY_TOKEN) {
+  console.error("Missing GOV_UK_PAY_TOKEN");
   process.exit(1);
 }
 
@@ -252,7 +255,7 @@ app.use("/bops/:localAuthority", (req, res) => {
             response: bopsResponse,
             response_headers: proxyRes.headers,
             session_id: req.body && req.body.sessionId,
-          },
+          }
         );
 
         return JSON.stringify({
@@ -261,7 +264,7 @@ app.use("/bops/:localAuthority", (req, res) => {
             bopsResponse,
           },
         });
-      },
+      }
     ),
   })(req, res);
 });
@@ -291,7 +294,7 @@ app.use(
     target: "https://api.notifications.service.gov.uk",
     changeOrigin: true,
     logLevel: "debug",
-  }),
+  })
 );
 
 app.use(
@@ -299,7 +302,7 @@ app.use(
     maxAge: 24 * 60 * 60 * 100,
     name: "session",
     secret: process.env.SESSION_SECRET,
-  }),
+  })
 );
 
 app.use(passport.initialize());
@@ -316,7 +319,7 @@ app.get("/hasura", async function (req, res) {
       teams {
         id
       }
-    }`,
+    }`
   );
   res.json(data);
 });
@@ -334,10 +337,10 @@ app.get(
         created_at
       }
     }`,
-      { id: req.user.id },
+      { id: req.user.id }
     );
     res.json(user.users_by_pk);
-  },
+  }
 );
 
 app.get("/gis", (_req, res) => {
