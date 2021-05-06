@@ -4,8 +4,14 @@ import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 
 import Card from "../shared/Preview/Card";
+import { makeData } from "../shared/utils";
 import { PublicProps } from "../ui";
-import { bopsDictionary, fullPayload, makePayload } from "./bops";
+import {
+  bopsDictionary,
+  BOPSFullPayload,
+  fullPayload,
+  makePayload,
+} from "./bops";
 import type { Send } from "./model";
 
 export type Props = PublicProps<Send>;
@@ -14,14 +20,21 @@ const SendComponent: React.FC<Props> = (props) => {
   const [breadcrumbs, flow, passport] = useStore((state) => [
     state.breadcrumbs,
     state.flow,
-    state.passport,
+    state.computePassport(),
   ]);
 
   const request = useAsync(async () => axios.post(props.url, getParams()));
 
   useEffect(() => {
-    if (!request.loading && !request.error && request.value) {
-      props.handleSubmit!([request.value.data.application.id]);
+    if (
+      !request.loading &&
+      !request.error &&
+      request.value &&
+      props.handleSubmit
+    ) {
+      props.handleSubmit(
+        makeData(props, request.value.data.application.id, "bopsId")
+      );
     }
   }, [request.loading, request.error, request.value]);
 
@@ -39,43 +52,40 @@ const SendComponent: React.FC<Props> = (props) => {
 
     // 1. address
 
-    if (passport.info) {
-      data.site.uprn = String(passport.info.uprn);
+    const address = passport.data?._address;
+    if (address) {
+      data.site.uprn = String(address.uprn);
 
-      data.site.address_1 = [
-        passport.info.sao,
-        passport.info.pao,
-        passport.info.street,
-      ]
+      data.site.address_1 = [address.sao, address.pao, address.street]
         .filter(Boolean)
         .join(" ");
 
-      data.site.town = passport.info.town;
-      data.site.postcode = passport.info.postcode;
+      data.site.town = address.town;
+      data.site.postcode = address.postcode;
 
       // TODO: add address_2 and ward
     }
 
     // 2. files
 
-    Object.values(breadcrumbs).forEach(({ answers = [] }) => {
-      answers.filter(Boolean).forEach((x: any) => {
-        if (x.filename && x.url) {
-          data.files = data.files || [];
-
-          data.files.push({
-            filename: String(x.url),
-            tags: [],
-            // TODO: replace tags with passport field
-          });
-        }
+    Object.entries(passport.data || {})
+      .filter(([, v]: any) => v?.[0]?.url)
+      .forEach(([key, arr]) => {
+        (arr as any[]).forEach(({ url }) => {
+          try {
+            data.files = data.files || [];
+            data.files.push({
+              filename: url,
+              tags: [], // should be [key], but BOPS will reject unless it's a specific string
+            });
+          } catch (err) {}
+        });
       });
-    });
 
     // 3. constraints
 
     data.constraints = (
-      passport.data["property.constraints.planning"]?.value || []
+      passport.data?.["property.constraints.planning"] || []
     ).reduce((acc: Record<string, boolean>, curr: string) => {
       // TODO: calculate application_type and payment_reference
       acc[curr] = true;
@@ -84,26 +94,21 @@ const SendComponent: React.FC<Props> = (props) => {
 
     // 4. work status
 
-    if (passport?.data["property.constraints.planning"] === "ldc.existing") {
+    if (passport?.data?.["property.constraints.planning"] === "ldc.existing") {
       data.work_status = "existing";
     }
 
     // 5. keys
 
-    const keys = Object.keys(flow);
-
     const bopsData = Object.entries(bopsDictionary).reduce(
       (acc, [bopsField, planxField]) => {
-        const id = keys.find((id) => flow[id].data?.fn === planxField);
-        if (id) {
-          const value = breadcrumbs[id]?.answers![0];
-          if (value) {
-            acc[bopsField] = value;
-          }
+        const value = passport.data?.[planxField];
+        if (value !== undefined && value !== null) {
+          acc[bopsField as keyof BOPSFullPayload] = value;
         }
         return acc;
       },
-      {} as Record<string, string>
+      {} as Partial<BOPSFullPayload>
     );
 
     // 6. questions+answers array
@@ -111,7 +116,7 @@ const SendComponent: React.FC<Props> = (props) => {
     data.proposal_details = makePayload(flow, breadcrumbs);
 
     const paymentReference =
-      passport?.data?.["application.fee.reference.govPay"]?.value?.[0];
+      passport?.data?.["application.fee.reference.govPay"];
 
     return {
       ...data,

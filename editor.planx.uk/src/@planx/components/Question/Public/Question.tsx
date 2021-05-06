@@ -38,10 +38,16 @@ const Question: React.FC<IQuestion> = (props) => {
 
   const formik = useFormik({
     initialValues: {
-      selected: { a: "" },
+      selected: {
+        id: "",
+        a: undefined,
+      },
     },
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      setTimeout(
+        () => props.handleSubmit({ answers: [values.selected.id] }),
+        theme.transitions.duration.standard
+      );
     },
     validate: () => {},
   });
@@ -73,11 +79,9 @@ const Question: React.FC<IQuestion> = (props) => {
           {!props.text?.startsWith("Sorry") &&
             props.responses?.map((response) => {
               const onClick = () => {
+                formik.setFieldValue("selected.id", response.id);
                 formik.setFieldValue("selected.a", response.responseKey);
-                setTimeout(
-                  () => props.handleSubmit(response.id),
-                  theme.transitions.duration.standard
-                );
+                formik.submitForm();
               };
               const selected = a === response.responseKey;
               const buttonProps = {

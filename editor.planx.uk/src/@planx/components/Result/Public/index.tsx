@@ -6,6 +6,7 @@ import Warning from "@material-ui/icons/WarningOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { useFormik } from "formik";
+import { submitFeedback } from "lib/feedback";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import type { Node, TextContent } from "types";
@@ -85,7 +86,12 @@ const Result: React.FC<Props> = ({
       feedback: "",
     },
     onSubmit: (values) => {
-      handleSubmit && handleSubmit(values.feedback);
+      if (values.feedback) {
+        submitFeedback(values.feedback, {
+          reason: "Inaccurate Result",
+        });
+      }
+      handleSubmit?.();
     },
   });
   const visibleResponses = responses.filter((r) => !r.hidden);

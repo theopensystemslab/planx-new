@@ -13,4 +13,16 @@ beforeEach(() => {
       teams: [{ id: 1 }],
     },
   });
+
+  queryMock.mockQuery({
+    name: "CreateApplication",
+    data: {
+      insert_bops_applications_one: { id: 22 },
+    },
+    matchOnVariables: false,
+    variables: {
+      destination_url:
+        "https://southwark.bops-staging.services/api/v1/planning_applications",
+    },
+  });
 });

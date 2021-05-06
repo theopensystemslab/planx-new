@@ -28,11 +28,9 @@ const ContentComponent: React.FC<Props> = (props) => {
   const classes = useClasses({
     color: props.color,
   });
+
   return (
-    <Card
-      handleSubmit={() => props.handleSubmit && props.handleSubmit([])}
-      isValid
-    >
+    <Card handleSubmit={props.handleSubmit} isValid>
       <QuestionHeader
         info={props.info}
         policyRef={props.policyRef}

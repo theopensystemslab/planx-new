@@ -33,7 +33,7 @@ test("renders correctly", async () => {
     await userEvent.click(screen.getByText("Pizza"));
 
     await waitForExpect(() => {
-      expect(handleSubmit).toHaveBeenCalledWith("pizza_id");
+      expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] });
     });
   });
 });

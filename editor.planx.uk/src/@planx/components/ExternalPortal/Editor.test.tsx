@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import React from "react";
 
 import { TYPES } from "../types";
@@ -19,10 +25,8 @@ test("adding an external portal", async () => {
 
   expect(screen.getByTestId("flowId")).toHaveValue("");
 
-  await waitFor(() => {
-    fireEvent.change(screen.getByTestId("flowId"), {
-      target: { value: "b" },
-    });
+  act(() => {
+    fireEvent.change(screen.getByTestId("flowId"), { target: { value: "b" } });
   });
 
   await waitFor(() => {
@@ -54,10 +58,8 @@ test("changing an external portal", async () => {
 
   expect(screen.getByTestId("flowId")).toHaveValue("b");
 
-  await waitFor(() => {
-    fireEvent.change(screen.getByTestId("flowId"), {
-      target: { value: "a" },
-    });
+  act(() => {
+    fireEvent.change(screen.getByTestId("flowId"), { target: { value: "a" } });
   });
 
   await waitFor(() => {
