@@ -13,6 +13,7 @@ const useClasses = makeStyles((theme) => ({
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
   },
   link: {
+    textTransform: "capitalize",
     cursor: "pointer",
     color: "inherit",
     whiteSpace: "nowrap",
@@ -47,7 +48,11 @@ export default function Footer(props: Props) {
 
   return (
     <footer className={classes.root}>
-      <Box display="flex" flexWrap="wrap">
+      <Box
+        display="flex"
+        flexWrap="wrap"
+        flexDirection={{ xs: "column", md: "row" }}
+      >
         {items &&
           items.map((item, i) => item && <FooterItem {...item} key={i} />)}
         {feedbackFishId && (
@@ -76,7 +81,7 @@ function FooterItem(props: {
       variant="body2"
       className={classnames(classes.link, props.bold && classes.bold)}
     >
-      {props.title}
+      {props.title.toLowerCase()}
     </Typography>
   );
 
@@ -85,6 +90,8 @@ function FooterItem(props: {
       {title}
     </Link>
   ) : (
-    <span onClick={props.onClick}>{title}</span>
+    <a onClick={props.onClick} className={classes.link}>
+      {title}
+    </a>
   );
 }

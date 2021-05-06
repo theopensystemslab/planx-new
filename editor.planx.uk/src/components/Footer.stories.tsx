@@ -19,13 +19,17 @@ Basic.args = {
     { title: "Cookies" },
   ],
   children: (
-    <Box display="flex">
-      <Box pr={3}>
+    <Box display="flex" alignItems="center">
+      <Box pr={3} display="flex">
         <img src={Logo} />
       </Box>
       <Typography variant="body2">
         All content is available under the{" "}
-        <Link href="#" underline="always" color="inherit">
+        <Link
+          href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          underline="always"
+          color="inherit"
+        >
           Open Government Licence v3
         </Link>
         , except where otherwise stated
