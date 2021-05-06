@@ -9,6 +9,8 @@ import DateInputComponent from "ui/DateInput";
 import InputRow from "ui/InputRow";
 import { object } from "yup";
 
+import { makeData } from "../shared/utils";
+
 export type Props = PublicProps<DateInput, UserData>;
 
 const DateInputPublic: React.FC<Props> = (props) => {
@@ -17,7 +19,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
       date: "",
     },
     onSubmit: (values) => {
-      props.handleSubmit && props.handleSubmit(values.date);
+      props.handleSubmit?.(makeData(props, values.date));
     },
     validateOnBlur: false,
     validateOnChange: false,

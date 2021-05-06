@@ -7,26 +7,19 @@ import {
   MoreInformation,
 } from "@planx/components/ui";
 import { useFormik } from "formik";
-import type { ChangeEvent } from "react";
 import React from "react";
 import Input from "ui/Input";
 import InputGroup from "ui/InputGroup";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
-import RichTextInput from "ui/RichTextInput";
 
-import type { Calculate, Input as CalculateInput } from "./model";
-import {
-  evaluate,
-  evaluatePassport,
-  getVariables,
-  parseCalculate,
-} from "./model";
+import type { Calculate } from "./model";
+import { evaluate, getVariables, parseCalculate } from "./model";
 
 export type Props = EditorProps<TYPES.Calculate, Calculate>;
 
-const useClasses = makeStyles((theme) => ({
+const useClasses = makeStyles((_theme) => ({
   were: {
     alignSelf: "center",
     margin: "auto 1rem",

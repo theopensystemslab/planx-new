@@ -59,7 +59,9 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 const NoticeComponent: React.FC<Props> = (props) => {
   const styles = useStyles({ color: props.color || "#EFEFEF" });
-  const handleSubmit = !props.resetButton ? props.handleSubmit : undefined;
+  const handleSubmit = !props.resetButton
+    ? () => props.handleSubmit?.()
+    : undefined;
   return (
     <Card handleSubmit={handleSubmit} isValid>
       <>

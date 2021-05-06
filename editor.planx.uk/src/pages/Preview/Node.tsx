@@ -18,16 +18,18 @@ import Send from "@planx/components/Send/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
-import { submitFeedback } from "lib/feedback";
 import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-import { FlowSettings, GovUKPayment } from "types";
+import type { FlowSettings, GovUKPayment } from "types";
 
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
 
-export type handleSubmit = (_?: Store.componentOutput) => void;
+export type handleSubmit = (
+  userData?: Pick<Store.userData, "answers" | "data"> | Event
+) => void;
+
 interface Props {
   handleSubmit: handleSubmit;
   node: Store.node;
@@ -40,12 +42,13 @@ const Node: React.FC<any> = (props: Props) => {
     state.childNodesOf,
     state.resultData,
     state.hasPaid(),
-    state.passport,
+    state.computePassport(),
   ]);
 
   const resetPreview = useStore((state) => state.resetPreview);
 
   const allProps = {
+    id: props.node.id,
     ...props.node.data,
     resetPreview,
     handleSubmit: props.handleSubmit,
@@ -82,14 +85,14 @@ const Node: React.FC<any> = (props: Props) => {
         />
       );
     case TYPES.Confirmation:
-      const payment: GovUKPayment = passport.data.payment;
+      const payment: GovUKPayment | undefined = passport.data?.payment;
 
       return (
         <Confirmation
           {...allProps}
           details={{
             "Planning Application Reference": payment?.reference || "N/A",
-            "Property Address": passport.info?.title || "N/A",
+            "Property Address": passport.data?._address?.title || "N/A",
             "Application type":
               "Application for a Certificate of Lawfulness - Proposed",
             Submitted: payment?.created_date
@@ -103,11 +106,11 @@ const Node: React.FC<any> = (props: Props) => {
           }}
           color={{ text: "#000", background: "rgba(1, 99, 96, 0.1)" }}
           handleSubmit={(feedback?: string) => {
-            feedback?.length &&
-              submitFeedback(feedback, {
-                reason: "Confirmation",
-              });
-            props.handleSubmit([props.node.id]);
+            // feedback?.length &&
+            //   submitFeedback(feedback, {
+            //     reason: "Confirmation",
+            //   });
+            props.handleSubmit();
           }}
         />
       );
@@ -124,50 +127,19 @@ const Node: React.FC<any> = (props: Props) => {
       return <FileUpload {...allProps} />;
 
     case TYPES.FindProperty:
-      return (
-        <FindProperty
-          {...allProps}
-          handleSubmit={(feedback?: string) => {
-            feedback?.length &&
-              submitFeedback(feedback, {
-                reason: "Inaccurate property location",
-              });
-            props.handleSubmit([props.node.id]);
-          }}
-        />
-      );
+      return <FindProperty {...allProps} />;
 
     case TYPES.Notice:
-      return (
-        <Notice
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <Notice {...allProps} />;
 
     case TYPES.Notify:
-      return (
-        <Notify
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <Notify {...allProps} />;
 
     case TYPES.NumberInput:
-      return (
-        <NumberInput
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <NumberInput {...allProps} />;
 
     case TYPES.Pay:
-      return (
-        <Pay
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <Pay {...allProps} />;
 
     case TYPES.Result:
       const flagSet = props.node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
@@ -177,12 +149,8 @@ const Node: React.FC<any> = (props: Props) => {
 
       return (
         <Result
+          {...allProps}
           allowChanges={!hasPaid}
-          handleSubmit={(feedback?: string) => {
-            feedback?.length &&
-              submitFeedback(feedback, { reason: "Inaccurate Result" });
-            props.handleSubmit([props.node.id]);
-          }}
           headingColor={{
             text: flag.color,
             background: flag.bgColor,
@@ -196,20 +164,10 @@ const Node: React.FC<any> = (props: Props) => {
       );
 
     case TYPES.Review:
-      return (
-        <Review
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <Review {...allProps} />;
 
     case TYPES.Send:
-      return (
-        <Send
-          {...allProps}
-          handleSubmit={() => props.handleSubmit([props.node.id])}
-        />
-      );
+      return <Send {...allProps} />;
 
     case TYPES.Statement:
       // TODO: sensitive fix for strict mode

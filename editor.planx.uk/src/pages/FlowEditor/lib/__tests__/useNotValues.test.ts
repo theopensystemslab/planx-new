@@ -1,8 +1,8 @@
-import { vanillaStore } from "../store";
+import { Store, vanillaStore } from "../store";
 
 // flow preview: https://i.imgur.com/nCov5CE.png
 
-const flow = {
+const flow: Store.flow = {
   _root: {
     edges: ["NS7QFc7Cjc", "3cNtq1pLmt", "eTBHJsbJKc"],
   },
@@ -114,20 +114,20 @@ describe("if I initially pick", () => {
     setState({ flow });
   });
 
-  test("lion, it should display 'lion'", () => {
-    getState().record("NS7QFc7Cjc", ["TDIbLrdTdd"]);
+  test.only("lion, it should display 'lion'", () => {
+    getState().record("NS7QFc7Cjc", { answers: ["TDIbLrdTdd"] });
     expect(getState().upcomingCardIds()).toEqual(["Sd38UCC8Cg"]);
   });
 
   test("tiger, it should display 'tiger or something else'", () => {
-    getState().record("NS7QFc7Cjc", ["UqZo0rGwcY"]);
+    getState().record("NS7QFc7Cjc", { answers: ["UqZo0rGwcY"] });
     expect(getState().upcomingCardIds()).toEqual(["UOefNWg6uf"]);
   });
 
   test("gazelle, it should ask which animal it is", () => {
-    getState().record("NS7QFc7Cjc", ["BecasKrIhI"]);
+    getState().record("NS7QFc7Cjc", { answers: ["BecasKrIhI"] });
     expect(getState().upcomingCardIds()).toEqual(["eTBHJsbJKc"]);
-    getState().record("eTBHJsbJKc", ["nR15Tl0lhC"]);
+    getState().record("eTBHJsbJKc", { answers: ["nR15Tl0lhC"] });
     expect(getState().upcomingCardIds()).toEqual(["pqZK1mpn23"]);
   });
 });
