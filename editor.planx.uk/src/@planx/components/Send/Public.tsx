@@ -3,6 +3,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 
+import { DEFAULT_PASSPORT_BOUNDARY_KEY } from "../DrawBoundary/model";
 import Card from "../shared/Preview/Card";
 import { makeData } from "../shared/utils";
 import { PublicProps } from "../ui";
@@ -62,6 +63,12 @@ const SendComponent: React.FC<Props> = (props) => {
 
       data.site.town = address.town;
       data.site.postcode = address.postcode;
+
+      // Very basic test to check if the default property boundary
+      // passport field contains geojson data. To be improved...
+      if (passport.data?.[DEFAULT_PASSPORT_BOUNDARY_KEY]?.type === "Feature") {
+        data.boundary_geojson = passport.data?.[DEFAULT_PASSPORT_BOUNDARY_KEY];
+      }
 
       // TODO: add address_2 and ward
     }
