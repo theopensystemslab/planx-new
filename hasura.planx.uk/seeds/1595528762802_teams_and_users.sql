@@ -4,3 +4,4 @@ INSERT INTO public.users (first_name, last_name, email, is_admin) VALUES ('John'
 INSERT INTO public.users (first_name, last_name, email, is_admin) VALUES ('Alastair', 'Parvin', 'alastair@opensystemslab.io', true);
 INSERT INTO public.users (first_name, last_name, email, is_admin) VALUES ('Gunar', 'Gessner', 'gunargessner@gmail.com', true);
 INSERT INTO public.users (first_name, last_name, email, is_admin) VALUES ('Jessica', 'McInchak', 'jessica@opensystemslab.io', true);
+INSERT INTO public.users (first_name, last_name, email, is_admin) VALUES ('Sarah', 'Scott', 'sarah@opensystemslab.io', true);
