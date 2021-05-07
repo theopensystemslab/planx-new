@@ -14,8 +14,12 @@ function Component(props: any) {
   const formik = useFormik<Pay>({
     initialValues: {
       // TODO: improve runtime validation here (joi, io-ts)
-      title: props.node?.data?.title || "",
-      description: props.node?.data?.description || "",
+      title: props.node?.data?.title || "Pay for your application",
+      description:
+        props.node?.data?.description ||
+        `<p>The planning fee covers the cost of processing your application.\
+         Find out more about how planning fees are calculated \
+         <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">here</a>.</p>`,
       color: props.node?.data?.color || "#EFEFEF",
       fn: props.node?.data?.fn,
       url: props.node?.data?.url,
@@ -36,7 +40,7 @@ function Component(props: any) {
           <InputRow>
             <Input
               format="large"
-              placeholder="Payment"
+              placeholder="Title"
               name="title"
               value={formik.values.title}
               onChange={formik.handleChange}

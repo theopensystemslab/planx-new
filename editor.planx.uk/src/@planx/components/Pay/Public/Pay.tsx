@@ -19,6 +19,7 @@ import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 import type { GovUKPayment } from "types";
 import Input from "ui/Input";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import type { GovUKCreatePaymentPayload, Pay } from "../model";
 import { toDecimal, toPence } from "../model";
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     padding: theme.spacing(4),
     width: "100%",
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(3),
     "& p": {
       textAlign: "left",
     },
@@ -58,6 +59,11 @@ const useStyles = makeStyles((theme) => ({
     border: 0,
     boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
     padding: theme.spacing(2),
+  },
+  link: {
+    color: theme.palette.primary.main,
+    textDecoration: "underline",
+    cursor: "pointer",
   },
 }));
 
@@ -116,7 +122,7 @@ function Component(props: Props) {
     <Box textAlign="left" width="100%">
       <Container maxWidth="md">
         <Typography variant="h1" gutterBottom align="left">
-          Pay for your application
+          {props.title}
         </Typography>
       </Container>
 
@@ -128,10 +134,9 @@ function Component(props: Props) {
           <Typography variant="h1" gutterBottom className="marginBottom">
             {`£${fee.toFixed(2)}`}
           </Typography>
-          <Typography variant="body1" align="left">
-            The planning fee covers the cost of processing your application.
-            Find out more about how planning fees are calculated{" "}
-            <a href="#">here</a>.
+
+          <Typography variant="h4">
+            <ReactMarkdownOrHtml source={props.description} />
           </Typography>
         </Container>
       </div>
@@ -234,11 +239,9 @@ function SuggestionDrawer() {
 
   return (
     <>
-      <p style={{ textAlign: "right", cursor: "pointer" }}>
-        <a style={{ color: "#000A" }} onClick={() => setIsOpen((x) => !x)}>
-          Tell us other ways you'd like to pay in the future
-        </a>
-      </p>
+      <a className={classes.link} onClick={() => setIsOpen((x) => !x)}>
+        Tell us other ways you'd like to pay in the future
+      </a>
       <Drawer
         variant="persistent"
         anchor="right"
