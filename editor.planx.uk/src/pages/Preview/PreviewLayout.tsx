@@ -1,9 +1,12 @@
 import Box from "@material-ui/core/Box";
+import Link from "@material-ui/core/Link";
 import { createMuiTheme, Theme, ThemeProvider } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useCurrentRoute } from "react-navi";
+import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
@@ -38,24 +41,29 @@ const PreviewLayout: React.FC<{
     }
   })();
 
-  const leftFooterItems =
-    settings?.elements?.privacy?.heading && settings?.elements?.privacy?.show
-      ? [
-          {
-            title: "Privacy",
-            href: makeHref("privacy"),
-          },
-        ]
-      : undefined;
+  const settingsLinks = (["help", "privacy"] as const).map((key) => {
+    const setting = settings?.elements && settings?.elements[key];
 
-  const rightFooterItems = [
-    settings?.elements?.help?.heading && settings?.elements?.help?.show
-      ? {
-          title: "Help",
-          href: makeHref("help"),
-          bold: true,
-        }
-      : undefined,
+    if (setting?.show) {
+      return {
+        title: setting.heading,
+        href: makeHref(key),
+        bold: key === "help",
+      };
+    }
+  });
+
+  const footerItems = [
+    ...settingsLinks,
+    {
+      title: "Accessibility",
+    },
+    {
+      title: "Terms of use",
+    },
+    {
+      title: "Cookies",
+    },
     {
       title: "Restart Application",
       onClick: () => {
@@ -63,7 +71,7 @@ const PreviewLayout: React.FC<{
         window.location.reload();
       },
     },
-  ];
+  ].flatMap((x) => (x ? [x] : []));
 
   const generatePreviewTheme = (baseTheme: Theme) =>
     theme.primary
@@ -97,7 +105,24 @@ const PreviewLayout: React.FC<{
         </ErrorBoundary>
       </Box>
 
-      <Footer leftItems={leftFooterItems} rightItems={rightFooterItems} />
+      <Footer items={footerItems}>
+        <Box display="flex" alignItems="center">
+          <Box pr={3} display="flex">
+            <img src={Logo} />
+          </Box>
+          <Typography variant="body2">
+            All content is available under the{" "}
+            <Link
+              href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+              underline="always"
+              color="inherit"
+            >
+              Open Government Licence v3
+            </Link>
+            , except where otherwise stated
+          </Typography>
+        </Box>
+      </Footer>
     </ThemeProvider>
   );
 };
