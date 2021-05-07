@@ -1,10 +1,30 @@
+import { Notifier } from "@airbrake/browser";
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
+import ErrorFallback from "../../components/ErrorFallback";
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
 import Node from "./Node";
+
+const AirbrakeErrorNotifier = (error: Error, info: {componentStack: string}): any => {
+  // Callback function to send JS error info to Airbrake when an ErrorBoundary is triggered
+  const airbrake = new Notifier({
+    projectId: 331493,
+    projectKey: "c6331cc0bfc7a373c8eddf221516b489",
+  });
+
+  console.log(error, info, info.componentStack);
+
+  return airbrake.notify({
+      error: error,
+      context: { component: 'sample' },
+      environment: { env1: 'value' },
+      params: { param1: 'value' },
+      session: { session1: 'value' },
+  });
+}
 
 const Questions = () => {
   const [
@@ -85,7 +105,8 @@ const Questions = () => {
 
       {node && (
         <ErrorBoundary
-          FallbackComponent={({ error }) => <pre>{error.stack}</pre>}
+          FallbackComponent={ErrorFallback}
+          onError={AirbrakeErrorNotifier}
         >
           <Node
             node={node}
