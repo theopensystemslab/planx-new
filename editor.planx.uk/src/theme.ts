@@ -13,6 +13,9 @@ const theme = createMuiTheme({
       letterSpacing: "-0.02em",
       fontWeight: 700,
     },
+    h4: {
+      fontSize: 20,
+    },
     h5: {
       fontSize: 20,
       fontWeight: 700,
