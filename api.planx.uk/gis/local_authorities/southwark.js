@@ -6,7 +6,7 @@ FID: 358
 */
 
 require("isomorphic-fetch");
-// var request = require("request");
+const https = require("https");
 
 var headers = {
   Origin: "https://geo.southwark.gov.uk",
@@ -73,41 +73,16 @@ function get(key, table, x, y, radius = 1.5) {
     x - radius
   },${y - radius},${x + radius},${y + radius},'EPSG:27700'))`;
 
-//   return new Promise((resolve, reject) => {
-//     request(
-//       {
-//         url:
-//           "https://geo.southwark.gov.uk/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-//         method: "POST",
-//         headers,
-//         strictSSL: false,
-//         // encoding: null,
-//         gzip: true,
-//         form: {
-//           url: `tables/features.json?q=${query}&page=1&pageLength=${limit}`,
-//           encodeSpecialChars: true,
-//         },
-//       },
-//       (error, response, body) => {
-//         if (error) {
-//           reject([key, error]);
-//         } else if (response.statusCode == 200) {
-//           resolve([key, body]);
-//         } else {
-//           reject([key, Error(response.statusCode)]);
-//         }
-//       }
-//     );
-//   });
-// }
-
-  return fetch("https://geo.southwark.gov.uk/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService?strictSSL=false&gzip=true", {
+  return fetch("https://geo.southwark.gov.uk/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService", {
       "method": "POST",
       "headers": headers,
-      "body": {
-        "url": `tables/features.json?q=${query}&page=1&pageLength=${limit}`,
+      "body": new URLSearchParams({
+        "url": `tables/features.json?q=${query}&page=1&pageLength=${limit}&strictSSL=false&gzip=true`,
         "encodeSpecialChars": "true"
-      }
+      }),
+      "agent": new https.Agent({
+        rejectUnauthorized: false
+      }),
     })
     .then(response => response.text())
     .then(data => new Array(key, data))
