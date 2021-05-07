@@ -13,13 +13,15 @@ import Portal from "./Portal";
 import Question from "./Question";
 
 const Node: React.FC<any> = (props) => {
-  const [node, wasVisited] = useStore((state) => [
+  const [node, wasVisited, isCurrent] = useStore((state) => [
     state.flow[props.id],
+    state.isCurrent(props.id),
     state.wasVisited(props.id),
   ]);
 
   const allProps = {
     ...props,
+    isCurrent,
     wasVisited,
   };
 

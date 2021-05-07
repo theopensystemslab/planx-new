@@ -53,6 +53,8 @@ export interface PreviewStore extends Store.Store {
   // temporary measure for storing payment fee & id between gov uk redirect
   govUkPayment?: GovUKPayment;
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
+  // should really be in shared store
+  isCurrent: (id: Store.nodeId) => boolean;
 }
 
 // export const previewStore = vanillaCreate<PreviewStore>((set, get) => ({
@@ -641,5 +643,9 @@ export const previewStore = (
 
     // then return an array of the upcoming node ids, in depth-first order
     return sortIdsDepthFirst(flow)(ids);
+  },
+
+  isCurrent(id) {
+    return id === get().upcomingCardIds()?.[0];
   },
 });

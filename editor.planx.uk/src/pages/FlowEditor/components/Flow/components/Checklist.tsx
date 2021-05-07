@@ -14,6 +14,7 @@ import Node from "./Node";
 type Props = {
   type: TYPES;
   [key: string]: any;
+  isCurrent?: boolean;
   wasVisited?: boolean;
 };
 
@@ -77,6 +78,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           isDragging,
           isClone: isClone(props.id),
           isNote: childNodes.length === 0,
+          isCurrent: props.isCurrent,
           wasVisited: props.wasVisited,
         })}
       >

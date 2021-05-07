@@ -24,7 +24,10 @@ const Option: React.FC<any> = (props) => {
 
   return (
     <li
-      className={classNames("card", "option", { wasVisited: props.wasVisited })}
+      className={classNames("card", "option", {
+        isCurrent: props.isCurrent,
+        wasVisited: props.wasVisited,
+      })}
     >
       <Link
         href={href}

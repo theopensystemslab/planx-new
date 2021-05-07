@@ -14,6 +14,7 @@ import Node from "./Node";
 type Props = {
   type: TYPES | "Error";
   [key: string]: any;
+  isCurrent?: boolean;
   wasVisited?: boolean;
 };
 
@@ -59,6 +60,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           isDragging,
           isClone: isClone(props.id),
           isNote: childNodes.length === 0,
+          isCurrent: props.isCurrent,
           wasVisited: props.wasVisited,
           hasFailed: props.hasFailed,
         })}

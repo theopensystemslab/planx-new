@@ -127,11 +127,23 @@ $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA
     }
   }
 
-  &.wasVisited > a {
-    span {
-      opacity: 1;
+  &.isCurrent,
+  &.wasVisited {
+    & > a {
+      span {
+        opacity: 1;
+      }
+      border-width: 2px;
+      border-style: solid;
     }
-    border: 2px solid limegreen;
+  }
+
+  &.isCurrent > a {
+    border-color: hotpink;
+  }
+
+  &.wasVisited > a {
+    border-color: limegreen;
   }
 
   &.isClone > a {
