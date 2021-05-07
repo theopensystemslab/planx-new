@@ -7,7 +7,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import turfArea from "@turf/area";
 import type { Geometry } from "@turf/helpers";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 
 import type { DrawBoundary } from "../model";
@@ -35,13 +35,10 @@ const useClasses = makeStyles((theme) => ({
 
 export default function Component(props: Props) {
   const [page, setPage] = useState<"draw" | "upload">("draw");
-  const [passport, mutatePassport] = useStore((state) => [
-    state.passport,
-    state.mutatePassport,
-  ]);
+  const passport = useStore((state) => state.computePassport());
   const classes = useClasses();
   const [boundary, setBoundary] = useState<Boundary>();
-  const [url, setUrl] = useState<String | undefined>();
+  const [url, setUrl] = useState<string | undefined>();
   useEffect(() => {
     setUrl(undefined);
     setBoundary(undefined);
@@ -65,8 +62,8 @@ export default function Component(props: Props) {
           <Box className={classes.map}>
             <Map
               zoom={18}
-              lat={Number(passport?.info?.latitude)}
-              lng={Number(passport?.info?.longitude)}
+              lat={Number(passport?.data?._address?.latitude)}
+              lng={Number(passport?.data?._address?.longitude)}
               setBoundary={setBoundary}
             />
           </Box>
@@ -98,15 +95,18 @@ export default function Component(props: Props) {
   }
 
   function handleSubmit() {
-    mutatePassport((draft) => {
+    const data = (() => {
+      const ob: Store.userData["data"] = {};
       if (props.dataFieldBoundary) {
-        draft.data[props.dataFieldBoundary] = boundary;
+        ob[props.dataFieldBoundary] = boundary;
       }
       if (props.dataFieldArea) {
-        draft.data[props.dataFieldArea] = area;
+        ob[props.dataFieldArea] = area;
       }
-    });
-    props.handleSubmit && props.handleSubmit([url]);
+      return Object.keys(ob).length > 0 ? ob : undefined;
+    })();
+
+    props.handleSubmit?.({ data });
   }
 }
 

@@ -82,7 +82,7 @@ interface Props {
   breadcrumbs: Store.breadcrumbs;
   flow: Store.flow;
   passport: Store.passport;
-  handleSubmit: handleSubmit;
+  handleSubmit?: handleSubmit;
   changeAnswer: (id: Store.nodeId) => void;
   showChangeButton: boolean;
 }
@@ -152,13 +152,17 @@ function Question(props: ComponentProps) {
   );
 
   function getNodeText() {
-    const answerId = props.userData?.answers[0];
-    return props.flow[answerId].data.text;
+    try {
+      const answerId = getAnswers(props)[0];
+      return props.flow[answerId].data.text;
+    } catch (err) {
+      return "";
+    }
   }
 }
 
 function FindProperty(props: ComponentProps) {
-  const { postcode, street, pao, town } = props.passport.info;
+  const { postcode, street, pao, town } = props.passport.data?._address;
   return (
     <>
       <div>Property</div>
@@ -179,7 +183,7 @@ function Checklist(props: ComponentProps) {
       <div>{props.node.data.text ?? "Checklist"}</div>
       <div>
         <ul>
-          {props.userData?.answers.map((nodeId: string) => (
+          {getAnswers(props).map((nodeId: string) => (
             <li>{props.flow[nodeId].data.text}</li>
           ))}
         </ul>
@@ -192,7 +196,7 @@ function TextInput(props: ComponentProps) {
   return (
     <>
       <div>{props.node.data.title ?? "Text"}</div>
-      <div>{props.userData?.answers[0]}</div>
+      <div>{getAnswers(props)[0]}</div>
     </>
   );
 }
@@ -203,8 +207,8 @@ function FileUpload(props: ComponentProps) {
       <div>{props.node.data.title ?? "File upload"}</div>
 
       <div>
-        {props.userData?.answers.length > 0
-          ? props.userData?.answers.map((file: any, i: number) => (
+        {getAnswers(props).length > 0
+          ? getAnswers(props).map((file: any, i: number) => (
               <a key={i} href={file.url}>
                 {file.filename}
               </a>
@@ -222,4 +226,16 @@ function Debug(props: ComponentProps) {
       <div>{JSON.stringify(props.userData?.answers)}</div>
     </>
   );
+}
+
+/**
+ * temporary helper function to ensure that the caller receives
+ * an array of answers to work with
+ */
+function getAnswers(props: ComponentProps): string[] {
+  try {
+    const array = props!.userData!.answers!;
+    if (Array.isArray(array)) return array;
+  } catch (err) {}
+  return [];
 }

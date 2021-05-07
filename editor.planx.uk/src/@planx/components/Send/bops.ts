@@ -129,8 +129,7 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
     .map(([id, bc]) => {
       const { edges = [], ...question } = flow[id];
 
-      // could be string or Array<string>, concat ensures it's Array<string>
-      const answers: Array<string> = [].concat(bc.answers);
+      const answers: Array<string> = bc.answers ?? [];
 
       const responses = answers.map((id) => {
         let value = id;

@@ -8,20 +8,20 @@ import { Link } from "react-navi";
 
 const useClasses = makeStyles((theme) => ({
   root: {
-    backgroundColor: "#fff",
-    padding: `${theme.spacing(1.5)}px 0`,
-    display: "flex",
-    flex: "0 0 auto",
-    justifyContent: "space-between",
+    color: theme.palette.common.white,
+    backgroundColor: theme.palette.common.black,
+    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
   },
   link: {
+    textTransform: "capitalize",
     cursor: "pointer",
-    textDecoration: "none",
     color: "inherit",
+    whiteSpace: "nowrap",
+    textDecoration: "underline",
+    marginRight: theme.spacing(3),
     "&:hover": {
-      textDecoration: "underline",
+      textDecoration: "none",
     },
-    padding: `0 ${theme.spacing(3)}px`,
   },
   bold: {
     fontWeight: 800,
@@ -35,32 +35,35 @@ interface Item {
   bold?: boolean;
 }
 
-interface Props {
-  leftItems?: Array<Item | undefined>;
-  rightItems?: Array<Item | undefined>;
+export interface Props {
+  items?: Item[];
+  children?: React.ReactNode;
 }
 
 export default function Footer(props: Props) {
-  const { leftItems, rightItems } = props;
+  const { items, children } = props;
   const classes = useClasses();
 
   const feedbackFishId = process.env.REACT_APP_FEEDBACK_FISH_ID;
 
   return (
     <footer className={classes.root}>
-      <Box display="flex">
-        {leftItems &&
-          leftItems.map((item, i) => item && <FooterItem {...item} key={i} />)}
-      </Box>
-      <Box display="flex">
-        {rightItems &&
-          rightItems.map((item, i) => item && <FooterItem {...item} key={i} />)}
+      <Box
+        display="flex"
+        flexWrap="wrap"
+        flexDirection={{ xs: "column", md: "row" }}
+      >
+        {items &&
+          items.map((item, i) => item && <FooterItem {...item} key={i} />)}
         {feedbackFishId && (
           <FeedbackFish projectId={feedbackFishId}>
-            <Typography className={classes.link}>Feedback</Typography>
+            <Typography variant="body2" className={classes.link}>
+              Feedback
+            </Typography>
           </FeedbackFish>
         )}
       </Box>
+      <Box py={4}>{children}</Box>
     </footer>
   );
 }
@@ -75,10 +78,10 @@ function FooterItem(props: {
 
   const title = (
     <Typography
-      variant="body1"
+      variant="body2"
       className={classnames(classes.link, props.bold && classes.bold)}
     >
-      {props.title}
+      {props.title.toLowerCase()}
     </Typography>
   );
 
@@ -87,6 +90,8 @@ function FooterItem(props: {
       {title}
     </Link>
   ) : (
-    <span onClick={props.onClick}>{title}</span>
+    <a onClick={props.onClick} className={classes.link}>
+      {title}
+    </a>
   );
 }

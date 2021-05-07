@@ -2,20 +2,20 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
+import isNil from "lodash/isNil";
 import React, { useEffect, useRef } from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import InputRowLabel from "ui/InputRowLabel";
 import { object, string } from "yup";
 
+import { makeData } from "../shared/utils";
 import type { NumberInput, UserData } from "./model";
 import { parseNumber } from "./model";
 
 export type Props = PublicProps<NumberInput, UserData>;
 
 export default function NumberInputComponent(props: Props): FCReturn {
-  const [mutatePassport] = useStore((state) => [state.mutatePassport]);
   const formik = useFormik({
     initialValues: {
       value: "",
@@ -23,13 +23,8 @@ export default function NumberInputComponent(props: Props): FCReturn {
     onSubmit: (values) => {
       if (values.value && props.handleSubmit) {
         const parsed = parseNumber(values.value);
-        if (parsed !== null) {
-          if (props.fn) {
-            mutatePassport((draft) => {
-              draft.data[props.fn] = { value: [String(parsed)] };
-            });
-          }
-          props.handleSubmit(parsed);
+        if (!isNil(parsed)) {
+          props.handleSubmit(makeData(props, parsed));
         }
       }
     },

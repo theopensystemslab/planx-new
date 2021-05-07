@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Card from "@planx/components/shared/Preview/Card";
+import { makeData } from "@planx/components/shared/utils";
 import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
@@ -67,14 +68,22 @@ interface Props extends Pay {
 }
 
 function Component(props: Props) {
-  const [id, passport, mutatePassport, environment] = useStore((state) => [
+  const [
+    id,
+    govUkPayment,
+    setGovUkPayment,
+    passport,
+    environment,
+  ] = useStore((state) => [
     state.id,
-    state.passport,
-    state.mutatePassport,
+    state.govUkPayment,
+    state.setGovUkPayment,
+    state.computePassport(),
     state.previewEnvironment,
   ]);
+
   const [state, setState] = React.useState<"init" | "paying" | "paid">(
-    passport.data.payment ? "paid" : "init"
+    govUkPayment ? "paid" : "init"
   );
 
   const classes = useStyles();
@@ -83,11 +92,12 @@ function Component(props: Props) {
   // possibly as a service worker or something that lives above flow components
   useEffect(() => {
     if (state === "paid") {
-      props.handleSubmit();
+      props.handleSubmit(makeData(props, govUkPayment, "payment"));
+      // we could remove store.govUkPayment here
     }
   }, [state]);
 
-  const fee = props.fn ? Number(passport.data[props.fn]?.value[0]) : 0;
+  const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
   const payload: GovUKCreatePaymentPayload = {
     amount: toPence(fee),
@@ -132,13 +142,11 @@ function Component(props: Props) {
             url={props.url}
             payload={payload}
             handleResponse={(response) => {
-              mutatePassport((draft) => {
-                const normalizedPayment = {
-                  ...response,
-                  amount: toDecimal(response.amount),
-                };
-                draft.data["payment"] = normalizedPayment;
-              });
+              const normalizedPayment = {
+                ...response,
+                amount: toDecimal(response.amount),
+              };
+              setGovUkPayment(normalizedPayment);
 
               try {
                 window.location.replace(response._links.next_url.href);

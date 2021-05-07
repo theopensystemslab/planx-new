@@ -1,5 +1,4 @@
 import { ROOT_NODE_KEY } from "@planx/graph";
-import produce from "immer";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import type { Store } from ".";
@@ -11,7 +10,6 @@ export interface SharedStore extends Store.Store {
   flow: Store.flow;
   id: string;
   getNode: (id: Store.nodeId) => Store.node;
-  mutatePassport: (mutation: (passport: Store.passport) => void) => void;
   resetPreview: () => void;
   setFlow: (id: string, flow: Store.flow) => void;
   wasVisited: (id: Store.nodeId) => boolean;
@@ -46,14 +44,8 @@ export const sharedStore = (
     };
   },
 
-  mutatePassport(mutation) {
-    set({
-      passport: produce(get().passport, mutation),
-    });
-  },
-
   resetPreview() {
-    set({ breadcrumbs: {}, passport: { data: {} }, sessionId: "" });
+    set({ breadcrumbs: {}, sessionId: "" });
   },
 
   setFlow(id, flow) {

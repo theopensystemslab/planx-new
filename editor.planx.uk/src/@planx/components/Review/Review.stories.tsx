@@ -56,25 +56,23 @@ const breadcrumbs = {
     auto: true,
   },
   "6RtX4nCoFx": {
-    answers: [],
     auto: true,
   },
   "0q9S6JfcZh": {
     answers: [
-      {
+      // temporary measure to ensure that the answers are an array of strings, not objects
+      JSON.stringify({
         filename: "planx.png",
         url:
           "https://planx-temp.s3.eu-west-2.amazonaws.com/development/11q1npcp/planx.png",
-      },
+      }),
     ],
     auto: true,
   },
   toSzQ8Afxr: {
-    answers: [],
     auto: true,
   },
   lBhoS6eLky: {
-    answers: [],
     auto: true,
   },
 };

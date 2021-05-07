@@ -8,7 +8,7 @@ import React from "react";
 interface Props {
   children: React.ReactNode;
   isValid?: boolean;
-  handleSubmit?: () => any;
+  handleSubmit?: (data?: any) => void;
 }
 
 const useStyles = makeStyles<Theme>(() => ({

@@ -28,8 +28,8 @@ describe("store.previousCard is", () => {
   test("undefined when cards were automatically answered", () => {
     setup({
       breadcrumbs: {
-        a: { answers: [], auto: true },
-        b: { answers: [], auto: true },
+        a: { auto: true },
+        b: { auto: true },
       },
     });
     expect(getState().previousCard()).toBeUndefined();
@@ -38,8 +38,8 @@ describe("store.previousCard is", () => {
   test("the most recent human-answered card id", () => {
     setup({
       breadcrumbs: {
-        a: { answers: [], auto: false }, // a human answered this card
-        b: { answers: [], auto: true },
+        a: { auto: false }, // a human answered this card
+        b: { auto: true },
       },
     });
 

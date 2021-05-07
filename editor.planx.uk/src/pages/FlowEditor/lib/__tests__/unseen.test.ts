@@ -83,6 +83,6 @@ const flow: Store.flow = {
 
 it("always shows a question when has a response(value) that hasn't been seen before", () => {
   setState({ flow });
-  getState().record("Dq7qLvn9If", ["6CTQDoPZPQ"]);
+  getState().record("Dq7qLvn9If", { answers: ["6CTQDoPZPQ"] });
   expect(getState().upcomingCardIds()).toEqual(["pws2AF5whV"]);
 });

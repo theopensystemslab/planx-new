@@ -6,9 +6,10 @@ import { client } from "lib/graphql";
 import difference from "lodash/difference";
 import flatten from "lodash/flatten";
 import isNil from "lodash/isNil";
+import pick from "lodash/pick";
 import uniq from "lodash/uniq";
 import pgarray from "pg-array";
-import type { Flag } from "types";
+import type { Flag, GovUKPayment } from "types";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
@@ -24,9 +25,12 @@ export interface PreviewStore extends Store.Store {
   ) => Array<string>;
   currentCard: () => Store.node | null;
   hasPaid: () => boolean;
-  passport: Store.passport;
+  computePassport: () => Readonly<Store.passport>;
   previousCard: () => Store.nodeId | undefined;
-  record: (id: Store.nodeId, vals?: Store.componentOutput) => void;
+  record: (
+    id: Store.nodeId,
+    userData?: Pick<Store.userData, "answers" | "data">
+  ) => void;
   resultData: (
     flagSet?: string,
     overrides?: { [flagId: string]: { heading?: string; description?: string } }
@@ -44,8 +48,11 @@ export interface PreviewStore extends Store.Store {
     id: SharedStore["id"];
   }) => void;
   sessionId: string;
-  startSession: ({ passport }: { passport: Store.passport }) => void;
+  startSession: ({ passport }: { passport: Record<string, any> }) => void;
   upcomingCardIds: () => Store.nodeId[];
+  // temporary measure for storing payment fee & id between gov uk redirect
+  govUkPayment?: GovUKPayment;
+  setGovUkPayment: (govUkPayment: GovUKPayment) => void;
 }
 
 // export const previewStore = vanillaCreate<PreviewStore>((set, get) => ({
@@ -53,6 +60,10 @@ export const previewStore = (
   set: SetState<PreviewStore>,
   get: GetState<SharedStore & PreviewStore>
 ): PreviewStore => ({
+  setGovUkPayment(govUkPayment) {
+    set({ govUkPayment });
+  },
+
   collectedFlags(upToNodeId, visited = []) {
     const { breadcrumbs, flow } = get();
 
@@ -76,7 +87,7 @@ export const previewStore = (
 
     const res = ids
       .reduce((acc, k) => {
-        breadcrumbs[k].answers.forEach((id: string) => {
+        breadcrumbs[k].answers?.forEach((id: string) => {
           acc.push(flow[id]?.data?.flag);
         });
         return acc;
@@ -110,10 +121,6 @@ export const previewStore = (
     );
   },
 
-  passport: {
-    data: {},
-  },
-
   previousCard: () => {
     const goBackable = Object.entries(get().breadcrumbs)
       .filter(([k, v]: any) => !v.auto)
@@ -122,66 +129,97 @@ export const previewStore = (
     return goBackable.pop();
   },
 
-  record(id, vals) {
-    const { breadcrumbs, sessionId, upcomingCardIds, flow, passport } = get();
+  computePassport: () => {
+    const { flow, breadcrumbs } = get();
+    const passport = Object.entries(breadcrumbs).reduce(
+      (acc, [id, { data = {}, answers = [] }]) => {
+        if (!flow[id]) return acc;
+
+        const key = flow[id].data?.fn;
+
+        const passportData: Store.passport["data"] = {};
+
+        if (key) {
+          const passportValue = answers
+            .map((id: string) => flow[id]?.data?.val)
+            .filter(
+              (val) =>
+                val !== undefined && val !== null && String(val).trim() !== ""
+            );
+
+          if (passportValue.length > 0) {
+            // console.log({
+            //   id,
+            //   key,
+            //   passportValue,
+            //   v: acc.data?.[key]?.value,
+            // });
+
+            const existingValue = acc.data?.[key] ?? [];
+
+            const combined = existingValue
+              .concat(passportValue)
+              .reduce(
+                (acc: string[], curr: string, _i: number, arr: string[]) => {
+                  if (!arr.some((x) => x !== curr && x.startsWith(curr))) {
+                    acc.push(curr);
+                  }
+                  return acc;
+                },
+                []
+              );
+
+            passportData[key] = uniq(combined);
+          }
+        }
+
+        // console.log(passportData);
+
+        const responseData = Object.entries(data).reduce(
+          (_acc, [id, value]) => {
+            _acc![id] = value;
+            return _acc;
+          },
+          {} as Store.passport["data"]
+        );
+
+        return {
+          ...acc,
+          data: {
+            ...acc.data,
+            ...responseData,
+            ...passportData,
+          },
+        };
+      },
+      {
+        data: {},
+      } as Store.passport
+    );
+
+    // console.log({ passport });
+
+    return passport;
+  },
+
+  record(id, userData) {
+    const { breadcrumbs, flow, sessionId, upcomingCardIds } = get();
 
     if (!flow[id]) throw new Error("id not found");
 
-    if (vals) {
-      vals = Array.isArray(vals) ? vals : [vals];
+    if (userData) {
+      // add breadcrumb
+      const { answers = [], data = {} } = userData;
 
-      const key = flow[id].data?.fn;
-      if (key) {
-        let passportValue = vals.map((id: string) => flow[id]?.data?.val);
-
-        passportValue = passportValue.filter(
-          (val: any) =>
-            val !== undefined && val !== null && String(val).trim() !== ""
-        );
-
-        if (passportValue.length > 0) {
-          if (passport.data[key] && Array.isArray(passport.data[key].value)) {
-            const allValues = uniq(
-              passport.data[key].value.concat(passportValue)
-            ).sort() as Array<string>;
-
-            passportValue = allValues.reduce((acc: Array<string>, curr) => {
-              if (allValues.some((x) => !x.startsWith(curr))) {
-                acc.push(curr);
-              }
-              return acc;
-            }, []);
-          }
-
-          set({
-            breadcrumbs: {
-              ...breadcrumbs,
-              [id]: { answers: vals, auto: false },
-            },
-            passport: {
-              ...passport,
-              data: {
-                ...passport.data,
-                [key]: { value: passportValue },
-              },
-            },
-          });
-        } else {
-          set({
-            breadcrumbs: {
-              ...breadcrumbs,
-              [id]: { answers: vals, auto: false },
-            },
-          });
-        }
-      } else {
-        set({
-          breadcrumbs: {
-            ...breadcrumbs,
-            [id]: { answers: vals, auto: false },
-          },
-        });
-      }
+      const breadcrumb: Store.userData = { auto: false };
+      if (answers?.length > 0) breadcrumb.answers = answers;
+      if (Object.keys(data).length > 0) breadcrumb.data = data;
+      set({
+        breadcrumbs: {
+          ...breadcrumbs,
+          [id]: breadcrumb,
+        },
+      });
 
       const flowIdType = flow[id]?.type;
 
@@ -199,44 +237,15 @@ export const previewStore = (
       }
     } else {
       // remove breadcrumbs that were stored from id onwards
-      let keepBreadcrumb = true;
 
-      const data: Record<string, { value: Array<string> }> = {
-        ...(passport.initialData || {}),
-      };
+      const breadcrumbIds = Object.keys(breadcrumbs);
+      const idx = breadcrumbIds.indexOf(id);
 
-      const newBreadcrumbs = Object.entries(breadcrumbs).reduce(
-        (acc: Record<string, any>, [questionId, v]) => {
-          if (questionId === id) {
-            keepBreadcrumb = false;
-          } else if (keepBreadcrumb) {
-            acc[questionId] = v;
-
-            const fn = flow[questionId]?.data?.fn;
-            if (fn) {
-              const { answers = [] } = v;
-
-              const value = answers
-                .map((aId: string) => flow[aId]?.data?.val)
-                .filter(Boolean);
-
-              if (value) {
-                data[fn] = { value };
-              }
-            }
-          }
-          return acc;
-        },
-        {}
-      );
-
-      set({
-        breadcrumbs: newBreadcrumbs,
-        passport: {
-          ...passport,
-          data,
-        },
-      });
+      if (idx >= 0) {
+        set({
+          breadcrumbs: pick(breadcrumbs, breadcrumbIds.slice(0, idx)),
+        });
+      }
     }
 
     function addSessionEvent() {
@@ -261,9 +270,7 @@ export const previewStore = (
           }
         `,
         variables: {
-          chosen_node_ids: Array.isArray(vals)
-            ? pgarray(vals)
-            : pgarray([vals]),
+          chosen_node_ids: pgarray(userData?.answers ?? []),
           session_id: get().sessionId,
           type: "human_decision", // TODO
           parent_node_id: id,
@@ -314,10 +321,8 @@ export const previewStore = (
         const keys = possibleFlags.map((f) => f.value);
         const collectedFlags = Object.values(
           breadcrumbs
-        ).flatMap(({ answers }) =>
-          Array.isArray(answers)
-            ? answers.map((id) => flow[id]?.data?.flag)
-            : flow[answers]?.data?.flag
+        ).flatMap(({ answers = [] }) =>
+          answers.map((id) => flow[id]?.data?.flag)
         );
 
         const filteredCollectedFlags = collectedFlags
@@ -336,35 +341,28 @@ export const previewStore = (
         };
 
         const responses = Object.entries(breadcrumbs)
-          .map(
-            ([k, { answers }]: [
-              string,
-              { answers: string | Array<string> }
-            ]) => {
-              const question = { id: k, ...flow[k] };
+          .map(([k, { answers = [] }]) => {
+            const question = { id: k, ...flow[k] };
 
-              const questionType = question?.type;
+            const questionType = question?.type;
 
-              if (
-                !questionType ||
-                !SUPPORTED_DECISION_TYPES.includes(questionType)
-              )
-                return null;
+            if (
+              !questionType ||
+              !SUPPORTED_DECISION_TYPES.includes(questionType)
+            )
+              return null;
 
-              answers = Array.isArray(answers) ? answers : [answers];
+            const selections = answers.map((id) => ({ id, ...flow[id] }));
+            const hidden = !selections.some(
+              (r) => r.data?.flag && r.data.flag === flag?.value
+            );
 
-              const selections = answers.map((id) => ({ id, ...flow[id] }));
-              const hidden = !selections.some(
-                (r) => r.data?.flag && r.data.flag === flag?.value
-              );
-
-              return {
-                question,
-                selections,
-                hidden,
-              };
-            }
-          )
+            return {
+              question,
+              selections,
+              hidden,
+            };
+          })
           .filter(Boolean);
 
         const heading =
@@ -395,77 +393,6 @@ export const previewStore = (
   sessionId: "",
 
   async startSession({ passport }) {
-    // ------ BEGIN PASSPORT DATA OVERRIDES ------
-
-    // TODO: move all of the logic in this block out of here and update the API
-
-    // In this block we are converting the vars stored in passport.data object
-    // from the old boolean values style to the new array style. This should be
-    // done on a server but as a temporary fix the data is currently being
-    // converted here.
-
-    // More info:
-    // GitHub comment explaining what's happening here https://bit.ly/2HFnxX2
-    // Google sheet with new passport schema https://bit.ly/39eYp4A
-
-    // https://tinyurl.com/3cdrnr7j
-
-    // converts what is here
-    // https://gist.github.com/johnrees/e0e3197e3915489a69c743b38faf489e
-    // into { 'property.constraints.planning': { value: ['property.landConservation'] } }
-    const constraintsDictionary = {
-      "property.article4.lambeth.albertsquare": "article4.lambeth.albert",
-      "property.article4.lambeth.hydefarm": "article4.lambeth.hydeFarm",
-      "property.article4.lambeth.lansdowne": "article4.lambeth.lansdowne",
-      "property.article4.lambeth.leighamcourt": "article4.lambeth.leigham",
-      "property.article4.lambeth.parkhallroad": "article4.lambeth.parkHall",
-      "property.article4.lambeth.stockwell": "article4.lambeth.stockwell",
-      "property.article4.lambeth.streatham": "article4.lambeth.streatham",
-      "property.article4s": "article4",
-      "property.buildingListed": "listed",
-      "property.landAONB": "designated.AONB",
-      "property.landBroads": "designated.broads",
-      "property.landConservation": "designated.conservationArea",
-      "property.landExplosivesStorage": "defence.explosives",
-      "property.landNP": "designated.nationalPark",
-      "property.landSafeguarded": "defence.safeguarded",
-      "property.landSafetyHazard": "hazard",
-      "property.landSSI": "nature.SSSI",
-      "property.landTPO": "tpo",
-      "property.landWHS": "designated.WHS",
-      "property.southwarkSunrayEstate": "article4.southwark.sunray",
-    };
-
-    const newPassportData = Object.entries(constraintsDictionary).reduce(
-      (dataObject, [oldName, newName]) => {
-        if (passport.data?.[oldName]?.value) {
-          dataObject["property.constraints.planning"] = dataObject[
-            "property.constraints.planning"
-          ] ?? { value: [] };
-          dataObject["property.constraints.planning"].value.push(newName);
-        }
-        return dataObject;
-      },
-      {
-        ...(get().passport.data || {}),
-      }
-    );
-
-    if (passport.info?.planx_value) {
-      newPassportData["property.type"] = {
-        value: [passport.info.planx_value],
-      };
-    }
-
-    set({
-      passport: {
-        ...passport,
-        data: newPassportData,
-      },
-    });
-
-    // ------ END PASSPORT DATA OVERRIDES ------
-
     try {
       const response = await client.mutate({
         mutation: gql`
@@ -500,7 +427,7 @@ export const previewStore = (
   },
 
   upcomingCardIds() {
-    const { flow, breadcrumbs, passport, collectedFlags } = get();
+    const { flow, breadcrumbs, computePassport, collectedFlags } = get();
 
     const knownNotVals = Object.entries(breadcrumbs).reduce(
       (acc, [id, { answers = [] }]) => {
@@ -545,6 +472,8 @@ export const previewStore = (
         .forEach((id) => {
           const node = flow[id];
 
+          const passport = computePassport();
+
           if (
             node.type &&
             [TYPES.InternalPortal, TYPES.Page].includes(node.type)
@@ -556,8 +485,15 @@ export const previewStore = (
 
           const [globalFlag] = collectedFlags(id, Array.from(visited));
 
-          let passportValues =
-            fn === "flag" ? globalFlag : passport.data[fn]?.value?.sort();
+          let passportValues = (() => {
+            try {
+              return fn === "flag" ? globalFlag : passport.data?.[fn]?.sort();
+            } catch (err) {
+              return [];
+            }
+          })();
+
+          // console.log({ fn, passport, _passport: computePassport() });
 
           if (fn && (fn === "flag" || passportValues !== undefined)) {
             const responses = node.edges?.map((id) => ({
@@ -618,8 +554,8 @@ export const previewStore = (
               if (_responses.length === 1 && isNil(_responses[0].data?.val)) {
                 responsesThatCanBeAutoAnswered = _responses;
               } else if (
-                !passport.data[fn] ||
-                passport.data[fn].value.length > 0
+                !passport.data?.[fn] ||
+                passport.data?.[fn].length > 0
               ) {
                 responsesThatCanBeAutoAnswered = (responses || []).filter(
                   (r) => !r.data?.val

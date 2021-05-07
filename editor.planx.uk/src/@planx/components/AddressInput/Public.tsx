@@ -1,6 +1,6 @@
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import { PublicProps } from "@planx/components/ui";
+import type { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
@@ -8,6 +8,7 @@ import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
 
+import { makeData } from "../shared/utils";
 import type { AddressInput, UserData } from "./model";
 import { userDataSchema } from "./model";
 
@@ -23,7 +24,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
       postcode: "",
     },
     onSubmit: (values) => {
-      props.handleSubmit && props.handleSubmit(values);
+      props.handleSubmit?.(makeData(props, values));
     },
     validateOnBlur: false,
     validateOnChange: false,

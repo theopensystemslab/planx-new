@@ -1,27 +1,25 @@
+import { makeData } from "@planx/components/shared/utils";
 import type { PublicProps } from "@planx/components/ui";
 import { useStore } from "pages/FlowEditor/lib/store";
-import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect } from "react";
 
 import type { Calculate } from "../model";
-import { evaluatePassport } from "../model";
+import { evaluate } from "../model";
 
 export type Props = PublicProps<Calculate>;
 
 export default function Component(props: Props) {
-  const [mutatePassport] = useStore((state) => [state.mutatePassport]);
+  const passport = useStore((state) => state.computePassport().data);
+
   useEffect(() => {
-    mutatePassport((draft) => {
-      draft.data[props.output] = {
-        value: [evaluatePassport(props.formula, draft, props.defaults)],
-      };
-    });
-    (props.handleSubmit as handleSubmit)([]);
+    props.handleSubmit?.(
+      makeData(
+        props,
+        evaluate(props.formula, passport, props.defaults),
+        props.output
+      )
+    );
   }, []);
 
-  return (
-    <>
-      <p>Calculating…</p>
-    </>
-  );
+  return <p>Calculating…</p>;
 }
