@@ -44,10 +44,10 @@ const PreviewLayout: React.FC<{
   const handleRestart = () => {
     if (
       confirm(
-        "Are you sure you want to start over? This deletes all data in your current application."
+        "Are you sure you want to restart? This will delete your previous answers"
       )
     ) {
-      localSession && localStorage.removeItem(entry);
+      localStorage.removeItem(entry);
       window.location.reload();
     }
   };
