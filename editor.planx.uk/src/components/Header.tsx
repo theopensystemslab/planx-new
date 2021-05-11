@@ -11,6 +11,7 @@ import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 import React, { useRef, useState } from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
+import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
@@ -67,7 +68,8 @@ const Header: React.FC<{
   bgcolor?: string;
   logo?: string;
   phaseBanner?: boolean;
-}> = ({ bgcolor = "#2c2c2c", logo, phaseBanner = false }) => {
+  handleRestart?: () => void;
+}> = ({ bgcolor = "#2c2c2c", logo, phaseBanner = false, handleRestart }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const headerRef = useRef(null);
@@ -140,24 +142,35 @@ const Header: React.FC<{
               </>
             )}
           </Box>
-          {data.username && (
-            <Box className={classes.profileSection}>
-              {data.flow && (
+          <Box display="flex" alignItems="center">
+            {data.username && (
+              <Box className={classes.profileSection} mr={2}>
+                {data.flow && (
+                  <Box mr={3}>
+                    <MenuOpenIcon
+                      onClick={togglePreview}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </Box>
+                )}
                 <Box mr={3}>
-                  <MenuOpenIcon
-                    onClick={togglePreview}
-                    style={{ cursor: "pointer" }}
-                  />
+                  <Avatar>{data.username[0]}</Avatar>
                 </Box>
-              )}
-              <Box mr={3}>
-                <Avatar>{data.username[0]}</Avatar>
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  onClick={handleMenuToggle}
+                >
+                  <KeyboardArrowDown />
+                </IconButton>
               </Box>
-              <IconButton edge="end" color="inherit" onClick={handleMenuToggle}>
-                <KeyboardArrowDown />
+            )}
+            {handleRestart && (
+              <IconButton color="secondary" onClick={handleRestart}>
+                <Reset title="Restart Application" color="secondary" />
               </IconButton>
-            </Box>
-          )}
+            )}
+          </Box>
         </Toolbar>
         {phaseBanner && <PhaseBanner />}
       </AppBar>

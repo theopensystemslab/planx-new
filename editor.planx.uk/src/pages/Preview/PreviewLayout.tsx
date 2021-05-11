@@ -41,6 +41,17 @@ const PreviewLayout: React.FC<{
     }
   })();
 
+  const handleRestart = () => {
+    if (
+      confirm(
+        "Are you sure you want to restart? This will delete your previous answers"
+      )
+    ) {
+      localStorage.removeItem(entry);
+      window.location.reload();
+    }
+  };
+
   const settingsLinks = (["help", "privacy"] as const).map((key) => {
     const setting = settings?.elements && settings?.elements[key];
 
@@ -64,13 +75,6 @@ const PreviewLayout: React.FC<{
     {
       title: "Cookies",
     },
-    {
-      title: "Restart Application",
-      onClick: () => {
-        localSession && localStorage.removeItem(entry);
-        window.location.reload();
-      },
-    },
   ].flatMap((x) => (x ? [x] : []));
 
   const generatePreviewTheme = (baseTheme: Theme) =>
@@ -88,7 +92,12 @@ const PreviewLayout: React.FC<{
 
   return (
     <ThemeProvider theme={generatePreviewTheme}>
-      <Header bgcolor={theme.primary} logo={theme.logo} phaseBanner />
+      <Header
+        bgcolor={theme.primary}
+        logo={theme.logo}
+        phaseBanner
+        handleRestart={handleRestart}
+      />
       <Box
         pt={5}
         display="flex"
