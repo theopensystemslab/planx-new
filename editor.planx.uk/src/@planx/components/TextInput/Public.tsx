@@ -7,6 +7,7 @@ import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import { object } from "yup";
 
+import { makeData } from "../shared/utils";
 import type { TextInput, UserData } from "./model";
 import { userDataSchema } from "./model";
 
@@ -18,7 +19,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
       text: "",
     },
     onSubmit: (values) => {
-      props.handleSubmit && props.handleSubmit(values.text);
+      props.handleSubmit?.(makeData(props, values.text));
     },
     validateOnBlur: false,
     validateOnChange: false,

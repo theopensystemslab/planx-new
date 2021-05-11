@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Card from "@planx/components/shared/Preview/Card";
+import { makeData } from "@planx/components/shared/utils";
 import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
@@ -18,6 +19,7 @@ import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 import type { GovUKPayment } from "types";
 import Input from "ui/Input";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import type { GovUKCreatePaymentPayload, Pay } from "../model";
 import { toDecimal, toPence } from "../model";
@@ -36,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     padding: theme.spacing(4),
     width: "100%",
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(3),
     "& p": {
       textAlign: "left",
     },
@@ -58,6 +60,11 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
     padding: theme.spacing(2),
   },
+  link: {
+    color: theme.palette.primary.main,
+    textDecoration: "underline",
+    cursor: "pointer",
+  },
 }));
 
 interface Props extends Pay {
@@ -67,14 +74,22 @@ interface Props extends Pay {
 }
 
 function Component(props: Props) {
-  const [id, passport, mutatePassport, environment] = useStore((state) => [
+  const [
+    id,
+    govUkPayment,
+    setGovUkPayment,
+    passport,
+    environment,
+  ] = useStore((state) => [
     state.id,
-    state.passport,
-    state.mutatePassport,
+    state.govUkPayment,
+    state.setGovUkPayment,
+    state.computePassport(),
     state.previewEnvironment,
   ]);
+
   const [state, setState] = React.useState<"init" | "paying" | "paid">(
-    passport.data.payment ? "paid" : "init"
+    govUkPayment ? "paid" : "init"
   );
 
   const classes = useStyles();
@@ -83,11 +98,12 @@ function Component(props: Props) {
   // possibly as a service worker or something that lives above flow components
   useEffect(() => {
     if (state === "paid") {
-      props.handleSubmit();
+      props.handleSubmit(makeData(props, govUkPayment, "payment"));
+      // we could remove store.govUkPayment here
     }
   }, [state]);
 
-  const fee = props.fn ? Number(passport.data[props.fn]?.value[0]) : 0;
+  const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
   const payload: GovUKCreatePaymentPayload = {
     amount: toPence(fee),
@@ -106,7 +122,7 @@ function Component(props: Props) {
     <Box textAlign="left" width="100%">
       <Container maxWidth="md">
         <Typography variant="h1" gutterBottom align="left">
-          Pay for your application
+          {props.title}
         </Typography>
       </Container>
 
@@ -118,10 +134,9 @@ function Component(props: Props) {
           <Typography variant="h1" gutterBottom className="marginBottom">
             {`£${fee.toFixed(2)}`}
           </Typography>
-          <Typography variant="body1" align="left">
-            The planning fee covers the cost of processing your application.
-            Find out more about how planning fees are calculated{" "}
-            <a href="#">here</a>.
+
+          <Typography variant="h4">
+            <ReactMarkdownOrHtml source={props.description} />
           </Typography>
         </Container>
       </div>
@@ -132,13 +147,11 @@ function Component(props: Props) {
             url={props.url}
             payload={payload}
             handleResponse={(response) => {
-              mutatePassport((draft) => {
-                const normalizedPayment = {
-                  ...response,
-                  amount: toDecimal(response.amount),
-                };
-                draft.data["payment"] = normalizedPayment;
-              });
+              const normalizedPayment = {
+                ...response,
+                amount: toDecimal(response.amount),
+              };
+              setGovUkPayment(normalizedPayment);
 
               try {
                 window.location.replace(response._links.next_url.href);
@@ -226,11 +239,9 @@ function SuggestionDrawer() {
 
   return (
     <>
-      <p style={{ textAlign: "right", cursor: "pointer" }}>
-        <a style={{ color: "#000A" }} onClick={() => setIsOpen((x) => !x)}>
-          Tell us other ways you'd like to pay in the future
-        </a>
-      </p>
+      <a className={classes.link} onClick={() => setIsOpen((x) => !x)}>
+        Tell us other ways you'd like to pay in the future
+      </a>
       <Drawer
         variant="persistent"
         anchor="right"

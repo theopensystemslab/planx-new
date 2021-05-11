@@ -8,7 +8,7 @@ import React from "react";
 interface Props {
   children: React.ReactNode;
   isValid?: boolean;
-  handleSubmit?: () => any;
+  handleSubmit?: (data?: any) => void;
 }
 
 const useStyles = makeStyles<Theme>(() => ({
@@ -41,7 +41,7 @@ const Card: React.FC<Props> = ({
           className={classes.container}
           bgcolor="background.default"
           py={{ xs: 2, md: 4 }}
-          px={{ xs: 2, md: 5 }}
+          px={{ xs: 2, md: 0 }}
           mb={4}
           {...props}
         >

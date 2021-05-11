@@ -20,6 +20,7 @@ import Send from "@material-ui/icons/Send";
 import SquareFoot from "@material-ui/icons/SquareFoot";
 import TextFields from "@material-ui/icons/TextFields";
 import { TYPES } from "@planx/components/types";
+import type { handleSubmit } from "pages/Preview/Node";
 import React, { ChangeEvent } from "react";
 import ImgInput from "ui/ImgInput";
 import Input from "ui/Input";
@@ -35,8 +36,9 @@ export interface EditorProps<Type, Data> {
   node?: any;
 }
 
+// TODO: come back to this and reuse UserData
 export type PublicProps<Data, UserData = {}> = Data & {
-  handleSubmit?: (value?: UserData) => void;
+  handleSubmit?: handleSubmit;
   resetButton?: boolean;
   resetPreview?: () => void;
   autoFocus?: boolean;

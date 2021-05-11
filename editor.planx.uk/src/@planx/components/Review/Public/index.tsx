@@ -1,22 +1,18 @@
 import { MoreInformation } from "@planx/components/shared";
+import { PublicProps } from "@planx/components/ui";
 import type { Store } from "pages/FlowEditor/lib/store";
 import { useStore } from "pages/FlowEditor/lib/store";
-import type { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
 import Presentational from "./Presentational";
 
 export default Component;
 
-interface Props extends MoreInformation {
-  handleSubmit: handleSubmit;
-}
-
-function Component(props: Props) {
+function Component(props: PublicProps<MoreInformation>) {
   const [breadcrumbs, flow, passport, record, hasPaid] = useStore((state) => [
     state.breadcrumbs,
     state.flow,
-    state.passport,
+    state.computePassport(),
     state.record,
     state.hasPaid(),
   ]);

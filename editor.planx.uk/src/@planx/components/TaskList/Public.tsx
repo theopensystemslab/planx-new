@@ -10,12 +10,7 @@ export type Props = PublicProps<TaskList>;
 
 const TaskListComponent: React.FC<Props> = (props) => {
   return (
-    <Card
-      handleSubmit={() => {
-        props.handleSubmit && props.handleSubmit([]);
-      }}
-      isValid
-    >
+    <Card handleSubmit={props.handleSubmit} isValid>
       <QuestionHeader
         title={props.title}
         description={props.description}

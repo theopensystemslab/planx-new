@@ -36,11 +36,11 @@ test("it lists upcoming cards", () => {
 
   expect(getState().upcomingCardIds()).toEqual(["a"]);
 
-  getState().record("a", ["c"]);
+  getState().record("a", { answers: ["c"] });
 
   expect(getState().upcomingCardIds()).toEqual(["d"]);
 
-  getState().record("d", ["e", "f"]);
+  getState().record("d", { answers: ["e", "f"] });
 
   expect(getState().upcomingCardIds()).toEqual([]);
 });
@@ -104,7 +104,7 @@ describe("error handling", () => {
       },
     });
 
-    expect(() => getState().record("x", [])).toThrowError("id not found");
+    expect(() => getState().record("x", {})).toThrowError("id not found");
   });
 });
 
@@ -133,8 +133,8 @@ test("record(id, undefined) clears up breadcrumbs", () => {
       f: { type: TYPES.Response },
     },
   });
-  getState().record("a", ["c"]);
-  getState().record("d", ["e", "f"]);
+  getState().record("a", { answers: ["c"] });
+  getState().record("d", { answers: ["e", "f"] });
   expect(getState().breadcrumbs).toEqual({
     a: { answers: ["c"], auto: false },
     d: { answers: ["e", "f"], auto: false },
@@ -167,13 +167,13 @@ test("hasPaid is updated if a Pay component has been recorded", () => {
     },
   });
 
-  getState().record("a", ["c"]);
+  getState().record("a", { answers: ["c"] });
   expect(getState().hasPaid()).toBe(false);
 
-  getState().record("c", []);
+  getState().record("c", {});
   expect(getState().breadcrumbs).toEqual({
     a: { answers: ["c"], auto: false },
-    c: { answers: [], auto: false },
+    c: { auto: false },
   });
 
   expect(getState().hasPaid()).toBe(true);

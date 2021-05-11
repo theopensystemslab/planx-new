@@ -42,7 +42,7 @@ export default function ConfirmationComponent(props: Props) {
       feedback: "",
     },
     onSubmit: (values) => {
-      props.handleSubmit && props.handleSubmit(values.feedback);
+      props.handleSubmit?.();
     },
   });
 
