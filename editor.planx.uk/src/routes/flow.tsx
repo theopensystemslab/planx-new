@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import { TYPES } from "@planx/components/types";
+import ErrorFallback from "components/ErrorFallback";
 import natsort from "natsort";
 import { compose, lazy, mount, route, withData, withView } from "navi";
 import mapAccum from "ramda/src/mapAccum";
@@ -160,9 +161,7 @@ const routes = compose(
     const [flow, ...breadcrumbs] = req.params.flow.split(",");
     return (
       <>
-        <ErrorBoundary
-          FallbackComponent={({ error }) => <pre>{error.stack}</pre>}
-        >
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
         </ErrorBoundary>
         <View />
