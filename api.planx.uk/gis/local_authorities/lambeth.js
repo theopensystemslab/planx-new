@@ -56,6 +56,15 @@ const names = {
       };
     },
   },
+  TREE_PRESERVATION_ORDERS: {
+    id: "LambethTreePreservationOrderBoundaries",
+    key: "tpo",
+    neg: "is not in a TPO (Tree Preservation Order) zone",
+    pos: (data) => ({
+      text: "is in a TPO (Tree Preservation Order) zone",
+      description: data.LEGISLATION,
+    }),
+  },
 };
 
 const makeUrl = (id, overrideParams = {}) => {
@@ -112,6 +121,7 @@ async function go(x, y, extras) {
       search("LISTED_BUILDINGS", ["GRADE", "OBJECTID", "ADDRESS_1"], pt),
       search("CONSERVATION_AREAS", ["NAME", "OBJECTID"], pt),
       search("ARTICLE_4S", ["OBJECTID", "DESCRIPTION"], pt),
+      search("TREE_PRESERVATION_ORDERS", ["OBJECTID", "TPO_NUMBER", "LEGISLATION"], pt),
     ]);
 
     const ob = results
