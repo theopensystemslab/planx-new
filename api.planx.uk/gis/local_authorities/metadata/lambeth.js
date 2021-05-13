@@ -71,49 +71,35 @@ const planningConstraints = {
       description: data.LEGISLATION,
     }),
   },
-  "designated.AONB": {
-    value: false, // LambethHistoricParksAndGardens ??
-  },
-  "designated.broads": {
-    value: false, // not found
-  },
-  "defence.explosives": {
-    value: false, // not found
-  },
-  "designated.nationalPark": {
-    value: false, // not found
-  },
-  "defence.safeguarded": {
-    value: false, // not found
-  },
-  hazard: {
-    value: false, // not found
-  },
-  "nature.SSSI": {
-    value: false, // not found
-  },
-  "designated.WHS": {
-    value: false, // LambethLocalHeritageValue ??
-  },
-  "designated.monument": {
-    value: false, // not found
-  },
-  "flood.zone1": {
-    value: false, // not found
-  },
+  "designated.AONB": { value: false }, // LambethHistoricParksAndGardens ??
+  "designated.broads": { value: false },
+  "defence.explosives": { value: false },
+  "designated.nationalPark": { value: false },
+  "defence.safeguarded": { value: false },
+  hazard: { value: false },
+  "nature.SSSI": { value: false },
+  "designated.WHS": { value: false }, // LambethLocalHeritageValue ??
+  "designated.monument": { value: false },
+  "flood.zone1": { value: false },
   "flood.zone2": {
     key: "flood.zone2",
     id: "LambethFloodRiskZone2",
     fields: ["OBJECTID"],
     neg: "is not in a Flood Zone 2",
-    pos: "is in a Flood Zone 2 (medium risk)",
+    pos: (data) => ({
+      text: "is in a Flood Zone 2 (medium risk)",
+      description: data,
+    }),
   },
   "flood.zone3": {
     key: "flood.zone3",
     id: "LambethFloodRiskZone3",
     fields: ["OBJECTID"],
     neg: "is not in a Flood Zone 3",
-    pos: "is in a Flood Zone 3 (high risk)",
+    pos: (data) => ({
+      text: "is in a Flood Zone 3 (high risk)",
+      description: data,
+    }),
   },
 };
 

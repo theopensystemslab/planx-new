@@ -19,8 +19,8 @@ const makeObjectFromUrl = (url) => {
   return { root, params };
 };
 
-const makeEsriUrl = (domain, id, overrideParams = {}) => {
-  let url = `${domain}/arcgis/rest/services/${id}/MapServer/0/query`;
+const makeEsriUrl = (domain, id, serverIndex = 0, overrideParams = {}) => {
+  let url = `${domain}/arcgis/rest/services/${id}/MapServer/${serverIndex}/query`;
 
   const defaultParams = {
     where: "1=1",

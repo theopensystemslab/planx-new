@@ -19,7 +19,7 @@ const articleFours = planningConstraints.article4.records;
 async function search(key, outFields, geometry) {
   const { id } = planningConstraints[key];
 
-  let url = makeEsriUrl(mapServerDomain, id, { outFields, geometry });
+  let url = makeEsriUrl(mapServerDomain, id, 0, { outFields, geometry });
 
   return fetch(url)
     .then((response) => response.text())
@@ -106,15 +106,15 @@ async function go(x, y, extras) {
         }
       );
 
-    ob["designated.conservationArea.lambeth.churchRoad"] = {
-      value:
-        ob["designated.conservationArea"] &&
-        ob["designated.conservationArea"].data &&
-        ob["designated.conservationArea"].data.CA_REF_NO &&
-        ob["designated.conservationArea"].data.CA_REF_NO === "CA10"
-          ? true
-          : false,
-    };
+    // ob["designated.conservationArea.lambeth.churchRoad"] = {
+    //   value:
+    //     ob["designated.conservationArea"] &&
+    //     ob["designated.conservationArea"].data &&
+    //     ob["designated.conservationArea"].data.CA_REF_NO &&
+    //     ob["designated.conservationArea"].data.CA_REF_NO === "CA10"
+    //       ? true
+    //       : false,
+    // };
 
     return ob;
   } catch (e) {
