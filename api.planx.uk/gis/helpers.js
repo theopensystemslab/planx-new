@@ -19,7 +19,41 @@ const makeObjectFromUrl = (url) => {
   return { root, params };
 };
 
+const makeEsriUrl = (domain, id, overrideParams = {}) => {
+  let url = `${domain}/arcgis/rest/services/${id}/MapServer/0/query`;
+
+  const defaultParams = {
+    where: "1=1",
+    geometryType: "esriGeometryEnvelope",
+    inSR: 27700,
+    spatialRel: "esriSpatialRelIntersects",
+    returnGeometry: false,
+    outSR: 4326,
+    f: "json",
+    outFields: [],
+    geometry: [],
+  };
+
+  const params = { ...defaultParams, ...overrideParams };
+
+  if (Array.isArray(params.outFields))
+    params.outFields = params.outFields.join(",");
+  if (Array.isArray(params.geometry))
+    params.geometry = params.geometry.join(",");
+
+  url = [
+    url,
+    Object.keys(params)
+      .map((key) => key + "=" + escape(params[key]))
+      .join("&"),
+  ].join("?");
+  console.log({ url });
+
+  return url;
+};
+
 module.exports = {
   makeUrlFromObject,
   makeObjectFromUrl,
+  makeEsriUrl,
 };
