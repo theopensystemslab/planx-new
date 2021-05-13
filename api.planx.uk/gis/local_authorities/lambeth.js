@@ -1,10 +1,7 @@
 require("isomorphic-fetch");
 
 const { makeEsriUrl } = require("../helpers.js");
-const {
-  mapServerDomain,
-  planningConstraints,
-} = require("./metadata/lambeth.js");
+const { planningConstraints } = require("./metadata/lambeth.js");
 
 // only query planningConstraints with known GIS data sources
 let gisLayers = [];
@@ -14,16 +11,24 @@ Object.keys(planningConstraints).map((layer) => {
   }
 });
 
+// store false constraints to include them in the final json response
+let falseConstraints = {};
+Object.keys(planningConstraints).filter((layer) => {
+  if (planningConstraints[layer].value === false) {
+    falseConstraints[layer] = { value: false };
+  }
+});
+
 const articleFours = planningConstraints.article4.records;
 
-async function search(key, outFields, geometry) {
-  const { id } = planningConstraints[key];
+async function search(mapServer, featureName, outFields, geometry) {
+  const { id } = planningConstraints[featureName];
 
-  let url = makeEsriUrl(mapServerDomain, id, 0, { outFields, geometry });
+  let url = makeEsriUrl(mapServer, id, 0, { outFields, geometry });
 
   return fetch(url)
     .then((response) => response.text())
-    .then((data) => new Array(key, data))
+    .then((data) => new Array(featureName, data))
     .catch((error) => {
       console.log("Error:", error);
     });
@@ -37,7 +42,12 @@ async function go(x, y, extras) {
   try {
     const results = await Promise.all(
       gisLayers.map((layer) =>
-        search(layer, planningConstraints[layer].fields, pt)
+        search(
+          planningConstraints[layer].source,
+          layer,
+          planningConstraints[layer].fields,
+          pt
+        )
       )
     );
 
@@ -88,20 +98,11 @@ async function go(x, y, extras) {
           return acc;
         },
         {
-          "designated.AONB": { value: false },
-          "designated.broads": { value: false },
-          "defence.explosives": { value: false },
-          "designated.nationalPark": { value: false },
-          "defence.safeguarded": { value: false },
-          hazard: { value: false },
-          "nature.SSSI": { value: false },
-          "designated.WHS": { value: false },
-          "designated.monument": { value: false },
-          "flood.zone1": { value: false },
           ...Object.values(articleFours).reduce((acc, curr) => {
             acc[curr] = { value: false };
             return acc;
           }, {}),
+          ...falseConstraints,
           ...extras,
         }
       );
