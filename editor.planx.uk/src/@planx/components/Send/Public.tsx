@@ -85,7 +85,9 @@ const SendComponent: React.FC<Props> = (props) => {
           if (geojson) data.boundary_geojson = geojson;
         }
       }
-    } catch (err) {}
+    } catch (err) {
+      console.error({ boundary_geojson: err });
+    }
 
     // 2. files
 
