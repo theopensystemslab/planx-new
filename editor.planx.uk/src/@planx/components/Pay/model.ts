@@ -38,3 +38,13 @@ export interface GovUKCreatePaymentPayload {
 
 export const toPence = (decimal: number) => Math.trunc(decimal * 100);
 export const toDecimal = (pence: number) => pence / 100;
+
+export const createPayload = (
+  fee: number,
+  reference: string
+): GovUKCreatePaymentPayload => ({
+  amount: toPence(fee),
+  reference,
+  description: "New application",
+  return_url: window.location.href,
+});
