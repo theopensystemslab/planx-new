@@ -3,9 +3,9 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 
-import { DEFAULT_PASSPORT_BOUNDARY_KEY } from "../DrawBoundary/model";
 import Card from "../shared/Preview/Card";
 import { makeData } from "../shared/utils";
+import { TYPES } from "../types";
 import { PublicProps } from "../ui";
 import {
   bopsDictionary,
@@ -51,7 +51,7 @@ const SendComponent: React.FC<Props> = (props) => {
   function getParams() {
     const data = fullPayload;
 
-    // 1. address
+    // 1a. address
 
     const address = passport.data?._address;
     if (address) {
@@ -64,14 +64,28 @@ const SendComponent: React.FC<Props> = (props) => {
       data.site.town = address.town;
       data.site.postcode = address.postcode;
 
-      // Very basic test to check if the default property boundary
-      // passport field contains geojson data. To be improved...
-      if (passport.data?.[DEFAULT_PASSPORT_BOUNDARY_KEY]?.type === "Feature") {
-        data.boundary_geojson = passport.data?.[DEFAULT_PASSPORT_BOUNDARY_KEY];
-      }
-
       // TODO: add address_2 and ward
     }
+
+    // 1b. property boundary
+
+    try {
+      // find the first draw boundary component breadcrumb
+      const boundaryBreadcrumb = Object.entries(breadcrumbs).find(
+        ([questionId]) => flow[questionId]?.type === TYPES.DrawBoundary
+      );
+      if (boundaryBreadcrumb) {
+        const [, { data }] = boundaryBreadcrumb;
+        if (data) {
+          // scan the breadcrumb's data object (what got saved to passport)
+          // and extract the first instance of any geojson that's found
+          const geojson = Object.values(data).find(
+            (v) => v?.type === "Feature"
+          );
+          if (geojson) data.boundary_geojson = geojson;
+        }
+      }
+    } catch (err) {}
 
     // 2. files
 
