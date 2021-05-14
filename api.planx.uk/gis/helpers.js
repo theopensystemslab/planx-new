@@ -52,8 +52,40 @@ const makeEsriUrl = (domain, id, serverIndex = 0, overrideParams = {}) => {
   return url;
 };
 
+// Buffer an address point as a proxy for curtilage boundaries
+const bufferPoint = (x, y, radius = 0.05) => {
+  return [x - radius, y + radius, x + radius, y - radius];
+};
+
+// For a dictionary of planning constraint objects, return the the items with { value: false }
+const getFalseConstraints = (metadata) => {
+  let falseConstraints = {};
+  Object.keys(metadata).filter((constraint) => {
+    if (metadata[constraint].value === false) {
+      falseConstraints[constraint] = { value: false };
+    }
+  });
+
+  return falseConstraints;
+};
+
+// For a dictionary of planning constraint objects, return the key names with known GIS data sources
+const getQueryableConstraints = (metadata) => {
+  let queryableConstraints = [];
+  Object.keys(metadata).map((constraint) => {
+    if ("id" in metadata[constraint]) {
+      queryableConstraints.push(constraint);
+    }
+  });
+
+  return queryableConstraints;
+};
+
 module.exports = {
   makeUrlFromObject,
   makeObjectFromUrl,
   makeEsriUrl,
+  bufferPoint,
+  getQueryableConstraints,
+  getFalseConstraints,
 };

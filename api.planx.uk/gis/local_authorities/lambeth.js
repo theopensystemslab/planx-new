@@ -1,26 +1,19 @@
 require("isomorphic-fetch");
 
-const { makeEsriUrl } = require("../helpers.js");
+const {
+  getQueryableConstraints,
+  getFalseConstraints,
+  makeEsriUrl,
+  bufferPoint,
+} = require("../helpers.js");
 const { planningConstraints } = require("./metadata/lambeth.js");
 
-// only query planningConstraints with known GIS data sources
-let gisLayers = [];
-Object.keys(planningConstraints).map((layer) => {
-  if ("id" in planningConstraints[layer]) {
-    gisLayers.push(layer);
-  }
-});
-
-// store false constraints to include them in the final json response
-let falseConstraints = {};
-Object.keys(planningConstraints).filter((layer) => {
-  if (planningConstraints[layer].value === false) {
-    falseConstraints[layer] = { value: false };
-  }
-});
-
+// Process local authority metadata
+const gisLayers = getQueryableConstraints(planningConstraints);
+const falseConstraints = getFalseConstraints(planningConstraints);
 const articleFours = planningConstraints.article4.records;
 
+// Fetch a data layer
 async function search(mapServer, featureName, outFields, geometry) {
   const { id } = planningConstraints[featureName];
 
@@ -34,10 +27,9 @@ async function search(mapServer, featureName, outFields, geometry) {
     });
 }
 
+// For this location, iterate through our planning constraints and aggregate/format the responses
 async function go(x, y, extras) {
-  // since no property boundaries, create a buffer around the address point
-  const radius = 0.05;
-  const pt = [x - radius, y + radius, x + radius, y - radius];
+  const point = bufferPoint(x, y, 0.05);
 
   try {
     const results = await Promise.all(
@@ -46,7 +38,7 @@ async function go(x, y, extras) {
           planningConstraints[layer].source,
           layer,
           planningConstraints[layer].fields,
-          pt
+          point
         )
       )
     );
@@ -93,7 +85,9 @@ async function go(x, y, extras) {
                 };
               }
             }
-          } catch (e) {}
+          } catch (e) {
+            console.log(e);
+          }
 
           return acc;
         },
@@ -122,10 +116,6 @@ async function go(x, y, extras) {
     throw e;
   }
 }
-
-// go(531593, 174449);
-// go(531176, 174642);
-// go(529491, 175638);
 
 async function locationSearch(x, y, extras) {
   return go(x, y, extras);

@@ -6,35 +6,16 @@ FID: 285
 
 https://opendata.canterbury.gov.uk/
 https://mapping.canterbury.gov.uk/arcgis/rest/services/
+https://environment.data.gov.uk/arcgis/rest/services
 */
 
-const mapServerDomain = "https://mapping.canterbury.gov.uk";
+const canterburyDomain = "https://mapping.canterbury.gov.uk";
+const environmentDomain = "https://environment.data.gov.uk";
 
 const planningConstraints = {
-  "designated.conservationArea": {
-    key: "designated.conservationArea",
-    id: "Open_Data/Conservation_Areas",
-    serverIndex: 0,
-    fields: ["OBJECTID", "NAME", "URL"],
-    neg: "is not in a Conservation Area",
-    pos: (data) => ({
-      text: "is in a Conservation Area",
-      description: data.NAME,
-    }),
-  },
-  tpo: {
-    key: "tpo",
-    id: "Open_Data/Tree_Preservation_Orders",
-    serverIndex: 0,
-    fields: ["OBJECTID", "TPO"],
-    neg: "is not in a TPO (Tree Preservation Order) zone",
-    pos: (data) => ({
-      text: "is in a TPO (Tree Preservation Order) zone",
-      description: data,
-    }),
-  },
   article4: {
     key: "article4",
+    source: canterburyDomain,
     id: "External/Heritage",
     serverIndex: 9,
     fields: ["OBJECTID", "LOCATION_1", "DESCRIPTIO"],
@@ -46,6 +27,7 @@ const planningConstraints = {
   },
   listed: {
     key: "listed",
+    source: canterburyDomain,
     id: "External/Heritage",
     serverIndex: 6,
     fields: ["OBJECTID", "GRADE", "NAME", "DESCRIPTIO"],
@@ -55,15 +37,43 @@ const planningConstraints = {
       description: data.NAME,
     }),
   },
-  "designated.AONB": { value: false },
+  "designated.conservationArea": {
+    key: "designated.conservationArea",
+    source: canterburyDomain,
+    id: "Open_Data/Conservation_Areas",
+    fields: ["OBJECTID", "NAME", "URL"],
+    neg: "is not in a Conservation Area",
+    pos: (data) => ({
+      text: "is in a Conservation Area",
+      description: data.NAME,
+    }),
+  },
+  "designated.AONB": {
+    key: "designated.AONB",
+    source: environmentDomain,
+    id: "NE/AreasOfOutstandingNaturalBeautyEngland",
+    fields: ["objectid", "code", "name", "desig_date", "hotlink"],
+    neg: "is not an Area of Outstanding Natural Beauty",
+    pos: (data) => ({
+      text: "is, or is within, an Area of Outstanding Natural Beauty",
+      description: data.name,
+    }),
+  },
+  "designated.nationalPark": {
+    key: "designated.nationalPark",
+    source: environmentDomain,
+    id: "NE/NationalParksEngland",
+    fields: ["objectid", "code", "name", "status", "hotlink"],
+    neg: "is not a National Park",
+    pos: (data) => ({
+      text: "is, or is within, a National Park",
+      description: data.name,
+    }),
+  },
   "designated.broads": { value: false },
-  "defence.explosives": { value: false },
-  "designated.nationalPark": { value: false },
-  "defence.safeguarded": { value: false },
-  hazard: { value: false },
-  "nature.SSSI": { value: false },
   "designated.WHS": {
     key: "designated.WHS",
+    source: canterburyDomain,
     id: "External/Heritage",
     serverIndex: 1,
     fields: ["OBJECTID", "NAME", "NOTES"],
@@ -73,9 +83,34 @@ const planningConstraints = {
       description: data.NAME,
     }),
   },
+  "designated.monument": { value: false },
+  tpo: {
+    key: "tpo",
+    source: canterburyDomain,
+    id: "Open_Data/Tree_Preservation_Orders",
+    fields: ["OBJECTID", "TPO"],
+    neg: "is not in a TPO (Tree Preservation Order) zone",
+    pos: (data) => ({
+      text: "is in a TPO (Tree Preservation Order) zone",
+      description: data,
+    }),
+  },
+  "nature.SSSI": {
+    key: "nature.SSSI",
+    source: environmentDomain,
+    id: "NE/SitesOfSpecialScientificInterestEngland",
+    fields: ["objectid", "sssi_name"],
+    neg: "is not a Site of Special Scientific Interest",
+    pos: (data) => ({
+      text: "is a Site of Special Scientific Interest",
+      description: data.sssi_name,
+    }),
+  },
+  "defence.explosives": { value: false },
+  "defence.safeguarded": { value: false },
+  hazard: { value: false },
 };
 
 module.exports = {
-  mapServerDomain,
   planningConstraints,
 };

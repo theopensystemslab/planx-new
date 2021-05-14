@@ -1,48 +1,53 @@
 require("isomorphic-fetch");
 
-const { makeEsriUrl } = require("../helpers.js");
 const {
-  mapServerDomain,
-  planningConstraints,
-} = require("./metadata/canterbury.js");
+  getQueryableConstraints,
+  getFalseConstraints,
+  makeEsriUrl,
+  bufferPoint,
+} = require("../helpers.js");
+const { planningConstraints } = require("./metadata/canterbury.js");
 
-// only query planningConstraints with known GIS data sources
-let gisLayers = [];
-Object.keys(planningConstraints).map((layer) => {
-  if ("id" in planningConstraints[layer]) {
-    gisLayers.push(layer);
-  }
-});
+// Process local authority metadata
+const gisLayers = getQueryableConstraints(planningConstraints);
+const falseConstraints = getFalseConstraints(planningConstraints);
 
-async function search(key, serverIndex, outFields, geometry) {
-  const { id } = planningConstraints[key];
+// Fetch a data layer
+async function search(
+  mapServer,
+  featureName,
+  serverIndex,
+  outFields,
+  geometry
+) {
+  const { id } = planningConstraints[featureName];
 
-  let url = makeEsriUrl(mapServerDomain, id, serverIndex, {
+  let url = makeEsriUrl(mapServer, id, serverIndex, {
     outFields,
     geometry,
   });
 
   return fetch(url)
     .then((response) => response.text())
-    .then((data) => new Array(key, data))
+    .then((data) => new Array(featureName, data))
     .catch((error) => {
       console.log("Error:", error);
     });
 }
 
+// For this location, iterate through our planning constraints and aggregate/format the responses
 async function go(x, y, extras) {
-  // since no property boundaries, create a buffer around the address point
-  const radius = 0.05;
-  const pt = [x - radius, y + radius, x + radius, y - radius];
+  const point = bufferPoint(x, y, 0.05);
 
   try {
     const results = await Promise.all(
       gisLayers.map((layer) =>
         search(
+          planningConstraints[layer].source,
           layer,
           planningConstraints[layer].serverIndex,
           planningConstraints[layer].fields,
-          pt
+          point
         )
       )
     );
@@ -73,18 +78,14 @@ async function go(x, y, extras) {
                 };
               }
             }
-          } catch (e) {}
+          } catch (e) {
+            console.log(e);
+          }
 
           return acc;
         },
         {
-          "designated.AONB": { value: false },
-          "designated.broads": { value: false },
-          "defence.explosives": { value: false },
-          "designated.nationalPark": { value: false },
-          "defence.safeguarded": { value: false },
-          hazard: { value: false },
-          "nature.SSSI": { value: false },
+          ...falseConstraints,
           ...extras,
         }
       );
