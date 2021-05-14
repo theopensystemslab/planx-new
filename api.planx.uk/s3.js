@@ -21,7 +21,7 @@ const signS3Upload = (filename) =>
     });
 
     const fileType = getType(filename);
-    const key = `${process.env.NODE_ENV}/${nanoid()}/${filename}`;
+    const key = `${nanoid()}/${filename}`;
 
     const params = {
       ACL: process.env.AWS_S3_ACL,
