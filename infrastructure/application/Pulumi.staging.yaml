@@ -1,0 +1,20 @@
+config:
+  application:bops-api-token:
+    secure: AAABAFVKlS0ituRhi1ER6DkaKP004YkB34i2q7RUc/eipdnH6mb8CppHxMxL9zGNWFcw77Jss+Q=
+  application:cloudflare-zone-id:
+    secure: AAABAPZz/bzFCZEZd+jzPpYP4HXAOLYQmLGf2YLQE2YPfMBUtDC83KCo2l2DJ4AL4OKL+jFFx8wrrJc6DDwXJQ==
+  application:google-client-id: 987324067365-anl1o207sphdeu28i6nk2e6brec8fh4b.apps.googleusercontent.com
+  application:google-client-secret:
+    secure: AAABAGPV1tkZnhQ4zUEj+UwdYTXrls5GyhgUu50qy0oh3m35t7+V4rkVcYIdi0kqOxcYnTzjo2U=
+  application:gov-uk-pay-token:
+    secure: AAABALieC3v8dE5pyzD/m7zT5MESGpQ/ZOrh9BNzQqpm7q0=
+  application:hasura-admin-secret:
+    secure: AAABAFWrfRcYR8kWrKVhFQ+PedyHB+Op5r4yl5VGOfQR0DmEauoCg5lqY16fPu/vNaFc4lte0rPznxg6ak+CaOLovjE=
+  application:jwt-secret:
+    secure: AAABACbmLC4176IBxX5iL64/nycSXEsCYSQ0hTb7t2OCVlWUc627Vr/EpBhcqPrw9q+0z8UOvRJG5/c/DflZxfPxyJRUVNu+
+  application:session-secret:
+    secure: AAABABAEQraYY1NSIufhqZ1XYWTEqYgQl1M1CJmouRiD1mMx7LqKbyoYzAS4H3nfksuavw==
+  aws:region: eu-west-2
+  certificates:cloudflare-zone-id: dc27ac531ff8862559ed9ab5016c4953
+  cloudflare:apiToken:
+    secure: AAABAEBwzJDNq00EhPGMB83WNHOCYSC06QVtrs/pS3KSYSvpi1H9fjhoLdzs0aXwFCgqasCgjdXIy/dXFJaLQRa3OdUNluwk

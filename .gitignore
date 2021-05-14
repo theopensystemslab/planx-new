@@ -1,5 +1,5 @@
 node_modules/
-/.envrc
+.envrc
 /.env.prod
 nginx/static/*
 /ignore/
