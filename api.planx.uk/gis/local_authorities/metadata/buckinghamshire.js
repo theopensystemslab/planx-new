@@ -51,13 +51,14 @@ const planningConstraints = {
   },
   "designated.AONB": {
     key: "designated.AONB",
-    source: environmentDomain,
-    id: "NE/AreasOfOutstandingNaturalBeautyEngland",
-    fields: ["objectid", "code", "name", "desig_date", "hotlink"],
+    source: bucksDomain,
+    id: "PLANNING/RIPA_BOPS",
+    serverIndex: 3,
+    fields: ["OBJECTID", "NAME", "DESCRIPTIO"],
     neg: "is not an Area of Outstanding Natural Beauty",
     pos: (data) => ({
       text: "is, or is within, an Area of Outstanding Natural Beauty",
-      description: data.name,
+      description: data.NAME,
     }),
   },
   "designated.nationalPark": {
