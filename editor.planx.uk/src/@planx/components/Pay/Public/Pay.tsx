@@ -1,38 +1,24 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import ButtonBase from "@material-ui/core/ButtonBase";
-import Checkbox from "@material-ui/core/Checkbox";
 import Container from "@material-ui/core/Container";
-import Drawer from "@material-ui/core/Drawer";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import CloseIcon from "@material-ui/icons/Close";
 import Card from "@planx/components/shared/Preview/Card";
 import { makeData } from "@planx/components/shared/utils";
 import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
-import React, { useEffect } from "react";
-import { useAsync } from "react-use";
+import React, { useEffect, useReducer } from "react";
 import type { GovUKPayment } from "types";
-import Input from "ui/Input";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
-import { createPayload, GovUKCreatePaymentPayload, Pay } from "../model";
-import { toDecimal, toPence } from "../model";
+import { createPayload, Pay } from "../model";
+import { ComponentState, Event,reducer, toDecimal } from "../model";
 import Init from "./Init";
 
 export default Component;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    "& *": {
-      fontFamily: "Inter, sans-serif",
-    },
-  },
   banner: {
     background: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
@@ -49,22 +35,6 @@ const useStyles = makeStyles((theme) => ({
     "& .marginBottom": {
       marginBottom: theme.spacing(3),
     },
-  },
-  drawerPaper: {
-    boxSizing: "border-box",
-    width: 300,
-    [theme.breakpoints.only("xs")]: {
-      width: "100%",
-    },
-    backgroundColor: theme.palette.background.default,
-    border: 0,
-    boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
-    padding: theme.spacing(2),
-  },
-  link: {
-    color: theme.palette.primary.main,
-    textDecoration: "underline",
-    cursor: "pointer",
   },
 }));
 
@@ -89,66 +59,105 @@ function Component(props: Props) {
     state.previewEnvironment,
   ]);
 
-  const [state, setState] = React.useState<"init" | "sending" | "sent">(
-    govUkPayment ? "init" : "sent"
-  );
-
   if (!props.url) throw new Error("Missing Gov.UK Pay URL");
 
   const classes = useStyles();
 
-  if (govUkPayment) {
-    switch (govUkPayment.state.status) {
-      case "created":
-        axios.get(props.url + `/${govUkPayment.payment_id}`).then((res) => {
-          console.log(res.data);
-          const payment: GovUKPayment = res.data;
-          if (payment.state.status === "success") {
-            props.handleSubmit(makeData(props, res.data, "payment"));
-          }
-        });
-        break;
-      case "cancelled":
-      // TODO: display message to user that payment was cancelled; do not proceed with application
-      case "submitted":
-      // TODO: figure out what even to do with this one; probably thow an error
-      case "error":
-      case "failed":
-        throw new Error("Payment failed");
-    }
-  }
-
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
-  const payload = createPayload(fee, id);
+  const [state, dispatch] = useReducer(reducer, "loading");
 
-  const handlePayment = async () => {
-    setState("sending");
+  useEffect(() => {
+    if (!govUkPayment) {
+      dispatch(Event.NoPaymentFound);
+      return;
+    }
+
+    switch (govUkPayment.state.status) {
+      case "success":
+        dispatch(Event.Success);
+        props.handleSubmit(makeData(props, govUkPayment, "payment"));
+        break;
+      case "cancelled":
+      case "capturable":
+      case "created":
+      case "error":
+      case "failed":
+      case "started":
+      case "submitted":
+        dispatch(Event.IncompletePaymentFound);
+        refetchPayment(govUkPayment.payment_id);
+    }
+  }, []);
+
+  const updatePayment = (responseData: any): GovUKPayment => {
+    const payment: GovUKPayment = responseData;
+
+    const normalizedPayment = {
+      ...payment,
+      amount: toDecimal(payment.amount),
+    };
+
+    setGovUkPayment(normalizedPayment);
+
+    return normalizedPayment;
+  };
+
+  const refetchPayment = async (id: string) => {
+    await axios.get(props.url + `/${id}`).then((res) => {
+      const payment = updatePayment(res.data);
+
+      if (payment.state.status === "success") {
+        dispatch(Event.Success);
+        props.handleSubmit(makeData(props, govUkPayment, "payment"));
+      }
+    });
+  };
+
+  const resumeExistingPayment = async () => {
+    if (!govUkPayment) throw new Error("");
+
+    dispatch(Event.ResumePayment);
+
+    switch (govUkPayment.state.status) {
+      case "cancelled":
+      case "error":
+      case "failed":
+        startNewPayment();
+        break;
+      case "created":
+      case "submitted":
+        if (govUkPayment._links.next_url?.href)
+          window.location.replace(govUkPayment._links.next_url.href);
+    }
+  };
+
+  const startNewPayment = async () => {
+    dispatch(Event.StartNewPayment);
+
+    // Skip the redirect process if viewing this within the Editor
+    if (environment !== "standalone") {
+      dispatch(Event.Success);
+      return;
+    }
 
     // TODO: why isn't ErrorBoundary catching the errors I throw in here?
     if (!props.url) throw new Error("Missing GovUK Pay URL");
 
-    const request = await axios
-      .post(props.url, payload)
+    await axios
+      .post(props.url, createPayload(fee, id))
       .then((res) => {
-        console.log(res);
-        const payment: GovUKPayment = res.data;
+        const payment = updatePayment(res.data);
 
-        const normalizedPayment = {
-          ...payment,
-          amount: toDecimal(payment.amount),
-        };
-
-        setGovUkPayment(normalizedPayment);
-        console.log(payment);
-
-        window.location.replace(payment._links.next_url.href);
+        if (payment._links.next_url?.href)
+          window.location.replace(payment._links.next_url.href);
       })
       .catch((e) => {
         throw e;
       });
   };
 
+  // TODO: ask gunar & john about this:
   // TODO: When connecting this component to the flow and to the backend
   //       remember to also pass up the value of `otherPayments`
   //       to be stored in special data fields, e.g.
@@ -179,19 +188,30 @@ function Component(props: Props) {
       </div>
 
       <Card>
+        {/* TODO: Remove these; they're just useful for debugging */}
+        <Typography variant="h4">State {state}</Typography>
+        <Typography variant="h5">
+          Payment Status{" "}
+          {govUkPayment ? govUkPayment.state.status : "No payment found"}
+        </Typography>
+
         {state === "init" ? (
           <Init
             startPayment={() => {
-              setState(environment === "standalone" ? "sending" : "sent");
-              handlePayment();
+              startNewPayment();
             }}
           />
+        ) : state === "incomplete" ? (
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={resumeExistingPayment}
+          >
+            Retry Payment
+          </Button>
         ) : (
-          <Typography>
-            {state === "sending"
-              ? "Loading..."
-              : `Payment Status: ${govUkPayment?.state.status.toLocaleUpperCase()}`}
-          </Typography>
+          <Typography>Loading...</Typography>
         )}
       </Card>
     </Box>
