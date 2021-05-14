@@ -94,7 +94,7 @@ const flowInfoHelper = (time: any, operations: any[] = []) => {
   let str = `Edited ${formatDistanceToNow(new Date(time))} ago`;
   // there will always be an user attached to every sharedb
   // operation soon, so the if statement won't be necessary
-  if (operations[0].actor) {
+  if (operations[0]?.actor) {
     const { first_name, last_name } = operations[0].actor;
     str += ` by ${first_name} ${last_name}`;
   }
