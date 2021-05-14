@@ -1,8 +1,10 @@
+import { Store } from "pages/FlowEditor/lib/store";
+
 import { TYPES } from "../types";
-import { makePayload } from "./bops";
+import { getParams, makePayload } from "./bops";
 
 test("makes a more advanced payload", () => {
-  const flow = {
+  const flow: Store.flow = {
     _root: {
       edges: [
         "9MOwkWbaQk",
@@ -106,7 +108,7 @@ test("makes a more advanced payload", () => {
     },
   };
 
-  const breadcrumbs = {
+  const breadcrumbs: Store.breadcrumbs = {
     "9MOwkWbaQk": {
       answers: ["2p2ZJhTW63", "a4ZWUug077"],
       auto: false,
@@ -187,4 +189,144 @@ test("makes a more advanced payload", () => {
       ],
     },
   ]);
+});
+
+test("handles geo information", () => {
+  const flow: Store.flow = {
+    _root: {
+      edges: ["wLOgE7wk0g", "RL7mZR0Ukm"],
+    },
+    RL7mZR0Ukm: {
+      data: {
+        dataFieldArea: "specialarea",
+        dataFieldBoundary: "property.boundary.site",
+      },
+      type: TYPES.DrawBoundary,
+    },
+    wLOgE7wk0g: {
+      type: TYPES.FindProperty,
+    },
+  };
+
+  const passport: Store.passport = {
+    data: {
+      _address: {
+        __typename: "addresses",
+        uprn: "200003453481",
+        town: "LONDON",
+        y: 178075.15617517993,
+        x: 533677.7864906556,
+        street: "COBOURG ROAD",
+        sao: "",
+        postcode: "SE5 0HU",
+        pao: "49",
+        organisation: "",
+        blpu_code: "RD",
+        latitude: "51.4858363",
+        longitude: "-0.0761246",
+        full_address: "49 COBOURG ROAD, LONDON",
+        title: "49 COBOURG ROAD, LONDON",
+      },
+      "property.constraints.planning": [
+        "listed",
+        "designated.conservationArea",
+      ],
+      "property.boundary.site": {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Polygon",
+          coordinates: [
+            [
+              [-0.0762381016591329, 51.48589318633188],
+              [-0.07605044913233461, 51.485675957205665],
+              [-0.07591909236368012, 51.48586143752448],
+              [-0.0762381016591329, 51.48589318633188],
+            ],
+          ],
+        },
+      },
+      specialarea: 244.39,
+    },
+  };
+
+  const breadcrumbs: Store.breadcrumbs = {
+    wLOgE7wk0g: {
+      auto: false,
+      data: {
+        _address: {
+          __typename: "addresses",
+          uprn: "200003453481",
+          town: "LONDON",
+          y: 178075.15617517993,
+          x: 533677.7864906556,
+          street: "COBOURG ROAD",
+          sao: "",
+          postcode: "SE5 0HU",
+          pao: "49",
+          organisation: "",
+          blpu_code: "RD",
+          latitude: "51.4858363",
+          longitude: "-0.0761246",
+          full_address: "49 COBOURG ROAD, LONDON",
+          title: "49 COBOURG ROAD, LONDON",
+        },
+        "property.constraints.planning": [
+          "listed",
+          "designated.conservationArea",
+        ],
+      },
+    },
+    RL7mZR0Ukm: {
+      auto: false,
+      data: {
+        "property.boundary.site": {
+          type: "Feature",
+          properties: {},
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [-0.0762381016591329, 51.48589318633188],
+                [-0.07605044913233461, 51.485675957205665],
+                [-0.07591909236368012, 51.48586143752448],
+                [-0.0762381016591329, 51.48589318633188],
+              ],
+            ],
+          },
+        },
+        specialarea: 244.39,
+      },
+    },
+  };
+
+  expect(getParams(breadcrumbs, flow, passport)).toEqual({
+    application_type: "lawfulness_certificate",
+    constraints: { "designated.conservationArea": true, listed: true },
+    files: [],
+    payment_reference: "JG669323",
+    proposal_details: [],
+    site: {
+      address_1: "49 COBOURG ROAD",
+      postcode: "SE5 0HU",
+      town: "LONDON",
+      uprn: "200003453481",
+    },
+    work_status: "proposed",
+    boundary_geojson: {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-0.0762381016591329, 51.48589318633188],
+            [-0.07605044913233461, 51.485675957205665],
+            [-0.07591909236368012, 51.48586143752448],
+            [-0.0762381016591329, 51.48589318633188],
+          ],
+        ],
+      },
+    },
+  });
 });

@@ -182,3 +182,106 @@ export const fullPayload: BOPSFullPayload = {
   constraints: {},
   files: [] as Array<File>,
 };
+
+export function getParams(
+  breadcrumbs: Store.breadcrumbs,
+  flow: Store.flow,
+  passport: Store.passport
+) {
+  const data = fullPayload;
+
+  // 1a. address
+
+  const address = passport.data?._address;
+  if (address) {
+    data.site.uprn = String(address.uprn);
+
+    data.site.address_1 = [address.sao, address.pao, address.street]
+      .filter(Boolean)
+      .join(" ");
+
+    data.site.town = address.town;
+    data.site.postcode = address.postcode;
+
+    // TODO: add address_2 and ward
+  }
+
+  // 1b. property boundary
+
+  try {
+    // find the first draw boundary component breadcrumb
+    const boundaryBreadcrumb = Object.entries(breadcrumbs).find(
+      ([questionId]) => flow[questionId]?.type === TYPES.DrawBoundary
+    );
+    if (boundaryBreadcrumb) {
+      const [, { data: breadcrumbData }] = boundaryBreadcrumb;
+      if (breadcrumbData) {
+        // scan the breadcrumb's data object (what got saved to passport)
+        // and extract the first instance of any geojson that's found
+        const geojson = Object.values(breadcrumbData).find(
+          (v) => v?.type === "Feature"
+        );
+        if (geojson) data.boundary_geojson = geojson;
+      }
+    }
+  } catch (err) {
+    console.error({ boundary_geojson: err });
+  }
+
+  // 2. files
+
+  Object.entries(passport.data || {})
+    .filter(([, v]: any) => v?.[0]?.url)
+    .forEach(([key, arr]) => {
+      (arr as any[]).forEach(({ url }) => {
+        try {
+          data.files = data.files || [];
+          data.files.push({
+            filename: url,
+            tags: [], // should be [key], but BOPS will reject unless it's a specific string
+          });
+        } catch (err) {}
+      });
+    });
+
+  // 3. constraints
+
+  data.constraints = (
+    passport.data?.["property.constraints.planning"] || []
+  ).reduce((acc: Record<string, boolean>, curr: string) => {
+    // TODO: calculate application_type and payment_reference
+    acc[curr] = true;
+    return acc;
+  }, {});
+
+  // 4. work status
+
+  if (passport?.data?.["property.constraints.planning"] === "ldc.existing") {
+    data.work_status = "existing";
+  }
+
+  // 5. keys
+
+  const bopsData = Object.entries(bopsDictionary).reduce(
+    (acc, [bopsField, planxField]) => {
+      const value = passport.data?.[planxField];
+      if (value !== undefined && value !== null) {
+        acc[bopsField as keyof BOPSFullPayload] = value;
+      }
+      return acc;
+    },
+    {} as Partial<BOPSFullPayload>
+  );
+
+  // 6. questions+answers array
+
+  data.proposal_details = makePayload(flow, breadcrumbs);
+
+  const paymentReference = passport?.data?.["application.fee.reference.govPay"];
+
+  return {
+    ...data,
+    ...bopsData,
+    ...(paymentReference ? { payment_reference: paymentReference } : {}),
+  };
+}
