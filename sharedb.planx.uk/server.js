@@ -36,7 +36,7 @@ const wss = new Server({
   verifyClient: (info, cb) => {
     try {
       // checks if JWT is included in cookies, does not allow connection if invalid
-      const [, token] = info.req.headers.cookie.match(/jwt\=([^;]+)/);
+      const [, token] = info.req.headers.cookie?.match(/jwt\=([^;]+)/) || [];
 
       if (!token) {
         cb(false, 401, "Unauthorized");
