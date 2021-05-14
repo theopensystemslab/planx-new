@@ -63,7 +63,7 @@ function DrawBoundaryComponent(props: Props) {
             <InputRow>
               <Input
                 name="dataFieldBoundary"
-                placeholder="property.boundary.gis"
+                placeholder=""
                 value={formik.values.dataFieldBoundary}
                 onChange={formik.handleChange}
               />
