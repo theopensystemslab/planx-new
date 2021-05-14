@@ -6,6 +6,8 @@ config:
   application:google-client-id: 987324067365-anl1o207sphdeu28i6nk2e6brec8fh4b.apps.googleusercontent.com
   application:google-client-secret:
     secure: AAABAGPV1tkZnhQ4zUEj+UwdYTXrls5GyhgUu50qy0oh3m35t7+V4rkVcYIdi0kqOxcYnTzjo2U=
+  application:gov-uk-pay-token:
+    secure: AAABACMyJ5FxL3mMIsVWHDe4o3IzlnnDxIop6H2wqS4MqX9utrS+IBnwcyDv1x4xW6v2UE63b7eFfFhbo/rZHFnZrCpkbgUN/gQoEak3MjvTEthlAfrN8wMPOQqnSpKFtEMO
   application:hasura-admin-secret:
     secure: AAABAFWrfRcYR8kWrKVhFQ+PedyHB+Op5r4yl5VGOfQR0DmEauoCg5lqY16fPu/vNaFc4lte0rPznxg6ak+CaOLovjE=
   application:jwt-secret:

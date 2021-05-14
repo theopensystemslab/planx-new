@@ -218,6 +218,10 @@ new pulumi.Config("cloudflare").require("apiToken");
           },
           { name: "SESSION_SECRET", value: config.require("session-secret") },
           { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
+          {
+            name: "GOV_UK_PAY_TOKEN",
+            value: config.require("gov-uk-pay-token"),
+          },
           { name: "BOPS_API_TOKEN", value: config.require("bops-api-token") },
           { name: "JWT_SECRET", value: config.require("jwt-secret") },
           { name: "PORT", value: String(API_PORT) },
