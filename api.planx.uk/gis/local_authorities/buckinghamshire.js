@@ -1,122 +1,93 @@
-/*
-LAD20CD: E06000060
-LAD20NM: Buckinghamshire
-LAD20NMW:
-FID: 135
-*/
-
 require("isomorphic-fetch");
-const { makeUrlFromObject } = require("../helpers.js");
 
+const {
+  getQueryableConstraints,
+  getFalseConstraints,
+  makeEsriUrl,
+  bufferPoint,
+} = require("../helpers.js");
+const { planningConstraints } = require("./metadata/buckinghamshire.js");
+
+// Process local authority metadata
+const gisLayers = getQueryableConstraints(planningConstraints);
+const falseConstraints = getFalseConstraints(planningConstraints);
 const articleFours = {};
 
-const names = {
-  CONSERVATION_AREAS: {
-    id: "LP19ConsvArea",
-    key: "designated.conservationArea",
-    neg: "is not in a Conservation Area",
-    pos: "is in a Conservation Area",
-  },
-  LISTED_BUILDINGS: {
-    id: "ListedBuilding",
-    key: "listed",
-    neg: "is not in, or within, a Listed Building",
-    pos: `is, or is within, a Listed Building`,
-  },
-  ARTICLE_4S: {
-    id: "Article4Direction",
-    key: "article4",
-    neg: "is not subject to any Article 4 directions",
-    pos: "is subject to Article 4 Restriction(s)",
-  },
-  TREE_PRESERVATION_ORDERS: {
-    id: "TreePreservationOrder",
-    key: "tpo",
-    neg: "is not in a TPO (Tree Preservation Order) zone",
-    pos: "is in a TPO (Tree Preservation Order) zone",
-  },
-};
+// Fetch a data layer
+async function search(
+  mapServer,
+  featureName,
+  serverIndex,
+  outFields,
+  geometry
+) {
+  const { id } = planningConstraints[featureName];
 
-const bbox = (x, y, r = 0.0001) => `${x - r},${y - r},${x + r},${y + r}`;
-
-async function search(key, bbox) {
-  const { id } = names[key];
-
-  const url = makeUrlFromObject({
-    root: "https://inspire.wycombe.gov.uk/getows.ashx",
-    params: {
-      service: "WFS",
-      request: "GetFeature",
-      version: "1.1.0",
-      mapsource: "Wycombe/INSPIRE",
-      typeName: id,
-      maxfeatures: 1,
-      bbox,
-    },
-  });
+  let url = makeEsriUrl(mapServer, id, serverIndex, { outFields, geometry });
 
   return fetch(url)
-    .then(response => response.text())
-    .then(data => new Array(key, data))
+    .then((response) => response.text())
+    .then((data) => new Array(featureName, data))
     .catch((error) => {
-      console.log('Error:', error);
+      console.log("Error:", error);
     });
 }
 
+// For this location, iterate through our planning constraints and aggregate/format the responses
 async function go(x, y, extras) {
-  const pt = bbox(x, y);
+  const point = bufferPoint(x, y, 0.05);
 
   try {
-    const results = await Promise.all([
-      search("LISTED_BUILDINGS", pt),
-      search("CONSERVATION_AREAS", pt),
-      search("ARTICLE_4S", pt),
-      search("TREE_PRESERVATION_ORDERS", pt),
-    ]);
+    const results = await Promise.all(
+      gisLayers.map((layer) =>
+        search(
+          planningConstraints[layer].source,
+          layer,
+          planningConstraints[layer].serverIndex,
+          planningConstraints[layer].fields,
+          point
+        )
+      )
+    );
 
     const ob = results
       .filter(([_key, result]) => !(result instanceof Error))
       .reduce(
         (acc, [key, result]) => {
-          const k = `${names[key].key}`;
+          const data = JSON.parse(result);
+          const k = `${planningConstraints[key].key}`;
+
           try {
-            const hasValue = !String(result).includes("gml:null");
-            if (hasValue) {
+            if (data.features.length > 0) {
+              const { attributes: properties } = data.features[0];
               acc[k] = {
-                text: names[key].pos,
+                ...planningConstraints[key].pos(properties),
                 value: true,
                 type: "warning",
-                data: {},
+                data: properties,
               };
             } else {
-              acc[k] = {
-                text: names[key].neg,
-                value: false,
-                type: "check",
-                data: {},
-              };
+              if (!acc[k]) {
+                acc[k] = {
+                  text: planningConstraints[key].neg,
+                  value: false,
+                  type: "check",
+                  data: {},
+                };
+              }
             }
-          } catch (err) {
-            console.error({ err });
+          } catch (e) {
+            console.log(e);
           }
 
           return acc;
         },
         {
-          "property.c31": { value: false },
-          "designated.AONB": { value: false },
-          "designated.broads": { value: false },
-          "defence.explosives": { value: false },
-          "designated.nationalPark": { value: false },
-          "defence.safeguarded": { value: false },
-          hazard: { value: false },
-          "nature.SSSI": { value: false },
-          "property.landWCA": { value: false },
-          "designated.WHS": { value: false },
           ...Object.values(articleFours).reduce((acc, curr) => {
             acc[curr] = { value: false };
             return acc;
           }, {}),
+          ...falseConstraints,
           ...extras,
         }
       );

@@ -44,7 +44,7 @@ async function go(x, y, extras) {
     );
 
     const ob = results
-      .filter(([key, result]) => !(result instanceof Error))
+      .filter(([_key, result]) => !(result instanceof Error))
       .reduce(
         (acc, [key, result]) => {
           const data = JSON.parse(result);

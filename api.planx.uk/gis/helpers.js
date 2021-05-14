@@ -52,12 +52,12 @@ const makeEsriUrl = (domain, id, serverIndex = 0, overrideParams = {}) => {
   return url;
 };
 
-// Buffer an address point as a proxy for curtilage boundaries
+// Buffer an address point as a proxy for curtilage
 const bufferPoint = (x, y, radius = 0.05) => {
   return [x - radius, y + radius, x + radius, y - radius];
 };
 
-// For a dictionary of planning constraint objects, return the the items with { value: false }
+// For a dictionary of planning constraint objects, return the items with { value: false }
 const getFalseConstraints = (metadata) => {
   let falseConstraints = {};
   Object.keys(metadata).filter((constraint) => {
@@ -69,7 +69,7 @@ const getFalseConstraints = (metadata) => {
   return falseConstraints;
 };
 
-// For a dictionary of planning constraint objects, return the key names with known GIS data sources
+// For a dictionary of planning constraint objects, return the key names with known data sources
 const getQueryableConstraints = (metadata) => {
   let queryableConstraints = [];
   Object.keys(metadata).map((constraint) => {
