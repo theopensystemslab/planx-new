@@ -100,17 +100,18 @@ const planningConstraints = {
       description: data.name,
     }),
   },
-  "designated.monument": {
-    key: "designated.monument",
-    source: environmentDomain,
-    id: "HE/ScheduledMonuments", // TODO debug response "requested operation not supported"
-    fields: ["objectid", "name", "scheddate"],
-    neg: "is not the site of a Scheduled Monument",
-    pos: (data) => ({
-      text: "is the site of a Scheduled Monument",
-      description: data.name,
-    }),
-  },
+  "designated.monument": { value: false },
+  // "designated.monument": {
+  //   key: "designated.monument",
+  //   source: environmentDomain,
+  //   id: "HE/ScheduledMonuments", // TODO debug response "requested operation not supported"
+  //   fields: ["objectid", "name", "scheddate"],
+  //   neg: "is not the site of a Scheduled Monument",
+  //   pos: (data) => ({
+  //     text: "is the site of a Scheduled Monument",
+  //     description: data.name,
+  //   }),
+  // },
   tpo: {
     key: "tpo",
     source: lambethDomain,
@@ -156,8 +157,8 @@ const planningConstraints = {
     }),
   },
   "defence.explosives": { value: false },
-  "defence.safeguarded": { value: false },
-  hazard: { value: false },
+  "defence.safeguarded": { value: false }, // https://lambethopenmappingdata-lambethcouncil.opendata.arcgis.com/datasets/safeguarded-waste-sites/data?geometry=-0.143%2C51.458%2C-0.064%2C51.467
+  hazard: { value: false }, // https://lambethopenmappingdata-lambethcouncil.opendata.arcgis.com/datasets/comah-sites?geometry=-3.006%2C51.203%2C2.028%2C51.802
 };
 
 module.exports = {

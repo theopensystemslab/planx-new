@@ -39,12 +39,12 @@ async function go(x, y, extras) {
 
   try {
     const results = await Promise.all(
-      gisLayers.map((layer) =>
+      Object.keys(gisLayers).map((layer) =>
         search(
-          planningConstraints[layer].source,
+          gisLayers[layer].source,
           layer,
-          planningConstraints[layer].serverIndex,
-          planningConstraints[layer].fields,
+          gisLayers[layer].serverIndex,
+          gisLayers[layer].fields,
           point
         )
       )

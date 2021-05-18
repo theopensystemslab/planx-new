@@ -36,7 +36,12 @@ const bufferPoint = (x, y, radius = 0.05) => {
   return [x - radius, y + radius, x + radius, y - radius];
 };
 
-// For a dictionary of planning constraint objects, return the items with { value: false }
+// Build a bbox (string) around a point
+const makeBbox = (x, y, radius = 1.5) => {
+  return `${x - radius},${y - radius},${x + radius},${y + radius}`;
+};
+
+// For a dictionary of planning constraint objects, return the items with preset { value: false }
 const getFalseConstraints = (metadata) => {
   let falseConstraints = {};
   Object.keys(metadata).filter((constraint) => {
@@ -50,10 +55,10 @@ const getFalseConstraints = (metadata) => {
 
 // For a dictionary of planning constraint objects, return the key names with known data sources
 const getQueryableConstraints = (metadata) => {
-  let queryableConstraints = [];
-  Object.keys(metadata).map((constraint) => {
-    if ("id" in metadata[constraint]) {
-      queryableConstraints.push(constraint);
+  let queryableConstraints = {};
+  Object.keys(metadata).filter((constraint) => {
+    if ("source" in metadata[constraint]) {
+      queryableConstraints[constraint] = metadata[constraint];
     }
   });
 
@@ -63,6 +68,7 @@ const getQueryableConstraints = (metadata) => {
 module.exports = {
   makeEsriUrl,
   bufferPoint,
+  makeBbox,
   getQueryableConstraints,
   getFalseConstraints,
 };
