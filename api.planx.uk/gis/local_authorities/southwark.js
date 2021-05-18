@@ -1,7 +1,11 @@
 require("isomorphic-fetch");
 const https = require("https");
 
+const { makeBbox, getFalseConstraints } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/southwark.js");
+
+// Process local authority metadata
+const falseConstraints = getFalseConstraints(planningConstraints);
 
 var headers = {
   Origin: "https://geo.southwark.gov.uk",
@@ -16,21 +20,18 @@ var headers = {
   DNT: "1",
 };
 
+// Fetch a data layer
 function get(key, table, x, y, radius = 1.5) {
   const fieldsString = planningConstraints[key].columns.map((f) => `"${f}"`).join(",");
 
   const limit = 1; // 100
 
+  const bbox = makeBbox(x, y, radius);
+
   const query = `
     SELECT ${fieldsString} 
     FROM "/NamedMaps/NamedTables/${table}" 
-    WHERE MI_Intersects(
-      obj,
-      MI_Box(
-        ${x - radius},${y - radius},${x + radius},${y + radius},
-        'EPSG:27700'
-      )
-    )
+    WHERE MI_Intersects(obj,MI_Box(${bbox},'EPSG:27700'))
   `;
 
   return fetch("https://geo.southwark.gov.uk/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService", {
@@ -51,6 +52,7 @@ function get(key, table, x, y, radius = 1.5) {
     });
 }
 
+// For this location, iterate through our planning constraints and aggregate/format the responses
 async function locationSearch(x, y, extras) {
   const responses = await Promise.all(
     [
@@ -76,7 +78,7 @@ async function locationSearch(x, y, extras) {
       get("article4", "Article 4 - Demolition of the Stables and the Forge on Catlin Street", x, y),
       get("designated.monument", "Scheduled Monuments", x, y),
       get("designated.WHS", "UNESCO World Heritage Sites England", x, y),
-    ].map((p) => p.catch((e) => e))
+    ].map((p) => p.catch((e) => console.log(e)))
   );
 
   const ob = responses
@@ -111,13 +113,7 @@ async function locationSearch(x, y, extras) {
         return acc;
       },
       {
-        "designated.AONB": { value: false },
-        "designated.broads": { value: false },
-        "defence.explosives": { value: false },
-        "designated.nationalPark": { value: false },
-        "defence.safeguarded": { value: false },
-        hazard: { value: false },
-        "nature.SSSI": { value: false },
+        ...falseConstraints,
         ...extras,
       }
     );

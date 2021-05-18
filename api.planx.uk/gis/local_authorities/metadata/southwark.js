@@ -37,11 +37,10 @@ const planningConstraints = {
     }),
   },
   listed: { 
-    // todo investigate https://geo.southwark.gov.uk/connect/analyst/mobile/#/main?mapcfg=Southwark%20IMA "all listed buildings" layer, is it up to date?
-    // OR https://geo.southwark.gov.uk/connect/analyst/mobile/#/main?mapcfg=Southwark%20Design%20and%20Conservation "Historic England Listed Buildings in Southwark" layer
     key: "listed",
     source: "Southwark Maps",
-    tables: [ // order from least to most significant grade
+    tables: [
+      // order from least to most significant grade
       "Listed buildings (Southwark) Grade II",
       "Listed buildings (Southwark) Grade II star",
       "Listed buildings (Southwark) Grade I",
@@ -80,28 +79,8 @@ const planningConstraints = {
         : data.Conservation_area,
     }),
   },
-  "designated.AONB": {
-    key: "designated.AONB",
-    source: environmentDomain,
-    id: "NE/AreasOfOutstandingNaturalBeautyEngland",
-    fields: ["objectid", "code", "name", "desig_date", "hotlink"],
-    neg: "is not an Area of Outstanding Natural Beauty",
-    pos: (data) => ({
-      text: "is, or is within, an Area of Outstanding Natural Beauty",
-      description: data.name,
-    }),
-  },
-  "designated.nationalPark": {
-    key: "designated.nationalPark",
-    source: environmentDomain,
-    id: "NE/NationalParksEngland",
-    fields: ["objectid", "code", "name", "status", "hotlink"],
-    neg: "is not a National Park",
-    pos: (data) => ({
-      text: "is, or is within, a National Park",
-      description: data.name,
-    }),
-  },
+  "designated.AONB": { value: false },
+  "designated.nationalPark": { value: false },
   "designated.broads": { value: false },
   "designated.WHS": {
     key: "designated.WHS",
@@ -138,7 +117,7 @@ const planningConstraints = {
       description: data.Name,
     }),
   },
-  tpo: { // todo investigate https://geo.southwark.gov.uk/connect/analyst/mobile/#/main?mapcfg=Southwark%20IMA "all tpo zones" file, is it up to date?
+  tpo: { 
     key: "tpo",
     source: "Southwark Maps",
     tables: [
@@ -155,17 +134,7 @@ const planningConstraints = {
       description: data.TPO_document ? data.TPO_document : data.Location,
     }),
   },
-  "nature.SSSI": {
-    key: "nature.SSSI",
-    source: environmentDomain,
-    id: "NE/SitesOfSpecialScientificInterestEngland",
-    fields: ["objectid", "sssi_name"],
-    neg: "is not a Site of Special Scientific Interest",
-    pos: (data) => ({
-      text: "is a Site of Special Scientific Interest",
-      description: data.sssi_name,
-    }),
-  },
+  "nature.SSSI": { value: false },
   "nature.ASNW": {
     key: "nature.ANSW",
     source: "Southwark Maps",

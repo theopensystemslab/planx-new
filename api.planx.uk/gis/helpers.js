@@ -1,3 +1,5 @@
+// Build up the URL used to query an ESRI feature
+// Ref https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-.htm
 const makeEsriUrl = (domain, id, serverIndex = 0, overrideParams = {}) => {
   let url = `${domain}/arcgis/rest/services/${id}/MapServer/${serverIndex}/query`;
 
@@ -53,7 +55,7 @@ const getFalseConstraints = (metadata) => {
   return falseConstraints;
 };
 
-// For a dictionary of planning constraint objects, return the key names with known data sources
+// For a dictionary of planning constraint objects, return the items with known data sources
 const getQueryableConstraints = (metadata) => {
   let queryableConstraints = {};
   Object.keys(metadata).filter((constraint) => {
