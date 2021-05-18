@@ -22,7 +22,7 @@ beforeEach(() => {
     matchOnVariables: false,
     variables: {
       destination_url:
-        "https://southwark.bops-staging.services/api/v1/planning_applications",
+        "https://southwark.bops.services/api/v1/planning_applications",
     },
   });
 });
