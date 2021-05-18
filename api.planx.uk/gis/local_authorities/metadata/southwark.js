@@ -11,8 +11,34 @@ https://environment.data.gov.uk/arcgis/rest/services
 const environmentDomain = "https://environment.data.gov.uk";
 
 const planningConstraints = {
-  article4: {},
-  listed: {
+  article4: {
+    key: "article4",
+    source: "Southwark Maps",
+    tables: [
+      "Article 4 - Sunray Estate",
+      "Article 4 - offices in the Central Activities Zone",
+      "Article 4 - Public Houses",
+      "Article 4 - HMO Henshaw Street",
+      "Article 4 - HMO Bywater Place",
+      "Article 4 - Light Industrial",
+      "Article 4 - Town Centres A3 - A5 to A2 and from A1 – A5 B1 D1 and D2 to flexible uses",
+      "Article 4 - Town Centres A1 to A2",
+      "Article 4 - Railway Arches",
+      "Article 4 - Demolition of the Stables and the Forge on Catlin Street",
+    ],
+    columns: [
+      "Article_4_Direction",
+      "More_information",
+    ],
+    neg: "is not subject to any Article 4 restrictions",
+    pos: (data) => ({
+      text: "is subject to Article 4 restriction(s)",
+      description: data.Article_4_Direction,
+    }),
+  },
+  listed: { 
+    // todo investigate https://geo.southwark.gov.uk/connect/analyst/mobile/#/main?mapcfg=Southwark%20IMA "all listed buildings" layer, is it up to date?
+    // OR https://geo.southwark.gov.uk/connect/analyst/mobile/#/main?mapcfg=Southwark%20Design%20and%20Conservation "Historic England Listed Buildings in Southwark" layer
     key: "listed",
     source: "Southwark Maps",
     tables: [ // order from least to most significant grade
@@ -79,17 +105,40 @@ const planningConstraints = {
   "designated.broads": { value: false },
   "designated.WHS": {
     key: "designated.WHS",
-    source: environmentDomain,
-    id: "HE/WorldHeritageSites",
-    fields: ["objectid", "name"],
+    source: "Southwark Maps",
+    tables: [
+      "UNESCO World Heritage Sites England"
+    ],
+    columns: [
+      "OGR_FID",
+      "NAME",
+      "NOTES",
+    ],
     neg: "is not a World Heritage Site",
     pos: (data) => ({
       text: "is a World Heritage Site",
-      description: data.name,
+      description: data.NAME,
     }),
   },
-  "designated.monument": { value: false },
-  tpo: {
+  "designated.monument": {
+    key: "designated.WHS",
+    source: "Southwark Maps", // todo debug access-denied error, or swap to ESRI source
+    tables: [
+      "Scheduled Monuments"
+    ],
+    columns: [
+      "ListEntry",
+      "Name",
+      "SchedDate",
+      "Hyperlink",
+    ],
+    neg: "is not the site of a Monument",
+    pos: (data) => ({
+      text: "is the site of a Monument",
+      description: data.Name,
+    }),
+  },
+  tpo: { // todo investigate https://geo.southwark.gov.uk/connect/analyst/mobile/#/main?mapcfg=Southwark%20IMA "all tpo zones" file, is it up to date?
     key: "tpo",
     source: "Southwark Maps",
     tables: [
@@ -116,6 +165,16 @@ const planningConstraints = {
       text: "is a Site of Special Scientific Interest",
       description: data.sssi_name,
     }),
+  },
+  "nature.ASNW": {
+    key: "nature.ANSW",
+    source: "Southwark Maps",
+    tables: [
+      "Areas of ancient woodland from Natural England (Southwark)"
+    ],
+    columns: ["OBJECTID", "NAME", "THEME"],
+    neg: "is not within an Ancient Woodland area",
+    pos: "is within an Ancient Woodland area",
   },
   "defence.explosives": { value: false },
   "defence.safeguarded": { value: false },
