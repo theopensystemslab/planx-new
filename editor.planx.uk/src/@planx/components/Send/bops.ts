@@ -5,9 +5,9 @@
 // https://southwark.preview.bops.services/api-docs/index.html
 
 import { flatFlags } from "pages/FlowEditor/data/flags";
-
 import { Store } from "../../../pages/FlowEditor/lib/store";
 import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
+import { GOV_PAY_PASSPORT_KEY } from "../Pay/model";
 import { TYPES } from "../types";
 
 interface BOPSMinimumPayload {
@@ -91,7 +91,7 @@ export const bopsDictionary = {
   agent_phone: "applicant.agent.phone.primary",
   agent_email: "applicant.agent.email",
 
-  payment_reference: "application.fee.reference.govPay",
+  payment_reference: GOV_PAY_PASSPORT_KEY,
   description: "proposal.description",
 };
 
@@ -287,7 +287,7 @@ export function getParams(
 
   data.proposal_details = makePayload(flow, breadcrumbs);
 
-  const paymentReference = passport?.data?.["application.fee.reference.govPay"];
+  const paymentReference = passport?.data?.[GOV_PAY_PASSPORT_KEY];
 
   return {
     ...data,
