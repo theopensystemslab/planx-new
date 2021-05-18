@@ -206,7 +206,7 @@ if (!process.env.BOPS_API_TOKEN) {
 }
 
 app.use("/bops/:localAuthority", (req, res) => {
-  const target = `https://${req.params.localAuthority}.bops-staging.services/api/v1/planning_applications`;
+  const target = `https://${req.params.localAuthority}.bops.services/api/v1/planning_applications`;
 
   createProxyMiddleware({
     headers: {
