@@ -157,8 +157,8 @@ const planningConstraints = {
     }),
   },
   "defence.explosives": { value: false },
-  "defence.safeguarded": { value: false }, // https://lambethopenmappingdata-lambethcouncil.opendata.arcgis.com/datasets/safeguarded-waste-sites/data?geometry=-0.143%2C51.458%2C-0.064%2C51.467
-  hazard: { value: false }, // https://lambethopenmappingdata-lambethcouncil.opendata.arcgis.com/datasets/comah-sites?geometry=-3.006%2C51.203%2C2.028%2C51.802
+  "defence.safeguarded": { value: false }, // https://lambethopenmappingdata-lambethcouncil.opendata.arcgis.com/datasets/safeguarded-waste-sites ??
+  hazard: { value: false }, // https://lambethopenmappingdata-lambethcouncil.opendata.arcgis.com/datasets/comah-sites ??
 };
 
 module.exports = {

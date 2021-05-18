@@ -101,7 +101,7 @@ const planningConstraints = {
   },
   "designated.monument": {
     key: "designated.WHS",
-    source: "Southwark Maps", // todo debug access-denied error, or swap to ESRI source
+    source: "Southwark Maps", // TODO debug access-denied error, or swap to ESRI source
     tables: [
       "Scheduled Monuments"
     ],
