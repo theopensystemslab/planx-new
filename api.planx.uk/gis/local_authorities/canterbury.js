@@ -2,7 +2,6 @@ require("isomorphic-fetch");
 
 const {
   getQueryableConstraints,
-  getFalseConstraints,
   makeEsriUrl,
   bufferPoint,
 } = require("../helpers.js");
@@ -10,7 +9,6 @@ const { planningConstraints } = require("./metadata/canterbury.js");
 
 // Process local authority metadata
 const gisLayers = getQueryableConstraints(planningConstraints);
-const falseConstraints = getFalseConstraints(planningConstraints);
 
 // Fetch a data layer
 async function search(
@@ -85,7 +83,6 @@ async function go(x, y, extras) {
           return acc;
         },
         {
-          ...falseConstraints,
           ...extras,
         }
       );

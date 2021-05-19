@@ -1,11 +1,8 @@
 require("isomorphic-fetch");
 const https = require("https");
 
-const { makeBbox, getFalseConstraints } = require("../helpers.js");
+const { makeBbox } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/southwark.js");
-
-// Process local authority metadata
-const falseConstraints = getFalseConstraints(planningConstraints);
 
 var headers = {
   Origin: "https://geo.southwark.gov.uk",
@@ -113,7 +110,6 @@ async function locationSearch(x, y, extras) {
         return acc;
       },
       {
-        ...falseConstraints,
         ...extras,
       }
     );

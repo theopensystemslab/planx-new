@@ -2,7 +2,6 @@ require("isomorphic-fetch");
 
 const {
   getQueryableConstraints,
-  getFalseConstraints,
   makeEsriUrl,
   bufferPoint,
 } = require("../helpers.js");
@@ -10,7 +9,6 @@ const { planningConstraints } = require("./metadata/lambeth.js");
 
 // Process local authority metadata
 const gisLayers = getQueryableConstraints(planningConstraints);
-const falseConstraints = getFalseConstraints(planningConstraints);
 const articleFours = planningConstraints.article4.records;
 
 // Fetch a data layer
@@ -96,20 +94,19 @@ async function go(x, y, extras) {
             acc[curr] = { value: false };
             return acc;
           }, {}),
-          ...falseConstraints,
           ...extras,
         }
       );
 
-    // ob["designated.conservationArea.lambeth.churchRoad"] = {
-    //   value:
-    //     ob["designated.conservationArea"] &&
-    //     ob["designated.conservationArea"].data &&
-    //     ob["designated.conservationArea"].data.CA_REF_NO &&
-    //     ob["designated.conservationArea"].data.CA_REF_NO === "CA10"
-    //       ? true
-    //       : false,
-    // };
+    ob["designated.conservationArea.lambeth.churchRoad"] = {
+      value:
+        ob["designated.conservationArea"] &&
+        ob["designated.conservationArea"].data &&
+        ob["designated.conservationArea"].data.CA_REF_NO &&
+        ob["designated.conservationArea"].data.CA_REF_NO === "CA10"
+          ? true
+          : false,
+    };
 
     return ob;
   } catch (e) {
