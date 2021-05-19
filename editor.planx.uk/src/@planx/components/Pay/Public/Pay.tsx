@@ -88,6 +88,10 @@ function Component(props: Props) {
   });
 
   useEffect(() => {
+    if (fee <= 0) {
+      handleSuccess();
+    }
+
     if (!govUkPayment) {
       dispatch(Action.NoPaymentFound);
       return;
