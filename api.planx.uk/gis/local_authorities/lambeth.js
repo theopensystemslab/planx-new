@@ -1,132 +1,59 @@
-/*
-LAD20CD: E09000022
-LAD20NM: Lambeth
-LAD20NMW:
-FID: 352
-*/
-
 require("isomorphic-fetch");
 
-const articleFours = {
-  // : "property.article4.lambeth.fentiman", // CA11
-  1: "article4.lambeth.streatham", // CA62
-  2: "article4.lambeth.stockwell", // CA05
-  3: "article4.lambeth.leigham", // CA31
-  4: "property.article4.lambeth.stmarks", // CA11
-  5: "article4.lambeth.parkHall", // CA19
-  6: "article4.lambeth.lansdowne", // CA03
-  7: "article4.lambeth.albert", // CA04
-  8: "article4.lambeth.hydeFarm", // CA48
-};
+const {
+  getQueryableConstraints,
+  makeEsriUrl,
+  bufferPoint,
+} = require("../helpers.js");
+const { planningConstraints } = require("./metadata/lambeth.js");
 
-const names = {
-  CONSERVATION_AREAS: {
-    id: "LambethConservationAreas",
-    key: "designated.conservationArea",
-    neg: "is not in a Conservation Area",
-    pos: (data) => ({
-      text: "is in a Conservation Area",
-      description: data.NAME,
-    }),
-  },
-  LISTED_BUILDINGS: {
-    id: "LambethListedBuildings",
-    key: "listed",
-    neg: "is not in, or within, a Listed Building",
-    pos: (data) => ({
-      text: `is, or is within, a ${data.GRADE}`,
-      description: data.ADDRESS_1,
-    }),
-  },
-  ARTICLE_4S: {
-    id: "LambethArticle4",
-    key: "article4",
-    neg: "is not subject to any Article 4 directions",
-    pos: (data) => {
-      const text =
-        data.length === 1
-          ? "is subject to an Article 4 Restriction"
-          : `is subject to multiple Article 4 Restrictions`;
-      return {
-        text,
-        description: data
-          .map((d) => d.DESCRIPTION)
-          .sort()
-          .join(", "),
-      };
-    },
-  },
-};
+// Process local authority metadata
+const gisLayers = getQueryableConstraints(planningConstraints);
+const articleFours = planningConstraints.article4.records;
 
-const makeUrl = (id, overrideParams = {}) => {
-  let url = `https://gis.lambeth.gov.uk/arcgis/rest/services/${id}/MapServer/0/query`;
-  const defaultParams = {
-    where: "1=1",
-    geometryType: "esriGeometryEnvelope",
-    inSR: 27700,
-    spatialRel: "esriSpatialRelIntersects",
-    returnGeometry: false,
-    outSR: 4326,
-    f: "json",
-    outFields: [],
-    geometry: [],
-  };
+// Fetch a data layer
+async function search(mapServer, featureName, outFields, geometry) {
+  const { id } = planningConstraints[featureName];
 
-  const params = { ...defaultParams, ...overrideParams };
-
-  if (Array.isArray(params.outFields))
-    params.outFields = params.outFields.join(",");
-  if (Array.isArray(params.geometry))
-    params.geometry = params.geometry.join(",");
-
-  url = [
-    url,
-    Object.keys(params)
-      .map((key) => key + "=" + escape(params[key]))
-      .join("&"),
-  ].join("?");
-  console.log({ url });
-  return url;
-};
-
-async function search(key, outFields, geometry) {
-  const { id } = names[key];
-
-  let url = makeUrl(id, { outFields, geometry });
+  let url = makeEsriUrl(mapServer, id, 0, { outFields, geometry });
 
   return fetch(url)
-    .then(response => response.text())
-    .then(data => new Array(key, data))
+    .then((response) => response.text())
+    .then((data) => new Array(featureName, data))
     .catch((error) => {
-      console.log('Error:', error);
+      console.log("Error:", error);
     });
 }
 
+// For this location, iterate through our planning constraints and aggregate/format the responses
 async function go(x, y, extras) {
-  // const radius = 0.05;
-  const radius = 0.05;
-  const pt = [x - radius, y + radius, x + radius, y - radius];
+  const point = bufferPoint(x, y, 0.05);
 
   try {
-    const results = await Promise.all([
-      search("LISTED_BUILDINGS", ["GRADE", "OBJECTID", "ADDRESS_1"], pt),
-      search("CONSERVATION_AREAS", ["NAME", "OBJECTID"], pt),
-      search("ARTICLE_4S", ["OBJECTID", "DESCRIPTION"], pt),
-    ]);
+    const results = await Promise.all(
+      Object.keys(gisLayers).map((layer) =>
+        search(
+          gisLayers[layer].source,
+          layer,
+          gisLayers[layer].fields,
+          point
+        )
+      )
+    );
 
     const ob = results
-      .filter(([key, result]) => !(result instanceof Error))
+      .filter(([_key, result]) => !(result instanceof Error))
       .reduce(
         (acc, [key, result]) => {
           const data = JSON.parse(result);
-          const k = `${names[key].key}`;
+          const k = `${planningConstraints[key].key}`;
 
           try {
             if (data.features.length > 0) {
-              if (key === "ARTICLE_4S") {
+              if (key === "article4") {
                 const properties = data.features.map((f) => f.attributes);
                 acc[key] = {
-                  ...names[key].pos(properties),
+                  ...planningConstraints[key].pos(properties),
                   value: true,
                   type: "warning",
                   data: properties,
@@ -140,7 +67,7 @@ async function go(x, y, extras) {
               } else {
                 const { attributes: properties } = data.features[0];
                 acc[k] = {
-                  ...names[key].pos(properties),
+                  ...planningConstraints[key].pos(properties),
                   value: true,
                   type: "warning",
                   data: properties,
@@ -149,28 +76,20 @@ async function go(x, y, extras) {
             } else {
               if (!acc[k]) {
                 acc[k] = {
-                  text: names[key].neg,
+                  text: planningConstraints[key].neg,
                   value: false,
                   type: "check",
                   data: {},
                 };
               }
             }
-          } catch (e) {}
+          } catch (e) {
+            console.log(e);
+          }
 
           return acc;
         },
         {
-          "property.c31": { value: false },
-          "designated.AONB": { value: false },
-          "designated.broads": { value: false },
-          "defence.explosives": { value: false },
-          "designated.nationalPark": { value: false },
-          "defence.safeguarded": { value: false },
-          hazard: { value: false },
-          "nature.SSSI": { value: false },
-          "property.landWCA": { value: false },
-          "designated.WHS": { value: false },
           ...Object.values(articleFours).reduce((acc, curr) => {
             acc[curr] = { value: false };
             return acc;
@@ -179,15 +98,21 @@ async function go(x, y, extras) {
         }
       );
 
+    ob["designated.conservationArea.lambeth.churchRoad"] = {
+      value:
+        ob["designated.conservationArea"] &&
+        ob["designated.conservationArea"].data &&
+        ob["designated.conservationArea"].data.CA_REF_NO &&
+        ob["designated.conservationArea"].data.CA_REF_NO === "CA10"
+          ? true
+          : false,
+    };
+
     return ob;
   } catch (e) {
     throw e;
   }
 }
-
-// go(531593, 174449);
-// go(531176, 174642);
-// go(529491, 175638);
 
 async function locationSearch(x, y, extras) {
   return go(x, y, extras);
