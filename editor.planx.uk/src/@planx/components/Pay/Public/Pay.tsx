@@ -1,20 +1,15 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Card from "@planx/components/shared/Preview/Card";
 import { makeData } from "@planx/components/shared/utils";
 import axios from "axios";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
 import type { GovUKPayment } from "types";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import { createPayload, Pay } from "../model";
-import { ComponentState, Event,reducer, toDecimal } from "../model";
-import Init from "./Init";
+import { toDecimal } from "../model";
+import Confirm from "./Confirm";
 
 export default Component;
 
@@ -44,6 +39,24 @@ interface Props extends Pay {
   fn?: string;
 }
 
+// TODO: Does this need an error state if we have a good ErrorBoundary?
+type ComponentState =
+  | "indeterminate"
+  | "init"
+  | "redirecting"
+  | "fetching_payment"
+  | "retry"
+  | "success";
+
+enum Action {
+  NoPaymentFound,
+  IncompletePaymentFound,
+  IncompletePaymentConfirmed,
+  StartNewPayment,
+  ResumePayment,
+  Success,
+}
+
 function Component(props: Props) {
   const [
     id,
@@ -61,32 +74,43 @@ function Component(props: Props) {
 
   if (!props.url) throw new Error("Missing Gov.UK Pay URL");
 
-  const classes = useStyles();
-
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
-  const [state, dispatch] = useReducer(reducer, "loading");
+  const handleSuccess = () => {
+    dispatch(Action.Success);
+    props.handleSubmit(makeData(props, govUkPayment, "payment"));
+  };
+
+  const reducer = (state: ComponentState, action: Action): ComponentState => {
+    switch (action) {
+      case Action.NoPaymentFound:
+        return "init";
+      case Action.IncompletePaymentFound:
+        return "fetching_payment";
+      case Action.IncompletePaymentConfirmed:
+        return "retry";
+      case Action.StartNewPayment:
+        return "redirecting";
+      case Action.ResumePayment:
+        return "redirecting";
+      case Action.Success:
+        return "success";
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, "indeterminate");
 
   useEffect(() => {
     if (!govUkPayment) {
-      dispatch(Event.NoPaymentFound);
+      dispatch(Action.NoPaymentFound);
       return;
     }
 
-    switch (govUkPayment.state.status) {
-      case "success":
-        dispatch(Event.Success);
-        props.handleSubmit(makeData(props, govUkPayment, "payment"));
-        break;
-      case "cancelled":
-      case "capturable":
-      case "created":
-      case "error":
-      case "failed":
-      case "started":
-      case "submitted":
-        dispatch(Event.IncompletePaymentFound);
-        refetchPayment(govUkPayment.payment_id);
+    if (govUkPayment.state.status === "success") {
+      handleSuccess();
+    } else {
+      dispatch(Action.IncompletePaymentFound);
+      refetchPayment(govUkPayment.payment_id);
     }
   }, []);
 
@@ -104,20 +128,37 @@ function Component(props: Props) {
   };
 
   const refetchPayment = async (id: string) => {
-    await axios.get(props.url + `/${id}`).then((res) => {
-      const payment = updatePayment(res.data);
+    await axios
+      .get(props.url + `/${id}`)
+      .then((res) => {
+        const payment = updatePayment(res.data);
 
-      if (payment.state.status === "success") {
-        dispatch(Event.Success);
-        props.handleSubmit(makeData(props, govUkPayment, "payment"));
-      }
-    });
+        if (!payment.state.status)
+          throw new Error("Corrupted response from GOV.UK");
+
+        switch (payment.state.status) {
+          case "success":
+            handleSuccess();
+            break;
+          case "submitted":
+          case "started":
+          case "failed":
+          case "created":
+          case "capturable":
+          case "cancelled":
+          case "error":
+            dispatch(Action.IncompletePaymentConfirmed);
+        }
+      })
+      .catch((e) => {
+        throw e;
+      });
   };
 
   const resumeExistingPayment = async () => {
     if (!govUkPayment) throw new Error("");
 
-    dispatch(Event.ResumePayment);
+    dispatch(Action.ResumePayment);
 
     switch (govUkPayment.state.status) {
       case "cancelled":
@@ -125,6 +166,7 @@ function Component(props: Props) {
       case "failed":
         startNewPayment();
         break;
+      case "started":
       case "created":
       case "submitted":
         if (govUkPayment._links.next_url?.href)
@@ -133,11 +175,11 @@ function Component(props: Props) {
   };
 
   const startNewPayment = async () => {
-    dispatch(Event.StartNewPayment);
+    dispatch(Action.StartNewPayment);
 
     // Skip the redirect process if viewing this within the Editor
     if (environment !== "standalone") {
-      dispatch(Event.Success);
+      handleSuccess();
       return;
     }
 
@@ -165,55 +207,21 @@ function Component(props: Props) {
   //       - feedback.payment.reason
 
   return (
-    <Box textAlign="left" width="100%">
-      <Container maxWidth="md">
-        <Typography variant="h1" gutterBottom align="left">
-          {props.title}
-        </Typography>
-      </Container>
-
-      <div className={classes.banner}>
-        <Container maxWidth="md">
-          <Typography variant="h5" gutterBottom className="marginBottom">
-            The planning fee for this application is
-          </Typography>
-          <Typography variant="h1" gutterBottom className="marginBottom">
-            {`£${fee.toFixed(2)}`}
-          </Typography>
-
-          <Typography variant="h4">
-            <ReactMarkdownOrHtml source={props.description} />
-          </Typography>
-        </Container>
-      </div>
-
-      <Card>
-        {/* TODO: Remove these; they're just useful for debugging */}
-        <Typography variant="h4">State {state}</Typography>
-        <Typography variant="h5">
-          Payment Status{" "}
-          {govUkPayment ? govUkPayment.state.status : "No payment found"}
-        </Typography>
-
-        {state === "init" ? (
-          <Init
-            startPayment={() => {
-              startNewPayment();
-            }}
-          />
-        ) : state === "incomplete" ? (
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={resumeExistingPayment}
-          >
-            Retry Payment
-          </Button>
-        ) : (
-          <Typography>Loading...</Typography>
-        )}
-      </Card>
-    </Box>
+    <>
+      {state === "init" || state === "retry" ? (
+        <Confirm
+          {...props}
+          fee={fee}
+          onConfirm={() => {
+            state === "init" ? startNewPayment() : resumeExistingPayment();
+          }}
+          buttonTitle={
+            state === "init" ? "Pay using GOV.UK Pay" : "Retry payment"
+          }
+        />
+      ) : (
+        <DelayedLoadingIndicator text={state} />
+      )}
+    </>
   );
 }

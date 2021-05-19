@@ -48,30 +48,3 @@ export const createPayload = (
   description: "New application",
   return_url: window.location.href,
 });
-
-export type ComponentState = "loading" | "init" | "incomplete";
-export enum Event {
-  NoPaymentFound,
-  IncompletePaymentFound,
-  StartNewPayment,
-  ResumePayment,
-  Success,
-}
-
-export const reducer = (
-  state: ComponentState,
-  event: Event
-): ComponentState => {
-  switch (event) {
-    case Event.NoPaymentFound:
-      return "init";
-    case Event.StartNewPayment:
-      return "loading";
-    case Event.Success:
-      return "loading";
-    case Event.ResumePayment:
-      return "loading";
-    case Event.IncompletePaymentFound:
-      return "incomplete";
-  }
-};

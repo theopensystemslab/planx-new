@@ -2,6 +2,7 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Checkbox from "@material-ui/core/Checkbox";
+import Container from "@material-ui/core/Container";
 import Drawer from "@material-ui/core/Drawer";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -9,8 +10,10 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
+import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 import Input from "ui/Input";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,28 +57,57 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  startPayment: () => void;
+  title?: string;
+  description?: string;
+  fee: number;
+  buttonTitle?: string;
+  onConfirm: () => void;
 }
 
-export default function Init(props: Props) {
+export default function Confirm(props: Props) {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h3">How to pay</Typography>
-      <Box py={3}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={props.startPayment}
-        >
-          Pay using GOV.UK Pay
-        </Button>
-      </Box>
+    <Box textAlign="left" width="100%">
+      <Container maxWidth="md">
+        <Typography variant="h1" gutterBottom align="left">
+          {props.title}
+        </Typography>
+      </Container>
 
-      <SuggestionDrawer />
-    </div>
+      <div className={classes.banner}>
+        <Container maxWidth="md">
+          <Typography variant="h5" gutterBottom className="marginBottom">
+            The planning fee for this application is
+          </Typography>
+          <Typography variant="h1" gutterBottom className="marginBottom">
+            {`£${props.fee.toFixed(2)}`}
+          </Typography>
+
+          <Typography variant="h4">
+            <ReactMarkdownOrHtml source={props.description} />
+          </Typography>
+        </Container>
+      </div>
+
+      <Card>
+        <div className={classes.root}>
+          <Typography variant="h3">How to pay</Typography>
+          <Box py={3}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={props.onConfirm}
+            >
+              {props.buttonTitle || "Pay using GOV.UK Pay"}
+            </Button>
+          </Box>
+
+          <SuggestionDrawer />
+        </div>
+      </Card>
+    </Box>
   );
 }
 
