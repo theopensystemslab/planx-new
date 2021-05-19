@@ -1,4 +1,3 @@
-import { makeStyles } from "@material-ui/core/styles";
 import { makeData } from "@planx/components/shared/utils";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
@@ -13,26 +12,6 @@ import Confirm from "./Confirm";
 
 export default Component;
 
-const useStyles = makeStyles((theme) => ({
-  banner: {
-    background: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    textAlign: "center",
-    padding: theme.spacing(4),
-    width: "100%",
-    marginTop: theme.spacing(3),
-    "& p": {
-      textAlign: "left",
-    },
-    "& a": {
-      color: theme.palette.primary.contrastText,
-    },
-    "& .marginBottom": {
-      marginBottom: theme.spacing(3),
-    },
-  },
-}));
-
 interface Props extends Pay {
   handleSubmit: handleSubmit;
   url?: string;
@@ -41,12 +20,12 @@ interface Props extends Pay {
 
 // TODO: Does this need an error state if we have a good ErrorBoundary?
 type ComponentState =
-  | "indeterminate"
-  | "init"
-  | "redirecting"
-  | "fetching_payment"
-  | "retry"
-  | "success";
+  | { status: "indeterminate"; displayText?: string }
+  | { status: "init" }
+  | { status: "redirecting"; displayText?: string }
+  | { status: "fetching_payment"; displayText?: string }
+  | { status: "retry" }
+  | { status: "success"; displayText?: string };
 
 enum Action {
   NoPaymentFound,
@@ -76,29 +55,37 @@ function Component(props: Props) {
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
-  const handleSuccess = () => {
-    dispatch(Action.Success);
-    props.handleSubmit(makeData(props, govUkPayment, "payment"));
-  };
-
+  // Handles UI states
   const reducer = (state: ComponentState, action: Action): ComponentState => {
     switch (action) {
       case Action.NoPaymentFound:
-        return "init";
+        return { status: "init" };
       case Action.IncompletePaymentFound:
-        return "fetching_payment";
+        return {
+          status: "fetching_payment",
+          displayText: "Loading payment information",
+        };
       case Action.IncompletePaymentConfirmed:
-        return "retry";
+        return { status: "retry" };
       case Action.StartNewPayment:
-        return "redirecting";
+        return {
+          status: "redirecting",
+          displayText: "Connecting you to GOV.UK Pay",
+        };
       case Action.ResumePayment:
-        return "redirecting";
+        return {
+          status: "redirecting",
+          displayText: "Reconnecting to GOV.UK Pay",
+        };
       case Action.Success:
-        return "success";
+        return { status: "success", displayText: "Payment Successful" };
     }
   };
 
-  const [state, dispatch] = useReducer(reducer, "indeterminate");
+  const [state, dispatch] = useReducer(reducer, {
+    status: "indeterminate",
+    displayText: "Loading...",
+  });
 
   useEffect(() => {
     if (!govUkPayment) {
@@ -113,6 +100,11 @@ function Component(props: Props) {
       refetchPayment(govUkPayment.payment_id);
     }
   }, []);
+
+  const handleSuccess = () => {
+    dispatch(Action.Success);
+    props.handleSubmit(makeData(props, govUkPayment, "payment"));
+  };
 
   const updatePayment = (responseData: any): GovUKPayment => {
     const payment: GovUKPayment = responseData;
@@ -208,19 +200,21 @@ function Component(props: Props) {
 
   return (
     <>
-      {state === "init" || state === "retry" ? (
+      {state.status === "init" || state.status === "retry" ? (
         <Confirm
           {...props}
           fee={fee}
           onConfirm={() => {
-            state === "init" ? startNewPayment() : resumeExistingPayment();
+            state.status === "init"
+              ? startNewPayment()
+              : resumeExistingPayment();
           }}
           buttonTitle={
-            state === "init" ? "Pay using GOV.UK Pay" : "Retry payment"
+            state.status === "init" ? "Pay using GOV.UK Pay" : "Retry payment"
           }
         />
       ) : (
-        <DelayedLoadingIndicator text={state} />
+        <DelayedLoadingIndicator text={state.displayText || state.status} />
       )}
     </>
   );
