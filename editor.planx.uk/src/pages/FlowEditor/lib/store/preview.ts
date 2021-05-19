@@ -438,12 +438,14 @@ export const previewStore = (
           answers as Array<Store.nodeId>
         );
 
-        acc[flow[id].data?.fn] = uniq(
-          flatten([
-            ...(acc[flow[id].data?.fn] || []),
-            _knownNotVals.flatMap((n) => flow[n].data?.val),
-          ])
-        ).filter(Boolean) as Array<Store.nodeId>;
+        if (flow[id].data?.fn) {
+          acc[flow[id].data.fn] = uniq(
+            flatten([
+              ...(acc[flow[id].data?.fn] || []),
+              _knownNotVals.flatMap((n) => flow[n].data?.val),
+            ])
+          ).filter(Boolean) as Array<string>;
+        }
 
         return acc;
       },
