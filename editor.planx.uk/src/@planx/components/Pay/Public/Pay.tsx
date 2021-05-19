@@ -148,9 +148,12 @@ function Component(props: Props) {
   };
 
   const resumeExistingPayment = async () => {
-    if (!govUkPayment) throw new Error("");
-
     dispatch(Action.ResumePayment);
+
+    if (!govUkPayment) {
+      startNewPayment();
+      return;
+    }
 
     switch (govUkPayment.state.status) {
       case "cancelled":
@@ -175,7 +178,6 @@ function Component(props: Props) {
       return;
     }
 
-    // TODO: why isn't ErrorBoundary catching the errors I throw in here?
     if (!props.url) throw new Error("Missing GovUK Pay URL");
 
     await axios
