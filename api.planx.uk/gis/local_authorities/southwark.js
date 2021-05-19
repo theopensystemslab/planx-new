@@ -1,11 +1,8 @@
-/*
-LAD20CD: E09000028
-LAD20NM: Southwark
-LAD20NMW:
-FID: 358
-*/
+require("isomorphic-fetch");
+const https = require("https");
 
-var request = require("request");
+const { makeBbox } = require("../helpers.js");
+const { planningConstraints } = require("./metadata/southwark.js");
 
 var headers = {
   Origin: "https://geo.southwark.gov.uk",
@@ -20,86 +17,39 @@ var headers = {
   DNT: "1",
 };
 
-const keys = {
-  "designated.conservationArea": {
-    columns: [
-      "Conservation_area",
-      "Conservation_area_number",
-      "More_information",
-    ],
-    neg: "is not in a Conservation Area",
-    pos: (data) => ({
-      text: "is in a Conservation Area",
-      description: data.More_information
-        ? data.More_information
-        : data.Conservation_area,
-    }),
-  },
-  tpo: {
-    columns: ["Location", "TPO_document"],
-    neg: "is not in a TPO (Tree Preservation Order) zone",
-    pos: (data) => ({
-      text: "is in a TPO (Tree Preservation Order) zone",
-      description: data.TPO_document ? data.TPO_document : data.Location,
-    }),
-  },
-  listed: {
-    columns: [
-      "ID",
-      "NAME",
-      "STREET_NUMBER",
-      "STREET",
-      "GRADE",
-      "DATE_OF_LISTING",
-      "LISTING_DESCRIPTION",
-    ],
-    neg: "is not in, or within, a Listed Building",
-    pos: (data) => ({
-      text: `is, or is within, a Grade ${data.GRADE} listed building`,
-      description: data.LISTING_DESCRIPTION
-        ? data.LISTING_DESCRIPTION
-        : data.NAME,
-    }),
-  },
-};
-
+// Fetch a data layer
 function get(key, table, x, y, radius = 1.5) {
-  const fieldsString = keys[key].columns.map((f) => `"${f}"`).join(",");
+  const fieldsString = planningConstraints[key].columns.map((f) => `"${f}"`).join(",");
 
   const limit = 1; // 100
 
-  const query = `SELECT ${fieldsString} FROM "/NamedMaps/NamedTables/${table}" WHERE MI_Intersects(obj,MI_Box(${
-    x - radius
-  },${y - radius},${x + radius},${y + radius},'EPSG:27700'))`;
+  const bbox = makeBbox(x, y, radius);
 
-  return new Promise((resolve, reject) => {
-    request(
-      {
-        url:
-          "https://geo.southwark.gov.uk/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-        method: "POST",
-        headers,
-        strictSSL: false,
-        // encoding: null,
-        gzip: true,
-        form: {
-          url: `tables/features.json?q=${query}&page=1&pageLength=${limit}`,
-          encodeSpecialChars: true,
-        },
-      },
-      (error, response, body) => {
-        if (error) {
-          reject([key, error]);
-        } else if (response.statusCode == 200) {
-          resolve([key, body]);
-        } else {
-          reject([key, Error(response.statusCode)]);
-        }
-      }
-    );
-  });
+  const query = `
+    SELECT ${fieldsString} 
+    FROM "/NamedMaps/NamedTables/${table}" 
+    WHERE MI_Intersects(obj,MI_Box(${bbox},'EPSG:27700'))
+  `;
+
+  return fetch("https://geo.southwark.gov.uk/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService", {
+      "method": "POST",
+      "headers": headers,
+      "body": new URLSearchParams({
+        "url": `tables/features.json?q=${query}&page=1&pageLength=${limit}&strictSSL=false&gzip=true`,
+        "encodeSpecialChars": "true"
+      }),
+      "agent": new https.Agent({
+        rejectUnauthorized: false
+      }),
+    })
+    .then(response => response.text())
+    .then(data => new Array(key, data))
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 }
 
+// For this location, iterate through our planning constraints and aggregate/format the responses
 async function locationSearch(x, y, extras) {
   const responses = await Promise.all(
     [
@@ -113,7 +63,19 @@ async function locationSearch(x, y, extras) {
       get("tpo", "TPO_zones___Group_type", x, y),
       get("tpo", "TPO_zones___Area_type", x, y),
       get("tpo", "TPO_zones___Historic_type", x, y),
-    ].map((p) => p.catch((e) => e))
+      get("article4", "Article 4 - Sunray Estate", x, y),
+      get("article4", "Article 4 - offices in the Central Activities Zone", x, y),
+      get("article4", "Article 4 - Public Houses", x, y),
+      get("article4", "Article 4 - HMO Henshaw Street", x, y),
+      get("article4", "Article 4 - HMO Bywater Place", x, y),
+      get("article4", "Article 4 - Light Industrial", x, y),
+      get("article4", "Article 4 - Town Centres A3 - A5 to A2 and from A1 – A5 B1 D1 and D2 to flexible uses", x, y),
+      get("article4", "Article 4 - Town Centres A1 to A2", x, y),
+      get("article4", "Article 4 - Railway Arches", x, y),
+      get("article4", "Article 4 - Demolition of the Stables and the Forge on Catlin Street", x, y),
+      get("designated.monument", "Scheduled Monuments", x, y),
+      get("designated.WHS", "UNESCO World Heritage Sites England", x, y),
+    ].map((p) => p.catch((e) => console.log(e)))
   );
 
   const ob = responses
@@ -127,7 +89,7 @@ async function locationSearch(x, y, extras) {
           if (data.features.length > 0) {
             const { properties } = data.features[0];
             acc[k] = {
-              ...keys[key].pos(properties),
+              ...planningConstraints[key].pos(properties),
               value: true,
               type: "warning",
               data: properties,
@@ -136,26 +98,18 @@ async function locationSearch(x, y, extras) {
             if (!acc[k]) {
               acc[k] = {
                 value: false,
-                text: keys[key].neg,
+                text: planningConstraints[key].neg,
                 type: "check",
                 data: {},
               };
             }
           }
-        } catch (e) {}
+        } catch (e) {
+          console.log(e);
+        }
         return acc;
       },
       {
-        "property.c31": { value: false },
-        "designated.AONB": { value: false },
-        "designated.broads": { value: false },
-        "defence.explosives": { value: false },
-        "designated.nationalPark": { value: false },
-        "defence.safeguarded": { value: false },
-        hazard: { value: false },
-        "nature.SSSI": { value: false },
-        "property.landWCA": { value: false },
-        "designated.WHS": { value: false },
         ...extras,
       }
     );

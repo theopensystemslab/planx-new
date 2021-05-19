@@ -2,6 +2,8 @@ import { getLocalFlow, setLocalFlow } from "lib/local";
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
+import ErrorFallback from "../../components/ErrorFallback";
+import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
 import Node, { handleSubmit } from "./Node";
@@ -91,9 +93,7 @@ const Questions = () => {
       </span>
 
       {node && (
-        <ErrorBoundary
-          FallbackComponent={({ error }) => <pre>{error.stack}</pre>}
-        >
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Node
             node={node}
             key={node.id}

@@ -1,107 +1,67 @@
-/*
-LAD20CD: E07000106
-LAD20NM: Canterbury
-LAD20NMW:
-FID: 285
-*/
+require("isomorphic-fetch");
 
-var request = require("request");
+const {
+  getQueryableConstraints,
+  makeEsriUrl,
+  bufferPoint,
+} = require("../helpers.js");
+const { planningConstraints } = require("./metadata/canterbury.js");
 
-const articleFours = {};
+// Process local authority metadata
+const gisLayers = getQueryableConstraints(planningConstraints);
 
-const names = {
-  CONSERVATION_AREAS: {
-    id: "Open_Data/Conservation_Areas",
-    key: "designated.conservationArea",
-    neg: "is not in a Conservation Area",
-    pos: (data) => ({
-      text: "is in a Conservation Area",
-      description: data.NAME,
-    }),
-  },
-  TREE_PRESERVATION_ORDERS: {
-    id: "Open_Data/Tree_Preservation_Orders",
-    key: "tpo",
-    neg: "is not in a TPO (Tree Preservation Order) zone",
-    pos: (_data) => ({
-      text: "is in a TPO (Tree Preservation Order) zone",
-    }),
-  },
-};
+// Fetch a data layer
+async function search(
+  mapServer,
+  featureName,
+  serverIndex,
+  outFields,
+  geometry
+) {
+  const { id } = planningConstraints[featureName];
 
-const makeUrl = (id, overrideParams = {}) => {
-  let url = `https://mapping.canterbury.gov.uk/arcgis/rest/services/${id}/MapServer/0/query`;
-
-  const defaultParams = {
-    where: "1=1",
-    geometryType: "esriGeometryEnvelope",
-    inSR: 27700,
-    spatialRel: "esriSpatialRelIntersects",
-    returnGeometry: false,
-    outSR: 4326,
-    f: "json",
-    outFields: [],
-    geometry: [],
-  };
-
-  const params = { ...defaultParams, ...overrideParams };
-
-  if (Array.isArray(params.outFields))
-    params.outFields = params.outFields.join(",");
-  if (Array.isArray(params.geometry))
-    params.geometry = params.geometry.join(",");
-
-  url = [
-    url,
-    Object.keys(params)
-      .map((key) => key + "=" + escape(params[key]))
-      .join("&"),
-  ].join("?");
-  console.log({ url });
-  return url;
-};
-
-async function search(key, outFields, geometry) {
-  const { id } = names[key];
-
-  let url = makeUrl(id, { outFields, geometry });
-
-  return new Promise((resolve, reject) => {
-    request(url, (error, response, body) => {
-      if (error) {
-        reject([key, error]);
-      } else if (response.statusCode == 200) {
-        resolve([key, body]);
-      } else {
-        reject([key, Error(response.statusCode)]);
-      }
-    });
+  let url = makeEsriUrl(mapServer, id, serverIndex, {
+    outFields,
+    geometry,
   });
+
+  return fetch(url)
+    .then((response) => response.text())
+    .then((data) => new Array(featureName, data))
+    .catch((error) => {
+      console.log("Error:", error);
+    });
 }
 
+// For this location, iterate through our planning constraints and aggregate/format the responses
 async function go(x, y, extras) {
-  // const radius = 0.05;
-  const radius = 0.05;
-  const pt = [x - radius, y + radius, x + radius, y - radius];
+  const point = bufferPoint(x, y, 0.05);
 
   try {
-    const results = await Promise.all([
-      search("CONSERVATION_AREAS", ["NAME", "OBJECTID"], pt),
-      search("TREE_PRESERVATION_ORDERS", ["TPO", "OBJECTID"], pt),
-    ]);
+    const results = await Promise.all(
+      Object.keys(gisLayers).map((layer) =>
+        search(
+          gisLayers[layer].source,
+          layer,
+          gisLayers[layer].serverIndex,
+          gisLayers[layer].fields,
+          point
+        )
+      )
+    );
 
     const ob = results
-      .filter(([key, result]) => !(result instanceof Error))
+      .filter(([_key, result]) => !(result instanceof Error))
       .reduce(
         (acc, [key, result]) => {
           const data = JSON.parse(result);
-          const k = `${names[key].key}`;
+          const k = `${planningConstraints[key].key}`;
 
           try {
             if (data.features.length > 0) {
               const { attributes: properties } = data.features[0];
               acc[k] = {
-                ...names[key].pos(properties),
+                ...planningConstraints[key].pos(properties),
                 value: true,
                 type: "warning",
                 data: properties,
@@ -109,32 +69,20 @@ async function go(x, y, extras) {
             } else {
               if (!acc[k]) {
                 acc[k] = {
-                  text: names[key].neg,
+                  text: planningConstraints[key].neg,
                   value: false,
                   type: "check",
                   data: {},
                 };
               }
             }
-          } catch (e) {}
+          } catch (e) {
+            console.log(e);
+          }
 
           return acc;
         },
         {
-          "property.c31": { value: false },
-          "designated.AONB": { value: false },
-          "designated.broads": { value: false },
-          "defence.explosives": { value: false },
-          "designated.nationalPark": { value: false },
-          "defence.safeguarded": { value: false },
-          hazard: { value: false },
-          "nature.SSSI": { value: false },
-          "property.landWCA": { value: false },
-          "designated.WHS": { value: false },
-          ...Object.values(articleFours).reduce((acc, curr) => {
-            acc[curr] = { value: false };
-            return acc;
-          }, {}),
           ...extras,
         }
       );

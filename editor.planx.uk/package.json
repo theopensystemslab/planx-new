@@ -3,6 +3,7 @@
   "private": true,
   "license": "MPL-2.0",
   "dependencies": {
+    "@airbrake/browser": "^2.1.4",
     "@apollo/client": "^3.2.5",
     "@ctrl/tinycolor": "^3.1.6",
     "@draft-js-plugins/anchor": "^4.0.0",

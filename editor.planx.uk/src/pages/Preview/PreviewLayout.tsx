@@ -2,7 +2,8 @@ import Box from "@material-ui/core/Box";
 import Link from "@material-ui/core/Link";
 import { createMuiTheme, Theme, ThemeProvider } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { clearLocalFlow, getLocalFlow } from "lib/local";
+import ErrorFallback from "components/ErrorFallback";
+import { clearLocalFlow } from "lib/local";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -96,9 +97,7 @@ const PreviewLayout: React.FC<{
         bgcolor="white"
         position="relative"
       >
-        <ErrorBoundary
-          FallbackComponent={({ error }) => <pre>{error.stack}</pre>}
-        >
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           {children}
         </ErrorBoundary>
       </Box>

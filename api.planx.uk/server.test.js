@@ -27,7 +27,7 @@ describe("sending an application to BOPS", () => {
       application: "0000123",
     };
 
-    nock("https://southwark.bops-staging.services/api/v1/planning_applications")
+    nock("https://southwark.bops.services/api/v1/planning_applications")
       .post("")
       .reply(200, mockResponse);
   });

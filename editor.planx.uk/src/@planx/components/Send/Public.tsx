@@ -6,12 +6,7 @@ import { useAsync } from "react-use";
 import Card from "../shared/Preview/Card";
 import { makeData } from "../shared/utils";
 import { PublicProps } from "../ui";
-import {
-  bopsDictionary,
-  BOPSFullPayload,
-  fullPayload,
-  makePayload,
-} from "./bops";
+import { getParams } from "./bops";
 import type { Send } from "./model";
 
 export type Props = PublicProps<Send>;
@@ -23,7 +18,9 @@ const SendComponent: React.FC<Props> = (props) => {
     state.computePassport(),
   ]);
 
-  const request = useAsync(async () => axios.post(props.url, getParams()));
+  const request = useAsync(async () =>
+    axios.post(props.url, getParams(breadcrumbs, flow, passport))
+  );
 
   useEffect(() => {
     if (
@@ -45,84 +42,6 @@ const SendComponent: React.FC<Props> = (props) => {
     throw request.error;
   } else {
     return <Card>Finalising…</Card>;
-  }
-
-  function getParams() {
-    const data = fullPayload;
-
-    // 1. address
-
-    const address = passport.data?._address;
-    if (address) {
-      data.site.uprn = String(address.uprn);
-
-      data.site.address_1 = [address.sao, address.pao, address.street]
-        .filter(Boolean)
-        .join(" ");
-
-      data.site.town = address.town;
-      data.site.postcode = address.postcode;
-
-      // TODO: add address_2 and ward
-    }
-
-    // 2. files
-
-    Object.entries(passport.data || {})
-      .filter(([, v]: any) => v?.[0]?.url)
-      .forEach(([key, arr]) => {
-        (arr as any[]).forEach(({ url }) => {
-          try {
-            data.files = data.files || [];
-            data.files.push({
-              filename: url,
-              tags: [], // should be [key], but BOPS will reject unless it's a specific string
-            });
-          } catch (err) {}
-        });
-      });
-
-    // 3. constraints
-
-    data.constraints = (
-      passport.data?.["property.constraints.planning"] || []
-    ).reduce((acc: Record<string, boolean>, curr: string) => {
-      // TODO: calculate application_type and payment_reference
-      acc[curr] = true;
-      return acc;
-    }, {});
-
-    // 4. work status
-
-    if (passport?.data?.["property.constraints.planning"] === "ldc.existing") {
-      data.work_status = "existing";
-    }
-
-    // 5. keys
-
-    const bopsData = Object.entries(bopsDictionary).reduce(
-      (acc, [bopsField, planxField]) => {
-        const value = passport.data?.[planxField];
-        if (value !== undefined && value !== null) {
-          acc[bopsField as keyof BOPSFullPayload] = value;
-        }
-        return acc;
-      },
-      {} as Partial<BOPSFullPayload>
-    );
-
-    // 6. questions+answers array
-
-    data.proposal_details = makePayload(flow, breadcrumbs);
-
-    const paymentReference =
-      passport?.data?.["application.fee.reference.govPay"];
-
-    return {
-      ...data,
-      ...bopsData,
-      ...(paymentReference ? { payment_reference: paymentReference } : {}),
-    };
   }
 };
 

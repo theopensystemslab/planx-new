@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/CloseOutlined";
 import { parseFormValues } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
+import ErrorFallback from "components/ErrorFallback";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigation } from "react-navi";
@@ -138,9 +139,7 @@ const FormModal: React.FC<{
         </IconButton>
       </DialogTitle>
       <DialogContent dividers>
-        <ErrorBoundary
-          FallbackComponent={({ error }) => <pre>{error.stack}</pre>}
-        >
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Component
             node={node}
             {...node?.data}
