@@ -16,6 +16,7 @@ import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
 import type { Store } from ".";
 import type { SharedStore } from "./shared";
 
+
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
 export interface PreviewStore extends Store.Store {
@@ -429,27 +430,10 @@ export const previewStore = (
   upcomingCardIds() {
     const { flow, breadcrumbs, computePassport, collectedFlags } = get();
 
-    const knownNotVals = Object.entries(breadcrumbs).reduce(
-      (acc, [id, { answers = [] }]) => {
-        if (!flow[id]) return acc;
-
-        const _knownNotVals = difference(
-          flow[id].edges,
-          answers as Array<Store.nodeId>
-        );
-
-        if (flow[id].data?.fn) {
-          acc[flow[id].data.fn] = uniq(
-            flatten([
-              ...(acc[flow[id].data?.fn] || []),
-              _knownNotVals.flatMap((n) => flow[n].data?.val),
-            ])
-          ).filter(Boolean) as Array<string>;
-        }
-
-        return acc;
-      },
-      {} as Record<Store.nodeId, Array<Store.nodeId>>
+    const knownNotVals = knownNots(
+      flow,
+      breadcrumbs,
+      computePassport().data?._not
     );
 
     const ids: Set<Store.nodeId> = new Set();
@@ -645,3 +629,33 @@ export const previewStore = (
     return sortIdsDepthFirst(flow)(ids);
   },
 });
+
+const knownNots = (
+  flow: Store.flow,
+  breadcrumbs: Store.breadcrumbs,
+  nots = {}
+) =>
+  Object.entries(breadcrumbs).reduce(
+    (acc, [id, { answers = [] }]) => {
+      if (!flow[id]) return acc;
+
+      const _knownNotVals = difference(
+        flow[id].edges,
+        answers as Array<Store.nodeId>
+      );
+
+      if (flow[id].data?.fn) {
+        acc[flow[id].data.fn] = uniq(
+          flatten([
+            ...(acc[flow[id].data?.fn] || []),
+            _knownNotVals.flatMap((n) => flow[n].data?.val),
+          ])
+        ).filter(Boolean) as Array<string>;
+      }
+
+      return acc;
+    },
+    {
+      ...nots,
+    } as Record<string, Array<string>>
+  );
