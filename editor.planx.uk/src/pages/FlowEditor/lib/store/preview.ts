@@ -16,7 +16,6 @@ import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
 import type { Store } from ".";
 import type { SharedStore } from "./shared";
 
-
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
 
 export interface PreviewStore extends Store.Store {
@@ -433,7 +432,8 @@ export const previewStore = (
     const knownNotVals = knownNots(
       flow,
       breadcrumbs,
-      computePassport().data?._not
+      // _nots is created by FindProperty/Public atm
+      computePassport().data?._nots
     );
 
     const ids: Set<Store.nodeId> = new Set();
