@@ -38,20 +38,28 @@ interface Props {
 }
 
 const Node: React.FC<any> = (props: Props) => {
-  const [childNodesOf, resultData, hasPaid, passport] = useStore((state) => [
+  const [
+    childNodesOf,
+    resultData,
+    hasPaid,
+    passport,
+    isFinalCard,
+  ] = useStore((state) => [
     state.childNodesOf,
     state.resultData,
     state.hasPaid(),
     state.computePassport(),
+    state.isFinalCard(),
   ]);
 
   const resetPreview = useStore((state) => state.resetPreview);
+  const handleSubmit = !isFinalCard ? props.handleSubmit : undefined;
 
   const allProps = {
     id: props.node.id,
     ...props.node.data,
     resetPreview,
-    handleSubmit: props.handleSubmit,
+    handleSubmit,
   };
 
   switch (props.node.type) {
@@ -105,13 +113,6 @@ const Node: React.FC<any> = (props: Props) => {
             "GOV.UK Payment reference": payment?.payment_id || "N/A",
           }}
           color={{ text: "#000", background: "rgba(1, 99, 96, 0.1)" }}
-          handleSubmit={(feedback?: string) => {
-            // feedback?.length &&
-            //   submitFeedback(feedback, {
-            //     reason: "Confirmation",
-            //   });
-            props.handleSubmit();
-          }}
         />
       );
     case TYPES.Content:

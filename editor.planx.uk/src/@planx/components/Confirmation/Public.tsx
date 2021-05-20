@@ -5,7 +5,8 @@ import Check from "@material-ui/icons/CheckCircleOutlineOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
-import React from "react";
+import { submitFeedback } from "lib/feedback";
+import React, { useEffect } from "react";
 import Banner from "ui/Banner";
 import CollapsibleInput from "ui/CollapsibleInput";
 import NumberedList from "ui/NumberedList";
@@ -30,7 +31,10 @@ const useClasses = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   feedback: {
-    textDecoration: "underline",
+    cursor: "pointer",
+    "&:hover": {
+      textDecoration: "underline",
+    },
   },
 }));
 
@@ -41,12 +45,28 @@ export default function ConfirmationComponent(props: Props) {
     initialValues: {
       feedback: "",
     },
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
+      if (values.feedback) {
+        submitFeedback(values.feedback, {
+          reason: "Confirmation",
+        });
+        resetForm();
+      }
       props.handleSubmit?.();
     },
   });
 
   const classes = useClasses();
+
+  const [showButton, setShowButton] = React.useState<boolean>(
+    !!props.handleSubmit
+  );
+
+  useEffect(() => {
+    if (props.handleSubmit) return;
+
+    setShowButton(formik.values.feedback.length > 0);
+  }, [formik.values.feedback]);
 
   return (
     <Box width="100%">
@@ -57,7 +77,7 @@ export default function ConfirmationComponent(props: Props) {
           </Box>
         )}
       </Banner>
-      <Card handleSubmit={formik.handleSubmit} isValid>
+      <Card handleSubmit={showButton ? formik.handleSubmit : undefined} isValid>
         {props.details && (
           <table className={classes.table}>
             <tbody>

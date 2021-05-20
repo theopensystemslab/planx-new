@@ -50,6 +50,7 @@ export interface PreviewStore extends Store.Store {
   sessionId: string;
   startSession: ({ passport }: { passport: Record<string, any> }) => void;
   upcomingCardIds: () => Store.nodeId[];
+  isFinalCard: () => boolean;
   // temporary measure for storing payment fee & id between gov uk redirect
   govUkPayment?: GovUKPayment;
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
@@ -641,5 +642,10 @@ export const previewStore = (
 
     // then return an array of the upcoming node ids, in depth-first order
     return sortIdsDepthFirst(flow)(ids);
+  },
+
+  isFinalCard: () => {
+    const { upcomingCardIds } = get();
+    return upcomingCardIds().length <= 1;
   },
 });
