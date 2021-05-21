@@ -1,3 +1,4 @@
+import { getLocalFlow, setLocalFlow } from "lib/local";
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -40,31 +41,22 @@ const Questions = () => {
 
   useEffect(() => {
     if (isStandalone) {
-      const entry = `flow:${id}`;
-      try {
-        const state = JSON.parse(localStorage.getItem(entry) || "");
-        if (state) {
-          resumeSession(state);
-        }
-      } catch (err) {
-        // Clean up just in case
-        localStorage.removeItem(entry);
+      const state = getLocalFlow(id);
+      if (state) {
+        resumeSession(state);
       }
     }
   }, []);
 
   useEffect(() => {
     if (isStandalone && id) {
-      localStorage.setItem(
-        `flow:${id}`,
-        JSON.stringify({
-          breadcrumbs,
-          id,
-          passport,
-          sessionId,
-          govUkPayment,
-        })
-      );
+      setLocalFlow(id, {
+        breadcrumbs,
+        id,
+        passport,
+        sessionId,
+        govUkPayment,
+      });
     }
   }, [breadcrumbs, passport, sessionId, id, govUkPayment]);
 

@@ -1,76 +1,39 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import ButtonBase from "@material-ui/core/ButtonBase";
-import Checkbox from "@material-ui/core/Checkbox";
-import Container from "@material-ui/core/Container";
-import Drawer from "@material-ui/core/Drawer";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import CloseIcon from "@material-ui/icons/Close";
-import Card from "@planx/components/shared/Preview/Card";
 import { makeData } from "@planx/components/shared/utils";
 import axios from "axios";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
-import React, { useEffect } from "react";
-import { useAsync } from "react-use";
+import React, { useEffect, useReducer } from "react";
 import type { GovUKPayment } from "types";
-import Input from "ui/Input";
-import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
-import type { GovUKCreatePaymentPayload, Pay } from "../model";
-import { toDecimal, toPence } from "../model";
+import { createPayload, Pay } from "../model";
+import { toDecimal } from "../model";
+import Confirm from "./Confirm";
 
 export default Component;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& *": {
-      fontFamily: "Inter, sans-serif",
-    },
-  },
-  banner: {
-    background: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    textAlign: "center",
-    padding: theme.spacing(4),
-    width: "100%",
-    marginTop: theme.spacing(3),
-    "& p": {
-      textAlign: "left",
-    },
-    "& a": {
-      color: theme.palette.primary.contrastText,
-    },
-    "& .marginBottom": {
-      marginBottom: theme.spacing(3),
-    },
-  },
-  drawerPaper: {
-    boxSizing: "border-box",
-    width: 300,
-    [theme.breakpoints.only("xs")]: {
-      width: "100%",
-    },
-    backgroundColor: theme.palette.background.default,
-    border: 0,
-    boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
-    padding: theme.spacing(2),
-  },
-  link: {
-    color: theme.palette.primary.main,
-    textDecoration: "underline",
-    cursor: "pointer",
-  },
-}));
 
 interface Props extends Pay {
   handleSubmit: handleSubmit;
   url?: string;
   fn?: string;
+}
+
+// TODO: Does this need an error state if we have a good ErrorBoundary?
+type ComponentState =
+  | { status: "indeterminate"; displayText?: string }
+  | { status: "init" }
+  | { status: "redirecting"; displayText?: string }
+  | { status: "fetching_payment"; displayText?: string }
+  | { status: "retry" }
+  | { status: "success"; displayText?: string };
+
+enum Action {
+  NoPaymentFound,
+  IncompletePaymentFound,
+  IncompletePaymentConfirmed,
+  StartNewPayment,
+  ResumePayment,
+  Success,
 }
 
 function Component(props: Props) {
@@ -88,30 +51,153 @@ function Component(props: Props) {
     state.previewEnvironment,
   ]);
 
-  const [state, setState] = React.useState<"init" | "paying" | "paid">(
-    govUkPayment ? "paid" : "init"
-  );
-
-  const classes = useStyles();
-
-  // TODO: Implement a nicer design for when a user returns to PlanX from GOV.UK;
-  // possibly as a service worker or something that lives above flow components
-  useEffect(() => {
-    if (state === "paid") {
-      props.handleSubmit(makeData(props, govUkPayment, "payment"));
-      // we could remove store.govUkPayment here
-    }
-  }, [state]);
+  if (!props.url) throw new Error("Missing Gov.UK Pay URL");
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
-  const payload: GovUKCreatePaymentPayload = {
-    amount: toPence(fee),
-    reference: id,
-    description: "New application",
-    return_url: window.location.href,
+  // Handles UI states
+  const reducer = (state: ComponentState, action: Action): ComponentState => {
+    switch (action) {
+      case Action.NoPaymentFound:
+        return { status: "init" };
+      case Action.IncompletePaymentFound:
+        return {
+          status: "fetching_payment",
+          displayText: "Loading payment information",
+        };
+      case Action.IncompletePaymentConfirmed:
+        return { status: "retry" };
+      case Action.StartNewPayment:
+        return {
+          status: "redirecting",
+          displayText: "Connecting you to GOV.UK Pay",
+        };
+      case Action.ResumePayment:
+        return {
+          status: "redirecting",
+          displayText: "Reconnecting to GOV.UK Pay",
+        };
+      case Action.Success:
+        return { status: "success", displayText: "Payment Successful" };
+    }
   };
 
+  const [state, dispatch] = useReducer(reducer, {
+    status: "indeterminate",
+    displayText: "Loading...",
+  });
+
+  useEffect(() => {
+    if (fee <= 0) {
+      handleSuccess();
+    }
+
+    if (!govUkPayment) {
+      dispatch(Action.NoPaymentFound);
+      return;
+    }
+
+    if (govUkPayment.state.status === "success") {
+      handleSuccess();
+    } else {
+      dispatch(Action.IncompletePaymentFound);
+      refetchPayment(govUkPayment.payment_id);
+    }
+  }, []);
+
+  const handleSuccess = () => {
+    dispatch(Action.Success);
+    props.handleSubmit(makeData(props, govUkPayment, "payment"));
+  };
+
+  const updatePayment = (responseData: any): GovUKPayment => {
+    const payment: GovUKPayment = responseData;
+
+    const normalizedPayment = {
+      ...payment,
+      amount: toDecimal(payment.amount),
+    };
+
+    setGovUkPayment(normalizedPayment);
+
+    return normalizedPayment;
+  };
+
+  const refetchPayment = async (id: string) => {
+    await axios
+      .get(props.url + `/${id}`)
+      .then((res) => {
+        const payment = updatePayment(res.data);
+
+        if (!payment.state.status)
+          throw new Error("Corrupted response from GOV.UK");
+
+        switch (payment.state.status) {
+          case "success":
+            handleSuccess();
+            break;
+          case "submitted":
+          case "started":
+          case "failed":
+          case "created":
+          case "capturable":
+          case "cancelled":
+          case "error":
+            dispatch(Action.IncompletePaymentConfirmed);
+        }
+      })
+      .catch((e) => {
+        throw e;
+      });
+  };
+
+  const resumeExistingPayment = async () => {
+    dispatch(Action.ResumePayment);
+
+    if (!govUkPayment) {
+      startNewPayment();
+      return;
+    }
+
+    switch (govUkPayment.state.status) {
+      case "cancelled":
+      case "error":
+      case "failed":
+        startNewPayment();
+        break;
+      case "started":
+      case "created":
+      case "submitted":
+        if (govUkPayment._links.next_url?.href)
+          window.location.replace(govUkPayment._links.next_url.href);
+    }
+  };
+
+  const startNewPayment = async () => {
+    dispatch(Action.StartNewPayment);
+
+    // Skip the redirect process if viewing this within the Editor
+    if (environment !== "standalone") {
+      handleSuccess();
+      return;
+    }
+
+    if (!props.url) throw new Error("Missing GovUK Pay URL");
+
+    await axios
+      .post(props.url, createPayload(fee, id))
+      .then((res) => {
+        const payment = updatePayment(res.data);
+
+        if (payment._links.next_url?.href)
+          window.location.replace(payment._links.next_url.href);
+      })
+      .catch((e) => {
+        throw e;
+      });
+  };
+
+  // TODO: ask gunar & john about this:
   // TODO: When connecting this component to the flow and to the backend
   //       remember to also pass up the value of `otherPayments`
   //       to be stored in special data fields, e.g.
@@ -119,180 +205,23 @@ function Component(props: Props) {
   //       - feedback.payment.reason
 
   return (
-    <Box textAlign="left" width="100%">
-      <Container maxWidth="md">
-        <Typography variant="h1" gutterBottom align="left">
-          {props.title}
-        </Typography>
-      </Container>
-
-      <div className={classes.banner}>
-        <Container maxWidth="md">
-          <Typography variant="h5" gutterBottom className="marginBottom">
-            The planning fee for this application is
-          </Typography>
-          <Typography variant="h1" gutterBottom className="marginBottom">
-            {`£${fee.toFixed(2)}`}
-          </Typography>
-
-          <Typography variant="h4">
-            <ReactMarkdownOrHtml source={props.description} />
-          </Typography>
-        </Container>
-      </div>
-
-      <Card>
-        {props.url && state === "paying" ? (
-          <GovUkTemporaryComponent
-            url={props.url}
-            payload={payload}
-            handleResponse={(response) => {
-              const normalizedPayment = {
-                ...response,
-                amount: toDecimal(response.amount),
-              };
-              setGovUkPayment(normalizedPayment);
-
-              try {
-                window.location.replace(response._links.next_url.href);
-              } catch (e) {
-                throw e;
-              }
-            }}
-          />
-        ) : (
-          <Init
-            amount={fee}
-            startPayment={() =>
-              setState(environment === "standalone" ? "paying" : "paid")
-            }
-            {...props}
-          />
-        )}
-      </Card>
-    </Box>
-  );
-}
-
-function Init(props: any) {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.root}>
-      <Typography variant="h3">How to pay</Typography>
-      <Box py={3}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={props.startPayment}
-        >
-          Pay using GOV.UK Pay
-        </Button>
-      </Box>
-
-      <SuggestionDrawer />
-    </div>
-  );
-}
-
-function GovUkTemporaryComponent(props: {
-  url: string;
-  payload: GovUKCreatePaymentPayload;
-  handleResponse: (response: GovUKPayment) => void;
-}): JSX.Element | null {
-  const request = useAsync(async () => axios.post(props.url, props.payload));
-
-  useEffect(() => {
-    if (!request.loading && !request.error && request.value) {
-      props.handleResponse(request.value.data as GovUKPayment);
-    }
-  }, [request.loading, request.error, request.value]);
-
-  if (request.loading) {
-    return <Typography>Loading...</Typography>;
-  } else if (request.error) {
-    throw request.error;
-  }
-
-  return null;
-}
-
-function SuggestionDrawer() {
-  const OTHER_OPTIONS = [
-    { name: "Apple", label: "Apple Pay" },
-    { name: "BACs", label: "Bank transfer by BACs" },
-    { name: "Cheque", label: "Cheque" },
-    { name: "PayPal", label: "PayPal" },
-    { name: "Phone", label: "Phone" },
-    { name: "Other", label: "Other" },
-  ];
-
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [checkboxes, setCheckboxes] = React.useState(
-    // { [name]: false }
-    Object.fromEntries(OTHER_OPTIONS.map(({ name }) => [name, false]))
-  );
-  const [text, setText] = React.useState("");
-
-  const classes = useStyles();
-
-  return (
     <>
-      <a className={classes.link} onClick={() => setIsOpen((x) => !x)}>
-        Tell us other ways you'd like to pay in the future
-      </a>
-      <Drawer
-        variant="persistent"
-        anchor="right"
-        open={isOpen}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div>
-          <IconButton onClick={() => setIsOpen(false)} aria-label="Close Panel">
-            <CloseIcon />
-          </IconButton>
-          <p>
-            What other types of payment would you like this service to accept in
-            the future:
-          </p>
-          <FormGroup row>
-            {OTHER_OPTIONS.map((p, i) => (
-              <FormControlLabel
-                key={i}
-                control={<Checkbox name={p.name} />}
-                label={p.label}
-                onChange={(event: React.ChangeEvent<{}>) => {
-                  if (event.target) {
-                    setCheckboxes((acc) => ({
-                      ...acc,
-                      [p.name]: (event.target as any).checked,
-                    }));
-                  }
-                }}
-              />
-            ))}
-          </FormGroup>
-          <p>Why would you prefer to use this form of payment?</p>
-
-          <Input
-            bordered
-            multiline={true}
-            rows={3}
-            style={{ width: "100%" }}
-            onChange={(ev) => {
-              setText(ev.target.value);
-            }}
-            value={text}
-          />
-
-          <p style={{ textAlign: "right" }}>
-            <ButtonBase onClick={() => setIsOpen(false)}>Save</ButtonBase>
-          </p>
-        </div>
-      </Drawer>
+      {state.status === "init" || state.status === "retry" ? (
+        <Confirm
+          {...props}
+          fee={fee}
+          onConfirm={() => {
+            state.status === "init"
+              ? startNewPayment()
+              : resumeExistingPayment();
+          }}
+          buttonTitle={
+            state.status === "init" ? "Pay using GOV.UK Pay" : "Retry payment"
+          }
+        />
+      ) : (
+        <DelayedLoadingIndicator text={state.displayText || state.status} />
+      )}
     </>
   );
 }

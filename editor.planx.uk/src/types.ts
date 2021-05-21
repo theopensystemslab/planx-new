@@ -87,7 +87,7 @@ export interface GovUKPayment {
       href: string;
       method: string;
     };
-    next_url: {
+    next_url?: {
       href: string;
       method: string;
     };

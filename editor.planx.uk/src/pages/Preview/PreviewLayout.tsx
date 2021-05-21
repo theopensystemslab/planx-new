@@ -3,6 +3,7 @@ import Link from "@material-ui/core/Link";
 import { createMuiTheme, Theme, ThemeProvider } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ErrorFallback from "components/ErrorFallback";
+import { clearLocalFlow } from "lib/local";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -30,25 +31,13 @@ const PreviewLayout: React.FC<{
 
   const [id] = useStore((state) => [state.id]);
 
-  const entry = `flow:${id}`;
-  const localSession = (() => {
-    try {
-      const storage = localStorage.getItem(entry);
-      if (storage) {
-        return JSON.parse(storage);
-      }
-    } catch (err) {
-      throw err;
-    }
-  })();
-
   const handleRestart = () => {
     if (
       confirm(
         "Are you sure you want to restart? This will delete your previous answers"
       )
     ) {
-      localStorage.removeItem(entry);
+      clearLocalFlow(id);
       window.location.reload();
     }
   };
