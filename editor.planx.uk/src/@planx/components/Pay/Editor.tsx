@@ -68,7 +68,7 @@ function Component(props: any) {
             <Input
               name="url"
               value={formik.values.url}
-              placeholder="https://api2.planx.uk/pay"
+              placeholder={`${process.env.REACT_APP_API_URL}/pay`}
               onChange={formik.handleChange}
             />
           </InputRow>

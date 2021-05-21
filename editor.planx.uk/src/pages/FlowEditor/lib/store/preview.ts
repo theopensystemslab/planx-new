@@ -429,25 +429,11 @@ export const previewStore = (
   upcomingCardIds() {
     const { flow, breadcrumbs, computePassport, collectedFlags } = get();
 
-    const knownNotVals = Object.entries(breadcrumbs).reduce(
-      (acc, [id, { answers = [] }]) => {
-        if (!flow[id]) return acc;
-
-        const _knownNotVals = difference(
-          flow[id].edges,
-          answers as Array<Store.nodeId>
-        );
-
-        acc[flow[id].data?.fn] = uniq(
-          flatten([
-            ...(acc[flow[id].data?.fn] || []),
-            _knownNotVals.flatMap((n) => flow[n].data?.val),
-          ])
-        ).filter(Boolean) as Array<Store.nodeId>;
-
-        return acc;
-      },
-      {} as Record<Store.nodeId, Array<Store.nodeId>>
+    const knownNotVals = knownNots(
+      flow,
+      breadcrumbs,
+      // _nots is created by FindProperty/Public atm
+      computePassport().data?._nots
     );
 
     const ids: Set<Store.nodeId> = new Set();
@@ -643,3 +629,33 @@ export const previewStore = (
     return sortIdsDepthFirst(flow)(ids);
   },
 });
+
+const knownNots = (
+  flow: Store.flow,
+  breadcrumbs: Store.breadcrumbs,
+  nots = {}
+) =>
+  Object.entries(breadcrumbs).reduce(
+    (acc, [id, { answers = [] }]) => {
+      if (!flow[id]) return acc;
+
+      const _knownNotVals = difference(
+        flow[id].edges,
+        answers as Array<Store.nodeId>
+      );
+
+      if (flow[id].data?.fn) {
+        acc[flow[id].data.fn] = uniq(
+          flatten([
+            ...(acc[flow[id].data?.fn] || []),
+            _knownNotVals.flatMap((n) => flow[n].data?.val),
+          ])
+        ).filter(Boolean) as Array<string>;
+      }
+
+      return acc;
+    },
+    {
+      ...nots,
+    } as Record<string, Array<string>>
+  );

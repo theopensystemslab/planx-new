@@ -49,7 +49,7 @@ function Component(props: Props) {
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
   const { data: constraints } = useSWR(() =>
     address
-      ? `https://local-authority-api.planx.uk/${team}?x=${address.x}&y=${address.y}&version=1`
+      ? `${process.env.REACT_APP_API_URL}/gis/${team}?x=${address.x}&y=${address.y}&version=1`
       : null
   );
 
@@ -62,149 +62,32 @@ function Component(props: Props) {
       />
     );
   } else if (constraints) {
-    // const mockConstraints = {
-    //   "property.c31": {
-    //     value: false,
-    //   },
-    //   "property.landAONB": {
-    //     value: false,
-    //   },
-    //   "property.landBroads": {
-    //     value: false,
-    //   },
-    //   "property.landExplosivesStorage": {
-    //     value: false,
-    //   },
-    //   "property.landNP": {
-    //     value: false,
-    //   },
-    //   "property.landSafeguarded": {
-    //     value: false,
-    //   },
-    //   "property.landSafetyHazard": {
-    //     value: false,
-    //   },
-    //   "property.landSSI": {
-    //     value: false,
-    //   },
-    //   "property.landWCA": {
-    //     value: false,
-    //   },
-    //   "property.landWHS": {
-    //     value: false,
-    //   },
-    //   "property.landConservation": {
-    //     text: "is in a Conservation Area",
-    //     description:
-    //       "http://www.southwark.gov.uk/planning-and-building-control/design-and-conservation/conservation-areas?chapter=10",
-    //     value: true,
-    //     type: "warning",
-    //     data: {
-    //       Conservation_area: "Cobourg Road",
-    //       Conservation_area_number: 19,
-    //       More_information:
-    //         "http://www.southwark.gov.uk/planning-and-building-control/design-and-conservation/conservation-areas?chapter=10",
-    //     },
-    //   },
-    //   "property.buildingListed": {
-    //     text: "is, or is within, a Grade II listed building",
-    //     description:
-    //       "https://geo.southwark.gov.uk/connect/analyst/Includes/Listed Buildings/SwarkLB 201.pdf",
-    //     value: true,
-    //     type: "warning",
-    //     data: {
-    //       ID: 470787,
-    //       NAME: "",
-    //       STREET_NUMBER: "47",
-    //       STREET: "Cobourg Road",
-    //       GRADE: "II",
-    //       DATE_OF_LISTING: "1986-01-24",
-    //       LISTING_DESCRIPTION:
-    //         "https://geo.southwark.gov.uk/connect/analyst/Includes/Listed Buildings/SwarkLB 201.pdf",
-    //     },
-    //   },
-    //   "property.landTPO": {
-    //     value: false,
-    //     text: "is not in a TPO (Tree Preservation Order) zone",
-    //     type: "check",
-    //     data: {},
-    //   },
-    //   "property.southwarkSunrayEstate": {
-    //     value: false,
-    //   },
-    // };
     return (
       <PropertyInformation
         handleSubmit={(feedback?: string) => {
           if (flow && address && constraints) {
-            // ------ BEGIN PASSPORT DATA OVERRIDES ------
+            const _nots: any = {};
+            const newPassportData: any = {};
 
-            // TODO: move all of the logic in this block out of here and update the API
-
-            // In this block we are converting the vars stored in passport.data object
-            // from the old boolean values style to the new array style. This should be
-            // done on a server but as a temporary fix the data is currently being
-            // converted here.
-
-            // More info:
-            // GitHub comment explaining what's happening here https://bit.ly/2HFnxX2
-            // Google sheet with new passport schema https://bit.ly/39eYp4A
-
-            // https://tinyurl.com/3cdrnr7j
-
-            // converts what is here
-            // https://gist.github.com/johnrees/e0e3197e3915489a69c743b38faf489e
-            // into { 'property.constraints.planning': { value: ['property.landConservation'] } }
-            const constraintsDictionary = {
-              "property.article4.lambeth.albertsquare":
-                "article4.lambeth.albert",
-              "property.article4.lambeth.hydefarm": "article4.lambeth.hydeFarm",
-              "property.article4.lambeth.lansdowne":
-                "article4.lambeth.lansdowne",
-              "property.article4.lambeth.leighamcourt":
-                "article4.lambeth.leigham",
-              "property.article4.lambeth.parkhallroad":
-                "article4.lambeth.parkHall",
-              "property.article4.lambeth.stockwell":
-                "article4.lambeth.stockwell",
-              "property.article4.lambeth.streatham":
-                "article4.lambeth.streatham",
-              "property.article4s": "article4",
-              "property.buildingListed": "listed",
-              "property.landAONB": "designated.AONB",
-              "property.landBroads": "designated.broads",
-              "property.landConservation": "designated.conservationArea",
-              "property.landExplosivesStorage": "defence.explosives",
-              "property.landNP": "designated.nationalPark",
-              "property.landSafeguarded": "defence.safeguarded",
-              "property.landSafetyHazard": "hazard",
-              "property.landSSI": "nature.SSSI",
-              "property.landTPO": "tpo",
-              "property.landWHS": "designated.WHS",
-              "property.southwarkSunrayEstate": "article4.southwark.sunray",
-            };
-
-            const newPassportData = Object.entries(
-              constraintsDictionary
-            ).reduce((dataObject, [oldName, newName]) => {
-              if (constraints?.[oldName]?.value) {
-                dataObject!["property.constraints.planning"] =
-                  dataObject!["property.constraints.planning"] ?? [];
-                dataObject!["property.constraints.planning"].push(newName);
+            Object.entries(constraints).forEach(([key, data]: any) => {
+              if (data.value) {
+                newPassportData["property.constraints.planning"] ||= [];
+                newPassportData["property.constraints.planning"].push(key);
+              } else {
+                _nots["property.constraints.planning"] ||= [];
+                _nots["property.constraints.planning"].push(key);
               }
-              return dataObject;
-            }, {} as Record<string, any>);
+            });
 
             if (address?.planx_value) {
-              newPassportData!["property.type"] = address.planx_value;
+              newPassportData["property.type"] = address.planx_value;
             }
 
             const passportData = {
               _address: address,
               ...newPassportData,
+              _nots,
             };
-
-            // ------ END PASSPORT DATA OVERRIDES ------
 
             props.handleSubmit?.({
               data: passportData,
