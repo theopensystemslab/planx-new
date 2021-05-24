@@ -1,3 +1,4 @@
+const assert = require('assert')
 const { Server } = require("ws");
 const jwt = require("jsonwebtoken");
 const ShareDB = require("sharedb");
@@ -5,7 +6,9 @@ const WebSocketJSONStream = require("@teamwork/websocket-json-stream");
 const PostgresDB = require("./sharedb-postgresql");
 const access = require("sharedb-access");
 
-const { PORT = 8000, JWT_SECRET = "shh", PG_URL = "" } = process.env;
+const { PORT = 8000, JWT_SECRET, PG_URL } = process.env;
+assert(JWT_SECRET);
+assert(PG_URL);
 
 const sharedb = new ShareDB({
   db: new PostgresDB({
@@ -33,7 +36,7 @@ const wss = new Server({
   verifyClient: (info, cb) => {
     try {
       // checks if JWT is included in cookies, does not allow connection if invalid
-      const [, token] = info.req.headers.cookie.match(/jwt\=([^;]+)/);
+      const [, token] = info.req.headers.cookie?.match(/jwt\=([^;]+)/) || [];
 
       if (!token) {
         cb(false, 401, "Unauthorized");

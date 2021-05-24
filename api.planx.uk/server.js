@@ -4,6 +4,7 @@ const cookieSession = require("cookie-session");
 const cors = require("cors");
 const express = require("express");
 const jwt = require("express-jwt");
+const url = require("url");
 const { GraphQLClient } = require("graphql-request");
 const { Server } = require("http");
 const passport = require("passport");
@@ -41,26 +42,20 @@ router.get("/logout", (req, res) => {
 //   redirecting the user to google.com.  After authorization, Google
 //   will redirect the user back to this application at /auth/google/callback
 
-const cookieDomain = (returnTo) => {
-  if (process.env.NODE_ENV === "production") {
-    // TODO: don't hardcode domain in here
-    // this is either going to be a planx.uk or netlify.app domain
-    if (returnTo && returnTo.includes("planx.uk")) {
-      return ".planx.uk";
-    }
-  } else {
-    return "localhost";
-  }
-};
-
 const handleSuccess = (req, res) => {
   if (req.user) {
     const { returnTo = process.env.EDITOR_URL_EXT } = req.session;
 
-    const domain = cookieDomain(returnTo);
+    const domain = (() => {
+      if (process.env.NODE_ENV === "production") {
+        return `${url.parse(returnTo).host}`;
+      } else {
+        return "localhost";
+      }
+    })();
 
     const cookie = {
-      domain: domain || ".planx.uk",
+      domain,
       maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       httpOnly: false,
     };

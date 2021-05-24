@@ -1,0 +1,6 @@
+config:
+  aws:region: eu-west-2
+  certificates:cloudflare-zone-id: dc27ac531ff8862559ed9ab5016c4953
+  certificates:domain: editor.planx.dev
+  cloudflare:apiToken:
+    secure: AAABAC70m1HdE0yXE01FKPcKSl36N4yZm/OXfCw0OMMCH5eN4ovudMj1b1AZJNhtTIlcfxBb4oRHuK/ioNMo12GtgPwQLZb9
