@@ -80,7 +80,7 @@ describe("sessions", () => {
           _set: {completed_at: "NOW()"}
         ) { id }
       }
-  `;
+    `;
 
     const res = await gqlPublic(query);
 
@@ -92,5 +92,18 @@ describe("sessions", () => {
         )
       ).data.sessions_by_pk.completed_at
     );
+  });
+
+  test("only admin can delete a session", async() => {
+    const query = `
+      mutation DeleteSession {
+        delete_sessions(where: {id: {_eq: "${sessionId}"}}) {
+          affected_rows
+        }
+      }
+    `;
+
+    assert.strictEqual((await gqlAdmin(query)).data.delete_sessions.affected_rows, 1);
+    assert((await gqlPublic(query)).errors.length);
   });
 });
