@@ -1,4 +1,5 @@
 const assert = require("assert");
+const { hasUncaughtExceptionCaptureCallback } = require("process");
 
 const { gqlAdmin, gqlPublic } = require("./utils");
 
@@ -94,6 +95,19 @@ describe("sessions", () => {
     );
   });
 
+  test("only admin can delete session events", async() => {
+    const query = `
+      mutation DeleteSessionEvent {
+        delete_session_events(where: {session_id: {_eq: "${sessionId}"}}) {
+          affected_rows
+        }
+      }
+    `;
+
+    expect((await gqlAdmin(query)).data.delete_session_events.affected_rows).toBeGreaterThanOrEqual(0);
+    assert((await gqlPublic(query)).errors.length);
+  });
+
   test("only admin can delete a session", async() => {
     const query = `
       mutation DeleteSession {
@@ -103,7 +117,7 @@ describe("sessions", () => {
       }
     `;
 
-    assert.strictEqual((await gqlAdmin(query)).data.delete_sessions.affected_rows, 1);
+    expect((await gqlAdmin(query)).data.delete_sessions.affected_rows).toEqual(1);
     assert((await gqlPublic(query)).errors.length);
   });
 });
