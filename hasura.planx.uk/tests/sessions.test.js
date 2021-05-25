@@ -1,5 +1,4 @@
 const assert = require("assert");
-const { hasUncaughtExceptionCaptureCallback } = require("process");
 
 const { gqlAdmin, gqlPublic } = require("./utils");
 
