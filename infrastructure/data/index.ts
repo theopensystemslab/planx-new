@@ -1,8 +1,7 @@
 "use strict";
 
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
-import * as awsx from "@pulumi/awsx";
+import * as pulumi from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
 
@@ -19,7 +18,7 @@ const db = new aws.rds.Instance("app", {
   // Available versions: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts.General.version12
   engineVersion: "12.3",
   // Available instance types: https://aws.amazon.com/rds/instance-types/
-  instanceClass: env === "production" ? "db.t3.small" : "db.t3.micro",
+  instanceClass: env === "production" ? "db.t3.medium" : "db.t3.micro",
   allocatedStorage: env === "production" ? 100 : 20,
   allowMajorVersionUpgrade: true,
   dbSubnetGroupName: networking.requireOutput("subnetId"),
