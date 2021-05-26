@@ -24,9 +24,9 @@ The environments are:
 Steps:
 
 1. Install the [Pulumi CLI](https://www.pulumi.com/docs/reference/cli/)
-1. Go to `networking/`, install dependencies with `npm install`, then run `pulumi up --stack <stack>`
-1. Go to `certificates/`, install dependencies with `npm install`, then run `pulumi up --stack <stack>`
-1. Go to `data/`, install dependencies with `npm install`, then run `pulumi up --stack <stack>`
+1. Go to `networking/`, install dependencies with `pnpm install`, then run `pulumi up --stack <stack>`
+1. Go to `certificates/`, install dependencies with `pnpm install`, then run `pulumi up --stack <stack>`
+1. Go to `data/`, install dependencies with `pnpm install`, then run `pulumi up --stack <stack>`
 
 ### What about the secrets?
 
