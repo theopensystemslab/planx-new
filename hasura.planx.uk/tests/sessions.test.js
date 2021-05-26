@@ -2,7 +2,7 @@ const assert = require("assert");
 
 const { gqlAdmin, gqlPublic } = require("./utils");
 
-describe("sessions", () => {
+describe("sessions and session_events", () => {
   let flowId, sessionId;
 
   beforeAll(async () => {
@@ -26,16 +26,18 @@ describe("sessions", () => {
     // XXX: We're assuming that if we delete the flow, then
     //      deletion will cascade into sessions and session_events
     assert.strictEqual(
-      (
-        await gqlAdmin(
-          `mutation DeleteFlowCascade {delete_flows(where: {id: {_eq: "${flowId}"}}) { affected_rows }}`
-        )
-      ).data.delete_flows.affected_rows,
+      (await gqlAdmin(`
+        mutation DeleteFlowCascade {
+          delete_flows(where: {id: {_eq: "${flowId}"}}) { 
+            affected_rows 
+          }
+        }
+      `)).data.delete_flows.affected_rows,
       1
     );
   });
 
-  test("public can insert session", async () => {
+  test("public can insert a session", async () => {
     const query = `
       mutation InsertSession {
         insert_sessions_one(object: {
@@ -48,12 +50,12 @@ describe("sessions", () => {
     `;
 
     const res = await gqlPublic(query);
-
     sessionId = res.data.insert_sessions_one.id;
+
     assert(sessionId);
   });
 
-  test("public can insert session event", async () => {
+  test("public can insert a session event", async () => {
     const query = `
       mutation InsertSessionEvent {
         insert_session_events(objects: {
@@ -67,9 +69,10 @@ describe("sessions", () => {
       }
     `;
 
-    const res = await gqlPublic(query);
-
-    assert.strictEqual(res.data.insert_session_events.affected_rows, 1);
+    assert.strictEqual(
+      (await gqlPublic(query)).data.insert_session_events.affected_rows, 
+      1
+    );
   });
 
   test("public can end a session", async () => {
@@ -82,15 +85,15 @@ describe("sessions", () => {
       }
     `;
 
-    const res = await gqlPublic(query);
-
-    assert.strictEqual(res.errors, undefined);
+    assert.strictEqual((await gqlPublic(query)).errors, undefined);
     assert(
-      (
-        await gqlAdmin(
-          `query ThisSession {sessions_by_pk(id: "${sessionId}") { completed_at }}`
-        )
-      ).data.sessions_by_pk.completed_at
+      (await gqlAdmin(`
+        query ThisSession {
+          sessions_by_pk(id: "${sessionId}") { 
+            completed_at 
+          }
+        }
+      `)).data.sessions_by_pk.completed_at
     );
   });
 
@@ -104,7 +107,10 @@ describe("sessions", () => {
     `;
 
     expect((await gqlAdmin(query)).data.delete_session_events.affected_rows).toBeGreaterThanOrEqual(0);
-    assert((await gqlPublic(query)).errors.length);
+    assert(
+      (await gqlPublic(query)).errors[0].message,
+      `field "delete_session_events" not found in type: 'mutation_root'`
+    );
   });
 
   test("only admin can delete a session", async() => {
@@ -116,7 +122,13 @@ describe("sessions", () => {
       }
     `;
 
-    expect((await gqlAdmin(query)).data.delete_sessions.affected_rows).toEqual(1);
-    assert((await gqlPublic(query)).errors.length);
+    assert.strictEqual(
+      (await gqlAdmin(query)).data.delete_sessions.affected_rows,
+      1
+    );
+    assert(
+      (await gqlPublic(query)).errors[0].message,
+      `field "delete_sessions" not found in type: 'mutation_root'`
+    );
   });
 });
