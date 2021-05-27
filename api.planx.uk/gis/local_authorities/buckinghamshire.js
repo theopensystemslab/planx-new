@@ -9,7 +9,7 @@ const { planningConstraints } = require("./metadata/buckinghamshire.js");
 
 // Process local authority metadata
 const gisLayers = getQueryableConstraints(planningConstraints);
-const articleFours = {};
+const articleFours = {}; // "planningConstraints.article4.records" in future
 
 // Fetch a data layer
 async function search(
@@ -88,6 +88,30 @@ async function go(x, y, extras) {
           ...extras,
         }
       );
+
+    ob["article4.buckinghamshire.officetoresi"] = {
+      value:
+        ob["article4"] &&
+        ob["article4"].data &&
+        ob["article4"].data.SUMMARY0 &&
+        ob["article4"].data.SUMMARY0.startsWith(
+          "Change of use from offices to residential"
+        )
+          ? true
+          : false,
+    };
+
+    ob["article4.buckinghamshire.poultry"] = {
+      value:
+        ob["article4"] &&
+        ob["article4"].data &&
+        ob["article4"].data.SUMMARY0 &&
+        ob["article4"].data.SUMMARY0.startsWith(
+          "Certain structures used for production of poultry"
+        )
+          ? true
+          : false,
+    };
 
     return ob;
   } catch (e) {
