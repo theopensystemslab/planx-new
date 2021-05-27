@@ -53,6 +53,10 @@ jobs:
           REACT_APP_PULL_REQUEST: https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
+          REACT_APP_API_URL: https://api.editor.planx.dev
+          REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
+          REACT_APP_HASURA_URL: https://hasura.editor.planx.dev/v1/graphql
+          REACT_APP_SHAREDB_URL: wss://sharedb.editor.planx.dev
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -98,6 +102,7 @@ jobs:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+      # TODO: use pnpm cache
       - run: npm install
         working-directory: infrastructure/application
       - name: Download Build Artifact
