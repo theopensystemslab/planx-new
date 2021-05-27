@@ -6,8 +6,8 @@ import type { Flag } from "../../../types";
 // https://www.figma.com/file/bnUUrsVRG6qPwDkTmVKACI/Design?node-id=1971%3A0
 const categoriesAndFlags = {
   "Planning permission": {
-    MISSING_INFO: ["Missing information", "#EAEAEA"],
     IMMUNE: ["Immune", "#BEE6E7"],
+    MISSING_INFO: ["Missing information", "#EAEAEA"],
     PLANNING_PERMISSION_REQUIRED: ["Permission needed", "#A8A8A8"],
     PRIOR_APPROVAL: ["Prior approval", "#FCFF58"],
     "PP-NOTICE": ["Notice", "#CAFB8B"],
