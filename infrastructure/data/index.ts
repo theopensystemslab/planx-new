@@ -9,9 +9,6 @@ const DB_ROOT_USERNAME = "dbuser";
 
 const env = pulumi.getStack();
 const networking = new pulumi.StackReference(`planx/networking/${env}`);
-const certificates = new pulumi.StackReference(
-  `planx/certificates/${env}`
-);
 
 const db = new aws.rds.Instance("app", {
   engine: "postgres",

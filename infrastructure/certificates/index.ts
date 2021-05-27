@@ -16,6 +16,7 @@ const env = pulumi.getStack();
 // The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the CloudFlare API token is missing.
 new pulumi.Config("cloudflare").require("apiToken");
 
+// https://docs.aws.amazon.com/acm/latest/userguide/setup-caa.html
 const caaRecordRoot = new cloudflare.Record(`caa-record-root`, {
   name: `${config.require("domain")}`,
   ttl: 600,

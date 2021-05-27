@@ -107,7 +107,7 @@ new pulumi.Config("cloudflare").require("apiToken");
     desiredCount: 1,
   });
 
-  const hasuraDnsRecord = new cloudflare.Record("hasura", {
+  new cloudflare.Record("hasura", {
     name: tldjs.getSubdomain(DOMAIN)
       ? `hasura.${tldjs.getSubdomain(DOMAIN)}`
       : "hasura",
@@ -141,7 +141,6 @@ new pulumi.Config("cloudflare").require("apiToken");
       ],
     },
   });
-
   new aws.s3.BucketPolicy("api-bucket-policy", {
     bucket: apiBucket.id,
     policy: {
@@ -238,7 +237,7 @@ new pulumi.Config("cloudflare").require("apiToken");
     },
     desiredCount: 1,
   });
-  const apiDnsRecord = new cloudflare.Record("api", {
+  new cloudflare.Record("api", {
     name: tldjs.getSubdomain(DOMAIN)
       ? `api.${tldjs.getSubdomain(DOMAIN)}`
       : "api",
@@ -321,7 +320,6 @@ new pulumi.Config("cloudflare").require("apiToken");
   });
 
   // ------------------- Frontend
-  // return;
   const frontendBucket = new aws.s3.Bucket("frontend", {
     bucket: DOMAIN,
     // TODO: can we remove these cors rules?
