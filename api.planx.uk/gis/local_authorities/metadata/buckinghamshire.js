@@ -127,22 +127,29 @@ const planningConstraints = {
       description: data.NAME,
     }),
   },
-  "designated.nationalPark": {
-    key: "designated.nationalPark",
-    source: environmentDomain,
-    id: "NE/NationalParksEngland",
-    fields: ["objectid", "code", "name", "status", "hotlink"],
-    neg: "is not a National Park",
-    pos: (data) => ({
-      text: "is, or is within, a National Park",
-      description: data.name,
-    }),
-  },
+  // "designated.nationalPark": {
+  //   key: "designated.nationalPark",
+  //   source: environmentDomain,
+  //   id: "NE/NationalParksEngland",
+  //   fields: ["objectid", "code", "name", "status", "hotlink"],
+  //   neg: "is not a National Park",
+  //   pos: (data) => ({
+  //     text: "is, or is within, a National Park",
+  //     description: data.name,
+  //   }),
+  // },
   "designated.broads": { value: false },
-  "designated.WHS": {
-    value: false,
-    type: "locally verified",
-  },
+  // "designated.WHS": {
+  //   key: "designated.WHS",
+  //   source: environmentDomain,
+  //   id: "HE/WorldHeritageSites",
+  //   fields: ["objectid", "name"],
+  //   neg: "is not a World Heritage Site",
+  //   pos: (data) => ({
+  //     text: "is a World Heritage Site",
+  //     description: data.name,
+  //   }),
+  // },
   "designated.monument": {
     key: "designated.monument",
     source: bucksDomain,

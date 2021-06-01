@@ -77,17 +77,17 @@ const planningConstraints = {
       description: data.name,
     }),
   },
-  "designated.nationalPark": {
-    key: "designated.nationalPark",
-    source: environmentDomain,
-    id: "NE/NationalParksEngland",
-    fields: ["objectid", "code", "name", "status", "hotlink"],
-    neg: "is not a National Park",
-    pos: (data) => ({
-      text: "is, or is within, a National Park",
-      description: data.name,
-    }),
-  },
+  // "designated.nationalPark": {
+  //   key: "designated.nationalPark",
+  //   source: environmentDomain,
+  //   id: "NE/NationalParksEngland",
+  //   fields: ["objectid", "code", "name", "status", "hotlink"],
+  //   neg: "is not a National Park",
+  //   pos: (data) => ({
+  //     text: "is, or is within, a National Park",
+  //     description: data.name,
+  //   }),
+  // },
   "designated.broads": { value: false },
   "designated.WHS": {
     key: "designated.WHS",

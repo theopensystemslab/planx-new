@@ -100,7 +100,7 @@ const planningConstraints = {
     }),
   },
   "designated.monument": {
-    key: "designated.WHS",
+    key: "designated.monument",
     source: "Southwark Maps", // TODO debug access-denied error, or swap to ESRI source
     tables: [
       "Scheduled Monuments"
@@ -111,9 +111,9 @@ const planningConstraints = {
       "SchedDate",
       "Hyperlink",
     ],
-    neg: "is not the site of a Monument",
+    neg: "is not the site of a Scheduled Monument",
     pos: (data) => ({
-      text: "is the site of a Monument",
+      text: "is the site of a Scheduled Monument",
       description: data.Name,
     }),
   },
