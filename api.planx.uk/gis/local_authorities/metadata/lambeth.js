@@ -19,27 +19,33 @@ const planningConstraints = {
     id: "LambethArticle4",
     fields: ["OBJECTID", "DESCRIPTION"],
     neg: "is not subject to any Article 4 directions",
-    pos: (data) => {
-      const text =
-        data.length === 1
-          ? "is subject to an Article 4 Restriction"
-          : `is subject to multiple Article 4 Restrictions`;
-      return {
-        text,
-        description: data,
-      };
-    },
+    pos: (data) => ({
+      text: "is subject to an Article 4 direction(s)",
+      description: data.DESCRIPTION,
+    }),
     records: {
-      // 0 : "property.article4.lambeth.fentiman", // CA11
+      0: "article4.lambeth.fentiman", // CA11
       1: "article4.lambeth.streatham", // CA62
       2: "article4.lambeth.stockwell", // CA05
       3: "article4.lambeth.leigham", // CA31
-      4: "property.article4.lambeth.stmarks", // CA11
+      4: "article4.lambeth.stmarks", // CA11
       5: "article4.lambeth.parkHall", // CA19
       6: "article4.lambeth.lansdowne", // CA03
       7: "article4.lambeth.albert", // CA04
       8: "article4.lambeth.hydeFarm", // CA48
     },
+  },
+  "article4.lambeth.kiba": {
+    key: "article4.lambeth.kiba",
+    source: lambethDomain,
+    id: "LambethArticle4B1toC3",
+    fields: ["OBJECTID", "NAME", "ARTICLE_4"],
+    where: "ARTICLE_4='KIBA'",
+    neg: "is not subject to any Article 4 directions",
+    pos: (data) => ({
+      text: "is subject to an Article 4 B1 to C3 direction",
+      description: data.NAME,
+    }),
   },
   listed: {
     key: "listed",
@@ -66,17 +72,17 @@ const planningConstraints = {
       1: "designated.conservationArea.lambeth.churchRoad", // CA10 aka Lambeth Palace ??
     },
   },
-  "designated.AONB": {
-    key: "designated.AONB",
-    source: environmentDomain,
-    id: "NE/AreasOfOutstandingNaturalBeautyEngland",
-    fields: ["objectid", "code", "name", "desig_date", "hotlink"],
-    neg: "is not an Area of Outstanding Natural Beauty",
-    pos: (data) => ({
-      text: "is, or is within, an Area of Outstanding Natural Beauty",
-      description: data.name,
-    }),
-  },
+  // "designated.AONB": {
+  //   key: "designated.AONB",
+  //   source: environmentDomain,
+  //   id: "NE/AreasOfOutstandingNaturalBeautyEngland",
+  //   fields: ["objectid", "code", "name", "desig_date", "hotlink"],
+  //   neg: "is not an Area of Outstanding Natural Beauty",
+  //   pos: (data) => ({
+  //     text: "is, or is within, an Area of Outstanding Natural Beauty",
+  //     description: data.name,
+  //   }),
+  // },
   // "designated.nationalPark": {
   //   key: "designated.nationalPark",
   //   source: environmentDomain,
@@ -104,7 +110,7 @@ const planningConstraints = {
   // "designated.monument": {
   //   key: "designated.monument",
   //   source: environmentDomain,
-  //   id: "HE/ScheduledMonuments", // TODO debug response "requested operation not supported"
+  //   id: "HE/ScheduledMonuments", // TODO debug response "requested operation 'query' not supported"
   //   fields: ["objectid", "name", "scheddate"],
   //   neg: "is not the site of a Scheduled Monument",
   //   pos: (data) => ({

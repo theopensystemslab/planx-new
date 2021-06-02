@@ -12,10 +12,10 @@ const gisLayers = getQueryableConstraints(planningConstraints);
 const articleFours = planningConstraints.article4.records;
 
 // Fetch a data layer
-async function search(mapServer, featureName, outFields, geometry) {
+async function search(mapServer, featureName, outFields, geometry, where) {
   const { id } = planningConstraints[featureName];
 
-  let url = makeEsriUrl(mapServer, id, 0, { outFields, geometry });
+  let url = makeEsriUrl(mapServer, id, 0, { outFields, geometry, where });
 
   return fetch(url)
     .then((response) => response.text())
@@ -36,7 +36,8 @@ async function go(x, y, extras) {
           gisLayers[layer].source,
           layer,
           gisLayers[layer].fields,
-          point
+          point,
+          gisLayers[layer].where || "1=1"
         )
       )
     );
@@ -106,6 +107,15 @@ async function go(x, y, extras) {
         ob["designated.conservationArea"].data.CA_REF_NO === "CA10"
           ? true
           : false,
+    };
+
+    // Since we have multiple article 4 layers, make sure the root variable is synced with the sub variable
+    if (ob["article4.lambeth.kiba"].value === true && ob["article4"].value === false) {
+      ob["article4"] = ob["article4.lambeth.kiba"];
+      ob["article4.lambeth.kiba"] = { value: true };
+    } else if (ob["article4.lambeth.kiba"].value === false && ob["article4"].value === true ) {
+      // Remove "text" from sub variable so it doesn't render as separate entry in planning constraints list
+      ob["article4.lambeth.kiba"] = { value: false };
     };
 
     return ob;
