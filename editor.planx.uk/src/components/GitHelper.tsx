@@ -20,7 +20,7 @@ export default function GitHelper(): FCReturn {
 
   if (
     !process.env.REACT_APP_GIT_BRANCH ||
-    process.env.REACT_APP_GIT_BRANCH === "master"
+    process.env.REACT_APP_GIT_BRANCH === "main"
   ) {
     return null;
   }
