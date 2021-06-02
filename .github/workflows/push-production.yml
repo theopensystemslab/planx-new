@@ -1,8 +1,8 @@
-name: Pulumi (Deploy Staging)
+name: Pulumi (Deploy Production)
 on:
   push:
     branches:
-      - main
+      - production
 jobs:
   test_and_build:
     name: Test and Build
@@ -48,10 +48,10 @@ jobs:
         env:
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
-          REACT_APP_API_URL: https://api.editor.planx.dev
+          REACT_APP_API_URL: https://api.editor.planx.uk
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
-          REACT_APP_HASURA_URL: https://hasura.editor.planx.dev/v1/graphql
-          REACT_APP_SHAREDB_URL: wss://sharedb.editor.planx.dev
+          REACT_APP_HASURA_URL: https://hasura.editor.planx.uk/v1/graphql
+          REACT_APP_SHAREDB_URL: wss://sharedb.editor.planx.uk
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -73,9 +73,9 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
-          aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
       # TODO: use pnpm cache
       - run: npm install
         working-directory: infrastructure/application
@@ -87,7 +87,7 @@ jobs:
       - uses: pulumi/actions@v3
         with:
           command: up
-          stack-name: staging
+          stack-name: production
           work-dir: infrastructure/application
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
