@@ -54,8 +54,8 @@ const components: {
   [TYPES.Checklist]: Checklist,
   [TYPES.Content]: undefined,
   [TYPES.Confirmation]: undefined,
-  [TYPES.DateInput]: Debug,
-  [TYPES.DrawBoundary]: Debug,
+  [TYPES.DateInput]: DateInput,
+  [TYPES.DrawBoundary]: DrawBoundary,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: FileUpload,
   [TYPES.Filter]: undefined,
@@ -64,7 +64,7 @@ const components: {
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: undefined,
   [TYPES.Notify]: undefined,
-  [TYPES.NumberInput]: Debug,
+  [TYPES.NumberInput]: NumberInput,
   [TYPES.Page]: undefined,
   [TYPES.Pay]: undefined,
   [TYPES.Report]: undefined,
@@ -116,7 +116,7 @@ function Component(props: Props) {
                       <a
                         onClick={() => {
                           const confirmed = window.confirm(
-                            `This action can't be undone.`
+                            `Are you sure you want to go back to change your answer? You may lose your answers to questions answered after this one.`
                           );
                           if (confirmed) {
                             props.changeAnswer(nodeId);
@@ -142,7 +142,9 @@ interface ComponentProps {
   userData?: Store.userData;
   flow: Store.flow;
   passport: Store.passport;
+  nodeId: number;
 }
+
 function Question(props: ComponentProps) {
   return (
     <>
@@ -207,14 +209,45 @@ function FileUpload(props: ComponentProps) {
       <div>{props.node.data.title ?? "File upload"}</div>
 
       <div>
-        {getAnswers(props).length > 0
-          ? getAnswers(props).map((file: any, i: number) => (
+        {Array.isArray(getAnswersByHash(props)) && getAnswersByHash(props).length > 0
+          ? getAnswersByHash(props).map((file: any, i: number) => (
               <a key={i} href={file.url}>
                 {file.filename}
               </a>
             ))
           : "No file"}
       </div>
+    </>
+  );
+}
+
+function DateInput(props: ComponentProps) {
+  return (
+    <>
+      <div>{props.node.data.title ?? "Date"}</div>
+      <div>{getAnswersByHash(props) ?? "No date"}</div>
+    </>
+  );
+}
+
+function DrawBoundary(props: ComponentProps) {
+  const geojson = props.userData?.data
+    ? JSON.stringify(props.userData?.data["property.boundary.site"])
+    : "No drawing";
+
+  return (
+    <>
+      <div>Site boundary (GeoJSON)</div>
+      <div>{geojson}</div>
+    </>
+  );
+}
+
+function NumberInput(props: ComponentProps) {
+  return (
+    <>
+      <div>{props.node.data.title ?? "Number"}</div>
+      <div>{`${getAnswersByHash(props) ?? "No number input"} ${props.node.data.units ?? ""}`}</div>
     </>
   );
 }
@@ -238,4 +271,16 @@ function getAnswers(props: ComponentProps): string[] {
     if (Array.isArray(array)) return array;
   } catch (err) {}
   return [];
+}
+
+function getAnswersByHash(props: ComponentProps): any {
+  try {
+    const edges = props!.flow!._root!.edges!;
+    const edgeHash = edges[props.nodeId];
+
+    if (props.userData?.data) {
+      return props.userData?.data[edgeHash];
+    }
+  } catch (err) {}
+  return "";
 }
