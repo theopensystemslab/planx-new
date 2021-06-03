@@ -36,7 +36,7 @@ const planningConstraints = {
       description: data.Article_4_Direction,
     }),
   },
-  listed: { 
+  listed: {
     key: "listed",
     source: "Southwark Maps",
     tables: [
@@ -101,7 +101,7 @@ const planningConstraints = {
   },
   "designated.monument": {
     key: "designated.monument",
-    source: "Southwark Maps", // TODO debug access-denied error, or swap to ESRI source
+    source: "Southwark Maps", // TODO debug "Access denied" error
     tables: [
       "Scheduled Monuments"
     ],
@@ -135,16 +135,6 @@ const planningConstraints = {
     }),
   },
   "nature.SSSI": { value: false },
-  "nature.ASNW": {
-    key: "nature.ANSW",
-    source: "Southwark Maps",
-    tables: [
-      "Areas of ancient woodland from Natural England (Southwark)"
-    ],
-    columns: ["OBJECTID", "NAME", "THEME"],
-    neg: "is not within an Ancient Woodland area",
-    pos: "is within an Ancient Woodland area",
-  },
   "defence.explosives": { value: false },
   "defence.safeguarded": { value: false },
   hazard: { value: false },
