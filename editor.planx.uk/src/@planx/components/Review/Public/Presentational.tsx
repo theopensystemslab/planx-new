@@ -233,7 +233,7 @@ function DateInput(props: ComponentProps) {
 
 function DrawBoundary(props: ComponentProps) {
   const geojson:string = props.userData?.data && props.userData?.data["property.boundary.site"]
-    ? JSON.stringify(props.userData?.data["property.boundary.site"])
+    ? JSON.stringify(props.userData?.data["property.boundary.site"], null, 2)
     : "No drawing";
 
   return (
