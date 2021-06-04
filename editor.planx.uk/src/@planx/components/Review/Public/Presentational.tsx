@@ -185,8 +185,8 @@ function Checklist(props: ComponentProps) {
       <div>{props.node.data.text ?? "Checklist"}</div>
       <div>
         <ul>
-          {getAnswers(props).map((nodeId: string) => (
-            <li>{props.flow[nodeId].data.text}</li>
+          {getAnswers(props).map((nodeId: string, i: number) => (
+            <li key={i}>{props.flow[nodeId].data.text}</li>
           ))}
         </ul>
       </div>
@@ -207,15 +207,16 @@ function FileUpload(props: ComponentProps) {
   return (
     <>
       <div>{props.node.data.title ?? "File upload"}</div>
-
       <div>
-        {Array.isArray(getAnswersByHash(props)) && getAnswersByHash(props).length > 0
-          ? getAnswersByHash(props).map((file: any, i: number) => (
-              <a key={i} href={file.url}>
-                {file.filename}
-              </a>
+        <ul>
+          {Array.isArray(getAnswersByHash(props)) && getAnswersByHash(props).length > 0
+            ? getAnswersByHash(props).map((file: any, i: number) => (
+              <li key={i}>
+                <a href={file.url}>{file.filename}</a>
+              </li>
             ))
-          : "No file"}
+            : "No file"}
+        </ul>
       </div>
     </>
   );
@@ -231,7 +232,7 @@ function DateInput(props: ComponentProps) {
 }
 
 function DrawBoundary(props: ComponentProps) {
-  const geojson = props.userData?.data
+  const geojson:string = props.userData?.data && props.userData?.data["property.boundary.site"]
     ? JSON.stringify(props.userData?.data["property.boundary.site"])
     : "No drawing";
 
@@ -275,10 +276,10 @@ function getAnswers(props: ComponentProps): string[] {
 
 function getAnswersByHash(props: ComponentProps): any {
   try {
-    const edges = props!.flow!._root!.edges!;
-    const edgeHash = edges[props.nodeId];
+    const edges:string[] = props!.flow!._root!.edges!;
+    const edgeHash:string = edges[props.nodeId];
 
-    if (props.userData?.data) {
+    if (props.userData?.data && edgeHash) {
       return props.userData?.data[edgeHash];
     }
   } catch (err) {}
