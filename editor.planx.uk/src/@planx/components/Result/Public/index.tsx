@@ -100,7 +100,7 @@ const Result: React.FC<Props> = ({
 
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [showSubmitButton, setShowSubmitButton] = useState<boolean>(
-    !!handleSubmit
+    Boolean(handleSubmit)
   );
 
   const classes = useClasses();

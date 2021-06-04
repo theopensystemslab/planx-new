@@ -646,6 +646,7 @@ export const previewStore = (
 
   isFinalCard: () => {
     const { upcomingCardIds } = get();
-    return upcomingCardIds().length <= 1;
+
+    return upcomingCardIds().length === 1;
   },
 });

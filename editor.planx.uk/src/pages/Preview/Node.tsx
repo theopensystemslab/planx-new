@@ -53,7 +53,7 @@ const Node: React.FC<any> = (props: Props) => {
   ]);
 
   const resetPreview = useStore((state) => state.resetPreview);
-  const handleSubmit = !isFinalCard ? props.handleSubmit : undefined;
+  const handleSubmit = isFinalCard ? undefined : props.handleSubmit;
 
   const allProps = {
     id: props.node.id,
