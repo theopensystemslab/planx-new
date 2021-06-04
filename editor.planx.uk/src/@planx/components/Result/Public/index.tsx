@@ -8,7 +8,7 @@ import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
 import type { handleSubmit } from "pages/Preview/Node";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { Node, TextContent } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
 
@@ -17,7 +17,7 @@ import ResultSummary from "./ResultSummary";
 
 export interface Props {
   allowChanges?: boolean;
-  handleSubmit: handleSubmit;
+  handleSubmit?: handleSubmit;
   headingColor: {
     text: string;
     background: string;
@@ -85,11 +85,12 @@ const Result: React.FC<Props> = ({
     initialValues: {
       feedback: "",
     },
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       if (values.feedback) {
         submitFeedback(values.feedback, {
           reason: "Inaccurate Result",
         });
+        resetForm();
       }
       handleSubmit?.();
     },
@@ -98,9 +99,18 @@ const Result: React.FC<Props> = ({
   const hiddenResponses = responses.filter((r) => r.hidden);
 
   const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [showSubmitButton, setShowSubmitButton] = useState<boolean>(
+    Boolean(handleSubmit)
+  );
 
   const classes = useClasses();
   const theme = useTheme();
+
+  useEffect(() => {
+    if (handleSubmit) return;
+
+    setShowSubmitButton(formik.values.feedback.length > 0);
+  }, [formik.values.feedback]);
 
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
@@ -109,7 +119,10 @@ const Result: React.FC<Props> = ({
         description={description}
         color={headingColor}
       />
-      <Card handleSubmit={formik.handleSubmit} isValid>
+      <Card
+        handleSubmit={showSubmitButton ? formik.handleSubmit : undefined}
+        isValid
+      >
         <Box mt={4} mb={3}>
           <Typography variant="h3" gutterBottom>
             {reasonsTitle}
