@@ -16,7 +16,7 @@ export interface DateInput extends MoreInformation {
 }
 
 const isDateValid = (date: string) =>
-  // TODO: don't use string equality check here?
+  // possibly replaceable with isValid(parseISO(date))?
   parseISO(date).toString() !== "Invalid Date";
 
 const displayDate = (date: string): string | undefined => {

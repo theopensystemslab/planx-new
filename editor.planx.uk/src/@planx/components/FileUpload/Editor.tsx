@@ -21,7 +21,6 @@ function Component(props: any) {
     title: string;
   }>({
     initialValues: {
-      // TODO: improve runtime validation here (joi, io-ts)
       color: props.node?.data?.color || "#EFEFEF",
       definitionImg: props.node?.data?.definitionImg,
       description: props.node?.data?.description || "",

@@ -127,7 +127,6 @@ export default function FileUpload(props: any) {
           setSlot((_file: any) => ({ ..._file, url, status: "success" }));
         })
         .catch((error) => {
-          // TODO: Handle error
           console.error(error);
           setSlot((_file: any) => ({ ..._file, status: "error" }));
         });
@@ -138,9 +137,7 @@ export default function FileUpload(props: any) {
         id: nanoid(),
       });
     },
-    onDropRejected: (fileRejections) => {
-      // TODO: Handle invalid file types
-    },
+    onDropRejected: (fileRejections) => {},
   });
 
   if (!slot) {

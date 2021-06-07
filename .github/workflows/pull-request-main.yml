@@ -105,7 +105,6 @@ jobs:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-      # TODO: use pnpm cache
       - run: npm install
         working-directory: infrastructure/application
       - name: Download Build Artifact

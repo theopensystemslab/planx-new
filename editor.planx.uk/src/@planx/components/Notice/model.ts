@@ -9,7 +9,6 @@ export interface Notice extends MoreInformation {
 }
 
 export const parseNotice = (data: Record<string, any> | undefined) => ({
-  // TODO: improve runtime validation here (joi, io-ts)
   title: data?.title || "",
   description: data?.description || "",
   color: data?.color || "#EFEFEF",

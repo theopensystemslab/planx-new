@@ -17,7 +17,7 @@ const planningConstraints = {
     key: "article4",
     source: bucksDomain,
     id: "PLANNING/RIPA_BOPS",
-    serverIndex: 7, // TODO expand beyond Wycombe
+    serverIndex: 7,
     fields: ["OBJECTID", "SUMMARY", "SUMMARY0", "CODE"],
     neg: "is not subject to any Article 4 Restriction",
     pos: (data) => ({
@@ -159,7 +159,7 @@ const planningConstraints = {
     key: "tpo",
     source: bucksDomain,
     id: "PLANNING/RIPA_BOPS",
-    serverIndex: 11, // TODO expand beyond Wycombe
+    serverIndex: 11,
     fields: ["OBJECTID", "ORDERREF", "STATUS", "COMMENTS"],
     neg: "is not in a TPO (Tree Preservation Order) zone",
     pos: (data) => ({
