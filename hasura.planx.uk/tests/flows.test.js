@@ -1,131 +1,47 @@
-const assert = require("assert");
-
 const { gqlAdmin, gqlPublic } = require("./utils");
 
 describe("flows and operations", () => {
-  let flowId;
-
-  beforeAll(async () => {
-    ({
-      data: {
-        insert_flows: {
-          returning: [{ id: flowId }],
-        },
-      },
-    } = await gqlAdmin(`
-      mutation InsertFser {
-        insert_flows(objects: {slug: "test"}) {
-          returning { id }
-        }
-      }
-    `));
-    assert(flowId);
-  });
-
-  afterAll(async () => {
-    assert.strictEqual(
-      (await gqlAdmin(`
-        mutation DeleteFlow {
-          delete_flows(where: {id: {_eq: "${flowId}"}}) {
-            affected_rows
+  const INTROSPECTION_QUERY = `
+    query IntrospectionQuery {
+      __schema {
+        types {
+          name
+          description
+          fields {
+            name
           }
         }
-      `)).data.delete_flows.affected_rows,
-      1
-    );
+      }
+    }
+  `;
+
+  test("public can query flows, but not the flows associated operations", async () => {
+    const response = await gqlPublic(INTROSPECTION_QUERY);
+    const { types } = response.data.__schema;
+    const queries = types.find(x => x.name === 'query_root').fields.map(x => x.name);
+
+    expect(queries).toContain('flows');
+    expect(queries).not.toContain('operations');
   });
 
-  test("public can query flows", async () => {
-    query = `
-      query GetFlows {
-        flows(where: {id: {_eq: "${flowId}"}}) {
-          id
-          name
-          data
-        }
-      }
-    `;
+  test("public cannot create, update, or delete flows or their associated operations", async () => {
+    const response = await gqlPublic(INTROSPECTION_QUERY);
+    const { types } = response.data.__schema;
+    const mutations = types.find(x => x.name === 'mutation_root').fields.map(x => x.name);
 
-    assert.strictEqual(
-      (await gqlPublic(query)).data.flows.length,
-      1
-    );
+    expect(mutations).not.toContain('insert_flows');
+    expect(mutations).not.toContain('update_flows_by_pk');
+    expect(mutations).not.toContain('delete_flows');
+    expect(mutations).not.toContain('insert_operations');
+    expect(mutations).not.toContain('delete_operations');
   });
 
-  test("public cannot create a new flow", async () => {
-    query = `
-      mutation InsertFlow {
-        insert_flows(objects: {slug: "test"}) {
-          affected_rows
-        }
-      }
-    `
+  test("admin can delete flows and their associated operations", async () => {
+    const response = await gqlAdmin(INTROSPECTION_QUERY);
+    const { types } = response.data.__schema;
+    const mutations = types.find(x => x.name === 'mutation_root').fields.map(x => x.name);
 
-    assert(
-      (await gqlPublic(query)).errors[0].message,
-      `field "insert_flows" not found in type: 'mutation_root'`
-    );
-  });
-
-  test("public cannot update an existing flow", async () => {
-    query = `
-      mutation UpdateFlow {
-        update_flows_by_pk(pk_columns: {
-          id: "${flowId}"},
-          _set: {updated_at: "NOW()"}
-        ) { id }
-      }
-    `;
-
-    assert(
-      (await gqlPublic(query)).errors[0].message,
-      `field "update_flows_by_pk" not found in type 'mutation_root'`
-    );
-  });
-
-  test("public cannot delete a flow", async () => {
-    query = `
-      mutation DeleteFlow {
-        delete_flows(where: {id: {_eq: "${flowId}"}}) {
-          affected_rows
-        }
-      }
-    `;
-
-    assert(
-      (await gqlPublic(query)).errors[0].message,
-      `field "delete_flows" not found in type: 'mutation_root'`
-    );
-  });
-
-  test("public cannot create a new operation associated with the flow", async () => {
-    query = `
-      mutation InsertOperation {
-        insert_operations(objects: {flow_id: "${flowId}", data: {}}) {
-          id
-        }
-      }
-    `;
-
-    assert(
-      (await gqlPublic(query)).errors[0].message,
-      `field "insert_operations" not found in type: 'mutation_root'`
-    );
-  });
-
-  test("only admin can delete operations associated with the flow", async () => {
-    query = `
-      mutation DeleteOperation {
-        delete_operations(where: {flow_id: {_eq: "${flowId}"}}) {
-          affected_rows
-        }
-      }
-    `;
-
-    expect((await gqlAdmin(query)).data.delete_operations.affected_rows).toBeGreaterThanOrEqual(0);
-    assert(
-      (await gqlPublic(query)).errors[0].message,
-      `field "delete_operations" not found in type: 'mutation_root'`
-    );
+    expect(mutations).toContain('delete_flows_by_pk');
+    expect(mutations).toContain('delete_operations');
   });
 });
