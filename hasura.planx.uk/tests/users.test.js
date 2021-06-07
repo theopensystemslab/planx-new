@@ -1,100 +1,47 @@
-const assert = require("assert");
-
-const { gqlAdmin, gqlPublic } = require("./utils");
+const { gqlPublic, gqlAdmin } = require("./utils");
 
 describe("users", () => {
-  let userId;
-
-  beforeAll(async () => {
-    ({
-      data: {
-        insert_users: {
-          returning: [{ id: userId }],
-        },
-      },
-    } = await gqlAdmin(`
-      mutation InsertUser {
-        insert_users(objects: {first_name: "Foo", last_name: "Bar", email: "foobar@test.com"}) {
-          returning { id }
-        }
-      }
-    `));
-    assert(userId);
-  });
-
-  afterAll(async () => {
-    // XXX: We're assuming that if we delete the user, then
-    //      deletion will cascade into team_members
-    assert.strictEqual(
-      (await gqlAdmin(`
-        mutation DeleteUserCascade {
-          delete_users(where: {id: {_eq: "${userId}"}}) {
-            affected_rows
+  const INTROSPECTION_QUERY = `
+    query IntrospectionQuery {
+      __schema {
+        types {
+          name
+          description
+          fields {
+            name
           }
         }
-      `)).data.delete_flows.affected_rows,
-      1
-    );
-  });
+      }
+    }
+  `;
 
   test("public cannot query users", async () => {
-    query = `
-      query GetUsers {
-        users(limit: 5) {
-          id
-        }
-      }
-    `;
+    const response = await gqlPublic(INTROSPECTION_QUERY);
+    const { types } = response.data.__schema;
+    const queries = types.find(x => x.name === 'query_root').fields.map(x => x.name);
 
-    assert(
-      (await gqlPublic(query)).errors[0].message,
-      `field "users" not found in type: 'query_root'`
-    );
+    expect(queries).not.toContain('users');
   });
 
-  test("public cannot create a new user", async () => {
-    query = `
-      mutation InsertUser {
-        insert_users(objects: {first_name: "Test", last_name: "Test", email: "test@test.com"}) {
-          affected_rows
-        }
-      }
-    `
+  test("public cannot create, update, or delete users", async () => {
+    const response = await gqlPublic(INTROSPECTION_QUERY);
+    const { types } = response.data.__schema;
+    const mutations = types.find(x => x.name === 'mutation_root').fields.map(x => x.name);
 
-    assert(
-      (await gqlPublic(query)).errors[0].message,
-      `field "insert_users" not found in type: 'mutation_root'`
-    );
+    expect(mutations).not.toContain('insert_users');
+    expect(mutations).not.toContain('update_users_by_pk');
+    expect(mutations).not.toContain('delete_users');
   });
 
-  test("public cannot update an existing user", async () => {
-    query = `
-      mutation UpdateUser {
-        update_users_by_pk(pk_columns: {
-          id: "${userId}"},
-          _set: {updated_at: "NOW()"}
-        ) { id }
-      }
-    `;
+  test("admin has full access to query and mutate users", async () => {
+    const response = await gqlAdmin(INTROSPECTION_QUERY);
+    const { types } = response.data.__schema;
+    const queries = types.find(x => x.name === 'query_root').fields.map(x => x.name);
+    const mutations = types.find(x => x.name === 'mutation_root').fields.map(x => x.name);
 
-    assert(
-      (await gqlPublic(query)).errors[0].message,
-      `field "update_users_by_pk" not found in type 'mutation_root'`
-    );
-  });
-
-  test("public cannot delete a user", async () => {
-    query = `
-      mutation DeleteUser {
-        delete_users(where: {id: {_eq: ${userId}}}) {
-          affected_rows
-        }
-      }
-    `;
-
-    assert(
-      (await gqlPublic(query)).errors[0].message,
-      `field "delete_users" not found in type: 'mutation_root'`
-    );
+    expect(queries).toContain('users');
+    expect(mutations).toContain('insert_users');
+    expect(mutations).toContain('update_users_by_pk');
+    expect(mutations).toContain('delete_users');
   });
 });

@@ -1,105 +1,48 @@
-const assert = require("assert");
-
 const { gqlAdmin, gqlPublic } = require("./utils");
 
-describe("teams", () => {
-  let teamId;
-
-  beforeAll(async () => {
-    ({
-      data: {
-        insert_teams: {
-          returning: [{ id: teamId }],
-        },
-      },
-    } = await gqlAdmin(`
-      mutation InsertTeam {
-        insert_teams(objects: {slug: "test", name: "Test"}) {
-          returning { id }
-        }
-      }
-    `));
-    assert(teamId);
-  });
-
-  afterAll(async () => {
-    // XXX: We're assuming that if we delete the team, then
-    //      deletion will cascade into team_members
-    assert.strictEqual(
-      (await gqlAdmin(`
-        mutation DeleteTeamCascade {
-          delete_teams(where: {id: {_eq: "${teamId}"}}) { 
-            affected_rows 
-          }
-        }
-      `)).data.delete_flows.affected_rows,
-      1
-    );
-  });
-
-  test("only admin can query relational team_members", async () => {
-    query = `
-      query GetTeamWithMembers {
-        teams(where: {id: {_eq: "${teamId}"}}) {
-          id
+describe("teams and team_members", () => {
+  const INTROSPECTION_QUERY = `
+    query IntrospectionQuery {
+      __schema {
+        types {
           name
-          members {
-            user_id
+          description
+          fields {
+            name
           }
         }
       }
-    `;
+    }
+  `;
 
-    assert((await gqlAdmin(query)).data.teams);
-    assert(
-      (await gqlPublic(query)).errors[0].message, 
-      `field "members" not found in type: 'teams'`
-    );
+  test("public can query teams, but not their associated team members", async () => {
+    const response = await gqlPublic(INTROSPECTION_QUERY);
+    const { types } = response.data.__schema;
+    const queries = types.find(x => x.name === 'query_root').fields.map(x => x.name);
+
+    expect(queries).toContain('teams');
+    expect(queries).not.toContain('team_members');
   });
 
-  test("public cannot create a new team", async () => {
-    query = `
-      mutation InsertTeam {
-        insert_teams(objects: {slug: "foo", name: "Bar"}) {
-          affected_rows
-        }
-      }
-    `;
+  test("admin can query teams and team members", async () => {
+    const response = await gqlAdmin(INTROSPECTION_QUERY);
+    const { types } = response.data.__schema;
+    const queries = types.find(x => x.name === 'query_root').fields.map(x => x.name);
 
-    assert(
-      (await gqlPublic(query)).errors[0].message,
-      `field "insert_teams" not found in type: 'mutation_root'`
-    );
+    expect(queries).toContain('teams');
+    expect(queries).toContain('team_members');
   });
 
-  test("public cannot update an existing team", async () => {
-    query = `
-      mutation UpdateTeam {
-        update_teams_by_pk(pk_columns: {
-          id: "${teamId}"},
-          _set: {name: "New team"}
-        ) { id }
-      }
-    `;
+  test("public cannot create, update, or delete teams or team members", async () => {
+    const response = await gqlPublic(INTROSPECTION_QUERY);
+    const { types } = response.data.__schema;
+    const mutations = types.find(x => x.name === 'mutation_root').fields.map(x => x.name);
 
-    assert(
-      (await gqlPublic(query)).errors[0].message,
-      `field "update_teams_by_pk" not found in type 'mutation_root'`
-    );
-  });
-
-  test("public cannot delete a team", async () => {
-    query = `
-      mutation DeleteTeam {
-        delete_teams(where: {id: {_eq: ${teamId}}}) {
-          affected_rows
-        }
-      }
-    `;
-
-    assert(
-      (await gqlPublic(query)).errors[0].message,
-      `field "delete_teams" not found in type: 'mutation_root'`
-    );
+    expect(mutations).not.toContain('insert_teams');
+    expect(mutations).not.toContain('insert_team_members');
+    expect(mutations).not.toContain('update_teams_by_pk');
+    expect(mutations).not.toContain('update_team_members_by_pk');
+    expect(mutations).not.toContain('delete_teams');
+    expect(mutations).not.toContain('delete_team_members');
   });
 });

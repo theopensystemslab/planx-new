@@ -4,6 +4,8 @@ This the configuration directory for [Hasura](https://hasura.io), which is our G
 
 ### Tests
 
+Hasura tests assume Docker is already up and running from the project root (`docker compose up --build`)
+
 ```sh
 cd tests
 pnpm install
