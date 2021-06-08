@@ -1,6 +1,6 @@
 const { gqlAdmin, gqlPublic } = require("./utils");
 
-describe("sessions and session_events", () => {
+describe("flows and operations", () => {
   const INTROSPECTION_QUERY = `
     query IntrospectionQuery {
       __schema {
@@ -15,33 +15,33 @@ describe("sessions and session_events", () => {
     }
   `;
 
-  test("public can query sessions and their associated session events", async () => {
+  test("public can query flows, but not the flows associated operations", async () => {
     const response = await gqlPublic(INTROSPECTION_QUERY);
     const { types } = response.data.__schema;
     const queries = types.find(x => x.name === 'query_root').fields.map(x => x.name);
 
-    expect(queries).toContain('sessions');
-    expect(queries).not.toContain('session_events');
+    expect(queries).toContain('flows');
+    expect(queries).not.toContain('operations');
   });
 
-  test("public can create and update sessions & session_events, but not delete them", async () => {
+  test("public cannot create, update, or delete flows or their associated operations", async () => {
     const response = await gqlPublic(INTROSPECTION_QUERY);
     const { types } = response.data.__schema;
     const mutations = types.find(x => x.name === 'mutation_root').fields.map(x => x.name);
 
-    expect(mutations).toContain('insert_sessions_one');
-    expect(mutations).toContain('insert_session_events');
-    expect(mutations).toContain('update_sessions_by_pk');
-    expect(mutations).not.toContain('delete_sessions');
-    expect(mutations).not.toContain('delete_session_events');
+    expect(mutations).not.toContain('insert_flows');
+    expect(mutations).not.toContain('update_flows_by_pk');
+    expect(mutations).not.toContain('delete_flows');
+    expect(mutations).not.toContain('insert_operations');
+    expect(mutations).not.toContain('delete_operations');
   });
 
-  test("admin can delete sessions and session events", async () => {
+  test("admin can delete flows and their associated operations", async () => {
     const response = await gqlAdmin(INTROSPECTION_QUERY);
     const { types } = response.data.__schema;
     const mutations = types.find(x => x.name === 'mutation_root').fields.map(x => x.name);
 
-    expect(mutations).toContain('delete_sessions');
-    expect(mutations).toContain('delete_session_events');
+    expect(mutations).toContain('delete_flows_by_pk');
+    expect(mutations).toContain('delete_operations');
   });
 });

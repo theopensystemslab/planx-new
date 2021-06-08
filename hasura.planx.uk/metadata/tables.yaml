@@ -26,6 +26,8 @@
       - "y"
       - planx_description
       - planx_value
+      computed_fields:
+      - full_address
       filter: {}
 - table:
     schema: public
@@ -66,12 +68,18 @@
   - role: public
     permission:
       columns:
+      - created_at
+      - creator_id
       - data
       - id
       - name
       - settings
       - slug
       - team_id
+      - updated_at
+      - version
+      computed_fields:
+      - data_merged
       filter: {}
 - table:
     schema: public
@@ -96,9 +104,12 @@
       check: {}
       columns:
       - chosen_node_ids
+      - created_at
+      - id
       - parent_node_id
       - session_id
       - type
+      - updated_at
       backend_only: false
 - table:
     schema: public
@@ -134,10 +145,14 @@
     permission:
       check: {}
       columns:
+      - completed_at
+      - created_at
       - flow_data
       - flow_id
       - flow_version
+      - id
       - passport
+      - updated_at
       backend_only: false
   select_permissions:
   - role: public
@@ -189,9 +204,11 @@
       columns:
       - id
       - name
-      - settings
       - slug
       - theme
+      - created_at
+      - updated_at
+      - settings
       filter: {}
 - table:
     schema: public
