@@ -55,8 +55,6 @@ const ChecklistComponent: React.FC<Props> = ({
   text,
   img,
 }) => {
-  // TODO: do we still need formik here?
-
   const formik = useFormik<{ checked: Array<string> }>({
     initialValues: {
       checked: [],

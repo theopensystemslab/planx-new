@@ -220,7 +220,6 @@ function Dropzone(props: any) {
                 );
               })
               .catch((error) => {
-                // TODO: Handle error
                 console.error(error);
                 setSlots((_files: any) =>
                   _files.map((_file: any) =>
@@ -238,9 +237,7 @@ function Dropzone(props: any) {
         ];
       });
     },
-    onDropRejected: (fileRejections) => {
-      // TODO: Handle invalid file types
-    },
+    onDropRejected: (fileRejections) => {},
   });
 
   return (

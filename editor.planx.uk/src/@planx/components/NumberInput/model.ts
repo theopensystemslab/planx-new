@@ -21,7 +21,6 @@ export const parseNumber = (raw: string): number | null => {
 export const parseNumberInput = (
   data: Record<string, any> | undefined
 ): NumberInput => ({
-  // TODO: improve runtime validation here (joi, io-ts)
   title: data?.title || "",
   description: data?.description,
   placeholder: data?.placeholder,

@@ -34,9 +34,6 @@ const rootEl = document.getElementById("root") as HTMLElement;
 const hasJWT = (): boolean | void => {
   let jwt: string | null = Cookies.get("jwt");
   if (jwt) {
-    // TODO: make this more robust
-    // checks if stored jwt is valid and includes a numeric user id
-    // otherwise it logs out the user
     try {
       if (
         Number(
@@ -50,10 +47,6 @@ const hasJWT = (): boolean | void => {
     } catch (e) {}
     window.location.href = "/logout";
   } else {
-    // TODO: don't pass jwt in url params like this
-    // We can't set the cookie on a netlify.app domain (staging), but we can
-    // pass the JWT back as a url param, but this is not a good look. Let's
-    // try to improve this situation with pulumi deploys etc.
     jwt = new URLSearchParams(window.location.search).get("jwt");
     if (jwt) {
       Cookies.set("jwt", jwt);

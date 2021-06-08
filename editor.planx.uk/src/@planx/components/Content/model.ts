@@ -8,7 +8,6 @@ export interface Content extends MoreInformation {
 export const parseContent = (
   data: Record<string, any> | undefined
 ): Content => ({
-  // TODO: improve runtime validation here (joi, io-ts)
   content: data?.content || "",
   color: data?.color,
   ...parseMoreInformation(data),

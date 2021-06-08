@@ -22,7 +22,6 @@ test("renders correctly", async () => {
   expect(handleSubmit).toHaveBeenCalled();
 });
 
-// TODO: this should probably be handled by a global visual test
 test("use light text color if color param is dark", () => {
   render(<Content content="dark" color="#000" />);
   expect(content()).toHaveStyle({

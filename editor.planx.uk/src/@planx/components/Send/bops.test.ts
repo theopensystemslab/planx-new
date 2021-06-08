@@ -158,10 +158,7 @@ test("makes a more advanced payload", () => {
       question:
         "will the new build's footprint occupy more than 50% available land?",
       metadata: {
-        policy_refs: [
-          // TODO: split policy refs into multiple text?/url? objects
-          { text: "Southwark SPD figure 123.31" },
-        ],
+        policy_refs: [{ text: "Southwark SPD figure 123.31" }],
       },
       responses: [
         {

@@ -36,7 +36,7 @@ const planningConstraints = {
       description: data.Article_4_Direction,
     }),
   },
-  listed: { 
+  listed: {
     key: "listed",
     source: "Southwark Maps",
     tables: [
@@ -101,7 +101,7 @@ const planningConstraints = {
   },
   "designated.monument": {
     key: "designated.WHS",
-    source: "Southwark Maps", // TODO debug access-denied error, or swap to ESRI source
+    source: "Southwark Maps",
     tables: [
       "Scheduled Monuments"
     ],
@@ -117,7 +117,7 @@ const planningConstraints = {
       description: data.Name,
     }),
   },
-  tpo: { 
+  tpo: {
     key: "tpo",
     source: "Southwark Maps",
     tables: [

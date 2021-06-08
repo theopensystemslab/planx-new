@@ -196,7 +196,7 @@ function GetAddress(props: {
         // Using map
         <Box>
           <Map
-            // TODO: Why these fixed values here?
+            // center map to UK + zoom map appropriately
             zoom={17.5}
             lat={51.2754385}
             lng={1.0848595}
