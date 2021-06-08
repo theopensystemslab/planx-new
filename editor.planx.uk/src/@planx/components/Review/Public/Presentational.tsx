@@ -116,7 +116,7 @@ function Component(props: Props) {
                       <a
                         onClick={() => {
                           const confirmed = window.confirm(
-                            `Are you sure you want to go back to change your answer? You may lose your answers to questions answered after this one.`
+                            `Are you sure you want to go back to change your answer? You will lose your answers to questions answered after this one.`
                           );
                           if (confirmed) {
                             props.changeAnswer(nodeId);
@@ -232,12 +232,14 @@ function DateInput(props: ComponentProps) {
 }
 
 function DrawBoundary(props: ComponentProps) {
+  const NOT_FOUND:string = "No drawing found";
+
   const { latitude, longitude } = props.passport.data?._address;
 
   // If a drawing, then encode GeoJSON for Mapbox API, else show a simple message
   const geojson:string = props.userData?.data && props.userData?.data["property.boundary.site"]
     ? encodeURIComponent(JSON.stringify(props.userData?.data["property.boundary.site"]))
-    : "No drawing found";
+    : NOT_FOUND;
 
   // Ordnance survey stylesheet (will also need `&addlayer={}` param to accurately display in future, I think)
   const stylesheet:string = "opensystemslab/ckbuw2xmi0mum1il33qucl4dv";
@@ -249,7 +251,7 @@ function DrawBoundary(props: ComponentProps) {
     <>
       <div>Site boundary</div>
       <div>
-        {geojson !== "No drawing found"
+        {geojson !== NOT_FOUND
           ? <img alt="Site boundary drawing" src={mapImg} />
           : geojson
         }
