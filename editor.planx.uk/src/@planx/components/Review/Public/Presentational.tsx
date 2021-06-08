@@ -232,14 +232,25 @@ function DateInput(props: ComponentProps) {
 }
 
 function DrawBoundary(props: ComponentProps) {
+  const { latitude, longitude } = props.passport.data?._address;
+
+  // If a drawing, then encode GeoJSON for Mapbox API, else show a simple message
   const geojson:string = props.userData?.data && props.userData?.data["property.boundary.site"]
-    ? JSON.stringify(props.userData?.data["property.boundary.site"], null, 2)
-    : "No drawing";
+    ? encodeURIComponent(JSON.stringify(props.userData?.data["property.boundary.site"]))
+    : "No drawing found"; // TODO handle file upload case
+
+  // Ref https://docs.mapbox.com/api/maps/static-images/
+  const mapImg:string = `https://api.mapbox.com/styles/v1/opensystemslab/ckbuw2xmi0mum1il33qucl4dv/static/geojson(${geojson})/${longitude},${latitude},18/350x300?logo=false&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
 
   return (
     <>
-      <div>Site boundary (GeoJSON)</div>
-      <div>{geojson}</div>
+      <div>Site boundary</div>
+      <div>
+        {geojson !== "No drawing found"
+          ? <img alt="Site boundary drawing" src={mapImg} />
+          : geojson
+        }
+      </div>
     </>
   );
 }
