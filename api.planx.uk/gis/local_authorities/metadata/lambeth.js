@@ -72,29 +72,21 @@ const planningConstraints = {
       1: "designated.conservationArea.lambeth.churchRoad", // CA10 aka Lambeth Palace ??
     },
   },
-  // "designated.AONB": {
-  //   key: "designated.AONB",
-  //   source: environmentDomain,
-  //   id: "NE/AreasOfOutstandingNaturalBeautyEngland",
-  //   fields: ["objectid", "code", "name", "desig_date", "hotlink"],
-  //   neg: "is not an Area of Outstanding Natural Beauty",
-  //   pos: (data) => ({
-  //     text: "is, or is within, an Area of Outstanding Natural Beauty",
-  //     description: data.name,
-  //   }),
-  // },
-  // "designated.nationalPark": {
-  //   key: "designated.nationalPark",
-  //   source: environmentDomain,
-  //   id: "NE/NationalParksEngland",
-  //   fields: ["objectid", "code", "name", "status", "hotlink"],
-  //   neg: "is not a National Park",
-  //   pos: (data) => ({
-  //     text: "is, or is within, a National Park",
-  //     description: data.name,
-  //   }),
-  // },
-  "designated.broads": { value: false },
+  "designated.AONB": {
+    key: "designated.AONB",
+    source: "manual", // there are no AONB in Lambeth
+    neg: "is not an Area of Outstanding Natural Beauty",
+  },
+  "designated.nationalPark": {
+    key: "designated.nationalPark",
+    source: "manual",// there are no National Parks in Lambeth
+    neg: "is not in a National Park",
+  },
+  "designated.broads": { 
+    key: "designated.broads",
+    source: "manual", // there are no Broads in Lambeth
+    neg: "is not in a Broad",
+  },
   "designated.WHS": {
     key: "designated.WHS",
     source: environmentDomain,
@@ -107,21 +99,6 @@ const planningConstraints = {
     }),
   },
   "designated.monument": { value: false },
-  // "designated.monument": {
-  //   key: "designated.monument",
-  //   source: environmentDomain,
-<<<<<<< HEAD
-  //   id: "HE/ScheduledMonuments", // TODO debug response "requested operation 'query' not supported"
-=======
-  //   id: "HE/ScheduledMonuments",
->>>>>>> b1c473e962608392200a9e754ed88b8960235d08
-  //   fields: ["objectid", "name", "scheddate"],
-  //   neg: "is not the site of a Scheduled Monument",
-  //   pos: (data) => ({
-  //     text: "is the site of a Scheduled Monument",
-  //     description: data.name,
-  //   }),
-  // },
   tpo: {
     key: "tpo",
     source: lambethDomain,

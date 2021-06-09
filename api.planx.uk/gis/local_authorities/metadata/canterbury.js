@@ -59,18 +59,16 @@ const planningConstraints = {
       description: data.name,
     }),
   },
-  // "designated.nationalPark": {
-  //   key: "designated.nationalPark",
-  //   source: environmentDomain,
-  //   id: "NE/NationalParksEngland",
-  //   fields: ["objectid", "code", "name", "status", "hotlink"],
-  //   neg: "is not a National Park",
-  //   pos: (data) => ({
-  //     text: "is, or is within, a National Park",
-  //     description: data.name,
-  //   }),
-  // },
-  "designated.broads": { value: false },
+  "designated.nationalPark": {
+    key: "designated.nationalPark",
+    source: "manual", // there are no National Parks in Canterbury
+    neg: "is not in a National Park",
+  },
+  "designated.broads": { 
+    key: "designated.broads",
+    source: "manual", // there are no Broads in Canterbury
+    neg: "is not in a Broad",
+  },
   "designated.WHS": {
     key: "designated.WHS",
     source: canterburyDomain,

@@ -17,12 +17,12 @@ const planningConstraints = {
     key: "article4",
     source: bucksDomain,
     id: "PLANNING/RIPA_BOPS",
-    serverIndex: 7,
-    fields: ["OBJECTID", "SUMMARY", "SUMMARY0", "CODE"],
-    neg: "is not subject to any Article 4 Restriction",
+    serverIndex: 4,
+    fields: ["OBJECTID", "DEV_TYPE", "DESCRIPTIO", "DISTRICT", "DATE_CONF"],
+    neg: "is not subject to any Article 4 restrictions",
     pos: (data) => ({
-      text: "is subject to Article 4 Restriction(s)",
-      description: data.SUMMARY,
+      text: "is subject to Article 4 restriction(s)",
+      description: data.DESCRIPTIO,
     }),
     records: {
       0: "article4.buckinghamshire.AD186731",
@@ -127,29 +127,21 @@ const planningConstraints = {
       description: data.NAME,
     }),
   },
-  // "designated.nationalPark": {
-  //   key: "designated.nationalPark",
-  //   source: environmentDomain,
-  //   id: "NE/NationalParksEngland",
-  //   fields: ["objectid", "code", "name", "status", "hotlink"],
-  //   neg: "is not a National Park",
-  //   pos: (data) => ({
-  //     text: "is, or is within, a National Park",
-  //     description: data.name,
-  //   }),
-  // },
-  "designated.broads": { value: false },
-  // "designated.WHS": {
-  //   key: "designated.WHS",
-  //   source: environmentDomain,
-  //   id: "HE/WorldHeritageSites",
-  //   fields: ["objectid", "name"],
-  //   neg: "is not a World Heritage Site",
-  //   pos: (data) => ({
-  //     text: "is a World Heritage Site",
-  //     description: data.name,
-  //   }),
-  // },
+  "designated.nationalPark": {
+    key: "designated.nationalPark",
+    source: "manual", // there are no National Parks in Bucks
+    neg: "is not in a National Park",
+  },
+  "designated.broads": { 
+    key: "designated.broads",
+    source: "manual", // there are no Broads in Bucks
+    neg: "is not in a Broad",
+  },
+  "designated.WHS": {
+    key: "designated.WHS",
+    source: "manual", // there are no WHS in Bucks
+    neg: "is not an UNESCO World Heritage Site",
+  },
   "designated.monument": {
     key: "designated.monument",
     source: bucksDomain,
@@ -166,12 +158,12 @@ const planningConstraints = {
     key: "tpo",
     source: bucksDomain,
     id: "PLANNING/RIPA_BOPS",
-    serverIndex: 11,
+    serverIndex: 5,
     fields: ["OBJECTID", "ORDERREF", "STATUS", "COMMENTS"],
     neg: "is not in a TPO (Tree Preservation Order) zone",
     pos: (data) => ({
       text: "is in a TPO (Tree Preservation Order) zone",
-      description: data.ORDERREF,
+      description: data.COMMENTS,
     }),
   },
   "nature.SSSI": {

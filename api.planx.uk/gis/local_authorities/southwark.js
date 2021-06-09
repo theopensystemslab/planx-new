@@ -1,10 +1,11 @@
 require("isomorphic-fetch");
 const https = require("https");
 
-const { makeBbox, getQueryableConstraints } = require("../helpers.js");
+const { makeBbox, getQueryableConstraints, getManualConstraints } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/southwark.js");
 
 const gisLayers = getQueryableConstraints(planningConstraints);
+const preCheckedLayers = getManualConstraints(planningConstraints);
 
 var headers = {
   Origin: "https://geo.southwark.gov.uk",
@@ -106,6 +107,7 @@ async function locationSearch(x, y, extras) {
       },
       {
         ...extras,
+        ...preCheckedLayers,
       }
     );
 

@@ -2,6 +2,7 @@ require("isomorphic-fetch");
 
 const {
   getQueryableConstraints,
+  getManualConstraints,
   makeEsriUrl,
   bufferPoint,
 } = require("../helpers.js");
@@ -9,6 +10,7 @@ const { planningConstraints } = require("./metadata/lambeth.js");
 
 // Process local authority metadata
 const gisLayers = getQueryableConstraints(planningConstraints);
+const preCheckedLayers = getManualConstraints(planningConstraints);
 const articleFours = planningConstraints.article4.records;
 
 // Fetch a data layer
@@ -95,6 +97,7 @@ async function go(x, y, extras) {
             acc[curr] = { value: false };
             return acc;
           }, {}),
+          ...preCheckedLayers,
           ...extras,
         }
       );

@@ -43,7 +43,7 @@ const makeBbox = (x, y, radius = 1.5) => {
   return `${x - radius},${y - radius},${x + radius},${y + radius}`;
 };
 
-// For a dictionary of planning constraint objects, return the items with preset { value: false }
+// For a dictionary of planning constraint objects, return the items with preset { value: false } aka unknown data source
 const getFalseConstraints = (metadata) => {
   let falseConstraints = {};
   Object.keys(metadata).filter((constraint) => {
@@ -59,12 +59,35 @@ const getFalseConstraints = (metadata) => {
 const getQueryableConstraints = (metadata) => {
   let queryableConstraints = {};
   Object.keys(metadata).filter((constraint) => {
-    if ("source" in metadata[constraint]) {
+    if ("source" in metadata[constraint] && metadata[constraint]["source"] !== "manual") {
       queryableConstraints[constraint] = metadata[constraint];
     }
   });
 
   return queryableConstraints;
+};
+
+// For a dictionary of planning constraint objects, return the items that have been manually verified and do not apply to this geographic region
+const getManualConstraints = (metadata) => {
+  let manualConstraints = {};
+  Object.keys(metadata).filter((constraint) => {
+    if ("source" in metadata[constraint] && metadata[constraint]["source"] === "manual") {
+      // Make object shape consistent with queryable data sources
+      delete metadata[constraint]["source"];
+      delete metadata[constraint]["key"];
+
+      metadata[constraint]["text"] = metadata[constraint]["neg"];
+      delete metadata[constraint]["neg"];
+
+      metadata[constraint]["value"] = false;
+      metadata[constraint]["type"] = "check";
+      metadata[constraint]["data"] = {};
+
+      manualConstraints[constraint] = metadata[constraint];
+    }
+  });
+
+  return manualConstraints;
 };
 
 module.exports = {
@@ -73,4 +96,5 @@ module.exports = {
   makeBbox,
   getQueryableConstraints,
   getFalseConstraints,
+  getManualConstraints,
 };

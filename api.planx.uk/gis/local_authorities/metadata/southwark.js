@@ -8,8 +8,6 @@ https://geo.southwark.gov.uk/connect/analyst/mobile/#/main
 https://environment.data.gov.uk/arcgis/rest/services
 */
 
-const environmentDomain = "https://environment.data.gov.uk";
-
 const planningConstraints = {
   article4: {
     key: "article4",
@@ -79,9 +77,21 @@ const planningConstraints = {
         : data.Conservation_area,
     }),
   },
-  "designated.AONB": { value: false },
-  "designated.nationalPark": { value: false },
-  "designated.broads": { value: false },
+  "designated.AONB": { 
+    key: "designated.AONB",
+    source: "manual", // there are no AONB in Southwark
+    neg: "is not an Area of Outstanding Natural Beauty",
+  },
+  "designated.nationalPark": { 
+    key: "designated.nationalPark",
+    source: "manual", // there are no National Parks in Southwark
+    neg: "is not in a National Park",
+  },
+  "designated.broads": { 
+    key: "designated.broads",
+    source: "manual", // there are no Broads in Southwark
+    neg: "is not in a Broad",
+  },
   "designated.WHS": {
     key: "designated.WHS",
     source: "Southwark Maps",
@@ -99,24 +109,7 @@ const planningConstraints = {
       description: data.NAME,
     }),
   },
-  "designated.monument": {
-    key: "designated.WHS",
-    source: "Southwark Maps",
-    tables: [
-      "Scheduled Monuments"
-    ],
-    columns: [
-      "ListEntry",
-      "Name",
-      "SchedDate",
-      "Hyperlink",
-    ],
-    neg: "is not the site of a Scheduled Monument",
-    pos: (data) => ({
-      text: "is the site of a Scheduled Monument",
-      description: data.Name,
-    }),
-  },
+  "designated.monument": { value: false },
   tpo: {
     key: "tpo",
     source: "Southwark Maps",

@@ -2,6 +2,7 @@ require("isomorphic-fetch");
 
 const {
   getQueryableConstraints,
+  getManualConstraints,
   makeEsriUrl,
   bufferPoint,
 } = require("../helpers.js");
@@ -9,6 +10,7 @@ const { planningConstraints } = require("./metadata/buckinghamshire.js");
 
 // Process local authority metadata
 const gisLayers = getQueryableConstraints(planningConstraints);
+const preCheckedLayers = getManualConstraints(planningConstraints);
 const articleFours = {}; // "planningConstraints.article4.records" in future
 
 // Fetch a data layer
@@ -85,6 +87,7 @@ async function go(x, y, extras) {
             acc[curr] = { value: false };
             return acc;
           }, {}),
+          ...preCheckedLayers,
           ...extras,
         }
       );
@@ -93,8 +96,8 @@ async function go(x, y, extras) {
       value:
         ob["article4"] &&
         ob["article4"].data &&
-        ob["article4"].data.SUMMARY0 &&
-        ob["article4"].data.SUMMARY0.startsWith(
+        ob["article4"].data.DESCRIPTIO &&
+        ob["article4"].data.DESCRIPTIO.startsWith(
           "Change of use from offices to residential"
         )
           ? true
@@ -105,10 +108,8 @@ async function go(x, y, extras) {
       value:
         ob["article4"] &&
         ob["article4"].data &&
-        ob["article4"].data.SUMMARY0 &&
-        ob["article4"].data.SUMMARY0.startsWith(
-          "Certain structures used for production of poultry"
-        )
+        ob["article4"].data.DEV_TYPE &&
+        ob["article4"].data.DEV_TYPE.toLowerCase().includes("poultry")
           ? true
           : false,
     };
