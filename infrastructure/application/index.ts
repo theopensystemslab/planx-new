@@ -400,5 +400,5 @@ export const sharedbServiceName = outputs.then(
   ({ sharedbService }) => sharedbService.service.name
 );
 export const sharedbServiceCluster = outputs.then(
-  ({ sharedbService }) => sharedbService.cluster
+  ({ sharedbService }) => sharedbService.cluster.cluster.name
 );
