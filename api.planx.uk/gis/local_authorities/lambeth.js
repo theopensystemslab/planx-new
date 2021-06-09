@@ -112,7 +112,7 @@ async function go(x, y, extras) {
           : false,
     };
 
-    // Since we have multiple article 4 layers, make sure the root variable is synced with the sub variable
+    // Since we have multiple article 4 layers, account for granularity & ensure root variable is synced with the subvariable
     if (ob["article4.lambeth.kiba"].value === true && ob["article4"].value === false) {
       ob["article4"] = ob["article4.lambeth.kiba"];
       ob["article4.lambeth.kiba"] = { value: true };
