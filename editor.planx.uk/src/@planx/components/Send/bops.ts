@@ -23,6 +23,7 @@ interface BOPSMinimumPayload {
 export interface BOPSFullPayload extends BOPSMinimumPayload {
   description?: string;
   payment_reference?: string;
+  session_id?: string;
   ward?: string;
   work_status?: "proposed" | "existing";
   applicant_first_name?: string;
@@ -179,7 +180,8 @@ export const fullPayload: BOPSFullPayload = {
 export function getParams(
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
-  passport: Store.passport
+  passport: Store.passport,
+  sessionId: string
 ) {
   const data = fullPayload;
 
@@ -273,5 +275,6 @@ export function getParams(
     ...data,
     ...bopsData,
     ...(paymentReference ? { payment_reference: paymentReference } : {}),
+    ...(sessionId ? { session_id: sessionId } : {}),
   };
 }
