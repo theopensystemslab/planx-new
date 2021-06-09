@@ -631,8 +631,11 @@ export const previewStore = (
   },
 
   isFinalCard: () => {
-    const { upcomingCardIds } = get();
+    // Temporarily always returns false until upcomingCardIds is optimised
+    // OSL Slack explanation: https://bit.ly/3x38IRY
+    return false;
 
+    const { upcomingCardIds } = get();
     return upcomingCardIds().length === 1;
   },
 });
