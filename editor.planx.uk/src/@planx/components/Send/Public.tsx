@@ -12,14 +12,15 @@ import type { Send } from "./model";
 export type Props = PublicProps<Send>;
 
 const SendComponent: React.FC<Props> = (props) => {
-  const [breadcrumbs, flow, passport] = useStore((state) => [
+  const [breadcrumbs, flow, passport, sessionId] = useStore((state) => [
     state.breadcrumbs,
     state.flow,
     state.computePassport(),
+    state.sessionId,
   ]);
 
   const request = useAsync(async () =>
-    axios.post(props.url, getParams(breadcrumbs, flow, passport))
+    axios.post(props.url, getParams(breadcrumbs, flow, passport, sessionId))
   );
 
   useEffect(() => {
