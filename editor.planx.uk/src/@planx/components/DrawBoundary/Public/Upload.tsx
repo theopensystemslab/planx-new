@@ -10,6 +10,8 @@ import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
+import handleRejectedUpload from "../../shared/handleRejectedUpload";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: theme.spacing(14),
@@ -127,7 +129,6 @@ export default function FileUpload(props: any) {
           setSlot((_file: any) => ({ ..._file, url, status: "success" }));
         })
         .catch((error) => {
-          // TODO: Handle error
           console.error(error);
           setSlot((_file: any) => ({ ..._file, status: "error" }));
         });
@@ -138,9 +139,7 @@ export default function FileUpload(props: any) {
         id: nanoid(),
       });
     },
-    onDropRejected: (fileRejections) => {
-      // TODO: Handle invalid file types
-    },
+    onDropRejected: handleRejectedUpload,
   });
 
   if (!slot) {

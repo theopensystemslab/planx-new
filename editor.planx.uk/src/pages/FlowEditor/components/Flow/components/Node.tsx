@@ -33,7 +33,6 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question
           {...allProps}
-          // TODO: we can probably render HTML here instead. TBD...
           text={stripTagsAndLimitLength(node?.data?.content, "Content", 100)}
         />
       );

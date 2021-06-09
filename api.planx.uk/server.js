@@ -60,7 +60,6 @@ const handleSuccess = (req, res) => {
       httpOnly: false,
     };
 
-    // TODO: remove this conditional, improve the cookieDomain fn
     if (process.env.NODE_ENV === "production") {
       cookie.secure = true;
       cookie.sameSite = "none";
@@ -71,8 +70,7 @@ const handleSuccess = (req, res) => {
     if (domain) {
       res.redirect(returnTo);
     } else {
-      // TODO:  build the url correctly with URLSearchParams, this
-      //        assumes the existing url doesn't have any search params.
+      // this assumes the existing url doesn't have any search params.
       res.redirect([returnTo, req.user.jwt].join("?jwt="));
     }
   } else {

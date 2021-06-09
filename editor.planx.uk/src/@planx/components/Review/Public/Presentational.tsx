@@ -54,8 +54,8 @@ const components: {
   [TYPES.Checklist]: Checklist,
   [TYPES.Content]: undefined,
   [TYPES.Confirmation]: undefined,
-  [TYPES.DateInput]: Debug,
-  [TYPES.DrawBoundary]: Debug,
+  [TYPES.DateInput]: DateInput,
+  [TYPES.DrawBoundary]: DrawBoundary,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: FileUpload,
   [TYPES.Filter]: undefined,
@@ -64,7 +64,7 @@ const components: {
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: undefined,
   [TYPES.Notify]: undefined,
-  [TYPES.NumberInput]: Debug,
+  [TYPES.NumberInput]: NumberInput,
   [TYPES.Page]: undefined,
   [TYPES.Pay]: undefined,
   [TYPES.Report]: undefined,
@@ -116,7 +116,7 @@ function Component(props: Props) {
                       <a
                         onClick={() => {
                           const confirmed = window.confirm(
-                            `This action can't be undone.`
+                            `Are you sure you want to go back to change your answer? You will lose your answers to questions answered after this one.`
                           );
                           if (confirmed) {
                             props.changeAnswer(nodeId);
@@ -142,7 +142,9 @@ interface ComponentProps {
   userData?: Store.userData;
   flow: Store.flow;
   passport: Store.passport;
+  nodeId: number;
 }
+
 function Question(props: ComponentProps) {
   return (
     <>
@@ -183,8 +185,8 @@ function Checklist(props: ComponentProps) {
       <div>{props.node.data.text ?? "Checklist"}</div>
       <div>
         <ul>
-          {getAnswers(props).map((nodeId: string) => (
-            <li>{props.flow[nodeId].data.text}</li>
+          {getAnswers(props).map((nodeId: string, i: number) => (
+            <li key={i}>{props.flow[nodeId].data.text}</li>
           ))}
         </ul>
       </div>
@@ -205,16 +207,64 @@ function FileUpload(props: ComponentProps) {
   return (
     <>
       <div>{props.node.data.title ?? "File upload"}</div>
-
       <div>
-        {getAnswers(props).length > 0
-          ? getAnswers(props).map((file: any, i: number) => (
-              <a key={i} href={file.url}>
-                {file.filename}
-              </a>
+        <ul>
+          {Array.isArray(getAnswersByHash(props)) && getAnswersByHash(props).length > 0
+            ? getAnswersByHash(props).map((file: any, i: number) => (
+              <li key={i}>
+                <a href={file.url}>{file.filename}</a>
+              </li>
             ))
-          : "No file"}
+            : "No file"}
+        </ul>
       </div>
+    </>
+  );
+}
+
+function DateInput(props: ComponentProps) {
+  return (
+    <>
+      <div>{props.node.data.title ?? "Date"}</div>
+      <div>{getAnswersByHash(props) ?? "No date"}</div>
+    </>
+  );
+}
+
+function DrawBoundary(props: ComponentProps) {
+  const NOT_FOUND:string = "No drawing found";
+
+  const { latitude, longitude } = props.passport.data?._address;
+
+  // If a drawing, then encode GeoJSON for Mapbox API, else show a simple message
+  const geojson:string = props.userData?.data && props.userData?.data["property.boundary.site"]
+    ? encodeURIComponent(JSON.stringify(props.userData?.data["property.boundary.site"]))
+    : NOT_FOUND;
+
+  // Ordnance survey stylesheet (will also need `&addlayer={}` param to accurately display in future, I think)
+  const stylesheet:string = "opensystemslab/ckbuw2xmi0mum1il33qucl4dv";
+
+  // Ref https://docs.mapbox.com/api/maps/static-images/
+  const mapImg:string = `https://api.mapbox.com/styles/v1/${stylesheet}/static/geojson(${geojson})/${longitude},${latitude},17/350x300?logo=false&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`;
+
+  return (
+    <>
+      <div>Site boundary</div>
+      <div>
+        {geojson !== NOT_FOUND
+          ? <img alt="Site boundary drawing" src={mapImg} />
+          : geojson
+        }
+      </div>
+    </>
+  );
+}
+
+function NumberInput(props: ComponentProps) {
+  return (
+    <>
+      <div>{props.node.data.title ?? "Number"}</div>
+      <div>{`${getAnswersByHash(props) ?? "No number input"} ${props.node.data.units ?? ""}`}</div>
     </>
   );
 }
@@ -238,4 +288,16 @@ function getAnswers(props: ComponentProps): string[] {
     if (Array.isArray(array)) return array;
   } catch (err) {}
   return [];
+}
+
+function getAnswersByHash(props: ComponentProps): any {
+  try {
+    const edges:string[] = props!.flow!._root!.edges!;
+    const edgeHash:string = edges[props.nodeId];
+
+    if (props.userData?.data && edgeHash) {
+      return props.userData?.data[edgeHash];
+    }
+  } catch (err) {}
+  return "";
 }

@@ -36,7 +36,6 @@ export interface EditorProps<Type, Data> {
   node?: any;
 }
 
-// TODO: come back to this and reuse UserData
 export type PublicProps<Data, UserData = {}> = Data & {
   handleSubmit?: handleSubmit;
   resetButton?: boolean;

@@ -26,7 +26,7 @@ const data = new pulumi.StackReference(`planx/data/${env}`);
 // The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the CloudFlare API token is missing.
 new pulumi.Config("cloudflare").require("apiToken");
 
-(async function main() {
+const outputs = (async function main() {
   const DOMAIN = await certificates.requireOutputValue("domain");
 
   const repo = new awsx.ecr.Repository("repo");
@@ -389,4 +389,16 @@ new pulumi.Config("cloudflare").require("apiToken");
     ttl: 1,
     proxied: true,
   });
+
+  return {
+    sharedbService,
+  };
 })();
+
+// These two are needed for scripts/promote-content.sh
+export const sharedbServiceName = outputs.then(
+  ({ sharedbService }) => sharedbService.service.name
+);
+export const sharedbServiceCluster = outputs.then(
+  ({ sharedbService }) => sharedbService.cluster
+);
