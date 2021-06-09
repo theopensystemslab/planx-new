@@ -4,6 +4,7 @@ import Switch, { SwitchProps } from "@material-ui/core/Switch";
 import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import React from "react";
+import { useCurrentRoute } from "react-navi";
 import Input, { Props as InputProps } from "ui/Input";
 import InputGroup from "ui/InputGroup";
 import InputRow from "ui/InputRow";
@@ -50,10 +51,11 @@ const TextInput: React.FC<{
 
 interface Props {
   settings?: FlowSettings;
-  flowId: string;
 }
 
 const ServiceSettings: React.FC<Props> = (props) => {
+  const { data } = useCurrentRoute();
+
   const formik = useFormik<FlowSettings>({
     initialValues: {
       elements: {
@@ -75,7 +77,7 @@ const ServiceSettings: React.FC<Props> = (props) => {
       },
     },
     onSubmit: (values) => {
-      useStore.getState().updateFlowSettings(props.flowId, values);
+      useStore.getState().updateFlowSettings(data.team, data.flow, values);
     },
     validate: () => {},
   });
