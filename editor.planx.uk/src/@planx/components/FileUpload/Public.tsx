@@ -16,6 +16,7 @@ import { useDropzone } from "react-dropzone";
 import ErrorWrapper from "ui/ErrorWrapper";
 import { array } from "yup";
 
+import handleRejectedUpload from "../shared/handleRejectedUpload";
 import { makeData } from "../shared/utils";
 
 interface Props extends MoreInformation {
@@ -191,8 +192,11 @@ const FileUpload: React.FC<Props> = (props) => {
 function Dropzone(props: any) {
   const { slots, setSlots } = props;
   const classes = useStyles();
+  const MAX_UPLOAD_SIZE_MB = 30;
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: ["image/*", "text/*", "application/pdf"],
+    maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
     multiple: true,
     onDrop: (acceptedFiles) => {
       setSlots((slots: any) => {
@@ -220,7 +224,6 @@ function Dropzone(props: any) {
                 );
               })
               .catch((error) => {
-                // TODO: Handle error
                 console.error(error);
                 setSlots((_files: any) =>
                   _files.map((_file: any) =>
@@ -238,9 +241,7 @@ function Dropzone(props: any) {
         ];
       });
     },
-    onDropRejected: (fileRejections) => {
-      // TODO: Handle invalid file types
-    },
+    onDropRejected: handleRejectedUpload,
   });
 
   return (
@@ -303,7 +304,7 @@ function Dropzone(props: any) {
           <Box color="text.secondary">pdf, jpeg, docx</Box>
         </Box>
         <Box color="text.secondary" alignSelf="flex-end">
-          max size 30MB
+          max size {MAX_UPLOAD_SIZE_MB}MB
         </Box>
       </div>
     </>

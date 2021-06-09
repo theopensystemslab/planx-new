@@ -1,4 +1,4 @@
-name: Pulumi (Push Staging)
+name: Pulumi (Deploy Staging)
 on:
   push:
     branches:
@@ -43,14 +43,9 @@ jobs:
         working-directory: editor.planx.uk
       - run: pnpm test
         working-directory: editor.planx.uk
-      - name: Set ENV Vars
-        if: endsWith(github.ref, '/main') != true
-        run: echo "SHORT_BRANCH_NAME=${GITHUB_HEAD_REF#refs/heads/}" >> $GITHUB_ENV
       - run: pnpm build
         working-directory: editor.planx.uk
         env:
-          REACT_APP_GIT_BRANCH: ${{ env.SHORT_BRANCH_NAME }}
-          REACT_APP_PULL_REQUEST: https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
           REACT_APP_API_URL: https://api.editor.planx.dev
@@ -63,27 +58,6 @@ jobs:
           name: build
           path: ./editor.planx.uk/build
           if-no-files-found: error
-
-  deploy_to_netlify:
-    name: Deploy to Netlify
-    runs-on: ubuntu-latest
-    needs: test_and_build
-    steps:
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: ./build
-      - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v1.2
-        with:
-          publish-dir: ./build
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions"
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        timeout-minutes: 1
 
   preview:
     name: Pulumi Up
@@ -102,7 +76,6 @@ jobs:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-      # TODO: use pnpm cache
       - run: npm install
         working-directory: infrastructure/application
       - name: Download Build Artifact

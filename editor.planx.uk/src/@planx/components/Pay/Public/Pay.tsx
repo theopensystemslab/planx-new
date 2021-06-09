@@ -6,8 +6,7 @@ import { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
 import type { GovUKPayment } from "types";
 
-import { createPayload, Pay } from "../model";
-import { toDecimal } from "../model";
+import { createPayload, Pay, toDecimal } from "../model";
 import Confirm from "./Confirm";
 
 export default Component;
@@ -18,7 +17,6 @@ interface Props extends Pay {
   fn?: string;
 }
 
-// TODO: Does this need an error state if we have a good ErrorBoundary?
 type ComponentState =
   | { status: "indeterminate"; displayText?: string }
   | { status: "init" }
@@ -196,13 +194,6 @@ function Component(props: Props) {
         throw e;
       });
   };
-
-  // TODO: ask gunar & john about this:
-  // TODO: When connecting this component to the flow and to the backend
-  //       remember to also pass up the value of `otherPayments`
-  //       to be stored in special data fields, e.g.
-  //       - feedback.payment.type
-  //       - feedback.payment.reason
 
   return (
     <>

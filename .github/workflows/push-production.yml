@@ -1,11 +1,8 @@
-name: Pulumi (PR Staging)
-
+name: Pulumi (Deploy Production)
 on:
-  pull_request:
-    types: [opened, synchronize]
+  push:
     branches:
-      - main
-
+      - production
 jobs:
   test_and_build:
     name: Test and Build
@@ -46,20 +43,15 @@ jobs:
         working-directory: editor.planx.uk
       - run: pnpm test
         working-directory: editor.planx.uk
-      - name: Set ENV Vars
-        if: endsWith(github.ref, '/main') != true
-        run: echo "SHORT_BRANCH_NAME=${GITHUB_HEAD_REF#refs/heads/}" >> $GITHUB_ENV
       - run: pnpm build
         working-directory: editor.planx.uk
         env:
-          REACT_APP_GIT_BRANCH: ${{ env.SHORT_BRANCH_NAME }}
-          REACT_APP_PULL_REQUEST: https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
-          REACT_APP_API_URL: https://api.editor.planx.dev
+          REACT_APP_API_URL: https://api.editor.planx.uk
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
-          REACT_APP_HASURA_URL: https://hasura.editor.planx.dev/v1/graphql
-          REACT_APP_SHAREDB_URL: wss://sharedb.editor.planx.dev
+          REACT_APP_HASURA_URL: https://hasura.editor.planx.uk/v1/graphql
+          REACT_APP_SHAREDB_URL: wss://sharedb.editor.planx.uk
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -67,29 +59,8 @@ jobs:
           path: ./editor.planx.uk/build
           if-no-files-found: error
 
-  deploy_to_netlify:
-    name: Deploy to Netlify
-    runs-on: ubuntu-latest
-    needs: test_and_build
-    steps:
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: ./build
-      - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v1.2
-        with:
-          publish-dir: ./build
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions"
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        timeout-minutes: 1
-
   preview:
-    name: Pulumi Preview
+    name: Pulumi Up
     needs: test_and_build
     runs-on: ubuntu-latest
     steps:
@@ -102,9 +73,9 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
-          aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
       - run: npm install
         working-directory: infrastructure/application
       - name: Download Build Artifact
@@ -114,8 +85,8 @@ jobs:
           path: ./editor.planx.uk/build
       - uses: pulumi/actions@v3
         with:
-          command: preview
-          stack-name: staging
+          command: up
+          stack-name: production
           work-dir: infrastructure/application
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}

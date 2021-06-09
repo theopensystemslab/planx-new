@@ -124,8 +124,6 @@ test("updating an internal portal", async () => {
 
 describe("validations", () => {
   describe("if no flowId is chosen", () => {
-    // TODO: this is quite slow, evaluate speed difference using test.each
-    // https://jestjs.io/docs/en/api#testeachtablename-fn-timeout
     const scenarios = [
       { action: "adding without flows", error: "Required." },
       { action: "updating without flows", id: "test", error: "Required." },

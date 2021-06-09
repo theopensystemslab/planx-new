@@ -100,8 +100,8 @@ const planningConstraints = {
     }),
   },
   "designated.monument": {
-    key: "designated.monument",
-    source: "Southwark Maps", // TODO debug "Access denied" error
+    key: "designated.WHS",
+    source: "Southwark Maps",
     tables: [
       "Scheduled Monuments"
     ],
@@ -117,7 +117,7 @@ const planningConstraints = {
       description: data.Name,
     }),
   },
-  tpo: { 
+  tpo: {
     key: "tpo",
     source: "Southwark Maps",
     tables: [

@@ -16,7 +16,6 @@ interface Node {
   type?: number;
 }
 
-// TODO: make this type more useful
 type Child = Record<string, any>;
 
 export type Graph = Record<string, Node>;

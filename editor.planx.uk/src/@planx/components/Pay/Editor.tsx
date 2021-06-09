@@ -13,7 +13,6 @@ import RichTextInput from "ui/RichTextInput";
 function Component(props: any) {
   const formik = useFormik<Pay>({
     initialValues: {
-      // TODO: improve runtime validation here (joi, io-ts)
       title: props.node?.data?.title || "Pay for your application",
       description:
         props.node?.data?.description ||

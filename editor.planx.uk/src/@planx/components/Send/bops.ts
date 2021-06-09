@@ -79,12 +79,6 @@ export const bopsDictionary = {
 
   // constraints => passport[property.constraints.planning]
 
-  // TODO: add ward property
-  // ward: "property.ward",
-
-  // TODO: derive application_type value, it's currently hardcoded
-  // application_type => application_type, work_status
-
   applicant_first_name: "applicant.name.first",
   applicant_last_name: "applicant.name.last",
   applicant_phone: "applicant.phone.primary",
@@ -175,7 +169,6 @@ export const fullPayload: BOPSFullPayload = {
 
   work_status: "proposed",
 
-  // TODO: remove hardcoded demo value
   payment_reference: "JG669323",
 
   proposal_details: [],
@@ -202,8 +195,6 @@ export function getParams(
 
     data.site.town = address.town;
     data.site.postcode = address.postcode;
-
-    // TODO: add address_2 and ward
   }
 
   // 1b. property boundary
@@ -249,7 +240,6 @@ export function getParams(
   data.constraints = (
     passport.data?.["property.constraints.planning"] || []
   ).reduce((acc: Record<string, boolean>, curr: string) => {
-    // TODO: calculate application_type and payment_reference
     acc[curr] = true;
     return acc;
   }, {});

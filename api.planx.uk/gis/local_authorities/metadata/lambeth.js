@@ -110,7 +110,11 @@ const planningConstraints = {
   // "designated.monument": {
   //   key: "designated.monument",
   //   source: environmentDomain,
+<<<<<<< HEAD
   //   id: "HE/ScheduledMonuments", // TODO debug response "requested operation 'query' not supported"
+=======
+  //   id: "HE/ScheduledMonuments",
+>>>>>>> b1c473e962608392200a9e754ed88b8960235d08
   //   fields: ["objectid", "name", "scheddate"],
   //   neg: "is not the site of a Scheduled Monument",
   //   pos: (data) => ({

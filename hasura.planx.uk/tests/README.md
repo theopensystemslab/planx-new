@@ -3,11 +3,11 @@
 To run tests
 
 ```sh
-npm run test
+pnpm run test
 ```
 
 or to develop locally, you can also
 
 ```sh
-npm run test:watch
+pnpm run test:watch
 ```
