@@ -17,11 +17,14 @@ const flowSettingsRoutes = compose(
     "/:tab": route(async (req) => {
       const { data } = await client.query({
         query: gql`
-          query GetFlow($slug: String!) {
+          query GetFlow($slug: String!, $team_slug: String!) {
             flows(
               order_by: { name: asc }
               limit: 1
-              where: { slug: { _eq: $slug } }
+              where: {
+                slug: { _eq: $slug }
+                team: { slug: { _eq: $team_slug } }
+              }
             ) {
               id
               settings
@@ -30,6 +33,7 @@ const flowSettingsRoutes = compose(
         `,
         variables: {
           slug: req.params.flow,
+          team_slug: req.params.team,
         },
       });
 
