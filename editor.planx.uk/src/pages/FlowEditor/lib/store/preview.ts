@@ -149,13 +149,6 @@ export const previewStore = (
             );
 
           if (passportValue.length > 0) {
-            // console.log({
-            //   id,
-            //   key,
-            //   passportValue,
-            //   v: acc.data?.[key]?.value,
-            // });
-
             const existingValue = acc.data?.[key] ?? [];
 
             const combined = existingValue
@@ -173,8 +166,6 @@ export const previewStore = (
             passportData[key] = uniq(combined);
           }
         }
-
-        // console.log(passportData);
 
         const responseData = Object.entries(data).reduce(
           (_acc, [id, value]) => {
@@ -197,8 +188,6 @@ export const previewStore = (
         data: {},
       } as Store.passport
     );
-
-    // console.log({ passport });
 
     return passport;
   },
@@ -459,7 +448,6 @@ export const previewStore = (
         })
         .forEach((id) => {
           const node = flow[id];
-
           const passport = computePassport();
 
           if (
@@ -497,8 +485,6 @@ export const previewStore = (
               return [];
             }
           })();
-
-          // console.log({ fn, passport, _passport: computePassport() });
 
           if (fn && (fn === "flag" || passportValues !== undefined)) {
             const responses = node.edges?.map((id) => ({
