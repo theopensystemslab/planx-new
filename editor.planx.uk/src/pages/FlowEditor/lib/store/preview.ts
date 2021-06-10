@@ -452,7 +452,8 @@ export const previewStore = (
           return (
             node &&
             !breadcrumbs[id] &&
-            ((node.edges || []).length > 0 ||
+            (node.type === TYPES.SetValue ||
+              (node.edges || []).length > 0 ||
               (node.type && !SUPPORTED_DECISION_TYPES.includes(node.type)))
           );
         })
@@ -466,6 +467,23 @@ export const previewStore = (
             [TYPES.InternalPortal, TYPES.Page].includes(node.type)
           ) {
             return nodeIdsConnectedFrom(id);
+          }
+
+          if (node.type === TYPES.SetValue) {
+            if (ids.size === 0) {
+              set({
+                breadcrumbs: {
+                  ...breadcrumbs,
+                  [id]: {
+                    data: {
+                      [node.data.fn]: [node.data.val],
+                    },
+                    auto: true,
+                  },
+                },
+              });
+            }
+            return;
           }
 
           const fn = node.type === TYPES.Filter ? "flag" : node.data?.fn;

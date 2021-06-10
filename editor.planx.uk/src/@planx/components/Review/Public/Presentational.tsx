@@ -72,6 +72,7 @@ const components: {
   [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,
   [TYPES.Send]: undefined,
+  [TYPES.SetValue]: undefined,
   [TYPES.SignIn]: undefined,
   [TYPES.Statement]: Question,
   [TYPES.TaskList]: undefined,
@@ -209,12 +210,13 @@ function FileUpload(props: ComponentProps) {
       <div>{props.node.data.title ?? "File upload"}</div>
       <div>
         <ul>
-          {Array.isArray(getAnswersByHash(props)) && getAnswersByHash(props).length > 0
+          {Array.isArray(getAnswersByHash(props)) &&
+          getAnswersByHash(props).length > 0
             ? getAnswersByHash(props).map((file: any, i: number) => (
-              <li key={i}>
-                <a href={file.url}>{file.filename}</a>
-              </li>
-            ))
+                <li key={i}>
+                  <a href={file.url}>{file.filename}</a>
+                </li>
+              ))
             : "No file"}
         </ul>
       </div>
@@ -232,29 +234,33 @@ function DateInput(props: ComponentProps) {
 }
 
 function DrawBoundary(props: ComponentProps) {
-  const NOT_FOUND:string = "No drawing found";
+  const NOT_FOUND: string = "No drawing found";
 
   const { latitude, longitude } = props.passport.data?._address;
 
   // If a drawing, then encode GeoJSON for Mapbox API, else show a simple message
-  const geojson:string = props.userData?.data && props.userData?.data["property.boundary.site"]
-    ? encodeURIComponent(JSON.stringify(props.userData?.data["property.boundary.site"]))
-    : NOT_FOUND;
+  const geojson: string =
+    props.userData?.data && props.userData?.data["property.boundary.site"]
+      ? encodeURIComponent(
+          JSON.stringify(props.userData?.data["property.boundary.site"])
+        )
+      : NOT_FOUND;
 
   // Ordnance survey stylesheet (will also need `&addlayer={}` param to accurately display in future, I think)
-  const stylesheet:string = "opensystemslab/ckbuw2xmi0mum1il33qucl4dv";
+  const stylesheet: string = "opensystemslab/ckbuw2xmi0mum1il33qucl4dv";
 
   // Ref https://docs.mapbox.com/api/maps/static-images/
-  const mapImg:string = `https://api.mapbox.com/styles/v1/${stylesheet}/static/geojson(${geojson})/${longitude},${latitude},17/350x300?logo=false&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`;
+  const mapImg: string = `https://api.mapbox.com/styles/v1/${stylesheet}/static/geojson(${geojson})/${longitude},${latitude},17/350x300?logo=false&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`;
 
   return (
     <>
       <div>Site boundary</div>
       <div>
-        {geojson !== NOT_FOUND
-          ? <img alt="Site boundary drawing" src={mapImg} />
-          : geojson
-        }
+        {geojson !== NOT_FOUND ? (
+          <img alt="Site boundary drawing" src={mapImg} />
+        ) : (
+          geojson
+        )}
       </div>
     </>
   );
@@ -264,7 +270,9 @@ function NumberInput(props: ComponentProps) {
   return (
     <>
       <div>{props.node.data.title ?? "Number"}</div>
-      <div>{`${getAnswersByHash(props) ?? "No number input"} ${props.node.data.units ?? ""}`}</div>
+      <div>{`${getAnswersByHash(props) ?? "No number input"} ${
+        props.node.data.units ?? ""
+      }`}</div>
     </>
   );
 }
@@ -292,8 +300,8 @@ function getAnswers(props: ComponentProps): string[] {
 
 function getAnswersByHash(props: ComponentProps): any {
   try {
-    const edges:string[] = props!.flow!._root!.edges!;
-    const edgeHash:string = edges[props.nodeId];
+    const edges: string[] = props!.flow!._root!.edges!;
+    const edgeHash: string = edges[props.nodeId];
 
     if (props.userData?.data && edgeHash) {
       return props.userData?.data[edgeHash];
