@@ -121,28 +121,29 @@ const planningConstraints = {
       description: data.sssi_name,
     }),
   },
-  "flood.zone2": {
-    key: "flood.zone2",
-    source: lambethDomain,
-    id: "LambethFloodRiskZone2",
-    fields: ["OBJECTID"],
-    neg: "is not in a Flood Zone 2",
-    pos: (data) => ({
-      text: "is in a Flood Zone 2 - Medium Risk",
-      description: data,
-    }),
-  },
-  "flood.zone3": {
-    key: "flood.zone3",
-    source: lambethDomain,
-    id: "LambethFloodRiskZone3",
-    fields: ["OBJECTID"],
-    neg: "is not in a Flood Zone 3",
-    pos: (data) => ({
-      text: "is in a Flood Zone 3 - High Risk",
-      description: data,
-    }),
-  },
+  // Flood zones are not MVP variables
+  // "flood.zone2": {
+  //   key: "flood.zone2",
+  //   source: lambethDomain,
+  //   id: "LambethFloodRiskZone2",
+  //   fields: ["OBJECTID"],
+  //   neg: "is not in a Flood Zone 2",
+  //   pos: (data) => ({
+  //     text: "is in a Flood Zone 2 - Medium Risk",
+  //     description: data,
+  //   }),
+  // },
+  // "flood.zone3": {
+  //   key: "flood.zone3",
+  //   source: lambethDomain,
+  //   id: "LambethFloodRiskZone3",
+  //   fields: ["OBJECTID"],
+  //   neg: "is not in a Flood Zone 3",
+  //   pos: (data) => ({
+  //     text: "is in a Flood Zone 3 - High Risk",
+  //     description: data,
+  //   }),
+  // },
   "defence.explosives": { value: false },
   "defence.safeguarded": { value: false }, // https://lambethopenmappingdata-lambethcouncil.opendata.arcgis.com/datasets/safeguarded-waste-sites ??
   hazard: { value: false }, // https://lambethopenmappingdata-lambethcouncil.opendata.arcgis.com/datasets/comah-sites ??
