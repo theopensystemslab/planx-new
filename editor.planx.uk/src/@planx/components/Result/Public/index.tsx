@@ -98,7 +98,7 @@ const Result: React.FC<Props> = ({
   const visibleResponses = responses.filter((r) => !r.hidden);
   const hiddenResponses = responses.filter((r) => r.hidden);
 
-  const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [showSubmitButton, setShowSubmitButton] = useState<boolean>(
     Boolean(handleSubmit)
   );
