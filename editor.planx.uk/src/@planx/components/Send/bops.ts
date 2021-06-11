@@ -125,7 +125,15 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
     .map(([id, bc]) => {
       const { edges = [], ...question } = flow[id];
 
-      const answers: Array<string> = bc.answers ?? [];
+      const answers: Array<string> = (() => {
+        if (flow[id].type === TYPES.TextInput) {
+          return Object.values(bc.data ?? {}).filter(
+            (x) => typeof x === "string"
+          );
+        } else {
+          return bc.answers ?? [];
+        }
+      })();
 
       const responses = answers.map((id) => {
         let value = id;
