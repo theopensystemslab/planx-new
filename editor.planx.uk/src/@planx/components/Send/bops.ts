@@ -24,6 +24,7 @@ interface BOPSMinimumPayload {
 export interface BOPSFullPayload extends BOPSMinimumPayload {
   description?: string;
   payment_reference?: string;
+  payment_amount?: unknown;
   session_id?: string;
   ward?: string;
   work_status?: "proposed" | "existing";
@@ -91,7 +92,9 @@ export const bopsDictionary = {
   agent_phone: "applicant.agent.phone.primary",
   agent_email: "applicant.agent.email",
 
+  payment_amount: "application.fee.payable",
   payment_reference: GOV_PAY_PASSPORT_KEY,
+
   description: "proposal.description",
 };
 
