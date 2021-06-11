@@ -115,14 +115,10 @@ async function go(x, y, extras) {
       ob["article4"].value === false
     ) {
       ob["article4"] = ob["article4.lambeth.kiba"];
+      // Remove "text" and other keys from subvariable so it doesn't render as separate entry in planning constraints list
       ob["article4.lambeth.kiba"] = { value: true };
-    } else if (
-      (ob["article4.lambeth.kiba"].value === false &&
-        ob["article4"].value === true) ||
-      (ob["article4.lambeth.kiba"].value === false &&
-        ob["article4"].value === false)
-    ) {
-      // Remove "text" from sub variable so it doesn't render as separate entry in planning constraints list
+    } else if (ob["article4.lambeth.kiba"].value === false) {
+      // Same as above, make sure we render single a4 planning constraint
       ob["article4.lambeth.kiba"] = { value: false };
     }
 
