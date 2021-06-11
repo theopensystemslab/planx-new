@@ -113,7 +113,6 @@ export const editorStore = (
     set({ id });
 
     const cloneStateFromShareDb = () => {
-      // console.debug("[NF]:", JSON.stringify(doc.data, null, 0));
       const flow = JSON.parse(JSON.stringify(doc.data));
       set({ flow });
     };
