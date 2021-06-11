@@ -42,7 +42,7 @@ jobs:
             ${{ runner.os }}-
       - run: npm install -g pnpm
         working-directory: editor.planx.uk
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
         working-directory: editor.planx.uk
       - run: pnpm test
         working-directory: editor.planx.uk
