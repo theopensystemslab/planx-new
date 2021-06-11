@@ -457,7 +457,13 @@ export const previewStore = (
             return nodeIdsConnectedFrom(id);
           }
 
+          // A SetValue component will never be shown to the user,
+          // it'll appear to get skipped, hence the inner return below.
           if (node.type === TYPES.SetValue) {
+            // If it's also the 'current' node in the stack
+            // i.e. upcomingNodeIds[0] = this
+            // then merge its data into the passport, like this taco example
+            // https://github.com/theopensystemslab/planx-new/pull/460
             if (ids.size === 0) {
               set({
                 breadcrumbs: {
