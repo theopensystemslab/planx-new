@@ -6,14 +6,13 @@ import { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
 import type { GovUKPayment } from "types";
 
-import { createPayload, Pay, toDecimal } from "../model";
+import { createPayload, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
 import Confirm from "./Confirm";
 
 export default Component;
 
 interface Props extends Pay {
   handleSubmit: handleSubmit;
-  url?: string;
   fn?: string;
 }
 
@@ -48,8 +47,6 @@ function Component(props: Props) {
     state.computePassport(),
     state.previewEnvironment,
   ]);
-
-  if (!props.url) throw new Error("Missing Gov.UK Pay URL");
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
@@ -123,7 +120,7 @@ function Component(props: Props) {
 
   const refetchPayment = async (id: string) => {
     await axios
-      .get(props.url + `/${id}`)
+      .get(GOV_UK_PAY_URL + `/${id}`)
       .then((res) => {
         const payment = updatePayment(res.data);
 
@@ -180,10 +177,8 @@ function Component(props: Props) {
       return;
     }
 
-    if (!props.url) throw new Error("Missing GovUK Pay URL");
-
     await axios
-      .post(props.url, createPayload(fee, id))
+      .post(GOV_UK_PAY_URL, createPayload(fee, id))
       .then((res) => {
         const payment = updatePayment(res.data);
 

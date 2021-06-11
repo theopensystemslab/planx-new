@@ -12,7 +12,6 @@ export interface Pay extends MoreInformation {
   description?: string;
   color?: string;
   fn?: string;
-  url?: string;
 }
 
 // https://docs.payments.service.gov.uk/making_payments/#creating-a-payment
@@ -48,3 +47,5 @@ export const createPayload = (
   description: "New application",
   return_url: window.location.href,
 });
+
+export const GOV_UK_PAY_URL = `${process.env.REACT_APP_API_URL}/pay`;

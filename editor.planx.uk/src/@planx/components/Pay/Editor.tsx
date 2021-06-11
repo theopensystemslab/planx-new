@@ -1,4 +1,4 @@
-import type { Pay } from "@planx/components/Pay/model";
+import { GOV_UK_PAY_URL, Pay } from "@planx/components/Pay/model";
 import { parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
 import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
@@ -21,7 +21,6 @@ function Component(props: any) {
          <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">here</a>.</p>`,
       color: props.node?.data?.color || "#EFEFEF",
       fn: props.node?.data?.fn,
-      url: props.node?.data?.url,
       ...parseMoreInformation(props.node?.data),
     },
     onSubmit: (newValues) => {
@@ -64,12 +63,8 @@ function Component(props: any) {
             />
           </InputRow>
           <InputRow>
-            <Input
-              name="url"
-              value={formik.values.url}
-              placeholder={`${process.env.REACT_APP_API_URL}/pay`}
-              onChange={formik.handleChange}
-            />
+            {/* Keep the url in the form temporarily while debugging */}
+            <Input disabled name="url" value={GOV_UK_PAY_URL} />
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
