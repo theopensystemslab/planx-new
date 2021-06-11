@@ -157,7 +157,7 @@ const ServiceSettings: React.FC<Props> = (props) => {
 
         <Box py={2} justifyContent="flex-end" mb={4}>
           <Button type="submit" variant="contained" color="primary">
-            Submit
+            Save
           </Button>
         </Box>
       </Box>

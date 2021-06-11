@@ -54,8 +54,8 @@ export default function PhaseBanner(): FCReturn {
           mr={2}
           className={classes.betaIcon}
         >
-          <Typography color="inherit" variant="h6" align="center">
-            BETA
+          <Typography color="inherit" variant="h6" align="center" noWrap>
+            PRIVATE BETA
           </Typography>
         </Box>
         <Typography variant="body2" color="textPrimary">
