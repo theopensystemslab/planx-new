@@ -117,8 +117,10 @@ async function go(x, y, extras) {
       ob["article4"] = ob["article4.lambeth.kiba"];
       ob["article4.lambeth.kiba"] = { value: true };
     } else if (
-      ob["article4.lambeth.kiba"].value === false &&
-      ob["article4"].value === true
+      (ob["article4.lambeth.kiba"].value === false &&
+        ob["article4"].value === true) ||
+      (ob["article4.lambeth.kiba"].value === false &&
+        ob["article4"].value === false)
     ) {
       // Remove "text" from sub variable so it doesn't render as separate entry in planning constraints list
       ob["article4.lambeth.kiba"] = { value: false };
