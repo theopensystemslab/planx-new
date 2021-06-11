@@ -1,9 +1,9 @@
+import { GOV_PAY_PASSPORT_KEY } from "@planx/components/Pay/model";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import ErrorFallback from "../../components/ErrorFallback";
-import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
 import Node, { handleSubmit } from "./Node";
@@ -36,7 +36,7 @@ const Questions = () => {
   const node = currentCard();
   const flow = useContext(PreviewContext);
 
-  const hasPaid = Boolean(passport.data?.payment);
+  const hasPaid = Boolean(passport.data?.[GOV_PAY_PASSPORT_KEY]);
   const isStandalone = previewEnvironment === "standalone";
 
   useEffect(() => {

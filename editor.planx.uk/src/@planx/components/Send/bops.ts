@@ -278,7 +278,7 @@ export function getParams(
 
   data.proposal_details = makePayload(flow, breadcrumbs);
 
-  const paymentReference = passport?.data?.[GOV_PAY_PASSPORT_KEY];
+  const paymentReference = passport?.data?.[GOV_PAY_PASSPORT_KEY]?.payment_id;
 
   return {
     ...data,
