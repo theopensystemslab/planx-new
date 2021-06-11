@@ -12,6 +12,7 @@ import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import List from "@material-ui/icons/List";
 import MailOutlined from "@material-ui/icons/MailOutlined";
 import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
+import PlaylistAdd from "@material-ui/icons/PlaylistAdd";
 import PlaylistAddCheck from "@material-ui/icons/PlaylistAddCheck";
 import RateReview from "@material-ui/icons/RateReview";
 import ReportProblemOutlined from "@material-ui/icons/ReportProblemOutlined";
@@ -72,6 +73,7 @@ export const ICONS: {
   [TYPES.Result]: PlaylistAddCheck,
   [TYPES.Review]: RateReview,
   [TYPES.Send]: Send,
+  [TYPES.SetValue]: PlaylistAdd,
   [TYPES.SignIn]: undefined,
   [TYPES.Statement]: CallSplit,
   [TYPES.TaskList]: List,
