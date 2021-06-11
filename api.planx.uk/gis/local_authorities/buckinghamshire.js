@@ -93,25 +93,17 @@ async function go(x, y, extras) {
       );
 
     ob["article4.buckinghamshire.officetoresi"] = {
-      value:
-        ob["article4"] &&
-        ob["article4"].data &&
-        ob["article4"].data.DESCRIPTIO &&
-        ob["article4"].data.DESCRIPTIO.startsWith(
-          "Change of use from offices to residential"
-        )
-          ? true
-          : false,
+      value: ob["article4"]?.data?.DESCRIPTIO?.startsWith(
+        "Change of use from offices to residential"
+      )
+        ? true
+        : false,
     };
 
     ob["article4.buckinghamshire.poultry"] = {
-      value:
-        ob["article4"] &&
-        ob["article4"].data &&
-        ob["article4"].data.DEV_TYPE &&
-        ob["article4"].data.DEV_TYPE.toLowerCase().includes("poultry")
-          ? true
-          : false,
+      value: ob["article4"]?.data?.DEV_TYPE?.toLowerCase().includes("poultry")
+        ? true
+        : false,
     };
 
     return ob;

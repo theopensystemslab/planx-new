@@ -132,7 +132,7 @@ const planningConstraints = {
     source: "manual", // there are no National Parks in Bucks
     neg: "is not in a National Park",
   },
-  "designated.broads": { 
+  "designated.broads": {
     key: "designated.broads",
     source: "manual", // there are no Broads in Bucks
     neg: "is not in a Broad",

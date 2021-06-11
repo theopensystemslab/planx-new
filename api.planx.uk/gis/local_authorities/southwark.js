@@ -56,8 +56,8 @@ function get(key, table, x, y, radius = 1.5) {
 async function locationSearch(x, y, extras) {
   // Setup a one-dimension array of each data source we'll fetch
   let sources = [];
-  Object.keys(gisLayers).map((layer) => 
-    gisLayers[layer].tables.map((table) => 
+  Object.keys(gisLayers).forEach((layer) => 
+    gisLayers[layer].tables.forEach((table) => 
       sources.push({
         "layer": layer,
         "table": table,
@@ -113,10 +113,7 @@ async function locationSearch(x, y, extras) {
 
   ob["article4.southwark.sunray"] = {
     value:
-      ob["designated.conservationArea"] &&
-      ob["designated.conservationArea"].data &&
-      ob["designated.conservationArea"].data.Conservation_area_number &&
-      ob["designated.conservationArea"].data.Conservation_area_number === 39
+      ob["designated.conservationArea"]?.data?.Conservation_area_number === 39
         ? true
         : false,
   };

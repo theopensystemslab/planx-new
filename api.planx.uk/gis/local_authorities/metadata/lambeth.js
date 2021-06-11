@@ -79,10 +79,10 @@ const planningConstraints = {
   },
   "designated.nationalPark": {
     key: "designated.nationalPark",
-    source: "manual",// there are no National Parks in Lambeth
+    source: "manual", // there are no National Parks in Lambeth
     neg: "is not in a National Park",
   },
-  "designated.broads": { 
+  "designated.broads": {
     key: "designated.broads",
     source: "manual", // there are no Broads in Lambeth
     neg: "is not in a Broad",

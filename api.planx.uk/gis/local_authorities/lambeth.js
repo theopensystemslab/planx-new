@@ -104,22 +104,25 @@ async function go(x, y, extras) {
 
     ob["designated.conservationArea.lambeth.churchRoad"] = {
       value:
-        ob["designated.conservationArea"] &&
-        ob["designated.conservationArea"].data &&
-        ob["designated.conservationArea"].data.CA_REF_NO &&
-        ob["designated.conservationArea"].data.CA_REF_NO === "CA10"
+        ob["designated.conservationArea"]?.data?.CA_REF_NO === "CA10"
           ? true
           : false,
     };
 
     // Since we have multiple article 4 layers, account for granularity & ensure root variable is synced with the subvariable
-    if (ob["article4.lambeth.kiba"].value === true && ob["article4"].value === false) {
+    if (
+      ob["article4.lambeth.kiba"].value === true &&
+      ob["article4"].value === false
+    ) {
       ob["article4"] = ob["article4.lambeth.kiba"];
       ob["article4.lambeth.kiba"] = { value: true };
-    } else if (ob["article4.lambeth.kiba"].value === false && ob["article4"].value === true ) {
+    } else if (
+      ob["article4.lambeth.kiba"].value === false &&
+      ob["article4"].value === true
+    ) {
       // Remove "text" from sub variable so it doesn't render as separate entry in planning constraints list
       ob["article4.lambeth.kiba"] = { value: false };
-    };
+    }
 
     return ob;
   } catch (e) {

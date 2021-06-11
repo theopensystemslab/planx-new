@@ -24,10 +24,7 @@ const planningConstraints = {
       "Article 4 - Railway Arches",
       "Article 4 - Demolition of the Stables and the Forge on Catlin Street",
     ],
-    columns: [
-      "Article_4_Direction",
-      "More_information",
-    ],
+    columns: ["Article_4_Direction", "More_information"],
     neg: "is not subject to any Article 4 restrictions",
     pos: (data) => ({
       text: "is subject to Article 4 restriction(s)",
@@ -77,17 +74,17 @@ const planningConstraints = {
         : data.Conservation_area,
     }),
   },
-  "designated.AONB": { 
+  "designated.AONB": {
     key: "designated.AONB",
     source: "manual", // there are no AONB in Southwark
     neg: "is not an Area of Outstanding Natural Beauty",
   },
-  "designated.nationalPark": { 
+  "designated.nationalPark": {
     key: "designated.nationalPark",
     source: "manual", // there are no National Parks in Southwark
     neg: "is not in a National Park",
   },
-  "designated.broads": { 
+  "designated.broads": {
     key: "designated.broads",
     source: "manual", // there are no Broads in Southwark
     neg: "is not in a Broad",
@@ -95,14 +92,8 @@ const planningConstraints = {
   "designated.WHS": {
     key: "designated.WHS",
     source: "Southwark Maps",
-    tables: [
-      "UNESCO World Heritage Sites England"
-    ],
-    columns: [
-      "OGR_FID",
-      "NAME",
-      "NOTES",
-    ],
+    tables: ["UNESCO World Heritage Sites England"],
+    columns: ["OGR_FID", "NAME", "NOTES"],
     neg: "is not a World Heritage Site",
     pos: (data) => ({
       text: "is a World Heritage Site",

@@ -64,7 +64,7 @@ const planningConstraints = {
     source: "manual", // there are no National Parks in Canterbury
     neg: "is not in a National Park",
   },
-  "designated.broads": { 
+  "designated.broads": {
     key: "designated.broads",
     source: "manual", // there are no Broads in Canterbury
     neg: "is not in a Broad",
