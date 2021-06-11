@@ -26,6 +26,7 @@ if (
   new Notifier({
     projectId: Number(process.env.REACT_APP_AIRBRAKE_PROJECT_ID),
     projectKey: process.env.REACT_APP_AIRBRAKE_PROJECT_KEY,
+    environment: 'production',
   });
 }
 
