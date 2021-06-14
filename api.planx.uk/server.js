@@ -4,7 +4,7 @@ const cookieSession = require("cookie-session");
 const cors = require("cors");
 const express = require("express");
 const jwt = require("express-jwt");
-const url = require("url");
+const { URL } = require("url");
 const { GraphQLClient } = require("graphql-request");
 const { Server } = require("http");
 const passport = require("passport");
@@ -48,30 +48,49 @@ const handleSuccess = (req, res) => {
 
     const domain = (() => {
       if (process.env.NODE_ENV === "production") {
-        return `${url.parse(returnTo).host}`;
+        if (returnTo?.includes("editor.planx.")) {
+          // user is logging in to staging from editor.planx.dev
+          // or production from editor.planx.uk
+          return `.${new URL(returnTo).host}`;
+        } else {
+          // user is logging in from either a netlify preview build,
+          // or from localhost, to staging (or production... temporarily)
+          return undefined;
+        }
       } else {
+        // user is logging in from localhost, to development
         return "localhost";
       }
     })();
 
-    const cookie = {
-      domain,
-      maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-      httpOnly: false,
-    };
-
-    if (process.env.NODE_ENV === "production") {
-      cookie.secure = true;
-      cookie.sameSite = "none";
-    }
-
-    res.cookie("jwt", req.user.jwt, cookie);
-
     if (domain) {
+      // As domain is set, we know that we're either redirecting back to
+      // editor.planx.dev/login, editor.planx.uk, or localhost:PORT
+      // (if this code is running in development). With the respective
+      // domain set in the cookie.
+      const cookie = {
+        domain,
+        maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+        httpOnly: false,
+      };
+
+      if (process.env.NODE_ENV === "production") {
+        cookie.secure = true;
+        cookie.sameSite = "none";
+      }
+
+      res.cookie("jwt", req.user.jwt, cookie);
+
       res.redirect(returnTo);
     } else {
-      // this assumes the existing url doesn't have any search params.
-      res.redirect([returnTo, req.user.jwt].join("?jwt="));
+      // Redirect back to localhost:PORT/login (if this API is in staging or
+      // production), or a netlify preview build url. As the login page is on a
+      // different domain to whatever this API is running on, we can't set a
+      // cookie. To solve this issue we inject the JWT into the return url as
+      // a parameter that can be extracted by the frontend code instead.
+      const url = new URL(returnTo);
+      url.searchParams.set("jwt", req.user.jwt);
+      res.redirect(url.href);
     }
   } else {
     res.json({
