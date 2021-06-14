@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 const components: {
   [key in TYPES]: React.FC<any> | undefined;
 } = {
-  [TYPES.AddressInput]: Debug,
+  [TYPES.AddressInput]: AddressInput,
   [TYPES.Calculate]: undefined,
   [TYPES.Checklist]: Checklist,
   [TYPES.Content]: undefined,
@@ -268,6 +268,27 @@ function NumberInput(props: ComponentProps) {
     <>
       <div>{props.node.data.title ?? "Number"}</div>
       <div>{`${getAnswersByNode(props)} ${props.node.data.units ?? ""}`}</div>
+    </>
+  );
+}
+
+function AddressInput(props: ComponentProps) {
+  const { line1, line2, town, county, postcode } = getAnswersByNode(props);
+
+  return (
+    <>
+      <div>{props.node.data.title ?? "Address"}</div>
+      <div>
+        {line1}
+        <br />
+        {line2}
+        <br />
+        {town}
+        <br />
+        {county}
+        <br />
+        {postcode}
+      </div>
     </>
   );
 }
