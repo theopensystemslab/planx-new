@@ -19,6 +19,7 @@ import Question from "@planx/components/Question/Editor";
 import Result from "@planx/components/Result/Editor";
 import Review from "@planx/components/Review/Editor";
 import Send from "@planx/components/Send/Editor";
+import SetValue from "@planx/components/SetValue/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
 import TextInput from "@planx/components/TextInput/Editor";
 import { TYPES } from "@planx/components/types";
@@ -53,6 +54,7 @@ const components: {
   result: Result,
   review: Review,
   send: Send,
+  "set-value": SetValue,
   "task-list": TaskList,
   "text-input": TextInput,
 };

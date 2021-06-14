@@ -126,7 +126,9 @@ test("makes a more advanced payload", () => {
       auto: false,
     },
     "8kKGIvNzEN": {
-      answers: ["extension demolition followed by a rebuild"],
+      data: {
+        "8kKGIvNzEN": "extension demolition followed by a rebuild",
+      },
       auto: false,
     },
   };
