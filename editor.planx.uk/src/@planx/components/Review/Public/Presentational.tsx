@@ -35,9 +35,11 @@ const useStyles = makeStyles((theme) => ({
     },
     "& >:nth-child(3n+2)": {
       // middle column
+      paddingLeft: "10px",
     },
     "& >:nth-child(3n+3)": {
       // right column
+      textAlign: "right",
       "& a": {
         textDecoration: "underline",
         cursor: "pointer",
