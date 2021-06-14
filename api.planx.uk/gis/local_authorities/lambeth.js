@@ -110,17 +110,12 @@ async function go(x, y, extras) {
     };
 
     // Since we have multiple article 4 layers, account for granularity & ensure root variable is synced with the subvariable
-    if (
-      ob["article4.lambeth.kiba"].value === true &&
-      ob["article4"].value === false
-    ) {
+    if (ob["article4.lambeth.kiba"].value && !ob["article4"].value) {
       ob["article4"] = ob["article4.lambeth.kiba"];
+      // Remove "text" and other keys from subvariable so it doesn't render as separate entry in planning constraints list
       ob["article4.lambeth.kiba"] = { value: true };
-    } else if (
-      ob["article4.lambeth.kiba"].value === false &&
-      ob["article4"].value === true
-    ) {
-      // Remove "text" from sub variable so it doesn't render as separate entry in planning constraints list
+    } else if (!ob["article4.lambeth.kiba"].value) {
+      // Same as above, make sure we render single a4 planning constraint
       ob["article4.lambeth.kiba"] = { value: false };
     }
 
