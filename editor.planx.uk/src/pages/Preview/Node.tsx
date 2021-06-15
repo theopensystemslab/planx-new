@@ -208,6 +208,7 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Page:
     case TYPES.Report:
     case TYPES.Response:
+    case TYPES.SetValue:
     case TYPES.SignIn:
     case undefined:
       return null;

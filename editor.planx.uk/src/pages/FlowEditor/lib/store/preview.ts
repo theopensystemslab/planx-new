@@ -149,13 +149,6 @@ export const previewStore = (
             );
 
           if (passportValue.length > 0) {
-            // console.log({
-            //   id,
-            //   key,
-            //   passportValue,
-            //   v: acc.data?.[key]?.value,
-            // });
-
             const existingValue = acc.data?.[key] ?? [];
 
             const combined = existingValue
@@ -173,8 +166,6 @@ export const previewStore = (
             passportData[key] = uniq(combined);
           }
         }
-
-        // console.log(passportData);
 
         const responseData = Object.entries(data).reduce(
           (_acc, [id, value]) => {
@@ -197,8 +188,6 @@ export const previewStore = (
         data: {},
       } as Store.passport
     );
-
-    // console.log({ passport });
 
     return passport;
   },
@@ -452,13 +441,13 @@ export const previewStore = (
           return (
             node &&
             !breadcrumbs[id] &&
-            ((node.edges || []).length > 0 ||
+            (node.type === TYPES.SetValue ||
+              (node.edges || []).length > 0 ||
               (node.type && !SUPPORTED_DECISION_TYPES.includes(node.type)))
           );
         })
         .forEach((id) => {
           const node = flow[id];
-
           const passport = computePassport();
 
           if (
@@ -466,6 +455,29 @@ export const previewStore = (
             [TYPES.InternalPortal, TYPES.Page].includes(node.type)
           ) {
             return nodeIdsConnectedFrom(id);
+          }
+
+          // A SetValue component will never be shown to the user,
+          // it'll appear to get skipped, hence the inner return below.
+          if (node.type === TYPES.SetValue) {
+            // If it's also the 'current' node in the stack
+            // i.e. upcomingNodeIds[0] = this
+            // then merge its data into the passport, like this taco example
+            // https://github.com/theopensystemslab/planx-new/pull/460
+            if (ids.size === 0) {
+              set({
+                breadcrumbs: {
+                  ...breadcrumbs,
+                  [id]: {
+                    data: {
+                      [node.data.fn]: [node.data.val],
+                    },
+                    auto: true,
+                  },
+                },
+              });
+            }
+            return;
           }
 
           const fn = node.type === TYPES.Filter ? "flag" : node.data?.fn;
@@ -479,8 +491,6 @@ export const previewStore = (
               return [];
             }
           })();
-
-          // console.log({ fn, passport, _passport: computePassport() });
 
           if (fn && (fn === "flag" || passportValues !== undefined)) {
             const responses = node.edges?.map((id) => ({

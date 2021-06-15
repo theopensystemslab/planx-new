@@ -172,7 +172,7 @@ const NavTabs: React.FC<{ tab?: string; settings?: FlowSettings }> = (
         <TeamSettings />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <ServiceSettings settings={props.settings} flowId={data.flow} />
+        <ServiceSettings settings={props.settings} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <ServiceFlags

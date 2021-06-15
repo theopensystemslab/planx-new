@@ -1,3 +1,6 @@
+// Source name used in metadata templates for pre-checked/human-verified data sources
+const PRECHECKED_SOURCE = "manual";
+
 // Build up the URL used to query an ESRI feature
 // Ref https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-.htm
 const makeEsriUrl = (domain, id, serverIndex = 0, overrideParams = {}) => {
@@ -43,10 +46,10 @@ const makeBbox = (x, y, radius = 1.5) => {
   return `${x - radius},${y - radius},${x + radius},${y + radius}`;
 };
 
-// For a dictionary of planning constraint objects, return the items with preset { value: false }
+// For a dictionary of planning constraint objects, return the items with preset { value: false } aka unknown data source
 const getFalseConstraints = (metadata) => {
   let falseConstraints = {};
-  Object.keys(metadata).filter((constraint) => {
+  Object.keys(metadata).forEach((constraint) => {
     if (metadata[constraint].value === false) {
       falseConstraints[constraint] = { value: false };
     }
@@ -58,13 +61,42 @@ const getFalseConstraints = (metadata) => {
 // For a dictionary of planning constraint objects, return the items with known data sources
 const getQueryableConstraints = (metadata) => {
   let queryableConstraints = {};
-  Object.keys(metadata).filter((constraint) => {
-    if ("source" in metadata[constraint]) {
+  Object.keys(metadata).forEach((constraint) => {
+    if (
+      "source" in metadata[constraint] &&
+      metadata[constraint]["source"] !== PRECHECKED_SOURCE
+    ) {
       queryableConstraints[constraint] = metadata[constraint];
     }
   });
 
   return queryableConstraints;
+};
+
+// For a dictionary of planning constraint objects, return the items that have been manually verified and do not apply to this geographic region
+const getManualConstraints = (metadata) => {
+  let manualConstraints = {};
+  Object.keys(metadata).forEach((constraint) => {
+    if (
+      "source" in metadata[constraint] &&
+      metadata[constraint]["source"] === PRECHECKED_SOURCE
+    ) {
+      // Make object shape consistent with queryable data sources
+      delete metadata[constraint]["source"];
+      delete metadata[constraint]["key"];
+
+      metadata[constraint]["text"] = metadata[constraint]["neg"];
+      delete metadata[constraint]["neg"];
+
+      metadata[constraint]["value"] = false;
+      metadata[constraint]["type"] = "check";
+      metadata[constraint]["data"] = {};
+
+      manualConstraints[constraint] = metadata[constraint];
+    }
+  });
+
+  return manualConstraints;
 };
 
 module.exports = {
@@ -73,4 +105,5 @@ module.exports = {
   makeBbox,
   getQueryableConstraints,
   getFalseConstraints,
+  getManualConstraints,
 };

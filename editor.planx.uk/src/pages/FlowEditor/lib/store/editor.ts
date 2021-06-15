@@ -66,7 +66,8 @@ export interface EditorStore extends Store.Store {
   pasteNode: (toParent: Store.nodeId, toBefore: Store.nodeId) => void;
   removeNode: (id: Store.nodeId, parent: Store.nodeId) => void;
   updateFlowSettings: (
-    flowId: string,
+    teamSlug: string,
+    flowSlug: string,
     newSettings: FlowSettings
   ) => Promise<number>;
   updateNode: (node: any, relationships?: any) => void;
@@ -112,7 +113,6 @@ export const editorStore = (
     set({ id });
 
     const cloneStateFromShareDb = () => {
-      // console.debug("[NF]:", JSON.stringify(doc.data, null, 0));
       const flow = JSON.parse(JSON.stringify(doc.data));
       set({ flow });
     };
@@ -292,12 +292,19 @@ export const editorStore = (
     send(ops);
   },
 
-  updateFlowSettings: async (flowSlug, newSettings) => {
+  updateFlowSettings: async (teamSlug, flowSlug, newSettings) => {
     let response = await client.mutate({
       mutation: gql`
-        mutation UpdateFlowSettings($slug: String, $settings: jsonb) {
+        mutation UpdateFlowSettings(
+          $team_slug: String
+          $flow_slug: String
+          $settings: jsonb
+        ) {
           update_flows(
-            where: { slug: { _eq: $slug } }
+            where: {
+              team: { slug: { _eq: $team_slug } }
+              slug: { _eq: $flow_slug }
+            }
             _set: { settings: $settings }
           ) {
             affected_rows
@@ -309,7 +316,8 @@ export const editorStore = (
         }
       `,
       variables: {
-        slug: flowSlug,
+        team_slug: teamSlug,
+        flow_slug: flowSlug,
         settings: newSettings,
       },
     });

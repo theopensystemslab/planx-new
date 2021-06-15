@@ -23,6 +23,7 @@ interface BOPSMinimumPayload {
 export interface BOPSFullPayload extends BOPSMinimumPayload {
   description?: string;
   payment_reference?: string;
+  session_id?: string;
   ward?: string;
   work_status?: "proposed" | "existing";
   applicant_first_name?: string;
@@ -124,7 +125,15 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
     .map(([id, bc]) => {
       const { edges = [], ...question } = flow[id];
 
-      const answers: Array<string> = bc.answers ?? [];
+      const answers: Array<string> = (() => {
+        if (flow[id].type === TYPES.TextInput) {
+          return Object.values(bc.data ?? {}).filter(
+            (x) => typeof x === "string"
+          );
+        } else {
+          return bc.answers ?? [];
+        }
+      })();
 
       const responses = answers.map((id) => {
         let value = id;
@@ -179,7 +188,8 @@ export const fullPayload: BOPSFullPayload = {
 export function getParams(
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
-  passport: Store.passport
+  passport: Store.passport,
+  sessionId: string
 ) {
   const data = fullPayload;
 
@@ -273,5 +283,6 @@ export function getParams(
     ...data,
     ...bopsData,
     ...(paymentReference ? { payment_reference: paymentReference } : {}),
+    ...(sessionId ? { session_id: sessionId } : {}),
   };
 }
