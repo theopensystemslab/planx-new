@@ -195,7 +195,7 @@ function Dropzone(props: any) {
   const MAX_UPLOAD_SIZE_MB = 30;
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: ["image/*", "text/*", "application/pdf"],
+    accept: ["image/jpeg", "image/png", "application/pdf"],
     maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
     multiple: true,
     onDrop: (acceptedFiles) => {

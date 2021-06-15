@@ -106,6 +106,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function FileUpload(props: any) {
+  const MAX_UPLOAD_SIZE_MB = 30;
+
   const [slot, setSlot] = useState<any>();
   const handleSubmit = () => {
     // url: slot.url,
@@ -116,7 +118,8 @@ export default function FileUpload(props: any) {
   }, [props.setUrl, slot]);
   const classes = useStyles();
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: ["application/pdf"],
+    accept: ["image/jpeg", "image/png", "application/pdf"],
+    maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
     multiple: false,
     onDrop: ([file]) => {
       // XXX: This is a non-blocking promise chain
@@ -158,7 +161,7 @@ export default function FileUpload(props: any) {
               ? "Drop the files here"
               : "Drop here or click to choose file"}
           </Box>
-          <Box color="text.secondary">pdf</Box>
+          <Box color="text.secondary">pdf, jpg or png</Box>
         </Box>
         <Box color="text.secondary" alignSelf="flex-end">
           max size 30MB
