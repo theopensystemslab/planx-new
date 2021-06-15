@@ -102,7 +102,8 @@ function Component(props: Props) {
             Object.entries(props.breadcrumbs).map(([nodeId, value], i) => {
               const node = props.flow[nodeId];
               const Component = node.type && components[node.type];
-              if (Component === undefined) {
+              // Hide questions if they lack a presentation component or are auto-answered
+              if (Component === undefined || value.auto) {
                 return null;
               }
               return (
