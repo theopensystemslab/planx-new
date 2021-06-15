@@ -35,9 +35,11 @@ const useStyles = makeStyles((theme) => ({
     },
     "& >:nth-child(3n+2)": {
       // middle column
+      paddingLeft: "10px",
     },
     "& >:nth-child(3n+3)": {
       // right column
+      textAlign: "right",
       "& a": {
         textDecoration: "underline",
         cursor: "pointer",
@@ -49,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 const components: {
   [key in TYPES]: React.FC<any> | undefined;
 } = {
-  [TYPES.AddressInput]: Debug,
+  [TYPES.AddressInput]: AddressInput,
   [TYPES.Calculate]: undefined,
   [TYPES.Checklist]: Checklist,
   [TYPES.Content]: undefined,
@@ -100,7 +102,8 @@ function Component(props: Props) {
             Object.entries(props.breadcrumbs).map(([nodeId, value], i) => {
               const node = props.flow[nodeId];
               const Component = node.type && components[node.type];
-              if (Component === undefined) {
+              // Hide questions if they lack a presentation component or are auto-answered
+              if (Component === undefined || value.auto) {
                 return null;
               }
               return (
@@ -199,7 +202,7 @@ function TextInput(props: ComponentProps) {
   return (
     <>
       <div>{props.node.data.title ?? "Text"}</div>
-      <div>{getAnswers(props)[0]}</div>
+      <div>{getAnswersByNode(props)}</div>
     </>
   );
 }
@@ -210,14 +213,11 @@ function FileUpload(props: ComponentProps) {
       <div>{props.node.data.title ?? "File upload"}</div>
       <div>
         <ul>
-          {Array.isArray(getAnswersByHash(props)) &&
-          getAnswersByHash(props).length > 0
-            ? getAnswersByHash(props).map((file: any, i: number) => (
-                <li key={i}>
-                  <a href={file.url}>{file.filename}</a>
-                </li>
-              ))
-            : "No file"}
+          {getAnswersByNode(props).map((file: any, i: number) => (
+            <li key={i}>
+              <a href={file.url}>{file.filename}</a>
+            </li>
+          ))}
         </ul>
       </div>
     </>
@@ -228,7 +228,7 @@ function DateInput(props: ComponentProps) {
   return (
     <>
       <div>{props.node.data.title ?? "Date"}</div>
-      <div>{getAnswersByHash(props) ?? "No date"}</div>
+      <div>{getAnswersByNode(props)}</div>
     </>
   );
 }
@@ -270,9 +270,28 @@ function NumberInput(props: ComponentProps) {
   return (
     <>
       <div>{props.node.data.title ?? "Number"}</div>
-      <div>{`${getAnswersByHash(props) ?? "No number input"} ${
-        props.node.data.units ?? ""
-      }`}</div>
+      <div>{`${getAnswersByNode(props)} ${props.node.data.units ?? ""}`}</div>
+    </>
+  );
+}
+
+function AddressInput(props: ComponentProps) {
+  const { line1, line2, town, county, postcode } = getAnswersByNode(props);
+
+  return (
+    <>
+      <div>{props.node.data.title ?? "Address"}</div>
+      <div>
+        {line1}
+        <br />
+        {line2}
+        <br />
+        {town}
+        <br />
+        {county}
+        <br />
+        {postcode}
+      </div>
     </>
   );
 }
@@ -298,13 +317,21 @@ function getAnswers(props: ComponentProps): string[] {
   return [];
 }
 
-function getAnswersByHash(props: ComponentProps): any {
+/**
+ * helper function to retrieve answers from the data object by their field name (eg planx variable)
+ * or alternatively by their node id (eg 8kKGIvNzEN), which is default fallback
+ * behaviour if no passport field is set for the component
+ */
+function getAnswersByNode(props: ComponentProps): any {
   try {
-    const edges: string[] = props!.flow!._root!.edges!;
-    const edgeHash: string = edges[props.nodeId];
+    const variableName: string = props.node!.data!.fn!;
+    const edges: string[] = props.flow!._root!.edges!;
+    const node: string = edges[props.nodeId];
 
-    if (props.userData?.data && edgeHash) {
-      return props.userData?.data[edgeHash];
+    if (props.userData?.data && variableName) {
+      return props.userData?.data[variableName];
+    } else if (props.userData?.data && node) {
+      return props.userData?.data[node];
     }
   } catch (err) {}
   return "";

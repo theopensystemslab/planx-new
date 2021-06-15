@@ -43,7 +43,7 @@ const planningConstraints = {
     where: "ARTICLE_4='KIBA'",
     neg: "is not subject to any Article 4 directions",
     pos: (data) => ({
-      text: "is subject to an Article 4 direction(s)",
+      text: "is subject to an Article 4 B1 to C3 direction",
       description: data.NAME,
     }),
   },
