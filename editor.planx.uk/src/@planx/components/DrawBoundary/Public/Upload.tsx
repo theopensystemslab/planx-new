@@ -106,9 +106,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function FileUpload(props: any) {
+  const [slot, setSlot] = useState<any>();
   const MAX_UPLOAD_SIZE_MB = 30;
 
-  const [slot, setSlot] = useState<any>();
   const handleSubmit = () => {
     // url: slot.url,
     // filename: slot.file.path,
@@ -185,7 +185,11 @@ export default function FileUpload(props: any) {
         width={`${Math.min(Math.ceil(slot.progress * 100), 100)}%`}
       />
       <Box className={classes.filePreview}>
-        <FileIcon />
+        {slot.file.type.includes("image") ? (
+          <ImagePreview file={slot.file} />
+        ) : (
+          <FileIcon />
+        )}
       </Box>
       <Box flexGrow={1}>
         <Box
@@ -202,6 +206,17 @@ export default function FileUpload(props: any) {
       </Box>
     </Box>
   );
+}
+
+function ImagePreview({ file }: any) {
+  const { current: url } = React.useRef(URL.createObjectURL(file));
+  useEffect(() => {
+    return () => {
+      // Cleanup to free up memory
+      URL.revokeObjectURL(url);
+    };
+  }, [url]);
+  return <img src={url} alt="" />;
 }
 
 function formatBytes(a: any, b = 2) {

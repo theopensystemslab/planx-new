@@ -301,7 +301,7 @@ function Dropzone(props: any) {
               ? "Drop the files here"
               : "Drop here or click to choose file"}
           </Box>
-          <Box color="text.secondary">pdf, jpeg, docx</Box>
+          <Box color="text.secondary">pdf, jpg or png</Box>
         </Box>
         <Box color="text.secondary" alignSelf="flex-end">
           max size {MAX_UPLOAD_SIZE_MB}MB
