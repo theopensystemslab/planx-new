@@ -54,7 +54,9 @@ export default function Footer(props: Props) {
         flexDirection={{ xs: "column", md: "row" }}
       >
         {items &&
-          items.map((item, i) => item && <FooterItem {...item} key={i} />)}
+          items.map(
+            (item, i) => item && item.title && <FooterItem {...item} key={i} />
+          )}
         {feedbackFishId && (
           <FeedbackFish projectId={feedbackFishId}>
             <Typography variant="body2" className={classes.link}>
