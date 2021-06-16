@@ -4,7 +4,7 @@ import { TYPES } from "@planx/components/types";
 import type { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React from "react";
-import { Layer,Source, StaticMap } from "react-map-gl";
+import { Layer, Source, StaticMap } from "react-map-gl";
 
 export default Component;
 
@@ -235,20 +235,25 @@ function DateInput(props: ComponentProps) {
 }
 
 function DrawBoundary(props: ComponentProps) {
-  const NOT_FOUND: string = "No drawing found";
   const { latitude, longitude } = props.passport.data?._address;
 
-  // If drawing, then data is GeoJSON obj, else show a simple message (eventually file upload details)
-  const data: any =
-    props.userData?.data && props.userData?.data["property.boundary.site"]
-      ? props.userData?.data["property.boundary.site"]
-      : NOT_FOUND;
+  let data = "";
+  if (props.userData?.data && props.userData?.data["property.boundary.site"]) {
+    // If drawing, then data is a GeoJSON obj
+    data = props.userData?.data["property.boundary.site"];
+  } else if (
+    props.userData?.data &&
+    props.userData?.data["property.boundary.file"]
+  ) {
+    // If file upload, then data is a URL string
+    data = props.userData?.data["property.boundary.file"];
+  }
 
   return (
     <>
       <div>Site boundary</div>
       <div>
-        {data !== NOT_FOUND ? (
+        {typeof data !== "string" ? (
           <StaticMap
             longitude={Number(longitude)}
             latitude={Number(latitude)}
@@ -303,7 +308,7 @@ function DrawBoundary(props: ComponentProps) {
             </Source>
           </StaticMap>
         ) : (
-          data
+          <a href={data}>Your uploaded location plan</a>
         )}
       </div>
     </>
