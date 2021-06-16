@@ -11,7 +11,11 @@ import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 
 import type { DrawBoundary } from "../model";
-import { DEFAULT_TITLE, DEFAULT_TITLE_FOR_UPLOADING } from "../model";
+import {
+  DEFAULT_PASSPORT_UPLOAD_KEY,
+  DEFAULT_TITLE,
+  DEFAULT_TITLE_FOR_UPLOADING,
+} from "../model";
 import Map from "./Map";
 import Upload from "./Upload";
 
@@ -97,12 +101,21 @@ export default function Component(props: Props) {
   function handleSubmit() {
     const data = (() => {
       const ob: Store.userData["data"] = {};
-      if (props.dataFieldBoundary) {
+
+      // we haven't added dataFieldUrl in the editor yet
+      const propsDataFieldUrl = DEFAULT_PASSPORT_UPLOAD_KEY;
+
+      if (boundary && props.dataFieldBoundary) {
+        // if boundary has been drawn
         ob[props.dataFieldBoundary] = boundary;
+        if (props.dataFieldArea) {
+          ob[props.dataFieldArea] = area;
+        }
+      } else if (url && propsDataFieldUrl) {
+        // or if a file has been uploaded
+        ob[propsDataFieldUrl] = url;
       }
-      if (props.dataFieldArea) {
-        ob[props.dataFieldArea] = area;
-      }
+
       return Object.keys(ob).length > 0 ? ob : undefined;
     })();
 

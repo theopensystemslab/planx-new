@@ -7,6 +7,7 @@ export interface DrawBoundary extends MoreInformation {
   descriptionForUploading: string;
   dataFieldBoundary: string;
   dataFieldArea: string;
+  dataFieldUrl: string;
 }
 
 export const parseDrawBoundary = (
@@ -19,8 +20,10 @@ export const parseDrawBoundary = (
   descriptionForUploading: data?.descriptionForUploading || "",
   dataFieldBoundary: data?.dataFieldBoundary || DEFAULT_PASSPORT_BOUNDARY_KEY,
   dataFieldArea: data?.dataFieldArea || "",
+  dataFieldUrl: data?.dataFieldUrl || "",
 });
 
 export const DEFAULT_PASSPORT_BOUNDARY_KEY = "property.boundary.site" as const;
 export const DEFAULT_TITLE = "Draw the boundary of the property" as const;
 export const DEFAULT_TITLE_FOR_UPLOADING = "Upload the PDF location plan" as const;
+export const DEFAULT_PASSPORT_UPLOAD_KEY = "property.boundary.file" as const; // not added to editor yet
