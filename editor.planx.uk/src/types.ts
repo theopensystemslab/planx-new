@@ -21,14 +21,23 @@ export interface Team {
 }
 
 interface TeamSettings {
-  design?: DesignSettings;
+  design?: {
+    color?: string;
+  };
 }
 
+export const FOOTER_ITEMS = [
+  "privacy",
+  "help",
+  "accessibility",
+  "cookies",
+  "termsOfUse",
+];
+
+const FLOW_SETTINGS = [...FOOTER_ITEMS, "legalDisclaimer"] as const;
 export interface FlowSettings {
   elements?: {
-    privacy?: TextContent;
-    help?: TextContent;
-    legalDisclaimer?: TextContent;
+    [key in typeof FLOW_SETTINGS[number]]?: TextContent;
   };
 }
 
@@ -36,13 +45,6 @@ export interface TextContent {
   heading: string;
   content: string;
   show: boolean;
-}
-
-export interface DesignSettings {
-  color?: string;
-  privacy?: TextContent;
-  help?: TextContent;
-  legalDisclaimer?: TextContent;
 }
 
 export interface Flag {

@@ -1,5 +1,13 @@
 import gql from "graphql-tag";
-import { compose, mount, NotFoundError, route, withData, withView } from "navi";
+import {
+  compose,
+  map,
+  mount,
+  NotFoundError,
+  route,
+  withData,
+  withView,
+} from "navi";
 import React, { useContext } from "react";
 import { useNavigation, View } from "react-navi";
 
@@ -65,37 +73,27 @@ const routes = compose(
     "/": route({
       view: <Questions />,
     }),
-    "/privacy": route({
-      view: () => {
-        const navigation = useNavigation();
-        const context = useContext(PreviewContext);
+    "/:page": map((req) => {
+      return route({
+        view: () => {
+          const navigation = useNavigation();
+          const context = useContext(PreviewContext);
 
-        if (!context) throw new NotFoundError();
+          if (
+            !context?.settings?.elements ||
+            !context.settings?.elements[req.params.page]?.show
+          )
+            throw new NotFoundError();
 
-        return (
-          <InformationPage
-            heading={context.settings?.elements?.privacy?.heading}
-            content={context.settings?.elements?.privacy?.content}
-            onClose={() => navigation.goBack()}
-          />
-        );
-      },
-    }),
-    "/help": route({
-      view: () => {
-        const navigation = useNavigation();
-        const context = useContext(PreviewContext);
-
-        if (!context) throw new NotFoundError();
-
-        return (
-          <InformationPage
-            heading={context.settings?.elements?.help?.heading}
-            content={context.settings?.elements?.help?.content}
-            onClose={() => navigation.goBack()}
-          />
-        );
-      },
+          return (
+            <InformationPage
+              heading={context.settings?.elements[req.params.page]?.heading}
+              content={context.settings?.elements[req.params.page]?.content}
+              onClose={() => navigation.goBack()}
+            />
+          );
+        },
+      });
     }),
   })
 );
