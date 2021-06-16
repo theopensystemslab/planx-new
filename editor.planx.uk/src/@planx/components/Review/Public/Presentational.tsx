@@ -4,6 +4,7 @@ import { TYPES } from "@planx/components/types";
 import type { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React from "react";
+import { Layer,Source, StaticMap } from "react-map-gl";
 
 export default Component;
 
@@ -235,31 +236,74 @@ function DateInput(props: ComponentProps) {
 
 function DrawBoundary(props: ComponentProps) {
   const NOT_FOUND: string = "No drawing found";
-
   const { latitude, longitude } = props.passport.data?._address;
 
-  // If a drawing, then encode GeoJSON for Mapbox API, else show a simple message
-  const geojson: string =
+  // If drawing, then data is GeoJSON obj, else show a simple message (eventually file upload details)
+  const data: any =
     props.userData?.data && props.userData?.data["property.boundary.site"]
-      ? encodeURIComponent(
-          JSON.stringify(props.userData?.data["property.boundary.site"])
-        )
+      ? props.userData?.data["property.boundary.site"]
       : NOT_FOUND;
-
-  // Ordnance survey stylesheet (will also need `&addlayer={}` param to accurately display in future, I think)
-  const stylesheet: string = "opensystemslab/ckbuw2xmi0mum1il33qucl4dv";
-
-  // Ref https://docs.mapbox.com/api/maps/static-images/
-  const mapImg: string = `https://api.mapbox.com/styles/v1/${stylesheet}/static/geojson(${geojson})/${longitude},${latitude},17/350x300?logo=false&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`;
 
   return (
     <>
       <div>Site boundary</div>
       <div>
-        {geojson !== NOT_FOUND ? (
-          <img alt="Site boundary drawing" src={mapImg} />
+        {data !== NOT_FOUND ? (
+          <StaticMap
+            longitude={Number(longitude)}
+            latitude={Number(latitude)}
+            zoom={18}
+            height={300}
+            width={400}
+            mapStyle={
+              "mapbox://styles/opensystemslab/ckbuw2xmi0mum1il33qucl4dv"
+            }
+            mapboxApiAccessToken={
+              process.env.REACT_APP_MAPBOX_ACCESS_TOKEN ?? ""
+            }
+          >
+            <Source
+              id="source_id"
+              type="raster"
+              tiles={[
+                `https://api.os.uk/maps/raster/v1/zxy/Road_3857/{z}/{x}/{y}.png?key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`,
+              ]}
+              tileSize={256}
+            >
+              <Layer
+                type="raster"
+                paint={{}}
+                layout={{
+                  visibility: "visible",
+                }}
+              />
+            </Source>
+            <Source id="boundary-geojson" type="geojson" data={data}>
+              <Layer
+                type="fill"
+                paint={{
+                  "fill-color": "rgb(189,189,189)",
+                  "fill-opacity": 0.4,
+                }}
+                layout={{
+                  visibility: "visible",
+                }}
+              />
+              <Layer
+                type="line"
+                paint={{
+                  "line-color": "rgb(255, 0, 0)",
+                  "line-width": 2,
+                  "line-dasharray": [6, 3],
+                }}
+                layout={{
+                  visibility: "visible",
+                }}
+              />
+            </Source>
+          </StaticMap>
         ) : (
-          geojson
+          data
         )}
       </div>
     </>
