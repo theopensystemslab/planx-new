@@ -53,10 +53,11 @@ export default function Footer(props: Props) {
         flexWrap="wrap"
         flexDirection={{ xs: "column", md: "row" }}
       >
-        {items &&
-          items.map(
-            (item, i) => item && item.title && <FooterItem {...item} key={i} />
-          )}
+        {items
+          ?.filter((item) => item.title)
+          .map((item) => (
+            <FooterItem {...item} key={item.title} />
+          ))}
         {feedbackFishId && (
           <FeedbackFish projectId={feedbackFishId}>
             <Typography variant="body2" className={classes.link}>
