@@ -107,6 +107,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function FileUpload(props: any) {
   const [slot, setSlot] = useState<any>();
+  const MAX_UPLOAD_SIZE_MB = 30;
+
   const handleSubmit = () => {
     // url: slot.url,
     // filename: slot.file.path,
@@ -116,7 +118,8 @@ export default function FileUpload(props: any) {
   }, [props.setUrl, slot]);
   const classes = useStyles();
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: ["application/pdf"],
+    accept: ["image/jpeg", "image/png", "application/pdf"],
+    maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
     multiple: false,
     onDrop: ([file]) => {
       // XXX: This is a non-blocking promise chain
@@ -158,7 +161,7 @@ export default function FileUpload(props: any) {
               ? "Drop the files here"
               : "Drop here or click to choose file"}
           </Box>
-          <Box color="text.secondary">pdf</Box>
+          <Box color="text.secondary">pdf, jpg or png</Box>
         </Box>
         <Box color="text.secondary" alignSelf="flex-end">
           max size 30MB
@@ -182,7 +185,11 @@ export default function FileUpload(props: any) {
         width={`${Math.min(Math.ceil(slot.progress * 100), 100)}%`}
       />
       <Box className={classes.filePreview}>
-        <FileIcon />
+        {slot.file.type.includes("image") ? (
+          <ImagePreview file={slot.file} />
+        ) : (
+          <FileIcon />
+        )}
       </Box>
       <Box flexGrow={1}>
         <Box
@@ -199,6 +206,17 @@ export default function FileUpload(props: any) {
       </Box>
     </Box>
   );
+}
+
+function ImagePreview({ file }: any) {
+  const { current: url } = React.useRef(URL.createObjectURL(file));
+  useEffect(() => {
+    return () => {
+      // Cleanup to free up memory
+      URL.revokeObjectURL(url);
+    };
+  }, [url]);
+  return <img src={url} alt="" />;
 }
 
 function formatBytes(a: any, b = 2) {
