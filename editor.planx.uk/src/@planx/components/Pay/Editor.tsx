@@ -1,4 +1,4 @@
-import { GOV_UK_PAY_URL, Pay } from "@planx/components/Pay/model";
+import { Pay } from "@planx/components/Pay/model";
 import { parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
 import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
@@ -61,10 +61,6 @@ function Component(props: any) {
               placeholder="Data field for calculated amount"
               onChange={formik.handleChange}
             />
-          </InputRow>
-          <InputRow>
-            {/* Keep the url in the form temporarily while debugging */}
-            <Input disabled name="url" value={GOV_UK_PAY_URL} />
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
