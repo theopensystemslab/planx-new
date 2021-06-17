@@ -291,11 +291,9 @@ app.post("/bops/:localAuthority", (req, res) => {
   })(req, res);
 });
 
-app.use("/pay/:localAuthority", (req, res) => {
+app.post("/pay/:localAuthority", (req, res) => {
   useProxy({
-    pathRewrite: {
-      "^/pay": "",
-    },
+    pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
     target: "https://publicapi.payments.service.gov.uk/v1/payments",
     onProxyReq: fixRequestBody,
     headers: {
