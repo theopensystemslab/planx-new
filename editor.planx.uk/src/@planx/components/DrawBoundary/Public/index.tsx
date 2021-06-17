@@ -100,21 +100,19 @@ export default function Component(props: Props) {
 
   function handleSubmit() {
     const data = (() => {
-      const ob: Store.userData["data"] = {};
-
       // we haven't added dataFieldUrl in the editor yet
       const propsDataFieldUrl = DEFAULT_PASSPORT_UPLOAD_KEY;
 
-      if (boundary && props.dataFieldBoundary) {
-        // if boundary has been drawn
-        ob[props.dataFieldBoundary] = boundary;
-        if (props.dataFieldArea) {
-          ob[props.dataFieldArea] = area;
-        }
-      } else if (url && propsDataFieldUrl) {
-        // or if a file has been uploaded
-        ob[propsDataFieldUrl] = url;
-      }
+      // set userData depending if user draws boundary or uploads file
+      const ob: Store.userData["data"] = {
+        [props.dataFieldBoundary]:
+          boundary && props.dataFieldBoundary ? boundary : undefined,
+        [props.dataFieldArea]:
+          boundary && props.dataFieldBoundary && props.dataFieldArea
+            ? area
+            : undefined,
+        [propsDataFieldUrl]: url && propsDataFieldUrl ? url : undefined,
+      };
 
       return Object.keys(ob).length > 0 ? ob : undefined;
     })();

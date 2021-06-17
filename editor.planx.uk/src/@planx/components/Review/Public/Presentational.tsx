@@ -237,23 +237,19 @@ function DateInput(props: ComponentProps) {
 function DrawBoundary(props: ComponentProps) {
   const { latitude, longitude } = props.passport.data?._address;
 
-  let data = "";
-  if (props.userData?.data && props.userData?.data["property.boundary.site"]) {
-    // If drawing, then data is a GeoJSON obj
-    data = props.userData?.data["property.boundary.site"];
-  } else if (
-    props.userData?.data &&
-    props.userData?.data["property.boundary.file"]
-  ) {
-    // If file upload, then data is a URL string
-    data = props.userData?.data["property.boundary.file"];
-  }
+  // check if we should show a boundary drawing or an uploaded file
+  const data =
+    props.userData?.data && props.userData?.data["property.boundary.site"]
+      ? props.userData?.data["property.boundary.site"]
+      : props.userData?.data && props.userData?.data["property.boundary.file"]
+      ? props.userData?.data["property.boundary.file"]
+      : undefined;
 
   return (
     <>
       <div>Site boundary</div>
       <div>
-        {typeof data !== "string" ? (
+        {data && typeof data !== "string" ? (
           <StaticMap
             longitude={Number(longitude)}
             latitude={Number(latitude)}
