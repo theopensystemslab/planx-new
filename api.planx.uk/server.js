@@ -227,15 +227,13 @@ if (!process.env.BOPS_API_TOKEN) {
 app.post("/bops/:localAuthority", (req, res) => {
   const target = `https://${req.params.localAuthority}.bops.services/api/v1/planning_applications`;
 
-  createProxyMiddleware({
+  useProxy({
     headers: {
       ...req.headers,
       Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
     },
     pathRewrite: (path) => path.replace(/^\/bops.*$/, ""),
     target,
-    changeOrigin: true,
-    logLevel: "debug",
     selfHandleResponse: true,
     onProxyReq: fixRequestBody,
     onProxyRes: responseInterceptor(
@@ -289,13 +287,11 @@ app.post("/bops/:localAuthority", (req, res) => {
 });
 
 app.use("/pay", (req, res) => {
-  createProxyMiddleware({
+  useProxy({
     pathRewrite: {
       "^/pay": "",
     },
     target: "https://publicapi.payments.service.gov.uk/v1/payments",
-    changeOrigin: true,
-    logLevel: "debug",
     onProxyReq: fixRequestBody,
     headers: {
       ...req.headers,
@@ -306,13 +302,11 @@ app.use("/pay", (req, res) => {
 
 app.use(
   "/notify/*",
-  createProxyMiddleware({
+  useProxy({
     pathRewrite: {
       "^/notify": "",
     },
     target: "https://api.notifications.service.gov.uk",
-    changeOrigin: true,
-    logLevel: "debug",
   })
 );
 
@@ -391,5 +385,13 @@ app.post("/sign-s3-upload", async (req, res) => {
 });
 
 const server = new Server(app);
+
+function useProxy(options = {}) {
+  return createProxyMiddleware({
+    changeOrigin: true,
+    logLevel: "debug",
+    ...options,
+  });
+}
 
 module.exports = server;
