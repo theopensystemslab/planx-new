@@ -294,7 +294,8 @@ app.post("/bops/:localAuthority", (req, res) => {
 // used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
 // returns the url to make a gov uk payment
 app.post("/pay/:localAuthority", (req, res) => {
-  // strip req.params.localAuthority from the path when redirecting
+  // drop req.params.localAuthority from the path when redirecting
+  // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
   usePayProxy(
     {
       pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
@@ -304,13 +305,12 @@ app.post("/pay/:localAuthority", (req, res) => {
 });
 
 // used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
-app.get("/pay/:id?", (req, res) => {
-  // keep anything after /pay in the path when redirecting
+// fetches the status of the payment
+app.get("/pay/:localAuthority/:paymentId", (req, res) => {
+  // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
   usePayProxy(
     {
-      pathRewrite: {
-        "^/pay": "",
-      },
+      pathRewrite: () => `/${req.params.paymentId}`,
     },
     req
   )(req, res);

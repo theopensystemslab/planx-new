@@ -49,6 +49,12 @@ function Component(props: Props) {
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
+  // We pay a specific localAuthority by fetching its slug from the URL
+  // e.g. https://editor.planx.uk/southwark/flow/preview
+  // localAuthoritySlug = 'southwark'
+  const localAuthoritySlug = window.location.pathname.match(/\/([^/]+)/)?.[1];
+  const govUkPayUrlForLocalAuthority = `${GOV_UK_PAY_URL}/${localAuthoritySlug}`;
+
   // Handles UI states
   const reducer = (state: ComponentState, action: Action): ComponentState => {
     switch (action) {
@@ -119,7 +125,7 @@ function Component(props: Props) {
 
   const refetchPayment = async (id: string) => {
     await axios
-      .get(`${GOV_UK_PAY_URL}/${id}`)
+      .get(`${govUkPayUrlForLocalAuthority}/${id}`)
       .then((res) => {
         const payment = updatePayment(res.data);
 
@@ -176,13 +182,8 @@ function Component(props: Props) {
       return;
     }
 
-    // We pay a specific localAuthority by fetching its slug from the URL
-    // e.g. https://editor.planx.uk/southwark/flow/preview
-    // localAuthoritySlug = 'southwark'
-    const localAuthoritySlug = window.location.pathname.match(/\/([^/]+)/)?.[1];
-
     await axios
-      .post(`${GOV_UK_PAY_URL}/${localAuthoritySlug}`, createPayload(fee, id))
+      .post(govUkPayUrlForLocalAuthority, createPayload(fee, id))
       .then((res) => {
         const payment = updatePayment(res.data);
 
