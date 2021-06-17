@@ -1,6 +1,5 @@
 import "./app.css";
 
-import { Notifier } from "@airbrake/browser";
 import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -11,24 +10,12 @@ import { render } from "react-dom";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
 import HelmetProvider from "react-navi-helmet-async";
 
+import { airbrake } from "./airbrake";
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import GitHelper from "./components/GitHelper";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import theme from "./theme";
-
-// forward all JS errors to airbrake.io
-if (
-  process.env.NODE_ENV !== "test" &&
-  process.env.REACT_APP_AIRBRAKE_PROJECT_ID &&
-  process.env.REACT_APP_AIRBRAKE_PROJECT_KEY
-) {
-  new Notifier({
-    projectId: Number(process.env.REACT_APP_AIRBRAKE_PROJECT_ID),
-    projectKey: process.env.REACT_APP_AIRBRAKE_PROJECT_KEY,
-    environment: 'production',
-  });
-}
 
 const rootEl = document.getElementById("root") as HTMLElement;
 
