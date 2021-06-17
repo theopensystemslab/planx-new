@@ -4,6 +4,7 @@ const cookieSession = require("cookie-session");
 const cors = require("cors");
 const express = require("express");
 const jwt = require("express-jwt");
+const noir = require("pino-noir");
 const { URL } = require("url");
 const { GraphQLClient } = require("graphql-request");
 const { Server } = require("http");
@@ -209,26 +210,35 @@ app.use(
   })
 );
 
+app.use(
+  require("express-pino-logger")({
+    serializers: noir(["req.headers.authorization"], "**REDACTED**"),
+  })
+);
+
 if (!process.env.BOPS_API_TOKEN) {
   console.error("Missing BOPS_API_TOKEN");
   process.exit(1);
-} else if (!process.env.GOV_UK_PAY_TOKEN) {
-  console.error("Missing GOV_UK_PAY_TOKEN");
-  process.exit(1);
+} else {
+  ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
+    const govPayTokenKey = `GOV_UK_PAY_TOKEN_${authority}`;
+    if (!process.env[govPayTokenKey]) {
+      console.error(`Missing ${govPayTokenKey}`);
+      process.exit(1);
+    }
+  });
 }
 
 app.post("/bops/:localAuthority", (req, res) => {
   const target = `https://${req.params.localAuthority}.bops.services/api/v1/planning_applications`;
 
-  createProxyMiddleware({
+  useProxy({
     headers: {
       ...req.headers,
       Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
     },
     pathRewrite: (path) => path.replace(/^\/bops.*$/, ""),
     target,
-    changeOrigin: true,
-    logLevel: "debug",
     selfHandleResponse: true,
     onProxyReq: fixRequestBody,
     onProxyRes: responseInterceptor(
@@ -281,31 +291,38 @@ app.post("/bops/:localAuthority", (req, res) => {
   })(req, res);
 });
 
-app.use("/pay", (req, res) => {
-  createProxyMiddleware({
-    pathRewrite: {
-      "^/pay": "",
+// used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
+// returns the url to make a gov uk payment
+app.post("/pay/:localAuthority", (req, res) => {
+  // drop req.params.localAuthority from the path when redirecting
+  // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
+  usePayProxy(
+    {
+      pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
     },
-    target: "https://publicapi.payments.service.gov.uk/v1/payments",
-    changeOrigin: true,
-    logLevel: "debug",
-    onProxyReq: fixRequestBody,
-    headers: {
-      ...req.headers,
-      Authorization: `Bearer ${process.env.GOV_UK_PAY_TOKEN}`,
+    req
+  )(req, res);
+});
+
+// used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
+// fetches the status of the payment
+app.get("/pay/:localAuthority/:paymentId", (req, res) => {
+  // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
+  usePayProxy(
+    {
+      pathRewrite: () => `/${req.params.paymentId}`,
     },
-  })(req, res);
+    req
+  )(req, res);
 });
 
 app.use(
   "/notify/*",
-  createProxyMiddleware({
+  useProxy({
     pathRewrite: {
       "^/notify": "",
     },
     target: "https://api.notifications.service.gov.uk",
-    changeOrigin: true,
-    logLevel: "debug",
   })
 );
 
@@ -384,5 +401,29 @@ app.post("/sign-s3-upload", async (req, res) => {
 });
 
 const server = new Server(app);
+
+function useProxy(options = {}) {
+  return createProxyMiddleware({
+    changeOrigin: true,
+    logLevel: "debug",
+    ...options,
+  });
+}
+
+function usePayProxy(options, req) {
+  return useProxy({
+    target: "https://publicapi.payments.service.gov.uk/v1/payments",
+    onProxyReq: fixRequestBody,
+    headers: {
+      ...req.headers,
+      Authorization: `Bearer ${
+        process.env[
+          `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
+        ]
+      }`,
+    },
+    ...options,
+  });
+}
 
 module.exports = server;
