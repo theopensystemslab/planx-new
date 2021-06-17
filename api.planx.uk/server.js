@@ -294,20 +294,26 @@ app.post("/bops/:localAuthority", (req, res) => {
 // used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
 // returns the url to make a gov uk payment
 app.post("/pay/:localAuthority", (req, res) => {
-  // strip the localAuthority from the path when redirecting
-  usePayProxy({
-    pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
-  })(req, res);
+  // strip req.params.localAuthority from the path when redirecting
+  usePayProxy(
+    {
+      pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
+    },
+    req
+  )(req, res);
 });
 
 // used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
-app.get("/pay", (req, res) => {
+app.get("/pay/:id?", (req, res) => {
   // keep anything after /pay in the path when redirecting
-  usePayProxy({
-    pathRewrite: {
-      "^/pay": "",
+  usePayProxy(
+    {
+      pathRewrite: {
+        "^/pay": "",
+      },
     },
-  })(req, res);
+    req
+  )(req, res);
 });
 
 app.use(
@@ -404,7 +410,7 @@ function useProxy(options = {}) {
   });
 }
 
-function usePayProxy(options = {}) {
+function usePayProxy(options, req) {
   return useProxy({
     target: "https://publicapi.payments.service.gov.uk/v1/payments",
     onProxyReq: fixRequestBody,
