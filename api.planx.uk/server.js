@@ -219,9 +219,14 @@ app.use(
 if (!process.env.BOPS_API_TOKEN) {
   console.error("Missing BOPS_API_TOKEN");
   process.exit(1);
-} else if (!process.env.GOV_UK_PAY_TOKEN) {
-  console.error("Missing GOV_UK_PAY_TOKEN");
-  process.exit(1);
+} else {
+  ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
+    const govPayTokenKey = `GOV_UK_PAY_TOKEN_${authority}`;
+    if (!process.env[govPayTokenKey]) {
+      console.error(`Missing ${govPayTokenKey}`);
+      process.exit(1);
+    }
+  });
 }
 
 app.post("/bops/:localAuthority", (req, res) => {
@@ -286,7 +291,7 @@ app.post("/bops/:localAuthority", (req, res) => {
   })(req, res);
 });
 
-app.use("/pay", (req, res) => {
+app.use("/pay/:localAuthority", (req, res) => {
   useProxy({
     pathRewrite: {
       "^/pay": "",
@@ -295,7 +300,11 @@ app.use("/pay", (req, res) => {
     onProxyReq: fixRequestBody,
     headers: {
       ...req.headers,
-      Authorization: `Bearer ${process.env.GOV_UK_PAY_TOKEN}`,
+      Authorization: `Bearer ${
+        process.env[
+          `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
+        ]
+      }`,
     },
   })(req, res);
 });
