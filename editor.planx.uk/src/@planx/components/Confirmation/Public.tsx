@@ -1,4 +1,5 @@
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Check from "@material-ui/icons/CheckCircleOutlineOutlined";
@@ -77,7 +78,7 @@ export default function ConfirmationComponent(props: Props) {
           </Box>
         )}
       </Banner>
-      <Card handleSubmit={showButton ? formik.handleSubmit : undefined} isValid>
+      <Card>
         {props.details && (
           <table className={classes.table}>
             <tbody>
@@ -135,6 +136,23 @@ export default function ConfirmationComponent(props: Props) {
               {props.feedbackCTA}
             </Typography>
           </CollapsibleInput>
+        )}
+
+        {formik.values.feedback.length > 0 && (
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            type="submit"
+            onClick={() => {
+              submitFeedback(formik.values.feedback, {
+                reason: "Confirmation",
+              });
+              formik.resetForm();
+            }}
+          >
+            Submit feedback
+          </Button>
         )}
       </Card>
     </Box>
