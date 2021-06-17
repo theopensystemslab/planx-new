@@ -4,6 +4,7 @@ const cookieSession = require("cookie-session");
 const cors = require("cors");
 const express = require("express");
 const jwt = require("express-jwt");
+const noir = require("pino-noir");
 const { URL } = require("url");
 const { GraphQLClient } = require("graphql-request");
 const { Server } = require("http");
@@ -206,6 +207,12 @@ app.use(
   json({
     extended: true,
     limit: "100mb",
+  })
+);
+
+app.use(
+  require("express-pino-logger")({
+    serializers: noir(["req.headers.authorization"], "**REDACTED**"),
   })
 );
 
