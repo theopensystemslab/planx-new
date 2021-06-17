@@ -247,15 +247,15 @@ export const previewStore = (
             $session_id: uuid
             $parent_node_id: String
           ) {
-            insert_session_events_one(
-              object: {
+            insert_session_events(
+              objects: {
                 chosen_node_ids: $chosen_node_ids
                 session_id: $session_id
                 type: $type
                 parent_node_id: $parent_node_id
               }
             ) {
-              id
+              affected_rows
             }
           }
         `,

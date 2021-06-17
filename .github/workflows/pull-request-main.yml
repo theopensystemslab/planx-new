@@ -42,7 +42,7 @@ jobs:
             ${{ runner.os }}-
       - run: npm install -g pnpm
         working-directory: editor.planx.uk
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
         working-directory: editor.planx.uk
       - run: pnpm test
         working-directory: editor.planx.uk
@@ -107,7 +107,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
       - run: npm install -g pnpm
         working-directory: infrastructure/application
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
         working-directory: infrastructure/application
       - name: Download Build Artifact
         uses: actions/download-artifact@v2
@@ -119,5 +119,6 @@ jobs:
           command: preview
           stack-name: staging
           work-dir: infrastructure/application
+          edit-pr-comment: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}

@@ -1,12 +1,13 @@
 import ReconnectingWebSocket from "reconnecting-websocket";
 import type { Doc } from "sharedb";
 import sharedb from "sharedb/lib/client";
+import type { Socket } from "sharedb/lib/sharedb";
 
 const socket = new ReconnectingWebSocket(
   process.env.REACT_APP_SHAREDB_URL || ""
 );
 
-const connection = new sharedb.Connection((socket as unknown) as WebSocket);
+const connection = new sharedb.Connection((socket as unknown) as Socket);
 
 export const getConnection = (id: string) => connection.get("flows", id);
 

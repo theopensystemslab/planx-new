@@ -104,12 +104,9 @@
       check: {}
       columns:
       - chosen_node_ids
-      - created_at
-      - id
       - parent_node_id
       - session_id
       - type
-      - updated_at
       backend_only: false
 - table:
     schema: public
