@@ -1,20 +1,12 @@
 "use strict";
 
-import * as assert from "assert";
-import * as path from "path";
-import * as mime from "mime";
-import * as fs from "fs";
-
-import * as pulumi from "@pulumi/pulumi";
+import * as fsWalk from "@nodelib/fs.walk";
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
-import * as docker from "@pulumi/docker";
 import * as cloudflare from "@pulumi/cloudflare";
-
-import * as fsWalk from "@nodelib/fs.walk";
+import * as pulumi from "@pulumi/pulumi";
+import * as mime from "mime";
 import * as tldjs from "tldjs";
-
-import { Input } from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
 
@@ -217,10 +209,6 @@ new pulumi.Config("cloudflare").require("apiToken");
           },
           { name: "SESSION_SECRET", value: config.require("session-secret") },
           { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
-          {
-            name: "GOV_UK_PAY_TOKEN",
-            value: config.require("gov-uk-pay-token"),
-          },
           { name: "BOPS_API_TOKEN", value: config.require("bops-api-token") },
           { name: "JWT_SECRET", value: config.require("jwt-secret") },
           { name: "PORT", value: String(API_PORT) },
@@ -232,6 +220,12 @@ new pulumi.Config("cloudflare").require("apiToken");
             name: "HASURA_GRAPHQL_URL",
             value: pulumi.interpolate`https://hasura.${DOMAIN}/v1/graphql`,
           },
+          ...["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].map((authority) => ({
+            name: `GOV_UK_PAY_TOKEN_${authority}`,
+            value: config.require(
+              `gov-uk-pay-token-${authority}`.toLowerCase()
+            ),
+          })),
         ],
       },
     },

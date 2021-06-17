@@ -5,8 +5,12 @@ config:
   application:google-client-id: 987324067365-anl1o207sphdeu28i6nk2e6brec8fh4b.apps.googleusercontent.com
   application:google-client-secret:
     secure: AAABALntYyY84++A0XpyAVtDxhiCeAMv/vN1A1VxGZ2beTzyAqHeEicfpvKwCOQisgQ0wnBLomQ=
-  application:gov-uk-pay-token:
-    secure: AAABAOnXyfBSqE/rN/LywavfjYEMAk6oGOVk4pypRmRyWgfWZ0n32Mbu8bxKzKj9/QqnAToPqTTu7MBgoJHmpuYgXbSu3RXdgKClIKLdvZT21Kohzx8wsEp8fkp9gkZoBN7d
+  application:gov-uk-pay-token-buckinghamshire:
+    secure: AAABAA0ya8JhmFcgwuuf5i+XiJZ/uDp4SEGplUiiojyZzDtbjlZZfd8tNw8PjqKHzMBIhgyB2gHSsx9D/FV+cxxBa1AfIFtcj/l3rIrkK9jeG+yXtHnsLKr7MsZUqi6SdFft
+  application:gov-uk-pay-token-lambeth:
+    secure: AAABAK7qJXCA9mN96DeDWHqRDY7xe5glU9NZ2oTWVxYHR0NhkA83JOnI6dhknhUh8m7IMyy59lFIzeFCG3gOoWvkoTeQNiok7T91ek2f8UQqSSzgfUzgftbRm2sCkS5Yn0bW
+  application:gov-uk-pay-token-southwark:
+    secure: AAABAEosPvNevt9G7xLgTJIgyPDe9ZmXZnQa2BIsk7glewLz+EFzCvMVFq+9RkiEzkg9GdV2S7ttZ+6fCb5gByNbM7n2JcVG6a+LH9nHv6NwcoZ6U8ORArwiL4uO8xvGQQzD
   application:hasura-admin-secret:
     secure: AAABAEtfaS9JI9yVKU3VM4YWI2Lzd2rEYdwlGt6QtDyJEWr1gYXLdxniq+cIJCKLMI7z9O36pA7JBLGpdEFsxQ==
   application:jwt-secret:
