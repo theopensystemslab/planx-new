@@ -1,7 +1,10 @@
 import React from "react";
 
+import { airbrake } from "../airbrake";
+
 function ErrorFallback(props: { error: Error }) {
   console.error(props.error);
+  airbrake.notify(props.error);
 
   return (
     <div role="alert">
