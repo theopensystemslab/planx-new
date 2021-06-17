@@ -291,18 +291,21 @@ app.post("/bops/:localAuthority", (req, res) => {
   })(req, res);
 });
 
+// used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
+// returns the url to make a gov uk payment
 app.post("/pay/:localAuthority", (req, res) => {
-  useProxy({
+  // strip the localAuthority from the path when redirecting
+  usePayProxy({
     pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
-    target: "https://publicapi.payments.service.gov.uk/v1/payments",
-    onProxyReq: fixRequestBody,
-    headers: {
-      ...req.headers,
-      Authorization: `Bearer ${
-        process.env[
-          `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
-        ]
-      }`,
+  })(req, res);
+});
+
+// used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
+app.get("/pay", (req, res) => {
+  // keep anything after /pay in the path when redirecting
+  usePayProxy({
+    pathRewrite: {
+      "^/pay": "",
     },
   })(req, res);
 });
@@ -397,6 +400,22 @@ function useProxy(options = {}) {
   return createProxyMiddleware({
     changeOrigin: true,
     logLevel: "debug",
+    ...options,
+  });
+}
+
+function usePayProxy(options = {}) {
+  return useProxy({
+    target: "https://publicapi.payments.service.gov.uk/v1/payments",
+    onProxyReq: fixRequestBody,
+    headers: {
+      ...req.headers,
+      Authorization: `Bearer ${
+        process.env[
+          `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
+        ]
+      }`,
+    },
     ...options,
   });
 }
