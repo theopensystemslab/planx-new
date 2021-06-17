@@ -10,7 +10,6 @@ import { createPayload, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
 import Confirm from "./Confirm";
 
 export default Component;
-
 interface Props extends Pay {
   handleSubmit: handleSubmit;
   fn?: string;
@@ -120,7 +119,7 @@ function Component(props: Props) {
 
   const refetchPayment = async (id: string) => {
     await axios
-      .get(GOV_UK_PAY_URL + `/${id}`)
+      .get(`${GOV_UK_PAY_URL}/${id}`)
       .then((res) => {
         const payment = updatePayment(res.data);
 
@@ -177,8 +176,13 @@ function Component(props: Props) {
       return;
     }
 
+    // We pay a specific localAuthority by fetching its slug from the URL
+    // e.g. https://editor.planx.uk/southwark/flow/preview
+    // localAuthoritySlug = 'southwark'
+    const localAuthoritySlug = window.location.pathname.match(/\/([^/]+)/)?.[1];
+
     await axios
-      .post(GOV_UK_PAY_URL, createPayload(fee, id))
+      .post(`${GOV_UK_PAY_URL}/${localAuthoritySlug}`, createPayload(fee, id))
       .then((res) => {
         const payment = updatePayment(res.data);
 
