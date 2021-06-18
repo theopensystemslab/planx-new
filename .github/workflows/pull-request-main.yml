@@ -50,7 +50,7 @@ jobs:
         run: echo "SHORT_BRANCH_NAME=${GITHUB_HEAD_REF#refs/heads/}" >> $GITHUB_ENV
       - name: Write github ENV info to public/github.json
         working-directory: editor.planx.uk
-        run: echo "{ \"branch\": \"$GIT_BRANCH\", \"pullRequestUrl\": \"$PULL_REQUEST\" }" >> public/github.json
+        run: 'echo "{ \"branch\": \"$GIT_BRANCH\", \"pullRequestUrl\": \"$PULL_REQUEST\" }" >> public/github.json'
         env:
           GIT_BRANCH: ${{ env.SHORT_BRANCH_NAME }}
           PULL_REQUEST: https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
