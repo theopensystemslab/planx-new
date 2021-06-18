@@ -364,6 +364,12 @@ export function PropertyInformation(props: any) {
 
 function PropertyConstraints({ constraintsData }: any) {
   const { title, constraints } = constraintsData;
+
+  // Order constraints so that { value: true } ones come first
+  constraints.sort(function (a: any, b: any) {
+    return b.value - a.value;
+  });
+
   const visibleConstraints = constraints
     .filter((x: any, i: number) => i < 3)
     .map((con: any) => (
