@@ -3,7 +3,6 @@ import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import ErrorFallback from "../../components/ErrorFallback";
-import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
 import Node, { handleSubmit } from "./Node";
@@ -61,16 +60,16 @@ const Questions = () => {
   }, [breadcrumbs, passport, sessionId, id, govUkPayment]);
 
   const handleSubmit = (id: string): handleSubmit => (userData) => {
-    const { answers = [], data } = (() => {
+    const { data, answers = [], auto = false } = (() => {
       try {
-        const { answers = [], data } = userData as any;
-        return { answers: answers.filter(Boolean), data };
+        const { answers = [], data, auto } = userData as any;
+        return { answers: answers.filter(Boolean), data, auto };
       } catch (err) {
         return {};
       }
     })();
 
-    record(id, { answers, data });
+    record(id, { answers, data, auto });
   };
 
   return (

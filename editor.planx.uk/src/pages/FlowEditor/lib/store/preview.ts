@@ -27,10 +27,7 @@ export interface PreviewStore extends Store.Store {
   hasPaid: () => boolean;
   computePassport: () => Readonly<Store.passport>;
   previousCard: () => Store.nodeId | undefined;
-  record: (
-    id: Store.nodeId,
-    userData?: Pick<Store.userData, "answers" | "data">
-  ) => void;
+  record: (id: Store.nodeId, userData?: Store.userData) => void;
   resultData: (
     flagSet?: string,
     overrides?: { [flagId: string]: { heading?: string; description?: string } }
@@ -199,9 +196,9 @@ export const previewStore = (
 
     if (userData) {
       // add breadcrumb
-      const { answers = [], data = {} } = userData;
+      const { answers = [], data = {}, auto = false } = userData;
 
-      const breadcrumb: Store.userData = { auto: false };
+      const breadcrumb: Store.userData = { auto: Boolean(auto) };
       if (answers?.length > 0) breadcrumb.answers = answers;
       if (Object.keys(data).length > 0) breadcrumb.data = data;
       set({

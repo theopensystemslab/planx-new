@@ -26,9 +26,7 @@ import type { FlowSettings, GovUKPayment } from "types";
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
 
-export type handleSubmit = (
-  userData?: Pick<Store.userData, "answers" | "data"> | Event
-) => void;
+export type handleSubmit = (userData?: Store.userData | Event) => void;
 
 interface Props {
   handleSubmit: handleSubmit;
