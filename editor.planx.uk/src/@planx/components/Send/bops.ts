@@ -8,7 +8,7 @@ import { flatFlags } from "pages/FlowEditor/data/flags";
 import { GovUKPayment } from "types";
 
 import { Store } from "../../../pages/FlowEditor/lib/store";
-import { GOV_PAY_PASSPORT_KEY } from "../Pay/model";
+import { GOV_PAY_PASSPORT_KEY, toPence } from "../Pay/model";
 import { TYPES } from "../types";
 
 interface BOPSMinimumPayload {
@@ -283,7 +283,7 @@ export function getParams(
 
   const payment = passport?.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
   if (payment) {
-    data.payment_amount = payment.amount;
+    data.payment_amount = toPence(payment.amount);
     data.payment_reference = payment.payment_id;
   }
 
