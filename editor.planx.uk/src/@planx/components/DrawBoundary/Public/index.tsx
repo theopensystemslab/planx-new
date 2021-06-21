@@ -58,6 +58,10 @@ export default function Component(props: Props) {
           <QuestionHeader
             title={props.title ?? DEFAULT_TITLE}
             description={props.description}
+            info={props.info}
+            policyRef={props.policyRef}
+            howMeasured={props.howMeasured}
+            definitionImg={props.definitionImg}
           />
           <Box className={classes.map}>
             <Map
@@ -82,6 +86,10 @@ export default function Component(props: Props) {
           <QuestionHeader
             title={props.titleForUploading ?? DEFAULT_TITLE_FOR_UPLOADING}
             description={props.descriptionForUploading}
+            info={props.info}
+            policyRef={props.policyRef}
+            howMeasured={props.howMeasured}
+            definitionImg={props.definitionImg}
           />
           <Upload setUrl={setUrl} />
           <p className={classes.uploadInstead}>
