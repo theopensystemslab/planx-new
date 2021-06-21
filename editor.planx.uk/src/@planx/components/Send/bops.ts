@@ -5,6 +5,8 @@
 // https://southwark.preview.bops.services/api-docs/index.html
 
 import { flatFlags } from "pages/FlowEditor/data/flags";
+import { GovUKPayment } from "types";
+
 import { Store } from "../../../pages/FlowEditor/lib/store";
 import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY } from "../Pay/model";
@@ -24,7 +26,7 @@ interface BOPSMinimumPayload {
 export interface BOPSFullPayload extends BOPSMinimumPayload {
   description?: string;
   payment_reference?: string;
-  payment_amount?: unknown;
+  payment_amount?: number;
   session_id?: string;
   ward?: string;
   work_status?: "proposed" | "existing";
@@ -91,9 +93,6 @@ export const bopsDictionary = {
   agent_last_name: "applicant.agent.name.last",
   agent_phone: "applicant.agent.phone.primary",
   agent_email: "applicant.agent.email",
-
-  payment_amount: "application.fee.payable",
-  payment_reference: GOV_PAY_PASSPORT_KEY,
 
   description: "proposal.description",
 };
@@ -290,12 +289,17 @@ export function getParams(
 
   data.proposal_details = makePayload(flow, breadcrumbs);
 
-  const paymentReference = passport?.data?.[GOV_PAY_PASSPORT_KEY]?.payment_id;
+  // 7. payment
+
+  const payment = passport?.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
+  if (payment) {
+    data.payment_amount = payment.amount;
+    data.payment_reference = payment.payment_id;
+  }
 
   return {
     ...data,
     ...bopsData,
-    ...(paymentReference ? { payment_reference: paymentReference } : {}),
     ...(sessionId ? { session_id: sessionId } : {}),
   };
 }
