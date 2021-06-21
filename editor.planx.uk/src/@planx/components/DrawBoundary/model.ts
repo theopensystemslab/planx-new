@@ -7,6 +7,10 @@ export interface DrawBoundary extends MoreInformation {
   descriptionForUploading: string;
   dataFieldBoundary: string;
   dataFieldArea: string;
+  info?: string;
+  policyRef?: string;
+  howMeasured?: string;
+  definitionImg?: string;
 }
 
 export const parseDrawBoundary = (
