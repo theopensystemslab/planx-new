@@ -1,7 +1,5 @@
 import { useFormik } from "formik";
 import React from "react";
-import Input from "ui/Input";
-import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 
@@ -20,24 +18,12 @@ const ContentComponent: React.FC<Props> = (props) => {
         props.handleSubmit({ type: TYPES.Send, data: newValues });
       }
     },
-    validate: () => {},
   });
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Send" Icon={ICONS[TYPES.Send]}>
-          <InputRow>
-            <Input
-              required
-              type="url"
-              placeholder="url"
-              name="url"
-              value={formik.values.url}
-              onChange={formik.handleChange}
-            />
-          </InputRow>
-        </ModalSectionContent>
+        <ModalSectionContent title="Send" Icon={ICONS[TYPES.Send]} />
       </ModalSection>
     </form>
   );
