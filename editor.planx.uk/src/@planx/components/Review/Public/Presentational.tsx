@@ -304,7 +304,9 @@ function DrawBoundary(props: ComponentProps) {
             </Source>
           </StaticMap>
         ) : (
-          <a href={data}>Your uploaded location plan</a>
+          <a target="_blank" href={data}>
+            Your uploaded location plan
+          </a>
         )}
       </div>
     </>
