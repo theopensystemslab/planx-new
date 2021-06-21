@@ -12,7 +12,7 @@ import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import type { FlowSettings } from "../../types";
+import { FlowSettings,FOOTER_ITEMS } from "../../types";
 
 const PreviewLayout: React.FC<{
   children?: any;
@@ -42,7 +42,7 @@ const PreviewLayout: React.FC<{
     }
   };
 
-  const settingsLinks = (["help", "privacy"] as const).map((key) => {
+  const footerItems = FOOTER_ITEMS.map((key) => {
     const setting = settings?.elements && settings?.elements[key];
 
     if (setting?.show) {
@@ -52,20 +52,9 @@ const PreviewLayout: React.FC<{
         bold: key === "help",
       };
     }
-  });
-
-  const footerItems = [
-    ...settingsLinks,
-    {
-      title: "Accessibility",
-    },
-    {
-      title: "Terms of use",
-    },
-    {
-      title: "Cookies",
-    },
-  ].flatMap((x) => (x ? [x] : []));
+  }).filter((item): item is { title: string; href: string; bold: boolean } =>
+    Boolean(item)
+  );
 
   const generatePreviewTheme = (baseTheme: Theme) =>
     theme.primary

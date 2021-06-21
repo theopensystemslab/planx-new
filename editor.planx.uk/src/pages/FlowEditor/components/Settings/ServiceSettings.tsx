@@ -59,20 +59,35 @@ const ServiceSettings: React.FC<Props> = (props) => {
   const formik = useFormik<FlowSettings>({
     initialValues: {
       elements: {
-        privacy: {
-          heading: props.settings?.elements?.privacy?.heading ?? "",
-          content: props.settings?.elements?.privacy?.content ?? "",
-          show: props.settings?.elements?.privacy?.show ?? false,
+        legalDisclaimer: {
+          heading: props.settings?.elements?.legalDisclaimer?.heading ?? "",
+          content: props.settings?.elements?.legalDisclaimer?.content ?? "",
+          show: props.settings?.elements?.legalDisclaimer?.show ?? false,
         },
         help: {
           heading: props.settings?.elements?.help?.heading ?? "",
           content: props.settings?.elements?.help?.content ?? "",
           show: props.settings?.elements?.help?.show ?? false,
         },
-        legalDisclaimer: {
-          heading: props.settings?.elements?.legalDisclaimer?.heading ?? "",
-          content: props.settings?.elements?.legalDisclaimer?.content ?? "",
-          show: props.settings?.elements?.legalDisclaimer?.show ?? false,
+        privacy: {
+          heading: props.settings?.elements?.privacy?.heading ?? "",
+          content: props.settings?.elements?.privacy?.content ?? "",
+          show: props.settings?.elements?.privacy?.show ?? false,
+        },
+        accessibility: {
+          heading: props.settings?.elements?.accessibility?.heading ?? "",
+          content: props.settings?.elements?.accessibility?.content ?? "",
+          show: props.settings?.elements?.accessibility?.show ?? false,
+        },
+        termsOfUse: {
+          heading: props.settings?.elements?.termsOfUse?.heading ?? "",
+          content: props.settings?.elements?.termsOfUse?.content ?? "",
+          show: props.settings?.elements?.termsOfUse?.show ?? false,
+        },
+        cookies: {
+          heading: props.settings?.elements?.cookies?.heading ?? "",
+          content: props.settings?.elements?.cookies?.content ?? "",
+          show: props.settings?.elements?.cookies?.show ?? false,
         },
       },
     },
@@ -92,7 +107,31 @@ const ServiceSettings: React.FC<Props> = (props) => {
           Manage the features that users will be able to see
         </Typography>
       </Box>
+      <Box borderBottom={1} pb={3}>
+        <TextInput
+          title="Legal Disclaimer"
+          description="Displayed before a user submits their application"
+          switchProps={{
+            name: "elements.legalDisclaimer.show",
+            checked: formik.values.elements?.legalDisclaimer?.show,
+            onChange: formik.handleChange,
+          }}
+          headingInputProps={{
+            name: "elements.legalDisclaimer.heading",
+            value: formik.values.elements?.legalDisclaimer?.heading,
+            onChange: formik.handleChange,
+          }}
+          contentInputProps={{
+            name: "elements.legalDisclaimer.content",
+            value: formik.values.elements?.legalDisclaimer?.content,
+            onChange: formik.handleChange,
+          }}
+        />
+      </Box>
       <Box pt={2}>
+        <Typography variant="h4">
+          <strong>Footer Links</strong>
+        </Typography>
         <InputGroup>
           <TextInput
             title="Help Page"
@@ -135,21 +174,59 @@ const ServiceSettings: React.FC<Props> = (props) => {
           />
 
           <TextInput
-            title="Legal Disclaimer"
-            description="Displayed before a user submits their application"
+            title="Accessibility"
+            description="Statement on accessibility policy"
             switchProps={{
-              name: "elements.legalDisclaimer.show",
-              checked: formik.values.elements?.legalDisclaimer?.show,
+              name: "elements.accessibility.show",
+              checked: formik.values.elements?.accessibility?.show,
               onChange: formik.handleChange,
             }}
             headingInputProps={{
-              name: "elements.legalDisclaimer.heading",
-              value: formik.values.elements?.legalDisclaimer?.heading,
+              name: "elements.accessibility.heading",
+              value: formik.values.elements?.accessibility?.heading,
               onChange: formik.handleChange,
             }}
             contentInputProps={{
-              name: "elements.legalDisclaimer.content",
-              value: formik.values.elements?.legalDisclaimer?.content,
+              name: "elements.accessibility.content",
+              value: formik.values.elements?.accessibility?.content,
+              onChange: formik.handleChange,
+            }}
+          />
+
+          <TextInput
+            title="Terms of Use"
+            switchProps={{
+              name: "elements.termsOfUse.show",
+              checked: formik.values.elements?.termsOfUse?.show,
+              onChange: formik.handleChange,
+            }}
+            headingInputProps={{
+              name: "elements.termsOfUse.heading",
+              value: formik.values.elements?.termsOfUse?.heading,
+              onChange: formik.handleChange,
+            }}
+            contentInputProps={{
+              name: "elements.termsOfUse.content",
+              value: formik.values.elements?.termsOfUse?.content,
+              onChange: formik.handleChange,
+            }}
+          />
+
+          <TextInput
+            title="Cookies"
+            switchProps={{
+              name: "elements.cookies.show",
+              checked: formik.values.elements?.cookies?.show,
+              onChange: formik.handleChange,
+            }}
+            headingInputProps={{
+              name: "elements.cookies.heading",
+              value: formik.values.elements?.cookies?.heading,
+              onChange: formik.handleChange,
+            }}
+            contentInputProps={{
+              name: "elements.cookies.content",
+              value: formik.values.elements?.cookies?.content,
               onChange: formik.handleChange,
             }}
           />

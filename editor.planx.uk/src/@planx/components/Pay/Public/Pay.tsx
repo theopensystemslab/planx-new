@@ -1,4 +1,3 @@
-import { makeData } from "@planx/components/shared/utils";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -6,11 +5,12 @@ import { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
 import type { GovUKPayment } from "types";
 
+import { useTeamSlug } from "../../shared/hooks";
+import { makeData } from "../../shared/utils";
 import { createPayload, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
 import Confirm from "./Confirm";
 
 export default Component;
-
 interface Props extends Pay {
   handleSubmit: handleSubmit;
   fn?: string;
@@ -49,6 +49,9 @@ function Component(props: Props) {
   ]);
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
+
+  const teamSlug = useTeamSlug();
+  const govUkPayUrlForTeam = `${GOV_UK_PAY_URL}/${teamSlug}`;
 
   // Handles UI states
   const reducer = (state: ComponentState, action: Action): ComponentState => {
@@ -120,7 +123,7 @@ function Component(props: Props) {
 
   const refetchPayment = async (id: string) => {
     await axios
-      .get(GOV_UK_PAY_URL + `/${id}`)
+      .get(`${govUkPayUrlForTeam}/${id}`)
       .then((res) => {
         const payment = updatePayment(res.data);
 
@@ -178,7 +181,7 @@ function Component(props: Props) {
     }
 
     await axios
-      .post(GOV_UK_PAY_URL, createPayload(fee, id))
+      .post(govUkPayUrlForTeam, createPayload(fee, id))
       .then((res) => {
         const payment = updatePayment(res.data);
 

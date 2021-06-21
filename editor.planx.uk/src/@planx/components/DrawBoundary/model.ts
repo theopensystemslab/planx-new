@@ -8,6 +8,10 @@ export interface DrawBoundary extends MoreInformation {
   dataFieldBoundary: string;
   dataFieldArea: string;
   dataFieldUrl: string;
+  info?: string;
+  policyRef?: string;
+  howMeasured?: string;
+  definitionImg?: string;
 }
 
 export const parseDrawBoundary = (

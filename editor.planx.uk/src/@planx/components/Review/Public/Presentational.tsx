@@ -216,7 +216,9 @@ function FileUpload(props: ComponentProps) {
         <ul>
           {getAnswersByNode(props).map((file: any, i: number) => (
             <li key={i}>
-              <a href={file.url}>{file.filename}</a>
+              <a target="_blank" href={file.url}>
+                {file.filename}
+              </a>
             </li>
           ))}
         </ul>
