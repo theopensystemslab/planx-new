@@ -1,6 +1,5 @@
 // init airbrake before everything else
-require("./airbrake");
-
+import "./airbrake";
 import "./app.css";
 
 import { ApolloProvider } from "@apollo/client";
