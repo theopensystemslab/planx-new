@@ -4,7 +4,8 @@
 // POST data payloads accepted by the BOPS API, see:
 // https://southwark.preview.bops.services/api-docs/index.html
 
-import { flatFlags } from "pages/FlowEditor/data/flags";
+import { DEFAULT_FLAG_CATEGORY, flatFlags } from "pages/FlowEditor/data/flags";
+import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
 
 import { Store } from "../../../pages/FlowEditor/lib/store";
@@ -42,6 +43,12 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
   constraints?: Record<string, boolean>;
   files?: Array<File>;
   boundary_geojson?: Object;
+  result?: {
+    flag?: string;
+    heading?: string;
+    description?: string;
+    override?: string;
+  };
 }
 
 interface QuestionMetaData {
@@ -74,16 +81,6 @@ interface File {
 }
 
 export const bopsDictionary = {
-  // address data taken from passport.info atm
-
-  // uprn: "property.uprn",
-  // address_1: "property.address.line1",
-  // address_2: "property.address.line2",
-  // town: "property.address.town",
-  // postcode: "property.postcode",
-
-  // constraints => passport[property.constraints.planning]
-
   applicant_first_name: "applicant.name.first",
   applicant_last_name: "applicant.name.last",
   applicant_phone: "applicant.phone.primary",
@@ -97,18 +94,7 @@ export const bopsDictionary = {
   description: "proposal.description",
 };
 
-const minimumPayload: BOPSMinimumPayload = {
-  application_type: "lawfulness_certificate",
-  site: {
-    uprn: "",
-    address_1: "",
-    // address_2: "",
-    town: "",
-    postcode: "",
-  },
-};
-
-export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
+const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
   Object.entries(breadcrumbs)
     .filter(([id]) => {
       if (!flow[id]?.type) return false;
@@ -176,38 +162,35 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
     })
     .filter(Boolean);
 
-export const fullPayload: BOPSFullPayload = {
-  ...minimumPayload,
-
-  work_status: "proposed",
-
-  payment_reference: "JG669323",
-
-  proposal_details: [],
-  constraints: {},
-  files: [] as Array<File>,
-};
-
 export function getParams(
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
   passport: Store.passport,
   sessionId: string
 ) {
-  const data = fullPayload;
+  const data = {} as BOPSFullPayload;
+
+  // Hardcode application type for now
+  data.application_type = "lawfulness_certificate";
+
+  if (sessionId) data.session_id = sessionId;
 
   // 1a. address
 
   const address = passport.data?._address;
   if (address) {
-    data.site.uprn = String(address.uprn);
+    const site = {} as BOPSFullPayload["site"];
 
-    data.site.address_1 = [address.sao, address.pao, address.street]
+    site.uprn = String(address.uprn);
+
+    site.address_1 = [address.sao, address.pao, address.street]
       .filter(Boolean)
       .join(" ");
 
-    data.site.town = address.town;
-    data.site.postcode = address.postcode;
+    site.town = address.town;
+    site.postcode = address.postcode;
+
+    data.site = site;
   }
 
   // 1b. property boundary
@@ -236,7 +219,7 @@ export function getParams(
 
   Object.entries(passport.data || {})
     .filter(([, v]: any) => v?.[0]?.url)
-    .forEach(([key, arr]) => {
+    .forEach(([, arr]) => {
       (arr as any[]).forEach(({ url }) => {
         try {
           data.files = data.files || [];
@@ -259,17 +242,25 @@ export function getParams(
 
   // 3. constraints
 
-  data.constraints = (
+  const constraints = (
     passport.data?.["property.constraints.planning"] || []
   ).reduce((acc: Record<string, boolean>, curr: string) => {
     acc[curr] = true;
     return acc;
   }, {});
+  if (Object.values(constraints).map(Boolean).length > 0) {
+    data.constraints = constraints;
+  }
 
   // 4. work status
 
-  if (passport?.data?.["property.constraints.planning"] === "ldc.existing") {
-    data.work_status = "existing";
+  switch (passport?.data?.["property.constraints.planning"]) {
+    case "ldc.existing":
+      data.work_status = "existing";
+      break;
+    case "ldc.proposed":
+      data.work_status = "proposed";
+      break;
   }
 
   // 5. keys
@@ -297,9 +288,36 @@ export function getParams(
     data.payment_reference = payment.payment_id;
   }
 
+  // 8. flag data
+
+  const resultId = Object.keys(breadcrumbs).find(
+    (id) => flow[id]?.type === TYPES.Result
+  );
+  if (resultId) {
+    const result = getResultData(
+      breadcrumbs,
+      flow,
+      DEFAULT_FLAG_CATEGORY,
+      flow[resultId].data?.overrides
+    );
+    const firstResult = Object.values(result)?.[0] as any;
+    const flag = firstResult?.flag?.value;
+
+    if (flag) {
+      data.result = Object.entries({
+        flag: [firstResult.flag.category, firstResult.flag.text].join(" / "),
+        heading: firstResult.displayText?.heading,
+        description: firstResult.displayText?.description,
+        override: passport?.data?.["application.resultOverride.reason"],
+      }).reduce((acc, [k, v]) => {
+        if (v) acc[k] = v;
+        return acc;
+      }, {} as Record<string, any>);
+    }
+  }
+
   return {
     ...data,
     ...bopsData,
-    ...(sessionId ? { session_id: sessionId } : {}),
   };
 }
