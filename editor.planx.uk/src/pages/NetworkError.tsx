@@ -34,7 +34,8 @@ const NetworkError: React.FC = () => {
             Network error
           </Typography>
           <Typography variant="body1">
-            Something went wrong. <Link href={"/"}>Go back home.</Link>
+            This bug has been automatically logged and our team will see it
+            soon. <Link href={"/"}>Go back home.</Link>
           </Typography>
         </Box>
       </Box>
