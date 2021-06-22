@@ -1,3 +1,6 @@
+// init airbrake before everything else
+require("./airbrake");
+
 import "./app.css";
 
 import { ApolloProvider } from "@apollo/client";
@@ -10,10 +13,7 @@ import { render } from "react-dom";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
 import HelmetProvider from "react-navi-helmet-async";
 
-// init airbrake
-import { airbrake } from "./airbrake";
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
-import GitHelper from "./components/GitHelper";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import theme from "./theme";
@@ -73,7 +73,6 @@ render(
           <Suspense fallback={null}>
             <View />
           </Suspense>
-          <GitHelper />
         </Layout>
       </HelmetProvider>
     </Router>
