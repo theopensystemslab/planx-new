@@ -45,15 +45,16 @@ const Node: React.FC<any> = (props: Props) => {
     hasPaid,
     passport,
     isFinalCard,
+    resetPreview,
   ] = useStore((state) => [
     state.childNodesOf,
     state.resultData,
     state.hasPaid(),
     state.computePassport(),
     state.isFinalCard(),
+    state.resetPreview,
   ]);
 
-  const resetPreview = useStore((state) => state.resetPreview);
   const handleSubmit = isFinalCard ? undefined : props.handleSubmit;
 
   const allProps = {
