@@ -10,6 +10,7 @@ import { render } from "react-dom";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
 import HelmetProvider from "react-navi-helmet-async";
 
+// init airbrake
 import { airbrake } from "./airbrake";
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import GitHelper from "./components/GitHelper";
