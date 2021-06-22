@@ -14,7 +14,6 @@ import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
 import HelmetProvider from "react-navi-helmet-async";
 
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
-import GitHelper from "./components/GitHelper";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import theme from "./theme";
@@ -74,7 +73,6 @@ render(
           <Suspense fallback={null}>
             <View />
           </Suspense>
-          <GitHelper />
         </Layout>
       </HelmetProvider>
     </Router>

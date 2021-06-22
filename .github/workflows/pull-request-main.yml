@@ -46,14 +46,9 @@ jobs:
         working-directory: editor.planx.uk
       - run: pnpm test
         working-directory: editor.planx.uk
-      - name: Set ENV Vars
-        if: endsWith(github.ref, '/main') != true
-        run: echo "SHORT_BRANCH_NAME=${GITHUB_HEAD_REF#refs/heads/}" >> $GITHUB_ENV
       - run: pnpm build
         working-directory: editor.planx.uk
         env:
-          REACT_APP_GIT_BRANCH: ${{ env.SHORT_BRANCH_NAME }}
-          REACT_APP_PULL_REQUEST: https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
           REACT_APP_API_URL: https://api.editor.planx.dev
