@@ -2,7 +2,6 @@ import Box from "@material-ui/core/Box";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
-import { Link } from "react-navi";
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
@@ -35,7 +34,7 @@ const NetworkError: React.FC = () => {
           </Typography>
           <Typography variant="body1">
             This bug has been automatically logged and our team will see it
-            soon. <Link href={"/"}>Go back home.</Link>
+            soon. Refreshing this page will not resolve the issue.
           </Typography>
         </Box>
       </Box>
