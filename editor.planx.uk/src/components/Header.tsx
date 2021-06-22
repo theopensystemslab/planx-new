@@ -17,6 +17,8 @@ import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
 import PhaseBanner from "./PhaseBanner";
 
+console.log("testing pulumi changes");
+
 const useStyles = makeStyles((theme) => ({
   root: {
     // backgroundColor: "#2c2c2c",
