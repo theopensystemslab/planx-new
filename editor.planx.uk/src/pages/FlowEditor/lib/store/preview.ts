@@ -438,8 +438,7 @@ export const previewStore = (
           return (
             node &&
             !breadcrumbs[id] &&
-            (node.type === TYPES.SetValue ||
-              (node.edges || []).length > 0 ||
+            ((node.edges || []).length > 0 ||
               (node.type && !SUPPORTED_DECISION_TYPES.includes(node.type)))
           );
         })
@@ -452,29 +451,6 @@ export const previewStore = (
             [TYPES.InternalPortal, TYPES.Page].includes(node.type)
           ) {
             return nodeIdsConnectedFrom(id);
-          }
-
-          // A SetValue component will never be shown to the user,
-          // it'll appear to get skipped, hence the inner return below.
-          if (node.type === TYPES.SetValue) {
-            // If it's also the 'current' node in the stack
-            // i.e. upcomingNodeIds[0] = this
-            // then merge its data into the passport, like this taco example
-            // https://github.com/theopensystemslab/planx-new/pull/460
-            if (ids.size === 0) {
-              set({
-                breadcrumbs: {
-                  ...breadcrumbs,
-                  [id]: {
-                    data: {
-                      [node.data.fn]: [node.data.val],
-                    },
-                    auto: true,
-                  },
-                },
-              });
-            }
-            return;
           }
 
           const fn = node.type === TYPES.Filter ? "flag" : node.data?.fn;

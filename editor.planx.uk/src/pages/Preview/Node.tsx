@@ -15,6 +15,7 @@ import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
 import Review from "@planx/components/Review/Public";
 import Send from "@planx/components/Send/Public";
+import SetValue from "@planx/components/SetValue/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
@@ -168,6 +169,9 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Send:
       return <Send {...allProps} />;
 
+    case TYPES.SetValue:
+      return <SetValue {...allProps} />;
+
     case TYPES.Statement:
       // TODO: sensitive fix for strict mode
       return (
@@ -206,7 +210,6 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Page:
     case TYPES.Report:
     case TYPES.Response:
-    case TYPES.SetValue:
     case TYPES.SignIn:
     case undefined:
       return null;
