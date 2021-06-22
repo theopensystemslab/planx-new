@@ -4,6 +4,7 @@ import * as React from "react";
 
 import { client } from "../lib/graphql";
 import Login from "../pages/Login";
+import NetworkError from "../pages/NetworkError";
 import { makeTitle } from "./utils";
 
 type RoutingContext = {
@@ -13,7 +14,7 @@ type RoutingContext = {
 const editorRoutes = mount({
   "/network-error": route({
     title: makeTitle("Network Error"),
-    view: <h1>Network error :(</h1>,
+    view: <NetworkError />,
   }),
 
   "/login": map(async (req, context: RoutingContext) =>
