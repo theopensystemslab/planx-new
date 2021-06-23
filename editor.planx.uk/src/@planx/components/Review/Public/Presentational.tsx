@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { TYPES } from "@planx/components/types";
 import type { Store } from "pages/FlowEditor/lib/store";
@@ -239,18 +240,29 @@ function DateInput(props: ComponentProps) {
 function DrawBoundary(props: ComponentProps) {
   const { latitude, longitude } = props.passport.data?._address;
 
-  // check if we should show a boundary drawing or an uploaded file
-  const data = props.userData?.data?.["property.boundary.site"]
-    ? props.userData.data["property.boundary.site"]
-    : props.userData?.data?.["property.boundary.file"]
-    ? props.userData.data["property.boundary.file"]
+  // check if the user drew a boundary,
+  // if they didn't then check that there's an uploaded boundary file
+  const data = props.userData?.data?.[props.node.data?.dataFieldBoundary]
+    ? props.userData.data![props.node.data.dataFieldBoundary]
+    : props.userData?.data?.[PASSPORT_UPLOAD_KEY]
+    ? props.userData.data![PASSPORT_UPLOAD_KEY]
     : undefined;
+
+  if (!data) {
+    // XXX: we always expect be data, this is for temporary debugging
+    console.info("boundary data expected but not found", props);
+    return null;
+  }
 
   return (
     <>
       <div>Site boundary</div>
       <div>
-        {data && typeof data !== "string" ? (
+        {typeof data === "string" ? (
+          <a target="_blank" href={data}>
+            Your uploaded location plan
+          </a>
+        ) : (
           <StaticMap
             longitude={Number(longitude)}
             latitude={Number(latitude)}
@@ -304,10 +316,6 @@ function DrawBoundary(props: ComponentProps) {
               />
             </Source>
           </StaticMap>
-        ) : (
-          <a target="_blank" href={data}>
-            Your uploaded location plan
-          </a>
         )}
       </div>
     </>
