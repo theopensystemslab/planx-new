@@ -9,7 +9,7 @@ export type Props = PublicProps<SetValue>;
 export default function Component(props: Props) {
   useEffect(() => {
     props.handleSubmit?.({
-      ...makeData(props, props.val, props.fn),
+      ...makeData(props, [props.val], props.fn),
       auto: true,
     });
   }, []);
