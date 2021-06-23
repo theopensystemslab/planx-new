@@ -240,12 +240,11 @@ function DrawBoundary(props: ComponentProps) {
   const { latitude, longitude } = props.passport.data?._address;
 
   // check if we should show a boundary drawing or an uploaded file
-  const data =
-    props.userData?.data && props.userData?.data["property.boundary.site"]
-      ? props.userData?.data["property.boundary.site"]
-      : props.userData?.data && props.userData?.data["property.boundary.file"]
-      ? props.userData?.data["property.boundary.file"]
-      : undefined;
+  const data = props.userData?.data?.["property.boundary.site"]
+    ? props.userData.data["property.boundary.site"]
+    : props.userData?.data?.["property.boundary.file"]
+    ? props.userData.data["property.boundary.file"]
+    : undefined;
 
   return (
     <>

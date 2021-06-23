@@ -250,7 +250,7 @@ export function getParams(
 
   if (passport?.data?.[DEFAULT_PASSPORT_UPLOAD_KEY]) {
     data.files?.push({
-      filename: passport?.data?.[DEFAULT_PASSPORT_UPLOAD_KEY],
+      filename: passport?.data[DEFAULT_PASSPORT_UPLOAD_KEY],
       tags: [],
     });
   }
