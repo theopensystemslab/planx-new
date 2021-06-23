@@ -12,9 +12,9 @@ import React, { useEffect, useState } from "react";
 
 import type { DrawBoundary } from "../model";
 import {
-  DEFAULT_PASSPORT_UPLOAD_KEY,
   DEFAULT_TITLE,
   DEFAULT_TITLE_FOR_UPLOADING,
+  PASSPORT_UPLOAD_KEY,
 } from "../model";
 import Map from "./Map";
 import Upload from "./Upload";
@@ -109,7 +109,7 @@ export default function Component(props: Props) {
   function handleSubmit() {
     const data = (() => {
       // we haven't added dataFieldUrl in the editor yet
-      const propsDataFieldUrl = DEFAULT_PASSPORT_UPLOAD_KEY;
+      const propsDataFieldUrl = PASSPORT_UPLOAD_KEY;
 
       // set userData depending if user draws boundary or uploads file
       const ob: Store.userData["data"] = {
