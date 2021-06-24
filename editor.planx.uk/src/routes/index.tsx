@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import { lazy, map, mount, redirect, route } from "navi";
 import * as React from "react";
 
@@ -33,15 +32,17 @@ const editorRoutes = mount({
   "/logout": map((): any => {
     try {
       client.resetStore();
-      Cookies.remove("jwt");
     } catch (err) {
       console.error(err);
     } finally {
-      // hack to force-remove cookie on editor.planx.uk
       const cookieString = `jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      // remove jwt cookie for non planx domains (netlify preview urls)
       document.cookie = cookieString;
-      document.cookie = cookieString.concat(" domain=.planx.uk;");
-
+      // remove jwt cookie for planx domains (staging and production)
+      document.cookie = cookieString.concat(
+        ` domain=.${window.location.host};`
+      );
+      // redirect to editor landing page with no jwt cookie set
       window.location.href = "/";
     }
   }),
