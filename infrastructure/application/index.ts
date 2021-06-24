@@ -384,3 +384,20 @@ new pulumi.Config("cloudflare").require("apiToken");
     proxied: true,
   });
 })();
+
+new aws.budgets.Budget("general-budget", {
+  budgetType: "COST",
+  limitAmount: "300",
+  limitUnit: "USD",
+  timePeriodStart: "2020-05-01_00:00",
+  timeUnit: "MONTHLY",
+  notifications: [
+    {
+      comparisonOperator: "GREATER_THAN",
+      notificationType: "FORECASTED",
+      threshold: 100,
+      thresholdType: "PERCENTAGE",
+      subscriberEmailAddresses: ["devops@opensystemslab.io"],
+    },
+  ],
+});
