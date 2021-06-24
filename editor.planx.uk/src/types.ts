@@ -6,6 +6,7 @@ export interface Flow {
   id: string;
   name: string;
   slug: string;
+  slug_public: string;
   team: Team;
   settings?: FlowSettings;
 }

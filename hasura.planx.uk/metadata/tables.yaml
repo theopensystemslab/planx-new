@@ -64,6 +64,12 @@
         schema: public
         name: compile_flow_portals
     comment: Flow data with portals merged in
+  - name: slug_public
+    definition:
+      function:
+        schema: public
+        name: slugify
+    comment: Formatted slug for tidy public URLs
   select_permissions:
   - role: public
     permission:

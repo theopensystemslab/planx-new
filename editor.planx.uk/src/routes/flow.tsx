@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import { TYPES } from "@planx/components/types";
 import ErrorFallback from "components/ErrorFallback";
+import _ from "lodash";
 import natsort from "natsort";
 import { compose, lazy, mount, route, withData, withView } from "navi";
 import mapAccum from "ramda/src/mapAccum";
@@ -29,6 +30,7 @@ const getExternalPortals = async () => {
           id
           name
           slug
+          slug_public
           team {
             slug
           }
