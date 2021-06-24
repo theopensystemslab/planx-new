@@ -7,12 +7,8 @@ import { FileRejection } from "react-dropzone";
  * @param fileRejections - array of errors provided by Dropzone
  */
 function handleRejectedUpload(fileRejections: Array<FileRejection>) {
-  const errors = fileRejections.map((rejection) => ({
-    file: rejection.file.name,
-    errors: rejection.errors.map((error) => error.message),
-  }));
-
-  alert(JSON.stringify({ errors }, null, 2));
+  // XXX: Even though there can be multiple file rejections with multiple errors, here we display only one error from one file in order to keep the UI simple and easy to understand
+  window.alert(fileRejections[0].errors[0].message);
 }
 
 export default handleRejectedUpload;
