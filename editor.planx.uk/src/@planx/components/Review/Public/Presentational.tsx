@@ -249,9 +249,9 @@ function DrawBoundary(props: ComponentProps) {
     : undefined;
 
   if (!data) {
-    // XXX: we always expect be data, this is for temporary debugging
-    console.info("boundary data expected but not found", props);
-    return null;
+    // XXX: we always expect to have data, this is for temporary debugging
+    console.error(props);
+    throw Error("boundary geojson or file expected but not found");
   }
 
   return (
