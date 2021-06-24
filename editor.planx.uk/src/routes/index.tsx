@@ -31,19 +31,9 @@ const editorRoutes = mount({
   ),
 
   "/logout": map((): any => {
-    try {
-      client.resetStore();
-      Cookies.remove("jwt");
-    } catch (err) {
-      console.error(err);
-    } finally {
-      // hack to force-remove cookie on editor.planx.uk
-      const cookieString = `jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      document.cookie = cookieString;
-      document.cookie = cookieString.concat(" domain=.planx.uk;");
-
-      window.location.href = "/";
-    }
+    localStorage.clear();
+    deleteAllCookies();
+    window.location.href = "/";
   }),
 
   "*": map(async (req, context: RoutingContext) =>
@@ -59,3 +49,25 @@ export default mount({
   "/:team/:flow/preview": lazy(() => import("./preview")),
   "*": editorRoutes,
 });
+
+// https://stackoverflow.com/a/33366171/1456173
+function deleteAllCookies() {
+  var cookies = document.cookie.split("; ");
+  for (var c = 0; c < cookies.length; c++) {
+    var d = window.location.hostname.split(".");
+    while (d.length > 0) {
+      var cookieBase =
+        encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) +
+        "=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=" +
+        d.join(".") +
+        " ;path=";
+      var p = location.pathname.split("/");
+      document.cookie = cookieBase + "/";
+      while (p.length > 0) {
+        document.cookie = cookieBase + p.join("/");
+        p.pop();
+      }
+      d.shift();
+    }
+  }
+}
