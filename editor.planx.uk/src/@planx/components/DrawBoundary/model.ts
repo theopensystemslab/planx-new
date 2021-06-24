@@ -7,7 +7,6 @@ export interface DrawBoundary extends MoreInformation {
   descriptionForUploading: string;
   dataFieldBoundary: string;
   dataFieldArea: string;
-  dataFieldUrl: string;
   info?: string;
   policyRef?: string;
   howMeasured?: string;
@@ -24,7 +23,6 @@ export const parseDrawBoundary = (
   descriptionForUploading: data?.descriptionForUploading || "",
   dataFieldBoundary: data?.dataFieldBoundary || DEFAULT_PASSPORT_BOUNDARY_KEY,
   dataFieldArea: data?.dataFieldArea || "",
-  dataFieldUrl: data?.dataFieldUrl || "",
 });
 
 const DEFAULT_PASSPORT_BOUNDARY_KEY = "property.boundary.site" as const;
