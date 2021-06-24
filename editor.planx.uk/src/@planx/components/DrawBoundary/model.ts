@@ -25,6 +25,7 @@ export const parseDrawBoundary = (
   dataFieldArea: data?.dataFieldArea || "",
 });
 
-export const DEFAULT_PASSPORT_BOUNDARY_KEY = "property.boundary.site" as const;
+const DEFAULT_PASSPORT_BOUNDARY_KEY = "property.boundary.site" as const;
 export const DEFAULT_TITLE = "Draw the boundary of the property" as const;
 export const DEFAULT_TITLE_FOR_UPLOADING = "Upload the PDF location plan" as const;
+export const PASSPORT_UPLOAD_KEY = "property.boundary.file" as const; // not added to editor yet

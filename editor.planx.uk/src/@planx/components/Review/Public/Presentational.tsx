@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { TYPES } from "@planx/components/types";
 import type { Store } from "pages/FlowEditor/lib/store";
@@ -237,20 +238,31 @@ function DateInput(props: ComponentProps) {
 }
 
 function DrawBoundary(props: ComponentProps) {
-  const NOT_FOUND: string = "No drawing found";
   const { latitude, longitude } = props.passport.data?._address;
 
-  // If drawing, then data is GeoJSON obj, else show a simple message (eventually file upload details)
-  const data: any =
-    props.userData?.data && props.userData?.data["property.boundary.site"]
-      ? props.userData?.data["property.boundary.site"]
-      : NOT_FOUND;
+  // check if the user drew a boundary,
+  // if they didn't then check that there's an uploaded boundary file
+  const data = props.userData?.data?.[props.node.data?.dataFieldBoundary]
+    ? props.userData.data![props.node.data.dataFieldBoundary]
+    : props.userData?.data?.[PASSPORT_UPLOAD_KEY]
+    ? props.userData.data![PASSPORT_UPLOAD_KEY]
+    : undefined;
+
+  if (!data) {
+    // XXX: we always expect to have data, this is for temporary debugging
+    console.error(props);
+    throw Error("boundary geojson or file expected but not found");
+  }
 
   return (
     <>
       <div>Site boundary</div>
       <div>
-        {data !== NOT_FOUND ? (
+        {typeof data === "string" ? (
+          <a target="_blank" href={data}>
+            Your uploaded location plan
+          </a>
+        ) : (
           <StaticMap
             longitude={Number(longitude)}
             latitude={Number(latitude)}
@@ -304,8 +316,6 @@ function DrawBoundary(props: ComponentProps) {
               />
             </Source>
           </StaticMap>
-        ) : (
-          data
         )}
       </div>
     </>

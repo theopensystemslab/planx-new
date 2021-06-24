@@ -7,6 +7,7 @@
 import { flatFlags } from "pages/FlowEditor/data/flags";
 
 import { Store } from "../../../pages/FlowEditor/lib/store";
+import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
 import { TYPES } from "../types";
 
 interface BOPSMinimumPayload {
@@ -244,6 +245,15 @@ export function getParams(
         } catch (err) {}
       });
     });
+
+  // 2a. property boundary file if the user didn't draw
+
+  if (passport?.data?.[PASSPORT_UPLOAD_KEY]) {
+    data.files?.push({
+      filename: passport?.data[PASSPORT_UPLOAD_KEY],
+      tags: [],
+    });
+  }
 
   // 3. constraints
 
