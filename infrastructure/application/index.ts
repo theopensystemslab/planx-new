@@ -209,6 +209,10 @@ new pulumi.Config("cloudflare").require("apiToken");
           },
           { name: "SESSION_SECRET", value: config.require("session-secret") },
           { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
+          {
+            name: "BOPS_API_ROOT_DOMAIN",
+            value: config.require("bops-api-root-domain"),
+          },
           { name: "BOPS_API_TOKEN", value: config.require("bops-api-token") },
           { name: "JWT_SECRET", value: config.require("jwt-secret") },
           { name: "PORT", value: String(API_PORT) },
