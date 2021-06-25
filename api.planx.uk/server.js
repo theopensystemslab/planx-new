@@ -210,11 +210,13 @@ app.use(
   })
 );
 
-app.use(
-  require("express-pino-logger")({
-    serializers: noir(["req.headers.authorization"], "**REDACTED**"),
-  })
-);
+if (process.env.NODE_ENV !== "test") {
+  app.use(
+    require("express-pino-logger")({
+      serializers: noir(["req.headers.authorization"], "**REDACTED**"),
+    })
+  );
+}
 
 if (!process.env.BOPS_API_TOKEN) {
   console.error("Missing BOPS_API_TOKEN");
