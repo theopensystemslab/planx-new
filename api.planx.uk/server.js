@@ -239,7 +239,7 @@ app.post("/bops/:localAuthority", (req, res) => {
       ...req.headers,
       Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
     },
-    pathRewrite: (path) => path.replace(/^\/bops.*$/, ""),
+    pathRewrite: () => "",
     target,
     selfHandleResponse: true,
     onProxyReq: fixRequestBody,
