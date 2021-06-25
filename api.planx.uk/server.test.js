@@ -74,7 +74,7 @@ describe("sending a payment to GOV.UK Pay", () => {
 
   it("proxies request", async () => {
     await supertest(app)
-      .post("/pay")
+      .post("/pay/southwark")
       .send({
         amount: 100,
         reference: "12343543",
