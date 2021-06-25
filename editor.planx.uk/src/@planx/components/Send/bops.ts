@@ -194,7 +194,7 @@ export function getParams(
 
   // 4. work status
 
-  switch (passport?.data?.["property.constraints.planning"]) {
+  switch (passport?.data?.["application.type"]) {
     case "ldc.existing":
       data.work_status = "existing";
       break;
