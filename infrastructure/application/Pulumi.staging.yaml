@@ -1,4 +1,5 @@
 config:
+  application:bops-api-root-domain: bops-staging.services
   application:bops-api-token:
     secure: AAABAFVKlS0ituRhi1ER6DkaKP004YkB34i2q7RUc/eipdnH6mb8CppHxMxL9zGNWFcw77Jss+Q=
   application:cloudflare-zone-id:

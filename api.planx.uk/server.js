@@ -1,5 +1,6 @@
 require("isomorphic-fetch");
 const { json, urlencoded } = require("body-parser");
+const assert = require("assert");
 const cookieSession = require("cookie-session");
 const cors = require("cors");
 const express = require("express");
@@ -210,34 +211,32 @@ app.use(
   })
 );
 
-app.use(
-  require("express-pino-logger")({
-    serializers: noir(["req.headers.authorization"], "**REDACTED**"),
-  })
-);
-
-if (!process.env.BOPS_API_TOKEN) {
-  console.error("Missing BOPS_API_TOKEN");
-  process.exit(1);
-} else {
-  ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
-    const govPayTokenKey = `GOV_UK_PAY_TOKEN_${authority}`;
-    if (!process.env[govPayTokenKey]) {
-      console.error(`Missing ${govPayTokenKey}`);
-      process.exit(1);
-    }
-  });
+if (process.env.NODE_ENV !== "test") {
+  app.use(
+    require("express-pino-logger")({
+      serializers: noir(["req.headers.authorization"], "**REDACTED**"),
+    })
+  );
 }
 
+assert(process.env.BOPS_API_ROOT_DOMAIN);
+assert(process.env.BOPS_API_TOKEN);
+["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
+  assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
+});
+
 app.post("/bops/:localAuthority", (req, res) => {
-  const target = `https://${req.params.localAuthority}.bops.services/api/v1/planning_applications`;
+  // a local or staging API instance should send to the BOPS staging endpoint
+  // production should send to the BOPS production endpoint
+  const domain = `https://${req.params.localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
+  const target = `${domain}/api/v1/planning_applications`;
 
   useProxy({
     headers: {
       ...req.headers,
       Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
     },
-    pathRewrite: (path) => path.replace(/^\/bops.*$/, ""),
+    pathRewrite: () => "",
     target,
     selfHandleResponse: true,
     onProxyReq: fixRequestBody,

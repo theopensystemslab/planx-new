@@ -1,4 +1,5 @@
 config:
+  application:bops-api-root-domain: bops.services
   application:bops-api-token:
     secure: AAABAMqHDCUHOnq3PCudVRigskTLZrBKjVzZ9X4qdUqF7Wid6NHa4zQyTMeQJ4ACtS7LMZIZq84=
   application:cloudflare-zone-id: a9b9933f28e786ec4cfd4bb596f5a519
