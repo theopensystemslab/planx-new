@@ -32,7 +32,6 @@ const routes = compose(
               slug
               flows(order_by: { updated_at: desc }) {
                 slug
-                slug_public
                 updated_at
                 operations(limit: 1, order_by: { id: desc }) {
                   actor {
