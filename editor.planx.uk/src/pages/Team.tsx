@@ -20,6 +20,7 @@ import FolderOutlined from "@material-ui/icons/FolderOutlined";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
+import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
 import SimpleMenu from "../ui/SimpleMenu";
@@ -246,7 +247,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
             {
               onClick: async () => {
                 const newSlug = prompt("New name", flow.slug);
-                if (newSlug && newSlug !== flow.slug) {
+                if (newSlug && slugify(newSlug) !== flow.slug) {
                   await client.mutate({
                     mutation: gql`
                       mutation MyMutation(
@@ -268,7 +269,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
                     variables: {
                       teamId: teamId,
                       slug: flow.slug,
-                      newSlug: newSlug,
+                      newSlug: slugify(newSlug),
                     },
                   });
 
@@ -333,9 +334,10 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
               onClick={() => {
                 const newFlowName = prompt("Service name");
                 if (newFlowName) {
+                  const newFlowSlug = slugify(newFlowName);
                   useStore
                     .getState()
-                    .createFlow(id, newFlowName)
+                    .createFlow(id, newFlowSlug)
                     .then((newId: string) => {
                       navigation.navigate(`/${slug}/${newId}`);
                     });
