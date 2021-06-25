@@ -232,7 +232,13 @@ if (!process.env.BOPS_API_TOKEN) {
 }
 
 app.post("/bops/:localAuthority", (req, res) => {
-  const target = `https://${req.params.localAuthority}.bops.services/api/v1/planning_applications`;
+  // XXX: This conditional should probably be removed and process.env.BOPS_HOST set in
+  //      an environment variable, but it's quite tricky to target staging specifically.
+  const host = req.get("origin").endsWith("planx.uk")
+    ? "bops.services"
+    : "bops-staging.services";
+
+  const target = `https://${req.params.localAuthority}.${host}/api/v1/planning_applications`;
 
   useProxy({
     headers: {

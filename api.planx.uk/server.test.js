@@ -21,27 +21,31 @@ it("mocks hasura", async () => {
     });
 });
 
-describe("sending an application to BOPS", () => {
-  beforeEach(() => {
-    const mockResponse = {
-      application: "0000123",
-    };
-
-    nock("https://southwark.bops.services/api/v1/planning_applications")
-      .post("")
-      .reply(200, mockResponse);
-  });
-
-  it("proxies request and returns hasura id", async () => {
-    await supertest(app)
-      .post("/bops/southwark")
-      .send({ applicationId: 123 })
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toEqual({
-          application: { id: 22, bopsResponse: { application: "0000123" } },
+[
+  { env: "production", origin: "editor.planx.uk", host: "bops.services" },
+  { env: "staging", origin: "editor.planx.dev", host: "bops-staging.services" },
+].forEach(({ env, origin, host }) => {
+  describe(`sending an application to BOPS ${env}`, () => {
+    beforeEach(() => {
+      nock(`https://southwark.${host}/api/v1/planning_applications`)
+        .post("")
+        .reply(200, {
+          application: "0000123",
         });
-      });
+    });
+
+    it("proxies request and returns hasura id", async () => {
+      await supertest(app)
+        .post("/bops/southwark")
+        .set("Origin", `https://${origin}`)
+        .send({ applicationId: 123 })
+        .expect(200)
+        .then((res) => {
+          expect(res.body).toEqual({
+            application: { id: 22, bopsResponse: { application: "0000123" } },
+          });
+        });
+    });
   });
 });
 
