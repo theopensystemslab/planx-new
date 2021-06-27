@@ -193,8 +193,9 @@ export function getParams(
   }
 
   // 4. work status
-
-  switch (passport?.data?.["application.type"]) {
+  // XXX: this is currently probably a [string], but will be string soon
+  //      howver, String(string) === string and String([string]) === string
+  switch (String(passport?.data?.["application.type"])) {
     case "ldc.existing":
       data.work_status = "existing";
       break;
