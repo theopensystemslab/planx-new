@@ -15,6 +15,8 @@ import React from "react";
 import Input from "ui/Input";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
+import { formattedPriceWithCurrencySymbol } from "../model";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& *": {
@@ -81,7 +83,7 @@ export default function Confirm(props: Props) {
             The planning fee for this application is
           </Typography>
           <Typography variant="h1" gutterBottom className="marginBottom">
-            {`£${props.fee.toFixed(2)}`}
+            {formattedPriceWithCurrencySymbol(props.fee)}
           </Typography>
 
           <Typography variant="h4">

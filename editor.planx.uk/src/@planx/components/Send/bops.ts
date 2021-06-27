@@ -4,83 +4,23 @@
 // POST data payloads accepted by the BOPS API, see:
 // https://southwark.preview.bops.services/api-docs/index.html
 
-import { flatFlags } from "pages/FlowEditor/data/flags";
+import { DEFAULT_FLAG_CATEGORY, flatFlags } from "pages/FlowEditor/data/flags";
+import { getResultData } from "pages/FlowEditor/lib/store/preview";
+import { GovUKPayment } from "types";
 
 import { Store } from "../../../pages/FlowEditor/lib/store";
 import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
+import { GOV_PAY_PASSPORT_KEY, toPence } from "../Pay/model";
 import { TYPES } from "../types";
-
-interface BOPSMinimumPayload {
-  application_type: "lawfulness_certificate";
-  site: {
-    uprn: string;
-    address_1: string;
-    address_2?: string;
-    town: string;
-    postcode: string;
-  };
-}
-
-export interface BOPSFullPayload extends BOPSMinimumPayload {
-  description?: string;
-  payment_reference?: string;
-  session_id?: string;
-  ward?: string;
-  work_status?: "proposed" | "existing";
-  applicant_first_name?: string;
-  applicant_last_name?: string;
-  applicant_phone?: string;
-  applicant_email?: string;
-  agent_first_name?: string;
-  agent_last_name?: string;
-  agent_phone?: string;
-  agent_email?: string;
-  proposal_details?: Array<QuestionAndResponses>;
-  constraints?: Record<string, boolean>;
-  files?: Array<File>;
-  boundary_geojson?: Object;
-}
-
-interface QuestionMetaData {
-  notes?: string;
-  auto_answered?: boolean;
-  policy_refs?: Array<{
-    url?: string;
-    text?: string;
-  }>;
-}
-
-interface ResponseMetaData {
-  flags?: Array<string>;
-}
-
-interface Response {
-  value: string;
-  metadata?: ResponseMetaData;
-}
-
-interface QuestionAndResponses {
-  question: string;
-  metadata?: QuestionMetaData;
-  responses: Array<Response>;
-}
-
-interface File {
-  filename: string;
-  tags?: Array<string>;
-}
+import type {
+  BOPSFullPayload,
+  QuestionAndResponses,
+  QuestionMetaData,
+  Response,
+  ResponseMetaData,
+} from "./model";
 
 export const bopsDictionary = {
-  // address data taken from passport.info atm
-
-  // uprn: "property.uprn",
-  // address_1: "property.address.line1",
-  // address_2: "property.address.line2",
-  // town: "property.address.town",
-  // postcode: "property.postcode",
-
-  // constraints => passport[property.constraints.planning]
-
   applicant_first_name: "applicant.name.first",
   applicant_last_name: "applicant.name.last",
   applicant_phone: "applicant.phone.primary",
@@ -91,22 +31,10 @@ export const bopsDictionary = {
   agent_phone: "applicant.agent.phone.primary",
   agent_email: "applicant.agent.email",
 
-  payment_reference: "application.fee.reference.govPay",
   description: "proposal.description",
 };
 
-const minimumPayload: BOPSMinimumPayload = {
-  application_type: "lawfulness_certificate",
-  site: {
-    uprn: "",
-    address_1: "",
-    // address_2: "",
-    town: "",
-    postcode: "",
-  },
-};
-
-export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
+const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
   Object.entries(breadcrumbs)
     .filter(([id]) => {
       if (!flow[id]?.type) return false;
@@ -174,38 +102,35 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
     })
     .filter(Boolean);
 
-export const fullPayload: BOPSFullPayload = {
-  ...minimumPayload,
-
-  work_status: "proposed",
-
-  payment_reference: "JG669323",
-
-  proposal_details: [],
-  constraints: {},
-  files: [] as Array<File>,
-};
-
 export function getParams(
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
   passport: Store.passport,
   sessionId: string
 ) {
-  const data = fullPayload;
+  const data = {} as BOPSFullPayload;
+
+  // Hardcode application type for now
+  data.application_type = "lawfulness_certificate";
+
+  if (sessionId) data.session_id = sessionId;
 
   // 1a. address
 
   const address = passport.data?._address;
   if (address) {
-    data.site.uprn = String(address.uprn);
+    const site = {} as BOPSFullPayload["site"];
 
-    data.site.address_1 = [address.sao, address.pao, address.street]
+    site.uprn = String(address.uprn);
+
+    site.address_1 = [address.sao, address.pao, address.street]
       .filter(Boolean)
       .join(" ");
 
-    data.site.town = address.town;
-    data.site.postcode = address.postcode;
+    site.town = address.town;
+    site.postcode = address.postcode;
+
+    data.site = site;
   }
 
   // 1b. property boundary
@@ -234,7 +159,7 @@ export function getParams(
 
   Object.entries(passport.data || {})
     .filter(([, v]: any) => v?.[0]?.url)
-    .forEach(([key, arr]) => {
+    .forEach(([, arr]) => {
       (arr as any[]).forEach(({ url }) => {
         try {
           data.files = data.files || [];
@@ -249,25 +174,35 @@ export function getParams(
   // 2a. property boundary file if the user didn't draw
 
   if (passport?.data?.[PASSPORT_UPLOAD_KEY]) {
-    data.files?.push({
-      filename: passport?.data[PASSPORT_UPLOAD_KEY],
+    data.files = data.files || [];
+    data.files.push({
+      filename: passport.data[PASSPORT_UPLOAD_KEY],
       tags: [],
     });
   }
 
   // 3. constraints
 
-  data.constraints = (
+  const constraints = (
     passport.data?.["property.constraints.planning"] || []
   ).reduce((acc: Record<string, boolean>, curr: string) => {
     acc[curr] = true;
     return acc;
   }, {});
+  if (Object.values(constraints).map(Boolean).length > 0) {
+    data.constraints = constraints;
+  }
 
   // 4. work status
-
-  if (passport?.data?.["property.constraints.planning"] === "ldc.existing") {
-    data.work_status = "existing";
+  // XXX: this is currently probably a [string], but will be string soon
+  //      howver, String(string) === string and String([string]) === string
+  switch (String(passport?.data?.["application.type"])) {
+    case "ldc.existing":
+      data.work_status = "existing";
+      break;
+    case "ldc.proposed":
+      data.work_status = "proposed";
+      break;
   }
 
   // 5. keys
@@ -287,12 +222,44 @@ export function getParams(
 
   data.proposal_details = makePayload(flow, breadcrumbs);
 
-  const paymentReference = passport?.data?.["application.fee.reference.govPay"];
+  // 7. payment
+
+  const payment = passport?.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
+  if (payment) {
+    data.payment_amount = toPence(payment.amount);
+    data.payment_reference = payment.payment_id;
+  }
+
+  // 8. flag data
+
+  const resultId = Object.keys(breadcrumbs).find(
+    (id) => flow[id]?.type === TYPES.Result
+  );
+  if (resultId) {
+    const result = getResultData(
+      breadcrumbs,
+      flow,
+      DEFAULT_FLAG_CATEGORY,
+      flow[resultId].data?.overrides
+    );
+    const firstResult = Object.values(result)?.[0] as any;
+    const flag = firstResult?.flag?.value;
+
+    if (flag) {
+      data.result = Object.entries({
+        flag: [firstResult.flag.category, firstResult.flag.text].join(" / "),
+        heading: firstResult.displayText?.heading,
+        description: firstResult.displayText?.description,
+        override: passport?.data?.["application.resultOverride.reason"],
+      }).reduce((acc, [k, v]) => {
+        if (v) acc[k] = v;
+        return acc;
+      }, {} as Record<string, any>);
+    }
+  }
 
   return {
     ...data,
     ...bopsData,
-    ...(paymentReference ? { payment_reference: paymentReference } : {}),
-    ...(sessionId ? { session_id: sessionId } : {}),
   };
 }

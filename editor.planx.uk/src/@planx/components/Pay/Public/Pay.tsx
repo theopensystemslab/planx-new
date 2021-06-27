@@ -7,7 +7,13 @@ import type { GovUKPayment } from "types";
 
 import { useTeamSlug } from "../../shared/hooks";
 import { makeData } from "../../shared/utils";
-import { createPayload, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
+import {
+  createPayload,
+  GOV_PAY_PASSPORT_KEY,
+  GOV_UK_PAY_URL,
+  Pay,
+  toDecimal,
+} from "../model";
 import Confirm from "./Confirm";
 
 export default Component;
@@ -106,7 +112,7 @@ function Component(props: Props) {
 
   const handleSuccess = () => {
     dispatch(Action.Success);
-    props.handleSubmit(makeData(props, govUkPayment, "payment"));
+    props.handleSubmit(makeData(props, govUkPayment, GOV_PAY_PASSPORT_KEY));
   };
 
   const updatePayment = (responseData: any): GovUKPayment => {

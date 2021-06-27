@@ -10,6 +10,7 @@ import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
 import Notify from "@planx/components/Notify/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
+import { GOV_PAY_PASSPORT_KEY } from "@planx/components/Pay/model";
 import Pay from "@planx/components/Pay/Public";
 import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
@@ -43,15 +44,16 @@ const Node: React.FC<any> = (props: Props) => {
     hasPaid,
     passport,
     isFinalCard,
+    resetPreview,
   ] = useStore((state) => [
     state.childNodesOf,
     state.resultData,
     state.hasPaid(),
     state.computePassport(),
     state.isFinalCard(),
+    state.resetPreview,
   ]);
 
-  const resetPreview = useStore((state) => state.resetPreview);
   const handleSubmit = isFinalCard ? undefined : props.handleSubmit;
 
   const allProps = {
@@ -92,7 +94,8 @@ const Node: React.FC<any> = (props: Props) => {
         />
       );
     case TYPES.Confirmation:
-      const payment: GovUKPayment | undefined = passport.data?.payment;
+      const payment: GovUKPayment | undefined =
+        passport.data?.[GOV_PAY_PASSPORT_KEY];
 
       return (
         <Confirmation

@@ -1,12 +1,5 @@
 import type { MoreInformation } from "../shared";
 
-export function toGBP(amount: number) {
-  return new Intl.NumberFormat("en-GB", {
-    style: "currency",
-    currency: "GBP",
-  }).format(amount);
-}
-
 export interface Pay extends MoreInformation {
   title?: string;
   description?: string;
@@ -38,6 +31,15 @@ export interface GovUKCreatePaymentPayload {
 export const toPence = (decimal: number) => Math.trunc(decimal * 100);
 export const toDecimal = (pence: number) => pence / 100;
 
+export const formattedPriceWithCurrencySymbol = (
+  amount: number,
+  currency = "GBP"
+) =>
+  new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency,
+  }).format(amount);
+
 export const createPayload = (
   fee: number,
   reference: string
@@ -49,3 +51,5 @@ export const createPayload = (
 });
 
 export const GOV_UK_PAY_URL = `${process.env.REACT_APP_API_URL}/pay`;
+
+export const GOV_PAY_PASSPORT_KEY = "application.fee.reference.govPay" as const;
