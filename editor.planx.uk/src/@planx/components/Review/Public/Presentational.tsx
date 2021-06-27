@@ -111,7 +111,7 @@ function Component(props: Props) {
               return (
                 <React.Fragment key={i}>
                   <Component
-                    nodeId={i}
+                    nodeId={nodeId}
                     node={node}
                     userData={value}
                     flow={props.flow}
@@ -148,7 +148,7 @@ interface ComponentProps {
   userData?: Store.userData;
   flow: Store.flow;
   passport: Store.passport;
-  nodeId: number;
+  nodeId: Store.nodeId;
 }
 
 function Question(props: ComponentProps) {
@@ -191,7 +191,7 @@ function Checklist(props: ComponentProps) {
       <div>{props.node.data.text ?? "Checklist"}</div>
       <div>
         <ul>
-          {getAnswers(props).map((nodeId: string, i: number) => (
+          {getAnswers(props).map((nodeId, i: number) => (
             <li key={i}>{props.flow[nodeId].data.text}</li>
           ))}
         </ul>
@@ -215,7 +215,7 @@ function FileUpload(props: ComponentProps) {
       <div>{props.node.data.title ?? "File upload"}</div>
       <div>
         <ul>
-          {getAnswersByNode(props).map((file: any, i: number) => (
+          {getAnswersByNode(props)?.map((file: any, i: number) => (
             <li key={i}>
               <a target="_blank" href={file.url}>
                 {file.filename}
@@ -381,14 +381,7 @@ function getAnswers(props: ComponentProps): string[] {
 function getAnswersByNode(props: ComponentProps): any {
   try {
     const variableName: string = props.node!.data!.fn!;
-    const edges: string[] = props.flow!._root!.edges!;
-    const node: string = edges[props.nodeId];
-
-    if (props.userData?.data && variableName) {
-      return props.userData?.data[variableName];
-    } else if (props.userData?.data && node) {
-      return props.userData?.data[node];
-    }
+    return props.userData?.data![variableName ?? props.nodeId];
   } catch (err) {}
   return "";
 }
