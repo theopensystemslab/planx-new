@@ -86,7 +86,7 @@ function Component(props: Props) {
   });
 
   useEffect(() => {
-    if (fee <= 0) {
+    if (isNaN(fee) || fee <= 0) {
       // skip the pay component because there's no fee to charge
       return props.handleSubmit({ auto: true });
     }
