@@ -200,7 +200,14 @@ export const previewStore = (
 
       const breadcrumb: Store.userData = { auto: Boolean(auto) };
       if (answers?.length > 0) breadcrumb.answers = answers;
-      if (Object.keys(data).length > 0) breadcrumb.data = data;
+
+      const filteredData = Object.entries(data).reduce((acc, [k, v]) => {
+        if (k && v !== null && v !== undefined) acc[k] = v;
+        return acc;
+      }, {} as typeof data);
+
+      if (Object.keys(filteredData).length > 0) breadcrumb.data = filteredData;
+
       set({
         breadcrumbs: {
           ...breadcrumbs,
