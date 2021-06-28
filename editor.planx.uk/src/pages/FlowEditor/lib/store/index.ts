@@ -1,9 +1,8 @@
 import { TYPES } from "@planx/components/types";
 import create from "zustand";
-import vanillaCreate from "zustand/vanilla";
+import vanillaCreate, { StoreApi } from "zustand/vanilla";
 
 import type { EditorStore, EditorUIStore } from "./editor";
-import { editorStore, editorUIStore } from "./editor";
 import type { PreviewStore } from "./preview";
 import { previewStore } from "./preview";
 import type { SharedStore } from "./shared";
@@ -30,17 +29,28 @@ export declare namespace Store {
   }
 }
 
-// We use a vanillaStore so that we can run unit tests without React
-export const vanillaStore = vanillaCreate<
-  SharedStore & EditorStore & EditorUIStore & PreviewStore
->((set, get) => ({
-  ...sharedStore(set, get),
-  ...editorStore(set, get),
-  ...editorUIStore(set, get),
-  ...previewStore(set, get),
-}));
+export const { vanillaStore, useStore } = (() => {
+  let vanillaStore;
+  // if public-facing preview then don't initialize editor store (including sharedb)
+  if (window?.location?.href?.endsWith("preview")) {
+    vanillaStore = vanillaCreate<SharedStore & PreviewStore>((set, get) => ({
+      ...sharedStore(set, get),
+      ...previewStore(set, get),
+    })) as StoreApi<SharedStore & EditorStore & EditorUIStore & PreviewStore>;
+  } else {
+    const { editorStore, editorUIStore } = require("./editor");
+    vanillaStore = vanillaCreate<
+      SharedStore & EditorStore & EditorUIStore & PreviewStore
+    >((set, get) => ({
+      ...sharedStore(set, get),
+      ...editorStore(set, get),
+      ...editorUIStore(set, get),
+      ...previewStore(set, get),
+    }));
+  }
 
-export const useStore = create(vanillaStore);
+  return { vanillaStore, useStore: create(vanillaStore) };
+})();
 
 // having window.api in console is useful for debugging
 (window as any)["api"] = useStore;
