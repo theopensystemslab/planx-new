@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+
+# When a concurrent job or workflow is queued, if another job or workflow using the same concurrency group in the repository is in progress, the queued job or workflow will be pending. Any previously pending job or workflow in the concurrency group will be canceled. 
+concurrency: staging_environment
+
 jobs:
   test_and_build:
     name: Test and Build
