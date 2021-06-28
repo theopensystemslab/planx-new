@@ -3,6 +3,7 @@ import tinycolor from "@ctrl/tinycolor";
 import { TYPES } from "@planx/components/types";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { client } from "lib/graphql";
+import { objectWithoutNullishValues } from "lib/objectHelpers";
 import difference from "lodash/difference";
 import flatten from "lodash/flatten";
 import isNil from "lodash/isNil";
@@ -201,10 +202,7 @@ export const previewStore = (
       const breadcrumb: Store.userData = { auto: Boolean(auto) };
       if (answers?.length > 0) breadcrumb.answers = answers;
 
-      const filteredData = Object.entries(data).reduce((acc, [k, v]) => {
-        if (k && v !== null && v !== undefined) acc[k] = v;
-        return acc;
-      }, {} as typeof data);
+      const filteredData = objectWithoutNullishValues(data);
 
       if (Object.keys(filteredData).length > 0) breadcrumb.data = filteredData;
 

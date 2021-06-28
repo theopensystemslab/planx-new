@@ -110,7 +110,7 @@ export function getParams(
 ) {
   const data = {} as BOPSFullPayload;
 
-  // Hardcode application type for now
+  // XXX: Hardcode application type for now
   data.application_type = "lawfulness_certificate";
 
   if (sessionId) data.session_id = sessionId;
@@ -194,16 +194,8 @@ export function getParams(
   }
 
   // 4. work status
-  // XXX: this is currently probably a [string], but will be string soon
-  //      howver, String(string) === string and String([string]) === string
-  switch (String(passport?.data?.["application.type"])) {
-    case "ldc.existing":
-      data.work_status = "existing";
-      break;
-    case "ldc.proposed":
-      data.work_status = "proposed";
-      break;
-  }
+  const workStatus = getWorkStatus(passport);
+  if (workStatus) data.work_status = workStatus;
 
   // 5. keys
 
@@ -263,3 +255,14 @@ export function getParams(
     ...bopsData,
   };
 }
+
+export const getWorkStatus = (passport: Store.passport) => {
+  // XXX: this is currently probably a [string], but will be string soon
+  //      howver, String(string) === string and String([string]) === string
+  switch (String(passport?.data?.["application.type"])) {
+    case "ldc.existing":
+      return "existing";
+    case "ldc.proposed":
+      return "proposed";
+  }
+};

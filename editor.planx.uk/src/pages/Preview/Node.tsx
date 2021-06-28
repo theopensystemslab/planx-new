@@ -15,11 +15,13 @@ import Pay from "@planx/components/Pay/Public";
 import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
 import Review from "@planx/components/Review/Public";
+import { getWorkStatus } from "@planx/components/Send/bops";
 import Send from "@planx/components/Send/Public";
 import SetValue from "@planx/components/SetValue/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
 import { TYPES } from "@planx/components/types";
+import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
@@ -45,6 +47,7 @@ const Node: React.FC<any> = (props: Props) => {
     passport,
     isFinalCard,
     resetPreview,
+    sessionId,
   ] = useStore((state) => [
     state.childNodesOf,
     state.resultData,
@@ -52,6 +55,7 @@ const Node: React.FC<any> = (props: Props) => {
     state.computePassport(),
     state.isFinalCard(),
     state.resetPreview,
+    state.sessionId,
   ]);
 
   const handleSubmit = isFinalCard ? undefined : props.handleSubmit;
@@ -97,23 +101,37 @@ const Node: React.FC<any> = (props: Props) => {
       const payment: GovUKPayment | undefined =
         passport.data?.[GOV_PAY_PASSPORT_KEY];
 
+      const details = {
+        "Planning Application Reference": payment?.reference ?? sessionId,
+
+        "Property Address": passport.data?._address?.title,
+
+        "Application type": [
+          // XXX: application type currently hardcoded as it's the only one being
+          //      tested, but this will need to become dynamic.
+          "Application for a Certificate of Lawfulness",
+          getWorkStatus(passport),
+        ]
+          .filter(Boolean)
+          .join(" - "),
+
+        // XXX: If there is no payment we can't alternatively show Date.now() because it
+        //      will change after page refresh. BOPS submission time needs to be queryable.
+        Submitted: payment?.created_date
+          ? new Date(payment.created_date).toLocaleDateString("en-gb", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })
+          : undefined,
+
+        "GOV.UK Payment reference": payment?.payment_id,
+      };
+
       return (
         <Confirmation
           {...allProps}
-          details={{
-            "Planning Application Reference": payment?.reference || "N/A",
-            "Property Address": passport.data?._address?.title || "N/A",
-            "Application type":
-              "Application for a Certificate of Lawfulness - Proposed",
-            Submitted: payment?.created_date
-              ? new Date(payment.created_date).toLocaleDateString("en-gb", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })
-              : "N/A",
-            "GOV.UK Payment reference": payment?.payment_id || "N/A",
-          }}
+          details={objectWithoutNullishValues(details)}
           color={{ text: "#000", background: "rgba(1, 99, 96, 0.1)" }}
         />
       );
