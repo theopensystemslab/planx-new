@@ -29,25 +29,33 @@ export declare namespace Store {
   }
 }
 
+// XXX: We're 'tricking' typescript into thinking that it has access to a
+//      complete store when it imports useStore, so that we have autocompletion
+//      and linting support. However, we don't load editor store files in the
+//      frontend because they do things like connect to sharedb, which is
+//      not something that public users should be concerned with.
+
+type FullStore = SharedStore & PreviewStore & EditorStore & EditorUIStore;
+
 export const { vanillaStore, useStore } = (() => {
-  let vanillaStore;
-  // if public-facing preview then don't initialize editor store (including sharedb)
-  if (window?.location?.href?.endsWith("preview")) {
-    vanillaStore = vanillaCreate<SharedStore & PreviewStore>((set, get) => ({
-      ...sharedStore(set, get),
-      ...previewStore(set, get),
-    })) as StoreApi<SharedStore & EditorStore & EditorUIStore & PreviewStore>;
-  } else {
-    const { editorStore, editorUIStore } = require("./editor");
-    vanillaStore = vanillaCreate<
-      SharedStore & EditorStore & EditorUIStore & PreviewStore
-    >((set, get) => ({
-      ...sharedStore(set, get),
-      ...editorStore(set, get),
-      ...editorUIStore(set, get),
-      ...previewStore(set, get),
-    }));
-  }
+  const vanillaStore: StoreApi<FullStore> = (() => {
+    if (window?.location?.href?.includes("/preview")) {
+      // if accessing the public preview, don't load editor store files
+      return vanillaCreate<SharedStore & PreviewStore>((set, get) => ({
+        ...sharedStore(set, get),
+        ...previewStore(set, get),
+      })) as StoreApi<FullStore>;
+    } else {
+      // if accessing the editor then load ALL store files
+      const { editorStore, editorUIStore } = require("./editor");
+      return vanillaCreate<FullStore>((set, get) => ({
+        ...sharedStore(set, get),
+        ...previewStore(set, get),
+        ...editorStore(set, get),
+        ...editorUIStore(set, get),
+      }));
+    }
+  })();
 
   return { vanillaStore, useStore: create(vanillaStore) };
 })();
