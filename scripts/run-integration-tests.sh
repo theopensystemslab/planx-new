@@ -45,5 +45,5 @@ echo "Running postgres tests…"
 echo "Postgres tests passed."
 
 echo "Running Hasura tests…"
-(cd hasura.planx.uk/tests && npm ci && npm test)
+(cd hasura.planx.uk/tests && pnpm install && pnpm test)
 echo "Hasura tests passed."
