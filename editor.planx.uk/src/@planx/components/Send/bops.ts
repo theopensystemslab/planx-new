@@ -12,7 +12,8 @@ import { Store } from "../../../pages/FlowEditor/lib/store";
 import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY, toPence } from "../Pay/model";
 import { TYPES } from "../types";
-import type {
+import {
+  BOPS_TAGS,
   BOPSFullPayload,
   QuestionAndResponses,
   QuestionMetaData,
@@ -212,13 +213,14 @@ export function getParams(
 
   Object.entries(passport.data || {})
     .filter(([, v]: any) => v?.[0]?.url)
-    .forEach(([, arr]) => {
+    .forEach(([key, arr]) => {
       (arr as any[]).forEach(({ url }) => {
         try {
           data.files = data.files || [];
+
           data.files.push({
             filename: url,
-            tags: [], // should be [key], but BOPS will reject unless it's a specific string
+            tags: extractTagsFromPassportKey(key),
           });
         } catch (err) {}
       });
@@ -318,4 +320,43 @@ export const getWorkStatus = (passport: Store.passport) => {
     case "ldc.proposed":
       return "proposed";
   }
+};
+
+/**
+ * Accepts a passport key and returns BOPS file tags associated with it
+ * More info: https://bit.ly/tags-spreadsheet
+ */
+export const extractTagsFromPassportKey = (passportKey: string) => {
+  const tags: string[] = [];
+
+  if (!passportKey) return tags;
+
+  const splitKey = passportKey.split(".");
+
+  // when?
+  if (splitKey[0] === "proposal") {
+    tags.push(BOPS_TAGS.Proposed);
+  } else if (splitKey[0] === "property") {
+    tags.push(BOPS_TAGS.Existing);
+  }
+
+  // subject
+  if (splitKey.includes("sitePlan")) {
+    tags.push(BOPS_TAGS.Site);
+  } else if (splitKey.includes("roofPlan")) {
+    tags.push(BOPS_TAGS.Roof);
+  } else if (splitKey.includes("plan")) {
+    tags.push(BOPS_TAGS.Floor);
+  }
+
+  // drawing or document type
+  if (splitKey.includes("elevation")) {
+    tags.push(BOPS_TAGS.Elevation);
+  } else if (splitKey.includes("section")) {
+    tags.push(BOPS_TAGS.Section);
+  } else if (splitKey.includes("plan")) {
+    tags.push(BOPS_TAGS.Plan);
+  }
+
+  return tags;
 };
