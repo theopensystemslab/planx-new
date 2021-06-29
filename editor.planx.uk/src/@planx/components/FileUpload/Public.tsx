@@ -135,7 +135,7 @@ const slotsSchema = array()
   });
 
 const FileUpload: React.FC<Props> = (props) => {
-  const [slots, setSlots] = useState([]);
+  const [slots, setSlots] = useState<any[]>([]);
   const [validationError, setValidationError] = useState<string>();
 
   const handleSubmit = () => {
@@ -174,7 +174,13 @@ const FileUpload: React.FC<Props> = (props) => {
   }, [slots]);
 
   return (
-    <Card isValid handleSubmit={handleSubmit}>
+    <Card
+      isValid={
+        slots.length > 0 &&
+        slots.every((slot) => slot.url && slot.status === "success")
+      }
+      handleSubmit={handleSubmit}
+    >
       <QuestionHeader
         title={props.title}
         description={props.description}
