@@ -114,8 +114,8 @@ const addDesignatedVariable = (responseObject) => {
   responseObject["designated"] = { value: false };
 
   // If any of the subvariables are true, then set "designated" to true
-  subVariables.map(s => {
-    if (`designated.${s}`) {
+  subVariables.forEach(s => {
+    if (responseObject[`designated.${s}`].value) {
       responseObject["designated"] = { value: true }
     }
   });
