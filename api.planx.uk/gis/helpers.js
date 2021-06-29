@@ -99,30 +99,6 @@ const getManualConstraints = (metadata) => {
   return manualConstraints;
 };
 
-// We don't have a parent "designated" GIS variable, but still want to auto-answer "are you on designated land" questions broadly
-const addDesignatedVariable = (responseObject) => {
-  subVariables = [
-    "conservationArea",
-    "AONB",
-    "nationalPark",
-    "broads",
-    "WHS",
-    "monument",
-  ]
-
-  // Set a default value, omit "text" key so it doesn't render separately in FindProperty
-  responseObject["designated"] = { value: false };
-
-  // If any of the subvariables are true, then set "designated" to true
-  subVariables.forEach(s => {
-    if (responseObject[`designated.${s}`].value) {
-      responseObject["designated"] = { value: true }
-    }
-  });
-
-  return responseObject;
-};
-
 module.exports = {
   makeEsriUrl,
   bufferPoint,
@@ -130,5 +106,4 @@ module.exports = {
   getQueryableConstraints,
   getFalseConstraints,
   getManualConstraints,
-  addDesignatedVariable,
 };

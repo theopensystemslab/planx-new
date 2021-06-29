@@ -5,7 +5,6 @@ const {
   getManualConstraints,
   makeEsriUrl,
   bufferPoint,
-  addDesignatedVariable,
 } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/lambeth.js");
 
@@ -119,9 +118,6 @@ async function go(x, y, extras) {
       // Same as above, make sure we render single a4 planning constraint
       ob["article4.lambeth.kiba"] = { value: false };
     }
-
-    // Add summary "designated" key to response
-    addDesignatedVariable(ob);
 
     return ob;
   } catch (e) {
