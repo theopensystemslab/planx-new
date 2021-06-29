@@ -1,5 +1,4 @@
 name: Pulumi (PR Staging)
-
 on:
   pull_request:
     types: [opened, synchronize]
@@ -7,6 +6,15 @@ on:
       - main
 
 jobs:
+  integration_tests:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+      - run: ./scripts/run-integration-tests.sh
   test_and_build:
     name: Test and Build
     runs-on: ubuntu-latest
