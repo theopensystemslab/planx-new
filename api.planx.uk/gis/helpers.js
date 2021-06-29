@@ -100,7 +100,7 @@ const getManualConstraints = (metadata) => {
 };
 
 // We don't have a parent "designated" GIS variable, but still want to auto-answer "are you on designated land" questions broadly
-const addDesignatedVariable = (resultObject) => {
+const addDesignatedVariable = (responseObject) => {
   subVariables = [
     "conservationArea",
     "AONB",
@@ -110,17 +110,17 @@ const addDesignatedVariable = (resultObject) => {
     "monument",
   ]
 
-  // Set a default value, omit "text" key so it doesn't render in planning constraints list in FindProperty
-  resultObject["designated"] = { value: false };
+  // Set a default value, omit "text" key so it doesn't render separately in FindProperty
+  responseObject["designated"] = { value: false };
 
   // If any of the subvariables are true, then set "designated" to true
   subVariables.map(s => {
     if (`designated.${s}`) {
-      resultObject["designated"] = { value: true }
+      responseObject["designated"] = { value: true }
     }
   });
 
-  return resultObject;
+  return responseObject;
 };
 
 module.exports = {
