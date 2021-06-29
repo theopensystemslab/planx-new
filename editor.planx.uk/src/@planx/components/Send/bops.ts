@@ -113,8 +113,6 @@ export function getParams(
   // XXX: Hardcode application type for now
   data.application_type = "lawfulness_certificate";
 
-  if (sessionId) data.session_id = sessionId;
-
   // 1a. address
 
   const address = passport.data?._address;
@@ -253,6 +251,11 @@ export function getParams(
   return {
     ...data,
     ...bopsData,
+    planx_debug_data: {
+      session_id: sessionId,
+      breadcrumbs,
+      passport,
+    },
   };
 }
 

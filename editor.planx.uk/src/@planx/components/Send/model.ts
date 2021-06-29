@@ -23,7 +23,6 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
   description?: string;
   payment_reference?: string;
   payment_amount?: number;
-  session_id?: string;
   ward?: string;
   work_status?: "proposed" | "existing";
   applicant_first_name?: string;
@@ -44,6 +43,7 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
     description?: string;
     override?: string;
   };
+  planx_debug_data?: Record<string, unknown>;
 }
 
 export interface QuestionMetaData {

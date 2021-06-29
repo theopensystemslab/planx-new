@@ -36,7 +36,11 @@ test("prior", () => {
       flag: "Planning permission / Prior approval",
       heading: "Custom prior heading",
     },
-    session_id: "123",
+    planx_debug_data: {
+      breadcrumbs,
+      passport,
+      session_id: sessionId,
+    },
   };
 
   expect(actual).toStrictEqual(expected);
@@ -89,7 +93,11 @@ test("permission", () => {
       heading: "Permission needed",
       override: "i don't agree",
     },
-    session_id: "123",
+    planx_debug_data: {
+      breadcrumbs,
+      passport,
+      session_id: sessionId,
+    },
   };
 
   expect(actual).toStrictEqual(expected);
@@ -113,7 +121,11 @@ test("other", () => {
     proposal_details: [
       { question: "which answer?", responses: [{ value: "other" }] },
     ],
-    session_id: "123",
+    planx_debug_data: {
+      breadcrumbs,
+      passport,
+      session_id: sessionId,
+    },
   };
 
   expect(actual).toStrictEqual(expected);
