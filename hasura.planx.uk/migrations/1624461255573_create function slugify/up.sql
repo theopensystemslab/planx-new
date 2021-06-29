@@ -18,6 +18,11 @@ RETURNS TEXT AS $$
   "trimmed" AS (
     SELECT regexp_replace(regexp_replace("value", '\-+$', ''), '^\-', '') AS "value"
     FROM "hyphenated"
+  ),
+  -- replaces multiple hyphens ('--') with a single hypen ('-')
+  "deduped" AS (
+    SELECT regexp_replace("value", '[-]+', '-', 'gi') AS "value"
+    FROM "trimmed"
   )
-  SELECT "value" FROM "trimmed";
+  SELECT "value" FROM "deduped";
 $$ LANGUAGE SQL STABLE;
