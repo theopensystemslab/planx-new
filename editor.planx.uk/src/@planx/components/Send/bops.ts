@@ -34,17 +34,54 @@ export const bopsDictionary = {
   description: "proposal.description",
 };
 
-const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
+function isTypeForBopsPayload(type?: TYPES) {
+  if (!type) return false;
+
+  switch (type) {
+    case TYPES.Calculate:
+    case TYPES.Confirmation:
+    case TYPES.Content:
+    case TYPES.DrawBoundary:
+    case TYPES.ExternalPortal:
+    case TYPES.FileUpload:
+    case TYPES.Filter:
+    case TYPES.FindProperty:
+    case TYPES.Flow:
+    case TYPES.InternalPortal:
+    case TYPES.Notice:
+    case TYPES.Notify:
+    case TYPES.Page:
+    case TYPES.Pay:
+    case TYPES.Response:
+    case TYPES.Result:
+    case TYPES.Review:
+    case TYPES.Send:
+    case TYPES.SetValue:
+    case TYPES.TaskList:
+    // TODO: remove Report and SignIn types
+    case TYPES.Report:
+    case TYPES.SignIn:
+      return false;
+
+    case TYPES.AddressInput:
+    case TYPES.Checklist:
+    case TYPES.DateInput:
+    case TYPES.NumberInput:
+    case TYPES.Statement:
+    case TYPES.TextInput:
+      return true;
+
+    default:
+      const exhaustiveCheck: never = type;
+      throw new Error(`Unhandled type: ${type}`);
+  }
+}
+
+export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
   Object.entries(breadcrumbs)
     .filter(([id]) => {
-      if (!flow[id]?.type) return false;
-
-      const validType = [
-        TYPES.Checklist,
-        TYPES.Statement,
-        TYPES.TextInput,
-      ].includes(flow[id].type as number);
-
+      const validType = isTypeForBopsPayload(flow[id].type);
+      // exclude answers that have been extracted into the root object
       const validKey = !Object.values(bopsDictionary).includes(
         flow[id]?.data?.fn
       );
@@ -55,12 +92,24 @@ const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
       const { edges = [], ...question } = flow[id];
 
       const answers: Array<string> = (() => {
-        if (flow[id].type === TYPES.TextInput) {
-          return Object.values(bc.data ?? {}).filter(
-            (x) => typeof x === "string"
-          );
-        } else {
-          return bc.answers ?? [];
+        switch (flow[id].type) {
+          case TYPES.AddressInput:
+            try {
+              const addressObject = Object.values(bc.data!).find(
+                (x) => x.postcode
+              );
+              return [Object.values(addressObject).join(", ")];
+            } catch (err) {
+              return [JSON.stringify(bc.data)];
+            }
+          case TYPES.DateInput:
+          case TYPES.NumberInput:
+          case TYPES.TextInput:
+            return Object.values(bc.data ?? {}).map((x) => String(x));
+          case TYPES.Checklist:
+          case TYPES.Statement:
+          default:
+            return bc.answers ?? [];
         }
       })();
 
