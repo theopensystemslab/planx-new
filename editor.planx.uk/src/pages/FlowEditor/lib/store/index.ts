@@ -1,9 +1,8 @@
 import { TYPES } from "@planx/components/types";
 import create from "zustand";
-import vanillaCreate from "zustand/vanilla";
+import vanillaCreate, { StoreApi } from "zustand/vanilla";
 
 import type { EditorStore, EditorUIStore } from "./editor";
-import { editorStore, editorUIStore } from "./editor";
 import type { PreviewStore } from "./preview";
 import { previewStore } from "./preview";
 import type { SharedStore } from "./shared";
@@ -30,17 +29,36 @@ export declare namespace Store {
   }
 }
 
-// We use a vanillaStore so that we can run unit tests without React
-export const vanillaStore = vanillaCreate<
-  SharedStore & EditorStore & EditorUIStore & PreviewStore
->((set, get) => ({
-  ...sharedStore(set, get),
-  ...editorStore(set, get),
-  ...editorUIStore(set, get),
-  ...previewStore(set, get),
-}));
+// XXX: We're 'tricking' typescript into thinking that it has access to a
+//      complete store when it imports useStore, so that we have autocompletion
+//      and linting support. However, we don't load editor store files in the
+//      frontend because they do things like connect to sharedb, which is
+//      not something that public users should be concerned with.
 
-export const useStore = create(vanillaStore);
+type FullStore = SharedStore & PreviewStore & EditorStore & EditorUIStore;
+
+export const { vanillaStore, useStore } = (() => {
+  const vanillaStore: StoreApi<FullStore> = (() => {
+    if (window?.location?.href?.includes("/preview")) {
+      // if accessing the public preview, don't load editor store files
+      return vanillaCreate<SharedStore & PreviewStore>((set, get) => ({
+        ...sharedStore(set, get),
+        ...previewStore(set, get),
+      })) as StoreApi<FullStore>;
+    } else {
+      // if accessing the editor then load ALL store files
+      const { editorStore, editorUIStore } = require("./editor");
+      return vanillaCreate<FullStore>((set, get) => ({
+        ...sharedStore(set, get),
+        ...previewStore(set, get),
+        ...editorStore(set, get),
+        ...editorUIStore(set, get),
+      }));
+    }
+  })();
+
+  return { vanillaStore, useStore: create(vanillaStore) };
+})();
 
 // having window.api in console is useful for debugging
 (window as any)["api"] = useStore;
