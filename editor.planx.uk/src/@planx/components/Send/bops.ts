@@ -334,30 +334,27 @@ export const extractTagsFromPassportKey = (passportKey: string) => {
 
   const splitKey = passportKey.split(".");
 
-  // when?
   if (splitKey[0] === "proposal") {
     tags.push(BOPS_TAGS.Proposed);
   } else if (splitKey[0] === "property") {
     tags.push(BOPS_TAGS.Existing);
   }
 
-  // subject
   if (splitKey.includes("sitePlan")) {
     tags.push(BOPS_TAGS.Site);
     tags.push(BOPS_TAGS.Plan);
   } else if (splitKey.includes("roofPlan")) {
     tags.push(BOPS_TAGS.Roof);
     tags.push(BOPS_TAGS.Plan);
+  } else if (splitKey.includes("elevation")) {
+    tags.push(BOPS_TAGS.Elevation);
+    tags.push(BOPS_TAGS.Plan);
+  } else if (splitKey.includes("section")) {
+    tags.push(BOPS_TAGS.Section);
+    tags.push(BOPS_TAGS.Plan);
   } else if (splitKey.includes("plan")) {
     tags.push(BOPS_TAGS.Floor);
     tags.push(BOPS_TAGS.Plan);
-  }
-
-  // drawing or document type
-  if (splitKey.includes("elevation")) {
-    tags.push(BOPS_TAGS.Elevation);
-  } else if (splitKey.includes("section")) {
-    tags.push(BOPS_TAGS.Section);
   }
 
   return uniq(tags);
