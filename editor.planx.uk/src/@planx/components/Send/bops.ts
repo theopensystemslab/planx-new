@@ -12,7 +12,8 @@ import { Store } from "../../../pages/FlowEditor/lib/store";
 import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY, toPence } from "../Pay/model";
 import { TYPES } from "../types";
-import type {
+import {
+  BOPS_TAGS,
   BOPSFullPayload,
   QuestionAndResponses,
   QuestionMetaData,
@@ -34,17 +35,54 @@ export const bopsDictionary = {
   description: "proposal.description",
 };
 
-const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
+function isTypeForBopsPayload(type?: TYPES) {
+  if (!type) return false;
+
+  switch (type) {
+    case TYPES.Calculate:
+    case TYPES.Confirmation:
+    case TYPES.Content:
+    case TYPES.DrawBoundary:
+    case TYPES.ExternalPortal:
+    case TYPES.FileUpload:
+    case TYPES.Filter:
+    case TYPES.FindProperty:
+    case TYPES.Flow:
+    case TYPES.InternalPortal:
+    case TYPES.Notice:
+    case TYPES.Notify:
+    case TYPES.Page:
+    case TYPES.Pay:
+    case TYPES.Response:
+    case TYPES.Result:
+    case TYPES.Review:
+    case TYPES.Send:
+    case TYPES.SetValue:
+    case TYPES.TaskList:
+    // TODO: remove Report and SignIn types
+    case TYPES.Report:
+    case TYPES.SignIn:
+      return false;
+
+    case TYPES.AddressInput:
+    case TYPES.Checklist:
+    case TYPES.DateInput:
+    case TYPES.NumberInput:
+    case TYPES.Statement:
+    case TYPES.TextInput:
+      return true;
+
+    default:
+      const exhaustiveCheck: never = type;
+      throw new Error(`Unhandled type: ${type}`);
+  }
+}
+
+export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
   Object.entries(breadcrumbs)
     .filter(([id]) => {
-      if (!flow[id]?.type) return false;
-
-      const validType = [
-        TYPES.Checklist,
-        TYPES.Statement,
-        TYPES.TextInput,
-      ].includes(flow[id].type as number);
-
+      const validType = isTypeForBopsPayload(flow[id].type);
+      // exclude answers that have been extracted into the root object
       const validKey = !Object.values(bopsDictionary).includes(
         flow[id]?.data?.fn
       );
@@ -55,12 +93,24 @@ const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
       const { edges = [], ...question } = flow[id];
 
       const answers: Array<string> = (() => {
-        if (flow[id].type === TYPES.TextInput) {
-          return Object.values(bc.data ?? {}).filter(
-            (x) => typeof x === "string"
-          );
-        } else {
-          return bc.answers ?? [];
+        switch (flow[id].type) {
+          case TYPES.AddressInput:
+            try {
+              const addressObject = Object.values(bc.data!).find(
+                (x) => x.postcode
+              );
+              return [Object.values(addressObject).join(", ")];
+            } catch (err) {
+              return [JSON.stringify(bc.data)];
+            }
+          case TYPES.DateInput:
+          case TYPES.NumberInput:
+          case TYPES.TextInput:
+            return Object.values(bc.data ?? {}).map((x) => String(x));
+          case TYPES.Checklist:
+          case TYPES.Statement:
+          default:
+            return bc.answers ?? [];
         }
       })();
 
@@ -69,7 +119,11 @@ const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
         const metadata: ResponseMetaData = {};
 
         if (flow[id]) {
-          value = flow[id].data?.text || flow[id].data?.title || "";
+          // XXX: this is how we get the text represenation of a node until
+          //      we have a more standardised way of retrieving it. More info
+          //      https://github.com/theopensystemslab/planx-new/discussions/386
+          value = flow[id].data?.text ?? flow[id].data?.title ?? "";
+
           if (flow[id].data?.flag) {
             const flag = flatFlags.find((f) => f.value === flow[id].data?.flag);
             if (flag) {
@@ -84,7 +138,7 @@ const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
       });
 
       const ob: QuestionAndResponses = {
-        question: question?.data?.text || question?.data?.title || "",
+        question: question?.data?.text ?? question?.data?.title ?? "",
         responses,
       };
 
@@ -159,13 +213,14 @@ export function getParams(
 
   Object.entries(passport.data || {})
     .filter(([, v]: any) => v?.[0]?.url)
-    .forEach(([, arr]) => {
+    .forEach(([key, arr]) => {
       (arr as any[]).forEach(({ url }) => {
         try {
           data.files = data.files || [];
+
           data.files.push({
             filename: url,
-            tags: [], // should be [key], but BOPS will reject unless it's a specific string
+            tags: extractTagsFromPassportKey(key),
           });
         } catch (err) {}
       });
@@ -265,4 +320,41 @@ export const getWorkStatus = (passport: Store.passport) => {
     case "ldc.proposed":
       return "proposed";
   }
+};
+
+/**
+ * Accepts a passport key and returns BOPS file tags associated with it
+ * More info: https://bit.ly/tags-spreadsheet
+ */
+export const extractTagsFromPassportKey = (passportKey: string) => {
+  const tags: BOPS_TAGS[] = [];
+
+  if (!passportKey) return tags;
+
+  const splitKey = passportKey.split(".");
+
+  if (splitKey[0] === "proposal") {
+    tags.push(BOPS_TAGS.Proposed);
+  } else if (splitKey[0] === "property") {
+    tags.push(BOPS_TAGS.Existing);
+  }
+
+  if (splitKey.includes("sitePlan")) {
+    tags.push(BOPS_TAGS.Site);
+    tags.push(BOPS_TAGS.Plan);
+  } else if (splitKey.includes("roofPlan")) {
+    tags.push(BOPS_TAGS.Roof);
+    tags.push(BOPS_TAGS.Plan);
+  } else if (splitKey.includes("elevation")) {
+    tags.push(BOPS_TAGS.Elevation);
+    tags.push(BOPS_TAGS.Plan);
+  } else if (splitKey.includes("section")) {
+    tags.push(BOPS_TAGS.Section);
+    tags.push(BOPS_TAGS.Plan);
+  } else if (splitKey.includes("plan")) {
+    tags.push(BOPS_TAGS.Floor);
+    tags.push(BOPS_TAGS.Plan);
+  }
+
+  return tags;
 };
