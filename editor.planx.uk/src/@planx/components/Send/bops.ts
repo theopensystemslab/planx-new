@@ -4,7 +4,6 @@
 // POST data payloads accepted by the BOPS API, see:
 // https://southwark.preview.bops.services/api-docs/index.html
 
-import uniq from "lodash/uniq";
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
@@ -357,5 +356,5 @@ export const extractTagsFromPassportKey = (passportKey: string) => {
     tags.push(BOPS_TAGS.Plan);
   }
 
-  return uniq(tags);
+  return tags;
 };
