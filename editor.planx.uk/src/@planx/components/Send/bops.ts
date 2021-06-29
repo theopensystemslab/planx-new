@@ -327,7 +327,7 @@ export const getWorkStatus = (passport: Store.passport) => {
  * More info: https://bit.ly/tags-spreadsheet
  */
 export const extractTagsFromPassportKey = (passportKey: string) => {
-  const tags: string[] = [];
+  const tags: BOPS_TAGS[] = [];
 
   if (!passportKey) return tags;
 
