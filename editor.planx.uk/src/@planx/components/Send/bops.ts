@@ -118,7 +118,11 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
         const metadata: ResponseMetaData = {};
 
         if (flow[id]) {
-          value = flow[id].data?.text || flow[id].data?.title || "";
+          // XXX: this is how we get the text represenation of a node until
+          //      we have a more standardised way of retrieving it. More info
+          //      https://github.com/theopensystemslab/planx-new/discussions/386
+          value = flow[id].data?.text ?? flow[id].data?.title ?? "";
+
           if (flow[id].data?.flag) {
             const flag = flatFlags.find((f) => f.value === flow[id].data?.flag);
             if (flag) {
@@ -133,7 +137,7 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
       });
 
       const ob: QuestionAndResponses = {
-        question: question?.data?.text || question?.data?.title || "",
+        question: question?.data?.text ?? question?.data?.title ?? "",
         responses,
       };
 
