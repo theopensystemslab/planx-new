@@ -4,6 +4,7 @@
 // POST data payloads accepted by the BOPS API, see:
 // https://southwark.preview.bops.services/api-docs/index.html
 
+import uniq from "lodash/uniq";
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
@@ -343,10 +344,13 @@ export const extractTagsFromPassportKey = (passportKey: string) => {
   // subject
   if (splitKey.includes("sitePlan")) {
     tags.push(BOPS_TAGS.Site);
+    tags.push(BOPS_TAGS.Plan);
   } else if (splitKey.includes("roofPlan")) {
     tags.push(BOPS_TAGS.Roof);
+    tags.push(BOPS_TAGS.Plan);
   } else if (splitKey.includes("plan")) {
     tags.push(BOPS_TAGS.Floor);
+    tags.push(BOPS_TAGS.Plan);
   }
 
   // drawing or document type
@@ -354,9 +358,7 @@ export const extractTagsFromPassportKey = (passportKey: string) => {
     tags.push(BOPS_TAGS.Elevation);
   } else if (splitKey.includes("section")) {
     tags.push(BOPS_TAGS.Section);
-  } else if (splitKey.includes("plan")) {
-    tags.push(BOPS_TAGS.Plan);
   }
 
-  return tags;
+  return uniq(tags);
 };
