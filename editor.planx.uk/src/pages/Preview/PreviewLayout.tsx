@@ -12,7 +12,7 @@ import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { FlowSettings,FOOTER_ITEMS } from "../../types";
+import { FlowSettings, FOOTER_ITEMS } from "../../types";
 
 const PreviewLayout: React.FC<{
   children?: any;
