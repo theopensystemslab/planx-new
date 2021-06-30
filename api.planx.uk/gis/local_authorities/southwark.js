@@ -129,9 +129,9 @@ async function locationSearch(x, y, extras) {
     });
 
   // Add summary "designated" key to response
-  addDesignatedVariable(ob);
+  const obWithDesignated = addDesignatedVariable(ob);
 
-  return ob;
+  return obWithDesignated;
 }
 
 module.exports = {

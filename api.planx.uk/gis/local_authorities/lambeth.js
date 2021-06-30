@@ -121,9 +121,9 @@ async function go(x, y, extras) {
     }
 
     // Add summary "designated" key to response
-    addDesignatedVariable(ob);
+    const obWithDesignated = addDesignatedVariable(ob);
 
-    return ob;
+    return obWithDesignated;
   } catch (e) {
     throw e;
   }
