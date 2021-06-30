@@ -1,5 +1,7 @@
 config:
   application:bops-api-root-domain: bops-staging.services
+  application:airtable-secret-key:
+    secure: AAABAHUHo5X21Pp8Hc3mBg+/4XT8GrCAPaa7TbWIx7jWrQ2UB1s08GGBp/M8hnIAAg==
   application:bops-api-token:
     secure: AAABAPFfMwfNWOArz/UOq2NB+vz16cENKc20a7reeh1hRqx3IXLyXg==
   application:cloudflare-zone-id:
