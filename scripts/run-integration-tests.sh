@@ -12,9 +12,9 @@ echo "ROOT_DIR=${ROOT_DIR}"
 cd "$ROOT_DIR" || exit
 
 # Destroy all previous containers and data (just in case)
-docker-compose down -v
+docker-compose down --volumes
 
-trap 'echo "Cleaning up…" ; docker-compose down -v' EXIT
+trap 'echo "Cleaning up…" ; docker-compose down --volumes' EXIT
 
 echo "Loading env vars…"
 . "${ROOT_DIR}/.env"
