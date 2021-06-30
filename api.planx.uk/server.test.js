@@ -131,11 +131,12 @@ describe("fetching GIS data from local authorities", () => {
     it(`returns MVP planning constraints for ${location.council}`, async () => {
       await supertest(app)
         .get(`/gis/${location.council}?x=${location.x}&y=${location.y}`)
+        .timeout(20000)
         .expect(200)
         .then((res) => {
           expect(res.body["article4"]).toBeDefined();
           expect(res.body["listed"]).toBeDefined();
-          expect(res.body["designated.conservationArea"]).toBeDefined();
+          expect(res.body["designated"]).toBeDefined();
         });
     });
   });
