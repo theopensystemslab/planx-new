@@ -1,6 +1,5 @@
 export enum TYPES {
   Flow = 1,
-  SignIn = 2,
   Result = 3,
   TaskList = 7,
   Notice = 8,

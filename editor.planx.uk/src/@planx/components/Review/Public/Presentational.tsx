@@ -75,7 +75,6 @@ const components: {
   [TYPES.Review]: undefined,
   [TYPES.Send]: undefined,
   [TYPES.SetValue]: undefined,
-  [TYPES.SignIn]: undefined,
   [TYPES.Statement]: Question,
   [TYPES.TaskList]: undefined,
   [TYPES.TextInput]: TextInput,

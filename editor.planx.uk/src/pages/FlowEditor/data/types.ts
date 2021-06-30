@@ -25,7 +25,6 @@ export const SLUGS: {
   [TYPES.Review]: "review",
   [TYPES.Send]: "send",
   [TYPES.SetValue]: "set-value",
-  [TYPES.SignIn]: "question",
   [TYPES.Statement]: "question",
   [TYPES.TaskList]: "task-list",
   [TYPES.TextInput]: "text-input",

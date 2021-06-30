@@ -71,7 +71,6 @@ export const ICONS: {
   [TYPES.Review]: RateReview,
   [TYPES.Send]: Send,
   [TYPES.SetValue]: PlaylistAdd,
-  [TYPES.SignIn]: undefined,
   [TYPES.Statement]: CallSplit,
   [TYPES.TaskList]: List,
   [TYPES.TextInput]: Create,
