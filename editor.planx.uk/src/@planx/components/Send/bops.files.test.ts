@@ -1,5 +1,6 @@
 import { Store } from "pages/FlowEditor/lib/store";
 
+import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
 import { extractTagsFromPassportKey, getParams } from "./bops";
 
 const flow: Store.flow = {
@@ -109,6 +110,10 @@ describe("It extracts tags for", () => {
     "Additional document": {
       key: "proposal.document.other",
       tags: ["Proposed"],
+    },
+    "Site boundary PDF": {
+      key: PASSPORT_UPLOAD_KEY,
+      tags: ["Proposed", "Plan"],
     },
   };
 

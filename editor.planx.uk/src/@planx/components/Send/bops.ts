@@ -232,7 +232,7 @@ export function getParams(
     data.files = data.files || [];
     data.files.push({
       filename: passport.data[PASSPORT_UPLOAD_KEY],
-      tags: [],
+      tags: extractTagsFromPassportKey(PASSPORT_UPLOAD_KEY),
     });
   }
 
@@ -350,6 +350,9 @@ export const extractTagsFromPassportKey = (passportKey: string) => {
     tags.push(BOPS_TAGS.Plan);
   } else if (splitKey.includes("section")) {
     tags.push(BOPS_TAGS.Section);
+    tags.push(BOPS_TAGS.Plan);
+  } else if (splitKey.includes("locationPlan")) {
+    // XXX: no Location-related tag provided by BOPS
     tags.push(BOPS_TAGS.Plan);
   } else if (splitKey.includes("plan")) {
     tags.push(BOPS_TAGS.Floor);
