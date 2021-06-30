@@ -137,9 +137,10 @@ function Component(props: Props) {
     );
   } else {
     return (
-      <DelayedLoadingIndicator msDelayBeforeVisible={0}>
-        Waiting for property data…
-      </DelayedLoadingIndicator>
+      <DelayedLoadingIndicator
+        msDelayBeforeVisible={0}
+        text="Fetching property information..."
+      />
     );
   }
 }
