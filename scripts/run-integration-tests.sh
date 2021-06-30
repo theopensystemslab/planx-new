@@ -12,7 +12,7 @@ echo "ROOT_DIR=${ROOT_DIR}"
 cd "$ROOT_DIR" || exit
 
 # Destroy all previous containers and data (just in case)
-docker-compose down --volumes
+docker-compose down --volumes --remove-orphans
 
 trap 'echo "Cleaning up…" ; docker-compose down --volumes' EXIT
 
