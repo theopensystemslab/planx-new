@@ -102,3 +102,41 @@ describe("sending a payment to GOV.UK Pay", () => {
       });
   });
 });
+
+describe("fetching GIS data from local authorities", () => {
+  const locations = [
+    {
+      council: "buckinghamshire",
+      x: 485061.33649798,
+      y: 191930.3763250516,
+    },
+    {
+      council: "canterbury",
+      x: 615806.3528948927,
+      y: 157824.02262987028,
+    },
+    {
+      council: "lambeth",
+      x: 531372.771064619,
+      y: 177420.151319974,
+    },
+    {
+      council: "southwark",
+      x: 532700,
+      y: 175010,
+    }
+  ];
+
+  locations.forEach(location => {
+    it(`returns MVP planning constraints for ${location.council}`, async () => {
+      await supertest(app)
+        .get(`/gis/${location.council}?x=${location.x}&y=${location.y}`)
+        .expect(200)
+        .then((res) => {
+          expect(res.body["article4"]).toBeDefined();
+          expect(res.body["listed"]).toBeDefined();
+          expect(res.body["designated.conservationArea"]).toBeDefined();
+        });
+    });
+  });
+});
