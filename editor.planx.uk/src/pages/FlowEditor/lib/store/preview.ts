@@ -370,10 +370,7 @@ export const previewStore = (
           const node = flow[id];
           const passport = computePassport();
 
-          if (
-            node.type &&
-            [TYPES.InternalPortal, TYPES.Page].includes(node.type)
-          ) {
+          if (node.type === TYPES.InternalPortal) {
             return nodeIdsConnectedFrom(id);
           }
 

@@ -8,7 +8,6 @@ import Breadcrumb from "./Breadcrumb";
 import Checklist from "./Checklist";
 import Filter from "./Filter";
 import Option from "./Option";
-import Page from "./Page";
 import Portal from "./Portal";
 import Question from "./Question";
 
@@ -64,8 +63,6 @@ const Node: React.FC<any> = (props) => {
       return <Question {...allProps} text="Notify" />;
     case TYPES.NumberInput:
       return <Question {...allProps} text={node?.data?.title ?? "Number"} />;
-    case TYPES.Page:
-      return <Page {...allProps} text={node?.data?.title ?? "Page"} />;
     case TYPES.Pay:
       return <Question {...allProps} text={node?.data?.title ?? "Pay"} />;
     case TYPES.Result:

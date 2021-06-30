@@ -19,7 +19,6 @@ export const SLUGS: {
   [TYPES.Notice]: "notice",
   [TYPES.Notify]: "notify",
   [TYPES.NumberInput]: "number-input",
-  [TYPES.Page]: "page",
   [TYPES.Pay]: "pay",
   [TYPES.Report]: "question",
   [TYPES.Response]: "question",

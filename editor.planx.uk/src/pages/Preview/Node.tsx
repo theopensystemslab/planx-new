@@ -228,7 +228,6 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Filter:
     case TYPES.Flow:
     case TYPES.InternalPortal:
-    case TYPES.Page:
     case TYPES.Report:
     case TYPES.Response:
     case TYPES.SignIn:
