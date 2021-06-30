@@ -26,9 +26,10 @@ interface TeamSettings {
 }
 
 export const FOOTER_ITEMS = [
-  "privacy",
   "help",
+  "privacy",
   "accessibility",
+  "license",
   "cookies",
   "termsOfUse",
 ];

@@ -1,3 +1,4 @@
+import { globalFooterContent } from "globalFooterContent";
 import gql from "graphql-tag";
 import {
   compose,
@@ -60,9 +61,13 @@ const routes = compose(
     //
     // useStore.getState().setFlow(flow.id, flow.data_merged);
 
+    const settings = {
+      elements: { ...flow.settings?.elements, ...globalFooterContent },
+    };
+
     return (
-      <PreviewContext.Provider value={flow}>
-        <Layout theme={flow.team.theme} settings={flow.settings}>
+      <PreviewContext.Provider value={{ ...flow, settings }}>
+        <Layout theme={flow.team.theme} settings={settings}>
           <View />
         </Layout>
       </PreviewContext.Provider>
