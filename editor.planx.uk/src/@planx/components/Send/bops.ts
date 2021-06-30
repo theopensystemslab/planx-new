@@ -58,8 +58,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.Send:
     case TYPES.SetValue:
     case TYPES.TaskList:
-    // TODO: remove Report and SignIn types
-    case TYPES.Report:
+    // TODO: remove SignIn type
     case TYPES.SignIn:
       return false;
 

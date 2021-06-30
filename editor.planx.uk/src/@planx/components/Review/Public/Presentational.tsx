@@ -70,7 +70,6 @@ const components: {
   [TYPES.Notify]: undefined,
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Pay]: undefined,
-  [TYPES.Report]: undefined,
   [TYPES.Response]: Debug,
   [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,

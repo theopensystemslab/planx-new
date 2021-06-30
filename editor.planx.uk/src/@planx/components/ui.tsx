@@ -66,7 +66,6 @@ export const ICONS: {
   [TYPES.Notify]: MailOutlined,
   [TYPES.NumberInput]: ExposureZero,
   [TYPES.Pay]: PaymentOutlined,
-  [TYPES.Report]: undefined,
   [TYPES.Response]: undefined,
   [TYPES.Result]: PlaylistAddCheck,
   [TYPES.Review]: RateReview,

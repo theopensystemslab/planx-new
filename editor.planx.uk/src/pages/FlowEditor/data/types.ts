@@ -20,7 +20,6 @@ export const SLUGS: {
   [TYPES.Notify]: "notify",
   [TYPES.NumberInput]: "number-input",
   [TYPES.Pay]: "pay",
-  [TYPES.Report]: "question",
   [TYPES.Response]: "question",
   [TYPES.Result]: "result",
   [TYPES.Review]: "review",
