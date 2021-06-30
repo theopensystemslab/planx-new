@@ -214,6 +214,10 @@ new pulumi.Config("cloudflare").require("apiToken");
             value: config.require("bops-api-root-domain"),
           },
           { name: "BOPS_API_TOKEN", value: config.require("bops-api-token") },
+          {
+            name: "AIRTABLE_SECRET_KEY",
+            value: config.require("airtable-secret-key"),
+          },
           { name: "JWT_SECRET", value: config.require("jwt-secret") },
           { name: "PORT", value: String(API_PORT) },
           {

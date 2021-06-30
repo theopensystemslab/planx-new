@@ -1,5 +1,7 @@
 config:
   application:bops-api-root-domain: bops.services
+  application:airtable-secret-key:
+    secure: AAABAHmKcPzDtelETdPPpMpo3Z8a2Ip+MNCuBRH+j3FFRt46ot3JgxGzSOBTCL/iCw==
   application:bops-api-token:
     secure: AAABAMqHDCUHOnq3PCudVRigskTLZrBKjVzZ9X4qdUqF7Wid6NHa4zQyTMeQJ4ACtS7LMZIZq84=
   application:cloudflare-zone-id: a9b9933f28e786ec4cfd4bb596f5a519
