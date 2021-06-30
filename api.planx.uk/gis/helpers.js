@@ -101,7 +101,7 @@ const getManualConstraints = (metadata) => {
 
 // We don't have a parent "designated" GIS variable, but still want to auto-answer "are you on designated land" questions broadly
 const addDesignatedVariable = (responseObject) => {
-  subVariables = [
+  const subVariables = [
     "conservationArea",
     "AONB",
     "nationalPark",
