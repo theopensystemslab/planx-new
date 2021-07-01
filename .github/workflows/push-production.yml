@@ -4,8 +4,10 @@ on:
     branches:
       - production
 
-# When a concurrent job or workflow is queued, if another job or workflow using the same concurrency group in the repository is in progress, the queued job or workflow will be pending. Any previously pending job or workflow in the concurrency group will be canceled. 
 concurrency: production_environment
+
+env:
+  DEPLOYMENT_ENVIRONMENT: production
 
 jobs:
   test_and_build:
@@ -97,3 +99,15 @@ jobs:
           edit-pr-comment: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      - name: Notify Airbrake of deploy
+        id: airbrake-deploy
+        uses: mtchavez/airbrake-deploy@v1
+        with:
+          project-id: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+          project-key: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+          environment: ${{ env.DEPLOYMENT_ENVIRONMENT }}
+          repository: https://github.com${{ github.repo }}
+          revision: ${{ github.sha }}
+          user: ${{ github.actor }}
+      - name: Get Airbrake deploy response
+        run: echo "The response was ${{ steps.airbrake-deploy.outputs.response }}"
