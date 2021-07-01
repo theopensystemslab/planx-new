@@ -1,4 +1,4 @@
-import { globalFooterContent } from "globalFooterContent";
+import Airtable from "airtable";
 import gql from "graphql-tag";
 import {
   compose,
@@ -16,10 +16,10 @@ import InformationPage from "../components/InformationPage";
 import { dataMerged } from "../lib/dataMergedHotfix";
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
-import { PreviewContext } from "../pages/Preview/Context";
+import { GlobalContent, PreviewContext } from "../pages/Preview/Context";
 import Layout from "../pages/Preview/PreviewLayout";
 import Questions from "../pages/Preview/Questions";
-import type { Flow } from "../types";
+import { AirtableStatus, Flow, FOOTER_ITEMS, TextContent } from "../types";
 
 const routes = compose(
   withData((req) => ({
@@ -56,6 +56,46 @@ const routes = compose(
 
     const flow: Flow = data.flows[0];
 
+    const records = (async () => {
+      try {
+        const base = new Airtable({ apiKey: "keyI7kFOwsgUCPG3w" }).base(
+          "appGAyYlJVo3f6MbA"
+        );
+
+        const records = await base("Footer pages")
+          .select({
+            view: "Grid view",
+          })
+          .firstPage();
+
+        return records;
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+
+    const globalContent = (await records)?.reduce(
+      (acc: { [key: string]: any }, record: any) => {
+        const name = record.get("Name") as string;
+        const status = record.get("Status") as AirtableStatus;
+        const heading = record.get("Heading") as string;
+        const content = record.get("Content") as string;
+        const slug = record.get("slug") as string;
+
+        if (slug && status === "Live") {
+          acc[slug] = {
+            name,
+            status,
+            heading,
+            content,
+          };
+        }
+
+        return acc;
+      },
+      {}
+    );
+
     if (!flow) throw new NotFoundError();
 
     const publishedFlow: Flow = data.flows[0].published_flows[0]?.data;
@@ -73,13 +113,17 @@ const routes = compose(
     // https://github.com/theopensystemslab/planx-new/pull/116
     // useStore.getState().setFlow(flow.id, flow.data_merged);
 
-    const settings = {
-      elements: { ...flow.settings?.elements, ...globalFooterContent },
-    };
+    // const settings = {
+    //   elements: { ...flow.settings?.elements, ...globalFooterContent },
+    // };
 
     return (
-      <PreviewContext.Provider value={{ ...flow, settings }}>
-        <Layout theme={flow.team.theme} settings={settings}>
+      <PreviewContext.Provider value={{ flow, globalContent }}>
+        <Layout
+          theme={flow.team.theme}
+          settings={flow.settings}
+          globalContent={globalContent}
+        >
           <View />
         </Layout>
       </PreviewContext.Provider>
@@ -90,24 +134,42 @@ const routes = compose(
     "/": route({
       view: <Questions />,
     }),
-    "/:page": map((req) => {
+    "/pages/:page": map((req) => {
       return route({
         view: () => {
           const navigation = useNavigation();
           const context = useContext(PreviewContext);
 
-          if (
-            !context?.settings?.elements ||
-            !context.settings?.elements[req.params.page]?.show
-          )
-            throw new NotFoundError();
+          const validateFlowSetting = () => {
+            const flowSetting =
+              context?.flow.settings?.elements?.[req.params.page];
+
+            if (!flowSetting?.show) return;
+
+            return {
+              heading: flowSetting.heading,
+              content: flowSetting.content,
+            };
+          };
+
+          const validateGlobalSetting = (setting?: string) => {
+            const globalSetting = context?.globalContent?.[req.params.page];
+            if (!(globalSetting && globalSetting?.status === "Live")) return;
+
+            return {
+              heading: globalSetting.heading,
+              content: globalSetting.content,
+            };
+          };
+
+          const content = FOOTER_ITEMS.includes(req.params.page)
+            ? validateFlowSetting()
+            : validateGlobalSetting();
+
+          if (!content) throw new NotFoundError();
 
           return (
-            <InformationPage
-              heading={context.settings?.elements[req.params.page]?.heading}
-              content={context.settings?.elements[req.params.page]?.content}
-              onClose={() => navigation.goBack()}
-            />
+            <InformationPage {...content} onClose={() => navigation.goBack()} />
           );
         },
       });

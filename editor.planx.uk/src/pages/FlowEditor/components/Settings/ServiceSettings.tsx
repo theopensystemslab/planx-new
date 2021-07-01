@@ -74,21 +74,6 @@ const ServiceSettings: React.FC<Props> = (props) => {
           content: props.settings?.elements?.privacy?.content ?? "",
           show: props.settings?.elements?.privacy?.show ?? false,
         },
-        accessibility: {
-          heading: props.settings?.elements?.accessibility?.heading ?? "",
-          content: props.settings?.elements?.accessibility?.content ?? "",
-          show: props.settings?.elements?.accessibility?.show ?? false,
-        },
-        termsOfUse: {
-          heading: props.settings?.elements?.termsOfUse?.heading ?? "",
-          content: props.settings?.elements?.termsOfUse?.content ?? "",
-          show: props.settings?.elements?.termsOfUse?.show ?? false,
-        },
-        cookies: {
-          heading: props.settings?.elements?.cookies?.heading ?? "",
-          content: props.settings?.elements?.cookies?.content ?? "",
-          show: props.settings?.elements?.cookies?.show ?? false,
-        },
       },
     },
     onSubmit: (values) => {
@@ -169,64 +154,6 @@ const ServiceSettings: React.FC<Props> = (props) => {
             contentInputProps={{
               name: "elements.privacy.content",
               value: formik.values.elements?.privacy?.content,
-              onChange: formik.handleChange,
-            }}
-          />
-
-          <TextInput
-            title="Accessibility"
-            description="Statement on accessibility policy"
-            switchProps={{
-              name: "elements.accessibility.show",
-              checked: formik.values.elements?.accessibility?.show,
-              onChange: formik.handleChange,
-            }}
-            headingInputProps={{
-              name: "elements.accessibility.heading",
-              value: formik.values.elements?.accessibility?.heading,
-              onChange: formik.handleChange,
-            }}
-            contentInputProps={{
-              name: "elements.accessibility.content",
-              value: formik.values.elements?.accessibility?.content,
-              onChange: formik.handleChange,
-            }}
-          />
-
-          <TextInput
-            title="Terms of Use"
-            switchProps={{
-              name: "elements.termsOfUse.show",
-              checked: formik.values.elements?.termsOfUse?.show,
-              onChange: formik.handleChange,
-            }}
-            headingInputProps={{
-              name: "elements.termsOfUse.heading",
-              value: formik.values.elements?.termsOfUse?.heading,
-              onChange: formik.handleChange,
-            }}
-            contentInputProps={{
-              name: "elements.termsOfUse.content",
-              value: formik.values.elements?.termsOfUse?.content,
-              onChange: formik.handleChange,
-            }}
-          />
-
-          <TextInput
-            title="Cookies"
-            switchProps={{
-              name: "elements.cookies.show",
-              checked: formik.values.elements?.cookies?.show,
-              onChange: formik.handleChange,
-            }}
-            headingInputProps={{
-              name: "elements.cookies.heading",
-              value: formik.values.elements?.cookies?.heading,
-              onChange: formik.handleChange,
-            }}
-            contentInputProps={{
-              name: "elements.cookies.content",
-              value: formik.values.elements?.cookies?.content,
               onChange: formik.handleChange,
             }}
           />
