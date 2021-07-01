@@ -34,7 +34,7 @@ const Questions = () => {
   ]);
 
   const node = currentCard();
-  const flow = useContext(PreviewContext);
+  const flow = useContext(PreviewContext)?.flow;
 
   const hasPaid = Boolean(passport.data?.[GOV_PAY_PASSPORT_KEY]);
   const isStandalone = previewEnvironment === "standalone";

@@ -1,5 +1,17 @@
 import React from "react";
 
-import type { Flow } from "../../types";
+import type { AirtableStatus, Flow } from "../../types";
 
-export const PreviewContext = React.createContext<Flow | undefined>(undefined);
+export type GlobalContent = {
+  [key: string]: {
+    slug: string;
+    status: AirtableStatus;
+    name: string;
+    heading: string;
+    content: string;
+  };
+};
+
+export const PreviewContext = React.createContext<
+  { flow: Flow; globalContent?: GlobalContent } | undefined
+>(undefined);

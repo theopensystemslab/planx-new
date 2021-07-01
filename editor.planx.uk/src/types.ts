@@ -25,14 +25,7 @@ interface TeamSettings {
   };
 }
 
-export const FOOTER_ITEMS = [
-  "help",
-  "privacy",
-  "accessibility",
-  "license",
-  "cookies",
-  "termsOfUse",
-];
+export const FOOTER_ITEMS = ["privacy", "help"];
 
 const FLOW_SETTINGS = [...FOOTER_ITEMS, "legalDisclaimer"] as const;
 export interface FlowSettings {
@@ -40,6 +33,8 @@ export interface FlowSettings {
     [key in typeof FLOW_SETTINGS[number]]?: TextContent;
   };
 }
+
+export type AirtableStatus = "Live" | "Ready" | "Archived" | "Do not use";
 
 export interface TextContent {
   heading: string;
