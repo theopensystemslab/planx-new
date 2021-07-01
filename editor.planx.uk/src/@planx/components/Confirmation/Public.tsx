@@ -1,15 +1,11 @@
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Check from "@material-ui/icons/CheckCircleOutlineOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/ui";
-import { useFormik } from "formik";
-import { submitFeedback } from "lib/feedback";
-import React, { useEffect } from "react";
+import React from "react";
 import Banner from "ui/Banner";
-import CollapsibleInput from "ui/CollapsibleInput";
 import NumberedList from "ui/NumberedList";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
@@ -31,43 +27,12 @@ const useClasses = makeStyles((theme) => ({
   listHeading: {
     marginBottom: theme.spacing(2),
   },
-  feedback: {
-    cursor: "pointer",
-    "&:hover": {
-      textDecoration: "underline",
-    },
-  },
 }));
 
 export type Props = PublicProps<Confirmation>;
 
 export default function ConfirmationComponent(props: Props) {
-  const formik = useFormik({
-    initialValues: {
-      feedback: "",
-    },
-    onSubmit: (values, { resetForm }) => {
-      if (values.feedback) {
-        submitFeedback(values.feedback, {
-          reason: "Confirmation",
-        });
-        resetForm();
-      }
-      props.handleSubmit?.();
-    },
-  });
-
   const classes = useClasses();
-
-  const [showButton, setShowButton] = React.useState<boolean>(
-    !!props.handleSubmit
-  );
-
-  useEffect(() => {
-    if (props.handleSubmit) return;
-
-    setShowButton(formik.values.feedback.length > 0);
-  }, [formik.values.feedback]);
 
   return (
     <Box width="100%">
@@ -118,41 +83,7 @@ export default function ConfirmationComponent(props: Props) {
               <Typography variant="h3">Contact us</Typography>
               <ReactMarkdownOrHtml source={props.contactInfo} />
             </Box>
-            <hr />
           </>
-        )}
-
-        {props.feedbackCTA && (
-          <CollapsibleInput
-            handleChange={formik.handleChange}
-            name="feedback"
-            value={formik.values.feedback}
-          >
-            <Typography
-              variant="body2"
-              color="primary"
-              className={classes.feedback}
-            >
-              {props.feedbackCTA}
-            </Typography>
-          </CollapsibleInput>
-        )}
-
-        {formik.values.feedback.length > 0 && (
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            type="submit"
-            onClick={() => {
-              submitFeedback(formik.values.feedback, {
-                reason: "Confirmation",
-              });
-              formik.resetForm();
-            }}
-          >
-            Submit feedback
-          </Button>
         )}
       </Card>
     </Box>

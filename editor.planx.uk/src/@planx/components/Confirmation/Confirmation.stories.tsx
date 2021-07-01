@@ -41,8 +41,7 @@ Basic.args = {
   - if any additional information is required
   - to arrange a site visit, if required
   - to inform you whether a certificate has been granted or not`,
-  contactInfo: `You can contact us at **planning@lambeth.gov.uk**`,
-  feedbackCTA: "What did you think of this service? (takes 30 seconds)",
+  contactInfo: `You can contact us at **planning@lambeth.gov.uk**<br/>What did you think of this service? Please give us your feedback using the link in the footer below.`,
 };
 
 export const WithEditor = () => (
