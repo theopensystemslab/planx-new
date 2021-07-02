@@ -54,7 +54,7 @@ function Component(props: Props) {
     {
       shouldRetryOnError: true,
       errorRetryInterval: 1000,
-      errorRetryCount: 5,
+      errorRetryCount: 3,
     }
   );
 
@@ -135,7 +135,7 @@ function Component(props: Props) {
         propertyConstraints={{
           title: "Constraints",
           description:
-            "These are the planning designations that apply to this property. They'll be used to automatically answer questions later in your application and help determine if your project is permitted development.",
+            "These are the planning policies that apply to this property. We will use this information to ask you relevant questions.",
           constraints: (Object.values(constraints) || []).filter(
             ({ text }: any) => text
           ),
