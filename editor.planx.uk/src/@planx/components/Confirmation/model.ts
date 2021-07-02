@@ -11,7 +11,6 @@ export interface Confirmation {
   nextSteps?: Step[];
   moreInfo?: string;
   contactInfo?: string;
-  feedbackCTA?: string;
 }
 
 export const parseNextSteps = (
