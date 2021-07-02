@@ -3,7 +3,6 @@ import "./map.css";
 import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import Collapse from "@material-ui/core/Collapse";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -47,10 +46,16 @@ function Component(props: Props) {
   //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
-  const { data: constraints } = useSWR(() =>
-    address
-      ? `${process.env.REACT_APP_API_URL}/gis/${team}?x=${address.x}&y=${address.y}&version=1`
-      : null
+  const { data: constraints } = useSWR(
+    () =>
+      address
+        ? `${process.env.REACT_APP_API_URL}/gis/${team}?x=${address.x}&y=${address.y}&version=1`
+        : null,
+    {
+      shouldRetryOnError: true,
+      errorRetryInterval: 1000,
+      errorRetryCount: 3,
+    }
   );
 
   if (!address) {
@@ -129,6 +134,8 @@ function Component(props: Props) {
         ]}
         propertyConstraints={{
           title: "Constraints",
+          description:
+            "These are the planning policies that apply to this property. We will use this information to ask you relevant questions.",
           constraints: (Object.values(constraints) || []).filter(
             ({ text }: any) => text
           ),
@@ -364,27 +371,18 @@ export function PropertyInformation(props: any) {
 }
 
 function PropertyConstraints({ constraintsData }: any) {
-  const { title, constraints } = constraintsData;
+  const { title, description, constraints } = constraintsData;
 
   // Order constraints so that { value: true } ones come first
   constraints.sort(function (a: any, b: any) {
     return b.value - a.value;
   });
 
-  const visibleConstraints = constraints
-    .filter((x: any, i: number) => i < 3)
-    .map((con: any) => (
-      <Constraint key={con.text} color={con.color || ""}>
-        {ReactHtmlParser(con.text)}
-      </Constraint>
-    ));
-  const hiddenConstraints = constraints
-    .filter((x: any, i: number) => i >= 3)
-    .map((con: any) => (
-      <Constraint key={con.text} color={con.color || ""}>
-        {ReactHtmlParser(con.text)}
-      </Constraint>
-    ));
+  const visibleConstraints = constraints.map((con: any) => (
+    <Constraint key={con.text} color={con.color || ""}>
+      {ReactHtmlParser(con.text)}
+    </Constraint>
+  ));
 
   return (
     <Box mb={3}>
@@ -392,11 +390,18 @@ function PropertyConstraints({ constraintsData }: any) {
         <Typography variant="h3" gutterBottom>
           {title}
         </Typography>
+        <Typography variant="body2" gutterBottom>
+          {description}
+        </Typography>
       </Box>
-      {visibleConstraints}
-      <SimpleExpand buttonText={{ open: "Show all", closed: "Show less" }}>
-        {hiddenConstraints}
-      </SimpleExpand>
+      {visibleConstraints.length > 0 ? (
+        visibleConstraints
+      ) : (
+        <DelayedLoadingIndicator
+          msDelayBeforeVisible={0}
+          text="Fetching constraints..."
+        />
+      )}
     </Box>
   );
 }
@@ -417,26 +422,5 @@ function Constraint({ children, color, ...props }: any) {
     >
       {children}
     </Box>
-  );
-}
-
-function SimpleExpand({ children, buttonText }: any) {
-  const [isOpen, setIsOpen] = React.useState<boolean>(false);
-  return (
-    <>
-      <Collapse in={isOpen}>
-        <div>{children}</div>
-      </Collapse>
-      <Box color="text.secondary">
-        <Button
-          size="large"
-          fullWidth
-          color="inherit"
-          onClick={() => setIsOpen((x) => !x)}
-        >
-          {isOpen ? buttonText.closed : buttonText.open}
-        </Button>
-      </Box>
-    </>
   );
 }
