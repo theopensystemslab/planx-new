@@ -21,6 +21,9 @@ const {
 const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
 
+// debug, info, warn, error, silent
+const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
+
 const router = express.Router();
 
 // when login failed, send failed msg
@@ -211,13 +214,12 @@ app.use(
   })
 );
 
-if (process.env.NODE_ENV !== "test") {
-  app.use(
-    require("express-pino-logger")({
-      serializers: noir(["req.headers.authorization"], "**REDACTED**"),
-    })
-  );
-}
+app.use(
+  require("express-pino-logger")({
+    serializers: noir(["req.headers.authorization"], "**REDACTED**"),
+    level: LOG_LEVEL,
+  })
+);
 
 assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
@@ -404,7 +406,7 @@ const server = new Server(app);
 function useProxy(options = {}) {
   return createProxyMiddleware({
     changeOrigin: true,
-    logLevel: "debug",
+    logLevel: LOG_LEVEL,
     ...options,
   });
 }

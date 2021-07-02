@@ -1,5 +1,6 @@
 const nock = require("nock");
 const supertest = require("supertest");
+const loadOrRecordNockRequests = require("./tests/loadOrRecordNockRequests");
 
 const app = require("./server");
 
@@ -124,20 +125,21 @@ describe("fetching GIS data from local authorities", () => {
       council: "southwark",
       x: 532700,
       y: 175010,
-    }
+    },
   ];
 
-  locations.forEach(location => {
+  loadOrRecordNockRequests("fetching-gis-data", locations);
+
+  locations.forEach((location) => {
     it(`returns MVP planning constraints for ${location.council}`, async () => {
       await supertest(app)
         .get(`/gis/${location.council}?x=${location.x}&y=${location.y}`)
-        .timeout(20000)
         .expect(200)
         .then((res) => {
           expect(res.body["article4"]).toBeDefined();
           expect(res.body["listed"]).toBeDefined();
           expect(res.body["designated"]).toBeDefined();
         });
-    });
+    }, 20_000); // 20s request timeout
   });
 });
