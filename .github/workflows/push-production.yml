@@ -103,6 +103,14 @@ jobs:
           edit-pr-comment: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+  notifications:
+    name: Notifications
+    needs: preview
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # Airbrake notification - https://airbrake.io/docs/features/deploy-tracking
       - name: Notify Airbrake of deploy
         id: airbrake-deploy
         uses: mtchavez/airbrake-deploy@v1
@@ -115,3 +123,9 @@ jobs:
           user: ${{ github.actor }}
       - name: Get Airbrake deploy response
         run: echo "The response was ${{ steps.airbrake-deploy.outputs.response }}"
+      # Slack deployment notification
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: ${{ env.DEPLOYMENT_ENVIRONMENT }} deploy
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}
