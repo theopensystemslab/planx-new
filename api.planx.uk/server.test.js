@@ -1,3 +1,4 @@
+const fs = require("fs");
 const nock = require("nock");
 const supertest = require("supertest");
 
@@ -104,6 +105,27 @@ describe("sending a payment to GOV.UK Pay", () => {
 });
 
 describe("fetching GIS data from local authorities", () => {
+  const records = [];
+
+  beforeAll(() => {
+    try {
+      nock.load("db.json");
+    } catch (err) {
+      nock.recorder.rec({
+        output_objects: true,
+        logging: (content) => records.push(content),
+        use_separator: false,
+        enable_reqheaders_recording: false,
+      });
+    }
+  });
+
+  afterAll(() => {
+    if (records.length > 0) {
+      fs.writeFileSync("db.json", JSON.stringify(records, null, 2));
+    }
+  });
+
   const locations = [
     {
       council: "buckinghamshire",
@@ -124,20 +146,19 @@ describe("fetching GIS data from local authorities", () => {
       council: "southwark",
       x: 532700,
       y: 175010,
-    }
+    },
   ];
 
-  locations.forEach(location => {
+  locations.forEach((location) => {
     it(`returns MVP planning constraints for ${location.council}`, async () => {
       await supertest(app)
         .get(`/gis/${location.council}?x=${location.x}&y=${location.y}`)
-        .timeout(20000)
         .expect(200)
         .then((res) => {
           expect(res.body["article4"]).toBeDefined();
           expect(res.body["listed"]).toBeDefined();
           expect(res.body["designated"]).toBeDefined();
         });
-    });
+    }, 20_000); // 20s request timeout
   });
 });
