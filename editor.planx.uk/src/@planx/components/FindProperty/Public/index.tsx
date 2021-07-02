@@ -46,10 +46,16 @@ function Component(props: Props) {
   //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
-  const { data: constraints } = useSWR(() =>
-    address
-      ? `${process.env.REACT_APP_API_URL}/gis/${team}?x=${address.x}&y=${address.y}&version=1`
-      : null
+  const { data: constraints } = useSWR(
+    () =>
+      address
+        ? `${process.env.REACT_APP_API_URL}/gis/${team}?x=${address.x}&y=${address.y}&version=1`
+        : null,
+    {
+      shouldRetryOnError: true,
+      errorRetryInterval: 1000,
+      errorRetryCount: 5,
+    }
   );
 
   if (!address) {
