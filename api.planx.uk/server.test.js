@@ -1,6 +1,6 @@
-const fs = require("fs");
 const nock = require("nock");
 const supertest = require("supertest");
+const loadOrRecordNockRequests = require("./tests/loadOrRecordNockRequests");
 
 const app = require("./server");
 
@@ -105,27 +105,6 @@ describe("sending a payment to GOV.UK Pay", () => {
 });
 
 describe("fetching GIS data from local authorities", () => {
-  const records = [];
-
-  beforeAll(() => {
-    try {
-      nock.load("db.json");
-    } catch (err) {
-      nock.recorder.rec({
-        output_objects: true,
-        logging: (content) => records.push(content),
-        use_separator: false,
-        enable_reqheaders_recording: false,
-      });
-    }
-  });
-
-  afterAll(() => {
-    if (records.length > 0) {
-      fs.writeFileSync("db.json", JSON.stringify(records, null, 2));
-    }
-  });
-
   const locations = [
     {
       council: "buckinghamshire",
@@ -148,6 +127,8 @@ describe("fetching GIS data from local authorities", () => {
       y: 175010,
     },
   ];
+
+  loadOrRecordNockRequests("fetching-gis-data", locations);
 
   locations.forEach((location) => {
     it(`returns MVP planning constraints for ${location.council}`, async () => {
