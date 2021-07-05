@@ -383,6 +383,50 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
+app.get("/flows/:flowId/flatten", async (req, res) => {
+  const data = await dataMerged(req.params.flowId);
+  res.json(data);
+});
+
+const getFlowData = async (id) => {
+  const data = await client.request(
+    `
+    query GetFlowData($id: uuid!) {
+      flows_by_pk(id: $id) {
+        data
+      }
+    }
+    `,
+    { id }
+  );
+  
+  return data.flows_by_pk.data;
+};
+
+const dataMerged = async (id, ob = {}) => {
+  // get the parent flow data
+  const data = await getFlowData(id);
+  
+  // recursively get internal portals (type 300) & external portals (type 310)
+  for (let [nodeId, node] of Object.entries(data)) {
+    if (nodeId === "_root" && Object.keys(ob).length > 0) {
+      ob[id] = {
+        ...node,
+        type: 300,
+      };
+    } else if (node.type === 310 && !ob[node.data.flowId]) {
+      await dataMerged(node.data.flowId, ob);
+      ob[nodeId] = {
+        type: 300,
+        edges: [node.data.flowId],
+      };
+    } else {
+      ob[nodeId] = node;
+    }
+  }
+  return ob;
+};
+
 app.post("/sign-s3-upload", async (req, res) => {
   if (!req.body.filename) res.status(422).json({ error: "missing filename" });
   const { fileType, url, acl } = await signS3Upload(req.body.filename);
