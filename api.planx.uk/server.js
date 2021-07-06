@@ -212,6 +212,7 @@ app.use(
   })
 );
 
+// Converts req.headers.cookie: string, to req.cookies: Record<string, string>
 app.use(cookieParser());
 
 const useJWT = jwt({
