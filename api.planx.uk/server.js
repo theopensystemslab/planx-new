@@ -215,6 +215,9 @@ app.use(
 // Converts req.headers.cookie: string, to req.cookies: Record<string, string>
 app.use(cookieParser());
 
+// XXX: Currently not checking for JWT and including req.user in every
+//      express endpoint because authentication also uses req.user. More info:
+//      https://github.com/theopensystemslab/planx-new/pull/555#issue-684435760
 const useJWT = jwt({
   secret: process.env.JWT_SECRET,
   algorithms: ["HS256"],
