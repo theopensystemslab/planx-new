@@ -224,7 +224,7 @@ const useJWT = jwt({
   credentialsRequired: true,
   getToken: (req) =>
     req.cookies?.jwt ??
-    req.headers.authorization?.split("Bearer ")?.[1] ??
+    req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1] ??
     req.query?.token,
 });
 
