@@ -20,6 +20,7 @@ const {
 
 const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
+const { publishFlow } = require("./publish");
 
 const router = express.Router();
 
@@ -383,73 +384,7 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
-app.get("/flows/:flowId/publish", async (req, res) => {
-  const flattenedFlow = await dataMerged(req.params.flowId);
-
-  const publishedFlow = await client.request(`
-    mutation PublishFlow(
-      $data: jsonb = {},
-      $flow_id: uuid,
-      $publisher_id: Int,
-    ) {
-      insert_published_flows_one(object: {
-        data: $data,
-        flow_id: $flow_id,
-        publisher_id: $publisher_id,
-      }) {
-        id
-      }
-    }`
-    ,
-    {
-      data: flattenedFlow,
-      flow_id: req.params.flowId,
-      publisher_id: 4, // TODO set dynamically
-    }
-  );
-
-  // returns id of published flow
-  res.json(publishedFlow.insert_published_flows_one);
-});
-
-const getFlowData = async (id) => {
-  const data = await client.request(
-    `
-    query GetFlowData($id: uuid!) {
-      flows_by_pk(id: $id) {
-        data
-      }
-    }
-    `,
-    { id }
-  );
-  
-  return data.flows_by_pk.data;
-};
-
-const dataMerged = async (id, ob = {}) => {
-  // get the parent flow data
-  const data = await getFlowData(id);
-  
-  // recursively get and flatten internal portals (type 300) & external portals (type 310)
-  for (let [nodeId, node] of Object.entries(data)) {
-    if (nodeId === "_root" && Object.keys(ob).length > 0) {
-      ob[id] = {
-        ...node,
-        type: 300,
-      };
-    } else if (node.type === 310 && !ob[node.data.flowId]) {
-      await dataMerged(node.data.flowId, ob);
-      ob[nodeId] = {
-        type: 300,
-        edges: [node.data.flowId],
-      };
-    } else {
-      ob[nodeId] = node;
-    }
-  }
-  return ob;
-};
+app.post("/flows/:flowId/publish", publishFlow());
 
 app.post("/sign-s3-upload", async (req, res) => {
   if (!req.body.filename) res.status(422).json({ error: "missing filename" });
