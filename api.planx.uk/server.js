@@ -222,17 +222,10 @@ const useJWT = jwt({
   secret: process.env.JWT_SECRET,
   algorithms: ["HS256"],
   credentialsRequired: true,
-  getToken: (req) => {
-    if (req.cookies?.jwt) {
-      return req.cookies.jwt;
-    } else if (req.headers.authorization?.split(" ")[0] === "Bearer") {
-      return req.headers.authorization.split(" ")[1];
-    } else if (req.query?.token) {
-      return req.query.token;
-    } else {
-      return null;
-    }
-  },
+  getToken: (req) =>
+    req.cookies?.jwt ??
+    req.headers.authorization?.split("Bearer ")?.[1] ??
+    req.query?.token,
 });
 
 if (process.env.NODE_ENV !== "test") {
