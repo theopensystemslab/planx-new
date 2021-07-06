@@ -63,11 +63,9 @@ export const useStagingUrlIfTestApplication = (passport: Store.passport) => (
       .map((x) => String(x).toLowerCase().trim())
       .join("|") === "test|test"
   ) {
-    try {
-      const url = new URL(urlThatMightBeReplaced);
-      url.hostname = url.hostname.replace("planx.uk", "planx.dev");
-      return url.href;
-    } catch (_err) {}
+    const url = new URL(urlThatMightBeReplaced);
+    url.hostname = url.hostname.replace("planx.uk", "planx.dev");
+    return url.href;
   }
 
   return urlThatMightBeReplaced;
