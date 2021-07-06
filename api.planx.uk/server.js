@@ -386,8 +386,12 @@ app.get("/me", useJWT, async function (req, res) {
     `query ($id: Int!) {
       users_by_pk(id: $id) {
         id
+        first_name
+        last_name
         email
+        is_admin
         created_at
+        updated_at
       }
     }`,
     { id: req.user.sub }
