@@ -9,18 +9,21 @@ import Input, { Props as InputProps } from "ui/Input";
 import InputGroup from "ui/InputGroup";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
+import RichTextInput from "ui/RichTextInput";
 
 import type { FlowSettings } from "../../../../types";
 import { useStore } from "../../lib/store";
 
 const TextInput: React.FC<{
   title: string;
+  richText?: boolean;
   description?: string;
   switchProps?: SwitchProps;
   headingInputProps?: InputProps;
   contentInputProps?: InputProps;
 }> = ({
   title,
+  richText = false,
   description,
   switchProps,
   headingInputProps,
@@ -42,7 +45,21 @@ const TextInput: React.FC<{
       </InputRow>
       <InputRow>
         <InputRowItem>
-          <Input placeholder="Text" multiline rows={6} {...contentInputProps} />
+          {richText ? (
+            <RichTextInput
+              placeholder="Text"
+              multiline
+              rows={6}
+              {...contentInputProps}
+            />
+          ) : (
+            <Input
+              placeholder="Text"
+              multiline
+              rows={6}
+              {...contentInputProps}
+            />
+          )}
         </InputRowItem>
       </InputRow>
     </Box>
@@ -120,6 +137,7 @@ const ServiceSettings: React.FC<Props> = (props) => {
         <InputGroup>
           <TextInput
             title="Help Page"
+            richText
             description="A place to communicate FAQs, useful tips, or contact information"
             switchProps={{
               name: "elements.help.show",
@@ -140,6 +158,7 @@ const ServiceSettings: React.FC<Props> = (props) => {
 
           <TextInput
             title="Privacy Page"
+            richText
             description="Your privacy policy"
             switchProps={{
               name: "elements.privacy.show",
