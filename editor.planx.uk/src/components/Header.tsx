@@ -210,6 +210,9 @@ const Header: React.FC<{
           )}
 
           <MenuItem onClick={() => navigate("/logout")}>Log out</MenuItem>
+          <MenuItem onClick={() => navigate("/global-settings")}>
+            Global Settings
+          </MenuItem>
         </Paper>
       </Popover>
     </>
