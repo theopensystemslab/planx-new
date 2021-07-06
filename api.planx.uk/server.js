@@ -383,9 +383,33 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
-app.get("/flows/:flowId/flatten", async (req, res) => {
-  const data = await dataMerged(req.params.flowId);
-  res.json(data);
+app.get("/flows/:flowId/publish", async (req, res) => {
+  const flattenedFlow = await dataMerged(req.params.flowId);
+
+  const publishedFlow = await client.request(`
+    mutation PublishFlow(
+      $data: jsonb = {},
+      $flow_id: uuid,
+      $publisher_id: Int,
+    ) {
+      insert_published_flows_one(object: {
+        data: $data,
+        flow_id: $flow_id,
+        publisher_id: $publisher_id,
+      }) {
+        id
+      }
+    }`
+    ,
+    {
+      data: flattenedFlow,
+      flow_id: req.params.flowId,
+      publisher_id: 4, // TODO set dynamically
+    }
+  );
+
+  // returns id of published flow
+  res.json(publishedFlow.insert_published_flows_one);
 });
 
 const getFlowData = async (id) => {
@@ -407,7 +431,7 @@ const dataMerged = async (id, ob = {}) => {
   // get the parent flow data
   const data = await getFlowData(id);
   
-  // recursively get internal portals (type 300) & external portals (type 310)
+  // recursively get and flatten internal portals (type 300) & external portals (type 310)
   for (let [nodeId, node] of Object.entries(data)) {
     if (nodeId === "_root" && Object.keys(ob).length > 0) {
       ob[id] = {
