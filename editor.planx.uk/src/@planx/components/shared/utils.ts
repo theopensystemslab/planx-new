@@ -41,8 +41,9 @@ export const makeData = <T>(
 };
 
 /**
- * Replaces a URL containing planx.uk with a planx.dev
+ * Replaces a URL containing planx.uk with planx.dev
  * if the passport appears to contain test data.
+ * Explanation: https://bit.ly/3AypxGW
  *
  * @example
  * useStagingUrlIfTestApplication(passport)("https://api.editor.planx.uk/test")
