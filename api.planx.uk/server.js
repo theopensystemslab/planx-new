@@ -1,6 +1,7 @@
 require("isomorphic-fetch");
 const { json, urlencoded } = require("body-parser");
 const assert = require("assert");
+const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const cors = require("cors");
 const express = require("express");
@@ -211,6 +212,25 @@ app.use(
   })
 );
 
+app.use(cookieParser());
+
+const useJWT = jwt({
+  secret: process.env.JWT_SECRET,
+  algorithms: ["HS256"],
+  credentialsRequired: true,
+  getToken: (req) => {
+    if (req.cookies?.jwt) {
+      return req.cookies.jwt;
+    } else if (req.headers.authorization?.split(" ")[0] === "Bearer") {
+      return req.headers.authorization.split(" ")[1];
+    } else if (req.query?.token) {
+      return req.query.token;
+    } else {
+      return null;
+    }
+  },
+});
+
 if (process.env.NODE_ENV !== "test") {
   app.use(
     require("express-pino-logger")({
@@ -325,6 +345,7 @@ app.use(
   })
 );
 
+// needed for storing original URL to redirect to in login flow
 app.use(
   cookieSession({
     maxAge: 24 * 60 * 60 * 100,
@@ -352,24 +373,27 @@ app.get("/hasura", async function (req, res) {
   res.json(data);
 });
 
-app.get(
-  "/me",
-  jwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }),
-  async function (req, res) {
-    const user = await request(
-      process.env.HASURA_GRAPHQL_URL,
-      `query ($id: Int!) {
+app.get("/me", useJWT, async function (req, res) {
+  // useJWT will return 401 if the JWT is missing or malformed
+  if (!req.user?.sub)
+    return res.status(401).json({ error: "User ID missing from JWT" });
+
+  const user = await client.request(
+    `query ($id: Int!) {
       users_by_pk(id: $id) {
         id
         email
         created_at
       }
     }`,
-      { id: req.user.id }
-    );
-    res.json(user.users_by_pk);
-  }
-);
+    { id: req.user.sub }
+  );
+
+  if (!user.users_by_pk)
+    return res.status(404).json({ error: `User (${req.user.sub}) not found` });
+
+  res.json(user.users_by_pk);
+});
 
 app.get("/gis", (_req, res) => {
   res.json({
