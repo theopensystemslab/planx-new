@@ -1,6 +1,7 @@
 import AppBar from "@material-ui/core/AppBar";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
@@ -145,15 +146,18 @@ const Header: React.FC<{
           <Box display="flex" alignItems="center">
             {data.username && (
               <Box className={classes.profileSection} mr={2}>
+                <Box mr={2}>
+                  <Button variant="contained">PUBLISH</Button>
+                </Box>
                 {data.flow && (
-                  <Box mr={3}>
+                  <Box mr={2}>
                     <MenuOpenIcon
                       onClick={togglePreview}
                       style={{ cursor: "pointer" }}
                     />
                   </Box>
                 )}
-                <Box mr={3}>
+                <Box mr={1}>
                   <Avatar>{data.username[0]}</Avatar>
                 </Box>
                 <IconButton
