@@ -25,7 +25,7 @@ function GlobalSettings(props: { footerContent?: TextContent[] }) {
     <form onSubmit={formik.handleSubmit}>
       <Box p={3}>
         <Typography variant="h1">Global Settings</Typography>
-        <Box>
+        <Box mb={2}>
           <Box py={3} borderBottom={1}>
             <Typography variant="h3" gutterBottom>
               <strong>Footer Elements</strong>
@@ -49,11 +49,11 @@ function GlobalSettings(props: { footerContent?: TextContent[] }) {
             Editor={ContentEditor}
           />
         </Box>
-      </Box>
 
-      <Button type="submit" variant="contained" color="primary">
-        Save
-      </Button>
+        <Button type="submit" variant="contained" color="primary">
+          Save
+        </Button>
+      </Box>
     </form>
   );
 }
@@ -86,6 +86,12 @@ function ContentEditor(props: {
             multiline
             rows={6}
             value={props.value.content}
+            onChange={(ev) => {
+              props.onChange({
+                ...props.value,
+                content: ev.target.value,
+              });
+            }}
           />
         </InputRowItem>
       </InputRow>
