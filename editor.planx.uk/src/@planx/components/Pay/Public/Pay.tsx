@@ -6,7 +6,7 @@ import React, { useEffect, useReducer } from "react";
 import type { GovUKPayment } from "types";
 
 import { useTeamSlug } from "../../shared/hooks";
-import { makeData } from "../../shared/utils";
+import { makeData, useStagingUrlIfTestApplication } from "../../shared/utils";
 import {
   createPayload,
   GOV_PAY_PASSPORT_KEY,
@@ -57,7 +57,9 @@ function Component(props: Props) {
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
   const teamSlug = useTeamSlug();
-  const govUkPayUrlForTeam = `${GOV_UK_PAY_URL}/${teamSlug}`;
+  const govUkPayUrlForTeam = useStagingUrlIfTestApplication(passport)(
+    `${GOV_UK_PAY_URL}/${teamSlug}`
+  );
 
   // Handles UI states
   const reducer = (state: ComponentState, action: Action): ComponentState => {
