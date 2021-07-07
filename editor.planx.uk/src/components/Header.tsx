@@ -1,7 +1,6 @@
 import AppBar from "@material-ui/core/AppBar";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
@@ -10,8 +9,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import MenuOpenIcon from "@material-ui/icons/MenuOpen";
-import axios from "axios";
-import Cookies from "js-cookie";
 import React, { useRef, useState } from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 import Reset from "ui/icons/Reset";
@@ -77,10 +74,7 @@ const Header: React.FC<{
   const [open, setOpen] = useState(false);
   const headerRef = useRef(null);
   const { navigate } = useNavigation();
-  const [flowId, togglePreview] = useStore((state) => [
-    state.id,
-    state.togglePreview,
-  ]);
+  const [togglePreview] = useStore((state) => [state.togglePreview]);
 
   const { data } = useCurrentRoute();
 
@@ -96,9 +90,6 @@ const Header: React.FC<{
   const handleMenuToggle = () => {
     setOpen(!open);
   };
-
-  const token = Cookies.get("jwt");
-  console.log(token);
 
   return (
     <>
@@ -154,22 +145,6 @@ const Header: React.FC<{
           <Box display="flex" alignItems="center">
             {data.username && (
               <Box className={classes.profileSection} mr={2}>
-                <Box mr={2}>
-                  <Button
-                    variant="contained"
-                    onClick={async () => {
-                      axios({
-                        url: `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish`,
-                        method: "POST",
-                        headers: {
-                          Authorization: `Bearer ${token}`,
-                        },
-                      }).then((res) => console.log(res));
-                    }}
-                  >
-                    PUBLISH
-                  </Button>
-                </Box>
                 {data.flow && (
                   <Box mr={2}>
                     <MenuOpenIcon
