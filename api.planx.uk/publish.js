@@ -46,6 +46,9 @@ const dataMerged = async (id, ob = {}) => {
 };
 
 const publishFlow = () => async (req, res) => {
+  if (!req.user?.sub)
+    return res.status(401).json({ error: "User ID missing from JWT" });
+  
   const flattenedFlow = await dataMerged(req.params.flowId);
 
   const publishedFlow = await client.request(
@@ -61,17 +64,21 @@ const publishFlow = () => async (req, res) => {
           publisher_id: $publisher_id,
         }) {
           id
+          flow_id
+          publisher_id
+          created_at
+          data
         }
       }`,
     {
       data: flattenedFlow,
       flow_id: req.params.flowId,
-      publisher_id: 4, // TODO set dynamically
+      publisher_id: parseInt(req.user.sub, 10),
     }
   );
 
   try {
-    // return id of published flow
+    // return published flow record
     res.json(publishedFlow.insert_published_flows_one);
   } catch (error) {
     console.error(error);
