@@ -22,6 +22,9 @@ const {
 const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
 
+// debug, info, warn, error, silent
+const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
+
 const router = express.Router();
 
 // when login failed, send failed msg
@@ -402,7 +405,7 @@ app.get("/gis", (_req, res) => {
   });
 });
 
-app.get("/gis/:la", locationSearch());
+app.get("/gis/:localAuthority", locationSearch());
 
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
@@ -429,7 +432,7 @@ const server = new Server(app);
 function useProxy(options = {}) {
   return createProxyMiddleware({
     changeOrigin: true,
-    logLevel: "debug",
+    logLevel: LOG_LEVEL,
     ...options,
   });
 }

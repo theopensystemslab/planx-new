@@ -99,6 +99,32 @@ const getManualConstraints = (metadata) => {
   return manualConstraints;
 };
 
+// Adds "designated" variable to response object, so we can auto-answer less granular questions like "are you on designated land"
+const addDesignatedVariable = (responseObject) => {
+  const resObjWithDesignated = {
+    ...responseObject,
+    "designated": { value: false},
+  };
+
+  const subVariables = [
+    "conservationArea",
+    "AONB",
+    "nationalPark",
+    "broads",
+    "WHS",
+    "monument",
+  ]
+
+  // If any of the subvariables are true, then set "designated" to true
+  subVariables.forEach(s => {
+    if (resObjWithDesignated[`designated.${s}`]?.value) {
+      resObjWithDesignated["designated"] = { value: true }
+    }
+  });
+
+  return resObjWithDesignated;
+};
+
 module.exports = {
   makeEsriUrl,
   bufferPoint,
@@ -106,4 +132,5 @@ module.exports = {
   getQueryableConstraints,
   getFalseConstraints,
   getManualConstraints,
+  addDesignatedVariable,
 };
