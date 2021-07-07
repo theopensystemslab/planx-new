@@ -160,11 +160,14 @@ const buildJWT = async (profile, done) => {
       "https://hasura.io/jwt/claims": hasura,
     };
 
-    return done(null, {
+    done(null, {
       jwt: sign(data, process.env.JWT_SECRET),
     });
   } else {
-    return done(new Error("User not found"));
+    done({
+      status: 404,
+      message: `User (${email}) not found. Do you need to log in to a different Google Account?`,
+    });
   }
 };
 
@@ -333,18 +336,16 @@ app.get("/pay/:localAuthority/:paymentId", (req, res) => {
     {
       pathRewrite: () => `/${req.params.paymentId}`,
       selfHandleResponse: true,
-      onProxyRes: responseInterceptor(
-        async (responseBuffer) => {
-          const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+      onProxyRes: responseInterceptor(async (responseBuffer) => {
+        const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
 
-          // only return payment status, filter out PII
-          return JSON.stringify({ 
-            payment_id: govUkResponse.payment_id,
-            amount: govUkResponse.amount,
-            state: govUkResponse.state,
-          });
-        }
-      )
+        // only return payment status, filter out PII
+        return JSON.stringify({
+          payment_id: govUkResponse.payment_id,
+          amount: govUkResponse.amount,
+          state: govUkResponse.state,
+        });
+      }),
     },
     req
   )(req, res);
@@ -388,10 +389,10 @@ app.get("/hasura", async function (req, res) {
   res.json(data);
 });
 
-app.get("/me", useJWT, async function (req, res) {
+app.get("/me", useJWT, async function (req, res, next) {
   // useJWT will return 401 if the JWT is missing or malformed
   if (!req.user?.sub)
-    return res.status(401).json({ error: "User ID missing from JWT" });
+    next({ status: 401, message: "User ID missing from JWT" });
 
   const user = await client.request(
     `query ($id: Int!) {
@@ -409,7 +410,7 @@ app.get("/me", useJWT, async function (req, res) {
   );
 
   if (!user.users_by_pk)
-    return res.status(404).json({ error: `User (${req.user.sub}) not found` });
+    next({ status: 404, message: `User (${req.user.sub}) not found` });
 
   res.json(user.users_by_pk);
 });
@@ -451,20 +452,19 @@ app.get("/flows/:flowId/download-schema", async (req, res) => {
       });
     } else {
       // build a CSV and stream it
-      stringify(schema.get_flow_schema, { header: true })
-        .pipe(res);
+      stringify(schema.get_flow_schema, { header: true }).pipe(res);
 
-      res.header('Content-type', 'text/csv');
+      res.header("Content-type", "text/csv");
       res.attachment(`${req.params.flowId}.csv`);
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error });
+  } catch (err) {
+    next({ error: err });
   }
 });
 
-app.post("/sign-s3-upload", async (req, res) => {
-  if (!req.body.filename) res.status(422).json({ error: "missing filename" });
+app.post("/sign-s3-upload", async (req, res, next) => {
+  if (!req.body.filename) next({ status: 422, message: "missing filename" });
+
   const { fileType, url, acl } = await signS3Upload(req.body.filename);
   try {
     res.json({
@@ -473,11 +473,23 @@ app.post("/sign-s3-upload", async (req, res) => {
       file_type: fileType,
       acl,
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error });
+  } catch (err) {
+    next({ error: err });
   }
 });
+
+// Handle any server errors that were passed with next(err)
+// Order is significant, this should be the final app.use()
+app.use(
+  // XXX: including all 4 function params appears to be significant?
+  function errorHandler(errorObject, _req, res, _next) {
+    const { status = 500, message = "Something went wrong" } = errorObject;
+
+    res.status(status).send({
+      error: message,
+    });
+  }
+);
 
 const server = new Server(app);
 
