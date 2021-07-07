@@ -1,4 +1,8 @@
 config:
+  application:airbrake-project-id:
+    secure: AAABAE+ZtQZO26XlmfAS7tG1DkwQ+G5OP82Roe4EOuk/tG1bMsI=
+  application:airbrake-project-key:
+    secure: AAABAPIGB+gWevPn0SzWnuSuV1RmdwpLOlWKnu8cM/kxLfslvdCIRcU0n0M0XNJ3jwj4EdFn7/llsL1Kg2XnDA==
   application:bops-api-root-domain: bops.services
   application:bops-api-token:
     secure: AAABAMqHDCUHOnq3PCudVRigskTLZrBKjVzZ9X4qdUqF7Wid6NHa4zQyTMeQJ4ACtS7LMZIZq84=
