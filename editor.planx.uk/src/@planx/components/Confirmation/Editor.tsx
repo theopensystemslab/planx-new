@@ -71,10 +71,7 @@ export default function ConfirmationEditor(props: Props) {
         </ul>`,
       contactInfo:
         props.node?.data?.contactInfo ||
-        "You can contact us at **planning@lambeth.gov.uk**",
-      feedbackCTA:
-        props.node?.data?.feedbackCTA ||
-        "What did you think of this service? (takes 30 seconds)",
+        "You can contact us at **planning@lambeth.gov.uk**<br/>What did you think of this service? Please give us your feedback using the link in the footer below.",
       ...parseNextSteps(props.node?.data),
     },
     onSubmit: (values) => {
@@ -138,19 +135,6 @@ export default function ConfirmationEditor(props: Props) {
           <RichTextInput
             value={formik.values.contactInfo}
             name="contactInfo"
-            onChange={formik.handleChange}
-          />
-        </ModalSectionContent>
-      </ModalSection>
-
-      <ModalSection>
-        <ModalSectionContent
-          title="Feedback Call-To-Action"
-          Icon={ICONS[TYPES.Notice]}
-        >
-          <Input
-            value={formik.values.feedbackCTA}
-            name="feedbackCTA"
             onChange={formik.handleChange}
           />
         </ModalSectionContent>

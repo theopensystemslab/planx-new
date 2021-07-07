@@ -5,7 +5,7 @@ import { useAsync } from "react-use";
 
 import { useTeamSlug } from "../shared/hooks";
 import Card from "../shared/Preview/Card";
-import { makeData } from "../shared/utils";
+import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
 import { PublicProps } from "../ui";
 import { getParams } from "./bops";
 import { BOPS_URL, Send } from "./model";
@@ -24,7 +24,7 @@ const SendComponent: React.FC<Props> = (props) => {
 
   const request = useAsync(async () =>
     axios.post(
-      `${BOPS_URL}/${teamSlug}`,
+      useStagingUrlIfTestApplication(passport)(`${BOPS_URL}/${teamSlug}`),
       getParams(breadcrumbs, flow, passport, sessionId)
     )
   );

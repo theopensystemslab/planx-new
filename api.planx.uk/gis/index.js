@@ -39,7 +39,7 @@ const locationSearch = () => async (req, res) => {
   // check if this is a supported location authority
   if (localAuthorities[req.params.localAuthority]) {
     try {
-      const timeout = Number(process.env.TIMEOUT_DURATION) || 20000;
+      const timeout = Number(process.env.TIMEOUT_DURATION) || 15000;
       const resp = await locationSearchWithTimeout(
         req.params.localAuthority,
         req.query,

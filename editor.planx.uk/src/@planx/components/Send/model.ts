@@ -23,7 +23,6 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
   description?: string;
   payment_reference?: string;
   payment_amount?: number;
-  session_id?: string;
   ward?: string;
   work_status?: "proposed" | "existing";
   applicant_first_name?: string;
@@ -44,6 +43,7 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
     description?: string;
     override?: string;
   };
+  planx_debug_data?: Record<string, unknown>;
 }
 
 export interface QuestionMetaData {
@@ -73,4 +73,20 @@ export interface QuestionAndResponses {
 interface File {
   filename: string;
   tags?: Array<string>;
+}
+
+// Extracted from:
+// https://github.com/unboxed/bops/blob/master/app/models/document.rb
+export enum BOPS_TAGS {
+  Front = "Front",
+  Rear = "Rear",
+  Side = "Side",
+  Roof = "Roof",
+  Floor = "Floor",
+  Site = "Site",
+  Plan = "Plan",
+  Elevation = "Elevation",
+  Section = "Section",
+  Proposed = "Proposed",
+  Existing = "Existing",
 }

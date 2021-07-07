@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Close from "@material-ui/icons/Close";
 import React from "react";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 const useClasses = makeStyles((theme) => ({
   content: {
@@ -32,7 +33,8 @@ function InformationPage(props: {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      py={2}
+      pt={2}
+      pb={10}
     >
       <IconButton
         onClick={props.onClose}
@@ -43,9 +45,7 @@ function InformationPage(props: {
       </IconButton>
       <Container maxWidth="md">
         <Typography variant="h1">{props.heading}</Typography>
-        <Typography variant="body2" className={classes.content}>
-          {props.content}
-        </Typography>
+        <ReactMarkdownOrHtml source={props.content} />
       </Container>
     </Box>
   );

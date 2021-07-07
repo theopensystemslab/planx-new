@@ -1,5 +1,4 @@
 name: Pulumi (PR Staging)
-
 on:
   pull_request:
     types: [opened, synchronize]
@@ -7,6 +6,26 @@ on:
       - main
 
 jobs:
+  integration_tests:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache .pnpm-store
+        uses: actions/cache@v1
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+      - name: Install pnpm
+        run: curl -f https://get.pnpm.io/v6.7.js | node - add --global pnpm@6
+      - run: ./scripts/run-integration-tests.sh
   test_and_build:
     name: Test and Build
     runs-on: ubuntu-latest
@@ -55,6 +74,8 @@ jobs:
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.editor.planx.dev/v1/graphql
           REACT_APP_SHAREDB_URL: wss://sharedb.editor.planx.dev
+          REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+          REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
