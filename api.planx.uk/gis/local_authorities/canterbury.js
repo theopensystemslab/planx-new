@@ -5,6 +5,7 @@ const {
   getManualConstraints,
   makeEsriUrl,
   bufferPoint,
+  addDesignatedVariable,
 } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/canterbury.js");
 
@@ -90,7 +91,10 @@ async function go(x, y, extras) {
         }
       );
 
-    return ob;
+    // Add summary "designated" key to response
+    const obWithDesignated = addDesignatedVariable(ob);
+
+    return obWithDesignated;
   } catch (e) {
     throw e;
   }

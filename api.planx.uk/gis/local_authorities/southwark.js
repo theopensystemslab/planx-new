@@ -1,7 +1,7 @@
 require("isomorphic-fetch");
 const https = require("https");
 
-const { makeBbox, getQueryableConstraints, getManualConstraints } = require("../helpers.js");
+const { makeBbox, getQueryableConstraints, getManualConstraints, addDesignatedVariable } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/southwark.js");
 
 const gisLayers = getQueryableConstraints(planningConstraints);
@@ -128,7 +128,10 @@ async function locationSearch(x, y, extras) {
       } catch (e) {}
     });
 
-  return ob;
+  // Add summary "designated" key to response
+  const obWithDesignated = addDesignatedVariable(ob);
+
+  return obWithDesignated;
 }
 
 module.exports = {
