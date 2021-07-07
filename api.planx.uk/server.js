@@ -476,7 +476,7 @@ app.get("/flows/:flowId/download-schema", async (req, res, next) => {
       res.attachment(`${req.params.flowId}.csv`);
     }
   } catch (err) {
-    next(err);
+    next({ error: err });
   }
 });
 
@@ -493,7 +493,7 @@ app.post("/sign-s3-upload", async (req, res, next) => {
       acl,
     });
   } catch (err) {
-    next(err);
+    next({ error: err });
   }
 });
 
