@@ -11,7 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import DrawIcon from "@material-ui/icons/Create";
 import LayersIcon from "@material-ui/icons/LayersOutlined";
 import React, { useEffect, useState } from "react";
-import ReactMapGL, { Layer, Source } from "react-map-gl";
+import ReactMapGL from "react-map-gl";
 import { DrawPolygonMode, Editor } from "react-map-gl-draw";
 
 import type { Boundary } from ".";
@@ -127,32 +127,18 @@ function Map(props: Props) {
         width="100%"
         height="50vh"
         mapStyle={
-          // XXX: Mapbox only shows the Ordnance Survey layer if we give it a valid mapStyle too.
-          //      Although this is unfortunate, at least the mapbox layerStyle below works as a fallback
-          //      in case Ordnance Survey's API stops working.
           layer === LAYER_ORDNANCE_SURVEY
-            ? "mapbox://styles/opensystemslab/ckbuw2xmi0mum1il33qucl4dv"
+            ? `https://api.os.uk/maps/vector/v1/vts/resources/styles?key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`
             : layer
         }
-        onViewportChange={setViewport}
         mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN ?? ""}
+        onViewportChange={setViewport}
+        minZoom={17}
+        maxZoom={20}
+        transformRequest={(url: string) => ({
+          url: url + "&srs=3857",
+        })}
       >
-        <Source
-          id="source_id"
-          type="raster"
-          tiles={[
-            `https://api.os.uk/maps/raster/v1/zxy/Road_3857/{z}/{x}/{y}.png?key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`,
-          ]}
-          tileSize={256}
-        >
-          <Layer
-            type="raster"
-            paint={{}}
-            layout={{
-              visibility: layer === LAYER_ORDNANCE_SURVEY ? "visible" : "none",
-            }}
-          />
-        </Source>
         <Editor
           key={String(editorKey)}
           mode={!polygon ? mode : undefined}
