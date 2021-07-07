@@ -4,8 +4,12 @@ on:
     branches:
       - main
 
-# When a concurrent job or workflow is queued, if another job or workflow using the same concurrency group in the repository is in progress, the queued job or workflow will be pending. Any previously pending job or workflow in the concurrency group will be canceled. 
+# When a concurrent job or workflow is queued, if another job or workflow using the same concurrency group in the repository is in progress,
+# the queued job or workflow will be pending. Any previously pending job or workflow in the concurrency group will be canceled.
 concurrency: staging_environment
+
+env:
+  DEPLOYMENT_ENVIRONMENT: staging
 
 jobs:
   test_and_build:
@@ -56,6 +60,8 @@ jobs:
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.editor.planx.dev/v1/graphql
           REACT_APP_SHAREDB_URL: wss://sharedb.editor.planx.dev
+          REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+          REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -97,3 +103,29 @@ jobs:
           edit-pr-comment: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+  notifications:
+    name: Notifications
+    needs: preview
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # Airbrake notification - https://airbrake.io/docs/features/deploy-tracking
+      - name: Notify Airbrake of deploy
+        id: airbrake-deploy
+        uses: mtchavez/airbrake-deploy@v1
+        with:
+          project-id: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+          project-key: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+          environment: ${{ env.DEPLOYMENT_ENVIRONMENT }}
+          repository: https://github.com${{ github.repo }}
+          revision: ${{ github.sha }}
+          user: ${{ github.actor }}
+      - name: Get Airbrake deploy response
+        run: echo "The response was ${{ steps.airbrake-deploy.outputs.response }}"
+      # Slack deployment notification
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: ${{ env.DEPLOYMENT_ENVIRONMENT }} deploy
+          SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}
