@@ -27,6 +27,8 @@ const { publishFlow } = require("./publish");
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
+const airbrake = require("./airbrake");
+
 const router = express.Router();
 
 // when login failed, send failed msg
@@ -481,9 +483,19 @@ app.post("/sign-s3-upload", async (req, res, next) => {
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()
 app.use(
-  // XXX: including all 4 function params appears to be significant?
+  // XXX: including all 4 function params appears to be a requirement?
   function errorHandler(errorObject, _req, res, _next) {
-    const { status = 500, message = "Something went wrong" } = errorObject;
+    const { status = 500, message = "Something went wrong" } = (() => {
+      if (errorObject.error) {
+        airbrake?.notify(errorObject.error);
+        return {
+          ...errorObject,
+          message: errorObject.message.concat(", this error has been logged"),
+        };
+      } else {
+        return errorObject;
+      }
+    })();
 
     res.status(status).send({
       error: message,
