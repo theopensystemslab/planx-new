@@ -130,12 +130,15 @@ jobs:
         with:
           name: build
           path: ./editor.planx.uk/build
+      - uses: izhangzhihao/delete-comment@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_user_name: pulumi[bot]
+          issue_number: ${{ github.event.number }}
       - uses: pulumi/actions@v3
         with:
           command: preview
           stack-name: staging
           work-dir: infrastructure/application
-          comment-on-pr: true
-          edit-pr-comment: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
