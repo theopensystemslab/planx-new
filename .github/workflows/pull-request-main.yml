@@ -135,6 +135,7 @@ jobs:
           command: preview
           stack-name: staging
           work-dir: infrastructure/application
+          comment-on-pr: true
           edit-pr-comment: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
