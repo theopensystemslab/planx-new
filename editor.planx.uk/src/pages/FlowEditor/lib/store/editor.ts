@@ -282,10 +282,9 @@ export const editorStore = (
       },
     });
 
-    const first = data.flows[0].published_flows[0].user.first_name;
-    const last = data.flows[0].published_flows[0].user.last_name;
+    const { first_name, last_name } = data.flows[0].published_flows[0].user;
 
-    return first.concat(" ", last);
+    return first_name.concat(" ", last_name);
   },
 
   makeUnique: (id, parent) => {
