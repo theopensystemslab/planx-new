@@ -140,5 +140,6 @@ jobs:
           command: preview
           stack-name: staging
           work-dir: infrastructure/application
+          diff: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
