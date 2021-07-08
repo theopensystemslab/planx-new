@@ -412,7 +412,7 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
-app.post("/flows/:flowId/publish", useJWT, publishFlow());
+app.post("/flows/:flowId/publish", useJWT, publishFlow);
 
 app.post("/sign-s3-upload", async (req, res) => {
   if (!req.body.filename) res.status(422).json({ error: "missing filename" });

@@ -74,7 +74,7 @@ const Header: React.FC<{
   const [open, setOpen] = useState(false);
   const headerRef = useRef(null);
   const { navigate } = useNavigation();
-  const [togglePreview] = useStore((state) => [state.togglePreview]);
+  const togglePreview = useStore((state) => state.togglePreview);
 
   const { data } = useCurrentRoute();
 

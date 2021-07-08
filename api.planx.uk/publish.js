@@ -21,6 +21,8 @@ const getFlowData = async (id) => {
   return data.flows_by_pk.data;
 };
 
+// XXX: getFlowData & dataMerged are currently repeated in ../editor.planx.uk/src/lib/dataMergedHotfix.ts
+// in order to load previews for flows that have not been published yet
 const dataMerged = async (id, ob = {}) => {
   // get the primary flow data
   const data = await getFlowData(id);
@@ -45,7 +47,7 @@ const dataMerged = async (id, ob = {}) => {
   return ob;
 };
 
-const publishFlow = () => async (req, res) => {
+const publishFlow = async (req, res) => {
   if (!req.user?.sub)
     return res.status(401).json({ error: "User ID missing from JWT" });
   
