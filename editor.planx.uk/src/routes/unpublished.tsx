@@ -42,9 +42,6 @@ const routes = compose(
               theme
             }
             settings
-            published_flows(limit: 1, order_by: { id: desc }) {
-              data
-            }
           }
         }
       `,
@@ -58,19 +55,10 @@ const routes = compose(
 
     if (!flow) throw new NotFoundError();
 
-    const publishedFlow: Flow = data.flows[0].published_flows[0]?.data;
+    useStore.getState().setFlow(flow.id, await dataMerged(flow.id));
 
-    // load pre-flattened published flow if exists, else load & flatten flow
-    useStore
-      .getState()
-      .setFlow(
-        flow.id,
-        publishedFlow ? publishedFlow : await dataMerged(flow.id)
-      );
-
-    // TODO: Replace with below after merging	     return (
+    // TODO: Replace with below after merging
     // https://github.com/theopensystemslab/planx-new/pull/116
-    //
     // useStore.getState().setFlow(flow.id, flow.data_merged);
 
     const settings = {

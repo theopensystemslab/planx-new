@@ -57,7 +57,7 @@ const editorRoutes = mount({
 });
 
 export default mount({
-  "/:team/:flow/preview": lazy(() => import("./preview")),
-  "/:team/:flow/published": lazy(() => import("./published")),
+  "/:team/:flow/preview": lazy(() => import("./preview")), // loads published flow if exists, or current flow
+  "/:team/:flow/unpublished": lazy(() => import("./unpublished")), // loads current flow
   "*": editorRoutes,
 });

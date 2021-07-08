@@ -85,7 +85,11 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
     <div id="fake-browser">
       <header className={classes.header}>
         <Box width="100%" display="flex">
-          <input type="text" disabled value={props.url} />
+          <input
+            type="text"
+            disabled
+            value={props.url.replace("/preview", "/unpublished")}
+          />
           <Tooltip arrow title="Refresh preview">
             <RefreshCw
               onClick={() => {
@@ -101,9 +105,9 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
             />
           </Tooltip>
 
-          <Tooltip arrow title="Open service preview">
+          <Tooltip arrow title="Open editor preview">
             <a
-              href={props.url}
+              href={props.url.replace("/preview", "/unpublished")}
               target="_blank"
               rel="noopener noreferrer"
               className={classes.refreshButton}
@@ -114,7 +118,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
 
           <Tooltip arrow title="Open published service">
             <a
-              href={props.url.replace("/preview", "/published")}
+              href={props.url}
               target="_blank"
               rel="noopener noreferrer"
               className={classes.refreshButton}
