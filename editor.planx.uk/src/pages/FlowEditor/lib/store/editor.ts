@@ -59,6 +59,7 @@ export interface EditorStore extends Store.Store {
   getFlows: (teamId: number) => Promise<any>;
   isClone: (id: Store.nodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
+  lastPublisher: (flowId: string) => Promise<string>;
   makeUnique: (id: Store.nodeId, parent?: Store.nodeId) => void;
   moveNode: (
     id: Store.nodeId,
@@ -248,7 +249,6 @@ export const editorStore = (
       query: gql`
         query GetFlow($id: uuid) {
           flows(limit: 1, where: { id: { _eq: $id } }) {
-            id
             published_flows(order_by: { id: desc }, limit: 1) {
               created_at
             }
@@ -261,6 +261,31 @@ export const editorStore = (
     });
 
     return data.flows[0].published_flows[0].created_at;
+  },
+
+  lastPublisher: async (flowId: string) => {
+    const { data } = await client.query({
+      query: gql`
+        query GetFlow($id: uuid) {
+          flows(limit: 1, where: { id: { _eq: $id } }) {
+            published_flows(order_by: { id: desc }, limit: 1) {
+              user {
+                first_name
+                last_name
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        id: flowId,
+      },
+    });
+
+    const first = data.flows[0].published_flows[0].user.first_name;
+    const last = data.flows[0].published_flows[0].user.last_name;
+
+    return first.concat(" ", last);
   },
 
   makeUnique: (id, parent) => {

@@ -58,5 +58,6 @@ const editorRoutes = mount({
 
 export default mount({
   "/:team/:flow/preview": lazy(() => import("./preview")),
+  "/:team/:flow/published": lazy(() => import("./published")),
   "*": editorRoutes,
 });

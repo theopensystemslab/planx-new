@@ -56,12 +56,14 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
     setPreviewEnvironment,
     publishFlow,
     lastPublished,
+    lastPublisher,
   ] = useStore((state) => [
     state.id,
     state.resetPreview,
     state.setPreviewEnvironment,
     state.publishFlow,
     state.lastPublished,
+    state.lastPublisher,
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>();
@@ -69,12 +71,14 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
 
   useEffect(() => setPreviewEnvironment("editor"), []);
 
-  const formatLastPublishedDate = (date: string) =>
-    `Last published ${formatDistanceToNow(new Date(date))} ago`;
+  const formatLastPublish = (date: string, user: string) =>
+    `Last published ${formatDistanceToNow(new Date(date))} ago by ${user}`;
 
   const lastPublishedRequest = useAsync(async () => {
     const date = await lastPublished(flowId);
-    setLastPublishedTitle(formatLastPublishedDate(date));
+    const user = await lastPublisher(flowId);
+
+    setLastPublishedTitle(formatLastPublish(date, user));
   });
 
   return (
@@ -109,7 +113,14 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
           </Tooltip>
 
           <Tooltip arrow title="Open published service">
-            <Globe />
+            <a
+              href={props.url.replace("/preview", "/published")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={classes.refreshButton}
+            >
+              <Globe />
+            </a>
           </Tooltip>
         </Box>
         <Box width="100%" mt={2}>
@@ -125,7 +136,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
             >
               PUBLISH
             </Button>
-            <Box mr={2}>
+            <Box mr={0}>
               <Typography variant="caption">{lastPublishedTitle}</Typography>
             </Box>
           </Box>
