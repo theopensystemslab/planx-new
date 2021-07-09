@@ -330,6 +330,15 @@ app.get("/pay/:localAuthority/:paymentId", (req, res) => {
   usePayProxy(
     {
       pathRewrite: () => `/${req.params.paymentId}`,
+      selfHandleResponse: true,
+      onProxyRes: responseInterceptor(
+        async (responseBuffer) => {
+          const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+
+          // only return payment status, filter out PII
+          return JSON.stringify(govUkResponse.state);
+        }
+      )
     },
     req
   )(req, res);
