@@ -2,6 +2,7 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import formik, { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import type { TextContent } from "types";
 import Input, { Props as InputProps } from "ui/Input";
@@ -9,16 +10,35 @@ import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
 import ListManager from "ui/ListManager";
 import RichTextInput from "ui/RichTextInput";
+import { slugify } from "utils";
 
-import { props } from ".pnpm/@types/ramda@0.27.32/node_modules/@types/ramda";
+function GlobalSettings(props: {
+  footerContent?: { [key: string]: TextContent };
+}) {
+  const [updateGlobalSettings] = useStore((state) => [
+    state.updateGlobalSettings,
+  ]);
 
-function GlobalSettings(props: { footerContent?: TextContent[] }) {
   const formik = useFormik({
     initialValues: {
-      footerContent: props.footerContent || [],
+      footerContent:
+        (props.footerContent &&
+          Object.entries(props.footerContent).map(
+            ([key, content]) => content
+          )) ||
+        [],
     },
     onSubmit: ({ footerContent }) => {
-      console.log("footer content", footerContent);
+      const formatted = footerContent.reduce((prev, curr): {
+        [key: string]: TextContent;
+      } => {
+        const key = slugify(curr.heading);
+
+        prev[key] = curr;
+        return prev;
+      }, {} as { [key: string]: TextContent });
+
+      updateGlobalSettings(formatted);
     },
   });
   return (

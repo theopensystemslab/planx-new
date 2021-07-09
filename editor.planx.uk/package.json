@@ -16,7 +16,6 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@turf/area": "^6.0.1",
     "@types/sharedb": "^1.0.17",
-    "airtable": "^0.11.1",
     "array-move": "^3.0.1",
     "axios": "^0.19.2",
     "classnames": "^2.2.6",

@@ -36,9 +36,25 @@ const editorRoutes = compose(
       };
     }),
 
-    "/global-settings": route({
-      title: makeTitle("Global Settings"),
-      view: <GlobalSettings />,
+    "/global-settings": route(async () => {
+      const { data } = await client.query({
+        query: gql`
+          query {
+            global_settings {
+              footer_content
+            }
+          }
+        `,
+      });
+
+      return {
+        title: makeTitle("Global Settings"),
+        view: (
+          <GlobalSettings
+            footerContent={data.global_settings[0]?.footer_content}
+          />
+        ),
+      };
     }),
 
     "/:team": lazy(() => import("./team")),

@@ -34,8 +34,6 @@ export interface FlowSettings {
   };
 }
 
-export type AirtableStatus = "Live" | "Ready" | "Archived" | "Do not use";
-
 export interface TextContent {
   heading: string;
   content: string;

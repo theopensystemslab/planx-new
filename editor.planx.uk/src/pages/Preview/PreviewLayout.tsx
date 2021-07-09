@@ -12,13 +12,13 @@ import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { FlowSettings, FOOTER_ITEMS } from "../../types";
+import { FlowSettings, FOOTER_ITEMS, TextContent } from "../../types";
 
 const PreviewLayout: React.FC<{
   children?: any;
   theme?: any;
   settings?: FlowSettings;
-  globalContent?: any;
+  globalContent?: { [key: string]: TextContent };
 }> = ({
   theme = {
     primary: "#2c2c2c",
@@ -56,17 +56,18 @@ const PreviewLayout: React.FC<{
     }
   });
 
-  const globalFooterItems = Object.keys(globalContent).map((slug) => {
-    const item = globalContent[slug];
+  const globalFooterItems =
+    (globalContent &&
+      Object.keys(globalContent).map((slug) => {
+        const item = globalContent[slug];
 
-    if (item.status !== "Live") return;
-
-    return {
-      title: item.name,
-      content: item.content,
-      href: makeHref(slug),
-    };
-  });
+        return {
+          title: item.heading,
+          content: item.content,
+          href: makeHref(slug),
+        };
+      })) ||
+    [];
 
   const footerItems = [
     ...flowSettingsContent,

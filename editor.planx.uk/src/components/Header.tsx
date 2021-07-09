@@ -209,10 +209,14 @@ const Header: React.FC<{
             </MenuItem>
           )}
 
+          {/* Only show global settings link from top-level admin view */}
+          {!data.flow && !data.team && (
+            <MenuItem onClick={() => navigate("/global-settings")}>
+              Global Settings
+            </MenuItem>
+          )}
+
           <MenuItem onClick={() => navigate("/logout")}>Log out</MenuItem>
-          <MenuItem onClick={() => navigate("/global-settings")}>
-            Global Settings
-          </MenuItem>
         </Paper>
       </Popover>
     </>
