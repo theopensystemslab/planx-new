@@ -1,0 +1,72 @@
+<html>
+  <head></head>
+  <body>
+    <ul id="logger"></ul>
+    <script type="text/javascript">
+      submitAllFlowData();
+
+      /**
+       * debug tool to submit all local flow data to webhook.site
+       *
+       * admin: open https://webhook.site and select 'CORS Headers' and make
+       *        note of the WEBHOOK_SITE_ID in the unique URL
+       *
+       * user:  visit editor.planx.uk/debugger.html#(WEBHOOK_SITE_ID)
+       *
+       * admin: watch flows appear at https://webhook.site/#!/WEBHOOK_SITE_ID
+       */
+      async function submitAllFlowData() {
+        const webhookId = window.location.hash.match(/^#([a-z0-9-]+)$/)?.[1];
+        if (!webhookId) return log("incorrect url");
+
+        const URL = `https://webhook.site/${webhookId}`;
+
+        const flowIdRegex = /^flow:([a-z0-9-]+)$/;
+
+        const keys = Object.keys(localStorage).filter((key) =>
+          flowIdRegex.test(key)
+        );
+
+        log(`found ${keys.length} flows`);
+
+        let count = 1;
+
+        for (const key of keys) {
+          try {
+            const id = key.match(flowIdRegex)[1];
+
+            const data = JSON.parse(localStorage.getItem(key));
+
+            await fetch(URL, {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ id, data }),
+            });
+
+            log(`(${count++}/${keys.length}) submitted ${id}`);
+
+            await sleep(250);
+          } catch (err) {
+            console.error(err);
+            log(`error submitting ${id}`);
+          }
+        }
+
+        log("done");
+      }
+
+      function log(msg) {
+        const message = document.createElement("li");
+        message.appendChild(document.createTextNode(msg));
+        document.getElementById("logger").appendChild(message);
+      }
+
+      function sleep(ms) {
+        return new Promise((res) => setTimeout(res, ms));
+      }
+    </script>
+  </body>
+</html>
