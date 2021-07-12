@@ -72,7 +72,6 @@ specifiers:
   navi: ^0.14.0
   node-sass: ^4.14.1
   notifications-node-client: ^5.0.2
-  pg-array: ^0.5.0
   postcode: ^5.0.0
   prettier: ^2.1.2
   proj4: ^2.6.2
@@ -147,7 +146,6 @@ dependencies:
   natsort: 2.0.2
   navi: 0.14.0
   notifications-node-client: 5.1.0
-  pg-array: 0.5.0
   postcode: 5.0.0
   proj4: 2.6.2
   ramda: 0.27.1
@@ -14760,12 +14758,6 @@ packages:
   /performance-now/2.1.0:
     resolution: {integrity: sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=}
 
-  /pg-array/0.5.0:
-    resolution: {integrity: sha1-51k1y1RZXu0sWrt7i78HyZcpsrc=}
-    dependencies:
-      to-array.js: 0.6.0
-    dev: false
-
   /picomatch/2.2.2:
     resolution: {integrity: sha512-q0M/9eZHzmr0AulXyPwNfZjtwZ/RBZlbN3K3CErVrk50T2ASYI7Bye0EvekFY3IP1Nt2DHu0re+V2ZHIpMkuWg==}
     engines: {node: '>=8.6'}
@@ -18385,10 +18377,6 @@ packages:
 
   /tmpl/1.0.4:
     resolution: {integrity: sha1-I2QN17QtAEM5ERQIIOXPRA5SHdE=}
-
-  /to-array.js/0.6.0:
-    resolution: {integrity: sha1-MDcmE0MtClrNyyGClxR99T1gC6E=}
-    dev: false
 
   /to-arraybuffer/1.0.1:
     resolution: {integrity: sha1-fSKbH8xjfkZsoIEYCDanqr/4P0M=}
