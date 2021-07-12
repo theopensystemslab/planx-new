@@ -26,6 +26,7 @@ export interface PreviewStore extends Store.Store {
   ) => Array<string>;
   currentCard: () => Store.node | null;
   hasPaid: () => boolean;
+  canGoBack: () => boolean;
   computePassport: () => Readonly<Store.passport>;
   previousCard: () => Store.nodeId | undefined;
   record: (id: Store.nodeId, userData?: Store.userData) => void;
@@ -115,17 +116,22 @@ export const previewStore = (
   hasPaid: () => {
     const { breadcrumbs, flow } = get();
 
-    return Object.keys(breadcrumbs).some(
-      (crumb) => flow[crumb]?.type === TYPES.Pay
+    return Object.entries(breadcrumbs).some(
+      ([id, userData]) => flow[id]?.type === TYPES.Pay && !userData.auto
     );
   },
 
   previousCard: () => {
     const goBackable = Object.entries(get().breadcrumbs)
-      .filter(([k, v]: any) => !v.auto)
+      .filter(([, v]) => !v.auto)
       .map(([k]) => k);
 
     return goBackable.pop();
+  },
+
+  canGoBack: () => {
+    const { hasPaid, previousCard } = get();
+    return Boolean(previousCard()) && !hasPaid();
   },
 
   computePassport: () => {
