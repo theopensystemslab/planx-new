@@ -9,7 +9,6 @@ import flatten from "lodash/flatten";
 import isNil from "lodash/isNil";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
-import pgarray from "pg-array";
 import type { Flag, GovUKPayment } from "types";
 import { v4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
@@ -204,7 +203,7 @@ export const previewStore = (
   },
 
   record(id, userData) {
-    const { breadcrumbs, flow, sessionId, upcomingCardIds } = get();
+    const { breadcrumbs, flow } = get();
 
     if (!flow[id]) throw new Error("id not found");
 
@@ -225,21 +224,6 @@ export const previewStore = (
           [id]: breadcrumb,
         },
       });
-
-      const flowIdType = flow[id]?.type;
-
-      // only store breadcrumbs in the backend if they are answers provided for
-      // either a Statement or Checklist type. TODO: make this more robust
-      if (
-        flowIdType &&
-        SUPPORTED_DECISION_TYPES.includes(flowIdType) &&
-        sessionId
-      ) {
-        addSessionEvent();
-        if (upcomingCardIds().length === 0) {
-          endSession();
-        }
-      }
     } else {
       // remove breadcrumbs that were stored from id onwards
 
@@ -251,57 +235,6 @@ export const previewStore = (
           breadcrumbs: pick(breadcrumbs, breadcrumbIds.slice(0, idx)),
         });
       }
-    }
-
-    function addSessionEvent() {
-      client.mutate({
-        mutation: gql`
-          mutation CreateSessionEvent(
-            $chosen_node_ids: _text
-            $type: session_event_type
-            $session_id: uuid
-            $parent_node_id: String
-          ) {
-            insert_session_events(
-              objects: {
-                chosen_node_ids: $chosen_node_ids
-                session_id: $session_id
-                type: $type
-                parent_node_id: $parent_node_id
-              }
-            ) {
-              affected_rows
-            }
-          }
-        `,
-        variables: {
-          chosen_node_ids: pgarray(userData?.answers ?? []),
-          session_id: get().sessionId,
-          type: "human_decision", // TODO
-          parent_node_id: id,
-        },
-      });
-    }
-
-    function endSession() {
-      client.mutate({
-        mutation: gql`
-          mutation EndSession($id: uuid!, $completed_at: timestamptz!) {
-            update_sessions_by_pk(
-              pk_columns: { id: $id }
-              _set: { completed_at: $completed_at }
-            ) {
-              id
-            }
-          }
-        `,
-        variables: {
-          id: get().sessionId,
-          // TODO: Move this logic to the backend
-          //       Could be done with a SQL Function exposed through Hasura as a mutation (e.g. end_session)
-          completed_at: new Date(),
-        },
-      });
     }
   },
 
