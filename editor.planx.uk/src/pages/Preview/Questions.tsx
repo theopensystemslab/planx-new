@@ -31,12 +31,13 @@ const Questions = () => {
     state.resumeSession,
     state.govUkPayment,
     state.previewEnvironment,
-    state.canGoBack(),
+    state.canGoBack,
   ]);
 
   const node = currentCard();
   const flow = useContext(PreviewContext);
 
+  const showBackButton = canGoBack(node?.id);
   const isStandalone = previewEnvironment === "standalone";
 
   useEffect(() => {
@@ -81,8 +82,8 @@ const Questions = () => {
         }}
         style={{
           padding: "0 10px 10px",
-          visibility: canGoBack ? "visible" : "hidden",
-          pointerEvents: canGoBack ? "auto" : "none",
+          visibility: showBackButton ? "visible" : "hidden",
+          pointerEvents: showBackButton ? "auto" : "none",
           display: "block",
           cursor: "pointer",
           userSelect: "none",

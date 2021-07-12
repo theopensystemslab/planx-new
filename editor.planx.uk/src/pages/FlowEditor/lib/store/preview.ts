@@ -26,9 +26,9 @@ export interface PreviewStore extends Store.Store {
   ) => Array<string>;
   currentCard: () => Store.node | null;
   hasPaid: () => boolean;
-  canGoBack: () => boolean;
-  computePassport: () => Readonly<Store.passport>;
   previousCard: () => Store.nodeId | undefined;
+  canGoBack: (nodeId?: Store.nodeId) => boolean;
+  computePassport: () => Readonly<Store.passport>;
   record: (id: Store.nodeId, userData?: Store.userData) => void;
   resultData: (
     flagSet?: string,
@@ -129,9 +129,13 @@ export const previewStore = (
     return goBackable.pop();
   },
 
-  canGoBack: () => {
-    const { hasPaid, previousCard } = get();
-    return Boolean(previousCard()) && !hasPaid();
+  canGoBack: (nodeId) => {
+    const { flow, hasPaid, previousCard } = get();
+    return (
+      flow[String(nodeId)].type !== TYPES.Confirmation &&
+      Boolean(previousCard()) &&
+      !hasPaid()
+    );
   },
 
   computePassport: () => {
