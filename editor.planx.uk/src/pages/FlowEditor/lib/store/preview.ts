@@ -318,9 +318,12 @@ export const previewStore = (
 
   async startSession({ passport }) {
     try {
-      const response = await client.mutate({
+      const { sessionId, flow, id } = get();
+
+      await client.mutate({
         mutation: gql`
           mutation CreateSession(
+            $id: uuid
             $flow_data: jsonb
             $flow_id: uuid
             $flow_version: Int
@@ -328,6 +331,7 @@ export const previewStore = (
           ) {
             insert_sessions_one(
               object: {
+                $id: uuid
                 flow_data: $flow_data
                 flow_id: $flow_id
                 flow_version: $flow_version
@@ -339,14 +343,13 @@ export const previewStore = (
           }
         `,
         variables: {
-          flow_data: get().flow,
-          flow_id: get().id,
+          id: sessionId,
+          flow_data: flow,
+          flow_id: id,
           flow_version: 0, // TODO: add flow version
           passport,
         },
       });
-      const sessionId = response.data.insert_sessions_one.id;
-      set({ sessionId });
     } catch (e) {}
   },
 
