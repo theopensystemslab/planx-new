@@ -1,4 +1,5 @@
 import { ROOT_NODE_KEY } from "@planx/graph";
+import { v4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import type { Store } from ".";
@@ -45,7 +46,7 @@ export const sharedStore = (
   },
 
   resetPreview() {
-    set({ breadcrumbs: {}, sessionId: "" });
+    set({ breadcrumbs: {}, sessionId: v4() });
   },
 
   setFlow(id, flow) {

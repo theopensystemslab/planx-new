@@ -11,6 +11,7 @@ import pick from "lodash/pick";
 import uniq from "lodash/uniq";
 import pgarray from "pg-array";
 import type { Flag, GovUKPayment } from "types";
+import { v4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
@@ -313,7 +314,7 @@ export const previewStore = (
     set(args);
   },
 
-  sessionId: "",
+  sessionId: v4(),
 
   async startSession({ passport }) {
     try {
