@@ -47,7 +47,7 @@ export interface PreviewStore extends Store.Store {
     id: SharedStore["id"];
   }) => void;
   sessionId: string;
-  startSession: ({ passport }: { passport: Record<string, any> }) => void;
+  sendSessionDataToHasura: () => void;
   upcomingCardIds: () => Store.nodeId[];
   isFinalCard: () => boolean;
   // temporary measure for storing payment fee & id between gov uk redirect
@@ -249,9 +249,9 @@ export const previewStore = (
 
   sessionId: v4(),
 
-  async startSession({ passport }) {
+  async sendSessionDataToHasura() {
     try {
-      const { sessionId, flow, id } = get();
+      const { sessionId, flow, id, computePassport } = get();
 
       await client.mutate({
         mutation: gql`
@@ -280,7 +280,7 @@ export const previewStore = (
           flow_data: flow,
           flow_id: id,
           flow_version: 0, // TODO: add flow version
-          passport,
+          passport: computePassport(),
         },
       });
     } catch (e) {}
