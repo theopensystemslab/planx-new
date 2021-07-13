@@ -336,7 +336,11 @@ app.get("/pay/:localAuthority/:paymentId", (req, res) => {
           const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
 
           // only return payment status, filter out PII
-          return JSON.stringify(govUkResponse.state);
+          return JSON.stringify({ 
+            payment_id: govUkResponse.payment_id,
+            amount: govUkResponse.amount,
+            state: govUkResponse.state,
+          });
         }
       )
     },
