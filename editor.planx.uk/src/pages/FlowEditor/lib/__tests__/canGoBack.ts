@@ -2,6 +2,7 @@ import { Store, vanillaStore } from "../store";
 
 const { getState, setState } = vanillaStore;
 
+// https://imgur.com/VFV64ax
 const flow: Store.flow = {
   _root: {
     edges: ["XYoJeox7F0", "8ZSxuIfFYE", "bmsSl3ScbV", "ltuI9xrBHk"],

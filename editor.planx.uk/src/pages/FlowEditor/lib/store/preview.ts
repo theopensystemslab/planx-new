@@ -130,6 +130,8 @@ export const previewStore = (
   },
 
   canGoBack: (nodeId) => {
+    // XXX: nodeId is a required param until upcomingNodes().shift() is
+    //      optimised/memoized, see related isFinalCard() comment below
     const { flow, hasPaid, previousCard } = get();
     return (
       flow[nodeId]?.type !== TYPES.Confirmation &&
