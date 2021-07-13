@@ -1,4 +1,3 @@
-import { GOV_PAY_PASSPORT_KEY } from "@planx/components/Pay/model";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -20,6 +19,7 @@ const Questions = () => {
     resumeSession,
     govUkPayment,
     previewEnvironment,
+    canGoBack,
   ] = useStore((state) => [
     state.currentCard,
     state.previousCard(),
@@ -31,12 +31,13 @@ const Questions = () => {
     state.resumeSession,
     state.govUkPayment,
     state.previewEnvironment,
+    state.canGoBack,
   ]);
 
   const node = currentCard();
   const flow = useContext(PreviewContext);
 
-  const hasPaid = Boolean(passport.data?.[GOV_PAY_PASSPORT_KEY]);
+  const showBackButton = node?.id ? canGoBack(node.id) : false;
   const isStandalone = previewEnvironment === "standalone";
 
   useEffect(() => {
@@ -81,8 +82,8 @@ const Questions = () => {
         }}
         style={{
           padding: "0 10px 10px",
-          visibility: previousCard && !hasPaid ? "visible" : "hidden",
-          pointerEvents: previousCard && !hasPaid ? "auto" : "none",
+          visibility: showBackButton ? "visible" : "hidden",
+          pointerEvents: showBackButton ? "auto" : "none",
           display: "block",
           cursor: "pointer",
           userSelect: "none",
