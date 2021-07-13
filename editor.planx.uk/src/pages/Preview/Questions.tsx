@@ -37,7 +37,7 @@ const Questions = () => {
   const node = currentCard();
   const flow = useContext(PreviewContext);
 
-  const showBackButton = canGoBack(node?.id);
+  const showBackButton = node?.id ? canGoBack(node.id) : false;
   const isStandalone = previewEnvironment === "standalone";
 
   useEffect(() => {

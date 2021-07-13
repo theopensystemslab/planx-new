@@ -27,7 +27,7 @@ export interface PreviewStore extends Store.Store {
   currentCard: () => Store.node | null;
   hasPaid: () => boolean;
   previousCard: () => Store.nodeId | undefined;
-  canGoBack: (nodeId?: Store.nodeId) => boolean;
+  canGoBack: (nodeId: Store.nodeId) => boolean;
   computePassport: () => Readonly<Store.passport>;
   record: (id: Store.nodeId, userData?: Store.userData) => void;
   resultData: (
@@ -132,7 +132,7 @@ export const previewStore = (
   canGoBack: (nodeId) => {
     const { flow, hasPaid, previousCard } = get();
     return (
-      flow[String(nodeId)].type !== TYPES.Confirmation &&
+      flow[nodeId]?.type !== TYPES.Confirmation &&
       Boolean(previousCard()) &&
       !hasPaid()
     );
