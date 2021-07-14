@@ -103,7 +103,7 @@ const getManualConstraints = (metadata) => {
 const addDesignatedVariable = (responseObject) => {
   const resObjWithDesignated = {
     ...responseObject,
-    "designated": { value: false},
+    designated: { value: false },
   };
 
   const subVariables = [
@@ -113,12 +113,12 @@ const addDesignatedVariable = (responseObject) => {
     "broads",
     "WHS",
     "monument",
-  ]
+  ];
 
   // If any of the subvariables are true, then set "designated" to true
-  subVariables.forEach(s => {
+  subVariables.forEach((s) => {
     if (resObjWithDesignated[`designated.${s}`]?.value) {
-      resObjWithDesignated["designated"] = { value: true }
+      resObjWithDesignated["designated"] = { value: true };
     }
   });
 

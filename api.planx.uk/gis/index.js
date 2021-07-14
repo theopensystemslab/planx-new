@@ -51,7 +51,9 @@ const locationSearch = () => async (req, res) => {
     }
   } else {
     res.send({});
-    console.log(`${req.params.localAuthority} is not a supported location authority`);
+    console.log(
+      `${req.params.localAuthority} is not a supported location authority`
+    );
   }
 };
 

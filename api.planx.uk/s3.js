@@ -1,4 +1,4 @@
-const assert = require('assert')
+const assert = require("assert");
 const S3 = require("aws-sdk/clients/s3");
 const { customAlphabet } = require("nanoid");
 const { getType } = require("mime");
