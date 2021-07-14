@@ -14,7 +14,7 @@ cd "$ROOT_DIR" || exit
 # Destroy all previous containers and data (just in case)
 docker-compose down --volumes --remove-orphans
 
-trap 'echo "Cleaning up…" ; docker-compose down --volumes' EXIT
+trap 'echo "Cleaning up…" ; docker-compose down --volumes --remove-orphans' TERM INT
 
 echo "Loading env vars…"
 . "${ROOT_DIR}/.env"
@@ -40,10 +40,4 @@ until $DONE; do
 done
 echo "Hasura is ready"
 
-echo "Running postgres tests…"
-./hasura.planx.uk/run-postgres-tests.sh
-echo "Postgres tests passed."
-
-echo "Running Hasura tests…"
-(cd hasura.planx.uk/tests && pnpm install && pnpm test)
-echo "Hasura tests passed."
+echo "All containers ready."

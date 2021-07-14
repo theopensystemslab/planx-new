@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+echo "Running postgres tests…"
+
 set -e
 
 SCRIPT_DIR=$(dirname "$0")
@@ -15,3 +17,5 @@ ROOT_DIR="${SCRIPT_DIR}/.."
 # $ npx nodemon -e sql --exec "./run-tests.sh"
 
 psql -v ON_ERROR_STOP=1 "postgres://${PG_USERNAME}:${PG_PASSWORD}@0.0.0.0:${PG_PORT}/${PG_DATABASE}" <"${SCRIPT_DIR}/tests/audit.test.sql"
+
+echo "Postgres tests passed."

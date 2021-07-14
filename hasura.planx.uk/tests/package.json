@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "jest",
+    "test": "echo 'Running hasura tests…' && jest && echo 'Hasura tests passed.'",
     "test:watch": "jest --watch"
   },
   "dependencies": {
