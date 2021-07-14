@@ -226,10 +226,10 @@ export function getParams(
 
   // 2a. property boundary file if the user didn't draw
 
-  if (passport?.data?.[PASSPORT_UPLOAD_KEY]?.url) {
+  if (passport?.data?.[PASSPORT_UPLOAD_KEY]) {
     data.files = data.files || [];
     data.files.push({
-      filename: passport.data[PASSPORT_UPLOAD_KEY].url,
+      filename: passport.data[PASSPORT_UPLOAD_KEY],
       tags: extractTagsFromPassportKey(PASSPORT_UPLOAD_KEY),
     });
   }
