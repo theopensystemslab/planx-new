@@ -1,7 +1,12 @@
 require("isomorphic-fetch");
 const https = require("https");
 
-const { makeBbox, getQueryableConstraints, getManualConstraints, addDesignatedVariable } = require("../helpers.js");
+const {
+  makeBbox,
+  getQueryableConstraints,
+  getManualConstraints,
+  addDesignatedVariable,
+} = require("../helpers.js");
 const { planningConstraints } = require("./metadata/southwark.js");
 
 const gisLayers = getQueryableConstraints(planningConstraints);
@@ -22,7 +27,9 @@ var headers = {
 
 // Fetch a data layer
 function get(key, table, x, y, radius = 1.5) {
-  const fieldsString = planningConstraints[key].columns.map((f) => `"${f}"`).join(",");
+  const fieldsString = planningConstraints[key].columns
+    .map((f) => `"${f}"`)
+    .join(",");
 
   const limit = 1; // 100
 
@@ -34,21 +41,24 @@ function get(key, table, x, y, radius = 1.5) {
     WHERE MI_Intersects(obj,MI_Box(${bbox},'EPSG:27700'))
   `;
 
-  return fetch("https://geo.southwark.gov.uk/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService", {
-      "method": "POST",
-      "headers": headers,
-      "body": new URLSearchParams({
-        "url": `tables/features.json?q=${query}&page=1&pageLength=${limit}&strictSSL=false&gzip=true`,
-        "encodeSpecialChars": "true"
+  return fetch(
+    "https://geo.southwark.gov.uk/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    {
+      method: "POST",
+      headers: headers,
+      body: new URLSearchParams({
+        url: `tables/features.json?q=${query}&page=1&pageLength=${limit}&strictSSL=false&gzip=true`,
+        encodeSpecialChars: "true",
       }),
-      "agent": new https.Agent({
-        rejectUnauthorized: false
+      agent: new https.Agent({
+        rejectUnauthorized: false,
       }),
-    })
-    .then(response => response.text())
-    .then(data => new Array(key, data))
+    }
+  )
+    .then((response) => response.text())
+    .then((data) => new Array(key, data))
     .catch((error) => {
-      console.error('Error:', error);
+      console.error("Error:", error);
     });
 }
 
@@ -56,22 +66,21 @@ function get(key, table, x, y, radius = 1.5) {
 async function locationSearch(x, y, extras) {
   // Setup a one-dimension array of each data source we'll fetch
   let sources = [];
-  Object.keys(gisLayers).forEach((layer) => 
-    gisLayers[layer].tables.forEach((table) => 
+  Object.keys(gisLayers).forEach((layer) =>
+    gisLayers[layer].tables.forEach((table) =>
       sources.push({
-        "layer": layer,
-        "table": table,
-        "x": x,
-        "y": y
+        layer: layer,
+        table: table,
+        x: x,
+        y: y,
       })
-  ));
+    )
+  );
 
   const responses = await Promise.all(
-    sources.map((source) => 
-      get(source.layer, source.table, source.x, source.y)
-    ).map((p) => 
-      p.catch((e) => console.log(e))
-    )
+    sources
+      .map((source) => get(source.layer, source.table, source.x, source.y))
+      .map((p) => p.catch((e) => console.log(e)))
   );
 
   const ob = responses
