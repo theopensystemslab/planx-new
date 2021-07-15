@@ -44,4 +44,22 @@ describe("flows and operations", () => {
     expect(mutations).toContain('delete_flows_by_pk');
     expect(mutations).toContain('delete_operations');
   });
+
+  test("public can query published flows", async () => {
+    const response = await gqlPublic(INTROSPECTION_QUERY);
+    const { types } = response.data.__schema;
+    const queries = types.find(x => x.name === 'query_root').fields.map(x => x.name);
+
+    expect(queries).toContain('published_flows');
+  });
+
+  test("public cannot create, update, or delete published_flows", async () => {
+    const response = await gqlPublic(INTROSPECTION_QUERY);
+    const { types } = response.data.__schema;
+    const mutations = types.find(x => x.name === 'mutation_root').fields.map(x => x.name);
+
+    expect(mutations).not.toContain('insert_published_flows');
+    expect(mutations).not.toContain('update_published_flows');
+    expect(mutations).not.toContain('delete_published_flows');
+  });
 });

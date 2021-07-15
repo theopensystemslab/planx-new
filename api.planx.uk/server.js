@@ -21,6 +21,7 @@ const {
 
 const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
+const { publishFlow } = require("./publish");
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -410,6 +411,8 @@ app.get("/gis/:localAuthority", locationSearch());
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
+
+app.post("/flows/:flowId/publish", useJWT, publishFlow);
 
 app.post("/sign-s3-upload", async (req, res) => {
   if (!req.body.filename) res.status(422).json({ error: "missing filename" });

@@ -42,9 +42,6 @@ const routes = compose(
               theme
             }
             settings
-            published_flows(limit: 1, order_by: { id: desc }) {
-              data
-            }
           }
         }
       `,
@@ -58,16 +55,7 @@ const routes = compose(
 
     if (!flow) throw new NotFoundError();
 
-    const publishedFlow: Flow = data.flows[0].published_flows[0]?.data;
-
-    // XXX: necessary as long as not every flow is published; aim to remove dataMergedHotfix.ts in future
-    // load pre-flattened published flow if exists, else load & flatten flow
-    useStore
-      .getState()
-      .setFlow(
-        flow.id,
-        publishedFlow ? publishedFlow : await dataMerged(flow.id)
-      );
+    useStore.getState().setFlow(flow.id, await dataMerged(flow.id));
 
     // TODO: Replace with below after merging
     // https://github.com/theopensystemslab/planx-new/pull/116

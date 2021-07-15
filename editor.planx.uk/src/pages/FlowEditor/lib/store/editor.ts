@@ -9,6 +9,8 @@ import {
   ROOT_NODE_KEY,
   update,
 } from "@planx/graph";
+import axios from "axios";
+import Cookies from "js-cookie";
 import { client } from "lib/graphql";
 import debounce from "lodash/debounce";
 import type { FlowSettings } from "types";
@@ -56,6 +58,8 @@ export interface EditorStore extends Store.Store {
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   getFlows: (teamId: number) => Promise<any>;
   isClone: (id: Store.nodeId) => boolean;
+  lastPublished: (flowId: string) => Promise<string>;
+  lastPublisher: (flowId: string) => Promise<string>;
   makeUnique: (id: Store.nodeId, parent?: Store.nodeId) => void;
   moveNode: (
     id: Store.nodeId,
@@ -64,6 +68,7 @@ export interface EditorStore extends Store.Store {
     toParent?: Store.nodeId
   ) => void;
   pasteNode: (toParent: Store.nodeId, toBefore: Store.nodeId) => void;
+  publishFlow: (flowId: string) => Promise<any>;
   removeNode: (id: Store.nodeId, parent: Store.nodeId) => void;
   updateFlowSettings: (
     teamSlug: string,
@@ -239,6 +244,49 @@ export const editorStore = (
     return isClone(id, get().flow);
   },
 
+  lastPublished: async (flowId: string) => {
+    const { data } = await client.query({
+      query: gql`
+        query GetFlow($id: uuid) {
+          flows(limit: 1, where: { id: { _eq: $id } }) {
+            published_flows(order_by: { id: desc }, limit: 1) {
+              created_at
+            }
+          }
+        }
+      `,
+      variables: {
+        id: flowId,
+      },
+    });
+
+    return data.flows[0].published_flows[0].created_at;
+  },
+
+  lastPublisher: async (flowId: string) => {
+    const { data } = await client.query({
+      query: gql`
+        query GetFlow($id: uuid) {
+          flows(limit: 1, where: { id: { _eq: $id } }) {
+            published_flows(order_by: { id: desc }, limit: 1) {
+              user {
+                first_name
+                last_name
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        id: flowId,
+      },
+    });
+
+    const { first_name, last_name } = data.flows[0].published_flows[0].user;
+
+    return first_name.concat(" ", last_name);
+  },
+
   makeUnique: (id, parent) => {
     const [, ops] = makeUnique(id, parent)(get().flow);
     send(ops);
@@ -272,6 +320,18 @@ export const editorStore = (
     } catch (err) {
       alert(err.message);
     }
+  },
+
+  publishFlow(flowId: string) {
+    const token = Cookies.get("jwt");
+
+    return axios({
+      url: `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish`,
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   },
 
   removeNode: (id, parent) => {

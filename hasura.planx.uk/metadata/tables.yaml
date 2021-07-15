@@ -50,6 +50,13 @@
         table:
           schema: public
           name: operations
+  - name: published_flows
+    using:
+      foreign_key_constraint_on:
+        column: flow_id
+        table:
+          schema: public
+          name: published_flows
   - name: sessions
     using:
       foreign_key_constraint_on:
@@ -91,6 +98,26 @@
   - name: flow
     using:
       foreign_key_constraint_on: flow_id
+- table:
+    schema: public
+    name: published_flows
+  object_relationships:
+  - name: flow
+    using:
+      foreign_key_constraint_on: flow_id
+  - name: user
+    using:
+      foreign_key_constraint_on: publisher_id
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - publisher_id
+      - data
+      - created_at
+      - flow_id
+      filter: {}
 - table:
     schema: public
     name: session_events
