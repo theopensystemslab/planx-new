@@ -1,5 +1,6 @@
-import { globalFooterContent } from "globalFooterContent";
 import gql from "graphql-tag";
+import { dataMerged } from "lib/dataMergedHotfix";
+import { client } from "lib/graphql";
 import {
   compose,
   map,
@@ -9,17 +10,14 @@ import {
   withData,
   withView,
 } from "navi";
-import React, { useContext } from "react";
-import { useNavigation, View } from "react-navi";
-
-import InformationPage from "../components/InformationPage";
-import { dataMerged } from "../lib/dataMergedHotfix";
-import { client } from "../lib/graphql";
-import { useStore } from "../pages/FlowEditor/lib/store";
-import { PreviewContext } from "../pages/Preview/Context";
-import Layout from "../pages/Preview/PreviewLayout";
-import Questions from "../pages/Preview/Questions";
-import type { Flow } from "../types";
+import { useStore } from "pages/FlowEditor/lib/store";
+import ContentPage from "pages/Preview/ContentPage";
+import { PreviewContext } from "pages/Preview/Context";
+import Layout from "pages/Preview/PreviewLayout";
+import Questions from "pages/Preview/Questions";
+import React from "react";
+import { View } from "react-navi";
+import type { Flow } from "types";
 
 const routes = compose(
   withData((req) => ({
@@ -43,6 +41,10 @@ const routes = compose(
             }
             settings
           }
+
+          global_settings {
+            footer_content
+          }
         }
       `,
       variables: {
@@ -53,6 +55,10 @@ const routes = compose(
 
     const flow: Flow = data.flows[0];
 
+    console.log("data", data);
+    const globalContent = data.global_settings[0]?.footer_content;
+    console.log("gb", globalContent);
+
     if (!flow) throw new NotFoundError();
 
     useStore.getState().setFlow(flow.id, await dataMerged(flow.id));
@@ -61,13 +67,13 @@ const routes = compose(
     // https://github.com/theopensystemslab/planx-new/pull/116
     // useStore.getState().setFlow(flow.id, flow.data_merged);
 
-    const settings = {
-      elements: { ...flow.settings?.elements, ...globalFooterContent },
-    };
-
     return (
-      <PreviewContext.Provider value={{ ...flow, settings }}>
-        <Layout theme={flow.team.theme} settings={settings}>
+      <PreviewContext.Provider value={{ flow, globalContent }}>
+        <Layout
+          theme={flow.team.theme}
+          settings={flow.settings}
+          globalContent={globalContent}
+        >
           <View />
         </Layout>
       </PreviewContext.Provider>
@@ -78,26 +84,9 @@ const routes = compose(
     "/": route({
       view: <Questions />,
     }),
-    "/:page": map((req) => {
+    "/pages/:page": map((req) => {
       return route({
-        view: () => {
-          const navigation = useNavigation();
-          const context = useContext(PreviewContext);
-
-          if (
-            !context?.settings?.elements ||
-            !context.settings?.elements[req.params.page]?.show
-          )
-            throw new NotFoundError();
-
-          return (
-            <InformationPage
-              heading={context.settings?.elements[req.params.page]?.heading}
-              content={context.settings?.elements[req.params.page]?.content}
-              onClose={() => navigation.goBack()}
-            />
-          );
-        },
+        view: () => <ContentPage page={req.params.page} />,
       });
     }),
   })

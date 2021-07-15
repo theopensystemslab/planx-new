@@ -1,5 +1,6 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import formik, { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -83,38 +84,40 @@ function ContentEditor(props: {
   onChange: (newVal: TextContent) => void;
 }) {
   return (
-    <Box my={3}>
-      <InputRow>
-        <InputRowItem>
-          <Input
-            placeholder="Heading"
-            format="bold"
-            value={props.value.heading}
-            onChange={(ev) => {
-              props.onChange({
-                ...props.value,
-                heading: ev.target.value,
-              });
-            }}
-          />
-        </InputRowItem>
-      </InputRow>
-      <InputRow>
-        <InputRowItem>
-          <RichTextInput
-            placeholder="Text"
-            multiline
-            rows={6}
-            value={props.value.content}
-            onChange={(ev) => {
-              props.onChange({
-                ...props.value,
-                content: ev.target.value,
-              });
-            }}
-          />
-        </InputRowItem>
-      </InputRow>
+    <Box width="100%">
+      <Box my={3} width="80%">
+        <InputRow>
+          <InputRowItem>
+            <Input
+              placeholder="Heading"
+              format="bold"
+              value={props.value.heading}
+              onChange={(ev) => {
+                props.onChange({
+                  ...props.value,
+                  heading: ev.target.value,
+                });
+              }}
+            />
+          </InputRowItem>
+        </InputRow>
+        <InputRow>
+          <InputRowItem>
+            <RichTextInput
+              placeholder="Text"
+              multiline
+              rows={6}
+              value={props.value.content}
+              onChange={(ev) => {
+                props.onChange({
+                  ...props.value,
+                  content: ev.target.value,
+                });
+              }}
+            />
+          </InputRowItem>
+        </InputRow>
+      </Box>
     </Box>
   );
 }
