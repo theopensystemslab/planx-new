@@ -101,41 +101,45 @@ function Component(props: Props) {
         <div className={grid}>
           {
             // XXX: This works because since ES2015 key order is guaranteed to be the insertion order
-            Object.entries(props.breadcrumbs).map(([nodeId, value], i) => {
-              const node = props.flow[nodeId];
-              const Component = node.type && components[node.type];
-              // Hide questions if they lack a presentation component or are auto-answered
-              if (Component === undefined || value.auto) {
-                return null;
-              }
-              return (
-                <React.Fragment key={i}>
-                  <Component
-                    nodeId={nodeId}
-                    node={node}
-                    userData={value}
-                    flow={props.flow}
-                    passport={props.passport}
-                  />
-                  {props.showChangeButton && (
-                    <div>
-                      <a
-                        onClick={() => {
-                          const confirmed = window.confirm(
-                            `Are you sure you want to go back to change your answer? You will lose your answers to questions answered after this one.`
-                          );
-                          if (confirmed) {
-                            props.changeAnswer(nodeId);
-                          }
-                        }}
-                      >
-                        Change
-                      </a>
-                    </div>
-                  )}
-                </React.Fragment>
-              );
-            })
+            Object.entries(props.breadcrumbs)
+              // ensure node exists, need to find the root cause but for now this should fix
+              // https://john-opensystemslab-io.airbrake.io/projects/329753/groups/3049111363214482333
+              .filter(([nodeId]) => Boolean(props.flow[nodeId]))
+              .map(([nodeId, value], i) => {
+                const node = props.flow[nodeId];
+                const Component = node.type && components[node.type];
+                // Hide questions if they lack a presentation component or are auto-answered
+                if (Component === undefined || value.auto) {
+                  return null;
+                }
+                return (
+                  <React.Fragment key={i}>
+                    <Component
+                      nodeId={nodeId}
+                      node={node}
+                      userData={value}
+                      flow={props.flow}
+                      passport={props.passport}
+                    />
+                    {props.showChangeButton && (
+                      <div>
+                        <a
+                          onClick={() => {
+                            const confirmed = window.confirm(
+                              `Are you sure you want to go back to change your answer? You will lose your answers to questions answered after this one.`
+                            );
+                            if (confirmed) {
+                              props.changeAnswer(nodeId);
+                            }
+                          }}
+                        >
+                          Change
+                        </a>
+                      </div>
+                    )}
+                  </React.Fragment>
+                );
+              })
           }
         </div>
       </div>
