@@ -34,6 +34,9 @@
     name: bops_applications
 - table:
     schema: public
+    name: flow_schemas
+- table:
+    schema: public
     name: flows
   object_relationships:
   - name: creator

@@ -414,6 +414,34 @@ app.get("/", (_req, res) => {
 
 app.post("/flows/:flowId/publish", useJWT, publishFlow);
 
+app.get("/flows/:flowId/schema", async (req, res) => {
+  const schema = await client.request(
+    `
+      query ($flow_id: String!) {
+        get_flow_schema(args: {published_flow_id: $flow_id}) {
+          node
+          type
+          planx_variable
+        }
+      }`,
+    { flow_id: req.params.flowId }
+  );
+
+  try {
+    if (schema.get_flow_schema.length < 1) {
+      res.json({
+        message:
+          "Can't find a schema for this flow. Make sure it's published or try a different flow id.",
+      });
+    } else {
+      res.json(schema.get_flow_schema);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
+});
+
 app.post("/sign-s3-upload", async (req, res) => {
   if (!req.body.filename) res.status(422).json({ error: "missing filename" });
   const { fileType, url, acl } = await signS3Upload(req.body.filename);
