@@ -1,3 +1,4 @@
+import camelcaseKeys from "camelcase-keys";
 import gql from "graphql-tag";
 import { compose, lazy, mount, route, withData, withView } from "navi";
 import React from "react";
@@ -47,9 +48,7 @@ const editorRoutes = compose(
         `,
       });
 
-      const globalSettings = {
-        footerContent: data.global_settings[0]?.footer_content,
-      };
+      const globalSettings = camelcaseKeys(data.global_settings[0]);
 
       return {
         title: makeTitle("Global Settings"),

@@ -14,6 +14,7 @@ dependencies:
   '@types/sharedb': 1.0.17
   array-move: 3.0.1
   axios: 0.19.2
+  camelcase-keys: 7.0.0
   classnames: 2.2.6
   date-fns: 2.16.1
   draft-js: 0.11.7_react-dom@17.0.1+react@17.0.1
@@ -8078,6 +8079,17 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-MIvur/3ygRkFHvodkyITyRuPkuc=
+  /camelcase-keys/7.0.0:
+    dependencies:
+      camelcase: 6.2.0
+      map-obj: 4.2.1
+      quick-lru: 5.1.1
+      type-fest: 1.2.2
+    dev: false
+    engines:
+      node: '>=12'
+    resolution:
+      integrity: sha512-qlQlECgDl5Ev+gkvONaiD4X4TF2gyZKuLBvzx0zLo2UwAxmz3hJP/841aaMHTeH1T7v5HRwoRq91daulXoYWvg==
   /camelcase/2.1.1:
     dev: true
     engines:
@@ -14113,6 +14125,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-2TPOuSBdgr3PSIb2dCvcK03qFG0=
+  /map-obj/4.2.1:
+    dev: false
+    engines:
+      node: '>=8'
+    resolution:
+      integrity: sha512-+WA2/1sPmDj1dlvvJmB5G6JKfY9dpn7EVBUL06+y6PoljPkh+6V1QihwxNkbcGxCRjt2b0F9K0taiCuo7MbdFQ==
   /map-or-similar/1.5.0:
     dev: true
     resolution:
@@ -16789,6 +16807,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==
+  /quick-lru/5.1.1:
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
   /quickselect/1.1.1:
     dev: false
     resolution:
@@ -19808,6 +19832,12 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
+  /type-fest/1.2.2:
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-pfkPYCcuV0TJoo/jlsUeWNV8rk7uMU6ocnYNvca1Vu+pyKi8Rl8Zo2scPt9O72gCsXIm+dMxOOWuA3VFDSdzWA==
   /type-is/1.6.18:
     dependencies:
       media-typer: 0.3.0
@@ -21080,6 +21110,7 @@ specifiers:
   '@types/sharedb': ^1.0.17
   array-move: ^3.0.1
   axios: ^0.19.2
+  camelcase-keys: ^7.0.0
   classnames: ^2.2.6
   craco-esbuild: ^0.2.1
   css-loader: ^5.0.1

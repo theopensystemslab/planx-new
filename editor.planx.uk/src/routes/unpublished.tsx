@@ -1,3 +1,4 @@
+import camelcaseKeys from "camelcase-keys";
 import gql from "graphql-tag";
 import { dataMerged } from "lib/dataMergedHotfix";
 import { client } from "lib/graphql";
@@ -55,9 +56,9 @@ const routes = compose(
 
     const flow: Flow = data.flows[0];
 
-    const globalSettings: GlobalSettings = {
-      footerContent: data.global_settings[0].footer_content,
-    };
+    const globalSettings: GlobalSettings = camelcaseKeys(
+      data.global_settings[0]
+    );
 
     if (!flow) throw new NotFoundError();
 
