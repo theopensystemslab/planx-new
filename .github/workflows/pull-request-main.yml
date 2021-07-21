@@ -7,7 +7,7 @@ on:
 
 jobs:
   integration_tests:
-    name: Integration tests
+    name: Integration and E2E tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,7 +25,13 @@ jobs:
           key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
       - name: Install pnpm
         run: curl -f https://get.pnpm.io/v6.7.js | node - add --global pnpm@6
-      - run: ./scripts/run-integration-tests.sh
+      - run: ./scripts/start-containers-for-tests.sh
+      - run: ./hasura.planx.uk/run-postgres-tests.sh
+      - run: pnpm install && pnpm test
+        working-directory: hasura.planx.uk/tests
+      - run: pnpm install && pnpm test
+        working-directory: e2e
+
   test_and_build:
     name: Test and Build
     runs-on: ubuntu-latest
