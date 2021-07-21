@@ -1,3 +1,4 @@
+import { airbrake } from "airbrake";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -131,31 +132,32 @@ function Component(props: Props) {
   };
 
   const refetchPayment = async (id: string) => {
-    await axios
-      .get(`${govUkPayUrlForTeam}/${id}`)
-      .then((res) => {
-        const payment = updatePayment(res.data);
+    try {
+      const {
+        data: { state },
+      } = await axios.get<
+        // API response has sensitive info filtered out
+        Pick<GovUKPayment, "payment_id" | "amount" | "state">
+      >(`${govUkPayUrlForTeam}/${id}`);
 
-        if (!payment.state.status)
-          throw new Error("Corrupted response from GOV.UK");
+      if (!state.status) throw new Error("Corrupted response from GOV.UK");
 
-        switch (payment.state.status) {
-          case "success":
-            handleSuccess();
-            break;
-          case "submitted":
-          case "started":
-          case "failed":
-          case "created":
-          case "capturable":
-          case "cancelled":
-          case "error":
-            dispatch(Action.IncompletePaymentConfirmed);
-        }
-      })
-      .catch((e) => {
-        throw e;
-      });
+      switch (state.status) {
+        case "success":
+          handleSuccess();
+          break;
+        default:
+          dispatch(Action.IncompletePaymentConfirmed);
+      }
+    } catch (err) {
+      // XXX: There's probably been an issue fetching the payment status,
+      //      but there's a chance that the user might've made a successful
+      //      payment. We silently log the error and the service continues.
+      try {
+        airbrake?.notify(err);
+      } catch (_) {}
+      console.error(err);
+    }
   };
 
   const resumeExistingPayment = async () => {
