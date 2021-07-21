@@ -25,6 +25,10 @@ interface TeamSettings {
   };
 }
 
+export interface GlobalSettings {
+  footerContent: { [key: string]: TextContent };
+}
+
 export const FOOTER_ITEMS = ["privacy", "help"];
 
 const FLOW_SETTINGS = [...FOOTER_ITEMS, "legalDisclaimer"] as const;

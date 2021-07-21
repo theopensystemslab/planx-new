@@ -1,7 +1,11 @@
 import React from "react";
 
-import type { Flow, TextContent } from "../../types";
+import type { Flow, GlobalSettings } from "../../types";
 
 export const PreviewContext = React.createContext<
-  { flow: Flow; globalContent?: { [key: string]: TextContent } } | undefined
+  | {
+      flow: Flow;
+      globalSettings?: GlobalSettings;
+    }
+  | undefined
 >(undefined);

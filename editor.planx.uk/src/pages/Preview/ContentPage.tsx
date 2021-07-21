@@ -72,7 +72,7 @@ function ContentPage(props: { page: string }) {
 
   const content = FOOTER_ITEMS.includes(props.page)
     ? validateFlowSetting()
-    : context?.globalContent?.[props.page];
+    : context?.globalSettings?.footerContent?.[props.page];
 
   if (!content) throw new NotFoundError();
 

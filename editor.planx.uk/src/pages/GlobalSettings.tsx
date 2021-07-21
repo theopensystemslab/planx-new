@@ -1,21 +1,18 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import formik, { useFormik } from "formik";
+import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import type { TextContent } from "types";
-import Input, { Props as InputProps } from "ui/Input";
+import type { GlobalSettings, TextContent } from "types";
+import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
 import ListManager from "ui/ListManager";
 import RichTextInput from "ui/RichTextInput";
 import { slugify } from "utils";
 
-function GlobalSettings(props: {
-  footerContent?: { [key: string]: TextContent };
-}) {
+function Component(props: GlobalSettings) {
   const [updateGlobalSettings] = useStore((state) => [
     state.updateGlobalSettings,
   ]);
@@ -23,25 +20,26 @@ function GlobalSettings(props: {
   const formik = useFormik({
     initialValues: {
       footerContent:
-        (props.footerContent &&
-          Object.entries(props.footerContent).map(
-            ([key, content]) => content
-          )) ||
-        [],
+        (props.footerContent && Object.values(props.footerContent)) || [],
     },
     onSubmit: ({ footerContent }) => {
-      const formatted = footerContent.reduce((prev, curr): {
-        [key: string]: TextContent;
-      } => {
-        const key = slugify(curr.heading);
-
-        prev[key] = curr;
-        return prev;
-      }, {} as { [key: string]: TextContent });
+      const formatted = footerContent.reduce(
+        (
+          prev,
+          curr
+        ): {
+          [key: string]: TextContent;
+        } => ({
+          ...prev,
+          [slugify(curr.heading)]: curr,
+        }),
+        {}
+      );
 
       updateGlobalSettings(formatted);
     },
   });
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box p={3}>
@@ -122,4 +120,4 @@ function ContentEditor(props: {
   );
 }
 
-export default GlobalSettings;
+export default Component;

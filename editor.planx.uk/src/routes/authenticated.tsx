@@ -47,13 +47,13 @@ const editorRoutes = compose(
         `,
       });
 
+      const globalSettings = {
+        footerContent: data.global_settings[0]?.footer_content,
+      };
+
       return {
         title: makeTitle("Global Settings"),
-        view: (
-          <GlobalSettings
-            footerContent={data.global_settings[0]?.footer_content}
-          />
-        ),
+        view: <GlobalSettings {...globalSettings} />,
       };
     }),
 

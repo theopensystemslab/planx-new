@@ -78,7 +78,7 @@ const Header: React.FC<{
   const { navigate } = useNavigation();
   const togglePreview = useStore((state) => state.togglePreview);
 
-  const { data } = useCurrentRoute();
+  const route = useCurrentRoute();
 
   const handleClose = () => {
     setOpen(false);
@@ -119,19 +119,19 @@ const Header: React.FC<{
               </Box>
             )}
 
-            {data.team && (
+            {route.data.team && (
               <>
                 {" / "}
                 <Link
-                  href={`/${data.team}`}
+                  href={`/${route.data.team}`}
                   prefetch={false}
                   className={classes.breadcrumb}
                 >
-                  {data.team}
+                  {route.data.team}
                 </Link>
               </>
             )}
-            {data.flow && (
+            {route.data.flow && (
               <>
                 {" / "}
                 <Link
@@ -139,15 +139,15 @@ const Header: React.FC<{
                   prefetch={false}
                   className={classes.breadcrumb}
                 >
-                  {data.flow}
+                  {route.data.flow}
                 </Link>
               </>
             )}
           </Box>
           <Box display="flex" alignItems="center">
-            {data.username && (
+            {route.data.username && (
               <Box className={classes.profileSection} mr={2}>
-                {data.flow && (
+                {route.data.flow && (
                   <Box mr={2}>
                     <MenuOpenIcon
                       onClick={togglePreview}
@@ -156,7 +156,7 @@ const Header: React.FC<{
                   </Box>
                 )}
                 <Box mr={1}>
-                  <Avatar>{data.username[0]}</Avatar>
+                  <Avatar>{route.data.username[0]}</Avatar>
                 </Box>
                 <IconButton
                   edge="end"
@@ -199,7 +199,7 @@ const Header: React.FC<{
            */}
 
           {/* only show flow settings link if inside a flow route  */}
-          {data.flow && (
+          {route.data.flow && (
             <MenuItem
               onClick={() =>
                 handleClick([rootFlowPath(true), "settings"].join("/"))
@@ -210,7 +210,7 @@ const Header: React.FC<{
           )}
 
           {/* Only show global settings link from top-level admin view */}
-          {!data.flow && !data.team && (
+          {!route.data.flow && !route.data.team && (
             <MenuItem onClick={() => navigate("/global-settings")}>
               Global Settings
             </MenuItem>

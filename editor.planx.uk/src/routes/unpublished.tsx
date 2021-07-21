@@ -17,7 +17,7 @@ import Layout from "pages/Preview/PreviewLayout";
 import Questions from "pages/Preview/Questions";
 import React from "react";
 import { View } from "react-navi";
-import type { Flow } from "types";
+import type { Flow, GlobalSettings } from "types";
 
 const routes = compose(
   withData((req) => ({
@@ -55,9 +55,9 @@ const routes = compose(
 
     const flow: Flow = data.flows[0];
 
-    console.log("data", data);
-    const globalContent = data.global_settings[0]?.footer_content;
-    console.log("gb", globalContent);
+    const globalSettings: GlobalSettings = {
+      footerContent: data.global_settings[0].footer_content,
+    };
 
     if (!flow) throw new NotFoundError();
 
@@ -68,11 +68,11 @@ const routes = compose(
     // useStore.getState().setFlow(flow.id, flow.data_merged);
 
     return (
-      <PreviewContext.Provider value={{ flow, globalContent }}>
+      <PreviewContext.Provider value={{ flow, globalSettings }}>
         <Layout
           theme={flow.team.theme}
           settings={flow.settings}
-          globalContent={globalContent}
+          footerContent={globalSettings.footerContent}
         >
           <View />
         </Layout>

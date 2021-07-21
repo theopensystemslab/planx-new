@@ -18,14 +18,14 @@ const PreviewLayout: React.FC<{
   children?: any;
   theme?: any;
   settings?: FlowSettings;
-  globalContent?: { [key: string]: TextContent };
+  footerContent?: { [key: string]: TextContent };
 }> = ({
   theme = {
     primary: "#2c2c2c",
   },
   children,
   settings,
-  globalContent,
+  footerContent,
 }) => {
   const { data } = useCurrentRoute();
 
@@ -57,9 +57,9 @@ const PreviewLayout: React.FC<{
   });
 
   const globalFooterItems =
-    (globalContent &&
-      Object.keys(globalContent).map((slug) => {
-        const item = globalContent[slug];
+    (footerContent &&
+      Object.keys(footerContent).map((slug) => {
+        const item = footerContent[slug];
 
         return {
           title: item.heading,
