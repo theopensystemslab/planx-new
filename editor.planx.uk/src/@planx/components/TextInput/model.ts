@@ -8,11 +8,16 @@ export enum TextInputType {
   Short = "short",
   Long = "long",
   Email = "email",
+  Phone = "phone",
 }
 
 const emailRegex =
   // eslint-disable-next-line
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+const phoneRegex =
+  // eslint-disable-next-line
+  /^[+]?[\s./0-9]*[(]?[0-9]{1,4}[)]?[-\s./0-9]{8,14}$/;
 
 export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
   string()
@@ -32,6 +37,9 @@ export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
         if (type === TextInputType.Email) {
           return "Must be valid email.";
         }
+        if (type === TextInputType.Phone) {
+          return "Must be a valid phone number.";
+        }
       })(),
       test: (value: string | undefined) => {
         if (!type) {
@@ -45,6 +53,9 @@ export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
         }
         if (type === TextInputType.Email) {
           return Boolean(value && emailRegex.test(value));
+        }
+        if (type === TextInputType.Phone) {
+          return Boolean(value && phoneRegex.test(value));
         }
         return false;
       },

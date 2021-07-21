@@ -46,3 +46,25 @@ test("requires a valid email before being able to continue", async () => {
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
 });
+
+test("requires a valid phone number before being able to continue", async () => {
+  const handleSubmit = jest.fn();
+
+  render(
+    <TextInput
+      title="hello"
+      placeholder="what?"
+      type={TextInputType.Phone}
+      handleSubmit={handleSubmit}
+    />
+  );
+
+  expect(screen.getByRole("heading")).toHaveTextContent("hello");
+
+  await act(async () => {
+    await userEvent.type(screen.getByPlaceholderText("what?"), "not-a-phone");
+    await userEvent.click(screen.getByText("Continue"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledTimes(0);
+});
