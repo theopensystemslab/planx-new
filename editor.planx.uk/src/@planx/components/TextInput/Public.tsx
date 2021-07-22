@@ -39,13 +39,11 @@ const TextInputComponent: React.FC<Props> = (props) => {
       />
       <InputRow>
         <Input
-          type={
-            props.type === "email"
-              ? "email"
-              : props.type === "phone"
-              ? "tel"
-              : "text"
-          }
+          type={((type) => {
+            if (type === "email") return "email";
+            else if (type === "phone") return "tel";
+            return "text";
+          })(props.type)}
           multiline={props.type === "long"}
           name="text"
           value={formik.values.text}

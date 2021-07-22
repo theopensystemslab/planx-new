@@ -17,7 +17,7 @@ const emailRegex =
 
 const phoneRegex =
   // eslint-disable-next-line
-  /^[+]?[\s./0-9]*[(]?[0-9]{1,4}[)]?[-\s./0-9]{8,14}$/;
+  /^[()\d\s]{9,}$/;
 
 export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
   string()

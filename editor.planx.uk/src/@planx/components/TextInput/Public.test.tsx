@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent,render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 
@@ -67,4 +67,37 @@ test("requires a valid phone number before being able to continue", async () => 
   });
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
+});
+
+const examplePhoneNumbers = [
+  "01632 960000", // uk non-geographic
+  "020 7946 0999", // uk london
+  "07700 900999", // uk mobile
+  "004408081570192", // with country code
+  "(01234) 123456", // welsh landlines :)
+];
+
+examplePhoneNumbers.forEach((number) => {
+  test(`continues for valid phone number example ${number}`, async () => {
+    const handleSubmit = jest.fn();
+
+    render(
+      <TextInput
+        title="phone"
+        placeholder={number}
+        type={TextInputType.Phone}
+        handleSubmit={handleSubmit}
+      />
+    );
+
+    fireEvent.change(screen.getByPlaceholderText(number), {
+      target: { value: number },
+    });
+
+    await act(async () => {
+      userEvent.click(screen.getByText("Continue"));
+    });
+
+    expect(handleSubmit).toHaveBeenCalled();
+  });
 });
