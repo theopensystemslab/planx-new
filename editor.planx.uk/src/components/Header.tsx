@@ -17,6 +17,8 @@ import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
 import PhaseBanner from "./PhaseBanner";
 
+export const HEADER_HEIGHT = 75;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     // backgroundColor: "#2c2c2c",
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     marginTop: theme.spacing(1),
-    height: 75,
+    height: HEADER_HEIGHT,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -57,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   logo: {
-    maxHeight: 70,
+    height: HEADER_HEIGHT - 5,
     width: "100%",
     maxWidth: 140,
     objectFit: "contain",
