@@ -53,6 +53,7 @@ export interface Flag {
   text: string;
   bgColor: string;
   color: string;
+  officerExplanation?: string;
 }
 
 export interface Node {

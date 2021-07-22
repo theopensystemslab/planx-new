@@ -6,13 +6,41 @@ import type { Flag } from "../../../types";
 // https://www.figma.com/file/bnUUrsVRG6qPwDkTmVKACI/Design?node-id=1971%3A0
 const categoriesAndFlags = {
   "Planning permission": {
-    IMMUNE: ["Immune", "#BEE6E7"],
-    MISSING_INFO: ["Missing information", "#EAEAEA"],
-    PLANNING_PERMISSION_REQUIRED: ["Permission needed", "#A8A8A8"],
-    PRIOR_APPROVAL: ["Prior approval", "#FCFF58"],
-    "PP-NOTICE": ["Notice", "#CAFB8B"],
-    NO_APP_REQUIRED: ["Permitted development", "#82E7A1"],
-    "PP-NOT_DEVELOPMENT": ["Not development", "#FFF"],
+    IMMUNE: [
+      "Immune",
+      "#BEE6E7",
+      "It looks like the changes may now be beyond the time limit for enforcement action. This does not apply if the changes have been deliberately concealed.",
+    ],
+    MISSING_INFO: [
+      "Missing information",
+      "#EAEAEA",
+      "There is some key information missing that will be needed to assess this application",
+    ],
+    PLANNING_PERMISSION_REQUIRED: [
+      "Permission needed",
+      "#A8A8A8",
+      "It looks like the proposed changes may require planning permission.",
+    ],
+    PRIOR_APPROVAL: [
+      "Prior approval",
+      "#FCFF58",
+      "It looks like the proposed changes do not require planning permission, however the applicant must apply for Prior Approval before proceeding.",
+    ],
+    "PP-NOTICE": [
+      "Notice",
+      "#CAFB8B",
+      "It looks like the proposed changes may not require planning permission, however the applicant must provide notice to the planning authority before proceeding.",
+    ],
+    NO_APP_REQUIRED: [
+      "Permitted development",
+      "#82E7A1",
+      "It looks like the proposed changes may fall within the rules for Permitted Development and therefore would not need planning permission.",
+    ],
+    "PP-NOT_DEVELOPMENT": [
+      "Not development",
+      "#FFF",
+      "It looks like the proposed changes may not fall within the legal definition of ‘development’, and therefore would not require planning permission.",
+    ],
   },
   "Listed building consent": {
     "LB-MISSING_INFO": ["Missing information", "#EAEAEA"],
@@ -57,7 +85,7 @@ const parsedFlags: Record<FlagSet, { [id: string]: Flag }> = Object.entries(
   categoriesAndFlags
 ).reduce((acc: Record<string, any>, [category, flags]) => {
   acc[category] = Object.entries(flags).reduce(
-    (acc: Record<string, Flag>, [id, [text, bgColor]]) => {
+    (acc: Record<string, Flag>, [id, [text, bgColor, officerExplanation]]) => {
       // loop through all the flags and add a text color which is
       // white if it's a dark background or black if it's light
       const color =
@@ -68,6 +96,7 @@ const parsedFlags: Record<FlagSet, { [id: string]: Flag }> = Object.entries(
         bgColor,
         color,
         category,
+        officerExplanation,
       };
 
       // check that no other flags share the same ID
