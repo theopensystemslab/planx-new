@@ -109,6 +109,10 @@ const TextInputComponent: React.FC<Props> = (props) => {
                   value: "email",
                   label: "Email",
                 },
+                {
+                  value: "phone",
+                  label: "Phone",
+                },
               ]}
               value={formik.values.type}
               onChange={(newType) => {
