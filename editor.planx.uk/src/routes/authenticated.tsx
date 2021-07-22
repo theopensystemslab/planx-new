@@ -2,10 +2,11 @@ import camelcaseKeys from "camelcase-keys";
 import gql from "graphql-tag";
 import { compose, lazy, mount, route, withData, withView } from "navi";
 import React from "react";
+import { GlobalSettings, Maybe } from "types";
 
 import AuthenticatedLayout from "../components/AuthenticatedLayout";
 import { client } from "../lib/graphql";
-import GlobalSettings from "../pages/GlobalSettings";
+import GlobalSettingsView from "../pages/GlobalSettings";
 import Teams from "../pages/Teams";
 import { makeTitle } from "./utils";
 
@@ -48,11 +49,13 @@ const editorRoutes = compose(
         `,
       });
 
-      const globalSettings = camelcaseKeys(data.global_settings[0]);
+      const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
+        data.global_settings[0]
+      );
 
       return {
         title: makeTitle("Global Settings"),
-        view: <GlobalSettings {...globalSettings} />,
+        view: <GlobalSettingsView {...globalSettings} />,
       };
     }),
 

@@ -1,5 +1,7 @@
 import { useFormik } from "formik";
 
+export type Maybe<T> = T | undefined;
+
 export type FormikHookReturn = ReturnType<typeof useFormik>;
 
 export interface Flow {
@@ -26,7 +28,7 @@ interface TeamSettings {
 }
 
 export interface GlobalSettings {
-  footerContent: { [key: string]: TextContent };
+  footerContent?: { [key: string]: TextContent };
 }
 
 export const FOOTER_ITEMS = ["privacy", "help"];

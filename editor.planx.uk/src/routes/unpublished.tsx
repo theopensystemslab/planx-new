@@ -18,7 +18,7 @@ import Layout from "pages/Preview/PreviewLayout";
 import Questions from "pages/Preview/Questions";
 import React from "react";
 import { View } from "react-navi";
-import type { Flow, GlobalSettings } from "types";
+import type { Flow, GlobalSettings, Maybe } from "types";
 
 const routes = compose(
   withData((req) => ({
@@ -56,7 +56,7 @@ const routes = compose(
 
     const flow: Flow = data.flows[0];
 
-    const globalSettings: GlobalSettings = camelcaseKeys(
+    const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
       data.global_settings[0]
     );
 
@@ -73,7 +73,7 @@ const routes = compose(
         <Layout
           theme={flow.team.theme}
           settings={flow.settings}
-          footerContent={globalSettings.footerContent}
+          footerContent={globalSettings?.footerContent}
         >
           <View />
         </Layout>

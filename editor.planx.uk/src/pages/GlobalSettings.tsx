@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import type { GlobalSettings, TextContent } from "types";
+import type { GlobalSettings, Maybe, TextContent } from "types";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
@@ -12,7 +12,7 @@ import ListManager from "ui/ListManager";
 import RichTextInput from "ui/RichTextInput";
 import { slugify } from "utils";
 
-function Component(props: GlobalSettings) {
+function Component(props: Maybe<GlobalSettings>) {
   const [updateGlobalSettings] = useStore((state) => [
     state.updateGlobalSettings,
   ]);
@@ -20,7 +20,7 @@ function Component(props: GlobalSettings) {
   const formik = useFormik({
     initialValues: {
       footerContent:
-        (props.footerContent && Object.values(props.footerContent)) || [],
+        (props?.footerContent && Object.values(props?.footerContent)) || [],
     },
     onSubmit: ({ footerContent }) => {
       const formatted = footerContent.reduce(
