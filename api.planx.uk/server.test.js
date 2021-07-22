@@ -104,6 +104,81 @@ describe("sending a payment to GOV.UK Pay", () => {
   });
 });
 
+describe.only("fetching status of a GOV.UK payment", () => {
+  // https://docs.payments.service.gov.uk/reporting/#get-information-about-a-single-payment
+  const govUKResponse = {
+    created_date: "2019-07-11T10:36:26.988Z",
+    amount: 3750,
+    state: {
+      status: "success",
+      finished: true,
+    },
+    description: "Pay your council tax",
+    reference: "12345",
+    language: "en",
+    metadata: {
+      ledger_code: "AB100",
+      an_internal_reference_number: 200,
+    },
+    email: "sherlock.holmes@example.com",
+    card_details: {
+      card_brand: "Visa",
+      card_type: "debit",
+      last_digits_card_number: "1234",
+      first_digits_card_number: "123456",
+      expiry_date: "04/24",
+      cardholder_name: "Sherlock Holmes",
+      billing_address: {
+        line1: "221 Baker Street",
+        line2: "Flat b",
+        postcode: "NW1 6XE",
+        city: "London",
+        country: "GB",
+      },
+    },
+    payment_id: "hu20sqlact5260q2nanm0q8u93",
+    refund_summary: {
+      status: "available",
+      amount_available: 4000,
+      amount_submitted: 0,
+    },
+    settlement_summary: {
+      capture_submit_time: "2019-07-12T17:15:000Z",
+      captured_date: "2019-07-12",
+      settled_date: "2019-07-12",
+    },
+    delayed_capture: false,
+    moto: false,
+    corporate_card_surcharge: 250,
+    total_amount: 4000,
+    fee: 200,
+    net_amount: 3800,
+    payment_provider: "worldpay",
+    provider_id: "10987654321",
+    return_url: "https://your.service.gov.uk/completed",
+  };
+
+  it("proxies request and returns filtered response object", async () => {
+    nock("https://publicapi.payments.service.gov.uk")
+      .get("/v1/payments/hu20sqlact5260q2nanm0q8u93")
+      .reply(200, govUKResponse);
+
+    await supertest(app)
+      .get("/pay/southwark/hu20sqlact5260q2nanm0q8u93")
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toStrictEqual({
+          payment_id: "hu20sqlact5260q2nanm0q8u93",
+          amount: 3750,
+          state: {
+            status: "success",
+            finished: true,
+          },
+        });
+      });
+  });
+});
+
 describe("fetching GIS data from local authorities", () => {
   const locations = [
     {
