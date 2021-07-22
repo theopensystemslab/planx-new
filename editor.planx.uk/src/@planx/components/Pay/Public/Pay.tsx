@@ -153,9 +153,7 @@ function Component(props: Props) {
       // XXX: There's probably been an issue fetching the payment status,
       //      but there's a chance that the user might've made a successful
       //      payment. We silently log the error and the service continues.
-      try {
-        airbrake?.notify(err);
-      } catch (_) {}
+      airbrake?.notify(err);
       console.error(err);
     }
   };
