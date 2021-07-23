@@ -104,4 +104,21 @@ export type FileTag = PlanTag | EvidenceTag;
 interface File {
   filename: string;
   tags?: Array<FileTag>;
+  applicant_description?: string;
+}
+
+// Extracted from:
+// https://github.com/unboxed/bops/blob/master/app/models/document.rb
+export enum BOPS_TAGS {
+  Front = "Front",
+  Rear = "Rear",
+  Side = "Side",
+  Roof = "Roof",
+  Floor = "Floor",
+  Site = "Site",
+  Plan = "Plan",
+  Elevation = "Elevation",
+  Section = "Section",
+  Proposed = "Proposed",
+  Existing = "Existing",
 }
