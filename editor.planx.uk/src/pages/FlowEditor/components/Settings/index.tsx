@@ -7,11 +7,12 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Close from "@material-ui/icons/Close";
+import { HEADER_HEIGHT } from "components/Header";
 import React from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
+import { rootFlowPath } from "routes/utils";
+import type { FlowSettings } from "types";
 
-import { rootFlowPath } from "../../../../routes/utils";
-import type { FlowSettings } from "../../../../types";
 import DataManagerSettings from "./DataManagerSettings";
 import DesignSettings from "./DesignSettings";
 import ServiceFlags from "./ServiceFlags";
@@ -86,8 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     backgroundColor: "#f2f2f2",
     position: "absolute",
-    // relies on hard-coded (75px) header height
-    top: 75,
+    top: HEADER_HEIGHT,
     left: 0,
     right: 0,
     bottom: 0,
