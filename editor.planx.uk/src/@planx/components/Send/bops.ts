@@ -216,6 +216,10 @@ export function getParams(
           data.files.push({
             filename: url,
             tags: extractTagsFromPassportKey(key),
+            applicant_description: extractFileDescriptionForPassportKey(
+              passport.data,
+              key
+            ),
           });
         } catch (err) {}
       });
@@ -304,6 +308,24 @@ export const getWorkStatus = (passport: Store.passport) => {
     case "ldc.proposed":
       return "proposed";
   }
+};
+
+const extractFileDescriptionForPassportKey = (
+  passport: Store.passport["data"],
+  passportKey: string
+): string | undefined => {
+  try {
+    // XXX: check for .description or .reason as there might be either atm
+    //      i.e. file = property.photograph, text = property.photograph.reason
+    ["description", "reason"].forEach((x) => {
+      const key = `${passportKey}.${x}`;
+      const val = passport?.[key];
+      if (val && typeof val === "string") {
+        return val;
+      }
+    });
+  } catch (_err) {}
+  return undefined;
 };
 
 /**
