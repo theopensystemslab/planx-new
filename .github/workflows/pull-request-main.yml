@@ -144,3 +144,20 @@ jobs:
           edit-pr-comment: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+  hasura-change-summary:
+    name: Hasura Change Summary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: Fieldguide/action-hasura-change-summary@v2
+        id: hasura-change
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          hasura_endpoint: https://hasura.editor.planx.dev/v1/graphql
+          project_dir: ./hasura.planx.uk
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: ${{ steps.hasura-change.outputs.change_html != '' }}
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          message: ${{ steps.hasura-change.outputs.change_html }}
