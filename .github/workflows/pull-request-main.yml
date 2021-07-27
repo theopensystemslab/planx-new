@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [opened, synchronize]
     branches:
-      - main
+      - gunar/hasura-change
 
 jobs:
   integration_tests:
