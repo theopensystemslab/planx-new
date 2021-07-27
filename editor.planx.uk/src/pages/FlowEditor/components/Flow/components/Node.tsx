@@ -114,8 +114,6 @@ const Node: React.FC<any> = (props) => {
     case TYPES.AddressInput:
       return <Question {...allProps} text={node?.data?.title ?? "Address"} />;
     case TYPES.Flow:
-    case TYPES.Report:
-    case TYPES.SignIn:
       return null;
     default:
       console.error({ nodeNotFound: props });
