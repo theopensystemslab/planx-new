@@ -8,20 +8,21 @@ import { airbrake } from "airbrake";
 import { flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
-
 import { Store } from "../../../pages/FlowEditor/lib/store";
 import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
-import { GOV_PAY_PASSPORT_KEY, toPence } from "../Pay/model";
-import { removeNilValues } from "../shared/utils";
-import { TYPES } from "../types";
 import {
   BOPSFullPayload,
   FileTag,
   QuestionAndResponses,
   QuestionMetaData,
   Response,
-  ResponseMetaData,
-} from "./model";
+  ResponseMetaData
+} from "../model";
+import { GOV_PAY_PASSPORT_KEY, toPence } from "../Pay/model";
+import { removeNilValues } from "../shared/utils";
+import { TYPES } from "../types";
+
+
 
 export const bopsDictionary = {
   applicant_first_name: "applicant.name.first",
@@ -80,7 +81,7 @@ function isTypeForBopsPayload(type?: TYPES) {
 export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
   Object.entries(breadcrumbs)
     .filter(([id]) => {
-      const validType = isTypeForBopsPayload(flow[id].type);
+      const validType = isTypeForBopsPayload(flow[id]?.type);
       // exclude answers that have been extracted into the root object
       const validKey = !Object.values(bopsDictionary).includes(
         flow[id]?.data?.fn
@@ -232,6 +233,10 @@ export function getParams(
     data.files.push({
       filename: passport.data[PASSPORT_UPLOAD_KEY],
       tags: extractTagsFromPassportKey(PASSPORT_UPLOAD_KEY),
+      applicant_description: extractFileDescriptionForPassportKey(
+        passport.data,
+        PASSPORT_UPLOAD_KEY
+      ),
     });
   }
 
@@ -317,13 +322,13 @@ const extractFileDescriptionForPassportKey = (
   try {
     // XXX: check for .description or .reason as there might be either atm
     //      i.e. file = property.photograph, text = property.photograph.reason
-    ["description", "reason"].forEach((x) => {
+    for (const x of ["description", "reason"]) {
       const key = `${passportKey}.${x}`;
       const val = passport?.[key];
       if (val && typeof val === "string") {
         return val;
       }
-    });
+    }
   } catch (_err) {}
   return undefined;
 };
