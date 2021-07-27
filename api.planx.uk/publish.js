@@ -72,44 +72,57 @@ const publishFlow = async (req, res) => {
   if (!req.user?.sub)
     return res.status(401).json({ error: "User ID missing from JWT" });
 
-  const flattenedFlow = await dataMerged(req.params.flowId);
+  try {
+    const flattenedFlow = await dataMerged(req.params.flowId);
+    const mostRecent = await getMostRecentPublishedFlow(req.params.flowId);
 
-  const pub = await getMostRecentPublishedFlow(req.params.flowId);
+    const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
 
-  const delta = jsondiffpatch.diff(pub, flattenedFlow);
-
-  // return published flow record if changes were made
-  const response = delta
-    ? await client.request(
+    if (delta) {
+      const response = await client.request(
         `
-      mutation PublishFlow(
-        $data: jsonb = {},
-        $flow_id: uuid,
-        $publisher_id: Int,
-      ) {
-
-        insert_published_flows_one(object: {
-          data: $data,
-          flow_id: $flow_id,
-          publisher_id: $publisher_id,
-        }) {
-          id
-          flow_id
-          publisher_id
-          created_at
-          data
-        }
-      }`,
+          mutation PublishFlow(
+            $data: jsonb = {},
+            $flow_id: uuid,
+          $publisher_id: Int,
+          ) {
+            insert_published_flows_one(object: {
+              data: $data,
+              flow_id: $flow_id,
+              publisher_id: $publisher_id,
+            }) {
+              id
+              flow_id
+              publisher_id
+              created_at
+              data
+            }
+          }
+        `,
         {
           data: flattenedFlow,
           flow_id: req.params.flowId,
           publisher_id: parseInt(req.user.sub, 10),
         }
-      )
-    : "No new changes";
+      );
+      const publishedFlow =
+        response.insert_published_flows_one &&
+        response.insert_published_flows_one.data;
+      const alteredNodes = Object.keys(delta).map((key) => ({
+        id: key,
+        ...publishedFlow[key],
+      }));
 
-  try {
-    res.json(response);
+      res.json({
+        alteredNodes,
+        publishedFlow,
+      });
+    } else {
+      res.json({
+        alteredNodes: null,
+        message: "No new changes",
+      });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error });
