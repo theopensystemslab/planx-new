@@ -29,10 +29,12 @@ with last_published_flow as (
         flow_id,
         node,
         (node_data->>'type')::int as "type",
+        node_data->'data'->>'text' as "text",
         coalesce(
             node_data->'data'->>'fn',
             node_data->'data'->>'val',
-            node_data->'data'->>'output'
+            node_data->'data'->>'output',
+            node_data->'data'->>'dataFieldBoundary'
         ) as planx_variable
     from data_per_node
     order by planx_variable asc nulls last;

@@ -423,6 +423,7 @@ app.get("/flows/:flowId/download-schema", async (req, res) => {
         get_flow_schema(args: {published_flow_id: $flow_id}) {
           node
           type
+          text
           planx_variable
         }
       }`,
