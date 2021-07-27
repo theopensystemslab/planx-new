@@ -5,17 +5,17 @@ import { MoreInformation, parseMoreInformation } from "../shared";
 
 export type UserData = {
   line1: string;
-  line2: string;
+  line2?: string;
   town: string;
-  county: string;
+  county?: string;
   postcode: string;
 };
 
 export const userDataSchema: SchemaOf<UserData> = object({
   line1: string().required(),
-  line2: string().required(),
+  line2: string(),
   town: string().required(),
-  county: string().required(),
+  county: string(),
   postcode: string().required(),
 });
 
