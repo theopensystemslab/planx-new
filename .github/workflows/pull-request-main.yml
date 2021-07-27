@@ -160,4 +160,11 @@ jobs:
         if: ${{ steps.hasura-change.outputs.change_html != '' }}
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: hasura-change-summary
           message: ${{ steps.hasura-change.outputs.change_html }}
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: ${{ steps.hasura-change.outputs.change_html == '' }}
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: hasura-change-summary
+          delete: true
