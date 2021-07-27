@@ -236,6 +236,9 @@
       filter: {}
 - table:
     schema: public
+    name: test_table
+- table:
+    schema: public
     name: users
   array_relationships:
   - name: created_flows
