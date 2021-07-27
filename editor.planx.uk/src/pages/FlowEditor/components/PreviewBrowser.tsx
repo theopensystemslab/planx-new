@@ -36,13 +36,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DebugConsole = () => {
-  const [passport, breadcrumbs] = useStore((state) => [
+  const [passport, breadcrumbs, flowId] = useStore((state) => [
     state.computePassport(),
     state.breadcrumbs,
+    state.id,
   ]);
   const classes = useStyles();
   return (
     <div className={classes.console}>
+      <Typography variant="body2">
+        <a
+          href={`${process.env.REACT_APP_API_URL}/flows/${flowId}/download-schema`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Download the flow schema
+        </a>
+      </Typography>
       <pre>{JSON.stringify({ passport, breadcrumbs }, null, 2)}</pre>
     </div>
   );

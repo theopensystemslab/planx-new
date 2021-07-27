@@ -4,6 +4,7 @@ const assert = require("assert");
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const cors = require("cors");
+const stringify = require("csv-stringify");
 const express = require("express");
 const jwt = require("express-jwt");
 const noir = require("pino-noir");
@@ -426,6 +427,41 @@ app.get("/", (_req, res) => {
 });
 
 app.post("/flows/:flowId/publish", useJWT, publishFlow);
+
+// unauthenticated because accessing flow schema only, no user data
+app.get("/flows/:flowId/download-schema", async (req, res) => {
+  const schema = await client.request(
+    `
+      query ($flow_id: String!) {
+        get_flow_schema(args: {published_flow_id: $flow_id}) {
+          node
+          type
+          text
+          planx_variable
+        }
+      }`,
+    { flow_id: req.params.flowId }
+  );
+
+  try {
+    if (schema.get_flow_schema.length < 1) {
+      res.json({
+        message:
+          "Can't find a schema for this flow. Make sure it's published or try a different flow id.",
+      });
+    } else {
+      // build a CSV and stream it
+      stringify(schema.get_flow_schema, { header: true })
+        .pipe(res);
+
+      res.header('Content-type', 'text/csv');
+      res.attachment(`${req.params.flowId}.csv`);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
+});
 
 app.post("/sign-s3-upload", async (req, res) => {
   if (!req.body.filename) res.status(422).json({ error: "missing filename" });
