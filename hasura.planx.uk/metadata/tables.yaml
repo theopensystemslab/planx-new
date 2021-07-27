@@ -75,16 +75,15 @@
   - role: public
     permission:
       columns:
-      - created_at
+      - id
+      - team_id
+      - slug
       - creator_id
       - data
-      - id
-      - name
-      - settings
-      - slug
-      - team_id
-      - updated_at
       - version
+      - created_at
+      - updated_at
+      - settings
       computed_fields:
       - data_merged
       filter: {}
