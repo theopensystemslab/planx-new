@@ -4,6 +4,7 @@ const assert = require("assert");
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const cors = require("cors");
+const stringify = require("csv-stringify");
 const express = require("express");
 const jwt = require("express-jwt");
 const noir = require("pino-noir");
@@ -414,7 +415,8 @@ app.get("/", (_req, res) => {
 
 app.post("/flows/:flowId/publish", useJWT, publishFlow);
 
-app.get("/flows/:flowId/schema", async (req, res) => {
+// unauthenticated because accessing flow schema only, no user data
+app.get("/flows/:flowId/download-schema", async (req, res) => {
   const schema = await client.request(
     `
       query ($flow_id: String!) {
@@ -434,7 +436,12 @@ app.get("/flows/:flowId/schema", async (req, res) => {
           "Can't find a schema for this flow. Make sure it's published or try a different flow id.",
       });
     } else {
-      res.json(schema.get_flow_schema);
+      // build a CSV and stream it
+      stringify(schema.get_flow_schema, { header: true })
+        .pipe(res);
+
+      res.header('Content-type', 'text/csv');
+      res.attachment(`${req.params.flowId}.csv`);
     }
   } catch (error) {
     console.error(error);
