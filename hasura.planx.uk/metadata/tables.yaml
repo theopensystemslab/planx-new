@@ -31,9 +31,6 @@
       filter: {}
 - table:
     schema: public
-    name: bops_applications
-- table:
-    schema: public
     name: flows
   object_relationships:
   - name: creator
@@ -56,7 +53,7 @@
         column: flow_id
         table:
           schema: public
-          name: published_flows
+          name: published_flows_with_new_name
   - name: sessions
     using:
       foreign_key_constraint_on:
@@ -100,7 +97,7 @@
       foreign_key_constraint_on: flow_id
 - table:
     schema: public
-    name: published_flows
+    name: published_flows_with_new_name
   object_relationships:
   - name: flow
     using:
@@ -234,6 +231,9 @@
       - updated_at
       - settings
       filter: {}
+- table:
+    schema: public
+    name: testinghasura
 - table:
     schema: public
     name: users
