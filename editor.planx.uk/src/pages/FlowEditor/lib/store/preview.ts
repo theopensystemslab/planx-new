@@ -304,7 +304,7 @@ export const previewStore = (
     }
   },
 
-  resultData(flagSet = DEFAULT_FLAG_CATEGORY, overrides) {
+  resultData(flagSet, overrides) {
     const { breadcrumbs, flow } = get();
     return getResultData(breadcrumbs, flow, flagSet, overrides);
   },
@@ -592,8 +592,8 @@ const knownNots = (
 export const getResultData = (
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
-  flagSet?: any,
-  overrides?: any
+  flagSet: Parameters<PreviewStore["resultData"]>[0] = DEFAULT_FLAG_CATEGORY,
+  overrides?: Parameters<PreviewStore["resultData"]>[1]
 ) => {
   const categories = [flagSet];
 
@@ -671,6 +671,6 @@ export const getResultData = (
 
       return acc;
     },
-    {}
+    {} as ReturnType<PreviewStore["resultData"]>
   );
 };
