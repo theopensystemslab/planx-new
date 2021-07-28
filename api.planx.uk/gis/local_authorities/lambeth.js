@@ -110,7 +110,7 @@ async function go(x, y, extras) {
           : false,
     };
 
-    // Since we have multiple article 4 layers, account for granularity & ensure root variable is synced with the subvariable
+    // Since we have multiple article 4 layers, account for granularity & ensure root variable is synced with the subvariables
     if (ob["article4.lambeth.kiba"].value && !ob["article4"].value) {
       ob["article4"] = ob["article4.lambeth.kiba"];
       // Remove "text" and other keys from subvariable so it doesn't render as separate entry in planning constraints list
@@ -118,6 +118,13 @@ async function go(x, y, extras) {
     } else if (!ob["article4.lambeth.kiba"].value) {
       // Same as above, make sure we render single a4 planning constraint
       ob["article4.lambeth.kiba"] = { value: false };
+    }
+
+    if (ob["article4.lambeth.caz"].value && !ob["article4"].value) {
+      ob["article4"] = ob["article4.lambeth.caz"];
+      ob["article4.lambeth.caz"] = { value: true };
+    } else if (!ob["article4.lambeth.caz"].value) {
+      ob["article4.lambeth.caz"] = { value: false };
     }
 
     // Add summary "designated" key to response
