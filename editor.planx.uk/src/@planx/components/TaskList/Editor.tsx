@@ -106,7 +106,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
                 name="description"
                 value={formik.values.description}
                 onChange={formik.handleChange}
-                placeholder=" Main Description"
+                placeholder="Main Description"
               />
             </InputRow>
           </div>
