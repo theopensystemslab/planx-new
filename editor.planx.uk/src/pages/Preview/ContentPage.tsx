@@ -59,20 +59,21 @@ function ContentPage(props: { page: string }) {
   const navigation = useNavigation();
   const context = React.useContext(PreviewContext);
 
-  const validateFlowSetting = () => {
-    const flowSetting = context?.flow.settings?.elements?.[props.page];
+  // Determine if the content is a flow setting or a global setting, and only show it if it isn't hidden
+  const content = (() => {
+    if (FOOTER_ITEMS.includes(props.page)) {
+      const flowSetting = context?.flow.settings?.elements?.[props.page];
 
-    if (!flowSetting?.show) return;
+      if (!flowSetting?.show) return;
 
-    return {
-      heading: flowSetting.heading,
-      content: flowSetting.content,
-    };
-  };
-
-  const content = FOOTER_ITEMS.includes(props.page)
-    ? validateFlowSetting()
-    : context?.globalSettings?.footerContent?.[props.page];
+      return {
+        heading: flowSetting.heading,
+        content: flowSetting.content,
+      };
+    } else {
+      return context?.globalSettings?.footerContent?.[props.page];
+    }
+  })();
 
   if (!content) throw new NotFoundError();
 

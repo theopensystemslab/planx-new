@@ -56,18 +56,13 @@ const PreviewLayout: React.FC<{
     }
   });
 
-  const globalFooterItems =
-    (footerContent &&
-      Object.keys(footerContent).map((slug) => {
-        const item = footerContent[slug];
-
-        return {
-          title: item.heading,
-          content: item.content,
-          href: makeHref(slug),
-        };
-      })) ||
-    [];
+  const globalFooterItems = footerContent
+    ? Object.entries(footerContent).map(([slug, item]) => ({
+        title: item.heading,
+        content: item.content,
+        href: makeHref(slug),
+      }))
+    : [];
 
   const footerItems = [
     ...flowSettingsContent,
