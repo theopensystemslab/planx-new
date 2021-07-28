@@ -4,7 +4,8 @@
 // POST data payloads accepted by the BOPS API, see:
 // https://southwark.preview.bops.services/api-docs/index.html
 
-import { DEFAULT_FLAG_CATEGORY, flatFlags } from "pages/FlowEditor/data/flags";
+import { airbrake } from "airbrake";
+import { flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
 
@@ -274,20 +275,18 @@ export function getParams(
 
   // 8. flag data
 
-  const resultId = Object.keys(breadcrumbs).find(
-    (id) => flow[id]?.type === TYPES.Result
-  );
-  if (resultId) {
-    const result = getResultData(
-      breadcrumbs,
-      flow,
-      DEFAULT_FLAG_CATEGORY,
-      flow[resultId].data?.overrides
+  try {
+    const resultId = Object.keys(breadcrumbs).find(
+      (id) => flow[id]?.type === TYPES.Result
     );
-    const firstResult = Object.values(result)?.[0] as any;
-    const flag = firstResult?.flag?.value;
-
-    if (flag) {
+    if (resultId) {
+      const result = getResultData(
+        breadcrumbs,
+        flow,
+        undefined,
+        flow[resultId].data?.overrides
+      );
+      const firstResult = Object.values(result!)?.[0] as any;
       data.result = Object.entries({
         flag: [firstResult.flag.category, firstResult.flag.text].join(" / "),
         heading: firstResult.displayText?.heading,
@@ -298,6 +297,9 @@ export function getParams(
         return acc;
       }, {} as Record<string, any>);
     }
+  } catch (err) {
+    console.error("unable to get flag result", err);
+    airbrake?.notify(err);
   }
 
   return {
