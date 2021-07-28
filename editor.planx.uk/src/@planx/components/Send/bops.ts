@@ -12,6 +12,7 @@ import { GovUKPayment } from "types";
 import { Store } from "../../../pages/FlowEditor/lib/store";
 import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY, toPence } from "../Pay/model";
+import { removeNilValues } from "../shared/utils";
 import { TYPES } from "../types";
 import {
   BOPS_TAGS,
@@ -250,15 +251,11 @@ export function getParams(
 
   // 5. keys
 
-  const bopsData = Object.entries(bopsDictionary).reduce(
-    (acc, [bopsField, planxField]) => {
-      const value = passport.data?.[planxField];
-      if (value !== undefined && value !== null) {
-        acc[bopsField as keyof BOPSFullPayload] = value;
-      }
+  const bopsData = removeNilValues(
+    Object.entries(bopsDictionary).reduce((acc, [bopsField, planxField]) => {
+      acc[bopsField as keyof BOPSFullPayload] = passport.data?.[planxField];
       return acc;
-    },
-    {} as Partial<BOPSFullPayload>
+    }, {} as Partial<BOPSFullPayload>)
   );
 
   // 6. questions+answers array
@@ -276,27 +273,14 @@ export function getParams(
   // 8. flag data
 
   try {
-    const resultId = Object.keys(breadcrumbs).find(
-      (id) => flow[id]?.type === TYPES.Result
-    );
-    if (resultId) {
-      const result = getResultData(
-        breadcrumbs,
-        flow,
-        undefined,
-        flow[resultId].data?.overrides
-      );
-      const firstResult = Object.values(result!)?.[0] as any;
-      data.result = Object.entries({
-        flag: [firstResult.flag.category, firstResult.flag.text].join(" / "),
-        heading: firstResult.displayText?.heading,
-        description: firstResult.displayText?.description,
-        override: passport?.data?.["application.resultOverride.reason"],
-      }).reduce((acc, [k, v]) => {
-        if (v) acc[k] = v;
-        return acc;
-      }, {} as Record<string, any>);
-    }
+    const result = getResultData(breadcrumbs, flow);
+    const { flag } = Object.values(result)[0];
+    data.result = removeNilValues({
+      flag: [flag.category, flag.text].join(" / "),
+      heading: flag.text,
+      description: flag.officerExplanation,
+      override: passport?.data?.["application.resultOverride.reason"],
+    });
   } catch (err) {
     console.error("unable to get flag result", err);
     airbrake?.notify(err);

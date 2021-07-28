@@ -621,7 +621,7 @@ export const getResultData = (
         .filter((flag) => flag && keys.includes(flag))
         .sort((a, b) => keys.indexOf(a) - keys.indexOf(b));
 
-      const flag = possibleFlags.find(
+      const flag: Flag = possibleFlags.find(
         (f) => f.value === filteredCollectedFlags[0]
       ) || {
         // value: "PP-NO_RESULT",
@@ -630,6 +630,7 @@ export const getResultData = (
         category,
         bgColor: "#EEEEEE",
         color: tinycolor("black").toHexString(),
+        officerExplanation: "",
       };
 
       const responses = Object.entries(breadcrumbs)

@@ -32,9 +32,10 @@ test("prior", () => {
       },
     ],
     result: {
-      description: "Custom prior description",
+      description:
+        "It looks like the proposed changes do not require planning permission, however the applicant must apply for Prior Approval before proceeding.",
       flag: "Planning permission / Prior approval",
-      heading: "Custom prior heading",
+      heading: "Prior approval",
     },
     planx_debug_data: {
       breadcrumbs,
@@ -88,7 +89,8 @@ test("permission", () => {
       },
     ],
     result: {
-      description: "Planning permission",
+      description:
+        "It looks like the proposed changes may require planning permission.",
       flag: "Planning permission / Permission needed",
       heading: "Permission needed",
       override: "i don't agree",
@@ -121,6 +123,11 @@ test("other", () => {
     proposal_details: [
       { question: "which answer?", responses: [{ value: "other" }] },
     ],
+    result: {
+      description: "",
+      flag: "Planning permission / No result",
+      heading: "No result",
+    },
     planx_debug_data: {
       breadcrumbs,
       passport,
@@ -168,12 +175,6 @@ let flow: Store.flow = {
     type: 3,
     data: {
       flagSet: "Planning permission",
-      overrides: {
-        PRIOR_APPROVAL: {
-          heading: "Custom prior heading",
-          description: "Custom prior description",
-        },
-      },
     },
   },
   l3JOp21fkV: {
