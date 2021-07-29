@@ -133,9 +133,8 @@ function Component(props: Props) {
           },
         ]}
         propertyConstraints={{
-          title: "Constraints",
-          description:
-            "These are the planning policies that apply to this property. We will use this information to ask you relevant questions.",
+          title: "Planning constraints",
+          description: "Things that might affect your project",
           constraints: (Object.values(constraints) || []).filter(
             ({ text }: any) => text
           ),
