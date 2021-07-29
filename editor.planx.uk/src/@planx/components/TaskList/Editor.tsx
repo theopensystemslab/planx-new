@@ -27,6 +27,12 @@ const useTaskEditorStyles = makeStyles((_theme) => ({
   },
 }));
 
+const useTaskListStyles = makeStyles((_theme) => ({
+  container: {
+    marginBottom: "1rem",
+  },
+}));
+
 const newTask = (): Task => ({
   title: "",
   description: "",
@@ -70,6 +76,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
 };
 
 const TaskListComponent: React.FC<Props> = (props) => {
+  const classes = useTaskListStyles();
   const formik = useFormik({
     initialValues: parseTaskList(props.node?.data),
     onSubmit: (newValues) => {
@@ -83,6 +90,26 @@ const TaskListComponent: React.FC<Props> = (props) => {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent title="Task List" Icon={ICONS[TYPES.TaskList]}>
+          <div className={classes.container}>
+            <InputRow>
+              <Input
+                autoFocus
+                name="title"
+                value={formik.values.title}
+                onChange={formik.handleChange}
+                placeholder="Main Title"
+                format="large"
+              />
+            </InputRow>
+            <InputRow>
+              <RichTextInput
+                name="description"
+                value={formik.values.description}
+                onChange={formik.handleChange}
+                placeholder="Main Description"
+              />
+            </InputRow>
+          </div>
           <ListManager
             values={formik.values.tasks}
             onChange={(tasks: Array<Task>) => {

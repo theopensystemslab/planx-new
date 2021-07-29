@@ -16,5 +16,7 @@ export const parseTaskList = (
   data: Record<string, any> | undefined
 ): TaskList => ({
   tasks: /* remove once migrated */ data?.taskList?.tasks || data?.tasks || [],
+  title: data?.title || "",
+  description: data?.description || "",
   ...parseMoreInformation(data),
 });
