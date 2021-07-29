@@ -16,7 +16,6 @@ import {
   DEFAULT_TITLE_FOR_UPLOADING,
   PASSPORT_UPLOAD_KEY,
 } from "../model";
-import Map from "./Map";
 import Upload from "./Upload";
 
 export type Props = PublicProps<DrawBoundary>;
@@ -68,19 +67,21 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <Box className={classes.map}>
-            <Map
+            {/* @ts-ignore */}
+            <my-map
+              zoom={20}
+              latitude={Number(passport?.data?._address?.latitude)}
+              longitude={Number(passport?.data?._address?.longitude)}
+            />
+            {/* <Map
               zoom={18}
               lat={Number(passport?.data?._address?.latitude)}
               lng={Number(passport?.data?._address?.longitude)}
               setBoundary={setBoundary}
-            />
+            /> */}
           </Box>
           <p className={classes.uploadInstead}>
             <a onClick={() => setPage("upload")}>Upload a file instead</a>
-          </p>
-          <p>
-            The boundary you have drawn has an area of{" "}
-            <strong>{area ?? 0} m²</strong>
           </p>
         </>
       );
