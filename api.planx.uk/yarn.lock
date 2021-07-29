@@ -877,6 +877,11 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+bluebird@^3.5.5:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
+  integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
+
 body-parser@1.19.0, body-parser@^1.19.0:
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.19.0.tgz#96b2709e57c9c4e09a6fd66a8fd979844f69f08a"
@@ -3538,6 +3543,15 @@ passport-google-oauth20@^2.0.0:
   dependencies:
     passport-oauth2 "1.x.x"
 
+passport-mocked@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/passport-mocked/-/passport-mocked-1.4.0.tgz#10f84b931b7ac8469a82472ab8c5ed08029ba508"
+  integrity sha512-49NUkg08n0+Wj3hMCSnd8ScmtyNhIeodLutp3qjP/8YXaNGNUrKKImXosvP9ktA2nCjm9gYcv5QVyD4IqQ1JJQ==
+  dependencies:
+    bluebird "^3.5.5"
+    passport "0.3.0"
+    url "^0.11.0"
+
 passport-oauth2@1.x.x:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/passport-oauth2/-/passport-oauth2-1.5.0.tgz#64babbb54ac46a4dcab35e7f266ed5294e3c4108"
@@ -3553,6 +3567,14 @@ passport-strategy@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
   integrity sha1-tVOaqPwiWj0a0XlHbd8ja0QPUuQ=
+
+passport@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/passport/-/passport-0.3.0.tgz#14c151b0eb6795aa9335239827f548d5f94c7046"
+  integrity sha1-FMFRsOtnlaqTNSOYJ/VI1flMcEY=
+  dependencies:
+    passport-strategy "1.x.x"
+    pause "0.0.1"
 
 passport@^0.4.1:
   version "0.4.1"
@@ -4583,6 +4605,14 @@ url@0.10.3:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/url/-/url-0.10.3.tgz#021e4d9c7705f21bbf37d03ceb58767402774c64"
   integrity sha1-Ah5NnHcF8hu/N9A861h2dAJ3TGQ=
+  dependencies:
+    punycode "1.3.2"
+    querystring "0.2.0"
+
+url@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/url/-/url-0.11.0.tgz#3838e97cfc60521eb73c525a8e55bfdd9e2e28f1"
+  integrity sha1-ODjpfPxgUh63PFJajlW/3Z4uKPE=
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"

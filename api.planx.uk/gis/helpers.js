@@ -31,7 +31,6 @@ const makeEsriUrl = (domain, id, serverIndex = 0, overrideParams = {}) => {
       .map((key) => key + "=" + escape(params[key]))
       .join("&"),
   ].join("?");
-  console.log({ url });
 
   return url;
 };

@@ -104,7 +104,7 @@ describe("sending a payment to GOV.UK Pay", () => {
   });
 });
 
-describe.only("fetching status of a GOV.UK payment", () => {
+describe("fetching status of a GOV.UK payment", () => {
   // https://docs.payments.service.gov.uk/reporting/#get-information-about-a-single-payment
   const govUKResponse = {
     created_date: "2019-07-11T10:36:26.988Z",

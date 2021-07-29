@@ -14,6 +14,7 @@ const { Server } = require("http");
 const passport = require("passport");
 const { sign } = require("jsonwebtoken");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const MockStrategy = require("passport-mocked").Strategy;
 const {
   createProxyMiddleware,
   responseInterceptor,
@@ -168,19 +169,36 @@ const buildJWT = async (profile, done) => {
   }
 };
 
-passport.use(
-  "google",
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `${process.env.API_URL_EXT}/auth/google/callback`,
-    },
-    async function (_accessToken, _refreshToken, profile, done) {
-      await buildJWT(profile, done);
-    }
-  )
-);
+function strategyForEnv() {
+  const strategy =
+    process.env.NODE_ENV === "test"
+      ? new MockStrategy(
+          {
+            name: "google",
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: `${process.env.API_URL_EXT}/auth/google/callback`,
+          },
+          async (_accessToken, _refreshToken, profile, done) => {
+            await strategyCallback(_accessToken, _refreshToken, profile, done);
+          }
+        )
+      : new GoogleStrategy(
+          {
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: `${process.env.API_URL_EXT}/auth/google/callback`,
+          },
+          strategyCallback
+        );
+  return strategy;
+}
+
+async function strategyCallback(_accessToken, _refreshToken, profile, done) {
+  await buildJWT(profile, done);
+}
+
+passport.use("google", strategyForEnv());
 
 passport.serializeUser(function (user, cb) {
   cb(null, user);
@@ -333,18 +351,16 @@ app.get("/pay/:localAuthority/:paymentId", (req, res) => {
     {
       pathRewrite: () => `/${req.params.paymentId}`,
       selfHandleResponse: true,
-      onProxyRes: responseInterceptor(
-        async (responseBuffer) => {
-          const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+      onProxyRes: responseInterceptor(async (responseBuffer) => {
+        const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
 
-          // only return payment status, filter out PII
-          return JSON.stringify({ 
-            payment_id: govUkResponse.payment_id,
-            amount: govUkResponse.amount,
-            state: govUkResponse.state,
-          });
-        }
-      )
+        // only return payment status, filter out PII
+        return JSON.stringify({
+          payment_id: govUkResponse.payment_id,
+          amount: govUkResponse.amount,
+          state: govUkResponse.state,
+        });
+      }),
     },
     req
   )(req, res);
@@ -451,10 +467,9 @@ app.get("/flows/:flowId/download-schema", async (req, res) => {
       });
     } else {
       // build a CSV and stream it
-      stringify(schema.get_flow_schema, { header: true })
-        .pipe(res);
+      stringify(schema.get_flow_schema, { header: true }).pipe(res);
 
-      res.header('Content-type', 'text/csv');
+      res.header("Content-type", "text/csv");
       res.attachment(`${req.params.flowId}.csv`);
     }
   } catch (error) {

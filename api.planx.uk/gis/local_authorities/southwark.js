@@ -127,8 +127,6 @@ async function locationSearch(x, y, extras) {
         : false,
   };
 
-  console.log(responses);
-
   responses
     .filter(([_key, result]) => result instanceof Error)
     .forEach(([key, _result]) => {

@@ -149,7 +149,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
                 setLastPublishedTitle(
                   publishedFlow?.data.alteredNodes
                     ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
-                    : "No new changes to publish!"
+                    : "No new changes to publish"
                 );
               }}
             >
