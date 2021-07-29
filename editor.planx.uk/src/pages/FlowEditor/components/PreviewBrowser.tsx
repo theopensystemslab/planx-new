@@ -177,7 +177,6 @@ const PublishButton: React.FC = () => {
             await publishFlow(flowId);
             setLastPublishedTitle("Successfully published");
           }}
-          disabled={window.location.hostname.endsWith("planx.uk")}
         >
           PUBLISH
         </Button>
