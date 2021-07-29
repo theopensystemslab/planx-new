@@ -60,36 +60,17 @@ const DebugConsole = () => {
 
 const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
-  const [
-    flowId,
-    resetPreview,
-    setPreviewEnvironment,
-    publishFlow,
-    lastPublished,
-    lastPublisher,
-  ] = useStore((state) => [
-    state.id,
+  const [resetPreview, setPreviewEnvironment] = useStore((state) => [
     state.resetPreview,
     state.setPreviewEnvironment,
-    state.publishFlow,
-    state.lastPublished,
-    state.lastPublisher,
   ]);
   const [key, setKey] = useState<boolean>(false);
-  const [lastPublishedTitle, setLastPublishedTitle] = useState<string>();
   const classes = useStyles();
 
   useEffect(() => setPreviewEnvironment("editor"), []);
 
-  const formatLastPublish = (date: string, user: string) =>
-    `Last published ${formatDistanceToNow(new Date(date))} ago by ${user}`;
-
-  const lastPublishedRequest = useAsync(async () => {
-    const date = await lastPublished(flowId);
-    const user = await lastPublisher(flowId);
-
-    setLastPublishedTitle(formatLastPublish(date, user));
-  });
+  // XXX: temporarily hide publish button in production
+  const showPublishButton = !window.location.hostname.endsWith("planx.uk");
 
   return (
     <div id="fake-browser">
@@ -115,46 +96,43 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
             />
           </Tooltip>
 
-          <Tooltip arrow title="Open editor preview">
-            <a
-              href={props.url.replace("/preview", "/unpublished")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={classes.refreshButton}
-            >
-              <ExternalLink />
-            </a>
-          </Tooltip>
-
-          <Tooltip arrow title="Open published service">
-            <a
-              href={props.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={classes.refreshButton}
-            >
-              <Globe />
-            </a>
-          </Tooltip>
+          {showPublishButton ? (
+            <>
+              <Tooltip arrow title="Open editor preview">
+                <a
+                  href={props.url.replace("/preview", "/unpublished")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={classes.refreshButton}
+                >
+                  <ExternalLink />
+                </a>
+              </Tooltip>
+              <Tooltip arrow title="Open published service">
+                <a
+                  href={props.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={classes.refreshButton}
+                >
+                  <Globe />
+                </a>
+              </Tooltip>
+            </>
+          ) : (
+            <Tooltip arrow title="Open editor preview">
+              <a
+                href={props.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={classes.refreshButton}
+              >
+                <ExternalLink />
+              </a>
+            </Tooltip>
+          )}
         </Box>
-        <Box width="100%" mt={2}>
-          <Box display="flex" flexDirection="column" alignItems="flex-end">
-            <Button
-              className={classes.publishButton}
-              variant="contained"
-              color="primary"
-              onClick={async () => {
-                const publishedFlow = await publishFlow(flowId);
-                setLastPublishedTitle("Successfully published");
-              }}
-            >
-              PUBLISH
-            </Button>
-            <Box mr={0}>
-              <Typography variant="caption">{lastPublishedTitle}</Typography>
-            </Box>
-          </Box>
-        </Box>
+        {showPublishButton && <PublishButton />}
       </header>
       <div className={classes.previewContainer}>
         <Questions key={String(key)} />
@@ -163,5 +141,52 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
     </div>
   );
 });
+
+const PublishButton: React.FC = () => {
+  const [
+    flowId,
+    lastPublished,
+    lastPublisher,
+    publishFlow,
+  ] = useStore((state) => [
+    state.id,
+    state.lastPublished,
+    state.lastPublisher,
+    state.publishFlow,
+  ]);
+  const [lastPublishedTitle, setLastPublishedTitle] = useState<string>();
+  const classes = useStyles();
+
+  const formatLastPublish = (date: string, user: string) =>
+    `Last published ${formatDistanceToNow(new Date(date))} ago by ${user}`;
+
+  useAsync(async () => {
+    const date = await lastPublished(flowId);
+    const user = await lastPublisher(flowId);
+    setLastPublishedTitle(formatLastPublish(date, user));
+  });
+
+  return (
+    <Box width="100%" mt={2}>
+      <Box display="flex" flexDirection="column" alignItems="flex-end">
+        <Button
+          className={classes.publishButton}
+          variant="contained"
+          color="primary"
+          onClick={async () => {
+            await publishFlow(flowId);
+            setLastPublishedTitle("Successfully published");
+          }}
+          disabled={window.location.hostname.endsWith("planx.uk")}
+        >
+          PUBLISH
+        </Button>
+        <Box mr={0}>
+          <Typography variant="caption">{lastPublishedTitle}</Typography>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
 
 export default PreviewBrowser;
