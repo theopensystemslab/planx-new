@@ -380,15 +380,19 @@ app.use("/auth", router);
 
 app.use("/gis", router);
 
-app.get("/hasura", async function (req, res) {
-  const data = await client.request(
-    `query GetTeams {
-      teams {
-        id
-      }
-    }`
-  );
-  res.json(data);
+app.get("/hasura", async function (_req, res, next) {
+  try {
+    const data = await client.request(
+      `query GetTeams {
+        teams {
+          id
+        }
+      }`
+    );
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get("/me", useJWT, async function (req, res, next) {
@@ -396,25 +400,29 @@ app.get("/me", useJWT, async function (req, res, next) {
   if (!req.user?.sub)
     next({ status: 401, message: "User ID missing from JWT" });
 
-  const user = await client.request(
-    `query ($id: Int!) {
-      users_by_pk(id: $id) {
-        id
-        first_name
-        last_name
-        email
-        is_admin
-        created_at
-        updated_at
-      }
-    }`,
-    { id: req.user.sub }
-  );
+  try {
+    const user = await client.request(
+      `query ($id: Int!) {
+        users_by_pk(id: $id) {
+          id
+          first_name
+          last_name
+          email
+          is_admin
+          created_at
+          updated_at
+        }
+      }`,
+      { id: req.user.sub }
+    );
 
-  if (!user.users_by_pk)
-    next({ status: 404, message: `User (${req.user.sub}) not found` });
+    if (!user.users_by_pk)
+      next({ status: 404, message: `User (${req.user.sub}) not found` });
 
-  res.json(user.users_by_pk);
+    res.json(user.users_by_pk);
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get("/gis", (_req, res) => {
@@ -429,12 +437,19 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
+// XXX: leaving this in temporarily as a testing endpoint to ensure it
+//      works correctly in staging and production
+app.get("/throw-error", () => {
+  throw new Error("custom error");
+});
+
 app.post("/flows/:flowId/publish", useJWT, publishFlow);
 
 // unauthenticated because accessing flow schema only, no user data
-app.get("/flows/:flowId/download-schema", async (req, res) => {
-  const schema = await client.request(
-    `
+app.get("/flows/:flowId/download-schema", async (req, res, next) => {
+  try {
+    const schema = await client.request(
+      `
       query ($flow_id: String!) {
         get_flow_schema(args: {published_flow_id: $flow_id}) {
           node
@@ -443,12 +458,12 @@ app.get("/flows/:flowId/download-schema", async (req, res) => {
           planx_variable
         }
       }`,
-    { flow_id: req.params.flowId }
-  );
+      { flow_id: req.params.flowId }
+    );
 
-  try {
     if (schema.get_flow_schema.length < 1) {
-      res.json({
+      next({
+        status: 404,
         message:
           "Can't find a schema for this flow. Make sure it's published or try a different flow id.",
       });
@@ -460,15 +475,16 @@ app.get("/flows/:flowId/download-schema", async (req, res) => {
       res.attachment(`${req.params.flowId}.csv`);
     }
   } catch (err) {
-    next({ error: err });
+    next(err);
   }
 });
 
 app.post("/sign-s3-upload", async (req, res, next) => {
   if (!req.body.filename) next({ status: 422, message: "missing filename" });
 
-  const { fileType, url, acl } = await signS3Upload(req.body.filename);
   try {
+    const { fileType, url, acl } = await signS3Upload(req.body.filename);
+
     res.json({
       upload_to: url,
       public_readonly_url_will_be: url.split("?")[0],
@@ -476,7 +492,7 @@ app.post("/sign-s3-upload", async (req, res, next) => {
       acl,
     });
   } catch (err) {
-    next({ error: err });
+    next(err);
   }
 });
 
@@ -486,8 +502,8 @@ app.use(
   // XXX: including all 4 function params appears to be a requirement?
   function errorHandler(errorObject, _req, res, _next) {
     const { status = 500, message = "Something went wrong" } = (() => {
-      if (errorObject.error) {
-        airbrake?.notify(errorObject.error);
+      if (errorObject.error && airbrake) {
+        airbrake.notify(errorObject.error);
         return {
           ...errorObject,
           message: errorObject.message.concat(", this error has been logged"),
