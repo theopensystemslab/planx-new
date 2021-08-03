@@ -2,6 +2,7 @@
 require("./airbrake");
 
 import "./app.css";
+import "react-toastify/dist/ReactToastify.css";
 
 import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,6 +13,7 @@ import React, { Suspense } from "react";
 import { render } from "react-dom";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
 import HelmetProvider from "react-navi-helmet-async";
+import { ToastContainer } from "react-toastify";
 
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import { client } from "./lib/graphql";
@@ -65,17 +67,20 @@ const Layout: React.FC<{
 };
 
 render(
-  <ApolloProvider client={client}>
-    <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
-      <HelmetProvider>
-        <Layout>
-          <CssBaseline />
-          <Suspense fallback={null}>
-            <View />
-          </Suspense>
-        </Layout>
-      </HelmetProvider>
-    </Router>
-  </ApolloProvider>,
+  <>
+    <ApolloProvider client={client}>
+      <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
+        <HelmetProvider>
+          <Layout>
+            <CssBaseline />
+            <Suspense fallback={null}>
+              <View />
+            </Suspense>
+          </Layout>
+        </HelmetProvider>
+      </Router>
+    </ApolloProvider>
+    <ToastContainer />
+  </>,
   rootEl
 );

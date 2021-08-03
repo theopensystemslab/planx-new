@@ -27,4 +27,4 @@ else
   HEADLESS=":headless"
 fi
 
-JWT_SECRET=$JWT_SECRET testcafe "${BROWSER}${HEADLESS}" '*.js'
+JWT_SECRET=$JWT_SECRET testcafe "${BROWSER}${HEADLESS}" './tests/*.js'
