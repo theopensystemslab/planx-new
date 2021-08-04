@@ -278,7 +278,7 @@ export function getParams(
     data.result = removeNilValues({
       flag: [flag.category, flag.text].join(" / "),
       heading: flag.text,
-      description: flag.officerExplanation,
+      description: flag.officerDescription,
       override: passport?.data?.["application.resultOverride.reason"],
     });
   } catch (err) {

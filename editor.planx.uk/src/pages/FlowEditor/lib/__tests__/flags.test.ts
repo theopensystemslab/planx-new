@@ -204,7 +204,7 @@ describe("displaying flags as result", () => {
           color: "#000000",
           text: "No result",
           value: undefined,
-          officerExplanation: "",
+          officerDescription: "",
         },
         responses: [],
       },

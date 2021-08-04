@@ -85,7 +85,7 @@ const parsedFlags: Record<FlagSet, { [id: string]: Flag }> = Object.entries(
   categoriesAndFlags
 ).reduce((acc: Record<string, any>, [category, flags]) => {
   acc[category] = Object.entries(flags).reduce(
-    (acc: Record<string, Flag>, [id, [text, bgColor, officerExplanation]]) => {
+    (acc: Record<string, Flag>, [id, [text, bgColor, officerDescription]]) => {
       // loop through all the flags and add a text color which is
       // white if it's a dark background or black if it's light
       const color =
@@ -96,7 +96,7 @@ const parsedFlags: Record<FlagSet, { [id: string]: Flag }> = Object.entries(
         bgColor,
         color,
         category,
-        officerExplanation,
+        officerDescription,
       };
 
       // check that no other flags share the same ID

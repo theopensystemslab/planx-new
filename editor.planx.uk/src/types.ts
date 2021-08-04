@@ -55,7 +55,7 @@ export interface Flag {
   color: string;
   // XXX: will be removed when flags are more dynamic. For the immediate future
   //      it's convenient to store a definition for BOPS users with the data.
-  officerExplanation?: string;
+  officerDescription?: string;
 }
 
 export interface Node {

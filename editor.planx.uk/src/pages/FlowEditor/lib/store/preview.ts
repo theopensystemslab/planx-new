@@ -630,7 +630,7 @@ export const getResultData = (
         category,
         bgColor: "#EEEEEE",
         color: tinycolor("black").toHexString(),
-        officerExplanation: "",
+        officerDescription: "",
       };
 
       const responses = Object.entries(breadcrumbs)
