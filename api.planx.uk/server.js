@@ -169,36 +169,33 @@ const buildJWT = async (profile, done) => {
   }
 };
 
-function strategyForEnv() {
-  const strategy =
-    process.env.NODE_ENV === "test"
-      ? new MockStrategy(
-          {
-            name: "google",
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: `${process.env.API_URL_EXT}/auth/google/callback`,
-          },
-          async (_accessToken, _refreshToken, profile, done) => {
-            await strategyCallback(_accessToken, _refreshToken, profile, done);
-          }
-        )
-      : new GoogleStrategy(
-          {
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: `${process.env.API_URL_EXT}/auth/google/callback`,
-          },
-          strategyCallback
-        );
-  return strategy;
-}
+passport.use(
+  "google",
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: `${process.env.API_URL_EXT}/auth/google/callback`,
+    },
+    async function (_accessToken, _refreshToken, profile, done) {
+      await buildJWT(profile, done);
+    }
+  )
+);
 
-async function strategyCallback(_accessToken, _refreshToken, profile, done) {
-  await buildJWT(profile, done);
-}
-
-passport.use("google", strategyForEnv());
+passport.use(
+  "google",
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: `${process.env.API_URL_EXT}/auth/google/callback`,
+    },
+    async function (_accessToken, _refreshToken, profile, done) {
+      await buildJWT(profile, done);
+    }
+  )
+);
 
 passport.serializeUser(function (user, cb) {
   cb(null, user);
