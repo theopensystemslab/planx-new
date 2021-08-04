@@ -16,10 +16,22 @@ const planningConstraints = {
   article4: {
     key: "article4",
     source: canterburyDomain,
-    id: "External/Heritage",
-    serverIndex: 9,
-    fields: ["OBJECTID", "LOCATION_1", "DESCRIPTIO"],
-    neg: "is not subject to any Article 4 Restriction",
+    id: "External/Planning_Constraints_New",
+    serverIndex: 3,
+    fields: ["OBJECTID", "REF", "LOCATION_1", "COMMENT", "DESCRIPTIO"],
+    neg: "is not subject to any Article 4 Restrictions",
+    pos: (data) => ({
+      text: "is subject to Article 4 Restriction(s)",
+      description: data.LOCATION_1,
+    }),
+  },
+  "article4.canterbury.hmo": {
+    key: "article4.canterbury.hmo",
+    source: canterburyDomain,
+    id: "External/Planning_Constraints_New",
+    serverIndex: 6,
+    fields: ["OBJECTID", "REF", "LOCATION_1", "COMMENT", "DESCRIPTIO"],
+    neg: "is not subject to any Article 4 Restrictions",
     pos: (data) => ({
       text: "is subject to Article 4 Restriction(s)",
       description: data.LOCATION_1,
@@ -28,8 +40,8 @@ const planningConstraints = {
   listed: {
     key: "listed",
     source: canterburyDomain,
-    id: "External/Heritage",
-    serverIndex: 6,
+    id: "External/Planning_Constraints_New",
+    serverIndex: 7,
     fields: ["OBJECTID", "GRADE", "NAME", "DESCRIPTIO"],
     neg: "is not in, or within, a Listed Building",
     pos: (data) => ({
@@ -37,11 +49,24 @@ const planningConstraints = {
       description: data.NAME,
     }),
   },
+  // "Locally listed buildings" do not have a grade; determine if these require more granular planx variable
+  "listed.local": {
+    key: "listed.local",
+    source: canterburyDomain,
+    id: "External/Planning_Constraints_New",
+    serverIndex: 8,
+    fields: ["OBJECTID", "LOCATION", "DESCRIPTIO", "POLICY", "info1"],
+    neg: "is not in, or within, a Locally Listed Building",
+    pos: (data) => ({
+      text: `is, or is within, a Locally Listed Building`,
+    }),
+  },
   "designated.conservationArea": {
     key: "designated.conservationArea",
     source: canterburyDomain,
-    id: "Open_Data/Conservation_Areas",
-    fields: ["OBJECTID", "NAME", "URL"],
+    id: "External/Planning_Constraints_New",
+    serverIndex: 4,
+    fields: ["OBJECTID", "NAME", "TYPE", "DESIGNATIO", "DESCRIPTIO", "URL"],
     neg: "is not in a Conservation Area",
     pos: (data) => ({
       text: "is in a Conservation Area",
@@ -50,9 +75,10 @@ const planningConstraints = {
   },
   "designated.AONB": {
     key: "designated.AONB",
-    source: environmentDomain,
-    id: "NE/AreasOfOutstandingNaturalBeautyEngland",
-    fields: ["objectid", "code", "name", "desig_date", "hotlink"],
+    source: canterburyDomain,
+    id: "External/Planning_Constraints_New",
+    serverIndex: 2,
+    fields: ["OBJECTID", "NAME", "DESIG_DATE", "HOTLINK"],
     neg: "is not an Area of Outstanding Natural Beauty",
     pos: (data) => ({
       text: "is, or is within, an Area of Outstanding Natural Beauty",
@@ -72,24 +98,36 @@ const planningConstraints = {
   "designated.WHS": {
     key: "designated.WHS",
     source: canterburyDomain,
-    id: "External/Heritage",
-    serverIndex: 1,
-    fields: ["OBJECTID", "NAME", "NOTES"],
+    id: "External/Planning_Constraints_New",
+    serverIndex: 13,
+    fields: ["OBJECTID", "NAME"],
     neg: "is not an UNESCO World Heritage Site",
     pos: (data) => ({
       text: "is an UNESCO World Heritage Site",
       description: data.NAME,
     }),
   },
-  "designated.monument": { value: false },
+  "designated.monument": {
+    key: "designated.monument",
+    source: canterburyDomain,
+    id: "External/Planning_Constraints_New",
+    serverIndex: 0,
+    fields: ["OBJECTID", "NAME", "SchedDate", "AmendDate"],
+    neg: "is not the site of an Ancient Monument",
+    pos: (data) => ({
+      text: "is the site of an Ancient Monument",
+      description: data.NAME,
+    }),
+  },
   tpo: {
     key: "tpo",
     source: canterburyDomain,
-    id: "Open_Data/Tree_Preservation_Orders",
-    fields: ["OBJECTID", "TPO"],
-    neg: "is not in a TPO (Tree Preservation Order) zone",
+    id: "External/Planning_Constraints_New",
+    serverIndex: 13,
+    fields: ["OBJECTID", "TPO", "TPO_Group", "Location", "Description"],
+    neg: "is not in a TPO (Tree Preservation Order) Zone",
     pos: (data) => ({
-      text: "is in a TPO (Tree Preservation Order) zone",
+      text: "is in a TPO (Tree Preservation Order) Zone",
       description: data,
     }),
   },

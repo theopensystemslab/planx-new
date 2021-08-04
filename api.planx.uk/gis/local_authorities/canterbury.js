@@ -38,7 +38,7 @@ async function search(
 
 // For this location, iterate through our planning constraints and aggregate/format the responses
 async function go(x, y, extras) {
-  const point = bufferPoint(x, y, 0.05);
+  const point = bufferPoint(x, y, 0.25);
 
   try {
     const results = await Promise.all(
@@ -90,6 +90,24 @@ async function go(x, y, extras) {
           ...preCheckedLayers,
         }
       );
+
+    // Since we have multiple article 4 layers, account for granularity & ensure root variable is synced with the subvariable
+    if (ob["article4.canterbury.hmo"].value && !ob["article4"].value) {
+      ob["article4"] = ob["article4.canterbury.hmo"];
+      // Remove "text" and other keys from subvariable so it doesn't render as separate entry in planning constraints list
+      ob["article4.canterbury.hmo"] = { value: true };
+    } else if (!ob["article4.canterbury.hmo"].value) {
+      // Same as above, make sure we render single a4 planning constraint
+      ob["article4.canterbury.hmo"] = { value: false };
+    }
+
+    // Merge Listed Buildings & "Locally Listed Buildings" responses under single "listed" variable
+    if (ob["listed.local"].value && !ob["listed"].value) {
+      ob["listed"] = ob["listed.local"];
+      delete ob["listed.local"];
+    } else if (!ob["listed.local"].value) {
+      delete ob["listed.local"];
+    } // If both are true, show each in planning constraints list for MVP debugging; flow schemas only care if passport has "listed"
 
     // Add summary "designated" key to response
     const obWithDesignated = addDesignatedVariable(ob);
