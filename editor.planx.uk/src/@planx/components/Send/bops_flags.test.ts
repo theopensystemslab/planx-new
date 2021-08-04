@@ -2,7 +2,11 @@ import { Store } from "pages/FlowEditor/lib/store";
 
 import { getParams } from "./bops";
 
-test("prior", () => {
+// PlanX ALWAYS sends a flag result & optional override description (test 2)
+// to BOPS, even if (1) no flag result component is shown to the applicant,
+// or (3) no flag is collected during the flow.
+
+test("sends flag result despite no result component", () => {
   const breadcrumbs: Store.breadcrumbs = {
     jkMtyqBwqB: {
       auto: false,
@@ -47,7 +51,7 @@ test("prior", () => {
   expect(actual).toStrictEqual(expected);
 });
 
-test("permission", () => {
+test("sends override description with flag result", () => {
   const breadcrumbs: Store.breadcrumbs = {
     jkMtyqBwqB: {
       auto: false,
@@ -105,7 +109,7 @@ test("permission", () => {
   expect(actual).toStrictEqual(expected);
 });
 
-test("other", () => {
+test("sends 'no result' to BOPS when there is no collected flag", () => {
   const breadcrumbs: Store.breadcrumbs = {
     jkMtyqBwqB: {
       auto: false,
@@ -138,6 +142,7 @@ test("other", () => {
   expect(actual).toStrictEqual(expected);
 });
 
+// https://i.imgur.com/Mx5UP6t.png
 let flow: Store.flow = {
   _root: {
     edges: ["jkMtyqBwqB"],
@@ -155,7 +160,6 @@ let flow: Store.flow = {
       text: "prior",
       flag: "PRIOR_APPROVAL",
     },
-    edges: ["Konz0RjOmX"],
   },
   pF4ug4nuUT: {
     type: 200,
