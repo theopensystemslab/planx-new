@@ -27,7 +27,6 @@
     "nanoid": "^3.1.12",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
-    "passport-mocked": "^1.4.0",
     "pino-noir": "^2.2.1"
   },
   "scripts": {
