@@ -304,7 +304,7 @@ export const previewStore = (
     }
   },
 
-  resultData(flagSet = DEFAULT_FLAG_CATEGORY, overrides) {
+  resultData(flagSet, overrides) {
     const { breadcrumbs, flow } = get();
     return getResultData(breadcrumbs, flow, flagSet, overrides);
   },
@@ -592,8 +592,8 @@ const knownNots = (
 export const getResultData = (
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
-  flagSet?: any,
-  overrides?: any
+  flagSet: Parameters<PreviewStore["resultData"]>[0] = DEFAULT_FLAG_CATEGORY,
+  overrides?: Parameters<PreviewStore["resultData"]>[1]
 ) => {
   const categories = [flagSet];
 
@@ -621,7 +621,7 @@ export const getResultData = (
         .filter((flag) => flag && keys.includes(flag))
         .sort((a, b) => keys.indexOf(a) - keys.indexOf(b));
 
-      const flag = possibleFlags.find(
+      const flag: Flag = possibleFlags.find(
         (f) => f.value === filteredCollectedFlags[0]
       ) || {
         // value: "PP-NO_RESULT",
@@ -630,6 +630,7 @@ export const getResultData = (
         category,
         bgColor: "#EEEEEE",
         color: tinycolor("black").toHexString(),
+        officerDescription: "",
       };
 
       const responses = Object.entries(breadcrumbs)
@@ -671,6 +672,6 @@ export const getResultData = (
 
       return acc;
     },
-    {}
+    {} as ReturnType<PreviewStore["resultData"]>
   );
 };
