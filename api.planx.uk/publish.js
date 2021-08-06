@@ -108,6 +108,7 @@ const publishFlow = async (req, res) => {
       const publishedFlow =
         response.insert_published_flows_one &&
         response.insert_published_flows_one.data;
+
       const alteredNodes = Object.keys(delta).map((key) => ({
         id: key,
         ...publishedFlow[key],
@@ -115,7 +116,6 @@ const publishFlow = async (req, res) => {
 
       res.json({
         alteredNodes,
-        publishedFlow,
       });
     } else {
       res.json({
