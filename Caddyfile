@@ -1,0 +1,11 @@
+api.{$DOMAIN} {
+  reverse_proxy 127.0.0.1:{$API_PORT}
+}
+
+sharedb.{$DOMAIN} {
+  reverse_proxy 127.0.0.1:{$SHAREDB_PORT}
+}
+
+hasura.{$DOMAIN} {
+  reverse_proxy 127.0.0.1:{$HASURA_GRAPHQL_PORT}
+}
