@@ -147,6 +147,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
                 const publishedFlow = await publishFlow(flowId);
                 setLastPublishedTitle("Successfully published");
               }}
+              disabled={window.location.hostname.endsWith("planx.uk")}
             >
               PUBLISH
             </Button>

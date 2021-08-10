@@ -56,6 +56,7 @@ dependencies:
   react-navi: 0.14.4_navi@0.14.0+react@17.0.1
   react-navi-helmet-async: 0.14.4_9e1187d2fd1b61ae47f82501f8cd8b4d
   react-scripts: 4.0.1_25cdfeca2612d82db237d04dbdcb46c9
+  react-toastify: 7.0.4_react-dom@17.0.1+react@17.0.1
   react-use: 15.3.8_react-dom@17.0.1+react@17.0.1
   reconnecting-websocket: 4.4.0
   rxjs: 6.6.3
@@ -8084,7 +8085,7 @@ packages:
       camelcase: 6.2.0
       map-obj: 4.2.1
       quick-lru: 5.1.1
-      type-fest: 1.2.2
+      type-fest: 1.4.0
     dev: false
     engines:
       node: '>=12'
@@ -17481,6 +17482,17 @@ packages:
       react: ^16.8.0 || ^17.0.0
     resolution:
       integrity: sha512-3GLWFAan2pbwBeoeNDoqGmSbrShORtgWfaWX0RJDivsUrpShh01saRM5RU/i4Zmf+whpBVEY5cA90Eq8Ub1N3w==
+  /react-toastify/7.0.4_react-dom@17.0.1+react@17.0.1:
+    dependencies:
+      clsx: 1.1.1
+      react: 17.0.1
+      react-dom: 17.0.1_react@17.0.1
+    dev: false
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    resolution:
+      integrity: sha512-Rol7+Cn39hZp5hQ/k6CbMNE2CKYV9E5OQdC/hBLtIQU2xz7DdAm7xil4NITQTHR6zEbE5RVFbpgSwTD7xRGLeQ==
   /react-transition-group/4.4.1_react-dom@17.0.1+react@17.0.1:
     dependencies:
       '@babel/runtime': 7.12.5
@@ -19832,12 +19844,12 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
-  /type-fest/1.2.2:
+  /type-fest/1.4.0:
     dev: false
     engines:
       node: '>=10'
     resolution:
-      integrity: sha512-pfkPYCcuV0TJoo/jlsUeWNV8rk7uMU6ocnYNvca1Vu+pyKi8Rl8Zo2scPt9O72gCsXIm+dMxOOWuA3VFDSdzWA==
+      integrity: sha512-yGSza74xk0UG8k+pLh5oeoYirvIiWo5t0/o3zHHAO2tRDiZcxWP7fywNlXhqb6/r6sWvwi+RsyQMWhVLe4BVuA==
   /type-is/1.6.18:
     dependencies:
       media-typer: 0.3.0
@@ -21165,6 +21177,7 @@ specifiers:
   react-navi-helmet-async: ^0.14.4
   react-refresh: ^0.9.0
   react-scripts: ^4.0.1
+  react-toastify: ^7.0.4
   react-use: ^15.3.4
   reconnecting-websocket: ^4.4.0
   rxjs: ^6.6.3

@@ -47,6 +47,17 @@ const planningConstraints = {
       description: data.NAME,
     }),
   },
+  "article4.lambeth.caz": {
+    key: "article4.lambeth.caz",
+    source: lambethDomain,
+    id: "LambethCentralActivitiesZone",
+    fields: ["OBJECTID", "TITLE", "POLICY"],
+    neg: "is not subject to any Article 4 directions",
+    pos: (data) => ({
+      text: "is subject to an Article 4 direction(s)",
+      description: data.TITLE,
+    }),
+  },
   listed: {
     key: "listed",
     source: lambethDomain,

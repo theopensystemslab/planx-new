@@ -133,9 +133,8 @@ function Component(props: Props) {
           },
         ]}
         propertyConstraints={{
-          title: "Constraints",
-          description:
-            "These are the planning policies that apply to this property. We will use this information to ask you relevant questions.",
+          title: "Planning constraints",
+          description: "Things that might affect your project",
           constraints: (Object.values(constraints) || []).filter(
             ({ text }: any) => text
           ),
@@ -179,7 +178,7 @@ function GetAddress(props: {
           blpu_code
           latitude
           longitude
-          full_address
+          single_line_address
         }
       }
     `,
@@ -251,7 +250,11 @@ function GetAddress(props: {
                   .map(
                     (address: Address): Option => ({
                       ...address,
-                      title: address.full_address,
+                      // we already know the postcode so remove it from full address
+                      title: address.single_line_address.replace(
+                        `, ${address.postcode}`,
+                        ""
+                      ),
                     })
                   )
                   .sort((a: Option, b: Option) => sorter(a.title, b.title))}
