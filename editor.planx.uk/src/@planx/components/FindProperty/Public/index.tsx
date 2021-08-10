@@ -178,7 +178,7 @@ function GetAddress(props: {
           blpu_code
           latitude
           longitude
-          full_address
+          single_line_address
         }
       }
     `,
@@ -250,7 +250,11 @@ function GetAddress(props: {
                   .map(
                     (address: Address): Option => ({
                       ...address,
-                      title: address.full_address,
+                      // we already know the postcode so remove it from full address
+                      title: address.single_line_address.replace(
+                        `, ${address.postcode}`,
+                        ""
+                      ),
                     })
                   )
                   .sort((a: Option, b: Option) => sorter(a.title, b.title))}
