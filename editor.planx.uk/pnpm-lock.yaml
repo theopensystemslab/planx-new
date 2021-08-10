@@ -94,6 +94,7 @@ specifiers:
   react-navi-helmet-async: ^0.14.4
   react-refresh: ^0.9.0
   react-scripts: ^4.0.1
+  react-toastify: ^7.0.4
   react-use: ^15.3.4
   reconnecting-websocket: ^4.4.0
   rxjs: ^6.6.3
@@ -166,6 +167,7 @@ dependencies:
   react-navi: 0.14.4_navi@0.14.0+react@17.0.1
   react-navi-helmet-async: 0.14.4_9e1187d2fd1b61ae47f82501f8cd8b4d
   react-scripts: 4.0.1_25cdfeca2612d82db237d04dbdcb46c9
+  react-toastify: 7.0.4_react-dom@17.0.1+react@17.0.1
   react-use: 15.3.8_react-dom@17.0.1+react@17.0.1
   reconnecting-websocket: 4.4.0
   rxjs: 6.6.3
@@ -17019,6 +17021,17 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
     dev: true
+
+  /react-toastify/7.0.4_react-dom@17.0.1+react@17.0.1:
+    resolution: {integrity: sha512-Rol7+Cn39hZp5hQ/k6CbMNE2CKYV9E5OQdC/hBLtIQU2xz7DdAm7xil4NITQTHR6zEbE5RVFbpgSwTD7xRGLeQ==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      clsx: 1.1.1
+      react: 17.0.1
+      react-dom: 17.0.1_react@17.0.1
+    dev: false
 
   /react-transition-group/4.4.1_react-dom@17.0.1+react@17.0.1:
     resolution: {integrity: sha512-Djqr7OQ2aPUiYurhPalTrVy9ddmFCCzwhqQmtN+J3+3DzLO209Fdr70QrN8Z3DsglWql6iY1lDWAfpFiBtuKGw==}

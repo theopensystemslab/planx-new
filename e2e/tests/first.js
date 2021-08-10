@@ -1,7 +1,6 @@
-import { ClientFunction, Selector } from "testcafe";
-import { gqlAdmin, gqlPublic } from "../hasura.planx.uk/tests/utils";
-const { sign } = require("jsonwebtoken");
-const assert = require("assert");
+import { Selector } from "testcafe";
+import { getAdminJWT, setJWT, gqlAdmin } from "../common.js";
+import assert from "assert";
 
 const URL = "http://localhost:3000";
 
@@ -136,28 +135,9 @@ test
 
   // Test flow
   await t.click(Selector("p").withText("Yes"));
-  t.expect(Selector("h3").withText(yesNoticeResult).exists);
+  await t.expect(Selector("h3").withText(yesNoticeResult).exists).ok();
   await t.click(Selector("span").withText("Back"));
   await t.click(Selector("p").withText("No"));
-  t.expect(Selector("h3").withText(noNoticeResult).exists);
+  await t.expect(Selector("h3").withText(noNoticeResult).exists).ok();
 });
 
-function getAdminJWT(userId) {
-  const data = {
-    sub: String(userId),
-    "https://hasura.io/jwt/claims": {
-      "x-hasura-allowed-roles": ["admin"],
-      "x-hasura-default-role": "admin",
-      "x-hasura-user-id": String(userId),
-    },
-  };
-
-  return sign(data, process.env.JWT_SECRET);
-}
-
-async function setJWT(t, jwt) {
-  await ClientFunction((jwt) => {
-    document.cookie = `jwt=${jwt}`;
-    window.location.reload();
-  })(jwt);
-}

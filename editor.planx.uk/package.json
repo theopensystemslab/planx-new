@@ -59,6 +59,7 @@
     "react-navi": "^0.14.4",
     "react-navi-helmet-async": "^0.14.4",
     "react-scripts": "^4.0.1",
+    "react-toastify": "^7.0.4",
     "react-use": "^15.3.4",
     "reconnecting-websocket": "^4.4.0",
     "rxjs": "^6.6.3",
