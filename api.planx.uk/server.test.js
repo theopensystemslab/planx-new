@@ -193,8 +193,8 @@ describe("fetching GIS data from local authorities", () => {
     },
     {
       council: "lambeth",
-      x: 531372.771064619,
-      y: 177420.151319974,
+      x: 530622.7463248332,
+      y: 178706.16704920324,
     },
     {
       council: "southwark",
