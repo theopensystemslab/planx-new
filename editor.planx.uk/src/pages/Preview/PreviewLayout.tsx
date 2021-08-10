@@ -12,22 +12,24 @@ import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { FlowSettings, FOOTER_ITEMS } from "../../types";
+import { FlowSettings, FOOTER_ITEMS, TextContent } from "../../types";
 
 const PreviewLayout: React.FC<{
   children?: any;
   theme?: any;
   settings?: FlowSettings;
+  footerContent?: { [key: string]: TextContent };
 }> = ({
   theme = {
     primary: "#2c2c2c",
   },
   children,
   settings,
+  footerContent,
 }) => {
   const { data } = useCurrentRoute();
 
-  const makeHref = (path: string) => [data.mountpath, path].join("/");
+  const makeHref = (path: string) => [data.mountpath, "pages", path].join("/");
 
   const [id] = useStore((state) => [state.id]);
 
@@ -42,7 +44,7 @@ const PreviewLayout: React.FC<{
     }
   };
 
-  const footerItems = FOOTER_ITEMS.map((key) => {
+  const flowSettingsContent = FOOTER_ITEMS.map((key) => {
     const setting = settings?.elements && settings?.elements[key];
 
     if (setting?.show) {
@@ -52,7 +54,20 @@ const PreviewLayout: React.FC<{
         bold: key === "help",
       };
     }
-  }).filter((item): item is { title: string; href: string; bold: boolean } =>
+  });
+
+  const globalFooterItems = footerContent
+    ? Object.entries(footerContent).map(([slug, item]) => ({
+        title: item.heading,
+        content: item.content,
+        href: makeHref(slug),
+      }))
+    : [];
+
+  const footerItems = [
+    ...flowSettingsContent,
+    ...globalFooterItems,
+  ].filter((item): item is { title: string; href: string; bold: boolean } =>
     Boolean(item)
   );
 
@@ -91,7 +106,7 @@ const PreviewLayout: React.FC<{
         </ErrorBoundary>
       </Box>
 
-      <Footer items={footerItems}>
+      <Footer items={[...footerItems]}>
         <Box display="flex" alignItems="center">
           <Box pr={3} display="flex">
             <img src={Logo} />
