@@ -42,7 +42,7 @@ const errorLink = onError(({ graphQLErrors }) => {
       )
     );
   } else {
-    toast.error("There's been an error. Retrying…", {
+    toast.error("Network error, attempting to reconnect…", {
       toastId,
       autoClose: false,
       hideProgressBar: true,
