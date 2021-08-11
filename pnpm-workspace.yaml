@@ -1,0 +1,8 @@
+packages:
+  - api.planx.uk
+  - editor.planx.uk
+  # - e2e
+  - hasura.planx.uk
+  - hasura.planx.uk/tests
+  - infrastructure/**
+  - sharedb.planx.uk
