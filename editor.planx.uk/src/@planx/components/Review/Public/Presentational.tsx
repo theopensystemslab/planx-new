@@ -5,7 +5,6 @@ import { TYPES } from "@planx/components/types";
 import type { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React from "react";
-import { Layer, Source, StaticMap } from "react-map-gl";
 
 export default Component;
 
@@ -256,6 +255,16 @@ function DrawBoundary(props: ComponentProps) {
     throw Error("boundary geojson or file expected but not found");
   }
 
+  // XXX: `geojsonData` prop currently expects a FeatureCollection with quoted property names
+  let geodata = data;
+  if ((data.type = "Feature")) {
+    geodata = {
+      type: "FeatureCollection",
+      features: [data],
+    };
+    geodata = JSON.stringify(geodata);
+  }
+
   return (
     <>
       <div>Site boundary</div>
@@ -265,59 +274,10 @@ function DrawBoundary(props: ComponentProps) {
             Your uploaded location plan
           </a>
         ) : (
-          <StaticMap
-            longitude={Number(longitude)}
-            latitude={Number(latitude)}
-            zoom={18}
-            height={300}
-            width={400}
-            mapStyle={
-              "mapbox://styles/opensystemslab/ckbuw2xmi0mum1il33qucl4dv"
-            }
-            mapboxApiAccessToken={
-              process.env.REACT_APP_MAPBOX_ACCESS_TOKEN ?? ""
-            }
-          >
-            <Source
-              id="source_id"
-              type="raster"
-              tiles={[
-                `https://api.os.uk/maps/raster/v1/zxy/Road_3857/{z}/{x}/{y}.png?key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`,
-              ]}
-              tileSize={256}
-            >
-              <Layer
-                type="raster"
-                paint={{}}
-                layout={{
-                  visibility: "visible",
-                }}
-              />
-            </Source>
-            <Source id="boundary-geojson" type="geojson" data={data}>
-              <Layer
-                type="fill"
-                paint={{
-                  "fill-color": "rgb(189,189,189)",
-                  "fill-opacity": 0.4,
-                }}
-                layout={{
-                  visibility: "visible",
-                }}
-              />
-              <Layer
-                type="line"
-                paint={{
-                  "line-color": "rgb(255, 0, 0)",
-                  "line-width": 2,
-                  "line-dasharray": [6, 3],
-                }}
-                layout={{
-                  visibility: "visible",
-                }}
-              />
-            </Source>
-          </StaticMap>
+          <>
+            {/* @ts-ignore */}
+            <my-map geojsonData={geodata} />
+          </>
         )}
       </div>
     </>

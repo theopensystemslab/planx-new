@@ -343,7 +343,8 @@ export function PropertyInformation(props: any) {
     <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
       <Box className={styles.map}>
-        <Map zoom={18} lat={lat} lng={lng} />
+        {/* @ts-ignore */}
+        <my-map zoom={18} latitude={lat} longitude={lng} showFeaturesAtPoint />
       </Box>
       <Box mb={6}>
         {propertyDetails.map(({ heading, detail }: any) => (

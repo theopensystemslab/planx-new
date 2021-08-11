@@ -16,7 +16,6 @@ import {
   DEFAULT_TITLE_FOR_UPLOADING,
   PASSPORT_UPLOAD_KEY,
 } from "../model";
-import Map from "./Map";
 import Upload from "./Upload";
 
 export type Props = PublicProps<DrawBoundary>;
@@ -68,11 +67,18 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <Box className={classes.map}>
-            <Map
+            {/* <Map
               zoom={18}
               lat={Number(passport?.data?._address?.latitude)}
               lng={Number(passport?.data?._address?.longitude)}
               setBoundary={setBoundary}
+            /> */}
+            {/* @ts-ignore */}
+            <my-map
+              zoom={19}
+              latitude={Number(passport?.data?._address?.latitude)}
+              longitude={Number(passport?.data?._address?.longitude)}
+              drawMode
             />
           </Box>
           <p className={classes.uploadInstead}>
