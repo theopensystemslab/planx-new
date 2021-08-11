@@ -68,7 +68,7 @@ test
   await t.click(Selector("h2").withText(TEAM_NAME));
 
   // Expect error toast
-  const toastText = "There's been an error. Retrying…"
+  const toastText = "Network error, attempting to reconnect…"
   await t.expect(Selector("div").withText(toastText).exists).ok();
 
   // Switch back from mocked api
