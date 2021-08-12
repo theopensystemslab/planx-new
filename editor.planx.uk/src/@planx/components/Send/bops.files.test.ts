@@ -121,7 +121,7 @@ describe("It extracts tags for", () => {
       key: "property.photograph",
       tags: ["Existing", "Photograph"],
     },
-    Visualiasation: {
+    Visualisation: {
       key: "proposal.visualisation",
       tags: ["Proposed" /*"Visualisation"*/],
     },
@@ -194,7 +194,7 @@ describe("It extracts tags for", () => {
       key: "proposal.document.bankStatement",
       tags: ["Proposed" /*"Document",*/, "Bank Statement"],
     },
-    "Statuatory declaration": {
+    "Statutory declaration": {
       key: "proposal.document.declaration",
       tags: ["Proposed" /*"Document",*/, "Statutory Declaration"],
     },
