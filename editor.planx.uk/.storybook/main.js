@@ -5,8 +5,6 @@ module.exports = {
   addons: ["@storybook/addon-links", "@storybook/addon-essentials"],
   webpackFinal: async (config) => {
     config.resolve.plugins.push(new TsconfigPathsPlugin({}));
-    // Required for Mapbox
-    config.node = { fs: "empty" };
     return config;
   },
 };
