@@ -1,4 +1,4 @@
-import parseISO from "date-fns/parseISO";
+import { isValid, parseISO } from "date-fns";
 import { SchemaOf, string } from "yup";
 
 import { MoreInformation, parseMoreInformation } from "../shared";
@@ -15,9 +15,12 @@ export interface DateInput extends MoreInformation {
   max?: string;
 }
 
-const isDateValid = (date: string) =>
-  // possibly replaceable with isValid(parseISO(date))?
-  parseISO(date).toString() !== "Invalid Date";
+export const isDateValid = (date: string) => {
+  // make sure we've got DD, MM, & YYYY
+  const isComplete = date.split("-").filter((n) => n.length > 0).length === 3;
+
+  return isComplete && isValid(parseISO(date));
+};
 
 const displayDate = (date: string): string | undefined => {
   if (!isDateValid(date)) {
@@ -27,15 +30,22 @@ const displayDate = (date: string): string | undefined => {
   return `${day}.${month}.${year}`;
 };
 
-export const dateSchema: (params: {
+export const dateSchema = () => {
+  return string().test(
+    "valid",
+    "Enter a valid date",
+    (date: string | undefined) => {
+      return Boolean(date && isDateValid(date));
+    }
+  );
+};
+
+export const dateRangeSchema: (params: {
   min?: string;
   max?: string;
 }) => SchemaOf<string> = (params) =>
-  string()
+  dateSchema()
     .required()
-    .test("valid", "Enter a valid date", (date: string | undefined) => {
-      return Boolean(date && isDateValid(date));
-    })
     .test({
       name: "too soon",
       message: `Enter a date later than ${

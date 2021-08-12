@@ -1,5 +1,5 @@
 import type { DateInput } from "@planx/components/DateInput/model";
-import { parseDateInput } from "@planx/components/DateInput/model";
+import { dateSchema, parseDateInput } from "@planx/components/DateInput/model";
 import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
@@ -15,6 +15,7 @@ import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
+import { object } from "yup";
 
 export type Props = EditorProps<TYPES.DateInput, DateInput>;
 
@@ -29,8 +30,13 @@ const DateInputComponent: React.FC<Props> = (props) => {
         });
       }
     },
-    validate: () => {},
+    validateOnChange: true,
+    validationSchema: object({
+      min: dateSchema(),
+      max: dateSchema(),
+    }),
   });
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -74,6 +80,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
             <DateInputUi
               label="min"
               value={formik.values.min}
+              error={formik.errors.min}
               onChange={(newDate) => {
                 formik.setFieldValue("min", newDate);
               }}
@@ -83,6 +90,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
             <DateInputUi
               label="max"
               value={formik.values.max}
+              error={formik.errors.max}
               onChange={(newDate) => {
                 formik.setFieldValue("max", newDate);
               }}

@@ -1,5 +1,5 @@
 import type { DateInput, UserData } from "@planx/components/DateInput/model";
-import { dateSchema } from "@planx/components/DateInput/model";
+import { dateRangeSchema } from "@planx/components/DateInput/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
@@ -24,7 +24,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: object({
-      date: dateSchema({ min: props.min, max: props.max }),
+      date: dateRangeSchema({ min: props.min, max: props.max }),
     }),
   });
 
