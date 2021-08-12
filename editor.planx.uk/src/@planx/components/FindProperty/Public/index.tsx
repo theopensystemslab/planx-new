@@ -2,7 +2,6 @@ import "./map.css";
 
 import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -26,7 +25,6 @@ import CollapsibleInput from "ui/CollapsibleInput";
 
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
-import Map from "./Map";
 
 type Props = PublicProps<FindProperty>;
 
@@ -156,8 +154,6 @@ function GetAddress(props: {
   title?: string;
   description?: string;
 }) {
-  const [boundary, setBoundary] = useState(null);
-  const [useMap, setUseMap] = useState<Boolean>(false);
   const [postcode, setPostcode] = useState<string | null>();
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
   const [selectedOption, setSelectedOption] = useState<Option | undefined>();
@@ -199,98 +195,55 @@ function GetAddress(props: {
         title={props.title || DEFAULT_TITLE}
         description={props.description || ""}
       />
-      {useMap ? (
-        // Using map
-        <Box>
-          <Map
-            // center map to UK + zoom map appropriately
-            zoom={17.5}
-            lat={51.2754385}
-            lng={1.0848595}
-            setBoundary={(val: any) => setBoundary(val)}
-          />
-
-          {boundary && (
-            <>
-              <Box mb={3}>
-                The boundary you have drawn is{" "}
-                <strong>
-                  {(boundary as any).area}m<sup>2</sup>
-                </strong>
-              </Box>
-              <Button variant="contained" size="large" color="primary">
-                Continue
-              </Button>
-            </>
-          )}
-        </Box>
-      ) : (
-        // Using postcode
-        <>
-          <Box pb={2}>
-            <FormInput
-              placeholder="Enter the postcode of the property"
-              value={postcode || ""}
-              onChange={(e: any) => {
-                // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
-                //      so this code attempts to validate postcodes without blocking any characters.
-                const input = e.target.value;
-                if (parse(input.trim()).valid) {
-                  setSanitizedPostcode(toNormalised(input.trim()));
-                  setPostcode(toNormalised(input.trim()));
-                } else {
-                  setSanitizedPostcode(null);
-                  setPostcode(input.toUpperCase());
-                }
-              }}
-            />
-            {Boolean(data?.addresses?.length) && (
-              <Autocomplete
-                options={data.addresses
-                  .map(
-                    (address: Address): Option => ({
-                      ...address,
-                      // we already know the postcode so remove it from full address
-                      title: address.single_line_address.replace(
-                        `, ${address.postcode}`,
-                        ""
-                      ),
-                    })
-                  )
-                  .sort((a: Option, b: Option) => sorter(a.title, b.title))}
-                getOptionLabel={(option: Option) => option.title}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Address"
-                    variant="outlined"
-                    style={{ marginTop: 20 }}
-                    autoFocus
-                  />
-                )}
-                onChange={(event, selectedOption) => {
-                  if (selectedOption) {
-                    setSelectedOption(selectedOption);
-                  }
-                }}
+      <Box pb={2}>
+        <FormInput
+          placeholder="Enter the postcode of the property"
+          value={postcode || ""}
+          onChange={(e: any) => {
+            // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
+            //      so this code attempts to validate postcodes without blocking any characters.
+            const input = e.target.value;
+            if (parse(input.trim()).valid) {
+              setSanitizedPostcode(toNormalised(input.trim()));
+              setPostcode(toNormalised(input.trim()));
+            } else {
+              setSanitizedPostcode(null);
+              setPostcode(input.toUpperCase());
+            }
+          }}
+        />
+        {Boolean(data?.addresses?.length) && (
+          <Autocomplete
+            options={data.addresses
+              .map(
+                (address: Address): Option => ({
+                  ...address,
+                  // we already know the postcode so remove it from full address
+                  title: address.single_line_address.replace(
+                    `, ${address.postcode}`,
+                    ""
+                  ),
+                })
+              )
+              .sort((a: Option, b: Option) => sorter(a.title, b.title))}
+            getOptionLabel={(option: Option) => option.title}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Address"
+                variant="outlined"
+                style={{ marginTop: 20 }}
+                autoFocus
               />
             )}
-          </Box>
-          {/* Map is disabled for now
-            <Box pb={2} color="text.primary">
-              <a
-                href="!#"
-                style={{ color: "inherit" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setUseMap(true);
-                }}
-              >
-                Find the property on a map
-              </a>
-            </Box>*/}
-        </>
-      )}
+            onChange={(event, selectedOption) => {
+              if (selectedOption) {
+                setSelectedOption(selectedOption);
+              }
+            }}
+          />
+        )}
+      </Box>
     </Card>
   );
 }
@@ -344,7 +297,14 @@ export function PropertyInformation(props: any) {
       <QuestionHeader title={title} description={description} />
       <Box className={styles.map}>
         {/* @ts-ignore */}
-        <my-map zoom={18} latitude={lat} longitude={lng} showFeaturesAtPoint />
+        <my-map
+          zoom={19.5}
+          latitude={lat}
+          longitude={lng}
+          osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+          showFeaturesAtPoint
+          osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY}
+        />
       </Box>
       <Box mb={6}>
         {propertyDetails.map(({ heading, detail }: any) => (

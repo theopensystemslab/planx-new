@@ -255,16 +255,6 @@ function DrawBoundary(props: ComponentProps) {
     throw Error("boundary geojson or file expected but not found");
   }
 
-  // XXX: `geojsonData` prop currently expects a FeatureCollection with quoted property names
-  let geodata = data;
-  if ((data.type = "Feature")) {
-    geodata = {
-      type: "FeatureCollection",
-      features: [data],
-    };
-    geodata = JSON.stringify(geodata);
-  }
-
   return (
     <>
       <div>Site boundary</div>
@@ -276,7 +266,10 @@ function DrawBoundary(props: ComponentProps) {
         ) : (
           <>
             {/* @ts-ignore */}
-            <my-map geojsonData={geodata} />
+            <my-map
+              geojsonData={JSON.stringify(data)}
+              osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+            />
           </>
         )}
       </div>
