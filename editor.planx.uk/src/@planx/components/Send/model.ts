@@ -70,23 +70,38 @@ export interface QuestionAndResponses {
   responses: Array<Response>;
 }
 
+// Using PLAN_TAGS & EVIDENCE_TAGS provided by BOPS, from:
+// https://github.com/unboxed/bops/blob/master/app/models/document.rb
+// will also be in POST Schema https://ripa.bops.services/api-docs
+type PlanTag =
+  | "Front"
+  | "Rear"
+  | "Side"
+  | "Roof"
+  | "Floor"
+  | "Site"
+  | "Plan"
+  | "Elevation"
+  | "Section"
+  | "Proposed"
+  | "Existing";
+
+type EvidenceTag =
+  | "Photograph"
+  | "Utility Bill"
+  | "Building Control Certificate"
+  | "Construction Invoice"
+  | "Council Tax Document"
+  | "Tenancy Agreement"
+  | "Tenancy Invoice"
+  | "Bank Statement"
+  | "Statutory Declaration"
+  | "Other"
+  | "Sitemap";
+
+export type FileTag = PlanTag | EvidenceTag;
+
 interface File {
   filename: string;
-  tags?: Array<string>;
-}
-
-// Extracted from:
-// https://github.com/unboxed/bops/blob/master/app/models/document.rb
-export enum BOPS_TAGS {
-  Front = "Front",
-  Rear = "Rear",
-  Side = "Side",
-  Roof = "Roof",
-  Floor = "Floor",
-  Site = "Site",
-  Plan = "Plan",
-  Elevation = "Elevation",
-  Section = "Section",
-  Proposed = "Proposed",
-  Existing = "Existing",
+  tags?: Array<FileTag>;
 }
