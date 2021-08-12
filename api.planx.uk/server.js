@@ -32,10 +32,10 @@ const airbrake = require("./airbrake");
 const router = express.Router();
 
 // when login failed, send failed msg
-router.get("/login/failed", (_req, res) => {
-  res.status(401).json({
+router.get("/login/failed", (_req, _res, next) => {
+  next({
+    status: 401,
     message: "user failed to authenticate.",
-    success: false,
   });
 });
 
