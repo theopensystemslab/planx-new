@@ -2,6 +2,7 @@ const nock = require("nock");
 const supertest = require("supertest");
 const loadOrRecordNockRequests = require("./tests/loadOrRecordNockRequests");
 
+const { queryMock } = require("./tests/graphqlQueryMock");
 const app = require("./server");
 
 it("works", async () => {
@@ -14,6 +15,13 @@ it("works", async () => {
 });
 
 it("mocks hasura", async () => {
+  queryMock.mockQuery({
+    name: "GetTeams",
+    data: {
+      teams: [{ id: 1 }],
+    },
+  });
+
   await supertest(app)
     .get("/hasura")
     .expect(200)
@@ -34,6 +42,20 @@ it("mocks hasura", async () => {
 ].forEach(({ env, bopsApiRootDomain }) => {
   describe(`sending an application to BOPS ${env}`, () => {
     const ORIGINAL_BOPS_API_ROOT_DOMAIN = process.env.BOPS_API_ROOT_DOMAIN;
+
+    beforeEach(() => {
+      queryMock.mockQuery({
+        name: "CreateApplication",
+        matchOnVariables: false,
+        data: {
+          insert_bops_applications_one: { id: 22 },
+        },
+        variables: {
+          destination_url:
+            "https://southwark.bops.services/api/v1/planning_applications",
+        },
+      });
+    });
 
     beforeAll(() => {
       process.env.BOPS_API_ROOT_DOMAIN = bopsApiRootDomain;
