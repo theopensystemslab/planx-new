@@ -178,6 +178,8 @@ jobs:
     name: Deploy PR Staging Environment
     runs-on: ubuntu-latest
     # needs: [test_and_build, integration_tests]
+    env:
+      VULTR_API_KEY: ${{ secrets.VULTR_API_KEY }}
     steps:
       - name: Install vultr-cli
         uses: techknowlogick/action-vultr@v2
