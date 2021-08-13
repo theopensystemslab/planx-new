@@ -19,7 +19,6 @@ const flowSettingsRoutes = compose(
         query: gql`
           query GetFlow($slug: String!, $team_slug: String!) {
             flows(
-              order_by: { name: asc }
               limit: 1
               where: {
                 slug: { _eq: $slug }

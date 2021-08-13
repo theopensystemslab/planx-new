@@ -2,6 +2,7 @@ import { Store } from "pages/FlowEditor/lib/store";
 
 import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
 import { extractTagsFromPassportKey, getParams } from "./bops";
+import type { FileTag } from "./model";
 
 const flow: Store.flow = {
   _root: {
@@ -46,15 +47,21 @@ test("makes file object", () => {
   const expected = [
     {
       filename: "http://example.com/planning-application-location-plan.jpeg",
-      tags: ["Existing", "Elevation", "Plan"],
+      tags: ["Existing", "Elevation"],
     },
   ];
 
   expect(actual).toEqual(expected);
 });
 
+interface TestTag {
+  key: string;
+  tags: Array<FileTag>;
+}
+
+// Google Sheet listing tags: https://bit.ly/3yIscgc
 describe("It extracts tags for", () => {
-  const data = {
+  const data: Record<string, TestTag> = {
     "No passport key": {
       key: "",
       tags: [],
@@ -63,63 +70,139 @@ describe("It extracts tags for", () => {
       key: "foo",
       tags: [],
     },
-    "Existing floor plan": {
-      key: "property.drawing.plan",
-      tags: ["Existing", "Floor", "Plan"],
-    },
-    "Proposed floor plan": {
-      key: "proposal.drawing.plan",
-      tags: ["Proposed", "Floor", "Plan"],
+    "Location plan": {
+      key:
+        PASSPORT_UPLOAD_KEY === "proposal.drawing.locationPlan"
+          ? PASSPORT_UPLOAD_KEY
+          : "key changed unexpectedly!",
+      tags: ["Proposed", /*"Drawing", "Location",*/ "Plan"],
     },
     "Existing site plan": {
       key: "property.drawing.sitePlan",
-      tags: ["Existing", "Site", "Plan"],
+      tags: ["Existing", /*"Drawing",*/ "Site", "Plan"],
     },
     "Proposed site plan": {
       key: "proposal.drawing.sitePlan",
-      tags: ["Proposed", "Site", "Plan"],
+      tags: ["Proposed", /*"Drawing",*/ "Site", "Plan"],
     },
-    "Existing elevations": {
-      key: "property.drawing.elevation",
-      tags: ["Existing", "Elevation", "Plan"],
+    "Existing floor plan": {
+      key: "property.drawing.floorPlan",
+      tags: ["Existing", /*"Drawing",*/ "Floor", "Plan"],
     },
-    "Proposed elevations": {
-      key: "proposal.drawing.elevation",
-      tags: ["Proposed", "Elevation", "Plan"],
-    },
-    "Existing sections": {
-      key: "property.drawing.section",
-      tags: ["Existing", "Section", "Plan"],
-    },
-    "Proposed sections": {
-      key: "proposal.drawing.section",
-      tags: ["Proposed", "Section", "Plan"],
+    "Proposed floor plan": {
+      key: "proposal.drawing.floorPlan",
+      tags: ["Proposed", /*"Drawing",*/ "Floor", "Plan"],
     },
     "Existing roof plan": {
       key: "property.drawing.roofPlan",
-      tags: ["Existing", "Roof", "Plan"],
+      tags: ["Existing", /*"Drawing",*/ "Roof", "Plan"],
     },
     "Proposed roof plan": {
       key: "proposal.drawing.roofPlan",
-      tags: ["Proposed", "Roof", "Plan"],
+      tags: ["Proposed", /*"Drawing",*/ "Roof", "Plan"],
     },
-    // The following require more tags to be made available by BOPS
-    Photographs: { key: "proposal.photograph.existing", tags: ["Proposed"] },
-    Visualisations: { key: "proposal.visualisation", tags: ["Proposed"] },
-    "Additional drawing": { key: "proposal.drawing.other", tags: ["Proposed"] },
-    "Additional document": {
+    "Existing elevations": {
+      key: "property.drawing.elevation",
+      tags: ["Existing", /*"Drawing",*/ "Elevation"],
+    },
+    "Proposed elevations": {
+      key: "proposal.drawing.elevation",
+      tags: ["Proposed", /*"Drawing",*/ "Elevation"],
+    },
+    "Existing sections": {
+      key: "property.drawing.section",
+      tags: ["Existing", /*"Drawing",*/ "Section"],
+    },
+    "Proposed sections": {
+      key: "proposal.drawing.section",
+      tags: ["Proposed", /*"Drawing",*/ "Section"],
+    },
+    "Existing Photographs": {
+      key: "property.photograph",
+      tags: ["Existing", "Photograph"],
+    },
+    Visualisation: {
+      key: "proposal.visualisation",
+      tags: ["Proposed" /*"Visualisation"*/],
+    },
+    "Proposed outbuilding roof plan": {
+      key: "proposal.drawing.roofPlan.outbuilding",
+      tags: ["Proposed", /*"Drawing",*/ "Roof", "Plan"],
+    },
+    "Proposed extension roof plan": {
+      key: "proposal.drawing.roofPlan.extension",
+      tags: ["Proposed", /*"Drawing",*/ "Roof", "Plan"],
+    },
+    "Proposed porch roof plan": {
+      key: "proposal.drawing.roofPlan.porch",
+      tags: ["Proposed", /*"Drawing",*/ "Roof", "Plan"],
+    },
+    "Existing use plan": {
+      key: "property.drawing.usePlan",
+      tags: ["Existing", /*"Drawing", "Use",*/ "Plan"],
+    },
+    "Proposed use plan": {
+      key: "proposal.drawing.usePlan",
+      tags: ["Proposed", /*"Drawing", "Use",*/ "Plan"],
+    },
+    "Existing unit plans": {
+      key: "property.drawing.unitPlan",
+      tags: ["Existing", /*"Drawing", "Unit",*/ "Plan"],
+    },
+    "Proposed unit plans": {
+      key: "proposal.drawing.unitPlan",
+      tags: ["Proposed", /*"Drawing", "Unit",*/ "Plan"],
+    },
+    "Additional drawings": {
+      key: "proposal.drawing.other",
+      tags: ["Proposed" /*"Drawing"*/],
+    },
+    "Additional documents": {
       key: "proposal.document.other",
-      tags: ["Proposed"],
+      tags: ["Proposed" /*"Document"*/],
     },
-    "Site boundary PDF": {
-      key: PASSPORT_UPLOAD_KEY,
-      tags: ["Proposed", "Plan"],
+    // Evidence of immunity
+    Photographs: {
+      key: "proposal.photograph",
+      tags: ["Proposed", "Photograph"],
+    },
+    "Utility bill": {
+      key: "proposal.document.utility.bill",
+      tags: ["Proposed" /*"Document",*/, "Utility Bill"],
+    },
+    "Building control certificate": {
+      key: "proposal.document.buildingControl.certificate",
+      tags: ["Proposed" /*"Document",*/, "Building Control Certificate"],
+    },
+    "Construction invoice": {
+      key: "proposal.document.construction.invoice",
+      tags: ["Proposed" /*"Document",*/, "Construction Invoice"],
+    },
+    "Council tax documents": {
+      key: "proposal.document.councilTaxBill",
+      tags: ["Proposed" /*"Document",*/, "Council Tax Document"],
+    },
+    "Tenancy agreements": {
+      key: "proposal.document.tenancyAgreement",
+      tags: ["Proposed" /*"Document",*/, "Tenancy Agreement"],
+    },
+    "Tenancy invoices": {
+      key: "proposal.document.tenancyInvoice",
+      tags: ["Proposed" /*"Document"*,*/, "Tenancy Invoice"],
+    },
+    "Bank statements": {
+      key: "proposal.document.bankStatement",
+      tags: ["Proposed" /*"Document",*/, "Bank Statement"],
+    },
+    "Statutory declaration": {
+      key: "proposal.document.declaration",
+      tags: ["Proposed" /*"Document",*/, "Statutory Declaration"],
     },
   };
 
   Object.entries(data).forEach(([example, { key, tags }]) => {
     test(example, () => {
-      expect(extractTagsFromPassportKey(key)).toEqual(tags);
+      expect(extractTagsFromPassportKey(key)).toStrictEqual(tags);
     });
   });
 });

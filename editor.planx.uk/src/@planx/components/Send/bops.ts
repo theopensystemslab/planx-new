@@ -4,17 +4,19 @@
 // POST data payloads accepted by the BOPS API, see:
 // https://southwark.preview.bops.services/api-docs/index.html
 
-import { DEFAULT_FLAG_CATEGORY, flatFlags } from "pages/FlowEditor/data/flags";
+import { airbrake } from "airbrake";
+import { flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
 
 import { Store } from "../../../pages/FlowEditor/lib/store";
 import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY, toPence } from "../Pay/model";
+import { removeNilValues } from "../shared/utils";
 import { TYPES } from "../types";
 import {
-  BOPS_TAGS,
   BOPSFullPayload,
+  FileTag,
   QuestionAndResponses,
   QuestionMetaData,
   Response,
@@ -249,15 +251,11 @@ export function getParams(
 
   // 5. keys
 
-  const bopsData = Object.entries(bopsDictionary).reduce(
-    (acc, [bopsField, planxField]) => {
-      const value = passport.data?.[planxField];
-      if (value !== undefined && value !== null) {
-        acc[bopsField as keyof BOPSFullPayload] = value;
-      }
+  const bopsData = removeNilValues(
+    Object.entries(bopsDictionary).reduce((acc, [bopsField, planxField]) => {
+      acc[bopsField as keyof BOPSFullPayload] = passport.data?.[planxField];
       return acc;
-    },
-    {} as Partial<BOPSFullPayload>
+    }, {} as Partial<BOPSFullPayload>)
   );
 
   // 6. questions+answers array
@@ -274,30 +272,18 @@ export function getParams(
 
   // 8. flag data
 
-  const resultId = Object.keys(breadcrumbs).find(
-    (id) => flow[id]?.type === TYPES.Result
-  );
-  if (resultId) {
-    const result = getResultData(
-      breadcrumbs,
-      flow,
-      DEFAULT_FLAG_CATEGORY,
-      flow[resultId].data?.overrides
-    );
-    const firstResult = Object.values(result)?.[0] as any;
-    const flag = firstResult?.flag?.value;
-
-    if (flag) {
-      data.result = Object.entries({
-        flag: [firstResult.flag.category, firstResult.flag.text].join(" / "),
-        heading: firstResult.displayText?.heading,
-        description: firstResult.displayText?.description,
-        override: passport?.data?.["application.resultOverride.reason"],
-      }).reduce((acc, [k, v]) => {
-        if (v) acc[k] = v;
-        return acc;
-      }, {} as Record<string, any>);
-    }
+  try {
+    const result = getResultData(breadcrumbs, flow);
+    const { flag } = Object.values(result)[0];
+    data.result = removeNilValues({
+      flag: [flag.category, flag.text].join(" / "),
+      heading: flag.text,
+      description: flag.officerDescription,
+      override: passport?.data?.["application.resultOverride.reason"],
+    });
+  } catch (err) {
+    console.error("unable to get flag result", err);
+    airbrake?.notify(err);
   }
 
   return {
@@ -327,36 +313,51 @@ export const getWorkStatus = (passport: Store.passport) => {
  * More info: https://bit.ly/tags-spreadsheet
  */
 export const extractTagsFromPassportKey = (passportKey: string) => {
-  const tags: BOPS_TAGS[] = [];
+  const tags: FileTag[] = [];
 
   if (!passportKey) return tags;
 
   const splitKey = passportKey.split(".");
 
   if (splitKey[0] === "proposal") {
-    tags.push(BOPS_TAGS.Proposed);
+    tags.push("Proposed");
   } else if (splitKey[0] === "property") {
-    tags.push(BOPS_TAGS.Existing);
+    tags.push("Existing");
   }
 
   if (splitKey.includes("sitePlan")) {
-    tags.push(BOPS_TAGS.Site);
-    tags.push(BOPS_TAGS.Plan);
+    tags.push("Site");
+    tags.push("Plan");
   } else if (splitKey.includes("roofPlan")) {
-    tags.push(BOPS_TAGS.Roof);
-    tags.push(BOPS_TAGS.Plan);
+    tags.push("Roof");
+    tags.push("Plan");
   } else if (splitKey.includes("elevation")) {
-    tags.push(BOPS_TAGS.Elevation);
-    tags.push(BOPS_TAGS.Plan);
+    tags.push("Elevation");
+  } else if (splitKey.includes("photograph")) {
+    tags.push("Photograph");
   } else if (splitKey.includes("section")) {
-    tags.push(BOPS_TAGS.Section);
-    tags.push(BOPS_TAGS.Plan);
-  } else if (splitKey.includes("locationPlan")) {
-    // XXX: no Location-related tag provided by BOPS
-    tags.push(BOPS_TAGS.Plan);
-  } else if (splitKey.includes("plan")) {
-    tags.push(BOPS_TAGS.Floor);
-    tags.push(BOPS_TAGS.Plan);
+    tags.push("Section");
+  } else if (splitKey.includes("floorPlan")) {
+    tags.push("Floor");
+    tags.push("Plan");
+  } else if (splitKey.includes("councilTaxBill")) {
+    tags.push("Council Tax Document");
+  } else if (splitKey.includes("tenancyAgreement")) {
+    tags.push("Tenancy Agreement");
+  } else if (splitKey.includes("tenancyInvoice")) {
+    tags.push("Tenancy Invoice");
+  } else if (splitKey.includes("bankStatement")) {
+    tags.push("Bank Statement");
+  } else if (splitKey.includes("declaration")) {
+    tags.push("Statutory Declaration");
+  } else if (passportKey.includes("utility.bill")) {
+    tags.push("Utility Bill");
+  } else if (passportKey.includes("buildingControl.certificate")) {
+    tags.push("Building Control Certificate");
+  } else if (passportKey.includes("construction.invoice")) {
+    tags.push("Construction Invoice");
+  } else if (splitKey.some((x) => x.endsWith("Plan"))) {
+    tags.push("Plan");
   }
 
   return tags;

@@ -13,7 +13,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { client } from "lib/graphql";
 import debounce from "lodash/debounce";
-import type { FlowSettings } from "types";
+import type { FlowSettings, TextContent } from "types";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { FlowLayout } from "../../components/Flow";
@@ -75,6 +75,7 @@ export interface EditorStore extends Store.Store {
     flowSlug: string,
     newSettings: FlowSettings
   ) => Promise<number>;
+  updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
   updateNode: (node: any, relationships?: any) => void;
 }
 
@@ -370,6 +371,27 @@ export const editorStore = (
     });
 
     return response.data.update_flows.affected_rows;
+  },
+
+  updateGlobalSettings: async (newSettings: { [key: string]: TextContent }) => {
+    let response = await client.mutate({
+      mutation: gql`
+        mutation UpdateGlobalSettings($new_settings: jsonb) {
+          insert_global_settings(
+            objects: { id: 1, footer_content: $new_settings }
+            on_conflict: {
+              constraint: global_settings_pkey
+              update_columns: footer_content
+            }
+          ) {
+            affected_rows
+          }
+        }
+      `,
+      variables: {
+        new_settings: newSettings,
+      },
+    });
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {

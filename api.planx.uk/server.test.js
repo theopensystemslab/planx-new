@@ -210,13 +210,13 @@ describe("fetching GIS data from local authorities", () => {
     },
     {
       council: "canterbury",
-      x: 615806.3528948927,
-      y: 157824.02262987028,
+      x: 621192.0132463141,
+      y: 157770.55052344775,
     },
     {
       council: "lambeth",
-      x: 531372.771064619,
-      y: 177420.151319974,
+      x: 530622.7463248332,
+      y: 178706.16704920324,
     },
     {
       council: "southwark",

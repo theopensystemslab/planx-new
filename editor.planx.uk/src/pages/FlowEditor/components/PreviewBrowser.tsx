@@ -152,6 +152,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
                     : "No new changes to publish"
                 );
               }}
+              disabled={window.location.hostname.endsWith("planx.uk")}
             >
               PUBLISH
             </Button>

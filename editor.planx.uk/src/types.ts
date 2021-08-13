@@ -1,5 +1,7 @@
 import { useFormik } from "formik";
 
+export type Maybe<T> = T | undefined;
+
 export type FormikHookReturn = ReturnType<typeof useFormik>;
 
 export interface Flow {
@@ -25,14 +27,11 @@ interface TeamSettings {
   };
 }
 
-export const FOOTER_ITEMS = [
-  "help",
-  "privacy",
-  "accessibility",
-  "license",
-  "cookies",
-  "termsOfUse",
-];
+export interface GlobalSettings {
+  footerContent?: { [key: string]: TextContent };
+}
+
+export const FOOTER_ITEMS = ["privacy", "help"];
 
 const FLOW_SETTINGS = [...FOOTER_ITEMS, "legalDisclaimer"] as const;
 export interface FlowSettings {
@@ -53,6 +52,9 @@ export interface Flag {
   text: string;
   bgColor: string;
   color: string;
+  // XXX: will be removed when flags are more dynamic. For the immediate future
+  //      it's convenient to store a definition for BOPS users with the data.
+  officerDescription?: string;
 }
 
 export interface Node {

@@ -28,7 +28,7 @@ export interface Address {
   y: number;
   planx_description: string;
   planx_value: string;
-  full_address: string;
+  single_line_address: string;
 }
 
 export const DEFAULT_TITLE = "Find the property" as const;

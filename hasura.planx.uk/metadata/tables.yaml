@@ -12,20 +12,21 @@
   - role: public
     permission:
       columns:
-      - uprn
       - blpu_code
       - latitude
       - longitude
       - organisation
-      - sao
       - pao
-      - street
-      - town
-      - postcode
-      - x
-      - "y"
       - planx_description
       - planx_value
+      - postcode
+      - sao
+      - single_line_address
+      - street
+      - town
+      - uprn
+      - x
+      - "y"
       computed_fields:
       - full_address
       filter: {}
@@ -99,6 +100,9 @@
       computed_fields:
       - data_merged
       filter: {}
+- table:
+    schema: public
+    name: global_settings
 - table:
     schema: public
     name: operations
