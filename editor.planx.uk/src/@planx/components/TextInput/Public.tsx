@@ -45,6 +45,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
             return "text";
           })(props.type)}
           multiline={props.type === "long"}
+          rows={props.type === "long" ? 5 : undefined}
           name="text"
           value={formik.values.text}
           placeholder={props.placeholder || "Type your answer"}
