@@ -118,6 +118,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
     zIndex: 0,
   },
+  underlinedLink: {
+    textDecoration: "underline",
+    color: theme.palette.primary.main,
+  },
 }));
 
 const slotsSchema = array()
@@ -303,9 +307,14 @@ function Dropzone(props: any) {
         </Box>
         <Box flexGrow={1}>
           <Box>
-            {isDragActive
-              ? "Drop the files here"
-              : "Drop here or click to choose file"}
+            {isDragActive ? (
+              "Drop the files here"
+            ) : (
+              <>
+                Drag files here or{" "}
+                <span className={classes.underlinedLink}>choose a file</span>
+              </>
+            )}
           </Box>
           <Box color="text.secondary">pdf, jpg or png</Box>
         </Box>
