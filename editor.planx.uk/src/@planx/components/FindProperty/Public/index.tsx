@@ -304,6 +304,7 @@ export function PropertyInformation(props: any) {
           osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
           showFeaturesAtPoint
           osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY}
+          hideResetControl
         />
       </Box>
       <Box mb={6}>

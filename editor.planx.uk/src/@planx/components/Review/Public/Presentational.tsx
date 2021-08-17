@@ -269,6 +269,9 @@ function DrawBoundary(props: ComponentProps) {
             <my-map
               geojsonData={JSON.stringify(data)}
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+              hideResetControl
+              staticMode
+              style={{ width: "100%", height: "30vh" }}
             />
           </>
         )}
