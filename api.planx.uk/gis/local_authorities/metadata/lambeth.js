@@ -40,7 +40,6 @@ const planningConstraints = {
     source: lambethDomain,
     id: "LambethArticle4B1toC3",
     fields: ["OBJECTID", "NAME", "ARTICLE_4"],
-    where: "ARTICLE_4='KIBA'",
     neg: "is not subject to any Article 4 directions",
     pos: (data) => ({
       text: "is subject to an Article 4 direction(s)",
