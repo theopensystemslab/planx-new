@@ -1,11 +1,11 @@
-version: "3.7"
+version: "3.8"
 
 # If you change anything here (e.g. environment variables) remember to cascade the change to `infrastructure/`
 
 services:
   postgres:
     image: postgis/postgis:12-3.0-alpine
-    restart: always
+    restart: unless-stopped
     ports:
       - ${PG_PORT}:5432
     volumes:
@@ -15,6 +15,10 @@ services:
       POSTGRES_DB: ${PG_DATABASE}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_USER: ${PG_USERNAME}
+    labels:
+      virtual.host: postgres.${ROOT_DOMAIN}
+      virtual.port: 5432
+      virtual.tls: ${TLS_EMAIL}
 
   hasura:
     build:
@@ -27,7 +31,7 @@ services:
     volumes:
       - "./hasura.planx.uk/metadata:/hasura-metadata"
       - "./hasura.planx.uk/migrations:/hasura-migrations"
-    restart: always
+    restart: unless-stopped
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_CORS_DOMAIN: "*"
@@ -36,14 +40,18 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_JWT_SECRET: '{ "type": "HS256", "key": "${JWT_SECRET}" }'
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
+    labels:
+      virtual.host: hasura.${ROOT_DOMAIN}
+      virtual.port: 8080
+      virtual.tls: ${TLS_EMAIL}
 
   api:
-    restart: always
+    restart: unless-stopped
     build:
       context: ./api.planx.uk
       dockerfile: Dockerfile.dev
-    depends_on:
-      - hasura
+    # depends_on:
+    #   - hasura
     volumes:
       - "./api.planx.uk:/api"
       - "/api/node_modules"
@@ -71,9 +79,13 @@ services:
       GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE: ${GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE}
       GOV_UK_PAY_TOKEN_LAMBETH: ${GOV_UK_PAY_TOKEN_LAMBETH}
       GOV_UK_PAY_TOKEN_SOUTHWARK: ${GOV_UK_PAY_TOKEN_SOUTHWARK}
+    labels:
+      virtual.host: api.${ROOT_DOMAIN}
+      virtual.port: ${API_PORT}
+      virtual.tls: ${TLS_EMAIL}
 
   sharedb:
-    restart: always
+    restart: unless-stopped
     build:
       context: ./sharedb.planx.uk
       dockerfile: Dockerfile.dev
@@ -89,6 +101,10 @@ services:
     environment:
       JWT_SECRET: ${JWT_SECRET}
       PG_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
+    labels:
+      virtual.host: sharedb.${ROOT_DOMAIN}
+      virtual.port: 8000
+      virtual.tls: ${TLS_EMAIL}
 
   minio:
     image: minio/minio:latest
@@ -101,7 +117,7 @@ services:
       MINIO_ROOT_USER: ${AWS_ACCESS_KEY}
       MINIO_ROOT_PASSWORD: ${AWS_SECRET_KEY}
     entrypoint: sh
-    command:  -c "mkdir -p /data/${AWS_S3_BUCKET} && /usr/bin/minio server /data"
+    command: -c "mkdir -p /data/${AWS_S3_BUCKET} && /usr/bin/minio server /data"
     deploy:
       restart_policy:
         condition: on-failure
@@ -110,6 +126,23 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
-      
+    labels:
+      virtual.host: minio.${ROOT_DOMAIN}
+      virtual.port: 9000
+      virtual.tls: ${TLS_EMAIL}
+
+  caddy-gen:
+    container_name: caddy-gen
+    image: "wemakeservices/caddy-gen:latest"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - caddy_data:/data/caddy # to back up certificates
+    ports:
+      - "80:80"
+      - "443:443"
+
 volumes:
   data:
+  caddy_data:
+  caddy_config:
