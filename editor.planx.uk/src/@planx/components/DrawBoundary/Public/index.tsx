@@ -46,17 +46,23 @@ export default function Component(props: Props) {
   useEffect(() => {
     setUrl(undefined);
 
-    const map = document.querySelector("my-map");
+    const areaChangeHandler = ({ detail: area }: any) => {
+      setArea(area);
+    };
 
-    if (map) {
-      map.addEventListener("areaChange", ({ detail: area }) => {
-        setArea(area);
-      });
-      map.addEventListener("geojsonChange", ({ detail: geojson }) => {
-        // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
-        setBoundary(geojson.features[0]);
-      });
-    }
+    const geojsonChangeHandler = ({ detail: geojson }: any) => {
+      // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
+      setBoundary(geojson.features[0]);
+    };
+
+    const map = document.querySelector("my-map");
+    map?.addEventListener("areaChange", areaChangeHandler);
+    map?.addEventListener("geojsonChange", geojsonChangeHandler);
+
+    return function cleanup() {
+      map?.removeEventListener("areaChange", areaChangeHandler);
+      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
+    };
   }, [page, setArea, setBoundary, setUrl]);
 
   return (

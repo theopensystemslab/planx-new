@@ -302,8 +302,6 @@ export function PropertyInformation(props: any) {
           latitude={lat}
           longitude={lng}
           osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
-          showFeaturesAtPoint
-          osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY}
           hideResetControl
         />
       </Box>
