@@ -142,6 +142,24 @@ services:
       - "80:80"
       - "443:443"
 
+  storybook:
+    image: pierrezemb/gostatic
+    entrypoint: "/goStatic --fallback /index.html"
+    volumes:
+      - ./editor.planx.uk/storybook-static:/srv/http
+    labels:
+      virtual.host: storybook.${ROOT_DOMAIN}
+      virtual.port: 8043
+
+  editor:
+    image: pierrezemb/gostatic
+    volumes:
+      - ./editor.planx.uk/build:/srv/http
+    entrypoint: "/goStatic --fallback /index.html"
+    labels:
+      virtual.host: editor.${ROOT_DOMAIN}
+      virtual.port: 8043
+
 volumes:
   data:
   caddy_data:
