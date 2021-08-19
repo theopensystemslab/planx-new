@@ -5,7 +5,6 @@ declare module "js-cookie";
 declare module "pg-array";
 declare module "nanoid-good";
 declare module "nanoid-good/locale/en";
-declare module "mapbox-gl";
 declare module "react-html-parser";
 declare module "proj4";
 declare module "notifications-node-client";

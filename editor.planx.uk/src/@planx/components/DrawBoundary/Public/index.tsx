@@ -5,7 +5,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
-import turfArea from "@turf/area";
 import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -16,7 +15,6 @@ import {
   DEFAULT_TITLE_FOR_UPLOADING,
   PASSPORT_UPLOAD_KEY,
 } from "../model";
-import Map from "./Map";
 import Upload from "./Upload";
 
 export type Props = PublicProps<DrawBoundary>;
@@ -43,11 +41,29 @@ export default function Component(props: Props) {
   const classes = useClasses();
   const [boundary, setBoundary] = useState<Boundary>();
   const [url, setUrl] = useState<string | undefined>();
+  const [area, setArea] = useState<string | undefined>();
+
   useEffect(() => {
     setUrl(undefined);
-    setBoundary(undefined);
-  }, [page, setBoundary, setUrl]);
-  const area = boundary !== undefined ? round(turfArea(boundary)) : 0;
+
+    const areaChangeHandler = ({ detail: area }: any) => {
+      setArea(area);
+    };
+
+    const geojsonChangeHandler = ({ detail: geojson }: any) => {
+      // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
+      setBoundary(geojson.features[0]);
+    };
+
+    const map = document.querySelector("my-map");
+    map?.addEventListener("areaChange", areaChangeHandler);
+    map?.addEventListener("geojsonChange", geojsonChangeHandler);
+
+    return function cleanup() {
+      map?.removeEventListener("areaChange", areaChangeHandler);
+      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
+    };
+  }, [page, setArea, setBoundary, setUrl]);
 
   return (
     <Card handleSubmit={handleSubmit} isValid={Boolean(boundary || url)}>
@@ -68,11 +84,13 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <Box className={classes.map}>
-            <Map
-              zoom={18}
-              lat={Number(passport?.data?._address?.latitude)}
-              lng={Number(passport?.data?._address?.longitude)}
-              setBoundary={setBoundary}
+            {/* @ts-ignore */}
+            <my-map
+              drawMode
+              zoom={19}
+              latitude={Number(passport?.data?._address?.latitude)}
+              longitude={Number(passport?.data?._address?.longitude)}
+              osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
           </Box>
           <p className={classes.uploadInstead}>
@@ -80,7 +98,7 @@ export default function Component(props: Props) {
           </p>
           <p>
             The boundary you have drawn has an area of{" "}
-            <strong>{area ?? 0} m²</strong>
+            <strong>{area ?? 0}</strong>
           </p>
         </>
       );
@@ -125,10 +143,6 @@ export default function Component(props: Props) {
 
     props.handleSubmit?.({ data });
   }
-}
-
-function round(num: number) {
-  return Math.round((num + Number.EPSILON) * 100) / 100;
 }
 
 export type Boundary = undefined | Geometry;
