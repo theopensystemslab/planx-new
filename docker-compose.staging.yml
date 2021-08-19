@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  postgres:
+    labels:
+      virtual.host: postgres.${ROOT_DOMAIN}
+      virtual.port: 5432
+      virtual.tls: ${TLS_EMAIL}
+
+  hasura:
+    labels:
+      virtual.host: hasura.${ROOT_DOMAIN}
+      virtual.port: 8080
+      virtual.tls: ${TLS_EMAIL}
+
+  api:
+    labels:
+      virtual.host: api.${ROOT_DOMAIN}
+      virtual.port: ${API_PORT}
+      virtual.tls: ${TLS_EMAIL}
+
+  sharedb:
+    labels:
+      virtual.host: sharedb.${ROOT_DOMAIN}
+      virtual.port: 8000
+      virtual.tls: ${TLS_EMAIL}
+
+  minio:
+    labels:
+      virtual.host: minio.${ROOT_DOMAIN}
+      virtual.port: 9000
+      virtual.tls: ${TLS_EMAIL}
+
+  editor:
+    restart: unless-stopped
+    build:
+      context: ./editor.planx.uk
+      args:
+        build_command: "pnpm build"
+        output_dir: "build"
+    volumes:
+      - "./editor.planx.uk:/editor"
+      - "/editor/node_modules"
+    labels:
+      virtual.host: ${ROOT_DOMAIN}
+      virtual.port: 8043
+      virtual.tls: ${TLS_EMAIL}
+
+  # storybook:
+  #   restart: unless-stopped
+  #   build:
+  #     context: ./editor.planx.uk
+  #     # target: storybook
+  #     args:
+  #       build_command: "pnpm build-storybook"
+  #       output_dir: "storybook-static"
+  #   volumes:
+  #     - "./editor.planx.uk:/editor"
+  #     - "/editor/node_modules"
+  #   labels:
+  #     virtual.host: storybook.${ROOT_DOMAIN}
+  #     virtual.port: 8043
+  #     virtual.tls: ${TLS_EMAIL}
+
+  caddy-gen:
+    image: wemakeservices/caddy-gen:latest
+    container_name: caddy-gen
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - caddy_data:/data/caddy # to back up certificates
+    ports:
+      - "80:80"
+      - "443:443"
+
+volumes:
+  caddy_data:
+  caddy_config:
