@@ -121,7 +121,7 @@
     "classic:build": "react-scripts build",
     "classic:test": "react-scripts test",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public",
+    "build-storybook": "build-storybook -s public --quiet",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix"
   },
   "eslintConfig": {
