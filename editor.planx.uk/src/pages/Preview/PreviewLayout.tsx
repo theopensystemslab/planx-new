@@ -109,7 +109,7 @@ const PreviewLayout: React.FC<{
       <Footer items={[...footerItems]}>
         <Box display="flex" alignItems="center">
           <Box pr={3} display="flex">
-            <img src={Logo} />
+            <img src={Logo} alt="Open Government License Logo" />
           </Box>
           <Typography variant="body2">
             All content is available under the{" "}

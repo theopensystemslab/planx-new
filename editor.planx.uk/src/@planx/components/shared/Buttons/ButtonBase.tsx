@@ -17,7 +17,8 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     height: "100%",
     "&:hover": {
-      backgroundColor: theme.palette.grey[300],
+      backgroundColor: theme.palette.grey[800],
+      color: "white",
     },
   },
   selected: {

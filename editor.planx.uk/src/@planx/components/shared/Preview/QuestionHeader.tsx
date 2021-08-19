@@ -2,6 +2,7 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import React from "react";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
@@ -55,14 +56,10 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
       <Grid container justify="space-between" wrap="nowrap">
         <Grid item>
           {title && (
-            <Box
-              fontSize="h3.fontSize"
-              fontWeight="h3.fontWeight"
-              letterSpacing="-0.02em"
-              role="heading"
-              mr={1}
-            >
-              {title}
+            <Box letterSpacing="-0.02em" mr={1}>
+              <Typography variant="h3" role="heading" aria-level={1}>
+                {title}
+              </Typography>
             </Box>
           )}
           {description && (

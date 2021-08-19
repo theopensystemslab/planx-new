@@ -168,7 +168,11 @@ const Header: React.FC<{
               </Box>
             )}
             {handleRestart && (
-              <IconButton color="secondary" onClick={handleRestart}>
+              <IconButton
+                color="secondary"
+                onClick={handleRestart}
+                aria-label="Restart Application"
+              >
                 <Reset title="Restart Application" color="secondary" />
               </IconButton>
             )}
