@@ -15,10 +15,10 @@ RUN pnpm install
 
 COPY . .
 
-RUN $build_command
+RUN pnpm build
 
 FROM pierrezemb/gostatic
 WORKDIR /srv/http
-COPY --from=install "/editor/$output_dir" .
+COPY --from=install /editor/build .
 EXPOSE 8043
 ENTRYPOINT ["/goStatic", "--fallback", "/index.html"]
