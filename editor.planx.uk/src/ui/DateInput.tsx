@@ -33,14 +33,6 @@ export default function DateInput(props: Props): FCReturn {
   const [year, month, day] = (props.value || "").split("-");
   const classes = useClasses();
 
-  const parseSingleDigit = (value: string) => {
-    if (value.length > 2 && value[0] === "0") {
-      return value.slice(-2);
-    }
-
-    return value.length === 1 && value !== "0" ? `0${value}` : value;
-  };
-
   return (
     <ErrorWrapper error={props.error}>
       <div className={classes.root}>
@@ -55,11 +47,7 @@ export default function DateInput(props: Props): FCReturn {
             bordered={props.bordered}
             onInput={(ev: ChangeEvent<HTMLInputElement>) => {
               props.onChange(
-                [
-                  year || "",
-                  month || "",
-                  parseSingleDigit(ev.target.value),
-                ].join("-")
+                [year || "", month || "", ev.target.value].join("-")
               );
             }}
           />
@@ -70,9 +58,7 @@ export default function DateInput(props: Props): FCReturn {
             bordered={props.bordered}
             onInput={(ev: ChangeEvent<HTMLInputElement>) => {
               props.onChange(
-                [year || "", parseSingleDigit(ev.target.value), day || ""].join(
-                  "-"
-                )
+                [year || "", ev.target.value, day || ""].join("-")
               );
             }}
           />

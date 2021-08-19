@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { act } from "react-dom/test-utils";
 
-import { dateRangeSchema, dateSchema } from "./model";
+import { dateRangeSchema, dateSchema, paddedDate } from "./model";
 import DateInput from "./Public";
 
 test("renders", async () => {
@@ -12,7 +12,7 @@ test("renders", async () => {
   expect(screen.getByRole("heading")).toHaveTextContent("Enter a date");
 });
 
-test("input works as expected", async () => {
+test("allows user to type into input field and click continue", async () => {
   const handleSubmit = jest.fn();
 
   render(<DateInput title="Enter a date" handleSubmit={handleSubmit} />);
@@ -42,6 +42,19 @@ test("input works as expected", async () => {
   });
 
   expect(handleSubmit).toHaveBeenCalled();
+});
+
+test("padding", () => {
+  // Adds zero to single digits
+  expect(paddedDate("2021-12-2")).toBe("2021-12-02");
+  expect(paddedDate("2021-3-22")).toBe("2021-03-22");
+  expect(paddedDate("2021-1-2")).toBe("2021-01-02");
+
+  // Removes extraneous zeroes
+  expect(paddedDate("2021-010-2")).toBe("2021-10-02");
+
+  // Leaves single 0 alone
+  expect(paddedDate("2021-0-2")).toBe("2021-0-02");
 });
 
 test("validation", async () => {

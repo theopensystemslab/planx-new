@@ -1,4 +1,8 @@
-import type { DateInput, UserData } from "@planx/components/DateInput/model";
+import {
+  DateInput,
+  paddedDate,
+  UserData,
+} from "@planx/components/DateInput/model";
 import { dateRangeSchema } from "@planx/components/DateInput/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -42,7 +46,8 @@ const DateInputPublic: React.FC<Props> = (props) => {
           value={formik.values.date}
           bordered
           onChange={(newDate: string) => {
-            formik.setFieldValue("date", newDate);
+            // Pad it here if necessary; keep DateInputComponent simple
+            formik.setFieldValue("date", paddedDate(newDate));
           }}
           error={formik.errors.date}
         />

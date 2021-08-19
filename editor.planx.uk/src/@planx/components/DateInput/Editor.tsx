@@ -1,4 +1,4 @@
-import type { DateInput } from "@planx/components/DateInput/model";
+import { DateInput, paddedDate } from "@planx/components/DateInput/model";
 import { dateSchema, parseDateInput } from "@planx/components/DateInput/model";
 import { TYPES } from "@planx/components/types";
 import {
@@ -82,7 +82,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
               value={formik.values.min}
               error={formik.errors.min}
               onChange={(newDate) => {
-                formik.setFieldValue("min", newDate);
+                formik.setFieldValue("min", paddedDate(newDate));
               }}
             />
           </InputRow>
@@ -92,7 +92,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
               value={formik.values.max}
               error={formik.errors.max}
               onChange={(newDate) => {
-                formik.setFieldValue("max", newDate);
+                formik.setFieldValue("max", paddedDate(newDate));
               }}
             />
           </InputRow>

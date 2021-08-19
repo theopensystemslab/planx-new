@@ -22,6 +22,32 @@ export const isDateValid = (date: string) => {
   return isComplete && isValid(parseISO(date));
 };
 
+export const paddedDate = (date: string) => {
+  const [year, month, day] = date.split("-");
+
+  // If month and/or year is single-digit, pad it
+  const [paddedMonth, paddedDay] = [month, day].map((value) => {
+    // Don't add padding if it's just a 0
+    if (value === "0") {
+      return value;
+    }
+
+    if (value.length === 1) {
+      return value.padStart(2, "0");
+    }
+
+    // If it's already been padded, remove extraneous 0
+    if (value.length > 2 && value[0] === "0") {
+      return value.slice(1);
+    }
+
+    // Otherwise change nothing
+    return value;
+  });
+
+  return [year, paddedMonth, paddedDay].join("-");
+};
+
 const displayDate = (date: string): string | undefined => {
   if (!isDateValid(date)) {
     return undefined;
@@ -35,7 +61,8 @@ export const dateSchema = () => {
     "valid",
     "Enter a valid date",
     (date: string | undefined) => {
-      return Boolean(date && isDateValid(date));
+      // test() runs regardless of required status, so don't fail it if it's undefined
+      return Boolean(!date || isDateValid(date));
     }
   );
 };
@@ -45,7 +72,7 @@ export const dateRangeSchema: (params: {
   max?: string;
 }) => SchemaOf<string> = (params) =>
   dateSchema()
-    .required()
+    .required("Please enter a valid date")
     .test({
       name: "too soon",
       message: `Enter a date later than ${
