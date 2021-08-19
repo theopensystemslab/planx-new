@@ -11,6 +11,7 @@ import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 import React, { useRef, useState } from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
+import { Team } from "types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
@@ -68,10 +69,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Header: React.FC<{
   bgcolor?: string;
-  logo?: string;
+  team: Team;
   phaseBanner?: boolean;
   handleRestart?: () => void;
-}> = ({ bgcolor = "#2c2c2c", logo, phaseBanner = false, handleRestart }) => {
+}> = ({ bgcolor = "#2c2c2c", team, phaseBanner = false, handleRestart }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const headerRef = useRef(null);
@@ -107,8 +108,12 @@ const Header: React.FC<{
       >
         <Toolbar className={classes.toolbar}>
           <Box className={classes.breadcrumbs} fontSize={20}>
-            {logo ? (
-              <img alt="Team logo" src={logo} className={classes.logo} />
+            {team.theme?.logo ? (
+              <img
+                alt={`${team.name} Logo`}
+                src={team.theme.logo}
+                className={classes.logo}
+              />
             ) : (
               <Box
                 component="span"
