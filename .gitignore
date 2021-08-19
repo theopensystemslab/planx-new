@@ -5,3 +5,4 @@ nginx/static/*
 /ignore/
 editor.planx.uk/.eslintcache
 /minio-data
+.pnpm-debug.log
