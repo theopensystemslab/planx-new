@@ -30,7 +30,7 @@ async function search(mapServer, featureName, outFields, geometry, where) {
 
 // For this location, iterate through our planning constraints and aggregate/format the responses
 async function go(x, y, extras) {
-  const point = bufferPoint(x, y, 0.1);
+  const point = bufferPoint(x, y, 2.5);
 
   try {
     const results = await Promise.all(
