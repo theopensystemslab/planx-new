@@ -32,6 +32,7 @@ const useClasses = makeStyles((theme) => ({
 export default function DateInput(props: Props): FCReturn {
   const [year, month, day] = (props.value || "").split("-");
   const classes = useClasses();
+
   return (
     <ErrorWrapper error={props.error}>
       <div className={classes.root}>

@@ -1,4 +1,4 @@
-import parseISO from "date-fns/parseISO";
+import { isValid, parseISO } from "date-fns";
 import { SchemaOf, string } from "yup";
 
 import { MoreInformation, parseMoreInformation } from "../shared";
@@ -15,9 +15,38 @@ export interface DateInput extends MoreInformation {
   max?: string;
 }
 
-const isDateValid = (date: string) =>
-  // possibly replaceable with isValid(parseISO(date))?
-  parseISO(date).toString() !== "Invalid Date";
+export const isDateValid = (date: string) => {
+  // make sure we've got DD, MM, & YYYY
+  const isComplete = date.split("-").filter((n) => n.length > 0).length === 3;
+
+  return isComplete && isValid(parseISO(date));
+};
+
+export const paddedDate = (date: string) => {
+  const [year, month, day] = date.split("-");
+
+  // If month and/or year is single-digit, pad it
+  const [paddedMonth, paddedDay] = [month, day].map((value) => {
+    // Don't add padding if it's just a 0
+    if (value === "0") {
+      return value;
+    }
+
+    if (value.length === 1) {
+      return value.padStart(2, "0");
+    }
+
+    // If it's already been padded, remove extraneous 0
+    if (value.length > 2 && value[0] === "0") {
+      return value.slice(1);
+    }
+
+    // Otherwise change nothing
+    return value;
+  });
+
+  return [year, paddedMonth, paddedDay].join("-");
+};
 
 const displayDate = (date: string): string | undefined => {
   if (!isDateValid(date)) {
@@ -27,15 +56,23 @@ const displayDate = (date: string): string | undefined => {
   return `${day}.${month}.${year}`;
 };
 
-export const dateSchema: (params: {
+export const dateSchema = () => {
+  return string().test(
+    "valid",
+    "Enter a valid date",
+    (date: string | undefined) => {
+      // test() runs regardless of required status, so don't fail it if it's undefined
+      return Boolean(!date || isDateValid(date));
+    }
+  );
+};
+
+export const dateRangeSchema: (params: {
   min?: string;
   max?: string;
 }) => SchemaOf<string> = (params) =>
-  string()
-    .required()
-    .test("valid", "Enter a valid date", (date: string | undefined) => {
-      return Boolean(date && isDateValid(date));
-    })
+  dateSchema()
+    .required("Please enter a valid date")
     .test({
       name: "too soon",
       message: `Enter a date later than ${
