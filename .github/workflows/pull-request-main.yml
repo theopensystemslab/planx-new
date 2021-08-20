@@ -14,30 +14,30 @@ jobs:
   create_vultr_instance:
     runs-on: ubuntu-latest
     steps:
-      - uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: vultr
-          message: |
-            Allocating resources for ${{ env.VULTR_URL }}
+      # - uses: marocchino/sticky-pull-request-comment@v2
+      #   with:
+      #     header: vultr
+      #     message: |
+      #       Allocating resources for ${{ env.VULTR_URL }}
 
-      - name: Create Server
-        id: create
-        uses: theopensystemslab/vultr-action@v1.4
-        with:
-          action: create
-          api_key: ${{ secrets.VULTR_API_KEY }}
-          domain: ${{ env.DOMAIN }}
-          os_id: 387
-          plan: vc2-1c-1gb
-          pullrequest_id: ${{ github.event.number }}
-          region: lhr
-          tag: pullrequest
+      # - name: Create Server
+      #   id: create
+      #   uses: theopensystemslab/vultr-action@v1.4
+      #   with:
+      #     action: create
+      #     api_key: ${{ secrets.VULTR_API_KEY }}
+      #     domain: ${{ env.DOMAIN }}
+      #     os_id: 387
+      #     plan: vc2-1c-1gb
+      #     pullrequest_id: ${{ github.event.number }}
+      #     region: lhr
+      #     tag: pullrequest
 
-      - uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: vultr
-          message: |
-            Deploying ${{ github.sha }} to ${{ env.VULTR_URL }}
+      # - uses: marocchino/sticky-pull-request-comment@v2
+      #   with:
+      #     header: vultr
+      #     message: |
+      #       Deploying ${{ github.sha }} to ${{ env.VULTR_URL }}
 
       - name: Create commands
         uses: appleboy/ssh-action@master
@@ -48,7 +48,7 @@ jobs:
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
-          password: ${{ steps.create.outputs.default_password }}
+          password: "v_6Aqo@!2d-MJmY2"
           # https://github.com/appleboy/ssh-action#pass-environment-variable-to-shell-script
           # https://github.com/appleboy/ssh-action/issues/124
           envs: PULLREQUEST_ID,REPO_URL,SSH_PASSWORD
