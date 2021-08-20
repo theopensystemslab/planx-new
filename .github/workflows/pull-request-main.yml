@@ -46,14 +46,22 @@ jobs:
           REPO_URL: ${{ secrets.AUTHENTICATED_REPO_URL }}
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         with:
-          host: ${{ env.FULL_DOMAIN }}
+          # host: ${{ env.FULL_DOMAIN }}
+          host: 605.planx.club
           username: root
           password: "v_6Aqo@!2d-MJmY2"
+          command_timeout: 20m
           # https://github.com/appleboy/ssh-action#pass-environment-variable-to-shell-script
           # https://github.com/appleboy/ssh-action/issues/124
           envs: PULLREQUEST_ID,REPO_URL,SSH_PASSWORD
           script: |
-            PULLREQUEST_ID="${PULLREQUEST_ID}" REPO_URL="${REPO_URL}" SSH_PASSWORD="${SSH_PASSWORD}" scripts/pullrequest/create.sh
+            export $PULLREQUEST_ID:=${{ github.event.number }}
+            export $REPO_URL:=${{ secrets.AUTHENTICATED_REPO_URL }}
+            export $SSH_PASSWORD:=${{ secrets.SSH_PASSWORD }}
+            git clone "$REPO_URL"
+            cd planx-new
+            git fetch origin "pull/$PULLREQUEST_ID/head" && git checkout FETCH_HEAD
+            sh scripts/pullrequest/create.sh
 
   # upload-artifact:
   #   name: Upload
