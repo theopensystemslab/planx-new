@@ -31,23 +31,23 @@ services:
       virtual.port: 9000
       virtual.tls: ${TLS_EMAIL}
 
-  editor:
-    restart: unless-stopped
-    build:
-      context: ./editor.planx.uk
-      args:
-        API_URL: https://api.${ROOT_DOMAIN}
-        HASURA_URL: https://hasura.${ROOT_DOMAIN}/v1/graphql
-        SHAREDB_URL: wss://sharedb.${ROOT_DOMAIN}
-    ports:
-      - 8043:8043
-    volumes:
-      - "./editor.planx.uk:/editor"
-      - "/editor/node_modules"
-    labels:
-      virtual.host: ${ROOT_DOMAIN}
-      virtual.port: 8043
-      virtual.tls: ${TLS_EMAIL}
+  # editor:
+  #   restart: unless-stopped
+  #   build:
+  #     context: ./editor.planx.uk
+  #     args:
+  #       API_URL: https://api.${ROOT_DOMAIN}
+  #       HASURA_URL: https://hasura.${ROOT_DOMAIN}/v1/graphql
+  #       SHAREDB_URL: wss://sharedb.${ROOT_DOMAIN}
+  #   ports:
+  #     - 8043:8043
+  #   volumes:
+  #     - "./editor.planx.uk:/editor"
+  #     - "/editor/node_modules"
+  #   labels:
+  #     virtual.host: ${ROOT_DOMAIN}
+  #     virtual.port: 8043
+  #     virtual.tls: ${TLS_EMAIL}
 
   caddy-gen:
     image: wemakeservices/caddy-gen:latest
