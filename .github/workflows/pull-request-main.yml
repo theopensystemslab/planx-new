@@ -236,11 +236,3 @@ jobs:
           header: vultr
           message: |
             Deployed ${{ github.sha }} to ${{ env.VULTR_URL }}
-
-  # finish-comment:
-  #   uses: marocchino/sticky-pull-request-comment@v2
-  #   needs: upload-artifact
-  #   with:
-  #     header: vultr
-  #     message: |
-  #       Deployed ${{ github.sha }} to <${{ env.VULTR_DOMAIN }}>
