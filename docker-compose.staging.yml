@@ -49,19 +49,6 @@ services:
       virtual.port: 8043
       virtual.tls: ${TLS_EMAIL}
 
-  webhook:
-    image: thecatlady/webhook
-    restart: unless-stopped
-    command: -verbose -hooks=hooks.yml -hotreload
-    volumes:
-      - ./scripts/webhooks:/config:ro
-    ports:
-      - 9999:9000
-    labels:
-      virtual.host: webhooks.${ROOT_DOMAIN}
-      virtual.port: 9000
-      virtual.tls: ${TLS_EMAIL}
-
   caddy-gen:
     image: wemakeservices/caddy-gen:latest
     restart: always
