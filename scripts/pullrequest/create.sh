@@ -26,15 +26,11 @@ apt-get install docker-ce docker-ce-cli containerd.io -y
 curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
-# download repo
- git clone $REPO_URL
+# # download repo
+# git clone $REPO_URL
+# cd planx-new
+# git fetch origin pull/${PULLREQUEST_ID}/head && git checkout FETCH_HEAD
 
-# ----------------------------------------------------------------
-
-# setup
-cd planx-new
-
-git fetch origin pull/${PULLREQUEST_ID}/head && git checkout FETCH_HEAD
 cat .env .env.staging > .env.prod
 
 ROOT_DOMAIN=$(hostname) TLS_EMAIL=devops@opensystemslab.io docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.staging.yml up --build
