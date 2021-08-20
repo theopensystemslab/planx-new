@@ -10,48 +10,57 @@ env:
   FULL_DOMAIN: ${{ github.event.number }}.planx.club
   VULTR_URL: https://${{ github.event.number }}.planx.club
   PULLREQUEST_ID: ${{ github.event.number }}
+  # FULL_DOMAIN: 605.planx.club
+  # VULTR_URL: https://605.planx.club
+  # PULLREQUEST_ID: 605
 
 jobs:
   create_vultr_instance:
     runs-on: ubuntu-latest
     steps:
-      # - uses: marocchino/sticky-pull-request-comment@v2
-      #   with:
-      #     header: vultr
-      #     message: |
-      #       Allocating resources for ${{ env.VULTR_URL }}
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: vultr
+          message: |
+            Creating vultr server
 
-      # - name: Create Server
-      #   id: create
-      #   uses: theopensystemslab/vultr-action@v1.4
-      #   with:
-      #     action: create
-      #     api_key: ${{ secrets.VULTR_API_KEY }}
-      #     domain: ${{ env.DOMAIN }}
-      #     os_id: 387
-      #     plan: vc2-1c-1gb
-      #     pullrequest_id: ${{ github.event.number }}
-      #     region: lhr
-      #     tag: pullrequest
+      - name: Create Server
+        id: create
+        uses: theopensystemslab/vultr-action@v1.4
+        with:
+          action: create
+          api_key: ${{ secrets.VULTR_API_KEY }}
+          domain: ${{ env.DOMAIN }}
+          os_id: 387
+          plan: vc2-1c-1gb
+          pullrequest_id: ${{ env.PULLREQUEST_ID }}
+          region: lhr
+          tag: pullrequest
 
-      # - uses: marocchino/sticky-pull-request-comment@v2
-      #   with:
-      #     header: vultr
-      #     message: |
-      #       Deploying ${{ github.sha }} to ${{ env.VULTR_URL }}
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: vultr
+          message: |
+            Deploying ${{ github.sha }} to ${{ env.VULTR_URL }}
 
       - name: Create commands
         uses: appleboy/ssh-action@master
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
-          password: "v_6Aqo@!2d-MJmY2"
+          password: ${{ steps.create.outputs.default_password }}
           command_timeout: 20m
           script: |
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
             SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} sh scripts/pullrequest/create.sh
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: vultr
+          message: |
+            Deployed ${{ github.sha }} to ${{ env.VULTR_URL }}
 
   # upload-artifact:
   #   name: Upload
