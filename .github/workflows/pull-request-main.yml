@@ -219,20 +219,20 @@ jobs:
 
       # UPDATE STEPS
 
-      # - if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
-      #   name: Update commands
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ env.FULL_DOMAIN }}
-      #     username: root
-      #     password: ${{ secrets.SSH_PASSWORD }}
-      #     command_timeout: 20m
-      #     script: |
-      #       git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
-      #       cd planx-new
-      #       git add . && git stash
-      #       git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
-      #       sh scripts/pullrequest/update.sh
+      - if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
+        name: Update commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.FULL_DOMAIN }}
+          username: root
+          password: ${{ secrets.SSH_PASSWORD }}
+          command_timeout: 20m
+          script: |
+            git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
+            cd planx-new
+            git add . && git stash
+            git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
+            sh scripts/pullrequest/update.sh
 
       # CREATE & UPDATE STEPS
 
@@ -247,11 +247,11 @@ jobs:
       - name: upload built editor
         uses: appleboy/scp-action@master
         with:
-          host: ${{ env.VULTR_DOMAIN }}
+          host: ${{ env.FULL_DOMAIN }}
           username: root
           password: ${{ secrets.SSH_PASSWORD }}
           source: "./build"
-          target: "build"
+          target: "planx-new/editor.planx.uk/build"
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
