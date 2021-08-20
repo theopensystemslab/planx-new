@@ -7,8 +7,8 @@ on:
 
 env:
   DOMAIN: planx.club
-  FULL_DOMAIN: ${{ github.event.number }}.${{ env.DOMAIN }}
-  VULTR_URL: https://${{ env.FULL_DOMAIN }}
+  FULL_DOMAIN: ${{ github.event.number }}.planx.club
+  VULTR_URL: https://${{ github.event.number }}.planx.club
 
 jobs:
   create_vultr_instance:
