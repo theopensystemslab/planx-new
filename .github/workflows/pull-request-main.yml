@@ -1,4 +1,4 @@
-name: Pulumi (PR Staging)
+name: Vultr Deploy
 on:
   pull_request:
     types: [opened, synchronize]
@@ -9,14 +9,14 @@ on:
 #   VULTR_DOMAIN: ${{ github.event.number }}.planx.club
 
 jobs:
-  create-comment:
+  create_comment:
     uses: marocchino/sticky-pull-request-comment@v2
     with:
       header: vultr
       message: |
         Allocating resources for <${{ env.VULTR_DOMAIN }}>
 
-  create-vultr-instance:
+  create_vultr_instance:
     runs-on: ubuntu-latest
     steps:
       - name: Create Server
@@ -34,9 +34,9 @@ jobs:
       - name: Get the IP address
         run: echo "${{ steps.create.outputs.ip_address }}"
 
-  update-comment:
+  update_comment:
     uses: marocchino/sticky-pull-request-comment@v2
-    needs: create-vultr-instance
+    needs: create_vultr_instance
     with:
       header: vultr
       message: |
