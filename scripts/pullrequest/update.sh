@@ -8,6 +8,6 @@
 
 cat .env .env.staging > .env.prod
 
-docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.staging.yml build --no-cache
+ROOT_DOMAIN=$(hostname) TLS_EMAIL=devops@opensystemslab.io docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.staging.yml build --no-cache
 
-docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.staging.yml up -d
+ROOT_DOMAIN=$(hostname) TLS_EMAIL=devops@opensystemslab.io docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.staging.yml restart
