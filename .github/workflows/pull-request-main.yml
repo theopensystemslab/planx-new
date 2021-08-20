@@ -5,8 +5,10 @@ on:
     branches:
       - main
 
-# env:
-#   VULTR_DOMAIN: ${{ github.event.number }}.planx.club
+env:
+  DOMAIN: planx.club
+  FULL_DOMAIN: ${{ github.event.number }}.${{ env.DOMAIN }}
+  VULTR_URL: https://${{ env.FULL_DOMAIN }}
 
 jobs:
   create_vultr_instance:
@@ -16,42 +18,38 @@ jobs:
         with:
           header: vultr
           message: |
-            Allocating resources for <${{ env.VULTR_DOMAIN }}>
+            Allocating resources for ${{ env.VULTR_URL }}
+
       - name: Create Server
         id: create
-        uses: theopensystemslab/vultr-action@v1.3
+        uses: theopensystemslab/vultr-action@v1
         with:
           action: create
-          api-key: ${{ secrets.VULTR_API_KEY }}
-          domain: planx.club
-          os-id: 387
+          api_key: ${{ secrets.VULTR_API_KEY }}
+          domain: ${{ env.DOMAIN }}
+          os_id: 387
           plan: vc2-1c-1gb
-          pullrequest-id: ${{ github.event.number }}
+          pullrequest_id: ${{ github.event.number }}
           region: lhr
           tag: pullrequest
-      - name: Get the IP address
-        run: echo "${{ steps.create.outputs.ip_address }}"
+
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: vultr
           message: |
-            Deploying ${{ github.sha }} to <${{ env.VULTR_DOMAIN }}>
+            Deploying ${{ github.sha }} to ${{ env.VULTR_URL }}
 
-  # prepare-vps:
-  #   name: Prepare VPS
-  #   runs-on: ubuntu-latest
-  #   needs: create-vultr-instance
-  #   steps:
-  #     - name: Create commands
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         host: ${{ env.VULTR_DOMAIN }}
-  #         username: ${{ secrets.USERNAME }}
-  #         password: ${{ secrets.PASSWORD }}
-  #         script: scripts/pullrequest/create
-  #       env:
-  #         PULLREQUEST_ID: ${{ github.event.number }}
-  #         REPO_URL: ${{ secrets.AUTHENTICATED_REPO_URL }}
+      - name: Create commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.FULL_DOMAIN }}
+          username: root
+          password: ${{ steps.create.outputs.default_password }}
+          script: scripts/pullrequest/create
+        env:
+          PULLREQUEST_ID: ${{ github.event.number }}
+          REPO_URL: ${{ secrets.AUTHENTICATED_REPO_URL }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
 
   # upload-artifact:
   #   name: Upload

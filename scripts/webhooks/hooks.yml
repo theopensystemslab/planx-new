@@ -1,3 +1,0 @@
-- id: redeploy
-  execute-command: "./redeploy.sh"
-  command-working-directory: "/root/planx-new"
