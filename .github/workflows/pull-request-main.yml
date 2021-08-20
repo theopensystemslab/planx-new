@@ -41,10 +41,6 @@ jobs:
 
       - name: Create commands
         uses: appleboy/ssh-action@master
-        env:
-          PULLREQUEST_ID: ${{ github.event.number }}
-          REPO_URL: ${{ secrets.AUTHENTICATED_REPO_URL }}
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         with:
           # host: ${{ env.FULL_DOMAIN }}
           host: 605.planx.club
@@ -54,10 +50,12 @@ jobs:
           # https://github.com/appleboy/ssh-action#pass-environment-variable-to-shell-script
           # https://github.com/appleboy/ssh-action/issues/124
           envs: PULLREQUEST_ID,REPO_URL,SSH_PASSWORD
+          # script: |
+          #   export $PULLREQUEST_ID=${{ github.event.number }}
           script: |
-            export $PULLREQUEST_ID:=${{ github.event.number }}
-            export $REPO_URL:=${{ secrets.AUTHENTICATED_REPO_URL }}
-            export $SSH_PASSWORD:=${{ secrets.SSH_PASSWORD }}
+            export PULLREQUEST_ID=605
+            export REPO_URL=${{ secrets.AUTHENTICATED_REPO_URL }}
+            export SSH_PASSWORD=${{ secrets.SSH_PASSWORD }}
             git clone "$REPO_URL"
             cd planx-new
             git fetch origin "pull/$PULLREQUEST_ID/head" && git checkout FETCH_HEAD
