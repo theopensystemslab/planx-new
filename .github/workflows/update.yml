@@ -15,7 +15,7 @@ jobs:
   update_vultr_instance:
     runs-on: ubuntu-latest
     steps:
-      - name: Create commands
+      - name: Update commands
         uses: appleboy/ssh-action@master
         with:
           host: ${{ env.FULL_DOMAIN }}
