@@ -26,7 +26,7 @@ jobs:
           domain: planx.club
           os-id: 387
           plan: vc2-1c-1gb
-          pullrequest_id: ${{ github.event.number }}
+          pullrequest-id: ${{ github.event.number }}
           region: lhr
           tag: pullrequest
       - name: Get the IP address
