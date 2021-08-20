@@ -22,7 +22,7 @@ jobs:
 
       - name: Create Server
         id: create
-        uses: theopensystemslab/vultr-action@v1
+        uses: theopensystemslab/vultr-action@v1.4
         with:
           action: create
           api_key: ${{ secrets.VULTR_API_KEY }}
