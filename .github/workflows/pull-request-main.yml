@@ -19,7 +19,7 @@ jobs:
             Allocating resources for <${{ env.VULTR_DOMAIN }}>
       - name: Create Server
         id: create
-        uses: theopensystemslab/vultr-action@v1.1
+        uses: theopensystemslab/vultr-action@v1.2
         with:
           action: create
           api-key: ${{ secrets.VULTR_API_KEY }}
