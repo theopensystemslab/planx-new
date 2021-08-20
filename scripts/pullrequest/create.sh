@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo $SSH_PASSWORD | passwd --stdin root
+echo -e "$SSH_PASSWORD\n$SSH_PASSWORD" | passwd root
 
 apt-get update -y
 apt update -y
