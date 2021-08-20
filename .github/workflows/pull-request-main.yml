@@ -9,16 +9,14 @@ on:
 #   VULTR_DOMAIN: ${{ github.event.number }}.planx.club
 
 jobs:
-  create_comment:
-    uses: marocchino/sticky-pull-request-comment@v2
-    with:
-      header: vultr
-      message: |
-        Allocating resources for <${{ env.VULTR_DOMAIN }}>
-
   create_vultr_instance:
     runs-on: ubuntu-latest
     steps:
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: vultr
+          message: |
+            Allocating resources for <${{ env.VULTR_DOMAIN }}>
       - name: Create Server
         id: create
         uses: theopensystemslab/vultr-action@v1.1
@@ -33,14 +31,11 @@ jobs:
           tag: pullrequest
       - name: Get the IP address
         run: echo "${{ steps.create.outputs.ip_address }}"
-
-  update_comment:
-    uses: marocchino/sticky-pull-request-comment@v2
-    needs: create_vultr_instance
-    with:
-      header: vultr
-      message: |
-        Deploying ${{ github.sha }} to <${{ env.VULTR_DOMAIN }}>
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: vultr
+          message: |
+            Deploying ${{ github.sha }} to <${{ env.VULTR_DOMAIN }}>
 
   # prepare-vps:
   #   name: Prepare VPS
