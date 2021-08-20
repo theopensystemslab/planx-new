@@ -176,9 +176,12 @@ jobs:
   #         delete: true
 
   create_or_update_vultr_instance:
+    name: Create or Update Vultr Instance
     runs-on: ubuntu-latest
     needs: test_and_build
     steps:
+      # CREATE STEPS
+
       - if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -214,22 +217,32 @@ jobs:
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
             SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} sh scripts/pullrequest/create.sh
 
-      - if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
-        name: Update commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.FULL_DOMAIN }}
-          username: root
-          password: ${{ secrets.SSH_PASSWORD }}
-          command_timeout: 20m
-          script: |
-            git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
-            cd planx-new
-            git add . && git stash
-            git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
-            sh scripts/pullrequest/update.sh
+      # UPDATE STEPS
+
+      # - if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
+      #   name: Update commands
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ env.FULL_DOMAIN }}
+      #     username: root
+      #     password: ${{ secrets.SSH_PASSWORD }}
+      #     command_timeout: 20m
+      #     script: |
+      #       git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
+      #       cd planx-new
+      #       git add . && git stash
+      #       git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
+      #       sh scripts/pullrequest/update.sh
+
+      # CREATE & UPDATE STEPS
 
       - uses: actions/checkout@master
+
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: ./build
 
       - name: upload built editor
         uses: appleboy/scp-action@master
@@ -237,7 +250,7 @@ jobs:
           host: ${{ env.VULTR_DOMAIN }}
           username: root
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "editor.planx.uk/build"
+          source: "./build"
           target: "build"
 
       - uses: marocchino/sticky-pull-request-comment@v2
