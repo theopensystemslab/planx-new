@@ -1,0 +1,80 @@
+name: Pulumi (PR Staging)
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+
+# env:
+#   VULTR_DOMAIN: ${{ github.event.number }}.planx.club
+
+jobs:
+  create-comment:
+    uses: marocchino/sticky-pull-request-comment@v2
+    with:
+      header: vultr
+      message: |
+        Allocating resources for <${{ env.VULTR_DOMAIN }}>
+
+  create-vultr-instance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Server
+        id: create
+        uses: theopensystemslab/vultr-action@v1.1
+        with:
+          action: create
+          api-key: ${{ secrets.VULTR_API_KEY }}
+          domain: planx.club
+          os-id: 387
+          plan: vc2-1c-1gb
+          pullrequest_id: ${{ github.event.number }}
+          region: lhr
+          tag: pullrequest
+      - name: Get the IP address
+        run: echo "${{ steps.create.outputs.ip_address }}"
+
+  update-comment:
+    uses: marocchino/sticky-pull-request-comment@v2
+    needs: create-vultr-instance
+    with:
+      header: vultr
+      message: |
+        Deploying ${{ github.sha }} to <${{ env.VULTR_DOMAIN }}>
+
+  # prepare-vps:
+  #   name: Prepare VPS
+  #   runs-on: ubuntu-latest
+  #   needs: create-vultr-instance
+  #   steps:
+  #     - name: Create commands
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ env.VULTR_DOMAIN }}
+  #         username: ${{ secrets.USERNAME }}
+  #         password: ${{ secrets.PASSWORD }}
+  #         script: scripts/pullrequest/create
+  #       env:
+  #         PULLREQUEST_ID: ${{ github.event.number }}
+  #         REPO_URL: ${{ secrets.AUTHENTICATED_REPO_URL }}
+
+  # upload-artifact:
+  #   name: Upload
+  #   needs: prepare-vps
+  #   steps:
+  #     - uses: actions/checkout@master
+  #     - name: copy file via ssh password
+  #       uses: appleboy/scp-action@master
+  #       with:
+  #         host: ${{ env.VULTR_DOMAIN }}
+  #         username: ${{ secrets.USERNAME }}
+  #         password: ${{ secrets.PASSWORD }}
+  #         target: "artifact"
+
+  # finish-comment:
+  #   uses: marocchino/sticky-pull-request-comment@v2
+  #   needs: upload-artifact
+  #   with:
+  #     header: vultr
+  #     message: |
+  #       Deployed ${{ github.sha }} to <${{ env.VULTR_DOMAIN }}>
