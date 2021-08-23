@@ -20,7 +20,10 @@ export type Props = PublicProps<DateInput, UserData>;
 const DateInputPublic: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
-      date: "",
+      date:
+        (props.id &&
+          (props.previouslySubmittedData?.data?.[props.id] as string)) ??
+        "",
     },
     onSubmit: (values) => {
       props.handleSubmit?.(makeData(props, values.date));

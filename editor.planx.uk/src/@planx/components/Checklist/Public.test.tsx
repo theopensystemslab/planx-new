@@ -59,3 +59,51 @@ test("answers are submitted in order they were supplied", async () => {
 });
 
 test.todo("expandable checklist");
+
+test("recovers checkboxes state when clicking the back button", async () => {
+  const handleSubmit = jest.fn();
+
+  render(
+    <Checklist
+      allRequired={false}
+      description=""
+      text="home type?"
+      handleSubmit={handleSubmit}
+      previouslySubmittedData={{ answers: ["flat_id", "house_id"] }}
+      options={[
+        {
+          id: "flat_id",
+          data: {
+            text: "Flat",
+          },
+        },
+        {
+          id: "caravan_id",
+          data: {
+            text: "Caravan",
+          },
+        },
+        {
+          id: "house_id",
+          data: {
+            text: "House",
+          },
+        },
+        {
+          id: "spaceship_id",
+          data: {
+            text: "Spaceship",
+          },
+        },
+      ]}
+    />
+  );
+
+  await waitFor(async () => {
+    userEvent.click(screen.getByText("Continue"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledWith({
+    answers: ["flat_id", "house_id"],
+  });
+});

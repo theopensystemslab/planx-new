@@ -34,3 +34,46 @@ test("submits an address", async () => {
     },
   });
 });
+
+test("recovers previously submitted text when clicking the back button", async () => {
+  const handleSubmit = jest.fn();
+
+  render(
+    <AddressInput
+      handleSubmit={handleSubmit}
+      title=""
+      fn="foo"
+      previouslySubmittedData={{
+        data: {
+          foo: {
+            line1: "Flat 1",
+            line2: "",
+            town: "London",
+            county: "",
+            postcode: "SW1A 2AA",
+          },
+        },
+      }}
+    />
+  );
+
+  await waitFor(async () => {
+    await fillInFieldsUsingPlaceholder({
+      "Line 2": "221b Baker St",
+    });
+
+    userEvent.click(screen.getByText("Continue"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledWith({
+    data: {
+      foo: {
+        line1: "Flat 1",
+        line2: "221b Baker St",
+        town: "London",
+        county: "",
+        postcode: "SW1A 2AA",
+      },
+    },
+  });
+});

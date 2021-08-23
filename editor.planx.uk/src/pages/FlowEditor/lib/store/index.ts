@@ -18,6 +18,7 @@ export declare namespace Store {
     auto?: boolean;
   };
   export type breadcrumbs = Record<nodeId, userData>;
+  export type cachedBreadcrumbs = Record<nodeId, userData> | undefined;
   export type node = {
     id?: nodeId;
     type?: TYPES;

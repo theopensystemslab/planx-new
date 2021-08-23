@@ -18,7 +18,10 @@ export type Props = PublicProps<NumberInput, UserData>;
 export default function NumberInputComponent(props: Props): FCReturn {
   const formik = useFormik({
     initialValues: {
-      value: "",
+      value:
+        (props.id &&
+          (props.previouslySubmittedData?.data?.[props.id] as string)) ??
+        "",
     },
     onSubmit: (values) => {
       if (values.value && props.handleSubmit) {

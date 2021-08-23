@@ -26,6 +26,27 @@ import CollapsibleInput from "ui/CollapsibleInput";
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
 
+// this query is exported because tests require it
+export const FIND_ADDRESS = gql`
+  query FindAddress($postcode: String = "") {
+    addresses(where: { postcode: { _eq: $postcode } }) {
+      uprn
+      town
+      y
+      x
+      street
+      sao
+      postcode
+      pao
+      organisation
+      blpu_code
+      latitude
+      longitude
+      single_line_address
+    }
+  }
+`;
+
 type Props = PublicProps<FindProperty>;
 
 const sorter = natsort({ insensitive: true });
@@ -33,6 +54,7 @@ const sorter = natsort({ insensitive: true });
 export default Component;
 
 function Component(props: Props) {
+  const previouslySubmittedData = props.previouslySubmittedData?.data;
   const [address, setAddress] = useState<Address | undefined>();
   const [flow, startSession] = useStore((state) => [
     state.flow,
@@ -62,6 +84,8 @@ function Component(props: Props) {
         title={props.title}
         description={props.description}
         setAddress={setAddress}
+        initialPostcode={previouslySubmittedData?._address.postcode}
+        initialSelectedAddress={previouslySubmittedData?._address}
       />
     );
   } else if (constraints) {
@@ -153,42 +177,30 @@ function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
   title?: string;
   description?: string;
+  initialPostcode?: string;
+  initialSelectedAddress?: Option;
 }) {
-  const [postcode, setPostcode] = useState<string | null>();
-  const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
-  const [selectedOption, setSelectedOption] = useState<Option | undefined>();
-
-  const { loading, error, data } = useQuery(
-    gql`
-      query FindAddress($postcode: String = "") {
-        addresses(where: { postcode: { _eq: $postcode } }) {
-          uprn
-          town
-          y
-          x
-          street
-          sao
-          postcode
-          pao
-          organisation
-          blpu_code
-          latitude
-          longitude
-          single_line_address
-        }
-      }
-    `,
-    {
-      skip: !Boolean(sanitizedPostcode),
-      variables: {
-        postcode: sanitizedPostcode,
-      },
-    }
+  const [postcode, setPostcode] = useState<string | null>(
+    props.initialPostcode ?? null
   );
+  const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>(
+    (props.initialPostcode && toNormalised(props.initialPostcode.trim())) ??
+      null
+  );
+  const [selectedOption, setSelectedOption] = useState<Option | null>(
+    props.initialSelectedAddress ?? null
+  );
+
+  const { loading, error, data } = useQuery(FIND_ADDRESS, {
+    skip: !Boolean(sanitizedPostcode),
+    variables: {
+      postcode: sanitizedPostcode,
+    },
+  });
 
   return (
     <Card
-      handleSubmit={() => props.setAddress(selectedOption)}
+      handleSubmit={() => props.setAddress(selectedOption ?? undefined)}
       isValid={Boolean(selectedOption)}
     >
       <QuestionHeader
@@ -227,6 +239,11 @@ function GetAddress(props: {
               )
               .sort((a: Option, b: Option) => sorter(a.title, b.title))}
             getOptionLabel={(option: Option) => option.title}
+            getOptionSelected={(option: Option, selected: Option) =>
+              option.uprn === selected.uprn
+            }
+            data-testid="autocomplete-input"
+            value={selectedOption}
             renderInput={(params) => (
               <TextField
                 {...params}

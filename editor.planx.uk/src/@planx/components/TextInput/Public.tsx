@@ -16,7 +16,10 @@ export type Props = PublicProps<TextInput, UserData>;
 const TextInputComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
-      text: "",
+      text:
+        (props.id &&
+          (props.previouslySubmittedData?.data?.[props.id] as string)) ??
+        "",
     },
     onSubmit: (values) => {
       props.handleSubmit?.(makeData(props, values.text));
