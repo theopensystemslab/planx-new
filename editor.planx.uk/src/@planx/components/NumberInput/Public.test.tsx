@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { uniqueId } from "lodash";
 import React from "react";
 import { act } from "react-dom/test-utils";
 
@@ -26,4 +27,29 @@ test("renders correctly", async () => {
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { num: 3 } });
+});
+
+test("recovers previously submitted number when clicking the back button", async () => {
+  const handleSubmit = jest.fn();
+  const componentId = uniqueId();
+
+  render(
+    <NumberInput
+      fn="num"
+      title="Cached Number"
+      handleSubmit={handleSubmit}
+      id={componentId}
+      previouslySubmittedData={{
+        data: {
+          [componentId]: 43,
+        },
+      }}
+    />
+  );
+
+  await waitFor(async () => {
+    userEvent.click(screen.getByText("Continue"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledWith({ data: { num: 43 } });
 });

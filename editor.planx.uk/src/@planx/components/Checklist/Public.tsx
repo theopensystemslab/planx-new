@@ -54,10 +54,11 @@ const ChecklistComponent: React.FC<Props> = ({
   policyRef,
   text,
   img,
+  previouslySubmittedData,
 }) => {
   const formik = useFormik<{ checked: Array<string> }>({
     initialValues: {
-      checked: [],
+      checked: previouslySubmittedData?.answers || [],
     },
     onSubmit: (values) => {
       handleSubmit?.({ answers: values.checked });

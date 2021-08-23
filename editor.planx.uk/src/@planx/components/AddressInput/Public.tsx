@@ -14,9 +14,17 @@ import { userDataSchema } from "./model";
 
 export type Props = PublicProps<AddressInput, UserData>;
 
+interface FormProps {
+  line1: string;
+  line2: string;
+  town: string;
+  county: string;
+  postcode: string;
+}
+
 export default function AddressInputComponent(props: Props): FCReturn {
-  const formik = useFormik({
-    initialValues: {
+  const formik = useFormik<FormProps>({
+    initialValues: props.previouslySubmittedData?.data?.[props.fn] ?? {
       line1: "",
       line2: "",
       town: "",

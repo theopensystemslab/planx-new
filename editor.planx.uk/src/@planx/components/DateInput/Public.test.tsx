@@ -1,10 +1,67 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { uniqueId } from "lodash";
 import React from "react";
 import { act } from "react-dom/test-utils";
 
+import { fillInFieldsUsingPlaceholder } from "../shared/testHelpers";
 import { dateRangeSchema, dateSchema, paddedDate } from "./model";
 import DateInput from "./Public";
+
+test("submits a date", async () => {
+  const handleSubmit = jest.fn();
+  const componentId = uniqueId();
+
+  render(
+    <DateInput id={componentId} title="Pizza Day" handleSubmit={handleSubmit} />
+  );
+
+  expect(screen.getByRole("heading")).toHaveTextContent("Pizza Day");
+
+  await waitFor(async () => {
+    await fillInFieldsUsingPlaceholder({
+      DD: "22",
+      MM: "05",
+      YYYY: "2010",
+    });
+
+    userEvent.click(screen.getByText("Continue"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledWith({
+    data: {
+      [componentId]: "2010-05-22",
+    },
+  });
+});
+
+test("recovers previously submitted date when clicking the back button", async () => {
+  const handleSubmit = jest.fn();
+  const componentId = uniqueId();
+
+  render(
+    <DateInput
+      id={componentId}
+      title="Pizza Day"
+      handleSubmit={handleSubmit}
+      previouslySubmittedData={{
+        data: {
+          [componentId]: "2010-05-22",
+        },
+      }}
+    />
+  );
+
+  await waitFor(() => {
+    userEvent.click(screen.getByText("Continue"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledWith({
+    data: {
+      [componentId]: "2010-05-22",
+    },
+  });
+});
 
 test("renders", async () => {
   render(<DateInput title="Enter a date" />);
