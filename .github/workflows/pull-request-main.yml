@@ -51,6 +51,7 @@ jobs:
         with:
           node-version: "14"
           cache: "pnpm"
+          cache-dependency-path: ${{ env.EDITOR_DIRECTORY }}/pnpm-lock.yaml
       - run: pnpm install
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm test
