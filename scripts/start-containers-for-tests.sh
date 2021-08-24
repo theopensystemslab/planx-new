@@ -16,28 +16,7 @@ docker-compose down --volumes --remove-orphans
 
 trap 'echo "Cleaning up…" ; docker-compose down --volumes --remove-orphans' TERM INT
 
-echo "Loading env vars…"
-. "${ROOT_DIR}/.env"
-
-# XXX: Starting postgres first makes Hasura start up faster
-echo "Starting postgres…"
+echo "Starting docker…"
 docker-compose up --build --remove-orphans -d postgres
-echo "Waiting for Postgres to be ready…"
-DONE=false
-until $DONE; do
-  sleep 0.1
-  docker-compose logs postgres 2>/dev/null | grep -q "listening on IP" && DONE=true
-done
-echo "Postgres is up."
-
-echo "Starting other services…"
-docker-compose up --build --remove-orphans -d
-echo "Waiting for Hasura to be ready…"
-DONE=false
-until $DONE; do
-  sleep 0.1
-  docker-compose logs hasura 2>/dev/null | grep -q "nothing to do" && DONE=true
-done
-echo "Hasura is ready"
 
 echo "All containers ready."
