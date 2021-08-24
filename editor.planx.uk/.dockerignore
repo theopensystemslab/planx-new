@@ -1,5 +1,4 @@
 node_modules/
 .eslintcache
 .tslint*
-.storybook
 build/
