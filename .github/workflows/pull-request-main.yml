@@ -10,6 +10,7 @@ env:
   FULL_DOMAIN: ${{ github.event.number }}.planx.club
   VULTR_URL: https://${{ github.event.number }}.planx.club
   PULLREQUEST_ID: ${{ github.event.number }}
+  EDITOR_DIRECTORY: editor.planx.uk
 
 jobs:
   # integration_tests:
@@ -50,12 +51,13 @@ jobs:
         with:
           node-version: "14"
           cache: "pnpm"
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm install
-        working-directory: www
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm test
-        working-directory: editor.planx.uk
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
-        working-directory: editor.planx.uk
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
         env:
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY: ${{ secrets.ORDNANCE_SURVEY_FEATURES_KEY }}
@@ -69,7 +71,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: ./editor.planx.uk/build
+          path: ./${{ env.EDITOR_DIRECTORY }}/build
           if-no-files-found: error
 
   # preview:
@@ -97,7 +99,7 @@ jobs:
   #       uses: actions/download-artifact@v2
   #       with:
   #         name: build
-  #         path: ./editor.planx.uk/build
+  #         path: ./${{ env.EDITOR_DIRECTORY }}/build
   #     - uses: pulumi/actions@v3
   #       with:
   #         command: preview
@@ -205,7 +207,7 @@ jobs:
           username: root
           password: ${{ secrets.SSH_PASSWORD }}
           source: "./build"
-          target: "planx-new/editor.planx.uk"
+          target: "planx-new/${{ env.EDITOR_DIRECTORY }}"
           overwrite: true
 
       - uses: marocchino/sticky-pull-request-comment@v2
