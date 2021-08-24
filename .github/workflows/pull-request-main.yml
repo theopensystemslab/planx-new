@@ -51,7 +51,6 @@ jobs:
         with:
           node-version: "14"
           cache: "pnpm"
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm install
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm test
