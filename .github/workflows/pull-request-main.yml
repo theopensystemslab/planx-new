@@ -12,20 +12,6 @@ env:
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
 
-editor_install_steps: &editor_install_steps
-  steps:
-    - uses: actions/checkout@v2
-    - uses: pnpm/action-setup@v2.0.1
-      with:
-        version: 6.13.0
-    - uses: actions/setup-node@v2
-      with:
-        node-version: "14"
-        cache: "pnpm"
-        cache-dependency-path: "*/pnpm-lock.yaml"
-    - run: pnpm install
-      working-directory: ${{ env.EDITOR_DIRECTORY }}
-
 jobs:
   integration_tests:
     name: Integration and E2E tests
@@ -33,8 +19,19 @@ jobs:
     strategy:
       matrix:
         node-version: [14]
-    <<: *editor_install_steps
-    steps+:
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.13.0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          cache: "pnpm"
+          cache-dependency-path: "*/pnpm-lock.yaml"
+      - run: pnpm install
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
+
       - run: ./scripts/start-containers-for-tests.sh
       - run: ./hasura.planx.uk/run-postgres-tests.sh
       - run: pnpm install && pnpm test
@@ -45,8 +42,19 @@ jobs:
   test_and_build:
     name: Test and Build
     runs-on: ubuntu-latest
-    <<: *editor_install_steps
-    steps+:
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.13.0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          cache: "pnpm"
+          cache-dependency-path: "*/pnpm-lock.yaml"
+      - run: pnpm install
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
+
       - run: pnpm test
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
