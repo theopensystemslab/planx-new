@@ -62,7 +62,7 @@ services:
     restart: unless-stopped
     build:
       context: ./api.planx.uk
-      dockerfile: Dockerfile.dev
+      target: development
     depends_on:
       hasura:
         condition: service_healthy
@@ -77,8 +77,6 @@ services:
       interval: 30s
       timeout: 3s
       retries: 5
-    stdin_open: true
-    tty: true
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
@@ -104,7 +102,7 @@ services:
     restart: unless-stopped
     build:
       context: ./sharedb.planx.uk
-      dockerfile: Dockerfile.dev
+      target: development
     volumes:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
@@ -113,8 +111,6 @@ services:
         condition: service_healthy
     ports:
       - ${SHAREDB_PORT}:8000
-    stdin_open: true
-    tty: true
     environment:
       JWT_SECRET: ${JWT_SECRET}
       PG_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
