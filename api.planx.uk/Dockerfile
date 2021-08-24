@@ -11,7 +11,6 @@ ENV NODE_ENV production
 RUN pnpm fetch --prod
 ADD . .
 RUN pnpm install --recursive --offline --prod
-RUN pnpm build
 COPY . .
 CMD ["pnpm", "start"]
 

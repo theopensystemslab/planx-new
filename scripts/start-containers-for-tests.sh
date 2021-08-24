@@ -17,6 +17,6 @@ docker-compose down --volumes --remove-orphans
 trap 'echo "Cleaning up…" ; docker-compose down --volumes --remove-orphans' TERM INT
 
 echo "Starting docker…"
-docker-compose up --build -d
+DOCKER_BUILDKIT=1 docker-compose up --build -d
 
 echo "All containers ready."
