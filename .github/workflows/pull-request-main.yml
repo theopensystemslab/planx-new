@@ -12,48 +12,40 @@ env:
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
 
+editor_install_steps: &editor_install_steps
+  - uses: actions/checkout@v2
+  - uses: pnpm/action-setup@v2.0.1
+    with:
+      version: 6.13.0
+  - uses: actions/setup-node@v2
+    with:
+      node-version: "14"
+      cache: "pnpm"
+      cache-dependency-path: */pnpm-lock.yaml
+  - run: pnpm install
+    working-directory: ${{ env.EDITOR_DIRECTORY }}
+
 jobs:
-  # integration_tests:
-  #   name: Integration and E2E tests
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       node-version: [14]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Use Node.js ${{ matrix.node-version }}
-  #       uses: actions/setup-node@v2
-  #       with:
-  #         node-version: ${{ matrix.node-version }}
-  #     - name: Cache .pnpm-store
-  #       uses: actions/cache@v1
-  #       with:
-  #         path: ~/.pnpm-store
-  #         key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-  #     - name: Install pnpm
-  #       run: curl -f https://get.pnpm.io/v6.7.js | node - add --global pnpm@6
-  #     - run: ./scripts/start-containers-for-tests.sh
-  #     - run: ./hasura.planx.uk/run-postgres-tests.sh
-  #     - run: pnpm install && pnpm test
-  #       working-directory: hasura.planx.uk/tests
-  #     - run: pnpm install && pnpm test
-  #       working-directory: e2e
+  integration_tests:
+    name: Integration and E2E tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14]
+    steps:
+      <<: *editor_install_steps
+      - run: ./scripts/start-containers-for-tests.sh
+      - run: ./hasura.planx.uk/run-postgres-tests.sh
+      - run: pnpm install && pnpm test
+        working-directory: hasura.planx.uk/tests
+      - run: pnpm install && pnpm test
+        working-directory: e2e
 
   test_and_build:
     name: Test and Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.13.0
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "14"
-          cache: "pnpm"
-          cache-dependency-path: ${{ env.EDITOR_DIRECTORY }}/pnpm-lock.yaml
-      - run: pnpm install
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
+      <<: *editor_install_steps
       - run: pnpm test
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
@@ -136,7 +128,7 @@ jobs:
   create_or_update_vultr_instance:
     name: Create or Update Vultr Instance
     runs-on: ubuntu-latest
-    needs: test_and_build
+    needs: [integration_tests, test_and_build]
     steps:
       # CREATE STEPS
 
