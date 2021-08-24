@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Header: React.FC<{
   bgcolor?: string;
-  team: Team;
+  team?: Team;
   phaseBanner?: boolean;
   handleRestart?: () => void;
 }> = ({ bgcolor = "#2c2c2c", team, phaseBanner = false, handleRestart }) => {
@@ -108,7 +108,7 @@ const Header: React.FC<{
       >
         <Toolbar className={classes.toolbar}>
           <Box className={classes.breadcrumbs} fontSize={20}>
-            {team.theme?.logo ? (
+            {team?.theme?.logo ? (
               <img
                 alt={`${team.name} Logo`}
                 src={team.theme.logo}
