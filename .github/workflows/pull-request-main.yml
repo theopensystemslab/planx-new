@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: "14"
           cache: "pnpm"
-          cache-dependency-path: "*/pnpm-lock.yaml"
+          cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - name: Setup Tests
@@ -54,7 +54,7 @@ jobs:
         with:
           node-version: "14"
           cache: "pnpm"
-          cache-dependency-path: "*/pnpm-lock.yaml"
+          cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
@@ -98,7 +98,7 @@ jobs:
         with:
           node-version: "14"
           cache: "pnpm"
-          cache-dependency-path: "*/pnpm-lock.yaml"
+          cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install
         working-directory: infrastructure/application
 
