@@ -1,10 +1,9 @@
-const assert = require('assert')
+const assert = require("assert");
 const { Server } = require("ws");
 const jwt = require("jsonwebtoken");
 const ShareDB = require("sharedb");
 const WebSocketJSONStream = require("@teamwork/websocket-json-stream");
 const PostgresDB = require("./sharedb-postgresql");
-const access = require("sharedb-access");
 
 const { PORT = 8000, JWT_SECRET, PG_URL } = process.env;
 assert(JWT_SECRET);
@@ -23,13 +22,6 @@ sharedb.use("connect", (request, next) => {
   } catch (e) {}
   next();
 });
-
-access(sharedb);
-
-sharedb.allowCreate("flows", async (docId, doc, session) => true);
-sharedb.allowRead("flows", async (docId, doc, session) => true);
-sharedb.allowUpdate("flows", async (docId, doc, session) => true);
-sharedb.allowDelete("flows", async (docId, doc, session) => true);
 
 const wss = new Server({
   port: PORT,

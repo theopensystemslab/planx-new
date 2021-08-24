@@ -1,18 +1,20 @@
-FROM node:14.4.0-alpine
-
-ENV ENV_NAME production
-ENV NODE_ENV production
-ENV NODE_CONFIG_ENV production
+FROM node:14.4.0-alpine as base
 
 WORKDIR /sharedb
+RUN npm install -g pnpm
+COPY package.json .
+COPY pnpm-lock.yaml .
+EXPOSE 4000
 
-ENV PATH /sharedb/node_modules/.bin:$PATH
+FROM base as production
+ENV NODE_ENV production
+RUN pnpm i --frozen
+RUN pnpm build
+COPY . .
+CMD ["pnpm", "start"]
 
-COPY package.json ./
-COPY yarn.lock ./
-
-RUN yarn install
-
-COPY . ./
-
-CMD ["yarn", "start"]
+FROM base as development
+ENV NODE_ENV development
+RUN pnpm i
+COPY . .
+CMD ["pnpm", "dev"]
