@@ -305,7 +305,7 @@ export function PropertyInformation(props: any) {
           hideResetControl
           showFeaturesAtPoint
           osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY}
-          featureColor="Orchid"
+          featureColor="#9a9a9a"
         />
       </Box>
       <Box mb={6}>
