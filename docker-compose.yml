@@ -62,7 +62,7 @@ services:
     restart: unless-stopped
     build:
       context: ./api.planx.uk
-      target: development
+      target: production
     depends_on:
       hasura:
         condition: service_healthy
@@ -102,7 +102,7 @@ services:
     restart: unless-stopped
     build:
       context: ./sharedb.planx.uk
-      target: development
+      target: production
     volumes:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
