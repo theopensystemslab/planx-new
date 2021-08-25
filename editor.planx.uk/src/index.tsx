@@ -1,14 +1,14 @@
 // init airbrake before everything else
 require("./airbrake");
 
-import "./app.css";
 import "react-toastify/dist/ReactToastify.css";
+import "./app.css";
 
 import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
-import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
+import { getCookie, setCookie } from "lib/cookie";
 import React, { Suspense } from "react";
 import { render } from "react-dom";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
@@ -23,7 +23,7 @@ import theme from "./theme";
 const rootEl = document.getElementById("root") as HTMLElement;
 
 const hasJWT = (): boolean | void => {
-  let jwt: string | null = Cookies.get("jwt");
+  let jwt = getCookie("jwt");
   if (jwt) {
     try {
       if (
@@ -40,7 +40,7 @@ const hasJWT = (): boolean | void => {
   } else {
     jwt = new URLSearchParams(window.location.search).get("jwt");
     if (jwt) {
-      Cookies.set("jwt", jwt);
+      setCookie("jwt", jwt);
       // set the jwt, and remove it from the url, then re-run this function
       window.location.href = "/";
     } else {
