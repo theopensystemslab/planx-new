@@ -12,17 +12,18 @@ import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { FlowSettings, FOOTER_ITEMS, TextContent } from "../../types";
+import { FlowSettings, FOOTER_ITEMS, Team, TextContent } from "../../types";
 
 const PreviewLayout: React.FC<{
+  team: Team;
   children?: any;
-  theme?: any;
   settings?: FlowSettings;
   footerContent?: { [key: string]: TextContent };
 }> = ({
-  theme = {
-    primary: "#2c2c2c",
-  },
+  // theme = {
+  //   primary: "#2c2c2c",
+  // },
+  team,
   children,
   settings,
   footerContent,
@@ -71,24 +72,24 @@ const PreviewLayout: React.FC<{
     Boolean(item)
   );
 
+  const primaryColour = team.theme?.primary || "#2c2c2c";
+
   const generatePreviewTheme = (baseTheme: Theme) =>
-    theme.primary
-      ? createMuiTheme({
-          ...baseTheme,
-          palette: {
-            ...baseTheme.palette,
-            primary: {
-              main: theme.primary,
-            },
-          },
-        })
-      : baseTheme;
+    createMuiTheme({
+      ...baseTheme,
+      palette: {
+        ...baseTheme.palette,
+        primary: {
+          main: primaryColour,
+        },
+      },
+    });
 
   return (
     <ThemeProvider theme={generatePreviewTheme}>
       <Header
-        bgcolor={theme.primary}
-        logo={theme.logo}
+        bgcolor={primaryColour}
+        team={team}
         phaseBanner
         handleRestart={handleRestart}
       />
@@ -109,7 +110,7 @@ const PreviewLayout: React.FC<{
       <Footer items={[...footerItems]}>
         <Box display="flex" alignItems="center">
           <Box pr={3} display="flex">
-            <img src={Logo} />
+            <img src={Logo} alt="Open Government License Logo" />
           </Box>
           <Typography variant="body2">
             All content is available under the{" "}

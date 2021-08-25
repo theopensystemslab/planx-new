@@ -39,6 +39,7 @@ const routes = compose(
             id
             team {
               theme
+              name
             }
             settings
           }
@@ -71,7 +72,7 @@ const routes = compose(
     return (
       <PreviewContext.Provider value={{ flow, globalSettings }}>
         <Layout
-          theme={flow.team.theme}
+          team={flow.team}
           settings={flow.settings}
           footerContent={globalSettings?.footerContent}
         >

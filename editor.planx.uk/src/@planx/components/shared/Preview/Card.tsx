@@ -36,7 +36,7 @@ const Card: React.FC<Props> = ({
 
   return (
     <Fade in={true} timeout={theme.transitions.duration.enteringScreen}>
-      <Container maxWidth="md">
+      <Container maxWidth="md" role="main">
         <Box
           className={classes.container}
           bgcolor="background.default"
