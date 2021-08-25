@@ -1,6 +1,5 @@
 import {
   ApolloClient,
-  ApolloLink,
   createHttpLink,
   from,
   InMemoryCache,
@@ -8,8 +7,9 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
-import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+
+import { getCookie } from "./cookie";
 
 const toastId = "error_toast";
 
@@ -53,7 +53,7 @@ const errorLink = onError(({ graphQLErrors }) => {
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from cookies if it exists
-  const token = Cookies.get("jwt");
+  const token = getCookie("jwt");
   // return the headers to the context so httpLink can read them
 
   if (token) {

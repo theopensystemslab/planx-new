@@ -10,7 +10,7 @@ import {
   update,
 } from "@planx/graph";
 import axios from "axios";
-import Cookies from "js-cookie";
+import { getCookie } from "lib/cookie";
 import { client } from "lib/graphql";
 import debounce from "lodash/debounce";
 import type { FlowSettings, TextContent } from "types";
@@ -324,7 +324,7 @@ export const editorStore = (
   },
 
   publishFlow(flowId: string) {
-    const token = Cookies.get("jwt");
+    const token = getCookie("jwt");
 
     return axios({
       url: `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish`,
