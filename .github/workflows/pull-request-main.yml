@@ -6,9 +6,9 @@ on:
       - main
 
 env:
-  DOMAIN: planx.club
-  FULL_DOMAIN: ${{ github.event.number }}.planx.club
-  VULTR_URL: https://${{ github.event.number }}.planx.club
+  DOMAIN: planx.pizza
+  FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
+  VULTR_URL: https://${{ github.event.number }}.planx.pizza
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
 
