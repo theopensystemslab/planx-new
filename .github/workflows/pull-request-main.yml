@@ -209,6 +209,10 @@ jobs:
             # GOV_UK_PAY_TOKEN_LAMBETH: ${GOV_UK_PAY_TOKEN_LAMBETH}
             # GOV_UK_PAY_TOKEN_SOUTHWARK: ${GOV_UK_PAY_TOKEN_SOUTHWARK}
             # # HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
+            # # PORT: ${API_PORT}
+
+            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }} \
+            SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }} \
 
             ROOT_DOMAIN=$(hostname) \
             SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} \
@@ -247,11 +251,9 @@ jobs:
             # GOV_UK_PAY_TOKEN_LAMBETH: ${GOV_UK_PAY_TOKEN_LAMBETH}
             # GOV_UK_PAY_TOKEN_SOUTHWARK: ${GOV_UK_PAY_TOKEN_SOUTHWARK}
             # # HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
-
-            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }} \
-
             # # PORT: ${API_PORT}
 
+            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }} \
             SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }} \
 
             ROOT_DOMAIN=$(hostname) \
