@@ -14,30 +14,30 @@ env:
 
 jobs:
   # integration_tests:
-    name: Integration and E2E tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.13.0
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "14"
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm install
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - name: Setup Tests
-        run: ./scripts/start-containers-for-tests.sh
-      - name: Postgres Tests
-        run: ./hasura.planx.uk/run-postgres-tests.sh
-      - name: Hasura Tests
-        run: pnpm install && pnpm test
-        working-directory: hasura.planx.uk/tests
-      - name: E2E Tests
-        run: pnpm install && pnpm test
-        working-directory: e2e
+  #   name: Integration and E2E tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: pnpm/action-setup@v2.0.1
+  #       with:
+  #         version: 6.13.0
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: "14"
+  #         cache: "pnpm"
+  #         cache-dependency-path: "**/pnpm-lock.yaml"
+  #     - run: pnpm install
+  #       working-directory: ${{ env.EDITOR_DIRECTORY }}
+  #     - name: Setup Tests
+  #       run: ./scripts/start-containers-for-tests.sh
+  #     - name: Postgres Tests
+  #       run: ./hasura.planx.uk/run-postgres-tests.sh
+  #     - name: Hasura Tests
+  #       run: pnpm install && pnpm test
+  #       working-directory: hasura.planx.uk/tests
+  #     - name: E2E Tests
+  #       run: pnpm install && pnpm test
+  #       working-directory: e2e
 
   test_and_build:
     name: Test and Build
