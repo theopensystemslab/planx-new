@@ -3,7 +3,6 @@
 echo "root:$SSH_PASSWORD" | chpasswd
 
 apt-get update -y
-apt update -y
 
 # create swap
 # https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-20-04
