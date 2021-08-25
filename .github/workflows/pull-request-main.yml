@@ -159,61 +159,61 @@ jobs:
     steps:
       # CREATE STEPS
 
-      # - if: github.event_name == 'pull_request' && github.event.action == 'opened'
-      #   uses: marocchino/sticky-pull-request-comment@v2
-      #   with:
-      #     header: vultr
-      #     message: |
-      #       Creating vultr server...
+      - if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: vultr
+          message: |
+            Creating vultr server...
 
-      # - if: github.event_name == 'pull_request' && github.event.action == 'opened'
-      #   name: Create Server
-      #   id: create
-      #   uses: theopensystemslab/vultr-action@v1.4
-      #   with:
-      #     action: create
-      #     api_key: ${{ secrets.VULTR_API_KEY }}
-      #     domain: ${{ env.DOMAIN }}
-      #     os_id: 387
-      #     plan: vc2-1c-1gb
-      #     pullrequest_id: ${{ env.PULLREQUEST_ID }}
-      #     region: lhr
-      #     tag: pullrequest
+      - if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        name: Create Server
+        id: create
+        uses: theopensystemslab/vultr-action@v1.4
+        with:
+          action: create
+          api_key: ${{ secrets.VULTR_API_KEY }}
+          domain: ${{ env.DOMAIN }}
+          os_id: 387
+          plan: vc2-1c-1gb
+          pullrequest_id: ${{ env.PULLREQUEST_ID }}
+          region: lhr
+          tag: pullrequest
 
-      # - if: github.event_name == 'pull_request' && github.event.action == 'opened'
-      #   name: Create commands
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ env.FULL_DOMAIN }}
-      #     username: root
-      #     password: ${{ steps.create.outputs.default_password }}
-      #     command_timeout: 20m
-      #     script: |
-      #       git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
-      #       cd planx-new
-      #       git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
+      - if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        name: Create commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.FULL_DOMAIN }}
+          username: root
+          password: ${{ steps.create.outputs.default_password }}
+          command_timeout: 20m
+          script: |
+            git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
+            cd planx-new
+            git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
 
-      # # HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      # # API_URL_EXT: ${API_URL_EXT}
-      # AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
-      # AWS_S3_ACL: ${AWS_S3_ACL}
-      # AWS_S3_BUCKET: ${AWS_S3_BUCKET}
-      # AWS_S3_REGION: ${AWS_S3_REGION}
-      # AWS_SECRET_KEY: ${AWS_SECRET_KEY}
-      # BOPS_API_ROOT_DOMAIN: ${BOPS_API_ROOT_DOMAIN}
-      # BOPS_API_TOKEN: ${BOPS_API_TOKEN}
-      # # EDITOR_URL_EXT: ${EDITOR_URL_EXT}
-      # # GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-      # # GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      # GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE: ${GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE}
-      # GOV_UK_PAY_TOKEN_LAMBETH: ${GOV_UK_PAY_TOKEN_LAMBETH}
-      # GOV_UK_PAY_TOKEN_SOUTHWARK: ${GOV_UK_PAY_TOKEN_SOUTHWARK}
-      # # HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
+            # # HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
+            # # API_URL_EXT: ${API_URL_EXT}
+            # AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+            # AWS_S3_ACL: ${AWS_S3_ACL}
+            # AWS_S3_BUCKET: ${AWS_S3_BUCKET}
+            # AWS_S3_REGION: ${AWS_S3_REGION}
+            # AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+            # BOPS_API_ROOT_DOMAIN: ${BOPS_API_ROOT_DOMAIN}
+            # BOPS_API_TOKEN: ${BOPS_API_TOKEN}
+            # # EDITOR_URL_EXT: ${EDITOR_URL_EXT}
+            # # GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+            # # GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+            # GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE: ${GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE}
+            # GOV_UK_PAY_TOKEN_LAMBETH: ${GOV_UK_PAY_TOKEN_LAMBETH}
+            # GOV_UK_PAY_TOKEN_SOUTHWARK: ${GOV_UK_PAY_TOKEN_SOUTHWARK}
+            # # HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
 
-      #       ROOT_DOMAIN=$(hostname) \
-      #       SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} \
-      #       TLS_EMAIL=${{ env.TLS_EMAIL }} \
-      #       sh scripts/pullrequest/create.sh
+            ROOT_DOMAIN=$(hostname) \
+            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} \
+            TLS_EMAIL=${{ env.TLS_EMAIL }} \
+            sh scripts/pullrequest/create.sh
 
       # UPDATE STEPS
 
