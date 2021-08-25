@@ -32,7 +32,7 @@ chmod +x /usr/local/bin/docker-compose
 
 cat .env .env.staging > .env.prod
 
-SESSION_SECRET=$SESSION_SECRET JWT_SECRET=$JWT_SECRET DOCKER_BUILDKIT=1 ROOT_DOMAIN=$(hostname) TLS_EMAIL=devops@opensystemslab.io docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.staging.yml up --build -d
+docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.staging.yml up --build -d
 
 # install hasura cli
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
