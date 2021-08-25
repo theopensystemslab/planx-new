@@ -26,10 +26,7 @@ services:
       virtual.tls: ${TLS_EMAIL}
 
   minio:
-    labels:
-      virtual.host: minio.${ROOT_DOMAIN}
-      virtual.port: 9000
-      virtual.tls: ${TLS_EMAIL}
+    entrypoint: ["echo", "minio disabled"]
 
   editor:
     image: pierrezemb/gostatic

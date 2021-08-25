@@ -11,6 +11,7 @@ env:
   VULTR_URL: https://${{ github.event.number }}.planx.pizza
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
+  TLS_EMAIL: devops@opensystemslab.io
 
 jobs:
   integration_tests:
@@ -165,7 +166,7 @@ jobs:
           message: |
             Creating vultr server...
 
-      - if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        # - if: github.event_name == 'pull_request' && github.event.action == 'opened'
         name: Create Server
         id: create
         uses: theopensystemslab/vultr-action@v1.4
@@ -179,7 +180,7 @@ jobs:
           region: lhr
           tag: pullrequest
 
-      - if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        # - if: github.event_name == 'pull_request' && github.event.action == 'opened'
         name: Create commands
         uses: appleboy/ssh-action@master
         with:
@@ -191,24 +192,33 @@ jobs:
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
-            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }} SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }} SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} sh scripts/pullrequest/create.sh
+            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }} \
+            SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }} \
+            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} \
+            TLS_EMAIL=${{ env.TLS_EMAIL }} \
+            ROOT_DOMAIN=$(hostname) \
+            sh scripts/pullrequest/create.sh
 
       # UPDATE STEPS
 
-      - if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
-        name: Update commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.FULL_DOMAIN }}
-          username: root
-          password: ${{ secrets.SSH_PASSWORD }}
-          command_timeout: 20m
-          script: |
-            git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
-            cd planx-new
-            git add . && git stash
-            git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
-            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }} SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }} sh scripts/pullrequest/update.sh
+      # - if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
+      #   name: Update commands
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ env.FULL_DOMAIN }}
+      #     username: root
+      #     password: ${{ secrets.SSH_PASSWORD }}
+      #     command_timeout: 10m
+      #     script: |
+      #       git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
+      #       cd planx-new
+      #       git add . && git stash
+      #       git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
+      #       JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }} \
+      #       SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }} \
+      #       TLS_EMAIL=${{ env.TLS_EMAIL }} \
+      #       ROOT_DOMAIN=$(hostname) \
+      #       sh scripts/pullrequest/update.sh
 
       # CREATE & UPDATE STEPS
 
