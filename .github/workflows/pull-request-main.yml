@@ -209,7 +209,7 @@ jobs:
             cd planx-new
             git add . && git stash
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
-            sh scripts/pullrequest/update.sh
+            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }} SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }} sh scripts/pullrequest/update.sh
 
       # CREATE & UPDATE STEPS
 

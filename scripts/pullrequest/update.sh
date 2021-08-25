@@ -10,4 +10,4 @@ cat .env .env.staging > .env.prod
 
 # ROOT_DOMAIN=$(hostname) TLS_EMAIL=devops@opensystemslab.io docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.staging.yml build --no-cache
 
-DOCKER_BUILDKIT=1 ROOT_DOMAIN=$(hostname) TLS_EMAIL=devops@opensystemslab.io docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.staging.yml up --build --remove-orphans -d
+SESSION_SECRET=$SESSION_SECRET JWT_SECRET=$JWT_SECRET DOCKER_BUILDKIT=1 ROOT_DOMAIN=$(hostname) TLS_EMAIL=devops@opensystemslab.io docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.staging.yml up --build --remove-orphans -d
