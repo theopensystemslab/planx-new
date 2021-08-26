@@ -62,6 +62,7 @@ function Component(props: Props) {
         title={props.title}
         description={props.description}
         setAddress={setAddress}
+        team={team}
       />
     );
   } else if (constraints) {
@@ -153,11 +154,20 @@ function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
   title?: string;
   description?: string;
+  team: string;
 }) {
   const [postcode, setPostcode] = useState<string | null>();
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
   const [selectedOption, setSelectedOption] = useState<Option | undefined>();
+  const [validPostcode, setValidPostcode] = useState<boolean>(true);
 
+  // fetch postcodes that are accessible to & valid for this team
+  const { data: postcodesPerTeam } = useSWR(
+    () => `${process.env.REACT_APP_API_URL}/postcodes/${props.team}?version=1`
+  );
+  console.log(postcodesPerTeam);
+
+  // get addresses in this postcode
   const { loading, error, data } = useQuery(
     gql`
       query FindAddress($postcode: String = "") {
@@ -206,13 +216,23 @@ function GetAddress(props: {
             if (parse(input.trim()).valid) {
               setSanitizedPostcode(toNormalised(input.trim()));
               setPostcode(toNormalised(input.trim()));
+
+              if (postcodesPerTeam.includes(toNormalised(input.trim()))) {
+                console.log("validated");
+                setValidPostcode(true);
+              } else {
+                setValidPostcode(false);
+              }
             } else {
               setSanitizedPostcode(null);
               setPostcode(input.toUpperCase());
             }
           }}
+          errorMessage={
+            validPostcode ? "" : "This postcode is not in your council"
+          }
         />
-        {Boolean(data?.addresses?.length) && (
+        {Boolean(data?.addresses?.length) && validPostcode && (
           <Autocomplete
             options={data.addresses
               .map(
