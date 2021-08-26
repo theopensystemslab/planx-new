@@ -1,65 +1,40 @@
-const { gqlAdmin, gqlPublic } = require("./utils");
+const { introspectAs } = require("./utils");
 
 describe("flows and operations", () => {
-  const INTROSPECTION_QUERY = `
-    query IntrospectionQuery {
-      __schema {
-        types {
-          name
-          description
-          fields {
-            name
-          }
-        }
-      }
-    }
-  `;
+  describe("public", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("public");
+    });
 
-  test("public can query flows, but not the flows associated operations", async () => {
-    const response = await gqlPublic(INTROSPECTION_QUERY);
-    const { types } = response.data.__schema;
-    const queries = types.find(x => x.name === 'query_root').fields.map(x => x.name);
+    test("can query flows, but not the flows associated operations", () => {
+      expect(i.queries).toContain("flows");
+      expect(i.queries).not.toContain("operations");
+    });
 
-    expect(queries).toContain('flows');
-    expect(queries).not.toContain('operations');
+    test("cannot create, update, or delete flows or their associated operations", () => {
+      expect(i).toHaveNoMutationsFor("flows");
+      expect(i).toHaveNoMutationsFor("operations");
+    });
+
+    test("can query published flows", () => {
+      expect(i.queries).toContain("published_flows");
+    });
+
+    test("cannot create, update, or delete published_flows", () => {
+      expect(i).toHaveNoMutationsFor("published_flows");
+    });
   });
 
-  test("public cannot create, update, or delete flows or their associated operations", async () => {
-    const response = await gqlPublic(INTROSPECTION_QUERY);
-    const { types } = response.data.__schema;
-    const mutations = types.find(x => x.name === 'mutation_root').fields.map(x => x.name);
+  describe("admin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("admin");
+    });
 
-    expect(mutations).not.toContain('insert_flows');
-    expect(mutations).not.toContain('update_flows_by_pk');
-    expect(mutations).not.toContain('delete_flows');
-    expect(mutations).not.toContain('insert_operations');
-    expect(mutations).not.toContain('delete_operations');
-  });
-
-  test("admin can delete flows and their associated operations", async () => {
-    const response = await gqlAdmin(INTROSPECTION_QUERY);
-    const { types } = response.data.__schema;
-    const mutations = types.find(x => x.name === 'mutation_root').fields.map(x => x.name);
-
-    expect(mutations).toContain('delete_flows_by_pk');
-    expect(mutations).toContain('delete_operations');
-  });
-
-  test("public can query published flows", async () => {
-    const response = await gqlPublic(INTROSPECTION_QUERY);
-    const { types } = response.data.__schema;
-    const queries = types.find(x => x.name === 'query_root').fields.map(x => x.name);
-
-    expect(queries).toContain('published_flows');
-  });
-
-  test("public cannot create, update, or delete published_flows", async () => {
-    const response = await gqlPublic(INTROSPECTION_QUERY);
-    const { types } = response.data.__schema;
-    const mutations = types.find(x => x.name === 'mutation_root').fields.map(x => x.name);
-
-    expect(mutations).not.toContain('insert_published_flows');
-    expect(mutations).not.toContain('update_published_flows');
-    expect(mutations).not.toContain('delete_published_flows');
+    test("can delete flows and their associated operations", () => {
+      expect(i.mutations).toContain("delete_flows_by_pk");
+      expect(i.mutations).toContain("delete_operations");
+    });
   });
 });

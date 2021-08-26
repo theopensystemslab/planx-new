@@ -7,4 +7,11 @@ module.exports = {
     config.resolve.plugins.push(new TsconfigPathsPlugin({}));
     return config;
   },
+  babel: async (options) => ({
+    ...options,
+    plugins: [
+      ...options.plugins,
+      "@babel/plugin-proposal-logical-assignment-operators",
+    ],
+  }),
 };

@@ -36,6 +36,8 @@ export default function PhaseBanner(): FCReturn {
   return (
     <FeedbackFish projectId={feedbackFishId}>
       <Box
+        role="button"
+        aria-label="This is a new service. Click here to provide feedback."
         className={classes.root}
         bgcolor="background.default"
         display="flex"
@@ -52,11 +54,14 @@ export default function PhaseBanner(): FCReturn {
           flexBasis={0}
           px={2}
           mr={2}
+          py={0.5}
+          fontSize={15}
+          textAlign="center"
+          whiteSpace="nowrap"
+          fontWeight={600}
           className={classes.betaIcon}
         >
-          <Typography color="inherit" variant="h6" align="center" noWrap>
-            PRIVATE BETA
-          </Typography>
+          PRIVATE BETA
         </Box>
         <Typography variant="body2" color="textPrimary">
           This is a new service. Your <a>feedback</a> will help us improve it.

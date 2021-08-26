@@ -41,7 +41,7 @@ const theme = createMuiTheme({
     },
     background: {
       default: "#fff",
-      paper: "#FAFAFA",
+      paper: "#DEDEDE",
     },
     secondary: {
       main: "#EFEFEF",

@@ -4,6 +4,7 @@ specifiers:
   '@airbrake/browser': ^2.1.4
   '@apollo/client': ^3.2.5
   '@babel/core': ^7.12.3
+  '@babel/plugin-proposal-logical-assignment-operators': ^7.14.5
   '@craco/craco': ^6.1.1
   '@ctrl/tinycolor': ^3.1.6
   '@draft-js-plugins/anchor': ^4.0.0
@@ -174,6 +175,7 @@ dependencies:
 
 devDependencies:
   '@babel/core': 7.12.8
+  '@babel/plugin-proposal-logical-assignment-operators': 7.14.5_@babel+core@7.12.8
   '@craco/craco': 6.1.1_react-scripts@4.0.1
   '@react-theming/storybook-addon': 1.0.3_54a30fc4c43e38dd78603ca5e62f7bcd
   '@storybook/addon-actions': 6.1.5_4695a47c40ef995f48f8c834d2fb82ec
@@ -704,6 +706,10 @@ packages:
   /@babel/helper-plugin-utils/7.13.0:
     resolution: {integrity: sha512-ZPafIPSwzUlAoWT8DKs1W2VyF2gOWthGd5NGFMsBcMMol+ZhK+EQY/e6V96poa6PA/Bh+C9plWN0hXO1uB8AfQ==}
 
+  /@babel/helper-plugin-utils/7.14.5:
+    resolution: {integrity: sha512-/37qQCE3K0vvZKwoK4XU/irIJQdIfCJuhU5eKnNxpFDsOkgFaUAwbv+RYw6eYgsC0E4hS7r5KqGULUogqui0fQ==}
+    engines: {node: '>=6.9.0'}
+
   /@babel/helper-regex/7.10.5:
     resolution: {integrity: sha512-68kdUAzDrljqBrio7DYAEgCoJHxppJOERHOgOrDN7WjOzP0ZQ1LsSDRXcemzVZaLvjaJsJEESb6qt+znNuENDg==}
     dependencies:
@@ -1075,6 +1081,17 @@ packages:
     dependencies:
       '@babel/core': 7.12.8
       '@babel/helper-plugin-utils': 7.10.4
+      '@babel/plugin-syntax-logical-assignment-operators': 7.10.4_@babel+core@7.12.8
+    dev: true
+
+  /@babel/plugin-proposal-logical-assignment-operators/7.14.5_@babel+core@7.12.8:
+    resolution: {integrity: sha512-YGn2AvZAo9TwyhlLvCCWxD90Xq8xJ4aSgaX3G5D/8DW94L8aaT+dS5cSP+Z06+rCJERGSr9GxMBZ601xoc2taw==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.12.8
+      '@babel/helper-plugin-utils': 7.14.5
       '@babel/plugin-syntax-logical-assignment-operators': 7.10.4_@babel+core@7.12.8
     dev: true
 
@@ -1617,7 +1634,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.10
-      '@babel/helper-plugin-utils': 7.13.0
+      '@babel/helper-plugin-utils': 7.14.5
     dev: false
 
   /@babel/plugin-syntax-logical-assignment-operators/7.10.4_@babel+core@7.12.3:
@@ -1626,7 +1643,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.3
-      '@babel/helper-plugin-utils': 7.13.0
+      '@babel/helper-plugin-utils': 7.14.5
     dev: false
 
   /@babel/plugin-syntax-logical-assignment-operators/7.10.4_@babel+core@7.12.8:
@@ -1635,7 +1652,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.8
-      '@babel/helper-plugin-utils': 7.13.0
+      '@babel/helper-plugin-utils': 7.14.5
     dev: true
 
   /@babel/plugin-syntax-logical-assignment-operators/7.10.4_@babel+core@7.13.8:
@@ -1644,7 +1661,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.13.8
-      '@babel/helper-plugin-utils': 7.13.0
+      '@babel/helper-plugin-utils': 7.14.5
     dev: true
 
   /@babel/plugin-syntax-nullish-coalescing-operator/7.8.3_@babel+core@7.12.10:
