@@ -8,21 +8,20 @@ import { airbrake } from "airbrake";
 import { flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
-import { Store } from "../../../pages/FlowEditor/lib/store";
-import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
+
+import { Store } from "../../../../pages/FlowEditor/lib/store";
+import { PASSPORT_UPLOAD_KEY } from "../../DrawBoundary/model";
+import { GOV_PAY_PASSPORT_KEY, toPence } from "../../Pay/model";
+import { removeNilValues } from "../../shared/utils";
+import { TYPES } from "../../types";
 import {
   BOPSFullPayload,
   FileTag,
   QuestionAndResponses,
   QuestionMetaData,
   Response,
-  ResponseMetaData
+  ResponseMetaData,
 } from "../model";
-import { GOV_PAY_PASSPORT_KEY, toPence } from "../Pay/model";
-import { removeNilValues } from "../shared/utils";
-import { TYPES } from "../types";
-
-
 
 export const bopsDictionary = {
   applicant_first_name: "applicant.name.first",
