@@ -37,7 +37,7 @@ export interface IFormInput {
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => void;
   value?: any;
-  errorMessage?: string | null;
+  errorMessage?: string | undefined;
 }
 
 /** General-purpose styled text input */

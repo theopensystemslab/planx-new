@@ -165,7 +165,6 @@ function GetAddress(props: {
   const { data: postcodesPerTeam } = useSWR(
     () => `${process.env.REACT_APP_API_URL}/postcodes/${props.team}?version=1`
   );
-  console.log(postcodesPerTeam);
 
   // get addresses in this postcode
   const { loading, error, data } = useQuery(
@@ -218,7 +217,6 @@ function GetAddress(props: {
               setPostcode(toNormalised(input.trim()));
 
               if (postcodesPerTeam.includes(toNormalised(input.trim()))) {
-                console.log("validated");
                 setValidPostcode(true);
               } else {
                 setValidPostcode(false);
