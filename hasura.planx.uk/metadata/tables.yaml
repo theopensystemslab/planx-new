@@ -13,6 +13,7 @@
     permission:
       columns:
       - blpu_code
+      - gss_code
       - latitude
       - longitude
       - organisation
