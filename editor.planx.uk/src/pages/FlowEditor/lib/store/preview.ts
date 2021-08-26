@@ -10,7 +10,7 @@ import isNil from "lodash/isNil";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
 import type { Flag, GovUKPayment } from "types";
-import { v4 } from "uuid";
+import { v4 as uuidV4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
 import type { Store } from ".";
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
@@ -244,7 +244,7 @@ export const previewStore = (
     set(args);
   },
 
-  sessionId: v4(),
+  sessionId: uuidV4(),
 
   async sendSessionDataToHasura() {
     try {
