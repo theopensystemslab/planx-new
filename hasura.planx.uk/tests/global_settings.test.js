@@ -12,7 +12,7 @@ describe("global_settings", () => {
     });
 
     test("cannot create, update, or delete global_settings", () => {
-      expect(i).not.toHaveSomeMutationsFor("global_settings");
+      expect(i).toHaveNoMutationsFor("global_settings");
     });
   });
 

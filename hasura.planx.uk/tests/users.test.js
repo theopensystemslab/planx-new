@@ -12,7 +12,7 @@ describe("users", () => {
     });
 
     test("cannot create, update, or delete users", async () => {
-      expect(i).not.toHaveSomeMutationsFor("users");
+      expect(i).toHaveNoMutationsFor("users");
     });
   });
 

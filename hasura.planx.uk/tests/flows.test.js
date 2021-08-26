@@ -13,16 +13,16 @@ describe("flows and operations", () => {
     });
 
     test("cannot create, update, or delete flows or their associated operations", () => {
-      expect(i).not.toHaveSomeMutationsFor("flows");
-      expect(i).not.toHaveSomeMutationsFor("operations");
+      expect(i).toHaveNoMutationsFor("flows");
+      expect(i).toHaveNoMutationsFor("operations");
     });
 
     test("can query published flows", () => {
       expect(i.queries).toContain("published_flows");
     });
 
-    test("public cannot create, update, or delete published_flows", () => {
-      expect(i).not.toHaveSomeMutationsFor("published_flows");
+    test("cannot create, update, or delete published_flows", () => {
+      expect(i).toHaveNoMutationsFor("published_flows");
     });
   });
 

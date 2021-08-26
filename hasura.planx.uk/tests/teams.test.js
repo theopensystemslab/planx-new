@@ -13,8 +13,8 @@ describe("teams and team_members", () => {
     });
 
     test("cannot create, update, or delete teams or team members", () => {
-      expect(i).not.toHaveSomeMutationsFor("teams");
-      expect(i).not.toHaveSomeMutationsFor("team_members");
+      expect(i).toHaveNoMutationsFor("teams");
+      expect(i).toHaveNoMutationsFor("team_members");
     });
   });
 

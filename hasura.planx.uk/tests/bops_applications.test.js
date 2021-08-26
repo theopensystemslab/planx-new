@@ -12,7 +12,7 @@ describe("bops_applications", () => {
     });
 
     test("cannot create, update, or delete bops applications", () => {
-      expect(i).not.toHaveSomeMutationsFor("bops_applications");
+      expect(i).toHaveNoMutationsFor("bops_applications");
     });
   });
 
