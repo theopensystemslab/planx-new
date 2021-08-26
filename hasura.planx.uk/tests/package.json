@@ -6,5 +6,10 @@
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "jest": "^26.4.2"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ]
   }
 }
