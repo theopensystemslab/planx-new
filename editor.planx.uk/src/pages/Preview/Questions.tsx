@@ -1,3 +1,4 @@
+import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
 import { getLocalFlow, setLocalFlow } from "lib/local";
@@ -102,7 +103,7 @@ const Questions = () => {
   };
 
   return (
-    <>
+    <Box width="100%" role="main">
       <button
         className={classnames(classes.backButton, {
           [classes.hidden]: !showBackButton,
@@ -124,7 +125,7 @@ const Questions = () => {
           />
         </ErrorBoundary>
       )}
-    </>
+    </Box>
   );
 };
 
