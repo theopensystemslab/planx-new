@@ -69,6 +69,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
+    "@babel/plugin-proposal-logical-assignment-operators": "^7.14.5",
     "@craco/craco": "^6.1.1",
     "@react-theming/storybook-addon": "^1.0.3",
     "@storybook/addon-actions": "^6.1.1",
