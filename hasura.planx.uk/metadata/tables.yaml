@@ -103,6 +103,13 @@
 - table:
     schema: public
     name: global_settings
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - footer_content
+      filter: {}
 - table:
     schema: public
     name: operations
