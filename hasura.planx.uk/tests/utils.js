@@ -26,7 +26,45 @@ async function gqlPublic(query, variables = {}) {
   return await res.json();
 }
 
+/**
+ * Helper method for introspecting as a specific user
+ * @param {string} role ("public" or "admin")
+ * @example
+ * const { types, queries, mutations } = await introspectAs("public")
+ */
+const introspectAs = async (role) => {
+  const gql = role === "admin" ? gqlAdmin : gqlPublic;
+  const INTROSPECTION_QUERY = `
+    query IntrospectionQuery {
+      __schema {
+        types {
+          name
+          description
+          fields {
+            name
+          }
+        }
+      }
+    }
+  `;
+  const response = await gql(INTROSPECTION_QUERY);
+  const { types } = response.data.__schema;
+  const queries = types
+    .find((x) => x.name === "query_root")
+    .fields.map((x) => x.name);
+  const mutations = types
+    .find((x) => x.name === "mutation_root")
+    .fields.map((x) => x.name);
+
+  return {
+    types,
+    queries,
+    mutations,
+  };
+};
+
 module.exports = {
   gqlAdmin,
   gqlPublic,
+  introspectAs,
 };
