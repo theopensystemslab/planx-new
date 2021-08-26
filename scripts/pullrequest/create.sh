@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "root:$SSH_PASSWORD" | chpasswd
 
