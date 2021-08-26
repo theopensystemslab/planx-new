@@ -233,7 +233,7 @@ jobs:
             git add . && git stash
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
 
-            cat <<EOT >> .env.temp
+            echo "
             JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }}
             SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }}
             # AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
@@ -246,7 +246,8 @@ jobs:
             # GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE: ${GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE}
             # GOV_UK_PAY_TOKEN_LAMBETH: ${GOV_UK_PAY_TOKEN_LAMBETH}
             # GOV_UK_PAY_TOKEN_SOUTHWARK: ${GOV_UK_PAY_TOKEN_SOUTHWARK}
-            EOT
+            " > .env.temp
+
             cat .env .env.temp .env.staging > .env.prod
             rm .env.temp
 
