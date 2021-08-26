@@ -422,6 +422,51 @@ app.get("/gis", (_req, res) => {
 
 app.get("/gis/:localAuthority", locationSearch());
 
+app.get("/postcodes/:localAuthority", async function (req, res) {
+  const gssCodes = {
+    "buckinghamshire": "E06000060",
+    "canterbury": "E07000106",
+    "lambeth": "E09000022",
+    "southwark": "E09000028",
+  }
+
+  const teamCode = gssCodes[req.params.localAuthority];
+
+  if (teamCode) {
+    // if we know the gss_code, get valid postcodes for that council
+    const data = await client.request(
+      `query ($code: String) {
+        addresses(
+          where: { gss_code: {_eq: $code } }, 
+          distinct_on: postcode,
+          order_by: { postcode: asc }
+        ) {
+          postcode
+        }
+      }`,
+      { code: teamCode }
+    );
+
+    const postcodes = data?.addresses?.map(a => a.postcode);
+    res.json(postcodes);
+  } else {
+    // if the team doesn't have a known gss_code, then they can access all postcodes
+    const data = await client.request(
+      `query {
+        addresses(
+          distinct_on: postcode
+          order_by: { postcode: asc }
+        ) {
+          postcode
+        }
+      }`
+    );
+
+    const postcodes = data?.addresses?.map(a => a.postcode);
+    res.json(postcodes);
+  }
+});
+
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
