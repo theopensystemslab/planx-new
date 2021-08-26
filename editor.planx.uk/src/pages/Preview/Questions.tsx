@@ -1,3 +1,5 @@
+import { makeStyles } from "@material-ui/core/styles";
+import classnames from "classnames";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -6,6 +8,29 @@ import ErrorFallback from "../../components/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
 import Node, { handleSubmit } from "./Node";
+
+const useClasses = makeStyles((theme) => ({
+  backButton: {
+    padding: "0 10px 10px",
+    visibility: "visible",
+    pointerEvents: "auto",
+    display: "block",
+    cursor: "pointer",
+    userSelect: "none",
+    alignSelf: "start",
+    fontSize: 16,
+    background: "transparent",
+    border: "none",
+
+    "&:hover": {
+      textDecoration: "underline",
+    },
+  },
+  hidden: {
+    visibility: "hidden",
+    pointerEvents: "none",
+  },
+}));
 
 const Questions = () => {
   const [
@@ -36,6 +61,8 @@ const Questions = () => {
 
   const node = currentCard();
   const flow = useContext(PreviewContext)?.flow;
+
+  const classes = useClasses();
 
   const showBackButton = node?.id ? canGoBack(node.id) : false;
   const isStandalone = previewEnvironment === "standalone";
@@ -76,22 +103,16 @@ const Questions = () => {
 
   return (
     <>
-      <span
+      <button
+        className={classnames(classes.backButton, {
+          [classes.hidden]: !showBackButton,
+        })}
         onClick={() => {
           record(previousCard!);
         }}
-        style={{
-          padding: "0 10px 10px",
-          visibility: showBackButton ? "visible" : "hidden",
-          pointerEvents: showBackButton ? "auto" : "none",
-          display: "block",
-          cursor: "pointer",
-          userSelect: "none",
-          alignSelf: "start",
-        }}
       >
         ⭠ Back
-      </span>
+      </button>
 
       {node && (
         <ErrorBoundary FallbackComponent={ErrorFallback}>
