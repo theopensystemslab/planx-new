@@ -193,30 +193,17 @@ jobs:
             cd planx-new
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
 
-            # # HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-            # # API_URL_EXT: ${API_URL_EXT}
-            # AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
-            # AWS_S3_ACL: ${AWS_S3_ACL}
-            # AWS_S3_BUCKET: ${AWS_S3_BUCKET}
-            # AWS_S3_REGION: ${AWS_S3_REGION}
-            # AWS_SECRET_KEY: ${AWS_SECRET_KEY}
-            # BOPS_API_ROOT_DOMAIN: ${BOPS_API_ROOT_DOMAIN}
-            # BOPS_API_TOKEN: ${BOPS_API_TOKEN}
-            # # EDITOR_URL_EXT: ${EDITOR_URL_EXT}
-            # # GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-            # # GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-            # GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE: ${GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE}
-            # GOV_UK_PAY_TOKEN_LAMBETH: ${GOV_UK_PAY_TOKEN_LAMBETH}
-            # GOV_UK_PAY_TOKEN_SOUTHWARK: ${GOV_UK_PAY_TOKEN_SOUTHWARK}
-            # # HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
-            # # PORT: ${API_PORT}
+            echo "
+            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }}
+            SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }}
+            BOPS_API_TOKEN: ${{ secrets.STAGING_BOPS_API_TOKEN }}
+            GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE: ${{ secrets.STAGING_GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE }}
+            GOV_UK_PAY_TOKEN_LAMBETH: ${{ secrets.STAGING_GOV_UK_PAY_TOKEN_LAMBETH }}
+            GOV_UK_PAY_TOKEN_SOUTHWARK: ${{ secrets.STAGING_GOV_UK_PAY_TOKEN_SOUTHWARK }}
+            " > .env.temp
+            cat .env .env.temp .env.staging > .env.prod
 
-            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }} \
-            SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }} \
-
-            ROOT_DOMAIN=$(hostname) \
-            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} \
-            sh scripts/pullrequest/create.sh
+            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} sh scripts/pullrequest/create.sh
 
       # UPDATE STEPS
 
@@ -237,20 +224,12 @@ jobs:
             echo "
             JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }}
             SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }}
-            # AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
-            # AWS_S3_ACL: ${AWS_S3_ACL}
-            # AWS_S3_BUCKET: ${AWS_S3_BUCKET}
-            # AWS_S3_REGION: ${AWS_S3_REGION}
-            # AWS_SECRET_KEY: ${AWS_SECRET_KEY}
-            # BOPS_API_ROOT_DOMAIN: ${BOPS_API_ROOT_DOMAIN}
-            # BOPS_API_TOKEN: ${BOPS_API_TOKEN}
-            # GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE: ${GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE}
-            # GOV_UK_PAY_TOKEN_LAMBETH: ${GOV_UK_PAY_TOKEN_LAMBETH}
-            # GOV_UK_PAY_TOKEN_SOUTHWARK: ${GOV_UK_PAY_TOKEN_SOUTHWARK}
+            BOPS_API_TOKEN: ${{ secrets.STAGING_BOPS_API_TOKEN }}
+            GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE: ${{ secrets.STAGING_GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE }}
+            GOV_UK_PAY_TOKEN_LAMBETH: ${{ secrets.STAGING_GOV_UK_PAY_TOKEN_LAMBETH }}
+            GOV_UK_PAY_TOKEN_SOUTHWARK: ${{ secrets.STAGING_GOV_UK_PAY_TOKEN_SOUTHWARK }}
             " > .env.temp
-
             cat .env .env.temp .env.staging > .env.prod
-            # rm .env.temp
 
             sh scripts/pullrequest/update.sh
 
