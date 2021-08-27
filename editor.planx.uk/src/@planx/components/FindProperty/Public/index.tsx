@@ -163,16 +163,7 @@ function GetAddress(props: {
 
   // fetch postcodes that are accessible to & valid for this team
   const { data: postcodesPerTeam } = useSWR(
-    () => `${process.env.REACT_APP_API_URL}/postcodes/${props.team}?version=1`,
-    {
-      // fetch once
-      revalidateOnFocus: false,
-      revalidateOnMount: false,
-      revalidateOnReconnect: false,
-      refreshWhenOffline: false,
-      refreshWhenHidden: false,
-      refreshInterval: 0,
-    }
+    () => `${process.env.REACT_APP_API_URL}/postcodes/${props.team}?version=1`
   );
 
   // get addresses in this postcode
