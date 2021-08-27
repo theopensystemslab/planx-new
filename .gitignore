@@ -6,3 +6,4 @@ nginx/static/*
 editor.planx.uk/.eslintcache
 /minio-data
 .pnpm-debug.log
+.env.temp
