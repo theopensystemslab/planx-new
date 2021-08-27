@@ -332,7 +332,7 @@ app.post("/pay/:localAuthority", (req, res) => {
 
 // used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
 // fetches the status of the payment
-app.get("/pay/:localAuthority/:paymentId", (req, res) => {
+app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
   // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
   usePayProxy(
     {
@@ -425,8 +425,9 @@ app.get("/me", useJWT, async function (req, res, next) {
   }
 });
 
-app.get("/gis", (_req, res) => {
-  res.json({
+app.get("/gis", (_req, res, next) => {
+  next({
+    status: 400,
     message: "Please specify a Local Authority",
   });
 });
@@ -525,6 +526,12 @@ function useProxy(options = {}) {
   return createProxyMiddleware({
     changeOrigin: true,
     logLevel: LOG_LEVEL,
+    onError: (err, req, res, target) => {
+      res.json({
+        status: 500,
+        message: "Something went wrong",
+      });
+    },
     ...options,
   });
 }
