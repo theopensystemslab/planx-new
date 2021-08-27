@@ -35,7 +35,7 @@ function locationSearchWithTimeout(
   });
 }
 
-const locationSearch = () => async (req, res) => {
+const locationSearch = () => async (req, res, next) => {
   // check if this is a supported location authority
   if (localAuthorities[req.params.localAuthority]) {
     try {
@@ -47,13 +47,16 @@ const locationSearch = () => async (req, res) => {
       );
       res.send(resp);
     } catch (err) {
-      res.status(500).send({ message: err ? err : "unknown error" });
+      next({
+        status: 500,
+        message: err ? err : "unknown error",
+      });
     }
   } else {
-    res.send({});
-    console.log(
-      `${req.params.localAuthority} is not a supported location authority`
-    );
+    next({
+      status: 400,
+      message: `${req.params.localAuthority} is not a supported location authority`,
+    });
   }
 };
 
