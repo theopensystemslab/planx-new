@@ -119,21 +119,31 @@ describe("BOPS files[*].applicant_description", () => {
                   url: "https://example.com/image.jpg",
                   filename: "image.jpg",
                 },
+                {
+                  url: "https://example.com/image2.jpg",
+                  filename: "image2.jpg",
+                },
               ],
             },
           },
           ...testScenarioBreadcrumbs,
         };
+
         setState({
           flow,
           breadcrumbs,
         });
 
-        // Check what the file's .applicant_description value is
-        expect(
-          getParams(flow, breadcrumbs, computePassport(), sessionId).files![0]
-            .applicant_description
-        ).toStrictEqual(expected);
+        // if the user has uploaded multiple files for a specific key,
+        // ensure that every file in the list has the same description
+        getParams(
+          flow,
+          breadcrumbs,
+          computePassport(),
+          sessionId
+        ).files?.forEach((file) => {
+          expect(file.applicant_description).toStrictEqual(expected);
+        });
       });
     }
   );
