@@ -159,11 +159,20 @@ function GetAddress(props: {
   const [postcode, setPostcode] = useState<string | null>();
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
   const [selectedOption, setSelectedOption] = useState<Option | undefined>();
-  const [validPostcode, setValidPostcode] = useState<boolean>(true);
+  const [postcodeInTeam, setPostcodeInTeam] = useState<boolean>(true);
 
   // fetch postcodes that are accessible to & valid for this team
   const { data: postcodesPerTeam } = useSWR(
-    () => `${process.env.REACT_APP_API_URL}/postcodes/${props.team}?version=1`
+    () => `${process.env.REACT_APP_API_URL}/postcodes/${props.team}?version=1`,
+    {
+      // fetch once
+      revalidateOnFocus: false,
+      revalidateOnMount: false,
+      revalidateOnReconnect: false,
+      refreshWhenOffline: false,
+      refreshWhenHidden: false,
+      refreshInterval: 0,
+    }
   );
 
   // get addresses in this postcode
@@ -216,10 +225,11 @@ function GetAddress(props: {
               setSanitizedPostcode(toNormalised(input.trim()));
               setPostcode(toNormalised(input.trim()));
 
+              // the postcode is valid, now check if it is local to this team/council
               if (postcodesPerTeam.includes(toNormalised(input.trim()))) {
-                setValidPostcode(true);
+                setPostcodeInTeam(true);
               } else {
-                setValidPostcode(false);
+                setPostcodeInTeam(false);
               }
             } else {
               setSanitizedPostcode(null);
@@ -227,10 +237,10 @@ function GetAddress(props: {
             }
           }}
           errorMessage={
-            validPostcode ? "" : "This postcode is not in your council"
+            postcodeInTeam ? "" : "This postcode is not in your council"
           }
         />
-        {Boolean(data?.addresses?.length) && validPostcode && (
+        {Boolean(data?.addresses?.length) && postcodeInTeam && (
           <Autocomplete
             options={data.addresses
               .map(
