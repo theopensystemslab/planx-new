@@ -87,30 +87,3 @@ describe("starting a flow with no initial data", () => {
     });
   });
 });
-
-it.skip("doesn't overwrite initial data when going back", () => {
-  getState().resetPreview();
-
-  setState({
-    flow,
-  });
-
-  const initialData = {
-    item: ["food"],
-    color: ["red"],
-  };
-  // passport: {
-  //   initialData,
-  //   data: initialData,
-  // },
-
-  getState().upcomingCardIds();
-
-  getState().record("whichfood", { answers: ["fruit"] });
-  getState().upcomingCardIds();
-
-  getState().record("whatisit");
-  getState().upcomingCardIds();
-
-  expect(getState().computePassport().data).toEqual(initialData);
-});
