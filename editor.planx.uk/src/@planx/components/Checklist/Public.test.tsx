@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 
@@ -58,7 +58,91 @@ test("answers are submitted in order they were supplied", async () => {
   });
 });
 
-test.todo("expandable checklist");
+test("submits answers with grouped options", async () => {
+  const handleSubmit = jest.fn();
+
+  render(
+    <Checklist
+      allRequired={false}
+      description=""
+      text="home type?"
+      handleSubmit={handleSubmit}
+      groupedOptions={[
+        {
+          title: "Section 1",
+          children: [
+            {
+              id: "S1_Option1",
+              data: {
+                text: "S1 Option1",
+              },
+            },
+            {
+              id: "S1_Option2",
+              data: {
+                text: "S1 Option2",
+              },
+            },
+          ],
+        },
+        {
+          title: "Section 2",
+          children: [
+            {
+              id: "S2_Option1",
+              data: {
+                text: "S2 Option1",
+              },
+            },
+            {
+              id: "S2_Option2",
+              data: {
+                text: "S2 Option2",
+              },
+            },
+          ],
+        },
+        {
+          title: "Section 3",
+          children: [
+            {
+              id: "S3_Option1",
+              data: {
+                text: "S3 Option1",
+              },
+            },
+            {
+              id: "S3_Option2",
+              data: {
+                text: "S3 Option2",
+              },
+            },
+          ],
+        },
+      ]}
+    />
+  );
+
+  await act(async () => {
+    userEvent.click(screen.getByText("Section 1"));
+  });
+
+  userEvent.click(screen.getByText("S1 Option1"));
+
+  await act(async () => {
+    userEvent.click(screen.getByText("Section 2"));
+  });
+
+  userEvent.click(screen.getByText("S2 Option2"));
+
+  await waitFor(async () => {
+    userEvent.click(screen.getByText("Continue"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledWith({
+    answers: ["S1_Option1", "S2_Option2"],
+  });
+});
 
 test("recovers checkboxes state when clicking the back button", async () => {
   const handleSubmit = jest.fn();
@@ -105,5 +189,84 @@ test("recovers checkboxes state when clicking the back button", async () => {
 
   expect(handleSubmit).toHaveBeenCalledWith({
     answers: ["flat_id", "house_id"],
+  });
+});
+
+test("recovers grouped options state when clicking the back button", async () => {
+  const handleSubmit = jest.fn();
+
+  render(
+    <Checklist
+      allRequired={false}
+      description=""
+      text="home type?"
+      handleSubmit={handleSubmit}
+      previouslySubmittedData={{ answers: ["S1_Option1", "S3_Option1"] }}
+      groupedOptions={[
+        {
+          title: "Section 1",
+          children: [
+            {
+              id: "S1_Option1",
+              data: {
+                text: "S1 Option1",
+              },
+            },
+            {
+              id: "S1_Option2",
+              data: {
+                text: "S1 Option2",
+              },
+            },
+          ],
+        },
+        {
+          title: "Section 2",
+          children: [
+            {
+              id: "S2_Option1",
+              data: {
+                text: "S2 Option1",
+              },
+            },
+            {
+              id: "S2_Option2",
+              data: {
+                text: "S2 Option2",
+              },
+            },
+          ],
+        },
+        {
+          title: "Section 3",
+          children: [
+            {
+              id: "S3_Option1",
+              data: {
+                text: "S3 Option1",
+              },
+            },
+            {
+              id: "S3_Option2",
+              data: {
+                text: "S3 Option2",
+              },
+            },
+          ],
+        },
+      ]}
+    />
+  );
+
+  expect(screen.getByTestId("group-0-expanded")).toBeTruthy();
+  expect(screen.queryAllByTestId("group-1-expanded")).toHaveLength(0);
+  expect(screen.getByTestId("group-2-expanded")).toBeTruthy();
+
+  await waitFor(async () => {
+    userEvent.click(screen.getByText("Continue"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledWith({
+    answers: ["S1_Option1", "S3_Option1"],
   });
 });
