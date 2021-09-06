@@ -120,8 +120,8 @@
     "classic:start": "react-app-rewired start",
     "classic:build": "react-scripts build",
     "classic:test": "react-scripts test",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public --quiet -o ./public/storybook",
+    "storybook": "start-storybook -p 6006 --static-dir public",
+    "build-storybook": "mkdir -p build && build-storybook --static-dir public --quiet --output-dir ./build/storybook",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix"
   },
   "eslintConfig": {
