@@ -49,8 +49,6 @@ services:
       - "/api/node_modules"
     ports:
       - ${API_PORT}:${API_PORT}
-    stdin_open: true
-    tty: true
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
@@ -84,8 +82,6 @@ services:
       - hasura
     ports:
       - ${SHAREDB_PORT}:8000
-    stdin_open: true
-    tty: true
     environment:
       JWT_SECRET: ${JWT_SECRET}
       PG_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
