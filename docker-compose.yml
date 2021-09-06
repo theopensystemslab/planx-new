@@ -11,6 +11,20 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
     command: "postgres -c listen_addresses='*'"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready",
+          "--username",
+          "${PG_USERNAME}",
+          "--dbname",
+          "${PG_DATABASE}",
+          "--quiet",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
     environment:
       POSTGRES_DB: ${PG_DATABASE}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
@@ -23,7 +37,14 @@ services:
     ports:
       - ${HASURA_GRAPHQL_PORT}:8080
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        ["CMD", "wget", "--spider", "--quiet", "http://localhost:8080/healthz"]
+      interval: 15s
+      timeout: 3s
+      retries: 10
     volumes:
       - "./hasura.planx.uk/metadata:/hasura-metadata"
       - "./hasura.planx.uk/migrations:/hasura-migrations"
@@ -43,12 +64,19 @@ services:
       context: ./api.planx.uk
       target: production
     depends_on:
-      - hasura
+      hasura:
+        condition: service_healthy
     volumes:
       - "./api.planx.uk:/api"
       - "/api/node_modules"
     ports:
       - ${API_PORT}:${API_PORT}
+    healthcheck:
+      test:
+        ["CMD", "wget", "--spider", "--quiet", "http://localhost:${API_PORT}"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
@@ -79,7 +107,8 @@ services:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
     depends_on:
-      - hasura
+      hasura:
+        condition: service_healthy
     ports:
       - ${SHAREDB_PORT}:8000
     environment:
