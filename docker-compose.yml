@@ -5,7 +5,7 @@ version: "3.8"
 services:
   postgres:
     image: postgis/postgis:12-3.0-alpine
-    restart: always
+    restart: unless-stopped
     ports:
       - ${PG_PORT}:5432
     volumes:
@@ -27,7 +27,7 @@ services:
     volumes:
       - "./hasura.planx.uk/metadata:/hasura-metadata"
       - "./hasura.planx.uk/migrations:/hasura-migrations"
-    restart: always
+    restart: unless-stopped
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_CORS_DOMAIN: "*"
@@ -38,7 +38,7 @@ services:
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
 
   api:
-    restart: always
+    restart: unless-stopped
     build:
       context: ./api.planx.uk
       target: production
@@ -73,7 +73,7 @@ services:
       GOV_UK_PAY_TOKEN_SOUTHWARK: ${GOV_UK_PAY_TOKEN_SOUTHWARK}
 
   sharedb:
-    restart: always
+    restart: unless-stopped
     build:
       context: ./sharedb.planx.uk
       target: production
