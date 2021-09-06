@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 # If you change anything here (e.g. environment variables) remember to cascade the change to `infrastructure/`
 
@@ -41,7 +41,7 @@ services:
     restart: always
     build:
       context: ./api.planx.uk
-      dockerfile: Dockerfile.dev
+      target: production
     depends_on:
       - hasura
     volumes:
@@ -76,7 +76,7 @@ services:
     restart: always
     build:
       context: ./sharedb.planx.uk
-      dockerfile: Dockerfile.dev
+      target: production
     volumes:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
