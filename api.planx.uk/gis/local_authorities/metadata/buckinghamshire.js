@@ -17,7 +17,7 @@ const planningConstraints = {
     key: "article4",
     source: bucksDomain,
     id: "PLANNING/RIPA_BOPS",
-    serverIndex: 4,
+    serverIndex: 5,
     fields: ["OBJECTID", "DEV_TYPE", "DESCRIPTIO", "DISTRICT", "DATE_CONF"],
     neg: "is not subject to any Article 4 restrictions",
     pos: (data) => ({
@@ -95,7 +95,7 @@ const planningConstraints = {
     key: "listed",
     source: bucksDomain,
     id: "PLANNING/RIPA_BOPS",
-    serverIndex: 1,
+    serverIndex: 2,
     fields: ["OBJECTID", "GRADE", "DESCRIPTIO", "ADDRESS"],
     neg: "is not in, or within, a Listed Building",
     pos: (data) => ({
@@ -107,7 +107,7 @@ const planningConstraints = {
     key: "designated.conservationArea",
     source: bucksDomain,
     id: "PLANNING/RIPA_BOPS",
-    serverIndex: 0,
+    serverIndex: 1,
     fields: ["OBJECTID", "Name", "Desc_", "Grade"],
     neg: "is not in a Conservation Area",
     pos: (data) => ({
@@ -119,7 +119,7 @@ const planningConstraints = {
     key: "designated.AONB",
     source: bucksDomain,
     id: "PLANNING/RIPA_BOPS",
-    serverIndex: 3,
+    serverIndex: 4,
     fields: ["OBJECTID", "NAME", "DESCRIPTIO"],
     neg: "is not an Area of Outstanding Natural Beauty",
     pos: (data) => ({
@@ -146,7 +146,7 @@ const planningConstraints = {
     key: "designated.monument",
     source: bucksDomain,
     id: "PLANNING/RIPA_BOPS",
-    serverIndex: 2,
+    serverIndex: 3,
     fields: ["OBJECTID", "Name", "Desc_"],
     neg: "is not the site of a Scheduled Ancient Monument",
     pos: (data) => ({
@@ -158,7 +158,7 @@ const planningConstraints = {
     key: "tpo",
     source: bucksDomain,
     id: "PLANNING/RIPA_BOPS",
-    serverIndex: 5,
+    serverIndex: 6,
     fields: ["OBJECTID", "ORDERREF", "STATUS", "COMMENTS"],
     neg: "is not in a TPO (Tree Preservation Order) zone",
     pos: (data) => ({
@@ -168,9 +168,10 @@ const planningConstraints = {
   },
   "nature.SSSI": {
     key: "nature.SSSI",
-    source: environmentDomain,
-    id: "NE/SitesOfSpecialScientificInterestEngland",
-    fields: ["objectid", "sssi_name"],
+    source: bucksDomain,
+    id: "PLANNING/RIPA_BOPS",
+    serverIndex: 0,
+    fields: ["OBJECTID", "sssi_name"],
     neg: "is not a Site of Special Scientific Interest",
     pos: (data) => ({
       text: "is a Site of Special Scientific Interest",
