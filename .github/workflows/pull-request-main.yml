@@ -142,7 +142,7 @@ jobs:
         id: hasura-change
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          hasura_endpoint: https://hasura.editor.planx.dev
+          hasura_endpoint: https://hasura.${{ env.FULL_DOMAIN }}
           project_dir: ./hasura.planx.uk
       - uses: marocchino/sticky-pull-request-comment@v2
         if: ${{ steps.hasura-change.outputs.change_html != '' }}
