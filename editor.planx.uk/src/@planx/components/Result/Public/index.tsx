@@ -89,6 +89,7 @@ const Result: React.FC<Props> = ({
       if (values.feedback) {
         submitFeedback(values.feedback, {
           reason: "Inaccurate Result",
+          responses: responses,
         });
         resetForm();
       }

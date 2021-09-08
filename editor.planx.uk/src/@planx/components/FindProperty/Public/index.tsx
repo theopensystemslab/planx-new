@@ -286,6 +286,8 @@ export function PropertyInformation(props: any) {
       if (values.feedback) {
         submitFeedback(values.feedback, {
           reason: "Inaccurate property location",
+          property: propertyDetails,
+          constraints: propertyConstraints,
         });
       }
       handleSubmit?.();
