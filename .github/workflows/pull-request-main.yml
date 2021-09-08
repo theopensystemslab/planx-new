@@ -103,7 +103,7 @@ jobs:
 
   preview:
     name: Pulumi Preview
-    needs: test_and_build
+    needs: [integration_tests, test_and_build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -139,6 +139,7 @@ jobs:
 
   hasura-change-summary:
     name: Hasura Change Summary
+    needs: [integration_tests, test_and_build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
