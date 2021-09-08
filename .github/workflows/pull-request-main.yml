@@ -68,6 +68,8 @@ jobs:
         env:
           REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+          REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
+          REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
