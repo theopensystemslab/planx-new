@@ -66,6 +66,8 @@ jobs:
           REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY: ${{ secrets.ORDNANCE_SURVEY_FEATURES_KEY }}
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
+          # needed because there's no API to change google's allowed OAuth URLs
+          REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
       - run: pnpm build-storybook
         working-directory: ${{ env.EDITOR_DIRECTORY }}
         # same env as above, if it's job.env it can't access existing env.[variable]
@@ -78,6 +80,7 @@ jobs:
           REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY: ${{ secrets.ORDNANCE_SURVEY_FEATURES_KEY }}
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
+          REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
