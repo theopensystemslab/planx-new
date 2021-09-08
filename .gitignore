@@ -4,3 +4,5 @@ node_modules/
 /ignore/
 editor.planx.uk/.eslintcache
 /minio-data
+.pnpm-debug.log
+.env.temp
