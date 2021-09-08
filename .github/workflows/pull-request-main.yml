@@ -8,7 +8,7 @@ on:
 env:
   FULL_DOMAIN: editor.planx.dev
   EDITOR_DIRECTORY: editor.planx.uk
-  PNPM_VERSION: 6.14.5
+  PNPM_VERSION: 6.14.7
   NODE_VERSION: 14
 
 jobs:
