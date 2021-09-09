@@ -12,16 +12,7 @@ services:
       - data:/var/lib/postgresql/data
     command: "postgres -c listen_addresses='*'"
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready",
-          "--username",
-          "${PG_USERNAME}",
-          "--dbname",
-          "${PG_DATABASE}",
-          "--quiet",
-        ]
+      test: pg_isready --username=${PG_USERNAME} --dbname=${PG_DATABASE} --quiet
       interval: 15s
       timeout: 5s
       retries: 5
