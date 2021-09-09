@@ -4,19 +4,19 @@ This currently handles the login process for PlanX. Most of the functionality of
 
 ## Running locally
 
-Install [yarn](https://yarnpkg.com/) if you don't have it `npm install -g yarn`
+Install [pnpm](https://pnpm.io) if you don't have it `npm install -g pnpm`
 
 Then install the project's dependencies
 
-`yarn`
+`pnpm install`
 
 Start the development server
 
-`yarn dev`
+`pnpm dev`
 
 Run tests
 
-`yarn test`
+`pnpm test`
 
 ### Prior art
 
