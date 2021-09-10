@@ -28,18 +28,8 @@ const DecisionButton: React.FC<Props> = ({
   const classes = useStyles();
   return (
     <ButtonBase selected={selected} {...props}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        flex={1}
-        py={1.25}
-        px={2}
-      >
+      <Box display="flex" alignItems="center" flex={1} py={1.25} px={2}>
         <Typography variant="body2">{title}</Typography>
-        {responseKey && (
-          <Box className={classes.key}>{String(responseKey).toUpperCase()}</Box>
-        )}
       </Box>
     </ButtonBase>
   );

@@ -12,7 +12,7 @@ export interface Props extends ButtonProps {
 }
 
 export default function DescriptionButton(props: Props) {
-  const { responseKey, title, description } = props;
+  const { title, description } = props;
 
   return (
     <ButtonBase {...props}>
@@ -34,11 +34,6 @@ export default function DescriptionButton(props: Props) {
             pb={1}
           >
             <Typography variant="h6">{title}</Typography>
-            {responseKey && (
-              <Typography variant="body2">
-                {String(responseKey).toUpperCase()}
-              </Typography>
-            )}
           </Box>
           <Typography align="left" variant="body2">
             {description}
