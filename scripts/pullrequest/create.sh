@@ -29,5 +29,5 @@ docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.stag
 
 # install hasura cli
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
-cd hasura.planx.uk
+cd hasura.planx.uk || exit 1
 hasura seed apply
