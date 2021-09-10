@@ -13,13 +13,13 @@ import { userDataSchema } from "./model";
 
 export type Props = PublicProps<TextInput, UserData>;
 
+// TODO: fix this data field bug for all components
 const TextInputComponent: React.FC<Props> = (props) => {
+  const prevouslySubmittedData =
+    props.id && Object.values(props.previouslySubmittedData?.data)?.[0];
   const formik = useFormik({
     initialValues: {
-      text:
-        (props.id &&
-          (props.previouslySubmittedData?.data?.[props.id] as string)) ??
-        "",
+      text: prevouslySubmittedData ?? "",
     },
     onSubmit: (values) => {
       props.handleSubmit?.(makeData(props, values.text));
