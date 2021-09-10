@@ -1,3 +1,5 @@
+import "./map.css";
+
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@planx/components/shared/Preview/Card";
@@ -6,15 +8,15 @@ import type { PublicProps } from "@planx/components/ui";
 import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
+
 import {
   DEFAULT_PASSPORT_AREA_KEY,
   DEFAULT_TITLE,
   DEFAULT_TITLE_FOR_UPLOADING,
   DrawBoundary,
-  PASSPORT_UPLOADED_FILE_KEY,
   PASSPORT_UPLOAD_KEY,
+  PASSPORT_UPLOADED_FILE_KEY,
 } from "../model";
-import "./map.css";
 import Upload, { FileUpload } from "./Upload";
 
 export type Props = PublicProps<DrawBoundary>;
