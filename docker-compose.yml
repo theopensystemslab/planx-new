@@ -94,6 +94,7 @@ services:
     image: minio/minio:RELEASE.2021-08-31T05-46-54Z
     ports:
       - "9000:9000"
+      - "9001:9001"
     volumes:
       - ./minio-data:/data
     environment:
@@ -101,7 +102,7 @@ services:
       MINIO_ROOT_USER: ${AWS_ACCESS_KEY}
       MINIO_ROOT_PASSWORD: ${AWS_SECRET_KEY}
     entrypoint: sh
-    command: -c "mkdir -p /data/${AWS_S3_BUCKET} && minio server /data"
+    command: -c "mkdir -p /data/${AWS_S3_BUCKET} && minio server --console-address ':9001' /data"
     deploy:
       restart_policy:
         condition: on-failure
