@@ -33,17 +33,22 @@ const useStyles = makeStyles((theme) => ({
 export interface Props {
   selected: boolean;
   children?: React.ReactNode;
+  className?: string;
   onClick?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
 export default function ButtonBase(props: Props): FCReturn {
-  const { selected, onClick, children } = props;
+  const { selected, onClick, children, className } = props;
   const classes = useStyles();
 
   return (
     <MuiButtonBase
       href=""
-      className={classNames(classes.root, selected && classes.selected)}
+      className={classNames(
+        classes.root,
+        selected && classes.selected,
+        className
+      )}
       classes={{ focusVisible: classes.onFocus }}
       onClick={onClick}
     >
