@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.contrastText,
   },
   onFocus: {
-    outline: `2px solid ${theme.palette.secondary.light}`,
+    outline: `2px solid ${theme.palette.secondary.dark}`,
   },
 }));
 
