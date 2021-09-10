@@ -97,6 +97,34 @@ test("recovers previously submitted text when clicking the back button", async (
   });
 });
 
+test("recovers previously submitted text when clicking the back button even if a data field is set", async () => {
+  const handleSubmit = jest.fn();
+  const nodeId = uniqueId();
+
+  render(
+    <TextInput
+      id={nodeId}
+      title="Submit text"
+      handleSubmit={handleSubmit}
+      previouslySubmittedData={{
+        data: {
+          foo: "Previously submitted text",
+        },
+      }}
+    />
+  );
+
+  await act(async () => {
+    userEvent.click(screen.getByText("Continue"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledWith({
+    data: {
+      [nodeId]: "Previously submitted text",
+    },
+  });
+});
+
 const examplePhoneNumbers = [
   "01632 960000", // uk non-geographic
   "020 7946 0999", // uk london
