@@ -77,7 +77,7 @@ const ResultReason: React.FC<IResultReason> = ({
           flexGrow={1}
           display="flex"
           alignItems="center"
-          color="secondary.dark"
+          color="text.primary"
         >
           <Typography variant="body2" color="textPrimary">
             {question.data.text}{" "}
