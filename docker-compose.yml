@@ -1,11 +1,11 @@
-version: "3.7"
+version: "3.8"
 
 # If you change anything here (e.g. environment variables) remember to cascade the change to `infrastructure/`
 
 services:
   postgres:
     image: postgis/postgis:12-3.0-alpine
-    restart: always
+    restart: unless-stopped
     ports:
       - ${PG_PORT}:5432
     volumes:
@@ -27,7 +27,7 @@ services:
     volumes:
       - "./hasura.planx.uk/metadata:/hasura-metadata"
       - "./hasura.planx.uk/migrations:/hasura-migrations"
-    restart: always
+    restart: unless-stopped
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_CORS_DOMAIN: "*"
@@ -38,10 +38,10 @@ services:
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
 
   api:
-    restart: always
+    restart: unless-stopped
     build:
       context: ./api.planx.uk
-      dockerfile: Dockerfile.dev
+      target: production
     depends_on:
       - hasura
     volumes:
@@ -49,8 +49,6 @@ services:
       - "/api/node_modules"
     ports:
       - ${API_PORT}:${API_PORT}
-    stdin_open: true
-    tty: true
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
@@ -73,10 +71,10 @@ services:
       GOV_UK_PAY_TOKEN_SOUTHWARK: ${GOV_UK_PAY_TOKEN_SOUTHWARK}
 
   sharedb:
-    restart: always
+    restart: unless-stopped
     build:
       context: ./sharedb.planx.uk
-      dockerfile: Dockerfile.dev
+      target: production
     volumes:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
@@ -84,8 +82,6 @@ services:
       - hasura
     ports:
       - ${SHAREDB_PORT}:8000
-    stdin_open: true
-    tty: true
     environment:
       JWT_SECRET: ${JWT_SECRET}
       PG_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
@@ -111,6 +107,6 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
-      
+
 volumes:
   data:
