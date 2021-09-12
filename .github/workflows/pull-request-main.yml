@@ -247,4 +247,4 @@ jobs:
         with:
           header: vultr
           message: |
-            Deployed ${{ github.sha }} to https://${{ env.VULTR_URL }}
+            Deployed ${{ github.sha }} to https://${{ env.FULL_DOMAIN }}
