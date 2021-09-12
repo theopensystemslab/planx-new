@@ -6,7 +6,9 @@ on:
       - main
 
 env:
-  FULL_DOMAIN: editor.planx.dev
+  DOMAIN: planx.pizza
+  FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
+  PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
   PNPM_VERSION: 6.14.7
   NODE_VERSION: 14
@@ -56,45 +58,35 @@ jobs:
       - run: pnpm build
         working-directory: ${{ env.EDITOR_DIRECTORY }}
         env:
-          REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
-          REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY: ${{ secrets.ORDNANCE_SURVEY_FEATURES_KEY }}
+          REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+          REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
           REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
+          REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY: ${{ secrets.ORDNANCE_SURVEY_FEATURES_KEY }}
+          REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
+          # needed because there's no API to change google's allowed OAuth URLs
+          REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
       - run: pnpm build-storybook
         working-directory: ${{ env.EDITOR_DIRECTORY }}
         # same env as above, if it's job.env it can't access existing env.[variable]
         env:
           REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+          REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
+          REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
+          REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
+          REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY: ${{ secrets.ORDNANCE_SURVEY_FEATURES_KEY }}
+          REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
+          REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
+          REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
           name: build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           if-no-files-found: error
-
-  deploy_to_netlify:
-    name: Deploy to Netlify
-    runs-on: ubuntu-latest
-    needs: test_and_build
-    steps:
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: ./build
-      - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v1.2
-        with:
-          publish-dir: ./build
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions"
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        timeout-minutes: 1
 
   preview:
     name: Pulumi Preview
@@ -156,3 +148,103 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: hasura-change-summary
           delete: true
+
+  create_or_update_vultr_instance:
+    name: Create or Update Vultr Instance
+    needs: [integration_tests, test_and_build]
+    runs-on: ubuntu-latest
+    steps:
+      # CREATE STEPS
+
+      - if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        name: Create Server
+        id: create
+        uses: theopensystemslab/vultr-action@v1.4
+        with:
+          action: create
+          api_key: ${{ secrets.VULTR_API_KEY }}
+          domain: ${{ env.DOMAIN }}
+          os_id: 387
+          plan: vc2-1c-1gb
+          pullrequest_id: ${{ env.PULLREQUEST_ID }}
+          region: lhr
+          tag: pullrequest
+
+      - if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        name: Create commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.FULL_DOMAIN }}
+          username: root
+          password: ${{ steps.create.outputs.default_password }}
+          command_timeout: 20m
+          script: |
+            git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
+            cd planx-new
+            git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
+
+            echo "
+            ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
+            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }}
+            SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }}
+            BOPS_API_TOKEN=${{ secrets.STAGING_BOPS_API_TOKEN }}
+            GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE }}
+            GOV_UK_PAY_TOKEN_LAMBETH=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_LAMBETH }}
+            GOV_UK_PAY_TOKEN_SOUTHWARK=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_SOUTHWARK }}
+            " > .env.temp
+            cat .env .env.temp .env.staging > .env.prod
+
+            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} sh scripts/pullrequest/create.sh
+
+      # UPDATE STEPS
+
+      - if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
+        name: Update commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.FULL_DOMAIN }}
+          username: root
+          password: ${{ secrets.SSH_PASSWORD }}
+          command_timeout: 10m
+          script: |
+            git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
+            cd planx-new
+            git add . && git stash
+            git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
+
+            echo "
+            ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
+            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }}
+            SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }}
+            BOPS_API_TOKEN=${{ secrets.STAGING_BOPS_API_TOKEN }}
+            GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE }}
+            GOV_UK_PAY_TOKEN_LAMBETH=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_LAMBETH }}
+            GOV_UK_PAY_TOKEN_SOUTHWARK=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_SOUTHWARK }}
+            " > .env.temp
+            cat .env .env.temp .env.staging > .env.prod
+
+            sh scripts/pullrequest/update.sh
+
+      # CREATE & UPDATE STEPS
+
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: ./build
+
+      - name: upload built editor
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ env.FULL_DOMAIN }}
+          username: root
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: "./build"
+          target: "planx-new/${{ env.EDITOR_DIRECTORY }}"
+          overwrite: true
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: vultr
+          message: |
+            Deployed ${{ github.sha }} to https://${{ env.VULTR_URL }}
