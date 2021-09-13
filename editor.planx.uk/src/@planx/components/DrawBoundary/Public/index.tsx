@@ -41,12 +41,14 @@ export default function Component(props: Props) {
   const classes = useClasses();
   const [boundary, setBoundary] = useState<Boundary>();
   const [url, setUrl] = useState<string | undefined>();
-  const [area, setArea] = useState<string | undefined>();
+  const [area, setArea] = useState<number | undefined>();
 
   useEffect(() => {
     setUrl(undefined);
 
-    const areaChangeHandler = ({ detail: area }: any) => {
+    const areaChangeHandler = ({ detail }: { detail: string }) => {
+      const numberString = detail.split(" ")[0];
+      const area = Number(numberString);
       setArea(area);
     };
 
@@ -98,7 +100,7 @@ export default function Component(props: Props) {
           </p>
           <p>
             The boundary you have drawn has an area of{" "}
-            <strong>{area ?? 0}</strong>
+            <strong>{area ?? 0} m²</strong>
           </p>
         </>
       );

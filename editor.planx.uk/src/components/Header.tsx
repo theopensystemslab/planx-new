@@ -107,7 +107,7 @@ const Header: React.FC<{
         }}
       >
         <Toolbar className={classes.toolbar}>
-          <Box className={classes.breadcrumbs} fontSize={20}>
+          <Box className={classes.breadcrumbs} fontSize={20} tabIndex={0}>
             {team?.theme?.logo ? (
               <img
                 alt={`${team.name} Logo`}

@@ -27,6 +27,7 @@ function Layout(props: {
   heading?: string;
   content?: string;
   onClose: () => void;
+  openLinksOnNewTab?: boolean;
 }) {
   const classes = useClasses();
 
@@ -49,7 +50,10 @@ function Layout(props: {
       </IconButton>
       <Container maxWidth="md">
         <Typography variant="h1">{props.heading}</Typography>
-        <ReactMarkdownOrHtml source={props.content} />
+        <ReactMarkdownOrHtml
+          source={props.content}
+          openLinksOnNewTab={props.openLinksOnNewTab}
+        />
       </Container>
     </Box>
   );
@@ -58,10 +62,10 @@ function Layout(props: {
 function ContentPage(props: { page: string }) {
   const navigation = useNavigation();
   const context = React.useContext(PreviewContext);
-
+  const isFooterItem = FOOTER_ITEMS.includes(props.page);
   // Determine if the content is a flow setting or a global setting, and only show it if it isn't hidden
   const content = (() => {
-    if (FOOTER_ITEMS.includes(props.page)) {
+    if (isFooterItem) {
       const flowSetting = context?.flow.settings?.elements?.[props.page];
 
       if (!flowSetting?.show) return;
@@ -77,7 +81,13 @@ function ContentPage(props: { page: string }) {
 
   if (!content) throw new NotFoundError();
 
-  return <Layout {...content} onClose={() => navigation.goBack()} />;
+  return (
+    <Layout
+      {...content}
+      onClose={() => navigation.goBack()}
+      openLinksOnNewTab={!isFooterItem}
+    />
+  );
 }
 
 export default ContentPage;

@@ -22,3 +22,11 @@ and start the development server
 If your IDE does type checking for you and you want to save some CPU resources,
 you can opt-out of type checking by setting the environment variable
 `DISABLE_TYPE_CHECKING=true`.
+
+### Running Storybook
+
+We use [Storybook](https://storybook.js.org/) for our UI component library.
+
+Start the development server
+
+`pnpm start-storybook`

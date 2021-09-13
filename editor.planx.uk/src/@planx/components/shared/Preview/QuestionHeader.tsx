@@ -63,7 +63,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             </Box>
           )}
           {description && (
-            <Box role="description" className={classes.description}>
+            <Box className={classes.description}>
               <ReactMarkdownOrHtml source={description} />
             </Box>
           )}
@@ -82,12 +82,12 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
       <MoreInfo open={open} handleClose={() => setOpen(false)}>
         {info && (
           <MoreInfoSection title="Why does it matter?">
-            <ReactMarkdownOrHtml source={info} />
+            <ReactMarkdownOrHtml source={info} openLinksOnNewTab />
           </MoreInfoSection>
         )}
         {policyRef && (
           <MoreInfoSection title="Source">
-            <ReactMarkdownOrHtml source={policyRef} />
+            <ReactMarkdownOrHtml source={policyRef} openLinksOnNewTab />
           </MoreInfoSection>
         )}
         {howMeasured && (
@@ -100,7 +100,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
                   className={classes.image}
                 />
               )}
-              <ReactMarkdownOrHtml source={howMeasured} />
+              <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab />
             </>
           </MoreInfoSection>
         )}

@@ -1,16 +1,21 @@
-version: "3.7"
+version: "3.8"
 
 # If you change anything here (e.g. environment variables) remember to cascade the change to `infrastructure/`
 
 services:
   postgres:
     image: postgis/postgis:12-3.0-alpine
-    restart: always
+    restart: unless-stopped
     ports:
       - ${PG_PORT}:5432
     volumes:
       - data:/var/lib/postgresql/data
     command: "postgres -c listen_addresses='*'"
+    healthcheck:
+      test: pg_isready --username=${PG_USERNAME} --dbname=${PG_DATABASE} --quiet
+      interval: 15s
+      timeout: 5s
+      retries: 5
     environment:
       POSTGRES_DB: ${PG_DATABASE}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
@@ -23,11 +28,18 @@ services:
     ports:
       - ${HASURA_GRAPHQL_PORT}:8080
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        ["CMD", "wget", "--spider", "--quiet", "http://localhost:8080/healthz"]
+      interval: 15s
+      timeout: 3s
+      retries: 10
     volumes:
       - "./hasura.planx.uk/metadata:/hasura-metadata"
       - "./hasura.planx.uk/migrations:/hasura-migrations"
-    restart: always
+    restart: unless-stopped
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_CORS_DOMAIN: "*"
@@ -38,19 +50,24 @@ services:
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
 
   api:
-    restart: always
+    restart: unless-stopped
     build:
       context: ./api.planx.uk
-      dockerfile: Dockerfile.dev
+      target: production
     depends_on:
-      - hasura
+      hasura:
+        condition: service_healthy
     volumes:
       - "./api.planx.uk:/api"
       - "/api/node_modules"
     ports:
       - ${API_PORT}:${API_PORT}
-    stdin_open: true
-    tty: true
+    healthcheck:
+      test:
+        ["CMD", "wget", "--spider", "--quiet", "http://localhost:${API_PORT}"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
@@ -73,27 +90,27 @@ services:
       GOV_UK_PAY_TOKEN_SOUTHWARK: ${GOV_UK_PAY_TOKEN_SOUTHWARK}
 
   sharedb:
-    restart: always
+    restart: unless-stopped
     build:
       context: ./sharedb.planx.uk
-      dockerfile: Dockerfile.dev
+      target: production
     volumes:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
     depends_on:
-      - hasura
+      hasura:
+        condition: service_healthy
     ports:
       - ${SHAREDB_PORT}:8000
-    stdin_open: true
-    tty: true
     environment:
       JWT_SECRET: ${JWT_SECRET}
       PG_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
 
   minio:
-    image: minio/minio:latest
+    image: minio/minio:RELEASE.2021-08-31T05-46-54Z
     ports:
       - "9000:9000"
+      - "9001:9001"
     volumes:
       - ./minio-data:/data
     environment:
@@ -101,7 +118,7 @@ services:
       MINIO_ROOT_USER: ${AWS_ACCESS_KEY}
       MINIO_ROOT_PASSWORD: ${AWS_SECRET_KEY}
     entrypoint: sh
-    command:  -c "mkdir -p /data/${AWS_S3_BUCKET} && /usr/bin/minio server /data"
+    command: -c "mkdir -p /data/${AWS_S3_BUCKET} && minio server --console-address ':9001' /data"
     deploy:
       restart_policy:
         condition: on-failure
@@ -110,6 +127,6 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
-      
+
 volumes:
   data:

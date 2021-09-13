@@ -339,7 +339,7 @@ function getAnswers(props: ComponentProps): string[] {
 function getAnswersByNode(props: ComponentProps): any {
   try {
     const variableName: string = props.node!.data!.fn!;
-    return props.userData?.data![variableName ?? props.nodeId];
+    return props.userData?.data![variableName || props.nodeId];
   } catch (err) {}
   return "";
 }

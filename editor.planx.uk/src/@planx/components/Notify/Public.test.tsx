@@ -3,8 +3,7 @@ import React from "react";
 
 import Public from "./Public";
 
-// skipping for now as there is some async strangeness
-test.skip("renders", async () => {
+test("renders", async () => {
   const handleSubmit = jest.fn();
   render(
     <Public

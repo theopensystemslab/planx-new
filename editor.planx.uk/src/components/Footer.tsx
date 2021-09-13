@@ -59,11 +59,13 @@ export default function Footer(props: Props) {
             <FooterItem {...item} key={item.title} />
           ))}
         {feedbackFishId && (
-          <FeedbackFish projectId={feedbackFishId}>
-            <Typography variant="body2" className={classes.link}>
-              Feedback
-            </Typography>
-          </FeedbackFish>
+          <a tabIndex={0}>
+            <FeedbackFish projectId={feedbackFishId}>
+              <Typography variant="body2" className={classes.link}>
+                Feedback
+              </Typography>
+            </FeedbackFish>
+          </a>
         )}
       </Box>
       <Box py={4}>{children}</Box>

@@ -1,7 +1,8 @@
 node_modules/
 .envrc
 /.env.prod
-nginx/static/*
 /ignore/
 editor.planx.uk/.eslintcache
 /minio-data
+.pnpm-debug.log
+.env.temp

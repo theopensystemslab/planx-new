@@ -1,18 +1,23 @@
-FROM node:14.4.0-alpine
-
-ENV ENV_NAME production
-ENV NODE_ENV production
-ENV NODE_CONFIG_ENV production
+FROM node:14.4.0-alpine as base
 
 WORKDIR /api
+RUN npm install -g pnpm
+COPY pnpm-lock.yaml .
+EXPOSE 4000
 
-ENV PATH /api/node_modules/.bin:$PATH
+FROM base as production
+ENV NODE_ENV production
+# see https://pnpm.io/cli/fetch
+RUN pnpm fetch --prod
+ADD . .
+RUN pnpm install --recursive --offline --prod
+COPY . .
+CMD ["pnpm", "start"]
 
-COPY package.json ./
-COPY yarn.lock ./
-
-RUN yarn install
-
-COPY . ./
-
-CMD ["yarn", "start"]
+FROM base as development
+ENV NODE_ENV development
+RUN pnpm fetch
+ADD . .
+RUN pnpm install --recursive --offline
+COPY . .
+CMD ["pnpm", "dev"]
