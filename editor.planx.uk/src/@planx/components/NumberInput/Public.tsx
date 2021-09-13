@@ -9,7 +9,7 @@ import InputRow from "ui/InputRow";
 import InputRowLabel from "ui/InputRowLabel";
 import { object, string } from "yup";
 
-import { makeData } from "../shared/utils";
+import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { NumberInput, UserData } from "./model";
 import { parseNumber } from "./model";
 
@@ -18,7 +18,7 @@ export type Props = PublicProps<NumberInput, UserData>;
 export default function NumberInputComponent(props: Props): FCReturn {
   const formik = useFormik({
     initialValues: {
-      value: "",
+      value: getPreviouslySubmittedData(props) ?? "",
     },
     onSubmit: (values) => {
       if (values.value && props.handleSubmit) {
@@ -70,7 +70,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
           placeholder="enter value"
           value={formik.values.value}
           onChange={formik.handleChange}
-          errorMessage={formik.errors.value}
+          errorMessage={formik.errors.value as string}
         />
         {props.units && <InputRowLabel>{props.units}</InputRowLabel>}
       </InputRow>

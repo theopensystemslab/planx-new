@@ -23,7 +23,7 @@ export interface AddressInput extends MoreInformation {
   title: string;
   description?: string;
   placeholder?: string;
-  fn: string;
+  fn?: string;
 }
 
 export const parseAddressInput = (

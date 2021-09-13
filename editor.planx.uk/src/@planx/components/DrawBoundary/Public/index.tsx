@@ -7,17 +7,19 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import type { DrawBoundary } from "../model";
+import { DEFAULT_PASSPORT_AREA_KEY, DrawBoundary } from "../model";
 import {
   DEFAULT_TITLE,
   DEFAULT_TITLE_FOR_UPLOADING,
   PASSPORT_UPLOAD_KEY,
+  PASSPORT_UPLOADED_FILE_KEY,
 } from "../model";
-import Upload from "./Upload";
+import Upload, { FileUpload } from "./Upload";
 
 export type Props = PublicProps<DrawBoundary>;
+export type SelectedFile = FileUpload;
 
 const useClasses = makeStyles((theme) => ({
   map: {
@@ -36,15 +38,28 @@ const useClasses = makeStyles((theme) => ({
 }));
 
 export default function Component(props: Props) {
-  const [page, setPage] = useState<"draw" | "upload">("draw");
+  const isMounted = useRef(false);
+  const previousBoundary =
+    props.previouslySubmittedData?.data?.[props.dataFieldBoundary];
+  const previousArea =
+    props.previouslySubmittedData?.data?.[
+      props.dataFieldArea || DEFAULT_PASSPORT_AREA_KEY
+    ];
+  const previousFile =
+    props.previouslySubmittedData?.data?.[PASSPORT_UPLOADED_FILE_KEY];
+  const startPage = previousFile ? "upload" : "draw";
+  const [page, setPage] = useState<"draw" | "upload">(startPage);
   const passport = useStore((state) => state.computePassport());
   const classes = useClasses();
-  const [boundary, setBoundary] = useState<Boundary>();
-  const [url, setUrl] = useState<string | undefined>();
-  const [area, setArea] = useState<number | undefined>();
+  const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
+  const [selectedFile, setSelectedFile] = useState<SelectedFile | undefined>(
+    previousFile
+  );
+  const [area, setArea] = useState<number | undefined>(previousArea);
 
   useEffect(() => {
-    setUrl(undefined);
+    if (isMounted.current) setSelectedFile(undefined);
+    isMounted.current = true;
 
     const areaChangeHandler = ({ detail }: { detail: string }) => {
       const numberString = detail.split(" ")[0];
@@ -57,7 +72,7 @@ export default function Component(props: Props) {
       setBoundary(geojson.features[0]);
     };
 
-    const map = document.querySelector("my-map");
+    const map: any = document.querySelector("my-map");
     map?.addEventListener("areaChange", areaChangeHandler);
     map?.addEventListener("geojsonChange", geojsonChangeHandler);
 
@@ -65,10 +80,13 @@ export default function Component(props: Props) {
       map?.removeEventListener("areaChange", areaChangeHandler);
       map?.removeEventListener("geojsonChange", geojsonChangeHandler);
     };
-  }, [page, setArea, setBoundary, setUrl]);
+  }, [page, setArea, setBoundary, setSelectedFile]);
 
   return (
-    <Card handleSubmit={handleSubmit} isValid={Boolean(boundary || url)}>
+    <Card
+      handleSubmit={handleSubmit}
+      isValid={Boolean(boundary || selectedFile?.url)}
+    >
       {getBody()}
     </Card>
   );
@@ -115,7 +133,7 @@ export default function Component(props: Props) {
             howMeasured={props.howMeasured}
             definitionImg={props.definitionImg}
           />
-          <Upload setUrl={setUrl} />
+          <Upload setFile={setSelectedFile} initialFile={selectedFile} />
           <p className={classes.uploadInstead}>
             <a onClick={() => setPage("draw")}>
               Draw the boundary on a map instead
@@ -139,7 +157,12 @@ export default function Component(props: Props) {
           boundary && props.dataFieldBoundary && props.dataFieldArea
             ? area
             : undefined,
-        [propsDataFieldUrl]: url && propsDataFieldUrl ? url : undefined,
+        [propsDataFieldUrl]:
+          selectedFile?.url && propsDataFieldUrl
+            ? selectedFile?.url
+            : undefined,
+        [PASSPORT_UPLOADED_FILE_KEY]:
+          selectedFile && propsDataFieldUrl ? selectedFile : undefined,
       };
     })();
 
