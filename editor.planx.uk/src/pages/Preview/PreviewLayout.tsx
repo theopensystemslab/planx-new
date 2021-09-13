@@ -118,6 +118,7 @@ const PreviewLayout: React.FC<{
               href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
               underline="always"
               color="inherit"
+              target="_blank"
             >
               Open Government Licence v3
             </Link>
