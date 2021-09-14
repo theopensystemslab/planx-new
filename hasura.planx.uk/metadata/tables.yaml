@@ -13,7 +13,6 @@
     permission:
       columns:
       - blpu_code
-      - gss_code
       - latitude
       - longitude
       - organisation
@@ -248,13 +247,14 @@
   - role: public
     permission:
       columns:
+      - created_at
+      - gss_code
       - id
       - name
+      - settings
       - slug
       - theme
-      - created_at
       - updated_at
-      - settings
       filter: {}
 - table:
     schema: public
