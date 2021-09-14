@@ -44,6 +44,23 @@ function Component(props: Props) {
   //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
+
+  const { data } = useQuery(
+    gql`
+      query GetTeam($team: String = "") {
+        teams(where: { slug: { _eq: $team } }) {
+          gss_code
+        }
+      }
+    `,
+    {
+      skip: !Boolean(team),
+      variables: {
+        team: team,
+      },
+    }
+  );
+
   const { data: constraints } = useSWR(
     () =>
       address
@@ -56,16 +73,16 @@ function Component(props: Props) {
     }
   );
 
-  if (!address) {
+  if (!address && Boolean(data?.teams.length)) {
     return (
       <GetAddress
         title={props.title}
         description={props.description}
         setAddress={setAddress}
-        team={team}
+        gssCode={data?.teams[0].gss_code}
       />
     );
-  } else if (constraints) {
+  } else if (address && constraints) {
     return (
       <PropertyInformation
         handleSubmit={(feedback?: string) => {
@@ -154,23 +171,22 @@ function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
   title?: string;
   description?: string;
-  team: string;
+  gssCode: string;
 }) {
   const [postcode, setPostcode] = useState<string | null>();
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
   const [selectedOption, setSelectedOption] = useState<Option | undefined>();
-  const [postcodeInTeam, setPostcodeInTeam] = useState<boolean>(true);
-
-  // fetch postcodes that are accessible to & valid for this team
-  const { data: postcodesPerTeam } = useSWR(
-    () => `${process.env.REACT_APP_API_URL}/postcodes/${props.team}?version=1`
-  );
 
   // get addresses in this postcode
   const { loading, error, data } = useQuery(
     gql`
-      query FindAddress($postcode: String = "") {
-        addresses(where: { postcode: { _eq: $postcode } }) {
+      query FindAddress($postcode: String = "", $gss_code: String = "") {
+        addresses(
+          where: {
+            postcode: { _eq: $postcode }
+            teams: { gss_code: { _eq: $gss_code } }
+          }
+        ) {
           uprn
           town
           y
@@ -191,6 +207,7 @@ function GetAddress(props: {
       skip: !Boolean(sanitizedPostcode),
       variables: {
         postcode: sanitizedPostcode,
+        gss_code: props.gssCode,
       },
     }
   );
@@ -215,23 +232,18 @@ function GetAddress(props: {
             if (parse(input.trim()).valid) {
               setSanitizedPostcode(toNormalised(input.trim()));
               setPostcode(toNormalised(input.trim()));
-
-              // the postcode is valid, now check if it is local to this team/council
-              if (postcodesPerTeam.includes(toNormalised(input.trim()))) {
-                setPostcodeInTeam(true);
-              } else {
-                setPostcodeInTeam(false);
-              }
             } else {
               setSanitizedPostcode(null);
               setPostcode(input.toUpperCase());
             }
           }}
           errorMessage={
-            postcodeInTeam ? "" : "This postcode is not in your council"
+            data?.addresses?.length == 0
+              ? "This postcode is not in your council"
+              : ""
           }
         />
-        {Boolean(data?.addresses?.length) && postcodeInTeam && (
+        {Boolean(data?.addresses?.length) && (
           <Autocomplete
             options={data.addresses
               .map(
@@ -246,6 +258,7 @@ function GetAddress(props: {
               )
               .sort((a: Option, b: Option) => sorter(a.title, b.title))}
             getOptionLabel={(option: Option) => option.title}
+            getOptionSelected={(option: Option) => Boolean(option.title)}
             renderInput={(params) => (
               <TextField
                 {...params}

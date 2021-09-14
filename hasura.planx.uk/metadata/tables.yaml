@@ -1,6 +1,15 @@
 - table:
     schema: public
     name: addresses
+  object_relationships:
+  - name: teams
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: teams
+        column_mapping:
+          gss_code: gss_code
   computed_fields:
   - name: full_address
     definition:
@@ -13,6 +22,7 @@
     permission:
       columns:
       - blpu_code
+      - gss_code
       - latitude
       - longitude
       - organisation
@@ -229,6 +239,14 @@
     schema: public
     name: teams
   array_relationships:
+  - name: addresses
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: addresses
+        column_mapping:
+          gss_code: gss_code
   - name: flows
     using:
       foreign_key_constraint_on:
