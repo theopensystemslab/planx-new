@@ -174,9 +174,7 @@ export function getParams(
 
     site.uprn = String(address.uprn);
 
-    site.address_1 = [address.sao, address.pao, address.street]
-      .filter(Boolean)
-      .join(" ");
+    site.address_1 = address.single_line_address.split(`, ${address.town}`)[0];
 
     site.town = address.town;
     site.postcode = address.postcode;
