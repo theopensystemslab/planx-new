@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => {
 });
 
 function ImageResponse(props: Props) {
-  const { selected, title, responseKey, img, checkbox } = props;
+  const { selected, title, img, checkbox } = props;
   const [imgError, setImgError] = useState(!(img && img.length));
   const [multiline, setMultiline] = useState(false);
 
@@ -133,14 +133,6 @@ function ImageResponse(props: Props) {
               {title}
             </Typography>
           </Box>
-          {responseKey && (
-            <Typography
-              variant="body2"
-              className={selected ? classes.keySelected : classes.key}
-            >
-              {String(responseKey).toUpperCase()}
-            </Typography>
-          )}
         </Box>
       </Box>
     </ButtonBase>

@@ -125,7 +125,7 @@ const Result: React.FC<Props> = ({
         isValid
       >
         <Box mt={4} mb={3}>
-          <Typography variant="h3" gutterBottom>
+          <Typography variant="h3" component="h2" gutterBottom>
             {reasonsTitle}
           </Typography>
         </Box>
