@@ -44,7 +44,7 @@ const useScrollControlsAndRememberPosition = (
 
       const wheelDown$ = mouseDown$.pipe(filter((ev: any) => ev.which === 2));
 
-      // TODO: don't have this variable, instead reset scan after mouseUp$
+      // instead of this variable, we could also reset scan after mouseUp$
       let accumulator = {} as any;
       mouseUp$.subscribe(() => (accumulator = {}));
 

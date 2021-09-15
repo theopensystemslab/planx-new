@@ -55,7 +55,6 @@ export interface PreviewStore extends Store.Store {
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
 }
 
-// export const previewStore = vanillaCreate<PreviewStore>((set, get) => ({
 export const previewStore = (
   set: SetState<PreviewStore>,
   get: GetState<SharedStore & PreviewStore>
@@ -67,7 +66,6 @@ export const previewStore = (
   collectedFlags(upToNodeId, visited = []) {
     const { breadcrumbs, flow } = get();
 
-    // TODO: Should this be all flags?
     const possibleFlags = flatFlags.filter(
       (f) => f.category === DEFAULT_FLAG_CATEGORY
     );
@@ -228,7 +226,7 @@ export const previewStore = (
       const flowIdType = flow[id]?.type;
 
       // only store breadcrumbs in the backend if they are answers provided for
-      // either a Statement or Checklist type. TODO: make this more robust
+      // either a Statement or Checklist type.
       if (
         flowIdType &&
         SUPPORTED_DECISION_TYPES.includes(flowIdType) &&
@@ -276,7 +274,7 @@ export const previewStore = (
         variables: {
           chosen_node_ids: pgarray(userData?.answers ?? []),
           session_id: get().sessionId,
-          type: "human_decision", // TODO
+          type: "human_decision",
           parent_node_id: id,
         },
       });
@@ -296,8 +294,7 @@ export const previewStore = (
         `,
         variables: {
           id: get().sessionId,
-          // TODO: Move this logic to the backend
-          //       Could be done with a SQL Function exposed through Hasura as a mutation (e.g. end_session)
+          // Could be moved to the backend with a SQL Function exposed through Hasura as a mutation (e.g. end_session)
           completed_at: new Date(),
         },
       });
@@ -340,7 +337,7 @@ export const previewStore = (
         variables: {
           flow_data: get().flow,
           flow_id: get().id,
-          flow_version: 0, // TODO: add flow version
+          flow_version: 0,
           passport,
         },
       });
@@ -608,7 +605,7 @@ export const getResultData = (
       },
       category: string
     ) => {
-      // TODO: DRY this up with preceding collectedFlags function?
+      // might DRY this up with preceding collectedFlags function
       const possibleFlags = flatFlags.filter((f) => f.category === category);
       const keys = possibleFlags.map((f) => f.value);
       const collectedFlags = Object.values(

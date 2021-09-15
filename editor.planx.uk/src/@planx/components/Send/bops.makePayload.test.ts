@@ -176,7 +176,7 @@ test("valid node types are serialized correctly for BOPS", () => {
       responses: [{ value: "c1" }, { value: "c2" }, { value: "c3" }],
     },
     { question: "date question", responses: [{ value: "1999-01-01" }] },
-    { question: "number question", responses: [{ value: "500" }] }, // TODO: use Number(), include unit?
+    { question: "number question", responses: [{ value: "500" }] },
     { question: "regular question", responses: [{ value: "a1" }] },
     { question: "text question", responses: [{ value: "testanswer" }] },
   ];

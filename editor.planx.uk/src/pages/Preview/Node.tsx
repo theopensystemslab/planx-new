@@ -71,7 +71,6 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Calculate:
       return <Calculate {...allProps} />;
     case TYPES.Checklist:
-      // TODO: sensitive fix for strict mode
       const childNodes = childNodesOf(props.node.id);
       return (
         <Checklist
@@ -194,7 +193,6 @@ const Node: React.FC<any> = (props: Props) => {
       return <SetValue {...allProps} />;
 
     case TYPES.Statement:
-      // TODO: sensitive fix for strict mode
       return (
         <Question
           {...allProps}

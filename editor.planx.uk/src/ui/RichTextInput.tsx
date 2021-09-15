@@ -46,8 +46,6 @@ const useClasses = makeStyles((theme) => ({
   regular: {
     position: "relative",
     boxSizing: "border-box",
-    // This is necessary for the focus styles to be visible. Breaks the layout a bit
-    // unfortunately. TODO: find a better solution.
     padding: 10,
     outline: "none",
     backgroundColor: theme.palette.background.default,
