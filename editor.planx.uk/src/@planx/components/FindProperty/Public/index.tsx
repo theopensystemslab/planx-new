@@ -177,10 +177,11 @@ function GetAddress(props: {
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
   const [selectedOption, setSelectedOption] = useState<Option | undefined>();
 
-  // get addresses in this postcode
+  // get addresses in this postcode & gss_code (aka local planning authority)
+  //    if gss_code is null, eg for team "opensystemslab", then ignore it in where filter https://stackoverflow.com/a/55809891
   const { loading, error, data } = useQuery(
     gql`
-      query FindAddress($postcode: String = "", $gss_code: String = "") {
+      query FindAddress($postcode: String = "", $gss_code: String) {
         addresses(
           where: {
             postcode: { _eq: $postcode }
