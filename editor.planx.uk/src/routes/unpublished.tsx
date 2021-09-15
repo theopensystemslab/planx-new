@@ -65,10 +65,6 @@ const routes = compose(
 
     useStore.getState().setFlow(flow.id, await dataMerged(flow.id));
 
-    // TODO: Replace with below after merging
-    // https://github.com/theopensystemslab/planx-new/pull/116
-    // useStore.getState().setFlow(flow.id, flow.data_merged);
-
     return (
       <PreviewContext.Provider value={{ flow, globalSettings }}>
         <Layout

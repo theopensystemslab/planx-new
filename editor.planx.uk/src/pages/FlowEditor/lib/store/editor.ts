@@ -241,7 +241,6 @@ export const editorStore = (
   },
 
   isClone: (id) => {
-    // TODO: this can be faster!
     return isClone(id, get().flow);
   },
 

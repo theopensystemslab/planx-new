@@ -56,7 +56,6 @@ const ColorGrid: React.FC<{ option: PaletteOption }> = (props) => {
       <Grid container spacing={1}>
         {colors.map((color, i) => {
           return (
-            // TODO: A nice way to show opacities
             !color.match(/opacity/i) && (
               <ColorSwatch
                 color={color.match(/rgba/) ? color : `${props.option}.${color}`}
