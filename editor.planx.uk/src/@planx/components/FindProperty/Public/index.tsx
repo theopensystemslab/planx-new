@@ -44,6 +44,23 @@ function Component(props: Props) {
   //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
+
+  const { data } = useQuery(
+    gql`
+      query GetTeam($team: String = "") {
+        teams(where: { slug: { _eq: $team } }) {
+          gss_code
+        }
+      }
+    `,
+    {
+      skip: !Boolean(team),
+      variables: {
+        team: team,
+      },
+    }
+  );
+
   const { data: constraints } = useSWR(
     () =>
       address
@@ -56,15 +73,16 @@ function Component(props: Props) {
     }
   );
 
-  if (!address) {
+  if (!address && Boolean(data?.teams.length)) {
     return (
       <GetAddress
         title={props.title}
         description={props.description}
         setAddress={setAddress}
+        gssCode={data?.teams[0].gss_code}
       />
     );
-  } else if (constraints) {
+  } else if (address && constraints) {
     return (
       <PropertyInformation
         handleSubmit={(feedback?: string) => {
@@ -153,15 +171,23 @@ function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
   title?: string;
   description?: string;
+  gssCode: string;
 }) {
   const [postcode, setPostcode] = useState<string | null>();
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
   const [selectedOption, setSelectedOption] = useState<Option | undefined>();
 
+  // get addresses in this postcode & gss_code (aka local planning authority)
+  //    if gss_code is null, eg for team "opensystemslab", then ignore it in where filter https://stackoverflow.com/a/55809891
   const { loading, error, data } = useQuery(
     gql`
-      query FindAddress($postcode: String = "") {
-        addresses(where: { postcode: { _eq: $postcode } }) {
+      query FindAddress($postcode: String = "", $gss_code: String) {
+        addresses(
+          where: {
+            postcode: { _eq: $postcode }
+            teams: { gss_code: { _eq: $gss_code } }
+          }
+        ) {
           uprn
           town
           y
@@ -182,6 +208,7 @@ function GetAddress(props: {
       skip: !Boolean(sanitizedPostcode),
       variables: {
         postcode: sanitizedPostcode,
+        gss_code: props.gssCode,
       },
     }
   );
@@ -211,6 +238,11 @@ function GetAddress(props: {
               setPostcode(input.toUpperCase());
             }
           }}
+          errorMessage={
+            data?.addresses?.length === 0
+              ? "This postcode is not in your local planning authority"
+              : ""
+          }
         />
         {Boolean(data?.addresses?.length) && (
           <Autocomplete
@@ -227,6 +259,7 @@ function GetAddress(props: {
               )
               .sort((a: Option, b: Option) => sorter(a.title, b.title))}
             getOptionLabel={(option: Option) => option.title}
+            getOptionSelected={(option: Option) => Boolean(option.title)}
             renderInput={(params) => (
               <TextField
                 {...params}
