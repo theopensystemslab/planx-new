@@ -238,8 +238,8 @@ function GetAddress(props: {
             }
           }}
           errorMessage={
-            data?.addresses?.length == 0
-              ? "This postcode is not in your council"
+            data?.addresses?.length === 0
+              ? "This postcode is not in your local planning authority"
               : ""
           }
         />
