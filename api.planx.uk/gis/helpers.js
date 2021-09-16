@@ -124,8 +124,8 @@ const addDesignatedVariable = (responseObject) => {
   // Ensure that our response includes all the expected subVariables before returning "designated"
   //   so we don't incorrectly auto-answer any questions for individual layer queries that may have failed
   let subVariablesFound = 0;
-  Object.keys(responseObject).forEach((s) => {
-    if (s.startsWith(`designated.`)) {
+  Object.keys(responseObject).forEach((key) => {
+    if (key.startsWith(`designated.`)) {
       subVariablesFound++;
     }
   });
