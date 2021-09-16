@@ -64,9 +64,10 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => {
       className={classNames(classes.drawer, {
         [classes.drawerShift]: open,
       })}
-      variant="persistent"
       anchor="right"
+      aria-modal="true"
       open={open}
+      onClose={() => handleClose()}
       classes={{
         paper: classes.drawerPaper,
       }}
