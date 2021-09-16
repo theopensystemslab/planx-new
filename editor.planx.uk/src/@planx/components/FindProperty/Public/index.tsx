@@ -126,14 +126,10 @@ function Component(props: Props) {
         propertyDetails={[
           {
             heading: "Address",
-            detail: [
-              address.organisation,
-              address.sao,
-              [address.pao, address.street].filter(Boolean).join(" "),
-              address.town,
-            ]
-              .filter(Boolean)
-              .join(", "),
+            detail: address.single_line_address.replace(
+              `, ${address.postcode}`,
+              ""
+            ),
           },
           {
             heading: "Postcode",

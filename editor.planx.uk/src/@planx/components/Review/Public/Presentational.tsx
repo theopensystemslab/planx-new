@@ -171,12 +171,12 @@ function Question(props: ComponentProps) {
 }
 
 function FindProperty(props: ComponentProps) {
-  const { postcode, street, pao, town } = props.passport.data?._address;
+  const { postcode, single_line_address, town } = props.passport.data?._address;
   return (
     <>
       <div>Property</div>
       <div>
-        {`${pao} ${street}`}
+        {`${single_line_address.split(`, ${town}`)[0]}`}
         <br />
         {town}
         <br />
