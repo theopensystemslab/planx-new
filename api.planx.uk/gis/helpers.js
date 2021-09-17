@@ -121,7 +121,20 @@ const addDesignatedVariable = (responseObject) => {
     }
   });
 
-  return resObjWithDesignated;
+  // Ensure that our response includes all the expected subVariables before returning "designated"
+  //   so we don't incorrectly auto-answer any questions for individual layer queries that may have failed
+  let subVariablesFound = 0;
+  Object.keys(responseObject).forEach((key) => {
+    if (key.startsWith(`designated.`)) {
+      subVariablesFound++;
+    }
+  });
+
+  if (subVariablesFound < subVariables.length) {
+    return responseObject;
+  } else {
+    return resObjWithDesignated;
+  }
 };
 
 module.exports = {
