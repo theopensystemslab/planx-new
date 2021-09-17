@@ -1,6 +1,7 @@
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { SPACE_BAR } from "@planx/components/shared/constants";
 import classNames from "classnames";
 import * as React from "react";
 
@@ -32,6 +33,9 @@ export const useClasses = makeStyles((theme) => ({
     position: "absolute",
     left: -10000,
     opacity: 0,
+    "&:focus-visible": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
+    },
   },
 }));
 
@@ -52,20 +56,33 @@ export default function ChecklistItem({
   const classes = useClasses();
   const input = React.createRef<HTMLInputElement>();
 
+  const handleChange = () => {
+    onChange(!checked);
+  };
+
   return (
     <Box mb={0.5}>
       <input
         onChange={() => {
-          onChange(!checked);
+          handleChange();
         }}
         checked={checked}
         className={classes.input}
         type="checkbox"
+        tabIndex={-1}
         ref={input}
         id={id}
         {...props}
       />
-      <label className={classNames(classes.labelRoot)} htmlFor={id}>
+      <label
+        className={classNames(classes.labelRoot)}
+        htmlFor={id}
+        onKeyDown={(e) => {
+          if (e.key === SPACE_BAR) {
+            handleChange();
+          }
+        }}
+      >
         <Box className={classes.text}>
           <Checkbox checked={checked} />
           <Typography variant="body2" className={classes.label}>

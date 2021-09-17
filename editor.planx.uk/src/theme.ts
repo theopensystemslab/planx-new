@@ -52,6 +52,9 @@ const theme = createMuiTheme({
     action: {
       selected: "#F8F8F8",
     },
+    error: {
+      main: "#E91B0C",
+    },
   },
   breakpoints: {
     values: {

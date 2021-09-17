@@ -16,6 +16,11 @@ export const useClasses = makeStyles<Theme, Props>((theme) => ({
     top: "42%",
     transform: "translate(-50%, -50%) rotate(45deg)",
   },
+  box: {
+    "&:focus-visible": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
+    },
+  },
 }));
 
 export interface Props {
@@ -34,6 +39,10 @@ export default function Checkbox({ checked, color }: Props): FCReturn {
       height={32}
       width={32}
       flexShrink={0}
+      tabIndex={0}
+      role="button"
+      aria-checked={checked ? "true" : "false"}
+      className={classes.box}
     >
       <span className={classes.icon} />
     </Box>
