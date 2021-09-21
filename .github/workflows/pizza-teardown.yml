@@ -1,0 +1,28 @@
+name: Pizza Teardown
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+env:
+  DOMAIN: planx.pizza
+  PULLREQUEST_ID: ${{ github.event.number }}
+
+jobs:
+  teardown_vultr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove vultr resources
+        uses: theopensystemslab/vultr-action@v1.6
+        with:
+          action: destroy
+          api_key: ${{ secrets.VULTR_API_KEY }}
+          domain: ${{ env.DOMAIN }}
+          pullrequest_id: ${{ env.PULLREQUEST_ID }}
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: vultr
+          message: |
+            Removed vultr server and associated DNS entries

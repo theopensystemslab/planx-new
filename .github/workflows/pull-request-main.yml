@@ -159,7 +159,7 @@ jobs:
       - if: github.event_name == 'pull_request' && github.event.action == 'opened'
         name: Create Server
         id: create
-        uses: theopensystemslab/vultr-action@v1.4
+        uses: theopensystemslab/vultr-action@v1.6
         with:
           action: create
           api_key: ${{ secrets.VULTR_API_KEY }}
