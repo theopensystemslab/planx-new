@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
+import { ENTER, SPACE_BAR } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import { TYPES } from "@planx/components/types";
 import type { Store } from "pages/FlowEditor/lib/store";
@@ -47,6 +48,11 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  button: {
+    "&:focus-visible": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
+    },
+  },
 }));
 
 const components: {
@@ -90,7 +96,17 @@ interface Props {
 }
 
 function Component(props: Props) {
-  const { grid, root } = useStyles();
+  const { grid, root, button } = useStyles();
+
+  const handleClick = (nodeId: string) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to go back to change your answer? You will lose your answers to questions answered after this one.`
+    );
+    if (confirmed) {
+      props.changeAnswer(nodeId);
+    }
+  };
+
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
       <div className={root}>
@@ -121,12 +137,16 @@ function Component(props: Props) {
                     {props.showChangeButton && (
                       <div>
                         <a
-                          onClick={() => {
-                            const confirmed = window.confirm(
-                              `Are you sure you want to go back to change your answer? You will lose your answers to questions answered after this one.`
-                            );
-                            if (confirmed) {
-                              props.changeAnswer(nodeId);
+                          tabIndex={0}
+                          role="button"
+                          className={button}
+                          onClick={() => handleClick(nodeId)}
+                          onKeyDown={(event) => {
+                            if (
+                              event.key === SPACE_BAR ||
+                              event.key === ENTER
+                            ) {
+                              handleClick(nodeId);
                             }
                           }}
                         >
