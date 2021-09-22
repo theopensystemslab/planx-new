@@ -60,6 +60,9 @@ const useStyles = makeStyles((theme) => ({
         }),
       ],
     },
+    "&:focus-visible": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
+    },
   },
   dragActive: {
     backgroundColor: theme.palette.background.default,
@@ -262,6 +265,7 @@ function Dropzone(props: any) {
             <IconButton
               size="small"
               className={classes.deleteIcon}
+              aria-label="Delete"
               onClick={() => {
                 setSlots((slots: any) =>
                   slots.filter((slot: any) => slot.file !== file)
@@ -299,6 +303,8 @@ function Dropzone(props: any) {
       })}
       <div
         className={classNames(classes.root, isDragActive && classes.dragActive)}
+        tabIndex={0}
+        role="button"
         {...getRootProps()}
       >
         <input {...getInputProps()} />
