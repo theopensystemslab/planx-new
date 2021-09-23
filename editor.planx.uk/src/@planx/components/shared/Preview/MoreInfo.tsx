@@ -64,20 +64,28 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => {
       className={classNames(classes.drawer, {
         [classes.drawerShift]: open,
       })}
-      variant="persistent"
       anchor="right"
+      aria-modal="true"
+      role="dialog"
+      aria-label="Further information about this question and the policies pertaining to it"
       open={open}
+      onClose={() => handleClose()}
       classes={{
         paper: classes.drawerPaper,
       }}
     >
-      <div className={classes.close}>
-        <IconButton onClick={() => handleClose()} aria-label="Close Panel">
+      <div className={classes.close} aria-hidden={true}>
+        <IconButton
+          onClick={() => handleClose()}
+          role="button"
+          aria-label="Close Panel"
+        >
           <CloseIcon />
         </IconButton>
       </div>
-
-      <div className={classes.drawerContent}>{children}</div>
+      <div role="main">
+        <div className={classes.drawerContent}>{children}</div>
+      </div>
     </Drawer>
   );
 };

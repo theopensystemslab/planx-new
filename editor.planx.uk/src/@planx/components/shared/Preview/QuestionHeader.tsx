@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       color: theme.palette.grey[300],
     },
+    "&:focus-visible": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
+    },
   },
   description: {
     "& p": {
@@ -72,6 +75,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           <Grid item>
             <IconButton
               className={classes.iconButton}
+              aria-label="See more information about this question"
               onClick={() => setOpen(true)}
             >
               <MoreInfoIcon viewBox="0 0 30 30" />
