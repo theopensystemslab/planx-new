@@ -292,6 +292,7 @@ function DrawBoundary(props: ComponentProps) {
               hideResetControl
               staticMode
               style={{ width: "100%", height: "30vh" }}
+              ariaLabel="A static map displaying the site boundary that you previously drew."
             />
           </>
         )}
