@@ -179,10 +179,7 @@ function GetAddress(props: {
     gql`
       query FindAddress($postcode: String = "", $gss_code: String) {
         addresses(
-          where: {
-            postcode: { _eq: $postcode }
-            teams: { gss_code: { _eq: $gss_code } }
-          }
+          where: { postcode: { _eq: $postcode }, gss_code: { _eq: $gss_code } }
         ) {
           uprn
           town
