@@ -112,12 +112,15 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
+type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 interface Item {
   title: string;
   description: string;
 }
 
-function ListItem(props: Item & { index: number; isLast: boolean }) {
+function ListItem(
+  props: Item & { index: number; isLast: boolean; heading?: HeadingLevel }
+) {
   const [expanded, setExpanded] = React.useState(false);
   const handleChange = () => {
     setExpanded(!expanded);
@@ -140,7 +143,9 @@ function ListItem(props: Item & { index: number; isLast: boolean }) {
         onClick={handleChange}
       >
         <Box>
-          <Typography variant="h5">{props.title}</Typography>
+          <Typography variant="h5" component={props.heading || "h5"}>
+            {props.title}
+          </Typography>
         </Box>
         <Caret expanded={expanded} />
       </ButtonBase>
@@ -155,7 +160,7 @@ function ListItem(props: Item & { index: number; isLast: boolean }) {
   );
 }
 
-function NumberedList(props: { items: Item[] }) {
+function NumberedList(props: { items: Item[]; heading?: HeadingLevel }) {
   return (
     <Box>
       {props.items.map((item, i) => (
@@ -164,6 +169,7 @@ function NumberedList(props: { items: Item[] }) {
           key={i}
           index={i}
           isLast={i === props.items.length - 1}
+          heading={props.heading}
         />
       ))}
     </Box>
