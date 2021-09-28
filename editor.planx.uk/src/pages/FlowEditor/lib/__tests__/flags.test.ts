@@ -62,10 +62,7 @@ describe("in a flow with no collected flags, the user", () => {
   });
 
   it("will follow a path that doesn't require flags by default", () => {
-    expect(getState().upcomingCardIds()).toEqual([
-      "question",
-      "noflag_followup",
-    ]);
+    expect(getState().upcomingCardIds()).toEqual(["question"]);
   });
 
   const scenarios: [string, string[], string][] = [
