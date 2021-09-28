@@ -389,7 +389,7 @@ function PropertyConstraints({ constraintsData }: any) {
   return (
     <Box mb={3}>
       <Box pb={2}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h3" component="h2" gutterBottom>
           {title}
         </Typography>
         <Typography variant="body2" gutterBottom>
