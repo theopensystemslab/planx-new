@@ -1,6 +1,5 @@
 import "./map.css";
 
-import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -45,22 +44,6 @@ function Component(props: Props) {
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
 
-  const { data } = useQuery(
-    gql`
-      query GetTeam($team: String = "") {
-        teams(where: { slug: { _eq: $team } }) {
-          gss_code
-        }
-      }
-    `,
-    {
-      skip: !Boolean(team),
-      variables: {
-        team: team,
-      },
-    }
-  );
-
   const { data: constraints } = useSWR(
     () =>
       address
@@ -73,13 +56,12 @@ function Component(props: Props) {
     }
   );
 
-  if (!address && Boolean(data?.teams.length)) {
+  if (!address) {
     return (
       <GetAddress
         title={props.title}
         description={props.description}
         setAddress={setAddress}
-        gssCode={data?.teams[0].gss_code}
       />
     );
   } else if (address && constraints) {
@@ -141,7 +123,7 @@ function Component(props: Props) {
           },
           {
             heading: "Building type",
-            detail: address.planx_description,
+            detail: address.blpu_code,
           },
         ]}
         propertyConstraints={{
@@ -167,51 +149,47 @@ function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
   title?: string;
   description?: string;
-  gssCode: string;
 }) {
   const [postcode, setPostcode] = useState<string | null>();
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
   const [selectedOption, setSelectedOption] = useState<Option | undefined>();
 
-  // get addresses in this postcode & gss_code (aka local planning authority)
-  //    if gss_code is null, eg for team "opensystemslab", then ignore it in where filter https://stackoverflow.com/a/55809891
-  const { loading, error, data } = useQuery(
-    gql`
-      query FindAddress($postcode: String = "", $gss_code: String) {
-        addresses(
-          where: {
-            postcode: { _eq: $postcode }
-            _or: [
-              { gss_code: { _eq: $gss_code } }
-              { gss_code: { _eq: "" } }
-              { gss_code: { _is_null: true } }
-            ]
-          }
-        ) {
-          uprn
-          town
-          y
-          x
-          street
-          sao
-          postcode
-          pao
-          organisation
-          blpu_code
-          latitude
-          longitude
-          single_line_address
-        }
-      }
-    `,
+  // Fetch addresses in this postcode from the OS Places API
+  const { data } = useSWR(
+    () =>
+      sanitizedPostcode
+        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`
+        : null,
     {
-      skip: !Boolean(sanitizedPostcode),
-      variables: {
-        postcode: sanitizedPostcode,
-        gss_code: props.gssCode,
-      },
+      shouldRetryOnError: true,
+      errorRetryInterval: 1000,
+      errorRetryCount: 1,
     }
   );
+
+  // Temp hack: map OS Places API fields to address_base fields
+  const addresses: Address[] = [];
+  if (data?.results?.length) {
+    data.results.forEach((a: any) => {
+      addresses.push({
+        uprn: a.DPA.UPRN,
+        blpu_code: `${a.DPA.CLASSIFICATION_CODE_DESCRIPTION} (${a.DPA.CLASSIFICATION_CODE})`,
+        latitude: a.DPA.Y_COORDINATE.toString(),
+        longitude: a.DPA.X_COORDINATE.toString(),
+        organisation: a.DPA.ORGANISATION_NAME || null,
+        sao: null,
+        pao: a.DPA.BUILDING_NUMBER,
+        street: a.DPA.THOROUGHFARE_NAME,
+        town: a.DPA.POST_TOWN,
+        postcode: a.DPA.POSTCODE,
+        x: a.DPA.X_COORDINATE,
+        y: a.DPA.Y_COORDINATE,
+        planx_description: "",
+        planx_value: "",
+        single_line_address: a.DPA.ADDRESS,
+      });
+    });
+  }
 
   return (
     <Card
@@ -238,15 +216,10 @@ function GetAddress(props: {
               setPostcode(input.toUpperCase());
             }
           }}
-          errorMessage={
-            data?.addresses?.length === 0
-              ? "This postcode is not in your local planning authority"
-              : ""
-          }
         />
-        {Boolean(data?.addresses?.length) && (
+        {Boolean(addresses.length) && (
           <Autocomplete
-            options={data.addresses
+            options={addresses
               .map(
                 (address: Address): Option => ({
                   ...address,
