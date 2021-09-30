@@ -101,8 +101,8 @@ function Component(props: Props) {
             throw Error("Should not have been clickable");
           }
         }}
-        lng={Number(address.longitude)}
-        lat={Number(address.latitude)}
+        lng={address.longitude}
+        lat={address.latitude}
         title="About the property"
         description="This is the information we currently have about the property"
         propertyDetails={[
@@ -158,7 +158,7 @@ function GetAddress(props: {
   const { data } = useSWR(
     () =>
       sanitizedPostcode
-        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`
+        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`
         : null,
     {
       shouldRetryOnError: true,
@@ -174,8 +174,8 @@ function GetAddress(props: {
       addresses.push({
         uprn: a.DPA.UPRN,
         blpu_code: `${a.DPA.CLASSIFICATION_CODE_DESCRIPTION} (${a.DPA.CLASSIFICATION_CODE})`,
-        latitude: a.DPA.Y_COORDINATE.toString(),
-        longitude: a.DPA.X_COORDINATE.toString(),
+        latitude: a.DPA.LAT,
+        longitude: a.DPA.LNG,
         organisation: a.DPA.ORGANISATION_NAME || null,
         sao: null,
         pao: a.DPA.BUILDING_NUMBER,
