@@ -61,10 +61,14 @@ export default function ConfirmationComponent(props: Props) {
 
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
           <Box pt={3}>
-            <Typography variant="h3" className={classes.listHeading}>
+            <Typography
+              variant="h3"
+              component="h2"
+              className={classes.listHeading}
+            >
               What happens next?
             </Typography>
-            <NumberedList items={props.nextSteps} />
+            <NumberedList items={props.nextSteps} heading="h3" />
           </Box>
         )}
 
