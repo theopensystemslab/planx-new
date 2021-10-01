@@ -344,6 +344,7 @@ export function PropertyInformation(props: any) {
           showFeaturesAtPoint
           osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY}
           featureColor={teamColor}
+          featureFill
           ariaLabel="A static map centered on your address input, showing the Ordnance Survey basemap features."
         />
       </Box>
