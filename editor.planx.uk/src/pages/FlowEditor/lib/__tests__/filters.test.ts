@@ -127,7 +127,11 @@ test("don't expand filters before visiting them (A)", () => {
     flow,
   });
 
-  expect(getState().upcomingCardIds()).toEqual(["d5SxIWZej9", "nroxFPM2Jx"]);
+  expect(getState().upcomingCardIds()).toEqual([
+    "d5SxIWZej9",
+    "LAz2YqYChs",
+    "nroxFPM2Jx",
+  ]);
 });
 
 test("immune path (B)", () => {
