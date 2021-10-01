@@ -50,6 +50,7 @@ function Component(props: Props) {
       query GetTeam($team: String = "") {
         teams(where: { slug: { _eq: $team } }) {
           gss_code
+          theme
         }
       }
     `,
@@ -79,7 +80,7 @@ function Component(props: Props) {
         title={props.title}
         description={props.description}
         setAddress={setAddress}
-        gssCode={data?.teams[0].gss_code}
+        gssCode={data?.teams?.[0].gss_code}
       />
     );
   } else if (address && constraints) {
@@ -151,6 +152,7 @@ function Component(props: Props) {
             ({ text }: any) => text
           ),
         }}
+        teamColor={data?.teams?.[0].theme?.primary || "#2c2c2c"}
       />
     );
   } else {
@@ -309,6 +311,7 @@ export function PropertyInformation(props: any) {
     lat,
     lng,
     handleSubmit,
+    teamColor,
   } = props;
   const styles = useClasses();
   const formik = useFormik({
@@ -340,7 +343,8 @@ export function PropertyInformation(props: any) {
           hideResetControl
           showFeaturesAtPoint
           osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY}
-          featureColor="#9a9a9a"
+          featureColor={teamColor}
+          featureFill
           ariaLabel="A static map centered on your address input, showing the Ordnance Survey basemap features."
         />
       </Box>
