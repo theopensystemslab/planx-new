@@ -80,7 +80,7 @@ function Component(props: Props) {
         title={props.title}
         description={props.description}
         setAddress={setAddress}
-        gssCode={data?.teams[0].gss_code}
+        gssCode={data?.teams?.[0].gss_code}
       />
     );
   } else if (address && constraints) {
@@ -152,7 +152,7 @@ function Component(props: Props) {
             ({ text }: any) => text
           ),
         }}
-        teamColor={data?.teams[0].theme?.primary || "#9a9a9a"}
+        teamColor={data?.teams?.[0].theme?.primary || "#2c2c2c"}
       />
     );
   } else {
