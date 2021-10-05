@@ -69,7 +69,7 @@ const ChecklistComponent: React.FC<Props> = ({
         .required()
         .test({
           name: "atLeastOneChecked",
-          message: "At least one option must be checked",
+          message: "Select at least one option",
           test: (checked?: Array<string>) => {
             return Boolean(checked && checked.length > 0);
           },

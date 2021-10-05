@@ -21,24 +21,24 @@ const phoneRegex =
 
 export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
   string()
-    .required()
+    .required("Enter your answer")
     .test({
       name: "valid",
       message: (() => {
         if (!type) {
-          return "Must provide a value.";
+          return "Enter your answer.";
         }
         if (type === TextInputType.Short) {
-          return "Must be shorter than 120 characters.";
+          return "Enter fewer than 120 characters.";
         }
         if (type === TextInputType.Long) {
-          return "Must be shorter than 250 characters.";
+          return "Enter fewer than 250 characters.";
         }
         if (type === TextInputType.Email) {
-          return "Must be valid email.";
+          return "Enter a valid email.";
         }
         if (type === TextInputType.Phone) {
-          return "Must be a valid phone number.";
+          return "Enter a valid phone number.";
         }
       })(),
       test: (value: string | undefined) => {
