@@ -121,9 +121,9 @@ const planningConstraints = {
     id: "PLANNING/RIPA_BOPS",
     serverIndex: 4,
     fields: ["OBJECTID", "NAME", "DESCRIPTIO"],
-    neg: "is not an Area of Outstanding Natural Beauty",
+    neg: "is not in an Area of Outstanding Natural Beauty",
     pos: (data) => ({
-      text: "is, or is within, an Area of Outstanding Natural Beauty",
+      text: "is in an Area of Outstanding Natural Beauty",
       description: data.NAME,
     }),
   },
