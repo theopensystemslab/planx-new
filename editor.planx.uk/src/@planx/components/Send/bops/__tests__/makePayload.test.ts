@@ -1,6 +1,6 @@
 import { Store } from "pages/FlowEditor/lib/store";
 
-import { makePayload } from "./bops";
+import { makePayload } from "..";
 
 const flow: Store.flow = {
   _root: {
