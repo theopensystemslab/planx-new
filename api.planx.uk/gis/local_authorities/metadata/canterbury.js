@@ -147,9 +147,9 @@ const planningConstraints = {
     id: "External/Planning_Constraints_New",
     serverIndex: 2,
     fields: ["OBJECTID", "NAME", "DESIG_DATE", "HOTLINK"],
-    neg: "is not an Area of Outstanding Natural Beauty",
+    neg: "is not in an Area of Outstanding Natural Beauty",
     pos: (data) => ({
-      text: "is, or is within, an Area of Outstanding Natural Beauty",
+      text: "is in an Area of Outstanding Natural Beauty",
       description: data.name,
     }),
   },

@@ -77,7 +77,7 @@ const planningConstraints = {
   "designated.AONB": {
     key: "designated.AONB",
     source: "manual", // there are no AONB in Southwark
-    neg: "is not an Area of Outstanding Natural Beauty",
+    neg: "is not in an Area of Outstanding Natural Beauty",
   },
   "designated.nationalPark": {
     key: "designated.nationalPark",
