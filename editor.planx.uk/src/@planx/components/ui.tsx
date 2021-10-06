@@ -11,6 +11,7 @@ import Home from "@material-ui/icons/Home";
 import InfoOutlined from "@material-ui/icons/InfoOutlined";
 import List from "@material-ui/icons/List";
 import MailOutlined from "@material-ui/icons/MailOutlined";
+import Map from "@material-ui/icons/Map";
 import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
 import PlaylistAdd from "@material-ui/icons/PlaylistAdd";
 import PlaylistAddCheck from "@material-ui/icons/PlaylistAddCheck";
@@ -68,6 +69,7 @@ export const ICONS: {
   [TYPES.NumberInput]: ExposureZero,
   [TYPES.Page]: Description,
   [TYPES.Pay]: PaymentOutlined,
+  [TYPES.PlanningConstraints]: Map,
   [TYPES.Response]: undefined,
   [TYPES.Result]: PlaylistAddCheck,
   [TYPES.Review]: RateReview,

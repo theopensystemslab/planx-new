@@ -68,6 +68,13 @@ const Node: React.FC<any> = (props) => {
       return <Page {...allProps} text={node?.data?.title ?? "Page"} />;
     case TYPES.Pay:
       return <Question {...allProps} text={node?.data?.title ?? "Pay"} />;
+    case TYPES.PlanningConstraints:
+      return (
+        <Question
+          {...allProps}
+          text={node?.data?.title ?? "Planning constraints"}
+        />
+      );
     case TYPES.Result:
       return (
         <Question
