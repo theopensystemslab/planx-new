@@ -63,7 +63,9 @@ function get(key, table, x, y, radius = 1.5) {
 }
 
 // For this location, iterate through our planning constraints and aggregate/format the responses
-async function locationSearch(x, y, extras) {
+async function locationSearch(x, y, siteBoundary, extras) {
+  console.log('southwark site boundary', siteBoundary);
+  
   // Setup a one-dimension array of each data source we'll fetch
   let sources = [];
   Object.keys(gisLayers).forEach((layer) =>

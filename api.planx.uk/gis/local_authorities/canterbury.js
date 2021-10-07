@@ -118,7 +118,9 @@ async function go(x, y, extras) {
   }
 }
 
-async function locationSearch(x, y, extras) {
+async function locationSearch(x, y, siteBoundary, extras) {
+  console.log('canterbury site boundary', siteBoundary);
+
   return go(x, y, extras);
 }
 

@@ -116,7 +116,9 @@ async function go(x, y, extras) {
   }
 }
 
-async function locationSearch(x, y, extras) {
+async function locationSearch(x, y, siteBoundary, extras) {
+  console.log('bucks site boundary', siteBoundary);
+
   return go(x, y, extras);
 }
 

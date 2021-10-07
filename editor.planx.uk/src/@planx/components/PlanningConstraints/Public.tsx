@@ -29,10 +29,17 @@ function Component(props: Props) {
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
 
+  // Get the coordinates of the site boundary drawing if they exist, fallback on x & y if file was uploaded
+  const coordinates: number[][] = siteBoundary?.geometry?.coordinates[0] || [];
+
   const { data: constraints } = useSWR(
     () =>
       x & y
-        ? `${process.env.REACT_APP_API_URL}/gis/${team}?x=${x}&y=${y}&version=1`
+        ? `${
+            process.env.REACT_APP_API_URL
+          }/gis/${team}?x=${x}&y=${y}&siteBoundary=${JSON.stringify(
+            coordinates
+          )}&version=1`
         : null,
     {
       shouldRetryOnError: true,
