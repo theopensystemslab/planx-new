@@ -29,10 +29,10 @@ export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
           return "Enter your answer.";
         }
         if (type === TextInputType.Short) {
-          return "Enter fewer than 120 characters.";
+          return "Your answer must be 120 characters or fewer.";
         }
         if (type === TextInputType.Long) {
-          return "Enter fewer than 250 characters.";
+          return "Your answer must be 250 characters or fewer.";
         }
         if (type === TextInputType.Email) {
           return "Enter a valid email.";
