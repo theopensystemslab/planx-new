@@ -1,5 +1,6 @@
 import "./map.css";
 
+import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -43,6 +44,23 @@ function Component(props: Props) {
   //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
+
+  const { data } = useQuery(
+    gql`
+      query GetTeam($team: String = "") {
+        teams(where: { slug: { _eq: $team } }) {
+          gss_code
+          theme
+        }
+      }
+    `,
+    {
+      skip: !Boolean(team),
+      variables: {
+        team: team,
+      },
+    }
+  );
 
   const { data: constraints } = useSWR(
     () =>
@@ -133,6 +151,7 @@ function Component(props: Props) {
             ({ text }: any) => text
           ),
         }}
+        teamColor={data?.teams?.[0].theme?.primary || "#2c2c2c"}
       />
     );
   } else {
@@ -282,6 +301,7 @@ export function PropertyInformation(props: any) {
     lat,
     lng,
     handleSubmit,
+    teamColor,
   } = props;
   const styles = useClasses();
   const formik = useFormik({
@@ -313,7 +333,8 @@ export function PropertyInformation(props: any) {
           hideResetControl
           showFeaturesAtPoint
           osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY}
-          featureColor="#9a9a9a"
+          featureColor={teamColor}
+          featureFill
           ariaLabel="A static map centered on your address input, showing the Ordnance Survey basemap features."
         />
       </Box>

@@ -19,7 +19,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
       />
       <Container maxWidth="md">
-        <NumberedList items={props.tasks} />
+        <NumberedList items={props.tasks} heading={"h2"} />
       </Container>
     </Card>
   );

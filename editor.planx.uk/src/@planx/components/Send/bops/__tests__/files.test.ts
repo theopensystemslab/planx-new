@@ -1,8 +1,8 @@
 import { Store } from "pages/FlowEditor/lib/store";
 
-import { PASSPORT_UPLOAD_KEY } from "../DrawBoundary/model";
-import { extractTagsFromPassportKey, getParams } from "./bops";
-import type { FileTag } from "./model";
+import { PASSPORT_UPLOAD_KEY } from "../../../DrawBoundary/model";
+import { extractTagsFromPassportKey, getParams } from "../../bops";
+import type { FileTag } from "../../model";
 
 const flow: Store.flow = {
   _root: {
