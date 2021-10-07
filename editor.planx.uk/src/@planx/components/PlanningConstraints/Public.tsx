@@ -1,14 +1,18 @@
 import Box from "@material-ui/core/Box";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import { useFormik } from "formik";
+import { submitFeedback } from "lib/feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ReactHtmlParser from "react-html-parser";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
+import CollapsibleInput from "ui/CollapsibleInput";
 
 import type { PlanningConstraints } from "./model";
 
@@ -25,7 +29,6 @@ function Component(props: Props) {
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
 
-  // If we don't have a site boundary (aka a file was uploaded), then query using the address point
   const { data: constraints } = useSWR(
     () =>
       x & y
@@ -39,16 +42,49 @@ function Component(props: Props) {
   );
 
   return (
-    <Card handleSubmit={props.handleSubmit} isValid>
-      <QuestionHeader
-        title={props.title}
-        description={props.description || ""}
-      />
-      {Object.keys(constraints).length > 0 
-        ? <PropertyConstraints data={constraints} />
-        : <DelayedLoadingIndicator msDelayBeforeVisible={0} text="Fetching data..." />
-      }
-    </Card>
+    <>
+      {constraints ? (
+        <PlanningConstraintsInformation
+          title={props.title}
+          description={props.description || ""}
+          constraints={constraints}
+          handleSubmit={(feedback?: string) => {
+            const _nots: any = {};
+            const newPassportData: any = {};
+
+            Object.entries(constraints).forEach(([key, data]: any) => {
+              if (data.value) {
+                newPassportData["property.constraints.planning"] ||= [];
+                newPassportData["property.constraints.planning"].push(key);
+              } else {
+                _nots["property.constraints.planning"] ||= [];
+                _nots["property.constraints.planning"].push(key);
+              }
+            });
+
+            const passportData = {
+              _nots,
+              ...newPassportData,
+            };
+
+            props.handleSubmit?.({
+              data: passportData,
+            });
+          }}
+        />
+      ) : (
+        <Card>
+          <QuestionHeader
+            title={props.title}
+            description={props.description || ""}
+          />
+          <DelayedLoadingIndicator
+            msDelayBeforeVisible={0}
+            text="Fetching data..."
+          />
+        </Card>
+      )}
+    </>
   );
 }
 
@@ -60,10 +96,44 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-function PropertyConstraints({ data }: any) {
-  const constraints = Object.values(data).filter(
-    ({ text }: any) => text
+function PlanningConstraintsInformation(props: any) {
+  const { title, description, constraints, handleSubmit } = props;
+  const formik = useFormik({
+    initialValues: {
+      feedback: "",
+    },
+    onSubmit: (values) => {
+      if (values.feedback) {
+        submitFeedback(values.feedback, {
+          reason: "Inaccurate planning constraints",
+          constraints: constraints,
+        });
+      }
+      handleSubmit?.();
+    },
+  });
+
+  return (
+    <Card handleSubmit={formik.handleSubmit} isValid>
+      <QuestionHeader title={title} description={description} />
+      <ConstraintsList data={constraints} />
+      <Box color="text.secondary" textAlign="right">
+        <CollapsibleInput
+          handleChange={formik.handleChange}
+          name="feedback"
+          value={formik.values.feedback}
+        >
+          <Typography variant="body2" color="inherit">
+            Report an inaccuracy
+          </Typography>
+        </CollapsibleInput>
+      </Box>
+    </Card>
   );
+}
+
+function ConstraintsList({ data }: any) {
+  const constraints = Object.values(data).filter(({ text }: any) => text);
 
   // Order constraints so that { value: true } ones come first
   constraints.sort(function (a: any, b: any) {
@@ -76,11 +146,7 @@ function PropertyConstraints({ data }: any) {
     </Constraint>
   ));
 
-  return (
-    <Box mb={3}>
-      {visibleConstraints}
-    </Box>
-  );
+  return <Box mb={3}>{visibleConstraints}</Box>;
 }
 
 function Constraint({ children, color, ...props }: any) {
