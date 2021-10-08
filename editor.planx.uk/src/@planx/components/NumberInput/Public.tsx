@@ -32,7 +32,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
     validateOnChange: false,
     validationSchema: object({
       value: string()
-        .required()
+        .required("Enter your answer")
         .test({
           name: "not a number",
           message: "Enter a number",

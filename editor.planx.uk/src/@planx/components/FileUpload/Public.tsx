@@ -131,7 +131,7 @@ const slotsSchema = array()
   .required()
   .test({
     name: "nonUploading",
-    message: "You must have at least one successfully uploaded file.",
+    message: "Upload at least one file.",
     test: (slots?: Array<any>) => {
       return Boolean(
         slots &&
