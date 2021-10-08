@@ -12,11 +12,11 @@ export type UserData = {
 };
 
 export const userDataSchema: SchemaOf<UserData> = object({
-  line1: string().required(),
+  line1: string().required("Line 1 is required"),
   line2: string(),
-  town: string().required(),
+  town: string().required("Town is required"),
   county: string(),
-  postcode: string().required(),
+  postcode: string().required("Postal code is required"),
 });
 
 export interface AddressInput extends MoreInformation {
