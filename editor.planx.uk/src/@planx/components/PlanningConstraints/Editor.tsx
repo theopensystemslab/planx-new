@@ -3,12 +3,13 @@ import { EditorProps, ICONS, InternalNotes } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
+import InputGroup from "ui/InputGroup";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
 
-import { parseContent,PlanningConstraints } from "./model";
+import { parseContent, PlanningConstraints } from "./model";
 
 type Props = EditorProps<TYPES.PlanningConstraints, PlanningConstraints>;
 
@@ -49,14 +50,16 @@ function PlanningConstraintsComponent(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputRow>
-            <Input
-              name="fn"
-              placeholder="Planning constraints data field"
-              value={formik.values.fn}
-              onChange={formik.handleChange}
-            />
-          </InputRow>
+          <InputGroup label="Planning constraints data field">
+            <InputRow>
+              <Input
+                name="fn"
+                placeholder="Planning constraints data field"
+                value={formik.values.fn}
+                onChange={formik.handleChange}
+              />
+            </InputRow>
+          </InputGroup>
         </ModalSectionContent>
       </ModalSection>
       <InternalNotes

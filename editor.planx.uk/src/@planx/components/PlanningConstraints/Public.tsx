@@ -30,7 +30,8 @@ function Component(props: Props) {
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
 
   // Get the coordinates of the site boundary drawing if they exist, fallback on x & y if file was uploaded
-  const coordinates: number[][] = siteBoundary?.geometry?.coordinates[0] || [];
+  // Coords should match Esri's "rings" type https://developers.arcgis.com/javascript/3/jsapi/polygon-amd.html#rings
+  const coordinates: number[][][] = siteBoundary?.geometry?.coordinates || [];
 
   const { data: constraints } = useSWR(
     () =>
@@ -54,6 +55,7 @@ function Component(props: Props) {
         <PlanningConstraintsInformation
           title={props.title}
           description={props.description || ""}
+          fn={props.fn}
           constraints={constraints}
           handleSubmit={(feedback?: string) => {
             const _nots: any = {};
@@ -61,11 +63,11 @@ function Component(props: Props) {
 
             Object.entries(constraints).forEach(([key, data]: any) => {
               if (data.value) {
-                newPassportData["property.constraints.planning"] ||= [];
-                newPassportData["property.constraints.planning"].push(key);
+                newPassportData[props.fn] ||= [];
+                newPassportData[props.fn].push(key);
               } else {
-                _nots["property.constraints.planning"] ||= [];
-                _nots["property.constraints.planning"].push(key);
+                _nots[props.fn] ||= [];
+                _nots[props.fn].push(key);
               }
             });
 
@@ -148,7 +150,7 @@ function ConstraintsList({ data }: any) {
   });
 
   const visibleConstraints = constraints.map((con: any) => (
-    <Constraint key={con.text} color={con.color || ""}>
+    <Constraint key={con.text} color={con.value ? "#ffbf00" : ""}>
       {ReactHtmlParser(con.text)}
     </Constraint>
   ));
