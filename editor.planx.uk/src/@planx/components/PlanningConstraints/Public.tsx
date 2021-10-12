@@ -150,7 +150,7 @@ function ConstraintsList({ data }: any) {
   });
 
   const visibleConstraints = constraints.map((con: any) => (
-    <Constraint key={con.text} color={con.value ? "#ffbf00" : ""}>
+    <Constraint key={con.text} color={con.color}>
       {ReactHtmlParser(con.text)}
     </Constraint>
   ));

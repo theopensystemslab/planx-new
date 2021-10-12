@@ -51,8 +51,6 @@ function get(key, table, x, y, siteBoundary, radius = 1.5) {
     `;
   }
 
-  console.log(query);
-
   return fetch(
     "https://geo.southwark.gov.uk/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
     {
