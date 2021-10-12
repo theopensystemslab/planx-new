@@ -15,10 +15,22 @@ const preCheckedLayers = getManualConstraints(planningConstraints);
 const articleFours = planningConstraints.article4.records;
 
 // Fetch a data layer
-async function search(mapServer, featureName, outFields, geometry, where) {
+async function search(
+  mapServer,
+  featureName,
+  outFields,
+  geometry,
+  geometryType,
+  where
+) {
   const { id } = planningConstraints[featureName];
 
-  let url = makeEsriUrl(mapServer, id, 0, { outFields, geometry, where });
+  let url = makeEsriUrl(mapServer, id, 0, {
+    outFields,
+    geometry,
+    geometryType,
+    where,
+  });
 
   return fetch(url)
     .then((response) => response.text())
@@ -29,8 +41,18 @@ async function search(mapServer, featureName, outFields, geometry, where) {
 }
 
 // For this location, iterate through our planning constraints and aggregate/format the responses
-async function go(x, y, extras) {
-  const point = bufferPoint(x, y, 2.5);
+async function go(x, y, siteBoundary, extras) {
+  const geomType =
+    siteBoundary.length === 0 ? "esriGeometryEnvelope" : "esriGeometryPolygon";
+  const geom =
+    geomType === "esriGeometryEnvelope"
+      ? bufferPoint(x, y, 2.5)
+      : JSON.stringify({
+          rings: siteBoundary,
+          spatialReference: {
+            wkid: 4326,
+          },
+        });
 
   try {
     const results = await Promise.all(
@@ -39,7 +61,8 @@ async function go(x, y, extras) {
           gisLayers[layer].source,
           layer,
           gisLayers[layer].fields,
-          point,
+          geom,
+          geomType,
           gisLayers[layer].where || "1=1"
         )
       )
@@ -154,9 +177,7 @@ async function go(x, y, extras) {
 }
 
 async function locationSearch(x, y, siteBoundary, extras) {
-  console.log('lambeth site boundary', siteBoundary);
-
-  return go(x, y, extras);
+  return go(x, y, siteBoundary, extras);
 }
 
 module.exports = {

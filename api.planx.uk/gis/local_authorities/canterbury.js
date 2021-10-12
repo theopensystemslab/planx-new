@@ -19,13 +19,15 @@ async function search(
   featureName,
   serverIndex,
   outFields,
-  geometry
+  geometry,
+  geometryType
 ) {
   const { id } = planningConstraints[featureName];
 
   let url = makeEsriUrl(mapServer, id, serverIndex, {
     outFields,
     geometry,
+    geometryType,
   });
 
   return fetch(url)
@@ -37,8 +39,18 @@ async function search(
 }
 
 // For this location, iterate through our planning constraints and aggregate/format the responses
-async function go(x, y, extras) {
-  const point = bufferPoint(x, y, 0.25);
+async function go(x, y, siteBoundary, extras) {
+  const geomType =
+    siteBoundary.length === 0 ? "esriGeometryEnvelope" : "esriGeometryPolygon";
+  const geom =
+    geomType === "esriGeometryEnvelope"
+      ? bufferPoint(x, y, 0.05)
+      : JSON.stringify({
+          rings: siteBoundary,
+          spatialReference: {
+            wkid: 4326,
+          },
+        });
 
   try {
     const results = await Promise.all(
@@ -48,7 +60,8 @@ async function go(x, y, extras) {
           layer,
           gisLayers[layer].serverIndex,
           gisLayers[layer].fields,
-          point
+          geom,
+          geomType
         )
       )
     );
@@ -119,9 +132,7 @@ async function go(x, y, extras) {
 }
 
 async function locationSearch(x, y, siteBoundary, extras) {
-  console.log('canterbury site boundary', siteBoundary);
-
-  return go(x, y, extras);
+  return go(x, y, siteBoundary, extras);
 }
 
 module.exports = {
