@@ -48,6 +48,7 @@ function Component(props: Props) {
     passport,
     environment,
     sendSessionDataToHasura,
+    showPreview,
   ] = useStore((state) => [
     state.id,
     state.govUkPayment,
@@ -55,6 +56,7 @@ function Component(props: Props) {
     state.computePassport(),
     state.previewEnvironment,
     state.sendSessionDataToHasura,
+    state.showPreview,
   ]);
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
@@ -115,7 +117,7 @@ function Component(props: Props) {
     }
   }, []);
 
-  if (state.status === "indeterminate") {
+  if (!Boolean(showPreview) && state.status === "indeterminate") {
     // XXX: When the pay component is initially loaded, send the user's
     //      session info to storage in case there's an issue with payment flow.
     //      Will be called when this component is shown, or if it's skipped.

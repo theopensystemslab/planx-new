@@ -1,0 +1,1 @@
+CREATE TABLE "public"."session_backups"("id" serial NOT NULL, "session_id" uuid, "flow_id" uuid, "flow_data" JSONB, "passport" jsonb, "created_at" timestamptz NOT NULL DEFAULT now(), PRIMARY KEY ("id") ); COMMENT ON TABLE "public"."session_backups" IS E'stores session data as a backup before taking payment';
