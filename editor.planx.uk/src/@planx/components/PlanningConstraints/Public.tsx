@@ -82,7 +82,7 @@ function Component(props: Props) {
           }}
         />
       ) : (
-        <Card>
+        <Card handleSubmit={props.handleSubmit} isValid>
           <QuestionHeader
             title={props.title}
             description={props.description || ""}
@@ -155,7 +155,16 @@ function ConstraintsList({ data }: any) {
     </Constraint>
   ));
 
-  return <Box mb={3}>{visibleConstraints}</Box>;
+  // Display constraints for valid teams, or message if unsupported local authority (eg api returned '{}')
+  return (
+    <Box mb={3}>
+      {visibleConstraints.length > 0 ? (
+        visibleConstraints
+      ) : (
+        <code>GIS data are not available for this team.</code>
+      )}
+    </Box>
+  );
 }
 
 function Constraint({ children, color, ...props }: any) {
