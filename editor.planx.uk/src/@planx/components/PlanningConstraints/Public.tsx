@@ -159,7 +159,12 @@ function ConstraintsList({ data }: any) {
   return (
     <Box mb={3}>
       {visibleConstraints.length > 0 ? (
-        visibleConstraints
+        <>
+          <Typography variant="h5" component="h2" gutterBottom>
+            This property
+          </Typography>
+          {visibleConstraints}
+        </>
       ) : (
         <code>GIS data are not available for this team.</code>
       )}
