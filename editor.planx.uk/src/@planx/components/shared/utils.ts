@@ -78,3 +78,18 @@ export const useStagingUrlIfTestApplication = (passport: Store.passport) => (
 
   return urlThatMightBeReplaced;
 };
+
+export const getPreviouslySubmittedData = ({
+  id,
+  fn,
+  previouslySubmittedData,
+}: {
+  id?: string;
+  fn?: string;
+  previouslySubmittedData?: any;
+}) => {
+  const key = fn || id;
+  const data = key && previouslySubmittedData?.data?.[key];
+
+  return data;
+};

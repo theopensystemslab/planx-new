@@ -7,16 +7,17 @@ import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import { object } from "yup";
 
-import { makeData } from "../shared/utils";
+import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { TextInput, UserData } from "./model";
 import { userDataSchema } from "./model";
 
 export type Props = PublicProps<TextInput, UserData>;
 
+// TODO: fix this data field bug for all components
 const TextInputComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
-      text: "",
+      text: getPreviouslySubmittedData(props) ?? "",
     },
     onSubmit: (values) => {
       props.handleSubmit?.(makeData(props, values.text));
@@ -51,7 +52,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
           placeholder={props.placeholder || "Type your answer"}
           bordered
           onChange={formik.handleChange}
-          errorMessage={formik.errors.text}
+          errorMessage={formik.errors.text as string}
         />
       </InputRow>
     </Card>

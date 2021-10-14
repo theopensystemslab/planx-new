@@ -1,6 +1,6 @@
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import type { Checklist } from "@planx/components/Checklist/model";
+import type { Checklist, Group } from "@planx/components/Checklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -11,6 +11,7 @@ import ErrorWrapper from "ui/ErrorWrapper";
 import { ExpandableList, ExpandableListItem } from "ui/ExpandableList";
 import { array, object } from "yup";
 
+import { Option } from "../shared";
 import type { PublicProps } from "../ui";
 
 export type Props = PublicProps<Checklist>;
@@ -54,10 +55,11 @@ const ChecklistComponent: React.FC<Props> = ({
   policyRef,
   text,
   img,
+  previouslySubmittedData,
 }) => {
   const formik = useFormik<{ checked: Array<string> }>({
     initialValues: {
-      checked: [],
+      checked: previouslySubmittedData?.answers || [],
     },
     onSubmit: (values) => {
       handleSubmit?.({ answers: values.checked });
@@ -89,7 +91,11 @@ const ChecklistComponent: React.FC<Props> = ({
     }),
   });
 
-  const [expandedGroups, setExpandedGroups] = useState<Array<number>>([]);
+  const initialExpandedGroups = getInitialExpandedGroups();
+
+  const [expandedGroups, setExpandedGroups] = useState<Array<number>>(
+    initialExpandedGroups
+  );
 
   const layout = options
     ? options.find((o) => o.data.img)
@@ -171,7 +177,12 @@ const ChecklistComponent: React.FC<Props> = ({
                       }}
                       title={group.title}
                     >
-                      <Box py={2}>
+                      <Box
+                        py={2}
+                        data-testid={`group-${index}${
+                          isExpanded ? "-expanded" : ""
+                        }`}
+                      >
                         {group.children.map((option: any) => (
                           <ChecklistItem
                             onChange={changeCheckbox(option.id)}
@@ -192,5 +203,21 @@ const ChecklistComponent: React.FC<Props> = ({
       </ErrorWrapper>
     </Card>
   );
+
+  function getInitialExpandedGroups() {
+    return (groupedOptions ?? ([] as Group<Option>[])).reduce(
+      (acc, group, index) =>
+        groupHasOptionSelected(group, previouslySubmittedData?.answers ?? [])
+          ? [...acc, index]
+          : acc,
+      [] as number[]
+    );
+
+    function groupHasOptionSelected(group: Group<Option>, answers: string[]) {
+      return group.children.some((child) =>
+        answers.some((id) => child.id === id)
+      );
+    }
+  }
 };
 export default ChecklistComponent;

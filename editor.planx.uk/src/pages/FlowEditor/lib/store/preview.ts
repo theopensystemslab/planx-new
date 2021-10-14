@@ -53,6 +53,7 @@ export interface PreviewStore extends Store.Store {
   // temporary measure for storing payment fee & id between gov uk redirect
   govUkPayment?: GovUKPayment;
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
+  cachedBreadcrumbs?: Store.cachedBreadcrumbs;
 }
 
 export const previewStore = (
@@ -246,6 +247,7 @@ export const previewStore = (
       if (idx >= 0) {
         set({
           breadcrumbs: pick(breadcrumbs, breadcrumbIds.slice(0, idx)),
+          cachedBreadcrumbs: pick(breadcrumbs, [id]),
         });
       }
     }
