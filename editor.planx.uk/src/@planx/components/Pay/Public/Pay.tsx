@@ -117,7 +117,8 @@ function Component(props: Props) {
     }
   }, []);
 
-  if (!Boolean(showPreview) && state.status === "indeterminate") {
+  // if this is the public-facing preview and Pay component is loading
+  if (environment === "standalone" && state.status === "indeterminate") {
     // XXX: When the pay component is initially loaded, send the user's
     //      session info to storage in case there's an issue with payment flow.
     //      Will be called when this component is shown, or if it's skipped.
