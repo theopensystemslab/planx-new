@@ -4,7 +4,8 @@ const {
   getQueryableConstraints,
   getManualConstraints,
   makeEsriUrl,
-  bufferPoint,
+  setEsriGeometryType,
+  setEsriGeometry,
   addDesignatedVariable,
 } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/lambeth.js");
@@ -42,17 +43,10 @@ async function search(
 
 // For this location, iterate through our planning constraints and aggregate/format the responses
 async function go(x, y, siteBoundary, extras) {
-  const geomType =
-    siteBoundary.length === 0 ? "esriGeometryEnvelope" : "esriGeometryPolygon";
-  const geom =
-    geomType === "esriGeometryEnvelope"
-      ? bufferPoint(x, y, 2.5)
-      : JSON.stringify({
-          rings: siteBoundary,
-          spatialReference: {
-            wkid: 4326,
-          },
-        });
+  // If we have a siteBoundary from drawing,
+  //   then query using the polygon, else fallback to the buffered address point
+  const geomType = setEsriGeometryType(siteBoundary);
+  const geom = setEsriGeometry(geomType, x, y, 2.5, siteBoundary);
 
   try {
     const results = await Promise.all(

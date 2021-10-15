@@ -35,7 +35,7 @@ function Component(props: Props) {
 
   const { data: constraints } = useSWR(
     () =>
-      x & y
+      x && y
         ? `${
             process.env.REACT_APP_API_URL
           }/gis/${team}?x=${x}&y=${y}&siteBoundary=${JSON.stringify(

@@ -91,7 +91,7 @@ const planningConstraints = {
       63: "article4.canterbury.womenswold.b15",
       64: "article4.canterbury.womenswold.b41",
       65: "article4.canterbury.yorkletts",
-    }
+    },
   },
   "article4.canterbury.hmo": {
     key: "article4.canterbury.hmo",
