@@ -257,14 +257,14 @@ export const previewStore = (
             $session_id: uuid
             $flow_id: uuid
             $flow_data: jsonb
-            $passport: jsonb
+            $user_data: jsonb
           ) {
             insert_session_backups_one(
               object: {
                 session_id: $session_id
                 flow_id: $flow_id
                 flow_data: $flow_data
-                passport: $passport
+                user_data: $user_data
               }
             ) {
               id
@@ -275,7 +275,7 @@ export const previewStore = (
           session_id: sessionId,
           flow_id: id,
           flow_data: flow,
-          passport: {
+          user_data: {
             breadcrumbs,
             passport: computePassport(),
           },

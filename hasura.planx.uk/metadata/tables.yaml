@@ -170,7 +170,7 @@
       columns:
       - flow_data
       - flow_id
-      - passport
+      - user_data
       - session_id
       backend_only: false
 - table:
