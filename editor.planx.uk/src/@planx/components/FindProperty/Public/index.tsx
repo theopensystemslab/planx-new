@@ -13,6 +13,7 @@ import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
+import { addressesClientForPizzas, client } from "lib/graphql";
 import capitalize from "lodash/capitalize";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -177,7 +178,7 @@ function GetAddress(props: {
 
   // get addresses in this postcode & gss_code (aka local planning authority)
   //    if gss_code is null, eg for team "opensystemslab", then ignore it in where filter https://stackoverflow.com/a/55809891
-  const { loading, error, data } = useQuery(
+  const { data } = useQuery(
     gql`
       query FindAddress($postcode: String = "", $gss_code: String) {
         addresses(
@@ -207,6 +208,10 @@ function GetAddress(props: {
       }
     `,
     {
+      // XXX: temporarily read addresses from staging db if it's a pizza
+      client: window.location.host.endsWith(".pizza")
+        ? addressesClientForPizzas
+        : client,
       skip: !Boolean(sanitizedPostcode),
       variables: {
         postcode: sanitizedPostcode,
