@@ -51,6 +51,11 @@ const useClasses = makeStyles((theme: Theme) => ({
   onFocus: {
     outline: `2px solid ${theme.palette.secondary.dark}`,
   },
+  removeTopBorder: {
+    "&:before": {
+      display: "none",
+    },
+  },
 }));
 
 const ResultReason: React.FC<IResultReason> = ({
@@ -60,21 +65,26 @@ const ResultReason: React.FC<IResultReason> = ({
   showChangeButton = false,
 }) => {
   const record = useStore((state) => state.record);
-  const [showMoreInfo, setShowMoreInfo] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(false);
 
   const classes = useClasses();
 
   const hasMoreInfo = question.data.info ?? question.data.policyRef;
-  const toggleAdditionalInfo = () => setShowMoreInfo(!showMoreInfo);
+  const toggleAdditionalInfo = () => setExpanded(!expanded);
 
   return (
     <Accordion
       className={classes.root}
-      onClick={() => hasMoreInfo && toggleAdditionalInfo()}
+      classes={{ root: classes.removeTopBorder }}
+      onChange={() => hasMoreInfo && toggleAdditionalInfo()}
+      expanded={expanded}
       elevation={0}
       square
     >
-      <AccordionSummary expandIcon={<Caret />}>
+      <AccordionSummary
+        expandIcon={hasMoreInfo ? <Caret /> : null}
+        aria-label={`${question.data.text}: Your answer was: ${response}. Click to expand for more information about this question.`}
+      >
         <Box
           display="flex"
           alignItems="flex-start"
@@ -94,7 +104,7 @@ const ResultReason: React.FC<IResultReason> = ({
               alignItems="center"
               color="text.primary"
             >
-              <Typography variant="body2" color="textPrimary">
+              <Typography variant="body2" color="textPrimary" id="questionText">
                 {question.data.text}{" "}
                 <strong className={classes.responseText}>{response}</strong>
               </Typography>
