@@ -13,7 +13,7 @@ import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
-import { addressesClient, client } from "lib/graphql";
+import { addressesClientForPizzas, client } from "lib/graphql";
 import capitalize from "lodash/capitalize";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -210,7 +210,7 @@ function GetAddress(props: {
     {
       // XXX: temporarily read addresses from staging db if it's a pizza
       client: window.location.host.endsWith(".pizza")
-        ? addressesClient
+        ? addressesClientForPizzas
         : client,
       skip: !Boolean(sanitizedPostcode),
       variables: {
