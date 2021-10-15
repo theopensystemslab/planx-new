@@ -2,37 +2,6 @@
   {
     "scope": "https://maps.buckscc.gov.uk:443",
     "method": "GET",
-    "path": "/arcgis/rest/services/PLANNING/RIPA_BOPS/MapServer/4/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CDEV_TYPE%2CDESCRIPTIO%2CDISTRICT%2CDATE_CONF&geometry=485060.95%2C191930.05%2C485061.05%2C191929.95",
-    "body": "",
-    "status": 200,
-    "response": [
-      "1f8b08000000000000008d52616bc23010fd2b219f3bacb2c2e6376debd631ac68d9184324da6b0daba924294ca4ff7d973a6b2a1bf8edddcbbd772fc91d69cad5be60870987229db21dd0210dc2b755f2310ba94333438f0ace14283a3cd278fc12fa491460570b9d8ba0a30dc2853f8f664914377c5be049b448e6919f18fe0c911d25e1ca8fa71343b7b8fe0d81e33f8f549c125ab3f5616f185092377748b08e9b136662dbcdb5d31a5831ff325868c9456e7958fd05885c6fe970e0dd770cadfbdd686929fe31bd3cce6d9697feb3a1e7da7eedabde6a6809da886ebdc43f01a62b09a75f611a85eb4a5fef48ffc1eb2cc72b1329619af82854f04dc695e202219931f9e590679e6fc9fb6153eed670bd3ffe96891c4899914a01c964b9439cf10d28a24b827e3c05a1392bc81d56194843c7324560863e053119b87daf29103c76b7d01a6a2da13be8b95eafe9aeeb65fd03c8aabac02c030000"
-    ],
-    "rawHeaders": [
-      "Vary",
-      "Origin",
-      "Cache-Control",
-      "max-age=0,must-revalidate",
-      "Server",
-      "",
-      "ETag",
-      "rq1mqhykkCXkz34p_10fffe33",
-      "Content-Encoding",
-      "gzip",
-      "Content-Type",
-      "text/plain;charset=utf-8",
-      "Content-Length",
-      "349",
-      "Date",
-      "Tue, 10 Aug 2021 13:28:21 GMT",
-      "Connection",
-      "close"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://maps.buckscc.gov.uk:443",
-    "method": "GET",
     "path": "/arcgis/rest/services/PLANNING/RIPA_BOPS/MapServer/1/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CGRADE%2CDESCRIPTIO%2CADDRESS&geometry=485060.95%2C191930.05%2C485061.05%2C191929.95",
     "body": "",
     "status": 200,
@@ -55,7 +24,7 @@
       "Content-Length",
       "210",
       "Date",
-      "Tue, 10 Aug 2021 13:28:21 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close"
     ],
@@ -74,7 +43,7 @@
       "Server",
       "nginx",
       "Date",
-      "Tue, 10 Aug 2021 13:28:21 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Content-Type",
       "application/json;charset=UTF-8",
       "Content-Length",
@@ -98,7 +67,7 @@
       "x-esri-ftiles-cache-compress",
       "true",
       "Set-Cookie",
-      "AGS_ROLES=\"419jqfa+uOZgYod4xPOQ8Q==\"; Version=1; Max-Age=60; Expires=Tue, 10-Aug-2021 13:29:21 GMT; Path=/arcgis/rest; Secure; HttpOnly",
+      "AGS_ROLES=\"419jqfa+uOZgYod4xPOQ8Q==\"; Version=1; Max-Age=60; Expires=Thu, 26-Aug-2021 16:49:24 GMT; Path=/arcgis/rest; Secure; HttpOnly",
       "X-AspNet-Version",
       "4.0.30319",
       "X-Powered-By",
@@ -131,7 +100,7 @@
       "Content-Length",
       "197",
       "Date",
-      "Tue, 10 Aug 2021 13:28:21 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close"
     ],
@@ -162,7 +131,7 @@
       "Content-Length",
       "184",
       "Date",
-      "Tue, 10 Aug 2021 13:28:21 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close"
     ],
@@ -171,11 +140,11 @@
   {
     "scope": "https://maps.buckscc.gov.uk:443",
     "method": "GET",
-    "path": "/arcgis/rest/services/PLANNING/RIPA_BOPS/MapServer/2/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CName%2CDesc_&geometry=485060.95%2C191930.05%2C485061.05%2C191929.95",
+    "path": "/arcgis/rest/services/PLANNING/RIPA_BOPS/MapServer/4/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CDEV_TYPE%2CDESCRIPTIO%2CDISTRICT%2CDATE_CONF&geometry=485060.95%2C191930.05%2C485061.05%2C191929.95",
     "body": "",
     "status": 200,
     "response": [
-      "1f8b0800000000000000ab564ac92c2ec849ac74cb4ccd49f14bcc4d55b25202533a4a692021c79cccc4e2d46225ab6a257f272f57e7104f17a00a38534709558f4b6a71723c900ba16ba18600b547572be5415422e92da92c0089a416176582ed0f01f2fdc13289206b9115d7eac00d805a854d73704951665e3a927ea8da9cd4bcf4920c252b2353132483208e24d22498629851860606b5b140ffa5269694168102283ab61600a3a360e34e010000"
+      "1f8b08000000000000008d52616bc23010fd2b219f3bacb2c2e6376debd631ac68d9184324da6b0daba924294ca4ff7d973a6b2a1bf8edddcbbd772fc91d69cad5be60870987229db21dd0210dc2b755f2310ba94333438f0ace14283a3cd278fc12fa491460570b9d8ba0a30dc2853f8f664914377c5be049b448e6919f18fe0c911d25e1ca8fa71343b7b8fe0d81e33f8f549c125ab3f5616f185092377748b08e9b136662dbcdb5d31a5831ff325868c9456e7958fd05885c6fe970e0dd770cadfbdd686929fe31bd3cce6d9697feb3a1e7da7eedabde6a6809da886ebdc43f01a62b09a75f611a85eb4a5fef48ffc1eb2cc72b1329619af82854f04dc695e202219931f9e590679e6fc9fb6153eed670bd3ffe96891c4899914a01c964b9439cf10d28a24b827e3c05a1392bc81d56194843c7324560863e053119b87daf29103c76b7d01a6a2da13be8b95eafe9aeeb65fd03c8aabac02c030000"
     ],
     "rawHeaders": [
       "Vary",
@@ -185,15 +154,15 @@
       "Server",
       "",
       "ETag",
-      "rq1mqhykkCXkz34p_25f9c9b3",
+      "rq1mqhykkCXkz34p_10fffe33",
       "Content-Encoding",
       "gzip",
       "Content-Type",
       "text/plain;charset=utf-8",
       "Content-Length",
-      "176",
+      "349",
       "Date",
-      "Tue, 10 Aug 2021 13:28:21 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close"
     ],
@@ -224,14 +193,45 @@
       "Content-Length",
       "208",
       "Date",
-      "Tue, 10 Aug 2021 13:28:21 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close"
     ],
     "responseIsBinary": false
   },
   {
-    "scope": "http://127.0.0.1:42567",
+    "scope": "https://maps.buckscc.gov.uk:443",
+    "method": "GET",
+    "path": "/arcgis/rest/services/PLANNING/RIPA_BOPS/MapServer/2/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CName%2CDesc_&geometry=485060.95%2C191930.05%2C485061.05%2C191929.95",
+    "body": "",
+    "status": 200,
+    "response": [
+      "1f8b0800000000000000ab564ac92c2ec849ac74cb4ccd49f14bcc4d55b25202533a4a692021c79cccc4e2d46225ab6a257f272f57e7104f17a00a38534709558f4b6a71723c900ba16ba18600b547572be5415422e92da92c0089a416176582ed0f01f2fdc13289206b9115d7eac00d805a854d73704951665e3a927ea8da9cd4bcf4920c252b2353132483208e24d22498629851860606b5b140ffa5269694168102283ab61600a3a360e34e010000"
+    ],
+    "rawHeaders": [
+      "Vary",
+      "Origin",
+      "Cache-Control",
+      "max-age=0,must-revalidate",
+      "Server",
+      "",
+      "ETag",
+      "rq1mqhykkCXkz34p_25f9c9b3",
+      "Content-Encoding",
+      "gzip",
+      "Content-Type",
+      "text/plain;charset=utf-8",
+      "Content-Length",
+      "176",
+      "Date",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
+      "Connection",
+      "close"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "http://127.0.0.1:65339",
     "method": "GET",
     "path": "/gis/buckinghamshire?x=485061.33649798&y=191930.3763250516",
     "body": "",
@@ -324,9 +324,93 @@
       "ETag",
       "W/\"5d7-aNRSf0guYFOmFhsiwskOdGAXCPw\"",
       "Date",
-      "Tue, 10 Aug 2021 13:28:21 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://environment.data.gov.uk:443",
+    "method": "GET",
+    "path": "/arcgis/rest/services/NE/SitesOfSpecialScientificInterestEngland/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=objectid%2Csssi_name&geometry=621191.75%2C157770.25%2C621192.25%2C157769.75",
+    "body": "",
+    "status": 200,
+    "response": [
+      "1f8b08000000000000006d8fbd0ec2300c84dfc5730660cc86842ab1c0005b55552931c528842a0e4315e5dd4950557960f3cf7d7776024b3c39333784ce9ecc0b41033353ef6bade05ee77b4786914127780f4fbc45b245b6964a1092ce0b5ec036c1b216549ca73a410ef48bbf96fe7c3c948da981529cd56a20affbe7708981fc284c24e0d08ff1017abbdbe4ae9c87267e42fdacedf217093ee47f0c010000"
+    ],
+    "rawHeaders": [
+      "Server",
+      "nginx",
+      "Date",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
+      "Content-Type",
+      "application/json;charset=UTF-8",
+      "Content-Length",
+      "161",
+      "Connection",
+      "close",
+      "Cache-Control",
+      "public, must-revalidate, max-age=0",
+      "Content-Encoding",
+      "gzip",
+      "Expires",
+      "Thu, 01 Jan 1970 00:00:00 GMT",
+      "ETag",
+      "712c1184",
+      "Vary",
+      "Origin",
+      "X-Content-Type-Options",
+      "nosniff",
+      "X-XSS-Protection",
+      "1; mode=block",
+      "x-esri-ftiles-cache-compress",
+      "true",
+      "Set-Cookie",
+      "AGS_ROLES=\"419jqfa+uOZgYod4xPOQ8Q==\"; Version=1; Max-Age=60; Expires=Thu, 26-Aug-2021 16:49:24 GMT; Path=/arcgis/rest; Secure; HttpOnly",
+      "X-AspNet-Version",
+      "4.0.30319",
+      "X-Powered-By",
+      "ASP.NET"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://mapping.canterbury.gov.uk:443",
+    "method": "GET",
+    "path": "/arcgis/rest/services/External/Planning_Constraints_New/MapServer/6/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CREF%2CLOCATION_1%2CCOMMENT%2CDESCRIPTIO&geometry=621191.75%2C157770.25%2C621192.25%2C157769.75",
+    "body": "",
+    "status": 200,
+    "response": [
+      "1f8b08000000000000008d914d0f82300c86ff4bcf3b68bc715398090698516ec498450a2ec169601e0ce1bf5b50b4261eb8756fdf3efd580bb9696e957eac0d5679a22f081eece41a0414bdb2ac8c6eb001af05b5da483f0d03327c423178a9020bacd19e909448f9cb3454c9714e89e87ad2ce5c2de9be8a6399a4248e918040eefd5db8253bc9817608ddbb31b5cc5ab0af81583ff7b8f50a36b519464ee9ad868cee47e5e64e7c00af8dfed5ee5d6d6cc9caf92a15dad29dc15bcc188bed3711c98e3012e7338efc1e6412ef6bff8f63579d481c4eff8b3bd047a076f7bafffdecd03d01b73645882a020000"
+    ],
+    "rawHeaders": [
+      "Cache-Control",
+      "max-age=0,must-revalidate",
+      "Content-Type",
+      "text/plain;charset=utf-8",
+      "Content-Encoding",
+      "gzip",
+      "ETag",
+      "498489b9",
+      "Vary",
+      "Origin",
+      "Server",
+      "Microsoft-IIS/8.5",
+      "X-Powered-By",
+      "ARR/2.5",
+      "X-Frame-Options",
+      "SAMEORIGIN",
+      "Referrer-Policy",
+      "same-origin",
+      "X-XSS-Protection",
+      "1",
+      "Date",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
+      "Connection",
+      "close",
+      "Content-Length",
+      "238"
     ],
     "responseIsBinary": false
   },
@@ -361,7 +445,7 @@
       "X-XSS-Protection",
       "1",
       "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close",
       "Content-Length",
@@ -370,58 +454,13 @@
     "responseIsBinary": false
   },
   {
-    "scope": "https://environment.data.gov.uk:443",
-    "method": "GET",
-    "path": "/arcgis/rest/services/NE/SitesOfSpecialScientificInterestEngland/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=objectid%2Csssi_name&geometry=621191.75%2C157770.25%2C621192.25%2C157769.75",
-    "body": "",
-    "status": 200,
-    "response": [
-      "1f8b08000000000000006d8fbd0ec2300c84dfc5730660cc86842ab1c0005b55552931c528842a0e4315e5dd4950557960f3cf7d7776024b3c39333784ce9ecc0b41033353ef6bade05ee77b4786914127780f4fbc45b245b6964a1092ce0b5ec036c1b216549ca73a410ef48bbf96fe7c3c948da981529cd56a20affbe7708981fc284c24e0d08ff1017abbdbe4ae9c87267e42fdacedf217093ee47f0c010000"
-    ],
-    "rawHeaders": [
-      "Server",
-      "nginx",
-      "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
-      "Content-Type",
-      "application/json;charset=UTF-8",
-      "Content-Length",
-      "161",
-      "Connection",
-      "close",
-      "Cache-Control",
-      "public, must-revalidate, max-age=0",
-      "Content-Encoding",
-      "gzip",
-      "Expires",
-      "Thu, 01 Jan 1970 00:00:00 GMT",
-      "ETag",
-      "712c1184",
-      "Vary",
-      "Origin",
-      "X-Content-Type-Options",
-      "nosniff",
-      "X-XSS-Protection",
-      "1; mode=block",
-      "x-esri-ftiles-cache-compress",
-      "true",
-      "Set-Cookie",
-      "AGS_ROLES=\"419jqfa+uOZgYod4xPOQ8Q==\"; Version=1; Max-Age=60; Expires=Tue, 10-Aug-2021 13:29:21 GMT; Path=/arcgis/rest; Secure; HttpOnly",
-      "X-AspNet-Version",
-      "4.0.30319",
-      "X-Powered-By",
-      "ASP.NET"
-    ],
-    "responseIsBinary": false
-  },
-  {
     "scope": "https://mapping.canterbury.gov.uk:443",
     "method": "GET",
-    "path": "/arcgis/rest/services/External/Planning_Constraints_New/MapServer/4/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CNAME%2CTYPE%2CDESIGNATIO%2CDESCRIPTIO%2CURL&geometry=621191.75%2C157770.25%2C621192.25%2C157769.75",
+    "path": "/arcgis/rest/services/External/Planning_Constraints_New/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CNAME%2CSchedDate%2CAmendDate&geometry=621191.75%2C157770.25%2C621192.25%2C157769.75",
     "body": "",
     "status": 200,
     "response": [
-      "1f8b08000000000000008d52cb6a834014fd95308bae2446f38008a118b5c5906a49cca2942c263a3543cd28f30884e0bf778c8f0e92859b79dc7beee1dc7bcf1d24981519bcbd61942501bc206081c0fef080067eaa909d61c81003d61d84eb8de744be2b11dd53abc1b2a62ad540f4f559fd1e97065c6fefbf0776e48732e62286530239cec9c8851cd57967e77f76f998e2a2cacbd461b795b1ea2c1b2552c3f71d905aa22280df8a2a8218c58f2622f90f1f19586957c1a5d611343d3e2bde738a49aad437bd6588a4fc0c2c633e51889a56071135d896686a2a3ccaac06b23d196827b1c7dc4e7938b3b28a4eaeda76b599816c35b46531e5f48e72a508724151bd54c865cd49f0becf8cd9b433d8d68fa2adb70e0fbbc0fb379a931386e8b51e824d11ecbbce34f4c9423796cb59df6f7651508819cc461b41d0c89c4ce69defce9c1796ae27792c2e8870368e21e1889e04bd8dd3fc3a16bf7a214e19666744f5cb35d6e593bb2dfa1527f2c2d2b574a50a7c113821f9ca756c73ba9883b23c967f65924ad980030000"
+      "1f8b08000000000000008d91b10e823010865fc5dccc6434316c289ae820036c84a191139a9486d03210c2bbdbd6164a6470eaf5ffefbebb5e4728a96819196e1459f9240d4208e608e0ada588512250403842727e5c2fd93d56197318c0ba267dd558c6446ac9c43dc372678400a206b9334decacc936536df211f897e8f59043ab15141d357366ea9e1887e8f1fce429980176a4ade2547694575ebdcd65c82b5943b83f1e3cd0f2a86d9ab51cebe7dd8e7af298cb2efe62aed6e5130bb53a24b2eff41fe5c5f401f82a285cd1010000"
     ],
     "rawHeaders": [
       "Cache-Control",
@@ -431,7 +470,7 @@
       "Content-Encoding",
       "gzip",
       "ETag",
-      "5dd08fcd",
+      "a56e84f1",
       "Vary",
       "Origin",
       "Server",
@@ -445,22 +484,22 @@
       "X-XSS-Protection",
       "1",
       "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close",
       "Content-Length",
-      "397"
+      "209"
     ],
     "responseIsBinary": false
   },
   {
     "scope": "https://mapping.canterbury.gov.uk:443",
     "method": "GET",
-    "path": "/arcgis/rest/services/External/Planning_Constraints_New/MapServer/8/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CLOCATION%2CDESCRIPTIO%2CPOLICY%2Cinfo1&geometry=621191.75%2C157770.25%2C621192.25%2C157769.75",
+    "path": "/arcgis/rest/services/External/Planning_Constraints_New/MapServer/13/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CTPO%2CTPO_Group%2CLocation%2CDescription&geometry=621191.75%2C157770.25%2C621192.25%2C157769.75",
     "body": "",
     "status": 200,
     "response": [
-      "1f8b08000000000000008d913d0f82301086ffcbcd0c62646143c00463ac5116631c1a29da042b69eb6008ffdd43a49c890353afefbd7deea30d14d2d4157fada4a88a2dbf0b0861c3e228cfd8163c283b39aa2437c240d8005baed338cf1274b9d01b1f8410158516c6a098a487789fed50473911e6a2656de543616ac736597c44f91b782055f9f051e8cff65b184b9e1a507d57a49e7dd59d228c969fbe73bcb34f8677ad5273eb390019eb1fe060b55457c21847a984bada1b84f360417864c089c4df2d38ea8c40dd4626019d7b60f90185f5db9cc81acc1475c68f10dc3e75f7fba773fb06dfb3147b2f020000"
+      "1f8b0800000000000000ab564a2d2aca2f52b2aa564ace4f4955b2323130d051ca4d2d2e4e4c07f294dc1233735253144af215522b52934b4b52150a4b538b2af594749452524b8092c54a56d1b1b5b500e89014d348000000"
     ],
     "rawHeaders": [
       "Cache-Control",
@@ -470,7 +509,7 @@
       "Content-Encoding",
       "gzip",
       "ETag",
-      "7dde2272",
+      "4fc6bde0",
       "Vary",
       "Origin",
       "Server",
@@ -484,11 +523,11 @@
       "X-XSS-Protection",
       "1",
       "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close",
       "Content-Length",
-      "240"
+      "89"
     ],
     "responseIsBinary": false
   },
@@ -523,7 +562,7 @@
       "X-XSS-Protection",
       "1",
       "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close",
       "Content-Length",
@@ -562,89 +601,11 @@
       "X-XSS-Protection",
       "1",
       "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close",
       "Content-Length",
       "300"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://mapping.canterbury.gov.uk:443",
-    "method": "GET",
-    "path": "/arcgis/rest/services/External/Planning_Constraints_New/MapServer/13/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CTPO%2CTPO_Group%2CLocation%2CDescription&geometry=621191.75%2C157770.25%2C621192.25%2C157769.75",
-    "body": "",
-    "status": 200,
-    "response": [
-      "1f8b0800000000000000ab564a2d2aca2f52b2aa564ace4f4955b2323130d051ca4d2d2e4e4c07f294dc1233735253144af215522b52934b4b52150a4b538b2af594749452524b8092c54a56d1b1b5b500e89014d348000000"
-    ],
-    "rawHeaders": [
-      "Cache-Control",
-      "max-age=0,must-revalidate",
-      "Content-Type",
-      "text/plain;charset=utf-8",
-      "Content-Encoding",
-      "gzip",
-      "ETag",
-      "4fc6bde0",
-      "Vary",
-      "Origin",
-      "Server",
-      "Microsoft-IIS/8.5",
-      "X-Powered-By",
-      "ARR/2.5",
-      "X-Frame-Options",
-      "SAMEORIGIN",
-      "Referrer-Policy",
-      "same-origin",
-      "X-XSS-Protection",
-      "1",
-      "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
-      "Connection",
-      "close",
-      "Content-Length",
-      "89"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://mapping.canterbury.gov.uk:443",
-    "method": "GET",
-    "path": "/arcgis/rest/services/External/Planning_Constraints_New/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CNAME%2CSchedDate%2CAmendDate&geometry=621191.75%2C157770.25%2C621192.25%2C157769.75",
-    "body": "",
-    "status": 200,
-    "response": [
-      "1f8b08000000000000008d91b10e823010865fc5dccc6434316c289ae820036c84a191139a9486d03210c2bbdbd6164a6470eaf5ffefbebb5e4728a96819196e1459f9240d4208e608e0ada588512250403842727e5c2fd93d56197318c0ba267dd558c6446ac9c43dc372678400a206b9334decacc936536df211f897e8f59043ab15141d357366ea9e1887e8f1fce429980176a4ade2547694575ebdcd65c82b5943b83f1e3cd0f2a86d9ab51cebe7dd8e7af298cb2efe62aed6e5130bb53a24b2eff41fe5c5f401f82a285cd1010000"
-    ],
-    "rawHeaders": [
-      "Cache-Control",
-      "max-age=0,must-revalidate",
-      "Content-Type",
-      "text/plain;charset=utf-8",
-      "Content-Encoding",
-      "gzip",
-      "ETag",
-      "a56e84f1",
-      "Vary",
-      "Origin",
-      "Server",
-      "Microsoft-IIS/8.5",
-      "X-Powered-By",
-      "ARR/2.5",
-      "X-Frame-Options",
-      "SAMEORIGIN",
-      "Referrer-Policy",
-      "same-origin",
-      "X-XSS-Protection",
-      "1",
-      "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
-      "Connection",
-      "close",
-      "Content-Length",
-      "209"
     ],
     "responseIsBinary": false
   },
@@ -679,7 +640,7 @@
       "X-XSS-Protection",
       "1",
       "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close",
       "Content-Length",
@@ -690,11 +651,11 @@
   {
     "scope": "https://mapping.canterbury.gov.uk:443",
     "method": "GET",
-    "path": "/arcgis/rest/services/External/Planning_Constraints_New/MapServer/6/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CREF%2CLOCATION_1%2CCOMMENT%2CDESCRIPTIO&geometry=621191.75%2C157770.25%2C621192.25%2C157769.75",
+    "path": "/arcgis/rest/services/External/Planning_Constraints_New/MapServer/8/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CLOCATION%2CDESCRIPTIO%2CPOLICY%2Cinfo1&geometry=621191.75%2C157770.25%2C621192.25%2C157769.75",
     "body": "",
     "status": 200,
     "response": [
-      "1f8b08000000000000008d914d0f82300c86ff4bcf3b68bc715398090698516ec498450a2ec169601e0ce1bf5b50b4261eb8756fdf3efd580bb9696e957eac0d5679a22f081eece41a0414bdb2ac8c6eb001af05b5da483f0d03327c423178a9020bacd19e909448f9cb3454c9714e89e87ad2ce5c2de9be8a6399a4248e918040eefd5db8253bc9817608ddbb31b5cc5ab0af81583ff7b8f50a36b519464ee9ad868cee47e5e64e7c00af8dfed5ee5d6d6cc9caf92a15dad29dc15bcc188bed3711c98e3012e7338efc1e6412ef6bff8f63579d481c4eff8b3bd047a076f7bafffdecd03d01b73645882a020000"
+      "1f8b08000000000000008d913d0f82301086ffcbcd0c62646143c00463ac5116631c1a29da042b69eb6008ffdd43a49c890353afefbd7deea30d14d2d4157fada4a88a2dbf0b0861c3e228cfd8163c283b39aa2437c240d8005baed338cf1274b9d01b1f8410158516c6a098a487789fed50473911e6a2656de543616ac736597c44f91b782055f9f051e8cff65b184b9e1a507d57a49e7dd59d228c969fbe73bcb34f8677ad5273eb390019eb1fe060b55457c21847a984bada1b84f360417864c089c4df2d38ea8c40dd4626019d7b60f90185f5db9cc81acc1475c68f10dc3e75f7fba773fb06dfb3147b2f020000"
     ],
     "rawHeaders": [
       "Cache-Control",
@@ -704,7 +665,7 @@
       "Content-Encoding",
       "gzip",
       "ETag",
-      "498489b9",
+      "7dde2272",
       "Vary",
       "Origin",
       "Server",
@@ -718,16 +679,55 @@
       "X-XSS-Protection",
       "1",
       "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close",
       "Content-Length",
-      "238"
+      "240"
     ],
     "responseIsBinary": false
   },
   {
-    "scope": "http://127.0.0.1:37573",
+    "scope": "https://mapping.canterbury.gov.uk:443",
+    "method": "GET",
+    "path": "/arcgis/rest/services/External/Planning_Constraints_New/MapServer/4/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CNAME%2CTYPE%2CDESIGNATIO%2CDESCRIPTIO%2CURL&geometry=621191.75%2C157770.25%2C621192.25%2C157769.75",
+    "body": "",
+    "status": 200,
+    "response": [
+      "1f8b08000000000000008d52cb6a834014fd95308bae2446f38008a118b5c5906a49cca2942c263a3543cd28f30884e0bf778c8f0e92859b79dc7beee1dc7bcf1d24981519bcbd61942501bc206081c0fef080067eaa909d61c81003d61d84eb8de744be2b11dd53abc1b2a62ad540f4f559fd1e97065c6fefbf0776e48732e62286530239cec9c8851cd57967e77f76f998e2a2cacbd461b795b1ea2c1b2552c3f71d905aa22280df8a2a8218c58f2622f90f1f19586957c1a5d611343d3e2bde738a49aad437bd6588a4fc0c2c633e51889a56071135d896686a2a3ccaac06b23d196827b1c7dc4e7938b3b28a4eaeda76b599816c35b46531e5f48e72a508724151bd54c865cd49f0becf8cd9b433d8d68fa2adb70e0fbbc0fb379a931386e8b51e824d11ecbbce34f4c9423796cb59df6f7651508819cc461b41d0c89c4ce69defce9c1796ae27792c2e8870368e21e1889e04bd8dd3fc3a16bf7a214e19666744f5cb35d6e593bb2dfa1527f2c2d2b574a50a7c113821f9ca756c73ba9883b23c967f65924ad980030000"
+    ],
+    "rawHeaders": [
+      "Cache-Control",
+      "max-age=0,must-revalidate",
+      "Content-Type",
+      "text/plain;charset=utf-8",
+      "Content-Encoding",
+      "gzip",
+      "ETag",
+      "5dd08fcd",
+      "Vary",
+      "Origin",
+      "Server",
+      "Microsoft-IIS/8.5",
+      "X-Powered-By",
+      "ARR/2.5",
+      "X-Frame-Options",
+      "SAMEORIGIN",
+      "Referrer-Policy",
+      "same-origin",
+      "X-XSS-Protection",
+      "1",
+      "Date",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
+      "Connection",
+      "close",
+      "Content-Length",
+      "397"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "http://127.0.0.1:65348",
     "method": "GET",
     "path": "/gis/canterbury?x=621192.0132463141&y=157770.55052344775",
     "body": "",
@@ -820,7 +820,7 @@
       "ETag",
       "W/\"5ca-CzpaCG7v8iskSLEmAc1rOWurbs8\"",
       "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
+      "Thu, 26 Aug 2021 16:48:24 GMT",
       "Connection",
       "close"
     ],
@@ -829,7 +829,91 @@
   {
     "scope": "https://gis.lambeth.gov.uk:443",
     "method": "GET",
-    "path": "/arcgis/rest/services/LambethArticle4B1toC3/MapServer/0/query?where=ARTICLE_4%3D%27KIBA%27&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CNAME%2CARTICLE_4&geometry=530621.95%2C178706.05%2C530622.05%2C178705.95",
+    "path": "/arcgis/rest/services/LambethConservationAreas/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CNAME%2CCA_REF_NO&geometry=530619.5%2C178708.5%2C530624.5%2C178703.5",
+    "body": "",
+    "status": 200,
+    "response": [
+      "1f8b08000000000000008d904f0b824010c5bf4accd94b8409decc0c0a52286f21b2e2644beb22eb7a10d9efdefa275daa43b7d9d9f77e6f663ac8695d31d21e28b23c2425820ba1770ec0827bdff2182535d6e07610ed4e811f1ff75a3197d6289e3dbe975e82431a46bab5d46a8269ccad033ea6180cd9567d076b41873962fd8e861fd2c79b6265cd8029f297f92a05e585e19fb40c79211fe06e1c83b3ccf927cc34bc89b64af492486423705c9348edcb1af979bced7a3e9ac7321472159419e1cf12b9fcbaa0ed8052897a01e1800562a7010000"
+    ],
+    "rawHeaders": [
+      "Server",
+      "nginx",
+      "Date",
+      "Thu, 26 Aug 2021 16:48:25 GMT",
+      "Content-Type",
+      "application/json;charset=UTF-8",
+      "Content-Length",
+      "215",
+      "Connection",
+      "close",
+      "Cache-Control",
+      "max-age=0,must-revalidate",
+      "Expires",
+      "Thu, 01 Jan 1970 00:00:00 GMT",
+      "X-Content-Type-Options",
+      "nosniff",
+      "X-XSS-Protection",
+      "1; mode=block",
+      "Vary",
+      "Origin",
+      "ETag",
+      "e2843dcb",
+      "x-esri-ftiles-cache-compress",
+      "true",
+      "Content-Encoding",
+      "gzip"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://environment.data.gov.uk:443",
+    "method": "GET",
+    "path": "/arcgis/rest/services/NE/SitesOfSpecialScientificInterestEngland/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=objectid%2Csssi_name&geometry=530619.5%2C178708.5%2C530624.5%2C178703.5",
+    "body": "",
+    "status": 200,
+    "response": [
+      "1f8b08000000000000006d8fbd0ec2300c84dfc5730660cc86842ab1c0005b55552931c528842a0e4315e5dd4950557960f3cf7d7776024b3c39333784ce9ecc0b41033353ef6bade05ee77b4786914127780f4fbc45b245b6964a1092ce0b5ec036c1b216549ca73a410ef48bbf96fe7c3c948da981529cd56a20affbe7708981fc284c24e0d08ff1017abbdbe4ae9c87267e42fdacedf217093ee47f0c010000"
+    ],
+    "rawHeaders": [
+      "Server",
+      "nginx",
+      "Date",
+      "Thu, 26 Aug 2021 16:48:25 GMT",
+      "Content-Type",
+      "application/json;charset=UTF-8",
+      "Content-Length",
+      "161",
+      "Connection",
+      "close",
+      "Cache-Control",
+      "public, must-revalidate, max-age=0",
+      "Content-Encoding",
+      "gzip",
+      "Expires",
+      "Thu, 01 Jan 1970 00:00:00 GMT",
+      "ETag",
+      "712c1184",
+      "Vary",
+      "Origin",
+      "X-Content-Type-Options",
+      "nosniff",
+      "X-XSS-Protection",
+      "1; mode=block",
+      "x-esri-ftiles-cache-compress",
+      "true",
+      "Set-Cookie",
+      "AGS_ROLES=\"419jqfa+uOZgYod4xPOQ8Q==\"; Version=1; Max-Age=60; Expires=Thu, 26-Aug-2021 16:49:25 GMT; Path=/arcgis/rest; Secure; HttpOnly",
+      "X-AspNet-Version",
+      "4.0.30319",
+      "X-Powered-By",
+      "ASP.NET"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://gis.lambeth.gov.uk:443",
+    "method": "GET",
+    "path": "/arcgis/rest/services/LambethArticle4B1toC3/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CNAME%2CARTICLE_4&geometry=530619.5%2C178708.5%2C530624.5%2C178703.5",
     "body": "",
     "status": 200,
     "response": [
@@ -839,7 +923,7 @@
       "Server",
       "nginx",
       "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
+      "Thu, 26 Aug 2021 16:48:25 GMT",
       "Content-Type",
       "application/json;charset=UTF-8",
       "Content-Length",
@@ -868,46 +952,7 @@
   {
     "scope": "https://gis.lambeth.gov.uk:443",
     "method": "GET",
-    "path": "/arcgis/rest/services/LambethCentralActivitiesZone/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CTITLE%2CPOLICY&geometry=530621.95%2C178706.05%2C530622.05%2C178705.95",
-    "body": "",
-    "status": 200,
-    "response": [
-      "1f8b08000000000000008d904d8bc2301086ff4a98730545bcf4a65d858a58c15c56f190d55107625a9a512825ff7d535b35bbec82a74cde99f7998f1a0e640badaa19a13e2cd5052186f403223836c25893b26821ae219bcca789f4a9f815462053b9987aa97d2358658b34f9f44217b80ee411db1a4ccb0ffc5c158d82b6a4fb04d2ffb37b4635adc362173d018f6e7fb9d75c9239058047b14673e233c483513f407573bec97a5687b09ddf11155f4b6cb754ec6d5f57fe7db7c1eb5c091a2e9516e33dd38d98d08a4d6ef0c701734dfb4a0c454fc8338aff1cceeddc371013d349c5010000"
-    ],
-    "rawHeaders": [
-      "Server",
-      "nginx",
-      "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
-      "Content-Type",
-      "application/json;charset=UTF-8",
-      "Content-Length",
-      "231",
-      "Connection",
-      "close",
-      "Cache-Control",
-      "max-age=0,must-revalidate",
-      "Expires",
-      "Thu, 01 Jan 1970 00:00:00 GMT",
-      "X-Content-Type-Options",
-      "nosniff",
-      "X-XSS-Protection",
-      "1; mode=block",
-      "Vary",
-      "Origin",
-      "ETag",
-      "720e0394",
-      "x-esri-ftiles-cache-compress",
-      "true",
-      "Content-Encoding",
-      "gzip"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://gis.lambeth.gov.uk:443",
-    "method": "GET",
-    "path": "/arcgis/rest/services/LambethListedBuildings/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CGRADE%2CADDRESS_1&geometry=530621.95%2C178706.05%2C530622.05%2C178705.95",
+    "path": "/arcgis/rest/services/LambethListedBuildings/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CGRADE%2CADDRESS_1&geometry=530619.5%2C178708.5%2C530624.5%2C178703.5",
     "body": "",
     "status": 200,
     "response": [
@@ -917,7 +962,7 @@
       "Server",
       "nginx",
       "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
+      "Thu, 26 Aug 2021 16:48:25 GMT",
       "Content-Type",
       "application/json;charset=UTF-8",
       "Content-Length",
@@ -946,7 +991,46 @@
   {
     "scope": "https://gis.lambeth.gov.uk:443",
     "method": "GET",
-    "path": "/arcgis/rest/services/LambethArticle4/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CDESCRIPTION&geometry=530621.95%2C178706.05%2C530622.05%2C178705.95",
+    "path": "/arcgis/rest/services/LambethCentralActivitiesZone/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CTITLE%2CPOLICY&geometry=530619.5%2C178708.5%2C530624.5%2C178703.5",
+    "body": "",
+    "status": 200,
+    "response": [
+      "1f8b08000000000000008d904d8bc2301086ff4a98730545bcf4a65d858a58c15c56f190d55107625a9a512825ff7d535b35bbec82a74cde99f7998f1a0e640badaa19a13e2cd5052186f403223836c25893b26821ae219bcca789f4a9f815462053b9987aa97d2358658b34f9f44217b80ee411db1a4ccb0ffc5c158d82b6a4fb04d2ffb37b4635adc362173d018f6e7fb9d75c9239058047b14673e233c483513f407573bec97a5687b09ddf11155f4b6cb754ec6d5f57fe7db7c1eb5c091a2e9516e33dd38d98d08a4d6ef0c701734dfb4a0c454fc8338aff1cceeddc371013d349c5010000"
+    ],
+    "rawHeaders": [
+      "Server",
+      "nginx",
+      "Date",
+      "Thu, 26 Aug 2021 16:48:25 GMT",
+      "Content-Type",
+      "application/json;charset=UTF-8",
+      "Content-Length",
+      "231",
+      "Connection",
+      "close",
+      "Cache-Control",
+      "max-age=0,must-revalidate",
+      "Expires",
+      "Thu, 01 Jan 1970 00:00:00 GMT",
+      "X-Content-Type-Options",
+      "nosniff",
+      "X-XSS-Protection",
+      "1; mode=block",
+      "Vary",
+      "Origin",
+      "ETag",
+      "720e0394",
+      "x-esri-ftiles-cache-compress",
+      "true",
+      "Content-Encoding",
+      "gzip"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://gis.lambeth.gov.uk:443",
+    "method": "GET",
+    "path": "/arcgis/rest/services/LambethArticle4/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CDESCRIPTION&geometry=530619.5%2C178708.5%2C530624.5%2C178703.5",
     "body": "",
     "status": 200,
     "response": [
@@ -956,7 +1040,7 @@
       "Server",
       "nginx",
       "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
+      "Thu, 26 Aug 2021 16:48:25 GMT",
       "Content-Type",
       "application/json;charset=UTF-8",
       "Content-Length",
@@ -985,46 +1069,7 @@
   {
     "scope": "https://gis.lambeth.gov.uk:443",
     "method": "GET",
-    "path": "/arcgis/rest/services/LambethConservationAreas/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CNAME%2CCA_REF_NO&geometry=530621.95%2C178706.05%2C530622.05%2C178705.95",
-    "body": "",
-    "status": 200,
-    "response": [
-      "1f8b08000000000000008d904f0b824010c5bf4accd94b8409decc0c0a52286f21b2e2644beb22eb7a10d9efdefa275daa43b7d9d9f77e6f663ac8695d31d21e28b23c2425820ba1770ec0827bdff2182535d6e07610ed4e811f1ff75a3197d6289e3dbe975e82431a46bab5d46a8269ccad033ea6180cd9567d076b41873962fd8e861fd2c79b6265cd8029f297f92a05e585e19fb40c79211fe06e1c83b3ccf927cc34bc89b64af492486423705c9348edcb1af979bced7a3e9ac7321472159419e1cf12b9fcbaa0ed8052897a01e1800562a7010000"
-    ],
-    "rawHeaders": [
-      "Server",
-      "nginx",
-      "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
-      "Content-Type",
-      "application/json;charset=UTF-8",
-      "Content-Length",
-      "215",
-      "Connection",
-      "close",
-      "Cache-Control",
-      "max-age=0,must-revalidate",
-      "Expires",
-      "Thu, 01 Jan 1970 00:00:00 GMT",
-      "X-Content-Type-Options",
-      "nosniff",
-      "X-XSS-Protection",
-      "1; mode=block",
-      "Vary",
-      "Origin",
-      "ETag",
-      "e2843dcb",
-      "x-esri-ftiles-cache-compress",
-      "true",
-      "Content-Encoding",
-      "gzip"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://gis.lambeth.gov.uk:443",
-    "method": "GET",
-    "path": "/arcgis/rest/services/LambethTreePreservationOrderBoundaries/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CTPO_NUMBER%2CLEGISLATION&geometry=530621.95%2C178706.05%2C530622.05%2C178705.95",
+    "path": "/arcgis/rest/services/LambethTreePreservationOrderBoundaries/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=OBJECTID%2CTPO_NUMBER%2CLEGISLATION&geometry=530619.5%2C178708.5%2C530624.5%2C178703.5",
     "body": "",
     "status": 200,
     "response": [
@@ -1034,7 +1079,7 @@
       "Server",
       "nginx",
       "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
+      "Thu, 26 Aug 2021 16:48:25 GMT",
       "Content-Type",
       "application/json;charset=UTF-8",
       "Content-Length",
@@ -1063,52 +1108,7 @@
   {
     "scope": "https://environment.data.gov.uk:443",
     "method": "GET",
-    "path": "/arcgis/rest/services/NE/SitesOfSpecialScientificInterestEngland/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=objectid%2Csssi_name&geometry=530621.95%2C178706.05%2C530622.05%2C178705.95",
-    "body": "",
-    "status": 200,
-    "response": [
-      "1f8b08000000000000006d8fbd0ec2300c84dfc5730660cc86842ab1c0005b55552931c528842a0e4315e5dd4950557960f3cf7d7776024b3c39333784ce9ecc0b41033353ef6bade05ee77b4786914127780f4fbc45b245b6964a1092ce0b5ec036c1b216549ca73a410ef48bbf96fe7c3c948da981529cd56a20affbe7708981fc284c24e0d08ff1017abbdbe4ae9c87267e42fdacedf217093ee47f0c010000"
-    ],
-    "rawHeaders": [
-      "Server",
-      "nginx",
-      "Date",
-      "Tue, 10 Aug 2021 13:28:22 GMT",
-      "Content-Type",
-      "application/json;charset=UTF-8",
-      "Content-Length",
-      "161",
-      "Connection",
-      "close",
-      "Cache-Control",
-      "public, must-revalidate, max-age=0",
-      "Content-Encoding",
-      "gzip",
-      "Expires",
-      "Thu, 01 Jan 1970 00:00:00 GMT",
-      "ETag",
-      "712c1184",
-      "Vary",
-      "Origin",
-      "X-Content-Type-Options",
-      "nosniff",
-      "X-XSS-Protection",
-      "1; mode=block",
-      "x-esri-ftiles-cache-compress",
-      "true",
-      "Set-Cookie",
-      "AGS_ROLES=\"419jqfa+uOZgYod4xPOQ8Q==\"; Version=1; Max-Age=60; Expires=Tue, 10-Aug-2021 13:29:22 GMT; Path=/arcgis/rest; Secure; HttpOnly",
-      "X-AspNet-Version",
-      "4.0.30319",
-      "X-Powered-By",
-      "ASP.NET"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://environment.data.gov.uk:443",
-    "method": "GET",
-    "path": "/arcgis/rest/services/HE/WorldHeritageSites/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=objectid%2Cname&geometry=530621.95%2C178706.05%2C530622.05%2C178705.95",
+    "path": "/arcgis/rest/services/HE/WorldHeritageSites/MapServer/0/query?where=1%3D1&geometryType=esriGeometryEnvelope&inSR=27700&spatialRel=esriSpatialRelIntersects&returnGeometry=false&outSR=4326&f=json&outFields=objectid%2Cname&geometry=530619.5%2C178708.5%2C530624.5%2C178703.5",
     "body": "",
     "status": 200,
     "response": [
@@ -1118,7 +1118,7 @@
       "Server",
       "nginx",
       "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
       "Content-Type",
       "application/json;charset=UTF-8",
       "Content-Length",
@@ -1142,7 +1142,7 @@
       "x-esri-ftiles-cache-compress",
       "true",
       "Set-Cookie",
-      "AGS_ROLES=\"419jqfa+uOZgYod4xPOQ8Q==\"; Version=1; Max-Age=60; Expires=Tue, 10-Aug-2021 13:29:22 GMT; Path=/arcgis/rest; Secure; HttpOnly",
+      "AGS_ROLES=\"419jqfa+uOZgYod4xPOQ8Q==\"; Version=1; Max-Age=60; Expires=Thu, 26-Aug-2021 16:49:25 GMT; Path=/arcgis/rest; Secure; HttpOnly",
       "X-AspNet-Version",
       "4.0.30319",
       "X-Powered-By",
@@ -1151,7 +1151,7 @@
     "responseIsBinary": false
   },
   {
-    "scope": "http://127.0.0.1:42849",
+    "scope": "http://127.0.0.1:65360",
     "method": "GET",
     "path": "/gis/lambeth?x=530622.7463248332&y=178706.16704920324",
     "body": "",
@@ -1256,9 +1256,201 @@
       "ETag",
       "W/\"746-KzPU4sTsPjkJuaYL3Fh9GL5k6Vw\"",
       "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
       "Connection",
       "close"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+Public+Houses%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "Article_4_Direction", "type": "String"},
+        {"name": "More_information", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "146",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=BDFB9AB23F21F9C2AA911176F586E9CD; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+Light+Industrial%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "Article_4_Direction", "type": "String"},
+        {"name": "More_information", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "146",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=99C6072300A2300A680C1ADA897D0881; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+Town+Centres+A3+-+A5+to+A2+and+from+A1+%E2%80%93+A5+B1+D1+and+D2+to+flexible+uses%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "Article_4_Direction", "type": "String"},
+        {"name": "More_information", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "146",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=C06C12C4282C0D267D74902E67DAEE24; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+HMO+Henshaw+Street%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "Article_4_Direction", "type": "String"},
+        {"name": "More_information", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "146",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=BD17620E1A6CC025BDCE81BF1C2E64C2; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+HMO+Bywater+Place%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "Article_4_Direction", "type": "String"},
+        {"name": "More_information", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "146",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=D455624C5A53D970006B64581C5AACD9; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+offices+in+the+Central+Activities+Zone%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "Article_4_Direction", "type": "String"},
+        {"name": "More_information", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "146",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=13BAA011625C6BB15445B11F299AACF3; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
     ],
     "responseIsBinary": false
   },
@@ -1288,7 +1480,7 @@
     },
     "rawHeaders": [
       "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
       "Content-Type",
       "application/json;charset=utf-8",
       "Content-Length",
@@ -1298,263 +1490,7 @@
       "Server",
       "Apache-Coyote/1.1",
       "Set-Cookie",
-      "JSESSIONID=84690E3EE6BD794D2D26981F0ACAAFA5; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+HMO+Henshaw+Street%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "Article_4_Direction", "type": "String"},
-        {"name": "More_information", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "146",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=D9A923C03B685BB2A06E3B229644B24A; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+offices+in+the+Central+Activities+Zone%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "Article_4_Direction", "type": "String"},
-        {"name": "More_information", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "146",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=237FDE07616388FD33F26DE05DD46D14; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+Railway+Arches%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "Article_4_Direction", "type": "String"},
-        {"name": "More_information", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "146",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=75D353F26FB59E2BC87DE84FD5F2BC70; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+Town+Centres+A3+-+A5+to+A2+and+from+A1+%E2%80%93+A5+B1+D1+and+D2+to+flexible+uses%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "Article_4_Direction", "type": "String"},
-        {"name": "More_information", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "146",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=50CE33A6AEEA513AFFDF60F296C79903; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+Town+Centres+A1+to+A2%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "Article_4_Direction", "type": "String"},
-        {"name": "More_information", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "146",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=8AE80A94A4D16CBEF61803E9AB2A6D88; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+Public+Houses%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "Article_4_Direction", "type": "String"},
-        {"name": "More_information", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "146",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=7DCE5309E0719EB8B80030B8FF93476D; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+Light+Industrial%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "Article_4_Direction", "type": "String"},
-        {"name": "More_information", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "146",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=5D911BE70D20402C612FDB39DE0028FB; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+HMO+Bywater+Place%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "Article_4_Direction", "type": "String"},
-        {"name": "More_information", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "146",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=6783B5F3675D7D543DA0CA43EEB26848; Path=/connect; HttpOnly",
+      "JSESSIONID=627D9CB3E4D17FEA92856860C6727F42; Path=/connect; HttpOnly",
       "Cache-Control",
       "max-age=3600"
     ],
@@ -1576,7 +1512,7 @@
     },
     "rawHeaders": [
       "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
       "Content-Type",
       "application/json;charset=utf-8",
       "Content-Length",
@@ -1586,215 +1522,7 @@
       "Server",
       "Apache-Coyote/1.1",
       "Set-Cookie",
-      "JSESSIONID=2A6021D9AC367E132A5EAB2376156011; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Location%22%2C%22TPO_document%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FTPO_zones___Historic_type%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "Location", "type": "String"},
-        {"name": "TPO_document", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "131",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=CDC0F86AEA5F3C9FDC1C4C33E3A37144; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Location%22%2C%22TPO_document%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FTPO_zones___Individual_type%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "Location", "type": "String"},
-        {"name": "TPO_document", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:28 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "131",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=C811A3FC2088097DBB9908FE6457E435; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Location%22%2C%22TPO_document%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FTPO_zones___Group_type%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "Location", "type": "String"},
-        {"name": "TPO_document", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:29 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "131",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=8B2FCA6301799C67AC8B5876334F917F; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Location%22%2C%22TPO_document%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FTPO_zones___Woodland_type%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "properties": {
-            "Location": "Area bounded by Denmark Hill, Sunray Avenue, Red Post Hill and Casino Avenue.",
-            "TPO_document": "https://geo.southwark.gov.uk/connect/analyst/Includes/TPOs/215.pdf"
-          },
-          "geometry": null,
-          "id": 7
-        }
-      ],
-      "Metadata": [
-        {"name": "Location", "type": "String"},
-        {"name": "TPO_document", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:29 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "362",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=ED2412ADF73499C2C942AEBA2F3CA2E7; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22OGR_FID%22%2C%22NAME%22%2C%22NOTES%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FUNESCO+World+Heritage+Sites+England%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "OGR_FID", "type": "Double"},
-        {"name": "NAME", "type": "String"},
-        {"name": "NOTES", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:29 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "155",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=E841E5A5AC61EF6C8AB41AAB7458267F; Path=/connect; HttpOnly",
-      "Cache-Control",
-      "max-age=3600"
-    ],
-    "responseIsBinary": false
-  },
-  {
-    "scope": "https://geo.southwark.gov.uk:443",
-    "method": "POST",
-    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
-    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22ID%22%2C%22NAME%22%2C%22STREET_NUMBER%22%2C%22STREET%22%2C%22GRADE%22%2C%22DATE_OF_LISTING%22%2C%22LISTING_DESCRIPTION%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FListed+buildings+%28Southwark%29+Grade+I%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
-    "status": 200,
-    "response": {
-      "type": "FeatureCollection",
-      "features": [],
-      "Metadata": [
-        {"name": "ID", "type": "Double"},
-        {"name": "NAME", "type": "String"},
-        {"name": "STREET_NUMBER", "type": "String"},
-        {"name": "STREET", "type": "String"},
-        {"name": "GRADE", "type": "String"},
-        {"name": "DATE_OF_LISTING", "type": "Date"},
-        {"name": "LISTING_DESCRIPTION", "type": "String"}
-      ]
-    },
-    "rawHeaders": [
-      "Date",
-      "Tue, 10 Aug 2021 13:28:29 GMT",
-      "Content-Type",
-      "application/json;charset=utf-8",
-      "Content-Length",
-      "313",
-      "Connection",
-      "keep-alive",
-      "Server",
-      "Apache-Coyote/1.1",
-      "Set-Cookie",
-      "JSESSIONID=E424B5275B511372D0EE93B72752A4A1; Path=/connect; HttpOnly",
+      "JSESSIONID=D5E298EC760A301164EE2AD537D08828; Path=/connect; HttpOnly",
       "Cache-Control",
       "max-age=3600"
     ],
@@ -1828,7 +1556,7 @@
     },
     "rawHeaders": [
       "Date",
-      "Tue, 10 Aug 2021 13:28:29 GMT",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
       "Content-Type",
       "application/json;charset=utf-8",
       "Content-Length",
@@ -1838,7 +1566,215 @@
       "Server",
       "Apache-Coyote/1.1",
       "Set-Cookie",
-      "JSESSIONID=1F06CD98FD18A87D4ACC47F2D0725914; Path=/connect; HttpOnly",
+      "JSESSIONID=0383F4C57901E954F6095CD82DC7C69B; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Location%22%2C%22TPO_document%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FTPO_zones___Woodland_type%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "Location": "Area bounded by Denmark Hill, Sunray Avenue, Red Post Hill and Casino Avenue.",
+            "TPO_document": "https://geo.southwark.gov.uk/connect/analyst/Includes/TPOs/215.pdf"
+          },
+          "geometry": null,
+          "id": 7
+        }
+      ],
+      "Metadata": [
+        {"name": "Location", "type": "String"},
+        {"name": "TPO_document", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "362",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=052EB0631E9890AD0F291792B902BD3F; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Location%22%2C%22TPO_document%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FTPO_zones___Individual_type%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "Location", "type": "String"},
+        {"name": "TPO_document", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "131",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=B8E0EB8A4194B103E2E19F4904262A6A; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Location%22%2C%22TPO_document%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FTPO_zones___Historic_type%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "Location", "type": "String"},
+        {"name": "TPO_document", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "131",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=5534512095B6D14C8143F1CA7CD3E5D4; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22ID%22%2C%22NAME%22%2C%22STREET_NUMBER%22%2C%22STREET%22%2C%22GRADE%22%2C%22DATE_OF_LISTING%22%2C%22LISTING_DESCRIPTION%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FListed+buildings+%28Southwark%29+Grade+I%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "ID", "type": "Double"},
+        {"name": "NAME", "type": "String"},
+        {"name": "STREET_NUMBER", "type": "String"},
+        {"name": "STREET", "type": "String"},
+        {"name": "GRADE", "type": "String"},
+        {"name": "DATE_OF_LISTING", "type": "Date"},
+        {"name": "LISTING_DESCRIPTION", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "313",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=185A3EB2C75908EDE9CD627447B812C5; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22OGR_FID%22%2C%22NAME%22%2C%22NOTES%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FUNESCO+World+Heritage+Sites+England%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "OGR_FID", "type": "Double"},
+        {"name": "NAME", "type": "String"},
+        {"name": "NOTES", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "155",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=53815141ADDC6BA2919BB219FF79CED9; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Location%22%2C%22TPO_document%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FTPO_zones___Group_type%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "Location", "type": "String"},
+        {"name": "TPO_document", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "131",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=30DFC027F739648E822CDBF279CBFAC8; Path=/connect; HttpOnly",
       "Cache-Control",
       "max-age=3600"
     ],
@@ -1865,7 +1801,7 @@
     },
     "rawHeaders": [
       "Date",
-      "Tue, 10 Aug 2021 13:28:29 GMT",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
       "Content-Type",
       "application/json;charset=utf-8",
       "Content-Length",
@@ -1875,7 +1811,39 @@
       "Server",
       "Apache-Coyote/1.1",
       "Set-Cookie",
-      "JSESSIONID=BDA1769D9637F7FF9D097FE472927D98; Path=/connect; HttpOnly",
+      "JSESSIONID=1C4E8E6F1244EEE483F406A2E06D32E5; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+Railway+Arches%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "Article_4_Direction", "type": "String"},
+        {"name": "More_information", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "146",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=4F1B8105A567877B3317B3DF0FEEA940; Path=/connect; HttpOnly",
       "Cache-Control",
       "max-age=3600"
     ],
@@ -1902,7 +1870,7 @@
     },
     "rawHeaders": [
       "Date",
-      "Tue, 10 Aug 2021 13:28:29 GMT",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
       "Content-Type",
       "application/json;charset=utf-8",
       "Content-Length",
@@ -1912,7 +1880,7 @@
       "Server",
       "Apache-Coyote/1.1",
       "Set-Cookie",
-      "JSESSIONID=8D4D2684AA7ECBBCE0C861474840BC65; Path=/connect; HttpOnly",
+      "JSESSIONID=1506411FD8B35C4D79628C60CD75C79E; Path=/connect; HttpOnly",
       "Cache-Control",
       "max-age=3600"
     ],
@@ -1934,7 +1902,7 @@
     },
     "rawHeaders": [
       "Date",
-      "Tue, 10 Aug 2021 13:28:29 GMT",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
       "Content-Type",
       "application/json;charset=utf-8",
       "Content-Length",
@@ -1944,14 +1912,46 @@
       "Server",
       "Apache-Coyote/1.1",
       "Set-Cookie",
-      "JSESSIONID=C2381EC236C839848ADFA56A2B8D83AB; Path=/connect; HttpOnly",
+      "JSESSIONID=18EB52F5A3060571EF50BFCA4A663E4A; Path=/connect; HttpOnly",
       "Cache-Control",
       "max-age=3600"
     ],
     "responseIsBinary": false
   },
   {
-    "scope": "http://127.0.0.1:33555",
+    "scope": "https://geo.southwark.gov.uk:443",
+    "method": "POST",
+    "path": "/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
+    "body": "url=tables%2Ffeatures.json%3Fq%3D%0A++++SELECT+%22Article_4_Direction%22%2C%22More_information%22+%0A++++FROM+%22%2FNamedMaps%2FNamedTables%2FArticle+4+-+Town+Centres+A1+to+A2%22+%0A++++WHERE+MI_Intersects%28obj%2CMI_Box%28532698.5%2C175008.5%2C532701.5%2C175011.5%2C%27EPSG%3A27700%27%29%29%0A++%26page%3D1%26pageLength%3D1%26strictSSL%3Dfalse%26gzip%3Dtrue&encodeSpecialChars=true",
+    "status": 200,
+    "response": {
+      "type": "FeatureCollection",
+      "features": [],
+      "Metadata": [
+        {"name": "Article_4_Direction", "type": "String"},
+        {"name": "More_information", "type": "String"}
+      ]
+    },
+    "rawHeaders": [
+      "Date",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
+      "Content-Type",
+      "application/json;charset=utf-8",
+      "Content-Length",
+      "146",
+      "Connection",
+      "keep-alive",
+      "Server",
+      "Apache-Coyote/1.1",
+      "Set-Cookie",
+      "JSESSIONID=D92C1AEB5691250AAEB05F1601C78CD8; Path=/connect; HttpOnly",
+      "Cache-Control",
+      "max-age=3600"
+    ],
+    "responseIsBinary": false
+  },
+  {
+    "scope": "http://127.0.0.1:65370",
     "method": "GET",
     "path": "/gis/southwark?x=532700&y=175010",
     "body": "",
@@ -2037,7 +2037,7 @@
       "ETag",
       "W/\"6c7-XY2U+3hvdOlfn7X25hpce5tD2sY\"",
       "Date",
-      "Tue, 10 Aug 2021 13:28:29 GMT",
+      "Thu, 26 Aug 2021 16:48:31 GMT",
       "Connection",
       "close"
     ],
