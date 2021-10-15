@@ -290,6 +290,7 @@ function DrawBoundary(props: ComponentProps) {
               geojsonData={JSON.stringify(data)}
               geojsonColor="#ff0000"
               geojsonFill
+              geojsonBuffer="20"
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
               hideResetControl
               staticMode
