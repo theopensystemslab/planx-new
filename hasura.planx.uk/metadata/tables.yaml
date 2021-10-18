@@ -170,8 +170,8 @@
       columns:
       - flow_data
       - flow_id
-      - user_data
       - session_id
+      - user_data
       backend_only: false
 - table:
     schema: public
