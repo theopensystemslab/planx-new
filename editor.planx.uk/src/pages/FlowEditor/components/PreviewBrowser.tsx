@@ -146,6 +146,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
               onClick={async () => {
                 setLastPublishedTitle("Sending changes...");
                 const publishedFlow = await publishFlow(flowId);
+                console.log("altered nodes", publishedFlow?.data.alteredNodes);
                 setLastPublishedTitle(
                   publishedFlow?.data.alteredNodes
                     ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
