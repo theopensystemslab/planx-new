@@ -76,7 +76,9 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
     state.lastPublisher,
   ]);
   const [key, setKey] = useState<boolean>(false);
-  const [lastPublishedTitle, setLastPublishedTitle] = useState<string>();
+  const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
+    "This flow is not published yet"
+  );
   const classes = useStyles();
 
   useEffect(() => setPreviewEnvironment("editor"), []);
