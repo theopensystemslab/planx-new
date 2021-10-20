@@ -4,7 +4,7 @@ export interface NumberInput extends MoreInformation {
   title: string;
   description?: string;
   placeholder?: string;
-  fn: string;
+  fn?: string;
   units?: string;
 }
 

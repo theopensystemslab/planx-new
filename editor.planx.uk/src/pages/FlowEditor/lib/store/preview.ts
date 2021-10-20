@@ -53,6 +53,7 @@ export interface PreviewStore extends Store.Store {
   // temporary measure for storing payment fee & id between gov uk redirect
   govUkPayment?: GovUKPayment;
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
+  cachedBreadcrumbs?: Store.cachedBreadcrumbs;
 }
 
 export const previewStore = (
@@ -201,7 +202,13 @@ export const previewStore = (
   },
 
   record(id, userData) {
-    const { breadcrumbs, flow, sessionId, upcomingCardIds } = get();
+    const {
+      breadcrumbs,
+      flow,
+      sessionId,
+      upcomingCardIds,
+      cachedBreadcrumbs,
+    } = get();
 
     if (!flow[id]) throw new Error("id not found");
 
@@ -242,10 +249,15 @@ export const previewStore = (
 
       const breadcrumbIds = Object.keys(breadcrumbs);
       const idx = breadcrumbIds.indexOf(id);
+      const pickedBreadcrumb = pick(breadcrumbs, [id]);
 
       if (idx >= 0) {
         set({
           breadcrumbs: pick(breadcrumbs, breadcrumbIds.slice(0, idx)),
+          cachedBreadcrumbs:
+            pickedBreadcrumb?.[id].answers || pickedBreadcrumb?.[id].data
+              ? pickedBreadcrumb
+              : cachedBreadcrumbs,
         });
       }
     }

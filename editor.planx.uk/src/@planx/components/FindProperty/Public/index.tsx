@@ -1,6 +1,11 @@
 import "./map.css";
 
-import { gql, useQuery } from "@apollo/client";
+import {
+  ApolloClient,
+  gql,
+  NormalizedCacheObject,
+  useQuery,
+} from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -27,6 +32,43 @@ import CollapsibleInput from "ui/CollapsibleInput";
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
 
+// these queries are exported because tests require them
+export const FIND_ADDRESS = gql`
+  query FindAddress($postcode: String = "", $gss_code: String) {
+    addresses(
+      where: {
+        postcode: { _eq: $postcode }
+        _or: [
+          { gss_code: { _eq: $gss_code } }
+          { gss_code: { _eq: "" } }
+          { gss_code: { _is_null: true } }
+        ]
+      }
+    ) {
+      uprn
+      town
+      y
+      x
+      street
+      sao
+      postcode
+      pao
+      organisation
+      blpu_code
+      latitude
+      longitude
+      single_line_address
+    }
+  }
+`;
+export const GET_TEAM_QUERY = gql`
+  query GetTeam($team: String = "") {
+    teams(where: { slug: { _eq: $team } }) {
+      gss_code
+      theme
+    }
+  }
+`;
 type Props = PublicProps<FindProperty>;
 
 const sorter = natsort({ insensitive: true });
@@ -34,6 +76,7 @@ const sorter = natsort({ insensitive: true });
 export default Component;
 
 function Component(props: Props) {
+  const previouslySubmittedData = props.previouslySubmittedData?.data;
   const [address, setAddress] = useState<Address | undefined>();
   const [flow, startSession] = useStore((state) => [
     state.flow,
@@ -46,22 +89,12 @@ function Component(props: Props) {
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
 
-  const { data } = useQuery(
-    gql`
-      query GetTeam($team: String = "") {
-        teams(where: { slug: { _eq: $team } }) {
-          gss_code
-          theme
-        }
-      }
-    `,
-    {
-      skip: !Boolean(team),
-      variables: {
-        team: team,
-      },
-    }
-  );
+  const { data } = useQuery(GET_TEAM_QUERY, {
+    skip: !Boolean(team),
+    variables: {
+      team: team,
+    },
+  });
 
   const { data: constraints } = useSWR(
     () =>
@@ -82,6 +115,8 @@ function Component(props: Props) {
         description={props.description}
         setAddress={setAddress}
         gssCode={data?.teams?.[0].gss_code}
+        initialPostcode={previouslySubmittedData?._address.postcode}
+        initialSelectedAddress={previouslySubmittedData?._address}
       />
     );
   } else if (address && constraints) {
@@ -165,64 +200,49 @@ function Component(props: Props) {
     );
   }
 }
+const isTestEnv = process.env.NODE_ENV === "test";
 
 function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
   title?: string;
   description?: string;
   gssCode: string;
+  initialPostcode?: string;
+  initialSelectedAddress?: Option;
 }) {
-  const [postcode, setPostcode] = useState<string | null>();
-  const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
-  const [selectedOption, setSelectedOption] = useState<Option | undefined>();
+  const [postcode, setPostcode] = useState<string | null>(
+    props.initialPostcode ?? null
+  );
+  const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>(
+    (props.initialPostcode && toNormalised(props.initialPostcode.trim())) ??
+      null
+  );
+  const [selectedOption, setSelectedOption] = useState<Option | null>(
+    props.initialSelectedAddress ?? null
+  );
+
+  const gqlClient = ((): ApolloClient<NormalizedCacheObject> | undefined => {
+    if (isTestEnv) return undefined;
+    return window.location.host.endsWith(".pizza")
+      ? addressesClientForPizzas
+      : client;
+  })();
 
   // get addresses in this postcode & gss_code (aka local planning authority)
   //    if gss_code is null, eg for team "opensystemslab", then ignore it in where filter https://stackoverflow.com/a/55809891
-  const { data } = useQuery(
-    gql`
-      query FindAddress($postcode: String = "", $gss_code: String) {
-        addresses(
-          where: {
-            postcode: { _eq: $postcode }
-            _or: [
-              { gss_code: { _eq: $gss_code } }
-              { gss_code: { _eq: "" } }
-              { gss_code: { _is_null: true } }
-            ]
-          }
-        ) {
-          uprn
-          town
-          y
-          x
-          street
-          sao
-          postcode
-          pao
-          organisation
-          blpu_code
-          latitude
-          longitude
-          single_line_address
-        }
-      }
-    `,
-    {
-      // XXX: temporarily read addresses from staging db if it's a pizza
-      client: window.location.host.endsWith(".pizza")
-        ? addressesClientForPizzas
-        : client,
-      skip: !Boolean(sanitizedPostcode),
-      variables: {
-        postcode: sanitizedPostcode,
-        gss_code: props.gssCode,
-      },
-    }
-  );
+  const { loading, error, data } = useQuery(FIND_ADDRESS, {
+    // XXX: temporarily read addresses from staging db if it's a pizza
+    client: gqlClient,
+    skip: !Boolean(sanitizedPostcode),
+    variables: {
+      postcode: sanitizedPostcode,
+      gss_code: props.gssCode,
+    },
+  });
 
   return (
     <Card
-      handleSubmit={() => props.setAddress(selectedOption)}
+      handleSubmit={() => props.setAddress(selectedOption ?? undefined)}
       isValid={Boolean(selectedOption)}
     >
       <QuestionHeader
@@ -266,7 +286,11 @@ function GetAddress(props: {
               )
               .sort((a: Option, b: Option) => sorter(a.title, b.title))}
             getOptionLabel={(option: Option) => option.title}
-            getOptionSelected={(option: Option) => Boolean(option.title)}
+            getOptionSelected={(option: Option, selected: Option) =>
+              option.uprn === selected.uprn
+            }
+            data-testid="autocomplete-input"
+            value={selectedOption}
             renderInput={(params) => (
               <TextField
                 {...params}

@@ -21,6 +21,7 @@ import Send from "@material-ui/icons/Send";
 import SquareFoot from "@material-ui/icons/SquareFoot";
 import TextFields from "@material-ui/icons/TextFields";
 import { TYPES } from "@planx/components/types";
+import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { ChangeEvent } from "react";
 import ImgInput from "ui/ImgInput";
@@ -38,10 +39,12 @@ export interface EditorProps<Type, Data> {
 }
 
 export type PublicProps<Data, UserData = {}> = Data & {
+  id?: string;
   handleSubmit?: handleSubmit;
   resetButton?: boolean;
   resetPreview?: () => void;
   autoFocus?: boolean;
+  previouslySubmittedData?: Store.userData;
 };
 
 // XXX: We define the Icon type in terms of one of the Icons so as not to have to repeat ourselves

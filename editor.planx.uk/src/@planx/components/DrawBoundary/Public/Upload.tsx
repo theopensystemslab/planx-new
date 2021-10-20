@@ -109,17 +109,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function FileUpload(props: any) {
-  const [slot, setSlot] = useState<any>();
+export interface FileUpload<T extends File = any> {
+  file: T;
+  status: "success" | "error" | "uploading";
+  progress: number;
+  id: string;
+  url?: string;
+}
+interface Props {
+  setFile: (file?: FileUpload) => void;
+  initialFile?: FileUpload;
+}
+
+export default function FileUpload(props: Props) {
+  const [slot, setSlot] = useState<FileUpload | undefined>(props.initialFile);
   const MAX_UPLOAD_SIZE_MB = 30;
 
-  const handleSubmit = () => {
-    // url: slot.url,
-    // filename: slot.file.path,
-  };
   useEffect(() => {
-    props.setUrl(slot?.url);
-  }, [props.setUrl, slot]);
+    props.setFile(slot);
+  }, [props.setFile, slot]);
   const classes = useStyles();
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: ["image/jpeg", "image/png", "application/pdf"],
