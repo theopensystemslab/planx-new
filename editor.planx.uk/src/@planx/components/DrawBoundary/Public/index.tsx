@@ -7,7 +7,9 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef,useState } from "react";
+import InputRow from "ui/InputRow";
+import OptionButton from "ui/OptionButton";
 
 import type { DrawBoundary } from "../model";
 import {
@@ -45,6 +47,8 @@ export default function Component(props: Props) {
   const [boundary, setBoundary] = useState<Boundary>();
   const [url, setUrl] = useState<string | undefined>();
   const [area, setArea] = useState<number | undefined>();
+  const [drawInteraction, setDrawInteraction] = useState<string>("click");
+  const mapRef = useRef();
 
   useEffect(() => {
     setUrl(undefined);
@@ -60,15 +64,19 @@ export default function Component(props: Props) {
       setBoundary(geojson.features[0]);
     };
 
-    const map = document.querySelector("my-map");
-    map?.addEventListener("areaChange", areaChangeHandler);
-    map?.addEventListener("geojsonChange", geojsonChangeHandler);
+    // const map = document.querySelector("my-map");
+    console.log(mapRef);
+    mapRef?.current?.addEventListener("areaChange", areaChangeHandler);
+    mapRef?.current?.addEventListener("geojsonChange", geojsonChangeHandler);
 
     return function cleanup() {
-      map?.removeEventListener("areaChange", areaChangeHandler);
-      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
+      mapRef?.current?.removeEventListener("areaChange", areaChangeHandler);
+      mapRef?.current?.removeEventListener(
+        "geojsonChange",
+        geojsonChangeHandler
+      );
     };
-  }, [page, setArea, setBoundary, setUrl]);
+  }, [page, drawInteraction, setArea, setBoundary, setUrl]);
 
   return (
     <Card handleSubmit={handleSubmit} isValid={Boolean(boundary || url)}>
@@ -77,6 +85,17 @@ export default function Component(props: Props) {
   );
 
   function getBody() {
+    const mapInteractionOptions = [
+      {
+        value: "click",
+        label: "Click-to-select mode",
+      },
+      {
+        value: "draw",
+        label: "Draw mode",
+      },
+    ];
+
     if (page === "draw") {
       return (
         <>
@@ -88,24 +107,25 @@ export default function Component(props: Props) {
             howMeasured={props.howMeasured}
             definitionImg={props.definitionImg}
           />
-          <Box className={classes.map}>
-            {/* @ts-ignore */}
-            <my-map
-              drawMode
-              zoom={19}
-              maxZoom={20}
-              latitude={Number(passport?.data?._address?.latitude)}
-              longitude={Number(passport?.data?._address?.longitude)}
-              osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
-              ariaLabel="An interactive map centered on your address, with a red pointer to begin drawing your site outline. Click to place points and connect the lines to make your site. Once you've closed the site shape, click and drag the lines to modify. If you cannot draw, you can alternately upload a file using the link below."
-            />
-          </Box>
+          <InputRow>
+            {mapInteractionOptions.map((option, index) => (
+              <OptionButton
+                selected={drawInteraction === option.value}
+                key={index}
+                onClick={() => {
+                  setDrawInteraction(option.value);
+                }}
+              >
+                {option.label}
+              </OptionButton>
+            ))}
+          </InputRow>
+          <Box className={classes.map}>{getMap()}</Box>
           <p className={classes.uploadInstead}>
             <a onClick={() => setPage("upload")}>Upload a file instead</a>
           </p>
           <p>
-            The boundary you have drawn has an area of{" "}
-            <strong>{area ?? 0} m²</strong>
+            The boundary has an area of <strong>{area ?? 0} m²</strong>
           </p>
         </>
       );
@@ -127,6 +147,42 @@ export default function Component(props: Props) {
             </a>
           </p>
         </div>
+      );
+    }
+  }
+
+  function getMap() {
+    if (drawInteraction === "draw") {
+      return (
+        /* @ts-ignore */
+        <my-map
+          ref={mapRef}
+          drawMode
+          zoom={19}
+          maxZoom={20}
+          latitude={Number(passport?.data?._address.latitude)}
+          longitude={Number(passport?.data?._address.longitude)}
+          osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+          ariaLabel="An interactive map centered on your address, with a red pointer to begin drawing your site outline. Click to place points and connect the lines to make your site. Once you've closed the site shape, click and drag the lines to modify. If you cannot draw, you can alternately upload a file using the link below."
+        />
+      );
+    } else if (drawInteraction === "click") {
+      return (
+        /* @ts-ignore */
+        <my-map
+          ref={mapRef}
+          showFeaturesAtPoint
+          clickFeatures
+          featureColor="#ff0000"
+          featureFill
+          zoom={19.5}
+          latitude={Number(passport?.data?._address.latitude)}
+          longitude={Number(passport?.data?._address.longitude)}
+          hideResetControl
+          osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+          osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY}
+          ariaLabel="An interactive map centered on your address. Click to select features on the map. Click again to remove a feature."
+        />
       );
     }
   }
