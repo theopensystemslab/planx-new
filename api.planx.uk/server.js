@@ -27,13 +27,15 @@ const { publishFlow } = require("./publish");
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
+const airbrake = require("./airbrake");
+
 const router = express.Router();
 
 // when login failed, send failed msg
-router.get("/login/failed", (_req, res) => {
-  res.status(401).json({
+router.get("/login/failed", (_req, _res, next) => {
+  next({
+    status: 401,
     message: "user failed to authenticate.",
-    success: false,
   });
 });
 
@@ -160,11 +162,14 @@ const buildJWT = async (profile, done) => {
       "https://hasura.io/jwt/claims": hasura,
     };
 
-    return done(null, {
+    done(null, {
       jwt: sign(data, process.env.JWT_SECRET),
     });
   } else {
-    return done(new Error("User not found"));
+    done({
+      status: 404,
+      message: `User (${email}) not found. Do you need to log in to a different Google Account?`,
+    });
   }
 };
 
@@ -327,24 +332,22 @@ app.post("/pay/:localAuthority", (req, res) => {
 
 // used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
 // fetches the status of the payment
-app.get("/pay/:localAuthority/:paymentId", (req, res) => {
+app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
   // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
   usePayProxy(
     {
       pathRewrite: () => `/${req.params.paymentId}`,
       selfHandleResponse: true,
-      onProxyRes: responseInterceptor(
-        async (responseBuffer) => {
-          const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+      onProxyRes: responseInterceptor(async (responseBuffer) => {
+        const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
 
-          // only return payment status, filter out PII
-          return JSON.stringify({ 
-            payment_id: govUkResponse.payment_id,
-            amount: govUkResponse.amount,
-            state: govUkResponse.state,
-          });
-        }
-      )
+        // only return payment status, filter out PII
+        return JSON.stringify({
+          payment_id: govUkResponse.payment_id,
+          amount: govUkResponse.amount,
+          state: govUkResponse.state,
+        });
+      }),
     },
     req
   )(req, res);
@@ -377,45 +380,54 @@ app.use("/auth", router);
 
 app.use("/gis", router);
 
-app.get("/hasura", async function (req, res) {
-  const data = await client.request(
-    `query GetTeams {
-      teams {
-        id
-      }
-    }`
-  );
-  res.json(data);
+app.get("/hasura", async function (_req, res, next) {
+  try {
+    const data = await client.request(
+      `query GetTeams {
+        teams {
+          id
+        }
+      }`
+    );
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.get("/me", useJWT, async function (req, res) {
+app.get("/me", useJWT, async function (req, res, next) {
   // useJWT will return 401 if the JWT is missing or malformed
   if (!req.user?.sub)
-    return res.status(401).json({ error: "User ID missing from JWT" });
+    next({ status: 401, message: "User ID missing from JWT" });
 
-  const user = await client.request(
-    `query ($id: Int!) {
-      users_by_pk(id: $id) {
-        id
-        first_name
-        last_name
-        email
-        is_admin
-        created_at
-        updated_at
-      }
-    }`,
-    { id: req.user.sub }
-  );
+  try {
+    const user = await client.request(
+      `query ($id: Int!) {
+        users_by_pk(id: $id) {
+          id
+          first_name
+          last_name
+          email
+          is_admin
+          created_at
+          updated_at
+        }
+      }`,
+      { id: req.user.sub }
+    );
 
-  if (!user.users_by_pk)
-    return res.status(404).json({ error: `User (${req.user.sub}) not found` });
+    if (!user.users_by_pk)
+      next({ status: 404, message: `User (${req.user.sub}) not found` });
 
-  res.json(user.users_by_pk);
+    res.json(user.users_by_pk);
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.get("/gis", (_req, res) => {
-  res.json({
+app.get("/gis", (_req, res, next) => {
+  next({
+    status: 400,
     message: "Please specify a Local Authority",
   });
 });
@@ -426,12 +438,19 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
+// XXX: leaving this in temporarily as a testing endpoint to ensure it
+//      works correctly in staging and production
+app.get("/throw-error", () => {
+  throw new Error("custom error");
+});
+
 app.post("/flows/:flowId/publish", useJWT, publishFlow);
 
 // unauthenticated because accessing flow schema only, no user data
-app.get("/flows/:flowId/download-schema", async (req, res) => {
-  const schema = await client.request(
-    `
+app.get("/flows/:flowId/download-schema", async (req, res, next) => {
+  try {
+    const schema = await client.request(
+      `
       query ($flow_id: String!) {
         get_flow_schema(args: {published_flow_id: $flow_id}) {
           node
@@ -440,44 +459,66 @@ app.get("/flows/:flowId/download-schema", async (req, res) => {
           planx_variable
         }
       }`,
-    { flow_id: req.params.flowId }
-  );
+      { flow_id: req.params.flowId }
+    );
 
-  try {
     if (schema.get_flow_schema.length < 1) {
-      res.json({
+      next({
+        status: 404,
         message:
           "Can't find a schema for this flow. Make sure it's published or try a different flow id.",
       });
     } else {
       // build a CSV and stream it
-      stringify(schema.get_flow_schema, { header: true })
-        .pipe(res);
+      stringify(schema.get_flow_schema, { header: true }).pipe(res);
 
-      res.header('Content-type', 'text/csv');
+      res.header("Content-type", "text/csv");
       res.attachment(`${req.params.flowId}.csv`);
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error });
+  } catch (err) {
+    next(err);
   }
 });
 
-app.post("/sign-s3-upload", async (req, res) => {
-  if (!req.body.filename) res.status(422).json({ error: "missing filename" });
-  const { fileType, url, acl } = await signS3Upload(req.body.filename);
+app.post("/sign-s3-upload", async (req, res, next) => {
+  if (!req.body.filename) next({ status: 422, message: "missing filename" });
+
   try {
+    const { fileType, url, acl } = await signS3Upload(req.body.filename);
+
     res.json({
       upload_to: url,
       public_readonly_url_will_be: url.split("?")[0],
       file_type: fileType,
       acl,
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error });
+  } catch (err) {
+    next(err);
   }
 });
+
+// Handle any server errors that were passed with next(err)
+// Order is significant, this should be the final app.use()
+app.use(
+  // XXX: including all 4 function params appears to be a requirement?
+  function errorHandler(errorObject, _req, res, _next) {
+    const { status = 500, message = "Something went wrong" } = (() => {
+      if (errorObject.error && airbrake) {
+        airbrake.notify(errorObject.error);
+        return {
+          ...errorObject,
+          message: errorObject.message.concat(", this error has been logged"),
+        };
+      } else {
+        return errorObject;
+      }
+    })();
+
+    res.status(status).send({
+      error: message,
+    });
+  }
+);
 
 const server = new Server(app);
 
@@ -485,6 +526,12 @@ function useProxy(options = {}) {
   return createProxyMiddleware({
     changeOrigin: true,
     logLevel: LOG_LEVEL,
+    onError: (err, req, res, target) => {
+      res.json({
+        status: 500,
+        message: "Something went wrong",
+      });
+    },
     ...options,
   });
 }
