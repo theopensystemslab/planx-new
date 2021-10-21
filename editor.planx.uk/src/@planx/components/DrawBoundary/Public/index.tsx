@@ -66,17 +66,23 @@ export default function Component(props: Props) {
 
     // const map = document.querySelector("my-map");
     console.log(mapRef);
-    mapRef?.current?.addEventListener("areaChange", areaChangeHandler);
-    mapRef?.current?.addEventListener("geojsonChange", geojsonChangeHandler);
+
+    if (drawInteraction === "draw") {
+      // event listeners only implemented in drawMode in map repo, issue #23
+      mapRef?.current?.addEventListener("areaChange", areaChangeHandler);
+      mapRef?.current?.addEventListener("geojsonChange", geojsonChangeHandler);
+    }
 
     return function cleanup() {
-      mapRef?.current?.removeEventListener("areaChange", areaChangeHandler);
-      mapRef?.current?.removeEventListener(
-        "geojsonChange",
-        geojsonChangeHandler
-      );
+      if (drawInteraction === "draw") {
+        mapRef?.current?.removeEventListener("areaChange", areaChangeHandler);
+        mapRef?.current?.removeEventListener(
+          "geojsonChange",
+          geojsonChangeHandler
+        );
+      }
     };
-  }, [page, drawInteraction, setArea, setBoundary, setUrl]);
+  }, [page, drawInteraction, mapRef, setArea, setBoundary, setUrl]);
 
   return (
     <Card handleSubmit={handleSubmit} isValid={Boolean(boundary || url)}>
