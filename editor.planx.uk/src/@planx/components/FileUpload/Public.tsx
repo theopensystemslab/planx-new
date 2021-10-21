@@ -193,6 +193,7 @@ const FileUpload: React.FC<Props> = (props) => {
         description={props.description}
         info={props.info}
         howMeasured={props.howMeasured}
+        definitionImg={props.definitionImg}
         policyRef={props.policyRef}
       />
       <ErrorWrapper error={validationError}>
