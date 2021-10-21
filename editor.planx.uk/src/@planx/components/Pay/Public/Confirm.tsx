@@ -10,6 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
+import { ENTER, SPACE_BAR } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 import Input from "ui/Input";
@@ -56,6 +57,11 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "underline",
     cursor: "pointer",
   },
+  saveButton: {
+    "&:focus-visible": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
+    },
+  },
 }));
 
 interface Props {
@@ -79,14 +85,23 @@ export default function Confirm(props: Props) {
 
       <div className={classes.banner}>
         <Container maxWidth="md">
-          <Typography variant="h5" gutterBottom className="marginBottom">
+          <Typography
+            variant="h5"
+            gutterBottom
+            className="marginBottom"
+            component="h2"
+          >
             The planning fee for this application is
           </Typography>
-          <Typography variant="h1" gutterBottom className="marginBottom">
+          <Typography
+            variant="h1"
+            gutterBottom
+            className="marginBottom"
+            component="span"
+          >
             {formattedPriceWithCurrencySymbol(props.fee)}
           </Typography>
-
-          <Typography variant="h4">
+          <Typography variant="h4" component="span">
             <ReactMarkdownOrHtml source={props.description} />
           </Typography>
         </Container>
@@ -132,9 +147,22 @@ function SuggestionDrawer() {
 
   const classes = useStyles();
 
+  const handleLinkClick = () => {
+    setIsOpen((x) => !x);
+  };
+
   return (
     <>
-      <a className={classes.link} onClick={() => setIsOpen((x) => !x)}>
+      <a
+        className={classes.link}
+        onClick={handleLinkClick}
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === SPACE_BAR || event.key === ENTER) {
+            handleLinkClick();
+          }
+        }}
+      >
         Tell us other ways you'd like to pay in the future
       </a>
       <Drawer
@@ -173,6 +201,7 @@ function SuggestionDrawer() {
           <p>Why would you prefer to use this form of payment?</p>
 
           <Input
+            aria-label="Reason for selected form of payments"
             bordered
             multiline={true}
             rows={3}
@@ -182,9 +211,14 @@ function SuggestionDrawer() {
             }}
             value={text}
           />
-
           <p style={{ textAlign: "right" }}>
-            <ButtonBase onClick={() => setIsOpen(false)}>Save</ButtonBase>
+            <ButtonBase
+              onClick={() => setIsOpen(false)}
+              tabIndex={0}
+              className={classes.saveButton}
+            >
+              Save
+            </ButtonBase>
           </p>
         </div>
       </Drawer>
