@@ -7,7 +7,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useRef,useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import InputRow from "ui/InputRow";
 import OptionButton from "ui/OptionButton";
 
@@ -154,35 +154,43 @@ export default function Component(props: Props) {
   function getMap() {
     if (drawInteraction === "draw") {
       return (
-        /* @ts-ignore */
-        <my-map
-          ref={mapRef}
-          drawMode
-          zoom={19}
-          maxZoom={20}
-          latitude={Number(passport?.data?._address.latitude)}
-          longitude={Number(passport?.data?._address.longitude)}
-          osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
-          ariaLabel="An interactive map centered on your address, with a red pointer to begin drawing your site outline. Click to place points and connect the lines to make your site. Once you've closed the site shape, click and drag the lines to modify. If you cannot draw, you can alternately upload a file using the link below."
-        />
+        <>
+          <p>debug: in draw mode</p>
+          {/* @ts-ignore */}
+          <my-map
+            ref={mapRef}
+            drawMode
+            zoom={19}
+            maxZoom={20}
+            latitude={Number(passport?.data?._address.latitude)}
+            longitude={Number(passport?.data?._address.longitude)}
+            osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+            ariaLabel="An interactive map centered on your address, with a red pointer to begin drawing your site outline. Click to place points and connect the lines to make your site. Once you've closed the site shape, click and drag the lines to modify. If you cannot draw, you can alternately upload a file using the link below."
+          />
+        </>
       );
     } else if (drawInteraction === "click") {
       return (
-        /* @ts-ignore */
-        <my-map
-          ref={mapRef}
-          showFeaturesAtPoint
-          clickFeatures
-          featureColor="#ff0000"
-          featureFill
-          zoom={19.5}
-          latitude={Number(passport?.data?._address.latitude)}
-          longitude={Number(passport?.data?._address.longitude)}
-          hideResetControl
-          osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
-          osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY}
-          ariaLabel="An interactive map centered on your address. Click to select features on the map. Click again to remove a feature."
-        />
+        <>
+          <p>debug: in click-to-select mode</p>
+          {/* @ts-ignore */}
+          <my-map
+            ref={mapRef}
+            showFeaturesAtPoint
+            clickFeatures
+            featureColor="#ff0000"
+            featureFill
+            zoom={19.5}
+            latitude={Number(passport?.data?._address.latitude)}
+            longitude={Number(passport?.data?._address.longitude)}
+            hideResetControl
+            osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+            osFeaturesApiKey={
+              process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY
+            }
+            ariaLabel="An interactive map centered on your address. Click to select features on the map. Click again to remove a feature."
+          />
+        </>
       );
     }
   }
