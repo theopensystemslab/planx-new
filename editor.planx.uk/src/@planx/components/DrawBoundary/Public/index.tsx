@@ -75,11 +75,11 @@ export default function Component(props: Props) {
 
   return (
     <Card handleSubmit={handleSubmit} isValid={Boolean(boundary || url)}>
-      {getBody()}
+      {getBody(page)}
     </Card>
   );
 
-  function getBody() {
+  function getBody(page: any) {
     const mapInteractionOptions = [
       {
         value: "click",
@@ -105,16 +105,12 @@ export default function Component(props: Props) {
             maxZoom: 20,
           }
         : {
-            ariaLabel: drawInteraction,
             clickFeatures: true,
             featureColor: "#ff0000",
             featureFill: true,
             hideResetControl: true,
-            latitude: Number(passport?.data?._address.latitude),
-            longitude: Number(passport?.data?._address.longitude),
             osFeaturesApiKey:
               process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY,
-            osVectorTilesApiKey: process.env.REACT_APP_ORDNANCE_SURVEY_KEY,
             showFeaturesAtPoint: true,
           }),
     } as any;
