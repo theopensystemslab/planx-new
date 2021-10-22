@@ -44,10 +44,16 @@ const useClasses = makeStyles((theme) => ({
 }));
 
 // ref https://www.npmjs.com/package/@lit-labs/react
-export const MyMapComponent = createComponent(React, "my-map", MyMap, {
-  areaChange: "areaChange", // listens to drawMode only
-  geojsonChange: "geojsonChange", // listens to drawMode only
-});
+const MyMapComponent = createComponent(
+  React,
+  "my-map",
+  MyMap,
+  {
+    areaChange: "areaChange", // listens to drawMode only
+    geojsonChange: "geojsonChange", // listens to drawMode only
+  },
+  `my-map-${Date.now()}`
+);
 
 export default function Component(props: Props) {
   const [page, setPage] = useState<"draw" | "upload">("draw");
