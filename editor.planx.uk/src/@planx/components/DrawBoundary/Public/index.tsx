@@ -1,13 +1,16 @@
 import "./map.css";
 
+import { createComponent } from "@lit-labs/react";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
+// @ts-ignore
+import { MyMap } from "@opensystemslab/map";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputRow from "ui/InputRow";
 import OptionButton from "ui/OptionButton";
 
@@ -40,6 +43,12 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
+// ref https://www.npmjs.com/package/@lit-labs/react
+export const MyMapComponent = createComponent(React, "my-map", MyMap, {
+  areaChange: "areaChange", // listens to drawMode only
+  geojsonChange: "geojsonChange", // listens to drawMode only
+});
+
 export default function Component(props: Props) {
   const [page, setPage] = useState<"draw" | "upload">("draw");
   const passport = useStore((state) => state.computePassport());
@@ -48,41 +57,21 @@ export default function Component(props: Props) {
   const [url, setUrl] = useState<string | undefined>();
   const [area, setArea] = useState<number | undefined>();
   const [drawInteraction, setDrawInteraction] = useState<string>("click");
-  const mapRef = useRef();
+
+  const areaChangeHandler = ({ detail }: { detail: string }) => {
+    const numberString = detail.split(" ")[0];
+    const area = Number(numberString);
+    setArea(area);
+  };
+
+  const geojsonChangeHandler = ({ detail: geojson }: any) => {
+    // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
+    setBoundary(geojson.features[0]);
+  };
 
   useEffect(() => {
     setUrl(undefined);
-
-    const areaChangeHandler = ({ detail }: { detail: string }) => {
-      const numberString = detail.split(" ")[0];
-      const area = Number(numberString);
-      setArea(area);
-    };
-
-    const geojsonChangeHandler = ({ detail: geojson }: any) => {
-      // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
-      setBoundary(geojson.features[0]);
-    };
-
-    // const map = document.querySelector("my-map");
-    console.log(mapRef);
-
-    if (drawInteraction === "draw") {
-      // event listeners only implemented in drawMode in map repo, issue #23
-      mapRef?.current?.addEventListener("areaChange", areaChangeHandler);
-      mapRef?.current?.addEventListener("geojsonChange", geojsonChangeHandler);
-    }
-
-    return function cleanup() {
-      if (drawInteraction === "draw") {
-        mapRef?.current?.removeEventListener("areaChange", areaChangeHandler);
-        mapRef?.current?.removeEventListener(
-          "geojsonChange",
-          geojsonChangeHandler
-        );
-      }
-    };
-  }, [page, drawInteraction, mapRef, setArea, setBoundary, setUrl]);
+  }, [page, drawInteraction, setArea, setBoundary, setUrl]);
 
   return (
     <Card handleSubmit={handleSubmit} isValid={Boolean(boundary || url)}>
@@ -160,43 +149,35 @@ export default function Component(props: Props) {
   function getMap() {
     if (drawInteraction === "draw") {
       return (
-        <>
-          <p>debug: in draw mode</p>
-          {/* @ts-ignore */}
-          <my-map
-            ref={mapRef}
-            drawMode
-            zoom={19}
-            maxZoom={20}
-            latitude={Number(passport?.data?._address.latitude)}
-            longitude={Number(passport?.data?._address.longitude)}
-            osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
-            ariaLabel="An interactive map centered on your address, with a red pointer to begin drawing your site outline. Click to place points and connect the lines to make your site. Once you've closed the site shape, click and drag the lines to modify. If you cannot draw, you can alternately upload a file using the link below."
-          />
-        </>
+        // @ts-ignore
+        <MyMapComponent
+          drawMode
+          zoom={19}
+          maxZoom={20}
+          latitude={Number(passport?.data?._address.latitude)}
+          longitude={Number(passport?.data?._address.longitude)}
+          areaChange={areaChangeHandler}
+          geojsonChange={geojsonChangeHandler}
+          osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+          ariaLabel={drawInteraction}
+        />
       );
     } else if (drawInteraction === "click") {
       return (
-        <>
-          <p>debug: in click-to-select mode</p>
-          {/* @ts-ignore */}
-          <my-map
-            ref={mapRef}
-            showFeaturesAtPoint
-            clickFeatures
-            featureColor="#ff0000"
-            featureFill
-            zoom={19.5}
-            latitude={Number(passport?.data?._address.latitude)}
-            longitude={Number(passport?.data?._address.longitude)}
-            hideResetControl
-            osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
-            osFeaturesApiKey={
-              process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY
-            }
-            ariaLabel="An interactive map centered on your address. Click to select features on the map. Click again to remove a feature."
-          />
-        </>
+        // @ts-ignore
+        <MyMapComponent
+          showFeaturesAtPoint
+          clickFeatures
+          featureColor="#ff0000"
+          featureFill
+          zoom={19.5}
+          latitude={Number(passport?.data?._address.latitude)}
+          longitude={Number(passport?.data?._address.longitude)}
+          hideResetControl
+          osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+          osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY}
+          ariaLabel={drawInteraction}
+        />
       );
     }
   }
