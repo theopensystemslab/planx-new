@@ -91,6 +91,34 @@ export default function Component(props: Props) {
       },
     ];
 
+    const mapProps = {
+      ariaLabel: drawInteraction,
+      latitude: Number(passport?.data?._address.latitude),
+      longitude: Number(passport?.data?._address.longitude),
+      osVectorTilesApiKey: process.env.REACT_APP_ORDNANCE_SURVEY_KEY,
+      zoom: 19,
+      ...(drawInteraction === "draw"
+        ? {
+            areaChange: areaChangeHandler,
+            drawMode: true,
+            geojsonChange: geojsonChangeHandler,
+            maxZoom: 20,
+          }
+        : {
+            ariaLabel: drawInteraction,
+            clickFeatures: true,
+            featureColor: "#ff0000",
+            featureFill: true,
+            hideResetControl: true,
+            latitude: Number(passport?.data?._address.latitude),
+            longitude: Number(passport?.data?._address.longitude),
+            osFeaturesApiKey:
+              process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY,
+            osVectorTilesApiKey: process.env.REACT_APP_ORDNANCE_SURVEY_KEY,
+            showFeaturesAtPoint: true,
+          }),
+    } as any;
+
     if (page === "draw") {
       return (
         <>
@@ -115,7 +143,9 @@ export default function Component(props: Props) {
               </OptionButton>
             ))}
           </InputRow>
-          <Box className={classes.map}>{getMap()}</Box>
+          <Box className={classes.map}>
+            <MyMapComponent {...mapProps} />
+          </Box>
           <p className={classes.uploadInstead}>
             <a onClick={() => setPage("upload")}>Upload a file instead</a>
           </p>
@@ -142,42 +172,6 @@ export default function Component(props: Props) {
             </a>
           </p>
         </div>
-      );
-    }
-  }
-
-  function getMap() {
-    if (drawInteraction === "draw") {
-      return (
-        // @ts-ignore
-        <MyMapComponent
-          drawMode
-          zoom={19}
-          maxZoom={20}
-          latitude={Number(passport?.data?._address.latitude)}
-          longitude={Number(passport?.data?._address.longitude)}
-          areaChange={areaChangeHandler}
-          geojsonChange={geojsonChangeHandler}
-          osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
-          ariaLabel={drawInteraction}
-        />
-      );
-    } else if (drawInteraction === "click") {
-      return (
-        // @ts-ignore
-        <MyMapComponent
-          showFeaturesAtPoint
-          clickFeatures
-          featureColor="#ff0000"
-          featureFill
-          zoom={19.5}
-          latitude={Number(passport?.data?._address.latitude)}
-          longitude={Number(passport?.data?._address.longitude)}
-          hideResetControl
-          osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
-          osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY}
-          ariaLabel={drawInteraction}
-        />
       );
     }
   }
