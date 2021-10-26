@@ -72,7 +72,7 @@ export const dateRangeSchema: (params: {
   max?: string;
 }) => SchemaOf<string> = (params) =>
   dateSchema()
-    .required("Please enter a valid date")
+    .required("Enter a valid date")
     .test({
       name: "too soon",
       message: `Enter a date later than ${

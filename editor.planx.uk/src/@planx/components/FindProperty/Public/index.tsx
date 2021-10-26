@@ -13,6 +13,7 @@ import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
+import { addressesClientForPizzas, client } from "lib/graphql";
 import capitalize from "lodash/capitalize";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -186,7 +187,7 @@ function GetAddress(props: {
     }
   );
 
-  // Temp hack: map OS Places API fields to address_base fields
+  // Temp hack: map OS Places API fields to address_base fields, eventually refactor model.ts
   const addresses: Address[] = [];
   if (data?.results?.length) {
     data.results.forEach((a: any) => {

@@ -230,6 +230,14 @@ new pulumi.Config("cloudflare").require("apiToken");
               `gov-uk-pay-token-${authority}`.toLowerCase()
             ),
           })),
+          {
+            name: "AIRBRAKE_PROJECT_ID",
+            value: config.require("airbrake-project-id"),
+          },
+          {
+            name: "AIRBRAKE_PROJECT_KEY",
+            value: config.require("airbrake-project-key"),
+          },
         ],
       },
     },

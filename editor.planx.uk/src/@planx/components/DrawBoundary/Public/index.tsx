@@ -25,12 +25,15 @@ const useClasses = makeStyles((theme) => ({
   },
   uploadInstead: {
     textAlign: "right",
-    fontSize: "small",
+    fontSize: "medium",
     marginTop: theme.spacing(1),
     "& a": {
-      color: theme.palette.text.secondary,
+      color: theme.palette.text.primary,
       cursor: "pointer",
       padding: theme.spacing(2),
+    },
+    "& a:hover": {
+      backgroundColor: theme.palette.background.paper,
     },
   },
 }));

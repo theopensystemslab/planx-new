@@ -131,7 +131,7 @@ const slotsSchema = array()
   .required()
   .test({
     name: "nonUploading",
-    message: "You must have at least one successfully uploaded file.",
+    message: "Upload at least one file.",
     test: (slots?: Array<any>) => {
       return Boolean(
         slots &&
@@ -193,6 +193,7 @@ const FileUpload: React.FC<Props> = (props) => {
         description={props.description}
         info={props.info}
         howMeasured={props.howMeasured}
+        definitionImg={props.definitionImg}
         policyRef={props.policyRef}
       />
       <ErrorWrapper error={validationError}>
