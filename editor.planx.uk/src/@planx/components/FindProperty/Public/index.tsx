@@ -13,8 +13,8 @@ import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
-import { addressesClientForPizzas, client } from "lib/graphql";
 import capitalize from "lodash/capitalize";
+import find from "lodash/find";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
@@ -142,7 +142,7 @@ function Component(props: Props) {
           },
           {
             heading: "Building type",
-            detail: address.blpu_code,
+            detail: address.planx_description,
           },
         ]}
         propertyConstraints={{
@@ -175,7 +175,7 @@ function GetAddress(props: {
   const [selectedOption, setSelectedOption] = useState<Option | undefined>();
 
   // Fetch addresses in this postcode from the OS Places API
-  const { data } = useSWR(
+  const { data: addressesInPostcode } = useSWR(
     () =>
       sanitizedPostcode
         ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`
@@ -187,13 +187,26 @@ function GetAddress(props: {
     }
   );
 
+  // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
+  const { data: blpuCodes } = useQuery(
+    gql`
+      {
+        blpu_codes {
+          code
+          description
+          value
+        }
+      }
+    `
+  );
+
   // Temp hack: map OS Places API fields to address_base fields, eventually refactor model.ts
   const addresses: Address[] = [];
-  if (data?.results?.length) {
-    data.results.forEach((a: any) => {
+  if (Boolean(addressesInPostcode?.results?.length) && Boolean(blpuCodes?.blpu_codes?.length)) {
+    addressesInPostcode.results.forEach((a: any) => {
       addresses.push({
         uprn: a.DPA.UPRN,
-        blpu_code: `${a.DPA.CLASSIFICATION_CODE_DESCRIPTION} (${a.DPA.CLASSIFICATION_CODE})`,
+        blpu_code: a.DPA.BLPU_STATE_CODE,
         latitude: a.DPA.LAT,
         longitude: a.DPA.LNG,
         organisation: a.DPA.ORGANISATION_NAME || null,
@@ -204,8 +217,8 @@ function GetAddress(props: {
         postcode: a.DPA.POSTCODE,
         x: a.DPA.X_COORDINATE,
         y: a.DPA.Y_COORDINATE,
-        planx_description: "",
-        planx_value: "",
+        planx_description: find(blpuCodes.blpu_codes, { "code": a.DPA.CLASSIFICATION_CODE }).description || null,
+        planx_value: find(blpuCodes.blpu_codes, { "code": a.DPA.CLASSIFICATION_CODE }).value || null,
         single_line_address: a.DPA.ADDRESS,
       });
     });
