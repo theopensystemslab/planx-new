@@ -112,7 +112,7 @@ function Component(props: Props) {
   } else if (address) {
     return (
       <PropertyInformation
-        handleSubmit={(feedback?: string) => {
+        handleSubmit={() => {
           if (flow && address) {
             const newPassportData: any = {};
 
