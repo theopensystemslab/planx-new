@@ -6,6 +6,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import FeedbackInput from "@planx/components/shared/FeedbackInput";
 import Card from "@planx/components/shared/Preview/Card";
 import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -22,7 +23,6 @@ import React, { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
-import CollapsibleInput from "ui/CollapsibleInput";
 
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
@@ -385,15 +385,11 @@ export function PropertyInformation(props: any) {
       </Box>
       <PropertyConstraints constraintsData={propertyConstraints} />
       <Box color="text.secondary" textAlign="right">
-        <CollapsibleInput
+        <FeedbackInput
+          text="Report an inaccuracy"
           handleChange={formik.handleChange}
-          name="feedback"
           value={formik.values.feedback}
-        >
-          <Typography variant="body2" color="inherit">
-            Report an inaccuracy
-          </Typography>
-        </CollapsibleInput>
+        />
       </Box>
     </Card>
   );
