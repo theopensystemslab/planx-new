@@ -4,6 +4,7 @@ import Collapse from "@material-ui/core/Collapse";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Warning from "@material-ui/icons/WarningOutlined";
+import FeedbackInput from "@planx/components/shared/FeedbackInput";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { useFormik } from "formik";
@@ -12,7 +13,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useState } from "react";
 import type { Node, TextContent } from "types";
-import CollapsibleInput from "ui/CollapsibleInput";
 
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
@@ -204,15 +204,11 @@ const Result: React.FC<Props> = ({
             </Box>
           </Box>
         )}
-        <CollapsibleInput
+        <FeedbackInput
+          text="Is this information inaccurate? **Tell us why.**"
           handleChange={formik.handleChange}
-          name="feedback"
           value={formik.values.feedback}
-        >
-          <Typography variant="body2">
-            Is this information inaccurate? <b>Tell us why.</b>
-          </Typography>
-        </CollapsibleInput>
+        />
       </Card>
     </Box>
   );
