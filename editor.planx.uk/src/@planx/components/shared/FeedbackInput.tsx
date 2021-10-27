@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import CollapsibleInput from "ui/CollapsibleInput";
 
 interface Props {
-  handleChange: (_: unknown) => void;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
   text: string;
 }
