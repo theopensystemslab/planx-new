@@ -183,7 +183,7 @@ function GetAddress(props: {
     {
       shouldRetryOnError: true,
       errorRetryInterval: 1000,
-      errorRetryCount: 1,
+      errorRetryCount: 3,
     }
   );
 
@@ -202,8 +202,11 @@ function GetAddress(props: {
 
   // Temp hack: map OS Places API fields to address_base fields, eventually refactor model.ts
   const addresses: Address[] = [];
-  if (Boolean(addressesInPostcode?.results?.length) && Boolean(blpuCodes?.blpu_codes?.length)) {
-    addressesInPostcode.results.forEach((a: any) => {
+  if (
+    Boolean(addressesInPostcode?.results?.length) &&
+    Boolean(blpuCodes?.blpu_codes?.length)
+  ) {
+    addressesInPostcode.results.map((a: any) => {
       addresses.push({
         uprn: a.DPA.UPRN,
         blpu_code: a.DPA.BLPU_STATE_CODE,
@@ -217,8 +220,12 @@ function GetAddress(props: {
         postcode: a.DPA.POSTCODE,
         x: a.DPA.X_COORDINATE,
         y: a.DPA.Y_COORDINATE,
-        planx_description: find(blpuCodes.blpu_codes, { "code": a.DPA.CLASSIFICATION_CODE }).description || null,
-        planx_value: find(blpuCodes.blpu_codes, { "code": a.DPA.CLASSIFICATION_CODE }).value || null,
+        planx_description:
+          find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
+            .description || null,
+        planx_value:
+          find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
+            .value || null,
         single_line_address: a.DPA.ADDRESS,
       });
     });
