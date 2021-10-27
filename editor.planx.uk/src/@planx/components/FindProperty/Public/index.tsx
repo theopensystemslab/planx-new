@@ -95,7 +95,7 @@ function Component(props: Props) {
   } else if (address && constraints) {
     return (
       <PropertyInformation
-        handleSubmit={(feedback?: string) => {
+        handleSubmit={() => {
           if (flow && address && constraints) {
             const _nots: any = {};
             const newPassportData: any = {};
@@ -325,6 +325,7 @@ const useClasses = makeStyles((theme) => ({
     borderBottom: `1px solid ${theme.palette.background.paper}`,
   },
 }));
+
 export function PropertyInformation(props: any) {
   const {
     title,
