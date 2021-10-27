@@ -11,7 +11,7 @@ interface Props {
 
 const FeedbackInput: React.FC<Props> = ({ text, ...componentProps }: Props) => (
   <CollapsibleInput {...componentProps} name="feedback">
-    <Typography variant="body2" color="inherit">
+    <Typography variant="body2" color="inherit" component="div">
       <ReactMarkdown>{text}</ReactMarkdown>
     </Typography>
   </CollapsibleInput>
