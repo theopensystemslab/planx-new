@@ -68,6 +68,37 @@ const dataMerged = async (id, ob = {}) => {
   return ob;
 };
 
+const diffFlow = async (req, res) => {
+  if (!req.user?.sub)
+    return res.status(401).json({ error: "User ID missing from JWT" });
+
+  try {
+    const flattenedFlow = await dataMerged(req.params.flowId);
+    const mostRecent = await getMostRecentPublishedFlow(req.params.flowId);
+
+    const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
+
+    if (delta) {
+      const alteredNodes = Object.keys(delta).map((key) => ({
+        id: key,
+        ...flattenedFlow[key]
+      }));
+
+      res.json({
+        alteredNodes
+      });
+    } else {
+      res.json({
+        alteredNodes: null,
+        message: "No new changes",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
+};
+
 const publishFlow = async (req, res) => {
   if (!req.user?.sub)
     return res.status(401).json({ error: "User ID missing from JWT" });
@@ -129,4 +160,4 @@ const publishFlow = async (req, res) => {
   }
 };
 
-module.exports = { publishFlow };
+module.exports = { diffFlow, publishFlow };

@@ -22,7 +22,7 @@ const {
 
 const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
-const { publishFlow } = require("./publish");
+const { diffFlow, publishFlow } = require("./publish");
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -443,6 +443,8 @@ app.get("/", (_req, res) => {
 app.get("/throw-error", () => {
   throw new Error("custom error");
 });
+
+app.post("/flows/:flowId/diff", useJWT, diffFlow);
 
 app.post("/flows/:flowId/publish", useJWT, publishFlow);
 
