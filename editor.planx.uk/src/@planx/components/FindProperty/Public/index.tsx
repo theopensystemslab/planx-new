@@ -1,10 +1,7 @@
-import "./map.css";
-
 import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import FeedbackInput from "@planx/components/shared/FeedbackInput";
 import Card from "@planx/components/shared/Preview/Card";
@@ -22,9 +19,9 @@ import { parse, toNormalised } from "postcode";
 import React, { useState } from "react";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
-
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
+import "./map.css";
 
 // these queries are exported because tests require them
 export const FETCH_GLBU_CODES = gql`
@@ -81,7 +78,7 @@ function Component(props: Props) {
   } else if (address) {
     return (
       <PropertyInformation
-        handleSubmit={(feedback?: string) => {
+        handleSubmit={() => {
           if (flow && address) {
             const newPassportData: any = {};
 
@@ -291,6 +288,7 @@ const useClasses = makeStyles((theme) => ({
     borderBottom: `1px solid ${theme.palette.background.paper}`,
   },
 }));
+
 export function PropertyInformation(props: any) {
   const {
     title,
