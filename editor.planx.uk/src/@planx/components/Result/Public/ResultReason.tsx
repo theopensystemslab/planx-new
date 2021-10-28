@@ -1,3 +1,6 @@
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
@@ -22,8 +25,12 @@ const useClasses = makeStyles((theme: Theme) => ({
   root: {
     cursor: "pointer",
     marginBottom: theme.spacing(0.5),
+    backgroundColor: theme.palette.background.paper,
     "&:hover": {
       background: theme.palette.grey,
+    },
+    "&:focus-visible": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
     },
   },
   moreInfo: {
@@ -41,6 +48,14 @@ const useClasses = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(1),
     padding: 0,
   },
+  onFocus: {
+    outline: `2px solid ${theme.palette.secondary.dark}`,
+  },
+  removeTopBorder: {
+    "&:before": {
+      display: "none",
+    },
+  },
 }));
 
 const ResultReason: React.FC<IResultReason> = ({
@@ -50,82 +65,86 @@ const ResultReason: React.FC<IResultReason> = ({
   showChangeButton = false,
 }) => {
   const record = useStore((state) => state.record);
-  const [showMoreInfo, setShowMoreInfo] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(false);
 
   const classes = useClasses();
 
   const hasMoreInfo = question.data.info ?? question.data.policyRef;
-  const toggleAdditionalInfo = () => setShowMoreInfo(!showMoreInfo);
+  const toggleAdditionalInfo = () => setExpanded(!expanded);
 
   return (
-    <ButtonBase
-      selected={false}
+    <Accordion
       className={classes.root}
-      aria-label="Expand for more information about this question"
-      onClick={() => hasMoreInfo && toggleAdditionalInfo()}
+      classes={{ root: classes.removeTopBorder }}
+      onChange={() => hasMoreInfo && toggleAdditionalInfo()}
+      expanded={expanded}
+      elevation={0}
+      square
     >
-      <Box
-        bgcolor="background.paper"
-        display="flex"
-        alignItems="flex-start"
-        flexDirection="column"
-        width="100%"
-        px={1.5}
+      <AccordionSummary
+        expandIcon={hasMoreInfo ? <Caret /> : null}
+        aria-label={`${question.data.text}: Your answer was: ${response}. Click to expand for more information about this question.`}
       >
         <Box
           display="flex"
-          justifyContent="space-between"
-          alignItems="center"
+          alignItems="flex-start"
+          flexDirection="column"
           width="100%"
-          py={1}
+          px={1.5}
         >
           <Box
-            flexGrow={1}
             display="flex"
+            justifyContent="space-between"
             alignItems="center"
-            color="text.primary"
+            width="100%"
           >
-            <Typography variant="body2" color="textPrimary">
-              {question.data.text}{" "}
-              <strong className={classes.responseText}>{response}</strong>
-            </Typography>
-            {showChangeButton && (
-              <Button
-                color="inherit"
-                aria-label="Change your answer"
-                className={classes.changeButton}
-                onClick={(
-                  e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                ) => {
-                  e.stopPropagation();
-                  record(id);
-                }}
-              >
-                change
-              </Button>
-            )}
-          </Box>
-          {hasMoreInfo && <Caret expanded={showMoreInfo} />}
-        </Box>
-        {hasMoreInfo && (
-          <Collapse in={showMoreInfo}>
             <Box
-              pt={{ xs: 1, md: 0 }}
-              pb={{ xs: 1, md: 3 }}
-              color="background.dark"
-              className={classes.moreInfo}
+              flexGrow={1}
+              display="flex"
+              alignItems="center"
+              color="text.primary"
             >
-              {question.data.info && (
-                <ReactMarkdownOrHtml source={question.data.info} />
-              )}
-              {question.data.policyRef && (
-                <ReactMarkdownOrHtml source={question.data.policyRef} />
+              <Typography variant="body2" color="textPrimary" id="questionText">
+                {question.data.text}{" "}
+                <strong className={classes.responseText}>{response}</strong>
+              </Typography>
+              {showChangeButton && (
+                <Button
+                  color="inherit"
+                  aria-label="Change your answer"
+                  className={classes.changeButton}
+                  onClick={(
+                    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                  ) => {
+                    e.stopPropagation();
+                    record(id);
+                  }}
+                >
+                  change
+                </Button>
               )}
             </Box>
-          </Collapse>
-        )}
-      </Box>
-    </ButtonBase>
+          </Box>
+        </Box>
+      </AccordionSummary>
+      {hasMoreInfo && (
+        <AccordionDetails>
+          <Box
+            pt={{ xs: 1, md: 0 }}
+            pb={{ xs: 1, md: 3 }}
+            color="background.dark"
+            className={classes.moreInfo}
+          >
+            {question.data.info && (
+              <ReactMarkdownOrHtml source={question.data.info} />
+            )}
+            {question.data.policyRef && (
+              <ReactMarkdownOrHtml source={question.data.policyRef} />
+            )}
+          </Box>
+        </AccordionDetails>
+      )}
+    </Accordion>
   );
 };
 export default ResultReason;
