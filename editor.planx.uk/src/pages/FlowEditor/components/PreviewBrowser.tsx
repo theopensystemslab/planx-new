@@ -1,5 +1,10 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
@@ -67,6 +72,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
     publishFlow,
     lastPublished,
     lastPublisher,
+    diffFlow,
   ] = useStore((state) => [
     state.id,
     state.resetPreview,
@@ -74,11 +80,14 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
     state.publishFlow,
     state.lastPublished,
     state.lastPublisher,
+    state.diffFlow,
   ]);
   const [key, setKey] = useState<boolean>(false);
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
     "This flow is not published yet"
   );
+  const [alteredNodes, setAlteredNodes] = useState<object[]>();
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const classes = useStyles();
 
   useEffect(() => setPreviewEnvironment("editor"), []);
@@ -146,19 +155,55 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
               variant="contained"
               color="primary"
               onClick={async () => {
-                setLastPublishedTitle("Sending changes...");
-                const publishedFlow = await publishFlow(flowId);
-                console.log("altered nodes", publishedFlow?.data.alteredNodes);
+                setLastPublishedTitle("Checking for changes...");
+                const alteredFlow = await diffFlow(flowId);
                 setLastPublishedTitle(
-                  publishedFlow?.data.alteredNodes
-                    ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
+                  alteredFlow?.data.alteredNodes
+                    ? `Found changes to ${alteredFlow?.data.alteredNodes.length} node(s)`
                     : "No new changes to publish"
                 );
+                setDialogOpen(true);
               }}
-              disabled={window.location.hostname.endsWith("planx.uk")}
             >
-              PUBLISH
+              CHECK FOR CHANGES TO PUBLISH
             </Button>
+            <Dialog
+              open={dialogOpen}
+              onClose={() => setDialogOpen(false)}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {lastPublishedTitle}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {`List of changes here...`}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setDialogOpen(false)}>
+                  KEEP EDITING
+                </Button>
+                <Button
+                  color="primary"
+                  autoFocus
+                  onClick={async () => {
+                    setDialogOpen(false);
+                    setLastPublishedTitle("Publishing changes...");
+                    const publishedFlow = await publishFlow(flowId);
+                    setLastPublishedTitle(
+                      publishedFlow?.data.alteredNodes
+                        ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
+                        : "No new changes to publish"
+                    );
+                  }}
+                  disabled={window.location.hostname.endsWith("planx.uk")}
+                >
+                  PUBLISH
+                </Button>
+              </DialogActions>
+            </Dialog>
             <Box mr={0}>
               <Typography variant="caption">{lastPublishedTitle}</Typography>
             </Box>
