@@ -375,8 +375,14 @@ export const previewStore = (
               (node.type && !SUPPORTED_DECISION_TYPES.includes(node.type)))
           );
         })
-        .forEach((id) => {
+        .forEach((id, i) => {
           const node = flow[id];
+
+          // XXX: temp fix to prevent expanding filter nodes that are not currently
+          //      being visited, they should be excluded from the previous .filter
+          //      method above instead.
+          if (node.type === TYPES.Filter && ids.size > 0) return ids.add(id);
+
           const passport = computePassport();
 
           if (
