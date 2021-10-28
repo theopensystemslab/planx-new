@@ -35,10 +35,7 @@ export default Component;
 
 function Component(props: Props) {
   const [address, setAddress] = useState<Address | undefined>();
-  const [flow, startSession] = useStore((state) => [
-    state.flow,
-    state.startSession,
-  ]);
+  const flow = useStore((state) => state.flow);
 
   // XXX: In the future, use this API to translate GSS_CODE to Team names (or just pass the GSS_CODE to the API)
   //      https://geoportal.statistics.gov.uk/datasets/fe6bcee87d95476abc84e194fe088abb_0/data?where=LAD20NM%20%3D%20%27Lambeth%27
@@ -115,8 +112,6 @@ function Component(props: Props) {
             props.handleSubmit?.({
               data: passportData,
             });
-
-            startSession({ passport: passportData });
           } else {
             throw Error("Should not have been clickable");
           }
