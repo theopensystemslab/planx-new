@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 import { ExternalLink, Globe, RefreshCw, Terminal } from "react-feather";
 import { useAsync } from "react-use";
 
+import { TYPES } from "../../../@planx/components/types";
 import Questions from "../../Preview/Questions";
 import { useStore } from "../lib/store";
 
@@ -102,6 +103,8 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
     setLastPublishedTitle(formatLastPublish(date, user));
   });
 
+  console.log(alteredNodes);
+
   return (
     <div id="fake-browser">
       <header className={classes.header}>
@@ -157,6 +160,11 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
               onClick={async () => {
                 setLastPublishedTitle("Checking for changes...");
                 const alteredFlow = await diffFlow(flowId);
+                setAlteredNodes(
+                  alteredFlow?.data.alteredNodes
+                    ? alteredFlow?.data.alteredNodes
+                    : []
+                );
                 setLastPublishedTitle(
                   alteredFlow?.data.alteredNodes
                     ? `Found changes to ${alteredFlow?.data.alteredNodes.length} node(s)`
@@ -178,7 +186,23 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  {`List of changes here...`}
+                  {alteredNodes?.length ? (
+                    <ul>
+                      {alteredNodes.map((a: any, i) => (
+                        <li key={i}>
+                          {a.id === "_root"
+                            ? `The _root service changed (nodes have been added, deleted, or re-ordered)`
+                            : !a.type && !a.data
+                            ? `Deleted node ${a.id}`
+                            : `Added or edited ${TYPES[a.type]} "${
+                                a.data.text
+                              }"`}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    `No new changes to publish`
+                  )}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
@@ -198,7 +222,11 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
                         : "No new changes to publish"
                     );
                   }}
-                  disabled={window.location.hostname.endsWith("planx.uk")}
+                  disabled={
+                    !alteredNodes ||
+                    alteredNodes.length === 0 ||
+                    window.location.hostname.endsWith("planx.uk")
+                  }
                 >
                   PUBLISH
                 </Button>
