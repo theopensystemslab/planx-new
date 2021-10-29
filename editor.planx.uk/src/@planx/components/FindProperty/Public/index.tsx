@@ -195,7 +195,8 @@ function GetAddress(props: {
     `
   );
 
-  // Temp hack: map OS Places API fields to address_base fields, eventually refactor model.ts
+  // XXX: Map OS Places API fields to legacy address_base fields, eventually we may want to
+  //    refactor model.ts to better align to OS Places DPA or LPI output
   const addresses: Address[] = [];
   if (
     Boolean(addressesInPostcode?.results?.length) &&
