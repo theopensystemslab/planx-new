@@ -13,8 +13,8 @@ import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
-import { addressesClientForPizzas, client } from "lib/graphql";
 import capitalize from "lodash/capitalize";
+import find from "lodash/find";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
@@ -72,13 +72,12 @@ function Component(props: Props) {
     }
   );
 
-  if (!address && Boolean(data?.teams.length)) {
+  if (!address) {
     return (
       <GetAddress
         title={props.title}
         description={props.description}
         setAddress={setAddress}
-        gssCode={data?.teams?.[0].gss_code}
       />
     );
   } else if (address && constraints) {
@@ -100,7 +99,7 @@ function Component(props: Props) {
             });
 
             if (address?.planx_value) {
-              newPassportData["property.type"] = address.planx_value;
+              newPassportData["property.type"] = [address.planx_value];
             }
 
             const passportData = {
@@ -116,8 +115,8 @@ function Component(props: Props) {
             throw Error("Should not have been clickable");
           }
         }}
-        lng={Number(address.longitude)}
-        lat={Number(address.latitude)}
+        lng={address.longitude}
+        lat={address.latitude}
         title="About the property"
         description="This is the information we currently have about the property"
         propertyDetails={[
@@ -165,55 +164,68 @@ function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
   title?: string;
   description?: string;
-  gssCode: string;
 }) {
   const [postcode, setPostcode] = useState<string | null>();
   const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
   const [selectedOption, setSelectedOption] = useState<Option | undefined>();
 
-  // get addresses in this postcode & gss_code (aka local planning authority)
-  //    if gss_code is null, eg for team "opensystemslab", then ignore it in where filter https://stackoverflow.com/a/55809891
-  const { data } = useQuery(
-    gql`
-      query FindAddress($postcode: String = "", $gss_code: String) {
-        addresses(
-          where: {
-            postcode: { _eq: $postcode }
-            _or: [
-              { gss_code: { _eq: $gss_code } }
-              { gss_code: { _eq: "" } }
-              { gss_code: { _is_null: true } }
-            ]
-          }
-        ) {
-          uprn
-          town
-          y
-          x
-          street
-          sao
-          postcode
-          pao
-          organisation
-          blpu_code
-          latitude
-          longitude
-          single_line_address
-        }
-      }
-    `,
+  // Fetch addresses in this postcode from the OS Places API
+  const { data: addressesInPostcode } = useSWR(
+    () =>
+      sanitizedPostcode
+        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`
+        : null,
     {
-      // XXX: temporarily read addresses from staging db if it's a pizza
-      client: window.location.host.endsWith(".pizza")
-        ? addressesClientForPizzas
-        : client,
-      skip: !Boolean(sanitizedPostcode),
-      variables: {
-        postcode: sanitizedPostcode,
-        gss_code: props.gssCode,
-      },
+      shouldRetryOnError: true,
+      errorRetryInterval: 1000,
+      errorRetryCount: 3,
     }
   );
+
+  // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
+  const { data: blpuCodes } = useQuery(
+    gql`
+      {
+        blpu_codes {
+          code
+          description
+          value
+        }
+      }
+    `
+  );
+
+  // XXX: Map OS Places API fields to legacy address_base fields, eventually we may want to
+  //    refactor model.ts to better align to OS Places DPA or LPI output
+  const addresses: Address[] = [];
+  if (
+    Boolean(addressesInPostcode?.results?.length) &&
+    Boolean(blpuCodes?.blpu_codes?.length)
+  ) {
+    addressesInPostcode.results.map((a: any) => {
+      addresses.push({
+        uprn: a.DPA.UPRN,
+        blpu_code: a.DPA.BLPU_STATE_CODE,
+        latitude: a.DPA.LAT,
+        longitude: a.DPA.LNG,
+        organisation: a.DPA.ORGANISATION_NAME || null,
+        sao: null,
+        pao: a.DPA.BUILDING_NUMBER,
+        street: a.DPA.THOROUGHFARE_NAME,
+        town: a.DPA.POST_TOWN,
+        postcode: a.DPA.POSTCODE,
+        x: a.DPA.X_COORDINATE,
+        y: a.DPA.Y_COORDINATE,
+        planx_description:
+          find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
+            .description || null,
+        planx_value:
+          find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
+            .value || null,
+        single_line_address: a.DPA.ADDRESS,
+      });
+    });
+  }
 
   return (
     <Card
@@ -240,15 +252,10 @@ function GetAddress(props: {
               setPostcode(input.toUpperCase());
             }
           }}
-          errorMessage={
-            data?.addresses?.length === 0
-              ? "This postcode is not in your local planning authority"
-              : ""
-          }
         />
-        {Boolean(data?.addresses?.length) && (
+        {Boolean(addresses.length) && (
           <Autocomplete
-            options={data.addresses
+            options={addresses
               .map(
                 (address: Address): Option => ({
                   ...address,

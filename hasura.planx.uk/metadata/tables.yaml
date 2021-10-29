@@ -42,6 +42,17 @@
       filter: {}
 - table:
     schema: public
+    name: blpu_codes
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - description
+      - code
+      - value
+      filter: {}
+- table:
+    schema: public
     name: bops_applications
 - table:
     schema: public
