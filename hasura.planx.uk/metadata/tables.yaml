@@ -91,6 +91,13 @@
         table:
           schema: public
           name: published_flows
+  - name: session_backups
+    using:
+      foreign_key_constraint_on:
+        column: flow_id
+        table:
+          schema: public
+          name: session_backups
   - name: sessions
     using:
       foreign_key_constraint_on:
@@ -160,6 +167,23 @@
       - created_at
       - flow_id
       filter: {}
+- table:
+    schema: public
+    name: session_backups
+  object_relationships:
+  - name: flow
+    using:
+      foreign_key_constraint_on: flow_id
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - flow_data
+      - flow_id
+      - session_id
+      - user_data
+      backend_only: false
 - table:
     schema: public
     name: session_events

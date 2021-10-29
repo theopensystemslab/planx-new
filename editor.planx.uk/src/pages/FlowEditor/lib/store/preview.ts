@@ -9,8 +9,8 @@ import flatten from "lodash/flatten";
 import isNil from "lodash/isNil";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
-import pgarray from "pg-array";
 import type { Flag, GovUKPayment } from "types";
+import { v4 as uuidV4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
@@ -47,7 +47,7 @@ export interface PreviewStore extends Store.Store {
     id: SharedStore["id"];
   }) => void;
   sessionId: string;
-  startSession: ({ passport }: { passport: Record<string, any> }) => void;
+  sendSessionDataToHasura: () => void;
   upcomingCardIds: () => Store.nodeId[];
   isFinalCard: () => boolean;
   // temporary measure for storing payment fee & id between gov uk redirect
@@ -201,7 +201,7 @@ export const previewStore = (
   },
 
   record(id, userData) {
-    const { breadcrumbs, flow, sessionId, upcomingCardIds } = get();
+    const { breadcrumbs, flow } = get();
 
     if (!flow[id]) throw new Error("id not found");
 
@@ -222,21 +222,6 @@ export const previewStore = (
           [id]: breadcrumb,
         },
       });
-
-      const flowIdType = flow[id]?.type;
-
-      // only store breadcrumbs in the backend if they are answers provided for
-      // either a Statement or Checklist type.
-      if (
-        flowIdType &&
-        SUPPORTED_DECISION_TYPES.includes(flowIdType) &&
-        sessionId
-      ) {
-        addSessionEvent();
-        if (upcomingCardIds().length === 0) {
-          endSession();
-        }
-      }
     } else {
       // remove breadcrumbs that were stored from id onwards
 
@@ -249,56 +234,6 @@ export const previewStore = (
         });
       }
     }
-
-    function addSessionEvent() {
-      client.mutate({
-        mutation: gql`
-          mutation CreateSessionEvent(
-            $chosen_node_ids: _text
-            $type: session_event_type
-            $session_id: uuid
-            $parent_node_id: String
-          ) {
-            insert_session_events(
-              objects: {
-                chosen_node_ids: $chosen_node_ids
-                session_id: $session_id
-                type: $type
-                parent_node_id: $parent_node_id
-              }
-            ) {
-              affected_rows
-            }
-          }
-        `,
-        variables: {
-          chosen_node_ids: pgarray(userData?.answers ?? []),
-          session_id: get().sessionId,
-          type: "human_decision",
-          parent_node_id: id,
-        },
-      });
-    }
-
-    function endSession() {
-      client.mutate({
-        mutation: gql`
-          mutation EndSession($id: uuid!, $completed_at: timestamptz!) {
-            update_sessions_by_pk(
-              pk_columns: { id: $id }
-              _set: { completed_at: $completed_at }
-            ) {
-              id
-            }
-          }
-        `,
-        variables: {
-          id: get().sessionId,
-          // Could be moved to the backend with a SQL Function exposed through Hasura as a mutation (e.g. end_session)
-          completed_at: new Date(),
-        },
-      });
-    }
   },
 
   resultData(flagSet, overrides) {
@@ -310,24 +245,26 @@ export const previewStore = (
     set(args);
   },
 
-  sessionId: "",
+  sessionId: uuidV4(),
 
-  async startSession({ passport }) {
+  async sendSessionDataToHasura() {
     try {
-      const response = await client.mutate({
+      const { breadcrumbs, computePassport, flow, id, sessionId } = get();
+
+      await client.mutate({
         mutation: gql`
-          mutation CreateSession(
-            $flow_data: jsonb
+          mutation CreateSessionBackup(
+            $session_id: uuid
             $flow_id: uuid
-            $flow_version: Int
-            $passport: jsonb
+            $flow_data: jsonb
+            $user_data: jsonb
           ) {
-            insert_sessions_one(
+            insert_session_backups_one(
               object: {
-                flow_data: $flow_data
+                session_id: $session_id
                 flow_id: $flow_id
-                flow_version: $flow_version
-                passport: $passport
+                flow_data: $flow_data
+                user_data: $user_data
               }
             ) {
               id
@@ -335,14 +272,15 @@ export const previewStore = (
           }
         `,
         variables: {
-          flow_data: get().flow,
-          flow_id: get().id,
-          flow_version: 0,
-          passport,
+          session_id: sessionId,
+          flow_id: id,
+          flow_data: flow,
+          user_data: {
+            breadcrumbs,
+            passport: computePassport(),
+          },
         },
       });
-      const sessionId = response.data.insert_sessions_one.id;
-      set({ sessionId });
     } catch (e) {}
   },
 
@@ -375,8 +313,14 @@ export const previewStore = (
               (node.type && !SUPPORTED_DECISION_TYPES.includes(node.type)))
           );
         })
-        .forEach((id) => {
+        .forEach((id, i) => {
           const node = flow[id];
+
+          // XXX: temp fix to prevent expanding filter nodes that are not currently
+          //      being visited, they should be excluded from the previous .filter
+          //      method above instead.
+          if (node.type === TYPES.Filter && ids.size > 0) return ids.add(id);
+
           const passport = computePassport();
 
           if (
