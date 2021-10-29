@@ -99,7 +99,7 @@ function Component(props: Props) {
             });
 
             if (address?.planx_value) {
-              newPassportData["property.type"] = address.planx_value;
+              newPassportData["property.type"] = [address.planx_value];
             }
 
             const passportData = {
