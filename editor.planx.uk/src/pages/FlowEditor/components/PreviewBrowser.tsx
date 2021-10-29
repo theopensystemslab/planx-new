@@ -3,7 +3,6 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -64,6 +63,29 @@ const DebugConsole = () => {
   );
 };
 
+function PublishChangeItem(props: any) {
+  const { node } = props;
+  let text, data;
+
+  if (node.id === "_root") {
+    text = "Changed _root service by adding, deleting or re-ordering nodes";
+  } else if (node.id && Object.keys(node).length === 1) {
+    text = `Deleted node ${node.id}`;
+  } else if (node.type && node.data) {
+    text = `Added/edited ${TYPES[node.type]}`;
+    data = `${JSON.stringify(node.data, null, "\t")}`;
+  } else {
+    text = `Added/edited ${TYPES[node.type]}`;
+  }
+
+  return (
+    <>
+      <Typography variant="body2">{text}</Typography>
+      <pre style={{ fontSize: ".8em" }}>{data ? data : null}</pre>
+    </>
+  );
+}
+
 const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
   const [
@@ -102,8 +124,6 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
 
     setLastPublishedTitle(formatLastPublish(date, user));
   });
-
-  console.log(alteredNodes);
 
   return (
     <div id="fake-browser">
@@ -181,29 +201,21 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
-              <DialogTitle id="alert-dialog-title">
+              <DialogTitle className={classes.header}>
                 {lastPublishedTitle}
               </DialogTitle>
               <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  {alteredNodes?.length ? (
-                    <ul>
-                      {alteredNodes.map((a: any, i) => (
-                        <li key={i}>
-                          {a.id === "_root"
-                            ? `The _root service changed (nodes have been added, deleted, or re-ordered)`
-                            : !a.type && !a.data
-                            ? `Deleted node ${a.id}`
-                            : `Added or edited ${TYPES[a.type]} "${
-                                a.data.text
-                              }"`}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    `No new changes to publish`
-                  )}
-                </DialogContentText>
+                {alteredNodes?.length ? (
+                  <ul>
+                    {alteredNodes.map((a: any) => (
+                      <li key={a.id}>
+                        <PublishChangeItem node={a} />
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  `No new changes to publish`
+                )}
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => setDialogOpen(false)}>
