@@ -1,4 +1,7 @@
-import { useStagingUrlIfTestApplication } from "./utils";
+import {
+  getPreviouslySubmittedData,
+  useStagingUrlIfTestApplication,
+} from "./utils";
 
 describe("useStagingUrlIfTestApplication()", () => {
   test("replaces URL if test user", () => {
@@ -21,5 +24,34 @@ describe("useStagingUrlIfTestApplication()", () => {
     })("https://api.editor.planx.uk/pay");
 
     expect(url).toStrictEqual("https://api.editor.planx.uk/pay");
+  });
+
+  test("returns correct result providing an id", () => {
+    const data = {
+      id: "some-id",
+      previouslySubmittedData: {
+        data: {
+          "some-id": 1234,
+          randomAttribute: "abcd",
+        },
+      },
+    };
+
+    expect(getPreviouslySubmittedData(data)).toEqual(1234);
+  });
+
+  test("returns correct result providing an fn value", () => {
+    const data = {
+      id: "some-id",
+      fn: "data-field",
+      previouslySubmittedData: {
+        data: {
+          "data-field": 1234,
+          randomAttribute: "abcd",
+        },
+      },
+    };
+
+    expect(getPreviouslySubmittedData(data)).toEqual(1234);
   });
 });

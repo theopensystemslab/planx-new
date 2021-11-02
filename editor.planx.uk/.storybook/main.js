@@ -5,6 +5,7 @@ module.exports = {
   addons: ["@storybook/addon-links", "@storybook/addon-essentials"],
   webpackFinal: async (config) => {
     config.resolve.plugins.push(new TsconfigPathsPlugin({}));
+    config.resolve.alias['react-navi'] = require.resolve('./__mocks__/react-navi.js');
     return config;
   },
   babel: async (options) => ({
