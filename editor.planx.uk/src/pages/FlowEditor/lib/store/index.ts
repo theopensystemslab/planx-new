@@ -16,6 +16,7 @@ export declare namespace Store {
     answers?: Array<string>;
     data?: Record<string, any>;
     auto?: boolean;
+    feedback?: string;
   };
   export type breadcrumbs = Record<nodeId, userData>;
   export type cachedBreadcrumbs = Record<nodeId, userData> | undefined;
