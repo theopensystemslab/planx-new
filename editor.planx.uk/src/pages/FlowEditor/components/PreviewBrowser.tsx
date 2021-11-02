@@ -70,6 +70,8 @@ function PublishChangeItem(props: any) {
 
   if (node.id === "_root") {
     text = "Changed _root service by adding, deleting or re-ordering nodes";
+  } else if (node.id === "0") {
+    text = `The entire _root service will be published for the first time`;
   } else if (node.id && Object.keys(node).length === 1) {
     text = `Deleted node ${node.id}`;
   } else if (node.type && node.data) {
