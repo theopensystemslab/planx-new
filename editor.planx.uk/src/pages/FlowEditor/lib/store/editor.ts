@@ -339,7 +339,9 @@ export const editorStore = (
     const token = getCookie("jwt");
 
     return axios({
-      url: `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish?summary=${summary}`,
+      url: `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish${
+        summary ? `?summary=${summary}` : ``
+      }`,
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

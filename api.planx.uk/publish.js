@@ -136,7 +136,7 @@ const publishFlow = async (req, res) => {
           data: flattenedFlow,
           flow_id: req.params.flowId,
           publisher_id: parseInt(req.user.sub, 10),
-          summary: req.query?.summary,
+          summary: req.query?.summary || null,
         }
       );
 
