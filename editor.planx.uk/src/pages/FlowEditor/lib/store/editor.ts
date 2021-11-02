@@ -69,7 +69,7 @@ export interface EditorStore extends Store.Store {
     toParent?: Store.nodeId
   ) => void;
   pasteNode: (toParent: Store.nodeId, toBefore: Store.nodeId) => void;
-  publishFlow: (flowId: string) => Promise<any>;
+  publishFlow: (flowId: string, summary?: string) => Promise<any>;
   removeNode: (id: Store.nodeId, parent: Store.nodeId) => void;
   updateFlowSettings: (
     teamSlug: string,
@@ -335,11 +335,11 @@ export const editorStore = (
     }
   },
 
-  publishFlow(flowId: string) {
+  publishFlow(flowId: string, summary?: string) {
     const token = getCookie("jwt");
 
     return axios({
-      url: `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish`,
+      url: `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish?summary=${summary}`,
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

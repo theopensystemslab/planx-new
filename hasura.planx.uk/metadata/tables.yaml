@@ -143,11 +143,12 @@
   - role: public
     permission:
       columns:
+      - created_at
+      - data
+      - flow_id
       - id
       - publisher_id
-      - data
-      - created_at
-      - flow_id
+      - summary
       filter: {}
 - table:
     schema: public

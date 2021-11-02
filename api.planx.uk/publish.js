@@ -115,12 +115,14 @@ const publishFlow = async (req, res) => {
           mutation PublishFlow(
             $data: jsonb = {},
             $flow_id: uuid,
-          $publisher_id: Int,
+            $publisher_id: Int,
+            $summary: String,
           ) {
             insert_published_flows_one(object: {
               data: $data,
               flow_id: $flow_id,
               publisher_id: $publisher_id,
+              summary: $summary,
             }) {
               id
               flow_id
@@ -134,8 +136,10 @@ const publishFlow = async (req, res) => {
           data: flattenedFlow,
           flow_id: req.params.flowId,
           publisher_id: parseInt(req.user.sub, 10),
+          summary: req.query?.summary,
         }
       );
+
       const publishedFlow =
         response.insert_published_flows_one &&
         response.insert_published_flows_one.data;

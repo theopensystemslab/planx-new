@@ -11,6 +11,7 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useEffect, useState } from "react";
 import { ExternalLink, Globe, RefreshCw, Terminal } from "react-feather";
 import { useAsync } from "react-use";
+import Input from "ui/Input";
 
 import { TYPES } from "../../../@planx/components/types";
 import Questions from "../../Preview/Questions";
@@ -111,6 +112,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
   );
   const [alteredNodes, setAlteredNodes] = useState<object[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [summary, setSummary] = useState<string>();
   const classes = useStyles();
 
   useEffect(() => setPreviewEnvironment("editor"), []);
@@ -201,18 +203,30 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
-              <DialogTitle className={classes.header}>
+              <DialogTitle style={{ paddingBottom: 0 }}>
                 {lastPublishedTitle}
               </DialogTitle>
               <DialogContent>
                 {alteredNodes?.length ? (
-                  <ul>
-                    {alteredNodes.map((a: any) => (
-                      <li key={a.id}>
-                        <PublishChangeItem node={a} />
-                      </li>
-                    ))}
-                  </ul>
+                  <>
+                    <Box pb={1}>
+                      <ul>
+                        {alteredNodes.map((a: any) => (
+                          <li key={a.id}>
+                            <PublishChangeItem node={a} />
+                          </li>
+                        ))}
+                      </ul>
+                    </Box>
+                    <Input
+                      bordered
+                      type="text"
+                      name="summary"
+                      value={summary || ""}
+                      placeholder="Summarise your changes..."
+                      onChange={(e) => setSummary(e.target.value)}
+                    />
+                  </>
                 ) : (
                   `No new changes to publish`
                 )}
@@ -227,7 +241,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
                   onClick={async () => {
                     setDialogOpen(false);
                     setLastPublishedTitle("Publishing changes...");
-                    const publishedFlow = await publishFlow(flowId);
+                    const publishedFlow = await publishFlow(flowId, summary);
                     setLastPublishedTitle(
                       publishedFlow?.data.alteredNodes
                         ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
