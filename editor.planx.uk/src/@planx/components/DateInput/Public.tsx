@@ -13,14 +13,14 @@ import DateInputComponent from "ui/DateInput";
 import InputRow from "ui/InputRow";
 import { object } from "yup";
 
-import { makeData } from "../shared/utils";
+import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 
 export type Props = PublicProps<DateInput, UserData>;
 
 const DateInputPublic: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
-      date: "",
+      date: getPreviouslySubmittedData(props) ?? "",
     },
     onSubmit: (values) => {
       props.handleSubmit?.(makeData(props, values.date));
@@ -49,7 +49,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
             // Pad it here if necessary; keep DateInputComponent simple
             formik.setFieldValue("date", paddedDate(newDate));
           }}
-          error={formik.errors.date}
+          error={formik.errors.date as string}
         />
       </InputRow>
     </Card>

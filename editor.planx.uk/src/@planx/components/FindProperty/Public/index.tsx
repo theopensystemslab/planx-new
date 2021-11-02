@@ -27,6 +27,25 @@ import CollapsibleInput from "ui/CollapsibleInput";
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
 
+// these queries are exported because tests require them
+export const FETCH_GLBU_CODES = gql`
+  {
+    blpu_codes {
+      code
+      description
+      value
+    }
+  }
+`;
+export const GET_TEAM_QUERY = gql`
+  query GetTeam($team: String = "") {
+    teams(where: { slug: { _eq: $team } }) {
+      gss_code
+      theme
+    }
+  }
+`;
+
 type Props = PublicProps<FindProperty>;
 
 const sorter = natsort({ insensitive: true });
@@ -34,31 +53,21 @@ const sorter = natsort({ insensitive: true });
 export default Component;
 
 function Component(props: Props) {
+  const previouslySubmittedData = props.previouslySubmittedData?.data;
   const [address, setAddress] = useState<Address | undefined>();
   const flow = useStore((state) => state.flow);
-
   // XXX: In the future, use this API to translate GSS_CODE to Team names (or just pass the GSS_CODE to the API)
   //      https://geoportal.statistics.gov.uk/datasets/fe6bcee87d95476abc84e194fe088abb_0/data?where=LAD20NM%20%3D%20%27Lambeth%27
   //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
   const route = useCurrentRoute();
-  const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
+  const team = route?.data?.team ?? route?.data.mountpath.split("/")[1];
 
-  const { data } = useQuery(
-    gql`
-      query GetTeam($team: String = "") {
-        teams(where: { slug: { _eq: $team } }) {
-          gss_code
-          theme
-        }
-      }
-    `,
-    {
-      skip: !Boolean(team),
-      variables: {
-        team: team,
-      },
-    }
-  );
+  const { data } = useQuery(GET_TEAM_QUERY, {
+    skip: !Boolean(team),
+    variables: {
+      team: team,
+    },
+  });
 
   const { data: constraints } = useSWR(
     () =>
@@ -78,6 +87,9 @@ function Component(props: Props) {
         title={props.title}
         description={props.description}
         setAddress={setAddress}
+        gssCode={data?.teams?.[0].gss_code}
+        initialPostcode={previouslySubmittedData?._address.postcode}
+        initialSelectedAddress={previouslySubmittedData?._address}
       />
     );
   } else if (address && constraints) {
@@ -164,10 +176,20 @@ function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
   title?: string;
   description?: string;
+  gssCode: string;
+  initialPostcode?: string;
+  initialSelectedAddress?: Option;
 }) {
-  const [postcode, setPostcode] = useState<string | null>();
-  const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
-  const [selectedOption, setSelectedOption] = useState<Option | undefined>();
+  const [postcode, setPostcode] = useState<string | null>(
+    props.initialPostcode ?? null
+  );
+  const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>(
+    (props.initialPostcode && toNormalised(props.initialPostcode.trim())) ??
+      null
+  );
+  const [selectedOption, setSelectedOption] = useState<Option | null>(
+    props.initialSelectedAddress ?? null
+  );
 
   // Fetch addresses in this postcode from the OS Places API
   const { data: addressesInPostcode } = useSWR(
@@ -183,17 +205,7 @@ function GetAddress(props: {
   );
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
-  const { data: blpuCodes } = useQuery(
-    gql`
-      {
-        blpu_codes {
-          code
-          description
-          value
-        }
-      }
-    `
-  );
+  const { data: blpuCodes } = useQuery(FETCH_GLBU_CODES);
 
   // XXX: Map OS Places API fields to legacy address_base fields, eventually we may want to
   //    refactor model.ts to better align to OS Places DPA or LPI output
@@ -218,10 +230,10 @@ function GetAddress(props: {
         y: a.DPA.Y_COORDINATE,
         planx_description:
           find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
-            .description || null,
+            ?.description || null,
         planx_value:
           find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
-            .value || null,
+            ?.value || null,
         single_line_address: a.DPA.ADDRESS,
       });
     });
@@ -229,7 +241,7 @@ function GetAddress(props: {
 
   return (
     <Card
-      handleSubmit={() => props.setAddress(selectedOption)}
+      handleSubmit={() => props.setAddress(selectedOption ?? undefined)}
       isValid={Boolean(selectedOption)}
     >
       <QuestionHeader
@@ -268,7 +280,11 @@ function GetAddress(props: {
               )
               .sort((a: Option, b: Option) => sorter(a.title, b.title))}
             getOptionLabel={(option: Option) => option.title}
-            getOptionSelected={(option: Option) => Boolean(option.title)}
+            getOptionSelected={(option: Option, selected: Option) =>
+              option.uprn === selected.uprn
+            }
+            data-testid="autocomplete-input"
+            value={selectedOption}
             renderInput={(params) => (
               <TextField
                 {...params}
