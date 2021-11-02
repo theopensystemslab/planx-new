@@ -150,9 +150,10 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
           { text: flow[id].data.policyRef.replace(/<[^>]*>/g, "").trim() },
         ];
       }
-      if (Object.keys(metadata).length > 0) ob.metadata = metadata;
 
-      if (flow[id]?.data?.feedback) metadata.feedback = flow[id].data.feedback;
+      if (bc.feedback) metadata.feedback = bc.feedback;
+
+      if (Object.keys(metadata).length > 0) ob.metadata = metadata;
 
       return ob;
     })
