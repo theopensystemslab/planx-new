@@ -175,9 +175,9 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
       }
       metadata = addPortalName(id, flow, metadata);
 
-      if (Object.keys(metadata).length > 0) ob.metadata = metadata;
+      if (bc.feedback) metadata.feedback = bc.feedback;
 
-      if (flow[id]?.data?.feedback) metadata.feedback = flow[id].data.feedback;
+      if (Object.keys(metadata).length > 0) ob.metadata = metadata;
 
       return ob;
     })
