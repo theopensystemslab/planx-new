@@ -73,6 +73,7 @@ export interface QuestionMetaData {
     url?: string;
     text?: string;
   }>;
+  feedback?: string;
 }
 
 export interface ResponseMetaData {
