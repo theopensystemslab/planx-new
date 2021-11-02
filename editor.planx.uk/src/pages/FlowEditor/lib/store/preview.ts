@@ -208,10 +208,11 @@ export const previewStore = (
 
     if (userData) {
       // add breadcrumb
-      const { answers = [], data = {}, auto = false } = userData;
+      const { answers = [], data = {}, auto = false, feedback } = userData;
 
       const breadcrumb: Store.userData = { auto: Boolean(auto) };
       if (answers?.length > 0) breadcrumb.answers = answers;
+      if (feedback) breadcrumb.feedback = feedback;
 
       const filteredData = objectWithoutNullishValues(data);
 

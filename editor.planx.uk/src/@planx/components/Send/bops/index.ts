@@ -152,6 +152,8 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
       }
       if (Object.keys(metadata).length > 0) ob.metadata = metadata;
 
+      if (flow[id]?.data?.feedback) metadata.feedback = flow[id].data.feedback;
+
       return ob;
     })
     .filter(Boolean);
