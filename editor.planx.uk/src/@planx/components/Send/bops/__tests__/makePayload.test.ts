@@ -139,10 +139,12 @@ const breadcrumbs: Store.breadcrumbs = {
         postcode: "postcode",
       },
     },
+    feedback: "address feedback",
   },
   "9K5DHOJIFG": {
     auto: false,
     answers: ["MvzjCmtxMH", "z6NYoKldtb"],
+    feedback: "", // empty string should be ignored
   },
   DzIEfGlsGa: {
     auto: false,
@@ -177,6 +179,9 @@ test("valid node types are serialized correctly for BOPS", () => {
     {
       question: "address question",
       responses: [{ value: "line1, line, town, county, postcode" }],
+      metadata: {
+        feedback: "address feedback",
+      },
     },
     { question: "checklist", responses: [{ value: "1" }, { value: "2" }] },
     {
