@@ -9,6 +9,7 @@ export type UserData = {
   town: string;
   county?: string;
   postcode: string;
+  country?: string;
 };
 
 export const userDataSchema: SchemaOf<UserData> = object({
@@ -17,6 +18,7 @@ export const userDataSchema: SchemaOf<UserData> = object({
   town: string().required("Town is required"),
   county: string(),
   postcode: string().required("Postal code is required"),
+  country: string(),
 });
 
 export interface AddressInput extends MoreInformation {

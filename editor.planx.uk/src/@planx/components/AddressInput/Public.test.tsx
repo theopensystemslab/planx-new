@@ -17,6 +17,7 @@ test("submits an address", async () => {
       Town: "London",
       County: "County",
       "Postal code": "SW1A 2AA",
+      Country: "United Kingdom",
     });
 
     await userEvent.click(screen.getByText("Continue"));
@@ -30,6 +31,7 @@ test("submits an address", async () => {
         town: "London",
         county: "County",
         postcode: "SW1A 2AA",
+        country: "United Kingdom",
       },
     },
   });
