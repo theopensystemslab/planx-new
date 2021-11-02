@@ -74,6 +74,7 @@ export interface QuestionMetaData {
     text?: string;
   }>;
   portal_name?: string;
+  feedback?: string;
 }
 
 export interface ResponseMetaData {

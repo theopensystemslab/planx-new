@@ -110,7 +110,7 @@ const Result: React.FC<Props> = ({
         });
         resetForm();
       }
-      handleSubmit?.();
+      handleSubmit?.({ feedback: values.feedback });
     },
   });
   const visibleResponses = responses.filter((r) => !r.hidden);
