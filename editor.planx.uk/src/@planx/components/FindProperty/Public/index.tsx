@@ -95,7 +95,7 @@ function Component(props: Props) {
   } else if (address && constraints) {
     return (
       <PropertyInformation
-        handleSubmit={() => {
+        handleSubmit={({ feedback }: { feedback?: string }) => {
           if (flow && address && constraints) {
             const _nots: any = {};
             const newPassportData: any = {};
@@ -120,9 +120,15 @@ function Component(props: Props) {
               _nots,
             };
 
-            props.handleSubmit?.({
+            const submissionData: any = {
               data: passportData,
-            });
+            };
+
+            if (feedback) {
+              submissionData.feedback = feedback;
+            }
+
+            props.handleSubmit?.(submissionData);
           } else {
             throw Error("Should not have been clickable");
           }
@@ -350,7 +356,7 @@ export function PropertyInformation(props: any) {
           constraints: propertyConstraints,
         });
       }
-      handleSubmit?.();
+      handleSubmit?.(values);
     },
   });
 

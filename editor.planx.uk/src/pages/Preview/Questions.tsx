@@ -90,16 +90,16 @@ const Questions = () => {
   }, [breadcrumbs, passport, sessionId, id, govUkPayment]);
 
   const handleSubmit = (id: string): handleSubmit => (userData) => {
-    const { data, answers = [], auto = false } = (() => {
+    const { data, answers = [], auto = false, feedback } = (() => {
       try {
-        const { answers = [], data, auto } = userData as any;
-        return { answers: answers.filter(Boolean), data, auto };
+        const { answers = [], data, auto, feedback } = userData as any;
+        return { answers: answers.filter(Boolean), data, auto, feedback };
       } catch (err) {
         return {};
       }
     })();
 
-    record(id, { answers, data, auto });
+    record(id, { answers, data, auto, feedback });
   };
 
   return (
