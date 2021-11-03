@@ -42,10 +42,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DebugConsole = () => {
-  const [passport, breadcrumbs, flowId] = useStore((state) => [
+  const [
+    passport,
+    breadcrumbs,
+    flowId,
+    cachedBreadcrumbs,
+  ] = useStore((state) => [
     state.computePassport(),
     state.breadcrumbs,
     state.id,
+    state.cachedBreadcrumbs,
   ]);
   const classes = useStyles();
   return (
@@ -59,7 +65,9 @@ const DebugConsole = () => {
           Download the flow schema
         </a>
       </Typography>
-      <pre>{JSON.stringify({ passport, breadcrumbs }, null, 2)}</pre>
+      <pre>
+        {JSON.stringify({ passport, breadcrumbs, cachedBreadcrumbs }, null, 2)}
+      </pre>
     </div>
   );
 };

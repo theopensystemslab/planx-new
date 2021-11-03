@@ -8,15 +8,23 @@ import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
 
-import { makeData } from "../shared/utils";
+import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { AddressInput, UserData } from "./model";
 import { userDataSchema } from "./model";
 
 export type Props = PublicProps<AddressInput, UserData>;
 
+interface FormProps {
+  line1: string;
+  line2: string;
+  town: string;
+  county: string;
+  postcode: string;
+}
+
 export default function AddressInputComponent(props: Props): FCReturn {
-  const formik = useFormik({
-    initialValues: {
+  const formik = useFormik<FormProps>({
+    initialValues: getPreviouslySubmittedData(props) ?? {
       line1: "",
       line2: "",
       town: "",

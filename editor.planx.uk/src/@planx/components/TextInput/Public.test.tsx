@@ -1,10 +1,10 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { uniqueId } from "lodash";
 import React from "react";
 
 import { TextInputType } from "./model";
 import TextInput from "./Public";
-
 test("requires a value before being able to continue", async () => {
   const handleSubmit = jest.fn();
 
@@ -67,6 +67,63 @@ test("requires a valid phone number before being able to continue", async () => 
   });
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
+});
+
+test("recovers previously submitted text when clicking the back button", async () => {
+  const handleSubmit = jest.fn();
+  const nodeId = uniqueId();
+
+  render(
+    <TextInput
+      id={nodeId}
+      title="Submit text"
+      handleSubmit={handleSubmit}
+      previouslySubmittedData={{
+        data: {
+          [nodeId]: "Previously submitted text",
+        },
+      }}
+    />
+  );
+
+  await act(async () => {
+    userEvent.click(screen.getByText("Continue"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledWith({
+    data: {
+      [nodeId]: "Previously submitted text",
+    },
+  });
+});
+
+test("recovers previously submitted text when clicking the back button even if a data field is set", async () => {
+  const handleSubmit = jest.fn();
+  const nodeId = uniqueId();
+
+  render(
+    <TextInput
+      fn="text-input-key"
+      id={nodeId}
+      title="Submit text"
+      handleSubmit={handleSubmit}
+      previouslySubmittedData={{
+        data: {
+          "text-input-key": "Previously submitted text",
+        },
+      }}
+    />
+  );
+
+  await act(async () => {
+    userEvent.click(screen.getByText("Continue"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledWith({
+    data: {
+      "text-input-key": "Previously submitted text",
+    },
+  });
 });
 
 const examplePhoneNumbers = [

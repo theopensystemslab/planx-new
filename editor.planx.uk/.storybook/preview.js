@@ -4,6 +4,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 import theme from "../src/theme";
+import { reactNaviDecorator } from "./__mocks__/react-navi";
 
 export const decorators = [
   (Story) => (
@@ -14,4 +15,5 @@ export const decorators = [
       </DndProvider>
     </ThemeProvider>
   ),
+  reactNaviDecorator
 ];
