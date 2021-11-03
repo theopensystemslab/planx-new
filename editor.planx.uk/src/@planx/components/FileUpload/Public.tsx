@@ -10,6 +10,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { uploadFile } from "api/upload";
 import classNames from "classnames";
 import { nanoid } from "nanoid";
+import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -17,7 +18,7 @@ import ErrorWrapper from "ui/ErrorWrapper";
 import { array } from "yup";
 
 import handleRejectedUpload from "../shared/handleRejectedUpload";
-import { makeData } from "../shared/utils";
+import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 
 interface Props extends MoreInformation {
   id?: string;
@@ -25,6 +26,7 @@ interface Props extends MoreInformation {
   fn?: string;
   description?: string;
   handleSubmit: handleSubmit;
+  previouslySubmittedData?: Store.userData;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -142,7 +144,10 @@ const slotsSchema = array()
   });
 
 const FileUpload: React.FC<Props> = (props) => {
-  const [slots, setSlots] = useState<any[]>([]);
+  const recoveredSlots = getPreviouslySubmittedData(props)?.map(
+    (slot: any) => slot.cachedSlot
+  );
+  const [slots, setSlots] = useState<any[]>(recoveredSlots ?? []);
   const [validationError, setValidationError] = useState<string>();
 
   const handleSubmit = () => {
@@ -155,6 +160,7 @@ const FileUpload: React.FC<Props> = (props) => {
             slots.map((slot: any) => ({
               url: slot.url,
               filename: slot.file.path,
+              cachedSlot: slot,
             }))
           )
         );
@@ -193,6 +199,7 @@ const FileUpload: React.FC<Props> = (props) => {
         description={props.description}
         info={props.info}
         howMeasured={props.howMeasured}
+        definitionImg={props.definitionImg}
         policyRef={props.policyRef}
       />
       <ErrorWrapper error={validationError}>

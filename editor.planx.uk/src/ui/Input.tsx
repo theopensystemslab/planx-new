@@ -62,7 +62,13 @@ export default forwardRef(
   (props: Props, ref): FCReturn => {
     const classes = useClasses();
 
-    const { format, bordered, errorMessage, ...restProps } = props;
+    const {
+      format,
+      bordered,
+      errorMessage,
+      "aria-label": ariaLabel,
+      ...restProps
+    } = props;
 
     return (
       <ErrorWrapper error={errorMessage}>
@@ -78,6 +84,9 @@ export default forwardRef(
             multiline: classes.inputMultiline,
             adornedEnd: classes.adornedEnd,
             focused: classes.focused,
+          }}
+          inputProps={{
+            "aria-label": ariaLabel,
           }}
           {...restProps}
         />

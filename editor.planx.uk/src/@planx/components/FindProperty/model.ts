@@ -16,8 +16,8 @@ export const parseFindProperty = (
 export interface Address {
   uprn: string;
   blpu_code: string;
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
   organisation: string | null;
   sao: string | null;
   pao: string;

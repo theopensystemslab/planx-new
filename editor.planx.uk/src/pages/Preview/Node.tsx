@@ -49,6 +49,7 @@ const Node: React.FC<any> = (props: Props) => {
     isFinalCard,
     resetPreview,
     sessionId,
+    cachedBreadcrumbs,
   ] = useStore((state) => [
     state.childNodesOf,
     state.resultData,
@@ -57,13 +58,18 @@ const Node: React.FC<any> = (props: Props) => {
     state.isFinalCard(),
     state.resetPreview,
     state.sessionId,
+    state.cachedBreadcrumbs,
   ]);
 
   const handleSubmit = isFinalCard ? undefined : props.handleSubmit;
 
+  const nodeId = props.node.id;
+  const previouslySubmittedData =
+    nodeId && cachedBreadcrumbs ? cachedBreadcrumbs[nodeId] : undefined;
   const allProps = {
-    id: props.node.id,
+    id: nodeId,
     ...props.node.data,
+    previouslySubmittedData,
     resetPreview,
     handleSubmit,
   };

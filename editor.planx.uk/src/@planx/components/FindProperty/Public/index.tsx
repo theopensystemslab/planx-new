@@ -13,17 +13,37 @@ import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
-import { addressesClientForPizzas, client } from "lib/graphql";
 import capitalize from "lodash/capitalize";
+import find from "lodash/find";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useState } from "react";
 import { useCurrentRoute } from "react-navi";
+import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
 
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
+
+// these queries are exported because tests require them
+export const FETCH_GLBU_CODES = gql`
+  {
+    blpu_codes {
+      code
+      description
+      value
+    }
+  }
+`;
+export const GET_TEAM_QUERY = gql`
+  query GetTeam($team: String = "") {
+    teams(where: { slug: { _eq: $team } }) {
+      gss_code
+      theme
+    }
+  }
+`;
 
 type Props = PublicProps<FindProperty>;
 
@@ -32,34 +52,21 @@ const sorter = natsort({ insensitive: true });
 export default Component;
 
 function Component(props: Props) {
+  const previouslySubmittedData = props.previouslySubmittedData?.data;
   const [address, setAddress] = useState<Address | undefined>();
-  const [flow, startSession] = useStore((state) => [
-    state.flow,
-    state.startSession,
-  ]);
-
+  const flow = useStore((state) => state.flow);
   // XXX: In the future, use this API to translate GSS_CODE to Team names (or just pass the GSS_CODE to the API)
   //      https://geoportal.statistics.gov.uk/datasets/fe6bcee87d95476abc84e194fe088abb_0/data?where=LAD20NM%20%3D%20%27Lambeth%27
   //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
   const route = useCurrentRoute();
-  const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
+  const team = route?.data?.team ?? route?.data.mountpath.split("/")[1];
 
-  const { data } = useQuery(
-    gql`
-      query GetTeam($team: String = "") {
-        teams(where: { slug: { _eq: $team } }) {
-          gss_code
-          theme
-        }
-      }
-    `,
-    {
-      skip: !Boolean(team),
-      variables: {
-        team: team,
-      },
-    }
-  );
+  const { data } = useQuery(GET_TEAM_QUERY, {
+    skip: !Boolean(team),
+    variables: {
+      team: team,
+    },
+  });
 
   if (!address && Boolean(data?.teams.length)) {
     return (
@@ -67,7 +74,8 @@ function Component(props: Props) {
         title={props.title}
         description={props.description}
         setAddress={setAddress}
-        gssCode={data?.teams?.[0].gss_code}
+        initialPostcode={previouslySubmittedData?._address.postcode}
+        initialSelectedAddress={previouslySubmittedData?._address}
       />
     );
   } else if (address) {
@@ -78,7 +86,7 @@ function Component(props: Props) {
             const newPassportData: any = {};
 
             if (address?.planx_value) {
-              newPassportData["property.type"] = address.planx_value;
+              newPassportData["property.type"] = [address.planx_value];
             }
 
             const passportData = {
@@ -89,14 +97,12 @@ function Component(props: Props) {
             props.handleSubmit?.({
               data: passportData,
             });
-
-            startSession({ passport: passportData });
           } else {
             throw Error("Should not have been clickable");
           }
         }}
-        lng={Number(address.longitude)}
-        lat={Number(address.latitude)}
+        lng={address.longitude}
+        lat={address.latitude}
         title="About the property"
         description="This is the information we currently have about the property"
         propertyDetails={[
@@ -137,59 +143,71 @@ function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
   title?: string;
   description?: string;
-  gssCode: string;
+  initialPostcode?: string;
+  initialSelectedAddress?: Option;
 }) {
-  const [postcode, setPostcode] = useState<string | null>();
-  const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>();
-  const [selectedOption, setSelectedOption] = useState<Option | undefined>();
+  const [postcode, setPostcode] = useState<string | null>(
+    props.initialPostcode ?? null
+  );
+  const [sanitizedPostcode, setSanitizedPostcode] = useState<string | null>(
+    (props.initialPostcode && toNormalised(props.initialPostcode.trim())) ??
+      null
+  );
+  const [selectedOption, setSelectedOption] = useState<Option | null>(
+    props.initialSelectedAddress ?? null
+  );
 
-  // get addresses in this postcode & gss_code (aka local planning authority)
-  //    if gss_code is null, eg for team "opensystemslab", then ignore it in where filter https://stackoverflow.com/a/55809891
-  const { data } = useQuery(
-    gql`
-      query FindAddress($postcode: String = "", $gss_code: String) {
-        addresses(
-          where: {
-            postcode: { _eq: $postcode }
-            _or: [
-              { gss_code: { _eq: $gss_code } }
-              { gss_code: { _eq: "" } }
-              { gss_code: { _is_null: true } }
-            ]
-          }
-        ) {
-          uprn
-          town
-          y
-          x
-          street
-          sao
-          postcode
-          pao
-          organisation
-          blpu_code
-          latitude
-          longitude
-          single_line_address
-        }
-      }
-    `,
+  // Fetch addresses in this postcode from the OS Places API
+  const { data: addressesInPostcode } = useSWR(
+    () =>
+      sanitizedPostcode
+        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`
+        : null,
     {
-      // XXX: temporarily read addresses from staging db if it's a pizza
-      client: window.location.host.endsWith(".pizza")
-        ? addressesClientForPizzas
-        : client,
-      skip: !Boolean(sanitizedPostcode),
-      variables: {
-        postcode: sanitizedPostcode,
-        gss_code: props.gssCode,
-      },
+      shouldRetryOnError: true,
+      errorRetryInterval: 1000,
+      errorRetryCount: 3,
     }
   );
 
+  // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
+  const { data: blpuCodes } = useQuery(FETCH_GLBU_CODES);
+
+  // XXX: Map OS Places API fields to legacy address_base fields, eventually we may want to
+  //    refactor model.ts to better align to OS Places DPA or LPI output
+  const addresses: Address[] = [];
+  if (
+    Boolean(addressesInPostcode?.results?.length) &&
+    Boolean(blpuCodes?.blpu_codes?.length)
+  ) {
+    addressesInPostcode.results.map((a: any) => {
+      addresses.push({
+        uprn: a.DPA.UPRN,
+        blpu_code: a.DPA.BLPU_STATE_CODE,
+        latitude: a.DPA.LAT,
+        longitude: a.DPA.LNG,
+        organisation: a.DPA.ORGANISATION_NAME || null,
+        sao: null,
+        pao: a.DPA.BUILDING_NUMBER,
+        street: a.DPA.THOROUGHFARE_NAME,
+        town: a.DPA.POST_TOWN,
+        postcode: a.DPA.POSTCODE,
+        x: a.DPA.X_COORDINATE,
+        y: a.DPA.Y_COORDINATE,
+        planx_description:
+          find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
+            ?.description || null,
+        planx_value:
+          find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
+            ?.value || null,
+        single_line_address: a.DPA.ADDRESS,
+      });
+    });
+  }
+
   return (
     <Card
-      handleSubmit={() => props.setAddress(selectedOption)}
+      handleSubmit={() => props.setAddress(selectedOption ?? undefined)}
       isValid={Boolean(selectedOption)}
     >
       <QuestionHeader
@@ -212,15 +230,10 @@ function GetAddress(props: {
               setPostcode(input.toUpperCase());
             }
           }}
-          errorMessage={
-            data?.addresses?.length === 0
-              ? "This postcode is not in your local planning authority"
-              : ""
-          }
         />
-        {Boolean(data?.addresses?.length) && (
+        {Boolean(addresses.length) && (
           <Autocomplete
-            options={data.addresses
+            options={addresses
               .map(
                 (address: Address): Option => ({
                   ...address,
@@ -233,7 +246,11 @@ function GetAddress(props: {
               )
               .sort((a: Option, b: Option) => sorter(a.title, b.title))}
             getOptionLabel={(option: Option) => option.title}
-            getOptionSelected={(option: Option) => Boolean(option.title)}
+            getOptionSelected={(option: Option, selected: Option) =>
+              option.uprn === selected.uprn
+            }
+            data-testid="autocomplete-input"
+            value={selectedOption}
             renderInput={(params) => (
               <TextField
                 {...params}

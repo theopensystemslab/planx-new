@@ -9,6 +9,17 @@ const metadata: Meta = {
   argTypes: {
     handleSubmit: { action: true, control: { disable: true } },
   },
+  parameters: {
+    reactNavi: {
+      useCurrentRoute: () => {
+        return {
+          data: {
+            team: "canterbury",
+          },
+        };
+      },
+    },
+  },
 };
 export default metadata;
 
