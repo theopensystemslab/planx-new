@@ -15,10 +15,6 @@ const emailRegex =
   // eslint-disable-next-line
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-const phoneRegex =
-  // eslint-disable-next-line
-  /^[()\d\s]{9,}$/;
-
 export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
   string()
     .required("Enter your answer")
@@ -55,7 +51,7 @@ export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
           return Boolean(value && emailRegex.test(value));
         }
         if (type === TextInputType.Phone) {
-          return Boolean(value && phoneRegex.test(value));
+          return Boolean(value);
         }
         return false;
       },
