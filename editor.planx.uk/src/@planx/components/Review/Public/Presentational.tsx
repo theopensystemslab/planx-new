@@ -314,7 +314,9 @@ function NumberInput(props: ComponentProps) {
 }
 
 function AddressInput(props: ComponentProps) {
-  const { line1, line2, town, county, postcode } = getAnswersByNode(props);
+  const { line1, line2, town, county, postcode, country } = getAnswersByNode(
+    props
+  );
 
   return (
     <>
@@ -329,6 +331,12 @@ function AddressInput(props: ComponentProps) {
         {county}
         <br />
         {postcode}
+        {country ? (
+          <>
+            <br />
+            {country}
+          </>
+        ) : null}
       </div>
     </>
   );
