@@ -216,7 +216,7 @@ function GetAddress(props: {
   ) {
     addressesInPostcode.results.map((a: any) => {
       addresses.push({
-        uprn: a.DPA.UPRN,
+        uprn: a.DPA.UPRN.padStart(12, "0"),
         blpu_code: a.DPA.BLPU_STATE_CODE,
         latitude: a.DPA.LAT,
         longitude: a.DPA.LNG,
