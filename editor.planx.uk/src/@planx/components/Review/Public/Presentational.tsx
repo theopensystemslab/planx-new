@@ -3,6 +3,7 @@ import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { ENTER, SPACE_BAR } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import { TYPES } from "@planx/components/types";
+import format from "date-fns/format";
 import type { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React from "react";
@@ -253,7 +254,7 @@ function DateInput(props: ComponentProps) {
   return (
     <>
       <div>{props.node.data.title ?? "Date"}</div>
-      <div>{getAnswersByNode(props)}</div>
+      <div>{format(new Date(getAnswersByNode(props)), "d MMMM yyyy")}</div>
     </>
   );
 }
