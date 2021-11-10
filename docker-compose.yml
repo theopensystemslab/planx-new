@@ -21,6 +21,18 @@ services:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_USER: ${PG_USERNAME}
 
+  metabase:
+    image: metabase/metabase:v0.41.2
+    ports:
+      - ${METABASE_PORT}:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_CONNECTION_URI: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
+
   hasura:
     build:
       context: ./hasura.planx.uk
@@ -111,8 +123,8 @@ services:
   minio:
     image: minio/minio:RELEASE.2021-08-31T05-46-54Z
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - ${MINIO_PORT}:9000
+      - ${MINIO_ADMIN_PORT}:9001
     volumes:
       - ./minio-data:/data
     environment:
