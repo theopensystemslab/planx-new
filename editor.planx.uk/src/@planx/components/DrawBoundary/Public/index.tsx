@@ -141,7 +141,9 @@ export default function Component(props: Props) {
             />
           </Box>
           <p className={classes.uploadInstead}>
-            <a onClick={() => setPage("upload")}>Upload a file instead</a>
+            <a onClick={() => setPage("upload")}>
+              Upload a location plan instead
+            </a>
           </p>
           <p>
             The boundary you have drawn has an area of{" "}
