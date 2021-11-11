@@ -81,7 +81,7 @@ function DrawBoundaryComponent(props: Props) {
           </InputGroup>
         </ModalSectionContent>
         <ModalSectionContent
-          title="Upload a location plan"
+          title={DEFAULT_TITLE_FOR_UPLOADING}
           Icon={ICONS[TYPES.DrawBoundary]}
         >
           <InputRow>
