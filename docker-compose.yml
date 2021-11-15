@@ -29,6 +29,12 @@ services:
       postgres:
         condition: service_healthy
     restart: unless-stopped
+    healthcheck:
+      test:
+        ["CMD", "wget", "--spider", "--quiet", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 10
     environment:
       MB_DB_TYPE: postgres
       MB_DB_CONNECTION_URI: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
