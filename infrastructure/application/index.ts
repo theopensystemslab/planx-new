@@ -31,6 +31,72 @@ new pulumi.Config("cloudflare").require("apiToken");
     vpc,
   });
 
+  // ----------------------- Metabase
+  const lbMetabase = new awsx.lb.ApplicationLoadBalancer("metabase", {
+    external: true,
+    vpc: vpc,
+    subnets: networking.requireOutput("publicSubnetIds"),
+  });
+  // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
+  const METABASE_PORT = 80;
+  const targetMetabase = lbMetabase.createTargetGroup("metabase", {
+    port: METABASE_PORT,
+    protocol: "HTTP",
+    healthCheck: {
+      path: "/api/health",
+    },
+  });
+  // Forward HTTP to HTTPS
+  const metabaseListenerHttp = targetMetabase.createListener("metabase-http", {
+    protocol: "HTTP",
+    defaultAction: {
+      type: "redirect",
+      redirect: {
+        protocol: "HTTPS",
+        port: "443",
+        statusCode: "HTTP_301",
+      },
+    },
+  });
+  const metabaseListenerHttps = targetMetabase.createListener(
+    "metabase-https",
+    {
+      protocol: "HTTPS",
+      certificateArn: certificates.requireOutput("certificateArn"),
+    }
+  );
+  const metabaseService = new awsx.ecs.FargateService("metabase", {
+    cluster,
+    subnets: networking.requireOutput("publicSubnetIds"),
+    taskDefinitionArgs: {
+      container: {
+        image: "metabase/metabase:v0.41.2",
+        memory: 512 /*MB*/,
+        portMappings: [metabaseListenerHttps],
+        environment: [
+          { name: "MB_DB_TYPE", value: "postgres" },
+          {
+            name: "MB_DB_CONNECTION_URI",
+            value: data.requireOutputValue("dbRootUrl"),
+          },
+          { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
+        ],
+      },
+    },
+    desiredCount: 1,
+  });
+
+  new cloudflare.Record("metabase", {
+    name: tldjs.getSubdomain(DOMAIN)
+      ? `metabase.${tldjs.getSubdomain(DOMAIN)}`
+      : "metabase",
+    type: "CNAME",
+    zoneId: config.require("cloudflare-zone-id"),
+    value: metabaseListenerHttps.endpoint.hostname,
+    ttl: 1,
+    proxied: false,
+  });
+
   // ----------------------- Hasura
   const lbHasura = new awsx.lb.ApplicationLoadBalancer("hasura", {
     external: true,
