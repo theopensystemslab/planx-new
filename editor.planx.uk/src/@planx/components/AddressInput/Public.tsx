@@ -30,6 +30,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
       town: "",
       county: "",
       postcode: "",
+      country: "",
     },
     onSubmit: (values) => {
       props.handleSubmit?.(makeData(props, values));
@@ -96,6 +97,18 @@ export default function AddressInputComponent(props: Props): FCReturn {
             placeholder="Postal code"
             bordered
             errorMessage={formik.errors.postcode}
+            onChange={formik.handleChange}
+          />
+        </InputRowItem>
+      </InputLabel>
+      <InputLabel label="country">
+        <InputRowItem>
+          <Input
+            name="country"
+            value={formik.values.country}
+            placeholder="Country"
+            bordered
+            errorMessage={formik.errors.country}
             onChange={formik.handleChange}
           />
         </InputRowItem>

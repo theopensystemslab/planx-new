@@ -37,7 +37,7 @@ const ContentComponent: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
       />
       <div className={classes.content} data-testid="content">
-        <ReactMarkdownOrHtml source={props.content} />
+        <ReactMarkdownOrHtml source={props.content} openLinksOnNewTab />
       </div>
     </Card>
   );
