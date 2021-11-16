@@ -21,6 +21,7 @@ export const SLUGS: {
   [TYPES.NumberInput]: "number-input",
   [TYPES.Page]: "page",
   [TYPES.Pay]: "pay",
+  [TYPES.PlanningConstraints]: "planning-constraints",
   [TYPES.Response]: "question",
   [TYPES.Result]: "result",
   [TYPES.Review]: "review",

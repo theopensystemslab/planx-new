@@ -4,7 +4,8 @@ const {
   getQueryableConstraints,
   getManualConstraints,
   makeEsriUrl,
-  bufferPoint,
+  setEsriGeometryType,
+  setEsriGeometry,
   addDesignatedVariable,
 } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/buckinghamshire.js");
@@ -20,11 +21,16 @@ async function search(
   featureName,
   serverIndex,
   outFields,
-  geometry
+  geometry,
+  geometryType
 ) {
   const { id } = planningConstraints[featureName];
 
-  let url = makeEsriUrl(mapServer, id, serverIndex, { outFields, geometry });
+  let url = makeEsriUrl(mapServer, id, serverIndex, {
+    outFields,
+    geometry,
+    geometryType,
+  });
 
   return fetch(url)
     .then((response) => response.text())
@@ -35,8 +41,11 @@ async function search(
 }
 
 // For this location, iterate through our planning constraints and aggregate/format the responses
-async function go(x, y, extras) {
-  const point = bufferPoint(x, y, 0.05);
+async function go(x, y, siteBoundary, extras) {
+  // If we have a siteBoundary from drawing,
+  //   then query using the polygon, else fallback to the buffered address point
+  const geomType = setEsriGeometryType(siteBoundary);
+  const geom = setEsriGeometry(geomType, x, y, 0.05, siteBoundary);
 
   try {
     const results = await Promise.all(
@@ -46,7 +55,8 @@ async function go(x, y, extras) {
           layer,
           gisLayers[layer].serverIndex,
           gisLayers[layer].fields,
-          point
+          geom,
+          geomType
         )
       )
     );
@@ -116,8 +126,8 @@ async function go(x, y, extras) {
   }
 }
 
-async function locationSearch(x, y, extras) {
-  return go(x, y, extras);
+async function locationSearch(x, y, siteBoundary, extras) {
+  return go(x, y, siteBoundary, extras);
 }
 
 module.exports = {

@@ -41,7 +41,7 @@ describe("bad requests", () => {
       .expect(400)
       .then((response) => {
         expect(response.body).toEqual({
-          error: "wrong is not a supported location authority",
+          error: "wrong is not a supported local authority",
         });
         done();
       });

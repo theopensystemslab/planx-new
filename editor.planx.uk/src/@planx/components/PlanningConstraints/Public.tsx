@@ -1,0 +1,192 @@
+import Box from "@material-ui/core/Box";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Card from "@planx/components/shared/Preview/Card";
+import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import type { PublicProps } from "@planx/components/ui";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import { useFormik } from "formik";
+import { submitFeedback } from "lib/feedback";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React from "react";
+import ReactHtmlParser from "react-html-parser";
+import { useCurrentRoute } from "react-navi";
+import useSWR from "swr";
+import CollapsibleInput from "ui/CollapsibleInput";
+
+import type { PlanningConstraints } from "./model";
+
+type Props = PublicProps<PlanningConstraints>;
+
+export default Component;
+
+function Component(props: Props) {
+  const [x, y, siteBoundary] = useStore((state) => [
+    state.computePassport().data?._address.x,
+    state.computePassport().data?._address.y,
+    state.computePassport().data?.["property.boundary.site"],
+  ]);
+  const route = useCurrentRoute();
+  const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
+
+  // Get the coordinates of the site boundary drawing if they exist, fallback on x & y if file was uploaded
+  // Coords should match Esri's "rings" type https://developers.arcgis.com/javascript/3/jsapi/polygon-amd.html#rings
+  const coordinates: number[][][] = siteBoundary?.geometry?.coordinates || [];
+
+  const { data: constraints } = useSWR(
+    () =>
+      x && y
+        ? `${
+            process.env.REACT_APP_API_URL
+          }/gis/${team}?x=${x}&y=${y}&siteBoundary=${JSON.stringify(
+            coordinates
+          )}&version=1`
+        : null,
+    {
+      shouldRetryOnError: true,
+      errorRetryInterval: 1000,
+      errorRetryCount: 3,
+    }
+  );
+
+  return (
+    <>
+      {constraints ? (
+        <PlanningConstraintsInformation
+          title={props.title}
+          description={props.description || ""}
+          fn={props.fn}
+          constraints={constraints}
+          handleSubmit={(feedback?: string) => {
+            const _nots: any = {};
+            const newPassportData: any = {};
+
+            Object.entries(constraints).forEach(([key, data]: any) => {
+              if (data.value) {
+                newPassportData[props.fn] ||= [];
+                newPassportData[props.fn].push(key);
+              } else {
+                _nots[props.fn] ||= [];
+                _nots[props.fn].push(key);
+              }
+            });
+
+            const passportData = {
+              _nots,
+              ...newPassportData,
+            };
+
+            props.handleSubmit?.({
+              data: passportData,
+            });
+          }}
+        />
+      ) : (
+        <Card handleSubmit={props.handleSubmit} isValid>
+          <QuestionHeader
+            title={props.title}
+            description={props.description || ""}
+          />
+          <DelayedLoadingIndicator
+            msDelayBeforeVisible={0}
+            text="Fetching data..."
+          />
+        </Card>
+      )}
+    </>
+  );
+}
+
+const useClasses = makeStyles((theme) => ({
+  constraint: {
+    borderLeft: `3px solid rgba(0,0,0,0.3)`,
+    padding: theme.spacing(1, 1.5),
+    marginBottom: theme.spacing(0.5),
+  },
+}));
+
+function PlanningConstraintsInformation(props: any) {
+  const { title, description, constraints, handleSubmit } = props;
+  const formik = useFormik({
+    initialValues: {
+      feedback: "",
+    },
+    onSubmit: (values) => {
+      if (values.feedback) {
+        submitFeedback(values.feedback, {
+          reason: "Inaccurate planning constraints",
+          constraints: constraints,
+        });
+      }
+      handleSubmit?.();
+    },
+  });
+
+  return (
+    <Card handleSubmit={formik.handleSubmit} isValid>
+      <QuestionHeader title={title} description={description} />
+      <ConstraintsList data={constraints} />
+      <Box color="text.secondary" textAlign="right">
+        <CollapsibleInput
+          handleChange={formik.handleChange}
+          name="feedback"
+          value={formik.values.feedback}
+        >
+          <Typography variant="body2" color="inherit">
+            Report an inaccuracy
+          </Typography>
+        </CollapsibleInput>
+      </Box>
+    </Card>
+  );
+}
+
+function ConstraintsList({ data }: any) {
+  const constraints = Object.values(data).filter(({ text }: any) => text);
+
+  // Order constraints so that { value: true } ones come first
+  constraints.sort(function (a: any, b: any) {
+    return b.value - a.value;
+  });
+
+  const visibleConstraints = constraints.map((con: any) => (
+    <Constraint key={con.text} color={con.color}>
+      {ReactHtmlParser(con.text)}
+    </Constraint>
+  ));
+
+  // Display constraints for valid teams, or message if unsupported local authority (eg api returned '{}')
+  return (
+    <Box mb={3}>
+      {visibleConstraints.length > 0 ? (
+        <>
+          <Typography variant="h5" component="h2" gutterBottom>
+            This property
+          </Typography>
+          {visibleConstraints}
+        </>
+      ) : (
+        <code>GIS data are not available for this team.</code>
+      )}
+    </Box>
+  );
+}
+
+function Constraint({ children, color, ...props }: any) {
+  const classes = useClasses();
+  const theme = useTheme();
+  return (
+    <Box
+      className={classes.constraint}
+      bgcolor={color ? color : "background.paper"}
+      color={
+        color
+          ? theme.palette.getContrastText(color)
+          : theme.palette.text.primary
+      }
+      {...props}
+    >
+      {children}
+    </Box>
+  );
+}

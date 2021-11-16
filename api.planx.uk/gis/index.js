@@ -7,7 +7,7 @@ const localAuthorities = {
 
 function locationSearchWithTimeout(
   localAuthority,
-  { x, y, extras = "{}" },
+  { x, y, siteBoundary, extras = "{}" },
   time
 ) {
   return new Promise(async (resolve, reject) => {
@@ -25,6 +25,7 @@ function locationSearchWithTimeout(
       const resp = await localAuthorities[localAuthority].locationSearch(
         parseInt(x, 10),
         parseInt(y, 10),
+        JSON.parse(siteBoundary),
         extraInfo
       );
       clearTimeout(timeout);
@@ -55,7 +56,7 @@ const locationSearch = () => async (req, res, next) => {
   } else {
     next({
       status: 400,
-      message: `${req.params.localAuthority} is not a supported location authority`,
+      message: `${req.params.localAuthority} is not a supported local authority`,
     });
   }
 };

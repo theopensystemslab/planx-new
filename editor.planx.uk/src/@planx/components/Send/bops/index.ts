@@ -55,6 +55,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.Notify:
     case TYPES.Page:
     case TYPES.Pay:
+    case TYPES.PlanningConstraints:
     case TYPES.Response:
     case TYPES.Result:
     case TYPES.Review:
