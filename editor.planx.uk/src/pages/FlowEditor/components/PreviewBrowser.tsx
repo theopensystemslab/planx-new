@@ -84,7 +84,7 @@ function PublishChangeItem(props: any) {
     text = `Deleted node ${node.id}`;
   } else if (node.type && node.data) {
     text = `Added/edited ${TYPES[node.type]}`;
-    data = `${JSON.stringify(node.data, null, "\t")}`;
+    data = JSON.stringify(node.data, null, 2);
   } else {
     text = `Added/edited ${TYPES[node.type]}`;
   }
@@ -92,7 +92,7 @@ function PublishChangeItem(props: any) {
   return (
     <>
       <Typography variant="body2">{text}</Typography>
-      <pre style={{ fontSize: ".8em" }}>{data ? data : null}</pre>
+      {data && <pre style={{ fontSize: ".8em" }}>{data}</pre>}
     </>
   );
 }
@@ -194,12 +194,12 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
                 const alteredFlow = await diffFlow(flowId);
                 setAlteredNodes(
                   alteredFlow?.data.alteredNodes
-                    ? alteredFlow?.data.alteredNodes
+                    ? alteredFlow.data.alteredNodes
                     : []
                 );
                 setLastPublishedTitle(
                   alteredFlow?.data.alteredNodes
-                    ? `Found changes to ${alteredFlow?.data.alteredNodes.length} node(s)`
+                    ? `Found changes to ${alteredFlow.data.alteredNodes.length} node(s)`
                     : "No new changes to publish"
                 );
                 setDialogOpen(true);
@@ -258,11 +258,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
                         : "No new changes to publish"
                     );
                   }}
-                  disabled={
-                    !alteredNodes ||
-                    alteredNodes.length === 0 ||
-                    window.location.hostname.endsWith("planx.uk")
-                  }
+                  disabled={!alteredNodes || alteredNodes.length === 0}
                 >
                   PUBLISH
                 </Button>

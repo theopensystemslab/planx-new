@@ -68,7 +68,7 @@ const dataMerged = async (id, ob = {}) => {
   return ob;
 };
 
-const diffFlow = async (req, res) => {
+const diffFlow = async (req, res, next) => {
   if (!req.user?.sub)
     return res.status(401).json({ error: "User ID missing from JWT" });
 
@@ -94,12 +94,11 @@ const diffFlow = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-const publishFlow = async (req, res) => {
+const publishFlow = async (req, res, next) => {
   if (!req.user?.sub)
     return res.status(401).json({ error: "User ID missing from JWT" });
 
@@ -159,8 +158,7 @@ const publishFlow = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error });
+    next(error);
   }
 };
 

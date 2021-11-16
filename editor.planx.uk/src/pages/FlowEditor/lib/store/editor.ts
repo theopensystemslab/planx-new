@@ -12,7 +12,10 @@ import {
 import axios from "axios";
 import { getCookie } from "lib/cookie";
 import { client } from "lib/graphql";
+import { NumericDictionary } from "lodash";
 import debounce from "lodash/debounce";
+import isEmpty from "lodash/isEmpty";
+import omitBy from "lodash/omitBy";
 import type { FlowSettings, TextContent } from "types";
 import type { GetState, SetState } from "zustand/vanilla";
 
@@ -338,10 +341,16 @@ export const editorStore = (
   publishFlow(flowId: string, summary?: string) {
     const token = getCookie("jwt");
 
+    const urlWithParams = (url: string, params: any) =>
+      [url, new URLSearchParams(omitBy(params, isEmpty))]
+        .filter(Boolean)
+        .join("?");
+
     return axios({
-      url: `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish${
-        summary ? `?summary=${summary}` : ``
-      }`,
+      url: urlWithParams(
+        `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish`,
+        { summary }
+      ),
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
