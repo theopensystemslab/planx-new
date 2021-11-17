@@ -23,6 +23,7 @@ services:
 
   metabase:
     image: metabase/metabase:v0.41.2
+    profiles: ["analytics"]
     ports:
       - ${METABASE_PORT}:3000
     depends_on:
