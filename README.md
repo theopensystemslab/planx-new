@@ -29,3 +29,10 @@
 1. Move into the editor directory `cd editor.planx.uk`
 
 1. Start the dev server! `pnpm start`, open http://localhost:3000 and login with Google
+
+#### Analytics
+
+Running `docker-compose up` won't spin up [metabase](https://www.metabase.com/).
+To spin it up, run:
+
+  `docker-compose --profile analytics up`
