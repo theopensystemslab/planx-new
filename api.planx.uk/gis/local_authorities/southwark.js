@@ -135,7 +135,7 @@ async function locationSearch(x, y, siteBoundary, extras) {
 
   ob["article4.southwark.sunray"] = {
     value:
-      ob["designated.conservationArea"]?.data?.Schedule_ID === 39
+      ob["designated.conservationArea"]?.data?.Conservation_area_number === 39
         ? true
         : false,
   };
