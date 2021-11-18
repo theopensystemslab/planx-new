@@ -335,22 +335,13 @@ export function PropertyInformation(props: any) {
   } as any;
 
   // ref https://www.npmjs.com/package/@lit-labs/react
-  const FindPropertyMap = (props: any) => {
-    const Component = createComponent(
-      React,
-      "my-map",
-      MyMap,
-      {},
-      `my-map-${Date.now()}`
-    );
-    return <Component {...props} />;
-  };
+  const FindPropertyMapComponent = createComponent(React, "my-map", MyMap);
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
       <Box className={styles.map}>
-        <FindPropertyMap {...findPropertyMapProps} />
+        <FindPropertyMapComponent {...findPropertyMapProps} />
       </Box>
       <Box mb={6}>
         {propertyDetails.map(({ heading, detail }: any) => (
