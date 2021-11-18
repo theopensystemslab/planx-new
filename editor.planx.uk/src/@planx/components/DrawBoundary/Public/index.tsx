@@ -133,7 +133,7 @@ export default function Component(props: Props) {
               drawMode
               drawGeojsonData={JSON.stringify(boundary)}
               zoom={19}
-              maxZoom={20}
+              maxZoom={23}
               latitude={Number(passport?.data?._address?.latitude)}
               longitude={Number(passport?.data?._address?.longitude)}
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
