@@ -137,7 +137,10 @@
     "resetMocks": false,
     "transform": {
       "^.+\\.tsx?$": "esbuild-jest"
-    }
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!@lit-labs)"
+    ]
   },
   "browserslist": {
     "production": [
