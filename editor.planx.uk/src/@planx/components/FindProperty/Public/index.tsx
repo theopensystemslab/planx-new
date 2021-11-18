@@ -1,3 +1,5 @@
+import "./map.css";
+
 import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
@@ -19,9 +21,9 @@ import { parse, toNormalised } from "postcode";
 import React, { useState } from "react";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
+
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
-import "./map.css";
 
 // these queries are exported because tests require them
 export const FETCH_GLBU_CODES = gql`
