@@ -71,7 +71,7 @@ new pulumi.Config("cloudflare").require("apiToken");
     taskDefinitionArgs: {
       container: {
         image: "metabase/metabase:v0.41.2",
-        memory: 512 /*MB*/,
+        memory: 2048 /*MB*/,
         portMappings: [metabaseListenerHttps],
         environment: [
           { name: "MB_DB_TYPE", value: "postgres" },
