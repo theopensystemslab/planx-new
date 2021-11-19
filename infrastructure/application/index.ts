@@ -80,10 +80,21 @@ new pulumi.Config("cloudflare").require("apiToken");
             value: data.requireOutputValue("dbRootUrl"),
           },
           { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
+          {
+            name: "MB_SITE_URL",
+            value: pulumi.interpolate`https://metabase.${DOMAIN}/`,
+          },
+          // https://www.metabase.com/docs/latest/operations-guide/encrypting-database-details-at-rest.html
+          {
+            name: "MB_ENCRYPTION_SECRET_KEY",
+            value: config.require("metabase-encryption-secret-key"),
+          },
         ],
       },
     },
     desiredCount: 1,
+    // Metabase takes a while to boot up
+    healthCheckGracePeriodSeconds: 60 * 15,
   });
 
   new cloudflare.Record("metabase", {
