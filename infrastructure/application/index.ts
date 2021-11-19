@@ -84,6 +84,11 @@ new pulumi.Config("cloudflare").require("apiToken");
             name: "MB_SITE_URL",
             value: pulumi.interpolate`https://metabase.${DOMAIN}/`,
           },
+          // https://www.metabase.com/docs/latest/operations-guide/encrypting-database-details-at-rest.html
+          {
+            name: "MB_ENCRYPTION_SECRET_KEY",
+            value: config.require("metabase-encryption-secret-key"),
+          },
         ],
       },
     },
