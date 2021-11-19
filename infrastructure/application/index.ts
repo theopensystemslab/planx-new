@@ -38,7 +38,7 @@ new pulumi.Config("cloudflare").require("apiToken");
     subnets: networking.requireOutput("publicSubnetIds"),
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
-  const METABASE_PORT = 80;
+  const METABASE_PORT = 3000;
   const targetMetabase = lbMetabase.createTargetGroup("metabase", {
     port: METABASE_PORT,
     protocol: "HTTP",
