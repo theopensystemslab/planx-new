@@ -27,4 +27,4 @@ else
   HEADLESS=":headless"
 fi
 
-JWT_SECRET=$JWT_SECRET testcafe "${BROWSER}${HEADLESS}" './tests/*.js'
+JWT_SECRET=$JWT_SECRET testcafe --browser-init-timeout 600000 "${BROWSER}${HEADLESS}" './tests/*.js'
