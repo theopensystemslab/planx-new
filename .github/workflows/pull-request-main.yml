@@ -14,29 +14,36 @@ env:
   NODE_VERSION: 14
 
 jobs:
+  # integration_tests:
+  #   name: Integration and E2E tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: pnpm/action-setup@v2.0.1
+  #       with:
+  #         version: ${{ env.PNPM_VERSION }}
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: "pnpm"
+  #         cache-dependency-path: "**/pnpm-lock.yaml"
+  #     - run: pnpm install
+  #       working-directory: ${{ env.EDITOR_DIRECTORY }}
+  #     - run: ./scripts/start-containers-for-tests.sh
+  #     - run: ./hasura.planx.uk/run-postgres-tests.sh
+  #     - name: Hasura Tests
+  #       run: pnpm install && pnpm test
+  #       working-directory: hasura.planx.uk/tests
+  #     - name: E2E Tests
+  #       run: pnpm install && pnpm test
+  #       working-directory: e2e
   integration_tests:
-    name: Integration and E2E tests
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.0.1
+      - name: Run TestCafe Tests
+        uses: DevExpress/testcafe-action@latest
         with:
-          version: ${{ env.PNPM_VERSION }}
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm install
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: ./scripts/start-containers-for-tests.sh
-      - run: ./hasura.planx.uk/run-postgres-tests.sh
-      - name: Hasura Tests
-        run: pnpm install && pnpm test
-        working-directory: hasura.planx.uk/tests
-      - name: E2E Tests
-        run: pnpm install && pnpm test
-        working-directory: e2e
+          args: "chrome e2e/tests"
 
   test_and_build:
     name: Test and Build
