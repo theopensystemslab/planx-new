@@ -17,7 +17,7 @@ test("submits an address", async () => {
       "Line 2": "221b Baker St",
       Town: "London",
       County: "County",
-      "Postal code": "SW1A 2AA",
+      Postcode: "SW1A 2AA",
       Country: "United Kingdom",
     });
 
