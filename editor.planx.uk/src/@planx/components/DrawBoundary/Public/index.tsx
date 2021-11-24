@@ -2,6 +2,7 @@ import "./map.css";
 
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
+import { visuallyHidden } from "@material-ui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
@@ -128,9 +129,17 @@ export default function Component(props: Props) {
               @ts-ignore */}
               <my-map drawMode zoom={19} />
             </div>
+            <p style={visuallyHidden}>
+              An interactive map centered on your address, with a red pointer to
+              draw your site outline. Click to place points and connect the
+              lines to make your site. Once you've closed the site shape, click
+              and drag the lines to modify it. If you cannot draw, you can
+              upload a location plan file using the link below.
+            </p>
             {/* @ts-ignore */}
             <my-map
               drawMode
+              drawPointer="dot"
               drawGeojsonData={JSON.stringify(boundary)}
               zoom={19}
               maxZoom={23}
