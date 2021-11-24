@@ -137,7 +137,6 @@ export default function Component(props: Props) {
               latitude={Number(passport?.data?._address?.latitude)}
               longitude={Number(passport?.data?._address?.longitude)}
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
-              ariaLabel="An interactive map centered on your address, with a red pointer to begin drawing your site outline. Click to place points and connect the lines to make your site. Once you've closed the site shape, click and drag the lines to modify. If you cannot draw, you can alternately upload a file using the link below."
             />
           </Box>
           <p className={classes.uploadInstead}>
