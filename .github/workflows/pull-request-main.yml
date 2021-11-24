@@ -63,7 +63,6 @@ jobs:
           REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY: ${{ secrets.ORDNANCE_SURVEY_FEATURES_KEY }}
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           # needed because there's no API to change google's allowed OAuth URLs
@@ -77,7 +76,6 @@ jobs:
           REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY: ${{ secrets.ORDNANCE_SURVEY_FEATURES_KEY }}
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
