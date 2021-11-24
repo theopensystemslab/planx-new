@@ -42,7 +42,7 @@ enum Action {
 
 function Component(props: Props) {
   const [
-    id,
+    sessionId,
     govUkPayment,
     setGovUkPayment,
     passport,
@@ -50,7 +50,7 @@ function Component(props: Props) {
     sendSessionDataToHasura,
     showPreview,
   ] = useStore((state) => [
-    state.id,
+    state.sessionId,
     state.govUkPayment,
     state.setGovUkPayment,
     state.computePassport(),
@@ -203,7 +203,7 @@ function Component(props: Props) {
     }
 
     await axios
-      .post(govUkPayUrlForTeam, createPayload(fee, id))
+      .post(govUkPayUrlForTeam, createPayload(fee, sessionId))
       .then((res) => {
         const payment = updatePayment(res.data);
 
