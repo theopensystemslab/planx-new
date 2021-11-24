@@ -48,7 +48,6 @@ function Component(props: Props) {
     passport,
     environment,
     sendSessionDataToHasura,
-    showPreview,
   ] = useStore((state) => [
     state.sessionId,
     state.govUkPayment,
@@ -56,7 +55,6 @@ function Component(props: Props) {
     state.computePassport(),
     state.previewEnvironment,
     state.sendSessionDataToHasura,
-    state.showPreview,
   ]);
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
@@ -67,7 +65,7 @@ function Component(props: Props) {
   );
 
   // Handles UI states
-  const reducer = (state: ComponentState, action: Action): ComponentState => {
+  const reducer = (_state: ComponentState, action: Action): ComponentState => {
     switch (action) {
       case Action.NoPaymentFound:
         return { status: "init" };
