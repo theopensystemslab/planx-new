@@ -15,7 +15,7 @@ env:
 
 jobs:
   integration_tests:
-    name: Integration and E2E tests
+    name: Integration and (DISABLED) E2E tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -34,9 +34,9 @@ jobs:
       - name: Hasura Tests
         run: pnpm install && pnpm test
         working-directory: hasura.planx.uk/tests
-      - name: E2E Tests
-        run: pnpm install && pnpm test
-        working-directory: e2e
+      # - name: E2E Tests
+      #   run: pnpm install && pnpm test
+      #   working-directory: e2e
 
   test_and_build:
     name: Test and Build
