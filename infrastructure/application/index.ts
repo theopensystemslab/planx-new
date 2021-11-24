@@ -34,7 +34,7 @@ new pulumi.Config("cloudflare").require("apiToken");
   // ----------------------- Metabase
   const lbMetabase = new awsx.lb.ApplicationLoadBalancer("metabase", {
     external: true,
-    vpc: vpc,
+    vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
@@ -79,6 +79,7 @@ new pulumi.Config("cloudflare").require("apiToken");
             name: "MB_DB_CONNECTION_URI",
             value: data.requireOutputValue("dbRootUrl"),
           },
+          { name: "MB_JETTY_HOST", value: "0.0.0.0" },
           { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
           {
             name: "MB_SITE_URL",
@@ -111,7 +112,7 @@ new pulumi.Config("cloudflare").require("apiToken");
   // ----------------------- Hasura
   const lbHasura = new awsx.lb.ApplicationLoadBalancer("hasura", {
     external: true,
-    vpc: vpc,
+    vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
@@ -229,7 +230,7 @@ new pulumi.Config("cloudflare").require("apiToken");
 
   const lbApi = new awsx.lb.ApplicationLoadBalancer("api", {
     external: true,
-    vpc: vpc,
+    vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
@@ -334,7 +335,7 @@ new pulumi.Config("cloudflare").require("apiToken");
   // ----------------------- ShareDB
   const lbSharedb = new awsx.lb.ApplicationLoadBalancer("sharedb", {
     external: true,
-    vpc: vpc,
+    vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
