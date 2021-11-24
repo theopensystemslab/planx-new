@@ -476,7 +476,7 @@ export const previewStore = (
             }
           }
 
-          ids.add(id);
+          if (node.type !== TYPES.Filter) ids.add(id);
         });
     };
 
