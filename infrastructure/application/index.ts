@@ -55,7 +55,7 @@ new pulumi.Config("cloudflare").require("apiToken");
     },
     { provider }
   );
-  new postgres.Database(
+  const metabasePgDatabase = new postgres.Database(
     "metabase",
     {
       name: role.name,
@@ -111,7 +111,7 @@ new pulumi.Config("cloudflare").require("apiToken");
           { name: "MB_DB_TYPE", value: "postgres" },
           {
             name: "MB_DB_CONNECTION_URI",
-            value: pulumi.interpolate`postgres://${role.name}:${metabasePgPassword}@${pgRoot.hostname}:${pgRoot.port}${pgRoot.path}`,
+            value: pulumi.interpolate`postgres://${role.name}:${metabasePgPassword}@${pgRoot.hostname}:${pgRoot.port}/${metabasePgDatabase.name}`,
           },
           { name: "MB_JETTY_HOST", value: "0.0.0.0" },
           { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
