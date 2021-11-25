@@ -152,7 +152,6 @@ jobs:
     needs: [integration_tests, test_and_build]
     runs-on: ubuntu-latest
     steps:
-      # CREATE STEPS
 
       name: Create Pizza (if it doesn't exist)
       id: create
@@ -169,7 +168,7 @@ jobs:
 
       # CREATE STEPS
 
-      - if: steps.create.outputs.ip_address
+      - if: steps.create.outputs.ip_address != ""
         name: Create commands
         uses: appleboy/ssh-action@master
         with:
@@ -197,7 +196,7 @@ jobs:
 
       # UPDATE STEPS
 
-      - if: !steps.create.outputs.ip_address
+      - if: steps.create.outputs.ip_address == ""
         name: Update commands
         uses: appleboy/ssh-action@master
         with:
