@@ -152,23 +152,22 @@ jobs:
     needs: [integration_tests, test_and_build]
     runs-on: ubuntu-latest
     steps:
-
-      name: Create Pizza (if it doesn't exist)
-      id: create
-      uses: theopensystemslab/vultr-action@v1.8
-      with:
-        action: create
-        api_key: ${{ secrets.VULTR_API_KEY }}
-        domain: ${{ env.DOMAIN }}
-        os_id: 387
-        plan: vc2-1c-1gb
-        pullrequest_id: ${{ env.PULLREQUEST_ID }}
-        region: lhr
-        tag: pullrequest
+      - name: Create Pizza (if it doesn't exist)
+        id: create
+        uses: theopensystemslab/vultr-action@v1.8
+        with:
+          action: create
+          api_key: ${{ secrets.VULTR_API_KEY }}
+          domain: ${{ env.DOMAIN }}
+          os_id: 387
+          plan: vc2-1c-1gb
+          pullrequest_id: ${{ env.PULLREQUEST_ID }}
+          region: lhr
+          tag: pullrequest
 
       # CREATE STEPS
 
-      - if: ${{ steps.create.outputs.ip_address }} != ""
+      - if: steps.create.outputs.ip_address
         name: Create commands
         uses: appleboy/ssh-action@master
         with:
@@ -196,7 +195,7 @@ jobs:
 
       # UPDATE STEPS
 
-      - if: ${{ steps.create.outputs.ip_address == "" }}
+      - if: !steps.create.outputs.ip_address
         name: Update commands
         uses: appleboy/ssh-action@master
         with:
@@ -240,7 +239,6 @@ jobs:
           source: "./build"
           target: "planx-new/${{ env.EDITOR_DIRECTORY }}"
           overwrite: true
-
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
