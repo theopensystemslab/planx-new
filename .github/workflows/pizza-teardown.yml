@@ -10,7 +10,7 @@ env:
   PULLREQUEST_ID: ${{ github.event.number }}
 
 jobs:
-  teardown_vultr:
+  teardown_pizza:
     runs-on: ubuntu-latest
     steps:
       - name: Remove vultr resources
