@@ -167,7 +167,8 @@ jobs:
         tag: pullrequest
 
       # CREATE STEPS
-      - if: steps.create.outputs.ip_address != ""
+
+      - if: ${{ steps.create.outputs.ip_address }} != ""
         name: Create commands
         uses: appleboy/ssh-action@master
         with:
@@ -194,7 +195,8 @@ jobs:
             SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} sh scripts/pullrequest/create.sh
 
       # UPDATE STEPS
-      - if: steps.create.outputs.ip_address == ""
+
+      - if: ${{ steps.create.outputs.ip_address == "" }}
         name: Update commands
         uses: appleboy/ssh-action@master
         with:
