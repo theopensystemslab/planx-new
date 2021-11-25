@@ -2,10 +2,11 @@ import "./map.css";
 
 import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import { visuallyHidden } from "@material-ui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -321,6 +322,9 @@ export function PropertyInformation(props: any) {
     <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
       <Box className={styles.map}>
+        <p style={visuallyHidden}>
+          A static map centered on the property address, showing the Ordnance Survey basemap features.
+        </p>
         {/* @ts-ignore */}
         <my-map
           zoom={19.5}
@@ -332,7 +336,6 @@ export function PropertyInformation(props: any) {
           osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
           featureColor={teamColor}
           featureFill
-          ariaLabel="A static map centered on your address input, showing the Ordnance Survey basemap features."
         />
       </Box>
       <Box mb={6}>
