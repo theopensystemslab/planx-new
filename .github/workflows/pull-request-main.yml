@@ -197,7 +197,7 @@ jobs:
 
       # UPDATE STEPS
 
-      - if: !contains(steps.create.outputs.ip_address , ".")
+      - if: ${{ !contains(steps.create.outputs.ip_address, ".") }}
         name: Update commands
         uses: appleboy/ssh-action@master
         with:
