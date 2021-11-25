@@ -167,7 +167,7 @@ jobs:
 
       # CREATE STEPS
 
-      - if: steps.create.outputs.ip_address
+      - if: steps.create.outputs.ip_address != ""
         name: Create commands
         uses: appleboy/ssh-action@master
         with:
@@ -195,7 +195,7 @@ jobs:
 
       # UPDATE STEPS
 
-      - if: !steps.create.outputs.ip_address
+      - if: steps.create.outputs.ip_address == ""
         name: Update commands
         uses: appleboy/ssh-action@master
         with:
