@@ -43,6 +43,7 @@ new pulumi.Config("cloudflare").require("apiToken");
     username: p.auth!.split(":")[0] as string,
     password: p.auth!.split(":")[1] as string,
     database: p.path!.substring(1) as string,
+    superuser: false,
   });
   const metabasePgPassword = config.require("metabasePgPassword");
   const role = new postgres.Role(
