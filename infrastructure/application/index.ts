@@ -5,8 +5,10 @@ import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
+import * as postgres from "@pulumi/postgresql";
 import * as mime from "mime";
 import * as tldjs from "tldjs";
+import * as url from "url";
 
 const config = new pulumi.Config();
 
@@ -30,6 +32,38 @@ new pulumi.Config("cloudflare").require("apiToken");
     cluster: networking.requireOutput("clusterName"),
     vpc,
   });
+
+  const dbRootUrl = await data.requireOutputValue("dbRootUrl");
+
+  // ----------------------- Metabase
+  const p = url.parse(dbRootUrl);
+  const provider = new postgres.Provider("metabase", {
+    host: p.hostname as string,
+    port: Number(p.port),
+    username: p.auth!.split(":")[0] as string,
+    password: p.auth!.split(":")[1] as string,
+    database: p.path!.substring(1) as string,
+  });
+  const metabasePgPassword = config.require("metabasePgPassword");
+  const role = new postgres.Role(
+    "metabase",
+    {
+      createDatabase: true,
+      name: "metabase",
+      login: true,
+      password: metabasePgPassword,
+    },
+    { provider }
+  );
+  new postgres.Database(
+    "metabase",
+    {
+      name: "metabase",
+    },
+    {
+      provider,
+    }
+  );
 
   // ----------------------- Hasura
   const lbHasura = new awsx.lb.ApplicationLoadBalancer("hasura", {
@@ -91,7 +125,7 @@ new pulumi.Config("cloudflare").require("apiToken");
           { name: "HASURA_GRAPHQL_UNAUTHORIZED_ROLE", value: "public" },
           {
             name: "HASURA_GRAPHQL_DATABASE_URL",
-            value: data.requireOutputValue("dbRootUrl"),
+            value: dbRootUrl,
           },
         ],
       },
@@ -306,7 +340,7 @@ new pulumi.Config("cloudflare").require("apiToken");
           },
           {
             name: "PG_URL",
-            value: data.requireOutputValue("dbRootUrl"),
+            value: dbRootUrl,
           },
         ],
       },
