@@ -77,7 +77,6 @@ const components: {
   [TYPES.Notice]: undefined,
   [TYPES.Notify]: undefined,
   [TYPES.NumberInput]: NumberInput,
-  [TYPES.Page]: undefined,
   [TYPES.Pay]: undefined,
   [TYPES.PlanningConstraints]: undefined,
   [TYPES.Response]: Debug,
