@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { visuallyHidden } from "@material-ui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { ENTER, SPACE_BAR } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
@@ -287,6 +288,9 @@ function DrawBoundary(props: ComponentProps) {
           </a>
         ) : (
           <>
+            <p style={visuallyHidden}>
+              A static map displaying the site boundary that you drew.
+            </p>
             {/* @ts-ignore */}
             <my-map
               geojsonData={JSON.stringify(data)}
@@ -297,7 +301,6 @@ function DrawBoundary(props: ComponentProps) {
               hideResetControl
               staticMode
               style={{ width: "100%", height: "30vh" }}
-              ariaLabel="A static map displaying the site boundary that you previously drew."
             />
           </>
         )}

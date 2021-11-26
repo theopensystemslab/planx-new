@@ -5,8 +5,10 @@ import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
+import * as postgres from "@pulumi/postgresql";
 import * as mime from "mime";
 import * as tldjs from "tldjs";
+import * as url from "url";
 
 const config = new pulumi.Config();
 
@@ -31,14 +33,46 @@ new pulumi.Config("cloudflare").require("apiToken");
     vpc,
   });
 
+  const dbRootUrl = await data.requireOutputValue("dbRootUrl");
+
   // ----------------------- Metabase
+  const pgRoot = url.parse(dbRootUrl);
+  const provider = new postgres.Provider("metabase", {
+    host: pgRoot.hostname as string,
+    port: Number(pgRoot.port),
+    username: pgRoot.auth!.split(":")[0] as string,
+    password: pgRoot.auth!.split(":")[1] as string,
+    database: pgRoot.path!.substring(1) as string,
+    superuser: false,
+  });
+  const metabasePgPassword = config.require("metabasePgPassword");
+  const role = new postgres.Role(
+    "metabase",
+    {
+      name: "metabase",
+      login: true,
+      password: metabasePgPassword,
+    },
+    { provider }
+  );
+  const metabasePgDatabase = new postgres.Database(
+    "metabase",
+    {
+      name: role.name,
+      owner: role.name,
+    },
+    {
+      provider,
+    }
+  );
+
   const lbMetabase = new awsx.lb.ApplicationLoadBalancer("metabase", {
     external: true,
-    vpc: vpc,
+    vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
-  const METABASE_PORT = 80;
+  const METABASE_PORT = 3000;
   const targetMetabase = lbMetabase.createTargetGroup("metabase", {
     port: METABASE_PORT,
     protocol: "HTTP",
@@ -71,19 +105,31 @@ new pulumi.Config("cloudflare").require("apiToken");
     taskDefinitionArgs: {
       container: {
         image: "metabase/metabase:v0.41.2",
-        memory: 512 /*MB*/,
+        memory: 2048 /*MB*/,
         portMappings: [metabaseListenerHttps],
         environment: [
           { name: "MB_DB_TYPE", value: "postgres" },
           {
             name: "MB_DB_CONNECTION_URI",
-            value: data.requireOutputValue("dbRootUrl"),
+            value: pulumi.interpolate`postgres://${role.name}:${metabasePgPassword}@${pgRoot.hostname}:${pgRoot.port}/${metabasePgDatabase.name}`,
           },
+          { name: "MB_JETTY_HOST", value: "0.0.0.0" },
           { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
+          {
+            name: "MB_SITE_URL",
+            value: pulumi.interpolate`https://metabase.${DOMAIN}/`,
+          },
+          // https://www.metabase.com/docs/latest/operations-guide/encrypting-database-details-at-rest.html
+          {
+            name: "MB_ENCRYPTION_SECRET_KEY",
+            value: config.require("metabase-encryption-secret-key"),
+          },
         ],
       },
     },
     desiredCount: 1,
+    // Metabase takes a while to boot up
+    healthCheckGracePeriodSeconds: 60 * 15,
   });
 
   new cloudflare.Record("metabase", {
@@ -100,7 +146,7 @@ new pulumi.Config("cloudflare").require("apiToken");
   // ----------------------- Hasura
   const lbHasura = new awsx.lb.ApplicationLoadBalancer("hasura", {
     external: true,
-    vpc: vpc,
+    vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
@@ -157,7 +203,7 @@ new pulumi.Config("cloudflare").require("apiToken");
           { name: "HASURA_GRAPHQL_UNAUTHORIZED_ROLE", value: "public" },
           {
             name: "HASURA_GRAPHQL_DATABASE_URL",
-            value: data.requireOutputValue("dbRootUrl"),
+            value: dbRootUrl,
           },
         ],
       },
@@ -218,7 +264,7 @@ new pulumi.Config("cloudflare").require("apiToken");
 
   const lbApi = new awsx.lb.ApplicationLoadBalancer("api", {
     external: true,
-    vpc: vpc,
+    vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
@@ -323,7 +369,7 @@ new pulumi.Config("cloudflare").require("apiToken");
   // ----------------------- ShareDB
   const lbSharedb = new awsx.lb.ApplicationLoadBalancer("sharedb", {
     external: true,
-    vpc: vpc,
+    vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
@@ -372,7 +418,7 @@ new pulumi.Config("cloudflare").require("apiToken");
           },
           {
             name: "PG_URL",
-            value: data.requireOutputValue("dbRootUrl"),
+            value: dbRootUrl,
           },
         ],
       },

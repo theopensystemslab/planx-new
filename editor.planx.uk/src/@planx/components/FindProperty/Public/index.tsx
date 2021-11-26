@@ -327,11 +327,9 @@ export function PropertyInformation(props: any) {
     osVectorTilesApiKey: process.env.REACT_APP_ORDNANCE_SURVEY_KEY,
     hideResetControl: true,
     showFeaturesAtPoint: true,
-    osFeaturesApiKey: process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY,
+    osFeaturesApiKey: process.env.REACT_APP_ORDNANCE_SURVEY_KEY,
     featureColor: teamColor,
     featureFill: true,
-    ariaLabel:
-      "A static map centered on your address input, showing the Ordnance Survey basemap features.",
   } as any;
 
   // ref https://www.npmjs.com/package/@lit-labs/react
