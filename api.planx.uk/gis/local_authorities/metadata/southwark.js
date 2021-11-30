@@ -62,13 +62,16 @@ const planningConstraints = {
     source: "Southwark Maps",
     tables: ["Conservation areas"],
     columns: [
-      "Name",
-      "Schedule_ID"
+      "Conservation_area",
+      "Conservation_area_number",
+      "More_information",
     ],
     neg: "is not in a Conservation Area",
     pos: (data) => ({
       text: "is in a Conservation Area",
-      description: data.Name,
+      description: data.More_information
+        ? data.More_information
+        : data.Conservation_area,
     }),
   },
   "designated.AONB": {
