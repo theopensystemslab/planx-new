@@ -163,7 +163,7 @@ const Result: React.FC<Props> = ({
                   setShowDisclaimer((showDisclaimer) => !showDisclaimer)
                 }
               >
-                <Typography variant="h6" color="inherit">
+                <Typography variant="h6" component="h3" color="inherit">
                   {disclaimer.heading}
                 </Typography>
                 <Typography variant="body2" className={classes.readMore}>
