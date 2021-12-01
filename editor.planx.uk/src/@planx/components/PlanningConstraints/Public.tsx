@@ -1,4 +1,6 @@
 import Box from "@material-ui/core/Box";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
@@ -101,7 +103,7 @@ const useClasses = makeStyles((theme) => ({
   constraint: {
     borderLeft: `3px solid rgba(0,0,0,0.3)`,
     padding: theme.spacing(1, 1.5),
-    marginBottom: theme.spacing(0.5),
+    width: `100vw`,
   },
 }));
 
@@ -163,7 +165,9 @@ function ConstraintsList({ data }: any) {
           <Typography variant="h5" component="h2" gutterBottom>
             This property
           </Typography>
-          {visibleConstraints}
+          <List dense disablePadding>
+            {visibleConstraints}
+          </List>
         </>
       ) : (
         <code>GIS data are not available for this team.</code>
@@ -176,17 +180,19 @@ function Constraint({ children, color, ...props }: any) {
   const classes = useClasses();
   const theme = useTheme();
   return (
-    <Box
-      className={classes.constraint}
-      bgcolor={color ? color : "background.paper"}
-      color={
-        color
-          ? theme.palette.getContrastText(color)
-          : theme.palette.text.primary
-      }
-      {...props}
-    >
-      {children}
-    </Box>
+    <ListItem dense disableGutters>
+      <Box
+        className={classes.constraint}
+        bgcolor={color ? color : "background.paper"}
+        color={
+          color
+            ? theme.palette.getContrastText(color)
+            : theme.palette.text.primary
+        }
+        {...props}
+      >
+        {children}
+      </Box>
+    </ListItem>
   );
 }
