@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1.5),
     position: "relative",
     zIndex: 10,
-    "&:focus": {
-      outline: "none",
+    "&:focus-visible": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
     },
     "&::before": {
       content: "''",

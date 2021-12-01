@@ -39,9 +39,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1.5),
     position: "relative",
     zIndex: 10,
-    "&:focus": {
-      outline: "none",
-    },
     "&::before": {
       content: "''",
       position: "absolute",
