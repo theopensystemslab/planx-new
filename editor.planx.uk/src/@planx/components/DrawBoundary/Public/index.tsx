@@ -29,15 +29,20 @@ const useClasses = makeStyles((theme) => ({
   hidden: { display: "none" },
   uploadInstead: {
     textAlign: "right",
-    fontSize: "medium",
     marginTop: theme.spacing(1),
-    "& a": {
+    "& button": {
+      background: "none",
+      "border-style": "none",
       color: theme.palette.text.primary,
       cursor: "pointer",
+      fontSize: "medium",
       padding: theme.spacing(2),
     },
-    "& a:hover": {
+    "& button:hover": {
       backgroundColor: theme.palette.background.paper,
+    },
+    "& button:focus-visible": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
     },
   },
 }));
@@ -148,11 +153,11 @@ export default function Component(props: Props) {
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
           </Box>
-          <p className={classes.uploadInstead}>
-            <a onClick={() => setPage("upload")}>
+          <div className={classes.uploadInstead}>
+            <button onClick={() => setPage("upload")}>
               Upload a location plan instead
-            </a>
-          </p>
+            </button>
+          </div>
           <p>
             The boundary you have drawn has an area of{" "}
             <strong>{area ?? 0} m²</strong>
@@ -171,11 +176,11 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <Upload setFile={setSelectedFile} initialFile={selectedFile} />
-          <p className={classes.uploadInstead}>
-            <a onClick={() => setPage("draw")}>
+          <div className={classes.uploadInstead}>
+            <button onClick={() => setPage("draw")}>
               Draw the boundary on a map instead
-            </a>
-          </p>
+            </button>
+          </div>
         </div>
       );
     }
