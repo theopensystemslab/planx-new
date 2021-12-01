@@ -8,7 +8,6 @@ import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { visuallyHidden } from "@material-ui/utils";
 import Card from "@planx/components/shared/Preview/Card";
-import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
@@ -23,6 +22,8 @@ import React, { useState } from "react";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
+import Input from "ui/Input";
+import InputLabel from "ui/InputLabel";
 
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
@@ -216,22 +217,32 @@ function GetAddress(props: {
         description={props.description || ""}
       />
       <Box pb={2}>
-        <FormInput
-          placeholder="Enter the postcode of the property"
-          value={postcode || ""}
-          onChange={(e: any) => {
-            // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
-            //      so this code attempts to validate postcodes without blocking any characters.
-            const input = e.target.value;
-            if (parse(input.trim()).valid) {
-              setSanitizedPostcode(toNormalised(input.trim()));
-              setPostcode(toNormalised(input.trim()));
-            } else {
-              setSanitizedPostcode(null);
-              setPostcode(input.toUpperCase());
+        <InputLabel label="Postcode">
+          <Input
+            required
+            bordered
+            name="postcode"
+            value={postcode || ""}
+            errorMessage={
+              postcode && postcode?.length > 5 && !sanitizedPostcode
+                ? "Enter a valid UK postcode"
+                : ""
             }
-          }}
-        />
+            onChange={(e: any) => {
+              // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
+              //      so this code attempts to validate postcodes without blocking any characters.
+              const input = e.target.value;
+              if (parse(input.trim()).valid) {
+                setSanitizedPostcode(toNormalised(input.trim()));
+                setPostcode(toNormalised(input.trim()));
+              } else {
+                setSanitizedPostcode(null);
+                setPostcode(input.toUpperCase());
+              }
+            }}
+            aria-describedby="Enter the postcode of the property"
+          />
+        </InputLabel>
         {Boolean(addresses.length) && (
           <Autocomplete
             options={addresses
@@ -250,6 +261,7 @@ function GetAddress(props: {
             getOptionSelected={(option: Option, selected: Option) =>
               option.uprn === selected.uprn
             }
+            noOptionsText="No addresses"
             data-testid="autocomplete-input"
             value={selectedOption}
             renderInput={(params) => (
@@ -259,6 +271,7 @@ function GetAddress(props: {
                 variant="outlined"
                 style={{ marginTop: 20 }}
                 autoFocus
+                aria-describedby="Select an address"
               />
             )}
             onChange={(event, selectedOption) => {
@@ -266,7 +279,15 @@ function GetAddress(props: {
                 setSelectedOption(selectedOption);
               }
             }}
+            disablePortal
           />
+        )}
+        {addresses.length === 0 && Boolean(sanitizedPostcode) && (
+          <Box pt={2}>
+            <Typography variant="body1" color="error">
+              No addresses found in this postcode.
+            </Typography>
+          </Box>
         )}
       </Box>
     </Card>
@@ -323,7 +344,8 @@ export function PropertyInformation(props: any) {
       <QuestionHeader title={title} description={description} />
       <Box className={styles.map}>
         <p style={visuallyHidden}>
-          A static map centered on the property address, showing the Ordnance Survey basemap features.
+          A static map centered on the property address, showing the Ordnance
+          Survey basemap features.
         </p>
         {/* @ts-ignore */}
         <my-map
