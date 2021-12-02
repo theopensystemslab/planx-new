@@ -38,7 +38,6 @@ interface Response {
 
 const useClasses = makeStyles((theme) => ({
   readMore: {
-    cursor: "pointer",
     color: theme.palette.grey[500],
     "&:hover": {
       color: theme.palette.grey[400],
