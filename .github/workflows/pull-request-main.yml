@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: browser-actions/setup-chrome@latest  
       - uses: pnpm/action-setup@v2.0.1
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -30,10 +31,10 @@ jobs:
       - run: pnpm install
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: ./scripts/start-containers-for-tests.sh
-      - run: ./hasura.planx.uk/run-postgres-tests.sh
-      - name: Hasura Tests
-        run: pnpm install && pnpm test
-        working-directory: hasura.planx.uk/tests
+        #- run: ./hasura.planx.uk/run-postgres-tests.sh
+        #- name: Hasura Tests
+        #run: pnpm install && pnpm test
+        #working-directory: hasura.planx.uk/tests
       - name: E2E Tests
         run: pnpm install && pnpm test
         working-directory: e2e
