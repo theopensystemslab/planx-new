@@ -13,7 +13,7 @@ fi
 
 pnpx --yes serve ../editor.planx.uk/build \
   --config "$(readlink -f "${SCRIPT_DIR}/serve.json")" `# https://github.com/vercel/serve/issues/662`\
-  --no-clipboard --no-port-switching --listen 3000 >/dev/null &
+  --no-clipboard --listen 3000 >/dev/null &
 
 if [ -x "$(command -v chrome)" ]; then
   BROWSER="chrome"
