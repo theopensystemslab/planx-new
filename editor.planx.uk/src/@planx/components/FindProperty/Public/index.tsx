@@ -2,6 +2,7 @@ import "./map.css";
 
 import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -207,6 +208,55 @@ function GetAddress(props: {
     });
   }
 
+  // Autocomplete overrides
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
+        // Default transform is "translate(14px, 20px) scale(1)""
+        // This lines up the label with the initial cursor position in the input
+        // after changing its padding-left.
+        transform: "translate(34px, 20px) scale(1);"
+      }
+    },
+    inputRoot: {
+      color: "#000",
+      fontSize: "inherit",
+      borderRadius: 0,
+      // This matches the specificity of the default styles at https://github.com/mui-org/material-ui/blob/v4.11.3/packages/material-ui-lab/src/Autocomplete/Autocomplete.js#L90
+      '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
+        // Default left padding is 6px
+        paddingLeft: 26,
+        borderRadius: 0,
+      },
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderRadius: 0,
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        borderRadius: 0,
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderRadius: 0,
+      },
+    },
+    input: {
+      padding: theme.spacing(1),
+    },
+    option: {
+      fontSize: "inherit",
+      // Hover
+      '&[data-focus="true"]': {
+        backgroundColor: theme.palette.grey[400],
+        borderColor: 'transparent',
+      },
+      // Selected
+      '&[aria-selected="true"]': {
+        backgroundColor: theme.palette.grey[400],
+        borderColor: 'transparent',
+      },
+    },
+  }));
+  const classes = useStyles();
+
   return (
     <Card
       handleSubmit={() => props.setAddress(selectedOption ?? undefined)}
@@ -241,10 +291,12 @@ function GetAddress(props: {
               }
             }}
             aria-describedby="Enter the postcode of the property"
+            style={{ marginBottom: "20px" }}
           />
         </InputLabel>
         {Boolean(addresses.length) && (
           <Autocomplete
+            classes={classes}
             options={addresses
               .map(
                 (address: Address): Option => ({
@@ -265,14 +317,14 @@ function GetAddress(props: {
             data-testid="autocomplete-input"
             value={selectedOption}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Address"
-                variant="outlined"
-                style={{ marginTop: 20 }}
-                autoFocus
-                aria-describedby="Select an address"
-              />
+              <InputLabel label="Select an address">
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  autoFocus
+                  aria-describedby="Select an address"
+                />
+              </InputLabel>
             )}
             onChange={(event, selectedOption) => {
               if (selectedOption) {
@@ -280,6 +332,10 @@ function GetAddress(props: {
               }
             }}
             disablePortal
+            disableClearable
+            PaperComponent={({ children }) => (
+              <Paper style={{ borderRadius: 0, boxShadow: "none" }}>{children}</Paper>
+            )}
           />
         )}
         {addresses.length === 0 && Boolean(sanitizedPostcode) && (
