@@ -1,6 +1,6 @@
-import { Selector } from "testcafe";
-import { getAdminJWT, setJWT, gqlAdmin } from "../common.js";
 import assert from "assert";
+import { Selector } from "testcafe";
+import { getAdminJWT, gqlAdmin, setJWT } from "../common.js";
 
 const URL = "http://localhost:3000";
 
@@ -12,7 +12,7 @@ const SERVICE_NAME = "test-service";
 let userId;
 let teamId;
 test
-  .before(async (t) => {
+  .before(async () => {
     ({
       data: {
         insert_users: {
@@ -33,7 +33,7 @@ test
       }
   `));
   })
-  .after(async (t) => {
+  .after(async () => {
     const { errors } = await gqlAdmin(`
       mutation {
         delete_operations(where: {actor_id: {_in: ${JSON.stringify([
