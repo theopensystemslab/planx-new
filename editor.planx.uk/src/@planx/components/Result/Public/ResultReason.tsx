@@ -102,7 +102,11 @@ const ResultReason: React.FC<IResultReason> = ({
               alignItems="center"
               color="text.primary"
             >
-              <Typography variant="body2" color="textPrimary" id="questionText">
+              <Typography
+                variant="body2"
+                color="textPrimary"
+                id={`questionText-${id}`}
+              >
                 {question.data.text}{" "}
                 <strong className={classes.responseText}>{response}</strong>
               </Typography>
