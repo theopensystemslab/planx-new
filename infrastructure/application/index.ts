@@ -79,10 +79,10 @@ new pulumi.Config("cloudflare").require("apiToken");
     healthCheck: {
       path: "/api/health",
       // XXX: Attempt to fix "504 Gateway Time-out"
-      healthyThreshold: 1,
+      healthyThreshold: 2,
       interval: 300,
       timeout: 120,
-      unhealthyThreshold: 100,
+      unhealthyThreshold: 10,
     },
   });
   // Forward HTTP to HTTPS
