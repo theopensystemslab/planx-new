@@ -108,6 +108,8 @@ test("allows user to type into input field and click continue", async () => {
 
   await act(async () => {
     await userEvent.type(day, "2");
+    // Trigger blur event
+    await userEvent.tab();
   });
 
   expect(day).toHaveValue("02");
@@ -131,17 +133,48 @@ test("allows user to type into input field and click continue", async () => {
   expect(handleSubmit).toHaveBeenCalled();
 });
 
-test("padding", () => {
-  // Adds zero to single digits
-  expect(paddedDate("2021-12-2")).toBe("2021-12-02");
-  expect(paddedDate("2021-3-22")).toBe("2021-03-22");
-  expect(paddedDate("2021-1-2")).toBe("2021-01-02");
+test("date fields have a max length set", async () => {
+  render(<DateInput title="Enter a date" />);
 
-  // Removes extraneous zeroes
-  expect(paddedDate("2021-010-2")).toBe("2021-10-02");
+  const day = screen.getByPlaceholderText("DD") as HTMLInputElement;
+  const month = screen.getByPlaceholderText("MM") as HTMLInputElement;
+  const year = screen.getByPlaceholderText("YYYY") as HTMLInputElement;
+
+  expect(day.maxLength === 2);
+  expect(month.maxLength === 2);
+  expect(year.maxLength === 4);
+});
+
+test("padding on input", () => {
+  // Adds zero to single digits greater than 3 on input
+  expect(paddedDate("2021-12-6", "input")).toBe("2021-12-06");
+  expect(paddedDate("2021-4-22", "input")).toBe("2021-04-22");
+  expect(paddedDate("2021-8-4", "input")).toBe("2021-08-04");
+
+  // Leaves valid dates alone
+  expect(paddedDate("2021-01-06", "input")).toBe("2021-01-06");
+  expect(paddedDate("2021-04-22", "input")).toBe("2021-04-22");
+  expect(paddedDate("2021-08-04", "input")).toBe("2021-08-04");
 
   // Leaves single 0 alone
-  expect(paddedDate("2021-0-2")).toBe("2021-0-02");
+  expect(paddedDate("2021-0-4", "input")).toBe("2021-0-04");
+  expect(paddedDate("2021-10-0", "input")).toBe("2021-10-0");
+});
+
+test("padding on blur", () => {
+  // Adds zero to single digits less than or equal to 3 on blur
+  expect(paddedDate("2021-12-1", "blur")).toBe("2021-12-01");
+  expect(paddedDate("2021-3-22", "blur")).toBe("2021-03-22");
+  expect(paddedDate("2021-2-2", "blur")).toBe("2021-02-02");
+
+  // Leaves valid dates alone
+  expect(paddedDate("2021-01-06", "blur")).toBe("2021-01-06");
+  expect(paddedDate("2021-04-22", "blur")).toBe("2021-04-22");
+  expect(paddedDate("2021-08-04", "blur")).toBe("2021-08-04");
+
+  // Leaves single 0 alone
+  expect(paddedDate("2021-0-2", "blur")).toBe("2021-0-02");
+  expect(paddedDate("2021-10-0", "blur")).toBe("2021-10-0");
 });
 
 test("validation", async () => {

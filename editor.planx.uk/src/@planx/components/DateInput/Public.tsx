@@ -56,9 +56,9 @@ const DateInputPublic: React.FC<Props> = (props) => {
           <DateInputComponent
             value={formik.values.date}
             bordered
-            onChange={(newDate: string) => {
+            onChange={(newDate: string, eventType: string) => {
               // Pad it here if necessary; keep DateInputComponent simple
-              formik.setFieldValue("date", paddedDate(newDate));
+              formik.setFieldValue("date", paddedDate(newDate, eventType));
             }}
             error={formik.errors.date as string}
           />

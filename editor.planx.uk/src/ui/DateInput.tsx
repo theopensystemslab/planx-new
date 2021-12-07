@@ -1,7 +1,7 @@
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, FocusEvent } from "react";
 
 import ErrorWrapper from "./ErrorWrapper";
 import Input from "./Input";
@@ -11,7 +11,7 @@ export interface Props {
   value?: string;
   error?: string;
   bordered?: boolean;
-  onChange: (newDate: string) => void;
+  onChange: (newDate: string, eventType: string) => void;
 }
 
 const useClasses = makeStyles((theme) => ({
@@ -52,12 +52,20 @@ export default function DateInput(props: Props): FCReturn {
             <Input
               style={{ width: 60 }}
               value={day || ""}
+              inputProps={{ maxLength: "2" }}
               placeholder="DD"
               bordered={props.bordered}
               id="day"
               onInput={(ev: ChangeEvent<HTMLInputElement>) => {
                 props.onChange(
-                  [year || "", month || "", ev.target.value].join("-")
+                  [year || "", month || "", ev.target.value].join("-"),
+                  ev.type
+                );
+              }}
+              onBlur={(ev: FocusEvent<HTMLInputElement>) => {
+                props.onChange(
+                  [year || "", month || "", ev.target.value].join("-"),
+                  ev.type
                 );
               }}
             />
@@ -70,11 +78,19 @@ export default function DateInput(props: Props): FCReturn {
               style={{ width: 60 }}
               value={month || ""}
               placeholder="MM"
+              inputProps={{ maxLength: "2" }}
               bordered={props.bordered}
               id="month"
               onInput={(ev: ChangeEvent<HTMLInputElement>) => {
                 props.onChange(
-                  [year || "", ev.target.value, day || ""].join("-")
+                  [year || "", ev.target.value, day || ""].join("-"),
+                  ev.type
+                );
+              }}
+              onBlur={(ev: FocusEvent<HTMLInputElement>) => {
+                props.onChange(
+                  [year || "", ev.target.value, day || ""].join("-"),
+                  ev.type
                 );
               }}
             />
@@ -87,11 +103,13 @@ export default function DateInput(props: Props): FCReturn {
               style={{ width: 90 }}
               value={year || ""}
               placeholder="YYYY"
+              inputProps={{ maxLength: "4" }}
               bordered={props.bordered}
               id="year"
               onInput={(ev: ChangeEvent<HTMLInputElement>) => {
                 props.onChange(
-                  [ev.target.value, month || "", day || ""].join("-")
+                  [ev.target.value, month || "", day || ""].join("-"),
+                  ev.type
                 );
               }}
             />

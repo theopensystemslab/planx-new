@@ -75,8 +75,8 @@ const DateInputComponent: React.FC<Props> = (props) => {
                 label="min"
                 value={formik.values.min}
                 error={formik.errors.min}
-                onChange={(newDate) => {
-                  formik.setFieldValue("min", paddedDate(newDate));
+                onChange={(newDate: string, eventType: string) => {
+                  formik.setFieldValue("min", paddedDate(newDate, eventType));
                 }}
               />
             </InputRow>
@@ -87,8 +87,8 @@ const DateInputComponent: React.FC<Props> = (props) => {
                 label="max"
                 value={formik.values.max}
                 error={formik.errors.max}
-                onChange={(newDate) => {
-                  formik.setFieldValue("max", paddedDate(newDate));
+                onChange={(newDate: string, eventType: string) => {
+                  formik.setFieldValue("max", paddedDate(newDate, eventType));
                 }}
               />
             </InputRow>
