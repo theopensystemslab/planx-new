@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => {
 });
 
 function ImageResponse(props: Props) {
-  const { selected, title, img, checkbox } = props;
+  const { selected, title, img, checkbox, id } = props;
   const [imgError, setImgError] = useState(!(img && img.length));
   const [multiline, setMultiline] = useState(false);
 
@@ -72,7 +72,7 @@ function ImageResponse(props: Props) {
   };
 
   return (
-    <ButtonBase {...props} aria-labelledby="buttonLabel">
+    <ButtonBase {...props} aria-labelledby={`buttonLabel-${id}`}>
       <Box display="flex" flexDirection="column" width="100%" height="100%">
         <Box
           width="100%"
@@ -133,7 +133,7 @@ function ImageResponse(props: Props) {
             )}
             <Typography
               variant="body2"
-              id="buttonLabel"
+              id={`buttonLabel-${id}`}
               className={checkbox ? classes.title : undefined}
             >
               {title}

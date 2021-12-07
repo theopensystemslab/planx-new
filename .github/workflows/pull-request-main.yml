@@ -15,7 +15,7 @@ env:
 
 jobs:
   integration_tests:
-    name: Integration and E2E tests
+    name: Integration and (DISABLED) E2E tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -34,9 +34,9 @@ jobs:
       - name: Hasura Tests
         run: pnpm install && pnpm test
         working-directory: hasura.planx.uk/tests
-      - name: E2E Tests
-        run: pnpm install && pnpm test
-        working-directory: e2e
+      # - name: E2E Tests
+      #   run: pnpm install && pnpm test
+      #   working-directory: e2e
 
   test_and_build:
     name: Test and Build
@@ -63,7 +63,6 @@ jobs:
           REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY: ${{ secrets.ORDNANCE_SURVEY_FEATURES_KEY }}
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           # needed because there's no API to change google's allowed OAuth URLs
@@ -77,7 +76,6 @@ jobs:
           REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY: ${{ secrets.ORDNANCE_SURVEY_FEATURES_KEY }}
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
@@ -150,16 +148,15 @@ jobs:
           delete: true
 
   create_or_update_vultr_instance:
+    # XXX: Does nothing if the pizza instance or DNS entries exist,
+    #      see https://github.com/theopensystemslab/planx-new/pull/725
     name: Create or Update Vultr Instance
     needs: [integration_tests, test_and_build]
     runs-on: ubuntu-latest
     steps:
-      # CREATE STEPS
-
-      - if: github.event_name == 'pull_request' && github.event.action == 'opened'
-        name: Create Server
+      - name: Create Pizza (if it doesn't exist)
         id: create
-        uses: theopensystemslab/vultr-action@v1.6
+        uses: theopensystemslab/vultr-action@v1.15
         with:
           action: create
           api_key: ${{ secrets.VULTR_API_KEY }}
@@ -170,7 +167,9 @@ jobs:
           region: lhr
           tag: pullrequest
 
-      - if: github.event_name == 'pull_request' && github.event.action == 'opened'
+      # CREATE STEPS
+
+      - if: steps.create.outputs.ip_address != null
         name: Create commands
         uses: appleboy/ssh-action@master
         with:
@@ -198,7 +197,7 @@ jobs:
 
       # UPDATE STEPS
 
-      - if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
+      - if: steps.create.outputs.ip_address == null
         name: Update commands
         uses: appleboy/ssh-action@master
         with:

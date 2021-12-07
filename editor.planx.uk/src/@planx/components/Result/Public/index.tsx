@@ -1,4 +1,5 @@
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -36,11 +37,7 @@ interface Response {
 }
 
 const useClasses = makeStyles((theme) => ({
-  disclaimer: {
-    cursor: "pointer",
-  },
   readMore: {
-    marginLeft: theme.spacing(1),
     color: theme.palette.grey[500],
     "&:hover": {
       color: theme.palette.grey[400],
@@ -48,6 +45,16 @@ const useClasses = makeStyles((theme) => ({
   },
   disclaimerContent: {
     marginTop: theme.spacing(1),
+  },
+  disclaimerHeading: {
+    marginRight: theme.spacing(1),
+  },
+  button: {
+    color: theme.palette.text.primary,
+    padding: 0,
+    "&:focus-visible": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
+    },
   },
 }));
 
@@ -152,23 +159,29 @@ const Result: React.FC<Props> = ({
             p={1.25}
             display="flex"
             color={theme.palette.grey[600]}
-            className={classes.disclaimer}
           >
             <Warning />
             <Box ml={1}>
-              <Box
-                display="flex"
-                alignItems="center"
-                onClick={() =>
-                  setShowDisclaimer((showDisclaimer) => !showDisclaimer)
-                }
-              >
-                <Typography variant="h6" color="inherit">
+              <Box display="flex" alignItems="center">
+                <Typography
+                  variant="h6"
+                  component="h3"
+                  color="inherit"
+                  className={classes.disclaimerHeading}
+                >
                   {disclaimer.heading}
                 </Typography>
-                <Typography variant="body2" className={classes.readMore}>
-                  read {showDisclaimer ? "less" : "more"}
-                </Typography>
+                <Button
+                  className={classes.button}
+                  onClick={() =>
+                    setShowDisclaimer((showDisclaimer) => !showDisclaimer)
+                  }
+                  disableRipple
+                >
+                  <Typography variant="body2" className={classes.readMore}>
+                    read {showDisclaimer ? "less" : "more"}
+                  </Typography>
+                </Button>
               </Box>
               <Collapse in={showDisclaimer}>
                 <Typography

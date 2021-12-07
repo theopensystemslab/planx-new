@@ -2,10 +2,11 @@ import "./map.css";
 
 import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import { visuallyHidden } from "@material-ui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -19,7 +20,6 @@ import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useState } from "react";
-import ReactHtmlParser from "react-html-parser";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
@@ -69,46 +69,22 @@ function Component(props: Props) {
     },
   });
 
-  const { data: constraints } = useSWR(
-    () =>
-      address
-        ? `${process.env.REACT_APP_API_URL}/gis/${team}?x=${address.x}&y=${address.y}&version=1`
-        : null,
-    {
-      shouldRetryOnError: true,
-      errorRetryInterval: 1000,
-      errorRetryCount: 3,
-    }
-  );
-
-  if (!address) {
+  if (!address && Boolean(data?.teams.length)) {
     return (
       <GetAddress
         title={props.title}
         description={props.description}
         setAddress={setAddress}
-        gssCode={data?.teams?.[0].gss_code}
         initialPostcode={previouslySubmittedData?._address.postcode}
         initialSelectedAddress={previouslySubmittedData?._address}
       />
     );
-  } else if (address && constraints) {
+  } else if (address) {
     return (
       <PropertyInformation
         handleSubmit={(feedback?: string) => {
-          if (flow && address && constraints) {
-            const _nots: any = {};
+          if (flow && address) {
             const newPassportData: any = {};
-
-            Object.entries(constraints).forEach(([key, data]: any) => {
-              if (data.value) {
-                newPassportData["property.constraints.planning"] ||= [];
-                newPassportData["property.constraints.planning"].push(key);
-              } else {
-                _nots["property.constraints.planning"] ||= [];
-                _nots["property.constraints.planning"].push(key);
-              }
-            });
 
             if (address?.planx_value) {
               newPassportData["property.type"] = [address.planx_value];
@@ -117,7 +93,6 @@ function Component(props: Props) {
             const passportData = {
               _address: address,
               ...newPassportData,
-              _nots,
             };
 
             props.handleSubmit?.({
@@ -152,13 +127,6 @@ function Component(props: Props) {
             detail: address.planx_description,
           },
         ]}
-        propertyConstraints={{
-          title: "Planning constraints",
-          description: "Things that might affect your project",
-          constraints: (Object.values(constraints) || []).filter(
-            ({ text }: any) => text
-          ),
-        }}
         teamColor={data?.teams?.[0].theme?.primary || "#2c2c2c"}
       />
     );
@@ -176,7 +144,6 @@ function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
   title?: string;
   description?: string;
-  gssCode: string;
   initialPostcode?: string;
   initialSelectedAddress?: Option;
 }) {
@@ -330,7 +297,6 @@ export function PropertyInformation(props: any) {
     title,
     description,
     propertyDetails,
-    propertyConstraints,
     lat,
     lng,
     handleSubmit,
@@ -344,9 +310,8 @@ export function PropertyInformation(props: any) {
     onSubmit: (values) => {
       if (values.feedback) {
         submitFeedback(values.feedback, {
-          reason: "Inaccurate property location",
+          reason: "Inaccurate property details",
           property: propertyDetails,
-          constraints: propertyConstraints,
         });
       }
       handleSubmit?.();
@@ -357,6 +322,9 @@ export function PropertyInformation(props: any) {
     <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
       <Box className={styles.map}>
+        <p style={visuallyHidden}>
+          A static map centered on the property address, showing the Ordnance Survey basemap features.
+        </p>
         {/* @ts-ignore */}
         <my-map
           zoom={19.5}
@@ -365,10 +333,9 @@ export function PropertyInformation(props: any) {
           osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
           hideResetControl
           showFeaturesAtPoint
-          osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_FEATURES_KEY}
+          osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
           featureColor={teamColor}
           featureFill
-          ariaLabel="A static map centered on your address input, showing the Ordnance Survey basemap features."
         />
       </Box>
       <Box mb={6}>
@@ -383,7 +350,6 @@ export function PropertyInformation(props: any) {
           </Box>
         ))}
       </Box>
-      <PropertyConstraints constraintsData={propertyConstraints} />
       <Box color="text.secondary" textAlign="right">
         <CollapsibleInput
           handleChange={formik.handleChange}
@@ -396,60 +362,5 @@ export function PropertyInformation(props: any) {
         </CollapsibleInput>
       </Box>
     </Card>
-  );
-}
-
-function PropertyConstraints({ constraintsData }: any) {
-  const { title, description, constraints } = constraintsData;
-
-  // Order constraints so that { value: true } ones come first
-  constraints.sort(function (a: any, b: any) {
-    return b.value - a.value;
-  });
-
-  const visibleConstraints = constraints.map((con: any) => (
-    <Constraint key={con.text} color={con.color || ""}>
-      {ReactHtmlParser(con.text)}
-    </Constraint>
-  ));
-
-  return (
-    <Box mb={3}>
-      <Box pb={2}>
-        <Typography variant="h3" component="h2" gutterBottom>
-          {title}
-        </Typography>
-        <Typography variant="body2" gutterBottom>
-          {description}
-        </Typography>
-      </Box>
-      {visibleConstraints.length > 0 ? (
-        visibleConstraints
-      ) : (
-        <DelayedLoadingIndicator
-          msDelayBeforeVisible={0}
-          text="Fetching constraints..."
-        />
-      )}
-    </Box>
-  );
-}
-
-function Constraint({ children, color, ...props }: any) {
-  const classes = useClasses();
-  const theme = useTheme();
-  return (
-    <Box
-      className={classes.constraint}
-      bgcolor={color ? color : "background.paper"}
-      color={
-        color
-          ? theme.palette.getContrastText(color)
-          : theme.palette.text.primary
-      }
-      {...props}
-    >
-      {children}
-    </Box>
   );
 }

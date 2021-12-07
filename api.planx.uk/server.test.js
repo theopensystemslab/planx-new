@@ -207,21 +207,25 @@ describe("fetching GIS data from local authorities", () => {
       council: "buckinghamshire",
       x: 485061.33649798,
       y: 191930.3763250516,
+      siteBoundary: [],
     },
     {
       council: "canterbury",
       x: 621192.0132463141,
       y: 157770.55052344775,
+      siteBoundary: [],
     },
     {
       council: "lambeth",
       x: 530622.7463248332,
       y: 178706.16704920324,
+      siteBoundary: [],
     },
     {
       council: "southwark",
       x: 532700,
       y: 175010,
+      siteBoundary: [],
     },
   ];
 
@@ -230,12 +234,12 @@ describe("fetching GIS data from local authorities", () => {
   locations.forEach((location) => {
     it(`returns MVP planning constraints for ${location.council}`, async () => {
       await supertest(app)
-        .get(`/gis/${location.council}?x=${location.x}&y=${location.y}`)
+        .get(`/gis/${location.council}?x=${location.x}&y=${location.y}&siteBoundary=${JSON.stringify(location.siteBoundary)}`)
         .expect(200)
         .then((res) => {
           expect(res.body["article4"]).toBeDefined();
           expect(res.body["listed"]).toBeDefined();
-          expect(res.body["designated"]).toBeDefined();
+          expect(res.body["designated.conservationArea"]).toBeDefined();
         });
     }, 20_000); // 20s request timeout
   });

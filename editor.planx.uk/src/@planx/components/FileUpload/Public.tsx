@@ -39,9 +39,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1.5),
     position: "relative",
     zIndex: 10,
-    "&:focus": {
-      outline: "none",
-    },
     "&::before": {
       content: "''",
       position: "absolute",
@@ -160,7 +157,14 @@ const FileUpload: React.FC<Props> = (props) => {
             slots.map((slot: any) => ({
               url: slot.url,
               filename: slot.file.path,
-              cachedSlot: slot,
+              cachedSlot: {
+                ...slot,
+                file: {
+                  path: slot.file.path,
+                  type: slot.file.type,
+                  size: slot.file.size,
+                },
+              },
             }))
           )
         );
@@ -287,7 +291,7 @@ function Dropzone(props: any) {
             />
             <Box className={classes.filePreview}>
               {file.type.includes("image") ? (
-                <ImagePreview file={file} />
+                <ImagePreview file={file} url={url} />
               ) : (
                 <FileIcon />
               )}
@@ -339,8 +343,11 @@ function Dropzone(props: any) {
   );
 }
 
-function ImagePreview({ file }: any) {
-  const { current: url } = React.useRef(URL.createObjectURL(file));
+function ImagePreview({ file, url: parentUrl }: any) {
+  const { current: url } = React.useRef(
+    file instanceof File ? URL.createObjectURL(file) : parentUrl
+  );
+
   useEffect(() => {
     return () => {
       // Cleanup to free up memory

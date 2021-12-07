@@ -21,6 +21,10 @@ config:
     secure: AAABAFWrfRcYR8kWrKVhFQ+PedyHB+Op5r4yl5VGOfQR0DmEauoCg5lqY16fPu/vNaFc4lte0rPznxg6ak+CaOLovjE=
   application:jwt-secret:
     secure: AAABACbmLC4176IBxX5iL64/nycSXEsCYSQ0hTb7t2OCVlWUc627Vr/EpBhcqPrw9q+0z8UOvRJG5/c/DflZxfPxyJRUVNu+
+  application:metabase-encryption-secret-key:
+    secure: AAABAGmfVICD8sR+IE6mHC8BNUY1WQXGCbv5F3C1fSgA+1ADiRem3GNrwY0YRZociRYuPIo3MIRS0aIg44jt10SBCE0ik58wHamcKA==
+  application:metabasePgPassword:
+    secure: AAABAI1jwOCiVQ7FdyxRXyZQh0VeN/z1R9t3Y2QXSdAgBq5cu7lT7UKRpDmtSS857F8GqOIAAedPXng11w0dmqWe1783BRtczE7tOQ==
   application:session-secret:
     secure: AAABABAEQraYY1NSIufhqZ1XYWTEqYgQl1M1CJmouRiD1mMx7LqKbyoYzAS4H3nfksuavw==
   aws:region: eu-west-2

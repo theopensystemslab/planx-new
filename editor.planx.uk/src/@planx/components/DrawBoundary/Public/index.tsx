@@ -2,6 +2,7 @@ import "./map.css";
 
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
+import { visuallyHidden } from "@material-ui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
@@ -28,15 +29,20 @@ const useClasses = makeStyles((theme) => ({
   hidden: { display: "none" },
   uploadInstead: {
     textAlign: "right",
-    fontSize: "medium",
     marginTop: theme.spacing(1),
-    "& a": {
+    "& button": {
+      background: "none",
+      "border-style": "none",
       color: theme.palette.text.primary,
       cursor: "pointer",
+      fontSize: "medium",
       padding: theme.spacing(2),
     },
-    "& a:hover": {
+    "& button:hover": {
       backgroundColor: theme.palette.background.paper,
+    },
+    "& button:focus-visible": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
     },
   },
 }));
@@ -128,23 +134,30 @@ export default function Component(props: Props) {
               @ts-ignore */}
               <my-map drawMode zoom={19} />
             </div>
+            <p style={visuallyHidden}>
+              An interactive map centered on your address, with a red pointer to
+              draw your site outline. Click to place points and connect the
+              lines to make your site. Once you've closed the site shape, click
+              and drag the lines to modify it. If you cannot draw, you can
+              upload a location plan file using the link below.
+            </p>
             {/* @ts-ignore */}
             <my-map
               drawMode
+              drawPointer="dot"
               drawGeojsonData={JSON.stringify(boundary)}
               zoom={19}
-              maxZoom={20}
+              maxZoom={23}
               latitude={Number(passport?.data?._address?.latitude)}
               longitude={Number(passport?.data?._address?.longitude)}
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
-              ariaLabel="An interactive map centered on your address, with a red pointer to begin drawing your site outline. Click to place points and connect the lines to make your site. Once you've closed the site shape, click and drag the lines to modify. If you cannot draw, you can alternately upload a file using the link below."
             />
           </Box>
-          <p className={classes.uploadInstead}>
-            <a onClick={() => setPage("upload")}>
+          <div className={classes.uploadInstead}>
+            <button onClick={() => setPage("upload")}>
               Upload a location plan instead
-            </a>
-          </p>
+            </button>
+          </div>
           <p>
             The boundary you have drawn has an area of{" "}
             <strong>{area ?? 0} m²</strong>
@@ -163,11 +176,11 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <Upload setFile={setSelectedFile} initialFile={selectedFile} />
-          <p className={classes.uploadInstead}>
-            <a onClick={() => setPage("draw")}>
+          <div className={classes.uploadInstead}>
+            <button onClick={() => setPage("draw")}>
               Draw the boundary on a map instead
-            </a>
-          </p>
+            </button>
+          </div>
         </div>
       );
     }

@@ -39,6 +39,7 @@ const routes = compose(
             id
             team {
               theme
+              name
             }
             settings
             published_flows(limit: 1, order_by: { id: desc }) {

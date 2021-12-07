@@ -26,20 +26,30 @@ var headers = {
 };
 
 // Fetch a data layer
-function get(key, table, x, y, radius = 1.5) {
+function get(key, table, x, y, siteBoundary, radius = 1.5) {
   const fieldsString = planningConstraints[key].columns
     .map((f) => `"${f}"`)
     .join(",");
 
   const limit = 1; // 100
 
+  // If no site boundary (aka file upload), query using the address point
   const bbox = makeBbox(x, y, radius);
-
-  const query = `
+  let query = `
     SELECT ${fieldsString} 
     FROM "/NamedMaps/NamedTables/${table}" 
     WHERE MI_Intersects(obj,MI_Box(${bbox},'EPSG:27700'))
   `;
+
+  // If there's a site boundary, use the polygon to query
+  if (siteBoundary.length > 0) {
+    const rings = siteBoundary.join();
+    query = `
+      SELECT ${fieldsString} 
+      FROM "/NamedMaps/NamedTables/${table}" 
+      WHERE MI_Intersects(obj,MI_Polygon('${rings}','EPSG:4326'))
+    `;
+  }
 
   return fetch(
     "https://geo.southwark.gov.uk/connect/analyst/controller/connectProxy/rest/Spatial/FeatureService",
@@ -63,7 +73,7 @@ function get(key, table, x, y, radius = 1.5) {
 }
 
 // For this location, iterate through our planning constraints and aggregate/format the responses
-async function locationSearch(x, y, extras) {
+async function locationSearch(x, y, siteBoundary, extras) {
   // Setup a one-dimension array of each data source we'll fetch
   let sources = [];
   Object.keys(gisLayers).forEach((layer) =>
@@ -73,13 +83,16 @@ async function locationSearch(x, y, extras) {
         table: table,
         x: x,
         y: y,
+        siteBoundary: siteBoundary,
       })
     )
   );
 
   const responses = await Promise.all(
     sources
-      .map((source) => get(source.layer, source.table, source.x, source.y))
+      .map((source) =>
+        get(source.layer, source.table, source.x, source.y, source.siteBoundary)
+      )
       .map((p) => p.catch((e) => console.log(e)))
   );
 

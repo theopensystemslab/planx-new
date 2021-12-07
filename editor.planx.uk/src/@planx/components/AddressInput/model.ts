@@ -17,7 +17,7 @@ export const userDataSchema: SchemaOf<UserData> = object({
   line2: string(),
   town: string().required("Town is required"),
   county: string(),
-  postcode: string().required("Postal code is required"),
+  postcode: string().required("Postcode is required"),
   country: string(),
 });
 

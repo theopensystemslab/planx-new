@@ -1,6 +1,28 @@
 // Source name used in metadata templates for pre-checked/human-verified data sources
 const PRECHECKED_SOURCE = "manual";
 
+// Set the geometry type to polygon if we have a valid site boundary polygon drawing,
+//   else do an envelope query using the buffered address point
+// Ref https://developers.arcgis.com/documentation/common-data-types/geometry-objects.htm
+const setEsriGeometryType = (siteBoundary = []) => {
+  return siteBoundary.length === 0
+    ? "esriGeometryEnvelope"
+    : "esriGeometryPolygon";
+};
+
+// Set the geometry object based on our geometry type
+// Ref https://developers.arcgis.com/documentation/common-data-types/geometry-objects.htm
+const setEsriGeometry = (geometryType, x, y, radius, siteBoundary) => {
+  return geometryType === "esriGeometryEnvelope"
+    ? bufferPoint(x, y, radius)
+    : JSON.stringify({
+        rings: siteBoundary,
+        spatialReference: {
+          wkid: 4326,
+        },
+      });
+};
+
 // Build up the URL used to query an ESRI feature
 // Ref https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-.htm
 const makeEsriUrl = (domain, id, serverIndex = 0, overrideParams = {}) => {
@@ -138,6 +160,8 @@ const addDesignatedVariable = (responseObject) => {
 };
 
 module.exports = {
+  setEsriGeometryType,
+  setEsriGeometry,
   makeEsriUrl,
   bufferPoint,
   makeBbox,

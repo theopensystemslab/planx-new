@@ -49,7 +49,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
-      <InputLabel label="building and street">
+      <InputLabel label="Building and street">
         <Input
           name="line1"
           value={formik.values.line1}
@@ -69,7 +69,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
           onChange={formik.handleChange}
         />
       </InputRow>
-      <InputLabel label="town">
+      <InputLabel label="Town">
         <Input
           name="town"
           value={formik.values.town}
@@ -79,7 +79,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
           onChange={formik.handleChange}
         />
       </InputLabel>
-      <InputLabel label="county">
+      <InputLabel label="County">
         <Input
           name="county"
           value={formik.values.county}
@@ -89,19 +89,19 @@ export default function AddressInputComponent(props: Props): FCReturn {
           onChange={formik.handleChange}
         />
       </InputLabel>
-      <InputLabel label="postal code">
+      <InputLabel label="Postcode">
         <InputRowItem width="40%">
           <Input
             name="postcode"
             value={formik.values.postcode}
-            placeholder="Postal code"
+            placeholder="Postcode"
             bordered
             errorMessage={formik.errors.postcode}
             onChange={formik.handleChange}
           />
         </InputRowItem>
       </InputLabel>
-      <InputLabel label="country">
+      <InputLabel label="Country">
         <InputRowItem>
           <Input
             name="country"

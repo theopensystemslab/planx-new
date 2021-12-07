@@ -4,22 +4,14 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import * as ReactNavi from "react-navi";
 import * as SWR from "swr";
-import waitForExpect from "wait-for-expect";
 
 import FindProperty from "./";
-import constraintsMock from "./mocks/constraintsMock";
 import findAddressReturnMock from "./mocks/findAddressReturnMock";
 import postcodeMock from "./mocks/postcodeMock";
 
 const TEAM = "canterbury";
-const CONSTRAINTS_URL = `${process.env.REACT_APP_API_URL}/gis/${TEAM}`;
 
 jest.spyOn(SWR, "default").mockImplementation((url: any) => {
-  if (url?.includes?.(CONSTRAINTS_URL)) {
-    return {
-      data: constraintsMock,
-    } as any;
-  }
   return {
     data: postcodeMock,
   } as any;
@@ -107,9 +99,6 @@ test("recovers previously submitted address when clicking the back button", asyn
       planx_value: "residential.HMO.parent",
     },
     "property.type": ["residential.HMO.parent"],
-    _nots: {
-      "property.constraints.planning": ["header", "results"],
-    },
   };
 
   render(

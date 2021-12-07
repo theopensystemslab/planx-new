@@ -3,10 +3,8 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import Collapse from "@material-ui/core/Collapse";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Caret from "ui/icons/Caret";
@@ -104,7 +102,11 @@ const ResultReason: React.FC<IResultReason> = ({
               alignItems="center"
               color="text.primary"
             >
-              <Typography variant="body2" color="textPrimary" id="questionText">
+              <Typography
+                variant="body2"
+                color="textPrimary"
+                id={`questionText-${id}`}
+              >
                 {question.data.text}{" "}
                 <strong className={classes.responseText}>{response}</strong>
               </Typography>
