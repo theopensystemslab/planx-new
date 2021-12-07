@@ -12,7 +12,6 @@ import {
 import axios from "axios";
 import { getCookie } from "lib/cookie";
 import { client } from "lib/graphql";
-import { NumericDictionary } from "lodash";
 import debounce from "lodash/debounce";
 import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
