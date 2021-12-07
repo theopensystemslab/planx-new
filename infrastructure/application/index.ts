@@ -66,12 +66,33 @@ new pulumi.Config("cloudflare").require("apiToken");
     }
   );
 
+  const METABASE_PORT = 3000;
   const lbMetabase = new awsx.lb.ApplicationLoadBalancer("metabase", {
     external: true,
     vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
+    securityGroups: [
+      new awsx.ec2.SecurityGroup("metabase-custom-port", {
+        vpc,
+        ingress: [
+          {
+            protocol: "tcp",
+            cidrBlocks: ["0.0.0.0/0"],
+            fromPort: 443,
+            toPort: 443,
+          },
+        ],
+        egress: [
+          {
+            protocol: "tcp",
+            cidrBlocks: ["0.0.0.0/0"],
+            fromPort: METABASE_PORT,
+            toPort: METABASE_PORT,
+          },
+        ],
+      }),
+    ],
   });
-  const METABASE_PORT = 3000;
   const targetMetabase = lbMetabase.createTargetGroup("metabase", {
     port: METABASE_PORT,
     protocol: "HTTP",
@@ -106,27 +127,6 @@ new pulumi.Config("cloudflare").require("apiToken");
   const metabaseService = new awsx.ecs.FargateService("metabase", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
-    securityGroups: [
-      new awsx.ec2.SecurityGroup("metabase-custom-port", {
-        vpc,
-        ingress: [
-          {
-            protocol: "tcp",
-            cidrBlocks: ["0.0.0.0/0"],
-            fromPort: 443,
-            toPort: 443,
-          },
-        ],
-        egress:[
-          {
-            protocol: "tcp",
-            cidrBlocks: ["0.0.0.0/0"],
-            fromPort: METABASE_PORT,
-            toPort: METABASE_PORT,
-          },
-        ],
-      }),
-    ],
     taskDefinitionArgs: {
       container: {
         image: "metabase/metabase:v0.41.3.1",
