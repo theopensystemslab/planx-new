@@ -71,7 +71,6 @@ new pulumi.Config("cloudflare").require("apiToken");
     vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
   });
-  // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
   const METABASE_PORT = 3000;
   const targetMetabase = lbMetabase.createTargetGroup("metabase", {
     port: METABASE_PORT,
@@ -107,6 +106,27 @@ new pulumi.Config("cloudflare").require("apiToken");
   const metabaseService = new awsx.ecs.FargateService("metabase", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
+    securityGroups: [
+      new awsx.ec2.SecurityGroup("metabase-custom-port", {
+        vpc,
+        ingress: [
+          {
+            protocol: "tcp",
+            cidrBlocks: ["0.0.0.0/0"],
+            fromPort: 443,
+            toPort: 443,
+          },
+        ],
+        egress:[
+          {
+            protocol: "tcp",
+            cidrBlocks: ["0.0.0.0/0"],
+            fromPort: METABASE_PORT,
+            toPort: METABASE_PORT,
+          },
+        ],
+      }),
+    ],
     taskDefinitionArgs: {
       container: {
         image: "metabase/metabase:v0.41.3.1",
