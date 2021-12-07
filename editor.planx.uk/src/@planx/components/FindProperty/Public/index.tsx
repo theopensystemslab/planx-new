@@ -164,11 +164,11 @@ function GetAddress(props: {
   const { data: addressesInPostcode } = useSWR(
     () =>
       sanitizedPostcode
-        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`
+        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&lr=EN`
         : null,
     {
       shouldRetryOnError: true,
-      errorRetryInterval: 1000,
+      errorRetryInterval: 500,
       errorRetryCount: 3,
     }
   );
@@ -215,17 +215,14 @@ function GetAddress(props: {
         // Default transform is "translate(14px, 20px) scale(1)""
         // This lines up the label with the initial cursor position in the input
         // after changing its padding-left.
-        transform: "translate(34px, 20px) scale(1);"
-      }
+        transform: "translate(34px, 20px) scale(1);",
+      },
     },
     inputRoot: {
       color: "#000",
       fontSize: "inherit",
       borderRadius: 0,
-      // This matches the specificity of the default styles at https://github.com/mui-org/material-ui/blob/v4.11.3/packages/material-ui-lab/src/Autocomplete/Autocomplete.js#L90
       '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
-        // Default left padding is 6px
-        paddingLeft: 26,
         borderRadius: 0,
       },
       "& .MuiOutlinedInput-notchedOutline": {
@@ -246,12 +243,12 @@ function GetAddress(props: {
       // Hover
       '&[data-focus="true"]': {
         backgroundColor: theme.palette.grey[400],
-        borderColor: 'transparent',
+        borderColor: "transparent",
       },
       // Selected
       '&[aria-selected="true"]': {
         backgroundColor: theme.palette.grey[400],
-        borderColor: 'transparent',
+        borderColor: "transparent",
       },
     },
   }));
@@ -290,7 +287,7 @@ function GetAddress(props: {
                 setPostcode(input.toUpperCase());
               }
             }}
-            aria-describedby="Enter the postcode of the property"
+            aria-label="Enter the postcode of the property"
             style={{ marginBottom: "20px" }}
           />
         </InputLabel>
@@ -322,7 +319,7 @@ function GetAddress(props: {
                   {...params}
                   variant="outlined"
                   autoFocus
-                  aria-describedby="Select an address"
+                  aria-label="Select an address"
                 />
               </InputLabel>
             )}
@@ -334,7 +331,9 @@ function GetAddress(props: {
             disablePortal
             disableClearable
             PaperComponent={({ children }) => (
-              <Paper style={{ borderRadius: 0, boxShadow: "none" }}>{children}</Paper>
+              <Paper style={{ borderRadius: 0, boxShadow: "none" }}>
+                {children}
+              </Paper>
             )}
           />
         )}
