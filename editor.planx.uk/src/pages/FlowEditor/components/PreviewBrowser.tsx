@@ -253,14 +253,18 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
                   color="primary"
                   autoFocus
                   onClick={async () => {
-                    setDialogOpen(false);
-                    setLastPublishedTitle("Publishing changes...");
-                    const publishedFlow = await publishFlow(flowId, summary);
-                    setLastPublishedTitle(
-                      publishedFlow?.data.alteredNodes
-                        ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
-                        : "No new changes to publish"
-                    );
+                    try {
+                      setDialogOpen(false);
+                      setLastPublishedTitle("Publishing changes...");
+                      const publishedFlow = await publishFlow(flowId, summary);
+                      setLastPublishedTitle(
+                        publishedFlow?.data.alteredNodes
+                          ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
+                          : "No new changes to publish"
+                      );
+                    } catch (error) {
+                      console.log(error);
+                    }
                   }}
                   disabled={!alteredNodes || alteredNodes.length === 0}
                 >
