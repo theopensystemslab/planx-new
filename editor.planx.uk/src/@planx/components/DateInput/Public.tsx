@@ -1,3 +1,4 @@
+import { makeStyles } from "@material-ui/core/styles";
 import {
   DateInput,
   paddedDate,
@@ -17,6 +18,12 @@ import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 
 export type Props = PublicProps<DateInput, UserData>;
 
+const useClasses = makeStyles(() => ({
+  fieldset: {
+    border: 0,
+  },
+}));
+
 const DateInputPublic: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
@@ -32,26 +39,31 @@ const DateInputPublic: React.FC<Props> = (props) => {
     }),
   });
 
+  const classes = useClasses();
+
   return (
     <Card handleSubmit={formik.handleSubmit}>
-      <QuestionHeader
-        title={props.title}
-        description={props.description}
-        info={props.info}
-        policyRef={props.policyRef}
-        howMeasured={props.howMeasured}
-      />
-      <InputRow>
-        <DateInputComponent
-          value={formik.values.date}
-          bordered
-          onChange={(newDate: string) => {
-            // Pad it here if necessary; keep DateInputComponent simple
-            formik.setFieldValue("date", paddedDate(newDate));
-          }}
-          error={formik.errors.date as string}
+      <fieldset className={classes.fieldset}>
+        <legend aria-label={props.title}></legend>
+        <QuestionHeader
+          title={props.title}
+          description={props.description}
+          info={props.info}
+          policyRef={props.policyRef}
+          howMeasured={props.howMeasured}
         />
-      </InputRow>
+        <InputRow>
+          <DateInputComponent
+            value={formik.values.date}
+            bordered
+            onChange={(newDate: string, eventType: string) => {
+              // Pad it here if necessary; keep DateInputComponent simple
+              formik.setFieldValue("date", paddedDate(newDate, eventType));
+            }}
+            error={formik.errors.date as string}
+          />
+        </InputRow>
+      </fieldset>
     </Card>
   );
 };
