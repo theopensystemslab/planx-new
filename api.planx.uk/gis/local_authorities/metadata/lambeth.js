@@ -108,7 +108,17 @@ const planningConstraints = {
       description: data.name,
     }),
   },
-  "designated.monument": { value: false },
+  "designated.monument": { 
+    key: "designated.monument",
+    source: environmentDomain,
+    id: "HE/ScheduledMonuments",
+    fields: ["objectid", "name", "scheddate", "amenddate"],
+    neg: "is not the site of a Scheduled Monument",
+    pos: (data) => ({
+      text: "is the site of a Scheduled Monument",
+      description: data.name,
+    }),
+  },
   tpo: {
     key: "tpo",
     source: lambethDomain,

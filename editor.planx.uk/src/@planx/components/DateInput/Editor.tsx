@@ -1,3 +1,4 @@
+import Box from "@material-ui/core/Box";
 import { DateInput, paddedDate } from "@planx/components/DateInput/model";
 import { dateSchema, parseDateInput } from "@planx/components/DateInput/model";
 import { TYPES } from "@planx/components/types";
@@ -59,14 +60,6 @@ const DateInputComponent: React.FC<Props> = (props) => {
             />
           </InputRow>
           <InputRow>
-            <RichTextInput
-              placeholder="Placeholder"
-              name="placeholder"
-              value={formik.values.placeholder}
-              onChange={formik.handleChange}
-            />
-          </InputRow>
-          <InputRow>
             <Input
               // required
               format="data"
@@ -76,26 +69,30 @@ const DateInputComponent: React.FC<Props> = (props) => {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputRow>
-            <DateInputUi
-              label="min"
-              value={formik.values.min}
-              error={formik.errors.min}
-              onChange={(newDate) => {
-                formik.setFieldValue("min", paddedDate(newDate));
-              }}
-            />
-          </InputRow>
-          <InputRow>
-            <DateInputUi
-              label="max"
-              value={formik.values.max}
-              error={formik.errors.max}
-              onChange={(newDate) => {
-                formik.setFieldValue("max", paddedDate(newDate));
-              }}
-            />
-          </InputRow>
+          <Box mt={2}>
+            <InputRow>
+              <DateInputUi
+                label="min"
+                value={formik.values.min}
+                error={formik.errors.min}
+                onChange={(newDate: string, eventType: string) => {
+                  formik.setFieldValue("min", paddedDate(newDate, eventType));
+                }}
+              />
+            </InputRow>
+          </Box>
+          <Box mt={2}>
+            <InputRow>
+              <DateInputUi
+                label="max"
+                value={formik.values.max}
+                error={formik.errors.max}
+                onChange={(newDate: string, eventType: string) => {
+                  formik.setFieldValue("max", paddedDate(newDate, eventType));
+                }}
+              />
+            </InputRow>
+          </Box>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation

@@ -9,7 +9,6 @@ export type UserData = string;
 export interface DateInput extends MoreInformation {
   title: string;
   description?: string;
-  placeholder?: string;
   fn?: string;
   min?: string;
   max?: string;
@@ -22,7 +21,7 @@ export const isDateValid = (date: string) => {
   return isComplete && isValid(parseISO(date));
 };
 
-export const paddedDate = (date: string) => {
+export const paddedDate = (date: string, eventType: string) => {
   const [year, month, day] = date.split("-");
 
   // If month and/or year is single-digit, pad it
@@ -32,13 +31,16 @@ export const paddedDate = (date: string) => {
       return value;
     }
 
-    if (value.length === 1) {
+    // If the first number is greater than 3, it cannot be a valid day/month
+    // Automatically pad with a 0
+    if (parseInt(value) > 3) {
       return value.padStart(2, "0");
     }
 
-    // If it's already been padded, remove extraneous 0
-    if (value.length > 2 && value[0] === "0") {
-      return value.slice(1);
+    // When the field has been blurred, the user has completed their input
+    // If the value is < 10, pad with a 0
+    if (eventType === "blur" && value.length === 1) {
+      return value.padStart(2, "0");
     }
 
     // Otherwise change nothing
@@ -97,7 +99,6 @@ export const parseDateInput = (
 ): DateInput => ({
   title: data?.title || "",
   description: data?.description,
-  placeholder: data?.placeholder,
   fn: data?.fn,
   min: data?.min,
   max: data?.max,

@@ -2,13 +2,13 @@ import "./map.css";
 
 import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { visuallyHidden } from "@material-ui/utils";
 import Card from "@planx/components/shared/Preview/Card";
-import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
@@ -23,6 +23,8 @@ import React, { useState } from "react";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
+import Input from "ui/Input";
+import InputLabel from "ui/InputLabel";
 
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
@@ -162,11 +164,11 @@ function GetAddress(props: {
   const { data: addressesInPostcode } = useSWR(
     () =>
       sanitizedPostcode
-        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`
+        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&lr=EN`
         : null,
     {
       shouldRetryOnError: true,
-      errorRetryInterval: 1000,
+      errorRetryInterval: 500,
       errorRetryCount: 3,
     }
   );
@@ -206,6 +208,54 @@ function GetAddress(props: {
     });
   }
 
+  // Autocomplete overrides
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
+        // Default transform is "translate(14px, 20px) scale(1)""
+        // This lines up the label with the initial cursor position in the input
+        // after changing its padding-left.
+        transform: "translate(34px, 20px) scale(1);",
+      },
+    },
+    inputRoot: {
+      color: "#000",
+      fontSize: "inherit",
+      borderRadius: 0,
+      '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
+        borderRadius: 0,
+      },
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderRadius: 0,
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        borderRadius: 0,
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderRadius: 0,
+      },
+    },
+    input: {
+      padding: theme.spacing(1),
+    },
+    option: {
+      fontSize: "inherit",
+      // Hover
+      '&[data-focus="true"]': {
+        backgroundColor: theme.palette.grey[800],
+        borderColor: "transparent",
+        color: "white",
+      },
+      // Selected
+      '&[aria-selected="true"]': {
+        backgroundColor: theme.palette.grey[800],
+        borderColor: "transparent",
+        color: "white",
+      },
+    },
+  }));
+  const classes = useStyles();
+
   return (
     <Card
       handleSubmit={() => props.setAddress(selectedOption ?? undefined)}
@@ -216,24 +266,36 @@ function GetAddress(props: {
         description={props.description || ""}
       />
       <Box pb={2}>
-        <FormInput
-          placeholder="Enter the postcode of the property"
-          value={postcode || ""}
-          onChange={(e: any) => {
-            // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
-            //      so this code attempts to validate postcodes without blocking any characters.
-            const input = e.target.value;
-            if (parse(input.trim()).valid) {
-              setSanitizedPostcode(toNormalised(input.trim()));
-              setPostcode(toNormalised(input.trim()));
-            } else {
-              setSanitizedPostcode(null);
-              setPostcode(input.toUpperCase());
+        <InputLabel label="Postcode">
+          <Input
+            required
+            bordered
+            name="postcode"
+            value={postcode || ""}
+            errorMessage={
+              postcode && postcode?.length > 5 && !sanitizedPostcode
+                ? "Enter a valid UK postcode"
+                : ""
             }
-          }}
-        />
+            onChange={(e: any) => {
+              // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
+              //      so this code attempts to validate postcodes without blocking any characters.
+              const input = e.target.value;
+              if (parse(input.trim()).valid) {
+                setSanitizedPostcode(toNormalised(input.trim()));
+                setPostcode(toNormalised(input.trim()));
+              } else {
+                setSanitizedPostcode(null);
+                setPostcode(input.toUpperCase());
+              }
+            }}
+            aria-label="Enter the postcode of the property"
+            style={{ marginBottom: "20px" }}
+          />
+        </InputLabel>
         {Boolean(addresses.length) && (
           <Autocomplete
+            classes={classes}
             options={addresses
               .map(
                 (address: Address): Option => ({
@@ -250,24 +312,41 @@ function GetAddress(props: {
             getOptionSelected={(option: Option, selected: Option) =>
               option.uprn === selected.uprn
             }
+            noOptionsText="No addresses"
             data-testid="autocomplete-input"
             value={selectedOption}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Address"
-                variant="outlined"
-                style={{ marginTop: 20 }}
-                autoFocus
-              />
+              <InputLabel label="Select an address">
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  autoFocus
+                  aria-label="Select an address"
+                />
+              </InputLabel>
             )}
             onChange={(event, selectedOption) => {
               if (selectedOption) {
                 setSelectedOption(selectedOption);
               }
             }}
+            disablePortal
+            disableClearable
+            PaperComponent={({ children }) => (
+              <Paper style={{ borderRadius: 0, boxShadow: "none" }}>
+                {children}
+              </Paper>
+            )}
           />
         )}
+        {addressesInPostcode?.header?.totalresults === 0 &&
+          Boolean(sanitizedPostcode) && (
+            <Box pt={2}>
+              <Typography variant="body1" color="error">
+                No addresses found in this postcode.
+              </Typography>
+            </Box>
+          )}
       </Box>
     </Card>
   );
@@ -323,7 +402,8 @@ export function PropertyInformation(props: any) {
       <QuestionHeader title={title} description={description} />
       <Box className={styles.map}>
         <p style={visuallyHidden}>
-          A static map centered on the property address, showing the Ordnance Survey basemap features.
+          A static map centered on the property address, showing the Ordnance
+          Survey basemap features.
         </p>
         {/* @ts-ignore */}
         <my-map
