@@ -50,13 +50,9 @@ test("renders correctly", async () => {
   );
 
   await waitFor(async () => {
-    await userEvent.type(
-      screen.getByPlaceholderText("Enter the postcode of the property"),
-      "SE5 0HU",
-      {
-        delay: 1,
-      }
-    );
+    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU", {
+      delay: 1,
+    });
   });
   await waitFor(async () => {
     await userEvent.type(screen.getByTestId("autocomplete-input"), "75", {
