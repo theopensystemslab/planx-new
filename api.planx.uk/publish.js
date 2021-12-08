@@ -70,7 +70,7 @@ const dataMerged = async (id, ob = {}) => {
 
 const diffFlow = async (req, res, next) => {
   if (!req.user?.sub)
-    return res.status(401).json({ error: "User ID missing from JWT" });
+    next({ status: 401, message: "User ID missing from JWT" });
 
   try {
     const flattenedFlow = await dataMerged(req.params.flowId);
@@ -100,7 +100,7 @@ const diffFlow = async (req, res, next) => {
 
 const publishFlow = async (req, res, next) => {
   if (!req.user?.sub)
-    return res.status(401).json({ error: "User ID missing from JWT" });
+    next({ status: 401, message: "User ID missing from JWT" });
 
   try {
     const flattenedFlow = await dataMerged(req.params.flowId);

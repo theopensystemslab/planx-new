@@ -217,13 +217,15 @@ export const editorStore = (
   diffFlow(flowId: string) {
     const token = getCookie("jwt");
 
-    return axios({
-      url: `${process.env.REACT_APP_API_URL}/flows/${flowId}/diff`,
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    return axios.post(
+      `${process.env.REACT_APP_API_URL}/flows/${flowId}/diff`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   },
 
   getFlows: async (teamId) => {
@@ -345,16 +347,18 @@ export const editorStore = (
         .filter(Boolean)
         .join("?");
 
-    return axios({
-      url: urlWithParams(
+    return axios.post(
+      urlWithParams(
         `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish`,
         { summary }
       ),
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   },
 
   removeNode: (id, parent) => {

@@ -190,19 +190,23 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
               variant="contained"
               color="primary"
               onClick={async () => {
-                setLastPublishedTitle("Checking for changes...");
-                const alteredFlow = await diffFlow(flowId);
-                setAlteredNodes(
-                  alteredFlow?.data.alteredNodes
-                    ? alteredFlow.data.alteredNodes
-                    : []
-                );
-                setLastPublishedTitle(
-                  alteredFlow?.data.alteredNodes
-                    ? `Found changes to ${alteredFlow.data.alteredNodes.length} node(s)`
-                    : "No new changes to publish"
-                );
-                setDialogOpen(true);
+                try {
+                  setLastPublishedTitle("Checking for changes...");
+                  const alteredFlow = await diffFlow(flowId);
+                  setAlteredNodes(
+                    alteredFlow?.data.alteredNodes
+                      ? alteredFlow.data.alteredNodes
+                      : []
+                  );
+                  setLastPublishedTitle(
+                    alteredFlow?.data.alteredNodes
+                      ? `Found changes to ${alteredFlow.data.alteredNodes.length} node(s)`
+                      : "No new changes to publish"
+                  );
+                  setDialogOpen(true);
+                } catch (error) {
+                  console.log(error);
+                }
               }}
             >
               CHECK FOR CHANGES TO PUBLISH
