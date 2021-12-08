@@ -182,6 +182,7 @@ export default function InputGroup({
             onFocus={() => setDeleteHover(true)}
             className={classes.deleteBtn}
             onClick={deleteInputGroup}
+            aria-label="Delete"
           >
             <Delete />
           </IconButton>

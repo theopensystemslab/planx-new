@@ -190,6 +190,7 @@ export default function FileUpload(props: Props) {
     <Box className={classes.file}>
       <IconButton
         size="small"
+        aria-label="Delete"
         className={classes.deleteIcon}
         onClick={() => {
           setSlot(undefined);

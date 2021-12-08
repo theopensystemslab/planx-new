@@ -166,6 +166,7 @@ const Header: React.FC<{
                 <IconButton
                   edge="end"
                   color="inherit"
+                  aria-label="Toggle Menu"
                   onClick={handleMenuToggle}
                 >
                   <KeyboardArrowDown />
