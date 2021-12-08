@@ -161,6 +161,7 @@ export default function FileUpload(props: Props) {
     return (
       <div
         className={classNames(classes.root, isDragActive && classes.dragActive)}
+        role="button"
         {...getRootProps()}
       >
         <input {...getInputProps()} />
