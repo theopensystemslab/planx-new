@@ -160,7 +160,7 @@ const Result: React.FC<Props> = ({
             display="flex"
             color={theme.palette.grey[600]}
           >
-            <Warning />
+            <Warning titleAccess="Warning" />
             <Box ml={1}>
               <Box display="flex" alignItems="center">
                 <Typography

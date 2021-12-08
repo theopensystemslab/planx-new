@@ -64,7 +64,7 @@ const TeamMember = ({ name, email, role }: any) => {
           </SelectInput>
         </Grid>
         <Grid item>
-          <IconButton aria-label="Close">
+          <IconButton aria-label="Remove">
             <Close />
           </IconButton>
         </Grid>

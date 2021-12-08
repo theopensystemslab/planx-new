@@ -173,19 +173,19 @@ const FooterLinks = () => (
   <List>
     <ListItem button disabled>
       <ListItemIcon>
-        <CallSplitOutlined />
+        <CallSplitOutlined titleAccess="Flows" />
       </ListItemIcon>
       <ListItemText>Flows</ListItemText>
     </ListItem>
     <ListItem button disabled>
       <ListItemIcon>
-        <FolderOutlined />
+        <FolderOutlined titleAccess="Archive" />
       </ListItemIcon>
       <ListItemText>Archive</ListItemText>
     </ListItem>
     <ListItem button disabled>
       <ListItemIcon>
-        <DeleteOutline />
+        <DeleteOutline titleAccess="Trash" />
       </ListItemIcon>
       <ListItemText>Trash</ListItemText>
     </ListItem>

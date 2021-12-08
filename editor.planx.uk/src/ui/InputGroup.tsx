@@ -170,7 +170,7 @@ export default function InputGroup({
       >
         {draggable && (
           <Box className={classes.drag}>
-            <DragHandle />
+            <DragHandle titleAccess="Drag" />
           </Box>
         )}
         {children}

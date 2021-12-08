@@ -155,6 +155,7 @@ const Header: React.FC<{
                 {route.data.flow && (
                   <Box mr={2}>
                     <MenuOpenIcon
+                      titleAccess="Toggle Preview"
                       onClick={togglePreview}
                       style={{ cursor: "pointer" }}
                     />
