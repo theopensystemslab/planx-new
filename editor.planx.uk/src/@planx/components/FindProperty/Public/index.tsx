@@ -242,13 +242,15 @@ function GetAddress(props: {
       fontSize: "inherit",
       // Hover
       '&[data-focus="true"]': {
-        backgroundColor: theme.palette.grey[400],
+        backgroundColor: theme.palette.grey[800],
         borderColor: "transparent",
+        color: "white",
       },
       // Selected
       '&[aria-selected="true"]': {
-        backgroundColor: theme.palette.grey[400],
+        backgroundColor: theme.palette.grey[800],
         borderColor: "transparent",
+        color: "white",
       },
     },
   }));
@@ -337,13 +339,14 @@ function GetAddress(props: {
             )}
           />
         )}
-        {addresses.length === 0 && Boolean(sanitizedPostcode) && (
-          <Box pt={2}>
-            <Typography variant="body1" color="error">
-              No addresses found in this postcode.
-            </Typography>
-          </Box>
-        )}
+        {addressesInPostcode?.header?.totalresults === 0 &&
+          Boolean(sanitizedPostcode) && (
+            <Box pt={2}>
+              <Typography variant="body1" color="error">
+                No addresses found in this postcode.
+              </Typography>
+            </Box>
+          )}
       </Box>
     </Card>
   );
