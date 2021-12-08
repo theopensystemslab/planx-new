@@ -179,7 +179,7 @@ const Header: React.FC<{
                 onClick={handleRestart}
                 aria-label="Restart Application"
               >
-                <Reset title="Restart Application" color="secondary" />
+                <Reset color="secondary" />
               </IconButton>
             )}
           </Box>
