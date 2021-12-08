@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS "flow_id_hash_idx";
