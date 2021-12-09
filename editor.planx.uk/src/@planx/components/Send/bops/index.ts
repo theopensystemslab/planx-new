@@ -21,6 +21,7 @@ import {
   QuestionMetaData,
   Response,
   ResponseMetaData,
+  USER_ROLES,
 } from "../model";
 
 export const bopsDictionary = {
@@ -292,6 +293,11 @@ export function getParams(
     console.error("unable to get flag result", err);
     airbrake?.notify(err);
   }
+
+  // 9. user role
+
+  const userRole = passport?.data?.["user.role"];
+  if (userRole && USER_ROLES.includes(userRole)) data.user_role = userRole;
 
   return {
     ...data,

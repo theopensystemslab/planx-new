@@ -8,6 +8,8 @@ export const parseContent = (data: Record<string, any> | undefined): Send => ({
 
 export const BOPS_URL = `${process.env.REACT_APP_API_URL}/bops`;
 
+export const USER_ROLES = ["applicant", "agent", "proxy"] as const;
+
 interface BOPSMinimumPayload {
   application_type: "lawfulness_certificate";
   site: {
@@ -44,6 +46,7 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
     override?: string;
   };
   planx_debug_data?: Record<string, unknown>;
+  user_role?: typeof USER_ROLES[number];
 }
 
 export interface QuestionMetaData {
