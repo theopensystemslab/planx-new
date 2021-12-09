@@ -159,6 +159,17 @@ const addDesignatedVariable = (responseObject) => {
   }
 };
 
+// Combine multiple layers into a single result
+const squashResultLayers = (ob, layers, layerName) => {
+  // Check to see if we have any intersections
+  const match = layers.find((layer) => layer.value);
+  // If we do, return this as the result. Otherwise take the first (negative) value.
+  ob[layerName] = match ? match : ob[layers[0]];
+  // Tidy up the redundant layers
+  layers.forEach((layer) => delete ob[layer]);
+  return ob;
+}
+
 module.exports = {
   setEsriGeometryType,
   setEsriGeometry,
@@ -169,4 +180,5 @@ module.exports = {
   getFalseConstraints,
   getManualConstraints,
   addDesignatedVariable,
+  squashResultLayers,
 };

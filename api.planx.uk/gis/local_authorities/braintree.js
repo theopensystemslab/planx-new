@@ -7,6 +7,7 @@ const {
   setEsriGeometryType,
   setEsriGeometry,
   addDesignatedVariable,
+  squashResultLayers,
 } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/braintree.js");
 
@@ -105,30 +106,21 @@ async function go(x, y, siteBoundary, extras) {
       );
 
     // Braintree host multiple TPO layers, but we only want to return a single result
-    squashTPOLayers(ob);
+    const tpoLayers = [
+      "tpo.tenMeterBuffer",
+      "tpo.areas",
+      "tpo.woodland",
+      "tpo.group",
+    ];
+    const obWithSingleTPO = squashResultLayers(ob, tpoLayers, "tpo");
 
     // Add summary "designated" key to response
-    const obWithDesignated = addDesignatedVariable(ob);
+    const obWithDesignated = addDesignatedVariable(obWithSingleTPO);
 
     return obWithDesignated;
   } catch (e) {
     throw e;
   }
-}
-
-const squashTPOLayers = (ob) => {
-  const tpoLayers = [
-    "tpo.tenMeterBuffer",
-    "tpo.areas",
-    "tpo.woodland",
-    "tpo.group",
-  ];
-  // Check to see if we have any intersections
-  const match = tpoLayers.find((layer) => layer.value);
-  // If we do, return this as the result. Otherwise take the first (negative) value.
-  ob.tpo = match ? match : ob[tpoLayers[0]];
-  // Tidy up the redundant layers
-  tpoLayers.forEach((layer) => delete ob[layer]);
 }
 
 async function locationSearch(x, y, siteBoundary, extras) {
