@@ -52,6 +52,7 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
   planx_debug_data?: Record<string, unknown>;
   // typeof arr[number] > https://steveholgado.com/typescript-types-from-arrays
   user_role?: typeof USER_ROLES[number];
+  proposal_completion_date?: string;
 }
 
 export interface QuestionMetaData {
