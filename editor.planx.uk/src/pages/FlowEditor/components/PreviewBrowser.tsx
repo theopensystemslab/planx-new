@@ -102,7 +102,6 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
   const [
     flowId,
     resetPreview,
-    setPreviewEnvironment,
     publishFlow,
     lastPublished,
     lastPublisher,
@@ -110,7 +109,6 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
   ] = useStore((state) => [
     state.id,
     state.resetPreview,
-    state.setPreviewEnvironment,
     state.publishFlow,
     state.lastPublished,
     state.lastPublisher,
@@ -124,8 +122,6 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
   const classes = useStyles();
-
-  useEffect(() => setPreviewEnvironment("editor"), []);
 
   const formatLastPublish = (date: string, user: string) =>
     `Last published ${formatDistanceToNow(new Date(date))} ago by ${user}`;
@@ -279,7 +275,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
         </Box>
       </header>
       <div className={classes.previewContainer}>
-        <Questions key={String(key)} />
+        <Questions previewEnvironment="editor" key={String(key)} />
       </div>
       {showDebugConsole && <DebugConsole />}
     </div>
