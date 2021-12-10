@@ -75,7 +75,8 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           <Grid item>
             <IconButton
               className={classes.iconButton}
-              aria-label="See more information about this question"
+              title={`See more information about "${title}"`}
+              aria-label={`See more information about "${title}"`}
               onClick={() => setOpen(true)}
             >
               <MoreInfoIcon viewBox="0 0 30 30" />
