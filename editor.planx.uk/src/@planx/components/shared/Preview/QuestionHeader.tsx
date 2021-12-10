@@ -75,7 +75,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           <Grid item>
             <IconButton
               className={classes.iconButton}
-              title={`See more information about "${title}"`}
+              title={`More information`}
               aria-label={`See more information about "${title}"`}
               onClick={() => setOpen(true)}
             >
