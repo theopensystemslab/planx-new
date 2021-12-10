@@ -92,7 +92,7 @@ const routes = compose(
 
   mount({
     "/": route({
-      view: <Questions />,
+      view: <Questions previewEnvironment="standalone" />,
     }),
     "/pages/:page": map((req) => {
       return route({

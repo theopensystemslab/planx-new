@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import useAnalyticsTracking from "pages/FlowEditor/lib/useAnalyticsTracking";
 import React from "react";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
@@ -53,6 +54,12 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
+  const { trackHelpClick } = useAnalyticsTracking();
+
+  const handleHelpClick = () => {
+    setOpen(true);
+    trackHelpClick(); // This returns a promise but we don't need to await for it
+  };
 
   return (
     <Box mb={2}>
@@ -76,7 +83,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             <IconButton
               className={classes.iconButton}
               aria-label="See more information about this question"
-              onClick={() => setOpen(true)}
+              onClick={handleHelpClick}
             >
               <MoreInfoIcon viewBox="0 0 30 30" />
             </IconButton>
