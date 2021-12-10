@@ -13,7 +13,11 @@ export default function VisibilityToggle(props: Props): FCReturn {
     props.onChange(!props.visible);
   };
   return (
-    <IconButton onClick={() => toggle()} style={{ height: 46 }}>
+    <IconButton
+      onClick={() => toggle()}
+      style={{ height: 46 }}
+      aria-label="Toggle visibility"
+    >
       {!props.visible ? <Visibility /> : <VisibilityOff />}
     </IconButton>
   );

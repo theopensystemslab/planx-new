@@ -23,6 +23,7 @@ export default function SimpleMenu({ items, ...restProps }: Props): FCReturn {
         onClick={(ev) => {
           setAnchorEl(ev.currentTarget);
         }}
+        aria-label="Options"
       >
         <MoreVert />
       </IconButton>

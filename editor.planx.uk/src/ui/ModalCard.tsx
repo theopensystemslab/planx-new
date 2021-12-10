@@ -30,6 +30,7 @@ export default function ModalCard({
       <IconButton
         className={classes.close}
         onClick={() => console.log("close")}
+        aria-label="Close"
       >
         <Close />
       </IconButton>

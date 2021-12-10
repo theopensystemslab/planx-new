@@ -162,7 +162,11 @@ const NavTabs: React.FC<{ tab?: string; settings?: FlowSettings }> = (
             </Tabs>
           </Grid>
           <Grid item>
-            <IconButton component={Link} href={flowBaseRoute}>
+            <IconButton
+              component={Link}
+              href={flowBaseRoute}
+              aria-label="Close"
+            >
               <Close />
             </IconButton>
           </Grid>

@@ -155,6 +155,7 @@ const Header: React.FC<{
                 {route.data.flow && (
                   <Box mr={2}>
                     <MenuOpenIcon
+                      titleAccess="Toggle Preview"
                       onClick={togglePreview}
                       style={{ cursor: "pointer" }}
                     />
@@ -166,6 +167,7 @@ const Header: React.FC<{
                 <IconButton
                   edge="end"
                   color="inherit"
+                  aria-label="Toggle Menu"
                   onClick={handleMenuToggle}
                 >
                   <KeyboardArrowDown />
@@ -178,7 +180,7 @@ const Header: React.FC<{
                 onClick={handleRestart}
                 aria-label="Restart Application"
               >
-                <Reset title="Restart Application" color="secondary" />
+                <Reset color="secondary" />
               </IconButton>
             )}
           </Box>

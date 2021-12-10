@@ -71,7 +71,7 @@ const ExternalPortal: React.FC<any> = React.memo(
             <span>{href}</span>
           </Link>
           <Link href={editHref} prefetch={false}>
-            <MoreVert />
+            <MoreVert titleAccess="Edit Portal" />
           </Link>
         </li>
       </>
@@ -123,7 +123,7 @@ const InternalPortal: React.FC<any> = (props) => {
           <span>{props.data.text}</span>
         </Link>
         <Link href={editHref} prefetch={false}>
-          <MoreVert />
+          <MoreVert titleAccess="Edit Portal" />
         </Link>
       </li>
     </>
