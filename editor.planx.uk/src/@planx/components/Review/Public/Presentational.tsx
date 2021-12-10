@@ -114,7 +114,7 @@ function Component(props: Props) {
     <Card isValid handleSubmit={props.handleSubmit}>
       <div className={root}>
         <h1>Check your answers before sending your application</h1>
-        <div className={grid}>
+        <dl className={grid}>
           {
             // XXX: This works because since ES2015 key order is guaranteed to be the insertion order
             Object.entries(props.breadcrumbs)
@@ -138,7 +138,7 @@ function Component(props: Props) {
                       passport={props.passport}
                     />
                     {props.showChangeButton && (
-                      <div>
+                      <dd>
                         <a
                           tabIndex={0}
                           role="button"
@@ -155,13 +155,13 @@ function Component(props: Props) {
                         >
                           Change
                         </a>
-                      </div>
+                      </dd>
                     )}
                   </React.Fragment>
                 );
               })
           }
-        </div>
+        </dl>
       </div>
     </Card>
   );
@@ -178,8 +178,8 @@ interface ComponentProps {
 function Question(props: ComponentProps) {
   return (
     <>
-      <div>{props.node.data.text}</div>
-      <div>{getNodeText()}</div>
+      <dt>{props.node.data.text}</dt>
+      <dd>{getNodeText()}</dd>
     </>
   );
 
@@ -197,14 +197,14 @@ function FindProperty(props: ComponentProps) {
   const { postcode, single_line_address, town } = props.passport.data?._address;
   return (
     <>
-      <div>Property</div>
-      <div>
+      <dt>Property</dt>
+      <dd>
         {`${single_line_address.split(`, ${town}`)[0]}`}
         <br />
         {town}
         <br />
         {postcode}
-      </div>
+      </dd>
     </>
   );
 }
@@ -212,14 +212,14 @@ function FindProperty(props: ComponentProps) {
 function Checklist(props: ComponentProps) {
   return (
     <>
-      <div>{props.node.data.text ?? "Checklist"}</div>
-      <div>
+      <dt>{props.node.data.text ?? "Checklist"}</dt>
+      <dd>
         <ul>
           {getAnswers(props).map((nodeId, i: number) => (
             <li key={i}>{props.flow[nodeId].data.text}</li>
           ))}
         </ul>
-      </div>
+      </dd>
     </>
   );
 }
@@ -227,8 +227,8 @@ function Checklist(props: ComponentProps) {
 function TextInput(props: ComponentProps) {
   return (
     <>
-      <div>{props.node.data.title ?? "Text"}</div>
-      <div>{getAnswersByNode(props)}</div>
+      <dt>{props.node.data.title ?? "Text"}</dt>
+      <dd>{getAnswersByNode(props)}</dd>
     </>
   );
 }
@@ -236,8 +236,8 @@ function TextInput(props: ComponentProps) {
 function FileUpload(props: ComponentProps) {
   return (
     <>
-      <div>{props.node.data.title ?? "File upload"}</div>
-      <div>
+      <dt>{props.node.data.title ?? "File upload"}</dt>
+      <dd>
         <ul>
           {getAnswersByNode(props)?.map((file: any, i: number) => (
             <li key={i}>
@@ -247,7 +247,7 @@ function FileUpload(props: ComponentProps) {
             </li>
           ))}
         </ul>
-      </div>
+      </dd>
     </>
   );
 }
@@ -255,8 +255,8 @@ function FileUpload(props: ComponentProps) {
 function DateInput(props: ComponentProps) {
   return (
     <>
-      <div>{props.node.data.title ?? "Date"}</div>
-      <div>{format(new Date(getAnswersByNode(props)), "d MMMM yyyy")}</div>
+      <dt>{props.node.data.title ?? "Date"}</dt>
+      <dd>{format(new Date(getAnswersByNode(props)), "d MMMM yyyy")}</dd>
     </>
   );
 }
@@ -280,8 +280,8 @@ function DrawBoundary(props: ComponentProps) {
 
   return (
     <>
-      <div>Site boundary</div>
-      <div>
+      <dt>Site boundary</dt>
+      <dd>
         {typeof data === "string" ? (
           <a target="_blank" href={data}>
             Your uploaded location plan
@@ -304,7 +304,7 @@ function DrawBoundary(props: ComponentProps) {
             />
           </>
         )}
-      </div>
+      </dd>
     </>
   );
 }
@@ -312,8 +312,8 @@ function DrawBoundary(props: ComponentProps) {
 function NumberInput(props: ComponentProps) {
   return (
     <>
-      <div>{props.node.data.title ?? "Number"}</div>
-      <div>{`${getAnswersByNode(props)} ${props.node.data.units ?? ""}`}</div>
+      <dt>{props.node.data.title ?? "Number"}</dt>
+      <dd>{`${getAnswersByNode(props)} ${props.node.data.units ?? ""}`}</dd>
     </>
   );
 }
@@ -325,8 +325,8 @@ function AddressInput(props: ComponentProps) {
 
   return (
     <>
-      <div>{props.node.data.title ?? "Address"}</div>
-      <div>
+      <dt>{props.node.data.title ?? "Address"}</dt>
+      <dd>
         {line1}
         <br />
         {line2}
@@ -342,7 +342,7 @@ function AddressInput(props: ComponentProps) {
             {country}
           </>
         ) : null}
-      </div>
+      </dd>
     </>
   );
 }
@@ -350,8 +350,8 @@ function AddressInput(props: ComponentProps) {
 function Debug(props: ComponentProps) {
   return (
     <>
-      <div>{JSON.stringify(props.node.data)}</div>
-      <div>{JSON.stringify(props.userData?.answers)}</div>
+      <dt>{JSON.stringify(props.node.data)}</dt>
+      <dd>{JSON.stringify(props.userData?.answers)}</dd>
     </>
   );
 }
