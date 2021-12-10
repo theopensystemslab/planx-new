@@ -18,7 +18,7 @@ const planningConstraints = {
     id: "Internal_Maps/PlanX",
     serverIndex: 0,
     fields: ["OBJECTID"],
-    neg: "is not in, or within, a Listed Building (Grade 1)",
+    neg: "is not in, or within, a Listed Building",
     pos: (data) => ({
       text: "is, or is within, a Listed Building (Grade 1)",
       description: null,
@@ -30,7 +30,7 @@ const planningConstraints = {
     id: "Internal_Maps/PlanX",
     serverIndex: 1,
     fields: ["OBJECTID"],
-    neg: "is not in, or within, a Listed Building (Grade 2)",
+    neg: "is not in, or within, a Listed Building",
     pos: (data) => ({
       text: "is, or is within, a Listed Building (Grade 2)",
       description: null,
@@ -42,7 +42,7 @@ const planningConstraints = {
     id: "Internal_Maps/PlanX",
     serverIndex: 2,
     fields: ["OBJECTID"],
-    neg: "is not in, or within, a Listed Building (Grade 2*)",
+    neg: "is not in, or within, a Listed Building",
     pos: (data) => ({
       text: "is, or is within, a Listed Building (Grade 2*)",
       description: null,

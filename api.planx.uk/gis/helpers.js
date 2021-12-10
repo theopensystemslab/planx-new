@@ -159,14 +159,27 @@ const addDesignatedVariable = (responseObject) => {
   }
 };
 
-// Combine multiple layers into a single result
-const squashResultLayers = (ob, layers, layerName) => {
+// Squash multiple layers into a single result
+const squashResultLayers = (originalOb, layers, layerName) => {
+  const ob = {...originalOb}
   // Check to see if we have any intersections
-  const match = layers.find((layer) => layer.value);
+  const match = layers.find((layer) => ob[layer].value);
   // If we do, return this as the result. Otherwise take the first (negative) value.
-  ob[layerName] = match ? match : ob[layers[0]];
+  ob[layerName] = match ? ob[match] : ob[layers[0]];
   // Tidy up the redundant layers
   layers.forEach((layer) => delete ob[layer]);
+  return ob;
+}
+
+// Rollup multiple layers into a single result, whilst preserving granularity
+const rollupResultLayers = (originalOb, layers, layerName) => {
+  const ob = {...originalOb}
+  // Check to see if we have any intersections
+  const match = layers.find((layer) => ob[layer].value);
+  // If we do, return this as the result. Otherwise take the first (negative) value.
+  ob[layerName] = match ? ob[match] : ob[layers[0]];
+  // Preserve a simple view of the rolled up layers
+  layers.forEach((layer) => ob[layer] = { value: ob[layer].value });
   return ob;
 }
 
@@ -181,4 +194,5 @@ module.exports = {
   getManualConstraints,
   addDesignatedVariable,
   squashResultLayers,
+  rollupResultLayers,
 };

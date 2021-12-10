@@ -8,6 +8,7 @@ const {
   setEsriGeometry,
   addDesignatedVariable,
   squashResultLayers,
+  rollupResultLayers,
 } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/braintree.js");
 
@@ -114,8 +115,17 @@ async function go(x, y, siteBoundary, extras) {
     ];
     const obWithSingleTPO = squashResultLayers(ob, tpoLayers, "tpo");
 
+    // Likewise, multiple layers are provided for "listed"
+    // Roll these up to preserve their granularity
+    const listedLayers = [
+      "listed.grade1",
+      "listed.grade2",
+      "listed.grade2star",
+    ]
+    const obWithSingleListed = rollupResultLayers(obWithSingleTPO, listedLayers, "listed")
+
     // Add summary "designated" key to response
-    const obWithDesignated = addDesignatedVariable(obWithSingleTPO);
+    const obWithDesignated = addDesignatedVariable(obWithSingleListed);
 
     return obWithDesignated;
   } catch (e) {
