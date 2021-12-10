@@ -276,7 +276,8 @@ function Dropzone(props: any) {
             <IconButton
               size="small"
               className={classes.deleteIcon}
-              aria-label="Delete"
+              aria-label="Delete file"
+              title="Delete file"
               onClick={() => {
                 setSlots((slots: any) =>
                   slots.filter((slot: any) => slot.file !== file)

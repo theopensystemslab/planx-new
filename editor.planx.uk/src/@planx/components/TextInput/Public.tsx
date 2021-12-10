@@ -4,6 +4,7 @@ import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
+import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import { object } from "yup";
 
@@ -39,21 +40,27 @@ const TextInputComponent: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
       />
       <InputRow>
-        <Input
-          type={((type) => {
-            if (type === "email") return "email";
-            else if (type === "phone") return "tel";
-            return "text";
-          })(props.type)}
-          multiline={props.type === "long"}
-          rows={props.type === "long" ? 5 : undefined}
-          name="text"
-          value={formik.values.text}
-          placeholder={props.placeholder || "Type your answer"}
-          bordered
-          onChange={formik.handleChange}
-          errorMessage={formik.errors.text as string}
-        />
+        <InputLabel
+          label={props.title}
+          hidden
+          describedBy={props.description || props.placeholder}
+        >
+          <Input
+            type={((type) => {
+              if (type === "email") return "email";
+              else if (type === "phone") return "tel";
+              return "text";
+            })(props.type)}
+            multiline={props.type === "long"}
+            rows={props.type === "long" ? 5 : undefined}
+            name="text"
+            value={formik.values.text}
+            placeholder={props.placeholder}
+            bordered
+            onChange={formik.handleChange}
+            errorMessage={formik.errors.text as string}
+          />
+        </InputLabel>
       </InputRow>
     </Card>
   );
