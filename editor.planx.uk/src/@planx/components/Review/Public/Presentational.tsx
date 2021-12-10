@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
       paddingBottom: theme.spacing(1),
       paddingTop: theme.spacing(2),
       verticalAlign: "top",
+      margin: 0,
     },
     "& ul": {
       listStylePosition: "inside",
