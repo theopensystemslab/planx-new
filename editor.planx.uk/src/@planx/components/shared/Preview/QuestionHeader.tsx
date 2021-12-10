@@ -76,6 +76,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             <IconButton
               className={classes.iconButton}
               aria-label="See more information about this question"
+              aria-haspopup="dialog"
               onClick={() => setOpen(true)}
             >
               <MoreInfoIcon viewBox="0 0 30 30" />
