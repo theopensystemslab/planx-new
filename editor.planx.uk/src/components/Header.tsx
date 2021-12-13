@@ -153,13 +153,13 @@ const Header: React.FC<{
             {route.data.username && (
               <Box className={classes.profileSection} mr={2}>
                 {route.data.flow && (
-                  <Box mr={2}>
-                    <MenuOpenIcon
-                      titleAccess="Toggle Preview"
-                      onClick={togglePreview}
-                      style={{ cursor: "pointer" }}
-                    />
-                  </Box>
+                  <IconButton
+                    color="inherit"
+                    onClick={togglePreview}
+                    aria-label="Toggle Preview"
+                  >
+                    <MenuOpenIcon />
+                  </IconButton>
                 )}
                 <Box mr={1}>
                   <Avatar>{route.data.username[0]}</Avatar>
