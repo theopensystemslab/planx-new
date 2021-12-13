@@ -159,6 +159,7 @@ function GetAddress(props: {
   const [selectedOption, setSelectedOption] = useState<Option | null>(
     props.initialSelectedAddress ?? null
   );
+  const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
 
   // Fetch addresses in this postcode from the OS Places API
   const { data: addressesInPostcode } = useSWR(
@@ -273,7 +274,7 @@ function GetAddress(props: {
             name="postcode"
             value={postcode || ""}
             errorMessage={
-              postcode && postcode?.length > 5 && !sanitizedPostcode
+              showPostcodeError && !sanitizedPostcode
                 ? "Enter a valid UK postcode"
                 : ""
             }
@@ -289,8 +290,14 @@ function GetAddress(props: {
                 setPostcode(input.toUpperCase());
               }
             }}
+            onBlur={() => {
+              if (!sanitizedPostcode) setShowPostcodeError(true);
+            }}
             aria-label="Enter the postcode of the property"
             style={{ marginBottom: "20px" }}
+            inputProps={{
+              maxLength: 7,
+            }}
           />
         </InputLabel>
         {Boolean(addresses.length) && (
