@@ -129,7 +129,7 @@ new pulumi.Config("cloudflare").require("apiToken");
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
       container: {
-        image: "metabase/metabase:v0.41.3.1",
+        image: "metabase/metabase:v0.41.4",
         memory: 2048 /*MB*/,
         portMappings: [metabaseListenerHttps],
         environment: [
