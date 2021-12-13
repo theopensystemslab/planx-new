@@ -94,7 +94,7 @@ const useAnalyticsTracking = () => {
           $analytics_id: Int
           $metadata: jsonb
           $node_type: Int
-          $node_title: String!
+          $node_title: String
         ) {
           insert_analytics_logs_one(
             object: {
