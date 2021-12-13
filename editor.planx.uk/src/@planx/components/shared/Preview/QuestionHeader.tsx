@@ -23,11 +23,8 @@ interface IQuestionHeader {
 
 const useStyles = makeStyles((theme) => ({
   iconButton: {
-    padding: 0,
-    borderRadius: 15,
-    color: "white",
     "&:hover": {
-      color: theme.palette.grey[300],
+      backgroundColor: "transparent",
     },
     "&:focus-visible": {
       outline: `2px solid ${theme.palette.secondary.dark}`,
@@ -63,7 +60,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
 
   return (
     <Box mb={2}>
-      <Grid container justify="space-between" wrap="nowrap">
+      <Grid container justify="space-between" alignItems="center" wrap="nowrap">
         <Grid item>
           {title && (
             <Box letterSpacing="-0.02em" mr={1}>
@@ -81,6 +78,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         {!!(info || policyRef || howMeasured) && (
           <Grid item>
             <IconButton
+              disableRipple
               className={classes.iconButton}
               aria-label="See more information about this question"
               onClick={handleHelpClick}
