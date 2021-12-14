@@ -83,6 +83,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               title={`More information`}
               aria-label={`See more information about "${title}"`}
               onClick={handleHelpClick}
+              aria-haspopup="dialog"
             >
               <MoreInfoIcon viewBox="0 0 30 30" />
             </IconButton>

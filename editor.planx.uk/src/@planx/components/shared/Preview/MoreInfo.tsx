@@ -74,11 +74,12 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => {
         paper: classes.drawerPaper,
       }}
     >
-      <div className={classes.close} aria-hidden={true}>
+      <div className={classes.close}>
         <IconButton
           onClick={() => handleClose()}
           role="button"
-          aria-label="Close Panel"
+          title="Close panel"
+          aria-label="Close panel"
         >
           <CloseIcon />
         </IconButton>
