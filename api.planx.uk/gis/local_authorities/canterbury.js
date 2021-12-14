@@ -99,14 +99,28 @@ async function go(x, y, siteBoundary, extras) {
       );
 
     // Since we have multiple article 4 layers, account for granularity & ensure root variable is synced with the subvariable
-    if (ob["article4.canterbury.hmo"].value && !ob["article4"].value) {
-      ob["article4"] = ob["article4.canterbury.hmo"];
+    if (ob["article4.canterbury.hmo"].value) {
       // Remove "text" and other keys from subvariable so it doesn't render as separate entry in planning constraints list
       ob["article4.canterbury.hmo"] = { value: true };
     } else if (!ob["article4.canterbury.hmo"].value) {
-      // Same as above, make sure we render single a4 planning constraint
       ob["article4.canterbury.hmo"] = { value: false };
     }
+
+    ob["article4.canterbury.whitstableconservation"] = {
+      value: ob["article4"]?.data?.LOCATION_1?.endsWith(
+        "Whitstable Town Conservation Area"
+      )
+        ? true
+        : false,
+    };
+
+    ob["article4.canterbury.hernebay"] = {
+      value: ob["article4"]?.data?.LOCATION_1?.endsWith(
+        "Herne Bay Conservation Area"
+      )
+        ? true
+        : false,
+    };
 
     // Merge Listed Buildings & "Locally Listed Buildings" responses under single "listed" variable
     if (ob["listed.local"].value && !ob["listed"].value) {
