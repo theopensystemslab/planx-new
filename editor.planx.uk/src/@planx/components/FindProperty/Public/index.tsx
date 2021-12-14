@@ -278,7 +278,7 @@ function GetAddress(props: {
                 ? "Enter a valid UK postcode"
                 : ""
             }
-            onChange={(e: any) => {
+            onChange={(e) => {
               // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
               //      so this code attempts to validate postcodes without blocking any characters.
               const input = e.target.value;
