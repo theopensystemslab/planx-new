@@ -257,6 +257,10 @@ function GetAddress(props: {
   }));
   const classes = useStyles();
 
+  const handleCheckPostcode = () => {
+    if (!sanitizedPostcode) setShowPostcodeError(true);
+  };
+
   return (
     <Card
       handleSubmit={() => props.setAddress(selectedOption ?? undefined)}
@@ -278,7 +282,7 @@ function GetAddress(props: {
                 ? "Enter a valid UK postcode"
                 : ""
             }
-            onChange={(e: any) => {
+            onChange={(e) => {
               // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
               //      so this code attempts to validate postcodes without blocking any characters.
               const input = e.target.value;
@@ -290,9 +294,10 @@ function GetAddress(props: {
                 setPostcode(input.toUpperCase());
               }
             }}
-            onBlur={() => {
-              if (!sanitizedPostcode) setShowPostcodeError(true);
+            onKeyUp={({ key }) => {
+              if (key === "Enter") handleCheckPostcode();
             }}
+            onBlur={handleCheckPostcode}
             aria-label="Enter the postcode of the property"
             style={{ marginBottom: "20px" }}
             inputProps={{
