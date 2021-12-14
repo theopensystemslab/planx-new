@@ -54,12 +54,18 @@ export interface PreviewStore extends Store.Store {
   govUkPayment?: GovUKPayment;
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
   cachedBreadcrumbs?: Store.cachedBreadcrumbs;
+  analyticsId?: number;
+  setAnalyticsId: (analyticsId: number) => void;
 }
 
 export const previewStore = (
   set: SetState<PreviewStore>,
   get: GetState<SharedStore & PreviewStore>
 ): PreviewStore => ({
+  setAnalyticsId(analyticsId) {
+    set({ analyticsId });
+  },
+
   setGovUkPayment(govUkPayment) {
     set({ govUkPayment });
   },
