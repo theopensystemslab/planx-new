@@ -80,7 +80,7 @@ const routes = compose(
 
   mount({
     "/": route({
-      view: <Questions />,
+      view: <Questions previewEnvironment="editor" />,
     }),
     "/pages/:page": map((req) => {
       return route({

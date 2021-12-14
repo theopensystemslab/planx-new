@@ -154,6 +154,11 @@ function Component(props: Props) {
                           }}
                         >
                           Change
+                          <span style={visuallyHidden}>
+                            {node.data?.title ||
+                              node.data?.text ||
+                              "this answer"}
+                          </span>
                         </a>
                       </div>
                     )}
