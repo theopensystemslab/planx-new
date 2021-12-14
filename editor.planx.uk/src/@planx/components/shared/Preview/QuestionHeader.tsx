@@ -80,7 +80,8 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             <IconButton
               disableRipple
               className={classes.iconButton}
-              aria-label="See more information about this question"
+              title={`More information`}
+              aria-label={`See more information about "${title}"`}
               onClick={handleHelpClick}
             >
               <MoreInfoIcon viewBox="0 0 30 30" />
