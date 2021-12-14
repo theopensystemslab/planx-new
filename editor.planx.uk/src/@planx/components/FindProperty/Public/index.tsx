@@ -159,6 +159,7 @@ function GetAddress(props: {
   const [selectedOption, setSelectedOption] = useState<Option | null>(
     props.initialSelectedAddress ?? null
   );
+  const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
 
   // Fetch addresses in this postcode from the OS Places API
   const { data: addressesInPostcode } = useSWR(
@@ -256,6 +257,10 @@ function GetAddress(props: {
   }));
   const classes = useStyles();
 
+  const handleCheckPostcode = () => {
+    if (!sanitizedPostcode) setShowPostcodeError(true);
+  };
+
   return (
     <Card
       handleSubmit={() => props.setAddress(selectedOption ?? undefined)}
@@ -273,11 +278,11 @@ function GetAddress(props: {
             name="postcode"
             value={postcode || ""}
             errorMessage={
-              postcode && postcode?.length > 5 && !sanitizedPostcode
+              showPostcodeError && !sanitizedPostcode
                 ? "Enter a valid UK postcode"
                 : ""
             }
-            onChange={(e: any) => {
+            onChange={(e) => {
               // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
               //      so this code attempts to validate postcodes without blocking any characters.
               const input = e.target.value;
@@ -289,8 +294,15 @@ function GetAddress(props: {
                 setPostcode(input.toUpperCase());
               }
             }}
+            onKeyUp={({ key }) => {
+              if (key === "Enter") handleCheckPostcode();
+            }}
+            onBlur={handleCheckPostcode}
             aria-label="Enter the postcode of the property"
             style={{ marginBottom: "20px" }}
+            inputProps={{
+              maxLength: 7,
+            }}
           />
         </InputLabel>
         {Boolean(addresses.length) && (
