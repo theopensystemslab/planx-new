@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(8),
     "& > *": {
       borderBottom: "1px solid grey",
-      paddingBottom: theme.spacing(1),
+      paddingBottom: theme.spacing(2),
       paddingTop: theme.spacing(2),
       verticalAlign: "top",
       margin: 0,
