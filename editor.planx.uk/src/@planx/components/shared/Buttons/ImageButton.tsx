@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => {
     },
     title: {
       marginLeft: theme.spacing(1.5),
+      "& > label": {
+        cursor: "pointer",
+      },
     },
   };
 });
@@ -127,16 +130,16 @@ function ImageResponse(props: Props) {
           >
             {checkbox && (
               <Checkbox
+                id={id}
                 checked={selected}
                 color={selected ? "primary.contrastText" : "text.primary"}
               />
             )}
             <Typography
               variant="body2"
-              id={`buttonLabel-${id}`}
               className={checkbox ? classes.title : undefined}
             >
-              {title}
+              <label htmlFor={id}>{title}</label>
             </Typography>
           </Box>
         </Box>
