@@ -153,12 +153,13 @@ const Header: React.FC<{
             {route.data.username && (
               <Box className={classes.profileSection} mr={2}>
                 {route.data.flow && (
-                  <Box mr={2}>
-                    <MenuOpenIcon
-                      onClick={togglePreview}
-                      style={{ cursor: "pointer" }}
-                    />
-                  </Box>
+                  <IconButton
+                    color="inherit"
+                    onClick={togglePreview}
+                    aria-label="Toggle Preview"
+                  >
+                    <MenuOpenIcon />
+                  </IconButton>
                 )}
                 <Box mr={1}>
                   <Avatar>{route.data.username[0]}</Avatar>
@@ -166,6 +167,7 @@ const Header: React.FC<{
                 <IconButton
                   edge="end"
                   color="inherit"
+                  aria-label="Toggle Menu"
                   onClick={handleMenuToggle}
                 >
                   <KeyboardArrowDown />
@@ -178,7 +180,7 @@ const Header: React.FC<{
                 onClick={handleRestart}
                 aria-label="Restart Application"
               >
-                <Reset title="Restart Application" color="secondary" />
+                <Reset color="secondary" />
               </IconButton>
             )}
           </Box>

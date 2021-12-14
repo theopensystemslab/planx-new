@@ -47,6 +47,7 @@ export default function ImgInput({
         color="inherit"
         className={classes.menu}
         size="small"
+        aria-label="Options"
         onClick={(ev) => {
           setAnchorEl(ev.currentTarget);
         }}

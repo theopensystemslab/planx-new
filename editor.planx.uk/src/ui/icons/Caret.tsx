@@ -19,6 +19,7 @@ export default function Caret(props: SvgIconProps & { expanded?: boolean }) {
 
   return (
     <SvgIcon
+      {...props}
       className={classnames(classes.root, {
         [classes.expanded]: props.expanded,
       })}

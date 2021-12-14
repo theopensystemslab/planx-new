@@ -68,7 +68,10 @@ export function ExpandableListItem(props: {
         <Typography variant="h6" component="h2">
           {props.title}
         </Typography>
-        <Caret expanded={props.expanded} />
+        <Caret
+          expanded={props.expanded}
+          titleAccess={props.expanded ? "Less Information" : "More Information"}
+        />
       </Box>
       {props.expanded && props.children}
     </li>

@@ -45,6 +45,7 @@ function Layout(props: {
         onClick={props.onClose}
         className={classes.close}
         size="medium"
+        aria-label="Close"
       >
         <Close />
       </IconButton>

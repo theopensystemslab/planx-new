@@ -2,6 +2,10 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
 import { getLocalFlow, setLocalFlow } from "lib/local";
+import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
+import useAnalyticsTracking, {
+  AnalyticsType,
+} from "pages/FlowEditor/lib/useAnalyticsTracking";
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -33,7 +37,11 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-const Questions = () => {
+interface QuestionsProps {
+  previewEnvironment: PreviewEnvironment;
+}
+
+const Questions = ({ previewEnvironment }: QuestionsProps) => {
   const [
     currentCard,
     previousCard,
@@ -44,8 +52,8 @@ const Questions = () => {
     id,
     resumeSession,
     govUkPayment,
-    previewEnvironment,
     canGoBack,
+    setPreviewEnvironment,
   ] = useStore((state) => [
     state.currentCard,
     state.previousCard(),
@@ -56,24 +64,25 @@ const Questions = () => {
     state.id,
     state.resumeSession,
     state.govUkPayment,
-    state.previewEnvironment,
     state.canGoBack,
+    state.setPreviewEnvironment,
   ]);
-
+  const isStandalone = previewEnvironment === "standalone";
   const node = currentCard();
   const flow = useContext(PreviewContext)?.flow;
-
+  const { createAnalytics } = useAnalyticsTracking();
   const classes = useClasses();
 
   const showBackButton = node?.id ? canGoBack(node.id) : false;
-  const isStandalone = previewEnvironment === "standalone";
 
   useEffect(() => {
+    setPreviewEnvironment(previewEnvironment);
     if (isStandalone) {
       const state = getLocalFlow(id);
       if (state) {
         resumeSession(state);
       }
+      createAnalytics(state ? "resume" : "init");
     }
   }, []);
 

@@ -36,7 +36,12 @@ export default function ConfirmationComponent(props: Props) {
 
   return (
     <Box width="100%">
-      <Banner heading={props.heading || ""} color={props.color} Icon={Check}>
+      <Banner
+        heading={props.heading || ""}
+        color={props.color}
+        Icon={Check}
+        iconTitle={"Success"}
+      >
         {props.description && (
           <Box mt={4}>
             <Typography>{props.description}</Typography>
