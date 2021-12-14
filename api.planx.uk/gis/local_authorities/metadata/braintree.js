@@ -4,7 +4,7 @@ LAD20NM: Braintree
 LAD20NMW:
 FID: 239
 
-https://braintree.maps.arcgis.com/home/item.html?id=d9067f55fdbd499e8698e36bc1f6b6c7
+https://mapping.braintree.gov.uk/arcgis/rest/services/PlanX/PlanX/FeatureServer
 https://environment.data.gov.uk/arcgis/rest/services
 */
 
@@ -15,7 +15,7 @@ const planningConstraints = {
   "listed.grade1": {
     key: "listed.grade1",
     source: braintreeDomain,
-    id: "Internal_Maps/PlanX",
+    id: "PlanX/PlanX",
     serverIndex: 0,
     fields: ["OBJECTID"],
     neg: "is not in, or within, a Listed Building",
@@ -27,7 +27,7 @@ const planningConstraints = {
   "listed.grade2": {
     key: "listed.grade2",
     source: braintreeDomain,
-    id: "Internal_Maps/PlanX",
+    id: "PlanX/PlanX",
     serverIndex: 1,
     fields: ["OBJECTID"],
     neg: "is not in, or within, a Listed Building",
@@ -39,7 +39,7 @@ const planningConstraints = {
   "listed.grade2star": {
     key: "listed.grade2star",
     source: braintreeDomain,
-    id: "Internal_Maps/PlanX",
+    id: "PlanX/PlanX",
     serverIndex: 2,
     fields: ["OBJECTID"],
     neg: "is not in, or within, a Listed Building",
@@ -51,7 +51,7 @@ const planningConstraints = {
   "designated.conservationArea": {
     key: "designated.conservationArea",
     source: braintreeDomain,
-    id: "Internal_Maps/PlanX",
+    id: "PlanX/PlanX",
     serverIndex: 3,
     fields: ["OBJECTID", "DESIGNATED"],
     neg: "is not in a Conservation Area",
@@ -63,7 +63,7 @@ const planningConstraints = {
   "nature.SSSI": {
     key: "nature.SSSI",
     source: braintreeDomain,
-    id: "Internal_Maps/PlanX",
+    id: "PlanX/PlanX",
     serverIndex: 8,
     fields: ["OBJECTID", "LOCATION"],
     neg: "is not a Site of Special Scientific Interest",
@@ -75,7 +75,7 @@ const planningConstraints = {
   "designated.monument": {
     key: "designated.monument",
     source: braintreeDomain,
-    id: "Internal_Maps/PlanX",
+    id: "PlanX/PlanX",
     serverIndex: 9,
     fields: ["OBJECTID", "LOCATION"],
     neg: "is not the site of a Scheduled Ancient Monument",
@@ -87,7 +87,7 @@ const planningConstraints = {
   "tpo.tenMeterBuffer": {
     key: "tpo.tenMeterBuffer",
     source: braintreeDomain,
-    id: "Internal_Maps/PlanX",
+    id: "PlanX/PlanX",
     serverIndex: 4,
     fields: ["OBJECTID"],
     neg: "is not in a TPO (Tree Preservation Order) Zone",
@@ -99,7 +99,7 @@ const planningConstraints = {
   "tpo.areas": {
     key: "tpo.areas",
     source: braintreeDomain,
-    id: "Internal_Maps/PlanX",
+    id: "PlanX/PlanX",
     serverIndex: 5,
     fields: ["OBJECTID", "AREAS"],
     neg: "is not in a TPO (Tree Preservation Order) Zone",
@@ -111,7 +111,7 @@ const planningConstraints = {
   "tpo.woodland": {
     key: "tpo.woodland",
     source: braintreeDomain,
-    id: "Internal_Maps/PlanX",
+    id: "PlanX/PlanX",
     serverIndex: 6,
     fields: ["OBJECTID", "SPECIES", "REFERENCE_"],
     neg: "is not in a TPO (Tree Preservation Order) Zone",
@@ -123,7 +123,7 @@ const planningConstraints = {
   "tpo.group": {
     key: "tpo.group",
     source: braintreeDomain,
-    id: "Internal_Maps/PlanX",
+    id: "PlanX/PlanX",
     serverIndex: 7,
     fields: ["OBJECTID", "GROUPS", "SPECIES"],
     neg: "is not in a TPO (Tree Preservation Order) Zone",
@@ -135,7 +135,7 @@ const planningConstraints = {
   article4: {
     key: "article4",
     source: braintreeDomain,
-    id: "Internal_Maps/PlanX",
+    id: "PlanX/PlanX",
     serverIndex: 10,
     fields: ["OBJECTID", "INFORMATIO"],
     neg: "is not subject to any Article 4 restrictions",
