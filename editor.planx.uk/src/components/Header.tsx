@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
     "&:focus": {
       // bring it into view when accessed by tab
       transform: "translateY(0%)",
+      position: "relative",
     },
   },
 }));
