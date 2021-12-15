@@ -11,7 +11,7 @@ type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
 
 let lastAnalyticsLogId: number | undefined = undefined;
 
-const useAnalyticsTracking = () => {
+const useAnalyticsTracking = (isRootComponent?: boolean) => {
   const [
     currentCard,
     breadcrumbs,
@@ -34,28 +34,40 @@ const useAnalyticsTracking = () => {
 
   const [lastBreadcrumbs, setLastBreadcrumb] = useState(breadcrumbs);
 
-  const onPageExit = () => {
-    document.addEventListener("visibilitychange", () => {
-      if (lastAnalyticsLogId && isStandalone) {
-        if (document.visibilityState === "hidden") trackPageExit();
-        if (document.visibilityState === "visible") trackPageResume();
-      }
-    });
-  };
-
   useEffect(() => {
-    onPageExit();
+    if (isRootComponent && isStandalone) {
+      // Track page exit/return
+      document.addEventListener("visibilitychange", () => {
+        if (lastAnalyticsLogId) {
+          if (document.visibilityState === "hidden") {
+            // Exited page
+            navigator.sendBeacon(
+              `${
+                process.env.REACT_APP_API_URL
+              }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
+            );
+          } else if (document.visibilityState === "visible") {
+            // Returned to page
+            navigator.sendBeacon(
+              `${
+                process.env.REACT_APP_API_URL
+              }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
+            );
+          }
+        }
+      });
+    }
   }, []);
 
+  // Track component transition
   useEffect(() => {
-    if (isStandalone && analyticsId) {
-      const currentBreadcrumbsLength = Object.keys(breadcrumbs).length;
-      const storedBreadcrumbsLength = Object.keys(lastBreadcrumbs).length;
-
-      if (currentBreadcrumbsLength > storedBreadcrumbsLength) {
+    if (isRootComponent && isStandalone && analyticsId) {
+      const curLength = Object.keys(breadcrumbs).length;
+      const prevLength = Object.keys(lastBreadcrumbs).length;
+      if (curLength > prevLength) {
         track("forwards", analyticsId);
       }
-      if (currentBreadcrumbsLength < storedBreadcrumbsLength) {
+      if (curLength < prevLength) {
         track("backwards", analyticsId);
       }
       setLastBreadcrumb(breadcrumbs);
@@ -66,24 +78,6 @@ const useAnalyticsTracking = () => {
     createAnalytics,
     trackHelpClick,
   };
-
-  function trackPageExit() {
-    if (lastAnalyticsLogId !== undefined) {
-      navigator.sendBeacon(
-        `${
-          process.env.REACT_APP_API_URL
-        }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
-      );
-    }
-  }
-
-  function trackPageResume() {
-    navigator.sendBeacon(
-      `${
-        process.env.REACT_APP_API_URL
-      }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
-    );
-  }
 
   async function track(direction: AnalyticsLogDirection, analyticsId: number) {
     const metadata = getNodeMetadata();
