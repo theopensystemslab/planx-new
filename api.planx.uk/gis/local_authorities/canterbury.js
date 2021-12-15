@@ -13,6 +13,7 @@ const { planningConstraints } = require("./metadata/canterbury.js");
 // Process local authority metadata
 const gisLayers = getQueryableConstraints(planningConstraints);
 const preCheckedLayers = getManualConstraints(planningConstraints);
+const articleFours = planningConstraints.article4.records;
 
 // Fetch a data layer
 async function search(
@@ -106,21 +107,14 @@ async function go(x, y, siteBoundary, extras) {
       ob["article4.canterbury.hmo"] = { value: false };
     }
 
-    ob["article4.canterbury.whitstableconservation"] = {
-      value: ob["article4"]?.data?.LOCATION_1?.endsWith(
-        "Whitstable Town Conservation Area"
-      )
-        ? true
-        : false,
-    };
-
-    ob["article4.canterbury.hernebay"] = {
-      value: ob["article4"]?.data?.LOCATION_1?.endsWith(
-        "Herne Bay Conservation Area"
-      )
-        ? true
-        : false,
-    };
+    // Set granular article 4 values
+    (Object.keys(articleFours)).forEach((key) => {
+      if (ob["article4"]?.data?.REF === articleFours[key]) {
+        ob[key] = { value: true }
+      } else {
+        ob[key] = { value: false }
+      }
+    });
 
     // Merge Listed Buildings & "Locally Listed Buildings" responses under single "listed" variable
     if (ob["listed.local"].value && !ob["listed"].value) {
