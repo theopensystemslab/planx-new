@@ -115,6 +115,25 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <Box className={classes.map}>
+            <div className={classes.hidden}>
+              {/*
+
+              XXX: THIS IS A HACK AND I'M NOT SORRY 
+
+              When clicking the "back" button after having drawn a boundary, for some obscure reason the boundary would be duplicated, showing two shapes on top of each other.  Each time you would press "Continue" then "Back" again, a new identical shape would be added on top of the previous ones.
+
+              For some obscure reason, it seems the state of the shapes being drawn is shared between all instances of theopensystemslab/map in a page. To be more precise, it's openlayers/openlayers that has this bug.
+
+              You can repro this by having two maps side by side. Even when not passing down any shared state through props (e.g. drawGeojsonData), the drawing on one map will be synchronously replicated to the other map. So yeah I *think* this has something to do with our back-button bug.
+
+              For some even more obscure reason, having two maps on the page fixes the back-button bug!! WHYYYYYYY! I have no idea. And I'm sorry. And I'm confused. And it's Friday. This is beyond me. I'll put this second map hidden under `display: none` and call it a day. As far as I can tell, it works perfectly. 
+
+              Cheers,
+              Gunar
+
+              @ts-ignore */}
+              <my-map drawMode zoom={19} />
+            </div>
             <p style={visuallyHidden}>
               An interactive map centered on your address, with a red pointer to
               draw your site outline. Click to place points and connect the
