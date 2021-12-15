@@ -6,3 +6,7 @@ editor.planx.uk/.eslintcache
 /minio-data
 .pnpm-debug.log
 .env.temp
+
+# IDE
+.vscode
+.devcontainer

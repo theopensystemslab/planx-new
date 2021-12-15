@@ -504,7 +504,7 @@ const trackAnalyticsLogExit = async (id, isUserExit) => {
     `
       mutation UpdateAnalyticsLogUserExit($id: bigint!, $user_exit: Boolean) {
         update_analytics_logs_by_pk(
-          pk_columns: {id: $id}, 
+          pk_columns: {id: $id},
           _set: {user_exit: $user_exit}
         ) {
           id
@@ -543,7 +543,7 @@ app.post("/analytics/log-user-exit", async (req, res, next) => {
   res.send();
 });
 
-app.post("/analytics/analytics/log-user-resume", async (req, res, next) => {
+app.post("/analytics/log-user-resume", async (req, res, next) => {
   const analyticsLogId = Number(req.query.analyticsLogId);
   if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
   res.send();
