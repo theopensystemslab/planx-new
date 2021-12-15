@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { visuallyHidden } from "@material-ui/utils";
 import React, { ReactNode } from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,11 +19,17 @@ const useStyles = makeStyles((theme) => ({
 export default function InputLabel(props: {
   label: string;
   children: ReactNode;
+  hidden?: boolean;
+  describedBy?: string;
 }) {
   const classes = useStyles();
   return (
-    <label className={classes.root}>
-      <Typography className={classes.labelText} variant="body1">
+    <label className={classes.root} aria-describedby={props.describedBy}>
+      <Typography
+        className={classes.labelText}
+        variant="body1"
+        style={props.hidden ? visuallyHidden : undefined}
+      >
         {props.label}
       </Typography>
       {props.children}

@@ -42,6 +42,57 @@
       filter: {}
 - table:
     schema: public
+    name: analytics
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - created_at
+      - flow_id
+      - id
+      - type
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      filter: {}
+- table:
+    schema: public
+    name: analytics_logs
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - analytics_id
+      - created_at
+      - flow_direction
+      - has_clicked_help
+      - id
+      - metadata
+      - node_title
+      - node_type
+      - user_exit
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - analytics_id
+      - id
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - has_clicked_help
+      filter: {}
+      check: null
+- table:
+    schema: public
     name: blpu_codes
   select_permissions:
   - role: public
@@ -161,11 +212,12 @@
   - role: public
     permission:
       columns:
+      - created_at
+      - data
+      - flow_id
       - id
       - publisher_id
-      - data
-      - created_at
-      - flow_id
+      - summary
       filter: {}
 - table:
     schema: public

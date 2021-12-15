@@ -13,6 +13,8 @@ import axios from "axios";
 import { getCookie } from "lib/cookie";
 import { client } from "lib/graphql";
 import debounce from "lodash/debounce";
+import isEmpty from "lodash/isEmpty";
+import omitBy from "lodash/omitBy";
 import type { FlowSettings, TextContent } from "types";
 import type { GetState, SetState } from "zustand/vanilla";
 
@@ -56,6 +58,7 @@ export interface EditorStore extends Store.Store {
   copyNode: (id: Store.nodeId) => void;
   createFlow: (teamId: any, newSlug: any) => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
+  diffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<any>;
   isClone: (id: Store.nodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
@@ -68,7 +71,7 @@ export interface EditorStore extends Store.Store {
     toParent?: Store.nodeId
   ) => void;
   pasteNode: (toParent: Store.nodeId, toBefore: Store.nodeId) => void;
-  publishFlow: (flowId: string) => Promise<any>;
+  publishFlow: (flowId: string, summary?: string) => Promise<any>;
   removeNode: (id: Store.nodeId, parent: Store.nodeId) => void;
   updateFlowSettings: (
     teamSlug: string,
@@ -211,6 +214,20 @@ export const editorStore = (
     return response;
   },
 
+  diffFlow(flowId: string) {
+    const token = getCookie("jwt");
+
+    return axios.post(
+      `${process.env.REACT_APP_API_URL}/flows/${flowId}/diff`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  },
+
   getFlows: async (teamId) => {
     client.cache.reset();
     const { data } = await client.query({
@@ -322,16 +339,26 @@ export const editorStore = (
     }
   },
 
-  publishFlow(flowId: string) {
+  publishFlow(flowId: string, summary?: string) {
     const token = getCookie("jwt");
 
-    return axios({
-      url: `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish`,
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const urlWithParams = (url: string, params: any) =>
+      [url, new URLSearchParams(omitBy(params, isEmpty))]
+        .filter(Boolean)
+        .join("?");
+
+    return axios.post(
+      urlWithParams(
+        `${process.env.REACT_APP_API_URL}/flows/${flowId}/publish`,
+        { summary }
+      ),
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   },
 
   removeNode: (id, parent) => {

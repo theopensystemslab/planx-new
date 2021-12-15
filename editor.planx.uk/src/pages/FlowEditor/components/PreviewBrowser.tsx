@@ -1,5 +1,9 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
@@ -7,7 +11,9 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useEffect, useState } from "react";
 import { ExternalLink, Globe, RefreshCw, Terminal } from "react-feather";
 import { useAsync } from "react-use";
+import Input from "ui/Input";
 
+import { TYPES } from "../../../@planx/components/types";
 import Questions from "../../Preview/Questions";
 import { useStore } from "../lib/store";
 
@@ -66,28 +72,56 @@ const DebugConsole = () => {
   );
 };
 
+function PublishChangeItem(props: any) {
+  const { node } = props;
+  let text, data;
+
+  if (node.id === "_root") {
+    text = "Changed _root service by adding, deleting or re-ordering nodes";
+  } else if (node.id === "0") {
+    text = `The entire _root service will be published for the first time`;
+  } else if (node.id && Object.keys(node).length === 1) {
+    text = `Deleted node ${node.id}`;
+  } else if (node.type && node.data) {
+    text = `Added/edited ${TYPES[node.type]}`;
+    data = JSON.stringify(node.data, null, 2);
+  } else {
+    text = `Added/edited ${TYPES[node.type]}`;
+  }
+
+  return (
+    <>
+      <Typography variant="body2">{text}</Typography>
+      {data && <pre style={{ fontSize: ".8em" }}>{data}</pre>}
+    </>
+  );
+}
+
 const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
   const [
     flowId,
     resetPreview,
-    setPreviewEnvironment,
     publishFlow,
     lastPublished,
     lastPublisher,
+    diffFlow,
   ] = useStore((state) => [
     state.id,
     state.resetPreview,
-    state.setPreviewEnvironment,
     state.publishFlow,
     state.lastPublished,
     state.lastPublisher,
+    state.diffFlow,
   ]);
   const [key, setKey] = useState<boolean>(false);
-  const [lastPublishedTitle, setLastPublishedTitle] = useState<string>();
+  const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
+    "This flow is not published yet"
+  );
+  const [alteredNodes, setAlteredNodes] = useState<object[]>();
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [summary, setSummary] = useState<string>();
   const classes = useStyles();
-
-  useEffect(() => setPreviewEnvironment("editor"), []);
 
   const formatLastPublish = (date: string, user: string) =>
     `Last published ${formatDistanceToNow(new Date(date))} ago by ${user}`;
@@ -152,18 +186,88 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
               variant="contained"
               color="primary"
               onClick={async () => {
-                setLastPublishedTitle("Sending changes...");
-                const publishedFlow = await publishFlow(flowId);
-                setLastPublishedTitle(
-                  publishedFlow?.data.alteredNodes
-                    ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
-                    : "No new changes to publish"
-                );
+                try {
+                  setLastPublishedTitle("Checking for changes...");
+                  const alteredFlow = await diffFlow(flowId);
+                  setAlteredNodes(
+                    alteredFlow?.data.alteredNodes
+                      ? alteredFlow.data.alteredNodes
+                      : []
+                  );
+                  setLastPublishedTitle(
+                    alteredFlow?.data.alteredNodes
+                      ? `Found changes to ${alteredFlow.data.alteredNodes.length} node(s)`
+                      : "No new changes to publish"
+                  );
+                  setDialogOpen(true);
+                } catch (error) {
+                  console.log(error);
+                }
               }}
-              disabled={window.location.hostname.endsWith("planx.uk")}
             >
-              PUBLISH
+              CHECK FOR CHANGES TO PUBLISH
             </Button>
+            <Dialog
+              open={dialogOpen}
+              onClose={() => setDialogOpen(false)}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle style={{ paddingBottom: 0 }}>
+                {lastPublishedTitle}
+              </DialogTitle>
+              <DialogContent>
+                {alteredNodes?.length ? (
+                  <>
+                    <Box pb={1}>
+                      <ul>
+                        {alteredNodes.map((a: any) => (
+                          <li key={a.id}>
+                            <PublishChangeItem node={a} />
+                          </li>
+                        ))}
+                      </ul>
+                    </Box>
+                    <Input
+                      bordered
+                      type="text"
+                      name="summary"
+                      value={summary || ""}
+                      placeholder="Summarise your changes..."
+                      onChange={(e) => setSummary(e.target.value)}
+                    />
+                  </>
+                ) : (
+                  `No new changes to publish`
+                )}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setDialogOpen(false)}>
+                  KEEP EDITING
+                </Button>
+                <Button
+                  color="primary"
+                  autoFocus
+                  onClick={async () => {
+                    try {
+                      setDialogOpen(false);
+                      setLastPublishedTitle("Publishing changes...");
+                      const publishedFlow = await publishFlow(flowId, summary);
+                      setLastPublishedTitle(
+                        publishedFlow?.data.alteredNodes
+                          ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
+                          : "No new changes to publish"
+                      );
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }}
+                  disabled={!alteredNodes || alteredNodes.length === 0}
+                >
+                  PUBLISH
+                </Button>
+              </DialogActions>
+            </Dialog>
             <Box mr={0}>
               <Typography variant="caption">{lastPublishedTitle}</Typography>
             </Box>
@@ -171,7 +275,7 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
         </Box>
       </header>
       <div className={classes.previewContainer}>
-        <Questions key={String(key)} />
+        <Questions previewEnvironment="editor" key={String(key)} />
       </div>
       {showDebugConsole && <DebugConsole />}
     </div>

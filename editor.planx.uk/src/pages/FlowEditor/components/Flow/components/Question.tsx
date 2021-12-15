@@ -50,6 +50,8 @@ const Question: React.FC<Props> = React.memo((props) => {
   };
 
   const Icon = props.type === "Error" ? ErrorIcon : ICONS[props.type];
+  // If there is an error, the icon has a semantic meaning and needs a title
+  const iconTitleAccess = props.type === "Error" ? "Error" : undefined;
 
   return (
     <>
@@ -69,7 +71,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           onContextMenu={handleContext}
           ref={drag}
         >
-          {Icon && <Icon />}
+          {Icon && <Icon titleAccess={iconTitleAccess} />}
           <span>{props.text}</span>
         </Link>
         <ol className="options">

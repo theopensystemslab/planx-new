@@ -147,7 +147,10 @@ function ListItem(
             {props.title}
           </Typography>
         </Box>
-        <Caret expanded={expanded} />
+        <Caret
+          expanded={expanded}
+          titleAccess={expanded ? "Less Information" : "More Information"}
+        />
       </ButtonBase>
       {props.description && (
         <Collapse in={expanded}>

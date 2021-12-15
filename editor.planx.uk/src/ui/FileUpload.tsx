@@ -99,7 +99,7 @@ export default function FileUpload(props: Props): FCReturn {
             root: classes.inputIconButton,
           }}
         >
-          <ErrorIcon />
+          <ErrorIcon titleAccess="Error" />
         </ButtonBase>
       </Tooltip>
     );

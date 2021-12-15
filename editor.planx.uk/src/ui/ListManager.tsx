@@ -57,7 +57,7 @@ export default function ListManager<T, EditorExtraProps>(
           return (
             <div className={classes.item} key={index}>
               <Box>
-                <IconButton disableRipple disabled={true}>
+                <IconButton disableRipple disabled={true} aria-label="Drag">
                   <DragHandle />
                 </IconButton>
               </Box>
@@ -74,6 +74,7 @@ export default function ListManager<T, EditorExtraProps>(
                   onClick={() => {
                     props.onChange(removeAt(index, props.values));
                   }}
+                  aria-label="Delete"
                 >
                   <Delete />
                 </IconButton>
@@ -132,6 +133,7 @@ export default function ListManager<T, EditorExtraProps>(
                           {...(!props.disableDragAndDrop
                             ? provided.dragHandleProps
                             : { disabled: true })}
+                          aria-label="Drag"
                         >
                           <DragHandle />
                         </IconButton>
@@ -149,6 +151,7 @@ export default function ListManager<T, EditorExtraProps>(
                           onClick={() => {
                             props.onChange(removeAt(index, props.values));
                           }}
+                          aria-label="Delete"
                         >
                           <Delete />
                         </IconButton>
