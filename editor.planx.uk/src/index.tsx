@@ -10,6 +10,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import { MyMap } from "@opensystemslab/map";
 import jwtDecode from "jwt-decode";
 import { getCookie, setCookie } from "lib/cookie";
+import { AnalyticsProvider } from "pages/FlowEditor/lib/analyticsProvider";
 import React, { Suspense } from "react";
 import { render } from "react-dom";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
@@ -74,16 +75,18 @@ const Layout: React.FC<{
 render(
   <>
     <ApolloProvider client={client}>
-      <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
-        <HelmetProvider>
-          <Layout>
-            <CssBaseline />
-            <Suspense fallback={null}>
-              <View />
-            </Suspense>
-          </Layout>
-        </HelmetProvider>
-      </Router>
+      <AnalyticsProvider>
+        <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
+          <HelmetProvider>
+            <Layout>
+              <CssBaseline />
+              <Suspense fallback={null}>
+                <View />
+              </Suspense>
+            </Layout>
+          </HelmetProvider>
+        </Router>
+      </AnalyticsProvider>
     </ApolloProvider>
     <ToastContainer />
   </>,
