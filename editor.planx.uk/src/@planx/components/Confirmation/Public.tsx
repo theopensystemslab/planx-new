@@ -13,6 +13,7 @@ import type { Confirmation } from "./model";
 
 const useClasses = makeStyles((theme) => ({
   table: {
+    width: "100%",
     borderCollapse: "collapse",
     "& tr": {
       borderBottom: `1px solid ${theme.palette.grey[400]}`,
