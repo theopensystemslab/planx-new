@@ -108,6 +108,9 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "underline",
     color: theme.palette.primary.main,
   },
+  fileSize: {
+    whiteSpace: "nowrap",
+  },
 }));
 
 export interface FileUpload<T extends File = any> {
@@ -201,7 +204,11 @@ export default function FileUpload(props: Props) {
             </Box>
             {slot?.file.path}
           </Box>
-          <Box color="text.secondary" alignSelf="flex-end">
+          <Box
+            color="text.secondary"
+            alignSelf="flex-end"
+            className={classes.fileSize}
+          >
             {formatBytes(slot?.file.size)}
           </Box>
         </Box>

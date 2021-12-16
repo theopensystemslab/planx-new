@@ -125,6 +125,9 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "underline",
     color: theme.palette.primary.main,
   },
+  fileSize: {
+    whiteSpace: "nowrap",
+  },
 }));
 
 const slotsSchema = array()
@@ -326,7 +329,11 @@ function Dropzone(props: any) {
               </Box>
               {file.path}
             </Box>
-            <Box color="text.secondary" alignSelf="flex-end">
+            <Box
+              color="text.secondary"
+              alignSelf="flex-end"
+              className={classes.fileSize}
+            >
               {formatBytes(file.size)}
             </Box>
           </Box>
