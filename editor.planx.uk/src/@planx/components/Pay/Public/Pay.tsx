@@ -48,7 +48,6 @@ function Component(props: Props) {
     passport,
     environment,
     sendSessionDataToHasura,
-    showPreview,
   ] = useStore((state) => [
     state.id,
     state.govUkPayment,
@@ -56,7 +55,6 @@ function Component(props: Props) {
     state.computePassport(),
     state.previewEnvironment,
     state.sendSessionDataToHasura,
-    state.showPreview,
   ]);
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;

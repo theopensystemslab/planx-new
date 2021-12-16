@@ -1,5 +1,4 @@
 import { ROOT_NODE_KEY } from "@planx/graph";
-import { v4 as uuidV4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import type { Store } from ".";
