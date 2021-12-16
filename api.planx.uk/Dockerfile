@@ -1,4 +1,4 @@
-FROM node:14.4.0-alpine as base
+FROM node:lts-alpine as base
 
 WORKDIR /api
 RUN npm install -g pnpm
