@@ -236,7 +236,6 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Filter:
     case TYPES.Flow:
     case TYPES.InternalPortal:
-    case TYPES.Page:
     case TYPES.Response:
     case undefined:
       return null;
