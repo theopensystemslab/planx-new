@@ -2,9 +2,9 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { visuallyHidden } from "@material-ui/utils";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Caret from "ui/icons/Caret";
@@ -32,19 +32,14 @@ const useClasses = makeStyles((theme: Theme) => ({
     },
   },
   moreInfo: {
-    "& a": {
-      color: theme.palette.text.disabled,
-    },
-    "& p": {
-      color: theme.palette.text.secondary,
-    },
+    paddingLeft: theme.spacing(2),
+    color: theme.palette.text.primary,
   },
   responseText: {
     whiteSpace: "nowrap",
   },
   changeButton: {
-    marginLeft: theme.spacing(1),
-    padding: 0,
+    textDecoration: "underline",
   },
   onFocus: {
     outline: `2px solid ${theme.palette.secondary.dark}`,
@@ -112,20 +107,23 @@ const ResultReason: React.FC<IResultReason> = ({
                 {question.data.text}{" "}
                 <strong className={classes.responseText}>{response}</strong>
               </Typography>
+            </Box>
+            <Box>
               {showChangeButton && (
-                <Button
-                  color="inherit"
-                  aria-label="Change your answer"
+                <a
+                  tabIndex={0}
+                  role="button"
                   className={classes.changeButton}
-                  onClick={(
-                    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                  ) => {
-                    e.stopPropagation();
+                  onClick={(event) => {
+                    event.stopPropagation();
                     record(id);
                   }}
                 >
-                  change
-                </Button>
+                  Change
+                  <span style={visuallyHidden}>
+                    {question.data.text || "this answer"}
+                  </span>
+                </a>
               )}
             </Box>
           </Box>
@@ -133,17 +131,18 @@ const ResultReason: React.FC<IResultReason> = ({
       </AccordionSummary>
       {hasMoreInfo && (
         <AccordionDetails>
-          <Box
-            pt={{ xs: 1, md: 0 }}
-            pb={{ xs: 1, md: 3 }}
-            color="background.dark"
-            className={classes.moreInfo}
-          >
+          <Box className={classes.moreInfo}>
             {question.data.info && (
-              <ReactMarkdownOrHtml source={question.data.info} />
+              <ReactMarkdownOrHtml
+                source={question.data.info}
+                openLinksOnNewTab
+              />
             )}
             {question.data.policyRef && (
-              <ReactMarkdownOrHtml source={question.data.policyRef} />
+              <ReactMarkdownOrHtml
+                source={question.data.policyRef}
+                openLinksOnNewTab
+              />
             )}
           </Box>
         </AccordionDetails>
