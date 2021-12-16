@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import FileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Close";
 import CloudUpload from "@material-ui/icons/CloudUpload";
+import { visuallyHidden } from "@material-ui/utils";
 import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -13,7 +14,7 @@ import { nanoid } from "nanoid";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useRef, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { FileWithPath, useDropzone } from "react-dropzone";
 import ErrorWrapper from "ui/ErrorWrapper";
 import { array } from "yup";
 
@@ -124,6 +125,9 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "underline",
     color: theme.palette.primary.main,
   },
+  fileSize: {
+    whiteSpace: "nowrap",
+  },
 }));
 
 const slotsSchema = array()
@@ -146,6 +150,7 @@ const FileUpload: React.FC<Props> = (props) => {
   );
   const [slots, setSlots] = useState<any[]>(recoveredSlots ?? []);
   const [validationError, setValidationError] = useState<string>();
+  const [fileUploadStatus, setFileUploadStatus] = useState<string>();
 
   const handleSubmit = () => {
     slotsSchema
@@ -207,14 +212,19 @@ const FileUpload: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
       />
       <ErrorWrapper error={validationError}>
-        <Dropzone slots={slots} setSlots={setSlots} />
+        <Dropzone
+          slots={slots}
+          setSlots={setSlots}
+          fileUploadStatus={fileUploadStatus}
+          setFileUploadStatus={setFileUploadStatus}
+        />
       </ErrorWrapper>
     </Card>
   );
 };
 
 function Dropzone(props: any) {
-  const { slots, setSlots } = props;
+  const { slots, setSlots, fileUploadStatus, setFileUploadStatus } = props;
   const classes = useStyles();
   const MAX_UPLOAD_SIZE_MB = 30;
 
@@ -222,7 +232,7 @@ function Dropzone(props: any) {
     accept: ["image/jpeg", "image/png", "application/pdf"],
     maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
     multiple: true,
-    onDrop: (acceptedFiles) => {
+    onDrop: (acceptedFiles: FileWithPath[]) => {
       setSlots((slots: any) => {
         return [
           ...slots,
@@ -245,6 +255,13 @@ function Dropzone(props: any) {
                       ? { ..._file, url, status: "success" }
                       : _file
                   )
+                );
+                setFileUploadStatus(() =>
+                  acceptedFiles.length > 1
+                    ? `Files ${acceptedFiles
+                        .map((file: any) => file.path)
+                        .join(", ")} were uploaded`
+                    : `File ${acceptedFiles[0].path} was uploaded`
                 );
               })
               .catch((error) => {
@@ -276,12 +293,13 @@ function Dropzone(props: any) {
             <IconButton
               size="small"
               className={classes.deleteIcon}
-              aria-label="Delete file"
-              title="Delete file"
+              aria-label={`Delete ${file.path}`}
+              title={`Delete ${file.path}`}
               onClick={() => {
                 setSlots((slots: any) =>
                   slots.filter((slot: any) => slot.file !== file)
                 );
+                setFileUploadStatus(() => `${file.path} was deleted`);
               }}
             >
               <DeleteIcon />
@@ -289,6 +307,10 @@ function Dropzone(props: any) {
             <Box
               className={classes.progress}
               width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={progress}
             />
             <Box className={classes.filePreview}>
               {file.type.includes("image") ? (
@@ -307,12 +329,21 @@ function Dropzone(props: any) {
               </Box>
               {file.path}
             </Box>
-            <Box color="text.secondary" alignSelf="flex-end">
+            <Box
+              color="text.secondary"
+              alignSelf="flex-end"
+              className={classes.fileSize}
+            >
               {formatBytes(file.size)}
             </Box>
           </Box>
         );
       })}
+      {fileUploadStatus && (
+        <p role="status" style={visuallyHidden}>
+          {fileUploadStatus}
+        </p>
+      )}
       <div
         className={classNames(classes.root, isDragActive && classes.dragActive)}
         tabIndex={0}
