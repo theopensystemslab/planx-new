@@ -40,7 +40,11 @@ type FullStore = SharedStore & PreviewStore & EditorStore & EditorUIStore;
 
 export const { vanillaStore, useStore } = (() => {
   const vanillaStore: StoreApi<FullStore> = (() => {
-    if (window?.location?.href?.includes("/preview")) {
+    if (
+      ["/preview", "/unpublished"].some((path) =>
+        window?.location?.href?.includes(path)
+      )
+    ) {
       // if accessing the public preview, don't load editor store files
       return vanillaCreate<SharedStore & PreviewStore>((set, get) => ({
         ...sharedStore(set, get),
