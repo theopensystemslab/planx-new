@@ -110,6 +110,11 @@ const useClasses = makeStyles((theme) => ({
     outline: `2px solid ${theme.palette.secondary.light}`,
     zIndex: 10,
   },
+  numberedList: {
+    listStyle: "none",
+    margin: 0,
+    padding: 0,
+  },
 }));
 
 type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
@@ -127,7 +132,7 @@ function ListItem(
   };
   const classes = useClasses();
   return (
-    <Box className={classes.panel}>
+    <li className={classes.panel}>
       <div
         className={classNames(
           classes.stepIndicator,
@@ -141,9 +146,15 @@ function ListItem(
         className={classes.summary}
         classes={{ focusVisible: classes.onFocus }}
         onClick={handleChange}
+        aria-expanded={expanded}
+        aria-controls={`group-${props.index}-content`}
       >
         <Box>
-          <Typography variant="h5" component={props.heading || "h5"}>
+          <Typography
+            variant="h5"
+            component={props.heading || "h5"}
+            id={`group-${props.index}-heading`}
+          >
             {props.title}
           </Typography>
         </Box>
@@ -154,18 +165,24 @@ function ListItem(
       </ButtonBase>
       {props.description && (
         <Collapse in={expanded}>
-          <Box className={classes.content}>
+          <Box
+            className={classes.content}
+            id={`group-${props.index}-content`}
+            aria-labelledby={`group-${props.index}-heading`}
+          >
             <ReactMarkdownOrHtml source={props.description} />
           </Box>
         </Collapse>
       )}
-    </Box>
+    </li>
   );
 }
 
 function NumberedList(props: { items: Item[]; heading?: HeadingLevel }) {
+  const classes = useClasses();
+
   return (
-    <Box>
+    <ol className={classes.numberedList}>
       {props.items.map((item, i) => (
         <ListItem
           {...item}
@@ -175,7 +192,7 @@ function NumberedList(props: { items: Item[]; heading?: HeadingLevel }) {
           heading={props.heading}
         />
       ))}
-    </Box>
+    </ol>
   );
 }
 

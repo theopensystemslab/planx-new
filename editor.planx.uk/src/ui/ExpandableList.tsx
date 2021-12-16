@@ -1,7 +1,6 @@
-import Box from "@material-ui/core/Box";
+import MuiButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { ENTER, SPACE_BAR } from "@planx/components/shared/constants";
 import classnames from "classnames";
 import React, { ReactNode } from "react";
 
@@ -20,7 +19,10 @@ const useItemClasses = makeStyles((theme) => ({
     padding: `${theme.spacing(1)}px ${theme.spacing(1.5)}px`,
   },
   title: {
-    cursor: "pointer",
+    alignItems: "flex-start",
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
     "&:focus-visible": {
       outline: `2px solid ${theme.palette.secondary.dark}`,
     },
@@ -40,6 +42,8 @@ export function ExpandableListItem(props: {
   expanded?: boolean;
   onToggle?: () => void;
   children?: ReactNode;
+  headingId: string;
+  groupId: string;
 }): FCReturn {
   const classes = useItemClasses();
 
@@ -51,28 +55,21 @@ export function ExpandableListItem(props: {
     <li
       className={classnames(classes.root, props.expanded && classes.expanded)}
     >
-      <Box
-        aria-expanded={props.expanded ? "true" : "false"}
-        display="flex"
-        alignItems="flex-start"
-        justifyContent="space-between"
+      <MuiButtonBase
+        aria-controls={props.groupId}
+        aria-expanded={props.expanded}
         className={classes.title}
+        disableRipple
         onClick={handleToggle}
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === SPACE_BAR || e.key === ENTER) {
-            handleToggle();
-          }
-        }}
       >
-        <Typography variant="h6" component="h2">
+        <Typography variant="h6" component="h2" id={props.headingId}>
           {props.title}
         </Typography>
         <Caret
           expanded={props.expanded}
           titleAccess={props.expanded ? "Less Information" : "More Information"}
         />
-      </Box>
+      </MuiButtonBase>
       {props.expanded && props.children}
     </li>
   );
