@@ -302,7 +302,7 @@ app.post("/bops/:localAuthority", (req, res) => {
             req_headers: req.headers,
             response: bopsResponse,
             response_headers: proxyRes.headers,
-            session_id: req.body && req.body.sessionId,
+            session_id: req.body?.planx_debug_data?.session_id,
           }
         );
 
