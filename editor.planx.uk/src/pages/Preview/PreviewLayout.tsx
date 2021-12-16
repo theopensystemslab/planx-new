@@ -94,6 +94,7 @@ const PreviewLayout: React.FC<{
         handleRestart={handleRestart}
       />
       <Box
+        id="main-content"
         pt={5}
         display="flex"
         flex="1 0 auto"
