@@ -124,7 +124,7 @@ const planningConstraints = {
     id: "External/Planning_Constraints_New",
     serverIndex: 8,
     fields: ["OBJECTID", "LOCATION", "DESCRIPTIO", "POLICY", "info1"],
-    neg: "is not in, or within, a Locally Listed Building",
+    neg: "is not in, or within, a Listed Building",
     pos: (data) => ({
       text: `is, or is within, a Locally Listed Building`,
     }),
