@@ -21,6 +21,7 @@ import {
   QuestionMetaData,
   Response,
   ResponseMetaData,
+  USER_ROLES,
 } from "../model";
 
 export const bopsDictionary = {
@@ -293,6 +294,21 @@ export function getParams(
     airbrake?.notify(err);
   }
 
+  // 9. user role
+
+  // XXX: toString() is a 'hack' until passport data is better structured.
+  //      Currently values might be [string] or string, depending on Q type.
+  //      This will extract a [string] into a string and not do anything if
+  //      the value is already a string, for example -
+  //
+  //      passport.data['user.role']= ["applicant"]
+  //      const userRole = passport.data['user.role'].toString()
+  //      userRole === "applicant"
+
+  const userRole = passport?.data?.["user.role"]?.toString();
+
+  if (userRole && USER_ROLES.includes(userRole)) data.user_role = userRole;
+
   return {
     ...data,
     ...bopsData,
@@ -305,9 +321,8 @@ export function getParams(
 }
 
 export const getWorkStatus = (passport: Store.passport) => {
-  // XXX: this is currently probably a [string], but will be string soon
-  //      howver, String(string) === string and String([string]) === string
-  switch (String(passport?.data?.["application.type"])) {
+  // XXX: toString() is explained in XXX block above
+  switch (passport?.data?.["application.type"]?.toString()) {
     case "ldc.existing":
       return "existing";
     case "ldc.proposed":
