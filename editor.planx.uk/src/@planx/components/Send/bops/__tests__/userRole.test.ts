@@ -1,6 +1,7 @@
 import { Store } from "pages/FlowEditor/lib/store";
 
 import { getParams } from "..";
+import { USER_ROLES } from "../../model";
 
 // https://i.imgur.com/KhUnUte.png
 const flow: Store.flow = {
@@ -52,12 +53,11 @@ const flow: Store.flow = {
 };
 
 // ensure that only supported user.role values are sent to BoPS
+// https://github.com/theopensystemslab/planx-new/pull/755
 
 describe("when user.role =", () => {
   [
-    { passportValue: "applicant", bopsValue: "applicant" },
-    { passportValue: "agent", bopsValue: "agent" },
-    { passportValue: "proxy", bopsValue: "proxy" },
+    ...USER_ROLES.map((role) => ({ passportValue: role, bopsValue: role })),
     { passportValue: "unsupported", bopsValue: undefined },
   ].forEach(({ passportValue, bopsValue }) => {
     const expectedStr = JSON.stringify(bopsValue);
