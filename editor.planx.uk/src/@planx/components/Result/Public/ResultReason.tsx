@@ -82,6 +82,8 @@ const ResultReason: React.FC<IResultReason> = ({
       <AccordionSummary
         expandIcon={hasMoreInfo ? <Caret /> : null}
         aria-label={`${question.data.text}: Your answer was: ${response}. Click to expand for more information about this question.`}
+        aria-controls={`group-${id}-content`}
+        id={`group-${id}-header`}
       >
         <Box
           display="flex"
