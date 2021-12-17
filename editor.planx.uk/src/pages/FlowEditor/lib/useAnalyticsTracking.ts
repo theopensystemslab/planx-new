@@ -60,17 +60,15 @@ const useAnalyticsTracking = (isRootComponent?: boolean) => {
 
   // Track component transition
   const prevLength = usePreviousDistinct(Object.keys(breadcrumbs).length) ?? 0;
-  useEffect(() => {
-    if (isRootComponent && isStandalone && analyticsId) {
-      const curLength = Object.keys(breadcrumbs).length;
-      if (curLength > prevLength) {
-        track("forwards", analyticsId);
-      }
-      if (curLength < prevLength) {
-        track("backwards", analyticsId);
-      }
+  if (isRootComponent && isStandalone && analyticsId) {
+    const curLength = Object.keys(breadcrumbs).length;
+    if (curLength > prevLength) {
+      track("forwards", analyticsId);
     }
-  }, [breadcrumbs, prevLength]);
+    if (curLength < prevLength) {
+      track("backwards", analyticsId);
+    }
+  }
 
   return {
     createAnalytics,
