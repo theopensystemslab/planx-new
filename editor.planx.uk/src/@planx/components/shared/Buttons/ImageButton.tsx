@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => {
       top: 0,
       left: 0,
       objectFit: "contain",
+      backgroundColor: "white",
     },
     key: {
       opacity: 0.3,
