@@ -40,7 +40,7 @@ describe("showing and hiding change capabilities", () => {
       />
     );
 
-    expect(screen.queryByText("change")).toBeFalsy();
+    expect(screen.queryByText("Change")).toBeFalsy();
   });
 
   it("shows the change button when allowChanges is true", () => {
@@ -59,6 +59,6 @@ describe("showing and hiding change capabilities", () => {
       />
     );
 
-    expect(screen.queryByText("change")).toBeTruthy();
+    expect(screen.queryByText("Change")).toBeTruthy();
   });
 });
