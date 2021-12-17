@@ -301,7 +301,7 @@ function GetAddress(props: {
             aria-label="Enter the postcode of the property"
             style={{ marginBottom: "20px" }}
             inputProps={{
-              maxLength: 7,
+              maxLength: 8,
             }}
           />
         </InputLabel>
