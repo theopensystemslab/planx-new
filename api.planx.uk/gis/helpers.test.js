@@ -1,4 +1,4 @@
-const { squashResultLayers, rollupResultLayers } = require("./helpers");
+const { squashResultLayers, rollupResultLayers, getA4Subvariables } = require("./helpers");
 
 describe("squashResultLayer helper function", () => {
   test("It should squash the list of layers passed in", () => {
@@ -234,3 +234,49 @@ describe("rollupResultLayer helper function", () => {
   });
 
 });
+
+describe("getA4Subvariables helper function", () => {
+  const A4_KEY = "OBJECTID"
+  const articleFours = {
+    "article4.test.a": 1,
+    "article4.test.b": 5,
+    "article4.test.c": 13,
+  }
+  it("returns a property for each Article 4 passed in", () => {
+    // Arrange
+    const features = [
+      { attributes: { OBJECTID: 1, name: "Hackney Road"},},
+      { attributes: { OBJECTID: 5, name: "Peckham Way"},},
+      { attributes: { OBJECTID: 13, name: "Chelsea Park"},},
+    ]
+    // Act
+    const result = getA4Subvariables(features, articleFours, A4_KEY);
+    // Assert
+    Object.keys(articleFours).forEach(key => expect(result).toHaveProperty([key]));
+  });
+
+  it("correctly matches features which have a hit on an Article 4", () => {
+    // Arrange
+    const features = [
+      { attributes: { OBJECTID: 1, name: "Hackney Road"},},
+      { attributes: { OBJECTID: 13, name: "Chelsea Park"},},
+    ]
+    // Act
+    const result = getA4Subvariables(features, articleFours, A4_KEY);
+    // Assert
+    expect(result).toMatchObject({
+      ["article4.test.a"]: { value: true },
+      ["article4.test.b"]: { value: false },
+      ["article4.test.c"]: { value: true },
+    })
+  });
+
+  it("handles no matching Article 4 results", () => {
+    const result = getA4Subvariables([], articleFours, A4_KEY);
+    expect(result).toMatchObject({
+      ["article4.test.a"]: { value: false },
+      ["article4.test.b"]: { value: false },
+      ["article4.test.c"]: { value: false },
+    });
+  })
+})

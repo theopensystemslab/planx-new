@@ -183,6 +183,18 @@ const rollupResultLayers = (originalOb, layers, layerName) => {
   return ob;
 }
 
+// Handle Article 4 subvariables
+// Return an object with a simple result for each A4 subvariable
+const getA4Subvariables = (features, articleFours, a4Key) => {
+  const result = {};
+  const a4Keys = features.map(feature => feature.attributes[a4Key]);
+  Object.entries(articleFours).forEach(([key, value]) => {
+    const isMatch = a4Keys.includes(value);
+    result[key] = { "value": isMatch };
+  });
+  return result;
+}
+
 module.exports = {
   setEsriGeometryType,
   setEsriGeometry,
@@ -195,4 +207,5 @@ module.exports = {
   addDesignatedVariable,
   squashResultLayers,
   rollupResultLayers,
+  getA4Subvariables,
 };
