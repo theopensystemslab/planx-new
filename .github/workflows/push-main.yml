@@ -10,7 +10,7 @@ concurrency: staging_environment
 
 env:
   DEPLOYMENT_ENVIRONMENT: staging
-  NODE_VERSION: lts/*
+  NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
 jobs:
   test_and_build:
