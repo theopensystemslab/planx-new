@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { TYPES } from "@planx/components/types";
 import { client } from "lib/graphql";
 import { useEffect, useState } from "react";
+import { usePreviousDistinct } from "react-use";
 
 import { DEFAULT_FLAG_CATEGORY } from "../data/flags";
 import { useStore } from "./store";
@@ -32,8 +33,6 @@ const useAnalyticsTracking = (isRootComponent?: boolean) => {
   const node = currentCard();
   const isStandalone = previewEnvironment === "standalone";
 
-  const [lastBreadcrumbs, setLastBreadcrumb] = useState(breadcrumbs);
-
   useEffect(() => {
     if (isRootComponent && isStandalone) {
       // Track page exit/return
@@ -60,19 +59,18 @@ const useAnalyticsTracking = (isRootComponent?: boolean) => {
   }, []);
 
   // Track component transition
+  const prevLength = usePreviousDistinct(Object.keys(breadcrumbs).length) ?? 0;
   useEffect(() => {
     if (isRootComponent && isStandalone && analyticsId) {
       const curLength = Object.keys(breadcrumbs).length;
-      const prevLength = Object.keys(lastBreadcrumbs).length;
       if (curLength > prevLength) {
         track("forwards", analyticsId);
       }
       if (curLength < prevLength) {
         track("backwards", analyticsId);
       }
-      setLastBreadcrumb(breadcrumbs);
     }
-  }, [breadcrumbs]);
+  }, [breadcrumbs, prevLength]);
 
   return {
     createAnalytics,
