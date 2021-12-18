@@ -129,7 +129,8 @@ new pulumi.Config("cloudflare").require("apiToken");
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
       container: {
-        image: "metabase/metabase:v0.41.4",
+        // if changing, also check docker-compose.yml
+        image: "metabase/metabase:v0.41.5",
         memory: 2048 /*MB*/,
         portMappings: [metabaseListenerHttps],
         environment: [
