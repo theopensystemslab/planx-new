@@ -183,7 +183,7 @@ function NumberedList(props: { items: Item[]; heading?: HeadingLevel }) {
 
   return (
     <ol className={classes.numberedList}>
-      {props.items.map((item, i) => (
+      {props.items?.map((item, i) => (
         <ListItem
           {...item}
           key={i}
