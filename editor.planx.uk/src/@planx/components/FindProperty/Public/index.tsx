@@ -299,6 +299,7 @@ function GetAddress(props: {
             }}
             onBlur={handleCheckPostcode}
             aria-label="Enter the postcode of the property"
+            aria-describedby="question-header-description"
             style={{ marginBottom: "20px" }}
             inputProps={{
               maxLength: 8,

@@ -71,6 +71,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
           value={formik.values.value}
           onChange={formik.handleChange}
           errorMessage={formik.errors.value as string}
+          aria-describedby="question-header-description"
         />
         {props.units && <InputRowLabel>{props.units}</InputRowLabel>}
       </InputRow>

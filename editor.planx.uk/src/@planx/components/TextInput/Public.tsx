@@ -59,6 +59,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
             bordered
             onChange={formik.handleChange}
             errorMessage={formik.errors.text as string}
+            aria-describedby="question-header-description"
           />
         </InputLabel>
       </InputRow>

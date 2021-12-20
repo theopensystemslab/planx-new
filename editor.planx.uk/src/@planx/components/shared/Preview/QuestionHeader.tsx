@@ -70,7 +70,10 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             </Box>
           )}
           {description && (
-            <Box className={classes.description}>
+            <Box
+              className={classes.description}
+              id="question-header-description"
+            >
               <ReactMarkdownOrHtml source={description} />
             </Box>
           )}
