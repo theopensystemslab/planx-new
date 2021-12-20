@@ -40,11 +40,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
       />
       <InputRow>
-        <InputLabel
-          label={props.title}
-          hidden
-          describedBy={props.description || props.placeholder}
-        >
+        <InputLabel label={props.title} hidden htmlFor="text-input">
           <Input
             type={((type) => {
               if (type === "email") return "email";
@@ -59,6 +55,10 @@ const TextInputComponent: React.FC<Props> = (props) => {
             bordered
             onChange={formik.handleChange}
             errorMessage={formik.errors.text as string}
+            id="text-input"
+            inputProps={{
+              "aria-describedby": props.description ? "description-text" : "",
+            }}
           />
         </InputLabel>
       </InputRow>

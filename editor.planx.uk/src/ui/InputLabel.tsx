@@ -20,16 +20,11 @@ export default function InputLabel(props: {
   label: string;
   children: ReactNode;
   hidden?: boolean;
-  describedBy?: string;
   htmlFor?: string;
 }) {
   const classes = useStyles();
   return (
-    <label
-      className={classes.root}
-      aria-describedby={props.describedBy}
-      htmlFor={props.htmlFor}
-    >
+    <label className={classes.root} htmlFor={props.htmlFor}>
       <Typography
         className={classes.labelText}
         variant="body1"
