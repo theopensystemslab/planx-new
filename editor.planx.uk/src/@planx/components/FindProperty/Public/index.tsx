@@ -271,11 +271,12 @@ function GetAddress(props: {
         description={props.description || ""}
       />
       <Box pb={2}>
-        <InputLabel label="Postcode">
+        <InputLabel label="Postcode" htmlFor="postcode-input">
           <Input
             required
             bordered
             name="postcode"
+            id="postcode-input"
             value={postcode || ""}
             errorMessage={
               showPostcodeError && !sanitizedPostcode
@@ -298,10 +299,10 @@ function GetAddress(props: {
               if (key === "Enter") handleCheckPostcode();
             }}
             onBlur={handleCheckPostcode}
-            aria-label="Enter the postcode of the property"
             style={{ marginBottom: "20px" }}
             inputProps={{
               maxLength: 8,
+              "aria-describedby": props.description ? "description-text" : "",
             }}
           />
         </InputLabel>

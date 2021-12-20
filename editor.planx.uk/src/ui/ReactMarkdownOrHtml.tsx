@@ -15,6 +15,7 @@ export default function ReactMarkdownOrHtml(props: {
   source?: string;
   className?: string;
   openLinksOnNewTab?: boolean;
+  id?: string;
 }): FCReturn {
   const classes = useClasses();
   if (typeof props.source !== "string") {
@@ -29,6 +30,7 @@ export default function ReactMarkdownOrHtml(props: {
       <div
         className={classNames(props.className, classes.htmlRoot)}
         dangerouslySetInnerHTML={{ __html: replaceTarget }}
+        id={props.id}
       />
     );
   }
