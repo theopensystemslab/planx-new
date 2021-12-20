@@ -434,13 +434,13 @@ export function PropertyInformation(props: any) {
           featureFill
         />
       </Box>
-      <Box mb={6}>
+      <Box component="dl" mb={6}>
         {propertyDetails.map(({ heading, detail }: any) => (
           <Box className={styles.propertyDetail} key={heading}>
-            <Box fontWeight={700} flex={"0 0 35%"} py={1}>
+            <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
               {heading}
             </Box>
-            <Box flexGrow={1} py={1}>
+            <Box component="dd" flexGrow={1} py={1}>
               {detail}
             </Box>
           </Box>
