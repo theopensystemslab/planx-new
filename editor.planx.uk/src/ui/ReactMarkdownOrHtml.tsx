@@ -23,7 +23,7 @@ export default function ReactMarkdownOrHtml(props: {
   }
   if (props.source.includes("</")) {
     const replaceTarget = props.openLinksOnNewTab
-      ? props.source.replaceAll(`target="_self"`, `target="_blank"`)
+      ? props.source.replaceAll(`target="_self"`, `target="_blank" external`)
       : props.source;
 
     return (
