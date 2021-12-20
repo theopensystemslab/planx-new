@@ -9,13 +9,14 @@ const {
   addDesignatedVariable,
   squashResultLayers,
   rollupResultLayers,
+  getA4Subvariables,
 } = require("../helpers.js");
-const { planningConstraints } = require("./metadata/braintree.js");
+const { planningConstraints, A4_KEY } = require("./metadata/braintree.js");
 
 // Process local authority metadata
 const gisLayers = getQueryableConstraints(planningConstraints);
 const preCheckedLayers = getManualConstraints(planningConstraints);
-const articleFours = {}; // "planningConstraints.article4.records" in future
+const articleFours = planningConstraints.article4.records;
 
 // Fetch a data layer
 async function search(
@@ -80,6 +81,11 @@ async function go(x, y, siteBoundary, extras) {
                 type: "warning",
                 data: properties,
               };
+              if (k === "article4") {
+                // In addition to the Article 4 variable, also map A4 subvariables onto the accumulator
+                const a4Subvariables = getA4Subvariables(data.features, articleFours, A4_KEY);
+                acc = { ...acc, ...a4Subvariables };
+              }
             } else {
               if (!acc[k]) {
                 acc[k] = {
@@ -97,10 +103,6 @@ async function go(x, y, siteBoundary, extras) {
           return acc;
         },
         {
-          ...Object.values(articleFours).reduce((acc, curr) => {
-            acc[curr] = { value: false };
-            return acc;
-          }, {}),
           ...preCheckedLayers,
           ...extras,
         }
@@ -121,8 +123,8 @@ async function go(x, y, siteBoundary, extras) {
       "listed.grade1",
       "listed.grade2",
       "listed.grade2star",
-    ]
-    const obWithSingleListed = rollupResultLayers(obWithSingleTPO, listedLayers, "listed")
+    ];
+    const obWithSingleListed = rollupResultLayers(obWithSingleTPO, listedLayers, "listed");
 
     // Add summary "designated" key to response
     const obWithDesignated = addDesignatedVariable(obWithSingleListed);
