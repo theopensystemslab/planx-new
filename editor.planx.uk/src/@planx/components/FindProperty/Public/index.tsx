@@ -223,6 +223,9 @@ function GetAddress(props: {
       color: "#000",
       fontSize: "inherit",
       borderRadius: 0,
+      "& fieldset": {
+        border: "2px solid black",
+      },
       '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
         borderRadius: 0,
       },
