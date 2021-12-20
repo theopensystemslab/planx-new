@@ -64,7 +64,12 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         <Grid item>
           {title && (
             <Box letterSpacing="-0.02em" mr={1} pt={1.5}>
-              <Typography variant="h3" role="heading" aria-level={1}>
+              <Typography
+                variant="h3"
+                role="heading"
+                aria-level={1}
+                component="h1"
+              >
                 {title}
               </Typography>
             </Box>
