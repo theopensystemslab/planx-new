@@ -233,6 +233,44 @@ describe("rollupResultLayer helper function", () => {
     expect(result[key]).toMatchObject(input["listed.grade1"]);
   });
 
+  test("It should correctly rollup when the layerName matches a provided layer", () => {
+    // Arrange
+    const input = {
+      "article4": {
+        text: 'is subject to Article 4 Restriction(s)',
+        description: 'BLACKFRIARS STREET 28,29,30, KING STREET 10 TO 15, MILL LANE 19,20',
+        value: true,
+        type: 'warning',
+        data: {
+          OBJECTID: 72963,
+          REF: 'Article 4 Direction 1985',
+          LOCATION_1: 'BLACKFRIARS STREET 28,29,30, KING STREET 10 TO 15, MILL LANE 19,20',
+          DESCRIPTIO: 'Effective 29 November 1985'
+        }
+      },
+      'article4.canterbury.hmo': {
+        text: 'is subject to Article 4 Restriction(s)',
+        description: 'Canterbury and surrounding area',
+        value: true,
+        type: 'warning',
+        data: {
+          OBJECTID: 73412,
+          REF: 'The Canterbury HMO Article 4 D',
+          LOCATION_1: 'Canterbury and surrounding area',
+          DESCRIPTIO: 'Effective 25 February 2016'
+        }
+      },
+    };
+    const layersToRollup = Object.keys(input);
+    const key = "article4";
+
+    // Act
+    const result = rollupResultLayers(input, layersToRollup, key);
+
+    // Assert
+    expect(result[key]).toMatchObject(input["article4"]); // parent key maintains all original properties
+    expect(result["article4.canterbury.hmo"]).toMatchObject({ value: true }); // granular key is simplified
+  });
 });
 
 describe("getA4Subvariables helper function", () => {

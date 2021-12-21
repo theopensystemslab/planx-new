@@ -176,13 +176,13 @@ const rollupResultLayers = (originalOb, layers, layerName) => {
   const ob = {...originalOb}
   const granularLayers = layers.filter(layer => layer != layerName);
 
-  if (ob[layerName].value) {
-    // If the parent layer intersects, preserve all properties for rendering PlanningConstraints and debugging
+  if (ob[layerName]?.value) {
+    // If the parent layer is in the original object & intersects, preserve all properties for rendering PlanningConstraints and debugging
     ob[layerName] = ob[layerName];
-  } else if (!ob[layerName].value) {
+  } else {
     // Check to see if any granular layers intersect
     const match = granularLayers.find(layer => ob[layer].value);
-    // If there is a granular match, overwrite the negative parent result. Otherwise take the first (negative) value
+    // If there is a granular match, set it as the parent result. Otherwise take the first (negative) value
     ob[layerName] = match ? ob[match] : ob[layers[0]];
   }
 
