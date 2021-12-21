@@ -8,6 +8,7 @@ import React from "react";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
+import { DESCRIPTION_TEXT } from "../constants";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
 
@@ -76,7 +77,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           )}
           {description && (
             <Box className={classes.description}>
-              <ReactMarkdownOrHtml source={description} id="description-text" />
+              <ReactMarkdownOrHtml source={description} id={DESCRIPTION_TEXT} />
             </Box>
           )}
         </Grid>
