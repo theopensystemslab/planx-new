@@ -1,7 +1,18 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["simple-import-sort"],
+  "plugins": ["simple-import-sort", "jsx-a11y"],
+  "extends": [
+    "plugin:jsx-a11y/recommended"
+  ],
   "rules": {
+    "jsx-a11y/no-autofocus": "warn",
+    "jsx-a11y/aria-proptypes": "warn",
+    "jsx-a11y/anchor-is-valid": "warn",
+    "jsx-a11y/no-static-element-interactions": "warn",
+    "jsx-a11y/no-noninteractive-tabindex": "warn",
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/img-redundant-alt": "warn",
+    "jsx-a11y/aria-role": "warn",
     "simple-import-sort/sort": "warn",
     "no-restricted-imports": [
       "error",
