@@ -174,12 +174,21 @@ const squashResultLayers = (originalOb, layers, layerName) => {
 // Rollup multiple layers into a single result, whilst preserving granularity
 const rollupResultLayers = (originalOb, layers, layerName) => {
   const ob = {...originalOb}
-  // Check to see if we have any intersections
-  const match = layers.find((layer) => ob[layer].value);
-  // If we do, return this as the result. Otherwise take the first (negative) value.
-  ob[layerName] = match ? ob[match] : ob[layers[0]];
-  // Preserve a simple view of the rolled up layers
-  layers.forEach((layer) => ob[layer] = { value: ob[layer].value });
+  const granularLayers = layers.filter(layer => layer != layerName);
+
+  if (ob[layerName].value) {
+    // If the parent layer intersects, preserve all properties for rendering PlanningConstraints and debugging
+    ob[layerName] = ob[layerName];
+  } else if (!ob[layerName].value) {
+    // Check to see if any granular layers intersect
+    const match = granularLayers.find(layer => ob[layer].value);
+    // If there is a granular match, overwrite the negative parent result. Otherwise take the first (negative) value
+    ob[layerName] = match ? ob[match] : ob[layers[0]];
+  }
+
+  // Return a simple view of the granular layers to avoid duplicate PlanningConstraint entries
+  granularLayers.forEach(layer => ob[layer] = { value: ob[layer].value });
+
   return ob;
 }
 
