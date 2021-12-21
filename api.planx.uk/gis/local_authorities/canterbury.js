@@ -110,14 +110,21 @@ async function go(x, y, siteBoundary, extras) {
       }
     });
 
+    // Roll up multiple article 4 layers, while preserving data debug details & granular HMO value
+    if (ob["article4"].value && ob["article4.canterbury.hmo"].value) {
+      ob["article4.canterbury.hmo"] = { value: true };
+    } else if (!ob["article4"].value && ob["article4.canterbury.hmo"].value) {
+      ob["article4"] = ob["article4.canterbury.hmo"];
+      ob["article4.canterbury.hmo"] = { value: true };
+    } else if (!ob["article4.canterbury.hmo"].value) {
+      ob["article4.canterbury.hmo"] = { value: false };
+    }
+
     // Merge Listed Buildings & "Locally Listed Buildings" responses under single "listed" variable
     const obSquashed = squashResultLayers(ob, ["listed.local"], "listed");
 
-    // Roll up multiple article 4 layers, while preserving granularity for HMO type
-    const obRolledUp = rollupResultLayers(obSquashed, ["article4.canterbury.hmo"], "article4");
-
     // Add summary "designated" key to response
-    const obWithDesignated = addDesignatedVariable(obRolledUp);
+    const obWithDesignated = addDesignatedVariable(obSquashed);
 
     return obWithDesignated;
   } catch (e) {
