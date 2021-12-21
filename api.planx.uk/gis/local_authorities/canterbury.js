@@ -110,7 +110,7 @@ async function go(x, y, siteBoundary, extras) {
       }
     });
 
-    // Roll up multiple article 4 layers, while granular HMO variable
+    // Roll up multiple Article4 layers
     const obRolledUp = rollupResultLayers(ob, ["article4", "article4.canterbury.hmo"], "article4");
 
     // Merge Listed Buildings & "Locally Listed Buildings" responses under single "listed" variable
