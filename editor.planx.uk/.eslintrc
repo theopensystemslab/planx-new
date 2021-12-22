@@ -5,15 +5,15 @@
     "plugin:jsx-a11y/recommended"
   ],
   "rules": {
-    "jsx-a11y/no-autofocus": "warn",
-    "jsx-a11y/aria-proptypes": "warn",
-    "jsx-a11y/anchor-is-valid": "warn",
-    "jsx-a11y/no-static-element-interactions": "warn",
-    "jsx-a11y/no-noninteractive-tabindex": "warn",
-    "jsx-a11y/click-events-have-key-events": "warn",
-    "jsx-a11y/img-redundant-alt": "warn",
-    "jsx-a11y/aria-role": "warn",
-    "simple-import-sort/sort": "warn",
+    "jsx-a11y/no-autofocus": "off",
+    "jsx-a11y/aria-proptypes": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/no-noninteractive-tabindex": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/img-redundant-alt": "off",
+    "jsx-a11y/aria-role": "off",
+    "simple-import-sort/sort": "off",
     "no-restricted-imports": [
       "error",
       {
