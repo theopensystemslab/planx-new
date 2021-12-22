@@ -1,5 +1,6 @@
 import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@material-ui/core/Box";
+import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import classnames from "classnames";
@@ -14,7 +15,6 @@ const useClasses = makeStyles((theme) => ({
   },
   link: {
     textTransform: "capitalize",
-    cursor: "pointer",
     color: "inherit",
     whiteSpace: "nowrap",
     textDecoration: "underline",
@@ -59,13 +59,13 @@ export default function Footer(props: Props) {
             <FooterItem {...item} key={item.title} />
           ))}
         {feedbackFishId && (
-          <a tabIndex={0}>
+          <ButtonBase disableRipple>
             <FeedbackFish projectId={feedbackFishId}>
               <Typography variant="body2" className={classes.link}>
                 Feedback
               </Typography>
             </FeedbackFish>
-          </a>
+          </ButtonBase>
         )}
       </Box>
       <Box py={4}>{children}</Box>
@@ -95,8 +95,8 @@ function FooterItem(props: {
       {title}
     </Link>
   ) : (
-    <a onClick={props.onClick} className={classes.link}>
+    <ButtonBase onClick={props.onClick} className={classes.link} disableRipple>
       {title}
-    </a>
+    </ButtonBase>
   );
 }
