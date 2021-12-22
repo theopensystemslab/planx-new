@@ -107,7 +107,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               {definitionImg && (
                 <img
                   src={definitionImg}
-                  alt="definition image"
+                  alt="definition"
                   className={classes.image}
                 />
               )}
@@ -117,7 +117,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         )}
       </MoreInfo>
 
-      {img && <img src={img} alt="question image" className={classes.image} />}
+      {img && <img src={img} alt="question" className={classes.image} />}
     </Box>
   );
 };
