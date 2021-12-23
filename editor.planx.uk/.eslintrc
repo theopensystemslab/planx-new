@@ -4,7 +4,6 @@
   "extends": ["plugin:jsx-a11y/recommended"],
   "rules": {
     "jsx-a11y/no-autofocus": "off",
-    "jsx-a11y/aria-proptypes": "off",
     "simple-import-sort/sort": "warn",
     "no-restricted-imports": [
       "error",
