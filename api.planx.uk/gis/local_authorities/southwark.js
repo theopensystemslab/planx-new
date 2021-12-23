@@ -6,6 +6,7 @@ const {
   getQueryableConstraints,
   getManualConstraints,
   addDesignatedVariable,
+  rollupResultLayers,
 } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/southwark.js");
 
@@ -133,13 +134,6 @@ async function locationSearch(x, y, siteBoundary, extras) {
       }
     );
 
-  ob["article4.southwark.sunray"] = {
-    value:
-      ob["designated.conservationArea"]?.data?.Conservation_area_number === 39
-        ? true
-        : false,
-  };
-
   responses
     .filter(([_key, result]) => result instanceof Error)
     .forEach(([key, _result]) => {
@@ -148,8 +142,12 @@ async function locationSearch(x, y, siteBoundary, extras) {
       } catch (e) {}
     });
 
+  // Rollup multiple Article4 layers
+  const a4Layers = Object.keys(planningConstraints).filter(constraint => constraint.startsWith("article4"));
+  const obRolledUp = rollupResultLayers(ob, a4Layers, "article4");
+
   // Add summary "designated" key to response
-  const obWithDesignated = addDesignatedVariable(ob);
+  const obWithDesignated = addDesignatedVariable(obRolledUp);
 
   return obWithDesignated;
 }
