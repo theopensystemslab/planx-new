@@ -49,38 +49,38 @@ const planningConstraints = {
       "article4.buckinghamshire.bryantsbottomroad.a": "Adj Bryants Bottom Road, Hughenden - Gates etc, Markets, Racing", // split a/b, different in airtable
       "article4.buckinghamshire.bryantsbottomroad.b": "Bryants Bottom Road, Hughenden - Agricultural Use", // split a/b, different in airtable
       "article4.buckinghamshire.burtonslane": "Land north of Burtons Lane extending to Carpenters and Hillas Woods Agricultural buildings and mineral working.", // line break
-      "article4.buckinghamshire.chalklaneanhydehealth": "",
-      "article4.buckinghamshire.chartridgelane": "",
-      "article4.buckinghamshire.cheshamroad": "",
-      "article4.buckinghamshire.chessfieldparkenclosure": "",
-      "article4.buckinghamshire.churchlane": "",
-      "article4.buckinghamshire.collegeplantation": "",
-      "article4.buckinghamshire.collumgreen": "",
-      "article4.buckinghamshire.commonwood": "",
-      "article4.buckinghamshire.commonwoodagri": "",
-      "article4.buckinghamshire.commonwoodandpennroad": "",
-      "article4.buckinghamshire.commonwoodenclosure": "",
-      "article4.buckinghamshire.commonwoodpennroad": "",
-      "article4.buckinghamshire.coneybankwood": "",
-      "article4.buckinghamshire.cooperskinslaneenclosure": "",
-      "article4.buckinghamshire.copperkinslanecaravan": "",
-      "article4.buckinghamshire.coppicesouthheathcaravan": "",
-      "article4.buckinghamshire.cryershillroad": "",
-      "article4.buckinghamshire.deanfield": "",
-      "article4.buckinghamshire.DO10fulmer": "",
-      "article4.buckinghamshire.dorneywoodroad": "",
-      "article4.buckinghamshire.eastamershamroadOS0006": "",
-      "article4.buckinghamshire.eastamershamroadOS9269": "",
-      "article4.buckinghamshire.eastjasonshill": "",
-      "article4.buckinghamshire.eastlatimervillage": "",
-      "article4.buckinghamshire.eastledgelaneagri": "",
-      "article4.buckinghamshire.eastlodgelanecaravan": "",
-      "article4.buckinghamshire.eastmarishlane": "",
-      "article4.buckinghamshire.eastvaleroad": "",
-      "article4.buckinghamshire.ferrylane": "",
-      "article4.buckinghamshire.fourwinds": "",
-      "article4.buckinghamshire.fulmer": "",
-      "article4.buckinghamshire.fulmerplacefarm": "",
+      "article4.buckinghamshire.chalklaneanhydehealth": "Land below Chalk Lane, Hyde Heath Agricultural buildings and mineral working.", // line break
+      "article4.buckinghamshire.chartridgelane": "Land off Chartridge Lane, Chartridge Agricultural Buildings.", // line break
+      "article4.buckinghamshire.cheshamroad": "Land off Chesham Road, Bellingdon Agricultural buildings.", // line break
+      "article4.buckinghamshire.chessfieldparkenclosure": "Land at rear of Chessfield Park - Means of enclosure.", // line break
+      "article4.buckinghamshire.churchlane": "Church lane, Wexham - Agricultural",
+      "article4.buckinghamshire.collegeplantation": "College Plantation, Speen - Motor car and motorcycle racing", // line break, different in airtable
+      "article4.buckinghamshire.collumgreen": "Land at Collum Green, Beaconsfield Road, Farnham Common - Agricultural",
+      "article4.buckinghamshire.commonwood": "Common Wood - Penn Road, Hazlemere (b) - Agricultural Use", // different in airtable
+      "article4.buckinghamshire.commonwoodagri": "Land at Common Wood, Penn. Agricultural buildings.", // line break
+      "article4.buckinghamshire.commonwoodandpennroad": "Land between Common Wood and Penn Road, Hazlemere Agricultural buildings.", // line break
+      "article4.buckinghamshire.commonwoodenclosure": "Land at Common Wood, Penn - Means of enclosure.", // line break
+      "article4.buckinghamshire.commonwoodpennroad": "Land between Common Wood and Penn Road, Hazelmere Means of enclosure.", // line break
+      "article4.buckinghamshire.coneybankwood": "Land South of Coneybank Wood, Great Missenden - Agricultural Buildings.", // line break
+      "article4.buckinghamshire.copperkinslanecaravan": "Land off Copperkins Lane, Amersham - Caravan sites", // line break
+      "article4.buckinghamshire.cooperkinslaneenclosure": "Land Off Copperkins Lane, Amersham - Means of enclosure", // line break, variable typo in airtable, check content
+      "article4.buckinghamshire.coppicesouthheathcaravan": "Land at The Coppice, South Heath - Caravan Sites", // line break
+      "article4.buckinghamshire.cryershillroad": "Valley Road/Cryers Hill Road, Hughenden - Caravan Sites", // different in airtable
+      "article4.buckinghamshire.deanfield": "Part Fields SW of Deanfield, Saunderton (b) - Caravan sites", // different in airtable
+      "article4.buckinghamshire.DO10fulmer": "", // no clear gis match
+      "article4.buckinghamshire.dorneywoodroad": "Dorney Wood Road, Burnham - Agricultural",
+      "article4.buckinghamshire.eastamershamroadOS0006": "Land East of Amersham Road including OS parcel 0006. Agricultural Buildings.", // line break
+      "article4.buckinghamshire.eastamershamroadOS9269": "Land East of Amersham Road including OS Parcel 9269 Agricultural buildings.", // line break
+      "article4.buckinghamshire.eastjasonshill": "Land to the East of Jasons Hill, Ley Hill Agricultural buildings.", // line break
+      "article4.buckinghamshire.eastlatimervillage": "Land on East side of Latimer Village, adjoining Bucks/Herts border Agricultural Buildings.", // line break
+      "article4.buckinghamshire.eastlodgelaneagri": "Land East of Lodge Lane Agricultural buildings.", // line break, variable typo in airtable, check content
+      "article4.buckinghamshire.eastlodgelanecaravan": "Small parcel of land East of Lodge Lane Caravan sites.", // line break
+      "article4.buckinghamshire.eastmarishlane": "Land adjoining the east side of Marish Lane and Slade Oak Lane and the north side of Mirrie Lane, Denham - Agricultural",
+      "article4.buckinghamshire.eastvaleroad": "Land on East Side of Vale Road - Agricultural buildings and mineral working.", // line break
+      "article4.buckinghamshire.ferrylane": "Water Meadows, Ferry Lane, Medmenham (a) - Gates, Fences, Walls etc", // different in airtable
+      "article4.buckinghamshire.fourwinds": "Four Winds, Slough Road, Iver Heath - Agricultural",
+      "article4.buckinghamshire.fulmer": "Land in Fulmer, Bucks - Agricultural",
+      "article4.buckinghamshire.fulmerplacefarm": "Fulmer Place Farm, Fulmer - Agricultural",
       "article4.buckinghamshire.georgegreen": "",
       "article4.buckinghamshire.gravellyway": "",
       "article4.buckinghamshire.greenacres": "",
@@ -108,7 +108,7 @@ const planningConstraints = {
       "article4.buckinghamshire.northpark": "",
       "article4.buckinghamshire.northsidesevenhills": "",
       "article4.buckinghamshire.northwelderslane": "",
-      "article4.buckinghamshire.officetoresi": "",
+      "article4.buckinghamshire.officetoresi": "", // contains, not equality match
       "article4.buckinghamshire.OS1178": "",
       "article4.buckinghamshire.os262": "",
       "article4.buckinghamshire.OS3100": "",
@@ -131,7 +131,7 @@ const planningConstraints = {
       "article4.buckinghamshire.potkilnlaneandlayternsgreen": "",
       "article4.buckinghamshire.potterrowcaravan": "",
       "article4.buckinghamshire.potterrowenclosure": "",
-      "article4.buckinghamshire.poultry": "",
+      "article4.buckinghamshire.poultry": "", // contains, not equality match
       "article4.buckinghamshire.purtonlane": "",
       "article4.buckinghamshire.rearuplands": "",
       "article4.buckinghamshire.robertswooddrive": "",
