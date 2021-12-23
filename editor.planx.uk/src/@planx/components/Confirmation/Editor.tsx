@@ -21,7 +21,6 @@ function StepEditor(props: ListManagerEditorProps<Step>) {
     <Box>
       <InputRow>
         <Input
-          autoFocus
           required
           name="title"
           value={props.value.title}

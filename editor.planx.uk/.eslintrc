@@ -3,7 +3,6 @@
   "plugins": ["simple-import-sort", "jsx-a11y"],
   "extends": ["plugin:jsx-a11y/recommended"],
   "rules": {
-    "jsx-a11y/no-autofocus": "off",
     "simple-import-sort/sort": "warn",
     "no-restricted-imports": [
       "error",
