@@ -140,7 +140,7 @@ it("should not have any accessibility violations", async () => {
       Postcode: "SW1A 2AA",
       Country: "United Kingdom",
     });
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
   });
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });
