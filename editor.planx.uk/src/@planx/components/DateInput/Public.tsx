@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { visuallyHidden } from "@material-ui/utils";
 import {
   DateInput,
   paddedDate,
@@ -44,7 +45,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
   return (
     <Card handleSubmit={formik.handleSubmit}>
       <fieldset className={classes.fieldset}>
-        <legend aria-label={props.title}></legend>
+        <legend style={visuallyHidden}>{props.title}</legend>
         <QuestionHeader
           title={props.title}
           description={props.description}
