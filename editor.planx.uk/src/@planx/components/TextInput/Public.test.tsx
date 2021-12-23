@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import { uniqueId } from "lodash";
 import React from "react";
 
@@ -136,4 +137,16 @@ examplePhoneNumbers.forEach((number) => {
 
     expect(handleSubmit).toHaveBeenCalled();
   });
+});
+
+it("should not have any accessibility violations", async () => {
+  const { container } = render(
+    <TextInput
+      title="phone"
+      placeholder="(01234) 123456"
+      type={TextInputType.Phone}
+    />
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });

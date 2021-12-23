@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import { uniqueId } from "lodash";
 import React from "react";
 
@@ -125,5 +126,21 @@ test("recovers previously submitted text when clicking the back button even if a
         postcode: "SW1A 2AA",
       },
     },
+  });
+});
+
+it("should not have any accessibility violations", async () => {
+  const { container } = render(<AddressInput title="title" />);
+  await waitFor(async () => {
+    await fillInFieldsUsingPlaceholder({
+      "Line 1": "Flat 1",
+      "Line 2": "221b Baker St",
+      Town: "London",
+      County: "County",
+      Postcode: "SW1A 2AA",
+      Country: "United Kingdom",
+    });
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

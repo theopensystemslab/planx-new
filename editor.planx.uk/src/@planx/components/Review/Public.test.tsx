@@ -1,5 +1,6 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import React from "react";
 
 import Review from "./Public/Presentational";
@@ -81,3 +82,17 @@ const mockedFlow = {
   ky2QQWHgi5: { data: { text: "Option 1" }, type: 200 },
   nyYCBQs24s: { data: { text: "Option 3" }, type: 200 },
 };
+
+it("should not have any accessibility violations", async () => {
+  const { container } = render(
+    <Review
+      flow={mockedFlow}
+      breadcrumbs={mockedBreadcrumbs}
+      passport={mockedPassport}
+      changeAnswer={() => {}}
+      showChangeButton={true}
+    />
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
