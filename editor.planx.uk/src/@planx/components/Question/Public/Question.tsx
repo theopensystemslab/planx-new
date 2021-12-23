@@ -1,6 +1,7 @@
 import Grid from "@material-ui/core/Grid";
 import { useTheme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
+import { visuallyHidden } from "@material-ui/utils";
 import DecisionButton from "@planx/components/shared/Buttons/DecisionButton";
 import DescriptionButton from "@planx/components/shared/Buttons/DescriptionButton";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
@@ -74,7 +75,7 @@ const Question: React.FC<IQuestion> = (props) => {
     <Card>
       <form onSubmit={formik.handleSubmit}>
         <fieldset className={classes.fieldset}>
-          <legend aria-label={props.text}></legend>
+          <legend style={visuallyHidden}>{props.text}</legend>
           <QuestionHeader
             title={props.text}
             description={props.description}
