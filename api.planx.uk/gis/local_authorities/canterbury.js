@@ -110,18 +110,11 @@ async function go(x, y, siteBoundary, extras) {
       }
     });
 
-    // Roll up multiple article 4 layers, while preserving data debug details & granular HMO value
-    if (ob["article4"].value && ob["article4.canterbury.hmo"].value) {
-      ob["article4.canterbury.hmo"] = { value: true };
-    } else if (!ob["article4"].value && ob["article4.canterbury.hmo"].value) {
-      ob["article4"] = ob["article4.canterbury.hmo"];
-      ob["article4.canterbury.hmo"] = { value: true };
-    } else if (!ob["article4.canterbury.hmo"].value) {
-      ob["article4.canterbury.hmo"] = { value: false };
-    }
+    // Roll up multiple Article4 layers
+    const obRolledUp = rollupResultLayers(ob, ["article4", "article4.canterbury.hmo"], "article4");
 
     // Merge Listed Buildings & "Locally Listed Buildings" responses under single "listed" variable
-    const obSquashed = squashResultLayers(ob, ["listed.local"], "listed");
+    const obSquashed = squashResultLayers(obRolledUp, ["listed.local"], "listed");
 
     // Add summary "designated" key to response
     const obWithDesignated = addDesignatedVariable(obSquashed);
