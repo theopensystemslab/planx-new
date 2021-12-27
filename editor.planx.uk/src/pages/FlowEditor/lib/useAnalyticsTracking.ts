@@ -32,43 +32,49 @@ const useAnalyticsTracking = (isRootComponent?: boolean) => {
   ]);
   const node = currentCard();
   const isStandalone = previewEnvironment === "standalone";
+  const [previousBredcrumbs, setPreviousBreadcrumb] = useState(breadcrumbs);
 
-  useEffect(() => {
-    if (isRootComponent && isStandalone) {
-      // Track page exit/return
-      document.addEventListener("visibilitychange", () => {
-        if (lastAnalyticsLogId) {
-          if (document.visibilityState === "hidden") {
-            // Exited page
-            navigator.sendBeacon(
-              `${
-                process.env.REACT_APP_API_URL
-              }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
-            );
-          } else if (document.visibilityState === "visible") {
-            // Returned to page
-            navigator.sendBeacon(
-              `${
-                process.env.REACT_APP_API_URL
-              }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
-            );
-          }
-        }
-      });
+  const onPageExit = () => {
+    if (lastAnalyticsLogId && isStandalone && isRootComponent) {
+      if (document.visibilityState === "hidden") {
+        navigator.sendBeacon(
+          `${
+            process.env.REACT_APP_API_URL
+          }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
+        );
+      }
+      if (document.visibilityState === "visible") {
+        navigator.sendBeacon(
+          `${
+            process.env.REACT_APP_API_URL
+          }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
+        );
+      }
     }
-  }, []);
+  };
+
+  // useEffect(() => {
+  //   if(!isRootComponent) { console.log('ev not root')}
+  //   if(isRootComponent) { console.log('ev is root')}
+
+  //   if(isStandalone) document.addEventListener("visibilitychange", onPageExit);
+  //   return () => {
+  //     if(isStandalone) document.removeEventListener("visibilitychange", onPageExit);
+  //   }
+  // }, []);
 
   // Track component transition
-  const prevLength = usePreviousDistinct(Object.keys(breadcrumbs).length) ?? 0;
-  if (isRootComponent && isStandalone && analyticsId) {
-    const curLength = Object.keys(breadcrumbs).length;
-    if (curLength > prevLength) {
-      track("forwards", analyticsId);
+  useEffect(() => {
+    if (isRootComponent && isStandalone && analyticsId) {
+      const curLength = Object.keys(breadcrumbs).length;
+      const prevLength = Object.keys(previousBredcrumbs).length;
+
+      if (curLength > prevLength) track("forwards", analyticsId);
+      if (curLength < prevLength) track("backwards", analyticsId);
+
+      setPreviousBreadcrumb(breadcrumbs);
     }
-    if (curLength < prevLength) {
-      track("backwards", analyticsId);
-    }
-  }
+  }, [breadcrumbs]);
 
   return {
     createAnalytics,
