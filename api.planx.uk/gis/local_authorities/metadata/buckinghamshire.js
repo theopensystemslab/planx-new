@@ -97,7 +97,6 @@ const planningConstraints = {
       "article4.buckinghamshire.lodgelaneagri": "3 parcels of land surrounding Lodge Lane Agricultural buildings.", // line break
       "article4.buckinghamshire.lodgelaneenclosure.a": "Land West of Lodge Lane Means of enclosure.", // split a/b, line break
       "article4.buckinghamshire.lodgelaneenclosure.b": "Small parcel of Land East of Lodge Lane Means of enclosure.", // split a/b, line break
-      // (is airtable missing lodgelane variables for caravan sites in gis data??)
       "article4.buckinghamshire.manorfarm": "Manor Farm, Coates Lane - Agricultural Use", // different in airtable
       "article4.buckinghamshire.mansionlanesouth": "Land West of Mansion Lane, Immediately South of Iverdale Close, Iver - Development",
       "article4.buckinghamshire.mansionlanewest": "Land West of Mansion Lane - immediately to the west and south row of cottages No's 110-148 Mansion Lane, Iver - Development",
@@ -106,7 +105,6 @@ const planningConstraints = {
       "article4.buckinghamshire.nightingaleslane": "Land surrounding Nightingales Lane, 2290 metre long strip. - Means of enclosure.", // line break, first airtable entry does not have gis match
       "article4.buckinghamshire.northandsouthhollowway": "Land north and south of Hollow Way between Chesham and Pednor - Agricultural buildings and mineral working.", // line break
       "article4.buckinghamshire.northballingerroadvaravan": "Land to north of Ballinger Road - Caravan sites.", // line break
-      // (is airtable missing northballingerroadenclosure variable for site in gis data??)
       "article4.buckinghamshire.northlongpark": "", // no clear gis match
       "article4.buckinghamshire.northorbitalroad": "Land off North Orbital Road, Denham - Caravan Site",
       "article4.buckinghamshire.northpark": "Land to north of North Park and West of St Andrews Church, Iver - the erection, construction, maintenance, improvement or alteration of a gate, fence, wall or other means of enclosure.",
@@ -123,61 +121,64 @@ const planningConstraints = {
       "article4.buckinghamshire.os6961": "OS parcel 6961 to West of Amersham Road, Chalfont St Giles Means of enclosure.", // line break
       "article4.buckinghamshire.os8050": "Land West of Amersham Road OS parcels 8050 and 8750 Means of enclosure.", // line break
       "article4.buckinghamshire.os8349": "OS parcel 8349, 6265, 7466, off Bellingdon Road Agricultural buildings.", // line break
-      "article4.buckinghamshire.parkspringwood": "",
-      "article4.buckinghamshire.parslowshillock": "",
-      "article4.buckinghamshire.pednorhighroad": "",
-      "article4.buckinghamshire.pednorroadanddrydelllane": "",
-      "article4.buckinghamshire.pednorroadcaravan": "",
-      "article4.buckinghamshire.pednorroaddrydelllane": "",
-      "article4.buckinghamshire.pednorroadenclosure": "",
-      "article4.buckinghamshire.pennroad": "",
-      "article4.buckinghamshire.phillipshillarm": "",
-      "article4.buckinghamshire.phillipshillfarm": "",
-      "article4.buckinghamshire.potkilnlaneandlayternsgreen": "",
-      "article4.buckinghamshire.potterrowcaravan": "",
-      "article4.buckinghamshire.potterrowenclosure": "",
-      "article4.buckinghamshire.poultry": "", // contains, not equality match
-      "article4.buckinghamshire.purtonlane": "",
-      "article4.buckinghamshire.rearuplands": "",
-      "article4.buckinghamshire.robertswooddrive": "",
-      "article4.buckinghamshire.ruralwycombe": "",
-      "article4.buckinghamshire.saunderton": "",
-      "article4.buckinghamshire.sedgesfarm": "",
-      "article4.buckinghamshire.sheepcotedellroad": "",
-      "article4.buckinghamshire.sibleyscoppice": "",
-      "article4.buckinghamshire.skimmersorchard": "",
-      "article4.buckinghamshire.southA413": "",
-      "article4.buckinghamshire.southchartridge": "",
-      "article4.buckinghamshire.southeastfinchlane": "",
-      "article4.buckinghamshire.southkilnlane": "",
-      "article4.buckinghamshire.southlittlemissenden": "",
-      "article4.buckinghamshire.southpenfoldlane": "",
-      "article4.buckinghamshire.southpenfoldlaneOS262": "",
-      "article4.buckinghamshire.southsheepcoteroad": "",
-      "article4.buckinghamshire.southsidekiln": "",
-      "article4.buckinghamshire.southswanbottom": "",
-      "article4.buckinghamshire.stokenchurch": "",
-      "article4.buckinghamshire.threeoaksfarm": "",
-      "article4.buckinghamshire.turnerswood": "",
-      "article4.buckinghamshire.turvillevalley": "",
-      "article4.buckinghamshire.valleyroad": "",
-      "article4.buckinghamshire.wellcottage": "",
-      "article4.buckinghamshire.westledgelanecaravan": "",
-      "article4.buckinghamshire.weststhubertslane": "",
-      "article4.buckinghamshire.westwexhamstreet": "",
-      "article4.buckinghamshire.wholedistrictpoultry": "",
-      "article4.buckinghamshire.widmerfarm": "",
-      "article4.buckinghamshire.wigginton": "",
-      "article4.buckinghamshire.wiltonlane": "",
-      "article4.buckinghamshire.wooburngreen": "",
-      "article4.buckinghamshire.woodlandsmeadow": "",
-      "article4.buckinghamshire.wyburnwood": "",
-      "article4.buckinghamshire.wyburnwoodagri": "",
-      "article4.buckinghamshire.wyburnwoodforestry": "",
-      "article4.buckinghamshire.wycombehealthfarmnortheast": "",
-      "article4.buckinghamshire.wycombehealthfarmspurlands": "",
-      "article4.buckinghamshire.wycombeheathfarm": "",
-      "article4.buckinghamshire.wycombeheathfarmcaravan": ""
+      "article4.buckinghamshire.parkspringwood": "Parkspring Wood, Fulmer - Agricultural",
+      "article4.buckinghamshire.parslowshillock": "Parslow's Hillock to Loosley Row, Lacey Green - Agricultural Use", // different in airtable
+      "article4.buckinghamshire.pednorhighroad": "Land Surrounding Pednor High Road Agricultural buildings and mineral working.", // line break
+      "article4.buckinghamshire.pednorroadanddrydelllane": "Land between Pednor Road and Drydell Lane - Caravan sites.", // line break
+      "article4.buckinghamshire.pednorroadcaravan": "Land off Pednor Road, Chesham - Caravan Sites.",
+      "article4.buckinghamshire.pednorroaddrydelllane": "Land between Pednor Road and Drydell Lane - Means of enclosure.", // line break
+      "article4.buckinghamshire.pednorroadenclosure": "Land off Pednor Road, Chesham - Means of enclosure.", // line break
+      "article4.buckinghamshire.pennroad": "Common Wood - Penn Road, Hazlemere (a) - Gates, Fences, Walls etc", // different in airtable
+      "article4.buckinghamshire.phillipshillarm": "Land at Phillipshill Farm off Old Shire Lane and Burtons Lane Agricultural Buildings.", // variable typo??, line break
+      "article4.buckinghamshire.phillipshillfarm": "Land at Phillipshill Farm off Old Shire Lane and Burtons Lane Means of enclosure.", // line break
+      "article4.buckinghamshire.potkilnlaneandlayternsgreen": "Land between Potkiln Lane and Layters Green Lane Agricultural Buildings.", // line break
+      "article4.buckinghamshire.potterrowcaravan": "Land East of Potter Row, Great Missenden - Caravan sites.", // line break
+      "article4.buckinghamshire.potterrowenclosure": "Land East of Potter Row, Great Missenden - Means of enclosure", // line break
+      "article4.buckinghamshire.poultry": "Former Wycombe Rural District - Poultry Production", // different in airtable (DESCRIPTIO not DEV_TYPE)
+      "article4.buckinghamshire.purtonlane": "Purton Lane/Farnham Park Lane, Farnham Royal - Agricultural",
+      "article4.buckinghamshire.rearuplands": "Land at the rear of Uplands, Swan Bottom (OS Parcel 2216) - Agricultural Buildings and means of enclosure.", // line break
+      "article4.buckinghamshire.robertswooddrive": "Land East of Roberts Wood Drive Means of enclosure.", // line break
+      "article4.buckinghamshire.ruralwycombe": "The whole of the Rural District of Wycombe in the county of Buckingham which includes the Area of Watchet Road, High Wycombe, edge of Chiltern District Council area - Poultry production",
+      "article4.buckinghamshire.saunderton": "Part Fields SW of Deanfield, Saunderton (a) - Gates etc, Markets, Racing", // different in airtable
+      "article4.buckinghamshire.sedgesfarm": "Strip Land at Sedges Farm, Great Missenden - Means of enclosure.", // line break
+      "article4.buckinghamshire.sheepcotedellroad": "Land South of Sheepcote Dell Road, Holmer Green, including Land East of Earl Howe Road Means of enclosure.", // line break
+      "article4.buckinghamshire.sibleyscoppice": "Land at Sibleys Coppice, South Heath - Means of enclosure.", // line break
+      "article4.buckinghamshire.skimmersorchard.a": "Land at Skimmers Orchard, Holmer Green (a) Holding of Markets (b) Motor Racing.", // split a/b/c, line break
+      "article4.buckinghamshire.skimmersorchard.b": "Land at Skimmers Orchard, Holmer Green Caravan Site", // split a/b/c, line break
+      "article4.buckinghamshire.skimmersorchard.c": "Land at Skimmers Orchard, Holmer Green Means of Enclosure.", // split a/b/c, line break
+      "article4.buckinghamshire.southA413": "Land South of A413 in Little Missenden Agricultural buildings and mineral working.", // line break
+      "article4.buckinghamshire.southchartridge": "Southern side Chartridge Lane between Chartridge-Pednor Bottom. Agricultural buildings and mineral working. OS parcels 1348, 1347, 1369, 1367, Southern side Chartridge Lane Agricultural buildings and mineral working. OS parcels 1274, 1279, 1328, Northern", // line break, different in airtable
+      "article4.buckinghamshire.southeastfinchlane": "Land Southeast of Finch Lane Agricultural buildings and mineral working.",
+      "article4.buckinghamshire.southkilnlane": "Land to South of Kiln Lane, Ley Hill Agricultural Buildings.", // line break
+      "article4.buckinghamshire.southlittlemissenden": "Land to the South of Little Missenden Agricultural buildings and mineral working.", // line break
+      "article4.buckinghamshire.southpenfoldlane.a": "Land south of Penfold Lane and adjoining the rear of properties in Shepherds Fold and Winters Way Agricultural Buildings.", // split a/b, line break
+      "article4.buckinghamshire.southpenfoldlane.b": "Land to the South of Penfold Lane Agricultural Buildings.", // split a/b, line break
+      "article4.buckinghamshire.southpenfoldlaneOS262": "Land south of Penfold Lane (OS Parcel 262) Caravan Sites.", // line break
+      "article4.buckinghamshire.southsheepcoteroad": "Land South of Sheepcote Dell Road, Holmer Green, including Land East of Earl Howe Road Agricultural Buildings.", // line break
+      "article4.buckinghamshire.southsidekiln": "Land on South Side of Kiln Lane Hedgerley - Agricultural",
+      "article4.buckinghamshire.southswanbottom": "Land on the south side of Swan Bottom Road - Agricultural buildings.", // line break
+      "article4.buckinghamshire.stokenchurch": "North of A40, Stokenchurch - Gates etc, Markets, Racing", // different in airtable
+      "article4.buckinghamshire.threeoaksfarm": "Land formally known as Three Oaks Farm, East Side, Roberts Lane Means of enclosure.", // line break
+      "article4.buckinghamshire.turnerswood": "Land at Turners Wood on the NE side of Amersham Road, Chalfont St Giles Agricultural buildings.", // line break
+      "article4.buckinghamshire.turvillevalley": "Turville Valley - Agricultural Use", // different in airtable
+      "article4.buckinghamshire.valleyroad": "Valley Road (formerly pt Hitchenden Farm) - Gates etc, Markets, Racing", // different in airtable
+      "article4.buckinghamshire.wellcottage": "N of Well Cottage, Church Ln, Lacey Green - Gates etc, Markets, Racing", // different in airtable
+      "article4.buckinghamshire.westledgelanecaravan": "Land West of Lodge Lane Caravan sites.", // line break
+      "article4.buckinghamshire.weststhubertslane": "Land on the West and North-East sides of St Huberts Lane, Gerrards Cross - Agricultural",
+      "article4.buckinghamshire.westwexhamstreet": "Land to the west of Wexham Street, Stoke Poges - Markets",
+      "article4.buckinghamshire.wholedistrictpoultry": "Whole District excluding the Town of Chesham - Poultry production.",
+      "article4.buckinghamshire.widmerfarm": "Widmer Farm, Lacey Green - Agricultural Use", // different in airtable
+      "article4.buckinghamshire.wigginton": "In the area of Wigginton - Agricultural buildings.", // line break
+      "article4.buckinghamshire.wiltonlane": "Land at Wilton Lane, Seer Green - Agricultural buildings and mineral working.", // line break
+      "article4.buckinghamshire.wooburngreen": "Wooburn Green - Agricultural Use", // different in airtable
+      "article4.buckinghamshire.woodlandsmeadow": "Land at Woodlands Meadow, Jasons Hill, Ley Hill Means of enclosure.", // line break
+      "article4.buckinghamshire.wyburnwood": "Land at Wyburn Wood off Amersham Road - Means of enclosure.", // line break
+      "article4.buckinghamshire.wyburnwoodagri": "Land at Wyburn Wood off Amersham Road - Agricultural Buildings.", // line break
+      "article4.buckinghamshire.wyburnwoodforestry": "Land at Wyburn Wood off Amersham Road - Forestry.", // line break
+      "article4.buckinghamshire.wycombehealthfarmnortheast": "Land to NE of Wycombe Heath Farm, Spurlands End Lane, Holmer Green Means of enclosure.", // line break
+      "article4.buckinghamshire.wycombehealthfarmspurlands": "Land at Wycombe Heath Farm, Spurlands End Means of enclosure.", // line break
+      "article4.buckinghamshire.wycombeheathfarm": "Land to NE of Wycombe Heath Farm, Spurlands End Lane, Holmer Green Caravan sites.", // line break
+      "article4.buckinghamshire.wycombeheathfarmcaravan": "Land at Wycombe Heath Farm, Spurlands End Caravan sites." // line break
     },
   },
   listed: {
