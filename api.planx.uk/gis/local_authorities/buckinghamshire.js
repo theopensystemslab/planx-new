@@ -13,7 +13,7 @@ const { planningConstraints } = require("./metadata/buckinghamshire.js");
 // Process local authority metadata
 const gisLayers = getQueryableConstraints(planningConstraints);
 const preCheckedLayers = getManualConstraints(planningConstraints);
-const articleFours = {}; // "planningConstraints.article4.records" in future
+const articleFours = planningConstraints.article4.records;
 
 // Fetch a data layer
 async function search(
@@ -94,28 +94,24 @@ async function go(x, y, siteBoundary, extras) {
           return acc;
         },
         {
-          ...Object.values(articleFours).reduce((acc, curr) => {
-            acc[curr] = { value: false };
-            return acc;
-          }, {}),
           ...preCheckedLayers,
           ...extras,
         }
       );
 
-    ob["article4.buckinghamshire.officetoresi"] = {
-      value: ob["article4"]?.data?.DESCRIPTIO?.startsWith(
-        "Change of use from offices to residential"
-      )
-        ? true
-        : false,
-    };
-
-    ob["article4.buckinghamshire.poultry"] = {
-      value: ob["article4"]?.data?.DEV_TYPE?.toLowerCase().includes("poultry")
-        ? true
-        : false,
-    };
+    // Set granular article 4 values
+    Object.keys(articleFours).forEach((key) => {
+      // TODO: test how line breaks/newlines are coming thru in GIS, may need to add .replace(/\r?\n|\r/g, "")
+      if (ob["article4"]?.data?.DEV_TYPE === articleFours[key]) {
+        ob[key] = { value: true }
+      } else if (ob["article4"]?.data?.INT_ID === articleFours[key]) {
+        ob[key] = { value: true }
+      } else if (ob["article4"]?.data?.DESCRIPTIO?.startsWith(articleFours[key])) {
+        ob[key] = { value: true }
+      } else {
+        ob[key] = { value: false }
+      }
+    });
 
     // Add summary "designated" key to response
     const obWithDesignated = addDesignatedVariable(ob);

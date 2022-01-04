@@ -67,7 +67,7 @@ const planningConstraints = {
       "article4.buckinghamshire.coppicesouthheathcaravan": "Land at The Coppice, South Heath - Caravan Sites", // line break
       "article4.buckinghamshire.cryershillroad": "Valley Road/Cryers Hill Road, Hughenden - Caravan Sites", // different in airtable
       "article4.buckinghamshire.deanfield": "Part Fields SW of Deanfield, Saunderton (b) - Caravan sites", // different in airtable
-      "article4.buckinghamshire.DO10fulmer": "", // no clear gis match
+      "article4.buckinghamshire.DO10fulmer": "DO.10 Fulmer - Agricultural", // no clear gis match
       "article4.buckinghamshire.dorneywoodroad": "Dorney Wood Road, Burnham - Agricultural",
       "article4.buckinghamshire.eastamershamroadOS0006": "Land East of Amersham Road including OS parcel 0006. Agricultural Buildings.", // line break
       "article4.buckinghamshire.eastamershamroadOS9269": "Land East of Amersham Road including OS Parcel 9269 Agricultural buildings.", // line break
@@ -105,7 +105,7 @@ const planningConstraints = {
       "article4.buckinghamshire.nightingaleslane": "Land surrounding Nightingales Lane, 2290 metre long strip. - Means of enclosure.", // line break, first airtable entry does not have gis match
       "article4.buckinghamshire.northandsouthhollowway": "Land north and south of Hollow Way between Chesham and Pednor - Agricultural buildings and mineral working.", // line break
       "article4.buckinghamshire.northballingerroadvaravan": "Land to north of Ballinger Road - Caravan sites.", // line break
-      "article4.buckinghamshire.northlongpark": "", // no clear gis match
+      "article4.buckinghamshire.northlongpark": "Land to the north of Long Park, Chesham Bois - Agricultural buildings.", // no clear gis match
       "article4.buckinghamshire.northorbitalroad": "Land off North Orbital Road, Denham - Caravan Site",
       "article4.buckinghamshire.northpark": "Land to north of North Park and West of St Andrews Church, Iver - the erection, construction, maintenance, improvement or alteration of a gate, fence, wall or other means of enclosure.",
       "article4.buckinghamshire.northsidesevenhills": "Land on the North Side of Seven Hills Road, Iver - Agricultural",
