@@ -81,43 +81,48 @@ const planningConstraints = {
       "article4.buckinghamshire.fourwinds": "Four Winds, Slough Road, Iver Heath - Agricultural",
       "article4.buckinghamshire.fulmer": "Land in Fulmer, Bucks - Agricultural",
       "article4.buckinghamshire.fulmerplacefarm": "Fulmer Place Farm, Fulmer - Agricultural",
-      "article4.buckinghamshire.georgegreen": "",
-      "article4.buckinghamshire.gravellyway": "",
-      "article4.buckinghamshire.greenacres": "",
-      "article4.buckinghamshire.greenstreetdarmagri": "",
-      "article4.buckinghamshire.greenstreetfarm": "",
-      "article4.buckinghamshire.hampdenroad": "",
-      "article4.buckinghamshire.hollybushcorner": "",
-      "article4.buckinghamshire.johnsonsfarm": "",
-      "article4.buckinghamshire.junctionhughendenroad": "",
-      "article4.buckinghamshire.lakeendroad": "",
-      "article4.buckinghamshire.littlekingsash": "",
-      "article4.buckinghamshire.lodgelane": "",
-      "article4.buckinghamshire.lodgelaneagri": "",
-      "article4.buckinghamshire.lodgelaneenclosure": "",
-      "article4.buckinghamshire.manorfarm": "",
-      "article4.buckinghamshire.mansionlanesouth": "",
-      "article4.buckinghamshire.mansionlanewest": "",
-      "article4.buckinghamshire.millfarm": "",
-      "article4.buckinghamshire.ministrywharf": "",
-      "article4.buckinghamshire.nightingaleslane": "",
-      "article4.buckinghamshire.northandsouthhollowway": "",
-      "article4.buckinghamshire.northballingerroadvaravan": "",
-      "article4.buckinghamshire.northlongpark": "",
-      "article4.buckinghamshire.northorbitalroad": "",
-      "article4.buckinghamshire.northpark": "",
-      "article4.buckinghamshire.northsidesevenhills": "",
-      "article4.buckinghamshire.northwelderslane": "",
-      "article4.buckinghamshire.officetoresi": "", // contains, not equality match
-      "article4.buckinghamshire.OS1178": "",
-      "article4.buckinghamshire.os262": "",
-      "article4.buckinghamshire.OS3100": "",
-      "article4.buckinghamshire.OS3313": "",
-      "article4.buckinghamshire.OS4729": "",
-      "article4.buckinghamshire.os5200": "",
-      "article4.buckinghamshire.os6961": "",
-      "article4.buckinghamshire.os8050": "",
-      "article4.buckinghamshire.OS8349": "",
+      "article4.buckinghamshire.georgegreen": "Land at George Green, Wexham, Bucks - Development",
+      "article4.buckinghamshire.gravellyway": "Land at Gravelly Way, adjacent Common Wood, Penn Bottom - Means of enclosure.", // line break
+      "article4.buckinghamshire.greenacres": "All that piece of land known as Greenacres, Buslins Lane, north east of the Chartridge/Chesham Road Agricultural buildings and mineral working.", // line break
+      "article4.buckinghamshire.greenstreetdarmagri": "Land at Green Street Farm, Herts and Bucks border - Agricultural buildings.",
+      "article4.buckinghamshire.greenstreetfarm.a": "Land at Green Street Farm, Herts and Bucks border Agricultural buildings.", // split a/b, line break
+      "article4.buckinghamshire.greenstreetfarm.b": "Land at Green Street Farm, Herts and Bucks border Highway access.", // split a/b, line break
+      "article4.buckinghamshire.hampdenroad": "Part Field West of Hampden Road - Gates etc, Markets, Racing", // different in airtable
+      "article4.buckinghamshire.hollybushcorner": "Land South of Hollybush Corner, Farnham Common - Agricultural",
+      "article4.buckinghamshire.johnsonsfarm": "Land at Johnson’s Farm, North of Chesham Road, Bellingdon Agricultural buildings.", // line break
+      "article4.buckinghamshire.junctionhughendenroad": "Junction Hughenden Rd & Cryers Hill Rd - Gates etc, Markets, Racing", // different in airtable
+      "article4.buckinghamshire.lakeendroad": "Land between Lake End road and Huntercombe Lane South, Burnham - Development",
+      "article4.buckinghamshire.littlekingsash": "Land know as Little Kings Ash Farm and adjoining land at Kingsash and Lee Gate - Agricultural buildings.", // line break
+      "article4.buckinghamshire.lodgelane": "Land East of Lodge Lane Means of enclosure.", // line break
+      "article4.buckinghamshire.lodgelaneagri": "3 parcels of land surrounding Lodge Lane Agricultural buildings.", // line break
+      "article4.buckinghamshire.lodgelaneenclosure.a": "Land West of Lodge Lane Means of enclosure.", // split a/b, line break
+      "article4.buckinghamshire.lodgelaneenclosure.b": "Small parcel of Land East of Lodge Lane Means of enclosure.", // split a/b, line break
+      // (is airtable missing lodgelane variables for caravan sites in gis data??)
+      "article4.buckinghamshire.manorfarm": "Manor Farm, Coates Lane - Agricultural Use", // different in airtable
+      "article4.buckinghamshire.mansionlanesouth": "Land West of Mansion Lane, Immediately South of Iverdale Close, Iver - Development",
+      "article4.buckinghamshire.mansionlanewest": "Land West of Mansion Lane - immediately to the west and south row of cottages No's 110-148 Mansion Lane, Iver - Development",
+      "article4.buckinghamshire.millfarm": "Land North of Mill Farm, Chenies Bottom - Agricultural Buildings.", // line break
+      "article4.buckinghamshire.ministrywharf": "NW of Ministry Wharf, Saunderton - Gates etc, Markets, Racing", // different in airtable
+      "article4.buckinghamshire.nightingaleslane": "Land surrounding Nightingales Lane, 2290 metre long strip. - Means of enclosure.", // line break, first airtable entry does not have gis match
+      "article4.buckinghamshire.northandsouthhollowway": "Land north and south of Hollow Way between Chesham and Pednor - Agricultural buildings and mineral working.", // line break
+      "article4.buckinghamshire.northballingerroadvaravan": "Land to north of Ballinger Road - Caravan sites.", // line break
+      // (is airtable missing northballingerroadenclosure variable for site in gis data??)
+      "article4.buckinghamshire.northlongpark": "", // no clear gis match
+      "article4.buckinghamshire.northorbitalroad": "Land off North Orbital Road, Denham - Caravan Site",
+      "article4.buckinghamshire.northpark": "Land to north of North Park and West of St Andrews Church, Iver - the erection, construction, maintenance, improvement or alteration of a gate, fence, wall or other means of enclosure.",
+      "article4.buckinghamshire.northsidesevenhills": "Land on the North Side of Seven Hills Road, Iver - Agricultural",
+      "article4.buckinghamshire.northwelderslane": "Land North of Welders Lane, South of Jordans Way Agricultural buildings and mineral working.", // line break
+      "article4.buckinghamshire.officetoresi": "Change of use from offices to residential", // DESCRIPTIO starts with, no DEV_TYPE match
+      "article4.buckinghamshire.os1178": "OS parcel 1178, 1179, 1180 nr Asheridge Farm Agricultural Buildings", // line break
+      "article4.buckinghamshire.os262": "OS Parcel 262, Penfolds Lane, Holmer Green Means of enclosure.", // line break
+      "article4.buckinghamshire.os3100": "OS Parcels 3100, 2829 - Means of enclosure and agricultural buildings.", // line break
+      "article4.buckinghamshire.os3313.a": "OS parcel 3313 north of Welders Lane Caravan sites.", // split a/b, line break
+      "article4.buckinghamshire.os3313.b": "OS parcel 3313 north of Welders Lane Means of enclosure.", // split a/b, line break
+      "article4.buckinghamshire.os4729": "O.S. Parcel No. 4729 at Swan Bottom Agricultural Buildings.", // line break
+      "article4.buckinghamshire.os5200": "OS Parcel 5200, Windsor Lane, Little Kingshill Means of enclosure.", // line break
+      "article4.buckinghamshire.os6961": "OS parcel 6961 to West of Amersham Road, Chalfont St Giles Means of enclosure.", // line break
+      "article4.buckinghamshire.os8050": "Land West of Amersham Road OS parcels 8050 and 8750 Means of enclosure.", // line break
+      "article4.buckinghamshire.os8349": "OS parcel 8349, 6265, 7466, off Bellingdon Road Agricultural buildings.", // line break
       "article4.buckinghamshire.parkspringwood": "",
       "article4.buckinghamshire.parslowshillock": "",
       "article4.buckinghamshire.pednorhighroad": "",
