@@ -180,6 +180,9 @@ export function getParams(
     site.town = address.town;
     site.postcode = address.postcode;
 
+    site.latitude = address.latitude;
+    site.longitude = address.longitude;
+
     data.site = site;
   }
 

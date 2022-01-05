@@ -18,6 +18,8 @@ interface BOPSMinimumPayload {
     address_2?: string;
     town: string;
     postcode: string;
+    latitude: string;
+    longitude: string;
   };
 }
 
