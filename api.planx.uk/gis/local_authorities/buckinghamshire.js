@@ -100,9 +100,9 @@ async function go(x, y, siteBoundary, extras) {
       );
 
     // Set granular article 4 values
-    Object.keys(articleFours).forEach((key) => {
-      // TODO: test how line breaks/newlines are coming thru in GIS, may need to add .replace(/\r?\n|\r/g, "")
-      if (ob["article4"]?.data?.DEV_TYPE === articleFours[key]) {
+    (Object.keys(articleFours)).forEach((key) => {
+      // Account for line breaks/newlines in gis records
+      if (ob["article4"]?.data?.DEV_TYPE.replace(/\r?\n|\r/g, " ") === articleFours[key]) {
         ob[key] = { value: true }
       } else if (ob["article4"]?.data?.INT_ID === articleFours[key]) {
         ob[key] = { value: true }
