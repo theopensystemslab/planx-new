@@ -189,7 +189,7 @@ const planningConstraints = {
     fields: ["OBJECTID", "GRADE", "DESCRIPTIO", "ADDRESS"],
     neg: "is not in, or within, a Listed Building",
     pos: (data) => ({
-      text: `is, or is within, a Listed Building Grade ${data.GRADE}`,
+      text: `is, or is within, a Listed Building Grade ${data[0].GRADE}`,
       description: data.DESCRIPTIO,
     }),
   },
