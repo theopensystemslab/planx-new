@@ -70,7 +70,10 @@ async function go(x, y, siteBoundary, extras) {
 
           try {
             if (data.features.length > 0) {
-              const { attributes: properties } = data.features[0];
+              // account for multiple, overlapping features in a single source
+              const properties = [];
+              data.features.forEach(feature => properties.push(feature.attributes));
+
               acc[k] = {
                 ...planningConstraints[key].pos(properties),
                 value: true,
@@ -83,7 +86,7 @@ async function go(x, y, siteBoundary, extras) {
                   text: planningConstraints[key].neg,
                   value: false,
                   type: "check",
-                  data: {},
+                  data: [],
                 };
               }
             }
@@ -99,19 +102,23 @@ async function go(x, y, siteBoundary, extras) {
         }
       );
 
-    // Set granular article 4 values
-    (Object.keys(articleFours)).forEach((key) => {
-      // Account for line breaks/newlines in gis records
-      if (ob["article4"]?.data?.DEV_TYPE.replace(/\r?\n|\r/g, " ") === articleFours[key]) {
-        ob[key] = { value: true }
-      } else if (ob["article4"]?.data?.INT_ID === articleFours[key]) {
-        ob[key] = { value: true }
-      } else if (ob["article4"]?.data?.DESCRIPTIO?.startsWith(articleFours[key])) {
-        ob[key] = { value: true }
-      } else {
-        ob[key] = { value: false }
-      }
-    });
+    // Loop through article4 features and set granular planx values
+    if (ob["article4"].data.length > 0) {
+      ob["article4"].data.forEach((d) => {
+        (Object.keys(articleFours)).forEach((key) => {
+          // Account for line breaks/newlines in DEV_TYPE formatting
+          if (d.DEV_TYPE.replace(/\r?\n|\r/g, " ") === articleFours[key] || ob[key]?.value) {
+            ob[key] = { value: true }
+          } else if (d.INT_ID === articleFours[key] || ob[key]?.value) {
+            ob[key] = { value: true }
+          } else if (d.DESCRIPTIO.startsWith(articleFours[key]) || ob[key]?.value) {
+            ob[key] = { value: true }
+          } else {
+            ob[key] = { value: false }
+          }
+        });
+      });
+    }
 
     // Add summary "designated" key to response
     const obWithDesignated = addDesignatedVariable(ob);
