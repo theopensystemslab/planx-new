@@ -129,8 +129,6 @@ const breadcrumbs: Store.breadcrumbs = {
         town: "town",
         county: "county",
         postcode: "postcode",
-        latitude: "51.4842536",
-        longitude: "-0.0764165",
       },
     },
   },
@@ -170,11 +168,7 @@ test("valid node types are serialized correctly for BOPS", () => {
   const expected = [
     {
       question: "address question",
-      responses: [
-        {
-          value: "line1, line, town, county, postcode, 51.4842536, -0.0764165",
-        },
-      ],
+      responses: [{ value: "line1, line, town, county, postcode" }],
     },
     { question: "checklist", responses: [{ value: "1" }, { value: "2" }] },
     {
