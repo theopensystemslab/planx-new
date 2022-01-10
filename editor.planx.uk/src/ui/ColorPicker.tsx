@@ -60,6 +60,7 @@ const useClasses = makeStyles((theme) => ({
     right: 0,
     bottom: 0,
     left: 0,
+    width: "100%",
   },
   focused: {
     color: theme.palette.primary.dark,
@@ -108,7 +109,12 @@ export default function ColorPicker(props: Props): FCReturn {
       </ButtonBase>
       {show ? (
         <div className={classes.popover}>
-          <div className={classes.cover} onClick={handleClose} />
+          <ButtonBase
+            className={classes.cover}
+            onClick={handleClose}
+            aria-label="Close Colour Picker"
+            disableRipple
+          />
           <ChromePicker color={props.color} onChange={handleChange} />
         </div>
       ) : null}

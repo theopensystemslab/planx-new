@@ -49,7 +49,6 @@ const InternalPortalForm: React.FC<{
       <div>
         Create new internal portal:{" "}
         <InputField
-          autoFocus
           name="text"
           onChange={formik.handleChange}
           placeholder="Portal name"

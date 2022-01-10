@@ -10,7 +10,6 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import { ENTER, SPACE_BAR } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 import Input from "ui/Input";
@@ -55,7 +54,9 @@ const useStyles = makeStyles((theme) => ({
   link: {
     color: theme.palette.primary.main,
     textDecoration: "underline",
-    cursor: "pointer",
+    "&:focus": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
+    },
   },
   saveButton: {
     "&:focus-visible": {
@@ -153,18 +154,13 @@ function SuggestionDrawer() {
 
   return (
     <>
-      <a
+      <ButtonBase
+        disableRipple
         className={classes.link}
         onClick={handleLinkClick}
-        tabIndex={0}
-        onKeyDown={(event) => {
-          if (event.key === SPACE_BAR || event.key === ENTER) {
-            handleLinkClick();
-          }
-        }}
       >
         Tell us other ways you'd like to pay in the future
-      </a>
+      </ButtonBase>
       <Drawer
         variant="persistent"
         anchor="right"

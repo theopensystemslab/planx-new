@@ -185,7 +185,7 @@ export default function FileUpload(props: Props) {
             role="progressbar"
             aria-valuemin={0}
             aria-valuemax={100}
-            aria-valuenow={slot?.progress}
+            aria-valuenow={slot?.progress || 0}
           />
           <Box className={classes.filePreview}>
             {slot?.file.type.includes("image") ? (
