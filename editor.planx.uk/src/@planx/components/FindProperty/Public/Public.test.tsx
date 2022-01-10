@@ -1,6 +1,7 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import React from "react";
 import * as ReactNavi from "react-navi";
 import * as SWR from "swr";
@@ -120,4 +121,37 @@ test("recovers previously submitted address when clicking the back button", asyn
   expect(handleSubmit).toHaveBeenCalledWith({
     data: previousData,
   });
+});
+
+it("should not have any accessibility violations", async () => {
+  const handleSubmit = jest.fn();
+  const { container } = render(
+    <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        handleSubmit={handleSubmit}
+      />
+    </MockedProvider>
+  );
+
+  // Ensure we also test the address drop down
+  // Note: MUI v4 has an a11y issue here when the dropdown is open, is has to be closed before we can test
+  // This has been resolved in v5
+  // https://github.com/mui-org/material-ui/issues/22302
+  await waitFor(async () => {
+    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU", {
+      delay: 1,
+    });
+  });
+  await waitFor(async () => {
+    await userEvent.type(screen.getByTestId("autocomplete-input"), "75", {
+      delay: 1,
+    });
+  });
+  await act(async () => {
+    userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
+  });
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });

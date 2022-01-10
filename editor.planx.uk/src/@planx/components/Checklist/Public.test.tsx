@@ -1,5 +1,6 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import React from "react";
 
 import Checklist from "./Public";
@@ -269,4 +270,42 @@ test("recovers grouped options state when clicking the back button", async () =>
   expect(handleSubmit).toHaveBeenCalledWith({
     answers: ["S1_Option1", "S3_Option1"],
   });
+});
+
+it("should not have any accessibility violations", async () => {
+  const { container } = render(
+    <Checklist
+      allRequired={false}
+      description=""
+      text="home type?"
+      options={[
+        {
+          id: "flat_id",
+          data: {
+            text: "Flat",
+          },
+        },
+        {
+          id: "caravan_id",
+          data: {
+            text: "Caravan",
+          },
+        },
+        {
+          id: "house_id",
+          data: {
+            text: "House",
+          },
+        },
+        {
+          id: "spaceship_id",
+          data: {
+            text: "Spaceship",
+          },
+        },
+      ]}
+    />
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });

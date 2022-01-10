@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import React from "react";
 
 import DrawBoundary from "./";
@@ -84,4 +85,19 @@ test("recovers previously submitted drawing when clicking the back button", asyn
   expect(handleSubmit).toHaveBeenCalledWith({
     data: expect.objectContaining(previouslySubmittedData),
   });
+});
+
+it("should not have any accessibility violations", async () => {
+  const { container } = render(
+    <DrawBoundary
+      dataFieldBoundary="property.boundary.site"
+      dataFieldArea="property.area.site"
+      description="description1"
+      descriptionForUploading="description1"
+      title="Draw a boundary"
+      titleForUploading="Upload a file"
+    />
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });

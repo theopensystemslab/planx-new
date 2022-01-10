@@ -65,9 +65,11 @@ const InternalPortalForm: React.FC<{
             <br /> OR
             <br />
             <br />
-            Point to an existing portal: <br />
+            <label htmlFor="flowId">Point to an existing portal:</label>
+            <br />
           </span>
           <select
+            id="flowId"
             data-testid="flowId"
             name="flowId"
             value={formik.values.flowId}
