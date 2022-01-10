@@ -1,6 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { axe } from "jest-axe";
+import axe from "axe-helper";
 import React from "react";
 
 import Result from "./Public";
@@ -75,4 +75,17 @@ describe("showing and hiding change capabilities", () => {
 
     expect(screen.queryByText("Change")).toBeTruthy();
   });
+});
+
+it("should not have any accessibility violations", async () => {
+  const { container } = render(
+    <Result
+      headingColor={{ text: "#000", background: "#fff" }}
+      responses={[]}
+      headingTitle="title"
+      reasonsTitle="reasons"
+    />
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });

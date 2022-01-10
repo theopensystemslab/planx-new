@@ -1,4 +1,5 @@
 import { render } from "@testing-library/react";
+import axe from "axe-helper";
 import React from "react";
 
 import Public from "./Public";
@@ -14,6 +15,19 @@ test("renders", async () => {
       addressee="placeholder"
     />
   );
+});
+
+it("should not have any accessibility violations", async () => {
+  const { container } = render(
+    <Public
+      token="placeholder"
+      templateId="placeholder"
+      personalisation={{}}
+      addressee="placeholder"
+    />
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });
 
 // XXX: Further tests such as

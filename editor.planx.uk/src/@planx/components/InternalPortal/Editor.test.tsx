@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import React from "react";
 
 import { TYPES } from "../types";
@@ -160,4 +161,17 @@ describe("validations", () => {
       });
     }
   });
+});
+
+it("should not have any accessibility violations", async () => {
+  const handleSubmit = jest.fn();
+
+  const { container } = render(
+    <InternalPortalForm
+      flows={[{ id: "portal", text: "portal" }]}
+      handleSubmit={handleSubmit}
+    />
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });

@@ -1,5 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import { uniqueId } from "lodash";
 import React from "react";
 
@@ -83,3 +84,18 @@ const dummyFile = {
     url: "http://127.0.0.1:9000/planx-temp/4oh73out/PXL_20210327_122515714.pdf",
   },
 };
+
+it("should not have any accessibility violations", async () => {
+  const handleSubmit = jest.fn();
+  const componentId = uniqueId();
+
+  const { container } = render(
+    <FileUpload
+      id={componentId}
+      handleSubmit={handleSubmit}
+      description="description"
+    />
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
