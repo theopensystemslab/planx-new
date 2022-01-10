@@ -337,7 +337,6 @@ function GetAddress(props: {
                 <TextField
                   {...params}
                   variant="outlined"
-                  autoFocus
                   aria-label="Select an address"
                 />
               </InputLabel>

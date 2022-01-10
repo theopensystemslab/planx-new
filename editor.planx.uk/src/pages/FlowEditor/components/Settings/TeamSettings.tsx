@@ -39,8 +39,8 @@ export const teamStyles = makeStyles((theme) => ({
   },
 }));
 
-const TeamMember = ({ name, email, role }: any) => {
-  const [userRole, setRole] = React.useState(role);
+const TeamMember = ({ name, email, userRole }: any) => {
+  const [role, setRole] = React.useState(userRole);
   const classes = teamStyles();
   return (
     <Box mb={1.5}>
@@ -54,7 +54,7 @@ const TeamMember = ({ name, email, role }: any) => {
         </Grid>
         <Grid item>
           <SelectInput
-            value={userRole}
+            value={role}
             onChange={(e) => setRole(e.target.value)}
             fullWidth
           >
@@ -97,17 +97,17 @@ const Team: React.FC<ITeam> = () => {
           <TeamMember
             name="Alice Allenby"
             email="alice.a@council.gov.uk"
-            role="admin"
+            userRole="admin"
           />
           <TeamMember
             name="Remy Sharp"
             email="alice.a@council.gov.uk"
-            role="edit"
+            userRole="edit"
           />
           <TeamMember
             name="Travis Howard"
             email="alice.a@council.gov.uk"
-            role="view"
+            userRole="view"
           />
         </Box>
         <Grid

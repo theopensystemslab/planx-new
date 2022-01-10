@@ -7,6 +7,7 @@ const {
   setEsriGeometryType,
   setEsriGeometry,
   addDesignatedVariable,
+  rollupResultLayers,
 } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/lambeth.js");
 
@@ -79,12 +80,6 @@ async function go(x, y, siteBoundary, extras) {
                   type: "warning",
                   data: properties,
                 };
-                properties.forEach((f) => {
-                  const k = articleFours[f.OBJECTID.toString()];
-                  acc[k] = {
-                    value: true,
-                  };
-                });
               } else {
                 const { attributes: properties } = data.features[0];
                 acc[k] = {
@@ -111,10 +106,6 @@ async function go(x, y, siteBoundary, extras) {
           return acc;
         },
         {
-          ...Object.values(articleFours).reduce((acc, curr) => {
-            acc[curr] = { value: false };
-            return acc;
-          }, {}),
           ...preCheckedLayers,
           ...extras,
         }
@@ -127,42 +118,27 @@ async function go(x, y, siteBoundary, extras) {
           : false,
     };
 
-    // Since we have multiple article 4 layers, account for granularity & ensure root variable is synced with the subvariables
-    // We remove "text" & other keys from subvariables so they don't render a seperate entries in planning constraints list
-    if (
-      !ob["article4"].value &&
-      ob["article4.lambeth.kiba"].value &&
-      ob["article4.lambeth.caz"].value
-    ) {
-      ob["article4"] = ob["article4.lambeth.kiba"]; // doesn't matter which subvariable properties are stored as root for now
-      ob["article4.lambeth.kiba"] = { value: true };
-      ob["article4.lambeth.caz"] = { value: true };
-    } else if (
-      !ob["article4"].value &&
-      !ob["article4.lambeth.kiba"].value &&
-      ob["article4.lambeth.caz"].value
-    ) {
-      ob["article4"] = ob["article4.lambeth.caz"];
-      ob["article4.lambeth.caz"] = { value: true };
-      ob["article4.lambeth.kiba"] = { value: false };
-    } else if (
-      !ob["article4"].value &&
-      ob["article4.lambeth.kiba"].value &&
-      !ob["article4.lambeth.caz"].value
-    ) {
-      ob["article4"] = ob["article4.lambeth.kiba"];
-      ob["article4.lambeth.kiba"] = { value: true };
-      ob["article4.lambeth.caz"] = { value: false };
-    } else if (
-      !ob["article4.lambeth.kiba"].value &&
-      !ob["article4.lambeth.caz"].value
-    ) {
-      ob["article4.lambeth.kiba"] = { value: false };
-      ob["article4.lambeth.caz"] = { value: false };
-    }
+    // Set granular article 4 values
+    (Object.keys(articleFours)).forEach((key) => {
+      if (ob["designated.conservationArea"]?.data?.CA_REF_NO === articleFours[key]) {
+        ob[key] = { value: true };
+        ob["article4"] = {
+          text: "is subject to an Article 4 direction(s)",
+          description: ob["designated.conservationArea"].data.CA_REF_NO,
+          value: true,
+          type: "warning",
+          data: ob["designated.conservationArea"].data
+        }
+      } else {
+        ob[key] = { value: false };
+      }
+    });
+
+    // Roll up multiple Article4 layers
+    const obRolledUp = rollupResultLayers(ob, ["article4", "article4.lambeth.caz", "article4.lambeth.kiba"], "article4");
 
     // Add summary "designated" key to response
-    const obWithDesignated = addDesignatedVariable(ob);
+    const obWithDesignated = addDesignatedVariable(obRolledUp);
 
     return obWithDesignated;
   } catch (e) {

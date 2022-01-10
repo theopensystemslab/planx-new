@@ -63,7 +63,7 @@ const planningConstraints = {
       "article4.canterbury.lowerHardres": "Article 4 Direction No 29 2003",
       "article4.canterbury.mountsWoods": "Article 4 Direction 1995",
       "article4.canterbury.nackington": "Article 4 Direction No 30 2003",
-      "article4.canterbury.nelsonroad": "Article 4 Direction, 1985",
+      "article4.canterbury.nelsonRoad": "Article 4 Direction, 1985",
       "article4.canterbury.patrixbourne": "Article 4 Direction No 2 2004",
       "article4.canterbury.pennyPot": "Article 4 Direction No 1 1976",
       "article4.canterbury.petham.a": "Article 4 Direction No 20 2003",

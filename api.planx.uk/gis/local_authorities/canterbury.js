@@ -110,14 +110,14 @@ async function go(x, y, siteBoundary, extras) {
       }
     });
 
-    // Merge Listed Buildings & "Locally Listed Buildings" responses under single "listed" variable
-    const obSquashed = squashResultLayers(ob, ["listed.local"], "listed");
+    // Roll up multiple Article4 layers
+    const obRolledUp = rollupResultLayers(ob, ["article4", "article4.canterbury.hmo"], "article4");
 
-    // Roll up multiple article 4 layers, while preserving granularity for HMO type
-    const obRolledUp = rollupResultLayers(obSquashed, ["article4.canterbury.hmo"], "article4");
+    // Merge Listed Buildings & "Locally Listed Buildings" responses under single "listed" variable
+    const obSquashed = squashResultLayers(obRolledUp, ["listed.local"], "listed");
 
     // Add summary "designated" key to response
-    const obWithDesignated = addDesignatedVariable(obRolledUp);
+    const obWithDesignated = addDesignatedVariable(obSquashed);
 
     return obWithDesignated;
   } catch (e) {

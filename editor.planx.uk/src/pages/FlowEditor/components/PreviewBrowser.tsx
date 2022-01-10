@@ -247,7 +247,6 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
                 </Button>
                 <Button
                   color="primary"
-                  autoFocus
                   onClick={async () => {
                     try {
                       setDialogOpen(false);

@@ -1,6 +1,7 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["simple-import-sort"],
+  "plugins": ["simple-import-sort", "jsx-a11y"],
+  "extends": ["plugin:jsx-a11y/recommended"],
   "rules": {
     "simple-import-sort/sort": "warn",
     "no-restricted-imports": [
