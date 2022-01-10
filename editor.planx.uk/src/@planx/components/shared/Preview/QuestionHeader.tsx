@@ -51,11 +51,9 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
-  const { trackHelpClick } = useAnalyticsTracking();
 
   const handleHelpClick = () => {
     setOpen(true);
-    trackHelpClick(); // This returns a promise but we don't need to await for it
   };
 
   return (

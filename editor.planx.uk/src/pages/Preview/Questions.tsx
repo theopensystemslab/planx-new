@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
-import useAnalyticsTracking from "pages/FlowEditor/lib/useAnalyticsTracking";
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -68,7 +67,6 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   const isStandalone = previewEnvironment === "standalone";
   const node = currentCard();
   const flow = useContext(PreviewContext)?.flow;
-  const { createAnalytics } = useAnalyticsTracking(true);
   const classes = useClasses();
 
   const showBackButton = node?.id ? canGoBack(node.id) : false;
@@ -80,7 +78,6 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       if (state) {
         resumeSession(state);
       }
-      createAnalytics(state ? "resume" : "init");
     }
   }, []);
 
