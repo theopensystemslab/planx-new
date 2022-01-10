@@ -5,6 +5,7 @@ import { visuallyHidden } from "@material-ui/utils";
 import DecisionButton from "@planx/components/shared/Buttons/DecisionButton";
 import DescriptionButton from "@planx/components/shared/Buttons/DescriptionButton";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
+import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
@@ -74,7 +75,10 @@ const Question: React.FC<IQuestion> = (props) => {
   return (
     <Card>
       <form onSubmit={formik.handleSubmit}>
-        <fieldset className={classes.fieldset}>
+        <fieldset
+          className={classes.fieldset}
+          aria-describedby={props.description ? DESCRIPTION_TEXT : ""}
+        >
           <legend style={visuallyHidden}>{props.text}</legend>
           <QuestionHeader
             title={props.text}

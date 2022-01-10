@@ -67,6 +67,8 @@ export default forwardRef(
       bordered,
       errorMessage,
       "aria-label": ariaLabel,
+      "aria-describedby": ariaDescribedBy,
+      id,
       ...restProps
     } = props;
 
@@ -87,7 +89,9 @@ export default forwardRef(
           }}
           inputProps={{
             "aria-label": ariaLabel,
+            "aria-describedby": ariaDescribedBy,
           }}
+          id={id}
           {...restProps}
         />
       </ErrorWrapper>

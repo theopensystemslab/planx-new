@@ -15,6 +15,7 @@ import DateInputComponent from "ui/DateInput";
 import InputRow from "ui/InputRow";
 import { object } from "yup";
 
+import { DESCRIPTION_TEXT } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 
 export type Props = PublicProps<DateInput, UserData>;
@@ -44,7 +45,10 @@ const DateInputPublic: React.FC<Props> = (props) => {
 
   return (
     <Card handleSubmit={formik.handleSubmit}>
-      <fieldset className={classes.fieldset}>
+      <fieldset
+        className={classes.fieldset}
+        aria-describedby={props.description ? DESCRIPTION_TEXT : ""}
+      >
         <legend style={visuallyHidden}>{props.title}</legend>
         <QuestionHeader
           title={props.title}

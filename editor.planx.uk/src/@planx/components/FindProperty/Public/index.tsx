@@ -8,6 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { visuallyHidden } from "@material-ui/utils";
+import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
@@ -223,6 +224,9 @@ function GetAddress(props: {
       color: "#000",
       fontSize: "inherit",
       borderRadius: 0,
+      "& fieldset": {
+        border: "2px solid black",
+      },
       '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
         borderRadius: 0,
       },
@@ -271,11 +275,12 @@ function GetAddress(props: {
         description={props.description || ""}
       />
       <Box pb={2}>
-        <InputLabel label="Postcode">
+        <InputLabel label="Postcode" htmlFor="postcode-input">
           <Input
             required
             bordered
             name="postcode"
+            id="postcode-input"
             value={postcode || ""}
             errorMessage={
               showPostcodeError && !sanitizedPostcode
@@ -298,10 +303,10 @@ function GetAddress(props: {
               if (key === "Enter") handleCheckPostcode();
             }}
             onBlur={handleCheckPostcode}
-            aria-label="Enter the postcode of the property"
             style={{ marginBottom: "20px" }}
             inputProps={{
               maxLength: 8,
+              "aria-describedby": props.description ? DESCRIPTION_TEXT : "",
             }}
           />
         </InputLabel>
@@ -429,13 +434,13 @@ export function PropertyInformation(props: any) {
           featureFill
         />
       </Box>
-      <Box mb={6}>
+      <Box component="dl" mb={6}>
         {propertyDetails.map(({ heading, detail }: any) => (
           <Box className={styles.propertyDetail} key={heading}>
-            <Box fontWeight={700} flex={"0 0 35%"} py={1}>
+            <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
               {heading}
             </Box>
-            <Box flexGrow={1} py={1}>
+            <Box component="dd" flexGrow={1} py={1}>
               {detail}
             </Box>
           </Box>
