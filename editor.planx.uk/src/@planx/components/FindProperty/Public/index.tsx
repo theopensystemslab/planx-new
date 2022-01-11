@@ -265,6 +265,24 @@ function GetAddress(props: {
     if (!sanitizedPostcode) setShowPostcodeError(true);
   };
 
+  // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
+  //      so this code attempts to validate postcodes without blocking any characters.
+  const handlePostcodeInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    // Reset the address on change of postcode - ensures no visual mismatch between address and postcode
+    if (selectedOption) setSelectedOption(null);
+    // Validate and set Postcode
+    const input = e.target.value;
+    if (parse(input.trim()).valid) {
+      setSanitizedPostcode(toNormalised(input.trim()));
+      setPostcode(toNormalised(input.trim()));
+    } else {
+      setSanitizedPostcode(null);
+      setPostcode(input.toUpperCase());
+    }
+  };
+
   return (
     <Card
       handleSubmit={() => props.setAddress(selectedOption ?? undefined)}
@@ -287,18 +305,7 @@ function GetAddress(props: {
                 ? "Enter a valid UK postcode"
                 : ""
             }
-            onChange={(e) => {
-              // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
-              //      so this code attempts to validate postcodes without blocking any characters.
-              const input = e.target.value;
-              if (parse(input.trim()).valid) {
-                setSanitizedPostcode(toNormalised(input.trim()));
-                setPostcode(toNormalised(input.trim()));
-              } else {
-                setSanitizedPostcode(null);
-                setPostcode(input.toUpperCase());
-              }
-            }}
+            onChange={(e) => handlePostcodeInputChange(e)}
             onKeyUp={({ key }) => {
               if (key === "Enter") handleCheckPostcode();
             }}

@@ -155,3 +155,52 @@ it("should not have any accessibility violations", async () => {
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
+
+it("clears the old address when the postcode is typed in", async () => {
+  // Arrange
+  render(
+    <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+      />
+    </MockedProvider>
+  );
+
+  // Act
+  // Enter a postcode...
+  await waitFor(async () => {
+    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU", {
+      delay: 1,
+    });
+  });
+  // ...and select an address
+  await waitFor(async () => {
+    await userEvent.type(screen.getByTestId("autocomplete-input"), "75", {
+      delay: 1,
+    });
+  });
+  await act(async () => {
+    userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
+  });
+
+  // Now go back and change the postcode
+  await waitFor(async () => {
+    await userEvent.clear(screen.getByLabelText("Postcode"));
+    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HX", {
+      delay: 1,
+    });
+  });
+
+  // Assert
+  const [postcodeInput, addressInput] = screen.getAllByRole("textbox");
+
+  // New postcode and blank address field should display
+  expect(postcodeInput).toHaveValue("SE5 0HX");
+  expect(addressInput).not.toBeUndefined();
+  expect(addressInput).toHaveValue("");
+
+  // User is unable to continue and to submit incomplete data
+  const continueButton = screen.getByText("Continue").parentElement;
+  expect(continueButton).toBeDisabled();
+});
