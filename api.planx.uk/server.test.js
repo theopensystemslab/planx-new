@@ -227,6 +227,12 @@ describe("fetching GIS data from local authorities", () => {
       y: 175010,
       siteBoundary: [],
     },
+    {
+      council: "braintree",
+      x: 575629.54,
+      y: 223122.85,
+      siteBoundary: [],
+    },
   ];
 
   loadOrRecordNockRequests("fetching-gis-data", locations);

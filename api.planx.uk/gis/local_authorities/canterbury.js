@@ -7,12 +7,15 @@ const {
   setEsriGeometryType,
   setEsriGeometry,
   addDesignatedVariable,
+  rollupResultLayers,
+  squashResultLayers,
 } = require("../helpers.js");
 const { planningConstraints } = require("./metadata/canterbury.js");
 
 // Process local authority metadata
 const gisLayers = getQueryableConstraints(planningConstraints);
 const preCheckedLayers = getManualConstraints(planningConstraints);
+const articleFours = planningConstraints.article4.records;
 
 // Fetch a data layer
 async function search(
@@ -98,26 +101,23 @@ async function go(x, y, siteBoundary, extras) {
         }
       );
 
-    // Since we have multiple article 4 layers, account for granularity & ensure root variable is synced with the subvariable
-    if (ob["article4.canterbury.hmo"].value && !ob["article4"].value) {
-      ob["article4"] = ob["article4.canterbury.hmo"];
-      // Remove "text" and other keys from subvariable so it doesn't render as separate entry in planning constraints list
-      ob["article4.canterbury.hmo"] = { value: true };
-    } else if (!ob["article4.canterbury.hmo"].value) {
-      // Same as above, make sure we render single a4 planning constraint
-      ob["article4.canterbury.hmo"] = { value: false };
-    }
+    // Set granular article 4 values
+    (Object.keys(articleFours)).forEach((key) => {
+      if (ob["article4"]?.data?.REF === articleFours[key]) {
+        ob[key] = { value: true }
+      } else {
+        ob[key] = { value: false }
+      }
+    });
+
+    // Roll up multiple Article4 layers
+    const obRolledUp = rollupResultLayers(ob, ["article4", "article4.canterbury.hmo"], "article4");
 
     // Merge Listed Buildings & "Locally Listed Buildings" responses under single "listed" variable
-    if (ob["listed.local"].value && !ob["listed"].value) {
-      ob["listed"] = ob["listed.local"];
-      delete ob["listed.local"];
-    } else if (!ob["listed.local"].value) {
-      delete ob["listed.local"];
-    } // If both are true, show each in planning constraints list for MVP debugging; flow schemas only care if passport has "listed"
+    const obSquashed = squashResultLayers(obRolledUp, ["listed.local"], "listed");
 
     // Add summary "designated" key to response
-    const obWithDesignated = addDesignatedVariable(ob);
+    const obWithDesignated = addDesignatedVariable(obSquashed);
 
     return obWithDesignated;
   } catch (e) {

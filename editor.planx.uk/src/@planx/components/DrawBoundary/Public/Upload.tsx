@@ -4,11 +4,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import FileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Close";
 import CloudUpload from "@material-ui/icons/CloudUpload";
+import { visuallyHidden } from "@material-ui/utils";
 import { uploadFile } from "api/upload";
 import classNames from "classnames";
 import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { FileWithPath, useDropzone } from "react-dropzone";
 
 import handleRejectedUpload from "../../shared/handleRejectedUpload";
 
@@ -22,8 +23,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1.5),
     position: "relative",
     zIndex: 10,
-    "&:focus": {
-      outline: "none",
+    "&:focus-visible": {
+      outline: `2px solid ${theme.palette.secondary.dark}`,
     },
     "&::before": {
       content: "''",
@@ -107,6 +108,9 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "underline",
     color: theme.palette.primary.main,
   },
+  fileSize: {
+    whiteSpace: "nowrap",
+  },
 }));
 
 export interface FileUpload<T extends File = any> {
@@ -123,6 +127,7 @@ interface Props {
 
 export default function FileUpload(props: Props) {
   const [slot, setSlot] = useState<FileUpload | undefined>(props.initialFile);
+  const [fileUploadStatus, setFileUploadStatus] = useState<string>();
   const MAX_UPLOAD_SIZE_MB = 30;
 
   useEffect(() => {
@@ -133,7 +138,7 @@ export default function FileUpload(props: Props) {
     accept: ["image/jpeg", "image/png", "application/pdf"],
     maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
     multiple: false,
-    onDrop: ([file]) => {
+    onDrop: ([file]: FileWithPath[]) => {
       // XXX: This is a non-blocking promise chain
       uploadFile(file, {
         onProgress: (progress) => {
@@ -142,6 +147,7 @@ export default function FileUpload(props: Props) {
       })
         .then((url) => {
           setSlot((_file: any) => ({ ..._file, url, status: "success" }));
+          setFileUploadStatus(() => `File ${file.path} was uploaded`);
         })
         .catch((error) => {
           console.error(error);
@@ -157,10 +163,64 @@ export default function FileUpload(props: Props) {
     onDropRejected: handleRejectedUpload,
   });
 
-  if (!slot) {
-    return (
+  return (
+    <>
+      {slot && (
+        <Box className={classes.file}>
+          <IconButton
+            size="small"
+            className={classes.deleteIcon}
+            aria-label={`Delete ${slot?.file.path}`}
+            title={`Delete ${slot?.file.path}`}
+            onClick={() => {
+              setSlot(undefined);
+              setFileUploadStatus(() => `${slot?.file.path} was deleted`);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+          <Box
+            className={classes.progress}
+            width={`${Math.min(Math.ceil(slot?.progress * 100), 100)}%`}
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={slot?.progress || 0}
+          />
+          <Box className={classes.filePreview}>
+            {slot?.file.type.includes("image") ? (
+              <ImagePreview file={slot?.file} />
+            ) : (
+              <FileIcon />
+            )}
+          </Box>
+          <Box flexGrow={1}>
+            <Box
+              fontSize="caption.fontSize"
+              fontWeight={700}
+              color="text.secondary"
+            >
+              File
+            </Box>
+            {slot?.file.path}
+          </Box>
+          <Box
+            color="text.secondary"
+            alignSelf="flex-end"
+            className={classes.fileSize}
+          >
+            {formatBytes(slot?.file.size)}
+          </Box>
+        </Box>
+      )}
+      {fileUploadStatus && (
+        <p role="status" style={visuallyHidden}>
+          {fileUploadStatus}
+        </p>
+      )}
       <div
         className={classNames(classes.root, isDragActive && classes.dragActive)}
+        role="button"
         {...getRootProps()}
       >
         <input {...getInputProps()} />
@@ -184,44 +244,7 @@ export default function FileUpload(props: Props) {
           max size 30MB
         </Box>
       </div>
-    );
-  }
-  return (
-    <Box className={classes.file}>
-      <IconButton
-        size="small"
-        className={classes.deleteIcon}
-        onClick={() => {
-          setSlot(undefined);
-        }}
-      >
-        <DeleteIcon />
-      </IconButton>
-      <Box
-        className={classes.progress}
-        width={`${Math.min(Math.ceil(slot.progress * 100), 100)}%`}
-      />
-      <Box className={classes.filePreview}>
-        {slot.file.type.includes("image") ? (
-          <ImagePreview file={slot.file} />
-        ) : (
-          <FileIcon />
-        )}
-      </Box>
-      <Box flexGrow={1}>
-        <Box
-          fontSize="caption.fontSize"
-          fontWeight={700}
-          color="text.secondary"
-        >
-          File
-        </Box>
-        {slot.file.path}
-      </Box>
-      <Box color="text.secondary" alignSelf="flex-end">
-        {formatBytes(slot.file.size)}
-      </Box>
-    </Box>
+    </>
   );
 }
 

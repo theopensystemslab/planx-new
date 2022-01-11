@@ -22,7 +22,8 @@ services:
       POSTGRES_USER: ${PG_USERNAME}
 
   metabase:
-    image: metabase/metabase:v0.41.2
+    # if changing, also check infrastructure/application/index.ts
+    image: metabase/metabase:v0.41.5
     profiles: ["analytics"]
     ports:
       - "${METABASE_PORT}:${METABASE_PORT}"
@@ -32,7 +33,13 @@ services:
     restart: unless-stopped
     healthcheck:
       test:
-        ["CMD", "wget", "--spider", "--quiet", "http://localhost:3000/api/health"]
+        [
+          "CMD",
+          "wget",
+          "--spider",
+          "--quiet",
+          "http://localhost:3000/api/health",
+        ]
       interval: 15s
       timeout: 3s
       retries: 10

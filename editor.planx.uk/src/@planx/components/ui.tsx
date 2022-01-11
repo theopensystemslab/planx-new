@@ -3,7 +3,6 @@ import CallSplit from "@material-ui/icons/CallSplit";
 import CheckBoxOutlined from "@material-ui/icons/CheckBoxOutlined";
 import CloudUpload from "@material-ui/icons/CloudUpload";
 import Create from "@material-ui/icons/Create";
-import Description from "@material-ui/icons/Description";
 import Event from "@material-ui/icons/Event";
 import ExposureZero from "@material-ui/icons/ExposureZero";
 import FunctionsIcon from "@material-ui/icons/Functions";
@@ -70,7 +69,6 @@ export const ICONS: {
   [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.Notify]: MailOutlined,
   [TYPES.NumberInput]: ExposureZero,
-  [TYPES.Page]: Description,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PlanningConstraints]: Map,
   [TYPES.Response]: undefined,

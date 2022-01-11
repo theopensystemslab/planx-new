@@ -1,6 +1,7 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["simple-import-sort"],
+  "plugins": ["simple-import-sort", "jsx-a11y"],
+  "extends": ["plugin:jsx-a11y/recommended"],
   "rules": {
     "simple-import-sort/sort": "warn",
     "no-restricted-imports": [
@@ -14,6 +15,10 @@
           {
             "name": "@material-ui/icons",
             "message": "See https://github.com/theopensystemslab/planx-new/pull/140"
+          },
+          {
+            "name": "jest-axe",
+            "message": "Please import axe-helper instead"
           }
         ],
         "patterns": ["@material-ui/*/*/*", "!@material-ui/core/test-utils/*"]

@@ -165,6 +165,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                   <Box flex={0}>
                     <IconButton
                       title="Delete group"
+                      aria-label="Delete group"
                       onClick={() => {
                         formik.setFieldValue(
                           `groupedOptions`,

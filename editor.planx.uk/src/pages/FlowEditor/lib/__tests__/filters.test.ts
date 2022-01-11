@@ -122,7 +122,7 @@ const flow: Store.flow = {
   },
 };
 
-test("don't expand filters before visiting them (A)", () => {
+test.skip("don't expand filters before visiting them (A)", () => {
   setState({
     flow,
   });

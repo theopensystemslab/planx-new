@@ -44,7 +44,6 @@ const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
     <div className={classes.container}>
       <InputRow>
         <Input
-          autoFocus
           required
           name="title"
           value={props.value.title}
@@ -93,7 +92,6 @@ const TaskListComponent: React.FC<Props> = (props) => {
           <div className={classes.container}>
             <InputRow>
               <Input
-                autoFocus
                 name="title"
                 value={formik.values.title}
                 onChange={formik.handleChange}

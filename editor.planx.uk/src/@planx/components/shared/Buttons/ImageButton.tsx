@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => {
       top: 0,
       left: 0,
       objectFit: "contain",
+      backgroundColor: "white",
     },
     key: {
       opacity: 0.3,
@@ -33,12 +34,15 @@ const useStyles = makeStyles((theme) => {
     },
     title: {
       marginLeft: theme.spacing(1.5),
+      "& > label": {
+        cursor: "pointer",
+      },
     },
   };
 });
 
 function ImageResponse(props: Props) {
-  const { selected, title, img, checkbox } = props;
+  const { selected, title, img, checkbox, id } = props;
   const [imgError, setImgError] = useState(!(img && img.length));
   const [multiline, setMultiline] = useState(false);
 
@@ -72,7 +76,7 @@ function ImageResponse(props: Props) {
   };
 
   return (
-    <ButtonBase {...props} aria-labelledby="buttonLabel">
+    <ButtonBase {...props} aria-labelledby={`buttonLabel-${id}`}>
       <Box display="flex" flexDirection="column" width="100%" height="100%">
         <Box
           width="100%"
@@ -127,16 +131,16 @@ function ImageResponse(props: Props) {
           >
             {checkbox && (
               <Checkbox
+                id={id}
                 checked={selected}
                 color={selected ? "primary.contrastText" : "text.primary"}
               />
             )}
             <Typography
               variant="body2"
-              id="buttonLabel"
               className={checkbox ? classes.title : undefined}
             >
-              {title}
+              <label htmlFor={id}>{title}</label>
             </Typography>
           </Box>
         </Box>

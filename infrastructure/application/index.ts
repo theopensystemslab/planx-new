@@ -66,18 +66,43 @@ new pulumi.Config("cloudflare").require("apiToken");
     }
   );
 
+  const METABASE_PORT = 3000;
   const lbMetabase = new awsx.lb.ApplicationLoadBalancer("metabase", {
     external: true,
     vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
+    securityGroups: [
+      new awsx.ec2.SecurityGroup("metabase-custom-port", {
+        vpc,
+        ingress: [
+          {
+            protocol: "tcp",
+            cidrBlocks: ["0.0.0.0/0"],
+            fromPort: 443,
+            toPort: 443,
+          },
+        ],
+        egress: [
+          {
+            protocol: "tcp",
+            cidrBlocks: ["0.0.0.0/0"],
+            fromPort: METABASE_PORT,
+            toPort: METABASE_PORT,
+          },
+        ],
+      }),
+    ],
   });
-  // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
-  const METABASE_PORT = 3000;
   const targetMetabase = lbMetabase.createTargetGroup("metabase", {
     port: METABASE_PORT,
     protocol: "HTTP",
     healthCheck: {
       path: "/api/health",
+      // XXX: Attempt to fix "504 Gateway Time-out"
+      healthyThreshold: 2,
+      interval: 300,
+      timeout: 120,
+      unhealthyThreshold: 10,
     },
   });
   // Forward HTTP to HTTPS
@@ -104,7 +129,8 @@ new pulumi.Config("cloudflare").require("apiToken");
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
       container: {
-        image: "metabase/metabase:v0.41.2",
+        // if changing, also check docker-compose.yml
+        image: "metabase/metabase:v0.41.5",
         memory: 2048 /*MB*/,
         portMappings: [metabaseListenerHttps],
         environment: [

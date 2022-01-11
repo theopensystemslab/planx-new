@@ -3,13 +3,15 @@ import "./map.css";
 import { gql, useQuery } from "@apollo/client";
 import { createComponent } from "@lit-labs/react";
 import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import { visuallyHidden } from "@material-ui/utils";
 import { MyMap } from "@opensystemslab/map";
+import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
-import FormInput from "@planx/components/shared/Preview/FormInput";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
@@ -24,6 +26,8 @@ import React, { useState } from "react";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
+import Input from "ui/Input";
+import InputLabel from "ui/InputLabel";
 
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
@@ -158,16 +162,17 @@ function GetAddress(props: {
   const [selectedOption, setSelectedOption] = useState<Option | null>(
     props.initialSelectedAddress ?? null
   );
+  const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
 
   // Fetch addresses in this postcode from the OS Places API
   const { data: addressesInPostcode } = useSWR(
     () =>
       sanitizedPostcode
-        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}`
+        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&lr=EN`
         : null,
     {
       shouldRetryOnError: true,
-      errorRetryInterval: 1000,
+      errorRetryInterval: 500,
       errorRetryCount: 3,
     }
   );
@@ -207,6 +212,79 @@ function GetAddress(props: {
     });
   }
 
+  // Autocomplete overrides
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
+        // Default transform is "translate(14px, 20px) scale(1)""
+        // This lines up the label with the initial cursor position in the input
+        // after changing its padding-left.
+        transform: "translate(34px, 20px) scale(1);",
+      },
+    },
+    inputRoot: {
+      color: "#000",
+      fontSize: "inherit",
+      borderRadius: 0,
+      "& fieldset": {
+        border: "2px solid black",
+      },
+      '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
+        borderRadius: 0,
+      },
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderRadius: 0,
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        borderRadius: 0,
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderRadius: 0,
+      },
+    },
+    input: {
+      padding: theme.spacing(1),
+    },
+    option: {
+      fontSize: "inherit",
+      // Hover
+      '&[data-focus="true"]': {
+        backgroundColor: theme.palette.grey[800],
+        borderColor: "transparent",
+        color: "white",
+      },
+      // Selected
+      '&[aria-selected="true"]': {
+        backgroundColor: theme.palette.grey[800],
+        borderColor: "transparent",
+        color: "white",
+      },
+    },
+  }));
+  const classes = useStyles();
+
+  const handleCheckPostcode = () => {
+    if (!sanitizedPostcode) setShowPostcodeError(true);
+  };
+
+  // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
+  //      so this code attempts to validate postcodes without blocking any characters.
+  const handlePostcodeInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    // Reset the address on change of postcode - ensures no visual mismatch between address and postcode
+    if (selectedOption) setSelectedOption(null);
+    // Validate and set Postcode
+    const input = e.target.value;
+    if (parse(input.trim()).valid) {
+      setSanitizedPostcode(toNormalised(input.trim()));
+      setPostcode(toNormalised(input.trim()));
+    } else {
+      setSanitizedPostcode(null);
+      setPostcode(input.toUpperCase());
+    }
+  };
+
   return (
     <Card
       handleSubmit={() => props.setAddress(selectedOption ?? undefined)}
@@ -217,24 +295,33 @@ function GetAddress(props: {
         description={props.description || ""}
       />
       <Box pb={2}>
-        <FormInput
-          placeholder="Enter the postcode of the property"
-          value={postcode || ""}
-          onChange={(e: any) => {
-            // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
-            //      so this code attempts to validate postcodes without blocking any characters.
-            const input = e.target.value;
-            if (parse(input.trim()).valid) {
-              setSanitizedPostcode(toNormalised(input.trim()));
-              setPostcode(toNormalised(input.trim()));
-            } else {
-              setSanitizedPostcode(null);
-              setPostcode(input.toUpperCase());
+        <InputLabel label="Postcode" htmlFor="postcode-input">
+          <Input
+            required
+            bordered
+            name="postcode"
+            id="postcode-input"
+            value={postcode || ""}
+            errorMessage={
+              showPostcodeError && !sanitizedPostcode
+                ? "Enter a valid UK postcode"
+                : ""
             }
-          }}
-        />
+            onChange={(e) => handlePostcodeInputChange(e)}
+            onKeyUp={({ key }) => {
+              if (key === "Enter") handleCheckPostcode();
+            }}
+            onBlur={handleCheckPostcode}
+            style={{ marginBottom: "20px" }}
+            inputProps={{
+              maxLength: 8,
+              "aria-describedby": props.description ? DESCRIPTION_TEXT : "",
+            }}
+          />
+        </InputLabel>
         {Boolean(addresses.length) && (
           <Autocomplete
+            classes={classes}
             options={addresses
               .map(
                 (address: Address): Option => ({
@@ -251,24 +338,40 @@ function GetAddress(props: {
             getOptionSelected={(option: Option, selected: Option) =>
               option.uprn === selected.uprn
             }
+            noOptionsText="No addresses"
             data-testid="autocomplete-input"
             value={selectedOption}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Address"
-                variant="outlined"
-                style={{ marginTop: 20 }}
-                autoFocus
-              />
+              <InputLabel label="Select an address">
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  aria-label="Select an address"
+                />
+              </InputLabel>
             )}
             onChange={(event, selectedOption) => {
               if (selectedOption) {
                 setSelectedOption(selectedOption);
               }
             }}
+            disablePortal
+            disableClearable
+            PaperComponent={({ children }) => (
+              <Paper style={{ borderRadius: 0, boxShadow: "none" }}>
+                {children}
+              </Paper>
+            )}
           />
         )}
+        {addressesInPostcode?.header?.totalresults === 0 &&
+          Boolean(sanitizedPostcode) && (
+            <Box pt={2}>
+              <Typography variant="body1" color="error">
+                No addresses found in this postcode.
+              </Typography>
+            </Box>
+          )}
       </Box>
     </Card>
   );
@@ -339,15 +442,19 @@ export function PropertyInformation(props: any) {
     <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
       <Box className={styles.map}>
+        <p style={visuallyHidden}>
+          A static map centered on the property address, showing the Ordnance
+          Survey basemap features.
+        </p>
         <FindPropertyMapComponent {...findPropertyMapProps} />
       </Box>
-      <Box mb={6}>
+      <Box component="dl" mb={6}>
         {propertyDetails.map(({ heading, detail }: any) => (
           <Box className={styles.propertyDetail} key={heading}>
-            <Box fontWeight={700} flex={"0 0 35%"} py={1}>
+            <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
               {heading}
             </Box>
-            <Box flexGrow={1} py={1}>
+            <Box component="dd" flexGrow={1} py={1}>
               {detail}
             </Box>
           </Box>

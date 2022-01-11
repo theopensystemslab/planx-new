@@ -1,4 +1,5 @@
-FROM node:14.4.0-alpine as base
+# 16.13.1 = LTS
+FROM node:16.13.1-alpine as base
 
 WORKDIR /api
 RUN npm install -g pnpm

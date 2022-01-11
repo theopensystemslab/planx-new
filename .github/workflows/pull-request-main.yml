@@ -10,8 +10,8 @@ env:
   FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
-  PNPM_VERSION: 6.14.7
-  NODE_VERSION: 14
+  PNPM_VERSION: 6.24.1
+  NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
 jobs:
   integration_tests:
@@ -148,16 +148,15 @@ jobs:
           delete: true
 
   create_or_update_vultr_instance:
+    # XXX: Does nothing if the pizza instance or DNS entries exist,
+    #      see https://github.com/theopensystemslab/planx-new/pull/725
     name: Create or Update Vultr Instance
     needs: [integration_tests, test_and_build]
     runs-on: ubuntu-latest
     steps:
-      # CREATE STEPS
-
-      - if: github.event_name == 'pull_request' && github.event.action == 'opened'
-        name: Create Server
+      - name: Create Pizza (if it doesn't exist)
         id: create
-        uses: theopensystemslab/vultr-action@v1.6
+        uses: theopensystemslab/vultr-action@v1.15
         with:
           action: create
           api_key: ${{ secrets.VULTR_API_KEY }}
@@ -168,7 +167,9 @@ jobs:
           region: lhr
           tag: pullrequest
 
-      - if: github.event_name == 'pull_request' && github.event.action == 'opened'
+      # CREATE STEPS
+
+      - if: steps.create.outputs.ip_address != null
         name: Create commands
         uses: appleboy/ssh-action@master
         with:
@@ -196,7 +197,7 @@ jobs:
 
       # UPDATE STEPS
 
-      - if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
+      - if: steps.create.outputs.ip_address == null
         name: Update commands
         uses: appleboy/ssh-action@master
         with:

@@ -175,10 +175,14 @@ const ChecklistComponent: React.FC<Props> = ({
                           toggleInArray(index, previous)
                         );
                       }}
+                      headingId={`group-${index}-heading`}
+                      groupId={`group-${index}-content`}
                       title={group.title}
                     >
                       <Box
                         py={2}
+                        aria-labelledby={`group-${index}-heading`}
+                        id={`group-${index}-content`}
                         data-testid={`group-${index}${
                           isExpanded ? "-expanded" : ""
                         }`}

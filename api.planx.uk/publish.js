@@ -68,9 +68,39 @@ const dataMerged = async (id, ob = {}) => {
   return ob;
 };
 
-const publishFlow = async (req, res) => {
+const diffFlow = async (req, res, next) => {
   if (!req.user?.sub)
-    return res.status(401).json({ error: "User ID missing from JWT" });
+    next({ status: 401, message: "User ID missing from JWT" });
+
+  try {
+    const flattenedFlow = await dataMerged(req.params.flowId);
+    const mostRecent = await getMostRecentPublishedFlow(req.params.flowId);
+
+    const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
+
+    if (delta) {
+      const alteredNodes = Object.keys(delta).map((key) => ({
+        id: key,
+        ...flattenedFlow[key]
+      }));
+
+      res.json({
+        alteredNodes
+      });
+    } else {
+      res.json({
+        alteredNodes: null,
+        message: "No new changes",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const publishFlow = async (req, res, next) => {
+  if (!req.user?.sub)
+    next({ status: 401, message: "User ID missing from JWT" });
 
   try {
     const flattenedFlow = await dataMerged(req.params.flowId);
@@ -84,12 +114,14 @@ const publishFlow = async (req, res) => {
           mutation PublishFlow(
             $data: jsonb = {},
             $flow_id: uuid,
-          $publisher_id: Int,
+            $publisher_id: Int,
+            $summary: String,
           ) {
             insert_published_flows_one(object: {
               data: $data,
               flow_id: $flow_id,
               publisher_id: $publisher_id,
+              summary: $summary,
             }) {
               id
               flow_id
@@ -103,8 +135,10 @@ const publishFlow = async (req, res) => {
           data: flattenedFlow,
           flow_id: req.params.flowId,
           publisher_id: parseInt(req.user.sub, 10),
+          summary: req.query?.summary || null,
         }
       );
+
       const publishedFlow =
         response.insert_published_flows_one &&
         response.insert_published_flows_one.data;
@@ -124,9 +158,8 @@ const publishFlow = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-module.exports = { publishFlow };
+module.exports = { diffFlow, publishFlow };

@@ -66,6 +66,8 @@ export default function PhaseBanner(): FCReturn {
             PRIVATE BETA
           </Box>
           <Typography variant="body2" color="textPrimary">
+            {/* Ignored for now - this is just a placeholder and may be swtiched for a GovUK component */}
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             This is a new service. Your <a>feedback</a> will help us improve it.
           </Typography>
         </>

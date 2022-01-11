@@ -11,3 +11,4 @@ declare module "draftjs-to-html";
 declare module "wait-for-expect";
 declare module "mathjs";
 declare module "@opensystemslab/map";
+declare module "@lit-labs/react";

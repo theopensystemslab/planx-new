@@ -42,21 +42,19 @@ enum Action {
 
 function Component(props: Props) {
   const [
-    id,
+    sessionId,
     govUkPayment,
     setGovUkPayment,
     passport,
     environment,
     sendSessionDataToHasura,
-    showPreview,
   ] = useStore((state) => [
-    state.id,
+    state.sessionId,
     state.govUkPayment,
     state.setGovUkPayment,
     state.computePassport(),
     state.previewEnvironment,
     state.sendSessionDataToHasura,
-    state.showPreview,
   ]);
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
@@ -67,7 +65,7 @@ function Component(props: Props) {
   );
 
   // Handles UI states
-  const reducer = (state: ComponentState, action: Action): ComponentState => {
+  const reducer = (_state: ComponentState, action: Action): ComponentState => {
     switch (action) {
       case Action.NoPaymentFound:
         return { status: "init" };
@@ -203,7 +201,7 @@ function Component(props: Props) {
     }
 
     await axios
-      .post(govUkPayUrlForTeam, createPayload(fee, id))
+      .post(govUkPayUrlForTeam, createPayload(fee, sessionId))
       .then((res) => {
         const payment = updatePayment(res.data);
 

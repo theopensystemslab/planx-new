@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import { uniqueId } from "lodash";
 import React from "react";
 import { act } from "react-dom/test-utils";
@@ -77,4 +78,10 @@ test("recovers previously submitted number when clicking the back button even if
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { [dataField]: 43 } });
+});
+
+it("should not have any accessibility violations", async () => {
+  const { container } = render(<NumberInput fn="num" title="Numberwang!" />);
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });

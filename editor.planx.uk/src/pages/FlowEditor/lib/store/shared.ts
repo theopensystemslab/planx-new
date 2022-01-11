@@ -4,7 +4,7 @@ import type { GetState, SetState } from "zustand/vanilla";
 
 import type { Store } from ".";
 
-type PreviewEnvironment = "editor" | "standalone";
+export type PreviewEnvironment = "editor" | "standalone";
 export interface SharedStore extends Store.Store {
   breadcrumbs: Store.breadcrumbs;
   childNodesOf: (id?: Store.nodeId) => Store.node[];

@@ -65,6 +65,23 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 140,
     objectFit: "contain",
   },
+  skipLink: {
+    width: "100vw",
+    height: HEADER_HEIGHT / 2,
+    backgroundColor: "#2c2c2c",
+    color: "#fff",
+    textDecoration: "underline",
+    padding: theme.spacing(1),
+    paddingLeft: theme.spacing(3),
+    // translate off-screen with absolute position
+    position: "absolute",
+    transform: "translateY(-100%)",
+    "&:focus": {
+      // bring it into view when accessed by tab
+      transform: "translateY(0%)",
+      position: "relative",
+    },
+  },
 }));
 
 const Header: React.FC<{
@@ -106,6 +123,12 @@ const Header: React.FC<{
           backgroundColor: bgcolor,
         }}
       >
+        {/* Only include skip links on /preview or /unpublished routes (phaseBanner is proxy for now) */}
+        {phaseBanner && (
+          <a tabIndex={0} className={classes.skipLink} href="#main-content">
+            Skip to main content
+          </a>
+        )}
         <Toolbar className={classes.toolbar}>
           <Box className={classes.breadcrumbs} fontSize={20} tabIndex={0}>
             {team?.theme?.logo ? (
@@ -153,12 +176,13 @@ const Header: React.FC<{
             {route.data.username && (
               <Box className={classes.profileSection} mr={2}>
                 {route.data.flow && (
-                  <Box mr={2}>
-                    <MenuOpenIcon
-                      onClick={togglePreview}
-                      style={{ cursor: "pointer" }}
-                    />
-                  </Box>
+                  <IconButton
+                    color="inherit"
+                    onClick={togglePreview}
+                    aria-label="Toggle Preview"
+                  >
+                    <MenuOpenIcon />
+                  </IconButton>
                 )}
                 <Box mr={1}>
                   <Avatar>{route.data.username[0]}</Avatar>
@@ -166,6 +190,7 @@ const Header: React.FC<{
                 <IconButton
                   edge="end"
                   color="inherit"
+                  aria-label="Toggle Menu"
                   onClick={handleMenuToggle}
                 >
                   <KeyboardArrowDown />
@@ -178,7 +203,7 @@ const Header: React.FC<{
                 onClick={handleRestart}
                 aria-label="Restart Application"
               >
-                <Reset title="Restart Application" color="secondary" />
+                <Reset color="secondary" />
               </IconButton>
             )}
           </Box>

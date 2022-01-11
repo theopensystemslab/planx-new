@@ -54,12 +54,18 @@ export interface PreviewStore extends Store.Store {
   govUkPayment?: GovUKPayment;
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
   cachedBreadcrumbs?: Store.cachedBreadcrumbs;
+  analyticsId?: number;
+  setAnalyticsId: (analyticsId: number) => void;
 }
 
 export const previewStore = (
   set: SetState<PreviewStore>,
   get: GetState<SharedStore & PreviewStore>
 ): PreviewStore => ({
+  setAnalyticsId(analyticsId) {
+    set({ analyticsId });
+  },
+
   setGovUkPayment(govUkPayment) {
     set({ govUkPayment });
   },
@@ -319,20 +325,12 @@ export const previewStore = (
               (node.type && !SUPPORTED_DECISION_TYPES.includes(node.type)))
           );
         })
-        .forEach((id, i) => {
+        .forEach((id) => {
           const node = flow[id];
-
-          // XXX: temp fix to prevent expanding filter nodes that are not currently
-          //      being visited, they should be excluded from the previous .filter
-          //      method above instead.
-          if (node.type === TYPES.Filter && i > 0) return ids.add(id);
 
           const passport = computePassport();
 
-          if (
-            node.type &&
-            [TYPES.InternalPortal, TYPES.Page].includes(node.type)
-          ) {
+          if (node.type === TYPES.InternalPortal) {
             return nodeIdsConnectedFrom(id);
           }
 

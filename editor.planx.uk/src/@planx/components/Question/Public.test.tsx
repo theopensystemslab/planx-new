@@ -1,5 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import React from "react";
 import waitForExpect from "wait-for-expect";
 
@@ -36,4 +37,28 @@ test("renders correctly", async () => {
       expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] });
     });
   });
+});
+
+it("should not have any accessibility violations", async () => {
+  const handleSubmit = jest.fn();
+  const { container } = render(
+    <Question
+      text="Best food"
+      responses={[
+        {
+          id: "pizza_id",
+          responseKey: "pizza",
+          title: "Pizza",
+        },
+        {
+          id: "celery_id",
+          responseKey: "celery",
+          title: "Celery",
+        },
+      ]}
+      handleSubmit={handleSubmit}
+    />
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });

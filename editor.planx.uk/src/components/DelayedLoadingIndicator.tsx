@@ -31,8 +31,13 @@ const DelayedLoadingIndicator: React.FC<{
   }, [msDelayBeforeVisible]);
 
   return visible ? (
-    <div className={classes.container}>
-      <CircularProgress />
+    <div
+      className={classes.container}
+      role="alert"
+      aria-busy="true"
+      aria-live="assertive"
+    >
+      <CircularProgress aria-label="Loading" />
       <Typography variant="body2" className={classes.text}>
         {text ?? "Loading…"}
       </Typography>

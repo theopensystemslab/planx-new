@@ -1,6 +1,7 @@
+import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, FocusEvent } from "react";
 
 import ErrorWrapper from "./ErrorWrapper";
 import Input from "./Input";
@@ -10,7 +11,7 @@ export interface Props {
   value?: string;
   error?: string;
   bordered?: boolean;
-  onChange: (newDate: string) => void;
+  onChange: (newDate: string, eventType: string) => void;
 }
 
 const useClasses = makeStyles((theme) => ({
@@ -21,11 +22,13 @@ const useClasses = makeStyles((theme) => ({
     // Adds a uniform horizontal spacing between all child elements.
     // The `* + *` selector makes sure the first element doesn't get this margin.
     "& > * + *": {
-      marginLeft: theme.spacing(1),
+      marginLeft: theme.spacing(2),
     },
   },
   label: {
     minWidth: 60,
+    alignSelf: "end",
+    marginBottom: theme.spacing(1.5),
   },
 }));
 
@@ -37,42 +40,80 @@ export default function DateInput(props: Props): FCReturn {
     <ErrorWrapper error={props.error}>
       <div className={classes.root}>
         <div className={classes.editor}>
-          <Typography className={classes.label} variant="body1">
-            {props.label || "Date"}:
-          </Typography>
-          <Input
-            style={{ width: 60 }}
-            value={day || ""}
-            placeholder="DD"
-            bordered={props.bordered}
-            onInput={(ev: ChangeEvent<HTMLInputElement>) => {
-              props.onChange(
-                [year || "", month || "", ev.target.value].join("-")
-              );
-            }}
-          />
-          <Input
-            style={{ width: 60 }}
-            value={month || ""}
-            placeholder="MM"
-            bordered={props.bordered}
-            onInput={(ev: ChangeEvent<HTMLInputElement>) => {
-              props.onChange(
-                [year || "", ev.target.value, day || ""].join("-")
-              );
-            }}
-          />
-          <Input
-            style={{ width: 90 }}
-            value={year || ""}
-            placeholder="YYYY"
-            bordered={props.bordered}
-            onInput={(ev: ChangeEvent<HTMLInputElement>) => {
-              props.onChange(
-                [ev.target.value, month || "", day || ""].join("-")
-              );
-            }}
-          />
+          {props.label && (
+            <Typography className={classes.label} variant="body1">
+              {props.label}:
+            </Typography>
+          )}
+          <Box>
+            <Typography variant="body1">
+              <label htmlFor="day">Day</label>
+            </Typography>
+            <Input
+              style={{ width: 60 }}
+              value={day || ""}
+              inputProps={{ maxLength: "2" }}
+              placeholder="DD"
+              bordered={props.bordered}
+              id="day"
+              onInput={(ev: ChangeEvent<HTMLInputElement>) => {
+                props.onChange(
+                  [year || "", month || "", ev.target.value].join("-"),
+                  ev.type
+                );
+              }}
+              onBlur={(ev: FocusEvent<HTMLInputElement>) => {
+                props.onChange(
+                  [year || "", month || "", ev.target.value].join("-"),
+                  ev.type
+                );
+              }}
+            />
+          </Box>
+          <Box>
+            <Typography variant="body1">
+              <label htmlFor="month">Month</label>
+            </Typography>
+            <Input
+              style={{ width: 60 }}
+              value={month || ""}
+              placeholder="MM"
+              inputProps={{ maxLength: "2" }}
+              bordered={props.bordered}
+              id="month"
+              onInput={(ev: ChangeEvent<HTMLInputElement>) => {
+                props.onChange(
+                  [year || "", ev.target.value, day || ""].join("-"),
+                  ev.type
+                );
+              }}
+              onBlur={(ev: FocusEvent<HTMLInputElement>) => {
+                props.onChange(
+                  [year || "", ev.target.value, day || ""].join("-"),
+                  ev.type
+                );
+              }}
+            />
+          </Box>
+          <Box>
+            <Typography variant="body1">
+              <label htmlFor="year">Year</label>
+            </Typography>
+            <Input
+              style={{ width: 90 }}
+              value={year || ""}
+              placeholder="YYYY"
+              inputProps={{ maxLength: "4" }}
+              bordered={props.bordered}
+              id="year"
+              onInput={(ev: ChangeEvent<HTMLInputElement>) => {
+                props.onChange(
+                  [ev.target.value, month || "", day || ""].join("-"),
+                  ev.type
+                );
+              }}
+            />
+          </Box>
         </div>
       </div>
     </ErrorWrapper>

@@ -13,6 +13,7 @@ import type { Confirmation } from "./model";
 
 const useClasses = makeStyles((theme) => ({
   table: {
+    width: "100%",
     borderCollapse: "collapse",
     "& tr": {
       borderBottom: `1px solid ${theme.palette.grey[400]}`,
@@ -36,7 +37,12 @@ export default function ConfirmationComponent(props: Props) {
 
   return (
     <Box width="100%">
-      <Banner heading={props.heading || ""} color={props.color} Icon={Check}>
+      <Banner
+        heading={props.heading || ""}
+        color={props.color}
+        Icon={Check}
+        iconTitle={"Success"}
+      >
         {props.description && (
           <Box mt={4}>
             <Typography>{props.description}</Typography>

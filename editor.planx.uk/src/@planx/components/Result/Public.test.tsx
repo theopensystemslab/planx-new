@@ -1,5 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import React from "react";
 
 import Result from "./Public";
@@ -24,6 +25,19 @@ test("renders correctly", async () => {
   expect(handleSubmit).toHaveBeenCalled();
 });
 
+it("should not have any accessibility violations", async () => {
+  const { container } = render(
+    <Result
+      headingColor={{ text: "#000", background: "#fff" }}
+      responses={[]}
+      headingTitle="title"
+      reasonsTitle="reasons"
+    />
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
+
 describe("showing and hiding change capabilities", () => {
   it("hides the change button by default", () => {
     render(
@@ -40,7 +54,7 @@ describe("showing and hiding change capabilities", () => {
       />
     );
 
-    expect(screen.queryByText("change")).toBeFalsy();
+    expect(screen.queryByText("Change")).toBeFalsy();
   });
 
   it("shows the change button when allowChanges is true", () => {
@@ -59,6 +73,19 @@ describe("showing and hiding change capabilities", () => {
       />
     );
 
-    expect(screen.queryByText("change")).toBeTruthy();
+    expect(screen.queryByText("Change")).toBeTruthy();
   });
+});
+
+it("should not have any accessibility violations", async () => {
+  const { container } = render(
+    <Result
+      headingColor={{ text: "#000", background: "#fff" }}
+      responses={[]}
+      headingTitle="title"
+      reasonsTitle="reasons"
+    />
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });

@@ -22,7 +22,7 @@ const {
 
 const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
-const { publishFlow } = require("./publish");
+const { diffFlow, publishFlow } = require("./publish");
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -302,7 +302,7 @@ app.post("/bops/:localAuthority", (req, res) => {
             req_headers: req.headers,
             response: bopsResponse,
             response_headers: proxyRes.headers,
-            session_id: req.body && req.body.sessionId,
+            session_id: req.body?.planx_debug_data?.session_id,
           }
         );
 
@@ -444,6 +444,8 @@ app.get("/throw-error", () => {
   throw new Error("custom error");
 });
 
+app.post("/flows/:flowId/diff", useJWT, diffFlow);
+
 app.post("/flows/:flowId/publish", useJWT, publishFlow);
 
 // unauthenticated because accessing flow schema only, no user data
@@ -495,6 +497,56 @@ app.post("/sign-s3-upload", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+const trackAnalyticsLogExit = async (id, isUserExit) => {
+  const result = await client.request(
+    `
+      mutation UpdateAnalyticsLogUserExit($id: bigint!, $user_exit: Boolean) {
+        update_analytics_logs_by_pk(
+          pk_columns: {id: $id},
+          _set: {user_exit: $user_exit}
+        ) {
+          id
+          user_exit
+          analytics_id
+        }
+      }
+    `,
+    {
+      id,
+      user_exit: isUserExit,
+    }
+  );
+
+  const analytics_id = result.update_analytics_logs_by_pk.analytics_id;
+  await client.request(
+    `
+      mutation SetAnalyticsEndedDate($id: bigint!, $ended_at: timestamptz) {
+        update_analytics_by_pk(pk_columns: {id: $id}, _set: {ended_at: $ended_at}) {
+          id
+        }
+      }
+    `,
+    {
+      id: analytics_id,
+      ended_at: isUserExit ? new Date().toISOString() : null,
+    }
+  );
+
+  return;
+}
+
+app.post("/analytics/log-user-exit", async (req, res, next) => {
+  const analyticsLogId = Number(req.query.analyticsLogId);
+  if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, true);
+  res.send();
+});
+
+app.post("/analytics/log-user-resume", async (req, res, next) => {
+  const analyticsLogId = Number(req.query.analyticsLogId);
+  if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
+  res.send();
 });
 
 // Handle any server errors that were passed with next(err)

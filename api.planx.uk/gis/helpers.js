@@ -159,6 +159,51 @@ const addDesignatedVariable = (responseObject) => {
   }
 };
 
+// Squash multiple layers into a single result
+const squashResultLayers = (originalOb, layers, layerName) => {
+  const ob = {...originalOb}
+  // Check to see if we have any intersections
+  const match = layers.find((layer) => ob[layer].value);
+  // If we do, return this as the result. Otherwise take the first (negative) value.
+  ob[layerName] = match ? ob[match] : ob[layers[0]];
+  // Tidy up the redundant layers
+  layers.forEach((layer) => delete ob[layer]);
+  return ob;
+}
+
+// Rollup multiple layers into a single result, whilst preserving granularity
+const rollupResultLayers = (originalOb, layers, layerName) => {
+  const ob = {...originalOb}
+  const granularLayers = layers.filter(layer => layer != layerName);
+
+  if (ob[layerName]?.value) {
+    // If the parent layer is in the original object & intersects, preserve all properties for rendering PlanningConstraints and debugging
+    ob[layerName] = ob[layerName];
+  } else {
+    // Check to see if any granular layers intersect
+    const match = granularLayers.find(layer => ob[layer].value);
+    // If there is a granular match, set it as the parent result. Otherwise take the first (negative) value
+    ob[layerName] = match ? ob[match] : ob[layers[0]];
+  }
+
+  // Return a simple view of the granular layers to avoid duplicate PlanningConstraint entries
+  granularLayers.forEach(layer => ob[layer] = { value: ob[layer].value });
+
+  return ob;
+}
+
+// Handle Article 4 subvariables
+// Return an object with a simple result for each A4 subvariable
+const getA4Subvariables = (features, articleFours, a4Key) => {
+  const result = {};
+  const a4Keys = features.map(feature => feature.attributes[a4Key]);
+  Object.entries(articleFours).forEach(([key, value]) => {
+    const isMatch = a4Keys.includes(value);
+    result[key] = { "value": isMatch };
+  });
+  return result;
+}
+
 module.exports = {
   setEsriGeometryType,
   setEsriGeometry,
@@ -169,4 +214,7 @@ module.exports = {
   getFalseConstraints,
   getManualConstraints,
   addDesignatedVariable,
+  squashResultLayers,
+  rollupResultLayers,
+  getA4Subvariables,
 };

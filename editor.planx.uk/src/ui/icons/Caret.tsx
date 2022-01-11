@@ -14,13 +14,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Caret(props: SvgIconProps & { expanded?: boolean }) {
+export default function Caret({
+  expanded,
+  ...svgProps
+}: {
+  expanded?: boolean & SvgIconProps;
+}) {
   const classes = useStyles();
-
   return (
     <SvgIcon
+      {...svgProps}
       className={classnames(classes.root, {
-        [classes.expanded]: props.expanded,
+        [classes.expanded]: expanded,
       })}
       viewBox="0 0 14 8"
     >

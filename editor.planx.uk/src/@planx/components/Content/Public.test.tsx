@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import React from "react";
 
 import Content from "./Public";
@@ -28,4 +29,10 @@ test("use light text color if color param is dark", () => {
     background: "#000",
     color: "#fff",
   });
+});
+
+it("should not have any accessibility violations", async () => {
+  const { container } = render(<Content content="dark" color="#000" />);
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });

@@ -39,6 +39,7 @@ const routes = compose(
             id
             team {
               theme
+              name
             }
             settings
             published_flows(limit: 1, order_by: { id: desc }) {
@@ -91,7 +92,7 @@ const routes = compose(
 
   mount({
     "/": route({
-      view: <Questions />,
+      view: <Questions previewEnvironment="standalone" />,
     }),
     "/pages/:page": map((req) => {
       return route({

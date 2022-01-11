@@ -23,16 +23,15 @@ const planningConstraints = {
       text: "is subject to an Article 4 direction(s)",
       description: data.DESCRIPTION,
     }),
-    records: {
-      0: "article4.lambeth.fentiman", // CA11
-      1: "article4.lambeth.streatham", // CA62
-      2: "article4.lambeth.stockwell", // CA05
-      3: "article4.lambeth.leigham", // CA31
-      4: "article4.lambeth.stmarks", // CA11
-      5: "article4.lambeth.parkHall", // CA19
-      6: "article4.lambeth.lansdowne", // CA03
-      7: "article4.lambeth.albert", // CA04
-      8: "article4.lambeth.hydeFarm", // CA48
+    records: { // // planx value to conservation area "CA_REF_NO" lookup
+      "article4.lambeth.streathamLodge": "CA62",
+      "article4.lambeth.stockwell": "CA05",
+      "article4.lambeth.leigham": "CA31",
+      "article4.lambeth.stMarks": "CA11",
+      "article4.lambeth.parkHall": "CA19",
+      "article4.lambeth.lansdowne": "CA03",
+      "article4.lambeth.albert": "CA04",
+      "article4.lambeth.hydeFarm": "CA48",
     },
   },
   "article4.lambeth.kiba": {
@@ -108,7 +107,17 @@ const planningConstraints = {
       description: data.name,
     }),
   },
-  "designated.monument": { value: false },
+  "designated.monument": { 
+    key: "designated.monument",
+    source: environmentDomain,
+    id: "HE/ScheduledMonuments",
+    fields: ["objectid", "name", "scheddate", "amenddate"],
+    neg: "is not the site of a Scheduled Monument",
+    pos: (data) => ({
+      text: "is the site of a Scheduled Monument",
+      description: data.name,
+    }),
+  },
   tpo: {
     key: "tpo",
     source: lambethDomain,

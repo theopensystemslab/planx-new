@@ -13,16 +13,100 @@ const planningConstraints = {
     key: "article4",
     source: "Southwark Maps",
     tables: [
-      "Article 4 - Sunray Estate",
+      "Article 4 - Demolition of the Stables and the Forge on Catlin Street",
+    ],
+    columns: ["Article_4_Direction", "More_information"],
+    neg: "is not subject to any Article 4 restrictions",
+    pos: (data) => ({
+      text: "is subject to Article 4 restriction(s)",
+      description: data.Article_4_Direction,
+    }),
+  },
+  "article4.southwark.sunray": {
+    key: "article4.southwark.sunray",
+    source: "Southwark Maps",
+    tables: [
+      "Article 4 - Sunray Estate"
+    ],
+    columns: ["Article_4_Direction", "More_information"],
+    neg: "is not subject to any Article 4 restrictions",
+    pos: (data) => ({
+      text: "is subject to Article 4 restriction(s)",
+      description: data.Article_4_Direction,
+    }),
+  },
+  "article4.southwark.caz": {
+    key: "article4.southwark.caz",
+    source: "Southwark Maps",
+    tables: [
       "Article 4 - offices in the Central Activities Zone",
+    ],
+    columns: ["Article_4_Direction", "More_information"],
+    neg: "is not subject to any Article 4 restrictions",
+    pos: (data) => ({
+      text: "is subject to Article 4 restriction(s)",
+      description: data.Article_4_Direction,
+    }),
+  },
+  "article4.southwark.publichouse": {
+    key: "article4.southwark.publichouse",
+    source: "Southwark Maps",
+    tables: [
       "Article 4 - Public Houses",
+    ],
+    columns: ["Article_4_Direction", "More_information"],
+    neg: "is not subject to any Article 4 restrictions",
+    pos: (data) => ({
+      text: "is subject to Article 4 restriction(s)",
+      description: data.Article_4_Direction,
+    }),
+  },
+  "article4.southwark.hmo": {
+    key: "article4.southwark.hmo",
+    source: "Southwark Maps",
+    tables: [
       "Article 4 - HMO Henshaw Street",
       "Article 4 - HMO Bywater Place",
+    ],
+    columns: ["Article_4_Direction", "More_information"],
+    neg: "is not subject to any Article 4 restrictions",
+    pos: (data) => ({
+      text: "is subject to Article 4 restriction(s)",
+      description: data.Article_4_Direction,
+    }),
+  },
+  "article4.southwark.lightindustrial": {
+    key: "article4.southwark.lightindustrial",
+    source: "Southwark Maps",
+    tables: [
       "Article 4 - Light Industrial",
+    ],
+    columns: ["Article_4_Direction", "More_information"],
+    neg: "is not subject to any Article 4 restrictions",
+    pos: (data) => ({
+      text: "is subject to Article 4 restriction(s)",
+      description: data.Article_4_Direction,
+    }),
+  },
+  "article4.southwark.towncentre": {
+    key: "article4.southwark.towncentre",
+    source: "Southwark Maps",
+    tables: [
       "Article 4 - Town Centres A3 - A5 to A2 and from A1 – A5 B1 D1 and D2 to flexible uses",
       "Article 4 - Town Centres A1 to A2",
+    ],
+    columns: ["Article_4_Direction", "More_information"],
+    neg: "is not subject to any Article 4 restrictions",
+    pos: (data) => ({
+      text: "is subject to Article 4 restriction(s)",
+      description: data.Article_4_Direction,
+    }),
+  },
+  "article4.southwark.southernrail": {
+    key: "article4.southwark.southernrail",
+    source: "Southwark Maps",
+    tables: [
       "Article 4 - Railway Arches",
-      "Article 4 - Demolition of the Stables and the Forge on Catlin Street",
     ],
     columns: ["Article_4_Direction", "More_information"],
     neg: "is not subject to any Article 4 restrictions",
@@ -62,13 +146,16 @@ const planningConstraints = {
     source: "Southwark Maps",
     tables: ["Conservation areas"],
     columns: [
-      "Name",
-      "Schedule_ID"
+      "Conservation_area",
+      "Conservation_area_number",
+      "More_information",
     ],
     neg: "is not in a Conservation Area",
     pos: (data) => ({
       text: "is in a Conservation Area",
-      description: data.Name,
+      description: data.More_information
+        ? data.More_information
+        : data.Conservation_area,
     }),
   },
   "designated.AONB": {

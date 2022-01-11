@@ -3,10 +3,12 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+// import useAnalyticsTracking from "pages/FlowEditor/lib/useAnalyticsTracking";
 import React from "react";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
+import { DESCRIPTION_TEXT } from "../constants";
 import MoreInfo from "./MoreInfo";
 import MoreInfoSection from "./MoreInfoSection";
 
@@ -22,11 +24,8 @@ interface IQuestionHeader {
 
 const useStyles = makeStyles((theme) => ({
   iconButton: {
-    padding: 0,
-    borderRadius: 15,
-    color: "white",
     "&:hover": {
-      color: theme.palette.grey[300],
+      backgroundColor: "transparent",
     },
     "&:focus-visible": {
       outline: `2px solid ${theme.palette.secondary.dark}`,
@@ -53,30 +52,44 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
+  // const { trackHelpClick } = useAnalyticsTracking();
+
+  const handleHelpClick = () => {
+    setOpen(true);
+    // trackHelpClick(); // This returns a promise but we don't need to await for it
+  };
 
   return (
     <Box mb={2}>
       <Grid container justify="space-between" wrap="nowrap">
         <Grid item>
           {title && (
-            <Box letterSpacing="-0.02em" mr={1}>
-              <Typography variant="h3" role="heading" aria-level={1}>
+            <Box letterSpacing="-0.02em" mr={1} pt={1.5}>
+              <Typography
+                variant="h3"
+                role="heading"
+                aria-level={1}
+                component="h1"
+              >
                 {title}
               </Typography>
             </Box>
           )}
           {description && (
             <Box className={classes.description}>
-              <ReactMarkdownOrHtml source={description} />
+              <ReactMarkdownOrHtml source={description} id={DESCRIPTION_TEXT} />
             </Box>
           )}
         </Grid>
         {!!(info || policyRef || howMeasured) && (
           <Grid item>
             <IconButton
+              disableRipple
               className={classes.iconButton}
-              aria-label="See more information about this question"
-              onClick={() => setOpen(true)}
+              title={`More information`}
+              aria-label={`See more information about "${title}"`}
+              onClick={handleHelpClick}
+              aria-haspopup="dialog"
             >
               <MoreInfoIcon viewBox="0 0 30 30" />
             </IconButton>
@@ -100,7 +113,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               {definitionImg && (
                 <img
                   src={definitionImg}
-                  alt="definition image"
+                  alt="definition"
                   className={classes.image}
                 />
               )}
@@ -110,7 +123,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         )}
       </MoreInfo>
 
-      {img && <img src={img} alt="question image" className={classes.image} />}
+      {img && <img src={img} alt="question" className={classes.image} />}
     </Box>
   );
 };
