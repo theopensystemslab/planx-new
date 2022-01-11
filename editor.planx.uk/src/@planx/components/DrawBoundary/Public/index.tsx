@@ -78,11 +78,17 @@ export default function Component(props: Props) {
     };
 
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
-      // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
-      setBoundary(geojson.features[0]);
+      if (geojson.features) {
+        // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
+        setBoundary(geojson.features[0]);
+      } else {
+        // if the user clicks 'reset' to erase the drawing, geojson will be empty object, so set boundary to undefined
+        setBoundary(undefined);
+      }
     };
 
-    const map: any = document.querySelector("my-map");
+    // XXX: querySelector("my-map") isn't reliable if there's a second hidden map rendered
+    const map: any = document.getElementById("visible-map");
 
     map?.addEventListener("areaChange", areaChangeHandler);
     map?.addEventListener("geojsonChange", geojsonChangeHandler);
@@ -143,6 +149,7 @@ export default function Component(props: Props) {
             </p>
             {/* @ts-ignore */}
             <my-map
+              id="visible-map"
               drawMode
               drawPointer="dot"
               drawGeojsonData={JSON.stringify(boundary)}
