@@ -131,6 +131,7 @@ const planningConstraints = {
       "article4.buckinghamshire.pennroad": "Common Wood - Penn Road, Hazlemere (a) - Gates, Fences, Walls etc", // different in airtable
       "article4.buckinghamshire.phillipshillfarm.a": "Land at Phillipshill Farm off Old Shire Lane and Burtons Lane Agricultural Buildings.", // split a/b, variable typo in airtable, check content
       "article4.buckinghamshire.phillipshillfarm.b": "Land at Phillipshill Farm off Old Shire Lane and Burtons Lane Means of enclosure.", // split a/b
+      "article4.buckinghamshire.piggery": "Buildings for use as piggery on agricultural land", // DESCRIPTIO starts with, no DEV_TYPE match
       "article4.buckinghamshire.potkilnlaneandlayternsgreen": "Land between Potkiln Lane and Layters Green Lane Agricultural Buildings.",
       "article4.buckinghamshire.potterrowcaravan": "Land East of Potter Row, Great Missenden - Caravan sites.",
       "article4.buckinghamshire.potterrowenclosure": "Land East of Potter Row, Great Missenden - Means of enclosure",
