@@ -72,12 +72,14 @@ const planningConstraints = {
       "article4.buckinghamshire.eastamershamroadOS0006": "Land East of Amersham Road including OS parcel 0006. Agricultural Buildings.",
       "article4.buckinghamshire.eastamershamroadOS9269": "Land East of Amersham Road including OS Parcel 9269 Agricultural buildings.",
       "article4.buckinghamshire.eastjasonshill": "Land to the East of Jasons Hill, Ley Hill Agricultural buildings.",
+      "article4.buckinghamshire.eastjordanslane": "OS parcel 449a and 447 East off Jordans Lane Breeding and keeping of poultry.",
       "article4.buckinghamshire.eastlatimervillage": "Land on East side of Latimer Village, adjoining Bucks/Herts border Agricultural Buildings.",
       "article4.buckinghamshire.eastlodgelaneagri": "Land East of Lodge Lane Agricultural buildings.", // variable typo in airtable, check content
       "article4.buckinghamshire.eastlodgelanecaravan": "Small parcel of land East of Lodge Lane Caravan sites.",
       "article4.buckinghamshire.eastmarishlane": "Land adjoining the east side of Marish Lane and Slade Oak Lane and the north side of Mirrie Lane, Denham - Agricultural",
       "article4.buckinghamshire.eastvaleroad": "Land on East Side of Vale Road - Agricultural buildings and mineral working.",
       "article4.buckinghamshire.ferrylane": "Water Meadows, Ferry Lane, Medmenham (a) - Gates, Fences, Walls etc", // different in airtable
+      "article4.buckinghamshire.ferrylaneagri": "Water Meadows, Ferry Lane, Medmenham (b) - Agricultural & Fish Farming", // different in airtable
       "article4.buckinghamshire.fourwinds": "Four Winds, Slough Road, Iver Heath - Agricultural",
       "article4.buckinghamshire.fulmer": "Land in Fulmer, Bucks - Agricultural",
       "article4.buckinghamshire.fulmerplacefarm": "Fulmer Place Farm, Fulmer - Agricultural",
