@@ -10,6 +10,8 @@ export const BOPS_URL = `${process.env.REACT_APP_API_URL}/bops`;
 
 export const USER_ROLES = ["applicant", "agent", "proxy"] as const;
 
+// See minimum POST schema for /api/v1/planning_applications
+// https://ripa.bops.services/api-docs/index.html
 interface BOPSMinimumPayload {
   application_type: "lawfulness_certificate";
   site: {
@@ -18,7 +20,10 @@ interface BOPSMinimumPayload {
     address_2?: string;
     town: string;
     postcode: string;
+    latitude: string;
+    longitude: string;
   };
+  applicant_email: string;
 }
 
 export interface BOPSFullPayload extends BOPSMinimumPayload {
@@ -30,7 +35,6 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
   applicant_first_name?: string;
   applicant_last_name?: string;
   applicant_phone?: string;
-  applicant_email?: string;
   agent_first_name?: string;
   agent_last_name?: string;
   agent_phone?: string;

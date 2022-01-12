@@ -8,6 +8,7 @@ import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import { object } from "yup";
 
+import { DESCRIPTION_TEXT } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { TextInput, UserData } from "./model";
 import { userDataSchema } from "./model";
@@ -40,11 +41,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
       />
       <InputRow>
-        <InputLabel
-          label={props.title}
-          hidden
-          describedBy={props.description || props.placeholder}
-        >
+        <InputLabel label={props.title} hidden htmlFor="text-input">
           <Input
             type={((type) => {
               if (type === "email") return "email";
@@ -59,6 +56,10 @@ const TextInputComponent: React.FC<Props> = (props) => {
             bordered
             onChange={formik.handleChange}
             errorMessage={formik.errors.text as string}
+            id="text-input"
+            inputProps={{
+              "aria-describedby": props.description ? DESCRIPTION_TEXT : "",
+            }}
           />
         </InputLabel>
       </InputRow>

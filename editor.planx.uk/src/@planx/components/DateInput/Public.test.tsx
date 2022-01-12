@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axe from "axe-helper";
 import { uniqueId } from "lodash";
 import React from "react";
 import { act } from "react-dom/test-utils";
@@ -195,4 +196,12 @@ test("validation", async () => {
       "1980-06-15"
     )
   ).toBe(false);
+});
+
+it("should not have any accessibility violations", async () => {
+  const { container } = render(
+    <DateInput id="123" title="Test title" description="description" />
+  );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
 });

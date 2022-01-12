@@ -2,6 +2,7 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Box from "@material-ui/core/Box";
+import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { visuallyHidden } from "@material-ui/utils";
@@ -110,9 +111,7 @@ const ResultReason: React.FC<IResultReason> = ({
             </Box>
             <Box>
               {showChangeButton && (
-                <a
-                  tabIndex={0}
-                  role="button"
+                <ButtonBase
                   className={classes.changeButton}
                   onClick={(event) => {
                     event.stopPropagation();
@@ -123,7 +122,7 @@ const ResultReason: React.FC<IResultReason> = ({
                   <span style={visuallyHidden}>
                     {question.data.text || "this answer"}
                   </span>
-                </a>
+                </ButtonBase>
               )}
             </Box>
           </Box>

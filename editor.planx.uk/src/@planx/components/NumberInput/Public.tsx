@@ -5,10 +5,12 @@ import { useFormik } from "formik";
 import isNil from "lodash/isNil";
 import React, { useEffect, useRef } from "react";
 import Input from "ui/Input";
+import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import InputRowLabel from "ui/InputRowLabel";
 import { object, string } from "yup";
 
+import { DESCRIPTION_TEXT } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { NumberInput, UserData } from "./model";
 import { parseNumber } from "./model";
@@ -62,16 +64,22 @@ export default function NumberInputComponent(props: Props): FCReturn {
         howMeasured={props.howMeasured}
       />
       <InputRow>
-        <Input
-          ref={inputRef}
-          bordered
-          name="value"
-          type="number"
-          placeholder="enter value"
-          value={formik.values.value}
-          onChange={formik.handleChange}
-          errorMessage={formik.errors.value as string}
-        />
+        <InputLabel label={props.title} hidden htmlFor="number-input">
+          <Input
+            ref={inputRef}
+            bordered
+            name="value"
+            type="number"
+            placeholder="enter value"
+            value={formik.values.value}
+            onChange={formik.handleChange}
+            errorMessage={formik.errors.value as string}
+            inputProps={{
+              "aria-describedby": props.description ? DESCRIPTION_TEXT : "",
+            }}
+            id="number-input"
+          />
+        </InputLabel>
         {props.units && <InputRowLabel>{props.units}</InputRowLabel>}
       </InputRow>
     </Card>

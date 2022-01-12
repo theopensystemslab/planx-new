@@ -54,7 +54,7 @@ export const useClasses = makeStyles((theme) => ({
     paddingRight: 2,
   },
   focused: {
-    boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
+    border: `2px solid ${theme.palette.primary.light}`,
   },
 }));
 
@@ -67,6 +67,8 @@ export default forwardRef(
       bordered,
       errorMessage,
       "aria-label": ariaLabel,
+      "aria-describedby": ariaDescribedBy,
+      id,
       ...restProps
     } = props;
 
@@ -87,7 +89,9 @@ export default forwardRef(
           }}
           inputProps={{
             "aria-label": ariaLabel,
+            "aria-describedby": ariaDescribedBy,
           }}
+          id={id}
           {...restProps}
         />
       </ErrorWrapper>

@@ -8,6 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { visuallyHidden } from "@material-ui/utils";
+import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
@@ -223,6 +224,9 @@ function GetAddress(props: {
       color: "#000",
       fontSize: "inherit",
       borderRadius: 0,
+      "& fieldset": {
+        border: "2px solid black",
+      },
       '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
         borderRadius: 0,
       },
@@ -261,6 +265,24 @@ function GetAddress(props: {
     if (!sanitizedPostcode) setShowPostcodeError(true);
   };
 
+  // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
+  //      so this code attempts to validate postcodes without blocking any characters.
+  const handlePostcodeInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    // Reset the address on change of postcode - ensures no visual mismatch between address and postcode
+    if (selectedOption) setSelectedOption(null);
+    // Validate and set Postcode
+    const input = e.target.value;
+    if (parse(input.trim()).valid) {
+      setSanitizedPostcode(toNormalised(input.trim()));
+      setPostcode(toNormalised(input.trim()));
+    } else {
+      setSanitizedPostcode(null);
+      setPostcode(input.toUpperCase());
+    }
+  };
+
   return (
     <Card
       handleSubmit={() => props.setAddress(selectedOption ?? undefined)}
@@ -271,37 +293,27 @@ function GetAddress(props: {
         description={props.description || ""}
       />
       <Box pb={2}>
-        <InputLabel label="Postcode">
+        <InputLabel label="Postcode" htmlFor="postcode-input">
           <Input
             required
             bordered
             name="postcode"
+            id="postcode-input"
             value={postcode || ""}
             errorMessage={
               showPostcodeError && !sanitizedPostcode
                 ? "Enter a valid UK postcode"
                 : ""
             }
-            onChange={(e) => {
-              // XXX: If you press a key on the keyboard, you expect something to show up on the screen,
-              //      so this code attempts to validate postcodes without blocking any characters.
-              const input = e.target.value;
-              if (parse(input.trim()).valid) {
-                setSanitizedPostcode(toNormalised(input.trim()));
-                setPostcode(toNormalised(input.trim()));
-              } else {
-                setSanitizedPostcode(null);
-                setPostcode(input.toUpperCase());
-              }
-            }}
+            onChange={(e) => handlePostcodeInputChange(e)}
             onKeyUp={({ key }) => {
               if (key === "Enter") handleCheckPostcode();
             }}
             onBlur={handleCheckPostcode}
-            aria-label="Enter the postcode of the property"
             style={{ marginBottom: "20px" }}
             inputProps={{
               maxLength: 8,
+              "aria-describedby": props.description ? DESCRIPTION_TEXT : "",
             }}
           />
         </InputLabel>
@@ -332,7 +344,6 @@ function GetAddress(props: {
                 <TextField
                   {...params}
                   variant="outlined"
-                  autoFocus
                   aria-label="Select an address"
                 />
               </InputLabel>
@@ -430,13 +441,13 @@ export function PropertyInformation(props: any) {
           featureFill
         />
       </Box>
-      <Box mb={6}>
+      <Box component="dl" mb={6}>
         {propertyDetails.map(({ heading, detail }: any) => (
           <Box className={styles.propertyDetail} key={heading}>
-            <Box fontWeight={700} flex={"0 0 35%"} py={1}>
+            <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
               {heading}
             </Box>
-            <Box flexGrow={1} py={1}>
+            <Box component="dd" flexGrow={1} py={1}>
               {detail}
             </Box>
           </Box>
