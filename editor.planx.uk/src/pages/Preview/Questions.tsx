@@ -6,6 +6,7 @@ import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 // import useAnalyticsTracking from "pages/FlowEditor/lib/useAnalyticsTracking";
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { FlowSettings } from "types";
 
 import ErrorFallback from "../../components/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
@@ -37,9 +38,10 @@ const useClasses = makeStyles((theme) => ({
 
 interface QuestionsProps {
   previewEnvironment: PreviewEnvironment;
+  settings?: FlowSettings;
 }
 
-const Questions = ({ previewEnvironment }: QuestionsProps) => {
+const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   const [
     currentCard,
     previousCard,
@@ -128,7 +130,9 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
             node={node}
             key={node.id}
             handleSubmit={handleSubmit(node.id!)}
-            settings={flow?.settings}
+            settings={
+              previewEnvironment === "editor" ? settings : flow?.settings
+            }
           />
         </ErrorBoundary>
       )}
