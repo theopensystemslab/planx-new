@@ -46,8 +46,8 @@ function Component(props: Props) {
         : null,
     {
       shouldRetryOnError: true,
-      errorRetryInterval: 1000,
-      errorRetryCount: 3,
+      errorRetryInterval: 500,
+      errorRetryCount: 5,
     }
   );
 
