@@ -23,7 +23,7 @@ export const Basic = () => {
           display="flex"
           justifyContent="center"
         >
-          <img src={imageUrl} style={{ width: "100%" }} />
+          <img src={imageUrl} style={{ width: "100%" }} alt="example" />
         </Box>
       )}
     </>
