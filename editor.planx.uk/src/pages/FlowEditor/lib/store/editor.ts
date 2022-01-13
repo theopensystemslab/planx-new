@@ -103,7 +103,7 @@ export const editorStore = (
         get().flow
       );
       send(ops);
-    } catch (err) {
+    } catch (err: any) {
       alert(err.message);
     }
   },
@@ -322,7 +322,7 @@ export const editorStore = (
       })(get().flow);
       send(ops);
       get().resetPreview();
-    } catch (err) {
+    } catch (err: any) {
       alert(err.message);
     }
   },
@@ -334,7 +334,7 @@ export const editorStore = (
         const [, ops] = clone(id, { toParent, toBefore })(get().flow);
         send(ops);
       }
-    } catch (err) {
+    } catch (err: any) {
       alert(err.message);
     }
   },
