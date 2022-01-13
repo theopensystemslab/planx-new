@@ -3,6 +3,7 @@ import "./map.css";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import { visuallyHidden } from "@material-ui/utils";
+import { MyMap } from "@opensystemslab/map";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
@@ -110,6 +111,10 @@ export default function Component(props: Props) {
 
   function getBody() {
     if (page === "draw") {
+      if (!window.customElements.get("my-map")) {
+        window.customElements.define("my-map", MyMap);
+      }
+
       return (
         <>
           <QuestionHeader

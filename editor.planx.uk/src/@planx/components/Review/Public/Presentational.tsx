@@ -1,6 +1,7 @@
 import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import { visuallyHidden } from "@material-ui/utils";
+import { MyMap } from "@opensystemslab/map";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { TYPES } from "@planx/components/types";
@@ -273,6 +274,10 @@ function DrawBoundary(props: ComponentProps) {
     // XXX: we always expect to have data, this is for temporary debugging
     console.error(props);
     throw Error("boundary geojson or file expected but not found");
+  }
+
+  if (!window.customElements.get("my-map")) {
+    window.customElements.define("my-map", MyMap);
   }
 
   return (

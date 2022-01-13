@@ -8,6 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { visuallyHidden } from "@material-ui/utils";
+import { MyMap } from "@opensystemslab/map";
 import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -419,6 +420,10 @@ export function PropertyInformation(props: any) {
       handleSubmit?.();
     },
   });
+
+  if (!window.customElements.get("my-map")) {
+    window.customElements.define("my-map", MyMap);
+  }
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
