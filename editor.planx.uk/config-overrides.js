@@ -5,5 +5,9 @@ module.exports = function override(config) {
       (plugin) => plugin.constructor.name !== "ForkTsCheckerWebpackPlugin"
     );
   }
+  config.resolve.fallback = {
+    crypto: false,
+    stream: require.resolve("stream-browserify"),
+  };
   return config;
 };
