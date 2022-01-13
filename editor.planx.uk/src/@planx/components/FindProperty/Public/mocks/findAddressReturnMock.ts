@@ -1,9 +1,9 @@
-import { FETCH_GLBU_CODES, GET_TEAM_QUERY } from "..";
+import { FETCH_BLPU_CODES, GET_TEAM_QUERY } from "..";
 
 export default [
   {
     request: {
-      query: FETCH_GLBU_CODES,
+      query: FETCH_BLPU_CODES,
       variables: {},
     },
     result: {

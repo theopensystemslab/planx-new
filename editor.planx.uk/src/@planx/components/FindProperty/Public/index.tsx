@@ -31,7 +31,7 @@ import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
 
 // these queries are exported because tests require them
-export const FETCH_GLBU_CODES = gql`
+export const FETCH_BLPU_CODES = gql`
   {
     blpu_codes {
       code
@@ -176,7 +176,7 @@ function GetAddress(props: {
   );
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
-  const { data: blpuCodes } = useQuery(FETCH_GLBU_CODES);
+  const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES);
 
   // XXX: Map OS Places API fields to legacy address_base fields, eventually we may want to
   //    refactor model.ts to better align to OS Places DPA or LPI output
