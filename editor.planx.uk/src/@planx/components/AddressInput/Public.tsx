@@ -20,6 +20,7 @@ interface FormProps {
   town: string;
   county: string;
   postcode: string;
+  country: string;
 }
 
 export default function AddressInputComponent(props: Props): FCReturn {
