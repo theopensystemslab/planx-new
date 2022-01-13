@@ -41,14 +41,10 @@ test("renders correctly", async () => {
   );
 
   await waitFor(async () => {
-    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU", {
-      delay: 1,
-    });
+    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
   });
   await waitFor(async () => {
-    await userEvent.type(screen.getByTestId("autocomplete-input"), "75", {
-      delay: 1,
-    });
+    await userEvent.type(screen.getByTestId("autocomplete-input"), "75");
   });
   await act(async () => {
     userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
@@ -130,14 +126,10 @@ it("should not have any accessibility violations", async () => {
   // This has been resolved in v5
   // https://github.com/mui-org/material-ui/issues/22302
   await waitFor(async () => {
-    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU", {
-      delay: 1,
-    });
+    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
   });
   await waitFor(async () => {
-    await userEvent.type(screen.getByTestId("autocomplete-input"), "75", {
-      delay: 1,
-    });
+    await userEvent.type(screen.getByTestId("autocomplete-input"), "75");
   });
   await act(async () => {
     userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
@@ -160,15 +152,11 @@ it("clears the old address when the postcode is typed in", async () => {
   // Act
   // Enter a postcode...
   await waitFor(async () => {
-    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU", {
-      delay: 1,
-    });
+    userEvent.type(screen.getByLabelText("Postcode"), "S15 4ST");
   });
   // ...and select an address
   await waitFor(async () => {
-    await userEvent.type(screen.getByTestId("autocomplete-input"), "75", {
-      delay: 1,
-    });
+    userEvent.type(screen.getByTestId("autocomplete-input"), "75");
   });
   await act(async () => {
     userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
@@ -177,9 +165,7 @@ it("clears the old address when the postcode is typed in", async () => {
   // Now go back and change the postcode
   await waitFor(async () => {
     await userEvent.clear(screen.getByLabelText("Postcode"));
-    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HX", {
-      delay: 1,
-    });
+    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HX");
   });
 
   // Assert
