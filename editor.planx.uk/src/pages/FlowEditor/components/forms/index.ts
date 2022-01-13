@@ -13,7 +13,6 @@ import InternalPortal from "@planx/components/InternalPortal/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import Notify from "@planx/components/Notify/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
-import Page from "@planx/components/Page/Editor";
 import Pay from "@planx/components/Pay/Editor";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Editor";
 import Question from "@planx/components/Question/Editor";
@@ -49,7 +48,6 @@ const components: {
   notice: Notice,
   notify: Notify,
   "number-input": NumberInput,
-  page: Page,
   pay: Pay,
   "planning-constraints": PlanningConstraints,
   question: Question,
