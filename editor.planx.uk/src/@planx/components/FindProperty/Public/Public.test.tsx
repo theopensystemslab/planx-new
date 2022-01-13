@@ -27,16 +27,6 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
     } as any)
 );
 
-const originalFetch = global.fetch;
-global.fetch = jest.fn(async () => ({
-  json: async () => ({ rates: { CAD: 1.42 } }),
-})) as any;
-
-afterAll(() => {
-  jest.restoreAllMocks();
-  global.fetch = originalFetch;
-});
-
 test("renders correctly", async () => {
   const handleSubmit = jest.fn();
 
