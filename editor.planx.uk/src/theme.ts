@@ -1,5 +1,21 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
+const GOVUK_YELLOW = "#FFDD00";
+
+// GOVUK Focus style
+// https://design-system.service.gov.uk/get-started/focus-states/
+export const focusStyle = {
+  outline: `3px solid ${GOVUK_YELLOW}`,
+  outlineOffset: 0,
+  zIndex: 1,
+};
+
+// Ensure that if the element already has a border, the border gets thicker
+export const borderedFocusStyle = {
+  ...focusStyle,
+  boxShadow: "inset 0 0 0 2px black",
+};
+
 const theme = createMuiTheme({
   typography: {
     fontFamily: "'Inter', Arial",
@@ -79,21 +95,41 @@ const theme = createMuiTheme({
     },
   },
   overrides: {
+    MuiInputBase: {
+      root: {
+        "&$focused": focusStyle,
+      },
+    },
     MuiCssBaseline: {
       "@global": {
         body: {
           backgroundColor: "#efefef",
         },
+        "*:focus": focusStyle,
       },
     },
     MuiButtonBase: {
       root: {
         fontFamily: "inherit",
+        "&:focus": focusStyle,
       },
     },
     MuiListItemIcon: {
       root: {
         color: "inherit",
+      },
+    },
+    MuiLink: {
+      root: {
+        // GOVUK focused text style
+        // https://github.com/alphagov/govuk-frontend/blob/main/src/govuk/helpers/_focused.scss
+        "&:focus": {
+          outline: "3px solid transparent",
+          color: "black",
+          backgroundColor: GOVUK_YELLOW,
+          boxShadow: `0 -2px black, 0 4px black`,
+          textDecoration: "none",
+        },
       },
     },
     MuiButton: {
