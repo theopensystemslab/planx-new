@@ -53,9 +53,6 @@ const useClasses = makeStyles((theme) => ({
   button: {
     color: theme.palette.text.primary,
     padding: theme.spacing(0.5),
-    "&:focus-visible": {
-      outline: `2px solid ${theme.palette.secondary.dark}`,
-    },
   },
 }));
 

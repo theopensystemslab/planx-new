@@ -41,9 +41,6 @@ const useClasses = makeStyles((theme) => ({
     "& button:hover": {
       backgroundColor: theme.palette.background.paper,
     },
-    "& button:focus-visible": {
-      outline: `2px solid ${theme.palette.secondary.dark}`,
-    },
   },
 }));
 

@@ -25,9 +25,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: `${theme.palette.primary.main} !important`,
     color: theme.palette.primary.contrastText,
   },
-  onFocus: {
-    outline: `2px solid ${theme.palette.secondary.dark}`,
-  },
 }));
 
 export interface Props {
@@ -49,7 +46,6 @@ export default function ButtonBase(props: Props): FCReturn {
         selected && classes.selected,
         className
       )}
-      classes={{ focusVisible: classes.onFocus }}
       onClick={onClick}
     >
       {children}

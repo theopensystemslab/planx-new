@@ -13,9 +13,6 @@ const useClasses = makeStyles((theme) => ({
       marginTop: theme.spacing(1),
     },
   },
-  inputFocused: {
-    backgroundColor: theme.palette.grey[200],
-  },
   input: {
     padding: theme.spacing(1),
   },
@@ -36,7 +33,6 @@ export default function InputField(props: Props): FCReturn {
       classes={{
         root: classes.inputRoot,
         input: classes.input,
-        focused: classes.inputFocused,
         multiline: classes.inputMultiline,
       }}
       {...props}

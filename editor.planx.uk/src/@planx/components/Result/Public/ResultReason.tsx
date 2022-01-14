@@ -28,9 +28,6 @@ const useClasses = makeStyles((theme: Theme) => ({
     "&:hover": {
       background: theme.palette.grey,
     },
-    "&:focus-visible": {
-      outline: `2px solid ${theme.palette.secondary.dark}`,
-    },
   },
   moreInfo: {
     paddingLeft: theme.spacing(2),
@@ -41,9 +38,6 @@ const useClasses = makeStyles((theme: Theme) => ({
   },
   changeButton: {
     textDecoration: "underline",
-  },
-  onFocus: {
-    outline: `2px solid ${theme.palette.secondary.dark}`,
   },
   removeTopBorder: {
     "&:before": {

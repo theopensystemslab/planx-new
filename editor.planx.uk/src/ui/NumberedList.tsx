@@ -106,10 +106,6 @@ const useClasses = makeStyles((theme) => ({
       },
     },
   },
-  onFocus: {
-    outline: `2px solid ${theme.palette.secondary.light}`,
-    zIndex: 10,
-  },
   numberedList: {
     listStyle: "none",
     margin: 0,
@@ -144,7 +140,6 @@ function ListItem(
       </div>
       <ButtonBase
         className={classes.summary}
-        classes={{ focusVisible: classes.onFocus }}
         onClick={handleChange}
         aria-expanded={expanded}
         aria-controls={`group-${props.index}-content`}

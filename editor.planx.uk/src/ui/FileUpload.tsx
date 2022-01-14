@@ -20,9 +20,6 @@ const useClasses = makeStyles((theme) => ({
     backgroundColor: "#fff",
     color: theme.palette.primary.main,
   },
-  focused: {
-    boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
-  },
   dragging: {
     border: `2px dashed ${theme.palette.primary.dark}`,
   },
@@ -112,7 +109,6 @@ export default function FileUpload(props: Props): FCReturn {
         root: `${classes.inputIconButton} ${
           isDragActive ? classes.dragging : ""
         }`,
-        focusVisible: classes.focused,
       }}
       {...getRootProps()}
     >

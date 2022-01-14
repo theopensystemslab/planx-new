@@ -53,9 +53,6 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     textDecoration: "underline",
-    "&:focus-visible": {
-      outline: `2px solid ${theme.palette.secondary.dark}`,
-    },
   },
 }));
 
