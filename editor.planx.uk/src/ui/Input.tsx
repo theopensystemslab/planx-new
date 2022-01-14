@@ -1,7 +1,9 @@
 import InputBase, { InputBaseProps } from "@material-ui/core/InputBase";
+import type { Theme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import React, { ChangeEvent, forwardRef } from "react";
+import { borderedFocusStyle, focusStyle } from "theme";
 
 import ErrorWrapper from "./ErrorWrapper";
 
@@ -16,7 +18,7 @@ export interface Props extends InputBaseProps {
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const useClasses = makeStyles((theme) => ({
+export const useClasses = makeStyles<Theme, Props>((theme) => ({
   input: {
     backgroundColor: "#fff",
     fontSize: 15,
@@ -53,14 +55,12 @@ export const useClasses = makeStyles((theme) => ({
   adornedEnd: {
     paddingRight: 2,
   },
-  focused: {
-    border: `2px solid ${theme.palette.primary.light}`,
-  },
+  focused: (props) => (props.bordered ? borderedFocusStyle : focusStyle),
 }));
 
 export default forwardRef(
   (props: Props, ref): FCReturn => {
-    const classes = useClasses();
+    const classes = useClasses(props);
 
     const {
       format,

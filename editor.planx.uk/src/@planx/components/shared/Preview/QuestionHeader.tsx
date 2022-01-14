@@ -27,9 +27,6 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "transparent",
     },
-    "&:focus-visible": {
-      outline: `2px solid ${theme.palette.secondary.dark}`,
-    },
   },
   description: {
     "& p": {

@@ -1,6 +1,7 @@
 import Box from "@material-ui/core/Box";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import * as React from "react";
+import { borderedFocusStyle } from "theme";
 
 export const useClasses = makeStyles<Theme, Props>((theme) => ({
   box: {
@@ -11,9 +12,7 @@ export const useClasses = makeStyles<Theme, Props>((theme) => ({
     borderColor: (props) => props.color || theme.palette.text.primary,
     border: "1px solid",
     background: "transparent",
-    "&:focus-within": {
-      outline: `2px solid ${theme.palette.secondary.dark}`,
-    },
+    "&:focus-within": borderedFocusStyle,
   },
   input: {
     opacity: 0,

@@ -60,9 +60,6 @@ const useStyles = makeStyles((theme) => ({
         }),
       ],
     },
-    "&:focus-visible": {
-      outline: `2px solid ${theme.palette.secondary.dark}`,
-    },
   },
   dragActive: {
     backgroundColor: theme.palette.background.default,

@@ -23,9 +23,6 @@ const useItemClasses = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     width: "100%",
-    "&:focus-visible": {
-      outline: `2px solid ${theme.palette.secondary.dark}`,
-    },
   },
   expanded: {
     background: theme.palette.action.selected,

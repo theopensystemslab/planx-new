@@ -32,6 +32,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { focusStyle } from "theme";
 
 import ErrorWrapper from "./ErrorWrapper";
 
@@ -50,9 +51,7 @@ const useClasses = makeStyles((theme) => ({
     outline: "none",
     backgroundColor: theme.palette.background.default,
     width: "100%",
-    "&:focus-within": {
-      boxShadow: `inset 0 0 0 2px ${theme.palette.primary.light}`,
-    },
+    "&:focus-within": focusStyle,
   },
   bordered: {
     border: `2px solid #000`,

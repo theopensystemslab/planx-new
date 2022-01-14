@@ -157,8 +157,8 @@ function GetAddress(props: {
     (props.initialPostcode && toNormalised(props.initialPostcode.trim())) ??
       null
   );
-  const [selectedOption, setSelectedOption] = useState<Option | null>(
-    props.initialSelectedAddress ?? null
+  const [selectedOption, setSelectedOption] = useState<Option | undefined>(
+    props.initialSelectedAddress ?? undefined
   );
   const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
 
@@ -226,6 +226,9 @@ function GetAddress(props: {
       borderRadius: 0,
       "& fieldset": {
         border: "2px solid black",
+        "& legend": {
+          lineHeight: "13px",
+        },
       },
       '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
         borderRadius: 0,
@@ -238,6 +241,8 @@ function GetAddress(props: {
       },
       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
         borderRadius: 0,
+        border: "2px solid black",
+        boxShadow: "inset 0 0 0 2px",
       },
     },
     input: {
@@ -271,7 +276,7 @@ function GetAddress(props: {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     // Reset the address on change of postcode - ensures no visual mismatch between address and postcode
-    if (selectedOption) setSelectedOption(null);
+    if (selectedOption) setSelectedOption(undefined);
     // Validate and set Postcode
     const input = e.target.value;
     if (parse(input.trim()).valid) {

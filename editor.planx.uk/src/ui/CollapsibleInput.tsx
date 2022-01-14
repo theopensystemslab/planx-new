@@ -17,9 +17,6 @@ const useClasses = makeStyles((theme) => ({
     color: theme.palette.text.primary,
     padding: 0,
   },
-  onFocus: {
-    outline: `2px solid ${theme.palette.secondary.dark}`,
-  },
   submit: {
     marginTop: theme.spacing(2),
   },
@@ -33,7 +30,6 @@ const CollapsibleInput: React.FC<Props> = (props: Props) => {
     <>
       <Button
         className={classes.button}
-        classes={{ focusVisible: classes.onFocus }}
         onClick={() => setExpanded((x) => !x)}
         disableRipple
       >

@@ -54,14 +54,6 @@ const useStyles = makeStyles((theme) => ({
   link: {
     color: theme.palette.primary.main,
     textDecoration: "underline",
-    "&:focus": {
-      outline: `2px solid ${theme.palette.secondary.dark}`,
-    },
-  },
-  saveButton: {
-    "&:focus-visible": {
-      outline: `2px solid ${theme.palette.secondary.dark}`,
-    },
   },
 }));
 
@@ -208,11 +200,7 @@ function SuggestionDrawer() {
             value={text}
           />
           <p style={{ textAlign: "right" }}>
-            <ButtonBase
-              onClick={() => setIsOpen(false)}
-              tabIndex={0}
-              className={classes.saveButton}
-            >
+            <ButtonBase onClick={() => setIsOpen(false)} tabIndex={0}>
               Save
             </ButtonBase>
           </p>
