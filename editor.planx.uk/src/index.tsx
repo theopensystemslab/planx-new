@@ -7,6 +7,7 @@ import "./app.css";
 import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
+import { MyMap } from "@opensystemslab/map";
 import jwtDecode from "jwt-decode";
 import { getCookie, setCookie } from "lib/cookie";
 import React, { Suspense } from "react";
@@ -21,6 +22,10 @@ import navigation from "./lib/navigation";
 import theme from "./theme";
 
 const rootEl = document.getElementById("root") as HTMLElement;
+
+if (!window.customElements.get("my-map")) {
+  window.customElements.define("my-map", MyMap);
+}
 
 const hasJWT = (): boolean | void => {
   let jwt = getCookie("jwt");

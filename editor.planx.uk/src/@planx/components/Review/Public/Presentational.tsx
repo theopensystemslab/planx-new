@@ -1,7 +1,6 @@
 import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import { visuallyHidden } from "@material-ui/utils";
-import { MyMap } from "@opensystemslab/map";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { TYPES } from "@planx/components/types";
@@ -276,10 +275,6 @@ function DrawBoundary(props: ComponentProps) {
     throw Error("boundary geojson or file expected but not found");
   }
 
-  if (!window.customElements.get("my-map")) {
-    window.customElements.define("my-map", MyMap);
-  }
-
   return (
     <>
       <dt>Site boundary</dt>
@@ -295,6 +290,7 @@ function DrawBoundary(props: ComponentProps) {
             </p>
             {/* @ts-ignore */}
             <my-map
+              id="review-boundary-map"
               geojsonData={JSON.stringify(data)}
               geojsonColor="#ff0000"
               geojsonFill
