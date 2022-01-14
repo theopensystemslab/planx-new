@@ -287,6 +287,7 @@ function DrawBoundary(props: ComponentProps) {
             </p>
             {/* @ts-ignore */}
             <my-map
+              id="review-boundary-map"
               geojsonData={JSON.stringify(data)}
               geojsonColor="#ff0000"
               geojsonFill

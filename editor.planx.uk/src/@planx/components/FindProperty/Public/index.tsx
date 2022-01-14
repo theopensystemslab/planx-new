@@ -435,6 +435,7 @@ export function PropertyInformation(props: any) {
         </p>
         {/* @ts-ignore */}
         <my-map
+          id="property-information-map"
           zoom={19.5}
           latitude={lat}
           longitude={lng}
