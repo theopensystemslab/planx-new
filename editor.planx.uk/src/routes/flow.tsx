@@ -172,7 +172,7 @@ const getFlowSettings = async (
       team_slug: team,
     },
   });
-  return data.flows[0].settings;
+  return data.flows[0]?.settings;
 };
 
 const routes = compose(
