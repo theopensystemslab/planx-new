@@ -8,9 +8,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ExternalLink, Globe, RefreshCw, Terminal } from "react-feather";
 import { useAsync } from "react-use";
+import { FlowSettings } from "types";
 import Input from "ui/Input";
 
 import { TYPES } from "../../../@planx/components/types";
@@ -97,7 +98,10 @@ function PublishChangeItem(props: any) {
   );
 }
 
-const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
+const PreviewBrowser: React.FC<{
+  url: string;
+  settings: FlowSettings;
+}> = React.memo((props) => {
   const [showDebugConsole, setDebugConsoleVisibility] = useState(false);
   const [
     flowId,
@@ -274,7 +278,11 @@ const PreviewBrowser: React.FC<{ url: string }> = React.memo((props) => {
         </Box>
       </header>
       <div className={classes.previewContainer}>
-        <Questions previewEnvironment="editor" key={String(key)} />
+        <Questions
+          previewEnvironment="editor"
+          key={String(key)}
+          settings={props.settings}
+        />
       </div>
       {showDebugConsole && <DebugConsole />}
     </div>

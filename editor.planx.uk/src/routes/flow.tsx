@@ -14,7 +14,7 @@ import components from "../pages/FlowEditor/components/forms";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import { SLUGS } from "../pages/FlowEditor/data/types";
 import { useStore } from "../pages/FlowEditor/lib/store";
-import type { Flow } from "../types";
+import type { Flow, FlowSettings } from "../types";
 import { makeTitle } from "./utils";
 
 const sorter = natsort({ insensitive: true });
@@ -151,17 +151,47 @@ const nodeRoutes = mount({
   "/:parent/nodes/:id/edit": editNode,
 });
 
+const getFlowSettings = async (
+  flow: string,
+  team: string
+): Promise<FlowSettings> => {
+  const { data } = await client.query({
+    query: gql`
+      query GetFlow($slug: String!, $team_slug: String!) {
+        flows(
+          limit: 1
+          where: { slug: { _eq: $slug }, team: { slug: { _eq: $team_slug } } }
+        ) {
+          id
+          settings
+        }
+      }
+    `,
+    variables: {
+      slug: flow,
+      team_slug: team,
+    },
+  });
+  return data.flows[0].settings;
+};
+
 const routes = compose(
   withData((req) => ({
     flow: req.params.flow.split(",")[0],
   })),
 
-  withView((req) => {
+  withView(async (req) => {
+    const settings = await getFlowSettings(req.params.flow, req.params.team);
     const [flow, ...breadcrumbs] = req.params.flow.split(",");
     return (
       <>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
+          <FlowEditor
+            key={flow}
+            flow={flow}
+            breadcrumbs={breadcrumbs}
+            settings={settings}
+          />
         </ErrorBoundary>
         <View />
       </>

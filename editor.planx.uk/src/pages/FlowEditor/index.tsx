@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
+const FlowEditor: React.FC<any> = ({ flow, breadcrumbs, settings }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
 
@@ -37,6 +37,7 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
       {showPreview && (
         <PreviewBrowser
           url={`${window.location.origin}${rootFlowPath(false)}/preview`}
+          settings={settings}
         />
       )}
     </div>
