@@ -5,10 +5,10 @@
 // https://southwark.preview.bops.services/api-docs/index.html
 
 import { airbrake } from "airbrake";
-import inRange from "lodash/inRange";
 import { flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
+
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { PASSPORT_UPLOAD_KEY } from "../../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY, toPence } from "../../Pay/model";
@@ -313,21 +313,21 @@ export function getParams(
 
   // 10. proposal completion date
   try {
-    const completionDate = new Date(
-      passport?.data?.["proposal.completion.date"]
-    );
-
-    const currentYear = new Date().getFullYear();
-
-    // submit the completion date as YYYY-MM-DD if it is ±50 years from now
-    if (
-      inRange(completionDate.getFullYear(), currentYear - 50, currentYear + 50)
-    ) {
-      data.proposal_completion_date = completionDate
+    const dateString = passport?.data?.["proposal.completion.date"];
+    if (dateString) {
+      // ensure that date is valid and in yyyy-mm-dd format
+      data.proposal_completion_date = new Date(dateString)
         .toISOString()
         .split("T")[0];
     }
-  } catch (err) {}
+  } catch (err) {
+    const errPayload = {
+      date: passport?.data?.["proposal.completion.date"],
+      err,
+    };
+    console.error("unable to parse completion date", errPayload);
+    airbrake?.notify(errPayload);
+  }
 
   return {
     ...data,
