@@ -174,7 +174,7 @@ it("clears the old address when the postcode is typed in", async () => {
   // New postcode and blank address field should display
   expect(postcodeInput).toHaveValue("SE5 0HX");
   expect(addressInput).not.toBeUndefined();
-  expect(addressInput).toHaveValue(undefined);
+  expect(addressInput).toHaveValue("");
 
   // User is unable to continue and to submit incomplete data
   const continueButton = screen.getByText("Continue").parentElement;
