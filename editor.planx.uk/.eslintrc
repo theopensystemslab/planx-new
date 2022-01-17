@@ -3,7 +3,8 @@
   "plugins": ["simple-import-sort", "jsx-a11y"],
   "extends": ["plugin:jsx-a11y/recommended"],
   "rules": {
-    "simple-import-sort/sort": "warn",
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn",
     "no-restricted-imports": [
       "error",
       {

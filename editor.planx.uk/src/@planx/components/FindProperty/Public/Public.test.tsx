@@ -27,16 +27,6 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
     } as any)
 );
 
-const originalFetch = global.fetch;
-global.fetch = jest.fn(async () => ({
-  json: async () => ({ rates: { CAD: 1.42 } }),
-})) as any;
-
-afterAll(() => {
-  jest.restoreAllMocks();
-  global.fetch = originalFetch;
-});
-
 test("renders correctly", async () => {
   const handleSubmit = jest.fn();
 
@@ -51,14 +41,10 @@ test("renders correctly", async () => {
   );
 
   await waitFor(async () => {
-    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU", {
-      delay: 1,
-    });
+    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
   });
   await waitFor(async () => {
-    await userEvent.type(screen.getByTestId("autocomplete-input"), "75", {
-      delay: 1,
-    });
+    await userEvent.type(screen.getByTestId("autocomplete-input"), "75");
   });
   await act(async () => {
     userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
@@ -140,14 +126,10 @@ it("should not have any accessibility violations", async () => {
   // This has been resolved in v5
   // https://github.com/mui-org/material-ui/issues/22302
   await waitFor(async () => {
-    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU", {
-      delay: 1,
-    });
+    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
   });
   await waitFor(async () => {
-    await userEvent.type(screen.getByTestId("autocomplete-input"), "75", {
-      delay: 1,
-    });
+    await userEvent.type(screen.getByTestId("autocomplete-input"), "75");
   });
   await act(async () => {
     userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
@@ -170,15 +152,11 @@ it("clears the old address when the postcode is typed in", async () => {
   // Act
   // Enter a postcode...
   await waitFor(async () => {
-    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU", {
-      delay: 1,
-    });
+    userEvent.type(screen.getByLabelText("Postcode"), "S15 4ST");
   });
   // ...and select an address
   await waitFor(async () => {
-    await userEvent.type(screen.getByTestId("autocomplete-input"), "75", {
-      delay: 1,
-    });
+    userEvent.type(screen.getByTestId("autocomplete-input"), "75");
   });
   await act(async () => {
     userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
@@ -187,9 +165,7 @@ it("clears the old address when the postcode is typed in", async () => {
   // Now go back and change the postcode
   await waitFor(async () => {
     await userEvent.clear(screen.getByLabelText("Postcode"));
-    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HX", {
-      delay: 1,
-    });
+    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HX");
   });
 
   // Assert
@@ -198,7 +174,7 @@ it("clears the old address when the postcode is typed in", async () => {
   // New postcode and blank address field should display
   expect(postcodeInput).toHaveValue("SE5 0HX");
   expect(addressInput).not.toBeUndefined();
-  expect(addressInput).toHaveValue(undefined);
+  expect(addressInput).toHaveValue("");
 
   // User is unable to continue and to submit incomplete data
   const continueButton = screen.getByText("Continue").parentElement;

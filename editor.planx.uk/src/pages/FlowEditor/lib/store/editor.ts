@@ -19,8 +19,8 @@ import type { FlowSettings, TextContent } from "types";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { FlowLayout } from "../../components/Flow";
-import type { Store } from ".";
 import { connectToDB, getConnection } from "./../sharedb";
+import type { Store } from ".";
 import type { SharedStore } from "./shared";
 
 let doc: any;
@@ -316,7 +316,7 @@ export const editorStore = (
     toParent = undefined
   ) {
     try {
-      const [, ops] = move(id, (parent as unknown) as string, {
+      const [, ops] = move(id, parent as unknown as string, {
         toParent,
         toBefore,
       })(get().flow);

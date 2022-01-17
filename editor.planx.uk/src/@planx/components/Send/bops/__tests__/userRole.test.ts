@@ -1,7 +1,7 @@
 import { Store } from "pages/FlowEditor/lib/store";
 
-import { getParams } from "..";
 import { USER_ROLES } from "../../model";
+import { getParams } from "..";
 
 // https://i.imgur.com/KhUnUte.png
 const flow: Store.flow = {

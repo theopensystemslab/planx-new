@@ -290,7 +290,7 @@ function GetAddress(props: {
 
   return (
     <Card
-      handleSubmit={() => props.setAddress(selectedOption ?? undefined)}
+      handleSubmit={() => props.setAddress(selectedOption)}
       isValid={Boolean(selectedOption)}
     >
       <QuestionHeader
@@ -343,7 +343,7 @@ function GetAddress(props: {
             }
             noOptionsText="No addresses"
             data-testid="autocomplete-input"
-            value={selectedOption}
+            value={selectedOption ?? (null as any as undefined)}
             renderInput={(params) => (
               <InputLabel label="Select an address">
                 <TextField

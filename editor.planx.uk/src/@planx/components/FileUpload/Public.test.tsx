@@ -11,9 +11,7 @@ test("renders correctly and blocks submit if there are no files added", async ()
 
   render(<FileUpload handleSubmit={handleSubmit} />);
 
-  await act(async () => {
-    await userEvent.click(screen.getByText("Continue"));
-  });
+  expect(screen.getByRole("button", { name: "Continue" })).toBeDisabled();
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
 });

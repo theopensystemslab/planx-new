@@ -98,18 +98,24 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     }
   }, [breadcrumbs, passport, sessionId, id, govUkPayment]);
 
-  const handleSubmit = (id: string): handleSubmit => (userData) => {
-    const { data, answers = [], auto = false } = (() => {
-      try {
-        const { answers = [], data, auto } = userData as any;
-        return { answers: answers.filter(Boolean), data, auto };
-      } catch (err) {
-        return {};
-      }
-    })();
+  const handleSubmit =
+    (id: string): handleSubmit =>
+    (userData) => {
+      const {
+        data = undefined,
+        answers = [],
+        auto = false,
+      } = (() => {
+        try {
+          const { answers = [], data, auto } = userData as any;
+          return { answers: answers.filter(Boolean), data, auto };
+        } catch (err) {
+          return {};
+        }
+      })();
 
-    record(id, { answers, data, auto });
-  };
+      record(id, { answers, data, auto });
+    };
 
   return (
     <Box width="100%" role="main">

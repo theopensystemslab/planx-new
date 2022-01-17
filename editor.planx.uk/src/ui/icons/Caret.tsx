@@ -17,9 +17,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Caret({
   expanded,
   ...svgProps
-}: {
-  expanded?: boolean & SvgIconProps;
-}) {
+}: SvgIconProps & { expanded?: boolean }) {
   const classes = useStyles();
   return (
     <SvgIcon
