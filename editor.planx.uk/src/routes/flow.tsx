@@ -181,8 +181,8 @@ const routes = compose(
   })),
 
   withView(async (req) => {
-    const settings = await getFlowSettings(req.params.flow, req.params.team);
     const [flow, ...breadcrumbs] = req.params.flow.split(",");
+    const settings = await getFlowSettings(flow, req.params.team);
     return (
       <>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
