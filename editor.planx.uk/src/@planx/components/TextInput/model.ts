@@ -60,7 +60,6 @@ export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
 export interface TextInput extends MoreInformation {
   title: string;
   description?: string;
-  placeholder?: string;
   fn?: string;
   type?: TextInputType;
 }
@@ -70,7 +69,6 @@ export const parseTextInput = (
 ): TextInput => ({
   title: data?.title || "",
   description: data?.description,
-  placeholder: data?.placeholder,
   fn: data?.fn,
   type: data?.type,
   ...parseMoreInformation(data),

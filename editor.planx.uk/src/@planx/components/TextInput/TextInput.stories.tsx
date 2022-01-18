@@ -20,7 +20,6 @@ export const Frontend: Story<Props> = Template.bind({});
 Frontend.args = {
   title: "How was your day?",
   description: "Be as descriptive as you can.",
-  placeholder: "I started with a long stroll...",
   type: TextInputType.Short,
 };
 
@@ -28,7 +27,6 @@ export const FrontendEmail: Story<Props> = Template.bind({});
 FrontendEmail.args = {
   title: "What's your email?",
   type: TextInputType.Email,
-  placeholder: "",
   description: "",
 };
 
