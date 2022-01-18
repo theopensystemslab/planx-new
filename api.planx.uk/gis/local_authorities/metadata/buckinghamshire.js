@@ -142,8 +142,8 @@ const planningConstraints = {
     source: "manual", // there are no WHS in Bucks
     neg: "is not an UNESCO World Heritage Site",
   },
-  "designated.monument": {
-    key: "designated.monument",
+  "monument": {
+    key: "monument",
     source: bucksDomain,
     id: "PLANNING/RIPA_BOPS",
     serverIndex: 3,

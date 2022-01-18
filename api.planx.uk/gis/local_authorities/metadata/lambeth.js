@@ -107,8 +107,8 @@ const planningConstraints = {
       description: data.name,
     }),
   },
-  "designated.monument": { 
-    key: "designated.monument",
+  "monument": { 
+    key: "monument",
     source: environmentDomain,
     id: "HE/ScheduledMonuments",
     fields: ["objectid", "name", "scheddate", "amenddate"],

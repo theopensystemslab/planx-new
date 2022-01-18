@@ -73,8 +73,8 @@ const planningConstraints = {
       description: data.LOCATION,
     }),
   },
-  "designated.monument": {
-    key: "designated.monument",
+  "monument": {
+    key: "monument",
     source: braintreeDomain,
     id: "PlanX/PlanX",
     serverIndex: 9,

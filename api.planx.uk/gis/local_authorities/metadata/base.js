@@ -43,7 +43,7 @@ const spatialResults = {
     neg: "is not an UNESCO World Heritage Site",
     pos: "is, or is within, an UNESCO World Heritage Site",
   },
-  "designated.monument": {
+  "monument": {
     neg: "is not the site of a Scheduled Monument",
     pos: "is the site of a Scheduled Monument",
   },
