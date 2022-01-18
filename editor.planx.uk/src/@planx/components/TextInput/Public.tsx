@@ -52,7 +52,6 @@ const TextInputComponent: React.FC<Props> = (props) => {
             rows={props.type === "long" ? 5 : undefined}
             name="text"
             value={formik.values.text}
-            placeholder={props.placeholder}
             bordered
             onChange={formik.handleChange}
             errorMessage={formik.errors.text as string}

@@ -3,7 +3,6 @@ import { MoreInformation, parseMoreInformation } from "../shared";
 export interface NumberInput extends MoreInformation {
   title: string;
   description?: string;
-  placeholder?: string;
   fn?: string;
   units?: string;
 }
@@ -23,7 +22,6 @@ export const parseNumberInput = (
 ): NumberInput => ({
   title: data?.title || "",
   description: data?.description,
-  placeholder: data?.placeholder,
   fn: data?.fn || "",
   units: data?.units,
   ...parseMoreInformation(data),

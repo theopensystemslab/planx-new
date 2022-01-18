@@ -9,17 +9,12 @@ import TextInput from "./Public";
 test("requires a value before being able to continue", async () => {
   const handleSubmit = jest.fn();
 
-  render(
-    <TextInput title="hello" placeholder="what?" handleSubmit={handleSubmit} />
-  );
+  render(<TextInput title="hello" handleSubmit={handleSubmit} />);
 
   expect(screen.getByRole("heading")).toHaveTextContent("hello");
 
   await act(async () => {
-    await userEvent.type(
-      await screen.getByPlaceholderText("what?"),
-      "something"
-    );
+    await userEvent.type(await screen.getByLabelText("hello"), "something");
     await userEvent.click(screen.getByText("Continue"));
   });
 
@@ -32,7 +27,6 @@ test("requires a valid email before being able to continue", async () => {
   render(
     <TextInput
       title="hello"
-      placeholder="what?"
       type={TextInputType.Email}
       handleSubmit={handleSubmit}
     />
@@ -41,7 +35,7 @@ test("requires a valid email before being able to continue", async () => {
   expect(screen.getByRole("heading")).toHaveTextContent("hello");
 
   await act(async () => {
-    await userEvent.type(screen.getByPlaceholderText("what?"), "not-an-email");
+    await userEvent.type(screen.getByLabelText("hello"), "not-an-email");
     await userEvent.click(screen.getByText("Continue"));
   });
 
@@ -121,13 +115,12 @@ examplePhoneNumbers.forEach((number) => {
     render(
       <TextInput
         title="phone"
-        placeholder={number}
         type={TextInputType.Phone}
         handleSubmit={handleSubmit}
       />
     );
 
-    fireEvent.change(screen.getByPlaceholderText(number), {
+    fireEvent.change(screen.getByLabelText("phone"), {
       target: { value: number },
     });
 
@@ -141,11 +134,7 @@ examplePhoneNumbers.forEach((number) => {
 
 it("should not have any accessibility violations", async () => {
   const { container } = render(
-    <TextInput
-      title="phone"
-      placeholder="(01234) 123456"
-      type={TextInputType.Phone}
-    />
+    <TextInput title="phone" type={TextInputType.Phone} />
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
