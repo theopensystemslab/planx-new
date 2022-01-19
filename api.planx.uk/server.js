@@ -23,6 +23,7 @@ const {
 const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
 const { diffFlow, publishFlow } = require("./publish");
+const { findInFlow } = require("./find");
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -447,6 +448,9 @@ app.get("/throw-error", () => {
 app.post("/flows/:flowId/diff", useJWT, diffFlow);
 
 app.post("/flows/:flowId/publish", useJWT, publishFlow);
+
+// unauthenticated because accessing flow schema only, no user data
+app.get("/flows/:flowId/find/:string", findInFlow);
 
 // unauthenticated because accessing flow schema only, no user data
 app.get("/flows/:flowId/download-schema", async (req, res, next) => {
