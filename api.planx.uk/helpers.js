@@ -6,6 +6,7 @@ const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
   },
 });
 
+// Get a flow's data (unflattened)
 const getFlowData = async (id) => {
   const data = await client.request(
     `
@@ -21,8 +22,30 @@ const getFlowData = async (id) => {
   return data.flows_by_pk.data;
 };
 
+// Get the most recent version of a published flow's data (flattened)
+const getMostRecentPublishedFlow = async (id) => {
+  const data = await client.request(
+    `
+      query GetMostRecentPublishedFlow($id: uuid!) {
+        flows_by_pk(id: $id) {
+          published_flows(limit: 1, order_by: { id: desc }) {
+            data
+          }
+        }
+      }
+    `,
+    { id }
+  );
+
+  return (
+    data.flows_by_pk.published_flows[0] &&
+    data.flows_by_pk.published_flows[0].data
+  );
+};
+
+// Flatten a flow's data to include main content & portals in a single JSON representation
 // XXX: getFlowData & dataMerged are currently repeated in ../editor.planx.uk/src/lib/dataMergedHotfix.ts
-//        in order to load previews for flows that are not published
+//        in order to load frontend /preview routes for flows that are not published
 const dataMerged = async (id, ob = {}) => {
   // get the primary flow data
   const data = await getFlowData(id);
@@ -47,4 +70,4 @@ const dataMerged = async (id, ob = {}) => {
   return ob;
 };
 
-module.exports = { dataMerged };
+module.exports = { getFlowData, getMostRecentPublishedFlow, dataMerged };

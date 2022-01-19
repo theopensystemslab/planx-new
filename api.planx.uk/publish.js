@@ -1,33 +1,13 @@
 const { GraphQLClient } = require("graphql-request");
 const jsondiffpatch = require("jsondiffpatch");
 
-const { dataMerged } = require("./helpers");
+const { dataMerged, getMostRecentPublishedFlow } = require("./helpers");
 
 const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
   headers: {
     "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
   },
 });
-
-const getMostRecentPublishedFlow = async (id) => {
-  const data = await client.request(
-    `
-      query GetMostRecentPublishedFlow($id: uuid!) {
-        flows_by_pk(id: $id) {
-          published_flows(limit: 1, order_by: { id: desc }) {
-            data
-          }
-        }
-      }
-    `,
-    { id }
-  );
-
-  return (
-    data.flows_by_pk.published_flows[0] &&
-    data.flows_by_pk.published_flows[0].data
-  );
-};
 
 const diffFlow = async (req, res, next) => {
   if (!req.user?.sub)
