@@ -112,8 +112,11 @@ const RichTextInput: React.FC<Props> = (props) => {
     const currentHtml = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
     );
-    // Do not sync state if value has been forcefully changed to "" as newHtmlContentNonEmpty
-    if (currentHtml !== props.value && props.value !== "") {
+    if (
+      currentHtml !== props.value &&
+      // Do not sync state if value has been forcefully changed to "" as newHtmlContentNonEmpty
+      props.value !== ""
+    ) {
       setEditorState(
         EditorState.createWithContent(
           valueToContentState((props.value as string) || ""),
