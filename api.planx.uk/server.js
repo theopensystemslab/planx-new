@@ -23,7 +23,7 @@ const {
 const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
 const { diffFlow, publishFlow } = require("./publish");
-const { findInFlow, findAndReplaceInFlow } = require("./find");
+const { findInFlow, findAndReplaceInFlow } = require("./findReplace");
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";

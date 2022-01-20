@@ -6,7 +6,7 @@ const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
   },
 });
 
-// Get a flow's data (unflattened)
+// Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id) => {
   const data = await client.request(
     `
@@ -22,7 +22,7 @@ const getFlowData = async (id) => {
   return data.flows_by_pk.data;
 };
 
-// Get the most recent version of a published flow's data (flattened)
+// Get the most recent version of a published flow's data (flattened, with external portal nodes)
 const getMostRecentPublishedFlow = async (id) => {
   const data = await client.request(
     `
