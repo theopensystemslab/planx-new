@@ -76,7 +76,7 @@ function ImageResponse(props: Props) {
   };
 
   return (
-    <ButtonBase {...props} aria-labelledby={`buttonLabel-${id}`}>
+    <ButtonBase {...props}>
       <Box display="flex" flexDirection="column" width="100%" height="100%">
         <Box
           width="100%"
@@ -99,12 +99,7 @@ function ImageResponse(props: Props) {
               <ImageIcon />
             </Box>
           ) : (
-            <img
-              className={classes.img}
-              src={img}
-              onError={onError}
-              alt="An illustration of this option"
-            />
+            <img className={classes.img} src={img} onError={onError} alt="" />
           )}
         </Box>
         {/*
@@ -140,7 +135,7 @@ function ImageResponse(props: Props) {
               variant="body2"
               className={checkbox ? classes.title : undefined}
             >
-              <label htmlFor={id}>{title}</label>
+              <label>{title}</label>
             </Typography>
           </Box>
         </Box>
