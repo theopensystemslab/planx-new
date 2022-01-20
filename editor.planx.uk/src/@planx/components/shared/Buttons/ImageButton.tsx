@@ -99,7 +99,13 @@ function ImageResponse(props: Props) {
               <ImageIcon />
             </Box>
           ) : (
-            <img className={classes.img} src={img} onError={onError} alt="" />
+            <img
+              className={classes.img}
+              src={img}
+              onError={onError}
+              // Use a null alt to indicate that this image can be ignored by screen readers
+              alt=""
+            />
           )}
         </Box>
         {/*
