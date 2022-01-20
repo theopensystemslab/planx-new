@@ -111,7 +111,7 @@ const getManualConstraints = (metadata) => {
 
       metadata[constraint]["value"] = false;
       metadata[constraint]["type"] = "check";
-      metadata[constraint]["data"] = {};
+      metadata[constraint]["data"] = [];
 
       manualConstraints[constraint] = metadata[constraint];
     }
