@@ -22,7 +22,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useState } from "react";
 import { useCurrentRoute } from "react-navi";
-import useSWR from "swr";
+import useSWR, { useSWRInfinite } from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
@@ -166,29 +166,32 @@ function GetAddress(props: {
 
   // Fetch addresses in this postcode from the OS Places API
   // https://apidocs.os.uk/docs/os-places-service-metadata
-  let osPlacesParams: Record<string, any> = {
-    key: process.env.REACT_APP_ORDNANCE_SURVEY_KEY,
-    postcode: sanitizedPostcode,
-    dataset: "LPI", // or "DPA" for only mailable addresses
-    output_srs: "EPSG:4326",
-    lr: "EN",
-    maxresults: 100, // 100 is default
-    offset: 0,
-  };
+  let osPlacesEndpoint = `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&dataset=LPI&output_srs=EPSG:4326&lr=EN&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&maxresults=100&offset=0`;
 
-  const osPlacesEndpoint: URL = new URL(
-    "https://api.os.uk/search/places/v1/postcode"
-  );
-  osPlacesEndpoint.search = new URLSearchParams(osPlacesParams).toString();
+  const fetcher = (url: RequestInfo) => fetch(url).then((res) => res.json());
 
-  const { data: addressesInPostcode } = useSWR(
-    () => (sanitizedPostcode ? osPlacesEndpoint.toString() : null),
+  const { data } = useSWR(
+    sanitizedPostcode ? osPlacesEndpoint : null,
+    fetcher,
     {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
       errorRetryCount: 3,
     }
   );
+
+  const totalAddresses: number = data?.header.totalresults;
+  const addressesInPostcode: any[] = data?.results || [];
+
+  if (sanitizedPostcode && data) {
+    console.log(
+      "fetched",
+      addressesInPostcode.length,
+      "/",
+      totalAddresses,
+      "addresses"
+    );
+  }
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES);
@@ -197,10 +200,10 @@ function GetAddress(props: {
   //    refactor model.ts to better align to OS Places DPA or LPI output
   const addresses: Address[] = [];
   if (
-    Boolean(addressesInPostcode?.results?.length) &&
+    Boolean(addressesInPostcode.length) &&
     Boolean(blpuCodes?.blpu_codes?.length)
   ) {
-    addressesInPostcode.results.map((a: any) => {
+    addressesInPostcode.map((a: any) => {
       addresses.push({
         uprn: a.LPI.UPRN.padStart(12, "0"),
         blpu_code: a.LPI.BLPU_STATE_CODE,
@@ -383,14 +386,13 @@ function GetAddress(props: {
             )}
           />
         )}
-        {addressesInPostcode?.header.totalresults === 0 &&
-          Boolean(sanitizedPostcode) && (
-            <Box pt={2}>
-              <Typography variant="body1" color="error">
-                No addresses found in this postcode.
-              </Typography>
-            </Box>
-          )}
+        {totalAddresses === 0 && Boolean(sanitizedPostcode) && (
+          <Box pt={2}>
+            <Typography variant="body1" color="error">
+              No addresses found in this postcode.
+            </Typography>
+          </Box>
+        )}
       </Box>
     </Card>
   );
