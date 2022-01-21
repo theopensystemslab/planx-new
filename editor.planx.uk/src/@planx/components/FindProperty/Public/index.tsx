@@ -22,7 +22,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useState } from "react";
 import { useCurrentRoute } from "react-navi";
-import useSWR, { useSWRInfinite } from "swr";
+import { useSWRInfinite } from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
@@ -123,14 +123,14 @@ function Component(props: Props) {
             detail: capitalize(team),
           },
           {
-            heading: "Building type",
+            heading: "Building type", // XXX: does this heading still make sense for infra?
             detail: address.planx_description,
           },
         ]}
         team={team}
         teamColor={data?.teams?.[0].theme?.primary || "#2c2c2c"}
         error={
-          address.administrative_area !== team.toUpperCase() &&
+          address.administrative_area !== team.toUpperCase() ||
           address.local_custodian_code !== team.toUpperCase()
         }
       />
@@ -166,22 +166,32 @@ function GetAddress(props: {
 
   // Fetch addresses in this postcode from the OS Places API
   // https://apidocs.os.uk/docs/os-places-service-metadata
-  let osPlacesEndpoint = `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&dataset=LPI&output_srs=EPSG:4326&lr=EN&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&maxresults=100&offset=0`;
+  let osPlacesEndpoint = `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&dataset=LPI&output_srs=EPSG:4326&lr=EN&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&maxresults=100`;
 
   const fetcher = (url: RequestInfo) => fetch(url).then((res) => res.json());
 
-  const { data } = useSWR(
-    sanitizedPostcode ? osPlacesEndpoint : null,
-    fetcher,
-    {
-      shouldRetryOnError: true,
-      errorRetryInterval: 500,
-      errorRetryCount: 3,
-    }
+  // https://swr.vercel.app/docs/pagination#useswrinfinite
+  const { data, size, setSize } = useSWRInfinite(
+    (index) =>
+      sanitizedPostcode ? osPlacesEndpoint + `&offset=${index * 100}` : null,
+    fetcher
+    // {
+    //   shouldRetryOnError: true,
+    //   errorRetryInterval: 500,
+    //   errorRetryCount: 3,
+    // }
   );
 
-  const totalAddresses: number = data?.header.totalresults;
-  const addressesInPostcode: any[] = data?.results || [];
+  const totalAddresses: number | undefined = data
+    ? data[0].header.totalresults
+    : undefined;
+  let addressesInPostcode: any[] = data
+    ? [].concat(...data[size - 1].results)
+    : [];
+
+  // if (totalAddresses && totalAddresses > addressesInPostcode.length) {
+  //   setSize(size + 1);
+  // }
 
   if (sanitizedPostcode && data) {
     console.log(
