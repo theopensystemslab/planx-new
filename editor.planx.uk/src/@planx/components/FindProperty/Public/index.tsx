@@ -112,10 +112,9 @@ function Component(props: Props) {
         propertyDetails={[
           {
             heading: "Address",
-            detail: address.single_line_address.replace(
-              `, ${address.postcode}`,
-              ""
-            ),
+            detail: address.single_line_address.split(
+              `, ${address.administrative_area}`
+            )[0],
           },
           {
             heading: "Postcode",
@@ -130,7 +129,12 @@ function Component(props: Props) {
             detail: address.planx_description,
           },
         ]}
+        team={team}
         teamColor={data?.teams?.[0].theme?.primary || "#2c2c2c"}
+        error={
+          address.administrative_area !== team.toUpperCase() &&
+          address.local_custodian_code !== team.toUpperCase()
+        }
       />
     );
   } else {
@@ -163,17 +167,32 @@ function GetAddress(props: {
   const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
 
   // Fetch addresses in this postcode from the OS Places API
+  // https://apidocs.os.uk/docs/os-places-service-metadata
+  let osPlacesParams: Record<string, any> = {
+    key: process.env.REACT_APP_ORDNANCE_SURVEY_KEY,
+    postcode: sanitizedPostcode,
+    dataset: "LPI", // or "DPA" for only mailable addresses
+    output_srs: "EPSG:4326",
+    lr: "EN",
+    maxresults: 100, // 100 is default
+    offset: 0,
+  };
+
+  const osPlacesEndpoint: URL = new URL(
+    "https://api.os.uk/search/places/v1/postcode"
+  );
+  osPlacesEndpoint.search = new URLSearchParams(osPlacesParams).toString();
+
   const { data: addressesInPostcode } = useSWR(
-    () =>
-      sanitizedPostcode
-        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&lr=EN`
-        : null,
+    () => (sanitizedPostcode ? osPlacesEndpoint.toString() : null),
     {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
       errorRetryCount: 3,
     }
   );
+
+  console.log(addressesInPostcode);
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES);
@@ -187,25 +206,27 @@ function GetAddress(props: {
   ) {
     addressesInPostcode.results.map((a: any) => {
       addresses.push({
-        uprn: a.DPA.UPRN.padStart(12, "0"),
-        blpu_code: a.DPA.BLPU_STATE_CODE,
-        latitude: a.DPA.LAT,
-        longitude: a.DPA.LNG,
-        organisation: a.DPA.ORGANISATION_NAME || null,
-        sao: null,
-        pao: a.DPA.BUILDING_NUMBER,
-        street: a.DPA.THOROUGHFARE_NAME,
-        town: a.DPA.POST_TOWN,
-        postcode: a.DPA.POSTCODE,
-        x: a.DPA.X_COORDINATE,
-        y: a.DPA.Y_COORDINATE,
+        uprn: a.LPI.UPRN.padStart(12, "0"),
+        blpu_code: a.LPI.BLPU_STATE_CODE,
+        latitude: a.LPI.LAT,
+        longitude: a.LPI.LNG,
+        organisation: a.LPI.ORGANISATION || null,
+        sao: a.LPI.SAO_TEXT,
+        pao: a.LPI.PAO_TEXT,
+        street: a.LPI.STREET_DESCRIPTION,
+        town: a.LPI.TOWN_NAME,
+        postcode: a.LPI.POSTCODE_LOCATOR,
+        x: a.LPI.X_COORDINATE,
+        y: a.LPI.Y_COORDINATE,
         planx_description:
-          find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
+          find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
             ?.description || null,
         planx_value:
-          find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
+          find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
             ?.value || null,
-        single_line_address: a.DPA.ADDRESS,
+        single_line_address: a.LPI.ADDRESS,
+        administrative_area: a.LPI.ADMINISTRATIVE_AREA, // local highway authority name, maybe useful for LPA validation??
+        local_custodian_code: a.LPI.LOCAL_CUSTODIAN_CODE_DESCRIPTION, // may not reflect merged councils
       });
     });
   }
@@ -329,11 +350,10 @@ function GetAddress(props: {
               .map(
                 (address: Address): Option => ({
                   ...address,
-                  // we already know the postcode so remove it from full address
-                  title: address.single_line_address.replace(
-                    `, ${address.postcode}`,
-                    ""
-                  ),
+                  // we already know the team & postcode so remove it from full address display
+                  title: address.single_line_address.split(
+                    `, ${address.administrative_area}`
+                  )[0],
                 })
               )
               .sort((a: Option, b: Option) => sorter(a.title, b.title))}
@@ -407,7 +427,9 @@ export function PropertyInformation(props: any) {
     lat,
     lng,
     handleSubmit,
+    team,
     teamColor,
+    error,
   } = props;
   const styles = useClasses();
   const formik = useFormik({
@@ -447,7 +469,7 @@ export function PropertyInformation(props: any) {
           featureFill
         />
       </Box>
-      <Box component="dl" mb={6}>
+      <Box component="dl" mb={2}>
         {propertyDetails.map(({ heading, detail }: any) => (
           <Box className={styles.propertyDetail} key={heading}>
             <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
@@ -459,6 +481,14 @@ export function PropertyInformation(props: any) {
           </Box>
         ))}
       </Box>
+      {error && (
+        <Box>
+          <Typography variant="body1" color="error">
+            This address may not be in {capitalize(team)}, are you sure you want
+            to continue using this service?
+          </Typography>
+        </Box>
+      )}
       <Box color="text.secondary" textAlign="right">
         <CollapsibleInput
           handleChange={formik.handleChange}
