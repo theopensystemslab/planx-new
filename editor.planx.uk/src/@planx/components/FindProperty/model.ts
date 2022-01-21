@@ -31,6 +31,7 @@ export interface Address {
   single_line_address: string;
   administrative_area: string;
   local_custodian_code: string;
+  title: string;
 }
 
 export const DEFAULT_TITLE = "Find the property" as const;

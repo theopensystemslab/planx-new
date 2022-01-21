@@ -112,9 +112,7 @@ function Component(props: Props) {
         propertyDetails={[
           {
             heading: "Address",
-            detail: address.single_line_address.split(
-              `, ${address.administrative_area}`
-            )[0],
+            detail: address.title,
           },
           {
             heading: "Postcode",
@@ -192,8 +190,6 @@ function GetAddress(props: {
     }
   );
 
-  console.log(addressesInPostcode);
-
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES);
 
@@ -212,7 +208,9 @@ function GetAddress(props: {
         longitude: a.LPI.LNG,
         organisation: a.LPI.ORGANISATION || null,
         sao: a.LPI.SAO_TEXT,
-        pao: a.LPI.PAO_TEXT,
+        pao: [a.LPI.PAO_START_NUMBER, a.LPI.PAO_START_SUFFIX]
+          .filter(Boolean)
+          .join(""), // docs reference PAO_TEXT, but not found in response
         street: a.LPI.STREET_DESCRIPTION,
         town: a.LPI.TOWN_NAME,
         postcode: a.LPI.POSTCODE_LOCATOR,
@@ -225,8 +223,9 @@ function GetAddress(props: {
           find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
             ?.value || null,
         single_line_address: a.LPI.ADDRESS,
-        administrative_area: a.LPI.ADMINISTRATIVE_AREA, // local highway authority name, maybe useful for LPA validation??
-        local_custodian_code: a.LPI.LOCAL_CUSTODIAN_CODE_DESCRIPTION, // may not reflect merged councils
+        administrative_area: a.LPI.ADMINISTRATIVE_AREA, // local highway authority name (proxy for local authority?)
+        local_custodian_code: a.LPI.LOCAL_CUSTODIAN_CODE_DESCRIPTION, // similar to GSS_CODE, but may not reflect merged councils
+        title: a.LPI.ADDRESS.split(`, ${a.LPI.ADMINISTRATIVE_AREA}`)[0], // display value used in autocomplete dropdown & FindProperty
       });
     });
   }
@@ -350,10 +349,7 @@ function GetAddress(props: {
               .map(
                 (address: Address): Option => ({
                   ...address,
-                  // we already know the team & postcode so remove it from full address display
-                  title: address.single_line_address.split(
-                    `, ${address.administrative_area}`
-                  )[0],
+                  title: address.title,
                 })
               )
               .sort((a: Option, b: Option) => sorter(a.title, b.title))}
@@ -387,7 +383,7 @@ function GetAddress(props: {
             )}
           />
         )}
-        {addressesInPostcode?.header?.totalresults === 0 &&
+        {addressesInPostcode?.header.totalresults === 0 &&
           Boolean(sanitizedPostcode) && (
             <Box pt={2}>
               <Typography variant="body1" color="error">
@@ -469,7 +465,7 @@ export function PropertyInformation(props: any) {
           featureFill
         />
       </Box>
-      <Box component="dl" mb={2}>
+      <Box component="dl" mb={3}>
         {propertyDetails.map(({ heading, detail }: any) => (
           <Box className={styles.propertyDetail} key={heading}>
             <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
