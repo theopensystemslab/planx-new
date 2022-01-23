@@ -138,7 +138,7 @@ it("should not have any accessibility violations", async () => {
   expect(results).toHaveNoViolations();
 });
 
-it.skip("clears the old address when the postcode is typed in", async () => {
+it("clears the old address when the postcode is typed in", async () => {
   // Arrange
   render(
     <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
@@ -173,7 +173,7 @@ it.skip("clears the old address when the postcode is typed in", async () => {
 
   // New postcode and blank address field should display
   expect(postcodeInput).toHaveValue("SE5 0HX");
-  expect(addressInput).not.toBeUndefined(); // XXX: why undefined now?
+  expect(addressInput).not.toBeUndefined();
   expect(addressInput).toHaveValue("");
 
   // User is unable to continue and to submit incomplete data

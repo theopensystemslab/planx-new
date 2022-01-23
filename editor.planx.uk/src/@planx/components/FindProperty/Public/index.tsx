@@ -22,7 +22,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useState } from "react";
 import { useCurrentRoute } from "react-navi";
-import { useSWRInfinite } from "swr";
+import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
@@ -130,6 +130,7 @@ function Component(props: Props) {
         team={team}
         teamColor={data?.teams?.[0].theme?.primary || "#2c2c2c"}
         error={
+          // if neither admin area nor LCC match team, then show error
           address.administrative_area !== team.toUpperCase() ||
           address.local_custodian_code !== team.toUpperCase()
         }
@@ -163,45 +164,42 @@ function GetAddress(props: {
     props.initialSelectedAddress ?? undefined
   );
   const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
+  const [offset, setOffset] = useState<number>(0);
+  const [totalAddresses, setTotalAddresses] = useState<number | undefined>(
+    undefined
+  );
+  const [addressesInPostcode, setAddressesInPostcode] = useState<any[]>([]);
 
   // Fetch addresses in this postcode from the OS Places API
   // https://apidocs.os.uk/docs/os-places-service-metadata
   let osPlacesEndpoint = `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&dataset=LPI&output_srs=EPSG:4326&lr=EN&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&maxresults=100`;
 
-  const fetcher = (url: RequestInfo) => fetch(url).then((res) => res.json());
+  const fetcher = (url: RequestInfo) =>
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        // Concat results to existing list of addresses for cases of paginated results
+        const concatenated = addressesInPostcode.concat(data.results || []);
+        setAddressesInPostcode(concatenated);
+        setTotalAddresses(data.header.totalresults);
+        console.log(
+          "fetched",
+          concatenated.length,
+          "/",
+          data.header.totalresults
+        );
+        return data;
+      });
 
-  // https://swr.vercel.app/docs/pagination#useswrinfinite
-  const { data, size, setSize } = useSWRInfinite(
-    (index) =>
-      sanitizedPostcode ? osPlacesEndpoint + `&offset=${index * 100}` : null,
-    fetcher
-    // {
-    //   shouldRetryOnError: true,
-    //   errorRetryInterval: 500,
-    //   errorRetryCount: 3,
-    // }
+  const { data } = useSWR(
+    sanitizedPostcode ? osPlacesEndpoint + `&offset=${offset}` : null,
+    fetcher,
+    {
+      shouldRetryOnError: true,
+      errorRetryInterval: 500,
+      errorRetryCount: 3,
+    }
   );
-
-  const totalAddresses: number | undefined = data
-    ? data[0].header.totalresults
-    : undefined;
-  let addressesInPostcode: any[] = data
-    ? [].concat(...data[size - 1].results)
-    : [];
-
-  // if (totalAddresses && totalAddresses > addressesInPostcode.length) {
-  //   setSize(size + 1);
-  // }
-
-  if (sanitizedPostcode && data) {
-    console.log(
-      "fetched",
-      addressesInPostcode.length,
-      "/",
-      totalAddresses,
-      "addresses"
-    );
-  }
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES);
@@ -223,7 +221,7 @@ function GetAddress(props: {
         sao: a.LPI.SAO_TEXT,
         pao: [a.LPI.PAO_START_NUMBER, a.LPI.PAO_START_SUFFIX]
           .filter(Boolean)
-          .join(""), // docs reference PAO_TEXT, but not found in response
+          .join(""), // docs reference PAO_TEXT, but not found in resp so roll our own
         street: a.LPI.STREET_DESCRIPTION,
         town: a.LPI.TOWN_NAME,
         postcode: a.LPI.POSTCODE_LOCATOR,
@@ -309,7 +307,17 @@ function GetAddress(props: {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     // Reset the address on change of postcode - ensures no visual mismatch between address and postcode
-    if (selectedOption) setSelectedOption(undefined);
+    if (selectedOption) {
+      setSelectedOption(undefined);
+    }
+
+    // Also reset any previously fetched addresses - ensures new results aren't concatenated to prev options
+    if (totalAddresses && Boolean(addressesInPostcode.length)) {
+      setOffset(0);
+      setTotalAddresses(undefined);
+      setAddressesInPostcode([]);
+    }
+
     // Validate and set Postcode
     const input = e.target.value;
     if (parse(input.trim()).valid) {
@@ -385,6 +393,15 @@ function GetAddress(props: {
             onChange={(event, selectedOption) => {
               if (selectedOption) {
                 setSelectedOption(selectedOption);
+              }
+            }}
+            onOpen={(event) => {
+              // Fetch additional paginated results from OS Places if they exist, concat results to options before input
+              if (
+                totalAddresses &&
+                totalAddresses > addressesInPostcode.length
+              ) {
+                setOffset(addressesInPostcode.length);
               }
             }}
             disablePortal
