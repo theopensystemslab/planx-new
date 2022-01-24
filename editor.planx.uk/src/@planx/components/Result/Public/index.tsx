@@ -174,7 +174,6 @@ const Result: React.FC<Props> = ({
                   onClick={() =>
                     setShowDisclaimer((showDisclaimer) => !showDisclaimer)
                   }
-                  disableRipple
                 >
                   <Typography variant="body2" className={classes.readMore}>
                     Read {showDisclaimer ? "less" : "more"}
