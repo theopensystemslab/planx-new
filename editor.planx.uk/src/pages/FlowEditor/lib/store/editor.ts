@@ -16,6 +16,7 @@ import debounce from "lodash/debounce";
 import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
 import type { FlowSettings, TextContent } from "types";
+import { getLoggedInUserId } from "utils";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { FlowLayout } from "../../components/Flow";
@@ -147,11 +148,23 @@ export const editorStore = (
 
   createFlow: async (teamId, newSlug) => {
     const data = { [ROOT_NODE_KEY]: { edges: [] } };
+    const creatorId = getLoggedInUserId();
     let response = (await client.mutate({
       mutation: gql`
-        mutation CreateFlow($data: jsonb, $slug: String, $teamId: Int) {
+        mutation CreateFlow(
+          $data: jsonb
+          $slug: String
+          $teamId: Int
+          $creatorId: Int
+        ) {
           insert_flows_one(
-            object: { data: $data, slug: $slug, team_id: $teamId, version: 1 }
+            object: {
+              data: $data
+              slug: $slug
+              team_id: $teamId
+              version: 1
+              creator_id: $creatorId
+            }
           ) {
             id
             data
@@ -162,6 +175,7 @@ export const editorStore = (
         slug: newSlug,
         teamId,
         data,
+        creatorId,
       },
     })) as any;
 
