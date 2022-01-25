@@ -66,7 +66,7 @@ const findAndReplaceInFlow = async (req, res, next) => {
     }
 
     if (find && replace) {
-      const { matches: matches, flowData: replacedFlowData } = getMatches(flow, find, replace);
+      const { matches, flowData } = getMatches(flow, find, replace);
 
       // if no matches, send message & exit
       if (Object.keys(matches).length === 0) {
@@ -96,7 +96,7 @@ const findAndReplaceInFlow = async (req, res, next) => {
           }
         `,
         {
-          data: replacedFlowData,
+          data: flowData,
           id: req.params.flowId,
         }
       );
