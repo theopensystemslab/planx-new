@@ -52,6 +52,8 @@ const useClasses = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
     width: "100%",
     "&:focus-within": focusStyle,
+    "& h1": theme.typography.h3,
+    "& h2": theme.typography.h5,
   },
   bordered: {
     border: `2px solid #000`,
@@ -112,7 +114,11 @@ const RichTextInput: React.FC<Props> = (props) => {
     const currentHtml = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
     );
-    if (currentHtml !== props.value) {
+    if (
+      currentHtml !== props.value &&
+      // Do not sync state if value has been forcefully changed to "" as newHtmlContentNonEmpty
+      props.value !== ""
+    ) {
       setEditorState(
         EditorState.createWithContent(
           valueToContentState((props.value as string) || ""),
@@ -130,9 +136,10 @@ const RichTextInput: React.FC<Props> = (props) => {
     []
   );
 
-  const inlineToolbarPlugin = useMemo(() => createInlineToolbarPlugin(), [
-    linkPlugin,
-  ]);
+  const inlineToolbarPlugin = useMemo(
+    () => createInlineToolbarPlugin(),
+    [linkPlugin]
+  );
 
   const classes = useClasses();
 
@@ -160,12 +167,12 @@ const RichTextInput: React.FC<Props> = (props) => {
                 : newHtmlContent;
 
             if (props.onChange && newHtmlContent !== props.value) {
-              const changeEvent = ({
+              const changeEvent = {
                 target: {
                   name: props.name,
                   value: newHtmlContentNonEmpty,
                 },
-              } as unknown) as ChangeEvent<HTMLInputElement>;
+              } as unknown as ChangeEvent<HTMLInputElement>;
               props.onChange(changeEvent);
             }
             setEditorState(newEditorState);
