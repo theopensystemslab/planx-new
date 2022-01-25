@@ -16,11 +16,28 @@ const sharedb = new ShareDB({
   }),
 });
 
-sharedb.use("connect", (request, next) => {
+// Register middleware hooks
+
+// Get userId from request on initial connection, register to agent
+sharedb.use("connect", (context, next) => {
   try {
-    request.agent.connectSession = { userId: request.req.uId.sub };
-  } catch (e) {}
+    context.agent.connectSession = { userId: context.req.uId.sub };
+  } catch (e) {
+    console.error("Error connecting to ShareDB: ", e);
+  };
   next();
+});
+
+// Assign userId to op metadata when commit hook fires
+// This allows us to access this value at the db level
+sharedb.use("commit", (context, done) => {
+  try {
+    const { op, agent } = context;
+    op.m.uId = agent.connectSession.userId;
+  } catch (e) {
+    console.error("Error committing to ShareDB: ", e);
+  };
+  done();
 });
 
 const wss = new Server({
