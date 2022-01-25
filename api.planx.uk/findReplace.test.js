@@ -26,19 +26,19 @@ beforeEach(() => {
   });
 });
 
-it("throws an error if missing query parameter `find`", async() => {
+it("throws an error if missing query parameter `find`", async () => {
   await supertest(app)
     .post("/flows/1/search")
     .set(authHeader())
     .expect(401)
     .then((res) => {
       expect(res.body).toEqual({
-        error: `Expected at least one query parameter "find"`
+        error: `Expected at least one query parameter "find"`,
       });
     });
 });
 
-it("finds matches", async() => {
+it("finds matches", async () => {
   await supertest(app)
     .post("/flows/1/search?find=designated.monument")
     .set(authHeader())
@@ -49,14 +49,14 @@ it("finds matches", async() => {
         matches: {
           AJnWX6O1xt: {
             data: {
-              val: "designated.monument"
-            }
+              val: "designated.monument",
+            },
           },
           Hfh8KuSzUq: {
             data: {
-              val: "designated.monument"
-            }
-          }
+              val: "designated.monument",
+            },
+          },
         },
       });
     });
@@ -85,14 +85,14 @@ it("updates flow data and returns matches if there are matches", async () => {
         matches: {
           AJnWX6O1xt: {
             data: {
-              val: "designated.monument"
-            }
+              val: "designated.monument",
+            },
           },
           Hfh8KuSzUq: {
             data: {
-              val: "designated.monument"
-            }
-          }
+              val: "designated.monument",
+            },
+          },
         },
         updatedFlow: replacedFlowData,
       });
@@ -101,146 +101,122 @@ it("updates flow data and returns matches if there are matches", async () => {
 
 const mockFlowData = {
   _root: {
-    edges: [
-        "RRQwM2zAgy",
-        "vcTgmVQAre",
-        "QsEdip17H5"
-    ]
+    edges: ["RRQwM2zAgy", "vcTgmVQAre", "QsEdip17H5"],
   },
   "6dwuQp5xjA": {
     data: {
-        text: "No"
+      text: "No",
     },
-    type: 200
+    type: 200,
   },
   "8AWcYxZgBw": {
     data: {
-        fn: "property.constraints.planning",
-        text: "Is it monument inside a portal?"
+      fn: "property.constraints.planning",
+      text: "Is it monument inside a portal?",
     },
     type: 100,
-    edges: [
-        "AJnWX6O1xt",
-        "6dwuQp5xjA"
-    ]
+    edges: ["AJnWX6O1xt", "6dwuQp5xjA"],
   },
-  "AJnWX6O1xt": {
+  AJnWX6O1xt: {
     data: {
-        val: "designated.monument",
-        text: "Yes"
+      val: "designated.monument",
+      text: "Yes",
     },
-    type: 200
+    type: 200,
   },
-  "Hfh8KuSzUq": {
+  Hfh8KuSzUq: {
     data: {
-        val: "designated.monument",
-        text: "Yes"
+      val: "designated.monument",
+      text: "Yes",
     },
-    type: 200
+    type: 200,
   },
-  "RRQwM2zAgy": {
+  RRQwM2zAgy: {
     data: {
-        fn: "property.constraints.planning",
-        text: "Is it a monument"
+      fn: "property.constraints.planning",
+      text: "Is it a monument",
     },
     type: 100,
-    edges: [
-        "Hfh8KuSzUq",
-        "ft26KlH7Oy"
-    ]
+    edges: ["Hfh8KuSzUq", "ft26KlH7Oy"],
   },
-  "ft26KlH7Oy": {
+  ft26KlH7Oy: {
     data: {
-        text: "No"
+      text: "No",
     },
-    type: 200
+    type: 200,
   },
-  "vcTgmVQAre": {
+  vcTgmVQAre: {
     data: {
-        text: "internal-portal-test"
+      text: "internal-portal-test",
     },
     type: 300,
-    edges: [
-        "8AWcYxZgBw"
-    ]
+    edges: ["8AWcYxZgBw"],
   },
-  "QsEdip17H5": {
+  QsEdip17H5: {
     type: 310,
     data: {
-      flowId: "f54b6505-c352-4fbc-aca3-7c4be99b49d4"
-    }
-  }
+      flowId: "f54b6505-c352-4fbc-aca3-7c4be99b49d4",
+    },
+  },
 };
 
 const replacedFlowData = {
   _root: {
-    edges: [
-        "RRQwM2zAgy",
-        "vcTgmVQAre",
-        "QsEdip17H5"
-    ]
+    edges: ["RRQwM2zAgy", "vcTgmVQAre", "QsEdip17H5"],
   },
   "6dwuQp5xjA": {
     data: {
-        text: "No"
+      text: "No",
     },
-    type: 200
+    type: 200,
   },
   "8AWcYxZgBw": {
     data: {
-        fn: "property.constraints.planning",
-        text: "Is it monument inside a portal?"
+      fn: "property.constraints.planning",
+      text: "Is it monument inside a portal?",
     },
     type: 100,
-    edges: [
-        "AJnWX6O1xt",
-        "6dwuQp5xjA"
-    ]
+    edges: ["AJnWX6O1xt", "6dwuQp5xjA"],
   },
-  "AJnWX6O1xt": {
+  AJnWX6O1xt: {
     data: {
-        val: "monument",
-        text: "Yes"
+      val: "monument",
+      text: "Yes",
     },
-    type: 200
+    type: 200,
   },
-  "Hfh8KuSzUq": {
+  Hfh8KuSzUq: {
     data: {
-        val: "monument",
-        text: "Yes"
+      val: "monument",
+      text: "Yes",
     },
-    type: 200
+    type: 200,
   },
-  "RRQwM2zAgy": {
+  RRQwM2zAgy: {
     data: {
-        fn: "property.constraints.planning",
-        text: "Is it a monument"
+      fn: "property.constraints.planning",
+      text: "Is it a monument",
     },
     type: 100,
-    edges: [
-        "Hfh8KuSzUq",
-        "ft26KlH7Oy"
-    ]
+    edges: ["Hfh8KuSzUq", "ft26KlH7Oy"],
   },
-  "ft26KlH7Oy": {
+  ft26KlH7Oy: {
     data: {
-        text: "No"
+      text: "No",
     },
-    type: 200
+    type: 200,
   },
-  "vcTgmVQAre": {
+  vcTgmVQAre: {
     data: {
-        text: "internal-portal-test"
+      text: "internal-portal-test",
     },
     type: 300,
-    edges: [
-        "8AWcYxZgBw"
-    ]
+    edges: ["8AWcYxZgBw"],
   },
-  "QsEdip17H5": {
+  QsEdip17H5: {
     type: 310,
     data: {
-      flowId: "f54b6505-c352-4fbc-aca3-7c4be99b49d4"
-    }
-  }
+      flowId: "f54b6505-c352-4fbc-aca3-7c4be99b49d4",
+    },
+  },
 };
