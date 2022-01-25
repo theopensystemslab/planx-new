@@ -81,7 +81,6 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         {!!(info || policyRef || howMeasured) && (
           <Grid item>
             <IconButton
-              disableRipple
               className={classes.iconButton}
               title={`More information`}
               aria-label={`See more information about "${title}"`}

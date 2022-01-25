@@ -146,11 +146,7 @@ function SuggestionDrawer() {
 
   return (
     <>
-      <ButtonBase
-        disableRipple
-        className={classes.link}
-        onClick={handleLinkClick}
-      >
+      <ButtonBase className={classes.link} onClick={handleLinkClick}>
         Tell us other ways you'd like to pay in the future
       </ButtonBase>
       <Drawer
