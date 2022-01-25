@@ -22,7 +22,9 @@ const sharedb = new ShareDB({
 sharedb.use("connect", (context, next) => {
   try {
     context.agent.connectSession = { userId: context.req.uId.sub };
-  } catch (e) {};
+  } catch (e) {
+    console.error("Error connecting to ShareDB: ", e);
+  };
   next();
 });
 
@@ -32,7 +34,9 @@ sharedb.use("commit", (context, done) => {
   try {
     const { op, agent } = context;
     op.m.uId = agent.connectSession.userId;
-  } catch (e) {};
+  } catch (e) {
+    console.error("Error committing to ShareDB: ", e);
+  };
   done();
 });
 
