@@ -26,9 +26,22 @@ beforeEach(() => {
   });
 });
 
+it("throws an error if missing query parameter `find`", async() => {
+  await supertest(app)
+    .post("/flows/1/search")
+    .set(authHeader())
+    .expect(401)
+    .then((res) => {
+      expect(res.body).toEqual({
+        error: `Expected at least one query parameter "find"`
+      });
+    });
+});
+
 it("finds matches", async() => {
   await supertest(app)
-    .get("/flows/1/find/designated.monument")
+    .post("/flows/1/search?find=designated.monument")
+    .set(authHeader())
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual({
@@ -51,19 +64,19 @@ it("finds matches", async() => {
 
 it("does not replace if no matches are found", async () => {
   await supertest(app)
-    .post("/flows/1/find/bananas/replace/monument")
+    .post("/flows/1/search?find=bananas&replace=monument")
     .set(authHeader())
     .expect(200)
     .then((res) => {
       expect(res.body).toEqual({
-        message: `Didn't find "bananas" in this flow, nothing to replace.`,
+        message: `Didn't find "bananas" in this flow, nothing to replace`,
       });
     });
 });
 
 it("updates flow data and returns matches if there are matches", async () => {
   await supertest(app)
-    .post("/flows/1/find/designated.monument/replace/monument")
+    .post("/flows/1/search?find=designated.monument&replace=monument")
     .set(authHeader())
     .expect(200)
     .then((res) => {
