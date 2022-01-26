@@ -211,34 +211,38 @@ function GetAddress(props: {
     Boolean(addressesInPostcode.length) &&
     Boolean(blpuCodes?.blpu_codes?.length)
   ) {
-    addressesInPostcode.map((a: any) => {
-      addresses.push({
-        uprn: a.LPI.UPRN.padStart(12, "0"),
-        blpu_code: a.LPI.BLPU_STATE_CODE,
-        latitude: a.LPI.LAT,
-        longitude: a.LPI.LNG,
-        organisation: a.LPI.ORGANISATION || null,
-        sao: a.LPI.SAO_TEXT,
-        pao: [a.LPI.PAO_START_NUMBER, a.LPI.PAO_START_SUFFIX]
-          .filter(Boolean)
-          .join(""), // docs reference PAO_TEXT, but not found in resp so roll our own
-        street: a.LPI.STREET_DESCRIPTION,
-        town: a.LPI.TOWN_NAME,
-        postcode: a.LPI.POSTCODE_LOCATOR,
-        x: a.LPI.X_COORDINATE,
-        y: a.LPI.Y_COORDINATE,
-        planx_description:
-          find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
-            ?.description || null,
-        planx_value:
-          find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
-            ?.value || null,
-        single_line_address: a.LPI.ADDRESS,
-        administrative_area: a.LPI.ADMINISTRATIVE_AREA, // local highway authority name (proxy for local authority?)
-        local_custodian_code: a.LPI.LOCAL_CUSTODIAN_CODE_DESCRIPTION, // similar to GSS_CODE, but may not reflect merged councils
-        title: a.LPI.ADDRESS.split(`, ${a.LPI.ADMINISTRATIVE_AREA}`)[0], // display value used in autocomplete dropdown & FindProperty
+    // Only show "APPROVED" addresses, filter out "ALTERNATIVE", "HISTORIC", or "PROVISIONAL" records
+    // https://www.ordnancesurvey.co.uk/documents/product-support/tech-spec/addressbase-premium-technical-specification.pdf (p61)
+    addressesInPostcode
+      .filter((a) => a.LPI.LPI_LOGICAL_STATUS_CODE_DESCRIPTION === "APPROVED")
+      .map((a) => {
+        addresses.push({
+          uprn: a.LPI.UPRN.padStart(12, "0"),
+          blpu_code: a.LPI.BLPU_STATE_CODE,
+          latitude: a.LPI.LAT,
+          longitude: a.LPI.LNG,
+          organisation: a.LPI.ORGANISATION || null,
+          sao: a.LPI.SAO_TEXT,
+          pao: [a.LPI.PAO_START_NUMBER, a.LPI.PAO_START_SUFFIX]
+            .filter(Boolean)
+            .join(""), // docs reference PAO_TEXT, but not found in resp so roll our own
+          street: a.LPI.STREET_DESCRIPTION,
+          town: a.LPI.TOWN_NAME,
+          postcode: a.LPI.POSTCODE_LOCATOR,
+          x: a.LPI.X_COORDINATE,
+          y: a.LPI.Y_COORDINATE,
+          planx_description:
+            find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
+              ?.description || null,
+          planx_value:
+            find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
+              ?.value || null,
+          single_line_address: a.LPI.ADDRESS,
+          administrative_area: a.LPI.ADMINISTRATIVE_AREA, // local highway authority name (proxy for local authority?)
+          local_custodian_code: a.LPI.LOCAL_CUSTODIAN_CODE_DESCRIPTION, // similar to GSS_CODE, but may not reflect merged councils
+          title: a.LPI.ADDRESS.split(`, ${a.LPI.ADMINISTRATIVE_AREA}`)[0], // display value used in autocomplete dropdown & FindProperty
+        });
       });
-    });
   }
 
   // Autocomplete overrides
