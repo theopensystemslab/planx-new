@@ -43,17 +43,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DebugConsole = () => {
-  const [
-    passport,
-    breadcrumbs,
-    flowId,
-    cachedBreadcrumbs,
-  ] = useStore((state) => [
-    state.computePassport(),
-    state.breadcrumbs,
-    state.id,
-    state.cachedBreadcrumbs,
-  ]);
+  const [passport, breadcrumbs, flowId, cachedBreadcrumbs] = useStore(
+    (state) => [
+      state.computePassport(),
+      state.breadcrumbs,
+      state.id,
+      state.cachedBreadcrumbs,
+    ]
+  );
   const classes = useStyles();
   return (
     <div className={classes.console}>
@@ -262,6 +259,8 @@ const PreviewBrowser: React.FC<{
                           : "No new changes to publish"
                       );
                     } catch (error) {
+                      setLastPublishedTitle("Error trying to publish");
+                      alert(error);
                       console.log(error);
                     }
                   }}

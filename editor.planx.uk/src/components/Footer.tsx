@@ -59,7 +59,7 @@ export default function Footer(props: Props) {
             <FooterItem {...item} key={item.title} />
           ))}
         {feedbackFishId && (
-          <ButtonBase disableRipple>
+          <ButtonBase>
             <FeedbackFish projectId={feedbackFishId}>
               <Typography variant="body2" className={classes.link}>
                 Feedback
@@ -95,7 +95,7 @@ function FooterItem(props: {
       {title}
     </Link>
   ) : (
-    <ButtonBase onClick={props.onClick} className={classes.link} disableRipple>
+    <ButtonBase onClick={props.onClick} className={classes.link}>
       {title}
     </ButtonBase>
   );
