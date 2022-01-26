@@ -182,13 +182,7 @@ function GetAddress(props: {
         const concatenated = addressesInPostcode.concat(data.results || []);
         setAddressesInPostcode(concatenated);
         setTotalAddresses(data.header.totalresults);
-        console.log(
-          "fetched",
-          concatenated.length,
-          "/",
-          data.header.totalresults
-        );
-        return data;
+        // console.log("fetched", concatenated.length, "/", data.header.totalresults);
       });
 
   const { data } = useSWR(

@@ -41,10 +41,10 @@ test.skip("renders correctly", async () => {
   );
 
   await waitFor(async () => {
-    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
+    userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
   });
   await waitFor(async () => {
-    await userEvent.type(screen.getByTestId("autocomplete-input"), "75");
+    userEvent.type(screen.getByTestId("autocomplete-input"), "75");
   });
   await act(async () => {
     userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
