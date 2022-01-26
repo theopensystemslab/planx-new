@@ -16,7 +16,6 @@ import debounce from "lodash/debounce";
 import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
 import type { FlowSettings, TextContent } from "types";
-import { getLoggedInUserId } from "utils";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { FlowLayout } from "../../components/Flow";
@@ -57,7 +56,7 @@ export interface EditorStore extends Store.Store {
   connect: (src: Store.nodeId, tgt: Store.nodeId, object?: any) => void;
   connectTo: (id: Store.nodeId) => void;
   copyNode: (id: Store.nodeId) => void;
-  createFlow: (teamId: any, newSlug: any) => Promise<string>;
+  createFlow: (teamId: any, newSlug: any, creatorId: number) => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   diffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<any>;
@@ -146,9 +145,8 @@ export const editorStore = (
     localStorage.setItem("clipboard", id);
   },
 
-  createFlow: async (teamId, newSlug) => {
+  createFlow: async (teamId, newSlug, creatorId) => {
     const data = { [ROOT_NODE_KEY]: { edges: [] } };
-    const creatorId = getLoggedInUserId();
     let response = (await client.mutate({
       mutation: gql`
         mutation CreateFlow(

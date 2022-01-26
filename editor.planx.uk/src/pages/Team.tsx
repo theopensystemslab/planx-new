@@ -19,7 +19,7 @@ import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import FolderOutlined from "@material-ui/icons/FolderOutlined";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigation } from "react-navi";
+import { Link, useCurrentRoute, useNavigation } from "react-navi";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
@@ -307,6 +307,7 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
   useEffect(() => {
     fetchFlows();
   }, [fetchFlows]);
+  const creatorId = useCurrentRoute().data?.currentUser?.userId;
   return (
     <Box className={classes.root}>
       <Box className={classes.dashboard}>
@@ -337,7 +338,7 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
                   const newFlowSlug = slugify(newFlowName);
                   useStore
                     .getState()
-                    .createFlow(id, newFlowSlug)
+                    .createFlow(id, newFlowSlug, creatorId)
                     .then((newId: string) => {
                       navigation.navigate(`/${slug}/${newId}`);
                     });

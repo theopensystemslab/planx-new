@@ -6,8 +6,10 @@ import Login from "../pages/Login";
 import NetworkError from "../pages/NetworkError";
 import { makeTitle } from "./utils";
 
-type RoutingContext = {
-  currentUser?: any;
+export type RoutingContext = {
+  currentUser?: {
+    userId: number;
+  };
 };
 
 const editorRoutes = mount({
@@ -17,7 +19,7 @@ const editorRoutes = mount({
   }),
 
   "/login": map(async (req, context: RoutingContext) =>
-    context.currentUser
+    Boolean(context.currentUser?.userId)
       ? redirect(
           req.params.redirectTo
             ? decodeURIComponent(req.params.redirectTo)
@@ -48,7 +50,7 @@ const editorRoutes = mount({
   }),
 
   "*": map(async (req, context: RoutingContext) =>
-    context.currentUser
+    Boolean(context.currentUser?.userId)
       ? lazy(() => import("./authenticated"))
       : redirect(`/login/?redirectTo=${encodeURIComponent(req.originalUrl)}`, {
           exact: false,

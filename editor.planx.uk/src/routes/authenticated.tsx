@@ -11,9 +11,10 @@ import Teams from "../pages/Teams";
 import { makeTitle } from "./utils";
 
 const editorRoutes = compose(
-  withData((req) => ({
+  withData((req, context) => ({
     // just putting anything here for now
     username: "A",
+    ...context,
   })),
 
   withView(() => <AuthenticatedLayout />),

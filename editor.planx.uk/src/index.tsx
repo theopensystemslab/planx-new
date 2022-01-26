@@ -15,6 +15,7 @@ import { render } from "react-dom";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
 import HelmetProvider from "react-navi-helmet-async";
 import { ToastContainer } from "react-toastify";
+import { RoutingContext } from "routes";
 
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import { client } from "./lib/graphql";
@@ -27,30 +28,27 @@ if (!window.customElements.get("my-map")) {
   window.customElements.define("my-map", MyMap);
 }
 
-const hasJWT = (): boolean | void => {
-  let jwt = getCookie("jwt");
-  if (jwt) {
-    try {
-      if (
-        Number(
-          (jwtDecode(jwt) as any)["https://hasura.io/jwt/claims"][
-            "x-hasura-user-id"
-          ]
-        ) > 0
-      ) {
-        return true;
-      }
-    } catch (e) {}
+const setJWTCookieFromQueryParams = (): void => {
+  const jwt = new URLSearchParams(window.location.search).get("jwt");
+  if (!jwt) return;
+  // Set the JWT, and remove it from the url
+  setCookie("jwt", jwt);
+  window.location.href = "/";
+};
+
+const getContextFromJWT = (): RoutingContext | undefined => {
+  const jwt = getCookie("jwt") || setJWTCookieFromQueryParams();
+  // Re-run this function if we did not get the JWT from the cookie
+  if (!jwt) return;
+  try {
+    const userId = Number(
+      (jwtDecode(jwt!) as any)["https://hasura.io/jwt/claims"][
+        "x-hasura-user-id"
+      ]
+    );
+    return { currentUser: { userId } };
+  } catch (e) {
     window.location.href = "/logout";
-  } else {
-    jwt = new URLSearchParams(window.location.search).get("jwt");
-    if (jwt) {
-      setCookie("jwt", jwt);
-      // set the jwt, and remove it from the url, then re-run this function
-      window.location.href = "/";
-    } else {
-      return false;
-    }
   }
 };
 
@@ -74,7 +72,7 @@ const Layout: React.FC<{
 render(
   <>
     <ApolloProvider client={client}>
-      <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
+      <Router context={getContextFromJWT()} navigation={navigation}>
         <HelmetProvider>
           <Layout>
             <CssBaseline />
