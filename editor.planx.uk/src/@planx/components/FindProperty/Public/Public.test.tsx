@@ -1,5 +1,11 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { act, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-helper";
 import React from "react";
@@ -26,6 +32,29 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
       },
     } as any)
 );
+
+test.skip("it renders an error if you submit an invalid postcode", async () => {
+  const handleSubmit = jest.fn();
+
+  render(
+    <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        handleSubmit={handleSubmit}
+      />
+    </MockedProvider>
+  );
+
+  await waitFor(() => userEvent.type(screen.getByLabelText("Postcode"), "SE5"))
+    .then(() =>
+      fireEvent.keyDown(screen.getByLabelText("Postcode"), { key: "Enter" })
+    )
+    .then(
+      () =>
+        expect(screen.getByText("Enter a valid UK postcode")).toBeInTheDocument
+    );
+});
 
 test.skip("renders correctly", async () => {
   const handleSubmit = jest.fn();
