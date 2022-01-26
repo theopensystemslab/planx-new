@@ -211,9 +211,9 @@ function GetAddress(props: {
     Boolean(addressesInPostcode.length) &&
     Boolean(blpuCodes?.blpu_codes?.length)
   ) {
-    // Only show "APPROVED" addresses, filter out "ALTERNATIVE", "HISTORIC", or "PROVISIONAL" records
-    // https://www.ordnancesurvey.co.uk/documents/product-support/tech-spec/addressbase-premium-technical-specification.pdf (p61)
     addressesInPostcode
+      // Only show "APPROVED" addresses, filter out "ALTERNATIVE", "HISTORIC", or "PROVISIONAL" records
+      // https://www.ordnancesurvey.co.uk/documents/product-support/tech-spec/addressbase-premium-technical-specification.pdf (p61)
       .filter((a) => a.LPI.LPI_LOGICAL_STATUS_CODE_DESCRIPTION === "APPROVED")
       .map((a) => {
         addresses.push({
