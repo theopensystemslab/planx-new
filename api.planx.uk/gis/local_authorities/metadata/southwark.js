@@ -184,7 +184,7 @@ const planningConstraints = {
       description: data.NAME,
     }),
   },
-  "designated.monument": { value: false },
+  "monument": { value: false },
   tpo: {
     key: "tpo",
     source: "Southwark Maps",
