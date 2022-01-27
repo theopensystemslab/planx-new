@@ -43,7 +43,6 @@ interface QuestionsProps {
 
 const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   const [
-    currentCard,
     previousCard,
     record,
     breadcrumbs,
@@ -55,7 +54,6 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     canGoBack,
     setPreviewEnvironment,
   ] = useStore((state) => [
-    state.currentCard,
     state.previousCard(),
     state.record,
     state.breadcrumbs,
@@ -68,9 +66,8 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     state.setPreviewEnvironment,
   ]);
   const isStandalone = previewEnvironment === "standalone";
-  const node = currentCard();
   const flow = useContext(PreviewContext)?.flow;
-  const { createAnalytics } = useAnalyticsTracking();
+  const { createAnalytics, node } = useAnalyticsTracking();
   const classes = useClasses();
 
   const showBackButton = node?.id ? canGoBack(node.id) : false;

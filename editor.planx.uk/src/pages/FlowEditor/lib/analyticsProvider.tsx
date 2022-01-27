@@ -1,10 +1,10 @@
 import { gql } from "@apollo/client";
 import { TYPES } from "@planx/components/types";
 import { client } from "lib/graphql";
-import React, { createContext,useContext,useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { DEFAULT_FLAG_CATEGORY } from "../data/flags";
-import { useStore } from "./store";
+import { Store, useStore } from "./store";
 
 export type AnalyticsType = "init" | "resume";
 type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
@@ -12,17 +12,17 @@ type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
 let lastAnalyticsLogId: number | undefined = undefined;
 
 const analyticsContext = createContext<{
-  createAnalytics: (type: AnalyticsType) => Promise<void>,
-  trackHelpClick: () => Promise<void>
+  createAnalytics: (type: AnalyticsType) => Promise<void>;
+  trackHelpClick: () => Promise<void>;
+  node: Store.node | null;
 }>({
   createAnalytics: () => Promise.resolve(),
   trackHelpClick: () => Promise.resolve(),
+  node: null,
 });
 const { Provider } = analyticsContext;
 
-export const AnalyticsProvider: React.FC = ({
-  children,
-}) => {
+export const AnalyticsProvider: React.FC = ({ children }) => {
   const [
     currentCard,
     breadcrumbs,
@@ -64,10 +64,11 @@ export const AnalyticsProvider: React.FC = ({
   };
 
   useEffect(() => {
-    if(isStandalone) document.addEventListener("visibilitychange", onPageExit);
+    if (isStandalone) document.addEventListener("visibilitychange", onPageExit);
     return () => {
-      if(isStandalone) document.removeEventListener("visibilitychange", onPageExit);
-    }
+      if (isStandalone)
+        document.removeEventListener("visibilitychange", onPageExit);
+    };
   }, []);
 
   // Track component transition
@@ -84,10 +85,13 @@ export const AnalyticsProvider: React.FC = ({
   }, [breadcrumbs]);
 
   return (
-    <Provider value={{
-      createAnalytics,
-      trackHelpClick,
-    }}>
+    <Provider
+      value={{
+        createAnalytics,
+        trackHelpClick,
+        node,
+      }}
+    >
       {children}
     </Provider>
   );
