@@ -209,7 +209,7 @@ function ConstraintsList({ data, refreshConstraints }: any) {
           </Typography>
           <Typography variant="body2">
             Click the link below to try to fetch again. If you continue, you may
-            be asked to answer questions about planning constraints effecting
+            be asked to answer questions about planning constraints affecting
             your property later in the application.
           </Typography>
           <button onClick={refreshConstraints}>Try again</button>
