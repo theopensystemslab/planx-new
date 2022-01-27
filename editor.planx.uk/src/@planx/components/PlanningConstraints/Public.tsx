@@ -39,6 +39,7 @@ function Component(props: Props) {
     data: constraints,
     error,
     mutate,
+    isValidating,
   } = useSWR(
     () =>
       x && y
@@ -57,7 +58,7 @@ function Component(props: Props) {
 
   return (
     <>
-      {constraints ? (
+      {!isValidating ? (
         <PlanningConstraintsInformation
           title={props.title}
           description={props.description || ""}
