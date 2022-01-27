@@ -17,17 +17,25 @@ test("renders correctly", async () => {
   expect(screen.getByRole("heading")).toHaveTextContent("Numberwang!");
 
   await act(async () => {
-    await userEvent.click(screen.getByText("Continue"));
-  });
-
-  expect(handleSubmit).toHaveBeenCalledTimes(0);
-
-  await act(async () => {
-    await userEvent.type(screen.getByPlaceholderText("enter value"), "3");
+    await userEvent.type(screen.getByLabelText("Numberwang!"), "3");
     await userEvent.click(screen.getByText("Continue"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { num: 3 } });
+});
+
+test("requires a value before being able to continue", async () => {
+  const handleSubmit = jest.fn();
+
+  render(
+    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />
+  );
+
+  await act(async () => {
+    await userEvent.click(screen.getByText("Continue"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledTimes(0);
 });
 
 test("recovers previously submitted number when clicking the back button", async () => {

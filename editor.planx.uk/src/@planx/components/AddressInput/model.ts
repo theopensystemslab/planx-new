@@ -24,7 +24,6 @@ export const userDataSchema: SchemaOf<UserData> = object({
 export interface AddressInput extends MoreInformation {
   title: string;
   description?: string;
-  placeholder?: string;
   fn?: string;
 }
 
@@ -33,7 +32,6 @@ export const parseAddressInput = (
 ): AddressInput => ({
   title: data?.title || "",
   description: data?.description,
-  placeholder: data?.placeholder,
   fn: data?.fn || "",
   ...parseMoreInformation(data),
 });

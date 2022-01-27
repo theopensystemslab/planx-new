@@ -78,14 +78,6 @@ const TextInputComponent: React.FC<Props> = (props) => {
           </InputRow>
           <InputRow>
             <Input
-              placeholder="Placeholder"
-              name="placeholder"
-              value={formik.values.placeholder}
-              onChange={formik.handleChange}
-            />
-          </InputRow>
-          <InputRow>
-            <Input
               // required
               format="data"
               name="fn"

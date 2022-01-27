@@ -70,7 +70,6 @@ export default function NumberInputComponent(props: Props): FCReturn {
             bordered
             name="value"
             type="number"
-            placeholder="enter value"
             value={formik.values.value}
             onChange={formik.handleChange}
             errorMessage={formik.errors.value as string}

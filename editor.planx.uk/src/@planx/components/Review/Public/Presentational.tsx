@@ -139,7 +139,6 @@ function Component(props: Props) {
                       <dd>
                         <ButtonBase
                           className={button}
-                          disableRipple
                           onClick={() => handleClick(nodeId)}
                         >
                           Change
@@ -314,9 +313,8 @@ function NumberInput(props: ComponentProps) {
 }
 
 function AddressInput(props: ComponentProps) {
-  const { line1, line2, town, county, postcode, country } = getAnswersByNode(
-    props
-  );
+  const { line1, line2, town, county, postcode, country } =
+    getAnswersByNode(props);
 
   return (
     <>

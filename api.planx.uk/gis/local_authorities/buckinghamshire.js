@@ -13,7 +13,7 @@ const { planningConstraints } = require("./metadata/buckinghamshire.js");
 // Process local authority metadata
 const gisLayers = getQueryableConstraints(planningConstraints);
 const preCheckedLayers = getManualConstraints(planningConstraints);
-const articleFours = {}; // "planningConstraints.article4.records" in future
+const articleFours = planningConstraints.article4.records;
 
 // Fetch a data layer
 async function search(
@@ -70,7 +70,10 @@ async function go(x, y, siteBoundary, extras) {
 
           try {
             if (data.features.length > 0) {
-              const { attributes: properties } = data.features[0];
+              // account for multiple, overlapping features in a single source
+              const properties = [];
+              data.features.forEach(feature => properties.push(feature.attributes));
+
               acc[k] = {
                 ...planningConstraints[key].pos(properties),
                 value: true,
@@ -83,7 +86,7 @@ async function go(x, y, siteBoundary, extras) {
                   text: planningConstraints[key].neg,
                   value: false,
                   type: "check",
-                  data: {},
+                  data: [],
                 };
               }
             }
@@ -94,28 +97,28 @@ async function go(x, y, siteBoundary, extras) {
           return acc;
         },
         {
-          ...Object.values(articleFours).reduce((acc, curr) => {
-            acc[curr] = { value: false };
-            return acc;
-          }, {}),
           ...preCheckedLayers,
           ...extras,
         }
       );
 
-    ob["article4.buckinghamshire.officetoresi"] = {
-      value: ob["article4"]?.data?.DESCRIPTIO?.startsWith(
-        "Change of use from offices to residential"
-      )
-        ? true
-        : false,
-    };
-
-    ob["article4.buckinghamshire.poultry"] = {
-      value: ob["article4"]?.data?.DEV_TYPE?.toLowerCase().includes("poultry")
-        ? true
-        : false,
-    };
+    // Loop through article4 features and set granular planx values
+    if (ob["article4"].data.length > 0) {
+      ob["article4"].data.forEach((d) => {
+        (Object.keys(articleFours)).forEach((key) => {
+          // Account for line breaks/newlines in DEV_TYPE formatting
+          if (d.DEV_TYPE.replace(/\r?\n|\r/g, " ") === articleFours[key] || ob[key]?.value) {
+            ob[key] = { value: true }
+          } else if (d.INT_ID === articleFours[key] || ob[key]?.value) {
+            ob[key] = { value: true }
+          } else if (d.DESCRIPTIO.startsWith(articleFours[key]) || ob[key]?.value) {
+            ob[key] = { value: true }
+          } else {
+            ob[key] = { value: false }
+          }
+        });
+      });
+    }
 
     // Add summary "designated" key to response
     const obWithDesignated = addDesignatedVariable(ob);
