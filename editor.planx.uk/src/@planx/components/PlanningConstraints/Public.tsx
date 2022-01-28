@@ -58,7 +58,7 @@ function Component(props: Props) {
 
   return (
     <>
-      {!isValidating ? (
+      {!isValidating && constraints ? (
         <PlanningConstraintsInformation
           title={props.title}
           description={props.description || ""}
