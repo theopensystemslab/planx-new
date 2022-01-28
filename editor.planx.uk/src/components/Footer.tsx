@@ -4,7 +4,7 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import classnames from "classnames";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-navi";
 
 const useClasses = makeStyles((theme) => ({
@@ -26,6 +26,23 @@ const useClasses = makeStyles((theme) => ({
   bold: {
     fontWeight: 800,
   },
+  wrapper: {
+    position: "absolute",
+    transform: "translate3d(-24px, -230px, 0px)",
+    width: "320px",
+    borderRadius: "16px 16px 0 0",
+    backgroundColor: "white",
+    // boxShadow: "rgb(0 0 0 / 20%) 0px 18px 50px -10px",
+    zIndex: 1000000,
+    "& p": {
+      textAlign: "center",
+      fontSize: "10px",
+      backgroundColor: theme.palette.primary.light,
+      borderRadius: "16px 16px 0 0",
+      padding: "7px",
+      marginTop: 0,
+    },
+  },
 }));
 
 interface Item {
@@ -40,11 +57,46 @@ export interface Props {
   children?: React.ReactNode;
 }
 
+const useOutsideAlerter = (
+  ref: any,
+  isFeedbackFishOpen: boolean,
+  setIsFeedbackFishOpen: any
+) => {
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (isFeedbackFishOpen) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setIsFeedbackFishOpen(false);
+        }
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref, isFeedbackFishOpen]);
+};
+
 export default function Footer(props: Props) {
   const { items, children } = props;
   const classes = useClasses();
-
+  const [isFeedbackFishOpen, setIsFeedbackFishOpen] = useState(false);
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef, isFeedbackFishOpen, setIsFeedbackFishOpen);
   const feedbackFishId = process.env.REACT_APP_FEEDBACK_FISH_ID;
+  const iframe = document.getElementsByTagName("iframe")[0];
+
+  // useEffect(() => {
+  //   const isOpen = iframe?.style?.display === "block";
+  //   console.log(isOpen)
+  //   if (isOpen) setIsFeedbackFishOpen(!isFeedbackFishOpen)
+  // }, [iframe?.style?.display]);
+
+  // const toggleFeedbackFish = () => {
+  //   ;
+  //   const iframe = ;
+  //   isFeedbackFishOpen ? iframe.style.display = "block" : iframe.style.display === "none";
+  // }
 
   return (
     <footer className={classes.root}>
@@ -58,8 +110,16 @@ export default function Footer(props: Props) {
           .map((item) => (
             <FooterItem {...item} key={item.title} />
           ))}
+        {isFeedbackFishOpen && (
+          <div className={classes.wrapper}>
+            <p>Please do not include any personal or financial information</p>
+          </div>
+        )}
         {feedbackFishId && (
-          <ButtonBase>
+          <ButtonBase
+            // onClick={() => toggleFeedbackFish()}
+            ref={wrapperRef}
+          >
             <FeedbackFish projectId={feedbackFishId}>
               <Typography variant="body2" className={classes.link}>
                 Feedback
