@@ -131,8 +131,9 @@ function Component(props: Props) {
         teamColor={data?.teams?.[0].theme?.primary || "#2c2c2c"}
         error={
           // if neither admin area nor LCC match team, then show error
-          address.administrative_area !== team.toUpperCase() ||
-          address.local_custodian_code !== team.toUpperCase()
+          ![address.administrative_area, address.local_custodian_code].includes(
+            team.toUpperCase()
+          )
         }
       />
     );
@@ -219,7 +220,7 @@ function GetAddress(props: {
           sao: a.LPI.SAO_TEXT,
           pao: [a.LPI.PAO_START_NUMBER, a.LPI.PAO_START_SUFFIX]
             .filter(Boolean)
-            .join(""), // docs reference PAO_TEXT, but not found in resp so roll our own
+            .join(""), // docs reference PAO_TEXT, but not found in response so roll our own
           street: a.LPI.STREET_DESCRIPTION,
           town: a.LPI.TOWN_NAME,
           postcode: a.LPI.POSTCODE_LOCATOR,
