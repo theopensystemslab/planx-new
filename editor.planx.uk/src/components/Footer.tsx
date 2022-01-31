@@ -1,10 +1,14 @@
 import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import ButtonBase from "@material-ui/core/ButtonBase";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import classnames from "classnames";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-navi";
 
 const useClasses = makeStyles((theme) => ({
@@ -43,8 +47,35 @@ export interface Props {
 export default function Footer(props: Props) {
   const { items, children } = props;
   const classes = useClasses();
+  const [feedbackPrivacyNoteVisible, setFeedbackPrivacyNoteVisible] =
+    useState(false);
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        // the feedback fish widget posts a message that's either
+        // {"width":0,"height":0} if the iframe is hidden
+        // or {"width":320,"height":200} if the iframe is visible
+        if (event.origin.endsWith("feedback.fish")) {
+          const { width, height } = JSON.parse(event.data);
+          setFeedbackPrivacyNoteVisible(width > 0 && height > 0);
+        }
+      } catch (err) {}
+    };
+    window.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  });
 
   const feedbackFishId = process.env.REACT_APP_FEEDBACK_FISH_ID;
+
+  const handleFeedbackPrivacyNoteClose = (e: React.MouseEvent) => {
+    setFeedbackPrivacyNoteVisible(false);
+    // prevent click from propagating to feedback fish listener,
+    // as it would close the widget otherwise
+    e.stopPropagation();
+  };
 
   return (
     <footer className={classes.root}>
@@ -59,13 +90,35 @@ export default function Footer(props: Props) {
             <FooterItem {...item} key={item.title} />
           ))}
         {feedbackFishId && (
-          <ButtonBase>
-            <FeedbackFish projectId={feedbackFishId}>
-              <Typography variant="body2" className={classes.link}>
-                Feedback
-              </Typography>
-            </FeedbackFish>
-          </ButtonBase>
+          <>
+            {feedbackPrivacyNoteVisible && (
+              <Dialog
+                // XXX: only render dialog when visible & open=true by default,
+                //      otherwise clicking modal BG also closes feedback widget
+                open
+                onClose={handleFeedbackPrivacyNoteClose}
+                // feedback fish uses z-index of 999999 :(
+                style={{ zIndex: 999999 + 1 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <DialogContent>
+                  Please do not include any personal or financial information in
+                  your feedback
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleFeedbackPrivacyNoteClose}>OK</Button>
+                </DialogActions>
+              </Dialog>
+            )}
+
+            <ButtonBase>
+              <FeedbackFish projectId={feedbackFishId}>
+                <Typography variant="body2" className={classes.link}>
+                  Feedback
+                </Typography>
+              </FeedbackFish>
+            </ButtonBase>
+          </>
         )}
       </Box>
       <Box py={4}>{children}</Box>
