@@ -86,8 +86,8 @@ export default function Footer(props: FooterProps) {
   const [intervalID, setIntervalID] = useState<number>();
   const toggleFeedbackFish = () => setIsFeedbackFishOpen(!isFeedbackFishOpen);
 
-  // When the FeedbackFish dialog is open, we cannot observe it's DOM as it's within a cross-domain iFrame
-  // Create an interval to check it's visibility periodically, and clear the interval when the dialog closes
+  // When the FeedbackFish dialog is open, we cannot observe its DOM as it is within a cross-domain iFrame
+  // Create an interval to check the visibility periodically, and clear the interval when the dialog closes
   useEffect(
     () => (isFeedbackFishOpen ? createInterval() : destroyInterval()),
     [isFeedbackFishOpen]
