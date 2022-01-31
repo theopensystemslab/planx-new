@@ -5,9 +5,11 @@ import { Story } from "@storybook/react";
 import React from "react";
 import Logo from "ui/images/OGLLogo.svg";
 
-import Footer, { Props } from "./Footer";
+import Footer, { FooterProps } from "./Footer";
 
-const Template: Story<Props> = (args: Props) => <Footer {...args} />;
+const Template: Story<FooterProps> = (args: FooterProps) => (
+  <Footer {...args} />
+);
 
 export const Basic = Template.bind({});
 Basic.args = {
