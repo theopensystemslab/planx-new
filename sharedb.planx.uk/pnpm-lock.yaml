@@ -6,14 +6,14 @@ specifiers:
   node-dev: ^5.0.0
   pg: ^8.6.0
   sharedb: ^2.2.5
-  ws: ^7.4.6
+  ws: ^8.4.2
 
 dependencies:
   '@teamwork/websocket-json-stream': 2.0.0
   jsonwebtoken: 8.5.1
   pg: 8.7.1
   sharedb: 2.2.5
-  ws: 7.5.3
+  ws: 8.4.2
 
 devDependencies:
   node-dev: 5.2.0
@@ -356,9 +356,9 @@ packages:
       isexe: 2.0.0
     dev: true
 
-  /ws/7.5.3:
-    resolution: {integrity: sha512-kQ/dHIzuLrS6Je9+uv81ueZomEwH0qVYstcAQ4/Z93K8zeko9gtAbttJWzoC5ukqXY1PpoouV3+VSOqEAFt5wg==}
-    engines: {node: '>=8.3.0'}
+  /ws/8.4.2:
+    resolution: {integrity: sha512-Kbk4Nxyq7/ZWqr/tarI9yIt/+iNNFOjBXEWgTb4ydaNHBNGgvf2QHbS9fdfsndfjFlFwEd4Al+mw83YkaD10ZA==}
+    engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
       utf-8-validate: ^5.0.2
