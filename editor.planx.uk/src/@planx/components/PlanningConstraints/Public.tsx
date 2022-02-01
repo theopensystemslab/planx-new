@@ -52,7 +52,7 @@ function Component(props: Props) {
     {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
-      errorRetryCount: 5,
+      errorRetryCount: 1,
     }
   );
 
@@ -209,9 +209,9 @@ function ConstraintsList({ data, refreshConstraints }: any) {
             Failed to fetch data
           </Typography>
           <Typography variant="body2">
-            Click the link below to try to fetch again. If you continue, you may
-            be asked to answer questions about planning constraints affecting
-            your property later in the application.
+            Click the link below to try to fetch again. If you continue without
+            fetching data, you may be asked to answer questions about planning
+            constraints affecting this property later in the application.
           </Typography>
           <button onClick={refreshConstraints}>Try again</button>
         </div>
