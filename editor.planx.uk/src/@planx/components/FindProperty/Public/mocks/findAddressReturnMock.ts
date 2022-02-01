@@ -28,7 +28,6 @@ export default [
       data: {
         teams: [
           {
-            gss_code: "1234",
             theme: {},
           },
         ],
@@ -44,7 +43,6 @@ export default [
       data: {
         teams: [
           {
-            gss_code: "1234",
             theme: {},
           },
         ],

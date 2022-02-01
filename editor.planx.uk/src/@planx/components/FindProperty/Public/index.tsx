@@ -43,7 +43,6 @@ export const FETCH_BLPU_CODES = gql`
 export const GET_TEAM_QUERY = gql`
   query GetTeam($team: String = "") {
     teams(where: { slug: { _eq: $team } }) {
-      gss_code
       theme
     }
   }
@@ -59,9 +58,6 @@ function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
   const [address, setAddress] = useState<Address | undefined>();
   const flow = useStore((state) => state.flow);
-  // XXX: In the future, use this API to translate GSS_CODE to Team names (or just pass the GSS_CODE to the API)
-  //      https://geoportal.statistics.gov.uk/datasets/fe6bcee87d95476abc84e194fe088abb_0/data?where=LAD20NM%20%3D%20%27Lambeth%27
-  //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route?.data.mountpath.split("/")[1];
 

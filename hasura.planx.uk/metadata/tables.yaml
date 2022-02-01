@@ -1,47 +1,5 @@
 - table:
     schema: public
-    name: addresses
-  object_relationships:
-  - name: teams
-    using:
-      manual_configuration:
-        remote_table:
-          schema: public
-          name: teams
-        column_mapping:
-          gss_code: gss_code
-  computed_fields:
-  - name: full_address
-    definition:
-      function:
-        schema: public
-        name: concat_address_parts
-    comment: ""
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - blpu_code
-      - gss_code
-      - latitude
-      - longitude
-      - organisation
-      - pao
-      - planx_description
-      - planx_value
-      - postcode
-      - sao
-      - single_line_address
-      - street
-      - town
-      - uprn
-      - x
-      - "y"
-      computed_fields:
-      - full_address
-      filter: {}
-- table:
-    schema: public
     name: analytics
   insert_permissions:
   - role: public
@@ -326,14 +284,6 @@
     schema: public
     name: teams
   array_relationships:
-  - name: addresses
-    using:
-      manual_configuration:
-        remote_table:
-          schema: public
-          name: addresses
-        column_mapping:
-          gss_code: gss_code
   - name: flows
     using:
       foreign_key_constraint_on:
@@ -352,14 +302,13 @@
   - role: public
     permission:
       columns:
-      - created_at
-      - gss_code
       - id
       - name
-      - settings
       - slug
       - theme
+      - created_at
       - updated_at
+      - settings
       filter: {}
 - table:
     schema: public
