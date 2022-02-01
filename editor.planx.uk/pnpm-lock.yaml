@@ -103,7 +103,7 @@ specifiers:
   sass: ^1.45.0
   sass-loader: ^12.4.0
   scroll-into-view-if-needed: ^2.2.26
-  sharedb: ^1.8.1
+  sharedb: ^2.2.5
   storybook-addon-material-ui: ^0.9.0-alpha.24
   stream-browserify: ^3.0.0
   subscriptions-transport-ws: ^0.9.18
@@ -172,7 +172,7 @@ dependencies:
   reconnecting-websocket: 4.4.0
   rxjs: 6.6.3
   scroll-into-view-if-needed: 2.2.26
-  sharedb: 1.8.1
+  sharedb: 2.2.5
   subscriptions-transport-ws: 0.9.18_graphql@15.4.0
   swr: 0.4.0_react@17.0.2
   uuid: 8.3.2
@@ -16975,8 +16975,8 @@ packages:
   /shallowequal/1.1.0:
     resolution: {integrity: sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==}
 
-  /sharedb/1.8.1:
-    resolution: {integrity: sha512-DSDIyAS21/3paZ/QFWNl1ToCy0mih6qDJEjn/ePMzCbc3ZoYFB0dgZi6bfif1tdl2Bor6bDYy6E+5Z0RuiVsYg==}
+  /sharedb/2.2.5:
+    resolution: {integrity: sha512-uCy8Npx8Azf21PmNUGqfIKRbnisH2U+N9Z0CJILWq23+HqcWRAA5n35m/dMm4ZuTQalYeWlR2/kaV8Wm0nXr3g==}
     dependencies:
       arraydiff: 0.1.3
       async: 2.6.3
