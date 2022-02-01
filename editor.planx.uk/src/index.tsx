@@ -10,7 +10,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import { MyMap } from "@opensystemslab/map";
 import jwtDecode from "jwt-decode";
 import { getCookie, setCookie } from "lib/cookie";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { render } from "react-dom";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
 import HelmetProvider from "react-navi-helmet-async";
@@ -58,6 +58,28 @@ const Layout: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const isLoading = useLoadingRoute();
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      // set the page title based on whatever heading is currently shown
+      // on screen. If there's no heading then the title will be "PlanX"
+      document.title = [
+        document.querySelector("[role=heading],h1,h2,h3")?.textContent,
+        "PlanX",
+      ]
+        .filter(Boolean)
+        .join(" - ");
+    });
+
+    observer.observe(document.getElementById("root")!, {
+      attributes: false,
+      childList: true,
+      subtree: true,
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <NotFoundBoundary render={() => <h1>Not found</h1>}>
