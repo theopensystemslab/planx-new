@@ -258,9 +258,9 @@ export function getParams(
   // 3a. constraints that we checked, but do not intersect/apply to the property
 
   const nots = (
-    passport.data?.["_nots"]["property.constraints.planning"] || []
+    passport.data?.["_nots"]?.["property.constraints.planning"] || []
   ).reduce((acc: Record<string, boolean>, curr: string) => {
-    acc[curr] = true;
+    acc[curr] = false;
     return acc;
   }, {});
   if (Object.keys(nots).map(Boolean).length > 0) {
