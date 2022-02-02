@@ -41,6 +41,7 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
   agent_email?: string;
   proposal_details?: Array<QuestionAndResponses>;
   constraints?: Record<string, boolean>;
+  constraints_not_applicable?: Record<string, boolean>;
   files?: Array<File>;
   boundary_geojson?: Object;
   result?: {
