@@ -264,7 +264,7 @@ export function getParams(
     return acc;
   }, {});
   if (Object.keys(nots).map(Boolean).length > 0) {
-    data.constraints_not_applicable = nots;
+    data.constraints = { ...data.constraints, ...nots };
   }
 
   // 4. work status
