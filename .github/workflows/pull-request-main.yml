@@ -41,7 +41,7 @@ jobs:
       #   working-directory: e2e
 
   test_and_build:
-    uses: ./.github/workflows/reuseable/test-and-build.yml
+    uses: ./.github/workflows/test-and-build.yml
     with:
       NODE_VERSION: ${{ env.NODE_VERSION }}
       PNPM_VERSION: ${{ env.PNPM_VERSION }}
