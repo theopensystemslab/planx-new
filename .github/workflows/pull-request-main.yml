@@ -10,7 +10,6 @@ env:
   FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
-  REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
   BUILD_STORYBOOK: true
   PNPM_VERSION: 6.24.1
   NODE_VERSION: 16.13.1 # 16.13.1 = LTS
@@ -45,9 +44,9 @@ jobs:
     with:
       NODE_VERSION: 16.13.1
       PNPM_VERSION: 6.24.1
-      FULL_DOMAIN: ${{ env.FULL_DOMAIN }}
-      REACT_APP_GOOGLE_OAUTH_OVERRIDE: ${{ env.REACT_APP_GOOGLE_OAUTH_OVERRIDE }}
-      BUILD_STORYBOOK: ${{ env.BUILD_STORYBOOK }}
+      FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
+      REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
+      BUILD_STORYBOOK: false
     secrets:
       ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
       AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
