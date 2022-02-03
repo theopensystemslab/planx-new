@@ -10,6 +10,8 @@ env:
   FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
+  REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
+  BUILD_STORYBOOK: true
   PNPM_VERSION: 6.24.1
   NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
@@ -39,56 +41,56 @@ jobs:
       #   working-directory: e2e
 
   test_and_build:
-    name: Test and Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm install
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm test
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm build
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-        env:
-          REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
-          REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
-          REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
-          REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
-          REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
-          REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
-          # needed because there's no API to change google's allowed OAuth URLs
-          REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
-      - run: pnpm build-storybook
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-        # same env as above, if it's job.env it can't access existing env.[variable]
-        env:
-          REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
-          REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
-          REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
-          REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
-          REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
-          REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
-          REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
-          if-no-files-found: error
+    uses: ./reuseable/test-and-build.yml
+    with:
+      NODE_VERSION: ${{ env.NODE_VERSION }}
+      PNPM_VERSION: ${{ env.PNPM_VERSION }}
+      FULL_DOMAIN: ${{ env.FULL_DOMAIN }}
+      REACT_APP_GOOGLE_OAUTH_OVERRIDE: ${{ env.REACT_APP_GOOGLE_OAUTH_OVERRIDE }}
+      BUILD_STORYBOOK: ${{ env.BUILD_STORYBOOK }}
+    secrets:
+      ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
+      AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+      AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+
+    # name: Test and Build
+    # runs-on: ubuntu-latest
+    # steps:
+    #   - uses: actions/checkout@v2
+    #   - uses: pnpm/action-setup@v2.0.1
+    #     with:
+    #       version: ${{ env.PNPM_VERSION }}
+    #   - uses: actions/setup-node@v2
+    #     with:
+    #       node-version: ${{ env.NODE_VERSION }}
+    #       cache: "pnpm"
+    #       cache-dependency-path: "**/pnpm-lock.yaml"
+    #   - run: pnpm install
+    #     working-directory: ${{ env.EDITOR_DIRECTORY }}
+    #   - run: pnpm test
+    #     working-directory: ${{ env.EDITOR_DIRECTORY }}
+    #   - run: pnpm build
+    #     working-directory: ${{ env.EDITOR_DIRECTORY }}
+    #     env:
+    #       REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
+    #       REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+    #       REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
+    #       REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
+    #       REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
+    #       REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
+    #       REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
+    #       # needed because there's no API to change google's allowed OAuth URLs
+    #       REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
+    #   - name: Upload Build Artifact
+    #     uses: actions/upload-artifact@v2
+    #     with:
+    #       name: build
+    #       path: ./${{ env.EDITOR_DIRECTORY }}/build
+    #       if-no-files-found: error
 
   preview:
     name: Pulumi Preview
-    needs: [integration_tests, test_and_build]
+    needs: [integration_tests, test_and_build] # Handle this
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
