@@ -43,8 +43,8 @@ jobs:
   test_and_build:
     uses: ./.github/workflows/test-and-build.yml
     with:
-      NODE_VERSION: ${{ env.NODE_VERSION }}
-      PNPM_VERSION: ${{ env.PNPM_VERSION }}
+      NODE_VERSION: 16.13.1
+      PNPM_VERSION: 6.24.1
       FULL_DOMAIN: ${{ env.FULL_DOMAIN }}
       REACT_APP_GOOGLE_OAUTH_OVERRIDE: ${{ env.REACT_APP_GOOGLE_OAUTH_OVERRIDE }}
       BUILD_STORYBOOK: ${{ env.BUILD_STORYBOOK }}
