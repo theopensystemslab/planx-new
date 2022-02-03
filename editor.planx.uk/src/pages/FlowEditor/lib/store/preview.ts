@@ -6,6 +6,7 @@ import { client } from "lib/graphql";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import difference from "lodash/difference";
 import flatten from "lodash/flatten";
+import isEqual from "lodash/isEqual";
 import isNil from "lodash/isNil";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
@@ -18,7 +19,8 @@ import type { Store } from ".";
 import type { SharedStore } from "./shared";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
-
+let memoizedPreviousCardId: string | undefined = undefined;
+let memoizedBreadcrumb: Store.breadcrumbs | undefined = undefined;
 export interface PreviewStore extends Store.Store {
   collectedFlags: (
     upToNodeId: Store.nodeId,
@@ -56,6 +58,10 @@ export interface PreviewStore extends Store.Store {
   cachedBreadcrumbs?: Store.cachedBreadcrumbs;
   analyticsId?: number;
   setAnalyticsId: (analyticsId: number) => void;
+  restore: boolean;
+  changeAnswer: (id: string) => void;
+  changedNode: string | undefined;
+  _nodesPendingEdit: string[];
 }
 
 export const previewStore = (
@@ -68,6 +74,13 @@ export const previewStore = (
 
   setGovUkPayment(govUkPayment) {
     set({ govUkPayment });
+  },
+
+  // XXX: This function assumes there's only one "Review" component per flow.
+  changeAnswer(id: string) {
+    const { record } = get();
+    set({ restore: true, changedNode: id });
+    record(id, undefined);
   },
 
   collectedFlags(upToNodeId, visited = []) {
@@ -127,11 +140,45 @@ export const previewStore = (
   },
 
   previousCard: () => {
-    const goBackable = Object.entries(get().breadcrumbs)
+    const {
+      breadcrumbs,
+      upcomingCardIds,
+      flow,
+      _nodesPendingEdit,
+      currentCard,
+      changedNode,
+    } = get();
+    const goBackable = Object.entries(breadcrumbs)
       .filter(([, v]) => !v.auto)
       .map(([k]) => k);
 
-    return goBackable.pop();
+    if (changedNode && currentCard()?.id === changedNode) return;
+
+    if (_nodesPendingEdit.length || goBackable.length <= 1) {
+      return goBackable.pop();
+    }
+
+    let previousCardId = memoizedPreviousCardId;
+
+    const shouldUpdateMemoizedValues =
+      !previousCardId || !isEqual(memoizedBreadcrumb, breadcrumbs);
+
+    // XXX: The functions `upcomingCardIds()` and `sortIdsDepthFirst()` are computationally heavy,
+    //      so we should call them only when needed to prevent UI slowness.
+    if (shouldUpdateMemoizedValues) {
+      memoizedBreadcrumb = breadcrumbs;
+
+      const upcoming = upcomingCardIds();
+      const sorted = sortIdsDepthFirst(flow)(
+        new Set([...goBackable, ...upcoming])
+      );
+      const nextcardIndex = sorted.indexOf(upcoming[0]);
+      previousCardId =
+        nextcardIndex > 0 ? sorted[nextcardIndex - 1] : sorted[0];
+      memoizedPreviousCardId = previousCardId;
+    }
+
+    return previousCardId;
   },
 
   canGoBack: (nodeId) => {
@@ -208,7 +255,14 @@ export const previewStore = (
   },
 
   record(id, userData) {
-    const { breadcrumbs, flow, cachedBreadcrumbs } = get();
+    const {
+      breadcrumbs,
+      flow,
+      restore,
+      cachedBreadcrumbs,
+      _nodesPendingEdit,
+      changedNode,
+    } = get();
 
     if (!flow[id]) throw new Error("id not found");
 
@@ -223,26 +277,66 @@ export const previewStore = (
 
       if (Object.keys(filteredData).length > 0) breadcrumb.data = filteredData;
 
+      let cacheWithoutOrphans = removeOrphansFromBreadcrumbs({
+        id,
+        flow,
+        userData: breadcrumb,
+        breadcrumbs: cachedBreadcrumbs,
+      });
+
+      const { newBreadcrumbs, nodesPendingEdit } = handleNodesWithPassport({
+        id,
+        flow,
+        cachedBreadcrumbs: cacheWithoutOrphans,
+        userData: breadcrumb,
+        currentNotsPendingEdit: _nodesPendingEdit,
+        breadcrumbs,
+      });
+
+      cacheWithoutOrphans = newBreadcrumbs;
+      delete cacheWithoutOrphans?.[id];
+
+      const nextBreadcrumbs = {
+        ...breadcrumbs,
+        ...(restore ? cacheWithoutOrphans : {}),
+        [id]: breadcrumb,
+      };
+
+      // Key order matters because it's the order in which components are dispayed in the Review component
+      const sortedBreadcrumbs = sortBreadcrumbs(
+        nextBreadcrumbs,
+        flow,
+        nodesPendingEdit
+      );
+
+      const shouldRemovedChangedNode = Object.keys(nextBreadcrumbs).some(
+        (key) => flow[key].type === TYPES.Review
+      );
       set({
-        breadcrumbs: {
-          ...breadcrumbs,
-          [id]: breadcrumb,
-        },
+        breadcrumbs: sortedBreadcrumbs,
+        cachedBreadcrumbs: { ...(restore ? {} : cacheWithoutOrphans) }, // clean cache if restore is true (i.e. if user has changed his answer)
+        restore: false,
+        _nodesPendingEdit: nodesPendingEdit,
+        changedNode: shouldRemovedChangedNode ? undefined : changedNode,
       });
     } else {
-      // remove breadcrumbs that were stored from id onwards
+      // remove breadcrumbs that were stored from id onwards because user has 'gone back'
 
       const breadcrumbIds = Object.keys(breadcrumbs);
       const idx = breadcrumbIds.indexOf(id);
-      const pickedBreadcrumb = pick(breadcrumbs, [id]);
+      const remainingBreadcrumbs = pick(
+        breadcrumbs,
+        breadcrumbIds.slice(0, idx)
+      );
+      const removedBreadcrumbs = pick(breadcrumbs, breadcrumbIds.slice(idx));
 
       if (idx >= 0) {
         set({
-          breadcrumbs: pick(breadcrumbs, breadcrumbIds.slice(0, idx)),
-          cachedBreadcrumbs:
-            pickedBreadcrumb?.[id].answers || pickedBreadcrumb?.[id].data
-              ? pickedBreadcrumb
-              : cachedBreadcrumbs,
+          breadcrumbs: remainingBreadcrumbs,
+          cachedBreadcrumbs: {
+            ...removedBreadcrumbs,
+            ...cachedBreadcrumbs,
+          },
         });
       }
     }
@@ -416,10 +510,8 @@ export const previewStore = (
 
             if (responsesThatCanBeAutoAnswered.length > 0) {
               if (node.type !== TYPES.Checklist) {
-                responsesThatCanBeAutoAnswered = responsesThatCanBeAutoAnswered.slice(
-                  0,
-                  1
-                );
+                responsesThatCanBeAutoAnswered =
+                  responsesThatCanBeAutoAnswered.slice(0, 1);
               }
 
               if (fn !== "flag") {
@@ -502,6 +594,12 @@ export const previewStore = (
     const { upcomingCardIds } = get();
     return upcomingCardIds().length === 1;
   },
+
+  restore: false,
+
+  changedNode: undefined,
+
+  _nodesPendingEdit: [],
 });
 
 const knownNots = (
@@ -534,6 +632,41 @@ const knownNots = (
     } as Record<string, Array<string>>
   );
 
+interface RemoveOrphansFromBreadcrumbsProps {
+  id: string;
+  flow: Store.flow;
+  userData: Store.userData;
+  breadcrumbs: Store.cachedBreadcrumbs | Store.breadcrumbs;
+}
+
+export const removeOrphansFromBreadcrumbs = ({
+  id,
+  flow,
+  userData,
+  breadcrumbs,
+}: RemoveOrphansFromBreadcrumbsProps):
+  | Store.cachedBreadcrumbs
+  | Store.breadcrumbs => {
+  const idsToRemove =
+    flow[id].edges?.filter(
+      (edge) => !(userData?.answers ?? []).includes(edge)
+    ) ?? [];
+
+  return idsToRemove.reduce(
+    (acc, id) => {
+      delete acc?.[id];
+      // recursion to remove orphans from tree
+      return removeOrphansFromBreadcrumbs({
+        id,
+        flow,
+        userData: flow[id],
+        breadcrumbs: acc,
+      });
+    },
+    { ...breadcrumbs } as Store.cachedBreadcrumbs | Store.breadcrumbs
+  );
+};
+
 export const getResultData = (
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
@@ -556,10 +689,8 @@ export const getResultData = (
       // might DRY this up with preceding collectedFlags function
       const possibleFlags = flatFlags.filter((f) => f.category === category);
       const keys = possibleFlags.map((f) => f.value);
-      const collectedFlags = Object.values(
-        breadcrumbs
-      ).flatMap(({ answers = [] }) =>
-        answers.map((id) => flow[id]?.data?.flag)
+      const collectedFlags = Object.values(breadcrumbs).flatMap(
+        ({ answers = [] }) => answers.map((id) => flow[id]?.data?.flag)
       );
 
       const filteredCollectedFlags = collectedFlags
@@ -619,4 +750,89 @@ export const getResultData = (
     },
     {} as ReturnType<PreviewStore["resultData"]>
   );
+};
+
+const sortBreadcrumbs = (
+  nextBreadcrumbs: Store.breadcrumbs,
+  flow: Store.flow,
+  editingsNots: string[]
+) => {
+  return editingsNots.length
+    ? nextBreadcrumbs
+    : sortIdsDepthFirst(flow)(new Set(Object.keys(nextBreadcrumbs))).reduce(
+        (acc, id) => ({ ...acc, [id]: nextBreadcrumbs[id] }),
+        {} as Store.breadcrumbs
+      );
+};
+
+function handleNodesWithPassport({
+  flow,
+  id,
+  cachedBreadcrumbs,
+  userData,
+  currentNotsPendingEdit,
+  breadcrumbs,
+}: {
+  flow: Store.flow;
+  id: string;
+  cachedBreadcrumbs: Store.cachedBreadcrumbs;
+  userData: Store.userData;
+  currentNotsPendingEdit: string[];
+  breadcrumbs: Store.breadcrumbs;
+}) {
+  let nodesPendingEdit = [...currentNotsPendingEdit];
+  let newBreadcrumbs: Store.cachedBreadcrumbs = { ...cachedBreadcrumbs };
+
+  const breadcrumbPopupulatesPassport =
+    flow[id].type === TYPES.FindProperty &&
+    newBreadcrumbs?.[id] &&
+    !isEqual(userData, newBreadcrumbs[id]);
+  // Check if component populates passport so that depend on passport do not have
+  // inconsistent data on them after changing answer in Review.
+  if (breadcrumbPopupulatesPassport) {
+    const { breadcrumbsWithoutPassportData, removedNotsIds } =
+      removeNodesDependentOnPassport(flow, newBreadcrumbs);
+
+    newBreadcrumbs = breadcrumbsWithoutPassportData;
+    if (removedNotsIds.length) {
+      nodesPendingEdit = removedNotsIds;
+    }
+  }
+
+  if (
+    nodesPendingEdit.every(
+      (pendingId) =>
+        Object.keys(breadcrumbs).includes(pendingId) || pendingId === id
+    )
+  ) {
+    nodesPendingEdit = [];
+  }
+
+  return { newBreadcrumbs, nodesPendingEdit };
+}
+
+// We need to remove some components that rely on passport values from the cached breadcrumbs
+// when changing awnswers from review component to guarantee that their values are updated.
+// XXX: This logic assumes only one "FindProperty" component per flow.
+export const removeNodesDependentOnPassport = (
+  flow: Store.flow,
+  breadcrumbs: Store.breadcrumbs
+): {
+  breadcrumbsWithoutPassportData: Store.breadcrumbs;
+  removedNotsIds: string[];
+} => {
+  const DEPENDENT_TYPES = [TYPES.PlanningConstraints, TYPES.DrawBoundary];
+  const newBreadcrumbs = { ...breadcrumbs };
+  const removedNotsIds = Object.entries(flow).reduce((acc, [id, value]) => {
+    if (
+      value?.type &&
+      DEPENDENT_TYPES.includes(value.type) &&
+      newBreadcrumbs[id]
+    ) {
+      delete newBreadcrumbs[id];
+      return [...acc, id];
+    }
+    return acc;
+  }, [] as string[]);
+  return { removedNotsIds, breadcrumbsWithoutPassportData: newBreadcrumbs };
 };

@@ -104,12 +104,7 @@ function Component(props: Props) {
   const { grid, root, button } = useStyles();
 
   const handleClick = (nodeId: string) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to go back to change your answer? You will lose your answers to questions answered after this one.`
-    );
-    if (confirmed) {
-      props.changeAnswer(nodeId);
-    }
+    props.changeAnswer(nodeId);
   };
 
   return (
