@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { visuallyHidden } from "@material-ui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import Card from "@planx/components/shared/Preview/Card";
+import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
 import type { Store } from "pages/FlowEditor/lib/store";
@@ -21,7 +22,8 @@ const useStyles = makeStyles((theme) => ({
     display: "grid",
     gridTemplateColumns: "1fr 2fr 100px",
     gridRowGap: "10px",
-    marginBottom: theme.spacing(8),
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4),
     "& > *": {
       borderBottom: "1px solid grey",
       paddingBottom: theme.spacing(2),
@@ -88,6 +90,8 @@ const components: {
 };
 
 interface Props {
+  title: string;
+  description: string;
   breadcrumbs: Store.breadcrumbs;
   flow: Store.flow;
   passport: Store.passport;
@@ -111,7 +115,7 @@ function Component(props: Props) {
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
       <div className={root}>
-        <h1>Check your answers before sending your application</h1>
+        <QuestionHeader title={props.title} description={props.description} />
         <dl className={grid}>
           {
             // XXX: This works because since ES2015 key order is guaranteed to be the insertion order
