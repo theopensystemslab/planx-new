@@ -289,7 +289,7 @@ export const previewStore = (
         flow,
         cachedBreadcrumbs: cacheWithoutOrphans,
         userData: breadcrumb,
-        currentNotsPendingEdit: _nodesPendingEdit,
+        currentNodesPendingEdit: _nodesPendingEdit,
         breadcrumbs,
       });
 
@@ -755,9 +755,9 @@ export const getResultData = (
 const sortBreadcrumbs = (
   nextBreadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
-  editingsNots: string[]
+  editingNodes: string[]
 ) => {
-  return editingsNots.length
+  return editingNodes.length
     ? nextBreadcrumbs
     : sortIdsDepthFirst(flow)(new Set(Object.keys(nextBreadcrumbs))).reduce(
         (acc, id) => ({ ...acc, [id]: nextBreadcrumbs[id] }),
@@ -770,17 +770,17 @@ function handleNodesWithPassport({
   id,
   cachedBreadcrumbs,
   userData,
-  currentNotsPendingEdit,
+  currentNodesPendingEdit,
   breadcrumbs,
 }: {
   flow: Store.flow;
   id: string;
   cachedBreadcrumbs: Store.cachedBreadcrumbs;
   userData: Store.userData;
-  currentNotsPendingEdit: string[];
+  currentNodesPendingEdit: string[];
   breadcrumbs: Store.breadcrumbs;
 }) {
-  let nodesPendingEdit = [...currentNotsPendingEdit];
+  let nodesPendingEdit = [...currentNodesPendingEdit];
   let newBreadcrumbs: Store.cachedBreadcrumbs = { ...cachedBreadcrumbs };
 
   const breadcrumbPopupulatesPassport =
@@ -790,12 +790,12 @@ function handleNodesWithPassport({
   // Check if component populates passport so that depend on passport do not have
   // inconsistent data on them after changing answer in Review.
   if (breadcrumbPopupulatesPassport) {
-    const { breadcrumbsWithoutPassportData, removedNotsIds } =
+    const { breadcrumbsWithoutPassportData, removedNodeIds } =
       removeNodesDependentOnPassport(flow, newBreadcrumbs);
 
     newBreadcrumbs = breadcrumbsWithoutPassportData;
-    if (removedNotsIds.length) {
-      nodesPendingEdit = removedNotsIds;
+    if (removedNodeIds.length) {
+      nodesPendingEdit = removedNodeIds;
     }
   }
 
@@ -819,11 +819,11 @@ export const removeNodesDependentOnPassport = (
   breadcrumbs: Store.breadcrumbs
 ): {
   breadcrumbsWithoutPassportData: Store.breadcrumbs;
-  removedNotsIds: string[];
+  removedNodeIds: string[];
 } => {
   const DEPENDENT_TYPES = [TYPES.PlanningConstraints, TYPES.DrawBoundary];
   const newBreadcrumbs = { ...breadcrumbs };
-  const removedNotsIds = Object.entries(flow).reduce((acc, [id, value]) => {
+  const removedNodeIds = Object.entries(flow).reduce((acc, [id, value]) => {
     if (
       value?.type &&
       DEPENDENT_TYPES.includes(value.type) &&
@@ -834,5 +834,5 @@ export const removeNodesDependentOnPassport = (
     }
     return acc;
   }, [] as string[]);
-  return { removedNotsIds, breadcrumbsWithoutPassportData: newBreadcrumbs };
+  return { removedNodeIds, breadcrumbsWithoutPassportData: newBreadcrumbs };
 };
