@@ -35,7 +35,12 @@ function Component(props: Props) {
   // Coords should match Esri's "rings" type https://developers.arcgis.com/javascript/3/jsapi/polygon-amd.html#rings
   const coordinates: number[][][] = siteBoundary?.geometry?.coordinates || [];
 
-  const { data: constraints } = useSWR(
+  const {
+    data: constraints,
+    error,
+    mutate,
+    isValidating,
+  } = useSWR(
     () =>
       x && y
         ? `${
@@ -47,13 +52,13 @@ function Component(props: Props) {
     {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
-      errorRetryCount: 5,
+      errorRetryCount: 1,
     }
   );
 
   return (
     <>
-      {constraints ? (
+      {!isValidating && constraints ? (
         <PlanningConstraintsInformation
           title={props.title}
           description={props.description || ""}
@@ -82,6 +87,7 @@ function Component(props: Props) {
               data: passportData,
             });
           }}
+          refreshConstraints={() => mutate()}
         />
       ) : (
         <Card handleSubmit={props.handleSubmit} isValid>
@@ -105,10 +111,30 @@ const useClasses = makeStyles((theme) => ({
     padding: theme.spacing(1, 1.5),
     width: `100vw`,
   },
+  errorSummary: {
+    marginTop: theme.spacing(1),
+    padding: theme.spacing(3),
+    border: `5px solid #E91B0C`,
+    "& button": {
+      background: "none",
+      "border-style": "none",
+      color: "#E91B0C",
+      cursor: "pointer",
+      fontSize: "medium",
+      fontWeight: 700,
+      textDecoration: "underline",
+      marginTop: theme.spacing(2),
+      padding: theme.spacing(0),
+    },
+    "& button:hover": {
+      backgroundColor: theme.palette.background.paper,
+    },
+  },
 }));
 
 function PlanningConstraintsInformation(props: any) {
-  const { title, description, constraints, handleSubmit } = props;
+  const { title, description, constraints, handleSubmit, refreshConstraints } =
+    props;
   const formik = useFormik({
     initialValues: {
       feedback: "",
@@ -127,7 +153,10 @@ function PlanningConstraintsInformation(props: any) {
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
-      <ConstraintsList data={constraints} />
+      <ConstraintsList
+        data={constraints}
+        refreshConstraints={refreshConstraints}
+      />
       <Box color="text.secondary" textAlign="right">
         <CollapsibleInput
           handleChange={formik.handleChange}
@@ -143,7 +172,8 @@ function PlanningConstraintsInformation(props: any) {
   );
 }
 
-function ConstraintsList({ data }: any) {
+function ConstraintsList({ data, refreshConstraints }: any) {
+  const classes = useClasses();
   const constraints = Object.values(data).filter(({ text }: any) => text);
 
   // Order constraints so that { value: true } ones come first
@@ -152,7 +182,11 @@ function ConstraintsList({ data }: any) {
   });
 
   const visibleConstraints = constraints.map((con: any) => (
-    <Constraint key={con.text} color={con.color}>
+    <Constraint
+      key={con.text}
+      color={con.color}
+      style={{ fontWeight: con.value ? 700 : 500 }}
+    >
       {ReactHtmlParser(con.text)}
     </Constraint>
   ));
@@ -170,7 +204,17 @@ function ConstraintsList({ data }: any) {
           </List>
         </>
       ) : (
-        <code>GIS data are not available for this team.</code>
+        <div className={classes.errorSummary}>
+          <Typography variant="h5" component="h2" gutterBottom>
+            Failed to fetch data
+          </Typography>
+          <Typography variant="body2">
+            Click the link below to try to fetch again. If you continue without
+            fetching data, you may be asked to answer questions about planning
+            constraints affecting this property later in the application.
+          </Typography>
+          <button onClick={refreshConstraints}>Try again</button>
+        </div>
       )}
     </Box>
   );
