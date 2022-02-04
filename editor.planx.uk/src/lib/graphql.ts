@@ -84,12 +84,3 @@ export const client = new ApolloClient({
   link: from([retryLink, errorLink, authLink, httpLink]),
   cache: new InMemoryCache(),
 });
-
-// XXX: temporarily read addresses from staging db
-export const addressesClientForPizzas = new ApolloClient({
-  link: createHttpLink({
-    uri: "https://hasura.editor.planx.dev/v1/graphql",
-    fetch: customFetch,
-  }),
-  cache: new InMemoryCache(),
-});

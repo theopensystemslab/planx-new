@@ -175,8 +175,8 @@ const planningConstraints = {
       description: data.NAME,
     }),
   },
-  "designated.monument": {
-    key: "designated.monument",
+  "monument": {
+    key: "monument",
     source: canterburyDomain,
     id: "External/Planning_Constraints_New",
     serverIndex: 0,

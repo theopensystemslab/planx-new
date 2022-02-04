@@ -133,7 +133,6 @@ const addDesignatedVariable = (responseObject) => {
     "nationalPark",
     "broads",
     "WHS",
-    "monument",
   ];
 
   // If any of the subvariables are true, then set "designated" to true

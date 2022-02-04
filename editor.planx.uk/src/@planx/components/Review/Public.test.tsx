@@ -10,6 +10,8 @@ test("renders correctly", async () => {
 
   render(
     <Review
+      title="Review"
+      description="Check your answers before submitting"
       flow={{}}
       breadcrumbs={{}}
       passport={{}}
@@ -18,6 +20,8 @@ test("renders correctly", async () => {
       showChangeButton={true}
     />
   );
+
+  expect(screen.getByRole("heading")).toHaveTextContent("Review");
 
   userEvent.click(screen.getByText("Continue"));
 
@@ -29,6 +33,8 @@ test("REGRESSION: doesn't return undefined when multiple nodes are filled", asyn
 
   render(
     <Review
+      title="Review"
+      description="Check your answers before submitting"
       flow={mockedFlow}
       breadcrumbs={mockedBreadcrumbs}
       passport={mockedPassport}
@@ -86,6 +92,8 @@ const mockedFlow = {
 it("should not have any accessibility violations", async () => {
   const { container } = render(
     <Review
+      title="Review"
+      description="Check your answers before submitting"
       flow={mockedFlow}
       breadcrumbs={mockedBreadcrumbs}
       passport={mockedPassport}

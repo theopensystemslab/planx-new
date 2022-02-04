@@ -255,6 +255,18 @@ export function getParams(
     data.constraints = constraints;
   }
 
+  // 3a. constraints that we checked, but do not intersect/apply to the property
+
+  const nots = (
+    passport.data?.["_nots"]?.["property.constraints.planning"] || []
+  ).reduce((acc: Record<string, boolean>, curr: string) => {
+    acc[curr] = false;
+    return acc;
+  }, {});
+  if (Object.keys(nots).map(Boolean).length > 0) {
+    data.constraints = { ...data.constraints, ...nots };
+  }
+
   // 4. work status
   const workStatus = getWorkStatus(passport);
   if (workStatus) data.work_status = workStatus;
