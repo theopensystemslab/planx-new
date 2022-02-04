@@ -130,7 +130,7 @@ export default function Component(props: Props) {
               drawMode
               drawPointer="dot"
               drawGeojsonData={JSON.stringify(boundary)}
-              zoom={19}
+              zoom={20}
               maxZoom={23}
               latitude={Number(passport?.data?._address?.latitude)}
               longitude={Number(passport?.data?._address?.longitude)}
