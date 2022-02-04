@@ -84,6 +84,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const TeamLogo: React.FC<{ team: Team }> = ({ team }) => {
+  const classes = useStyles();
+  const altText = team.settings?.homepage
+    ? `${team.name} Logo`
+    : `${team.name} Homepage (opens in a new tab)`;
+  const logo = (
+    <img alt={altText} src={team.theme?.logo} className={classes.logo} />
+  );
+  return team.settings?.homepage ? (
+    <a href={team.settings.homepage} target="_blank">
+      {logo}
+    </a>
+  ) : (
+    logo
+  );
+};
+
 const Header: React.FC<{
   bgcolor?: string;
   team?: Team;
@@ -132,11 +149,7 @@ const Header: React.FC<{
         <Toolbar className={classes.toolbar}>
           <Box className={classes.breadcrumbs} fontSize={20} tabIndex={0}>
             {team?.theme?.logo ? (
-              <img
-                alt={`${team.name} Logo`}
-                src={team.theme.logo}
-                className={classes.logo}
-              />
+              <TeamLogo team={team}></TeamLogo>
             ) : (
               <Box
                 component="span"
