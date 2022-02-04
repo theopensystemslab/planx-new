@@ -3,7 +3,11 @@ INSERT INTO public.teams (name, slug, theme) VALUES ('Canterbury', 'canterbury',
 INSERT INTO public.teams (name, slug, theme) VALUES ('Southwark', 'southwark', '{}');
 INSERT INTO public.users (first_name, last_name, email, is_admin) VALUES ('John', 'Rees', 'john@opensystemslab.io', true);
 INSERT INTO public.users (first_name, last_name, email, is_admin) VALUES ('Alastair', 'Parvin', 'alastair@opensystemslab.io', true);
+SELECT setval('users_id_seq', 5);
 INSERT INTO public.users (first_name, last_name, email, is_admin) VALUES ('Gunar', 'Gessner', 'gunargessner@gmail.com', true);
-INSERT INTO public.users (first_name, last_name, email, is_admin) VALUES ('Jessica', 'McInchak', 'jessica@opensystemslab.io', true);
+SELECT setval('users_id_seq', 12);
 INSERT INTO public.users (first_name, last_name, email, is_admin) VALUES ('Sarah', 'Scott', 'sarah@opensystemslab.io', true);
+SELECT setval('users_id_seq', 19);
+INSERT INTO public.users (first_name, last_name, email, is_admin) VALUES ('Jessica', 'McInchak', 'jessica@opensystemslab.io', true);
+SELECT setval('users_id_seq', 32);
 INSERT INTO public.users (first_name, last_name, email, is_admin) VALUES ('Dafydd', 'Pearson', 'dafydd@opensystemslab.io', true);
