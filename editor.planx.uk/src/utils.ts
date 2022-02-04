@@ -1,7 +1,3 @@
-import jwtDecode from "jwt-decode";
-
-import { getCookie } from "./lib/cookie";
-
 export function removeAt<T>(index: number, arr: Array<T>): Array<T> {
   return arr.filter((_item, i) => {
     return i !== index;
@@ -55,13 +51,4 @@ export function slugify(name: string): string {
     .replace(/[^\w\s-]/g, "") // remove non-word [a-z0-9_], non-whitespace, non-hyphen characters
     .replace(/[\s_-]+/g, "-") // swap any length of whitespace, underscore, hyphen characters with a single -
     .replace(/^-+|-+$/g, ""); // remove leading, trailing -
-}
-
-export function getLoggedInUserId(): number | undefined {
-  const jwt = getCookie("jwt");
-  if (!jwt) return;
-  const userId = Number(
-    (jwtDecode(jwt) as any)["https://hasura.io/jwt/claims"]["x-hasura-user-id"]
-  );
-  return userId;
 }
