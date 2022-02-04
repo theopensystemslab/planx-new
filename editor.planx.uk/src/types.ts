@@ -25,6 +25,7 @@ interface TeamSettings {
   design?: {
     color?: string;
   };
+  homepage?: string;
 }
 
 export interface GlobalSettings {
