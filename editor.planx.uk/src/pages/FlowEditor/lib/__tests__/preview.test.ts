@@ -239,7 +239,7 @@ describe("removeNodesDependentOnPassport", () => {
   test("Deletes nodes that are dependent on passport", () => {
     const breadcrumbs = { ...breadcrumbsDependentOnPassport };
 
-    const { breadcrumbsWithoutPassportData, removedNodesIds } =
+    const { breadcrumbsWithoutPassportData, removedNodeIds } =
       removeNodesDependentOnPassport(flowWithPassportComponents, breadcrumbs);
 
     const expectedBreadcrumbs = {
@@ -251,19 +251,19 @@ describe("removeNodesDependentOnPassport", () => {
     const expectRemovedNots = ["planningConstraints", "drawBoundary"];
 
     expect(breadcrumbsWithoutPassportData).toEqual(expectedBreadcrumbs);
-    expect(removedNodesIds.sort()).toEqual(expectRemovedNots.sort());
+    expect(removedNodeIds.sort()).toEqual(expectRemovedNots.sort());
   });
 
   test("Should not remove components that does not depend on passport", () => {
     const breadcrumbs = { ...mockBreadcrumbs };
 
-    const { breadcrumbsWithoutPassportData, removedNodesIds } =
+    const { breadcrumbsWithoutPassportData, removedNodeIds } =
       removeNodesDependentOnPassport(mockFlowData as Store.flow, breadcrumbs);
 
     const expectedBreadcrumbs = { ...mockBreadcrumbs };
 
     expect(breadcrumbsWithoutPassportData).toEqual(expectedBreadcrumbs);
-    expect(removedNodesIds).toHaveLength(0);
+    expect(removedNodeIds).toHaveLength(0);
   });
 });
 
