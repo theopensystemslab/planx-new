@@ -783,13 +783,13 @@ function handleNodesWithPassport({
   let nodesPendingEdit = [...currentNodesPendingEdit];
   let newBreadcrumbs: Store.cachedBreadcrumbs = { ...cachedBreadcrumbs };
 
-  const breadcrumbPopupulatesPassport =
+  const breadcrumbPopulatesPassport =
     flow[id].type === TYPES.FindProperty &&
     newBreadcrumbs?.[id] &&
     !isEqual(userData, newBreadcrumbs[id]);
   // Check if component populates passport so that depend on passport do not have
   // inconsistent data on them after changing answer in Review.
-  if (breadcrumbPopupulatesPassport) {
+  if (breadcrumbPopulatesPassport) {
     const { breadcrumbsWithoutPassportData, removedNodeIds } =
       removeNodesDependentOnPassport(flow, newBreadcrumbs);
 
