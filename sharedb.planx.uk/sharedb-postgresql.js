@@ -228,7 +228,7 @@ PostgresDB.prototype.getOps = function (
     }
     client.query(
       // "SELECT version, operation FROM operations WHERE collection = $1 AND doc_id = $2 AND version >= $3 AND version < $4",
-      "SELECT version, data FROM operations WHERE flow_id = $1 AND version >= $2 AND version < $3",
+      "SELECT version, data FROM operations WHERE flow_id = $1 AND version > $2 AND version <= $3",
       [id, from, to],
       (err, res) => {
         done();
