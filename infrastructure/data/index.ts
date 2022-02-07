@@ -2,7 +2,6 @@
 
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
-import { Output, secret } from "@pulumi/pulumi";
 
 const config = new pulumi.Config();
 
@@ -29,7 +28,7 @@ const db = new aws.rds.Instance("app", {
   storageEncrypted: true,
   backupRetentionPeriod: env === "production" ? 35 : 0,
 });
-export const dbRootUrl: Output<string> = secret(pulumi.interpolate`postgres://${DB_ROOT_USERNAME}:${config.require(
+export const dbRootUrl: pulumi.Output<string> = pulumi.secret(pulumi.interpolate`postgres://${DB_ROOT_USERNAME}:${config.require(
   "db-password"
 )}@${db.endpoint}/postgres`);
 
