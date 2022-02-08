@@ -6,6 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { visuallyHidden } from "@material-ui/utils";
 import React from "react";
 import { useState } from "react";
 import { TeamSettings } from "types";
@@ -56,7 +57,10 @@ export default function ExternalPlanningSiteDialog({
               target="_blank"
               className={classes.externalLink}
             >
-              <Button>Proceed to {settings?.externalPlanningSite?.name}</Button>
+              <Button>
+                Proceed to {settings?.externalPlanningSite?.name}
+                <span style={visuallyHidden}> (opens in a new tab)</span>
+              </Button>
             </a>
           </DialogActions>
         </Dialog>
