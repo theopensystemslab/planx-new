@@ -1,4 +1,5 @@
-import { FETCH_BLPU_CODES, GET_TEAM_QUERY } from "..";
+import { FETCH_BLPU_CODES } from "..";
+import { GET_TEAM_QUERY } from "./../../../../../utils";
 
 export default [
   {
