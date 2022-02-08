@@ -197,6 +197,7 @@ function GetAddress(props: {
   // Autocomplete overrides
   const useStyles = makeStyles((theme) => ({
     root: {
+      paddingBottom: theme.spacing(3),
       "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
         // Default transform is "translate(14px, 20px) scale(1)""
         // This lines up the label with the initial cursor position in the input
