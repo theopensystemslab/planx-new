@@ -20,7 +20,7 @@ import find from "lodash/find";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
@@ -171,26 +171,29 @@ function GetAddress(props: {
   // https://apidocs.os.uk/docs/os-places-service-metadata
   let osPlacesEndpoint = `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&dataset=LPI&output_srs=EPSG:4326&lr=EN&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&maxresults=100`;
 
-  const fetcher = (url: RequestInfo) =>
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        // Concat results to existing list of addresses for cases of paginated results
-        const concatenated = addressesInPostcode.concat(data.results || []);
-        setAddressesInPostcode(concatenated);
-        setTotalAddresses(data.header.totalresults);
-        // console.log("fetched", concatenated.length, "/", data.header.totalresults);
-      });
-
   const { data } = useSWR(
-    sanitizedPostcode ? osPlacesEndpoint + `&offset=${offset}` : null,
-    fetcher,
+    () => (sanitizedPostcode ? osPlacesEndpoint + `&offset=${offset}` : null),
     {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
       errorRetryCount: 3,
     }
   );
+
+  useEffect(() => {
+    if (data && data.results && data.header) {
+      // Concat results to existing list of addresses for cases of paginated results
+      const concatenated = addressesInPostcode.concat(data.results || []);
+      setAddressesInPostcode(concatenated);
+      setTotalAddresses(data.header.totalresults);
+      console.log(
+        "fetched",
+        concatenated.length,
+        "/",
+        data.header.totalresults
+      );
+    }
+  }, [data]);
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES);
