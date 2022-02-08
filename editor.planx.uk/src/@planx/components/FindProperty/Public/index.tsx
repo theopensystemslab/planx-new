@@ -181,17 +181,12 @@ function GetAddress(props: {
   );
 
   useEffect(() => {
-    if (data && data.results && data.header) {
+    if (data && !data?.error) {
       // Concat results to existing list of addresses for cases of paginated results
       const concatenated = addressesInPostcode.concat(data.results || []);
       setAddressesInPostcode(concatenated);
       setTotalAddresses(data.header.totalresults);
-      console.log(
-        "fetched",
-        concatenated.length,
-        "/",
-        data.header.totalresults
-      );
+      // console.log("fetched", concatenated.length, "/", data.header.totalresults);
     }
   }, [data]);
 
@@ -411,10 +406,10 @@ function GetAddress(props: {
             )}
           />
         )}
-        {totalAddresses === 0 && Boolean(sanitizedPostcode) && (
+        {(data?.error || totalAddresses === 0) && Boolean(sanitizedPostcode) && (
           <Box pt={2}>
             <Typography variant="body1" color="error">
-              No addresses found in this postcode.
+              {data.error?.message || "No addresses found in this postcode."}
             </Typography>
           </Box>
         )}
