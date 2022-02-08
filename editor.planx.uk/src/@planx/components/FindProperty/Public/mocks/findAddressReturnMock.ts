@@ -30,21 +30,13 @@ export default [
         teams: [
           {
             theme: {},
-          },
-        ],
-      },
-    },
-  },
-  {
-    request: {
-      query: GET_TEAM_QUERY,
-      variables: { team: "canterbury" },
-    },
-    result: {
-      data: {
-        teams: [
-          {
-            theme: {},
+            settings: {
+              externalPlanningSite: {
+                name: "Planning Portal",
+                url: "https://www.planningportal.co.uk/",
+              },
+            },
+            name: "Cantebury",
           },
         ],
       },
