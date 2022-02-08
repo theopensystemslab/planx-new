@@ -15,17 +15,18 @@ import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
-import capitalize from "lodash/capitalize";
 import find from "lodash/find";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useState } from "react";
-import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
+import { TeamSettings } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
+import ExternalPlanningSiteDialog from "ui/ExternalPlanningSiteDialog";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
+import { fetchCurrentTeam } from "utils";
 
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
@@ -40,13 +41,6 @@ export const FETCH_BLPU_CODES = gql`
     }
   }
 `;
-export const GET_TEAM_QUERY = gql`
-  query GetTeam($team: String = "") {
-    teams(where: { slug: { _eq: $team } }) {
-      theme
-    }
-  }
-`;
 
 type Props = PublicProps<FindProperty>;
 
@@ -58,17 +52,9 @@ function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
   const [address, setAddress] = useState<Address | undefined>();
   const flow = useStore((state) => state.flow);
-  const route = useCurrentRoute();
-  const team = route?.data?.team ?? route?.data.mountpath.split("/")[1];
+  const team = fetchCurrentTeam();
 
-  const { data } = useQuery(GET_TEAM_QUERY, {
-    skip: !Boolean(team),
-    variables: {
-      team: team,
-    },
-  });
-
-  if (!address && Boolean(data?.teams.length)) {
+  if (!address && Boolean(team)) {
     return (
       <GetAddress
         title={props.title}
@@ -76,6 +62,7 @@ function Component(props: Props) {
         setAddress={setAddress}
         initialPostcode={previouslySubmittedData?._address.postcode}
         initialSelectedAddress={previouslySubmittedData?._address}
+        teamSettings={team?.settings}
       />
     );
   } else if (address) {
@@ -119,14 +106,14 @@ function Component(props: Props) {
           },
           {
             heading: "District",
-            detail: capitalize(team),
+            detail: team?.name,
           },
           {
             heading: "Building type",
             detail: address.planx_description,
           },
         ]}
-        teamColor={data?.teams?.[0].theme?.primary || "#2c2c2c"}
+        teamColor={team?.theme?.primary || "#2c2c2c"}
       />
     );
   } else {
@@ -145,6 +132,7 @@ function GetAddress(props: {
   description?: string;
   initialPostcode?: string;
   initialSelectedAddress?: Option;
+  teamSettings?: TeamSettings;
 }) {
   const [postcode, setPostcode] = useState<string | null>(
     props.initialPostcode ?? null
@@ -363,6 +351,9 @@ function GetAddress(props: {
             )}
           />
         )}
+        <ExternalPlanningSiteDialog
+          teamSettings={props.teamSettings}
+        ></ExternalPlanningSiteDialog>
         {addressesInPostcode?.header?.totalresults === 0 &&
           Boolean(sanitizedPostcode) && (
             <Box pt={2}>
@@ -395,6 +386,7 @@ const useClasses = makeStyles((theme) => ({
     borderBottom: `1px solid ${theme.palette.background.paper}`,
   },
 }));
+
 export function PropertyInformation(props: any) {
   const {
     title,
