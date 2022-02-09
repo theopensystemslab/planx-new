@@ -486,6 +486,23 @@ app.get("/flows/:flowId/download-schema", async (req, res, next) => {
   }
 });
 
+// allow a user to download their application data on the Confirmation page
+app.get("/download-application", async (req, res, next) => {
+  const data = [JSON.parse(req.query.data)];
+
+  try {
+    // build a CSV and stream it
+    stringify(data, { header: true }).pipe(res);
+    const filename = data[0]["Planning Application Reference"];
+
+    res.header("Content-type", "text/csv");
+    res.attachment(`${filename}.csv`);
+  } catch (err) {
+    next(err);
+  }
+
+});
+
 app.post("/sign-s3-upload", async (req, res, next) => {
   if (!req.body.filename) next({ status: 422, message: "missing filename" });
 

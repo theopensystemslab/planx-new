@@ -4,11 +4,14 @@ import Typography from "@material-ui/core/Typography";
 import Check from "@material-ui/icons/CheckCircleOutlineOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/ui";
+import omit from "lodash/omit";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Banner from "ui/Banner";
 import NumberedList from "ui/NumberedList";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
+import { getParams } from "../Send/bops";
 import type { Confirmation } from "./model";
 
 const useClasses = makeStyles((theme) => ({
@@ -28,11 +31,47 @@ const useClasses = makeStyles((theme) => ({
   listHeading: {
     marginBottom: theme.spacing(2),
   },
+  download: {
+    marginTop: theme.spacing(1),
+    textAlign: "right",
+    "& button": {
+      background: "none",
+      "border-style": "none",
+      color: theme.palette.text.primary,
+      cursor: "pointer",
+      fontSize: "medium",
+      textDecoration: "underline",
+      padding: theme.spacing(2),
+    },
+    "& button:hover": {
+      backgroundColor: theme.palette.background.paper,
+    },
+  },
 }));
 
 export type Props = PublicProps<Confirmation>;
 
 export default function ConfirmationComponent(props: Props) {
+  const [breadcrumbs, flow, passport, sessionId] = useStore((state) => [
+    state.breadcrumbs,
+    state.flow,
+    state.computePassport(),
+    state.sessionId,
+  ]);
+
+  // recreate the payload we sent to BOPs for download, minus debug data & any keys that are already in confirmation details
+  const sentData = getParams(breadcrumbs, flow, passport, sessionId);
+  const sentFiles = sentData["files"];
+  const data = {
+    ...props.details,
+    ...omit(sentData, ["planx_debug_data", "application_type", "files"]),
+  };
+
+  const handleDownload = () => {
+    console.log(sentFiles);
+    console.log(data);
+  };
+
   const classes = useClasses();
 
   return (
@@ -64,6 +103,22 @@ export default function ConfirmationComponent(props: Props) {
             </tbody>
           </table>
         )}
+
+        {
+          <div className={classes.download}>
+            <a
+              href={`${
+                process.env.REACT_APP_API_URL
+              }/download-application?data=${JSON.stringify(data)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button onClick={handleDownload}>
+                Download your application data (.zip)
+              </button>
+            </a>
+          </div>
+        }
 
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
           <Box pt={3}>
