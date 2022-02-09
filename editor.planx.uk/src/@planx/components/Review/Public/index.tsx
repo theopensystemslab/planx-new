@@ -9,13 +9,15 @@ import Presentational from "./Presentational";
 export default Component;
 
 function Component(props: PublicProps<Review>) {
-  const [breadcrumbs, flow, passport, record, hasPaid] = useStore((state) => [
-    state.breadcrumbs,
-    state.flow,
-    state.computePassport(),
-    state.record,
-    state.hasPaid(),
-  ]);
+  const [breadcrumbs, flow, passport, hasPaid, changeAnswer] = useStore(
+    (state) => [
+      state.breadcrumbs,
+      state.flow,
+      state.computePassport(),
+      state.hasPaid(),
+      state.changeAnswer,
+    ]
+  );
   return (
     <Presentational
       title={props.title}
@@ -28,9 +30,4 @@ function Component(props: PublicProps<Review>) {
       showChangeButton={!hasPaid}
     />
   );
-
-  function changeAnswer(id: Store.nodeId) {
-    // XXX: Remove the node `id` and all subsequent ones from breadcrumbs
-    record(id, undefined);
-  }
 }
