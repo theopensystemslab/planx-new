@@ -3,7 +3,6 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import ExternalPlanningSiteDialog from "ui/ExternalPlanningSiteDialog";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
@@ -115,7 +114,6 @@ export default function AddressInputComponent(props: Props): FCReturn {
           />
         </InputRowItem>
       </InputLabel>
-      <ExternalPlanningSiteDialog></ExternalPlanningSiteDialog>
     </Card>
   );
 }
