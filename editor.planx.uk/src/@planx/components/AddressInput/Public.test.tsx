@@ -1,22 +1,16 @@
-import { MockedProvider } from "@apollo/client/testing";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-helper";
 import { uniqueId } from "lodash";
 import React from "react";
 
-import findAddressReturnMock from "../FindProperty/Public/mocks/findAddressReturnMock";
 import { fillInFieldsUsingPlaceholder } from "../shared/testHelpers";
 import AddressInput from "./Public";
 
 test("submits an address", async () => {
   const handleSubmit = jest.fn();
 
-  render(
-    <MockedProvider mocks={findAddressReturnMock}>
-      <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />
-    </MockedProvider>
-  );
+  render(<AddressInput handleSubmit={handleSubmit} title="" fn="foo" />);
 
   await waitFor(async () => {
     await fillInFieldsUsingPlaceholder({
@@ -50,24 +44,22 @@ test("recovers previously submitted text when clicking the back button", async (
   const componentId = uniqueId();
 
   render(
-    <MockedProvider mocks={findAddressReturnMock}>
-      <AddressInput
-        handleSubmit={handleSubmit}
-        title=""
-        id={componentId}
-        previouslySubmittedData={{
-          data: {
-            [componentId]: {
-              line1: "Flat 1",
-              line2: "",
-              town: "London",
-              county: "",
-              postcode: "SW1A 2AA",
-            },
+    <AddressInput
+      handleSubmit={handleSubmit}
+      title=""
+      id={componentId}
+      previouslySubmittedData={{
+        data: {
+          [componentId]: {
+            line1: "Flat 1",
+            line2: "",
+            town: "London",
+            county: "",
+            postcode: "SW1A 2AA",
           },
-        }}
-      />
-    </MockedProvider>
+        },
+      }}
+    />
   );
 
   await waitFor(async () => {
@@ -97,25 +89,23 @@ test("recovers previously submitted text when clicking the back button even if a
   const dataField = "data-field";
 
   render(
-    <MockedProvider mocks={findAddressReturnMock}>
-      <AddressInput
-        handleSubmit={handleSubmit}
-        title=""
-        fn={dataField}
-        id={componentId}
-        previouslySubmittedData={{
-          data: {
-            [dataField]: {
-              line1: "Flat 1",
-              line2: "",
-              town: "London",
-              county: "",
-              postcode: "SW1A 2AA",
-            },
+    <AddressInput
+      handleSubmit={handleSubmit}
+      title=""
+      fn={dataField}
+      id={componentId}
+      previouslySubmittedData={{
+        data: {
+          [dataField]: {
+            line1: "Flat 1",
+            line2: "",
+            town: "London",
+            county: "",
+            postcode: "SW1A 2AA",
           },
-        }}
-      />
-    </MockedProvider>
+        },
+      }}
+    />
   );
 
   await waitFor(async () => {
@@ -140,11 +130,7 @@ test("recovers previously submitted text when clicking the back button even if a
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = render(
-    <MockedProvider mocks={findAddressReturnMock}>
-      <AddressInput title="title" />
-    </MockedProvider>
-  );
+  const { container } = render(<AddressInput title="title" />);
   await waitFor(async () => {
     await fillInFieldsUsingPlaceholder({
       "Line 1": "Flat 1",
