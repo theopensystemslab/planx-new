@@ -30,6 +30,7 @@ export interface TeamSettings {
     name: string;
     url: string;
   };
+  supportEmail?: string;
 }
 
 export interface GlobalSettings {

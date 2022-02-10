@@ -1,4 +1,4 @@
-INSERT INTO public.teams (name, slug, theme) VALUES ('Open Systems Lab', 'opensystemslab', '{}');
+INSERT INTO public.teams (name, slug, theme, settings) VALUES ('Open Systems Lab', 'opensystemslab', '{}', {"externalPlanningSite": {"url": "https://www.planningportal.co.uk/", "name": "Planning Portal"}, "supportEmail": "enquiries@opensystemslab.io"});
 INSERT INTO public.teams (name, slug, theme, settings) VALUES ('Canterbury', 'canterbury', '{"logo": "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/canterbury.svg", "primary": "#331035"}', '{"homepage": "https://www.canterbury.gov.uk/", "externalPlanningSite": {"url": "https://www.planningportal.co.uk/", "name": "Planning Portal"}}');
 INSERT INTO public.teams (name, slug, theme) VALUES ('Southwark', 'southwark', '{}');
 INSERT INTO public.users (id, first_name, last_name, email, is_admin) VALUES (1, 'John', 'Rees', 'john@opensystemslab.io', true);
