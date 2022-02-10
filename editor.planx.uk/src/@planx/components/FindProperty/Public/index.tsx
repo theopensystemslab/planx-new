@@ -24,7 +24,7 @@ import useSWR from "swr";
 import { TeamSettings } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
 import ExternalPlanningSiteDialog, {
-  DialogContext,
+  DialogPurpose,
 } from "ui/ExternalPlanningSiteDialog";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
@@ -355,7 +355,7 @@ function GetAddress(props: {
           />
         )}
         <ExternalPlanningSiteDialog
-          context={DialogContext.MissingAddress}
+          purpose={DialogPurpose.MissingAddress}
           teamSettings={props.teamSettings}
         ></ExternalPlanningSiteDialog>
         {addressesInPostcode?.header?.totalresults === 0 &&

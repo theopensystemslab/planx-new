@@ -13,7 +13,7 @@ import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import ExternalPlanningSiteDialog, {
-  DialogContext,
+  DialogPurpose,
 } from "ui/ExternalPlanningSiteDialog";
 
 export interface IQuestion {
@@ -58,7 +58,8 @@ const Question: React.FC<IQuestion> = (props) => {
   const theme = useTheme();
   const classes = useClasses();
   const currentCard = useStore((state) => state.currentCard());
-  const isProjectTypeQuestion = currentCard?.data?.fn === "project.type";
+  const isProjectTypeQuestion =
+    currentCard?.data?.fn === "proposal.projectType";
 
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
   const previousResponseKey = props.responses.find(
@@ -155,7 +156,7 @@ const Question: React.FC<IQuestion> = (props) => {
       </form>
       {isProjectTypeQuestion && (
         <ExternalPlanningSiteDialog
-          context={DialogContext.ProjectType}
+          purpose={DialogPurpose.MissingProjectType}
         ></ExternalPlanningSiteDialog>
       )}
     </Card>

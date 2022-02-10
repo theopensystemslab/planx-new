@@ -29,17 +29,17 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-export enum DialogContext {
-  ProjectType,
+export enum DialogPurpose {
+  MissingProjectType,
   MissingAddress,
 }
 
 const getTitleAndContent = (
-  context: DialogContext,
+  purpose: DialogPurpose,
   settings?: TeamSettings
 ): Record<string, string | JSX.Element> => {
-  switch (context) {
-    case DialogContext.MissingAddress:
+  switch (purpose) {
+    case DialogPurpose.MissingAddress:
       return {
         title: "The site does not have an address",
         content: (
@@ -49,7 +49,7 @@ const getTitleAndContent = (
           </>
         ),
       };
-    case DialogContext.ProjectType:
+    case DialogPurpose.MissingProjectType:
       return {
         title: "My project type is not listed",
         content: (
@@ -78,19 +78,19 @@ const getTitleAndContent = (
 };
 
 interface Props {
-  context: DialogContext;
+  purpose: DialogPurpose;
   teamSettings?: TeamSettings;
 }
 
 export default function ExternalPlanningSiteDialog({
-  context,
+  purpose,
   teamSettings,
 }: Props): FCReturn {
   const classes = useClasses();
   const [isOpen, setIsOpen] = useState(false);
   const toggleModal = () => setIsOpen(!isOpen);
   const settings = teamSettings || fetchCurrentTeam()?.settings;
-  const { title, content } = getTitleAndContent(context, settings);
+  const { title, content } = getTitleAndContent(purpose, settings);
   return (
     <>
       {isOpen && (
