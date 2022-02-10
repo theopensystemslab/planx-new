@@ -7,6 +7,7 @@ const cors = require("cors");
 const stringify = require("csv-stringify");
 const express = require("express");
 const jwt = require("express-jwt");
+const JSZip = require("jszip");
 const noir = require("pino-noir");
 const { URL } = require("url");
 const { GraphQLClient } = require("graphql-request");
@@ -486,21 +487,31 @@ app.get("/flows/:flowId/download-schema", async (req, res, next) => {
   }
 });
 
-// allow a user to download their application data on the Confirmation page
+// allows an applicant to download their application data on the Confirmation page
 app.get("/download-application", async (req, res, next) => {
-  const data = [JSON.parse(req.query.data)];
-
+  if (!req.query.data) {
+    res.send({
+      message: "Missing application `data` to download"
+    });
+  }
+  
   try {
-    // build a CSV and stream it
-    stringify(data, { header: true }).pipe(res);
-    const filename = data[0]["Planning Application Reference"];
+    const zip = new JSZip();
+    zip
+      .folder(req.query.ref)
+      .file(`application.csv`, stringify(JSON.parse(req.query.data), { header: true }));
 
-    res.header("Content-type", "text/csv");
-    res.attachment(`${filename}.csv`);
+    zip.generateAsync({ type: "base64" }).then((base64) => {
+      let zip = Buffer.from(base64, "base64");
+      res.writeHead(200, {
+        "Content-Type": "application/zip",
+        "Content-disposition": `attachment; filename=${req.query.ref}.zip`,
+      });
+      res.end(zip);
+    });
   } catch (err) {
     next(err);
   }
-
 });
 
 app.post("/sign-s3-upload", async (req, res, next) => {

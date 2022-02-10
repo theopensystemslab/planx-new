@@ -39,7 +39,8 @@ const useClasses = makeStyles((theme) => ({
       "border-style": "none",
       color: theme.palette.text.primary,
       cursor: "pointer",
-      fontSize: "medium",
+      fontSize: "inherit",
+      fontFamily: "inherit",
       textDecoration: "underline",
       padding: theme.spacing(2),
     },
@@ -59,18 +60,31 @@ export default function ConfirmationComponent(props: Props) {
     state.sessionId,
   ]);
 
-  // recreate the payload we sent to BOPs for download, minus debug data & any keys that are already in confirmation details
+  // recreate the payload we sent to BOPs for download
   const sentData = getParams(breadcrumbs, flow, passport, sessionId);
-  const sentFiles = sentData["files"];
-  const data = {
-    ...props.details,
-    ...omit(sentData, ["planx_debug_data", "application_type", "files"]),
-  };
+  const files = sentData["files"];
 
-  const handleDownload = () => {
-    console.log(sentFiles);
-    console.log(data);
+  // format dedicated BOPs properties as list of questions & responses to match proposal_details,
+  //   omitting debug data and keys that are duplicated in confirmation details
+  const summary: any = {
+    ...omit(props.details, "Property Address"),
+    ...omit(sentData, [
+      "planx_debug_data",
+      "application_type",
+      "files",
+      "proposal_details",
+    ]),
   };
+  const formattedSummary: { question: string; responses: any }[] = [];
+  Object.keys(summary).forEach((key) => {
+    formattedSummary.push({
+      question: key,
+      responses: summary[key],
+    });
+  });
+
+  // create a single list of questions & responses
+  const data = formattedSummary.concat(sentData["proposal_details"] || []);
 
   const classes = useClasses();
 
@@ -109,13 +123,12 @@ export default function ConfirmationComponent(props: Props) {
             <a
               href={`${
                 process.env.REACT_APP_API_URL
-              }/download-application?data=${JSON.stringify(data)}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              }/download-application?ref=${
+                props.details?.["Planning Application Reference"] ||
+                "application"
+              }&data=${JSON.stringify(data)}&files=${JSON.stringify(files)}`}
             >
-              <button onClick={handleDownload}>
-                Download your application data (.zip)
-              </button>
+              <button>Download your application data (.zip)</button>
             </a>
           </div>
         }
