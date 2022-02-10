@@ -4,6 +4,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { visuallyHidden } from "@material-ui/utils";
@@ -28,27 +29,79 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
+export enum DialogContext {
+  ProjectType,
+  MissingAddress,
+}
+
+const getTitleAndContent = (
+  context: DialogContext,
+  settings?: TeamSettings
+): Record<string, string | JSX.Element> => {
+  switch (context) {
+    case DialogContext.MissingAddress:
+      return {
+        title: "The site does not have an address",
+        content: (
+          <>
+            At present, we require a site with an address and postcode in order
+            to continue.
+          </>
+        ),
+      };
+    case DialogContext.ProjectType:
+      return {
+        title: "My project type is not listed",
+        content: (
+          <>
+            <p>At present, only the listed project types are supported.</p>
+            {settings?.supportEmail && (
+              <p>
+                Please feel free to{" "}
+                <Link
+                  underline="always"
+                  href={`mailto:${
+                    settings?.supportEmail
+                  }?subject=${encodeURIComponent(
+                    "Planning Application - Suggestion for Project Type"
+                  )}`}
+                >
+                  contact us via email
+                </Link>{" "}
+                if you would like your project type to be added.
+              </p>
+            )}
+          </>
+        ),
+      };
+  }
+};
+
 interface Props {
+  context: DialogContext;
   teamSettings?: TeamSettings;
 }
 
 export default function ExternalPlanningSiteDialog({
+  context,
   teamSettings,
 }: Props): FCReturn {
   const classes = useClasses();
   const [isOpen, setIsOpen] = useState(false);
   const toggleModal = () => setIsOpen(!isOpen);
   const settings = teamSettings || fetchCurrentTeam()?.settings;
+  const { title, content } = getTitleAndContent(context, settings);
   return (
     <>
       {isOpen && (
         <Dialog open onClose={toggleModal}>
-          <DialogTitle>The site does not have an address</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogContent>
-            At present, we require a site with an address and postcode in order
-            to continue. In order to proceed, you will need to submit an
-            application through{" "}
-            <strong>{settings?.externalPlanningSite?.name}</strong>.
+            {content}
+            <p>
+              In order to proceed, you will need to submit an application
+              through <strong>{settings?.externalPlanningSite?.name}</strong>.
+            </p>
           </DialogContent>
           <DialogActions>
             <Button onClick={toggleModal}>Return to application</Button>
@@ -67,9 +120,7 @@ export default function ExternalPlanningSiteDialog({
       )}
       <div className={classes.container}>
         <ButtonBase onClick={toggleModal} className={classes.button}>
-          <Typography variant="body2">
-            The site does not have an address
-          </Typography>
+          <Typography variant="body2">{title}</Typography>
         </ButtonBase>
       </div>
     </>

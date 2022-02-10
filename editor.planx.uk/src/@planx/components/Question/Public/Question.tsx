@@ -9,8 +9,12 @@ import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
+import ExternalPlanningSiteDialog, {
+  DialogContext,
+} from "ui/ExternalPlanningSiteDialog";
 
 export interface IQuestion {
   text?: string;
@@ -45,6 +49,8 @@ const useClasses = makeStyles(() => ({
 const Question: React.FC<IQuestion> = (props) => {
   const theme = useTheme();
   const classes = useClasses();
+  const currentCard = useStore((state) => state.currentCard());
+  const isProjectTypeQuestion = currentCard?.data?.fn === "project.type";
 
   const formik = useFormik({
     initialValues: {
@@ -128,6 +134,11 @@ const Question: React.FC<IQuestion> = (props) => {
           </Grid>
         </fieldset>
       </form>
+      {isProjectTypeQuestion && (
+        <ExternalPlanningSiteDialog
+          context={DialogContext.ProjectType}
+        ></ExternalPlanningSiteDialog>
+      )}
     </Card>
   );
 };

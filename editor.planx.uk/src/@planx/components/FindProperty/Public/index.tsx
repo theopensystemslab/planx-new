@@ -23,7 +23,9 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import { TeamSettings } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
-import ExternalPlanningSiteDialog from "ui/ExternalPlanningSiteDialog";
+import ExternalPlanningSiteDialog, {
+  DialogContext,
+} from "ui/ExternalPlanningSiteDialog";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 import { fetchCurrentTeam } from "utils";
@@ -353,6 +355,7 @@ function GetAddress(props: {
           />
         )}
         <ExternalPlanningSiteDialog
+          context={DialogContext.MissingAddress}
           teamSettings={props.teamSettings}
         ></ExternalPlanningSiteDialog>
         {addressesInPostcode?.header?.totalresults === 0 &&
