@@ -34,9 +34,9 @@ const useStyles = makeStyles((theme) => {
     },
     title: {
       marginLeft: theme.spacing(1.5),
-      "& > label": {
-        cursor: "pointer",
-      },
+    },
+    label: {
+      cursor: "pointer",
     },
   };
 });
@@ -141,7 +141,7 @@ function ImageResponse(props: Props) {
               variant="body2"
               className={checkbox ? classes.title : undefined}
             >
-              <label>{title}</label>
+              <label className={classes.label}>{title}</label>
             </Typography>
           </Box>
         </Box>
