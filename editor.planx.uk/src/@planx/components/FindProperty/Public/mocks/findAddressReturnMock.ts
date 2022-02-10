@@ -1,4 +1,5 @@
-import { FETCH_BLPU_CODES, GET_TEAM_QUERY } from "..";
+import { FETCH_BLPU_CODES } from "..";
+import { GET_TEAM_QUERY } from "./../../../../../utils";
 
 export default [
   {
@@ -29,21 +30,13 @@ export default [
         teams: [
           {
             theme: {},
-          },
-        ],
-      },
-    },
-  },
-  {
-    request: {
-      query: GET_TEAM_QUERY,
-      variables: { team: "canterbury" },
-    },
-    result: {
-      data: {
-        teams: [
-          {
-            theme: {},
+            settings: {
+              externalPlanningSite: {
+                name: "Planning Portal",
+                url: "https://www.planningportal.co.uk/",
+              },
+            },
+            name: "Cantebury",
           },
         ],
       },
