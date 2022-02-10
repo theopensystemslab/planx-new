@@ -7,7 +7,6 @@ const cors = require("cors");
 const stringify = require("csv-stringify");
 const express = require("express");
 const jwt = require("express-jwt");
-const JSZip = require("jszip");
 const noir = require("pino-noir");
 const { URL } = require("url");
 const { GraphQLClient } = require("graphql-request");
