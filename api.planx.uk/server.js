@@ -496,19 +496,12 @@ app.get("/download-application", async (req, res, next) => {
   }
   
   try {
-    const zip = new JSZip();
-    zip
-      .folder(req.query.ref)
-      .file(`application.csv`, stringify(JSON.parse(req.query.data), { header: true }));
+    // build a CSV and stream it
+    const filename = req.query.ref;
+    stringify(JSON.parse(req.query.data), { columns: ["question", "responses", "metadata"], header: true }).pipe(res);
 
-    zip.generateAsync({ type: "base64" }).then((base64) => {
-      let zip = Buffer.from(base64, "base64");
-      res.writeHead(200, {
-        "Content-Type": "application/zip",
-        "Content-disposition": `attachment; filename=${req.query.ref}.zip`,
-      });
-      res.end(zip);
-    });
+    res.header("Content-type", "text/csv");
+    res.attachment(`${filename}.csv`);  
   } catch (err) {
     next(err);
   }
