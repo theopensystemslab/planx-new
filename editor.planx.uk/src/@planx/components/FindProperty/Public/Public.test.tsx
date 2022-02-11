@@ -14,7 +14,7 @@ const TEAM = "canterbury";
 
 jest.spyOn(SWR, "default").mockImplementation((url: any) => {
   return {
-    data: postcodeMock,
+    data: url()?.startsWith("https://api.os.uk") ? postcodeMock : null,
   } as any;
 });
 
@@ -27,7 +27,7 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
     } as any)
 );
 
-test.skip("renders correctly", async () => {
+test("renders correctly", async () => {
   const handleSubmit = jest.fn();
 
   render(
@@ -42,6 +42,7 @@ test.skip("renders correctly", async () => {
 
   await waitFor(async () => {
     userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
+    userEvent.tab();
   });
   await waitFor(async () => {
     userEvent.type(screen.getByTestId("autocomplete-input"), "75");
@@ -129,7 +130,7 @@ test("recovers previously submitted address when clicking the back button", asyn
   });
 });
 
-it.skip("should not have any accessibility violations", async () => {
+it("should not have any accessibility violations", async () => {
   const handleSubmit = jest.fn();
   const { container } = render(
     <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
@@ -158,7 +159,7 @@ it.skip("should not have any accessibility violations", async () => {
   expect(results).toHaveNoViolations();
 });
 
-it.skip("clears the old address when the postcode is typed in", async () => {
+it("clears the old address when the postcode is typed in", async () => {
   // Arrange
   render(
     <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
