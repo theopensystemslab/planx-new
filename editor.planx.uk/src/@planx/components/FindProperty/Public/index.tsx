@@ -21,11 +21,15 @@ import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
-import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
+import { TeamSettings } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
+import ExternalPlanningSiteDialog, {
+  DialogPurpose,
+} from "ui/ExternalPlanningSiteDialog";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
+import { fetchCurrentTeam } from "utils";
 
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
@@ -40,13 +44,6 @@ export const FETCH_BLPU_CODES = gql`
     }
   }
 `;
-export const GET_TEAM_QUERY = gql`
-  query GetTeam($team: String = "") {
-    teams(where: { slug: { _eq: $team } }) {
-      theme
-    }
-  }
-`;
 
 type Props = PublicProps<FindProperty>;
 
@@ -58,17 +55,9 @@ function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
   const [address, setAddress] = useState<Address | undefined>();
   const flow = useStore((state) => state.flow);
-  const route = useCurrentRoute();
-  const team = route?.data?.team ?? route?.data.mountpath.split("/")[1];
+  const team = fetchCurrentTeam();
 
-  const { data } = useQuery(GET_TEAM_QUERY, {
-    skip: !Boolean(team),
-    variables: {
-      team: team,
-    },
-  });
-
-  if (!address && Boolean(data?.teams.length)) {
+  if (!address && Boolean(team)) {
     return (
       <GetAddress
         title={props.title}
@@ -76,6 +65,7 @@ function Component(props: Props) {
         setAddress={setAddress}
         initialPostcode={previouslySubmittedData?._address.postcode}
         initialSelectedAddress={previouslySubmittedData?._address}
+        teamSettings={team?.settings}
       />
     );
   } else if (address) {
@@ -116,7 +106,7 @@ function Component(props: Props) {
           },
           {
             heading: "District",
-            detail: capitalize(team),
+            detail: team?.name,
           },
           {
             heading: "Building type", // XXX: does this heading still make sense for infra?
@@ -124,12 +114,12 @@ function Component(props: Props) {
           },
         ]}
         team={team}
-        teamColor={data?.teams?.[0].theme?.primary || "#2c2c2c"}
+        teamColor={team?.theme?.primary || "#2c2c2c"}
         error={
-          // if neither admin area nor LCC match team, then show error
-          ![address.administrative_area, address.local_custodian_code].includes(
-            team.toUpperCase()
-          )
+          team?.name 
+            // if neither admin area nor LCC match team, then show error
+            ? ![address.administrative_area, address.local_custodian_code].includes(team.name.toUpperCase()) 
+            : false
         }
       />
     );
@@ -149,6 +139,7 @@ function GetAddress(props: {
   description?: string;
   initialPostcode?: string;
   initialSelectedAddress?: Option;
+  teamSettings?: TeamSettings;
 }) {
   const [postcode, setPostcode] = useState<string | null>(
     props.initialPostcode ?? null
@@ -237,6 +228,7 @@ function GetAddress(props: {
   // Autocomplete overrides
   const useStyles = makeStyles((theme) => ({
     root: {
+      paddingBottom: theme.spacing(3),
       "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
         // Default transform is "translate(14px, 20px) scale(1)""
         // This lines up the label with the initial cursor position in the input
@@ -413,6 +405,10 @@ function GetAddress(props: {
             </Typography>
           </Box>
         )}
+        <ExternalPlanningSiteDialog
+          purpose={DialogPurpose.MissingAddress}
+          teamSettings={props.teamSettings}
+        ></ExternalPlanningSiteDialog>
       </Box>
     </Card>
   );
@@ -437,6 +433,7 @@ const useClasses = makeStyles((theme) => ({
     borderBottom: `1px solid ${theme.palette.background.paper}`,
   },
 }));
+
 export function PropertyInformation(props: any) {
   const {
     title,
@@ -499,10 +496,10 @@ export function PropertyInformation(props: any) {
           </Box>
         ))}
       </Box>
-      {error && (
+      {error && team?.name && (
         <Box>
           <Typography variant="body1" color="error">
-            This address may not be in {capitalize(team)}, are you sure you want
+            This address may not be in {capitalize(team.name)}, are you sure you want
             to continue using this service?
           </Typography>
         </Box>
