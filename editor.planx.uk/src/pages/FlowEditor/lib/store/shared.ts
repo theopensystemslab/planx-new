@@ -46,14 +46,7 @@ export const sharedStore = (
   },
 
   resetPreview() {
-    set({
-      cachedBreadcrumbs: {},
-      breadcrumbs: {},
-      sessionId: "",
-      _nodesPendingEdit: [],
-      restore: false,
-      changedNode: undefined,
-    });
+    set({ cachedBreadcrumbs: {}, breadcrumbs: {}, sessionId: "" });
   },
 
   setFlow(id, flow) {

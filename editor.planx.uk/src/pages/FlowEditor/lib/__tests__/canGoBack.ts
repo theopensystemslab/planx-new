@@ -146,26 +146,4 @@ describe("cannot go back if", () => {
     });
     expect(getState().canGoBack("bmsSl3ScbV")).toStrictEqual(false);
   });
-
-  test("changing a component's answer", () => {
-    setState({
-      breadcrumbs: {
-        XYoJeox7F0: {
-          auto: false,
-          answers: ["YQXjsVsGqf"],
-        },
-        DlgsufM3OK: {
-          auto: true,
-          data: {
-            fee: 10,
-          },
-        },
-        "8ZSxuIfFYE": {
-          auto: false,
-        },
-      },
-      changedNode: "ltuI9xrBHk",
-    });
-    expect(getState().canGoBack("ltuI9xrBHk")).toStrictEqual(false);
-  });
 });
