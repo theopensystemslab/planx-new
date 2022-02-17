@@ -123,7 +123,9 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
         className={classnames(classes.backButton, {
           [classes.hidden]: !showBackButton,
         })}
-        onClick={() => record(previousCard!)}
+        onClick={() => {
+          record(previousCard!);
+        }}
       >
         ⭠ Back
       </button>
