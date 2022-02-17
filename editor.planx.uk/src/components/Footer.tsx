@@ -111,13 +111,13 @@ export default function Footer(props: Props) {
               </Dialog>
             )}
 
-            <ButtonBase>
-              <FeedbackFish projectId={feedbackFishId}>
+            <FeedbackFish projectId={feedbackFishId}>
+              <ButtonBase>
                 <Typography variant="body2" className={classes.link}>
                   Feedback
                 </Typography>
-              </FeedbackFish>
-            </ButtonBase>
+              </ButtonBase>
+            </FeedbackFish>
           </>
         )}
       </Box>
