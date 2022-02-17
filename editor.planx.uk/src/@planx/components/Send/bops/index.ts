@@ -321,11 +321,14 @@ export function getParams(
         .split("T")[0];
     }
   } catch (err) {
-    const errPayload = {
-      date: passport?.data?.["proposal.completion.date"],
-      err,
-    };
-    console.error("unable to parse completion date", errPayload);
+    const errPayload = [
+      "unable to parse completion date",
+      {
+        date: passport?.data?.["proposal.completion.date"],
+        err,
+      },
+    ];
+    console.error(errPayload);
     airbrake?.notify(errPayload);
   }
 
