@@ -47,7 +47,8 @@ const DateInputPublic: React.FC<Props> = (props) => {
     <Card handleSubmit={formik.handleSubmit}>
       <fieldset
         className={classes.fieldset}
-        aria-describedby={props.description ? DESCRIPTION_TEXT : ""}
+        role="group"
+        aria-describedby={`${DESCRIPTION_TEXT} error-message`}
       >
         <legend style={visuallyHidden}>{props.title}</legend>
         <QuestionHeader

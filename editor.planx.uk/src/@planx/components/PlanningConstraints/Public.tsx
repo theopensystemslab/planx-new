@@ -9,6 +9,7 @@ import type { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
+import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ReactHtmlParser from "react-html-parser";
@@ -174,6 +175,7 @@ function PlanningConstraintsInformation(props: any) {
 
 function ConstraintsList({ data, refreshConstraints }: any) {
   const classes = useClasses();
+  const error = data.error || undefined;
   const constraints = Object.values(data).filter(({ text }: any) => text);
 
   // Order constraints so that { value: true } ones come first
@@ -204,16 +206,23 @@ function ConstraintsList({ data, refreshConstraints }: any) {
           </List>
         </>
       ) : (
-        <div className={classes.errorSummary}>
+        <div className={classes.errorSummary} role="status">
           <Typography variant="h5" component="h2" gutterBottom>
             Failed to fetch data
           </Typography>
-          <Typography variant="body2">
-            Click the link below to try to fetch again. If you continue without
-            fetching data, you may be asked to answer questions about planning
-            constraints affecting this property later in the application.
-          </Typography>
-          <button onClick={refreshConstraints}>Try again</button>
+          {error && error.endsWith("local authority") ? (
+            <Typography variant="body2">{capitalize(error)}</Typography>
+          ) : (
+            <>
+              <Typography variant="body2">
+                Click the link below to try to fetch again. If you continue
+                without fetching data, you may be asked to answer questions
+                about planning constraints affecting this property later in the
+                application.
+              </Typography>
+              <button onClick={refreshConstraints}>Try again</button>
+            </>
+          )}
         </div>
       )}
     </Box>

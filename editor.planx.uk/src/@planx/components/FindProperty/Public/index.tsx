@@ -360,7 +360,7 @@ function GetAddress(props: {
         ></ExternalPlanningSiteDialog>
         {addressesInPostcode?.header?.totalresults === 0 &&
           Boolean(sanitizedPostcode) && (
-            <Box pt={2}>
+            <Box pt={2} role="status">
               <Typography variant="body1" color="error">
                 No addresses found in this postcode.
               </Typography>
