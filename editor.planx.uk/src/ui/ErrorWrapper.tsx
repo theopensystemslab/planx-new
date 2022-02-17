@@ -24,11 +24,7 @@ const useClasses = makeStyles((theme) => ({
 export default function ErrorWrapper(props: Props): FCReturn {
   const classes = useClasses();
   return (
-    <div
-      id="error-wrapper"
-      className={props.error ? classes.rootError : undefined}
-      role="status"
-    >
+    <div className={props.error ? classes.rootError : undefined} role="status">
       {props.error && (
         <p id="error-message" className={classes.errorText}>
           {props.error}
