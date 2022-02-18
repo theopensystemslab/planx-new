@@ -98,6 +98,16 @@ export default function ConfirmationComponent(props: Props) {
     .concat(sentData["proposal_details"] || [])
     .concat(formattedFiles);
 
+  const downloadCsv = (filename: string, content: string) => {
+    const csv = "data:text/csv;charset=utf-8," + content;
+    const data = encodeURI(csv);
+
+    let link = document.createElement("a");
+    link.setAttribute("href", data);
+    link.setAttribute("download", `${filename}.csv`);
+    link.click();
+  };
+
   const classes = useClasses();
 
   return (
@@ -132,16 +142,29 @@ export default function ConfirmationComponent(props: Props) {
 
         {
           <div className={classes.download}>
-            <a
-              href={`${
-                process.env.REACT_APP_API_URL
-              }/download-application?ref=${
-                props.details?.["Planning Application Reference"] ||
-                "application"
-              }&data=${JSON.stringify(data)}`}
+            <button
+              onClick={async () => {
+                const reference =
+                  props.details?.["Planning Application Reference"] ||
+                  "application";
+                await fetch(
+                  `${process.env.REACT_APP_API_URL}/download-application?ref=${reference}`,
+                  {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                  }
+                )
+                  .then((res) => res.text())
+                  .then((data) => downloadCsv(reference, data))
+                  .catch((error) => console.log(error));
+              }}
             >
-              <button>Download your application data (.csv)</button>
-            </a>
+              Download your application data (.csv)
+            </button>
           </div>
         }
 
