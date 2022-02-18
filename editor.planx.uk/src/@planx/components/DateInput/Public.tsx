@@ -15,7 +15,7 @@ import DateInputComponent from "ui/DateInput";
 import InputRow from "ui/InputRow";
 import { object } from "yup";
 
-import { DESCRIPTION_TEXT } from "../shared/constants";
+import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 
 export type Props = PublicProps<DateInput, UserData>;
@@ -48,7 +48,12 @@ const DateInputPublic: React.FC<Props> = (props) => {
       <fieldset
         className={classes.fieldset}
         role="group"
-        aria-describedby={`${DESCRIPTION_TEXT} error-message`}
+        aria-describedby={[
+          props.description ? DESCRIPTION_TEXT : "",
+          formik.errors.date ? ERROR_MESSAGE : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
         <legend style={visuallyHidden}>{props.title}</legend>
         <QuestionHeader

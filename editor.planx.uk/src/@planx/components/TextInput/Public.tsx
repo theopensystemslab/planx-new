@@ -8,7 +8,7 @@ import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import { object } from "yup";
 
-import { DESCRIPTION_TEXT } from "../shared/constants";
+import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { TextInput, UserData } from "./model";
 import { userDataSchema } from "./model";
@@ -57,7 +57,12 @@ const TextInputComponent: React.FC<Props> = (props) => {
             errorMessage={formik.errors.text as string}
             id="text-input"
             inputProps={{
-              "aria-describedby": props.description ? DESCRIPTION_TEXT : "",
+              "aria-describedby": [
+                props.description ? DESCRIPTION_TEXT : "",
+                formik.errors.text ? ERROR_MESSAGE : "",
+              ]
+                .filter(Boolean)
+                .join(" "),
             }}
           />
         </InputLabel>

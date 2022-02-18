@@ -8,7 +8,10 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { visuallyHidden } from "@material-ui/utils";
-import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
+import {
+  DESCRIPTION_TEXT,
+  ERROR_MESSAGE,
+} from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
@@ -305,7 +308,12 @@ function GetAddress(props: {
             style={{ marginBottom: "20px" }}
             inputProps={{
               maxLength: 8,
-              "aria-describedby": props.description ? DESCRIPTION_TEXT : "",
+              "aria-describedby": [
+                props.description ? DESCRIPTION_TEXT : "",
+                showPostcodeError && !sanitizedPostcode ? ERROR_MESSAGE : "",
+              ]
+                .filter(Boolean)
+                .join(" "),
             }}
           />
         </InputLabel>
