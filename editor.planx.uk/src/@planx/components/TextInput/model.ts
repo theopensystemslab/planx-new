@@ -17,12 +17,12 @@ const emailRegex =
 
 export const userDataSchema = (type?: TextInputType): SchemaOf<UserData> =>
   string()
-    .required("Enter your answer")
+    .required("Enter your answer before continuing")
     .test({
       name: "valid",
       message: (() => {
         if (!type) {
-          return "Enter your answer.";
+          return "Enter your answer before continuing";
         }
         if (type === TextInputType.Short) {
           return "Your answer must be 120 characters or fewer.";
