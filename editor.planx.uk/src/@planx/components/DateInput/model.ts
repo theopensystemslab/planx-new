@@ -61,7 +61,7 @@ const displayDate = (date: string): string | undefined => {
 export const dateSchema = () => {
   return string().test(
     "valid",
-    "Enter a valid date",
+    "Enter a valid date in DD.MM.YYYY format",
     (date: string | undefined) => {
       // test() runs regardless of required status, so don't fail it if it's undefined
       return Boolean(!date || isDateValid(date));
@@ -74,7 +74,7 @@ export const dateRangeSchema: (params: {
   max?: string;
 }) => SchemaOf<string> = (params) =>
   dateSchema()
-    .required("Enter a valid date")
+    .required("Enter a valid date in DD.MM.YYYY format")
     .test({
       name: "too soon",
       message: `Enter a date later than ${

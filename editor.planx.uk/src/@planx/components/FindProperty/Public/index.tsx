@@ -8,7 +8,10 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { visuallyHidden } from "@material-ui/utils";
-import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
+import {
+  DESCRIPTION_TEXT,
+  ERROR_MESSAGE,
+} from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
@@ -116,9 +119,12 @@ function Component(props: Props) {
         team={team}
         teamColor={team?.theme?.primary || "#2c2c2c"}
         error={
-          team?.name 
-            // if neither admin area nor LCC match team, then show error
-            ? ![address.administrative_area, address.local_custodian_code].includes(team.name.toUpperCase()) 
+          team?.name
+            ? // if neither admin area nor LCC match team, then show error
+              ![
+                address.administrative_area,
+                address.local_custodian_code,
+              ].includes(team.name.toUpperCase())
             : false
         }
       />
@@ -344,7 +350,12 @@ function GetAddress(props: {
             style={{ marginBottom: "20px" }}
             inputProps={{
               maxLength: 8,
-              "aria-describedby": props.description ? DESCRIPTION_TEXT : "",
+              "aria-describedby": [
+                props.description ? DESCRIPTION_TEXT : "",
+                showPostcodeError && !sanitizedPostcode ? ERROR_MESSAGE : "",
+              ]
+                .filter(Boolean)
+                .join(" "),
             }}
           />
         </InputLabel>
@@ -399,7 +410,7 @@ function GetAddress(props: {
           />
         )}
         {(data?.error || totalAddresses === 0) && Boolean(sanitizedPostcode) && (
-          <Box pt={2}>
+          <Box pt={2} role="status">
             <Typography variant="body1" color="error">
               {data.error?.message || "No addresses found in this postcode."}
             </Typography>
@@ -497,10 +508,10 @@ export function PropertyInformation(props: any) {
         ))}
       </Box>
       {error && team?.name && (
-        <Box>
+        <Box role="status">
           <Typography variant="body1" color="error">
-            This address may not be in {capitalize(team.name)}, are you sure you want
-            to continue using this service?
+            This address may not be in {capitalize(team.name)}, are you sure you
+            want to continue using this service?
           </Typography>
         </Box>
       )}
