@@ -15,11 +15,12 @@ import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
+import capitalize from "lodash/capitalize";
 import find from "lodash/find";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import { TeamSettings } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
@@ -97,10 +98,7 @@ function Component(props: Props) {
         propertyDetails={[
           {
             heading: "Address",
-            detail: address.single_line_address.replace(
-              `, ${address.postcode}`,
-              ""
-            ),
+            detail: address.title,
           },
           {
             heading: "Postcode",
@@ -111,11 +109,18 @@ function Component(props: Props) {
             detail: team?.name,
           },
           {
-            heading: "Building type",
+            heading: "Building type", // XXX: does this heading still make sense for infra?
             detail: address.planx_description,
           },
         ]}
+        team={team}
         teamColor={team?.theme?.primary || "#2c2c2c"}
+        error={
+          team?.name 
+            // if neither admin area nor LCC match team, then show error
+            ? ![address.administrative_area, address.local_custodian_code].includes(team.name.toUpperCase()) 
+            : false
+        }
       />
     );
   } else {
@@ -147,19 +152,34 @@ function GetAddress(props: {
     props.initialSelectedAddress ?? undefined
   );
   const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
+  const [offset, setOffset] = useState<number>(0);
+  const [totalAddresses, setTotalAddresses] = useState<number | undefined>(
+    undefined
+  );
+  const [addressesInPostcode, setAddressesInPostcode] = useState<any[]>([]);
 
   // Fetch addresses in this postcode from the OS Places API
-  const { data: addressesInPostcode } = useSWR(
-    () =>
-      sanitizedPostcode
-        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&lr=EN`
-        : null,
+  // https://apidocs.os.uk/docs/os-places-service-metadata
+  let osPlacesEndpoint = `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&dataset=LPI&output_srs=EPSG:4326&lr=EN&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&maxresults=100`;
+
+  const { data } = useSWR(
+    () => (sanitizedPostcode ? osPlacesEndpoint + `&offset=${offset}` : null),
     {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
       errorRetryCount: 3,
     }
   );
+
+  useEffect(() => {
+    if (data && !data?.error) {
+      // Concat results to existing list of addresses for cases of paginated results
+      const concatenated = addressesInPostcode.concat(data.results || []);
+      setAddressesInPostcode(concatenated);
+      setTotalAddresses(data.header.totalresults);
+      // console.log("fetched", concatenated.length, "/", data.header.totalresults);
+    }
+  }, [data]);
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES);
@@ -168,32 +188,41 @@ function GetAddress(props: {
   //    refactor model.ts to better align to OS Places DPA or LPI output
   const addresses: Address[] = [];
   if (
-    Boolean(addressesInPostcode?.results?.length) &&
+    Boolean(addressesInPostcode.length) &&
     Boolean(blpuCodes?.blpu_codes?.length)
   ) {
-    addressesInPostcode.results.map((a: any) => {
-      addresses.push({
-        uprn: a.DPA.UPRN.padStart(12, "0"),
-        blpu_code: a.DPA.BLPU_STATE_CODE,
-        latitude: a.DPA.LAT,
-        longitude: a.DPA.LNG,
-        organisation: a.DPA.ORGANISATION_NAME || null,
-        sao: null,
-        pao: a.DPA.BUILDING_NUMBER,
-        street: a.DPA.THOROUGHFARE_NAME,
-        town: a.DPA.POST_TOWN,
-        postcode: a.DPA.POSTCODE,
-        x: a.DPA.X_COORDINATE,
-        y: a.DPA.Y_COORDINATE,
-        planx_description:
-          find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
-            ?.description || null,
-        planx_value:
-          find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
-            ?.value || null,
-        single_line_address: a.DPA.ADDRESS,
+    addressesInPostcode
+      // Only show "APPROVED" addresses, filter out "ALTERNATIVE", "HISTORIC", or "PROVISIONAL" records
+      // https://www.ordnancesurvey.co.uk/documents/product-support/tech-spec/addressbase-premium-technical-specification.pdf (p61)
+      .filter((a) => a.LPI.LPI_LOGICAL_STATUS_CODE_DESCRIPTION === "APPROVED")
+      .map((a) => {
+        addresses.push({
+          uprn: a.LPI.UPRN.padStart(12, "0"),
+          blpu_code: a.LPI.BLPU_STATE_CODE,
+          latitude: a.LPI.LAT,
+          longitude: a.LPI.LNG,
+          organisation: a.LPI.ORGANISATION || null,
+          sao: a.LPI.SAO_TEXT,
+          pao: [a.LPI.PAO_START_NUMBER, a.LPI.PAO_START_SUFFIX]
+            .filter(Boolean)
+            .join(""), // docs reference PAO_TEXT, but not found in response so roll our own
+          street: a.LPI.STREET_DESCRIPTION,
+          town: a.LPI.TOWN_NAME,
+          postcode: a.LPI.POSTCODE_LOCATOR,
+          x: a.LPI.X_COORDINATE,
+          y: a.LPI.Y_COORDINATE,
+          planx_description:
+            find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
+              ?.description || null,
+          planx_value:
+            find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
+              ?.value || null,
+          single_line_address: a.LPI.ADDRESS,
+          administrative_area: a.LPI.ADMINISTRATIVE_AREA, // local highway authority name (proxy for local authority?)
+          local_custodian_code: a.LPI.LOCAL_CUSTODIAN_CODE_DESCRIPTION, // similar to GSS_CODE, but may not reflect merged councils
+          title: a.LPI.ADDRESS.split(`, ${a.LPI.ADMINISTRATIVE_AREA}`)[0], // display value used in autocomplete dropdown & FindProperty
+        });
       });
-    });
   }
 
   // Autocomplete overrides
@@ -263,7 +292,17 @@ function GetAddress(props: {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     // Reset the address on change of postcode - ensures no visual mismatch between address and postcode
-    if (selectedOption) setSelectedOption(undefined);
+    if (selectedOption) {
+      setSelectedOption(undefined);
+    }
+
+    // Also reset any previously fetched addresses - ensures new results aren't concatenated to prev options
+    if (totalAddresses && Boolean(addressesInPostcode.length)) {
+      setOffset(0);
+      setTotalAddresses(undefined);
+      setAddressesInPostcode([]);
+    }
+
     // Validate and set Postcode
     const input = e.target.value;
     if (parse(input.trim()).valid) {
@@ -316,11 +355,7 @@ function GetAddress(props: {
               .map(
                 (address: Address): Option => ({
                   ...address,
-                  // we already know the postcode so remove it from full address
-                  title: address.single_line_address.replace(
-                    `, ${address.postcode}`,
-                    ""
-                  ),
+                  title: address.title,
                 })
               )
               .sort((a: Option, b: Option) => sorter(a.title, b.title))}
@@ -345,6 +380,15 @@ function GetAddress(props: {
                 setSelectedOption(selectedOption);
               }
             }}
+            onOpen={(event) => {
+              // Fetch additional paginated results from OS Places if they exist, concat results to options before input
+              if (
+                totalAddresses &&
+                totalAddresses > addressesInPostcode.length
+              ) {
+                setOffset(addressesInPostcode.length);
+              }
+            }}
             disablePortal
             disableClearable
             PaperComponent={({ children }) => (
@@ -354,18 +398,17 @@ function GetAddress(props: {
             )}
           />
         )}
+        {(data?.error || totalAddresses === 0) && Boolean(sanitizedPostcode) && (
+          <Box pt={2}>
+            <Typography variant="body1" color="error">
+              {data.error?.message || "No addresses found in this postcode."}
+            </Typography>
+          </Box>
+        )}
         <ExternalPlanningSiteDialog
           purpose={DialogPurpose.MissingAddress}
           teamSettings={props.teamSettings}
         ></ExternalPlanningSiteDialog>
-        {addressesInPostcode?.header?.totalresults === 0 &&
-          Boolean(sanitizedPostcode) && (
-            <Box pt={2}>
-              <Typography variant="body1" color="error">
-                No addresses found in this postcode.
-              </Typography>
-            </Box>
-          )}
       </Box>
     </Card>
   );
@@ -399,7 +442,9 @@ export function PropertyInformation(props: any) {
     lat,
     lng,
     handleSubmit,
+    team,
     teamColor,
+    error,
   } = props;
   const styles = useClasses();
   const formik = useFormik({
@@ -439,7 +484,7 @@ export function PropertyInformation(props: any) {
           featureFill
         />
       </Box>
-      <Box component="dl" mb={6}>
+      <Box component="dl" mb={3}>
         {propertyDetails.map(({ heading, detail }: any) => (
           <Box className={styles.propertyDetail} key={heading}>
             <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
@@ -451,6 +496,14 @@ export function PropertyInformation(props: any) {
           </Box>
         ))}
       </Box>
+      {error && team?.name && (
+        <Box>
+          <Typography variant="body1" color="error">
+            This address may not be in {capitalize(team.name)}, are you sure you want
+            to continue using this service?
+          </Typography>
+        </Box>
+      )}
       <Box color="text.secondary" textAlign="right">
         <CollapsibleInput
           handleChange={formik.handleChange}
