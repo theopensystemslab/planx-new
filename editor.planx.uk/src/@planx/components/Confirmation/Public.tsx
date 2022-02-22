@@ -8,6 +8,7 @@ import omit from "lodash/omit";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Banner from "ui/Banner";
+import FileDownload from "ui/FileDownload";
 import NumberedList from "ui/NumberedList";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
@@ -30,23 +31,6 @@ const useClasses = makeStyles((theme) => ({
   },
   listHeading: {
     marginBottom: theme.spacing(2),
-  },
-  download: {
-    marginTop: theme.spacing(1),
-    textAlign: "right",
-    "& button": {
-      background: "none",
-      "border-style": "none",
-      color: theme.palette.text.primary,
-      cursor: "pointer",
-      fontSize: "inherit",
-      fontFamily: "inherit",
-      textDecoration: "underline",
-      padding: theme.spacing(2),
-    },
-    "& button:hover": {
-      backgroundColor: theme.palette.background.paper,
-    },
   },
 }));
 
@@ -98,16 +82,6 @@ export default function ConfirmationComponent(props: Props) {
     .concat(sentData["proposal_details"] || [])
     .concat(formattedFiles);
 
-  const downloadCsv = (filename: string, content: string) => {
-    const csv = "data:text/csv;charset=utf-8," + content;
-    const data = encodeURI(csv);
-
-    let link = document.createElement("a");
-    link.setAttribute("href", data);
-    link.setAttribute("download", `${filename}.csv`);
-    link.click();
-  };
-
   const classes = useClasses();
 
   return (
@@ -141,32 +115,12 @@ export default function ConfirmationComponent(props: Props) {
         )}
 
         {
-          <div className={classes.download}>
-            <button
-              onClick={async () => {
-                const reference =
-                  props.details?.["Planning Application Reference"] ||
-                  "application";
-
-                await fetch(
-                  `${process.env.REACT_APP_API_URL}/download-application`,
-                  {
-                    method: "POST",
-                    headers: {
-                      Accept: "application/json",
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                  }
-                )
-                  .then((res) => res.text())
-                  .then((data) => downloadCsv(reference, data))
-                  .catch((error) => console.log(error));
-              }}
-            >
-              Download your application data (.csv)
-            </button>
-          </div>
+          <FileDownload
+            data={data}
+            filename={
+              props.details?.["Planning Application Reference"] || "application"
+            }
+          />
         }
 
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
