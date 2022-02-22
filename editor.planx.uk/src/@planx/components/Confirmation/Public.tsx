@@ -147,8 +147,9 @@ export default function ConfirmationComponent(props: Props) {
                 const reference =
                   props.details?.["Planning Application Reference"] ||
                   "application";
+
                 await fetch(
-                  `${process.env.REACT_APP_API_URL}/download-application?ref=${reference}`,
+                  `${process.env.REACT_APP_API_URL}/download-application`,
                   {
                     method: "POST",
                     headers: {

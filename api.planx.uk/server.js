@@ -496,8 +496,8 @@ app.post("/download-application", async (req, res, next) => {
   
   try {
     // build a CSV and stream the response
-    const filename = req.query.ref;
     stringify(req.body, { columns: ["question", "responses", "metadata"], header: true }).pipe(res);
+    res.header("Content-type", "text/csv");
   } catch (err) {
     next(err);
   }
