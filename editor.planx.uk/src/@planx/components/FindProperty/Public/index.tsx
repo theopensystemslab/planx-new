@@ -72,6 +72,26 @@ function Component(props: Props) {
       />
     );
   } else if (address) {
+    let warning: {
+      show: boolean;
+      os_administrative_area: string;
+      os_local_custodian_code: string;
+      planx_team_name?: string;
+    } = {
+      show: false,
+      os_administrative_area: address.administrative_area,
+      os_local_custodian_code: address.local_custodian_code,
+    };
+
+    if (team?.name) {
+      // if neither admin area nor LCC match team, then show warning error msg
+      warning.show = ![
+        address.administrative_area,
+        address.local_custodian_code,
+      ].includes(team.name.toUpperCase());
+      warning.planx_team_name = team.name.toUpperCase();
+    }
+
     return (
       <PropertyInformation
         handleSubmit={(feedback?: string) => {
@@ -84,6 +104,7 @@ function Component(props: Props) {
 
             const passportData = {
               _address: address,
+              _addressWarning: warning,
               ...newPassportData,
             };
 
@@ -118,15 +139,7 @@ function Component(props: Props) {
         ]}
         team={team}
         teamColor={team?.theme?.primary || "#2c2c2c"}
-        error={
-          team?.name
-            ? // if neither admin area nor LCC match team, then show error
-              ![
-                address.administrative_area,
-                address.local_custodian_code,
-              ].includes(team.name.toUpperCase())
-            : false
-        }
+        error={warning.show}
       />
     );
   } else {
