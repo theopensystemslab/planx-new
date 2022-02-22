@@ -101,6 +101,14 @@ test("recovers previously submitted address when clicking the back button", asyn
       title: "103 COBOURG ROAD, LONDON",
       planx_description: "HMO Parent",
       planx_value: "residential.HMO.parent",
+      administrative_area: "SOUTHWARK",
+      local_custodian_code: "SOUTHWARK",
+    },
+    _addressWarning: {
+      show: true,
+      os_administrative_area: "SOUTHWARK",
+      os_local_custodian_code: "SOUTHWARK",
+      planx_team_name: "CANTERBURY",
     },
     "property.type": ["residential.HMO.parent"],
   };
