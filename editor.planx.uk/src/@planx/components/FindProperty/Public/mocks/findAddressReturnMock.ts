@@ -11,7 +11,6 @@ export default [
       data: {
         blpu_codes: [
           {
-            __typename: "blpu_codes",
             code: "RH01",
             description: "HMO Parent",
             value: "residential.HMO.parent",

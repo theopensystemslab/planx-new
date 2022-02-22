@@ -14,7 +14,7 @@ const TEAM = "canterbury";
 
 jest.spyOn(SWR, "default").mockImplementation((url: any) => {
   return {
-    data: postcodeMock,
+    data: url()?.startsWith("https://api.os.uk") ? postcodeMock : null,
   } as any;
 });
 
@@ -41,10 +41,11 @@ test("renders correctly", async () => {
   );
 
   await waitFor(async () => {
-    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
+    userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
+    userEvent.tab();
   });
   await waitFor(async () => {
-    await userEvent.type(screen.getByTestId("autocomplete-input"), "75");
+    userEvent.type(screen.getByTestId("autocomplete-input"), "75");
   });
   await act(async () => {
     userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
@@ -57,6 +58,26 @@ test("renders correctly", async () => {
   });
 
   expect(handleSubmit).toHaveBeenCalled();
+});
+
+test("it displays an error if you submit an invalid postcode", async () => {
+  const handleSubmit = jest.fn();
+
+  render(
+    <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        handleSubmit={handleSubmit}
+      />
+    </MockedProvider>
+  );
+
+  await waitFor(async () => {
+    userEvent.type(screen.getByLabelText("Postcode"), "SE5{enter}");
+  });
+
+  expect(screen.getByText("Enter a valid UK postcode")).toBeInTheDocument;
 });
 
 test("recovers previously submitted address when clicking the back button", async () => {
@@ -152,7 +173,7 @@ it("clears the old address when the postcode is typed in", async () => {
   // Act
   // Enter a postcode...
   await waitFor(async () => {
-    userEvent.type(screen.getByLabelText("Postcode"), "S15 4ST");
+    userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
   });
   // ...and select an address
   await waitFor(async () => {
