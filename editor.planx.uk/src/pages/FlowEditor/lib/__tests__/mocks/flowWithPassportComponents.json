@@ -1,0 +1,54 @@
+{
+  "_root": {
+    "edges": [
+      "findProperty",
+      "text",
+      "drawBoundary",
+      "planningConstraints",
+      "text2",
+      "notice"
+    ]
+  },
+  "planningConstraints": {
+    "data": {
+      "fn": "property.constraints.planning",
+      "title": "Planning constraints",
+      "description": "<p>Things that might affect your project</p>\n"
+    },
+    "type": 11
+  },
+  "drawBoundary": {
+    "data": {
+      "dataFieldBoundary": "property.boundary.site"
+    },
+    "type": 10
+  },
+  "text": {
+    "data": {
+      "type": "short",
+      "title": "Text"
+    },
+    "type": 110
+  },
+  "text2": {
+    "data": {
+      "type": "short",
+      "title": "Text 2"
+    },
+    "type": 110
+  },
+  "findProperty": {
+    "data": {
+      "title": "Find Property"
+    },
+    "type": 9
+  },
+  "notice": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "The End",
+      "resetButton": false
+    },
+    "type": 8
+  }
+}

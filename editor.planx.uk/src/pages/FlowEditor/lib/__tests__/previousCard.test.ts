@@ -22,7 +22,7 @@ const setup = (args = {}) =>
 describe("store.previousCard is", () => {
   test("undefined when there are no breadcrumbs", () => {
     setup();
-    expect(getState().previousCard()).toBeUndefined();
+    expect(getState().previousCard(getState().currentCard())).toBeUndefined();
   });
 
   test("undefined when cards were automatically answered", () => {
@@ -32,7 +32,7 @@ describe("store.previousCard is", () => {
         b: { auto: true },
       },
     });
-    expect(getState().previousCard()).toBeUndefined();
+    expect(getState().previousCard(getState().currentCard())).toBeUndefined();
   });
 
   test("the most recent human-answered card id", () => {
@@ -43,6 +43,6 @@ describe("store.previousCard is", () => {
       },
     });
 
-    expect(getState().previousCard()).toEqual("a");
+    expect(getState().previousCard(getState().currentCard())).toEqual("a");
   });
 });
