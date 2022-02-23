@@ -29,6 +29,7 @@ export default function ReactMarkdownOrHtml(props: {
   className?: string;
   openLinksOnNewTab?: boolean;
   id?: string;
+  manuallyIncrementHeaders?: boolean;
 }): FCReturn {
   const classes = useClasses();
   if (typeof props.source !== "string") {
@@ -38,7 +39,9 @@ export default function ReactMarkdownOrHtml(props: {
     const replaceTarget = props.openLinksOnNewTab
       ? props.source.replaceAll(`target="_self"`, `target="_blank" external`)
       : props.source;
-    const incrementHeaders = incrementHeaderElements(replaceTarget);
+    const incrementHeaders = props.manuallyIncrementHeaders
+      ? replaceTarget
+      : incrementHeaderElements(replaceTarget);
 
     return (
       <div
