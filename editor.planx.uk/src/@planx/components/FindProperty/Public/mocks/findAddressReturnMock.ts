@@ -35,7 +35,7 @@ export default [
                 url: "https://www.planningportal.co.uk/",
               },
             },
-            name: "Cantebury",
+            name: "Canterbury",
           },
         ],
       },
