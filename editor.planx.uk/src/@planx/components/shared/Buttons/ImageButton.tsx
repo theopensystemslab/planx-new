@@ -5,14 +5,14 @@ import ImageIcon from "@material-ui/icons/Image";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import Checkbox from "ui/Checkbox";
 
-import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
-
-export interface Props extends ButtonProps {
+export interface Props {
   id?: string;
   title: string;
   responseKey?: string | number;
   img?: string;
   checkbox?: boolean;
+  selected: boolean;
+  onClick: (checked: boolean) => void;
 }
 
 const useStyles = makeStyles((theme) => {
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => {
 });
 
 function ImageResponse(props: Props) {
-  const { selected, title, img, checkbox, id } = props;
+  const { selected, title, img, checkbox, id, onClick } = props;
   const [imgError, setImgError] = useState(!(img && img.length));
   const [multiline, setMultiline] = useState(false);
 
@@ -76,7 +76,7 @@ function ImageResponse(props: Props) {
   };
 
   return (
-    <ButtonBase {...props}>
+    <label htmlFor={id} className={classes.label}>
       <Box display="flex" flexDirection="column" width="100%" height="100%">
         <Box
           width="100%"
@@ -135,18 +135,19 @@ function ImageResponse(props: Props) {
                 id={id}
                 checked={selected}
                 color={selected ? "primary.contrastText" : "text.primary"}
+                onChange={onClick}
               />
             )}
             <Typography
               variant="body2"
               className={checkbox ? classes.title : undefined}
             >
-              <label className={classes.label}>{title}</label>
+              {title}
             </Typography>
           </Box>
         </Box>
       </Box>
-    </ButtonBase>
+    </label>
   );
 }
 

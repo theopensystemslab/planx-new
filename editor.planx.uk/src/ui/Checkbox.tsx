@@ -1,6 +1,6 @@
 import Box from "@material-ui/core/Box";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import * as React from "react";
+import React from "react";
 import { borderedFocusStyle } from "theme";
 
 export const useClasses = makeStyles<Theme, Props>((theme) => ({
@@ -39,6 +39,7 @@ export interface Props {
   id?: string;
   checked: boolean;
   color?: string;
+  onChange: (checked: boolean) => void;
 }
 
 export default function Checkbox(props: Props): FCReturn {
@@ -51,6 +52,9 @@ export default function Checkbox(props: Props): FCReturn {
         className={classes.input}
         type="checkbox"
         id={props.id}
+        onChange={(ev) => {
+          props.onChange(ev?.target?.checked);
+        }}
       />
       <span className={classes.icon}></span>
     </Box>
