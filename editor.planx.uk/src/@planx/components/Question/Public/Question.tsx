@@ -9,9 +9,12 @@ import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
-import { Store } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
+import ExternalPlanningSiteDialog, {
+  DialogPurpose,
+} from "ui/ExternalPlanningSiteDialog";
 
 export interface IQuestion {
   text?: string;
@@ -54,6 +57,9 @@ const useClasses = makeStyles(() => ({
 const Question: React.FC<IQuestion> = (props) => {
   const theme = useTheme();
   const classes = useClasses();
+  const currentCard = useStore((state) => state.currentCard());
+  const isProjectTypeQuestion =
+    currentCard?.data?.fn === "proposal.projectType";
 
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
   const previousResponseKey = props.responses.find(
@@ -148,6 +154,11 @@ const Question: React.FC<IQuestion> = (props) => {
           </Grid>
         </fieldset>
       </form>
+      {isProjectTypeQuestion && (
+        <ExternalPlanningSiteDialog
+          purpose={DialogPurpose.MissingProjectType}
+        ></ExternalPlanningSiteDialog>
+      )}
     </Card>
   );
 };

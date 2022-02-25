@@ -3,11 +3,7 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Fade from "@material-ui/core/Fade";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import ExternalPlanningSiteDialog, {
-  DialogPurpose,
-} from "ui/ExternalPlanningSiteDialog";
 
 interface Props {
   children: React.ReactNode;
@@ -38,11 +34,6 @@ const Card: React.FC<Props> = ({
   const classes = useStyles();
   const theme = useTheme();
 
-  const currentCard = useStore((state) => state.currentCard());
-  const isProjectTypeQuestion = ["proposal.projectType"].includes(
-    currentCard?.data?.fn
-  );
-
   return (
     <Fade in={true} timeout={theme.transitions.duration.enteringScreen}>
       <Container maxWidth="md">
@@ -55,11 +46,7 @@ const Card: React.FC<Props> = ({
           {...props}
         >
           {children}
-          {isProjectTypeQuestion && (
-            <ExternalPlanningSiteDialog
-              purpose={DialogPurpose.MissingProjectType}
-            ></ExternalPlanningSiteDialog>
-          )}
+
           {handleSubmit && (
             <Button
               variant="contained"
