@@ -1,117 +1,127 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
+import { ThemeOptions } from "@material-ui/core/styles";
+
+import { TeamTheme } from "./types";
 
 const GOVUK_YELLOW = "#FFDD00";
 
 // GOVUK Focus style
 // https://design-system.service.gov.uk/get-started/focus-states/
-export const focusStyle = {
-  outline: `3px solid ${GOVUK_YELLOW}`,
+export const focusStyle = (focusColour: string = GOVUK_YELLOW) => ({
+  outline: `3px solid ${focusColour}`,
   outlineOffset: 0,
   zIndex: 1,
-};
+});
 
 // Ensure that if the element already has a border, the border gets thicker
-export const borderedFocusStyle = {
-  ...focusStyle,
+export const borderedFocusStyle = (focusColour: string) => ({
+  ...focusStyle(focusColour),
   boxShadow: "inset 0 0 0 2px black",
-};
+});
 
-const theme = createMuiTheme({
-  typography: {
-    fontFamily: "'Inter', Arial",
-    h1: {
-      fontSize: 40,
-      letterSpacing: "-0.02em",
-      fontWeight: 700,
-    },
-    h3: {
-      fontSize: 25,
-      letterSpacing: "-0.02em",
-      fontWeight: 700,
-    },
-    h4: {
-      fontSize: 20,
-    },
-    h5: {
-      fontSize: 20,
-      fontWeight: 700,
-    },
-    h6: {
-      fontSize: 15,
-      fontWeight: 600,
-    },
-    subtitle1: {
-      fontSize: 20,
-    },
-    body1: {
-      fontSize: 18,
-    },
-    body2: {
-      fontSize: 15,
-    },
-  },
-  palette: {
-    primary: {
-      main: "#000661",
-      contrastText: "#fff",
-    },
-    background: {
-      default: "#fff",
-      paper: "#f2f2f2",
-    },
-    secondary: {
-      main: "#EFEFEF",
-    },
-    text: {
-      secondary: "rgba(0,0,0,0.6)",
-    },
-    action: {
-      selected: "#F8F8F8",
-    },
-    error: {
-      main: "#E91B0C",
-    },
-  },
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 500,
-      md: 768, // Used with Container as general max-width
-      lg: 1280,
-      xl: 1920,
-    },
-  },
-  props: {
-    // MuiButton: {
-    //   elevation: 0,
-    // },
-    MuiPaper: {
-      elevation: 0,
-    },
-  },
-  transitions: {
-    duration: {
-      enteringScreen: 400,
-    },
-  },
-  overrides: {
-    MuiInputBase: {
-      root: {
-        "&$focused": focusStyle,
+/**
+ * Get Global theme options
+ * The global theme is used in editor, and as the base theme in Preview/Unpublished which can be
+ *  merged with Team specific options
+ * @returns {ThemeOptions}
+ */
+export const getGlobalThemeOptions = (): ThemeOptions => {
+  const themeOptions: ThemeOptions = {
+    typography: {
+      fontFamily: "'Inter', Arial",
+      h1: {
+        fontSize: 40,
+        letterSpacing: "-0.02em",
+        fontWeight: 700,
+      },
+      h3: {
+        fontSize: 25,
+        letterSpacing: "-0.02em",
+        fontWeight: 700,
+      },
+      h4: {
+        fontSize: 20,
+      },
+      h5: {
+        fontSize: 20,
+        fontWeight: 700,
+      },
+      h6: {
+        fontSize: 15,
+        fontWeight: 600,
+      },
+      subtitle1: {
+        fontSize: 20,
+      },
+      body1: {
+        fontSize: 18,
+      },
+      body2: {
+        fontSize: 15,
       },
     },
+    palette: {
+      primary: {
+        main: "#000661",
+        contrastText: "#fff",
+      },
+      background: {
+        default: "#fff",
+        paper: "#f2f2f2",
+      },
+      secondary: {
+        main: "#EFEFEF",
+      },
+      text: {
+        secondary: "rgba(0,0,0,0.6)",
+      },
+      action: {
+        selected: "#F8F8F8",
+        focus: GOVUK_YELLOW,
+      },
+      error: {
+        main: "#E91B0C",
+      },
+    },
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 500,
+        md: 768, // Used with Container as general max-width
+        lg: 1280,
+        xl: 1920,
+      },
+    },
+    props: {
+      MuiButton: {
+        // Removes default box shadow on buttons
+        disableElevation: true,
+      },
+      MuiPaper: {
+        elevation: 0,
+      },
+    },
+    transitions: {
+      duration: {
+        enteringScreen: 400,
+      },
+    },
+  };
+
+  // Separately setting "overrides" allows us to refer back to the pallette
+  themeOptions.overrides = {
     MuiCssBaseline: {
       "@global": {
         body: {
           backgroundColor: "#efefef",
         },
-        "*:focus": focusStyle,
+        "*:focus-visible": focusStyle(themeOptions.palette?.action?.focus),
       },
     },
     MuiButtonBase: {
       root: {
         fontFamily: "inherit",
-        "&:focus": focusStyle,
+        "&:focus-visible": focusStyle(themeOptions.palette?.action?.focus),
       },
     },
     MuiListItemIcon: {
@@ -136,8 +146,8 @@ const theme = createMuiTheme({
         "&:focus": {
           outline: "3px solid transparent",
           color: "black",
-          backgroundColor: GOVUK_YELLOW,
-          boxShadow: `0 -2px ${GOVUK_YELLOW}, 0 4px black`,
+          backgroundColor: themeOptions.palette?.action?.focus,
+          boxShadow: `0 -2px ${themeOptions.palette?.action?.focus}, 0 4px black`,
           textDecoration: "none",
         },
       },
@@ -160,6 +170,14 @@ const theme = createMuiTheme({
     MuiIconButton: {
       root: {
         borderRadius: 0,
+      },
+    },
+    MuiAccordionSummary: {
+      root: {
+        "&:focus-visible": {
+          backgroundColor: "inherit",
+          ...focusStyle(themeOptions.palette?.action?.focus),
+        },
       },
     },
     ...({
@@ -191,14 +209,62 @@ const theme = createMuiTheme({
       },
       // Make TypeScript happy by 'casting away' unrecognized override keys
     } as {}),
-  },
-});
+  };
 
-theme.props = {
-  MuiButton: {
-    // Removes default box shadow on buttons
-    disableElevation: true,
-  },
+  return themeOptions;
 };
 
-export default responsiveFontSizes(theme);
+/**
+ * Get team specific theme options
+ * Pass in TeamTheme to customise the pallette and associated overrides
+ * @param {TeamTheme} theme
+ * @returns {ThemeOptions}
+ */
+export const getTeamThemeOptions = (
+  theme: TeamTheme | undefined
+): ThemeOptions => {
+  // Defer to global theme if TeamTheme is not set
+  if (!theme || !theme.primary) return {};
+  return {
+    palette: {
+      primary: {
+        main: theme.primary,
+      },
+      action: {
+        focus: theme.focus,
+      },
+    },
+    overrides: {
+      MuiCssBaseline: {
+        "@global": {
+          "*:focus-visible": focusStyle(theme.focus),
+        },
+      },
+      MuiButtonBase: {
+        root: {
+          "&:focus-visible": focusStyle(theme.focus),
+        },
+      },
+      MuiLink: {
+        root: {
+          "&:focus": {
+            backgroundColor: theme.focus,
+            boxShadow: `0 -2px ${theme.focus}, 0 4px black`,
+          },
+        },
+      },
+      MuiAccordionSummary: {
+        root: {
+          "&:focus-visible": {
+            backgroundColor: "inherit",
+            ...focusStyle(theme.focus),
+          },
+        },
+      },
+    },
+  };
+};
+
+const globalTheme = createMuiTheme(getGlobalThemeOptions());
+
+export default responsiveFontSizes(globalTheme);

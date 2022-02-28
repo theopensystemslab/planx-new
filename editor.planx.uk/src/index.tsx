@@ -19,7 +19,7 @@ import { ToastContainer } from "react-toastify";
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
-import theme from "./theme";
+import globalTheme from "./theme";
 
 const rootEl = document.getElementById("root") as HTMLElement;
 
@@ -81,7 +81,8 @@ const Layout: React.FC<{
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={globalTheme}>
+      <CssBaseline />
       <NotFoundBoundary render={() => <h1>Not found</h1>}>
         {!!isLoading ? (
           <DelayedLoadingIndicator msDelayBeforeVisible={500} />
@@ -99,7 +100,6 @@ render(
       <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
         <HelmetProvider>
           <Layout>
-            <CssBaseline />
             <Suspense fallback={null}>
               <View />
             </Suspense>

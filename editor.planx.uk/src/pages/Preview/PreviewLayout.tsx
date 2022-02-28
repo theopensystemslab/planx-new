@@ -1,13 +1,16 @@
 import Box from "@material-ui/core/Box";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Link from "@material-ui/core/Link";
 import { createMuiTheme, Theme, ThemeProvider } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ErrorFallback from "components/ErrorFallback";
 import { clearLocalFlow } from "lib/local";
+import { merge } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useCurrentRoute } from "react-navi";
+import { getGlobalThemeOptions, getTeamThemeOptions } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
@@ -19,15 +22,7 @@ const PreviewLayout: React.FC<{
   children?: any;
   settings?: FlowSettings;
   footerContent?: { [key: string]: TextContent };
-}> = ({
-  // theme = {
-  //   primary: "#2c2c2c",
-  // },
-  team,
-  children,
-  settings,
-  footerContent,
-}) => {
+}> = ({ team, children, settings, footerContent }) => {
   const { data } = useCurrentRoute();
 
   const makeHref = (path: string) => [data.mountpath, "pages", path].join("/");
@@ -65,34 +60,25 @@ const PreviewLayout: React.FC<{
       }))
     : [];
 
-  const footerItems = [
-    ...flowSettingsContent,
-    ...globalFooterItems,
-  ].filter((item): item is { title: string; href: string; bold: boolean } =>
-    Boolean(item)
+  const footerItems = [...flowSettingsContent, ...globalFooterItems].filter(
+    (item): item is { title: string; href: string; bold: boolean } =>
+      Boolean(item)
   );
 
-  const primaryColour = team.theme?.primary || "#2c2c2c";
-
-  const generatePreviewTheme = (baseTheme: Theme) =>
-    createMuiTheme({
-      ...baseTheme,
-      palette: {
-        ...baseTheme.palette,
-        primary: {
-          main: primaryColour,
-        },
-      },
-    });
+  /**
+   * Generates a MuiTheme by deep merging global and team ThemeOptions
+   * @returns {Theme}
+   */
+  const generatePreviewTheme = (): Theme => {
+    const gloalOptions = getGlobalThemeOptions();
+    const teamOptions = getTeamThemeOptions(team.theme);
+    return createMuiTheme(merge(gloalOptions, teamOptions));
+  };
 
   return (
     <ThemeProvider theme={generatePreviewTheme}>
-      <Header
-        bgcolor={primaryColour}
-        team={team}
-        phaseBanner
-        handleRestart={handleRestart}
-      />
+      <CssBaseline />
+      <Header team={team} phaseBanner handleRestart={handleRestart} />
       <Box
         id="main-content"
         pt={5}
