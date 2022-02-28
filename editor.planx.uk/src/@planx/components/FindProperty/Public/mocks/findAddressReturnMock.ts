@@ -1,4 +1,5 @@
-import { FETCH_BLPU_CODES, GET_TEAM_QUERY } from "..";
+import { FETCH_BLPU_CODES } from "..";
+import { GET_TEAM_QUERY } from "./../../../../../utils";
 
 export default [
   {
@@ -10,7 +11,6 @@ export default [
       data: {
         blpu_codes: [
           {
-            __typename: "blpu_codes",
             code: "RH01",
             description: "HMO Parent",
             value: "residential.HMO.parent",
@@ -28,24 +28,14 @@ export default [
       data: {
         teams: [
           {
-            gss_code: "1234",
             theme: {},
-          },
-        ],
-      },
-    },
-  },
-  {
-    request: {
-      query: GET_TEAM_QUERY,
-      variables: { team: "canterbury" },
-    },
-    result: {
-      data: {
-        teams: [
-          {
-            gss_code: "1234",
-            theme: {},
+            settings: {
+              externalPlanningSite: {
+                name: "Planning Portal",
+                url: "https://www.planningportal.co.uk/",
+              },
+            },
+            name: "Canterbury",
           },
         ],
       },

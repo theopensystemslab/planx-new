@@ -17,12 +17,12 @@ export const parseDrawBoundary = (
   data: Record<string, any> | undefined
 ): DrawBoundary => ({
   ...parseMoreInformation(data),
-  title: data?.title || "",
+  title: data?.title || DEFAULT_TITLE,
   description: data?.description || "",
-  titleForUploading: data?.titleForUploading || "",
+  titleForUploading: data?.titleForUploading || DEFAULT_TITLE_FOR_UPLOADING,
   descriptionForUploading: data?.descriptionForUploading || "",
   dataFieldBoundary: data?.dataFieldBoundary || DEFAULT_PASSPORT_BOUNDARY_KEY,
-  dataFieldArea: data?.dataFieldArea || "",
+  dataFieldArea: data?.dataFieldArea || DEFAULT_PASSPORT_AREA_KEY,
 });
 
 export const DEFAULT_PASSPORT_BOUNDARY_KEY = "property.boundary.site" as const;

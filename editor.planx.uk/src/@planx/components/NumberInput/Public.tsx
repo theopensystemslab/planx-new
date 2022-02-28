@@ -10,7 +10,7 @@ import InputRow from "ui/InputRow";
 import InputRowLabel from "ui/InputRowLabel";
 import { object, string } from "yup";
 
-import { DESCRIPTION_TEXT } from "../shared/constants";
+import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { NumberInput, UserData } from "./model";
 import { parseNumber } from "./model";
@@ -34,7 +34,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
     validateOnChange: false,
     validationSchema: object({
       value: string()
-        .required("Enter your answer")
+        .required("Enter your answer before continuing")
         .test({
           name: "not a number",
           message: "Enter a number",
@@ -74,7 +74,12 @@ export default function NumberInputComponent(props: Props): FCReturn {
             onChange={formik.handleChange}
             errorMessage={formik.errors.value as string}
             inputProps={{
-              "aria-describedby": props.description ? DESCRIPTION_TEXT : "",
+              "aria-describedby": [
+                props.description ? DESCRIPTION_TEXT : "",
+                formik.errors.value ? ERROR_MESSAGE : "",
+              ]
+                .filter(Boolean)
+                .join(" "),
             }}
             id="number-input"
           />

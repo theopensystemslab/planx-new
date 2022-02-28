@@ -9,8 +9,12 @@ import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
+import ExternalPlanningSiteDialog, {
+  DialogPurpose,
+} from "ui/ExternalPlanningSiteDialog";
 
 export interface IQuestion {
   text?: string;
@@ -27,6 +31,7 @@ export interface IQuestion {
     description?: string;
     img?: string;
   }[];
+  previouslySubmittedData?: Store.userData;
   handleSubmit: handleSubmit;
 }
 
@@ -39,18 +44,33 @@ enum Layout {
 const useClasses = makeStyles(() => ({
   fieldset: {
     border: 0,
+    padding: 0,
+  },
+  gridContainer: {
+    // Overwrite Mui Grid style to align with "Continue" button
+    "& > .MuiGrid-item": {
+      padding: "0px 0px 8px 2px",
+    },
   },
 }));
 
 const Question: React.FC<IQuestion> = (props) => {
   const theme = useTheme();
   const classes = useClasses();
+  const currentCard = useStore((state) => state.currentCard());
+  const isProjectTypeQuestion =
+    currentCard?.data?.fn === "proposal.projectType";
+
+  const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
+  const previousResponseKey = props.responses.find(
+    (response) => response.id === previousResponseId
+  )?.responseKey;
 
   const formik = useFormik({
     initialValues: {
       selected: {
-        id: "",
-        a: undefined,
+        id: previousResponseId ?? "",
+        a: previousResponseKey ?? undefined,
       },
     },
     onSubmit: (values) => {
@@ -73,8 +93,11 @@ const Question: React.FC<IQuestion> = (props) => {
   }
 
   return (
-    <Card>
-      <form onSubmit={formik.handleSubmit}>
+    <Card
+      handleSubmit={formik.handleSubmit}
+      isValid={Boolean(formik.values.selected.id)}
+    >
+      <form>
         <fieldset
           className={classes.fieldset}
           aria-describedby={props.description ? DESCRIPTION_TEXT : ""}
@@ -89,13 +112,16 @@ const Question: React.FC<IQuestion> = (props) => {
             definitionImg={props.definitionImg}
             img={props.img}
           />
-          <Grid container spacing={layout === Layout.Descriptions ? 2 : 1}>
+          <Grid
+            container
+            spacing={layout === Layout.Descriptions ? 2 : 1}
+            className={classes.gridContainer}
+          >
             {!props.text?.startsWith("Sorry") &&
               props.responses?.map((response) => {
                 const onClick = () => {
                   formik.setFieldValue("selected.id", response.id);
                   formik.setFieldValue("selected.a", response.responseKey);
-                  formik.submitForm();
                 };
                 const selected = a === response.responseKey;
                 const buttonProps = {
@@ -128,6 +154,11 @@ const Question: React.FC<IQuestion> = (props) => {
           </Grid>
         </fieldset>
       </form>
+      {isProjectTypeQuestion && (
+        <ExternalPlanningSiteDialog
+          purpose={DialogPurpose.MissingProjectType}
+        ></ExternalPlanningSiteDialog>
+      )}
     </Card>
   );
 };

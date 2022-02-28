@@ -16,7 +16,7 @@ specifiers:
   '@material-ui/icons': ^4.9.1
   '@material-ui/lab': ^4.0.0-alpha.56
   '@material-ui/utils': ^5.0.0-beta.5
-  '@opensystemslab/map': ^0.4.5
+  '@opensystemslab/map': ^0.4.6
   '@react-theming/storybook-addon': ^1.1.3
   '@storybook/addon-actions': ^6.4.10
   '@storybook/addon-essentials': ^6.4.10
@@ -128,7 +128,7 @@ dependencies:
   '@material-ui/icons': 4.9.1_aca2900b4bcc0ae456c0c6b700ff3f91
   '@material-ui/lab': 4.0.0-alpha.56_aca2900b4bcc0ae456c0c6b700ff3f91
   '@material-ui/utils': 5.0.0-beta.5_react@17.0.2
-  '@opensystemslab/map': 0.4.5
+  '@opensystemslab/map': 0.4.6
   array-move: 3.0.1
   axios: 0.19.2
   camelcase-keys: 7.0.0
@@ -2542,8 +2542,8 @@ packages:
       mkdirp: 1.0.4
     dev: true
 
-  /@opensystemslab/map/0.4.5:
-    resolution: {integrity: sha512-lPThgDG6tp8Sn721TD9LOdBVwHTQMFxn5jWw0a2PU2pzm0oPwjB8PiOYSv7Vqj3v4TNVi7EtpCQjAGEHst8ptw==}
+  /@opensystemslab/map/0.4.6:
+    resolution: {integrity: sha512-Zy14U6Eiyyjzgv0KWZ1ZSDjZz0tqGyTGdlZx5l/TCVbOPy5jIQLm1+OGHfzfc7Hq3BiDASUnKK0kLUdFJ+gkrQ==}
     dependencies:
       '@turf/union': 6.5.0
       lit: 2.1.1

@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { ERROR_MESSAGE } from "@planx/components/shared/constants";
 import React, { ReactElement } from "react";
 
 export interface Props {
@@ -24,8 +25,16 @@ const useClasses = makeStyles((theme) => ({
 export default function ErrorWrapper(props: Props): FCReturn {
   const classes = useClasses();
   return (
-    <div className={props.error ? classes.rootError : undefined}>
-      {props.error && <p className={classes.errorText}>{props.error}</p>}
+    // role="status" immediately announces the error to screenreaders without interrupting focus
+    <div
+      className={props.error ? classes.rootError : undefined}
+      role={props.error ? "status" : undefined}
+    >
+      {props.error && (
+        <p id={ERROR_MESSAGE} className={classes.errorText}>
+          {props.error}
+        </p>
+      )}
       {props.children || null}
     </div>
   );

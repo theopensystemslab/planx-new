@@ -7,28 +7,20 @@ import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
 
 import { TYPES } from "../types";
-import { ICONS, InternalNotes } from "../ui";
-import type { Review } from "./model";
+import { EditorProps, ICONS, InternalNotes } from "../ui";
+import { parseContent, Review } from "./model";
 
-interface Props {
-  id?: string;
-  handleSubmit?: (data: { type: TYPES.Review; data: Review }) => void;
-  node?: any;
-}
+type Props = EditorProps<TYPES.Review, Review>;
 
 function Component(props: Props) {
   const formik = useFormik<Review>({
-    initialValues: {
-      title: props.node?.data?.title ?? "",
-      description: props.node?.data?.description ?? "",
-      notes: props.node?.data?.notes ?? "",
-    },
+    initialValues: parseContent(props.node?.data),
     onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.Review, data: newValues });
-      }
+      props.handleSubmit?.({
+        type: TYPES.Review,
+        data: newValues,
+      });
     },
-    validate: () => {},
   });
 
   return (
@@ -38,16 +30,16 @@ function Component(props: Props) {
           <InputRow>
             <Input
               format="large"
-              placeholder="Review"
               name="title"
+              placeholder={formik.values.title}
               value={formik.values.title}
               onChange={formik.handleChange}
             />
           </InputRow>
           <InputRow>
             <RichTextInput
-              placeholder="Description"
               name="description"
+              placeholder="Description"
               value={formik.values.description}
               onChange={formik.handleChange}
             />

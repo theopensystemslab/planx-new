@@ -170,6 +170,8 @@ export function getParams(
   // 1a. address
 
   const address = passport.data?._address;
+  const warning = passport.data?._addressWarning;
+
   if (address) {
     const site = {} as BOPSFullPayload["site"];
 
@@ -182,6 +184,12 @@ export function getParams(
 
     site.latitude = address.latitude;
     site.longitude = address.longitude;
+
+    // if the applicant was shown a warning message that their selected address
+    //   may not be in this council, send the error context to BOPS
+    if (warning && warning.show) {
+      site.warning = warning;
+    }
 
     data.site = site;
   }
@@ -253,6 +261,18 @@ export function getParams(
   }, {});
   if (Object.values(constraints).map(Boolean).length > 0) {
     data.constraints = constraints;
+  }
+
+  // 3a. constraints that we checked, but do not intersect/apply to the property
+
+  const nots = (
+    passport.data?.["_nots"]?.["property.constraints.planning"] || []
+  ).reduce((acc: Record<string, boolean>, curr: string) => {
+    acc[curr] = false;
+    return acc;
+  }, {});
+  if (Object.keys(nots).map(Boolean).length > 0) {
+    data.constraints = { ...data.constraints, ...nots };
   }
 
   // 4. work status

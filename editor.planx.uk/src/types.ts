@@ -21,10 +21,16 @@ export interface Team {
   };
 }
 
-interface TeamSettings {
+export interface TeamSettings {
   design?: {
     color?: string;
   };
+  homepage?: string;
+  externalPlanningSite: {
+    name: string;
+    url: string;
+  };
+  supportEmail?: string;
 }
 
 export interface GlobalSettings {

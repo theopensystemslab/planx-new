@@ -8,7 +8,10 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { visuallyHidden } from "@material-ui/utils";
-import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
+import {
+  DESCRIPTION_TEXT,
+  ERROR_MESSAGE,
+} from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
@@ -20,12 +23,16 @@ import find from "lodash/find";
 import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
-import React, { useState } from "react";
-import { useCurrentRoute } from "react-navi";
+import React, { useEffect, useState } from "react";
 import useSWR from "swr";
+import { TeamSettings } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
+import ExternalPlanningSiteDialog, {
+  DialogPurpose,
+} from "ui/ExternalPlanningSiteDialog";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
+import { fetchCurrentTeam } from "utils";
 
 import type { Address, FindProperty } from "../model";
 import { DEFAULT_TITLE } from "../model";
@@ -40,14 +47,6 @@ export const FETCH_BLPU_CODES = gql`
     }
   }
 `;
-export const GET_TEAM_QUERY = gql`
-  query GetTeam($team: String = "") {
-    teams(where: { slug: { _eq: $team } }) {
-      gss_code
-      theme
-    }
-  }
-`;
 
 type Props = PublicProps<FindProperty>;
 
@@ -59,20 +58,9 @@ function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
   const [address, setAddress] = useState<Address | undefined>();
   const flow = useStore((state) => state.flow);
-  // XXX: In the future, use this API to translate GSS_CODE to Team names (or just pass the GSS_CODE to the API)
-  //      https://geoportal.statistics.gov.uk/datasets/fe6bcee87d95476abc84e194fe088abb_0/data?where=LAD20NM%20%3D%20%27Lambeth%27
-  //      https://trello.com/c/OmafTN7j/876-update-local-authority-api-to-receive-gsscode-instead-of-nebulous-team-name
-  const route = useCurrentRoute();
-  const team = route?.data?.team ?? route?.data.mountpath.split("/")[1];
+  const team = fetchCurrentTeam();
 
-  const { data } = useQuery(GET_TEAM_QUERY, {
-    skip: !Boolean(team),
-    variables: {
-      team: team,
-    },
-  });
-
-  if (!address && Boolean(data?.teams.length)) {
+  if (!address && Boolean(team)) {
     return (
       <GetAddress
         title={props.title}
@@ -80,9 +68,30 @@ function Component(props: Props) {
         setAddress={setAddress}
         initialPostcode={previouslySubmittedData?._address.postcode}
         initialSelectedAddress={previouslySubmittedData?._address}
+        teamSettings={team?.settings}
       />
     );
   } else if (address) {
+    let warning: {
+      show: boolean;
+      os_administrative_area: string;
+      os_local_custodian_code: string;
+      planx_team_name?: string;
+    } = {
+      show: false,
+      os_administrative_area: address.administrative_area,
+      os_local_custodian_code: address.local_custodian_code,
+    };
+
+    if (team?.name) {
+      // if neither admin area nor LCC match team, then show warning error msg
+      warning.show = ![
+        address.administrative_area,
+        address.local_custodian_code,
+      ].includes(team.name.toUpperCase());
+      warning.planx_team_name = team.name.toUpperCase();
+    }
+
     return (
       <PropertyInformation
         handleSubmit={(feedback?: string) => {
@@ -95,6 +104,7 @@ function Component(props: Props) {
 
             const passportData = {
               _address: address,
+              _addressWarning: warning,
               ...newPassportData,
             };
 
@@ -112,10 +122,7 @@ function Component(props: Props) {
         propertyDetails={[
           {
             heading: "Address",
-            detail: address.single_line_address.replace(
-              `, ${address.postcode}`,
-              ""
-            ),
+            detail: address.title,
           },
           {
             heading: "Postcode",
@@ -123,14 +130,16 @@ function Component(props: Props) {
           },
           {
             heading: "District",
-            detail: capitalize(team),
+            detail: team?.name,
           },
           {
-            heading: "Building type",
+            heading: "Building type", // XXX: does this heading still make sense for infra?
             detail: address.planx_description,
           },
         ]}
-        teamColor={data?.teams?.[0].theme?.primary || "#2c2c2c"}
+        team={team}
+        teamColor={team?.theme?.primary || "#2c2c2c"}
+        error={warning.show}
       />
     );
   } else {
@@ -149,6 +158,7 @@ function GetAddress(props: {
   description?: string;
   initialPostcode?: string;
   initialSelectedAddress?: Option;
+  teamSettings?: TeamSettings;
 }) {
   const [postcode, setPostcode] = useState<string | null>(
     props.initialPostcode ?? null
@@ -161,19 +171,34 @@ function GetAddress(props: {
     props.initialSelectedAddress ?? undefined
   );
   const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
+  const [offset, setOffset] = useState<number>(0);
+  const [totalAddresses, setTotalAddresses] = useState<number | undefined>(
+    undefined
+  );
+  const [addressesInPostcode, setAddressesInPostcode] = useState<any[]>([]);
 
   // Fetch addresses in this postcode from the OS Places API
-  const { data: addressesInPostcode } = useSWR(
-    () =>
-      sanitizedPostcode
-        ? `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&output_srs=EPSG:4326&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&lr=EN`
-        : null,
+  // https://apidocs.os.uk/docs/os-places-service-metadata
+  let osPlacesEndpoint = `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&dataset=LPI&output_srs=EPSG:4326&lr=EN&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&maxresults=100`;
+
+  const { data } = useSWR(
+    () => (sanitizedPostcode ? osPlacesEndpoint + `&offset=${offset}` : null),
     {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
       errorRetryCount: 3,
     }
   );
+
+  useEffect(() => {
+    if (data && !data?.error) {
+      // Concat results to existing list of addresses for cases of paginated results
+      const concatenated = addressesInPostcode.concat(data.results || []);
+      setAddressesInPostcode(concatenated);
+      setTotalAddresses(data.header.totalresults);
+      // console.log("fetched", concatenated.length, "/", data.header.totalresults);
+    }
+  }, [data]);
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES);
@@ -182,37 +207,47 @@ function GetAddress(props: {
   //    refactor model.ts to better align to OS Places DPA or LPI output
   const addresses: Address[] = [];
   if (
-    Boolean(addressesInPostcode?.results?.length) &&
+    Boolean(addressesInPostcode.length) &&
     Boolean(blpuCodes?.blpu_codes?.length)
   ) {
-    addressesInPostcode.results.map((a: any) => {
-      addresses.push({
-        uprn: a.DPA.UPRN.padStart(12, "0"),
-        blpu_code: a.DPA.BLPU_STATE_CODE,
-        latitude: a.DPA.LAT,
-        longitude: a.DPA.LNG,
-        organisation: a.DPA.ORGANISATION_NAME || null,
-        sao: null,
-        pao: a.DPA.BUILDING_NUMBER,
-        street: a.DPA.THOROUGHFARE_NAME,
-        town: a.DPA.POST_TOWN,
-        postcode: a.DPA.POSTCODE,
-        x: a.DPA.X_COORDINATE,
-        y: a.DPA.Y_COORDINATE,
-        planx_description:
-          find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
-            ?.description || null,
-        planx_value:
-          find(blpuCodes.blpu_codes, { code: a.DPA.CLASSIFICATION_CODE })
-            ?.value || null,
-        single_line_address: a.DPA.ADDRESS,
+    addressesInPostcode
+      // Only show "APPROVED" addresses, filter out "ALTERNATIVE", "HISTORIC", or "PROVISIONAL" records
+      // https://www.ordnancesurvey.co.uk/documents/product-support/tech-spec/addressbase-premium-technical-specification.pdf (p61)
+      .filter((a) => a.LPI.LPI_LOGICAL_STATUS_CODE_DESCRIPTION === "APPROVED")
+      .map((a) => {
+        addresses.push({
+          uprn: a.LPI.UPRN.padStart(12, "0"),
+          blpu_code: a.LPI.BLPU_STATE_CODE,
+          latitude: a.LPI.LAT,
+          longitude: a.LPI.LNG,
+          organisation: a.LPI.ORGANISATION || null,
+          sao: a.LPI.SAO_TEXT,
+          pao: [a.LPI.PAO_START_NUMBER, a.LPI.PAO_START_SUFFIX]
+            .filter(Boolean)
+            .join(""), // docs reference PAO_TEXT, but not found in response so roll our own
+          street: a.LPI.STREET_DESCRIPTION,
+          town: a.LPI.TOWN_NAME,
+          postcode: a.LPI.POSTCODE_LOCATOR,
+          x: a.LPI.X_COORDINATE,
+          y: a.LPI.Y_COORDINATE,
+          planx_description:
+            find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
+              ?.description || null,
+          planx_value:
+            find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
+              ?.value || null,
+          single_line_address: a.LPI.ADDRESS,
+          administrative_area: a.LPI.ADMINISTRATIVE_AREA, // local highway authority name (proxy for local authority?)
+          local_custodian_code: a.LPI.LOCAL_CUSTODIAN_CODE_DESCRIPTION, // similar to GSS_CODE, but may not reflect merged councils
+          title: a.LPI.ADDRESS.split(`, ${a.LPI.ADMINISTRATIVE_AREA}`)[0], // display value used in autocomplete dropdown & FindProperty
+        });
       });
-    });
   }
 
   // Autocomplete overrides
   const useStyles = makeStyles((theme) => ({
     root: {
+      paddingBottom: theme.spacing(3),
       "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
         // Default transform is "translate(14px, 20px) scale(1)""
         // This lines up the label with the initial cursor position in the input
@@ -276,7 +311,17 @@ function GetAddress(props: {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     // Reset the address on change of postcode - ensures no visual mismatch between address and postcode
-    if (selectedOption) setSelectedOption(undefined);
+    if (selectedOption) {
+      setSelectedOption(undefined);
+    }
+
+    // Also reset any previously fetched addresses - ensures new results aren't concatenated to prev options
+    if (totalAddresses && Boolean(addressesInPostcode.length)) {
+      setOffset(0);
+      setTotalAddresses(undefined);
+      setAddressesInPostcode([]);
+    }
+
     // Validate and set Postcode
     const input = e.target.value;
     if (parse(input.trim()).valid) {
@@ -318,7 +363,12 @@ function GetAddress(props: {
             style={{ marginBottom: "20px" }}
             inputProps={{
               maxLength: 8,
-              "aria-describedby": props.description ? DESCRIPTION_TEXT : "",
+              "aria-describedby": [
+                props.description ? DESCRIPTION_TEXT : "",
+                showPostcodeError && !sanitizedPostcode ? ERROR_MESSAGE : "",
+              ]
+                .filter(Boolean)
+                .join(" "),
             }}
           />
         </InputLabel>
@@ -329,11 +379,7 @@ function GetAddress(props: {
               .map(
                 (address: Address): Option => ({
                   ...address,
-                  // we already know the postcode so remove it from full address
-                  title: address.single_line_address.replace(
-                    `, ${address.postcode}`,
-                    ""
-                  ),
+                  title: address.title,
                 })
               )
               .sort((a: Option, b: Option) => sorter(a.title, b.title))}
@@ -358,6 +404,15 @@ function GetAddress(props: {
                 setSelectedOption(selectedOption);
               }
             }}
+            onOpen={(event) => {
+              // Fetch additional paginated results from OS Places if they exist, concat results to options before input
+              if (
+                totalAddresses &&
+                totalAddresses > addressesInPostcode.length
+              ) {
+                setOffset(addressesInPostcode.length);
+              }
+            }}
             disablePortal
             disableClearable
             PaperComponent={({ children }) => (
@@ -367,14 +422,17 @@ function GetAddress(props: {
             )}
           />
         )}
-        {addressesInPostcode?.header?.totalresults === 0 &&
-          Boolean(sanitizedPostcode) && (
-            <Box pt={2}>
-              <Typography variant="body1" color="error">
-                No addresses found in this postcode.
-              </Typography>
-            </Box>
-          )}
+        {(data?.error || totalAddresses === 0) && Boolean(sanitizedPostcode) && (
+          <Box pt={2} role="status">
+            <Typography variant="body1" color="error">
+              {data.error?.message || "No addresses found in this postcode."}
+            </Typography>
+          </Box>
+        )}
+        <ExternalPlanningSiteDialog
+          purpose={DialogPurpose.MissingAddress}
+          teamSettings={props.teamSettings}
+        ></ExternalPlanningSiteDialog>
       </Box>
     </Card>
   );
@@ -399,6 +457,7 @@ const useClasses = makeStyles((theme) => ({
     borderBottom: `1px solid ${theme.palette.background.paper}`,
   },
 }));
+
 export function PropertyInformation(props: any) {
   const {
     title,
@@ -407,7 +466,9 @@ export function PropertyInformation(props: any) {
     lat,
     lng,
     handleSubmit,
+    team,
     teamColor,
+    error,
   } = props;
   const styles = useClasses();
   const formik = useFormik({
@@ -447,7 +508,7 @@ export function PropertyInformation(props: any) {
           featureFill
         />
       </Box>
-      <Box component="dl" mb={6}>
+      <Box component="dl" mb={3}>
         {propertyDetails.map(({ heading, detail }: any) => (
           <Box className={styles.propertyDetail} key={heading}>
             <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
@@ -459,6 +520,14 @@ export function PropertyInformation(props: any) {
           </Box>
         ))}
       </Box>
+      {error && team?.name && (
+        <Box role="status">
+          <Typography variant="body1" color="error">
+            This address may not be in {capitalize(team.name)}, are you sure you
+            want to continue using this service?
+          </Typography>
+        </Box>
+      )}
       <Box color="text.secondary" textAlign="right">
         <CollapsibleInput
           handleChange={formik.handleChange}

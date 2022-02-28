@@ -63,8 +63,7 @@ const breadcrumbs = {
       // temporary measure to ensure that the answers are an array of strings, not objects
       JSON.stringify({
         filename: "planx.png",
-        url:
-          "https://planx-temp.s3.eu-west-2.amazonaws.com/development/11q1npcp/planx.png",
+        url: "https://planx-temp.s3.eu-west-2.amazonaws.com/development/11q1npcp/planx.png",
       }),
     ],
     auto: true,
@@ -267,6 +266,8 @@ const flow = {
 export const Frontend: Story<{}> = () => {
   return (
     <Presentational
+      title="Review"
+      description="Check your answers before submitting"
       breadcrumbs={breadcrumbs}
       flow={flow}
       passport={passport}

@@ -10,10 +10,8 @@ import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 
-import { DEFAULT_PASSPORT_AREA_KEY, DrawBoundary } from "../model";
 import {
-  DEFAULT_TITLE,
-  DEFAULT_TITLE_FOR_UPLOADING,
+  DrawBoundary,
   PASSPORT_UPLOAD_KEY,
   PASSPORT_UPLOADED_FILE_KEY,
 } from "../model";
@@ -49,9 +47,7 @@ export default function Component(props: Props) {
   const previousBoundary =
     props.previouslySubmittedData?.data?.[props.dataFieldBoundary];
   const previousArea =
-    props.previouslySubmittedData?.data?.[
-      props.dataFieldArea || DEFAULT_PASSPORT_AREA_KEY
-    ];
+    props.previouslySubmittedData?.data?.[props.dataFieldArea];
   const previousFile =
     props.previouslySubmittedData?.data?.[PASSPORT_UPLOADED_FILE_KEY];
   const startPage = previousFile ? "upload" : "draw";
@@ -109,7 +105,7 @@ export default function Component(props: Props) {
       return (
         <>
           <QuestionHeader
-            title={props.title ?? DEFAULT_TITLE}
+            title={props.title}
             description={props.description}
             info={props.info}
             policyRef={props.policyRef}
@@ -130,7 +126,7 @@ export default function Component(props: Props) {
               drawMode
               drawPointer="dot"
               drawGeojsonData={JSON.stringify(boundary)}
-              zoom={19}
+              zoom={20}
               maxZoom={23}
               latitude={Number(passport?.data?._address?.latitude)}
               longitude={Number(passport?.data?._address?.longitude)}
@@ -152,7 +148,7 @@ export default function Component(props: Props) {
       return (
         <div>
           <QuestionHeader
-            title={props.titleForUploading ?? DEFAULT_TITLE_FOR_UPLOADING}
+            title={props.titleForUploading}
             description={props.descriptionForUploading}
             info={props.info}
             policyRef={props.policyRef}
@@ -179,7 +175,7 @@ export default function Component(props: Props) {
       return {
         [props.dataFieldBoundary]:
           boundary && props.dataFieldBoundary ? boundary : undefined,
-        [props.dataFieldArea || DEFAULT_PASSPORT_AREA_KEY]:
+        [props.dataFieldArea]:
           boundary && props.dataFieldBoundary ? area : undefined,
         [propsDataFieldUrl]:
           selectedFile?.url && propsDataFieldUrl

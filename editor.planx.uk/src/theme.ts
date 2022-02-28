@@ -121,13 +121,23 @@ const theme = createMuiTheme({
     },
     MuiLink: {
       root: {
+        textDecoration: "underline",
+        textDecorationThickness: "1px",
+        textUnderlineOffset: "0.1em",
+        "&:hover": {
+          textDecorationThickness: "3px",
+          // Disable ink skipping on underlines on hover. Browsers haven't
+          // standardised on this part of the spec yet, so set both properties
+          textDecorationSkipInk: "none", // Chromium, Firefox
+          textDecorationSkip: "none", // Safari
+        },
         // GOVUK focused text style
         // https://github.com/alphagov/govuk-frontend/blob/main/src/govuk/helpers/_focused.scss
         "&:focus": {
           outline: "3px solid transparent",
           color: "black",
           backgroundColor: GOVUK_YELLOW,
-          boxShadow: `0 -2px black, 0 4px black`,
+          boxShadow: `0 -2px ${GOVUK_YELLOW}, 0 4px black`,
           textDecoration: "none",
         },
       },

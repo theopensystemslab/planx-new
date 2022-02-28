@@ -8,7 +8,7 @@ const useClasses = makeStyles((theme: Theme) => ({
   root: {
     cursor: "pointer",
     "&:hover": {
-      "& a": {
+      "& span": {
         textDecoration: "underline",
       },
     },
@@ -34,44 +34,41 @@ export default function PhaseBanner(): FCReturn {
   const feedbackFishId = process.env.REACT_APP_FEEDBACK_FISH_ID || "";
 
   return (
-    <Box
-      role="button"
-      tabIndex={0}
-      aria-label="This is a new service. Click here to provide feedback."
-      className={classes.root}
-      bgcolor="background.default"
-      display="flex"
-      alignItems="center"
-      borderBottom={`1px solid ${theme.palette.grey[300]}`}
-      px={2}
-      py={1}
-    >
-      <FeedbackFish projectId={feedbackFishId}>
-        <>
-          <Box
-            bgcolor="primary.main"
-            color="white"
-            display="flex"
-            alignItems="center"
-            flexBasis={0}
-            px={2}
-            mr={2}
-            py={0.5}
-            fontSize={15}
-            textAlign="center"
-            whiteSpace="nowrap"
-            fontWeight={600}
-            className={classes.betaIcon}
-          >
-            PRIVATE BETA
-          </Box>
-          <Typography variant="body2" color="textPrimary">
-            {/* Ignored for now - this is just a placeholder and may be swtiched for a GovUK component */}
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            This is a new service. Your <a>feedback</a> will help us improve it.
-          </Typography>
-        </>
-      </FeedbackFish>
-    </Box>
+    <FeedbackFish projectId={feedbackFishId}>
+      <Box
+        role="button"
+        tabIndex={0}
+        aria-label="This is a new service. Click here to provide feedback."
+        className={classes.root}
+        bgcolor="background.default"
+        display="flex"
+        alignItems="center"
+        borderBottom={`1px solid ${theme.palette.grey[300]}`}
+        px={2}
+        py={1}
+      >
+        <Box
+          bgcolor="primary.main"
+          color="white"
+          display="flex"
+          alignItems="center"
+          flexBasis={0}
+          px={2}
+          mr={2}
+          py={0.5}
+          fontSize={15}
+          textAlign="center"
+          whiteSpace="nowrap"
+          fontWeight={600}
+          className={classes.betaIcon}
+        >
+          PRIVATE BETA
+        </Box>
+        <Typography variant="body2" color="textPrimary">
+          This is a new service. Your <span>feedback</span> will help us improve
+          it.
+        </Typography>
+      </Box>
+    </FeedbackFish>
   );
 }
