@@ -42,7 +42,7 @@ export const AnalyticsProvider: React.FC = ({ children }) => {
   ]);
   const node = currentCard();
   const isStandalone = previewEnvironment === "standalone";
-  const [previousBredcrumbs, setPreviousBreadcrumb] = useState(breadcrumbs);
+  const [previousBreadcrumbs, setPreviousBreadcrumb] = useState(breadcrumbs);
 
   const onPageExit = () => {
     if (lastAnalyticsLogId && isStandalone) {
@@ -75,7 +75,7 @@ export const AnalyticsProvider: React.FC = ({ children }) => {
   useEffect(() => {
     if (isStandalone && analyticsId) {
       const curLength = Object.keys(breadcrumbs).length;
-      const prevLength = Object.keys(previousBredcrumbs).length;
+      const prevLength = Object.keys(previousBreadcrumbs).length;
 
       if (curLength > prevLength) track("forwards", analyticsId);
       if (curLength < prevLength) track("backwards", analyticsId);
