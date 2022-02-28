@@ -137,7 +137,7 @@ const Header: React.FC<{
         color="transparent"
         ref={headerRef}
         style={{
-          backgroundColor: bgcolor,
+          backgroundColor: team?.theme?.primary || bgcolor,
         }}
       >
         {/* Only include skip links on /preview or /unpublished routes (phaseBanner is proxy for now) */}

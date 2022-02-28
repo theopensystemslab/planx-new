@@ -51,7 +51,7 @@ const useClasses = makeStyles((theme) => ({
     outline: "none",
     backgroundColor: theme.palette.background.default,
     width: "100%",
-    "&:focus-within": focusStyle,
+    "&:focus-within": focusStyle(theme.palette.action.focus),
     "& h1": theme.typography.h3,
     "& h2": theme.typography.h5,
   },
