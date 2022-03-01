@@ -44,26 +44,26 @@ export const AnalyticsProvider: React.FC = ({ children }) => {
   const isStandalone = previewEnvironment === "standalone";
   const [previousBreadcrumbs, setPreviousBreadcrumb] = useState(breadcrumbs);
 
-  const onPageExit = () => {
-    if (lastAnalyticsLogId && isStandalone) {
-      if (document.visibilityState === "hidden") {
-        navigator.sendBeacon(
-          `${
-            process.env.REACT_APP_API_URL
-          }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
-        );
-      }
-      if (document.visibilityState === "visible") {
-        navigator.sendBeacon(
-          `${
-            process.env.REACT_APP_API_URL
-          }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
-        );
-      }
-    }
-  };
-
   useEffect(() => {
+    const onPageExit = () => {
+      if (lastAnalyticsLogId && isStandalone) {
+        if (document.visibilityState === "hidden") {
+          navigator.sendBeacon(
+            `${
+              process.env.REACT_APP_API_URL
+            }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
+          );
+        }
+        if (document.visibilityState === "visible") {
+          navigator.sendBeacon(
+            `${
+              process.env.REACT_APP_API_URL
+            }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
+          );
+        }
+      }
+    };
+
     if (isStandalone) document.addEventListener("visibilitychange", onPageExit);
     return () => {
       if (isStandalone)
