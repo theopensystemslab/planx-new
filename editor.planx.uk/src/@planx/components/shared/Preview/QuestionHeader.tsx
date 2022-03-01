@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-// import useAnalyticsTracking from "pages/FlowEditor/lib/useAnalyticsTracking";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import React from "react";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
@@ -49,11 +49,11 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
-  // const { trackHelpClick } = useAnalyticsTracking();
+  const { trackHelpClick } = useAnalyticsTracking();
 
   const handleHelpClick = () => {
     setOpen(true);
-    // trackHelpClick(); // This returns a promise but we don't need to await for it
+    trackHelpClick(); // This returns a promise but we don't need to await for it
   };
 
   return (
