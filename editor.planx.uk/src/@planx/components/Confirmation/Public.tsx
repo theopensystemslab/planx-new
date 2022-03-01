@@ -8,6 +8,7 @@ import omit from "lodash/omit";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Banner from "ui/Banner";
+import FileDownload from "ui/FileDownload";
 import NumberedList from "ui/NumberedList";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
@@ -30,23 +31,6 @@ const useClasses = makeStyles((theme) => ({
   },
   listHeading: {
     marginBottom: theme.spacing(2),
-  },
-  download: {
-    marginTop: theme.spacing(1),
-    textAlign: "right",
-    "& button": {
-      background: "none",
-      "border-style": "none",
-      color: theme.palette.text.primary,
-      cursor: "pointer",
-      fontSize: "inherit",
-      fontFamily: "inherit",
-      textDecoration: "underline",
-      padding: theme.spacing(2),
-    },
-    "& button:hover": {
-      backgroundColor: theme.palette.background.paper,
-    },
   },
 }));
 
@@ -131,18 +115,12 @@ export default function ConfirmationComponent(props: Props) {
         )}
 
         {
-          <div className={classes.download}>
-            <a
-              href={`${
-                process.env.REACT_APP_API_URL
-              }/download-application?ref=${
-                props.details?.["Planning Application Reference"] ||
-                "application"
-              }&data=${JSON.stringify(data)}`}
-            >
-              <button>Download your application data (.csv)</button>
-            </a>
-          </div>
+          <FileDownload
+            data={data}
+            filename={
+              props.details?.["Planning Application Reference"] || "application"
+            }
+          />
         }
 
         {props.nextSteps && Boolean(props.nextSteps?.length) && (
