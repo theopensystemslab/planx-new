@@ -7,22 +7,28 @@ const GOVUK_YELLOW = "#FFDD00";
 
 // GOVUK Focus style
 // https://design-system.service.gov.uk/get-started/focus-states/
+// https://github.com/alphagov/govuk-frontend/blob/main/src/govuk/helpers/_focused.scss
 export const focusStyle = (focusColour: string = GOVUK_YELLOW) => ({
-  outline: `3px solid ${focusColour}`,
-  outlineOffset: 0,
-  zIndex: 1,
+  color: "black",
+  backgroundColor: focusColour,
+  boxShadow: `0 -2px ${focusColour}, 0 4px black`,
+  textDecoration: "none",
+  outline: "3px solid transparent",
+  borderBottom: 0,
 });
 
 // Ensure that if the element already has a border, the border gets thicker
-export const borderedFocusStyle = (focusColour: string) => ({
-  ...focusStyle(focusColour),
+export const inputFocusStyle = (focusColour: string = GOVUK_YELLOW) => ({
+  outline: `3px solid ${focusColour}`,
+  outlineOffset: 0,
+  zIndex: 1,
   boxShadow: "inset 0 0 0 2px black",
 });
 
 /**
  * Get Global theme options
  * The global theme is used in editor, and as the base theme in Preview/Unpublished which can be
- *  merged with Team specific options
+ * merged with Team specific options
  * @returns {ThemeOptions}
  */
 export const getGlobalThemeOptions = (): ThemeOptions => {
@@ -96,9 +102,13 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
       MuiButton: {
         // Removes default box shadow on buttons
         disableElevation: true,
+        disableFocusRipple: true,
       },
       MuiPaper: {
         elevation: 0,
+      },
+      MuiIconButton: {
+        disableFocusRipple: true,
       },
     },
     transitions: {
@@ -115,13 +125,18 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
         body: {
           backgroundColor: "#efefef",
         },
-        "*:focus-visible": focusStyle(themeOptions.palette?.action?.focus),
       },
     },
     MuiButtonBase: {
       root: {
         fontFamily: "inherit",
-        "&:focus-visible": focusStyle(themeOptions.palette?.action?.focus),
+        "&:focus-visible": {
+          ...focusStyle(themeOptions.palette?.action?.focus),
+          // !important is required here as setting disableElevation = true removes boxShadow
+          boxShadow: `0 -2px ${themeOptions.palette?.action?.focus}, 0 4px black !important`,
+          // Hover should not overwrite focus
+          "&:hover": focusStyle(themeOptions.palette?.action?.focus),
+        },
       },
     },
     MuiListItemIcon: {
@@ -141,15 +156,7 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
           textDecorationSkipInk: "none", // Chromium, Firefox
           textDecorationSkip: "none", // Safari
         },
-        // GOVUK focused text style
-        // https://github.com/alphagov/govuk-frontend/blob/main/src/govuk/helpers/_focused.scss
-        "&:focus": {
-          outline: "3px solid transparent",
-          color: "black",
-          backgroundColor: themeOptions.palette?.action?.focus,
-          boxShadow: `0 -2px ${themeOptions.palette?.action?.focus}, 0 4px black`,
-          textDecoration: "none",
-        },
+        "&:focus-visible": focusStyle(themeOptions.palette?.action?.focus),
       },
     },
     MuiButton: {
@@ -170,14 +177,6 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
     MuiIconButton: {
       root: {
         borderRadius: 0,
-      },
-    },
-    MuiAccordionSummary: {
-      root: {
-        "&:focus-visible": {
-          backgroundColor: "inherit",
-          ...focusStyle(themeOptions.palette?.action?.focus),
-        },
       },
     },
     ...({
@@ -217,6 +216,7 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
 /**
  * Get team specific theme options
  * Pass in TeamTheme to customise the pallette and associated overrides
+ * Rules here will only apply in the Preview and Unpublished routes
  * @param {TeamTheme} theme
  * @returns {ThemeOptions}
  */
@@ -235,29 +235,21 @@ export const getTeamThemeOptions = (
       },
     },
     overrides: {
-      MuiCssBaseline: {
-        "@global": {
-          "*:focus-visible": focusStyle(theme.focus),
-        },
-      },
       MuiButtonBase: {
         root: {
-          "&:focus-visible": focusStyle(theme.focus),
+          "&:focus-visible": {
+            ...focusStyle(theme.focus),
+            // !important is required here as setting disableElevation = true removes boxShadow
+            boxShadow: `0 -2px ${theme.focus}, 0 4px black !important`,
+            "&:hover": focusStyle(theme.focus),
+          },
         },
       },
       MuiLink: {
         root: {
-          "&:focus": {
+          "&:focus-visible": {
             backgroundColor: theme.focus,
             boxShadow: `0 -2px ${theme.focus}, 0 4px black`,
-          },
-        },
-      },
-      MuiAccordionSummary: {
-        root: {
-          "&:focus-visible": {
-            backgroundColor: "inherit",
-            ...focusStyle(theme.focus),
           },
         },
       },
