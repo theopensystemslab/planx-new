@@ -425,7 +425,7 @@ function GetAddress(props: {
         {(data?.error || totalAddresses === 0) && Boolean(sanitizedPostcode) && (
           <Box pt={2} role="status">
             <Typography variant="body1" color="error">
-              {data.error?.message || "No addresses found in this postcode."}
+              {data?.error?.message || "No addresses found in this postcode."}
             </Typography>
           </Box>
         )}
