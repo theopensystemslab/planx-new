@@ -26,7 +26,7 @@ interface Props {
   id?: string;
   label: string;
   checked: boolean;
-  onChange: (checked: boolean) => void;
+  onChange: (event?: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
 export default function ChecklistItem({

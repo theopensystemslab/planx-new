@@ -5,14 +5,14 @@ import ImageIcon from "@material-ui/icons/Image";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import Checkbox from "ui/Checkbox";
 
-export interface Props {
+import ButtonBase, { Props as ButtonBaseProps } from "./ButtonBase";
+
+export interface Props extends ButtonBaseProps {
   id?: string;
   title: string;
   responseKey?: string | number;
   img?: string;
   checkbox?: boolean;
-  selected: boolean;
-  onClick: (checked: boolean) => void;
 }
 
 const useStyles = makeStyles((theme) => {
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-function ImageResponse(props: Props) {
+function ImageResponse(props: Props): FCReturn {
   const { selected, title, img, checkbox, id, onClick } = props;
   const [imgError, setImgError] = useState(!(img && img.length));
   const [multiline, setMultiline] = useState(false);
@@ -75,78 +75,88 @@ function ImageResponse(props: Props) {
     }
   };
 
-  return (
-    <label htmlFor={id} className={classes.label}>
-      <Box display="flex" flexDirection="column" width="100%" height="100%">
+  const ImageResponseContents = (): FCReturn => (
+    <Box display="flex" flexDirection="column" width="100%" height="100%">
+      <Box
+        width="100%"
+        paddingTop="100%"
+        position="relative"
+        height={0}
+        overflow="hidden"
+        border={`1px solid ${bgColor}`}
+        borderBottom="none"
+        bgcolor="background.default"
+      >
+        {imgError ? (
+          <Box
+            className={classes.img}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            color="secondary.dark"
+          >
+            <ImageIcon />
+          </Box>
+        ) : (
+          <img
+            className={classes.img}
+            src={img}
+            onError={onError}
+            // Use a null alt to indicate that this image can be ignored by screen readers
+            alt=""
+          />
+        )}
+      </Box>
+      {/*
+      ref doesn't exist in the MUI type definitions, should be
+      available in v5, sigh.
+     https://github.com/mui-org/material-ui/issues/17010
+    */}
+      <Box
+        {...({ ref: textContentEl } as any)}
+        width="100%"
+        flexGrow={1}
+        bgcolor={bgColor}
+        color={selected ? "primary.contrastText" : "text.primary"}
+        display="flex"
+        justifyContent="space-between"
+        px={checkbox ? 1 : 2.25}
+        py={checkbox ? 1 : 1.75}
+      >
         <Box
-          width="100%"
-          paddingTop="100%"
-          position="relative"
-          height={0}
-          overflow="hidden"
-          border={`1px solid ${bgColor}`}
-          borderBottom="none"
-          bgcolor="background.default"
+          display="flex"
+          alignItems={multiline ? "flex-start" : "center"}
+          height="100%"
         >
-          {imgError ? (
-            <Box
-              className={classes.img}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              color="secondary.dark"
-            >
-              <ImageIcon />
-            </Box>
-          ) : (
-            <img
-              className={classes.img}
-              src={img}
-              onError={onError}
-              // Use a null alt to indicate that this image can be ignored by screen readers
-              alt=""
+          {checkbox && (
+            <Checkbox
+              id={id}
+              checked={selected}
+              color={selected ? "primary.contrastText" : "text.primary"}
+              onChange={onClick}
             />
           )}
-        </Box>
-        {/*
-          ref doesn't exist in the MUI type definitions, should be
-          available in v5, sigh.
-
-         https://github.com/mui-org/material-ui/issues/17010
-        */}
-        <Box
-          {...({ ref: textContentEl } as any)}
-          width="100%"
-          flexGrow={1}
-          bgcolor={bgColor}
-          color={selected ? "primary.contrastText" : "text.primary"}
-          display="flex"
-          justifyContent="space-between"
-          px={checkbox ? 1 : 2.25}
-          py={checkbox ? 1 : 1.75}
-        >
-          <Box
-            display="flex"
-            alignItems={multiline ? "flex-start" : "center"}
-            height="100%"
+          <Typography
+            variant="body2"
+            className={checkbox ? classes.title : undefined}
           >
-            {checkbox && (
-              <Checkbox
-                id={id}
-                checked={selected}
-                color={selected ? "primary.contrastText" : "text.primary"}
-                onChange={onClick}
-              />
-            )}
-            <Typography
-              variant="body2"
-              className={checkbox ? classes.title : undefined}
-            >
-              {title}
-            </Typography>
-          </Box>
+            {title}
+          </Typography>
         </Box>
       </Box>
+    </Box>
+  );
+
+  // Ensure we do not return one interactive element inside another (checkbox inside a button)
+  return (
+    <label htmlFor={id} className={classes.label}>
+      {checkbox ? (
+        <ImageResponseContents></ImageResponseContents>
+      ) : (
+        <ButtonBase {...props}>
+          <ImageResponseContents></ImageResponseContents>
+        </ButtonBase>
+      )}
     </label>
   );
 }
