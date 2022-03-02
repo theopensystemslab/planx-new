@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-function ImageResponse(props: Props): FCReturn {
+const ImageResponseContents = (props: Props): FCReturn => {
   const { selected, title, img, checkbox, id, onClick } = props;
   const [imgError, setImgError] = useState(!(img && img.length));
   const [multiline, setMultiline] = useState(false);
@@ -75,7 +75,7 @@ function ImageResponse(props: Props): FCReturn {
     }
   };
 
-  const ImageResponseContents = (): FCReturn => (
+  return (
     <Box display="flex" flexDirection="column" width="100%" height="100%">
       <Box
         width="100%"
@@ -146,15 +146,18 @@ function ImageResponse(props: Props): FCReturn {
       </Box>
     </Box>
   );
+};
 
+function ImageResponse(props: Props): FCReturn {
+  const classes = useStyles();
   // Ensure we do not return one interactive element inside another (checkbox inside a button)
   return (
-    <label htmlFor={id} className={classes.label}>
-      {checkbox ? (
-        <ImageResponseContents></ImageResponseContents>
+    <label htmlFor={props.id} className={classes.label}>
+      {props.checkbox ? (
+        <ImageResponseContents {...props}></ImageResponseContents>
       ) : (
         <ButtonBase {...props}>
-          <ImageResponseContents></ImageResponseContents>
+          <ImageResponseContents {...props}></ImageResponseContents>
         </ButtonBase>
       )}
     </label>
