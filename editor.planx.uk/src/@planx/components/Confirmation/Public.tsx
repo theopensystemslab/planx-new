@@ -1,4 +1,5 @@
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Check from "@material-ui/icons/CheckCircleOutlineOutlined";
@@ -34,7 +35,7 @@ const useClasses = makeStyles((theme) => ({
   download: {
     marginTop: theme.spacing(1),
     textAlign: "right",
-    "& button": {
+    "& a": {
       background: "none",
       "border-style": "none",
       color: theme.palette.text.primary,
@@ -43,9 +44,6 @@ const useClasses = makeStyles((theme) => ({
       fontFamily: "inherit",
       textDecoration: "underline",
       padding: theme.spacing(2),
-    },
-    "& button:hover": {
-      backgroundColor: theme.palette.background.paper,
     },
   },
 }));
@@ -132,7 +130,7 @@ export default function ConfirmationComponent(props: Props) {
 
         {
           <div className={classes.download}>
-            <a
+            <Button
               href={`${
                 process.env.REACT_APP_API_URL
               }/download-application?ref=${
@@ -140,8 +138,8 @@ export default function ConfirmationComponent(props: Props) {
                 "application"
               }&data=${JSON.stringify(data)}`}
             >
-              <button>Download your application data (.csv)</button>
-            </a>
+              Download your application data (.csv)
+            </Button>
           </div>
         }
 

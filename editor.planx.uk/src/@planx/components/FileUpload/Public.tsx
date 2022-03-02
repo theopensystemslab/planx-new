@@ -1,4 +1,5 @@
 import Box from "@material-ui/core/Box";
+import ButtonBase from "@material-ui/core/ButtonBase";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import FileIcon from "@material-ui/icons/AttachFile";
@@ -39,6 +40,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: theme.spacing(1.5),
     position: "relative",
+    width: "100%",
+    fontSize: "medium",
     zIndex: 10,
     "&::before": {
       content: "''",
@@ -341,10 +344,8 @@ function Dropzone(props: any) {
           {fileUploadStatus}
         </p>
       )}
-      <div
+      <ButtonBase
         className={classNames(classes.root, isDragActive && classes.dragActive)}
-        tabIndex={0}
-        role="button"
         {...getRootProps()}
       >
         <input {...getInputProps()} />
@@ -367,7 +368,7 @@ function Dropzone(props: any) {
         <Box color="text.secondary" alignSelf="flex-end">
           max size {MAX_UPLOAD_SIZE_MB}MB
         </Box>
-      </div>
+      </ButtonBase>
     </>
   );
 }

@@ -1,6 +1,7 @@
 import AppBar from "@material-ui/core/AppBar";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
+import ButtonBase from "@material-ui/core/ButtonBase";
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
@@ -11,6 +12,7 @@ import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 import React, { useRef, useState } from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
+import { focusStyle } from "theme";
 import { Team } from "types";
 import Reset from "ui/icons/Reset";
 
@@ -80,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
       // bring it into view when accessed by tab
       transform: "translateY(0%)",
       position: "relative",
+      ...focusStyle(theme.palette.action.focus),
     },
   },
 }));
@@ -147,17 +150,17 @@ const Header: React.FC<{
           </a>
         )}
         <Toolbar className={classes.toolbar}>
-          <Box className={classes.breadcrumbs} fontSize={20} tabIndex={0}>
+          <Box className={classes.breadcrumbs} fontSize={20}>
             {team?.theme?.logo ? (
               <TeamLogo team={team}></TeamLogo>
             ) : (
-              <Box
+              <ButtonBase
                 component="span"
                 color="#999"
                 onClick={() => handleClick("/")}
               >
                 Plan✕
-              </Box>
+              </ButtonBase>
             )}
 
             {route.data.team && (

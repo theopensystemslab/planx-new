@@ -1,4 +1,5 @@
 import Box from "@material-ui/core/Box";
+import ButtonBase from "@material-ui/core/ButtonBase";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import FileIcon from "@material-ui/icons/AttachFile";
@@ -22,6 +23,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: theme.spacing(1.5),
     position: "relative",
+    width: "100%",
+    fontSize: "medium",
     zIndex: 10,
     "&::before": {
       content: "''",
@@ -215,9 +218,8 @@ export default function FileUpload(props: Props) {
           {fileUploadStatus}
         </p>
       )}
-      <div
+      <ButtonBase
         className={classNames(classes.root, isDragActive && classes.dragActive)}
-        role="button"
         {...getRootProps()}
       >
         <input {...getInputProps()} />
@@ -240,7 +242,7 @@ export default function FileUpload(props: Props) {
         <Box color="text.secondary" alignSelf="flex-end">
           max size 30MB
         </Box>
-      </div>
+      </ButtonBase>
     </>
   );
 }

@@ -1,6 +1,7 @@
 import "./map.css";
 
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { visuallyHidden } from "@material-ui/utils";
 import Card from "@planx/components/shared/Preview/Card";
@@ -134,9 +135,9 @@ export default function Component(props: Props) {
             />
           </Box>
           <div className={classes.uploadInstead}>
-            <button onClick={() => setPage("upload")}>
+            <Button onClick={() => setPage("upload")}>
               Upload a location plan instead
-            </button>
+            </Button>
           </div>
           <p>
             The boundary you have drawn has an area of{" "}
@@ -157,9 +158,9 @@ export default function Component(props: Props) {
           />
           <Upload setFile={setSelectedFile} initialFile={selectedFile} />
           <div className={classes.uploadInstead}>
-            <button onClick={() => setPage("draw")}>
+            <Button onClick={() => setPage("draw")}>
               Draw the boundary on a map instead
-            </button>
+            </Button>
           </div>
         </div>
       );

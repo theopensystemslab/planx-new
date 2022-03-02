@@ -1,4 +1,5 @@
 import Box from "@material-ui/core/Box";
+import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
 import { getLocalFlow, setLocalFlow } from "lib/local";
@@ -13,9 +14,9 @@ import { useStore } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
 import Node, { handleSubmit } from "./Node";
 
-const useClasses = makeStyles((theme) => ({
+const useClasses = makeStyles(() => ({
   backButton: {
-    padding: "0 10px 10px",
+    padding: "0 10px",
     visibility: "visible",
     pointerEvents: "auto",
     display: "block",
@@ -25,7 +26,6 @@ const useClasses = makeStyles((theme) => ({
     fontSize: 16,
     background: "transparent",
     border: "none",
-
     "&:hover": {
       textDecoration: "underline",
     },
@@ -119,7 +119,7 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
 
   return (
     <Box width="100%" role="main">
-      <button
+      <ButtonBase
         className={classnames(classes.backButton, {
           [classes.hidden]: !showBackButton,
         })}
@@ -128,7 +128,7 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
         }}
       >
         ⭠ Back
-      </button>
+      </ButtonBase>
 
       {node && (
         <ErrorBoundary FallbackComponent={ErrorFallback}>

@@ -1,4 +1,5 @@
 import ButtonBase from "@material-ui/core/ButtonBase";
+import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import { visuallyHidden } from "@material-ui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
@@ -238,9 +239,9 @@ function FileUpload(props: ComponentProps) {
         <ul>
           {getAnswersByNode(props)?.map((file: any, i: number) => (
             <li key={i}>
-              <a target="_blank" href={file.url}>
+              <Link target="_blank" href={file.url}>
                 {file.filename}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
