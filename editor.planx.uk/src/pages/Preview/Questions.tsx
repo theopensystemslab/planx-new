@@ -3,8 +3,8 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
 import { getLocalFlow, setLocalFlow } from "lib/local";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
-// import useAnalyticsTracking from "pages/FlowEditor/lib/useAnalyticsTracking";
 import React, { useContext, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { FlowSettings } from "types";
@@ -43,7 +43,6 @@ interface QuestionsProps {
 
 const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   const [
-    currentCard,
     previousCard,
     record,
     breadcrumbs,
@@ -55,7 +54,6 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     canGoBack,
     setPreviewEnvironment,
   ] = useStore((state) => [
-    state.currentCard,
     state.previousCard(),
     state.record,
     state.breadcrumbs,
@@ -68,9 +66,8 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     state.setPreviewEnvironment,
   ]);
   const isStandalone = previewEnvironment === "standalone";
-  const node = currentCard();
   const flow = useContext(PreviewContext)?.flow;
-  // const { createAnalytics } = useAnalyticsTracking();
+  const { createAnalytics, node } = useAnalyticsTracking();
   const classes = useClasses();
 
   const showBackButton = node?.id ? canGoBack(node.id) : false;
@@ -82,7 +79,7 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
       if (state) {
         resumeSession(state);
       }
-      // createAnalytics(state ? "resume" : "init");
+      createAnalytics(state ? "resume" : "init");
     }
   }, []);
 
