@@ -1,17 +1,28 @@
 import { gql } from "@apollo/client";
 import { TYPES } from "@planx/components/types";
 import { client } from "lib/graphql";
-import { useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { DEFAULT_FLAG_CATEGORY } from "../data/flags";
-import { useStore } from "./store";
+import { Store, useStore } from "./store";
 
 export type AnalyticsType = "init" | "resume";
 type AnalyticsLogDirection = AnalyticsType | "forwards" | "backwards";
 
 let lastAnalyticsLogId: number | undefined = undefined;
 
-const useAnalyticsTracking = () => {
+const analyticsContext = createContext<{
+  createAnalytics: (type: AnalyticsType) => Promise<void>;
+  trackHelpClick: () => Promise<void>;
+  node: Store.node | null;
+}>({
+  createAnalytics: () => Promise.resolve(),
+  trackHelpClick: () => Promise.resolve(),
+  node: null,
+});
+const { Provider } = analyticsContext;
+
+export const AnalyticsProvider: React.FC = ({ children }) => {
   const [
     currentCard,
     breadcrumbs,
@@ -31,59 +42,59 @@ const useAnalyticsTracking = () => {
   ]);
   const node = currentCard();
   const isStandalone = previewEnvironment === "standalone";
-
-  const [lastBreadcrumbs, setLastBreadcrumb] = useState(breadcrumbs);
-
-  const onPageExit = () => {
-    document.addEventListener("visibilitychange", () => {
-      if (lastAnalyticsLogId && isStandalone) {
-        if (document.visibilityState === "hidden") trackPageExit();
-        if (document.visibilityState === "visible") trackPageResume();
-      }
-    });
-  };
+  const [previousBreadcrumbs, setPreviousBreadcrumb] = useState(breadcrumbs);
 
   useEffect(() => {
-    onPageExit();
+    const onPageExit = () => {
+      if (lastAnalyticsLogId && isStandalone) {
+        if (document.visibilityState === "hidden") {
+          navigator.sendBeacon(
+            `${
+              process.env.REACT_APP_API_URL
+            }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
+          );
+        }
+        if (document.visibilityState === "visible") {
+          navigator.sendBeacon(
+            `${
+              process.env.REACT_APP_API_URL
+            }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
+          );
+        }
+      }
+    };
+
+    if (isStandalone) document.addEventListener("visibilitychange", onPageExit);
+    return () => {
+      if (isStandalone)
+        document.removeEventListener("visibilitychange", onPageExit);
+    };
   }, []);
 
+  // Track component transition
   useEffect(() => {
     if (isStandalone && analyticsId) {
-      const currentBreadcrumbsLength = Object.keys(breadcrumbs).length;
-      const storedBreadcrumbsLength = Object.keys(lastBreadcrumbs).length;
+      const curLength = Object.keys(breadcrumbs).length;
+      const prevLength = Object.keys(previousBreadcrumbs).length;
 
-      if (currentBreadcrumbsLength > storedBreadcrumbsLength) {
-        track("forwards", analyticsId);
-      }
-      if (currentBreadcrumbsLength < storedBreadcrumbsLength) {
-        track("backwards", analyticsId);
-      }
-      setLastBreadcrumb(breadcrumbs);
+      if (curLength > prevLength) track("forwards", analyticsId);
+      if (curLength < prevLength) track("backwards", analyticsId);
+
+      setPreviousBreadcrumb(breadcrumbs);
     }
   }, [breadcrumbs]);
 
-  return {
-    createAnalytics,
-    trackHelpClick,
-  };
-
-  function trackPageExit() {
-    if (lastAnalyticsLogId !== undefined) {
-      navigator.sendBeacon(
-        `${
-          process.env.REACT_APP_API_URL
-        }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
-      );
-    }
-  }
-
-  function trackPageResume() {
-    navigator.sendBeacon(
-      `${
-        process.env.REACT_APP_API_URL
-      }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
-    );
-  }
+  return (
+    <Provider
+      value={{
+        createAnalytics,
+        trackHelpClick,
+        node,
+      }}
+    >
+      {children}
+    </Provider>
+  );
 
   async function track(direction: AnalyticsLogDirection, analyticsId: number) {
     const metadata = getNodeMetadata();
@@ -180,4 +191,6 @@ const useAnalyticsTracking = () => {
   }
 };
 
-export default useAnalyticsTracking;
+export function useAnalyticsTracking() {
+  return useContext(analyticsContext);
+}

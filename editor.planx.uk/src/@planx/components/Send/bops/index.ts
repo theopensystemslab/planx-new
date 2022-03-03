@@ -170,6 +170,8 @@ export function getParams(
   // 1a. address
 
   const address = passport.data?._address;
+  const warning = passport.data?._addressWarning;
+
   if (address) {
     const site = {} as BOPSFullPayload["site"];
 
@@ -182,6 +184,12 @@ export function getParams(
 
     site.latitude = address.latitude;
     site.longitude = address.longitude;
+
+    // if the applicant was shown a warning message that their selected address
+    //   may not be in this council, send the error context to BOPS
+    if (warning && warning.show) {
+      site.warning = warning;
+    }
 
     data.site = site;
   }

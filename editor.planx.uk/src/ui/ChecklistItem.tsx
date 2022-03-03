@@ -26,7 +26,7 @@ interface Props {
   id?: string;
   label: string;
   checked: boolean;
-  onChange: (checked: boolean) => void;
+  onChange: (event?: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
 export default function ChecklistItem({
@@ -37,15 +37,9 @@ export default function ChecklistItem({
 }: Props): FCReturn {
   const classes = useClasses();
 
-  const handleChange = (ev: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    // Prevent bubbling of event from label associated with checkbox
-    ev.preventDefault();
-    onChange(!checked);
-  };
-
   return (
-    <Box className={classes.root} onClick={(ev) => handleChange(ev)}>
-      <Checkbox checked={checked} id={id} />
+    <Box className={classes.root}>
+      <Checkbox checked={checked} id={id} onChange={onChange} />
       <Typography variant="body2" className={classes.label}>
         <label htmlFor={id}>{label}</label>
       </Typography>
