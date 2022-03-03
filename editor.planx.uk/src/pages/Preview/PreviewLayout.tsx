@@ -1,7 +1,12 @@
 import Box from "@material-ui/core/Box";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Link from "@material-ui/core/Link";
-import { createMuiTheme, Theme, ThemeProvider } from "@material-ui/core/styles";
+import {
+  createMuiTheme,
+  makeStyles,
+  Theme,
+  ThemeProvider,
+} from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ErrorFallback from "components/ErrorFallback";
 import { clearLocalFlow } from "lib/local";
@@ -17,6 +22,19 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { FlowSettings, FOOTER_ITEMS, Team, TextContent } from "../../types";
 
+const useClasses = makeStyles((theme) => ({
+  mainContainer: {
+    borderTop: `1px solid ${theme.palette.grey[300]}`,
+    paddingTop: theme.spacing(5),
+    display: "flex",
+    flex: "1 0 auto",
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: "white",
+    position: "relative",
+  },
+}));
+
 const PreviewLayout: React.FC<{
   team: Team;
   children?: any;
@@ -24,6 +42,8 @@ const PreviewLayout: React.FC<{
   footerContent?: { [key: string]: TextContent };
 }> = ({ team, children, settings, footerContent }) => {
   const { data } = useCurrentRoute();
+
+  const classes = useClasses();
 
   const makeHref = (path: string) => [data.mountpath, "pages", path].join("/");
 
@@ -70,25 +90,16 @@ const PreviewLayout: React.FC<{
    * @returns {Theme}
    */
   const generatePreviewTheme = (): Theme => {
-    const gloalOptions = getGlobalThemeOptions();
+    const globalOptions = getGlobalThemeOptions();
     const teamOptions = getTeamThemeOptions(team.theme);
-    return createMuiTheme(merge(gloalOptions, teamOptions));
+    return createMuiTheme(merge(globalOptions, teamOptions));
   };
 
   return (
     <ThemeProvider theme={generatePreviewTheme}>
       <CssBaseline />
       <Header team={team} phaseBanner handleRestart={handleRestart} />
-      <Box
-        id="main-content"
-        pt={5}
-        display="flex"
-        flex="1 0 auto"
-        flexDirection="column"
-        alignItems="center"
-        bgcolor="white"
-        position="relative"
-      >
+      <Box id="main-content" className={classes.mainContainer}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           {children}
         </ErrorBoundary>

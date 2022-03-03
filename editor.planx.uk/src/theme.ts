@@ -14,7 +14,6 @@ export const focusStyle = (focusColour: string = GOVUK_YELLOW) => ({
   boxShadow: `0 -2px ${focusColour}, 0 4px black`,
   textDecoration: "none",
   outline: "3px solid transparent",
-  borderBottom: 0,
 });
 
 // Ensure that if the element already has a border, the border gets thicker
@@ -177,6 +176,12 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
     MuiIconButton: {
       root: {
         borderRadius: 0,
+        "&:focus-visible": {
+          ...focusStyle(themeOptions.palette?.action?.focus),
+          "& svg": {
+            color: "black",
+          },
+        },
       },
     },
     ...({
@@ -223,34 +228,39 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
 export const getTeamThemeOptions = (
   theme: TeamTheme | undefined
 ): ThemeOptions => {
-  // Defer to global theme if TeamTheme is not set
-  if (!theme || !theme.primary) return {};
+  const primary = theme?.primary || "#2c2c2c";
+  const focus = theme?.focus || GOVUK_YELLOW;
   return {
     palette: {
       primary: {
-        main: theme.primary,
+        main: primary,
       },
       action: {
-        focus: theme.focus,
+        focus: focus,
       },
     },
     overrides: {
       MuiButtonBase: {
         root: {
           "&:focus-visible": {
-            ...focusStyle(theme.focus),
+            ...focusStyle(focus),
             // !important is required here as setting disableElevation = true removes boxShadow
-            boxShadow: `0 -2px ${theme.focus}, 0 4px black !important`,
-            "&:hover": focusStyle(theme.focus),
+            boxShadow: `0 -2px ${focus}, 0 4px black !important`,
+            "&:hover": focusStyle(focus),
           },
         },
       },
       MuiLink: {
         root: {
           "&:focus-visible": {
-            backgroundColor: theme.focus,
-            boxShadow: `0 -2px ${theme.focus}, 0 4px black`,
+            backgroundColor: focus,
+            boxShadow: `0 -2px ${focus}, 0 4px black`,
           },
+        },
+      },
+      MuiIconButton: {
+        root: {
+          "&:focus-visible": focusStyle(focus),
         },
       },
     },

@@ -7,11 +7,9 @@ import React from "react";
 
 const useClasses = makeStyles((theme: Theme) => ({
   root: {
-    cursor: "pointer",
     backgroundColor: "white",
     display: "flex",
     justifyContent: "start",
-    borderBottom: `1px solid ${theme.palette.grey[300]}`,
     "&:hover": {
       "& span": {
         textDecoration: "underline",
