@@ -398,13 +398,8 @@ function GetAddress(props: {
                 <TextField
                   {...params}
                   variant="outlined"
+                  aria-label="Select an address in this postcode by typing or using your arrow keys"
                   id="address-textfield"
-                  helperText={
-                    <span style={visuallyHidden}>
-                      Start typing or use your arrow keys to select an address
-                      in this postcode
-                    </span>
-                  }
                 />
               </InputLabel>
             )}
