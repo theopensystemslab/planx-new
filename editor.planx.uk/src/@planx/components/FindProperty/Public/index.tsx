@@ -375,6 +375,8 @@ function GetAddress(props: {
         {Boolean(addresses.length) && (
           <Autocomplete
             role="status"
+            aria-atomic={true}
+            aria-live="polite"
             classes={classes}
             options={addresses
               .map(
