@@ -72,7 +72,7 @@ describe("can go back if", () => {
         },
       },
     });
-    expect(getState().canGoBack("8ZSxuIfFYE")).toStrictEqual(true);
+    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(true);
   });
 
   test("the user skipped the payment component", () => {
@@ -87,13 +87,13 @@ describe("can go back if", () => {
         },
       },
     });
-    expect(getState().canGoBack("bmsSl3ScbV")).toStrictEqual(true);
+    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(true);
   });
 });
 
 describe("cannot go back if", () => {
   test("it's the very first component", () => {
-    expect(getState().canGoBack("XYoJeox7F0")).toStrictEqual(false);
+    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
   });
 
   test("the only previous component was auto-answered", () => {
@@ -105,7 +105,7 @@ describe("cannot go back if", () => {
         },
       },
     });
-    expect(getState().canGoBack("8ZSxuIfFYE")).toStrictEqual(false);
+    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
   });
 
   test("it's the confirmation component", () => {
@@ -123,7 +123,7 @@ describe("cannot go back if", () => {
         },
       },
     });
-    expect(getState().canGoBack("ltuI9xrBHk")).toStrictEqual(false);
+    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
   });
 
   test("the applicant made a payment", () => {
@@ -144,6 +144,28 @@ describe("cannot go back if", () => {
         },
       },
     });
-    expect(getState().canGoBack("bmsSl3ScbV")).toStrictEqual(false);
+    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
+  });
+
+  test("changing a component's answer", () => {
+    setState({
+      breadcrumbs: {
+        XYoJeox7F0: {
+          auto: false,
+          answers: ["YQXjsVsGqf"],
+        },
+        DlgsufM3OK: {
+          auto: true,
+          data: {
+            fee: 10,
+          },
+        },
+        "8ZSxuIfFYE": {
+          auto: false,
+        },
+      },
+      changedNode: "ltuI9xrBHk",
+    });
+    expect(getState().canGoBack(getState().currentCard())).toStrictEqual(false);
   });
 });

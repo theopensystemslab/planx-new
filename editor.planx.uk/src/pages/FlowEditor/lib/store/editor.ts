@@ -116,7 +116,6 @@ export const editorStore = (
     doc = getConnection(id);
     (window as any)["doc"] = doc;
 
-    
     await connectToDB(doc);
     // set the ID of the flow to assist with deciding what to render
     set({ id });
@@ -136,7 +135,7 @@ export const editorStore = (
     // remote operation, there might be network latency so wait for 0.5s
     const cloneStateFromRemoteOps = debounce(cloneStateFromShareDb, 500);
 
-    doc.on("op", (_op: any, isLocalOp?: boolean) => 
+    doc.on("op", (_op: any, isLocalOp?: boolean) =>
       isLocalOp ? cloneStateFromLocalOps() : cloneStateFromRemoteOps()
     );
   },
