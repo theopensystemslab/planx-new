@@ -1,6 +1,6 @@
 import Box from "@material-ui/core/Box";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import * as React from "react";
+import React from "react";
 import { inputFocusStyle } from "theme";
 
 export const useClasses = makeStyles<Theme, Props>((theme) => ({

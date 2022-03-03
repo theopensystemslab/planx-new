@@ -132,7 +132,6 @@ const Question: React.FC<IQuestion> = (props) => {
                 switch (layout) {
                   case Layout.Basic:
                     return (
-                      // TODO: Focus styles for image questions
                       <Grid item xs={12} key={response.id}>
                         <DecisionButton {...buttonProps} {...response} />
                       </Grid>
