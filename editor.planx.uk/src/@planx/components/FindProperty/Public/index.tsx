@@ -25,6 +25,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
+import { inputFocusStyle } from "theme";
 import { TeamSettings } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
 import ExternalPlanningSiteDialog, {
@@ -247,7 +248,6 @@ function GetAddress(props: {
   // Autocomplete overrides
   const useStyles = makeStyles((theme) => ({
     root: {
-      paddingBottom: theme.spacing(3),
       "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
         // Default transform is "translate(14px, 20px) scale(1)""
         // This lines up the label with the initial cursor position in the input
@@ -260,9 +260,10 @@ function GetAddress(props: {
       fontSize: "inherit",
       borderRadius: 0,
       "& fieldset": {
-        border: "2px solid black",
+        border: "2px solid black !important",
+        marginTop: "8px",
         "& legend": {
-          lineHeight: "13px",
+          lineHeight: "2px",
         },
       },
       '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
@@ -274,10 +275,9 @@ function GetAddress(props: {
       "&:hover .MuiOutlinedInput-notchedOutline": {
         borderRadius: 0,
       },
-      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      "&.Mui-focused": {
         borderRadius: 0,
-        border: "2px solid black",
-        boxShadow: "inset 0 0 0 2px",
+        "& fieldset": inputFocusStyle(theme.palette.action.focus),
       },
     },
     input: {
@@ -429,10 +429,12 @@ function GetAddress(props: {
             </Typography>
           </Box>
         )}
-        <ExternalPlanningSiteDialog
-          purpose={DialogPurpose.MissingAddress}
-          teamSettings={props.teamSettings}
-        ></ExternalPlanningSiteDialog>
+        <Box pt={2}>
+          <ExternalPlanningSiteDialog
+            purpose={DialogPurpose.MissingAddress}
+            teamSettings={props.teamSettings}
+          ></ExternalPlanningSiteDialog>
+        </Box>
       </Box>
     </Card>
   );
