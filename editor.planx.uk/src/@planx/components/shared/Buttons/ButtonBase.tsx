@@ -31,11 +31,12 @@ export interface Props {
   selected: boolean;
   children?: React.ReactNode;
   className?: string;
+  id?: string;
   onClick: (event?: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
 export default function ButtonBase(props: Props): FCReturn {
-  const { selected, onClick, children, className } = props;
+  const { selected, onClick, children, className, id } = props;
   const classes = useStyles();
 
   return (
@@ -47,6 +48,7 @@ export default function ButtonBase(props: Props): FCReturn {
         className
       )}
       onClick={onClick}
+      id={id}
     >
       {children}
     </MuiButtonBase>
