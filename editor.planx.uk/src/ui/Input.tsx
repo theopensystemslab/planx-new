@@ -3,7 +3,7 @@ import type { Theme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import React, { ChangeEvent, forwardRef } from "react";
-import { inputFocusStyle } from "theme";
+import { borderedFocusStyle } from "theme";
 
 import ErrorWrapper from "./ErrorWrapper";
 
@@ -56,7 +56,7 @@ export const useClasses = makeStyles<Theme, Props>((theme) => ({
     paddingRight: 2,
   },
   focused: (props) =>
-    props.bordered ? inputFocusStyle(theme.palette.action.focus) : {},
+    props.bordered ? borderedFocusStyle(theme.palette.action.focus) : {},
 }));
 
 export default forwardRef((props: Props, ref): FCReturn => {

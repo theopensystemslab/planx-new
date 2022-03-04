@@ -17,7 +17,7 @@ export const focusStyle = (focusColour: string = GOVUK_YELLOW) => ({
 });
 
 // Ensure that if the element already has a border, the border gets thicker
-export const inputFocusStyle = (focusColour: string = GOVUK_YELLOW) => ({
+export const borderedFocusStyle = (focusColour: string = GOVUK_YELLOW) => ({
   outline: `3px solid ${focusColour}`,
   outlineOffset: 0,
   zIndex: 1,

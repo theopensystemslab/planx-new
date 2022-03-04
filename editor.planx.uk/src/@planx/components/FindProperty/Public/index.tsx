@@ -25,7 +25,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
-import { inputFocusStyle } from "theme";
+import { borderedFocusStyle } from "theme";
 import { TeamSettings } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
 import ExternalPlanningSiteDialog, {
@@ -277,7 +277,7 @@ function GetAddress(props: {
       },
       "&.Mui-focused": {
         borderRadius: 0,
-        "& fieldset": inputFocusStyle(theme.palette.action.focus),
+        "& fieldset": borderedFocusStyle(theme.palette.action.focus),
       },
     },
     input: {

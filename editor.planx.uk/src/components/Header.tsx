@@ -12,7 +12,7 @@ import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 import React, { useRef, useState } from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
-import { focusStyle } from "theme";
+import { borderedFocusStyle, focusStyle } from "theme";
 import { Team } from "types";
 import Reset from "ui/icons/Reset";
 
@@ -67,6 +67,10 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 140,
     objectFit: "contain",
   },
+  logoLink: {
+    display: "inline-block",
+    "&:focus-visible": borderedFocusStyle(theme.palette.action.focus),
+  },
   skipLink: {
     width: "100vw",
     height: HEADER_HEIGHT / 2,
@@ -96,7 +100,11 @@ const TeamLogo: React.FC<{ team: Team }> = ({ team }) => {
     <img alt={altText} src={team.theme?.logo} className={classes.logo} />
   );
   return team.settings?.homepage ? (
-    <a href={team.settings.homepage} target="_blank">
+    <a
+      href={team.settings.homepage}
+      target="_blank"
+      className={classes.logoLink}
+    >
       {logo}
     </a>
   ) : (
