@@ -95,7 +95,7 @@ export default function Confirm(props: Props) {
             {formattedPriceWithCurrencySymbol(props.fee)}
           </Typography>
           <Typography variant="h4" component="span">
-            <ReactMarkdownOrHtml source={props.description} />
+            <ReactMarkdownOrHtml source={props.description} openLinksOnNewTab />
           </Typography>
         </Container>
       </div>
