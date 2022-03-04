@@ -1,6 +1,7 @@
 import Box from "@material-ui/core/Box";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import classnames from "classnames";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
@@ -14,18 +15,20 @@ import { useStore } from "../FlowEditor/lib/store";
 import { PreviewContext } from "./Context";
 import Node, { handleSubmit } from "./Node";
 
-const useClasses = makeStyles(() => ({
+const useClasses = makeStyles((theme) => ({
   backButton: {
-    padding: "0 10px",
+    marginLeft: "10px",
+    marginBottom: "10px",
     visibility: "visible",
     pointerEvents: "auto",
-    display: "block",
+    display: "flex",
     cursor: "pointer",
     userSelect: "none",
     alignSelf: "start",
     fontSize: 16,
     background: "transparent",
     border: "none",
+    columnGap: theme.spacing(1),
     "&:hover": {
       textDecoration: "underline",
     },
@@ -124,7 +127,8 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
           record(previousCard!);
         }}
       >
-        ⭠ Back
+        <ArrowBackIcon fontSize="small"></ArrowBackIcon>
+        Back
       </ButtonBase>
 
       {node && (
