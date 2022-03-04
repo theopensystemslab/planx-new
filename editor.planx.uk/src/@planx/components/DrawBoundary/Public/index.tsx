@@ -119,9 +119,14 @@ export default function Component(props: Props) {
               An interactive map centered on your address, with a red pointer to
               draw your site outline. Click to place points and connect the
               lines to make your site. Once you've closed the site shape, click
-              and drag the lines to modify it. If you cannot draw, you can
-              upload a location plan file using the link below.
+              and drag the lines to modify it.
             </p>
+            {!props.hideFileUpload && (
+              <p style={visuallyHidden}>
+                If you cannot draw, you can upload a location plan file using
+                the link below.
+              </p>
+            )}
             {/* @ts-ignore */}
             <my-map
               id="draw-boundary-map"

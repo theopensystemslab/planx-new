@@ -102,19 +102,17 @@ function DrawBoundaryComponent(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputRow>
-            <OptionButton
-              selected={formik.values.hideFileUpload}
-              onClick={() => {
-                formik.setFieldValue(
-                  "hideFileUpload",
-                  !formik.values.hideFileUpload
-                );
-              }}
-            >
-              Hide file upload and allow user to continue without data
-            </OptionButton>
-          </InputRow>
+          <OptionButton
+            selected={formik.values.hideFileUpload}
+            onClick={() => {
+              formik.setFieldValue(
+                "hideFileUpload",
+                !formik.values.hideFileUpload
+              );
+            }}
+          >
+            Hide file upload and allow user to continue without data
+          </OptionButton>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation
