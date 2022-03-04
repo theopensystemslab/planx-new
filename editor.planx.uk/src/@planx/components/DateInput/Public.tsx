@@ -23,6 +23,7 @@ export type Props = PublicProps<DateInput, UserData>;
 const useClasses = makeStyles(() => ({
   fieldset: {
     border: 0,
+    padding: 0,
   },
 }));
 
