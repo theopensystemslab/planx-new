@@ -1,5 +1,4 @@
 import Box from "@material-ui/core/Box";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import Link from "@material-ui/core/Link";
 import {
   createMuiTheme,
@@ -97,7 +96,6 @@ const PreviewLayout: React.FC<{
 
   return (
     <ThemeProvider theme={generatePreviewTheme}>
-      <CssBaseline />
       <Header team={team} phaseBanner handleRestart={handleRestart} />
       <Box id="main-content" className={classes.mainContainer}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>

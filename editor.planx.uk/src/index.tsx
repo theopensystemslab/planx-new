@@ -83,7 +83,6 @@ const Layout: React.FC<{
 
   return (
     <ThemeProvider theme={globalTheme}>
-      <CssBaseline />
       <NotFoundBoundary render={() => <h1>Not found</h1>}>
         {!!isLoading ? (
           <DelayedLoadingIndicator msDelayBeforeVisible={500} />
@@ -102,6 +101,7 @@ render(
         <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
           <HelmetProvider>
             <Layout>
+              <CssBaseline />
               <Suspense fallback={null}>
                 <View />
               </Suspense>

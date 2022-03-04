@@ -342,7 +342,7 @@ function GetAddress(props: {
         title={props.title || DEFAULT_TITLE}
         description={props.description || ""}
       />
-      <Box pb={2}>
+      <Box>
         <InputLabel label="Postcode" htmlFor="postcode-input">
           <Input
             required
@@ -429,13 +429,11 @@ function GetAddress(props: {
             </Typography>
           </Box>
         )}
-        <Box pt={2}>
-          <ExternalPlanningSiteDialog
-            purpose={DialogPurpose.MissingAddress}
-            teamSettings={props.teamSettings}
-          ></ExternalPlanningSiteDialog>
-        </Box>
       </Box>
+      <ExternalPlanningSiteDialog
+        purpose={DialogPurpose.MissingAddress}
+        teamSettings={props.teamSettings}
+      ></ExternalPlanningSiteDialog>
     </Card>
   );
 }

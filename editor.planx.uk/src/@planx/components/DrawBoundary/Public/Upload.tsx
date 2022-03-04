@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     height: theme.spacing(14),
     backgroundColor: theme.palette.background.paper,
-    cursor: "pointer",
     display: "flex",
     alignItems: "center",
     padding: theme.spacing(1.5),

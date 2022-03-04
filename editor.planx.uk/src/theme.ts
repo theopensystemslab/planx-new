@@ -117,7 +117,7 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
     },
   };
 
-  // Separately setting "overrides" allows us to refer back to the pallette
+  // Separately setting "overrides" allows us to refer back to the palette
   themeOptions.overrides = {
     MuiCssBaseline: {
       "@global": {
@@ -220,7 +220,7 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
 
 /**
  * Get team specific theme options
- * Pass in TeamTheme to customise the pallette and associated overrides
+ * Pass in TeamTheme to customise the palette and associated overrides
  * Rules here will only apply in the Preview and Unpublished routes
  * @param {TeamTheme} theme
  * @returns {ThemeOptions}
