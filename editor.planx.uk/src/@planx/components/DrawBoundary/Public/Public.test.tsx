@@ -117,7 +117,13 @@ test("shows the file upload option by default and requires user data to continue
     />
   );
 
+  // Draw a boundary screen
   expect(screen.queryByTestId("upload-file-button")).toBeInTheDocument;
+  expect(screen.getByText("Continue")).toBeDisabled;
+
+  // Navigate to upload a file screen
+  userEvent.click(screen.getByTestId("upload-file-button"));
+  expect(screen.getByText("Upload a file")).toBeInTheDocument;
   expect(screen.getByText("Continue")).toBeDisabled;
 });
 

@@ -135,14 +135,12 @@ export default function Component(props: Props) {
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
           </Box>
-          {props.hideFileUpload ? (
-            ``
-          ) : (
-            <div
-              data-testid="upload-file-button"
-              className={classes.uploadInstead}
-            >
-              <button onClick={() => setPage("upload")}>
+          {!props.hideFileUpload && (
+            <div className={classes.uploadInstead}>
+              <button
+                data-testid="upload-file-button"
+                onClick={() => setPage("upload")}
+              >
                 Upload a location plan instead
               </button>
             </div>
