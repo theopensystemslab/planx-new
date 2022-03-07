@@ -73,11 +73,12 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   useEffect(() => {
     setPreviewEnvironment(previewEnvironment);
     if (isStandalone) {
-      const state = getLocalFlow(id);
-      if (state) {
-        resumeSession(state);
-      }
-      createAnalytics(state ? "resume" : "init");
+      getLocalFlow(id).then((state: any) => {
+        if (state) {
+          resumeSession(state);
+        }
+        createAnalytics(state ? "resume" : "init");
+      });
     }
   }, []);
 
