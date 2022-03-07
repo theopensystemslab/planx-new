@@ -331,6 +331,27 @@ export function getParams(
 
   if (userRole && USER_ROLES.includes(userRole)) data.user_role = userRole;
 
+  // 10. proposal completion date
+  try {
+    const dateString = passport?.data?.["proposal.completion.date"];
+    if (dateString) {
+      // ensure that date is valid and in yyyy-mm-dd format
+      data.proposal_completion_date = new Date(dateString)
+        .toISOString()
+        .split("T")[0];
+    }
+  } catch (err) {
+    const errPayload = [
+      "unable to parse completion date",
+      {
+        date: passport?.data?.["proposal.completion.date"],
+        err,
+      },
+    ];
+    console.error(errPayload);
+    airbrake?.notify(errPayload);
+  }
+
   return {
     ...data,
     ...bopsData,
