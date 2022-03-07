@@ -247,7 +247,7 @@ function GetAddress(props: {
   // Autocomplete overrides
   const useStyles = makeStyles((theme) => ({
     root: {
-      paddingBottom: theme.spacing(3),
+      paddingBottom: theme.spacing(1),
       "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
         // Default transform is "translate(14px, 20px) scale(1)""
         // This lines up the label with the initial cursor position in the input
@@ -374,6 +374,9 @@ function GetAddress(props: {
         </InputLabel>
         {Boolean(addresses.length) && (
           <Autocomplete
+            role="status"
+            aria-atomic={true}
+            aria-live="polite"
             classes={classes}
             options={addresses
               .map(
@@ -391,11 +394,12 @@ function GetAddress(props: {
             data-testid="autocomplete-input"
             value={selectedOption ?? (null as any as undefined)}
             renderInput={(params) => (
-              <InputLabel label="Select an address">
+              <InputLabel label="Select an address" htmlFor="address-textfield">
                 <TextField
                   {...params}
                   variant="outlined"
-                  aria-label="Select an address"
+                  aria-label="Select an address in this postcode by typing or using your arrow keys"
+                  id="address-textfield"
                 />
               </InputLabel>
             )}
@@ -415,6 +419,7 @@ function GetAddress(props: {
             }}
             disablePortal
             disableClearable
+            handleHomeEndKeys
             PaperComponent={({ children }) => (
               <Paper style={{ borderRadius: 0, boxShadow: "none" }}>
                 {children}
