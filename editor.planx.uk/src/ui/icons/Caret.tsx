@@ -3,7 +3,7 @@ import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
 import classnames from "classnames";
 import React from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     height: 8,
     width: 19,

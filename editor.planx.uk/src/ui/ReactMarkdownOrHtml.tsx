@@ -2,11 +2,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import { focusStyle } from "theme";
 
 const useClasses = makeStyles((theme) => ({
   htmlRoot: {
     "& a": {
       color: "inherit",
+      "&:focus-visible": focusStyle(theme.palette.action.focus),
     },
     "& h2": theme.typography.h3,
     "& h3": theme.typography.h5,
@@ -52,6 +54,8 @@ export default function ReactMarkdownOrHtml(props: {
     );
   }
   return (
-    <ReactMarkdown className={props.className}>{props.source}</ReactMarkdown>
+    <ReactMarkdown className={classNames(props.className, classes.htmlRoot)}>
+      {props.source}
+    </ReactMarkdown>
   );
 }

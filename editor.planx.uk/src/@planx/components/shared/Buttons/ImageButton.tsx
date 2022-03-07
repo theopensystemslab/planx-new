@@ -41,9 +41,7 @@ const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
       width: "100%",
       backgroundColor: (props) => props.bgColor,
       color: (props) =>
-        props.selected
-          ? theme.palette.primary.contrastText
-          : theme.palette.primary.main,
+        props.selected ? theme.palette.primary.contrastText : "black",
       display: "flex",
       flexGrow: 1,
     },
