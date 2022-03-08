@@ -59,7 +59,7 @@ test
   })("creates a flow that is executable", async (t) => {
   // Log in
   await t.expect(Selector("a").innerText).eql("Login with Google");
-  await setJWT(t, getAdminJWT(userId));
+  await setJWT(getAdminJWT(userId));
 
   // Create a service
   await t.click(Selector("h2").withText(TEAM_NAME));

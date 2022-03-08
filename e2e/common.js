@@ -15,7 +15,7 @@ export function getAdminJWT(userId) {
   return sign(data, process.env.JWT_SECRET);
 }
 
-export async function setJWT(t, jwt) {
+export async function setJWT(jwt) {
   await ClientFunction((jwt) => {
     document.cookie = `jwt=${jwt}`;
     window.location.reload();

@@ -57,24 +57,25 @@ test
     `);
 
     assert(!errors, JSON.stringify(errors));
-  })("Shows error toast when there is a network error and removes it when a retry is successful", async (t) => {
-  // Log in
-  await t.expect(Selector("a").innerText).eql("Login with Google");
-  await setJWT(t, getAdminJWT(userId));
+  })(
+  "Shows error toast when there is a network error and removes it when a retry is successful",
+  async (t) => {
+    // Log in
+    await t.expect(Selector("a").innerText).eql("Login with Google");
+    await setJWT(getAdminJWT(userId));
 
-  // Switch to mock api after teams are loaded
-  await t.expect(Selector("h2").withText(TEAM_NAME).exists).ok();
-  await t.addRequestHooks(apiMock);
-  await t.click(Selector("h2").withText(TEAM_NAME));
+    // Switch to mock api after teams are loaded
+    await t.expect(Selector("h2").withText(TEAM_NAME).exists).ok();
+    await t.addRequestHooks(apiMock);
+    await t.click(Selector("h2").withText(TEAM_NAME));
 
-  // Expect error toast
-  const toastText = "Network error, attempting to reconnect…"
-  await t.expect(Selector("div").withText(toastText).exists).ok();
+    // Expect error toast
+    const toastText = "Network error, attempting to reconnect…";
+    await t.expect(Selector("div").withText(toastText).exists).ok();
 
-  // Switch back from mocked api
-  await t.removeRequestHooks(apiMock);
-  await t.expect(Selector("h1").withText('My services').exists).ok();
-  await t.expect(Selector("div").withText(toastText).exists).notOk();
-
-});
-
+    // Switch back from mocked api
+    await t.removeRequestHooks(apiMock);
+    await t.expect(Selector("h1").withText("My services").exists).ok();
+    await t.expect(Selector("div").withText(toastText).exists).notOk();
+  }
+);
