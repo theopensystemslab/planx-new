@@ -12,14 +12,11 @@ if [ -z "${CI}" ]; then
 fi
 
 pnpx --yes serve ../editor.planx.uk/build \
-  --config "$(readlink -f "${SCRIPT_DIR}/serve.json")" `# https://github.com/vercel/serve/issues/662`\
-  --no-clipboard --no-port-switching --listen 3000 >/dev/null &
+  --config "$(pwd)/serve.json" `# https://github.com/vercel/serve/issues/662` \
+  --listen 3000 >/dev/null &
 
-if [ -x "$(command -v chrome)" ]; then
-  BROWSER="chrome"
-else
-  BROWSER="chromium"
-fi
+# use chrome or chromium
+BROWSER=$(testcafe --list-browsers | grep "^chrom" | head -1)
 
 if [ -z "${CI}" ]; then
   HEADLESS=""
