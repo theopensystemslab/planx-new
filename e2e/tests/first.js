@@ -1,6 +1,6 @@
-import { Selector } from "testcafe";
-import { getAdminJWT, setJWT, gqlAdmin } from "../common.js";
 import assert from "assert";
+import { Selector } from "testcafe";
+import { getAdminJWT, gqlAdmin, setJWT } from "../common.js";
 
 const URL = "http://localhost:3000";
 

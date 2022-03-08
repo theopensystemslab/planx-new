@@ -1,24 +1,18 @@
-import { RequestMock, Selector } from "testcafe";
-import { getAdminJWT, setJWT, gqlAdmin } from "../common.js";
 import assert from "assert";
+import { RequestMock, Selector } from "testcafe";
+import { getAdminJWT, gqlAdmin, setJWT } from "../common.js";
 
 const URL = "http://localhost:3000";
 
 const apiMock = RequestMock()
-    .onRequestTo('http://localhost:7000/v1/graphql')
-    .respond(
-      '',
-      404,
-      {
-        'Access-Control-Allow-Origin': '*'
-      }
-    );
+  .onRequestTo("http://localhost:7000/v1/graphql")
+  .respond("", 404, {
+    "Access-Control-Allow-Origin": "*",
+  });
 
-fixture`Retry requests with network error`
-  .page`${URL}`
+fixture`Retry requests with network error`.page`${URL}`;
 
 const TEAM_NAME = "test-team";
-const SERVICE_NAME = "test-service";
 
 let userId;
 let teamId;
