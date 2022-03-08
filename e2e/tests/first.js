@@ -34,6 +34,18 @@ test
   `));
   })
   .after(async (t) => {
+    // TODO: determine whether or not to delete analytics when flow deleted
+    await gqlAdmin(`
+      mutation {
+        delete_analytics_logs(where: {}) {
+          affected_rows
+        }
+        delete_analytics(where: {}) {
+          affected_rows
+        }
+      }
+    `);
+
     const { errors } = await gqlAdmin(`
       mutation {
         delete_operations(where: {actor_id: {_in: ${JSON.stringify([
