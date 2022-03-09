@@ -6,7 +6,7 @@ import classnames from "classnames";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
-import React, { useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { FlowSettings } from "types";
 
@@ -57,7 +57,7 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     canGoBack,
     setPreviewEnvironment,
   ] = useStore((state) => [
-    state.previousCard(),
+    state.previousCard,
     state.record,
     state.breadcrumbs,
     state.computePassport(),
@@ -72,8 +72,6 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   const flow = useContext(PreviewContext)?.flow;
   const { createAnalytics, node } = useAnalyticsTracking();
   const classes = useClasses();
-
-  const showBackButton = node?.id ? canGoBack(node.id) : false;
 
   useEffect(() => {
     setPreviewEnvironment(previewEnvironment);
@@ -117,15 +115,23 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
       record(id, { answers, data, auto });
     };
 
+  const goBack = useCallback(() => {
+    const previous = previousCard(node);
+    if (previous) record(previous);
+  }, [node?.id]);
+
+  const showBackButton = useMemo(
+    () => (node?.id ? canGoBack(node) : false),
+    [node?.id]
+  );
+
   return (
     <Box width="100%" role="main">
       <ButtonBase
         className={classnames(classes.backButton, {
           [classes.hidden]: !showBackButton,
         })}
-        onClick={() => {
-          record(previousCard!);
-        }}
+        onClick={() => goBack()}
       >
         <ArrowBackIcon fontSize="small"></ArrowBackIcon>
         Back

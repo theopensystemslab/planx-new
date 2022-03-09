@@ -374,6 +374,9 @@ function GetAddress(props: {
         </InputLabel>
         {Boolean(addresses.length) && (
           <Autocomplete
+            role="status"
+            aria-atomic={true}
+            aria-live="polite"
             classes={classes}
             options={addresses
               .map(
@@ -391,11 +394,12 @@ function GetAddress(props: {
             data-testid="autocomplete-input"
             value={selectedOption ?? (null as any as undefined)}
             renderInput={(params) => (
-              <InputLabel label="Select an address">
+              <InputLabel label="Select an address" htmlFor="address-textfield">
                 <TextField
                   {...params}
                   variant="outlined"
-                  aria-label="Select an address"
+                  aria-label="Select an address in this postcode by typing or using your arrow keys"
+                  id="address-textfield"
                 />
               </InputLabel>
             )}
@@ -415,6 +419,7 @@ function GetAddress(props: {
             }}
             disablePortal
             disableClearable
+            handleHomeEndKeys
             PaperComponent={({ children }) => (
               <Paper style={{ borderRadius: 0, boxShadow: "none" }}>
                 {children}
@@ -425,7 +430,7 @@ function GetAddress(props: {
         {(data?.error || totalAddresses === 0) && Boolean(sanitizedPostcode) && (
           <Box pt={2} role="status">
             <Typography variant="body1" color="error">
-              {data.error?.message || "No addresses found in this postcode."}
+              {data?.error?.message || "No addresses found in this postcode."}
             </Typography>
           </Box>
         )}

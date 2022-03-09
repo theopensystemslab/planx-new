@@ -173,100 +173,106 @@ const _add = (
   });
 };
 
-export const add = (
-  {
-    id = uniqueId(),
-    ...nodeData
-  }: { id?: string; type?: number; data?: object },
-  {
-    children = [],
-    parent = ROOT_NODE_KEY,
-    before = undefined,
-  }: {
-    children?: Child[];
-    parent?: string;
-    before?: string;
-  } = {}
-) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
-  wrap(graph, (draft) => {
-    draft[ROOT_NODE_KEY] = draft[ROOT_NODE_KEY] || {};
-    _add(draft, { id, ...nodeData }, { children, parent, before });
-  });
+export const add =
+  (
+    {
+      id = uniqueId(),
+      ...nodeData
+    }: { id?: string; type?: number; data?: object },
+    {
+      children = [],
+      parent = ROOT_NODE_KEY,
+      before = undefined,
+    }: {
+      children?: Child[];
+      parent?: string;
+      before?: string;
+    } = {}
+  ) =>
+  (graph: Graph = {}): [Graph, Array<OT.Op>] =>
+    wrap(graph, (draft) => {
+      draft[ROOT_NODE_KEY] = draft[ROOT_NODE_KEY] || {};
+      _add(draft, { id, ...nodeData }, { children, parent, before });
+    });
 
-export const clone = (
-  id: string,
-  {
-    toParent = ROOT_NODE_KEY,
-    toBefore = undefined,
-  }: { toParent?: string; toBefore?: string } = {}
-) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
-  wrap(graph, (draft) => {
-    if (!draft[id]) throw new Error("id not found");
-    else if (!draft[toParent]) throw new Error("toParent not found");
-    else if (draft[toParent].edges?.includes(id))
-      throw new Error("cannot clone to same parent");
+export const clone =
+  (
+    id: string,
+    {
+      toParent = ROOT_NODE_KEY,
+      toBefore = undefined,
+    }: { toParent?: string; toBefore?: string } = {}
+  ) =>
+  (graph: Graph = {}): [Graph, Array<OT.Op>] =>
+    wrap(graph, (draft) => {
+      if (!draft[id]) throw new Error("id not found");
+      else if (!draft[toParent]) throw new Error("toParent not found");
+      else if (draft[toParent].edges?.includes(id))
+        throw new Error("cannot clone to same parent");
 
-    const toParentNode = draft[toParent];
+      const toParentNode = draft[toParent];
 
-    toParentNode.edges = toParentNode.edges || [];
+      toParentNode.edges = toParentNode.edges || [];
 
-    if (toBefore) {
-      const idx = toParentNode.edges.indexOf(toBefore);
-      if (idx >= 0) {
-        toParentNode.edges.splice(idx, 0, id);
+      if (toBefore) {
+        const idx = toParentNode.edges.indexOf(toBefore);
+        if (idx >= 0) {
+          toParentNode.edges.splice(idx, 0, id);
+        } else {
+          throw new Error("toBefore does not exist in toParent");
+        }
       } else {
-        throw new Error("toBefore does not exist in toParent");
+        toParentNode.edges.push(id);
       }
-    } else {
-      toParentNode.edges.push(id);
-    }
 
-    if (isCyclic(draft)) throw new Error("cannot create cycle in graph");
-  });
+      if (isCyclic(draft)) throw new Error("cannot create cycle in graph");
+    });
 
-export const move = (
-  id: string,
-  parent: string,
-  {
-    toParent = undefined,
-    toBefore = undefined,
-  }: { toParent?: string; toBefore?: string } = {}
-) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
-  wrap(graph, (draft) => {
-    toParent = toParent || parent;
+export const move =
+  (
+    id: string,
+    parent: string,
+    {
+      toParent = undefined,
+      toBefore = undefined,
+    }: { toParent?: string; toBefore?: string } = {}
+  ) =>
+  (graph: Graph = {}): [Graph, Array<OT.Op>] =>
+    wrap(graph, (draft) => {
+      toParent = toParent || parent;
 
-    if (!draft[id]) throw new Error("id not found");
-    else if (!draft[parent]) throw new Error("parent not found");
-    else if (!draft[toParent]) throw new Error("toParent not found");
-    else if (parent !== toParent && draft[toParent].edges?.includes(id)) {
-      throw new Error("cannot move to same parent");
-    }
+      if (!draft[id]) throw new Error("id not found");
+      else if (!draft[parent]) throw new Error("parent not found");
+      else if (!draft[toParent]) throw new Error("toParent not found");
+      else if (parent !== toParent && draft[toParent].edges?.includes(id)) {
+        throw new Error("cannot move to same parent");
+      }
 
-    const parentNode = draft[parent];
-    parentNode.edges = parentNode.edges || [];
+      const parentNode = draft[parent];
+      parentNode.edges = parentNode.edges || [];
 
-    let idx = parentNode.edges.indexOf(id);
-    if (idx >= 0) {
-      if (parentNode.edges.length === 1) delete draft[parent].edges;
-      else parentNode.edges.splice(idx, 1);
-    } else throw new Error("parent does not connect to id");
-
-    const toParentNode = draft[toParent];
-    toParentNode.edges = toParentNode.edges || [];
-
-    if (toBefore) {
-      idx = toParentNode.edges.indexOf(toBefore);
+      let idx = parentNode.edges.indexOf(id);
       if (idx >= 0) {
-        toParentNode.edges.splice(idx, 0, id);
-      } else {
-        throw new Error("toBefore does not exist in toParent");
-      }
-    } else {
-      toParentNode.edges.push(id);
-    }
+        if (parentNode.edges.length === 1) delete draft[parent].edges;
+        else parentNode.edges.splice(idx, 1);
+      } else throw new Error("parent does not connect to id");
 
-    if (isCyclic(draft)) throw new Error("cannot create cycle in graph");
-  });
+      const toParentNode = draft[toParent];
+      toParentNode.edges = toParentNode.edges || [];
+
+      if (toBefore) {
+        idx = toParentNode.edges.indexOf(toBefore);
+        if (idx >= 0) {
+          toParentNode.edges.splice(idx, 0, id);
+        } else {
+          throw new Error("toBefore does not exist in toParent");
+        }
+      } else {
+        toParentNode.edges.push(id);
+      }
+
+      if (isCyclic(draft)) throw new Error("cannot create cycle in graph");
+    });
 
 const _remove = (draft: Graph, id: string, parent: string) => {
   if (!draft[id]) throw new Error("id not found");
@@ -297,12 +303,12 @@ const _remove = (draft: Graph, id: string, parent: string) => {
   }
 };
 
-export const remove = (id: string, parent: string) => (
-  graph: Graph = {}
-): [Graph, Array<OT.Op>] =>
-  wrap(graph, (draft) => {
-    _remove(draft, id, parent);
-  });
+export const remove =
+  (id: string, parent: string) =>
+  (graph: Graph = {}): [Graph, Array<OT.Op>] =>
+    wrap(graph, (draft) => {
+      _remove(draft, id, parent);
+    });
 
 const _update = (
   draft: Graph,
@@ -388,51 +394,51 @@ const _update = (
   if (Object.keys(node.data).length === 0) delete node.data;
 };
 
-export const update = (
-  id: string,
-  newData: object,
-  {
-    children = undefined,
-    removeKeyIfMissing = false,
-  }: {
-    children?: Child[];
-    removeKeyIfMissing?: boolean;
-  } = {}
-) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
-  wrap(graph, (draft) => {
-    _update(draft, id, newData, {
-      children,
-      removeKeyIfMissing,
+export const update =
+  (
+    id: string,
+    newData: object,
+    {
+      children = undefined,
+      removeKeyIfMissing = false,
+    }: {
+      children?: Child[];
+      removeKeyIfMissing?: boolean;
+    } = {}
+  ) =>
+  (graph: Graph = {}): [Graph, Array<OT.Op>] =>
+    wrap(graph, (draft) => {
+      _update(draft, id, newData, {
+        children,
+        removeKeyIfMissing,
+      });
     });
-  });
 
-export const makeUnique = (
-  id: string,
-  parent: string = ROOT_NODE_KEY,
-  { idFn = uniqueId } = {}
-) => (graph: Graph = {}): [Graph, Array<OT.Op>] =>
-  wrap(graph, (draft) => {
-    const _makeUnique = (
-      id: string,
-      parent: string,
-      { idFn }: { idFn: Function },
-      firstCall: boolean
-    ) => {
-      const { edges = [], ...nodeData } = draft[id];
-      if (!firstCall && isClone(id, draft)) {
-        const node = draft[parent];
-        node.edges = node.edges || [];
-        node.edges.push(id);
-      } else {
-        const newId = idFn();
-        _add(draft, { id: newId, ...nodeData }, { parent });
-        edges.forEach((tgt: string) => {
-          _makeUnique(tgt, newId, { idFn }, false);
-        });
-      }
-    };
-    _makeUnique(id, parent, { idFn }, true);
-  });
+export const makeUnique =
+  (id: string, parent: string = ROOT_NODE_KEY, { idFn = uniqueId } = {}) =>
+  (graph: Graph = {}): [Graph, Array<OT.Op>] =>
+    wrap(graph, (draft) => {
+      const _makeUnique = (
+        id: string,
+        parent: string,
+        { idFn }: { idFn: Function },
+        firstCall: boolean
+      ) => {
+        const { edges = [], ...nodeData } = draft[id];
+        if (!firstCall && isClone(id, draft)) {
+          const node = draft[parent];
+          node.edges = node.edges || [];
+          node.edges.push(id);
+        } else {
+          const newId = idFn();
+          _add(draft, { id: newId, ...nodeData }, { parent });
+          edges.forEach((tgt: string) => {
+            _makeUnique(tgt, newId, { idFn }, false);
+          });
+        }
+      };
+      _makeUnique(id, parent, { idFn }, true);
+    });
 
 const dfs = (graph: Graph) => (startId: string) => {
   const visited = new Set([startId]);
@@ -447,11 +453,18 @@ const dfs = (graph: Graph) => (startId: string) => {
   return [...visited];
 };
 
-export const sortIdsDepthFirst = (graph: Graph) => (
-  nodeIds: Set<string>
-): Array<string> => {
-  const allNodeIdsSorted = dfs(graph)(ROOT_NODE_KEY);
-  return Array.from(nodeIds).sort(
-    (a, b) => allNodeIdsSorted.indexOf(a) - allNodeIdsSorted.indexOf(b)
-  );
-};
+const memoizedNodesIdsByGraph = new WeakMap<Graph, string[]>();
+
+export const sortIdsDepthFirst =
+  (graph: Graph) =>
+  (nodeIds: Set<string>): Array<string> => {
+    const allNodeIdsSorted = memoizedNodesIdsByGraph.has(graph)
+      ? memoizedNodesIdsByGraph.get(graph)!
+      : dfs(graph)(ROOT_NODE_KEY);
+
+    memoizedNodesIdsByGraph.set(graph, allNodeIdsSorted);
+
+    return Array.from(nodeIds).sort(
+      (a, b) => allNodeIdsSorted.indexOf(a) - allNodeIdsSorted.indexOf(b)
+    );
+  };
