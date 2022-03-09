@@ -29,7 +29,19 @@ it("should not have any accessibility violations", async () => {
   const { container } = render(
     <Result
       headingColor={{ text: "#000", background: "#fff" }}
-      responses={[]}
+      responses={[
+        {
+          question: { data: { text: "Is this hidden?" }, id: "a" },
+          hidden: false,
+          selections: [],
+        },
+        {
+          question: { data: { text: "Is this shown?" }, id: "b" },
+          hidden: true,
+          selections: [],
+        },
+      ]}
+      allowChanges
       headingTitle="title"
       reasonsTitle="reasons"
     />
