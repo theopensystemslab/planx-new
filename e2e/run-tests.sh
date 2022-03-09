@@ -13,7 +13,7 @@ fi
 
 pnpx --yes serve ../editor.planx.uk/build \
   --config "$(pwd)/serve.json" `# https://github.com/vercel/serve/issues/662` \
-  --listen 3000 >/dev/null &
+  --no-clipboard --no-port-switching --listen 3000 >/dev/null &
 
 # use chrome or chromium
 BROWSER=$(testcafe --list-browsers | grep "^chrom" | head -1)
