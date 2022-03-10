@@ -15,10 +15,13 @@ export interface Team {
   name: string;
   slug: string;
   settings?: TeamSettings;
-  theme?: {
-    primary?: string;
-    logo?: string;
-  };
+  theme?: TeamTheme;
+}
+
+export interface TeamTheme {
+  primary?: string;
+  logo?: string;
+  focus?: string;
 }
 
 export interface TeamSettings {

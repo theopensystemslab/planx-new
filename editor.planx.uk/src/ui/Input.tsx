@@ -3,7 +3,7 @@ import type { Theme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import React, { ChangeEvent, forwardRef } from "react";
-import { borderedFocusStyle, focusStyle } from "theme";
+import { borderedFocusStyle } from "theme";
 
 import ErrorWrapper from "./ErrorWrapper";
 
@@ -55,46 +55,45 @@ export const useClasses = makeStyles<Theme, Props>((theme) => ({
   adornedEnd: {
     paddingRight: 2,
   },
-  focused: (props) => (props.bordered ? borderedFocusStyle : focusStyle),
+  focused: (props) =>
+    props.bordered ? borderedFocusStyle(theme.palette.action.focus) : {},
 }));
 
-export default forwardRef(
-  (props: Props, ref): FCReturn => {
-    const classes = useClasses(props);
+export default forwardRef((props: Props, ref): FCReturn => {
+  const classes = useClasses(props);
 
-    const {
-      format,
-      bordered,
-      errorMessage,
-      "aria-label": ariaLabel,
-      "aria-describedby": ariaDescribedBy,
-      id,
-      ...restProps
-    } = props;
+  const {
+    format,
+    bordered,
+    errorMessage,
+    "aria-label": ariaLabel,
+    "aria-describedby": ariaDescribedBy,
+    id,
+    ...restProps
+  } = props;
 
-    return (
-      <ErrorWrapper error={errorMessage}>
-        <InputBase
-          className={classNames(
-            classes.input,
-            format === "large" && classes.questionInput,
-            format === "bold" && classes.bold,
-            format === "data" && classes.data,
-            bordered && classes.bordered
-          )}
-          classes={{
-            multiline: classes.inputMultiline,
-            adornedEnd: classes.adornedEnd,
-            focused: classes.focused,
-          }}
-          inputProps={{
-            "aria-label": ariaLabel,
-            "aria-describedby": ariaDescribedBy,
-          }}
-          id={id}
-          {...restProps}
-        />
-      </ErrorWrapper>
-    );
-  }
-);
+  return (
+    <ErrorWrapper error={errorMessage}>
+      <InputBase
+        className={classNames(
+          classes.input,
+          format === "large" && classes.questionInput,
+          format === "bold" && classes.bold,
+          format === "data" && classes.data,
+          bordered && classes.bordered
+        )}
+        classes={{
+          multiline: classes.inputMultiline,
+          adornedEnd: classes.adornedEnd,
+          focused: classes.focused,
+        }}
+        inputProps={{
+          "aria-label": ariaLabel,
+          "aria-describedby": ariaDescribedBy,
+        }}
+        id={id}
+        {...restProps}
+      />
+    </ErrorWrapper>
+  );
+});

@@ -12,6 +12,7 @@ const useClasses = makeStyles((theme) => ({
   panel: {
     backgroundColor: theme.palette.background.default,
     position: "relative",
+    paddingBottom: theme.spacing(1.25),
   },
   stepIndicator: {
     position: "absolute",
@@ -20,7 +21,6 @@ const useClasses = makeStyles((theme) => ({
     textAlign: "center",
     top: 0,
     left: 0,
-    paddingTop: theme.spacing(1.25),
     overflow: "hidden",
     [theme.breakpoints.up("sm")]: {
       paddingTop: theme.spacing(1.25),
@@ -51,7 +51,7 @@ const useClasses = makeStyles((theme) => ({
       position: "relative",
       fontStyle: "normal",
       textAlign: "center",
-      zIndex: 10,
+      zIndex: 2,
       [theme.breakpoints.up("sm")]: {
         lineHeight: `${theme.spacing(4.5)}px`,
         width: theme.spacing(4.5),
