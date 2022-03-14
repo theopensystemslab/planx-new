@@ -50,7 +50,7 @@ test("answers are submitted in order they were supplied", async () => {
   userEvent.click(screen.getByText("House"));
 
   await waitFor(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   // order matches the order of the options, not order they were clicked
@@ -137,7 +137,7 @@ test("submits answers with grouped options", async () => {
   userEvent.click(screen.getByText("S2 Option2"));
 
   await waitFor(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({
@@ -185,7 +185,7 @@ test("recovers checkboxes state when clicking the back button", async () => {
   );
 
   await waitFor(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({
@@ -264,7 +264,7 @@ test("recovers grouped options state when clicking the back button", async () =>
   expect(screen.getByTestId("group-2-expanded")).toBeTruthy();
 
   await waitFor(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({

@@ -26,7 +26,7 @@ test("submits a date", async () => {
       YYYY: "2010",
     });
 
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({
@@ -54,7 +54,7 @@ test("recovers previously submitted date when clicking the back button", async (
   );
 
   await waitFor(() => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({
@@ -84,7 +84,7 @@ test("recovers previously submitted date when clicking the back button even if a
   );
 
   await waitFor(() => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({
@@ -128,7 +128,7 @@ test("allows user to type into input field and click continue", async () => {
     await userEvent.type(year, "9");
     await userEvent.type(year, "9");
     await userEvent.type(year, "2");
-    await userEvent.click(screen.getByText("Continue"));
+    await userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalled();

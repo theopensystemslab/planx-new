@@ -23,7 +23,7 @@ test("renders correctly", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("Review");
 
-  userEvent.click(screen.getByText("Continue"));
+  userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalled();
 });
