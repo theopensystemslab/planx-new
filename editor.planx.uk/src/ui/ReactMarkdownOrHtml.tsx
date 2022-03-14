@@ -54,8 +54,10 @@ export default function ReactMarkdownOrHtml(props: {
     );
   }
   return (
-    <ReactMarkdown className={classNames(props.className, classes.htmlRoot)}>
-      {props.source}
-    </ReactMarkdown>
+    <div id={props.id}>
+      <ReactMarkdown className={classNames(props.className, classes.htmlRoot)}>
+        {props.source}
+      </ReactMarkdown>
+    </div>
   );
 }
