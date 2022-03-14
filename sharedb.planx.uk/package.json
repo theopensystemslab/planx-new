@@ -6,8 +6,8 @@
     "@teamwork/websocket-json-stream": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.6.0",
-    "sharedb": "^1.8.1",
-    "ws": "^7.4.6"
+    "sharedb": "^2.2.5",
+    "ws": "^8.4.2"
   },
   "scripts": {
     "dev": "node-dev server.js",

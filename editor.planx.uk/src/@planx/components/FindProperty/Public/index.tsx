@@ -25,6 +25,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
+import { borderedFocusStyle } from "theme";
 import { TeamSettings } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
 import ExternalPlanningSiteDialog, {
@@ -247,7 +248,6 @@ function GetAddress(props: {
   // Autocomplete overrides
   const useStyles = makeStyles((theme) => ({
     root: {
-      paddingBottom: theme.spacing(3),
       "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
         // Default transform is "translate(14px, 20px) scale(1)""
         // This lines up the label with the initial cursor position in the input
@@ -260,9 +260,10 @@ function GetAddress(props: {
       fontSize: "inherit",
       borderRadius: 0,
       "& fieldset": {
-        border: "2px solid black",
+        border: "2px solid black !important",
+        marginTop: "8px",
         "& legend": {
-          lineHeight: "13px",
+          lineHeight: "2px",
         },
       },
       '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
@@ -274,10 +275,9 @@ function GetAddress(props: {
       "&:hover .MuiOutlinedInput-notchedOutline": {
         borderRadius: 0,
       },
-      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      "&.Mui-focused": {
         borderRadius: 0,
-        border: "2px solid black",
-        boxShadow: "inset 0 0 0 2px",
+        "& fieldset": borderedFocusStyle(theme.palette.action.focus),
       },
     },
     input: {
@@ -342,7 +342,7 @@ function GetAddress(props: {
         title={props.title || DEFAULT_TITLE}
         description={props.description || ""}
       />
-      <Box pb={2}>
+      <Box>
         <InputLabel label="Postcode" htmlFor="postcode-input">
           <Input
             required
@@ -374,6 +374,9 @@ function GetAddress(props: {
         </InputLabel>
         {Boolean(addresses.length) && (
           <Autocomplete
+            role="status"
+            aria-atomic={true}
+            aria-live="polite"
             classes={classes}
             options={addresses
               .map(
@@ -391,11 +394,12 @@ function GetAddress(props: {
             data-testid="autocomplete-input"
             value={selectedOption ?? (null as any as undefined)}
             renderInput={(params) => (
-              <InputLabel label="Select an address">
+              <InputLabel label="Select an address" htmlFor="address-textfield">
                 <TextField
                   {...params}
                   variant="outlined"
-                  aria-label="Select an address"
+                  aria-label="Select an address in this postcode by typing or using your arrow keys"
+                  id="address-textfield"
                 />
               </InputLabel>
             )}
@@ -415,6 +419,7 @@ function GetAddress(props: {
             }}
             disablePortal
             disableClearable
+            handleHomeEndKeys
             PaperComponent={({ children }) => (
               <Paper style={{ borderRadius: 0, boxShadow: "none" }}>
                 {children}
@@ -429,11 +434,11 @@ function GetAddress(props: {
             </Typography>
           </Box>
         )}
-        <ExternalPlanningSiteDialog
-          purpose={DialogPurpose.MissingAddress}
-          teamSettings={props.teamSettings}
-        ></ExternalPlanningSiteDialog>
       </Box>
+      <ExternalPlanningSiteDialog
+        purpose={DialogPurpose.MissingAddress}
+        teamSettings={props.teamSettings}
+      ></ExternalPlanningSiteDialog>
     </Card>
   );
 }

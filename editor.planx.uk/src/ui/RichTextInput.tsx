@@ -32,8 +32,8 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { focusStyle } from "theme";
 
+// import { borderedFocusStyle } from "theme";
 import ErrorWrapper from "./ErrorWrapper";
 
 interface Props extends InputBaseProps {
@@ -51,7 +51,8 @@ const useClasses = makeStyles((theme) => ({
     outline: "none",
     backgroundColor: theme.palette.background.default,
     width: "100%",
-    "&:focus-within": focusStyle,
+    // TODO: Handle focus styles for Editor
+    // "&:focus-within": borderedFocusStyle(theme.palette.action.focus),
     "& h1": theme.typography.h3,
     "& h2": theme.typography.h5,
   },

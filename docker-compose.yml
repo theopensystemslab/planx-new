@@ -58,8 +58,14 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
+      # https://github.com/hasura/graphql-engine/issues/3371#issuecomment-902515112
       test:
-        ["CMD", "wget", "--spider", "--quiet", "http://localhost:8080/healthz"]
+        [
+          "CMD",
+          "bash",
+          "-c",
+          "exec 5<>/dev/tcp/127.0.0.1/8080 && echo -e 'GET /healthz HTTP/1.1\n\n' >&5 && cat <&5 | head -n 1 | grep 200",
+        ]
       interval: 15s
       timeout: 3s
       retries: 10

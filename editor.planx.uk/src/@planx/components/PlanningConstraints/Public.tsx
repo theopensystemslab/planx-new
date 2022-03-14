@@ -210,7 +210,9 @@ function ConstraintsList({ data, refreshConstraints }: any) {
           <Typography variant="h5" component="h2" gutterBottom>
             Failed to fetch data
           </Typography>
-          {error && error.endsWith("local authority") ? (
+          {error &&
+          typeof error === "string" &&
+          error.endsWith("local authority") ? (
             <Typography variant="body2">{capitalize(error)}</Typography>
           ) : (
             <>

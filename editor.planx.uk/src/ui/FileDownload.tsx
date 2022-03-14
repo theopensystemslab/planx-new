@@ -1,3 +1,4 @@
+import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
@@ -43,7 +44,7 @@ export default function FileDownload(props: Props): FCReturn {
 
   return (
     <div className={classes.download}>
-      <button
+      <Button
         onClick={async () => {
           await fetch(`${process.env.REACT_APP_API_URL}/download-application`, {
             method: "POST",
@@ -59,7 +60,7 @@ export default function FileDownload(props: Props): FCReturn {
         }}
       >
         {props.text || "Download your application (.csv)"}
-      </button>
+      </Button>
     </div>
   );
 }
