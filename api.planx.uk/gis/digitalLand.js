@@ -4,6 +4,8 @@ const { baseSchema } = require("./local_authorities/metadata/base.js");
 const { digitalLandDatasets } = require("./local_authorities/metadata/digital-land-datasets.js");
 
 async function go(x, y, siteBoundary, extras) {
+  // TODO: handle x,y case when no siteBoundary is provided
+  
   try {
     // https://www.digital-land.info/docs#/
     let url = `https://www.digital-land.info/entity.json?entries=all&geometry=${siteBoundary}&geometry_relation=intersects&limit=100`;
