@@ -51,10 +51,10 @@ test("renders correctly", async () => {
     userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
   });
   await act(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
   await act(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalled();
@@ -127,10 +127,10 @@ test("recovers previously submitted address when clicking the back button", asyn
   );
 
   await waitFor(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
   await waitFor(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({
@@ -206,6 +206,6 @@ it("clears the old address when the postcode is typed in", async () => {
   expect(addressInput).toHaveValue("");
 
   // User is unable to continue and to submit incomplete data
-  const continueButton = screen.getByText("Continue").parentElement;
+  const continueButton = screen.getByTestId("continue-button");
   expect(continueButton).toBeDisabled();
 });

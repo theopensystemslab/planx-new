@@ -20,7 +20,7 @@ test("renders correctly", async () => {
   expect(screen.getAllByRole("heading")[0]).toHaveTextContent("AMAZING");
 
   await act(async () => {
-    await userEvent.click(screen.getByText("Continue"));
+    await userEvent.click(screen.getByTestId("continue-button"));
   });
   expect(handleSubmit).toHaveBeenCalled();
 });

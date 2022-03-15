@@ -37,7 +37,7 @@ test("recovers previously submitted files when clicking the back button", async 
     />
   );
 
-  userEvent.click(screen.getByText("Continue"));
+  userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: previouslySubmittedData,
@@ -80,7 +80,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
     />
   );
 
-  userEvent.click(screen.getByText("Continue"));
+  userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: expect.objectContaining(previouslySubmittedData),
