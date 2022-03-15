@@ -101,3 +101,50 @@ it("should not have any accessibility violations", async () => {
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
+
+test("shows the file upload option by default and requires user data to continue", async () => {
+  const handleSubmit = jest.fn();
+
+  render(
+    <DrawBoundary
+      dataFieldBoundary="property.boundary.site"
+      dataFieldArea="property.area.site"
+      description=""
+      descriptionForUploading=""
+      title="Draw a boundary"
+      titleForUploading="Upload a file"
+      handleSubmit={handleSubmit}
+    />
+  );
+
+  // Draw a boundary screen
+  expect(screen.queryByTestId("upload-file-button")).toBeInTheDocument;
+  expect(screen.getByText("Continue")).toBeDisabled;
+
+  // Navigate to upload a file screen
+  userEvent.click(screen.getByTestId("upload-file-button"));
+  expect(screen.getByText("Upload a file")).toBeInTheDocument;
+  expect(screen.getByText("Continue")).toBeDisabled;
+});
+
+test("hides the upload option and allows user to continue without drawing if editor specifies", async () => {
+  const handleSubmit = jest.fn();
+
+  render(
+    <DrawBoundary
+      dataFieldBoundary="property.boundary.site"
+      dataFieldArea="property.area.site"
+      description=""
+      descriptionForUploading=""
+      title="Draw a boundary"
+      titleForUploading="Upload a file"
+      handleSubmit={handleSubmit}
+      hideFileUpload={true}
+    />
+  );
+
+  expect(screen.queryByTestId("upload-file-button")).not.toBeInTheDocument;
+
+  userEvent.click(screen.getByText("Continue"));
+  expect(handleSubmit).toHaveBeenCalledTimes(1);
+});

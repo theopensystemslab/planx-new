@@ -12,6 +12,7 @@ import InputGroup from "ui/InputGroup";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
+import OptionButton from "ui/OptionButton";
 import RichTextInput from "ui/RichTextInput";
 
 import type { DrawBoundary } from "./model";
@@ -101,6 +102,17 @@ function DrawBoundaryComponent(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
+          <OptionButton
+            selected={formik.values.hideFileUpload}
+            onClick={() => {
+              formik.setFieldValue(
+                "hideFileUpload",
+                !formik.values.hideFileUpload
+              );
+            }}
+          >
+            Hide file upload and allow user to continue without data
+          </OptionButton>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation

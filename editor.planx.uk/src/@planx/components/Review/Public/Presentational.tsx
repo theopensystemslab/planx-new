@@ -265,7 +265,7 @@ function DrawBoundary(props: ComponentProps) {
     ? props.userData.data![PASSPORT_UPLOAD_KEY]
     : undefined;
 
-  if (!data) {
+  if (!data && !props.node.data?.hideFileUpload) {
     // XXX: we always expect to have data, this is for temporary debugging
     console.error(props);
     throw Error("boundary geojson or file expected but not found");
@@ -275,7 +275,9 @@ function DrawBoundary(props: ComponentProps) {
     <>
       <dt>Site boundary</dt>
       <dd>
-        {typeof data === "string" ? (
+        {!data && props.node.data?.hideFileUpload ? (
+          "Skipped"
+        ) : typeof data === "string" ? (
           <a target="_blank" href={data}>
             Your uploaded location plan
           </a>
