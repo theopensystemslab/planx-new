@@ -96,7 +96,7 @@ const PreviewLayout: React.FC<{
 
   return (
     <ThemeProvider theme={generatePreviewTheme}>
-      <Header team={team} phaseBanner handleRestart={handleRestart} />
+      <Header team={team} isPublicRoute={true} handleRestart={handleRestart} />
       <Box id="main-content" className={classes.mainContainer}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           {children}
