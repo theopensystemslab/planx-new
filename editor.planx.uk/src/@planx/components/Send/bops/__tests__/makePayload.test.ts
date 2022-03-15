@@ -12,6 +12,7 @@ const flow: Store.flow = {
       "BLGxRowcwn",
       "aKhcyyHYAG",
       "AFoFsXSPus",
+      "fnT4PnVhhJ",
     ],
   },
   "9K5DHOJIFG": {
@@ -116,6 +117,13 @@ const flow: Store.flow = {
       text: "2",
     },
     type: 200,
+  },
+  fnT4PnVhhJ: {
+    data: {
+      title: "proposal completion date",
+      fn: "proposal.completion.date",
+    },
+    type: 120,
   },
 };
 

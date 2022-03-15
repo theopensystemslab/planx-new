@@ -1,12 +1,15 @@
 import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@material-ui/core/Box";
-import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
+import ButtonBase from "@material-ui/core/ButtonBase";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 
 const useClasses = makeStyles((theme: Theme) => ({
   root: {
-    cursor: "pointer",
+    backgroundColor: "white",
+    display: "flex",
+    justifyContent: "start",
     "&:hover": {
       "& span": {
         textDecoration: "underline",
@@ -30,22 +33,13 @@ const useClasses = makeStyles((theme: Theme) => ({
 
 export default function PhaseBanner(): FCReturn {
   const classes = useClasses();
-  const theme = useTheme();
   const feedbackFishId = process.env.REACT_APP_FEEDBACK_FISH_ID || "";
 
   return (
     <FeedbackFish projectId={feedbackFishId}>
-      <Box
-        role="button"
-        tabIndex={0}
+      <ButtonBase
         aria-label="This is a new service. Click here to provide feedback."
         className={classes.root}
-        bgcolor="background.default"
-        display="flex"
-        alignItems="center"
-        borderBottom={`1px solid ${theme.palette.grey[300]}`}
-        px={2}
-        py={1}
       >
         <Box
           bgcolor="primary.main"
@@ -68,7 +62,7 @@ export default function PhaseBanner(): FCReturn {
           This is a new service. Your <span>feedback</span> will help us improve
           it.
         </Typography>
-      </Box>
+      </ButtonBase>
     </FeedbackFish>
   );
 }

@@ -1,6 +1,6 @@
-import { Selector } from "testcafe";
-import { getAdminJWT, setJWT, gqlAdmin } from "../common.js";
 import assert from "assert";
+import { Selector } from "testcafe";
+import { getAdminJWT, gqlAdmin, setJWT } from "../common.js";
 
 const URL = "http://localhost:3000";
 
@@ -34,6 +34,18 @@ test
   `));
   })
   .after(async (t) => {
+    // TODO: determine whether or not to delete analytics when flow deleted
+    await gqlAdmin(`
+      mutation {
+        delete_analytics_logs(where: {}) {
+          affected_rows
+        }
+        delete_analytics(where: {}) {
+          affected_rows
+        }
+      }
+    `);
+
     const { errors } = await gqlAdmin(`
       mutation {
         delete_operations(where: {actor_id: {_in: ${JSON.stringify([
@@ -59,7 +71,7 @@ test
   })("creates a flow that is executable", async (t) => {
   // Log in
   await t.expect(Selector("a").innerText).eql("Login with Google");
-  await setJWT(t, getAdminJWT(userId));
+  await setJWT(getAdminJWT(userId));
 
   // Create a service
   await t.click(Selector("h2").withText(TEAM_NAME));
@@ -135,8 +147,12 @@ test
 
   // Test flow
   await t.click(Selector("p").withText("Yes"));
+  await t.click(Selector("button").withText("Continue"));
   await t.expect(Selector("h3").withText(yesNoticeResult).exists).ok();
+
   await t.click(Selector("button").withText("Back"));
+
   await t.click(Selector("p").withText("No"));
+  await t.click(Selector("button").withText("Continue"));
   await t.expect(Selector("h3").withText(noNoticeResult).exists).ok();
 });
