@@ -16,6 +16,7 @@ import ReactHtmlParser from "react-html-parser";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
+import { stringify } from "wkt";
 
 import type { PlanningConstraints } from "./model";
 
@@ -35,6 +36,7 @@ function Component(props: Props) {
   // Get the coordinates of the site boundary drawing if they exist, fallback on x & y if file was uploaded
   // Coords should match Esri's "rings" type https://developers.arcgis.com/javascript/3/jsapi/polygon-amd.html#rings
   const coordinates: number[][][] = siteBoundary?.geometry?.coordinates || [];
+  const wktPolygon: string = stringify(siteBoundary) || "";
 
   const {
     data: constraints,
@@ -46,9 +48,9 @@ function Component(props: Props) {
       x && y
         ? `${
             process.env.REACT_APP_API_URL
-          }/gis/${team}?x=${x}&y=${y}&siteBoundary=${JSON.stringify(
-            coordinates
-          )}&version=1`
+          }/gis/${team}?x=${x}&y=${y}&siteBoundary=${
+            team === "opensystemslab" ? wktPolygon : JSON.stringify(coordinates)
+          }&version=1`
         : null,
     {
       shouldRetryOnError: true,

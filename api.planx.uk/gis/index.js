@@ -4,6 +4,7 @@ const localAuthorities = {
   buckinghamshire: require("./local_authorities/buckinghamshire"),
   canterbury: require("./local_authorities/canterbury"),
   braintree: require("./local_authorities/braintree"),
+  opensystemslab: require("./digitalLand"), // PROTOTYPING ONLY
 };
 
 function locationSearchWithTimeout(
@@ -26,7 +27,7 @@ function locationSearchWithTimeout(
       const resp = await localAuthorities[localAuthority].locationSearch(
         parseInt(x, 10),
         parseInt(y, 10),
-        JSON.parse(siteBoundary),
+        localAuthority === "opensystemslab" ? siteBoundary : JSON.parse(siteBoundary),
         extraInfo
       );
       clearTimeout(timeout);
