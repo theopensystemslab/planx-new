@@ -57,14 +57,19 @@ const makeEsriUrl = (domain, id, serverIndex = 0, overrideParams = {}) => {
   return url;
 };
 
-// Buffer an address point as a proxy for curtilage
+// Buffer an address point as a proxy for curtilage, return array of 4 coordinates
 const bufferPoint = (x, y, radius = 0.05) => {
   return [x - radius, y + radius, x + radius, y - radius];
 };
 
-// Build a bbox (string) around a point
+// Build a bbox around a point, return string of 4 coordinates: '(minx, miny, maxx, maxy)'
 const makeBbox = (x, y, radius = 1.5) => {
   return `${x - radius},${y - radius},${x + radius},${y + radius}`;
+};
+
+// Build a bbox around a point, return bbox as WKT formatted polygon: 'POLYGON((minx miny, maxx miny, maxx maxy, minx maxy, minx miny))'
+const makeBboxWkt = (x, y, radius = 0.05) => {
+  return `POLYGON((${x - radius} ${y - radius}, ${x + radius} ${y - radius}, ${x + radius} ${y + radius}, ${x - radius} ${y + radius}, ${x - radius} ${y - radius}))`;
 };
 
 // For a dictionary of planning constraint objects, return the items with preset { value: false } aka unknown data source
@@ -203,12 +208,23 @@ const getA4Subvariables = (features, articleFours, a4Key) => {
   return result;
 }
 
+// Filter a Digital Land entity object, omitting the "geojson" key if exists
+const omitGeojson = (entity) => {
+  return Object.keys(entity)
+    .filter(key => key !== "geojson")
+    .reduce((obj, key) => { 
+      obj[key] = entity[key];
+      return obj;
+    }, {});
+};
+
 module.exports = {
   setEsriGeometryType,
   setEsriGeometry,
   makeEsriUrl,
   bufferPoint,
   makeBbox,
+  makeBboxWkt,
   getQueryableConstraints,
   getFalseConstraints,
   getManualConstraints,
@@ -216,4 +232,5 @@ module.exports = {
   squashResultLayers,
   rollupResultLayers,
   getA4Subvariables,
+  omitGeojson,
 };
