@@ -1,6 +1,6 @@
 require("isomorphic-fetch");
 
-const { makeBboxWkt, omitGeojson } = require("./helpers");
+const { omitGeojson } = require("./helpers");
 const { baseSchema } = require("./local_authorities/metadata/base.js");
 
 // generate list of digital land datasets we want to query
@@ -16,24 +16,21 @@ Object.keys(baseSchema).forEach(key => {
 
 async function go(x, y, siteBoundary, extras) {
   try {
-    // use drawn site boundary if available, fallback to buffered address point
-    // digital land expects WKT format using projection 4326
-    const geom = siteBoundary ? siteBoundary : makeBboxWkt(x, y, 0.05);
-
     // https://www.digital-land.info/docs#/
     let options = {
       entries: "current",
-      geometry: geom,
+      geometry: siteBoundary, // TODO decide if/how to buffer - using drawn POLYGON or falling back on unbuffered POINT now
       geometry_relation: "intersects",
       limit: 100,
     };
-    let datasets = `&dataset=${activeDatasets.join(`&dataset=`)}`; // dataset param is not array[string] per docs, instead need to re-specify param name per dataset
+    // 'dataset' param is not array[string] per docs, instead need to re-specify param name per dataset
+    let datasets = `&dataset=${activeDatasets.join(`&dataset=`)}`;
     
+    // fetch records from digital land, will return {} if no intersections
     let url = `https://www.digital-land.info/entity.json?${new URLSearchParams(options)}${datasets}`;
     const results = await fetch(url)
       .then(response => response.json())
       .catch(error => console.log(error));
-
 
     // results will ONLY be populated if we have "positive"/intersecting constraints
     let formattedResult = {};
@@ -42,7 +39,7 @@ async function go(x, y, siteBoundary, extras) {
         // get the planx variable that corresponds to this entity's "dataset", should never be null because our initial request is filtered on "dataset"
         const key = Object.keys(baseSchema).find(key => baseSchema[key]["digital-land-datasets"].includes(entity.dataset));
   
-        // because there can be many digital land datasets per planx variable, check if this key is already in our result
+        // because there can be many digital land entities per planx variable, check if this key is already in our result
         if (Object.keys(formattedResult).includes(key)) {
           formattedResult[key]["data"].push(omitGeojson(entity));
         } else {
@@ -52,16 +49,19 @@ async function go(x, y, siteBoundary, extras) {
             data: [omitGeojson(entity)],
           };
         }
-      })
-    } else {
-      // TODO: generate list of planx variables with neg text using base schema??
-      formattedResult = { error: "No intersecting constraints found", url: url };
+      });
     }
 
-    // TODO: do second request to get denominator of all datasets available for this council (aka "negative" constraints) & concat to formattedResult
-    // use local authority boundary as polygon for this case & get all datasets within?? won't hold up if local auth doesn't have a national park for example
+    // add active, non-intersecting planning constraints to the formatted result
+    // TODO followup with digital land about how to return 'nots' via API (currently just human assumption these datasets were actually checked!)
+    const nots = Object.keys(baseSchema).filter(key => baseSchema[key]["active"] && !Object.keys(formattedResult).includes(key));
+    nots.forEach(not => {
+      formattedResult[not] = { value: false, text: baseSchema[not].neg };
+    });
 
-    return formattedResult;
+    // TODO add granular article 4 variables to the formatted result based on specific council
+
+    return { url: url, constraints: formattedResult };
   } catch (e) {
     throw e;
   }

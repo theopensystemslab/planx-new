@@ -25,9 +25,11 @@ type Props = PublicProps<PlanningConstraints>;
 export default Component;
 
 function Component(props: Props) {
-  const [x, y, siteBoundary] = useStore((state) => [
+  const [x, y, longitude, latitude, siteBoundary] = useStore((state) => [
     state.computePassport().data?._address.x,
     state.computePassport().data?._address.y,
+    state.computePassport().data?._address.longitude,
+    state.computePassport().data?._address.latitude,
     state.computePassport().data?.["property.boundary.site"],
   ]);
   const route = useCurrentRoute();
@@ -36,20 +38,21 @@ function Component(props: Props) {
   // Get the coordinates of the site boundary drawing if they exist, fallback on x & y if file was uploaded
   // Coords should match Esri's "rings" type https://developers.arcgis.com/javascript/3/jsapi/polygon-amd.html#rings
   const coordinates: number[][][] = siteBoundary?.geometry?.coordinates || [];
-  const wktPolygon: string = stringify(siteBoundary) || "";
 
-  const {
-    data: constraints,
-    error,
-    mutate,
-    isValidating,
-  } = useSWR(
+  // TODO clean up projection & spatial formats here - digital land will consistently use WKT format rather than GeoJSON
+  const wktPoint: string = `POINT(${longitude} ${latitude})`;
+  const wktPolygon: string | undefined =
+    siteBoundary && stringify(siteBoundary);
+
+  const { data, error, mutate, isValidating } = useSWR(
     () =>
       x && y
         ? `${
             process.env.REACT_APP_API_URL
           }/gis/${team}?x=${x}&y=${y}&siteBoundary=${
-            team === "opensystemslab" ? wktPolygon : JSON.stringify(coordinates)
+            team !== "opensystemslab"
+              ? JSON.stringify(coordinates)
+              : wktPolygon || wktPoint
           }&version=1`
         : null,
     {
@@ -58,6 +61,9 @@ function Component(props: Props) {
       errorRetryCount: 1,
     }
   );
+
+  // TODO clean this up - testing out new /gis response structure, but still want prior to work too
+  const constraints = data?.constraints || data || undefined;
 
   return (
     <>
@@ -84,6 +90,7 @@ function Component(props: Props) {
             const passportData = {
               _nots,
               ...newPassportData,
+              ...{ digitalLandRequest: data?.url || "" },
             };
 
             props.handleSubmit?.({

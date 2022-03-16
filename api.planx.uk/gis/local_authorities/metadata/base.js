@@ -1,4 +1,4 @@
-// planx schema variables and their attributes (in the future, maybe these are configurable in Editor?)
+// planx schema variables and their attributes (in the future, maybe these are managed in Editor?)
 const baseSchema = {
   article4: {
     active: true,
@@ -34,7 +34,7 @@ const baseSchema = {
     active: false,
     neg: "is not in a Broad",
     pos: "is in a Broad",
-    "digital-land-datasets": ["national-park"] // TODO: filter on record https://www.digital-land.info/entity/520007
+    "digital-land-datasets": ["national-park"] // TODO filter on record https://www.digital-land.info/entity/520007
   },
   "designated.WHS": {
     active: true,
