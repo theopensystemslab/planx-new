@@ -92,6 +92,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Describes the differing headers, based on the primary routes through which a flow can be interacted with
+ */
+export enum HeaderVariant {
+  Preview,
+  Unpublished,
+  Editor,
+}
+
 const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
   const classes = useStyles();
   const altText = team?.settings?.homepage
@@ -156,7 +165,7 @@ const Breadcrumbs: React.FC<{
   );
 };
 
-const PreviewToolbar: React.FC<{
+const PublicToolbar: React.FC<{
   team?: Team;
   handleRestart?: () => void;
   route: Route;
@@ -292,8 +301,8 @@ const Header: React.FC<{
   bgcolor?: string;
   team?: Team;
   handleRestart?: () => void;
-  isPublicRoute?: boolean;
-}> = ({ bgcolor = "#2c2c2c", team, handleRestart, isPublicRoute = false }) => {
+  variant: HeaderVariant;
+}> = ({ bgcolor = "#2c2c2c", team, handleRestart, variant }) => {
   const classes = useStyles();
   const headerRef = useRef<HTMLElement>(null);
   const route = useCurrentRoute();
@@ -309,14 +318,14 @@ const Header: React.FC<{
         backgroundColor: team?.theme?.primary || bgcolor,
       }}
     >
-      {isPublicRoute ? (
-        <PreviewToolbar
+      {variant === HeaderVariant.Editor ? (
+        <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>
+      ) : (
+        <PublicToolbar
           team={team}
           handleRestart={handleRestart}
           route={route}
-        ></PreviewToolbar>
-      ) : (
-        <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>
+        ></PublicToolbar>
       )}
     </AppBar>
   );
