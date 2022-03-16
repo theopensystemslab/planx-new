@@ -34,7 +34,7 @@ test("recovers previously submitted files when clicking the back button", async 
   );
 
   await act(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith(uploadedFile);
@@ -60,7 +60,7 @@ test("recovers previously submitted files when clicking the back button even if 
   );
 
   await act(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith(uploadedFile);

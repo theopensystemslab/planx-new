@@ -15,7 +15,7 @@ test("requires a value before being able to continue", async () => {
 
   await act(async () => {
     await userEvent.type(await screen.getByLabelText("hello"), "something");
-    await userEvent.click(screen.getByText("Continue"));
+    await userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalled();
@@ -36,7 +36,7 @@ test("requires a valid email before being able to continue", async () => {
 
   await act(async () => {
     await userEvent.type(screen.getByLabelText("hello"), "not-an-email");
-    await userEvent.click(screen.getByText("Continue"));
+    await userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
@@ -60,7 +60,7 @@ test("recovers previously submitted text when clicking the back button", async (
   );
 
   await act(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({
@@ -89,7 +89,7 @@ test("recovers previously submitted text when clicking the back button even if a
   );
 
   await act(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({
@@ -125,7 +125,7 @@ examplePhoneNumbers.forEach((number) => {
     });
 
     await act(async () => {
-      userEvent.click(screen.getByText("Continue"));
+      userEvent.click(screen.getByTestId("continue-button"));
     });
 
     expect(handleSubmit).toHaveBeenCalled();

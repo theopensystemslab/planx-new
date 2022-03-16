@@ -22,7 +22,7 @@ test("submits an address", async () => {
       Country: "United Kingdom",
     });
 
-    await userEvent.click(screen.getByText("Continue"));
+    await userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({
@@ -67,7 +67,7 @@ test("recovers previously submitted text when clicking the back button", async (
       "Line 2": "221b Baker St",
     });
 
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({
@@ -113,7 +113,7 @@ test("recovers previously submitted text when clicking the back button even if a
       "Line 2": "221b Baker St",
     });
 
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({
