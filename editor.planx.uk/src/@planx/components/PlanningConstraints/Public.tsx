@@ -48,13 +48,10 @@ function Component(props: Props) {
   //   In future, Digital Land will theoretically support any team/UK address and this list won't be necessary, but data collection still limited!
   const digitalLandOrganisations: string[] = ["opensystemslab"];
 
+  const root: string = `${process.env.REACT_APP_API_URL}/gis/${team}`;
   const url: string = digitalLandOrganisations.includes(team)
-    ? `${process.env.REACT_APP_API_URL}/gis/${team}?geom=${
-        wktPolygon || wktPoint
-      }&version=1`
-    : `${
-        process.env.REACT_APP_API_URL
-      }/gis/${team}?x=${x}&y=${y}&siteBoundary=${JSON.stringify(
+    ? `${root}?geom=${wktPolygon || wktPoint}`
+    : `${root}?x=${x}&y=${y}&siteBoundary=${JSON.stringify(
         coordinates
       )}&version=1`;
 
@@ -68,7 +65,8 @@ function Component(props: Props) {
   );
 
   // XXX handle both Digital Land response and custom GIS hookup responses
-  const constraints = data?.constraints || data || undefined;
+  const constraints: Record<string, any> | undefined =
+    data?.constraints || data;
 
   return (
     <>
