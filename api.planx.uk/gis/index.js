@@ -4,20 +4,14 @@ const localAuthorities = {
   buckinghamshire: require("./local_authorities/buckinghamshire"),
   canterbury: require("./local_authorities/canterbury"),
   braintree: require("./local_authorities/braintree"),
-  digitalLand: require("./local_authorities/digitalLand"),
+  digitalLand: require("./digitalLand"),
 };
 
-// XXX i know these functions are repetitive, but feels useful to be able to mock simplified query params we'll be able to use with Digital Land
-function locationSearchWithTimeoutViaDigitalLand(localAuthority, { geom }, time) {
+// Digital Land is a single request with standardized geometry, so remove timeout & simplify query params
+function locationSearchWithoutTimeout(localAuthority, { geom }) {
   return new Promise(async (resolve, reject) => {
-    const timeout = setTimeout(() => {
-      console.log("timeout");
-      reject("timeout");
-    }, time);
-
     try {
       const resp = await localAuthorities["digitalLand"].locationSearch(localAuthority, geom);
-      clearTimeout(timeout);
       resolve(resp);
     } catch (err) {
       reject(err);
@@ -25,6 +19,7 @@ function locationSearchWithTimeoutViaDigitalLand(localAuthority, { geom }, time)
   });
 }
 
+// custom GIS hookups require many requests to individual data layers which are more likely to timeout
 function locationSearchWithTimeout(
   localAuthority,
   { x, y, siteBoundary, extras = "{}" },
@@ -58,15 +53,10 @@ function locationSearchWithTimeout(
 
 const locationSearch = () => async (req, res, next) => {
   // check if this local authority has data available via Digital Land
-  //   XXX 'geom' param signals this for now, teams are set in PlanningConstraints component in editor
+  //   XXX 'geom' param signals this for now, teams are configured in PlanningConstraints component in editor
   if (req.query.geom) {
     try {
-      const timeout = Number(process.env.TIMEOUT_DURATION) || 5000;
-      const resp = await locationSearchWithTimeoutViaDigitalLand(
-        req.params.localAuthority,
-        req.query,
-        timeout
-      );
+      const resp = await locationSearchWithoutTimeout(req.params.localAuthority, req.query);
       res.send(resp);
     } catch (err) {
       next({

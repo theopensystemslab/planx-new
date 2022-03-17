@@ -1,7 +1,7 @@
 require("isomorphic-fetch");
 
-const { omitGeojson, addDesignatedVariable } = require("../helpers");
-const { baseSchema } = require("./metadata/base.js");
+const { omitGeojson, addDesignatedVariable } = require("./helpers");
+const { baseSchema } = require("./local_authorities/metadata/base.js");
 
 /* 
  * Query planning constraints datasets that intersect a given geometry and return results in the planx schema format
@@ -65,16 +65,18 @@ async function go(localAuthority, geom) {
     }
 
     // add active, non-intersecting planning constraints to the formattedResult
-    // TODO followup with digital land about how to return 'nots' via API (currently assumes any "active" metadata was successfully queried during request)
+    // TODO followup with digital land about how to return 'nots' via API (currently assumes any "active" metadata was successfully queried)
     const nots = Object.keys(baseSchema).filter(key => baseSchema[key]["active"] && !Object.keys(formattedResult).includes(key));
     nots.forEach(not => {
       formattedResult[not] = { value: false, text: baseSchema[not].neg };
     });
 
+    // TODO add helper function to set 'designated.broads' based on 'designated.nationalPark' entity id
+
     // add top-level 'designated' variable based on granular query results
     let formattedResultWithDesignated = addDesignatedVariable(formattedResult);
 
-    // TODO add granular article 4 variables to formattedResult based on metadata mappings per localAuthority
+    // TODO add granular article 4 variables to formattedResult based on metadata mappings per 'localAuthority'
 
     return { url: url, constraints: formattedResultWithDesignated };
   } catch (e) {

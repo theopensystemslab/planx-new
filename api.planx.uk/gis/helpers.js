@@ -57,12 +57,12 @@ const makeEsriUrl = (domain, id, serverIndex = 0, overrideParams = {}) => {
   return url;
 };
 
-// Buffer an address point as a proxy for curtilage, return array of 4 coordinates
+// Buffer an address point as a proxy for curtilage
 const bufferPoint = (x, y, radius = 0.05) => {
   return [x - radius, y + radius, x + radius, y - radius];
 };
 
-// Build a bbox around a point, return string of 4 coordinates: '(minx, miny, maxx, maxy)'
+// Build a bbox (string) around a point
 const makeBbox = (x, y, radius = 1.5) => {
   return `${x - radius},${y - radius},${x + radius},${y + radius}`;
 };

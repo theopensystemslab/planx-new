@@ -45,8 +45,8 @@ function Component(props: Props) {
   const wktPolygon: string | undefined =
     siteBoundary && stringify(siteBoundary);
 
-  // Check if team should query Digital Land or custom GIS hookup and set params accordingly
-  //   In future, Digital Land will theoretically support any team/UK address and this list won't be necessary, but data collection still limited!
+  // Configure which planx teams should query Digital Land (or continue to use custom GIS) and set params accordingly
+  //   In future, Digital Land will theoretically support any UK address and this list won't be necessary, but data collection still limited to select councils!
   const digitalLandOrganisations: string[] = ["opensystemslab"];
 
   const root: string = `${process.env.REACT_APP_API_URL}/gis/${team}`;
