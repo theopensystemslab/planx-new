@@ -5,6 +5,7 @@ const { baseSchema } = require("./metadata/base.js");
 
 /* 
  * Query planning constraints datasets that intersect a given geometry and return results in the planx schema format
+ *   using the Digital Land API https://www.digital-land.info/
  * 
  * @param localAuthority (string) - planx team name used to link granular article 4 metadata
  * @param geom (string) - WKT POLYGON or POINT, prioritizes drawn site boundary and fallsback to unbuffered address point

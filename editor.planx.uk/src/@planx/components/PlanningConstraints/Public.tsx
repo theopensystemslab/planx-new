@@ -26,14 +26,15 @@ export default Component;
 
 function Component(props: Props) {
   const [x, y, longitude, latitude, siteBoundary] = useStore((state) => [
-    state.computePassport().data?._address.x,
-    state.computePassport().data?._address.y,
-    state.computePassport().data?._address.longitude,
-    state.computePassport().data?._address.latitude,
+    state.computePassport().data?._address?.x,
+    state.computePassport().data?._address?.y,
+    state.computePassport().data?._address?.longitude,
+    state.computePassport().data?._address?.latitude,
     state.computePassport().data?.["property.boundary.site"],
   ]);
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
+  const classes = useClasses();
 
   // Get the coordinates of the site boundary drawing if they exist, fallback on x & y if file was uploaded
   // Coords should match Esri's "rings" type https://developers.arcgis.com/javascript/3/jsapi/polygon-amd.html#rings
@@ -108,10 +109,23 @@ function Component(props: Props) {
             title={props.title}
             description={props.description || ""}
           />
-          <DelayedLoadingIndicator
-            msDelayBeforeVisible={0}
-            text="Fetching data..."
-          />
+          {x && y && longitude && latitude ? (
+            <DelayedLoadingIndicator
+              msDelayBeforeVisible={0}
+              text="Fetching data..."
+            />
+          ) : (
+            <div className={classes.errorSummary} role="status">
+              <Typography variant="h5" component="h2" gutterBottom>
+                Invalid graph
+              </Typography>
+              <Typography variant="body2">
+                Edit this flow so that "Planning constraints" is positioned
+                after "Find property"; an address or site boundary drawing is
+                required to fetch data.
+              </Typography>
+            </div>
+          )}
         </Card>
       )}
     </>
