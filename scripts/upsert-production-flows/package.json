@@ -1,0 +1,12 @@
+{
+  "name": "scripts",
+  "private": true,
+  "license": "MPL-2.0",
+  "dependencies": {
+    "graphql": "^16.3.0",
+    "graphql-request": "^4.0.0"
+  },
+  "scripts": {
+    "upsert-flows": "node ./upsert-production-flows"
+  }
+}
