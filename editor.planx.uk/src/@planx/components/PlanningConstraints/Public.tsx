@@ -39,22 +39,27 @@ function Component(props: Props) {
   // Coords should match Esri's "rings" type https://developers.arcgis.com/javascript/3/jsapi/polygon-amd.html#rings
   const coordinates: number[][][] = siteBoundary?.geometry?.coordinates || [];
 
-  // TODO clean up projection & spatial formats here - digital land will consistently use WKT format rather than GeoJSON
+  // Get the WKT representation of the site boundary drawing or address point to pass to Digital Land, when applicable
   const wktPoint: string = `POINT(${longitude} ${latitude})`;
   const wktPolygon: string | undefined =
     siteBoundary && stringify(siteBoundary);
 
+  // Check if team should query Digital Land or custom GIS hookup and set params accordingly
+  //   In future, Digital Land will theoretically support any team/UK address and this list won't be necessary, but data collection still limited!
+  const digitalLandOrganisations: string[] = ["opensystemslab"];
+
+  const url: string = digitalLandOrganisations.includes(team)
+    ? `${process.env.REACT_APP_API_URL}/gis/${team}?geom=${
+        wktPolygon || wktPoint
+      }&version=1`
+    : `${
+        process.env.REACT_APP_API_URL
+      }/gis/${team}?x=${x}&y=${y}&siteBoundary=${JSON.stringify(
+        coordinates
+      )}&version=1`;
+
   const { data, error, mutate, isValidating } = useSWR(
-    () =>
-      x && y
-        ? `${
-            process.env.REACT_APP_API_URL
-          }/gis/${team}?x=${x}&y=${y}&siteBoundary=${
-            team !== "opensystemslab"
-              ? JSON.stringify(coordinates)
-              : wktPolygon || wktPoint
-          }&version=1`
-        : null,
+    () => (x && y && latitude && longitude ? url : null),
     {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
@@ -62,7 +67,7 @@ function Component(props: Props) {
     }
   );
 
-  // TODO clean this up - testing out new /gis response structure, but still want prior to work too
+  // XXX handle both Digital Land response and custom GIS hookup responses
   const constraints = data?.constraints || data || undefined;
 
   return (
@@ -193,11 +198,7 @@ function ConstraintsList({ data, refreshConstraints }: any) {
   });
 
   const visibleConstraints = constraints.map((con: any) => (
-    <Constraint
-      key={con.text}
-      color={con.color}
-      style={{ fontWeight: con.value ? 700 : 500 }}
-    >
+    <Constraint key={con.text} style={{ fontWeight: con.value ? 700 : 500 }}>
       {ReactHtmlParser(con.text)}
     </Constraint>
   ));
@@ -240,19 +241,15 @@ function ConstraintsList({ data, refreshConstraints }: any) {
   );
 }
 
-function Constraint({ children, color, ...props }: any) {
+function Constraint({ children, ...props }: any) {
   const classes = useClasses();
   const theme = useTheme();
   return (
     <ListItem dense disableGutters>
       <Box
         className={classes.constraint}
-        bgcolor={color ? color : "background.paper"}
-        color={
-          color
-            ? theme.palette.getContrastText(color)
-            : theme.palette.text.primary
-        }
+        bgcolor="background.paper"
+        color={theme.palette.text.primary}
         {...props}
       >
         {children}

@@ -67,11 +67,6 @@ const makeBbox = (x, y, radius = 1.5) => {
   return `${x - radius},${y - radius},${x + radius},${y + radius}`;
 };
 
-// Build a bbox around a point, return bbox as WKT formatted polygon: 'POLYGON((minx miny, maxx miny, maxx maxy, minx maxy, minx miny))'
-const makeBboxWkt = (x, y, radius = 0.05) => {
-  return `POLYGON((${x - radius} ${y - radius}, ${x + radius} ${y - radius}, ${x + radius} ${y + radius}, ${x - radius} ${y + radius}, ${x - radius} ${y - radius}))`;
-};
-
 // For a dictionary of planning constraint objects, return the items with preset { value: false } aka unknown data source
 const getFalseConstraints = (metadata) => {
   let falseConstraints = {};
@@ -136,7 +131,7 @@ const addDesignatedVariable = (responseObject) => {
     "conservationArea",
     "AONB",
     "nationalPark",
-    "broads",
+    // "broads", -- doesn't apply to any active councils yet & subset of nationalPark per digital land
     "WHS",
   ];
 
@@ -224,7 +219,6 @@ module.exports = {
   makeEsriUrl,
   bufferPoint,
   makeBbox,
-  makeBboxWkt,
   getQueryableConstraints,
   getFalseConstraints,
   getManualConstraints,

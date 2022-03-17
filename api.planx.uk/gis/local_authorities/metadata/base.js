@@ -1,4 +1,5 @@
 // planx schema variables and their attributes (in the future, maybe these are managed in Editor?)
+// flag as 'active' based on dataset status/availability here https://digital-land-maturity-model.herokuapp.com/performance/
 const baseSchema = {
   article4: {
     active: true,
@@ -34,7 +35,7 @@ const baseSchema = {
     active: false,
     neg: "is not in a Broad",
     pos: "is in a Broad",
-    "digital-land-datasets": ["national-park"] // TODO filter on record https://www.digital-land.info/entity/520007
+    "digital-land-datasets": ["national-park"] // TODO filter on record within dataset https://www.digital-land.info/entity/520007
   },
   "designated.WHS": {
     active: true,
