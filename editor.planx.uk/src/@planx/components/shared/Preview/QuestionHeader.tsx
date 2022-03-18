@@ -74,7 +74,11 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           )}
           {description && (
             <Box className={classes.description}>
-              <ReactMarkdownOrHtml source={description} id={DESCRIPTION_TEXT} />
+              <ReactMarkdownOrHtml
+                source={description}
+                id={DESCRIPTION_TEXT}
+                openLinksOnNewTab
+              />
             </Box>
           )}
         </Grid>
