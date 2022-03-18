@@ -8,6 +8,7 @@ import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
 
+import { ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { AddressInput, UserData } from "./model";
 import { userDataSchema } from "./model";
@@ -58,6 +59,12 @@ export default function AddressInputComponent(props: Props): FCReturn {
           bordered
           errorMessage={formik.errors.line1}
           onChange={formik.handleChange}
+          id={`${props.id}-line1`}
+          inputProps={{
+            "aria-describedby": formik.errors.line1
+              ? `${ERROR_MESSAGE}-${props.id}-line1`
+              : "",
+          }}
         />
       </InputLabel>
       <InputRow>
@@ -78,6 +85,12 @@ export default function AddressInputComponent(props: Props): FCReturn {
           bordered
           errorMessage={formik.errors.town}
           onChange={formik.handleChange}
+          id={`${props.id}-town`}
+          inputProps={{
+            "aria-describedby": formik.errors.town
+              ? `${ERROR_MESSAGE}-${props.id}-town`
+              : "",
+          }}
         />
       </InputLabel>
       <InputLabel label="County">
@@ -99,6 +112,12 @@ export default function AddressInputComponent(props: Props): FCReturn {
             bordered
             errorMessage={formik.errors.postcode}
             onChange={formik.handleChange}
+            id={`${props.id}-postcode`}
+            inputProps={{
+              "aria-describedby": formik.errors.postcode
+                ? `${ERROR_MESSAGE}-${props.id}-postcode`
+                : "",
+            }}
           />
         </InputRowItem>
       </InputLabel>

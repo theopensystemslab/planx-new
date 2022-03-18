@@ -11,6 +11,7 @@ export interface Props {
   value?: string;
   error?: string;
   bordered?: boolean;
+  id?: string;
   onChange: (newDate: string, eventType: string) => void;
 }
 
@@ -40,7 +41,7 @@ export default function DateInput(props: Props): FCReturn {
   const classes = useClasses();
 
   return (
-    <ErrorWrapper error={props.error}>
+    <ErrorWrapper error={props.error} id={props.id}>
       <div className={classes.root}>
         <div className={classes.editor}>
           {props.label && (

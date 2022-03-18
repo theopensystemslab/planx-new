@@ -76,7 +76,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
             inputProps={{
               "aria-describedby": [
                 props.description ? DESCRIPTION_TEXT : "",
-                formik.errors.value ? ERROR_MESSAGE : "",
+                formik.errors.value ? `${ERROR_MESSAGE}-${props.id}` : "",
               ]
                 .filter(Boolean)
                 .join(" "),

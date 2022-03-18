@@ -73,7 +73,7 @@ export default forwardRef((props: Props, ref): FCReturn => {
   } = props;
 
   return (
-    <ErrorWrapper error={errorMessage}>
+    <ErrorWrapper error={errorMessage} id={id}>
       <InputBase
         className={classNames(
           classes.input,

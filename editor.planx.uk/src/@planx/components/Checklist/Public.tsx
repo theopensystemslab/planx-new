@@ -56,6 +56,7 @@ const ChecklistComponent: React.FC<Props> = ({
   text,
   img,
   previouslySubmittedData,
+  id,
 }) => {
   const formik = useFormik<{ checked: Array<string> }>({
     initialValues: {
@@ -136,7 +137,7 @@ const ChecklistComponent: React.FC<Props> = ({
         img={img}
       />
 
-      <ErrorWrapper error={formik.errors.checked}>
+      <ErrorWrapper error={formik.errors.checked} id={id}>
         <Grid container spacing={layout === ChecklistLayout.Images ? 1 : 0}>
           {options ? (
             options.map((option: any) =>
