@@ -127,12 +127,12 @@ const Question: React.FC<IQuestion> = (props) => {
                   case QuestionLayout.Basic:
                     return (
                       <Grid item xs={12} key={response.id}>
-                        <DecisionButton {...buttonProps} {...response} />
+                        <DecisionButton {...buttonProps} {...response} data-testid="decision-button" />
                       </Grid>
                     );
                   case QuestionLayout.Descriptions:
                     return (
-                      <Grid item xs={6} sm={4} key={response.id}>
+                      <Grid item xs={6} sm={4} key={response.id} data-testid="description-button">
                         <DescriptionButton {...buttonProps} {...response} />
                       </Grid>
                     );
