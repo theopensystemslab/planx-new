@@ -9,9 +9,11 @@ import ButtonBase, { Props as ButtonBaseProps } from "./ButtonBase";
 
 export interface Props extends ButtonBaseProps {
   title: string;
+  description?: string;
   responseKey?: string | number;
   img?: string;
   checkbox?: boolean;
+  selected: boolean;
 }
 
 const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
@@ -34,6 +36,12 @@ const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
     title: {
       marginLeft: theme.spacing(1.5),
     },
+    subtitle: {
+      marginTop: theme.spacing(1),
+    },
+    bold: {
+      fontWeight: "bold",
+    },
     label: {
       cursor: "pointer",
     },
@@ -45,6 +53,9 @@ const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
       display: "flex",
       flexGrow: 1,
     },
+    imageButton: {
+      alignItems: 'flex-start'
+    }
   };
 });
 
@@ -53,7 +64,7 @@ interface TextLabelProps extends Props {
 }
 
 const TextLabel = (props: TextLabelProps): FCReturn => {
-  const { selected, title, checkbox, id, onClick } = props;
+  const { selected, title, checkbox, id, onClick, description } = props;
   const [multiline, setMultiline] = useState(false);
 
   const textContentEl = useRef<HTMLDivElement>(null);
@@ -91,13 +102,22 @@ const TextLabel = (props: TextLabelProps): FCReturn => {
         <Typography variant="body2" className={classes.title}>
           {title}
         </Typography>
+
       </Box>
     );
   } else {
     return (
-      <ButtonBase selected={props.selected} onClick={props.onClick} id={id}>
+      <ButtonBase selected={props.selected} onClick={props.onClick} id={id} className={classes.imageButton}>
         <Box {...({ ref: textContentEl } as any)} px={2.25} py={1.75}>
-          <Typography variant="body2">{title}</Typography>
+          <Typography variant="body1" className={classes.bold}>
+            {title}
+          </Typography>
+          {
+            Boolean(description) &&
+            <Typography variant="body2" className={classes.subtitle}>
+              {description}
+            </Typography>
+          }
         </Box>
       </ButtonBase>
     );
@@ -163,7 +183,7 @@ function ImageResponse(props: Props): FCReturn {
     : theme?.palette?.secondary?.main;
   return (
     <label htmlFor={props.id} className={classes.label}>
-      <Box display="flex" flexDirection="column" width="100%" height="100%">
+      <Box display="flex" flexDirection="column" width="100%" height="100%" data-testid="image-button">
         <ImageLabel bgColor={bgColor} img={img}></ImageLabel>
         <TextLabel bgColor={bgColor} {...props}></TextLabel>
       </Box>

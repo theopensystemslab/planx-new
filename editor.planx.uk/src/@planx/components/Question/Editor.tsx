@@ -88,7 +88,22 @@ const OptionEditor: React.FC<{
         }}
       />
     </InputRow>
-
+    <InputRow>
+      <Input
+        format="data"
+        value={props.value.data.description || ""}
+        placeholder="Description"
+        onChange={(ev) => {
+          props.onChange({
+            ...props.value,
+            data: {
+              ...props.value.data,
+              description: ev.target.value,
+            },
+          });
+        }}
+      />
+    </InputRow>
     {props.showValueField && (
       <InputRow>
         <Input
