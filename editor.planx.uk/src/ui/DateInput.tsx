@@ -59,7 +59,7 @@ export default function DateInput(props: Props): FCReturn {
               inputProps={{ maxLength: "2" }}
               placeholder="DD"
               bordered={props.bordered}
-              id="day"
+              id={`${props.id}-day`}
               onInput={(ev: ChangeEvent<HTMLInputElement>) => {
                 props.onChange(
                   [year || "", month || "", ev.target.value].join("-"),
@@ -84,7 +84,7 @@ export default function DateInput(props: Props): FCReturn {
               placeholder="MM"
               inputProps={{ maxLength: "2" }}
               bordered={props.bordered}
-              id="month"
+              id={`${props.id}-month`}
               onInput={(ev: ChangeEvent<HTMLInputElement>) => {
                 props.onChange(
                   [year || "", ev.target.value, day || ""].join("-"),
@@ -109,7 +109,7 @@ export default function DateInput(props: Props): FCReturn {
               placeholder="YYYY"
               inputProps={{ maxLength: "4" }}
               bordered={props.bordered}
-              id="year"
+              id={`${props.id}-year`}
               onInput={(ev: ChangeEvent<HTMLInputElement>) => {
                 props.onChange(
                   [ev.target.value, month || "", day || ""].join("-"),

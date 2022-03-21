@@ -5,6 +5,7 @@ import { uniqueId } from "lodash";
 import React from "react";
 import { act } from "react-dom/test-utils";
 
+import { ERROR_MESSAGE } from "../shared/constants";
 import { fillInFieldsUsingPlaceholder } from "../shared/testHelpers";
 import { dateRangeSchema, dateSchema, paddedDate } from "./model";
 import DateInput from "./Public";
@@ -198,10 +199,51 @@ test("validation", async () => {
   ).toBe(false);
 });
 
-it("should not have any accessibility violations", async () => {
+it("should not have any accessibility violations upon initial load", async () => {
   const { container } = render(
     <DateInput id="123" title="Test title" description="description" />
   );
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
+
+it("should not have any accessibility violations whilst in the error state", async () => {
+  const { container } = render(
+    <DateInput id="testId" title="Test title" description="description" />
+  );
+
+  const dateElements = ["day", "month", "year"];
+
+  // There is an ErrorWrapper per input, which should not display on load
+  dateElements.forEach((el) => {
+    const inputErrorWrapper = container.querySelector(
+      `#${ERROR_MESSAGE}-testId-${el}`
+    );
+    expect(inputErrorWrapper).toBeEmptyDOMElement();
+  });
+
+  // There is a main ErrorWrapper, which should not display on load
+  const mainErrorMessage = container.querySelector(`#${ERROR_MESSAGE}-testId`);
+  expect(mainErrorMessage).toBeEmptyDOMElement();
+
+  await waitFor(() => {
+    // Trigger error state
+    userEvent.click(screen.getByTestId("continue-button"));
+  });
+
+  // Individual input errors do not display, and are not in an error state
+  dateElements.forEach((el) => {
+    const inputErrorWrapper = container.querySelector(
+      `#${ERROR_MESSAGE}-testId-${el}`
+    );
+    expect(inputErrorWrapper).toBeEmptyDOMElement();
+    expect(inputErrorWrapper).not.toHaveAttribute("role", "status");
+  });
+
+  // Main ErrorWrapper does display, and is in error state
+  expect(mainErrorMessage).not.toBeEmptyDOMElement();
+  expect(mainErrorMessage?.parentElement).toHaveAttribute("role", "status");
+
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
