@@ -19,7 +19,14 @@ import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
 import Header, { HeaderVariant } from "../../components/Header";
-import { FlowSettings, FOOTER_ITEMS, Team, TextContent } from "../../types";
+import {
+  ApplicationPath as AppPath,
+  FlowSettings,
+  FOOTER_ITEMS,
+  Team,
+  TextContent,
+} from "../../types";
+import SaveAndReturn from "./SaveAndReturn";
 
 const useClasses = makeStyles((theme) => ({
   mainContainer: {
@@ -34,31 +41,13 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-const PreviewLayout: React.FC<{
-  team: Team;
-  children?: any;
+const PublicFooter: React.FC<{
   settings?: FlowSettings;
   footerContent?: { [key: string]: TextContent };
-  headerVariant: HeaderVariant;
-}> = ({ team, children, settings, footerContent, headerVariant }) => {
+}> = ({ footerContent, settings }) => {
   const { data } = useCurrentRoute();
 
-  const classes = useClasses();
-
   const makeHref = (path: string) => [data.mountpath, "pages", path].join("/");
-
-  const [id] = useStore((state) => [state.id]);
-
-  const handleRestart = () => {
-    if (
-      confirm(
-        "Are you sure you want to restart? This will delete your previous answers"
-      )
-    ) {
-      clearLocalFlow(id);
-      window.location.reload();
-    }
-  };
 
   const flowSettingsContent = FOOTER_ITEMS.map((key) => {
     const setting = settings?.elements && settings?.elements[key];
@@ -84,6 +73,51 @@ const PreviewLayout: React.FC<{
     (item): item is { title: string; href: string; bold: boolean } =>
       Boolean(item)
   );
+  return (
+    <Footer items={[...footerItems]}>
+      <Box display="flex" alignItems="center">
+        <Box pr={3} display="flex">
+          <img src={Logo} alt="Open Government License Logo" />
+        </Box>
+        <Typography variant="body2">
+          All content is available under the{" "}
+          <Link
+            href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+            underline="always"
+            color="inherit"
+            target="_blank"
+          >
+            Open Government Licence v3
+          </Link>
+          , except where otherwise stated
+        </Typography>
+      </Box>
+    </Footer>
+  );
+};
+
+const PreviewLayout: React.FC<{
+  team: Team;
+  children?: any;
+  settings?: FlowSettings;
+  footerContent?: { [key: string]: TextContent };
+  headerVariant: HeaderVariant;
+}> = ({ team, children, settings, footerContent, headerVariant }) => {
+  const classes = useClasses();
+  const path = useStore((state) => state.path);
+
+  const [id] = useStore((state) => [state.id]);
+
+  const handleRestart = () => {
+    if (
+      confirm(
+        "Are you sure you want to restart? This will delete your previous answers"
+      )
+    ) {
+      clearLocalFlow(id);
+      window.location.reload();
+    }
+  };
 
   /**
    * Generates a MuiTheme by deep merging global and team ThemeOptions
@@ -99,34 +133,27 @@ const PreviewLayout: React.FC<{
     <ThemeProvider theme={generatePreviewTheme}>
       <Header
         team={team}
-        variant={headerVariant}
         handleRestart={handleRestart}
+        variant={headerVariant}
       />
       <Box id="main-content" className={classes.mainContainer}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
-          {children}
+          {
+            {
+              [AppPath.SingleSession]: children,
+              [AppPath.Save]: <h1>Save Page</h1>,
+              [AppPath.Resume]: <h1>Resume Page</h1>,
+              [AppPath.SaveAndReturn]: (
+                <SaveAndReturn>{children}</SaveAndReturn>
+              ),
+            }[path]
+          }
         </ErrorBoundary>
       </Box>
-
-      <Footer items={[...footerItems]}>
-        <Box display="flex" alignItems="center">
-          <Box pr={3} display="flex">
-            <img src={Logo} alt="Open Government License Logo" />
-          </Box>
-          <Typography variant="body2">
-            All content is available under the{" "}
-            <Link
-              href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
-              underline="always"
-              color="inherit"
-              target="_blank"
-            >
-              Open Government Licence v3
-            </Link>
-            , except where otherwise stated
-          </Typography>
-        </Box>
-      </Footer>
+      <PublicFooter
+        footerContent={footerContent}
+        settings={settings}
+      ></PublicFooter>
     </ThemeProvider>
   );
 };
