@@ -171,7 +171,7 @@ const PreviewBrowser: React.FC<{
 
           <Tooltip arrow title="Open published service">
             <a
-              href={props.url}
+              href={props.url + "?analytics=false"}
               target="_blank"
               rel="noopener noreferrer"
               className={classes.refreshButton}

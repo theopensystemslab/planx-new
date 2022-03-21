@@ -19,6 +19,7 @@ import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
+import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
 import PhaseBanner from "./PhaseBanner";
 
 export const HEADER_HEIGHT = 75;
@@ -89,6 +90,14 @@ const useStyles = makeStyles((theme) => ({
       position: "relative",
       ...focusStyle(theme.palette.action.focus),
     },
+  },
+  analyticsWarning: {
+    display: "flex",
+    backgroundColor: "#FFFB00",
+    padding: "0 24px",
+    color: "#070707",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 }));
 
@@ -191,6 +200,7 @@ const PublicToolbar: React.FC<{
           <Reset color="secondary" />
         </IconButton>
       </Toolbar>
+      <AnalyticsDisabledBanner />
       <PhaseBanner />
     </>
   );
