@@ -2,11 +2,8 @@ import "./map.css";
 
 import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import { visuallyHidden } from "@material-ui/utils";
 import {
   DESCRIPTION_TEXT,
@@ -20,11 +17,9 @@ import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
 import capitalize from "lodash/capitalize";
 import find from "lodash/find";
-import natsort from "natsort";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
-import useSWR from "swr";
 import { borderedFocusStyle } from "theme";
 import { TeamSettings } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
@@ -50,8 +45,6 @@ export const FETCH_BLPU_CODES = gql`
 `;
 
 type Props = PublicProps<FindProperty>;
-
-const sorter = natsort({ insensitive: true });
 
 export default Component;
 
@@ -174,78 +167,65 @@ function GetAddress(props: {
     props.initialSelectedAddress ?? undefined
   );
   const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
-  const [offset, setOffset] = useState<number>(0);
-  const [totalAddresses, setTotalAddresses] = useState<number | undefined>(
-    undefined
-  );
-  const [addressesInPostcode, setAddressesInPostcode] = useState<any[]>([]);
-
-  // Fetch addresses in this postcode from the OS Places API
-  // https://apidocs.os.uk/docs/os-places-service-metadata
-  let osPlacesEndpoint = `https://api.os.uk/search/places/v1/postcode?postcode=${sanitizedPostcode}&dataset=LPI&output_srs=EPSG:4326&lr=EN&key=${process.env.REACT_APP_ORDNANCE_SURVEY_KEY}&maxresults=100`;
-
-  const { data } = useSWR(
-    () => (sanitizedPostcode ? osPlacesEndpoint + `&offset=${offset}` : null),
-    {
-      shouldRetryOnError: true,
-      errorRetryInterval: 500,
-      errorRetryCount: 3,
-    }
-  );
-
-  useEffect(() => {
-    if (data && !data?.error) {
-      // Concat results to existing list of addresses for cases of paginated results
-      const concatenated = addressesInPostcode.concat(data.results || []);
-      setAddressesInPostcode(concatenated);
-      setTotalAddresses(data.header.totalresults);
-      // console.log("fetched", concatenated.length, "/", data.header.totalresults);
-    }
-  }, [data]);
 
   // Fetch blpu_codes records so that we can join address CLASSIFICATION_CODE to planx variable
   const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES);
 
-  // XXX: Map OS Places API fields to legacy address_base fields, eventually we may want to
-  //    refactor model.ts to better align to OS Places DPA or LPI output
-  const addresses: Address[] = [];
-  if (
-    Boolean(addressesInPostcode.length) &&
-    Boolean(blpuCodes?.blpu_codes?.length)
-  ) {
-    addressesInPostcode
-      // Only show "APPROVED" addresses, filter out "ALTERNATIVE", "HISTORIC", or "PROVISIONAL" records
-      // https://www.ordnancesurvey.co.uk/documents/product-support/tech-spec/addressbase-premium-technical-specification.pdf (p61)
-      .filter((a) => a.LPI.LPI_LOGICAL_STATUS_CODE_DESCRIPTION === "APPROVED")
-      .map((a) => {
-        addresses.push({
-          uprn: a.LPI.UPRN.padStart(12, "0"),
-          blpu_code: a.LPI.BLPU_STATE_CODE,
-          latitude: a.LPI.LAT,
-          longitude: a.LPI.LNG,
-          organisation: a.LPI.ORGANISATION || null,
-          sao: a.LPI.SAO_TEXT,
-          pao: [a.LPI.PAO_START_NUMBER, a.LPI.PAO_START_SUFFIX]
+  useEffect(() => {
+    // Handles mapping the raw Ordnance Survey record to planx's address model
+    const addressSelectionHandler = ({
+      detail,
+    }: {
+      detail: Record<"address", Record<string, any>>;
+    }) => {
+      console.log("address selected", detail);
+      const selectedAddress: Record<string, any> | undefined =
+        detail?.address?.LPI;
+      if (selectedAddress) {
+        setSelectedOption({
+          uprn: selectedAddress.UPRN.padStart(12, "0"),
+          blpu_code: selectedAddress.BLPU_STATE_CODE,
+          latitude: selectedAddress.LAT,
+          longitude: selectedAddress.LNG,
+          organisation: selectedAddress.ORGANISATION || null,
+          sao: selectedAddress.SAO_TEXT,
+          pao: [
+            selectedAddress.PAO_START_NUMBER,
+            selectedAddress.PAO_START_SUFFIX,
+          ]
             .filter(Boolean)
             .join(""), // docs reference PAO_TEXT, but not found in response so roll our own
-          street: a.LPI.STREET_DESCRIPTION,
-          town: a.LPI.TOWN_NAME,
-          postcode: a.LPI.POSTCODE_LOCATOR,
-          x: a.LPI.X_COORDINATE,
-          y: a.LPI.Y_COORDINATE,
+          street: selectedAddress.STREET_DESCRIPTION,
+          town: selectedAddress.TOWN_NAME,
+          postcode: selectedAddress.POSTCODE_LOCATOR,
+          x: selectedAddress.X_COORDINATE,
+          y: selectedAddress.Y_COORDINATE,
           planx_description:
-            find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
-              ?.description || null,
+            find(blpuCodes.blpu_codes, {
+              code: selectedAddress.CLASSIFICATION_CODE,
+            })?.description || null,
           planx_value:
-            find(blpuCodes.blpu_codes, { code: a.LPI.CLASSIFICATION_CODE })
-              ?.value || null,
-          single_line_address: a.LPI.ADDRESS,
-          administrative_area: a.LPI.ADMINISTRATIVE_AREA, // local highway authority name (proxy for local authority?)
-          local_custodian_code: a.LPI.LOCAL_CUSTODIAN_CODE_DESCRIPTION, // similar to GSS_CODE, but may not reflect merged councils
-          title: a.LPI.ADDRESS.split(`, ${a.LPI.ADMINISTRATIVE_AREA}`)[0], // display value used in autocomplete dropdown & FindProperty
+            find(blpuCodes.blpu_codes, {
+              code: selectedAddress.CLASSIFICATION_CODE,
+            })?.value || null,
+          single_line_address: selectedAddress.ADDRESS,
+          administrative_area: selectedAddress.ADMINISTRATIVE_AREA, // local highway authority name (proxy for local authority?)
+          local_custodian_code:
+            selectedAddress.LOCAL_CUSTODIAN_CODE_DESCRIPTION, // similar to GSS_CODE, but may not reflect merged councils
+          title: selectedAddress.ADDRESS.split(
+            `, ${selectedAddress.ADMINISTRATIVE_AREA}`
+          )[0], // display value used in autocomplete dropdown & FindProperty
         });
-      });
-  }
+      }
+    };
+
+    const autocomplete: any = document.getElementById("address-autocomplete");
+    autocomplete?.addEventListener("addressSelection", addressSelectionHandler);
+
+    return function cleanup() {
+      autocomplete?.removeEventListener("areaChange", addressSelectionHandler);
+    };
+  }, [sanitizedPostcode, setSelectedOption]);
 
   // Autocomplete overrides
   const useStyles = makeStyles((theme) => ({
@@ -300,6 +280,18 @@ function GetAddress(props: {
         color: "white",
       },
     },
+    autocomplete: {
+      fontFamily: "inherit",
+      fontSize: "inherit",
+      ".autocomplete__option": {
+        borderBottom: `solid ${theme.palette.grey[200]}`,
+      },
+      ".autocomplete__option:hover": {
+        borderColor: theme.palette.grey[800],
+        backgroundColor: theme.palette.grey[800],
+        color: "white",
+      },
+    },
   }));
   const classes = useStyles();
 
@@ -315,13 +307,6 @@ function GetAddress(props: {
     // Reset the address on change of postcode - ensures no visual mismatch between address and postcode
     if (selectedOption) {
       setSelectedOption(undefined);
-    }
-
-    // Also reset any previously fetched addresses - ensures new results aren't concatenated to prev options
-    if (totalAddresses && Boolean(addressesInPostcode.length)) {
-      setOffset(0);
-      setTotalAddresses(undefined);
-      setAddressesInPostcode([]);
     }
 
     // Validate and set Postcode
@@ -376,67 +361,15 @@ function GetAddress(props: {
             }}
           />
         </InputLabel>
-        {Boolean(addresses.length) && (
-          <Autocomplete
-            role="status"
-            aria-atomic={true}
-            aria-live="polite"
-            classes={classes}
-            options={addresses
-              .map(
-                (address: Address): Option => ({
-                  ...address,
-                  title: address.title,
-                })
-              )
-              .sort((a: Option, b: Option) => sorter(a.title, b.title))}
-            getOptionLabel={(option: Option) => option.title}
-            getOptionSelected={(option: Option, selected: Option) =>
-              option.uprn === selected.uprn
-            }
-            noOptionsText="No addresses"
+        {sanitizedPostcode && (
+          /* @ts-ignore */
+          <address-autocomplete
+            id="address-autocomplete"
             data-testid="autocomplete-input"
-            value={selectedOption ?? (null as any as undefined)}
-            renderInput={(params) => (
-              <InputLabel label="Select an address" htmlFor="address-textfield">
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  aria-label="Select an address in this postcode by typing or using your arrow keys"
-                  id="address-textfield"
-                />
-              </InputLabel>
-            )}
-            onChange={(event, selectedOption) => {
-              if (selectedOption) {
-                setSelectedOption(selectedOption);
-              }
-            }}
-            onOpen={(event) => {
-              // Fetch additional paginated results from OS Places if they exist, concat results to options before input
-              if (
-                totalAddresses &&
-                totalAddresses > addressesInPostcode.length
-              ) {
-                setOffset(addressesInPostcode.length);
-              }
-            }}
-            disablePortal
-            disableClearable
-            handleHomeEndKeys
-            PaperComponent={({ children }) => (
-              <Paper style={{ borderRadius: 0, boxShadow: "none" }}>
-                {children}
-              </Paper>
-            )}
+            postcode={sanitizedPostcode}
+            osPlacesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+            className={classes.autocomplete} // not working yet
           />
-        )}
-        {(data?.error || totalAddresses === 0) && Boolean(sanitizedPostcode) && (
-          <Box pt={2} role="status">
-            <Typography variant="body1" color="error">
-              {data?.error?.message || "No addresses found in this postcode."}
-            </Typography>
-          </Box>
         )}
       </Box>
       <ExternalPlanningSiteDialog
