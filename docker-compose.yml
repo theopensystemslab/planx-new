@@ -81,10 +81,12 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_JWT_SECRET: '{ "type": "HS256", "key": "${JWT_SECRET}" }'
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
-  flows_seed:
+  seed-database:
     build:
-      context: ./scripts/upsert-production-flows
+      context: ./scripts/seed-database
       dockerfile: Dockerfile
+    volumes:
+       - "./hasura.planx.uk/:/hasura"
     restart: "no"
     depends_on:
       hasura:
@@ -92,6 +94,7 @@ services:
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
+      HASURA_GRAPHQL_ENDPOINT: http://hasura:8080/
       PRODUCTION_GRAPHQL_URL: 'https://hasura.editor.planx.uk/v1/graphql'
   api:
     restart: unless-stopped

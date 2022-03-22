@@ -35,9 +35,6 @@ jobs:
       - name: Hasura Tests
         run: pnpm install && pnpm test
         working-directory: hasura.planx.uk/tests
-      - name: Hasura Apply seeds
-        run: hasura seeds apply
-        working-directory: hasura.planx.uk
       - name: E2E Tests
         run: pnpm install && pnpm test
         working-directory: e2e
