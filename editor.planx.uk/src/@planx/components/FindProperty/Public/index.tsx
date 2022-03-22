@@ -178,7 +178,6 @@ function GetAddress(props: {
     }: {
       detail: Record<"address", Record<string, any>>;
     }) => {
-      console.log("address selected", detail);
       const selectedAddress: Record<string, any> | undefined =
         detail?.address?.LPI;
       if (selectedAddress) {
@@ -223,63 +222,15 @@ function GetAddress(props: {
     autocomplete?.addEventListener("addressSelection", addressSelectionHandler);
 
     return function cleanup() {
-      autocomplete?.removeEventListener("areaChange", addressSelectionHandler);
+      autocomplete?.removeEventListener(
+        "addressSelection",
+        addressSelectionHandler
+      );
     };
   }, [sanitizedPostcode, setSelectedOption]);
 
   // Autocomplete overrides
   const useStyles = makeStyles((theme) => ({
-    root: {
-      "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
-        // Default transform is "translate(14px, 20px) scale(1)""
-        // This lines up the label with the initial cursor position in the input
-        // after changing its padding-left.
-        transform: "translate(34px, 20px) scale(1);",
-      },
-    },
-    inputRoot: {
-      color: "#000",
-      fontSize: "inherit",
-      borderRadius: 0,
-      "& fieldset": {
-        border: "2px solid black !important",
-        marginTop: "8px",
-        "& legend": {
-          lineHeight: "2px",
-        },
-      },
-      '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
-        borderRadius: 0,
-      },
-      "& .MuiOutlinedInput-notchedOutline": {
-        borderRadius: 0,
-      },
-      "&:hover .MuiOutlinedInput-notchedOutline": {
-        borderRadius: 0,
-      },
-      "&.Mui-focused": {
-        borderRadius: 0,
-        "& fieldset": borderedFocusStyle(theme.palette.action.focus),
-      },
-    },
-    input: {
-      padding: theme.spacing(1),
-    },
-    option: {
-      fontSize: "inherit",
-      // Hover
-      '&[data-focus="true"]': {
-        backgroundColor: theme.palette.grey[800],
-        borderColor: "transparent",
-        color: "white",
-      },
-      // Selected
-      '&[aria-selected="true"]': {
-        backgroundColor: theme.palette.grey[800],
-        borderColor: "transparent",
-        color: "white",
-      },
-    },
     autocomplete: {
       fontFamily: "inherit",
       fontSize: "inherit",
@@ -365,8 +316,9 @@ function GetAddress(props: {
           /* @ts-ignore */
           <address-autocomplete
             id="address-autocomplete"
-            data-testid="autocomplete-input"
+            data-testid="address-autocomplete-web-component"
             postcode={sanitizedPostcode}
+            initialAddress={selectedOption?.title || ""}
             osPlacesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             className={classes.autocomplete} // not working yet
           />
