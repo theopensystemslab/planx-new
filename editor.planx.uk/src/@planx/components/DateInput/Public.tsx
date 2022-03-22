@@ -73,6 +73,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
               formik.setFieldValue("date", paddedDate(newDate, eventType));
             }}
             error={formik.errors.date as string}
+            id={props.id}
           />
         </InputRow>
       </fieldset>

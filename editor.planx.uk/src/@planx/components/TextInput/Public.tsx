@@ -41,7 +41,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
       />
       <InputRow>
-        <InputLabel label={props.title} hidden htmlFor="text-input">
+        <InputLabel label={props.title} hidden htmlFor={props.id}>
           <Input
             type={((type) => {
               if (type === "email") return "email";
@@ -55,11 +55,11 @@ const TextInputComponent: React.FC<Props> = (props) => {
             bordered
             onChange={formik.handleChange}
             errorMessage={formik.errors.text as string}
-            id="text-input"
+            id={props.id}
             inputProps={{
               "aria-describedby": [
                 props.description ? DESCRIPTION_TEXT : "",
-                formik.errors.text ? ERROR_MESSAGE : "",
+                formik.errors.text ? `${ERROR_MESSAGE}-${props.id}` : "",
               ]
                 .filter(Boolean)
                 .join(" "),

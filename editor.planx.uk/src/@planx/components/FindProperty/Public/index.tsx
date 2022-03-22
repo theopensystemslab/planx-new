@@ -70,6 +70,7 @@ function Component(props: Props) {
         initialPostcode={previouslySubmittedData?._address.postcode}
         initialSelectedAddress={previouslySubmittedData?._address}
         teamSettings={team?.settings}
+        id={props.id}
       />
     );
   } else if (address) {
@@ -160,6 +161,7 @@ function GetAddress(props: {
   initialPostcode?: string;
   initialSelectedAddress?: Option;
   teamSettings?: TeamSettings;
+  id?: string;
 }) {
   const [postcode, setPostcode] = useState<string | null>(
     props.initialPostcode ?? null
@@ -365,7 +367,9 @@ function GetAddress(props: {
               maxLength: 8,
               "aria-describedby": [
                 props.description ? DESCRIPTION_TEXT : "",
-                showPostcodeError && !sanitizedPostcode ? ERROR_MESSAGE : "",
+                showPostcodeError && !sanitizedPostcode
+                  ? `${ERROR_MESSAGE}-${props.id}`
+                  : "",
               ]
                 .filter(Boolean)
                 .join(" "),

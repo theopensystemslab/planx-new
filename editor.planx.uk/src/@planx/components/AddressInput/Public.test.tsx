@@ -4,7 +4,9 @@ import axe from "axe-helper";
 import { uniqueId } from "lodash";
 import React from "react";
 
+import { ERROR_MESSAGE } from "../shared/constants";
 import { fillInFieldsUsingPlaceholder } from "../shared/testHelpers";
+import { userDataSchema } from "./model";
 import AddressInput from "./Public";
 
 test("submits an address", async () => {
@@ -129,7 +131,7 @@ test("recovers previously submitted text when clicking the back button even if a
   });
 });
 
-it("should not have any accessibility violations", async () => {
+it("should not have any accessibility violations on initial load", async () => {
   const { container } = render(<AddressInput title="title" />);
   await waitFor(async () => {
     await fillInFieldsUsingPlaceholder({
@@ -141,6 +143,34 @@ it("should not have any accessibility violations", async () => {
       Country: "United Kingdom",
     });
   });
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
+
+it("should not have any accessibility violations whilst in the error state", async () => {
+  const { container } = render(<AddressInput title="title" id="testId" />);
+
+  const requiredAddressElements = ["line1", "town", "postcode"];
+
+  requiredAddressElements.forEach((el) => {
+    const errorMessage = container.querySelector(
+      `#${ERROR_MESSAGE}-testId-${el}`
+    );
+    expect(errorMessage).toBeEmptyDOMElement();
+  });
+
+  await waitFor(async () => {
+    // This should trigger multiple ErrorWrappers to display as the form is empty
+    userEvent.click(screen.getByTestId("continue-button"));
+  });
+
+  requiredAddressElements.forEach((el) => {
+    const errorMessage = container.querySelector(
+      `#${ERROR_MESSAGE}-testId-${el}`
+    );
+    expect(errorMessage).not.toBeEmptyDOMElement();
+  });
+
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });

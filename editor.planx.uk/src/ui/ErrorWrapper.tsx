@@ -5,6 +5,7 @@ import React, { ReactElement } from "react";
 export interface Props {
   error: string | string[] | undefined;
   children?: ReactElement;
+  id?: string;
 }
 
 const useClasses = makeStyles((theme) => ({
@@ -12,29 +13,33 @@ const useClasses = makeStyles((theme) => ({
     width: "100%",
     paddingLeft: theme.spacing(2),
     borderLeft: `3px solid ${theme.palette.error.main}`,
+    // Only apply padding to child when visible to ensure no blank space
+    "& > p": {
+      paddingTop: theme.spacing(0.5),
+      paddingBottom: theme.spacing(1),
+    },
   },
   errorText: {
     color: theme.palette.error.main,
     margin: 0,
-    paddingTop: theme.spacing(0.5),
-    paddingBottom: theme.spacing(1),
     fontWeight: "bold",
   },
 }));
 
 export default function ErrorWrapper(props: Props): FCReturn {
   const classes = useClasses();
+  const id = props.id ? `${ERROR_MESSAGE}-${props.id}` : undefined;
+
   return (
     // role="status" immediately announces the error to screenreaders without interrupting focus
     <div
       className={props.error ? classes.rootError : undefined}
       role={props.error ? "status" : undefined}
+      data-testid="error-wrapper"
     >
-      {props.error && (
-        <p id={ERROR_MESSAGE} className={classes.errorText}>
-          {props.error}
-        </p>
-      )}
+      <p id={id} className={classes.errorText}>
+        {props?.error}
+      </p>
       {props.children || null}
     </div>
   );
