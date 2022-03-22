@@ -364,6 +364,7 @@ function GetAddress(props: {
         {sanitizedPostcode && (
           /* @ts-ignore */
           <address-autocomplete
+            id="address-autocomplete"
             data-testid="autocomplete-input"
             postcode={sanitizedPostcode}
             osPlacesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
