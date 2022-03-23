@@ -16,7 +16,7 @@ specifiers:
   '@material-ui/icons': ^4.9.1
   '@material-ui/lab': ^4.0.0-alpha.56
   '@material-ui/utils': ^5.0.0-beta.5
-  '@opensystemslab/map': ^0.4.7
+  '@opensystemslab/map': ^0.4.8
   '@react-theming/storybook-addon': ^1.1.3
   '@storybook/addon-actions': ^6.4.10
   '@storybook/addon-essentials': ^6.4.10
@@ -127,7 +127,7 @@ dependencies:
   '@material-ui/icons': 4.9.1_aca2900b4bcc0ae456c0c6b700ff3f91
   '@material-ui/lab': 4.0.0-alpha.56_aca2900b4bcc0ae456c0c6b700ff3f91
   '@material-ui/utils': 5.0.0-beta.5_react@17.0.2
-  '@opensystemslab/map': 0.4.7
+  '@opensystemslab/map': 0.4.8
   array-move: 3.0.1
   axios: 0.19.2
   camelcase-keys: 7.0.0
@@ -2539,8 +2539,8 @@ packages:
       mkdirp: 1.0.4
     dev: true
 
-  /@opensystemslab/map/0.4.7:
-    resolution: {integrity: sha512-Kxv+Or2jWJaWdWwt2JFM7LoO4OGOpAvnIQfng3QGYgxhJrVncLXgwwGoRIrwap1tWPvSXK/4uQT44MYbN8gbDA==}
+  /@opensystemslab/map/0.4.8:
+    resolution: {integrity: sha512-UIy35cRBO1z70LNT+Zv+OltalvX7OFEoBq2Tj7IsLtd7ZdD+JjIb+OmgU2G0txLJUF9La7+9AxvpjL+KDDVh3g==}
     dependencies:
       '@turf/union': 6.5.0
       accessible-autocomplete: 2.0.4
