@@ -54,8 +54,8 @@ const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
       flexGrow: 1,
     },
     imageButton: {
-      alignItems: 'flex-start'
-    }
+      alignItems: "flex-start",
+    },
   };
 });
 
@@ -107,17 +107,29 @@ const TextLabel = (props: TextLabelProps): FCReturn => {
   } else {
     const descriptionId = description ? `${id}-description` : undefined;
     return (
-      <ButtonBase selected={props.selected} onClick={props.onClick} id={id} className={classes.imageButton}>
+      <ButtonBase
+        selected={props.selected}
+        onClick={props.onClick}
+        id={id}
+        className={classes.imageButton}
+      >
         <Box {...({ ref: textContentEl } as any)} px={2.25} py={1.75}>
-          <Typography variant="body1" className={classes.bold} aria-describedby={descriptionId}>
+          <Typography
+            variant="body1"
+            className={classes.bold}
+            aria-describedby={descriptionId}
+          >
             {title}
           </Typography>
-          {
-            Boolean(description) &&
-            <Typography variant="body2" className={classes.subtitle} id={descriptionId}>
+          {Boolean(description) && (
+            <Typography
+              variant="body2"
+              className={classes.subtitle}
+              id={descriptionId}
+            >
               {description}
             </Typography>
-          }
+          )}
         </Box>
       </ButtonBase>
     );
@@ -182,15 +194,19 @@ function ImageResponse(props: Props): FCReturn {
   const bgColor = selected
     ? theme?.palette?.primary?.main
     : theme?.palette?.secondary?.main;
-  
-  const altText = description ?
-    `${title} - ${description}`
-    : title;
-  
+
+  const altText = description ? `${title} - ${description}` : title;
+
   return (
     <label htmlFor={checkbox ? id : undefined} className={classes.label}>
-      <Box display="flex" flexDirection="column" width="100%" height="100%" data-testid="image-button">
-        <ImageLabel bgColor={bgColor} img={img} alt={altText}/>
+      <Box
+        display="flex"
+        flexDirection="column"
+        width="100%"
+        height="100%"
+        data-testid="image-button"
+      >
+        <ImageLabel bgColor={bgColor} img={img} alt={altText} />
         <TextLabel bgColor={bgColor} {...props}></TextLabel>
       </Box>
     </label>
