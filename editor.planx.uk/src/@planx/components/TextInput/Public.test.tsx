@@ -4,6 +4,7 @@ import axe from "axe-helper";
 import { uniqueId } from "lodash";
 import React from "react";
 
+import { ERROR_MESSAGE } from "../shared/constants";
 import { TextInputType } from "./model";
 import TextInput from "./Public";
 test("requires a value before being able to continue", async () => {
@@ -138,4 +139,39 @@ it("should not have any accessibility violations", async () => {
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
+});
+
+it("should always an empty error message element in the DOM", () => {
+  const { container } = render(
+    <TextInput
+      title="Short Text"
+      type={TextInputType.Short}
+      id="testId"
+    ></TextInput>
+  );
+  const errorMessage = container.querySelector(`#${ERROR_MESSAGE}-testId`);
+  expect(errorMessage).toBeEmptyDOMElement();
+});
+
+it("should change the role of the ErrorWrapper when an invalid input is given", async () => {
+  const handleSubmit = jest.fn();
+
+  const { container } = render(
+    <TextInput
+      title="Short Text"
+      type={TextInputType.Short}
+      handleSubmit={handleSubmit}
+      id="testId"
+    ></TextInput>
+  );
+
+  const errorWrapper = container.querySelector(
+    `#${ERROR_MESSAGE}-testId`
+  )?.parentElement;
+  await act(async () => {
+    userEvent.click(screen.getByTestId("continue-button"));
+  });
+
+  expect(errorWrapper).not.toBeEmptyDOMElement();
+  expect(errorWrapper).toHaveAttribute("role", "status");
 });

@@ -210,7 +210,7 @@ const FileUpload: React.FC<Props> = (props) => {
         definitionImg={props.definitionImg}
         policyRef={props.policyRef}
       />
-      <ErrorWrapper error={validationError}>
+      <ErrorWrapper error={validationError} id={props.id}>
         <Dropzone
           slots={slots}
           setSlots={setSlots}

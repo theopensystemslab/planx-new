@@ -1,4 +1,5 @@
 import camelcaseKeys from "camelcase-keys";
+import { HeaderVariant } from "components/Header";
 import gql from "graphql-tag";
 import { dataMerged } from "lib/dataMergedHotfix";
 import { client } from "lib/graphql";
@@ -71,6 +72,7 @@ const routes = compose(
           team={flow.team}
           settings={flow.settings}
           footerContent={globalSettings?.footerContent}
+          headerVariant={HeaderVariant.Unpublished}
         >
           <View />
         </Layout>

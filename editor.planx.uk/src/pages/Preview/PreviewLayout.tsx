@@ -18,7 +18,7 @@ import { getGlobalThemeOptions, getTeamThemeOptions } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
-import Header from "../../components/Header";
+import Header, { HeaderVariant } from "../../components/Header";
 import { FlowSettings, FOOTER_ITEMS, Team, TextContent } from "../../types";
 
 const useClasses = makeStyles((theme) => ({
@@ -39,7 +39,8 @@ const PreviewLayout: React.FC<{
   children?: any;
   settings?: FlowSettings;
   footerContent?: { [key: string]: TextContent };
-}> = ({ team, children, settings, footerContent }) => {
+  headerVariant: HeaderVariant;
+}> = ({ team, children, settings, footerContent, headerVariant }) => {
   const { data } = useCurrentRoute();
 
   const classes = useClasses();
@@ -96,7 +97,11 @@ const PreviewLayout: React.FC<{
 
   return (
     <ThemeProvider theme={generatePreviewTheme}>
-      <Header team={team} phaseBanner handleRestart={handleRestart} />
+      <Header
+        team={team}
+        variant={headerVariant}
+        handleRestart={handleRestart}
+      />
       <Box id="main-content" className={classes.mainContainer}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           {children}

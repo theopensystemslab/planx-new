@@ -10,6 +10,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import MenuOpenIcon from "@material-ui/icons/MenuOpen";
+import { Route } from "navi";
 import React, { useRef, useState } from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 import { borderedFocusStyle, focusStyle } from "theme";
@@ -91,15 +92,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TeamLogo: React.FC<{ team: Team }> = ({ team }) => {
+/**
+ * Describes the differing headers, based on the primary routes through which a flow can be interacted with
+ */
+export enum HeaderVariant {
+  Preview,
+  Unpublished,
+  Editor,
+}
+
+const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
   const classes = useStyles();
-  const altText = team.settings?.homepage
-    ? `${team.name} Logo`
-    : `${team.name} Homepage (opens in a new tab)`;
+  const altText = team?.settings?.homepage
+    ? `${team.name} Homepage (opens in a new tab)`
+    : `${team?.name} Logo`;
   const logo = (
-    <img alt={altText} src={team.theme?.logo} className={classes.logo} />
+    <img alt={altText} src={team?.theme?.logo} className={classes.logo} />
   );
-  return team.settings?.homepage ? (
+  return team?.settings?.homepage ? (
     <a
       href={team.settings.homepage}
       target="_blank"
@@ -112,19 +122,89 @@ const TeamLogo: React.FC<{ team: Team }> = ({ team }) => {
   );
 };
 
-const Header: React.FC<{
-  bgcolor?: string;
-  team?: Team;
-  phaseBanner?: boolean;
-  handleRestart?: () => void;
-}> = ({ bgcolor = "#2c2c2c", team, phaseBanner = false, handleRestart }) => {
+const Breadcrumbs: React.FC<{
+  route: Route;
+  handleClick?: (href: string) => void;
+}> = ({ route, handleClick }) => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const headerRef = useRef(null);
+  return (
+    <Box className={classes.breadcrumbs} fontSize={20}>
+      <ButtonBase
+        component="span"
+        color="#999"
+        onClick={() => handleClick && handleClick("/")}
+      >
+        Plan✕
+      </ButtonBase>
+
+      {route.data.team && (
+        <>
+          {" / "}
+          <Link
+            href={`/${route.data.team}`}
+            prefetch={false}
+            className={classes.breadcrumb}
+          >
+            {route.data.team}
+          </Link>
+        </>
+      )}
+      {route.data.flow && (
+        <>
+          {" / "}
+          <Link
+            href={rootFlowPath(false)}
+            prefetch={false}
+            className={classes.breadcrumb}
+          >
+            {route.data.flow}
+          </Link>
+        </>
+      )}
+    </Box>
+  );
+};
+
+const PublicToolbar: React.FC<{
+  team?: Team;
+  handleRestart?: () => void;
+  route: Route;
+}> = ({ team, handleRestart, route }) => {
+  const classes = useStyles();
   const { navigate } = useNavigation();
+  return (
+    <>
+      <a tabIndex={0} className={classes.skipLink} href="#main-content">
+        Skip to main content
+      </a>
+      <Toolbar className={classes.toolbar}>
+        {team?.theme?.logo ? (
+          <TeamLogo team={team}></TeamLogo>
+        ) : (
+          <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
+        )}
+        <IconButton
+          color="secondary"
+          onClick={handleRestart}
+          aria-label="Restart Application"
+        >
+          <Reset color="secondary" />
+        </IconButton>
+      </Toolbar>
+      <PhaseBanner />
+    </>
+  );
+};
+
+const EditorToolbar: React.FC<{
+  headerRef: React.RefObject<HTMLElement>;
+  route: Route;
+}> = ({ headerRef, route }) => {
+  const [open, setOpen] = useState(false);
   const togglePreview = useStore((state) => state.togglePreview);
 
-  const route = useCurrentRoute();
+  const classes = useStyles();
+  const { navigate } = useNavigation();
 
   const handleClose = () => {
     setOpen(false);
@@ -141,99 +221,35 @@ const Header: React.FC<{
 
   return (
     <>
-      <AppBar
-        position="static"
-        elevation={0}
-        className={classes.root}
-        color="transparent"
-        ref={headerRef}
-        style={{
-          backgroundColor: team?.theme?.primary || bgcolor,
-        }}
-      >
-        {/* Only include skip links on /preview or /unpublished routes (phaseBanner is proxy for now) */}
-        {phaseBanner && (
-          <a tabIndex={0} className={classes.skipLink} href="#main-content">
-            Skip to main content
-          </a>
-        )}
-        <Toolbar className={classes.toolbar}>
-          <Box className={classes.breadcrumbs} fontSize={20}>
-            {team?.theme?.logo ? (
-              <TeamLogo team={team}></TeamLogo>
-            ) : (
-              <ButtonBase
-                component="span"
-                color="#999"
-                onClick={() => handleClick("/")}
-              >
-                Plan✕
-              </ButtonBase>
-            )}
-
-            {route.data.team && (
-              <>
-                {" / "}
-                <Link
-                  href={`/${route.data.team}`}
-                  prefetch={false}
-                  className={classes.breadcrumb}
-                >
-                  {route.data.team}
-                </Link>
-              </>
-            )}
-            {route.data.flow && (
-              <>
-                {" / "}
-                <Link
-                  href={rootFlowPath(false)}
-                  prefetch={false}
-                  className={classes.breadcrumb}
-                >
-                  {route.data.flow}
-                </Link>
-              </>
-            )}
-          </Box>
-          <Box display="flex" alignItems="center">
-            {route.data.username && (
-              <Box className={classes.profileSection} mr={2}>
-                {route.data.flow && (
-                  <IconButton
-                    color="inherit"
-                    onClick={togglePreview}
-                    aria-label="Toggle Preview"
-                  >
-                    <MenuOpenIcon />
-                  </IconButton>
-                )}
-                <Box mr={1}>
-                  <Avatar>{route.data.username[0]}</Avatar>
-                </Box>
+      <Toolbar className={classes.toolbar}>
+        <Breadcrumbs route={route} handleClick={handleClick}></Breadcrumbs>
+        <Box display="flex" alignItems="center">
+          {route.data.username && (
+            <Box className={classes.profileSection} mr={2}>
+              {route.data.flow && (
                 <IconButton
-                  edge="end"
                   color="inherit"
-                  aria-label="Toggle Menu"
-                  onClick={handleMenuToggle}
+                  onClick={togglePreview}
+                  aria-label="Toggle Preview"
                 >
-                  <KeyboardArrowDown />
+                  <MenuOpenIcon />
                 </IconButton>
+              )}
+              <Box mr={1}>
+                <Avatar>{route.data.username[0]}</Avatar>
               </Box>
-            )}
-            {handleRestart && (
               <IconButton
-                color="secondary"
-                onClick={handleRestart}
-                aria-label="Restart Application"
+                edge="end"
+                color="inherit"
+                aria-label="Toggle Menu"
+                onClick={handleMenuToggle}
               >
-                <Reset color="secondary" />
+                <KeyboardArrowDown />
               </IconButton>
-            )}
-          </Box>
-        </Toolbar>
-        {phaseBanner && <PhaseBanner />}
-      </AppBar>
+            </Box>
+          )}
+        </Box>
+      </Toolbar>
       <Popover
         open={open}
         anchorEl={headerRef.current}
@@ -252,9 +268,9 @@ const Header: React.FC<{
       >
         <Paper className={classes.paper}>
           {/*
-          <MenuItem onClick={() => handleClick("/")}>Service settings</MenuItem>
-          <MenuItem onClick={() => handleClick("/")}>My dashboard</MenuItem>
-           */}
+            <MenuItem onClick={() => handleClick("/")}>Service settings</MenuItem>
+            <MenuItem onClick={() => handleClick("/")}>My dashboard</MenuItem>
+             */}
 
           {/* only show flow settings link if inside a flow route  */}
           {route.data.flow && (
@@ -278,6 +294,40 @@ const Header: React.FC<{
         </Paper>
       </Popover>
     </>
+  );
+};
+
+const Header: React.FC<{
+  bgcolor?: string;
+  team?: Team;
+  handleRestart?: () => void;
+  variant: HeaderVariant;
+}> = ({ bgcolor = "#2c2c2c", team, handleRestart, variant }) => {
+  const classes = useStyles();
+  const headerRef = useRef<HTMLElement>(null);
+  const route = useCurrentRoute();
+
+  return (
+    <AppBar
+      position="static"
+      elevation={0}
+      className={classes.root}
+      color="transparent"
+      ref={headerRef}
+      style={{
+        backgroundColor: team?.theme?.primary || bgcolor,
+      }}
+    >
+      {variant === HeaderVariant.Editor ? (
+        <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>
+      ) : (
+        <PublicToolbar
+          team={team}
+          handleRestart={handleRestart}
+          route={route}
+        ></PublicToolbar>
+      )}
+    </AppBar>
   );
 };
 

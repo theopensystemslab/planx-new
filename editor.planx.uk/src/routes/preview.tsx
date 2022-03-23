@@ -1,4 +1,5 @@
 import camelcaseKeys from "camelcase-keys";
+import { HeaderVariant } from "components/Header";
 import gql from "graphql-tag";
 import { dataMerged } from "lib/dataMergedHotfix";
 import { client } from "lib/graphql";
@@ -18,7 +19,7 @@ import Layout from "pages/Preview/PreviewLayout";
 import Questions from "pages/Preview/Questions";
 import React from "react";
 import { View } from "react-navi";
-import type { Flow, GlobalSettings, Maybe } from "types";
+import { Flow, GlobalSettings, Maybe } from "types";
 
 const routes = compose(
   withData((req) => ({
@@ -84,6 +85,7 @@ const routes = compose(
           team={flow.team}
           settings={flow.settings}
           footerContent={globalSettings?.footerContent}
+          headerVariant={HeaderVariant.Preview}
         >
           <View />
         </Layout>
