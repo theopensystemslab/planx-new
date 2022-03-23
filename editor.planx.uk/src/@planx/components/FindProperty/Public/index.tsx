@@ -241,8 +241,8 @@ function GetAddress(props: {
       "--autocomplete__option__padding": "6px 12px 7px 12px",
       "--autocomplete__menu__max-height": "336px",
       "--autocomplete__option__border-bottom": `solid 1px ${theme.palette.grey[800]}`,
-      "--autocomplete__option__hover-border-color": theme.palette.primary,
-      "--autocomplete__option__hover-background-color": theme.palette.primary,
+      "--autocomplete__option__hover-border-color": theme.palette.grey[800],
+      "--autocomplete__option__hover-background-color": theme.palette.grey[800],
       "--autocomplete__font-family": theme.typography.fontFamily,
     },
   }));
