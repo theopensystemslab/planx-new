@@ -111,6 +111,7 @@ specifiers:
   typescript: ^4.5.4
   uuid: ^8.3.2
   wait-for-expect: ^3.0.2
+  wkt: ^0.1.1
   yup: ^0.32.8
   zustand: ^3.1.4
 
@@ -174,6 +175,7 @@ dependencies:
   sharedb: 2.2.5
   swr: 0.4.0_react@17.0.2
   uuid: 8.3.2
+  wkt: 0.1.1
   yup: 0.32.8
   zustand: 3.1.4_react@17.0.2
 
@@ -19266,6 +19268,10 @@ packages:
     dependencies:
       string-width: 4.2.3
     dev: true
+
+  /wkt/0.1.1:
+    resolution: {integrity: sha512-2vtzYZOqN0VZdtDTMDUgbpXpE+MXRdsFTiCpS08FZ4yktT9pPylVMZaLxcIqT9pRkBp5FIAGVQyJ/kJa9b8uGg==}
+    dev: false
 
   /word-wrap/1.2.3:
     resolution: {integrity: sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==}

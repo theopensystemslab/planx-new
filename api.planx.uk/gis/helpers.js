@@ -131,7 +131,7 @@ const addDesignatedVariable = (responseObject) => {
     "conservationArea",
     "AONB",
     "nationalPark",
-    "broads",
+    // "broads", -- doesn't apply to any active councils yet & subset of nationalPark per digital land
     "WHS",
   ];
 
@@ -203,6 +203,16 @@ const getA4Subvariables = (features, articleFours, a4Key) => {
   return result;
 }
 
+// Filter a Digital Land entity object, omitting the "geojson" key if exists
+const omitGeojson = (entity) => {
+  return Object.keys(entity)
+    .filter(key => key !== "geojson")
+    .reduce((obj, key) => { 
+      obj[key] = entity[key];
+      return obj;
+    }, {});
+};
+
 module.exports = {
   setEsriGeometryType,
   setEsriGeometry,
@@ -216,4 +226,5 @@ module.exports = {
   squashResultLayers,
   rollupResultLayers,
   getA4Subvariables,
+  omitGeojson,
 };
