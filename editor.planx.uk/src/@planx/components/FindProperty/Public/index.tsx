@@ -321,6 +321,7 @@ function GetAddress(props: {
             id="address-autocomplete"
             data-testid="address-autocomplete-web-component"
             postcode={sanitizedPostcode}
+            initialAddress={selectedOption?.title || ""}
             osPlacesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
           />
         )}
