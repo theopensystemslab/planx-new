@@ -13,7 +13,7 @@ const planningConstraints = {
     key: "article4",
     source: "Southwark Maps",
     tables: [
-      "Article 4 - Demolition of the Stables and the Forge on Catlin Street",
+      "Article 4 - Class ZA - Demolition of commercial",
     ],
     columns: ["Article_4_Direction", "More_information"],
     neg: "is not subject to any Article 4 restrictions",
@@ -75,33 +75,32 @@ const planningConstraints = {
       description: data.Article_4_Direction,
     }),
   },
-  // "article4.southwark.lightindustrial": {
-  //   key: "article4.southwark.lightindustrial",
-  //   source: "Southwark Maps",
-  //   tables: [
-  //     "Article 4 - Light Industrial",
-  //   ],
-  //   columns: ["Article_4_Direction", "More_information"],
-  //   neg: "is not subject to any Article 4 restrictions",
-  //   pos: (data) => ({
-  //     text: "is subject to Article 4 restriction(s)",
-  //     description: data.Article_4_Direction,
-  //   }),
-  // },
-  // "article4.southwark.towncentre": {
-  //   key: "article4.southwark.towncentre",
-  //   source: "Southwark Maps",
-  //   tables: [
-  //     "Article 4 - Town Centres A3 - A5 to A2 and from A1 – A5 B1 D1 and D2 to flexible uses",
-  //     "Article 4 - Town Centres A1 to A2",
-  //   ],
-  //   columns: ["Article_4_Direction", "More_information"],
-  //   neg: "is not subject to any Article 4 restrictions",
-  //   pos: (data) => ({
-  //     text: "is subject to Article 4 restriction(s)",
-  //     description: data.Article_4_Direction,
-  //   }),
-  // },
+  "article4.southwark.MA": {
+    key: "article4.southwark.MA",
+    source: "Southwark Maps",
+    tables: [
+      "Article 4 - CLass MA - Change of use from Class E to residential",
+    ],
+    columns: ["Article_4_Direction", "More_information"],
+    neg: "is not subject to any Article 4 restrictions",
+    pos: (data) => ({
+      text: "is subject to Article 4 restriction(s)",
+      description: data.Article_4_Direction,
+    }),
+  },
+  "article4.southwark.railway": {
+    key: "article4.southwark.railway",
+    source: "Southwark Maps",
+    tables: [
+      "Article 4 - Demolition of the Stables and the Forge on Catlin Street",
+    ],
+    columns: ["Article_4_Direction", "More_information"],
+    neg: "is not subject to any Article 4 restrictions",
+    pos: (data) => ({
+      text: "is subject to Article 4 restriction(s)",
+      description: data.Article_4_Direction,
+    }),
+  },
   "article4.southwark.southernrail": {
     key: "article4.southwark.southernrail",
     source: "Southwark Maps",
