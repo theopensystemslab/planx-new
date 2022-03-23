@@ -105,7 +105,7 @@ async function locationSearch(x, y, siteBoundary, extras) {
         const k = `${key}`;
 
         try {
-          if (data.features.length > 0) {
+          if (data?.features?.length > 0) {
             const { properties } = data.features[0];
             acc[k] = {
               ...planningConstraints[key].pos(properties),
