@@ -3,18 +3,23 @@ require("isomorphic-fetch");
 const { omitGeojson, addDesignatedVariable } = require("./helpers");
 const { baseSchema } = require("./local_authorities/metadata/base.js");
 
-/* 
+const localAuthorityMetadata = {
+  "buckinghamshire": require("./local_authorities/metadata/buckinghamshire.js"),
+  "lambeth": require("./local_authorities/metadata/lambeth.js"),
+  "southwark": require("./local_authorities/metadata/southwark.js"),
+};
+
+/**
+ * 
  * Query planning constraints datasets that intersect a given geometry and return results in the planx schema format
  *   using the Digital Land API https://www.digital-land.info/
  * 
- * @param localAuthority (string) - planx team name used to link granular article 4 metadata
- * @param geom (string) - WKT POLYGON or POINT, prioritizes drawn site boundary and fallsback to unbuffered address point
+ * @param localAuthority (string) - planx team name used to link granular Article 4 metadata
+ * @param geom (string) - WKT POLYGON or POINT, prioritized drawn site boundary and fallsback to unbuffered address point
  * 
- * @returns an object with the original request URL for debugging/auditing & a dictionary of constraints
- *   {
- *     url: string,
- *     constraints: { [planx_variable]: {value: bool, text: string, data?: [] }
- *   }
+ * @returns { url: string, constraints: { [planx_variable]: { value: bool, text: string, data?: [] }}}
+ *   an object with the original request URL for debugging/auditing & a dictionary of constraints
+ * 
  */
 async function go(localAuthority, geom) {
   // generate list of digital land datasets we should query based on 'active' planx schema variables
@@ -51,7 +56,7 @@ async function go(localAuthority, geom) {
         // get the planx variable that corresponds to this entity's 'dataset', should never be null because our initial request is filtered on 'dataset'
         const key = Object.keys(baseSchema).find(key => baseSchema[key]["digital-land-datasets"].includes(entity.dataset));
   
-        // because there can be many digital land entities per planx variable, check if this key is already in our result
+        // because there can be many digital land datasets per planx variable, check if this key is already in our result
         if (Object.keys(formattedResult).includes(key)) {
           formattedResult[key]["data"].push(omitGeojson(entity));
         } else {
@@ -75,6 +80,12 @@ async function go(localAuthority, geom) {
 
     // add top-level 'designated' variable based on granular query results
     let formattedResultWithDesignated = addDesignatedVariable(formattedResult);
+
+    // TODO add helper function to concatenate grade onto the listed building text if "pos" (and add granular schema var?)
+
+    // get the specific article 4 records for this local authority
+    const { planningConstraints } = localAuthorityMetadata[localAuthority];
+    const a4s = planningConstraints["article4"]["records"] || undefined; // TODO account for southwark
 
     // TODO add granular article 4 variables to formattedResult based on metadata mappings per 'localAuthority'
 

@@ -47,7 +47,12 @@ function Component(props: Props) {
 
   // Configure which planx teams should query Digital Land (or continue to use custom GIS) and set URL params accordingly
   //   In future, Digital Land will theoretically support any UK address and this list won't be necessary, but data collection still limited to select councils!
-  const digitalLandOrganisations: string[] = ["opensystemslab"];
+  const digitalLandOrganisations: string[] = [
+    "opensystemslab",
+    "buckinghamshire",
+    "lambeth",
+    "southwark",
+  ];
 
   const digitalLandParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,

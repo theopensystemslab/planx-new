@@ -203,7 +203,7 @@ const getA4Subvariables = (features, articleFours, a4Key) => {
   return result;
 }
 
-// Filter a Digital Land entity object, omitting the "geojson" key if exists
+// Filter a Digital Land entity response object, omitting the "geojson" key if exists
 const omitGeojson = (entity) => {
   return Object.keys(entity)
     .filter(key => key !== "geojson")

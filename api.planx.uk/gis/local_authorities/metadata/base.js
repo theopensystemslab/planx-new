@@ -31,11 +31,12 @@ const baseSchema = {
     pos: "is in a National Park",
     "digital-land-datasets": ["national-park"],
   },
-  "designated.broads": {
+  "designated.nationalPark.broads": { // this is a suggested schema change from 'designated.broads' to better reflect real granularity here
     active: false,
     neg: "is not in a Broad",
-    pos: "is in a Broad",
-    "digital-land-datasets": ["national-park"] // TODO filter on record within dataset https://www.digital-land.info/entity/520007
+    pos: "is in a Broad", // (but unlike other granular vars, we would still show distinct list item in constraints??)
+    "digital-land-datasets": ["national-park"],
+    "digital-land-entities": [520007] // TODO filter on record within dataset https://www.digital-land.info/entity/520007
   },
   "designated.WHS": {
     active: true,
