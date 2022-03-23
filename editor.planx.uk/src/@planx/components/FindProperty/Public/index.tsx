@@ -280,17 +280,20 @@ function GetAddress(props: {
         color: "white",
       },
     },
+    // Set CSS custom properties which will be inherited by the autocomplete web component
     autocomplete: {
-      fontFamily: "inherit",
-      fontSize: "inherit",
-      ".autocomplete__option": {
-        borderBottom: `solid ${theme.palette.grey[200]}`,
-      },
-      ".autocomplete__option:hover": {
-        borderColor: theme.palette.grey[800],
-        backgroundColor: theme.palette.grey[800],
-        color: "white",
-      },
+      "--autocomplete__input__padding": "6px 12px 7px 12px",
+      "--autocomplete__input__font-size": "15px",
+      "--autocomplete__input__height": "50px",
+      "--autocomplete__dropdown-arrow-down__top": "16px",
+      "--autocomplete__dropdown-arrow-down__z-index": "2",
+      "--autocomplete__option__font-size": "15px",
+      "--autocomplete__option__padding": "6px 12px 7px 12px",
+      "--autocomplete__menu__max-height": "336px",
+      "--autocomplete__option__border-bottom": `solid 1px ${theme.palette.grey[800]}`,
+      "--autocomplete__option__hover-border-color": theme.palette.primary,
+      "--autocomplete__option__hover-background-color": theme.palette.primary,
+      "--autocomplete__font-family": theme.typography.fontFamily,
     },
   }));
   const classes = useStyles();
@@ -362,14 +365,15 @@ function GetAddress(props: {
           />
         </InputLabel>
         {sanitizedPostcode && (
-          /* @ts-ignore */
-          <address-autocomplete
-            id="address-autocomplete"
-            data-testid="autocomplete-input"
-            postcode={sanitizedPostcode}
-            osPlacesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
-            className={classes.autocomplete} // not working yet
-          />
+          <Box className={classes.autocomplete}>
+            {/* @ts-ignore */}
+            <address-autocomplete
+              id="address-autocomplete"
+              data-testid="autocomplete-input"
+              postcode={sanitizedPostcode}
+              osPlacesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+            />
+          </Box>
         )}
       </Box>
       <ExternalPlanningSiteDialog
