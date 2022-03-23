@@ -45,16 +45,28 @@ function Component(props: Props) {
   const wktPolygon: string | undefined =
     siteBoundary && stringify(siteBoundary);
 
-  // Configure which planx teams should query Digital Land (or continue to use custom GIS) and set params accordingly
+  // Configure which planx teams should query Digital Land (or continue to use custom GIS) and set URL params accordingly
   //   In future, Digital Land will theoretically support any UK address and this list won't be necessary, but data collection still limited to select councils!
   const digitalLandOrganisations: string[] = ["opensystemslab"];
 
-  const root: string = `${process.env.REACT_APP_API_URL}/gis/${team}`;
-  const url: string = digitalLandOrganisations.includes(team)
-    ? `${root}?geom=${wktPolygon || wktPoint}`
-    : `${root}?x=${x}&y=${y}&siteBoundary=${JSON.stringify(
-        coordinates
-      )}&version=1`;
+  const digitalLandParams: Record<string, string> = {
+    geom: wktPolygon || wktPoint,
+  };
+  const customGisParams: Record<string, any> = {
+    x: x,
+    y: y,
+    siteBoundary: JSON.stringify(coordinates),
+    version: 1,
+  };
+
+  const root: string = `${process.env.REACT_APP_API_URL}/gis/${team}?`;
+  const url: string =
+    root +
+    new URLSearchParams(
+      digitalLandOrganisations.includes(team)
+        ? digitalLandParams
+        : customGisParams
+    ).toString();
 
   const { data, error, mutate, isValidating } = useSWR(
     () => (x && y && latitude && longitude ? url : null),
