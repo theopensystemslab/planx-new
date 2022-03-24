@@ -82,24 +82,28 @@ async function go(localAuthority, geom) {
     formattedResult = addDesignatedVariable(formattedResult);
 
     // --- ARTICLE 4 ---
-    // get the article 4 schema map for this local authority
-    const { planningConstraints } = localAuthorityMetadata[localAuthority];
-    const a4s = planningConstraints["article4"]["records"] || undefined; // TODO account for southwark
+    // only attempt to set granular a4s if we have metadata for this local authority; proceed with non-granular a4 queries under "opensystemslab" team etc
+    if (Object.keys(localAuthorityMetadata).includes(localAuthority)) {
+      // get the article 4 schema map for this local authority
+      const { planningConstraints } = localAuthorityMetadata[localAuthority];
+      const a4s = planningConstraints["article4"]["records"] || undefined; // TODO account for Southwark
 
-    // loop through any intersecting a4 entities and set granular planx values based on this local authority's schema
-    if (a4s && formattedResult["article4"].value) {
-      formattedResult["article4"].data.forEach((d) => {
-        (Object.keys(a4s)).forEach((key) => {
-          // Account for line breaks/newlines in Buckinghamshire's DEV_TYPE formatting
-          if (d.name.replace(/\r?\n|\r/g, " ") === a4s[key] || formattedResult[key]?.value) {
-            formattedResult[key] = { value: true }
-          } else if (d.json.notes.startsWith(a4s[key]) || formattedResult[key]?.value) {
-            formattedResult[key] = { value: true }
-          } else {
-            formattedResult[key] = { value: false }
-          }
+      // loop through any intersecting a4 data entities and set granular planx values based on this local authority's schema
+      if (a4s && formattedResult["article4"].value) {
+        formattedResult["article4"].data.forEach((entity) => {
+          (Object.keys(a4s)).forEach((key) => {
+            // Digital Land's entity.name maps to Buck's DEV_TYPE (which can have line breaks), Lambeth's ..., Southwark's ...
+            if (entity.name.replace(/\r?\n|\r/g, " ") === a4s[key] || formattedResult[key]?.value) {
+              formattedResult[key] = { value: true }
+            // DL's entity.json.notes maps to Buck's DESCRIPTIO, Lambeth's ..., Southwark's ...
+            } else if (entity.json.notes.startsWith(a4s[key]) || formattedResult[key]?.value) {
+              formattedResult[key] = { value: true }
+            } else {
+              formattedResult[key] = { value: false }
+            }
+          });
         });
-      });
+      }
     }
 
     // TODO add helper function to set 'designated.broads' based on 'designated.nationalPark' entity id
