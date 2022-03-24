@@ -43,10 +43,6 @@ const useClasses = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(0.5),
     textDecoration: "underline",
   },
-  changeButtonContainer: {
-    display: "flex",
-    alignItems: "center",
-  },
   removeTopBorder: {
     "&:before": {
       display: "none",
@@ -139,7 +135,7 @@ const ResultReason: React.FC<IResultReason> = ({
           </AccordionDetails>
         )}
       </Accordion>
-      <Box className={classes.changeButtonContainer}>
+      <Box>
         {showChangeButton && (
           <ButtonBase
             className={classes.changeButton}
