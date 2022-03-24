@@ -49,13 +49,13 @@ async function go(localAuthority, geom) {
       .then(response => response.json())
       .catch(error => console.log(error));
 
-    // check for & add any 'positive'/intersecting constraints to the formattedResult
+    // --- INTERSECTIONS ---
+    // check for & add any 'positive' constraints to the formattedResult
     let formattedResult = {};
     if (res && res.count > 0 && res.entities) {
       res.entities.forEach(entity => {
         // get the planx variable that corresponds to this entity's 'dataset', should never be null because our initial request is filtered on 'dataset'
         const key = Object.keys(baseSchema).find(key => baseSchema[key]["digital-land-datasets"].includes(entity.dataset));
-  
         // because there can be many digital land datasets per planx variable, check if this key is already in our result
         if (Object.keys(formattedResult).includes(key)) {
           formattedResult[key]["data"].push(omitGeojson(entity));
@@ -69,6 +69,7 @@ async function go(localAuthority, geom) {
       });
     }
 
+    // --- NOTS --- 
     // add active, non-intersecting planning constraints to the formattedResult
     // TODO followup with digital land about how to return 'nots' via API (currently assumes any "active" metadata was successfully queried)
     const nots = Object.keys(baseSchema).filter(key => baseSchema[key]["active"] && !Object.keys(formattedResult).includes(key));
@@ -76,20 +77,38 @@ async function go(localAuthority, geom) {
       formattedResult[not] = { value: false, text: baseSchema[not].neg };
     });
 
-    // TODO add helper function to set 'designated.broads' based on 'designated.nationalPark' entity id
-
+    // --- DESIGNATED LAND ---
     // add top-level 'designated' variable based on granular query results
-    let formattedResultWithDesignated = addDesignatedVariable(formattedResult);
+    formattedResult = addDesignatedVariable(formattedResult);
 
-    // TODO add helper function to concatenate grade onto the listed building text if "pos" (and add granular schema var?)
-
-    // get the specific article 4 records for this local authority
+    // --- ARTICLE 4 ---
+    // get the article 4 schema map for this local authority
     const { planningConstraints } = localAuthorityMetadata[localAuthority];
     const a4s = planningConstraints["article4"]["records"] || undefined; // TODO account for southwark
 
-    // TODO add granular article 4 variables to formattedResult based on metadata mappings per 'localAuthority'
+    // loop through any intersecting a4 entities and set granular planx values based on this local authority's schema
+    if (a4s && formattedResult["article4"].value) {
+      formattedResult["article4"].data.forEach((d) => {
+        (Object.keys(a4s)).forEach((key) => {
+          // Account for line breaks/newlines in Buckinghamshire's DEV_TYPE formatting
+          if (d.name.replace(/\r?\n|\r/g, " ") === a4s[key] || formattedResult[key]?.value) {
+            formattedResult[key] = { value: true }
+          // } else if (d.INT_ID === articleFours[key] || ob[key]?.value) {
+          //   ob[key] = { value: true }
+          // } else if (d.DESCRIPTIO.startsWith(articleFours[key]) || ob[key]?.value) {
+          //   ob[key] = { value: true }
+          } else {
+            formattedResult[key] = { value: false }
+          }
+        });
+      });
+    }
 
-    return { url: url, constraints: formattedResultWithDesignated };
+    // TODO add helper function to set 'designated.broads' based on 'designated.nationalPark' entity id
+
+    // TODO add helper function to concatenate grade onto the listed building text if "pos" (and add granular schema var?)
+
+    return { url: url, constraints: formattedResult };
   } catch (e) {
     throw e;
   }
