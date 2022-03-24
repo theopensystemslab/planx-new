@@ -152,7 +152,7 @@ test
 
   await t.click(Selector("button").withText("Back"));
 
-  await t.click(Selector("p").withText("No"));
+  await t.click(Selector("button>div>p").withText("No"));
   await t.click(Selector("button").withText("Continue"));
   await t.expect(Selector("h3").withText(noNoticeResult).exists).ok();
 });

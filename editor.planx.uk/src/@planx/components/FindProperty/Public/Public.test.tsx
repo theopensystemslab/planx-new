@@ -1,22 +1,14 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-helper";
 import React from "react";
 import * as ReactNavi from "react-navi";
-import * as SWR from "swr";
 
 import FindProperty from "./";
 import findAddressReturnMock from "./mocks/findAddressReturnMock";
-import postcodeMock from "./mocks/postcodeMock";
 
 const TEAM = "canterbury";
-
-jest.spyOn(SWR, "default").mockImplementation((url: any) => {
-  return {
-    data: url()?.startsWith("https://api.os.uk") ? postcodeMock : null,
-  } as any;
-});
 
 jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
   () =>
@@ -40,24 +32,23 @@ test("renders correctly", async () => {
     </MockedProvider>
   );
 
+  // autocomplete does not exist in the DOM on initial render
+  expect(screen.queryByTestId("address-autocomplete-web-component")).toBeNull();
+
+  // type a valid postcode
   await waitFor(async () => {
     userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
-    userEvent.tab();
-  });
-  await waitFor(async () => {
-    userEvent.type(screen.getByTestId("autocomplete-input"), "75");
-  });
-  await act(async () => {
-    userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
-  });
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
   });
 
-  expect(handleSubmit).toHaveBeenCalled();
+  // expect the autocomplete to be rendered with the correct postcode prop & empty initial address
+  const autocomplete = screen.getByTestId("address-autocomplete-web-component");
+  expect(autocomplete).toBeInTheDocument;
+  expect(autocomplete.getAttribute("postcode")).toEqual("SE5 0HU");
+  expect(autocomplete.getAttribute("intialAddress")).toBeFalsy();
+
+  // expect continue to be disabled because an address has not been selected
+  expect(screen.getByTestId("continue-button")).toBeDisabled;
+  expect(handleSubmit).not.toHaveBeenCalled();
 });
 
 test("it displays an error if you submit an invalid postcode", async () => {
@@ -150,24 +141,21 @@ it("should not have any accessibility violations", async () => {
     </MockedProvider>
   );
 
-  // Ensure we also test the address drop down
-  // Note: MUI v4 has an a11y issue here when the dropdown is open, is has to be closed before we can test
-  // This has been resolved in v5
-  // https://github.com/mui-org/material-ui/issues/22302
   await waitFor(async () => {
     await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
   });
+  // shadow DOM is not rendered, so autocomplete does not actually "open" on typing or account for dropdown options here
   await waitFor(async () => {
-    await userEvent.type(screen.getByTestId("autocomplete-input"), "75");
-  });
-  await act(async () => {
-    userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
+    await userEvent.type(
+      screen.getByTestId("address-autocomplete-web-component"),
+      "75"
+    );
   });
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
 
-it("clears the old address when the postcode is typed in", async () => {
+it("updates the address-autocomplete props when the postcode is changed", async () => {
   // Arrange
   render(
     <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
@@ -178,18 +166,19 @@ it("clears the old address when the postcode is typed in", async () => {
     </MockedProvider>
   );
 
-  // Act
   // Enter a postcode...
   await waitFor(async () => {
     userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
   });
-  // ...and select an address
-  await waitFor(async () => {
-    userEvent.type(screen.getByTestId("autocomplete-input"), "75");
-  });
-  await act(async () => {
-    userEvent.click(screen.getByText("75, COBOURG ROAD, LONDON"));
-  });
+
+  // Expect autocomplete to be rendered with the correct postcode prop
+  expect(screen.getByTestId("address-autocomplete-web-component"))
+    .toBeInTheDocument;
+  expect(
+    screen
+      .getByTestId("address-autocomplete-web-component")
+      .getAttribute("postcode")
+  ).toEqual("SE5 0HU");
 
   // Now go back and change the postcode
   await waitFor(async () => {
@@ -197,13 +186,12 @@ it("clears the old address when the postcode is typed in", async () => {
     await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HX");
   });
 
-  // Assert
-  const [postcodeInput, addressInput] = screen.getAllByRole("textbox");
-
-  // New postcode and blank address field should display
-  expect(postcodeInput).toHaveValue("SE5 0HX");
-  expect(addressInput).not.toBeUndefined();
-  expect(addressInput).toHaveValue("");
+  // Expect autocomplete to be rendered with the new postcode prop
+  expect(
+    screen
+      .getByTestId("address-autocomplete-web-component")
+      .getAttribute("postcode")
+  ).toEqual("SE5 0HX");
 
   // User is unable to continue and to submit incomplete data
   const continueButton = screen.getByTestId("continue-button");
