@@ -93,10 +93,8 @@ async function go(localAuthority, geom) {
           // Account for line breaks/newlines in Buckinghamshire's DEV_TYPE formatting
           if (d.name.replace(/\r?\n|\r/g, " ") === a4s[key] || formattedResult[key]?.value) {
             formattedResult[key] = { value: true }
-          // } else if (d.INT_ID === articleFours[key] || ob[key]?.value) {
-          //   ob[key] = { value: true }
-          // } else if (d.DESCRIPTIO.startsWith(articleFours[key]) || ob[key]?.value) {
-          //   ob[key] = { value: true }
+          } else if (d.json.notes.startsWith(a4s[key]) || formattedResult[key]?.value) {
+            formattedResult[key] = { value: true }
           } else {
             formattedResult[key] = { value: false }
           }
