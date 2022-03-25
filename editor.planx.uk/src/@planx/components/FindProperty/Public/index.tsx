@@ -15,7 +15,6 @@ import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
-import capitalize from "lodash/capitalize";
 import find from "lodash/find";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
@@ -106,28 +105,19 @@ function Component(props: Props) {
     let warning: {
       show: boolean;
       message: string;
-      os_administrative_area: string;
-      os_local_custodian_code: string;
       local_authority_districts: string[];
       planx_team_name?: string;
     } = {
       show: false,
       message: "",
-      os_administrative_area: address.administrative_area,
-      os_local_custodian_code: address.local_custodian_code,
       local_authority_districts: localAuthorityDistricts,
     };
 
     if (team?.name) {
       const addressOutsideTeamWarning = {
-        // if neither admin area nor LCC match team, then show warning error msg
-        showCondition: ![
-          address.administrative_area,
-          address.local_custodian_code,
-        ].includes(team.name.toUpperCase()),
-        message: `This address may not be in ${capitalize(
-          team.name
-        )}, are you sure you want to continue using this service?`,
+        // if team does not match any local authority districts, then show warning error msg
+        showCondition: !localAuthorityDistricts.includes(team.name),
+        message: `This address may not be in ${team.name}, are you sure you want to continue using this service?`,
       };
       const buckinghamshireOutsideWycombeWarning = {
         // if using Buckinghamshire service, but site is not in Wycombe, then show warning error msg
@@ -144,7 +134,7 @@ function Component(props: Props) {
       warning.message = addressOutsideTeamWarning.showCondition
         ? addressOutsideTeamWarning.message
         : buckinghamshireOutsideWycombeWarning.message;
-      warning.planx_team_name = team.name.toUpperCase();
+      warning.planx_team_name = team.name;
     }
 
     return (

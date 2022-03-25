@@ -109,9 +109,7 @@ test("recovers previously submitted address when clicking the back button", asyn
       show: true,
       message:
         "This address may not be in Canterbury, are you sure you want to continue using this service?",
-      os_administrative_area: "SOUTHWARK",
-      os_local_custodian_code: "SOUTHWARK",
-      planx_team_name: "CANTERBURY",
+      planx_team_name: "Canterbury",
       local_authority_districts: ["Southwark"],
     },
     "property.type": ["residential.HMO.parent"],
