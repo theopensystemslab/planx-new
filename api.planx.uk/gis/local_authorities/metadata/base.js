@@ -7,6 +7,12 @@ const baseSchema = {
     pos: "is subject to Article 4 restriction(s)",
     "digital-land-datasets": ["article-4-direction"],
   },
+  "article4.caz": {
+    active: true,
+    neg: "is not in the Central Activities Zone",
+    pos: "is in the Central Activities Zone",
+    "digital-land-datasets": ["central-activities-zone"],
+  },
   listed: {
     active: true,
     neg: "is not in, or within, a Listed Building",
@@ -31,10 +37,10 @@ const baseSchema = {
     pos: "is in a National Park",
     "digital-land-datasets": ["national-park"],
   },
-  "designated.nationalPark.broads": { // this is a suggested schema change from 'designated.broads' to better reflect real granularity here
+  "designated.nationalPark.broads": { // propose schema change from 'designated.broads' to better reflect real granularity here
     active: false,
     neg: "is not in a Broad",
-    pos: "is in a Broad", // (but unlike other granular vars, we would still show distinct list item in constraints??)
+    pos: "is in a Broad",
     "digital-land-datasets": ["national-park"],
     "digital-land-entities": [520007] // TODO filter on record within dataset https://www.digital-land.info/entity/520007
   },

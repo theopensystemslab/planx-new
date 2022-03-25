@@ -5,6 +5,7 @@ const { baseSchema } = require("./local_authorities/metadata/base.js");
 
 const localAuthorityMetadata = {
   "buckinghamshire": require("./local_authorities/metadata/buckinghamshire.js"),
+  "canterbury": require("./local_authorities/metadata/canterbury.js"),
   "lambeth": require("./local_authorities/metadata/lambeth.js"),
   "southwark": require("./local_authorities/metadata/southwark.js"),
 };
