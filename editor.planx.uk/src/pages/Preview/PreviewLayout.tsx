@@ -26,7 +26,9 @@ import {
   Team,
   TextContent,
 } from "../../types";
+import ResumePage from "./ResumePage";
 import SaveAndReturn from "./SaveAndReturn";
+import SavePage from "./SavePage";
 
 const useClasses = makeStyles((theme) => ({
   mainContainer: {
@@ -141,8 +143,8 @@ const PreviewLayout: React.FC<{
           {
             {
               [AppPath.SingleSession]: children,
-              [AppPath.Save]: <h1>Save Page</h1>,
-              [AppPath.Resume]: <h1>Resume Page</h1>,
+              [AppPath.Save]: <SavePage />,
+              [AppPath.Resume]: <ResumePage />,
               [AppPath.SaveAndReturn]: (
                 <SaveAndReturn>{children}</SaveAndReturn>
               ),
