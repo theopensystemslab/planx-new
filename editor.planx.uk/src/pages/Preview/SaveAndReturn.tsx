@@ -21,15 +21,15 @@ const confirmEmailSchema = object({
  *
  * @returns
  */
-const ConfirmEmail: React.FC = () => {
+export const ConfirmEmail: React.FC<{
+  handleSubmit: (email: string) => void;
+}> = ({ handleSubmit }) => {
   const formik = useFormik({
     initialValues: {
       email: "",
       confirmEmail: "",
     },
-    onSubmit: (values) => {
-      useStore.getState().setApplicantEmail(values.confirmEmail);
-    },
+    onSubmit: (values) => handleSubmit(values.confirmEmail),
     validateOnChange: false,
     validationSchema: confirmEmailSchema,
   });
@@ -42,7 +42,7 @@ const ConfirmEmail: React.FC = () => {
           description="We will use this to save your application so you can come back to it later. We will also email you updates about your application."
         ></QuestionHeader>
         <InputRow>
-          <InputLabel label={"Email Address"}>
+          <InputLabel label={"Email Address"} htmlFor={"email"}>
             <Input
               bordered
               errorMessage={
@@ -60,7 +60,7 @@ const ConfirmEmail: React.FC = () => {
           </InputLabel>
         </InputRow>
         <InputRow>
-          <InputLabel label={"Confirm Email Address"}>
+          <InputLabel label={"Confirm Email Address"} htmlFor={"confirmEmail"}>
             <Input
               bordered
               errorMessage={
@@ -93,8 +93,18 @@ const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const isEmailCaptured = Boolean(useStore((state) => state.applicantEmail));
+  const handleSubmit = (email: string) =>
+    useStore.getState().setApplicantEmail(email);
 
-  return <>{isEmailCaptured ? children : <ConfirmEmail></ConfirmEmail>}</>;
+  return (
+    <>
+      {isEmailCaptured ? (
+        children
+      ) : (
+        <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>
+      )}
+    </>
+  );
 };
 
 export default SaveAndReturn;
