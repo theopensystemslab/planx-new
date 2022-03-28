@@ -232,6 +232,7 @@ function GetAddress(props: {
   // Autocomplete overrides
   const useStyles = makeStyles((theme) => ({
     autocomplete: {
+      "--autocomplete__label__font-size": "18px",
       "--autocomplete__input__padding": "6px 40px 7px 12px",
       "--autocomplete__input__font-size": "15px",
       "--autocomplete__input__height": "50px",
@@ -324,6 +325,7 @@ function GetAddress(props: {
             initialAddress={selectedOption?.title || ""}
             osPlacesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             arrowStyle="light"
+            labelStyle="static"
           />
         )}
       </Box>
