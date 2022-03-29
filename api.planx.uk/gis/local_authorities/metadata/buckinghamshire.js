@@ -70,7 +70,7 @@ const planningConstraints = {
       "article4.buckinghamshire.coppicesouthheathcaravan": "Land at The Coppice, South Heath - Caravan Sites",
       "article4.buckinghamshire.cryershillroad": "Valley Road/Cryers Hill Road, Hughenden - Caravan Sites",
       "article4.buckinghamshire.deanfield": "Part Fields SW of Deanfield, Saunderton (b) - Caravan sites",
-      "article4.buckinghamshire.DO10fulmer": "DO.10 Fulmer - Agricultural", // no clear gis match
+      "article4.buckinghamshire.DO10fulmer": "Fulmer - Agricultural",
       "article4.buckinghamshire.dorneywoodroad": "Dorney Wood Road, Burnham - Agricultural",
       "article4.buckinghamshire.eastamershamroadOS0006": "Land East of Amersham Road including OS parcel 0006. Agricultural Buildings.",
       "article4.buckinghamshire.eastamershamroadOS9269": "Land East of Amersham Road including OS Parcel 9269 Agricultural buildings.",
