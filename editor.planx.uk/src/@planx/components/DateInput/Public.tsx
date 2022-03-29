@@ -23,6 +23,7 @@ export type Props = PublicProps<DateInput, UserData>;
 const useClasses = makeStyles(() => ({
   fieldset: {
     border: 0,
+    padding: 0,
   },
 }));
 
@@ -72,6 +73,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
               formik.setFieldValue("date", paddedDate(newDate, eventType));
             }}
             error={formik.errors.date as string}
+            id={props.id}
           />
         </InputRow>
       </fieldset>

@@ -1,4 +1,5 @@
 import ButtonBase from "@material-ui/core/ButtonBase";
+import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import { visuallyHidden } from "@material-ui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
@@ -233,9 +234,9 @@ function FileUpload(props: ComponentProps) {
         <ul>
           {getAnswersByNode(props)?.map((file: any, i: number) => (
             <li key={i}>
-              <a target="_blank" href={file.url}>
+              <Link target="_blank" href={file.url}>
                 {file.filename}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -264,7 +265,7 @@ function DrawBoundary(props: ComponentProps) {
     ? props.userData.data![PASSPORT_UPLOAD_KEY]
     : undefined;
 
-  if (!data) {
+  if (!data && !props.node.data?.hideFileUpload) {
     // XXX: we always expect to have data, this is for temporary debugging
     console.error(props);
     throw Error("boundary geojson or file expected but not found");
@@ -274,7 +275,9 @@ function DrawBoundary(props: ComponentProps) {
     <>
       <dt>Site boundary</dt>
       <dd>
-        {typeof data === "string" ? (
+        {!data && props.node.data?.hideFileUpload ? (
+          "Skipped"
+        ) : typeof data === "string" ? (
           <a target="_blank" href={data}>
             Your uploaded location plan
           </a>

@@ -20,7 +20,7 @@ test("renders correctly", async () => {
   expect(screen.getAllByRole("heading")[0]).toHaveTextContent("AMAZING");
 
   await act(async () => {
-    await userEvent.click(screen.getByText("Continue"));
+    await userEvent.click(screen.getByTestId("continue-button"));
   });
   expect(handleSubmit).toHaveBeenCalled();
 });
@@ -29,7 +29,19 @@ it("should not have any accessibility violations", async () => {
   const { container } = render(
     <Result
       headingColor={{ text: "#000", background: "#fff" }}
-      responses={[]}
+      responses={[
+        {
+          question: { data: { text: "Is this hidden?" }, id: "a" },
+          hidden: false,
+          selections: [],
+        },
+        {
+          question: { data: { text: "Is this shown?" }, id: "b" },
+          hidden: true,
+          selections: [],
+        },
+      ]}
+      allowChanges
       headingTitle="title"
       reasonsTitle="reasons"
     />

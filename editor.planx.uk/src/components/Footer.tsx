@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import classnames from "classnames";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-navi";
+import { focusStyle } from "theme";
 
 const useClasses = makeStyles((theme) => ({
   root: {
@@ -17,15 +18,19 @@ const useClasses = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.black,
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
   },
+  buttonGroup: {
+    columnGap: theme.spacing(3),
+  },
   link: {
     textTransform: "capitalize",
     color: "inherit",
     whiteSpace: "nowrap",
     textDecoration: "underline",
-    marginRight: theme.spacing(3),
     "&:hover": {
       textDecoration: "none",
     },
+    // Consistently style MuiLink and ReactNavi link components
+    "&:focus-visible": focusStyle(theme.palette.action.focus),
   },
   bold: {
     fontWeight: 800,
@@ -51,6 +56,7 @@ export default function Footer(props: Props) {
     useState(false);
 
   useEffect(() => {
+    let feedbackFishPostMessageWorkingCorrectly: boolean;
     const handleMessage = (event: MessageEvent) => {
       try {
         // the feedback fish widget posts a message that's either
@@ -58,7 +64,16 @@ export default function Footer(props: Props) {
         // or {"width":320,"height":200} if the iframe is visible
         if (event.origin.endsWith("feedback.fish")) {
           const { width, height } = JSON.parse(event.data);
-          setFeedbackPrivacyNoteVisible(width > 0 && height > 0);
+          // XXX: postMessage not working in firefox as expected
+          //      https://trello.com/c/MX1cpAM8 this disables it in FF
+          //      by checking if the initial {"width":0,"height":0} message
+          //      was received. If not then never show feedback warning msg
+          if (width === 0 && height === 0) {
+            feedbackFishPostMessageWorkingCorrectly = true;
+          }
+          setFeedbackPrivacyNoteVisible(
+            width > 0 && height > 0 && feedbackFishPostMessageWorkingCorrectly
+          );
         }
       } catch (err) {}
     };
@@ -66,7 +81,7 @@ export default function Footer(props: Props) {
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  });
+  }, []);
 
   const feedbackFishId = process.env.REACT_APP_FEEDBACK_FISH_ID;
 
@@ -83,6 +98,7 @@ export default function Footer(props: Props) {
         display="flex"
         flexWrap="wrap"
         flexDirection={{ xs: "column", md: "row" }}
+        className={classes.buttonGroup}
       >
         {items
           ?.filter((item) => item.title)

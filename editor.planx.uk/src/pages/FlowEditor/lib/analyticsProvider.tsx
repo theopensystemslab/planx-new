@@ -41,39 +41,43 @@ export const AnalyticsProvider: React.FC = ({ children }) => {
     state.id,
   ]);
   const node = currentCard();
-  const isStandalone = previewEnvironment === "standalone";
+  const isAnalyticsEnabled =
+    new URL(window.location.href).searchParams.get("analytics") !== "false";
+  const shouldTrackAnalytics =
+    previewEnvironment === "standalone" && isAnalyticsEnabled;
   const [previousBreadcrumbs, setPreviousBreadcrumb] = useState(breadcrumbs);
 
-  useEffect(() => {
-    const onPageExit = () => {
-      if (lastAnalyticsLogId && isStandalone) {
-        if (document.visibilityState === "hidden") {
-          navigator.sendBeacon(
-            `${
-              process.env.REACT_APP_API_URL
-            }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
-          );
-        }
-        if (document.visibilityState === "visible") {
-          navigator.sendBeacon(
-            `${
-              process.env.REACT_APP_API_URL
-            }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
-          );
-        }
+  const onPageExit = () => {
+    if (lastAnalyticsLogId && shouldTrackAnalytics) {
+      if (document.visibilityState === "hidden") {
+        navigator.sendBeacon(
+          `${
+            process.env.REACT_APP_API_URL
+          }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
+        );
       }
-    };
+      if (document.visibilityState === "visible") {
+        navigator.sendBeacon(
+          `${
+            process.env.REACT_APP_API_URL
+          }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
+        );
+      }
+    }
+  };
 
-    if (isStandalone) document.addEventListener("visibilitychange", onPageExit);
+  useEffect(() => {
+    if (shouldTrackAnalytics)
+      document.addEventListener("visibilitychange", onPageExit);
     return () => {
-      if (isStandalone)
+      if (shouldTrackAnalytics)
         document.removeEventListener("visibilitychange", onPageExit);
     };
   }, []);
 
   // Track component transition
   useEffect(() => {
-    if (isStandalone && analyticsId) {
+    if (shouldTrackAnalytics && analyticsId) {
       const curLength = Object.keys(breadcrumbs).length;
       const prevLength = Object.keys(previousBreadcrumbs).length;
 
@@ -98,6 +102,11 @@ export const AnalyticsProvider: React.FC = ({ children }) => {
 
   async function track(direction: AnalyticsLogDirection, analyticsId: number) {
     const metadata = getNodeMetadata();
+    const node_title =
+      node?.type === TYPES.Content
+        ? "Content"
+        : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
+
     const result = await client.mutate({
       mutation: gql`
         mutation InsertNewAnalyticsLog(
@@ -126,8 +135,7 @@ export const AnalyticsProvider: React.FC = ({ children }) => {
         analytics_id: analyticsId,
         metadata: metadata,
         node_type: node?.type,
-        node_title:
-          node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet,
+        node_title: node_title,
       },
     });
     const id = result?.data.insert_analytics_logs_one?.id;
@@ -135,7 +143,7 @@ export const AnalyticsProvider: React.FC = ({ children }) => {
   }
 
   async function trackHelpClick() {
-    if (isStandalone && lastAnalyticsLogId) {
+    if (shouldTrackAnalytics && lastAnalyticsLogId) {
       await client.mutate({
         mutation: gql`
           mutation UpdateHasClickedHelp($id: bigint!) {
@@ -155,22 +163,24 @@ export const AnalyticsProvider: React.FC = ({ children }) => {
   }
 
   async function createAnalytics(type: AnalyticsType) {
-    const response = await client.mutate({
-      mutation: gql`
-        mutation InsertNewAnalytics($type: String, $flow_id: uuid) {
-          insert_analytics_one(object: { type: $type, flow_id: $flow_id }) {
-            id
+    if (shouldTrackAnalytics) {
+      const response = await client.mutate({
+        mutation: gql`
+          mutation InsertNewAnalytics($type: String, $flow_id: uuid) {
+            insert_analytics_one(object: { type: $type, flow_id: $flow_id }) {
+              id
+            }
           }
-        }
-      `,
-      variables: {
-        type,
-        flow_id: flowId,
-      },
-    });
-    const id = response.data.insert_analytics_one.id;
-    setAnalyticsId(id);
-    track(type, id);
+        `,
+        variables: {
+          type,
+          flow_id: flowId,
+        },
+      });
+      const id = response.data.insert_analytics_one.id;
+      setAnalyticsId(id);
+      track(type, id);
+    }
   }
 
   function getNodeMetadata() {

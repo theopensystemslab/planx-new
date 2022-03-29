@@ -16,6 +16,7 @@ import ReactHtmlParser from "react-html-parser";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
+import { stringify } from "wkt";
 
 import type { PlanningConstraints } from "./model";
 
@@ -24,38 +25,61 @@ type Props = PublicProps<PlanningConstraints>;
 export default Component;
 
 function Component(props: Props) {
-  const [x, y, siteBoundary] = useStore((state) => [
-    state.computePassport().data?._address.x,
-    state.computePassport().data?._address.y,
+  const [x, y, longitude, latitude, siteBoundary] = useStore((state) => [
+    state.computePassport().data?._address?.x,
+    state.computePassport().data?._address?.y,
+    state.computePassport().data?._address?.longitude,
+    state.computePassport().data?._address?.latitude,
     state.computePassport().data?.["property.boundary.site"],
   ]);
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
+  const classes = useClasses();
 
   // Get the coordinates of the site boundary drawing if they exist, fallback on x & y if file was uploaded
   // Coords should match Esri's "rings" type https://developers.arcgis.com/javascript/3/jsapi/polygon-amd.html#rings
   const coordinates: number[][][] = siteBoundary?.geometry?.coordinates || [];
 
-  const {
-    data: constraints,
-    error,
-    mutate,
-    isValidating,
-  } = useSWR(
-    () =>
-      x && y
-        ? `${
-            process.env.REACT_APP_API_URL
-          }/gis/${team}?x=${x}&y=${y}&siteBoundary=${JSON.stringify(
-            coordinates
-          )}&version=1`
-        : null,
+  // Get the WKT representation of the site boundary drawing or address point to pass to Digital Land, when applicable
+  const wktPoint: string = `POINT(${longitude} ${latitude})`;
+  const wktPolygon: string | undefined =
+    siteBoundary && stringify(siteBoundary);
+
+  // Configure which planx teams should query Digital Land (or continue to use custom GIS) and set URL params accordingly
+  //   In future, Digital Land will theoretically support any UK address and this list won't be necessary, but data collection still limited to select councils!
+  const digitalLandOrganisations: string[] = ["opensystemslab"];
+
+  const digitalLandParams: Record<string, string> = {
+    geom: wktPolygon || wktPoint,
+  };
+  const customGisParams: Record<string, any> = {
+    x: x,
+    y: y,
+    siteBoundary: JSON.stringify(coordinates),
+    version: 1,
+  };
+
+  const root: string = `${process.env.REACT_APP_API_URL}/gis/${team}?`;
+  const url: string =
+    root +
+    new URLSearchParams(
+      digitalLandOrganisations.includes(team)
+        ? digitalLandParams
+        : customGisParams
+    ).toString();
+
+  const { data, error, mutate, isValidating } = useSWR(
+    () => (x && y && latitude && longitude ? url : null),
     {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
       errorRetryCount: 1,
     }
   );
+
+  // XXX handle both Digital Land response and custom GIS hookup responses
+  const constraints: Record<string, any> | undefined =
+    data?.constraints || data;
 
   return (
     <>
@@ -82,6 +106,7 @@ function Component(props: Props) {
             const passportData = {
               _nots,
               ...newPassportData,
+              ...{ digitalLandRequest: data?.url || "" },
             };
 
             props.handleSubmit?.({
@@ -96,10 +121,23 @@ function Component(props: Props) {
             title={props.title}
             description={props.description || ""}
           />
-          <DelayedLoadingIndicator
-            msDelayBeforeVisible={0}
-            text="Fetching data..."
-          />
+          {x && y && longitude && latitude ? (
+            <DelayedLoadingIndicator
+              msDelayBeforeVisible={0}
+              text="Fetching data..."
+            />
+          ) : (
+            <div className={classes.errorSummary} role="status">
+              <Typography variant="h5" component="h2" gutterBottom>
+                Invalid graph
+              </Typography>
+              <Typography variant="body2">
+                Edit this flow so that "Planning constraints" is positioned
+                after "Find property"; an address or site boundary drawing is
+                required to fetch data.
+              </Typography>
+            </div>
+          )}
         </Card>
       )}
     </>
@@ -184,11 +222,7 @@ function ConstraintsList({ data, refreshConstraints }: any) {
   });
 
   const visibleConstraints = constraints.map((con: any) => (
-    <Constraint
-      key={con.text}
-      color={con.color}
-      style={{ fontWeight: con.value ? 700 : 500 }}
-    >
+    <Constraint key={con.text} style={{ fontWeight: con.value ? 700 : 500 }}>
       {ReactHtmlParser(con.text)}
     </Constraint>
   ));
@@ -210,7 +244,9 @@ function ConstraintsList({ data, refreshConstraints }: any) {
           <Typography variant="h5" component="h2" gutterBottom>
             Failed to fetch data
           </Typography>
-          {error && error.endsWith("local authority") ? (
+          {error &&
+          typeof error === "string" &&
+          error.endsWith("local authority") ? (
             <Typography variant="body2">{capitalize(error)}</Typography>
           ) : (
             <>
@@ -229,19 +265,15 @@ function ConstraintsList({ data, refreshConstraints }: any) {
   );
 }
 
-function Constraint({ children, color, ...props }: any) {
+function Constraint({ children, ...props }: any) {
   const classes = useClasses();
   const theme = useTheme();
   return (
     <ListItem dense disableGutters>
       <Box
         className={classes.constraint}
-        bgcolor={color ? color : "background.paper"}
-        color={
-          color
-            ? theme.palette.getContrastText(color)
-            : theme.palette.text.primary
-        }
+        bgcolor="background.paper"
+        color={theme.palette.text.primary}
         {...props}
       >
         {children}

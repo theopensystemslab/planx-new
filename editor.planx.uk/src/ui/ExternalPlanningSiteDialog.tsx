@@ -105,7 +105,7 @@ export default function ExternalPlanningSiteDialog({
           </DialogContent>
           <DialogActions>
             <Button onClick={toggleModal}>Return to application</Button>
-            <a
+            <Link
               href={settings?.externalPlanningSite?.url}
               target="_blank"
               className={classes.externalLink}
@@ -114,7 +114,7 @@ export default function ExternalPlanningSiteDialog({
                 Proceed to {settings?.externalPlanningSite?.name}
                 <span style={visuallyHidden}> (opens in a new tab)</span>
               </Button>
-            </a>
+            </Link>
           </DialogActions>
         </Dialog>
       )}

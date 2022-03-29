@@ -13,9 +13,9 @@ const planningConstraints = {
     key: "article4",
     source: "Southwark Maps",
     tables: [
-      "Article 4 - Demolition of the Stables and the Forge on Catlin Street",
+      "Article 4 - Class ZA - Demolition of commercial",
     ],
-    columns: ["Article_4_Direction", "More_information"],
+    columns: ["Name", "Article_4_Direction", "More_information"],
     neg: "is not subject to any Article 4 restrictions",
     pos: (data) => ({
       text: "is subject to Article 4 restriction(s)",
@@ -28,7 +28,7 @@ const planningConstraints = {
     tables: [
       "Article 4 - Sunray Estate"
     ],
-    columns: ["Article_4_Direction", "More_information"],
+    columns: ["Name", "Article_4_Direction", "More_information"],
     neg: "is not subject to any Article 4 restrictions",
     pos: (data) => ({
       text: "is subject to Article 4 restriction(s)",
@@ -41,7 +41,7 @@ const planningConstraints = {
     tables: [
       "Article 4 - offices in the Central Activities Zone",
     ],
-    columns: ["Article_4_Direction", "More_information"],
+    columns: ["Name", "Article_4_Direction", "More_information"],
     neg: "is not subject to any Article 4 restrictions",
     pos: (data) => ({
       text: "is subject to Article 4 restriction(s)",
@@ -54,7 +54,7 @@ const planningConstraints = {
     tables: [
       "Article 4 - Public Houses",
     ],
-    columns: ["Article_4_Direction", "More_information"],
+    columns: ["Name", "Article_4_Direction", "More_information"],
     neg: "is not subject to any Article 4 restrictions",
     pos: (data) => ({
       text: "is subject to Article 4 restriction(s)",
@@ -68,34 +68,33 @@ const planningConstraints = {
       "Article 4 - HMO Henshaw Street",
       "Article 4 - HMO Bywater Place",
     ],
-    columns: ["Article_4_Direction", "More_information"],
+    columns: ["Name", "Article_4_Direction", "More_information"],
     neg: "is not subject to any Article 4 restrictions",
     pos: (data) => ({
       text: "is subject to Article 4 restriction(s)",
       description: data.Article_4_Direction,
     }),
   },
-  "article4.southwark.lightindustrial": {
-    key: "article4.southwark.lightindustrial",
+  "article4.southwark.MA": {
+    key: "article4.southwark.MA",
     source: "Southwark Maps",
     tables: [
-      "Article 4 - Light Industrial",
+      "Article 4 - Class MA - Change of use from Class E to residential",
     ],
-    columns: ["Article_4_Direction", "More_information"],
+    columns: ["Name", "Article_4_Direction", "More_information"],
     neg: "is not subject to any Article 4 restrictions",
     pos: (data) => ({
       text: "is subject to Article 4 restriction(s)",
       description: data.Article_4_Direction,
     }),
   },
-  "article4.southwark.towncentre": {
-    key: "article4.southwark.towncentre",
+  "article4.southwark.railway": {
+    key: "article4.southwark.railway",
     source: "Southwark Maps",
     tables: [
-      "Article 4 - Town Centres A3 - A5 to A2 and from A1 – A5 B1 D1 and D2 to flexible uses",
-      "Article 4 - Town Centres A1 to A2",
+      "Article 4 - Demolition of the Stables and the Forge on Catlin Street",
     ],
-    columns: ["Article_4_Direction", "More_information"],
+    columns: ["Name", "Article_4_Direction", "More_information"],
     neg: "is not subject to any Article 4 restrictions",
     pos: (data) => ({
       text: "is subject to Article 4 restriction(s)",
@@ -108,7 +107,7 @@ const planningConstraints = {
     tables: [
       "Article 4 - Railway Arches",
     ],
-    columns: ["Article_4_Direction", "More_information"],
+    columns: ["Name", "Article_4_Direction", "More_information"],
     neg: "is not subject to any Article 4 restrictions",
     pos: (data) => ({
       text: "is subject to Article 4 restriction(s)",

@@ -16,7 +16,7 @@ import type { PublicProps } from "../ui";
 
 export type Props = PublicProps<Checklist>;
 
-enum Layout {
+export enum ChecklistLayout {
   Basic,
   Grouped,
   Images,
@@ -56,6 +56,7 @@ const ChecklistComponent: React.FC<Props> = ({
   text,
   img,
   previouslySubmittedData,
+  id,
 }) => {
   const formik = useFormik<{ checked: Array<string> }>({
     initialValues: {
@@ -99,11 +100,11 @@ const ChecklistComponent: React.FC<Props> = ({
 
   const layout = options
     ? options.find((o) => o.data.img)
-      ? Layout.Images
-      : Layout.Basic
+      ? ChecklistLayout.Images
+      : ChecklistLayout.Basic
     : groupedOptions
-    ? Layout.Grouped
-    : Layout.Basic;
+    ? ChecklistLayout.Grouped
+    : ChecklistLayout.Basic;
 
   const flatOptions = getFlatOptions({ options, groupedOptions });
 
@@ -136,11 +137,11 @@ const ChecklistComponent: React.FC<Props> = ({
         img={img}
       />
 
-      <ErrorWrapper error={formik.errors.checked}>
-        <Grid container spacing={layout === Layout.Images ? 1 : 0}>
+      <ErrorWrapper error={formik.errors.checked} id={id}>
+        <Grid container spacing={layout === ChecklistLayout.Images ? 1 : 0}>
           {options ? (
             options.map((option: any) =>
-              layout === Layout.Basic ? (
+              layout === ChecklistLayout.Basic ? (
                 <Grid item xs={12} key={option.data.text}>
                   <ChecklistItem
                     onChange={changeCheckbox(option.id)}

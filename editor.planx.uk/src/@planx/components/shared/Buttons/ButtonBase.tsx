@@ -5,7 +5,7 @@ import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    transition: theme.transitions.create(["background-color"]),
+    transition: theme.transitions.create(["background-color", "box-shadow"]),
     backgroundColor: theme.palette.background.paper,
     fontSize: 15,
     fontFamily: "inherit",
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   selected: {
-    backgroundColor: `${theme.palette.primary.main} !important`,
+    backgroundColor: `${theme.palette.primary.main}`,
     color: theme.palette.primary.contrastText,
   },
 }));
@@ -31,11 +31,12 @@ export interface Props {
   selected: boolean;
   children?: React.ReactNode;
   className?: string;
+  id?: string;
   onClick: (event?: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
 export default function ButtonBase(props: Props): FCReturn {
-  const { selected, onClick, children, className } = props;
+  const { selected, onClick, children, className, id } = props;
   const classes = useStyles();
 
   return (
@@ -47,6 +48,7 @@ export default function ButtonBase(props: Props): FCReturn {
         className
       )}
       onClick={onClick}
+      id={id}
     >
       {children}
     </MuiButtonBase>

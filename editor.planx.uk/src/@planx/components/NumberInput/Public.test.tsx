@@ -18,7 +18,7 @@ test("renders correctly", async () => {
 
   await act(async () => {
     await userEvent.type(screen.getByLabelText("Numberwang!"), "3");
-    await userEvent.click(screen.getByText("Continue"));
+    await userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { num: 3 } });
@@ -32,7 +32,7 @@ test("requires a value before being able to continue", async () => {
   );
 
   await act(async () => {
-    await userEvent.click(screen.getByText("Continue"));
+    await userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
@@ -56,7 +56,7 @@ test("recovers previously submitted number when clicking the back button", async
   );
 
   await waitFor(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { [componentId]: 43 } });
@@ -82,7 +82,7 @@ test("recovers previously submitted number when clicking the back button even if
   );
 
   await waitFor(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
   });
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { [dataField]: 43 } });

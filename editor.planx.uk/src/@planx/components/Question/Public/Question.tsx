@@ -32,7 +32,7 @@ export interface IQuestion {
   handleSubmit: handleSubmit;
 }
 
-enum Layout {
+export enum QuestionLayout {
   Basic,
   Images,
   Descriptions,
@@ -77,13 +77,13 @@ const Question: React.FC<IQuestion> = (props) => {
   });
   const { a } = formik.values.selected;
 
-  let layout = Layout.Basic;
+  let layout = QuestionLayout.Basic;
   if (props.responses.find((r) => r.img && r.img.length)) {
-    layout = Layout.Images;
+    layout = QuestionLayout.Images;
   } else if (
     props.responses.find((r) => r.description && r.description.length)
   ) {
-    layout = Layout.Descriptions;
+    layout = QuestionLayout.Descriptions;
   }
 
   return (
@@ -108,7 +108,7 @@ const Question: React.FC<IQuestion> = (props) => {
           />
           <Grid
             container
-            spacing={layout === Layout.Descriptions ? 2 : 1}
+            spacing={layout === QuestionLayout.Descriptions ? 2 : 1}
             className={classes.gridContainer}
           >
             {!props.text?.startsWith("Sorry") &&
@@ -124,20 +124,30 @@ const Question: React.FC<IQuestion> = (props) => {
                 };
 
                 switch (layout) {
-                  case Layout.Basic:
+                  case QuestionLayout.Basic:
                     return (
                       <Grid item xs={12} key={response.id}>
-                        <DecisionButton {...buttonProps} {...response} />
+                        <DecisionButton
+                          {...buttonProps}
+                          {...response}
+                          data-testid="decision-button"
+                        />
                       </Grid>
                     );
-                  case Layout.Descriptions:
+                  case QuestionLayout.Descriptions:
                     return (
-                      <Grid item xs={6} sm={4} key={response.id}>
+                      <Grid
+                        item
+                        xs={6}
+                        sm={4}
+                        key={response.id}
+                        data-testid="description-button"
+                      >
                         <DescriptionButton {...buttonProps} {...response} />
                       </Grid>
                     );
 
-                  case Layout.Images:
+                  case QuestionLayout.Images:
                     return (
                       <Grid item xs={12} sm={6} key={response.id}>
                         <ImageButton {...buttonProps} {...response} />

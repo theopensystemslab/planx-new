@@ -55,6 +55,7 @@ const Card: React.FC<Props> = ({
               type="submit"
               disabled={!isValid}
               onClick={async () => await handleSubmit()}
+              data-testid="continue-button"
             >
               Continue
             </Button>

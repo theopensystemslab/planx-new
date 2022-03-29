@@ -22,7 +22,12 @@ interface IResultReason {
 
 const useClasses = makeStyles((theme: Theme) => ({
   root: {
+    display: "flex",
+    alignItems: "baseline",
+  },
+  accordion: {
     cursor: "pointer",
+    width: "100%",
     marginBottom: theme.spacing(0.5),
     backgroundColor: theme.palette.background.paper,
     "&:hover": {
@@ -33,10 +38,9 @@ const useClasses = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(2),
     color: theme.palette.text.primary,
   },
-  responseText: {
-    whiteSpace: "nowrap",
-  },
   changeButton: {
+    marginLeft: theme.spacing(2),
+    marginBottom: theme.spacing(0.5),
     textDecoration: "underline",
   },
   removeTopBorder: {
@@ -60,87 +64,95 @@ const ResultReason: React.FC<IResultReason> = ({
   const hasMoreInfo = question.data.info ?? question.data.policyRef;
   const toggleAdditionalInfo = () => setExpanded(!expanded);
 
+  const ariaLabel = `${question.data.text}: Your answer was: ${response}. ${
+    hasMoreInfo
+      ? "Click to expand for more information about this question."
+      : ""
+  }`;
+
   return (
-    <Accordion
-      className={classes.root}
-      classes={{ root: classes.removeTopBorder }}
-      onChange={() => hasMoreInfo && toggleAdditionalInfo()}
-      expanded={expanded}
-      elevation={0}
-      square
-    >
-      <AccordionSummary
-        expandIcon={hasMoreInfo ? <Caret /> : null}
-        aria-label={`${question.data.text}: Your answer was: ${response}. Click to expand for more information about this question.`}
-        aria-controls={`group-${id}-content`}
-        id={`group-${id}-header`}
+    <Box className={classes.root}>
+      <Accordion
+        className={classes.accordion}
+        classes={{ root: classes.removeTopBorder }}
+        onChange={() => hasMoreInfo && toggleAdditionalInfo()}
+        expanded={expanded}
+        elevation={0}
+        square
       >
-        <Box
-          display="flex"
-          alignItems="flex-start"
-          flexDirection="column"
-          width="100%"
-          px={1.5}
+        <AccordionSummary
+          expandIcon={hasMoreInfo ? <Caret /> : null}
+          aria-label={ariaLabel}
+          aria-controls={`group-${id}-content`}
+          id={`group-${id}-header`}
         >
           <Box
             display="flex"
-            justifyContent="space-between"
-            alignItems="center"
+            alignItems="flex-start"
+            flexDirection="column"
             width="100%"
+            px={1.5}
           >
             <Box
-              flexGrow={1}
               display="flex"
+              justifyContent="space-between"
               alignItems="center"
-              color="text.primary"
+              width="100%"
             >
-              <Typography
-                variant="body2"
-                color="textPrimary"
-                id={`questionText-${id}`}
+              <Box
+                flexGrow={1}
+                display="flex"
+                alignItems="center"
+                color="text.primary"
               >
-                {question.data.text}{" "}
-                <strong className={classes.responseText}>{response}</strong>
-              </Typography>
-            </Box>
-            <Box>
-              {showChangeButton && (
-                <ButtonBase
-                  className={classes.changeButton}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    record(id);
-                  }}
+                <Typography
+                  variant="body2"
+                  color="textPrimary"
+                  id={`questionText-${id}`}
                 >
-                  Change
-                  <span style={visuallyHidden}>
-                    {question.data.text || "this answer"}
-                  </span>
-                </ButtonBase>
+                  {question.data.text} <strong>{response}</strong>
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        </AccordionSummary>
+        {hasMoreInfo && (
+          <AccordionDetails>
+            <Box className={classes.moreInfo}>
+              {question.data.info && (
+                <ReactMarkdownOrHtml
+                  source={question.data.info}
+                  openLinksOnNewTab
+                />
+              )}
+              {question.data.policyRef && (
+                <ReactMarkdownOrHtml
+                  source={question.data.policyRef}
+                  openLinksOnNewTab
+                />
               )}
             </Box>
-          </Box>
-        </Box>
-      </AccordionSummary>
-      {hasMoreInfo && (
-        <AccordionDetails>
-          <Box className={classes.moreInfo}>
-            {question.data.info && (
-              <ReactMarkdownOrHtml
-                source={question.data.info}
-                openLinksOnNewTab
-              />
-            )}
-            {question.data.policyRef && (
-              <ReactMarkdownOrHtml
-                source={question.data.policyRef}
-                openLinksOnNewTab
-              />
-            )}
-          </Box>
-        </AccordionDetails>
-      )}
-    </Accordion>
+          </AccordionDetails>
+        )}
+      </Accordion>
+      <Box>
+        {showChangeButton && (
+          <ButtonBase
+            className={classes.changeButton}
+            onClick={(event) => {
+              event.stopPropagation();
+              record(id);
+            }}
+          >
+            Change
+            <span style={visuallyHidden}>
+              your response to {question.data.text || "this question"}
+            </span>
+          </ButtonBase>
+        )}
+      </Box>
+    </Box>
   );
 };
+
 export default ResultReason;

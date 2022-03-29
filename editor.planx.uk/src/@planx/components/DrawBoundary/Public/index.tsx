@@ -1,6 +1,7 @@
 import "./map.css";
 
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { visuallyHidden } from "@material-ui/utils";
 import Card from "@planx/components/shared/Preview/Card";
@@ -94,7 +95,9 @@ export default function Component(props: Props) {
   return (
     <Card
       handleSubmit={handleSubmit}
-      isValid={Boolean(boundary || selectedFile?.url)}
+      isValid={
+        props.hideFileUpload ? true : Boolean(boundary || selectedFile?.url)
+      }
     >
       {getBody()}
     </Card>
@@ -117,9 +120,14 @@ export default function Component(props: Props) {
               An interactive map centered on your address, with a red pointer to
               draw your site outline. Click to place points and connect the
               lines to make your site. Once you've closed the site shape, click
-              and drag the lines to modify it. If you cannot draw, you can
-              upload a location plan file using the link below.
+              and drag the lines to modify it.
             </p>
+            {!props.hideFileUpload && (
+              <p style={visuallyHidden}>
+                If you cannot draw, you can upload a location plan file using
+                the link below.
+              </p>
+            )}
             {/* @ts-ignore */}
             <my-map
               id="draw-boundary-map"
@@ -133,11 +141,16 @@ export default function Component(props: Props) {
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
           </Box>
-          <div className={classes.uploadInstead}>
-            <button onClick={() => setPage("upload")}>
-              Upload a location plan instead
-            </button>
-          </div>
+          {!props.hideFileUpload && (
+            <div className={classes.uploadInstead}>
+              <button
+                data-testid="upload-file-button"
+                onClick={() => setPage("upload")}
+              >
+                Upload a location plan instead
+              </button>
+            </div>
+          )}
           <p>
             The boundary you have drawn has an area of{" "}
             <strong>{area ?? 0} m²</strong>
@@ -157,9 +170,9 @@ export default function Component(props: Props) {
           />
           <Upload setFile={setSelectedFile} initialFile={selectedFile} />
           <div className={classes.uploadInstead}>
-            <button onClick={() => setPage("draw")}>
+            <Button onClick={() => setPage("draw")}>
               Draw the boundary on a map instead
-            </button>
+            </Button>
           </div>
         </div>
       );
