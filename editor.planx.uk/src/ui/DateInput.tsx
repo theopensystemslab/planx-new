@@ -34,6 +34,15 @@ const useClasses = makeStyles((theme) => ({
   label: {
     paddingBottom: theme.spacing(0.5),
   },
+  dayContainer: {
+    width: 60,
+  },
+  monthContainer: {
+    width: 60,
+  },
+  yearContainer: {
+    width: 90,
+  },
 }));
 
 export default function DateInput(props: Props): FCReturn {
@@ -49,12 +58,11 @@ export default function DateInput(props: Props): FCReturn {
               {props.label}:
             </Typography>
           )}
-          <Box>
+          <Box className={classes.dayContainer}>
             <Typography variant="body1" className={classes.label}>
               <label htmlFor="day">Day</label>
             </Typography>
             <Input
-              style={{ width: 60 }}
               value={day || ""}
               inputProps={{ maxLength: "2" }}
               placeholder="DD"
@@ -74,12 +82,11 @@ export default function DateInput(props: Props): FCReturn {
               }}
             />
           </Box>
-          <Box>
+          <Box className={classes.monthContainer}>
             <Typography variant="body1" className={classes.label}>
               <label htmlFor="month">Month</label>
             </Typography>
             <Input
-              style={{ width: 60 }}
               value={month || ""}
               placeholder="MM"
               inputProps={{ maxLength: "2" }}
@@ -99,12 +106,11 @@ export default function DateInput(props: Props): FCReturn {
               }}
             />
           </Box>
-          <Box>
+          <Box className={classes.yearContainer}>
             <Typography variant="body1" className={classes.label}>
               <label htmlFor="year">Year</label>
             </Typography>
             <Input
-              style={{ width: 90 }}
               value={year || ""}
               placeholder="YYYY"
               inputProps={{ maxLength: "4" }}
