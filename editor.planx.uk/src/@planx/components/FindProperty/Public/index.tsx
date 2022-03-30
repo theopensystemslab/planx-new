@@ -101,7 +101,6 @@ function Component(props: Props) {
       />
     );
   } else if (address) {
-    // check if we should show the applicant any warnings before they proceed with their application
     let warning: {
       show: boolean;
       os_administrative_area: string;
