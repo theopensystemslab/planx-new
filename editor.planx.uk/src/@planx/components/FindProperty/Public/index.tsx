@@ -64,9 +64,9 @@ function Component(props: Props) {
     geometry_relation: "intersects",
     limit: "100",
   };
-  const url = `https://www.digital-land.info/entity.json?${new URLSearchParams(
-    options
-  )}`;
+  // https://www.digital-land.info/docs#/Search%20entity
+  const root = `https://www.digital-land.info/entity.json?`;
+  const url = root + new URLSearchParams(options).toString();
   const { data } = useSWR(
     () => (address?.latitude && address?.longitude ? url : null),
     {
