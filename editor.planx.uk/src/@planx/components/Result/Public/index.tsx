@@ -70,7 +70,7 @@ const Responses = ({
         id={question.id}
         question={question}
         showChangeButton={allowChanges}
-        response={selections.map((s: any) => s.data.text).join(",")}
+        response={selections.map((s: any) => s.data.text).join(", ")}
       />
     ))}
   </>

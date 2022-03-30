@@ -38,9 +38,6 @@ const useClasses = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(2),
     color: theme.palette.text.primary,
   },
-  responseText: {
-    whiteSpace: "nowrap",
-  },
   changeButton: {
     marginLeft: theme.spacing(2),
     marginBottom: theme.spacing(0.5),
@@ -113,8 +110,7 @@ const ResultReason: React.FC<IResultReason> = ({
                   color="textPrimary"
                   id={`questionText-${id}`}
                 >
-                  {question.data.text}{" "}
-                  <strong className={classes.responseText}>{response}</strong>
+                  {question.data.text} <strong>{response}</strong>
                 </Typography>
               </Box>
             </Box>
