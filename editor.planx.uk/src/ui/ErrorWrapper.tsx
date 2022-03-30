@@ -34,7 +34,7 @@ export default function ErrorWrapper(props: Props): FCReturn {
     // role="status" immediately announces the error to screenreaders without interrupting focus
     <div
       className={props.error ? classes.rootError : undefined}
-      role={props.error ? "status" : undefined}
+      role="status"
       data-testid="error-wrapper"
     >
       <p id={id} className={classes.errorText}>
