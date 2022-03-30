@@ -56,7 +56,7 @@ function Component(props: Props) {
   const flow = useStore((state) => state.flow);
   const team = fetchCurrentTeam();
 
-  // if we have an address point, check which local authority district it's located in via Digital Land
+  // if we have an address point, check which local authority district(s) it's located in via Digital Land
   const options = {
     dataset: "local-authority-district",
     entries: "all", // includes historic
@@ -100,41 +100,26 @@ function Component(props: Props) {
         id={props.id}
       />
     );
-  } else if (address && localAuthorityDistricts) {
+  } else if (address) {
     // check if we should show the applicant any warnings before they proceed with their application
     let warning: {
       show: boolean;
-      message: string;
-      local_authority_districts: string[];
+      os_administrative_area: string;
+      os_local_custodian_code: string;
       planx_team_name?: string;
     } = {
       show: false,
-      message: "",
-      local_authority_districts: localAuthorityDistricts,
+      os_administrative_area: address.administrative_area,
+      os_local_custodian_code: address.local_custodian_code,
     };
 
     if (team?.name) {
-      const addressOutsideTeamWarning = {
-        // if team does not match any local authority districts, then show warning error msg
-        showCondition: !localAuthorityDistricts.includes(team.name),
-        message: `This address may not be in ${team.name}, are you sure you want to continue using this service?`,
-      };
-      const buckinghamshireOutsideWycombeWarning = {
-        // if using Buckinghamshire service, but site is not in Wycombe, then show warning error msg
-        showCondition:
-          (team.name === "Buckinghamshire" &&
-            !localAuthorityDistricts.includes("Wycombe")) ||
-          false,
-        message: `Buckinghamshire is currently only accepting applications in the Wycombe area.`,
-      };
-
-      warning.show =
-        addressOutsideTeamWarning.showCondition ||
-        buckinghamshireOutsideWycombeWarning.showCondition;
-      warning.message = addressOutsideTeamWarning.showCondition
-        ? addressOutsideTeamWarning.message
-        : buckinghamshireOutsideWycombeWarning.message;
-      warning.planx_team_name = team.name;
+      // if neither admin area nor LCC match team, then show warning error msg
+      warning.show = ![
+        address.administrative_area,
+        address.local_custodian_code,
+      ].includes(team.name.toUpperCase());
+      warning.planx_team_name = team.name.toUpperCase();
     }
 
     return (
@@ -145,6 +130,11 @@ function Component(props: Props) {
 
             if (address?.planx_value) {
               newPassportData["property.type"] = [address.planx_value];
+            }
+
+            if (localAuthorityDistricts) {
+              newPassportData["property.localAuthorityDistrict"] =
+                localAuthorityDistricts;
             }
 
             const passportData = {
@@ -185,7 +175,6 @@ function Component(props: Props) {
         team={team}
         teamColor={team?.theme?.primary || "#2c2c2c"}
         error={warning.show}
-        errorMessage={warning.message}
       />
     );
   } else {
@@ -419,7 +408,6 @@ export function PropertyInformation(props: any) {
     team,
     teamColor,
     error,
-    errorMessage,
   } = props;
   const styles = useClasses();
   const formik = useFormik({
@@ -471,10 +459,11 @@ export function PropertyInformation(props: any) {
           </Box>
         ))}
       </Box>
-      {error && (
+      {error && team?.name && (
         <Box role="status">
           <Typography variant="body1" color="error">
-            {errorMessage}
+            This address may not be in {team.name}, are you sure you want to
+            continue using this service?
           </Typography>
         </Box>
       )}
