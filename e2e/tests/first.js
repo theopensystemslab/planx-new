@@ -7,6 +7,7 @@ const URL = "http://localhost:3000";
 fixture`Home page`.page`${URL}`;
 
 const TEAM_NAME = "test-team";
+const USER_EMAIL = "test@test.com";
 const SERVICE_NAME = "test-service";
 
 let userId;
@@ -24,14 +25,20 @@ test
       },
     } = await gqlAdmin(`
       mutation {
-        insert_users(objects: {first_name: "test", last_name: "test", email: "test@test.com"}) {
+        delete_users(where: {email: {_eq: "${USER_EMAIL}"}}) {
+          affected_rows
+        }
+        delete_teams(where: {slug: {_eq: "${TEAM_NAME}"}}) {
+          affected_rows
+        }
+        insert_users(objects: {first_name: "test", last_name: "test", email: "${USER_EMAIL}"}) {
           returning { id }
         }
         insert_teams(objects: {name: "${TEAM_NAME}", slug: "${TEAM_NAME}"}) {
           returning { id }
         }
       }
-  `));
+    `));
   })
   .after(async (t) => {
     // TODO: determine whether or not to delete analytics when flow deleted
