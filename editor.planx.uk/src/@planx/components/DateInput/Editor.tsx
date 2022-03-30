@@ -1,5 +1,9 @@
 import Box from "@material-ui/core/Box";
-import { DateInput, paddedDate } from "@planx/components/DateInput/model";
+import {
+  DateInput,
+  editorValidationSchema,
+  paddedDate,
+} from "@planx/components/DateInput/model";
 import { dateSchema, parseDateInput } from "@planx/components/DateInput/model";
 import { TYPES } from "@planx/components/types";
 import {
@@ -31,11 +35,8 @@ const DateInputComponent: React.FC<Props> = (props) => {
         });
       }
     },
-    validateOnChange: true,
-    validationSchema: object({
-      min: dateSchema(),
-      max: dateSchema(),
-    }),
+    validateOnChange: false,
+    validationSchema: editorValidationSchema(),
   });
 
   return (
