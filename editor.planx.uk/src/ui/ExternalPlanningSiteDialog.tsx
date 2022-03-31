@@ -44,8 +44,11 @@ const getTitleAndContent = (
         title: "The site does not have an address",
         content: (
           <>
-            At present, we require a site with an address and postcode in order
-            to continue.
+            <p>We need an address and postcode to continue.</p>
+            <p>
+              You can apply for a Lawful Development Certificate without an
+              address and postcode through Planning Portal.
+            </p>
           </>
         ),
       };
@@ -111,7 +114,7 @@ export default function ExternalPlanningSiteDialog({
               className={classes.externalLink}
             >
               <Button>
-                Proceed to {settings?.externalPlanningSite?.name}
+                Go to {settings?.externalPlanningSite?.name}
                 <span style={visuallyHidden}> (opens in a new tab)</span>
               </Button>
             </Link>
