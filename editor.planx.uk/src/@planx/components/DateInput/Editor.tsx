@@ -1,6 +1,10 @@
 import Box from "@material-ui/core/Box";
-import { DateInput, paddedDate } from "@planx/components/DateInput/model";
-import { dateSchema, parseDateInput } from "@planx/components/DateInput/model";
+import {
+  DateInput,
+  editorValidationSchema,
+  paddedDate,
+} from "@planx/components/DateInput/model";
+import { parseDateInput } from "@planx/components/DateInput/model";
 import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
@@ -16,7 +20,6 @@ import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
-import { object } from "yup";
 
 export type Props = EditorProps<TYPES.DateInput, DateInput>;
 
@@ -31,15 +34,12 @@ const DateInputComponent: React.FC<Props> = (props) => {
         });
       }
     },
-    validateOnChange: true,
-    validationSchema: object({
-      min: dateSchema(),
-      max: dateSchema(),
-    }),
+    validateOnChange: false,
+    validationSchema: editorValidationSchema(),
   });
 
   return (
-    <form onSubmit={formik.handleSubmit} id="modal">
+    <form onSubmit={formik.handleSubmit} id="modal" name="modal">
       <ModalSection>
         <ModalSectionContent title="Date Input" Icon={ICONS[TYPES.DateInput]}>
           <InputRow>
