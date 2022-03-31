@@ -15,12 +15,11 @@ import { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
-import capitalize from "lodash/capitalize";
 import find from "lodash/find";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
-import { borderedFocusStyle } from "theme";
+import useSWR from "swr";
 import { TeamSettings } from "types";
 import CollapsibleInput from "ui/CollapsibleInput";
 import ExternalPlanningSiteDialog, {
@@ -51,8 +50,43 @@ export default Component;
 function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
   const [address, setAddress] = useState<Address | undefined>();
+  const [localAuthorityDistricts, setLocalAuthorityDistricts] = useState<
+    string[] | undefined
+  >();
   const flow = useStore((state) => state.flow);
   const team = fetchCurrentTeam();
+
+  // if we have an address point, check which local authority district(s) it's located in via Digital Land
+  const options = {
+    dataset: "local-authority-district",
+    entries: "all", // includes historic
+    geometry: `POINT(${address?.longitude} ${address?.latitude})`,
+    geometry_relation: "intersects",
+    limit: "100",
+  };
+  // https://www.digital-land.info/docs#/Search%20entity
+  const root = `https://www.digital-land.info/entity.json?`;
+  const url = root + new URLSearchParams(options).toString();
+  const { data } = useSWR(
+    () => (address?.latitude && address?.longitude ? url : null),
+    {
+      shouldRetryOnError: true,
+      errorRetryInterval: 500,
+      errorRetryCount: 1,
+    }
+  );
+
+  useEffect(() => {
+    if (address && data) {
+      if (data.count > 0) {
+        const names: string[] = [];
+        data.entities.forEach((entity: any) => {
+          names.push(entity.name);
+        });
+        setLocalAuthorityDistricts([...new Set(names)]);
+      }
+    }
+  }, [data]);
 
   if (!address && Boolean(team)) {
     return (
@@ -97,6 +131,11 @@ function Component(props: Props) {
               newPassportData["property.type"] = [address.planx_value];
             }
 
+            if (localAuthorityDistricts) {
+              newPassportData["property.localAuthorityDistrict"] =
+                localAuthorityDistricts;
+            }
+
             const passportData = {
               _address: address,
               _addressWarning: warning,
@@ -124,8 +163,8 @@ function Component(props: Props) {
             detail: address.postcode,
           },
           {
-            heading: "District",
-            detail: team?.name,
+            heading: "Local planning authority",
+            detail: localAuthorityDistricts?.join(", ") || team?.name,
           },
           {
             heading: "Building type", // XXX: does this heading still make sense for infra?
@@ -422,8 +461,8 @@ export function PropertyInformation(props: any) {
       {error && team?.name && (
         <Box role="status">
           <Typography variant="body1" color="error">
-            This address may not be in {capitalize(team.name)}, are you sure you
-            want to continue using this service?
+            This address may not be in {team.name}, are you sure you want to
+            continue using this service?
           </Typography>
         </Box>
       )}

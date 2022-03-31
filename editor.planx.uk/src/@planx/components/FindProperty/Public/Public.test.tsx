@@ -4,9 +4,11 @@ import userEvent from "@testing-library/user-event";
 import axe from "axe-helper";
 import React from "react";
 import * as ReactNavi from "react-navi";
+import * as SWR from "swr";
 
 import FindProperty from "./";
 import findAddressReturnMock from "./mocks/findAddressReturnMock";
+import localAuthorityMock from "./mocks/localAuthorityMock";
 
 const TEAM = "canterbury";
 
@@ -18,6 +20,14 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
       },
     } as any)
 );
+
+jest.spyOn(SWR, "default").mockImplementation((url: any) => {
+  return {
+    data: url()?.startsWith("https://www.digital-land")
+      ? localAuthorityMock
+      : null,
+  } as any;
+});
 
 test("renders correctly", async () => {
   const handleSubmit = jest.fn();
@@ -102,6 +112,7 @@ test("recovers previously submitted address when clicking the back button", asyn
       planx_team_name: "CANTERBURY",
     },
     "property.type": ["residential.HMO.parent"],
+    "property.localAuthorityDistrict": ["Southwark"],
   };
 
   render(
