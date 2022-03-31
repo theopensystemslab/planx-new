@@ -110,14 +110,14 @@ export const editorValidationSchema = () =>
     min: dateSchema().test({
       name: "Min less than max",
       message: "Min must be less than max",
-      test: function (date: string | undefined) {
+      test(date: string | undefined) {
         return Boolean(date && date < this.parent.max);
       },
     }),
     max: dateSchema().test({
       name: "Max greater than min",
       message: "Max must be greater than min",
-      test: function (date: string | undefined) {
+      test(date: string | undefined) {
         return Boolean(date && date > this.parent.min);
       },
     }),

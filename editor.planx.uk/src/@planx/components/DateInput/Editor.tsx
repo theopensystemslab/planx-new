@@ -4,7 +4,7 @@ import {
   editorValidationSchema,
   paddedDate,
 } from "@planx/components/DateInput/model";
-import { dateSchema, parseDateInput } from "@planx/components/DateInput/model";
+import { parseDateInput } from "@planx/components/DateInput/model";
 import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
@@ -20,7 +20,6 @@ import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
-import { object } from "yup";
 
 export type Props = EditorProps<TYPES.DateInput, DateInput>;
 
@@ -40,7 +39,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
   });
 
   return (
-    <form onSubmit={formik.handleSubmit} id="modal">
+    <form onSubmit={formik.handleSubmit} id="modal" name="modal">
       <ModalSection>
         <ModalSectionContent title="Date Input" Icon={ICONS[TYPES.DateInput]}>
           <InputRow>
