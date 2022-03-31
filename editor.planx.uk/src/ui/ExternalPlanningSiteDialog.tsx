@@ -42,15 +42,7 @@ const getTitleAndContent = (
     case DialogPurpose.MissingAddress:
       return {
         title: "The site does not have an address",
-        content: (
-          <>
-            <p>We need an address and postcode to continue.</p>
-            <p>
-              You can apply for a Lawful Development Certificate without an
-              address and postcode through Planning Portal.
-            </p>
-          </>
-        ),
+        content: <>We need an address and postcode to continue.</>,
       };
     case DialogPurpose.MissingProjectType:
       return {
@@ -102,8 +94,9 @@ export default function ExternalPlanningSiteDialog({
           <DialogContent>
             {content}
             <p>
-              In order to proceed, you will need to submit an application
-              through <strong>{settings?.externalPlanningSite?.name}</strong>.
+              You can apply for a Lawful Development Certificate without an
+              address and postcode through{" "}
+              <strong>{settings?.externalPlanningSite?.name}</strong>.
             </p>
           </DialogContent>
           <DialogActions>
