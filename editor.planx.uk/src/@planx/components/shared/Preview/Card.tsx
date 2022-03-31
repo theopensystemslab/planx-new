@@ -1,12 +1,13 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import ButtonBase from "@material-ui/core/ButtonBase";
 import Container from "@material-ui/core/Container";
 import Fade from "@material-ui/core/Fade";
-import Link from "@material-ui/core/Link";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { linkStyle } from "theme";
 import { ApplicationPath } from "types";
 
 interface Props {
@@ -22,9 +23,8 @@ const useStyles = makeStyles<Theme>((theme) => ({
     },
   },
   saveResumeButton: {
+    ...linkStyle,
     marginTop: theme.spacing(2.5),
-    display: "inline-block",
-    cursor: "pointer",
   },
 }));
 
@@ -39,12 +39,13 @@ const SaveResumeButton: React.FC = () => {
   return (
     <>
       <Typography variant="body2">or</Typography>
-      {/* TODO: Make this keyboard navigable */}
-      <Link className={classes.saveResumeButton} onClick={onClick}>
-        {isEmailVerified
-          ? "Save and return to this application later"
-          : "Resume an application you have already started"}
-      </Link>
+      <ButtonBase className={classes.saveResumeButton} onClick={onClick}>
+        <Typography variant="body2">
+          {isEmailVerified
+            ? "Save and return to this application later"
+            : "Resume an application you have already started"}
+        </Typography>
+      </ButtonBase>
     </>
   );
 };

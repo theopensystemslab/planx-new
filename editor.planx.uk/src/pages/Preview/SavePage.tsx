@@ -1,12 +1,13 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
+import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { add } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { linkStyle } from "theme";
 import Banner from "ui/Banner";
 
 const useStyles = makeStyles((theme) => ({
@@ -15,9 +16,8 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.contrastText,
   },
   linkButton: {
+    ...linkStyle,
     marginTop: theme.spacing(2.5),
-    display: "inline-block",
-    cursor: "pointer",
   },
 }));
 
@@ -60,10 +60,12 @@ const SavePage: React.FC = () => {
           Close Tab
         </Button>
         <Typography variant="body2">or</Typography>
-        {/* TODO: Make this keyboard navigable */}
-        <Link className={classes.linkButton} onClick={() => location.reload()}>
-          Start a new application
-        </Link>
+        <ButtonBase
+          className={classes.linkButton}
+          onClick={() => location.reload()}
+        >
+          <Typography variant="body2">Start a new application</Typography>
+        </ButtonBase>
       </Card>
     </>
   );
