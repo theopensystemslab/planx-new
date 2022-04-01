@@ -31,6 +31,7 @@ export const ConfirmEmail: React.FC<{
     },
     onSubmit: (values) => handleSubmit(values.confirmEmail),
     validateOnChange: false,
+    validateOnBlur: false,
     validationSchema: confirmEmailSchema,
   });
 

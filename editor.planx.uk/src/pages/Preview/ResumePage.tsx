@@ -34,6 +34,7 @@ const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
     },
     onSubmit: (values) => setEmail(values.email),
     validateOnChange: false,
+    validateOnBlur: false,
     validationSchema: emailSchema,
   });
 
