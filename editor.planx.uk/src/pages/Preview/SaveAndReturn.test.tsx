@@ -25,7 +25,7 @@ describe("Save and Return component", () => {
   });
 
   it("displays children if an email address is already captured", () => {
-    act(() => setState({ applicantEmail: "test@test.com" }));
+    act(() => setState({ saveToEmail: "test@test.com" }));
     const children = <Button>Testing 123</Button>;
     render(<SaveAndReturn children={children}></SaveAndReturn>);
 
@@ -40,7 +40,7 @@ describe("Save and Return component", () => {
     const children = <Button>Testing 123</Button>;
     render(<SaveAndReturn children={children}></SaveAndReturn>);
 
-    expect(getState().applicantEmail).toBeUndefined();
+    expect(getState().saveToEmail).toBeUndefined();
 
     userEvent.type(screen.getByLabelText("Email Address"), "test@test.com");
     userEvent.type(
@@ -50,7 +50,7 @@ describe("Save and Return component", () => {
     userEvent.click(screen.getByTestId("continue-button"));
 
     await waitFor(() => {
-      expect(getState().applicantEmail).toEqual("test@test.com");
+      expect(getState().saveToEmail).toEqual("test@test.com");
     });
     await waitFor(() => {
       expect(screen.queryByText("Testing 123")).toBeInTheDocument();

@@ -30,18 +30,18 @@ const useStyles = makeStyles<Theme>((theme) => ({
 
 const SaveResumeButton: React.FC = () => {
   const classes = useStyles();
-  const isEmailVerified = Boolean(useStore((state) => state.applicantEmail));
+  const isEmailSaved = Boolean(useStore((state) => state.saveToEmail));
   const onClick = () =>
     useStore
       .getState()
-      .setPath(isEmailVerified ? ApplicationPath.Save : ApplicationPath.Resume);
+      .setPath(isEmailSaved ? ApplicationPath.Save : ApplicationPath.Resume);
 
   return (
     <>
       <Typography variant="body2">or</Typography>
       <ButtonBase className={classes.saveResumeButton} onClick={onClick}>
         <Typography variant="body2">
-          {isEmailVerified
+          {isEmailSaved
             ? "Save and return to this application later"
             : "Resume an application you have already started"}
         </Typography>

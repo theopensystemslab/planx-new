@@ -26,7 +26,7 @@ const SavePage: React.FC = () => {
   const theme = useTheme();
   // Assume rolling 28 days - just a placeholder value
   const expiryDate = add(new Date(), { days: 28 }).toDateString();
-  const applicantEmail = useStore.getState().applicantEmail;
+  const saveToEmail = useStore.getState().saveToEmail;
 
   return (
     <>
@@ -40,7 +40,7 @@ const SavePage: React.FC = () => {
         >
           <Box mt={4}>
             <Typography>
-              We have sent a link to {applicantEmail}. Use that link to continue
+              We have sent a link to {saveToEmail}. Use that link to continue
               your application.
             </Typography>
           </Box>

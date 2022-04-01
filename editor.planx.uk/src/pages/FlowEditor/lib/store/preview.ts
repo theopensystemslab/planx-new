@@ -68,8 +68,8 @@ export interface PreviewStore extends Store.Store {
   _nodesPendingEdit: string[];
   path: ApplicationPath;
   setPath: (path: ApplicationPath) => void;
-  applicantEmail?: string;
-  setApplicantEmail: (applicantEmail: string) => void;
+  saveToEmail?: string;
+  setSaveToEmail: (notifyEmail: string) => void;
 }
 
 export const previewStore = (
@@ -601,9 +601,9 @@ export const previewStore = (
 
   setPath: (path) => set({ path }),
 
-  applicantEmail: undefined,
+  saveToEmail: undefined,
 
-  setApplicantEmail: (applicantEmail) => set({ applicantEmail }),
+  setSaveToEmail: (saveToEmail) => set({ saveToEmail }),
 });
 
 const knownNots = (

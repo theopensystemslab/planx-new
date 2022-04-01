@@ -93,9 +93,9 @@ export const ConfirmEmail: React.FC<{
 const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const isEmailCaptured = Boolean(useStore((state) => state.applicantEmail));
+  const isEmailCaptured = Boolean(useStore((state) => state.saveToEmail));
   const handleSubmit = (email: string) =>
-    useStore.getState().setApplicantEmail(email);
+    useStore.getState().setSaveToEmail(email);
 
   return (
     <>

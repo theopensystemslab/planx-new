@@ -26,7 +26,7 @@ describe("Card component", () => {
     render(<Card children={children}></Card>);
 
     expect(screen.queryByText(resumeButtonText)).toBeInTheDocument();
-    act(() => setState({ applicantEmail: "test@test.com" }));
+    act(() => setState({ saveToEmail: "test@test.com" }));
     expect(screen.queryByText(saveButtonText)).toBeInTheDocument();
   });
 
@@ -50,7 +50,7 @@ describe("Card component", () => {
 
   it("updates state to navigate to the 'Save' page if the 'Save' button is clicked", () => {
     act(() => setState({ path: ApplicationPath.SaveAndReturn }));
-    act(() => setState({ applicantEmail: "test@test.com" }));
+    act(() => setState({ saveToEmail: "test@test.com" }));
     const children = <Button>Testing 123</Button>;
     render(<Card children={children}></Card>);
 
