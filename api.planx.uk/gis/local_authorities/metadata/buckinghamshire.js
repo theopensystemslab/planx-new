@@ -25,13 +25,13 @@ const planningConstraints = {
       description: data.DESCRIPTIO,
     }),
     records: { // planx value to "DEV_TYPE" lookup, unless otherwise noted
-      "article4.buckinghamshire.twyfordgrange": 309, // INT_ID
-      "article4.buckinghamshire.ivylane": 318, // INT_ID
-      "article4.buckinghamshire.ruralaylesbury": 320, // INT_ID
-      "article4.buckinghamshire.piddingtonroad": 186731, // INT_ID
-      "article4.buckinghamshire.rockylane": 285884, // INT_ID
-      "article4.buckinghamshire.bridgestreet": 287247, // INT_ID
-      "article4.buckinghamshire.winslowroad": 390975, // INT_ID
+      "article4.buckinghamshire.twyfordgrange": "309", // INT_ID
+      "article4.buckinghamshire.ivylane": "318", // INT_ID
+      "article4.buckinghamshire.ruralaylesbury": "320", // INT_ID
+      "article4.buckinghamshire.piddingtonroad": "186731", // INT_ID
+      "article4.buckinghamshire.rockylane": "285884", // INT_ID
+      "article4.buckinghamshire.bridgestreet": "287247", // INT_ID
+      "article4.buckinghamshire.winslowroad": "390975", // INT_ID
       "article4.buckinghamshire.amershamroad": "Land to north-west of Amersham Road, Beaconsfield - the erection, construction, maintenance, improvement or alteration of a gate, fence, wall or other means of enclosure",
       "article4.buckinghamshire.amershamroadeast": "Land East of Amersham Road including OS parcel 0006. Means of enclosure.",
       "article4.buckinghamshire.asheridgeroad": "Land Surrounding Asheridge Road Agricultural buildings and mineral working.",

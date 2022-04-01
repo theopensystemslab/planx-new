@@ -17,21 +17,25 @@ const planningConstraints = {
     key: "article4",
     source: lambethDomain,
     id: "LambethArticle4",
-    fields: ["OBJECTID", "DESCRIPTION"],
+    fields: ["OBJECTID", "NAME", "DESCRIPTION"],
     neg: "is not subject to any Article 4 directions",
     pos: (data) => ({
       text: "is subject to an Article 4 direction(s)",
       description: data.DESCRIPTION,
     }),
-    records: { // // planx value to conservation area "CA_REF_NO" lookup
-      "article4.lambeth.streathamLodge": "CA62",
-      "article4.lambeth.stockwell": "CA05",
-      "article4.lambeth.leigham": "CA31",
-      "article4.lambeth.stMarks": "CA11",
-      "article4.lambeth.parkHall": "CA19",
-      "article4.lambeth.lansdowne": "CA03",
-      "article4.lambeth.albert": "CA04",
-      "article4.lambeth.hydeFarm": "CA48",
+    records: { // planx value to "NAME" lookup (previously conservation area "CA_REF_NO" lookup)
+      "article4.lambeth.streathamLodge": "STREATHAM LODGE ESTATE", // CA62
+      "article4.lambeth.stockwell": "STOCKWELL PARK", // CA05
+      "article4.lambeth.leigham": "LEIGHAM COURT ESTATE", // CA31
+      "article4.lambeth.stMarks": "ST MARKS", // CA11
+      "article4.lambeth.stMarks.hanoverGardens": "ST MARKS/HANOVER GARDENS", // CA11
+      "article4.lambeth.parkHall": "PARK HALL ROAD", // CA19
+      "article4.lambeth.lansdowne": "LANSDOWNE GARDENS", // CA03
+      "article4.lambeth.albert": "ALBERT SQUARE", // CA04
+      "article4.lambeth.hydeFarm": "HYDE FARM", // CA48
+      "article4.lambeth.kiba": "KIBA", // ARTICLE_4 match on B1toC3 dataset
+      "article4.lambeth.kiba.clapham": "Clapham", // ARTICLE_4 match on B1toC3 dataset
+      "article4.lambeth.kiba.brixton": "Brixton", // ARTICLE_4 match on B1toC3 dataset
     },
   },
   "article4.lambeth.kiba": {

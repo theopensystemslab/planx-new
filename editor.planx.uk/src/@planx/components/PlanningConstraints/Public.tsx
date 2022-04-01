@@ -50,7 +50,8 @@ function Component(props: Props) {
   const digitalLandOrganisations: string[] = [
     "opensystemslab",
     "buckinghamshire",
-    // "lambeth",
+    // "canterbury",
+    "lambeth",
     // "southwark",
   ];
 
@@ -82,7 +83,7 @@ function Component(props: Props) {
     }
   );
 
-  // XXX handle both Digital Land response and custom GIS hookup responses
+  // XXX handle both/either Digital Land response and custom GIS hookup responses
   const constraints: Record<string, any> | undefined =
     data?.constraints || data;
 

@@ -93,11 +93,14 @@ async function go(localAuthority, geom) {
       if (a4s && formattedResult["article4"].value) {
         formattedResult["article4"].data.forEach((entity) => {
           (Object.keys(a4s)).forEach((key) => {
-            // Digital Land's entity.name maps to Buck's DEV_TYPE (which can have line breaks), Lambeth's ..., Southwark's ...
+            // Digital Land's entity.name maps to Buck's DEV_TYPE (with line breaks), Lambeth's NAME, Southwark's ...
             if (entity.name.replace(/\r?\n|\r/g, " ") === a4s[key] || formattedResult[key]?.value) {
               formattedResult[key] = { value: true }
-            // DL's entity.json.notes maps to Buck's DESCRIPTIO, Lambeth's ..., Southwark's ...
-            } else if (entity.json.notes.startsWith(a4s[key]) || formattedResult[key]?.value) {
+            // DL's entity.json.description maps to Buck's DESCRIPTIO (starts with), Lambeth's DESCRIPTION, Southwark's ...
+            } else if (entity.json.description === a4s[key] || entity.json.description?.startsWith(a4s[key]) || formattedResult[key]?.value) {
+              formattedResult[key] = { value: true }
+            // DL's entity.json.notes maps to Buck's INT_ID, Lambeth's ARTICLE_4, Southwark's ...
+            } else if (entity.json.notes === a4s[key] || formattedResult[key]?.value) {
               formattedResult[key] = { value: true }
             } else {
               formattedResult[key] = { value: false }
