@@ -17,10 +17,6 @@ const confirmEmailSchema = object({
     .oneOf([ref("email"), null], "Emails must match"),
 });
 
-/**
- *
- * @returns
- */
 export const ConfirmEmail: React.FC<{
   handleSubmit: (email: string) => void;
 }> = ({ handleSubmit }) => {
@@ -85,11 +81,6 @@ export const ConfirmEmail: React.FC<{
   );
 };
 
-/**
- *
- * @param param0
- * @returns
- */
 const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
