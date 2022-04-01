@@ -242,7 +242,7 @@ function ConstraintsList({ data, refreshConstraints }: any) {
       ) : (
         <div className={classes.errorSummary} role="status">
           <Typography variant="h5" component="h2" gutterBottom>
-            Failed to fetch data
+            No information available
           </Typography>
           {error &&
           typeof error === "string" &&
@@ -251,12 +251,12 @@ function ConstraintsList({ data, refreshConstraints }: any) {
           ) : (
             <>
               <Typography variant="body2">
-                Click the link below to try to fetch again. If you continue
-                without fetching data, you may be asked to answer questions
-                about planning constraints affecting this property later in the
-                application.
+                We couldn't find any information about your property. Click
+                search again to try again. You can continue your application
+                without this information but it might mean we ask additional
+                questions about your project.
               </Typography>
-              <button onClick={refreshConstraints}>Try again</button>
+              <button onClick={refreshConstraints}>Search again</button>
             </>
           )}
         </div>
