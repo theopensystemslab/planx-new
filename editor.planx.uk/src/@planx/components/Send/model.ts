@@ -1,12 +1,23 @@
-import { parseMoreInformation } from "../shared";
+import { MoreInformation, parseMoreInformation } from "../shared";
 
-export interface Send {}
+export enum Destination {
+  BOPS = "bops",
+  Uniform = "uniform",
+}
+
+export interface Send extends MoreInformation {
+  title: string;
+  destination: Destination;
+}
+
+export const DEFAULT_TITLE = "Send to BOPs";
+export const DEFAULT_DESTINATION = Destination.BOPS;
 
 export const parseContent = (data: Record<string, any> | undefined): Send => ({
   ...parseMoreInformation(data),
+  title: data?.title || DEFAULT_TITLE,
+  destination: data?.destination || DEFAULT_DESTINATION,
 });
-
-export const BOPS_URL = `${process.env.REACT_APP_API_URL}/bops`;
 
 export const USER_ROLES = ["applicant", "agent", "proxy"] as const;
 

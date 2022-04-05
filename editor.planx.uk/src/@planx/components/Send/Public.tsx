@@ -8,7 +8,7 @@ import Card from "../shared/Preview/Card";
 import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
 import { PublicProps } from "../ui";
 import { getParams } from "./bops";
-import { BOPS_URL, Send } from "./model";
+import { Send } from "./model";
 
 export type Props = PublicProps<Send>;
 
@@ -21,10 +21,11 @@ const SendComponent: React.FC<Props> = (props) => {
   ]);
 
   const teamSlug = useTeamSlug();
+  const destinationUrl = `${process.env.REACT_APP_API_URL}/${props.destination}/${teamSlug}`;
 
   const request = useAsync(async () =>
     axios.post(
-      useStagingUrlIfTestApplication(passport)(`${BOPS_URL}/${teamSlug}`),
+      useStagingUrlIfTestApplication(passport)(destinationUrl),
       getParams(breadcrumbs, flow, passport, sessionId)
     )
   );
@@ -43,7 +44,7 @@ const SendComponent: React.FC<Props> = (props) => {
   }, [request.loading, request.error, request.value]);
 
   if (request.loading) {
-    return <Card>Sending data…</Card>;
+    return <Card>Sending data to {props.destination.toUpperCase()}…</Card>;
   } else if (request.error) {
     // Throw error so that they're caught by our error boundaries and our error logging tool
     throw request.error;
