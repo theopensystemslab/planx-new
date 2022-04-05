@@ -20,7 +20,15 @@ const SendComponent: React.FC<Props> = (props) => {
     state.sessionId,
   ]);
 
-  const teamSlug = useTeamSlug();
+  let teamSlug = useTeamSlug();
+  // Bucks has 4 legacy instances of Uniform, set teamSlug to pre-merger council name
+  if (props.destination === "uniform" && teamSlug === "buckinghamshire") {
+    teamSlug = passport.data?.["property.localAuthorityDistrict"]
+      ?.filter((name: string) => name !== "Buckinghamshire")[0]
+      ?.toLowerCase()
+      .replace(" ", "-");
+  }
+
   const destinationUrl = `${process.env.REACT_APP_API_URL}/${props.destination}/${teamSlug}`;
 
   const request = useAsync(async () =>
@@ -32,6 +40,7 @@ const SendComponent: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (
+      props.destination === "bops" &&
       !request.loading &&
       !request.error &&
       request.value &&

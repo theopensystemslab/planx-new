@@ -318,6 +318,12 @@ app.post("/bops/:localAuthority", (req, res) => {
   })(req, res);
 });
 
+app.post("/uniform/:localAuthority", (req, res) => {
+  res.send({
+    message: `TBD prepping application data for Uniform (${req.params.localAuthority})`
+  });
+});
+
 // used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
 // returns the url to make a gov uk payment
 app.post("/pay/:localAuthority", (req, res) => {
