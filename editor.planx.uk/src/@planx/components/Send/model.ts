@@ -132,3 +132,111 @@ interface File {
   tags?: Array<FileTag>;
   applicant_description?: string;
 }
+
+// Uniform LDC XML
+// Based on "existing" & "proposed" sample .zips attached here https://trello.com/c/lVOPqsoY/1450-send-data-to-uniform
+export interface DataModel {
+  siteAddress: {
+    uprn: string;
+    easting: string;
+    northing: string;
+    description: string;
+    displayStreet1: string;
+    displayStreet2: string;
+    town: string;
+    postcode: string;
+    county: string;
+    addressLineSingle: string;
+  };
+  formType: "4114" | "4140"; // existing = 4114; proposed = 4140 ??
+  Applicant: {
+    Forename: string;
+    Surname: string;
+    Title: string;
+    CompanyName: string;
+    Address1: string;
+    Address2: string;
+    Postcode: string;
+    Town: string;
+    County: string;
+    Country: string;
+    TelNo: string;
+    Email: string;
+  };
+  App: { Areyouanagent: "Yes" | "No" }; // user.role === "agent" ? "Yes" : "No"
+  Agent?: {
+    Forename: string;
+    Surname: string;
+    Title: string;
+    CompanyName: string;
+    Address1: string;
+    Address2: string;
+    Postcode: string;
+    Town: string;
+    County: string;
+    Country: string;
+    TelNo: string;
+    Email: string;
+  };
+  ApplicationData: {
+    CertificateLawfulness: CertificateLawfulness;
+    Advice: { HaveSoughtAdvice: "Yes" | "No" };
+    SiteVisit: { SeeSite: "Yes" | "No" };
+  };
+  DeclarationOfInterest: {
+    IsRelated: "Yes" | "No";
+    RelationDetails: string;
+  };
+  Declaration: {
+    DeclarationMade: { string: string };
+    DeclarationDate: string;
+  };
+  emailconfirmationTelephone: string;
+  emailconfirmationEmail: string;
+  emailconfirmationSurname: string;
+  emailconfirmationForename: string;
+}
+
+export interface CertificateLawfulness {
+  ExistingUseApplication?: ExistingUseApplication;
+  ProposedUseApplication?: ProposedUseApplication;
+}
+
+export interface ExistingUseApplication {
+  DescriptionCEU: string;
+  GroundsCEU: {
+    ApplicationSiteRefList: {
+      ApplicationSiteRef: {
+        ReferenceDate: string;
+        Reference: string;
+        ConditionNumber: string;
+      };
+    };
+    CertificateLawfulnessReason: string;
+  };
+  InformationCEU: {
+    IsExistingUseInterruption: string;
+    UseBegunDate: string;
+    InterruptionDetails: string;
+    IsExistingUseChange: string;
+    ExistingUseChangeDetails: string;
+    IsResidentialUseChange: string;
+  };
+}
+
+export interface ProposedUseApplication {
+  DescriptionCPU: {
+    IsProposedOperationBuilding: string;
+    OperationsDescription: string;
+    IsUseChange: string;
+    ProposedUseDescription: string;
+    ExistingUseDescription: string;
+    IsUseStarted: string;
+  };
+  GroundsCPU: {
+    UseLawfulnessReason: string;
+    SupportingInformation: { Reference: string };
+    ProposedUseStatus: string;
+    LawfulDevCertificateReason: string;
+  };
+}

@@ -1,4 +1,5 @@
 import axios from "axios";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { useAsync } from "react-use";
@@ -26,7 +27,7 @@ const SendComponent: React.FC<Props> = (props) => {
     teamSlug = passport.data?.["property.localAuthorityDistrict"]
       ?.filter((name: string) => name !== "Buckinghamshire")[0]
       ?.toLowerCase()
-      .replace(" ", "-");
+      ?.replace(" ", "-");
   }
 
   const destinationUrl = `${process.env.REACT_APP_API_URL}/${props.destination}/${teamSlug}`;
@@ -53,12 +54,26 @@ const SendComponent: React.FC<Props> = (props) => {
   }, [request.loading, request.error, request.value]);
 
   if (request.loading) {
-    return <Card>Sending data to {props.destination.toUpperCase()}…</Card>;
+    return (
+      <Card>
+        <DelayedLoadingIndicator
+          text={`Sending data to ${props.destination.toUpperCase()}`}
+          msDelayBeforeVisible={0}
+        />
+      </Card>
+    );
   } else if (request.error) {
     // Throw error so that they're caught by our error boundaries and our error logging tool
     throw request.error;
   } else {
-    return <Card>Finalising…</Card>;
+    return (
+      <Card>
+        <DelayedLoadingIndicator
+          text="Finalising..."
+          msDelayBeforeVisible={0}
+        />
+      </Card>
+    );
   }
 };
 
