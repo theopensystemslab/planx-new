@@ -24,7 +24,7 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
     ({
       url: {
         href: "test",
-        pathname: "/opensystemslab/test-flow/preview?analytics=false",
+        pathname: "/opensystemslab/test-flow/preview",
       },
       data: {
         username: "Test User",
