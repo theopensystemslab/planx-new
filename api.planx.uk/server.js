@@ -30,6 +30,7 @@ const { sendToUniform, downloadUniformZip } = require("./send");
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
 const airbrake = require("./airbrake");
+const { saveApplication } = require("./saveAndReturn/saveApplication");
 
 const router = express.Router();
 
@@ -575,6 +576,9 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
   if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
   res.send();
 });
+
+// assert(process.env.GOVUK_NOTIFY_API_KEY);
+app.post("/save-application", saveApplication);
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()

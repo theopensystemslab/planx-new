@@ -7,6 +7,7 @@ import {
   compose,
   map,
   mount,
+  NaviRequest,
   NotFoundError,
   route,
   withData,
@@ -22,6 +23,17 @@ import { View } from "react-navi";
 import { ApplicationPath, Flow, GlobalSettings, Maybe } from "types";
 
 import { isSaveReturnFlow } from "./utils";
+
+const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
+  let path = isSaveReturnFlow(flowData)
+    ? ApplicationPath.SaveAndReturn
+    : ApplicationPath.SingleSession;
+
+  if (req.params.sessionId && ApplicationPath.SaveAndReturn) {
+    path = ApplicationPath.Resume;
+  }
+  useStore.getState().setPath(path);
+};
 
 const routes = compose(
   withData((req) => ({
@@ -74,10 +86,7 @@ const routes = compose(
 
     const flowData = publishedFlow ? publishedFlow : await dataMerged(flow.id);
 
-    const path = isSaveReturnFlow(flowData)
-      ? ApplicationPath.SaveAndReturn
-      : ApplicationPath.SingleSession;
-    useStore.getState().setPath(path);
+    setPath(flowData, req);
 
     // XXX: necessary as long as not every flow is published; aim to remove dataMergedHotfix.ts in future
     // load pre-flattened published flow if exists, else load & flatten flow

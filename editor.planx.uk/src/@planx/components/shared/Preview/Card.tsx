@@ -5,6 +5,8 @@ import Container from "@material-ui/core/Container";
 import Fade from "@material-ui/core/Fade";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import axios from "axios";
+import { getCookie } from "lib/cookie";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { linkStyle } from "theme";
@@ -28,20 +30,46 @@ const useStyles = makeStyles<Theme>((theme) => ({
   },
 }));
 
+const sendNotifyEmail = async (saveToEmail: string | undefined) => {
+  if (!saveToEmail) console.error("Email is required to save");
+  const url = `${process.env.REACT_APP_API_URL}/save-application`;
+  const flowId = useStore.getState().id;
+  // TODO: Type for this
+  const data = { email: saveToEmail, flowId: flowId };
+  const token = getCookie("jwt");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  return await axios.post(url, data, config);
+};
+
 const SaveResumeButton: React.FC = () => {
   const classes = useStyles();
-  const isEmailSaved = Boolean(useStore((state) => state.saveToEmail));
-  const onClick = () =>
-    useStore
-      .getState()
-      .setPath(isEmailSaved ? ApplicationPath.Save : ApplicationPath.Resume);
+  const saveToEmail = useStore((state) => state.saveToEmail);
+  const onClick = () => (Boolean(saveToEmail) ? save() : resume());
+
+  const save = async () => {
+    // TODO: Save session to db
+
+    try {
+      await sendNotifyEmail(saveToEmail);
+      useStore.getState().setPath(ApplicationPath.Save);
+    } catch (error) {
+      console.error(error);
+      // TODO: Handle error visually?
+    }
+  };
+
+  const resume = () => useStore.getState().setPath(ApplicationPath.Resume);
 
   return (
     <>
       <Typography variant="body2">or</Typography>
       <ButtonBase className={classes.saveResumeButton} onClick={onClick}>
         <Typography variant="body2">
-          {isEmailSaved
+          {Boolean(saveToEmail)
             ? "Save and return to this application later"
             : "Resume an application you have already started"}
         </Typography>
