@@ -24,6 +24,7 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
     ({
       url: {
         href: "test",
+        pathname: "/opensystemslab/test-flow/preview?analytics=false",
       },
       data: {
         username: "Test User",
@@ -81,6 +82,12 @@ describe("Header Component - Public Routes", () => {
       screen.queryByAltText(`${mockTeam2.name} Logo`)
     ).not.toBeInTheDocument();
     expect(screen.getByText("Plan✕")).toBeInTheDocument();
+  });
+
+  it("parses the url pathname and displays a service title", () => {
+    render(<Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>);
+    expect(screen.getByTestId("service-title")).toBeInTheDocument;
+    expect(screen.getByText("test flow")).toBeInTheDocument;
   });
 
   it("should not have any accessibility violations", async () => {
