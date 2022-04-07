@@ -257,6 +257,12 @@
           schema: public
           name: session_events
   computed_fields:
+  - name: replay
+    definition:
+      function:
+        schema: public
+        name: compile_session_replay
+    comment: ""
   - name: session_events_compiled
     definition:
       function:
@@ -264,12 +270,6 @@
         name: compile_session_events
     comment: Filters out events with duplicated parent_node_id (e.g. clicking "back"
       and changing the answer)
-  - name: replay
-    definition:
-      function:
-        schema: public
-        name: compile_session_replay
-    comment: ""
   insert_permissions:
   - role: public
     permission:
