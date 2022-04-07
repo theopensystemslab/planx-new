@@ -8,6 +8,7 @@ import Paper from "@material-ui/core/Paper";
 import Popover from "@material-ui/core/Popover";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 import { Route } from "navi";
@@ -99,6 +100,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  serviceTitle: {
+    textTransform: "capitalize",
+    fontSize: "1.25em",
+    fontWeight: 700,
+    paddingLeft: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
+  },
 }));
 
 /**
@@ -181,6 +189,11 @@ const PublicToolbar: React.FC<{
 }> = ({ team, handleRestart, route }) => {
   const classes = useStyles();
   const { navigate } = useNavigation();
+
+  // Center the service title on desktop layouts, or drop it to second line on mobile
+  // ref https://design-system.service.gov.uk/styles/page-template/
+  const showCenteredServiceTitle = useMediaQuery("(min-width:600px)");
+
   return (
     <>
       <a tabIndex={0} className={classes.skipLink} href="#main-content">
@@ -192,6 +205,7 @@ const PublicToolbar: React.FC<{
         ) : (
           <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
         )}
+        {showCenteredServiceTitle && <ServiceTitle route={route} />}
         <IconButton
           color="secondary"
           onClick={handleRestart}
@@ -200,9 +214,23 @@ const PublicToolbar: React.FC<{
           <Reset color="secondary" />
         </IconButton>
       </Toolbar>
+      {!showCenteredServiceTitle && <ServiceTitle route={route} />}
       <AnalyticsDisabledBanner />
       <PhaseBanner />
     </>
+  );
+};
+
+const ServiceTitle: React.FC<{
+  route: Route;
+}> = ({ route }) => {
+  const classes = useStyles();
+  const flowName = route.url?.pathname?.split("/")[2]?.replaceAll("-", " ");
+
+  return (
+    <span data-testid="service-title" className={classes.serviceTitle}>
+      {flowName}
+    </span>
   );
 };
 
