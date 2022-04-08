@@ -4,9 +4,14 @@ import { useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import axios, { AxiosError } from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
+import { getCookie } from "lib/cookie";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
+import { useCurrentRoute } from "react-navi";
+import { ApplicationPath } from "types";
 import Banner from "ui/Banner";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
@@ -15,7 +20,7 @@ import { object, string } from "yup";
 
 enum Status {
   EmailRequired,
-  Sending,
+  Validating,
   Success,
   Invalid,
   Error,
@@ -129,7 +134,7 @@ const EmailInvalid: React.FC<{ email: string }> = ({ email }) => {
       <Card>
         <Typography variant="body2">
           We weren't able to find any open applications matching the provided
-          email address. Please click below to begin a new application.
+          details. Please click below to begin a new application.
         </Typography>
         <Button
           variant="contained"
@@ -183,35 +188,77 @@ const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
   );
 };
 
+/**
+ * Explain two "paths"
+ */
 const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
   const [email, setEmail] = useState<string>("");
+  const sessionId = useCurrentRoute().url.query.sessionId;
 
   useEffect(() => {
-    if (email) handleSubmit(email);
+    if (email) handleSubmit();
   }, [email]);
 
-  // Temp placeholder function for dev testing
-  const handleSubmit = (email: string) => {
-    setPageStatus(Status.Sending);
-    setTimeout(() => {
-      console.log(`Sent email to ${email}`);
-      // setPageStatus(Status.Error);
+  /**
+   * Send magic link to user, based on submitted email
+   * Sets page status based on validation of request by API
+   */
+  const sendResumeEmail = async () => {
+    const url = `${process.env.REACT_APP_API_URL}/resume-application`;
+    const flowId = useStore.getState().id;
+    // TODO: Type for this
+    const data = { email: email, flowId: flowId };
+    const token = getCookie("jwt");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      await axios.post(url, data, config);
       setPageStatus(Status.Success);
-      // setPageStatus(Status.Invalid);
+    } catch (error) {
+      // Handle API specific errors
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        setPageStatus(Status.Invalid);
+      }
+      // Handle all other errors
+      setPageStatus(Status.Error);
+    }
+  };
+
+  /**
+   * Temp placeholder function for dev testing
+   * Query DB to validate that sessionID and email match
+   */
+  const validateSessionId = () => {
+    setTimeout(() => {
+      useStore.getState().setSaveToEmail(email);
+      useStore.getState().setPath(ApplicationPath.SaveAndReturn);
+      // TODO: Reconciliation...!
     }, 500);
+  };
+
+  /**
+   * Handle both submit "paths" that leads a user to this page
+   */
+  const handleSubmit = () => {
+    setPageStatus(Status.Validating);
+    sessionId ? validateSessionId() : sendResumeEmail();
   };
 
   return {
     [Status.EmailRequired]: <EmailRequired setEmail={setEmail} />,
-    [Status.Sending]: (
-      <DelayedLoadingIndicator text={"Sending..."} msDelayBeforeVisible={0} />
+    [Status.Validating]: (
+      <DelayedLoadingIndicator
+        text={sessionId ? "Validating..." : "Sending..."}
+        msDelayBeforeVisible={0}
+      />
     ),
     [Status.Success]: <EmailSuccess email={email} />,
     [Status.Invalid]: <EmailInvalid email={email} />,
-    [Status.Error]: (
-      <EmailError retry={() => handleSubmit(email)} email={email} />
-    ),
+    [Status.Error]: <EmailError retry={() => handleSubmit()} email={email} />,
   }[pageStatus];
 };
 

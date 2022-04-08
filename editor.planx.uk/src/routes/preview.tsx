@@ -7,7 +7,6 @@ import {
   compose,
   map,
   mount,
-  NaviRequest,
   NotFoundError,
   route,
   withData,
@@ -20,20 +19,9 @@ import Layout from "pages/Preview/PreviewLayout";
 import Questions from "pages/Preview/Questions";
 import React from "react";
 import { View } from "react-navi";
-import { ApplicationPath, Flow, GlobalSettings, Maybe } from "types";
+import { Flow, GlobalSettings, Maybe } from "types";
 
-import { isSaveReturnFlow } from "./utils";
-
-const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
-  let path = isSaveReturnFlow(flowData)
-    ? ApplicationPath.SaveAndReturn
-    : ApplicationPath.SingleSession;
-
-  if (req.params.sessionId && ApplicationPath.SaveAndReturn) {
-    path = ApplicationPath.Resume;
-  }
-  useStore.getState().setPath(path);
-};
+import { setPath } from "./utils";
 
 const routes = compose(
   withData((req) => ({

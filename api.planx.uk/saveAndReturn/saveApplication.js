@@ -1,42 +1,48 @@
-const { gql } = require("graphql-tag");
-const { getNotifyClient, getGraphQLClient } = require("./utils");
+const {
+  getGraphQLClient,
+  sendEmail,
+  convertSlugToName,
+  getResumeLink,
+} = require("./utils");
 const { add } = require("date-fns");
 
 const saveApplication = async (req, res, next) => {
-  const { emailAddress, flowSlug, teamSlug, teamPersonalisation, session } =
-    await validateRequest(req);
-  const templateId = process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID;
-  const config = {
-    personalisation: getPersonalisation(
-      session,
-      flowSlug,
-      teamSlug,
-      teamPersonalisation
-    ),
-    reference: null,
-    // This value is required to go live, but is not currently set up
-    // emailReplyToId: team.emailReplyToId,
-  };
-  sendEmail(templateId, emailAddress, config, res);
+  try {
+    const { emailAddress, flowSlug, teamSlug, teamPersonalisation, session } =
+      await validateRequest(req);
+    const templateId = process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID;
+    const config = {
+      personalisation: getPersonalisation(
+        session,
+        flowSlug,
+        teamSlug,
+        teamPersonalisation
+      ),
+      reference: null,
+      // This value is required to go live, but is not currently set up
+      // emailReplyToId: team.emailReplyToId,
+    };
+    sendEmail(templateId, emailAddress, config, res);
+  } catch (error) {
+    next(error);
+  }
 };
 
 const validateRequest = async (req) => {
   const client = getGraphQLClient();
-  // TODO: Validate that flowId, sessionId, and email are linked in a lowcal_storage row
-  const response = await client.request(
-    gql`
-      query ($flowId: uuid!) {
-        flows_by_pk(id: $flowId) {
+  const query = `
+    query ($flowId: uuid!) {
+      flows_by_pk(id: $flowId) {
+        slug
+        team {
           slug
-          team {
-            slug
-            notifyPersonalisation
-          }
+          notifyPersonalisation
         }
       }
-    `,
-    { flowId: req.body.flowId }
-  );
+    }
+  `;
+  // TODO: Validate that flowId, sessionId, and email are linked in a lowcal_storage row
+  const response = await client.request(query, { flowId: req.body.flowId });
 
   // Catch errors here
 
@@ -50,7 +56,7 @@ const validateRequest = async (req) => {
 };
 
 const getSessionDetails = () => {
-  const session = {};
+  const session = undefined;
 
   // query MyQuery {
   //   lowcal_sessions(where: {id: {_eq: "4b34974d-d559-4269-a3ad-bf41a217831f"}}) {
@@ -61,11 +67,12 @@ const getSessionDetails = () => {
 
   return {
     address:
-      session.data?.passport?.data?._address?.single_line_address ||
+      session?.data?.passport?.data?._address?.single_line_address ||
       "Address not submitted",
     projectType:
-      session.data?.passport?.data?.["property.type"]?.[0] ||
+      session?.data?.passport?.data?.["property.type"]?.[0] ||
       "Project type not submitted",
+    sessionId: 123456789,
   };
 };
 
@@ -86,38 +93,10 @@ const getPersonalisation = (
   };
 };
 
-convertSlugToName = (slug) => {
-  const capitalise = (word) => word[0].toUpperCase() + word.substring(1);
-  return slug.split("-").map(capitalise).join(" ");
-};
-
 const getApplicationExpiry = () => {
   // TODO: Get date from lowcal_session table and handle magic number
   const expiryDate = add(new Date(), { days: 28 }).toDateString();
   return expiryDate;
 };
 
-const getResumeLink = (session, teamSlug, flowSlug) => {
-  return `${process.env.EDITOR_URL_EXT}/${teamSlug}/${flowSlug}/preview&sessionId=${session.id}`;
-};
-
-const sendEmail = (templateId, emailAddress, config, res) => {
-  const notifyClient = getNotifyClient();
-  notifyClient
-    .sendEmail(templateId, emailAddress, config)
-    .then((response) =>
-      res.json({
-        debug: response.data,
-        expiryDate: config.personalisation.expiryDate,
-      })
-    )
-    .catch((err) => {
-      console.error({
-        message: err.response.data.errors,
-        status: err.response.data.status_code,
-      });
-      res.status(err.response.data.status_code).send(err.response.data);
-    });
-};
-
-module.exports = { saveApplication };
+module.exports = saveApplication;
