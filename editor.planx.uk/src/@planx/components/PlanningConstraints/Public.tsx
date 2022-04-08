@@ -50,9 +50,9 @@ function Component(props: Props) {
   const digitalLandOrganisations: string[] = [
     "opensystemslab",
     "buckinghamshire",
-    // "canterbury",
+    "canterbury",
     "lambeth",
-    // "southwark",
+    "southwark",
   ];
 
   const digitalLandParams: Record<string, string> = {

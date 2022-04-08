@@ -9,22 +9,13 @@ https://environment.data.gov.uk/arcgis/rest/services
 https://inspire.wycombe.gov.uk/ (legacy)
 */
 
-const bucksDomain = "https://maps.buckscc.gov.uk";
-const environmentDomain = "https://environment.data.gov.uk";
-
 const planningConstraints = {
   article4: {
-    key: "article4",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 5,
-    fields: ["OBJECTID", "INT_ID", "DEV_TYPE", "DESCRIPTIO", "DISTRICT"],
-    neg: "is not subject to any Article 4 restrictions",
-    pos: (data) => ({
-      text: "is subject to Article 4 restriction(s)",
-      description: data.DESCRIPTIO,
-    }),
-    records: { // planx value to "DEV_TYPE" lookup, unless otherwise noted
+    // Planx granular values link to Buck's source data in the following ways:
+    //   * exact match of Digital Land entity.name after removing line break/return characters (aka "DEV_TYPE" in source data)
+    //   * exact match of DL entity.json.notes ("INT_ID")
+    //   * "starts with" DL entity.json.description ("DESCRIPTIO")
+    records: {
       "article4.buckinghamshire.twyfordgrange": "309", // INT_ID
       "article4.buckinghamshire.ivylane": "318", // INT_ID
       "article4.buckinghamshire.ruralaylesbury": "320", // INT_ID
@@ -191,96 +182,6 @@ const planningConstraints = {
       "article4.buckinghamshire.wycombeheathfarmcaravan": "Land at Wycombe Heath Farm, Spurlands End Caravan sites."
     },
   },
-  listed: {
-    key: "listed",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 2,
-    fields: ["OBJECTID", "GRADE", "DESCRIPTIO", "ADDRESS"],
-    neg: "is not in, or within, a Listed Building",
-    pos: (data) => ({
-      text: `is, or is within, a Listed Building Grade ${data[0].GRADE}`,
-      description: data.DESCRIPTIO,
-    }),
-  },
-  "designated.conservationArea": {
-    key: "designated.conservationArea",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 1,
-    fields: ["OBJECTID", "Name", "Desc_", "Grade"],
-    neg: "is not in a Conservation Area",
-    pos: (data) => ({
-      text: "is in a Conservation Area",
-      description: data.Name,
-    }),
-  },
-  "designated.AONB": {
-    key: "designated.AONB",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 4,
-    fields: ["OBJECTID", "NAME", "DESCRIPTIO"],
-    neg: "is not in an Area of Outstanding Natural Beauty",
-    pos: (data) => ({
-      text: "is in an Area of Outstanding Natural Beauty",
-      description: data.NAME,
-    }),
-  },
-  "designated.nationalPark": {
-    key: "designated.nationalPark",
-    source: "manual", // there are no National Parks in Bucks
-    neg: "is not in a National Park",
-  },
-  "designated.broads": {
-    key: "designated.broads",
-    source: "manual", // there are no Broads in Bucks
-    neg: "is not in a Broad",
-  },
-  "designated.WHS": {
-    key: "designated.WHS",
-    source: "manual", // there are no WHS in Bucks
-    neg: "is not an UNESCO World Heritage Site",
-  },
-  "monument": {
-    key: "monument",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 3,
-    fields: ["OBJECTID", "Name", "Desc_"],
-    neg: "is not the site of a Scheduled Ancient Monument",
-    pos: (data) => ({
-      text: "is the site of a Scheduled Ancient Monument",
-      description: data.Name,
-    }),
-  },
-  tpo: {
-    key: "tpo",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 6,
-    fields: ["OBJECTID", "ORDERREF", "STATUS", "COMMENTS"],
-    neg: "is not in a TPO (Tree Preservation Order) zone",
-    pos: (data) => ({
-      text: "is in a TPO (Tree Preservation Order) zone",
-      description: data.COMMENTS,
-    }),
-  },
-  "nature.SSSI": {
-    key: "nature.SSSI",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 0,
-    fields: ["OBJECTID", "sssi_name"],
-    neg: "is not a Site of Special Scientific Interest",
-    pos: (data) => ({
-      text: "is a Site of Special Scientific Interest",
-      description: data.sssi_name,
-    }),
-  },
-  "defence.explosives": { value: false },
-  "defence.safeguarded": { value: false },
-  hazard: { value: false },
 };
 
 module.exports = {

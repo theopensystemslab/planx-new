@@ -19,6 +19,12 @@ const baseSchema = {
     pos: "is, or is within, a Listed Building",
     "digital-land-datasets": ["listed-building", "listed-building-outline", "locally-listed-building"],
   },
+  "listed.local": { // check if locally listed is treated different than nationally listed in legislation/outcomes/schema
+    active: false,
+    neg: "is not in, or within, a Locally Listed Building",
+    pos: "is, or is within, a Locally Listed Building",
+    "digital-land-datasets": ["locally-listed-building"],
+  },
   "designated.conservationArea": {
     active: true,
     neg: "is not in a Conservation Area",
