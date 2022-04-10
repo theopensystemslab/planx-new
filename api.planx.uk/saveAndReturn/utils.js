@@ -22,7 +22,6 @@ const sendEmail = async (templateId, emailAddress, config, res) => {
       config
     );
     res.json({
-      debug: response.data,
       expiryDate: config.personalisation.expiryDate,
     });
   } catch (err) {

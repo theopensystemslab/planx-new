@@ -2,7 +2,7 @@ const { getGraphQLClient, sendEmail, convertSlugToName, getResumeLink } = requir
 
 const resumeApplication = async (req, res, next) => {
   try {
-    const { emailAddress, flowSlug, teamSlug, teamPersonalisation, sessions } = await validateRequest(req, next);
+    const { emailAddress, flowSlug, teamSlug, teamPersonalisation, sessions } = await validateRequest(req);
     const templateId = process.env.GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID;
     const config = {
       personalisation: getPersonalisation(
@@ -21,7 +21,7 @@ const resumeApplication = async (req, res, next) => {
   }
 };
 
-const validateRequest = async (req, next) => {
+const validateRequest = async (req) => {
   // TODO: Validate that flowId and email are linked in a lowcal_storage row
   // TODO: Ignore expired applications, if any
   const client = getGraphQLClient();

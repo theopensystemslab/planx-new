@@ -200,6 +200,15 @@ const ResumePage: React.FC = () => {
     if (email) handleSubmit();
   }, [email]);
 
+  const handleError = (error: unknown) => {
+    // Handle API specific errors
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      setPageStatus(Status.Invalid);
+    }
+    // Handle all other errors
+    setPageStatus(Status.Error);
+  };
+
   /**
    * Send magic link to user, based on submitted email
    * Sets page status based on validation of request by API
@@ -207,37 +216,30 @@ const ResumePage: React.FC = () => {
   const sendResumeEmail = async () => {
     const url = `${process.env.REACT_APP_API_URL}/resume-application`;
     const flowId = useStore.getState().id;
-    // TODO: Type for this
     const data = { email: email, flowId: flowId };
-    const token = getCookie("jwt");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
     try {
-      await axios.post(url, data, config);
+      await axios.post(url, data);
       setPageStatus(Status.Success);
     } catch (error) {
-      // Handle API specific errors
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        setPageStatus(Status.Invalid);
-      }
-      // Handle all other errors
-      setPageStatus(Status.Error);
+      handleError(error);
     }
   };
 
   /**
-   * Temp placeholder function for dev testing
    * Query DB to validate that sessionID and email match
    */
-  const validateSessionId = () => {
-    setTimeout(() => {
+  const validateSessionId = async () => {
+    const url = `${process.env.REACT_APP_API_URL}/validate-session`;
+    const data = { email: email, sessionId: sessionId };
+    try {
+      await axios.post(url, data);
       useStore.getState().setSaveToEmail(email);
       useStore.getState().setPath(ApplicationPath.SaveAndReturn);
+      // TODO: Remove sessionId query param from url?
       // TODO: Reconciliation...!
-    }, 500);
+    } catch (error) {
+      handleError(error);
+    }
   };
 
   /**
