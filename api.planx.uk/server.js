@@ -577,7 +577,8 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
   res.send();
 });
 
-// assert(process.env.GOVUK_NOTIFY_API_KEY);
+// assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
+// assert(process.env.GOVUK_NOTIFY_API_KEY_TEST);
 app.post("/save-application", saveApplication);
 app.post("/resume-application", resumeApplication);
 app.post("/validate-session", validateSession);

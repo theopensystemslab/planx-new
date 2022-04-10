@@ -189,7 +189,10 @@ const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
 };
 
 /**
- * Explain two "paths"
+ * Component which handles the "Resume" page used for Save & Return
+ * The user can access this page via two "paths"
+ * 1. Directly via PlanX, user enters email to trigger "dashboard" email with resume magic links
+ * 2. Magic link in email with a sessionId, user enters email to continue application
  */
 const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);

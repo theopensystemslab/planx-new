@@ -1,7 +1,6 @@
 const { GraphQLClient } = require("graphql-request");
 const { NotifyClient } = require("notifications-node-client");
 
-// Explain test and team keys here
 const getNotifyClient = () =>
   // new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEST);
   new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
@@ -16,7 +15,7 @@ const getGraphQLClient = () =>
 const sendEmail = async (templateId, emailAddress, config, res) => {
   const notifyClient = getNotifyClient();
   try {
-    const response = await notifyClient.sendEmail(
+    await notifyClient.sendEmail(
       templateId,
       emailAddress,
       config
@@ -33,11 +32,23 @@ const sendEmail = async (templateId, emailAddress, config, res) => {
   };
 };
 
+/**
+ * Converts a flow's slug to a pretty name
+ * @param {string} slug 
+ * @returns {string}
+ */
 const convertSlugToName = (slug) => {
   const capitalise = (word) => word[0].toUpperCase() + word.substring(1);
   return slug.split("-").map(capitalise).join(" ");
 };
 
+/**
+ * Build the magic link which will be sent to users via email to continue their application
+ * @param {object} session 
+ * @param {string} teamSlug 
+ * @param {string} flowSlug 
+ * @returns {string}
+ */
 const getResumeLink = (session, teamSlug, flowSlug) => {
   return `${process.env.EDITOR_URL_EXT}/${teamSlug}/${flowSlug}/preview?sessionId=${session.id}`;
 };
