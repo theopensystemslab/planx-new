@@ -239,11 +239,11 @@ function GetAddress(props: {
           x: selectedAddress.X_COORDINATE,
           y: selectedAddress.Y_COORDINATE,
           planx_description:
-            find(blpuCodes.blpu_codes, {
+            find(blpuCodes?.blpu_codes, {
               code: selectedAddress.CLASSIFICATION_CODE,
             })?.description || null,
           planx_value:
-            find(blpuCodes.blpu_codes, {
+            find(blpuCodes?.blpu_codes, {
               code: selectedAddress.CLASSIFICATION_CODE,
             })?.value || null,
           single_line_address: selectedAddress.ADDRESS,
