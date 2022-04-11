@@ -11,7 +11,7 @@ https://environment.data.gov.uk/arcgis/rest/services
 const planningConstraints = {
   article4: {
     // Planx granular values link to Southwark's source data in the following ways:
-    //   * exact match of Digital Land entity.json.notes (aka "ARTICLE_4_DIRECTION" in source data)
+    //   * exact match of Digital Land entity.json.description (aka "ARTICLE_4_DIRECTION" in source data)
     records: {
       "article4.southwark.sunray": "External alterations to buildings are restricted",
       "article4.southwark.publichouse": "Change of use, demolition or alteration of pubs is restricted",
