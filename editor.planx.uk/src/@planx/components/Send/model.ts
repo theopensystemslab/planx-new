@@ -135,7 +135,7 @@ interface File {
 
 // Uniform LDC XML
 // ref "sample.xml" from Kev attached here https://trello.com/c/lVOPqsoY/1450-send-data-to-uniform
-export interface Welcome1 {
+export interface UniformPayload {
   Envelope: {
     "_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance";
     "_xmlns:xsd": "http://www.w3.org/2001/XMLSchema";
@@ -159,7 +159,7 @@ export interface Welcome1 {
             ApplicantAddress: string;
             ApplicantContactDetails: {
               ApplicantContactDetail: {
-                ContactTypeCode: "EMAIL";
+                ContactTypeCode: string;
                 ContactAddress: string;
               };
             };
@@ -171,6 +171,7 @@ export interface Welcome1 {
             AgentContactDetails: {
               AgentContactDetail: {
                 ContactTypeCode: string;
+                ContactAddress: string;
               };
             };
           };
@@ -178,7 +179,7 @@ export interface Welcome1 {
             FeeAmount: string;
             PaymentDetails: {
               AmountReceived: string;
-              PaymentMethod: "ONLINE";
+              PaymentMethod: string;
             };
           };
           ParkingProvision: string;
@@ -188,9 +189,7 @@ export interface Welcome1 {
           LandUse: string;
           EmploymentDetails: string;
           ListedBuilding: string;
-          _xmlns: "http://www.caps-solutions.co.uk/schema/uniform/72b/planning/dc/dctypes";
         };
-        _xmlns: "http://www.caps-solutions.co.uk/webservices/connectors/planning/service";
       };
       __prefix: "soap";
     };

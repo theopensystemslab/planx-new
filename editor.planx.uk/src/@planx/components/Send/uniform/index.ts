@@ -1,42 +1,105 @@
-export const uniformSiteAddressDictionary = {
-  uprn: "_address.uprn",
-  easting: "_address.x",
-  northing: "_address.y",
-  description: "_address.planx_value",
-  displayStreet1: "_address.pao",
-  displayStreet2: "_address.street",
-  town: "_address.town",
-  postcode: "_address.postcode",
-  county: "",
-  addressLineSingle: "_address.single_line_address",
-};
+import { GovUKPayment } from "types";
 
-export const uniformApplicantDictionary = {
-  Forename: "applicant.name.first",
-  Surname: "applicant.name.last",
-  Title: "applicant.title",
-  CompanyName: "applicant.company.name",
-  Address1: "applicant.address.line1",
-  Address2: "applicant.address.line2",
-  Postcode: "applicant.address.postcode",
-  Town: "applicant.address.town",
-  County: "applicant.address.county",
-  Country: "applicant.address.country",
-  TelNo: "applicant.phone.primary",
-  Email: "applicant.email",
-};
+import { Store } from "../../../../pages/FlowEditor/lib/store";
+import { GOV_PAY_PASSPORT_KEY } from "../../Pay/model";
+import { UniformPayload } from "../model";
 
-export const uniformAgentDictionary = {
-  Forename: "applicant.agent.name.first",
-  Surname: "applicant.agent.name.last",
-  Title: "applicant.agent.title",
-  CompanyName: "applicant.agent.company.name",
-  Address1: "applicant.agent.address.line1",
-  Address2: "applicant.agent.address.line2",
-  Postcode: "applicant.agent.address.postcode",
-  Town: "applicant.agent.address.town",
-  County: "applicant.agent.address.county",
-  Country: "applicant.agent.address.country",
-  TelNo: "applicant.agent.phone.primary",
-  Email: "applicant.agent.email",
-};
+export function getUniformParams(passport: Store.passport, sessionId: string) {
+  const applicant = passport.data?.applicant;
+  const agent = passport.data?.agent;
+  const payment = passport.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
+
+  // Map passport variables to their corresponding XML field
+  //   TODO transform JSON to XML later via API endpoitn?
+  const data: UniformPayload = {
+    Envelope: {
+      "_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+      "_xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
+      "_xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
+      __prefix: "soap",
+      Body: {
+        CreateDcApplication: {
+          SubmittedDcApplication: {
+            ApplicationIdentification: sessionId,
+            SiteLocation: {
+              Address:
+                passport.data?._address?.single_line_address?.replaceAll(
+                  ", ",
+                  "\n"
+                ) || "",
+            },
+            TypeOfApplication: {
+              ApplicationType: "LDC", // hardcode OR passport.data?.application.type ??
+              ApplicationType_Text:
+                "Lawful Development Certificate submitted via RIPA", // ??
+            },
+            Proposal: passport.data?.proposal?.description || "",
+            ApplicantDetails: {
+              ApplicantName:
+                [
+                  applicant?.title,
+                  applicant?.name?.first,
+                  applicant?.name?.last,
+                ].join(" ") || "",
+              ApplicantPhoneNumber: applicant?.phone?.primary || "",
+              ApplicantAddress:
+                [
+                  applicant?.address?.line1,
+                  applicant?.address?.line2,
+                  applicant?.address?.town,
+                  applicant?.address?.county,
+                  applicant?.address?.postcode,
+                  applicant?.address?.country,
+                ].join(", ") || "",
+              ApplicantContactDetails: {
+                ApplicantContactDetail: {
+                  ContactTypeCode: "EMAIL",
+                  ContactAddress: applicant?.email || "",
+                },
+              },
+            },
+            AgentDetails: {
+              AgentName:
+                [agent?.title, agent?.name?.first, agent?.name?.last].join(
+                  " "
+                ) || "",
+              AgentPhoneNumber: agent?.phone?.primary || "",
+              AgentAddress:
+                [
+                  agent?.address?.line1,
+                  agent?.address?.line2,
+                  agent?.address?.town,
+                  agent?.address?.county,
+                  agent?.address?.postcode,
+                  agent?.address?.country,
+                ].join(", ") || "",
+              AgentContactDetails: {
+                AgentContactDetail: {
+                  ContactTypeCode: "EMAIL",
+                  ContactAddress: agent?.email || "",
+                },
+              },
+            },
+            ApplicationFee: {
+              FeeAmount: passport?.data?.application?.fee || "",
+              PaymentDetails: {
+                AmountReceived: payment?.amount.toString() || "",
+                PaymentMethod: "ONLINE", // GOV_PAY ??
+              },
+            },
+            ParkingProvision: "",
+            ClassifiedRoads: "",
+            ResidentialDetails: "",
+            FloorspaceDetails: "",
+            LandUse: "",
+            EmploymentDetails: "",
+            ListedBuilding: "",
+          },
+        },
+        __prefix: "soap",
+      },
+    },
+  };
+
+  return data;
+}

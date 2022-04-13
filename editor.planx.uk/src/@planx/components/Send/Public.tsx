@@ -10,6 +10,7 @@ import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
 import { PublicProps } from "../ui";
 import { getParams } from "./bops";
 import { Send } from "./model";
+import { getUniformParams } from "./uniform";
 
 export type Props = PublicProps<Send>;
 
@@ -35,7 +36,9 @@ const SendComponent: React.FC<Props> = (props) => {
   const request = useAsync(async () =>
     axios.post(
       useStagingUrlIfTestApplication(passport)(destinationUrl),
-      getParams(breadcrumbs, flow, passport, sessionId)
+      props.destination === "bops"
+        ? getParams(breadcrumbs, flow, passport, sessionId)
+        : getUniformParams(passport, sessionId)
     )
   );
 
