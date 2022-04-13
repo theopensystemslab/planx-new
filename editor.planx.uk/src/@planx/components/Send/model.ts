@@ -134,109 +134,65 @@ interface File {
 }
 
 // Uniform LDC XML
-// Based on "existing" & "proposed" sample .zips attached here https://trello.com/c/lVOPqsoY/1450-send-data-to-uniform
-export interface DataModel {
-  siteAddress: {
-    uprn: string;
-    easting: string;
-    northing: string;
-    description: string;
-    displayStreet1: string;
-    displayStreet2: string;
-    town: string;
-    postcode: string;
-    county: string;
-    addressLineSingle: string;
-  };
-  formType: "4114" | "4140"; // existing = 4114; proposed = 4140 ??
-  Applicant: {
-    Forename: string;
-    Surname: string;
-    Title: string;
-    CompanyName: string;
-    Address1: string;
-    Address2: string;
-    Postcode: string;
-    Town: string;
-    County: string;
-    Country: string;
-    TelNo: string;
-    Email: string;
-  };
-  App: { Areyouanagent: "Yes" | "No" }; // user.role === "agent" ? "Yes" : "No"
-  Agent?: {
-    Forename: string;
-    Surname: string;
-    Title: string;
-    CompanyName: string;
-    Address1: string;
-    Address2: string;
-    Postcode: string;
-    Town: string;
-    County: string;
-    Country: string;
-    TelNo: string;
-    Email: string;
-  };
-  ApplicationData: {
-    CertificateLawfulness: CertificateLawfulness;
-    Advice: { HaveSoughtAdvice: "Yes" | "No" };
-    SiteVisit: { SeeSite: "Yes" | "No" };
-  };
-  DeclarationOfInterest: {
-    IsRelated: "Yes" | "No";
-    RelationDetails: string;
-  };
-  Declaration: {
-    DeclarationMade: { string: string };
-    DeclarationDate: string;
-  };
-  emailconfirmationTelephone: string;
-  emailconfirmationEmail: string;
-  emailconfirmationSurname: string;
-  emailconfirmationForename: string;
-}
-
-export interface CertificateLawfulness {
-  ExistingUseApplication?: ExistingUseApplication;
-  ProposedUseApplication?: ProposedUseApplication;
-}
-
-export interface ExistingUseApplication {
-  DescriptionCEU: string;
-  GroundsCEU: {
-    ApplicationSiteRefList: {
-      ApplicationSiteRef: {
-        ReferenceDate: string;
-        Reference: string;
-        ConditionNumber: string;
+// ref "sample.xml" from Kev attached here https://trello.com/c/lVOPqsoY/1450-send-data-to-uniform
+export interface Welcome1 {
+  Envelope: {
+    "_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance";
+    "_xmlns:xsd": "http://www.w3.org/2001/XMLSchema";
+    "_xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/";
+    __prefix: "soap";
+    Body: {
+      CreateDcApplication: {
+        SubmittedDcApplication: {
+          ApplicationIdentification: string;
+          SiteLocation: {
+            Address: string;
+          };
+          TypeOfApplication: {
+            ApplicationType: string;
+            ApplicationType_Text: string;
+          };
+          Proposal: string;
+          ApplicantDetails: {
+            ApplicantName: string;
+            ApplicantPhoneNumber: string;
+            ApplicantAddress: string;
+            ApplicantContactDetails: {
+              ApplicantContactDetail: {
+                ContactTypeCode: "EMAIL";
+                ContactAddress: string;
+              };
+            };
+          };
+          AgentDetails: {
+            AgentName: string;
+            AgentPhoneNumber: string;
+            AgentAddress: string;
+            AgentContactDetails: {
+              AgentContactDetail: {
+                ContactTypeCode: string;
+              };
+            };
+          };
+          ApplicationFee: {
+            FeeAmount: string;
+            PaymentDetails: {
+              AmountReceived: string;
+              PaymentMethod: "ONLINE";
+            };
+          };
+          ParkingProvision: string;
+          ClassifiedRoads: string;
+          ResidentialDetails: string;
+          FloorspaceDetails: string;
+          LandUse: string;
+          EmploymentDetails: string;
+          ListedBuilding: string;
+          _xmlns: "http://www.caps-solutions.co.uk/schema/uniform/72b/planning/dc/dctypes";
+        };
+        _xmlns: "http://www.caps-solutions.co.uk/webservices/connectors/planning/service";
       };
+      __prefix: "soap";
     };
-    CertificateLawfulnessReason: string;
-  };
-  InformationCEU: {
-    IsExistingUseInterruption: string;
-    UseBegunDate: string;
-    InterruptionDetails: string;
-    IsExistingUseChange: string;
-    ExistingUseChangeDetails: string;
-    IsResidentialUseChange: string;
-  };
-}
-
-export interface ProposedUseApplication {
-  DescriptionCPU: {
-    IsProposedOperationBuilding: string;
-    OperationsDescription: string;
-    IsUseChange: string;
-    ProposedUseDescription: string;
-    ExistingUseDescription: string;
-    IsUseStarted: string;
-  };
-  GroundsCPU: {
-    UseLawfulnessReason: string;
-    SupportingInformation: { Reference: string };
-    ProposedUseStatus: string;
-    LawfulDevCertificateReason: string;
   };
 }
