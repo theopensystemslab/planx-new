@@ -31,3 +31,14 @@ docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.stag
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 cd hasura.planx.uk || exit 1
 hasura seed apply
+
+# install node
+cd ../scripts/seed-database
+
+curl -L https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
+bash nodesource_setup.sh
+rm nodesource_setup.sh
+
+apt-get install nodejs -y
+
+node ./upsert-production-flows.js -o
