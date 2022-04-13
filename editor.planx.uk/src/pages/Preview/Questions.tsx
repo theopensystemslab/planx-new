@@ -3,6 +3,7 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import classnames from "classnames";
+import { FEATURE_FLAG__CAN_SAVE_AND_RETURN } from "lib/featureFlags";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
@@ -83,26 +84,50 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   useEffect(() => {
     setPreviewEnvironment(previewEnvironment);
     if (isStandalone) {
-      getLocalFlow(id).then((state) => {
+      if (FEATURE_FLAG__CAN_SAVE_AND_RETURN) {
+        // @ts-ignore
+        getLocalFlow(id).then((state) => {
+          if (state) {
+            resumeSession(state);
+          }
+          createAnalytics(state ? "resume" : "init");
+          setGotFlow(true);
+        });
+      } else {
+        const state = getLocalFlow(id);
         if (state) {
           resumeSession(state);
         }
         createAnalytics(state ? "resume" : "init");
         setGotFlow(true);
-      });
+      }
     }
   }, []);
 
-  useEffect(() => {
-    if (!gotFlow || !isStandalone || !id) return;
-    setLocalFlow(id, {
-      breadcrumbs,
-      govUkPayment,
-      id,
-      passport,
-      sessionId,
-    });
-  }, [breadcrumbs, gotFlow, govUkPayment, id, passport, sessionId]);
+  if (FEATURE_FLAG__CAN_SAVE_AND_RETURN) {
+    useEffect(() => {
+      if (!gotFlow || !isStandalone || !id) return;
+      setLocalFlow(id, {
+        breadcrumbs,
+        govUkPayment,
+        id,
+        passport,
+        sessionId,
+      });
+    }, [breadcrumbs, gotFlow, govUkPayment, id, passport, sessionId]);
+  } else {
+    useEffect(() => {
+      if (isStandalone && id) {
+        setLocalFlow(id, {
+          breadcrumbs,
+          id,
+          passport,
+          sessionId,
+          govUkPayment,
+        });
+      }
+    }, [breadcrumbs, passport, sessionId, id, govUkPayment]);
+  }
 
   const handleSubmit =
     (id: string): handleSubmit =>
