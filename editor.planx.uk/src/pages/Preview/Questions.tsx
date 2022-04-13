@@ -3,7 +3,10 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import classnames from "classnames";
-import { FEATURE_FLAG__CAN_SAVE_AND_RETURN } from "lib/featureFlags";
+import {
+  FEATURE_FLAG__CAN_SAVE_AND_RETURN,
+  getFeatureFlags,
+} from "lib/featureFlags";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
@@ -82,6 +85,13 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   const [gotFlow, setGotFlow] = useState(false);
 
   useEffect(() => {
+    const featureFlags = getFeatureFlags();
+    if (featureFlags.size > 0) {
+      console.log(
+        `🎏 FEATURE FLAGS ENABLED: ${[...featureFlags].sort().join(", ")}`
+      );
+    }
+
     setPreviewEnvironment(previewEnvironment);
     if (isStandalone) {
       if (FEATURE_FLAG__CAN_SAVE_AND_RETURN) {

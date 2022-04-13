@@ -1,4 +1,4 @@
-const getFlags = () => {
+export const getFeatureFlags = () => {
   let flags: Set<string> = new Set();
   try {
     const existingFlags = localStorage.getItem("FEATURE_FLAGS");
@@ -9,8 +9,8 @@ const getFlags = () => {
   return flags;
 };
 
-const toggleFlag = (flag: string) => {
-  const flags = getFlags();
+const toggleFeatureFlag = (flag: string) => {
+  const flags = getFeatureFlags();
 
   if (flags.has(flag)) {
     flags.delete(flag);
@@ -23,11 +23,11 @@ const toggleFlag = (flag: string) => {
   console.debug({ flags });
 };
 
-export const flagEnabled = (flag: string) => getFlags().has(flag);
+export const flagEnabled = (flag: string) => getFeatureFlags().has(flag);
 
 (window as any).featureFlags = {
-  toggle: toggleFlag,
-  get: getFlags,
+  toggle: toggleFeatureFlag,
+  get: getFeatureFlags,
   isEnabled: flagEnabled,
 };
 
