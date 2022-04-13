@@ -23,12 +23,14 @@ const toggleFeatureFlag = (flag: string) => {
   console.debug({ flags });
 };
 
-export const flagEnabled = (flag: string) => getFeatureFlags().has(flag);
+export const isFeatureFlagEnabled = (flag: string) =>
+  getFeatureFlags().has(flag);
 
 (window as any).featureFlags = {
   toggle: toggleFeatureFlag,
   get: getFeatureFlags,
-  isEnabled: flagEnabled,
+  has: isFeatureFlagEnabled,
 };
 
-export const FEATURE_FLAG__CAN_SAVE_AND_RETURN = flagEnabled("SAVE_AND_RETURN");
+export const FEATURE_FLAG__CAN_SAVE_AND_RETURN =
+  isFeatureFlagEnabled("SAVE_AND_RETURN");

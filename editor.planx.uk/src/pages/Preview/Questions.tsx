@@ -8,6 +8,7 @@ import {
   getFeatureFlags,
 } from "lib/featureFlags";
 import { getLocalFlow, setLocalFlow } from "lib/local";
+import * as NEW_LOCAL from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import React, {
@@ -95,8 +96,7 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     setPreviewEnvironment(previewEnvironment);
     if (isStandalone) {
       if (FEATURE_FLAG__CAN_SAVE_AND_RETURN) {
-        // @ts-ignore
-        getLocalFlow(id).then((state) => {
+        NEW_LOCAL.getLocalFlow(id).then((state) => {
           if (state) {
             resumeSession(state);
           }
@@ -117,7 +117,7 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   if (FEATURE_FLAG__CAN_SAVE_AND_RETURN) {
     useEffect(() => {
       if (!gotFlow || !isStandalone || !id) return;
-      setLocalFlow(id, {
+      NEW_LOCAL.setLocalFlow(id, {
         breadcrumbs,
         govUkPayment,
         id,
