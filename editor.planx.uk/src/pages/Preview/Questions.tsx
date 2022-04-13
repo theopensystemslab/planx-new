@@ -6,7 +6,13 @@ import classnames from "classnames";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
-import React, { useCallback, useContext, useEffect, useMemo } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { FlowSettings } from "types";
 
@@ -72,29 +78,31 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   const flow = useContext(PreviewContext)?.flow;
   const { createAnalytics, node } = useAnalyticsTracking();
   const classes = useClasses();
+  const [gotFlow, setGotFlow] = useState(false);
 
   useEffect(() => {
     setPreviewEnvironment(previewEnvironment);
     if (isStandalone) {
-      const state = getLocalFlow(id);
-      if (state) {
-        resumeSession(state);
-      }
-      createAnalytics(state ? "resume" : "init");
+      getLocalFlow(id).then((state) => {
+        if (state) {
+          resumeSession(state);
+        }
+        createAnalytics(state ? "resume" : "init");
+        setGotFlow(true);
+      });
     }
   }, []);
 
   useEffect(() => {
-    if (isStandalone && id) {
-      setLocalFlow(id, {
-        breadcrumbs,
-        id,
-        passport,
-        sessionId,
-        govUkPayment,
-      });
-    }
-  }, [breadcrumbs, passport, sessionId, id, govUkPayment]);
+    if (!gotFlow || !isStandalone || !id) return;
+    setLocalFlow(id, {
+      breadcrumbs,
+      govUkPayment,
+      id,
+      passport,
+      sessionId,
+    });
+  }, [breadcrumbs, gotFlow, govUkPayment, id, passport, sessionId]);
 
   const handleSubmit =
     (id: string): handleSubmit =>

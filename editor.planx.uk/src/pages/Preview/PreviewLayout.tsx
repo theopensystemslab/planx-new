@@ -55,8 +55,7 @@ const PreviewLayout: React.FC<{
         "Are you sure you want to restart? This will delete your previous answers"
       )
     ) {
-      clearLocalFlow(id);
-      window.location.reload();
+      clearLocalFlow(id).then(() => window.location.reload());
     }
   };
 
