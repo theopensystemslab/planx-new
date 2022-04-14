@@ -37,7 +37,6 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           data
           slug
           team_id
-          version
           settings
         }
         teams {
@@ -64,7 +63,7 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
       }
     );
 
-    await localClient.request(`
+    const { insert_flows: { returning } } = await localClient.request(`
       mutation InsertFlowsAndTeams(
         $teams: [teams_insert_input!]!, 
         $flows: [flows_insert_input!]!
@@ -80,15 +79,33 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           on_conflict: {constraint: flows_pkey, update_columns: [data, slug, created_at]}
         ) {
           affected_rows
+          returning {
+            id
+          }
         }
       }
-      `, 
+      `,
       {
         teams,
-        flows,
+        flows: flows.map(flow => ({ ...flow, version: 1 })),
       }
     );
-  
+
+    // XXX: We need to add a row to `operations` for each inserted flow, otherwise sharedb throws a silent error when opening the flow in the UI
+    const ops = returning.map(({ id }) => ({ version: 1, flow_id: id, data: {} }));
+
+    await localClient.request(`
+      mutation InsertOperations($ops:[operations_insert_input!]!) {
+        insert_operations(objects: $ops) {
+          affected_rows
+        }
+      }
+      `,
+      {
+        ops
+      }
+    );
+
     console.log("Production flows and teams inserted successfully.");
   } catch (err) {
     process.exit(1)
