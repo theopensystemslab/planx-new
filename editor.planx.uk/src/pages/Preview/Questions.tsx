@@ -3,10 +3,7 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import classnames from "classnames";
-import {
-  FEATURE_FLAG__CAN_SAVE_AND_RETURN,
-  getFeatureFlags,
-} from "lib/featureFlags";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import * as NEW_LOCAL from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
@@ -86,16 +83,9 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   const [gotFlow, setGotFlow] = useState(false);
 
   useEffect(() => {
-    const featureFlags = getFeatureFlags();
-    if (featureFlags.size > 0) {
-      console.log(
-        `🎏 FEATURE FLAGS ENABLED: ${[...featureFlags].sort().join(", ")}`
-      );
-    }
-
     setPreviewEnvironment(previewEnvironment);
     if (isStandalone) {
-      if (FEATURE_FLAG__CAN_SAVE_AND_RETURN) {
+      if (hasFeatureFlag("SAVE_AND_RETURN")) {
         NEW_LOCAL.getLocalFlow(id).then((state) => {
           if (state) {
             resumeSession(state);
@@ -114,7 +104,7 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     }
   }, []);
 
-  if (FEATURE_FLAG__CAN_SAVE_AND_RETURN) {
+  if (hasFeatureFlag("SAVE_AND_RETURN")) {
     useEffect(() => {
       if (!gotFlow || !isStandalone || !id) return;
       NEW_LOCAL.setLocalFlow(id, {
