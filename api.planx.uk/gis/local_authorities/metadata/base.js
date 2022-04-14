@@ -7,7 +7,7 @@ const baseSchema = {
     pos: "is subject to Article 4 restriction(s)",
     "digital-land-datasets": ["article-4-direction"],
   },
-  "article4.caz": {
+  "article4.caz": { // will be renamed to `article4.localAuthority.caz` when applicable
     active: true,
     neg: "is not in the Central Activities Zone",
     pos: "is in the Central Activities Zone",
@@ -17,10 +17,10 @@ const baseSchema = {
     active: true,
     neg: "is not in, or within, a Listed Building",
     pos: "is, or is within, a Listed Building",
-    "digital-land-datasets": ["listed-building", "listed-building-outline", "locally-listed-building"],
+    "digital-land-datasets": ["listed-building", "listed-building-outline"],
   },
-  "listed.local": { // check if locally listed is treated different than nationally listed in legislation/outcomes/schema
-    active: false,
+  "locallyListed": {
+    active: true,
     neg: "is not in, or within, a Locally Listed Building",
     pos: "is, or is within, a Locally Listed Building",
     "digital-land-datasets": ["locally-listed-building"],
@@ -43,12 +43,12 @@ const baseSchema = {
     pos: "is in a National Park",
     "digital-land-datasets": ["national-park"],
   },
-  "designated.nationalPark.broads": { // propose schema change from 'designated.broads' to better reflect real granularity here
-    active: false,
+  "designated.nationalPark.broads": {
+    active: true,
     neg: "is not in a Broad",
     pos: "is in a Broad",
     "digital-land-datasets": ["national-park"],
-    "digital-land-entities": [520007] // TODO filter on record within dataset https://www.digital-land.info/entity/520007
+    "digital-land-entities": [520007] // https://www.digital-land.info/entity/520007
   },
   "designated.WHS": {
     active: true,

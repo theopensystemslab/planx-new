@@ -131,7 +131,6 @@ const addDesignatedVariable = (responseObject) => {
     "conservationArea",
     "AONB",
     "nationalPark",
-    // "broads", -- doesn't apply to any active councils yet & subset of nationalPark per digital land
     "WHS",
   ];
 

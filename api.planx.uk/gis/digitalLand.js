@@ -41,8 +41,8 @@ async function go(localAuthority, geom) {
       geometry_relation: "intersects",
       limit: 100, // TODO handle pagination in future for large polygons & many datasets, but should be well within this limit now
     };
-    // 'dataset' param is not array[string] per docs, instead re-specify param name per dataset
-    let datasets = `&dataset=${activeDatasets.join(`&dataset=`)}`;
+    // 'dataset' param is not array[string] per docs, instead re-specify param name per unique dataset
+    let datasets = `&dataset=${[...new Set(activeDatasets)].join(`&dataset=`)}`;
 
     // fetch records from digital land, will return '{ count: 0, entities: [], links: {..} }' if no intersections
     let url = `https://www.digital-land.info/entity.json?${new URLSearchParams(options)}${datasets}`;
@@ -82,7 +82,22 @@ async function go(localAuthority, geom) {
     // add top-level 'designated' variable based on granular query results
     formattedResult = addDesignatedVariable(formattedResult);
 
-    // --- ARTICLE 4 ---
+    // set granular `designated.nationalPark.broads` based on entity id (eventually extract to helper method if other cases like this)
+    const broads = "designated.nationalPark.broads";
+    if (formattedResult["designated.nationalPark"].value) {
+      formattedResult["designated.nationalPark"].data.forEach((entity) => {
+        if (baseSchema[broads]["digital-land-entities"].includes(entity.entity)) {
+          formattedResult[broads] = { value: true, text: baseSchema[broads].pos };
+        }
+      });
+    } else {
+      formattedResult[broads] = { value: false };
+    }
+
+    // --- LISTED BUILDINGS ---
+    // TODO add granular variables to reflect grade (eg `listed.grade1`)
+
+    // --- ARTICLE 4S ---
     // only attempt to set granular a4s if we have metadata for this local authority; proceed with non-granular a4 queries under "opensystemslab" team etc
     if (Object.keys(localAuthorityMetadata).includes(localAuthority)) {
       // get the article 4 schema map for this local authority
@@ -94,25 +109,28 @@ async function go(localAuthority, geom) {
         formattedResult["article4"].data.forEach((entity) => {
           (Object.keys(a4s)).forEach((key) => {
             if (
-              // various ways source data can link to granular planx values (see local_authorities/metadata for specifics)
+              // these are various ways we link source data to granular planx values (see local_authorities/metadata for specifics)
               entity.name.replace(/\r?\n|\r/g, " ") === a4s[key] ||
               entity.reference === a4s[key] ||
               entity.json.notes === a4s[key] ||
               entity.json.description?.startsWith(a4s[key]) ||
               formattedResult[key]?.value // if this granular var is already true, make sure it remains true
             ) {
-              formattedResult[key] = { value: true }
+              formattedResult[key] = { value: true };
             } else {
-              formattedResult[key] = { value: false }
+              formattedResult[key] = { value: false };
             }
           });
         });
       }
+
+      // rename `article4.caz` to reflect localAuthority if applicable
+      const localCaz = `article4.${localAuthority}.caz`;
+      if (formattedResult["article4.caz"]) {
+        formattedResult[localCaz] = formattedResult["article4.caz"];
+        delete formattedResult["article4.caz"];
+      }
     }
-
-    // TODO add helper function to set 'designated.broads' based on 'designated.nationalPark' entity id
-
-    // TODO add helper function to concatenate grade onto the listed building text if "pos" (and add granular schema var?)
 
     return { url: url, constraints: formattedResult };
   } catch (e) {
