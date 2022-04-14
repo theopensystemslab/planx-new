@@ -18,18 +18,18 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           id
         }
       }
-    `); 
+    `);
 
-    if(localFlows.length > 0) {
+    if (localFlows.length > 0) {
       // If a flow belongs to an existing team we can not delete the teams because of existing constraints.
       console.log('There are flows in the local database, refusing to continue.');
-      process.exit(0)
+      process.exit(0);
       return;
     }
 
     // Teams have 2 unique fields: `id` and `slug`, but the upsert `on_conflict` query only allows us to check for one of them. 
     // So if both fields exist in the current database, the query will fail. To prevent it, all teams that have duplicated slugs are deleted.
-  
+
     const { flows, teams } = await productionClient.request(`
       query GetAllFlowsAndTeams {
         flows {
@@ -48,7 +48,7 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           theme
         }
       }
-    `);  
+    `);
 
     await localClient.request(`
       mutation DeleteTeams(
@@ -58,11 +58,11 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           affected_rows
         }
       }
-      `, 
+      `,
       {
         teams_slugs: teams.map(team => team.slug),
       }
-    ); 
+    );
 
     await localClient.request(`
       mutation InsertFlowsAndTeams(
@@ -90,7 +90,7 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
     );
   
     console.log("Production flows and teams inserted successfully.");
-  } catch(err) {
+  } catch (err) {
     process.exit(1)
   }
 })()
