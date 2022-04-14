@@ -13,6 +13,7 @@ const apiMock = RequestMock()
 fixture`Retry requests with network error`.page`${URL}`;
 
 const TEAM_NAME = "test-team";
+const USER_EMAIL = "test@test.com";
 
 let userId;
 let teamId;
@@ -29,14 +30,20 @@ test
       },
     } = await gqlAdmin(`
       mutation {
-        insert_users(objects: {first_name: "test", last_name: "test", email: "test@test.com"}) {
+        delete_users(where: {email: {_eq: "${USER_EMAIL}"}}) {
+          affected_rows
+        }
+        delete_teams(where: {slug: {_eq: "${TEAM_NAME}"}}) {
+          affected_rows
+        }
+        insert_users(objects: {first_name: "test", last_name: "test", email: "${USER_EMAIL}"}) {
           returning { id }
         }
         insert_teams(objects: {name: "${TEAM_NAME}", slug: "${TEAM_NAME}"}) {
           returning { id }
         }
       }
-  `));
+    `));
   })
   .after(async (t) => {
     const { errors } = await gqlAdmin(`
