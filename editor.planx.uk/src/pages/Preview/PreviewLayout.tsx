@@ -8,7 +8,9 @@ import {
 } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ErrorFallback from "components/ErrorFallback";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { clearLocalFlow } from "lib/local";
+import * as NEW_LOCAL from "lib/local.new";
 import { merge } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -55,8 +57,12 @@ const PreviewLayout: React.FC<{
         "Are you sure you want to restart? This will delete your previous answers"
       )
     ) {
-      clearLocalFlow(id);
-      window.location.reload();
+      if (hasFeatureFlag("SAVE_AND_RETURN")) {
+        NEW_LOCAL.clearLocalFlow(id).then(() => window.location.reload());
+      } else {
+        clearLocalFlow(id);
+        window.location.reload();
+      }
     }
   };
 
