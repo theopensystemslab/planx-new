@@ -86,7 +86,7 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     setPreviewEnvironment(previewEnvironment);
     if (isStandalone) {
       if (hasFeatureFlag("SAVE_AND_RETURN")) {
-        NEW_LOCAL.getLocalFlow(id).then((state) => {
+        NEW_LOCAL.getLocalFlow(sessionId).then((state) => {
           if (state) {
             resumeSession(state);
           }
