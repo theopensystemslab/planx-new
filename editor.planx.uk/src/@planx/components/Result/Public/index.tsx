@@ -8,6 +8,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
+import { useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useState } from "react";
 import type { Node, TextContent } from "types";
@@ -62,19 +63,30 @@ const Responses = ({
 }: {
   responses: Response[];
   allowChanges: boolean;
-}) => (
-  <>
-    {responses.map(({ question, selections }: Response) => (
-      <ResultReason
-        key={question.id}
-        id={question.id}
-        question={question}
-        showChangeButton={allowChanges}
-        response={selections.map((s: any) => s.data.text).join(", ")}
-      />
-    ))}
-  </>
-);
+}) => {
+  const breadcrumbs = useStore((state) => state.breadcrumbs);
+  return (
+    <>
+      {responses
+        .filter((response) =>
+          breadcrumbs[response.question.id]
+            ? breadcrumbs[response.question.id].auto
+              ? response.selections.some((s) => s.data?.flag)
+              : true
+            : false
+        )
+        .map(({ question, selections }: Response) => (
+          <ResultReason
+            key={question.id}
+            id={question.id}
+            question={question}
+            showChangeButton={allowChanges && !breadcrumbs[question.id].auto}
+            response={selections.map((s: any) => s.data.text).join(",")}
+          />
+        ))}
+    </>
+  );
+};
 
 const Result: React.FC<Props> = ({
   allowChanges = false,
