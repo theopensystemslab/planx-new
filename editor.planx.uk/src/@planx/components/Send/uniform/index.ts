@@ -13,20 +13,20 @@ export function getUniformParams(
   passport: Store.passport,
   sessionId: string
 ) {
-  // Make a list of all S3 URLs for uploaded files
+  // make a list of all S3 URLs from uploaded files
   const fileUrls: string[] = [];
-  // get any files uploaded via a FileUpload component
   Object.entries(passport.data || {})
     .filter(([, v]: any) => v?.[0]?.url)
     .forEach(([key, arr]) => {
       (arr as any[]).forEach(({ url }) => {
         try {
+          // add any files uploaded via a FileUpload component
           fileUrls.push(url);
         } catch (err) {}
       });
     });
 
-  // additionally get the property boundary file if the user didn't draw
+  // additionally add the property boundary file if the user didn't draw
   if (passport?.data?.[PASSPORT_UPLOAD_KEY]) {
     fileUrls.push(passport.data[PASSPORT_UPLOAD_KEY]);
   }
@@ -39,7 +39,8 @@ export function getUniformParams(
   };
 }
 
-// Map passport variables to their corresponding XML field
+// map passport variables to their corresponding XML field
+//  returns a typed JSON representation of the XML
 function makeXmlData(
   passport: Store.passport,
   sessionId: string
@@ -139,8 +140,9 @@ function makeXmlData(
   };
 }
 
-// Create a CSV based on the payload structure we send to bops (list of questions/responses/metadata)
-function makeCsvData(
+// create a CSV data structure based on the payload we send to BOPs
+//   (also used in Confirmation component for user-downloadable copy of app data)
+export function makeCsvData(
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
   passport: Store.passport,

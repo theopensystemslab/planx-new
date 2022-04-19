@@ -4,7 +4,6 @@ import Typography from "@material-ui/core/Typography";
 import Check from "@material-ui/icons/CheckCircleOutlineOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/ui";
-import omit from "lodash/omit";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Banner from "ui/Banner";
@@ -12,7 +11,7 @@ import FileDownload from "ui/FileDownload";
 import NumberedList from "ui/NumberedList";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
-import { getParams } from "../Send/bops";
+import { makeCsvData } from "../Send/uniform";
 import type { Confirmation } from "./model";
 
 const useClasses = makeStyles((theme) => ({
@@ -44,43 +43,8 @@ export default function ConfirmationComponent(props: Props) {
     state.sessionId,
   ]);
 
-  // recreate the payload we sent to BOPs for download
-  const sentData = getParams(breadcrumbs, flow, passport, sessionId);
-
-  // format dedicated BOPs properties as list of questions & responses to match proposal_details
-  //   omitting debug data and keys already in confirmation details
-  const summary: any = {
-    ...omit(props.details, "Property Address"), // use detailed "site" instead
-    ...omit(sentData, ["planx_debug_data", "files", "proposal_details"]),
-  };
-  const formattedSummary: { question: string; responses: any }[] = [];
-  Object.keys(summary).forEach((key) => {
-    formattedSummary.push({
-      question: key,
-      responses: summary[key],
-    });
-  });
-
-  // similarly format file uploads as list of questions, responses, metadata
-  const formattedFiles: {
-    question: string;
-    responses: any;
-    metadata: string;
-  }[] = [];
-  sentData["files"]?.forEach((file) => {
-    formattedFiles.push({
-      question: file.tags
-        ? `File upload: ${file.tags.join(", ")}`
-        : "File upload",
-      responses: file.filename.split("/").pop(),
-      metadata: file.applicant_description || "",
-    });
-  });
-
-  // concat into single list, each object will be row in CSV
-  const data = formattedSummary
-    .concat(sentData["proposal_details"] || [])
-    .concat(formattedFiles);
+  // make a CSV data structure based on the payloads we Send to BOPs/Uniform
+  const data = makeCsvData(breadcrumbs, flow, passport, sessionId);
 
   const classes = useClasses();
 
