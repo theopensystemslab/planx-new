@@ -38,7 +38,7 @@ const SendComponent: React.FC<Props> = (props) => {
       useStagingUrlIfTestApplication(passport)(destinationUrl),
       props.destination === "bops"
         ? getParams(breadcrumbs, flow, passport, sessionId)
-        : getUniformParams(passport, sessionId)
+        : getUniformParams(breadcrumbs, flow, passport, sessionId)
     )
   );
 
