@@ -111,7 +111,7 @@ test("recovers previously submitted address when clicking the back button", asyn
       os_local_custodian_code: "SOUTHWARK",
       planx_team_name: "CANTERBURY",
     },
-    "property.type": ["residential.HMO.parent"],
+    // "property.type": ["residential.HMO.parent"],
     "property.localAuthorityDistrict": ["Southwark"],
   };
 

@@ -18,18 +18,18 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           id
         }
       }
-    `); 
+    `);
 
-    if(localFlows.length > 0) {
+    if (localFlows.length > 0) {
       // If a flow belongs to an existing team we can not delete the teams because of existing constraints.
       console.log('There are flows in the local database, refusing to continue.');
-      process.exit(0)
+      process.exit(0);
       return;
     }
 
     // Teams have 2 unique fields: `id` and `slug`, but the upsert `on_conflict` query only allows us to check for one of them. 
     // So if both fields exist in the current database, the query will fail. To prevent it, all teams that have duplicated slugs are deleted.
-  
+
     const { flows, teams } = await productionClient.request(`
       query GetAllFlowsAndTeams {
         flows {
@@ -37,7 +37,6 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           data
           slug
           team_id
-          version
           settings
         }
         teams {
@@ -48,7 +47,7 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           theme
         }
       }
-    `);  
+    `);
 
     await localClient.request(`
       mutation DeleteTeams(
@@ -58,13 +57,13 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           affected_rows
         }
       }
-      `, 
+      `,
       {
         teams_slugs: teams.map(team => team.slug),
       }
-    ); 
+    );
 
-    await localClient.request(`
+    const { insert_flows: { returning } } = await localClient.request(`
       mutation InsertFlowsAndTeams(
         $teams: [teams_insert_input!]!, 
         $flows: [flows_insert_input!]!
@@ -80,17 +79,35 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           on_conflict: {constraint: flows_pkey, update_columns: [data, slug, created_at]}
         ) {
           affected_rows
+          returning {
+            id
+          }
         }
       }
-      `, 
+      `,
       {
         teams,
-        flows,
+        flows: flows.map(flow => ({ ...flow, version: 1 })),
       }
     );
-  
+
+    // XXX: We need to add a row to `operations` for each inserted flow, otherwise sharedb throws a silent error when opening the flow in the UI
+    const ops = returning.map(({ id }) => ({ version: 1, flow_id: id, data: {} }));
+
+    await localClient.request(`
+      mutation InsertOperations($ops:[operations_insert_input!]!) {
+        insert_operations(objects: $ops) {
+          affected_rows
+        }
+      }
+      `,
+      {
+        ops
+      }
+    );
+
     console.log("Production flows and teams inserted successfully.");
-  } catch(err) {
+  } catch (err) {
     process.exit(1)
   }
 })()
