@@ -39,7 +39,7 @@ curl -L https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
 bash nodesource_setup.sh
 rm nodesource_setup.sh
 
-apt-get install nodejs npm -y
+apt-get install nodejs -y
 npm i -g pnpm 
 pnpm i
 
