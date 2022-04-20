@@ -136,12 +136,11 @@ interface File {
 // Uniform LDC XML
 // ref "sample.xml" from Kev attached here https://trello.com/c/lVOPqsoY/1450-send-data-to-uniform
 export interface UniformPayload {
-  Envelope: {
+  "soap:Envelope": {
     "_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance";
     "_xmlns:xsd": "http://www.w3.org/2001/XMLSchema";
     "_xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/";
-    __prefix: "soap";
-    Body: {
+    "soap:Body": {
       CreateDcApplication: {
         SubmittedDcApplication: {
           ApplicationIdentification: string;
@@ -191,7 +190,15 @@ export interface UniformPayload {
           ListedBuilding: string;
         };
       };
-      __prefix: "soap";
     };
   };
 }
+
+// CSV data structure sent to Uniform & re-used for user download on Confirmation page
+interface CSVRow {
+  question: string;
+  responses: any;
+  metadata?: any;
+}
+
+export type CSVData = CSVRow[];

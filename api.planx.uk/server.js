@@ -19,6 +19,9 @@ const {
   responseInterceptor,
   fixRequestBody,
 } = require("http-proxy-middleware");
+const convert = require("xml-js");
+const fs = require("fs");
+const AdmZip = require("adm-zip");
 
 const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
@@ -318,10 +321,31 @@ app.post("/bops/:localAuthority", (req, res) => {
   })(req, res);
 });
 
-app.post("/uniform/:localAuthority", (req, res) => {
-  res.send({
-    message: `TBD prepping application data for Uniform (${req.params.localAuthority})`
-  });
+app.post("/uniform/:localAuthority", (req, res, next) => {
+  if (!req.body) {
+    res.send({
+      message: "Missing application data to send to Uniform"
+    });
+  }
+  
+  try {
+    // build a CSV
+    const csv = stringify(req.body.csv, { columns: ["question", "responses", "metadata"], header: true });
+
+    // build an XML file
+    const options = { compact: true, spaces: 4, fullTagEmptyElement: true };
+    const xml = convert.json2xml(req.body.xml, options);
+
+    // download the S3 files
+
+    // create a .zip, add all files to it
+    const zip = new AdmZip();
+    zip.addFile("test.xml", Buffer.from(xml, "utf-8"));
+
+    res.send({ message: "TBD prepping data for Uniform" });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx

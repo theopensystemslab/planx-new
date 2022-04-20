@@ -5,7 +5,7 @@ import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { PASSPORT_UPLOAD_KEY } from "../../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY } from "../../Pay/model";
 import { getParams } from "../bops";
-import { UniformPayload } from "../model";
+import { CSVData,UniformPayload } from "../model";
 
 export function getUniformParams(
   breadcrumbs: Store.breadcrumbs,
@@ -45,81 +45,90 @@ function makeXmlData(
   passport: Store.passport,
   sessionId: string
 ): UniformPayload {
-  const applicant = passport.data?.applicant;
-  const agent = passport.data?.agent;
   const payment = passport.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
 
   return {
-    Envelope: {
+    "soap:Envelope": {
       "_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
       "_xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
       "_xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
-      __prefix: "soap",
-      Body: {
+      "soap:Body": {
         CreateDcApplication: {
           SubmittedDcApplication: {
             ApplicationIdentification: sessionId,
             SiteLocation: {
               Address:
-                passport.data?._address?.single_line_address?.replaceAll(
-                  ", ",
-                  "\n"
-                ) || "",
+                passport.data?.["_address"]?.["single_line_address"] || "", // may need to replace commas with line breaks?
             },
             TypeOfApplication: {
-              ApplicationType: "LDC", // hardcode OR passport.data?.application.type ??
+              ApplicationType: passport.data?.["application.type"] || "LDC",
               ApplicationType_Text:
                 "Lawful Development Certificate submitted via RIPA", // ??
             },
-            Proposal: passport.data?.proposal?.description || "",
+            Proposal: passport.data?.["proposal.description"] || "",
             ApplicantDetails: {
               ApplicantName:
                 [
-                  applicant?.title,
-                  applicant?.name?.first,
-                  applicant?.name?.last,
-                ].join(" ") || "",
-              ApplicantPhoneNumber: applicant?.phone?.primary || "",
+                  passport.data?.["applicant.title"],
+                  passport.data?.["applicant.name.first"],
+                  passport.data?.["applicant.name.last"],
+                ]
+                  .filter(Boolean)
+                  .join(" ") || "",
+              ApplicantPhoneNumber:
+                passport.data?.["applicant.phone.primary"] || "",
               ApplicantAddress:
                 [
-                  applicant?.address?.line1,
-                  applicant?.address?.line2,
-                  applicant?.address?.town,
-                  applicant?.address?.county,
-                  applicant?.address?.postcode,
-                  applicant?.address?.country,
-                ].join(", ") || "",
+                  passport.data?.["applicant.address.line1"],
+                  passport.data?.["applicant.address.line2"],
+                  passport.data?.["applicant.address.town"],
+                  passport.data?.["applicant.address.county"],
+                  passport.data?.["applicant.address.postcode"],
+                  passport.data?.["applicant.address.country"],
+                ]
+                  .filter(Boolean)
+                  .join(", ") || "",
               ApplicantContactDetails: {
                 ApplicantContactDetail: {
-                  ContactTypeCode: "EMAIL",
-                  ContactAddress: applicant?.email || "",
+                  ContactTypeCode: passport.data?.["applicant.email"]
+                    ? "EMAIL"
+                    : "",
+                  ContactAddress: passport.data?.["applicant.email"] || "",
                 },
               },
             },
             AgentDetails: {
               AgentName:
-                [agent?.title, agent?.name?.first, agent?.name?.last].join(
-                  " "
-                ) || "",
-              AgentPhoneNumber: agent?.phone?.primary || "",
+                [
+                  passport.data?.["agent.title"],
+                  passport.data?.["agent.name.first"],
+                  passport.data?.["agent.name.last"],
+                ]
+                  .filter(Boolean)
+                  .join(" ") || "",
+              AgentPhoneNumber: passport.data?.["agent.phone.primary"] || "",
               AgentAddress:
                 [
-                  agent?.address?.line1,
-                  agent?.address?.line2,
-                  agent?.address?.town,
-                  agent?.address?.county,
-                  agent?.address?.postcode,
-                  agent?.address?.country,
-                ].join(", ") || "",
+                  passport.data?.["agent.address.line1"],
+                  passport.data?.["agent.address.line2"],
+                  passport.data?.["agent.address.town"],
+                  passport.data?.["agent.address.county"],
+                  passport.data?.["agent.address.postcode"],
+                  passport.data?.["agent.address.country"],
+                ]
+                  .filter(Boolean)
+                  .join(", ") || "",
               AgentContactDetails: {
                 AgentContactDetail: {
-                  ContactTypeCode: "EMAIL",
-                  ContactAddress: agent?.email || "",
+                  ContactTypeCode: passport.data?.["agent.email"]
+                    ? "EMAIL"
+                    : "",
+                  ContactAddress: passport.data?.["agent.email"] || "",
                 },
               },
             },
             ApplicationFee: {
-              FeeAmount: passport?.data?.application?.fee || "",
+              FeeAmount: passport?.data?.["application.fee"] || "",
               PaymentDetails: {
                 AmountReceived: payment?.amount.toString() || "",
                 PaymentMethod: "ONLINE", // GOV_PAY ??
@@ -134,7 +143,6 @@ function makeXmlData(
             ListedBuilding: "",
           },
         },
-        __prefix: "soap",
       },
     },
   };
@@ -147,7 +155,7 @@ export function makeCsvData(
   flow: Store.flow,
   passport: Store.passport,
   sessionId: string
-): { question: string; responses: any; metadata?: any }[] {
+): CSVData {
   const bopsData = getParams(breadcrumbs, flow, passport, sessionId);
 
   // format dedicated BOPs properties as list of questions & responses to match proposal_details
