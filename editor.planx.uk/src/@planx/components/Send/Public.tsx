@@ -71,10 +71,18 @@ const SendComponent: React.FC<Props> = (props) => {
   } else {
     return (
       <Card>
-        <DelayedLoadingIndicator
-          text="Finalising..."
-          msDelayBeforeVisible={0}
-        />
+        {props.destination === "uniform" && request.value ? (
+          <a
+            href={`${process.env.REACT_APP_API_URL}/uniform-download?file=${request.value.data?.fileName}`}
+          >
+            Download the Uniform .zip (TESTING ONLY)
+          </a>
+        ) : (
+          <DelayedLoadingIndicator
+            text="Finalising..."
+            msDelayBeforeVisible={0}
+          />
+        )}
       </Card>
     );
   }
