@@ -17,6 +17,8 @@ import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import { object, string } from "yup";
 
+import StatusPage from "./StatusPage";
+
 enum Status {
   EmailRequired,
   Validating,
@@ -76,114 +78,43 @@ const EmailError: React.FC<{ retry: () => void; email: string }> = ({
   retry,
   email,
 }) => {
-  const theme = useTheme();
-
   return (
-    <>
-      <Box width="100%">
-        <Banner
-          heading="Error sending email"
-          color={{
-            background: theme.palette.primary.main,
-            text: theme.palette.primary.contrastText,
-          }}
-        >
-          <Box mt={4}>
-            <Typography>Failed to send email to {email}</Typography>
-          </Box>
-        </Banner>
-      </Box>
-      <Card>
-        <Typography variant="body2">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien
-          nunc, blandit et cursus nec, auctor at leo. Donec eros enim, tristique
-          sit amet enim iaculis.
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={retry}
-        >
-          Retry
-        </Button>
-      </Card>
-    </>
+    <StatusPage
+      bannerHeading="Error sending email"
+      bannerText={`Failed to send email to ${email}`}
+      cardText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien
+      nunc, blandit et cursus nec, auctor at leo. Donec eros enim, tristique
+      sit amet enim iaculis."
+      buttonText="Retry"
+      onClick={retry}
+    ></StatusPage>
   );
 };
 
 const EmailInvalid: React.FC<{ email: string }> = ({ email }) => {
-  const theme = useTheme();
-
   return (
-    <>
-      <Box width="100%">
-        <Banner
-          heading="Invalid email address"
-          color={{
-            background: theme.palette.primary.main,
-            text: theme.palette.primary.contrastText,
-          }}
-        >
-          <Box mt={4}>
-            <Typography>Invalid email address: {email}.</Typography>
-          </Box>
-        </Banner>
-      </Box>
-      <Card>
-        <Typography variant="body2">
-          We weren't able to find any open applications matching the provided
-          details. Please click below to begin a new application.
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={() => location.reload()}
-        >
-          Start a new application
-        </Button>
-      </Card>
-    </>
+    <StatusPage
+      bannerHeading="Invalid email address"
+      bannerText={`Invalid email address: ${email}.`}
+      cardText="We weren't able to find any open applications matching the provided
+      details. Please click below to begin a new application."
+      buttonText="Start a new application"
+      onClick={() => location.reload()}
+    ></StatusPage>
   );
 };
 
 const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
-  const theme = useTheme();
-
   return (
-    <>
-      <Box width="100%">
-        <Banner
-          heading="Email sent"
-          color={{
-            background: theme.palette.primary.main,
-            text: theme.palette.primary.contrastText,
-          }}
-        >
-          <Box mt={4}>
-            <Typography>
-              We have sent a link to {email}. Use that link to continue your
-              application.
-            </Typography>
-          </Box>
-        </Banner>
-      </Box>
-      <Card>
-        <Typography variant="body2">
-          You will need to open the email we have sent you in order to proceed.
-          You are now free to close this tab.
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={() => window.close()}
-        >
-          Close Tab
-        </Button>
-      </Card>
-    </>
+    <StatusPage
+      bannerHeading="Email sent"
+      bannerText={`We have sent a link to ${email}. Use that link to continue your
+      application.`}
+      cardText="You will need to open the email we have sent you in order to proceed.
+      You are now free to close this tab."
+      buttonText="Close Tab"
+      onClick={() => window.close()}
+    ></StatusPage>
   );
 };
 
@@ -203,12 +134,13 @@ const ResumePage: React.FC = () => {
   }, [email]);
 
   const handleError = (error: unknown) => {
-    // Handle API specific errors
     if (axios.isAxiosError(error) && error.response?.status === 404) {
+      // Handle API specific errors
       setPageStatus(Status.Invalid);
+    } else {
+      // Handle all other errors
+      setPageStatus(Status.Error);
     }
-    // Handle all other errors
-    setPageStatus(Status.Error);
   };
 
   /**
