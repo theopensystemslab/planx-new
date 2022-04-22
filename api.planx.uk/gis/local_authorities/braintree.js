@@ -81,11 +81,6 @@ async function go(x, y, siteBoundary, extras) {
                 type: "warning",
                 data: properties,
               };
-              if (k === "article4") {
-                // In addition to the Article 4 variable, also map A4 subvariables onto the accumulator
-                const a4Subvariables = getA4Subvariables(data.features, articleFours, A4_KEY);
-                acc = { ...acc, ...a4Subvariables };
-              }
             } else {
               if (!acc[k]) {
                 acc[k] = {
@@ -107,6 +102,17 @@ async function go(x, y, siteBoundary, extras) {
           ...extras,
         }
       );
+
+    // Set granular A4s, accounting for one variable matching to many possible shapes
+    if (ob["article4"].value) {
+      Object.keys(articleFours).forEach((key) => {
+        if (articleFours[key].includes(ob["article4"].data[A4_KEY]) || ob[key]?.value) {
+          ob[key] = { value: true }
+        } else {
+          ob[key] = { value: false }
+        }
+      });
+    }
 
     // Braintree host multiple TPO layers, but we only want to return a single result
     const tpoLayers = [

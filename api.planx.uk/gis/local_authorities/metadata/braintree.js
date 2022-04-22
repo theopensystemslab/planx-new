@@ -145,15 +145,8 @@ const planningConstraints = {
       description: data.INFORMATIO,
     }),
     records: { // planx value to "PARISH" lookup
-      "article4.braintree.silverEnd": "Silver End",
-      "article4.braintree.stisted": "Stisted",
-      "article4.braintree.stisted": "Braintree",
-      "article4.braintree.stisted": "Gosfield",
-      "article4.braintree.stisted": "Middleton",
-      "article4.braintree.stisted": "Shalford",
-      "article4.braintree.stisted": "Greenstead Green",
-      "article4.braintree.stisted": "Coggeshall",
-      "article4.braintree.stisted": "Ashen",
+      "article4.braintree.silverEnd": ["Silver End"],
+      "article4.braintree.stisted": ["Stisted", "Braintree", "Gosfield", "Middleton", "Shalford", "Greenstead Green", "Coggeshall", "Ashen"],
     },
   },
   "designated.AONB": {
