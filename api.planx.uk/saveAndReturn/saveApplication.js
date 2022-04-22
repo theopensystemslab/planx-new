@@ -7,9 +7,15 @@ const {
 const { add } = require("date-fns");
 
 const saveApplication = async (req, res, next) => {
+  const { flowId, email } = req.body;
+  if (!flowId || !email) 
+    return next({
+      status: 400, 
+      message: "Required value missing"
+  });
+
   try {
-    const { emailAddress, flowSlug, teamSlug, teamPersonalisation, session } =
-      await validateRequest(req);
+    const { flowSlug, teamSlug, teamPersonalisation, session } = await validateRequest(flowId, email);
     const templateId = process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID;
     const config = {
       personalisation: getPersonalisation(
@@ -22,37 +28,38 @@ const saveApplication = async (req, res, next) => {
       // This value is required to go live, but is not currently set up
       // emailReplyToId: team.emailReplyToId,
     };
-    sendEmail(templateId, emailAddress, config, res);
+    sendEmail(templateId, email, config, res);
   } catch (error) {
     next(error);
   }
 };
 
-const validateRequest = async (req) => {
-  const client = getGraphQLClient();
-  const query = `
-    query ($flowId: uuid!) {
-      flows_by_pk(id: $flowId) {
-        slug
-        team {
+const validateRequest = async (flowId, email) => {
+  try {
+    const client = getGraphQLClient();
+    const query = `
+      query GetFlowByPK($flowId: uuid!) {
+        flows_by_pk(id: $flowId) {
           slug
-          notifyPersonalisation
+          team {
+            slug
+            notifyPersonalisation
+          }
         }
       }
-    }
-  `;
-  // TODO: Validate that flowId, sessionId, and email are linked in a lowcal_storage row
-  const response = await client.request(query, { flowId: req.body.flowId });
+    `;
+    // TODO: Validate that flowId, sessionId, and email are linked in a lowcal_storage row
+    const response = await client.request(query, { flowId: flowId });
 
-  // Catch errors here
-
-  return {
-    emailAddress: req.body.email,
-    flowSlug: response.flows_by_pk.slug,
-    teamSlug: response.flows_by_pk.team.slug,
-    teamPersonalisation: response.flows_by_pk.team.notifyPersonalisation,
-    session: getSessionDetails(),
-  };
+    return {
+      flowSlug: response.flows_by_pk.slug,
+      teamSlug: response.flows_by_pk.team.slug,
+      teamPersonalisation: response.flows_by_pk.team.notifyPersonalisation,
+      session: getSessionDetails(),
+    };
+  } catch (error) {
+    throw new Error("Unable to validate request")
+  }
 };
 
 const getSessionDetails = () => {

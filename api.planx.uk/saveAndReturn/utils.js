@@ -5,16 +5,11 @@ const getNotifyClient = () =>
   // new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEST);
   new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
 
-const getGraphQLClient = () =>
-  new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
-    headers: {
-      "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
-    },
-  });
+const getGraphQLClient = () => new GraphQLClient(process.env.HASURA_GRAPHQL_URL);
 
 const sendEmail = async (templateId, emailAddress, config, res) => {
-  const notifyClient = getNotifyClient();
   try {
+    const notifyClient = getNotifyClient();
     await notifyClient.sendEmail(
       templateId,
       emailAddress,
@@ -34,6 +29,7 @@ const sendEmail = async (templateId, emailAddress, config, res) => {
 
 /**
  * Converts a flow's slug to a pretty name
+ * XXX: This relies on pretty names not having dashes in them, which may not always be true (e.g. Na h-Eileanan Siar, Stoke-on-Trent)
  * @param {string} slug 
  * @returns {string}
  */

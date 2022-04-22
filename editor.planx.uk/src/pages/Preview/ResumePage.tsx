@@ -4,10 +4,9 @@ import { useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
-import { getCookie } from "lib/cookie";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { useCurrentRoute } from "react-navi";
@@ -238,7 +237,8 @@ const ResumePage: React.FC = () => {
       await axios.post(url, data);
       useStore.getState().setSaveToEmail(email);
       useStore.getState().setPath(ApplicationPath.SaveAndReturn);
-      // TODO: Remove sessionId query param from url?
+      // Remove sessionId query param from URL
+      window.history.pushState({}, document.title, window.location.pathname);
       // TODO: Reconciliation...!
     } catch (error) {
       handleError(error);
