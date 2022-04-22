@@ -5,7 +5,7 @@ import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { PASSPORT_UPLOAD_KEY } from "../../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY } from "../../Pay/model";
 import { getParams } from "../bops";
-import { CSVData,UniformPayload } from "../model";
+import { CSVData, UniformPayload } from "../model";
 
 export function getUniformParams(
   breadcrumbs: Store.breadcrumbs,
@@ -48,11 +48,14 @@ function makeXmlData(
   const payment = passport.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
 
   return {
-    "soap:Envelope": {
-      "_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-      "_xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
-      "_xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
-      "soap:Body": {
+    _declaration: {
+      _attributes: {
+        version: "1.0",
+        encoding: "utf-8",
+      },
+    },
+    Envelope: {
+      Body: {
         CreateDcApplication: {
           SubmittedDcApplication: {
             ApplicationIdentification: sessionId,

@@ -136,11 +136,14 @@ interface File {
 // Uniform LDC XML
 // ref "sample.xml" from Kev attached here https://trello.com/c/lVOPqsoY/1450-send-data-to-uniform
 export interface UniformPayload {
-  "soap:Envelope": {
-    "_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance";
-    "_xmlns:xsd": "http://www.w3.org/2001/XMLSchema";
-    "_xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/";
-    "soap:Body": {
+  _declaration: {
+    _attributes: {
+      version: string;
+      encoding: string;
+    };
+  };
+  Envelope: {
+    Body: {
       CreateDcApplication: {
         SubmittedDcApplication: {
           ApplicationIdentification: string;
