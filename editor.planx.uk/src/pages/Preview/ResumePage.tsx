@@ -19,7 +19,6 @@ enum Status {
   EmailRequired,
   Validating,
   Success,
-  Invalid,
   Error,
 }
 
@@ -87,25 +86,11 @@ const EmailError: React.FC<{ retry: () => void; email: string }> = ({
   );
 };
 
-const EmailInvalid: React.FC<{ email: string }> = ({ email }) => {
-  return (
-    // TODO: DON'T USE THIS! JUST SEND A SUCCESS IF THEY TRY TO RESUME
-    <StatusPage
-      bannerHeading="Invalid email address"
-      bannerText={`Invalid email address: ${email}.`}
-      cardText="We weren't able to find any open applications matching the provided
-      details. Please click below to begin a new application."
-      buttonText="Start a new application"
-      onButtonClick={() => location.reload()}
-    ></StatusPage>
-  );
-};
-
 const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
   return (
     <StatusPage
-      bannerHeading="Email sent"
-      bannerText={`We have sent a link to ${email}. Use that link to continue your
+      bannerHeading="Request successful"
+      bannerText={`If we hold any draft applications for ${email}, an email will be sent to that address. Please use that link to continue your
       application.`}
       cardText="You will need to open the email we have sent you in order to proceed.
       You are now free to close this tab."
@@ -130,16 +115,6 @@ const ResumePage: React.FC = () => {
     if (email) handleSubmit();
   }, [email]);
 
-  const handleError = (error: unknown) => {
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      // Handle API specific errors
-      setPageStatus(Status.Invalid);
-    } else {
-      // Handle all other errors
-      setPageStatus(Status.Error);
-    }
-  };
-
   /**
    * Send magic link to user, based on submitted email
    * Sets page status based on validation of request by API
@@ -152,7 +127,7 @@ const ResumePage: React.FC = () => {
       await axios.post(url, data);
       setPageStatus(Status.Success);
     } catch (error) {
-      handleError(error);
+      setPageStatus(Status.Error);
     }
   };
 
@@ -170,7 +145,7 @@ const ResumePage: React.FC = () => {
       window.history.pushState({}, document.title, window.location.pathname);
       // TODO: Reconciliation...!
     } catch (error) {
-      handleError(error);
+      setPageStatus(Status.Error);
     }
   };
 
@@ -191,7 +166,6 @@ const ResumePage: React.FC = () => {
       />
     ),
     [Status.Success]: <EmailSuccess email={email} />,
-    [Status.Invalid]: <EmailInvalid email={email} />,
     [Status.Error]: <EmailError retry={() => handleSubmit()} email={email} />,
   }[pageStatus];
 };
