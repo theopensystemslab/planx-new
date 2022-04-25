@@ -79,7 +79,7 @@ const getSessionDetails = () => {
     projectType:
       session?.data?.passport?.data?.["property.type"]?.[0] ||
       "Project type not submitted",
-    sessionId: 123456789,
+    id: 123456789,
   };
 };
 

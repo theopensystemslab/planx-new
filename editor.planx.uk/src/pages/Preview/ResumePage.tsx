@@ -1,7 +1,4 @@
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import { useTheme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import axios from "axios";
@@ -11,7 +8,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { useCurrentRoute } from "react-navi";
 import { ApplicationPath } from "types";
-import Banner from "ui/Banner";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
@@ -86,20 +82,21 @@ const EmailError: React.FC<{ retry: () => void; email: string }> = ({
       nunc, blandit et cursus nec, auctor at leo. Donec eros enim, tristique
       sit amet enim iaculis."
       buttonText="Retry"
-      onClick={retry}
+      onButtonClick={retry}
     ></StatusPage>
   );
 };
 
 const EmailInvalid: React.FC<{ email: string }> = ({ email }) => {
   return (
+    // TODO: DON'T USE THIS! JUST SEND A SUCCESS IF THEY TRY TO RESUME
     <StatusPage
       bannerHeading="Invalid email address"
       bannerText={`Invalid email address: ${email}.`}
       cardText="We weren't able to find any open applications matching the provided
       details. Please click below to begin a new application."
       buttonText="Start a new application"
-      onClick={() => location.reload()}
+      onButtonClick={() => location.reload()}
     ></StatusPage>
   );
 };
@@ -113,7 +110,7 @@ const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
       cardText="You will need to open the email we have sent you in order to proceed.
       You are now free to close this tab."
       buttonText="Close Tab"
-      onClick={() => window.close()}
+      onButtonClick={() => window.close()}
     ></StatusPage>
   );
 };

@@ -9,7 +9,7 @@ const resumeApplication = async (req, res, next) => {
     });
 
   try {
-    const { flowSlug, teamSlug, teamPersonalisation, sessions } = await validateRequest(flowId, email);
+    const { flowSlug, teamSlug, teamPersonalisation, sessions } = await validateRequest(flowId, email, next);
     const templateId = process.env.GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID;
     const config = {
       personalisation: getPersonalisation(
@@ -28,7 +28,7 @@ const resumeApplication = async (req, res, next) => {
   }
 };
 
-const validateRequest = async (flowId, email) => {
+const validateRequest = async (flowId, email, next) => {
   try {
     // TODO: Validate that flowId and email are linked in a lowcal_storage row
     // TODO: Ignore expired applications, if any
@@ -55,7 +55,7 @@ const validateRequest = async (flowId, email) => {
     // const mockEmailAddress = null;
 
     // if (!mockSessions.length || !mockEmailAddress) {
-    //   throw Error("Unable to find matching application", { status: 404 })
+    //   return next({message: "Unable to find matching application", status: 404})
     // };
 
     return {
