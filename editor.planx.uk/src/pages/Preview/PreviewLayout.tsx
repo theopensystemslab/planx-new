@@ -49,16 +49,20 @@ const PreviewLayout: React.FC<{
 
   const makeHref = (path: string) => [data.mountpath, "pages", path].join("/");
 
-  const [id] = useStore((state) => [state.id]);
+  const [id, sessionId] = useStore((state) => [state.id, state.sessionId]);
 
-  const handleRestart = () => {
+  const handleRestart = async () => {
     if (
       confirm(
         "Are you sure you want to restart? This will delete your previous answers"
       )
     ) {
       if (hasFeatureFlag("SAVE_AND_RETURN")) {
-        NEW_LOCAL.clearLocalFlow(id).then(() => window.location.reload());
+        // don't delete old flow for now
+        // await NEW_LOCAL.clearLocalFlow(sessionId)
+        const url = new URL(window.location.href);
+        url.searchParams.delete("sessionId");
+        window.location.href = url.href;
       } else {
         clearLocalFlow(id);
         window.location.reload();
