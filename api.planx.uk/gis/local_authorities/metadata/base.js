@@ -5,7 +5,7 @@ const baseSchema = {
     active: true,
     neg: "is not subject to any Article 4 restrictions",
     pos: "is subject to Article 4 restriction(s)",
-    "digital-land-datasets": ["article-4-direction"],
+    "digital-land-datasets": ["article-4-direction", "article-4-direction-area"],
   },
   "article4.caz": { // will be renamed to `article4.localAuthority.caz` when applicable
     active: true,
