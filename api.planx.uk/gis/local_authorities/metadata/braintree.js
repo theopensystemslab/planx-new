@@ -10,7 +10,7 @@ https://environment.data.gov.uk/arcgis/rest/services
 
 const braintreeDomain = "https://mapping.braintree.gov.uk/";
 const environmentDomain = "https://environment.data.gov.uk";
-const A4_KEY = "OBJECTID";
+const A4_KEY = "PARISH";
 
 const planningConstraints = {
   "listed.grade1": {
@@ -144,20 +144,9 @@ const planningConstraints = {
       text: "is subject to Article 4 restriction(s)",
       description: data.INFORMATIO,
     }),
-    records: { // planx value to "OBJECTID" lookup (set A4_KEY at top)
-      // "article4.braintree.braintree": 1,
-      "article4.braintree.silverEnd": 2,
-      // "article4.braintree.gosfield": 3,
-      // "article4.braintree.middleton": 4,
-      // "article4.braintree.shalford.a": 5,
-      // "article4.braintree.shalford.b": 6,
-      // "article4.braintree.greensteadGreen": 7,
-      // "article4.braintree.stisted.a": 9,
-      // "article4.braintree.stisted.b": 10,
-      // "article4.braintree.stisted.c": 17,
-      // "article4.braintree.stisted.d": 18,
-      // "article4.braintree.coggeshall": 19,
-      // "article4.braintree.ashen": 35,
+    records: { // planx value to "PARISH" lookup
+      "article4.braintree.silverEnd": ["Silver End"],
+      "article4.braintree.stisted": ["Stisted", "Braintree", "Gosfield", "Middleton", "Shalford", "Greenstead Green", "Coggeshall", "Ashen"],
     },
   },
   "designated.AONB": {
