@@ -41,7 +41,7 @@ const SendComponent: React.FC<Props> = (props) => {
               options={[
                 {
                   value: "bops",
-                  label: "BOPs",
+                  label: "BOPS",
                 },
                 {
                   value: "uniform",

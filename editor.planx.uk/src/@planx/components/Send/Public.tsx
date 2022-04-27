@@ -9,7 +9,7 @@ import Card from "../shared/Preview/Card";
 import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
 import { PublicProps } from "../ui";
 import { getParams } from "./bops";
-import { Send } from "./model";
+import { Destination,Send } from "./model";
 import { getUniformParams } from "./uniform";
 
 export type Props = PublicProps<Send>;
@@ -24,7 +24,10 @@ const SendComponent: React.FC<Props> = (props) => {
 
   let teamSlug = useTeamSlug();
   // Bucks has 4 legacy instances of Uniform, set teamSlug to pre-merger council name
-  if (props.destination === "uniform" && teamSlug === "buckinghamshire") {
+  if (
+    props.destination === Destination.Uniform &&
+    teamSlug === "buckinghamshire"
+  ) {
     teamSlug = passport.data?.["property.localAuthorityDistrict"]
       ?.filter((name: string) => name !== "Buckinghamshire")[0]
       ?.toLowerCase()
@@ -36,7 +39,7 @@ const SendComponent: React.FC<Props> = (props) => {
   const request = useAsync(async () =>
     axios.post(
       useStagingUrlIfTestApplication(passport)(destinationUrl),
-      props.destination === "bops"
+      props.destination === Destination.BOPS
         ? getParams(breadcrumbs, flow, passport, sessionId)
         : getUniformParams(breadcrumbs, flow, passport, sessionId)
     )
@@ -44,7 +47,7 @@ const SendComponent: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (
-      props.destination === "bops" &&
+      props.destination === Destination.BOPS &&
       !request.loading &&
       !request.error &&
       request.value &&
@@ -60,7 +63,7 @@ const SendComponent: React.FC<Props> = (props) => {
     return (
       <Card>
         <DelayedLoadingIndicator
-          text={`Sending data to ${props.destination.toUpperCase()}`}
+          text={`Sending data to ${props.destination.toUpperCase()} - ${teamSlug?.toUpperCase()}`}
           msDelayBeforeVisible={0}
         />
       </Card>
@@ -71,7 +74,7 @@ const SendComponent: React.FC<Props> = (props) => {
   } else {
     return (
       <Card>
-        {props.destination === "uniform" && request.value ? (
+        {props.destination === Destination.Uniform && request.value ? (
           <a
             href={`${process.env.REACT_APP_API_URL}/uniform-download?file=${request.value.data?.fileName}`}
           >

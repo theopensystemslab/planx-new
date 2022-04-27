@@ -2,7 +2,6 @@ import omit from "lodash/omit";
 import { GovUKPayment } from "types";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
-import { PASSPORT_UPLOAD_KEY } from "../../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY } from "../../Pay/model";
 import { getParams } from "../bops";
 import { CSVData, UniformPayload } from "../model";
@@ -13,29 +12,41 @@ export function getUniformParams(
   passport: Store.passport,
   sessionId: string
 ) {
-  // make a list of all S3 URLs from uploaded files
-  const fileUrls: string[] = [];
+  // make a list of all S3 URLs & filenames from uploaded files
+  const files: { url: string; name: string }[] = [];
   Object.entries(passport.data || {})
+    // add any files uploaded via a FileUpload component
     .filter(([, v]: any) => v?.[0]?.url)
     .forEach(([key, arr]) => {
-      (arr as any[]).forEach(({ url }) => {
+      (arr as any[]).forEach(({ url, filename }) => {
         try {
-          // add any files uploaded via a FileUpload component
-          fileUrls.push(url);
+          files.push({ url: url, name: filename });
         } catch (err) {}
       });
     });
 
   // additionally add the property boundary file if the user didn't draw
-  if (passport?.data?.[PASSPORT_UPLOAD_KEY]) {
-    fileUrls.push(passport.data[PASSPORT_UPLOAD_KEY]);
+  if (passport?.data?.["property.uploadedFile"]) {
+    const boundaryFile = passport.data["property.uploadedFile"];
+    files.push({ url: boundaryFile.url, name: boundaryFile.file.path });
   }
+
+  // applicants may upload the same file in multiple slots,
+  //  but we only want to send a single copy of each file to Uniform
+  const uniqueFiles: string[] = [];
+  const uniqueFileNames: string[] = [];
+  files.forEach((file) => {
+    if (!uniqueFileNames.includes(file.name)) {
+      uniqueFileNames.push(file.name);
+      uniqueFiles.push(file.url);
+    }
+  });
 
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
     xml: makeXmlData(passport, sessionId),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
-    files: fileUrls,
+    files: uniqueFiles,
   };
 }
 
