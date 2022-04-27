@@ -225,7 +225,7 @@ const ServiceTitle: React.FC<{
   route: Route;
 }> = ({ route }) => {
   const classes = useStyles();
-  const flowName = route.url?.pathname?.split("/")?.[2]?.replaceAll("-", " ");
+  const flowName = route.url?.pathname?.split("/")?.[2]?.replaceAll?.("-", " ");
 
   return (
     <span data-testid="service-title" className={classes.serviceTitle}>
