@@ -24,10 +24,16 @@ const activeFeatureFlags = (() => {
  * @param autoReload reload the page after change? default = true
  */
 const toggleFeatureFlag = (featureFlag: featureFlag, autoReload = true) => {
+  const supportedFlag = AVAILABLE_FEATURE_FLAGS.includes(featureFlag);
+
   if (activeFeatureFlags.has(featureFlag)) {
     activeFeatureFlags.delete(featureFlag);
-  } else {
+  } else if (supportedFlag) {
     activeFeatureFlags.add(featureFlag);
+  } else {
+    throw new Error(
+      `${featureFlag} is not a supported feature flag, try again. Available flags are: ${AVAILABLE_FEATURE_FLAGS}`
+    );
   }
 
   localStorage.setItem(
