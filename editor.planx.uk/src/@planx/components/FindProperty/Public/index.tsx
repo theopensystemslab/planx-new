@@ -101,26 +101,6 @@ function Component(props: Props) {
       />
     );
   } else if (address) {
-    let warning: {
-      show: boolean;
-      os_administrative_area: string;
-      os_local_custodian_code: string;
-      planx_team_name?: string;
-    } = {
-      show: false,
-      os_administrative_area: address.administrative_area,
-      os_local_custodian_code: address.local_custodian_code,
-    };
-
-    if (team?.name) {
-      // if neither admin area nor LCC match team, then show warning error msg
-      warning.show = ![
-        address.administrative_area,
-        address.local_custodian_code,
-      ].includes(team.name.toUpperCase());
-      warning.planx_team_name = team.name.toUpperCase();
-    }
-
     return (
       <PropertyInformation
         handleSubmit={(feedback?: string) => {
@@ -142,7 +122,6 @@ function Component(props: Props) {
 
             const passportData = {
               _address: address,
-              _addressWarning: warning,
               ...newPassportData,
             };
 
@@ -175,9 +154,7 @@ function Component(props: Props) {
             detail: address.planx_description,
           },
         ]}
-        team={team}
         teamColor={team?.theme?.primary || "#2c2c2c"}
-        error={warning.show}
       />
     );
   } else {
@@ -251,9 +228,6 @@ function GetAddress(props: {
               code: selectedAddress.CLASSIFICATION_CODE,
             })?.value || null,
           single_line_address: selectedAddress.ADDRESS,
-          administrative_area: selectedAddress.ADMINISTRATIVE_AREA, // local highway authority name (proxy for local authority?)
-          local_custodian_code:
-            selectedAddress.LOCAL_CUSTODIAN_CODE_DESCRIPTION, // similar to GSS_CODE, but may not reflect merged councils
           title: selectedAddress.ADDRESS.split(
             `, ${selectedAddress.ADMINISTRATIVE_AREA}`
           )[0], // display value used in autocomplete dropdown & FindProperty
@@ -408,9 +382,7 @@ export function PropertyInformation(props: any) {
     lat,
     lng,
     handleSubmit,
-    team,
     teamColor,
-    error,
   } = props;
   const styles = useClasses();
   const formik = useFormik({
@@ -462,14 +434,6 @@ export function PropertyInformation(props: any) {
           </Box>
         ))}
       </Box>
-      {error && team?.name && (
-        <Box role="status">
-          <Typography variant="body1" color="error">
-            This address may not be in {team.name}, are you sure you want to
-            continue using this service?
-          </Typography>
-        </Box>
-      )}
       <Box color="text.secondary" textAlign="right">
         <CollapsibleInput
           handleChange={formik.handleChange}
