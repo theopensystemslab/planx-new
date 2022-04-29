@@ -29,8 +29,6 @@ export interface Address {
   planx_description: string;
   planx_value: string;
   single_line_address: string;
-  administrative_area: string;
-  local_custodian_code: string;
   title: string;
 }
 
