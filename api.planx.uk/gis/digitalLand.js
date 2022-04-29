@@ -1,6 +1,6 @@
 require("isomorphic-fetch");
 
-const { omitGeojson, addDesignatedVariable } = require("./helpers");
+const { addDesignatedVariable, omitGeometry, rollupResultLayers } = require("./helpers");
 const { baseSchema } = require("./local_authorities/metadata/base.js");
 
 const localAuthorityMetadata = {
@@ -59,12 +59,12 @@ async function go(localAuthority, geom) {
         const key = Object.keys(baseSchema).find(key => baseSchema[key]["digital-land-datasets"].includes(entity.dataset));
         // because there can be many digital land datasets per planx variable, check if this key is already in our result
         if (Object.keys(formattedResult).includes(key)) {
-          formattedResult[key]["data"].push(omitGeojson(entity));
+          formattedResult[key]["data"].push(omitGeometry(entity));
         } else {
           formattedResult[key] = {
             value: true,
             text: baseSchema[key].pos,
-            data: [omitGeojson(entity)],
+            data: [omitGeometry(entity)],
           };
         }
       });
@@ -84,14 +84,15 @@ async function go(localAuthority, geom) {
 
     // set granular `designated.nationalPark.broads` based on entity id (eventually extract to helper method if other cases like this)
     const broads = "designated.nationalPark.broads";
-    if (formattedResult["designated.nationalPark"].value) {
+    if (formattedResult["designated.nationalPark"] && formattedResult["designated.nationalPark"].value) {
       formattedResult["designated.nationalPark"].data.forEach((entity) => {
         if (baseSchema[broads]["digital-land-entities"].includes(entity.entity)) {
           formattedResult[broads] = { value: true, text: baseSchema[broads].pos };
         }
       });
     } else {
-      formattedResult[broads] = { value: false };
+      // only add the granular variable if the response already includes the parent one
+      if (formattedResult["designated.nationalPark"]) formattedResult[broads] = { value: false };
     }
 
     // --- LISTED BUILDINGS ---
@@ -112,8 +113,8 @@ async function go(localAuthority, geom) {
               // these are various ways we link source data to granular planx values (see local_authorities/metadata for specifics)
               entity.name.replace(/\r?\n|\r/g, " ") === a4s[key] ||
               entity.reference === a4s[key] ||
-              entity.json.notes === a4s[key] ||
-              entity.json.description?.startsWith(a4s[key]) ||
+              entity?.notes === a4s[key] ||
+              entity?.description?.startsWith(a4s[key]) ||
               formattedResult[key]?.value // if this granular var is already true, make sure it remains true
             ) {
               formattedResult[key] = { value: true };
@@ -129,6 +130,15 @@ async function go(localAuthority, geom) {
       if (formattedResult["article4.caz"]) {
         formattedResult[localCaz] = formattedResult["article4.caz"];
         delete formattedResult["article4.caz"];
+
+        // if caz is true, but parent a4 is false, sync a4 for accurate granularity
+        if (formattedResult[localCaz].value && !formattedResult["article4"].value) {
+          formattedResult["article4"] = { 
+            value: true, 
+            text: baseSchema["article4"].pos, 
+            data: formattedResult[localCaz].data 
+          }; 
+        }
       }
     }
 
