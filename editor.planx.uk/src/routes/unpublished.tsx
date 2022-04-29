@@ -19,7 +19,9 @@ import Layout from "pages/Preview/PreviewLayout";
 import Questions from "pages/Preview/Questions";
 import React from "react";
 import { View } from "react-navi";
-import type { Flow, GlobalSettings, Maybe } from "types";
+import { ApplicationPath, Flow, GlobalSettings, Maybe } from "types";
+
+import { isSaveReturnFlow } from "./utils";
 
 const routes = compose(
   withData((req) => ({
@@ -64,7 +66,13 @@ const routes = compose(
 
     if (!flow) throw new NotFoundError();
 
-    useStore.getState().setFlow(flow.id, await dataMerged(flow.id));
+    const flowData = await dataMerged(flow.id);
+    useStore.getState().setFlow(flow.id, flowData);
+
+    const path = isSaveReturnFlow(flowData)
+      ? ApplicationPath.SaveAndReturn
+      : ApplicationPath.SingleSession;
+    useStore.getState().setPath(path);
 
     return (
       <PreviewContext.Provider value={{ flow, globalSettings }}>

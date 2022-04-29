@@ -37,7 +37,10 @@ export declare namespace Store {
 //      frontend because they do things like connect to sharedb, which is
 //      not something that public users should be concerned with.
 
-type FullStore = SharedStore & PreviewStore & EditorStore & EditorUIStore;
+export type FullStore = SharedStore &
+  PreviewStore &
+  EditorStore &
+  EditorUIStore;
 
 export const { vanillaStore, useStore } = (() => {
   const vanillaStore: StoreApi<FullStore> = (() => {
