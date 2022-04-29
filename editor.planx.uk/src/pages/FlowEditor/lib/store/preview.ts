@@ -16,6 +16,7 @@ import { v4 as uuidV4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
+import { ApplicationPath } from "./../../../../types";
 import type { Store } from ".";
 import type { SharedStore } from "./shared";
 
@@ -66,6 +67,10 @@ export interface PreviewStore extends Store.Store {
   changeAnswer: (id: string) => void;
   changedNode: string | undefined;
   _nodesPendingEdit: string[];
+  path: ApplicationPath;
+  setPath: (path: ApplicationPath) => void;
+  saveToEmail?: string;
+  setSaveToEmail: (notifyEmail: string) => void;
 }
 
 export const previewStore = (
@@ -605,6 +610,14 @@ export const previewStore = (
   changedNode: undefined,
 
   _nodesPendingEdit: [],
+
+  path: ApplicationPath.Resume,
+
+  setPath: (path) => set({ path }),
+
+  saveToEmail: undefined,
+
+  setSaveToEmail: (saveToEmail) => set({ saveToEmail }),
 });
 
 const knownNots = (
