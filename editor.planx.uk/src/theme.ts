@@ -24,6 +24,19 @@ export const borderedFocusStyle = (focusColour: string = GOVUK_YELLOW) => ({
   boxShadow: "inset 0 0 0 2px black",
 });
 
+export const linkStyle = {
+  textDecoration: "underline",
+  textDecorationThickness: "1px",
+  textUnderlineOffset: "0.1em",
+  "&:hover": {
+    textDecorationThickness: "3px",
+    // Disable ink skipping on underlines on hover. Browsers haven't
+    // standardised on this part of the spec yet, so set both properties
+    textDecorationSkipInk: "none", // Chromium, Firefox
+    textDecorationSkip: "none", // Safari
+  },
+};
+
 /**
  * Get Global theme options
  * The global theme is used in editor, and as the base theme in Preview/Unpublished which can be
@@ -145,16 +158,7 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
     },
     MuiLink: {
       root: {
-        textDecoration: "underline",
-        textDecorationThickness: "1px",
-        textUnderlineOffset: "0.1em",
-        "&:hover": {
-          textDecorationThickness: "3px",
-          // Disable ink skipping on underlines on hover. Browsers haven't
-          // standardised on this part of the spec yet, so set both properties
-          textDecorationSkipInk: "none", // Chromium, Firefox
-          textDecorationSkip: "none", // Safari
-        },
+        ...linkStyle,
         "&:focus-visible": focusStyle(themeOptions.palette?.action?.focus),
       },
     },
