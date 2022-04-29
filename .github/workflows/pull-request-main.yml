@@ -4,6 +4,7 @@ on:
     types: [opened, synchronize]
     branches:
       - main
+      - feat/save-and-return # TODO: Delete when feature branch merged
 
 env:
   DOMAIN: planx.pizza
