@@ -192,6 +192,8 @@ jobs:
             GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE }}
             GOV_UK_PAY_TOKEN_LAMBETH=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_LAMBETH }}
             GOV_UK_PAY_TOKEN_SOUTHWARK=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_SOUTHWARK }}
+            GOVUK_NOTIFY_API_KEY_TEAM=${{ secrets.GOVUK_NOTIFY_API_KEY_TEAM }}
+            GOVUK_NOTIFY_API_KEY_TEST=${{ secrets.GOVUK_NOTIFY_API_KEY_TEST }}
             " > .env.temp
             cat .env .env.temp .env.staging > .env.prod
 
