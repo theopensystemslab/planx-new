@@ -148,6 +148,36 @@
       filter: {}
 - table:
     schema: public
+    name: lowcal_sessions
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - data
+      - id
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - data
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - data
+      - id
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: operations
   object_relationships:
   - name: actor

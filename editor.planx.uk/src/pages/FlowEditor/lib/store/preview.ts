@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
 import { TYPES } from "@planx/components/types";
 import { sortIdsDepthFirst } from "@planx/graph";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { client } from "lib/graphql";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import difference from "lodash/difference";
@@ -342,7 +343,19 @@ export const previewStore = (
     set(args);
   },
 
-  sessionId: uuidV4(),
+  sessionId: (() => {
+    if (hasFeatureFlag("SAVE_AND_RETURN")) {
+      const url = new URL(window.location.href);
+      let sessionId = url.searchParams.get("sessionId");
+      if (!sessionId) {
+        url.searchParams.append("sessionId", uuidV4());
+        window.location.href = url.href;
+      }
+      return sessionId!;
+    } else {
+      return uuidV4();
+    }
+  })(),
 
   async sendSessionDataToHasura() {
     try {
