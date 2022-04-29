@@ -1,5 +1,5 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = ["SAVE_AND_RETURN"] as const;
+const AVAILABLE_FEATURE_FLAGS = ["SAVE_AND_RETURN", "SEND_TO_UNIFORM"] as const;
 
 type featureFlag = typeof AVAILABLE_FEATURE_FLAGS[number];
 

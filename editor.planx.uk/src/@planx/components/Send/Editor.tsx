@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
@@ -23,6 +24,21 @@ const SendComponent: React.FC<Props> = (props) => {
     },
   });
 
+  // only show radio buttons if we have support > 1 destination
+  let options: { value: string; label: string }[] = [];
+  if (hasFeatureFlag("SEND_TO_UNIFORM")) {
+    options = [
+      {
+        value: "bops",
+        label: "BOPS",
+      },
+      {
+        value: "uniform",
+        label: "Uniform",
+      },
+    ];
+  }
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -38,16 +54,7 @@ const SendComponent: React.FC<Props> = (props) => {
           </InputRow>
           <InputRow>
             <Radio
-              options={[
-                {
-                  value: "bops",
-                  label: "BOPS",
-                },
-                {
-                  value: "uniform",
-                  label: "Uniform",
-                },
-              ]}
+              options={options}
               value={formik.values.destination}
               onChange={(newDestination) => {
                 formik.setFieldValue("destination", newDestination);
