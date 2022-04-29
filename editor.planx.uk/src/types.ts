@@ -114,3 +114,13 @@ export interface GovUKPayment {
     };
   };
 }
+
+/**
+ * Describes the different paths through which a flow can be navigated by a user
+ */
+export enum ApplicationPath {
+  Save,
+  Resume,
+  SingleSession,
+  SaveAndReturn,
+}
