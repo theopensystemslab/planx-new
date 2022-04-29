@@ -105,12 +105,6 @@ test("recovers previously submitted address when clicking the back button", asyn
       administrative_area: "SOUTHWARK",
       local_custodian_code: "SOUTHWARK",
     },
-    _addressWarning: {
-      show: true,
-      os_administrative_area: "SOUTHWARK",
-      os_local_custodian_code: "SOUTHWARK",
-      planx_team_name: "CANTERBURY",
-    },
     // "property.type": ["residential.HMO.parent"],
     "property.localAuthorityDistrict": ["Southwark"],
   };

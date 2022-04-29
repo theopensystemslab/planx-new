@@ -33,12 +33,6 @@ interface BOPSMinimumPayload {
     postcode: string;
     latitude: string;
     longitude: string;
-    warning?: {
-      show: boolean;
-      os_administrative_area: string;
-      os_local_custodian_code: string;
-      planx_team_name?: string;
-    };
   };
   applicant_email: string;
 }
