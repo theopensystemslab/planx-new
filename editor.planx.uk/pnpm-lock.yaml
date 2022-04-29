@@ -46,7 +46,7 @@ specifiers:
   '@types/sharedb': ^1.0.17
   '@types/uuid': ^8.3.1
   array-move: ^3.0.1
-  axios: ^0.25.0
+  axios: ^0.26.1
   camelcase-keys: ^7.0.0
   classnames: ^2.2.6
   craco-esbuild: ^0.5.0
@@ -132,7 +132,7 @@ dependencies:
   '@material-ui/utils': 5.0.0-beta.5_react@17.0.2
   '@opensystemslab/map': 0.5.4
   array-move: 3.0.1
-  axios: 0.25.0
+  axios: 0.26.1
   camelcase-keys: 7.0.0
   classnames: 2.2.6
   date-fns: 2.16.1
@@ -6229,8 +6229,8 @@ packages:
       - debug
     dev: false
 
-  /axios/0.25.0:
-    resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
+  /axios/0.26.1:
+    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
     dependencies:
       follow-redirects: 1.14.9
     transitivePeerDependencies:
