@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@airbrake/node': ^2.1.5
+  adm-zip: ^0.5.9
   aws-sdk: ^2.727.1
   body-parser: ^1.19.0
   cookie-parser: ^1.4.5
@@ -31,9 +32,11 @@ specifiers:
   pino-noir: ^2.2.1
   prettier: 2.x
   supertest: ^6.1.3
+  xml-js: ^1.6.11
 
 dependencies:
   '@airbrake/node': 2.1.7
+  adm-zip: 0.5.9
   aws-sdk: 2.973.0
   body-parser: 1.19.0
   cookie-parser: 1.4.5
@@ -53,6 +56,7 @@ dependencies:
   passport: 0.4.1
   passport-google-oauth20: 2.0.0
   pino-noir: 2.2.1
+  xml-js: 1.6.11
 
 devDependencies:
   dotenv: 8.6.0
@@ -802,6 +806,11 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
+
+  /adm-zip/0.5.9:
+    resolution: {integrity: sha512-s+3fXLkeeLjZ2kLjCBwQufpI5fuN+kIGBxu6530nVQZGVol0d7Y/M88/xw9HGGUcJjKf8LutN3VPRUBq6N7Ajg==}
+    engines: {node: '>=6.0'}
+    dev: false
 
   /agent-base/6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -3998,6 +4007,10 @@ packages:
     resolution: {integrity: sha1-e45lYZCyKOgaZq6nSEgNgozS03o=}
     dev: false
 
+  /sax/1.2.4:
+    resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
+    dev: false
+
   /saxes/5.0.1:
     resolution: {integrity: sha512-5LBh1Tls8c9xgGjw3QrMwETmTMVk0oFgvrFSvWx62llR2hcEInrKNZ2GZCCuuy2lvWrdl5jhbpeqc5hRYKFOcw==}
     engines: {node: '>=10'}
@@ -4682,6 +4695,13 @@ packages:
       utf-8-validate:
         optional: true
     dev: true
+
+  /xml-js/1.6.11:
+    resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}
+    hasBin: true
+    dependencies:
+      sax: 1.2.4
+    dev: false
 
   /xml-name-validator/3.0.0:
     resolution: {integrity: sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw==}

@@ -11,36 +11,12 @@ import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
-import OptionButton from "ui/OptionButton";
+import Radio from "ui/Radio";
 import RichTextInput from "ui/RichTextInput";
 
 import { parseTextInput, TextInput } from "./model";
 
 export type Props = EditorProps<TYPES.TextInput, TextInput>;
-
-interface RadioProps<T> {
-  value?: T;
-  options: Array<{ label: string; value: T }>;
-  onChange: (newValue: T) => void;
-}
-
-function Radio<T>(props: RadioProps<T>) {
-  return (
-    <div>
-      {props.options.map((option, index) => (
-        <OptionButton
-          selected={props.value === option.value}
-          key={index}
-          onClick={() => {
-            props.onChange(option.value);
-          }}
-        >
-          {option.label}
-        </OptionButton>
-      ))}
-    </div>
-  );
-}
 
 const TextInputComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
