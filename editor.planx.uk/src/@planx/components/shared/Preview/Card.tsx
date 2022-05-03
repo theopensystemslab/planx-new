@@ -1,14 +1,13 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import ButtonBase from "@material-ui/core/ButtonBase";
 import Container from "@material-ui/core/Container";
 import Fade from "@material-ui/core/Fade";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { linkStyle } from "theme";
 import { ApplicationPath } from "types";
+
+import SaveResumeButton from "./SaveResumeButton";
 
 interface Props {
   children: React.ReactNode;
@@ -22,33 +21,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
       marginTop: theme.spacing(2.5),
     },
   },
-  saveResumeButton: {
-    ...linkStyle,
-    marginTop: theme.spacing(2.5),
-  },
 }));
-
-const SaveResumeButton: React.FC = () => {
-  const classes = useStyles();
-  const isEmailSaved = Boolean(useStore((state) => state.saveToEmail));
-  const onClick = () =>
-    useStore
-      .getState()
-      .setPath(isEmailSaved ? ApplicationPath.Save : ApplicationPath.Resume);
-
-  return (
-    <>
-      <Typography variant="body2">or</Typography>
-      <ButtonBase className={classes.saveResumeButton} onClick={onClick}>
-        <Typography variant="body2">
-          {isEmailSaved
-            ? "Save and return to this application later"
-            : "Resume an application you have already started"}
-        </Typography>
-      </ButtonBase>
-    </>
-  );
-};
 
 /**
  * Card which acts as a wrapper for public components
