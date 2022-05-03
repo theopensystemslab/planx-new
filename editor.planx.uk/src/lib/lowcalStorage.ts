@@ -106,10 +106,10 @@ const memoize = <T extends Function>(fn: T) => {
   }) as unknown as T;
 };
 
-export function stringifyWithRootKeysSortedAlphabetically(
-  ob: Record<string, unknown>
-) {
-  return JSON.stringify(
+export const stringifyWithRootKeysSortedAlphabetically = (
+  ob: Record<string, unknown> = {}
+) =>
+  JSON.stringify(
     Object.keys(ob)
       .sort()
       .reduce((acc, curr) => {
@@ -117,6 +117,5 @@ export function stringifyWithRootKeysSortedAlphabetically(
         return acc;
       }, {} as typeof ob)
   );
-}
 
 export const lowcalStorage = new LowcalStorage();
