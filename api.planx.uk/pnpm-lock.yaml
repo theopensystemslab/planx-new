@@ -9,6 +9,7 @@ specifiers:
   cookie-session: ^1.4.0
   cors: ^2.8.5
   csv-stringify: ^5.6.2
+  date-fns: ^2.28.0
   dotenv: ^8.2.0
   esbuild: ^0.12.22
   esbuild-jest: ^0.5.0
@@ -28,6 +29,7 @@ specifiers:
   nanoid: ^3.1.12
   nock: ^13.0.11
   node-dev: ^5.0.0
+  notifications-node-client: ^5.1.1
   passport: ^0.4.1
   passport-google-oauth20: ^2.0.0
   pino-noir: ^2.2.1
@@ -44,6 +46,7 @@ dependencies:
   cookie-session: 1.4.0
   cors: 2.8.5
   csv-stringify: 5.6.2
+  date-fns: 2.28.0
   express: 4.17.1
   express-jwt: 6.1.0
   express-pino-logger: 6.0.0
@@ -55,6 +58,7 @@ dependencies:
   jsonwebtoken: 8.5.1
   mime: 2.5.2
   nanoid: 3.1.25
+  notifications-node-client: 5.1.1
   passport: 0.4.1
   passport-google-oauth20: 2.0.0
   pino-noir: 2.2.1
@@ -937,6 +941,14 @@ packages:
       xml2js: 0.4.19
     dev: false
 
+  /axios/0.25.0:
+    resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
+    dependencies:
+      follow-redirects: 1.15.1
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /babel-jest/26.6.3_@babel+core@7.15.0:
     resolution: {integrity: sha512-pl4Q+GAVOHwvjrck6jKjvmGhnO3jHX/xuB9d27f+EJZ/6k+6nMuPjorrYp7s++bKKdANwzElBWnLWaObvTnaZA==}
     engines: {node: '>= 10.14.2'}
@@ -1404,6 +1416,11 @@ packages:
       whatwg-mimetype: 2.3.0
       whatwg-url: 8.7.0
     dev: true
+
+  /date-fns/2.28.0:
+    resolution: {integrity: sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==}
+    engines: {node: '>=0.11'}
+    dev: false
 
   /dateformat/3.0.3:
     resolution: {integrity: sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==}
@@ -1908,6 +1925,16 @@ packages:
 
   /follow-redirects/1.14.2:
     resolution: {integrity: sha512-yLR6WaE2lbF0x4K2qE2p9PEXKLDjUjnR/xmjS3wHAYxtlsI9MLLBJUZirAHKzUZDGLxje7w/cXR49WOUo4rbsA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
+
+  /follow-redirects/1.15.1:
+    resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -3461,6 +3488,16 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /notifications-node-client/5.1.1:
+    resolution: {integrity: sha512-/Rutb/s7OLqIvsvgjPi6kVSu4nnEC5Hq1arB6fo219hAJOzkHJ+dJr1fMNIpDo7ubgf3hv5GFNzutPN54wIqOA==}
+    dependencies:
+      axios: 0.25.0
+      jsonwebtoken: 8.5.1
+      underscore: 1.13.4
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /npm-run-path/2.0.2:
     resolution: {integrity: sha1-NakjLfo11wZ7TLLd8jV7GHFTbF8=}
     engines: {node: '>=4'}
@@ -4507,6 +4544,10 @@ packages:
 
   /uid2/0.0.3:
     resolution: {integrity: sha1-SDEm4Rd03y9xuLY53NeZw3YWK4I=}
+    dev: false
+
+  /underscore/1.13.4:
+    resolution: {integrity: sha512-BQFnUDuAQ4Yf/cYY5LNrK9NCJFKriaRbD9uR1fTeXnBeoa97W0i41qkZfGO9pSo8I5KzjAcSY2XYtdf0oKd7KQ==}
     dev: false
 
   /union-value/1.0.1:
