@@ -86,7 +86,7 @@ const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const isEmailCaptured = Boolean(useStore((state) => state.saveToEmail));
   const handleSubmit = (email: string) =>
-    useStore.getState().setSaveToEmail(email);
+    useStore.setState({ saveToEmail: email });
 
   return (
     <>
