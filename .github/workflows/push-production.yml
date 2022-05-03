@@ -46,7 +46,7 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - run: npm install -g pnpm
+      - run: npm install -g pnpm@6.24.1
         working-directory: editor.planx.uk
       - run: pnpm install --frozen-lockfile
         working-directory: editor.planx.uk
@@ -86,7 +86,7 @@ jobs:
           aws-access-key-id: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
-      - run: npm install -g pnpm
+      - run: npm install -g pnpm@6.24.1
         working-directory: infrastructure/application
       - run: pnpm install --frozen-lockfile
         working-directory: infrastructure/application
