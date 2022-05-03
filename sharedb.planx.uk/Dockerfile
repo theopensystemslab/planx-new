@@ -2,7 +2,7 @@
 FROM node:16.13.1-alpine as base
 
 WORKDIR /sharedb
-RUN npm install -g pnpm
+RUN npm install -g pnpm@6.24.1
 COPY pnpm-lock.yaml .
 EXPOSE 4000
 
