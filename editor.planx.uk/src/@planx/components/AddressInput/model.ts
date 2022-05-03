@@ -13,7 +13,7 @@ export type UserData = {
 };
 
 export const userDataSchema: SchemaOf<UserData> = object({
-  line1: string().required("Line 1 is required"),
+  line1: string().required("Address line 1 is required"),
   line2: string(),
   town: string().required("Town is required"),
   county: string(),

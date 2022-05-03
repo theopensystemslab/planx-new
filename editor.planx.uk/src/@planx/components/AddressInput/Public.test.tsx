@@ -5,8 +5,7 @@ import { uniqueId } from "lodash";
 import React from "react";
 
 import { ERROR_MESSAGE } from "../shared/constants";
-import { fillInFieldsUsingPlaceholder } from "../shared/testHelpers";
-import { userDataSchema } from "./model";
+import { fillInFieldsUsingLabel } from "../shared/testHelpers";
 import AddressInput from "./Public";
 
 test("submits an address", async () => {
@@ -15,13 +14,13 @@ test("submits an address", async () => {
   render(<AddressInput handleSubmit={handleSubmit} title="" fn="foo" />);
 
   await waitFor(async () => {
-    await fillInFieldsUsingPlaceholder({
-      "Line 1": "Flat 1",
-      "Line 2": "221b Baker St",
+    await fillInFieldsUsingLabel({
+      "Address line 1": "Flat 1",
+      "Address line 2 (optional)": "221b Baker St",
       Town: "London",
-      County: "County",
+      "County (optional)": "County",
       Postcode: "SW1A 2AA",
-      Country: "United Kingdom",
+      "Country (optional)": "United Kingdom",
     });
 
     await userEvent.click(screen.getByTestId("continue-button"));
@@ -65,8 +64,8 @@ test("recovers previously submitted text when clicking the back button", async (
   );
 
   await waitFor(async () => {
-    await fillInFieldsUsingPlaceholder({
-      "Line 2": "221b Baker St",
+    await fillInFieldsUsingLabel({
+      "Address line 2 (optional)": "221b Baker St",
     });
 
     userEvent.click(screen.getByTestId("continue-button"));
@@ -111,8 +110,8 @@ test("recovers previously submitted text when clicking the back button even if a
   );
 
   await waitFor(async () => {
-    await fillInFieldsUsingPlaceholder({
-      "Line 2": "221b Baker St",
+    await fillInFieldsUsingLabel({
+      "Address line 2 (optional)": "221b Baker St",
     });
 
     userEvent.click(screen.getByTestId("continue-button"));
@@ -134,13 +133,13 @@ test("recovers previously submitted text when clicking the back button even if a
 it("should not have any accessibility violations on initial load", async () => {
   const { container } = render(<AddressInput title="title" />);
   await waitFor(async () => {
-    await fillInFieldsUsingPlaceholder({
-      "Line 1": "Flat 1",
-      "Line 2": "221b Baker St",
+    await fillInFieldsUsingLabel({
+      "Address line 1": "Flat 1",
+      "Address line 2 (optional)": "221b Baker St",
       Town: "London",
-      County: "County",
+      "County (optional)": "County",
       Postcode: "SW1A 2AA",
-      Country: "United Kingdom",
+      "Country (optional)": "United Kingdom",
     });
   });
   const results = await axe(container);
