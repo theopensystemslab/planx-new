@@ -331,17 +331,15 @@
     - role: public
       permission:
         columns:
+          - created_at
           - id
           - name
+          - notifyPersonalisation
+          - settings
           - slug
           - theme
-          - created_at
           - updated_at
-          - settings
         filter: {}
-- table:
-    schema: public
-    name: uniform_applications
 - table:
     schema: public
     name: users

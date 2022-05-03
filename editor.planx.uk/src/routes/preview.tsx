@@ -19,9 +19,9 @@ import Layout from "pages/Preview/PreviewLayout";
 import Questions from "pages/Preview/Questions";
 import React from "react";
 import { View } from "react-navi";
-import { ApplicationPath, Flow, GlobalSettings, Maybe } from "types";
+import { Flow, GlobalSettings, Maybe } from "types";
 
-import { isSaveReturnFlow } from "./utils";
+import { setPath } from "./utils";
 
 const routes = compose(
   withData((req) => ({
@@ -74,10 +74,7 @@ const routes = compose(
 
     const flowData = publishedFlow ? publishedFlow : await dataMerged(flow.id);
 
-    const path = isSaveReturnFlow(flowData)
-      ? ApplicationPath.SaveAndReturn
-      : ApplicationPath.SingleSession;
-    useStore.getState().setPath(path);
+    setPath(flowData, req);
 
     // XXX: necessary as long as not every flow is published; aim to remove dataMergedHotfix.ts in future
     // load pre-flattened published flow if exists, else load & flatten flow
