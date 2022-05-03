@@ -1,6 +1,7 @@
-import stringify from "json-stable-stringify";
-
-import { lowcalStorage } from "./lowcalStorage";
+import {
+  lowcalStorage,
+  stringifyWithRootKeysSortedAlphabetically,
+} from "./lowcalStorage";
 
 export const getLocalFlow = async (sessionId: string) => {
   const entry = `session:${sessionId}`;
@@ -17,7 +18,10 @@ export const setLocalFlow = async (
   sessionId: string,
   args: { [key: string]: any }
 ) => {
-  await lowcalStorage.setItem(`session:${sessionId}`, stringify(args));
+  await lowcalStorage.setItem(
+    `session:${sessionId}`,
+    stringifyWithRootKeysSortedAlphabetically(args)
+  );
 };
 
 export const clearLocalFlow = async (sessionId: string) => {
