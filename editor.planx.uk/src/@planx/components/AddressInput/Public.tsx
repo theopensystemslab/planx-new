@@ -5,7 +5,6 @@ import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
-import InputRow from "ui/InputRow";
 import InputRowItem from "ui/InputRowItem";
 
 import { ERROR_MESSAGE } from "../shared/constants";
@@ -51,11 +50,10 @@ export default function AddressInputComponent(props: Props): FCReturn {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
-      <InputLabel label="Building and street">
+      <InputLabel label="Address line 1">
         <Input
           name="line1"
           value={formik.values.line1}
-          placeholder="Line 1"
           bordered
           errorMessage={formik.errors.line1}
           onChange={formik.handleChange}
@@ -67,21 +65,19 @@ export default function AddressInputComponent(props: Props): FCReturn {
           }}
         />
       </InputLabel>
-      <InputRow>
+      <InputLabel label="Address line 2 (optional)">
         <Input
           name="line2"
           value={formik.values.line2}
-          placeholder="Line 2"
           bordered
           errorMessage={formik.errors.line2}
           onChange={formik.handleChange}
         />
-      </InputRow>
+      </InputLabel>
       <InputLabel label="Town">
         <Input
           name="town"
           value={formik.values.town}
-          placeholder="Town"
           bordered
           errorMessage={formik.errors.town}
           onChange={formik.handleChange}
@@ -93,11 +89,10 @@ export default function AddressInputComponent(props: Props): FCReturn {
           }}
         />
       </InputLabel>
-      <InputLabel label="County">
+      <InputLabel label="County (optional)">
         <Input
           name="county"
           value={formik.values.county}
-          placeholder="County"
           bordered
           errorMessage={formik.errors.county}
           onChange={formik.handleChange}
@@ -108,7 +103,6 @@ export default function AddressInputComponent(props: Props): FCReturn {
           <Input
             name="postcode"
             value={formik.values.postcode}
-            placeholder="Postcode"
             bordered
             errorMessage={formik.errors.postcode}
             onChange={formik.handleChange}
@@ -121,12 +115,11 @@ export default function AddressInputComponent(props: Props): FCReturn {
           />
         </InputRowItem>
       </InputLabel>
-      <InputLabel label="Country">
+      <InputLabel label="Country (optional)">
         <InputRowItem>
           <Input
             name="country"
             value={formik.values.country}
-            placeholder="Country"
             bordered
             errorMessage={formik.errors.country}
             onChange={formik.handleChange}
