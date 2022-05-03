@@ -1,5 +1,8 @@
 import { TYPES as NodeTypes } from "@planx/components/types";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { NaviRequest } from "navi";
+import { useStore } from "pages/FlowEditor/lib/store";
+import { ApplicationPath } from "types";
 
 export const makeTitle = (str: string) =>
   [str, "PlanX"].filter(Boolean).join(" | ");
@@ -16,3 +19,14 @@ export const isSaveReturnFlow = (flowData: Record<string, any>): Boolean =>
       (node: Record<string, any>) => node.type === NodeTypes.Send
     )
   );
+
+export const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
+  let path = isSaveReturnFlow(flowData)
+    ? ApplicationPath.SaveAndReturn
+    : ApplicationPath.SingleSession;
+
+  if (req.params.sessionId && ApplicationPath.SaveAndReturn) {
+    path = ApplicationPath.Resume;
+  }
+  useStore.setState({ path });
+};

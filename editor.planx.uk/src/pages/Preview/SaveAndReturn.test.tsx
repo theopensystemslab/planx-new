@@ -161,7 +161,7 @@ describe("ConfirmEmail component", () => {
     expect(results).toHaveNoViolations();
   });
 
-  it.skip("should not have any accessibility violations in the error state", async () => {
+  it("should not have any accessibility violations in the error state", async () => {
     const handleSubmit = jest.fn();
 
     const { container } = render(
