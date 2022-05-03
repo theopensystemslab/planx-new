@@ -17,11 +17,11 @@ const SaveResumeButton: React.FC = () => {
 
   const saveToEmail = useStore((state) => state.saveToEmail);
   const onClick = () =>
-    useStore
-      .getState()
-      .setPath(
-        Boolean(saveToEmail) ? ApplicationPath.Save : ApplicationPath.Resume
-      );
+    useStore.setState({
+      path: Boolean(saveToEmail)
+        ? ApplicationPath.Save
+        : ApplicationPath.Resume,
+    });
 
   return (
     <>

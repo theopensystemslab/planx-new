@@ -139,8 +139,11 @@ const ResumePage: React.FC = () => {
     const data = { email: email, sessionId: sessionId };
     try {
       await axios.post(url, data);
-      useStore.getState().setSaveToEmail(email);
-      useStore.getState().setPath(ApplicationPath.SaveAndReturn);
+      useStore.setState({
+        saveToEmail: email,
+        path: ApplicationPath.SaveAndReturn,
+        sessionId: sessionId,
+      });
       // Remove sessionId query param from URL
       window.history.pushState({}, document.title, window.location.pathname);
       // TODO: Reconciliation...!

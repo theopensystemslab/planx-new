@@ -28,5 +28,5 @@ export const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
   if (req.params.sessionId && ApplicationPath.SaveAndReturn) {
     path = ApplicationPath.Resume;
   }
-  useStore.getState().setPath(path);
+  useStore.setState({ path });
 };
