@@ -68,9 +68,7 @@ export interface PreviewStore extends Store.Store {
   changedNode: string | undefined;
   _nodesPendingEdit: string[];
   path: ApplicationPath;
-  setPath: (path: ApplicationPath) => void;
   saveToEmail?: string;
-  setSaveToEmail: (notifyEmail: string) => void;
 }
 
 export const previewStore = (
@@ -348,19 +346,7 @@ export const previewStore = (
     set(args);
   },
 
-  sessionId: (() => {
-    if (hasFeatureFlag("SAVE_AND_RETURN")) {
-      const url = new URL(window.location.href);
-      let sessionId = url.searchParams.get("sessionId");
-      if (!sessionId) {
-        url.searchParams.append("sessionId", uuidV4());
-        window.location.href = url.href;
-      }
-      return sessionId!;
-    } else {
-      return uuidV4();
-    }
-  })(),
+  sessionId: uuidV4(),
 
   async sendSessionDataToHasura() {
     try {
@@ -612,11 +598,7 @@ export const previewStore = (
 
   path: ApplicationPath.Resume,
 
-  setPath: (path) => set({ path }),
-
   saveToEmail: undefined,
-
-  setSaveToEmail: (saveToEmail) => set({ saveToEmail }),
 });
 
 const knownNots = (
