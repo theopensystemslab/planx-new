@@ -112,10 +112,13 @@ export const stringifyWithRootKeysSortedAlphabetically = (
   JSON.stringify(
     Object.keys(ob)
       .sort()
-      .reduce((acc, curr) => {
-        acc[curr] = ob[curr];
-        return acc;
-      }, {} as typeof ob)
+      .reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr]: ob[curr],
+        }),
+        {} as typeof ob
+      )
   );
 
 export const lowcalStorage = new LowcalStorage();
