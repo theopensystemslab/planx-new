@@ -1,23 +1,24 @@
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import { useTheme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
-import Banner from "ui/Banner";
+import { useCurrentRoute } from "react-navi";
+import { ApplicationPath } from "types";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import { object, string } from "yup";
 
+import StatusPage from "./StatusPage";
+
 enum Status {
   EmailRequired,
-  Sending,
+  Validating,
   Success,
-  Invalid,
   Error,
 }
 
@@ -72,146 +73,103 @@ const EmailError: React.FC<{ retry: () => void; email: string }> = ({
   retry,
   email,
 }) => {
-  const theme = useTheme();
-
   return (
-    <>
-      <Box width="100%">
-        <Banner
-          heading="Error sending email"
-          color={{
-            background: theme.palette.primary.main,
-            text: theme.palette.primary.contrastText,
-          }}
-        >
-          <Box mt={4}>
-            <Typography>Failed to send email to {email}</Typography>
-          </Box>
-        </Banner>
-      </Box>
-      <Card>
-        <Typography variant="body2">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien
-          nunc, blandit et cursus nec, auctor at leo. Donec eros enim, tristique
-          sit amet enim iaculis.
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={retry}
-        >
-          Retry
-        </Button>
-      </Card>
-    </>
-  );
-};
-
-const EmailInvalid: React.FC<{ email: string }> = ({ email }) => {
-  const theme = useTheme();
-
-  return (
-    <>
-      <Box width="100%">
-        <Banner
-          heading="Invalid email address"
-          color={{
-            background: theme.palette.primary.main,
-            text: theme.palette.primary.contrastText,
-          }}
-        >
-          <Box mt={4}>
-            <Typography>Invalid email address: {email}.</Typography>
-          </Box>
-        </Banner>
-      </Box>
-      <Card>
-        <Typography variant="body2">
-          We weren't able to find any open applications matching the provided
-          email address. Please click below to begin a new application.
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={() => location.reload()}
-        >
-          Start a new application
-        </Button>
-      </Card>
-    </>
+    <StatusPage
+      bannerHeading="Error sending email"
+      bannerText={`Failed to send email to ${email}`}
+      cardText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien
+      nunc, blandit et cursus nec, auctor at leo. Donec eros enim, tristique
+      sit amet enim iaculis."
+      buttonText="Retry"
+      onButtonClick={retry}
+    ></StatusPage>
   );
 };
 
 const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
-  const theme = useTheme();
-
   return (
-    <>
-      <Box width="100%">
-        <Banner
-          heading="Email sent"
-          color={{
-            background: theme.palette.primary.main,
-            text: theme.palette.primary.contrastText,
-          }}
-        >
-          <Box mt={4}>
-            <Typography>
-              We have sent a link to {email}. Use that link to continue your
-              application.
-            </Typography>
-          </Box>
-        </Banner>
-      </Box>
-      <Card>
-        <Typography variant="body2">
-          You will need to open the email we have sent you in order to proceed.
-          You are now free to close this tab.
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={() => window.close()}
-        >
-          Close Tab
-        </Button>
-      </Card>
-    </>
+    <StatusPage
+      bannerHeading="Request successful"
+      bannerText={`If we hold any draft applications for ${email}, an email will be sent to that address. Please use that link to continue your
+      application.`}
+      cardText="You will need to open the email we have sent you in order to proceed.
+      You are now free to close this tab."
+      buttonText="Close Tab"
+      onButtonClick={() => window.close()}
+    ></StatusPage>
   );
 };
 
+/**
+ * Component which handles the "Resume" page used for Save & Return
+ * The user can access this page via two "paths"
+ * 1. Directly via PlanX, user enters email to trigger "dashboard" email with resume magic links
+ * 2. Magic link in email with a sessionId, user enters email to continue application
+ */
 const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
   const [email, setEmail] = useState<string>("");
+  const sessionId = useCurrentRoute().url.query.sessionId;
 
   useEffect(() => {
-    if (email) handleSubmit(email);
+    if (email) handleSubmit();
   }, [email]);
 
-  // Temp placeholder function for dev testing
-  const handleSubmit = (email: string) => {
-    setPageStatus(Status.Sending);
-    setTimeout(() => {
-      console.log(`Sent email to ${email}`);
-      // setPageStatus(Status.Error);
+  /**
+   * Send magic link to user, based on submitted email
+   * Sets page status based on validation of request by API
+   */
+  const sendResumeEmail = async () => {
+    const url = `${process.env.REACT_APP_API_URL}/resume-application`;
+    const flowId = useStore.getState().id;
+    const data = { email: email, flowId: flowId };
+    try {
+      await axios.post(url, data);
       setPageStatus(Status.Success);
-      // setPageStatus(Status.Invalid);
-    }, 500);
+    } catch (error) {
+      setPageStatus(Status.Error);
+    }
+  };
+
+  /**
+   * Query DB to validate that sessionID and email match
+   */
+  const validateSessionId = async () => {
+    const url = `${process.env.REACT_APP_API_URL}/validate-session`;
+    const data = { email: email, sessionId: sessionId };
+    try {
+      await axios.post(url, data);
+      useStore.setState({
+        saveToEmail: email,
+        path: ApplicationPath.SaveAndReturn,
+        sessionId: sessionId,
+      });
+      // Remove sessionId query param from URL
+      window.history.pushState({}, document.title, window.location.pathname);
+      // TODO: Reconciliation...!
+    } catch (error) {
+      setPageStatus(Status.Error);
+    }
+  };
+
+  /**
+   * Handle both submit "paths" that leads a user to this page
+   */
+  const handleSubmit = () => {
+    setPageStatus(Status.Validating);
+    sessionId ? validateSessionId() : sendResumeEmail();
   };
 
   return {
     [Status.EmailRequired]: <EmailRequired setEmail={setEmail} />,
-    [Status.Sending]: (
-      <DelayedLoadingIndicator text={"Sending..."} msDelayBeforeVisible={0} />
+    [Status.Validating]: (
+      <DelayedLoadingIndicator
+        text={sessionId ? "Validating..." : "Sending..."}
+        msDelayBeforeVisible={0}
+      />
     ),
     [Status.Success]: <EmailSuccess email={email} />,
-    [Status.Invalid]: <EmailInvalid email={email} />,
-    [Status.Error]: (
-      <EmailError retry={() => handleSubmit(email)} email={email} />
-    ),
+    [Status.Error]: <EmailError retry={() => handleSubmit()} email={email} />,
   }[pageStatus];
 };
 

@@ -6,7 +6,6 @@ import React from "react";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { fillInFieldsUsingPlaceholder } from "../shared/testHelpers";
-import { userDataSchema } from "./model";
 import AddressInput from "./Public";
 
 test("submits an address", async () => {
