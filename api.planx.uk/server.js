@@ -25,6 +25,7 @@ const { locationSearch } = require("./gis/index");
 const { diffFlow, publishFlow } = require("./publish");
 const { findAndReplaceInFlow } = require("./findReplace");
 const { sendToUniform, downloadUniformZip } = require("./send");
+const { saveApplication, resumeApplication, validateSession } = require("./saveAndReturn")
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -575,6 +576,12 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
   if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
   res.send();
 });
+
+// assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
+// assert(process.env.GOVUK_NOTIFY_API_KEY_TEST);
+app.post("/save-application", saveApplication);
+app.post("/resume-application", resumeApplication);
+app.post("/validate-session", validateSession);
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()
