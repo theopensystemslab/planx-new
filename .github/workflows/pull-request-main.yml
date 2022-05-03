@@ -4,6 +4,7 @@ on:
     types: [opened, synchronize]
     branches:
       - main
+      - feat/save-and-return # TODO: Delete when feature branch merged
 
 env:
   DOMAIN: planx.pizza
@@ -216,6 +217,8 @@ jobs:
             UNIFORM_CLIENT_WYCOMBE=${{ secrets.STAGING_UNIFORM_CLIENT_WYCOMBE }}
             UNIFORM_CLIENT_SOUTHWARK=${{ secrets.STAGING_UNIFORM_CLIENT_SOUTHWARK }}
             UNIFORM_CLIENT_LAMBETH=${{ secrets.STAGING_UNIFORM_CLIENT_LAMBETH }}
+            GOVUK_NOTIFY_API_KEY_TEAM=${{ secrets.GOVUK_NOTIFY_API_KEY_TEAM }}
+            GOVUK_NOTIFY_API_KEY_TEST=${{ secrets.GOVUK_NOTIFY_API_KEY_TEST }}
             " > .env.temp
             cat .env .env.temp .env.staging > .env.prod
 
@@ -253,6 +256,8 @@ jobs:
             UNIFORM_CLIENT_WYCOMBE=${{ secrets.STAGING_UNIFORM_CLIENT_WYCOMBE }}
             UNIFORM_CLIENT_SOUTHWARK=${{ secrets.STAGING_UNIFORM_CLIENT_SOUTHWARK }}
             UNIFORM_CLIENT_LAMBETH=${{ secrets.STAGING_UNIFORM_CLIENT_LAMBETH }}
+            GOVUK_NOTIFY_API_KEY_TEAM=${{ secrets.GOVUK_NOTIFY_API_KEY_TEAM }}
+            GOVUK_NOTIFY_API_KEY_TEST=${{ secrets.GOVUK_NOTIFY_API_KEY_TEST }}
             " > .env.temp
             cat .env .env.temp .env.staging > .env.prod
 
