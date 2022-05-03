@@ -16,6 +16,7 @@ import { v4 as uuidV4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
+import { ApplicationPath } from "./../../../../types";
 import type { Store } from ".";
 import type { SharedStore } from "./shared";
 
@@ -66,6 +67,8 @@ export interface PreviewStore extends Store.Store {
   changeAnswer: (id: string) => void;
   changedNode: string | undefined;
   _nodesPendingEdit: string[];
+  path: ApplicationPath;
+  saveToEmail?: string;
 }
 
 export const previewStore = (
@@ -343,19 +346,7 @@ export const previewStore = (
     set(args);
   },
 
-  sessionId: (() => {
-    if (hasFeatureFlag("SAVE_AND_RETURN")) {
-      const url = new URL(window.location.href);
-      let sessionId = url.searchParams.get("sessionId");
-      if (!sessionId) {
-        url.searchParams.append("sessionId", uuidV4());
-        window.location.href = url.href;
-      }
-      return sessionId!;
-    } else {
-      return uuidV4();
-    }
-  })(),
+  sessionId: uuidV4(),
 
   async sendSessionDataToHasura() {
     try {
@@ -604,6 +595,10 @@ export const previewStore = (
   changedNode: undefined,
 
   _nodesPendingEdit: [],
+
+  path: ApplicationPath.Resume,
+
+  saveToEmail: undefined,
 });
 
 const knownNots = (
