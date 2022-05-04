@@ -581,7 +581,7 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
 // assert(process.env.GOVUK_NOTIFY_API_KEY_TEST);
 app.post("/save-application", saveApplication);
 app.post("/resume-application", resumeApplication);
-app.post("/validate-session", validateSession);
+app.get("/validate-session", validateSession);
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()

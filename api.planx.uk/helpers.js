@@ -43,6 +43,33 @@ const getMostRecentPublishedFlow = async (id) => {
   );
 };
 
+// Get the snapshot of the published flow for a certain point in time (flattened, with external portal nodes)
+const getPublishedFlowByDate = async (id, created_at) => {
+  const data = await client.request(
+    `
+      query GetPublishedFlowByDate($id: uuid!, $created_at: timestamptz!) {
+        flows_by_pk(id: $id) {
+          published_flows(
+            limit: 1, 
+            order_by: { id: asc }, 
+            where: { created_at: {_gte: $created_at} }
+          ) {
+            data
+          }
+        }
+      }
+    `,
+    {
+      id, created_at
+    }
+  );
+
+  return (
+    data.flows_by_pk.published_flows[0] &&
+    data.flows_by_pk.published_flows[0].data
+  );
+}
+
 // Flatten a flow's data to include main content & portals in a single JSON representation
 // XXX: getFlowData & dataMerged are currently repeated in ../editor.planx.uk/src/lib/dataMergedHotfix.ts
 //        in order to load frontend /preview routes for flows that are not published
@@ -70,4 +97,4 @@ const dataMerged = async (id, ob = {}) => {
   return ob;
 };
 
-module.exports = { getFlowData, getMostRecentPublishedFlow, dataMerged };
+module.exports = { getFlowData, getMostRecentPublishedFlow, getPublishedFlowByDate, dataMerged };
