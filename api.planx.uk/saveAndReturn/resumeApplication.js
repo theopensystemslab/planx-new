@@ -1,4 +1,4 @@
-const { getGraphQLClient, sendEmail, convertSlugToName, getResumeLink } = require("./utils");
+const { getGraphQLClient, sendEmail, convertSlugToName, getResumeLink, formatDate } = require("./utils");
 
 const resumeApplication = async (req, res, next) => {
   const { flowId, email } = req.body;
@@ -30,11 +30,14 @@ const resumeApplication = async (req, res, next) => {
 
 const validateRequest = async (flowId, email, res) => {
   try {
-    // TODO: Validate that flowId and email are linked in a lowcal_storage row
-    // TODO: Ignore expired applications, if any
     const client = getGraphQLClient();
     const query = `
-      query GetFlowByPK ($flowId: uuid!) {
+      query ValidateRequest($email: String, $flowId: uuid!) {
+        lowcal_sessions(where: {email: {_ilike: $email}, data: {_contains: {id: $flowId}}}) {
+          id
+          data
+          expiry_date
+        } 
         flows_by_pk(id: $flowId) {
           slug
           team {
@@ -44,26 +47,19 @@ const validateRequest = async (flowId, email, res) => {
         }
       }
     `
-    const response = await client.request(query, { flowId: flowId });
+    const { lowcal_sessions, flows_by_pk } = await client.request(query, { flowId, email });
 
-    const mockSessions = [
-      { id: 123, address: "1 High Street", propertyType: "house" },
-      { id: 456, address: "2 High Street", propertyType: "flat" },
-      { id: 789, address: "3 High Street", propertyType: "barn" },
-    ];
+    if (!flows_by_pk) throw Error;
 
-    // const mockEmailAddress = null;
-
-    // // Protect against phishing by returning a positive response even if no matching sessions/email found
-    // if (!mockSessions.length || !mockEmailAddress) {
-    //   return res.json({});
-    // };
+    // Protect against phishing by returning a positive response even if no matching sessions found
+    if (!lowcal_sessions) return res.json({});
+    
 
     return {
-      flowSlug: response.flows_by_pk.slug,
-      teamSlug: response.flows_by_pk.team.slug,
-      teamPersonalisation: response.flows_by_pk.team.notifyPersonalisation,
-      sessions: mockSessions,
+      flowSlug: flows_by_pk.slug,
+      teamSlug: flows_by_pk.team.slug,
+      teamPersonalisation: flows_by_pk.team.notifyPersonalisation,
+      sessions: lowcal_sessions,
     };
   } catch (error) {
     throw new Error("Unable to validate request")
@@ -81,7 +77,7 @@ const getPersonalisation = (sessions, flowSlug, teamSlug, teamPersonalisation) =
 };
 
 const buildContentFromSessions = (sessions, flowSlug, teamSlug) => {
-  const content = sessions.map(session => {
+  return sessions.map(session => {
     const address =
       session.data?.passport?.data?._address?.single_line_address ||
       "Address not submitted";
@@ -89,12 +85,13 @@ const buildContentFromSessions = (sessions, flowSlug, teamSlug) => {
       session.data?.passport?.data?.["property.type"]?.[0] ||
       "Project type not submitted";
     const resumeLink = getResumeLink(session, teamSlug, flowSlug)
+    const expiryDate = formatDate(session.expiry_date);
 
     return `Address: ${address}
       Project Type: ${projectType}
+      Expiry Date: ${expiryDate}
       Link: ${resumeLink}`;
   }).join("\n\n");
-  return content;
 };
 
 module.exports = { resumeApplication, buildContentFromSessions };

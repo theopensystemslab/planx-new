@@ -1,10 +1,9 @@
-const { format } = require('date-fns');
-
 const {
   getGraphQLClient,
   sendEmail,
   convertSlugToName,
   getResumeLink,
+  formatDate,
 } = require("./utils");
 
 const saveApplication = async (req, res, next) => {
@@ -78,7 +77,7 @@ const getSessionDetails = (session) => {
       session?.data?.passport?.data?.["property.type"]?.[0] ||
       "Project type not submitted",
     id: session.id,
-    expiryDate: format(Date.parse(session.expiry_date), "MM/dd/yyyy"),
+    expiryDate: formatDate(session.expiry_date),
   };
 };
 
