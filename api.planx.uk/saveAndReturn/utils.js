@@ -5,7 +5,11 @@ const getNotifyClient = () =>
   // new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEST);
   new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
 
-const getGraphQLClient = () => new GraphQLClient(process.env.HASURA_GRAPHQL_URL);
+const getGraphQLClient = () => new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
+  headers: {
+    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+  }
+});
 
 const sendEmail = async (templateId, emailAddress, config, res) => {
   try {
