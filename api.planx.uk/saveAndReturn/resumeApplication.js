@@ -53,7 +53,6 @@ const validateRequest = async (flowId, email, res) => {
 
     // Protect against phishing by returning a positive response even if no matching sessions found
     if (!lowcal_sessions) return res.json({});
-    
 
     return {
       flowSlug: flows_by_pk.slug,

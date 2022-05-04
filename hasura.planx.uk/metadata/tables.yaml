@@ -161,6 +161,7 @@
         check: {}
         columns:
           - data
+          - email
           - id
         backend_only: false
   select_permissions:
@@ -175,6 +176,7 @@
       permission:
         columns:
           - data
+          - email
           - id
         filter: {}
         check: null

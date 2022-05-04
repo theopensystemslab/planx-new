@@ -20,6 +20,7 @@ enum Status {
   Validating,
   Success,
   Error,
+  Invalid,
 }
 
 const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
@@ -100,6 +101,20 @@ const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
   );
 };
 
+const ValidationError: React.FC = () => {
+  return (
+    <StatusPage
+      bannerHeading="Validation error"
+      bannerText={"Unable to validate session"}
+      cardText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien
+      nunc, blandit et cursus nec, auctor at leo. Donec eros enim, tristique
+      sit amet enim iaculis."
+      buttonText="Close Tab"
+      onButtonClick={() => window.close()}
+    ></StatusPage>
+  );
+};
+
 /**
  * Component which handles the "Resume" page used for Save & Return
  * The user can access this page via two "paths"
@@ -110,6 +125,7 @@ const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
   const [email, setEmail] = useState<string>("");
   const sessionId = useCurrentRoute().url.query.sessionId;
+  const flowId = useStore((state) => state.id);
 
   useEffect(() => {
     if (email) handleSubmit();
@@ -136,9 +152,10 @@ const ResumePage: React.FC = () => {
    */
   const validateSessionId = async () => {
     const url = `${process.env.REACT_APP_API_URL}/validate-session`;
-    const data = { email: email, sessionId: sessionId };
+    const data = { email, sessionId, flowId };
     try {
       await axios.post(url, data);
+      // Setting sessionId triggers an API call to update the local session
       useStore.setState({
         saveToEmail: email,
         path: ApplicationPath.SaveAndReturn,
@@ -148,7 +165,7 @@ const ResumePage: React.FC = () => {
       window.history.pushState({}, document.title, window.location.pathname);
       // TODO: Reconciliation...!
     } catch (error) {
-      setPageStatus(Status.Error);
+      setPageStatus(Status.Invalid);
     }
   };
 
@@ -170,6 +187,7 @@ const ResumePage: React.FC = () => {
     ),
     [Status.Success]: <EmailSuccess email={email} />,
     [Status.Error]: <EmailError retry={() => handleSubmit()} email={email} />,
+    [Status.Invalid]: <ValidationError />,
   }[pageStatus];
 };
 
