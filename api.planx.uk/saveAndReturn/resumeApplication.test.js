@@ -1,22 +1,11 @@
 const supertest = require("supertest");
 const app = require("../server");
 const { queryMock } = require("../tests/graphqlQueryMock");
+const { mockFlow, mockLowcalSession } = require("../tests/mocks/saveAndReturnMocks");
 const { buildContentFromSessions } = require("./resumeApplication");
 
 const ENDPOINT = "/resume-application";
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk"
-
-const mockFlow = { 
-  slug: "slug", 
-  team: {
-    slug: "teamName",
-    notifyPersonalisation: {
-      helpPhone: "test",
-      helpEmail: "test",
-      helpOpeningHours: "test",
-    }
-  }
-};
 
 describe("buildContentFromSessions function", () => {
   it("should return correctly formatted content for a single session", () => {
@@ -186,20 +175,7 @@ describe("Resume Application endpoint", () => {
     queryMock.mockQuery({
       name: 'ValidateRequest',
       data: {
-        lowcal_sessions: [{
-          data: {
-            passport: {
-              data: {
-                _address: {
-                  single_line_address: "1 High Street"
-                },
-                "property.type": ["house"]
-              }
-            }
-          },
-          id: 123,
-          expiry_date: "1900-01-01T01:01:01.865452+00:00",
-        }],
+        lowcal_sessions: [mockLowcalSession],
         flows_by_pk: mockFlow
       },
       variables: {

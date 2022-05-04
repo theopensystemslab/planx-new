@@ -1,43 +1,18 @@
 const supertest = require("supertest");
 const app = require("../server");
 const { queryMock } = require("../tests/graphqlQueryMock");
+const { mockFlow, mockLowcalSession } = require("../tests/mocks/saveAndReturnMocks");
 
 // https://docs.notifications.service.gov.uk/node.html#email-addresses
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk"
 const ENDPOINT = "/save-application"
-
-const mockFlow = {
-  slug: "slug", team: {
-    slug: "teamName",
-    notifyPersonalisation: {
-      helpPhone: "test",
-      helpEmail: "test",
-      helpOpeningHours: "test",
-    }
-  },
-};
-
-const mockLowcalSession = {
-  id: 123,
-  data: {
-    passport: {
-      data: {
-        _address: {
-          single_line_address: "1 High Street"
-        },
-        "property.type": ["house"]
-      }
-    }
-  },
-  expiry_date: "1900-01-01T01:01:01.865452+00:00",
-};
 
 describe("saveApplication endpoint", () => {
   beforeEach(() => {
     queryMock.reset();
   });
 
-  it("throws an error for if required data is missing", () => {
+  it("throws an error if required data is missing", () => {
 
     const missingEmail = { flowId: "test", sessionId: 123 };
     const missingSessionId = { flowId: "test", email: "test" };
