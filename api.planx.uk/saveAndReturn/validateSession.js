@@ -34,9 +34,12 @@ const validateSession = async (req, res, next) => {
               removedBreadcrumbs[node.id] = sessionData.data.breadcrumbs[node.id];
               delete sessionData.data.breadcrumbs[node.id];
             }
+
+            // TODO check if removed breadcrumbs have associated passport vars & also remove from sessionData.data.passport?
+            //   ** what about collected flags? what about `auto: true`? 
           });
 
-          // mutate the stored lowcal_session record to match our updated in-memory sessionData.data.breadcrumbs
+          // update the lowcal_session.data to match our updated in-memory sessionData.data
           const reconciledSessionData = await updateLowcalSessionData(req.query.sessionId, sessionData.data);
 
           res.status(200).json({
@@ -55,7 +58,7 @@ const validateSession = async (req, res, next) => {
         });
       }
     } else {
-      res.status(404).send("Unable to find matching session");
+      res.status(404).json({ message: "Unable to find your session. Please start over?" });
     }
   } catch (error) {
     next(error);
