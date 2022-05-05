@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import stringify from "json-stable-stringify";
 
 import { client } from "./graphql";
 
@@ -34,7 +33,9 @@ class LowcalStorage {
     });
 
     try {
-      current = stringify(data.lowcal_sessions_by_pk?.data);
+      current = stringifyWithRootKeysSortedAlphabetically(
+        data.lowcal_sessions_by_pk?.data
+      );
       return current;
     } catch (err) {
       return undefined;
@@ -94,12 +95,30 @@ const memoize = <T extends Function>(fn: T) => {
   let cachedResult: any;
 
   return ((...args: any) => {
-    if (stringify(args) !== stringify(previousArgs)) {
+    if (
+      stringifyWithRootKeysSortedAlphabetically(args) !==
+      stringifyWithRootKeysSortedAlphabetically(previousArgs)
+    ) {
       previousArgs = args;
       cachedResult = fn(...args);
     }
     return cachedResult;
   }) as unknown as T;
 };
+
+export const stringifyWithRootKeysSortedAlphabetically = (
+  ob: Record<string, unknown> = {}
+) =>
+  JSON.stringify(
+    Object.keys(ob)
+      .sort()
+      .reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr]: ob[curr],
+        }),
+        {} as typeof ob
+      )
+  );
 
 export const lowcalStorage = new LowcalStorage();
