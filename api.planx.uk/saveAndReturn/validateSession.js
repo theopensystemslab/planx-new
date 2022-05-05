@@ -13,12 +13,12 @@ const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
 const validateSession = async (req, res, next) => {
   try {
     // TODO also validate on req.query.email
-    const sessionData = await findSession(req.query.sessionId);
+    let sessionData = await findSession(req.query.sessionId);
 
     if (sessionData) {
       // reconcile content changes between the published flow state at point of resuming and when the applicant last left off
-      const currentFlow = await getMostRecentPublishedFlow(sessionData.flowId);
-      const savedFlow = await getPublishedFlowByDate(sessionData.flowId, sessionData.updated_at);
+      const currentFlow = await getMostRecentPublishedFlow(sessionData.data.id);
+      const savedFlow = await getPublishedFlowByDate(sessionData.data.id, sessionData.updated_at);
   
       const delta = jsondiffpatch.diff(currentFlow, savedFlow);
       if (delta) {
@@ -26,19 +26,32 @@ const validateSession = async (req, res, next) => {
           id: key,
           ...currentFlow[key]
         }));
-  
-        res.status(200).json({
-          message: `Found ${alteredNodes.length} content changes since last save point`,
-          alteredNodes
-        });
+        if (alteredNodes.length) {
+          let removedBreadcrumbs = {};
+          alteredNodes.forEach((node) => {
+            // if the session breadcrumbs include any altered content, remove those breadcrumbs so the user will be re-prompted to answer those questions
+            if (Object.keys(sessionData.data.breadcrumbs).includes(node.id)) {
+              removedBreadcrumbs[node.id] = sessionData.data.breadcrumbs[node.id];
+              delete sessionData.data.breadcrumbs[node.id];
+            }
+          });
 
-        // TODO reconcile user data against content changes
-        //   check if alteredNodes are in session.breadcrumbs & remove them (possible to have content changes that aren't on applicant's path!)
-        //   if breadcrumbs changed, then update lowcal session data
+          // mutate the stored lowcal_session record to match our updated in-memory sessionData.data.breadcrumbs
+          const reconciledSessionData = await updateLowcalSessionData(req.query.sessionId, sessionData.data);
+
+          res.status(200).json({
+            message: `Found ${alteredNodes.length} content changes since last save point, which effect ${Object.keys(removedBreadcrumbs).length} previously answered question(s)`,
+            alteredNodes,
+            removedBreadcrumbs,
+            reconciledSessionData,
+          });
+        }
       } else {
         res.status(200).json({
           message: "No content changes since last save point; session breadcrumbs not effected",
-          alteredNodes: null
+          alteredNodes: null,
+          removedBreadcrumbs: null,
+          reconciledSessionData: sessionData.data,
         });
       }
     } else {
@@ -50,7 +63,7 @@ const validateSession = async (req, res, next) => {
 };
 
 const findSession = async (id) => {
-  const data = await client.request(`
+  const response = await client.request(`
     query FindSession($id: uuid!) {
       lowcal_sessions(
         where: {
@@ -58,11 +71,7 @@ const findSession = async (id) => {
         }, 
         limit: 1
       ) {
-        id
-        flowId: data(path: "$.id")
-        passportData: data(path: "$.passport.data")
-        breadcrumbs: data(path: "$.breadcrumbs")
-        created_at
+        data
         updated_at
       }
     }`,
@@ -71,7 +80,34 @@ const findSession = async (id) => {
     }
   );
 
-  return data.lowcal_sessions[0];
+  return response.lowcal_sessions[0];
 };
+
+const updateLowcalSessionData = async (id, data) => {
+  const response = await client.request(`
+    mutation UpdateLowcalSessionData(
+      $id: uuid!,
+      $data: jsonb = {},
+    ) {
+      update_lowcal_sessions_by_pk(
+        pk_columns: {id: $id},
+        _set: {
+          data: $data,
+        },
+      ) {
+        id
+        data
+        created_at
+        updated_at
+      }
+    }
+  `,
+  {
+    id, data
+  }
+  );
+
+  return response.update_lowcal_sessions_by_pk && response.update_lowcal_sessions_by_pk.data;
+}
 
 module.exports = validateSession;
