@@ -21,12 +21,12 @@ describe("buildContentFromSessions function", () => {
         }
       },
       id: 123,
-      expiry_date: "1900-01-01T01:01:01.865452+00:00",
+      expiry_date: "2022-05-04T01:02:03.865452+00:00",
     }];
 
     const result = `Address: 1 High Street
       Project Type: house
-      Expiry Date: 01/01/1900
+      Expiry Date: 04 May 2022
       Link: example.com/team/flow/preview?sessionId=123`
     expect(buildContentFromSessions(sessions, "flow", "team")).toEqual(result);
   });
@@ -44,7 +44,7 @@ describe("buildContentFromSessions function", () => {
         }
       },
       id: 123,
-      expiry_date: "1900-01-01T01:01:01.865452+00:00",
+      expiry_date: "2022-05-04T01:02:03.865452+00:00",
     },
     {
       data: {
@@ -58,7 +58,7 @@ describe("buildContentFromSessions function", () => {
         }
       },
       id: 456,
-      expiry_date: "1900-01-01T01:01:01.865452+00:00",
+      expiry_date: "2022-05-04T01:02:03.865452+00:00",
     },
     {
       data: {
@@ -72,17 +72,17 @@ describe("buildContentFromSessions function", () => {
         }
       },
       id: 789,
-      expiry_date: "1900-01-01T01:01:01.865452+00:00",
+      expiry_date: "2022-05-04T01:02:03.865452+00:00",
     }];
     const result = `Address: 1 High Street
       Project Type: house
-      Expiry Date: 01/01/1900
+      Expiry Date: 04 May 2022
       Link: example.com/team/flow/preview?sessionId=123\n\nAddress: 2 High Street
       Project Type: flat
-      Expiry Date: 01/01/1900
+      Expiry Date: 04 May 2022
       Link: example.com/team/flow/preview?sessionId=456\n\nAddress: 3 High Street
       Project Type: farm
-      Expiry Date: 01/01/1900
+      Expiry Date: 04 May 2022
       Link: example.com/team/flow/preview?sessionId=789`
     expect(buildContentFromSessions(sessions, "flow", "team")).toEqual(result)
   });
@@ -98,12 +98,12 @@ describe("buildContentFromSessions function", () => {
         }
       },
       id: 123,
-      expiry_date: "1900-01-01T01:01:01.865452+00:00",
+      expiry_date: "2022-05-04T01:02:03.865452+00:00",
     }];
 
     const result = `Address: Address not submitted
       Project Type: house
-      Expiry Date: 01/01/1900
+      Expiry Date: 04 May 2022
       Link: example.com/team/flow/preview?sessionId=123`
     expect(buildContentFromSessions(sessions, "flow", "team")).toEqual(result);
   });
@@ -121,12 +121,12 @@ describe("buildContentFromSessions function", () => {
         }
       },
       id: 123,
-      expiry_date: "1900-01-01T01:01:01.865452+00:00",
+      expiry_date: "2022-05-04T01:02:03.865452+00:00",
     }];
 
     const result = `Address: 1 High Street
       Project Type: Project type not submitted
-      Expiry Date: 01/01/1900
+      Expiry Date: 04 May 2022
       Link: example.com/team/flow/preview?sessionId=123`
     expect(buildContentFromSessions(sessions, "flow", "team")).toEqual(result);
   });

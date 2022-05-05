@@ -21,7 +21,7 @@ const mockLowcalSession = {
       }
     }
   },
-  expiry_date: "1900-01-01T01:01:01.865452+00:00",
+  expiry_date: "2022-05-04T01:02:03.865452+00:00",
 };
 
 module.exports = { mockFlow, mockLowcalSession }

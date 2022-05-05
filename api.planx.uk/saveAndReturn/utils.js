@@ -60,7 +60,7 @@ const getResumeLink = (session, teamSlug, flowSlug) => {
  * @param {string} date 
  * @returns 
  */
-const formatDate = (date) => format(Date.parse(date), "MM/dd/yyyy");
+const formatDate = (date) => format(Date.parse(date), "dd MMMM yyyy");
 
 module.exports = {
   getNotifyClient,
