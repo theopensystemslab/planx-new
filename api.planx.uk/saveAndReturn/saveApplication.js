@@ -39,7 +39,7 @@ const validateRequest = async (flowId, email, sessionId) => {
     const client = getGraphQLClient();
     const query = `
       query ValidateRequest($email: String, $sessionId: uuid!, $flowId: uuid!) {
-        lowcal_sessions(where: {email: {_ilike: $email}, id: {_eq: $sessionId}, data: {_contains: {id: $flowId}}}) {
+        lowcal_sessions(where: {email: {_eq: $email}, id: {_eq: $sessionId}, data: {_contains: {id: $flowId}}}) {
           id
           data
           expiry_date
@@ -53,7 +53,7 @@ const validateRequest = async (flowId, email, sessionId) => {
         }
       }
     `
-    const { lowcal_sessions, flows_by_pk }  = await client.request(query, { email, flowId, sessionId })
+    const { lowcal_sessions, flows_by_pk }  = await client.request(query, { email: email.toLowerCase(), flowId, sessionId })
 
     if (!lowcal_sessions || !flows_by_pk) throw Error;
 

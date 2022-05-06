@@ -116,14 +116,28 @@ const ValidationError: React.FC = () => {
 };
 
 /**
+ * If an email is passed in as a query param, do not prompt a user for this
+ * Currently only used for redirects back from GovUK Pay
+ */
+const getInitialEmailValue = () => {
+  const emailQueryParam = useCurrentRoute().url.query.email;
+  console.debug(document.referrer);
+  const isRedirectFromGovPay =
+    document.referrer.split("?")[0] === "https://www.payments.service.gov.uk/";
+  if (isRedirectFromGovPay && emailQueryParam) return emailQueryParam;
+  return "";
+};
+
+/**
  * Component which handles the "Resume" page used for Save & Return
- * The user can access this page via two "paths"
+ * The user can access this page via three "paths"
  * 1. Directly via PlanX, user enters email to trigger "dashboard" email with resume magic links
  * 2. Magic link in email with a sessionId, user enters email to continue application
+ * 3. Redirect back from GovPay - sessionId and email come from query params
  */
 const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
-  const [email, setEmail] = useState<string>("");
+  const [email, setEmail] = useState<string>(getInitialEmailValue());
   const sessionId = useCurrentRoute().url.query.sessionId;
   const flowId = useStore((state) => state.id);
 
@@ -161,7 +175,7 @@ const ResumePage: React.FC = () => {
         path: ApplicationPath.SaveAndReturn,
         sessionId: sessionId,
       });
-      // Remove sessionId query param from URL
+      // Remove query params from URL
       window.history.pushState({}, document.title, window.location.pathname);
       // TODO: Reconciliation...!
     } catch (error) {
@@ -170,7 +184,7 @@ const ResumePage: React.FC = () => {
   };
 
   /**
-   * Handle both submit "paths" that leads a user to this page
+   * Handle all submit "paths" that leads a user to this page
    */
   const handleSubmit = () => {
     setPageStatus(Status.Validating);
