@@ -77,18 +77,15 @@ const getPersonalisation = (sessions, flowSlug, teamSlug, teamPersonalisation) =
 
 const buildContentFromSessions = (sessions, flowSlug, teamSlug) => {
   return sessions.map(session => {
-    const address =
-      session.data?.passport?.data?._address?.single_line_address ||
-      "Address not submitted";
-    const projectType =
-      session.data?.passport?.data?.["property.type"]?.[0] ||
-      "Project type not submitted";
+    const address = session.data?.passport?.data?._address?.single_line_address;
+    // TODO: Get human readable values here     
+    const projectType = session?.data?.passport?.data?.["proposal.projectType"]?.join(", ")
     const resumeLink = getResumeLink(session, teamSlug, flowSlug)
     const expiryDate = formatDate(session.expiry_date);
 
     return `Address: ${address}
-      Project Type: ${projectType}
-      Expiry Date: ${expiryDate}
+      Project Type: ${projectType || "Project type not submitted"}
+      Expiry Date: ${expiryDate || "Address not submitted"}
       Link: ${resumeLink}`;
   }).join("\n\n");
 };

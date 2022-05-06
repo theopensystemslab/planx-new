@@ -69,13 +69,13 @@ const validateRequest = async (flowId, email, sessionId) => {
 };
 
 const getSessionDetails = (session) => {
+  // TODO: Get human readable values here
+  const projectTypes = session?.data?.passport?.data?.["proposal.projectType"]?.join(", ");
+  const address = session?.data?.passport?.data?._address?.single_line_address;
+
   return {
-    address:
-      session?.data?.passport?.data?._address?.single_line_address ||
-      "Address not submitted",
-    projectType:
-      session?.data?.passport?.data?.["property.type"]?.[0] ||
-      "Project type not submitted",
+    address: address || "Address not submitted",
+    projectType: projectTypes|| "Project type not submitted",
     id: session.id,
     expiryDate: formatDate(session.expiry_date),
   };

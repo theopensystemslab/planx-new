@@ -121,9 +121,8 @@ const ValidationError: React.FC = () => {
  */
 const getInitialEmailValue = () => {
   const emailQueryParam = useCurrentRoute().url.query.email;
-  console.debug(document.referrer);
   const isRedirectFromGovPay =
-    document.referrer.split("?")[0] === "https://www.payments.service.gov.uk/";
+    document.referrer === "https://www.payments.service.gov.uk/";
   if (isRedirectFromGovPay && emailQueryParam) return emailQueryParam;
   return "";
 };
