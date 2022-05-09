@@ -1,3 +1,6 @@
+import { useStore } from "pages/FlowEditor/lib/store";
+import { ApplicationPath } from "types";
+
 import type { MoreInformation } from "../shared";
 
 export interface Pay extends MoreInformation {
@@ -47,8 +50,22 @@ export const createPayload = (
   amount: toPence(fee),
   reference,
   description: "New application",
-  return_url: window.location.href,
+  return_url: getReturnURL(reference),
 });
+
+/**
+ * For Save & Return, include sessionId and email as query params so the session can be picked up
+ */
+const getReturnURL = (sessionId: string): string => {
+  const isSaveReturn =
+    useStore.getState().path === ApplicationPath.SaveAndReturn;
+  if (isSaveReturn) {
+    const email = useStore.getState().saveToEmail!;
+    const params = new URLSearchParams({ sessionId, email });
+    return `${window.location.href.split("?")[0]}?${params}`;
+  }
+  return window.location.href;
+};
 
 export const GOV_UK_PAY_URL = `${process.env.REACT_APP_API_URL}/pay`;
 
