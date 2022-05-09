@@ -3,20 +3,19 @@ const {
   sendEmail,
   convertSlugToName,
   getResumeLink,
+  formatDate,
 } = require("./utils");
 
-const { add } = require("date-fns");
-
 const saveApplication = async (req, res, next) => {
-  const { flowId, email } = req.body;
-  if (!flowId || !email) 
+  const { flowId, email, sessionId } = req.body;
+  if (!flowId || !email || !sessionId)
     return next({
-      status: 400, 
+      status: 400,
       message: "Required value missing"
-  });
+    });
 
   try {
-    const { flowSlug, teamSlug, teamPersonalisation, session } = await validateRequest(flowId, email);
+    const { flowSlug, teamSlug, teamPersonalisation, session } = await validateRequest(flowId, email, sessionId);
     const templateId = process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID;
     const config = {
       personalisation: getPersonalisation(
@@ -35,11 +34,16 @@ const saveApplication = async (req, res, next) => {
   }
 };
 
-const validateRequest = async (flowId, email) => {
+const validateRequest = async (flowId, email, sessionId) => {
   try {
     const client = getGraphQLClient();
     const query = `
-      query GetFlowByPK($flowId: uuid!) {
+      query ValidateRequest($email: String, $sessionId: uuid!, $flowId: uuid!) {
+        lowcal_sessions(where: {email: {_eq: $email}, id: {_eq: $sessionId}, data: {_contains: {id: $flowId}}}) {
+          id
+          data
+          expiry_date
+        } 
         flows_by_pk(id: $flowId) {
           slug
           team {
@@ -48,39 +52,32 @@ const validateRequest = async (flowId, email) => {
           }
         }
       }
-    `;
-    // TODO: Validate that flowId, sessionId, and email are linked in a lowcal_storage row
-    const response = await client.request(query, { flowId: flowId });
+    `
+    const { lowcal_sessions, flows_by_pk }  = await client.request(query, { email: email.toLowerCase(), flowId, sessionId })
+
+    if (!lowcal_sessions || !flows_by_pk) throw Error;
 
     return {
-      flowSlug: response.flows_by_pk.slug,
-      teamSlug: response.flows_by_pk.team.slug,
-      teamPersonalisation: response.flows_by_pk.team.notifyPersonalisation,
-      session: getSessionDetails(),
+      flowSlug: flows_by_pk.slug,
+      teamSlug: flows_by_pk.team.slug,
+      teamPersonalisation: flows_by_pk.team.notifyPersonalisation,
+      session: getSessionDetails(lowcal_sessions[0]),
     };
   } catch (error) {
     throw new Error("Unable to validate request")
   }
 };
 
-const getSessionDetails = () => {
-  const session = undefined;
-
-  // query MyQuery {
-  //   lowcal_sessions(where: {id: {_eq: "4b34974d-d559-4269-a3ad-bf41a217831f"}}) {
-  //     address: data(path: "passport.data.address")
-  //     projectType: data(path: "passport.projectType")
-  //   }
-  // }
+const getSessionDetails = (session) => {
+  // TODO: Get human readable values here
+  const projectTypes = session?.data?.passport?.data?.["proposal.projectType"]?.join(", ");
+  const address = session?.data?.passport?.data?._address?.single_line_address;
 
   return {
-    address:
-      session?.data?.passport?.data?._address?.single_line_address ||
-      "Address not submitted",
-    projectType:
-      session?.data?.passport?.data?.["property.type"]?.[0] ||
-      "Project type not submitted",
-    id: 123456789,
+    address: address || "Address not submitted",
+    projectType: projectTypes|| "Project type not submitted",
+    id: session.id,
+    expiryDate: formatDate(session.expiry_date),
   };
 };
 
@@ -91,7 +88,7 @@ const getPersonalisation = (
   teamPersonalisation
 ) => {
   return {
-    expiryDate: getApplicationExpiry(),
+    expiryDate: session.expiryDate,
     resumeLink: getResumeLink(session, teamSlug, flowSlug),
     helpEmail: teamPersonalisation.helpEmail,
     helpPhone: teamPersonalisation.helpPhone,
@@ -99,12 +96,6 @@ const getPersonalisation = (
     serviceName: convertSlugToName(flowSlug),
     ...session,
   };
-};
-
-const getApplicationExpiry = () => {
-  // TODO: Get date from lowcal_session table and handle magic number
-  const expiryDate = add(new Date(), { days: 28 }).toDateString();
-  return expiryDate;
 };
 
 module.exports = saveApplication;

@@ -1,11 +1,17 @@
 const { GraphQLClient } = require("graphql-request");
 const { NotifyClient } = require("notifications-node-client");
 
+const { format } = require('date-fns');
+
 const getNotifyClient = () =>
   // new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEST);
   new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
 
-const getGraphQLClient = () => new GraphQLClient(process.env.HASURA_GRAPHQL_URL);
+const getGraphQLClient = () => new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
+  headers: {
+    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+  }
+});
 
 const sendEmail = async (templateId, emailAddress, config, res) => {
   try {
@@ -49,10 +55,18 @@ const getResumeLink = (session, teamSlug, flowSlug) => {
   return `${process.env.EDITOR_URL_EXT}/${teamSlug}/${flowSlug}/preview?sessionId=${session.id}`;
 };
 
+/**
+ * Return raw date from db in a standard format
+ * @param {string} date 
+ * @returns 
+ */
+const formatDate = (date) => format(Date.parse(date), "dd MMMM yyyy");
+
 module.exports = {
   getNotifyClient,
   getGraphQLClient,
   sendEmail,
   convertSlugToName,
   getResumeLink,
+  formatDate,
 };

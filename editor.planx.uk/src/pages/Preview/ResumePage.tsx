@@ -20,6 +20,7 @@ enum Status {
   Validating,
   Success,
   Error,
+  Invalid,
 }
 
 const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
@@ -100,16 +101,44 @@ const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
   );
 };
 
+const ValidationError: React.FC = () => {
+  return (
+    <StatusPage
+      bannerHeading="Validation error"
+      bannerText={"Unable to validate session"}
+      cardText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien
+      nunc, blandit et cursus nec, auctor at leo. Donec eros enim, tristique
+      sit amet enim iaculis."
+      buttonText="Close Tab"
+      onButtonClick={() => window.close()}
+    ></StatusPage>
+  );
+};
+
+/**
+ * If an email is passed in as a query param, do not prompt a user for this
+ * Currently only used for redirects back from GovUK Pay
+ */
+const getInitialEmailValue = () => {
+  const emailQueryParam = useCurrentRoute().url.query.email;
+  const isRedirectFromGovPay =
+    document.referrer === "https://www.payments.service.gov.uk/";
+  if (isRedirectFromGovPay && emailQueryParam) return emailQueryParam;
+  return "";
+};
+
 /**
  * Component which handles the "Resume" page used for Save & Return
- * The user can access this page via two "paths"
+ * The user can access this page via three "paths"
  * 1. Directly via PlanX, user enters email to trigger "dashboard" email with resume magic links
  * 2. Magic link in email with a sessionId, user enters email to continue application
+ * 3. Redirect back from GovPay - sessionId and email come from query params
  */
 const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
-  const [email, setEmail] = useState<string>("");
+  const [email, setEmail] = useState<string>(getInitialEmailValue());
   const sessionId = useCurrentRoute().url.query.sessionId;
+  const flowId = useStore((state) => state.id);
 
   useEffect(() => {
     if (email) handleSubmit();
@@ -132,28 +161,29 @@ const ResumePage: React.FC = () => {
   };
 
   /**
-   * Query DB to validate that sessionID and email match
+   * Query DB to validate that sessionID, flowId, & email match
    */
   const validateSessionId = async () => {
     const url = `${process.env.REACT_APP_API_URL}/validate-session`;
-    const data = { email: email, sessionId: sessionId };
+    const data = { email, sessionId, flowId };
     try {
       await axios.post(url, data);
+      // Setting sessionId triggers an API call to update the local session
       useStore.setState({
         saveToEmail: email,
         path: ApplicationPath.SaveAndReturn,
         sessionId: sessionId,
       });
-      // Remove sessionId query param from URL
+      // Remove query params from URL
       window.history.pushState({}, document.title, window.location.pathname);
       // TODO: Reconciliation...!
     } catch (error) {
-      setPageStatus(Status.Error);
+      setPageStatus(Status.Invalid);
     }
   };
 
   /**
-   * Handle both submit "paths" that leads a user to this page
+   * Handle all submit "paths" that leads a user to this page
    */
   const handleSubmit = () => {
     setPageStatus(Status.Validating);
@@ -170,6 +200,7 @@ const ResumePage: React.FC = () => {
     ),
     [Status.Success]: <EmailSuccess email={email} />,
     [Status.Error]: <EmailError retry={() => handleSubmit()} email={email} />,
+    [Status.Invalid]: <ValidationError />,
   }[pageStatus];
 };
 

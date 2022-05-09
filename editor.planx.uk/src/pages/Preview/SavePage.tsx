@@ -54,9 +54,9 @@ const SavePage: React.FC = () => {
 
   const sendNotifyEmail = async () => {
     const url = `${process.env.REACT_APP_API_URL}/save-application`;
-    const flowId = useStore.getState().id;
+    const { id, sessionId } = useStore.getState();
     // TODO: Type for this?
-    const data = { email: saveToEmail, flowId: flowId };
+    const data = { email: saveToEmail, flowId: id, sessionId: sessionId };
     const token = getCookie("jwt");
     const config = {
       headers: {
