@@ -142,12 +142,19 @@
 - table:
     schema: public
     name: lowcal_sessions
+  computed_fields:
+    - name: expiry_date
+      definition:
+        function:
+          schema: public
+          name: lowcal_session_expiry_date
   insert_permissions:
     - role: public
       permission:
         check: {}
         columns:
           - data
+          - email
           - id
         backend_only: false
   select_permissions:
@@ -162,6 +169,7 @@
       permission:
         columns:
           - data
+          - email
           - id
         filter: {}
         check: null

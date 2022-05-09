@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { useStore } from "pages/FlowEditor/lib/store";
 
 import { client } from "./graphql";
 
@@ -70,9 +71,9 @@ class LowcalStorage {
 
     await client.mutate({
       mutation: gql`
-        mutation SetItem($data: jsonb!, $id: uuid!) {
+        mutation SetItem($data: jsonb!, $id: uuid!, $email: String) {
           insert_lowcal_sessions_one(
-            object: { data: $data, id: $id }
+            object: { data: $data, id: $id, email: $email }
             on_conflict: {
               constraint: lowcal_sessions_pkey
               update_columns: data
@@ -85,6 +86,7 @@ class LowcalStorage {
       variables: {
         id: key.split(":")[1],
         data: JSON.parse(value),
+        email: useStore.getState().saveToEmail,
       },
     });
   });
