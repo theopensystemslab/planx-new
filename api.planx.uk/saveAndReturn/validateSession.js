@@ -1,6 +1,16 @@
+const { getGraphQLClient } = require("./utils");
+
 const validateSession = async (req, res, next) => {
   try {
-    const isValid = await validateRequest(req);
+    const { flowId, email, sessionId } = req.body;
+    if (!flowId || !email || !sessionId)
+      return next({
+        status: 400,
+        message: "Required value missing"
+      });
+    
+    const { isValid, _sessionData } = await validateRequest(flowId, email, sessionId);
+
     isValid ? 
       res.status(200).send("Valid session") :
       res.status(404).send("Unable to find matching session");
@@ -9,21 +19,33 @@ const validateSession = async (req, res, next) => {
   }
 };
 
-const validateRequest = async (req) => {
-  // TODO: Query lowcal table to find if there is a record matching the given email address and session ID
-  // const client = getGraphQLClient();
-  // const query = "";
-  // const response = await client.request(
-  //   query,
-  //   {
-  //     emailAddress: req.body.emailAddress,
-  //     sessionId: req.body.sessionId,
-  //   }
-  // );
+const validateRequest = async (flowId, email, sessionId) => {
+  const result = {
+    isValid: false,
+    sessionData: null,
+  };
 
-  // No table to query, just give a postive answer to test the data flow
-  return true;
-  // return false;
+  const client = getGraphQLClient();
+  const query = `
+    query ValidateRequest($email: String, $sessionId: uuid!, $flowId: uuid!) {
+      lowcal_sessions(where: {email: {_eq: $email}, id: {_eq: $sessionId}, data: {_contains: {id: $flowId}}}) {
+        data
+      } 
+      flows_by_pk(id: $flowId) {
+        id
+      }
+    }
+  `
+  const { lowcal_sessions, flows_by_pk }  = await client.request(query, { email: email.toLowerCase(), flowId, sessionId })
+
+  if (!flows_by_pk) throw new Error("Unable to validate request");
+
+  if (lowcal_sessions[0]) {
+    result.isValid = true;
+    result.sessionData = lowcal_sessions[0];
+  };
+
+  return result;
 };
 
 module.exports = validateSession;
