@@ -21,12 +21,9 @@ export const isSaveReturnFlow = (flowData: Record<string, any>): Boolean =>
   );
 
 export const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
-  let path = isSaveReturnFlow(flowData)
-    ? ApplicationPath.SaveAndReturn
-    : ApplicationPath.SingleSession;
-
-  if (req.params.sessionId && ApplicationPath.SaveAndReturn) {
-    path = ApplicationPath.Resume;
-  }
+  if (!isSaveReturnFlow(flowData)) return;
+  const path = req.params.sessionId
+    ? ApplicationPath.Resume
+    : ApplicationPath.SaveAndReturn;
   useStore.setState({ path });
 };
