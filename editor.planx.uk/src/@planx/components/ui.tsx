@@ -67,7 +67,6 @@ export const ICONS: {
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: ReportProblemOutlined,
-  [TYPES.Notify]: MailOutlined,
   [TYPES.NumberInput]: ExposureZero,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PlanningConstraints]: Map,
