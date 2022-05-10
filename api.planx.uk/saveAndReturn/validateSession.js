@@ -36,14 +36,14 @@ const validateSession = async (req, res, next) => {
             }
 
             // TODO check if removed breadcrumbs have associated passport vars & also remove from sessionData.data.passport?
-            //   ** what about collected flags? what about `auto: true`? 
+            //   **what about collected flags? what about `auto: true`? component dependencies like FindProp/Draw/PlanningConstraints?
           });
 
           // update the lowcal_session.data to match our updated in-memory sessionData.data
           const reconciledSessionData = await updateLowcalSessionData(req.query.sessionId, sessionData.data);
 
           res.status(200).json({
-            message: `Found ${alteredNodes.length} content changes since last save point, which effect ${Object.keys(removedBreadcrumbs).length} previously answered question(s)`,
+            message: `There have been ${alteredNodes.length} content changes since last save point, affecting ${Object.keys(removedBreadcrumbs).length} previous answers`,
             alteredNodes,
             removedBreadcrumbs,
             reconciledSessionData,
@@ -51,14 +51,14 @@ const validateSession = async (req, res, next) => {
         }
       } else {
         res.status(200).json({
-          message: "No content changes since last save point; session breadcrumbs not effected",
+          message: "No content changes since last save point",
           alteredNodes: null,
           removedBreadcrumbs: null,
           reconciledSessionData: sessionData.data,
         });
       }
     } else {
-      res.status(404).json({ message: "Unable to find your session. Please start over?" });
+      res.status(404).json({ message: "Unable to find your session" });
     }
   } catch (error) {
     next(error);

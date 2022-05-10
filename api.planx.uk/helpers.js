@@ -51,7 +51,8 @@ const getPublishedFlowByDate = async (id, created_at) => {
       query GetPublishedFlowByDate($id: uuid!, $created_at: timestamptz!) {
         flows_by_pk(id: $id) {
           published_flows(
-            order_by: { id: asc },
+            limit: 1,
+            order_by: { id: desc },
             where: { created_at: {_lte: $created_at} }
           ) {
             data
