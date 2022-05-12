@@ -168,8 +168,8 @@ const ResumePage: React.FC = () => {
     const url = `${process.env.REACT_APP_API_URL}/validate-session`;
     const data = { email: email, sessionId: sessionId };
     try {
-      // Remove sessionId query param from URL before validation
-      //   so that 404/UnknownSession "retry" button reloads window.location without params
+      // Remove sessionId query param from URL before validation request
+      //   so that 404/Status.UnknownSession will reload window.location without params on "retry" button
       window.history.pushState({}, document.title, window.location.pathname);
       // Find this session, if found then handle reconciliation
       await axios.post(url, data).then((response) => {
