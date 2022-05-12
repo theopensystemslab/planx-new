@@ -596,7 +596,7 @@ export const previewStore = (
 
   _nodesPendingEdit: [],
 
-  path: ApplicationPath.Resume,
+  path: ApplicationPath.SingleSession,
 
   saveToEmail: undefined,
 });

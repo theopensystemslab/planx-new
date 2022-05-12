@@ -20,7 +20,7 @@ enum Status {
   EmailRequired,
   Validating,
   Validated,
-  UnknownSession,
+  InvalidSession,
   Success,
   Error,
 }
@@ -115,7 +115,7 @@ const ValidationSuccess: React.FC<{ data: any }> = ({ data }) => {
   );
 };
 
-const UnknownSession: React.FC = () => {
+const InvalidSession: React.FC = () => {
   return (
     <StatusPage
       bannerHeading="No session found"
@@ -128,18 +128,32 @@ const UnknownSession: React.FC = () => {
 };
 
 /**
+ * If an email is passed in as a query param, do not prompt a user for this
+ * Currently only used for redirects back from GovUK Pay
+ */
+const getInitialEmailValue = () => {
+  const emailQueryParam = useCurrentRoute().url.query.email;
+  const isRedirectFromGovPay =
+    document.referrer === "https://www.payments.service.gov.uk/";
+  if (isRedirectFromGovPay && emailQueryParam) return emailQueryParam;
+  return "";
+};
+
+/**
  * Component which handles the "Resume" page used for Save & Return
- * The user can access this page via two "paths"
+ * The user can access this page via three "paths"
  * 1. Directly via PlanX, user enters email to trigger "dashboard" email with resume magic links
  * 2. Magic link in email with a sessionId, user enters email to continue application
+ * 3. Redirect back from GovPay - sessionId and email come from query params
  */
 const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
-  const [email, setEmail] = useState<string>("");
   const [reconciliedData, setReconciledData] = useState<
     Record<any, any> | undefined
   >();
+  const [email, setEmail] = useState<string>(getInitialEmailValue());
   const sessionId = useCurrentRoute().url.query.sessionId;
+  const flowId = useStore((state) => state.id);
 
   useEffect(() => {
     if (email) handleSubmit();
@@ -162,14 +176,14 @@ const ResumePage: React.FC = () => {
   };
 
   /**
-   * Query DB to validate that sessionID and email match
+   * Query DB to validate that sessionID, flowId, & email match
    */
   const validateSessionId = async () => {
     const url = `${process.env.REACT_APP_API_URL}/validate-session`;
-    const data = { email: email, sessionId: sessionId };
+    const data = { email, sessionId, flowId };
     try {
       // Remove sessionId query param from URL before validation request
-      //   so that 404/Status.UnknownSession will reload window.location without params on "retry" button
+      //   so that 404/Status.InvalidSession will reload window.location without params on "retry" button
       window.history.pushState({}, document.title, window.location.pathname);
       // Find this session, if found then handle reconciliation
       await axios.post(url, data).then((response) => {
@@ -182,12 +196,12 @@ const ResumePage: React.FC = () => {
         sessionId: sessionId,
       });
     } catch (error) {
-      setPageStatus(Status.UnknownSession);
+      setPageStatus(Status.InvalidSession);
     }
   };
 
   /**
-   * Handle both submit "paths" that leads a user to this page
+   * Handle all submit "paths" that leads a user to this page
    */
   const handleSubmit = () => {
     setPageStatus(Status.Validating);
@@ -203,7 +217,7 @@ const ResumePage: React.FC = () => {
       />
     ),
     [Status.Validated]: <ValidationSuccess data={reconciliedData} />,
-    [Status.UnknownSession]: <UnknownSession />,
+    [Status.InvalidSession]: <InvalidSession />,
     [Status.Success]: <EmailSuccess email={email} />,
     [Status.Error]: <EmailError retry={() => handleSubmit()} email={email} />,
   }[pageStatus];
