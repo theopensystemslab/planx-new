@@ -103,14 +103,24 @@ const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
   );
 };
 
-const ValidationSuccess: React.FC<{ data: any }> = ({ data }) => {
+const ValidationSuccess: React.FC<{
+  data: any;
+  email: string;
+  sessionId: string;
+}> = ({ data, email, sessionId }) => {
   return (
     <ReconciliationPage
       bannerHeading="Resume your application"
       diffMessage={data?.message || ""}
       data={data}
       buttonText="Continue"
-      onButtonClick={() => console.log("TODO clicked continue")}
+      onButtonClick={() =>
+        useStore.setState({
+          saveToEmail: email,
+          sessionId: sessionId,
+          path: ApplicationPath.SaveAndReturn,
+        })
+      }
     ></ReconciliationPage>
   );
 };
@@ -148,12 +158,12 @@ const getInitialEmailValue = () => {
  */
 const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
-  const [reconciliedData, setReconciledData] = useState<
-    Record<any, any> | undefined
-  >();
   const [email, setEmail] = useState<string>(getInitialEmailValue());
   const sessionId = useCurrentRoute().url.query.sessionId;
   const flowId = useStore((state) => state.id);
+  const [reconciledData, setReconciledData] = useState<
+    Record<any, any> | undefined
+  >();
 
   useEffect(() => {
     if (email) handleSubmit();
@@ -190,11 +200,6 @@ const ResumePage: React.FC = () => {
         setReconciledData(response?.data);
         setPageStatus(Status.Validated);
       });
-      useStore.setState({
-        saveToEmail: email,
-        // path: ApplicationPath.SaveAndReturn,
-        sessionId: sessionId,
-      });
     } catch (error) {
       setPageStatus(Status.InvalidSession);
     }
@@ -216,7 +221,13 @@ const ResumePage: React.FC = () => {
         msDelayBeforeVisible={0}
       />
     ),
-    [Status.Validated]: <ValidationSuccess data={reconciliedData} />,
+    [Status.Validated]: (
+      <ValidationSuccess
+        data={reconciledData}
+        email={email}
+        sessionId={sessionId}
+      />
+    ),
     [Status.InvalidSession]: <InvalidSession />,
     [Status.Success]: <EmailSuccess email={email} />,
     [Status.Error]: <EmailError retry={() => handleSubmit()} email={email} />,

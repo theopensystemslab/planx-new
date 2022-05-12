@@ -56,19 +56,20 @@ const ReconciliationPage: React.FC<Props> = ({
       </Box>
       <Card>
         {/* Only show a warning if the content change has affected the user's path */}
-        {data?.removedBreadcrumbs && Object.keys(data.removedBreadcrumbs) && (
-          <Box display="flex" mb={4}>
-            <Warning
-              titleAccess="Warning"
-              color="primary"
-              fontSize="large"
-              className={classes.warningContainer}
-            />
-            <Typography variant="body2" className={classes.warningMessage}>
-              {diffMessage}
-            </Typography>
-          </Box>
-        )}
+        {data?.removedBreadcrumbs &&
+          Object.keys(data.removedBreadcrumbs).length > 0 && (
+            <Box display="flex" mb={4}>
+              <Warning
+                titleAccess="Warning"
+                color="primary"
+                fontSize="large"
+                className={classes.warningContainer}
+              />
+              <Typography variant="body2" className={classes.warningMessage}>
+                {diffMessage}
+              </Typography>
+            </Box>
+          )}
         <Typography variant="h3" component="h2">
           Review your answers so far
         </Typography>

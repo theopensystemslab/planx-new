@@ -6,14 +6,14 @@ const { getGraphQLClient } = require("./utils");
 const client = getGraphQLClient();
 
 const validateSession = async (req, res, next) => {
-  const { flowId, email, sessionId } = req.body;
-  if (!flowId || !email || !sessionId)
-    return next({
-      status: 400,
-      message: "Required value missing"
-    });
-  
   try {
+    const { flowId, email, sessionId } = req.body;
+    if (!flowId || !email || !sessionId)
+      return next({
+        status: 400,
+        message: "Required value missing"
+      });
+    
     let sessionData = await findSession(sessionId, email);
 
     if (sessionData) {
