@@ -101,19 +101,43 @@ const addPortalName = (
   return metadata;
 };
 
-export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
-  Object.entries(breadcrumbs)
-    .filter(([id]) => {
-      const validType = isTypeForBopsPayload(flow[id]?.type);
+export const makePayload = (
+  flow: Store.flow,
+  breadcrumbs: Store.breadcrumbs
+) => {
+  const feedback: BOPSFullPayload["feedback"] = {};
+
+  const proposal_details = Object.entries(breadcrumbs)
+    .map(([id, bc]) => {
+      const { edges = [], ...question } = flow[id];
+
+      try {
+        const trimmedFeedback = bc.feedback?.trim();
+        if (trimmedFeedback) {
+          switch (flow[id].type) {
+            case TYPES.Result:
+              feedback["result"] = trimmedFeedback;
+              break;
+            case TYPES.FindProperty:
+              feedback["find_property"] = trimmedFeedback;
+              break;
+            case TYPES.PlanningConstraints:
+              feedback["planning_constraints"] = trimmedFeedback;
+              break;
+            default:
+              throw new Error(`invalid feedback type ${flow[id].type}`);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        airbrake?.notify(err);
+      }
+
       // exclude answers that have been extracted into the root object
       const validKey = !Object.values(bopsDictionary).includes(
         flow[id]?.data?.fn
       );
-
-      return validType && validKey;
-    })
-    .map(([id, bc]) => {
-      const { edges = [], ...question } = flow[id];
+      if (!isTypeForBopsPayload(flow[id]?.type) || !validKey) return;
 
       const answers: Array<string> = (() => {
         switch (flow[id].type) {
@@ -175,13 +199,14 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
       }
       metadata = addPortalName(id, flow, metadata);
 
-      if (bc.feedback) metadata.feedback = bc.feedback;
-
       if (Object.keys(metadata).length > 0) ob.metadata = metadata;
 
       return ob;
     })
-    .filter(Boolean);
+    .filter(Boolean) as Array<QuestionAndResponses>;
+
+  return { proposal_details, feedback };
+};
 
 export function getParams(
   breadcrumbs: Store.breadcrumbs,
@@ -308,9 +333,16 @@ export function getParams(
     }, {} as Partial<BOPSFullPayload>)
   );
 
-  // 6. questions+answers array
+  // 6a. questions+answers array
+  const { proposal_details, feedback } = makePayload(flow, breadcrumbs);
 
-  data.proposal_details = makePayload(flow, breadcrumbs);
+  data.proposal_details = proposal_details;
+
+  // 6b. optional feedback object
+  // we include feedback object if it contains at least 1 key/value pair
+  if (Object.keys(feedback).length > 0) {
+    data.feedback = feedback;
+  }
 
   // 7. payment
 
