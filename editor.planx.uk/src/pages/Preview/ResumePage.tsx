@@ -13,11 +13,14 @@ import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import { object, string } from "yup";
 
+import ReconciliationPage from "./ReconciliationPage";
 import StatusPage from "./StatusPage";
 
 enum Status {
   EmailRequired,
   Validating,
+  Validated,
+  UnknownSession,
   Success,
   Error,
 }
@@ -100,6 +103,30 @@ const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
   );
 };
 
+const ValidationSuccess: React.FC<{ data: any }> = ({ data }) => {
+  return (
+    <ReconciliationPage
+      bannerHeading="Resume your application"
+      diffMessage={data?.message || ""}
+      data={data}
+      buttonText="Continue"
+      onButtonClick={() => console.log("clicked continue")}
+    ></ReconciliationPage>
+  );
+};
+
+const UnknownSession: React.FC = () => {
+  return (
+    <StatusPage
+      bannerHeading="No session found"
+      bannerText="Click retry to start a new application or enter your email again"
+      cardText=""
+      buttonText="Retry"
+      onButtonClick={() => window.location.reload()}
+    ></StatusPage>
+  );
+};
+
 /**
  * Component which handles the "Resume" page used for Save & Return
  * The user can access this page via two "paths"
@@ -109,6 +136,9 @@ const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
 const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
   const [email, setEmail] = useState<string>("");
+  const [reconciliedData, setReconciledData] = useState<
+    Record<any, any> | undefined
+  >();
   const sessionId = useCurrentRoute().url.query.sessionId;
 
   useEffect(() => {
@@ -138,17 +168,20 @@ const ResumePage: React.FC = () => {
     const url = `${process.env.REACT_APP_API_URL}/validate-session`;
     const data = { email: email, sessionId: sessionId };
     try {
-      await axios.post(url, data);
       useStore.setState({
         saveToEmail: email,
-        path: ApplicationPath.SaveAndReturn,
+        // path: ApplicationPath.SaveAndReturn,
         sessionId: sessionId,
       });
       // Remove sessionId query param from URL
       window.history.pushState({}, document.title, window.location.pathname);
-      // TODO: Reconciliation...!
+      // Confirm we have this session, if we do then handle reconciliation
+      await axios.post(url, data).then((response) => {
+        setReconciledData(response?.data);
+        setPageStatus(Status.Validated);
+      });
     } catch (error) {
-      setPageStatus(Status.Error);
+      setPageStatus(Status.UnknownSession);
     }
   };
 
@@ -164,10 +197,12 @@ const ResumePage: React.FC = () => {
     [Status.EmailRequired]: <EmailRequired setEmail={setEmail} />,
     [Status.Validating]: (
       <DelayedLoadingIndicator
-        text={sessionId ? "Validating..." : "Sending..."}
+        text={sessionId ? "Validating..." : "Searching..."}
         msDelayBeforeVisible={0}
       />
     ),
+    [Status.Validated]: <ValidationSuccess data={reconciliedData} />,
+    [Status.UnknownSession]: <UnknownSession />,
     [Status.Success]: <EmailSuccess email={email} />,
     [Status.Error]: <EmailError retry={() => handleSubmit()} email={email} />,
   }[pageStatus];

@@ -13,7 +13,7 @@ const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
 const validateSession = async (req, res, next) => {
   try {
     // TODO also validate on req.query.email
-    let sessionData = await findSession(req.query.sessionId);
+    let sessionData = await findSession(req.body.sessionId);
 
     if (sessionData) {
       // reconcile content changes between the published flow state at point of resuming and when the applicant last left off
@@ -40,10 +40,11 @@ const validateSession = async (req, res, next) => {
           });
 
           // update the lowcal_session.data to match our updated in-memory sessionData.data
-          const reconciledSessionData = await updateLowcalSessionData(req.query.sessionId, sessionData.data);
+          // TODO ensure node order is preserved
+          const reconciledSessionData = await updateLowcalSessionData(req.body.sessionId, sessionData.data);
 
           res.status(200).json({
-            message: `There have been ${alteredNodes.length} content changes since last save point, affecting ${Object.keys(removedBreadcrumbs).length} previous answers`,
+            message: `This service has changed since your last save point, affecting at least ${Object.keys(removedBreadcrumbs).length} previous answers. You will be prompted to answer any updated questions again when you continue.`,
             alteredNodes,
             removedBreadcrumbs,
             reconciledSessionData,
