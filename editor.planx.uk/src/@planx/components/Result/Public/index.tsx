@@ -9,7 +9,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useState } from "react";
 import type { Node, TextContent } from "types";
@@ -29,6 +29,7 @@ export interface Props {
   reasonsTitle?: string;
   responses: Array<Response>;
   disclaimer?: TextContent;
+  previouslySubmittedData?: Store.userData;
 }
 
 interface Response {
@@ -97,10 +98,11 @@ const Result: React.FC<Props> = ({
   reasonsTitle = "",
   responses,
   disclaimer,
+  previouslySubmittedData,
 }) => {
   const formik = useFormik({
     initialValues: {
-      feedback: "",
+      feedback: previouslySubmittedData?.feedback || "",
     },
     onSubmit: (values, { resetForm }) => {
       if (values.feedback) {

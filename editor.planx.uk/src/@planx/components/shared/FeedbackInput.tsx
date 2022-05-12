@@ -7,6 +7,7 @@ interface Props {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
   text: string;
+  defaultValue?: string;
 }
 
 const FeedbackInput: React.FC<Props> = ({ text, ...componentProps }: Props) => (

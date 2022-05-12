@@ -112,6 +112,7 @@ function Component(props: Props) {
   } else if (address) {
     return (
       <PropertyInformation
+        previousFeedback={props.previouslySubmittedData?.feedback}
         handleSubmit={({ feedback }: { feedback?: string }) => {
           if (flow && address) {
             const newPassportData: any = {};
@@ -398,11 +399,12 @@ export function PropertyInformation(props: any) {
     lng,
     handleSubmit,
     teamColor,
+    previousFeedback,
   } = props;
   const styles = useClasses();
   const formik = useFormik({
     initialValues: {
-      feedback: "",
+      feedback: previousFeedback || "",
     },
     onSubmit: (values) => {
       if (values.feedback) {
