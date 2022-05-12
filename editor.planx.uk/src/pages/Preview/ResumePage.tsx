@@ -212,7 +212,7 @@ const ResumePage: React.FC = () => {
     [Status.EmailRequired]: <EmailRequired setEmail={setEmail} />,
     [Status.Validating]: (
       <DelayedLoadingIndicator
-        text={sessionId ? "Validating..." : "Searching..."}
+        text={sessionId ? "Validating..." : "Sending..."}
         msDelayBeforeVisible={0}
       />
     ),

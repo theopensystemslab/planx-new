@@ -1,14 +1,20 @@
 const jsondiffpatch = require("jsondiffpatch");
 
 const { getMostRecentPublishedFlow, getPublishedFlowByDate } = require("../helpers");
-const { useGraphQLClient } = require("./utils");
+const { getGraphQLClient } = require("./utils");
 
-const client = useGraphQLClient();
+const client = getGraphQLClient();
 
 const validateSession = async (req, res, next) => {
+  const { flowId, email, sessionId } = req.body;
+  if (!flowId || !email || !sessionId)
+    return next({
+      status: 400,
+      message: "Required value missing"
+    });
+  
   try {
-    // TODO also validate on req.query.email
-    let sessionData = await findSession(req.body.sessionId);
+    let sessionData = await findSession(sessionId, email);
 
     if (sessionData) {
       // reconcile content changes between the published flow state at point of resuming and when the applicant last left off
@@ -36,7 +42,7 @@ const validateSession = async (req, res, next) => {
 
           // update the lowcal_session.data to match our updated in-memory sessionData.data
           // TODO ensure node order is preserved
-          const reconciledSessionData = await updateLowcalSessionData(req.body.sessionId, sessionData.data);
+          const reconciledSessionData = await updateLowcalSessionData(sessionId, sessionData.data);
 
           res.status(200).json({
             message: `This service has changed since your last save point, affecting at least ${Object.keys(removedBreadcrumbs).length} previous answers. You will be prompted to answer any updated questions again when you continue.`,
@@ -61,12 +67,13 @@ const validateSession = async (req, res, next) => {
   }
 };
 
-const findSession = async (id) => {
+const findSession = async (id, email) => {
   const response = await client.request(`
-    query FindSession($id: uuid!) {
+    query FindSession($id: uuid!, $email: String!) {
       lowcal_sessions(
         where: {
-          id: {_eq: $id}
+          id: {_eq: $id},
+          email: {_eq: $email}
         }, 
         limit: 1
       ) {
@@ -75,7 +82,7 @@ const findSession = async (id) => {
       }
     }`,
     { 
-      id
+      id, email
     }
   );
 
