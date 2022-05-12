@@ -110,7 +110,7 @@ const ValidationSuccess: React.FC<{ data: any }> = ({ data }) => {
       diffMessage={data?.message || ""}
       data={data}
       buttonText="Continue"
-      onButtonClick={() => console.log("clicked continue")}
+      onButtonClick={() => console.log("TODO clicked continue")}
     ></ReconciliationPage>
   );
 };
@@ -168,17 +168,18 @@ const ResumePage: React.FC = () => {
     const url = `${process.env.REACT_APP_API_URL}/validate-session`;
     const data = { email: email, sessionId: sessionId };
     try {
+      // Remove sessionId query param from URL before validation
+      //   so that 404/UnknownSession "retry" button reloads window.location without params
+      window.history.pushState({}, document.title, window.location.pathname);
+      // Find this session, if found then handle reconciliation
+      await axios.post(url, data).then((response) => {
+        setReconciledData(response?.data);
+        setPageStatus(Status.Validated);
+      });
       useStore.setState({
         saveToEmail: email,
         // path: ApplicationPath.SaveAndReturn,
         sessionId: sessionId,
-      });
-      // Remove sessionId query param from URL
-      window.history.pushState({}, document.title, window.location.pathname);
-      // Confirm we have this session, if we do then handle reconciliation
-      await axios.post(url, data).then((response) => {
-        setReconciledData(response?.data);
-        setPageStatus(Status.Validated);
       });
     } catch (error) {
       setPageStatus(Status.UnknownSession);

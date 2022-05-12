@@ -1,14 +1,9 @@
-const { GraphQLClient } = require("graphql-request");
 const jsondiffpatch = require("jsondiffpatch");
 
 const { getMostRecentPublishedFlow, getPublishedFlowByDate } = require("../helpers");
+const { useGraphQLClient } = require("./utils");
 
-// TODO use `useGraphQLClient()` from utils instead 
-const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
-  headers: {
-    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
-  },
-});
+const client = useGraphQLClient();
 
 const validateSession = async (req, res, next) => {
   try {
