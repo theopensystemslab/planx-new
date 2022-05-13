@@ -84,7 +84,8 @@ const formatDate = (date) => format(Date.parse(date), "dd MMMM yyyy");
 
 /**
  * Sends "Save", "Remind", and "Expiry" emails to Save & Return users
- * @param {string} template 
+ * @param {object} res 
+ * @param {object} applicationDetails 
  */
 const sendSingleApplicationEmail = async (res, {template, flowId, email, sessionId}) => {
   const { flowSlug, teamSlug, teamPersonalisation, session } = await validateRequest(flowId, email, sessionId);
@@ -136,7 +137,7 @@ const validateRequest = async (flowId, email, sessionId) => {
     `
     const { lowcal_sessions, flows_by_pk }  = await client.request(query, { email: email.toLowerCase(), flowId, sessionId })
 
-    if (!lowcal_sessions || !flows_by_pk) throw Error;
+    if (!lowcal_sessions.length || !flows_by_pk) throw Error;
 
     return {
       flowSlug: flows_by_pk.slug,

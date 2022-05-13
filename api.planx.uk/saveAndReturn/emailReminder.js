@@ -8,7 +8,7 @@ const emailReminder = async (req, res, next) => {
         status: 400,
         message: "Malformed event, required values missing"
       });
-    await sendSingleApplicationEmail(res, next, { flowId, email, sessionId, template: "reminder" });
+    await sendSingleApplicationEmail(res, { flowId, email, sessionId, template: "reminder" });
   } catch (error) {
     next(error);
   };

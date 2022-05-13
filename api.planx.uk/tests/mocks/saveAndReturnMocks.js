@@ -17,7 +17,7 @@ const mockLowcalSession = {
         _address: {
           single_line_address: "1 High Street"
         },
-        "property.type": ["house"]
+        "proposal.projectType": ["house"]
       }
     }
   },

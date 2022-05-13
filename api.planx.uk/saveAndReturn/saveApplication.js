@@ -1,3 +1,5 @@
+const { sendSingleApplicationEmail } = require("./utils");
+
 const saveApplication = async (req, res, next) => {
   try {
     const { flowId, email, sessionId } = req.body;
@@ -6,8 +8,7 @@ const saveApplication = async (req, res, next) => {
         status: 400,
         message: "Required value missing"
       });
-  
-    await sendSingleApplicationEmail(res, next, {flowId, email, sessionId, template: "save"});
+    await sendSingleApplicationEmail(res, {flowId, email, sessionId, template: "save"});
   } catch (error) {
     next(error);
   }
