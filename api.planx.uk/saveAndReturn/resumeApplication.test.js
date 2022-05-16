@@ -1,7 +1,7 @@
 const supertest = require("supertest");
 const app = require("../server");
 const { queryMock } = require("../tests/graphqlQueryMock");
-const { mockFlow, mockLowcalSession } = require("../tests/mocks/saveAndReturnMocks");
+const { mockFlow, mockLowcalSession, mockTeam } = require("../tests/mocks/saveAndReturnMocks");
 const { buildContentFromSessions } = require("./resumeApplication");
 
 const ENDPOINT = "/resume-application";
@@ -16,18 +16,22 @@ describe("buildContentFromSessions function", () => {
             _address: {
               single_line_address: "1 High Street"
             },
-            "property.type": ["house"]
+            "proposal.projectType": ["house"]
           }
         }
       },
       id: 123,
       expiry_date: "2022-05-04T01:02:03.865452+00:00",
+      flow: {
+        slug: "apply-for-a-lawful-development-certificate"
+      },
     }];
 
-    const result = `Address: 1 High Street
+    const result = `Service: Apply For A Lawful Development Certificate
+      Address: 1 High Street
       Project Type: house
       Expiry Date: 04 May 2022
-      Link: example.com/team/flow/preview?sessionId=123`
+      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
     expect(buildContentFromSessions(sessions, "flow", "team")).toEqual(result);
   });
 
@@ -39,12 +43,15 @@ describe("buildContentFromSessions function", () => {
             _address: {
               single_line_address: "1 High Street"
             },
-            "property.type": ["house"]
+            "proposal.projectType": ["house"]
           }
         }
       },
       id: 123,
       expiry_date: "2022-05-04T01:02:03.865452+00:00",
+      flow: {
+        slug: "apply-for-a-lawful-development-certificate"
+      },
     },
     {
       data: {
@@ -53,12 +60,15 @@ describe("buildContentFromSessions function", () => {
             _address: {
               single_line_address: "2 High Street"
             },
-            "property.type": ["flat"]
+            "proposal.projectType": ["flat"]
           }
         }
       },
       id: 456,
       expiry_date: "2022-05-04T01:02:03.865452+00:00",
+      flow: {
+        slug: "apply-for-a-lawful-development-certificate"
+      },
     },
     {
       data: {
@@ -67,23 +77,29 @@ describe("buildContentFromSessions function", () => {
             _address: {
               single_line_address: "3 High Street"
             },
-            "property.type": ["farm"]
+            "proposal.projectType": ["farm"]
           }
         }
       },
       id: 789,
       expiry_date: "2022-05-04T01:02:03.865452+00:00",
+      flow: {
+        slug: "apply-for-a-lawful-development-certificate"
+      },
     }];
-    const result = `Address: 1 High Street
+    const result = `Service: Apply For A Lawful Development Certificate
+      Address: 1 High Street
       Project Type: house
       Expiry Date: 04 May 2022
-      Link: example.com/team/flow/preview?sessionId=123\n\nAddress: 2 High Street
+      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123\n\nService: Apply For A Lawful Development Certificate
+      Address: 2 High Street
       Project Type: flat
       Expiry Date: 04 May 2022
-      Link: example.com/team/flow/preview?sessionId=456\n\nAddress: 3 High Street
+      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=456\n\nService: Apply For A Lawful Development Certificate
+      Address: 3 High Street
       Project Type: farm
       Expiry Date: 04 May 2022
-      Link: example.com/team/flow/preview?sessionId=789`
+      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=789`
     expect(buildContentFromSessions(sessions, "flow", "team")).toEqual(result)
   });
 
@@ -93,18 +109,22 @@ describe("buildContentFromSessions function", () => {
         passport: {
           // Missing address
           data: {
-            "property.type": ["house"]
+            "proposal.projectType": ["house"]
           }
         }
       },
       id: 123,
       expiry_date: "2022-05-04T01:02:03.865452+00:00",
+      flow: {
+        slug: "apply-for-a-lawful-development-certificate"
+      },
     }];
 
-    const result = `Address: Address not submitted
+    const result = `Service: Apply For A Lawful Development Certificate
+      Address: Address not submitted
       Project Type: house
       Expiry Date: 04 May 2022
-      Link: example.com/team/flow/preview?sessionId=123`
+      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
     expect(buildContentFromSessions(sessions, "flow", "team")).toEqual(result);
   });
 
@@ -122,12 +142,16 @@ describe("buildContentFromSessions function", () => {
       },
       id: 123,
       expiry_date: "2022-05-04T01:02:03.865452+00:00",
+      flow: {
+        slug: "apply-for-a-lawful-development-certificate"
+      },
     }];
 
-    const result = `Address: 1 High Street
+    const result = `Service: Apply For A Lawful Development Certificate
+      Address: 1 High Street
       Project Type: Project type not submitted
       Expiry Date: 04 May 2022
-      Link: example.com/team/flow/preview?sessionId=123`
+      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
     expect(buildContentFromSessions(sessions, "flow", "team")).toEqual(result);
   });
 
@@ -137,10 +161,10 @@ describe("Resume Application endpoint", () => {
 
   it("throws an error for if required data is missing", () => {
 
-    const missingEmail = { flowId: "test", sessionId: 123 };
-    const missingFlowId = { email: "test", sessionId: 123 };
+    const missingEmail = { teamSlug: "test" };
+    const missingTeamSlug = { email: "test" };
 
-    [missingEmail, missingFlowId].forEach(async (invalidBody) => {
+    [missingEmail, missingTeamSlug].forEach(async (invalidBody) => {
       await supertest(app)
       .post(ENDPOINT)
       .send(invalidBody)
@@ -151,18 +175,18 @@ describe("Resume Application endpoint", () => {
     })
   });
 
-  it("throws an error if a flowId is invalid", async () => {
-    const flowId = 123;
+  it("throws an error if a teamSlug is invalid", async () => {
+    const payload = { teamSlug: "not-a-team", email: TEST_EMAIL };
 
     queryMock.mockQuery({
       name: 'ValidateRequest',
-      data: { flows_by_pk: null, lowcal_sessions: null },
-      variables: { flowId: flowId, email: TEST_EMAIL }
+      data: { teams: null, lowcal_sessions: null },
+      variables: payload
     });
 
     await supertest(app)
       .post(ENDPOINT)
-      .send({ email: TEST_EMAIL, flowId: flowId})
+      .send(payload)
       .expect(500)
       .then(response => {
         expect(response.body).toHaveProperty("error", "Unable to validate request");
@@ -170,41 +194,35 @@ describe("Resume Application endpoint", () => {
   });
   
   it("sends a Notify email on successful resume", async () => {
-    const flowId = 123;
+    const payload = { teamSlug: "test-team", email: TEST_EMAIL };
 
     queryMock.mockQuery({
       name: 'ValidateRequest',
       data: {
         lowcal_sessions: [mockLowcalSession],
-        flows_by_pk: mockFlow
+        teams: [mockTeam]
       },
-      variables: {
-        flowId: flowId,
-        email: TEST_EMAIL,
-      }
+      variables: payload
     });
 
     await supertest(app)
       .post(ENDPOINT)
-      .send({
-        email: TEST_EMAIL,
-        flowId: flowId,
-      })
+      .send(payload)
       .expect(200)
   });
 
   it("give a successful response even if there is not a matching session", async () => {
-    const flowId = 123;
+    const payload = { teamSlug: "test-team", email: TEST_EMAIL };
 
     queryMock.mockQuery({
       name: 'ValidateRequest',
-      data: { flows_by_pk: mockFlow, lowcal_sessions: null },
-      variables: { flowId: flowId, email: TEST_EMAIL }
+      data: { teams: [mockTeam], lowcal_sessions: null },
+      variables: payload
     });
 
     await supertest(app)
       .post(ENDPOINT)
-      .send({ email: TEST_EMAIL, flowId: flowId})
+      .send(payload)
       .expect(200);
   });
 });

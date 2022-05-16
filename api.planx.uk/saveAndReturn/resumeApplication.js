@@ -1,22 +1,22 @@
 const { getGraphQLClient, sendEmail, convertSlugToName, getResumeLink, formatDate } = require("./utils");
 
 const resumeApplication = async (req, res, next) => {
-  const { flowId, email } = req.body;
-  if (!flowId || !email)
+  const { teamSlug, email } = req.body;
+  if (!teamSlug || !email)
     return next({
       status: 400,
       message: "Required value missing"
     });
 
   try {
-    const { flowSlug, teamSlug, teamPersonalisation, sessions } = await validateRequest(flowId, email, res);
+    const { teamPersonalisation, sessions, teamName } = await validateRequest(teamSlug, email, res);
     const templateId = process.env.GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID;
     const config = {
       personalisation: getPersonalisation(
         sessions,
-        flowSlug,
         teamSlug,
-        teamPersonalisation
+        teamPersonalisation,
+        teamName,
       ),
       reference: null,
       // This value is required to go live, but is not currently set up
@@ -28,36 +28,36 @@ const resumeApplication = async (req, res, next) => {
   }
 };
 
-const validateRequest = async (flowId, email, res) => {
+const validateRequest = async (teamSlug, email, res) => {
   try {
     const client = getGraphQLClient();
     const query = `
-      query ValidateRequest($email: String, $flowId: uuid!) {
-        lowcal_sessions(where: {email: {_eq: $email}, data: {_contains: {id: $flowId}}}) {
+      query ValidateRequest($email: String, $teamSlug: String) {
+        lowcal_sessions(where: {email: {_eq: $email}}, order_by: {flow: {slug: asc}, expiry_date: asc}) {
           id
-          data
           expiry_date
-        } 
-        flows_by_pk(id: $flowId) {
-          slug
-          team {
+          flow {
             slug
-            notifyPersonalisation
           }
+        }
+        teams(where: {slug: {_eq: $teamSlug}}) {
+          slug
+          name
+          notifyPersonalisation
         }
       }
     `
-    const { lowcal_sessions, flows_by_pk } = await client.request(query, { flowId, email: email.toLowerCase() });
+    const { lowcal_sessions, teams } = await client.request(query, { teamSlug, email: email.toLowerCase() });
 
-    if (!flows_by_pk) throw Error;
+    if (!teams?.length) throw Error;
 
     // Protect against phishing by returning a positive response even if no matching sessions found
-    if (!lowcal_sessions) return res.json({});
+    if (!lowcal_sessions?.length) return res.json({});
 
     return {
-      flowSlug: flows_by_pk.slug,
-      teamSlug: flows_by_pk.team.slug,
-      teamPersonalisation: flows_by_pk.team.notifyPersonalisation,
+      teamSlug: teams[0].slug,
+      teamName: teams[0].name,
+      teamPersonalisation: teams[0].notifyPersonalisation,
       sessions: lowcal_sessions,
     };
   } catch (error) {
@@ -65,27 +65,29 @@ const validateRequest = async (flowId, email, res) => {
   }
 };
 
-const getPersonalisation = (sessions, flowSlug, teamSlug, teamPersonalisation) => {
+const getPersonalisation = (sessions, teamSlug, teamPersonalisation, teamName) => {
   return {
     helpEmail: teamPersonalisation.helpEmail,
     helpPhone: teamPersonalisation.helpPhone,
     helpOpeningHours: teamPersonalisation.helpOpeningHours,
-    serviceName: convertSlugToName(flowSlug),
-    content: buildContentFromSessions(sessions, flowSlug, teamSlug)
+    teamName: teamName,
+    content: buildContentFromSessions(sessions, teamSlug)
   };
 };
 
 const buildContentFromSessions = (sessions, flowSlug, teamSlug) => {
   return sessions.map(session => {
+    const service = convertSlugToName(session.flow.slug);
     const address = session.data?.passport?.data?._address?.single_line_address;
     // TODO: Get human readable values here     
     const projectType = session?.data?.passport?.data?.["proposal.projectType"]?.join(", ")
-    const resumeLink = getResumeLink(session, teamSlug, flowSlug)
+    const resumeLink = getResumeLink(session, teamSlug, session.flow.slug)
     const expiryDate = formatDate(session.expiry_date);
 
-    return `Address: ${address}
+    return `Service: ${service}
+      Address: ${address || "Address not submitted"}
       Project Type: ${projectType || "Project type not submitted"}
-      Expiry Date: ${expiryDate || "Address not submitted"}
+      Expiry Date: ${expiryDate}
       Link: ${resumeLink}`;
   }).join("\n\n");
 };
