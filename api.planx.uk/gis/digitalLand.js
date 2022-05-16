@@ -1,6 +1,6 @@
 require("isomorphic-fetch");
 
-const { addDesignatedVariable, omitGeometry, rollupResultLayers } = require("./helpers");
+const { addDesignatedVariable, omitGeometry } = require("./helpers");
 const { baseSchema } = require("./local_authorities/metadata/base.js");
 
 const localAuthorityMetadata = {
@@ -96,7 +96,7 @@ async function go(localAuthority, geom) {
     }
 
     // --- LISTED BUILDINGS ---
-    // TODO add granular variables to reflect grade (eg `listed.grade1`)
+    // TODO add granular variables to reflect grade (eg `listed.grade1`), not reflected in content yet though
 
     // --- ARTICLE 4S ---
     // only attempt to set granular a4s if we have metadata for this local authority; proceed with non-granular a4 queries under "opensystemslab" team etc

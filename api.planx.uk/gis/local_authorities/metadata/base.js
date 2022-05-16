@@ -4,7 +4,7 @@ const baseSchema = {
   article4: {
     active: true,
     neg: "is not subject to any Article 4 restrictions",
-    pos: "is subject to Article 4 restriction(s)",
+    pos: "is subject to Article 4 restrictions",
     "digital-land-datasets": ["article-4-direction-area"],
   },
   "article4.caz": { // will be renamed to `article4.localAuthority.caz` when applicable
@@ -17,10 +17,10 @@ const baseSchema = {
     active: true,
     neg: "is not in, or within, a Listed Building",
     pos: "is, or is within, a Listed Building",
-    "digital-land-datasets": ["listed-building", "listed-building-outline"],
+    "digital-land-datasets": ["listed-building", "listed-building-outline"], // HE publishes points, LPAs publish outlines
   },
   "locallyListed": {
-    active: true,
+    active: false,
     neg: "is not in, or within, a Locally Listed Building",
     pos: "is, or is within, a Locally Listed Building",
     "digital-land-datasets": ["locally-listed-building"],
