@@ -214,10 +214,6 @@
                       "flowId": {{$body.event.data.new.data.id}},
                       "email": {{$body.event.data.new.email}}
                   },
-                  "headers": [{
-                      "name":"header-key",
-                      "value":"header-value"
-                  }],
                   "comment": "expiry_{{$body.event.data.new.id}}"
               }
           }
@@ -248,10 +244,6 @@
                       "flowId": {{$body.event.data.new.data.id}},
                       "email": {{$body.event.data.new.email}}
                   },
-                  "headers": [{
-                      "name":"header-key",
-                      "value":"header-value"
-                  }],
                   "comment": "reminder_{{$body.event.data.new.id}}"
               }
           }
