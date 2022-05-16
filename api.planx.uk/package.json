@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@airbrake/node": "^2.1.5",
+    "adm-zip": "^0.5.9",
     "aws-sdk": "^2.727.1",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
@@ -22,7 +23,8 @@
     "nanoid": "^3.1.12",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
-    "pino-noir": "^2.2.1"
+    "pino-noir": "^2.2.1",
+    "xml-js": "^1.6.11"
   },
   "scripts": {
     "dev": "node-dev index.js",

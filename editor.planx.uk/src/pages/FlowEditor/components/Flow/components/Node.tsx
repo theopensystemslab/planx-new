@@ -59,8 +59,6 @@ const Node: React.FC<any> = (props) => {
       return <Question {...allProps} text="Find property" />;
     case TYPES.Notice:
       return <Question {...allProps} text={node?.data?.title ?? "Notice"} />;
-    case TYPES.Notify:
-      return <Question {...allProps} text="Notify" />;
     case TYPES.NumberInput:
       return <Question {...allProps} text={node?.data?.title ?? "Number"} />;
     case TYPES.Pay:
@@ -82,7 +80,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Review:
       return <Question {...allProps} text={node?.data?.title ?? "Review"} />;
     case TYPES.Send:
-      return <Question {...allProps} text="Send" />;
+      return <Question {...allProps} text={node?.data?.title ?? "Send"} />;
     case TYPES.SetValue:
       return (
         <Question

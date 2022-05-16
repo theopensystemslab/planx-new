@@ -107,13 +107,9 @@ function Component(props: Props) {
           if (flow && address) {
             const newPassportData: any = {};
 
-            // XXX: do NOT set/auto-answer "property.type" right now because of content bugs around behavior of various 'parent shells', always ask user
-            //   https://trello.com/c/biqspUXF/1858-issue-with-overriding-value
-            //   https://trello.com/c/QqILomoQ/1686-add-hmo-hmo-parent-to-property-types-so-this-doesnt-go-down-other-property-unless-we-want-it-to
-            //   https://trello.com/c/vlXuDgwF/1684-do-not-send-a-property-type-to-the-passport-if-blpu-returns-property-shell
-            // if (address?.planx_value) {
-            //   newPassportData["property.type"] = [address.planx_value];
-            // }
+            if (address?.planx_value) {
+              newPassportData["property.type"] = [address.planx_value];
+            }
 
             if (localAuthorityDistricts) {
               newPassportData["property.localAuthorityDistrict"] =

@@ -11,3 +11,12 @@ export const fillInFieldsUsingPlaceholder = async (
     await typeUsingPlaceholder(placeholder, text);
   }
 };
+
+export const typeUsingLabel = async (label: string, text: string) =>
+  userEvent.type(await screen.getByLabelText(label), text);
+
+export const fillInFieldsUsingLabel = async (ob: Record<string, string>) => {
+  for (const [label, text] of Object.entries(ob)) {
+    await typeUsingLabel(label, text);
+  }
+};
