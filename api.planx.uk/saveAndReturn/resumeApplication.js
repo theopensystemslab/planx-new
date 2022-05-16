@@ -75,7 +75,7 @@ const getPersonalisation = (sessions, teamSlug, teamPersonalisation, teamName) =
   };
 };
 
-const buildContentFromSessions = (sessions, flowSlug, teamSlug) => {
+const buildContentFromSessions = (sessions, teamSlug) => {
   return sessions.map(session => {
     const service = convertSlugToName(session.flow.slug);
     const address = session.data?.passport?.data?._address?.single_line_address;

@@ -1,7 +1,7 @@
 const supertest = require("supertest");
 const app = require("../server");
 const { queryMock } = require("../tests/graphqlQueryMock");
-const { mockFlow, mockLowcalSession, mockTeam } = require("../tests/mocks/saveAndReturnMocks");
+const { mockLowcalSession, mockTeam } = require("../tests/mocks/saveAndReturnMocks");
 const { buildContentFromSessions } = require("./resumeApplication");
 
 const ENDPOINT = "/resume-application";
