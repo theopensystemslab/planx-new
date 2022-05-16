@@ -21,7 +21,17 @@ const getGraphQLClient = () => new GraphQLClient(process.env.HASURA_GRAPHQL_URL,
   }
 });
 
-const sendEmail = async (templateId, emailAddress, config, res) => {
+/**
+ * Send email using the GovUK Notify client
+ * @param {string} template 
+ * @param {string} emailAddress 
+ * @param {object} config 
+ * @param {object} res 
+ */
+const sendEmail = async (template, emailAddress, config, res) => {
+  const templateId = emailTemplates[template];
+  if (!templateId) throw new Error("Template ID is required");
+
   try {
     const notifyClient = getNotifyClient();
     await notifyClient.sendEmail(
@@ -29,10 +39,9 @@ const sendEmail = async (templateId, emailAddress, config, res) => {
       emailAddress,
       config
     );
-    //TODO: Change this based on template
-    res.json({
-      expiryDate: config.personalisation.expiryDate,
-    });
+    const returnValue = { message: "Success" }
+    if (template === "save") returnValue.expiryDate = config.personalisation.expiryDate;
+    res.json(returnValue);
   } catch (err) {
     console.error({
       message: err.response.data.errors,
@@ -88,9 +97,7 @@ const formatDate = (date) => format(Date.parse(date), "dd MMMM yyyy");
  * @param {object} applicationDetails 
  */
 const sendSingleApplicationEmail = async (res, {template, flowId, email, sessionId}) => {
-  const { flowSlug, teamSlug, teamPersonalisation, session } = await validateRequest(flowId, email, sessionId);
-  const templateId = emailTemplates[template];
-  if (!templateId) throw new Error("Template ID is required");
+  const { flowSlug, teamSlug, teamPersonalisation, session } = await validateSingleSessionRequest(flowId, email, sessionId);
   const config = {
     personalisation: getPersonalisation(
       session,
@@ -103,24 +110,25 @@ const sendSingleApplicationEmail = async (res, {template, flowId, email, session
       // emailReplyToId: team.emailReplyToId,
     };
   if (template === "expiry") { 
-    sendEmailWithAttachment(templateId, email, config, res);
+    sendEmailWithAttachment(template, email, config, res);
   } else {
-    sendEmail(templateId, email, config, res);
+    sendEmail(template, email, config, res);
   }
 };
 
 /**
- * TODO
+ * Ensure that request for an email relating to a "single session" is valid
+ * (e.g. Save, Return, Expiry, Reminder)
  * @param {string} flowId 
  * @param {string} email 
  * @param {string} sessionId 
  * @returns 
  */
-const validateRequest = async (flowId, email, sessionId) => {
+const validateSingleSessionRequest = async (flowId, email, sessionId) => {
   try {
     const client = getGraphQLClient();
     const query = `
-      query ValidateRequest($email: String, $sessionId: uuid!, $flowId: uuid!) {
+      query ValidateSingleSessionRequest($email: String, $sessionId: uuid!, $flowId: uuid!) {
         lowcal_sessions(where: {email: {_eq: $email}, id: {_eq: $sessionId}, data: {_contains: {id: $flowId}}}) {
           id
           data
@@ -151,9 +159,9 @@ const validateRequest = async (flowId, email, sessionId) => {
 };
 
 /**
- * TODO
+ * Parse session details into an object which will be read by email template
  * @param {string} session 
- * @returns 
+ * @returns {object}
  */
 const getSessionDetails = (session) => {
   // TODO: Get human readable values here
@@ -169,12 +177,12 @@ const getSessionDetails = (session) => {
 };
 
 /**
- * TODO
+ * Build an personalisation object which is read by email templates
  * @param {string} session 
  * @param {string} flowSlug 
  * @param {string} teamSlug 
  * @param {object} teamPersonalisation 
- * @returns 
+ * @returns {object}
  */
 const getPersonalisation = (
   session,
@@ -197,17 +205,17 @@ const getPersonalisation = (
 /**
  * Upload CSV file of user data to Notify, attach to email using dataLink
  * TODO: Instead of test file, get user data!
- * @param {string} templateId 
+ * @param {string} template 
  * @param {string} email 
  * @param {object} config 
  * @param {object} res 
  */
-const sendEmailWithAttachment = async (templateId, email, config, res) => {
+const sendEmailWithAttachment = async (template, email, config, res) => {
   fs.readFile('test.csv', (err, csvFile) => {
     console.log(err);
     const notifyClient = getNotifyClient();
     config.personalisation.dataLink = notifyClient.prepareUpload(csvFile, true);
-    sendEmail(templateId, email, config, res);
+    sendEmail(template, email, config, res);
   });
 };
 

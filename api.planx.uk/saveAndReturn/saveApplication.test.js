@@ -35,7 +35,7 @@ describe("saveApplication endpoint", () => {
     const sessionId = 456;
 
     queryMock.mockQuery({
-      name: 'ValidateRequest',
+      name: 'ValidateSingleSessionRequest',
       data: {
         flows_by_pk: mockFlow,
         lowcal_sessions: [mockLowcalSession]
@@ -65,7 +65,7 @@ describe("saveApplication endpoint", () => {
     const sessionId = 456
 
     queryMock.mockQuery({
-      name: 'ValidateRequest',
+      name: 'ValidateSingleSessionRequest',
       data: {
         flows_by_pk: mockFlow,
         lowcal_sessions: [mockLowcalSession]
@@ -95,7 +95,7 @@ describe("saveApplication endpoint", () => {
     const sessionId = 456;
 
     queryMock.mockQuery({
-      name: 'ValidateRequest',
+      name: 'ValidateSingleSessionRequest',
       data: {
         flows_by_pk: null,
         lowcal_sessions: [mockLowcalSession]
@@ -121,7 +121,7 @@ describe("saveApplication endpoint", () => {
     const sessionId = 456;
 
     queryMock.mockQuery({
-      name: 'ValidateRequest',
+      name: 'ValidateSingleSessionRequest',
       data: {
         flows_by_pk: mockFlow,
         lowcal_sessions: null

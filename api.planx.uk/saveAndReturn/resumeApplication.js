@@ -10,7 +10,6 @@ const resumeApplication = async (req, res, next) => {
       });
 
     const { teamPersonalisation, sessions, teamName } = await validateRequest(teamSlug, email, res);
-    const templateId = process.env.GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID;
     const config = {
       personalisation: getPersonalisation(
         sessions,
@@ -22,7 +21,7 @@ const resumeApplication = async (req, res, next) => {
       // This value is required to go live, but is not currently set up
       // emailReplyToId: team.emailReplyToId,
     };
-    sendEmail(templateId, email, config, res);
+    sendEmail("resume", email, config, res);
   } catch (error) {
     next(error);
   }
