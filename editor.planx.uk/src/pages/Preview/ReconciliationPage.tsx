@@ -34,9 +34,8 @@ const ReconciliationPage: React.FC<Props> = ({
   buttonText,
   onButtonClick,
 }) => {
-  const [flow, hasPaid, changeAnswer] = useStore((state) => [
+  const [flow, changeAnswer] = useStore((state) => [
     state.flow,
-    state.hasPaid(),
     state.changeAnswer,
   ]);
 
@@ -78,7 +77,7 @@ const ReconciliationPage: React.FC<Props> = ({
           flow={flow}
           passport={data?.reconciledSessionData?.passport}
           changeAnswer={changeAnswer}
-          showChangeButton={!hasPaid}
+          showChangeButton={false}
         />
         {buttonText && (
           <Button

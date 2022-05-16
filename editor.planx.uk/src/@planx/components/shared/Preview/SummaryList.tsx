@@ -137,7 +137,7 @@ function SummaryList(props: SummaryListProps) {
                   </dd>
                 ) : (
                   <dd>
-                    {/** ensure there's always a third column, even if we're not showing change link */}
+                    {/** ensure there's always a third column to not break styling, even when showChange is false */}
                   </dd>
                 )}
               </React.Fragment>

@@ -22,6 +22,7 @@ const validateSession = async (req, res, next) => {
       const savedFlow = await getPublishedFlowByDate(sessionData.data.id, sessionData.updated_at);
   
       const delta = jsondiffpatch.diff(currentFlow, savedFlow);
+      // if there have been content changes, make a list of the alteredNodes
       if (delta) {
         const alteredNodes = Object.keys(delta).map((key) => ({
           id: key,
