@@ -120,6 +120,7 @@ function Component(props: Props) {
             });
           }}
           refreshConstraints={() => mutate()}
+          sourcedFromDigitalLand={digitalLandOrganisations.includes(team)}
         />
       ) : (
         <Card handleSubmit={props.handleSubmit} isValid>
@@ -178,8 +179,14 @@ const useClasses = makeStyles((theme) => ({
 }));
 
 function PlanningConstraintsInformation(props: any) {
-  const { title, description, constraints, handleSubmit, refreshConstraints } =
-    props;
+  const {
+    title,
+    description,
+    constraints,
+    handleSubmit,
+    refreshConstraints,
+    sourcedFromDigitalLand,
+  } = props;
   const formik = useFormik({
     initialValues: {
       feedback: "",
@@ -209,6 +216,7 @@ function PlanningConstraintsInformation(props: any) {
           value={formik.values.feedback}
         >
           <Typography variant="body2" color="inherit">
+            {sourcedFromDigitalLand && `Sourced from Digital Land - DHLUC.`}{" "}
             Report an inaccuracy
           </Typography>
         </CollapsibleInput>

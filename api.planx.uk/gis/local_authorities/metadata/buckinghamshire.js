@@ -85,7 +85,7 @@ const planningConstraints = {
       "article4.buckinghamshire.greenstreetfarm.b": "Land at Green Street Farm, Herts and Bucks border Highway access.", // split a/b
       "article4.buckinghamshire.hampdenroad": "Part Field West of Hampden Road - Gates etc, Markets, Racing",
       "article4.buckinghamshire.hollybushcorner": "Land South of Hollybush Corner, Farnham Common - Agricultural",
-      "article4.buckinghamshire.johnsonsfarm": "Land at Johnson’s Farm, North of Chesham Road, Bellingdon Agricultural buildings.",
+      "article4.buckinghamshire.johnsonsfarm": "Land at Johnsons Farm, North of Chesham Road, Bellingdon - Agricultural buildings.",
       "article4.buckinghamshire.junctionhughendenroad": "Junction Hughenden Rd & Cryers Hill Rd - Gates etc, Markets, Racing",
       "article4.buckinghamshire.lakeendroad": "Land between Lake End road and Huntercombe Lane South, Burnham - Development",
       "article4.buckinghamshire.littlekingsash": "Land know as Little Kings Ash Farm and adjoining land at Kingsash and Lee Gate - Agricultural buildings.",
