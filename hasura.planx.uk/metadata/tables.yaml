@@ -142,6 +142,16 @@
 - table:
     schema: public
     name: lowcal_sessions
+  object_relationships:
+    - name: flow
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: flows
+          insertion_order: null
+          column_mapping:
+            flow_id: id
   computed_fields:
     - name: expiry_date
       definition:
