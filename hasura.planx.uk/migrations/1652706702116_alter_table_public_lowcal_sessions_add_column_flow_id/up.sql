@@ -1,0 +1,1 @@
+alter table "public"."lowcal_sessions" add column "flow_id" uuid;
