@@ -15,15 +15,21 @@ const baseSchema = {
   },
   listed: {
     active: true,
-    neg: "is not in, or within, a Listed Building",
+    neg: "is not, or is not within, a Listed Building",
     pos: "is, or is within, a Listed Building",
-    "digital-land-datasets": ["listed-building", "listed-building-outline"], // HE publishes points, LPAs publish outlines
+    "digital-land-datasets": ["listed-building", "listed-building-outline", "locally-listed-building"],
   },
   "locallyListed": {
     active: false,
-    neg: "is not in, or within, a Locally Listed Building",
+    neg: "is not, or is not within, a Locally Listed Building",
     pos: "is, or is within, a Locally Listed Building",
     "digital-land-datasets": ["locally-listed-building"],
+  },
+  "registeredPark": {
+    active: true,
+    neg: "is not in a Historic Park or Garden",
+    pos: "is in a Historic Park or Garden",
+    "digital-land-datasets": ["park-and-garden"],
   },
   "designated.conservationArea": {
     active: true,
