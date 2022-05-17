@@ -1,14 +1,3 @@
-const mockFlow = {
-  slug: "slug", team: {
-    slug: "teamName",
-    notifyPersonalisation: {
-      helpPhone: "test",
-      helpEmail: "test",
-      helpOpeningHours: "test",
-    }
-  },
-};
-
 const mockLowcalSession = {
   id: 123,
   data: {
@@ -36,6 +25,11 @@ const mockTeam = {
     emailReplyToId: "testID",
     helpOpeningHours: "Monday - Friday, 9am - 5pm"
   }
-}
+};
+
+const mockFlow = {
+  slug: "slug", 
+  team: mockTeam,
+};
 
 module.exports = { mockFlow, mockLowcalSession, mockTeam }

@@ -97,13 +97,14 @@ const formatDate = (date) => format(Date.parse(date), "dd MMMM yyyy");
  * @param {object} applicationDetails 
  */
 const sendSingleApplicationEmail = async (res, {template, flowId, email, sessionId}) => {
-  const { flowSlug, teamSlug, teamPersonalisation, session } = await validateSingleSessionRequest(flowId, email, sessionId);
+  const { flowSlug, teamSlug, teamPersonalisation, session, teamName } = await validateSingleSessionRequest(flowId, email, sessionId);
   const config = {
     personalisation: getPersonalisation(
       session,
       flowSlug,
       teamSlug,
-      teamPersonalisation
+      teamPersonalisation,
+      teamName,
       ),
       reference: null,
       // This value is required to go live, but is not currently set up
@@ -137,6 +138,7 @@ const validateSingleSessionRequest = async (flowId, email, sessionId) => {
         flows_by_pk(id: $flowId) {
           slug
           team {
+            name
             slug
             notifyPersonalisation
           }
@@ -152,6 +154,7 @@ const validateSingleSessionRequest = async (flowId, email, sessionId) => {
       teamSlug: flows_by_pk.team.slug,
       teamPersonalisation: flows_by_pk.team.notifyPersonalisation,
       session: getSessionDetails(lowcal_sessions[0]),
+      teamName: flows_by_pk.team.name,
     };
   } catch (error) {
     throw new Error("Unable to validate request")
@@ -188,7 +191,8 @@ const getPersonalisation = (
   session,
   flowSlug,
   teamSlug,
-  teamPersonalisation
+  teamPersonalisation,
+  teamName,
 ) => {
   return {
     expiryDate: session.expiryDate,
@@ -198,6 +202,7 @@ const getPersonalisation = (
     helpPhone: teamPersonalisation.helpPhone,
     helpOpeningHours: teamPersonalisation.helpOpeningHours,
     serviceName: convertSlugToName(flowSlug),
+    teamName: teamName,
     ...session,
   };
 };
