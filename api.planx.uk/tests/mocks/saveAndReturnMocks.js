@@ -21,7 +21,21 @@ const mockLowcalSession = {
       }
     }
   },
+  flow: {
+    slug: "apply-for-a-lawful-development-certificate"
+  },
   expiry_date: "2022-05-04T01:02:03.865452+00:00",
 };
 
-module.exports = { mockFlow, mockLowcalSession }
+const mockTeam = {
+  slug: "test-team",
+  name: "Test Team",
+  notifyPersonalisation: {
+    helpEmail: "example@council.gov.uk",
+    helpPhone: "(01234) 567890",
+    emailReplyToId: "testID",
+    helpOpeningHours: "Monday - Friday, 9am - 5pm"
+  }
+}
+
+module.exports = { mockFlow, mockLowcalSession, mockTeam }

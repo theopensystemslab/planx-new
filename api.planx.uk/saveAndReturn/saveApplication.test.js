@@ -73,7 +73,7 @@ describe("saveApplication endpoint", () => {
       variables: {
         flowId,
         sessionId,
-        email: "Not an email address"
+        email: "not an email address"
       }
     });
 
