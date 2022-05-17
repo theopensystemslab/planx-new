@@ -1,5 +1,5 @@
 // planx schema variables and their attributes (in the future, maybe these are managed in Editor?)
-// flag as 'active' based on dataset status/availability here https://digital-land-maturity-model.herokuapp.com/performance/
+// flag as 'active' based on dataset status/availability here https://www.digital-land.info/dataset/
 const baseSchema = {
   article4: {
     active: true,
@@ -17,7 +17,7 @@ const baseSchema = {
     active: true,
     neg: "is not, or is not within, a Listed Building",
     pos: "is, or is within, a Listed Building",
-    "digital-land-datasets": ["listed-building", "listed-building-outline", "locally-listed-building"],
+    "digital-land-datasets": ["listed-building", "listed-building-outline"], // HE publishes points, LPAs publish polygons
   },
   "locallyListed": {
     active: false,
@@ -72,7 +72,7 @@ const baseSchema = {
     active: true,
     neg: "is not in a Tree Preservation Order (TPO) Zone",
     pos: "is in a Tree Preservation Order (TPO) Zone",
-    "digital-land-datasets": ["tree-preservation-order", "tree-preservation-zone"],
+    "digital-land-datasets": ["tree", "tree-preservation-order", "tree-preservation-zone"], // "tree" is points, "-zone" is polygons
   },
   "nature.SSSI": {
     active: true,
