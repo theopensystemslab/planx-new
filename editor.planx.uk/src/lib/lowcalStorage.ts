@@ -71,9 +71,14 @@ class LowcalStorage {
 
     await client.mutate({
       mutation: gql`
-        mutation SetItem($data: jsonb!, $id: uuid!, $email: String) {
+        mutation SetItem(
+          $data: jsonb!
+          $id: uuid!
+          $email: String
+          $flowId: uuid!
+        ) {
           insert_lowcal_sessions_one(
-            object: { data: $data, id: $id, email: $email }
+            object: { data: $data, id: $id, email: $email, flow_id: $flowId }
             on_conflict: {
               constraint: lowcal_sessions_pkey
               update_columns: data
@@ -87,6 +92,7 @@ class LowcalStorage {
         id: key.split(":")[1],
         data: JSON.parse(value),
         email: useStore.getState().saveToEmail,
+        flowId: useStore.getState().id,
       },
     });
   });

@@ -1,4 +1,5 @@
 import Box from "@material-ui/core/Box";
+import { useTeamSlug } from "@planx/components/shared/hooks";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import axios from "axios";
@@ -175,8 +176,8 @@ const ResumePage: React.FC = () => {
    */
   const sendResumeEmail = async () => {
     const url = `${process.env.REACT_APP_API_URL}/resume-application`;
-    const flowId = useStore.getState().id;
-    const data = { email: email, flowId: flowId };
+    const teamSlug = useTeamSlug();
+    const data = { email: email, teamSlug };
     try {
       await axios.post(url, data);
       setPageStatus(Status.Success);
