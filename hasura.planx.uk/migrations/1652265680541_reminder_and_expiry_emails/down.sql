@@ -38,10 +38,3 @@ DROP FUNCTION IF EXISTS lowcal_sessions_reminder_date;
 --     FOR EACH ROW EXECUTE PROCEDURE lowcal_sessions_reminder_date();
 
 DROP TRIGGER IF EXISTS lowcal_sessions_reminder_date_trigger ON "public"."lowcal_sessions";
-
--- DROP FUNCTION IF EXISTS lowcal_session_expiry_date(lowcal_session_row lowcal_sessions);
-
-CREATE OR REPLACE FUNCTION lowcal_session_expiry_date(lowcal_session_row lowcal_sessions)
-RETURNS timestamp with time zone AS $$
-  SELECT lowcal_session_row.created_at + INTERVAL '28 days'
-$$ LANGUAGE sql STABLE;

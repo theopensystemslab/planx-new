@@ -1,3 +1,14 @@
+const mockTeam = {
+  slug: "test-team",
+  name: "Test Team",
+  notifyPersonalisation: {
+    helpEmail: "example@council.gov.uk",
+    helpPhone: "(01234) 567890",
+    emailReplyToId: "testID",
+    helpOpeningHours: "Monday - Friday, 9am - 5pm"
+  }
+};
+
 const mockLowcalSession = {
   id: 123,
   data: {
@@ -11,20 +22,10 @@ const mockLowcalSession = {
     }
   },
   flow: {
-    slug: "apply-for-a-lawful-development-certificate"
+    slug: "apply-for-a-lawful-development-certificate",
+    team: mockTeam,
   },
   expiry_date: "2022-05-04T01:02:03.865452+00:00",
-};
-
-const mockTeam = {
-  slug: "test-team",
-  name: "Test Team",
-  notifyPersonalisation: {
-    helpEmail: "example@council.gov.uk",
-    helpPhone: "(01234) 567890",
-    emailReplyToId: "testID",
-    helpOpeningHours: "Monday - Friday, 9am - 5pm"
-  }
 };
 
 const mockFlow = {

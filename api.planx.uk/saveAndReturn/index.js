@@ -1,13 +1,9 @@
 const { resumeApplication } = require("./resumeApplication");
-const saveApplication = require("./saveApplication");
 const validateSession = require("./validateSession");
-const emailReminder = require("./emailReminder");
-const emailExpiry = require("./emailExpiry");
+const sendSaveAndReturnEmail = require("./sendEmail");
 
 module.exports = {
-  saveApplication,
+  sendSaveAndReturnEmail,
   resumeApplication,
   validateSession,
-  emailReminder,
-  emailExpiry,
 };

@@ -1,8 +1,6 @@
-alter table "public"."lowcal_sessions" add column "expiry_date" timestamptz
- null default now();
+alter table "public"."lowcal_sessions" add column "expiry_date" timestamptz null;
 
-alter table "public"."lowcal_sessions" add column "reminder_date" timestamptz
- null default now();
+alter table "public"."lowcal_sessions" add column "reminder_date" timestamptz null;
 
 CREATE OR REPLACE FUNCTION lowcal_sessions_expiry_date() RETURNS trigger AS $generate_expiry_date$
     BEGIN        
@@ -23,6 +21,3 @@ $generate_reminder_date$ LANGUAGE plpgsql;
 
 CREATE TRIGGER lowcal_sessions_reminder_date_trigger BEFORE INSERT OR UPDATE ON lowcal_sessions
     FOR EACH ROW EXECUTE PROCEDURE lowcal_sessions_reminder_date();
-
--- Drop function previously used for calculated field
-DROP FUNCTION IF EXISTS lowcal_session_expiry_date(lowcal_session_row lowcal_sessions);

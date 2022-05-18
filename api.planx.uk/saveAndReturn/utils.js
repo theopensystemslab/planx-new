@@ -4,11 +4,19 @@ const fs = require('fs');
 
 const { format } = require('date-fns');
 
-const emailTemplates = {
+const singleSessionEmailTemplates = {
   save: process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID,
-  resume: process.env.GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID,
   reminder: process.env.GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID,
   expiry: process.env.GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID,
+};
+
+const multipleSessionEmailTemplates = {
+  resume: process.env.GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID,
+};
+
+const emailTemplates = {
+  ...singleSessionEmailTemplates,
+  ...multipleSessionEmailTemplates,
 };
 
 const getNotifyClient = () =>
@@ -80,14 +88,14 @@ const getResumeLink = (session, teamSlug, flowSlug) => {
  * @param {string} flowSlug 
  * @returns {string}
  */
- const getServiceLink = (teamSlug, flowSlug) => {
+const getServiceLink = (teamSlug, flowSlug) => {
   return `${process.env.EDITOR_URL_EXT}/${teamSlug}/${flowSlug}/preview`;
 };
 
 /**
  * Return raw date from db in a standard format
  * @param {string} date 
- * @returns 
+ * @returns {string}
  */
 const formatDate = (date) => format(Date.parse(date), "dd MMMM yyyy");
 
@@ -96,8 +104,8 @@ const formatDate = (date) => format(Date.parse(date), "dd MMMM yyyy");
  * @param {object} res 
  * @param {object} applicationDetails 
  */
-const sendSingleApplicationEmail = async (res, {template, flowId, email, sessionId}) => {
-  const { flowSlug, teamSlug, teamPersonalisation, session, teamName } = await validateSingleSessionRequest(flowId, email, sessionId);
+const sendSingleApplicationEmail = async (res, template, email, sessionId) => {
+  const { flowSlug, teamSlug, teamPersonalisation, session, teamName } = await validateSingleSessionRequest(email, sessionId);
   const config = {
     personalisation: getPersonalisation(
       session,
@@ -105,12 +113,12 @@ const sendSingleApplicationEmail = async (res, {template, flowId, email, session
       teamSlug,
       teamPersonalisation,
       teamName,
-      ),
-      reference: null,
-      // This value is required to go live, but is not currently set up
-      // emailReplyToId: team.emailReplyToId,
-    };
-  if (template === "expiry") { 
+    ),
+    reference: null,
+    // This value is required to go live, but is not currently set up
+    // emailReplyToId: team.emailReplyToId,
+  };
+  if (template === "expiry") {
     sendEmailWithAttachment(template, email, config, res);
   } else {
     sendEmail(template, email, config, res);
@@ -119,42 +127,41 @@ const sendSingleApplicationEmail = async (res, {template, flowId, email, session
 
 /**
  * Ensure that request for an email relating to a "single session" is valid
- * (e.g. Save, Return, Expiry, Reminder)
- * @param {string} flowId 
+ * (e.g. Save, Expiry, Reminder)
  * @param {string} email 
  * @param {string} sessionId 
- * @returns 
+ * @returns {object}
  */
-const validateSingleSessionRequest = async (flowId, email, sessionId) => {
+const validateSingleSessionRequest = async (email, sessionId) => {
   try {
     const client = getGraphQLClient();
     const query = `
-      query ValidateSingleSessionRequest($email: String, $sessionId: uuid!, $flowId: uuid!) {
-        lowcal_sessions(where: {email: {_eq: $email}, id: {_eq: $sessionId}, data: {_contains: {id: $flowId}}}) {
+      query ValidateSingleSessionRequest($email: String, $sessionId: uuid!) {
+        lowcal_sessions(where: {email: {_eq: $email}, id: {_eq: $sessionId}}) {
           id
           data
           expiry_date
-        } 
-        flows_by_pk(id: $flowId) {
-          slug
-          team {
-            name
+          flow {
             slug
-            notifyPersonalisation
+            team {
+              name
+              slug
+              notifyPersonalisation
+            }
           }
         }
       }
     `
-    const { lowcal_sessions, flows_by_pk }  = await client.request(query, { email: email.toLowerCase(), flowId, sessionId })
+    const { lowcal_sessions: [session] } = await client.request(query, { email: email.toLowerCase(), sessionId });
 
-    if (!lowcal_sessions.length || !flows_by_pk) throw Error;
+    if (!session) throw Error;
 
     return {
-      flowSlug: flows_by_pk.slug,
-      teamSlug: flows_by_pk.team.slug,
-      teamPersonalisation: flows_by_pk.team.notifyPersonalisation,
-      session: getSessionDetails(lowcal_sessions[0]),
-      teamName: flows_by_pk.team.name,
+      flowSlug: session.flow.slug,
+      teamSlug: session.flow.team.slug,
+      teamPersonalisation: session.flow.team.notifyPersonalisation,
+      session: getSessionDetails(session),
+      teamName: session.flow.team.name,
     };
   } catch (error) {
     throw new Error("Unable to validate request")
@@ -173,14 +180,14 @@ const getSessionDetails = (session) => {
 
   return {
     address: address || "Address not submitted",
-    projectType: projectTypes|| "Project type not submitted",
+    projectType: projectTypes || "Project type not submitted",
     id: session.id,
     expiryDate: formatDate(session.expiry_date),
   };
 };
 
 /**
- * Build an personalisation object which is read by email templates
+ * Build a personalisation object which is read by email templates
  * @param {string} session 
  * @param {string} flowSlug 
  * @param {string} teamSlug 
@@ -232,4 +239,5 @@ module.exports = {
   getResumeLink,
   formatDate,
   sendSingleApplicationEmail,
+  singleSessionEmailTemplates,
 };
