@@ -9,7 +9,7 @@ import Card from "../shared/Preview/Card";
 import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
 import { PublicProps } from "../ui";
 import { getParams } from "./bops";
-import { Destination,Send } from "./model";
+import { Destination, Send } from "./model";
 import { getUniformParams } from "./uniform";
 
 export type Props = PublicProps<Send>;
@@ -63,7 +63,7 @@ const SendComponent: React.FC<Props> = (props) => {
     return (
       <Card>
         <DelayedLoadingIndicator
-          text={`Sending data to ${props.destination.toUpperCase()} - ${teamSlug?.toUpperCase()}`}
+          text={`Sending data to ${props.destination?.toUpperCase()} ${teamSlug?.toUpperCase()}`}
           msDelayBeforeVisible={0}
         />
       </Card>
