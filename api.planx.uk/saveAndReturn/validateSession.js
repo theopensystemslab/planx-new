@@ -28,7 +28,13 @@ const validateRequest = async (email, sessionId) => {
   const client = getGraphQLClient();
   const query = `
     query ValidateRequest($email: String, $sessionId: uuid!) {
-      lowcal_sessions(where: {email: {_eq: $email}, id: {_eq: $sessionId}}) {
+      lowcal_sessions(
+        where: {
+          email: { _eq: $email }
+          id: { _eq: $sessionId }
+          deleted_at: { _is_null: true }
+        }
+      ) {
         data
         flow {
           id

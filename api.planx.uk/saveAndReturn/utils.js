@@ -119,6 +119,7 @@ const sendSingleApplicationEmail = async (res, template, email, sessionId) => {
     // emailReplyToId: team.emailReplyToId,
   };
   if (template === "expiry") {
+    softDeleteSession(sessionId);
     sendEmailWithAttachment(template, email, config, res);
   } else {
     sendEmail(template, email, config, res);
@@ -137,7 +138,7 @@ const validateSingleSessionRequest = async (email, sessionId) => {
     const client = getGraphQLClient();
     const query = `
       query ValidateSingleSessionRequest($email: String, $sessionId: uuid!) {
-        lowcal_sessions(where: {email: {_eq: $email}, id: {_eq: $sessionId}}) {
+        lowcal_sessions(where: {email: {_eq: $email}, id: {_eq: $sessionId}, deleted_at: {_is_null: true}}) {
           id
           data
           expiry_date
@@ -229,6 +230,27 @@ const sendEmailWithAttachment = async (template, email, config, res) => {
     config.personalisation.dataLink = notifyClient.prepareUpload(csvFile, true);
     sendEmail(template, email, config, res);
   });
+};
+
+/**
+ * Mark a lowcal_session record as expired
+ * Cleaned up weekly as part of cron job delete_expired_sessions on Hasura
+ * @param {string} sessionId 
+ */
+const softDeleteSession = async (sessionId) => {
+  try {
+    const client = getGraphQLClient();
+    const mutation = `
+      mutation SoftDeleteLowcalSession($sessionId: uuid!) {
+        update_lowcal_sessions_by_pk(pk_columns: {id: $sessionId}, _set: {deleted_at: "now()"}){
+          id
+        }
+      }
+    `
+    await client.request(mutation, { sessionId });
+  } catch (error) {
+    throw new Error(`Error deleteding session ${sessionId}`);
+  };
 };
 
 module.exports = {

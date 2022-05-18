@@ -26,6 +26,7 @@ const { diffFlow, publishFlow } = require("./publish");
 const { findAndReplaceInFlow } = require("./findReplace");
 const { sendToUniform, downloadUniformZip } = require("./send");
 const { resumeApplication, validateSession, sendSaveAndReturnEmail } = require("./saveAndReturn")
+const { hardDeleteSessions } = require("./webhooks/hardDeleteSessions");
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -582,6 +583,8 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
 app.post("/send-email", sendSaveAndReturnEmail);
 app.post("/resume-application", resumeApplication);
 app.post("/validate-session", validateSession);
+
+app.post("/webhooks/delete-expired-sessions", hardDeleteSessions);
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()
