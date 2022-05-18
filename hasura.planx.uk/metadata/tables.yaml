@@ -207,7 +207,7 @@
           {
               "type": "create_scheduled_event",
               "args": {
-                  "webhook": "http://api:7002/email-expiry",
+                  "webhook": "http://api:7002/send-email",
                   "schedule_at": {{$body.event.data.new.expiry_date}},
                   "payload": {
                       "sessionId": {{$body.event.data.new.id}},
@@ -237,7 +237,7 @@
           {
               "type": "create_scheduled_event",
               "args": {
-                  "webhook": "http://api:7002/email-reminder",
+                  "webhook": "http://api:7002/send-email",
                   "schedule_at": {{$body.event.data.new.reminder_date}},
                   "payload": {
                       "sessionId": {{$body.event.data.new.id}},
