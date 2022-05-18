@@ -6,6 +6,4 @@ module.exports = {
   sendSaveAndReturnEmail,
   resumeApplication,
   validateSession,
-  emailReminder,
-  emailExpiry,
 };

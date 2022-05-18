@@ -582,8 +582,6 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
 app.post("/send-email", sendSaveAndReturnEmail);
 app.post("/resume-application", resumeApplication);
 app.post("/validate-session", validateSession);
-app.post("/email-reminder", emailReminder);
-app.post("/email-expiry", emailExpiry);
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()
