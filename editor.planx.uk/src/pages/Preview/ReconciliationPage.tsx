@@ -19,7 +19,7 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme) => ({
-  warningContainer: {
+  warningIcon: {
     padding: theme.spacing(2.5),
   },
   warningMessage: {
@@ -62,7 +62,7 @@ const ReconciliationPage: React.FC<Props> = ({
                 titleAccess="Warning"
                 color="primary"
                 fontSize="large"
-                className={classes.warningContainer}
+                className={classes.warningIcon}
               />
               <Typography variant="body2" className={classes.warningMessage}>
                 {diffMessage}

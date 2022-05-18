@@ -14,7 +14,7 @@ const validateSession = async (req, res, next) => {
         message: "Required value missing"
       });
     
-    let sessionData = await findSession(sessionId, email);
+    let sessionData = await findSession(sessionId, email, flowId);
 
     if (sessionData) {
       // reconcile content changes between the published flow state at point of resuming and when the applicant last left off
@@ -36,13 +36,27 @@ const validateSession = async (req, res, next) => {
               removedBreadcrumbs[node.id] = sessionData.data.breadcrumbs[node.id];
               delete sessionData.data.breadcrumbs[node.id];
             }
-
-            // TODO check if removed breadcrumbs have associated passport vars & also remove from sessionData.data.passport?
-            //   **what about collected flags? what about `auto: true`? component dependencies like FindProp/Draw/PlanningConstraints?
           });
 
+          // if we removed user breadcrumbs, check if those breadcrumbs have associated passport variables
+          if (Object.keys(removedBreadcrumbs).length) {
+            // a flow schema can store the planx variable name under any of these keys
+            const planx_keys = ["fn", "val", "output", "dataFieldBoundary"];
+            planx_keys.forEach((key) => {
+              Object.keys(removedBreadcrumbs).forEach((nodeId) => {
+                // check if a removed breadcrumb has a passport var based on the published content at save point
+                if (savedFlow[nodeId]?.data?.[key]) {
+                  // if it does, remove that passport variable from our sessionData so we don't auto-answer changed questions before the user sees them
+                  delete sessionData.data.passport.data[currentFlow[nodeId].data[key]];
+                }
+              });
+            });
+          }
+
+          // TODO: FUTURE RECONCILIATION CHECKS
+          //   **what about collected flags? what about `auto: true`? component dependencies like FindProp/Draw/PlanningConstraints?
+
           // update the lowcal_session.data to match our updated in-memory sessionData.data
-          // TODO ensure node order is preserved
           const reconciledSessionData = await updateLowcalSessionData(sessionId, sessionData.data);
 
           res.status(200).json({
@@ -68,13 +82,14 @@ const validateSession = async (req, res, next) => {
   }
 };
 
-const findSession = async (id, email) => {
+const findSession = async (id, email, flow_id) => {
   const response = await client.request(`
-    query FindSession($id: uuid!, $email: String!) {
+    query FindSession($id: uuid!, $email: String!, $flow_id: uuid!) {
       lowcal_sessions(
         where: {
           id: {_eq: $id},
-          email: {_eq: $email}
+          email: {_eq: $email},
+          flow_id: {_eq: $flow_id}
         }, 
         limit: 1
       ) {
@@ -82,8 +97,8 @@ const findSession = async (id, email) => {
         updated_at
       }
     }`,
-    { 
-      id, email
+    {
+      id, email, flow_id
     }
   );
 
