@@ -139,7 +139,6 @@ const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
   const [email, setEmail] = useState<string>(getInitialEmailValue());
   const sessionId = useCurrentRoute().url.query.sessionId;
-  const flowId = useStore((state) => state.id);
 
   useEffect(() => {
     if (email) handleSubmit();
@@ -162,11 +161,11 @@ const ResumePage: React.FC = () => {
   };
 
   /**
-   * Query DB to validate that sessionID, flowId, & email match
+   * Query DB to validate that sessionID & email match
    */
   const validateSessionId = async () => {
     const url = `${process.env.REACT_APP_API_URL}/validate-session`;
-    const data = { email, sessionId, flowId };
+    const data = { email, sessionId };
     try {
       await axios.post(url, data);
       // Setting sessionId triggers an API call to update the local session
