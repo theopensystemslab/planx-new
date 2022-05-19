@@ -153,10 +153,7 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
       // get portals from flow schema; internal & external are both type 300 after flattening
       const portals: any = {};
       Object.keys(flow).forEach((nodeId) => {
-        if (
-          (flow[nodeId].type === 300 || nodeId === "_root") &&
-          flow[nodeId].edges
-        ) {
+        if (flow[nodeId].type === 300 && flow[nodeId].edges) {
           portals[nodeId] = flow[nodeId];
         }
       });
@@ -164,7 +161,7 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
       // add portal_name to QuestionMetadata as a proxy for "tags" so BOPS can thematically group questions
       Object.keys(portals).forEach((portalId) => {
         if (portals[portalId].edges.includes(id)) {
-          metadata.portal_name = portals[portalId].data?.text || portalId; // TODO replace portal flowId with slug for external portals
+          metadata.portal_name = portals[portalId].data?.text || portalId; // TODO replace flow uuid with slug for external portal_name
         }
       });
 
