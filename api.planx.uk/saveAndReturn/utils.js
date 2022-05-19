@@ -1,7 +1,23 @@
 const { GraphQLClient } = require("graphql-request");
 const { NotifyClient } = require("notifications-node-client");
+const fs = require('fs');
 
 const { format } = require('date-fns');
+
+const singleSessionEmailTemplates = {
+  save: process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID,
+  reminder: process.env.GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID,
+  expiry: process.env.GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID,
+};
+
+const multipleSessionEmailTemplates = {
+  resume: process.env.GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID,
+};
+
+const emailTemplates = {
+  ...singleSessionEmailTemplates,
+  ...multipleSessionEmailTemplates,
+};
 
 const getNotifyClient = () =>
   // new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEST);
@@ -13,7 +29,17 @@ const getGraphQLClient = () => new GraphQLClient(process.env.HASURA_GRAPHQL_URL,
   }
 });
 
-const sendEmail = async (templateId, emailAddress, config, res) => {
+/**
+ * Send email using the GovUK Notify client
+ * @param {string} template 
+ * @param {string} emailAddress 
+ * @param {object} config 
+ * @param {object} res 
+ */
+const sendEmail = async (template, emailAddress, config, res) => {
+  const templateId = emailTemplates[template];
+  if (!templateId) throw new Error("Template ID is required");
+
   try {
     const notifyClient = getNotifyClient();
     await notifyClient.sendEmail(
@@ -21,9 +47,9 @@ const sendEmail = async (templateId, emailAddress, config, res) => {
       emailAddress,
       config
     );
-    res.json({
-      expiryDate: config.personalisation.expiryDate,
-    });
+    const returnValue = { message: "Success" }
+    if (template === "save") returnValue.expiryDate = config.personalisation.expiryDate;
+    res.json(returnValue);
   } catch (err) {
     console.error({
       message: err.response.data.errors,
@@ -52,15 +78,158 @@ const convertSlugToName = (slug) => {
  * @returns {string}
  */
 const getResumeLink = (session, teamSlug, flowSlug) => {
-  return `${process.env.EDITOR_URL_EXT}/${teamSlug}/${flowSlug}/preview?sessionId=${session.id}`;
+  const serviceLink = getServiceLink(teamSlug, flowSlug);
+  return `${serviceLink}?sessionId=${session.id}`;
+};
+
+/**
+ * Construct a link to the service
+ * @param {string} teamSlug 
+ * @param {string} flowSlug 
+ * @returns {string}
+ */
+const getServiceLink = (teamSlug, flowSlug) => {
+  return `${process.env.EDITOR_URL_EXT}/${teamSlug}/${flowSlug}/preview`;
 };
 
 /**
  * Return raw date from db in a standard format
  * @param {string} date 
- * @returns 
+ * @returns {string}
  */
 const formatDate = (date) => format(Date.parse(date), "dd MMMM yyyy");
+
+/**
+ * Sends "Save", "Remind", and "Expiry" emails to Save & Return users
+ * @param {object} res 
+ * @param {object} applicationDetails 
+ */
+const sendSingleApplicationEmail = async (res, template, email, sessionId) => {
+  const { flowSlug, teamSlug, teamPersonalisation, session, teamName } = await validateSingleSessionRequest(email, sessionId);
+  const config = {
+    personalisation: getPersonalisation(
+      session,
+      flowSlug,
+      teamSlug,
+      teamPersonalisation,
+      teamName,
+    ),
+    reference: null,
+    // This value is required to go live, but is not currently set up
+    // emailReplyToId: team.emailReplyToId,
+  };
+  if (template === "expiry") {
+    sendEmailWithAttachment(template, email, config, res);
+  } else {
+    sendEmail(template, email, config, res);
+  }
+};
+
+/**
+ * Ensure that request for an email relating to a "single session" is valid
+ * (e.g. Save, Expiry, Reminder)
+ * @param {string} email 
+ * @param {string} sessionId 
+ * @returns {object}
+ */
+const validateSingleSessionRequest = async (email, sessionId) => {
+  try {
+    const client = getGraphQLClient();
+    const query = `
+      query ValidateSingleSessionRequest($email: String, $sessionId: uuid!) {
+        lowcal_sessions(where: {email: {_eq: $email}, id: {_eq: $sessionId}}) {
+          id
+          data
+          expiry_date
+          flow {
+            slug
+            team {
+              name
+              slug
+              notifyPersonalisation
+            }
+          }
+        }
+      }
+    `
+    const { lowcal_sessions: [session] } = await client.request(query, { email: email.toLowerCase(), sessionId });
+
+    if (!session) throw Error;
+
+    return {
+      flowSlug: session.flow.slug,
+      teamSlug: session.flow.team.slug,
+      teamPersonalisation: session.flow.team.notifyPersonalisation,
+      session: getSessionDetails(session),
+      teamName: session.flow.team.name,
+    };
+  } catch (error) {
+    throw new Error("Unable to validate request")
+  }
+};
+
+/**
+ * Parse session details into an object which will be read by email template
+ * @param {string} session 
+ * @returns {object}
+ */
+const getSessionDetails = (session) => {
+  // TODO: Get human readable values here
+  const projectTypes = session?.data?.passport?.data?.["proposal.projectType"]?.join(", ");
+  const address = session?.data?.passport?.data?._address?.single_line_address;
+
+  return {
+    address: address || "Address not submitted",
+    projectType: projectTypes || "Project type not submitted",
+    id: session.id,
+    expiryDate: formatDate(session.expiry_date),
+  };
+};
+
+/**
+ * Build a personalisation object which is read by email templates
+ * @param {string} session 
+ * @param {string} flowSlug 
+ * @param {string} teamSlug 
+ * @param {object} teamPersonalisation 
+ * @returns {object}
+ */
+const getPersonalisation = (
+  session,
+  flowSlug,
+  teamSlug,
+  teamPersonalisation,
+  teamName,
+) => {
+  return {
+    expiryDate: session.expiryDate,
+    resumeLink: getResumeLink(session, teamSlug, flowSlug),
+    serviceLink: getServiceLink(teamSlug, flowSlug),
+    helpEmail: teamPersonalisation.helpEmail,
+    helpPhone: teamPersonalisation.helpPhone,
+    helpOpeningHours: teamPersonalisation.helpOpeningHours,
+    serviceName: convertSlugToName(flowSlug),
+    teamName: teamName,
+    ...session,
+  };
+};
+
+/**
+ * Upload CSV file of user data to Notify, attach to email using dataLink
+ * TODO: Instead of test file, get user data!
+ * @param {string} template 
+ * @param {string} email 
+ * @param {object} config 
+ * @param {object} res 
+ */
+const sendEmailWithAttachment = async (template, email, config, res) => {
+  fs.readFile('test.csv', (err, csvFile) => {
+    console.log(err);
+    const notifyClient = getNotifyClient();
+    config.personalisation.dataLink = notifyClient.prepareUpload(csvFile, true);
+    sendEmail(template, email, config, res);
+  });
+};
 
 module.exports = {
   getNotifyClient,
@@ -69,4 +238,6 @@ module.exports = {
   convertSlugToName,
   getResumeLink,
   formatDate,
+  sendSingleApplicationEmail,
+  singleSessionEmailTemplates,
 };
