@@ -1,8 +1,4 @@
 const localAuthorities = {
-  lambeth: require("./local_authorities/lambeth"),
-  southwark: require("./local_authorities/southwark"),
-  buckinghamshire: require("./local_authorities/buckinghamshire"),
-  canterbury: require("./local_authorities/canterbury"),
   braintree: require("./local_authorities/braintree"),
   digitalLand: require("./digitalLand"),
 };
