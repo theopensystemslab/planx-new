@@ -149,6 +149,25 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
           { text: flow[id].data.policyRef.replace(/<[^>]*>/g, "").trim() },
         ];
       }
+
+      // get portals from flow schema; internal & external are both type 300 after flattening
+      const portals: any = {};
+      Object.keys(flow).forEach((nodeId) => {
+        if (
+          (flow[nodeId].type === 300 || nodeId === "_root") &&
+          flow[nodeId].edges
+        ) {
+          portals[nodeId] = flow[nodeId];
+        }
+      });
+
+      // add portal_name to QuestionMetadata as a proxy for "tags" so BOPS can thematically group questions
+      Object.keys(portals).forEach((portalId) => {
+        if (portals[portalId].edges.includes(id)) {
+          metadata.portal_name = portals[portalId].data?.text || portalId; // TODO replace portal flowId with slug for external portals
+        }
+      });
+
       if (Object.keys(metadata).length > 0) ob.metadata = metadata;
 
       return ob;

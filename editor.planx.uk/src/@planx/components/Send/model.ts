@@ -73,6 +73,7 @@ export interface QuestionMetaData {
     url?: string;
     text?: string;
   }>;
+  portal_name?: string;
 }
 
 export interface ResponseMetaData {
