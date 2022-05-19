@@ -32,7 +32,7 @@ describe("buildContentFromSessions function", () => {
       Project Type: house
       Expiry Date: 04 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(buildContentFromSessions(sessions, "flow", "team")).toEqual(result);
+    expect(buildContentFromSessions(sessions, "team")).toEqual(result);
   });
 
   it("should return correctly formatted content for multiple session", () => {
@@ -100,7 +100,7 @@ describe("buildContentFromSessions function", () => {
       Project Type: farm
       Expiry Date: 04 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=789`
-    expect(buildContentFromSessions(sessions, "flow", "team")).toEqual(result)
+    expect(buildContentFromSessions(sessions, "team")).toEqual(result)
   });
 
   it("should handle an empty address field", () => {
@@ -125,7 +125,7 @@ describe("buildContentFromSessions function", () => {
       Project Type: house
       Expiry Date: 04 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(buildContentFromSessions(sessions, "flow", "team")).toEqual(result);
+    expect(buildContentFromSessions(sessions, "team")).toEqual(result);
   });
 
   it("should handle an empty project type field", () => {
@@ -152,7 +152,7 @@ describe("buildContentFromSessions function", () => {
       Project Type: Project type not submitted
       Expiry Date: 04 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(buildContentFromSessions(sessions, "flow", "team")).toEqual(result);
+    expect(buildContentFromSessions(sessions, "team")).toEqual(result);
   });
 
 });

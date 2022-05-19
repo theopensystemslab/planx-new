@@ -5,20 +5,20 @@ const { mockFlow, mockLowcalSession } = require("../tests/mocks/saveAndReturnMoc
 
 // https://docs.notifications.service.gov.uk/node.html#email-addresses
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk"
-const ENDPOINT = "/save-application"
+const ENDPOINT = "/send-email"
 
-describe("saveApplication endpoint", () => {
+describe("Send Email endpoint", () => {
   beforeEach(() => {
     queryMock.reset();
   });
 
   it("throws an error if required data is missing", () => {
 
-    const missingEmail = { flowId: "test", sessionId: 123 };
-    const missingSessionId = { flowId: "test", email: "test" };
-    const missingFlowId = { email: "test", sessionId: 123 };
+    const missingEmail = { sessionId: 123, template: "save" };
+    const missingSessionId = { email: "test", template: "save" };
+    const missingTemplate = { email: "test", sessionId: 123 };
 
-    [missingEmail, missingSessionId, missingFlowId].forEach(async (invalidBody) => {
+    [missingEmail, missingSessionId, missingTemplate].forEach(async (invalidBody) => {
       await supertest(app)
       .post(ENDPOINT)
       .send(invalidBody)
@@ -31,29 +31,24 @@ describe("saveApplication endpoint", () => {
   });
 
   it("sends a Notify email on successful save", async () => {
-    const flowId = 123;
-    const sessionId = 456;
-
+    
     queryMock.mockQuery({
-      name: 'ValidateRequest',
+      name: 'ValidateSingleSessionRequest',
       data: {
         flows_by_pk: mockFlow,
         lowcal_sessions: [mockLowcalSession]
       },
       variables: {
-        flowId,
-        sessionId,
+        sessionId: 123,
         email: TEST_EMAIL
       }
     });
 
+    const payload = { sessionId: 123, email: TEST_EMAIL, template: "save" };
+    
     await supertest(app)
       .post(ENDPOINT)
-      .send({
-        flowId,
-        sessionId,
-        email: TEST_EMAIL,
-      })
+      .send(payload)
       .expect(200)
       .then((response) => {
         expect(response.body).toHaveProperty("expiryDate");
@@ -61,81 +56,71 @@ describe("saveApplication endpoint", () => {
   });
 
   it("throws an error for an invalid email address", async () => {
-    const flowId = 123;
-    const sessionId = 456
-
     queryMock.mockQuery({
-      name: 'ValidateRequest',
+      name: 'ValidateSingleSessionRequest',
       data: {
         flows_by_pk: mockFlow,
         lowcal_sessions: [mockLowcalSession]
       },
       variables: {
-        flowId,
-        sessionId,
+        sessionId: 123,
         email: "not an email address"
       }
     });
 
+    const payload = { sessionId: 123, email: "Not an email address", template: "save" };
+
     await supertest(app)
       .post(ENDPOINT)
-      .send({
-        email: "Not an email address",
-        flowId,
-        sessionId,
-      })
+      .send(payload)
       .expect(400)
       .then((response) => {
         expect(response.body).toHaveProperty("errors");
       });
   });
 
-  it("throws an error if a flowId is invalid", async () => {
-    const flowId = 123;
-    const sessionId = 456;
-
+  it("throws an error if a template is invalid", async () => {
     queryMock.mockQuery({
-      name: 'ValidateRequest',
+      name: 'ValidateSingleSessionRequest',
       data: {
         flows_by_pk: null,
         lowcal_sessions: [mockLowcalSession]
       },
       variables: {
-        flowId,
-        sessionId,
-        email: TEST_EMAIL
+        sessionId: 123,
+        email: TEST_EMAIL,
       }
     });
 
+    const payload = { sessionId: 123, email: TEST_EMAIL, template: "not a template" };
+
     await supertest(app)
       .post(ENDPOINT)
-      .send({ email: TEST_EMAIL, flowId, sessionId })
-      .expect(500)
+      .send(payload)
+      .expect(400)
       .then(response => {
-        expect(response.body).toHaveProperty("error", "Unable to validate request");
+        expect(response.body).toHaveProperty("error", 'Invalid template - must be one of [save, reminder, expiry]');
       });
   });
 
   it("throws an error if a sessionId is invalid", async () => {
-    const flowId = 123;
-    const sessionId = 456;
-
     queryMock.mockQuery({
-      name: 'ValidateRequest',
+      name: 'ValidateSingleSessionRequest',
       data: {
         flows_by_pk: mockFlow,
         lowcal_sessions: null
       },
       variables: {
-        flowId,
-        sessionId,
-        email: TEST_EMAIL
+        sessionId: 123,
+        email: TEST_EMAIL,
       }
     });
 
+    const payload = { sessionId: 123, email: TEST_EMAIL, template: "save" };
+
     await supertest(app)
       .post(ENDPOINT)
-      .send({ email: TEST_EMAIL, flowId, sessionId })
+      .send(payload)
       .expect(500)
       .then(response => {
         expect(response.body).toHaveProperty("error", "Unable to validate request");
