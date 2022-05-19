@@ -535,6 +535,7 @@ new pulumi.Config("cloudflare").require("apiToken");
 
   for (let i = 0; i < DOMAINS.length; i++) {
     if (i === 0) {
+      // Main domain is managed by us (through CloudFlare)
       new cloudflare.Record("frontend", {
         name: tldjs.getSubdomain(DOMAIN) ?? "@",
         type: "CNAME",
@@ -544,6 +545,8 @@ new pulumi.Config("cloudflare").require("apiToken");
         proxied: true,
       });
     } else {
+      // Custom domains are managed by partners (i.e. councils)
+      // Logging here so we can ask them to set up these DNS records
       console.log(pulumi.interpolate`CNAME\t${DOMAINS[i]}\t${frontendBuckets[i].websiteDomain}`);
     }
   }
