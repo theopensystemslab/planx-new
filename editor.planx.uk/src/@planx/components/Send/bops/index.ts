@@ -5,10 +5,12 @@
 // https://southwark.preview.bops.services/api-docs/index.html
 
 import { airbrake } from "airbrake";
+import gql from "graphql-tag";
 import { flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
 
+import { client } from "../../../../lib/graphql";
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { PASSPORT_UPLOAD_KEY } from "../../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY, toPence } from "../../Pay/model";
@@ -76,6 +78,22 @@ function isTypeForBopsPayload(type?: TYPES) {
       throw new Error(`Unhandled type: ${type}`);
   }
 }
+
+const getFlowSlugById = async (id: string) => {
+  const { data } = await client.query({
+    query: gql`
+      query GetFlowData($id: uuid!) {
+        flows_by_pk(id: $id) {
+          slug
+        }
+      }
+    `,
+    variables: {
+      id,
+    },
+  });
+  return data.flows_by_pk.slug;
+};
 
 export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
   Object.entries(breadcrumbs)
@@ -153,15 +171,24 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
       // get portals from flow schema; internal & external are both type 300 after flattening
       const portals: any = {};
       Object.keys(flow).forEach((nodeId) => {
-        if (flow[nodeId].type === 300 && flow[nodeId].edges) {
+        if (
+          (flow[nodeId].type === 300 && flow[nodeId].edges) ||
+          nodeId === "_root"
+        ) {
           portals[nodeId] = flow[nodeId];
+          // TODO recursively flatten each portal so we can assign the portal name to every question within it, not only its' direct edges
         }
       });
 
       // add portal_name to QuestionMetadata as a proxy for "tags" so BOPS can thematically group questions
-      Object.keys(portals).forEach((portalId) => {
+      Object.keys(portals).forEach(async (portalId) => {
         if (portals[portalId].edges.includes(id)) {
-          metadata.portal_name = portals[portalId].data?.text || portalId; // TODO replace flow uuid with slug for external portal_name
+          if (portalId === "_root") {
+            metadata.portal_name = "_root";
+          } else {
+            metadata.portal_name =
+              portals[portalId].data?.text || (await getFlowSlugById(portalId));
+          }
         }
       });
 
@@ -299,6 +326,14 @@ export function getParams(
   // 6. questions+answers array
 
   data.proposal_details = makePayload(flow, breadcrumbs);
+
+  console.log("proposal_details", data.proposal_details);
+  console.log(
+    "questions with portal_name",
+    data.proposal_details.filter((p) => p.metadata?.portal_name).length,
+    "/",
+    data.proposal_details.length
+  );
 
   // 7. payment
 
