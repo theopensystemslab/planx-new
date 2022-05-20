@@ -27,6 +27,7 @@ const { findAndReplaceInFlow } = require("./findReplace");
 const { sendToUniform, downloadUniformZip } = require("./send");
 const { resumeApplication, validateSession, sendSaveAndReturnEmail } = require("./saveAndReturn")
 const { hardDeleteSessions } = require("./webhooks/hardDeleteSessions");
+const { useHasuraAuth } = require("./auth");
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -578,13 +579,16 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
   res.send();
 });
 
+// Ensure that Reminder and Expiry emails can only be triggered by Hasura scheduled events
+const useSendEmailAuth = (req, res, next) => (["reminder", "expiry"].includes(req.body.template)) ? useHasuraAuth(req, res, next) : next();
+
 // assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
 // assert(process.env.GOVUK_NOTIFY_API_KEY_TEST);
-app.post("/send-email", sendSaveAndReturnEmail);
+app.post("/send-email", useSendEmailAuth, sendSaveAndReturnEmail);
 app.post("/resume-application", resumeApplication);
 app.post("/validate-session", validateSession);
 
-app.post("/webhooks/delete-expired-sessions", hardDeleteSessions);
+app.post("/webhooks/delete-expired-sessions", useHasuraAuth, hardDeleteSessions);
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()

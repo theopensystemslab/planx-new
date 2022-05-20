@@ -51,4 +51,4 @@ const validateRequest = async (email, sessionId) => {
   return result;
 };
 
-module.exports = validateSession;
+module.exports = { validateSession };

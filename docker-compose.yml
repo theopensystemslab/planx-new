@@ -82,6 +82,7 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_JWT_SECRET: '{ "type": "HS256", "key": "${JWT_SECRET}" }'
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
+      HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
   seed-database:
     build:
       context: ./scripts/seed-database
@@ -144,6 +145,7 @@ services:
       GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID}
       GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID}
       GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID}
+      HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
 
   sharedb:
     restart: unless-stopped
