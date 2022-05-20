@@ -95,6 +95,30 @@ const getFlowSlugById = async (id: string) => {
   return data.flows_by_pk.slug;
 };
 
+// For a given node (a "Question"), recursively scan the flow schema to find which portal it belongs to
+//   and add the portal_name to the QuestionMetadata so BOPS can thematically group proposal_details
+const getPortalName = (
+  id: string,
+  flow: Store.flow,
+  metadata: QuestionMetaData
+): QuestionMetaData => {
+  if (id === "_root") {
+    metadata.portal_name = "_root";
+  } else if (flow[id]?.type === 300) {
+    // internal & external portals are both type 300 after flattening (ref dataMergedHotFix)
+    metadata.portal_name = flow[id]?.data?.text || id; // TODO replace flow id with slug for readability; make async
+  } else {
+    // if the current node id is not the root or a portal, then find its' next parent node and so on until we hit a portal
+    Object.entries(flow).forEach(([nodeId, node]) => {
+      if (node.edges?.includes(id)) {
+        getPortalName(nodeId, flow, metadata);
+      }
+    });
+  }
+
+  return metadata;
+};
+
 export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
   Object.entries(breadcrumbs)
     .filter(([id]) => {
@@ -159,7 +183,7 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
         responses,
       };
 
-      const metadata: QuestionMetaData = {};
+      let metadata: QuestionMetaData = {};
       if (bc.auto) metadata.auto_answered = true;
       if (flow[id]?.data?.policyRef) {
         metadata.policy_refs = [
@@ -168,29 +192,7 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
         ];
       }
 
-      // get portals from flow schema; internal & external are both type 300 after flattening
-      const portals: any = {};
-      Object.keys(flow).forEach((nodeId) => {
-        if (
-          (flow[nodeId].type === 300 && flow[nodeId].edges) ||
-          nodeId === "_root"
-        ) {
-          portals[nodeId] = flow[nodeId];
-          // TODO recursively flatten each portal so we can assign the portal name to every question within it, not only its' direct edges
-        }
-      });
-
-      // add portal_name to QuestionMetadata as a proxy for "tags" so BOPS can thematically group questions
-      Object.keys(portals).forEach(async (portalId) => {
-        if (portals[portalId].edges.includes(id)) {
-          if (portalId === "_root") {
-            metadata.portal_name = "_root";
-          } else {
-            metadata.portal_name =
-              portals[portalId].data?.text || (await getFlowSlugById(portalId));
-          }
-        }
-      });
+      metadata = getPortalName(id, flow, metadata);
 
       if (Object.keys(metadata).length > 0) ob.metadata = metadata;
 
@@ -327,13 +329,13 @@ export function getParams(
 
   data.proposal_details = makePayload(flow, breadcrumbs);
 
-  console.log("proposal_details", data.proposal_details);
-  console.log(
-    "questions with portal_name",
-    data.proposal_details.filter((p) => p.metadata?.portal_name).length,
-    "/",
-    data.proposal_details.length
-  );
+  // console.log("proposal_details", data.proposal_details);
+  // console.log(
+  //   "questions with portal_name",
+  //   data.proposal_details.filter((p) => p.metadata?.portal_name).length,
+  //   "/",
+  //   data.proposal_details.length
+  // );
 
   // 7. payment
 
