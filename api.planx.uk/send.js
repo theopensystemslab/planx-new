@@ -47,6 +47,9 @@ const sendToUniform = (req, res, next) => {
       zip.writeZip(downloadName);
       res.status(200).send({ message: "Generated zip", fileName: downloadName });
     }, 5000);
+
+    // Mark session as deleted so that reminder and expiry emails are not triggered
+    softDeleteSession(req.body.sessionId)
   } catch (err) {
     next(err);
   }

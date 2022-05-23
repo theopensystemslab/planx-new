@@ -274,6 +274,9 @@ app.post("/bops/:localAuthority", (req, res) => {
     onProxyReq: fixRequestBody,
     onProxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {
+        // Mark session as deleted so that reminder and expiry emails are not triggered
+        softDeleteSession(req.body?.planx_debug_data?.session_id)
+
         const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
 
         const applicationId = await client.request(

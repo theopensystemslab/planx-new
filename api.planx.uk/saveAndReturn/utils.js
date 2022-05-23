@@ -1,8 +1,7 @@
 const { GraphQLClient } = require("graphql-request");
 const { NotifyClient } = require("notifications-node-client");
-const fs = require('fs');
-
-const { format } = require('date-fns');
+const fs = require("fs");
+const { format } = require("date-fns");
 
 const singleSessionEmailTemplates = {
   save: process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID,
@@ -249,7 +248,7 @@ const softDeleteSession = async (sessionId) => {
     `
     await client.request(mutation, { sessionId });
   } catch (error) {
-    throw new Error(`Error deleteding session ${sessionId}`);
+    throw new Error(`Error deleting session ${sessionId}`);
   };
 };
 
@@ -262,4 +261,5 @@ module.exports = {
   formatDate,
   sendSingleApplicationEmail,
   singleSessionEmailTemplates,
+  softDeleteSession,
 };
