@@ -54,10 +54,10 @@ const SavePage: React.FC = () => {
   const [expiryDate, setExpiryDate] = useState<string>(placeholderExpiryDate);
 
   const sendNotifyEmail = async () => {
-    const url = `${process.env.REACT_APP_API_URL}/send-email`;
+    const url = `${process.env.REACT_APP_API_URL}/send-email/save`;
     const { sessionId } = useStore.getState();
     const data: SendEmailPayload = {
-      payload: { email: saveToEmail, template: "save", sessionId },
+      payload: { email: saveToEmail, sessionId },
     };
     try {
       const response = await axios.post(url, data);

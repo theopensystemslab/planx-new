@@ -126,12 +126,6 @@ export enum ApplicationPath {
 }
 
 /**
- * GovUK Notify email templates available through the /send-email endpoint
- * XXX: Only "send" is currently used on the frontend
- */
-type singleSessionEmailTemplates = "save" | "reminder" | "expiry";
-
-/**
  * Body of request posted to /send-email endpoint
  * XXX: Matches the body created by a Hasura scheduled event - see tables.yml
  */
@@ -139,6 +133,5 @@ export interface SendEmailPayload {
   payload: {
     email: string | undefined;
     sessionId: string;
-    template: singleSessionEmailTemplates;
   };
 }

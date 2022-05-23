@@ -207,12 +207,11 @@
           {
               "type": "create_scheduled_event",
               "args": {
-                  "webhook": "http://api:7002/send-email",
+                  "webhook": "http://api:7002/send-email/expiry",
                   "schedule_at": {{$body.event.data.new.expiry_date}},
                   "payload": {
-                      "sessionId": {{$body.event.data.new.id}},
-                      "email": {{$body.event.data.new.email}},
-                      "template": "expiry"
+                    "sessionId": {{$body.event.data.new.id}},
+                    "email": {{$body.event.data.new.email}}
                   },
                   "comment": "expiry_{{$body.event.data.new.id}}",
                   "headers": [{
@@ -241,12 +240,11 @@
           {
               "type": "create_scheduled_event",
               "args": {
-                  "webhook": "http://api:7002/send-email",
+                  "webhook": "http://api:7002/send-email/reminder",
                   "schedule_at": {{$body.event.data.new.reminder_date}},
                   "payload": {
-                      "sessionId": {{$body.event.data.new.id}},
-                      "email": {{$body.event.data.new.email}},
-                      "template": "reminder"
+                    "sessionId": {{$body.event.data.new.id}},
+                    "email": {{$body.event.data.new.email}}
                   },
                   "comment": "reminder_{{$body.event.data.new.id}}",
                   "headers": [{
