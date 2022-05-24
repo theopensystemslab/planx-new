@@ -118,11 +118,7 @@ const sendSingleApplicationEmail = async (res, template, email, sessionId) => {
     // This value is required to go live, but is not currently set up
     // emailReplyToId: team.emailReplyToId,
   };
-  if (template === "expiry") {
-    sendEmailWithAttachment(template, email, config, res);
-  } else {
-    sendEmail(template, email, config, res);
-  }
+  sendEmail(template, email, config, res);
 };
 
 /**
@@ -212,23 +208,6 @@ const getPersonalisation = (
     teamName: teamName,
     ...session,
   };
-};
-
-/**
- * Upload CSV file of user data to Notify, attach to email using dataLink
- * TODO: Instead of test file, get user data!
- * @param {string} template 
- * @param {string} email 
- * @param {object} config 
- * @param {object} res 
- */
-const sendEmailWithAttachment = async (template, email, config, res) => {
-  fs.readFile('test.csv', (err, csvFile) => {
-    console.log(err);
-    const notifyClient = getNotifyClient();
-    config.personalisation.dataLink = notifyClient.prepareUpload(csvFile, true);
-    sendEmail(template, email, config, res);
-  });
 };
 
 module.exports = {
