@@ -58,19 +58,18 @@ function Component(props: Props) {
   const team = fetchCurrentTeam();
 
   // if we have an address point, check which local authority district(s) & region it's located in via Digital Land
-  const options = {
+  let options = new URLSearchParams({
     entries: "all", // includes historic
     geometry: `POINT(${address?.longitude} ${address?.latitude})`,
     geometry_relation: "intersects",
     limit: "100",
-  };
-  // 'dataset' param is not array[string] per docs, instead re-specify param name per unique dataset
-  const datasets = ["local-authority-district", "region"];
-  const datasetParams = `&dataset=${datasets.join(`&dataset=`)}`;
+  });
+  options.append("dataset", "local-authority-district");
+  options.append("dataset", "region");
 
   // https://www.digital-land.info/docs#/Search%20entity
   const root = `https://www.digital-land.info/entity.json?`;
-  const url = root + new URLSearchParams(options).toString() + datasetParams;
+  const url = root + options;
   const { data } = useSWR(
     () => (address?.latitude && address?.longitude ? url : null),
     {
