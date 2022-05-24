@@ -60,7 +60,13 @@ const baseSchema = {
     active: true,
     neg: "is not an UNESCO World Heritage Site",
     pos: "is, or is within, an UNESCO World Heritage Site",
-    "digital-land-datasets": ["world-heritage-site"],
+    "digital-land-datasets": ["world-heritage-site", "world-heritage-site-buffer-zone"],
+  },
+  "designated.SPA": {
+    active: true,
+    neg: "is not in a Special Protection Area (SPA)",
+    pos: "is in a Special Protection Area (SPA)",
+    "digital-land-datasets": ["special-protection-area"],
   },
   "monument": {
     active: true,
@@ -79,6 +85,18 @@ const baseSchema = {
     neg: "is not a Site of Special Scientific Interest (SSSI)",
     pos: "is a Site of Special Scientific Interest (SSSI)",
     "digital-land-datasets": ["site-of-special-scientific-interest"],
+  },
+  "nature.SAC": {
+    active: true,
+    neg: "is not in a Special Area of Conservation (SAC)",
+    pos: "is in a Special Area of Conservation (SAC)",
+    "digital-land-datasets": ["special-area-of-conservation"],
+  },
+  "nature.ASNW": {
+    active: true,
+    neg: "is not in an Ancient Semi-Natural Woodland (ASNW)",
+    pos: "is in an Ancient Semi-Natural Woodland (ASNW)",
+    "digital-land-datasets": ["ancient-woodland"],
   },
   "flood.zone1": {
     active: false,
