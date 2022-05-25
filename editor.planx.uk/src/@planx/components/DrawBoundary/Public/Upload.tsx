@@ -6,8 +6,9 @@ import FileIcon from "@material-ui/icons/AttachFile";
 import DeleteIcon from "@material-ui/icons/Close";
 import CloudUpload from "@material-ui/icons/CloudUpload";
 import { visuallyHidden } from "@material-ui/utils";
-import { uploadFile } from "api/upload";
+import { UploadFileResponse, uploadPrivateFile } from "api/upload";
 import classNames from "classnames";
+import ImagePreview from "components/ImagePreview";
 import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
@@ -117,7 +118,7 @@ export interface FileUpload<T extends File = any> {
   status: "success" | "error" | "uploading";
   progress: number;
   id: string;
-  url?: string;
+  serverFile?: UploadFileResponse;
 }
 interface Props {
   setFile: (file?: FileUpload) => void;
@@ -139,13 +140,17 @@ export default function FileUpload(props: Props) {
     multiple: false,
     onDrop: ([file]: FileWithPath[]) => {
       // XXX: This is a non-blocking promise chain
-      uploadFile(file, {
+      uploadPrivateFile(file, {
         onProgress: (progress) => {
           setSlot((_file: any) => ({ ..._file, progress }));
         },
       })
-        .then((url) => {
-          setSlot((_file: any) => ({ ..._file, url, status: "success" }));
+        .then((serverFile) => {
+          setSlot((_file: any) => ({
+            ..._file,
+            status: "success",
+            serverFile,
+          }));
           setFileUploadStatus(() => `File ${file.path} was uploaded`);
         })
         .catch((error) => {
@@ -188,7 +193,7 @@ export default function FileUpload(props: Props) {
           />
           <Box className={classes.filePreview}>
             {slot?.file.type.includes("image") ? (
-              <ImagePreview file={slot?.file} />
+              <ImagePreview file={slot?.file} serverFile={slot?.serverFile} />
             ) : (
               <FileIcon />
             )}
@@ -244,17 +249,6 @@ export default function FileUpload(props: Props) {
       </ButtonBase>
     </>
   );
-}
-
-function ImagePreview({ file }: any) {
-  const { current: url } = React.useRef(URL.createObjectURL(file));
-  useEffect(() => {
-    return () => {
-      // Cleanup to free up memory
-      URL.revokeObjectURL(url);
-    };
-  }, [url]);
-  return <img src={url} alt="" />;
 }
 
 function formatBytes(a: any, b = 2) {

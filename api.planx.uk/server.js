@@ -19,8 +19,9 @@ const {
   responseInterceptor,
   fixRequestBody,
 } = require("http-proxy-middleware");
+const multer = require('multer');
 
-const { signS3Upload } = require("./s3");
+const { getFileFromS3, uploadFile } = require("./s3");
 const { locationSearch } = require("./gis/index");
 const { diffFlow, publishFlow } = require("./publish");
 const { findAndReplaceInFlow } = require("./findReplace");
@@ -489,7 +490,7 @@ app.post("/download-application", async (req, res, next) => {
       message: "Missing application `data` to download"
     });
   }
-  
+
   try {
     // build a CSV and stream the response
     stringify(req.body, { columns: ["question", "responses", "metadata"], header: true }).pipe(res);
@@ -499,18 +500,85 @@ app.post("/download-application", async (req, res, next) => {
   }
 });
 
-app.post("/sign-s3-upload", async (req, res, next) => {
+async function handleFileUpload(file, filename) {
+  const { fileType, key } = await uploadFile(file, filename);
+
+  return {
+    file_type: fileType,
+    key,
+  }
+}
+
+app.post("/private-file-upload", multer().single('file'), async (req, res, next) => {
   if (!req.body.filename) next({ status: 422, message: "missing filename" });
+  if (!req.file) next({ status: 422, message: "missing file" });
 
   try {
-    const { fileType, url, acl } = await signS3Upload(req.body.filename);
+    const fileResponse = await handleFileUpload(req.file, req.body.filename);
 
     res.json({
-      upload_to: url,
-      public_readonly_url_will_be: url.split("?")[0],
-      file_type: fileType,
-      acl,
+      ...fileResponse,
+      file_hash: generateFileHash(fileResponse.key)
     });
+
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post("/public-file-upload", multer().single('file'), async (req, res, next) => {
+  if (!req.body.filename) next({ status: 422, message: "missing filename" });
+  if (!req.file) next({ status: 422, message: "missing file" });
+
+  try {
+    const fileResponse = await handleFileUpload(req.file);
+
+    res.json(fileResponse);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/file/public/:fileKey/:fileName", async (req, res, next) => {
+  const filePath = buildFilePath(req.params.fileKey, req.params.fileName);
+
+  if (!filePath) {
+    return next({ status: 404, message: "file not found" });
+  }
+
+  try {
+    const { body, headers } = await getFileFromS3(filePath);
+
+    res.set(headers);
+    res.send(body);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// XXX: Once save-and-return is shipped, we can use the user authentication as means to verify the user's authorization to download the file.
+app.get("/file/private/:fileKey/:fileName", async (req, res, next) => {
+  const filePath = buildFilePath(req.params.fileKey, req.params.fileName);
+
+  if (filePath) {
+    return next({ status: 404, message: "file not found" });
+  }
+
+  const fileHash = req.headers['file-hash'];
+
+  if (!fileHash) {
+    return next({ status: 400, message: "wrong or missing headers" });
+  }
+
+  if (!validateFileHash(filePath, fileHash)) {
+    return next({ status: 403, message: "unauthorized" });
+  }
+
+  try {
+    const { body, headers } = await getFileFromS3(fileKey);
+
+    res.set(headers);
+    res.send(body);
   } catch (err) {
     next(err);
   }
@@ -556,13 +624,13 @@ const trackAnalyticsLogExit = async (id, isUserExit) => {
 
 app.post("/analytics/log-user-exit", async (req, res, next) => {
   const analyticsLogId = Number(req.query.analyticsLogId);
-  if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, true);
+  if (analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, true);
   res.send();
 });
 
 app.post("/analytics/log-user-resume", async (req, res, next) => {
   const analyticsLogId = Number(req.query.analyticsLogId);
-  if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
+  if (analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
   res.send();
 });
 
@@ -611,14 +679,31 @@ function usePayProxy(options, req) {
     onProxyReq: fixRequestBody,
     headers: {
       ...req.headers,
-      Authorization: `Bearer ${
-        process.env[
-          `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
-        ]
-      }`,
+      Authorization: `Bearer ${process.env[
+        `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
+      ]
+        }`,
     },
     ...options,
   });
+}
+
+function validateFileHash(fileKey, hash) {
+  return hash === generateFileHash(fileKey);
+}
+
+function generateFileHash(fileKey) {
+  return require('crypto').createHash('sha256')
+    .update(`${fileKey}${process.env.FILE_UPLOAD_HASHING_SALT}`)
+    .digest('hex');
+}
+
+function buildFilePath(fileKey, fileName) {
+  if (!fileKey || !fileName) {
+    return '';
+  }
+
+  return `${fileKey}/${fileName}`;
 }
 
 module.exports = server;

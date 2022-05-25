@@ -9,8 +9,9 @@ import { visuallyHidden } from "@material-ui/utils";
 import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import { uploadFile } from "api/upload";
+import { uploadPrivateFile } from "api/upload";
 import classNames from "classnames";
+import ImagePreview from "components/ImagePreview";
 import { nanoid } from "nanoid";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
@@ -159,7 +160,7 @@ const FileUpload: React.FC<Props> = (props) => {
           makeData(
             props,
             slots.map((slot: any) => ({
-              url: slot.url,
+              serverFile: slot.serverFile,
               filename: slot.file.path,
               cachedSlot: {
                 ...slot,
@@ -198,7 +199,7 @@ const FileUpload: React.FC<Props> = (props) => {
     <Card
       isValid={
         slots.length > 0 &&
-        slots.every((slot) => slot.url && slot.status === "success")
+        slots.every((slot) => slot.serverFile && slot.status === "success")
       }
       handleSubmit={handleSubmit}
     >
@@ -238,7 +239,7 @@ function Dropzone(props: any) {
           ...acceptedFiles.map((file) => {
             // XXX: This is a non-blocking promise chain
             //      If a file is removed while it's being uploaded, nothing should break because we're using map()
-            uploadFile(file, {
+            uploadPrivateFile(file, {
               onProgress: (progress) => {
                 setSlots((_files: any) =>
                   _files.map((_file: any) =>
@@ -247,11 +248,15 @@ function Dropzone(props: any) {
                 );
               },
             })
-              .then((url) => {
+              .then(({ fileHash, fileId }) => {
                 setSlots((_files: any) =>
                   _files.map((_file: any) =>
                     _file.file === file
-                      ? { ..._file, url, status: "success" }
+                      ? {
+                          ..._file,
+                          status: "success",
+                          serverFile: { fileHash, fileId },
+                        }
                       : _file
                   )
                 );
@@ -286,7 +291,7 @@ function Dropzone(props: any) {
 
   return (
     <>
-      {slots.map(({ id, file, status, progress, url }: any, index: number) => {
+      {slots.map(({ id, file, progress, serverFile }: any, index: number) => {
         return (
           <Box key={id} className={classes.file}>
             <IconButton
@@ -313,7 +318,7 @@ function Dropzone(props: any) {
             />
             <Box className={classes.filePreview}>
               {file.type.includes("image") ? (
-                <ImagePreview file={file} url={url} />
+                <ImagePreview file={file} serverFile={serverFile} />
               ) : (
                 <FileIcon />
               )}
@@ -370,20 +375,6 @@ function Dropzone(props: any) {
       </ButtonBase>
     </>
   );
-}
-
-function ImagePreview({ file, url: parentUrl }: any) {
-  const { current: url } = React.useRef(
-    file instanceof File ? URL.createObjectURL(file) : parentUrl
-  );
-
-  useEffect(() => {
-    return () => {
-      // Cleanup to free up memory
-      URL.revokeObjectURL(url);
-    };
-  }, [url]);
-  return <img src={url} alt="" />;
 }
 
 function formatBytes(a: any, b = 2) {

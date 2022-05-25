@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import ErrorIcon from "@material-ui/icons/Error";
 import Image from "@material-ui/icons/Image";
-import { uploadFile } from "api/upload";
+import { uploadPublicFile } from "api/upload";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -52,7 +52,7 @@ export default function FileUpload(props: Props): FCReturn {
       setStatus({
         type: "loading",
       });
-      uploadFile(file)
+      uploadPublicFile(file)
         .then((res) => {
           setStatus({
             type: "none",

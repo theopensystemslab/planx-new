@@ -96,7 +96,9 @@ export default function Component(props: Props) {
     <Card
       handleSubmit={handleSubmit}
       isValid={
-        props.hideFileUpload ? true : Boolean(boundary || selectedFile?.url)
+        props.hideFileUpload
+          ? true
+          : Boolean(boundary || selectedFile?.serverFile)
       }
     >
       {getBody()}
@@ -191,8 +193,8 @@ export default function Component(props: Props) {
         [props.dataFieldArea]:
           boundary && props.dataFieldBoundary ? area : undefined,
         [propsDataFieldUrl]:
-          selectedFile?.url && propsDataFieldUrl
-            ? selectedFile?.url
+          selectedFile?.serverFile && propsDataFieldUrl
+            ? selectedFile?.serverFile
             : undefined,
         [PASSPORT_UPLOADED_FILE_KEY]:
           selectedFile && propsDataFieldUrl ? selectedFile : undefined,

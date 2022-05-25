@@ -8,8 +8,10 @@ import DrawBoundary from "./";
 test("recovers previously submitted files when clicking the back button", async () => {
   const handleSubmit = jest.fn();
   const previouslySubmittedData = {
-    "proposal.drawing.locationPlan":
-      "http://127.0.0.1:9000/planx-temp/tdgg8gvf/file.pdf",
+    "proposal.drawing.locationPlan": {
+      fileKey: "/4oh73out/PXL_20210327_122515714.pdf",
+      fileHash: "testHash",
+    },
     "property.uploadedFile": {
       file: {
         path: "file.pdf",
@@ -18,7 +20,10 @@ test("recovers previously submitted files when clicking the back button", async 
       status: "success",
       progress: 1,
       id: "g5Xy36kAGY2k9xoTxtk_i",
-      url: "http://127.0.0.1:9000/planx-temp/tdgg8gvf/file.pdf",
+      serverFile: {
+        fileKey: "/4oh73out/PXL_20210327_122515714.pdf",
+        fileHash: "testHash",
+      },
     },
   };
 

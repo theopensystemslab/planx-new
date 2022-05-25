@@ -69,7 +69,10 @@ test("recovers previously submitted files when clicking the back button even if 
 test.todo("cannot continue until uploads have finished");
 
 const dummyFile = {
-  url: "http://127.0.0.1:9000/planx-temp/4oh73out/PXL_20210327_122515714.pdf",
+  serverFile: {
+    fileKey: "/4oh73out/PXL_20210327_122515714.pdf",
+    fileHash: "testHash",
+  },
   filename: "PXL_20210327_122515714.pdf",
   cachedSlot: {
     file: {
@@ -79,7 +82,10 @@ const dummyFile = {
     status: "success",
     progress: 1,
     id: "2vBmuynz-3D_EN-H2gF2E",
-    url: "http://127.0.0.1:9000/planx-temp/4oh73out/PXL_20210327_122515714.pdf",
+    serverFile: {
+      fileKey: "/4oh73out/PXL_20210327_122515714.pdf",
+      fileHash: "testHash",
+    },
   },
 };
 

@@ -6,10 +6,11 @@ import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { TYPES } from "@planx/components/types";
+import { downloadFile } from "api/download";
 import format from "date-fns/format";
 import type { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default Component;
 
@@ -256,6 +257,8 @@ function DateInput(props: ComponentProps) {
 function DrawBoundary(props: ComponentProps) {
   const { latitude, longitude } = props.passport.data?._address;
 
+  const [fileUrl, setFileUrl] = useState("");
+
   // check if the user drew a boundary,
   // if they didn't then check that there's an uploaded boundary file
   const data = props.userData?.data?.[props.node.data?.dataFieldBoundary]
@@ -270,14 +273,31 @@ function DrawBoundary(props: ComponentProps) {
     throw Error("boundary geojson or file expected but not found");
   }
 
+  useEffect(() => {
+    if ("fileId" in data && "fileHash" in data) {
+      const { fileId, fileHash } = data;
+
+      downloadFile(fileId, fileHash).then((f) => {
+        setFileUrl(URL.createObjectURL(f));
+      });
+    }
+
+    return () => {
+      if (fileUrl) {
+        // Cleanup to free up memory
+        URL.revokeObjectURL(fileUrl);
+      }
+    };
+  }, []);
+
   return (
     <>
       <dt>Site boundary</dt>
       <dd>
         {!data && props.node.data?.hideFileUpload ? (
           "Skipped"
-        ) : typeof data === "string" ? (
-          <a target="_blank" href={data}>
+        ) : "fileId" in data ? (
+          <a target="_blank" href={fileUrl}>
             Your uploaded location plan
           </a>
         ) : (

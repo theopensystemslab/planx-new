@@ -86,7 +86,7 @@ services:
       context: ./scripts/seed-database
       dockerfile: Dockerfile
     volumes:
-       - "./hasura.planx.uk/:/hasura"
+      - "./hasura.planx.uk/:/hasura"
     restart: "no"
     depends_on:
       hasura:
@@ -137,6 +137,7 @@ services:
       GOV_UK_PAY_TOKEN_SOUTHWARK: ${GOV_UK_PAY_TOKEN_SOUTHWARK}
       AIRBRAKE_PROJECT_ID: ${AIRBRAKE_PROJECT_ID}
       AIRBRAKE_PROJECT_KEY: ${AIRBRAKE_PROJECT_KEY}
+      FILE_UPLOAD_HASHING_SALT: ${FILE_UPLOAD_HASHING_SALT}
 
   sharedb:
     restart: unless-stopped
