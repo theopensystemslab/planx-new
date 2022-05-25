@@ -531,7 +531,7 @@ app.post("/public-file-upload", multer().single('file'), async (req, res, next) 
   if (!req.file) next({ status: 422, message: "missing file" });
 
   try {
-    const fileResponse = await handleFileUpload(req.file);
+    const fileResponse = await handleFileUpload(req.file, req.body.filename);
 
     res.json(fileResponse);
   } catch (err) {
