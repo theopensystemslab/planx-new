@@ -31,8 +31,8 @@ specifiers:
   passport-google-oauth20: ^2.0.0
   pino-noir: ^2.2.1
   prettier: 2.x
+  string-to-stream: ^3.0.1
   supertest: ^6.1.3
-  xml-js: ^1.6.11
 
 dependencies:
   '@airbrake/node': 2.1.7
@@ -56,7 +56,7 @@ dependencies:
   passport: 0.4.1
   passport-google-oauth20: 2.0.0
   pino-noir: 2.2.1
-  xml-js: 1.6.11
+  string-to-stream: 3.0.1
 
 devDependencies:
   dotenv: 8.6.0
@@ -3885,7 +3885,6 @@ packages:
       inherits: 2.0.4
       string_decoder: 1.3.0
       util-deprecate: 1.0.2
-    dev: true
 
   /regex-not/1.0.2:
     resolution: {integrity: sha512-J6SDjUgDxQj5NusnOtdFxDwN/+HWykR8GELwctJ7mdqhcyy1xEc4SRFHUXvxTp661YaVKAjfRLZ9cCqS6tn32A==}
@@ -4005,10 +4004,6 @@ packages:
 
   /sax/1.2.1:
     resolution: {integrity: sha1-e45lYZCyKOgaZq6nSEgNgozS03o=}
-    dev: false
-
-  /sax/1.2.4:
-    resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
     dev: false
 
   /saxes/5.0.1:
@@ -4269,6 +4264,12 @@ packages:
       strip-ansi: 6.0.0
     dev: true
 
+  /string-to-stream/3.0.1:
+    resolution: {integrity: sha512-Hl092MV3USJuUCC6mfl9sPzGloA3K5VwdIeJjYIkXY/8K+mUvaeEabWJgArp+xXrsWxCajeT2pc4axbVhIZJyg==}
+    dependencies:
+      readable-stream: 3.6.0
+    dev: false
+
   /string-width/4.2.2:
     resolution: {integrity: sha512-XBJbT3N4JhVumXE0eoLU9DCjcaF92KLNqTmFCnG1pf8duUxFGwtP6AD6nkjw9a3IdiRtL3E2w3JDiE/xi3vOeA==}
     engines: {node: '>=8'}
@@ -4282,7 +4283,6 @@ packages:
     resolution: {integrity: sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==}
     dependencies:
       safe-buffer: 5.2.1
-    dev: true
 
   /strip-ansi/6.0.0:
     resolution: {integrity: sha512-AuvKTrTfQNYNIctbR1K/YGTR1756GycPsg7b9bdV9Duqur4gv6aKqHXah67Z8ImS7WEz5QVcOtlfW2rZEugt6w==}
@@ -4545,7 +4545,6 @@ packages:
 
   /util-deprecate/1.0.2:
     resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=}
-    dev: true
 
   /utils-merge/1.0.1:
     resolution: {integrity: sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=}
@@ -4695,13 +4694,6 @@ packages:
       utf-8-validate:
         optional: true
     dev: true
-
-  /xml-js/1.6.11:
-    resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}
-    hasBin: true
-    dependencies:
-      sax: 1.2.4
-    dev: false
 
   /xml-name-validator/3.0.0:
     resolution: {integrity: sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw==}

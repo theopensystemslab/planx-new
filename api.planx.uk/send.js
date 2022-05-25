@@ -1,7 +1,7 @@
-const convert = require("xml-js");
 const fs = require("fs");
 const AdmZip = require("adm-zip");
 const stringify = require("csv-stringify");
+const str = require("string-to-stream");
 
 // Generate a .zip folder containing an XML (schema specified by Uniform), CSV (our own format) and any user uploaded files
 //   Eventually, drop the .zip on an FTP server corresponding to that council's Uniform/IDOX instance so it can be picked up & parsed later
@@ -24,7 +24,7 @@ const sendToUniform = (req, res, next) => {
     });
 
     // build a CSV, write it locally, add it to the zip
-    const csvPath = "test.csv";
+    const csvPath = "application.csv";
     const csvFile = fs.createWriteStream(csvPath);
     const csvStream = stringify(req.body.csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
     csvStream.on("finish", () => {
@@ -34,11 +34,16 @@ const sendToUniform = (req, res, next) => {
       deleteFile(csvPath);
     });
 
-    // build an XML file, add it directly to the zip
-    const options = { compact: true, spaces: 4, fullTagEmptyElement: true };
-    const xml = convert.json2xml(req.body.xml, options);
-    zip.addFile("test.xml", Buffer.from(xml, "utf-8"));
-    console.log(`Generated test.xml and added to zip`);
+    // build the XML file from a string, write it locally, add it to the zip
+    const xmlPath = "proposal.xml"; // this file name is required by idox/uniform
+    const xmlFile = fs.createWriteStream(xmlPath);
+    const xmlStream = str((req.body.xml).trim()).pipe(xmlFile);
+    xmlStream.on("finish", () => {
+      zip.addLocalFile(xmlPath);
+      console.log(`Generated ${xmlPath} and added to zip`);
+      // cleanup
+      deleteFile(xmlPath);
+    });
 
     // generate & save zip locally (**for now while we wait for Uniform connection details**)
     //   XXX using a timeout here to ensure various file streams have completed, but probably better way??

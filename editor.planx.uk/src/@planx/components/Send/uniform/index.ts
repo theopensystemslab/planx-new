@@ -1,10 +1,9 @@
 import omit from "lodash/omit";
-import { GovUKPayment } from "types";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
-import { GOV_PAY_PASSPORT_KEY } from "../../Pay/model";
 import { getParams } from "../bops";
-import { CSVData, UniformPayload } from "../model";
+import { CSVData } from "../model";
+import { makeXmlString } from "./xml";
 
 export function getUniformParams(
   breadcrumbs: Store.breadcrumbs,
@@ -44,121 +43,9 @@ export function getUniformParams(
 
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlData(passport, sessionId),
+    xml: makeXmlString(passport, sessionId),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
     files: uniqueFiles,
-  };
-}
-
-// map passport variables to their corresponding XML field
-//  returns a typed JSON representation of the XML
-function makeXmlData(
-  passport: Store.passport,
-  sessionId: string
-): UniformPayload {
-  const payment = passport.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
-
-  return {
-    _declaration: {
-      _attributes: {
-        version: "1.0",
-        encoding: "utf-8",
-      },
-    },
-    Envelope: {
-      Body: {
-        CreateDcApplication: {
-          SubmittedDcApplication: {
-            ApplicationIdentification: sessionId,
-            SiteLocation: {
-              Address:
-                passport.data?.["_address"]?.["single_line_address"] || "", // may need to replace commas with line breaks?
-            },
-            TypeOfApplication: {
-              ApplicationType: passport.data?.["application.type"] || "LDC",
-              ApplicationType_Text:
-                "Lawful Development Certificate submitted via RIPA", // ??
-            },
-            Proposal: passport.data?.["proposal.description"] || "",
-            ApplicantDetails: {
-              ApplicantName:
-                [
-                  passport.data?.["applicant.title"],
-                  passport.data?.["applicant.name.first"],
-                  passport.data?.["applicant.name.last"],
-                ]
-                  .filter(Boolean)
-                  .join(" ") || "",
-              ApplicantPhoneNumber:
-                passport.data?.["applicant.phone.primary"] || "",
-              ApplicantAddress:
-                [
-                  passport.data?.["applicant.address.line1"],
-                  passport.data?.["applicant.address.line2"],
-                  passport.data?.["applicant.address.town"],
-                  passport.data?.["applicant.address.county"],
-                  passport.data?.["applicant.address.postcode"],
-                  passport.data?.["applicant.address.country"],
-                ]
-                  .filter(Boolean)
-                  .join(", ") || "",
-              ApplicantContactDetails: {
-                ApplicantContactDetail: {
-                  ContactTypeCode: passport.data?.["applicant.email"]
-                    ? "EMAIL"
-                    : "",
-                  ContactAddress: passport.data?.["applicant.email"] || "",
-                },
-              },
-            },
-            AgentDetails: {
-              AgentName:
-                [
-                  passport.data?.["agent.title"],
-                  passport.data?.["agent.name.first"],
-                  passport.data?.["agent.name.last"],
-                ]
-                  .filter(Boolean)
-                  .join(" ") || "",
-              AgentPhoneNumber: passport.data?.["agent.phone.primary"] || "",
-              AgentAddress:
-                [
-                  passport.data?.["agent.address.line1"],
-                  passport.data?.["agent.address.line2"],
-                  passport.data?.["agent.address.town"],
-                  passport.data?.["agent.address.county"],
-                  passport.data?.["agent.address.postcode"],
-                  passport.data?.["agent.address.country"],
-                ]
-                  .filter(Boolean)
-                  .join(", ") || "",
-              AgentContactDetails: {
-                AgentContactDetail: {
-                  ContactTypeCode: passport.data?.["agent.email"]
-                    ? "EMAIL"
-                    : "",
-                  ContactAddress: passport.data?.["agent.email"] || "",
-                },
-              },
-            },
-            ApplicationFee: {
-              FeeAmount: passport?.data?.["application.fee"] || "",
-              PaymentDetails: {
-                AmountReceived: payment?.amount.toString() || "",
-                PaymentMethod: "ONLINE", // GOV_PAY ??
-              },
-            },
-            ParkingProvision: "",
-            ClassifiedRoads: "",
-            ResidentialDetails: "",
-            FloorspaceDetails: "",
-            LandUse: "",
-            EmploymentDetails: "",
-            ListedBuilding: "",
-          },
-        },
-      },
-    },
   };
 }
 
