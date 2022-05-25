@@ -7,6 +7,8 @@ config:
   application:bops-api-token:
     secure: AAABALRtSjQMRjERtkHs6WBOI7MBMw4bFOuHO8qLLPe9Pfg8Nlbp61XalZA1pmXsRt/T+59fGcdqbKA5WRkOZVibhFo=
   application:cloudflare-zone-id: a9b9933f28e786ec4cfd4bb596f5a519
+  application:file-upload-hashing-salt:
+    secure: AAABAFm1XRyFN9emeEuiTH+ZSgLeugKXyJpPWUUPN1FhJuaksMzTp2SUAXF7GNECj6f71lgKrhjvJAKtowVr5Atdd6Dhq8A0k3MU3w==
   application:google-client-id: 987324067365-anl1o207sphdeu28i6nk2e6brec8fh4b.apps.googleusercontent.com
   application:google-client-secret:
     secure: AAABALntYyY84++A0XpyAVtDxhiCeAMv/vN1A1VxGZ2beTzyAqHeEicfpvKwCOQisgQ0wnBLomQ=

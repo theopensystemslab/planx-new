@@ -338,6 +338,10 @@ new pulumi.Config("cloudflare").require("apiToken");
           },
           { name: "AWS_S3_ACL", value: "public-read" },
           {
+            name: "FILE_UPLOAD_HASHING_SALT",
+            value: config.require("file-upload-hashing-salt"),
+          },
+          {
             name: "GOOGLE_CLIENT_ID",
             value: config.require("google-client-id"),
           },
