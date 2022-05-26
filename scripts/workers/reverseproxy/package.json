@@ -1,0 +1,25 @@
+{
+  "name": "worker",
+  "source": "src/worker.ts",
+  "main": "dist/worker.js",
+  "scripts": {
+    "build": "rimraf dist && parcel build",
+    "dev": "miniflare ./dist/worker.js --watch --debug"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^3.11.0",
+    "miniflare": "^2.4.0",
+    "parcel": "^2.6.0",
+    "rimraf": "^3.0.2"
+  },
+  "dependencies": {
+    "reflare": "^1.0.1"
+  },
+  "targets": {
+    "default": {
+      "sourceMap": false,
+      "context": "service-worker"
+    },
+    "main": false
+  }
+}
