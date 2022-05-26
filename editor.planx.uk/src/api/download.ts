@@ -2,7 +2,7 @@ export { downloadFile };
 
 async function downloadFile(fileKey: string, fileHash: string) {
   const res = await fetch(
-    `${process.env.REACT_APP_API_URL}/file/public/${fileKey}`,
+    `${process.env.REACT_APP_API_URL}/file/private/${fileKey}`,
     {
       method: "GET",
       headers: {

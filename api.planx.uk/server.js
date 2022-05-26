@@ -21,7 +21,7 @@ const {
 } = require("http-proxy-middleware");
 const multer = require('multer');
 
-const { getFileFromS3, uploadFile } = require("./s3");
+const { getFileFromS3, uploadPublicFile, uploadPrivateFile, validateFileHash } = require("./s3");
 const { locationSearch } = require("./gis/index");
 const { diffFlow, publishFlow } = require("./publish");
 const { findAndReplaceInFlow } = require("./findReplace");
@@ -500,27 +500,14 @@ app.post("/download-application", async (req, res, next) => {
   }
 });
 
-async function handleFileUpload(file, filename) {
-  const { fileType, key } = await uploadFile(file, filename);
-
-  return {
-    file_type: fileType,
-    key,
-  }
-}
-
 app.post("/private-file-upload", multer().single('file'), async (req, res, next) => {
   if (!req.body.filename) next({ status: 422, message: "missing filename" });
   if (!req.file) next({ status: 422, message: "missing file" });
 
   try {
-    const fileResponse = await handleFileUpload(req.file, req.body.filename);
+    const fileResponse = await uploadPrivateFile(req.file, req.body.filename);
 
-    res.json({
-      ...fileResponse,
-      file_hash: generateFileHash(fileResponse.key)
-    });
-
+    res.json(fileResponse);
   } catch (err) {
     next(err);
   }
@@ -531,7 +518,7 @@ app.post("/public-file-upload", multer().single('file'), async (req, res, next) 
   if (!req.file) next({ status: 422, message: "missing file" });
 
   try {
-    const fileResponse = await handleFileUpload(req.file, req.body.filename);
+    const fileResponse = await uploadPublicFile(req.file, req.body.filename);
 
     res.json(fileResponse);
   } catch (err) {
@@ -547,7 +534,9 @@ app.get("/file/public/:fileKey/:fileName", async (req, res, next) => {
   }
 
   try {
-    const { body, headers } = await getFileFromS3(filePath);
+    const { body, headers, file_hash } = await getFileFromS3(filePath);
+
+    if (file_hash) return next({ status: 400, message: "bad request" });
 
     res.set(headers);
     res.send(body);
@@ -560,22 +549,27 @@ app.get("/file/public/:fileKey/:fileName", async (req, res, next) => {
 app.get("/file/private/:fileKey/:fileName", async (req, res, next) => {
   const filePath = buildFilePath(req.params.fileKey, req.params.fileName);
 
-  if (filePath) {
+  if (!filePath) {
     return next({ status: 404, message: "file not found" });
   }
 
-  const fileHash = req.headers['file-hash'];
+  const providedFileHash = req.headers['file-hash'];
 
-  if (!fileHash) {
+  if (!providedFileHash) {
     return next({ status: 400, message: "wrong or missing headers" });
   }
 
-  if (!validateFileHash(filePath, fileHash)) {
+  // XXX: If the variable `FILE_UPLOAD_HASH_SALT` ever changes, and we need to keep old URLs valid, we could drop this check and rely solely on checking against the file's metadata below. We've added this extra check here to avoid downloading unnecessary files into memory, which also avoids unnecessary AWS S3 charges.
+  if (!validateFileHash(filePath, providedFileHash)) {
     return next({ status: 403, message: "unauthorized" });
   }
 
   try {
-    const { body, headers } = await getFileFromS3(fileKey);
+    const { body, headers, file_hash } = await getFileFromS3(filePath);
+
+    if (providedFileHash !== file_hash) {
+      return next({ status: 403, message: "unauthorized" });
+    }
 
     res.set(headers);
     res.send(body);
@@ -686,16 +680,6 @@ function usePayProxy(options, req) {
     },
     ...options,
   });
-}
-
-function validateFileHash(fileKey, hash) {
-  return hash === generateFileHash(fileKey);
-}
-
-function generateFileHash(fileKey) {
-  return require('crypto').createHash('sha256')
-    .update(`${fileKey}${process.env.FILE_UPLOAD_HASHING_SALT}`)
-    .digest('hex');
 }
 
 function buildFilePath(fileKey, fileName) {
