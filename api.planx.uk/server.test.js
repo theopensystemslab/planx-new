@@ -201,32 +201,8 @@ describe("fetching status of a GOV.UK payment", () => {
   });
 });
 
-describe("fetching GIS data from local authorities", () => {
+describe("fetching GIS data from local authorities directly", () => {
   const locations = [
-    {
-      council: "buckinghamshire",
-      x: 485061.33649798,
-      y: 191930.3763250516,
-      siteBoundary: [],
-    },
-    {
-      council: "canterbury",
-      x: 621192.0132463141,
-      y: 157770.55052344775,
-      siteBoundary: [],
-    },
-    {
-      council: "lambeth",
-      x: 530622.7463248332,
-      y: 178706.16704920324,
-      siteBoundary: [],
-    },
-    {
-      council: "southwark",
-      x: 532700,
-      y: 175010,
-      siteBoundary: [],
-    },
     {
       council: "braintree",
       x: 575629.54,
@@ -235,7 +211,7 @@ describe("fetching GIS data from local authorities", () => {
     },
   ];
 
-  loadOrRecordNockRequests("fetching-gis-data", locations);
+  loadOrRecordNockRequests("fetching-direct-gis-data", locations);
 
   locations.forEach((location) => {
     it(`returns MVP planning constraints for ${location.council}`, async () => {
@@ -246,6 +222,42 @@ describe("fetching GIS data from local authorities", () => {
           expect(res.body["article4"]).toBeDefined();
           expect(res.body["listed"]).toBeDefined();
           expect(res.body["designated.conservationArea"]).toBeDefined();
+        });
+    }, 20_000); // 20s request timeout
+  });
+});
+
+describe("fetching GIS data from Digital Land for supported local authorities", () => {
+  const locations = [
+    {
+      council: "buckinghamshire",
+      geom: "POINT(-1.0498956 51.8547901)"
+    },
+    {
+      council: "canterbury",
+      geom: "POINT(1.0803887 51.2811746)",
+    },
+    {
+      council: "lambeth",
+      geom: "POINT(-0.1198903 51.4922191)",
+    },
+    {
+      council: "southwark",
+      geom: "POINT(-0.0887039 51.5021734)",
+    },
+  ];
+
+  loadOrRecordNockRequests("fetching-digital-land-gis-data", locations);
+
+  locations.forEach((location) => {
+    it(`returns MVP planning constraints from Digital Land for ${location.council}`, async () => {
+      await supertest(app)
+        .get(`/gis/${location.council}?geom=${location.geom}`)
+        .expect(200)
+        .then((res) => {
+          expect(res.body["constraints"]["article4"]).toBeDefined();
+          expect(res.body["constraints"]["listed"]).toBeDefined();
+          expect(res.body["constraints"]["designated.conservationArea"]).toBeDefined();
         });
     }, 20_000); // 20s request timeout
   });

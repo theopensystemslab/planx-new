@@ -189,16 +189,38 @@ test("valid node types are serialized correctly for BOPS", () => {
       {
         question: "address question",
         responses: [{ value: "line1, line, town, county, postcode" }],
+        metadata: { portal_name: "_root" },
       },
-      { question: "checklist", responses: [{ value: "1" }, { value: "2" }] },
+      {
+        question: "checklist",
+        responses: [{ value: "1" }, { value: "2" }],
+        metadata: { portal_name: "_root" },
+      },
       {
         question: "expandable checklist question",
         responses: [{ value: "c1" }, { value: "c2" }, { value: "c3" }],
+        metadata: { portal_name: "_root" },
       },
-      { question: "date question", responses: [{ value: "1999-01-01" }] },
-      { question: "number question", responses: [{ value: "500" }] },
-      { question: "regular question", responses: [{ value: "a1" }] },
-      { question: "text question", responses: [{ value: "testanswer" }] },
+      {
+        question: "date question",
+        responses: [{ value: "1999-01-01" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "number question",
+        responses: [{ value: "500" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "regular question",
+        responses: [{ value: "a1" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "text question",
+        responses: [{ value: "testanswer" }],
+        metadata: { portal_name: "_root" },
+      },
     ],
   };
 
