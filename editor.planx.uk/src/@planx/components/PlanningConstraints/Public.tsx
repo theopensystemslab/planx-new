@@ -14,6 +14,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ReactHtmlParser from "react-html-parser";
 import { useCurrentRoute } from "react-navi";
+import { externalTeamName, isExternalUrl } from "routes/utils";
 import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
 import { stringify } from "wkt";

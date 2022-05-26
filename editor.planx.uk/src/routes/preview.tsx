@@ -21,6 +21,8 @@ import React from "react";
 import { View } from "react-navi";
 import { Flow, GlobalSettings, Maybe } from "types";
 
+import { externalTeamName, isExternalUrl } from "./utils";
+
 const routes = compose(
   withData((req) => ({
     mountpath: req.mountpath,
@@ -56,7 +58,7 @@ const routes = compose(
       `,
       variables: {
         flowSlug: req.params.flow.split(",")[0],
-        teamSlug: req.params.team,
+        teamSlug: isExternalUrl ? externalTeamName : req.params.team,
       },
     });
 

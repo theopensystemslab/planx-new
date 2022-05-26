@@ -1,4 +1,5 @@
 import { TYPES } from "@planx/components/types";
+import { isExternalUrl } from "routes/utils";
 import create from "zustand";
 import vanillaCreate, { StoreApi } from "zustand/vanilla";
 
@@ -41,7 +42,7 @@ type FullStore = SharedStore & PreviewStore & EditorStore & EditorUIStore;
 
 export const { vanillaStore, useStore } = (() => {
   const vanillaStore: StoreApi<FullStore> = (() => {
-    if (window?.location?.href?.includes("/preview")) {
+    if (isExternalUrl || window?.location?.href?.includes("/preview")) {
       // if accessing the public preview, don't load editor store files
       return vanillaCreate<SharedStore & PreviewStore>((set, get) => ({
         ...sharedStore(set, get),

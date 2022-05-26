@@ -4,7 +4,7 @@ import * as React from "react";
 import { client } from "../lib/graphql";
 import Login from "../pages/Login";
 import NetworkError from "../pages/NetworkError";
-import { makeTitle } from "./utils";
+import { isExternalUrl, makeTitle } from "./utils";
 
 type RoutingContext = {
   currentUser?: any;
@@ -56,8 +56,13 @@ const editorRoutes = mount({
   ),
 });
 
-export default mount({
-  "/:team/:flow/preview": lazy(() => import("./preview")), // loads published flow if exists, or current flow
-  "/:team/:flow/unpublished": lazy(() => import("./unpublished")), // loads current flow
-  "*": editorRoutes,
-});
+export default isExternalUrl
+  ? mount({
+      "/:flow": lazy(() => import("./preview")),
+      "/": redirect("/find-out-if-you-need-planning-permission"),
+    })
+  : mount({
+      "/:team/:flow/preview": lazy(() => import("./preview")), // loads published flow if exists, or current flow
+      "/:team/:flow/unpublished": lazy(() => import("./unpublished")), // loads current flow
+      "*": editorRoutes,
+    });

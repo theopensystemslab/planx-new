@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
 import { useCurrentRoute } from "react-navi";
+import { externalTeamName, isExternalUrl } from "routes/utils";
 import { Team } from "types";
 
 export function removeAt<T>(index: number, arr: Array<T>): Array<T> {
@@ -71,7 +72,10 @@ export const GET_TEAM_QUERY = gql`
 
 export const fetchCurrentTeam = (): Team | undefined => {
   const route = useCurrentRoute();
-  const team = route?.data?.team ?? route?.data.mountpath.split("/")[1];
+  const team =
+    route?.data?.team ?? isExternalUrl
+      ? externalTeamName
+      : route?.data.mountpath.split("/")[1];
   const { data } = useQuery(GET_TEAM_QUERY, {
     skip: !Boolean(team),
     variables: {

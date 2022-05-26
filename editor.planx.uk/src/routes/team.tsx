@@ -5,7 +5,7 @@ import React from "react";
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
 import Team from "../pages/Team";
-import { makeTitle } from "./utils";
+import { externalTeamName, makeTitle } from "./utils";
 
 let cached: { flowSlug?: string; teamSlug?: string } = {
   flowSlug: undefined,
@@ -14,7 +14,7 @@ let cached: { flowSlug?: string; teamSlug?: string } = {
 
 const routes = compose(
   withData((req) => ({
-    team: req.params.team,
+    team: req.params.team || externalTeamName,
   })),
 
   mount({
