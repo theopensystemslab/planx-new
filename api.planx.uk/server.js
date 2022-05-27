@@ -573,6 +573,9 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
   res.send();
 });
 
+// Ensure that Reminder and Expiry emails can only be triggered by Hasura scheduled events
+const useSendEmailAuth = (req, res, next) => (["reminder", "expiry"].includes(req.params.template)) ? useHasuraAuth(req, res, next) : next();
+
 // assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
 // assert(process.env.GOVUK_NOTIFY_API_KEY_TEST);
 app.post("/send-email/:template", useSendEmailAuth, sendSaveAndReturnEmail);
