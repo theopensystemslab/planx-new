@@ -2,6 +2,7 @@ const convert = require("xml-js");
 const fs = require("fs");
 const AdmZip = require("adm-zip");
 const stringify = require("csv-stringify");
+const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
 
 // Generate a .zip folder containing an XML (schema specified by Uniform), CSV (our own format) and any user uploaded files
 //   Eventually, drop the .zip on an FTP server corresponding to that council's Uniform/IDOX instance so it can be picked up & parsed later
@@ -47,6 +48,9 @@ const sendToUniform = (req, res, next) => {
       zip.writeZip(downloadName);
       res.status(200).send({ message: "Generated zip", fileName: downloadName });
     }, 5000);
+
+    // Mark session as submitted so that reminder and expiry emails are not triggered
+    markSessionAsSubmitted(req.body.sessionId);
   } catch (err) {
     next(err);
   }

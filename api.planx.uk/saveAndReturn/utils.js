@@ -1,8 +1,7 @@
 const { GraphQLClient } = require("graphql-request");
 const { NotifyClient } = require("notifications-node-client");
-const fs = require('fs');
-
-const { format } = require('date-fns');
+const fs = require("fs");
+const { format } = require("date-fns");
 
 const singleSessionEmailTemplates = {
   save: process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID,
@@ -119,6 +118,7 @@ const sendSingleApplicationEmail = async (res, template, email, sessionId) => {
     // emailReplyToId: team.emailReplyToId,
   };
   if (template === "expiry") {
+    softDeleteSession(sessionId);
     sendEmailWithAttachment(template, email, config, res);
   } else {
     sendEmail(template, email, config, res);
@@ -136,21 +136,29 @@ const validateSingleSessionRequest = async (email, sessionId) => {
   try {
     const client = getGraphQLClient();
     const query = `
-      query ValidateSingleSessionRequest($email: String, $sessionId: uuid!) {
-        lowcal_sessions(where: {email: {_eq: $email}, id: {_eq: $sessionId}}) {
-          id
-          data
-          expiry_date
-          flow {
+    query ValidateSingleSessionRequest($email: String, $sessionId: uuid!) {
+      lowcal_sessions(
+        where: {
+          email: { _eq: $email }
+          id: { _eq: $sessionId }
+          deleted_at: { _is_null: true }
+          submitted_at: { _is_null: true }
+        }
+      ) {
+        id
+        data
+        expiry_date
+        flow {
+          slug
+          team {
+            name
             slug
-            team {
-              name
-              slug
-              notifyPersonalisation
-            }
+            notifyPersonalisation
           }
         }
       }
+    }
+    
     `
     const { lowcal_sessions: [session] } = await client.request(query, { email: email.toLowerCase(), sessionId });
 
@@ -231,6 +239,48 @@ const sendEmailWithAttachment = async (template, email, config, res) => {
   });
 };
 
+/**
+ * Mark a lowcal_session record as deleted
+ * Sessions older than a week cleaned up nightly by cron job delete_expired_sessions on Hasura
+ * @param {string} sessionId 
+ */
+const softDeleteSession = async (sessionId) => {
+  try {
+    const client = getGraphQLClient();
+    const mutation = `
+      mutation SoftDeleteLowcalSession($sessionId: uuid!) {
+        update_lowcal_sessions_by_pk(pk_columns: {id: $sessionId}, _set: {deleted_at: "now()"}){
+          id
+        }
+      }
+    `
+    await client.request(mutation, { sessionId });
+  } catch (error) {
+    throw new Error(`Error deleting session ${sessionId}`);
+  };
+};
+
+/**
+ * Mark a lowcal_session record as submitted
+ * Sessions older than a week cleaned up nightly by cron job delete_expired_sessions on Hasura
+ * @param {string} sessionId 
+ */
+ const markSessionAsSubmitted = async (sessionId) => {
+  try {
+    const client = getGraphQLClient();
+    const mutation = `
+      mutation MarkSessionAsSubmitted($sessionId: uuid!) {
+        update_lowcal_sessions_by_pk(pk_columns: {id: $sessionId}, _set: {submitted_at: "now()"}){
+          id
+        }
+      }
+    `
+    await client.request(mutation, { sessionId });
+  } catch (error) {
+    throw new Error(`Error marking session ${sessionId} as submitted`);
+  };
+};
+
 module.exports = {
   getNotifyClient,
   getGraphQLClient,
@@ -240,4 +290,6 @@ module.exports = {
   formatDate,
   sendSingleApplicationEmail,
   singleSessionEmailTemplates,
+  softDeleteSession,
+  markSessionAsSubmitted,
 };
