@@ -1,4 +1,4 @@
-const { getGraphQLClient, sendEmail, convertSlugToName, getResumeLink, formatDate } = require("./utils");
+const { getGraphQLClient, sendEmail, convertSlugToName, getResumeLink, calculateExpiryDate } = require("./utils");
 
 const resumeApplication = async (req, res, next) => {
   try {
@@ -38,10 +38,10 @@ const validateRequest = async (teamSlug, email, res) => {
             deleted_at: { _is_null: true }
             submitted_at: { _is_null: true }
           }
-          order_by: { flow: { slug: asc }, expiry_date: asc }
+          order_by: { flow: { slug: asc }, created_at: asc }
         ) {
           id
-          expiry_date
+          created_at
           flow {
             slug
           }
@@ -88,7 +88,7 @@ const buildContentFromSessions = (sessions, teamSlug) => {
     // TODO: Get human readable values here     
     const projectType = session?.data?.passport?.data?.["proposal.projectType"]?.join(", ")
     const resumeLink = getResumeLink(session, teamSlug, session.flow.slug)
-    const expiryDate = formatDate(session.expiry_date);
+    const expiryDate = calculateExpiryDate(session.created_at);
 
     return `Service: ${service}
       Address: ${address || "Address not submitted"}

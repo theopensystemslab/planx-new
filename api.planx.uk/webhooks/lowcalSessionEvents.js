@@ -1,7 +1,6 @@
 const { addDays } = require("date-fns");
 const { createScheduledEvent } = require("../hasura/metadata");
-
-const DAYS_UNTIL_EXPIRY = 28;
+const { DAYS_UNTIL_EXPIRY } = require("../saveAndReturn/utils");
 
 /**
  * Create a "reminder" event for a lowcal_session record
