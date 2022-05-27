@@ -4,6 +4,7 @@ import { add } from "date-fns";
 import { getCookie } from "lib/cookie";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
+import { SendEmailPayload } from "types";
 
 import StatusPage from "./StatusPage";
 
@@ -53,18 +54,13 @@ const SavePage: React.FC = () => {
   const [expiryDate, setExpiryDate] = useState<string>(placeholderExpiryDate);
 
   const sendNotifyEmail = async () => {
-    const url = `${process.env.REACT_APP_API_URL}/send-email`;
+    const url = `${process.env.REACT_APP_API_URL}/send-email/save`;
     const { sessionId } = useStore.getState();
-    // TODO: Type for this?
-    const data = { email: saveToEmail, template: "save", sessionId };
-    const token = getCookie("jwt");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const data: SendEmailPayload = {
+      payload: { email: saveToEmail, sessionId },
     };
     try {
-      const response = await axios.post(url, data, config);
+      const response = await axios.post(url, data);
       setPageStatus(Status.Success);
       setExpiryDate(response?.data?.expiryDate || placeholderExpiryDate);
     } catch (error) {
