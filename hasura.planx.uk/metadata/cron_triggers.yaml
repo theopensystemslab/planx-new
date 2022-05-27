@@ -1,5 +1,5 @@
 - name: delete_expired_sessions
-  webhook: '{{HASURA_PLANX_API_URL}}/webhooks/delete-expired-sessions'
+  webhook: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/delete-expired-sessions'
   schedule: 0 2 * * *
   include_in_metadata: true
   payload: {}
