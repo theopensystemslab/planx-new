@@ -305,7 +305,7 @@ export const previewStore = (
       );
 
       const shouldRemovedChangedNode = Object.keys(nextBreadcrumbs).some(
-        (key) => flow[key].type === TYPES.Review
+        (key) => flow[key]?.type === TYPES.Review
       );
       set({
         breadcrumbs: sortedBreadcrumbs,

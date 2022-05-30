@@ -53,7 +53,6 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.Flow:
     case TYPES.InternalPortal:
     case TYPES.Notice:
-    case TYPES.Notify:
     case TYPES.Pay:
     case TYPES.PlanningConstraints:
     case TYPES.Response:
@@ -77,6 +76,30 @@ function isTypeForBopsPayload(type?: TYPES) {
       throw new Error(`Unhandled type: ${type}`);
   }
 }
+
+// For a given node (a "Question"), recursively scan the flow schema to find which portal it belongs to
+//   and add the portal_name to the QuestionMetadata so BOPS can group proposal_details
+const addPortalName = (
+  id: string,
+  flow: Store.flow,
+  metadata: QuestionMetaData
+): QuestionMetaData => {
+  if (id === "_root") {
+    metadata.portal_name = "_root";
+  } else if (flow[id]?.type === 300) {
+    // internal & external portals are both type 300 after flattening (ref dataMergedHotFix)
+    metadata.portal_name = flow[id]?.data?.text || id;
+  } else {
+    // if the current node id is not the root or a portal, then find its' next parent node and so on until we hit a portal
+    Object.entries(flow).forEach(([nodeId, node]) => {
+      if (node.edges?.includes(id)) {
+        addPortalName(nodeId, flow, metadata);
+      }
+    });
+  }
+
+  return metadata;
+};
 
 export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
   Object.entries(breadcrumbs)
@@ -142,7 +165,7 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
         responses,
       };
 
-      const metadata: QuestionMetaData = {};
+      let metadata: QuestionMetaData = {};
       if (bc.auto) metadata.auto_answered = true;
       if (flow[id]?.data?.policyRef) {
         metadata.policy_refs = [
@@ -150,6 +173,8 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
           { text: flow[id].data.policyRef.replace(/<[^>]*>/g, "").trim() },
         ];
       }
+      metadata = addPortalName(id, flow, metadata);
+
       if (Object.keys(metadata).length > 0) ob.metadata = metadata;
 
       return ob;

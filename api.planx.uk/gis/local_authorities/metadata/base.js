@@ -1,17 +1,35 @@
 // planx schema variables and their attributes (in the future, maybe these are managed in Editor?)
-// flag as 'active' based on dataset status/availability here https://digital-land-maturity-model.herokuapp.com/performance/
+// flag as 'active' based on dataset status/availability here https://www.digital-land.info/dataset/
 const baseSchema = {
   article4: {
     active: true,
     neg: "is not subject to any Article 4 restrictions",
-    pos: "is subject to Article 4 restriction(s)",
-    "digital-land-datasets": ["article-4-direction"],
+    pos: "is subject to Article 4 restrictions",
+    "digital-land-datasets": ["article-4-direction-area"],
+  },
+  "article4.caz": { // will be renamed to `article4.localAuthority.caz` when applicable
+    active: true,
+    neg: "is not in the Central Activities Zone",
+    pos: "is in the Central Activities Zone",
+    "digital-land-datasets": ["central-activities-zone"],
   },
   listed: {
     active: true,
-    neg: "is not in, or within, a Listed Building",
+    neg: "is not, or is not within, a Listed Building",
     pos: "is, or is within, a Listed Building",
-    "digital-land-datasets": ["listed-building", "listed-building-outline", "locally-listed-building"],
+    "digital-land-datasets": ["listed-building", "listed-building-outline"], // HE publishes points, LPAs publish polygons
+  },
+  "locallyListed": {
+    active: false,
+    neg: "is not, or is not within, a Locally Listed Building",
+    pos: "is, or is within, a Locally Listed Building",
+    "digital-land-datasets": ["locally-listed-building"],
+  },
+  "registeredPark": {
+    active: true,
+    neg: "is not in a Historic Park or Garden",
+    pos: "is in a Historic Park or Garden",
+    "digital-land-datasets": ["park-and-garden"],
   },
   "designated.conservationArea": {
     active: true,
@@ -31,11 +49,12 @@ const baseSchema = {
     pos: "is in a National Park",
     "digital-land-datasets": ["national-park"],
   },
-  "designated.broads": {
-    active: false,
+  "designated.nationalPark.broads": {
+    active: true,
     neg: "is not in a Broad",
     pos: "is in a Broad",
-    "digital-land-datasets": ["national-park"] // TODO filter on record within dataset https://www.digital-land.info/entity/520007
+    "digital-land-datasets": ["national-park"],
+    "digital-land-entities": [520007] // https://www.digital-land.info/entity/520007
   },
   "designated.WHS": {
     active: true,
@@ -53,7 +72,7 @@ const baseSchema = {
     active: true,
     neg: "is not in a Tree Preservation Order (TPO) Zone",
     pos: "is in a Tree Preservation Order (TPO) Zone",
-    "digital-land-datasets": ["tree-preservation-order", "tree-preservation-zone"],
+    "digital-land-datasets": ["tree", "tree-preservation-order", "tree-preservation-zone"], // "tree" is points, "-zone" is polygons
   },
   "nature.SSSI": {
     active: true,

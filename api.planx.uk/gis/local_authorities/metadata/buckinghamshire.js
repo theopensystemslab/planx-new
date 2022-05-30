@@ -9,29 +9,20 @@ https://environment.data.gov.uk/arcgis/rest/services
 https://inspire.wycombe.gov.uk/ (legacy)
 */
 
-const bucksDomain = "https://maps.buckscc.gov.uk";
-const environmentDomain = "https://environment.data.gov.uk";
-
 const planningConstraints = {
   article4: {
-    key: "article4",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 5,
-    fields: ["OBJECTID", "INT_ID", "DEV_TYPE", "DESCRIPTIO", "DISTRICT"],
-    neg: "is not subject to any Article 4 restrictions",
-    pos: (data) => ({
-      text: "is subject to Article 4 restriction(s)",
-      description: data.DESCRIPTIO,
-    }),
-    records: { // planx value to "DEV_TYPE" lookup, unless otherwise noted
-      "article4.buckinghamshire.twyfordgrange": 309, // INT_ID
-      "article4.buckinghamshire.ivylane": 318, // INT_ID
-      "article4.buckinghamshire.ruralaylesbury": 320, // INT_ID
-      "article4.buckinghamshire.piddingtonroad": 186731, // INT_ID
-      "article4.buckinghamshire.rockylane": 285884, // INT_ID
-      "article4.buckinghamshire.bridgestreet": 287247, // INT_ID
-      "article4.buckinghamshire.winslowroad": 390975, // INT_ID
+    // Planx granular values link to Buck's source data in the following ways:
+    //   * exact match of Digital Land entity.name after removing line break/return characters (aka "DEV_TYPE" in source data)
+    //   * exact match of DL entity.json.notes ("INT_ID")
+    //   * "starts with" DL entity.json.description ("DESCRIPTIO")
+    records: {
+      "article4.buckinghamshire.twyfordgrange": "309", // INT_ID
+      "article4.buckinghamshire.ivylane": "318", // INT_ID
+      "article4.buckinghamshire.ruralaylesbury": "320", // INT_ID
+      "article4.buckinghamshire.piddingtonroad": "186731", // INT_ID
+      "article4.buckinghamshire.rockylane": "285884", // INT_ID
+      "article4.buckinghamshire.bridgestreet": "287247", // INT_ID
+      "article4.buckinghamshire.winslowroad": "390975", // INT_ID
       "article4.buckinghamshire.amershamroad": "Land to north-west of Amersham Road, Beaconsfield - the erection, construction, maintenance, improvement or alteration of a gate, fence, wall or other means of enclosure",
       "article4.buckinghamshire.amershamroadeast": "Land East of Amersham Road including OS parcel 0006. Means of enclosure.",
       "article4.buckinghamshire.asheridgeroad": "Land Surrounding Asheridge Road Agricultural buildings and mineral working.",
@@ -94,7 +85,7 @@ const planningConstraints = {
       "article4.buckinghamshire.greenstreetfarm.b": "Land at Green Street Farm, Herts and Bucks border Highway access.", // split a/b
       "article4.buckinghamshire.hampdenroad": "Part Field West of Hampden Road - Gates etc, Markets, Racing",
       "article4.buckinghamshire.hollybushcorner": "Land South of Hollybush Corner, Farnham Common - Agricultural",
-      "article4.buckinghamshire.johnsonsfarm": "Land at Johnson’s Farm, North of Chesham Road, Bellingdon Agricultural buildings.",
+      "article4.buckinghamshire.johnsonsfarm": "Land at Johnsons Farm, North of Chesham Road, Bellingdon - Agricultural buildings.",
       "article4.buckinghamshire.junctionhughendenroad": "Junction Hughenden Rd & Cryers Hill Rd - Gates etc, Markets, Racing",
       "article4.buckinghamshire.lakeendroad": "Land between Lake End road and Huntercombe Lane South, Burnham - Development",
       "article4.buckinghamshire.littlekingsash": "Land know as Little Kings Ash Farm and adjoining land at Kingsash and Lee Gate - Agricultural buildings.",
@@ -191,96 +182,6 @@ const planningConstraints = {
       "article4.buckinghamshire.wycombeheathfarmcaravan": "Land at Wycombe Heath Farm, Spurlands End Caravan sites."
     },
   },
-  listed: {
-    key: "listed",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 2,
-    fields: ["OBJECTID", "GRADE", "DESCRIPTIO", "ADDRESS"],
-    neg: "is not in, or within, a Listed Building",
-    pos: (data) => ({
-      text: `is, or is within, a Listed Building Grade ${data[0].GRADE}`,
-      description: data.DESCRIPTIO,
-    }),
-  },
-  "designated.conservationArea": {
-    key: "designated.conservationArea",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 1,
-    fields: ["OBJECTID", "Name", "Desc_", "Grade"],
-    neg: "is not in a Conservation Area",
-    pos: (data) => ({
-      text: "is in a Conservation Area",
-      description: data.Name,
-    }),
-  },
-  "designated.AONB": {
-    key: "designated.AONB",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 4,
-    fields: ["OBJECTID", "NAME", "DESCRIPTIO"],
-    neg: "is not in an Area of Outstanding Natural Beauty",
-    pos: (data) => ({
-      text: "is in an Area of Outstanding Natural Beauty",
-      description: data.NAME,
-    }),
-  },
-  "designated.nationalPark": {
-    key: "designated.nationalPark",
-    source: "manual", // there are no National Parks in Bucks
-    neg: "is not in a National Park",
-  },
-  "designated.broads": {
-    key: "designated.broads",
-    source: "manual", // there are no Broads in Bucks
-    neg: "is not in a Broad",
-  },
-  "designated.WHS": {
-    key: "designated.WHS",
-    source: "manual", // there are no WHS in Bucks
-    neg: "is not an UNESCO World Heritage Site",
-  },
-  "monument": {
-    key: "monument",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 3,
-    fields: ["OBJECTID", "Name", "Desc_"],
-    neg: "is not the site of a Scheduled Ancient Monument",
-    pos: (data) => ({
-      text: "is the site of a Scheduled Ancient Monument",
-      description: data.Name,
-    }),
-  },
-  tpo: {
-    key: "tpo",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 6,
-    fields: ["OBJECTID", "ORDERREF", "STATUS", "COMMENTS"],
-    neg: "is not in a TPO (Tree Preservation Order) zone",
-    pos: (data) => ({
-      text: "is in a TPO (Tree Preservation Order) zone",
-      description: data.COMMENTS,
-    }),
-  },
-  "nature.SSSI": {
-    key: "nature.SSSI",
-    source: bucksDomain,
-    id: "PLANNING/RIPA_BOPS",
-    serverIndex: 0,
-    fields: ["OBJECTID", "sssi_name"],
-    neg: "is not a Site of Special Scientific Interest",
-    pos: (data) => ({
-      text: "is a Site of Special Scientific Interest",
-      description: data.sssi_name,
-    }),
-  },
-  "defence.explosives": { value: false },
-  "defence.safeguarded": { value: false },
-  hazard: { value: false },
 };
 
 module.exports = {

@@ -361,16 +361,6 @@ app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
   )(req, res);
 });
 
-app.use(
-  "/notify/*",
-  useProxy({
-    pathRewrite: {
-      "^/notify": "",
-    },
-    target: "https://api.notifications.service.gov.uk",
-  })
-);
-
 // needed for storing original URL to redirect to in login flow
 app.use(
   cookieSession({

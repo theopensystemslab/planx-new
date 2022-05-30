@@ -5,7 +5,6 @@ declare module "js-cookie";
 declare module "nanoid-good";
 declare module "nanoid-good/locale/en";
 declare module "react-html-parser";
-declare module "notifications-node-client";
 declare module "draftjs-to-html";
 declare module "wait-for-expect";
 declare module "mathjs";

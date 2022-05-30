@@ -11,7 +11,6 @@ import Filter from "@planx/components/Filter/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
 import InternalPortal from "@planx/components/InternalPortal/Editor";
 import Notice from "@planx/components/Notice/Editor";
-import Notify from "@planx/components/Notify/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
 import Pay from "@planx/components/Pay/Editor";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Editor";
@@ -46,7 +45,6 @@ const components: {
   flow: EmptyComponent,
   "internal-portal": InternalPortal,
   notice: Notice,
-  notify: Notify,
   "number-input": NumberInput,
   pay: Pay,
   "planning-constraints": PlanningConstraints,

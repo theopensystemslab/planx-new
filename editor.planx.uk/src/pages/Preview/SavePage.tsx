@@ -21,10 +21,8 @@ const SaveSuccess: React.FC<{ saveToEmail?: string; expiryDate?: string }> = ({
     <>
       <StatusPage
         bannerHeading="Application saved"
-        bannerText={`We have sent a link to ${saveToEmail}. Use that link to continue
-      your application.`}
-        cardText={`You have until ${expiryDate} to complete and submit this application,
-      or it will be deleted to protect your privacy.`}
+        bannerText={`We have sent a link to ${saveToEmail}. Use that link to continue your application.`}
+        cardText={`You have until ${expiryDate} to complete and submit this application, or it will be deleted to protect your privacy.`}
         showDownloadLink
         buttonText="Close Tab"
         onButtonClick={() => window.close()}

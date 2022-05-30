@@ -47,7 +47,13 @@ function Component(props: Props) {
 
   // Configure which planx teams should query Digital Land (or continue to use custom GIS) and set URL params accordingly
   //   In future, Digital Land will theoretically support any UK address and this list won't be necessary, but data collection still limited to select councils!
-  const digitalLandOrganisations: string[] = ["opensystemslab"];
+  const digitalLandOrganisations: string[] = [
+    "opensystemslab",
+    "buckinghamshire",
+    "canterbury",
+    "lambeth",
+    "southwark",
+  ];
 
   const digitalLandParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,
@@ -77,7 +83,7 @@ function Component(props: Props) {
     }
   );
 
-  // XXX handle both Digital Land response and custom GIS hookup responses
+  // XXX handle both/either Digital Land response and custom GIS hookup responses
   const constraints: Record<string, any> | undefined =
     data?.constraints || data;
 
@@ -114,6 +120,7 @@ function Component(props: Props) {
             });
           }}
           refreshConstraints={() => mutate()}
+          sourcedFromDigitalLand={digitalLandOrganisations.includes(team)}
         />
       ) : (
         <Card handleSubmit={props.handleSubmit} isValid>
@@ -172,8 +179,14 @@ const useClasses = makeStyles((theme) => ({
 }));
 
 function PlanningConstraintsInformation(props: any) {
-  const { title, description, constraints, handleSubmit, refreshConstraints } =
-    props;
+  const {
+    title,
+    description,
+    constraints,
+    handleSubmit,
+    refreshConstraints,
+    sourcedFromDigitalLand,
+  } = props;
   const formik = useFormik({
     initialValues: {
       feedback: "",
@@ -203,6 +216,7 @@ function PlanningConstraintsInformation(props: any) {
           value={formik.values.feedback}
         >
           <Typography variant="body2" color="inherit">
+            {sourcedFromDigitalLand && `Sourced from Digital Land - DHLUC.`}{" "}
             Report an inaccuracy
           </Typography>
         </CollapsibleInput>

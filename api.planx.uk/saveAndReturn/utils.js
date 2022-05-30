@@ -1,6 +1,5 @@
 const { GraphQLClient } = require("graphql-request");
 const { NotifyClient } = require("notifications-node-client");
-const fs = require('fs');
 
 const { format } = require('date-fns');
 
