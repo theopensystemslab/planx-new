@@ -5,9 +5,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Card from "@planx/components/shared/Preview/Card";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { linkStyle } from "theme";
 import Banner from "ui/Banner";
+
+import { makeCsvData } from "../../@planx/components/Send/uniform";
+import FileDownload from "../../ui/FileDownload";
 
 interface Props {
   bannerHeading: string;
@@ -17,6 +21,7 @@ interface Props {
   onButtonClick?: () => void;
   altButtonText?: string;
   onAltButtonClick?: () => void;
+  showDownloadLink?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -34,7 +39,18 @@ const StatusPage: React.FC<Props> = ({
   onButtonClick,
   altButtonText,
   onAltButtonClick,
+  showDownloadLink,
 }) => {
+  const [breadcrumbs, flow, passport, sessionId] = useStore((state) => [
+    state.breadcrumbs,
+    state.flow,
+    state.computePassport(),
+    state.sessionId,
+  ]);
+
+  // make a CSV data structure based on the payloads we Send to BOPs/Uniform
+  const data = makeCsvData(breadcrumbs, flow, passport, sessionId);
+
   const theme = useTheme();
   const classes = useStyles();
 
@@ -55,6 +71,9 @@ const StatusPage: React.FC<Props> = ({
       </Box>
       <Card>
         <Typography variant="body2">{cardText}</Typography>
+        {showDownloadLink && (
+          <FileDownload data={data} filename={sessionId || "application"} />
+        )}
         {buttonText && (
           <Button
             variant="contained"
