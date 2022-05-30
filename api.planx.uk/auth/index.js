@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const { singleSessionEmailTemplates } = require('../saveAndReturn/utils');
 
 /**
  * Validate that a provided string (e.g. API key) matches the expected value
@@ -7,10 +8,9 @@ const crypto = require('crypto');
  * @returns {boolean}
  */
 const isEqual = (provided = "", expected) => {
-  const hash = crypto.createHash('SHA512');
   return crypto.timingSafeEqual(
-    hash.copy().update(provided).digest(),
-    hash.copy().update(expected).digest()
+    Buffer.from(provided), 
+    Buffer.from(expected)
   );
 };
 
@@ -26,4 +26,32 @@ const useHasuraAuth = (req, res, next) => {
   next();
 };
 
-module.exports = { useHasuraAuth }
+/**
+ * Ensure that the correct permissions are used for the /send-email endpoint
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
+ */
+const useSendEmailAuth = (req, res, next) => {
+  switch (req.params.template) {
+    case "reminder":
+    case "expiry":
+      // Requires authorization - can only be triggered by Hasura scheduled events
+      return useHasuraAuth(req, res, next);
+    case "save":
+      // Public access
+      return next();
+    default:
+      // Invalid template
+      const validTemplates = Object.keys(singleSessionEmailTemplates);
+      return next({
+        status: 400,
+        message: `Invalid template - must be one of [${validTemplates.join(', ')}]`
+      });
+  };
+};
+
+module.exports = { 
+  useHasuraAuth, 
+  useSendEmailAuth,
+};

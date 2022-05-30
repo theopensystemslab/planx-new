@@ -13,12 +13,10 @@ describe("Send Email endpoint", () => {
   });
 
   it("throws an error if required data is missing", () => {
-
     const missingEmail = { payload: { sessionId: 123 } };
     const missingSessionId = { payload: { email: "test" } };
-    const missingTemplate = { payload: { email: "test" } };
 
-    [missingEmail, missingSessionId, missingTemplate].forEach(async (invalidBody) => {
+    [missingEmail, missingSessionId].forEach(async (invalidBody) => {
       await supertest(app)
       .post(SAVE_ENDPOINT)
       .send(invalidBody)
@@ -27,7 +25,6 @@ describe("Send Email endpoint", () => {
         expect(response.body).toHaveProperty("error", "Required value missing");
       });
     })
-
   });
 
   it("sends a Notify email on successful save", async () => {
@@ -77,6 +74,14 @@ describe("Send Email endpoint", () => {
       .then((response) => {
         expect(response.body).toHaveProperty("errors");
       });
+  });
+
+  it("throws an error if the template is missing", async () => {
+    const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
+    await supertest(app)
+      .post("/send-email")
+      .send(data)
+      .expect(404);
   });
 
   it("throws an error if a template is invalid", async () => {

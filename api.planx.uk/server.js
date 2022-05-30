@@ -27,7 +27,7 @@ const { findAndReplaceInFlow } = require("./findReplace");
 const { sendToUniform, downloadUniformZip } = require("./send");
 const { resumeApplication, validateSession, sendSaveAndReturnEmail } = require("./saveAndReturn")
 const { hardDeleteSessions } = require("./webhooks/hardDeleteSessions");
-const { useHasuraAuth } = require("./auth");
+const { useHasuraAuth, useSendEmailAuth } = require("./auth");
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -276,7 +276,7 @@ app.post("/bops/:localAuthority", (req, res) => {
     onProxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {
         // Mark session as submitted so that reminder and expiry emails are not triggered
-        markSessionAsSubmitted(req.body?.planx_debug_data?.session_id)
+        markSessionAsSubmitted(req.body.planx_debug_data.session_id)
 
         const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
 
@@ -572,9 +572,6 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
   if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
   res.send();
 });
-
-// Ensure that Reminder and Expiry emails can only be triggered by Hasura scheduled events
-const useSendEmailAuth = (req, res, next) => (["reminder", "expiry"].includes(req.params.template)) ? useHasuraAuth(req, res, next) : next();
 
 // assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
 // assert(process.env.GOVUK_NOTIFY_API_KEY_TEST);
