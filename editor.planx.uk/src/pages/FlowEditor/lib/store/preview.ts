@@ -2,7 +2,6 @@ import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
 import { TYPES } from "@planx/components/types";
 import { sortIdsDepthFirst } from "@planx/graph";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { client } from "lib/graphql";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import difference from "lodash/difference";
@@ -306,7 +305,7 @@ export const previewStore = (
       );
 
       const shouldRemovedChangedNode = Object.keys(nextBreadcrumbs).some(
-        (key) => flow[key].type === TYPES.Review
+        (key) => flow[key]?.type === TYPES.Review
       );
       set({
         breadcrumbs: sortedBreadcrumbs,

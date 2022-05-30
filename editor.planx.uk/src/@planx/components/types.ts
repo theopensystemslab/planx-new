@@ -22,7 +22,6 @@ export enum TYPES {
   Pay = 400,
   Filter = 500,
   Review = 600,
-  Notify = 625,
   Send = 650,
   Calculate = 700,
   Confirmation = 725,

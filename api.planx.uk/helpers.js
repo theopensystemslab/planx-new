@@ -12,6 +12,7 @@ const getFlowData = async (id) => {
     `
       query GetFlowData($id: uuid!) {
         flows_by_pk(id: $id) {
+          slug
           data
         }
       }
@@ -19,7 +20,7 @@ const getFlowData = async (id) => {
     { id }
   );
 
-  return data.flows_by_pk.data;
+  return data.flows_by_pk;
 };
 
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
@@ -76,7 +77,7 @@ const getPublishedFlowByDate = async (id, created_at) => {
 //        in order to load frontend /preview routes for flows that are not published
 const dataMerged = async (id, ob = {}) => {
   // get the primary flow data
-  const data = await getFlowData(id);
+  const { slug, data } = await getFlowData(id);
 
   // recursively get and flatten internal portals (type 300) & external portals (type 310)
   for (let [nodeId, node] of Object.entries(data)) {
@@ -84,6 +85,7 @@ const dataMerged = async (id, ob = {}) => {
       ob[id] = {
         ...node,
         type: 300,
+        data: { text: slug },
       };
     } else if (node.type === 310 && !ob[node.data.flowId]) {
       await dataMerged(node.data.flowId, ob);

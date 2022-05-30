@@ -8,7 +8,6 @@ import DrawBoundary from "@planx/components/DrawBoundary/Public";
 import FileUpload from "@planx/components/FileUpload/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
-import Notify from "@planx/components/Notify/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
 import { GOV_PAY_PASSPORT_KEY } from "@planx/components/Pay/model";
 import Pay from "@planx/components/Pay/Public";
@@ -158,9 +157,6 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.Notice:
       return <Notice {...allProps} />;
-
-    case TYPES.Notify:
-      return <Notify {...allProps} />;
 
     case TYPES.NumberInput:
       return <NumberInput {...allProps} />;
