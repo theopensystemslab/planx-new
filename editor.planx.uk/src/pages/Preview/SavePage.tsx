@@ -21,10 +21,9 @@ const SaveSuccess: React.FC<{ saveToEmail?: string; expiryDate?: string }> = ({
     <>
       <StatusPage
         bannerHeading="Application saved"
-        bannerText={`We have sent a link to ${saveToEmail}. Use that link to continue
-      your application.`}
-        cardText={`You have until ${expiryDate} to complete and submit this application,
-      or it will be deleted to protect your privacy.`}
+        bannerText={`We have sent a link to ${saveToEmail}. Use that link to continue your application.`}
+        cardText={`You have until ${expiryDate} to complete and submit this application, or it will be deleted to protect your privacy.`}
+        showDownloadLink
         buttonText="Close Tab"
         onButtonClick={() => window.close()}
         altButtonText="Start a new application"
@@ -40,6 +39,7 @@ const SaveError: React.FC = () => {
       bannerHeading="Error sending email"
       bannerText={`We were unable to successfully send an email to the address provided.`}
       cardText="Your application details have been saved, and we will automatically retry periodically to send the email which will allow you to proceed. If you require assistance please contact XXXXX"
+      showDownloadLink
     ></StatusPage>
   );
 };
