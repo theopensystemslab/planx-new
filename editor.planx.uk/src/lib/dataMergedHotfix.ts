@@ -21,7 +21,7 @@ const getFlowData = async (id: string) => {
 };
 
 export const dataMerged = async (
-  id: string, 
+  id: string,
   ob: Record<string, any> = {}
 ): Promise<Record<string, any>> => {
   const { slug, data }: { slug: string; data: Record<string, any> } =
