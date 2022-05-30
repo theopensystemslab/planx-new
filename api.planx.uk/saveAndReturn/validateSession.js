@@ -7,14 +7,14 @@ const client = getGraphQLClient();
 
 const validateSession = async (req, res, next) => {
   try {
-    const { flowId, email, sessionId } = req.body;
-    if (!flowId || !email || !sessionId)
+    const { email, sessionId } = req.body;
+    if (!email || !sessionId)
       return next({
         status: 400,
         message: "Required value missing"
       });
     
-    let sessionData = await findSession(sessionId, email, flowId);
+    let sessionData = await findSession(sessionId, email);
 
     if (sessionData) {
       // reconcile content changes between the published flow state at point of resuming and when the applicant last left off
@@ -82,14 +82,13 @@ const validateSession = async (req, res, next) => {
   }
 };
 
-const findSession = async (id, email, flow_id) => {
+const findSession = async (id, email) => {
   const response = await client.request(`
-    query FindSession($id: uuid!, $email: String!, $flow_id: uuid!) {
+    query FindSession($id: uuid!, $email: String!) {
       lowcal_sessions(
         where: {
           id: {_eq: $id},
           email: {_eq: $email},
-          flow_id: {_eq: $flow_id}
         }, 
         limit: 1
       ) {
@@ -98,7 +97,7 @@ const findSession = async (id, email, flow_id) => {
       }
     }`,
     {
-      id, email, flow_id
+      id, email
     }
   );
 

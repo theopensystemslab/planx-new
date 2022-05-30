@@ -191,7 +191,7 @@ const ResumePage: React.FC = () => {
    */
   const validateSessionId = async () => {
     const url = `${process.env.REACT_APP_API_URL}/validate-session`;
-    const data = { email, sessionId, flowId };
+    const data = { email, sessionId };
     try {
       // Remove sessionId query param from URL before validation request
       //   so that 404/Status.InvalidSession will reload window.location without params on "retry" button
