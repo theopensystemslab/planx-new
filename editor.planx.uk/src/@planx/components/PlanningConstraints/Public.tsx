@@ -216,7 +216,8 @@ function PlanningConstraintsInformation(props: any) {
           value={formik.values.feedback}
         >
           <Typography variant="body2" color="inherit">
-            {sourcedFromDigitalLand && `Sourced from Digital Land - DHLUC.`}{" "}
+            {sourcedFromDigitalLand &&
+              `Sourced from Department for Levelling Up, Housing & Communities.`}{" "}
             Report an inaccuracy
           </Typography>
         </CollapsibleInput>
