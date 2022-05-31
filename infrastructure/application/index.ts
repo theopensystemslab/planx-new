@@ -470,7 +470,7 @@ new pulumi.Config("cloudflare").require("apiToken");
   ];
   const frontendBuckets = DOMAINS.map((domain) => {
     const bucket = new aws.s3.Bucket(
-      `${domain}`,
+      `frontend-${domain}`,
       {
         bucket: domain,
         // TODO: can we remove these cors rules?
