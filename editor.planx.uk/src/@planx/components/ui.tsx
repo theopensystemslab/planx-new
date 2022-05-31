@@ -36,6 +36,7 @@ export interface EditorProps<Type, Data> {
   id?: string;
   handleSubmit?: (data: { type: Type; data: Data }) => void;
   node?: any;
+  setIsValid?: (value: boolean) => void;
 }
 
 export type PublicProps<Data, UserData = {}> = Data & {

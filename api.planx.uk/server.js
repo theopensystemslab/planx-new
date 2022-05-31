@@ -30,6 +30,7 @@ const { sendToUniform, downloadUniformZip } = require("./send");
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
 const airbrake = require("./airbrake");
+const { TYPES } = require("./types");
 
 const router = express.Router();
 
@@ -482,6 +483,18 @@ app.get("/flows/:flowId/download-schema", async (req, res, next) => {
   }
 });
 
+
+app.get("/flows/:flowId/has-review", async (req, res, next) => {
+  try {
+    const { query: { nodeId }, params: { flowId } } = req;
+    const hasReview = await hasReviewComponent(flowId, nodeId);
+    res.json(hasReview);
+  } catch (err) {
+    console.log(err)
+    next(err);
+  }
+});
+
 // allows an applicant to download their application data on the Confirmation page
 app.post("/download-application", async (req, res, next) => {
   if (!req.body) {
@@ -489,7 +502,7 @@ app.post("/download-application", async (req, res, next) => {
       message: "Missing application `data` to download"
     });
   }
-  
+
   try {
     // build a CSV and stream the response
     stringify(req.body, { columns: ["question", "responses", "metadata"], header: true }).pipe(res);
@@ -556,13 +569,13 @@ const trackAnalyticsLogExit = async (id, isUserExit) => {
 
 app.post("/analytics/log-user-exit", async (req, res, next) => {
   const analyticsLogId = Number(req.query.analyticsLogId);
-  if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, true);
+  if (analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, true);
   res.send();
 });
 
 app.post("/analytics/log-user-resume", async (req, res, next) => {
   const analyticsLogId = Number(req.query.analyticsLogId);
-  if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
+  if (analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
   res.send();
 });
 
@@ -611,14 +624,126 @@ function usePayProxy(options, req) {
     onProxyReq: fixRequestBody,
     headers: {
       ...req.headers,
-      Authorization: `Bearer ${
-        process.env[
-          `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
-        ]
-      }`,
+      Authorization: `Bearer ${process.env[
+        `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
+      ]
+        }`,
     },
     ...options,
   });
+}
+
+// XXX: we need nodeId to prevent returning "true" when users are trying to update the review component itself.
+async function hasReviewComponent(
+  flowId,
+  nodeId,
+) {
+  const memoizedFlows = new Set();
+  const { flows_by_pk: flow } = await client.request(
+    `query GetFlowByPK($id: uuid!) {
+      flows_by_pk(id: $id) {
+        team {
+          slug
+        }
+        slug
+        data
+        id
+      }
+    }`,
+    { id: flowId }
+  );
+  memoizedFlows.add(flowId);
+
+  return findReviewComponent(flow, nodeId, 'current');
+
+  async function findReviewComponent(flow, currentNodeId, placement) {
+    const flowData = flow.data;
+    const portalsIds = [];
+
+    for (const [id, node] of Object.entries(flowData)) {
+      if (node.type === TYPES.Review && id !== currentNodeId) return {
+        hasReview: true,
+        placement,
+        slug: `${flow?.team?.slug}/${flow.slug}`
+      };
+
+      if (
+        node.type === TYPES.ExternalPortal && node?.data?.flowId &&
+        !memoizedFlows.has(node.data.flowId)
+      ) {
+        portalsIds.push(node.data.flowId)
+      }
+    }
+
+    const parents = (await findFlowParents(flow.id))
+      .filter(flow => !memoizedFlows.has(flow.id))
+      .map(flow => ({ ...flow, placement: 'parent' }));
+
+    if (portalsIds.length === 0 && parents.length === 0) {
+      return {
+        hasReview: false,
+        placement: "",
+        slug: ""
+      };
+    }
+
+    const portals = await getPortals(portalsIds);
+
+    const flowsToAnalyze = [...parents, ...portals]
+    flowsToAnalyze.forEach(flow => memoizedFlows.add(flow.id));
+
+    const result = await Promise.all(
+      flowsToAnalyze.map(
+        (flow) => findReviewComponent(flow, currentNodeId, flow.placement || 'child')
+      )
+    );
+
+    const flowContainingReview = result.find(res => res.hasReview);
+
+    return {
+      hasReview: flowContainingReview?.hasReview || false,
+      placement: flowContainingReview?.placement || '',
+      slug: flowContainingReview?.slug || ''
+    };
+  };
+}
+
+async function getPortals(portalsIds) {
+  if (!portalsIds.length) return [];
+
+  const { flows: portals } = await client.request(
+    `query GetFlows($ids: [uuid!]!) {
+      flows(where: { id: { _in: $ids } }) {
+        team {
+          name
+        }
+        slug
+        data
+        id
+      }
+    }`,
+    { ids: portalsIds }
+  );
+
+  return portals
+}
+
+async function findFlowParents(flow_id) {
+  const { get_parent_flows: flows } = await client.request(
+    `query GetParents($flow_id: String!) {
+      get_parent_flows(args: {flow_id: $flow_id}) {
+        team {
+          name
+        }
+        slug
+        id
+        data
+      }
+    }`,
+    { flow_id: flow_id }
+  );
+
+  return flows || [];
 }
 
 module.exports = server;

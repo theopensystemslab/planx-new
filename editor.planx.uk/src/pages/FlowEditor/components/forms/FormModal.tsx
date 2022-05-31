@@ -1,3 +1,4 @@
+import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -7,12 +8,14 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/CloseOutlined";
+import { Alert } from "@material-ui/lab";
 import { parseFormValues } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
 import ErrorFallback from "components/ErrorFallback";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigation } from "react-navi";
+import { useAsync } from "react-use";
 import { rootFlowPath } from "routes/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
@@ -33,6 +36,12 @@ const useStyles = makeStyles((theme) => ({
   },
   actions: {
     padding: 0,
+  },
+  errorsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 5,
+    marginBottom: 10,
   },
 }));
 
@@ -100,13 +109,16 @@ const FormModal: React.FC<{
 }> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
   const { navigate } = useNavigation();
   const classes = useStyles();
-  const [addNode, updateNode, node, makeUnique, connect] = useStore((store) => [
+  const [addNode, updateNode, flow, makeUnique, connect] = useStore((store) => [
     store.addNode,
     store.updateNode,
-    store.flow[id],
+    store.flow,
     store.makeUnique,
     store.connect,
   ]);
+  const [isValid, setIsValid] = useState(true);
+  const node = flow[id];
+
   const handleClose = () => navigate(rootFlowPath(true));
 
   return (
@@ -144,36 +156,9 @@ const FormModal: React.FC<{
             node={node}
             {...node?.data}
             {...extraProps}
+            setIsValid={(value: boolean) => setIsValid(value)}
             id={id}
-            handleSubmit={(
-              data: any,
-              children: Array<any> | undefined = undefined
-            ) => {
-              if (typeof data === "string") {
-                connect(parent, data, { before });
-              } else {
-                const parsedData = parseFormValues(Object.entries(data));
-                const parsedChildren =
-                  children?.map((o: any) =>
-                    parseFormValues(Object.entries(o))
-                  ) || undefined;
-
-                if (handleDelete) {
-                  updateNode(
-                    { id, ...parsedData },
-                    { children: parsedChildren }
-                  );
-                } else {
-                  addNode(parsedData, {
-                    children: parsedChildren,
-                    parent,
-                    before,
-                  });
-                }
-              }
-
-              navigate(rootFlowPath(true));
-            }}
+            handleSubmit={handleSubmit}
           />
         </ErrorBoundary>
       </DialogContent>
@@ -215,6 +200,8 @@ const FormModal: React.FC<{
               variant="contained"
               color="primary"
               form="modal"
+              data-testid={`submit-button${isValid ? "-validating" : ""}`}
+              disabled={!isValid}
             >
               {handleDelete ? `Update ${type}` : `Create ${type}`}
             </Button>
@@ -223,6 +210,32 @@ const FormModal: React.FC<{
       </DialogActions>
     </Dialog>
   );
+
+  async function handleSubmit(
+    data: any,
+    children: Array<any> | undefined = undefined
+  ) {
+    if (typeof data === "string") {
+      connect(parent, data, { before });
+    } else {
+      const parsedData = parseFormValues(Object.entries(data));
+      const parsedChildren =
+        children?.map((o: any) => parseFormValues(Object.entries(o))) ||
+        undefined;
+
+      if (handleDelete) {
+        updateNode({ id, ...parsedData }, { children: parsedChildren });
+      } else {
+        addNode(parsedData, {
+          children: parsedChildren,
+          parent,
+          before,
+        });
+      }
+    }
+
+    navigate(rootFlowPath(true));
+  }
 };
 
 export default FormModal;

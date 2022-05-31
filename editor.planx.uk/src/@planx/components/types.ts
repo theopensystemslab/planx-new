@@ -1,3 +1,4 @@
+// XXX: when updating this file, also update `api.planx.uk/types.js`
 export enum TYPES {
   Flow = 1,
   Result = 3,

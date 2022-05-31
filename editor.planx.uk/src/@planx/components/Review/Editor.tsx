@@ -1,4 +1,7 @@
-import { useFormik } from "formik";
+import { flowHasReview } from "api/flowHasReview";
+import WarningMessages from "components/ErrorsWarning";
+import { FormikErrors, useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
@@ -11,6 +14,7 @@ import { EditorProps, ICONS, InternalNotes } from "../ui";
 import { parseContent, Review } from "./model";
 
 type Props = EditorProps<TYPES.Review, Review>;
+type Errors = FormikErrors<Review>;
 
 function Component(props: Props) {
   const formik = useFormik<Review>({
@@ -21,10 +25,18 @@ function Component(props: Props) {
         data: newValues,
       });
     },
+    validate,
+    validateOnChange: false,
+    validateOnMount: true,
   });
+
+  const [flowId] = useStore((state) => [state.id]);
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
+      {Boolean(formik.errors?.title) && (
+        <WarningMessages errors={Object.values(formik.errors)} />
+      )}
       <ModalSection>
         <ModalSectionContent title="Review" Icon={ICONS[TYPES.Review]}>
           <InputRow>
@@ -53,6 +65,26 @@ function Component(props: Props) {
       />
     </form>
   );
+
+  async function validate(): Promise<Errors> {
+    const errors: Errors = {};
+
+    const res = await flowHasReview(flowId, props.id);
+
+    if (res.hasReview) {
+      const message = {
+        child: `The portal ${res.slug} has a review component. Remove the existing review component before adding a new one.`,
+        parent: `The flow ${res.slug} contains a review component and is using this flow or portals present in this flow as portals. Remove the existing review component before adding a new one.`,
+        current:
+          "There is a review component in this flow. Remove the existing review component before adding a new one.",
+      };
+      errors.title = message[res.placement] || "";
+    }
+
+    if (props.setIsValid) props.setIsValid(!errors.title);
+
+    return errors;
+  }
 }
 
 export default Component;

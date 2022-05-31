@@ -4,6 +4,8 @@ const loadOrRecordNockRequests = require("./tests/loadOrRecordNockRequests");
 
 const { queryMock } = require("./tests/graphqlQueryMock");
 const app = require("./server");
+const { flowWithoutReview, FLOW_WITHOUT_REVIEW_ID, flowWithReview, FLOW_WITH_REVIEW_ID, SEARCH_FLOW_ID, searchFlow } = require("./tests/mocks/flowsMocks");
+const { TYPES } = require("./types");
 
 it("works", async () => {
   await supertest(app)
@@ -262,3 +264,323 @@ describe("fetching GIS data from Digital Land for supported local authorities", 
     }, 20_000); // 20s request timeout
   });
 });
+
+describe("validate flow has review", () => {
+
+  const generateEmptyParentMock = () => {
+    queryMock.mockQuery({
+      name: 'GetParents',
+      data: {
+        get_parent_flows: []
+      },
+      matchOnVariables: false,
+      persist: true,
+      variables: {
+        flow_id: ""
+      }
+    });
+  }
+
+  beforeEach(() => {
+    queryMock.reset();
+  });
+
+  it("should return false for a flow without reviews", async () => {
+    generateEmptyParentMock();
+
+    queryMock.mockQuery({
+      name: 'GetFlowByPK',
+      data: {
+        flows_by_pk: {
+          data: flowWithoutReview,
+          id: FLOW_WITHOUT_REVIEW_ID,
+          slug: 'test',
+          team: {
+            slug: 'test-team'
+          }
+        }
+      },
+      variables: {
+        id: FLOW_WITHOUT_REVIEW_ID,
+      }
+    });
+
+    await supertest(app)
+      .get(`/flows/${FLOW_WITHOUT_REVIEW_ID}/has-review`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          hasReview: false,
+          placement: "",
+          slug: ""
+        });
+      })
+  });
+
+  it("should return true for a flow with review", async () => {
+    generateEmptyParentMock();
+
+    queryMock.mockQuery({
+      name: 'GetFlowByPK',
+      data: {
+        flows_by_pk: {
+          data: flowWithReview,
+          id: FLOW_WITH_REVIEW_ID,
+          slug: 'test',
+          team: {
+            slug: 'test-team'
+          }
+        }
+      },
+      variables: {
+        id: FLOW_WITH_REVIEW_ID,
+      }
+    });
+
+    await supertest(app)
+      .get(`/flows/${FLOW_WITH_REVIEW_ID}/has-review`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          hasReview: true,
+          placement: "current",
+          slug: "test-team/test"
+        });
+      })
+  });
+
+  it("should return true for a flow with a review inside a portal", async () => {
+    generateEmptyParentMock();
+
+    queryMock.mockQuery({
+      name: 'GetFlowByPK',
+      data: {
+        flows_by_pk: {
+          data: {
+            ...flowWithoutReview,
+            portal: {
+              type: TYPES.ExternalPortal,
+              data: {
+                flowId: FLOW_WITH_REVIEW_ID,
+              },
+            }
+          },
+          id: FLOW_WITHOUT_REVIEW_ID,
+          slug: 'test',
+          team: {
+            slug: 'test-team'
+          }
+        }
+      },
+      variables: {
+        id: FLOW_WITHOUT_REVIEW_ID,
+      }
+    });
+
+    queryMock.mockQuery({
+      name: 'GetFlows',
+      data: {
+        flows: [{
+          data: flowWithReview,
+          id: FLOW_WITH_REVIEW_ID,
+          slug: 'test-portal',
+          team: {
+            slug: 'test-portal-team'
+          }
+        }]
+      },
+      variables: {
+        ids: [FLOW_WITH_REVIEW_ID]
+      }
+    })
+
+    await supertest(app)
+      .get(`/flows/${FLOW_WITHOUT_REVIEW_ID}/has-review`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          hasReview: true,
+          placement: "child",
+          slug: "test-portal-team/test-portal"
+        });
+      });
+  });
+
+  it("should return false for a with portal but without review", async () => {
+    generateEmptyParentMock();
+
+    queryMock.mockQuery({
+      name: 'GetFlowByPK',
+      data: {
+        flows_by_pk: {
+          data: {
+            ...flowWithoutReview,
+            portal: {
+              type: TYPES.ExternalPortal,
+              data: {
+                flowId: FLOW_WITH_REVIEW_ID,
+              },
+            }
+          },
+          id: FLOW_WITHOUT_REVIEW_ID,
+          slug: 'test',
+          team: {
+            slug: 'test-team'
+          }
+        }
+      },
+      variables: {
+        id: FLOW_WITHOUT_REVIEW_ID,
+      }
+    });
+
+    queryMock.mockQuery({
+      name: 'GetFlows',
+      data: {
+        flows: [{ data: flowWithoutReview, id: FLOW_WITH_REVIEW_ID }]
+      },
+      variables: {
+        ids: [FLOW_WITH_REVIEW_ID]
+      }
+    })
+
+    await supertest(app)
+      .get(`/flows/${FLOW_WITHOUT_REVIEW_ID}/has-review`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          hasReview: false,
+          placement: "",
+          slug: ""
+        });
+      });
+  });
+
+  it('should use memoized flows, preventing fetching searchFlow twice', async () => {
+    generateEmptyParentMock();
+    const randomFlowId = '200f59d2-6a71-4028-a16e-81e503b384ca';
+
+    queryMock.mockQuery({
+      name: 'GetFlowByPK',
+      data: {
+        flows_by_pk: {
+          data: {
+            ...flowWithoutReview,
+            portal: {
+              type: TYPES.ExternalPortal,
+              data: {
+                flowId: FLOW_WITH_REVIEW_ID,
+              },
+            },
+            searchPortal: {
+              type: TYPES.ExternalPortal,
+              data: {
+                flowId: SEARCH_FLOW_ID,
+              },
+            }
+          },
+          id: FLOW_WITHOUT_REVIEW_ID
+        }
+      },
+      variables: {
+        id: FLOW_WITHOUT_REVIEW_ID,
+      }
+    });
+
+    queryMock.mockQuery({
+      name: 'GetFlows',
+      data: {
+        flows: [
+          {
+            data: {
+              ...flowWithoutReview,
+              searchPortal: {
+                type: TYPES.ExternalPortal,
+                data: {
+                  flowId: SEARCH_FLOW_ID,
+                },
+              },
+            },
+            id: randomFlowId
+          },
+          { data: searchFlow, id: SEARCH_FLOW_ID },
+        ]
+      },
+      matchVariables: false,
+      variables: {
+        ids: [FLOW_WITH_REVIEW_ID, SEARCH_FLOW_ID]
+      }
+    });
+
+    await supertest(app)
+      .get(`/flows/${FLOW_WITHOUT_REVIEW_ID}/has-review`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          hasReview: false,
+          placement: "",
+          slug: "",
+        });
+      });
+
+    // We should expect for 2 calls:
+    // 1. Is the root flow, there is an exclusive query to fetch it.
+    // 2. Is the query which fetches the root's flow portals. One of these portals is duplicated, so there shouldn’t be a third call in the next recursive call.
+    expect(queryMock.getCalls().filter(call => call.id !== 'GetParents').length).toBe(2);
+  });
+
+  it("should return true for a flow used as a portal", async () => {
+    queryMock.mockQuery({
+      name: 'GetFlowByPK',
+      data: {
+        flows_by_pk: {
+          data: flowWithoutReview,
+          id: FLOW_WITHOUT_REVIEW_ID,
+          slug: 'test',
+          team: {
+            slug: 'test-team'
+          }
+        }
+      },
+      variables: {
+        id: FLOW_WITHOUT_REVIEW_ID,
+      }
+    });
+
+    queryMock.mockQuery({
+      name: 'GetParents',
+      data: {
+        get_parent_flows: [{
+          id: FLOW_WITH_REVIEW_ID,
+          data: {
+            ...flowWithReview,
+            portal: {
+              type: TYPES.ExternalPortal,
+              data: {
+                flowId: FLOW_WITHOUT_REVIEW_ID,
+              },
+            }
+          },
+          slug: 'parent',
+          team: {
+            slug: 'parent-team'
+          }
+        }]
+      },
+      variables: {
+        flow_id: FLOW_WITHOUT_REVIEW_ID,
+      }
+    });
+
+    await supertest(app)
+      .get(`/flows/${FLOW_WITHOUT_REVIEW_ID}/has-review`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          hasReview: true,
+          placement: "parent",
+          slug: "parent-team/parent"
+        });
+      })
+  });
+})

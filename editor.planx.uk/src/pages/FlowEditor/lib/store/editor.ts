@@ -28,7 +28,10 @@ let doc: any;
 const send = (ops: Array<any>) => {
   if (ops.length > 0) {
     console.log({ ops });
-    doc.submitOp(ops);
+
+    // XXX: when testing we should use optional chaining to prevent errors
+    if (process.env.NODE_ENV === "test") doc?.submitOp(ops);
+    else doc.submitOp(ops);
   }
 };
 

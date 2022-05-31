@@ -5,14 +5,24 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
+import axios from "axios";
+import MockAdapter from "axios-mock-adapter";
 import React from "react";
 
 import { TYPES } from "../types";
 import ExternalPortalForm from "./Editor";
 
+const mock = new MockAdapter(axios);
+beforeAll(() => {
+  mock.onGet(/(.*)\/has-review/).reply(200, { hasReview: false });
+});
+
+afterAll(() => {
+  mock.restore();
+});
+
 test("adding an external portal", async () => {
   const handleSubmit = jest.fn();
-
   render(
     <ExternalPortalForm
       flows={[
@@ -73,7 +83,3 @@ test("changing an external portal", async () => {
     },
   });
 });
-
-test.todo(
-  "don't add external portal if same external portal already in parent"
-);

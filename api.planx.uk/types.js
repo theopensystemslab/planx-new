@@ -1,0 +1,32 @@
+// XXX: when updating this file, also update `editor.planx.uk/src/@planx/components/types.ts`
+const TYPES = {
+  Flow: 1,
+  Result: 3,
+  TaskList: 7,
+  Notice: 8,
+  FindProperty: 9,
+  DrawBoundary: 10,
+  PlanningConstraints: 11,
+  Statement: 100, // Question/DropDown
+  Checklist: 105,
+  TextInput: 110,
+  DateInput: 120,
+  AddressInput: 130,
+  FileUpload: 140,
+  NumberInput: 150,
+  Response: 200,
+  Content: 250,
+  InternalPortal: 300,
+  ExternalPortal: 310,
+  SetValue: 380,
+  Pay: 400,
+  Filter: 500,
+  Review: 600,
+  Send: 650,
+  Calculate: 700,
+  Confirmation: 725,
+}
+
+module.exports = {
+  TYPES,
+}
