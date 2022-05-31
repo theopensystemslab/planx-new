@@ -469,43 +469,39 @@ new pulumi.Config("cloudflare").require("apiToken");
     ...(env === "production" ? ["planningservices.southwark.gov.uk"] : []),
   ];
   const frontendBuckets = DOMAINS.map((domain) => {
-    const bucket = new aws.s3.Bucket(
-      `frontend-${domain}`,
-      {
-        bucket: domain,
-        // TODO: can we remove these cors rules?
-        corsRules: [
+    const bucket = new aws.s3.Bucket(`frontend-${domain}`, {
+      bucket: domain,
+      // TODO: can we remove these cors rules?
+      corsRules: [
+        {
+          allowedHeaders: ["*"],
+          allowedMethods: ["GET", "HEAD"],
+          // TODO: Narrow down allowed origin to the domain we're using
+          allowedOrigins: ["*"],
+          exposeHeaders: ["ETag"],
+          maxAgeSeconds: 3000,
+        },
+      ],
+      // TODO: remove stringify
+      policy: JSON.stringify({
+        Version: "2012-10-17",
+        Statement: [
           {
-            allowedHeaders: ["*"],
-            allowedMethods: ["GET", "HEAD"],
-            // TODO: Narrow down allowed origin to the domain we're using
-            allowedOrigins: ["*"],
-            exposeHeaders: ["ETag"],
-            maxAgeSeconds: 3000,
+            Sid: "PublicReadGetObject",
+            Effect: "Allow",
+            Principal: "*",
+            Action: ["s3:GetObject"],
+            Resource: [`arn:aws:s3:::${domain}/*`],
           },
         ],
-        // TODO: remove stringify
-        policy: JSON.stringify({
-          Version: "2012-10-17",
-          Statement: [
-            {
-              Sid: "PublicReadGetObject",
-              Effect: "Allow",
-              Principal: "*",
-              Action: ["s3:GetObject"],
-              Resource: [`arn:aws:s3:::${domain}/*`],
-            },
-          ],
-        }),
-        websiteDomain: domain,
-        website: {
-          indexDocument: "index.html",
-          errorDocument: "index.html",
-          // XXX: If needed we can use the `routingRules` key here to create forwardings.
-        },
+      }),
+      websiteDomain: domain,
+      website: {
+        indexDocument: "index.html",
+        errorDocument: "index.html",
+        // XXX: If needed we can use the `routingRules` key here to create forwardings.
       },
-      { deleteBeforeReplace: true }
-    );
+    });
 
     fsWalk
       .walkSync("../../editor.planx.uk/build/", {
@@ -551,9 +547,7 @@ new pulumi.Config("cloudflare").require("apiToken");
     } else {
       // Custom domains are managed by partners (i.e. councils)
       // Logging here so we can ask them to set up these DNS records
-      console.log(
-        pulumi.interpolate`CNAME\t${DOMAINS[i]}\t${frontendBuckets[i].websiteDomain}`
-      );
+      console.log(pulumi.interpolate`CNAME\t${DOMAINS[i]}\t${frontendBuckets[i].websiteDomain}`);
     }
   }
 })();
