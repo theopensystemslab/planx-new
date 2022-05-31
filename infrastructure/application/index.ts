@@ -464,7 +464,7 @@ new pulumi.Config("cloudflare").require("apiToken");
   });
 
   // ------------------- Frontend
-  const frontendBucket = new aws.s3.Bucket("frontend", {
+  const frontendBucket = new aws.s3.Bucket(`${DOMAIN}`, {
     bucket: DOMAIN,
     // TODO: can we remove these cors rules?
     corsRules: [
