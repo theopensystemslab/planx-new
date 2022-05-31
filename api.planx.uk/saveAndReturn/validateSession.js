@@ -14,7 +14,7 @@ const validateSession = async (req, res, next) => {
         message: "Required value missing"
       });
     
-    let sessionData = await findSession(sessionId, email);
+    let sessionData = await findSession(sessionId, email.toLowerCase());
 
     if (sessionData) {
       // reconcile content changes between the published flow state at point of resuming and when the applicant last left off

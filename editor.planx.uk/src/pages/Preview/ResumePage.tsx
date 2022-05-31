@@ -187,7 +187,7 @@ const ResumePage: React.FC = () => {
   };
 
   /**
-   * Query DB to validate that sessionID, flowId, & email match
+   * Query DB to validate that sessionID & email match
    */
   const validateSessionId = async () => {
     const url = `${process.env.REACT_APP_API_URL}/validate-session`;
