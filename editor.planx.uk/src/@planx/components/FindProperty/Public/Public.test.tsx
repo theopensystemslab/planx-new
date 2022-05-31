@@ -107,6 +107,7 @@ test("recovers previously submitted address when clicking the back button", asyn
     },
     "property.type": ["residential.HMO.parent"],
     "property.localAuthorityDistrict": ["Southwark"],
+    "property.region": ["London"],
   };
 
   render(

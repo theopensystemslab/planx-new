@@ -53,20 +53,23 @@ function Component(props: Props) {
   const [localAuthorityDistricts, setLocalAuthorityDistricts] = useState<
     string[] | undefined
   >();
+  const [regions, setRegions] = useState<string[] | undefined>();
   const flow = useStore((state) => state.flow);
   const team = fetchCurrentTeam();
 
-  // if we have an address point, check which local authority district(s) it's located in via Digital Land
-  const options = {
-    dataset: "local-authority-district",
+  // if we have an address point, check which local authority district(s) & region it's located in via Digital Land
+  let options = new URLSearchParams({
     entries: "all", // includes historic
     geometry: `POINT(${address?.longitude} ${address?.latitude})`,
     geometry_relation: "intersects",
     limit: "100",
-  };
+  });
+  options.append("dataset", "local-authority-district");
+  options.append("dataset", "region");
+
   // https://www.digital-land.info/docs#/Search%20entity
   const root = `https://www.digital-land.info/entity.json?`;
-  const url = root + new URLSearchParams(options).toString();
+  const url = root + options;
   const { data } = useSWR(
     () => (address?.latitude && address?.longitude ? url : null),
     {
@@ -79,11 +82,17 @@ function Component(props: Props) {
   useEffect(() => {
     if (address && data) {
       if (data.count > 0) {
-        const names: string[] = [];
+        const lads: string[] = [];
+        const regions: string[] = [];
         data.entities.forEach((entity: any) => {
-          names.push(entity.name);
+          if (entity.dataset === "local-authority-district") {
+            lads.push(entity.name);
+          } else if (entity.dataset === "region") {
+            regions.push(entity.name);
+          }
         });
-        setLocalAuthorityDistricts([...new Set(names)]);
+        setLocalAuthorityDistricts([...new Set(lads)]);
+        setRegions([...new Set(regions)]);
       }
     }
   }, [data]);
@@ -114,6 +123,10 @@ function Component(props: Props) {
             if (localAuthorityDistricts) {
               newPassportData["property.localAuthorityDistrict"] =
                 localAuthorityDistricts;
+            }
+
+            if (regions) {
+              newPassportData["property.region"] = regions;
             }
 
             const passportData = {
