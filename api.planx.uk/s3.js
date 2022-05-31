@@ -126,5 +126,5 @@ module.exports = {
   uploadPublicFile,
   generateFileHash,
   validateFileHash,
-  uploadPrivateFile
+  uploadPrivateFile,
 };

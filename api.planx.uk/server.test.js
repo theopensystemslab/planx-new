@@ -1,5 +1,6 @@
 const nock = require("nock");
 const supertest = require("supertest");
+const { generateFileHash } = require("./s3");
 const loadOrRecordNockRequests = require("./tests/loadOrRecordNockRequests");
 
 const { queryMock } = require("./tests/graphqlQueryMock");
@@ -227,7 +228,7 @@ describe("fetching GIS data from local authorities directly", () => {
   });
 });
 
-describe("fetching GIS data from Digital Land for supported local authorities", () => {
+describe("fetching GIS data from Digital Land for supported local authorities", async () => {
   const locations = [
     {
       council: "buckinghamshire",
@@ -260,5 +261,193 @@ describe("fetching GIS data from Digital Land for supported local authorities", 
           expect(res.body["constraints"]["designated.conservationArea"]).toBeDefined();
         });
     }, 20_000); // 20s request timeout
+  });
+});
+
+const mockPutObject = jest.fn(() => ({
+  promise: () => Promise.resolve()
+}))
+
+let getObjectResponse = {};
+
+const mockGetObject = jest.fn(() => ({
+  promise: () => Promise.resolve(getObjectResponse)
+}))
+
+const s3Mock = () => {
+  return {
+    putObject: mockPutObject,
+    getObject: mockGetObject,
+  };
+};
+
+jest.mock('aws-sdk/clients/s3', () => {
+  return jest.fn().mockImplementation(() => {
+    return s3Mock();
+  })
+});
+
+describe("File upload", () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it("private-file-upload - should not upload without filename", async () => {
+    await supertest(app)
+      .post("/private-file-upload")
+      .field("filename", '')
+      .attach("file", Buffer.from('some data'), 'some_file.txt')
+      .expect(422)
+      .then(res => {
+        expect(mockPutObject).not.toHaveBeenCalled();
+        expect(res.body.error).toBe("missing filename")
+      })
+  });
+
+  it("private-file-upload - should not upload without file", async () => {
+    await supertest(app)
+      .post("/private-file-upload")
+      .field("filename", 'some filename')
+      .expect(422)
+      .then(res => {
+        expect(mockPutObject).not.toHaveBeenCalled();
+        expect(res.body.error).toBe("missing file")
+      })
+  });
+
+  it("private-file-upload - should upload file", async () => {
+    await supertest(app)
+      .post("/private-file-upload")
+      .field("filename", 'some_file.txt')
+      .attach("file", Buffer.from('some data'), 'some_file.txt')
+      .then(res => {
+        expect(res.body).toEqual({
+          file_type: 'text/plain',
+          key: expect.stringContaining('some_file.txt'),
+          file_hash: expect.any(String),
+        });
+        expect(mockPutObject).toHaveBeenCalledTimes(1);
+      });
+  });
+
+  it("public-file-upload - should not upload without file", async () => {
+    await supertest(app)
+      .post("/public-file-upload")
+      .field("filename", 'some filename')
+      .expect(422)
+      .then(res => {
+        expect(mockPutObject).not.toHaveBeenCalled();
+        expect(res.body.error).toBe("missing file")
+      })
+  });
+
+  it("public-file-upload - should upload file", async () => {
+    await supertest(app)
+      .post("/public-file-upload")
+      .field("filename", 'some_file.txt')
+      .attach("file", Buffer.from('some data'), 'some_file.txt')
+      .then(res => {
+        expect(res.body).toEqual({
+          file_type: 'text/plain',
+          key: expect.stringContaining('some_file.txt'),
+        });
+        expect(mockPutObject).toHaveBeenCalledTimes(1);
+      });
+  });
+});
+
+describe("File download", () => {
+  beforeEach(() => {
+    getObjectResponse = {
+      Body: Buffer.from('some data'),
+      ContentLength: '633',
+      ContentDisposition: 'inline;filename="some_file.txt"',
+      ContentEncoding: 'undefined',
+      CacheControl: 'undefined',
+      Expires: 'undefined',
+      LastModified: 'Tue May 31 2022 12:21:37 GMT+0000 (Coordinated Universal Time)',
+      ETag: 'a4c57ed39e8d869d636ccf5fc34a65a1',
+    };
+    jest.clearAllMocks()
+  })
+
+  it("file/public - should not download with incomplete path", async () => {
+    await supertest(app)
+      .get("/file/public/somekey")
+      .expect(404)
+  });
+
+  it("file/public - should download", async () => {
+    await supertest(app)
+      .get("/file/public/somekey/file_name.txt")
+      .expect(200)
+      .then(res => {
+        expect(mockGetObject).toHaveBeenCalledTimes(1);
+      })
+  });
+
+  it("file/public - should not download private files", async () => {
+    getObjectResponse = {
+      ...getObjectResponse,
+      Metadata: {
+        file_hash: '123'
+      }
+    }
+    await supertest(app)
+      .get("/file/public/somekey/file_name.txt")
+      .expect(400)
+      .then(res => {
+        expect(mockGetObject).toHaveBeenCalledTimes(1);
+        expect(res.body.error).toBe('bad request')
+      })
+  });
+
+  it("file/private - should not download with missing file hash", async () => {
+    await supertest(app)
+      .get("/file/private/somekey/file_name.txt")
+      .expect(400)
+      .then(res => {
+        expect(mockGetObject).not.toHaveBeenCalled();
+        expect(res.body.error).toBe('wrong or missing headers')
+      })
+  });
+
+  it("file/private - should not download if file has different hash", async () => {
+    const filePath = 'somekey/file_name.txt'
+    const hash = generateFileHash(filePath);
+    getObjectResponse = {
+      ...getObjectResponse,
+      Metadata: {
+        file_hash: 'somehash'
+      }
+    }
+
+    await supertest(app)
+      .get(`/file/private/${filePath}`)
+      .set({ 'file-hash': hash })
+      .expect(403)
+      .then(res => {
+        expect(mockGetObject).toHaveBeenCalledTimes(1);
+        expect(res.body.error).toBe('unauthorized')
+      });
+  });
+
+  it("file/private - should download file", async () => {
+    const filePath = 'somekey/file_name.txt'
+    const hash = generateFileHash(filePath);
+    getObjectResponse = {
+      ...getObjectResponse,
+      Metadata: {
+        file_hash: hash
+      }
+    }
+
+    await supertest(app)
+      .get(`/file/private/${filePath}`)
+      .set({ 'file-hash': hash })
+      .expect(200)
+      .then(() => {
+        expect(mockGetObject).toHaveBeenCalledTimes(1);
+      });
   });
 });

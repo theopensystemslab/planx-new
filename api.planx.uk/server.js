@@ -501,8 +501,8 @@ app.post("/download-application", async (req, res, next) => {
 });
 
 app.post("/private-file-upload", multer().single('file'), async (req, res, next) => {
-  if (!req.body.filename) next({ status: 422, message: "missing filename" });
-  if (!req.file) next({ status: 422, message: "missing file" });
+  if (!req.body.filename) return next({ status: 422, message: "missing filename" });
+  if (!req.file) return next({ status: 422, message: "missing file" });
 
   try {
     const fileResponse = await uploadPrivateFile(req.file, req.body.filename);
@@ -514,8 +514,8 @@ app.post("/private-file-upload", multer().single('file'), async (req, res, next)
 });
 
 app.post("/public-file-upload", multer().single('file'), async (req, res, next) => {
-  if (!req.body.filename) next({ status: 422, message: "missing filename" });
-  if (!req.file) next({ status: 422, message: "missing file" });
+  if (!req.body.filename) return next({ status: 422, message: "missing filename" });
+  if (!req.file) return next({ status: 422, message: "missing file" });
 
   try {
     const fileResponse = await uploadPublicFile(req.file, req.body.filename);
