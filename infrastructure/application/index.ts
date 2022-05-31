@@ -464,92 +464,75 @@ new pulumi.Config("cloudflare").require("apiToken");
   });
 
   // ------------------- Frontend
-  const DOMAINS = [
-    DOMAIN,
-    ...(env === "production" ? ["planningservices.southwark.gov.uk"] : []),
-  ];
-  const frontendBuckets = DOMAINS.map((domain) => {
-    const bucket = new aws.s3.Bucket(`frontend-${domain}`, {
-      bucket: domain,
-      // TODO: can we remove these cors rules?
-      corsRules: [
+  const frontendBucket = new aws.s3.Bucket("frontend", {
+    bucket: DOMAIN,
+    // TODO: can we remove these cors rules?
+    corsRules: [
+      {
+        allowedHeaders: ["*"],
+        allowedMethods: ["GET", "HEAD"],
+        // TODO: Narrow down allowed origin to the domain we're using
+        allowedOrigins: ["*"],
+        exposeHeaders: ["ETag"],
+        maxAgeSeconds: 3000,
+      },
+    ],
+    // TODO: remove stringify
+    policy: JSON.stringify({
+      Version: "2012-10-17",
+      Statement: [
         {
-          allowedHeaders: ["*"],
-          allowedMethods: ["GET", "HEAD"],
-          // TODO: Narrow down allowed origin to the domain we're using
-          allowedOrigins: ["*"],
-          exposeHeaders: ["ETag"],
-          maxAgeSeconds: 3000,
+          Sid: "PublicReadGetObject",
+          Effect: "Allow",
+          Principal: "*",
+          Action: ["s3:GetObject"],
+          Resource: [`arn:aws:s3:::${DOMAIN}/*`],
         },
       ],
-      // TODO: remove stringify
-      policy: JSON.stringify({
-        Version: "2012-10-17",
-        Statement: [
-          {
-            Sid: "PublicReadGetObject",
-            Effect: "Allow",
-            Principal: "*",
-            Action: ["s3:GetObject"],
-            Resource: [`arn:aws:s3:::${domain}/*`],
-          },
-        ],
-      }),
-      websiteDomain: domain,
-      website: {
-        indexDocument: "index.html",
-        errorDocument: "index.html",
-        // XXX: If needed we can use the `routingRules` key here to create forwardings.
-      },
-    });
-
-    fsWalk
-      .walkSync("../../editor.planx.uk/build/", {
-        basePath: "",
-        entryFilter: (e) => !e.dirent.isDirectory(),
-      })
-      .forEach(({ path }) => {
-        const relativeFilePath = `../../editor.planx.uk/build/${path}`;
-        const contentType = mime.getType(relativeFilePath) || "";
-        const contentFile = new aws.s3.BucketObject(
-          `${domain}/${relativeFilePath}`,
-          {
-            key: path,
-            acl: "public-read",
-            bucket: bucket,
-            contentType,
-            source: new pulumi.asset.FileAsset(relativeFilePath),
-            // https://web.dev/stale-while-revalidate/
-            cacheControl: contentType.includes("html")
-              ? undefined
-              : `max-age=${1}, stale-while-revalidate=${60 * 60 * 24}`,
-          },
-          {
-            parent: bucket,
-          }
-        );
-      });
-
-    return bucket;
+    }),
+    websiteDomain: DOMAIN,
+    website: {
+      indexDocument: "index.html",
+      errorDocument: "index.html",
+      // XXX: If needed we can use the `routingRules` key here to create forwardings.
+    },
   });
 
-  for (let i = 0; i < DOMAINS.length; i++) {
-    if (i === 0) {
-      // Main domain is managed by us (through CloudFlare)
-      new cloudflare.Record("frontend", {
-        name: tldjs.getSubdomain(DOMAIN) ?? "@",
-        type: "CNAME",
-        zoneId: config.require("cloudflare-zone-id"),
-        value: frontendBuckets[0].websiteDomain,
-        ttl: 1,
-        proxied: true,
-      });
-    } else {
-      // Custom domains are managed by partners (i.e. councils)
-      // Logging here so we can ask them to set up these DNS records
-      console.log(pulumi.interpolate`CNAME\t${DOMAINS[i]}\t${frontendBuckets[i].websiteDomain}`);
-    }
-  }
+  fsWalk
+    .walkSync("../../editor.planx.uk/build/", {
+      basePath: "",
+      entryFilter: (e) => !e.dirent.isDirectory(),
+    })
+    .forEach(({ path }) => {
+      const relativeFilePath = `../../editor.planx.uk/build/${path}`;
+      const contentType = mime.getType(relativeFilePath) || "";
+      const contentFile = new aws.s3.BucketObject(
+        relativeFilePath,
+        {
+          key: path,
+          acl: "public-read",
+          bucket: frontendBucket,
+          contentType,
+          source: new pulumi.asset.FileAsset(relativeFilePath),
+          // https://web.dev/stale-while-revalidate/
+          cacheControl: contentType.includes("html")
+            ? undefined
+            : `max-age=${1}, stale-while-revalidate=${60 * 60 * 24}`,
+        },
+        {
+          parent: frontendBucket,
+        }
+      );
+    });
+
+  const frontendDnsRecord = new cloudflare.Record("frontend", {
+    name: tldjs.getSubdomain(DOMAIN) ?? "@",
+    type: "CNAME",
+    zoneId: config.require("cloudflare-zone-id"),
+    value: frontendBucket.websiteDomain,
+    ttl: 1,
+    proxied: true,
+  });
 })();
 
 new aws.budgets.Budget("general-budget", {
