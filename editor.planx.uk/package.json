@@ -102,12 +102,12 @@
     "esbuild-jest": "^0.5.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "husky": "^4.3.0",
+    "husky": "^8.0.1",
     "identity-obj-proxy": "^3.0.0",
     "jest-axe": "^5.0.1",
     "jest-localstorage-mock": "^2.4.18",
-    "lint-staged": "^12.1.2",
-    "prettier": "^2.5.1",
+    "lint-staged": "^12.4.3",
+    "prettier": "^2.6.2",
     "react-app-rewired": "^2.1.11",
     "react-refresh": "^0.11.0",
     "sass": "^1.45.0",
@@ -128,7 +128,8 @@
     "classic:test": "react-scripts test",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "mkdir -p build && build-storybook --quiet --output-dir ./build/storybook",
-    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix"
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
+    "prepare": "cd .. && husky install editor.planx.uk/.husky"
   },
   "eslintConfig": {
     "extends": [
@@ -159,11 +160,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
