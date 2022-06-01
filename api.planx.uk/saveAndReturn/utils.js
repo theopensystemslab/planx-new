@@ -148,7 +148,7 @@ const validateSingleSessionRequest = async (email, sessionId) => {
           team {
             name
             slug
-            notifyPersonalisation
+            notify_personalisation
           }
         }
       }
@@ -162,7 +162,7 @@ const validateSingleSessionRequest = async (email, sessionId) => {
     return {
       flowSlug: session.flow.slug,
       teamSlug: session.flow.team.slug,
-      teamPersonalisation: session.flow.team.notifyPersonalisation,
+      teamPersonalisation: session.flow.team.notify_personalisation,
       session: getSessionDetails(session),
       teamName: session.flow.team.name,
     };
