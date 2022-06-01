@@ -26,11 +26,14 @@ const { diffFlow, publishFlow } = require("./publish");
 const { findAndReplaceInFlow } = require("./findReplace");
 const { sendToUniform } = require("./send");
 const { resumeApplication, validateSession, sendSaveAndReturnEmail } = require("./saveAndReturn")
+const { hardDeleteSessions } = require("./webhooks/hardDeleteSessions");
+const { useHasuraAuth, useSendEmailAuth } = require("./auth");
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
 const airbrake = require("./airbrake");
+const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
 
 const router = express.Router();
 
@@ -272,6 +275,9 @@ app.post("/bops/:localAuthority", (req, res) => {
     onProxyReq: fixRequestBody,
     onProxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, res) => {
+        // Mark session as submitted so that reminder and expiry emails are not triggered
+        markSessionAsSubmitted(req.body.planx_debug_data.session_id)
+
         const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
 
         const applicationId = await client.request(
@@ -568,9 +574,11 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
 
 // assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
 // assert(process.env.GOVUK_NOTIFY_API_KEY_TEST);
-app.post("/send-email", sendSaveAndReturnEmail);
+app.post("/send-email/:template", useSendEmailAuth, sendSaveAndReturnEmail);
 app.post("/resume-application", resumeApplication);
 app.post("/validate-session", validateSession);
+
+app.post("/webhooks/delete-expired-sessions", useHasuraAuth, hardDeleteSessions);
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()

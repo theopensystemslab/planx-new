@@ -7,6 +7,7 @@ const AdmZip = require("adm-zip");
 const str = require("string-to-stream");
 const stringify = require("csv-stringify");
 const { GraphQLClient } = require("graphql-request");
+const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
 
 const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
   headers: {
@@ -82,6 +83,9 @@ const sendToUniform = async (req, res, next) => {
             response: submissionDetails,
           }
         );
+
+        // Mark session as submitted so that reminder and expiry emails are not triggered
+        markSessionAsSubmitted(req.body.sessionId);
 
         res.status(200).send({
           message: `Successfully created a Uniform submission`,

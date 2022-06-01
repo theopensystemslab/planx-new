@@ -5,7 +5,7 @@ const { mockFlow, mockLowcalSession } = require("../tests/mocks/saveAndReturnMoc
 
 // https://docs.notifications.service.gov.uk/node.html#email-addresses
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk"
-const ENDPOINT = "/send-email"
+const SAVE_ENDPOINT = "/send-email/save"
 
 describe("Send Email endpoint", () => {
   beforeEach(() => {
@@ -13,21 +13,18 @@ describe("Send Email endpoint", () => {
   });
 
   it("throws an error if required data is missing", () => {
+    const missingEmail = { payload: { sessionId: 123 } };
+    const missingSessionId = { payload: { email: "test" } };
 
-    const missingEmail = { sessionId: 123, template: "save" };
-    const missingSessionId = { email: "test", template: "save" };
-    const missingTemplate = { email: "test", sessionId: 123 };
-
-    [missingEmail, missingSessionId, missingTemplate].forEach(async (invalidBody) => {
+    [missingEmail, missingSessionId].forEach(async (invalidBody) => {
       await supertest(app)
-      .post(ENDPOINT)
+      .post(SAVE_ENDPOINT)
       .send(invalidBody)
       .expect(400)
       .then(response => {
         expect(response.body).toHaveProperty("error", "Required value missing");
       });
     })
-
   });
 
   it("sends a Notify email on successful save", async () => {
@@ -44,11 +41,11 @@ describe("Send Email endpoint", () => {
       }
     });
 
-    const payload = { sessionId: 123, email: TEST_EMAIL, template: "save" };
+    const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
     
     await supertest(app)
-      .post(ENDPOINT)
-      .send(payload)
+      .post(SAVE_ENDPOINT)
+      .send(data)
       .expect(200)
       .then((response) => {
         expect(response.body).toHaveProperty("expiryDate");
@@ -68,15 +65,23 @@ describe("Send Email endpoint", () => {
       }
     });
 
-    const payload = { sessionId: 123, email: "Not an email address", template: "save" };
+    const data = { payload: { sessionId: 123, email: "Not an email address" } };
 
     await supertest(app)
-      .post(ENDPOINT)
-      .send(payload)
+      .post(SAVE_ENDPOINT)
+      .send(data)
       .expect(400)
       .then((response) => {
         expect(response.body).toHaveProperty("errors");
       });
+  });
+
+  it("throws an error if the template is missing", async () => {
+    const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
+    await supertest(app)
+      .post("/send-email")
+      .send(data)
+      .expect(404);
   });
 
   it("throws an error if a template is invalid", async () => {
@@ -92,11 +97,11 @@ describe("Send Email endpoint", () => {
       }
     });
 
-    const payload = { sessionId: 123, email: TEST_EMAIL, template: "not a template" };
+    const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
 
     await supertest(app)
-      .post(ENDPOINT)
-      .send(payload)
+      .post("/send-email/not-a-template")
+      .send(data)
       .expect(400)
       .then(response => {
         expect(response.body).toHaveProperty("error", 'Invalid template - must be one of [save, reminder, expiry]');
@@ -116,15 +121,49 @@ describe("Send Email endpoint", () => {
       }
     });
 
-    const payload = { sessionId: 123, email: TEST_EMAIL, template: "save" };
+    const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
 
     await supertest(app)
-      .post(ENDPOINT)
-      .send(payload)
+      .post(SAVE_ENDPOINT)
+      .send(data)
       .expect(500)
       .then(response => {
         expect(response.body).toHaveProperty("error", "Unable to validate request");
       });
   });
+});
 
+describe("Send Email endpoint - Templates which require authorisation", () => {
+
+  it("returns 401 UNAUTHORIZED if no auth header is provided", () => {
+    ["reminder", "expiry"].forEach(async (template) => {
+      const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
+      await supertest(app)
+        .post(`/send-email/${template}`)
+        .send(data)
+        .expect(401);
+    });
+  });
+
+  it("returns 401 UNAUTHORIZED if no incorrect auth header is provided", () => {
+    ["reminder", "expiry"].forEach(async (template) => {
+      const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
+      await supertest(app)
+        .post(`/send-email/${template}`)
+        .set("Authorization", "invalid-api-key")
+        .send(data)
+        .expect(401);
+    });
+  });
+
+  it("returns 200 OK if the correct headers are used", () => {
+    ["reminder", "expiry"].forEach(async (template) => {
+      const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
+      await supertest(app)
+        .post(`/send-email/${template}`)
+        .set("Authorisation", "testtesttest")
+        .send(data)
+        .expect(401);
+    });
+  });
 });
