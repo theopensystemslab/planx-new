@@ -18,8 +18,16 @@ const validateSession = async (req, res, next) => {
 
     if (sessionData) {
       // reconcile content changes between the published flow state at point of resuming and when the applicant last left off
-      const currentFlow = await getMostRecentPublishedFlow(sessionData.data.id);
-      const savedFlow = await getPublishedFlowByDate(sessionData.data.id, sessionData.updated_at);
+      const [currentFlow, savedFlow] = await Promise.all([
+        getMostRecentPublishedFlow(sessionData.data.id),
+        getPublishedFlowByDate(sessionData.data.id, sessionData.updated_at),
+      ]);
+      if (!currentFlow || !savedFlow) {
+        next({
+          status: 404,
+          message: "Unable to find a published version of this flow"
+        });
+      }
   
       const delta = jsondiffpatch.diff(currentFlow, savedFlow);
       // if there have been content changes, make a list of the alteredNodes
@@ -75,7 +83,10 @@ const validateSession = async (req, res, next) => {
         });
       }
     } else {
-      res.status(404).json({ message: "Unable to find your session" });
+      next({
+        status: 404,
+        message: "Unable to find your session" 
+      });
     }
   } catch (error) {
     next(error);
@@ -101,14 +112,14 @@ const findSession = async (id, email) => {
     }
   );
 
-  return response.lowcal_sessions[0];
+  return response.lowcal_sessions?.[0];
 };
 
 const updateLowcalSessionData = async (id, data) => {
   const response = await client.request(`
     mutation UpdateLowcalSessionData(
       $id: uuid!,
-      $data: jsonb = {},
+      $data: jsonb!,
     ) {
       update_lowcal_sessions_by_pk(
         pk_columns: {id: $id},
@@ -128,7 +139,7 @@ const updateLowcalSessionData = async (id, data) => {
   }
   );
 
-  return response.update_lowcal_sessions_by_pk && response.update_lowcal_sessions_by_pk.data;
+  return response.update_lowcal_sessions_by_pk?.data;
 }
 
 module.exports = validateSession;

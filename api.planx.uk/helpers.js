@@ -38,10 +38,7 @@ const getMostRecentPublishedFlow = async (id) => {
     { id }
   );
 
-  return (
-    data.flows_by_pk.published_flows[0] &&
-    data.flows_by_pk.published_flows[0].data
-  );
+  return data.flows_by_pk.published_flows?.[0]?.data;
 };
 
 // Get the snapshot of the published flow for a certain point in time (flattened, with external portal nodes)
@@ -66,10 +63,7 @@ const getPublishedFlowByDate = async (id, created_at) => {
     }
   );
 
-  return (
-    data.flows_by_pk.published_flows[0] &&
-    data.flows_by_pk.published_flows[0].data
-  );
+  return data.flows_by_pk.published_flows?.[0]?.data;
 }
 
 // Flatten a flow's data to include main content & portals in a single JSON representation
