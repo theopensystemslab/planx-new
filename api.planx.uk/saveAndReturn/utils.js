@@ -19,9 +19,7 @@ const emailTemplates = {
   ...multipleSessionEmailTemplates,
 };
 
-const getNotifyClient = () =>
-  // new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEST);
-  new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
+const getNotifyClient = () => new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
 
 const getGraphQLClient = () => new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
   headers: {
@@ -168,7 +166,7 @@ const validateSingleSessionRequest = async (email, sessionId) => {
       flowSlug: session.flow.slug,
       teamSlug: session.flow.team.slug,
       teamPersonalisation: session.flow.team.notify_personalisation,
-      session: getSessionDetails(session),
+      session: await getSessionDetails(session),
       teamName: session.flow.team.name,
     };
   } catch (error) {
@@ -181,9 +179,8 @@ const validateSingleSessionRequest = async (email, sessionId) => {
  * @param {string} session 
  * @returns {object}
  */
-const getSessionDetails = (session) => {
-  // TODO: Get human readable values here
-  const projectTypes = session?.data?.passport?.data?.["proposal.projectType"]?.join(", ");
+const getSessionDetails = async (session) => {
+  const projectTypes = await getHumanReadableProjectType(session);
   const address = session?.data?.passport?.data?._address?.single_line_address;
 
   return {
@@ -264,6 +261,43 @@ const softDeleteSession = async (sessionId) => {
   };
 };
 
+/**
+ * Get formatted list of the session's project types
+ * @param {array} session 
+ * @returns {string}
+ */
+const getHumanReadableProjectType = async (session) => {
+  const rawProjectType = session?.data?.passport?.data?.["proposal.projectType"];
+  if (!rawProjectType) return;
+  // Get human readable values from db
+  const humanReadableList = await getReadableProjectTypeFromRaw(rawProjectType);
+  // Join in readable format - en-US ensures we use Oxford commas
+  const formatter = new Intl.ListFormat("en-US", { type: "conjunction" });
+  const joinedList = formatter.format(humanReadableList);
+  // Convert first character to uppercase
+  const humanReadableString = joinedList.charAt(0).toUpperCase() + joinedList.slice(1);
+  return humanReadableString;
+};
+
+/**
+ * Query DB to get human readable project type values, based on passport variables
+ * @param {array} rawList 
+ * @returns {array}
+ */
+const getReadableProjectTypeFromRaw = async (rawList) => {
+  const client = getGraphQLClient();
+  const query = `
+    query GetHumanReadableProjectType($rawList: [String!]) {
+      planning_data_project_types(where: {value: {_in: $rawList}}) {
+        description
+      }
+    }
+  `;
+  const { planning_data_project_types } = await client.request(query, { rawList });
+  const list = planning_data_project_types.map(result => result.description);
+  return list;
+};
+
 module.exports = {
   getNotifyClient,
   getGraphQLClient,
@@ -276,4 +310,5 @@ module.exports = {
   markSessionAsSubmitted,
   DAYS_UNTIL_EXPIRY,
   calculateExpiryDate,
+  getHumanReadableProjectType,
 };

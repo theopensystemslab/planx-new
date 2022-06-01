@@ -1,0 +1,1 @@
+CREATE TABLE "planning_data"."project_types" ("description" text NOT NULL, "value" text NOT NULL, "id" serial NOT NULL, PRIMARY KEY ("id") );COMMENT ON TABLE "planning_data"."project_types" IS E'A list of things people want to do within the planning system';

@@ -1,4 +1,7 @@
 - table:
+    schema: planning_data
+    name: project_types
+- table:
     schema: public
     name: analytics
   insert_permissions:
