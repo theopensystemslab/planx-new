@@ -14,14 +14,16 @@ import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
 import { object, string } from "yup";
 
+import ReconciliationPage from "./ReconciliationPage";
 import StatusPage from "./StatusPage";
 
 enum Status {
   EmailRequired,
   Validating,
+  Validated,
+  InvalidSession,
   Success,
   Error,
-  Invalid,
 }
 
 const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
@@ -102,16 +104,36 @@ const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
   );
 };
 
-const ValidationError: React.FC = () => {
+const ValidationSuccess: React.FC<{
+  data: any;
+  email: string;
+  sessionId: string;
+}> = ({ data, email, sessionId }) => {
+  return (
+    <ReconciliationPage
+      bannerHeading="Resume your application"
+      diffMessage={data?.message || ""}
+      data={data}
+      buttonText="Continue"
+      onButtonClick={() =>
+        useStore.setState({
+          saveToEmail: email,
+          sessionId: sessionId,
+          path: ApplicationPath.SaveAndReturn,
+        })
+      }
+    ></ReconciliationPage>
+  );
+};
+
+const InvalidSession: React.FC = () => {
   return (
     <StatusPage
-      bannerHeading="Validation error"
-      bannerText={"Unable to validate session"}
-      cardText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien
-      nunc, blandit et cursus nec, auctor at leo. Donec eros enim, tristique
-      sit amet enim iaculis."
-      buttonText="Close Tab"
-      onButtonClick={() => window.close()}
+      bannerHeading="No session found"
+      bannerText="Click retry to start a new application or enter your email again"
+      cardText=""
+      buttonText="Retry"
+      onButtonClick={() => window.location.reload()}
     ></StatusPage>
   );
 };
@@ -139,6 +161,10 @@ const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
   const [email, setEmail] = useState<string>(getInitialEmailValue());
   const sessionId = useCurrentRoute().url.query.sessionId;
+  const flowId = useStore((state) => state.id);
+  const [reconciledData, setReconciledData] = useState<
+    Record<any, any> | undefined
+  >();
 
   useEffect(() => {
     if (email) handleSubmit();
@@ -167,18 +193,16 @@ const ResumePage: React.FC = () => {
     const url = `${process.env.REACT_APP_API_URL}/validate-session`;
     const data = { email, sessionId };
     try {
-      await axios.post(url, data);
-      // Setting sessionId triggers an API call to update the local session
-      useStore.setState({
-        saveToEmail: email,
-        path: ApplicationPath.SaveAndReturn,
-        sessionId: sessionId,
-      });
-      // Remove query params from URL
+      // Remove sessionId query param from URL before validation request
+      //   so that 404/Status.InvalidSession will reload window.location without params on "retry" button
       window.history.pushState({}, document.title, window.location.pathname);
-      // TODO: Reconciliation...!
+      // Find this session, if found then handle reconciliation
+      await axios.post(url, data).then((response) => {
+        setReconciledData(response?.data);
+        setPageStatus(Status.Validated);
+      });
     } catch (error) {
-      setPageStatus(Status.Invalid);
+      setPageStatus(Status.InvalidSession);
     }
   };
 
@@ -198,9 +222,16 @@ const ResumePage: React.FC = () => {
         msDelayBeforeVisible={0}
       />
     ),
+    [Status.Validated]: (
+      <ValidationSuccess
+        data={reconciledData}
+        email={email}
+        sessionId={sessionId}
+      />
+    ),
+    [Status.InvalidSession]: <InvalidSession />,
     [Status.Success]: <EmailSuccess email={email} />,
     [Status.Error]: <EmailError retry={() => handleSubmit()} email={email} />,
-    [Status.Invalid]: <ValidationError />,
   }[pageStatus];
 };
 
