@@ -413,7 +413,7 @@
           - created_at
           - id
           - name
-          - notifyPersonalisation
+          - notify_personalisation
           - settings
           - slug
           - theme
