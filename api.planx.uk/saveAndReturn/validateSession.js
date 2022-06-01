@@ -100,6 +100,8 @@ const findSession = async (id, email) => {
         where: {
           id: {_eq: $id},
           email: {_eq: $email},
+          deleted_at: { _is_null: true },
+          submitted_at: { _is_null: true },
         }, 
         limit: 1
       ) {
@@ -142,4 +144,4 @@ const updateLowcalSessionData = async (id, data) => {
   return response.update_lowcal_sessions_by_pk?.data;
 }
 
-module.exports = validateSession;
+module.exports = { validateSession };

@@ -32,14 +32,21 @@ const validateRequest = async (teamSlug, email, res) => {
     const client = getGraphQLClient();
     const query = `
       query ValidateRequest($email: String, $teamSlug: String) {
-        lowcal_sessions(where: {email: {_eq: $email}}, order_by: {flow: {slug: asc}, expiry_date: asc}) {
+        lowcal_sessions(
+          where: {
+            email: { _eq: $email }
+            deleted_at: { _is_null: true }
+            submitted_at: { _is_null: true }
+          }
+          order_by: { flow: { slug: asc }, expiry_date: asc }
+        ) {
           id
           expiry_date
           flow {
             slug
           }
         }
-        teams(where: {slug: {_eq: $teamSlug}}) {
+        teams(where: { slug: { _eq: $teamSlug } }) {
           slug
           name
           notifyPersonalisation
