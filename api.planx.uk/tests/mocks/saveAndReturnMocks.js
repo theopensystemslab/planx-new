@@ -1,7 +1,7 @@
 const mockTeam = {
   slug: "test-team",
   name: "Test Team",
-  notifyPersonalisation: {
+  notify_personalisation: {
     helpEmail: "example@council.gov.uk",
     helpPhone: "(01234) 567890",
     emailReplyToId: "testID",
