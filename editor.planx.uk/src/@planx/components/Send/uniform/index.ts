@@ -46,7 +46,7 @@ export function getUniformParams(
     xml: makeXmlString(passport, sessionId, uniqueFiles, uniformInstance),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
     files: uniqueFiles,
-    sessionId: sessionId,
+    sessionId,
   };
 }
 

@@ -219,6 +219,7 @@ jobs:
             UNIFORM_CLIENT_LAMBETH=${{ secrets.STAGING_UNIFORM_CLIENT_LAMBETH }}
             GOVUK_NOTIFY_API_KEY_TEAM=${{ secrets.GOVUK_NOTIFY_API_KEY_TEAM }}
             GOVUK_NOTIFY_API_KEY_TEST=${{ secrets.GOVUK_NOTIFY_API_KEY_TEST }}
+            HASURA_PLANX_API_KEY=${{ secrets.HASURA_PLANX_API_KEY }}
             " > .env.temp
             cat .env .env.temp .env.staging > .env.prod
 
@@ -258,6 +259,7 @@ jobs:
             UNIFORM_CLIENT_LAMBETH=${{ secrets.STAGING_UNIFORM_CLIENT_LAMBETH }}
             GOVUK_NOTIFY_API_KEY_TEAM=${{ secrets.GOVUK_NOTIFY_API_KEY_TEAM }}
             GOVUK_NOTIFY_API_KEY_TEST=${{ secrets.GOVUK_NOTIFY_API_KEY_TEST }}
+            HASURA_PLANX_API_KEY=${{ secrets.HASURA_PLANX_API_KEY }}
             " > .env.temp
             cat .env .env.temp .env.staging > .env.prod
 
