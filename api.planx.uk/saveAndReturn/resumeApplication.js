@@ -49,7 +49,7 @@ const validateRequest = async (teamSlug, email, res) => {
         teams(where: { slug: { _eq: $teamSlug } }) {
           slug
           name
-          notifyPersonalisation
+          notify_personalisation
         }
       }
     `
@@ -63,7 +63,7 @@ const validateRequest = async (teamSlug, email, res) => {
     return {
       teamSlug: teams[0].slug,
       teamName: teams[0].name,
-      teamPersonalisation: teams[0].notifyPersonalisation,
+      teamPersonalisation: teams[0].notify_personalisation,
       sessions: lowcal_sessions,
     };
   } catch (error) {
