@@ -1,4 +1,4 @@
-INSERT INTO planning_data.project_types (description, value) VALUES
+INSERT INTO "public"."project_types" (description, value) VALUES
 ('demolition of a building', 'demolish.full'),
 ('demolition of part of a building', 'demolish.part'),
 ('demolition of an outbuilding', 'demolish.outbuilding'),

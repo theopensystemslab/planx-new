@@ -288,13 +288,13 @@ const getReadableProjectTypeFromRaw = async (rawList) => {
   const client = getGraphQLClient();
   const query = `
     query GetHumanReadableProjectType($rawList: [String!]) {
-      planning_data_project_types(where: {value: {_in: $rawList}}) {
+      project_types(where: {value: {_in: $rawList}}) {
         description
       }
     }
   `;
-  const { planning_data_project_types } = await client.request(query, { rawList });
-  const list = planning_data_project_types.map(result => result.description);
+  const { project_types } = await client.request(query, { rawList });
+  const list = project_types.map(result => result.description);
   return list;
 };
 

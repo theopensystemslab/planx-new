@@ -1,5 +1,5 @@
 - table:
-    schema: planning_data
+    schema: public
     name: project_types
 - table:
     schema: public

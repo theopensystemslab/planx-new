@@ -1,1 +1,1 @@
-DROP TABLE "planning_data"."project_types";
+DROP TABLE "public"."project_types";
