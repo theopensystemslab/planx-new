@@ -7,26 +7,29 @@ const axios = require("axios");
  * @returns {AxiosResponse<any>}
  */
 const postToMetadataAPI = async (body) => {
-  return await axios.post(
-    process.env.HASURA_METADATA_URL,
-    JSON.stringify(body),
-    {
-      headers: {
-        "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET
-      },
-    }
-  );
+  try {
+    return await axios.post(
+      process.env.HASURA_METADATA_URL,
+      JSON.stringify(body),
+      {
+        headers: {
+          "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET
+        },
+      }
+    );
+  } catch (error) {
+    throw Error(error.message || "Failed to POST to Hasura Metadata API");
+  };
 };
 
 /**
  * Set up a new scheduled event in Hasura
  * https://hasura.io/docs/latest/graphql/core/api-reference/metadata-api/scheduled-triggers/#metadata-create-scheduled-event
- * @param {object} args 
- * @returns 
+ * @param {object} args
  */
 const createScheduledEvent = async (args) => {
   try {
-    const data = await postToMetadataAPI({
+    const response = await postToMetadataAPI({
       type: "create_scheduled_event",
       args: {
         ...args,
@@ -39,9 +42,9 @@ const createScheduledEvent = async (args) => {
         num_retries: 3,
       },
     });
-    return data;
+    return response.data;
   } catch (error) {
-    throw new Error(error);
+    throw Error(error.message);
   };
 };
 

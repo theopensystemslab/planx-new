@@ -11,7 +11,12 @@ const { DAYS_UNTIL_EXPIRY } = require("../saveAndReturn/utils");
 const createReminderEvent = async (req, res, next) => {
   try {
     const { createdAt, payload } = req.body
-    const response = createScheduledEvent({
+    if (!createdAt || !payload)
+      return next({
+        status: 400,
+        message: "Required value missing"
+      });
+    const response = await createScheduledEvent({
       webhook: "{{HASURA_PLANX_API_URL}}/send-email/reminder",
       schedule_at: addDays(Date.parse(createdAt), (DAYS_UNTIL_EXPIRY - 7)),
       payload: payload,
@@ -19,7 +24,9 @@ const createReminderEvent = async (req, res, next) => {
     });
     res.json(response);
   } catch (error) {
-    next(error);
+    return next({
+      message: `Failed to create reminder event. Error: ${error}`,
+    });
   };
 };
 
@@ -32,15 +39,22 @@ const createReminderEvent = async (req, res, next) => {
 const createExpiryEvent = async (req, res, next) => {
   try {
     const { createdAt, payload } = req.body
-    const response = createScheduledEvent({
+    if (!createdAt || !payload)
+      return next({
+        status: 400,
+        message: "Required value missing"
+      });
+    const response = await createScheduledEvent({
       webhook: "{{HASURA_PLANX_API_URL}}/send-email/expiry",
       schedule_at: addDays(Date.parse(createdAt), DAYS_UNTIL_EXPIRY),
       payload: payload,
       comment: `expiry_${payload.sessionId}`,
-    });
+    }, next);
     res.json(response);
   } catch (error) {
-    next(error);
+    return next({
+      message: `Failed to create expiry event. Error: ${error.message}`,
+    });
   };
 };
 
