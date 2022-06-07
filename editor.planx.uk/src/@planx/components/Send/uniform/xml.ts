@@ -1,6 +1,11 @@
+import { GovUKPayment } from "types";
+
 import { Store } from "../../../../pages/FlowEditor/lib/store";
+import { GOV_PAY_PASSPORT_KEY } from "../../Pay/model";
 
 export function makeXmlString(passport: Store.passport, sessionId: string) {
+  const payment = passport.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
+
   // ensure that date is valid and in yyyy-mm-dd format
   let proposalCompletionDate = passport.data?.["proposal.completion.date"];
   if (proposalCompletionDate) {
@@ -11,15 +16,15 @@ export function makeXmlString(passport: Store.passport, sessionId: string) {
     proposalCompletionDate = new Date(Date.now()).toISOString().split("T")[0];
   }
 
-  // this string template represents the full proposal.xml schema
+  // this string template represents the full proposal.xml schema including prefixes
   const proposal = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <portaloneapp:Proposal xmlns:portaloneapp="http://www.govtalk.gov.uk/planning/OneAppProposal-2006" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bs7666="http://www.govtalk.gov.uk/people/bs7666" xmlns:org="http://www.govtalk.gov.uk/financial/OrganisationIdentifiers" xmlns:pdt="http://www.govtalk.gov.uk/people/PersonDescriptives" xmlns:apd="http://www.govtalk.gov.uk/people/AddressAndPersonalDetails" xmlns:core="http://www.govtalk.gov.uk/core" xmlns:common="http://www.govtalk.gov.uk/planning/OneAppCommon-2006" Version="1.3">
       <portaloneapp:SchemaVersion>1.3</portaloneapp:SchemaVersion>
       <portaloneapp:ApplicationHeader>
         <portaloneapp:ApplicationTo>00QA</portaloneapp:ApplicationTo>
         <portaloneapp:DateSubmitted>${proposalCompletionDate}</portaloneapp:DateSubmitted>
-        <portaloneapp:RefNum/>
-        <portaloneapp:FormattedRefNum/>
+        <portaloneapp:RefNum>${sessionId}</portaloneapp:RefNum>
+        <portaloneapp:FormattedRefNum>${sessionId}</portaloneapp:FormattedRefNum>
         <portaloneapp:ApplicationVersion>1</portaloneapp:ApplicationVersion>
         <portaloneapp:AttachmentsChanged>false</portaloneapp:AttachmentsChanged>
         <portaloneapp:Payment>
@@ -27,9 +32,7 @@ export function makeXmlString(passport: Store.passport, sessionId: string) {
           <common:AmountDue>${
             passport.data?.["application.fee.payable"]
           }</common:AmountDue>
-          <common:AmountPaid>${
-            passport.data?.["application.fee.payable"]
-          }</common:AmountPaid>
+          <common:AmountPaid>${payment?.amount?.toString()}</common:AmountPaid>
           <common:Currency>GBP</common:Currency>
         </portaloneapp:Payment>
       </portaloneapp:ApplicationHeader>
