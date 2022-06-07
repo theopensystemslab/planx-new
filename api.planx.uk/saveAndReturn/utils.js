@@ -1,7 +1,8 @@
 const { GraphQLClient } = require("graphql-request");
 const { NotifyClient } = require("notifications-node-client");
+const { format, addDays } = require("date-fns");
 
-const { format } = require('date-fns');
+const DAYS_UNTIL_EXPIRY = 28;
 
 const singleSessionEmailTemplates = {
   save: process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID,
@@ -92,11 +93,15 @@ const getServiceLink = (teamSlug, flowSlug) => {
 };
 
 /**
- * Return raw date from db in a standard format
+ * Return formatted expiry date, based on created_at timestamptz
  * @param {string} date 
  * @returns {string}
  */
-const formatDate = (date) => format(Date.parse(date), "dd MMMM yyyy");
+const calculateExpiryDate = (createdAt) => {
+  const expiryDate = addDays(Date.parse(createdAt), DAYS_UNTIL_EXPIRY);
+  const formattedExpiryDate = format(expiryDate, "dd MMMM yyyy");
+  return formattedExpiryDate;
+}
 
 /**
  * Sends "Save", "Remind", and "Expiry" emails to Save & Return users
@@ -142,7 +147,7 @@ const validateSingleSessionRequest = async (email, sessionId) => {
       ) {
         id
         data
-        expiry_date
+        created_at
         flow {
           slug
           team {
@@ -185,7 +190,7 @@ const getSessionDetails = (session) => {
     address: address || "Address not submitted",
     projectType: projectTypes || "Project type not submitted",
     id: session.id,
-    expiryDate: formatDate(session.expiry_date),
+    expiryDate: calculateExpiryDate(session.created_at),
   };
 };
 
@@ -265,9 +270,10 @@ module.exports = {
   sendEmail,
   convertSlugToName,
   getResumeLink,
-  formatDate,
   sendSingleApplicationEmail,
   singleSessionEmailTemplates,
   softDeleteSession,
   markSessionAsSubmitted,
+  DAYS_UNTIL_EXPIRY,
+  calculateExpiryDate,
 };

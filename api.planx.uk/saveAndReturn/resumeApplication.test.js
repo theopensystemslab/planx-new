@@ -21,7 +21,7 @@ describe("buildContentFromSessions function", () => {
         }
       },
       id: 123,
-      expiry_date: "2022-05-04T01:02:03.865452+00:00",
+      created_at: "2022-05-01T01:02:03.865452+00:00",
       flow: {
         slug: "apply-for-a-lawful-development-certificate"
       },
@@ -30,7 +30,7 @@ describe("buildContentFromSessions function", () => {
     const result = `Service: Apply For A Lawful Development Certificate
       Address: 1 High Street
       Project Type: house
-      Expiry Date: 04 May 2022
+      Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
     expect(buildContentFromSessions(sessions, "team")).toEqual(result);
   });
@@ -48,7 +48,7 @@ describe("buildContentFromSessions function", () => {
         }
       },
       id: 123,
-      expiry_date: "2022-05-04T01:02:03.865452+00:00",
+      created_at: "2022-05-01T01:02:03.865452+00:00",
       flow: {
         slug: "apply-for-a-lawful-development-certificate"
       },
@@ -65,7 +65,7 @@ describe("buildContentFromSessions function", () => {
         }
       },
       id: 456,
-      expiry_date: "2022-05-04T01:02:03.865452+00:00",
+      created_at: "2022-05-01T01:02:03.865452+00:00",
       flow: {
         slug: "apply-for-a-lawful-development-certificate"
       },
@@ -82,7 +82,7 @@ describe("buildContentFromSessions function", () => {
         }
       },
       id: 789,
-      expiry_date: "2022-05-04T01:02:03.865452+00:00",
+      created_at: "2022-05-01T01:02:03.865452+00:00",
       flow: {
         slug: "apply-for-a-lawful-development-certificate"
       },
@@ -90,15 +90,15 @@ describe("buildContentFromSessions function", () => {
     const result = `Service: Apply For A Lawful Development Certificate
       Address: 1 High Street
       Project Type: house
-      Expiry Date: 04 May 2022
+      Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123\n\nService: Apply For A Lawful Development Certificate
       Address: 2 High Street
       Project Type: flat
-      Expiry Date: 04 May 2022
+      Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=456\n\nService: Apply For A Lawful Development Certificate
       Address: 3 High Street
       Project Type: farm
-      Expiry Date: 04 May 2022
+      Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=789`
     expect(buildContentFromSessions(sessions, "team")).toEqual(result)
   });
@@ -114,7 +114,7 @@ describe("buildContentFromSessions function", () => {
         }
       },
       id: 123,
-      expiry_date: "2022-05-04T01:02:03.865452+00:00",
+      created_at: "2022-05-01T01:02:03.865452+00:00",
       flow: {
         slug: "apply-for-a-lawful-development-certificate"
       },
@@ -123,7 +123,7 @@ describe("buildContentFromSessions function", () => {
     const result = `Service: Apply For A Lawful Development Certificate
       Address: Address not submitted
       Project Type: house
-      Expiry Date: 04 May 2022
+      Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
     expect(buildContentFromSessions(sessions, "team")).toEqual(result);
   });
@@ -141,7 +141,7 @@ describe("buildContentFromSessions function", () => {
         }
       },
       id: 123,
-      expiry_date: "2022-05-04T01:02:03.865452+00:00",
+      created_at: "2022-05-01T01:02:03.865452+00:00",
       flow: {
         slug: "apply-for-a-lawful-development-certificate"
       },
@@ -150,7 +150,7 @@ describe("buildContentFromSessions function", () => {
     const result = `Service: Apply For A Lawful Development Certificate
       Address: 1 High Street
       Project Type: Project type not submitted
-      Expiry Date: 04 May 2022
+      Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
     expect(buildContentFromSessions(sessions, "team")).toEqual(result);
   });

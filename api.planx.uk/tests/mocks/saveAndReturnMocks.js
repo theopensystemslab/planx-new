@@ -25,7 +25,7 @@ const mockLowcalSession = {
     slug: "apply-for-a-lawful-development-certificate",
     team: mockTeam,
   },
-  expiry_date: "2022-05-04T01:02:03.865452+00:00",
+  created_at: "2022-01-04T01:02:03.865452+00:00",
 };
 
 const mockFlow = {
