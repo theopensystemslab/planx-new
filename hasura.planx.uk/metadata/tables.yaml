@@ -1,5 +1,8 @@
 - table:
     schema: public
+    name: project_types
+- table:
+    schema: public
     name: analytics
   insert_permissions:
     - role: public
