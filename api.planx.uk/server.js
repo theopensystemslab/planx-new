@@ -34,6 +34,7 @@ const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
 const airbrake = require("./airbrake");
 const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
+const { createReminderEvent, createExpiryEvent } = require("./webhooks/lowcalSessionEvents");
 
 const router = express.Router();
 
@@ -579,7 +580,10 @@ app.post("/send-email/:template", useSendEmailAuth, sendSaveAndReturnEmail);
 app.post("/resume-application", resumeApplication);
 app.post("/validate-session", validateSession);
 
-app.post("/webhooks/delete-expired-sessions", useHasuraAuth, hardDeleteSessions);
+app.use("/webhooks/hasura", useHasuraAuth)
+app.post("/webhooks/hasura/delete-expired-sessions", hardDeleteSessions);
+app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
+app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()
