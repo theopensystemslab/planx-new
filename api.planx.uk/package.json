@@ -6,6 +6,7 @@
     "@airbrake/node": "^2.1.5",
     "adm-zip": "^0.5.9",
     "aws-sdk": "^2.727.1",
+    "axios": "^0.27.2",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
