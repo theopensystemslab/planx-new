@@ -1,0 +1,1 @@
+DELETE FROM public.project_types;
