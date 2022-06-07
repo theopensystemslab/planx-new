@@ -1,5 +1,11 @@
-const { getGraphQLClient, sendEmail, convertSlugToName, getResumeLink, calculateExpiryDate } = require("./utils");
+const { getGraphQLClient, sendEmail, convertSlugToName, getResumeLink, calculateExpiryDate, getHumanReadableProjectType } = require("./utils");
 
+/**
+ * Send a "Resume" email to an applicant which list all open applications for a given council (team)
+ * @param {object} req 
+ * @param {object} res 
+ * @param {object} next 
+ */
 const resumeApplication = async (req, res, next) => {
   try {
     const { teamSlug, email } = req.body;
@@ -11,7 +17,7 @@ const resumeApplication = async (req, res, next) => {
 
     const { teamPersonalisation, sessions, teamName } = await validateRequest(teamSlug, email, res);
     const config = {
-      personalisation: getPersonalisation(
+      personalisation: await getPersonalisation(
         sessions,
         teamSlug,
         teamPersonalisation,
@@ -27,6 +33,12 @@ const resumeApplication = async (req, res, next) => {
   }
 };
 
+/**
+ * Validate that there are sessions matching the request
+ * @param {string} teamSlug 
+ * @param {string} email 
+ * @param {object} res 
+ */
 const validateRequest = async (teamSlug, email, res) => {
   try {
     const client = getGraphQLClient();
@@ -42,6 +54,7 @@ const validateRequest = async (teamSlug, email, res) => {
         ) {
           id
           created_at
+          data
           flow {
             slug
           }
@@ -71,22 +84,36 @@ const validateRequest = async (teamSlug, email, res) => {
   }
 };
 
-const getPersonalisation = (sessions, teamSlug, teamPersonalisation, teamName) => {
+/**
+ * Construct personalisation object required for the "Resume" Notify template
+ * @param {array} sessions 
+ * @param {string} teamSlug 
+ * @param {object} teamPersonalisation 
+ * @param {string} teamName 
+ * @returns {object}
+ */
+const getPersonalisation = async (sessions, teamSlug, teamPersonalisation, teamName) => {
   return {
     helpEmail: teamPersonalisation.helpEmail,
     helpPhone: teamPersonalisation.helpPhone,
     helpOpeningHours: teamPersonalisation.helpOpeningHours,
     teamName: teamName,
-    content: buildContentFromSessions(sessions, teamSlug)
+    content: await buildContentFromSessions(sessions, teamSlug)
   };
 };
 
-const buildContentFromSessions = (sessions, teamSlug) => {
-  return sessions.map(session => {
+/**
+ * Build the main content of the "Resume" email
+ * A formatted list of all open applications, including magic link to resume
+ * @param {array} sessions 
+ * @param {string} teamSlug 
+ * @returns {string}
+ */
+const buildContentFromSessions = async (sessions, teamSlug) => {
+  const contentBuilder = async (session) => {
     const service = convertSlugToName(session.flow.slug);
     const address = session.data?.passport?.data?._address?.single_line_address;
-    // TODO: Get human readable values here     
-    const projectType = session?.data?.passport?.data?.["proposal.projectType"]?.join(", ")
+    const projectType = await getHumanReadableProjectType(session);
     const resumeLink = getResumeLink(session, teamSlug, session.flow.slug)
     const expiryDate = calculateExpiryDate(session.created_at);
 
@@ -95,7 +122,10 @@ const buildContentFromSessions = (sessions, teamSlug) => {
       Project Type: ${projectType || "Project type not submitted"}
       Expiry Date: ${expiryDate}
       Link: ${resumeLink}`;
-  }).join("\n\n");
+  };
+
+  const content = await Promise.all(sessions.map(contentBuilder));
+  return content.join("\n\n");
 };
 
 module.exports = { resumeApplication, buildContentFromSessions };
