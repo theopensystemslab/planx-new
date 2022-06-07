@@ -1,4 +1,4 @@
-const { addDays } = require("date-fns");
+const { addDays, addMinutes } = require("date-fns");
 const { createScheduledEvent } = require("../hasura/metadata");
 const { DAYS_UNTIL_EXPIRY } = require("../saveAndReturn/utils");
 
@@ -18,7 +18,8 @@ const createReminderEvent = async (req, res, next) => {
       });
     const response = await createScheduledEvent({
       webhook: "{{HASURA_PLANX_API_URL}}/send-email/reminder",
-      schedule_at: addDays(Date.parse(createdAt), (DAYS_UNTIL_EXPIRY - 7)),
+      // schedule_at: addDays(Date.parse(createdAt), (DAYS_UNTIL_EXPIRY - 7)),
+      schedule_at: addMinutes(Date.parse(createdAt), 10),
       payload: payload,
       comment: `reminder_${payload.sessionId}`,
     });
@@ -46,7 +47,8 @@ const createExpiryEvent = async (req, res, next) => {
       });
     const response = await createScheduledEvent({
       webhook: "{{HASURA_PLANX_API_URL}}/send-email/expiry",
-      schedule_at: addDays(Date.parse(createdAt), DAYS_UNTIL_EXPIRY),
+      // schedule_at: addDays(Date.parse(createdAt), DAYS_UNTIL_EXPIRY),
+      schedule_at: addMinutes(Date.parse(createdAt), 15),
       payload: payload,
       comment: `expiry_${payload.sessionId}`,
     }, next);
