@@ -1,7 +1,6 @@
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { add } from "date-fns";
-import { getCookie } from "lib/cookie";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { SendEmailPayload } from "types";

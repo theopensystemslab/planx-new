@@ -8,21 +8,22 @@ const { singleSessionEmailTemplates } = require('../saveAndReturn/utils');
  * @returns {boolean}
  */
 const isEqual = (provided = "", expected) => {
+  const hash = crypto.createHash('SHA512');
   return crypto.timingSafeEqual(
-    Buffer.from(provided), 
-    Buffer.from(expected)
+    hash.copy().update(provided).digest(),
+    hash.copy().update(expected).digest()
   );
 };
 
 /**
  * Validate that a request is using the Hasura API key
  * @param {object} req 
- * @param {object} res 
+ * @param {object} _res 
  * @param {object} next 
  */
-const useHasuraAuth = (req, res, next) => {
+const useHasuraAuth = (req, _res, next) => {
   const isAuthenticated = isEqual(req.headers.authorization, process.env.HASURA_PLANX_API_KEY);
-  if (!isAuthenticated) return res.status(401).send("Unauthorised");
+  if (!isAuthenticated) return next({ status: 401, message: "Unauthorised" });
   next();
 };
 
