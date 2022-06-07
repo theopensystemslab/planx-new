@@ -1,0 +1,1 @@
+drop table if exists "public"."uniform_applications" cascade;
