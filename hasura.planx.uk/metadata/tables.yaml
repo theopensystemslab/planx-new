@@ -191,29 +191,23 @@
         num_retries: 3
         interval_sec: 10
         timeout_sec: 60
-      webhook: http://localhost:8080/v1/metadata
+      webhook_from_env: HASURA_PLANX_API_URL
       headers:
-        - name: x-hasura-admin-secret
-          value_from_env: ADMIN_SECRET
+        - name: authorization
+          value_from_env: HASURA_PLANX_API_KEY
       request_transform:
         body: |-
           {
-              "type": "create_scheduled_event",
-              "args": {
-                  "webhook": "http://api:7002/send-email/expiry",
-                  "schedule_at": {{$body.event.data.new.expiry_date}},
-                  "payload": {
-                    "sessionId": {{$body.event.data.new.id}},
-                    "email": {{$body.event.data.new.email}}
-                  },
-                  "comment": "expiry_{{$body.event.data.new.id}}",
-                  "headers": [{
-                      "name":"authorization",
-                      "value_from_env":"HASURA_PLANX_API_KEY"
-                  }]
-              }
+            "createdAt": {{$body.event.data.new.created_at}},
+            "payload": {
+              "sessionId": {{$body.event.data.new.id}},
+              "email": {{$body.event.data.new.email}}
+            }
           }
+        url: '{{$base_url}}/webhooks/hasura/create-expiry-event'
         content_type: application/json
+        method: POST
+        query_params: {}
         template_engine: Kriti
     - name: setup_lowcal_reminder_events
       definition:
@@ -224,29 +218,23 @@
         num_retries: 3
         interval_sec: 10
         timeout_sec: 60
-      webhook: http://localhost:8080/v1/metadata
+      webhook_from_env: HASURA_PLANX_API_URL
       headers:
-        - name: x-hasura-admin-secret
-          value_from_env: ADMIN_SECRET
+        - name: authorization
+          value_from_env: HASURA_PLANX_API_KEY
       request_transform:
         body: |-
           {
-              "type": "create_scheduled_event",
-              "args": {
-                  "webhook": "http://api:7002/send-email/reminder",
-                  "schedule_at": {{$body.event.data.new.reminder_date}},
-                  "payload": {
-                    "sessionId": {{$body.event.data.new.id}},
-                    "email": {{$body.event.data.new.email}}
-                  },
-                  "comment": "reminder_{{$body.event.data.new.id}}",
-                  "headers": [{
-                      "name":"authorization",
-                      "value_from_env":"HASURA_PLANX_API_KEY"
-                  }]
-              }
+            "createdAt": {{$body.event.data.new.created_at}},
+            "payload": {
+              "sessionId": {{$body.event.data.new.id}},
+              "email": {{$body.event.data.new.email}}
+            }
           }
+        url: '{{$base_url}}/webhooks/hasura/create-reminder-event'
         content_type: application/json
+        method: POST
+        query_params: {}
         template_engine: Kriti
 - table:
     schema: public
