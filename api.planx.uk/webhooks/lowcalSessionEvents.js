@@ -25,6 +25,7 @@ const createReminderEvent = async (req, res, next) => {
     res.json(response);
   } catch (error) {
     return next({
+      error,
       message: `Failed to create reminder event. Error: ${error}`,
     });
   };
@@ -53,6 +54,7 @@ const createExpiryEvent = async (req, res, next) => {
     res.json(response);
   } catch (error) {
     return next({
+      error,
       message: `Failed to create expiry event. Error: ${error.message}`,
     });
   };

@@ -9,9 +9,13 @@ const sendSaveAndReturnEmail = async (req, res, next) => {
         status: 400,
         message: "Required value missing"
       });
-    await sendSingleApplicationEmail(res, template, email, sessionId);
+    const response = await sendSingleApplicationEmail(template, email, sessionId);
+    return res.json(response);
   } catch (error) {
-    next(error);
+    return next({ 
+      error,
+      message: `Failed to send ${req.params.template} email. ${error.message}`
+    });
   };
 };
 
