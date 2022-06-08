@@ -1,14 +1,15 @@
+require("isomorphic-fetch");
 const convert = require("xml-js");
 const fs = require("fs");
 const AdmZip = require("adm-zip");
 const stringify = require("csv-stringify");
 
 // Generate a .zip folder containing an XML (schema specified by Uniform), CSV (our own format) and any user uploaded files
-//   Eventually, drop the .zip on an FTP server corresponding to that council's Uniform/IDOX instance so it can be picked up & parsed later
+// TODO rename to `createUniformZip` ?? 
 const sendToUniform = (req, res, next) => {
   if (!req.body) {
     res.send({
-      message: "Missing application data to send to Uniform"
+      message: "Missing application data to create Uniform zip"
     });
   }
   
@@ -50,6 +51,118 @@ const sendToUniform = (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+// Handle submission steps: authenticate, create a submission, and then attach the .zip to that submission
+//   TODO store responses in uniform_applications table
+const sendToUniformNew = async (req, res, next) => {
+  // TODO additionally send & check for req.body.sessionId
+  if (!req.params.localAuthority) {
+    res.send({
+      message: "Missing application data to submit to Uniform",
+    });
+  }
+
+  // TODO map req.params.localAuthority to supported Uniform organisations/organisationIds (to be supplied by Idox)
+  //   defaults to "DHLUC" for testing
+  const org = "DHLUC";
+
+  try {
+    const credentials = await authenticate(org);
+    if (credentials && credentials.access_token && credentials["organisation-id"]) {
+      const token = credentials.access_token;
+      const orgId = credentials["organisation-id"];
+
+      const submissionLocation = await createSubmission(token, org, orgId, "TEST");
+      const idoxSubmissionId = submissionLocation.split("/").pop();
+
+      // TODO last request to add attachment, handle createSubmission errors
+
+      res.send({
+        message: `Authenticated and created a submission`,
+        data: submissionLocation,
+      });
+    } else {
+      res.send({
+        message: `Unable to authenticate to Uniform`,
+      });
+    }
+  } catch (error) {
+    next({
+      error,
+      message: `Unable to send to Uniform. ${error}`,
+    });
+  }
+};
+
+function authenticate(organisation) {
+  const authEndpoint = "https://dev.identity.idoxgroup.com/uaa/oauth/token";
+
+  const authOptions = {
+    method: "POST",
+    headers: new Headers({
+      "Authorization": 'Basic ' + Buffer.from(process.env.UNIFORM_API_USERNAME + ":" + process.env.UNIFORM_API_PASSWORD).toString("base64"),
+      "Content-type": "application/x-www-form-urlencoded",
+    }),
+    body: new URLSearchParams({
+      client_id: process.env.UNIFORM_API_USERNAME,
+      client_secret: process.env.UNIFORM_API_PASSWORD,
+      grant_type: "client_credentials",
+    }),
+    redirect: "follow",
+  };
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await fetch(authEndpoint, authOptions)
+        .then(response => response.json())
+        .catch(error => console.log(error));
+      resolve(resp);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+function createSubmission(token, organisation, organisationId, sessionId) {
+  const createSubmissionEndpoint = "https://dev.identity.idoxgroup.com/agw/submission-api/secure/submission";
+
+  const createSubmissionOptions = {
+    method: "POST",
+    headers: new Headers({
+      "Authorization": `Bearer ${token}`,
+      "Content-type": "application/json",
+    }),
+    body: JSON.stringify({
+      "entity": "dc",
+      "module": "dc",
+      "organisation": organisation,
+      "organisationId": organisationId,
+      "submissionReference": sessionId,
+      "description": "Test insert for DLUHC",
+      "submissionProcessorType": "API"
+    }),
+    redirect: "follow",
+  };
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await fetch(createSubmissionEndpoint, createSubmissionOptions)
+        .then(response => {
+          if (response.status === 201) {
+            return response.headers.get("location");
+          }
+        })
+        .catch(error => console.log(error));
+      resolve(resp);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+function attachArchive(token, submissionId, zip) {
+  console.log("TODO");
 };
 
 // XXX: TEMPORARY METHOD FOR TESTING ONLY
@@ -100,4 +213,4 @@ const deleteFile = (path) => {
   }
 };
 
-module.exports = { sendToUniform, downloadUniformZip };
+module.exports = { sendToUniform, sendToUniformNew, downloadUniformZip };

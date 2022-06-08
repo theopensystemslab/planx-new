@@ -24,7 +24,7 @@ const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
 const { diffFlow, publishFlow } = require("./publish");
 const { findAndReplaceInFlow } = require("./findReplace");
-const { sendToUniform, downloadUniformZip } = require("./send");
+const { sendToUniform, downloadUniformZip, sendToUniformNew } = require("./send");
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -320,6 +320,10 @@ app.post("/bops/:localAuthority", (req, res) => {
 });
 
 app.post("/uniform/:localAuthority", sendToUniform);
+
+assert(process.env.UNIFORM_API_USERNAME);
+assert(process.env.UNIFORM_API_PASSWORD);
+app.post("/uniform-new/:localAuthority", sendToUniformNew);
 
 // XXX: TEMPORARY ENDPOINT for interim testing until we can POST to Uniform FTP server
 app.get("/uniform-download", downloadUniformZip);
