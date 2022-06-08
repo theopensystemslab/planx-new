@@ -32,9 +32,8 @@ const getGraphQLClient = () => new GraphQLClient(process.env.HASURA_GRAPHQL_URL,
  * @param {string} template 
  * @param {string} emailAddress 
  * @param {object} config 
- * @param {object} res 
  */
-const sendEmail = async (template, emailAddress, config, res) => {
+const sendEmail = async (template, emailAddress, config) => {
   const templateId = emailTemplates[template];
   if (!templateId) throw new Error("Template ID is required");
 
@@ -47,13 +46,10 @@ const sendEmail = async (template, emailAddress, config, res) => {
     );
     const returnValue = { message: "Success" }
     if (template === "save") returnValue.expiryDate = config.personalisation.expiryDate;
-    res.json(returnValue);
-  } catch (err) {
-    console.error({
-      message: err.response.data.errors,
-      status: err.response.data.status_code,
-    });
-    res.status(err.response.data.status_code).send(err.response.data);
+    return returnValue;
+  } catch (error) {
+    const notifyError = JSON.stringify(error.response.data.errors[0]);
+    throw Error(`Error: Failed to send email using Notify client. ${notifyError}`);
   };
 };
 
@@ -103,24 +99,29 @@ const calculateExpiryDate = (createdAt) => {
 
 /**
  * Sends "Save", "Remind", and "Expiry" emails to Save & Return users
- * @param {object} res 
- * @param {object} applicationDetails 
+ * @param {string} template 
+ * @param {string} email 
+ * @param {string} sessionId 
  */
-const sendSingleApplicationEmail = async (res, template, email, sessionId) => {
-  const { flowSlug, teamSlug, teamPersonalisation, session, teamName } = await validateSingleSessionRequest(email, sessionId);
-  const config = {
-    personalisation: getPersonalisation(
-      session,
-      flowSlug,
-      teamSlug,
-      teamPersonalisation,
-      teamName,
-    ),
-    reference: null,
-    // This value is required to go live, but is not currently set up
-    // emailReplyToId: team.emailReplyToId,
+const sendSingleApplicationEmail = async (template, email, sessionId) => {
+  try {
+    const { flowSlug, teamSlug, teamPersonalisation, session, teamName } = await validateSingleSessionRequest(email, sessionId);
+    const config = {
+      personalisation: getPersonalisation(
+        session,
+        flowSlug,
+        teamSlug,
+        teamPersonalisation,
+        teamName,
+      ),
+      reference: null,
+      // This value is required to go live, but is not currently set up
+      // emailReplyToId: team.emailReplyToId,
+    };
+    return await sendEmail(template, email, config);
+  } catch (error) {
+    throw Error(error.message)
   };
-  sendEmail(template, email, config, res);
 };
 
 /**
@@ -134,33 +135,32 @@ const validateSingleSessionRequest = async (email, sessionId) => {
   try {
     const client = getGraphQLClient();
     const query = `
-    query ValidateSingleSessionRequest($email: String, $sessionId: uuid!) {
-      lowcal_sessions(
-        where: {
-          email: { _eq: $email }
-          id: { _eq: $sessionId }
-          deleted_at: { _is_null: true }
-          submitted_at: { _is_null: true }
-        }
-      ) {
-        id
-        data
-        created_at
-        flow {
-          slug
-          team {
-            name
+      query ValidateSingleSessionRequest($email: String, $sessionId: uuid!) {
+        lowcal_sessions(
+          where: {
+            email: { _eq: $email }
+            id: { _eq: $sessionId }
+            deleted_at: { _is_null: true }
+            submitted_at: { _is_null: true }
+          }
+        ) {
+          id
+          data
+          created_at
+          flow {
             slug
-            notify_personalisation
+            team {
+              name
+              slug
+              notify_personalisation
+            }
           }
         }
       }
-    }
-    
     `
     const { lowcal_sessions: [session] } = await client.request(query, { email: email.toLowerCase(), sessionId });
 
-    if (!session) throw Error;
+    if (!session) throw Error("Unable to find session");
 
     return {
       flowSlug: session.flow.slug,
@@ -170,7 +170,7 @@ const validateSingleSessionRequest = async (email, sessionId) => {
       teamName: session.flow.team.name,
     };
   } catch (error) {
-    throw new Error("Unable to validate request")
+    throw Error(`Unable to validate request. ${error.message}`)
   }
 };
 

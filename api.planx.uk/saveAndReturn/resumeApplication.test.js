@@ -8,7 +8,23 @@ const ENDPOINT = "/resume-application";
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk"
 
 describe("buildContentFromSessions function", () => {
-  it("should return correctly formatted content for a single session", () => {
+
+  beforeEach(() => {
+    queryMock.reset();
+    queryMock.mockQuery({
+      name: "GetHumanReadableProjectType",
+      data: {
+        project_types: [
+          { description: "New office premises" }
+        ],
+      },
+      variables: {
+        rawList: ["new.office"],
+      }
+    });
+  });
+
+  it("should return correctly formatted content for a single session", async () => {
     const sessions = [{
       data: {
         passport: {
@@ -16,7 +32,7 @@ describe("buildContentFromSessions function", () => {
             _address: {
               single_line_address: "1 High Street"
             },
-            "proposal.projectType": ["house"]
+            "proposal.projectType": ["new.office"]
           }
         }
       },
@@ -29,13 +45,13 @@ describe("buildContentFromSessions function", () => {
 
     const result = `Service: Apply For A Lawful Development Certificate
       Address: 1 High Street
-      Project Type: house
+      Project Type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(buildContentFromSessions(sessions, "team")).toEqual(result);
+    expect(await buildContentFromSessions(sessions, "team")).toEqual(result);
   });
 
-  it("should return correctly formatted content for multiple session", () => {
+  it("should return correctly formatted content for multiple session", async () => {
     const sessions = [{
       data: {
         passport: {
@@ -43,7 +59,7 @@ describe("buildContentFromSessions function", () => {
             _address: {
               single_line_address: "1 High Street"
             },
-            "proposal.projectType": ["house"]
+            "proposal.projectType": ["new.office"]
           }
         }
       },
@@ -60,7 +76,7 @@ describe("buildContentFromSessions function", () => {
             _address: {
               single_line_address: "2 High Street"
             },
-            "proposal.projectType": ["flat"]
+            "proposal.projectType": ["new.office"]
           }
         }
       },
@@ -77,7 +93,7 @@ describe("buildContentFromSessions function", () => {
             _address: {
               single_line_address: "3 High Street"
             },
-            "proposal.projectType": ["farm"]
+            "proposal.projectType": ["new.office"]
           }
         }
       },
@@ -89,27 +105,27 @@ describe("buildContentFromSessions function", () => {
     }];
     const result = `Service: Apply For A Lawful Development Certificate
       Address: 1 High Street
-      Project Type: house
+      Project Type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123\n\nService: Apply For A Lawful Development Certificate
       Address: 2 High Street
-      Project Type: flat
+      Project Type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=456\n\nService: Apply For A Lawful Development Certificate
       Address: 3 High Street
-      Project Type: farm
+      Project Type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=789`
-    expect(buildContentFromSessions(sessions, "team")).toEqual(result)
+    expect(await buildContentFromSessions(sessions, "team")).toEqual(result)
   });
 
-  it("should handle an empty address field", () => {
+  it("should handle an empty address field", async () => {
     const sessions = [{
       data: {
         passport: {
           // Missing address
           data: {
-            "proposal.projectType": ["house"]
+            "proposal.projectType": ["new.office"]
           }
         }
       },
@@ -122,13 +138,13 @@ describe("buildContentFromSessions function", () => {
 
     const result = `Service: Apply For A Lawful Development Certificate
       Address: Address not submitted
-      Project Type: house
+      Project Type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(buildContentFromSessions(sessions, "team")).toEqual(result);
+    expect(await buildContentFromSessions(sessions, "team")).toEqual(result);
   });
 
-  it("should handle an empty project type field", () => {
+  it("should handle an empty project type field", async () => {
     const sessions = [{
       data: {
         passport: {
@@ -152,27 +168,42 @@ describe("buildContentFromSessions function", () => {
       Project Type: Project type not submitted
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(buildContentFromSessions(sessions, "team")).toEqual(result);
+    expect(await buildContentFromSessions(sessions, "team")).toEqual(result);
   });
 
 });
 
 describe("Resume Application endpoint", () => {
 
-  it("throws an error for if required data is missing", () => {
+  beforeEach(() => {
+    queryMock.reset();
+    queryMock.mockQuery({
+      name: "GetHumanReadableProjectType",
+      data: {
+        project_types: [
+          { description: "New office premises" }
+        ],
+      },
+      variables: {
+        rawList: ["new.office"],
+      }
+    });
+  });
+
+  it("throws an error for if required data is missing", async () => {
 
     const missingEmail = { teamSlug: "test" };
     const missingTeamSlug = { email: "test" };
 
-    [missingEmail, missingTeamSlug].forEach(async (invalidBody) => {
+    for (let invalidBody of [missingEmail, missingTeamSlug]) {
       await supertest(app)
-      .post(ENDPOINT)
-      .send(invalidBody)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toHaveProperty("error", "Required value missing");
-      });
-    })
+        .post(ENDPOINT)
+        .send(invalidBody)
+        .expect(400)
+        .then(response => {
+          expect(response.body).toHaveProperty("error", "Required value missing");
+        });
+    };
   });
 
   it("throws an error if a teamSlug is invalid", async () => {
@@ -189,10 +220,10 @@ describe("Resume Application endpoint", () => {
       .send(payload)
       .expect(500)
       .then(response => {
-        expect(response.body).toHaveProperty("error", "Unable to validate request");
-    });
+        expect(response.body).toHaveProperty('error', 'Failed to send "Resume" email. Unable to validate request');
+      });
   });
-  
+
   it("sends a Notify email on successful resume", async () => {
     const payload = { teamSlug: "test-team", email: TEST_EMAIL };
 
@@ -209,6 +240,9 @@ describe("Resume Application endpoint", () => {
       .post(ENDPOINT)
       .send(payload)
       .expect(200)
+      .then(response => {
+        expect(response.body).toHaveProperty("message", "Success");
+      });
   });
 
   it("give a successful response even if there is not a matching session", async () => {
@@ -216,13 +250,16 @@ describe("Resume Application endpoint", () => {
 
     queryMock.mockQuery({
       name: 'ValidateRequest',
-      data: { teams: [mockTeam], lowcal_sessions: null },
+      data: { teams: [mockTeam], lowcal_sessions: [] },
       variables: payload
     });
 
     await supertest(app)
       .post(ENDPOINT)
       .send(payload)
-      .expect(200);
+      .expect(200)
+      .then(response => {
+        expect(response.body).toHaveProperty("message", "Success");
+      });
   });
 });

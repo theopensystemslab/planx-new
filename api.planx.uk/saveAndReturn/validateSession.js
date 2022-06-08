@@ -23,7 +23,7 @@ const validateSession = async (req, res, next) => {
         getPublishedFlowByDate(sessionData.data.id, sessionData.updated_at),
       ]);
       if (!currentFlow || !savedFlow) {
-        next({
+        return next({
           status: 404,
           message: "Unable to find a published version of this flow"
         });
@@ -83,14 +83,17 @@ const validateSession = async (req, res, next) => {
         });
       }
     } else {
-      next({
+      return next({
         status: 404,
         message: "Unable to find your session" 
       });
     }
   } catch (error) {
-    next(error);
-  }
+    return next({
+      error,
+      message: "Failed to validate session"
+    });
+  };
 };
 
 const findSession = async (id, email) => {
