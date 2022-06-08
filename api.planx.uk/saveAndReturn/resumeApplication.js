@@ -16,6 +16,9 @@ const resumeApplication = async (req, res, next) => {
       });
 
     const { teamPersonalisation, sessions, teamName } = await validateRequest(teamSlug, email, res);
+    // Protect against phishing by returning a positive response even if no matching sessions found
+    if (!sessions.length) return res.json({ message: "Success" });
+
     const config = {
       personalisation: await getPersonalisation(
         sessions,
@@ -27,9 +30,13 @@ const resumeApplication = async (req, res, next) => {
       // This value is required to go live, but is not currently set up
       // emailReplyToId: team.emailReplyToId,
     };
-    sendEmail("resume", email, config, res);
+    const response = await sendEmail("resume", email, config);
+    return res.json(response);
   } catch (error) {
-    next(error);
+    return next({ 
+      error,
+      message: `Failed to send "Resume" email. ${error.message}`
+    });
   }
 };
 
@@ -37,9 +44,8 @@ const resumeApplication = async (req, res, next) => {
  * Validate that there are sessions matching the request
  * @param {string} teamSlug 
  * @param {string} email 
- * @param {object} res 
  */
-const validateRequest = async (teamSlug, email, res) => {
+const validateRequest = async (teamSlug, email) => {
   try {
     const client = getGraphQLClient();
     const query = `
@@ -70,9 +76,6 @@ const validateRequest = async (teamSlug, email, res) => {
 
     if (!teams?.length) throw Error;
 
-    // Protect against phishing by returning a positive response even if no matching sessions found
-    if (!lowcal_sessions?.length) return res.json({});
-
     return {
       teamSlug: teams[0].slug,
       teamName: teams[0].name,
@@ -80,7 +83,7 @@ const validateRequest = async (teamSlug, email, res) => {
       sessions: lowcal_sessions,
     };
   } catch (error) {
-    throw new Error("Unable to validate request")
+    throw Error("Unable to validate request")
   }
 };
 
