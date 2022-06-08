@@ -1,4 +1,5 @@
 require("isomorphic-fetch");
+const FormData = require('form-data');
 const convert = require("xml-js");
 const fs = require("fs");
 const AdmZip = require("adm-zip");
@@ -54,47 +55,68 @@ const sendToUniform = (req, res, next) => {
 };
 
 // Handle submission steps: authenticate, create a submission, and then attach the .zip to that submission
-//   TODO store responses in uniform_applications table
 const sendToUniformNew = async (req, res, next) => {
-  // TODO additionally send & check for req.body.sessionId
+  // TODO also check for !req.body.sessionId
   if (!req.params.localAuthority) {
     res.send({
       message: "Missing application data to submit to Uniform",
     });
   }
 
-  // TODO map req.params.localAuthority to supported Uniform organisations/organisationIds (to be supplied by Idox)
-  //   defaults to "DHLUC" for testing
+  // TODO create some type of lookup between req.params.localAuthority & Uniform-compatible organisations/organisationIds
+  //   defaults to "DHLUC" for testing now (more values supplied after idox install I guess?? we'll probably need to template env vars with org name suffix)
   const org = "DHLUC";
+  const orgId = 18505;
 
   try {
+    // 1/3 - Authenticate
     const credentials = await authenticate(org);
-    if (credentials && credentials.access_token && credentials["organisation-id"]) {
+    
+    // 2/3 - Create a submission
+    if (credentials && credentials.access_token) {
       const token = credentials.access_token;
-      const orgId = credentials["organisation-id"];
-
-      const submissionLocation = await createSubmission(token, org, orgId, "TEST");
-      const idoxSubmissionId = submissionLocation.split("/").pop();
-
-      // TODO last request to add attachment, handle createSubmission errors
-
-      res.send({
-        message: `Authenticated and created a submission`,
-        data: submissionLocation,
-      });
+      const idoxSubmissionId = await createSubmission(token, org, orgId, req.body.sessionId);
+      
+      // 3/3 - Attach the zip
+      // TODO final request to GET endpoint to retrieve/store status and resource links in audit table??
+      if (idoxSubmissionId) {
+        const attachmentAdded = await attachArchive(token, idoxSubmissionId, "uniform_test.zip");
+        if (attachmentAdded) {
+          res.send({
+            message: `Successfully created a submission and attached the zip`,
+            submissionId: idoxSubmissionId,
+          });
+        } else {
+          res.send({
+            message: `Successfully created a submission, but failed to attach zip`,
+            submissionId: idoxSubmissionId,
+          });
+        }
+      } else {
+        res.send({
+          message: `Authenticated to Uniform, but failed to create submission`,
+        });
+      }
     } else {
       res.send({
-        message: `Unable to authenticate to Uniform`,
+        message: `Failed to authenticate to Uniform`,
       });
     }
   } catch (error) {
     next({
       error,
-      message: `Unable to send to Uniform. ${error}`,
+      message: `Failed to send to Uniform. ${error}`,
     });
   }
 };
 
+/**
+ * Logs in to the Idox Submission API using a username/password
+ *   and returns an access token
+ * 
+ * @param {string} organisation - idox-generated organisation name
+ * @returns {Promise} - access token
+ */
 function authenticate(organisation) {
   const authEndpoint = "https://dev.identity.idoxgroup.com/uaa/oauth/token";
 
@@ -124,7 +146,17 @@ function authenticate(organisation) {
   });
 };
 
-function createSubmission(token, organisation, organisationId, sessionId) {
+/**
+ * Creates a submission (submissionReference must be unique value provided by RIPA & match XML <portaloneapp:RefNum>)
+ *   and returns a submissionId parsed from the resource link
+ * 
+ * @param {string} token - access token retrieved from idox authentication
+ * @param {string} organisation - idox-generated organisation name
+ * @param {number} organisationId - idox-generated organisation id
+ * @param {string} sessionId - ripa-generated sessionId
+ * @returns {Promise} - idox-generated submissionId
+ */
+function createSubmission(token, organisation, organisationId, sessionId = "TEST") {
   const createSubmissionEndpoint = "https://dev.identity.idoxgroup.com/agw/submission-api/secure/submission";
 
   const createSubmissionOptions = {
@@ -149,8 +181,13 @@ function createSubmission(token, organisation, organisationId, sessionId) {
     try {
       const resp = await fetch(createSubmissionEndpoint, createSubmissionOptions)
         .then(response => {
+          // successful submission returns 201 Created without body
+          console.log(response.status);
           if (response.status === 201) {
-            return response.headers.get("location");
+            // parse & return the submissionId
+            const resourceLink = response.headers.get("location");
+            console.log(resourceLink);
+            return resourceLink.split("/").pop();
           }
         })
         .catch(error => console.log(error));
@@ -161,8 +198,44 @@ function createSubmission(token, organisation, organisationId, sessionId) {
   });
 };
 
-function attachArchive(token, submissionId, zip) {
-  console.log("TODO");
+/**
+ * Uploads and attaches a zip folder to an existing submission
+ * 
+ * @param {string} token - access token retrieved from idox authentication 
+ * @param {string} submissionId - idox-generated UUID returned in the resource link of the submission 
+ * @param {string} zipPath - file path to an existing zip folder (2GB limit)
+ * @returns {Promise}
+ */
+function attachArchive(token, submissionId, zipPath) {
+  const attachArchiveEndpoint = `https://dev.identity.idoxgroup.com/agw/submission-api/secure/submission/${submissionId}/archive`;
+
+  const formData = new FormData();
+  formData.append("file", fs.createReadStream(zipPath));
+
+  const attachArchiveOptions = {
+    method: "POST",
+    headers: new Headers({
+      "Authorization": `Bearer ${token}`,
+    }),
+    body: formData,
+    redirect: "follow",
+  };
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await fetch(attachArchiveEndpoint, attachArchiveOptions)
+        .then(response => {
+          // successful upload returns 204 No Content without body
+          if (response.status === 204) {
+            return true;
+          }
+        })
+        .catch(error => console.log(error));
+      resolve(resp);
+    } catch (err) {
+      reject(err);
+    }
+  });
 };
 
 // XXX: TEMPORARY METHOD FOR TESTING ONLY
@@ -186,6 +259,13 @@ const downloadUniformZip = (req, res, next) => {
   }
 };
 
+/**
+ * Helper method to locally download S3 files, add them to the zip, then clean them up
+ * 
+ * @param {string} url - s3 URL
+ * @param {string} path - file name for download
+ * @param {string} folder - AdmZip archive
+ */
 const downloadFile = async (url, path, folder) => {
   const res = await fetch(url);
   const fileStream = fs.createWriteStream(path);
@@ -204,6 +284,11 @@ const downloadFile = async (url, path, folder) => {
   });
 };
 
+/**
+ * Helper method to clean up files temporarily stored locally
+ * 
+ * @param {string} path - file name
+ */
 const deleteFile = (path) => {
   if (fs.existsSync(path)) {
     fs.unlinkSync(path);
