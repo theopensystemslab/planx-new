@@ -10,27 +10,38 @@ const SAVE_ENDPOINT = "/send-email/save"
 describe("Send Email endpoint", () => {
   beforeEach(() => {
     queryMock.reset();
+    queryMock.mockQuery({
+      name: "GetHumanReadableProjectType",
+      data: {
+        project_types: [
+          { description: "New office premises" }
+        ],
+      },
+      variables: {
+        rawList: ["new.office"],
+      }
+    });
   });
 
-  it("throws an error if required data is missing", () => {
+  it("throws an error if required data is missing", async () => {
     const missingEmail = { payload: { sessionId: 123 } };
     const missingSessionId = { payload: { email: "test" } };
 
-    [missingEmail, missingSessionId].forEach(async (invalidBody) => {
+    for (let invalidBody of [missingEmail, missingSessionId]) {
       await supertest(app)
-      .post(SAVE_ENDPOINT)
-      .send(invalidBody)
-      .expect(400)
-      .then(response => {
-        expect(response.body).toHaveProperty("error", "Required value missing");
-      });
-    })
+        .post(SAVE_ENDPOINT)
+        .send(invalidBody)
+        .expect(400)
+        .then(response => {
+          expect(response.body).toHaveProperty("error", "Required value missing");
+        });
+    }
   });
 
   it("sends a Notify email on successful save", async () => {
-    
+
     queryMock.mockQuery({
-      name: 'ValidateSingleSessionRequest',
+      name: "ValidateSingleSessionRequest",
       data: {
         flows_by_pk: mockFlow,
         lowcal_sessions: [mockLowcalSession]
@@ -42,7 +53,7 @@ describe("Send Email endpoint", () => {
     });
 
     const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
-    
+
     await supertest(app)
       .post(SAVE_ENDPOINT)
       .send(data)
@@ -70,9 +81,9 @@ describe("Send Email endpoint", () => {
     await supertest(app)
       .post(SAVE_ENDPOINT)
       .send(data)
-      .expect(400)
+      .expect(500)
       .then((response) => {
-        expect(response.body).toHaveProperty("errors");
+        expect(response.body).toHaveProperty("error");
       });
   });
 
@@ -113,7 +124,7 @@ describe("Send Email endpoint", () => {
       name: 'ValidateSingleSessionRequest',
       data: {
         flows_by_pk: mockFlow,
-        lowcal_sessions: null
+        lowcal_sessions: []
       },
       variables: {
         sessionId: 123,
@@ -128,42 +139,42 @@ describe("Send Email endpoint", () => {
       .send(data)
       .expect(500)
       .then(response => {
-        expect(response.body).toHaveProperty("error", "Unable to validate request");
+        expect(response.body).toHaveProperty("error");
       });
   });
 });
 
 describe("Send Email endpoint - Templates which require authorisation", () => {
 
-  it("returns 401 UNAUTHORIZED if no auth header is provided", () => {
-    ["reminder", "expiry"].forEach(async (template) => {
+  it("returns 401 UNAUTHORIZED if no auth header is provided", async () => {
+    for (let template of ["reminder", "expiry"]) {
       const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
       await supertest(app)
         .post(`/send-email/${template}`)
         .send(data)
         .expect(401);
-    });
+    }
   });
 
-  it("returns 401 UNAUTHORIZED if no incorrect auth header is provided", () => {
-    ["reminder", "expiry"].forEach(async (template) => {
+  it("returns 401 UNAUTHORIZED if no incorrect auth header is provided", async () => {
+    for (let template of ["reminder", "expiry"]) {
       const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
       await supertest(app)
         .post(`/send-email/${template}`)
         .set("Authorization", "invalid-api-key")
         .send(data)
         .expect(401);
-    });
+    };
   });
 
-  it("returns 200 OK if the correct headers are used", () => {
-    ["reminder", "expiry"].forEach(async (template) => {
+  it("returns 200 OK if the correct headers are used", async () => {
+    for (let template of ["reminder", "expiry"]) {
       const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
       await supertest(app)
         .post(`/send-email/${template}`)
         .set("Authorisation", "testtesttest")
         .send(data)
         .expect(401);
-    });
+    };
   });
 });
