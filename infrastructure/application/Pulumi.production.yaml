@@ -16,8 +16,12 @@ config:
     secure: AAABAK7qJXCA9mN96DeDWHqRDY7xe5glU9NZ2oTWVxYHR0NhkA83JOnI6dhknhUh8m7IMyy59lFIzeFCG3gOoWvkoTeQNiok7T91ek2f8UQqSSzgfUzgftbRm2sCkS5Yn0bW
   application:gov-uk-pay-token-southwark:
     secure: AAABAEosPvNevt9G7xLgTJIgyPDe9ZmXZnQa2BIsk7glewLz+EFzCvMVFq+9RkiEzkg9GdV2S7ttZ+6fCb5gByNbM7n2JcVG6a+LH9nHv6NwcoZ6U8ORArwiL4uO8xvGQQzD
+  application:govuk-notify-api-key-team:
+    secure: AAABAL9mXeldGeX3dkcm7FecLyNhyxWK4EWSfqTmBFaE6SyMkAN3B8PdntoSr21cD8CSAHOvrCOq0pt30jk/hwCwbFHSapqgPJkjxLciTYEmzVS8n0i1CRbAgm6zhJ27M1DtrTiiv7LAe7dgVJ2ApzBWHg3p
   application:hasura-admin-secret:
     secure: AAABAEtfaS9JI9yVKU3VM4YWI2Lzd2rEYdwlGt6QtDyJEWr1gYXLdxniq+cIJCKLMI7z9O36pA7JBLGpdEFsxQ==
+  application:hasura-planx-api-key:
+    secure: AAABAExsXFL7HabeK0Z1oSUJzI2NqVqEmKJ1ojYXyX4Hi8Sbt1Ht9QJc/Yn3cPBAB2r32HKa4HtqqLmfGjS+04lFB/I=
   application:jwt-secret:
     secure: AAABABnYUYnZbOVTfN/n+m6kMQV951efSyHJYKVkGmtYvbPkpAk+BUIciL6AbJvW2x5bBuYvsrmY1v5lyZkoqoJ3XgDA/MTBQNIiNg==
   application:metabase-encryption-secret-key:
