@@ -4,6 +4,13 @@ const convert = require("xml-js");
 const fs = require("fs");
 const AdmZip = require("adm-zip");
 const stringify = require("csv-stringify");
+const { GraphQLClient } = require("graphql-request");
+
+const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
+  headers: {
+    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+  },
+});
 
 // Generate a .zip folder containing an XML (schema specified by Uniform), CSV (our own format) and any user uploaded files
 // TODO rename to `createUniformZip` ?? 
@@ -54,7 +61,14 @@ const sendToUniform = (req, res, next) => {
   }
 };
 
-// Handle submission steps: authenticate, create a submission, and then attach the .zip to that submission
+
+/**
+ * Submits application data to Uniform
+ * 
+ *   first, create a zip folder containing an XML (Idox's schema), CSV (our format), and any user-uploaded files
+ *   then, make requests to Uniform's "Submission API" to authenticate, create a submission, and attach the zip to the submission
+ *   finally, insert a record into uniform_applications for future auditing
+ */
 const sendToUniformNew = async (req, res, next) => {
   // TODO also check for !req.body.sessionId
   if (!req.params.localAuthority) {
@@ -77,21 +91,46 @@ const sendToUniformNew = async (req, res, next) => {
       const token = credentials.access_token;
       const idoxSubmissionId = await createSubmission(token, org, orgId, req.body.sessionId);
       
-      // 3/3 - Attach the zip
-      // TODO final request to GET endpoint to retrieve/store status and resource links in audit table??
+      // 3/3 - Attach the zip & create an audit entry
       if (idoxSubmissionId) {
         const attachmentAdded = await attachArchive(token, idoxSubmissionId, "uniform_test.zip");
-        if (attachmentAdded) {
-          res.send({
-            message: `Successfully created a submission and attached the zip`,
-            submissionId: idoxSubmissionId,
-          });
-        } else {
-          res.send({
-            message: `Successfully created a submission, but failed to attach zip`,
-            submissionId: idoxSubmissionId,
-          });
-        }
+        const submissionDetails = await retrieveSubmission(token, idoxSubmissionId);
+        const application = await client.request(
+          `
+            mutation CreateUniformApplication(
+              $idox_submission_id: String = "",
+              $submission_reference: String = "",
+              $destination: String = "",
+              $response: jsonb = "",
+            ) {
+              insert_uniform_applications_one(object: {
+                idox_submission_id: $idox_submission_id,
+                submission_reference: $submission_reference,
+                destination: $destination,
+                response: $response,
+              }) {
+                id
+                idox_submission_id
+                submission_reference
+                destination
+                response
+                created_at
+              }
+            }
+          `,
+          {
+            idox_submission_id: idoxSubmissionId,
+            submission_reference: req.body.sessionId,
+            destination: req.params.localAuthority,
+            response: submissionDetails,
+          }
+        );
+
+        res.send({
+          message: `Successfully created a Uniform submission`,
+          zipAttached: attachmentAdded,
+          application: application.insert_uniform_applications_one,
+        });
       } else {
         res.send({
           message: `Authenticated to Uniform, but failed to create submission`,
@@ -147,7 +186,7 @@ function authenticate(organisation) {
 };
 
 /**
- * Creates a submission (submissionReference must be unique value provided by RIPA & match XML <portaloneapp:RefNum>)
+ * Creates a submission (submissionReference is unique value provided by RIPA & must match XML <portaloneapp:RefNum>)
  *   and returns a submissionId parsed from the resource link
  * 
  * @param {string} token - access token retrieved from idox authentication
@@ -182,11 +221,9 @@ function createSubmission(token, organisation, organisationId, sessionId = "TEST
       const resp = await fetch(createSubmissionEndpoint, createSubmissionOptions)
         .then(response => {
           // successful submission returns 201 Created without body
-          console.log(response.status);
           if (response.status === 201) {
             // parse & return the submissionId
             const resourceLink = response.headers.get("location");
-            console.log(resourceLink);
             return resourceLink.split("/").pop();
           }
         })
@@ -230,6 +267,37 @@ function attachArchive(token, submissionId, zipPath) {
             return true;
           }
         })
+        .catch(error => console.log(error));
+      resolve(resp);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+
+/**
+ * Gets details about an existing submission
+ * 
+ * @param {string} token - access token retrieved from idox authentication
+ * @param {string} submissionId - idox-generated UUID returned in the resource link of the submission
+ * @returns {Promise}
+ */
+function retrieveSubmission(token, submissionId) {
+  const getSubmissionEndpoint = `https://dev.identity.idoxgroup.com/agw/submission-api/secure/submission/${submissionId}`;
+
+  const getSubmissionOptions = {
+    method: "GET",
+    headers: new Headers({
+      "Authorization": `Bearer ${token}`,
+    }),
+    redirect: "follow",
+  };
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await fetch(getSubmissionEndpoint, getSubmissionOptions)
+        .then(response => response.json())
         .catch(error => console.log(error));
       resolve(resp);
     } catch (err) {
