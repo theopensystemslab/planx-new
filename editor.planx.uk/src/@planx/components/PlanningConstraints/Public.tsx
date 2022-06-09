@@ -179,9 +179,13 @@ const useClasses = makeStyles((theme) => ({
       backgroundColor: theme.palette.background.paper,
     },
   },
+  sourcedFrom: {
+    paddingBottom: "1em",
+  },
 }));
 
 function PlanningConstraintsInformation(props: any) {
+  const classes = useClasses();
   const {
     title,
     description,
@@ -213,17 +217,19 @@ function PlanningConstraintsInformation(props: any) {
         data={constraints}
         refreshConstraints={refreshConstraints}
       />
+      {sourcedFromDigitalLand && (
+        <Box className={classes.sourcedFrom}>
+          <Typography variant="body2" color="inherit">
+            Sourced from Department for Levelling Up, Housing & Communities.
+          </Typography>
+        </Box>
+      )}
       <Box color="text.secondary" textAlign="right">
         <CollapsibleInput
           name="feedback"
           handleChange={formik.handleChange}
           value={formik.values.feedback}
         >
-          {sourcedFromDigitalLand && (
-            <Typography variant="body2" color="inherit">
-              Sourced from Department for Levelling Up, Housing & Communities.
-            </Typography>
-          )}
           <Typography variant="body2" color="inherit">
             Report an inaccuracy
           </Typography>
