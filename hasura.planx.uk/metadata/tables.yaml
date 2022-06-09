@@ -169,6 +169,7 @@
         columns:
           - data
           - email
+          - flow_id
           - id
         backend_only: false
   select_permissions:
@@ -410,6 +411,9 @@
           - theme
           - updated_at
         filter: {}
+- table:
+    schema: public
+    name: uniform_applications
 - table:
     schema: public
     name: users
