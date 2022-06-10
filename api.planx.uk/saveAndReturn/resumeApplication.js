@@ -122,7 +122,7 @@ const buildContentFromSessions = async (sessions, teamSlug) => {
 
     return `Service: ${service}
       Address: ${address || "Address not submitted"}
-      Project Type: ${projectType || "Project type not submitted"}
+      Project type: ${projectType || "Project type not submitted"}
       Expiry Date: ${expiryDate}
       Link: ${resumeLink}`;
   };
