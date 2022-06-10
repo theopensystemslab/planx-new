@@ -48,10 +48,10 @@ const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
       <Card handleSubmit={formik.handleSubmit}>
         <QuestionHeader
           title="Resume your application"
-          description="Please enter your email below to resume a previously started application."
+          description="Enter your email to resume your application."
         ></QuestionHeader>
         <InputRow>
-          <InputLabel label={"Email Address"} htmlFor={"email"}>
+          <InputLabel label={"Email address"} htmlFor={"email"}>
             <Input
               bordered
               errorMessage={
@@ -73,17 +73,12 @@ const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
   );
 };
 
-const EmailError: React.FC<{ retry: () => void; email: string }> = ({
-  retry,
-  email,
-}) => {
+const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
   return (
     <StatusPage
       bannerHeading="Error sending email"
-      bannerText={`Failed to send email to ${email}`}
-      cardText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien
-      nunc, blandit et cursus nec, auctor at leo. Donec eros enim, tristique
-      sit amet enim iaculis."
+      bannerText="We are having trouble sending emails at the moment."
+      cardText="Your application has been saved. We will try to send the email again later."
       buttonText="Retry"
       onButtonClick={retry}
     ></StatusPage>
@@ -129,10 +124,10 @@ const ValidationSuccess: React.FC<{
 const InvalidSession: React.FC = () => {
   return (
     <StatusPage
-      bannerHeading="No session found"
+      bannerHeading="We can't find your application"
       bannerText="Click retry to start a new application or enter your email again"
       cardText=""
-      buttonText="Retry"
+      buttonText="Try again"
       onButtonClick={() => window.location.reload()}
     ></StatusPage>
   );
@@ -161,7 +156,6 @@ const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
   const [email, setEmail] = useState<string>(getInitialEmailValue());
   const sessionId = useCurrentRoute().url.query.sessionId;
-  const flowId = useStore((state) => state.id);
   const [reconciledData, setReconciledData] = useState<
     Record<any, any> | undefined
   >();
@@ -231,7 +225,7 @@ const ResumePage: React.FC = () => {
     ),
     [Status.InvalidSession]: <InvalidSession />,
     [Status.Success]: <EmailSuccess email={email} />,
-    [Status.Error]: <EmailError retry={() => handleSubmit()} email={email} />,
+    [Status.Error]: <EmailError retry={() => handleSubmit()} />,
   }[pageStatus];
 };
 
