@@ -1,7 +1,9 @@
 require("isomorphic-fetch");
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 const FormData = require('form-data');
 const convert = require("xml-js");
-const fs = require("fs");
 const AdmZip = require("adm-zip");
 const stringify = require("csv-stringify");
 const { GraphQLClient } = require("graphql-request");
@@ -12,56 +14,6 @@ const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
   },
 });
 
-// Generate a .zip folder containing an XML (schema specified by Uniform), CSV (our own format) and any user uploaded files
-// TODO rename to `createUniformZip` ?? 
-const sendToUniform = (req, res, next) => {
-  if (!req.body) {
-    res.send({
-      message: "Missing application data to create Uniform zip"
-    });
-  }
-  
-  try {
-    // initiate an empty zip folder
-    const zip = new AdmZip();
-
-    // download any user-uploaded files from S3 locally, add them to the zip
-    const files = req.body.files;
-    files.forEach((file) => {
-      let filePath = file.split("/").pop();
-      downloadFile(file, filePath, zip);
-    });
-
-    // build a CSV, write it locally, add it to the zip
-    const csvPath = "test.csv";
-    const csvFile = fs.createWriteStream(csvPath);
-    const csvStream = stringify(req.body.csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
-    csvStream.on("finish", () => {
-      zip.addLocalFile(csvPath);
-      console.log(`Generated ${csvPath} and added to zip`);
-      // cleanup
-      deleteFile(csvPath);
-    });
-
-    // build an XML file, add it directly to the zip
-    const options = { compact: true, spaces: 4, fullTagEmptyElement: true };
-    const xml = convert.json2xml(req.body.xml, options);
-    zip.addFile("test.xml", Buffer.from(xml, "utf-8"));
-    console.log(`Generated test.xml and added to zip`);
-
-    // generate & save zip locally (**for now while we wait for Uniform connection details**)
-    //   XXX using a timeout here to ensure various file streams have completed, but probably better way??
-    setTimeout(() => {
-      const downloadName = "uniform_test.zip";
-      zip.writeZip(downloadName);
-      res.status(200).send({ message: "Generated zip", fileName: downloadName });
-    }, 5000);
-  } catch (err) {
-    next(err);
-  }
-};
-
-
 /**
  * Submits application data to Uniform
  * 
@@ -69,9 +21,8 @@ const sendToUniform = (req, res, next) => {
  *   then, make requests to Uniform's "Submission API" to authenticate, create a submission, and attach the zip to the submission
  *   finally, insert a record into uniform_applications for future auditing
  */
-const sendToUniformNew = async (req, res, next) => {
-  // TODO also check for !req.body.sessionId
-  if (!req.params.localAuthority) {
+const sendToUniform = async (req, res, next) => {
+  if (!req.params.localAuthority && !req.body.xml && !req.body.sessionId) {
     res.send({
       message: "Missing application data to submit to Uniform",
     });
@@ -83,7 +34,10 @@ const sendToUniformNew = async (req, res, next) => {
   const orgId = 18505;
 
   try {
-    // 1/3 - Authenticate
+    // Setup - Create the zip folder
+    const zipPath = await createZip(req.body.xml, req.body.csv, req.body.files, req.body.sessionId);
+
+    // Request 1/3 - Authenticate
     const credentials = await authenticate(org);
     
     // 2/3 - Create a submission
@@ -93,7 +47,11 @@ const sendToUniformNew = async (req, res, next) => {
       
       // 3/3 - Attach the zip & create an audit entry
       if (idoxSubmissionId) {
-        const attachmentAdded = await attachArchive(token, idoxSubmissionId, "uniform_test.zip");
+        const attachmentAdded = await attachArchive(token, idoxSubmissionId, zipPath);
+        if (attachmentAdded) {
+          deleteFile(zipPath);
+        }
+
         const submissionDetails = await retrieveSubmission(token, idoxSubmissionId);
         const application = await client.request(
           `
@@ -147,6 +105,63 @@ const sendToUniformNew = async (req, res, next) => {
       message: `Failed to send to Uniform. ${error}`,
     });
   }
+};
+
+function createZip(jsonXml, csv, files, sessionId) {
+  // initiate an empty zip folder
+  const zip = new AdmZip;
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      // make a tmp directory to avoid file name collisions if simultaneous applications
+      let tmpDir = "";
+      fs.mkdtemp(path.join(os.tmpdir(), sessionId), (err, folder) => {
+        if (err) throw err;
+        tmpDir = folder;
+      });
+
+      // download any user-uploaded files from S3 to the tmp directory, add them to the zip
+      if (files) {
+        files.forEach((file) => {
+          let filePath = path.join(tmpDir, file.split("/").pop());
+          downloadFile(file, filePath, zip);
+        });
+      }
+
+      // build a CSV, write it to the tmp directory, add it to the zip
+      const csvPath = path.join(tmpDir, "application.csv");
+      const csvFile = fs.createWriteStream(csvPath);
+      const csvStream = stringify(csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
+      csvStream.on("finish", () => {
+        zip.addLocalFile(csvPath);
+        console.log(`Generated ${csvPath} and added to zip`);
+        // cleanup
+        deleteFile(csvPath);
+      });
+
+      // build an XML file, add it directly to the zip
+      const options = { compact: true, spaces: 4, fullTagEmptyElement: true };
+      const xml = convert.json2xml(jsonXml, options);
+      zip.addFile("proposal.xml", Buffer.from(xml, "utf-8"));
+      console.log(`Generated proposal.xml and added to zip`);
+
+      // generate & save zip locally
+      //   XXX using a timeout here to ensure various file streams have completed, need to make better??
+      setTimeout(() => {
+        const downloadName = `ripa-test-${sessionId}.zip`;
+        zip.writeZip(downloadName);
+
+        fs.rmdir(tmpDir, { recursive: true }, (err) => {
+          if (err) throw err;
+          console.log(`Removed folder ${tmpDir}`);
+        });
+
+        resolve(downloadName);
+      }, 4000);
+    } catch (err) {
+      reject(err);
+    }
+  });
 };
 
 /**
@@ -366,4 +381,4 @@ const deleteFile = (path) => {
   }
 };
 
-module.exports = { sendToUniform, sendToUniformNew, downloadUniformZip };
+module.exports = { sendToUniform, downloadUniformZip };
