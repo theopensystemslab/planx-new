@@ -1,9 +1,9 @@
 require("isomorphic-fetch");
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const FormData = require('form-data');
+const os = require("os");
+const path = require("path");
+const FormData = require("form-data");
 const convert = require("xml-js");
+const fs = require("fs");
 const AdmZip = require("adm-zip");
 const stringify = require("csv-stringify");
 const { GraphQLClient } = require("graphql-request");
@@ -23,8 +23,8 @@ const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
  */
 const sendToUniform = async (req, res, next) => {
   if (!req.params.localAuthority && !req.body.xml && !req.body.sessionId) {
-    res.send({
-      message: "Missing application data to submit to Uniform",
+    res.status(400).send({
+      message: "Missing application data to send to Uniform"
     });
   }
 
@@ -84,18 +84,18 @@ const sendToUniform = async (req, res, next) => {
           }
         );
 
-        res.send({
+        res.status(200).send({
           message: `Successfully created a Uniform submission`,
           zipAttached: attachmentAdded,
           application: application.insert_uniform_applications_one,
         });
       } else {
-        res.send({
+        res.status(403).send({
           message: `Authenticated to Uniform, but failed to create submission`,
         });
       }
     } else {
-      res.send({
+      res.status(401).send({
         message: `Failed to authenticate to Uniform`,
       });
     }
@@ -107,6 +107,14 @@ const sendToUniform = async (req, res, next) => {
   }
 };
 
+/**
+ * Creates a zip folder containing the documents required by Uniform
+ * @param {any} jsonXml - a JSON representation of the XML schema, resulting file must be named "proposal.xml"
+ * @param {any} csv - an array of objects representing our custom CSV format
+ * @param {string[]} files - an array of the S3 URLs for any user-uploaded files
+ * @param {string} sessionId 
+ * @returns {Promise}
+ */
 function createZip(jsonXml, csv, files, sessionId) {
   // initiate an empty zip folder
   const zip = new AdmZip;
@@ -134,8 +142,6 @@ function createZip(jsonXml, csv, files, sessionId) {
       const csvStream = stringify(csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
       csvStream.on("finish", () => {
         zip.addLocalFile(csvPath);
-        console.log(`Generated ${csvPath} and added to zip`);
-        // cleanup
         deleteFile(csvPath);
       });
 
@@ -143,7 +149,6 @@ function createZip(jsonXml, csv, files, sessionId) {
       const options = { compact: true, spaces: 4, fullTagEmptyElement: true };
       const xml = convert.json2xml(jsonXml, options);
       zip.addFile("proposal.xml", Buffer.from(xml, "utf-8"));
-      console.log(`Generated proposal.xml and added to zip`);
 
       // generate & save zip locally
       //   XXX using a timeout here to ensure various file streams have completed, need to make better??
@@ -154,7 +159,6 @@ function createZip(jsonXml, csv, files, sessionId) {
         // cleanup tmp directory
         fs.rm(tmpDir, { recursive: true }, (err) => {
           if (err) throw err;
-          console.log(`Removed folder ${tmpDir}`);
         });
 
         resolve(downloadName);
@@ -193,7 +197,7 @@ function authenticate(organisation) {
     try {
       const resp = await fetch(authEndpoint, authOptions)
         .then(response => response.json())
-        .catch(error => console.log(error));
+        .catch(error => { throw error; });
       resolve(resp);
     } catch (err) {
       reject(err);
@@ -243,7 +247,7 @@ function createSubmission(token, organisation, organisationId, sessionId = "TEST
             return resourceLink.split("/").pop();
           }
         })
-        .catch(error => console.log(error));
+        .catch(error => { throw error });
       resolve(resp);
     } catch (err) {
       reject(err);
@@ -283,7 +287,7 @@ function attachArchive(token, submissionId, zipPath) {
             return true;
           }
         })
-        .catch(error => console.log(error));
+        .catch(error => { throw error; });
       resolve(resp);
     } catch (err) {
       reject(err);
@@ -314,7 +318,7 @@ function retrieveSubmission(token, submissionId) {
     try {
       const resp = await fetch(getSubmissionEndpoint, getSubmissionOptions)
         .then(response => response.json())
-        .catch(error => console.log(error));
+        .catch(error => { throw error; });
       resolve(resp);
     } catch (err) {
       reject(err);
@@ -339,8 +343,6 @@ const downloadFile = async (url, path, folder) => {
 
     fileStream.on("finish", () => {
       folder.addLocalFile(path);
-      console.log(`Downloaded ${path} and added to zip`);
-      // cleanup
       deleteFile(path);
       resolve;
     });
@@ -355,7 +357,6 @@ const downloadFile = async (url, path, folder) => {
 const deleteFile = (path) => {
   if (fs.existsSync(path)) {
     fs.unlinkSync(path);
-    console.log(`Deleted ${path}`);
   } else {
     console.log(`Didn't find ${path}, nothing to delete`);
   }
