@@ -68,7 +68,7 @@ const validateSession = async (req, res, next) => {
           const reconciledSessionData = await updateLowcalSessionData(sessionId, sessionData.data);
 
           res.status(200).json({
-            message: `This service has changed since your last save point, affecting at least ${Object.keys(removedBreadcrumbs).length} previous answers. You will be prompted to answer any updated questions again when you continue.`,
+            message: "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
             alteredNodes,
             removedBreadcrumbs,
             reconciledSessionData,

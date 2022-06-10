@@ -45,7 +45,7 @@ describe("buildContentFromSessions function", () => {
 
     const result = `Service: Apply For A Lawful Development Certificate
       Address: 1 High Street
-      Project Type: New office premises
+      Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
     expect(await buildContentFromSessions(sessions, "team")).toEqual(result);
@@ -105,15 +105,15 @@ describe("buildContentFromSessions function", () => {
     }];
     const result = `Service: Apply For A Lawful Development Certificate
       Address: 1 High Street
-      Project Type: New office premises
+      Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123\n\nService: Apply For A Lawful Development Certificate
       Address: 2 High Street
-      Project Type: New office premises
+      Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=456\n\nService: Apply For A Lawful Development Certificate
       Address: 3 High Street
-      Project Type: New office premises
+      Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=789`
     expect(await buildContentFromSessions(sessions, "team")).toEqual(result)
@@ -138,7 +138,7 @@ describe("buildContentFromSessions function", () => {
 
     const result = `Service: Apply For A Lawful Development Certificate
       Address: Address not submitted
-      Project Type: New office premises
+      Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
     expect(await buildContentFromSessions(sessions, "team")).toEqual(result);
@@ -165,7 +165,7 @@ describe("buildContentFromSessions function", () => {
 
     const result = `Service: Apply For A Lawful Development Certificate
       Address: 1 High Street
-      Project Type: Project type not submitted
+      Project type: Project type not submitted
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
     expect(await buildContentFromSessions(sessions, "team")).toEqual(result);
