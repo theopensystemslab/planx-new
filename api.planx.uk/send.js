@@ -29,9 +29,9 @@ const sendToUniform = async (req, res, next) => {
   }
 
   // TODO create some type of lookup between req.params.localAuthority & Uniform-compatible organisations/organisationIds
-  //   defaults to "DHLUC" for testing now (more values supplied after idox install I guess?? we'll probably need to template env vars with org name suffix)
-  const org = "DHLUC";
-  const orgId = 18505;
+  //   defaults to "DLUHC" for testing now (more values supplied after idox install I guess?? we'll probably need to template env vars with org name suffix)
+  const org = "DLUHC";
+  const orgId = 185050;
 
   try {
     // Setup - Create the zip folder
