@@ -122,9 +122,9 @@ function createZip(jsonXml, csv, files, sessionId) {
 
       // download any user-uploaded files from S3 to the tmp directory, add them to the zip
       if (files) {
-        files.forEach((file) => {
+        files.forEach(async (file) => {
           let filePath = path.join(tmpDir, file.split("/").pop());
-          downloadFile(file, filePath, zip);
+          await downloadFile(file, filePath, zip);
         });
       }
 
@@ -151,7 +151,8 @@ function createZip(jsonXml, csv, files, sessionId) {
         const downloadName = `ripa-test-${sessionId}.zip`;
         zip.writeZip(downloadName);
 
-        fs.rmdir(tmpDir, { recursive: true }, (err) => {
+        // cleanup tmp directory
+        fs.rm(tmpDir, { recursive: true }, (err) => {
           if (err) throw err;
           console.log(`Removed folder ${tmpDir}`);
         });
@@ -321,27 +322,6 @@ function retrieveSubmission(token, submissionId) {
   });
 };
 
-// XXX: TEMPORARY METHOD FOR TESTING ONLY
-const downloadUniformZip = (req, res, next) => {
-  try {
-    const zipPath = req.query.file;
-    if (fs.existsSync(zipPath)) {
-      res.header('Content-type', 'application/zip');
-      res.header('Content-Disposition', 'attachment');
-
-      let stream = fs.createReadStream(zipPath);
-      stream.pipe(res);
-      res.attachment(zipPath);
-
-      // TODO clean up local zip file
-    } else {
-      res.send({ message: "Couldn't find file to download" });
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
 /**
  * Helper method to locally download S3 files, add them to the zip, then clean them up
  * 
@@ -381,4 +361,4 @@ const deleteFile = (path) => {
   }
 };
 
-module.exports = { sendToUniform, downloadUniformZip };
+module.exports = { sendToUniform };
