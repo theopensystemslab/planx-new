@@ -511,6 +511,46 @@ new pulumi.Config("cloudflare").require("apiToken");
       comment: "This is needed to setup s3 polices and make s3 not public.",
     }
   );
+
+  // XXX: Originally, our certificate (generated in the `certificates` stack) was created in eu-west-2 (London), however, later we wanted to add CloudFlare which only accepts certificates generated in the us-east-1 region. Hence, this here is duplicate code which should be merged into the `certificate` stack.
+  const usEast1 = new aws.Provider("useast1", { region: "us-east-1" });
+  const sslCert = new aws.acm.Certificate(
+    `sslCert`,
+    {
+      // XXX: For wildcards remember that *.example.com will only cover a single level subdomain such as www.example.com not secondary levels such as beta.www.example.com.
+      domainName: `${DOMAIN}`,
+      validationMethod: "DNS",
+      subjectAlternativeNames: [
+        // Root
+        `${DOMAIN}`,
+        // Wildcard / subdomains
+        `*.${DOMAIN}`,
+      ],
+    },
+    {
+      provider: usEast1,
+      // XXX: These records are set up upstream in the `certificates` stack.
+      //   dependsOn: [caaRecordRoot, caaRecordWildcard],
+    }
+  );
+  const sslCertValidationRecord = new cloudflare.Record(
+    `sslCertValidationRecord`,
+    {
+      name: sslCert.domainValidationOptions[0].resourceRecordName,
+      ttl: 3600,
+      type: sslCert.domainValidationOptions[0].resourceRecordType,
+      value: sslCert.domainValidationOptions[0].resourceRecordValue,
+      zoneId: config.require("cloudflare-zone-id"),
+    }
+  );
+  const sslCertValidation = new aws.acm.CertificateValidation(
+    `sslCertValidation`,
+    {
+      certificateArn: sslCert.arn,
+      validationRecordFqdns: [sslCertValidationRecord.name],
+    },
+    { provider: usEast1 }
+  );
   const cdn = new aws.cloudfront.Distribution(`${DOMAIN}-cdn`, {
     enabled: true,
     // Could include `www.${DOMAIN}` here if the `www` subdomain is desired
@@ -518,7 +558,7 @@ new pulumi.Config("cloudflare").require("apiToken");
     origins: [
       {
         originId: frontendBucket.arn,
-        domainName: frontendBucket.websiteEndpoint,
+        domainName: frontendBucket.bucketRegionalDomainName,
         s3OriginConfig: {
           originAccessIdentity:
             originAccessIdentity.cloudfrontAccessIdentityPath,
@@ -544,10 +584,12 @@ new pulumi.Config("cloudflare").require("apiToken");
       defaultTtl: 60 * 10,
       maxTtl: 60 * 10,
       responseHeadersPolicyId: new aws.cloudfront.ResponseHeadersPolicy(
-        `${DOMAIN}-policy`,
+        `${DOMAIN.replace(/[^a-z0-9_-]/g, "_")}-policy`,
         {
           corsConfig: {
-            accessControlAllowCredentials: true,
+            // XXX: might need to turn this back on because the editor side uses cookies
+            //      but when this is true, AllowHeaders can't be `*` so will need to dive deeper
+            accessControlAllowCredentials: false,
             accessControlAllowHeaders: {
               items: ["*"],
             },
@@ -586,6 +628,8 @@ new pulumi.Config("cloudflare").require("apiToken");
     // web service) it can return a different error code, and return the response for a different resource.
     customErrorResponses: [
       { errorCode: 404, responseCode: 200, responsePagePath: "/index.html" },
+      // XXX: CloudFront seems to be returning `403 AccessDenied` when files aren't found. Because the front-end is a Single Page Application (SPA) we need to redirect those errors to `index.html`.
+      { errorCode: 403, responseCode: 200, responsePagePath: "/index.html" },
     ],
 
     restrictions: {
@@ -595,7 +639,7 @@ new pulumi.Config("cloudflare").require("apiToken");
     },
 
     viewerCertificate: {
-      acmCertificateArn: certificates.requireOutput("certificateArn"),
+      acmCertificateArn: sslCert.arn,
       sslSupportMethod: "sni-only",
       minimumProtocolVersion: "TLSv1.2_2021",
     },
@@ -613,7 +657,7 @@ new pulumi.Config("cloudflare").require("apiToken");
     zoneId: config.require("cloudflare-zone-id"),
     value: cdn.domainName,
     ttl: 1,
-    proxied: true,
+    proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
   });
 })();
 
