@@ -46,11 +46,11 @@ const SendComponent: React.FC<Props> = (props) => {
   );
 
   useEffect(() => {
+    const isReady = !request.loading && !request.error && request.value;
+
     if (
       props.destination === Destination.BOPS &&
-      !request.loading &&
-      !request.error &&
-      request.value &&
+      isReady &&
       props.handleSubmit
     ) {
       props.handleSubmit(
@@ -60,9 +60,7 @@ const SendComponent: React.FC<Props> = (props) => {
 
     if (
       props.destination === Destination.Uniform &&
-      !request.loading &&
-      !request.error &&
-      request.value &&
+      isReady &&
       props.handleSubmit
     ) {
       props.handleSubmit(
