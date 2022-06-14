@@ -18,6 +18,7 @@ import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
 import { stringify } from "wkt";
 
+import FeedbackInput from "../shared/FeedbackInput";
 import type { PlanningConstraints } from "./model";
 
 type Props = PublicProps<PlanningConstraints>;
@@ -95,7 +96,8 @@ function Component(props: Props) {
           description={props.description || ""}
           fn={props.fn}
           constraints={constraints}
-          handleSubmit={(feedback?: string) => {
+          previousFeedback={props.previouslySubmittedData?.feedback}
+          handleSubmit={(values: { feedback?: string }) => {
             const _nots: any = {};
             const newPassportData: any = {};
 
@@ -116,6 +118,7 @@ function Component(props: Props) {
             };
 
             props.handleSubmit?.({
+              ...values,
               data: passportData,
             });
           }}
@@ -176,9 +179,13 @@ const useClasses = makeStyles((theme) => ({
       backgroundColor: theme.palette.background.paper,
     },
   },
+  sourcedFrom: {
+    paddingBottom: "1em",
+  },
 }));
 
 function PlanningConstraintsInformation(props: any) {
+  const classes = useClasses();
   const {
     title,
     description,
@@ -186,10 +193,11 @@ function PlanningConstraintsInformation(props: any) {
     handleSubmit,
     refreshConstraints,
     sourcedFromDigitalLand,
+    previousFeedback,
   } = props;
   const formik = useFormik({
     initialValues: {
-      feedback: "",
+      feedback: previousFeedback || "",
     },
     onSubmit: (values) => {
       if (values.feedback) {
@@ -198,7 +206,7 @@ function PlanningConstraintsInformation(props: any) {
           constraints: constraints,
         });
       }
-      handleSubmit?.();
+      handleSubmit?.(values);
     },
   });
 
@@ -209,15 +217,20 @@ function PlanningConstraintsInformation(props: any) {
         data={constraints}
         refreshConstraints={refreshConstraints}
       />
+      {sourcedFromDigitalLand && (
+        <Box className={classes.sourcedFrom}>
+          <Typography variant="body2" color="inherit">
+            Sourced from Department for Levelling Up, Housing & Communities.
+          </Typography>
+        </Box>
+      )}
       <Box color="text.secondary" textAlign="right">
         <CollapsibleInput
-          handleChange={formik.handleChange}
           name="feedback"
+          handleChange={formik.handleChange}
           value={formik.values.feedback}
         >
           <Typography variant="body2" color="inherit">
-            {sourcedFromDigitalLand &&
-              `Sourced from Department for Levelling Up, Housing & Communities.`}{" "}
             Report an inaccuracy
           </Typography>
         </CollapsibleInput>

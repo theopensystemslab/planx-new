@@ -51,6 +51,11 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
   agent_phone?: string;
   agent_email?: string;
   proposal_details?: Array<QuestionAndResponses>;
+  feedback?: {
+    result?: string;
+    find_property?: string;
+    planning_constraints?: string;
+  };
   constraints?: Record<string, boolean>;
   files?: Array<File>;
   boundary_geojson?: Object;
@@ -74,6 +79,7 @@ export interface QuestionMetaData {
     text?: string;
   }>;
   portal_name?: string;
+  feedback?: string;
 }
 
 export interface ResponseMetaData {
