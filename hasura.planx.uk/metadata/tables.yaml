@@ -178,20 +178,33 @@
         columns:
           - id
           - data
-        filter: {}
+        filter:
+          _and:
+            - id:
+                _eq: x-hasura-ls-session-id
+            - email:
+                _eq: x-hasura-ls-email
   update_permissions:
     - role: public
       permission:
         columns:
           - data
-          - email
-          - id
-        filter: {}
-        check: null
+        filter:
+          _and:
+            - id:
+                _eq: x-hasura-ls-session-id
+            - email:
+                _eq: x-hasura-ls-email
+        check: {}
   delete_permissions:
     - role: public
       permission:
-        filter: {}
+        filter:
+          _and:
+            - id:
+                _eq: x-hasura-ls-session-id
+            - email:
+                _eq: x-hasura-ls-email
   event_triggers:
     - name: setup_lowcal_expiry_events
       definition:
