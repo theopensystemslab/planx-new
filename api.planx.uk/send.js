@@ -22,7 +22,7 @@ const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
  *   finally, insert a record into uniform_applications for future auditing
  */
 const sendToUniform = async (req, res, next) => {
-  if (!req.params.localAuthority && !req.body.xml && !req.body.sessionId) {
+  if (!req.params.localAuthority || !req.body.xml || !req.body.sessionId) {
     res.status(400).send({
       message: "Missing application data to send to Uniform"
     });
@@ -41,7 +41,7 @@ const sendToUniform = async (req, res, next) => {
     const credentials = await authenticate(org);
     
     // 2/3 - Create a submission
-    if (credentials && credentials.access_token) {
+    if (credentials?.access_token) {
       const token = credentials.access_token;
       const idoxSubmissionId = await createSubmission(token, org, orgId, req.body.sessionId);
       
@@ -117,7 +117,7 @@ const sendToUniform = async (req, res, next) => {
  */
 function createZip(jsonXml, csv, files, sessionId) {
   // initiate an empty zip folder
-  const zip = new AdmZip;
+  const zip = new AdmZip();
 
   return new Promise(async (resolve, reject) => {
     try {
