@@ -195,10 +195,8 @@ function authenticate(organisation) {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await fetch(authEndpoint, authOptions)
-        .then(response => response.json())
-        .catch(error => { throw error; });
-      resolve(resp);
+      await fetch(authEndpoint, authOptions)
+        .then(response => resolve(response.json()));
     } catch (err) {
       reject(err);
     }
@@ -238,17 +236,15 @@ function createSubmission(token, organisation, organisationId, sessionId = "TEST
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await fetch(createSubmissionEndpoint, createSubmissionOptions)
+      await fetch(createSubmissionEndpoint, createSubmissionOptions)
         .then(response => {
           // successful submission returns 201 Created without body
           if (response.status === 201) {
             // parse & return the submissionId
             const resourceLink = response.headers.get("location");
-            return resourceLink.split("/").pop();
+            resolve(resourceLink.split("/").pop());
           }
-        })
-        .catch(error => { throw error });
-      resolve(resp);
+        });
     } catch (err) {
       reject(err);
     }
@@ -280,15 +276,13 @@ function attachArchive(token, submissionId, zipPath) {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await fetch(attachArchiveEndpoint, attachArchiveOptions)
+      await fetch(attachArchiveEndpoint, attachArchiveOptions)
         .then(response => {
           // successful upload returns 204 No Content without body
           if (response.status === 204) {
-            return true;
+            resolve(true);
           }
-        })
-        .catch(error => { throw error; });
-      resolve(resp);
+        });
     } catch (err) {
       reject(err);
     }
@@ -316,10 +310,8 @@ function retrieveSubmission(token, submissionId) {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await fetch(getSubmissionEndpoint, getSubmissionOptions)
-        .then(response => response.json())
-        .catch(error => { throw error; });
-      resolve(resp);
+      await fetch(getSubmissionEndpoint, getSubmissionOptions)
+        .then(response => resolve(response.json()));
     } catch (err) {
       reject(err);
     }
