@@ -115,12 +115,12 @@ const sendToUniform = async (req, res, next) => {
  * @param {string} sessionId 
  * @returns {Promise}
  */
-function createZip(jsonXml, csv, files, sessionId) {
-  // initiate an empty zip folder
-  const zip = new AdmZip();
-
+async function createZip(jsonXml, csv, files, sessionId) {
   return new Promise(async (resolve, reject) => {
     try {
+      // initiate an empty zip folder
+      const zip = new AdmZip();
+
       // make a tmp directory to avoid file name collisions if simultaneous applications
       let tmpDir = "";
       fs.mkdtemp(path.join(os.tmpdir(), sessionId), (err, folder) => {
@@ -176,7 +176,7 @@ function createZip(jsonXml, csv, files, sessionId) {
  * @param {string} organisation - idox-generated organisation name
  * @returns {Promise} - access token
  */
-function authenticate(organisation) {
+async function authenticate(organisation) {
   const authEndpoint = "https://dev.identity.idoxgroup.com/uaa/oauth/token";
 
   const authOptions = {
@@ -213,7 +213,7 @@ function authenticate(organisation) {
  * @param {string} sessionId - ripa-generated sessionId
  * @returns {Promise} - idox-generated submissionId
  */
-function createSubmission(token, organisation, organisationId, sessionId = "TEST") {
+async function createSubmission(token, organisation, organisationId, sessionId = "TEST") {
   const createSubmissionEndpoint = "https://dev.identity.idoxgroup.com/agw/submission-api/secure/submission";
 
   const createSubmissionOptions = {
@@ -259,7 +259,7 @@ function createSubmission(token, organisation, organisationId, sessionId = "TEST
  * @param {string} zipPath - file path to an existing zip folder (2GB limit)
  * @returns {Promise}
  */
-function attachArchive(token, submissionId, zipPath) {
+async function attachArchive(token, submissionId, zipPath) {
   const attachArchiveEndpoint = `https://dev.identity.idoxgroup.com/agw/submission-api/secure/submission/${submissionId}/archive`;
 
   const formData = new FormData();
@@ -291,13 +291,14 @@ function attachArchive(token, submissionId, zipPath) {
 
 
 /**
- * Gets details about an existing submission
+ * Gets details about an existing submission to store for auditing purposes
+ *   since neither createSubmission nor attachArchive requests return a meaningful response body
  * 
  * @param {string} token - access token retrieved from idox authentication
  * @param {string} submissionId - idox-generated UUID returned in the resource link of the submission
  * @returns {Promise}
  */
-function retrieveSubmission(token, submissionId) {
+async function retrieveSubmission(token, submissionId) {
   const getSubmissionEndpoint = `https://dev.identity.idoxgroup.com/agw/submission-api/secure/submission/${submissionId}`;
 
   const getSubmissionOptions = {
@@ -331,8 +332,7 @@ const downloadFile = async (url, path, folder) => {
 
   await new Promise((resolve, reject) => {
     res.body.pipe(fileStream);
-    res.body.on("error", reject);
-
+    fileStream.on("error", reject);
     fileStream.on("finish", () => {
       folder.addLocalFile(path);
       deleteFile(path);
