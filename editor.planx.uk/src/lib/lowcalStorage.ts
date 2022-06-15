@@ -49,8 +49,11 @@ class LowcalStorage {
 
     await client.mutate({
       mutation: gql`
-        mutation RemoveItem($id: uuid!) {
-          delete_lowcal_sessions_by_pk(id: $id) {
+        mutation SoftDeleteLowcalSession($id: uuid!) {
+          update_lowcal_sessions_by_pk(
+            pk_columns: { id: $id }
+            _set: { deleted_at: "now()" }
+          ) {
             id
           }
         }

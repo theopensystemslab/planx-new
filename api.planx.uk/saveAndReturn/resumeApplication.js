@@ -1,4 +1,6 @@
-const { getGraphQLClient, sendEmail, convertSlugToName, getResumeLink, calculateExpiryDate, getHumanReadableProjectType } = require("./utils");
+const { gql } = require("graphql-request");
+const { AdminGraphQLClient } = require("../hasura");
+const { sendEmail, convertSlugToName, getResumeLink, calculateExpiryDate, getHumanReadableProjectType } = require("./utils");
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
@@ -42,13 +44,15 @@ const resumeApplication = async (req, res, next) => {
 
 /**
  * Validate that there are sessions matching the request
+ * XXX: Admin role is required here as we are relying on the combination of email 
+ * address + inbox access to "secure" these requests
  * @param {string} teamSlug 
  * @param {string} email 
  */
 const validateRequest = async (teamSlug, email) => {
   try {
-    const client = getGraphQLClient();
-    const query = `
+    const client = AdminGraphQLClient;
+    const query = gql`
       query ValidateRequest($email: String, $teamSlug: String) {
         lowcal_sessions(
           where: {

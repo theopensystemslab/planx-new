@@ -1,6 +1,7 @@
-const { GraphQLClient } = require("graphql-request");
-const { NotifyClient } = require("notifications-node-client");
 const { format, addDays } = require("date-fns");
+const { gql } = require("graphql-request");
+const { PublicGraphQLClient, AdminGraphQLClient } = require("../hasura");
+const { NotifyClient } = require("./notify");
 
 const DAYS_UNTIL_EXPIRY = 28;
 
@@ -19,14 +20,6 @@ const emailTemplates = {
   ...multipleSessionEmailTemplates,
 };
 
-const getNotifyClient = () => new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
-
-const getGraphQLClient = () => new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
-  headers: {
-    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
-  }
-});
-
 /**
  * Send email using the GovUK Notify client
  * @param {string} template 
@@ -38,8 +31,7 @@ const sendEmail = async (template, emailAddress, config) => {
   if (!templateId) throw new Error("Template ID is required");
 
   try {
-    const notifyClient = getNotifyClient();
-    await notifyClient.sendEmail(
+    await NotifyClient.sendEmail(
       templateId,
       emailAddress,
       config
@@ -133,17 +125,10 @@ const sendSingleApplicationEmail = async (template, email, sessionId) => {
  */
 const validateSingleSessionRequest = async (email, sessionId) => {
   try {
-    const client = getGraphQLClient();
-    const query = `
-      query ValidateSingleSessionRequest($email: String, $sessionId: uuid!) {
-        lowcal_sessions(
-          where: {
-            email: { _eq: $email }
-            id: { _eq: $sessionId }
-            deleted_at: { _is_null: true }
-            submitted_at: { _is_null: true }
-          }
-        ) {
+    const client = PublicGraphQLClient;
+    const query = gql`
+      query ValidateSingleSessionRequest {
+        lowcal_sessions {
           id
           data
           created_at
@@ -158,7 +143,8 @@ const validateSingleSessionRequest = async (email, sessionId) => {
         }
       }
     `
-    const { lowcal_sessions: [session] } = await client.request(query, { email: email.toLowerCase(), sessionId });
+    const headers = getSaveAndReturnPublicHeaders(sessionId, email);
+    const { lowcal_sessions: [session] } = await client.request(query, null, headers);
 
     if (!session) throw Error("Unable to find session");
 
@@ -220,35 +206,14 @@ const getPersonalisation = (
 };
 
 /**
- * Mark a lowcal_session record as deleted
- * Sessions older than a week cleaned up nightly by cron job delete_expired_sessions on Hasura
- * @param {string} sessionId 
- */
-const softDeleteSession = async (sessionId) => {
-  try {
-    const client = getGraphQLClient();
-    const mutation = `
-      mutation SoftDeleteLowcalSession($sessionId: uuid!) {
-        update_lowcal_sessions_by_pk(pk_columns: {id: $sessionId}, _set: {deleted_at: "now()"}){
-          id
-        }
-      }
-    `
-    await client.request(mutation, { sessionId });
-  } catch (error) {
-    throw new Error(`Error deleting session ${sessionId}`);
-  };
-};
-
-/**
  * Mark a lowcal_session record as submitted
  * Sessions older than a week cleaned up nightly by cron job delete_expired_sessions on Hasura
  * @param {string} sessionId 
  */
  const markSessionAsSubmitted = async (sessionId) => {
   try {
-    const client = getGraphQLClient();
-    const mutation = `
+    const client = AdminGraphQLClient;
+    const mutation = gql`
       mutation MarkSessionAsSubmitted($sessionId: uuid!) {
         update_lowcal_sessions_by_pk(pk_columns: {id: $sessionId}, _set: {submitted_at: "now()"}){
           id
@@ -285,8 +250,8 @@ const getHumanReadableProjectType = async (session) => {
  * @returns {array}
  */
 const getReadableProjectTypeFromRaw = async (rawList) => {
-  const client = getGraphQLClient();
-  const query = `
+  const client = PublicGraphQLClient;
+  const query = gql`
     query GetHumanReadableProjectType($rawList: [String!]) {
       project_types(where: {value: {_in: $rawList}}) {
         description
@@ -298,15 +263,25 @@ const getReadableProjectTypeFromRaw = async (rawList) => {
   return list;
 };
 
+/**
+ * Scope Save & Return requests for Public role
+ * SessionId and Email is required to access a lowcal_storage record
+ * @param {string} sessionId 
+ * @param {string} email 
+ * @returns {object}
+ */
+const getSaveAndReturnPublicHeaders = (sessionId, email) => ({
+  "x-hasura-ls-session-id": sessionId,
+  "x-hasura-ls-email": email.toLowerCase(),
+});
+
 module.exports = {
-  getNotifyClient,
-  getGraphQLClient,
+  getSaveAndReturnPublicHeaders,
   sendEmail,
   convertSlugToName,
   getResumeLink,
   sendSingleApplicationEmail,
   singleSessionEmailTemplates,
-  softDeleteSession,
   markSessionAsSubmitted,
   DAYS_UNTIL_EXPIRY,
   calculateExpiryDate,
