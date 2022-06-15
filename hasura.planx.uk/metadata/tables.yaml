@@ -188,6 +188,9 @@
         foreign_key_constraint_on: flow_id
 - table:
     schema: public
+    name: planning_constraints_requests
+- table:
+    schema: public
     name: published_flows
   object_relationships:
     - name: flow
