@@ -45,7 +45,7 @@ it("renders correctly", async () => {
 
   // TODO mock passport _address so that SWR request is actually triggered to return mock response
 
-  expect(screen.getByText("Planning constraints")).toBeInTheDocument;
+  expect(screen.getByText("Planning constraints")).toBeInTheDocument();
 
   await act(async () => {
     userEvent.click(screen.getByTestId("continue-button"));

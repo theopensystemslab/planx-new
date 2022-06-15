@@ -86,8 +86,8 @@ describe("Header Component - Public Routes", () => {
 
   it("parses the url pathname and displays a service title", () => {
     render(<Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>);
-    expect(screen.getByTestId("service-title")).toBeInTheDocument;
-    expect(screen.getByText("test flow")).toBeInTheDocument;
+    expect(screen.getByTestId("service-title")).toBeInTheDocument();
+    expect(screen.getByText("test flow")).toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
