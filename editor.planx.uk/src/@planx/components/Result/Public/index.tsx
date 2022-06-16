@@ -4,15 +4,15 @@ import Collapse from "@material-ui/core/Collapse";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Warning from "@material-ui/icons/WarningOutlined";
+import FeedbackInput from "@planx/components/shared/FeedbackInput";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useState } from "react";
 import type { Node, TextContent } from "types";
-import CollapsibleInput from "ui/CollapsibleInput";
 
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
@@ -29,6 +29,7 @@ export interface Props {
   reasonsTitle?: string;
   responses: Array<Response>;
   disclaimer?: TextContent;
+  previouslySubmittedData?: Store.userData;
 }
 
 interface Response {
@@ -97,10 +98,11 @@ const Result: React.FC<Props> = ({
   reasonsTitle = "",
   responses,
   disclaimer,
+  previouslySubmittedData,
 }) => {
   const formik = useFormik({
     initialValues: {
-      feedback: "",
+      feedback: previouslySubmittedData?.feedback || "",
     },
     onSubmit: (values, { resetForm }) => {
       if (values.feedback) {
@@ -110,7 +112,7 @@ const Result: React.FC<Props> = ({
         });
         resetForm();
       }
-      handleSubmit?.();
+      handleSubmit?.({ feedback: values.feedback });
     },
   });
   const visibleResponses = responses.filter((r) => !r.hidden);
@@ -204,15 +206,11 @@ const Result: React.FC<Props> = ({
             </Box>
           </Box>
         )}
-        <CollapsibleInput
+        <FeedbackInput
+          text="Is this information inaccurate? **Tell us why.**"
           handleChange={formik.handleChange}
-          name="feedback"
           value={formik.values.feedback}
-        >
-          <Typography variant="body2">
-            Is this information inaccurate? <b>Tell us why.</b>
-          </Typography>
-        </CollapsibleInput>
+        />
       </Card>
     </Box>
   );

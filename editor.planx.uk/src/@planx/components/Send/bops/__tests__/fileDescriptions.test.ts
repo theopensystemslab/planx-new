@@ -137,8 +137,8 @@ describe("BOPS files[*].applicant_description", () => {
         // if the user has uploaded multiple files for a specific key,
         // ensure that every file in the list has the same description
         getParams(
-          flow,
           breadcrumbs,
+          flow,
           computePassport(),
           sessionId
         ).files?.forEach((file) => {
