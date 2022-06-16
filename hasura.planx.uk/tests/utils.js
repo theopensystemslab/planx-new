@@ -18,10 +18,11 @@ async function gqlAdmin(query, variables = {}) {
   return json;
 }
 
-async function gqlPublic(query, variables = {}) {
+async function gqlPublic(query, variables = {}, headers = {}) {
   const res = await fetch(`http://0.0.0.0:${HASURA_PORT}/v1/graphql`, {
     method: "POST",
-    body: JSON.stringify({ query, variables }),
+    headers: headers,
+    body: JSON.stringify({ query: query, variables }),
   });
   return await res.json();
 }

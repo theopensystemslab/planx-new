@@ -1,7 +1,6 @@
 const { format, addDays } = require("date-fns");
 const { gql } = require("graphql-request");
 const { PublicGraphQLClient, AdminGraphQLClient } = require("../hasura");
-const { NotifyClient } = require("./notify");
 
 const DAYS_UNTIL_EXPIRY = 28;
 
@@ -265,7 +264,7 @@ const getReadableProjectTypeFromRaw = async (rawList) => {
 
 /**
  * Scope Save & Return requests for Public role
- * SessionId and Email is required to access a lowcal_storage record
+ * SessionId and Email is required to access a lowcal_sessions record
  * @param {string} sessionId 
  * @param {string} email 
  * @returns {object}

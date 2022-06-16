@@ -137,7 +137,7 @@ export const stringifyWithRootKeysSortedAlphabetically = (
 
 /**
  * Generate context for GraphQL client Save & Return requests
- * Hasura "Public" role users need the sessionId and email for lowcal_storage access
+ * Hasura "Public" role users need the sessionId and email for lowcal_sessions access
  */
 const getPublicContext = (sessionId: string) => ({
   context: {
