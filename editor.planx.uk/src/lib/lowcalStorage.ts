@@ -143,7 +143,7 @@ const getPublicContext = (sessionId: string) => ({
   context: {
     headers: {
       "x-hasura-ls-session-id": sessionId,
-      "x-hasura-ls-email": useStore.getState().saveToEmail,
+      "x-hasura-ls-email": useStore.getState().saveToEmail?.toLowerCase(),
     },
   },
 });

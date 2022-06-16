@@ -66,7 +66,7 @@ const validateSession = async (req, res, next) => {
           //   **what about collected flags? what about `auto: true`? component dependencies like FindProp/Draw/PlanningConstraints?
 
           // update the lowcal_session.data to match our updated in-memory sessionData.data
-          const reconciledSessionData = await updateLowcalSessionData(sessionId, sessionData.data, email.toLowerCase());
+          const reconciledSessionData = await updateLowcalSessionData(sessionId, sessionData.data, email);
 
           res.status(200).json({
             message: "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
@@ -128,7 +128,7 @@ const updateLowcalSessionData = async (sessionId, data, email) => {
         updated_at
       }
     }
-  `
+  `;
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
   const response = await client.request(query, { sessionId, data }, headers);
   return response.update_lowcal_sessions_by_pk?.data;
