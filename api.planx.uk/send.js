@@ -112,61 +112,60 @@ const sendToUniform = async (req, res, next) => {
  * @param {any} jsonXml - a JSON representation of the XML schema, resulting file must be named "proposal.xml"
  * @param {any} csv - an array of objects representing our custom CSV format
  * @param {string[]} files - an array of the S3 URLs for any user-uploaded files
- * @param {string} sessionId 
- * @returns {Promise}
+ * @param {string} sessionId
+ * @returns {Promise} - name of zip
  */
 async function createZip(jsonXml, csv, files, sessionId) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      // initiate an empty zip folder
-      const zip = new AdmZip();
+  // initiate an empty zip folder
+  const zip = new AdmZip();
 
-      // make a tmp directory to avoid file name collisions if simultaneous applications
-      let tmpDir = "";
-      fs.mkdtemp(path.join(os.tmpdir(), sessionId), (err, folder) => {
-        if (err) throw err;
-        tmpDir = folder;
-      });
-
-      // download any user-uploaded files from S3 to the tmp directory, add them to the zip
-      if (files) {
-        files.forEach(async (file) => {
-          let filePath = path.join(tmpDir, file.split("/").pop());
-          await downloadFile(file, filePath, zip);
-        });
-      }
-
-      // build a CSV, write it to the tmp directory, add it to the zip
-      const csvPath = path.join(tmpDir, "application.csv");
-      const csvFile = fs.createWriteStream(csvPath);
-      const csvStream = stringify(csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
-      csvStream.on("finish", () => {
-        zip.addLocalFile(csvPath);
-        deleteFile(csvPath);
-      });
-
-      // build an XML file, add it directly to the zip
-      const options = { compact: true, spaces: 4, fullTagEmptyElement: true };
-      const xml = convert.json2xml(jsonXml, options);
-      zip.addFile("proposal.xml", Buffer.from(xml, "utf-8"));
-
-      // generate & save zip locally
-      //   XXX using a timeout here to ensure various file streams have completed, need to make better??
-      setTimeout(() => {
-        const downloadName = `ripa-test-${sessionId}.zip`;
-        zip.writeZip(downloadName);
-
-        // cleanup tmp directory
-        fs.rm(tmpDir, { recursive: true }, (err) => {
-          if (err) throw err;
-        });
-
-        resolve(downloadName);
-      }, 4000);
-    } catch (err) {
-      reject(err);
-    }
+  // make a tmp directory to avoid file name collisions if simultaneous applications
+  let tmpDir = "";
+  fs.mkdtemp(path.join(os.tmpdir(), sessionId), (err, folder) => {
+    if (err) throw err;
+    tmpDir = folder;
   });
+
+  try {
+    // download any user-uploaded files from S3 to the tmp directory, add them to the zip
+    if (files) {
+      for (let file of files) {
+        const filePath = path.join(tmpDir, file.split("/").pop());
+        await downloadFile(file, filePath, zip);
+      }
+    }
+
+    // build a CSV, write it to the tmp directory, add it to the zip
+    const csvPath = path.join(tmpDir, "application.csv");
+    const csvFile = fs.createWriteStream(csvPath);
+    
+    const csvStream = stringify(csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
+    await new Promise((resolve, reject) => {
+      csvStream.on("error", reject);
+      csvStream.on("finish", resolve);
+    });
+
+    zip.addLocalFile(csvPath);
+    deleteFile(csvPath);
+
+    // build an XML file, add it directly to the zip
+    const options = { compact: true, spaces: 4, fullTagEmptyElement: true };
+    const xml = convert.json2xml(jsonXml, options);
+    zip.addFile("proposal.xml", Buffer.from(xml, "utf-8"));
+
+    // generate & save zip locally
+    const zipName = `ripa-test-${sessionId}.zip`;
+    zip.writeZip(zipName);
+
+    // cleanup tmp directory
+    fs.rm(tmpDir, { recursive: true }, (err) => {
+      if (err) throw err;
+    });
+
+    return zipName;
+  } catch (err) {
+    reject(err);
+  }
 };
 
 /**
@@ -193,14 +192,12 @@ async function authenticate(organisation) {
     redirect: "follow",
   };
 
-  return new Promise(async (resolve, reject) => {
-    try {
-      await fetch(authEndpoint, authOptions)
-        .then(response => resolve(response.json()));
-    } catch (err) {
-      reject(err);
-    }
-  });
+  try {
+    return await fetch(authEndpoint, authOptions)
+      .then(response => response.json());
+  } catch (err) {
+    reject(err);
+  }
 };
 
 /**
@@ -234,21 +231,19 @@ async function createSubmission(token, organisation, organisationId, sessionId =
     redirect: "follow",
   };
 
-  return new Promise(async (resolve, reject) => {
-    try {
-      await fetch(createSubmissionEndpoint, createSubmissionOptions)
-        .then(response => {
-          // successful submission returns 201 Created without body
-          if (response.status === 201) {
-            // parse & return the submissionId
-            const resourceLink = response.headers.get("location");
-            resolve(resourceLink.split("/").pop());
-          }
-        });
-    } catch (err) {
-      reject(err);
-    }
-  });
+  try {
+    return await fetch(createSubmissionEndpoint, createSubmissionOptions)
+      .then(response => {
+        // successful submission returns 201 Created without body
+        if (response.status === 201) {
+          // parse & return the submissionId
+          const resourceLink = response.headers.get("location");
+          return resourceLink.split("/").pop();
+        }
+      });
+  } catch (err) {
+    reject(err);
+  }
 };
 
 /**
@@ -257,9 +252,14 @@ async function createSubmission(token, organisation, organisationId, sessionId =
  * @param {string} token - access token retrieved from idox authentication 
  * @param {string} submissionId - idox-generated UUID returned in the resource link of the submission 
  * @param {string} zipPath - file path to an existing zip folder (2GB limit)
- * @returns {Promise}
+ * @returns {Promise} - "zipAttached" boolean for our audit record because retrieveSubmission response will include archive.href regardless
  */
 async function attachArchive(token, submissionId, zipPath) {
+  if (!fs.existsSync(zipPath)) {
+    console.log(`Zip does not exist, cannot attach to idox_submission_id ${submissionId}`);
+    return false;
+  }
+
   const attachArchiveEndpoint = `https://dev.identity.idoxgroup.com/agw/submission-api/secure/submission/${submissionId}/archive`;
 
   const formData = new FormData();
@@ -273,20 +273,18 @@ async function attachArchive(token, submissionId, zipPath) {
     body: formData,
     redirect: "follow",
   };
-
-  return new Promise(async (resolve, reject) => {
-    try {
-      await fetch(attachArchiveEndpoint, attachArchiveOptions)
-        .then(response => {
-          // successful upload returns 204 No Content without body
-          if (response.status === 204) {
-            resolve(true);
-          }
-        });
-    } catch (err) {
-      reject(err);
-    }
-  });
+  
+  try {
+    return await fetch(attachArchiveEndpoint, attachArchiveOptions)
+      .then(response => {
+        // successful upload returns 204 No Content without body
+        if (response.status === 204) {
+          return true;
+        }
+      });
+  } catch (err) {
+    reject(err);
+  }
 };
 
 
@@ -309,14 +307,12 @@ async function retrieveSubmission(token, submissionId) {
     redirect: "follow",
   };
 
-  return new Promise(async (resolve, reject) => {
-    try {
-      await fetch(getSubmissionEndpoint, getSubmissionOptions)
-        .then(response => resolve(response.json()));
-    } catch (err) {
-      reject(err);
-    }
-  });
+  try {
+    return await fetch(getSubmissionEndpoint, getSubmissionOptions)
+      .then(response => response.json());
+  } catch (err) {
+    reject(err);
+  }
 };
 
 /**
@@ -330,15 +326,14 @@ const downloadFile = async (url, path, folder) => {
   const res = await fetch(url);
   const fileStream = fs.createWriteStream(path);
 
+  res.body.pipe(fileStream);
   await new Promise((resolve, reject) => {
-    res.body.pipe(fileStream);
     fileStream.on("error", reject);
-    fileStream.on("finish", () => {
-      folder.addLocalFile(path);
-      deleteFile(path);
-      resolve;
-    });
+    fileStream.on("finish", resolve);
   });
+
+  folder.addLocalFile(path);
+  deleteFile(path);
 };
 
 /**
