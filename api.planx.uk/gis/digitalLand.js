@@ -1,4 +1,5 @@
 require("isomorphic-fetch");
+const { GraphQLClient } = require("graphql-request");
 
 const { addDesignatedVariable, omitGeometry } = require("./helpers");
 const { baseSchema } = require("./local_authorities/metadata/base.js");
@@ -10,6 +11,12 @@ const localAuthorityMetadata = {
   "southwark": require("./local_authorities/metadata/southwark.js"),
 };
 
+const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
+  headers: {
+    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+  },
+});
+
 /**
  * 
  * Query planning constraints datasets that intersect a given geometry and return results in the planx schema format
@@ -17,12 +24,13 @@ const localAuthorityMetadata = {
  * 
  * @param localAuthority (string) - planx team name used to link granular Article 4 metadata
  * @param geom (string) - WKT POLYGON or POINT, prioritized drawn site boundary and fallsback to unbuffered address point
+ * @param extras (dict) - optional query params like "analytics" & "sessionId" used to decide if we should audit the raw response
  * 
  * @returns { url: string, constraints: { [planx_variable]: { value: bool, text: string, data?: [] }}}
  *   an object with the original request URL for debugging/auditing & a dictionary of constraints
  * 
  */
-async function go(localAuthority, geom) {
+async function go(localAuthority, geom, extras) {
   // generate list of digital land datasets we should query based on 'active' planx schema variables
   let activeDatasets = [];
   Object.keys(baseSchema).forEach(key => {
@@ -49,6 +57,32 @@ async function go(localAuthority, geom) {
     const res = await fetch(url)
       .then(response => response.json())
       .catch(error => console.log(error));
+
+    // if analytics are "on", store an audit record of the raw response
+    if (extras?.analytics !== "false") {
+      const record = await client.request(
+        `
+          mutation CreatePlanningConstraintsRequest(
+            $destination_url: String = "",
+            $response: jsonb = {},
+            $session_id: String = "",
+          ) {
+            insert_planning_constraints_requests_one(object: {
+              destination_url: $destination_url,
+              response: $response
+              session_id: $session_id,
+            }) {
+              id
+            }
+          }
+        `,
+        {
+          destination_url: url,
+          response: res,
+          session_id: extras?.sessionId,
+        }
+      );
+    }
 
     // --- INTERSECTIONS ---
     // check for & add any 'positive' constraints to the formattedResult
@@ -148,8 +182,8 @@ async function go(localAuthority, geom) {
   }
 }
 
-async function locationSearch(localAuthority, geom) {
-  return go(localAuthority, geom);
+async function locationSearch(localAuthority, geom, extras) {
+  return go(localAuthority, geom, extras);
 }
 
 module.exports = {

@@ -35,6 +35,11 @@ function Component(props: Props) {
   ]);
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
+
+  // Get current query parameters (eg ?analytics=false&sessionId=XXX) to determine if we should audit this response
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const params = Object.fromEntries(urlSearchParams.entries());
+
   const classes = useClasses();
 
   // Get the coordinates of the site boundary drawing if they exist, fallback on x & y if file was uploaded
@@ -58,6 +63,7 @@ function Component(props: Props) {
 
   const digitalLandParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,
+    ...params,
   };
   const customGisParams: Record<string, any> = {
     x: x,
