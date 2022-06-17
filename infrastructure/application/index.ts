@@ -381,8 +381,8 @@ new pulumi.Config("cloudflare").require("apiToken");
             value: config.require("uniform-api-username"),
           },
           {
-            name: "UNIFORM_API_TOKEN",
-            value: config.require("uniform-api-token"),
+            name: "UNIFORM_API_PASSWORD",
+            value: config.require("uniform-api-password"),
           },
         ],
       },
