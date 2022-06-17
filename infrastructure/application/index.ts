@@ -376,6 +376,14 @@ new pulumi.Config("cloudflare").require("apiToken");
             name: "AIRBRAKE_PROJECT_KEY",
             value: config.require("airbrake-project-key"),
           },
+          {
+            name: "UNIFORM_API_USERNAME",
+            value: config.require("uniform-api-username"),
+          },
+          {
+            name: "UNIFORM_API_TOKEN",
+            value: config.require("uniform-api-token"),
+          },
         ],
       },
     },
