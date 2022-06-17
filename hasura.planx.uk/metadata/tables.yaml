@@ -2,64 +2,64 @@
     schema: public
     name: analytics
   insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - created_at
-      - flow_id
-      - id
-      - type
-      backend_only: false
+    - role: public
+      permission:
+        check: {}
+        columns:
+          - created_at
+          - flow_id
+          - id
+          - type
+        backend_only: false
   select_permissions:
-  - role: public
-    permission:
-      columns:
-      - id
-      filter: {}
+    - role: public
+      permission:
+        columns:
+          - id
+        filter: {}
 - table:
     schema: public
     name: analytics_logs
   insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - analytics_id
-      - created_at
-      - flow_direction
-      - has_clicked_help
-      - id
-      - metadata
-      - node_title
-      - node_type
-      - user_exit
-      backend_only: false
+    - role: public
+      permission:
+        check: {}
+        columns:
+          - analytics_id
+          - created_at
+          - flow_direction
+          - has_clicked_help
+          - id
+          - metadata
+          - node_title
+          - node_type
+          - user_exit
+        backend_only: false
   select_permissions:
-  - role: public
-    permission:
-      columns:
-      - analytics_id
-      - id
-      filter: {}
+    - role: public
+      permission:
+        columns:
+          - analytics_id
+          - id
+        filter: {}
   update_permissions:
-  - role: public
-    permission:
-      columns:
-      - has_clicked_help
-      filter: {}
-      check: null
+    - role: public
+      permission:
+        columns:
+          - has_clicked_help
+        filter: {}
+        check: null
 - table:
     schema: public
     name: blpu_codes
   select_permissions:
-  - role: public
-    permission:
-      columns:
-      - description
-      - code
-      - value
-      filter: {}
+    - role: public
+      permission:
+        columns:
+          - description
+          - code
+          - value
+        filter: {}
 - table:
     schema: public
     name: bops_applications
@@ -67,308 +67,313 @@
     schema: public
     name: flow_schemas
   select_permissions:
-  - role: public
-    permission:
-      columns:
-      - flow_id
-      - node
-      - type
-      - planx_variable
-      filter: {}
+    - role: public
+      permission:
+        columns:
+          - flow_id
+          - node
+          - type
+          - planx_variable
+        filter: {}
 - table:
     schema: public
     name: flows
   object_relationships:
-  - name: creator
-    using:
-      foreign_key_constraint_on: creator_id
-  - name: team
-    using:
-      foreign_key_constraint_on: team_id
+    - name: creator
+      using:
+        foreign_key_constraint_on: creator_id
+    - name: team
+      using:
+        foreign_key_constraint_on: team_id
   array_relationships:
-  - name: operations
-    using:
-      foreign_key_constraint_on:
-        column: flow_id
-        table:
-          schema: public
-          name: operations
-  - name: published_flows
-    using:
-      foreign_key_constraint_on:
-        column: flow_id
-        table:
-          schema: public
-          name: published_flows
-  - name: session_backups
-    using:
-      foreign_key_constraint_on:
-        column: flow_id
-        table:
-          schema: public
-          name: session_backups
-  - name: sessions
-    using:
-      foreign_key_constraint_on:
-        column: flow_id
-        table:
-          schema: public
-          name: sessions
+    - name: operations
+      using:
+        foreign_key_constraint_on:
+          column: flow_id
+          table:
+            schema: public
+            name: operations
+    - name: published_flows
+      using:
+        foreign_key_constraint_on:
+          column: flow_id
+          table:
+            schema: public
+            name: published_flows
+    - name: session_backups
+      using:
+        foreign_key_constraint_on:
+          column: flow_id
+          table:
+            schema: public
+            name: session_backups
+    - name: sessions
+      using:
+        foreign_key_constraint_on:
+          column: flow_id
+          table:
+            schema: public
+            name: sessions
   computed_fields:
-  - name: data_merged
-    definition:
-      function:
-        schema: public
-        name: compile_flow_portals
-    comment: Flow data with portals merged in
+    - name: data_merged
+      definition:
+        function:
+          schema: public
+          name: compile_flow_portals
+      comment: Flow data with portals merged in
   select_permissions:
-  - role: public
-    permission:
-      columns:
-      - id
-      - team_id
-      - slug
-      - creator_id
-      - data
-      - version
-      - created_at
-      - updated_at
-      - settings
-      computed_fields:
-      - data_merged
-      filter: {}
+    - role: public
+      permission:
+        columns:
+          - id
+          - team_id
+          - slug
+          - creator_id
+          - data
+          - version
+          - created_at
+          - updated_at
+          - settings
+        computed_fields:
+          - data_merged
+        filter: {}
 - table:
     schema: public
     name: global_settings
   select_permissions:
-  - role: public
-    permission:
-      columns:
-      - footer_content
-      filter: {}
+    - role: public
+      permission:
+        columns:
+          - footer_content
+        filter: {}
 - table:
     schema: public
     name: lowcal_sessions
   insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - data
-      - id
-      backend_only: false
+    - role: public
+      permission:
+        check: {}
+        columns:
+          - data
+          - id
+        backend_only: false
   select_permissions:
-  - role: public
-    permission:
-      columns:
-      - id
-      - data
-      filter: {}
+    - role: public
+      permission:
+        columns:
+          - id
+          - data
+        filter: {}
   update_permissions:
-  - role: public
-    permission:
-      columns:
-      - data
-      - id
-      filter: {}
-      check: null
+    - role: public
+      permission:
+        columns:
+          - data
+          - id
+        filter: {}
+        check: null
   delete_permissions:
-  - role: public
-    permission:
-      filter: {}
+    - role: public
+      permission:
+        filter: {}
 - table:
     schema: public
     name: operations
   object_relationships:
-  - name: actor
-    using:
-      foreign_key_constraint_on: actor_id
-  - name: flow
-    using:
-      foreign_key_constraint_on: flow_id
+    - name: actor
+      using:
+        foreign_key_constraint_on: actor_id
+    - name: flow
+      using:
+        foreign_key_constraint_on: flow_id
+- table:
+    schema: public
+    name: planning_constraints_requests
 - table:
     schema: public
     name: published_flows
   object_relationships:
-  - name: flow
-    using:
-      foreign_key_constraint_on: flow_id
-  - name: user
-    using:
-      foreign_key_constraint_on: publisher_id
+    - name: flow
+      using:
+        foreign_key_constraint_on: flow_id
+    - name: user
+      using:
+        foreign_key_constraint_on: publisher_id
   select_permissions:
-  - role: public
-    permission:
-      columns:
-      - created_at
-      - data
-      - flow_id
-      - id
-      - publisher_id
-      - summary
-      filter: {}
+    - role: public
+      permission:
+        columns:
+          - created_at
+          - data
+          - flow_id
+          - id
+          - publisher_id
+          - summary
+        filter: {}
 - table:
     schema: public
     name: session_backups
   object_relationships:
-  - name: flow
-    using:
-      foreign_key_constraint_on: flow_id
+    - name: flow
+      using:
+        foreign_key_constraint_on: flow_id
   insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - flow_data
-      - flow_id
-      - session_id
-      - user_data
-      backend_only: false
+    - role: public
+      permission:
+        check: {}
+        columns:
+          - flow_data
+          - flow_id
+          - session_id
+          - user_data
+        backend_only: false
 - table:
     schema: public
     name: session_events
   object_relationships:
-  - name: session
-    using:
-      foreign_key_constraint_on: session_id
+    - name: session
+      using:
+        foreign_key_constraint_on: session_id
   insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - chosen_node_ids
-      - parent_node_id
-      - session_id
-      - type
-      backend_only: false
+    - role: public
+      permission:
+        check: {}
+        columns:
+          - chosen_node_ids
+          - parent_node_id
+          - session_id
+          - type
+        backend_only: false
 - table:
     schema: public
     name: sessions
   object_relationships:
-  - name: flow
-    using:
-      foreign_key_constraint_on: flow_id
+    - name: flow
+      using:
+        foreign_key_constraint_on: flow_id
   array_relationships:
-  - name: session_events
-    using:
-      foreign_key_constraint_on:
-        column: session_id
-        table:
-          schema: public
-          name: session_events
+    - name: session_events
+      using:
+        foreign_key_constraint_on:
+          column: session_id
+          table:
+            schema: public
+            name: session_events
   computed_fields:
-  - name: session_events_compiled
-    definition:
-      function:
-        schema: public
-        name: compile_session_events
-    comment: Filters out events with duplicated parent_node_id (e.g. clicking "back"
-      and changing the answer)
-  - name: replay
-    definition:
-      function:
-        schema: public
-        name: compile_session_replay
-    comment: ""
+    - name: replay
+      definition:
+        function:
+          schema: public
+          name: compile_session_replay
+      comment: ""
+    - name: session_events_compiled
+      definition:
+        function:
+          schema: public
+          name: compile_session_events
+      comment: Filters out events with duplicated parent_node_id (e.g. clicking "back" and changing the answer)
   insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - completed_at
-      - created_at
-      - flow_data
-      - flow_id
-      - flow_version
-      - id
-      - passport
-      - updated_at
-      backend_only: false
+    - role: public
+      permission:
+        check: {}
+        columns:
+          - completed_at
+          - created_at
+          - flow_data
+          - flow_id
+          - flow_version
+          - id
+          - passport
+          - updated_at
+        backend_only: false
   select_permissions:
-  - role: public
-    permission:
-      columns:
-      - id
-      filter: {}
+    - role: public
+      permission:
+        columns:
+          - id
+        filter: {}
   update_permissions:
-  - role: public
-    permission:
-      columns:
-      - completed_at
-      filter: {}
-      check: null
+    - role: public
+      permission:
+        columns:
+          - completed_at
+        filter: {}
+        check: null
 - table:
     schema: public
     name: team_members
   object_relationships:
-  - name: creator
-    using:
-      foreign_key_constraint_on: creator_id
-  - name: team
-    using:
-      foreign_key_constraint_on: team_id
-  - name: user
-    using:
-      foreign_key_constraint_on: user_id
+    - name: creator
+      using:
+        foreign_key_constraint_on: creator_id
+    - name: team
+      using:
+        foreign_key_constraint_on: team_id
+    - name: user
+      using:
+        foreign_key_constraint_on: user_id
 - table:
     schema: public
     name: teams
   array_relationships:
-  - name: flows
-    using:
-      foreign_key_constraint_on:
-        column: team_id
-        table:
-          schema: public
-          name: flows
-  - name: members
-    using:
-      foreign_key_constraint_on:
-        column: team_id
-        table:
-          schema: public
-          name: team_members
+    - name: flows
+      using:
+        foreign_key_constraint_on:
+          column: team_id
+          table:
+            schema: public
+            name: flows
+    - name: members
+      using:
+        foreign_key_constraint_on:
+          column: team_id
+          table:
+            schema: public
+            name: team_members
   select_permissions:
-  - role: public
-    permission:
-      columns:
-      - id
-      - name
-      - slug
-      - theme
-      - created_at
-      - updated_at
-      - settings
-      filter: {}
+    - role: public
+      permission:
+        columns:
+          - id
+          - name
+          - slug
+          - theme
+          - created_at
+          - updated_at
+          - settings
+        filter: {}
+- table:
+    schema: public
+    name: uniform_applications
 - table:
     schema: public
     name: users
   array_relationships:
-  - name: created_flows
-    using:
-      foreign_key_constraint_on:
-        column: creator_id
-        table:
-          schema: public
-          name: flows
-  - name: created_team_members
-    using:
-      foreign_key_constraint_on:
-        column: creator_id
-        table:
-          schema: public
-          name: team_members
-  - name: operations
-    using:
-      foreign_key_constraint_on:
-        column: actor_id
-        table:
-          schema: public
-          name: operations
-  - name: team_members
-    using:
-      foreign_key_constraint_on:
-        column: user_id
-        table:
-          schema: public
-          name: team_members
+    - name: created_flows
+      using:
+        foreign_key_constraint_on:
+          column: creator_id
+          table:
+            schema: public
+            name: flows
+    - name: created_team_members
+      using:
+        foreign_key_constraint_on:
+          column: creator_id
+          table:
+            schema: public
+            name: team_members
+    - name: operations
+      using:
+        foreign_key_constraint_on:
+          column: actor_id
+          table:
+            schema: public
+            name: operations
+    - name: team_members
+      using:
+        foreign_key_constraint_on:
+          column: user_id
+          table:
+            schema: public
+            name: team_members

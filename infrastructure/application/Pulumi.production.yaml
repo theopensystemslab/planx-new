@@ -26,6 +26,10 @@ config:
     secure: AAABAN1bRAyO0jk0n4rfVAntYPWNat+naRsld87v3I18Bn9Iu5HGHmdKyF8Z0qpKoa7Sm88hmxlYsOb9wxQi0Yxtl7sdGZvodD6iLg==
   application:session-secret:
     secure: AAABACeZpncVIdwarlb/J9qtaPqUob0YwbaOVDNEgfhSJ71aq0pkZml1EP+JqMKvyhkG483LcIiGzEh/ZDJehMu2
+  application:uniform-api-password:
+    secure: AAABAG3JJ43EfMXi85e6QT46Wk9xLB4jlXTHoNRgSlIbmzeuELq6IDANkoHk6LfU6vLDKvt9fA==
+  application:uniform-api-username:
+    secure: AAABAOCeei4Uz5zF4LTLIYIMeUkNW9U0s4g7K/R3lMinZo9IDrz5G7M=
   aws:region: eu-west-2
   cloudflare:apiToken:
     secure: AAABAMbIBX9N21ModHyDYCQCGZXkRUP62NIUMhsxkK+/YUPRQr6PEqgZX9LRP2UuVwvVHd2RxvKGT8lpq8oAgyeDYP1eZSUl

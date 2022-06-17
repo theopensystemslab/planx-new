@@ -9,6 +9,7 @@ import {
   DESCRIPTION_TEXT,
   ERROR_MESSAGE,
 } from "@planx/components/shared/constants";
+import FeedbackInput from "@planx/components/shared/FeedbackInput";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
@@ -21,7 +22,6 @@ import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import { TeamSettings } from "types";
-import CollapsibleInput from "ui/CollapsibleInput";
 import ExternalPlanningSiteDialog, {
   DialogPurpose,
 } from "ui/ExternalPlanningSiteDialog";
@@ -112,7 +112,8 @@ function Component(props: Props) {
   } else if (address) {
     return (
       <PropertyInformation
-        handleSubmit={(feedback?: string) => {
+        previousFeedback={props.previouslySubmittedData?.feedback}
+        handleSubmit={({ feedback }: { feedback?: string }) => {
           if (flow && address) {
             const newPassportData: any = {};
 
@@ -134,9 +135,15 @@ function Component(props: Props) {
               ...newPassportData,
             };
 
-            props.handleSubmit?.({
+            const submissionData: any = {
               data: passportData,
-            });
+            };
+
+            if (feedback) {
+              submissionData.feedback = feedback;
+            }
+
+            props.handleSubmit?.(submissionData);
           } else {
             throw Error("Should not have been clickable");
           }
@@ -392,11 +399,12 @@ export function PropertyInformation(props: any) {
     lng,
     handleSubmit,
     teamColor,
+    previousFeedback,
   } = props;
   const styles = useClasses();
   const formik = useFormik({
     initialValues: {
-      feedback: "",
+      feedback: previousFeedback || "",
     },
     onSubmit: (values) => {
       if (values.feedback) {
@@ -405,7 +413,7 @@ export function PropertyInformation(props: any) {
           property: propertyDetails,
         });
       }
-      handleSubmit?.();
+      handleSubmit?.(values);
     },
   });
 
@@ -444,15 +452,11 @@ export function PropertyInformation(props: any) {
         ))}
       </Box>
       <Box color="text.secondary" textAlign="right">
-        <CollapsibleInput
+        <FeedbackInput
+          text="Report an inaccuracy"
           handleChange={formik.handleChange}
-          name="feedback"
           value={formik.values.feedback}
-        >
-          <Typography variant="body2" color="inherit">
-            Report an inaccuracy
-          </Typography>
-        </CollapsibleInput>
+        />
       </Box>
     </Card>
   );

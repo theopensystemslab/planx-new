@@ -59,13 +59,15 @@ export const hasFeatureFlag = (featureFlag: featureFlag) =>
   has: hasFeatureFlag,
 };
 
-// log current flag status on page load
-console.debug(
-  activeFeatureFlags.size > 0
-    ? `🎏 ${activeFeatureFlags.size} feature flags enabled: ${[
-        ...activeFeatureFlags,
-      ]
-        .sort()
-        .join(", ")}`
-    : `🎏 no active feature flags`
-);
+if (process.env.NODE_ENV !== "test") {
+  // log current flag status on page load
+  console.debug(
+    activeFeatureFlags.size > 0
+      ? `🎏 ${activeFeatureFlags.size} feature flags enabled: ${[
+          ...activeFeatureFlags,
+        ]
+          .sort()
+          .join(", ")}`
+      : `🎏 no active feature flags`
+  );
+}

@@ -5,6 +5,7 @@ import { makePayload } from "..";
 const flow: Store.flow = {
   _root: {
     edges: [
+      "zQlvAHP8lw",
       "LDGBpPGxWC",
       "9K5DHOJIFG",
       "DzIEfGlsGa",
@@ -14,6 +15,9 @@ const flow: Store.flow = {
       "AFoFsXSPus",
       "fnT4PnVhhJ",
     ],
+  },
+  zQlvAHP8lw: {
+    type: 9,
   },
   "9K5DHOJIFG": {
     data: {
@@ -128,6 +132,10 @@ const flow: Store.flow = {
 };
 
 const breadcrumbs: Store.breadcrumbs = {
+  zQlvAHP8lw: {
+    auto: false,
+    feedback: "test",
+  },
   LDGBpPGxWC: {
     auto: false,
     data: {
@@ -173,43 +181,48 @@ const breadcrumbs: Store.breadcrumbs = {
 };
 
 test("valid node types are serialized correctly for BOPS", () => {
-  const expected = [
-    {
-      question: "address question",
-      responses: [{ value: "line1, line, town, county, postcode" }],
-      metadata: { portal_name: "_root" },
+  const expected = {
+    feedback: {
+      find_property: "test",
     },
-    {
-      question: "checklist",
-      responses: [{ value: "1" }, { value: "2" }],
-      metadata: { portal_name: "_root" },
-    },
-    {
-      question: "expandable checklist question",
-      responses: [{ value: "c1" }, { value: "c2" }, { value: "c3" }],
-      metadata: { portal_name: "_root" },
-    },
-    {
-      question: "date question",
-      responses: [{ value: "1999-01-01" }],
-      metadata: { portal_name: "_root" },
-    },
-    {
-      question: "number question",
-      responses: [{ value: "500" }],
-      metadata: { portal_name: "_root" },
-    },
-    {
-      question: "regular question",
-      responses: [{ value: "a1" }],
-      metadata: { portal_name: "_root" },
-    },
-    {
-      question: "text question",
-      responses: [{ value: "testanswer" }],
-      metadata: { portal_name: "_root" },
-    },
-  ];
+    proposal_details: [
+      {
+        question: "address question",
+        responses: [{ value: "line1, line, town, county, postcode" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "checklist",
+        responses: [{ value: "1" }, { value: "2" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "expandable checklist question",
+        responses: [{ value: "c1" }, { value: "c2" }, { value: "c3" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "date question",
+        responses: [{ value: "1999-01-01" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "number question",
+        responses: [{ value: "500" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "regular question",
+        responses: [{ value: "a1" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "text question",
+        responses: [{ value: "testanswer" }],
+        metadata: { portal_name: "_root" },
+      },
+    ],
+  };
 
   const actual = makePayload(flow, breadcrumbs);
 

@@ -4,10 +4,10 @@ const localAuthorities = {
 };
 
 // Digital Land is a single request with standardized geometry, so remove timeout & simplify query params
-function locationSearchWithoutTimeout(localAuthority, { geom }) {
+function locationSearchWithoutTimeout(localAuthority, queryParams) {
   return new Promise(async (resolve, reject) => {
     try {
-      const resp = await localAuthorities["digitalLand"].locationSearch(localAuthority, geom);
+      const resp = await localAuthorities["digitalLand"].locationSearch(localAuthority, queryParams.geom, queryParams);
       resolve(resp);
     } catch (err) {
       reject(err);

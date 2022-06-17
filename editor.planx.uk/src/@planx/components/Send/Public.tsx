@@ -46,15 +46,29 @@ const SendComponent: React.FC<Props> = (props) => {
   );
 
   useEffect(() => {
+    const isReady = !request.loading && !request.error && request.value;
+
     if (
       props.destination === Destination.BOPS &&
-      !request.loading &&
-      !request.error &&
-      request.value &&
+      isReady &&
       props.handleSubmit
     ) {
       props.handleSubmit(
         makeData(props, request.value.data.application.id, "bopsId")
+      );
+    }
+
+    if (
+      props.destination === Destination.Uniform &&
+      isReady &&
+      props.handleSubmit
+    ) {
+      props.handleSubmit(
+        makeData(
+          props,
+          request.value.data.application.idox_submission_id,
+          "idoxSubmissionId"
+        )
       );
     }
   }, [request.loading, request.error, request.value]);
@@ -63,7 +77,7 @@ const SendComponent: React.FC<Props> = (props) => {
     return (
       <Card>
         <DelayedLoadingIndicator
-          text={`Sending data to ${props.destination?.toUpperCase()} ${teamSlug?.toUpperCase()}`}
+          text={`Submitting your application to ${props.destination?.toUpperCase()} ${teamSlug?.toUpperCase()}...`}
           msDelayBeforeVisible={0}
         />
       </Card>
@@ -74,18 +88,10 @@ const SendComponent: React.FC<Props> = (props) => {
   } else {
     return (
       <Card>
-        {props.destination === Destination.Uniform && request.value ? (
-          <a
-            href={`${process.env.REACT_APP_API_URL}/uniform-download?file=${request.value.data?.fileName}`}
-          >
-            Download the Uniform .zip (TESTING ONLY)
-          </a>
-        ) : (
-          <DelayedLoadingIndicator
-            text="Finalising..."
-            msDelayBeforeVisible={0}
-          />
-        )}
+        <DelayedLoadingIndicator
+          text="Finalising your submission..."
+          msDelayBeforeVisible={0}
+        />
       </Card>
     );
   }
