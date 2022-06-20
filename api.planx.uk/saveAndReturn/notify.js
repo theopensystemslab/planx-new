@@ -1,5 +1,5 @@
-const { NotifyClient } = require("./notify");
+const { NotifyClient } = require("notifications-node-client");
 
-const NotifyClient = new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
+const notifyClient = new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
 
-module.exports = { NotifyClient };
+module.exports = { notifyClient };

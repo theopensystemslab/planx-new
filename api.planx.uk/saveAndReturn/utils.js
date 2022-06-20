@@ -1,6 +1,7 @@
 const { format, addDays } = require("date-fns");
 const { gql } = require("graphql-request");
 const { publicGraphQLClient, adminGraphQLClient } = require("../hasura");
+const { notifyClient } = require("./notify");
 
 const DAYS_UNTIL_EXPIRY = 28;
 
@@ -30,7 +31,7 @@ const sendEmail = async (template, emailAddress, config) => {
   if (!templateId) throw new Error("Template ID is required");
 
   try {
-    await NotifyClient.sendEmail(
+    await notifyClient.sendEmail(
       templateId,
       emailAddress,
       config
