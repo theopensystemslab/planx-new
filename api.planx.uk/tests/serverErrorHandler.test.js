@@ -1,5 +1,6 @@
 const supertest = require("supertest");
 const app = require("../server");
+const nock = require("nock");
 
 const { get, post } = supertest(app);
 
@@ -9,10 +10,18 @@ describe("bad requests", () => {
   });
 
   test(`app.post("/pay/:localAuthority")`, (done) => {
+    nock("https://publicapi.payments.service.gov.uk")
+      .post("/v1/payments")
+      .reply(400);
+
     post("/pay/wrong").expect(400, done);
   });
 
-  test.skip(`app.get("/pay/:localAuthority/:paymentId")`, (done) => {
+  test(`app.get("/pay/:localAuthority/:paymentId")`, (done) => {
+    nock("https://publicapi.payments.service.gov.uk")
+      .get("/v1/payments/1")
+      .reply(400, { payment_id: 123, amount: 0, state: "paid" });
+
     get("/pay/wrong/1").expect(400, done);
   });
 
