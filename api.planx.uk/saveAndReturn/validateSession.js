@@ -1,10 +1,10 @@
 const { gql } = require("graphql-request");
 const jsondiffpatch = require("jsondiffpatch");
-const { PublicGraphQLClient } = require("../hasura");
+const { publicGraphQLClient } = require("../hasura");
 const { getMostRecentPublishedFlow, getPublishedFlowByDate } = require("../helpers");
 const { getSaveAndReturnPublicHeaders } = require("./utils");
 
-const client = PublicGraphQLClient;
+const client = publicGraphQLClient;
 
 const validateSession = async (req, res, next) => {
   try {

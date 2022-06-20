@@ -34,7 +34,7 @@ const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 const airbrake = require("./airbrake");
 const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
 const { createReminderEvent, createExpiryEvent } = require("./webhooks/lowcalSessionEvents");
-const { AdminGraphQLClient } = require("./hasura");
+const { adminGraphQLClient } = require("./hasura");
 
 const router = express.Router();
 
@@ -130,7 +130,7 @@ router.get(
   handleSuccess
 );
 
-const client = AdminGraphQLClient;
+const client = adminGraphQLClient;
 
 const buildJWT = async (profile, done) => {
   const { email } = profile._json;

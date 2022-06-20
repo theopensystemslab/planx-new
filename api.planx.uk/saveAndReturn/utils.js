@@ -1,6 +1,6 @@
 const { format, addDays } = require("date-fns");
 const { gql } = require("graphql-request");
-const { PublicGraphQLClient, AdminGraphQLClient } = require("../hasura");
+const { publicGraphQLClient, adminGraphQLClient } = require("../hasura");
 
 const DAYS_UNTIL_EXPIRY = 28;
 
@@ -124,7 +124,7 @@ const sendSingleApplicationEmail = async (template, email, sessionId) => {
  */
 const validateSingleSessionRequest = async (email, sessionId) => {
   try {
-    const client = PublicGraphQLClient;
+    const client = publicGraphQLClient;
     const query = gql`
       query ValidateSingleSessionRequest {
         lowcal_sessions {
@@ -211,7 +211,7 @@ const getPersonalisation = (
  */
  const markSessionAsSubmitted = async (sessionId) => {
   try {
-    const client = AdminGraphQLClient;
+    const client = adminGraphQLClient;
     const mutation = gql`
       mutation MarkSessionAsSubmitted($sessionId: uuid!) {
         update_lowcal_sessions_by_pk(pk_columns: {id: $sessionId}, _set: {submitted_at: "now()"}){
@@ -249,7 +249,7 @@ const getHumanReadableProjectType = async (session) => {
  * @returns {array}
  */
 const getReadableProjectTypeFromRaw = async (rawList) => {
-  const client = PublicGraphQLClient;
+  const client = publicGraphQLClient;
   const query = gql`
     query GetHumanReadableProjectType($rawList: [String!]) {
       project_types(where: {value: {_in: $rawList}}) {
@@ -270,8 +270,8 @@ const getReadableProjectTypeFromRaw = async (rawList) => {
  * @returns {object}
  */
 const getSaveAndReturnPublicHeaders = (sessionId, email) => ({
-  "x-hasura-ls-session-id": sessionId,
-  "x-hasura-ls-email": email.toLowerCase(),
+  "x-hasura-lowcal-session-id": sessionId,
+  "x-hasura-lowcal-email": email.toLowerCase(),
 });
 
 module.exports = {

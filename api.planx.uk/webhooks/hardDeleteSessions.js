@@ -1,6 +1,6 @@
 const { subDays } = require("date-fns");
 const { gql } = require("graphql-request");
-const { AdminGraphQLClient } = require("../hasura");
+const { adminGraphQLClient } = require("../hasura");
 
 const hardDeleteSessions = async (_req, res, next) => {
   try {
@@ -21,7 +21,7 @@ const hardDeleteSessions = async (_req, res, next) => {
       }
     `
     const oneWeekAgo = subDays(new Date(), 7);
-    const { delete_lowcal_sessions } = await AdminGraphQLClient.request(mutation, { oneWeekAgo });
+    const { delete_lowcal_sessions } = await adminGraphQLClient.request(mutation, { oneWeekAgo });
     res.json({
       deletedSessions: delete_lowcal_sessions.returning.map(session => session.id),
     });

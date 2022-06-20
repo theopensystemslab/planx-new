@@ -105,22 +105,34 @@ describe("lowcal_sessions", () => {
     });
 
     describe("UPDATE without permission", () => {
-      test("cannot update without 'x-hasura-ls-session-id' header", async () => {
+      test("cannot update without 'x-hasura-lowcal-session-id' header", async () => {
         const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } });
         expect(res).toHaveProperty("errors");
-        expect(res.errors[0].message).toContain('missing session variable: "x-hasura-ls-session-id"');
+        expect(res.errors[0].message).toContain('missing session variable: "x-hasura-lowcal-session-id"');
       });
   
-      test("cannot update without 'x-hasura-ls-email' header", async () => {
-        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, { "x-hasura-ls-session-id": uuidV4() });
+      test("cannot update without 'x-hasura-lowcal-email' header", async () => {
+        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, { "x-hasura-lowcal-session-id": uuidV4() });
         expect(res).toHaveProperty("errors");
-        expect(res.errors[0].message).toContain('missing session variable: "x-hasura-ls-email"');
+        expect(res.errors[0].message).toContain('missing session variable: "x-hasura-lowcal-email"');
+      });
+
+      test("'x-hasura-lowcal-session-id' header must have value", async () => {
+        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, { "x-hasura-lowcal-session-id": null});
+        expect(res).toHaveProperty("errors");
+        expect(res.errors[0].message).toContain('missing session variable: "x-hasura-lowcal-session-id"');
+      });
+  
+      test("'x-hasura-lowcal-email' header must have value", async () => {
+        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, { "x-hasura-lowcal-session-id": uuidV4(), "x-hasura-lowcal-email": null });
+        expect(res).toHaveProperty("errors");
+        expect(res.errors[0].message).toContain('missing session variable: "x-hasura-lowcal-email"');
       });
 
       test("Alice cannot update her own session with invalid sessionId", async () => {
         const headers = {
-          "x-hasura-ls-session-id": uuidV4(),
-          "x-hasura-ls-email": "alice@opensystemslab.io"
+          "x-hasura-lowcal-session-id": uuidV4(),
+          "x-hasura-lowcal-email": "alice@opensystemslab.io"
         };
         const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, headers);
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
@@ -128,8 +140,8 @@ describe("lowcal_sessions", () => {
 
       test("Alice cannot update her own session with invalid email", async () => {
         const headers = {
-          "x-hasura-ls-session-id": alice1,
-          "x-hasura-ls-email": "not-alice@opensystemslab.io"
+          "x-hasura-lowcal-session-id": alice1,
+          "x-hasura-lowcal-email": "not-alice@opensystemslab.io"
         };
         const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, headers);
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
@@ -137,8 +149,8 @@ describe("lowcal_sessions", () => {
 
       test("Mallory cannot update Alice's session", async () => {
         const headers = {
-          "x-hasura-ls-session-id": uuidV4(),
-          "x-hasura-ls-email": "random@opensystemslab.io"
+          "x-hasura-lowcal-session-id": uuidV4(),
+          "x-hasura-lowcal-email": "random@opensystemslab.io"
         };
         const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, headers);
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
@@ -146,8 +158,8 @@ describe("lowcal_sessions", () => {
 
       test("Mallory cannot update multiple sessions which do not belong to them", async () => {
         const headers = {
-          "x-hasura-ls-session-id": mallory1,
-          "x-hasura-ls-email": "mallory@opensystemslab.io"
+          "x-hasura-lowcal-session-id": uuidV4(),
+          "x-hasura-lowcal-email": "random@opensystemslab.io"
         };
         const res = await gqlPublic(`
           mutation UpdateMultipleSessionsWithoutWhereClause {
@@ -158,14 +170,13 @@ describe("lowcal_sessions", () => {
             }
           }
         `, null, headers);
-        expect(res.data.update_lowcal_sessions.returning).toHaveLength(1);
-        expect(res.data.update_lowcal_sessions.returning[0].id).toEqual(mallory1);
+        expect(res.data.update_lowcal_sessions.returning).toHaveLength(0);
       });
 
       test("Bob cannot update multiple sessions which do belong to them", async () => {
         const headers = {
-          "x-hasura-ls-session-id": bob1,
-          "x-hasura-ls-email": "bob@opensystemslab.io"
+          "x-hasura-lowcal-session-id": bob1,
+          "x-hasura-lowcal-email": "bob@opensystemslab.io"
         };
         const res = await gqlPublic(`
           mutation UpdateMultipleSessionsWithoutWhereClause {
@@ -185,8 +196,8 @@ describe("lowcal_sessions", () => {
 
       test("Alice can update her session", async () => {
         const headers = {
-          "x-hasura-ls-session-id": alice1,
-          "x-hasura-ls-email": "alice@opensystemslab.io"
+          "x-hasura-lowcal-session-id": alice1,
+          "x-hasura-lowcal-email": "alice@opensystemslab.io"
         };
         const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, headers);
         expect(res.data.update_lowcal_sessions_by_pk).not.toBeNull();
@@ -196,22 +207,22 @@ describe("lowcal_sessions", () => {
     });
 
     describe("SELECT without permission", () => {
-      test("cannot select without 'x-hasura-ls-session-id' header", async () => {
+      test("cannot select without 'x-hasura-lowcal-session-id' header", async () => {
         const res = await gqlPublic(selectByPK, { sessionId: alice1 });
         expect(res).toHaveProperty("errors");
-        expect(res.errors[0].message).toContain('missing session variable: "x-hasura-ls-session-id"');
+        expect(res.errors[0].message).toContain('missing session variable: "x-hasura-lowcal-session-id"');
       });
 
-      test("cannot select without 'x-hasura-ls-email' header", async () => {
-        const res = await gqlPublic(selectByPK, { sessionId: alice1 }, { "x-hasura-ls-session-id": uuidV4() });
+      test("cannot select without 'x-hasura-lowcal-email' header", async () => {
+        const res = await gqlPublic(selectByPK, { sessionId: alice1 }, { "x-hasura-lowcal-session-id": uuidV4() });
         expect(res).toHaveProperty("errors");
-        expect(res.errors[0].message).toContain('missing session variable: "x-hasura-ls-email"');
+        expect(res.errors[0].message).toContain('missing session variable: "x-hasura-lowcal-email"');
       });
 
       test("Mallory cannot select Alice's session", async () => {
         const headers = {
-          "x-hasura-ls-session-id": uuidV4(),
-          "x-hasura-ls-email": "random@opensystemslab.io"
+          "x-hasura-lowcal-session-id": uuidV4(),
+          "x-hasura-lowcal-email": "random@opensystemslab.io"
         };
         const res = await gqlPublic(selectByPK, { sessionId: alice1 }, headers);
         expect(res.data.lowcal_sessions_by_pk).toBeNull();
@@ -219,8 +230,8 @@ describe("lowcal_sessions", () => {
 
       test("Mallory cannot select all sessions", async () => {
         const headers = {
-          "x-hasura-ls-session-id": uuidV4(),
-          "x-hasura-ls-email": "random@opensystemslab.io"
+          "x-hasura-lowcal-session-id": uuidV4(),
+          "x-hasura-lowcal-email": "random@opensystemslab.io"
         };
         const res = await gqlPublic(`
           query SelectAllLowcalSessions {
@@ -234,8 +245,8 @@ describe("lowcal_sessions", () => {
 
       test("Bob cannot select multiple sessions which belong to him", async () => {
         const headers = {
-          "x-hasura-ls-session-id": bob1,
-          "x-hasura-ls-email": "bob@opensystemslab.io"
+          "x-hasura-lowcal-session-id": bob1,
+          "x-hasura-lowcal-email": "bob@opensystemslab.io"
         };
         const res = await gqlPublic(`
           query SelectAllLowcalSessions {
@@ -253,8 +264,8 @@ describe("lowcal_sessions", () => {
     describe("SELECT with permission", () => {
       test("Alice can select her session", async () => {
         const headers = {
-          "x-hasura-ls-session-id": alice1,
-          "x-hasura-ls-email": "alice@opensystemslab.io"
+          "x-hasura-lowcal-session-id": alice1,
+          "x-hasura-lowcal-email": "alice@opensystemslab.io"
         };
         const res = await gqlPublic(`
           query SelectAllLowcalSessions {

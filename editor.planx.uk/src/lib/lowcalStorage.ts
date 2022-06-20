@@ -19,7 +19,7 @@ class LowcalStorage {
 
   getItem = memoize(async (key: string) => {
     console.debug({ getItem: key });
-    const id = key.split(":")[1];
+    const id = getSessionId(key);
 
     const { data } = await client.query({
       query: gql`
@@ -45,7 +45,7 @@ class LowcalStorage {
 
   removeItem = memoize(async (key: string) => {
     console.debug({ removeItem: key });
-    const id = key.split(":")[1];
+    const id = getSessionId(key);
 
     await client.mutate({
       mutation: gql`
@@ -72,7 +72,7 @@ class LowcalStorage {
       current = "";
     }
 
-    const id = key.split(":")[1];
+    const id = getSessionId(key);
 
     await client.mutate({
       mutation: gql`
@@ -142,10 +142,15 @@ export const stringifyWithRootKeysSortedAlphabetically = (
 const getPublicContext = (sessionId: string) => ({
   context: {
     headers: {
-      "x-hasura-ls-session-id": sessionId,
-      "x-hasura-ls-email": useStore.getState().saveToEmail?.toLowerCase(),
+      "x-hasura-lowcal-session-id": sessionId,
+      "x-hasura-lowcal-email": useStore.getState().saveToEmail?.toLowerCase(),
     },
   },
 });
+
+/**
+ * Get sessionId from the key used for lowcalStorage
+ */
+const getSessionId = (key: string): string => key.split(":")[1];
 
 export const lowcalStorage = new LowcalStorage();
