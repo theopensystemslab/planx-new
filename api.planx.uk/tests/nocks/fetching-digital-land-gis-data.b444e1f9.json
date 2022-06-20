@@ -2,7 +2,7 @@
   {
     "scope": "https://www.digital-land.info:443",
     "method": "GET",
-    "path": "/entity.json?entries=current&geometry=POINT%28-1.0498956+51.8547901%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=scheduled-monument&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest",
+    "path": "/entity.json?entries=current&geometry=POINT%28-1.0498956+51.8547901%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
     "body": "",
     "status": 200,
     "response": {
@@ -29,7 +29,7 @@
     },
     "rawHeaders": [
       "Date",
-      "Mon, 16 May 2022 15:26:32 GMT",
+      "Mon, 20 Jun 2022 10:40:56 GMT",
       "Content-Type",
       "application/json",
       "Content-Length",
@@ -48,13 +48,13 @@
     "responseIsBinary": false
   },
   {
-    "scope": "http://127.0.0.1:39789",
+    "scope": "http://127.0.0.1:50582",
     "method": "GET",
     "path": "/gis/buckinghamshire?geom=POINT(-1.0498956%2051.8547901)",
     "body": "",
     "status": 200,
     "response": {
-      "url": "https://www.digital-land.info/entity.json?entries=current&geometry=POINT%28-1.0498956+51.8547901%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=scheduled-monument&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest",
+      "url": "https://www.digital-land.info/entity.json?entries=current&geometry=POINT%28-1.0498956+51.8547901%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
       "constraints": {
         "article4": {
           "value": true,
@@ -78,7 +78,11 @@
         },
         "listed": {
           "value": false,
-          "text": "is not in, or within, a Listed Building"
+          "text": "is not, or is not within, a Listed Building"
+        },
+        "registeredPark": {
+          "value": false,
+          "text": "is not in a Historic Park or Garden"
         },
         "designated.conservationArea": {
           "value": false,
@@ -97,6 +101,10 @@
           "value": false,
           "text": "is not an UNESCO World Heritage Site"
         },
+        "designated.SPA": {
+          "value": false,
+          "text": "is not in a Special Protection Area (SPA)"
+        },
         "monument": {
           "value": false,
           "text": "is not the site of a Scheduled Monument"
@@ -108,6 +116,14 @@
         "nature.SSSI": {
           "value": false,
           "text": "is not a Site of Special Scientific Interest (SSSI)"
+        },
+        "nature.SAC": {
+          "value": false,
+          "text": "is not in a Special Area of Conservation (SAC)"
+        },
+        "nature.ASNW": {
+          "value": false,
+          "text": "is not in an Ancient Semi-Natural Woodland (ASNW)"
         },
         "designated": {"value": false},
         "article4.buckinghamshire.twyfordgrange": {"value": false},
@@ -292,11 +308,11 @@
       "Content-Type",
       "application/json; charset=utf-8",
       "Content-Length",
-      "11609",
+      "12120",
       "ETag",
-      "W/\"2d59-zzkubGatL34R2WZmXNSx6xk8MG4\"",
+      "W/\"2f58-wTfYD6eU18pemkBWIUiWutyFpzc\"",
       "Date",
-      "Mon, 16 May 2022 15:26:32 GMT",
+      "Mon, 20 Jun 2022 10:40:56 GMT",
       "Connection",
       "close"
     ],
@@ -305,7 +321,7 @@
   {
     "scope": "https://www.digital-land.info:443",
     "method": "GET",
-    "path": "/entity.json?entries=current&geometry=POINT%281.0803887+51.2811746%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=scheduled-monument&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest",
+    "path": "/entity.json?entries=current&geometry=POINT%281.0803887+51.2811746%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
     "body": "",
     "status": 200,
     "response": {
@@ -377,7 +393,7 @@
     },
     "rawHeaders": [
       "Date",
-      "Mon, 16 May 2022 15:26:32 GMT",
+      "Mon, 20 Jun 2022 10:40:56 GMT",
       "Content-Type",
       "application/json",
       "Content-Length",
@@ -396,13 +412,13 @@
     "responseIsBinary": false
   },
   {
-    "scope": "http://127.0.0.1:39841",
+    "scope": "http://127.0.0.1:50585",
     "method": "GET",
     "path": "/gis/canterbury?geom=POINT(1.0803887%2051.2811746)",
     "body": "",
     "status": 200,
     "response": {
-      "url": "https://www.digital-land.info/entity.json?entries=current&geometry=POINT%281.0803887+51.2811746%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=scheduled-monument&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest",
+      "url": "https://www.digital-land.info/entity.json?entries=current&geometry=POINT%281.0803887+51.2811746%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
       "constraints": {
         "designated.conservationArea": {
           "value": true,
@@ -471,7 +487,11 @@
         },
         "listed": {
           "value": false,
-          "text": "is not in, or within, a Listed Building"
+          "text": "is not, or is not within, a Listed Building"
+        },
+        "registeredPark": {
+          "value": false,
+          "text": "is not in a Historic Park or Garden"
         },
         "designated.AONB": {
           "value": false,
@@ -486,6 +506,10 @@
           "value": false,
           "text": "is not an UNESCO World Heritage Site"
         },
+        "designated.SPA": {
+          "value": false,
+          "text": "is not in a Special Protection Area (SPA)"
+        },
         "monument": {
           "value": false,
           "text": "is not the site of a Scheduled Monument"
@@ -497,6 +521,14 @@
         "nature.SSSI": {
           "value": false,
           "text": "is not a Site of Special Scientific Interest (SSSI)"
+        },
+        "nature.SAC": {
+          "value": false,
+          "text": "is not in a Special Area of Conservation (SAC)"
+        },
+        "nature.ASNW": {
+          "value": false,
+          "text": "is not in an Ancient Semi-Natural Woodland (ASNW)"
         },
         "designated": {"value": true},
         "article4.canterbury.adisham.a": {"value": false},
@@ -583,11 +615,11 @@
       "Content-Type",
       "application/json; charset=utf-8",
       "Content-Length",
-      "6153",
+      "6664",
       "ETag",
-      "W/\"1809-NpRFJGy7sgqLGcfo+DNJXHxF7ZM\"",
+      "W/\"1a08-H7ijSRlm+BbGiAi2KwWc1BH2Iag\"",
       "Date",
-      "Mon, 16 May 2022 15:26:32 GMT",
+      "Mon, 20 Jun 2022 10:40:56 GMT",
       "Connection",
       "close"
     ],
@@ -596,7 +628,7 @@
   {
     "scope": "https://www.digital-land.info:443",
     "method": "GET",
-    "path": "/entity.json?entries=current&geometry=POINT%28-0.1198903+51.4922191%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=scheduled-monument&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest",
+    "path": "/entity.json?entries=current&geometry=POINT%28-0.1198903+51.4922191%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
     "body": "",
     "status": 200,
     "response": {
@@ -666,7 +698,7 @@
     },
     "rawHeaders": [
       "Date",
-      "Mon, 16 May 2022 15:26:32 GMT",
+      "Mon, 20 Jun 2022 10:40:56 GMT",
       "Content-Type",
       "application/json",
       "Content-Length",
@@ -685,13 +717,13 @@
     "responseIsBinary": false
   },
   {
-    "scope": "http://127.0.0.1:32861",
+    "scope": "http://127.0.0.1:50592",
     "method": "GET",
     "path": "/gis/lambeth?geom=POINT(-0.1198903%2051.4922191)",
     "body": "",
     "status": 200,
     "response": {
-      "url": "https://www.digital-land.info/entity.json?entries=current&geometry=POINT%28-0.1198903+51.4922191%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=scheduled-monument&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest",
+      "url": "https://www.digital-land.info/entity.json?entries=current&geometry=POINT%28-0.1198903+51.4922191%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
       "constraints": {
         "designated.conservationArea": {
           "value": true,
@@ -749,6 +781,10 @@
             }
           ]
         },
+        "registeredPark": {
+          "value": false,
+          "text": "is not in a Historic Park or Garden"
+        },
         "designated.AONB": {
           "value": false,
           "text": "is not in an Area of Outstanding Natural Beauty"
@@ -762,6 +798,10 @@
           "value": false,
           "text": "is not an UNESCO World Heritage Site"
         },
+        "designated.SPA": {
+          "value": false,
+          "text": "is not in a Special Protection Area (SPA)"
+        },
         "monument": {
           "value": false,
           "text": "is not the site of a Scheduled Monument"
@@ -773,6 +813,14 @@
         "nature.SSSI": {
           "value": false,
           "text": "is not a Site of Special Scientific Interest (SSSI)"
+        },
+        "nature.SAC": {
+          "value": false,
+          "text": "is not in a Special Area of Conservation (SAC)"
+        },
+        "nature.ASNW": {
+          "value": false,
+          "text": "is not in an Ancient Semi-Natural Woodland (ASNW)"
         },
         "designated": {"value": true},
         "article4.lambeth.streathamLodge": {"value": false},
@@ -820,11 +868,11 @@
       "Content-Type",
       "application/json; charset=utf-8",
       "Content-Length",
-      "3257",
+      "3764",
       "ETag",
-      "W/\"cb9-zvkcIrbgOFs8u9wgc8Ecwg873bY\"",
+      "W/\"eb4-MfKYoGbAi8YQ70ZC+VaXAhn4KOw\"",
       "Date",
-      "Mon, 16 May 2022 15:26:32 GMT",
+      "Mon, 20 Jun 2022 10:40:56 GMT",
       "Connection",
       "close"
     ],
@@ -833,7 +881,7 @@
   {
     "scope": "https://www.digital-land.info:443",
     "method": "GET",
-    "path": "/entity.json?entries=current&geometry=POINT%28-0.0887039+51.5021734%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=scheduled-monument&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest",
+    "path": "/entity.json?entries=current&geometry=POINT%28-0.0887039+51.5021734%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
     "body": "",
     "status": 200,
     "response": {
@@ -939,7 +987,7 @@
     },
     "rawHeaders": [
       "Date",
-      "Mon, 16 May 2022 15:26:33 GMT",
+      "Mon, 20 Jun 2022 10:40:56 GMT",
       "Content-Type",
       "application/json",
       "Content-Length",
@@ -958,13 +1006,13 @@
     "responseIsBinary": false
   },
   {
-    "scope": "http://127.0.0.1:38513",
+    "scope": "http://127.0.0.1:50595",
     "method": "GET",
     "path": "/gis/southwark?geom=POINT(-0.0887039%2051.5021734)",
     "body": "",
     "status": 200,
     "response": {
-      "url": "https://www.digital-land.info/entity.json?entries=current&geometry=POINT%28-0.0887039+51.5021734%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=scheduled-monument&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest",
+      "url": "https://www.digital-land.info/entity.json?entries=current&geometry=POINT%28-0.0887039+51.5021734%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
       "constraints": {
         "article4": {
           "value": true,
@@ -1044,7 +1092,11 @@
         },
         "listed": {
           "value": false,
-          "text": "is not in, or within, a Listed Building"
+          "text": "is not, or is not within, a Listed Building"
+        },
+        "registeredPark": {
+          "value": false,
+          "text": "is not in a Historic Park or Garden"
         },
         "designated.conservationArea": {
           "value": false,
@@ -1063,6 +1115,10 @@
           "value": false,
           "text": "is not an UNESCO World Heritage Site"
         },
+        "designated.SPA": {
+          "value": false,
+          "text": "is not in a Special Protection Area (SPA)"
+        },
         "monument": {
           "value": false,
           "text": "is not the site of a Scheduled Monument"
@@ -1074,6 +1130,14 @@
         "nature.SSSI": {
           "value": false,
           "text": "is not a Site of Special Scientific Interest (SSSI)"
+        },
+        "nature.SAC": {
+          "value": false,
+          "text": "is not in a Special Area of Conservation (SAC)"
+        },
+        "nature.ASNW": {
+          "value": false,
+          "text": "is not in an Ancient Semi-Natural Woodland (ASNW)"
         },
         "designated": {"value": false},
         "article4.southwark.sunray": {"value": false},
@@ -1115,11 +1179,11 @@
       "Content-Type",
       "application/json; charset=utf-8",
       "Content-Length",
-      "4546",
+      "5057",
       "ETag",
-      "W/\"11c2-PFvDD88o4LvxAU1Hqh4jyurBkyY\"",
+      "W/\"13c1-6KERKZM9NX4JD19qPQi8rE0HSwY\"",
       "Date",
-      "Mon, 16 May 2022 15:26:33 GMT",
+      "Mon, 20 Jun 2022 10:40:56 GMT",
       "Connection",
       "close"
     ],

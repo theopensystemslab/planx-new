@@ -39,6 +39,23 @@ jobs:
         run: pnpm install && pnpm test
         working-directory: e2e
 
+  api_tests:
+    name: API Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: Run API Tests
+        run: pnpm install && pnpm test
+        working-directory: api.planx.uk
+
   test_and_build:
     name: Test and Build
     runs-on: ubuntu-latest
@@ -152,7 +169,7 @@ jobs:
     # XXX: Does nothing if the pizza instance or DNS entries exist,
     #      see https://github.com/theopensystemslab/planx-new/pull/725
     name: Create or Update Vultr Instance
-    needs: [integration_tests, test_and_build]
+    needs: [integration_tests, api_tests, test_and_build]
     runs-on: ubuntu-latest
     steps:
       - name: Create Pizza (if it doesn't exist)

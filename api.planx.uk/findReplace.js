@@ -64,7 +64,7 @@ const findAndReplaceInFlow = async (req, res, next) => {
       });
 
     if (find && !replace) {
-      const matches = getMatches(flow, find)["matches"];
+      const matches = getMatches(flow.data, find)["matches"];
 
       res.json({
         message: `Found ${
@@ -75,7 +75,7 @@ const findAndReplaceInFlow = async (req, res, next) => {
     }
 
     if (find && replace) {
-      const { matches, flowData } = getMatches(flow, find, replace);
+      const { matches, flowData } = getMatches(flow.data, find, replace);
 
       // if no matches, send message & exit
       if (Object.keys(matches).length === 0) {
