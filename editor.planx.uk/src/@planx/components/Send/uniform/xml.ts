@@ -3,7 +3,11 @@ import { GovUKPayment } from "types";
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { GOV_PAY_PASSPORT_KEY } from "../../Pay/model";
 
-export function makeXmlString(passport: Store.passport, sessionId: string) {
+export function makeXmlString(
+  passport: Store.passport,
+  sessionId: string,
+  files: string[]
+) {
   const payment = passport.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
 
   // ensure that date is valid and in yyyy-mm-dd format
@@ -15,6 +19,29 @@ export function makeXmlString(passport: Store.passport, sessionId: string) {
   } else {
     proposalCompletionDate = new Date(Date.now()).toISOString().split("T")[0];
   }
+
+  // format file attachments
+  const requiredFiles = `
+    <common:FileAttachment>
+      <common:Identifier>N10049</common:Identifier>
+      <common:FileName>proposal.xml</common:FileName>
+      <common:Reference>Schema XML File</common:Reference>
+    </common:FileAttachment>
+    <common:FileAttachment>
+      <common:FileName>application.csv</common:FileName>
+      <common:Reference>Other</common:Reference>
+    </common:FileAttachment>
+  `;
+
+  const userUploadedFiles: string[] = [];
+  files?.forEach((file) => {
+    userUploadedFiles.push(`
+      <common:FileAttachment>
+        <common:FileName>${file.split("/").pop()}</common:FileName>
+        <common:Reference>Other</common:Reference>
+      </common:FileAttachment>
+    `);
+  });
 
   // this string template represents the full proposal.xml schema including prefixes
   const proposal = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -30,18 +57,15 @@ export function makeXmlString(passport: Store.passport, sessionId: string) {
         <portaloneapp:Payment>
           <common:PaymentMethod>OnlineViaPortal</common:PaymentMethod>
           <common:AmountDue>${
-            passport.data?.["application.fee.payable"]
+            passport.data?.["application.fee.payable"] || 0
           }</common:AmountDue>
-          <common:AmountPaid>${payment?.amount?.toString()}</common:AmountPaid>
+          <common:AmountPaid>${payment?.amount || 0}</common:AmountPaid>
           <common:Currency>GBP</common:Currency>
         </portaloneapp:Payment>
       </portaloneapp:ApplicationHeader>
       <portaloneapp:FileAttachments>
-        <common:FileAttachment>
-          <common:Identifier>N10049</common:Identifier>
-          <common:FileName>proposal.xml</common:FileName>
-          <common:Reference>Schema XML File</common:Reference>
-        </common:FileAttachment>
+        ${requiredFiles}
+        ${userUploadedFiles.join("")}
       </portaloneapp:FileAttachments>
       <portaloneapp:Applicant>
         <common:PersonName>

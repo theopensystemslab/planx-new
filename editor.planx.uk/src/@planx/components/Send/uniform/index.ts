@@ -33,17 +33,15 @@ export function getUniformParams(
   // applicants may upload the same file in multiple slots,
   //  but we only want to send a single copy of each file to Uniform
   const uniqueFiles: string[] = [];
-  const uniqueFileNames: string[] = [];
   files.forEach((file) => {
-    if (!uniqueFileNames.includes(file.name)) {
-      uniqueFileNames.push(file.name);
+    if (!uniqueFiles.includes(file.url)) {
       uniqueFiles.push(file.url);
     }
   });
 
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString(passport, sessionId),
+    xml: makeXmlString(passport, sessionId, uniqueFiles),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
     files: uniqueFiles,
     sessionId: sessionId,
