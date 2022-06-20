@@ -1,5 +1,5 @@
 const { gql } = require("graphql-request");
-const { AdminGraphQLClient } = require("../hasura");
+const { adminGraphQLClient } = require("../hasura");
 const { sendEmail, convertSlugToName, getResumeLink, calculateExpiryDate, getHumanReadableProjectType } = require("./utils");
 
 /**
@@ -51,7 +51,7 @@ const resumeApplication = async (req, res, next) => {
  */
 const validateRequest = async (teamSlug, email) => {
   try {
-    const client = AdminGraphQLClient;
+    const client = adminGraphQLClient;
     const query = gql`
       query ValidateRequest($email: String, $teamSlug: String) {
         lowcal_sessions(
