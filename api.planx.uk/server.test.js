@@ -202,7 +202,9 @@ describe("fetching status of a GOV.UK payment", () => {
   });
 });
 
-describe("fetching GIS data from local authorities directly", () => {
+// GIS tests commented out due to reliance on external API calls and fallibility of nocks
+// Please comment in and run locally if making changes to /gis functionality
+describe.skip("fetching GIS data from local authorities directly", () => {
   const locations = [
     {
       council: "braintree",
@@ -228,7 +230,7 @@ describe("fetching GIS data from local authorities directly", () => {
   });
 });
 
-describe("fetching GIS data from Digital Land for supported local authorities", async () => {
+describe.skip("fetching GIS data from Digital Land for supported local authorities", () => {
   const locations = [
     {
       council: "buckinghamshire",

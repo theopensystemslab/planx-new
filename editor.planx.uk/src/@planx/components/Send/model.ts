@@ -51,6 +51,11 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
   agent_phone?: string;
   agent_email?: string;
   proposal_details?: Array<QuestionAndResponses>;
+  feedback?: {
+    result?: string;
+    find_property?: string;
+    planning_constraints?: string;
+  };
   constraints?: Record<string, boolean>;
   files?: Array<File>;
   boundary_geojson?: Object;
@@ -73,6 +78,8 @@ export interface QuestionMetaData {
     url?: string;
     text?: string;
   }>;
+  portal_name?: string;
+  feedback?: string;
 }
 
 export interface ResponseMetaData {
@@ -125,70 +132,6 @@ interface File {
   filename: string;
   tags?: Array<FileTag>;
   applicant_description?: string;
-}
-
-// Uniform LDC XML
-// ref "sample.xml" from Kev attached here https://trello.com/c/lVOPqsoY/1450-send-data-to-uniform
-export interface UniformPayload {
-  _declaration: {
-    _attributes: {
-      version: string;
-      encoding: string;
-    };
-  };
-  Envelope: {
-    Body: {
-      CreateDcApplication: {
-        SubmittedDcApplication: {
-          ApplicationIdentification: string;
-          SiteLocation: {
-            Address: string;
-          };
-          TypeOfApplication: {
-            ApplicationType: string;
-            ApplicationType_Text: string;
-          };
-          Proposal: string;
-          ApplicantDetails: {
-            ApplicantName: string;
-            ApplicantPhoneNumber: string;
-            ApplicantAddress: string;
-            ApplicantContactDetails: {
-              ApplicantContactDetail: {
-                ContactTypeCode: string;
-                ContactAddress: string;
-              };
-            };
-          };
-          AgentDetails: {
-            AgentName: string;
-            AgentPhoneNumber: string;
-            AgentAddress: string;
-            AgentContactDetails: {
-              AgentContactDetail: {
-                ContactTypeCode: string;
-                ContactAddress: string;
-              };
-            };
-          };
-          ApplicationFee: {
-            FeeAmount: string;
-            PaymentDetails: {
-              AmountReceived: string;
-              PaymentMethod: string;
-            };
-          };
-          ParkingProvision: string;
-          ClassifiedRoads: string;
-          ResidentialDetails: string;
-          FloorspaceDetails: string;
-          LandUse: string;
-          EmploymentDetails: string;
-          ListedBuilding: string;
-        };
-      };
-    };
-  };
 }
 
 // CSV data structure sent to Uniform & re-used for user download on Confirmation page

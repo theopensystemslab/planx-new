@@ -77,19 +77,67 @@ function isTypeForBopsPayload(type?: TYPES) {
   }
 }
 
-export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
-  Object.entries(breadcrumbs)
-    .filter(([id]) => {
-      const validType = isTypeForBopsPayload(flow[id]?.type);
+// For a given node (a "Question"), recursively scan the flow schema to find which portal it belongs to
+//   and add the portal_name to the QuestionMetadata so BOPS can group proposal_details
+const addPortalName = (
+  id: string,
+  flow: Store.flow,
+  metadata: QuestionMetaData
+): QuestionMetaData => {
+  if (id === "_root") {
+    metadata.portal_name = "_root";
+  } else if (flow[id]?.type === 300) {
+    // internal & external portals are both type 300 after flattening (ref dataMergedHotFix)
+    metadata.portal_name = flow[id]?.data?.text || id;
+  } else {
+    // if the current node id is not the root or a portal, then find its' next parent node and so on until we hit a portal
+    Object.entries(flow).forEach(([nodeId, node]) => {
+      if (node.edges?.includes(id)) {
+        addPortalName(nodeId, flow, metadata);
+      }
+    });
+  }
+
+  return metadata;
+};
+
+export const makePayload = (
+  flow: Store.flow,
+  breadcrumbs: Store.breadcrumbs
+) => {
+  const feedback: BOPSFullPayload["feedback"] = {};
+
+  const proposal_details = Object.entries(breadcrumbs)
+    .map(([id, bc]) => {
+      const { edges = [], ...question } = flow[id];
+
+      try {
+        const trimmedFeedback = bc.feedback?.trim();
+        if (trimmedFeedback) {
+          switch (flow[id].type) {
+            case TYPES.Result:
+              feedback["result"] = trimmedFeedback;
+              break;
+            case TYPES.FindProperty:
+              feedback["find_property"] = trimmedFeedback;
+              break;
+            case TYPES.PlanningConstraints:
+              feedback["planning_constraints"] = trimmedFeedback;
+              break;
+            default:
+              throw new Error(`invalid feedback type ${flow[id].type}`);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        airbrake?.notify(err);
+      }
+
       // exclude answers that have been extracted into the root object
       const validKey = !Object.values(bopsDictionary).includes(
         flow[id]?.data?.fn
       );
-
-      return validType && validKey;
-    })
-    .map(([id, bc]) => {
-      const { edges = [], ...question } = flow[id];
+      if (!isTypeForBopsPayload(flow[id]?.type) || !validKey) return;
 
       const answers: Array<string> = (() => {
         switch (flow[id].type) {
@@ -141,7 +189,7 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
         responses,
       };
 
-      const metadata: QuestionMetaData = {};
+      let metadata: QuestionMetaData = {};
       if (bc.auto) metadata.auto_answered = true;
       if (flow[id]?.data?.policyRef) {
         metadata.policy_refs = [
@@ -149,11 +197,16 @@ export const makePayload = (flow: Store.flow, breadcrumbs: Store.breadcrumbs) =>
           { text: flow[id].data.policyRef.replace(/<[^>]*>/g, "").trim() },
         ];
       }
+      metadata = addPortalName(id, flow, metadata);
+
       if (Object.keys(metadata).length > 0) ob.metadata = metadata;
 
       return ob;
     })
-    .filter(Boolean);
+    .filter(Boolean) as Array<QuestionAndResponses>;
+
+  return { proposal_details, feedback };
+};
 
 export function getParams(
   breadcrumbs: Store.breadcrumbs,
@@ -280,9 +333,16 @@ export function getParams(
     }, {} as Partial<BOPSFullPayload>)
   );
 
-  // 6. questions+answers array
+  // 6a. questions+answers array
+  const { proposal_details, feedback } = makePayload(flow, breadcrumbs);
 
-  data.proposal_details = makePayload(flow, breadcrumbs);
+  data.proposal_details = proposal_details;
+
+  // 6b. optional feedback object
+  // we include feedback object if it contains at least 1 key/value pair
+  if (Object.keys(feedback).length > 0) {
+    data.feedback = feedback;
+  }
 
   // 7. payment
 
