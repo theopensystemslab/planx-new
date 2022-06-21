@@ -569,8 +569,7 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
   res.send();
 });
 
-// assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
-// assert(process.env.GOVUK_NOTIFY_API_KEY_TEST);
+assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
 app.post("/send-email/:template", useSendEmailAuth, sendSaveAndReturnEmail);
 app.post("/resume-application", resumeApplication);
 app.post("/validate-session", validateSession);
