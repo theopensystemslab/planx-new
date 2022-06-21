@@ -19,7 +19,7 @@ const planningConstraints = {
       "article4.lambeth.stockwell": "STOCKWELL PARK", // CA05
       "article4.lambeth.leigham": "LEIGHAM COURT ESTATE", // CA31
       "article4.lambeth.stMarks": "ST MARKS", // CA11
-      "article4.lambeth.stMarks.hanoverGardens": "ST MARKS/HANOVER GARDENS", // CA11
+      "article4.lambeth.hanover": "ST MARKS/HANOVER GARDENS", // CA11
       "article4.lambeth.parkHall": "PARK HALL ROAD", // CA19
       "article4.lambeth.lansdowne": "LANSDOWNE GARDENS", // CA03
       "article4.lambeth.albert": "ALBERT SQUARE", // CA04
