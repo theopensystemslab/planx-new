@@ -5,7 +5,8 @@
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
-    "jest": "^26.4.2"
+    "jest": "^26.4.2",
+    "uuid": "^8.3.2"
   },
   "jest": {
     "setupFilesAfterEnv": [

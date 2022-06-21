@@ -1,9 +1,10 @@
+const { gql } = require("graphql-request");
 const jsondiffpatch = require("jsondiffpatch");
-
+const { publicGraphQLClient } = require("../hasura");
 const { getMostRecentPublishedFlow, getPublishedFlowByDate } = require("../helpers");
-const { getGraphQLClient } = require("./utils");
+const { getSaveAndReturnPublicHeaders } = require("./utils");
 
-const client = getGraphQLClient();
+const client = publicGraphQLClient;
 
 const validateSession = async (req, res, next) => {
   try {
@@ -65,7 +66,7 @@ const validateSession = async (req, res, next) => {
           //   **what about collected flags? what about `auto: true`? component dependencies like FindProp/Draw/PlanningConstraints?
 
           // update the lowcal_session.data to match our updated in-memory sessionData.data
-          const reconciledSessionData = await updateLowcalSessionData(sessionId, sessionData.data);
+          const reconciledSessionData = await updateLowcalSessionData(sessionId, sessionData.data, email);
 
           res.status(200).json({
             message: "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
@@ -96,38 +97,27 @@ const validateSession = async (req, res, next) => {
   };
 };
 
-const findSession = async (id, email) => {
-  const response = await client.request(`
-    query FindSession($id: uuid!, $email: String!) {
-      lowcal_sessions(
-        where: {
-          id: {_eq: $id},
-          email: {_eq: $email},
-          deleted_at: { _is_null: true },
-          submitted_at: { _is_null: true },
-        }, 
-        limit: 1
-      ) {
+const findSession = async (sessionId, email) => {
+  const query = gql`
+    query FindSession {
+      lowcal_sessions {
         data
         updated_at
       }
-    }`,
-    {
-      id, email
-    }
-  );
-
+    }`;
+  const headers = getSaveAndReturnPublicHeaders(sessionId, email);
+  const response = await client.request(query, null, headers);
   return response.lowcal_sessions?.[0];
 };
 
-const updateLowcalSessionData = async (id, data) => {
-  const response = await client.request(`
+const updateLowcalSessionData = async (sessionId, data, email) => {
+  const query = gql`
     mutation UpdateLowcalSessionData(
-      $id: uuid!,
+      $sessionId: uuid!,
       $data: jsonb!,
     ) {
       update_lowcal_sessions_by_pk(
-        pk_columns: {id: $id},
+        pk_columns: {id: $sessionId},
         _set: {
           data: $data,
         },
@@ -138,12 +128,9 @@ const updateLowcalSessionData = async (id, data) => {
         updated_at
       }
     }
-  `,
-  {
-    id, data
-  }
-  );
-
+  `;
+  const headers = getSaveAndReturnPublicHeaders(sessionId, email);
+  const response = await client.request(query, { sessionId, data }, headers);
   return response.update_lowcal_sessions_by_pk?.data;
 }
 
