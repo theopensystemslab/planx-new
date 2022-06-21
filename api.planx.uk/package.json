@@ -25,7 +25,7 @@
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
     "pino-noir": "^2.2.1",
-    "xml-js": "^1.6.11"
+    "string-to-stream": "^3.0.1"
   },
   "scripts": {
     "dev": "node-dev index.js",

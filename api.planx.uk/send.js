@@ -2,9 +2,9 @@ require("isomorphic-fetch");
 const os = require("os");
 const path = require("path");
 const FormData = require("form-data");
-const convert = require("xml-js");
 const fs = require("fs");
 const AdmZip = require("adm-zip");
+const str = require("string-to-stream");
 const stringify = require("csv-stringify");
 const { GraphQLClient } = require("graphql-request");
 
@@ -32,6 +32,9 @@ const sendToUniform = async (req, res, next) => {
   //   defaults to "DLUHC" for testing now (more values supplied after idox install I guess?? we'll probably need to template env vars with org name suffix)
   const org = "DLUHC";
   const orgId = 185050;
+
+  // const org = "DLUHC 2";
+  // const orgId = 185051;
 
   try {
     // Setup - Create the zip folder
@@ -109,13 +112,13 @@ const sendToUniform = async (req, res, next) => {
 
 /**
  * Creates a zip folder containing the documents required by Uniform
- * @param {any} jsonXml - a JSON representation of the XML schema, resulting file must be named "proposal.xml"
+ * @param {any} stringXml - a string representation of the XML schema, resulting file must be named "proposal.xml"
  * @param {any} csv - an array of objects representing our custom CSV format
  * @param {string[]} files - an array of the S3 URLs for any user-uploaded files
  * @param {string} sessionId
  * @returns {Promise} - name of zip
  */
-async function createZip(jsonXml, csv, files, sessionId) {
+async function createZip(stringXml, csv, files, sessionId) {
   // initiate an empty zip folder
   const zip = new AdmZip();
 
@@ -148,11 +151,20 @@ async function createZip(jsonXml, csv, files, sessionId) {
     zip.addLocalFile(csvPath);
     deleteFile(csvPath);
 
-    // build an XML file, add it directly to the zip
-    const options = { compact: true, spaces: 4, fullTagEmptyElement: true };
-    const xml = convert.json2xml(jsonXml, options);
-    zip.addFile("proposal.xml", Buffer.from(xml, "utf-8"));
+    // build the XML file from a string, write it locally, add it to the zip
+    //   must be named "proposal.xml" to be processed by Uniform
+    const xmlPath = "proposal.xml";
+    const xmlFile = fs.createWriteStream(xmlPath);
+    
+    const xmlStream = str(stringXml.trim()).pipe(xmlFile);
+    await new Promise((resolve, reject) => {
+      xmlStream.on("error", reject);
+      xmlStream.on("finish", resolve);
+    });
 
+    zip.addLocalFile(xmlPath);
+    deleteFile(xmlPath);
+    
     // generate & save zip locally
     const zipName = `ripa-test-${sessionId}.zip`;
     zip.writeZip(zipName);
@@ -164,7 +176,7 @@ async function createZip(jsonXml, csv, files, sessionId) {
 
     return zipName;
   } catch (err) {
-    reject(err);
+    throw err;
   }
 };
 
@@ -196,7 +208,7 @@ async function authenticate(organisation) {
     return await fetch(authEndpoint, authOptions)
       .then(response => response.json());
   } catch (err) {
-    reject(err);
+    throw err;
   }
 };
 
@@ -242,7 +254,7 @@ async function createSubmission(token, organisation, organisationId, sessionId =
         }
       });
   } catch (err) {
-    reject(err);
+    throw err;
   }
 };
 
@@ -283,7 +295,7 @@ async function attachArchive(token, submissionId, zipPath) {
         }
       });
   } catch (err) {
-    reject(err);
+    throw err;
   }
 };
 
@@ -311,7 +323,7 @@ async function retrieveSubmission(token, submissionId) {
     return await fetch(getSubmissionEndpoint, getSubmissionOptions)
       .then(response => response.json());
   } catch (err) {
-    reject(err);
+    throw err;
   }
 };
 
