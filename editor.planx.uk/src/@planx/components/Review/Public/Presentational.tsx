@@ -3,6 +3,7 @@ import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import { visuallyHidden } from "@material-ui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
+import { useFileUrl } from "@planx/components/shared/hooks";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { TYPES } from "@planx/components/types";
@@ -226,6 +227,16 @@ function TextInput(props: ComponentProps) {
   );
 }
 
+function FileUploadLink({ file }: any) {
+  const { fileUrl } = useFileUrl(file);
+
+  return (
+    <Link target="_blank" href={fileUrl}>
+      {file.filename}
+    </Link>
+  );
+}
+
 function FileUpload(props: ComponentProps) {
   return (
     <>
@@ -234,9 +245,7 @@ function FileUpload(props: ComponentProps) {
         <ul>
           {getAnswersByNode(props)?.map((file: any, i: number) => (
             <li key={i}>
-              <Link target="_blank" href={file.url}>
-                {file.filename}
-              </Link>
+              <FileUploadLink file={file} />
             </li>
           ))}
         </ul>
