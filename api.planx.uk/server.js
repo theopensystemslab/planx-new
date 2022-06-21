@@ -9,7 +9,6 @@ const express = require("express");
 const jwt = require("express-jwt");
 const noir = require("pino-noir");
 const { URL } = require("url");
-const { GraphQLClient } = require("graphql-request");
 const { Server } = require("http");
 const passport = require("passport");
 const { sign } = require("jsonwebtoken");
@@ -35,6 +34,7 @@ const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 const airbrake = require("./airbrake");
 const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
 const { createReminderEvent, createExpiryEvent } = require("./webhooks/lowcalSessionEvents");
+const { adminGraphQLClient } = require("./hasura");
 
 const router = express.Router();
 
@@ -130,11 +130,7 @@ router.get(
   handleSuccess
 );
 
-const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
-  headers: {
-    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
-  },
-});
+const client = adminGraphQLClient;
 
 const buildJWT = async (profile, done) => {
   const { email } = profile._json;
@@ -594,8 +590,7 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
   res.send();
 });
 
-// assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
-// assert(process.env.GOVUK_NOTIFY_API_KEY_TEST);
+assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
 app.post("/send-email/:template", useSendEmailAuth, sendSaveAndReturnEmail);
 app.post("/resume-application", resumeApplication);
 app.post("/validate-session", validateSession);
