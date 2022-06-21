@@ -231,7 +231,7 @@ function FileUploadLink({ file }: any) {
   const { fileUrl } = useFileUrl(file);
 
   return (
-    <Link target="_blank" href={fileUrl}>
+    <Link target="_blank" href={fileUrl} data-testid="file-upload-link">
       {file.filename}
     </Link>
   );
@@ -266,8 +266,6 @@ function DateInput(props: ComponentProps) {
 function DrawBoundary(props: ComponentProps) {
   const { latitude, longitude } = props.passport.data?._address;
 
-  const [fileUrl, setFileUrl] = useState("");
-
   // check if the user drew a boundary,
   // if they didn't then check that there's an uploaded boundary file
   const data = props.userData?.data?.[props.node.data?.dataFieldBoundary]
@@ -282,22 +280,7 @@ function DrawBoundary(props: ComponentProps) {
     throw Error("boundary geojson or file expected but not found");
   }
 
-  useEffect(() => {
-    if ("fileId" in data && "fileHash" in data) {
-      const { fileId, fileHash } = data;
-
-      downloadFile(fileId, fileHash).then((f) => {
-        setFileUrl(URL.createObjectURL(f));
-      });
-    }
-
-    return () => {
-      if (fileUrl) {
-        // Cleanup to free up memory
-        URL.revokeObjectURL(fileUrl);
-      }
-    };
-  }, []);
+  const { fileUrl } = useFileUrl({ serverFile: data });
 
   return (
     <>
