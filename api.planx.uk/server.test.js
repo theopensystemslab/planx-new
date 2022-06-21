@@ -55,6 +55,15 @@ it("mocks hasura", async () => {
             "https://southwark.bops.services/api/v1/planning_applications",
         },
       });
+
+      queryMock.mockQuery({
+        name: "MarkSessionAsSubmitted",
+        matchOnVariables: false,
+        data: {
+          update_lowcal_sessions_by_pk: { id: 123 }
+        },
+        variables: { sessionId: 123 },
+      });
     });
 
     beforeAll(() => {
@@ -76,7 +85,7 @@ it("mocks hasura", async () => {
 
       await supertest(app)
         .post("/bops/southwark")
-        .send({ applicationId: 123 })
+        .send({ applicationId: 123, planx_debug_data: { session_id: 123 } })
         .expect(200)
         .then((res) => {
           expect(res.body).toEqual({

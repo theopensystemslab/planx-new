@@ -45,10 +45,6 @@ describe("Send Email endpoint", () => {
       data: {
         flows_by_pk: mockFlow,
         lowcal_sessions: [mockLowcalSession]
-      },
-      variables: {
-        sessionId: 123,
-        email: TEST_EMAIL
       }
     });
 
@@ -70,10 +66,6 @@ describe("Send Email endpoint", () => {
         flows_by_pk: mockFlow,
         lowcal_sessions: [mockLowcalSession]
       },
-      variables: {
-        sessionId: 123,
-        email: "not an email address"
-      }
     });
 
     const data = { payload: { sessionId: 123, email: "Not an email address" } };
@@ -102,10 +94,6 @@ describe("Send Email endpoint", () => {
         flows_by_pk: null,
         lowcal_sessions: [mockLowcalSession]
       },
-      variables: {
-        sessionId: 123,
-        email: TEST_EMAIL,
-      }
     });
 
     const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
@@ -126,10 +114,6 @@ describe("Send Email endpoint", () => {
         flows_by_pk: mockFlow,
         lowcal_sessions: []
       },
-      variables: {
-        sessionId: 123,
-        email: TEST_EMAIL,
-      }
     });
 
     const data = { payload: { sessionId: 123, email: TEST_EMAIL } };

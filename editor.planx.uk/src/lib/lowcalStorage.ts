@@ -19,6 +19,7 @@ class LowcalStorage {
 
   getItem = memoize(async (key: string) => {
     console.debug({ getItem: key });
+    const id = getSessionId(key);
 
     const { data } = await client.query({
       query: gql`
@@ -28,9 +29,8 @@ class LowcalStorage {
           }
         }
       `,
-      variables: {
-        id: key.split(":")[1],
-      },
+      variables: { id },
+      ...getPublicContext(id),
     });
 
     try {
@@ -45,29 +45,34 @@ class LowcalStorage {
 
   removeItem = memoize(async (key: string) => {
     console.debug({ removeItem: key });
+    const id = getSessionId(key);
 
     await client.mutate({
       mutation: gql`
-        mutation RemoveItem($id: uuid!) {
-          delete_lowcal_sessions_by_pk(id: $id) {
+        mutation SoftDeleteLowcalSession($id: uuid!) {
+          update_lowcal_sessions_by_pk(
+            pk_columns: { id: $id }
+            _set: { deleted_at: "now()" }
+          ) {
             id
           }
         }
       `,
-      variables: {
-        id: key.split(":")[1],
-      },
+      variables: { id },
+      ...getPublicContext(id),
     });
   });
 
   setItem = memoize(async (key: string, value: string) => {
     if (value === current) {
-      console.debug("setting what was already retreived");
+      console.debug("setting what was already retrieved");
       return;
     } else {
       console.debug({ setItem: { key, value }, value, current });
       current = "";
     }
+
+    const id = getSessionId(key);
 
     await client.mutate({
       mutation: gql`
@@ -89,11 +94,12 @@ class LowcalStorage {
         }
       `,
       variables: {
-        id: key.split(":")[1],
+        id,
         data: JSON.parse(value),
         email: useStore.getState().saveToEmail,
         flowId: useStore.getState().id,
       },
+      ...getPublicContext(id),
     });
   });
 }
@@ -128,5 +134,23 @@ export const stringifyWithRootKeysSortedAlphabetically = (
         {} as typeof ob
       )
   );
+
+/**
+ * Generate context for GraphQL client Save & Return requests
+ * Hasura "Public" role users need the sessionId and email for lowcal_sessions access
+ */
+const getPublicContext = (sessionId: string) => ({
+  context: {
+    headers: {
+      "x-hasura-lowcal-session-id": sessionId,
+      "x-hasura-lowcal-email": useStore.getState().saveToEmail?.toLowerCase(),
+    },
+  },
+});
+
+/**
+ * Get sessionId from the key used for lowcalStorage
+ */
+const getSessionId = (key: string): string => key.split(":")[1];
 
 export const lowcalStorage = new LowcalStorage();
