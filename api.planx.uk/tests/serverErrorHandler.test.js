@@ -68,7 +68,4 @@ describe("bad requests", () => {
     post("/flows/WRONG/download-schema").expect(404, done);
   });
 
-  test(`app.post("/sign-s3-upload")`, (done) => {
-    post("/sign-s3-upload").expect(422, done);
-  });
 });
