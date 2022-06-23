@@ -23,7 +23,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
       value: getPreviouslySubmittedData(props) ?? "",
     },
     onSubmit: (values) => {
-      if (values.value && props.handleSubmit) {
+      if (props.handleSubmit) {
         const parsed = parseNumber(values.value);
         if (!isNil(parsed)) {
           props.handleSubmit(makeData(props, parsed));
@@ -42,7 +42,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
             if (!value) {
               return false;
             }
-            return Boolean(parseNumber(value));
+            return value === "0" ? true : Boolean(parseNumber(value));
           },
         }),
     }),
