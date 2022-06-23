@@ -10,7 +10,7 @@ export interface NumberInput extends MoreInformation {
 export type UserData = number;
 
 export const parseNumber = (raw: string): number | null => {
-  const parsed = parseFloat(raw);
+  const parsed = raw === "0" ? 0 : parseFloat(raw);
   if (isNaN(parsed)) {
     return null;
   }

@@ -24,6 +24,23 @@ test("renders correctly", async () => {
   expect(handleSubmit).toHaveBeenCalledWith({ data: { num: 3 } });
 });
 
+test("allows 0 to be input as a valid number", async () => {
+  const handleSubmit = jest.fn();
+
+  render(
+    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />
+  );
+
+  expect(screen.getByRole("heading")).toHaveTextContent("Numberwang!");
+
+  await act(async () => {
+    await userEvent.type(screen.getByLabelText("Numberwang!"), "0");
+    await userEvent.click(screen.getByTestId("continue-button"));
+  });
+
+  expect(handleSubmit).toHaveBeenCalledWith({ data: { num: 0 } });
+});
+
 test("requires a value before being able to continue", async () => {
   const handleSubmit = jest.fn();
 
