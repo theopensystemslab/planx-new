@@ -37,6 +37,7 @@ const sendEmail = async (template, emailAddress, config) => {
       config
     );
     const returnValue = { message: "Success" }
+    if (template === "expiry") softDeleteSession(config.personalisation.id);
     if (template === "save") returnValue.expiryDate = config.personalisation.expiryDate;
     return returnValue;
   } catch (error) {
@@ -202,6 +203,27 @@ const getPersonalisation = (
     serviceName: convertSlugToName(flowSlug),
     teamName: teamName,
     ...session,
+  };
+};
+
+/**
+ * Mark a lowcal_session record as deleted
+ * Sessions older than a week cleaned up nightly by cron job delete_expired_sessions on Hasura
+ * @param {string} sessionId 
+ */
+ const softDeleteSession = async (sessionId) => {
+  try {
+    const client = adminGraphQLClient;
+    const mutation = gql`
+      mutation SoftDeleteLowcalSession($sessionId: uuid!) {
+        update_lowcal_sessions_by_pk(pk_columns: {id: $sessionId}, _set: {deleted_at: "now()"}){
+          id
+        }
+      }
+    `
+    await client.request(mutation, { sessionId });
+  } catch (error) {
+    throw new Error(`Error deleting session ${sessionId}`);
   };
 };
 
