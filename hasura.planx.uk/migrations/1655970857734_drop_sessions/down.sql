@@ -1,0 +1,4 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- DROP TABLE "public"."sessions" CASCADE;
+-- DROP TABLE "public"."session_events" CASCADE;

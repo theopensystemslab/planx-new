@@ -107,13 +107,6 @@
           table:
             schema: public
             name: session_backups
-    - name: sessions
-      using:
-        foreign_key_constraint_on:
-          column: flow_id
-          table:
-            schema: public
-            name: sessions
   computed_fields:
     - name: data_merged
       definition:
@@ -227,78 +220,6 @@
           - session_id
           - user_data
         backend_only: false
-- table:
-    schema: public
-    name: session_events
-  object_relationships:
-    - name: session
-      using:
-        foreign_key_constraint_on: session_id
-  insert_permissions:
-    - role: public
-      permission:
-        check: {}
-        columns:
-          - chosen_node_ids
-          - parent_node_id
-          - session_id
-          - type
-        backend_only: false
-- table:
-    schema: public
-    name: sessions
-  object_relationships:
-    - name: flow
-      using:
-        foreign_key_constraint_on: flow_id
-  array_relationships:
-    - name: session_events
-      using:
-        foreign_key_constraint_on:
-          column: session_id
-          table:
-            schema: public
-            name: session_events
-  computed_fields:
-    - name: replay
-      definition:
-        function:
-          schema: public
-          name: compile_session_replay
-      comment: ""
-    - name: session_events_compiled
-      definition:
-        function:
-          schema: public
-          name: compile_session_events
-      comment: Filters out events with duplicated parent_node_id (e.g. clicking "back" and changing the answer)
-  insert_permissions:
-    - role: public
-      permission:
-        check: {}
-        columns:
-          - completed_at
-          - created_at
-          - flow_data
-          - flow_id
-          - flow_version
-          - id
-          - passport
-          - updated_at
-        backend_only: false
-  select_permissions:
-    - role: public
-      permission:
-        columns:
-          - id
-        filter: {}
-  update_permissions:
-    - role: public
-      permission:
-        columns:
-          - completed_at
-        filter: {}
-        check: null
 - table:
     schema: public
     name: team_members
