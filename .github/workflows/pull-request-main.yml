@@ -265,3 +265,21 @@ jobs:
           header: vultr
           message: |
             Deployed ${{ github.sha }} to https://${{ env.FULL_DOMAIN }}
+
+  healthcheck:
+    name: Healthcheck Pizza Services
+    needs: [create_or_update_vultr_instance]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Startup grace period
+        run: sleep 60s
+        shell: bash
+      - name: API healthcheck
+        run: |
+          curl --fail -sv --retry 3 --retry-delay 30 --retry-connrefused https://api.${{ env.FULL_DOMAIN }}
+      - name: Hasura healthcheck
+        run: |
+          curl --fail -sv --retry 3 --retry-delay 30 --retry-connrefused https://hasura.${{ env.FULL_DOMAIN }}/healthz
+      - name: Editor healthcheck
+        run: |
+          curl --fail -sv --retry 3 --retry-delay 30 --retry-connrefused https://${{ env.FULL_DOMAIN }}
