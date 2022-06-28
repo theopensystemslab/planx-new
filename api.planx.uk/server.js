@@ -30,6 +30,8 @@ const { sendToUniform } = require("./send");
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
+const MAX_FILE_SIZE_30_MB = 30_000_000;
+
 const airbrake = require("./airbrake");
 
 const router = express.Router();
@@ -499,7 +501,11 @@ app.post("/download-application", async (req, res, next) => {
   }
 });
 
-app.post("/private-file-upload", multer().single('file'), async (req, res, next) => {
+app.post("/private-file-upload", multer({
+  limits: {
+    fileSize: MAX_FILE_SIZE_30_MB
+  }
+}).single('file'), async (req, res, next) => {
   if (!req.body.filename) return next({ status: 422, message: "missing filename" });
   if (!req.file) return next({ status: 422, message: "missing file" });
 
