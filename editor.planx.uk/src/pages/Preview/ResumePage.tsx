@@ -121,14 +121,18 @@ const ValidationSuccess: React.FC<{
   );
 };
 
-const InvalidSession: React.FC = () => {
+const InvalidSession: React.FC<{
+  retry: () => void;
+}> = ({ retry }) => {
   return (
     <StatusPage
       bannerHeading="We can't find your application"
-      bannerText="Click retry to start a new application or enter your email again"
+      bannerText='Click "Try Again" enter your email address again, or start a new application'
       cardText=""
       buttonText="Try again"
-      onButtonClick={() => window.location.reload()}
+      onButtonClick={retry}
+      altButtonText="Start a new application"
+      onAltButtonClick={() => window.location.reload()}
     ></StatusPage>
   );
 };
@@ -208,6 +212,14 @@ const ResumePage: React.FC = () => {
     sessionId ? validateSessionId() : sendResumeEmail();
   };
 
+  /**
+   * Allow user to try again, with a different email address
+   */
+  const retryWithNewEmailAddress = () => {
+    setEmail("");
+    setPageStatus(Status.EmailRequired);
+  };
+
   return {
     [Status.EmailRequired]: <EmailRequired setEmail={setEmail} />,
     [Status.Validating]: (
@@ -223,7 +235,9 @@ const ResumePage: React.FC = () => {
         sessionId={sessionId}
       />
     ),
-    [Status.InvalidSession]: <InvalidSession />,
+    [Status.InvalidSession]: (
+      <InvalidSession retry={retryWithNewEmailAddress} />
+    ),
     [Status.Success]: <EmailSuccess email={email} />,
     [Status.Error]: <EmailError retry={() => handleSubmit()} />,
   }[pageStatus];
