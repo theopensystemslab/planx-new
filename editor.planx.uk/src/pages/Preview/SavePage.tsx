@@ -27,7 +27,7 @@ const SaveSuccess: React.FC<{ saveToEmail?: string; expiryDate?: string }> = ({
         buttonText="Close tab"
         onButtonClick={() => window.close()}
         altButtonText="Start a new application"
-        onAltButtonClick={() => location.reload()}
+        onAltButtonClick={() => window.location.reload()}
       ></StatusPage>
     </>
   );
