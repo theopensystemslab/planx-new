@@ -5,6 +5,7 @@
 // https://southwark.preview.bops.services/api-docs/index.html
 
 import { airbrake } from "airbrake";
+import { getPrivateFileURL } from "api/download";
 import { flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
@@ -264,14 +265,15 @@ export function getParams(
   // 2. files
 
   Object.entries(passport.data || {})
-    .filter(([, v]: any) => v?.[0]?.url)
+    .filter(([, v]: any) => v?.[0]?.serverFile?.fileId)
     .forEach(([key, arr]) => {
-      (arr as any[]).forEach(({ url }) => {
+      (arr as any[]).forEach(({ serverFile }) => {
         try {
           data.files = data.files || [];
 
           data.files.push({
-            filename: url,
+            filename: getPrivateFileURL(serverFile.fileId),
+            fileHash: serverFile.fileHash,
             tags: extractTagsFromPassportKey(key),
             applicant_description: extractFileDescriptionForPassportKey(
               passport.data,
@@ -287,7 +289,8 @@ export function getParams(
   if (passport?.data?.[PASSPORT_UPLOAD_KEY]) {
     data.files = data.files || [];
     data.files.push({
-      filename: passport.data[PASSPORT_UPLOAD_KEY],
+      filename: getPrivateFileURL(passport.data[PASSPORT_UPLOAD_KEY]?.fileId),
+      fileHash: passport.data[PASSPORT_UPLOAD_KEY]?.fileHash,
       tags: extractTagsFromPassportKey(PASSPORT_UPLOAD_KEY),
       applicant_description: extractFileDescriptionForPassportKey(
         passport.data,

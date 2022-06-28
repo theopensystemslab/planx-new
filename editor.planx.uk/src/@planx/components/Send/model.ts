@@ -130,6 +130,7 @@ export type FileTag = PlanTag | EvidenceTag;
 
 interface File {
   filename: string;
+  fileHash: string;
   tags?: Array<FileTag>;
   applicant_description?: string;
 }

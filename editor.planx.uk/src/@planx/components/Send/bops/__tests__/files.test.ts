@@ -17,6 +17,9 @@ const flow: Store.flow = {
   },
 };
 
+const fileId = "f76u79vq/planning-application-location-plan.jpeg";
+const fileHash =
+  "58ebde475464e299b566051fd613a2d3f7d6b61b2c0f4a783abefcc0b71a8af9";
 test("makes file object", () => {
   const breadcrumbs: Store.breadcrumbs = {
     FnyZh5IrV3: {
@@ -24,8 +27,10 @@ test("makes file object", () => {
       data: {
         "property.drawing.elevation": [
           {
-            url: "http://example.com/planning-application-location-plan.jpeg",
-            filename: "planning-application-location-plan.jpeg",
+            serverFile: {
+              fileHash,
+              fileId,
+            },
           },
         ],
       },
@@ -35,8 +40,10 @@ test("makes file object", () => {
     data: {
       "property.drawing.elevation": [
         {
-          url: "http://example.com/planning-application-location-plan.jpeg",
-          filename: "planning-application-location-plan.jpeg",
+          serverFile: {
+            fileHash,
+            fileId,
+          },
         },
       ],
     },
@@ -46,7 +53,8 @@ test("makes file object", () => {
 
   const expected = [
     {
-      filename: "http://example.com/planning-application-location-plan.jpeg",
+      filename: `${process.env.REACT_APP_API_URL}/file/private/${fileId}`,
+      fileHash,
       tags: ["Existing", "Elevation"],
     },
   ];
