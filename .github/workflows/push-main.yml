@@ -15,7 +15,7 @@ env:
 jobs:
   test_and_build:
     name: Test and Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -72,7 +72,7 @@ jobs:
   preview:
     name: Pulumi Up
     needs: test_and_build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -108,7 +108,7 @@ jobs:
   notifications:
     name: Notifications
     needs: preview
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       # Airbrake notification - https://airbrake.io/docs/features/deploy-tracking
