@@ -52,12 +52,12 @@ test("renders correctly", async () => {
 
   // expect the autocomplete to be rendered with the correct postcode prop & empty initial address
   const autocomplete = screen.getByTestId("address-autocomplete-web-component");
-  expect(autocomplete).toBeInTheDocument;
+  expect(autocomplete).toBeInTheDocument();
   expect(autocomplete.getAttribute("postcode")).toEqual("SE5 0HU");
   expect(autocomplete.getAttribute("intialAddress")).toBeFalsy();
 
   // expect continue to be disabled because an address has not been selected
-  expect(screen.getByTestId("continue-button")).toBeDisabled;
+  expect(screen.getByTestId("continue-button")).toBeDisabled();
   expect(handleSubmit).not.toHaveBeenCalled();
 });
 
@@ -78,7 +78,7 @@ test("it displays an error if you submit an invalid postcode", async () => {
     userEvent.type(screen.getByLabelText("Postcode"), "SE5{enter}");
   });
 
-  expect(screen.getByText("Enter a valid UK postcode")).toBeInTheDocument;
+  expect(screen.getByText("Enter a valid UK postcode")).toBeInTheDocument();
 });
 
 test("recovers previously submitted address when clicking the back button", async () => {
@@ -179,7 +179,7 @@ it("updates the address-autocomplete props when the postcode is changed", async 
 
   // Expect autocomplete to be rendered with the correct postcode prop
   expect(screen.getByTestId("address-autocomplete-web-component"))
-    .toBeInTheDocument;
+    .toBeInTheDocument();
   expect(
     screen
       .getByTestId("address-autocomplete-web-component")

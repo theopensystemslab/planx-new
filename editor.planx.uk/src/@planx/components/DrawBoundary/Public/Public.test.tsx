@@ -118,13 +118,13 @@ test("shows the file upload option by default and requires user data to continue
   );
 
   // Draw a boundary screen
-  expect(screen.queryByTestId("upload-file-button")).toBeInTheDocument;
-  expect(screen.getByText("Continue")).toBeDisabled;
+  expect(screen.queryByTestId("upload-file-button")).toBeInTheDocument();
+  expect(screen.getByTestId("continue-button")).toBeDisabled();
 
   // Navigate to upload a file screen
   userEvent.click(screen.getByTestId("upload-file-button"));
-  expect(screen.getByText("Upload a file")).toBeInTheDocument;
-  expect(screen.getByText("Continue")).toBeDisabled;
+  expect(screen.getByText("Upload a file")).toBeInTheDocument();
+  expect(screen.getByTestId("continue-button")).toBeDisabled();
 });
 
 test("hides the upload option and allows user to continue without drawing if editor specifies", async () => {
@@ -143,8 +143,8 @@ test("hides the upload option and allows user to continue without drawing if edi
     />
   );
 
-  expect(screen.queryByTestId("upload-file-button")).not.toBeInTheDocument;
+  expect(screen.queryByTestId("upload-file-button")).not.toBeInTheDocument();
 
-  userEvent.click(screen.getByText("Continue"));
+  userEvent.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalledTimes(1);
 });
