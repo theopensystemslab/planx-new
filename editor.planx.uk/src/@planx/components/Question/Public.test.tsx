@@ -172,7 +172,7 @@ it("renders correctly with responses containing comments", async () => {
   });
 
   await act(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
 
     await waitForExpect(() => {
       expect(handleSubmit).toHaveBeenCalledWith({ answers: ["option1"] });
@@ -199,7 +199,7 @@ it("renders correctly with responses containing images", async () => {
   });
 
   await act(async () => {
-    userEvent.click(screen.getByText("Continue"));
+    userEvent.click(screen.getByTestId("continue-button"));
 
     await waitForExpect(() => {
       expect(handleSubmit).toHaveBeenCalledWith({ answers: ["image2"] });
