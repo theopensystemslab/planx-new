@@ -28,6 +28,6 @@ To spin it up, run:
 
 #### Documentation
 
-This project uses Architecture Decision Records (ADRs) to record significant changes and decisions. Further details of this can be (found here)[https://github.com/theopensystemslab/planx-new/blob/main/doc/architecture/decisions/0001-record-architecture-decisions.md].
+This project uses Architecture Decision Records (ADRs) to record significant changes and decisions. Further details of this can be [found here](https://github.com/theopensystemslab/planx-new/blob/main/doc/architecture/decisions/0001-record-architecture-decisions.md).
 
-For maximum visibility and discoverability, we recommend using the (GitHub discussions board)[https://github.com/theopensystemslab/planx-new/discussions] where possible.
+For maximum visibility and discoverability, we recommend using the [GitHub discussions board](https://github.com/theopensystemslab/planx-new/discussions) where possible.
