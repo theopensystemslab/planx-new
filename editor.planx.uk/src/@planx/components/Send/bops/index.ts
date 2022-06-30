@@ -85,7 +85,7 @@ const addPortalName = (
   metadata: QuestionMetaData
 ): QuestionMetaData => {
   if (id === "_root") {
-    metadata.portal_name = "_root";
+    metadata.portal_name = "Main";
   } else if (flow[id]?.type === 300) {
     // internal & external portals are both type 300 after flattening (ref dataMergedHotFix)
     metadata.portal_name = flow[id]?.data?.text || id;
@@ -166,7 +166,7 @@ export const makePayload = (
         const metadata: ResponseMetaData = {};
 
         if (flow[id]) {
-          // XXX: this is how we get the text represenation of a node until
+          // XXX: this is how we get the text representation of a node until
           //      we have a more standardised way of retrieving it. More info
           //      https://github.com/theopensystemslab/planx-new/discussions/386
           value = flow[id].data?.text ?? flow[id].data?.title ?? "";
