@@ -2,9 +2,6 @@ name: Pizza Teardown
 on:
   pull_request:
     types: [closed]
-    branches:
-      - main
-      - feat/save-and-return # TODO: Delete when feature branch merged
 
 env:
   DOMAIN: planx.pizza
