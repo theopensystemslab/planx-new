@@ -2,8 +2,6 @@ name: Pizza Teardown
 on:
   pull_request:
     types: [closed]
-    branches:
-      - main
 
 env:
   DOMAIN: planx.pizza
