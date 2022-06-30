@@ -33,7 +33,7 @@ test("sends flag result despite no result component", () => {
             value: "prior",
           },
         ],
-        metadata: { portal_name: "_root" },
+        metadata: { portal_name: "Main" },
       },
     ],
     result: {
@@ -87,12 +87,12 @@ test("sends override description with flag result", () => {
             value: "permission",
           },
         ],
-        metadata: { portal_name: "_root" },
+        metadata: { portal_name: "Main" },
       },
       {
         question: "do you want to override this decision?",
         responses: [{ value: "i don't agree" }],
-        metadata: { portal_name: "_root" },
+        metadata: { portal_name: "Main" },
       },
     ],
     result: {
@@ -131,7 +131,7 @@ test("sends 'no result' to BOPS when there is no collected flag", () => {
       {
         question: "which answer?",
         responses: [{ value: "other" }],
-        metadata: { portal_name: "_root" },
+        metadata: { portal_name: "Main" },
       },
     ],
     result: {
