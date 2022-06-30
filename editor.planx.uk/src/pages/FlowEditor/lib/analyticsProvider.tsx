@@ -49,15 +49,16 @@ export const AnalyticsProvider: React.FC = ({ children }) => {
 
   const onPageExit = () => {
     if (lastAnalyticsLogId && shouldTrackAnalytics) {
+      const send = navigator.sendBeacon && navigator.sendBeacon.bind(navigator);
       if (document.visibilityState === "hidden") {
-        navigator.sendBeacon(
+        send(
           `${
             process.env.REACT_APP_API_URL
           }/analytics/log-user-exit?analyticsLogId=${lastAnalyticsLogId.toString()}`
         );
       }
       if (document.visibilityState === "visible") {
-        navigator.sendBeacon(
+        send(
           `${
             process.env.REACT_APP_API_URL
           }/analytics/log-user-resume?analyticsLogId=${lastAnalyticsLogId?.toString()}`
