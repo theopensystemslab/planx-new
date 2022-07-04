@@ -124,6 +124,14 @@ const ValidationSuccess: React.FC<{
 const InvalidSession: React.FC<{
   retry: () => void;
 }> = ({ retry }) => {
+  const startNewApplication = () => {
+    // Drop sessionId from URL to route to ApplicationPath.SaveAndReturn, not ApplicationPath.Resume
+    const currentURL = new URL(window.location.href);
+    currentURL.searchParams.delete("sessionId");
+    window.history.pushState({}, document.title, currentURL);
+    window.location.reload();
+  };
+
   return (
     <StatusPage
       bannerHeading="We can't find your application"
@@ -132,7 +140,7 @@ const InvalidSession: React.FC<{
       buttonText="Try again"
       onButtonClick={retry}
       altButtonText="Start a new application"
-      onAltButtonClick={() => window.location.reload()}
+      onAltButtonClick={() => startNewApplication()}
     ></StatusPage>
   );
 };
@@ -191,9 +199,6 @@ const ResumePage: React.FC = () => {
     const url = `${process.env.REACT_APP_API_URL}/validate-session`;
     const data = { email, sessionId };
     try {
-      // Remove sessionId query param from URL before validation request
-      //   so that 404/Status.InvalidSession will reload window.location without params on "retry" button
-      window.history.pushState({}, document.title, window.location.pathname);
       // Find this session, if found then handle reconciliation
       await axios.post(url, data).then((response) => {
         setReconciledData(response?.data);

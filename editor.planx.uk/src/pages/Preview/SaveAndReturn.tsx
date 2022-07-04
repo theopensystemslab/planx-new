@@ -85,8 +85,20 @@ const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const isEmailCaptured = Boolean(useStore((state) => state.saveToEmail));
-  const handleSubmit = (email: string) =>
+  const sessionId = useStore((state) => state.sessionId);
+
+  // Setting the URL search param "sessionId" will route the user to Application.Resume
+  // Without this the user will need to click the magic link in their email after a refresh
+  const allowResumeOnBrowserRefresh = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("sessionId", sessionId);
+    window.history.pushState({}, document.title, url);
+  };
+
+  const handleSubmit = (email: string) => {
     useStore.setState({ saveToEmail: email });
+    allowResumeOnBrowserRefresh();
+  };
 
   return (
     <>
