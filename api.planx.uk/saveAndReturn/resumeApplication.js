@@ -59,6 +59,7 @@ const validateRequest = async (teamSlug, email) => {
             email: { _eq: $email }
             deleted_at: { _is_null: true }
             submitted_at: { _is_null: true }
+            flow: { team: { slug: { _eq: $teamSlug } } }
           }
           order_by: { flow: { slug: asc }, created_at: asc }
         ) {
