@@ -12,9 +12,15 @@ const { getState, setState } = vanillaStore;
 let initialState: FullStore;
 
 describe("Save and Return component", () => {
+  const originalHref = window.location.href;
+
   beforeAll(() => (initialState = getState()));
 
-  afterEach(() => waitFor(() => setState(initialState)));
+  afterEach(() => {
+    waitFor(() => setState(initialState));
+    // Reset URL between tests
+    window.history.replaceState({}, "", decodeURIComponent(originalHref));
+  });
 
   it("displays the ConfirmEmail component if an email address is not captured", () => {
     const children = <Button>Testing 123</Button>;
@@ -65,6 +71,33 @@ describe("Save and Return component", () => {
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  it("stores the sessionId as part of the URL once an email has been submitted", async () => {
+    const children = <Button>Testing 123</Button>;
+    render(<SaveAndReturn children={children}></SaveAndReturn>);
+
+    const sessionId = getState().sessionId;
+    await waitFor(() => {
+      expect(sessionId).toBeDefined();
+    });
+
+    userEvent.type(screen.getByLabelText("Email Address"), "test@test.com");
+    userEvent.type(
+      screen.getByLabelText("Confirm Email Address"),
+      "test@test.com"
+    );
+
+    expect(window.location.href).not.toContain("sessionId");
+    expect(window.location.href).not.toContain(sessionId);
+
+    userEvent.click(screen.getByTestId("continue-button"));
+
+    await waitFor(() => {
+      expect(screen.queryByText("Testing 123")).toBeInTheDocument();
+    });
+
+    expect(window.location.href).toContain(`sessionId=${sessionId}`);
   });
 });
 
