@@ -126,7 +126,9 @@ const InvalidSession: React.FC<{
 }> = ({ retry }) => {
   const startNewApplication = () => {
     // Drop sessionId from URL to route to ApplicationPath.SaveAndReturn, not ApplicationPath.Resume
-    window.history.pushState({}, document.title, window.location.pathname);
+    const currentURL = new URL(window.location.href);
+    currentURL.searchParams.delete("sessionId");
+    window.history.pushState({}, document.title, currentURL);
     window.location.reload();
   };
 
