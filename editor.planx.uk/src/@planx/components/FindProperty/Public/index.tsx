@@ -433,10 +433,13 @@ export function PropertyInformation(props: any) {
           longitude={lng}
           osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
           hideResetControl
+          showMarker
+          markerLatitude={lat}
+          markerLongitude={lng}
+          // markerColor={teamColor} // defaults to black
+          osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
           showFeaturesAtPoint
           featureBorderNone
-          showMarker
-          osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
           featureColor={teamColor}
           featureFill
         />
