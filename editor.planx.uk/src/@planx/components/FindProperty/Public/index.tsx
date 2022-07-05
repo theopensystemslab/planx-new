@@ -434,6 +434,8 @@ export function PropertyInformation(props: any) {
           osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
           hideResetControl
           showFeaturesAtPoint
+          featureBorderNone
+          showMarker
           osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
           featureColor={teamColor}
           featureFill
