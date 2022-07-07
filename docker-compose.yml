@@ -139,6 +139,8 @@ services:
       AIRBRAKE_PROJECT_KEY: ${AIRBRAKE_PROJECT_KEY}
       UNIFORM_API_USERNAME: ${UNIFORM_API_USERNAME}
       UNIFORM_API_PASSWORD: ${UNIFORM_API_PASSWORD}
+    env_file:
+      - .env.development.local
 
   sharedb:
     restart: unless-stopped
