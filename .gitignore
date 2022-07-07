@@ -1,11 +1,20 @@
+# Dependencies
 node_modules/
-.envrc
-/.env.prod
-/ignore/
-editor.planx.uk/.eslintcache
-/minio-data
+
+# Secrets
+**/.envrc
+**/.env
+**/.env.*
+
+# Logs
 .pnpm-debug.log
-.env.temp
+
+# Lint Cache
+editor.planx.uk/.eslintcache
+
+# Misc
+/ignore/
+/minio-data
 
 # IDE
 .vscode

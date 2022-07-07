@@ -10,6 +10,8 @@ import * as mime from "mime";
 import * as tldjs from "tldjs";
 import * as url from "url";
 
+import { generateCustomerSecrets } from "./utils/generateCustomerSecrets";
+
 const config = new pulumi.Config();
 
 const env = pulumi.getStack();
@@ -362,12 +364,6 @@ new pulumi.Config("cloudflare").require("apiToken");
             name: "HASURA_GRAPHQL_URL",
             value: pulumi.interpolate`https://hasura.${DOMAIN}/v1/graphql`,
           },
-          ...["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].map((authority) => ({
-            name: `GOV_UK_PAY_TOKEN_${authority}`,
-            value: config.require(
-              `gov-uk-pay-token-${authority}`.toLowerCase()
-            ),
-          })),
           {
             name: "AIRBRAKE_PROJECT_ID",
             value: config.require("airbrake-project-id"),
@@ -377,13 +373,14 @@ new pulumi.Config("cloudflare").require("apiToken");
             value: config.require("airbrake-project-key"),
           },
           {
-            name: "UNIFORM_API_USERNAME",
-            value: config.require("uniform-api-username"),
+            name: "UNIFORM_TOKEN_URL",
+            value: config.require("uniform-token-url"),
           },
           {
-            name: "UNIFORM_API_PASSWORD",
-            value: config.require("uniform-api-password"),
+            name: "UNIFORM_SUBMISSION_URL",
+            value: config.require("uniform-submission-url"),
           },
+          ...generateCustomerSecrets(config),
         ],
       },
     },
