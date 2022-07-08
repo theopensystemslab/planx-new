@@ -437,11 +437,6 @@ export function PropertyInformation(props: any) {
           markerLatitude={lat}
           markerLongitude={lng}
           // markerColor={teamColor} // defaults to black
-          osFeaturesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
-          showFeaturesAtPoint
-          featureBorderNone
-          featureColor={teamColor}
-          featureFill
         />
       </Box>
       <Box component="dl" mb={3}>
