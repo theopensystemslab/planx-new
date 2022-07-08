@@ -10,7 +10,7 @@ import * as mime from "mime";
 import * as tldjs from "tldjs";
 import * as url from "url";
 
-import { generateCustomerSecrets } from "./utils/generateCustomerSecrets";
+import { generateTeamSecrets } from './utils/generateTeamSecrets';
 
 const config = new pulumi.Config();
 
@@ -380,7 +380,7 @@ new pulumi.Config("cloudflare").require("apiToken");
             name: "UNIFORM_SUBMISSION_URL",
             value: config.require("uniform-submission-url"),
           },
-          ...generateCustomerSecrets(config),
+          ...generateTeamSecrets(config),
         ],
       },
     },

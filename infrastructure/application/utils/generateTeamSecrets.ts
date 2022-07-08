@@ -1,6 +1,7 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as awsx from "@pulumi/awsx";
-import { customers } from "../../common/customers"
+
+import { teams } from './../../common/teams';
 
 // Greedily match any non-word characters
 // XXX: Matches regex used in api.planx.uk/send.js
@@ -18,14 +19,14 @@ const name = (name: string) => name.replace(regex, "_").toUpperCase();
  */
 const value = (value: string) => value.replace(regex, "-").toLowerCase();
 
-export const generateCustomerSecrets = (config: pulumi.Config): awsx.ecs.KeyValuePair[] => {
+export const generateTeamSecrets = (config: pulumi.Config): awsx.ecs.KeyValuePair[] => {
   const secrets: awsx.ecs.KeyValuePair[] = [];
-  customers.forEach(customer => {
+  teams.forEach(team => {
     secrets.push({
-      name: `GOV_UK_PAY_TOKEN_${name(customer.name)}`,
-      value: config.require(`gov-uk-pay-token-${value(customer.name)}`),
+      name: `GOV_UK_PAY_TOKEN_${name(team.name)}`,
+      value: config.require(`gov-uk-pay-token-${value(team.name)}`),
     });
-    customer.uniformInstances?.forEach(instance => {
+    team.uniformInstances?.forEach(instance => {
       secrets.push({
         name: `UNIFORM_CLIENT_${name(instance)}`,
         value: config.require(`uniform-client-${value(instance)}`),
@@ -35,4 +36,4 @@ export const generateCustomerSecrets = (config: pulumi.Config): awsx.ecs.KeyValu
   return secrets;
 };
 
-module.exports = { generateCustomerSecrets };
+module.exports = { generateTeamSecrets };

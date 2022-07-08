@@ -12,5 +12,5 @@
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true
   },
-  "files": ["customers.ts"]
+  "files": ["teams.ts"]
 }
