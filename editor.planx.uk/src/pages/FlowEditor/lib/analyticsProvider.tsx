@@ -22,6 +22,9 @@ const analyticsContext = createContext<{
 });
 const { Provider } = analyticsContext;
 
+// Navigator has to be bound to ensure it does not error in some browsers
+const send = navigator?.sendBeacon?.bind(navigator);
+
 export const AnalyticsProvider: React.FC = ({ children }) => {
   const [
     currentCard,
@@ -49,7 +52,6 @@ export const AnalyticsProvider: React.FC = ({ children }) => {
 
   const onPageExit = () => {
     if (lastAnalyticsLogId && shouldTrackAnalytics) {
-      const send = navigator.sendBeacon && navigator.sendBeacon.bind(navigator);
       if (document.visibilityState === "hidden") {
         send(
           `${
