@@ -2,6 +2,11 @@ import { GovUKPayment } from "types";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { GOV_PAY_PASSPORT_KEY } from "../../Pay/model";
+import {
+  appTypeLookup,
+  PlanXAppTypes,
+  UniformAppTypes,
+} from "./applicationType";
 
 export function makeXmlString(
   passport: Store.passport,
@@ -42,6 +47,20 @@ export function makeXmlString(
       </common:FileAttachment>
     `);
   });
+
+  const getApplicationType = (): string => {
+    const planXAppType: PlanXAppTypes = passport.data?.["application.type"];
+    const uniformAppType: UniformAppTypes = appTypeLookup[planXAppType];
+
+    return `
+      <portaloneapp:ApplicationScenario>
+        <portaloneapp:ScenarioNumber>${uniformAppType.scenarioNumber}</portaloneapp:ScenarioNumber>
+      </portaloneapp:ApplicationScenario>
+      <portaloneapp:ConsentRegimes>
+        <portaloneapp:ConsentRegime>${uniformAppType.consentRegime}</portaloneapp:ConsentRegime>
+      </portaloneapp:ConsentRegimes>
+    `;
+  };
 
   // this string template represents the full proposal.xml schema including prefixes
   const proposal = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -196,10 +215,7 @@ export function makeXmlString(
           <bs7666:Y>${passport.data?.["_address"]?.["y"]}</bs7666:Y>
         </common:SiteGridRefence>
       </portaloneapp:SiteLocation>
-      <portaloneapp:ApplicationScenario>
-        <portaloneapp:ScenarioNumber/>
-      </portaloneapp:ApplicationScenario>
-      <portaloneapp:ConsentRegimes/>
+      ${getApplicationType()}
       <portaloneapp:ApplicationData>
         <portaloneapp:Advice>
           <common:HaveSoughtAdvice>0</common:HaveSoughtAdvice>
