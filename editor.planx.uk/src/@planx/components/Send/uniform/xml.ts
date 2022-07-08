@@ -67,6 +67,7 @@ export function makeXmlString(
     <portaloneapp:Proposal xmlns:portaloneapp="http://www.govtalk.gov.uk/planning/OneAppProposal-2006" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bs7666="http://www.govtalk.gov.uk/people/bs7666" xmlns:org="http://www.govtalk.gov.uk/financial/OrganisationIdentifiers" xmlns:pdt="http://www.govtalk.gov.uk/people/PersonDescriptives" xmlns:apd="http://www.govtalk.gov.uk/people/AddressAndPersonalDetails" xmlns:core="http://www.govtalk.gov.uk/core" xmlns:common="http://www.govtalk.gov.uk/planning/OneAppCommon-2006" Version="1.3">
       <portaloneapp:SchemaVersion>1.3</portaloneapp:SchemaVersion>
       <portaloneapp:ApplicationHeader>
+        ${/* TODO: Each team has a unique value for this */ ""}
         <portaloneapp:ApplicationTo>00QA</portaloneapp:ApplicationTo>
         <portaloneapp:DateSubmitted>${proposalCompletionDate}</portaloneapp:DateSubmitted>
         <portaloneapp:RefNum>${sessionId}</portaloneapp:RefNum>
@@ -217,6 +218,9 @@ export function makeXmlString(
       </portaloneapp:SiteLocation>
       ${getApplicationType()}
       <portaloneapp:ApplicationData>
+        ${
+          /* TODO: Is this pre-application advice? application.preAppAdvice */ ""
+        }
         <portaloneapp:Advice>
           <common:HaveSoughtAdvice>0</common:HaveSoughtAdvice>
         </portaloneapp:Advice>
@@ -272,6 +276,7 @@ export function makeXmlString(
               }</common:LawfulDevCertificateReason>
             </portaloneapp:GroundsCPU>
           </portaloneapp:ProposedUseApplication>
+          ${/* TODO: Should applicant.interest be referenced here?  */ ""}
           <portaloneapp:Interest>
             <common:ApplicantInterest>
               <common:Owner>true</common:Owner>
@@ -281,6 +286,9 @@ export function makeXmlString(
           </portaloneapp:Interest>
         </portaloneapp:CertificateLawfulness>
       </portaloneapp:ApplicationData>
+      ${
+        /* TODO: Should application.declaration.connection be reference here? */ ""
+      }
       <portaloneapp:DeclarationOfInterest>
         <common:IsRelated>o</common:IsRelated>
       </portaloneapp:DeclarationOfInterest>
