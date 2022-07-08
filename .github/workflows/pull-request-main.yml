@@ -208,6 +208,14 @@ jobs:
             GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE }}
             GOV_UK_PAY_TOKEN_LAMBETH=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_LAMBETH }}
             GOV_UK_PAY_TOKEN_SOUTHWARK=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_SOUTHWARK }}
+            UNIFORM_TOKEN_URL=https://staging.identity.idoxgroup.com/uaa/oauth/token
+            UNIFORM_SUBMISSION_URL=https://staging.identity.idoxgroup.com/agw/submission-api
+            UNIFORM_CLIENT_AYLESBURY_VALE=${{ secrets.STAGING_UNIFORM_CLIENT_AYLESBURY_VALE }}
+            UNIFORM_CLIENT_CHILTERN=${{ secrets.STAGING_UNIFORM_CLIENT_CHILTERN }}
+            UNIFORM_CLIENT_SOUTH_BUCKS=${{ secrets.STAGING_UNIFORM_CLIENT_SOUTH_BUCKS }}
+            UNIFORM_CLIENT_WYCOMBE=${{ secrets.STAGING_UNIFORM_CLIENT_WYCOMBE }}
+            UNIFORM_CLIENT_SOUTHWARK=${{ secrets.STAGING_UNIFORM_CLIENT_SOUTHWARK }}
+            UNIFORM_CLIENT_LAMBETH=${{ secrets.STAGING_UNIFORM_CLIENT_LAMBETH }}
             " > .env.temp
             cat .env .env.temp .env.staging > .env.prod
 
@@ -237,6 +245,14 @@ jobs:
             GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE }}
             GOV_UK_PAY_TOKEN_LAMBETH=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_LAMBETH }}
             GOV_UK_PAY_TOKEN_SOUTHWARK=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_SOUTHWARK }}
+            UNIFORM_TOKEN_URL=https://staging.identity.idoxgroup.com/uaa/oauth/token
+            UNIFORM_SUBMISSION_URL=https://staging.identity.idoxgroup.com/agw/submission-api
+            UNIFORM_CLIENT_AYLESBURY_VALE=${{ secrets.STAGING_UNIFORM_CLIENT_AYLESBURY_VALE }}
+            UNIFORM_CLIENT_CHILTERN=${{ secrets.STAGING_UNIFORM_CLIENT_CHILTERN }}
+            UNIFORM_CLIENT_SOUTH_BUCKS=${{ secrets.STAGING_UNIFORM_CLIENT_SOUTH_BUCKS }}
+            UNIFORM_CLIENT_WYCOMBE=${{ secrets.STAGING_UNIFORM_CLIENT_WYCOMBE }}
+            UNIFORM_CLIENT_SOUTHWARK=${{ secrets.STAGING_UNIFORM_CLIENT_SOUTHWARK }}
+            UNIFORM_CLIENT_LAMBETH=${{ secrets.STAGING_UNIFORM_CLIENT_LAMBETH }}
             " > .env.temp
             cat .env .env.temp .env.staging > .env.prod
 

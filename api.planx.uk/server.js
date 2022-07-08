@@ -319,8 +319,8 @@ app.post("/bops/:localAuthority", (req, res) => {
   })(req, res);
 });
 
-assert(process.env.UNIFORM_API_USERNAME);
-assert(process.env.UNIFORM_API_PASSWORD);
+assert(process.env.UNIFORM_TOKEN_URL);
+assert(process.env.UNIFORM_SUBMISSION_URL);
 app.post("/uniform/:localAuthority", sendToUniform);
 
 // used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
