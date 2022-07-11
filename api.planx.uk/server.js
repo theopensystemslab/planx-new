@@ -325,7 +325,15 @@ app.post("/uniform/:localAuthority", sendToUniform);
 
 // used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
 // returns the url to make a gov uk payment
-app.post("/pay/:localAuthority", (req, res) => {
+app.post("/pay/:localAuthority", (req, res, next) => {
+  // confirm that this local authority (aka team) has a pay token configured
+  if (!process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`]) {
+    next({
+      status: 400,
+      message: `GOV.UK Pay is not enabled for this local authority`,
+    });
+  }
+
   // drop req.params.localAuthority from the path when redirecting
   // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
   usePayProxy(
@@ -424,7 +432,7 @@ app.get("/me", useJWT, async function (req, res, next) {
 app.get("/gis", (_req, res, next) => {
   next({
     status: 400,
-    message: "Please specify a Local Authority",
+    message: "Please specify a local authority",
   });
 });
 
