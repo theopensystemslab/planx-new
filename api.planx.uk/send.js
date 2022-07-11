@@ -22,7 +22,13 @@ const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
  *   finally, insert a record into uniform_applications for future auditing
  */
 const sendToUniform = async (req, res, next) => {
-  if (!req.params.localAuthority || !req.body.xml || !req.body.sessionId) {
+  if (!process.env[`UNIFORM_CLIENT_${req.params.localAuthority.toUpperCase().replaceAll("-", "_")}`]) {
+    res.status(400).send({
+      message: "Idox Uniform connector is not enabled for this local authority"
+    });
+  }
+
+  if (!req.body.xml || !req.body.sessionId) {
     res.status(400).send({
       message: "Missing application data to send to Uniform"
     });
