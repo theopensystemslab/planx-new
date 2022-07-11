@@ -100,7 +100,7 @@ const SendComponent: React.FC<Props> = (props) => {
     );
   } else if (
     request.error &&
-    request.error.response?.data?.message?.endsWith("local authority")
+    request.error.response?.data?.error?.endsWith("local authority")
   ) {
     // Display an error message if this local authority/team isn't configured for the selected destination
     return (
@@ -110,7 +110,7 @@ const SendComponent: React.FC<Props> = (props) => {
             Cannot submit your application
           </Typography>
           <Typography variant="body2">
-            {request.error.response.data.message}.
+            {request.error.response.data.error}.
           </Typography>
         </div>
       </Card>

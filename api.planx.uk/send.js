@@ -23,8 +23,9 @@ const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
  */
 const sendToUniform = async (req, res, next) => {
   if (!process.env[`UNIFORM_CLIENT_${req.params.localAuthority.toUpperCase().replaceAll("-", "_")}`]) {
-    res.status(400).send({
-      message: "Idox Uniform connector is not enabled for this local authority"
+    next({
+      status: 400,
+      message: "Idox/Uniform connector is not enabled for this local authority"
     });
   }
 
