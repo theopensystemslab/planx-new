@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Warning from "@material-ui/icons/WarningOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import SummaryList from "@planx/components/shared/Preview/SummaryList";
+import { stringifyWithRootKeysSortedAlphabetically } from "lib/lowcalStorage";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Banner from "ui/Banner";
@@ -73,9 +74,17 @@ const ReconciliationPage: React.FC<Props> = ({
           Review your answers so far
         </Typography>
         <SummaryList
-          breadcrumbs={data?.reconciledSessionData?.breadcrumbs}
+          breadcrumbs={JSON.parse(
+            stringifyWithRootKeysSortedAlphabetically(
+              data?.reconciledSessionData?.breadcrumbs
+            )
+          )}
           flow={flow}
-          passport={data?.reconciledSessionData?.passport}
+          passport={JSON.parse(
+            stringifyWithRootKeysSortedAlphabetically(
+              data?.reconciledSessionData?.passport
+            )
+          )}
           changeAnswer={changeAnswer}
           showChangeButton={false}
         />

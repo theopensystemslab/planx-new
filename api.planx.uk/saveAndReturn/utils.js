@@ -297,6 +297,25 @@ const getSaveAndReturnPublicHeaders = (sessionId, email) => ({
   "x-hasura-lowcal-email": email.toLowerCase(),
 });
 
+/**
+ * Helper method to preserve breadcrumb order during reconciliation
+ *    XXX: This function is also maintained at editor.planx.uk/src/lib/lowcalStorage.ts
+ */
+const stringifyWithRootKeysSortedAlphabetically = (
+  ob = {}
+) =>
+  JSON.stringify(
+    Object.keys(ob)
+      .sort()
+      .reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr]: ob[curr],
+        }),
+        {}
+      )
+  );
+
 module.exports = {
   getSaveAndReturnPublicHeaders,
   sendEmail,
@@ -308,4 +327,5 @@ module.exports = {
   DAYS_UNTIL_EXPIRY,
   calculateExpiryDate,
   getHumanReadableProjectType,
+  stringifyWithRootKeysSortedAlphabetically,
 };

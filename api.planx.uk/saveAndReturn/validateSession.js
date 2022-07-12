@@ -2,7 +2,7 @@ const { gql } = require("graphql-request");
 const jsondiffpatch = require("jsondiffpatch");
 const { publicGraphQLClient } = require("../hasura");
 const { getMostRecentPublishedFlow, getPublishedFlowByDate } = require("../helpers");
-const { getSaveAndReturnPublicHeaders } = require("./utils");
+const { getSaveAndReturnPublicHeaders, stringifyWithRootKeysSortedAlphabetically } = require("./utils");
 
 const client = publicGraphQLClient;
 
@@ -66,7 +66,8 @@ const validateSession = async (req, res, next) => {
           //   **what about collected flags? what about `auto: true`? component dependencies like FindProp/Draw/PlanningConstraints?
 
           // update the lowcal_session.data to match our updated in-memory sessionData.data
-          const reconciledSessionData = await updateLowcalSessionData(sessionId, sessionData.data, email);
+          const sortedSessionData = stringifyWithRootKeysSortedAlphabetically(sessionData.data);
+          const reconciledSessionData = await updateLowcalSessionData(sessionId, JSON.parse(sortedSessionData.data), email);
 
           res.status(200).json({
             message: "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
@@ -98,6 +99,7 @@ const validateSession = async (req, res, next) => {
 };
 
 const findSession = async (sessionId, email) => {
+  // the headers act like "where" params in this case
   const query = gql`
     query FindSession {
       lowcal_sessions {
