@@ -71,7 +71,7 @@ export function makeXmlString(
         <portaloneapp:ApplicationTo>00QA</portaloneapp:ApplicationTo>
         <portaloneapp:DateSubmitted>${proposalCompletionDate}</portaloneapp:DateSubmitted>
         <portaloneapp:RefNum>${sessionId}</portaloneapp:RefNum>
-        <portaloneapp:FormattedRefNum>${sessionId}</portaloneapp:FormattedRefNum>
+        <portaloneapp:FormattedRefNum>RIPA-${sessionId}</portaloneapp:FormattedRefNum>
         <portaloneapp:ApplicationVersion>1</portaloneapp:ApplicationVersion>
         <portaloneapp:AttachmentsChanged>false</portaloneapp:AttachmentsChanged>
         <portaloneapp:Payment>
@@ -242,9 +242,7 @@ export function makeXmlString(
           <portaloneapp:ProposedUseApplication>
             <portaloneapp:DescriptionCPU>
               <common:IsProposedOperationBuilding>true</common:IsProposedOperationBuilding>
-              <common:OperationsDescription>${
-                passport.data?.["proposal.description"]
-              }</common:OperationsDescription>
+              <common:OperationsDescription/>
               <common:IsUseChange>true</common:IsUseChange>
               <common:ProposedUseDescription>${
                 passport.data?.["proposal.description"]
@@ -255,14 +253,10 @@ export function makeXmlString(
               <common:IsUseStarted>true</common:IsUseStarted>
             </portaloneapp:DescriptionCPU>
             <portaloneapp:GroundsCPU>
-              <common:UseLawfulnessReason>${
-                passport.data?.["proposal.description"]
-              }</common:UseLawfulnessReason>
+              <common:UseLawfulnessReason/>
               <common:SupportingInformation>
                 <common:AdditionalInformation>true</common:AdditionalInformation>
-                <common:Reference>${
-                  passport.data?.["proposal.description"]
-                }</common:Reference>
+                <common:Reference/>
               </common:SupportingInformation>
               <common:ExistingUse>
                 <common:A1/>
@@ -271,9 +265,7 @@ export function makeXmlString(
                 <common:A1/>
               </common:ProposedUse>
               <common:ProposedUseStatus>permanent</common:ProposedUseStatus>
-              <common:LawfulDevCertificateReason>${
-                passport.data?.["proposal.description"]
-              }</common:LawfulDevCertificateReason>
+              <common:LawfulDevCertificateReason/>
             </portaloneapp:GroundsCPU>
           </portaloneapp:ProposedUseApplication>
           ${/* TODO: Should applicant.interest be referenced here?  */ ""}
