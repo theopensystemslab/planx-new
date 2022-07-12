@@ -17,6 +17,14 @@ const SaveSuccess: React.FC<{ saveToEmail?: string; expiryDate?: string }> = ({
   saveToEmail,
   expiryDate,
 }) => {
+  const startNewApplication = () => {
+    // Drop sessionId from URL to route to ApplicationPath.SaveAndReturn, not ApplicationPath.Resume
+    const currentURL = new URL(window.location.href);
+    currentURL.searchParams.delete("sessionId");
+    window.history.pushState({}, document.title, currentURL);
+    window.location.reload();
+  };
+
   return (
     <>
       <StatusPage
@@ -27,7 +35,7 @@ const SaveSuccess: React.FC<{ saveToEmail?: string; expiryDate?: string }> = ({
         buttonText="Close tab"
         onButtonClick={() => window.close()}
         altButtonText="Start a new application"
-        onAltButtonClick={() => window.location.reload()}
+        onAltButtonClick={() => startNewApplication()}
       ></StatusPage>
     </>
   );
