@@ -416,10 +416,6 @@ new pulumi.Config("cloudflare").require("apiToken");
             name: "GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID",
             value: "9619f89d-5d33-4cb0-a365-42c431ea9db3",
           },
-          {
-            name: "HASURA_PLANX_API_KEY",
-            value: config.require("hasura-planx-api-key"),
-          },
           ...generateTeamSecrets(config),
         ],
       },
