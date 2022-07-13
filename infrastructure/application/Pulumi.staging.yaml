@@ -31,10 +31,20 @@ config:
     secure: AAABAI1jwOCiVQ7FdyxRXyZQh0VeN/z1R9t3Y2QXSdAgBq5cu7lT7UKRpDmtSS857F8GqOIAAedPXng11w0dmqWe1783BRtczE7tOQ==
   application:session-secret:
     secure: AAABABAEQraYY1NSIufhqZ1XYWTEqYgQl1M1CJmouRiD1mMx7LqKbyoYzAS4H3nfksuavw==
-  application:uniform-api-password:
-    secure: AAABAHGjA/gkaror7iagv50+ey99M+YhNQkK7rgs7DJNP4eOONIEeoYbLRLWScgS+dBAhRTeHA==
-  application:uniform-api-username:
-    secure: AAABAAoTJS/8qMxFzVzxeiYTh2FLYxIZJxt8yG7dlQqWJ7xIbiqZMXs=
+  application:uniform-client-aylesbury-vale:
+    secure: AAABAMYcpm1hTYJfIMPWiB2/PXpGqFao06z0Ou4WHFavhJY/rPmEjFt5Mi9QyUHee8FvfU0VWu+tJ85MJ2DU
+  application:uniform-client-chiltern:
+    secure: AAABAIimitDScyWDrmnC049KLGWrjgA4iQXyOnI2z0zIkqfqyrStqfOyHMjYqBrFv1PZ8wRdK8hlIk/BeWE=
+  application:uniform-client-lambeth:
+    secure: AAABAA5D9I/HLWmzyqq+mK6wjyagZgne4akWVCtGaoR4HPkw1M8WqlM26RM5o6KjwPTjFkLH55ltHLZHdA==
+  application:uniform-client-south-bucks:
+    secure: AAABAFGycAp8BUQZgMeffj7QzxsuszESwT41ac+NXWGZxfxwEabqQG7ATLQ4Pp6Wc3JeSbPCSQOXUxddiH/JfQ==
+  application:uniform-client-southwark:
+    secure: AAABALWeaw3/BHLqTXaV4YWbC4f6YF4R3uOq0KPM4a23K5tYiTNOPjGE458CM7TIYiPX0R58Xf/8rIml3sfN
+  application:uniform-client-wycombe:
+    secure: AAABAMigmJJU65iKBBR5l0H5iwP/oPFRPgkEHyLzJTVW9uZP2tHhAQzy+nQxHYzKwUKw6btpIOhceu9jzw==
+  application:uniform-submission-url: https://staging.identity.idoxgroup.com/agw/submission-api
+  application:uniform-token-url: https://staging.identity.idoxgroup.com/uaa/oauth/token
   aws:region: eu-west-2
   certificates:cloudflare-zone-id: dc27ac531ff8862559ed9ab5016c4953
   cloudflare:apiToken:

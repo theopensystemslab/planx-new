@@ -29,25 +29,21 @@ const sendToUniform = async (req, res, next) => {
     });
   }
 
-  // TODO create some type of lookup between req.params.localAuthority & Uniform-compatible organisations/organisationIds
-  //   defaults to "DLUHC" for testing now (more values supplied after idox install I guess?? we'll probably need to template env vars with org name suffix)
-  const org = "DLUHC";
-  const orgId = 185050;
-
-  // const org = "DLUHC 2";
-  // const orgId = 185051;
-
   try {
+    const { clientId, clientSecret } = getUniformClient(req.params.localAuthority);
     // Setup - Create the zip folder
     const zipPath = await createZip(req.body.xml, req.body.csv, req.body.files, req.body.sessionId);
 
     // Request 1/3 - Authenticate
-    const credentials = await authenticate(org);
+    const { 
+      access_token: token, 
+      "organisation-name": organisation, 
+      "organisation-id": organisationId 
+    } = await authenticate(clientId, clientSecret);
     
     // 2/3 - Create a submission
-    if (credentials?.access_token) {
-      const token = credentials.access_token;
-      const idoxSubmissionId = await createSubmission(token, org, orgId, req.body.sessionId);
+    if (token) {
+      const idoxSubmissionId = await createSubmission(token, organisation, organisationId, req.body.sessionId);
       
       // 3/3 - Attach the zip & create an audit entry
       if (idoxSubmissionId) {
@@ -188,21 +184,22 @@ async function createZip(stringXml, csv, files, sessionId) {
  * Logs in to the Idox Submission API using a username/password
  *   and returns an access token
  * 
- * @param {string} organisation - idox-generated organisation name
+ * @param {string} clientId - idox-generated client ID
+ * @param {string} clientSecret - idox-generated client secret
  * @returns {Promise} - access token
  */
-async function authenticate(organisation) {
-  const authEndpoint = "https://dev.identity.idoxgroup.com/uaa/oauth/token";
+async function authenticate(clientId, clientSecret) {
+  const authEndpoint = process.env.UNIFORM_TOKEN_URL;
 
   const authOptions = {
     method: "POST",
     headers: new Headers({
-      "Authorization": 'Basic ' + Buffer.from(process.env.UNIFORM_API_USERNAME + ":" + process.env.UNIFORM_API_PASSWORD).toString("base64"),
+      "Authorization": 'Basic ' + Buffer.from(clientId + ":" + clientSecret).toString("base64"),
       "Content-type": "application/x-www-form-urlencoded",
     }),
     body: new URLSearchParams({
-      client_id: process.env.UNIFORM_API_USERNAME,
-      client_secret: process.env.UNIFORM_API_PASSWORD,
+      client_id: clientId,
+      client_secret: clientSecret,
       grant_type: "client_credentials",
     }),
     redirect: "follow",
@@ -227,7 +224,7 @@ async function authenticate(organisation) {
  * @returns {Promise} - idox-generated submissionId
  */
 async function createSubmission(token, organisation, organisationId, sessionId = "TEST") {
-  const createSubmissionEndpoint = "https://dev.identity.idoxgroup.com/agw/submission-api/secure/submission";
+  const createSubmissionEndpoint = process.env.UNIFORM_SUBMISSION_URL + "/secure/submission"
 
   const createSubmissionOptions = {
     method: "POST",
@@ -276,7 +273,7 @@ async function attachArchive(token, submissionId, zipPath) {
     return false;
   }
 
-  const attachArchiveEndpoint = `https://dev.identity.idoxgroup.com/agw/submission-api/secure/submission/${submissionId}/archive`;
+  const attachArchiveEndpoint = process.env.UNIFORM_SUBMISSION_URL + `/secure/submission/${submissionId}/archive`;
 
   const formData = new FormData();
   formData.append("file", fs.createReadStream(zipPath));
@@ -313,7 +310,7 @@ async function attachArchive(token, submissionId, zipPath) {
  * @returns {Promise}
  */
 async function retrieveSubmission(token, submissionId) {
-  const getSubmissionEndpoint = `https://dev.identity.idoxgroup.com/agw/submission-api/secure/submission/${submissionId}`;
+  const getSubmissionEndpoint = process.env.UNIFORM_SUBMISSION_URL + `/secure/submission/${submissionId}`
 
   const getSubmissionOptions = {
     method: "GET",
@@ -363,6 +360,21 @@ const deleteFile = (path) => {
   } else {
     console.log(`Didn't find ${path}, nothing to delete`);
   }
+};
+
+/**
+ * Get id and secret of Uniform client which matches the provided Local Authority
+ * @param {string} localAuthority 
+ * @returns {object}
+ */
+const getUniformClient = (localAuthority) => {
+  // Greedily match any non-word characters
+  // XXX: Matches regex used in IAC (getCustomerSecrets.ts)
+  const regex = new RegExp(/\W+/g)
+  const client = process.env["UNIFORM_CLIENT_" + localAuthority.replace(regex, "_").toUpperCase()];
+  if (!client) throw Error("Unable to find Uniform client credentials");
+  const [ clientId, clientSecret ] = client.split(":");
+  return { clientId, clientSecret };
 };
 
 module.exports = { sendToUniform };

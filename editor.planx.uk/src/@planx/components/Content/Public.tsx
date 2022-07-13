@@ -16,8 +16,7 @@ interface StyleProps {
 
 const useClasses = makeStyles<Theme, StyleProps>((theme) => ({
   content: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
+    padding: theme.spacing(2),
     backgroundColor: (props) => props.color,
     color: (props) =>
       mostReadable(props.color || "#fff", ["#fff", "#000"])?.toHexString() ||

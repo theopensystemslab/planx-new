@@ -16,7 +16,7 @@ specifiers:
   '@material-ui/icons': ^4.9.1
   '@material-ui/lab': ^4.0.0-alpha.56
   '@material-ui/utils': ^5.0.0-beta.5
-  '@opensystemslab/map': ^0.5.4
+  '@opensystemslab/map': ^0.5.6
   '@react-theming/storybook-addon': ^1.1.3
   '@storybook/addon-actions': ^6.4.10
   '@storybook/addon-essentials': ^6.4.10
@@ -128,7 +128,7 @@ dependencies:
   '@material-ui/icons': 4.9.1_aca2900b4bcc0ae456c0c6b700ff3f91
   '@material-ui/lab': 4.0.0-alpha.56_aca2900b4bcc0ae456c0c6b700ff3f91
   '@material-ui/utils': 5.0.0-beta.5_react@17.0.2
-  '@opensystemslab/map': 0.5.4
+  '@opensystemslab/map': 0.5.6
   array-move: 3.0.1
   axios: 0.26.1
   camelcase-keys: 7.0.0
@@ -2269,12 +2269,12 @@ packages:
     dev: false
 
   /@mapbox/jsonlint-lines-primitives/2.0.2:
-    resolution: {integrity: sha1-zlblOfg1UrWNENZy6k1vya3HsjQ=}
+    resolution: {integrity: sha512-rY0o9A5ECsTQRVhv7tL/OyDpGAoUB4tTvLiW1DSzQGq4bvTPhNw1VpSNjDJc5GFZ2XuyOtSWSVN05qOtcD71qQ==}
     engines: {node: '>= 0.6'}
     dev: false
 
-  /@mapbox/mapbox-gl-style-spec/13.23.0:
-    resolution: {integrity: sha512-zI26XoK0UjGOvOEUUAoKlmFKHrSD8qIMCaoQBsFxNPzGIluryT32Z1m4aq7NtxEsrfE+qc2mPPXQg+iRllqbqA==}
+  /@mapbox/mapbox-gl-style-spec/13.25.0:
+    resolution: {integrity: sha512-ukBk13MyI/X4tjRfPaNCo4rJLrRJ7ZbANxjeQyGeLYJTF1DZxqkX9C8qlxnQlxYllBBDBWiYYX5lU1fIsm2jwg==}
     hasBin: true
     dependencies:
       '@mapbox/jsonlint-lines-primitives': 2.0.2
@@ -2288,11 +2288,11 @@ packages:
     dev: false
 
   /@mapbox/point-geometry/0.1.0:
-    resolution: {integrity: sha1-ioP5M1x4YO/6Lu7KJUMyqgru2PI=}
+    resolution: {integrity: sha512-6j56HdLTwWGO0fJPlrZtdU/B13q8Uwmo18Ck2GnGgN9PCFyKTZ3UbXeEdRFh18i9XQ92eH2VdtpJHpBD3aripQ==}
     dev: false
 
   /@mapbox/unitbezier/0.0.0:
-    resolution: {integrity: sha1-FWUb1VOme4WB+zmIEMmK2Go0Uk4=}
+    resolution: {integrity: sha512-HPnRdYO0WjFjRTSwO3frz1wKaU649OBFPX3Zo/2WZvuRi6zMiRGui8SnPQiQABgqCf8YikDe5t3HViTVw1WUzA==}
     dev: false
 
   /@material-ui/core/4.11.0_5539cae010396b202b015f3568914e95:
@@ -2543,15 +2543,15 @@ packages:
       mkdirp: 1.0.4
     dev: true
 
-  /@opensystemslab/map/0.5.4:
-    resolution: {integrity: sha512-kFkErsiIuXKVAdAjLs73TyNyLnX9ZLxQ8Qhr54yXvpF5yMs98tXIqQ1tCtgdQvjjXPh1KbHFLv1Vp3TuJng2pA==}
+  /@opensystemslab/map/0.5.6:
+    resolution: {integrity: sha512-WZHxu2Xmw/dTYmMh9SiSPveFEooxjwOiUTz+rq0skciwOlnf8H80SHejlxIzeLr8+yxm8Zx/6sR8Qnwmrj+sLw==}
     dependencies:
       '@turf/union': 6.5.0
       accessible-autocomplete: 2.0.4
-      govuk-frontend: 3.14.0
+      govuk-frontend: 4.2.0
       lit: 2.1.1
       ol: 6.12.0
-      ol-mapbox-style: 7.1.1
+      ol-mapbox-style: 8.1.2
       postcode: 5.1.0
       rambda: 7.0.1
     transitivePeerDependencies:
@@ -7908,7 +7908,7 @@ packages:
     dev: true
 
   /csscolorparser/1.0.3:
-    resolution: {integrity: sha1-s085HupNqPPpgjHizNjfnAQfFxs=}
+    resolution: {integrity: sha512-umPSgYwZkdFoUrH5hIq5kf0wPSXiro51nPw0j2K/c83KflkPSTBGMz6NJvMB+07VlL0y7VPo6QJcDjcgKTTm3w==}
     dev: false
 
   /cssdb/5.0.0:
@@ -10408,8 +10408,8 @@ packages:
     dev: true
     optional: true
 
-  /govuk-frontend/3.14.0:
-    resolution: {integrity: sha512-y7FTuihCSA8Hty+e9h0uPhCoNanCAN+CLioNFlPmlbeHXpbi09VMyxTcH+XfnMPY4Cp++7096v0rLwwdapTXnA==}
+  /govuk-frontend/4.2.0:
+    resolution: {integrity: sha512-IHbnz5DbnPjuCv4lQvtJGoCNAKAN6byKqmaej8hjd6Y/KTaAuw10npijeqfRJNO4WdDX9a34+n+SC/UmWdjfGQ==}
     engines: {node: '>= 4.2.0'}
     dev: false
 
@@ -13763,17 +13763,16 @@ packages:
   /ol-mapbox-style/6.8.2:
     resolution: {integrity: sha512-iObsecfgrCoMakFCwWWRTYXMy0X1bedJwbTgn6Im7igto+obRgmUoy/TZGBHQY1xEBczV4fVAzyyOkzQUNa8ug==}
     dependencies:
-      '@mapbox/mapbox-gl-style-spec': 13.23.0
+      '@mapbox/mapbox-gl-style-spec': 13.25.0
       mapbox-to-css-font: 2.4.1
       webfont-matcher: 1.1.0
     dev: false
 
-  /ol-mapbox-style/7.1.1:
-    resolution: {integrity: sha512-GLTEYiH/Ec9Zn1eS4S/zXyR2sierVrUc+OLVP8Ra0FRyqRhoYbXdko0b7OIeSHWdtJfHssWYefDOGxfTRUUZ/A==}
+  /ol-mapbox-style/8.1.2:
+    resolution: {integrity: sha512-Ay1zHi84Phqpu+EnzuDSIrjo2GdtOw3u9t8M34JM/RNKzaRlbGKpJW1c3hmkM2ZnMUFHecTXnd3ytrB+lrMs5A==}
     dependencies:
-      '@mapbox/mapbox-gl-style-spec': 13.23.0
+      '@mapbox/mapbox-gl-style-spec': 13.25.0
       mapbox-to-css-font: 2.4.1
-      webfont-matcher: 1.1.0
     dev: false
 
   /ol/6.12.0:
@@ -16565,7 +16564,7 @@ packages:
     dev: true
 
   /rw/1.3.3:
-    resolution: {integrity: sha1-P4Yt+pGrdmsUiF700BEkv9oHT7Q=}
+    resolution: {integrity: sha512-PdhdWy89SiZogBLaw42zdeqtRJ//zFd2PgQavcICDUgJT5oW10QCRKbJ6bg4r0/UY2M6BWd5tkxuGFRvCkgfHQ==}
     dev: false
 
   /rxjs/6.6.3:
@@ -17056,17 +17055,17 @@ packages:
     dev: false
 
   /sort-asc/0.1.0:
-    resolution: {integrity: sha1-q3md9h/HPqCVbHnEtTHtHp53J+k=}
+    resolution: {integrity: sha512-jBgdDd+rQ+HkZF2/OHCmace5dvpos/aWQpcxuyRs9QUbPRnkEJmYVo81PIGpjIdpOcsnJ4rGjStfDHsbn+UVyw==}
     engines: {node: '>=0.10.0'}
     dev: false
 
   /sort-desc/0.1.1:
-    resolution: {integrity: sha1-GYuMDN6wlcRjNBhh45JdTuNZqe4=}
+    resolution: {integrity: sha512-jfZacW5SKOP97BF5rX5kQfJmRVZP5/adDUTY8fCSPvNcXDVpUEe2pr/iKGlcyZzchRJZrswnp68fgk3qBXgkJw==}
     engines: {node: '>=0.10.0'}
     dev: false
 
   /sort-object/0.3.2:
-    resolution: {integrity: sha1-mODRme3kDgfGGoRAPGHWw7KQ+eI=}
+    resolution: {integrity: sha512-aAQiEdqFTTdsvUFxXm3umdo04J7MRljoVGbBlkH7BgNsMvVNAJyGj7C/wV1A8wHWAJj/YikeZbfuCKqhggNWGA==}
     engines: {node: '>=0.10.0'}
     dependencies:
       sort-asc: 0.1.0
@@ -18866,7 +18865,7 @@ packages:
     dev: true
 
   /webfont-matcher/1.1.0:
-    resolution: {integrity: sha1-mM6VCXsp4x++czBT4Q5XFkLRxsc=}
+    resolution: {integrity: sha512-ov8lMvF9wi4PD7fK2Axn9PQEpO9cYI0fIoGqErwd+wi8xacFFDmX114D5Q2Lw0Wlgmb+Qw/dKI2KTtimrJf85g==}
     dev: false
 
   /webidl-conversions/4.0.2:

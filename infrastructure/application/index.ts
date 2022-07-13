@@ -10,6 +10,8 @@ import * as mime from "mime";
 import * as tldjs from "tldjs";
 import * as url from "url";
 
+import { generateTeamSecrets } from './utils/generateTeamSecrets';
+
 const config = new pulumi.Config();
 
 const env = pulumi.getStack();
@@ -378,12 +380,6 @@ new pulumi.Config("cloudflare").require("apiToken");
             name: "HASURA_PLANX_API_KEY",
             value: config.require("hasura-planx-api-key"),
           },
-          ...["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].map((authority) => ({
-            name: `GOV_UK_PAY_TOKEN_${authority}`,
-            value: config.require(
-              `gov-uk-pay-token-${authority}`.toLowerCase()
-            ),
-          })),
           {
             name: "AIRBRAKE_PROJECT_ID",
             value: config.require("airbrake-project-id"),
@@ -393,12 +389,12 @@ new pulumi.Config("cloudflare").require("apiToken");
             value: config.require("airbrake-project-key"),
           },
           {
-            name: "UNIFORM_API_USERNAME",
-            value: config.require("uniform-api-username"),
+            name: "UNIFORM_TOKEN_URL",
+            value: config.require("uniform-token-url"),
           },
           {
-            name: "UNIFORM_API_PASSWORD",
-            value: config.require("uniform-api-password"),
+            name: "UNIFORM_SUBMISSION_URL",
+            value: config.require("uniform-submission-url"),
           },
           {
             name: "GOVUK_NOTIFY_API_KEY_TEAM",
@@ -424,6 +420,7 @@ new pulumi.Config("cloudflare").require("apiToken");
             name: "HASURA_PLANX_API_KEY",
             value: config.require("hasura-planx-api-key"),
           },
+          ...generateTeamSecrets(config),
         ],
       },
     },
