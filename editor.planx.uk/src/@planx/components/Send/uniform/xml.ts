@@ -71,7 +71,7 @@ export function makeXmlString(
         <portaloneapp:ApplicationTo>00QA</portaloneapp:ApplicationTo>
         <portaloneapp:DateSubmitted>${proposalCompletionDate}</portaloneapp:DateSubmitted>
         <portaloneapp:RefNum>${sessionId}</portaloneapp:RefNum>
-        <portaloneapp:FormattedRefNum>RIPA-${sessionId}</portaloneapp:FormattedRefNum>
+        <portaloneapp:FormattedRefNum>${sessionId}</portaloneapp:FormattedRefNum>
         <portaloneapp:ApplicationVersion>1</portaloneapp:ApplicationVersion>
         <portaloneapp:AttachmentsChanged>false</portaloneapp:AttachmentsChanged>
         <portaloneapp:Payment>
