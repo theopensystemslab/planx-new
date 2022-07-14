@@ -212,8 +212,8 @@ export function makeXmlString(
           }</bs7666:UniquePropertyReferenceNumber>
         </bs7666:BS7666Address>
         <common:SiteGridRefence>
-          <bs7666:X>${passport.data?.["_address"]?.["x"]}</bs7666:X>
-          <bs7666:Y>${passport.data?.["_address"]?.["y"]}</bs7666:Y>
+          <bs7666:X>${Math.round(passport.data?.["_address"]?.["x"])}</bs7666:X>
+          <bs7666:Y>${Math.round(passport.data?.["_address"]?.["y"])}</bs7666:Y>
         </common:SiteGridRefence>
       </portaloneapp:SiteLocation>
       ${getApplicationType()}
