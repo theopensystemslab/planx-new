@@ -289,10 +289,10 @@ jobs:
     steps:
       - name: API healthcheck
         run: |
-          curl --fail -sv --retry 5 --retry-delay 30 --retry-connrefused https://api.${{ env.FULL_DOMAIN }}
+          timeout 150s bash -c "until curl --fail https://api.${{ env.FULL_DOMAIN }}; do sleep 1; done"
       - name: Hasura healthcheck
         run: |
-          curl --fail -sv --retry 5 --retry-delay 30 --retry-connrefused https://hasura.${{ env.FULL_DOMAIN }}/healthz
+          timeout 150s bash -c "until curl --fail https://hasura.${{ env.FULL_DOMAIN }}/healthz; do sleep 1; done"
       - name: Editor healthcheck
         run: |
-          curl --fail -sv --retry 5 --retry-delay 30 --retry-connrefused https://${{ env.FULL_DOMAIN }}
+          timeout 150s bash -c "until curl --fail https://${{ env.FULL_DOMAIN }}; do sleep 1; done"
