@@ -16,30 +16,17 @@ enum Status {
 const SaveSuccess: React.FC<{ saveToEmail?: string; expiryDate?: string }> = ({
   saveToEmail,
   expiryDate,
-}) => {
-  const startNewApplication = () => {
-    // Drop sessionId from URL to route to ApplicationPath.SaveAndReturn, not ApplicationPath.Resume
-    const currentURL = new URL(window.location.href);
-    currentURL.searchParams.delete("sessionId");
-    window.history.pushState({}, document.title, currentURL);
-    window.location.reload();
-  };
-
-  return (
-    <>
-      <StatusPage
-        bannerHeading="Application saved"
-        bannerText={`We have sent a link to ${saveToEmail}. Use that link to continue your application.`}
-        cardText={`You have until ${expiryDate} to complete and send this application.`}
-        showDownloadLink
-        buttonText="Close tab"
-        onButtonClick={() => window.close()}
-        altButtonText="Start a new application"
-        onAltButtonClick={() => startNewApplication()}
-      ></StatusPage>
-    </>
-  );
-};
+}) => (
+  <StatusPage
+    bannerHeading="Application saved"
+    bannerText={`We have sent a link to ${saveToEmail}. Use that link to continue your application.`}
+    cardText={`You have until ${expiryDate} to complete and send this application.`}
+    showDownloadLink
+    buttonText="Close tab"
+    onButtonClick={() => window.close()}
+    additionalOption="startNewApplication"
+  ></StatusPage>
+);
 
 const SaveError: React.FC = () => {
   return (

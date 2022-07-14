@@ -123,27 +123,16 @@ const ValidationSuccess: React.FC<{
 
 const InvalidSession: React.FC<{
   retry: () => void;
-}> = ({ retry }) => {
-  const startNewApplication = () => {
-    // Drop sessionId from URL to route to ApplicationPath.SaveAndReturn, not ApplicationPath.Resume
-    const currentURL = new URL(window.location.href);
-    currentURL.searchParams.delete("sessionId");
-    window.history.pushState({}, document.title, currentURL);
-    window.location.reload();
-  };
-
-  return (
-    <StatusPage
-      bannerHeading="We can't find your application"
-      bannerText='Click "Try Again" enter your email address again, or start a new application'
-      cardText=""
-      buttonText="Try again"
-      onButtonClick={retry}
-      altButtonText="Start a new application"
-      onAltButtonClick={() => startNewApplication()}
-    ></StatusPage>
-  );
-};
+}> = ({ retry }) => (
+  <StatusPage
+    bannerHeading="We can't find your application"
+    bannerText='Click "Try Again" enter your email address again, or start a new application'
+    cardText=""
+    buttonText="Try again"
+    onButtonClick={retry}
+    additionalOption="startNewApplication"
+  ></StatusPage>
+);
 
 /**
  * If an email is passed in as a query param, do not prompt a user for this
