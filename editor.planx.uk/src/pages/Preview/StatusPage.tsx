@@ -19,9 +19,8 @@ interface Props {
   cardText: string;
   buttonText?: string;
   onButtonClick?: () => void;
-  altButtonText?: string;
-  onAltButtonClick?: () => void;
   showDownloadLink?: boolean;
+  additionalOption?: "startNewApplication";
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -37,9 +36,8 @@ const StatusPage: React.FC<Props> = ({
   cardText,
   buttonText,
   onButtonClick,
-  altButtonText,
-  onAltButtonClick,
   showDownloadLink,
+  additionalOption,
 }) => {
   const [breadcrumbs, flow, passport, sessionId] = useStore((state) => [
     state.breadcrumbs,
@@ -53,6 +51,14 @@ const StatusPage: React.FC<Props> = ({
 
   const theme = useTheme();
   const classes = useStyles();
+
+  // Drop sessionId from URL to route to ApplicationPath.SaveAndReturn, not ApplicationPath.Resume
+  const startNewApplication = () => {
+    const currentURL = new URL(window.location.href);
+    currentURL.searchParams.delete("sessionId");
+    window.history.pushState({}, document.title, currentURL);
+    window.location.reload();
+  };
 
   return (
     <>
@@ -84,14 +90,14 @@ const StatusPage: React.FC<Props> = ({
             {buttonText}
           </Button>
         )}
-        {altButtonText && (
+        {additionalOption === "startNewApplication" && (
           <>
             <Typography variant="body2">or</Typography>
             <ButtonBase
               className={classes.linkButton}
-              onClick={onAltButtonClick}
+              onClick={startNewApplication}
             >
-              <Typography variant="body2">{altButtonText}</Typography>
+              <Typography variant="body2">Start new application</Typography>
             </ButtonBase>
           </>
         )}
