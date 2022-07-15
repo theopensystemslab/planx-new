@@ -56,7 +56,7 @@ const ResultReason: React.FC<IResultReason> = ({
   response,
   showChangeButton = false,
 }) => {
-  const record = useStore((state) => state.record);
+  const changeAnswer = useStore((state) => state.changeAnswer);
   const [expanded, setExpanded] = React.useState(false);
 
   const classes = useClasses();
@@ -141,7 +141,7 @@ const ResultReason: React.FC<IResultReason> = ({
             className={classes.changeButton}
             onClick={(event) => {
               event.stopPropagation();
-              record(id);
+              changeAnswer(id);
             }}
           >
             Change

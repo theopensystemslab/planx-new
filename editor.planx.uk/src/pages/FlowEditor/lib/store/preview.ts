@@ -83,7 +83,7 @@ export const previewStore = (
   // XXX: This function assumes there's only one "Review" component per flow.
   changeAnswer(id: string) {
     const { record } = get();
-    set({ restore: true, changedNode: id });
+    set({ changedNode: id });
     record(id, undefined);
   },
 

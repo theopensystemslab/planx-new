@@ -1,0 +1,57 @@
+{
+  "_root": {
+    "edges": ["rCjETwjwE3", "vgj2UNYK9r", "RmBM70HauS"]
+  },
+  "PudhfeKPHL": {
+    "data": {
+      "val": "false",
+      "text": "No"
+    },
+    "type": 200
+  },
+  "RmBM70HauS": {
+    "data": {
+      "title": "Check your answers before sending your application"
+    },
+    "type": 600
+  },
+  "X9JjnbPpnd": {
+    "data": {
+      "val": "true",
+      "text": "Yes"
+    },
+    "type": 200
+  },
+  "b0qdvLAxIL": {
+    "data": {
+      "val": "true",
+      "flag": "PLANNING_PERMISSION_REQUIRED",
+      "text": "Yes"
+    },
+    "type": 200
+  },
+  "rCjETwjwE3": {
+    "data": {
+      "fn": "application.fee.exemption.disability",
+      "text": "Does it qualify for a disability exemption?"
+    },
+    "type": 100,
+    "edges": ["b0qdvLAxIL", "ykNZocRJtQ"]
+  },
+  "vgj2UNYK9r": {
+    "data": {
+      "fn": "application.fee.exemption.disability",
+      "text": "Another disability question",
+      "description": "<p>This one will be auto-answered</p>"
+    },
+    "type": 100,
+    "edges": ["X9JjnbPpnd", "PudhfeKPHL"]
+  },
+  "ykNZocRJtQ": {
+    "data": {
+      "val": "false",
+      "text": "No"
+    },
+    "type": 200
+  }
+}
