@@ -13,6 +13,7 @@ import { PublicProps } from "../ui";
 import { getParams } from "./bops";
 import { DEFAULT_DESTINATION, Destination, Send } from "./model";
 import { getUniformParams } from "./uniform";
+import { UniformInstance } from "./uniform/applicationType";
 
 export type Props = PublicProps<Send>;
 
@@ -47,7 +48,7 @@ const SendComponent: React.FC<Props> = ({ destination = DEFAULT_DESTINATION, ...
     teamSlug = passport.data?.["property.localAuthorityDistrict"]
       ?.filter((name: string) => name !== "Buckinghamshire")[0]
       ?.toLowerCase()
-      ?.replace(" ", "-");
+      ?.replace(/\W+/g, "-");
   }
 
   const destinationUrl = `${process.env.REACT_APP_API_URL}/${destination}/${teamSlug}`;
@@ -60,7 +61,15 @@ const SendComponent: React.FC<Props> = ({ destination = DEFAULT_DESTINATION, ...
   const request: any = useAsync(async () =>
     axios.post(
       useStagingUrlIfTestApplication(passport)(destinationUrl),
-      params
+      props.destination === Destination.BOPS
+        ? getParams(breadcrumbs, flow, passport, sessionId)
+        : getUniformParams(
+            breadcrumbs,
+            flow,
+            passport,
+            sessionId,
+            teamSlug as UniformInstance
+          )
     )
   );
 
