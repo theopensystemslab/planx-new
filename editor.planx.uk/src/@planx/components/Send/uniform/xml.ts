@@ -40,9 +40,10 @@ export function makeXmlString(
 
   const userUploadedFiles: string[] = [];
   files?.forEach((file) => {
+    const uniqueFilename = file.split("/").slice(-2).join("-");
     userUploadedFiles.push(`
       <common:FileAttachment>
-        <common:FileName>${file.split("/").pop()}</common:FileName>
+        <common:FileName>${uniqueFilename}</common:FileName>
         <common:Reference>Other</common:Reference>
       </common:FileAttachment>
     `);
