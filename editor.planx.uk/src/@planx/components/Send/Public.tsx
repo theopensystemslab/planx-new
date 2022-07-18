@@ -14,7 +14,7 @@ import { getUniformParams } from "./uniform";
 
 export type Props = PublicProps<Send>;
 
-const SendComponent: React.FC<Props> = (props) => {
+const SendComponent: React.FC<Props> = ({ destination = Destination.BOPS, ...props }) => {
   const [breadcrumbs, flow, passport, sessionId] = useStore((state) => [
     state.breadcrumbs,
     state.flow,
@@ -25,7 +25,7 @@ const SendComponent: React.FC<Props> = (props) => {
   let teamSlug = useTeamSlug();
   // Bucks has 4 legacy instances of Uniform, set teamSlug to pre-merger council name
   if (
-    props.destination === Destination.Uniform &&
+    destination === Destination.Uniform &&
     teamSlug === "buckinghamshire"
   ) {
     teamSlug = passport.data?.["property.localAuthorityDistrict"]
@@ -34,12 +34,12 @@ const SendComponent: React.FC<Props> = (props) => {
       ?.replace(" ", "-");
   }
 
-  const destinationUrl = `${process.env.REACT_APP_API_URL}/${props.destination}/${teamSlug}`;
+  const destinationUrl = `${process.env.REACT_APP_API_URL}/${destination}/${teamSlug}`;
 
   const request = useAsync(async () =>
     axios.post(
       useStagingUrlIfTestApplication(passport)(destinationUrl),
-      props.destination === Destination.BOPS
+      destination === Destination.BOPS
         ? getParams(breadcrumbs, flow, passport, sessionId)
         : getUniformParams(breadcrumbs, flow, passport, sessionId)
     )
@@ -49,7 +49,7 @@ const SendComponent: React.FC<Props> = (props) => {
     const isReady = !request.loading && !request.error && request.value;
 
     if (
-      props.destination === Destination.BOPS &&
+      destination === Destination.BOPS &&
       isReady &&
       props.handleSubmit
     ) {
@@ -59,7 +59,7 @@ const SendComponent: React.FC<Props> = (props) => {
     }
 
     if (
-      props.destination === Destination.Uniform &&
+      destination === Destination.Uniform &&
       isReady &&
       props.handleSubmit
     ) {
@@ -77,7 +77,7 @@ const SendComponent: React.FC<Props> = (props) => {
     return (
       <Card>
         <DelayedLoadingIndicator
-          text={`Submitting your application to ${props.destination?.toUpperCase()} ${teamSlug?.toUpperCase()}...`}
+          text={`Submitting your application to ${destination?.toUpperCase()} ${teamSlug?.toUpperCase()}...`}
           msDelayBeforeVisible={0}
         />
       </Card>
