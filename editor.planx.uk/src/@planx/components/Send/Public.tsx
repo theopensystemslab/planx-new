@@ -9,12 +9,12 @@ import Card from "../shared/Preview/Card";
 import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
 import { PublicProps } from "../ui";
 import { getParams } from "./bops";
-import { Destination, Send } from "./model";
+import { DEFAULT_DESTINATION, Destination, Send } from "./model";
 import { getUniformParams } from "./uniform";
 
 export type Props = PublicProps<Send>;
 
-const SendComponent: React.FC<Props> = ({ destination = Destination.BOPS, ...props }) => {
+const SendComponent: React.FC<Props> = ({ destination = DEFAULT_DESTINATION, ...props }) => {
   const [breadcrumbs, flow, passport, sessionId] = useStore((state) => [
     state.breadcrumbs,
     state.flow,
