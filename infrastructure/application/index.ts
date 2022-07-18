@@ -20,6 +20,7 @@ const networking = new pulumi.StackReference(`planx/networking/${env}`);
 const data = new pulumi.StackReference(`planx/data/${env}`);
 
 // The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the CloudFlare API token is missing.
+// You can generate tokens here: https://dash.cloudflare.com/profile/api-tokens
 new pulumi.Config("cloudflare").require("apiToken");
 
 export = async () => {
