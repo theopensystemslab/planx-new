@@ -36,12 +36,15 @@ const SendComponent: React.FC<Props> = ({ destination = DEFAULT_DESTINATION, ...
 
   const destinationUrl = `${process.env.REACT_APP_API_URL}/${destination}/${teamSlug}`;
 
+  const params = {
+    [Destination.BOPS]: getParams(breadcrumbs, flow, passport, sessionId),
+    [Destination.Uniform]: getUniformParams(breadcrumbs, flow, passport, sessionId)
+  }[destination];
+
   const request = useAsync(async () =>
     axios.post(
       useStagingUrlIfTestApplication(passport)(destinationUrl),
-      destination === Destination.BOPS
-        ? getParams(breadcrumbs, flow, passport, sessionId)
-        : getUniformParams(breadcrumbs, flow, passport, sessionId)
+      params
     )
   );
 
