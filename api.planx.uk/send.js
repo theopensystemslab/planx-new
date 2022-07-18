@@ -129,7 +129,8 @@ async function createZip(stringXml, csv, files, sessionId) {
     // download any user-uploaded files from S3 to the tmp directory, add them to the zip
     if (files) {
       for (let file of files) {
-        const filePath = path.join(tmpDir, file.split("/").pop());
+        const uniqueFilename = file.split("/").slice(-2).join("-");
+        const filePath = path.join(tmpDir, uniqueFilename);
         await downloadFile(file, filePath, zip);
       }
     }
