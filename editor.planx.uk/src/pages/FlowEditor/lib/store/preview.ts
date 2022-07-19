@@ -247,6 +247,8 @@ export const previewStore = (
     return passport;
   },
 
+  // record() notably handles removing cachedBreadcrumbs for dependent component types
+  //   ie if you 'go back' to change your address, DrawBoundary and PlanningConstraints shouldn't be retained because they reference the property site passport, but answers to other questions can be retained
   record(id, userData) {
     const {
       breadcrumbs,
