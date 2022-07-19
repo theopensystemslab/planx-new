@@ -49,29 +49,18 @@ export function makeXmlString(
   });
 
   const getApplicationType = (): string => {
-    const planXAppType: PlanXAppTypes = passport.data?.["application.type"];
+    const planXAppType: PlanXAppTypes =
+      passport.data?.["application.type"] || "ldc.existing";
     const uniformAppType: UniformAppTypes = appTypeLookup[planXAppType];
 
-    if (planXAppType && uniformAppType) {
-      return `
-        <portaloneapp:ApplicationScenario>
-          <portaloneapp:ScenarioNumber>${uniformAppType.scenarioNumber}</portaloneapp:ScenarioNumber>
-        </portaloneapp:ApplicationScenario>
-        <portaloneapp:ConsentRegimes>
-          <portaloneapp:ConsentRegime>${uniformAppType.consentRegime}</portaloneapp:ConsentRegime>
-        </portaloneapp:ConsentRegimes>
-      `;
-    } else {
-      // if this flow is missing the "application.type" passport var, set default values
-      return `
-        <portaloneapp:ApplicationScenario>
-          <portaloneapp:ScenarioNumber>14</portaloneapp:ScenarioNumber>
-        </portaloneapp:ApplicationScenario>
-        <portaloneapp:ConsentRegimes>
-          <portaloneapp:ConsentRegime>Certificate of Lawfulness</portaloneapp:ConsentRegime>
-        </portaloneapp:ConsentRegimes>
-      `;
-    }
+    return `
+      <portaloneapp:ApplicationScenario>
+        <portaloneapp:ScenarioNumber>${uniformAppType.scenarioNumber}</portaloneapp:ScenarioNumber>
+      </portaloneapp:ApplicationScenario>
+      <portaloneapp:ConsentRegimes>
+        <portaloneapp:ConsentRegime>${uniformAppType.consentRegime}</portaloneapp:ConsentRegime>
+      </portaloneapp:ConsentRegimes>
+    `;
   };
 
   // this string template represents the full proposal.xml schema including prefixes
