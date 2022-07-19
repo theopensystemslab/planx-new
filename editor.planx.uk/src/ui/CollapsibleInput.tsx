@@ -9,7 +9,6 @@ export interface Props {
   children: JSX.Element[] | JSX.Element;
   handleChange: (ev: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
-  defaultValue?: string;
   name: string;
 }
 
@@ -41,7 +40,6 @@ const CollapsibleInput: React.FC<Props> = (props: Props) => {
           <Input
             multiline
             bordered
-            defaultValue={props.defaultValue || ""}
             value={props.value}
             name={props.name}
             onChange={props.handleChange}
