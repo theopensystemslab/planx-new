@@ -227,8 +227,8 @@ export function makeXmlString(
           }</bs7666:UniquePropertyReferenceNumber>
         </bs7666:BS7666Address>
         <common:SiteGridRefence>
-          <bs7666:X>${passport.data?.["_address"]?.["x"]}</bs7666:X>
-          <bs7666:Y>${passport.data?.["_address"]?.["y"]}</bs7666:Y>
+          <bs7666:X>${Math.round(passport.data?.["_address"]?.["x"])}</bs7666:X>
+          <bs7666:Y>${Math.round(passport.data?.["_address"]?.["y"])}</bs7666:Y>
         </common:SiteGridRefence>
       </portaloneapp:SiteLocation>
       ${getApplicationType()}
@@ -257,9 +257,7 @@ export function makeXmlString(
           <portaloneapp:ProposedUseApplication>
             <portaloneapp:DescriptionCPU>
               <common:IsProposedOperationBuilding>true</common:IsProposedOperationBuilding>
-              <common:OperationsDescription>${
-                passport.data?.["proposal.description"]
-              }</common:OperationsDescription>
+              <common:OperationsDescription/>
               <common:IsUseChange>true</common:IsUseChange>
               <common:ProposedUseDescription>${
                 passport.data?.["proposal.description"]
@@ -270,14 +268,10 @@ export function makeXmlString(
               <common:IsUseStarted>true</common:IsUseStarted>
             </portaloneapp:DescriptionCPU>
             <portaloneapp:GroundsCPU>
-              <common:UseLawfulnessReason>${
-                passport.data?.["proposal.description"]
-              }</common:UseLawfulnessReason>
+              <common:UseLawfulnessReason/>
               <common:SupportingInformation>
                 <common:AdditionalInformation>true</common:AdditionalInformation>
-                <common:Reference>${
-                  passport.data?.["proposal.description"]
-                }</common:Reference>
+                <common:Reference/>
               </common:SupportingInformation>
               <common:ExistingUse>
                 <common:A1/>
@@ -286,9 +280,7 @@ export function makeXmlString(
                 <common:A1/>
               </common:ProposedUse>
               <common:ProposedUseStatus>permanent</common:ProposedUseStatus>
-              <common:LawfulDevCertificateReason>${
-                passport.data?.["proposal.description"]
-              }</common:LawfulDevCertificateReason>
+              <common:LawfulDevCertificateReason/>
             </portaloneapp:GroundsCPU>
           </portaloneapp:ProposedUseApplication>
           ${/* TODO: Should applicant.interest be referenced here?  */ ""}
