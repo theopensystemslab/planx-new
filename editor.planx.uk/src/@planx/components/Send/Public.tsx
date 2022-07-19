@@ -1,3 +1,5 @@
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -14,6 +16,19 @@ import { getUniformParams } from "./uniform";
 
 export type Props = PublicProps<Send>;
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& *": {
+      fontFamily: "Inter, sans-serif",
+    },
+  },
+  errorSummary: {
+    marginTop: theme.spacing(1),
+    padding: theme.spacing(3),
+    border: `5px solid #E91B0C`,
+  },
+}));
+
 const SendComponent: React.FC<Props> = ({ destination = DEFAULT_DESTINATION, ...props }) => {
   const [breadcrumbs, flow, passport, sessionId] = useStore((state) => [
     state.breadcrumbs,
@@ -21,6 +36,7 @@ const SendComponent: React.FC<Props> = ({ destination = DEFAULT_DESTINATION, ...
     state.computePassport(),
     state.sessionId,
   ]);
+  const classes = useStyles();
 
   let teamSlug = useTeamSlug();
   // Bucks has 4 legacy instances of Uniform, set teamSlug to pre-merger council name
@@ -41,7 +57,7 @@ const SendComponent: React.FC<Props> = ({ destination = DEFAULT_DESTINATION, ...
     [Destination.Uniform]: getUniformParams(breadcrumbs, flow, passport, sessionId)
   }[destination];
 
-  const request = useAsync(async () =>
+  const request: any = useAsync(async () =>
     axios.post(
       useStagingUrlIfTestApplication(passport)(destinationUrl),
       params
@@ -85,8 +101,25 @@ const SendComponent: React.FC<Props> = ({ destination = DEFAULT_DESTINATION, ...
         />
       </Card>
     );
+  } else if (
+    request.error &&
+    request.error.response?.data?.error?.endsWith("local authority")
+  ) {
+    // Display an error message if this local authority/team isn't configured for the selected destination
+    return (
+      <Card>
+        <div className={classes.errorSummary} role="status">
+          <Typography variant="h5" component="h3" gutterBottom>
+            Cannot submit your application
+          </Typography>
+          <Typography variant="body2">
+            {request.error.response.data.error}.
+          </Typography>
+        </div>
+      </Card>
+    );
   } else if (request.error) {
-    // Throw error so that they're caught by our error boundaries and our error logging tool
+    // Throw all other errors so that they're caught by our error boundaries and our error logging tool
     throw request.error;
   } else {
     return (

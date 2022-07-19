@@ -49,7 +49,8 @@ export function makeXmlString(
   });
 
   const getApplicationType = (): string => {
-    const planXAppType: PlanXAppTypes = passport.data?.["application.type"];
+    const planXAppType: PlanXAppTypes =
+      passport.data?.["application.type"] || "ldc.existing";
     const uniformAppType: UniformAppTypes = appTypeLookup[planXAppType];
 
     return `
@@ -137,6 +138,9 @@ export function makeXmlString(
           </common:Telephone>
         </common:ContactDetails>
       </portaloneapp:Applicant>
+      ${
+        /* TODO: Check for "application.agent.." || "applicant.proxy.." variables in this section??  */ ""
+      }
       <portaloneapp:Agent>
         <common:PersonName>
         <pdt:PersonNameTitle>${
@@ -289,6 +293,9 @@ export function makeXmlString(
         <common:DeclarationMade>${
           passport.data?.["application.declaration.accurate"]
         }</common:DeclarationMade>
+        ${
+          /* TODO: Update PersonRole value based on planx roles applicant/agent/proxy */ ""
+        }
         <common:Signatory PersonRole="Agent"/>
       </portaloneapp:Declaration>
     </portaloneapp:Proposal>

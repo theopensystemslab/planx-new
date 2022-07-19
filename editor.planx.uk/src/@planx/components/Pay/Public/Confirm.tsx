@@ -55,6 +55,11 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.main,
     textDecoration: "underline",
   },
+  errorSummary: {
+    marginTop: theme.spacing(1),
+    padding: theme.spacing(3),
+    border: `5px solid #E91B0C`,
+  },
 }));
 
 interface Props {
@@ -63,6 +68,7 @@ interface Props {
   fee: number;
   buttonTitle?: string;
   onConfirm: () => void;
+  error?: string;
 }
 
 export default function Confirm(props: Props) {
@@ -100,23 +106,37 @@ export default function Confirm(props: Props) {
         </Container>
       </div>
 
-      <Card>
-        <div className={classes.root}>
-          <Typography variant="h3">How to pay</Typography>
-          <Box py={3}>
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              onClick={props.onConfirm}
-            >
-              {props.buttonTitle || "Pay using GOV.UK Pay"}
-            </Button>
-          </Box>
+      {!props.error ? (
+        <Card>
+          <div className={classes.root}>
+            <Typography variant="h3">How to pay</Typography>
+            <Box py={3}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                onClick={props.onConfirm}
+              >
+                {props.buttonTitle || "Pay using GOV.UK Pay"}
+              </Button>
+            </Box>
 
-          <SuggestionDrawer />
-        </div>
-      </Card>
+            <SuggestionDrawer />
+          </div>
+        </Card>
+      ) : (
+        <Card handleSubmit={props.onConfirm} isValid>
+          <div className={classes.errorSummary} role="status">
+            <Typography variant="h5" component="h3" gutterBottom>
+              {props.error}
+            </Typography>
+            <Typography variant="body2">
+              Click continue to skip payment and proceed with your application
+              for testing.
+            </Typography>
+          </div>
+        </Card>
+      )}
     </Box>
   );
 }
