@@ -40,7 +40,7 @@ export function makeXmlString(
 
   const userUploadedFiles: string[] = [];
   files?.forEach((file) => {
-    // Must match the uniqueFilename generated in send.js
+    // Must match the unique filename in api.planx.uk/send.js
     const uniqueFilename = file.split("/").slice(-2).join("-");
     userUploadedFiles.push(`
       <common:FileAttachment>
