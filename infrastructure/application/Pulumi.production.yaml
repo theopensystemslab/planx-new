@@ -43,7 +43,7 @@ config:
   application:uniform-client-southwark:
     secure: AAABAPU5mofUcMemIN579HhHs8LVwH/ikqLTUinpj1qNmmesfZUBKRrPUUtTuqJ7B0YDnxNB8uZb8UkGy5y8
   application:uniform-client-wycombe:
-    secure: AAABAOekVYcOih6KmOn6s2PYUGydT6i8FRSLw2jfFj5qt2uPs9QbZrmqbvvH8OVLuKKpfGcKnN1W9YXsHQ==
+    secure: AAABABSDO6aSlHFLy4RclrYJDIKNQdlgDo12EeGDzuMD325xo//ABR0yGFl4DzuyU+33TtrAwqgvtxZe1Q==
   application:uniform-submission-url: https://identity.idoxgroup.com/agw/submission-api
   application:uniform-token-url: https://identity.idoxgroup.com/uaa/oauth/token
   aws:region: eu-west-2
