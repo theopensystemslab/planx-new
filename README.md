@@ -2,6 +2,12 @@
 
 ## https://editor.planx.uk
 
+### Status pages
+
+- Staging: https://status.planx.dev
+- Production: https://status.planx.uk
+- GIS: https://gis-status.planx.uk (pass: `geography!`)
+
 ### Running Locally
 
 1. [Download and install Docker](https://docs.docker.com/get-docker/) if you don't have it already
