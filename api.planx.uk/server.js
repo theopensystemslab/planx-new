@@ -254,69 +254,80 @@ assert(process.env.BOPS_API_TOKEN);
   assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
 });
 
-app.post("/bops/:localAuthority", (req, res) => {
-  // a local or staging API instance should send to the BOPS staging endpoint
-  // production should send to the BOPS production endpoint
-  const domain = `https://${req.params.localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
-  const target = `${domain}/api/v1/planning_applications`;
+app.post("/bops/:localAuthority", (req, res, next) => {
+  // confirm this local authority (aka team) is supported by BOPS before creating the proxy
+  //   XXX: we check this outside of the proxy because domain-specific errors (eg 404 "No Local Authority Found") won't bubble up, rather the proxy will throw its' own "Network Error"
+  const isSupported = ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].includes(req.params.localAuthority.toUpperCase());
 
-  useProxy({
-    headers: {
-      ...req.headers,
-      Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
-    },
-    pathRewrite: () => "",
-    target,
-    selfHandleResponse: true,
-    onProxyReq: fixRequestBody,
-    onProxyRes: responseInterceptor(
-      async (responseBuffer, proxyRes, req, res) => {
-        const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
+  if (isSupported) {
+    // a local or staging API instance should send to the BOPS staging endpoint
+    // production should send to the BOPS production endpoint
+    const domain = `https://${req.params.localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
+    const target = `${domain}/api/v1/planning_applications`;
 
-        const applicationId = await client.request(
-          `
-            mutation CreateApplication(
-              $bops_id: String = "",
-              $destination_url: String = "",
-              $request: jsonb = "",
-              $req_headers: jsonb = "",
-              $response: jsonb = "",
-              $response_headers: jsonb = "",
-              $session_id: String = "",
-            ) {
-              insert_bops_applications_one(object: {
-                bops_id: $bops_id,
-                destination_url: $destination_url,
-                request: $request,
-                req_headers: $req_headers,
-                response: $response,
-                response_headers: $response_headers,
-                session_id: $session_id,
-              }) {
-                id
+    useProxy({
+      headers: {
+        ...req.headers,
+        Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
+      },
+      pathRewrite: () => "",
+      target,
+      selfHandleResponse: true,
+      onProxyReq: fixRequestBody,
+      onProxyRes: responseInterceptor(
+        async (responseBuffer, proxyRes, req, res) => {
+          const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
+
+          const applicationId = await client.request(
+            `
+              mutation CreateApplication(
+                $bops_id: String = "",
+                $destination_url: String = "",
+                $request: jsonb = "",
+                $req_headers: jsonb = "",
+                $response: jsonb = "",
+                $response_headers: jsonb = "",
+                $session_id: String = "",
+              ) {
+                insert_bops_applications_one(object: {
+                  bops_id: $bops_id,
+                  destination_url: $destination_url,
+                  request: $request,
+                  req_headers: $req_headers,
+                  response: $response,
+                  response_headers: $response_headers,
+                  session_id: $session_id,
+                }) {
+                  id
+                }
               }
+            `,
+            {
+              bops_id: bopsResponse.id,
+              destination_url: target,
+              request: req.body,
+              req_headers: req.headers,
+              response: bopsResponse,
+              response_headers: proxyRes.headers,
+              session_id: req.body?.planx_debug_data?.session_id,
             }
-          `,
-          {
-            bops_id: bopsResponse.id,
-            destination_url: target,
-            request: req.body,
-            req_headers: req.headers,
-            response: bopsResponse,
-            response_headers: proxyRes.headers,
-            session_id: req.body?.planx_debug_data?.session_id,
-          }
-        );
+          );
 
-        return JSON.stringify({
-          application: {
-            ...applicationId.insert_bops_applications_one,
-            bopsResponse,
-          },
-        });
-      }
-    ),
-  })(req, res);
+          return JSON.stringify({
+            application: {
+              ...applicationId.insert_bops_applications_one,
+              bopsResponse,
+            },
+          });
+        }
+      ),
+    })(req, res);
+  } else {
+    next({
+      status: 400,
+      message: `Back-office Planning System (BOPS) is not enabled for this local authority`,
+    });
+  }
 });
 
 assert(process.env.UNIFORM_TOKEN_URL);
@@ -325,15 +336,25 @@ app.post("/uniform/:localAuthority", sendToUniform);
 
 // used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
 // returns the url to make a gov uk payment
-app.post("/pay/:localAuthority", (req, res) => {
-  // drop req.params.localAuthority from the path when redirecting
-  // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
-  usePayProxy(
-    {
-      pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
-    },
-    req
-  )(req, res);
+app.post("/pay/:localAuthority", (req, res, next) => {
+  // confirm that this local authority (aka team) has a pay token configured before creating the proxy
+  const isSupported = process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
+  
+  if (isSupported) {
+    // drop req.params.localAuthority from the path when redirecting
+    // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
+    usePayProxy(
+      {
+        pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
+      },
+      req
+    )(req, res);
+  } else {
+    next({
+      status: 400,
+      message: `GOV.UK Pay is not enabled for this local authority`,
+    });
+  }
 });
 
 // used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
@@ -424,7 +445,7 @@ app.get("/me", useJWT, async function (req, res, next) {
 app.get("/gis", (_req, res, next) => {
   next({
     status: 400,
-    message: "Please specify a Local Authority",
+    message: "Please specify a local authority",
   });
 });
 

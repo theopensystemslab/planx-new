@@ -3,13 +3,15 @@ import omit from "lodash/omit";
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getParams } from "../bops";
 import { CSVData } from "../model";
+import { UniformInstance } from "./applicationType";
 import { makeXmlString } from "./xml";
 
 export function getUniformParams(
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
   passport: Store.passport,
-  sessionId: string
+  sessionId: string,
+  uniformInstance: UniformInstance
 ) {
   // make a list of all S3 URLs & filenames from uploaded files
   const files: { url: string; name: string }[] = [];
@@ -41,7 +43,7 @@ export function getUniformParams(
 
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString(passport, sessionId, uniqueFiles),
+    xml: makeXmlString(passport, sessionId, uniqueFiles, uniformInstance),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
     files: uniqueFiles,
     sessionId: sessionId,

@@ -6,12 +6,15 @@ import {
   appTypeLookup,
   PlanXAppTypes,
   UniformAppTypes,
+  UniformInstance,
+  UniformLPACodes,
 } from "./applicationType";
 
 export function makeXmlString(
   passport: Store.passport,
   sessionId: string,
-  files: string[]
+  files: string[],
+  uniformInstance: UniformInstance
 ) {
   const payment = passport.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
 
@@ -24,6 +27,13 @@ export function makeXmlString(
   } else {
     proposalCompletionDate = new Date(Date.now()).toISOString().split("T")[0];
   }
+
+  // TODO: Set in flow using SetValue component instead?
+  const lpaCode = UniformLPACodes[uniformInstance];
+
+  // XXX: "proxy" is not supported by Uniform and will be cast to "Agent"
+  const personRole =
+    passport.data?.["user.role"] === "applicant" ? "Applicant" : "Agent";
 
   // format file attachments
   const requiredFiles = `
@@ -40,16 +50,19 @@ export function makeXmlString(
 
   const userUploadedFiles: string[] = [];
   files?.forEach((file) => {
+    // Must match the unique filename in api.planx.uk/send.js
+    const uniqueFilename = file.split("/").slice(-2).join("-");
     userUploadedFiles.push(`
       <common:FileAttachment>
-        <common:FileName>${file.split("/").pop()}</common:FileName>
+        <common:FileName>${uniqueFilename}</common:FileName>
         <common:Reference>Other</common:Reference>
       </common:FileAttachment>
     `);
   });
 
   const getApplicationType = (): string => {
-    const planXAppType: PlanXAppTypes = passport.data?.["application.type"];
+    const planXAppType: PlanXAppTypes =
+      passport.data?.["application.type"] || "ldc.existing";
     const uniformAppType: UniformAppTypes = appTypeLookup[planXAppType];
 
     return `
@@ -62,13 +75,80 @@ export function makeXmlString(
     `;
   };
 
+  const getCertificateOfLawfulness = () => {
+    const planXAppType: PlanXAppTypes = passport.data?.["application.type"];
+    if (planXAppType === "ldc.proposed") {
+      return `
+        <portaloneapp:CertificateLawfulness>
+          <portaloneapp:ProposedUseApplication>
+            <portaloneapp:DescriptionCPU>
+              <common:OperationsDescription>${
+                passport.data?.["proposal.description"]
+              }</common:OperationsDescription>
+              ${/* Get answer from Alastair here*/ ""}
+              <common:IsUseChange>true</common:IsUseChange>
+              <common:ProposedUseDescription>${
+                passport.data?.["proposal.description"]
+              }</common:ProposedUseDescription>
+              <common:ExistingUseDescription>${
+                passport.data?.["proposal.description"]
+              }</common:ExistingUseDescription>
+              <common:IsUseStarted>${
+                passport.data?.["proposal.started"]
+              }</common:IsUseStarted>
+            </portaloneapp:DescriptionCPU>
+            <portaloneapp:GroundsCPU>
+              <common:UseLawfulnessReason>${
+                passport.data?.["proposal.description"]
+              }</common:UseLawfulnessReason>
+              <common:SupportingInformation>
+                <common:AdditionalInformation>true</common:AdditionalInformation>
+                <common:Reference>${
+                  passport.data?.["proposal.description"]
+                }</common:Reference>
+              </common:SupportingInformation>
+              ${
+                /* Currently hardcoded, will later be a variable controlled by SetValue component */ ""
+              }
+              <common:ProposedUseStatus>permanent</common:ProposedUseStatus>
+              <common:LawfulDevCertificateReason>${
+                passport.data?.["proposal.description"]
+              }</common:LawfulDevCertificateReason>
+            </portaloneapp:GroundsCPU>
+          </portaloneapp:ProposedUseApplication>
+        </portaloneapp:CertificateLawfulness>
+      `;
+    }
+    // ldc.existing is treated as default
+    return `
+      <portaloneapp:CertificateLawfulness>
+        <portaloneapp:ExistingUseApplication>
+          <portaloneapp:CategoryCEU/>
+          <portaloneapp:DescriptionCEU>${passport.data?.["proposal.description"]}</portaloneapp:DescriptionCEU>
+          <portaloneapp:GroundsCEU>
+            <common:GroundsCategory/>
+            <common:CertificateLawfulnessReason>${passport.data?.["proposal.description"]}</common:CertificateLawfulnessReason>
+          </portaloneapp:GroundsCEU>
+          <portaloneapp:InformationCEU>
+            <common:UseBegunDate>${passport.data?.["proposal.started.date"]}</common:UseBegunDate>
+          </portaloneapp:InformationCEU>
+        </portaloneapp:ExistingUseApplication>
+      </portaloneapp:CertificateLawfulness>
+    `;
+  };
+
+  const isRelated =
+    passport.data?.["application.declaration.connection"] !== "none";
+
   // this string template represents the full proposal.xml schema including prefixes
+  // XML Schema Definitions for reference:
+  // -- https://ecab.planningportal.co.uk/uploads/schema/OneAppProposal-v2-0-1.xsd
+  // -- https://ecab.planningportal.co.uk/uploads/schema/OneAppCommon/OneAppCommon-2-0-1.xsd
   const proposal = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <portaloneapp:Proposal xmlns:portaloneapp="http://www.govtalk.gov.uk/planning/OneAppProposal-2006" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bs7666="http://www.govtalk.gov.uk/people/bs7666" xmlns:org="http://www.govtalk.gov.uk/financial/OrganisationIdentifiers" xmlns:pdt="http://www.govtalk.gov.uk/people/PersonDescriptives" xmlns:apd="http://www.govtalk.gov.uk/people/AddressAndPersonalDetails" xmlns:core="http://www.govtalk.gov.uk/core" xmlns:common="http://www.govtalk.gov.uk/planning/OneAppCommon-2006" Version="1.3">
       <portaloneapp:SchemaVersion>1.3</portaloneapp:SchemaVersion>
       <portaloneapp:ApplicationHeader>
-        ${/* TODO: Each team has a unique value for this */ ""}
-        <portaloneapp:ApplicationTo>00QA</portaloneapp:ApplicationTo>
+        <portaloneapp:ApplicationTo>${lpaCode}</portaloneapp:ApplicationTo>
         <portaloneapp:DateSubmitted>${proposalCompletionDate}</portaloneapp:DateSubmitted>
         <portaloneapp:RefNum>${sessionId}</portaloneapp:RefNum>
         <portaloneapp:FormattedRefNum>${sessionId}</portaloneapp:FormattedRefNum>
@@ -137,6 +217,9 @@ export function makeXmlString(
           </common:Telephone>
         </common:ContactDetails>
       </portaloneapp:Applicant>
+      ${
+        /* TODO: Check for "application.agent.." || "applicant.proxy.." variables in this section??  */ ""
+      }
       <portaloneapp:Agent>
         <common:PersonName>
         <pdt:PersonNameTitle>${
@@ -212,17 +295,16 @@ export function makeXmlString(
           }</bs7666:UniquePropertyReferenceNumber>
         </bs7666:BS7666Address>
         <common:SiteGridRefence>
-          <bs7666:X>${passport.data?.["_address"]?.["x"]}</bs7666:X>
-          <bs7666:Y>${passport.data?.["_address"]?.["y"]}</bs7666:Y>
+          <bs7666:X>${Math.round(passport.data?.["_address"]?.["x"])}</bs7666:X>
+          <bs7666:Y>${Math.round(passport.data?.["_address"]?.["y"])}</bs7666:Y>
         </common:SiteGridRefence>
       </portaloneapp:SiteLocation>
       ${getApplicationType()}
       <portaloneapp:ApplicationData>
-        ${
-          /* TODO: Is this pre-application advice? application.preAppAdvice */ ""
-        }
         <portaloneapp:Advice>
-          <common:HaveSoughtAdvice>0</common:HaveSoughtAdvice>
+          <common:HaveSoughtAdvice>${
+            passport.data?.["application.preAppAdvice"]
+          }</common:HaveSoughtAdvice>
         </portaloneapp:Advice>
         <portaloneapp:SiteVisit>
           <common:SeeSite>false</common:SeeSite>
@@ -230,66 +312,17 @@ export function makeXmlString(
             <common:ContactAgent/>
           </common:VisitContactDetails>
         </portaloneapp:SiteVisit>
-        <portaloneapp:Biodiversity>
-          <common:ProtectedPrioritySpecies/>
-          <common:DesignatedSites/>
-          <common:GeologicalConservationImportance/>
-          <common:InvolvesDemolitionOfBuilding>false</common:InvolvesDemolitionOfBuilding>
-          <common:InvolvesAlterationsOrEnlargement>false</common:InvolvesAlterationsOrEnlargement>
-          <common:InvolvesLossOfTreesOrHedges>false</common:InvolvesLossOfTreesOrHedges>
-        </portaloneapp:Biodiversity>
-        <portaloneapp:CertificateLawfulness>
-          <portaloneapp:ProposedUseApplication>
-            <portaloneapp:DescriptionCPU>
-              <common:IsProposedOperationBuilding>true</common:IsProposedOperationBuilding>
-              <common:OperationsDescription/>
-              <common:IsUseChange>true</common:IsUseChange>
-              <common:ProposedUseDescription>${
-                passport.data?.["proposal.description"]
-              }</common:ProposedUseDescription>
-              <common:ExistingUseDescription>${
-                passport.data?.["proposal.description"]
-              }</common:ExistingUseDescription>
-              <common:IsUseStarted>true</common:IsUseStarted>
-            </portaloneapp:DescriptionCPU>
-            <portaloneapp:GroundsCPU>
-              <common:UseLawfulnessReason/>
-              <common:SupportingInformation>
-                <common:AdditionalInformation>true</common:AdditionalInformation>
-                <common:Reference/>
-              </common:SupportingInformation>
-              <common:ExistingUse>
-                <common:A1/>
-              </common:ExistingUse>
-              <common:ProposedUse>
-                <common:A1/>
-              </common:ProposedUse>
-              <common:ProposedUseStatus>permanent</common:ProposedUseStatus>
-              <common:LawfulDevCertificateReason/>
-            </portaloneapp:GroundsCPU>
-          </portaloneapp:ProposedUseApplication>
-          ${/* TODO: Should applicant.interest be referenced here?  */ ""}
-          <portaloneapp:Interest>
-            <common:ApplicantInterest>
-              <common:Owner>true</common:Owner>
-              <common:Lessee>false</common:Lessee>
-              <common:Occupier>false</common:Occupier>
-            </common:ApplicantInterest>
-          </portaloneapp:Interest>
-        </portaloneapp:CertificateLawfulness>
+        ${getCertificateOfLawfulness()}
       </portaloneapp:ApplicationData>
-      ${
-        /* TODO: Should application.declaration.connection be reference here? */ ""
-      }
       <portaloneapp:DeclarationOfInterest>
-        <common:IsRelated>o</common:IsRelated>
+        <common:IsRelated>${isRelated}</common:IsRelated>
       </portaloneapp:DeclarationOfInterest>
       <portaloneapp:Declaration>
         <common:DeclarationDate>${proposalCompletionDate}</common:DeclarationDate>
         <common:DeclarationMade>${
           passport.data?.["application.declaration.accurate"]
         }</common:DeclarationMade>
-        <common:Signatory PersonRole="Agent"/>
+        <common:Signatory PersonRole="${personRole}"/>
       </portaloneapp:Declaration>
     </portaloneapp:Proposal>
   `;

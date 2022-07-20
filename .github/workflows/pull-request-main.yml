@@ -287,15 +287,12 @@ jobs:
     needs: [create_or_update_vultr_instance]
     runs-on: ubuntu-20.04
     steps:
-      - name: Startup grace period
-        run: sleep 60s
-        shell: bash
       - name: API healthcheck
         run: |
-          curl --fail -sv --retry 3 --retry-delay 30 --retry-connrefused https://api.${{ env.FULL_DOMAIN }}
+          timeout 150s bash -c "until curl --fail https://api.${{ env.FULL_DOMAIN }}; do sleep 1; done"
       - name: Hasura healthcheck
         run: |
-          curl --fail -sv --retry 3 --retry-delay 30 --retry-connrefused https://hasura.${{ env.FULL_DOMAIN }}/healthz
+          timeout 150s bash -c "until curl --fail https://hasura.${{ env.FULL_DOMAIN }}/healthz; do sleep 1; done"
       - name: Editor healthcheck
         run: |
-          curl --fail -sv --retry 3 --retry-delay 30 --retry-connrefused https://${{ env.FULL_DOMAIN }}
+          timeout 150s bash -c "until curl --fail https://${{ env.FULL_DOMAIN }}; do sleep 1; done"

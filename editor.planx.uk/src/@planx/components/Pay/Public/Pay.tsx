@@ -29,13 +29,15 @@ type ComponentState =
   | { status: "redirecting"; displayText?: string }
   | { status: "fetching_payment"; displayText?: string }
   | { status: "retry" }
-  | { status: "success"; displayText?: string };
+  | { status: "success"; displayText?: string }
+  | { status: "unsupported_team" };
 
 enum Action {
   NoPaymentFound,
   IncompletePaymentFound,
   IncompletePaymentConfirmed,
   StartNewPayment,
+  StartNewPaymentError,
   ResumePayment,
   Success,
 }
@@ -81,6 +83,8 @@ function Component(props: Props) {
           status: "redirecting",
           displayText: "Connecting you to GOV.UK Pay",
         };
+      case Action.StartNewPaymentError:
+        return { status: "unsupported_team" };
       case Action.ResumePayment:
         return {
           status: "redirecting",
@@ -208,24 +212,42 @@ function Component(props: Props) {
         if (payment._links.next_url?.href)
           window.location.replace(payment._links.next_url.href);
       })
-      .catch((e) => {
-        throw e;
+      .catch((error) => {
+        if (error.response?.data?.error?.endsWith("local authority")) {
+          // Show a custom message if this team isn't set up to use Pay yet
+          dispatch(Action.StartNewPaymentError);
+        } else {
+          // Throw all other errors so they're caught by our ErrorBoundary
+          throw error;
+        }
       });
   };
 
   return (
     <>
-      {state.status === "init" || state.status === "retry" ? (
+      {state.status === "init" ||
+      state.status === "retry" ||
+      state.status === "unsupported_team" ? (
         <Confirm
           {...props}
           fee={fee}
           onConfirm={() => {
-            state.status === "init"
-              ? startNewPayment()
-              : resumeExistingPayment();
+            if (state.status === "init") {
+              startNewPayment();
+            } else if (state.status === "retry") {
+              resumeExistingPayment();
+            } else if (state.status === "unsupported_team") {
+              // Allow "Continue" button to skip Pay
+              props.handleSubmit({ auto: true });
+            }
           }}
           buttonTitle={
             state.status === "init" ? "Pay using GOV.UK Pay" : "Retry payment"
+          }
+          error={
+            state.status === "unsupported_team"
+              ? "GOV.UK Pay is not enabled for this local authority"
+              : undefined
           }
         />
       ) : (

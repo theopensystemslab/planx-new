@@ -83,7 +83,7 @@ export const previewStore = (
   // XXX: This function assumes there's only one "Review" component per flow.
   changeAnswer(id: string) {
     const { record } = get();
-    set({ restore: true, changedNode: id });
+    set({ changedNode: id });
     record(id, undefined);
   },
 
@@ -247,6 +247,8 @@ export const previewStore = (
     return passport;
   },
 
+  // record() notably handles removing cachedBreadcrumbs for dependent component types
+  //   ie if you 'go back' to change your address, DrawBoundary and PlanningConstraints shouldn't be retained because they reference the property site passport, but answers to other questions can be retained
   record(id, userData) {
     const {
       breadcrumbs,

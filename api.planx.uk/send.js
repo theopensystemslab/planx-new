@@ -22,8 +22,14 @@ const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
  *   finally, insert a record into uniform_applications for future auditing
  */
 const sendToUniform = async (req, res, next) => {
-  if (!req.params.localAuthority || !req.body.xml || !req.body.sessionId) {
-    res.status(400).send({
+  if (!getUniformClient(req.params.localAuthority)) {
+    next({
+      status: 400,
+      message: "Idox/Uniform connector is not enabled for this local authority"
+    });
+  } else if (!req.body.xml || !req.body.sessionId) {
+    next({
+      status: 400,
       message: "Missing application data to send to Uniform"
     });
   }
@@ -129,7 +135,11 @@ async function createZip(stringXml, csv, files, sessionId) {
     // download any user-uploaded files from S3 to the tmp directory, add them to the zip
     if (files) {
       for (let file of files) {
-        const filePath = path.join(tmpDir, file.split("/").pop());
+        // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
+        // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
+        // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
+        const uniqueFilename = file.split("/").slice(-2).join("-");
+        const filePath = path.join(tmpDir, uniqueFilename);
         await downloadFile(file, filePath, zip);
       }
     }
@@ -368,7 +378,10 @@ const getUniformClient = (localAuthority) => {
   // XXX: Matches regex used in IAC (getCustomerSecrets.ts)
   const regex = new RegExp(/\W+/g)
   const client = process.env["UNIFORM_CLIENT_" + localAuthority.replace(regex, "_").toUpperCase()];
-  if (!client) throw Error("Unable to find Uniform client credentials");
+  
+  // If we can't find secrets, return undefined to trigger a 400 error using next() in sendToUniform()
+  if (!client) return undefined;
+
   const [ clientId, clientSecret ] = client.split(":");
   return { clientId, clientSecret };
 };

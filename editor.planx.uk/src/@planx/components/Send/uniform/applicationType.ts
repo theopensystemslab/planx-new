@@ -25,4 +25,23 @@ export const appTypeLookup: Record<PlanXAppTypes, UniformAppTypes> = {
     scenarioNumber: 15,
     consentRegime: "Certificate of Lawfulness",
   },
-};
+} as const;
+
+export enum UniformInstance {
+  Lambeth = "lambeth",
+  Southwark = "southwark",
+  // Buckinghamshire has 4 legacy instances
+  Chiltern = "chiltern",
+  SouthBucks = "south-bucks",
+  Aylesbury = "aylesbury-vale",
+  Wycombe = "wycombe",
+}
+
+export const UniformLPACodes: { [key in UniformInstance]: string } = {
+  [UniformInstance.Lambeth]: "N5660",
+  [UniformInstance.Southwark]: "A5840",
+  [UniformInstance.Aylesbury]: "J0405",
+  [UniformInstance.Wycombe]: "K0425",
+  [UniformInstance.Chiltern]: "X0415",
+  [UniformInstance.SouthBucks]: "N410",
+} as const;
