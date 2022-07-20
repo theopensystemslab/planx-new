@@ -32,10 +32,6 @@ export const dbRootUrl = pulumi.interpolate`postgres://${DB_ROOT_USERNAME}:${con
   "db-password"
 )}@${db.endpoint}/postgres`;
 
-const apiBucketKey = new aws.kms.Key("user-data-bucket-key", {
-  description: "Key used to encrypt user-data bucket at rest",
-});
-
 const apiBucket = new aws.s3.Bucket("user-data", {
   corsRules: [
     {
@@ -49,11 +45,9 @@ const apiBucket = new aws.s3.Bucket("user-data", {
   ],
   serverSideEncryptionConfiguration: {
     rule: {
-        applyServerSideEncryptionByDefault: {
-            kmsMasterKeyId: apiBucketKey.arn,
-            sseAlgorithm: "aws:kms",
+      applyServerSideEncryptionByDefault: {
+          sseAlgorithm: "AES256",
         },
-        bucketKeyEnabled: true,
       },
     },
 });
