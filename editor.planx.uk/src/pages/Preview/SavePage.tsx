@@ -1,3 +1,4 @@
+import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { add } from "date-fns";
@@ -19,23 +20,33 @@ const SaveSuccess: React.FC<{ saveToEmail?: string; expiryDate?: string }> = ({
 }) => (
   <StatusPage
     bannerHeading="Application saved"
-    bannerText={`We have sent a link to ${saveToEmail}. Use that link to continue your application.`}
-    cardText={`You have until ${expiryDate} to complete and send this application.`}
     showDownloadLink
     buttonText="Close tab"
     onButtonClick={() => window.close()}
     additionalOption="startNewApplication"
-  ></StatusPage>
+  >
+    <Typography variant="body2">
+      We have sent a link to {saveToEmail}. Use the link to continue your application.
+      <br/><br/>
+      You have until {expiryDate} to complete this application.
+      <br/><br/>
+      Your application will be deleted if you do not complete it by this date.
+    </Typography>
+  </StatusPage>
 );
 
 const SaveError: React.FC = () => {
   return (
     <StatusPage
-      bannerHeading="Error sending email"
-      bannerText="We are having trouble sending emails at the moment."
-      cardText="Your application has been saved. We will try to send the email again later."
+      bannerHeading="Email not sent"
       showDownloadLink
-    ></StatusPage>
+    >
+      <Typography variant="body2">
+        We are having trouble sending emails at the moment.
+        <br/><br/>
+        We have saved your application. We will try to send the email again later.
+      </Typography>
+    </StatusPage>
   );
 };
 

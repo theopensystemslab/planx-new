@@ -15,12 +15,12 @@ import FileDownload from "../../ui/FileDownload";
 
 interface Props {
   bannerHeading: string;
-  bannerText: string;
-  cardText: string;
+  bannerText?: string;
   buttonText?: string;
   onButtonClick?: () => void;
   showDownloadLink?: boolean;
   additionalOption?: "startNewApplication";
+  children?: React.ReactNode;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -33,11 +33,11 @@ const useStyles = makeStyles((theme) => ({
 const StatusPage: React.FC<Props> = ({
   bannerHeading,
   bannerText,
-  cardText,
   buttonText,
   onButtonClick,
   showDownloadLink,
   additionalOption,
+  children,
 }) => {
   const [breadcrumbs, flow, passport, sessionId] = useStore((state) => [
     state.breadcrumbs,
@@ -69,14 +69,16 @@ const StatusPage: React.FC<Props> = ({
             background: theme.palette.primary.main,
             text: theme.palette.primary.contrastText,
           }}
-        >
+        > 
+        { bannerText &&
           <Box mt={4}>
             <Typography>{bannerText}</Typography>
           </Box>
+          }
         </Banner>
       </Box>
       <Card>
-        <Typography variant="body2">{cardText}</Typography>
+        {children}
         {showDownloadLink && (
           <FileDownload data={data} filename={sessionId || "application"} />
         )}
