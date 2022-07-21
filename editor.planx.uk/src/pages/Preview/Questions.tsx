@@ -3,8 +3,6 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import classnames from "classnames";
-import { hasFeatureFlag } from "lib/featureFlags";
-import { getLocalFlow, setLocalFlow } from "lib/local";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
@@ -82,57 +80,31 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   const classes = useClasses();
   const [gotFlow, setGotFlow] = useState(false);
 
-  if (hasFeatureFlag("SAVE_AND_RETURN")) {
-    useEffect(() => {
-      setPreviewEnvironment(previewEnvironment);
-      if (isStandalone) {
-        NEW.getLocalFlow(sessionId).then((state) => {
-          if (state) {
-            resumeSession(state);
-          }
-          createAnalytics(state ? "resume" : "init");
-          setGotFlow(true);
-        });
-      }
-    }, []);
-
-    useEffect(() => {
-      if (gotFlow && isStandalone && sessionId) {
-        NEW.setLocalFlow(sessionId, {
-          breadcrumbs,
-          // todo: replace `id` with `flow: { id, published_flow_id }`
-          id,
-          passport,
-          sessionId,
-          govUkPayment,
-        });
-      }
-    }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
-  } else {
-    useEffect(() => {
-      setPreviewEnvironment(previewEnvironment);
-      if (isStandalone) {
-        const state = getLocalFlow(id);
+  useEffect(() => {
+    setPreviewEnvironment(previewEnvironment);
+    if (isStandalone) {
+      NEW.getLocalFlow(sessionId).then((state) => {
         if (state) {
           resumeSession(state);
         }
         createAnalytics(state ? "resume" : "init");
         setGotFlow(true);
-      }
-    }, []);
+      });
+    }
+  }, []);
 
-    useEffect(() => {
-      if (gotFlow && isStandalone && id) {
-        setLocalFlow(id, {
-          breadcrumbs,
-          id,
-          passport,
-          sessionId,
-          govUkPayment,
-        });
-      }
-    }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
-  }
+  useEffect(() => {
+    if (gotFlow && isStandalone && sessionId) {
+      NEW.setLocalFlow(sessionId, {
+        breadcrumbs,
+        // todo: replace `id` with `flow: { id, published_flow_id }`
+        id,
+        passport,
+        sessionId,
+        govUkPayment,
+      });
+    }
+  }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
 
   const handleSubmit =
     (id: string): handleSubmit =>

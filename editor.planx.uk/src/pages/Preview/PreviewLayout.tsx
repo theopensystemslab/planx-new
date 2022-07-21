@@ -118,16 +118,11 @@ const PreviewLayout: React.FC<{
         "Are you sure you want to restart? This will delete your previous answers"
       )
     ) {
-      if (hasFeatureFlag("SAVE_AND_RETURN")) {
-        // don't delete old flow for now
-        // await NEW_LOCAL.clearLocalFlow(sessionId)
-        const url = new URL(window.location.href);
-        url.searchParams.delete("sessionId");
-        window.location.href = url.href;
-      } else {
-        clearLocalFlow(id);
-        window.location.reload();
-      }
+      // don't delete old flow for now
+      // await NEW_LOCAL.clearLocalFlow(sessionId)
+      const url = new URL(window.location.href);
+      url.searchParams.delete("sessionId");
+      window.location.href = url.href;
     }
   };
 

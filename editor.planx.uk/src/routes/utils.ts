@@ -1,5 +1,4 @@
 import { TYPES as NodeTypes } from "@planx/components/types";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { NaviRequest } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
@@ -13,7 +12,6 @@ export const rootFlowPath = (includePortals = false) => {
 };
 
 export const isSaveReturnFlow = (flowData: Record<string, any>): Boolean =>
-  hasFeatureFlag("SAVE_AND_RETURN") &&
   Boolean(
     Object.values(flowData).find(
       (node: Record<string, any>) => node.type === NodeTypes.Send
