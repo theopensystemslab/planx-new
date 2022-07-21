@@ -18,8 +18,7 @@ const createReminderEvent = async (req, res, next) => {
       });
     const response = await createScheduledEvent({
       webhook: "{{HASURA_PLANX_API_URL}}/send-email/reminder",
-      // schedule_at: addDays(Date.parse(createdAt), (DAYS_UNTIL_EXPIRY - 7)),
-      schedule_at: addDays(Date.parse(createdAt), 1),
+      schedule_at: addDays(Date.parse(createdAt), (DAYS_UNTIL_EXPIRY - 7)),
       payload: payload,
       comment: `reminder_${payload.sessionId}`,
     });
@@ -48,8 +47,7 @@ const createExpiryEvent = async (req, res, next) => {
       });
     const response = await createScheduledEvent({
       webhook: "{{HASURA_PLANX_API_URL}}/send-email/expiry",
-      // schedule_at: addDays(Date.parse(createdAt), DAYS_UNTIL_EXPIRY),
-      schedule_at: addDays(Date.parse(createdAt), 2),
+      schedule_at: addDays(Date.parse(createdAt), DAYS_UNTIL_EXPIRY),
       payload: payload,
       comment: `expiry_${payload.sessionId}`,
     }, next);
