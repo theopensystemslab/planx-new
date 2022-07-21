@@ -59,7 +59,7 @@ export default function FileDownload(props: Props): FCReturn {
             .catch((error) => console.log(error));
         }}
       >
-        {props.text || "Download your application (.csv)"}
+        {props.text || "Download your application"}
       </Button>
     </div>
   );
