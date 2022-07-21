@@ -460,7 +460,7 @@ export const extractTagsFromPassportKey = (passportKey: string) => {
     tags.push("Existing");
   }
 
-  if (splitKey.includes("sitePlan")) {
+  if (splitKey.includes("locationPlan")) {
     tags.push("Site");
     tags.push("Plan");
   } else if (splitKey.includes("roofPlan")) {
