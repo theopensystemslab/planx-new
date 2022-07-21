@@ -1,4 +1,5 @@
 import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
 import { useTeamSlug } from "@planx/components/shared/hooks";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -76,26 +77,30 @@ const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
 const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
   return (
     <StatusPage
-      bannerHeading="Error sending email"
-      bannerText="We are having trouble sending emails at the moment."
-      cardText="Your application has been saved. We will try to send the email again later."
+      bannerHeading="Email not sent"
       buttonText="Retry"
       onButtonClick={retry}
-    ></StatusPage>
+    >
+      <Typography variant="body2">
+        We are having trouble sending emails at the moment.
+        <br/><br/>
+        We have saved your application. We will try to send the email again later.
+      </Typography>
+    </StatusPage>
   );
 };
 
-const EmailSuccess: React.FC<{ email: string }> = ({ email }) => {
+const EmailSuccess: React.FC = () => {
   return (
     <StatusPage
-      bannerHeading="Request successful"
-      bannerText={`If we hold any draft applications for ${email}, an email will be sent to that address. Please use that link to continue your
-      application.`}
-      cardText="You will need to open the email we have sent you in order to proceed.
-      You are now free to close this tab."
+      bannerHeading="Check your email"
       buttonText="Close Tab"
       onButtonClick={() => window.close()}
-    ></StatusPage>
+    >
+      <Typography variant="body2">
+        If you have any draft applications we have sent you an email that contains a link. Use this link to access your applications.
+      </Typography>
+    </StatusPage>
   );
 };
 
@@ -126,12 +131,18 @@ const InvalidSession: React.FC<{
 }> = ({ retry }) => (
   <StatusPage
     bannerHeading="We can't find your application"
-    bannerText='Click "Try Again" enter your email address again, or start a new application'
-    cardText=""
     buttonText="Try again"
     onButtonClick={retry}
     additionalOption="startNewApplication"
-  ></StatusPage>
+  >
+    <Typography variant="body2">
+      <b>Reasons</b>
+      <br/><br/>
+      This may be because your application has expired or there was a mistake in your email address.
+      <br/><br/>
+      Try entering your email address again.
+    </Typography>
+  </StatusPage>
 );
 
 /**
@@ -232,7 +243,7 @@ const ResumePage: React.FC = () => {
     [Status.InvalidSession]: (
       <InvalidSession retry={retryWithNewEmailAddress} />
     ),
-    [Status.Success]: <EmailSuccess email={email} />,
+    [Status.Success]: <EmailSuccess />,
     [Status.Error]: <EmailError retry={() => handleSubmit()} />,
   }[pageStatus];
 };
