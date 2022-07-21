@@ -3,7 +3,11 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Fade from "@material-ui/core/Fade";
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { ApplicationPath } from "types";
+
+import SaveResumeButton from "./SaveResumeButton";
 
 interface Props {
   children: React.ReactNode;
@@ -11,10 +15,10 @@ interface Props {
   handleSubmit?: (data?: any) => void;
 }
 
-const useStyles = makeStyles<Theme>(() => ({
+const useStyles = makeStyles<Theme>((theme) => ({
   container: {
     "& > * + *": {
-      marginTop: 20,
+      marginTop: theme.spacing(2.5),
     },
   },
 }));
@@ -33,6 +37,8 @@ const Card: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
+  const path = useStore((state) => state.path);
+  const showSaveResumeButton = path === ApplicationPath.SaveAndReturn;
 
   return (
     <Fade in={true} timeout={theme.transitions.duration.enteringScreen}>
@@ -60,6 +66,7 @@ const Card: React.FC<Props> = ({
               Continue
             </Button>
           )}
+          {showSaveResumeButton && <SaveResumeButton />}
         </Box>
       </Container>
     </Fade>

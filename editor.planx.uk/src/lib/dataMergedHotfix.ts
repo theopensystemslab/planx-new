@@ -20,7 +20,10 @@ const getFlowData = async (id: string) => {
   return data.flows_by_pk;
 };
 
-export const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
+export const dataMerged = async (
+  id: string,
+  ob: Record<string, any> = {}
+): Promise<Record<string, any>> => {
   const { slug, data }: { slug: string; data: Record<string, any> } =
     await getFlowData(id);
   for (let [nodeId, node] of Object.entries(data)) {

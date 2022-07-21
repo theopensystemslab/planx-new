@@ -234,6 +234,14 @@ export = async () => {
             name: "HASURA_GRAPHQL_DATABASE_URL",
             value: dbRootUrl,
           },
+          {
+            name: "HASURA_PLANX_API_URL",
+            value: `https://api.${DOMAIN}`,
+          },
+          {
+            name: "HASURA_PLANX_API_KEY",
+            value: config.require("hasura-planx-api-key"),
+          },
         ],
       },
     },
@@ -366,6 +374,14 @@ export = async () => {
             value: pulumi.interpolate`https://hasura.${DOMAIN}/v1/graphql`,
           },
           {
+            name: "HASURA_METADATA_URL",
+            value: pulumi.interpolate`https://hasura.${DOMAIN}/v1/metadata`,
+          },
+          {
+            name: "HASURA_PLANX_API_KEY",
+            value: config.require("hasura-planx-api-key"),
+          },
+          {
             name: "AIRBRAKE_PROJECT_ID",
             value: config.require("airbrake-project-id"),
           },
@@ -380,6 +396,26 @@ export = async () => {
           {
             name: "UNIFORM_SUBMISSION_URL",
             value: config.require("uniform-submission-url"),
+          },
+          {
+            name: "GOVUK_NOTIFY_API_KEY_TEAM",
+            value: config.require("govuk-notify-api-key-team"),
+          },
+          {
+            name: "GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID",
+            value: "428c4dfd-a70b-44d6-9f81-b4f833d80405",
+          },
+          {
+            name: "GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID",
+            value: "c7202e07-08cf-468e-a6a4-ac528d60d2f7",
+          },
+          {
+            name: "GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID",
+            value: "43be4c11-a406-4381-b2be-056a1127455d",
+          },
+          {
+            name: "GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID",
+            value: "9619f89d-5d33-4cb0-a365-42c431ea9db3",
           },
           ...generateTeamSecrets(config),
         ],

@@ -9,7 +9,6 @@ const express = require("express");
 const jwt = require("express-jwt");
 const noir = require("pino-noir");
 const { URL } = require("url");
-const { GraphQLClient } = require("graphql-request");
 const { Server } = require("http");
 const passport = require("passport");
 const { sign } = require("jsonwebtoken");
@@ -25,11 +24,17 @@ const { locationSearch } = require("./gis/index");
 const { diffFlow, publishFlow } = require("./publish");
 const { findAndReplaceInFlow } = require("./findReplace");
 const { sendToUniform } = require("./send");
+const { resumeApplication, validateSession, sendSaveAndReturnEmail } = require("./saveAndReturn")
+const { hardDeleteSessions } = require("./webhooks/hardDeleteSessions");
+const { useHasuraAuth, useSendEmailAuth } = require("./auth");
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
 const airbrake = require("./airbrake");
+const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
+const { createReminderEvent, createExpiryEvent } = require("./webhooks/lowcalSessionEvents");
+const { adminGraphQLClient } = require("./hasura");
 
 const router = express.Router();
 
@@ -125,11 +130,7 @@ router.get(
   handleSuccess
 );
 
-const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
-  headers: {
-    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
-  },
-});
+const client = adminGraphQLClient;
 
 const buildJWT = async (profile, done) => {
   const { email } = profile._json;
@@ -276,6 +277,9 @@ app.post("/bops/:localAuthority", (req, res, next) => {
       onProxyReq: fixRequestBody,
       onProxyRes: responseInterceptor(
         async (responseBuffer, proxyRes, req, res) => {
+          // Mark session as submitted so that reminder and expiry emails are not triggered
+          markSessionAsSubmitted(req.body.planx_debug_data.session_id);
+          
           const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
 
           const applicationId = await client.request(
@@ -585,6 +589,16 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
   if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
   res.send();
 });
+
+assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
+app.post("/send-email/:template", useSendEmailAuth, sendSaveAndReturnEmail);
+app.post("/resume-application", resumeApplication);
+app.post("/validate-session", validateSession);
+
+app.use("/webhooks/hasura", useHasuraAuth)
+app.post("/webhooks/hasura/delete-expired-sessions", hardDeleteSessions);
+app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
+app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()

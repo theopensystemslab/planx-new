@@ -114,3 +114,24 @@ export interface GovUKPayment {
     };
   };
 }
+
+/**
+ * Describes the different paths through which a flow can be navigated by a user
+ */
+export enum ApplicationPath {
+  Save,
+  Resume,
+  SingleSession,
+  SaveAndReturn,
+}
+
+/**
+ * Body of request posted to /send-email endpoint
+ * XXX: Matches the body created by a Hasura scheduled event - see tables.yml
+ */
+export interface SendEmailPayload {
+  payload: {
+    email: string | undefined;
+    sessionId: string;
+  };
+}

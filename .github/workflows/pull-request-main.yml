@@ -4,6 +4,7 @@ on:
     types: [opened, synchronize]
     branches:
       - main
+      - feat/save-and-return # TODO: Delete when feature branch merged
 
 env:
   DOMAIN: planx.pizza
@@ -42,6 +43,9 @@ jobs:
   api_tests:
     name: API Tests
     runs-on: ubuntu-20.04
+    timeout-minutes: 10
+    env:
+      GOVUK_NOTIFY_API_KEY_TEAM: ${{ secrets.GOVUK_NOTIFY_API_KEY_TEST }}
     steps:
       - uses: actions/checkout@v2
       - uses: pnpm/action-setup@v2.0.1
@@ -106,7 +110,7 @@ jobs:
 
   preview:
     name: Pulumi Preview
-    needs: [integration_tests, test_and_build]
+    needs: [integration_tests, api_tests, test_and_build]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -142,7 +146,7 @@ jobs:
 
   hasura-change-summary:
     name: Hasura Change Summary
-    needs: [integration_tests, test_and_build]
+    needs: [integration_tests, api_tests, test_and_build]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -216,6 +220,9 @@ jobs:
             UNIFORM_CLIENT_WYCOMBE=${{ secrets.STAGING_UNIFORM_CLIENT_WYCOMBE }}
             UNIFORM_CLIENT_SOUTHWARK=${{ secrets.STAGING_UNIFORM_CLIENT_SOUTHWARK }}
             UNIFORM_CLIENT_LAMBETH=${{ secrets.STAGING_UNIFORM_CLIENT_LAMBETH }}
+            GOVUK_NOTIFY_API_KEY_TEAM=${{ secrets.GOVUK_NOTIFY_API_KEY_TEAM }}
+            GOVUK_NOTIFY_API_KEY_TEST=${{ secrets.GOVUK_NOTIFY_API_KEY_TEST }}
+            HASURA_PLANX_API_KEY=${{ secrets.HASURA_PLANX_API_KEY }}
             " > .env.temp
             cat .env .env.temp .env.staging > .env.prod
 
@@ -253,6 +260,9 @@ jobs:
             UNIFORM_CLIENT_WYCOMBE=${{ secrets.STAGING_UNIFORM_CLIENT_WYCOMBE }}
             UNIFORM_CLIENT_SOUTHWARK=${{ secrets.STAGING_UNIFORM_CLIENT_SOUTHWARK }}
             UNIFORM_CLIENT_LAMBETH=${{ secrets.STAGING_UNIFORM_CLIENT_LAMBETH }}
+            GOVUK_NOTIFY_API_KEY_TEAM=${{ secrets.GOVUK_NOTIFY_API_KEY_TEAM }}
+            GOVUK_NOTIFY_API_KEY_TEST=${{ secrets.GOVUK_NOTIFY_API_KEY_TEST }}
+            HASURA_PLANX_API_KEY=${{ secrets.HASURA_PLANX_API_KEY }}
             " > .env.temp
             cat .env .env.temp .env.staging > .env.prod
 
