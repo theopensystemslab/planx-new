@@ -8,6 +8,8 @@ const str = require("string-to-stream");
 const stringify = require("csv-stringify");
 const { GraphQLClient } = require("graphql-request");
 const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
+const { jsPDF } = require("jspdf");
+require("jspdf-autotable");
 
 const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
   headers: {
@@ -119,12 +121,12 @@ const sendToUniform = async (req, res, next) => {
 /**
  * Creates a zip folder containing the documents required by Uniform
  * @param {any} stringXml - a string representation of the XML schema, resulting file must be named "proposal.xml"
- * @param {any} csv - an array of objects representing our custom CSV format
+ * @param {any} data - an array of objects representing our custom CSV format
  * @param {string[]} files - an array of the S3 URLs for any user-uploaded files
  * @param {string} sessionId
  * @returns {Promise} - name of zip
  */
-async function createZip(stringXml, csv, files, sessionId) {
+async function createZip(stringXml, data, files, sessionId) {
   // initiate an empty zip folder
   const zip = new AdmZip();
 
@@ -152,14 +154,13 @@ async function createZip(stringXml, csv, files, sessionId) {
     const csvPath = path.join(tmpDir, "application.csv");
     const csvFile = fs.createWriteStream(csvPath);
     
-    const csvStream = stringify(csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
+    const csvStream = stringify(data, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
     await new Promise((resolve, reject) => {
       csvStream.on("error", reject);
       csvStream.on("finish", resolve);
     });
 
-    zip.addLocalFile(csvPath);
-    deleteFile(csvPath);
+    addPDFToZip(data, zip);
 
     // build the XML file from a string, write it locally, add it to the zip
     //   must be named "proposal.xml" to be processed by Uniform
@@ -188,6 +189,48 @@ async function createZip(stringXml, csv, files, sessionId) {
   } catch (err) {
     throw err;
   }
+};
+
+/**
+ * Generate a PDF copy of the application, and add to zip file
+ * @param {object} data an array of objects representing our custom data format
+ * @param {Buffer} zip in memory zip file
+ */
+function addPDFToZip(data, zip) {
+
+  /**
+   * Helper function to format responses
+   * @param {any} response applicant's response to a question
+   * @returns {string}
+   */
+  const formatResponse = (response) => {
+    // Handle simple responses
+    if (typeof response === "string") return response;
+    // Handle multiple responses, and only display values
+    if (Array.isArray(response)) return response.map(resp => resp.value).join(", ");
+    // Pretty print complex objects
+    return JSON.stringify(response, null, 4);
+  };
+
+  // Parse data into rows
+  const rows = data.map(entry => ([
+    entry.question, formatResponse(entry.responses)
+  ]));
+
+  // Create new autoTable PDF using row data
+  const doc = new jsPDF();
+  doc.autoTable({
+    columns: ["Question", "Responses"],
+    body: rows,
+    styles: { fontSize: 6 },
+  });
+
+  // Save PDF and add to zip file
+  doc.save('application.pdf');
+  const pdfPath = path.join("application.pdf");
+  zip.addLocalFile(pdfPath);
+
+  deleteFile(pdfPath);
 };
 
 /**
