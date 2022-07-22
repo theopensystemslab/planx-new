@@ -89,8 +89,32 @@ export function makeCsvData(
     });
   });
 
-  // concat into single list, each object will be row in CSV
-  return formattedSummary
+  // gather key reference fields, these will be first rows of CSV
+  const references: { question: string; responses: any }[] = [
+    {
+      question: "Planning Application Reference", // match language used on Confirmation page
+      responses: sessionId,
+    },
+  ];
+
+  // check if the passport has payment or submission ids, add them as reference rows if exist
+  const conditionalKeys = [
+    "application.fee.reference.govPay",
+    "bopsId",
+    "idoxSubmissionId",
+  ];
+  conditionalKeys.forEach((key) => {
+    if (passport.data?.[key]) {
+      references.push({
+        question: key,
+        responses: passport.data?.[key],
+      });
+    }
+  });
+
+  // concat data sections into single list, each object will be row in CSV
+  return references
+    .concat(formattedSummary)
     .concat(bopsData["proposal_details"] || [])
     .concat(formattedFiles);
 }
