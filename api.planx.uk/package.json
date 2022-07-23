@@ -48,5 +48,12 @@
     "node-dev": "^5.0.0",
     "prettier": "~2.7.1",
     "supertest": "^6.2.4"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "nock": "13"
+      }
+    }
   }
 }
