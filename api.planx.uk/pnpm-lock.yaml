@@ -11,7 +11,7 @@ specifiers:
   cors: ^2.8.5
   csv-stringify: ^6.2.0
   date-fns: ^2.29.1
-  dotenv: ^8.2.0
+  dotenv: ^16.0.1
   esbuild: ^0.14.49
   esbuild-jest: ^0.5.0
   express: ^4.18.1
@@ -69,7 +69,7 @@ dependencies:
   string-to-stream: 3.0.1
 
 devDependencies:
-  dotenv: 8.6.0
+  dotenv: 16.0.1
   esbuild: 0.14.49
   esbuild-jest: 0.5.0_esbuild@0.14.49
   graphql-query-test-mock: 0.12.1_nock@13.2.9
@@ -1696,9 +1696,9 @@ packages:
       webidl-conversions: 5.0.0
     dev: true
 
-  /dotenv/8.6.0:
-    resolution: {integrity: sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==}
-    engines: {node: '>=10'}
+  /dotenv/16.0.1:
+    resolution: {integrity: sha512-1K6hR6wtk2FviQ4kEiSjFiH5rpzEVi8WW0x96aztHVMhEspNpc4DVOUTEHtEva5VThQ8IaBX1Pe4gSzpVVUsKQ==}
+    engines: {node: '>=12'}
     dev: true
 
   /duplexify/4.1.2:
