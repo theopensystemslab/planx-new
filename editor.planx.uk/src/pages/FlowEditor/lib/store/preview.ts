@@ -753,7 +753,7 @@ export const getResultData = (
   );
 };
 
-const sortBreadcrumbs = (
+export const sortBreadcrumbs = (
   nextBreadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
   editingNodes?: string[]
