@@ -22,7 +22,6 @@ import { View } from "react-navi";
 import { Flow, GlobalSettings, Maybe } from "types";
 
 import { setPath } from "./utils";
-
 import { extractFlowNameFromReq, getTeamFromDomain } from "./utils";
 
 const routes = compose(
