@@ -1,5 +1,9 @@
 {
   "devDependencies": {
-    "hasura-cli": "^2.2.0"
+    "hasura-cli": "^2.8.4"
+  },
+  "engines": {
+    "node": "^16",
+    "pnpm": "^7"
   }
 }
