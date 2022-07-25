@@ -35,6 +35,7 @@
     "nanoid-good": "^3.1.0",
     "natsort": "^2.0.2",
     "navi": "^0.14.0",
+    "p-memoize": "^7.1.0",
     "postcode": "^5.0.0",
     "ramda": "^0.27.1",
     "react": "^17.0.2",

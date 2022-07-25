@@ -1,8 +1,12 @@
 import { TYPES as NodeTypes } from "@planx/components/types";
+import gql from "graphql-tag";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { NaviRequest } from "navi";
+import pMemoize from "p-memoize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
+
+import { client } from "../lib/graphql";
 
 export const makeTitle = (str: string) =>
   [str, "PlanX"].filter(Boolean).join(" | ");
@@ -26,4 +30,52 @@ export const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
     ? ApplicationPath.Resume
     : ApplicationPath.SaveAndReturn;
   useStore.setState({ path });
+};
+
+//
+// XXX: Why does `isReadOnlyDomain` contain hard-coded values?
+//
+//      Ideally, we'd want to get rid of these hard-coded domain names in favour of inferring them by calling getTeamFromDomain.
+//      Here's some pseudo-code:
+//
+//          const isReadOnlyDomain = Boolean(await getTeamFromDomain(window.location.hostname))
+//
+//      Unfortunately, it's not that easy. The `isReadOnlyDomain` variable is easy to inject, and access from context (or even from global variable) for all of the code but the `store`. The `store` is initialized as soon as the application comes up and depends on `isReadOnlyDomain` to be created. There are a couple of solutions I could think of, but they are either too much of a workaround or require too much refactoring:
+//      1. Lazy initialisation of the variables, using async to get the team, and then setting the exported values based on the result. The problem here is the bad practice of exporting a mutable `let` variable.
+//      2. Using `zustand`'s [Context](https://github.com/pmndrs/zustand#react-context). We could initialize the store inside a component and take advantage of a `useEffect`, populate the store, and then render the `Provider` as soon as the store was ready. I tried doing this, but the `useStore` exported from `createContext` is a hook, and cannot be used outside React, therefore, we would have to refactor all functions that use `useStore.getState` to receive it as a prop, instead of accessing it directly.
+//      3. Since the store is loaded only once and right after the application is up, even if we used a global variable it would not be initialized yet.
+//
+//      So I've hard-coded these domain names until a better solution comes along.
+//
+export const isReadOnlyDomain = ![
+  "planx.dev",
+  "planx.uk",
+  // XXX: comment out the next line to test custom domains
+  "localhost",
+].some((domain) => window.location.hostname.endsWith(domain));
+
+const QUERY_GET_TEAM_BY_DOMAIN = gql`
+  query GetTeamByDomain($domain: String!) {
+    teams(limit: 1, where: { domain: { _eq: $domain } }) {
+      slug
+    }
+  }
+`;
+
+export const getTeamFromDomain = pMemoize(async (domain: string) => {
+  const {
+    data: { teams },
+  } = await client.query({
+    query: QUERY_GET_TEAM_BY_DOMAIN,
+    variables: {
+      domain,
+    },
+  });
+
+  return teams?.[0]?.slug;
+});
+
+// NB: In the database `flowName` and `slug` are (now) synonymous.
+export const extractFlowNameFromReq = (req: NaviRequest<object>) => {
+  return req.params.flow?.replaceAll?.("-", " ");
 };

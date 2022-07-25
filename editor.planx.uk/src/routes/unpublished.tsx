@@ -23,9 +23,14 @@ import { Flow, GlobalSettings, Maybe } from "types";
 
 import { setPath } from "./utils";
 
+import { extractFlowNameFromReq, getTeamFromDomain } from "./utils";
+
 const routes = compose(
-  withData((req) => ({
+  withData(async (req) => ({
     mountpath: req.mountpath,
+    team:
+      req.params.team || (await getTeamFromDomain(window.location.hostname)),
+    flowName: extractFlowNameFromReq(req),
   })),
 
   withView(async (req) => {
@@ -54,7 +59,9 @@ const routes = compose(
       `,
       variables: {
         flowSlug: req.params.flow.split(",")[0],
-        teamSlug: req.params.team,
+        teamSlug:
+          req.params.team ||
+          (await getTeamFromDomain(window.location.hostname)),
       },
     });
 

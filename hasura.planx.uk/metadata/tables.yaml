@@ -352,6 +352,7 @@
           - id
           - name
           - notify_personalisation
+          - domain
           - settings
           - slug
           - theme

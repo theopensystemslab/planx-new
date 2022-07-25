@@ -225,7 +225,7 @@ const ServiceTitle: React.FC<{
   route: Route;
 }> = ({ route }) => {
   const classes = useStyles();
-  const flowName = route.url?.pathname?.split("/")?.[2]?.replaceAll?.("-", " ");
+  const { flowName } = route.data;
 
   return (
     <span data-testid="service-title" className={classes.serviceTitle}>
@@ -363,7 +363,7 @@ const Header: React.FC<{
           team={team}
           handleRestart={handleRestart}
           route={route}
-        ></PublicToolbar>
+        />
       )}
     </AppBar>
   );

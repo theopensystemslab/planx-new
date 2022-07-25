@@ -4,7 +4,7 @@ import * as React from "react";
 import { client } from "../lib/graphql";
 import Login from "../pages/Login";
 import NetworkError from "../pages/NetworkError";
-import { makeTitle } from "./utils";
+import { isReadOnlyDomain, makeTitle } from "./utils";
 
 type RoutingContext = {
   currentUser?: any;
@@ -56,8 +56,15 @@ const editorRoutes = mount({
   ),
 });
 
-export default mount({
-  "/:team/:flow/preview": lazy(() => import("./preview")), // loads published flow if exists, or current flow
-  "/:team/:flow/unpublished": lazy(() => import("./unpublished")), // loads current flow
-  "*": editorRoutes,
-});
+export default isReadOnlyDomain
+  ? mount({
+      "/:team/:flow/preview": lazy(() => import("./preview")), // XXX: keeps old URL working, but only for the team listed in the domain.
+      "/:flow": lazy(() => import("./preview")),
+      // XXX: We're not sure where to redirect `/` to so for now we'll just return the default 404
+      // "/": redirect("somewhere?"),
+    })
+  : mount({
+      "/:team/:flow/preview": lazy(() => import("./preview")), // loads published flow if exists, or current flow
+      "/:team/:flow/unpublished": lazy(() => import("./unpublished")), // loads current flow
+      "*": editorRoutes,
+    });
