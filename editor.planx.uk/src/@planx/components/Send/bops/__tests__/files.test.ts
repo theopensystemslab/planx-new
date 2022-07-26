@@ -75,15 +75,15 @@ describe("It extracts tags for", () => {
         PASSPORT_UPLOAD_KEY === "proposal.drawing.locationPlan"
           ? PASSPORT_UPLOAD_KEY
           : "key changed unexpectedly!",
-      tags: ["Proposed", /*"Drawing", "Location",*/ "Plan"],
+      tags: ["Proposed", /*"Drawing",*/ "Site", "Plan"],
     },
     "Existing site plan": {
       key: "property.drawing.sitePlan",
-      tags: ["Existing", /*"Drawing",*/ "Site", "Plan"],
+      tags: ["Existing", /*"Drawing", "Site",*/ "Plan"], // "Site" is reserved for red-line drawings ONLY!
     },
     "Proposed site plan": {
       key: "proposal.drawing.sitePlan",
-      tags: ["Proposed", /*"Drawing",*/ "Site", "Plan"],
+      tags: ["Proposed", /*"Drawing", "Site",*/ "Plan"],
     },
     "Existing floor plan": {
       key: "property.drawing.floorPlan",
