@@ -41,26 +41,27 @@ describe("bad requests", () => {
       .catch(done);
   });
 
-  test(`app.get("/gis")`, async () => {
-    get("/gis").expect(400);
+  test(`app.get("/gis")`, (done) => {
+    get("/gis").expect(400, done);
   });
 
-  test(`app.get("/gis/wrong")`, async () => {
+  test(`app.get("/gis/wrong")`, (done) => {
     get("/gis/wrong")
       .expect(400)
       .then((response) => {
         expect(response.body).toEqual({
           error: "wrong is not a supported local authority",
         });
+        done();
       });
   });
 
-  test(`app.get("/throw-error")`, async () => {
-    get("/throw-error").expect(500);
+  test(`app.get("/throw-error")`, (done) => {
+    get("/throw-error").expect(500, done);
   });
 
-  test(`app.post("/flows/:flowId/publish")`, async () => {
-    post("/flows/WRONG/publish").expect(401);
+  test(`app.post("/flows/:flowId/publish")`, (done) => {
+    post("/flows/WRONG/publish").expect(401, done);
   });
 
   test(`app.post("/flows/:flowId/download-schema")`, (done) => {
