@@ -41,11 +41,11 @@ describe("bad requests", () => {
       .catch(done);
   });
 
-  test(`app.get("/gis")`, async (done) => {
+  test(`app.get("/gis")`, (done) => {
     get("/gis").expect(400, done);
   });
 
-  test(`app.get("/gis/wrong")`, async (done) => {
+  test(`app.get("/gis/wrong")`, (done) => {
     get("/gis/wrong")
       .expect(400)
       .then((response) => {
@@ -56,11 +56,11 @@ describe("bad requests", () => {
       });
   });
 
-  test(`app.get("/throw-error")`, async (done) => {
+  test(`app.get("/throw-error")`, (done) => {
     get("/throw-error").expect(500, done);
   });
 
-  test(`app.post("/flows/:flowId/publish")`, async (done) => {
+  test(`app.post("/flows/:flowId/publish")`, (done) => {
     post("/flows/WRONG/publish").expect(401, done);
   });
 

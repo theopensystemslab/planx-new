@@ -4,9 +4,9 @@ const assert = require("assert");
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const cors = require("cors");
-const stringify = require("csv-stringify");
+const { stringify } = require("csv-stringify");
 const express = require("express");
-const jwt = require("express-jwt");
+const { expressjwt } = require("express-jwt");
 const noir = require("pino-noir");
 const { URL } = require("url");
 const { Server } = require("http");
@@ -231,10 +231,12 @@ app.use(cookieParser());
 // XXX: Currently not checking for JWT and including req.user in every
 //      express endpoint because authentication also uses req.user. More info:
 //      https://github.com/theopensystemslab/planx-new/pull/555#issue-684435760
-const useJWT = jwt({
+// TODO: requestProperty can now be set. This might resolve the above issue.
+const useJWT = expressjwt({
   secret: process.env.JWT_SECRET,
   algorithms: ["HS256"],
   credentialsRequired: true,
+  requestProperty: "user",
   getToken: (req) =>
     req.cookies?.jwt ??
     req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1] ??
