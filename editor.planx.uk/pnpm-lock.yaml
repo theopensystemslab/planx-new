@@ -44,7 +44,7 @@ specifiers:
   '@types/sharedb': ^1.0.17
   '@types/testing-library__jest-dom': ^5.14.3
   '@types/uuid': ^8.3.1
-  array-move: ^3.0.1
+  array-move: ^4.0.0
   axios: 0.27.2
   camelcase-keys: ^7.0.0
   classnames: ^2.3.1
@@ -126,7 +126,7 @@ dependencies:
   '@material-ui/icons': 4.9.1_aca2900b4bcc0ae456c0c6b700ff3f91
   '@material-ui/utils': 5.0.0-beta.5_react@17.0.2
   '@opensystemslab/map': 0.5.6
-  array-move: 3.0.1
+  array-move: 4.0.0
   axios: 0.27.2
   camelcase-keys: 7.0.0
   classnames: 2.3.1
@@ -6033,9 +6033,9 @@ packages:
       get-intrinsic: 1.1.1
       is-string: 1.0.7
 
-  /array-move/3.0.1:
-    resolution: {integrity: sha512-H3Of6NIn2nNU1gsVDqDnYKY/LCdWvCMMOWifNGhKcVQgiZ6nOek39aESOvro6zmueP07exSl93YLvkN4fZOkSg==}
-    engines: {node: '>=10'}
+  /array-move/4.0.0:
+    resolution: {integrity: sha512-+RY54S8OuVvg94THpneQvFRmqWdAHeqtMzgMW6JNurHxe8rsS07cHQdfGkXnTUXiBcyZ0j3SiDIxxj0RPiqCkQ==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
 
   /array-union/1.0.2:
