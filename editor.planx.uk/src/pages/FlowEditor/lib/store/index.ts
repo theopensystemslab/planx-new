@@ -1,5 +1,5 @@
 import { TYPES } from "@planx/components/types";
-import { isReadOnlyDomain } from "routes/utils";
+import { isPreviewOnlyDomain } from "routes/utils";
 import create from "zustand";
 import vanillaCreate, { StoreApi } from "zustand/vanilla";
 
@@ -45,7 +45,7 @@ export type FullStore = SharedStore &
 
 export const { vanillaStore, useStore } = (() => {
   const vanillaStore: StoreApi<FullStore> = (() => {
-    if (isReadOnlyDomain || window?.location?.href?.includes("/preview")) {
+    if (isPreviewOnlyDomain || window?.location?.href?.includes("/preview")) {
       // if accessing the public preview, don't load editor store files
       return vanillaCreate<SharedStore & PreviewStore>((set, get) => ({
         ...sharedStore(set, get),

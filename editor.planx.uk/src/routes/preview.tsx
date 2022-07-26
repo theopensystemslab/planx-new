@@ -32,7 +32,7 @@ const routes = compose(
     return {
       mountpath: req.mountpath,
       team: req.params.team || externalDomainTeam,
-      isReadOnlyDomain: Boolean(externalDomainTeam),
+      isPreviewOnlyDomain: Boolean(externalDomainTeam),
       flowName: extractFlowNameFromReq(req),
     };
   }),

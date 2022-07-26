@@ -4,7 +4,7 @@ import * as React from "react";
 import { client } from "../lib/graphql";
 import Login from "../pages/Login";
 import NetworkError from "../pages/NetworkError";
-import { isReadOnlyDomain, makeTitle } from "./utils";
+import { isPreviewOnlyDomain, makeTitle } from "./utils";
 
 type RoutingContext = {
   currentUser?: any;
@@ -56,7 +56,7 @@ const editorRoutes = mount({
   ),
 });
 
-export default isReadOnlyDomain
+export default isPreviewOnlyDomain
   ? mount({
       "/:team/:flow/preview": lazy(() => import("./preview")), // XXX: keeps old URL working, but only for the team listed in the domain.
       "/:flow": lazy(() => import("./preview")),
