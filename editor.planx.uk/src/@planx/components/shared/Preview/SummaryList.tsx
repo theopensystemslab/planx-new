@@ -242,33 +242,28 @@ function DateInput(props: ComponentProps) {
 }
 
 function DrawBoundary(props: ComponentProps) {
-  const { latitude, longitude } = props.passport.data?._address;
+  // check if the user drew a boundary, uploaded a file, or both (or neither if props.node.data?.hideFileUpload is triggered "on")
+  const geodata = props.userData?.data?.[props.node.data?.dataFieldBoundary];
+  const locationPlan = props.userData?.data?.[PASSPORT_UPLOAD_KEY];
 
-  // check if the user drew a boundary,
-  // if they didn't then check that there's an uploaded boundary file
-  const data = props.userData?.data?.[props.node.data?.dataFieldBoundary]
-    ? props.userData.data![props.node.data.dataFieldBoundary]
-    : props.userData?.data?.[PASSPORT_UPLOAD_KEY]
-    ? props.userData.data![PASSPORT_UPLOAD_KEY]
-    : undefined;
-
-  if (!data && !props.node.data?.hideFileUpload) {
+  if (!geodata && !locationPlan && !props.node.data?.hideFileUpload) {
     // XXX: we always expect to have data, this is for temporary debugging
     console.error(props);
-    throw Error("boundary geojson or file expected but not found");
+    throw Error(
+      "Site boundary geojson or location plan file expected, but not found"
+    );
   }
 
   return (
     <>
       <dt>Site boundary</dt>
       <dd>
-        {!data && props.node.data?.hideFileUpload ? (
-          "Skipped"
-        ) : typeof data === "string" ? (
-          <a target="_blank" href={data}>
+        {locationPlan && (
+          <a target="_blank" href={locationPlan}>
             Your uploaded location plan
           </a>
-        ) : (
+        )}
+        {geodata && (
           <>
             <p style={visuallyHidden}>
               A static map displaying the site boundary that you drew.
@@ -276,7 +271,7 @@ function DrawBoundary(props: ComponentProps) {
             {/* @ts-ignore */}
             <my-map
               id="review-boundary-map"
-              geojsonData={JSON.stringify(data)}
+              geojsonData={JSON.stringify(geodata)}
               geojsonColor="#ff0000"
               geojsonFill
               geojsonBuffer="20"
@@ -287,6 +282,10 @@ function DrawBoundary(props: ComponentProps) {
             />
           </>
         )}
+        {!locationPlan &&
+          !geodata &&
+          props.node.data?.hideFileUpload &&
+          "Not provided"}
       </dd>
     </>
   );
