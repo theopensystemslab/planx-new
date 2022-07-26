@@ -50,6 +50,7 @@ export const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
 export const isReadOnlyDomain = ![
   "planx.dev",
   "planx.uk",
+  "planx.pizza",
   // XXX: comment out the next line to test custom domains
   "localhost",
 ].some((domain) => window.location.hostname.endsWith(domain));
