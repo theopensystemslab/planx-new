@@ -598,7 +598,7 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
 
 assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
 app.post("/send-email/:template", sendEmailLimiter, useSendEmailAuth, sendSaveAndReturnEmail);
-app.post("/resume-application", resumeApplication);
+app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
 app.use("/webhooks/hasura", useHasuraAuth)

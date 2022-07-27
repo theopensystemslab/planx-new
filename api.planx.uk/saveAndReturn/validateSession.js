@@ -8,7 +8,7 @@ const client = publicGraphQLClient;
 
 const validateSession = async (req, res, next) => {
   try {
-    const { email, sessionId } = req.body;
+    const { email, sessionId } = req.body.payload;
     if (!email || !sessionId)
       return next({
         status: 400,

@@ -6,8 +6,8 @@ const ENDPOINT = "/validate-session";
 describe("Validate Session endpoint", () => {
 
   it("throws an error if required data is missing", (done) => {
-    const missingEmail = { sessionId: 123 };
-    const missingSessionId = { email: "test" };
+    const missingEmail =  { payload: { sessionId: 123 } };
+    const missingSessionId = { payload: { email: "test" } };
 
     for (let invalidBody of [missingEmail, missingSessionId]) {
       supertest(app)

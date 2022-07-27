@@ -8,6 +8,11 @@ const apiLimiter = rateLimit({
 	legacyHeaders: false,
 });
 
+const HASURA_ONLY_SEND_EMAIL_TEMPLATES = [
+	"reminder",
+	"expiry",
+];
+
 // Limit the number of requests which can send a "Save & Return" email
 const sendEmailLimiter = rateLimit({
 	windowMs: 5 * 60 * 1000, // 10 minutes
@@ -16,10 +21,10 @@ const sendEmailLimiter = rateLimit({
 	legacyHeaders: false,
   // Use email as key for limiter
   // Invalid emails will fail at validation
-  keyGenerator: (request, response) => request.body?.payload?.email,
-  // Only apply limiter to public requests - allow Hasura to make multiple requests without limit
-  // Any other template requires authorization
-  skip: (request, response) => request.params.template !== "save",
+  keyGenerator: (req, _res) => req.body?.payload?.email,
+	// Only apply limiter to public requests - allow Hasura to make multiple requests without limit
+	// Any other S&R endpoints require authorisation
+  skip: (req, _res) => HASURA_ONLY_SEND_EMAIL_TEMPLATES.includes(req.params.template),
 });
 
 module.exports = { apiLimiter, sendEmailLimiter };

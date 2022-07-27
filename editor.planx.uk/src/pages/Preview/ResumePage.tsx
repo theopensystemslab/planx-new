@@ -9,7 +9,7 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { useCurrentRoute } from "react-navi";
-import { ApplicationPath } from "types";
+import { ApplicationPath, SendEmailPayload } from "types";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
@@ -83,8 +83,10 @@ const EmailError: React.FC<{ retry: () => void }> = ({ retry }) => {
     >
       <Typography variant="body2">
         We are having trouble sending emails at the moment.
-        <br/><br/>
-        We have saved your application. We will try to send the email again later.
+        <br />
+        <br />
+        We have saved your application. We will try to send the email again
+        later.
       </Typography>
     </StatusPage>
   );
@@ -98,7 +100,8 @@ const EmailSuccess: React.FC = () => {
       onButtonClick={() => window.close()}
     >
       <Typography variant="body2">
-        If you have any draft applications we have sent you an email that contains a link. Use this link to access your applications.
+        If you have any draft applications we have sent you an email that
+        contains a link. Use this link to access your applications.
       </Typography>
     </StatusPage>
   );
@@ -137,9 +140,12 @@ const InvalidSession: React.FC<{
   >
     <Typography variant="body2">
       <b>Reasons</b>
-      <br/><br/>
-      This may be because your application has expired or there was a mistake in your email address.
-      <br/><br/>
+      <br />
+      <br />
+      This may be because your application has expired or there was a mistake in
+      your email address.
+      <br />
+      <br />
       Try entering your email address again.
     </Typography>
   </StatusPage>
@@ -183,7 +189,9 @@ const ResumePage: React.FC = () => {
   const sendResumeEmail = async () => {
     const url = `${process.env.REACT_APP_API_URL}/resume-application`;
     const teamSlug = useTeamSlug();
-    const data = { email: email, teamSlug };
+    const data = {
+      payload: { email, teamSlug },
+    };
     try {
       await axios.post(url, data);
       setPageStatus(Status.Success);
@@ -197,7 +205,9 @@ const ResumePage: React.FC = () => {
    */
   const validateSessionId = async () => {
     const url = `${process.env.REACT_APP_API_URL}/validate-session`;
-    const data = { email, sessionId };
+    const data: SendEmailPayload = {
+      payload: { email, sessionId },
+    };
     try {
       // Find this session, if found then handle reconciliation
       await axios.post(url, data).then((response) => {
