@@ -101,6 +101,7 @@ const routes = compose(
     "/pages/:page": map((req) => {
       return route({
         view: () => <ContentPage page={req.params.page} />,
+        data: { isContentPage: true },
       });
     }),
   })
