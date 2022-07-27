@@ -199,6 +199,8 @@ export = async () => {
       },
     },
   });
+  // Configure white-listed domains; Pulumi doesn't need to support "localhost" but .env should
+  const HASURA_DOMAINS = `http://api:${DOMAIN}, https://*.planx.uk, https://*.planx.dev, https://*.planx.pizza, https://*.gov.uk`;
   const hasuraListenerHttps = targetHasura.createListener("hasura-https", {
     protocol: "HTTPS",
     certificateArn: certificates.requireOutput("certificateArn"),
@@ -218,7 +220,7 @@ export = async () => {
             name: "HASURA_GRAPHQL_ADMIN_SECRET",
             value: config.require("hasura-admin-secret"),
           },
-          { name: "HASURA_GRAPHQL_CORS_DOMAIN", value: "*" },
+          { name: "HASURA_GRAPHQL_CORS_DOMAIN", value: HASURA_DOMAINS },
           {
             name: "HASURA_GRAPHQL_ENABLED_LOG_TYPES",
             value: "startup, http-log, webhook-log, websocket-log, query-log",
@@ -236,7 +238,7 @@ export = async () => {
           },
           {
             name: "HASURA_PLANX_API_URL",
-            value: `https://api.${DOMAIN}`,
+            value: `https://api:${DOMAIN}`,
           },
           {
             name: "HASURA_PLANX_API_KEY",
