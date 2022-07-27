@@ -192,8 +192,8 @@ describe("Resume Application endpoint", () => {
 
   it("throws an error for if required data is missing", async () => {
 
-    const missingEmail = { teamSlug: "test" };
-    const missingTeamSlug = { email: "test" };
+    const missingEmail = { payload: { teamSlug: "test" } };
+    const missingTeamSlug = { payload: { email: "test" } };
 
     for (let invalidBody of [missingEmail, missingTeamSlug]) {
       await supertest(app)
@@ -207,17 +207,17 @@ describe("Resume Application endpoint", () => {
   });
 
   it("throws an error if a teamSlug is invalid", async () => {
-    const payload = { teamSlug: "not-a-team", email: TEST_EMAIL };
+    const body = { payload: { teamSlug: "not-a-team", email: TEST_EMAIL } };
 
     queryMock.mockQuery({
       name: 'ValidateRequest',
       data: { teams: null, lowcal_sessions: null },
-      variables: payload
+      variables: body.payload
     });
 
     await supertest(app)
       .post(ENDPOINT)
-      .send(payload)
+      .send(body)
       .expect(500)
       .then(response => {
         expect(response.body).toHaveProperty('error', 'Failed to send "Resume" email. Unable to validate request');
@@ -225,7 +225,7 @@ describe("Resume Application endpoint", () => {
   });
 
   it("sends a Notify email on successful resume", async () => {
-    const payload = { teamSlug: "test-team", email: TEST_EMAIL };
+    const body = { payload: { teamSlug: "test-team", email: TEST_EMAIL } };
 
     queryMock.mockQuery({
       name: 'ValidateRequest',
@@ -233,12 +233,12 @@ describe("Resume Application endpoint", () => {
         lowcal_sessions: [mockLowcalSession],
         teams: [mockTeam]
       },
-      variables: payload
+      variables: body.payload
     });
 
     await supertest(app)
       .post(ENDPOINT)
-      .send(payload)
+      .send(body)
       .expect(200)
       .then(response => {
         expect(response.body).toHaveProperty("message", "Success");
@@ -246,17 +246,17 @@ describe("Resume Application endpoint", () => {
   });
 
   it("give a successful response even if there is not a matching session", async () => {
-    const payload = { teamSlug: "test-team", email: TEST_EMAIL };
+    const body = { payload: { teamSlug: "test-team", email: TEST_EMAIL } };
 
     queryMock.mockQuery({
       name: 'ValidateRequest',
       data: { teams: [mockTeam], lowcal_sessions: [] },
-      variables: payload
+      variables: body.payload
     });
 
     await supertest(app)
       .post(ENDPOINT)
-      .send(payload)
+      .send(body)
       .expect(200)
       .then(response => {
         expect(response.body).toHaveProperty("message", "Success");

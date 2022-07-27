@@ -35,6 +35,7 @@ const airbrake = require("./airbrake");
 const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
 const { createReminderEvent, createExpiryEvent } = require("./webhooks/lowcalSessionEvents");
 const { adminGraphQLClient } = require("./hasura");
+const { sendEmailLimiter, apiLimiter } = require("./rateLimit");
 
 const router = express.Router();
 
@@ -250,6 +251,9 @@ if (process.env.NODE_ENV !== "test") {
     })
   );
 }
+
+// Rate limit requests per IP address
+app.use(apiLimiter);
 
 assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
@@ -593,8 +597,8 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
 });
 
 assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
-app.post("/send-email/:template", useSendEmailAuth, sendSaveAndReturnEmail);
-app.post("/resume-application", resumeApplication);
+app.post("/send-email/:template", sendEmailLimiter, useSendEmailAuth, sendSaveAndReturnEmail);
+app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
 app.use("/webhooks/hasura", useHasuraAuth)

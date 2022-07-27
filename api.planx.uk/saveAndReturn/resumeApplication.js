@@ -10,7 +10,7 @@ const { sendEmail, convertSlugToName, getResumeLink, calculateExpiryDate, getHum
  */
 const resumeApplication = async (req, res, next) => {
   try {
-    const { teamSlug, email } = req.body;
+    const { teamSlug, email } = req.body.payload;
     if (!teamSlug || !email)
       return next({
         status: 400,
