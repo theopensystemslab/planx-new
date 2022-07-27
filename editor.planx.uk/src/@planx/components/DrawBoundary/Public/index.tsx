@@ -40,6 +40,9 @@ const useClasses = makeStyles((theme) => ({
     "& button:hover": {
       backgroundColor: theme.palette.background.paper,
     },
+    "& button:disabled": {
+      color: theme.palette.text.disabled,
+    },
   },
 }));
 
@@ -141,11 +144,12 @@ export default function Component(props: Props) {
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
           </Box>
-          {!props.hideFileUpload && !Boolean(boundary) && (
+          {!props.hideFileUpload && (
             <div className={classes.uploadInstead}>
               <button
                 data-testid="upload-file-button"
                 onClick={() => setPage("upload")}
+                disabled={Boolean(boundary)}
               >
                 Upload a location plan instead
               </button>
@@ -169,13 +173,14 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <Upload setFile={setSelectedFile} initialFile={selectedFile} />
-          {!Boolean(selectedFile?.url) && (
-            <div className={classes.uploadInstead}>
-              <Button onClick={() => setPage("draw")}>
-                Draw the boundary on a map instead
-              </Button>
-            </div>
-          )}
+          <div className={classes.uploadInstead}>
+            <Button
+              onClick={() => setPage("draw")}
+              disabled={Boolean(selectedFile?.url)}
+            >
+              Draw the boundary on a map instead
+            </Button>
+          </div>
         </div>
       );
     }
