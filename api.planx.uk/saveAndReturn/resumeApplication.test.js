@@ -224,7 +224,7 @@ describe("Resume Application endpoint", () => {
       });
   });
 
-  fit("sends a Notify email on successful resume", async () => {
+  it("sends a Notify email on successful resume", async () => {
     const body = { payload: { teamSlug: "test-team", email: TEST_EMAIL } };
 
     queryMock.mockQuery({
