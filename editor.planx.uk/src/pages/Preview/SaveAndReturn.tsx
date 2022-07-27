@@ -87,7 +87,7 @@ const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const isEmailCaptured = Boolean(useStore((state) => state.saveToEmail));
   const sessionId = useStore((state) => state.sessionId);
-  const isContentPage = useCurrentRoute().data?.isContentPage;
+  const isContentPage = useCurrentRoute()?.data?.isContentPage;
 
   // Setting the URL search param "sessionId" will route the user to ApplicationPath.Resume
   // Without this the user will need to click the magic link in their email after a refresh
