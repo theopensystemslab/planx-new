@@ -6,7 +6,7 @@
   "dependencies": {
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
-    "serve": "^13.0.2",
-    "testcafe": "^1.17.1"
+    "serve": "^14.0.1",
+    "testcafe": "^1.20.0"
   }
 }
