@@ -200,7 +200,7 @@ export = async () => {
     },
   });
   // Configure white-listed domains; Pulumi doesn't need to support "localhost" or introspection but root .env should
-  const HASURA_DOMAINS = `http://api:${DOMAIN}, https://*.planx.uk, https://*.planx.dev, https://*.planx.pizza, https://*.gov.uk`;
+  const HASURA_DOMAINS = `http://*.${DOMAIN}, https://*.${DOMAIN}, https://${DOMAIN}`;
   const hasuraListenerHttps = targetHasura.createListener("hasura-https", {
     protocol: "HTTPS",
     certificateArn: certificates.requireOutput("certificateArn"),
