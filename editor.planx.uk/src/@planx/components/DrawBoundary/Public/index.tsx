@@ -40,6 +40,9 @@ const useClasses = makeStyles((theme) => ({
     "& button:hover": {
       backgroundColor: theme.palette.background.paper,
     },
+    "& button:disabled": {
+      color: theme.palette.text.disabled,
+    },
   },
 }));
 
@@ -146,6 +149,7 @@ export default function Component(props: Props) {
               <button
                 data-testid="upload-file-button"
                 onClick={() => setPage("upload")}
+                disabled={Boolean(boundary)}
               >
                 Upload a location plan instead
               </button>
@@ -170,7 +174,10 @@ export default function Component(props: Props) {
           />
           <Upload setFile={setSelectedFile} initialFile={selectedFile} />
           <div className={classes.uploadInstead}>
-            <Button onClick={() => setPage("draw")}>
+            <Button
+              onClick={() => setPage("draw")}
+              disabled={Boolean(selectedFile?.url)}
+            >
               Draw the boundary on a map instead
             </Button>
           </div>
