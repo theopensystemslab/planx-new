@@ -7,6 +7,7 @@ import Warning from "@material-ui/icons/WarningOutlined";
 import Card from "@planx/components/shared/Preview/Card";
 import SummaryList from "@planx/components/shared/Preview/SummaryList";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
 import Banner from "ui/Banner";
 
@@ -38,6 +39,11 @@ const ReconciliationPage: React.FC<Props> = ({
     state.flow,
     state.changeAnswer,
   ]);
+
+  const sortedBreadcrumbs = sortBreadcrumbs(
+    data?.reconciledSessionData?.breadcrumbs,
+    flow
+  );
 
   const theme = useTheme();
   const classes = useStyles();
@@ -73,7 +79,7 @@ const ReconciliationPage: React.FC<Props> = ({
           Review your answers so far
         </Typography>
         <SummaryList
-          breadcrumbs={data?.reconciledSessionData?.breadcrumbs}
+          breadcrumbs={sortedBreadcrumbs}
           flow={flow}
           passport={data?.reconciledSessionData?.passport}
           changeAnswer={changeAnswer}
