@@ -141,7 +141,7 @@ export default function Component(props: Props) {
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
           </Box>
-          {!props.hideFileUpload && (
+          {!props.hideFileUpload && !Boolean(boundary) && (
             <div className={classes.uploadInstead}>
               <button
                 data-testid="upload-file-button"
@@ -169,11 +169,13 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <Upload setFile={setSelectedFile} initialFile={selectedFile} />
-          <div className={classes.uploadInstead}>
-            <Button onClick={() => setPage("draw")}>
-              Draw the boundary on a map instead
-            </Button>
-          </div>
+          {!Boolean(selectedFile?.url) && (
+            <div className={classes.uploadInstead}>
+              <Button onClick={() => setPage("draw")}>
+                Draw the boundary on a map instead
+              </Button>
+            </div>
+          )}
         </div>
       );
     }
