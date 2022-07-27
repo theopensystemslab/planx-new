@@ -212,7 +212,7 @@ describe("Resume Application endpoint", () => {
     queryMock.mockQuery({
       name: 'ValidateRequest',
       data: { teams: null, lowcal_sessions: null },
-      variables: payload
+      variables: body.payload
     });
 
     await supertest(app)
