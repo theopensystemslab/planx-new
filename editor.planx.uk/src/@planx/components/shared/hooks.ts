@@ -9,8 +9,6 @@ import { useCurrentRoute } from "react-navi";
  * https://editor.planx.uk/southwark/flow/preview
  */
 export const useTeamSlug = () => {
-  // XXX: This should really be handled by navi, but it's not clear how.
   const route = useCurrentRoute();
-
   return route?.data?.team;
 };
