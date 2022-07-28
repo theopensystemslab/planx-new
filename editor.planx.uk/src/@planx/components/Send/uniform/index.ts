@@ -95,6 +95,18 @@ export function makeCsvData(
       question: "Planning Application Reference", // match language used on Confirmation page
       responses: sessionId,
     },
+    {
+      question: "Property Address",
+      responses: [
+        bopsData.site?.address_1,
+        bopsData.site?.address_2,
+        bopsData.site?.town,
+        bopsData.site?.postcode,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .replaceAll(",", ""), // omit commas for csv > pdf parsing later by Uniform
+    },
   ];
 
   // check if the passport has payment or submission ids, add them as reference rows if exist
