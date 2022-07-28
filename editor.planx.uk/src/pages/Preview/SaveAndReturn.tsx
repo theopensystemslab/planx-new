@@ -4,6 +4,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { useCurrentRoute } from "react-navi";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 import InputRow from "ui/InputRow";
@@ -86,8 +87,9 @@ const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const isEmailCaptured = Boolean(useStore((state) => state.saveToEmail));
   const sessionId = useStore((state) => state.sessionId);
+  const isContentPage = useCurrentRoute()?.data?.isContentPage;
 
-  // Setting the URL search param "sessionId" will route the user to Application.Resume
+  // Setting the URL search param "sessionId" will route the user to ApplicationPath.Resume
   // Without this the user will need to click the magic link in their email after a refresh
   const allowResumeOnBrowserRefresh = () => {
     const url = new URL(window.location.href);
@@ -102,7 +104,7 @@ const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <>
-      {isEmailCaptured ? (
+      {isEmailCaptured || isContentPage ? (
         children
       ) : (
         <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>

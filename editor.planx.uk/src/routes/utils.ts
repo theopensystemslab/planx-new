@@ -22,8 +22,10 @@ export const isSaveReturnFlow = (flowData: Record<string, any>): Boolean =>
 
 export const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
   if (!isSaveReturnFlow(flowData)) return;
-  const path = req.params.sessionId
-    ? ApplicationPath.Resume
-    : ApplicationPath.SaveAndReturn;
+  const isEmailCaptured = Boolean(useStore.getState().saveToEmail);
+  const path =
+    req.params.sessionId && !isEmailCaptured
+      ? ApplicationPath.Resume
+      : ApplicationPath.SaveAndReturn;
   useStore.setState({ path });
 };
