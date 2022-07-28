@@ -403,8 +403,8 @@ export = async () => {
             value: config.require("uniform-submission-url"),
           },
           {
-            name: "GOVUK_NOTIFY_API_KEY_TEAM",
-            value: config.require("govuk-notify-api-key-team"),
+            name: "GOVUK_NOTIFY_API_KEY",
+            value: config.require("govuk-notify-api-key"),
           },
           {
             name: "GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID",
