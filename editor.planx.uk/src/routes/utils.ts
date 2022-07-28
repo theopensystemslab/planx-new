@@ -47,16 +47,17 @@ export const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
 //
 //      So I've hard-coded these domain names until a better solution comes along.
 //
-const DOMAINS = ["planx.dev", "planx.uk", "planx.pizza"];
 const PREVIEW_ONLY_DOMAINS = [
   "1036.planx.pizza",
+  "planningservices.buckinghamshire.gov.uk",
+  "planningservices.lambeth.gov.uk",
+  "planningservices.southwark.gov.uk",
   // XXX: un-comment the next line to test custom domains locally
   // "localhost",
 ];
-export const isPreviewOnlyDomain =
-  PREVIEW_ONLY_DOMAINS.some((domain) =>
-    window.location.hostname.endsWith(String(domain))
-  ) || !DOMAINS.some((domain) => window.location.hostname.endsWith(domain));
+export const isPreviewOnlyDomain = PREVIEW_ONLY_DOMAINS.some((domain) =>
+  window.location.hostname.endsWith(domain)
+);
 
 const QUERY_GET_TEAM_BY_DOMAIN = gql`
   query GetTeamByDomain($domain: String!) {
