@@ -111,7 +111,6 @@ export = async () => {
   // Forward HTTP to HTTPS
   const metabaseListenerHttp = targetMetabase.createListener("metabase-http", {
     protocol: "HTTP",
-    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     defaultAction: {
       type: "redirect",
       redirect: {
@@ -192,7 +191,6 @@ export = async () => {
   // Forward HTTP to HTTPS
   const hasuraListenerHttp = targetHasura.createListener("hasura-http", {
     protocol: "HTTP",
-    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     defaultAction: {
       type: "redirect",
       redirect: {
@@ -322,7 +320,6 @@ export = async () => {
   // Forward HTTP to HTTPS
   const apiListenerHttp = targetApi.createListener("api-http", {
     protocol: "HTTP",
-    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     defaultAction: {
       type: "redirect",
       redirect: {
@@ -465,7 +462,6 @@ export = async () => {
   // Forward HTTP to HTTPS
   const sharedbListenerHttp = targetSharedb.createListener("sharedb-http", {
     protocol: "HTTP",
-    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     defaultAction: {
       type: "redirect",
       redirect: {
