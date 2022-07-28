@@ -108,8 +108,7 @@ const sendSingleApplicationEmail = async (template, email, sessionId) => {
         teamName,
       ),
       reference: null,
-      // This value is required to go live, but is not currently set up
-      // emailReplyToId: team.emailReplyToId,
+      emailReplyToId: teamPersonalisation.emailReplyToId,
     };
     return await sendEmail(template, email, config);
   } catch (error) {
