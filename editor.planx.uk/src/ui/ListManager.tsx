@@ -4,7 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Delete from "@material-ui/icons/Delete";
 import DragHandle from "@material-ui/icons/DragHandle";
-import arrayMove from "array-move";
+import { arrayMoveImmutable } from "array-move";
 import React, { useRef } from "react";
 import {
   DragDropContext,
@@ -99,7 +99,7 @@ export default function ListManager<T, EditorExtraProps>(
           return;
         }
         props.onChange(
-          arrayMove(
+          arrayMoveImmutable(
             props.values,
             dropResult.source.index,
             dropResult.destination.index

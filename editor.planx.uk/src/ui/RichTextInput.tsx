@@ -24,7 +24,7 @@ import {
   EditorState,
 } from "draft-js";
 import draftToHtml from "draftjs-to-html";
-import marked from "marked";
+import { marked } from "marked";
 import React, {
   ChangeEvent,
   ReactElement,
