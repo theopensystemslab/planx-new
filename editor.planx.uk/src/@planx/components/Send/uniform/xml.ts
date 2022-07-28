@@ -185,22 +185,22 @@ export function makeXmlString(
         <common:ExternalAddress>
           <common:InternationalAddress>
             <apd:IntAddressLine>${
-              passport.data?.["applicant.address.line1"]
+              passport.data?.["applicant.address"]?.["line1"]
             }</apd:IntAddressLine>
             <apd:IntAddressLine>${
-              passport.data?.["applicant.address.line2"]
+              passport.data?.["applicant.address"]?.["line2"]
             }</apd:IntAddressLine>
             <apd:IntAddressLine>${
-              passport.data?.["applicant.address.town"]
+              passport.data?.["applicant.address"]?.["town"]
             }</apd:IntAddressLine>
             <apd:IntAddressLine>${
-              passport.data?.["applicant.address.county"]
+              passport.data?.["applicant.address"]?.["county"]
             }</apd:IntAddressLine>
             <apd:Country>${
-              passport.data?.["applicant.address.country"]
+              passport.data?.["applicant.address"]?.["country"]
             }</apd:Country>
             <apd:InternationalPostCode>${
-              passport.data?.["applicant.address.postcode"]
+              passport.data?.["applicant.address"]?.["postcode"]
             }</apd:InternationalPostCode>
           </common:InternationalAddress>
         </common:ExternalAddress>
@@ -238,22 +238,22 @@ export function makeXmlString(
         <common:ExternalAddress>
           <common:InternationalAddress>
           <apd:IntAddressLine>${
-            passport.data?.["applicant.agent.address.line1"]
+            passport.data?.["applicant.agent.address"]?.["line1"]
           }</apd:IntAddressLine>
           <apd:IntAddressLine>${
-            passport.data?.["applicant.agent.address.line2"]
+            passport.data?.["applicant.agent.address"]?.["line2"]
           }</apd:IntAddressLine>
           <apd:IntAddressLine>${
-            passport.data?.["applicant.agent.address.town"]
+            passport.data?.["applicant.agent.address"]?.["town"]
           }</apd:IntAddressLine>
           <apd:IntAddressLine>${
-            passport.data?.["applicant.agent.address.county"]
+            passport.data?.["applicant.agent.address"]?.["county"]
           }</apd:IntAddressLine>
           <apd:Country>${
-            passport.data?.["applicant.agent.address.country"]
+            passport.data?.["applicant.agent.address"]?.["country"]
           }</apd:Country>
           <apd:InternationalPostCode>${
-            passport.data?.["applicant.agent.address.postcode"]
+            passport.data?.["applicant.agent.address"]?.["postcode"]
           }</apd:InternationalPostCode>
           </common:InternationalAddress>
         </common:ExternalAddress>
