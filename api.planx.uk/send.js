@@ -5,7 +5,7 @@ const FormData = require("form-data");
 const fs = require("fs");
 const AdmZip = require("adm-zip");
 const str = require("string-to-stream");
-const stringify = require("csv-stringify");
+const { stringify } = require("csv-stringify");
 const { GraphQLClient } = require("graphql-request");
 const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
 

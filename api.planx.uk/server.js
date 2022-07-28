@@ -4,9 +4,9 @@ const assert = require("assert");
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const cors = require("cors");
-const stringify = require("csv-stringify");
+const { stringify } = require("csv-stringify");
 const express = require("express");
-const jwt = require("express-jwt");
+const { expressjwt } = require("express-jwt");
 const noir = require("pino-noir");
 const { URL } = require("url");
 const { Server } = require("http");
@@ -35,6 +35,7 @@ const airbrake = require("./airbrake");
 const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
 const { createReminderEvent, createExpiryEvent } = require("./webhooks/lowcalSessionEvents");
 const { adminGraphQLClient } = require("./hasura");
+const { sendEmailLimiter, apiLimiter } = require("./rateLimit");
 
 const router = express.Router();
 
@@ -231,10 +232,12 @@ app.use(cookieParser());
 // XXX: Currently not checking for JWT and including req.user in every
 //      express endpoint because authentication also uses req.user. More info:
 //      https://github.com/theopensystemslab/planx-new/pull/555#issue-684435760
-const useJWT = jwt({
+// TODO: requestProperty can now be set. This might resolve the above issue.
+const useJWT = expressjwt({
   secret: process.env.JWT_SECRET,
   algorithms: ["HS256"],
   credentialsRequired: true,
+  requestProperty: "user",
   getToken: (req) =>
     req.cookies?.jwt ??
     req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1] ??
@@ -248,6 +251,9 @@ if (process.env.NODE_ENV !== "test") {
     })
   );
 }
+
+// Rate limit requests per IP address
+app.use(apiLimiter);
 
 assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
@@ -591,8 +597,8 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
 });
 
 assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
-app.post("/send-email/:template", useSendEmailAuth, sendSaveAndReturnEmail);
-app.post("/resume-application", resumeApplication);
+app.post("/send-email/:template", sendEmailLimiter, useSendEmailAuth, sendSaveAndReturnEmail);
+app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
 app.use("/webhooks/hasura", useHasuraAuth)

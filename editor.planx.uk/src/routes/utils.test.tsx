@@ -84,9 +84,6 @@ const mockSendFlow = {
 };
 
 describe("isSaveReturnFlow helper function", () => {
-  beforeAll(() => (window as any).featureFlags.toggle("SAVE_AND_RETURN"));
-  afterAll(() => (window as any).featureFlags.toggle("SAVE_AND_RETURN"));
-
   it("correctly identifies flows with a 'Send' node", () => {
     expect(isSaveReturnFlow(mockSendFlow)).toEqual(true);
   });
@@ -97,14 +94,9 @@ describe("isSaveReturnFlow helper function", () => {
 });
 
 describe("setPath helper function", () => {
-  beforeAll(() => {
-    initialState = getState();
-    (window as any).featureFlags.toggle("SAVE_AND_RETURN");
-  });
+  beforeAll(() => (initialState = getState()));
 
   afterEach(() => waitFor(() => setState(initialState)));
-
-  afterAll(() => (window as any).featureFlags.toggle("SAVE_AND_RETURN"));
 
   it("correctly sets the path for a 'Save/Return' user journey", () => {
     const mockNaviRequest = { params: {} } as unknown as NaviRequest;

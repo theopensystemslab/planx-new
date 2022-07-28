@@ -124,6 +124,7 @@ export = async () => {
     "metabase-https",
     {
       protocol: "HTTPS",
+      sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
       certificateArn: certificates.requireOutput("certificateArn"),
     }
   );
@@ -133,7 +134,7 @@ export = async () => {
     taskDefinitionArgs: {
       container: {
         // if changing, also check docker-compose.yml
-        image: "metabase/metabase:v0.41.5",
+        image: "metabase/metabase:v0.43.4",
         memory: 2048 /*MB*/,
         portMappings: [metabaseListenerHttps],
         environment: [
@@ -199,8 +200,11 @@ export = async () => {
       },
     },
   });
+  // Configure white-listed domains; Pulumi doesn't need to support "localhost" or introspection but root .env should
+  const HASURA_DOMAINS = `http://*.${DOMAIN}, https://*.${DOMAIN}, https://${DOMAIN}`;
   const hasuraListenerHttps = targetHasura.createListener("hasura-https", {
     protocol: "HTTPS",
+    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     certificateArn: certificates.requireOutput("certificateArn"),
   });
   const hasuraService = new awsx.ecs.FargateService("hasura", {
@@ -218,7 +222,7 @@ export = async () => {
             name: "HASURA_GRAPHQL_ADMIN_SECRET",
             value: config.require("hasura-admin-secret"),
           },
-          { name: "HASURA_GRAPHQL_CORS_DOMAIN", value: "*" },
+          { name: "HASURA_GRAPHQL_CORS_DOMAIN", value: HASURA_DOMAINS },
           {
             name: "HASURA_GRAPHQL_ENABLED_LOG_TYPES",
             value: "startup, http-log, webhook-log, websocket-log, query-log",
@@ -327,6 +331,7 @@ export = async () => {
   });
   const apiListenerHttps = targetApi.createListener("api-https", {
     protocol: "HTTPS",
+    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     certificateArn: certificates.requireOutput("certificateArn"),
   });
   const apiService = new awsx.ecs.FargateService("api", {
@@ -468,6 +473,7 @@ export = async () => {
   });
   const sharedbListenerHttps = targetSharedb.createListener("sharedb-https", {
     protocol: "HTTPS",
+    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     certificateArn: certificates.requireOutput("certificateArn"),
   });
   const sharedbService = new awsx.ecs.FargateService("sharedb", {

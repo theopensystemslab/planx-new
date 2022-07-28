@@ -108,8 +108,7 @@ const sendSingleApplicationEmail = async (template, email, sessionId) => {
         teamName,
       ),
       reference: null,
-      // This value is required to go live, but is not currently set up
-      // emailReplyToId: team.emailReplyToId,
+      emailReplyToId: teamPersonalisation.emailReplyToId,
     };
     return await sendEmail(template, email, config);
   } catch (error) {
@@ -297,6 +296,23 @@ const getSaveAndReturnPublicHeaders = (sessionId, email) => ({
   "x-hasura-lowcal-email": email.toLowerCase(),
 });
 
+/**
+ * Helper method to preserve session data order during reconciliation
+ *    XX: This function is also maintained at editor.planx.uk/src/lib/lowcalStorage.ts
+ */
+const stringifyWithRootKeysSortedAlphabetically = (ob = {}) =>
+  JSON.stringify(
+    Object.keys(ob)
+      .sort()
+      .reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr]: ob[curr],
+        }),
+        {}
+      )
+  );
+
 module.exports = {
   getSaveAndReturnPublicHeaders,
   sendEmail,
@@ -308,4 +324,5 @@ module.exports = {
   DAYS_UNTIL_EXPIRY,
   calculateExpiryDate,
   getHumanReadableProjectType,
+  stringifyWithRootKeysSortedAlphabetically,
 };

@@ -106,7 +106,7 @@ describe("lowcal_sessions", () => {
 
     describe("UPDATE without permission", () => {
       test("cannot update without 'x-hasura-lowcal-session-id' header", async () => {
-        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } });
+        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, { "x-hasura-lowcal-email": "alice@opensystemslab.io" });
         expect(res).toHaveProperty("errors");
         expect(res.errors[0].message).toContain('missing session variable: "x-hasura-lowcal-session-id"');
       });
@@ -118,15 +118,9 @@ describe("lowcal_sessions", () => {
       });
 
       test("'x-hasura-lowcal-session-id' header must have value", async () => {
-        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, { "x-hasura-lowcal-session-id": null});
+        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, { "x-hasura-lowcal-session-id": null, "x-hasura-lowcal-email": "alice@opensystemslab.io"});
         expect(res).toHaveProperty("errors");
-        expect(res.errors[0].message).toContain('missing session variable: "x-hasura-lowcal-session-id"');
-      });
-  
-      test("'x-hasura-lowcal-email' header must have value", async () => {
-        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, { "x-hasura-lowcal-session-id": uuidV4(), "x-hasura-lowcal-email": null });
-        expect(res).toHaveProperty("errors");
-        expect(res.errors[0].message).toContain('missing session variable: "x-hasura-lowcal-email"');
+        expect(res.errors[0].message).toContain("invalid input syntax for type uuid: \"null\"");
       });
 
       test("Alice cannot update her own session with invalid sessionId", async () => {
@@ -142,6 +136,15 @@ describe("lowcal_sessions", () => {
         const headers = {
           "x-hasura-lowcal-session-id": alice1,
           "x-hasura-lowcal-email": "not-alice@opensystemslab.io"
+        };
+        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, headers);
+        expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
+      });
+
+      test("Alice cannot update her own session with a missing email", async () => {
+        const headers = {
+          "x-hasura-lowcal-session-id": alice1,
+          "x-hasura-lowcal-email": null
         };
         const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, headers);
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();

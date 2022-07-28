@@ -4,7 +4,6 @@ const mockTeam = {
   notify_personalisation: {
     helpEmail: "example@council.gov.uk",
     helpPhone: "(01234) 567890",
-    emailReplyToId: "testID",
     helpOpeningHours: "Monday - Friday, 9am - 5pm"
   }
 };

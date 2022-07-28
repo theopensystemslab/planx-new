@@ -460,7 +460,8 @@ export const extractTagsFromPassportKey = (passportKey: string) => {
     tags.push("Existing");
   }
 
-  if (splitKey.includes("sitePlan")) {
+  if (splitKey.includes("locationPlan")) {
+    // "locationPlan" is DrawBoundary's passport key
     tags.push("Site");
     tags.push("Plan");
   } else if (splitKey.includes("roofPlan")) {
@@ -492,6 +493,7 @@ export const extractTagsFromPassportKey = (passportKey: string) => {
   } else if (passportKey.includes("construction.invoice")) {
     tags.push("Construction Invoice");
   } else if (splitKey.some((x) => x.endsWith("Plan"))) {
+    // eg "sitePlan"
     tags.push("Plan");
   }
 

@@ -17,7 +17,6 @@ export const rootFlowPath = (includePortals = false) => {
 };
 
 export const isSaveReturnFlow = (flowData: Record<string, any>): Boolean =>
-  hasFeatureFlag("SAVE_AND_RETURN") &&
   Boolean(
     Object.values(flowData).find(
       (node: Record<string, any>) => node.type === NodeTypes.Send
@@ -25,10 +24,14 @@ export const isSaveReturnFlow = (flowData: Record<string, any>): Boolean =>
   );
 
 export const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
+  // XXX: store.path is SingleSession by default
   if (!isSaveReturnFlow(flowData)) return;
-  const path = req.params.sessionId
-    ? ApplicationPath.Resume
-    : ApplicationPath.SaveAndReturn;
+  if (hasFeatureFlag("DISABLE_SAVE_AND_RETURN")) return;
+  const isEmailCaptured = Boolean(useStore.getState().saveToEmail);
+  const path =
+    req.params.sessionId && !isEmailCaptured
+      ? ApplicationPath.Resume
+      : ApplicationPath.SaveAndReturn;
   useStore.setState({ path });
 };
 

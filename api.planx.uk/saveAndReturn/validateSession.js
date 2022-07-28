@@ -2,13 +2,13 @@ const { gql } = require("graphql-request");
 const jsondiffpatch = require("jsondiffpatch");
 const { publicGraphQLClient } = require("../hasura");
 const { getMostRecentPublishedFlow, getPublishedFlowByDate } = require("../helpers");
-const { getSaveAndReturnPublicHeaders } = require("./utils");
+const { getSaveAndReturnPublicHeaders, stringifyWithRootKeysSortedAlphabetically } = require("./utils");
 
 const client = publicGraphQLClient;
 
 const validateSession = async (req, res, next) => {
   try {
-    const { email, sessionId } = req.body;
+    const { email, sessionId } = req.body.payload;
     if (!email || !sessionId)
       return next({
         status: 400,
@@ -66,7 +66,9 @@ const validateSession = async (req, res, next) => {
           //   **what about collected flags? what about `auto: true`? component dependencies like FindProp/Draw/PlanningConstraints?
 
           // update the lowcal_session.data to match our updated in-memory sessionData.data
-          const reconciledSessionData = await updateLowcalSessionData(sessionId, sessionData.data, email);
+          //   XX: apply sorting to match the original get/set methods used in editor.planx.uk/src/lib/lowcalStorage.ts
+          const sortedSessionData = stringifyWithRootKeysSortedAlphabetically(sessionData.data);
+          const reconciledSessionData = await updateLowcalSessionData(sessionId, JSON.parse(sortedSessionData.data), email);
 
           res.status(200).json({
             message: "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",

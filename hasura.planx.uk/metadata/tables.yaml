@@ -10,7 +10,6 @@
           - flow_id
           - id
           - type
-        backend_only: false
   select_permissions:
     - role: public
       permission:
@@ -34,7 +33,6 @@
           - node_title
           - node_type
           - user_exit
-        backend_only: false
   select_permissions:
     - role: public
       permission:
@@ -312,7 +310,6 @@
           - flow_id
           - session_id
           - user_data
-        backend_only: false
 - table:
     schema: public
     name: team_members

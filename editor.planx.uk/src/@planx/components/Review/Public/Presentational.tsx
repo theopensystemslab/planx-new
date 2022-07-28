@@ -3,6 +3,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import SummaryList from "@planx/components/shared/Preview/SummaryList";
 import type { Store } from "pages/FlowEditor/lib/store";
+import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import type { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 
@@ -30,12 +31,15 @@ interface Props {
 function Component(props: Props) {
   const { root } = useStyles();
 
+  // ensure questions & answers display in expected order
+  const sortedBreadcrumbs = sortBreadcrumbs(props.breadcrumbs, props.flow);
+
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
       <div className={root}>
         <QuestionHeader title={props.title} description={props.description} />
         <SummaryList
-          breadcrumbs={props.breadcrumbs}
+          breadcrumbs={sortedBreadcrumbs}
           flow={props.flow}
           passport={props.passport}
           changeAnswer={props.changeAnswer}

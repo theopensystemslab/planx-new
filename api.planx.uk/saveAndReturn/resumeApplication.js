@@ -10,7 +10,7 @@ const { sendEmail, convertSlugToName, getResumeLink, calculateExpiryDate, getHum
  */
 const resumeApplication = async (req, res, next) => {
   try {
-    const { teamSlug, email } = req.body;
+    const { teamSlug, email } = req.body.payload;
     if (!teamSlug || !email)
       return next({
         status: 400,
@@ -29,8 +29,7 @@ const resumeApplication = async (req, res, next) => {
         teamName,
       ),
       reference: null,
-      // This value is required to go live, but is not currently set up
-      // emailReplyToId: team.emailReplyToId,
+      emailReplyToId: teamPersonalisation.emailReplyToId,
     };
     const response = await sendEmail("resume", email, config);
     return res.json(response);

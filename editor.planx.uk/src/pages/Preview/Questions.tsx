@@ -16,7 +16,7 @@ import React, {
   useState,
 } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { FlowSettings } from "types";
+import { ApplicationPath, FlowSettings } from "types";
 
 import ErrorFallback from "../../components/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
@@ -81,8 +81,36 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   const { createAnalytics, node } = useAnalyticsTracking();
   const classes = useClasses();
   const [gotFlow, setGotFlow] = useState(false);
+  const isSingleSession =
+    useStore((state) => state.path) === ApplicationPath.SingleSession;
 
-  if (hasFeatureFlag("SAVE_AND_RETURN")) {
+  if (isSingleSession) {
+    // Use local storage for simple, non-Save&Return flows
+    useEffect(() => {
+      setPreviewEnvironment(previewEnvironment);
+      if (isStandalone) {
+        const state = getLocalFlow(id);
+        if (state) {
+          resumeSession(state);
+        }
+        createAnalytics(state ? "resume" : "init");
+        setGotFlow(true);
+      }
+    }, []);
+
+    useEffect(() => {
+      if (gotFlow && isStandalone && id) {
+        setLocalFlow(id, {
+          breadcrumbs,
+          id,
+          passport,
+          sessionId,
+          govUkPayment,
+        });
+      }
+    }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
+  } else {
+    // Use lowcalStorage for Save & Return flows
     useEffect(() => {
       setPreviewEnvironment(previewEnvironment);
       if (isStandalone) {
@@ -101,30 +129,6 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
         NEW.setLocalFlow(sessionId, {
           breadcrumbs,
           // todo: replace `id` with `flow: { id, published_flow_id }`
-          id,
-          passport,
-          sessionId,
-          govUkPayment,
-        });
-      }
-    }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
-  } else {
-    useEffect(() => {
-      setPreviewEnvironment(previewEnvironment);
-      if (isStandalone) {
-        const state = getLocalFlow(id);
-        if (state) {
-          resumeSession(state);
-        }
-        createAnalytics(state ? "resume" : "init");
-        setGotFlow(true);
-      }
-    }, []);
-
-    useEffect(() => {
-      if (gotFlow && isStandalone && id) {
-        setLocalFlow(id, {
-          breadcrumbs,
           id,
           passport,
           sessionId,
