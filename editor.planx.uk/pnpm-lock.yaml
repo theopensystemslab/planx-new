@@ -34,7 +34,7 @@ specifiers:
   '@types/jest': ^26.0.24
   '@types/jest-axe': ^3.5.3
   '@types/lodash': ^4.14.165
-  '@types/marked': ^1.2.1
+  '@types/marked': ^4.0.3
   '@types/node': ^17.0.0
   '@types/ramda': ^0.27.32
   '@types/react': ^17.0.37
@@ -65,11 +65,11 @@ specifiers:
   immer: ^7.0.14
   jest-axe: ^5.0.1
   jest-localstorage-mock: ^2.4.18
-  js-cookie: ^2.2.1
+  js-cookie: ^3.0.1
   jwt-decode: ^3.1.2
   lint-staged: ^12.4.3
   lodash: ^4.17.21
-  marked: ^1.2.7
+  marked: ^4.0.18
   mathjs: ^9.3.0
   nanoid: ^3.1.16
   nanoid-good: ^3.1.0
@@ -136,11 +136,11 @@ dependencies:
   formik: 2.2.9_react@17.0.2
   graphql: 16.5.0
   graphql-tag: 2.12.6_graphql@16.5.0
-  immer: 7.0.14
-  js-cookie: 2.2.1
+  immer: 7.0.15
+  js-cookie: 3.0.1
   jwt-decode: 3.1.2
   lodash: 4.17.21
-  marked: 1.2.7
+  marked: 4.0.18
   mathjs: 9.3.0
   nanoid: 3.1.16
   nanoid-good: 3.1.0
@@ -196,7 +196,7 @@ devDependencies:
   '@types/jest': 26.0.24
   '@types/jest-axe': 3.5.3
   '@types/lodash': 4.14.165
-  '@types/marked': 1.2.1
+  '@types/marked': 4.0.3
   '@types/node': 17.0.0
   '@types/ramda': 0.27.32
   '@types/react': 17.0.37
@@ -5034,8 +5034,8 @@ packages:
     resolution: {integrity: sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==}
     dev: false
 
-  /@types/marked/1.2.1:
-    resolution: {integrity: sha512-d5adCgRHB+NAme23hkiTkvpfZUDqoNtL2Sr2nZBJqSj3zyHLxsfFWsGQ2sK2z9aX6L1xkJzon2c0jTPcsEjpaQ==}
+  /@types/marked/4.0.3:
+    resolution: {integrity: sha512-HnMWQkLJEf/PnxZIfbm0yGJRRZYYMhb++O9M36UCTA9z53uPvVoSlAwJr3XOpDEryb7Hwl1qAx/MV6YIW1RXxg==}
     dev: true
 
   /@types/mdast/3.0.3:
@@ -10953,8 +10953,8 @@ packages:
     resolution: {integrity: sha512-2zeMQpbKz5dhZ9IwL0gbxSW5w0NK/MSAMtNuhgIHEPmaU3vPdKPL0UdvUCXs5SS4JAwsBxysK5sFMW8ocFiVjQ==}
     engines: {node: '>= 4'}
 
-  /immer/7.0.14:
-    resolution: {integrity: sha512-BxCs6pJwhgSEUEOZjywW7OA8DXVzfHjkBelSEl0A+nEu0+zS4cFVdNOONvt55N4WOm8Pu4xqSPYxhm1Lv2iBBA==}
+  /immer/7.0.15:
+    resolution: {integrity: sha512-yM7jo9+hvYgvdCQdqvhCNRRio0SCXc8xDPzA25SvKWa7b1WVPjLwQs1VYU5JPXjcJPTqAa5NP5dqpORGYBQ2AA==}
     dev: false
 
   /immer/8.0.1:
@@ -12188,6 +12188,11 @@ packages:
     resolution: {integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==}
     dev: false
 
+  /js-cookie/3.0.1:
+    resolution: {integrity: sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==}
+    engines: {node: '>=12'}
+    dev: false
+
   /js-string-escape/1.0.1:
     resolution: {integrity: sha1-4mJbrbwNZ8dTPp7cEGjFh65BN+8=}
     engines: {node: '>= 0.8'}
@@ -12781,9 +12786,9 @@ packages:
       react: 17.0.2
     dev: true
 
-  /marked/1.2.7:
-    resolution: {integrity: sha512-No11hFYcXr/zkBvL6qFmAp1z6BKY3zqLMHny/JN/ey+al7qwCM2+CMBL9BOgqMxZU36fz4cCWfn2poWIf7QRXA==}
-    engines: {node: '>= 8.16.2'}
+  /marked/4.0.18:
+    resolution: {integrity: sha512-wbLDJ7Zh0sqA0Vdg6aqlbT+yPxqLblpAZh1mK2+AO2twQkPywvvqQNfEPVwSSRjZ7dZcdeVBIAgiO7MMp3Dszw==}
+    engines: {node: '>= 12'}
     hasBin: true
     dev: false
 
