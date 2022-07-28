@@ -133,7 +133,7 @@ export = async () => {
     taskDefinitionArgs: {
       container: {
         // if changing, also check docker-compose.yml
-        image: "metabase/metabase:v0.41.5",
+        image: "metabase/metabase:v0.43.4",
         memory: 2048 /*MB*/,
         portMappings: [metabaseListenerHttps],
         environment: [
