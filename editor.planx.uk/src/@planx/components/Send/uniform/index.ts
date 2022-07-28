@@ -98,10 +98,10 @@ export function makeCsvData(
     {
       question: "Property Address",
       responses: [
-        bopsData.site.address_1,
-        bopsData.site.address_2,
-        bopsData.site.town,
-        bopsData.site.postcode,
+        bopsData.site?.address_1,
+        bopsData.site?.address_2,
+        bopsData.site?.town,
+        bopsData.site?.postcode,
       ]
         .filter(Boolean)
         .join(" ")
