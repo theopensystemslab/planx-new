@@ -53,7 +53,7 @@ const PREVIEW_ONLY_DOMAINS = [
   // XXX: un-comment the next line to test custom domains locally
   // "localhost",
 ];
-const isPreviewOnlyDomain =
+export const isPreviewOnlyDomain =
   PREVIEW_ONLY_DOMAINS.some((domain) =>
     window.location.hostname.endsWith(String(domain))
   ) || !DOMAINS.some((domain) => window.location.hostname.endsWith(domain));
