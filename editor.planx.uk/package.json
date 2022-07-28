@@ -30,7 +30,7 @@
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "marked": "^4.0.18",
-    "mathjs": "^9.3.0",
+    "mathjs": "^11.0.1",
     "nanoid": "^3.1.16",
     "nanoid-good": "^3.1.0",
     "natsort": "^2.0.3",
