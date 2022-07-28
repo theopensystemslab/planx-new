@@ -111,6 +111,7 @@ export = async () => {
   // Forward HTTP to HTTPS
   const metabaseListenerHttp = targetMetabase.createListener("metabase-http", {
     protocol: "HTTP",
+    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     defaultAction: {
       type: "redirect",
       redirect: {
@@ -124,6 +125,7 @@ export = async () => {
     "metabase-https",
     {
       protocol: "HTTPS",
+      sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
       certificateArn: certificates.requireOutput("certificateArn"),
     }
   );
@@ -190,6 +192,7 @@ export = async () => {
   // Forward HTTP to HTTPS
   const hasuraListenerHttp = targetHasura.createListener("hasura-http", {
     protocol: "HTTP",
+    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     defaultAction: {
       type: "redirect",
       redirect: {
@@ -203,6 +206,7 @@ export = async () => {
   const HASURA_DOMAINS = `http://*.${DOMAIN}, https://*.${DOMAIN}, https://${DOMAIN}`;
   const hasuraListenerHttps = targetHasura.createListener("hasura-https", {
     protocol: "HTTPS",
+    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     certificateArn: certificates.requireOutput("certificateArn"),
   });
   const hasuraService = new awsx.ecs.FargateService("hasura", {
@@ -318,6 +322,7 @@ export = async () => {
   // Forward HTTP to HTTPS
   const apiListenerHttp = targetApi.createListener("api-http", {
     protocol: "HTTP",
+    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     defaultAction: {
       type: "redirect",
       redirect: {
@@ -329,6 +334,7 @@ export = async () => {
   });
   const apiListenerHttps = targetApi.createListener("api-https", {
     protocol: "HTTPS",
+    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     certificateArn: certificates.requireOutput("certificateArn"),
   });
   const apiService = new awsx.ecs.FargateService("api", {
@@ -459,6 +465,7 @@ export = async () => {
   // Forward HTTP to HTTPS
   const sharedbListenerHttp = targetSharedb.createListener("sharedb-http", {
     protocol: "HTTP",
+    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     defaultAction: {
       type: "redirect",
       redirect: {
@@ -470,6 +477,7 @@ export = async () => {
   });
   const sharedbListenerHttps = targetSharedb.createListener("sharedb-https", {
     protocol: "HTTPS",
+    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     certificateArn: certificates.requireOutput("certificateArn"),
   });
   const sharedbService = new awsx.ecs.FargateService("sharedb", {
