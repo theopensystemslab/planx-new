@@ -21,14 +21,35 @@ import React from "react";
 import { View } from "react-navi";
 import { Flow, GlobalSettings, Maybe } from "types";
 
-import { setPath } from "./utils";
+import { extractFlowNameFromReq, getTeamFromDomain, setPath } from "./utils";
 
 const routes = compose(
-  withData((req) => ({
-    mountpath: req.mountpath,
-  })),
+  withData(async (req) => {
+    const externalDomainTeam = await getTeamFromDomain(
+      window.location.hostname
+    );
+
+    return {
+      mountpath: req.mountpath,
+      team: req.params.team || externalDomainTeam,
+      isPreviewOnlyDomain: Boolean(externalDomainTeam),
+      flowName: extractFlowNameFromReq(req),
+    };
+  }),
 
   withView(async (req) => {
+    const externalTeamName = await getTeamFromDomain(window.location.hostname);
+
+    // XXX: Prevents accessing a different team than the one associated with the custom domain.
+    //      e.g. Custom domain is for Southwark but URL is looking for Lambeth
+    //      e.g. https://planningservices.southwark.gov.uk/lambeth/some-flow/preview
+    if (
+      req.params.team &&
+      externalTeamName &&
+      externalTeamName !== req.params.team
+    )
+      throw new NotFoundError();
+
     const { data } = await client.query({
       query: gql`
         query GetFlow($flowSlug: String!, $teamSlug: String!) {
@@ -58,7 +79,7 @@ const routes = compose(
       `,
       variables: {
         flowSlug: req.params.flow.split(",")[0],
-        teamSlug: req.params.team,
+        teamSlug: req.params.team || externalTeamName,
       },
     });
 

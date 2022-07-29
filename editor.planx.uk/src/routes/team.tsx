@@ -5,7 +5,7 @@ import React from "react";
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
 import Team from "../pages/Team";
-import { makeTitle } from "./utils";
+import { getTeamFromDomain, makeTitle } from "./utils";
 
 let cached: { flowSlug?: string; teamSlug?: string } = {
   flowSlug: undefined,
@@ -13,8 +13,9 @@ let cached: { flowSlug?: string; teamSlug?: string } = {
 };
 
 const routes = compose(
-  withData((req) => ({
-    team: req.params.team,
+  withData(async (req) => ({
+    team:
+      req.params.team || (await getTeamFromDomain(window.location.hostname)),
   })),
 
   mount({

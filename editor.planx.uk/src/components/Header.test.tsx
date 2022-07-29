@@ -30,6 +30,7 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
         username: "Test User",
         team: mockTeam1.slug,
         flow: "test-flow",
+        flowName: "test flow",
       },
     } as any)
 );
