@@ -495,6 +495,8 @@ export const extractTagsFromPassportKey = (passportKey: string) => {
   } else if (splitKey.some((x) => x.endsWith("Plan"))) {
     // eg "sitePlan"
     tags.push("Plan");
+  } else if (splitKey.includes("other")) {
+    tags.push("Other");
   }
 
   return tags;

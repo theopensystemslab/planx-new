@@ -18,6 +18,7 @@ const {
   responseInterceptor,
   fixRequestBody,
 } = require("http-proxy-middleware");
+const helmet = require('helmet')
 
 const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
@@ -254,6 +255,9 @@ if (process.env.NODE_ENV !== "test") {
 
 // Rate limit requests per IP address
 app.use(apiLimiter);
+
+// Secure Express by setting various HTTP headers
+app.use(helmet());
 
 assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
@@ -596,7 +600,7 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
   res.send();
 });
 
-assert(process.env.GOVUK_NOTIFY_API_KEY_TEAM);
+assert(process.env.GOVUK_NOTIFY_API_KEY);
 app.post("/send-email/:template", sendEmailLimiter, useSendEmailAuth, sendSaveAndReturnEmail);
 app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);

@@ -61,8 +61,10 @@ export function makeXmlString(
   });
 
   const getApplicationType = (): string => {
-    const planXAppType: PlanXAppTypes =
-      passport.data?.["application.type"] || "ldc.existing";
+    const passportValue = passport.data?.["application.type"][0];
+    const planXAppType: PlanXAppTypes = passportValue.startsWith("ldc.existing")
+      ? "ldc.existing"
+      : "ldc.proposed";
     const uniformAppType: UniformAppTypes = appTypeLookup[planXAppType];
 
     return `
@@ -76,7 +78,7 @@ export function makeXmlString(
   };
 
   const getCertificateOfLawfulness = () => {
-    const planXAppType: PlanXAppTypes = passport.data?.["application.type"];
+    const planXAppType: PlanXAppTypes = passport.data?.["application.type"][0];
     if (planXAppType === "ldc.proposed") {
       return `
         <portaloneapp:CertificateLawfulness>
@@ -185,22 +187,22 @@ export function makeXmlString(
         <common:ExternalAddress>
           <common:InternationalAddress>
             <apd:IntAddressLine>${
-              passport.data?.["applicant.address.line1"]
+              passport.data?.["applicant.address"]?.["line1"]
             }</apd:IntAddressLine>
             <apd:IntAddressLine>${
-              passport.data?.["applicant.address.line2"]
+              passport.data?.["applicant.address"]?.["line2"]
             }</apd:IntAddressLine>
             <apd:IntAddressLine>${
-              passport.data?.["applicant.address.town"]
+              passport.data?.["applicant.address"]?.["town"]
             }</apd:IntAddressLine>
             <apd:IntAddressLine>${
-              passport.data?.["applicant.address.county"]
+              passport.data?.["applicant.address"]?.["county"]
             }</apd:IntAddressLine>
             <apd:Country>${
-              passport.data?.["applicant.address.country"]
+              passport.data?.["applicant.address"]?.["country"]
             }</apd:Country>
             <apd:InternationalPostCode>${
-              passport.data?.["applicant.address.postcode"]
+              passport.data?.["applicant.address"]?.["postcode"]
             }</apd:InternationalPostCode>
           </common:InternationalAddress>
         </common:ExternalAddress>
@@ -217,9 +219,6 @@ export function makeXmlString(
           </common:Telephone>
         </common:ContactDetails>
       </portaloneapp:Applicant>
-      ${
-        /* TODO: Check for "application.agent.." || "applicant.proxy.." variables in this section??  */ ""
-      }
       <portaloneapp:Agent>
         <common:PersonName>
         <pdt:PersonNameTitle>${
@@ -238,22 +237,22 @@ export function makeXmlString(
         <common:ExternalAddress>
           <common:InternationalAddress>
           <apd:IntAddressLine>${
-            passport.data?.["applicant.agent.address.line1"]
+            passport.data?.["applicant.agent.address"]?.["line1"]
           }</apd:IntAddressLine>
           <apd:IntAddressLine>${
-            passport.data?.["applicant.agent.address.line2"]
+            passport.data?.["applicant.agent.address"]?.["line2"]
           }</apd:IntAddressLine>
           <apd:IntAddressLine>${
-            passport.data?.["applicant.agent.address.town"]
+            passport.data?.["applicant.agent.address"]?.["town"]
           }</apd:IntAddressLine>
           <apd:IntAddressLine>${
-            passport.data?.["applicant.agent.address.county"]
+            passport.data?.["applicant.agent.address"]?.["county"]
           }</apd:IntAddressLine>
           <apd:Country>${
-            passport.data?.["applicant.agent.address.country"]
+            passport.data?.["applicant.agent.address"]?.["country"]
           }</apd:Country>
           <apd:InternationalPostCode>${
-            passport.data?.["applicant.agent.address.postcode"]
+            passport.data?.["applicant.agent.address"]?.["postcode"]
           }</apd:InternationalPostCode>
           </common:InternationalAddress>
         </common:ExternalAddress>
