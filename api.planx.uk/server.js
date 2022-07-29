@@ -18,6 +18,7 @@ const {
   responseInterceptor,
   fixRequestBody,
 } = require("http-proxy-middleware");
+const helmet = require('helmet')
 
 const { signS3Upload } = require("./s3");
 const { locationSearch } = require("./gis/index");
@@ -254,6 +255,9 @@ if (process.env.NODE_ENV !== "test") {
 
 // Rate limit requests per IP address
 app.use(apiLimiter);
+
+// Secure Express by setting various HTTP headers
+app.use(helmet());
 
 assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
