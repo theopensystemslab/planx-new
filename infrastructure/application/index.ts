@@ -23,6 +23,20 @@ const data = new pulumi.StackReference(`planx/data/${env}`);
 // You can generate tokens here: https://dash.cloudflare.com/profile/api-tokens
 new pulumi.Config("cloudflare").require("apiToken");
 
+const CUSTOM_DOMAINS =
+  env === "production"
+    ? [
+        {
+          domain: "planningservices.buckinghamshire.gov.uk",
+          name: "bucks",
+        },
+        {
+          domain: "planningservices.southwark.gov.uk",
+          name: "southwark",
+        },
+      ]
+    : [];
+
 export = async () => {
   const DOMAIN = await certificates.requireOutputValue("domain");
 
@@ -200,8 +214,7 @@ export = async () => {
       },
     },
   });
-  // Configure white-listed domains; Pulumi doesn't need to support "localhost" or introspection but root .env should
-  const HASURA_DOMAINS = `http://*.${DOMAIN}, https://*.${DOMAIN}, https://${DOMAIN}`;
+
   const hasuraListenerHttps = targetHasura.createListener("hasura-https", {
     protocol: "HTTPS",
     sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
@@ -222,7 +235,12 @@ export = async () => {
             name: "HASURA_GRAPHQL_ADMIN_SECRET",
             value: config.require("hasura-admin-secret"),
           },
-          { name: "HASURA_GRAPHQL_CORS_DOMAIN", value: HASURA_DOMAINS },
+          {
+            name: "HASURA_GRAPHQL_CORS_DOMAIN",
+            value: [...CUSTOM_DOMAINS.map((x) => x.domain), DOMAIN]
+              .map((x) => `https://*.${x}, https://${x}`)
+              .join(", "),
+          },
           {
             name: "HASURA_GRAPHQL_ENABLED_LOG_TYPES",
             value: "startup, http-log, webhook-log, websocket-log, query-log",
@@ -564,19 +582,7 @@ export = async () => {
   const usEast1 = new aws.Provider("useast1", { region: "us-east-1" });
 
   const customDomains = ((): Array<any> => {
-    if (env !== "production") {
-      return [];
-    }
-    return [
-      {
-        domain: "planningservices.buckinghamshire.gov.uk",
-        name: "bucks",
-      },
-      {
-        domain: "planningservices.southwark.gov.uk",
-        name: "southwark",
-      },
-    ].map(createCustomDomain);
+    return CUSTOM_DOMAINS.map(createCustomDomain);
 
     function createCustomDomain({
       domain,
