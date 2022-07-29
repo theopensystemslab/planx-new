@@ -260,7 +260,7 @@ export = async () => {
     zoneId: config.require("cloudflare-zone-id"),
     value: hasuraListenerHttps.endpoint.hostname,
     ttl: 1,
-    proxied: false,
+    proxied: true,
   });
 
   // ----------------------- API
