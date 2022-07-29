@@ -155,11 +155,11 @@ describe("It extracts tags for", () => {
     },
     "Additional drawings": {
       key: "proposal.drawing.other",
-      tags: ["Proposed" /*"Drawing"*/],
+      tags: ["Proposed", /*"Drawing",*/ "Other"],
     },
     "Additional documents": {
       key: "proposal.document.other",
-      tags: ["Proposed" /*"Document"*/],
+      tags: ["Proposed", /*"Document",*/ "Other"],
     },
     // Evidence of immunity
     Photographs: {
