@@ -159,7 +159,6 @@
           - email
           - flow_id
           - id
-        backend_only: false
   select_permissions:
     - role: public
       permission:
