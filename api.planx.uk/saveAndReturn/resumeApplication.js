@@ -17,19 +17,17 @@ const resumeApplication = async (req, res, next) => {
         message: "Required value missing"
       });
 
-    const { teamPersonalisation, sessions, teamName } = await validateRequest(teamSlug, email, res);
+    const { team, sessions } = await validateRequest(teamSlug, email, res);
     // Protect against phishing by returning a positive response even if no matching sessions found
     if (!sessions.length) return res.json({ message: "Success" });
 
     const config = {
       personalisation: await getPersonalisation(
         sessions,
-        teamSlug,
-        teamPersonalisation,
-        teamName,
+        team
       ),
       reference: null,
-      emailReplyToId: teamPersonalisation.emailReplyToId,
+      emailReplyToId: team.notifyPersonalisation.emailReplyToId,
     };
     const response = await sendEmail("resume", email, config);
     return res.json(response);
@@ -72,7 +70,8 @@ const validateRequest = async (teamSlug, email) => {
         teams(where: { slug: { _eq: $teamSlug } }) {
           slug
           name
-          notify_personalisation
+          notifyPersonalisation: notify_personalisation
+          domain
         }
       }
     `
@@ -81,9 +80,7 @@ const validateRequest = async (teamSlug, email) => {
     if (!teams?.length) throw Error;
 
     return {
-      teamSlug: teams[0].slug,
-      teamName: teams[0].name,
-      teamPersonalisation: teams[0].notify_personalisation,
+      team: teams[0],
       sessions: lowcal_sessions,
     };
   } catch (error) {
@@ -94,18 +91,14 @@ const validateRequest = async (teamSlug, email) => {
 /**
  * Construct personalisation object required for the "Resume" Notify template
  * @param {array} sessions 
- * @param {string} teamSlug 
- * @param {object} teamPersonalisation 
- * @param {string} teamName 
+ * @param {object} team
  * @returns {object}
  */
-const getPersonalisation = async (sessions, teamSlug, teamPersonalisation, teamName) => {
+const getPersonalisation = async (sessions, team) => {
   return {
-    helpEmail: teamPersonalisation.helpEmail,
-    helpPhone: teamPersonalisation.helpPhone,
-    helpOpeningHours: teamPersonalisation.helpOpeningHours,
-    teamName: teamName,
-    content: await buildContentFromSessions(sessions, teamSlug)
+    teamName: team.name,
+    content: await buildContentFromSessions(sessions, team.slug),
+    ...team.notifyPersonalisation,
   };
 };
 
@@ -113,15 +106,15 @@ const getPersonalisation = async (sessions, teamSlug, teamPersonalisation, teamN
  * Build the main content of the "Resume" email
  * A formatted list of all open applications, including magic link to resume
  * @param {array} sessions 
- * @param {string} teamSlug 
+ * @param {object} team
  * @returns {string}
  */
-const buildContentFromSessions = async (sessions, teamSlug) => {
+const buildContentFromSessions = async (sessions, team) => {
   const contentBuilder = async (session) => {
     const service = convertSlugToName(session.flow.slug);
     const address = session.data?.passport?.data?._address?.single_line_address;
     const projectType = await getHumanReadableProjectType(session);
-    const resumeLink = getResumeLink(session, teamSlug, session.flow.slug)
+    const resumeLink = getResumeLink(session, team, session.flow.slug)
     const expiryDate = calculateExpiryDate(session.created_at);
 
     return `Service: ${service}
