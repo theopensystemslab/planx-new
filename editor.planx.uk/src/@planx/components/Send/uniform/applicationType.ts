@@ -30,9 +30,8 @@ export const appTypeLookup: Record<PlanXAppTypes, UniformAppTypes> = {
 export enum UniformInstance {
   Lambeth = "lambeth",
   Southwark = "southwark",
-  // Buckinghamshire has 4 legacy instances
-  Chiltern = "chiltern",
-  SouthBucks = "south-bucks",
+  // Buckinghamshire has 3 legacy instances
+  Chiltern = "chiltern", // & South Bucks
   Aylesbury = "aylesbury-vale",
   Wycombe = "wycombe",
 }
@@ -43,5 +42,4 @@ export const UniformLPACodes: { [key in UniformInstance]: string } = {
   [UniformInstance.Aylesbury]: "J0405",
   [UniformInstance.Wycombe]: "K0425",
   [UniformInstance.Chiltern]: "X0415",
-  [UniformInstance.SouthBucks]: "N410",
 } as const;

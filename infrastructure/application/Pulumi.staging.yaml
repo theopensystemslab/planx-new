@@ -37,8 +37,6 @@ config:
     secure: AAABAIimitDScyWDrmnC049KLGWrjgA4iQXyOnI2z0zIkqfqyrStqfOyHMjYqBrFv1PZ8wRdK8hlIk/BeWE=
   application:uniform-client-lambeth:
     secure: AAABAA5D9I/HLWmzyqq+mK6wjyagZgne4akWVCtGaoR4HPkw1M8WqlM26RM5o6KjwPTjFkLH55ltHLZHdA==
-  application:uniform-client-south-bucks:
-    secure: AAABAFGycAp8BUQZgMeffj7QzxsuszESwT41ac+NXWGZxfxwEabqQG7ATLQ4Pp6Wc3JeSbPCSQOXUxddiH/JfQ==
   application:uniform-client-southwark:
     secure: AAABALWeaw3/BHLqTXaV4YWbC4f6YF4R3uOq0KPM4a23K5tYiTNOPjGE458CM7TIYiPX0R58Xf/8rIml3sfN
   application:uniform-client-wycombe:

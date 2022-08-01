@@ -30,7 +30,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SendComponent: React.FC<Props> = ({ destination = DEFAULT_DESTINATION, ...props }) => {
+const SendComponent: React.FC<Props> = ({
+  destination = DEFAULT_DESTINATION,
+  ...props
+}) => {
   const [breadcrumbs, flow, passport, sessionId] = useStore((state) => [
     state.breadcrumbs,
     state.flow,
@@ -40,49 +43,46 @@ const SendComponent: React.FC<Props> = ({ destination = DEFAULT_DESTINATION, ...
   const classes = useStyles();
 
   let teamSlug = useTeamSlug();
-  // Bucks has 4 legacy instances of Uniform, set teamSlug to pre-merger council name
-  if (
-    destination === Destination.Uniform &&
-    teamSlug === "buckinghamshire"
-  ) {
+  // Bucks has 3 legacy instances of Uniform, set teamSlug to pre-merger council name
+  if (destination === Destination.Uniform && teamSlug === "buckinghamshire") {
     teamSlug = passport.data?.["property.localAuthorityDistrict"]
       ?.filter((name: string) => name !== "Buckinghamshire")[0]
       ?.toLowerCase()
       ?.replace(/\W+/g, "-");
+
+    if ((teamSlug = "south-bucks")) {
+      // South Bucks & Chiltern share an Idox connector, route addresses in either to Chiltern
+      teamSlug = "chiltern";
+    }
   }
 
   const destinationUrl = `${process.env.REACT_APP_API_URL}/${destination}/${teamSlug}`;
 
   const params = {
     [Destination.BOPS]: getParams(breadcrumbs, flow, passport, sessionId),
-    [Destination.Uniform]: getUniformParams(breadcrumbs, flow, passport, sessionId, teamSlug as UniformInstance)
+    [Destination.Uniform]: getUniformParams(
+      breadcrumbs,
+      flow,
+      passport,
+      sessionId,
+      teamSlug as UniformInstance
+    ),
   }[destination];
 
   const request: any = useAsync(async () =>
-    axios.post(
-      useStagingUrlIfTestApplication(passport)(destinationUrl),
-      params
-    )
+    axios.post(useStagingUrlIfTestApplication(passport)(destinationUrl), params)
   );
 
   useEffect(() => {
     const isReady = !request.loading && !request.error && request.value;
 
-    if (
-      destination === Destination.BOPS &&
-      isReady &&
-      props.handleSubmit
-    ) {
+    if (destination === Destination.BOPS && isReady && props.handleSubmit) {
       props.handleSubmit(
         makeData(props, request.value.data.application.id, "bopsId")
       );
     }
 
-    if (
-      destination === Destination.Uniform &&
-      isReady &&
-      props.handleSubmit
-    ) {
+    if (destination === Destination.Uniform && isReady && props.handleSubmit) {
       props.handleSubmit(
         makeData(
           props,
