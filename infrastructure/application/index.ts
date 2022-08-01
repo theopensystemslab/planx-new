@@ -241,9 +241,7 @@ export = async () => {
           },
           {
             name: "HASURA_GRAPHQL_CORS_DOMAIN",
-            value: [...CUSTOM_DOMAINS.map((x) => x.domain), DOMAIN]
-              .map((x) => `https://*.${x}, https://${x}`)
-              .join(", "),
+            value: `https://api.${DOMAIN}`
           },
           {
             name: "HASURA_GRAPHQL_ENABLED_LOG_TYPES",
