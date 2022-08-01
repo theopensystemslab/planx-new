@@ -19,7 +19,7 @@ interface Team {
 export const teams: Team[] = [
   {
     name: "Buckinghamshire",
-    uniformInstances: ["South Bucks", "Wycombe", "Chiltern", "Aylesbury Vale"],
+    uniformInstances: ["Wycombe", "Chiltern", "Aylesbury Vale"],
   },
   {
     name: "Lambeth",
