@@ -5,7 +5,7 @@ import { getAdminJWT, gqlAdmin, setJWT } from "../common.js";
 const URL = "http://localhost:3000";
 
 const apiMock = RequestMock()
-  .onRequestTo("http://localhost:7000/v1/graphql")
+  .onRequestTo("http://localhost:7002/hasura/v1/graphql")
   .respond("", 404, {
     "Access-Control-Allow-Origin": "*",
   });
