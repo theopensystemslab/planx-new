@@ -635,6 +635,9 @@ app.use(
 
 const server = new Server(app);
 
+server.keepAliveTimeout = 30000; // 30s
+server.headersTimeout = 35000; // 35s
+
 function useProxy(options = {}) {
   return createProxyMiddleware({
     changeOrigin: true,
