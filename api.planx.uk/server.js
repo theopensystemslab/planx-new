@@ -456,6 +456,21 @@ app.get("/me", useJWT, async function (req, res, next) {
   }
 });
 
+// Proxy for Hasura requests
+app.use("hasura/v1/graphql", (req, res, _next) => {
+  useProxy({
+    pathRewrite: () => "",
+    target: process.env.HASURA_GRAPHQL_URL,
+    selfHandleResponse: true,
+    onProxyReq: fixRequestBody,
+    onProxyRes: responseInterceptor(
+      async (responseBuffer, _proxyRes, _req, res) => {
+        res.removeHeader('server');
+        return responseBuffer;
+      }),
+  })(req, res);
+});
+
 app.get("/gis", (_req, res, next) => {
   next({
     status: 400,
