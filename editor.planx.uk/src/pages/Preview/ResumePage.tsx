@@ -182,13 +182,14 @@ const ResumePage: React.FC = () => {
     if (email) handleSubmit();
   }, [email]);
 
+  const teamSlug = useTeamSlug();
+
   /**
    * Send magic link to user, based on submitted email
    * Sets page status based on validation of request by API
    */
   const sendResumeEmail = async () => {
     const url = `${process.env.REACT_APP_API_URL}/resume-application`;
-    const teamSlug = useTeamSlug();
     const data = {
       payload: { email, teamSlug },
     };
