@@ -457,6 +457,7 @@ app.get("/me", useJWT, async function (req, res, next) {
 });
 
 // Proxy for Hasura requests
+// XXX: Rate limiting is not applied to this endpoint currently
 app.use("/hasura/v1/graphql", (req, res, _next) => {
   useProxy({
     pathRewrite: () => "",

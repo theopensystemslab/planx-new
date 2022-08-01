@@ -2,7 +2,7 @@ const rateLimit = require("express-rate-limit")
 
 // Endpoints which rate limiting will not be applied to
 const RATE_LIMIT_IGNORE_LIST = [
-	"hasura/v1/graphql",
+	"/hasura/v1/graphql",
 ];
 
 // Broad limiter to prevent egregious abuse
