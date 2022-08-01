@@ -48,7 +48,7 @@ describe("buildContentFromSessions function", () => {
       Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(await buildContentFromSessions(sessions, "team")).toEqual(result);
+    expect(await buildContentFromSessions(sessions, { slug: "team"})).toEqual(result);
   });
 
   it("should return correctly formatted content for multiple session", async () => {
@@ -116,7 +116,7 @@ describe("buildContentFromSessions function", () => {
       Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=789`
-    expect(await buildContentFromSessions(sessions, "team")).toEqual(result)
+    expect(await buildContentFromSessions(sessions, { slug: "team"})).toEqual(result)
   });
 
   it("should handle an empty address field", async () => {
@@ -141,7 +141,7 @@ describe("buildContentFromSessions function", () => {
       Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(await buildContentFromSessions(sessions, "team")).toEqual(result);
+    expect(await buildContentFromSessions(sessions, { slug: "team"})).toEqual(result);
   });
 
   it("should handle an empty project type field", async () => {
@@ -168,7 +168,7 @@ describe("buildContentFromSessions function", () => {
       Project type: Project type not submitted
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(await buildContentFromSessions(sessions, "team")).toEqual(result);
+    expect(await buildContentFromSessions(sessions, { slug: "team"})).toEqual(result);
   });
 
 });

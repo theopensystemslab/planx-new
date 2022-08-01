@@ -1,10 +1,11 @@
 const mockTeam = {
   slug: "test-team",
   name: "Test Team",
-  notify_personalisation: {
+  notifyPersonalisation: {
     helpEmail: "example@council.gov.uk",
     helpPhone: "(01234) 567890",
-    helpOpeningHours: "Monday - Friday, 9am - 5pm"
+    helpOpeningHours: "Monday - Friday, 9am - 5pm",
+    emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
   }
 };
 

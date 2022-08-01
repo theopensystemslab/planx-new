@@ -60,23 +60,26 @@ const convertSlugToName = (slug) => {
 /**
  * Build the magic link which will be sent to users via email to continue their application
  * @param {object} session 
- * @param {string} teamSlug 
+ * @param {object} team 
  * @param {string} flowSlug 
  * @returns {string}
  */
-const getResumeLink = (session, teamSlug, flowSlug) => {
-  const serviceLink = getServiceLink(teamSlug, flowSlug);
+const getResumeLink = (session, team, flowSlug) => {
+  const serviceLink = getServiceLink(team, flowSlug);
   return `${serviceLink}?sessionId=${session.id}`;
 };
 
 /**
  * Construct a link to the service
- * @param {string} teamSlug 
+ * @param {object} team 
  * @param {string} flowSlug 
  * @returns {string}
  */
-const getServiceLink = (teamSlug, flowSlug) => {
-  return `${process.env.EDITOR_URL_EXT}/${teamSlug}/${flowSlug}/preview`;
+const getServiceLink = (team, flowSlug) => {
+  // Link to custom domain
+  if (team.domain) return `https://${team.domain}/${flowSlug}`;
+  // Fallback to PlanX domain
+  return `${process.env.EDITOR_URL_EXT}/${team.slug}/${flowSlug}/preview`;
 };
 
 /**
@@ -98,17 +101,15 @@ const calculateExpiryDate = (createdAt) => {
  */
 const sendSingleApplicationEmail = async (template, email, sessionId) => {
   try {
-    const { flowSlug, teamSlug, teamPersonalisation, session, teamName } = await validateSingleSessionRequest(email, sessionId);
+    const { flowSlug, team, session } = await validateSingleSessionRequest(email, sessionId);
     const config = {
       personalisation: getPersonalisation(
         session,
         flowSlug,
-        teamSlug,
-        teamPersonalisation,
-        teamName,
+        team,
       ),
       reference: null,
-      emailReplyToId: teamPersonalisation.emailReplyToId,
+      emailReplyToId: team.notifyPersonalisation.emailReplyToId,
     };
     return await sendEmail(template, email, config);
   } catch (error) {
@@ -137,7 +138,8 @@ const validateSingleSessionRequest = async (email, sessionId) => {
             team {
               name
               slug
-              notify_personalisation
+              notifyPersonalisation: notify_personalisation
+              domain
             }
           }
         }
@@ -150,10 +152,8 @@ const validateSingleSessionRequest = async (email, sessionId) => {
 
     return {
       flowSlug: session.flow.slug,
-      teamSlug: session.flow.team.slug,
-      teamPersonalisation: session.flow.team.notify_personalisation,
+      team: session.flow.team,
       session: await getSessionDetails(session),
-      teamName: session.flow.team.name,
     };
   } catch (error) {
     throw Error(`Unable to validate request. ${error.message}`)
@@ -181,26 +181,21 @@ const getSessionDetails = async (session) => {
  * Build a personalisation object which is read by email templates
  * @param {string} session 
  * @param {string} flowSlug 
- * @param {string} teamSlug 
- * @param {object} teamPersonalisation 
+ * @param {object} team 
  * @returns {object}
  */
 const getPersonalisation = (
   session,
   flowSlug,
-  teamSlug,
-  teamPersonalisation,
-  teamName,
+  team,
 ) => {
   return {
     expiryDate: session.expiryDate,
-    resumeLink: getResumeLink(session, teamSlug, flowSlug),
-    serviceLink: getServiceLink(teamSlug, flowSlug),
-    helpEmail: teamPersonalisation.helpEmail,
-    helpPhone: teamPersonalisation.helpPhone,
-    helpOpeningHours: teamPersonalisation.helpOpeningHours,
+    resumeLink: getResumeLink(session, team, flowSlug),
+    serviceLink: getServiceLink(team, flowSlug),
     serviceName: convertSlugToName(flowSlug),
-    teamName: teamName,
+    teamName: team.name,
+    ...team.notifyPersonalisation,
     ...session,
   };
 };
