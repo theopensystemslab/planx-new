@@ -1,11 +1,17 @@
 const rateLimit = require("express-rate-limit")
 
+// Endpoints which rate limiting will not be applied to
+const RATE_LIMIT_IGNORE_LIST = [
+	"hasura/v1/graphql",
+];
+
 // Broad limiter to prevent egregious abuse
 const apiLimiter = rateLimit({
 	windowMs: 10 * 60 * 1000, // 10 minutes
 	max: 250,
 	standardHeaders: true,
 	legacyHeaders: false,
+	skip: (req, _res) => RATE_LIMIT_IGNORE_LIST.includes(req.path),
 });
 
 const HASURA_ONLY_SEND_EMAIL_TEMPLATES = [
