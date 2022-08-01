@@ -230,7 +230,7 @@ export = async () => {
     taskDefinitionArgs: {
       container: {
         image: repo.buildAndPushImage("../../hasura.planx.uk"),
-        memory: 512 /*MB*/,
+        memory: 1024 /*MB*/,
         portMappings: [hasuraListenerHttps],
         environment: [
           { name: "HASURA_GRAPHQL_SERVER_PORT", value: String(HASURA_PORT) },
@@ -362,7 +362,7 @@ export = async () => {
     taskDefinitionArgs: {
       container: {
         image: repo.buildAndPushImage("../../api.planx.uk"),
-        memory: 512 /*MB*/,
+        memory: 1024 /*MB*/,
         portMappings: [apiListenerHttps],
         environment: [
           { name: "NODE_ENV", value: "production" },
