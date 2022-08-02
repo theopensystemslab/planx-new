@@ -153,9 +153,12 @@ export = async () => {
       container: {
         // if changing, also check docker-compose.yml
         image: "metabase/metabase:v0.43.4",
-        memory: 2048 /*MB*/,
         portMappings: [metabaseListenerHttps],
+        // When changing `memory`, also update `JAVA_OPTS` below
+        memory: 4096 /*MB*/,
         environment: [
+          // https://www.metabase.com/docs/latest/troubleshooting-guide/running.html#heap-space-outofmemoryerrors
+          { name: "JAVA_OPTS", value: `-Xmx2g` },
           { name: "MB_DB_TYPE", value: "postgres" },
           {
             name: "MB_DB_CONNECTION_URI",
