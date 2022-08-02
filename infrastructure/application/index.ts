@@ -164,7 +164,6 @@ export = async () => {
             name: "MB_DB_CONNECTION_URI",
             value: pulumi.interpolate`postgres://${role.name}:${metabasePgPassword}@${pgRoot.hostname}:${pgRoot.port}/${metabasePgDatabase.name}`,
           },
-
           { name: "MB_JETTY_HOST", value: "0.0.0.0" },
           { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
           {
