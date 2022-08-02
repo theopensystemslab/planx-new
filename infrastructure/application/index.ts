@@ -153,7 +153,7 @@ export = async () => {
       container: {
         // if changing, also check docker-compose.yml
         image: "metabase/metabase:v0.43.4",
-        memory: 2048 /*MB*/,
+        memory: 4096 /*MB*/,
         portMappings: [metabaseListenerHttps],
         environment: [
           { name: "MB_DB_TYPE", value: "postgres" },
