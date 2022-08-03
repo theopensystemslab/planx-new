@@ -159,7 +159,6 @@
           - email
           - flow_id
           - id
-        backend_only: false
   select_permissions:
     - role: public
       permission:
@@ -310,6 +309,13 @@
           - flow_id
           - session_id
           - user_data
+  select_permissions:
+    - role: public
+      permission:
+        columns:
+          - id
+        filter: {}
+        limit: 1
 - table:
     schema: public
     name: team_members
