@@ -97,7 +97,7 @@ const validateRequest = async (teamSlug, email) => {
 const getPersonalisation = async (sessions, team) => {
   return {
     teamName: team.name,
-    content: await buildContentFromSessions(sessions, team.slug),
+    content: await buildContentFromSessions(sessions, team),
     ...team.notifyPersonalisation,
   };
 };
