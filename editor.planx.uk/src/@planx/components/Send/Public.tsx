@@ -50,7 +50,7 @@ const SendComponent: React.FC<Props> = ({
       ?.toLowerCase()
       ?.replace(/\W+/g, "-");
 
-    if ((teamSlug = "south-bucks")) {
+    if (teamSlug === "south-bucks") {
       // South Bucks & Chiltern share an Idox connector, route addresses in either to Chiltern
       teamSlug = "chiltern";
     }
