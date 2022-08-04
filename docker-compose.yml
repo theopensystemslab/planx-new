@@ -95,9 +95,9 @@ services:
         condition: service_healthy
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
-      PRODUCTION_GRAPHQL_URL: 'https://hasura.editor.planx.uk/v1/graphql'
+      HASURA_GRAPHQL_URL: http://api:${API_PORT}/v1/graphql
       HASURA_GRAPHQL_ENDPOINT: http://hasura:8080/
+      PRODUCTION_GRAPHQL_URL: 'https://hasura.editor.planx.uk/v1/graphql'
   api:
     restart: unless-stopped
     build:
