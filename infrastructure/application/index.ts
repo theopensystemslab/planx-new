@@ -395,6 +395,10 @@ export = async () => {
             value: config.require("hasura-admin-secret"),
           },
           {
+            name: "HASURA_URL_EXT",
+            value: pulumi.interpolate`https://hasura.${DOMAIN}`
+          },
+          {
             name: "HASURA_GRAPHQL_URL",
             value: pulumi.interpolate`https://hasura.${DOMAIN}/v1/graphql`,
           },

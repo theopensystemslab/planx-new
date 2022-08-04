@@ -37,6 +37,7 @@ const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
 const { createReminderEvent, createExpiryEvent } = require("./webhooks/lowcalSessionEvents");
 const { adminGraphQLClient } = require("./hasura");
 const { sendEmailLimiter, apiLimiter } = require("./rateLimit");
+const teams = require("./teams");
 
 const router = express.Router();
 
@@ -213,8 +214,22 @@ app.use((req, res, next) => {
   next();
 });
 
+const corsAllowlist = {
+  test: false,
+  staging: [
+    process.env.EDITOR_URL_EXT,
+    process.env.HASURA_URL_EXT,
+  ],
+  production: [
+    ...teams.map(team => team.domain),
+    process.env.EDITOR_URL_EXT,
+    process.env.HASURA_URL_EXT,
+  ],
+}[process.env.NODE_ENV]
+
 app.use(
   cors({
+    origin: corsAllowlist,
     credentials: true,
     methods: "*",
   })

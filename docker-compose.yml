@@ -75,7 +75,7 @@ services:
     restart: unless-stopped
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_CORS_DOMAIN: ${HASURA_GRAPHQL_CORS_DOMAIN}
+      HASURA_GRAPHQL_CORS_DOMAIN: "*"
       HASURA_GRAPHQL_DATABASE_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
@@ -96,8 +96,8 @@ services:
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
-      HASURA_GRAPHQL_ENDPOINT: http://hasura:8080/
       PRODUCTION_GRAPHQL_URL: 'https://hasura.editor.planx.uk/v1/graphql'
+      HASURA_GRAPHQL_ENDPOINT: http://hasura:8080/
   api:
     restart: unless-stopped
     build:
@@ -119,8 +119,9 @@ services:
       retries: 5
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
-      HASURA_METADATA_URL: http://hasura:8080/v1/metadata 
+      HASURA_URL_EXT: ${HASURA_URL_EXT}
+      HASURA_GRAPHQL_URL: ${HASURA_GRAPHQL_URL}
+      HASURA_METADATA_URL: ${HASURA_METADATA_URL}
       JWT_SECRET: ${JWT_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
