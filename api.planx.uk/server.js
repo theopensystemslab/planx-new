@@ -217,19 +217,20 @@ app.use((req, res, next) => {
 const corsAllowlist = {
   test: false,
   staging: [
+    "*.planx.pizza",
     process.env.EDITOR_URL_EXT,
     process.env.HASURA_URL_EXT,
   ],
-  production: [
-    ...teams.map(team => team.domain),
-    process.env.EDITOR_URL_EXT,
-    process.env.HASURA_URL_EXT,
-  ],
-}[process.env.NODE_ENV]
+}
+
+corsAllowlist.production = [
+  ...teams.map(team => team.domain),
+  ...corsAllowlist.staging,
+]
 
 app.use(
   cors({
-    origin: corsAllowlist,
+    origin: corsAllowlist[process.env.NODE_ENV],
     credentials: true,
     methods: "*",
   })
