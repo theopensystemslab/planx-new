@@ -40,7 +40,6 @@ jobs:
         working-directory: e2e
         env:
           NODE_ENV: "test"
-          HASURA_GRAPHQL_CORS_DOMAIN: "*"
 
   api_tests:
     name: API Tests

@@ -22,7 +22,7 @@ describe("uniform_applications", () => {
       i = await introspectAs("admin");
     });
 
-    test("has full access to query and mutate uniform appliations", () => {
+    test("has full access to query and mutate uniform applications", () => {
       expect(i.queries).toContain("uniform_applications");
       expect(i.mutations).toContain("insert_uniform_applications");
       expect(i.mutations).toContain("update_uniform_applications_by_pk");

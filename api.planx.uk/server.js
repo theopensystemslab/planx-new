@@ -481,6 +481,7 @@ app.use("/hasura/v1/graphql", (req, res, _next) => {
     onProxyReq: fixRequestBody,
     onProxyRes: responseInterceptor(
       async (responseBuffer, _proxyRes, _req, res) => {
+        // Do not leak server information from Hasura
         res.removeHeader('server');
         return responseBuffer;
       }),

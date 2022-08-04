@@ -273,3 +273,23 @@ describe.skip("fetching GIS data from Digital Land for supported local authoriti
     }, 20_000); // 20s request timeout
   });
 });
+
+describe("API proxy to Hasura", () => {
+  it("strips 'server' header from response", async () => {
+    await supertest(app)
+      .get("/hasura/v1/graphql")
+      .expect(200)
+      .then((response) => {
+        expect(response.headers).not.toHaveProperty("server");
+      });
+  });
+
+  it("adds HSTS headers to Hasura responses", async () => {
+    await supertest(app)
+      .get("/hasura/v1/graphql")
+      .expect(200)
+      .then((response) => {
+        expect(response.headers).toHaveProperty("strict-transport-security", "max-age=15552000; includeSubDomains");
+      });
+  });
+});
