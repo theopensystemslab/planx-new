@@ -217,7 +217,6 @@ app.use((req, res, next) => {
 const corsAllowlist = {
   test: false,
   staging: [
-    "*.planx.pizza",
     process.env.EDITOR_URL_EXT,
     process.env.HASURA_URL_EXT,
   ],
@@ -677,6 +676,9 @@ function useProxy(options = {}) {
     logLevel: LOG_LEVEL,
     onError: (err, req, res, target) => {
       res.json({
+        err,
+        req,
+        res,
         status: 500,
         message: "Something went wrong",
       });
