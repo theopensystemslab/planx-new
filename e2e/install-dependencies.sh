@@ -4,7 +4,6 @@ set -xe
 SCRIPT_DIR=$(dirname "$0")
 . "$SCRIPT_DIR/../.env"
 
-(cd "${SCRIPT_DIR}/../hasura.planx.uk" && pnpm install)
 (cd "${SCRIPT_DIR}/../editor.planx.uk" && pnpm install && pnpm build)
 
 if [ -z "${CI}" ]; then

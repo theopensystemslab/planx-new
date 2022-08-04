@@ -1,6 +1,9 @@
 const { sign } = require("jsonwebtoken");
 import { ClientFunction } from "testcafe";
-export { gqlAdmin } from "../hasura.planx.uk/tests/utils";
+const fetch = require("isomorphic-fetch");
+
+const HASURA_API_ENDPOINT = "http://localhost:7002/hasura/v1/graphql"
+const HASURA_ADMIN_SECRET = "TODO";
 
 export function getAdminJWT(userId) {
   const data = {
@@ -20,4 +23,19 @@ export async function setJWT(jwt) {
     document.cookie = `jwt=${jwt}`;
     window.location.reload();
   })(jwt);
+}
+
+export async function gqlAdmin(query, variables = {}) {
+  const res = await fetch(HASURA_API_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "X-Hasura-Admin-Secret": HASURA_ADMIN_SECRET,
+    },
+    body: JSON.stringify({ query, variables }),
+  });
+  const json = await res.json();
+  if (json.errors && json.errors[0].message.includes("x-hasura-admin-secret")) {
+    throw Error("Invalid HASURA_SECRET");
+  }
+  return json;
 }
