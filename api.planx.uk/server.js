@@ -313,6 +313,7 @@ app.post("/bops/:localAuthority", (req, res, next) => {
                   session_id: $session_id,
                 }) {
                   id
+                  bops_id
                 }
               }
             `,
