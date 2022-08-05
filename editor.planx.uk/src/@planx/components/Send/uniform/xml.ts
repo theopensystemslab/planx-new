@@ -273,19 +273,15 @@ export function makeXmlString(
         <bs7666:BS7666Address>
           <bs7666:PAON>
             <bs7666:Description>${
-              passport.data?.["_address"]?.["planx_description"]
+              passport.data?.["_address"]?.["pao"]
             }</bs7666:Description>
           </bs7666:PAON>
           <bs7666:StreetDescription>${
-            passport.data?.["_address"]?.["title"]
+            passport.data?.["_address"]?.["street"]
           }</bs7666:StreetDescription>
           <bs7666:Town>${passport.data?.["_address"]?.["town"]}</bs7666:Town>
-          <bs7666:AdministrativeArea>${passport.data?.[
-            "property.localAuthorityDistrict"
-          ]?.join(", ")}</bs7666:AdministrativeArea>
-          <bs7666:PostTown>${
-            passport.data?.["_address"]?.["town"]
-          }</bs7666:PostTown>
+          <bs7666:AdministrativeArea/>
+          <bs7666:PostTown/>
           <bs7666:PostCode>${
             passport.data?.["_address"]?.["postcode"]
           }</bs7666:PostCode>

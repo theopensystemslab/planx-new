@@ -78,7 +78,7 @@ const SendComponent: React.FC<Props> = ({
 
     if (destination === Destination.BOPS && isReady && props.handleSubmit) {
       props.handleSubmit(
-        makeData(props, request.value.data.application.id, "bopsId")
+        makeData(props, request.value.data.application.bops_id, "bopsId")
       );
     }
 
