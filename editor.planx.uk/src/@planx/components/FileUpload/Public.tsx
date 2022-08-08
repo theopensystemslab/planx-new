@@ -349,7 +349,7 @@ function Dropzone(props: any) {
       )}
       <ButtonBase
         className={classNames(classes.root, isDragActive && classes.dragActive)}
-        {...getRootProps()}
+        {...getRootProps({ role: "button" })}
       >
         <input {...getInputProps()} />
         <Box pl={3} pr={4} color="text.secondary">
