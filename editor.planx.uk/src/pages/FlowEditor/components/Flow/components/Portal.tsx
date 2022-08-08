@@ -36,8 +36,8 @@ const ExternalPortal: React.FC<any> = React.memo(
         id: props.id,
         parent,
         text: props.data.text,
-        type: "PORTAL",
       },
+      type: "PORTAL",
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
       }),
@@ -97,8 +97,8 @@ const InternalPortal: React.FC<any> = (props) => {
       id: props.id,
       parent,
       text: props.data.text,
-      type: "PORTAL",
     },
+    type: "PORTAL",
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),

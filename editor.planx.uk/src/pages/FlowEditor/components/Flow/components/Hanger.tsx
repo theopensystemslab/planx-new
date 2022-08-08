@@ -13,6 +13,12 @@ interface HangerProps {
   before?: any;
 }
 
+interface Item {
+  id: string;
+  parent: string;
+  text: string;
+}
+
 const buildHref = (before: any, parent: any) => {
   let hrefParts = [rootFlowPath(true)];
   if (parent) {
@@ -31,7 +37,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   const [{ canDrop, item }, drop] = useDrop({
     accept: ["DECISION", "PORTAL", "PAGE"],
-    drop: () => {
+    drop: (item: Item) => {
       moveNode(item.id, item.parent, before, parent);
     },
     collect: (monitor) => ({

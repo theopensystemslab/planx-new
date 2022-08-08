@@ -148,8 +148,8 @@ export default function InputGroup({
     item: {
       id,
       index,
-      type: "OPTION",
     },
+    type: "OPTION",
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
