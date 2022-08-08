@@ -97,7 +97,7 @@ services:
       timeout: 10s
       retries: 3
     volumes:
-      - ./hasura.planx.uk/server/Caddyfile:/etc/caddy/Caddyfile
+      - ./hasura.planx.uk/server/docker-compose/Caddyfile:/etc/caddy/Caddyfile
       - ./hasura.planx.uk/server/caddy_certs:/root/.caddy
   seed-database:
     build:

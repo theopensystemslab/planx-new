@@ -1,8 +1,7 @@
-# 
-# Caddyfile used in AWS environments (staging & production)
+# Caddyfile used for docker-compose environments (local dev & pizzas)
 
-hasura-test.{$DOMAIN} {
-  reverse_proxy localhost:8080
+:{$HASURA_GRAPHQL_PORT} {
+  reverse_proxy hasura-graphql-engine:8080
 
   header {
     # Enable HSTS
