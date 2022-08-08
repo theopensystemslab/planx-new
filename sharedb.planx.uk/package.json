@@ -15,5 +15,10 @@
   },
   "devDependencies": {
     "node-dev": "^7.4.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "async@>=2.0.0 <2.6.4": ">=2.6.4"
+    }
   }
 }

@@ -1,5 +1,8 @@
 lockfileVersion: 5.3
 
+overrides:
+  async@>=2.0.0 <2.6.4: '>=2.6.4'
+
 specifiers:
   '@teamwork/websocket-json-stream': ^2.0.0
   jsonwebtoken: ^8.5.1
