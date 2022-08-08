@@ -71,7 +71,10 @@ export default function FileUpload(props: Props): FCReturn {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: "image/*",
+    accept: {
+      "image/jpeg": [".jpg", ".jpeg"],
+      "image/png": [".png"],
+    },
   });
   const classes = useClasses();
 
