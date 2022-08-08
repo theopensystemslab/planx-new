@@ -129,7 +129,7 @@ specifiers:
   react-error-boundary: ^3.1.4
   react-feather: ^2.0.10
   react-html-parser: ^2.0.2
-  react-markdown: ^7.1.1
+  react-markdown: ^8.0.3
   react-navi: ^0.15.0
   react-navi-helmet-async: ^0.15.0
   react-refresh: ^0.11.0
@@ -199,7 +199,7 @@ dependencies:
   react-error-boundary: 3.1.4_react@17.0.2
   react-feather: 2.0.10_react@17.0.2
   react-html-parser: 2.0.2_react@17.0.2
-  react-markdown: 7.1.1_cfedea9b3ed0faf0dded75c187406c5e
+  react-markdown: 8.0.3_cfedea9b3ed0faf0dded75c187406c5e
   react-navi: 0.15.0_navi@0.15.0+react@17.0.2
   react-navi-helmet-async: 0.15.0_189ffc24ed4fdb78146e5b0264b8eba2
   react-scripts: 5.0.1_f0cf5bb15e0b9b0de62731d839d07c05
@@ -12854,14 +12854,16 @@ packages:
       unist-util-visit: 2.0.3
     dev: true
 
-  /mdast-util-to-hast/11.3.0:
-    resolution: {integrity: sha512-4o3Cli3hXPmm1LhB+6rqhfsIUBjnKFlIUZvudaermXB+4/KONdd/W4saWWkC+LBLbPMqhFSSTSRgafHsT5fVJw==}
+  /mdast-util-to-hast/12.2.0:
+    resolution: {integrity: sha512-YDwT5KhGzLgPpSnQhAlK1+WpCW4gsPmNNAxUNMkMTDhxQyPp2eX86WOelnKnLKEvSpfxqJbPbInHFkefXZBhEA==}
     dependencies:
       '@types/hast': 2.3.1
       '@types/mdast': 3.0.3
       '@types/mdurl': 1.0.2
       mdast-util-definitions: 5.1.0
       mdurl: 1.0.1
+      micromark-util-sanitize-uri: 1.0.0
+      trim-lines: 3.0.1
       unist-builder: 3.0.0
       unist-util-generated: 2.0.0
       unist-util-position: 4.0.1
@@ -12885,7 +12887,7 @@ packages:
     dev: false
 
   /mdurl/1.0.1:
-    resolution: {integrity: sha1-/oWy7HWlkDfyrf7BAP1sYBdhFS4=}
+    resolution: {integrity: sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==}
 
   /media-typer/0.3.0:
     resolution: {integrity: sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=}
@@ -15684,27 +15686,32 @@ packages:
   /react-is/17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
+  /react-is/18.2.0:
+    resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+    dev: false
+
   /react-lifecycles-compat/3.0.4:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
     dev: true
 
-  /react-markdown/7.1.1_cfedea9b3ed0faf0dded75c187406c5e:
-    resolution: {integrity: sha512-bXS7indkcPlCLB6wRFFzX8Xdghr62TBxUF2587o+CUkaZlNaoILb2qNt+5pYmTZuCOC+OeEcdJ+06mu5whtCVQ==}
+  /react-markdown/8.0.3_cfedea9b3ed0faf0dded75c187406c5e:
+    resolution: {integrity: sha512-We36SfqaKoVNpN1QqsZwWSv/OZt5J15LNgTLWynwAN5b265hrQrsjMtlRNwUvS+YyR3yDM8HpTNc4pK9H/Gc0A==}
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16'
     dependencies:
       '@types/hast': 2.3.1
+      '@types/prop-types': 15.7.4
       '@types/react': 17.0.37
       '@types/unist': 2.0.3
       comma-separated-tokens: 2.0.2
       hast-util-whitespace: 2.0.0
-      prop-types: 15.7.2
+      prop-types: 15.8.1
       property-information: 6.1.1
       react: 17.0.2
-      react-is: 17.0.2
+      react-is: 18.2.0
       remark-parse: 10.0.1
-      remark-rehype: 9.1.0
+      remark-rehype: 10.1.0
       space-separated-tokens: 2.0.1
       style-to-object: 0.3.0
       unified: 10.1.1
@@ -16259,12 +16266,12 @@ packages:
       xtend: 4.0.2
     dev: true
 
-  /remark-rehype/9.1.0:
-    resolution: {integrity: sha512-oLa6YmgAYg19zb0ZrBACh40hpBLteYROaPLhBXzLgjqyHQrN+gVP9N/FJvfzuNNuzCutktkroXEZBrxAxKhh7Q==}
+  /remark-rehype/10.1.0:
+    resolution: {integrity: sha512-EFmR5zppdBp0WQeDVZ/b66CWJipB2q2VLNFMabzDSGR66Z2fQii83G5gTBbgGEnEEA0QRussvrFHxk1HWGJskw==}
     dependencies:
       '@types/hast': 2.3.1
       '@types/mdast': 3.0.3
-      mdast-util-to-hast: 11.3.0
+      mdast-util-to-hast: 12.2.0
       unified: 10.1.1
     dev: false
 
@@ -18046,6 +18053,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       punycode: 2.1.1
+    dev: false
+
+  /trim-lines/3.0.1:
+    resolution: {integrity: sha512-kRj8B+YHZCc9kQYdWfJB2/oUl9rA99qbowYYBtr4ui4mZyAQ2JpvVBd/6U2YloATfqBhBTSMhTpgBHtU0Mf3Rg==}
     dev: false
 
   /trim-trailing-lines/1.1.4:
