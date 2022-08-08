@@ -110,7 +110,7 @@ render(
         </Router>
       </AnalyticsProvider>
     </ApolloProvider>
-    <ToastContainer />
+    <ToastContainer icon={false} theme="colored" />
   </>,
   rootEl
 );
