@@ -5,15 +5,15 @@
   "dependencies": {
     "@teamwork/websocket-json-stream": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
-    "pg": "^8.6.0",
-    "sharedb": "^2.2.5",
-    "ws": "^8.4.2"
+    "pg": "^8.7.3",
+    "sharedb": "^3.0.0",
+    "ws": "^8.8.1"
   },
   "scripts": {
     "dev": "node-dev server.js",
     "start": "node server.js"
   },
   "devDependencies": {
-    "node-dev": "^5.0.0"
+    "node-dev": "^7.4.3"
   }
 }
