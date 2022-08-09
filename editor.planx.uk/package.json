@@ -110,7 +110,7 @@
     "react-app-rewired": "^2.2.1",
     "react-refresh": "^0.14.0",
     "sass": "^1.54.3",
-    "sass-loader": "^12.4.0",
+    "sass-loader": "^13.0.2",
     "storybook-addon-material-ui": "^0.9.0-alpha.24",
     "stream-browserify": "^3.0.0",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
