@@ -31,3 +31,8 @@ Steps:
 ### What about the secrets?
 
 Pulumi holds the encryption keys only. We hold the ciphertext. This means Pulumi can never access our secrets.  If we wanted to, we could set up pulumi to use an S3 bucket instead of relying on their services, but this would add complexity as using IaC to set up the S3 bucket to host IaC's secrets is a bit of a chicken-and-the-egg situation. It's good to know it's doable but not worth the effort at the moment.
+
+### M1 Macs and Docker Images
+https://github.com/pulumi/pulumi/discussions/7428
+https://github.com/pulumi/pulumi-docker/issues/296
+https://github.com/pulumi/pulumi-docker/issues/296#issuecomment-1030094518

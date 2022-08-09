@@ -7,10 +7,15 @@ services:
       virtual.port: 5432
       virtual.tls: ${TLS_EMAIL}
 
-  hasura:
+  hasura-graphql-engine:
+    labels:
+      virtual.port: 8080
+      virtual.tls: ${TLS_EMAIL}
+
+  hasura-server:
     labels:
       virtual.host: hasura.${ROOT_DOMAIN}
-      virtual.port: 8080
+      virtual.port: 7000
       virtual.tls: ${TLS_EMAIL}
 
   api:
