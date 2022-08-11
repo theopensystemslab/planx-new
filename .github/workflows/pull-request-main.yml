@@ -10,7 +10,7 @@ env:
   FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
-  PNPM_VERSION: 6.24.1
+  PNPM_VERSION: 7.8.0
   NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v2
@@ -47,9 +47,9 @@ jobs:
       GOVUK_NOTIFY_API_KEY: ${{ secrets.GOVUK_NOTIFY_API_KEY }}
     steps:
       - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v2.2.2
         with:
-          version: 7.5.2
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v2
@@ -119,7 +119,7 @@ jobs:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v2

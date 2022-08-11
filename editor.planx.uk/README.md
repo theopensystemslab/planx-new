@@ -6,7 +6,7 @@ This is a React App for planning officers and other people who need access to Pl
 
 ## Running locally
 
-This project uses [pnpm](https://github.com/pnpm/pnpm), to install it you can run `npm i -g pnpm`
+This project uses [pnpm](https://github.com/pnpm/pnpm), to install it you can run `npm i -g pnpm@7.8.0`
 
 Then install the project's dependencies
 

@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@nodelib/fs.walk': ^1.2.8
@@ -17,7 +17,7 @@ specifiers:
 dependencies:
   '@nodelib/fs.walk': 1.2.8
   '@pulumi/aws': 5.6.0
-  '@pulumi/awsx': 0.40.0_d91221cd0e105205e95c7efd303c95b4
+  '@pulumi/awsx': 0.40.0_3ejcdtiocbjal2k4p36tapevwq
   '@pulumi/cloudflare': 4.7.0
   '@pulumi/docker': 3.2.0
   '@pulumi/postgresql': 3.4.0
@@ -120,7 +120,7 @@ packages:
       resolve: 1.20.0
     dev: false
 
-  /@pulumi/awsx/0.40.0_d91221cd0e105205e95c7efd303c95b4:
+  /@pulumi/awsx/0.40.0_3ejcdtiocbjal2k4p36tapevwq:
     resolution: {integrity: sha512-4xMmVOHT/PZQsqPAPWe1cYguUCdk0ZUJ1JN7wfYUoGy1I3LR7gxPD14IK5I79o20PmZI65BRlAwNuntByVy6xw==}
     peerDependencies:
       '@pulumi/aws': ^5.0.0
