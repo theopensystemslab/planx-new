@@ -2,7 +2,7 @@
 FROM node:16.13.1-alpine as base
 
 WORKDIR /api
-RUN npm install -g pnpm@7.5.2
+RUN npm install -g pnpm@7.8.0
 COPY pnpm-lock.yaml .
 EXPOSE 4000
 

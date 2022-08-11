@@ -4,7 +4,7 @@ This currently handles the login process for PlanX. Most of the functionality of
 
 ## Running locally
 
-Install [pnpm](https://pnpm.io) if you don't have it `npm install -g pnpm@7.5.2`
+Install [pnpm](https://pnpm.io) if you don't have it `npm install -g pnpm@7.8.0`
 
 Then install the project's dependencies
 

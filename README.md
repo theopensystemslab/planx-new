@@ -18,7 +18,7 @@
 
 1. Move into the editor directory `cd ../editor.planx.uk`
 
-1. Install [pnpm](https://github.com/pnpm/pnpm) if you don't have it `npm install -g pnpm`
+1. Install [pnpm](https://github.com/pnpm/pnpm) if you don't have it `npm install -g pnpm@7.8.0`
 
 1. Install dependencies `pnpm i`
 
