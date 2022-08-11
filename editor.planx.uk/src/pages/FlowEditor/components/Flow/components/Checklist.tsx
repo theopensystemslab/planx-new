@@ -49,8 +49,8 @@ const Checklist: React.FC<Props> = React.memo((props) => {
       id: props.id,
       parent,
       text: props.text,
-      type: "DECISION",
     },
+    type: "DECISION",
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),

@@ -15,6 +15,10 @@ module.exports = {
         fallback: {
           crypto: false,
           stream: require.resolve("stream-browserify"),
+          // TODO: Remove this when upgrading to React 18
+          // https://github.com/facebook/react/issues/20235#issuecomment-750911623
+          "react/jsx-runtime": "react/jsx-runtime.js",
+          "react/jsx-dev-runtime": "react/jsx-dev-runtime.js",
         },
       },
       ignoreWarnings: [/Failed to parse source map/],

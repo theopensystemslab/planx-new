@@ -3,7 +3,6 @@ import "./map.css";
 import { gql, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import { visuallyHidden } from "@material-ui/utils";
 import {
   DESCRIPTION_TEXT,
@@ -69,9 +68,12 @@ function Component(props: Props) {
 
   // https://www.digital-land.info/docs#/Search%20entity
   const root = `https://www.digital-land.info/entity.json?`;
-  const url = root + options;
+  const digitalLandEndpoint = root + options;
+  const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data } = useSWR(
-    () => (address?.latitude && address?.longitude ? url : null),
+    () =>
+      address?.latitude && address?.longitude ? digitalLandEndpoint : null,
+    fetcher,
     {
       shouldRetryOnError: true,
       errorRetryInterval: 500,

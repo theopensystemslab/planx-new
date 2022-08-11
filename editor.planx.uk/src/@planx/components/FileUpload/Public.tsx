@@ -228,7 +228,11 @@ function Dropzone(props: any) {
   const MAX_UPLOAD_SIZE_MB = 30;
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: ["image/jpeg", "image/png", "application/pdf"],
+    accept: {
+      "image/jpeg": [".jpg", ".jpeg"],
+      "image/png": [".png"],
+      "application/pdf": [".pdf"],
+    },
     maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
     multiple: true,
     onDrop: (acceptedFiles: FileWithPath[]) => {
@@ -345,7 +349,7 @@ function Dropzone(props: any) {
       )}
       <ButtonBase
         className={classNames(classes.root, isDragActive && classes.dragActive)}
-        {...getRootProps()}
+        {...getRootProps({ role: "button" })}
       >
         <input {...getInputProps()} />
         <Box pl={3} pr={4} color="text.secondary">

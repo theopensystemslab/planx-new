@@ -134,7 +134,11 @@ export default function FileUpload(props: Props) {
   }, [props.setFile, slot]);
   const classes = useStyles();
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: ["image/jpeg", "image/png", "application/pdf"],
+    accept: {
+      "image/jpeg": [".jpg", ".jpeg"],
+      "image/png": [".png"],
+      "application/pdf": [".pdf"],
+    },
     maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
     multiple: false,
     onDrop: ([file]: FileWithPath[]) => {

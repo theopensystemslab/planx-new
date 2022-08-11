@@ -73,7 +73,7 @@ function Component(props: Props) {
   };
 
   const root: string = `${process.env.REACT_APP_API_URL}/gis/${team}?`;
-  const url: string =
+  const teamGisEndpoint: string =
     root +
     new URLSearchParams(
       digitalLandOrganisations.includes(team)
@@ -81,8 +81,10 @@ function Component(props: Props) {
         : customGisParams
     ).toString();
 
+  const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data, error, mutate, isValidating } = useSWR(
-    () => (x && y && latitude && longitude ? url : null),
+    () => (x && y && latitude && longitude ? teamGisEndpoint : null),
+    fetcher,
     {
       shouldRetryOnError: true,
       errorRetryInterval: 500,
