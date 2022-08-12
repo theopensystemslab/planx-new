@@ -5,12 +5,12 @@
   debug
 }
 
-tls devops+caddy@opensystemslab.io { 
-  dns cloudflare {$CLOUDFLARE_API_KEY}
-}
-
 # Reverse proxy for Hasura GraphQL Engine
 hasura-test.{$DOMAIN} {
+  tls devops+caddy@opensystemslab.io { 
+    dns cloudflare {$CLOUDFLARE_API_KEY}
+  }
+
   reverse_proxy localhost:8080
 
   header {
