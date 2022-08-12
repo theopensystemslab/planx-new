@@ -93,7 +93,7 @@ export const createHasuraCaddyTest = (
             },
             {
               name: "HASURA_PLANX_API_KEY",
-              value: new pulumi.Config("cloudflare").require("hasura-planx-api-key"),
+              value: config.require("hasura-planx-api-key"),
             },
           ],
         },
@@ -104,7 +104,7 @@ export const createHasuraCaddyTest = (
           environment: [
             { name: "HASURA_GRAPHQL_PORT", value: "8080" },
             { name: "DOMAIN", value: DOMAIN },
-            { name: "CLOUDFLARE_API_KEY", value: config.require("apiToken")}
+            { name: "CLOUDFLARE_API_KEY", value: new pulumi.Config("cloudflare").require("apiToken"),}
           ],
         }
       } 
