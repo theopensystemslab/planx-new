@@ -28,9 +28,9 @@ export const createHasuraCaddyTest = (
     protocol: "HTTP",
     healthCheck: {
       path: "/healthz",
-      timeout: 60 * 60 * 60 * 24,
+      timeout: 120,
       interval: 300,
-      unhealthyThreshold: 100
+      unhealthyThreshold: 10
     },
   });
   // Forward HTTP to HTTPS
