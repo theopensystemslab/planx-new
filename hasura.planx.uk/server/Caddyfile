@@ -1,8 +1,7 @@
-# 
 # Caddyfile used in AWS environments (staging & production)
 
 hasura-test.{$DOMAIN} {
-  reverse_proxy localhost:8080
+  reverse_proxy http://localhost:8080
 
   header {
     # Enable HSTS
