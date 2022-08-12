@@ -26,25 +26,25 @@ export const createHasuraCaddyTest = (
   const targetHasura = lbHasura.createTargetGroup("hasura-test", {
     port: HASURA_PORT,
     protocol: "HTTP",
-    healthCheck: {
-      path: "/healthz",
-      timeout: 120,
-      interval: 300,
-      unhealthyThreshold: 10
-    },
+    // healthCheck: {
+    //   path: "/healthz",
+    //   timeout: 120,
+    //   interval: 300,
+    //   unhealthyThreshold: 10
+    // },
   });
   // Forward HTTP to HTTPS
-  // const hasuraListenerHttp = targetHasura.createListener("hasura-http-test", {
-  //   protocol: "HTTP",
-  //   defaultAction: {
-  //     type: "redirect",
-  //     redirect: {
-  //       protocol: "HTTPS",
-  //       port: "443",
-  //       statusCode: "HTTP_301",
-  //     },
-  //   },
-  // });
+  // // const hasuraListenerHttp = targetHasura.createListener("hasura-http-test", {
+  // //   protocol: "HTTP",
+  // //   defaultAction: {
+  // //     type: "redirect",
+  // //     redirect: {
+  // //       protocol: "HTTPS",
+  // //       port: "443",
+  // //       statusCode: "HTTP_301",
+  // //     },
+  // //   },
+  // // });
   
   const hasuraListenerHttps = targetHasura.createListener("hasura-https-test", {
     protocol: "HTTPS",
@@ -104,6 +104,7 @@ export const createHasuraCaddyTest = (
           environment: [
             { name: "HASURA_GRAPHQL_PORT", value: "8080" },
             { name: "DOMAIN", value: DOMAIN },
+            { name: "CLOUDFLARE_API_KEY", value: new pulumi.Config("cloudflare").require("apiToken"),}
           ],
         }
       } 
