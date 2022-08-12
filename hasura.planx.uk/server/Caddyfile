@@ -7,7 +7,7 @@
 }
 
 # Reverse proxy for Hasura GraphQL Engine
-hasura-test.editor.planx.dev {
+hasura-test.{$DOMAIN} {
   reverse_proxy localhost:8080
 
   header {
@@ -22,5 +22,49 @@ hasura-test.editor.planx.dev {
 
     # Do not leak server information
     -Server
+
+    Debug hasura-test
+  }
+}
+
+# Reverse proxy for Hasura GraphQL Engine
+:443 {
+  reverse_proxy localhost:8080
+
+  header {
+    # Enable HSTS
+    Strict-Transport-Security max-age=31536000; includeSubDomains
+
+    # Disable clients from sniffing the media type
+    X-Content-Type-Options nosniff
+
+    # Clickjacking protection
+    X-Frame-Options DENY
+
+    # Do not leak server information
+    -Server
+
+    Debug 443
+  }
+}
+
+# Reverse proxy for Hasura GraphQL Engine
+hasura-test.{$DOMAIN}:443 {
+  reverse_proxy localhost:8080
+
+  header {
+    # Enable HSTS
+    Strict-Transport-Security max-age=31536000; includeSubDomains
+
+    # Disable clients from sniffing the media type
+    X-Content-Type-Options nosniff
+
+    # Clickjacking protection
+    X-Frame-Options DENY
+
+    # Do not leak server information
+    -Server
+
+    Debug Domain-443
   }
 }
