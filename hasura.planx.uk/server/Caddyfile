@@ -1,7 +1,20 @@
 # Caddyfile used in AWS environments (staging & production)
 
+{
+  apps {
+    http {
+      servers {
+        automatic_https {
+          # Allow Pulumi to handle certificates
+          disable_certificates: true
+        }
+      }
+    }
+  }
+}
+
 hasura-test.{$DOMAIN} {
-  reverse_proxy http://localhost:8080
+  reverse_proxy localhost:8080
 
   header {
     # Enable HSTS
