@@ -1,7 +1,14 @@
 # Caddyfile used in AWS environments (staging & production)
 
-hasura-test.{$DOMAIN} {
-  reverse_proxy http://localhost:8080
+# General options
+{
+  # Pulumi should handle certificates
+  auto_https disable_certs
+}
+
+# Reverse proxy for Hasura GraphQL Engine
+hasura-test.editor.planx.dev {
+  reverse_proxy localhost:8080
 
   header {
     # Enable HSTS
