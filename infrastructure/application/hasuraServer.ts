@@ -93,7 +93,7 @@ export const createHasuraCaddyTest = (
             },
             {
               name: "HASURA_PLANX_API_KEY",
-              value: config.require("hasura-planx-api-key"),
+              value: new pulumi.Config("cloudflare").require("hasura-planx-api-key"),
             },
           ],
         },
