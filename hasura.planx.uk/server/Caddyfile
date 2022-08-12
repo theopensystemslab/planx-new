@@ -2,6 +2,7 @@
 
 # General options
 {
+  debug
   # Pulumi should handle certificates
   auto_https disable_certs
 }
