@@ -8,7 +8,7 @@
 
 # Reverse proxy for Hasura GraphQL Engine
 hasura-test.{$DOMAIN} {
-  tls devops@opensystemslab.io { 
+  tls { 
     dns cloudflare {env.CLOUDFLARE_API_KEY}
     resolvers 1.1.1.1
   }
