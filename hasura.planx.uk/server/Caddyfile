@@ -3,11 +3,12 @@
 # General options
 {
   debug
+  auto_https disable_certs
 }
 
 # Reverse proxy for Hasura GraphQL Engine
 hasura-test.{$DOMAIN} {
-  tls devops+caddy@opensystemslab.io { 
+  tls devops@opensystemslab.io { 
     dns cloudflare {$CLOUDFLARE_API_KEY}
     resolvers 1.1.1.1
   }
