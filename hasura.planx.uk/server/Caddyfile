@@ -9,6 +9,7 @@
 hasura-test.{$DOMAIN} {
   tls devops+caddy@opensystemslab.io { 
     dns cloudflare {$CLOUDFLARE_API_KEY}
+    resolvers 1.1.1.1
   }
 
   reverse_proxy localhost:8080
