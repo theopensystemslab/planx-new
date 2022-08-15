@@ -104,7 +104,7 @@ export const createHasuraCaddyTest = (
           environment: [
             { name: "HASURA_GRAPHQL_PORT", value: "8080" },
             { name: "DOMAIN", value: DOMAIN },
-            { name: "CLOUDFLARE_API_KEY", value: new pulumi.Config("cloudflare").require("apiToken"),}
+            { name: "CLOUDFLARE_API_TOKEN", value: config.require("caddy-cloudflare-token")}
           ],
         }
       } 
