@@ -48,10 +48,12 @@ services:
       MB_DB_CONNECTION_URI: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
       MB_JETTY_PORT: "${METABASE_PORT}"
 
-  hasura-graphql-engine:
+  hasura:
     build:
       context: ./hasura.planx.uk
       dockerfile: Dockerfile
+    ports:
+      - ${HASURA_GRAPHQL_PORT}:8080
     depends_on:
       postgres:
         condition: service_healthy
@@ -81,24 +83,6 @@ services:
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
       HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
       HASURA_PLANX_API_URL: ${HASURA_PLANX_API_URL}
-  hasura-server:
-    image: caddy/caddy
-    depends_on:
-      hasura-graphql-engine:
-        condition: service_healthy
-    restart: always
-    ports:
-      - ${HASURA_GRAPHQL_PORT}:${HASURA_GRAPHQL_PORT}
-    environment:
-      HASURA_GRAPHQL_PORT: ${HASURA_GRAPHQL_PORT}
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "--quiet", "localhost:$HASURA_GRAPHQL_PORT/healthz"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    volumes:
-      - ./hasura.planx.uk/server/docker-compose/Caddyfile:/etc/caddy/Caddyfile
-      - ./hasura.planx.uk/server/caddy_certs:/root/.caddy
   seed-database:
     build:
       context: ./scripts/seed-database
@@ -107,12 +91,12 @@ services:
        - "./hasura.planx.uk/:/hasura"
     restart: "no"
     depends_on:
-      hasura-server:
+      hasura:
         condition: service_healthy
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_URL: http://hasura-server:7000/v1/graphql
-      HASURA_GRAPHQL_ENDPOINT: http://hasura-server:7000/
+      HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
+      HASURA_GRAPHQL_ENDPOINT: http://hasura:8080/
       PRODUCTION_GRAPHQL_URL: 'https://hasura.editor.planx.uk/v1/graphql'
   api:
     restart: unless-stopped
@@ -120,7 +104,7 @@ services:
       context: ./api.planx.uk
       target: production
     depends_on:
-      hasura-server:
+      hasura:
         condition: service_healthy
     volumes:
       - "./api.planx.uk:/api"
@@ -135,8 +119,8 @@ services:
       retries: 5
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_URL: http://hasura-server:7000/v1/graphql
-      HASURA_METADATA_URL: http://hasura-server:7000/v1/metadata 
+      HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
+      HASURA_METADATA_URL: http://hasura:8080/v1/metadata 
       JWT_SECRET: ${JWT_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
@@ -179,7 +163,7 @@ services:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
     depends_on:
-      hasura-server:
+      hasura:
         condition: service_healthy
     ports:
       - ${SHAREDB_PORT}:8000
@@ -211,4 +195,3 @@ services:
 
 volumes:
   data:
-  caddy_certs:
