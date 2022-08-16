@@ -6,8 +6,6 @@ config:
   application:bops-api-root-domain: bops-staging.services
   application:bops-api-token:
     secure: AAABAJx2KnnFeuEmwRB5VyE790TeYxiKmWFuVXVY8Lb7+HDNRYND8Pfd9d61zjwPzi9Jf2ZlT0OH++1MXYafhdQO28Y=
-  application:caddy-cloudflare-token:
-    secure: AAABAPjWHKe/K8Ef9Sq4AJc9JmLGipEdvJ4KUqtGtJDvRbJl1QoMmcEoM9A7rcr/ubSsV+rBdfYA69fZOQ7IX4RUCfqfaegx
   application:cloudflare-zone-id:
     secure: AAABAPZz/bzFCZEZd+jzPpYP4HXAOLYQmLGf2YLQE2YPfMBUtDC83KCo2l2DJ4AL4OKL+jFFx8wrrJc6DDwXJQ==
   application:google-client-id: 987324067365-anl1o207sphdeu28i6nk2e6brec8fh4b.apps.googleusercontent.com

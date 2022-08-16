@@ -26,25 +26,22 @@ export const createHasuraCaddyTest = (
   const targetHasura = lbHasura.createTargetGroup("hasura-test", {
     port: HASURA_PORT,
     protocol: "HTTP",
-    // healthCheck: {
-    //   path: "/healthz",
-    //   timeout: 120,
-    //   interval: 300,
-    //   unhealthyThreshold: 10
-    // },
+    healthCheck: {
+      path: "/healthz",
+    },
   });
   // Forward HTTP to HTTPS
-  // // const hasuraListenerHttp = targetHasura.createListener("hasura-http-test", {
-  // //   protocol: "HTTP",
-  // //   defaultAction: {
-  // //     type: "redirect",
-  // //     redirect: {
-  // //       protocol: "HTTPS",
-  // //       port: "443",
-  // //       statusCode: "HTTP_301",
-  // //     },
-  // //   },
-  // // });
+  const hasuraListenerHttp = targetHasura.createListener("hasura-http-test", {
+    protocol: "HTTP",
+    defaultAction: {
+      type: "redirect",
+      redirect: {
+        protocol: "HTTPS",
+        port: "443",
+        statusCode: "HTTP_301",
+      },
+    },
+  });
   
   const hasuraListenerHttps = targetHasura.createListener("hasura-https-test", {
     protocol: "HTTPS",
@@ -60,7 +57,7 @@ export const createHasuraCaddyTest = (
           image: repo.buildAndPushImage("../../hasura.planx.uk"),
           memory: 1024 /*MB*/,
           environment: [
-            { name: "HASURA_GRAPHQL_SERVER_PORT", value: String(8080) },
+            { name: "HASURA_GRAPHQL_SERVER_PORT", value: String(HASURA_PORT) },
             { name: "HASURA_GRAPHQL_ENABLE_CONSOLE", value: "true" },
             {
               name: "HASURA_GRAPHQL_ADMIN_SECRET",
@@ -104,7 +101,6 @@ export const createHasuraCaddyTest = (
           environment: [
             { name: "HASURA_GRAPHQL_PORT", value: "8080" },
             { name: "DOMAIN", value: DOMAIN },
-            { name: "CLOUDFLARE_API_TOKEN", value: config.require("caddy-cloudflare-token")}
           ],
         }
       } 

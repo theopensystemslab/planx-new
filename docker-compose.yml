@@ -82,7 +82,7 @@ services:
       HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
       HASURA_PLANX_API_URL: ${HASURA_PLANX_API_URL}
   hasura-server:
-    image: caddy:2.5.2-alpine
+    image: caddy/caddy
     depends_on:
       hasura-graphql-engine:
         condition: service_healthy
