@@ -11,7 +11,6 @@ import * as tldjs from "tldjs";
 import * as url from "url";
 
 import { generateTeamSecrets } from "./utils/generateTeamSecrets";
-import { createHasuraCaddyTest } from './hasuraServer';
 
 const config = new pulumi.Config();
 
@@ -288,17 +287,6 @@ export = async () => {
     ttl: 1,
     proxied: false,
   });
-
-  createHasuraCaddyTest(vpc, 
-    networking, 
-    certificates, 
-    cluster, 
-    repo, 
-    config, 
-    dbRootUrl, 
-    CUSTOM_DOMAINS, 
-    DOMAIN
-  );
 
   // ----------------------- API
   const apiBucket = aws.s3.Bucket.get(
