@@ -12,7 +12,7 @@ hasura-test.{$DOMAIN} {
     resolvers 1.1.1.1
   }
 
-  reverse_proxy localhost:{env.HASURA_GRAPHQL_PORT}
+  reverse_proxy localhost:8080
 
   header {
     # Enable HSTS
