@@ -43,5 +43,14 @@ const apiBucket = new aws.s3.Bucket("user-data", {
       maxAgeSeconds: 3000,
     },
   ],
+  // Encrypt objects at rest using SSE-S3 encryption
+  serverSideEncryptionConfiguration: {
+    rule: {
+      applyServerSideEncryptionByDefault: {
+          sseAlgorithm: "AES256",
+        },
+      },
+    },
 });
+
 export const apiBucketId = apiBucket.id;
