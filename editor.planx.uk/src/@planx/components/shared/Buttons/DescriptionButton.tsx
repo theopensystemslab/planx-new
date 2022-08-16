@@ -1,6 +1,7 @@
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import React, { useRef } from "react";
+import { useWindowSize } from "react-use";
 
 import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
 
@@ -14,6 +15,8 @@ export interface Props extends ButtonProps {
 export default function DescriptionButton(props: Props) {
   const { title, description } = props;
   const buttonRef = useRef<HTMLDivElement>();
+  // rerender component on windowSize change
+  useWindowSize();
 
   return (
     <ButtonBase {...props}>
