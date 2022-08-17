@@ -6,14 +6,6 @@
 	auto_https off
 }
 
-:80 {
-	respond "Hello, world from port 80!"
-}
-
-:443 {
-	respond "Hello, world from port 443!"
-}
-
 # Reverse proxy for Hasura GraphQL Engine
 hasura-test.{$DOMAIN} {
 	respond "Hello, world!"
