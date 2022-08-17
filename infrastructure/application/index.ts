@@ -1,4 +1,3 @@
-import { createHasuraCaddyTest } from './hasuraServer';
 "use strict";
 
 import * as fsWalk from "@nodelib/fs.walk";
@@ -288,18 +287,6 @@ export = async () => {
     ttl: 1,
     proxied: false,
   });
-
-  createHasuraCaddyTest(
-    vpc, 
-    networking, 
-    certificates, 
-    cluster, 
-    repo, 
-    config, 
-    dbRootUrl, 
-    CUSTOM_DOMAINS, 
-    DOMAIN
-  );
 
   // ----------------------- API
   const apiBucket = aws.s3.Bucket.get(
