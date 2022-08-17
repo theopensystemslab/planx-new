@@ -5,25 +5,25 @@ import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
 import * as tldjs from "tldjs";
 
-export const createHasuraCaddyTest = (
-  vpc: any, 
-  networking: any,
-  certificates: any, 
-  cluster: any, 
-  repo: any, 
-  config: any, 
-  dbRootUrl: any, 
-  CUSTOM_DOMAINS: any, 
-  DOMAIN: any,
+export const createHasuraService = (
+  vpc: awsx.ec2.Vpc, 
+  networking: pulumi.StackReference,
+  certificates: pulumi.StackReference, 
+  cluster: awsx.ecs.Cluster, 
+  repo: awsx.ecr.Repository, 
+  config: pulumi.Config, 
+  dbRootUrl: string, 
+  CUSTOM_DOMAINS: Record<string, string>[], 
+  DOMAIN: string,
 ) => {
-  const lbHasura = new awsx.lb.ApplicationLoadBalancer("hasura-test", {
+  const lbHasura = new awsx.lb.ApplicationLoadBalancer("hasura", {
     external: true,
     vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
   const HASURA_SERVER_PORT = 80;
-  const targetHasura = lbHasura.createTargetGroup("hasura-test", {
+  const targetHasura = lbHasura.createTargetGroup("hasura", {
     port: HASURA_SERVER_PORT,
     protocol: "HTTP",
     healthCheck: {
@@ -31,7 +31,7 @@ export const createHasuraCaddyTest = (
     },
   });
   // Forward HTTP to HTTPS
-  const hasuraListenerHttp = targetHasura.createListener("hasura-http-test", {
+  const hasuraListenerHttp = targetHasura.createListener("hasura-http", {
     protocol: "HTTP",
     defaultAction: {
       type: "redirect",
@@ -43,16 +43,29 @@ export const createHasuraCaddyTest = (
     },
   });
   
-  const hasuraListenerHttps = targetHasura.createListener("hasura-https-test", {
+  const hasuraListenerHttps = targetHasura.createListener("hasura-https", {
     protocol: "HTTPS",
     sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     certificateArn: certificates.requireOutput("certificateArn"),
   });
-  const hasuraService = new awsx.ecs.FargateService("hasura-test", {
+
+  // hasuraService is composed of two tightly coupled containers
+  // hasuraServer is publicly exposed (behind the load balancer) and reverse proxies requests to hasuraGraphQLEngine
+  // hasuraGraphQLEngine has no externally exposed ports, and can only be accessed by hasuraService
+  const hasuraService = new awsx.ecs.FargateService("hasura", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
       containers: {
+        hasuraServer: {
+          image: repo.buildAndPushImage("../../hasura.planx.uk/server"),
+          memory: 1024 /*MB*/,
+          portMappings: [hasuraListenerHttps],
+          environment: [
+            { name: "HASURA_SERVER_PORT", value: String(HASURA_SERVER_PORT) },
+            { name: "HASURA_GRAPHQL_ENGINE_NETWORK_LOCATION", value: "localhost" },
+          ],
+        },
         hasuraGraphQLEngine: {
           image: repo.buildAndPushImage("../../hasura.planx.uk"),
           memory: 1024 /*MB*/,
@@ -93,27 +106,18 @@ export const createHasuraCaddyTest = (
             },
           ],
         },
-        hasuraServer: {
-          image: repo.buildAndPushImage("../../hasura.planx.uk/server"),
-          memory: 1024 /*MB*/,
-          portMappings: [hasuraListenerHttps],
-          environment: [
-            { name: "HASURA_SERVER_PORT", value: String(HASURA_SERVER_PORT) },
-            { name: "HASURA_GRAPHQL_ENGINE_NETWORK_LOCATION", value: "localhost" },
-          ],
-        }
       } 
     },
     desiredCount: 1,
   });
   
-  new cloudflare.Record("hasura-test", {
+  new cloudflare.Record("hasura", {
     name: tldjs.getSubdomain(DOMAIN)
-      ? `hasura-test.${tldjs.getSubdomain(DOMAIN)}`
-      : "hasura-test",
+      ? `hasura.${tldjs.getSubdomain(DOMAIN)}`
+      : "hasura",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
-    value: lbHasura.loadBalancer.dnsName,
+    value: hasuraListenerHttps.endpoint.hostname,
     ttl: 1,
     proxied: false,
   });
