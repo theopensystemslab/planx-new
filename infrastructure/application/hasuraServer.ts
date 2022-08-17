@@ -115,7 +115,7 @@ export const createHasuraCaddyTest = (
       : "hasura-test",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
-    value: hasuraListenerHttps.endpoint.hostname,
+    value: lbHasura.loadBalancer.dnsName,
     ttl: 1,
     proxied: false,
   });
