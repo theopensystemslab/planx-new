@@ -2,26 +2,26 @@
 
 # General options
 {
-  debug
-  auto_https off
+	debug
+	auto_https off
 }
 
 # Reverse proxy for Hasura GraphQL Engine
 hasura-test.{$DOMAIN} {
-  respond "Hello, world!"
-  # reverse_proxy localhost:8080
+	respond "Hello, world!"
+	# reverse_proxy localhost:8080
 
-  # header {
-  #   # Enable HSTS
-  #   Strict-Transport-Security "max-age=15552000; includeSubDomains"
+	# header {
+	#   # Enable HSTS
+	#   Strict-Transport-Security "max-age=15552000; includeSubDomains"
 
-  #   # Disable clients from sniffing the media type
-  #   X-Content-Type-Options nosniff
+	#   # Disable clients from sniffing the media type
+	#   X-Content-Type-Options nosniff
 
-  #   # Clickjacking protection
-  #   X-Frame-Options DENY
+	#   # Clickjacking protection
+	#   X-Frame-Options DENY
 
-  #   # Do not leak server information
-  #   -Server
-  # }
+	#   # Do not leak server information
+	#   -Server
+	# }
 }
