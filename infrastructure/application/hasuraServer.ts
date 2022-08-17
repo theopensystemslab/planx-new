@@ -31,17 +31,17 @@ export const createHasuraCaddyTest = (
     },
   });
   // Forward HTTP to HTTPS
-  const hasuraListenerHttp = targetHasura.createListener("hasura-http-test", {
-    protocol: "HTTP",
-    defaultAction: {
-      type: "redirect",
-      redirect: {
-        protocol: "HTTPS",
-        port: "443",
-        statusCode: "HTTP_301",
-      },
-    },
-  });
+  // const hasuraListenerHttp = targetHasura.createListener("hasura-http-test", {
+  //   protocol: "HTTP",
+  //   defaultAction: {
+  //     type: "redirect",
+  //     redirect: {
+  //       protocol: "HTTPS",
+  //       port: "443",
+  //       statusCode: "HTTP_301",
+  //     },
+  //   },
+  // });
   
   const hasuraListenerHttps = targetHasura.createListener("hasura-https-test", {
     protocol: "HTTPS",
