@@ -29,6 +29,17 @@ const validateSession = async (req, res, next) => {
           message: "Unable to find a published version of this flow"
         });
       }
+
+      // if a user has paid, skip reconciliation steps and return *without* calling updateLowcalSessionData
+      const paymentRecorded = hasPaid(sessionData.data.breadcrumbs, savedFlow);
+      if (paymentRecorded) {
+        res.status(200).json({
+          message: "Already paid, skipping reconciliation",
+          alteredNodes: null,
+          removedBreadcrumbs: null,
+          reconciledSessionData: sessionData.data,
+        });
+      }
   
       const delta = jsondiffpatch.diff(currentFlow, savedFlow);
       // if there have been content changes, make a list of the alteredNodes
@@ -134,6 +145,13 @@ const updateLowcalSessionData = async (sessionId, data, email) => {
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
   const response = await client.request(query, { sessionId, data }, headers);
   return response.update_lowcal_sessions_by_pk?.data;
-}
+};
+
+// XXX also maintained in editor.planx.uk/src/pages/FlowEditor/lib/store/preview
+const hasPaid = (breadcrumbs, flow) => {
+  return Object.entries(breadcrumbs).some(
+    ([id, userData]) => flow[id]?.type === 400 && !userData.auto
+  );
+};
 
 module.exports = { validateSession };
