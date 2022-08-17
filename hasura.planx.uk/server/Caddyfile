@@ -1,26 +1,37 @@
-# Caddyfile used in AWS environments (staging & production)
+# HASURA_SERVER_PORT - The publicly exposed port through which this service can be accessed
+# HASURA_GRAPHQL_ENGINE_NETWORK_LOCATION - Either "hasura-graphql-engine" in Docker environments, or "localhost" on Fargate
+
 
 # General options
 {
-	debug
+	# Handle HTTPS redirection in AWS at the LoadBalancer level
 	auto_https off
 }
 
 # Reverse proxy for Hasura GraphQL Engine
-:{$HASURA_PORT} {
-	reverse_proxy localhost:8080
+:{$HASURA_SERVER_PORT} {
+	reverse_proxy {$HASURA_GRAPHQL_ENGINE_NETWORK_LOCATION}:8080
 
+	# Update response headers
 	header {
-	  # Enable HSTS
-	  Strict-Transport-Security "max-age=15552000; includeSubDomains"
+		# Use security headers which match those used by the Express API
+		# https://helmetjs.github.io/
+		Content-Security-Policy: "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+		Cross-Origin-Embedder-Policy: require-corp
+		Cross-Origin-Opener-Policy: same-origin
+		Cross-Origin-Resource-Policy: same-origin
+		Expect-CT: max-age=0
+		Origin-Agent-Cluster: ?1
+		Referrer-Policy: no-referrer
+		Strict-Transport-Security: "max-age=15552000; includeSubDomains"
+		X-Content-Type-Options: nosniff
+		X-DNS-Prefetch-Control: off
+		X-Download-Options: noopen
+		X-Frame-Options: SAMEORIGIN
+		X-Permitted-Cross-Domain-Policies: none
+		X-XSS-Protection: 0
 
-	  # Disable clients from sniffing the media type
-	  X-Content-Type-Options nosniff
-
-	  # Clickjacking protection
-	  X-Frame-Options DENY
-
-	  # Do not leak server information
-	  -Server
+		# Do not leak server information
+		-Server
 	}
 }
