@@ -99,9 +99,9 @@ export const createHasuraCaddyTest = (
           memory: 1024 /*MB*/,
           portMappings: [hasuraListenerHttps],
           environment: [
+            { name: "HASURA_PORT", value: HASURA_PORT },
             { name: "HASURA_GRAPHQL_PORT", value: "8080" },
             { name: "DOMAIN", value: DOMAIN },
-            { name: "CLOUDFLARE_API_TOKEN", value: config.require("caddy-cloudflare-token")}
           ],
         }
       } 
