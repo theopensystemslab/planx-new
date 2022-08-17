@@ -88,17 +88,17 @@ services:
         condition: service_healthy
     restart: always
     ports:
-      - ${HASURA_SERVER_PORT}:${HASURA_SERVER_PORT}
+      - ${HASURA_GRAPHQL_PORT}:${HASURA_GRAPHQL_PORT}
     environment:
-      HASURA_SERVER_PORT: ${HASURA_SERVER_PORT}
-      HASURA_GRAPHQL_ENGINE_NETWORK_LOCATION: "hasura-graphql-engine"
+      HASURA_GRAPHQL_PORT: ${HASURA_GRAPHQL_PORT}
     healthcheck:
-      test: ["CMD", "wget", "--spider", "--quiet", "localhost:$HASURA_SERVER_PORT/healthz"]
+      test: ["CMD", "wget", "--spider", "--quiet", "localhost:$HASURA_GRAPHQL_PORT/healthz"]
       interval: 30s
       timeout: 10s
       retries: 3
     volumes:
-      - ./hasura.planx.uk/server/Caddyfile:/etc/caddy/Caddyfile
+      - ./hasura.planx.uk/server/docker-compose/Caddyfile:/etc/caddy/Caddyfile
+      - ./hasura.planx.uk/server/caddy_certs:/root/.caddy
   seed-database:
     build:
       context: ./scripts/seed-database
