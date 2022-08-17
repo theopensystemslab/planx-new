@@ -22,9 +22,9 @@ export const createHasuraCaddyTest = (
     subnets: networking.requireOutput("publicSubnetIds"),
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
-  const HASURA_PORT = 80;
+  const HASURA_SERVER_PORT = 80;
   const targetHasura = lbHasura.createTargetGroup("hasura-test", {
-    port: HASURA_PORT,
+    port: HASURA_SERVER_PORT,
     protocol: "HTTP",
     healthCheck: {
       path: "/healthz",
@@ -57,7 +57,6 @@ export const createHasuraCaddyTest = (
           image: repo.buildAndPushImage("../../hasura.planx.uk"),
           memory: 1024 /*MB*/,
           environment: [
-            { name: "HASURA_GRAPHQL_SERVER_PORT", value: String(8080) },
             { name: "HASURA_GRAPHQL_ENABLE_CONSOLE", value: "true" },
             {
               name: "HASURA_GRAPHQL_ADMIN_SECRET",
@@ -99,9 +98,8 @@ export const createHasuraCaddyTest = (
           memory: 1024 /*MB*/,
           portMappings: [hasuraListenerHttps],
           environment: [
-            { name: "HASURA_PORT", value: String(HASURA_PORT) },
-            { name: "HASURA_GRAPHQL_PORT", value: "8080" },
-            { name: "DOMAIN", value: DOMAIN },
+            { name: "HASURA_SERVER_PORT", value: String(HASURA_SERVER_PORT) },
+            { name: "HASURA_GRAPHQL_ENGINE_NETWORK_LOCATION", value: "localhost" },
           ],
         }
       } 
