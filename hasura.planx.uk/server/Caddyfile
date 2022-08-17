@@ -6,21 +6,30 @@
 	auto_https off
 }
 
+:80 {
+	respond "Hello, world from port 80!"
+}
+
+:443 {
+	respond "Hello, world from port 443!"
+}
+
 # Reverse proxy for Hasura GraphQL Engine
-:{$HASURA_PORT} {
-	reverse_proxy localhost:8080
+hasura-test.{$DOMAIN} {
+	respond "Hello, world!"
+	# reverse_proxy localhost:8080
 
-	header {
-	  # Enable HSTS
-	  Strict-Transport-Security "max-age=15552000; includeSubDomains"
+	# header {
+	#   # Enable HSTS
+	#   Strict-Transport-Security "max-age=15552000; includeSubDomains"
 
-	  # Disable clients from sniffing the media type
-	  X-Content-Type-Options nosniff
+	#   # Disable clients from sniffing the media type
+	#   X-Content-Type-Options nosniff
 
-	  # Clickjacking protection
-	  X-Frame-Options DENY
+	#   # Clickjacking protection
+	#   X-Frame-Options DENY
 
-	  # Do not leak server information
-	  -Server
-	}
+	#   # Do not leak server information
+	#   -Server
+	# }
 }
