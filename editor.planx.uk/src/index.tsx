@@ -1,3 +1,4 @@
+import "core-js/actual/string/replace-all"; // replace-all polyfill
 // init airbrake before everything else
 require("./airbrake");
 
