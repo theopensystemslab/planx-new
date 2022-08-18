@@ -63,7 +63,7 @@ export const createHasuraService = async ({
     taskDefinitionArgs: {
       containers: {
         hasuraProxy: {
-          image: repo.buildAndPushImage("../../hasura.planx.uk/server"),
+          image: repo.buildAndPushImage("../../hasura.planx.uk/proxy"),
           memory: 1024 /*MB*/,
           portMappings: [hasuraListenerHttps],
           environment: [

@@ -82,7 +82,9 @@ services:
       HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
       HASURA_PLANX_API_URL: ${HASURA_PLANX_API_URL}
   hasura-proxy:
-    image: caddy:2.5.2-alpine
+    build:
+      context: ./hasura.planx.uk/proxy
+      dockerfile: Dockerfile
     depends_on:
       hasura:
         condition: service_healthy
@@ -94,11 +96,9 @@ services:
       HASURA_NETWORK_LOCATION: "hasura"
     healthcheck:
       test: ["CMD", "wget", "--spider", "--quiet", "localhost:$HASURA_PROXY_PORT/healthz"]
-      interval: 30s
-      timeout: 10s
+      interval: 15s
+      timeout: 3s
       retries: 3
-    volumes:
-      - ./hasura.planx.uk/server/Caddyfile:/etc/caddy/Caddyfile
   seed-database:
     build:
       context: ./scripts/seed-database
