@@ -36,8 +36,8 @@
   "scripts": {
     "dev": "node-dev index.js",
     "start": "node index.js",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "TZ=Europe/London jest",
+    "test:watch": "TZ=Europe/London jest --watch"
   },
   "devDependencies": {
     "dotenv": "^16.0.1",
