@@ -33,7 +33,7 @@ const validateSession = async (req, res, next) => {
       // if a user has paid, skip reconciliation steps and return *without* calling updateLowcalSessionData
       const paymentRecorded = hasPaid(sessionData.data.breadcrumbs, savedFlow);
       if (paymentRecorded) {
-        res.status(200).json({
+        return res.status(200).json({
           message: "Already paid, skipping reconciliation",
           alteredNodes: null,
           removedBreadcrumbs: null,
