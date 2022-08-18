@@ -196,17 +196,15 @@ export = async () => {
   });
 
   // ----------------------- Hasura
-  createHasuraService(
-    vpc, 
-    networking, 
-    certificates, 
-    cluster, 
-    repo, 
-    config, 
-    dbRootUrl, 
+  createHasuraService({
+    vpc,
+    cluster,
+    repo,
     CUSTOM_DOMAINS, 
-    DOMAIN
-  );
+    stacks: {
+      networking, certificates, data,
+    },
+  });
 
   // ----------------------- API
   const apiBucket = aws.s3.Bucket.get(

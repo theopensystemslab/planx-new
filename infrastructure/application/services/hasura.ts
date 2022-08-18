@@ -5,17 +5,22 @@ import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
 import * as tldjs from "tldjs";
 
-export const createHasuraService = (
-  vpc: awsx.ec2.Vpc, 
-  networking: pulumi.StackReference,
-  certificates: pulumi.StackReference, 
-  cluster: awsx.ecs.Cluster, 
-  repo: awsx.ecr.Repository, 
-  config: pulumi.Config, 
-  dbRootUrl: string, 
-  CUSTOM_DOMAINS: Record<string, string>[], 
-  DOMAIN: string,
-) => {
+import { CreateService } from './../types';
+
+export const createHasuraService = async ({
+  vpc,
+  cluster,
+  repo,
+  CUSTOM_DOMAINS, 
+  stacks: {
+    networking, certificates, data,
+  },
+}: CreateService) => {
+
+  const config = new pulumi.Config();
+  const dbRootUrl: string = await data.requireOutputValue("dbRootUrl");
+  const DOMAIN: string = await certificates.requireOutputValue("domain");
+
   const lbHasura = new awsx.lb.ApplicationLoadBalancer("hasura", {
     external: true,
     vpc,
