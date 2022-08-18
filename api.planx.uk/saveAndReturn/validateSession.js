@@ -19,7 +19,7 @@ const validateSession = async (req, res, next) => {
 
     if (sessionData) {
       // if a user has paid, skip reconciliation steps and return *without* calling updateLowcalSessionData
-      if (sessionData.data.govUkPayment?.status === "created") {
+      if (sessionData.data.govUkPayment?.state?.status === "created") {
         return res.status(200).json({
           message: "Payment process initiated, skipping reconciliation",
           alteredNodes: null,
