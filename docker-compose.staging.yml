@@ -12,7 +12,7 @@ services:
       virtual.port: 8080
       virtual.tls: ${TLS_EMAIL}
 
-  hasura-server:
+  hasura-proxy:
     labels:
       virtual.host: hasura.${ROOT_DOMAIN}
       virtual.port: 7000

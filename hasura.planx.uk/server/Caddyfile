@@ -1,4 +1,4 @@
-# HASURA_SERVER_PORT - The publicly exposed port through which this service can be accessed
+# HASURA_PROXY_PORT - The publicly exposed port through which this service can be accessed
 # HASURA_GRAPHQL_ENGINE_NETWORK_LOCATION - Either "hasura-graphql-engine" in Docker environments, or "localhost" on Fargate
 
 
@@ -9,7 +9,7 @@
 }
 
 # Reverse proxy for Hasura GraphQL Engine
-:{$HASURA_SERVER_PORT} {
+:{$HASURA_PROXY_PORT} {
 	reverse_proxy {$HASURA_GRAPHQL_ENGINE_NETWORK_LOCATION}:8080
 
 	# Update response headers
