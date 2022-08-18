@@ -137,6 +137,7 @@ export const previewStore = (
     }
   },
 
+  // XXX also maintained in api.planx.uk/saveAndReturn/validateSession
   hasPaid: () => {
     const { breadcrumbs, flow } = get();
 
