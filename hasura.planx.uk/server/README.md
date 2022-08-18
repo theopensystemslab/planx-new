@@ -1,7 +1,7 @@
 ## Hasura Server
 
 **Setup**
- - Install Caddy (`brew install caddy`)
+ - Install Caddy - https://caddyserver.com/docs/install
  - Use `caddy run` to test locally, or test as part of the docker-compose setup
  - Please see [the ADR which introduced Hasura Server](https://github.com/theopensystemslab/planx-new/blob/main/doc/architecture/decisions/0002-create-reverse-proxy-for-hasura.md) for full details
 

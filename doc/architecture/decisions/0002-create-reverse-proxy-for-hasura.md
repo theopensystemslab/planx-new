@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-Following a penetration test on PlanX, it was made clear that we needed to be able to control and modify the response headers from Hasura. This is not natively possible from Hasura Core.
+Following [a penetration test on PlanX](https://trello.com/c/UKLRlUBu/1970-jumpsec-security-audit), it was made clear that we needed to be able to control and modify the response headers from Hasura. This is not natively possible from Hasura Core.
 
 ## Decision
 
@@ -21,7 +21,7 @@ Following a penetration test on PlanX, it was made clear that we needed to be ab
 - In staging/prod, we compose the `Hasura` Fargate service of two tightly coupled containers which can communicate with each other
 
 **AWS Architecture Diagram**
-![AWS Architecture Diagram](https://user-images.githubusercontent.com/20502206/185238027-df7c167b-e469-4518-b8a4-7e9bb691cd7e.jpg)
+![AWS Architecture Diagram](./img/0002-create-reverse-proxy-for-hasura.jpg)
 
 ## Consequences
 
