@@ -211,7 +211,9 @@ const ResumePage: React.FC = () => {
    * XXX: Pay component is still responsible for validating payment status and updating passport
    */
   const isPaymentCreated = (data: Record<string, any>): boolean => {
-    return data.reconciledSessionData.govUkPayment.state.status === "created";
+    return (
+      data?.reconciledSessionData?.govUkPayment?.state?.status === "created"
+    );
   };
 
   /**
