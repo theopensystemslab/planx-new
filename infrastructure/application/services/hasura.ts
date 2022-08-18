@@ -55,8 +55,8 @@ export const createHasuraService = async ({
   });
 
   // hasuraService is composed of two tightly coupled containers
-  // hasuraProxy is publicly exposed (behind the load balancer) and reverse proxies requests to hasuraGraphQLEngine
-  // hasuraGraphQLEngine has no externally exposed ports, and can only be accessed by hasuraService
+  // hasuraProxy is publicly exposed (behind the load balancer) and reverse proxies requests to hasura
+  // hasura has no externally exposed ports, and can only be accessed by hasuraService
   const hasuraService = new awsx.ecs.FargateService("hasura", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -68,10 +68,10 @@ export const createHasuraService = async ({
           portMappings: [hasuraListenerHttps],
           environment: [
             { name: "HASURA_PROXY_PORT", value: String(HASURA_PROXY_PORT) },
-            { name: "HASURA_GRAPHQL_ENGINE_NETWORK_LOCATION", value: "localhost" },
+            { name: "HASURA_NETWORK_LOCATION", value: "localhost" },
           ],
         },
-        hasuraGraphQLEngine: {
+        hasura: {
           image: repo.buildAndPushImage("../../hasura.planx.uk"),
           memory: 1024 /*MB*/,
           environment: [

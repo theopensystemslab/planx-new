@@ -16,7 +16,7 @@ Following [a penetration test on PlanX](https://trello.com/c/UKLRlUBu/1970-jumps
 - Caddy is one of the recommendations by Hasura, and after much trial and error I'm confident it's a good match for the requirements
 - Naming conventions -  
   - `HasuraProxy` is the public facing service, all requests will be routed through this
-  - `HasuraGraphQLEngine` is the Hasura we know and love, and is not publicly exposed
+  - `Hasura` is the Hasura we know and love, and is not publicly exposed
 - In local dev & Pizza (test) environments, we spin up a brand new independent `HasuraProxy`
 - In staging/prod, we compose the `Hasura` Fargate service of two tightly coupled containers which can communicate with each other
 
@@ -31,7 +31,7 @@ It is not entirely required to make any changes to the docker-compose configurat
 
 **Staging & Production environments**
 
-Having `HasuraProxy` and `HasuraGraphQLEngine` be tightly coupled may not prove be ideal if both need to scale independently. We could mitigate this in a number of ways if it proves to be necessary - 
+Having `HasuraProxy` and `Hasura` be tightly coupled may not prove be ideal if both need to scale independently. We could mitigate this in a number of ways if it proves to be necessary - 
  - Increase memory available to one of the containers
  - Refactor into two separate services, and address a more complex Fargate networking setup
 

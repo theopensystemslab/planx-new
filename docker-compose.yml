@@ -48,7 +48,7 @@ services:
       MB_DB_CONNECTION_URI: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
       MB_JETTY_PORT: "${METABASE_PORT}"
 
-  hasura-graphql-engine:
+  hasura:
     build:
       context: ./hasura.planx.uk
       dockerfile: Dockerfile
@@ -84,14 +84,14 @@ services:
   hasura-proxy:
     image: caddy:2.5.2-alpine
     depends_on:
-      hasura-graphql-engine:
+      hasura:
         condition: service_healthy
     restart: always
     ports:
       - ${HASURA_PROXY_PORT}:${HASURA_PROXY_PORT}
     environment:
       HASURA_PROXY_PORT: ${HASURA_PROXY_PORT}
-      HASURA_GRAPHQL_ENGINE_NETWORK_LOCATION: "hasura-graphql-engine"
+      HASURA_NETWORK_LOCATION: "hasura"
     healthcheck:
       test: ["CMD", "wget", "--spider", "--quiet", "localhost:$HASURA_PROXY_PORT/healthz"]
       interval: 30s
