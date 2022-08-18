@@ -18,6 +18,16 @@ const validateSession = async (req, res, next) => {
     let sessionData = await findSession(sessionId, email.toLowerCase());
 
     if (sessionData) {
+      // if a user has paid, skip reconciliation steps and return *without* calling updateLowcalSessionData
+      if (sessionData.data.govUkPayment?.status === "created") {
+        return res.status(200).json({
+          message: "Payment process initiated, skipping reconciliation",
+          alteredNodes: null,
+          removedBreadcrumbs: null,
+          reconciledSessionData: sessionData.data,
+        });
+      }
+
       // reconcile content changes between the published flow state at point of resuming and when the applicant last left off
       const [currentFlow, savedFlow] = await Promise.all([
         getMostRecentPublishedFlow(sessionData.data.id),
@@ -27,17 +37,6 @@ const validateSession = async (req, res, next) => {
         return next({
           status: 404,
           message: "Unable to find a published version of this flow"
-        });
-      }
-
-      // if a user has paid, skip reconciliation steps and return *without* calling updateLowcalSessionData
-      const paymentRecorded = hasPaid(sessionData.data.breadcrumbs, savedFlow);
-      if (paymentRecorded) {
-        return res.status(200).json({
-          message: "Already paid, skipping reconciliation",
-          alteredNodes: null,
-          removedBreadcrumbs: null,
-          reconciledSessionData: sessionData.data,
         });
       }
   
@@ -145,13 +144,6 @@ const updateLowcalSessionData = async (sessionId, data, email) => {
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
   const response = await client.request(query, { sessionId, data }, headers);
   return response.update_lowcal_sessions_by_pk?.data;
-};
-
-// XXX also maintained in editor.planx.uk/src/pages/FlowEditor/lib/store/preview
-const hasPaid = (breadcrumbs, flow) => {
-  return Object.entries(breadcrumbs).some(
-    ([id, userData]) => flow[id]?.type === 400 && !userData.auto
-  );
 };
 
 module.exports = { validateSession };
