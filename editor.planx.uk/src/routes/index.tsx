@@ -2,8 +2,8 @@ import { lazy, map, mount, redirect, route } from "navi";
 import * as React from "react";
 
 import { client } from "../lib/graphql";
+import ErrorPage from "../pages/ErrorPage";
 import Login from "../pages/Login";
-import NetworkError from "../pages/NetworkError";
 import { isPreviewOnlyDomain, makeTitle } from "./utils";
 
 type RoutingContext = {
@@ -13,7 +13,7 @@ type RoutingContext = {
 const editorRoutes = mount({
   "/network-error": route({
     title: makeTitle("Network Error"),
-    view: <NetworkError />,
+    view: <ErrorPage title="Network error" />,
   }),
 
   "/login": map(async (req, context: RoutingContext) =>
