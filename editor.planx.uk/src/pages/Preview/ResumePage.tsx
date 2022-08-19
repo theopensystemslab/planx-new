@@ -109,22 +109,15 @@ const EmailSuccess: React.FC = () => {
 
 const ValidationSuccess: React.FC<{
   data: any;
-  email: string;
-  sessionId: string;
-}> = ({ data, email, sessionId }) => {
+  continueApplication: () => void;
+}> = ({ data, continueApplication }) => {
   return (
     <ReconciliationPage
       bannerHeading="Resume your application"
       diffMessage={data?.message || ""}
       data={data}
       buttonText="Continue"
-      onButtonClick={() =>
-        useStore.setState({
-          saveToEmail: email,
-          sessionId: sessionId,
-          path: ApplicationPath.SaveAndReturn,
-        })
-      }
+      onButtonClick={() => continueApplication()}
     ></ReconciliationPage>
   );
 };
@@ -154,6 +147,7 @@ const InvalidSession: React.FC<{
 /**
  * If an email is passed in as a query param, do not prompt a user for this
  * Currently only used for redirects back from GovUK Pay
+ * XXX: Won't work locally as referrer is stripped from the browser when navigating from HTTPS to HTTP (localhost)
  */
 const getInitialEmailValue = () => {
   const emailQueryParam = useCurrentRoute().url.query.email;
@@ -185,6 +179,17 @@ const ResumePage: React.FC = () => {
   const teamSlug = useTeamSlug();
 
   /**
+   * Continue application following successful validation & reconciliation
+   */
+  const continueApplication = (): void => {
+    useStore.setState({
+      saveToEmail: email,
+      sessionId: sessionId,
+      path: ApplicationPath.SaveAndReturn,
+    });
+  };
+
+  /**
    * Send magic link to user, based on submitted email
    * Sets page status based on validation of request by API
    */
@@ -202,6 +207,16 @@ const ResumePage: React.FC = () => {
   };
 
   /**
+   * Check if applicant has initialised the payment process
+   * XXX: Pay component is still responsible for validating payment status and updating passport
+   */
+  const isPaymentCreated = (data: Record<string, any>): boolean => {
+    return (
+      data?.reconciledSessionData?.govUkPayment?.state?.status === "created"
+    );
+  };
+
+  /**
    * Query DB to validate that sessionID & email match
    */
   const validateSessionId = async () => {
@@ -213,7 +228,10 @@ const ResumePage: React.FC = () => {
       // Find this session, if found then handle reconciliation
       await axios.post(url, data).then((response) => {
         setReconciledData(response?.data);
-        setPageStatus(Status.Validated);
+        // Skip reconciliation page if applicant has started payment
+        isPaymentCreated(response?.data)
+          ? continueApplication()
+          : setPageStatus(Status.Validated);
       });
     } catch (error) {
       setPageStatus(Status.InvalidSession);
@@ -247,8 +265,7 @@ const ResumePage: React.FC = () => {
     [Status.Validated]: (
       <ValidationSuccess
         data={reconciledData}
-        email={email}
-        sessionId={sessionId}
+        continueApplication={continueApplication}
       />
     ),
     [Status.InvalidSession]: (
