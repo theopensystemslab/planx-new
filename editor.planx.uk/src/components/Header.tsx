@@ -101,11 +101,13 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   serviceTitle: {
-    textTransform: "capitalize",
     fontSize: "1.25em",
     fontWeight: 700,
     paddingLeft: theme.spacing(2),
     paddingBottom: theme.spacing(1),
+    "&::first-letter": {
+      textTransform: "capitalize",
+    },
   },
 }));
 
