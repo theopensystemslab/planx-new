@@ -3,7 +3,7 @@ const { convertSlugToName, getResumeLink } = require("./utils");
 describe("convertSlugToName util function", () => {
   it("should return the correct value", () => {
     const testData = [
-      ["open-systems-lab", "Open Systems Lab"],
+      ["open-systems-lab", "Open systems lab"],
       ["lambeth", "Lambeth"],
     ];
 

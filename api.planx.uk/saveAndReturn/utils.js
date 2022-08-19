@@ -52,10 +52,7 @@ const sendEmail = async (template, emailAddress, config) => {
  * @param {string} slug 
  * @returns {string}
  */
-const convertSlugToName = (slug) => {
-  const capitalise = (word) => word[0].toUpperCase() + word.substring(1);
-  return slug.split("-").map(capitalise).join(" ");
-};
+const convertSlugToName = (slug) => slug[0].toUpperCase() + slug.substring(1).replaceAll("-", " ");
 
 /**
  * Build the magic link which will be sent to users via email to continue their application

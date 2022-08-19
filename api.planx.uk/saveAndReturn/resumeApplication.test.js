@@ -43,7 +43,7 @@ describe("buildContentFromSessions function", () => {
       },
     }];
 
-    const result = `Service: Apply For A Lawful Development Certificate
+    const result = `Service: Apply for a lawful development certificate
       Address: 1 High Street
       Project type: New office premises
       Expiry Date: 29 May 2022
@@ -103,15 +103,15 @@ describe("buildContentFromSessions function", () => {
         slug: "apply-for-a-lawful-development-certificate"
       },
     }];
-    const result = `Service: Apply For A Lawful Development Certificate
+    const result = `Service: Apply for a lawful development certificate
       Address: 1 High Street
       Project type: New office premises
       Expiry Date: 29 May 2022
-      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123\n\nService: Apply For A Lawful Development Certificate
+      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123\n\nService: Apply for a lawful development certificate
       Address: 2 High Street
       Project type: New office premises
       Expiry Date: 29 May 2022
-      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=456\n\nService: Apply For A Lawful Development Certificate
+      Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=456\n\nService: Apply for a lawful development certificate
       Address: 3 High Street
       Project type: New office premises
       Expiry Date: 29 May 2022
@@ -136,7 +136,7 @@ describe("buildContentFromSessions function", () => {
       },
     }];
 
-    const result = `Service: Apply For A Lawful Development Certificate
+    const result = `Service: Apply for a lawful development certificate
       Address: Address not submitted
       Project type: New office premises
       Expiry Date: 29 May 2022
@@ -163,7 +163,7 @@ describe("buildContentFromSessions function", () => {
       },
     }];
 
-    const result = `Service: Apply For A Lawful Development Certificate
+    const result = `Service: Apply for a lawful development certificate
       Address: 1 High Street
       Project type: Project type not submitted
       Expiry Date: 29 May 2022
