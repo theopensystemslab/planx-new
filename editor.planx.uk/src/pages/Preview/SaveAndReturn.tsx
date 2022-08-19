@@ -40,7 +40,7 @@ export const ConfirmEmail: React.FC<{
           description="We will use this to save your application so you can come back to it later. We will also email you updates about your application."
         ></QuestionHeader>
         <InputRow>
-          <InputLabel label={"Email Address"} htmlFor={"email"}>
+          <InputLabel label={"Email address"} htmlFor={"email"}>
             <Input
               bordered
               errorMessage={
@@ -58,7 +58,7 @@ export const ConfirmEmail: React.FC<{
           </InputLabel>
         </InputRow>
         <InputRow>
-          <InputLabel label={"Confirm Email Address"} htmlFor={"confirmEmail"}>
+          <InputLabel label={"Confirm email address"} htmlFor={"confirmEmail"}>
             <Input
               bordered
               errorMessage={

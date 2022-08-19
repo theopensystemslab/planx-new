@@ -48,9 +48,9 @@ describe("Save and Return component", () => {
 
     expect(getState().saveToEmail).toBeUndefined();
 
-    userEvent.type(screen.getByLabelText("Email Address"), "test@test.com");
+    userEvent.type(screen.getByLabelText("Email address"), "test@test.com");
     userEvent.type(
-      screen.getByLabelText("Confirm Email Address"),
+      screen.getByLabelText("Confirm email address"),
       "test@test.com"
     );
     userEvent.click(screen.getByTestId("continue-button"));
@@ -82,9 +82,9 @@ describe("Save and Return component", () => {
       expect(sessionId).toBeDefined();
     });
 
-    userEvent.type(screen.getByLabelText("Email Address"), "test@test.com");
+    userEvent.type(screen.getByLabelText("Email address"), "test@test.com");
     userEvent.type(
-      screen.getByLabelText("Confirm Email Address"),
+      screen.getByLabelText("Confirm email address"),
       "test@test.com"
     );
 
@@ -124,11 +124,11 @@ describe("ConfirmEmail component", () => {
     render(<ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>);
 
     userEvent.type(
-      screen.getByLabelText("Email Address"),
+      screen.getByLabelText("Email address"),
       "testABC@testABC.com"
     );
     userEvent.type(
-      screen.getByLabelText("Confirm Email Address"),
+      screen.getByLabelText("Confirm email address"),
       "test123@test123.com"
     );
     userEvent.click(screen.getByTestId("continue-button"));
@@ -147,8 +147,8 @@ describe("ConfirmEmail component", () => {
 
     render(<ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>);
 
-    const emailInput = screen.getByLabelText("Email Address");
-    const confirmEmailInput = screen.getByLabelText("Confirm Email Address");
+    const emailInput = screen.getByLabelText("Email address");
+    const confirmEmailInput = screen.getByLabelText("Confirm email address");
 
     userEvent.type(emailInput, "not an email");
     userEvent.type(confirmEmailInput, "not an email");
@@ -166,8 +166,8 @@ describe("ConfirmEmail component", () => {
 
     render(<ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>);
 
-    const emailInput = screen.getByLabelText("Email Address");
-    const confirmEmailInput = screen.getByLabelText("Confirm Email Address");
+    const emailInput = screen.getByLabelText("Email address");
+    const confirmEmailInput = screen.getByLabelText("Confirm email address");
 
     expect(emailInput).toHaveValue("");
     expect(confirmEmailInput).toHaveValue("");
@@ -217,11 +217,11 @@ describe("ConfirmEmail component", () => {
     render(<ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>);
 
     userEvent.type(
-      screen.getByLabelText("Email Address"),
+      screen.getByLabelText("Email address"),
       "testABC@testABC.com"
     );
     userEvent.type(
-      screen.getByLabelText("Confirm Email Address"),
+      screen.getByLabelText("Confirm email address"),
       "testABC@testABC.com"
     );
     userEvent.click(screen.getByTestId("continue-button"));
