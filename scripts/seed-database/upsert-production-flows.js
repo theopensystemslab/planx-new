@@ -154,7 +154,7 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
   }
 })()
 
-const getInsertMutation = ({ teamConstraint, flowConstraint, publishedFlowConstraints }) => `
+const getInsertMutation = ({ teamConstraint, flowConstraint }) => `
   mutation InsertFlowsAndTeams(
     $teams: [teams_insert_input!]!, 
     $flows: [flows_insert_input!]!,
