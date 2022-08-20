@@ -1,6 +1,6 @@
-const { gql } = require("graphql-request");
-const { adminGraphQLClient } = require("../hasura");
-const { sendEmail, convertSlugToName, getResumeLink, calculateExpiryDate, getHumanReadableProjectType } = require("./utils");
+import { gql } from "graphql-request";
+import { adminGraphQLClient } from "../hasura";
+import { sendEmail, convertSlugToName, getResumeLink, calculateExpiryDate, getHumanReadableProjectType } from "./utils";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
@@ -32,7 +32,7 @@ const resumeApplication = async (req, res, next) => {
     const response = await sendEmail("resume", email, config);
     return res.json(response);
   } catch (error) {
-    return next({ 
+    return next({
       error,
       message: `Failed to send "Resume" email. ${error.message}`
     });
@@ -128,4 +128,4 @@ const buildContentFromSessions = async (sessions, team) => {
   return content.join("\n\n");
 };
 
-module.exports = { resumeApplication, buildContentFromSessions };
+export { resumeApplication, buildContentFromSessions };

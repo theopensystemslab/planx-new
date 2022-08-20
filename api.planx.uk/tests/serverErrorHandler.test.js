@@ -1,6 +1,6 @@
-const supertest = require("supertest");
-const app = require("../server");
-const nock = require("nock");
+import supertest from "supertest";
+import app from "../server";
+import nock from "nock";
 
 const { get, post } = supertest(app);
 

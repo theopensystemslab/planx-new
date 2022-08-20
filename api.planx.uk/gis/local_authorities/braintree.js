@@ -145,6 +145,6 @@ async function locationSearch(x, y, siteBoundary, extras) {
   return go(x, y, siteBoundary, extras);
 }
 
-module.exports = {
+export {
   locationSearch,
 };

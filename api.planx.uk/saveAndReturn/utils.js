@@ -1,7 +1,7 @@
-const { format, addDays } = require("date-fns");
-const { gql } = require("graphql-request");
-const { publicGraphQLClient, adminGraphQLClient } = require("../hasura");
-const { notifyClient } = require("./notify");
+import { format, addDays } from "date-fns";
+import { gql } from "graphql-request";
+import { publicGraphQLClient, adminGraphQLClient } from "../hasura";
+import { notifyClient } from "./notify";
 
 const DAYS_UNTIL_EXPIRY = 28;
 
@@ -202,7 +202,7 @@ const getPersonalisation = (
  * Sessions older than a week cleaned up nightly by cron job delete_expired_sessions on Hasura
  * @param {string} sessionId 
  */
- const softDeleteSession = async (sessionId) => {
+const softDeleteSession = async (sessionId) => {
   try {
     const client = adminGraphQLClient;
     const mutation = gql`
@@ -223,7 +223,7 @@ const getPersonalisation = (
  * Sessions older than a week cleaned up nightly by cron job delete_expired_sessions on Hasura
  * @param {string} sessionId 
  */
- const markSessionAsSubmitted = async (sessionId) => {
+const markSessionAsSubmitted = async (sessionId) => {
   try {
     const client = adminGraphQLClient;
     const mutation = gql`
@@ -305,7 +305,7 @@ const stringifyWithRootKeysSortedAlphabetically = (ob = {}) =>
       )
   );
 
-module.exports = {
+export {
   getSaveAndReturnPublicHeaders,
   sendEmail,
   convertSlugToName,

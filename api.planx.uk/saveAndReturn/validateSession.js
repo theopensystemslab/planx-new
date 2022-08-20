@@ -1,8 +1,8 @@
-const { gql } = require("graphql-request");
-const jsondiffpatch = require("jsondiffpatch");
-const { publicGraphQLClient } = require("../hasura");
-const { getMostRecentPublishedFlow, getPublishedFlowByDate } = require("../helpers");
-const { getSaveAndReturnPublicHeaders, stringifyWithRootKeysSortedAlphabetically } = require("./utils");
+import { gql } from "graphql-request";
+import jsondiffpatch from "jsondiffpatch";
+import { publicGraphQLClient } from "../hasura";
+import { getMostRecentPublishedFlow, getPublishedFlowByDate } from "../helpers";
+import { getSaveAndReturnPublicHeaders, stringifyWithRootKeysSortedAlphabetically } from "./utils";
 
 const client = publicGraphQLClient;
 
@@ -14,7 +14,7 @@ const validateSession = async (req, res, next) => {
         status: 400,
         message: "Required value missing"
       });
-    
+
     let sessionData = await findSession(sessionId, email.toLowerCase());
 
     if (sessionData) {
@@ -39,7 +39,7 @@ const validateSession = async (req, res, next) => {
           message: "Unable to find a published version of this flow"
         });
       }
-  
+
       const delta = jsondiffpatch.diff(currentFlow, savedFlow);
       // if there have been content changes, make a list of the alteredNodes
       if (delta) {
@@ -98,7 +98,7 @@ const validateSession = async (req, res, next) => {
     } else {
       return next({
         status: 404,
-        message: "Unable to find your session" 
+        message: "Unable to find your session"
       });
     }
   } catch (error) {
@@ -146,4 +146,4 @@ const updateLowcalSessionData = async (sessionId, data, email) => {
   return response.update_lowcal_sessions_by_pk?.data;
 };
 
-module.exports = { validateSession };
+export { validateSession };

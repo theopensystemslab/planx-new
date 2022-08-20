@@ -29,8 +29,8 @@ const mockLowcalSession = {
 };
 
 const mockFlow = {
-  slug: "slug", 
+  slug: "slug",
   team: mockTeam,
 };
 
-module.exports = { mockFlow, mockLowcalSession, mockTeam }
+export { mockFlow, mockLowcalSession, mockTeam }
