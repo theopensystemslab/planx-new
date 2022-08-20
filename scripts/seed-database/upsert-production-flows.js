@@ -60,6 +60,7 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           summary
           publisher_id
           flow_id
+          created_at
         }
       }
     `);
@@ -135,7 +136,10 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
       ) {
         insert_published_flows(
           objects: $publishedFlows,
-          on_conflict: {constraint: published_flows_pkey, update_columns: [data, flow_id, summary, publisher_id]}
+          on_conflict: {
+            constraint: published_flows_pkey, 
+            update_columns: [data, flow_id, summary, publisher_id, created_at]
+          }
         ) {
           affected_rows
         }
