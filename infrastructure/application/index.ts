@@ -11,6 +11,7 @@ import * as tldjs from "tldjs";
 import * as url from "url";
 
 import { generateTeamSecrets } from "./utils/generateTeamSecrets";
+import { createHasuraService } from './services/hasura';
 
 const config = new pulumi.Config();
 
@@ -42,7 +43,7 @@ const CUSTOM_DOMAINS =
     : [];
 
 export = async () => {
-  const DOMAIN = await certificates.requireOutputValue("domain");
+  const DOMAIN: string = await certificates.requireOutputValue("domain");
 
   const repo = new awsx.ecr.Repository("repo");
 
@@ -54,7 +55,7 @@ export = async () => {
     vpc,
   });
 
-  const dbRootUrl = await data.requireOutputValue("dbRootUrl");
+  const dbRootUrl: string = await data.requireOutputValue("dbRootUrl");
 
   // ----------------------- Metabase
   const pgRoot = url.parse(dbRootUrl);
@@ -195,97 +196,14 @@ export = async () => {
   });
 
   // ----------------------- Hasura
-  const lbHasura = new awsx.lb.ApplicationLoadBalancer("hasura", {
-    external: true,
+  createHasuraService({
     vpc,
-    subnets: networking.requireOutput("publicSubnetIds"),
-  });
-  // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
-  const HASURA_PORT = 80;
-  const targetHasura = lbHasura.createTargetGroup("hasura", {
-    port: HASURA_PORT,
-    protocol: "HTTP",
-    healthCheck: {
-      path: "/healthz",
-    },
-  });
-  // Forward HTTP to HTTPS
-  const hasuraListenerHttp = targetHasura.createListener("hasura-http", {
-    protocol: "HTTP",
-    defaultAction: {
-      type: "redirect",
-      redirect: {
-        protocol: "HTTPS",
-        port: "443",
-        statusCode: "HTTP_301",
-      },
-    },
-  });
-
-  const hasuraListenerHttps = targetHasura.createListener("hasura-https", {
-    protocol: "HTTPS",
-    sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
-    certificateArn: certificates.requireOutput("certificateArn"),
-  });
-  const hasuraService = new awsx.ecs.FargateService("hasura", {
     cluster,
-    subnets: networking.requireOutput("publicSubnetIds"),
-    taskDefinitionArgs: {
-      container: {
-        image: repo.buildAndPushImage("../../hasura.planx.uk"),
-        memory: 1024 /*MB*/,
-        portMappings: [hasuraListenerHttps],
-        environment: [
-          { name: "HASURA_GRAPHQL_SERVER_PORT", value: String(HASURA_PORT) },
-          { name: "HASURA_GRAPHQL_ENABLE_CONSOLE", value: "true" },
-          {
-            name: "HASURA_GRAPHQL_ADMIN_SECRET",
-            value: config.require("hasura-admin-secret"),
-          },
-          {
-            name: "HASURA_GRAPHQL_CORS_DOMAIN",
-            value: [...CUSTOM_DOMAINS.map((x) => x.domain), DOMAIN]
-              .map((x) => `https://*.${x}, https://${x}`)
-              .join(", "),
-          },
-          {
-            name: "HASURA_GRAPHQL_ENABLED_LOG_TYPES",
-            value: "startup, http-log, webhook-log, websocket-log, query-log",
-          },
-          {
-            name: "HASURA_GRAPHQL_JWT_SECRET",
-            value: pulumi.interpolate`{ "type": "HS256", "key": "${config.require(
-              "jwt-secret"
-            )}" }`,
-          },
-          { name: "HASURA_GRAPHQL_UNAUTHORIZED_ROLE", value: "public" },
-          {
-            name: "HASURA_GRAPHQL_DATABASE_URL",
-            value: dbRootUrl,
-          },
-          {
-            name: "HASURA_PLANX_API_URL",
-            value: `https://api.${DOMAIN}`,
-          },
-          {
-            name: "HASURA_PLANX_API_KEY",
-            value: config.require("hasura-planx-api-key"),
-          },
-        ],
-      },
+    repo,
+    CUSTOM_DOMAINS, 
+    stacks: {
+      networking, certificates, data,
     },
-    desiredCount: 1,
-  });
-
-  new cloudflare.Record("hasura", {
-    name: tldjs.getSubdomain(DOMAIN)
-      ? `hasura.${tldjs.getSubdomain(DOMAIN)}`
-      : "hasura",
-    type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
-    value: hasuraListenerHttps.endpoint.hostname,
-    ttl: 1,
-    proxied: false,
   });
 
   // ----------------------- API

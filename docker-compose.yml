@@ -52,8 +52,6 @@ services:
     build:
       context: ./hasura.planx.uk
       dockerfile: Dockerfile
-    ports:
-      - ${HASURA_GRAPHQL_PORT}:8080
     depends_on:
       postgres:
         condition: service_healthy
@@ -83,6 +81,24 @@ services:
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
       HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
       HASURA_PLANX_API_URL: ${HASURA_PLANX_API_URL}
+  hasura-proxy:
+    build:
+      context: ./hasura.planx.uk/proxy
+      dockerfile: Dockerfile
+    depends_on:
+      hasura:
+        condition: service_healthy
+    restart: always
+    ports:
+      - ${HASURA_PROXY_PORT}:${HASURA_PROXY_PORT}
+    environment:
+      HASURA_PROXY_PORT: ${HASURA_PROXY_PORT}
+      HASURA_NETWORK_LOCATION: "hasura"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "localhost:$HASURA_PROXY_PORT/healthz"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
   seed-database:
     build:
       context: ./scripts/seed-database
@@ -91,12 +107,12 @@ services:
        - "./hasura.planx.uk/:/hasura"
     restart: "no"
     depends_on:
-      hasura:
+      hasura-proxy:
         condition: service_healthy
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
-      HASURA_GRAPHQL_ENDPOINT: http://hasura:8080/
+      HASURA_GRAPHQL_URL: http://hasura-proxy:7000/v1/graphql
+      HASURA_GRAPHQL_ENDPOINT: http://hasura-proxy:7000/
       PRODUCTION_GRAPHQL_URL: 'https://hasura.editor.planx.uk/v1/graphql'
   api:
     restart: unless-stopped
@@ -104,7 +120,7 @@ services:
       context: ./api.planx.uk
       target: production
     depends_on:
-      hasura:
+      hasura-proxy:
         condition: service_healthy
     volumes:
       - "./api.planx.uk:/api"
@@ -119,8 +135,8 @@ services:
       retries: 5
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
-      HASURA_METADATA_URL: http://hasura:8080/v1/metadata 
+      HASURA_GRAPHQL_URL: http://hasura-proxy:7000/v1/graphql
+      HASURA_METADATA_URL: http://hasura-proxy:7000/v1/metadata 
       JWT_SECRET: ${JWT_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
@@ -163,7 +179,7 @@ services:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
     depends_on:
-      hasura:
+      hasura-proxy:
         condition: service_healthy
     ports:
       - ${SHAREDB_PORT}:8000
