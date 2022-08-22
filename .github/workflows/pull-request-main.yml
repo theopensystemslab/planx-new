@@ -43,8 +43,6 @@ jobs:
     name: API Tests
     runs-on: ubuntu-20.04
     timeout-minutes: 10
-    env:
-      GOVUK_NOTIFY_API_KEY: ${{ secrets.GOVUK_NOTIFY_API_KEY }}
     steps:
       - uses: actions/checkout@v2
       - uses: pnpm/action-setup@v2.2.2
