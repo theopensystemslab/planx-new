@@ -21,8 +21,14 @@ export const isDateValid = (date: string) => {
   return isComplete && isValid(parseISO(date));
 };
 
-export const paddedDate = (date: string, eventType: string) => {
+export const paddedDate = (
+  date: string,
+  eventType: string
+): string | undefined => {
   const [year, month, day] = date.split("-");
+
+  // Do not parse if no values given (e.g. deleting a date)
+  if (!year && !month && !day) return;
 
   // If month and/or year is single-digit, pad it
   const [paddedMonth, paddedDay] = [month, day].map((value) => {
@@ -111,14 +117,16 @@ export const editorValidationSchema = () =>
       name: "Min less than max",
       message: "Min must be less than max",
       test(date: string | undefined) {
-        return Boolean(date && date < this.parent.max);
+        if (!date) return true;
+        return date < this.parent.max;
       },
     }),
     max: dateSchema().test({
       name: "Max greater than min",
       message: "Max must be greater than min",
       test(date: string | undefined) {
-        return Boolean(date && date > this.parent.min);
+        if (!date) return true;
+        return date > this.parent.min;
       },
     }),
   });
