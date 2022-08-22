@@ -1,8 +1,8 @@
-const { resumeApplication } = require("./resumeApplication");
-const { validateSession } = require("./validateSession");
-const { sendSaveAndReturnEmail } = require("./sendEmail");
+import { resumeApplication } from "./resumeApplication";
+import { validateSession } from "./validateSession";
+import { sendSaveAndReturnEmail } from "./sendEmail";
 
-module.exports = {
+export {
   sendSaveAndReturnEmail,
   resumeApplication,
   validateSession,

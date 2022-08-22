@@ -1,4 +1,4 @@
-const { sign } = require("jsonwebtoken");
+import { sign } from "jsonwebtoken";
 
 function getJWT(userId) {
   const data = {
@@ -17,7 +17,7 @@ function authHeader(userId) {
   return { Authorization: `Bearer ${getJWT(userId || 0)}` };
 }
 
-module.exports = {
+export {
   authHeader,
   getJWT,
 };

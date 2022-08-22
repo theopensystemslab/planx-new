@@ -48,6 +48,6 @@ const createScheduledEvent = async (args) => {
   };
 };
 
-module.exports = {
+export {
   createScheduledEvent
 };

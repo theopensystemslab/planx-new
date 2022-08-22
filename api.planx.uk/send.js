@@ -1,13 +1,13 @@
 require("isomorphic-fetch");
-const os = require("os");
-const path = require("path");
-const FormData = require("form-data");
-const fs = require("fs");
-const AdmZip = require("adm-zip");
-const str = require("string-to-stream");
-const { stringify } = require("csv-stringify");
-const { GraphQLClient } = require("graphql-request");
-const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
+import os from "os";
+import path from "path";
+import FormData from "form-data";
+import fs from "fs";
+import AdmZip from "adm-zip";
+import str from "string-to-stream";
+import stringify from "csv-stringify";
+import { GraphQLClient } from "graphql-request";
+import { markSessionAsSubmitted } from "./saveAndReturn/utils";
 
 const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
   headers: {
@@ -41,16 +41,16 @@ const sendToUniform = async (req, res, next) => {
     const zipPath = await createZip(req.body.xml, req.body.csv, req.body.files, req.body.sessionId);
 
     // Request 1/3 - Authenticate
-    const { 
-      access_token: token, 
-      "organisation-name": organisation, 
-      "organisation-id": organisationId 
+    const {
+      access_token: token,
+      "organisation-name": organisation,
+      "organisation-id": organisationId
     } = await authenticate(clientId, clientSecret);
-    
+
     // 2/3 - Create a submission
     if (token) {
       const idoxSubmissionId = await createSubmission(token, organisation, organisationId, req.body.sessionId);
-      
+
       // 3/3 - Attach the zip & create an audit entry
       if (idoxSubmissionId) {
         const attachmentAdded = await attachArchive(token, idoxSubmissionId, zipPath);
@@ -151,7 +151,7 @@ async function createZip(stringXml, csv, files, sessionId) {
     // build a CSV, write it to the tmp directory, add it to the zip
     const csvPath = path.join(tmpDir, "application.csv");
     const csvFile = fs.createWriteStream(csvPath);
-    
+
     const csvStream = stringify(csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
     await new Promise((resolve, reject) => {
       csvStream.on("error", reject);
@@ -165,7 +165,7 @@ async function createZip(stringXml, csv, files, sessionId) {
     //   must be named "proposal.xml" to be processed by Uniform
     const xmlPath = "proposal.xml";
     const xmlFile = fs.createWriteStream(xmlPath);
-    
+
     const xmlStream = str(stringXml.trim()).pipe(xmlFile);
     await new Promise((resolve, reject) => {
       xmlStream.on("error", reject);
@@ -174,7 +174,7 @@ async function createZip(stringXml, csv, files, sessionId) {
 
     zip.addLocalFile(xmlPath);
     deleteFile(xmlPath);
-    
+
     // generate & save zip locally
     const zipName = `ripa-test-${sessionId}.zip`;
     zip.writeZip(zipName);
@@ -296,7 +296,7 @@ async function attachArchive(token, submissionId, zipPath) {
     body: formData,
     redirect: "follow",
   };
-  
+
   try {
     return await fetch(attachArchiveEndpoint, attachArchiveOptions)
       .then(response => {
@@ -382,12 +382,12 @@ const getUniformClient = (localAuthority) => {
   // XXX: Matches regex used in IAC (getCustomerSecrets.ts)
   const regex = new RegExp(/\W+/g)
   const client = process.env["UNIFORM_CLIENT_" + localAuthority.replace(regex, "_").toUpperCase()];
-  
+
   // If we can't find secrets, return undefined to trigger a 400 error using next() in sendToUniform()
   if (!client) return undefined;
 
-  const [ clientId, clientSecret ] = client.split(":");
+  const [clientId, clientSecret] = client.split(":");
   return { clientId, clientSecret };
 };
 
-module.exports = { sendToUniform };
+export { sendToUniform };

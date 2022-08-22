@@ -30,7 +30,7 @@ function locationSearchWithTimeout(
     let extraInfo = extras;
     try {
       extraInfo = JSON.parse(unescape(extras));
-    } catch (e) {}
+    } catch (e) { }
 
     try {
       const resp = await localAuthorities[localAuthority].locationSearch(
@@ -60,7 +60,7 @@ const locationSearch = () => async (req, res, next) => {
         message: err ? err : "unknown error",
       });
     }
-  // check if this local authority is supported via our custom GIS hookup
+    // check if this local authority is supported via our custom GIS hookup
   } else if (localAuthorities[req.params.localAuthority]) {
     try {
       const timeout = Number(process.env.TIMEOUT_DURATION) || 15000;
@@ -84,4 +84,4 @@ const locationSearch = () => async (req, res, next) => {
   }
 };
 
-module.exports = { locationSearch };
+export { locationSearch };

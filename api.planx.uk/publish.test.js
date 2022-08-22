@@ -1,8 +1,8 @@
-const supertest = require("supertest");
+import supertest from "supertest";
 
-const { queryMock } = require("./tests/graphqlQueryMock");
-const { authHeader } = require("./tests/mockJWT");
-const app = require("./server");
+import { queryMock } from "./tests/graphqlQueryMock";
+import { authHeader } from "./tests/mockJWT";
+import app from "./server";
 
 beforeEach(() => {
   queryMock.mockQuery({

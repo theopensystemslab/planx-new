@@ -1,4 +1,4 @@
-const { Notifier } = require("@airbrake/node");
+import { Notifier } from "@airbrake/node";
 
 const airbrake =
   process.env.NODE_ENV === "production" &&
@@ -13,4 +13,4 @@ const airbrake =
       })
     : undefined;
 
-module.exports = airbrake;
+export default airbrake;

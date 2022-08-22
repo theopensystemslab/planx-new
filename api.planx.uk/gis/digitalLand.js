@@ -1,8 +1,8 @@
 require("isomorphic-fetch");
-const { GraphQLClient } = require("graphql-request");
+import { GraphQLClient } from "graphql-request";
 
 const { addDesignatedVariable, omitGeometry } = require("./helpers");
-const { baseSchema } = require("./local_authorities/metadata/base.js");
+import { baseSchema } from "./local_authorities/metadata/base.js";
 
 const localAuthorityMetadata = {
   "buckinghamshire": require("./local_authorities/metadata/buckinghamshire.js"),
@@ -167,11 +167,11 @@ async function go(localAuthority, geom, extras) {
 
         // if caz is true, but parent a4 is false, sync a4 for accurate granularity
         if (formattedResult[localCaz].value && !formattedResult["article4"].value) {
-          formattedResult["article4"] = { 
-            value: true, 
-            text: baseSchema["article4"].pos, 
-            data: formattedResult[localCaz].data 
-          }; 
+          formattedResult["article4"] = {
+            value: true,
+            text: baseSchema["article4"].pos,
+            data: formattedResult[localCaz].data
+          };
         }
       }
     }
@@ -186,6 +186,6 @@ async function locationSearch(localAuthority, geom, extras) {
   return go(localAuthority, geom, extras);
 }
 
-module.exports = {
+export {
   locationSearch,
 };

@@ -1,7 +1,7 @@
-const supertest = require("supertest");
-const app = require("../server");
-const { queryMock } = require("../tests/graphqlQueryMock");
-const { mockFlow, mockLowcalSession } = require("../tests/mocks/saveAndReturnMocks");
+import supertest from "supertest";
+import app from "../server";
+import { queryMock } from "../tests/graphqlQueryMock";
+import { mockFlow, mockLowcalSession } from "../tests/mocks/saveAndReturnMocks";
 
 // https://docs.notifications.service.gov.uk/node.html#email-addresses
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk"
@@ -32,7 +32,7 @@ describe("Send Email endpoint", () => {
     queryMock.mockQuery({
       name: "SoftDeleteLowcalSession",
       data: {
-        update_lowcal_sessions_by_pk: { id:  123 }
+        update_lowcal_sessions_by_pk: { id: 123 }
       },
       variables: {
         sessionId: 123,
@@ -42,11 +42,11 @@ describe("Send Email endpoint", () => {
 
   describe("'Save' template", () => {
     const SAVE_ENDPOINT = "/send-email/save"
-    
+
     it("throws an error if required data is missing", async () => {
       const missingEmail = { payload: { sessionId: 123 } };
       const missingSessionId = { payload: { email: "test" } };
-  
+
       for (let invalidBody of [missingEmail, missingSessionId]) {
         await supertest(app)
           .post(SAVE_ENDPOINT)
@@ -57,11 +57,11 @@ describe("Send Email endpoint", () => {
           });
       }
     });
-  
+
     it("sends a Notify email on successful save", async () => {
-  
+
       const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
-  
+
       await supertest(app)
         .post(SAVE_ENDPOINT)
         .send(data)
@@ -70,11 +70,11 @@ describe("Send Email endpoint", () => {
           expect(response.body).toHaveProperty("expiryDate");
         });
     });
-  
+
     it("throws an error for an invalid email address", async () => {
-  
+
       const data = { payload: { sessionId: 123, email: "Not an email address" } };
-  
+
       await supertest(app)
         .post(SAVE_ENDPOINT)
         .send(data)
@@ -94,7 +94,7 @@ describe("Send Email endpoint", () => {
           lowcal_sessions: []
         }
       });
-  
+
       queryMock.mockQuery({
         name: "GetHumanReadableProjectType",
         data: {
@@ -106,19 +106,19 @@ describe("Send Email endpoint", () => {
           rawList: ["new.office"],
         }
       });
-  
+
       queryMock.mockQuery({
         name: "SoftDeleteLowcalSession",
         data: {
-          update_lowcal_sessions_by_pk: { id:  123 }
+          update_lowcal_sessions_by_pk: { id: 123 }
         },
         variables: {
           sessionId: 123,
         }
       });
-  
+
       const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
-  
+
       await supertest(app)
         .post(SAVE_ENDPOINT)
         .send(data)
@@ -140,7 +140,7 @@ describe("Send Email endpoint", () => {
 
     it("throws an error if a template is invalid", async () => {
       const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
-  
+
       await supertest(app)
         .post("/send-email/not-a-template")
         .send(data)
@@ -161,7 +161,7 @@ describe("Send Email endpoint", () => {
           .expect(401);
       }
     });
-  
+
     it("returns 401 UNAUTHORIZED if no incorrect auth header is provided", async () => {
       for (let template of ["reminder", "expiry"]) {
         const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
@@ -172,7 +172,7 @@ describe("Send Email endpoint", () => {
           .expect(401);
       };
     });
-  
+
     it("returns 200 OK if the correct headers are used", async () => {
       for (let template of ["reminder", "expiry"]) {
         const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
@@ -187,7 +187,7 @@ describe("Send Email endpoint", () => {
 
   describe("'Expiry' template", () => {
     it("soft deletes the session when an expiry email is sent", async () => {
-    
+
       const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
 
       await supertest(app)

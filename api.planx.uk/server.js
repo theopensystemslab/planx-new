@@ -1,42 +1,42 @@
-require("isomorphic-fetch");
-const { json, urlencoded } = require("body-parser");
-const assert = require("assert");
-const cookieParser = require("cookie-parser");
-const cookieSession = require("cookie-session");
-const cors = require("cors");
-const { stringify } = require("csv-stringify");
-const express = require("express");
-const { expressjwt } = require("express-jwt");
-const noir = require("pino-noir");
-const { URL } = require("url");
-const { Server } = require("http");
-const passport = require("passport");
-const { sign } = require("jsonwebtoken");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const {
+import "isomorphic-fetch";
+import { json, urlencoded } from "body-parser";
+import assert from "assert";
+import cookieParser from "cookie-parser";
+import cookieSession from "cookie-session";
+import cors from "cors";
+import { stringify } from "csv-stringify";
+import express from "express";
+import { expressjwt } from "express-jwt";
+import noir from "pino-noir";
+import { URL } from "url";
+import { Server } from "http";
+import passport from "passport";
+import { sign } from "jsonwebtoken";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import {
   createProxyMiddleware,
   responseInterceptor,
   fixRequestBody,
-} = require("http-proxy-middleware");
-const helmet = require('helmet')
+} from "http-proxy-middleware";
+import helmet from 'helmet';
 
-const { signS3Upload } = require("./s3");
-const { locationSearch } = require("./gis/index");
-const { diffFlow, publishFlow } = require("./publish");
-const { findAndReplaceInFlow } = require("./findReplace");
-const { sendToUniform } = require("./send");
-const { resumeApplication, validateSession, sendSaveAndReturnEmail } = require("./saveAndReturn")
-const { hardDeleteSessions } = require("./webhooks/hardDeleteSessions");
-const { useHasuraAuth, useSendEmailAuth } = require("./auth");
+import { signS3Upload } from "./s3";
+import { locationSearch } from "./gis/index";
+import { diffFlow, publishFlow } from "./publish";
+import { findAndReplaceInFlow } from "./findReplace";
+import { sendToUniform } from "./send";
+import { resumeApplication, validateSession, sendSaveAndReturnEmail } from "./saveAndReturn"
+import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
+import { useHasuraAuth, useSendEmailAuth } from "./auth";
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
-const airbrake = require("./airbrake");
-const { markSessionAsSubmitted } = require("./saveAndReturn/utils");
-const { createReminderEvent, createExpiryEvent } = require("./webhooks/lowcalSessionEvents");
-const { adminGraphQLClient } = require("./hasura");
-const { sendEmailLimiter, apiLimiter } = require("./rateLimit");
+import airbrake from "./airbrake";
+import { markSessionAsSubmitted } from "./saveAndReturn/utils";
+import { createReminderEvent, createExpiryEvent } from "./webhooks/lowcalSessionEvents";
+import { adminGraphQLClient } from "./hasura";
+import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 
 const router = express.Router();
 
@@ -289,7 +289,7 @@ app.post("/bops/:localAuthority", (req, res, next) => {
         async (responseBuffer, proxyRes, req, res) => {
           // Mark session as submitted so that reminder and expiry emails are not triggered
           markSessionAsSubmitted(req.body.planx_debug_data.session_id);
-          
+
           const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
 
           const applicationId = await client.request(
@@ -354,7 +354,7 @@ app.post("/uniform/:localAuthority", sendToUniform);
 app.post("/pay/:localAuthority", (req, res, next) => {
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
   const isSupported = process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
-  
+
   if (isSupported) {
     // drop req.params.localAuthority from the path when redirecting
     // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
@@ -524,7 +524,7 @@ app.post("/download-application", async (req, res, next) => {
       message: "Missing application `data` to download"
     });
   }
-  
+
   try {
     // build a CSV and stream the response
     stringify(req.body, { columns: ["question", "responses", "metadata"], header: true }).pipe(res);
@@ -591,13 +591,13 @@ const trackAnalyticsLogExit = async (id, isUserExit) => {
 
 app.post("/analytics/log-user-exit", async (req, res, next) => {
   const analyticsLogId = Number(req.query.analyticsLogId);
-  if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, true);
+  if (analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, true);
   res.send();
 });
 
 app.post("/analytics/log-user-resume", async (req, res, next) => {
   const analyticsLogId = Number(req.query.analyticsLogId);
-  if(analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
+  if (analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
   res.send();
 });
 
@@ -659,14 +659,13 @@ function usePayProxy(options, req) {
     onProxyReq: fixRequestBody,
     headers: {
       ...req.headers,
-      Authorization: `Bearer ${
-        process.env[
-          `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
-        ]
-      }`,
+      Authorization: `Bearer ${process.env[
+        `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
+      ]
+        }`,
     },
     ...options,
   });
 }
 
-module.exports = server;
+export default server;

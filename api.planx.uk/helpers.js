@@ -1,4 +1,4 @@
-const { GraphQLClient } = require("graphql-request");
+import { GraphQLClient } from "graphql-request";
 
 const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
   headers: {
@@ -94,4 +94,4 @@ const dataMerged = async (id, ob = {}) => {
   return ob;
 };
 
-module.exports = { getFlowData, getMostRecentPublishedFlow, getPublishedFlowByDate, dataMerged };
+export { getFlowData, getMostRecentPublishedFlow, getPublishedFlowByDate, dataMerged };

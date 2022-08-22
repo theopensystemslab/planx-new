@@ -1,5 +1,5 @@
-const { NotifyClient } = require("notifications-node-client");
+import { NotifyClient } from "notifications-node-client";
 
 const notifyClient = new NotifyClient(process.env.GOVUK_NOTIFY_API_KEY);
 
-module.exports = { notifyClient };
+export { notifyClient };

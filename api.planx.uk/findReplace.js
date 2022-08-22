@@ -1,6 +1,6 @@
-const { GraphQLClient } = require("graphql-request");
+import { GraphQLClient } from "graphql-request";
 
-const { getFlowData } = require("./helpers");
+import { getFlowData } from "./helpers";
 
 const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
   headers: {
@@ -126,4 +126,4 @@ const findAndReplaceInFlow = async (req, res, next) => {
   }
 };
 
-module.exports = { findAndReplaceInFlow };
+export { findAndReplaceInFlow };

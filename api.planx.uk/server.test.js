@@ -1,9 +1,9 @@
-const nock = require("nock");
-const supertest = require("supertest");
-const loadOrRecordNockRequests = require("./tests/loadOrRecordNockRequests");
+import nock from "nock";
+import supertest from "supertest";
+import loadOrRecordNockRequests from "./tests/loadOrRecordNockRequests";
 
-const { queryMock } = require("./tests/graphqlQueryMock");
-const app = require("./server");
+import { queryMock } from "./tests/graphqlQueryMock";
+import app from "./server";
 
 it("works", async () => {
   await supertest(app)

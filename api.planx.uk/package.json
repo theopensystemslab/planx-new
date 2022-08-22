@@ -34,12 +34,16 @@
     "string-to-stream": "^3.0.1"
   },
   "scripts": {
-    "dev": "node-dev index.js",
-    "start": "node index.js",
+    "dev": "ts-node-dev index.ts",
+    "start": "node ./dist/index.js",
     "test": "TZ=Europe/London jest",
-    "test:watch": "TZ=Europe/London jest --watch"
+    "test:watch": "TZ=Europe/London jest --watch",
+    "build": "rimraf ./dist && npx tsc"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/jest": "^28.1.4",
+    "@types/node": "^16.11.43",
     "dotenv": "^16.0.1",
     "esbuild": "^0.14.49",
     "esbuild-jest": "^0.5.0",
@@ -49,7 +53,11 @@
     "nock": "^13.2.9",
     "node-dev": "^7.4.3",
     "prettier": "~2.7.1",
-    "supertest": "^6.2.4"
+    "supertest": "^6.2.4",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^28.0.5",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.7.4"
   },
   "pnpm": {
     "peerDependencyRules": {

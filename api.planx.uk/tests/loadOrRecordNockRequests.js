@@ -1,8 +1,8 @@
-const { createHash } = require("crypto");
-const { writeFileSync } = require("fs");
-const nock = require("nock");
-const path = require("path");
-const stringify = require("json-stringify-pretty-compact");
+import { createHash } from "crypto";
+import { writeFileSync } from "fs";
+import nock from "nock";
+import path from "path";
+import stringify from "json-stringify-pretty-compact";
 
 /**
  * Attempts to load HTTP requests that have been made in previous tests.
@@ -50,4 +50,4 @@ function loadOrRecordNockRequests(filename, hashKey) {
   });
 }
 
-module.exports = loadOrRecordNockRequests;
+export default loadOrRecordNockRequests;

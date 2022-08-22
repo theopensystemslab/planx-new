@@ -16,11 +16,11 @@ const setEsriGeometry = (geometryType, x, y, radius, siteBoundary) => {
   return geometryType === "esriGeometryEnvelope"
     ? bufferPoint(x, y, radius)
     : JSON.stringify({
-        rings: siteBoundary,
-        spatialReference: {
-          wkid: 4326,
-        },
-      });
+      rings: siteBoundary,
+      spatialReference: {
+        wkid: 4326,
+      },
+    });
 };
 
 // Build up the URL used to query an ESRI feature
@@ -160,7 +160,7 @@ const addDesignatedVariable = (responseObject) => {
 
 // Squash multiple layers into a single result
 const squashResultLayers = (originalOb, layers, layerName) => {
-  const ob = {...originalOb}
+  const ob = { ...originalOb }
   // Check to see if we have any intersections
   const match = layers.find((layer) => ob[layer].value);
   // If we do, return this as the result. Otherwise take the first (negative) value.
@@ -172,7 +172,7 @@ const squashResultLayers = (originalOb, layers, layerName) => {
 
 // Rollup multiple layers into a single result, whilst preserving granularity
 const rollupResultLayers = (originalOb, layers, layerName) => {
-  const ob = {...originalOb}
+  const ob = { ...originalOb }
   const granularLayers = layers.filter(layer => layer != layerName);
 
   if (ob[layerName]?.value) {
@@ -207,13 +207,13 @@ const getA4Subvariables = (features, articleFours, a4Key) => {
 const omitGeometry = (entity) => {
   return Object.keys(entity)
     .filter(key => !["geometry", "point"].includes(key))
-    .reduce((obj, key) => { 
+    .reduce((obj, key) => {
       obj[key] = entity[key];
       return obj;
     }, {});
 };
 
-module.exports = {
+export {
   setEsriGeometryType,
   setEsriGeometry,
   makeEsriUrl,

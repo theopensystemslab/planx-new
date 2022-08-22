@@ -26,11 +26,11 @@ const hardDeleteSessions = async (_req, res, next) => {
       deletedSessions: delete_lowcal_sessions.returning.map(session => session.id),
     });
   } catch (error) {
-    return next({ 
+    return next({
       error,
       message: `Failed to delete sessions. ${error.message}`
     });
   };
 };
 
-module.exports = { hardDeleteSessions };
+export { hardDeleteSessions };

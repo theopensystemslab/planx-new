@@ -52,7 +52,7 @@ const useSendEmailAuth = (req, res, next) => {
   };
 };
 
-module.exports = { 
-  useHasuraAuth, 
+export {
+  useHasuraAuth,
   useSendEmailAuth,
 };

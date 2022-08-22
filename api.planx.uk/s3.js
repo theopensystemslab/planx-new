@@ -1,7 +1,7 @@
-const assert = require("assert");
-const S3 = require("aws-sdk/clients/s3");
-const { customAlphabet } = require("nanoid");
-const { getType } = require("mime");
+import assert from "assert";
+import S3 from "aws-sdk/clients/s3";
+import { customAlphabet } from "nanoid";
+import { getType } from "mime";
 
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 8);
 
@@ -55,4 +55,4 @@ function useMinio() {
   }
 }
 
-module.exports = { signS3Upload };
+export { signS3Upload };

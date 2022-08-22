@@ -23,6 +23,6 @@ const planningConstraints = {
   },
 };
 
-module.exports = {
+export {
   planningConstraints,
 };

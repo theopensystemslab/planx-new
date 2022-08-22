@@ -130,6 +130,6 @@ const baseSchema = {
   },
 };
 
-module.exports = {
+export {
   baseSchema
 };

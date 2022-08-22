@@ -174,7 +174,7 @@ const planningConstraints = {
   hazard: { value: false },
 };
 
-module.exports = {
+export {
   planningConstraints,
   A4_KEY
 };

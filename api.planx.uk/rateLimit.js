@@ -19,12 +19,12 @@ const sendEmailLimiter = rateLimit({
 	max: 25,
 	standardHeaders: true,
 	legacyHeaders: false,
-  // Use email as key for limiter
-  // Invalid emails will fail at validation
-  keyGenerator: (req, _res) => req.body?.payload?.email,
+	// Use email as key for limiter
+	// Invalid emails will fail at validation
+	keyGenerator: (req, _res) => req.body?.payload?.email,
 	// Only apply limiter to public requests - allow Hasura to make multiple requests without limit
 	// Any other S&R endpoints require authorisation
-  skip: (req, _res) => HASURA_ONLY_SEND_EMAIL_TEMPLATES.includes(req.params.template),
+	skip: (req, _res) => HASURA_ONLY_SEND_EMAIL_TEMPLATES.includes(req.params.template),
 });
 
-module.exports = { apiLimiter, sendEmailLimiter };
+export { apiLimiter, sendEmailLimiter };

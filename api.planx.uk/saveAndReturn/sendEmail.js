@@ -1,4 +1,4 @@
-const { sendSingleApplicationEmail } = require("./utils");
+import { sendSingleApplicationEmail } from "./utils";
 
 const sendSaveAndReturnEmail = async (req, res, next) => {
   try {
@@ -12,11 +12,11 @@ const sendSaveAndReturnEmail = async (req, res, next) => {
     const response = await sendSingleApplicationEmail(template, email, sessionId);
     return res.json(response);
   } catch (error) {
-    return next({ 
+    return next({
       error,
       message: `Failed to send ${req.params.template} email. ${error.message}`
     });
   };
 };
 
-module.exports = { sendSaveAndReturnEmail };
+export { sendSaveAndReturnEmail };

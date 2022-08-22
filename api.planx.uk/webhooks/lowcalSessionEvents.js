@@ -60,7 +60,7 @@ const createExpiryEvent = async (req, res, next) => {
   };
 };
 
-module.exports = {
+export {
   createReminderEvent,
   createExpiryEvent,
 };

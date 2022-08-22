@@ -1,5 +1,5 @@
-const { GraphQLClient } = require("graphql-request");
-const jsondiffpatch = require("jsondiffpatch");
+import { GraphQLClient } from "graphql-request";
+import * as jsondiffpatch from "jsondiffpatch";
 
 const { dataMerged, getMostRecentPublishedFlow } = require("./helpers");
 
@@ -103,4 +103,4 @@ const publishFlow = async (req, res, next) => {
   }
 };
 
-module.exports = { diffFlow, publishFlow };
+export { diffFlow, publishFlow };
