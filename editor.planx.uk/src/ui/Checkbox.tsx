@@ -46,7 +46,7 @@ export default function Checkbox(props: Props): FCReturn {
   const classes = useClasses(props);
 
   return (
-    <Box className={classes.box}>
+    <Box className={classes.box} onClick={() => props.onChange()}>
       <input
         defaultChecked={props.checked}
         className={classes.input}
