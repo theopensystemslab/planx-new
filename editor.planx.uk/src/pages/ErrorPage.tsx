@@ -22,7 +22,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
   },
 }));
 
-const NetworkError: React.FC = () => {
+const ErrorPage: React.FC<{ title: string }> = ({ title }) => {
   const classes = useStyles();
 
   return (
@@ -30,7 +30,7 @@ const NetworkError: React.FC = () => {
       <Box className={classes.dashboard}>
         <Box pl={2} pb={2}>
           <Typography variant="h1" gutterBottom>
-            Network error
+            {title}
           </Typography>
           <Typography variant="body1">
             This bug has been automatically logged and our team will see it
@@ -42,4 +42,4 @@ const NetworkError: React.FC = () => {
   );
 };
 
-export default NetworkError;
+export default ErrorPage;

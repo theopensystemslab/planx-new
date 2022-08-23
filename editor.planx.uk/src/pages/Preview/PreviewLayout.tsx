@@ -8,10 +8,9 @@ import {
 } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ErrorFallback from "components/ErrorFallback";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { clearLocalFlow } from "lib/local";
-import * as NEW_LOCAL from "lib/local.new";
 import { merge } from "lodash";
+import { NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -109,8 +108,13 @@ const PreviewLayout: React.FC<{
 }> = ({ team, children, settings, footerContent, headerVariant }) => {
   const classes = useClasses();
   const path = useStore((state) => state.path);
+  const id = useStore((state) => state.id);
 
-  const [id, sessionId] = useStore((state) => [state.id, state.sessionId]);
+  // Manually check for route errors
+  // We're not yet within the NaviView which will automatically handle this
+  // Save & Return "wrapper" must be resolved first
+  const route = useCurrentRoute();
+  if (route.error) throw new NotFoundError();
 
   const handleRestart = async () => {
     if (
@@ -134,7 +138,6 @@ const PreviewLayout: React.FC<{
 
   /**
    * Generates a MuiTheme by deep merging global and team ThemeOptions
-   * @returns {Theme}
    */
   const generatePreviewTheme = (): Theme => {
     const globalOptions = getGlobalThemeOptions();

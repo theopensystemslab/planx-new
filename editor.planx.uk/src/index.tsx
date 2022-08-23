@@ -11,6 +11,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import { MyMap } from "@opensystemslab/map";
 import jwtDecode from "jwt-decode";
 import { getCookie, setCookie } from "lib/cookie";
+import ErrorPage from "pages/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analyticsProvider";
 import React, { Suspense, useEffect } from "react";
 import { render } from "react-dom";
@@ -84,7 +85,7 @@ const Layout: React.FC<{
 
   return (
     <ThemeProvider theme={globalTheme}>
-      <NotFoundBoundary render={() => <h1>Not found</h1>}>
+      <NotFoundBoundary render={() => <ErrorPage title="Not found" />}>
         {!!isLoading ? (
           <DelayedLoadingIndicator msDelayBeforeVisible={500} />
         ) : (
