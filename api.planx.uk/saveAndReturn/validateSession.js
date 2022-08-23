@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import jsondiffpatch from "jsondiffpatch";
+import * as jsondiffpatch from "jsondiffpatch";
 import { publicGraphQLClient } from "../hasura";
 import { getMostRecentPublishedFlow, getPublishedFlowByDate } from "../helpers";
 import { getSaveAndReturnPublicHeaders, stringifyWithRootKeysSortedAlphabetically } from "./utils";
