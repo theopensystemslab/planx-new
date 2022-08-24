@@ -5,7 +5,7 @@
   "dependencies": {
     "@teamwork/websocket-json-stream": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
-    "pg": "^8.7.3",
+    "pg": "8.6.0",
     "sharedb": "2.2.5",
     "ws": "8.4.2"
   },
