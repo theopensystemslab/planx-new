@@ -4,8 +4,7 @@
   "license": "MPL-2.0",
   "dependencies": {
     "graphql": "^16.5.0",
-    "graphql-request": "^4.3.0",
-    "lodash": "^4.17.21"
+    "graphql-request": "^4.3.0"
   },
   "scripts": {
     "upsert-flows": "node ./upsert-production-flows"
