@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SendComponent: React.FC<Props> = ({
-  destination = DEFAULT_DESTINATION,
+  destinations = [DEFAULT_DESTINATION],
   ...props
 }) => {
   const [breadcrumbs, flow, passport, sessionId] = useStore((state) => [
@@ -43,52 +43,72 @@ const SendComponent: React.FC<Props> = ({
   const classes = useStyles();
 
   let teamSlug = useTeamSlug();
-  // Bucks has 4 legacy instances of Uniform, set teamSlug to pre-merger council name
-  if (destination === Destination.Uniform && teamSlug === "buckinghamshire") {
-    teamSlug = passport.data?.["property.localAuthorityDistrict"]
-      ?.filter((name: string) => name !== "Buckinghamshire")[0]
-      ?.toLowerCase()
-      ?.replace(/\W+/g, "-");
+  let combinedEventsPayload: any = {};
 
-    if (teamSlug === "south-bucks") {
-      // South Bucks & Chiltern share an Idox connector, route addresses in either to Chiltern
-      teamSlug = "chiltern";
-    }
+  // Format application user data as required by BOPS
+  if (destinations.includes(Destination.BOPS)) {
+    combinedEventsPayload[Destination.BOPS] = {
+      localAuthority: teamSlug,
+      body: getParams(breadcrumbs, flow, passport, sessionId),
+    };
   }
 
-  const destinationUrl = `${process.env.REACT_APP_API_URL}/${destination}/${teamSlug}`;
+  // Format application user data as required by Idox/Uniform
+  if (destinations.includes(Destination.Uniform)) {
+    // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
+    if (teamSlug === "buckinghamshire") {
+      teamSlug = passport.data?.["property.localAuthorityDistrict"]
+        ?.filter((name: string) => name !== "Buckinghamshire")[0]
+        ?.toLowerCase()
+        ?.replace(/\W+/g, "-");
 
-  const params = {
-    [Destination.BOPS]: getParams(breadcrumbs, flow, passport, sessionId),
-    [Destination.Uniform]: getUniformParams(
-      breadcrumbs,
-      flow,
-      passport,
-      sessionId,
-      teamSlug as UniformInstance
-    ),
-  }[destination];
+      // South Bucks & Chiltern share an Idox connector, route addresses in either to Chiltern
+      if (teamSlug === "south-bucks") {
+        teamSlug = "chiltern";
+      }
+    }
 
+    combinedEventsPayload[Destination.Uniform] = {
+      localAuthority: teamSlug,
+      body: getUniformParams(
+        breadcrumbs,
+        flow,
+        passport,
+        sessionId,
+        teamSlug as UniformInstance
+      ),
+    };
+  }
+
+  // Send makes a single request to create scheduled events in Hasura, then those events make the actual submission requests with retries etc
+  const url = `${process.env.REACT_APP_API_URL}/create-send-events/${sessionId}`;
   const request: any = useAsync(async () =>
-    axios.post(useStagingUrlIfTestApplication(passport)(destinationUrl), params)
+    axios.post(
+      useStagingUrlIfTestApplication(passport)(url),
+      combinedEventsPayload
+    )
   );
 
   useEffect(() => {
     const isReady = !request.loading && !request.error && request.value;
 
-    if (destination === Destination.BOPS && isReady && props.handleSubmit) {
+    if (
+      destinations.includes(Destination.BOPS) &&
+      isReady &&
+      props.handleSubmit
+    ) {
       props.handleSubmit(
-        makeData(props, request.value.data.application.bops_id, "bopsId")
+        makeData(props, request?.value?.bops?.event_id, "bopsSendEventId")
       );
     }
 
-    if (destination === Destination.Uniform && isReady && props.handleSubmit) {
+    if (
+      destinations.includes(Destination.Uniform) &&
+      isReady &&
+      props.handleSubmit
+    ) {
       props.handleSubmit(
-        makeData(
-          props,
-          request.value.data.application.idox_submission_id,
-          "idoxSubmissionId"
-        )
+        makeData(props, request?.value?.uniform?.event_id, "uniformSendEventId")
       );
     }
   }, [request.loading, request.error, request.value]);
@@ -97,30 +117,13 @@ const SendComponent: React.FC<Props> = ({
     return (
       <Card>
         <DelayedLoadingIndicator
-          text={`Submitting your application to ${destination?.toUpperCase()} ${teamSlug?.toUpperCase()}...`}
+          text={`Submitting your application...`}
           msDelayBeforeVisible={0}
         />
       </Card>
     );
-  } else if (
-    request.error &&
-    request.error.response?.data?.error?.endsWith("local authority")
-  ) {
-    // Display an error message if this local authority/team isn't configured for the selected destination
-    return (
-      <Card>
-        <div className={classes.errorSummary} role="status">
-          <Typography variant="h5" component="h3" gutterBottom>
-            Cannot submit your application
-          </Typography>
-          <Typography variant="body2">
-            {request.error.response.data.error}.
-          </Typography>
-        </div>
-      </Card>
-    );
   } else if (request.error) {
-    // Throw all other errors so that they're caught by our error boundaries and our error logging tool
+    // Throw errors so that they're caught by our error boundaries and Airbrake
     throw request.error;
   } else {
     return (

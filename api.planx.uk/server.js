@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import cors from "cors";
 import { stringify } from "csv-stringify";
+import { addSeconds } from "date-fns";
 import express from "express";
 import { expressjwt } from "express-jwt";
 import noir from "pino-noir";
@@ -36,6 +37,7 @@ import airbrake from "./airbrake";
 import { markSessionAsSubmitted } from "./saveAndReturn/utils";
 import { createReminderEvent, createExpiryEvent } from "./webhooks/lowcalSessionEvents";
 import { adminGraphQLClient } from "./hasura";
+import { createScheduledEvent } from "./hasura/metadata";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 
 const router = express.Router();
@@ -259,12 +261,51 @@ app.use(apiLimiter);
 // Secure Express by setting various HTTP headers
 app.use(helmet());
 
+// Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
+app.post("/create-send-events/:sessionId", async (req, res, next) => {
+  if (!req.params.sessionId || !req.body)
+    return next({
+      status: 400,
+      message: "Required value missing"
+    });
+
+  try {
+    let combinedResponse = {};
+
+    if ("bops" in req.body) {
+      const bopsEvent = await createScheduledEvent({
+        webhook: `{{HASURA_PLANX_API_URL}}/bops/${req.body.bops.localAuthority}`,
+        schedule_at: addSeconds(new Date(), 5),
+        payload: req.body.bops.body,
+        comment: `bops_submission_${req.params.sessionId}`,
+      });
+      combinedResponse["bops"] = bopsEvent;
+    }
+
+    if ("uniform" in req.body) {
+      const uniformEvent = await createScheduledEvent({
+        webhook: `{{HASURA_PLANX_API_URL}}/uniform/${req.body.uniform.localAuthority}`,
+        schedule_at: addSeconds(new Date(), 5),
+        payload: req.body.uniform.body,
+        comment: `uniform_submission_${req.params.sessionId}`,
+      });
+      combinedResponse["uniform"] = uniformEvent;
+    }
+
+    res.json(combinedResponse);
+  } catch (error) {
+    return next({
+      error,
+      message: `Failed to create send event(s) for session ${req.params.sessionId}. Error: ${error}`,
+    });
+  }
+});
+
 assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
 ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
   assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
 });
-
 app.post("/bops/:localAuthority", (req, res, next) => {
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy
   //   XXX: we check this outside of the proxy because domain-specific errors (eg 404 "No Local Authority Found") won't bubble up, rather the proxy will throw its' own "Network Error"
@@ -275,6 +316,9 @@ app.post("/bops/:localAuthority", (req, res, next) => {
     // production should send to the BOPS production endpoint
     const domain = `https://${req.params.localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
     const target = `${domain}/api/v1/planning_applications`;
+
+    // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
+    const { payload } = req.body;
 
     useProxy({
       headers: {
@@ -288,7 +332,7 @@ app.post("/bops/:localAuthority", (req, res, next) => {
       onProxyRes: responseInterceptor(
         async (responseBuffer, proxyRes, req, res) => {
           // Mark session as submitted so that reminder and expiry emails are not triggered
-          markSessionAsSubmitted(req.body.planx_debug_data.session_id);
+          markSessionAsSubmitted(payload?.planx_debug_data?.session_id);
 
           const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
 
@@ -320,11 +364,11 @@ app.post("/bops/:localAuthority", (req, res, next) => {
             {
               bops_id: bopsResponse.id,
               destination_url: target,
-              request: req.body,
+              request: payload,
               req_headers: req.headers,
               response: bopsResponse,
               response_headers: proxyRes.headers,
-              session_id: req.body?.planx_debug_data?.session_id,
+              session_id: payload?.planx_debug_data?.session_id,
             }
           );
 
