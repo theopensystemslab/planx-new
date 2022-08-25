@@ -145,7 +145,7 @@ const validateSingleSessionRequest = async (email, sessionId) => {
     const headers = getSaveAndReturnPublicHeaders(sessionId, email);
     const { lowcal_sessions: [session] } = await client.request(query, null, headers);
 
-    if (!session) throw Error("Unable to find session");
+    if (!session) throw Error(`Unable to find session: ${sessionId}`);
 
     return {
       flowSlug: session.flow.slug,
