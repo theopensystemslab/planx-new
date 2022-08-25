@@ -7,7 +7,7 @@ import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import stringify from "csv-stringify";
 import { GraphQLClient } from "graphql-request";
-import { markSessionAsSubmitted } from "./saveAndReturn/utils";
+import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 
 const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
   headers: {

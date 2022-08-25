@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import cors from "cors";
 import { stringify } from "csv-stringify";
-import { addSeconds } from "date-fns";
 import express from "express";
 import { expressjwt } from "express-jwt";
 import noir from "pino-noir";
@@ -25,7 +24,7 @@ import { signS3Upload } from "./s3";
 import { locationSearch } from "./gis/index";
 import { diffFlow, publishFlow } from "./publish";
 import { findAndReplaceInFlow } from "./findReplace";
-import { sendToUniform } from "./send";
+import { sendToUniform } from "./send/uniform";
 import { resumeApplication, validateSession, sendSaveAndReturnEmail } from "./saveAndReturn"
 import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
 import { useHasuraAuth, useSendEmailAuth } from "./auth";
@@ -37,8 +36,9 @@ import airbrake from "./airbrake";
 import { markSessionAsSubmitted } from "./saveAndReturn/utils";
 import { createReminderEvent, createExpiryEvent } from "./webhooks/lowcalSessionEvents";
 import { adminGraphQLClient } from "./hasura";
-import { createScheduledEvent } from "./hasura/metadata";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
+import { createSendEvents } from "./send/createSendEvents";
+import { sendToBOPS } from "./send/bops";
 
 const router = express.Router();
 
@@ -262,136 +262,19 @@ app.use(apiLimiter);
 app.use(helmet());
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
-app.post("/create-send-events/:sessionId", async (req, res, next) => {
-  if (!req.params.sessionId || !req.body)
-    return next({
-      status: 400,
-      message: "Required value missing"
-    });
-
-  try {
-    let combinedResponse = {};
-
-    if ("bops" in req.body) {
-      const bopsEvent = await createScheduledEvent({
-        webhook: `{{HASURA_PLANX_API_URL}}/bops/${req.body.bops.localAuthority}`,
-        schedule_at: addSeconds(new Date(), 5),
-        payload: req.body.bops.body,
-        comment: `bops_submission_${req.params.sessionId}`,
-      });
-      combinedResponse["bops"] = bopsEvent;
-    }
-
-    if ("uniform" in req.body) {
-      const uniformEvent = await createScheduledEvent({
-        webhook: `{{HASURA_PLANX_API_URL}}/uniform/${req.body.uniform.localAuthority}`,
-        schedule_at: addSeconds(new Date(), 5),
-        payload: req.body.uniform.body,
-        comment: `uniform_submission_${req.params.sessionId}`,
-      });
-      combinedResponse["uniform"] = uniformEvent;
-    }
-
-    res.json(combinedResponse);
-  } catch (error) {
-    return next({
-      error,
-      message: `Failed to create send event(s) for session ${req.params.sessionId}. Error: ${error}`,
-    });
-  }
-});
+app.post("/create-send-events/:sessionId", createSendEvents);
 
 assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
-["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
-  assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
-});
-app.post("/bops/:localAuthority", (req, res, next) => {
-  // confirm this local authority (aka team) is supported by BOPS before creating the proxy
-  //   XXX: we check this outside of the proxy because domain-specific errors (eg 404 "No Local Authority Found") won't bubble up, rather the proxy will throw its' own "Network Error"
-  const isSupported = ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].includes(req.params.localAuthority.toUpperCase());
-
-  if (isSupported) {
-    // a local or staging API instance should send to the BOPS staging endpoint
-    // production should send to the BOPS production endpoint
-    const domain = `https://${req.params.localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
-    const target = `${domain}/api/v1/planning_applications`;
-
-    // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
-    const { payload } = req.body;
-
-    useProxy({
-      headers: {
-        ...req.headers,
-        Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
-      },
-      pathRewrite: () => "",
-      target,
-      selfHandleResponse: true,
-      onProxyReq: fixRequestBody,
-      onProxyRes: responseInterceptor(
-        async (responseBuffer, proxyRes, req, res) => {
-          // Mark session as submitted so that reminder and expiry emails are not triggered
-          markSessionAsSubmitted(payload?.planx_debug_data?.session_id);
-
-          const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
-
-          const applicationId = await client.request(
-            `
-              mutation CreateApplication(
-                $bops_id: String = "",
-                $destination_url: String = "",
-                $request: jsonb = "",
-                $req_headers: jsonb = "",
-                $response: jsonb = "",
-                $response_headers: jsonb = "",
-                $session_id: String = "",
-              ) {
-                insert_bops_applications_one(object: {
-                  bops_id: $bops_id,
-                  destination_url: $destination_url,
-                  request: $request,
-                  req_headers: $req_headers,
-                  response: $response,
-                  response_headers: $response_headers,
-                  session_id: $session_id,
-                }) {
-                  id
-                  bops_id
-                }
-              }
-            `,
-            {
-              bops_id: bopsResponse.id,
-              destination_url: target,
-              request: payload,
-              req_headers: req.headers,
-              response: bopsResponse,
-              response_headers: proxyRes.headers,
-              session_id: payload?.planx_debug_data?.session_id,
-            }
-          );
-
-          return JSON.stringify({
-            application: {
-              ...applicationId.insert_bops_applications_one,
-              bopsResponse,
-            },
-          });
-        }
-      ),
-    })(req, res);
-  } else {
-    next({
-      status: 400,
-      message: `Back-office Planning System (BOPS) is not enabled for this local authority`,
-    });
-  }
-});
+app.post("/bops/:localAuthority", sendToBOPS);
 
 assert(process.env.UNIFORM_TOKEN_URL);
 assert(process.env.UNIFORM_SUBMISSION_URL);
 app.post("/uniform/:localAuthority", sendToUniform);
+
+["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
+  assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
+});
 
 // used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
 // returns the url to make a gov uk payment
@@ -683,7 +566,7 @@ const server = new Server(app);
 server.keepAliveTimeout = 30000; // 30s
 server.headersTimeout = 35000; // 35s
 
-function useProxy(options = {}) {
+export function useProxy(options = {}) {
   return createProxyMiddleware({
     changeOrigin: true,
     logLevel: LOG_LEVEL,
