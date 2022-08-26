@@ -20,6 +20,7 @@ FROM node:16.13.1-alpine as production
 WORKDIR /api
 ENV NODE_ENV production
 
+COPY --from=base /api/package.json ./package.json
 COPY --from=base /api/dist ./dist
 COPY --from=base /api/node_modules ./node_modules
 

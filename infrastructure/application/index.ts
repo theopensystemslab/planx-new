@@ -11,7 +11,7 @@ import * as tldjs from "tldjs";
 import * as url from "url";
 
 import { generateTeamSecrets } from "./utils/generateTeamSecrets";
-import { createHasuraService } from './services/hasura';
+import { createHasuraService } from "./services/hasura";
 
 const config = new pulumi.Config();
 
@@ -200,9 +200,11 @@ export = async () => {
     vpc,
     cluster,
     repo,
-    CUSTOM_DOMAINS, 
+    CUSTOM_DOMAINS,
     stacks: {
-      networking, certificates, data,
+      networking,
+      certificates,
+      data,
     },
   });
 
@@ -282,7 +284,10 @@ export = async () => {
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
       container: {
-        image: repo.buildAndPushImage("../../api.planx.uk"),
+        image: repo.buildAndPushImage({
+          context: "../../api.planx.uk",
+          target: "production",
+        }),
         memory: 1024 /*MB*/,
         portMappings: [apiListenerHttps],
         environment: [

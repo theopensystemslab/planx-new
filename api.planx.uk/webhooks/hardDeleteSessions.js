@@ -2,6 +2,10 @@ const { subDays } = require("date-fns");
 const { gql } = require("graphql-request");
 const { adminGraphQLClient } = require("../hasura");
 
+/**
+ * Called by Hasura cron job `delete_expired_sessions` on a nightly basis
+ * See hasura.planx.uk/metadata/cron_triggers.yaml
+ */
 const hardDeleteSessions = async (_req, res, next) => {
   try {
     const mutation = gql`

@@ -1,0 +1,2 @@
+DROP TRIGGER IF EXISTS delete_lowcal_session_scheduled_events_trigger ON lowcal_sessions;
+DROP FUNCTION IF EXISTS delete_lowcal_session_scheduled_events;
