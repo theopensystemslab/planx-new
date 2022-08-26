@@ -262,7 +262,6 @@ app.use(apiLimiter);
 app.use(helmet());
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
-assert(process.env.HASURA_PLANX_API_URL);
 assert(process.env.HASURA_PLANX_API_KEY);
 app.post("/create-send-events/:sessionId", createSendEvents);
 
@@ -270,8 +269,8 @@ assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
 app.post("/bops/:localAuthority", sendToBOPS);
 
-assert(process.env.UNIFORM_SUBMISSION_URL);
 assert(process.env.UNIFORM_TOKEN_URL);
+assert(process.env.UNIFORM_SUBMISSION_URL);
 app.post("/uniform/:localAuthority", sendToUniform);
 
 ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
