@@ -36,10 +36,10 @@ const createScheduledEvent = async (args) => {
         headers: [{
           name: "authorization",
           value_from_env: "HASURA_PLANX_API_KEY"
-        }]
-      },
-      retry_conf: {
-        num_retries: 3,
+        }],
+        retry_conf: {
+          num_retries: 3,
+        },
       },
     });
     return response.data;
