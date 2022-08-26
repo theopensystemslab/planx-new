@@ -98,7 +98,7 @@ const SendComponent: React.FC<Props> = ({
       props.handleSubmit
     ) {
       props.handleSubmit(
-        makeData(props, request?.value?.bops?.event_id, "bopsSendEventId")
+        makeData(props, request.value.bops?.event_id, "bopsSendEventId")
       );
     }
 
@@ -108,7 +108,7 @@ const SendComponent: React.FC<Props> = ({
       props.handleSubmit
     ) {
       props.handleSubmit(
-        makeData(props, request?.value?.uniform?.event_id, "uniformSendEventId")
+        makeData(props, request.value.uniform?.event_id, "uniformSendEventId")
       );
     }
   }, [request.loading, request.error, request.value]);
