@@ -2,15 +2,11 @@ import {
   responseInterceptor,
   fixRequestBody,
 } from "http-proxy-middleware";
-import { GraphQLClient } from "graphql-request";
+import { adminGraphQLClient } from "../hasura";
 import { useProxy } from "../server";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 
-const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
-  headers: {
-    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
-  },
-});
+const client = adminGraphQLClient;
 
 const sendToBOPS = (req, res, next) => {
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy

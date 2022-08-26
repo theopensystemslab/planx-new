@@ -1,15 +1,15 @@
-import { addSeconds } from "date-fns";
 import { createScheduledEvent } from "../hasura/metadata";
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
 const createSendEvents = async (req, res, next) => {
   try {
+    const now = new Date();
     let combinedResponse = {};
 
     if ("bops" in req.body) {
       const bopsEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/bops/${req.body.bops.localAuthority}`,
-        schedule_at: addSeconds(new Date(), 5),
+        schedule_at: now,
         payload: req.body.bops.body,
         comment: `bops_submission_${req.params.sessionId}`,
       });
@@ -19,7 +19,7 @@ const createSendEvents = async (req, res, next) => {
     if ("uniform" in req.body) {
       const uniformEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/uniform/${req.body.uniform.localAuthority}`,
-        schedule_at: addSeconds(new Date(), 5),
+        schedule_at: now,
         payload: req.body.uniform.body,
         comment: `uniform_submission_${req.params.sessionId}`,
       });
