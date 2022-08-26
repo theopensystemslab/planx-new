@@ -3,12 +3,6 @@ import { createScheduledEvent } from "../hasura/metadata";
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
 const createSendEvents = async (req, res, next) => {
-  if (!req.params.sessionId || !req.body)
-    return next({
-      status: 400,
-      message: "Required value missing"
-    });
-
   try {
     let combinedResponse = {};
 

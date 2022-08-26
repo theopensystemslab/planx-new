@@ -1,7 +1,7 @@
 import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
-import { getParams } from "../bops";
+import { getBOPSParams } from "../bops";
 import { CSVData } from "../model";
 import { UniformInstance } from "./applicationType";
 import { makeXmlString } from "./xml";
@@ -58,7 +58,7 @@ export function makeCsvData(
   passport: Store.passport,
   sessionId: string
 ): CSVData {
-  const bopsData = getParams(breadcrumbs, flow, passport, sessionId);
+  const bopsData = getBOPSParams(breadcrumbs, flow, passport, sessionId);
 
   // format dedicated BOPs properties as list of questions & responses to match proposal_details
   //   omitting debug data and keys already in confirmation details

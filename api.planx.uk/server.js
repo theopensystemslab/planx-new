@@ -24,7 +24,6 @@ import { signS3Upload } from "./s3";
 import { locationSearch } from "./gis/index";
 import { diffFlow, publishFlow } from "./publish";
 import { findAndReplaceInFlow } from "./findReplace";
-import { sendToUniform } from "./send/uniform";
 import { resumeApplication, validateSession, sendSaveAndReturnEmail } from "./saveAndReturn"
 import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
 import { useHasuraAuth, useSendEmailAuth } from "./auth";
@@ -33,12 +32,12 @@ import { useHasuraAuth, useSendEmailAuth } from "./auth";
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
 import airbrake from "./airbrake";
-import { markSessionAsSubmitted } from "./saveAndReturn/utils";
 import { createReminderEvent, createExpiryEvent } from "./webhooks/lowcalSessionEvents";
 import { adminGraphQLClient } from "./hasura";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
-import { createSendEvents } from "./send/createSendEvents";
 import { sendToBOPS } from "./send/bops";
+import { createSendEvents } from "./send/createSendEvents";
+import { sendToUniform } from "./send/uniform";
 
 const router = express.Router();
 
@@ -262,7 +261,6 @@ app.use(apiLimiter);
 app.use(helmet());
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
-assert(process.env.HASURA_PLANX_API_KEY);
 app.post("/create-send-events/:sessionId", createSendEvents);
 
 assert(process.env.BOPS_API_ROOT_DOMAIN);
@@ -534,6 +532,7 @@ app.post("/send-email/:template", sendEmailLimiter, useSendEmailAuth, sendSaveAn
 app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
+assert(process.env.HASURA_PLANX_API_KEY);
 app.use("/webhooks/hasura", useHasuraAuth)
 app.post("/webhooks/hasura/delete-expired-sessions", hardDeleteSessions);
 app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);

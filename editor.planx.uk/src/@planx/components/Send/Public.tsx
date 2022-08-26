@@ -10,7 +10,7 @@ import { useTeamSlug } from "../shared/hooks";
 import Card from "../shared/Preview/Card";
 import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
 import { PublicProps } from "../ui";
-import { getParams } from "./bops";
+import { getBOPSParams } from "./bops";
 import { DEFAULT_DESTINATION, Destination, Send } from "./model";
 import { getUniformParams } from "./uniform";
 import { UniformInstance } from "./uniform/applicationType";
@@ -49,7 +49,7 @@ const SendComponent: React.FC<Props> = ({
   if (destinations.includes(Destination.BOPS)) {
     combinedEventsPayload[Destination.BOPS] = {
       localAuthority: teamSlug,
-      body: getParams(breadcrumbs, flow, passport, sessionId),
+      body: getBOPSParams(breadcrumbs, flow, passport, sessionId),
     };
   }
 
