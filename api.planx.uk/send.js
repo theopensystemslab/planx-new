@@ -5,7 +5,7 @@ import FormData from "form-data";
 import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
-import stringify from "csv-stringify";
+import { stringify } from "csv-stringify";
 import { GraphQLClient } from "graphql-request";
 import { markSessionAsSubmitted } from "./saveAndReturn/utils";
 
