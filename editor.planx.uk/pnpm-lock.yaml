@@ -153,7 +153,7 @@ specifiers:
   wait-for-expect: ^3.0.2
   wkt: ^0.1.1
   yup: ^0.32.11
-  zustand: ^3.1.4
+  zustand: 3.7.2
 
 dependencies:
   '@airbrake/browser': 2.1.7
@@ -216,7 +216,7 @@ dependencies:
   uuid: 8.3.2
   wkt: 0.1.1
   yup: 0.32.11
-  zustand: 3.1.4_react@17.0.2
+  zustand: 3.7.2_react@17.0.2
 
 devDependencies:
   '@babel/core': 7.16.5
@@ -18821,10 +18821,14 @@ packages:
     resolution: {integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==}
     dev: false
 
-  /zustand/3.1.4_react@17.0.2:
-    resolution: {integrity: sha512-DB/r73Dm3YsUEo9KilbGWsKXQLOrM41aYItznvD68f44P2hYo+FY65D7N8m2ojKVzg6eIPgXZWqkFO60Utko8A==}
+  /zustand/3.7.2_react@17.0.2:
+    resolution: {integrity: sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA==}
+    engines: {node: '>=12.7.0'}
     peerDependencies:
       react: '>=16.8'
+    peerDependenciesMeta:
+      react:
+        optional: true
     dependencies:
       react: 17.0.2
     dev: false
