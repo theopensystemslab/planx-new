@@ -23,9 +23,11 @@ const sendSlackNotification = (req, res, next) => {
       }
 
       const bopsMessage = `:incoming_envelope: New BOPS submission *${data?.bops_id}* [${data?.destination_url}]`;
-      slack.send(bopsMessage).then(() => {
-        res.status(200).send({ message: "Posted to Slack", data: bopsMessage });
-      });
+      slack.send(bopsMessage)
+        .then(() => {
+          res.status(200).send({ message: "Posted to Slack", data: bopsMessage });
+        })
+        .catch(error => next(error));
     }
     
     if (req.query.type === "uniform-submission") {
@@ -37,9 +39,11 @@ const sendSlackNotification = (req, res, next) => {
       }
 
       const uniformMessage = `:incoming_envelope: New Uniform submission *${data?.idox_submission_id}* [${data?.destination?.toUpperCase()}]`;
-      slack.send(uniformMessage).then(() => {
-        res.status(200).send({ message: "Posted to Slack", data: uniformMessage });
-      });
+      slack.send(uniformMessage)
+        .then(() => {
+          res.status(200).send({ message: "Posted to Slack", data: uniformMessage });
+        })
+        .catch(error => next(error));
     }
   } catch (error) {
     return next({
