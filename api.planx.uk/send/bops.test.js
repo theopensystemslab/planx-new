@@ -58,7 +58,7 @@ import app from "../server";
 
       await supertest(app)
         .post("/bops/southwark")
-        .send({ applicationId: 123, planx_debug_data: { session_id: 123 } })
+        .send({ payload: { applicationId: 123, planx_debug_data: { session_id: 123 } }})
         .expect(200)
         .then((res) => {
           expect(res.body).toEqual({
