@@ -1,9 +1,11 @@
 import { gql } from "@apollo/client";
+import isEmpty from "lodash/isEmpty";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { Session } from "types";
 
 import { client } from "./graphql";
 
-let current: string;
+let current: string | null;
 
 class LowcalStorage {
   // /** Returns the number of key/value pairs. */
@@ -17,11 +19,11 @@ class LowcalStorage {
 
   // async clear() {}
 
-  getItem = memoize(async (key: string) => {
+  getItem = memoize(async (key: string): Promise<string | null> => {
     console.debug({ getItem: key });
     const id = getSessionId(key);
 
-    const { data } = await client.query({
+    const { data: lowcal_sessions_by_pk } = await client.query({
       query: gql`
         query GetItem($id: uuid!) {
           lowcal_sessions_by_pk(id: $id) {
@@ -34,12 +36,12 @@ class LowcalStorage {
     });
 
     try {
-      current = stringifyWithRootKeysSortedAlphabetically(
-        data.lowcal_sessions_by_pk?.data
-      );
+      const session: Session = lowcal_sessions_by_pk?.data;
+      if (isEmpty(session)) return null;
+      current = stringifyWithRootKeysSortedAlphabetically(session) || null;
       return current;
     } catch (err) {
-      return undefined;
+      return null;
     }
   });
 
@@ -69,7 +71,7 @@ class LowcalStorage {
       return;
     } else {
       console.debug({ setItem: { key, value }, value, current });
-      current = "";
+      current = null;
     }
 
     const id = getSessionId(key);
@@ -123,7 +125,7 @@ const memoize = <T extends Function>(fn: T) => {
 // XX: This function is also maintained at api.planx.uk/saveAndReturn/utils.js
 export const stringifyWithRootKeysSortedAlphabetically = (
   ob: Record<string, unknown> = {}
-) =>
+): string | undefined =>
   JSON.stringify(
     Object.keys(ob)
       .sort()

@@ -1,5 +1,8 @@
 import { useFormik } from "formik";
 
+import { Store } from "./pages/FlowEditor/lib/store/index";
+import { SharedStore } from "./pages/FlowEditor/lib/store/shared";
+
 export type Maybe<T> = T | undefined;
 
 export type FormikHookReturn = ReturnType<typeof useFormik>;
@@ -135,3 +138,11 @@ export interface SendEmailPayload {
     sessionId: string;
   };
 }
+export type Session = {
+  passport: Store.passport;
+  breadcrumbs: Store.breadcrumbs;
+  sessionId: string;
+  // TODO: replace `id` with `flow: { id, published_flow_id }`
+  id: SharedStore["id"];
+  govUkPayment?: GovUKPayment;
+};

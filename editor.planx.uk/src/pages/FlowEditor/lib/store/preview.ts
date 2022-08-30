@@ -10,7 +10,7 @@ import isEqual from "lodash/isEqual";
 import isNil from "lodash/isNil";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
-import type { Flag, GovUKPayment } from "types";
+import type { Flag, GovUKPayment, Session } from "types";
 import { v4 as uuidV4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
 
@@ -46,12 +46,7 @@ export interface PreviewStore extends Store.Store {
       displayText: { heading: string; description: string };
     };
   };
-  resumeSession: (session: {
-    passport: Store.passport;
-    breadcrumbs: Store.breadcrumbs;
-    sessionId: string;
-    id: SharedStore["id"];
-  }) => void;
+  resumeSession: (session: Session) => void;
   sessionId: string;
   sendSessionDataToHasura: () => void;
   upcomingCardIds: () => Store.nodeId[];
@@ -345,7 +340,7 @@ export const previewStore = (
   },
 
   resumeSession(args) {
-    set(args);
+    set(args as Partial<PreviewStore>);
   },
 
   sessionId: uuidV4(),

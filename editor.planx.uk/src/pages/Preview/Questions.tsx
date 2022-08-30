@@ -127,7 +127,6 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
       if (gotFlow && isStandalone && sessionId) {
         NEW.setLocalFlow(sessionId, {
           breadcrumbs,
-          // todo: replace `id` with `flow: { id, published_flow_id }`
           id,
           passport,
           sessionId,

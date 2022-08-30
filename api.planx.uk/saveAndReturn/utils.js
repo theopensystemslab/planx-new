@@ -290,7 +290,9 @@ const getSaveAndReturnPublicHeaders = (sessionId, email) => ({
 
 /**
  * Helper method to preserve session data order during reconciliation
- *    XX: This function is also maintained at editor.planx.uk/src/lib/lowcalStorage.ts
+ * XXX: This function is also maintained at editor.planx.uk/src/lib/lowcalStorage.ts
+ * @param {object} ob 
+ * @returns { string | undefined }
  */
 const stringifyWithRootKeysSortedAlphabetically = (ob = {}) =>
   JSON.stringify(
