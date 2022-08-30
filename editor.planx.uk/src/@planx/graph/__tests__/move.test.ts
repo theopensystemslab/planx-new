@@ -16,7 +16,8 @@ test("move within same parent", () => {
     b: {},
   });
   expect(ops).toEqual([
-    { od: ["a", "b"], oi: ["b", "a"], p: ["_root", "edges"] },
+    { p: ["_root", "edges", 0], ld: "a", li: "b" },
+    { p: ["_root", "edges", 1], ld: "b", li: "a" },
   ]);
 });
 
