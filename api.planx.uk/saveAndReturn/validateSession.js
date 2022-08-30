@@ -78,7 +78,7 @@ const validateSession = async (req, res, next) => {
           // update the lowcal_session.data to match our updated in-memory sessionData.data
           //   XX: apply sorting to match the original get/set methods used in editor.planx.uk/src/lib/lowcalStorage.ts
           const sortedSessionData = stringifyWithRootKeysSortedAlphabetically(sessionData.data);
-          const reconciledSessionData = await updateLowcalSessionData(sessionId, JSON.parse(sortedSessionData.data), email);
+          const reconciledSessionData = await updateLowcalSessionData(sessionId, JSON.parse(sortedSessionData), email);
 
           res.status(200).json({
             message: "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
