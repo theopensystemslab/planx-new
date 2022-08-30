@@ -30,7 +30,27 @@ const sendToBOPS = (req, res, next) => {
       pathRewrite: () => "",
       target,
       selfHandleResponse: true,
-      onProxyReq: fixRequestBody,
+      onProxyReq: (proxyReq, req, res) => {
+        // make sure req.body.payload is parsed in the proxy request too
+        //   ref https://github.com/chimurai/http-proxy-middleware/issues/320
+        if (!req.body || !Object.keys(req.body).length) {
+          return;
+        }
+        
+        const contentType = proxyReq.getHeader('Content-Type');
+        const writeBody = (bodyData) => {
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
+        };
+
+        if (contentType === 'application/json') {
+          writeBody(JSON.stringify(req.body?.payload));
+        }
+
+        if (contentType === 'application/x-www-form-urlencoded') {
+          writeBody(querystring.stringify(req.body?.payload));
+        }
+      },
       onProxyRes: responseInterceptor(
         async (responseBuffer, proxyRes, req, res) => {
           // Mark session as submitted so that reminder and expiry emails are not triggered
