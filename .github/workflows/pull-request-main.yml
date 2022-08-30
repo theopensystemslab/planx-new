@@ -218,6 +218,7 @@ jobs:
             UNIFORM_CLIENT_LAMBETH=${{ secrets.STAGING_UNIFORM_CLIENT_LAMBETH }}
             GOVUK_NOTIFY_API_KEY=${{ secrets.GOVUK_NOTIFY_API_KEY }}
             HASURA_PLANX_API_KEY=${{ secrets.HASURA_PLANX_API_KEY }}
+            SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}
             " > .env.temp
             cat .env .env.temp .env.staging > .env.prod
 
