@@ -153,7 +153,7 @@ specifiers:
   wait-for-expect: ^3.0.2
   wkt: ^0.1.1
   yup: ^0.32.11
-  zustand: 3.7.2
+  zustand: ^4.1.1
 
 dependencies:
   '@airbrake/browser': 2.1.7
@@ -216,7 +216,7 @@ dependencies:
   uuid: 8.3.2
   wkt: 0.1.1
   yup: 0.32.11
-  zustand: 3.7.2_react@17.0.2
+  zustand: 4.1.1_immer@7.0.14+react@17.0.2
 
 devDependencies:
   '@babel/core': 7.16.5
@@ -17940,6 +17940,14 @@ packages:
       react: 17.0.2
     dev: false
 
+  /use-sync-external-store/1.2.0_react@17.0.2:
+    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 17.0.2
+    dev: false
+
   /use/3.1.1:
     resolution: {integrity: sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==}
     engines: {node: '>=0.10.0'}
@@ -18821,16 +18829,21 @@ packages:
     resolution: {integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==}
     dev: false
 
-  /zustand/3.7.2_react@17.0.2:
-    resolution: {integrity: sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA==}
+  /zustand/4.1.1_immer@7.0.14+react@17.0.2:
+    resolution: {integrity: sha512-h4F3WMqsZgvvaE0n3lThx4MM81Ls9xebjvrABNzf5+jb3/03YjNTSgZXeyrvXDArMeV9untvWXRw1tY+ntPYbA==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
+      immer: '>=9.0'
       react: '>=16.8'
     peerDependenciesMeta:
+      immer:
+        optional: true
       react:
         optional: true
     dependencies:
+      immer: 7.0.14
       react: 17.0.2
+      use-sync-external-store: 1.2.0_react@17.0.2
     dev: false
 
   /zwitch/1.0.5:
