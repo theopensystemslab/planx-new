@@ -25,7 +25,9 @@ const { Provider } = analyticsContext;
 // Navigator has to be bound to ensure it does not error in some browsers
 const send = navigator?.sendBeacon?.bind(navigator);
 
-export const AnalyticsProvider: React.FC = ({ children }) => {
+export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [
     currentCard,
     breadcrumbs,
