@@ -38,7 +38,7 @@ const sendSlackNotification = (req, res, next) => {
         });
       }
 
-      const uniformMessage = `:incoming_envelope: New Uniform submission *${data?.idox_submission_id}* [${data?.destination?.toUpperCase()}]`;
+      const uniformMessage = `:incoming_envelope: New Uniform submission *${data?.idox_submission_id}* [${data?.response?.organisation}]`;
       slack.send(uniformMessage)
         .then(() => {
           res.status(200).send({ message: "Posted to Slack", data: uniformMessage });
