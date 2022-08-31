@@ -1,11 +1,17 @@
 node_modules/
-.envrc
-/.env.prod
 /ignore/
 editor.planx.uk/.eslintcache
 /minio-data
 .pnpm-debug.log
+
+# Secrets
+.env
+.envrc
+.env.prod
 .env.temp
+.env.staging
+api.planx.uk/.env.test
+editor.planx.uk/.env
 
 # IDE
 .vscode
