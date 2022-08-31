@@ -37,6 +37,7 @@ import { markSessionAsSubmitted } from "./saveAndReturn/utils";
 import { createReminderEvent, createExpiryEvent } from "./webhooks/lowcalSessionEvents";
 import { adminGraphQLClient } from "./hasura";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
+import { sendSlackNotification } from "./webhooks/sendNotifications";
 
 const router = express.Router();
 
@@ -610,6 +611,7 @@ app.use("/webhooks/hasura", useHasuraAuth)
 app.post("/webhooks/hasura/delete-expired-sessions", hardDeleteSessions);
 app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
+app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()

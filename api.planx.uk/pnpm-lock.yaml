@@ -47,6 +47,7 @@ specifiers:
   pino-noir: ^2.2.1
   prettier: ~2.7.1
   rimraf: ^3.0.2
+  slack-notify: ^2.0.3
   string-to-stream: ^3.0.1
   supertest: ^6.2.4
   ts-jest: ^28.0.5
@@ -82,6 +83,7 @@ dependencies:
   passport: 0.5.3
   passport-google-oauth20: 2.0.0
   pino-noir: 2.2.1
+  slack-notify: 2.0.3
   string-to-stream: 3.0.1
 
 devDependencies:
@@ -5002,6 +5004,11 @@ packages:
   /sisteransi/1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
     dev: true
+
+  /slack-notify/2.0.3:
+    resolution: {integrity: sha512-kRbXhgVnUoI93nIMaXprZyBixH3FfsMkybxppPU0r9yQm4RIoAw2E1QG3l15KRAce7S0mGPYYTIZ7rf6IbBAIQ==}
+    engines: {node: '>=13.2.x'}
+    dev: false
 
   /slash/3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
