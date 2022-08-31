@@ -44,7 +44,6 @@ export default function FileUpload(props: Props): FCReturn {
   }, [status, setStatus]);
 
   const onDrop = useCallback(
-    // TODO: test this...
     (files: FileWithPath[]) => {
       const file: File = files[0];
       if (!file) {
