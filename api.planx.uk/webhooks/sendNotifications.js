@@ -2,7 +2,7 @@ import SlackNotify from 'slack-notify';
 
 const sendSlackNotification = (req, res, next) => {
   const supportedTypes = ["bops-submission", "uniform-submission"];
-  if (!req.body || !req.query?.type || !supportedTypes.includes(req.query.type)) {
+  if (!req.body?.event || !req.query?.type || !supportedTypes.includes(req.query.type)) {
     return res.status(404).send({
       message: "Missing info required to send a Slack notification"
     });
