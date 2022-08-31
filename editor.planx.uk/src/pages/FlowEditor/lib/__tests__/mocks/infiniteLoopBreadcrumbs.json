@@ -1,0 +1,228 @@
+{
+  "GzQpqSouyb": {
+    "auto": false,
+    "data": {
+      "_address": {
+        "uprn": "200003450288",
+        "blpu_code": "2",
+        "latitude": 51.4589773,
+        "longitude": -0.0911856,
+        "organisation": null,
+        "pao": "40",
+        "street": "SUNRAY AVENUE",
+        "town": "LONDON",
+        "postcode": "SE24 9PX",
+        "x": 532710,
+        "y": 175061,
+        "planx_description": "Semi-detached",
+        "planx_value": "residential.dwelling.house.semiDetached",
+        "single_line_address": "40, SUNRAY AVENUE, LONDON, SOUTHWARK, SE24 9PX",
+        "title": "40, SUNRAY AVENUE, LONDON"
+      },
+      "property.type": ["residential.dwelling.house.semiDetached"],
+      "property.localAuthorityDistrict": ["Southwark"],
+      "property.region": ["London"]
+    }
+  },
+  "N8NecQEaEZ": {
+    "answers": ["z34Zwa6KMD"],
+    "auto": true
+  },
+  "o1DIIs63KW": {
+    "auto": false
+  },
+  "wMA7jSouyt": {
+    "auto": false,
+    "data": {
+      "property.boundary.site": {
+        "type": "Feature",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [-0.09126221517884117, 51.45898968412948],
+              [-0.09121481879058703, 51.458954841028714],
+              [-0.09108379621987409, 51.45901788319475],
+              [-0.09114034787283457, 51.459052674633966],
+              [-0.09126221517884117, 51.45898968412948]
+            ]
+          ]
+        },
+        "properties": null
+      },
+      "proposal.siteArea": 59.15
+    }
+  },
+  "cAtR1hWaLd": {
+    "auto": false,
+    "data": {
+      "_nots": {
+        "property.constraints.planning": [
+          "listed",
+          "registeredPark",
+          "designated.AONB",
+          "designated.nationalPark",
+          "designated.nationalPark.broads",
+          "designated.WHS",
+          "designated.SPA",
+          "monument",
+          "nature.SSSI",
+          "nature.SAC",
+          "nature.ASNW",
+          "article4.southwark.publichouse",
+          "article4.southwark.hmo",
+          "article4.southwark.MA",
+          "article4.southwark.railway",
+          "article4.southwark.southernrail",
+          "article4.southwark.caz"
+        ]
+      },
+      "property.constraints.planning": [
+        "article4",
+        "article4.southwark.sunray",
+        "designated",
+        "designated.conservationArea",
+        "tpo"
+      ],
+      "digitalLandRequest": "https://www.digital-land.info/entity.json?entries=current&geometry=POLYGON+%28%28-0.09126221517884117+51.45898968412948%2C+-0.09121481879058703+51.458954841028714%2C+-0.09108379621987409+51.45901788319475%2C+-0.09114034787283457+51.459052674633966%2C+-0.09126221517884117+51.45898968412948%29%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland"
+    }
+  },
+  "AXaUGSouW3": {
+    "auto": false,
+    "answers": ["QRbcuSouzJ"]
+  },
+  "VjKjvSouUI": {
+    "auto": false,
+    "data": {
+      "proposal.description": "test"
+    }
+  },
+  "eiN5C9wgDe": {
+    "auto": false,
+    "answers": ["4XcVYegtm4", "4G8adrKwPt", "ChjXEAKt8u", "3dTJDS7Cl0"]
+  },
+  "eQJQlJJtuU": {
+    "auto": false,
+    "answers": ["mOt9KFU6ta"]
+  },
+  "CtyInx9nSU": {
+    "answers": ["1ikPyMZOwV"],
+    "auto": true
+  },
+  "aNCrtwuqLB": {
+    "answers": ["ADsUBodsd7"],
+    "auto": true
+  },
+  "xTyzrbbMds": {
+    "answers": ["i0uhcaViKg"],
+    "auto": true
+  },
+  "q3OdFfFPEp": {
+    "answers": ["JItBoFV1Dj"],
+    "auto": true
+  },
+  "PETql36bke": {
+    "answers": ["XD8TLML3Zs"],
+    "auto": true
+  },
+  "0Ssv1Sou4B": {
+    "answers": ["v2b6eSouAa"],
+    "auto": true
+  },
+  "QoMCXqj0Jq": {
+    "answers": ["SrN40HwUhR"],
+    "auto": true
+  },
+  "WAUEgMY1RL": {
+    "answers": ["AfMV3SF44Q"],
+    "auto": true
+  },
+  "dTKxWBS9rN": {
+    "answers": ["zK8OjUho2V"],
+    "auto": true
+  },
+  "T4MfGcERNk": {
+    "answers": ["VlujhNqIet", "hXm8njDulm", "DiKRi463Op"],
+    "auto": true
+  },
+  "ID9WMI7OEi": {
+    "answers": ["x9Ed6ECDRt"],
+    "auto": true
+  },
+  "6AiepUVV19": {
+    "answers": ["CqHwMfPIHR"],
+    "auto": true
+  },
+  "LKIH1WsOMk": {
+    "answers": ["22Pf5UOwiP"],
+    "auto": true
+  },
+  "dyszZMv887": {
+    "answers": ["pCewlBWKex"],
+    "auto": true
+  },
+  "fcVT5SouS9": {
+    "answers": ["lUduBSouPp"],
+    "auto": true
+  },
+  "uEWi5CUULe": {
+    "answers": ["PbjNPpOIfT"],
+    "auto": true
+  },
+  "SY2RlcC2mT": {
+    "answers": ["2CXdq0J4pE"],
+    "auto": true
+  },
+  "dknMGLlZaS": {
+    "answers": ["oaEgqmt3Mj"],
+    "auto": true
+  },
+  "NpxV0KPCFD": {
+    "answers": ["kgaFUFF9ER"],
+    "auto": true
+  },
+  "hwylHZOZXA": {
+    "answers": ["o8F4ZxPUdg"],
+    "auto": true
+  },
+  "OjcuaKCgpa": {
+    "answers": ["AeLGP7vY6f"],
+    "auto": true
+  },
+  "8XMxtVMin2": {
+    "answers": ["TTPxO66mEi"],
+    "auto": true
+  },
+  "pbMm4dzL2R": {
+    "answers": ["kgClnJjvGJ"],
+    "auto": true
+  },
+  "jhW9joqZF3": {
+    "answers": ["jqor9SqKdC"],
+    "auto": true
+  },
+  "wCqwaiL60E": {
+    "answers": ["iavOhUUgRh"],
+    "auto": true
+  },
+  "0vyk3XWTXQ": {
+    "answers": ["q6HwTYoO6E"],
+    "auto": true
+  },
+  "AsjvlXzwZY": {
+    "answers": ["hc5wpCTnft", "1ccZ6JZisO", "MqGbErDL0q", "9ywm34Suzw"],
+    "auto": true
+  },
+  "W8i3ISoumu": {
+    "answers": ["zqkl9SouVU"],
+    "auto": true
+  },
+  "HF5gig0UwR": {
+    "answers": ["z83hY4SFT7"],
+    "auto": true
+  },
+  "X5qFvg2o1x": {
+    "answers": ["tQtHw1KqCu"],
+    "auto": true
+  }
+}
