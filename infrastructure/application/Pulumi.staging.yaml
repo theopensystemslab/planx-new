@@ -31,6 +31,8 @@ config:
     secure: AAABAI1jwOCiVQ7FdyxRXyZQh0VeN/z1R9t3Y2QXSdAgBq5cu7lT7UKRpDmtSS857F8GqOIAAedPXng11w0dmqWe1783BRtczE7tOQ==
   application:session-secret:
     secure: AAABABAEQraYY1NSIufhqZ1XYWTEqYgQl1M1CJmouRiD1mMx7LqKbyoYzAS4H3nfksuavw==
+  application:slack-webhook-url:
+    secure: AAABALzK5KLP5po8giGePS/+ZpcWQHf8LfvCcdlY/oSv6NvC3y6D44CeIAiUdDXTB7VeUX5JFeaceDyZ9C1N5CAWFOLPCCKvuLjuDtk7QZe/rczqd2QnMDLh+Q9wPlQSb4PIoK8jWNEmvQC3QMgq
   application:uniform-client-aylesbury-vale:
     secure: AAABAMYcpm1hTYJfIMPWiB2/PXpGqFao06z0Ou4WHFavhJY/rPmEjFt5Mi9QyUHee8FvfU0VWu+tJ85MJ2DU
   application:uniform-client-chiltern:
