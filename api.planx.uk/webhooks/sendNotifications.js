@@ -1,8 +1,5 @@
 import SlackNotify from 'slack-notify';
 
-// hook into the #planx-notifications channel
-const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL);
-
 const sendSlackNotification = (req, res, next) => {
   const supportedTypes = ["bops-submission", "uniform-submission"];
   if (!req.body || !req.query?.type || !supportedTypes.includes(req.query.type)) {
@@ -12,6 +9,9 @@ const sendSlackNotification = (req, res, next) => {
   }
 
   try {
+    // hook into the #planx-notifications channel
+    const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL);
+
     const data = req.body?.event?.data?.new;
 
     if (req.query.type === "bops-submission") {
