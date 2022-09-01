@@ -18,7 +18,8 @@ import {
   responseInterceptor,
   fixRequestBody,
 } from "http-proxy-middleware";
-import helmet from 'helmet';
+import helmet from "helmet";
+import SlackNotify from "slack-notify";
 
 import { signS3Upload } from "./s3";
 import { locationSearch } from "./gis/index";
@@ -383,6 +384,15 @@ app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
       selfHandleResponse: true,
       onProxyRes: responseInterceptor(async (responseBuffer) => {
         const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+
+        // if it's a prod payment, notify #planx-notifcations so we can monitor for subsequent submissions
+        if (govUkResponse.return_url?.startsWith("https://planningservices")) {
+          const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL);
+          const payMessage = `:coin: New GOV.UK payment *${govUkResponse.payment_id}* [${req.params.localAuthority}]`;
+          slack.send(payMessage)
+            .then(() => console.log("Payment notification posted to Slack"))
+            .catch(error => next(error));
+        }
 
         // only return payment status, filter out PII
         return JSON.stringify({
