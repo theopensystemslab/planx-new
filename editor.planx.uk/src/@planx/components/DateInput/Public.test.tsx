@@ -1,9 +1,8 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-helper";
 import { uniqueId } from "lodash";
 import React from "react";
-import { act } from "react-dom/test-utils";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { fillInFieldsUsingPlaceholder } from "../shared/testHelpers";
@@ -20,15 +19,13 @@ test("submits a date", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("Pizza Day");
 
-  await waitFor(async () => {
-    await fillInFieldsUsingPlaceholder({
-      DD: "22",
-      MM: "05",
-      YYYY: "2010",
-    });
-
-    userEvent.click(screen.getByTestId("continue-button"));
+  await fillInFieldsUsingPlaceholder({
+    DD: "22",
+    MM: "05",
+    YYYY: "2010",
   });
+
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -54,9 +51,7 @@ test("recovers previously submitted date when clicking the back button", async (
     />
   );
 
-  await waitFor(() => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -84,9 +79,7 @@ test("recovers previously submitted date when clicking the back button even if a
     />
   );
 
-  await waitFor(() => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -108,29 +101,23 @@ test("allows user to type into input field and click continue", async () => {
 
   const day = screen.getByPlaceholderText("DD");
 
-  await act(async () => {
-    await userEvent.type(day, "2");
-    // Trigger blur event
-    await userEvent.tab();
-  });
+  await userEvent.type(day, "2");
+  // Trigger blur event
+  await userEvent.tab();
 
   expect(day).toHaveValue("02");
 
   const month = screen.getByPlaceholderText("MM");
-  await act(async () => {
-    await userEvent.type(month, "1");
-    await userEvent.type(month, "1");
-  });
+  await userEvent.type(month, "1");
+  await userEvent.type(month, "1");
   expect(month).toHaveValue("11");
 
   const year = screen.getByPlaceholderText("YYYY");
-  await act(async () => {
-    await userEvent.type(year, "1");
-    await userEvent.type(year, "9");
-    await userEvent.type(year, "9");
-    await userEvent.type(year, "2");
-    await userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.type(year, "1");
+  await userEvent.type(year, "9");
+  await userEvent.type(year, "9");
+  await userEvent.type(year, "2");
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalled();
 });
@@ -226,11 +213,8 @@ it("should not have any accessibility violations whilst in the error state", asy
   const mainErrorMessage = container.querySelector(`#${ERROR_MESSAGE}-testId`);
   expect(mainErrorMessage).toBeEmptyDOMElement();
 
-  await waitFor(() => {
-    // Trigger error state
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
-
+  // Trigger error state
+  await userEvent.click(screen.getByTestId("continue-button"));
   // Individual input errors do not display, and are not in an error state
   dateElements.forEach((el) => {
     const inputErrorWrapper = container.querySelector(

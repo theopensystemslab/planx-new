@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-helper";
 import React from "react";
@@ -136,21 +136,11 @@ describe("Checklist Component - Grouped Layout", () => {
       />
     );
 
-    await act(async () => {
-      userEvent.click(screen.getByText("Section 1"));
-    });
-
-    userEvent.click(screen.getByText("S1 Option1"));
-
-    await act(async () => {
-      userEvent.click(screen.getByText("Section 2"));
-    });
-
-    userEvent.click(screen.getByText("S2 Option2"));
-
-    await waitFor(async () => {
-      userEvent.click(screen.getByTestId("continue-button"));
-    });
+    await userEvent.click(screen.getByText("Section 1"));
+    await userEvent.click(screen.getByText("S1 Option1"));
+    await userEvent.click(screen.getByText("Section 2"));
+    await userEvent.click(screen.getByText("S2 Option2"));
+    await userEvent.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalledWith({
       answers: ["S1_Option1", "S2_Option2"],
@@ -174,9 +164,7 @@ describe("Checklist Component - Grouped Layout", () => {
     expect(screen.queryAllByTestId("group-1-expanded")).toHaveLength(0);
     expect(screen.getByTestId("group-2-expanded")).toBeTruthy();
 
-    await waitFor(async () => {
-      userEvent.click(screen.getByTestId("continue-button"));
-    });
+    await userEvent.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalledWith({
       answers: ["S1_Option1", "S3_Option1"],
@@ -215,39 +203,37 @@ describe("Checklist Component - Grouped Layout", () => {
       expect(element).toHaveAttribute("aria-expanded", "false");
     });
     // Tab gives focus to first section
-    userEvent.tab();
+    await userEvent.tab();
     expect(section1Button).toHaveFocus();
     // Tab jumps to second section
-    userEvent.tab();
+    await userEvent.tab();
     expect(section2Button).toHaveFocus();
     // Space opens second section
-    userEvent.keyboard("[Space]");
+    await userEvent.keyboard("[Space]");
     expect(section2Button).toHaveAttribute("aria-expanded", "true");
     // Tab goes to Section 2, Option 1
-    userEvent.tab();
+    await userEvent.tab();
     expect(container.querySelector("#S2_Option1")).toHaveFocus();
     // Select option using keyboard
-    userEvent.keyboard("[Space]");
+    await userEvent.keyboard("[Space]");
     expect(container.querySelector("#S2_Option1")).toBeChecked();
     // Tab to Section 2, Option 2
-    userEvent.tab();
+    await userEvent.tab();
     expect(container.querySelector("#S2_Option2")).toHaveFocus();
     // Select option using keyboard
-    userEvent.keyboard("[Space]");
+    await userEvent.keyboard("[Space]");
     expect(container.querySelector("#S2_Option2")).toBeChecked();
     // Tab to Section 3, and navigate through to "Continue" without selecting anything
-    userEvent.tab();
+    await userEvent.tab();
     expect(section3Button).toHaveFocus();
-    userEvent.keyboard("[Space]");
+    await userEvent.keyboard("[Space]");
     expect(section3Button).toHaveAttribute("aria-expanded", "true");
-    userEvent.tab();
-    userEvent.tab();
-    userEvent.tab();
+    await userEvent.tab();
+    await userEvent.tab();
+    await userEvent.tab();
     expect(screen.getByTestId("continue-button")).toHaveFocus();
     // Submit
-    await waitFor(async () => {
-      userEvent.keyboard("[Space]");
-    });
+    await userEvent.keyboard("[Space]");
     expect(handleSubmit).toHaveBeenCalledWith({
       answers: ["S2_Option1", "S2_Option2"],
     });
@@ -275,9 +261,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
       userEvent.click(screen.getByText("Flat"));
       userEvent.click(screen.getByText("House"));
 
-      await waitFor(async () => {
-        userEvent.click(screen.getByTestId("continue-button"));
-      });
+      await userEvent.click(screen.getByTestId("continue-button"));
 
       // order matches the order of the options, not order they were clicked
       expect(handleSubmit).toHaveBeenCalledWith({
@@ -298,9 +282,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
         />
       );
 
-      await waitFor(async () => {
-        userEvent.click(screen.getByTestId("continue-button"));
-      });
+      await userEvent.click(screen.getByTestId("continue-button"));
 
       expect(handleSubmit).toHaveBeenCalledWith({
         answers: ["flat_id", "house_id"],
@@ -318,7 +300,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
-    test(`Focus jumps from checkbox to checkbox (${ChecklistLayout[type]} layout)`, () => {
+    test(`Focus jumps from checkbox to checkbox (${ChecklistLayout[type]} layout)`, async () => {
       const handleSubmit = jest.fn();
 
       const { container } = render(
@@ -331,9 +313,9 @@ describe("Checklist Component - Basic & Images Layout", () => {
         />
       );
 
-      userEvent.tab();
+      await userEvent.tab();
       expect(container.querySelector("#flat_id")).toHaveFocus();
-      userEvent.tab();
+      await userEvent.tab();
       expect(container.querySelector("#caravan_id")).toHaveFocus();
     });
   });

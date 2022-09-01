@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-helper";
 import React from "react";
@@ -7,6 +7,7 @@ import TaskList from "./Public";
 
 test("renders correctly", async () => {
   const handleSubmit = jest.fn();
+  const user = userEvent.setup();
 
   render(
     <TaskList
@@ -17,10 +18,11 @@ test("renders correctly", async () => {
       handleSubmit={handleSubmit}
     />
   );
+  await user.click(screen.getByTestId("continue-button"));
 
-  userEvent.click(screen.getByTestId("continue-button"));
-
-  expect(handleSubmit).toHaveBeenCalled();
+  await waitFor(() => {
+    expect(handleSubmit).toHaveBeenCalled();
+  });
 });
 
 it("should not have any accessibility violations", async () => {

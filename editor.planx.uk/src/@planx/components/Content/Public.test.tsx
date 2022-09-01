@@ -18,7 +18,7 @@ test("renders correctly", async () => {
     color: "#000",
   });
 
-  userEvent.click(screen.getByTestId("continue-button"));
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalled();
 });

@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-helper";
 import { uniqueId } from "lodash";
@@ -33,9 +33,7 @@ test("recovers previously submitted files when clicking the back button", async 
     />
   );
 
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith(uploadedFile);
 });
@@ -59,9 +57,7 @@ test("recovers previously submitted files when clicking the back button even if 
     />
   );
 
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith(uploadedFile);
 });

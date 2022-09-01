@@ -1,5 +1,5 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-helper";
 import React from "react";
@@ -46,10 +46,7 @@ it("renders correctly", async () => {
   // TODO mock passport _address so that SWR request is actually triggered to return mock response
 
   expect(screen.getByText("Planning constraints")).toBeInTheDocument();
-
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalledTimes(1);
 });
 

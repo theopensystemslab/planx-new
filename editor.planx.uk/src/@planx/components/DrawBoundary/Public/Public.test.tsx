@@ -37,7 +37,7 @@ test("recovers previously submitted files when clicking the back button", async 
     />
   );
 
-  userEvent.click(screen.getByTestId("continue-button"));
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: previouslySubmittedData,
@@ -80,7 +80,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
     />
   );
 
-  userEvent.click(screen.getByTestId("continue-button"));
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: expect.objectContaining(previouslySubmittedData),
@@ -122,7 +122,7 @@ test("shows the file upload option by default and requires user data to continue
   expect(screen.getByTestId("continue-button")).toBeDisabled();
 
   // Navigate to upload a file screen
-  userEvent.click(screen.getByTestId("upload-file-button"));
+  await userEvent.click(screen.getByTestId("upload-file-button"));
   expect(screen.getByText("Upload a file")).toBeInTheDocument();
   expect(screen.getByTestId("continue-button")).toBeDisabled();
 });
@@ -145,6 +145,6 @@ test("hides the upload option and allows user to continue without drawing if edi
 
   expect(screen.queryByTestId("upload-file-button")).not.toBeInTheDocument();
 
-  userEvent.click(screen.getByTestId("continue-button"));
+  await userEvent.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalledTimes(1);
 });

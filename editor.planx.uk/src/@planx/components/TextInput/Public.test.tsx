@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-helper";
 import { uniqueId } from "lodash";
@@ -14,10 +14,8 @@ test("requires a value before being able to continue", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("hello");
 
-  await act(async () => {
-    await userEvent.type(await screen.getByLabelText("hello"), "something");
-    await userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.type(screen.getByLabelText("hello"), "something");
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalled();
 });
@@ -35,10 +33,8 @@ test("requires a valid email before being able to continue", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("hello");
 
-  await act(async () => {
-    await userEvent.type(screen.getByLabelText("hello"), "not-an-email");
-    await userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.type(screen.getByLabelText("hello"), "not-an-email");
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
 });
@@ -60,9 +56,7 @@ test("recovers previously submitted text when clicking the back button", async (
     />
   );
 
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -89,9 +83,7 @@ test("recovers previously submitted text when clicking the back button even if a
     />
   );
 
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -125,9 +117,7 @@ examplePhoneNumbers.forEach((number) => {
       target: { value: number },
     });
 
-    await act(async () => {
-      userEvent.click(screen.getByTestId("continue-button"));
-    });
+    await userEvent.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalled();
   });
@@ -168,9 +158,7 @@ it("should change the role of the ErrorWrapper when an invalid input is given", 
   const errorWrapper = container.querySelector(
     `#${ERROR_MESSAGE}-testId`
   )?.parentElement;
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  userEvent.click(screen.getByTestId("continue-button"));
 
   expect(errorWrapper).not.toBeEmptyDOMElement();
   expect(errorWrapper).toHaveAttribute("role", "status");

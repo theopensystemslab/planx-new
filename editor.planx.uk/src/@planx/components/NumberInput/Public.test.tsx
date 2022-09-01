@@ -1,9 +1,8 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-helper";
 import { uniqueId } from "lodash";
 import React from "react";
-import { act } from "react-dom/test-utils";
 
 import NumberInput from "./Public";
 
@@ -16,10 +15,8 @@ test("renders correctly", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("Numberwang!");
 
-  await act(async () => {
-    await userEvent.type(screen.getByLabelText("Numberwang!"), "3");
-    await userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.type(screen.getByLabelText("Numberwang!"), "3");
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { num: 3 } });
 });
@@ -33,10 +30,8 @@ test("allows 0 to be input as a valid number", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("Numberwang!");
 
-  await act(async () => {
-    await userEvent.type(screen.getByLabelText("Numberwang!"), "0");
-    await userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.type(screen.getByLabelText("Numberwang!"), "0");
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { num: 0 } });
 });
@@ -48,9 +43,7 @@ test("requires a value before being able to continue", async () => {
     <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />
   );
 
-  await act(async () => {
-    await userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
 });
@@ -72,9 +65,7 @@ test("recovers previously submitted number when clicking the back button", async
     />
   );
 
-  await waitFor(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { [componentId]: 43 } });
 });
@@ -98,9 +89,7 @@ test("recovers previously submitted number when clicking the back button even if
     />
   );
 
-  await waitFor(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { [dataField]: 43 } });
 });

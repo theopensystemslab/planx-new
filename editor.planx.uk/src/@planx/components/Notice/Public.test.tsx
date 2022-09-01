@@ -17,7 +17,7 @@ test("renders correctly", async () => {
     />
   );
 
-  userEvent.click(screen.getByTestId("continue-button"));
+  await userEvent.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalled();
 });

@@ -1,5 +1,5 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-helper";
 import React from "react";
@@ -46,9 +46,7 @@ test("renders correctly", async () => {
   expect(screen.queryByTestId("address-autocomplete-web-component")).toBeNull();
 
   // type a valid postcode
-  await waitFor(async () => {
-    userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
-  });
+  await userEvent.type(await screen.findByLabelText("Postcode"), "SE5 0HU");
 
   // expect the autocomplete to be rendered with the correct postcode prop & empty initial address
   const autocomplete = screen.getByTestId("address-autocomplete-web-component");
@@ -74,9 +72,7 @@ test("it displays an error if you submit an invalid postcode", async () => {
     </MockedProvider>
   );
 
-  await waitFor(async () => {
-    userEvent.type(screen.getByLabelText("Postcode"), "SE5{enter}");
-  });
+  await userEvent.type(await screen.findByLabelText("Postcode"), "SE5{enter}");
 
   expect(screen.getByText("Enter a valid UK postcode")).toBeInTheDocument();
 });
@@ -123,12 +119,9 @@ test("recovers previously submitted address when clicking the back button", asyn
     </MockedProvider>
   );
 
-  await waitFor(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
-  await waitFor(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await userEvent.click(await screen.findByTestId("continue-button"));
+
+  await userEvent.click(await screen.findByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: previousData,
@@ -147,21 +140,18 @@ it("should not have any accessibility violations", async () => {
     </MockedProvider>
   );
 
-  await waitFor(async () => {
-    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
-  });
+  await userEvent.type(await screen.findByLabelText("Postcode"), "SE5 0HU");
   // shadow DOM is not rendered, so autocomplete does not actually "open" on typing or account for dropdown options here
-  await waitFor(async () => {
-    await userEvent.type(
-      screen.getByTestId("address-autocomplete-web-component"),
-      "75"
-    );
-  });
+
+  await userEvent.type(
+    await screen.findByTestId("address-autocomplete-web-component"),
+    "75"
+  );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
 
-it("updates the address-autocomplete props when the postcode is changed", async () => {
+it.only("updates the address-autocomplete props when the postcode is changed", async () => {
   // Arrange
   render(
     <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
@@ -173,13 +163,12 @@ it("updates the address-autocomplete props when the postcode is changed", async 
   );
 
   // Enter a postcode...
-  await waitFor(async () => {
-    userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HU");
-  });
+  await userEvent.type(await screen.findByLabelText("Postcode"), "SE5 0HU");
 
   // Expect autocomplete to be rendered with the correct postcode prop
-  expect(screen.getByTestId("address-autocomplete-web-component"))
-    .toBeInTheDocument();
+  expect(
+    screen.getByTestId("address-autocomplete-web-component")
+  ).toBeInTheDocument();
   expect(
     screen
       .getByTestId("address-autocomplete-web-component")
@@ -187,10 +176,8 @@ it("updates the address-autocomplete props when the postcode is changed", async 
   ).toEqual("SE5 0HU");
 
   // Now go back and change the postcode
-  await waitFor(async () => {
-    await userEvent.clear(screen.getByLabelText("Postcode"));
-    await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HX");
-  });
+  await userEvent.clear(screen.getByLabelText("Postcode"));
+  await userEvent.type(screen.getByLabelText("Postcode"), "SE5 0HX");
 
   // Expect autocomplete to be rendered with the new postcode prop
   expect(

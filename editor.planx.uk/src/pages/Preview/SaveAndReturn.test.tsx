@@ -17,7 +17,7 @@ describe("Save and Return component", () => {
   beforeAll(() => (initialState = getState()));
 
   afterEach(() => {
-    waitFor(() => setState(initialState));
+    act(() => setState(initialState));
     // Reset URL between tests
     window.history.replaceState({}, "", decodeURIComponent(originalHref));
   });
@@ -27,7 +27,7 @@ describe("Save and Return component", () => {
     render(<SaveAndReturn children={children}></SaveAndReturn>);
 
     expect(screen.queryByText("Testing 123")).not.toBeInTheDocument();
-    expect(screen.queryByText("Enter your email address")).toBeInTheDocument();
+    expect(screen.getByText("Enter your email address")).toBeInTheDocument();
   });
 
   it("displays children if an email address is already captured", () => {
@@ -35,7 +35,7 @@ describe("Save and Return component", () => {
     const children = <Button>Testing 123</Button>;
     render(<SaveAndReturn children={children}></SaveAndReturn>);
 
-    expect(screen.queryByText("Testing 123")).toBeInTheDocument();
+    expect(screen.getByText("Testing 123")).toBeInTheDocument();
 
     expect(
       screen.queryByText("Enter your email address")
@@ -45,22 +45,20 @@ describe("Save and Return component", () => {
   it("will save matching emails to state", async () => {
     const children = <Button>Testing 123</Button>;
     render(<SaveAndReturn children={children}></SaveAndReturn>);
-
     expect(getState().saveToEmail).toBeUndefined();
 
-    userEvent.type(screen.getByLabelText("Email address"), "test@test.com");
-    userEvent.type(
+    await userEvent.type(
+      screen.getByLabelText("Email address"),
+      "test@test.com"
+    );
+    await userEvent.type(
       screen.getByLabelText("Confirm email address"),
       "test@test.com"
     );
-    userEvent.click(screen.getByTestId("continue-button"));
+    await userEvent.click(screen.getByTestId("continue-button"));
 
-    await waitFor(() => {
-      expect(getState().saveToEmail).toEqual("test@test.com");
-    });
-    await waitFor(() => {
-      expect(screen.queryByText("Testing 123")).toBeInTheDocument();
-    });
+    expect(getState().saveToEmail).toEqual("test@test.com");
+    expect(screen.getByText("Testing 123")).toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
@@ -78,12 +76,13 @@ describe("Save and Return component", () => {
     render(<SaveAndReturn children={children}></SaveAndReturn>);
 
     const sessionId = getState().sessionId;
-    await waitFor(() => {
-      expect(sessionId).toBeDefined();
-    });
+    expect(sessionId).toBeDefined();
 
-    userEvent.type(screen.getByLabelText("Email address"), "test@test.com");
-    userEvent.type(
+    await userEvent.type(
+      screen.getByLabelText("Email address"),
+      "test@test.com"
+    );
+    await userEvent.type(
       screen.getByLabelText("Confirm email address"),
       "test@test.com"
     );
@@ -91,10 +90,10 @@ describe("Save and Return component", () => {
     expect(window.location.href).not.toContain("sessionId");
     expect(window.location.href).not.toContain(sessionId);
 
-    userEvent.click(screen.getByTestId("continue-button"));
+    await userEvent.click(screen.getByTestId("continue-button"));
 
     await waitFor(() => {
-      expect(screen.queryByText("Testing 123")).toBeInTheDocument();
+      expect(screen.getByText("Testing 123")).toBeInTheDocument();
     });
 
     expect(window.location.href).toContain(`sessionId=${sessionId}`);
@@ -107,12 +106,13 @@ describe("ConfirmEmail component", () => {
 
     render(<ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>);
 
-    userEvent.click(screen.getByTestId("continue-button"));
+    await userEvent.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).not.toHaveBeenCalled();
-    await waitFor(() => {
-      expect(screen.getAllByText("Email address required")).toHaveLength(2);
-    });
+    expect(await screen.findAllByText("Email address required")).toHaveLength(
+      2
+    );
+
     screen
       .getAllByText("Email address required")
       .forEach((el) => expect(el).toBeVisible());
@@ -123,23 +123,19 @@ describe("ConfirmEmail component", () => {
 
     render(<ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>);
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByLabelText("Email address"),
       "testABC@testABC.com"
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByLabelText("Confirm email address"),
       "test123@test123.com"
     );
-    userEvent.click(screen.getByTestId("continue-button"));
+    await userEvent.click(screen.getByTestId("continue-button"));
 
-    await waitFor(() => {
-      expect(handleSubmit).not.toHaveBeenCalled();
-    });
+    expect(handleSubmit).not.toHaveBeenCalled();
 
-    await waitFor(() => {
-      expect(screen.getByText("Emails must match")).toBeVisible();
-    });
+    expect(await screen.findByText("Emails must match")).toBeVisible();
   });
 
   it("will display an error for an invalid email address", async () => {
@@ -150,15 +146,13 @@ describe("ConfirmEmail component", () => {
     const emailInput = screen.getByLabelText("Email address");
     const confirmEmailInput = screen.getByLabelText("Confirm email address");
 
-    userEvent.type(emailInput, "not an email");
-    userEvent.type(confirmEmailInput, "not an email");
-    userEvent.click(screen.getByTestId("continue-button"));
+    await userEvent.type(emailInput, "not an email");
+    await userEvent.type(confirmEmailInput, "not an email");
+    await userEvent.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).not.toHaveBeenCalled();
 
-    await waitFor(() => {
-      expect(screen.getAllByText("Invalid email")).toHaveLength(2);
-    });
+    expect(await screen.findAllByText("Invalid email")).toHaveLength(2);
   });
 
   it("will display an error if a field is left empty", async () => {
@@ -172,15 +166,13 @@ describe("ConfirmEmail component", () => {
     expect(emailInput).toHaveValue("");
     expect(confirmEmailInput).toHaveValue("");
 
-    userEvent.click(screen.getByTestId("continue-button"));
+    await userEvent.click(screen.getByTestId("continue-button"));
 
-    await waitFor(() => {
-      expect(screen.getAllByText("Email address required")).toHaveLength(2);
-    });
+    expect(handleSubmit).not.toHaveBeenCalled();
 
-    await waitFor(() => {
-      expect(handleSubmit).not.toHaveBeenCalled();
-    });
+    expect(await screen.findAllByText("Email address required")).toHaveLength(
+      2
+    );
   });
 
   it("should not have any accessibility violations upon load", async () => {
@@ -196,16 +188,14 @@ describe("ConfirmEmail component", () => {
 
   it("should not have any accessibility violations in the error state", async () => {
     const handleSubmit = jest.fn();
-
     const { container } = render(
       <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>
     );
 
-    userEvent.click(screen.getByTestId("continue-button"));
-
-    await waitFor(() => {
-      expect(screen.getAllByText("Email address required")).toHaveLength(2);
-    });
+    await userEvent.click(screen.getByTestId("continue-button"));
+    expect(await screen.findAllByText("Email address required")).toHaveLength(
+      2
+    );
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -216,18 +206,16 @@ describe("ConfirmEmail component", () => {
 
     render(<ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>);
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByLabelText("Email address"),
       "testABC@testABC.com"
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByLabelText("Confirm email address"),
       "testABC@testABC.com"
     );
-    userEvent.click(screen.getByTestId("continue-button"));
+    await userEvent.click(screen.getByTestId("continue-button"));
 
-    await waitFor(() => {
-      expect(handleSubmit).toHaveBeenCalledWith("testABC@testABC.com");
-    });
+    expect(handleSubmit).toHaveBeenCalledWith("testABC@testABC.com");
   });
 });

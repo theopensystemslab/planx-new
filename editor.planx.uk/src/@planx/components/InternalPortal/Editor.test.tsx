@@ -22,23 +22,23 @@ describe("adding an internal portal", () => {
     expect(flowSelect).toHaveValue("");
     expect(flowSelect).toBeEnabled();
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByPlaceholderText("Portal name"),
       "new internal portal"
     );
 
     expect(flowSelect).toBeDisabled();
 
-    await waitFor(() => {
-      fireEvent.submit(screen.getByTestId("form"));
-    });
+    await fireEvent.submit(screen.getByTestId("form"));
 
-    expect(handleSubmit).toHaveBeenCalledWith({
-      type: TYPES.InternalPortal,
-      data: {
-        flowId: "", // will be removed when saving the data
-        text: "new internal portal",
-      },
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        type: TYPES.InternalPortal,
+        data: {
+          flowId: "", // will be removed when saving the data
+          text: "new internal portal",
+        },
+      });
     });
   });
 
@@ -57,14 +57,13 @@ describe("adding an internal portal", () => {
     expect(dropdown).toHaveValue("");
 
     if (dropdown) {
-      userEvent.selectOptions(dropdown, "portal");
+      await userEvent.selectOptions(dropdown, "portal");
     }
 
+    await fireEvent.submit(screen.getByTestId("form"));
     await waitFor(() => {
-      fireEvent.submit(screen.getByTestId("form"));
+      expect(handleSubmit).toHaveBeenCalledWith("portal");
     });
-
-    expect(handleSubmit).toHaveBeenCalledWith("portal");
   });
 
   test("if text and flowId are set, only flowId should be submitted", async () => {
@@ -79,14 +78,13 @@ describe("adding an internal portal", () => {
 
     const dropdown = screen.queryByTestId("flowId");
     if (dropdown) {
-      userEvent.selectOptions(dropdown, "portal");
+      await userEvent.selectOptions(dropdown, "portal");
     }
 
+    await fireEvent.submit(screen.getByTestId("form"));
     await waitFor(() => {
-      fireEvent.submit(screen.getByTestId("form"));
+      expect(handleSubmit).toHaveBeenCalledWith("portal");
     });
-
-    expect(handleSubmit).toHaveBeenCalledWith("portal");
   });
 });
 
@@ -108,18 +106,18 @@ test("updating an internal portal", async () => {
 
   expect(textInput).toHaveValue("val");
 
-  userEvent.type(textInput, "{selectall}new val");
+  await userEvent.clear(textInput);
+  await userEvent.type(textInput, "new val");
+  await fireEvent.submit(screen.getByTestId("form"));
 
   await waitFor(() => {
-    fireEvent.submit(screen.getByTestId("form"));
-  });
-
-  expect(handleSubmit).toHaveBeenCalledWith({
-    type: TYPES.InternalPortal,
-    data: {
-      flowId: "", // will be removed when saving the data
-      text: "new val",
-    },
+    expect(handleSubmit).toHaveBeenCalledWith({
+      type: TYPES.InternalPortal,
+      data: {
+        flowId: "", // will be removed when saving the data
+        text: "new val",
+      },
+    });
   });
 });
 
@@ -152,11 +150,9 @@ describe("validations", () => {
           />
         );
 
-        await waitFor(() => {
-          fireEvent.submit(screen.getByTestId("form"));
-        });
+        await fireEvent.submit(screen.getByTestId("form"));
 
-        expect(screen.getByText(scenario.error)).toBeInTheDocument();
+        expect(await screen.findByText(scenario.error)).toBeInTheDocument();
         expect(handleSubmit).not.toHaveBeenCalled();
       });
     }
