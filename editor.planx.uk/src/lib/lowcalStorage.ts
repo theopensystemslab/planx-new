@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import isEmpty from "lodash/isEmpty";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Session } from "types";
 
@@ -23,7 +22,7 @@ class LowcalStorage {
     console.debug({ getItem: key });
     const id = getSessionId(key);
 
-    const { data: lowcal_sessions_by_pk } = await client.query({
+    const { data } = await client.query({
       query: gql`
         query GetItem($id: uuid!) {
           lowcal_sessions_by_pk(id: $id) {
@@ -36,8 +35,8 @@ class LowcalStorage {
     });
 
     try {
-      const session: Session = lowcal_sessions_by_pk?.data;
-      if (isEmpty(session)) return null;
+      const session: Session = data.lowcal_sessions_by_pk?.data;
+      if (!session) return null;
       current = stringifyWithRootKeysSortedAlphabetically(session) || null;
       return current;
     } catch (err) {
