@@ -14,7 +14,7 @@ test("submits an address", async () => {
     <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />
   );
 
-  await fillInFieldsUsingLabel({
+  await fillInFieldsUsingLabel(user, {
     "Address line 1": "Flat 1",
     "Address line 2 (optional)": "221b Baker St",
     Town: "London",
@@ -62,7 +62,7 @@ test("recovers previously submitted text when clicking the back button", async (
     />
   );
 
-  await fillInFieldsUsingLabel({
+  await fillInFieldsUsingLabel(user, {
     "Address line 2 (optional)": "221b Baker St",
   });
 
@@ -106,7 +106,7 @@ test("recovers previously submitted text when clicking the back button even if a
     />
   );
 
-  await fillInFieldsUsingLabel({
+  await fillInFieldsUsingLabel(user, {
     "Address line 2 (optional)": "221b Baker St",
   });
 
@@ -126,8 +126,8 @@ test("recovers previously submitted text when clicking the back button even if a
 });
 
 it("should not have any accessibility violations on initial load", async () => {
-  const { container } = setup(<AddressInput title="title" />);
-  await fillInFieldsUsingLabel({
+  const { container, user } = setup(<AddressInput title="title" />);
+  await fillInFieldsUsingLabel(user, {
     "Address line 1": "Flat 1",
     "Address line 2 (optional)": "221b Baker St",
     Town: "London",

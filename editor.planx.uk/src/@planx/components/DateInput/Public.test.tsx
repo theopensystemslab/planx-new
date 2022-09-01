@@ -18,7 +18,7 @@ test("submits a date", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("Pizza Day");
 
-  await fillInFieldsUsingPlaceholder({
+  await fillInFieldsUsingPlaceholder(user, {
     DD: "22",
     MM: "05",
     YYYY: "2010",
