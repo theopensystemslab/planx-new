@@ -388,7 +388,7 @@ app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
         // if it's a prod payment, notify #planx-notifcations so we can monitor for subsequent submissions
         if (govUkResponse?.payment_provider !== "sandbox") {
           const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL);
-          const payMessage = `:coin: New GOV.UK payment *${govUkResponse.payment_id}* [${req.params.localAuthority}]`;
+          const payMessage = `:coin: New GOV Pay payment *${govUkResponse.payment_id}* [${req.params.localAuthority}]`;
           slack.send(payMessage)
             .then(() => console.log("Payment notification posted to Slack"))
             .catch(error => next(error));
