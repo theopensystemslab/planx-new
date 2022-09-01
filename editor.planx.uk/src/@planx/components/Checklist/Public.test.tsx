@@ -194,9 +194,8 @@ describe("Checklist Component - Grouped Layout", () => {
         groupedOptions={groupedOptions}
       />
     );
-    const section1Button = screen.getByText("Section 1").parentNode;
-    const section2Button = screen.getByText("Section 2").parentNode;
-    const section3Button = screen.getByText("Section 3").parentNode;
+    const [section1Button, section2Button, section3Button, _continueButton] =
+      screen.getAllByRole("button");
 
     // All accordion sections begin collapsed
     [section1Button, section2Button, section3Button].forEach((element) => {
@@ -213,16 +212,16 @@ describe("Checklist Component - Grouped Layout", () => {
     expect(section2Button).toHaveAttribute("aria-expanded", "true");
     // Tab goes to Section 2, Option 1
     await userEvent.tab();
-    expect(container.querySelector("#S2_Option1")).toHaveFocus();
+    expect(screen.getByTestId("S2_Option1")).toHaveFocus();
     // Select option using keyboard
     await userEvent.keyboard("[Space]");
-    expect(container.querySelector("#S2_Option1")).toBeChecked();
+    expect(screen.getByTestId("S2_Option1")).toBeChecked();
     // Tab to Section 2, Option 2
     await userEvent.tab();
-    expect(container.querySelector("#S2_Option2")).toHaveFocus();
+    expect(screen.getByTestId("S2_Option2")).toHaveFocus();
     // Select option using keyboard
     await userEvent.keyboard("[Space]");
-    expect(container.querySelector("#S2_Option2")).toBeChecked();
+    expect(screen.getByTestId("S2_Option2")).toBeChecked();
     // Tab to Section 3, and navigate through to "Continue" without selecting anything
     await userEvent.tab();
     expect(section3Button).toHaveFocus();
@@ -257,10 +256,9 @@ describe("Checklist Component - Basic & Images Layout", () => {
 
       expect(screen.getByRole("heading")).toHaveTextContent("home type?");
 
-      userEvent.click(screen.getByText("Spaceship"));
-      userEvent.click(screen.getByText("Flat"));
-      userEvent.click(screen.getByText("House"));
-
+      await userEvent.click(screen.getByText("Spaceship"));
+      await userEvent.click(screen.getByText("Flat"));
+      await userEvent.click(screen.getByText("House"));
       await userEvent.click(screen.getByTestId("continue-button"));
 
       // order matches the order of the options, not order they were clicked
@@ -303,7 +301,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
     test(`Focus jumps from checkbox to checkbox (${ChecklistLayout[type]} layout)`, async () => {
       const handleSubmit = jest.fn();
 
-      const { container } = render(
+      render(
         <Checklist
           allRequired={false}
           description=""
@@ -314,9 +312,9 @@ describe("Checklist Component - Basic & Images Layout", () => {
       );
 
       await userEvent.tab();
-      expect(container.querySelector("#flat_id")).toHaveFocus();
+      expect(screen.getByTestId("flat_id")).toHaveFocus();
       await userEvent.tab();
-      expect(container.querySelector("#caravan_id")).toHaveFocus();
+      expect(screen.getByTestId("caravan_id")).toHaveFocus();
     });
   });
 });

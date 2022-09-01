@@ -144,9 +144,7 @@ it("should not have any accessibility violations whilst in the error state", asy
   const requiredAddressElements = ["line1", "town", "postcode"];
 
   requiredAddressElements.forEach((el) => {
-    const errorMessage = container.querySelector(
-      `#${ERROR_MESSAGE}-testId-${el}`
-    );
+    const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId-${el}`);
     expect(errorMessage).toBeEmptyDOMElement();
   });
 
@@ -154,9 +152,7 @@ it("should not have any accessibility violations whilst in the error state", asy
   await userEvent.click(screen.getByTestId("continue-button"));
 
   requiredAddressElements.forEach((el) => {
-    const errorMessage = container.querySelector(
-      `#${ERROR_MESSAGE}-testId-${el}`
-    );
+    const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId-${el}`);
     expect(errorMessage).not.toBeEmptyDOMElement();
   });
 

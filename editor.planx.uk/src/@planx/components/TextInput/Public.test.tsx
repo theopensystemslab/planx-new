@@ -132,21 +132,21 @@ it("should not have any accessibility violations", async () => {
 });
 
 it("should always an empty error message element in the DOM", () => {
-  const { container } = render(
+  render(
     <TextInput
       title="Short Text"
       type={TextInputType.Short}
       id="testId"
     ></TextInput>
   );
-  const errorMessage = container.querySelector(`#${ERROR_MESSAGE}-testId`);
+  const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId`);
   expect(errorMessage).toBeEmptyDOMElement();
 });
 
 it("should change the role of the ErrorWrapper when an invalid input is given", async () => {
   const handleSubmit = jest.fn();
 
-  const { container } = render(
+  render(
     <TextInput
       title="Short Text"
       type={TextInputType.Short}
@@ -155,9 +155,7 @@ it("should change the role of the ErrorWrapper when an invalid input is given", 
     ></TextInput>
   );
 
-  const errorWrapper = container.querySelector(
-    `#${ERROR_MESSAGE}-testId`
-  )?.parentElement;
+  const [errorWrapper, ..._rest] = screen.getAllByTestId("error-wrapper");
   userEvent.click(screen.getByTestId("continue-button"));
 
   expect(errorWrapper).not.toBeEmptyDOMElement();

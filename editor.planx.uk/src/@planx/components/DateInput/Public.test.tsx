@@ -203,22 +203,22 @@ it("should not have any accessibility violations whilst in the error state", asy
 
   // There is an ErrorWrapper per input, which should not display on load
   dateElements.forEach((el) => {
-    const inputErrorWrapper = container.querySelector(
-      `#${ERROR_MESSAGE}-testId-${el}`
+    const inputErrorWrapper = screen.getByTestId(
+      `${ERROR_MESSAGE}-testId-${el}`
     );
     expect(inputErrorWrapper).toBeEmptyDOMElement();
   });
 
   // There is a main ErrorWrapper, which should not display on load
-  const mainErrorMessage = container.querySelector(`#${ERROR_MESSAGE}-testId`);
+  const mainErrorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId`);
   expect(mainErrorMessage).toBeEmptyDOMElement();
 
   // Trigger error state
   await userEvent.click(screen.getByTestId("continue-button"));
   // Individual input errors do not display, and are not in an error state
   dateElements.forEach((el) => {
-    const inputErrorWrapper = container.querySelector(
-      `#${ERROR_MESSAGE}-testId-${el}`
+    const inputErrorWrapper = screen.getByTestId(
+      `${ERROR_MESSAGE}-testId-${el}`
     );
     expect(inputErrorWrapper).toBeEmptyDOMElement();
     expect(inputErrorWrapper).not.toHaveAttribute("role", "status");
@@ -226,7 +226,8 @@ it("should not have any accessibility violations whilst in the error state", asy
 
   // Main ErrorWrapper does display, and is in error state
   expect(mainErrorMessage).not.toBeEmptyDOMElement();
-  expect(mainErrorMessage?.parentElement).toHaveAttribute("role", "status");
+  const [mainErrorWrapper, ..._rest] = screen.getAllByTestId("error-wrapper");
+  expect(mainErrorWrapper).toHaveAttribute("role", "status");
 
   const results = await axe(container);
   expect(results).toHaveNoViolations();
