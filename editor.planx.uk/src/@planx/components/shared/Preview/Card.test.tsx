@@ -1,9 +1,8 @@
 import Button from "@material-ui/core/Button";
-import { act, render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { act, screen, waitFor } from "@testing-library/react";
 import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { axe } from "testUtils";
+import { axe, setup } from "testUtils";
 import { ApplicationPath } from "types";
 
 import Card from "./Card";
@@ -24,7 +23,7 @@ describe("Card component", () => {
   it("displays the Save/Resume option if the application path requires it", () => {
     act(() => setState({ path: ApplicationPath.SaveAndReturn }));
     const children = <Button>Testing 123</Button>;
-    render(<Card handleSubmit={handleSubmit} children={children}></Card>);
+    setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
 
     expect(screen.getByText(resumeButtonText)).toBeInTheDocument();
     act(() => setState({ saveToEmail: "test@test.com" }));
@@ -34,7 +33,7 @@ describe("Card component", () => {
   it("hides the Save/Resume option if the application path does not require it", () => {
     act(() => setState({ path: ApplicationPath.SingleSession }));
     const children = <Button>Testing 123</Button>;
-    render(<Card handleSubmit={handleSubmit} children={children}></Card>);
+    setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
 
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
     expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
@@ -52,9 +51,9 @@ describe("Card component", () => {
   it("updates state to navigate to the 'Resume' page if the 'Resume' button is clicked", async () => {
     act(() => setState({ path: ApplicationPath.SaveAndReturn }));
     const children = <Button>Testing 123</Button>;
-    render(<Card handleSubmit={handleSubmit} children={children}></Card>);
+    const { user } = setup(<Card children={children}></Card>);
 
-    await userEvent.click(screen.getByText(resumeButtonText));
+    await user.click(screen.getByText(resumeButtonText));
     expect(getState().path).toEqual(ApplicationPath.Resume);
   });
 
@@ -62,18 +61,16 @@ describe("Card component", () => {
     act(() => setState({ path: ApplicationPath.SaveAndReturn }));
     act(() => setState({ saveToEmail: "test@test.com" }));
     const children = <Button>Testing 123</Button>;
-    render(<Card handleSubmit={handleSubmit} children={children}></Card>);
+    const { user } = setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
 
-    await userEvent.click(screen.getByText(saveButtonText));
+    await user.click(screen.getByText(saveButtonText));
     expect(getState().path).toEqual(ApplicationPath.Save);
   });
 
   it("should not have any accessibility violations", async () => {
     setState({ path: ApplicationPath.SaveAndReturn });
     const children = <Button>Testing 123</Button>;
-    const { container } = render(
-      <Card handleSubmit={handleSubmit} children={children}></Card>
-    );
+    const { container } = setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();

@@ -1,7 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/react";
 import React from "react";
-import { axe } from "testUtils";
+import { axe, setup } from "testUtils";
 
 import { vanillaStore } from "../../../pages/FlowEditor/lib/store";
 import Result from "./Public";
@@ -15,7 +14,7 @@ beforeEach(() => {
 test("renders correctly", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <Result
       headingColor={{ text: "#000", background: "#fff" }}
       responses={[]}
@@ -25,12 +24,12 @@ test("renders correctly", async () => {
   );
 
   expect(screen.getAllByRole("heading")[0]).toHaveTextContent("AMAZING");
-  await userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalled();
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = render(
+  const { container } = setup(
     <Result
       headingColor={{ text: "#000", background: "#fff" }}
       responses={[
@@ -56,7 +55,7 @@ it("should not have any accessibility violations", async () => {
 
 describe("showing and hiding change capabilities", () => {
   it("hides the change button by default", () => {
-    render(
+    setup(
       <Result
         responses={[
           {
@@ -158,7 +157,7 @@ describe("showing and hiding change capabilities", () => {
       } the change button when allowChanges is ${allowChanges} and question ${
         autoAnswered ? "was" : "wasn't"
       } auto-answered`, () => {
-        render(
+        setup(
           <Result
             {...{ allowChanges, responses }}
             handleSubmit={() => {}}
@@ -175,7 +174,7 @@ describe("showing and hiding change capabilities", () => {
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = render(
+  const { container } = setup(
     <Result
       headingColor={{ text: "#000", background: "#fff" }}
       responses={[]}

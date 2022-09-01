@@ -1,7 +1,6 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { axe } from "testUtils";
+import { axe, setup } from "testUtils";
 
 import { TYPES } from "../types";
 import InternalPortalForm from "./Editor";
@@ -10,7 +9,7 @@ describe("adding an internal portal", () => {
   test("creating a new internal portal", async () => {
     const handleSubmit = jest.fn();
 
-    render(
+    const { user } = setup(
       <InternalPortalForm
         flows={[{ id: "ignore", text: "ignore" }]}
         handleSubmit={handleSubmit}
@@ -22,7 +21,7 @@ describe("adding an internal portal", () => {
     expect(flowSelect).toHaveValue("");
     expect(flowSelect).toBeEnabled();
 
-    await userEvent.type(
+    await user.type(
       screen.getByPlaceholderText("Portal name"),
       "new internal portal"
     );
@@ -45,7 +44,7 @@ describe("adding an internal portal", () => {
   test("selecting an existing internal portal", async () => {
     const handleSubmit = jest.fn();
 
-    render(
+    const { user } = setup(
       <InternalPortalForm
         flows={[{ id: "portal", text: "portal" }]}
         handleSubmit={handleSubmit}
@@ -57,7 +56,7 @@ describe("adding an internal portal", () => {
     expect(dropdown).toHaveValue("");
 
     if (dropdown) {
-      await userEvent.selectOptions(dropdown, "portal");
+      await user.selectOptions(dropdown, "portal");
     }
 
     await fireEvent.submit(screen.getByTestId("form"));
@@ -69,7 +68,7 @@ describe("adding an internal portal", () => {
   test("if text and flowId are set, only flowId should be submitted", async () => {
     const handleSubmit = jest.fn();
 
-    render(
+    const { user } = setup(
       <InternalPortalForm
         flows={[{ id: "portal", text: "portal" }]}
         handleSubmit={handleSubmit}
@@ -78,7 +77,7 @@ describe("adding an internal portal", () => {
 
     const dropdown = screen.queryByTestId("flowId");
     if (dropdown) {
-      await userEvent.selectOptions(dropdown, "portal");
+      await user.selectOptions(dropdown, "portal");
     }
 
     await fireEvent.submit(screen.getByTestId("form"));
@@ -89,14 +88,14 @@ describe("adding an internal portal", () => {
 });
 
 test("do not display select field when there are no flows to select", () => {
-  render(<InternalPortalForm />);
+  setup(<InternalPortalForm />);
   expect(screen.queryByTestId("flowId")).not.toBeInTheDocument();
 });
 
 test("updating an internal portal", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <InternalPortalForm id="test" text="val" handleSubmit={handleSubmit} />
   );
 
@@ -106,8 +105,8 @@ test("updating an internal portal", async () => {
 
   expect(textInput).toHaveValue("val");
 
-  await userEvent.clear(textInput);
-  await userEvent.type(textInput, "new val");
+  await user.clear(textInput);
+  await user.type(textInput, "new val");
   await fireEvent.submit(screen.getByTestId("form"));
 
   await waitFor(() => {
@@ -142,7 +141,7 @@ describe("validations", () => {
       test(scenario.action, async () => {
         const handleSubmit = jest.fn();
 
-        render(
+        setup(
           <InternalPortalForm
             id={scenario.id}
             flows={scenario.flows}
@@ -162,7 +161,7 @@ describe("validations", () => {
 it("should not have any accessibility violations", async () => {
   const handleSubmit = jest.fn();
 
-  const { container } = render(
+  const { container } = setup(
     <InternalPortalForm
       flows={[{ id: "portal", text: "portal" }]}
       handleSubmit={handleSubmit}

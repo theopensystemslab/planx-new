@@ -1,7 +1,6 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { axe } from "testUtils";
+import { axe, setup } from "testUtils";
 
 import Question, { IQuestion, QuestionLayout } from "./Public";
 
@@ -58,7 +57,7 @@ describe("Question Component", () => {
     it(`renders the ${QuestionLayout[type]} layout correctly`, async () => {
       const handleSubmit = jest.fn();
 
-      render(
+      const { user } = setup(
         <Question
           text="Best food"
           responses={responses[type]}
@@ -72,11 +71,11 @@ describe("Question Component", () => {
 
       expect(continueButton).toBeDisabled();
 
-      await userEvent.click(screen.getByText("Pizza"));
+      await user.click(screen.getByText("Pizza"));
 
       expect(continueButton).not.toBeDisabled();
 
-      await userEvent.click(continueButton);
+      await user.click(continueButton);
 
       await waitFor(() =>
         expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] })
@@ -85,7 +84,7 @@ describe("Question Component", () => {
 
     it(`should not have any accessibility violations in the ${QuestionLayout[type]} layout`, async () => {
       const handleSubmit = jest.fn();
-      const { container } = render(
+      const { container } = setup(
         <Question
           text="Best food"
           responses={responses[type]}
@@ -100,7 +99,7 @@ describe("Question Component", () => {
 
 it("should not have any accessibility violations", async () => {
   const handleSubmit = jest.fn();
-  const { container } = render(
+  const { container } = setup(
     <Question
       text="Best food"
       responses={[
@@ -124,7 +123,7 @@ it("should not have any accessibility violations", async () => {
 
 it("should not have any accessibility violations", async () => {
   const handleSubmit = jest.fn();
-  const { container } = render(
+  const { container } = setup(
     <Question
       text="Best food"
       responses={[
@@ -149,7 +148,7 @@ it("should not have any accessibility violations", async () => {
 it("renders correctly with responses containing comments", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <Question
       handleSubmit={handleSubmit}
       responses={responsesWithComment}
@@ -160,9 +159,9 @@ it("renders correctly with responses containing comments", async () => {
   expect(screen.getAllByTestId("description-button")).toHaveLength(3);
   expect(screen.getByText("Some description")).toBeInTheDocument();
 
-  await userEvent.click(screen.getByText("Commented"));
+  await user.click(screen.getByText("Commented"));
 
-  await userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByTestId("continue-button"));
 
   await waitFor(() =>
     expect(handleSubmit).toHaveBeenCalledWith({ answers: ["option1"] })
@@ -172,7 +171,7 @@ it("renders correctly with responses containing comments", async () => {
 it("renders correctly with responses containing images", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <Question
       handleSubmit={handleSubmit}
       responses={responsesWithImages}
@@ -183,8 +182,8 @@ it("renders correctly with responses containing images", async () => {
   expect(screen.getAllByTestId("image-button")).toHaveLength(3);
   expect(screen.getByText("Some description")).toBeInTheDocument();
 
-  await userEvent.click(screen.getByText("Without image"));
-  await userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByText("Without image"));
+  await user.click(screen.getByTestId("continue-button"));
 
   await waitFor(() => {
     expect(handleSubmit).toHaveBeenCalledWith({ answers: ["image2"] });

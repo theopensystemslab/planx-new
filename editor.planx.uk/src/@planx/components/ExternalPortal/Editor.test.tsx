@@ -1,5 +1,6 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import React from "react";
+import { setup } from "testUtils";
 
 import { TYPES } from "../types";
 import ExternalPortalForm from "./Editor";
@@ -7,7 +8,7 @@ import ExternalPortalForm from "./Editor";
 test("adding an external portal", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  setup(
     <ExternalPortalForm
       flows={[
         { id: "a", text: "flow a" },
@@ -37,7 +38,7 @@ test("adding an external portal", async () => {
 test("changing an external portal", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  setup(
     <ExternalPortalForm
       id="test"
       flowId="b"

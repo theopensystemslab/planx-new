@@ -1,7 +1,7 @@
+/* eslint-disable no-restricted-imports */
 import { render, RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
-// eslint-disable-next-line no-restricted-imports
 import { configureAxe } from "jest-axe";
 
 export const axe = configureAxe({

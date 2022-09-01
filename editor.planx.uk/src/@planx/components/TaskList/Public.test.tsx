@@ -1,15 +1,13 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { axe } from "testUtils";
+import { axe, setup } from "testUtils";
 
 import TaskList from "./Public";
 
 test("renders correctly", async () => {
   const handleSubmit = jest.fn();
-  const user = userEvent.setup();
 
-  render(
+  const { user } = setup(
     <TaskList
       tasks={[
         { title: "buy land", description: "" },
@@ -26,7 +24,7 @@ test("renders correctly", async () => {
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = render(
+  const { container } = setup(
     <TaskList
       tasks={[
         { title: "buy land", description: "" },

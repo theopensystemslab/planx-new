@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports, testing-library/no-await-sync-query */
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 

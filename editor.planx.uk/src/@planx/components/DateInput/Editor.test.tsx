@@ -1,8 +1,8 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { setup } from "testUtils";
 
 import DateInputComponent from "./Editor";
 
@@ -12,7 +12,7 @@ const invalidError = "Enter a valid date in DD.MM.YYYY format";
 
 describe("DateInputComponent - Editor Modal", () => {
   it("renders", () => {
-    render(
+    setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" />
       </DndProvider>
@@ -22,7 +22,7 @@ describe("DateInputComponent - Editor Modal", () => {
 
   it("throws an error for incompatible date values", async () => {
     const handleSubmit = jest.fn();
-    render(
+    const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>
@@ -35,13 +35,13 @@ describe("DateInputComponent - Editor Modal", () => {
     expect(screen.queryByText(minError)).toBeNull();
     expect(screen.queryByText(maxError)).toBeNull();
 
-    await userEvent.type(minDay, "01");
-    await userEvent.type(minMonth, "01");
-    await userEvent.type(minYear, "2000");
+    await user.type(minDay, "01");
+    await user.type(minMonth, "01");
+    await user.type(minYear, "2000");
 
-    await userEvent.type(maxDay, "01");
-    await userEvent.type(maxMonth, "01");
-    await userEvent.type(maxYear, "1900");
+    await user.type(maxDay, "01");
+    await user.type(maxMonth, "01");
+    await user.type(maxYear, "1900");
 
     fireEvent.submit(screen.getByRole("form"));
 
@@ -51,7 +51,7 @@ describe("DateInputComponent - Editor Modal", () => {
 
   it("does not show errors if min is less than max", async () => {
     const handleSubmit = jest.fn();
-    render(
+    const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" handleSubmit={handleSubmit} />
       </DndProvider>
@@ -64,13 +64,13 @@ describe("DateInputComponent - Editor Modal", () => {
     expect(screen.queryByText(minError)).toBeNull();
     expect(screen.queryByText(maxError)).toBeNull();
 
-    await userEvent.type(minDay, "01");
-    await userEvent.type(minMonth, "01");
-    await userEvent.type(minYear, "1900");
+    await user.type(minDay, "01");
+    await user.type(minMonth, "01");
+    await user.type(minYear, "1900");
 
-    await userEvent.type(maxDay, "01");
-    await userEvent.type(maxMonth, "01");
-    await userEvent.type(maxYear, "2000");
+    await user.type(maxDay, "01");
+    await user.type(maxMonth, "01");
+    await user.type(maxYear, "2000");
 
     fireEvent.submit(screen.getByRole("form"));
 
@@ -81,7 +81,7 @@ describe("DateInputComponent - Editor Modal", () => {
   it("does not show an error if user deletes a date", async () => {
     const handleSubmit = jest.fn();
     const node = { data: { min: "1900-02-13", max: "2000-12-14" } };
-    render(
+    const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" handleSubmit={handleSubmit} node={node} />
       </DndProvider>
@@ -101,7 +101,7 @@ describe("DateInputComponent - Editor Modal", () => {
       minYear,
       maxYear,
     ]) {
-      await await userEvent.clear(el);
+      await await user.clear(el);
     }
 
     fireEvent.submit(screen.getByRole("form"));

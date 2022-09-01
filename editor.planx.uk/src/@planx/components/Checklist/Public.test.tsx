@@ -1,7 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/react";
 import React from "react";
-import { axe } from "testUtils";
+import { axe, setup } from "testUtils";
 
 import { Option } from "../shared";
 import { Group } from "./model";
@@ -126,7 +125,7 @@ describe("Checklist Component - Grouped Layout", () => {
   it("answers are submitted in order they were supplied", async () => {
     const handleSubmit = jest.fn();
 
-    render(
+    const { user } = setup(
       <Checklist
         allRequired={false}
         description=""
@@ -136,11 +135,11 @@ describe("Checklist Component - Grouped Layout", () => {
       />
     );
 
-    await userEvent.click(screen.getByText("Section 1"));
-    await userEvent.click(screen.getByText("S1 Option1"));
-    await userEvent.click(screen.getByText("Section 2"));
-    await userEvent.click(screen.getByText("S2 Option2"));
-    await userEvent.click(screen.getByTestId("continue-button"));
+    await user.click(screen.getByText("Section 1"));
+    await user.click(screen.getByText("S1 Option1"));
+    await user.click(screen.getByText("Section 2"));
+    await user.click(screen.getByText("S2 Option2"));
+    await user.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalledWith({
       answers: ["S1_Option1", "S2_Option2"],
@@ -149,7 +148,7 @@ describe("Checklist Component - Grouped Layout", () => {
   it("recovers checkboxes state when clicking the back button", async () => {
     const handleSubmit = jest.fn();
 
-    render(
+    const { user } = setup(
       <Checklist
         allRequired={false}
         description=""
@@ -164,14 +163,14 @@ describe("Checklist Component - Grouped Layout", () => {
     expect(screen.queryAllByTestId("group-1-expanded")).toHaveLength(0);
     expect(screen.getByTestId("group-2-expanded")).toBeTruthy();
 
-    await userEvent.click(screen.getByTestId("continue-button"));
+    await user.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalledWith({
       answers: ["S1_Option1", "S3_Option1"],
     });
   });
   it("should not have any accessibility violations", async () => {
-    const { container } = render(
+    const { container } = setup(
       <Checklist
         allRequired={false}
         description=""
@@ -185,7 +184,7 @@ describe("Checklist Component - Grouped Layout", () => {
   it("should be navigable by keyboard", async () => {
     const handleSubmit = jest.fn();
 
-    const { container } = render(
+    const { user } = setup(
       <Checklist
         allRequired={false}
         description=""
@@ -202,37 +201,37 @@ describe("Checklist Component - Grouped Layout", () => {
       expect(element).toHaveAttribute("aria-expanded", "false");
     });
     // Tab gives focus to first section
-    await userEvent.tab();
+    await user.tab();
     expect(section1Button).toHaveFocus();
     // Tab jumps to second section
-    await userEvent.tab();
+    await user.tab();
     expect(section2Button).toHaveFocus();
     // Space opens second section
-    await userEvent.keyboard("[Space]");
+    await user.keyboard("[Space]");
     expect(section2Button).toHaveAttribute("aria-expanded", "true");
     // Tab goes to Section 2, Option 1
-    await userEvent.tab();
+    await user.tab();
     expect(screen.getByTestId("S2_Option1")).toHaveFocus();
     // Select option using keyboard
-    await userEvent.keyboard("[Space]");
+    await user.keyboard("[Space]");
     expect(screen.getByTestId("S2_Option1")).toBeChecked();
     // Tab to Section 2, Option 2
-    await userEvent.tab();
+    await user.tab();
     expect(screen.getByTestId("S2_Option2")).toHaveFocus();
     // Select option using keyboard
-    await userEvent.keyboard("[Space]");
+    await user.keyboard("[Space]");
     expect(screen.getByTestId("S2_Option2")).toBeChecked();
     // Tab to Section 3, and navigate through to "Continue" without selecting anything
-    await userEvent.tab();
+    await user.tab();
     expect(section3Button).toHaveFocus();
-    await userEvent.keyboard("[Space]");
+    await user.keyboard("[Space]");
     expect(section3Button).toHaveAttribute("aria-expanded", "true");
-    await userEvent.tab();
-    await userEvent.tab();
-    await userEvent.tab();
+    await user.tab();
+    await user.tab();
+    await user.tab();
     expect(screen.getByTestId("continue-button")).toHaveFocus();
     // Submit
-    await userEvent.keyboard("[Space]");
+    await user.keyboard("[Space]");
     expect(handleSubmit).toHaveBeenCalledWith({
       answers: ["S2_Option1", "S2_Option2"],
     });
@@ -244,7 +243,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
     it(`answers are submitted in order they were supplied (${ChecklistLayout[type]} layout)`, async () => {
       const handleSubmit = jest.fn();
 
-      render(
+      const { user } = setup(
         <Checklist
           allRequired={false}
           description=""
@@ -256,10 +255,10 @@ describe("Checklist Component - Basic & Images Layout", () => {
 
       expect(screen.getByRole("heading")).toHaveTextContent("home type?");
 
-      await userEvent.click(screen.getByText("Spaceship"));
-      await userEvent.click(screen.getByText("Flat"));
-      await userEvent.click(screen.getByText("House"));
-      await userEvent.click(screen.getByTestId("continue-button"));
+      await user.click(screen.getByText("Spaceship"));
+      await user.click(screen.getByText("Flat"));
+      await user.click(screen.getByText("House"));
+      await user.click(screen.getByTestId("continue-button"));
 
       // order matches the order of the options, not order they were clicked
       expect(handleSubmit).toHaveBeenCalledWith({
@@ -269,7 +268,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
     it(`recovers checkboxes state when clicking the back button (${ChecklistLayout[type]} layout)`, async () => {
       const handleSubmit = jest.fn();
 
-      render(
+      const { user } = setup(
         <Checklist
           allRequired={false}
           description=""
@@ -280,14 +279,14 @@ describe("Checklist Component - Basic & Images Layout", () => {
         />
       );
 
-      await userEvent.click(screen.getByTestId("continue-button"));
+      await user.click(screen.getByTestId("continue-button"));
 
       expect(handleSubmit).toHaveBeenCalledWith({
         answers: ["flat_id", "house_id"],
       });
     });
     it(`should not have any accessibility violations (${ChecklistLayout[type]} layout)`, async () => {
-      const { container } = render(
+      const { container } = setup(
         <Checklist
           allRequired={false}
           description=""
@@ -301,7 +300,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
     test(`Focus jumps from checkbox to checkbox (${ChecklistLayout[type]} layout)`, async () => {
       const handleSubmit = jest.fn();
 
-      render(
+      const { user } = setup(
         <Checklist
           allRequired={false}
           description=""
@@ -311,9 +310,9 @@ describe("Checklist Component - Basic & Images Layout", () => {
         />
       );
 
-      await userEvent.tab();
+      await user.tab();
       expect(screen.getByTestId("flat_id")).toHaveFocus();
-      await userEvent.tab();
+      await user.tab();
       expect(screen.getByTestId("caravan_id")).toHaveFocus();
     });
   });

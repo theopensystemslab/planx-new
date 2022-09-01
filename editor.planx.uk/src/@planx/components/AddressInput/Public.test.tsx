@@ -1,8 +1,7 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-import { axe } from "testUtils";
+import { axe, setup } from "testUtils";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { fillInFieldsUsingLabel } from "../shared/testHelpers";
@@ -11,7 +10,9 @@ import AddressInput from "./Public";
 test("submits an address", async () => {
   const handleSubmit = jest.fn();
 
-  render(<AddressInput handleSubmit={handleSubmit} title="" fn="foo" />);
+  const { user } = setup(
+    <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />
+  );
 
   await fillInFieldsUsingLabel({
     "Address line 1": "Flat 1",
@@ -22,7 +23,7 @@ test("submits an address", async () => {
     "Country (optional)": "United Kingdom",
   });
 
-  await userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -42,7 +43,7 @@ test("recovers previously submitted text when clicking the back button", async (
   const handleSubmit = jest.fn();
   const componentId = uniqueId();
 
-  render(
+  const { user } = setup(
     <AddressInput
       handleSubmit={handleSubmit}
       title=""
@@ -65,7 +66,7 @@ test("recovers previously submitted text when clicking the back button", async (
     "Address line 2 (optional)": "221b Baker St",
   });
 
-  await userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -85,7 +86,7 @@ test("recovers previously submitted text when clicking the back button even if a
   const componentId = uniqueId();
   const dataField = "data-field";
 
-  render(
+  const { user } = setup(
     <AddressInput
       handleSubmit={handleSubmit}
       title=""
@@ -109,7 +110,7 @@ test("recovers previously submitted text when clicking the back button even if a
     "Address line 2 (optional)": "221b Baker St",
   });
 
-  await userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -125,7 +126,7 @@ test("recovers previously submitted text when clicking the back button even if a
 });
 
 it("should not have any accessibility violations on initial load", async () => {
-  const { container } = render(<AddressInput title="title" />);
+  const { container } = setup(<AddressInput title="title" />);
   await fillInFieldsUsingLabel({
     "Address line 1": "Flat 1",
     "Address line 2 (optional)": "221b Baker St",
@@ -139,7 +140,7 @@ it("should not have any accessibility violations on initial load", async () => {
 });
 
 it("should not have any accessibility violations whilst in the error state", async () => {
-  const { container } = render(<AddressInput title="title" id="testId" />);
+  const { container, user } = setup(<AddressInput title="title" id="testId" />);
 
   const requiredAddressElements = ["line1", "town", "postcode"];
 
@@ -149,7 +150,7 @@ it("should not have any accessibility violations whilst in the error state", asy
   });
 
   // This should trigger multiple ErrorWrappers to display as the form is empty
-  await userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByTestId("continue-button"));
 
   requiredAddressElements.forEach((el) => {
     const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId-${el}`);

@@ -1,11 +1,10 @@
-import { render } from "@testing-library/react";
 import React from "react";
-import { axe } from "testUtils";
+import { axe, setup } from "testUtils";
 
 import ConfirmationComponent from "./Public";
 
 it("should not have any accessibility violations", async () => {
-  const { container } = render(
+  const { container } = setup(
     <ConfirmationComponent
       heading="heading"
       description="description"

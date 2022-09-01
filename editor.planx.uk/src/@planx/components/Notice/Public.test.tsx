@@ -1,14 +1,13 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/react";
 import React from "react";
-import { axe } from "testUtils";
+import { axe, setup } from "testUtils";
 
 import Notice from "./Public";
 
 test("renders correctly", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <Notice
       title="hello"
       description="world"
@@ -17,13 +16,13 @@ test("renders correctly", async () => {
     />
   );
 
-  await userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalled();
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = render(
+  const { container } = setup(
     <Notice title="hello" description="world" color="red" />
   );
   const results = await axe(container);
