@@ -14,7 +14,7 @@ import { getCookie, setCookie } from "lib/cookie";
 import ErrorPage from "pages/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analyticsProvider";
 import React, { Suspense, useEffect } from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
 import HelmetProvider from "react-navi-helmet-async";
 import { ToastContainer } from "react-toastify";
@@ -24,7 +24,8 @@ import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import globalTheme from "./theme";
 
-const rootEl = document.getElementById("root") as HTMLElement;
+const container = document.getElementById("root") as HTMLElement;
+const root = createRoot(container);
 
 if (!window.customElements.get("my-map")) {
   window.customElements.define("my-map", MyMap);
@@ -96,7 +97,7 @@ const Layout: React.FC<{
   );
 };
 
-render(
+root.render(
   <>
     <ApolloProvider client={client}>
       <AnalyticsProvider>
@@ -113,6 +114,5 @@ render(
       </AnalyticsProvider>
     </ApolloProvider>
     <ToastContainer icon={false} theme="colored" />
-  </>,
-  rootEl
+  </>
 );

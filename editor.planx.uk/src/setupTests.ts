@@ -5,3 +5,6 @@
 import "@testing-library/jest-dom";
 import "jest-localstorage-mock";
 import "jest-axe/extend-expect";
+
+// @ts-ignore
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
