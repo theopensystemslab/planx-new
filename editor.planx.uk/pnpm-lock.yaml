@@ -151,7 +151,6 @@ specifiers:
   tsconfig-paths-webpack-plugin: ^4.0.0
   typescript: ^4.7.4
   uuid: ^8.3.2
-  wait-for-expect: ^3.0.2
   wkt: ^0.1.1
   yup: ^0.32.11
   zustand: ^4.1.1
@@ -271,7 +270,6 @@ devDependencies:
   stream-browserify: 3.0.0
   tsconfig-paths-webpack-plugin: 4.0.0
   typescript: 4.7.4
-  wait-for-expect: 3.0.2
 
 packages:
 
@@ -18155,10 +18153,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       xml-name-validator: 3.0.0
-
-  /wait-for-expect/3.0.2:
-    resolution: {integrity: sha512-cfS1+DZxuav1aBYbaO/kE06EOS8yRw7qOFoD3XtjTkYvCvh3zUvNST8DXK/nPaeqIzIv3P3kL3lRJn8iwOiSag==}
-    dev: true
 
   /walker/1.0.7:
     resolution: {integrity: sha512-cF4je9Fgt6sj1PKfuFt9jpQPeHosM+Ryma/hfY9U7uXGKM7pJCsF0v2r55o+Il54+i77SyYWetB4tD1dEygRkw==}
