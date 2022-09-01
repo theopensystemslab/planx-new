@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import axe from "axe-helper";
 import React from "react";
 import * as ReactNavi from "react-navi";
+import { axe } from "testUtils";
 import { Team } from "types";
 
 import Header, { HeaderVariant } from "./Header";

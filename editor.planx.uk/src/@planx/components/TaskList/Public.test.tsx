@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
 import React from "react";
+import { axe } from "testUtils";
 
 import TaskList from "./Public";
 

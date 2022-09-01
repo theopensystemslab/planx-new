@@ -1,10 +1,10 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
 import React from "react";
 import * as ReactNavi from "react-navi";
 import * as SWR from "swr";
+import { axe } from "testUtils";
 
 import FindProperty from "./";
 import findAddressReturnMock from "./mocks/findAddressReturnMock";
@@ -52,7 +52,7 @@ test("renders correctly", async () => {
   const autocomplete = screen.getByTestId("address-autocomplete-web-component");
   expect(autocomplete).toBeInTheDocument();
   expect(autocomplete.getAttribute("postcode")).toEqual("SE5 0HU");
-  expect(autocomplete.getAttribute("intialAddress")).toBeFalsy();
+  expect(autocomplete.getAttribute("initialAddress")).toBeFalsy();
 
   // expect continue to be disabled because an address has not been selected
   expect(screen.getByTestId("continue-button")).toBeDisabled();

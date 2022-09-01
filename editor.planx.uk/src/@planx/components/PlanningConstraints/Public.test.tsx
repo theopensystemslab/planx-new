@@ -1,10 +1,10 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
 import React from "react";
 import * as ReactNavi from "react-navi";
 import * as SWR from "swr";
+import { axe } from "testUtils";
 
 import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
 import teamMock from "./mocks/teamMock";

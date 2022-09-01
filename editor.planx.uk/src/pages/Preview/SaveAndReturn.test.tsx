@@ -1,9 +1,9 @@
 import Button from "@material-ui/core/Button";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
 import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { axe } from "testUtils";
 
 import SaveAndReturn, { ConfirmEmail } from "./SaveAndReturn";
 

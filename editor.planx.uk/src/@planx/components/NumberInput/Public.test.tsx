@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
 import { uniqueId } from "lodash";
 import React from "react";
+import { axe } from "testUtils";
 
 import NumberInput from "./Public";
 
