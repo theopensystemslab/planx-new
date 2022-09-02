@@ -6,7 +6,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import Image from "@material-ui/icons/Image";
 import { uploadFile } from "api/upload";
 import React, { useCallback, useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { FileWithPath, useDropzone } from "react-dropzone";
 
 export interface Props {
   onChange?: (image: string) => void;
@@ -44,7 +44,7 @@ export default function FileUpload(props: Props): FCReturn {
   }, [status, setStatus]);
 
   const onDrop = useCallback(
-    (files) => {
+    (files: FileWithPath[]) => {
       const file: File = files[0];
       if (!file) {
         return;

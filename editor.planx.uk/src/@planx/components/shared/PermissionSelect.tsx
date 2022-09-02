@@ -23,7 +23,7 @@ const PermissionSelect: React.FC<SelectInputProps> = (props) => {
 
   return (
     <SelectInput {...props}>
-      {props.value && <MenuItem value="">Remove Flag</MenuItem>}
+      {Boolean(props.value) && <MenuItem value="">Remove Flag</MenuItem>}
       {flagMenuItems}
     </SelectInput>
   );

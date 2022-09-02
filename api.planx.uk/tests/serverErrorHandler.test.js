@@ -20,7 +20,7 @@ describe("bad requests", () => {
   test(`app.get("/pay/:localAuthority/:paymentId")`, (done) => {
     nock("https://publicapi.payments.service.gov.uk")
       .get("/v1/payments/1")
-      .reply(400, { payment_id: 123, amount: 0, state: "paid" });
+      .reply(400, { payment_id: 123, amount: 0, state: "paid", payment_provider: "sandbox" });
 
     get("/pay/wrong/1").expect(400, done);
   });

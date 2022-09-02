@@ -1,9 +1,13 @@
+import { Session } from "types";
+
 import {
   lowcalStorage,
   stringifyWithRootKeysSortedAlphabetically,
 } from "./lowcalStorage";
 
-export const getLocalFlow = async (sessionId: string) => {
+export const getLocalFlow = async (
+  sessionId: string
+): Promise<Session | undefined> => {
   const entry = `session:${sessionId}`;
   try {
     const state = await lowcalStorage.getItem(entry);
@@ -14,13 +18,10 @@ export const getLocalFlow = async (sessionId: string) => {
   }
 };
 
-export const setLocalFlow = async (
-  sessionId: string,
-  args: { [key: string]: any }
-) => {
+export const setLocalFlow = async (sessionId: string, session: Session) => {
   await lowcalStorage.setItem(
     `session:${sessionId}`,
-    stringifyWithRootKeysSortedAlphabetically(args)
+    stringifyWithRootKeysSortedAlphabetically(session) || ""
   );
 };
 

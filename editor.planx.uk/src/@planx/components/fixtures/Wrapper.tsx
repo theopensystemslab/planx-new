@@ -55,7 +55,7 @@ function Wrapper<Type, Data, UserData>(props: Props<Type, Data, UserData>) {
   );
 }
 
-type ErrorProps = { hasInitData: boolean };
+type ErrorProps = { hasInitData: boolean; children: React.ReactNode };
 type ErrorState = { hasError: boolean };
 class ErrorBoundary extends React.Component<ErrorProps, ErrorState> {
   state: ErrorState = {

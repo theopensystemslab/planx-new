@@ -18,7 +18,8 @@ import {
   responseInterceptor,
   fixRequestBody,
 } from "http-proxy-middleware";
-import helmet from 'helmet';
+import helmet from "helmet";
+import SlackNotify from "slack-notify";
 
 import { signS3Upload } from "./s3";
 import { locationSearch } from "./gis/index";
@@ -38,6 +39,7 @@ import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 import { sendToBOPS } from "./send/bops";
 import { createSendEvents } from "./send/createSendEvents";
 import { sendToUniform } from "./send/uniform";
+import { sendSlackNotification } from "./webhooks/sendNotifications";
 
 const router = express.Router();
 
@@ -298,6 +300,8 @@ app.post("/pay/:localAuthority", (req, res, next) => {
   }
 });
 
+assert(process.env.SLACK_WEBHOOK_URL);
+
 // used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
 // fetches the status of the payment
 app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
@@ -308,6 +312,18 @@ app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
       selfHandleResponse: true,
       onProxyRes: responseInterceptor(async (responseBuffer) => {
         const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+
+        // if it's a prod payment, notify #planx-notifcations so we can monitor for subsequent submissions
+        if (govUkResponse?.payment_provider !== "sandbox") {
+          try {
+            const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL);
+            const payMessage = `:coin: New GOV Pay payment *${govUkResponse.payment_id}* [${req.params.localAuthority}]`;
+            await slack.send(payMessage);
+            console.log("Payment notification posted to Slack");
+          } catch (error) {
+            return next(error);
+          }
+        }
 
         // only return payment status, filter out PII
         return JSON.stringify({
@@ -537,6 +553,7 @@ app.use("/webhooks/hasura", useHasuraAuth)
 app.post("/webhooks/hasura/delete-expired-sessions", hardDeleteSessions);
 app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
+app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
 
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()

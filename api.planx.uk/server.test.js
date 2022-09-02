@@ -118,7 +118,7 @@ describe("fetching status of a GOV.UK payment", () => {
     total_amount: 4000,
     fee: 200,
     net_amount: 3800,
-    payment_provider: "worldpay",
+    payment_provider: "sandbox", // don't trigger a Slack notification
     provider_id: "10987654321",
     return_url: "https://your.service.gov.uk/completed",
   };
