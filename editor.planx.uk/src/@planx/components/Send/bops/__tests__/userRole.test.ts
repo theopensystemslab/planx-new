@@ -1,7 +1,7 @@
 import { Store } from "pages/FlowEditor/lib/store";
 
 import { USER_ROLES } from "../../model";
-import { getParams } from "..";
+import { getBOPSParams } from "..";
 
 // https://i.imgur.com/KhUnUte.png
 const flow: Store.flow = {
@@ -76,7 +76,12 @@ describe("when user.role =", () => {
         },
       };
 
-      const result = getParams(breadcrumbs, flow, passport, "FAKE-SESSION-ID");
+      const result = getBOPSParams(
+        breadcrumbs,
+        flow,
+        passport,
+        "FAKE-SESSION-ID"
+      );
 
       expect(result.user_role).toEqual(bopsValue);
     });
