@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
 import { axe, setup } from "testUtils";
@@ -226,7 +226,7 @@ it("should not have any accessibility violations whilst in the error state", asy
   });
 
   // Main ErrorWrapper does display, and is in error state
-  expect(mainErrorMessage).not.toBeEmptyDOMElement();
+  await waitFor(() => expect(mainErrorMessage).not.toBeEmptyDOMElement());
   const [mainErrorWrapper, ..._rest] = screen.getAllByTestId("error-wrapper");
   expect(mainErrorWrapper).toHaveAttribute("role", "status");
 

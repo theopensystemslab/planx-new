@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
 import { axe, setup } from "testUtils";
@@ -152,10 +152,12 @@ it("should not have any accessibility violations whilst in the error state", asy
   // This should trigger multiple ErrorWrappers to display as the form is empty
   await user.click(screen.getByTestId("continue-button"));
 
-  requiredAddressElements.forEach((el) => {
-    const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId-${el}`);
-    expect(errorMessage).not.toBeEmptyDOMElement();
-  });
+  for (const el of requiredAddressElements) {
+    const errorMessage = await screen.findByTestId(
+      `${ERROR_MESSAGE}-testId-${el}`
+    );
+    await waitFor(() => expect(errorMessage).not.toBeEmptyDOMElement());
+  }
 
   const results = await axe(container);
   expect(results).toHaveNoViolations();
