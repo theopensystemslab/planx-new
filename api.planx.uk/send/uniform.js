@@ -234,7 +234,8 @@ async function authenticate(clientId, clientSecret) {
  * @returns {Promise} - idox-generated submissionId
  */
 async function createSubmission(token, organisation, organisationId, sessionId = "TEST") {
-  const createSubmissionEndpoint = process.env.UNIFORM_SUBMISSION_URL + "/secure/submission"
+  const createSubmissionEndpoint = process.env.UNIFORM_SUBMISSION_URL + "/secure/submission";
+  const isStaging = process.env.UNIFORM_SUBMISSION_URL.includes("staging");
 
   const createSubmissionOptions = {
     method: "POST",
@@ -248,7 +249,7 @@ async function createSubmission(token, organisation, organisationId, sessionId =
       "organisation": organisation,
       "organisationId": organisationId,
       "submissionReference": sessionId,
-      "description": "Test insert for DLUHC",
+      "description": isStaging ? "Staging submission from PlanX" : "Production submission from PlanX",
       "submissionProcessorType": "API"
     }),
     redirect: "follow",
