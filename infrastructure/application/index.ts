@@ -39,6 +39,10 @@ const CUSTOM_DOMAINS =
           domain: "planningservices.lambeth.gov.uk",
           name: "lambeth",
         },
+        {
+          domain: "planningservices.doncaster.gov.uk",
+          name: "doncaster",
+        },
       ]
     : [];
 
