@@ -1,10 +1,6 @@
-import { GraphQLClient } from "graphql-request";
+import { adminGraphQLClient } from "./hasura";
 
-const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
-  headers: {
-    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
-  },
-});
+const client = adminGraphQLClient;
 
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id) => {
