@@ -90,4 +90,54 @@ const dataMerged = async (id, ob = {}) => {
   return ob;
 };
 
-export { getFlowData, getMostRecentPublishedFlow, getPublishedFlowByDate, dataMerged };
+/**
+ * For any node with edges, recursively find all of its' children nodes and return them as their own flow-like data structure
+ * @param {object} node
+ * @param {object} originalFlow - the original parent flow data
+ * @param {object} newFlow - the new flow data
+ * @returns {object} - the new flow data with child nodes included
+ */
+ const getChildren = (node, originalFlow, newFlow) => {
+  if (node.edges) {
+    node.edges.forEach((edgeId) => {
+      if (!Object.keys(newFlow).includes(edgeId)) {
+        newFlow[edgeId] = originalFlow[edgeId];
+        getChildren(originalFlow[edgeId], originalFlow, newFlow);
+      }
+    });
+  }
+
+  return newFlow;
+};
+
+/**
+ * For a given flow, make it unique by renaming its' node ids (replace last n characters) while preserving its' content
+ * @param {object} flowData
+ * @param {string} replaceValue
+ * @returns {object} flowData with updated node ids
+ */
+ const makeUniqueFlow = (flowData, replaceValue) => {
+  const charactersToReplace = replaceValue.length;
+
+  Object.keys(flowData).forEach((node) => {
+    // if this node has edges, rename them (includes _root.edges)
+    if (flowData[node]["edges"]) {
+      const newEdges = flowData[node]["edges"].map(
+        (edge) => edge.slice(0, -charactersToReplace) + replaceValue
+      );
+      delete flowData[node]["edges"];
+      flowData[node]["edges"] = newEdges;
+    }
+
+    // rename this top-level node if it's not _root
+    if (node !== "_root") {
+      const newNodeId = node.slice(0, -charactersToReplace) + replaceValue;
+      flowData[newNodeId] = flowData[node];
+      delete flowData[node];
+    }
+  });
+
+  return flowData;
+};
+
+export { getFlowData, getMostRecentPublishedFlow, getPublishedFlowByDate, dataMerged, getChildren, makeUniqueFlow };

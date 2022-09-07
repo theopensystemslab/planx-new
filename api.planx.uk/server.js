@@ -25,7 +25,7 @@ import { signS3Upload } from "./s3";
 import { locationSearch } from "./gis/index";
 import { diffFlow, publishFlow } from "./editor/publish";
 import { findAndReplaceInFlow } from "./editor/findReplace";
-import { copyPortalAsFlow } from "./editor/portals";
+import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
 import { resumeApplication, validateSession, sendSaveAndReturnEmail } from "./saveAndReturn"
 import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
 import { useHasuraAuth, useSendEmailAuth } from "./auth";

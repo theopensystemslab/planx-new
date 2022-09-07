@@ -1,7 +1,5 @@
-import { adminGraphQLClient } from "../hasura";
+import { adminGraphQLClient as client } from "../hasura";
 import { getFlowData } from "../helpers";
-
-const client = adminGraphQLClient;
 
 /**
  * Find and return the node ids and specific data properties that match a given search term,

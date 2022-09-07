@@ -1,9 +1,7 @@
 import * as jsondiffpatch from "jsondiffpatch";
 
-import { adminGraphQLClient } from "../hasura";
+import { adminGraphQLClient as client } from "../hasura";
 import { dataMerged, getMostRecentPublishedFlow } from "../helpers";
-
-const client = adminGraphQLClient;
 
 const diffFlow = async (req, res, next) => {
   if (!req.user?.sub)
