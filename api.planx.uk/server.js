@@ -23,8 +23,9 @@ import SlackNotify from "slack-notify";
 
 import { signS3Upload } from "./s3";
 import { locationSearch } from "./gis/index";
-import { diffFlow, publishFlow } from "./publish";
-import { findAndReplaceInFlow } from "./findReplace";
+import { diffFlow, publishFlow } from "./editor/publish";
+import { findAndReplaceInFlow } from "./editor/findReplace";
+import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
 import { resumeApplication, validateSession, sendSaveAndReturnEmail } from "./saveAndReturn"
 import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
 import { useHasuraAuth, useSendEmailAuth } from "./auth";
@@ -424,6 +425,8 @@ app.post("/flows/:flowId/publish", useJWT, publishFlow);
 
 // use with query params `find` (required) and `replace` (optional)
 app.post("/flows/:flowId/search", useJWT, findAndReplaceInFlow);
+
+app.get("/flows/:flowId/copy-portal/:portalNodeId", useJWT, copyPortalAsFlow);
 
 // unauthenticated because accessing flow schema only, no user data
 app.get("/flows/:flowId/download-schema", async (req, res, next) => {

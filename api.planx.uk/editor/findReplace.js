@@ -1,12 +1,5 @@
-import { GraphQLClient } from "graphql-request";
-
-import { getFlowData } from "./helpers";
-
-const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
-  headers: {
-    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
-  },
-});
+import { adminGraphQLClient as client } from "../hasura";
+import { getFlowData } from "../helpers";
 
 /**
  * Find and return the node ids and specific data properties that match a given search term,
