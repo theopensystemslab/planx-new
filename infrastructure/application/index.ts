@@ -155,6 +155,10 @@ export = async () => {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
+      logGroup: new aws.cloudwatch.LogGroup("metabase-log", {
+        namePrefix: "metabase",
+        retentionInDays: 0,
+      }),
       container: {
         // if changing, also check docker-compose.yml
         image: "metabase/metabase:v0.43.4",
@@ -287,6 +291,10 @@ export = async () => {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
+      logGroup: new aws.cloudwatch.LogGroup("api-log", {
+        namePrefix: "api",
+        retentionInDays: 0,
+      }),
       container: {
         image: repo.buildAndPushImage({
           context: "../../api.planx.uk",
@@ -436,6 +444,10 @@ export = async () => {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
+      logGroup: new aws.cloudwatch.LogGroup("sharedb-log", {
+        namePrefix: "sharedb",
+        retentionInDays: 0,
+      }),
       container: {
         image: repo.buildAndPushImage("../../sharedb.planx.uk"),
         memory: 512 /*MB*/,
