@@ -1,0 +1,19 @@
+.ProseMirror {
+  padding: 10px;
+  background-color: #fff;
+}
+
+.ProseMirror p {
+  margin: 0;
+}
+
+.ProseMirror a {
+  color: currentColor;
+}
+
+.bubble-menu {
+  background: #fff;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+}
