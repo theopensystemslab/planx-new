@@ -1,7 +1,8 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { act } from "react-dom/test-utils";
 import { setup } from "testUtils";
 
 import DateInputComponent from "./Editor";
@@ -50,7 +51,8 @@ describe("DateInputComponent - Editor Modal", () => {
   });
 
   it("does not show errors if min is less than max", async () => {
-    const handleSubmit = jest.fn();
+    const promise = Promise.resolve();
+    const handleSubmit = jest.fn(() => promise);
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <DateInputComponent id="test" handleSubmit={handleSubmit} />
@@ -76,10 +78,12 @@ describe("DateInputComponent - Editor Modal", () => {
 
     expect(screen.queryByText(minError)).toBeNull();
     expect(screen.queryByText(maxError)).toBeNull();
+    await act(async () => await promise);
   });
 
   it("does not show an error if user deletes a date", async () => {
-    const handleSubmit = jest.fn();
+    const promise = Promise.resolve();
+    const handleSubmit = jest.fn(() => promise);
     const node = { data: { min: "1900-02-13", max: "2000-12-14" } };
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
@@ -93,21 +97,12 @@ describe("DateInputComponent - Editor Modal", () => {
 
     expect(screen.queryAllByText(invalidError)).toHaveLength(0);
 
-    for await (const el of [
-      minDay,
-      maxDay,
-      minMonth,
-      maxMonth,
-      minYear,
-      maxYear,
-    ]) {
-      await await user.clear(el);
+    for (const el of [minDay, maxDay, minMonth, maxMonth, minYear, maxYear]) {
+      await user.clear(el);
     }
-
     fireEvent.submit(screen.getByRole("form"));
 
-    await waitFor(() => {
-      expect(screen.queryAllByText(invalidError)).toHaveLength(0);
-    });
+    expect(screen.queryAllByText(invalidError)).toHaveLength(0);
+    await act(async () => await promise);
   });
 });
