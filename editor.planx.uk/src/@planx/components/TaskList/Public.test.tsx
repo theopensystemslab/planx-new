@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import React from "react";
 import { axe, setup } from "testUtils";
 
@@ -18,9 +18,7 @@ test("renders correctly", async () => {
   );
   await user.click(screen.getByTestId("continue-button"));
 
-  await waitFor(() => {
-    expect(handleSubmit).toHaveBeenCalled();
-  });
+  expect(handleSubmit).toHaveBeenCalledTimes(1);
 });
 
 it("should not have any accessibility violations", async () => {
