@@ -157,7 +157,7 @@ export = async () => {
     taskDefinitionArgs: {
       logGroup: new aws.cloudwatch.LogGroup("metabase", {
         namePrefix: "metabase",
-        retentionInDays: 28,
+        retentionInDays: 30,
       }),
       container: {
         // if changing, also check docker-compose.yml
@@ -293,7 +293,7 @@ export = async () => {
     taskDefinitionArgs: {
       logGroup: new aws.cloudwatch.LogGroup("api", {
         namePrefix: "api",
-        retentionInDays: 28,
+        retentionInDays: 30,
       }),
       container: {
         image: repo.buildAndPushImage({
@@ -446,7 +446,7 @@ export = async () => {
     taskDefinitionArgs: {
       logGroup: new aws.cloudwatch.LogGroup("sharedb", {
         namePrefix: "sharedb",
-        retentionInDays: 28,
+        retentionInDays: 30,
       }),
       container: {
         image: repo.buildAndPushImage("../../sharedb.planx.uk"),
