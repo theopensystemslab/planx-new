@@ -27,7 +27,7 @@ export const setup = (
 });
 
 /**
- * Mock the MUI Fade component
+ * Mock the MUI Fade component used in @planx/components/shared/Preview/Card.tsx
  * Required as this frequently updates following the final "expect()" call of a test,
  * leading to multiple "an update was not wrapped in act(...)" warnings
  * Docs: https://testing-library.com/docs/example-react-transition-group/
