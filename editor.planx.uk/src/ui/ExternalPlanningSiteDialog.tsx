@@ -105,6 +105,7 @@ export default function ExternalPlanningSiteDialog({
               href={settings?.externalPlanningSite?.url}
               target="_blank"
               className={classes.externalLink}
+              underline="hover"
             >
               <Button>
                 Go to {settings?.externalPlanningSite?.name}

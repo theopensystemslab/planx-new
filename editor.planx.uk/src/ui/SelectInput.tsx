@@ -72,6 +72,7 @@ export default function SelectInput({
   const classes = useClasses();
   return (
     <Select
+      variant="standard"
       value={value}
       className={classes.root}
       // TODO: Check this out!
