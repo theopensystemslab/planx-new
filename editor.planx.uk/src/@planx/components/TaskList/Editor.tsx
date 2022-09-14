@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import type { Task, TaskList } from "@planx/components/TaskList/model";
 import { parseTaskList } from "@planx/components/TaskList/model";
 import { TYPES } from "@planx/components/types";

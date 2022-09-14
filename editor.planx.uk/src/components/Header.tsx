@@ -1,16 +1,16 @@
-import AppBar from "@material-ui/core/AppBar";
-import Avatar from "@material-ui/core/Avatar";
-import Box from "@material-ui/core/Box";
-import ButtonBase from "@material-ui/core/ButtonBase";
-import IconButton from "@material-ui/core/IconButton";
-import MenuItem from "@material-ui/core/MenuItem";
-import Paper from "@material-ui/core/Paper";
-import Popover from "@material-ui/core/Popover";
-import { makeStyles } from "@material-ui/core/styles";
-import Toolbar from "@material-ui/core/Toolbar";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
-import MenuOpenIcon from "@material-ui/icons/MenuOpen";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import ButtonBase from "@mui/material/ButtonBase";
+import IconButton from "@mui/material/IconButton";
+import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
+import Popover from "@mui/material/Popover";
+import Toolbar from "@mui/material/Toolbar";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import makeStyles from "@mui/styles/makeStyles";
 import { Route } from "navi";
 import React, { useRef, useState } from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
@@ -212,6 +212,7 @@ const PublicToolbar: React.FC<{
           color="secondary"
           onClick={handleRestart}
           aria-label="Restart Application"
+          size="large"
         >
           <Reset color="secondary" />
         </IconButton>
@@ -271,6 +272,7 @@ const EditorToolbar: React.FC<{
                   color="inherit"
                   onClick={togglePreview}
                   aria-label="Toggle Preview"
+                  size="large"
                 >
                   <MenuOpenIcon />
                 </IconButton>
@@ -283,6 +285,7 @@ const EditorToolbar: React.FC<{
                 color="inherit"
                 aria-label="Toggle Menu"
                 onClick={handleMenuToggle}
+                size="large"
               >
                 <KeyboardArrowDown />
               </IconButton>
@@ -308,9 +311,9 @@ const EditorToolbar: React.FC<{
       >
         <Paper className={classes.paper}>
           {/*
-            <MenuItem onClick={() => handleClick("/")}>Service settings</MenuItem>
-            <MenuItem onClick={() => handleClick("/")}>My dashboard</MenuItem>
-             */}
+          <MenuItem onClick={() => handleClick("/")}>Service settings</MenuItem>
+          <MenuItem onClick={() => handleClick("/")}>My dashboard</MenuItem>
+           */}
 
           {/* only show flow settings link if inside a flow route  */}
           {route.data.flow && (
@@ -344,7 +347,7 @@ const Header: React.FC<{
   variant: HeaderVariant;
 }> = ({ bgcolor = "#2c2c2c", team, handleRestart, variant }) => {
   const classes = useStyles();
-  const headerRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const route = useCurrentRoute();
 
   return (

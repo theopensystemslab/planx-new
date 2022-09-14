@@ -1,5 +1,5 @@
-import { makeStyles } from "@material-ui/core/styles";
-import { visuallyHidden } from "@material-ui/utils";
+import makeStyles from "@mui/styles/makeStyles";
+import { visuallyHidden } from "@mui/utils";
 import {
   DateInput,
   paddedDate,

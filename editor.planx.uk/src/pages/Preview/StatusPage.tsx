@@ -1,9 +1,9 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import ButtonBase from "@material-ui/core/ButtonBase";
-import { makeStyles } from "@material-ui/core/styles";
-import { useTheme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import ButtonBase from "@mui/material/ButtonBase";
+import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -69,12 +69,12 @@ const StatusPage: React.FC<Props> = ({
             background: theme.palette.primary.main,
             text: theme.palette.primary.contrastText,
           }}
-        > 
-        { bannerText &&
-          <Box mt={4}>
-            <Typography>{bannerText}</Typography>
-          </Box>
-          }
+        >
+          {bannerText && (
+            <Box mt={4}>
+              <Typography>{bannerText}</Typography>
+            </Box>
+          )}
         </Banner>
       </Box>
       <Card>

@@ -1,7 +1,7 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import Delete from "@material-ui/icons/Delete";
+import Delete from "@mui/icons-material/Delete";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import { useFormik } from "formik";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
@@ -172,6 +172,7 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                           remove(groupIndex, 1, formik.values.groupedOptions)
                         );
                       }}
+                      size="large"
                     >
                       <Delete />
                     </IconButton>

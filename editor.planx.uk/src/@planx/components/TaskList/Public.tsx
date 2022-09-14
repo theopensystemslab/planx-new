@@ -1,4 +1,4 @@
-import Container from "@material-ui/core/Container";
+import Container from "@mui/material/Container";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { TaskList } from "@planx/components/TaskList/model";

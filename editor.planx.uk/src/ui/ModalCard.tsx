@@ -1,7 +1,7 @@
-import Box from "@material-ui/core/Box";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import Close from "@material-ui/icons/CloseOutlined";
+import Close from "@mui/icons-material/CloseOutlined";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import makeStyles from "@mui/styles/makeStyles";
 import React, { ReactNode } from "react";
 
 const useClasses = makeStyles({
@@ -31,6 +31,7 @@ export default function ModalCard({
         className={classes.close}
         onClick={() => console.log("close")}
         aria-label="Close"
+        size="large"
       >
         <Close />
       </IconButton>

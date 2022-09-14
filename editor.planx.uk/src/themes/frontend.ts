@@ -1,8 +1,8 @@
-// eslint-disable-next-line
-import { PaletteOptions } from "@material-ui/core/styles/createPalette";
+import { PaletteOptions } from "@mui/material/styles";
 
+// TODO: This looks unused?
 export const darkPalette: PaletteOptions = {
-  type: "dark",
+  mode: "dark",
   primary: {
     main: "#fff",
   },
@@ -17,7 +17,7 @@ export const darkPalette: PaletteOptions = {
 };
 
 export const lightPalette: PaletteOptions = {
-  type: "light",
+  mode: "light",
   primary: {
     main: "#000",
   },

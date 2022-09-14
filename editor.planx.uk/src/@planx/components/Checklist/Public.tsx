@@ -1,5 +1,5 @@
-import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import type { Checklist, Group } from "@planx/components/Checklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";

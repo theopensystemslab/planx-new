@@ -1,7 +1,7 @@
-import Grid from "@material-ui/core/Grid";
-import { useTheme } from "@material-ui/core/styles";
-import { makeStyles } from "@material-ui/core/styles";
-import { visuallyHidden } from "@material-ui/utils";
+import Grid from "@mui/material/Grid";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
+import { visuallyHidden } from "@mui/utils";
 import DecisionButton from "@planx/components/shared/Buttons/DecisionButton";
 import DescriptionButton from "@planx/components/shared/Buttons/DescriptionButton";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";

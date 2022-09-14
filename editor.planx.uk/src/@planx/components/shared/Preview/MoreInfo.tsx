@@ -1,7 +1,7 @@
-import Drawer from "@material-ui/core/Drawer";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from "@mui/icons-material/Close";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import React from "react";
 
@@ -80,6 +80,7 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => {
           role="button"
           title="Close panel"
           aria-label="Close panel"
+          size="large"
         >
           <CloseIcon />
         </IconButton>

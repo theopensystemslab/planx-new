@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import MoreVert from "@material-ui/icons/MoreVert";
+import MoreVert from "@mui/icons-material/MoreVert";
 import classNames from "classnames";
 import gql from "graphql-tag";
 import { useStore } from "pages/FlowEditor/lib/store";

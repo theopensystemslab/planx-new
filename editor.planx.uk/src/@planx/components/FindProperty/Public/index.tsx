@@ -1,9 +1,9 @@
 import "./map.css";
 
 import { gql, useQuery } from "@apollo/client";
-import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
-import { visuallyHidden } from "@material-ui/utils";
+import Box from "@mui/material/Box";
+import makeStyles from "@mui/styles/makeStyles";
+import { visuallyHidden } from "@mui/utils";
 import {
   DESCRIPTION_TEXT,
   ERROR_MESSAGE,

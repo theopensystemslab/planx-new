@@ -1,6 +1,6 @@
-import IconButton from "@material-ui/core/IconButton";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
 import React from "react";
 
 export interface Props {
@@ -17,6 +17,7 @@ export default function VisibilityToggle(props: Props): FCReturn {
       onClick={() => toggle()}
       style={{ height: 46 }}
       aria-label="Toggle visibility"
+      size="large"
     >
       {!props.visible ? <Visibility /> : <VisibilityOff />}
     </IconButton>

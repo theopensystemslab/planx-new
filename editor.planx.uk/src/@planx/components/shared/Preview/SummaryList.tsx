@@ -1,7 +1,7 @@
-import ButtonBase from "@material-ui/core/ButtonBase";
-import Link from "@material-ui/core/Link";
-import { makeStyles } from "@material-ui/core/styles";
-import { visuallyHidden } from "@material-ui/utils";
+import ButtonBase from "@mui/material/ButtonBase";
+import Link from "@mui/material/Link";
+import makeStyles from "@mui/styles/makeStyles";
+import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";

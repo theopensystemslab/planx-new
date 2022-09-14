@@ -1,6 +1,6 @@
-import ButtonBase from "@material-ui/core/ButtonBase";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import ButtonBase from "@mui/material/ButtonBase";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import React, { useState } from "react";
 import { ChromePicker } from "react-color";
@@ -21,7 +21,7 @@ const useClasses = makeStyles((theme) => ({
   },
   inline: {
     height: 50,
-    padding: `${theme.spacing(2)}px 0`,
+    padding: `${theme.spacing(2)} 0`,
     "& $popover": {
       top: "calc(100% - 4px)",
     },

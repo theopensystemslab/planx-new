@@ -1,6 +1,6 @@
-import Select, { SelectProps } from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/core/styles";
-import ArrowIcon from "@material-ui/icons/KeyboardArrowDown";
+import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
+import Select, { SelectProps } from "@mui/material/Select";
+import makeStyles from "@mui/styles/makeStyles";
 import React, { ReactNode } from "react";
 
 import Input from "./Input";
@@ -74,8 +74,9 @@ export default function SelectInput({
     <Select
       value={value}
       className={classes.root}
+      // TODO: Check this out!
       classes={{
-        root: classes.selectRoot,
+        select: classes.selectRoot,
         icon: classes.icon,
       }}
       onChange={onChange}
@@ -87,8 +88,9 @@ export default function SelectInput({
           selectMenu: classes.selectMenu,
         },
       }}
+      // TODO: Check this out
       MenuProps={{
-        getContentAnchorEl: null,
+        anchorEl: null,
         anchorOrigin: {
           vertical: "bottom",
           horizontal: "left",

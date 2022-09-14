@@ -1,7 +1,7 @@
-import Box from "@material-ui/core/Box";
-import Collapse from "@material-ui/core/Collapse";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import { useFormik } from "formik";
 import flags, { FlagSet } from "pages/FlowEditor/data/flags";
 import React, { useState } from "react";

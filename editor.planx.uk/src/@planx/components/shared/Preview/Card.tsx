@@ -1,8 +1,9 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
-import Fade from "@material-ui/core/Fade";
-import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Fade from "@mui/material/Fade";
+import { Theme, useTheme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ApplicationPath } from "types";

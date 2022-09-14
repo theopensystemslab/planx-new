@@ -1,12 +1,12 @@
 import { FeedbackFish } from "@feedback-fish/react";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import ButtonBase from "@material-ui/core/ButtonBase";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import ButtonBase from "@mui/material/ButtonBase";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import classnames from "classnames";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-navi";
@@ -16,7 +16,7 @@ const useClasses = makeStyles((theme) => ({
   root: {
     color: theme.palette.common.white,
     backgroundColor: theme.palette.common.black,
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+    padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
   },
   buttonGroup: {
     columnGap: theme.spacing(3),

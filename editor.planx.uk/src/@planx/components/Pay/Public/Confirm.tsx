@@ -1,15 +1,15 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import ButtonBase from "@material-ui/core/ButtonBase";
-import Checkbox from "@material-ui/core/Checkbox";
-import Container from "@material-ui/core/Container";
-import Drawer from "@material-ui/core/Drawer";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from "@mui/icons-material/Close";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import ButtonBase from "@mui/material/ButtonBase";
+import Checkbox from "@mui/material/Checkbox";
+import Container from "@mui/material/Container";
+import Drawer from "@mui/material/Drawer";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormGroup from "@mui/material/FormGroup";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 import Input from "ui/Input";
@@ -178,7 +178,11 @@ function SuggestionDrawer() {
         }}
       >
         <div>
-          <IconButton onClick={() => setIsOpen(false)} aria-label="Close Panel">
+          <IconButton
+            onClick={() => setIsOpen(false)}
+            aria-label="Close Panel"
+            size="large"
+          >
             <CloseIcon />
           </IconButton>
           <p>

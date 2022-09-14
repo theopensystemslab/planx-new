@@ -1,9 +1,9 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import Delete from "@material-ui/icons/Delete";
-import DragHandle from "@material-ui/icons/DragHandle";
+import Delete from "@mui/icons-material/Delete";
+import DragHandle from "@mui/icons-material/DragHandle";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import makeStyles from "@mui/styles/makeStyles";
 import { arrayMoveImmutable } from "array-move";
 import React, { useRef } from "react";
 import {
@@ -57,7 +57,12 @@ export default function ListManager<T, EditorExtraProps>(
           return (
             <div className={classes.item} key={index}>
               <Box>
-                <IconButton disableRipple disabled={true} aria-label="Drag">
+                <IconButton
+                  disableRipple
+                  disabled={true}
+                  aria-label="Drag"
+                  size="large"
+                >
                   <DragHandle />
                 </IconButton>
               </Box>
@@ -75,6 +80,7 @@ export default function ListManager<T, EditorExtraProps>(
                     props.onChange(removeAt(index, props.values));
                   }}
                   aria-label="Delete"
+                  size="large"
                 >
                   <Delete />
                 </IconButton>
@@ -134,6 +140,7 @@ export default function ListManager<T, EditorExtraProps>(
                             ? provided.dragHandleProps
                             : { disabled: true })}
                           aria-label="Drag"
+                          size="large"
                         >
                           <DragHandle />
                         </IconButton>
@@ -152,6 +159,7 @@ export default function ListManager<T, EditorExtraProps>(
                             props.onChange(removeAt(index, props.values));
                           }}
                           aria-label="Delete"
+                          size="large"
                         >
                           <Delete />
                         </IconButton>

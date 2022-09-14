@@ -1,4 +1,4 @@
-import ErrorIcon from "@material-ui/icons/Error";
+import ErrorIcon from "@mui/icons-material/Error";
 import { TYPES } from "@planx/components/types";
 import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";

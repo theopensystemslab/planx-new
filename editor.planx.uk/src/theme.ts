@@ -1,5 +1,9 @@
-import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
-import { ThemeOptions } from "@material-ui/core/styles";
+import {
+  adaptV4Theme,
+  createTheme,
+  responsiveFontSizes,
+} from "@mui/material/styles";
+import { DeprecatedThemeOptions } from "@mui/material/styles";
 
 import { TeamTheme } from "./types";
 
@@ -41,10 +45,10 @@ export const linkStyle = {
  * Get Global theme options
  * The global theme is used in editor, and as the base theme in Preview/Unpublished which can be
  * merged with Team specific options
- * @returns {ThemeOptions}
+ * @returns {DeprecatedThemeOptions}
  */
-export const getGlobalThemeOptions = (): ThemeOptions => {
-  const themeOptions: ThemeOptions = {
+export const getGlobalThemeOptions = (): DeprecatedThemeOptions => {
+  const themeOptions: DeprecatedThemeOptions = {
     typography: {
       fontFamily: "'Inter', Arial",
       h1: {
@@ -227,11 +231,11 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
  * Pass in TeamTheme to customise the palette and associated overrides
  * Rules here will only apply in the Preview and Unpublished routes
  * @param {TeamTheme} theme
- * @returns {ThemeOptions}
+ * @returns {DeprecatedThemeOptions}
  */
 export const getTeamThemeOptions = (
   theme: TeamTheme | undefined
-): ThemeOptions => {
+): DeprecatedThemeOptions => {
   const primary = theme?.primary || "#2c2c2c";
   const focus = theme?.focus || GOVUK_YELLOW;
   return {
@@ -271,6 +275,6 @@ export const getTeamThemeOptions = (
   };
 };
 
-const globalTheme = createMuiTheme(getGlobalThemeOptions());
+const globalTheme = createTheme(adaptV4Theme(getGlobalThemeOptions()));
 
 export default responsiveFontSizes(globalTheme);

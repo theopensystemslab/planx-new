@@ -1,12 +1,12 @@
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import Close from "@material-ui/icons/CloseOutlined";
+import Close from "@mui/icons-material/CloseOutlined";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import makeStyles from "@mui/styles/makeStyles";
 import { parseFormValues } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
 import ErrorFallback from "components/ErrorFallback";
@@ -134,6 +134,7 @@ const FormModal: React.FC<{
           aria-label="close"
           className={classes.closeButton}
           onClick={handleClose}
+          size="large"
         >
           <Close />
         </IconButton>
@@ -178,7 +179,7 @@ const FormModal: React.FC<{
         </ErrorBoundary>
       </DialogContent>
       <DialogActions className={classes.actions}>
-        <Grid container justify="flex-end">
+        <Grid container justifyContent="flex-end">
           {handleDelete && (
             <Grid item xs={6} sm={4} md={3}>
               <Button

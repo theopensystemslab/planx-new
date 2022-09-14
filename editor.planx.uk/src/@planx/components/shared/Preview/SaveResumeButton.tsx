@@ -1,6 +1,7 @@
-import ButtonBase from "@material-ui/core/ButtonBase";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import ButtonBase from "@mui/material/ButtonBase";
+import { Theme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { linkStyle } from "theme";
