@@ -1,9 +1,8 @@
 import {
-  adaptV4Theme,
   createTheme,
   responsiveFontSizes,
+  ThemeOptions,
 } from "@mui/material/styles";
-import { DeprecatedThemeOptions } from "@mui/material/styles";
 
 import { TeamTheme } from "./types";
 
@@ -45,10 +44,10 @@ export const linkStyle = {
  * Get Global theme options
  * The global theme is used in editor, and as the base theme in Preview/Unpublished which can be
  * merged with Team specific options
- * @returns {DeprecatedThemeOptions}
+ * @returns {DeprecatedOptions}
  */
-export const getGlobalThemeOptions = (): DeprecatedThemeOptions => {
-  const themeOptions: DeprecatedThemeOptions = {
+export const getGlobalThemeOptions = (): ThemeOptions => {
+  const themeOptions: ThemeOptions = {
     typography: {
       fontFamily: "'Inter', Arial",
       h1: {
@@ -114,19 +113,6 @@ export const getGlobalThemeOptions = (): DeprecatedThemeOptions => {
         xl: 1920,
       },
     },
-    props: {
-      MuiButton: {
-        // Removes default box shadow on buttons
-        disableElevation: true,
-        disableFocusRipple: true,
-      },
-      MuiPaper: {
-        elevation: 0,
-      },
-      MuiIconButton: {
-        disableFocusRipple: true,
-      },
-    },
     transitions: {
       duration: {
         enteringScreen: 400,
@@ -134,89 +120,116 @@ export const getGlobalThemeOptions = (): DeprecatedThemeOptions => {
     },
   };
 
-  // Separately setting "overrides" allows us to refer back to the palette
-  themeOptions.overrides = {
+  // Separately setting "components" allows us to refer back to the palette
+  themeOptions.components = {
     MuiCssBaseline: {
-      "@global": {
-        body: {
-          backgroundColor: "#efefef",
+      styleOverrides: {
+        "@global": {
+          body: {
+            backgroundColor: "#efefef",
+          },
         },
       },
     },
     MuiButtonBase: {
-      root: {
-        fontFamily: "inherit",
-        "&:focus-visible": {
-          ...focusStyle(themeOptions.palette?.action?.focus),
-          // !important is required here as setting disableElevation = true removes boxShadow
-          boxShadow: `0 -2px ${themeOptions.palette?.action?.focus}, 0 4px black !important`,
-          // Hover should not overwrite focus
-          "&:hover": focusStyle(themeOptions.palette?.action?.focus),
+      styleOverrides: {
+        root: {
+          fontFamily: "inherit",
+          "&:focus-visible": {
+            ...focusStyle(themeOptions.palette?.action?.focus),
+            // !important is required here as setting disableElevation = true removes boxShadow
+            boxShadow: `0 -2px ${themeOptions.palette?.action?.focus}, 0 4px black !important`,
+            // Hover should not overwrite focus
+            "&:hover": focusStyle(themeOptions.palette?.action?.focus),
+          },
         },
       },
     },
     MuiListItemIcon: {
-      root: {
-        color: "inherit",
+      styleOverrides: {
+        root: {
+          color: "inherit",
+        },
       },
     },
     MuiLink: {
-      root: {
-        ...linkStyle,
-        "&:focus-visible": focusStyle(themeOptions.palette?.action?.focus),
+      styleOverrides: {
+        root: {
+          ...linkStyle,
+          "&:focus-visible": focusStyle(themeOptions.palette?.action?.focus),
+        },
       },
     },
     MuiButton: {
-      root: {
-        borderRadius: 0,
-        textTransform: "none",
+      defaultProps: {
+        // Removes default box shadow on buttons
+        disableElevation: true,
+        disableFocusRipple: true,
       },
-      text: {
-        color: "rgba(0,0,0,0.4)",
-        "&:hover": {
-          color: "rgba(0,0,0,1)",
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+          textTransform: "none",
         },
-      },
-      containedSizeLarge: {
-        fontWeight: 700,
+        text: {
+          color: "rgba(0,0,0,0.4)",
+          "&:hover": {
+            color: "rgba(0,0,0,1)",
+          },
+        },
+        containedSizeLarge: {
+          fontWeight: 700,
+        },
       },
     },
     MuiIconButton: {
-      root: {
-        borderRadius: 0,
-        "&:focus-visible": {
-          ...focusStyle(themeOptions.palette?.action?.focus),
-          "& svg": {
-            color: "black",
+      defaultProps: {
+        disableFocusRipple: true,
+      },
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+          "&:focus-visible": {
+            ...focusStyle(themeOptions.palette?.action?.focus),
+            "& svg": {
+              color: "black",
+            },
           },
         },
+      },
+    },
+    MuiPaper: {
+      defaultProps: {
+        elevation: 0,
       },
     },
     ...({
       MUIRichTextEditor: {
-        root: {
-          padding: 0,
-        },
-        container: {
-          // Disable margins to allow a container <Box/>
-          margin: 0,
-          focus: {
-            outline: "none",
+        styleOverrides: {
+          root: {
+            padding: 0,
           },
-        },
-        editor: {
-          backgroundColor: "#fff",
-          padding: "4px 10px",
-          minHeight: 48,
-          fontSize: 15,
-        },
-        placeHolder: {
-          fontSize: 15,
-          padding: "4px 10px",
-          color: "#9a9a9a",
-        },
-        inlineToolbar: {
-          boxShadow: "0 1px 6px 0 rgba(0, 0, 0, 0.2)",
+          container: {
+            // Disable margins to allow a container <Box/>
+            margin: 0,
+            focus: {
+              outline: "none",
+            },
+          },
+          editor: {
+            backgroundColor: "#fff",
+            padding: "4px 10px",
+            minHeight: 48,
+            fontSize: 15,
+          },
+          placeHolder: {
+            fontSize: 15,
+            padding: "4px 10px",
+            color: "#9a9a9a",
+          },
+          inlineToolbar: {
+            boxShadow: "0 1px 6px 0 rgba(0, 0, 0, 0.2)",
+          },
         },
       },
       // Make TypeScript happy by 'casting away' unrecognized override keys
@@ -231,11 +244,11 @@ export const getGlobalThemeOptions = (): DeprecatedThemeOptions => {
  * Pass in TeamTheme to customise the palette and associated overrides
  * Rules here will only apply in the Preview and Unpublished routes
  * @param {TeamTheme} theme
- * @returns {DeprecatedThemeOptions}
+ * @returns {ThemeOptions}
  */
 export const getTeamThemeOptions = (
   theme: TeamTheme | undefined
-): DeprecatedThemeOptions => {
+): ThemeOptions => {
   const primary = theme?.primary || "#2c2c2c";
   const focus = theme?.focus || GOVUK_YELLOW;
   return {
@@ -247,34 +260,40 @@ export const getTeamThemeOptions = (
         focus: focus,
       },
     },
-    overrides: {
+    components: {
       MuiButtonBase: {
-        root: {
-          "&:focus-visible": {
-            ...focusStyle(focus),
-            // !important is required here as setting disableElevation = true removes boxShadow
-            boxShadow: `0 -2px ${focus}, 0 4px black !important`,
-            "&:hover": focusStyle(focus),
+        styleOverrides: {
+          root: {
+            "&:focus-visible": {
+              ...focusStyle(focus),
+              // !important is required here as setting disableElevation = true removes boxShadow
+              boxShadow: `0 -2px ${focus}, 0 4px black !important`,
+              "&:hover": focusStyle(focus),
+            },
           },
         },
       },
       MuiLink: {
-        root: {
-          "&:focus-visible": {
-            backgroundColor: focus,
-            boxShadow: `0 -2px ${focus}, 0 4px black`,
+        styleOverrides: {
+          root: {
+            "&:focus-visible": {
+              backgroundColor: focus,
+              boxShadow: `0 -2px ${focus}, 0 4px black`,
+            },
           },
         },
       },
       MuiIconButton: {
-        root: {
-          "&:focus-visible": focusStyle(focus),
+        styleOverrides: {
+          root: {
+            "&:focus-visible": focusStyle(focus),
+          },
         },
       },
     },
   };
 };
 
-const globalTheme = createTheme(adaptV4Theme(getGlobalThemeOptions()));
+const globalTheme = createTheme(getGlobalThemeOptions());
 
 export default responsiveFontSizes(globalTheme);

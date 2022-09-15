@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import {
-  adaptV4Theme,
   createTheme,
   StyledEngineProvider,
   Theme,
@@ -143,12 +142,12 @@ const PreviewLayout: React.FC<{
   };
 
   /**
-   * Generates a MuiTheme by deep merging global and team DeprecatedThemeOptions
+   * Generates a MuiTheme by deep merging global and team ThemeOptions
    */
   const generatePreviewTheme = (): Theme => {
     const globalOptions = getGlobalThemeOptions();
     const teamOptions = getTeamThemeOptions(team.theme);
-    return createTheme(adaptV4Theme(merge(globalOptions, teamOptions)));
+    return createTheme(merge(globalOptions, teamOptions));
   };
 
   return (
