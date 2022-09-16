@@ -33,7 +33,7 @@ const useClasses = makeStyles((theme) => ({
     right: theme.spacing(1.5),
     color: "rgba(0,0,0,0.25)",
   },
-  selectMenu: {
+  select: {
     backgroundColor: "transparent",
     "&:focus": {
       backgroundColor: "transparent",
@@ -83,10 +83,11 @@ export default function SelectInput({
       onChange={onChange}
       IconComponent={ArrowIcon}
       input={<Input />}
+      // TODO: Check this out
       inputProps={{
         name,
         classes: {
-          selectMenu: classes.selectMenu,
+          select: classes.select,
         },
       }}
       // TODO: Check this out

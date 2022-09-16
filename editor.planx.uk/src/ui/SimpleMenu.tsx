@@ -31,6 +31,10 @@ export default function SimpleMenu({ items, ...restProps }: Props): FCReturn {
       <Menu
         id="long-menu"
         anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
         keepMounted
         open={Boolean(anchorEl)}
         onClose={() => {

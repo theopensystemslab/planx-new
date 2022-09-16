@@ -58,7 +58,7 @@ interface LinkTabProps {
   href?: string;
 }
 
-const tabStyles = makeStyles((theme: Theme) => ({
+const tabStyles = makeStyles(() => ({
   tab: {
     position: "relative",
     zIndex: 1,
@@ -125,10 +125,11 @@ const NavTabs: React.FC<{ tab?: string; settings?: FlowSettings }> = (
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="default" elevation={0}>
+      <AppBar position="static" color="default" enableColorOnDark elevation={0}>
         <Grid container wrap="nowrap">
           <Grid item xs={12}>
             <Tabs
+              textColor="inherit"
               indicatorColor="primary"
               variant="fullWidth"
               value={value}

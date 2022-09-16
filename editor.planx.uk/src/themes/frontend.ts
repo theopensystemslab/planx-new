@@ -63,7 +63,7 @@ export const themeObject = {
     MuiButton: {
       color: "secondary",
     },
-    MuiExpansionPanel: {
+    MuiAccordian: {
       elevation: 0,
     },
   },

@@ -124,10 +124,11 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
   themeOptions.components = {
     MuiCssBaseline: {
       styleOverrides: {
-        "@global": {
-          body: {
-            backgroundColor: "#efefef",
-          },
+        body: {
+          backgroundColor: "#efefef",
+          fontSize: "0.875rem",
+          lineHeight: 1.43,
+          letterSpacing: "0.01071em",
         },
       },
     },
