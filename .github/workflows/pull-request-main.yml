@@ -27,16 +27,16 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: ./scripts/start-containers-for-tests.sh
       - run: ./hasura.planx.uk/run-postgres-tests.sh
       - run: pnpm i -g hasura-cli
       - name: Hasura Tests
-        run: pnpm install && pnpm test
+        run: pnpm install --frozen-lockfile && pnpm test
         working-directory: hasura.planx.uk/tests
       - name: E2E Tests
-        run: pnpm install && pnpm test
+        run: pnpm install --frozen-lockfile && pnpm test
         working-directory: e2e
 
   api_tests:
@@ -54,7 +54,7 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Run API Tests
-        run: pnpm install && pnpm test
+        run: pnpm install --frozen-lockfile && pnpm test
         working-directory: api.planx.uk
 
   test_and_build:
@@ -70,7 +70,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm test
         working-directory: ${{ env.EDITOR_DIRECTORY }}
@@ -125,7 +125,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
         working-directory: infrastructure/application
       - name: Download Build Artifact
         uses: actions/download-artifact@v2
