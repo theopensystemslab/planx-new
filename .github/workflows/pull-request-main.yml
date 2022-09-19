@@ -167,10 +167,8 @@ jobs:
           delete: true
 
   create_or_update_vultr_instance:
-    # XXX: Does nothing if the pizza instance or DNS entries exist,
-    #      see https://github.com/theopensystemslab/planx-new/pull/725
-    name: Create or Update Vultr Instance
-    needs: [integration_tests, api_tests, test_and_build]
+    name: Upsert Vultr Instance
+    needs: test_and_build
     runs-on: ubuntu-20.04
     steps:
       - name: Create Pizza (if it doesn't exist)
