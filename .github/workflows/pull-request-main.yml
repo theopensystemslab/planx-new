@@ -285,7 +285,14 @@ jobs:
         with:
           header: vultr
           message: |
-            Deployed ${{ github.sha }} to https://${{ env.FULL_DOMAIN }}
+            Deployed ${{ github.sha }} to https://${{ env.FULL_DOMAIN }}.
+
+            Useful links:
+              - [Editor](https://${{ env.FULL_DOMAIN }})
+              - [Storybook](https://${{ env.FULL_DOMAIN }}/storybook)
+              - [Hasura](https://hasura.${{ env.FULL_DOMAIN }})
+              - [API](https://api.${{ env.FULL_DOMAIN }})
+              - [ShareDB](https://sharedb.${{ env.FULL_DOMAIN }})
 
   healthcheck:
     name: Healthcheck Pizza Services
