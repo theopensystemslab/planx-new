@@ -107,7 +107,7 @@ jobs:
 
   preview:
     name: Pulumi Preview
-    needs: [integration_tests, api_tests, test_and_build]
+    needs: test_and_build
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
