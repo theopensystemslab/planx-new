@@ -58,7 +58,7 @@ jobs:
         working-directory: api.planx.uk
 
   test_and_build:
-    name: Test and Build
+    name: Test and Build React App
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
