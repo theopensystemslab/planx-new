@@ -1,14 +1,13 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
+import { screen } from "@testing-library/react";
 import React from "react";
+import { axe, setup } from "testUtils";
 
 import TaskList from "./Public";
 
 test("renders correctly", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <TaskList
       tasks={[
         { title: "buy land", description: "" },
@@ -17,14 +16,13 @@ test("renders correctly", async () => {
       handleSubmit={handleSubmit}
     />
   );
+  await user.click(screen.getByTestId("continue-button"));
 
-  userEvent.click(screen.getByTestId("continue-button"));
-
-  expect(handleSubmit).toHaveBeenCalled();
+  expect(handleSubmit).toHaveBeenCalledTimes(1);
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = render(
+  const { container } = setup(
     <TaskList
       tasks={[
         { title: "buy land", description: "" },

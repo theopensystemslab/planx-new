@@ -1,8 +1,7 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
+import { fireEvent, screen } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
+import { axe, setup } from "testUtils";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { TextInputType } from "./model";
@@ -10,14 +9,14 @@ import TextInput from "./Public";
 test("requires a value before being able to continue", async () => {
   const handleSubmit = jest.fn();
 
-  render(<TextInput title="hello" handleSubmit={handleSubmit} />);
+  const { user } = setup(
+    <TextInput title="hello" handleSubmit={handleSubmit} />
+  );
 
   expect(screen.getByRole("heading")).toHaveTextContent("hello");
 
-  await act(async () => {
-    await userEvent.type(await screen.getByLabelText("hello"), "something");
-    await userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await user.type(screen.getByLabelText("hello"), "something");
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalled();
 });
@@ -25,7 +24,7 @@ test("requires a value before being able to continue", async () => {
 test("requires a valid email before being able to continue", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <TextInput
       title="hello"
       type={TextInputType.Email}
@@ -35,10 +34,8 @@ test("requires a valid email before being able to continue", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("hello");
 
-  await act(async () => {
-    await userEvent.type(screen.getByLabelText("hello"), "not-an-email");
-    await userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await user.type(screen.getByLabelText("hello"), "not-an-email");
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledTimes(0);
 });
@@ -47,7 +44,7 @@ test("recovers previously submitted text when clicking the back button", async (
   const handleSubmit = jest.fn();
   const nodeId = uniqueId();
 
-  render(
+  const { user } = setup(
     <TextInput
       id={nodeId}
       title="Submit text"
@@ -60,9 +57,7 @@ test("recovers previously submitted text when clicking the back button", async (
     />
   );
 
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -75,7 +70,7 @@ test("recovers previously submitted text when clicking the back button even if a
   const handleSubmit = jest.fn();
   const nodeId = uniqueId();
 
-  render(
+  const { user } = setup(
     <TextInput
       fn="text-input-key"
       id={nodeId}
@@ -89,9 +84,7 @@ test("recovers previously submitted text when clicking the back button even if a
     />
   );
 
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -113,7 +106,7 @@ examplePhoneNumbers.forEach((number) => {
   test(`continues for valid phone number example ${number}`, async () => {
     const handleSubmit = jest.fn();
 
-    render(
+    const { user } = setup(
       <TextInput
         title="phone"
         type={TextInputType.Phone}
@@ -125,16 +118,14 @@ examplePhoneNumbers.forEach((number) => {
       target: { value: number },
     });
 
-    await act(async () => {
-      userEvent.click(screen.getByTestId("continue-button"));
-    });
+    await user.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalled();
   });
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = render(
+  const { container } = setup(
     <TextInput title="phone" type={TextInputType.Phone} />
   );
   const results = await axe(container);
@@ -142,21 +133,21 @@ it("should not have any accessibility violations", async () => {
 });
 
 it("should always an empty error message element in the DOM", () => {
-  const { container } = render(
+  setup(
     <TextInput
       title="Short Text"
       type={TextInputType.Short}
       id="testId"
     ></TextInput>
   );
-  const errorMessage = container.querySelector(`#${ERROR_MESSAGE}-testId`);
+  const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId`);
   expect(errorMessage).toBeEmptyDOMElement();
 });
 
 it("should change the role of the ErrorWrapper when an invalid input is given", async () => {
   const handleSubmit = jest.fn();
 
-  const { container } = render(
+  const { user } = setup(
     <TextInput
       title="Short Text"
       type={TextInputType.Short}
@@ -165,12 +156,8 @@ it("should change the role of the ErrorWrapper when an invalid input is given", 
     ></TextInput>
   );
 
-  const errorWrapper = container.querySelector(
-    `#${ERROR_MESSAGE}-testId`
-  )?.parentElement;
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  const [errorWrapper, ..._rest] = screen.getAllByTestId("error-wrapper");
+  user.click(screen.getByTestId("continue-button"));
 
   expect(errorWrapper).not.toBeEmptyDOMElement();
   expect(errorWrapper).toHaveAttribute("role", "status");

@@ -1,8 +1,7 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
+import { screen, waitFor } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
+import { axe, setup } from "testUtils";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { fillInFieldsUsingLabel } from "../shared/testHelpers";
@@ -11,20 +10,20 @@ import AddressInput from "./Public";
 test("submits an address", async () => {
   const handleSubmit = jest.fn();
 
-  render(<AddressInput handleSubmit={handleSubmit} title="" fn="foo" />);
+  const { user } = setup(
+    <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />
+  );
 
-  await waitFor(async () => {
-    await fillInFieldsUsingLabel({
-      "Address line 1": "Flat 1",
-      "Address line 2 (optional)": "221b Baker St",
-      Town: "London",
-      "County (optional)": "County",
-      Postcode: "SW1A 2AA",
-      "Country (optional)": "United Kingdom",
-    });
-
-    await userEvent.click(screen.getByTestId("continue-button"));
+  await fillInFieldsUsingLabel(user, {
+    "Address line 1": "Flat 1",
+    "Address line 2 (optional)": "221b Baker St",
+    Town: "London",
+    "County (optional)": "County",
+    Postcode: "SW1A 2AA",
+    "Country (optional)": "United Kingdom",
   });
+
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -44,7 +43,7 @@ test("recovers previously submitted text when clicking the back button", async (
   const handleSubmit = jest.fn();
   const componentId = uniqueId();
 
-  render(
+  const { user } = setup(
     <AddressInput
       handleSubmit={handleSubmit}
       title=""
@@ -63,13 +62,11 @@ test("recovers previously submitted text when clicking the back button", async (
     />
   );
 
-  await waitFor(async () => {
-    await fillInFieldsUsingLabel({
-      "Address line 2 (optional)": "221b Baker St",
-    });
-
-    userEvent.click(screen.getByTestId("continue-button"));
+  await fillInFieldsUsingLabel(user, {
+    "Address line 2 (optional)": "221b Baker St",
   });
+
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -89,7 +86,7 @@ test("recovers previously submitted text when clicking the back button even if a
   const componentId = uniqueId();
   const dataField = "data-field";
 
-  render(
+  const { user } = setup(
     <AddressInput
       handleSubmit={handleSubmit}
       title=""
@@ -109,13 +106,11 @@ test("recovers previously submitted text when clicking the back button even if a
     />
   );
 
-  await waitFor(async () => {
-    await fillInFieldsUsingLabel({
-      "Address line 2 (optional)": "221b Baker St",
-    });
-
-    userEvent.click(screen.getByTestId("continue-button"));
+  await fillInFieldsUsingLabel(user, {
+    "Address line 2 (optional)": "221b Baker St",
   });
+
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -131,44 +126,38 @@ test("recovers previously submitted text when clicking the back button even if a
 });
 
 it("should not have any accessibility violations on initial load", async () => {
-  const { container } = render(<AddressInput title="title" />);
-  await waitFor(async () => {
-    await fillInFieldsUsingLabel({
-      "Address line 1": "Flat 1",
-      "Address line 2 (optional)": "221b Baker St",
-      Town: "London",
-      "County (optional)": "County",
-      Postcode: "SW1A 2AA",
-      "Country (optional)": "United Kingdom",
-    });
+  const { container, user } = setup(<AddressInput title="title" />);
+  await fillInFieldsUsingLabel(user, {
+    "Address line 1": "Flat 1",
+    "Address line 2 (optional)": "221b Baker St",
+    Town: "London",
+    "County (optional)": "County",
+    Postcode: "SW1A 2AA",
+    "Country (optional)": "United Kingdom",
   });
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
 
 it("should not have any accessibility violations whilst in the error state", async () => {
-  const { container } = render(<AddressInput title="title" id="testId" />);
+  const { container, user } = setup(<AddressInput title="title" id="testId" />);
 
   const requiredAddressElements = ["line1", "town", "postcode"];
 
   requiredAddressElements.forEach((el) => {
-    const errorMessage = container.querySelector(
-      `#${ERROR_MESSAGE}-testId-${el}`
-    );
+    const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId-${el}`);
     expect(errorMessage).toBeEmptyDOMElement();
   });
 
-  await waitFor(async () => {
-    // This should trigger multiple ErrorWrappers to display as the form is empty
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  // This should trigger multiple ErrorWrappers to display as the form is empty
+  await user.click(screen.getByTestId("continue-button"));
 
-  requiredAddressElements.forEach((el) => {
-    const errorMessage = container.querySelector(
-      `#${ERROR_MESSAGE}-testId-${el}`
+  for (const el of requiredAddressElements) {
+    const errorMessage = await screen.findByTestId(
+      `${ERROR_MESSAGE}-testId-${el}`
     );
-    expect(errorMessage).not.toBeEmptyDOMElement();
-  });
+    await waitFor(() => expect(errorMessage).not.toBeEmptyDOMElement());
+  }
 
   const results = await axe(container);
   expect(results).toHaveNoViolations();

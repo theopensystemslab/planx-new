@@ -1,7 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
+import { screen } from "@testing-library/react";
 import React from "react";
+import { axe, setup } from "testUtils";
 
 import DrawBoundary from "./";
 
@@ -22,7 +21,7 @@ test("recovers previously submitted files when clicking the back button", async 
     },
   };
 
-  render(
+  const { user } = setup(
     <DrawBoundary
       dataFieldBoundary="property.boundary.site"
       dataFieldArea="property.area.site"
@@ -37,7 +36,7 @@ test("recovers previously submitted files when clicking the back button", async 
     />
   );
 
-  userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: previouslySubmittedData,
@@ -65,7 +64,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
     },
   };
 
-  render(
+  const { user } = setup(
     <DrawBoundary
       dataFieldBoundary="property.boundary.site"
       dataFieldArea="property.area.site"
@@ -80,7 +79,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
     />
   );
 
-  userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: expect.objectContaining(previouslySubmittedData),
@@ -88,7 +87,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = render(
+  const { container } = setup(
     <DrawBoundary
       dataFieldBoundary="property.boundary.site"
       dataFieldArea="property.area.site"
@@ -105,7 +104,7 @@ it("should not have any accessibility violations", async () => {
 test("shows the file upload option by default and requires user data to continue", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <DrawBoundary
       dataFieldBoundary="property.boundary.site"
       dataFieldArea="property.area.site"
@@ -118,11 +117,11 @@ test("shows the file upload option by default and requires user data to continue
   );
 
   // Draw a boundary screen
-  expect(screen.queryByTestId("upload-file-button")).toBeInTheDocument();
+  expect(screen.getByTestId("upload-file-button")).toBeInTheDocument();
   expect(screen.getByTestId("continue-button")).toBeDisabled();
 
   // Navigate to upload a file screen
-  userEvent.click(screen.getByTestId("upload-file-button"));
+  await user.click(screen.getByTestId("upload-file-button"));
   expect(screen.getByText("Upload a file")).toBeInTheDocument();
   expect(screen.getByTestId("continue-button")).toBeDisabled();
 });
@@ -130,7 +129,7 @@ test("shows the file upload option by default and requires user data to continue
 test("hides the upload option and allows user to continue without drawing if editor specifies", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <DrawBoundary
       dataFieldBoundary="property.boundary.site"
       dataFieldArea="property.area.site"
@@ -145,6 +144,6 @@ test("hides the upload option and allows user to continue without drawing if edi
 
   expect(screen.queryByTestId("upload-file-button")).not.toBeInTheDocument();
 
-  userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalledTimes(1);
 });

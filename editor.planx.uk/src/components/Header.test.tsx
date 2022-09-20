@@ -1,7 +1,7 @@
-import { render, screen } from "@testing-library/react";
-import axe from "axe-helper";
+import { screen } from "@testing-library/react";
 import React from "react";
 import * as ReactNavi from "react-navi";
+import { axe, setup } from "testUtils";
 import { Team } from "types";
 
 import Header, { HeaderVariant } from "./Header";
@@ -46,20 +46,20 @@ jest.spyOn(ReactNavi, "useNavigation").mockImplementation(
 
 describe("Header Component - Editor Route", () => {
   it("displays breadcrumbs", () => {
-    render(<Header variant={HeaderVariant.Editor} team={mockTeam1}></Header>);
+    setup(<Header variant={HeaderVariant.Editor} team={mockTeam1}></Header>);
     expect(screen.getByText("Plan✕")).toBeInTheDocument();
     expect(screen.getByText(mockTeam1.slug)).toBeInTheDocument();
     expect(screen.getByText("test-flow")).toBeInTheDocument();
   });
 
   it("displays avatar and settings", () => {
-    render(<Header variant={HeaderVariant.Editor} team={mockTeam1}></Header>);
+    setup(<Header variant={HeaderVariant.Editor} team={mockTeam1}></Header>);
     expect(screen.getByText("T")).toBeInTheDocument();
     expect(screen.getByLabelText("Toggle Menu")).toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = render(
+    const { container } = setup(
       <Header variant={HeaderVariant.Editor} team={mockTeam1}></Header>
     );
     const results = await axe(container);
@@ -69,7 +69,7 @@ describe("Header Component - Editor Route", () => {
 
 describe("Header Component - Public Routes", () => {
   it("displays a logo when available", () => {
-    render(<Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>);
+    setup(<Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>);
     expect(screen.queryByText("Plan✕")).not.toBeInTheDocument();
     expect(screen.getByAltText(`${mockTeam1.name} Logo`)).toHaveAttribute(
       "src",
@@ -78,7 +78,7 @@ describe("Header Component - Public Routes", () => {
   });
 
   it("falls back to the PlanX link when a logo is not present", () => {
-    render(<Header variant={HeaderVariant.Preview} team={mockTeam2}></Header>);
+    setup(<Header variant={HeaderVariant.Preview} team={mockTeam2}></Header>);
     expect(
       screen.queryByAltText(`${mockTeam2.name} Logo`)
     ).not.toBeInTheDocument();
@@ -86,13 +86,13 @@ describe("Header Component - Public Routes", () => {
   });
 
   it("parses the url pathname and displays a service title", () => {
-    render(<Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>);
+    setup(<Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>);
     expect(screen.getByTestId("service-title")).toBeInTheDocument();
     expect(screen.getByText("test flow")).toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = render(
+    const { container } = setup(
       <Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>
     );
     const results = await axe(container);
