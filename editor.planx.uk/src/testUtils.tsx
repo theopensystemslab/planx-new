@@ -35,6 +35,6 @@ export const setup = (
  * leading to multiple "an update was not wrapped in act(...)" warnings
  * Docs: https://testing-library.com/docs/example-react-transition-group/
  */
-export const mockFade = jest.mock("@material-ui/core/Fade", () =>
+export const mockFade = jest.mock("@mui/material/Fade", () =>
   jest.fn(({ children }: FadeProps) => <div>{children}</div>)
 );
