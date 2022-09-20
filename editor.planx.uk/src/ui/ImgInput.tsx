@@ -57,10 +57,6 @@ export default function ImgInput({
       <Menu
         id={`${menuId}`}
         anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
         keepMounted
         open={Boolean(anchorEl)}
         onClose={() => {
