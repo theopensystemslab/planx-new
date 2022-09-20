@@ -1,9 +1,7 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
+import { screen, waitFor } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
-import { act } from "react-dom/test-utils";
+import { axe, setup } from "testUtils";
 
 import { ERROR_MESSAGE } from "../shared/constants";
 import { fillInFieldsUsingPlaceholder } from "../shared/testHelpers";
@@ -14,21 +12,19 @@ test("submits a date", async () => {
   const handleSubmit = jest.fn();
   const componentId = uniqueId();
 
-  render(
+  const { user } = setup(
     <DateInput id={componentId} title="Pizza Day" handleSubmit={handleSubmit} />
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent("Pizza Day");
 
-  await waitFor(async () => {
-    await fillInFieldsUsingPlaceholder({
-      DD: "22",
-      MM: "05",
-      YYYY: "2010",
-    });
-
-    userEvent.click(screen.getByTestId("continue-button"));
+  await fillInFieldsUsingPlaceholder(user, {
+    DD: "22",
+    MM: "05",
+    YYYY: "2010",
   });
+
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -41,7 +37,7 @@ test("recovers previously submitted date when clicking the back button", async (
   const handleSubmit = jest.fn();
   const componentId = uniqueId();
 
-  render(
+  const { user } = setup(
     <DateInput
       id={componentId}
       title="Pizza Day"
@@ -54,9 +50,7 @@ test("recovers previously submitted date when clicking the back button", async (
     />
   );
 
-  await waitFor(() => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -70,7 +64,7 @@ test("recovers previously submitted date when clicking the back button even if a
   const componentId = uniqueId();
   const dataField = "data-field";
 
-  render(
+  const { user } = setup(
     <DateInput
       fn={dataField}
       id={componentId}
@@ -84,9 +78,7 @@ test("recovers previously submitted date when clicking the back button even if a
     />
   );
 
-  await waitFor(() => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
@@ -96,7 +88,7 @@ test("recovers previously submitted date when clicking the back button even if a
 });
 
 test("renders", async () => {
-  render(<DateInput title="Enter a date" />);
+  setup(<DateInput title="Enter a date" />);
 
   expect(screen.getByRole("heading")).toHaveTextContent("Enter a date");
 });
@@ -104,39 +96,35 @@ test("renders", async () => {
 test("allows user to type into input field and click continue", async () => {
   const handleSubmit = jest.fn();
 
-  render(<DateInput title="Enter a date" handleSubmit={handleSubmit} />);
+  const { user } = setup(
+    <DateInput title="Enter a date" handleSubmit={handleSubmit} />
+  );
 
   const day = screen.getByPlaceholderText("DD");
 
-  await act(async () => {
-    await userEvent.type(day, "2");
-    // Trigger blur event
-    await userEvent.tab();
-  });
+  await user.type(day, "2");
+  // Trigger blur event
+  await user.tab();
 
   expect(day).toHaveValue("02");
 
   const month = screen.getByPlaceholderText("MM");
-  await act(async () => {
-    await userEvent.type(month, "1");
-    await userEvent.type(month, "1");
-  });
+  await user.type(month, "1");
+  await user.type(month, "1");
   expect(month).toHaveValue("11");
 
   const year = screen.getByPlaceholderText("YYYY");
-  await act(async () => {
-    await userEvent.type(year, "1");
-    await userEvent.type(year, "9");
-    await userEvent.type(year, "9");
-    await userEvent.type(year, "2");
-    await userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await user.type(year, "1");
+  await user.type(year, "9");
+  await user.type(year, "9");
+  await user.type(year, "2");
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalled();
 });
 
 test("date fields have a max length set", async () => {
-  render(<DateInput title="Enter a date" />);
+  setup(<DateInput title="Enter a date" />);
 
   const day = screen.getByPlaceholderText("DD") as HTMLInputElement;
   const month = screen.getByPlaceholderText("MM") as HTMLInputElement;
@@ -200,7 +188,7 @@ test("validation", async () => {
 });
 
 it("should not have any accessibility violations upon initial load", async () => {
-  const { container } = render(
+  const { container } = setup(
     <DateInput id="123" title="Test title" description="description" />
   );
   const results = await axe(container);
@@ -208,7 +196,7 @@ it("should not have any accessibility violations upon initial load", async () =>
 });
 
 it("should not have any accessibility violations whilst in the error state", async () => {
-  const { container } = render(
+  const { container, user } = setup(
     <DateInput id="testId" title="Test title" description="description" />
   );
 
@@ -216,33 +204,31 @@ it("should not have any accessibility violations whilst in the error state", asy
 
   // There is an ErrorWrapper per input, which should not display on load
   dateElements.forEach((el) => {
-    const inputErrorWrapper = container.querySelector(
-      `#${ERROR_MESSAGE}-testId-${el}`
+    const inputErrorWrapper = screen.getByTestId(
+      `${ERROR_MESSAGE}-testId-${el}`
     );
     expect(inputErrorWrapper).toBeEmptyDOMElement();
   });
 
   // There is a main ErrorWrapper, which should not display on load
-  const mainErrorMessage = container.querySelector(`#${ERROR_MESSAGE}-testId`);
+  const mainErrorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId`);
   expect(mainErrorMessage).toBeEmptyDOMElement();
 
-  await waitFor(() => {
-    // Trigger error state
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
-
+  // Trigger error state
+  await user.click(screen.getByTestId("continue-button"));
   // Individual input errors do not display, and are not in an error state
   dateElements.forEach((el) => {
-    const inputErrorWrapper = container.querySelector(
-      `#${ERROR_MESSAGE}-testId-${el}`
+    const inputErrorWrapper = screen.getByTestId(
+      `${ERROR_MESSAGE}-testId-${el}`
     );
     expect(inputErrorWrapper).toBeEmptyDOMElement();
     expect(inputErrorWrapper).not.toHaveAttribute("role", "status");
   });
 
   // Main ErrorWrapper does display, and is in error state
-  expect(mainErrorMessage).not.toBeEmptyDOMElement();
-  expect(mainErrorMessage?.parentElement).toHaveAttribute("role", "status");
+  await waitFor(() => expect(mainErrorMessage).not.toBeEmptyDOMElement());
+  const [mainErrorWrapper, ..._rest] = screen.getAllByTestId("error-wrapper");
+  expect(mainErrorWrapper).toHaveAttribute("role", "status");
 
   const results = await axe(container);
   expect(results).toHaveNoViolations();

@@ -52,6 +52,7 @@ export default function Checkbox(props: Props): FCReturn {
         className={classes.input}
         type="checkbox"
         id={props.id}
+        data-testid={props.id}
         onChange={() => props.onChange()}
       />
       <span className={classes.icon}></span>

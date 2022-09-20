@@ -6,14 +6,10 @@ import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
-import { GraphQLClient } from "graphql-request";
-import { markSessionAsSubmitted } from "./saveAndReturn/utils";
+import { adminGraphQLClient } from "../hasura";
+import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 
-const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
-  headers: {
-    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
-  },
-});
+const client = adminGraphQLClient;
 
 /**
  * Submits application data to Uniform
@@ -28,7 +24,11 @@ const sendToUniform = async (req, res, next) => {
       status: 400,
       message: "Idox/Uniform connector is not enabled for this local authority"
     });
-  } else if (!req.body.xml || !req.body.sessionId) {
+  } 
+  
+  // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
+  const { payload } = req.body;
+  if (!payload?.xml || !payload?.sessionId) {
     next({
       status: 400,
       message: "Missing application data to send to Uniform"
@@ -38,7 +38,7 @@ const sendToUniform = async (req, res, next) => {
   try {
     const { clientId, clientSecret } = getUniformClient(req.params.localAuthority);
     // Setup - Create the zip folder
-    const zipPath = await createZip(req.body.xml, req.body.csv, req.body.files, req.body.sessionId);
+    const zipPath = await createZip(payload?.xml, payload?.csv, payload?.files, payload?.sessionId);
 
     // Request 1/3 - Authenticate
     const {
@@ -49,7 +49,7 @@ const sendToUniform = async (req, res, next) => {
 
     // 2/3 - Create a submission
     if (token) {
-      const idoxSubmissionId = await createSubmission(token, organisation, organisationId, req.body.sessionId);
+      const idoxSubmissionId = await createSubmission(token, organisation, organisationId, payload?.sessionId);
 
       // 3/3 - Attach the zip & create an audit entry
       if (idoxSubmissionId) {
@@ -84,14 +84,14 @@ const sendToUniform = async (req, res, next) => {
           `,
           {
             idox_submission_id: idoxSubmissionId,
-            submission_reference: req.body.sessionId,
+            submission_reference: payload?.sessionId,
             destination: req.params.localAuthority,
             response: submissionDetails,
           }
         );
 
         // Mark session as submitted so that reminder and expiry emails are not triggered
-        markSessionAsSubmitted(req.body.sessionId);
+        markSessionAsSubmitted(payload?.sessionId);
 
         res.status(200).send({
           message: `Successfully created a Uniform submission`,
@@ -234,7 +234,8 @@ async function authenticate(clientId, clientSecret) {
  * @returns {Promise} - idox-generated submissionId
  */
 async function createSubmission(token, organisation, organisationId, sessionId = "TEST") {
-  const createSubmissionEndpoint = process.env.UNIFORM_SUBMISSION_URL + "/secure/submission"
+  const createSubmissionEndpoint = process.env.UNIFORM_SUBMISSION_URL + "/secure/submission";
+  const isStaging = process.env.UNIFORM_SUBMISSION_URL.includes("staging");
 
   const createSubmissionOptions = {
     method: "POST",
@@ -248,7 +249,7 @@ async function createSubmission(token, organisation, organisationId, sessionId =
       "organisation": organisation,
       "organisationId": organisationId,
       "submissionReference": sessionId,
-      "description": "Test insert for DLUHC",
+      "description": isStaging ? "Staging submission from PlanX" : "Production submission from PlanX",
       "submissionProcessorType": "API"
     }),
     redirect: "follow",

@@ -7,7 +7,7 @@ export enum Destination {
 
 export interface Send extends MoreInformation {
   title: string;
-  destination: Destination;
+  destinations: Destination[];
 }
 
 export const DEFAULT_TITLE = "Send";
@@ -16,7 +16,7 @@ export const DEFAULT_DESTINATION = Destination.BOPS;
 export const parseContent = (data: Record<string, any> | undefined): Send => ({
   ...parseMoreInformation(data),
   title: data?.title || DEFAULT_TITLE,
-  destination: data?.destination || DEFAULT_DESTINATION,
+  destinations: data?.destinations || [DEFAULT_DESTINATION],
 });
 
 export const USER_ROLES = ["applicant", "agent", "proxy"] as const;

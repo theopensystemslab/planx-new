@@ -208,7 +208,7 @@ export const makePayload = (
   return { proposal_details, feedback };
 };
 
-export function getParams(
+export function getBOPSParams(
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
   passport: Store.passport,

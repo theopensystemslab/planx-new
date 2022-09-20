@@ -61,7 +61,8 @@ export function makeXmlString(
   });
 
   const getApplicationType = (): string => {
-    const passportValue = passport.data?.["application.type"][0];
+    const passportValue =
+      passport.data?.["application.type"]?.[0] || "ldc.existing";
     const planXAppType: PlanXAppTypes = passportValue.startsWith("ldc.existing")
       ? "ldc.existing"
       : "ldc.proposed";
@@ -78,7 +79,8 @@ export function makeXmlString(
   };
 
   const getCertificateOfLawfulness = () => {
-    const planXAppType: PlanXAppTypes = passport.data?.["application.type"][0];
+    const planXAppType: PlanXAppTypes =
+      passport.data?.["application.type"]?.[0];
     if (planXAppType === "ldc.proposed") {
       return `
         <portaloneapp:CertificateLawfulness>

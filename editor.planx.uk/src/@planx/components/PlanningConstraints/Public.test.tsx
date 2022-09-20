@@ -1,10 +1,9 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
+import { screen } from "@testing-library/react";
 import React from "react";
 import * as ReactNavi from "react-navi";
 import * as SWR from "swr";
+import { axe, setup } from "testUtils";
 
 import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
 import teamMock from "./mocks/teamMock";
@@ -32,7 +31,7 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
 it("renders correctly", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <MockedProvider mocks={teamMock} addTypename={false}>
       <PlanningConstraints
         title="Planning constraints"
@@ -46,15 +45,12 @@ it("renders correctly", async () => {
   // TODO mock passport _address so that SWR request is actually triggered to return mock response
 
   expect(screen.getByText("Planning constraints")).toBeInTheDocument();
-
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await user.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalledTimes(1);
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = render(
+  const { container } = setup(
     <MockedProvider mocks={teamMock} addTypename={false}>
       <PlanningConstraints
         title="Planning constraints"

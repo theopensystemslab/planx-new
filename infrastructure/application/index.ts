@@ -39,6 +39,10 @@ const CUSTOM_DOMAINS =
           domain: "planningservices.lambeth.gov.uk",
           name: "lambeth",
         },
+        {
+          domain: "planningservices.doncaster.gov.uk",
+          name: "doncaster",
+        },
       ]
     : [];
 
@@ -151,6 +155,10 @@ export = async () => {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
+      logGroup: new aws.cloudwatch.LogGroup("metabase", {
+        namePrefix: "metabase",
+        retentionInDays: 30,
+      }),
       container: {
         // if changing, also check docker-compose.yml
         image: "metabase/metabase:v0.43.4",
@@ -283,6 +291,10 @@ export = async () => {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
+      logGroup: new aws.cloudwatch.LogGroup("api", {
+        namePrefix: "api",
+        retentionInDays: 30,
+      }),
       container: {
         image: repo.buildAndPushImage({
           context: "../../api.planx.uk",
@@ -432,6 +444,10 @@ export = async () => {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
     taskDefinitionArgs: {
+      logGroup: new aws.cloudwatch.LogGroup("sharedb", {
+        namePrefix: "sharedb",
+        retentionInDays: 30,
+      }),
       container: {
         image: repo.buildAndPushImage("../../sharedb.planx.uk"),
         memory: 512 /*MB*/,
@@ -529,6 +545,9 @@ export = async () => {
       // If, in order to send us their certificate, a council asks us to first send them a Certificate Signing Request (CSR), this is how you can generate one:
       // $ openssl req -new -newkey rsa:2048 -nodes -keyout server.key -out server.csr
       // Then `server.key` should go into `ssl-${name}-key` and the other two (`-cert` and `-chain`) will be provided by the council. NB: Sometimes the certificate chain is called the intermediary certificate.
+      //
+      // In case you want to avoid round-trips of setting these values and waiting for CI to deploy to staging first, then to production, only to learn something is misconfigured, you can log use AWS's console to import the certificate manually first, and if that passes, you can remove it from the console again and add it properly here using Pulumi code/configs:
+      // > https://us-east-1.console.aws.amazon.com/acm/home?region=us-east-1#/certificates/import
       const certificate = new aws.acm.Certificate(
         `sslCert-${name}`,
         {

@@ -1,14 +1,13 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
+import { screen } from "@testing-library/react";
 import React from "react";
+import { axe, setup } from "testUtils";
 
 import Review from "./Public/Presentational";
 
 test("renders correctly", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <Review
       title="Review"
       description="Check your answers before submitting"
@@ -23,7 +22,7 @@ test("renders correctly", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent("Review");
 
-  userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalled();
 });
@@ -31,7 +30,7 @@ test("renders correctly", async () => {
 test("REGRESSION: doesn't return undefined when multiple nodes are filled", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  setup(
     <Review
       title="Review"
       description="Check your answers before submitting"
@@ -90,7 +89,7 @@ const mockedFlow = {
 };
 
 it("should not have any accessibility violations", async () => {
-  const { container } = render(
+  const { container } = setup(
     <Review
       title="Review"
       description="Check your answers before submitting"

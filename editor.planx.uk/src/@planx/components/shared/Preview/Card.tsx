@@ -38,7 +38,8 @@ const Card: React.FC<Props> = ({
   const classes = useStyles();
   const theme = useTheme();
   const path = useStore((state) => state.path);
-  const showSaveResumeButton = path === ApplicationPath.SaveAndReturn;
+  const showSaveResumeButton =
+    path === ApplicationPath.SaveAndReturn && handleSubmit;
 
   return (
     <Fade in={true} timeout={theme.transitions.duration.enteringScreen}>

@@ -18,14 +18,19 @@ import {
   responseInterceptor,
   fixRequestBody,
 } from "http-proxy-middleware";
-import helmet from 'helmet';
+import helmet from "helmet";
+import SlackNotify from "slack-notify";
 
 import { signS3Upload } from "./s3";
 import { locationSearch } from "./gis/index";
-import { diffFlow, publishFlow } from "./publish";
-import { findAndReplaceInFlow } from "./findReplace";
-import { sendToUniform } from "./send";
-import { resumeApplication, validateSession, sendSaveAndReturnEmail } from "./saveAndReturn"
+import { diffFlow, publishFlow } from "./editor/publish";
+import { findAndReplaceInFlow } from "./editor/findReplace";
+import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
+import {
+  resumeApplication,
+  validateSession,
+  sendSaveAndReturnEmail,
+} from "./saveAndReturn";
 import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
 import { useHasuraAuth, useSendEmailAuth } from "./auth";
 
@@ -33,10 +38,15 @@ import { useHasuraAuth, useSendEmailAuth } from "./auth";
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
 import airbrake from "./airbrake";
-import { markSessionAsSubmitted } from "./saveAndReturn/utils";
-import { createReminderEvent, createExpiryEvent } from "./webhooks/lowcalSessionEvents";
+import {
+  createReminderEvent,
+  createExpiryEvent,
+} from "./webhooks/lowcalSessionEvents";
 import { adminGraphQLClient } from "./hasura";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
+import { sendToBOPS } from "./send/bops";
+import { createSendEvents } from "./send/createSendEvents";
+import { sendToUniform } from "./send/uniform";
 import { sendSlackNotification } from "./webhooks/sendNotifications";
 
 const router = express.Router();
@@ -260,101 +270,27 @@ app.use(apiLimiter);
 // Secure Express by setting various HTTP headers
 app.use(helmet());
 
+// Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
+app.post("/create-send-events/:sessionId", createSendEvents);
+
 assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
-["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
-  assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
-});
-
-app.post("/bops/:localAuthority", (req, res, next) => {
-  // confirm this local authority (aka team) is supported by BOPS before creating the proxy
-  //   XXX: we check this outside of the proxy because domain-specific errors (eg 404 "No Local Authority Found") won't bubble up, rather the proxy will throw its' own "Network Error"
-  const isSupported = ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].includes(req.params.localAuthority.toUpperCase());
-
-  if (isSupported) {
-    // a local or staging API instance should send to the BOPS staging endpoint
-    // production should send to the BOPS production endpoint
-    const domain = `https://${req.params.localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
-    const target = `${domain}/api/v1/planning_applications`;
-
-    useProxy({
-      headers: {
-        ...req.headers,
-        Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
-      },
-      pathRewrite: () => "",
-      target,
-      selfHandleResponse: true,
-      onProxyReq: fixRequestBody,
-      onProxyRes: responseInterceptor(
-        async (responseBuffer, proxyRes, req, res) => {
-          // Mark session as submitted so that reminder and expiry emails are not triggered
-          markSessionAsSubmitted(req.body.planx_debug_data.session_id);
-
-          const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
-
-          const applicationId = await client.request(
-            `
-              mutation CreateApplication(
-                $bops_id: String = "",
-                $destination_url: String = "",
-                $request: jsonb = "",
-                $req_headers: jsonb = "",
-                $response: jsonb = "",
-                $response_headers: jsonb = "",
-                $session_id: String = "",
-              ) {
-                insert_bops_applications_one(object: {
-                  bops_id: $bops_id,
-                  destination_url: $destination_url,
-                  request: $request,
-                  req_headers: $req_headers,
-                  response: $response,
-                  response_headers: $response_headers,
-                  session_id: $session_id,
-                }) {
-                  id
-                  bops_id
-                }
-              }
-            `,
-            {
-              bops_id: bopsResponse.id,
-              destination_url: target,
-              request: req.body,
-              req_headers: req.headers,
-              response: bopsResponse,
-              response_headers: proxyRes.headers,
-              session_id: req.body?.planx_debug_data?.session_id,
-            }
-          );
-
-          return JSON.stringify({
-            application: {
-              ...applicationId.insert_bops_applications_one,
-              bopsResponse,
-            },
-          });
-        }
-      ),
-    })(req, res);
-  } else {
-    next({
-      status: 400,
-      message: `Back-office Planning System (BOPS) is not enabled for this local authority`,
-    });
-  }
-});
+app.post("/bops/:localAuthority", sendToBOPS);
 
 assert(process.env.UNIFORM_TOKEN_URL);
 assert(process.env.UNIFORM_SUBMISSION_URL);
 app.post("/uniform/:localAuthority", sendToUniform);
 
+["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
+  assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
+});
+
 // used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
 // returns the url to make a gov uk payment
 app.post("/pay/:localAuthority", (req, res, next) => {
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
-  const isSupported = process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
+  const isSupported =
+    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
 
   if (isSupported) {
     // drop req.params.localAuthority from the path when redirecting
@@ -373,6 +309,8 @@ app.post("/pay/:localAuthority", (req, res, next) => {
   }
 });
 
+assert(process.env.SLACK_WEBHOOK_URL);
+
 // used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
 // fetches the status of the payment
 app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
@@ -383,6 +321,18 @@ app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
       selfHandleResponse: true,
       onProxyRes: responseInterceptor(async (responseBuffer) => {
         const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+
+        // if it's a prod payment, notify #planx-notifcations so we can monitor for subsequent submissions
+        if (govUkResponse?.payment_provider !== "sandbox") {
+          try {
+            const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL);
+            const payMessage = `:coin: New GOV Pay payment *${govUkResponse.payment_id}* [${req.params.localAuthority}]`;
+            await slack.send(payMessage);
+            console.log("Payment notification posted to Slack");
+          } catch (error) {
+            return next(error);
+          }
+        }
 
         // only return payment status, filter out PII
         return JSON.stringify({
@@ -484,6 +434,8 @@ app.post("/flows/:flowId/publish", useJWT, publishFlow);
 // use with query params `find` (required) and `replace` (optional)
 app.post("/flows/:flowId/search", useJWT, findAndReplaceInFlow);
 
+app.get("/flows/:flowId/copy-portal/:portalNodeId", useJWT, copyPortalAsFlow);
+
 // unauthenticated because accessing flow schema only, no user data
 app.get("/flows/:flowId/download-schema", async (req, res, next) => {
   try {
@@ -522,13 +474,16 @@ app.get("/flows/:flowId/download-schema", async (req, res, next) => {
 app.post("/download-application", async (req, res, next) => {
   if (!req.body) {
     res.send({
-      message: "Missing application `data` to download"
+      message: "Missing application `data` to download",
     });
   }
 
   try {
     // build a CSV and stream the response
-    stringify(req.body, { columns: ["question", "responses", "metadata"], header: true }).pipe(res);
+    stringify(req.body, {
+      columns: ["question", "responses", "metadata"],
+      header: true,
+    }).pipe(res);
     res.header("Content-type", "text/csv");
   } catch (err) {
     next(err);
@@ -553,8 +508,9 @@ app.post("/sign-s3-upload", async (req, res, next) => {
 });
 
 const trackAnalyticsLogExit = async (id, isUserExit) => {
-  const result = await client.request(
-    `
+  try {
+    const result = await client.request(
+      `
       mutation UpdateAnalyticsLogUserExit($id: bigint!, $user_exit: Boolean) {
         update_analytics_logs_by_pk(
           pk_columns: {id: $id},
@@ -566,29 +522,36 @@ const trackAnalyticsLogExit = async (id, isUserExit) => {
         }
       }
     `,
-    {
-      id,
-      user_exit: isUserExit,
-    }
-  );
+      {
+        id,
+        user_exit: isUserExit,
+      }
+    );
 
-  const analytics_id = result.update_analytics_logs_by_pk.analytics_id;
-  await client.request(
-    `
+    const analytics_id = result.update_analytics_logs_by_pk.analytics_id;
+    await client.request(
+      `
       mutation SetAnalyticsEndedDate($id: bigint!, $ended_at: timestamptz) {
         update_analytics_by_pk(pk_columns: {id: $id}, _set: {ended_at: $ended_at}) {
           id
         }
       }
     `,
-    {
-      id: analytics_id,
-      ended_at: isUserExit ? new Date().toISOString() : null,
-    }
-  );
+      {
+        id: analytics_id,
+        ended_at: isUserExit ? new Date().toISOString() : null,
+      }
+    );
+  } catch (e) {
+    // We need to catch this exception here otherwise the exception would become an unhandle rejection which brings down the whole node.js process
+    console.error(
+      "There's been an error while recording metrics for analytics but because this thread is non-blocking we didn't reject the request",
+      e.stack
+    );
+  }
 
   return;
-}
+};
 
 app.post("/analytics/log-user-exit", async (req, res, next) => {
   const analyticsLogId = Number(req.query.analyticsLogId);
@@ -603,11 +566,17 @@ app.post("/analytics/log-user-resume", async (req, res, next) => {
 });
 
 assert(process.env.GOVUK_NOTIFY_API_KEY);
-app.post("/send-email/:template", sendEmailLimiter, useSendEmailAuth, sendSaveAndReturnEmail);
+app.post(
+  "/send-email/:template",
+  sendEmailLimiter,
+  useSendEmailAuth,
+  sendSaveAndReturnEmail
+);
 app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
-app.use("/webhooks/hasura", useHasuraAuth)
+assert(process.env.HASURA_PLANX_API_KEY);
+app.use("/webhooks/hasura", useHasuraAuth);
 app.post("/webhooks/hasura/delete-expired-sessions", hardDeleteSessions);
 app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
@@ -641,7 +610,7 @@ const server = new Server(app);
 server.keepAliveTimeout = 30000; // 30s
 server.headersTimeout = 35000; // 35s
 
-function useProxy(options = {}) {
+export function useProxy(options = {}) {
   return createProxyMiddleware({
     changeOrigin: true,
     logLevel: LOG_LEVEL,
@@ -661,10 +630,11 @@ function usePayProxy(options, req) {
     onProxyReq: fixRequestBody,
     headers: {
       ...req.headers,
-      Authorization: `Bearer ${process.env[
-        `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
-      ]
-        }`,
+      Authorization: `Bearer ${
+        process.env[
+          `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
+        ]
+      }`,
     },
     ...options,
   });

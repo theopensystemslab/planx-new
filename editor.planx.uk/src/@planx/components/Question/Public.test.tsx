@@ -1,8 +1,6 @@
-import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
+import { screen, waitFor } from "@testing-library/react";
 import React from "react";
-import waitForExpect from "wait-for-expect";
+import { axe, setup } from "testUtils";
 
 import Question, { IQuestion, QuestionLayout } from "./Public";
 
@@ -59,7 +57,7 @@ describe("Question Component", () => {
     it(`renders the ${QuestionLayout[type]} layout correctly`, async () => {
       const handleSubmit = jest.fn();
 
-      render(
+      const { user } = setup(
         <Question
           text="Best food"
           responses={responses[type]}
@@ -71,28 +69,22 @@ describe("Question Component", () => {
 
       expect(screen.getByRole("heading")).toHaveTextContent("Best food");
 
-      await act(async () => {
-        await waitForExpect(() => {
-          expect(continueButton).toBeDisabled();
-        });
+      expect(continueButton).toBeDisabled();
 
-        await userEvent.click(screen.getByText("Pizza"));
+      await user.click(screen.getByText("Pizza"));
 
-        await waitForExpect(() => {
-          expect(continueButton).not.toBeDisabled();
-        });
+      expect(continueButton).not.toBeDisabled();
 
-        await userEvent.click(continueButton);
+      await user.click(continueButton);
 
-        await waitForExpect(() => {
-          expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] });
-        });
-      });
+      await waitFor(() =>
+        expect(handleSubmit).toHaveBeenCalledWith({ answers: ["pizza_id"] })
+      );
     });
 
     it(`should not have any accessibility violations in the ${QuestionLayout[type]} layout`, async () => {
       const handleSubmit = jest.fn();
-      const { container } = render(
+      const { container } = setup(
         <Question
           text="Best food"
           responses={responses[type]}
@@ -107,7 +99,7 @@ describe("Question Component", () => {
 
 it("should not have any accessibility violations", async () => {
   const handleSubmit = jest.fn();
-  const { container } = render(
+  const { container } = setup(
     <Question
       text="Best food"
       responses={[
@@ -131,7 +123,7 @@ it("should not have any accessibility violations", async () => {
 
 it("should not have any accessibility violations", async () => {
   const handleSubmit = jest.fn();
-  const { container } = render(
+  const { container } = setup(
     <Question
       text="Best food"
       responses={[
@@ -156,7 +148,7 @@ it("should not have any accessibility violations", async () => {
 it("renders correctly with responses containing comments", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <Question
       handleSubmit={handleSubmit}
       responses={responsesWithComment}
@@ -167,23 +159,19 @@ it("renders correctly with responses containing comments", async () => {
   expect(screen.getAllByTestId("description-button")).toHaveLength(3);
   expect(screen.getByText("Some description")).toBeInTheDocument();
 
-  await act(async () => {
-    userEvent.click(screen.getByText("Commented"));
-  });
+  await user.click(screen.getByText("Commented"));
 
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
+  await user.click(screen.getByTestId("continue-button"));
 
-    await waitForExpect(() => {
-      expect(handleSubmit).toHaveBeenCalledWith({ answers: ["option1"] });
-    });
-  });
+  await waitFor(() =>
+    expect(handleSubmit).toHaveBeenCalledWith({ answers: ["option1"] })
+  );
 });
 
 it("renders correctly with responses containing images", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <Question
       handleSubmit={handleSubmit}
       responses={responsesWithImages}
@@ -194,16 +182,11 @@ it("renders correctly with responses containing images", async () => {
   expect(screen.getAllByTestId("image-button")).toHaveLength(3);
   expect(screen.getByText("Some description")).toBeInTheDocument();
 
-  await act(async () => {
-    userEvent.click(screen.getByText("Without image"));
-  });
+  await user.click(screen.getByText("Without image"));
+  await user.click(screen.getByTestId("continue-button"));
 
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-
-    await waitForExpect(() => {
-      expect(handleSubmit).toHaveBeenCalledWith({ answers: ["image2"] });
-    });
+  await waitFor(() => {
+    expect(handleSubmit).toHaveBeenCalledWith({ answers: ["image2"] });
   });
 });
 

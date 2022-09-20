@@ -37,7 +37,7 @@ export default function ErrorWrapper(props: Props): FCReturn {
       role="status"
       data-testid="error-wrapper"
     >
-      <p id={id} className={classes.errorText}>
+      <p id={id} data-testid={id} className={classes.errorText}>
         {props?.error}
       </p>
       {props.children || null}

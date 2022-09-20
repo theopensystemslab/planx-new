@@ -1,7 +1,6 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import React from "react";
+import { axe, setup } from "testUtils";
 
 import { TYPES } from "../types";
 import InternalPortalForm from "./Editor";
@@ -10,7 +9,7 @@ describe("adding an internal portal", () => {
   test("creating a new internal portal", async () => {
     const handleSubmit = jest.fn();
 
-    render(
+    const { user } = setup(
       <InternalPortalForm
         flows={[{ id: "ignore", text: "ignore" }]}
         handleSubmit={handleSubmit}
@@ -22,30 +21,30 @@ describe("adding an internal portal", () => {
     expect(flowSelect).toHaveValue("");
     expect(flowSelect).toBeEnabled();
 
-    userEvent.type(
+    await user.type(
       screen.getByPlaceholderText("Portal name"),
       "new internal portal"
     );
 
     expect(flowSelect).toBeDisabled();
 
-    await waitFor(() => {
-      fireEvent.submit(screen.getByTestId("form"));
-    });
+    await fireEvent.submit(screen.getByTestId("form"));
 
-    expect(handleSubmit).toHaveBeenCalledWith({
-      type: TYPES.InternalPortal,
-      data: {
-        flowId: "", // will be removed when saving the data
-        text: "new internal portal",
-      },
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        type: TYPES.InternalPortal,
+        data: {
+          flowId: "", // will be removed when saving the data
+          text: "new internal portal",
+        },
+      });
     });
   });
 
   test("selecting an existing internal portal", async () => {
     const handleSubmit = jest.fn();
 
-    render(
+    const { user } = setup(
       <InternalPortalForm
         flows={[{ id: "portal", text: "portal" }]}
         handleSubmit={handleSubmit}
@@ -57,20 +56,19 @@ describe("adding an internal portal", () => {
     expect(dropdown).toHaveValue("");
 
     if (dropdown) {
-      userEvent.selectOptions(dropdown, "portal");
+      await user.selectOptions(dropdown, "portal");
     }
 
+    await fireEvent.submit(screen.getByTestId("form"));
     await waitFor(() => {
-      fireEvent.submit(screen.getByTestId("form"));
+      expect(handleSubmit).toHaveBeenCalledWith("portal");
     });
-
-    expect(handleSubmit).toHaveBeenCalledWith("portal");
   });
 
   test("if text and flowId are set, only flowId should be submitted", async () => {
     const handleSubmit = jest.fn();
 
-    render(
+    const { user } = setup(
       <InternalPortalForm
         flows={[{ id: "portal", text: "portal" }]}
         handleSubmit={handleSubmit}
@@ -79,26 +77,25 @@ describe("adding an internal portal", () => {
 
     const dropdown = screen.queryByTestId("flowId");
     if (dropdown) {
-      userEvent.selectOptions(dropdown, "portal");
+      await user.selectOptions(dropdown, "portal");
     }
 
+    await fireEvent.submit(screen.getByTestId("form"));
     await waitFor(() => {
-      fireEvent.submit(screen.getByTestId("form"));
+      expect(handleSubmit).toHaveBeenCalledWith("portal");
     });
-
-    expect(handleSubmit).toHaveBeenCalledWith("portal");
   });
 });
 
 test("do not display select field when there are no flows to select", () => {
-  render(<InternalPortalForm />);
+  setup(<InternalPortalForm />);
   expect(screen.queryByTestId("flowId")).not.toBeInTheDocument();
 });
 
 test("updating an internal portal", async () => {
   const handleSubmit = jest.fn();
 
-  render(
+  const { user } = setup(
     <InternalPortalForm id="test" text="val" handleSubmit={handleSubmit} />
   );
 
@@ -108,18 +105,18 @@ test("updating an internal portal", async () => {
 
   expect(textInput).toHaveValue("val");
 
-  userEvent.type(textInput, "{selectall}new val");
+  await user.clear(textInput);
+  await user.type(textInput, "new val");
+  await fireEvent.submit(screen.getByTestId("form"));
 
   await waitFor(() => {
-    fireEvent.submit(screen.getByTestId("form"));
-  });
-
-  expect(handleSubmit).toHaveBeenCalledWith({
-    type: TYPES.InternalPortal,
-    data: {
-      flowId: "", // will be removed when saving the data
-      text: "new val",
-    },
+    expect(handleSubmit).toHaveBeenCalledWith({
+      type: TYPES.InternalPortal,
+      data: {
+        flowId: "", // will be removed when saving the data
+        text: "new val",
+      },
+    });
   });
 });
 
@@ -144,7 +141,7 @@ describe("validations", () => {
       test(scenario.action, async () => {
         const handleSubmit = jest.fn();
 
-        render(
+        setup(
           <InternalPortalForm
             id={scenario.id}
             flows={scenario.flows}
@@ -152,11 +149,9 @@ describe("validations", () => {
           />
         );
 
-        await waitFor(() => {
-          fireEvent.submit(screen.getByTestId("form"));
-        });
+        await fireEvent.submit(screen.getByTestId("form"));
 
-        expect(screen.getByText(scenario.error)).toBeInTheDocument();
+        expect(await screen.findByText(scenario.error)).toBeInTheDocument();
         expect(handleSubmit).not.toHaveBeenCalled();
       });
     }
@@ -166,7 +161,7 @@ describe("validations", () => {
 it("should not have any accessibility violations", async () => {
   const handleSubmit = jest.fn();
 
-  const { container } = render(
+  const { container } = setup(
     <InternalPortalForm
       flows={[{ id: "portal", text: "portal" }]}
       handleSubmit={handleSubmit}

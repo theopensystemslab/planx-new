@@ -1,13 +1,7 @@
-import { GraphQLClient } from "graphql-request";
 import * as jsondiffpatch from "jsondiffpatch";
 
-const { dataMerged, getMostRecentPublishedFlow } = require("./helpers");
-
-const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
-  headers: {
-    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
-  },
-});
+import { adminGraphQLClient as client } from "../hasura";
+import { dataMerged, getMostRecentPublishedFlow } from "../helpers";
 
 const diffFlow = async (req, res, next) => {
   if (!req.user?.sub)

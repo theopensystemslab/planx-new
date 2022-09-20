@@ -1,15 +1,14 @@
-import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import axe from "axe-helper";
+import { screen } from "@testing-library/react";
 import { uniqueId } from "lodash";
 import React from "react";
+import { axe, setup } from "testUtils";
 
 import FileUpload from "./Public";
 
 test("renders correctly and blocks submit if there are no files added", async () => {
   const handleSubmit = jest.fn();
 
-  render(<FileUpload handleSubmit={handleSubmit} />);
+  setup(<FileUpload handleSubmit={handleSubmit} />);
 
   expect(screen.getByRole("button", { name: "Continue" })).toBeDisabled();
 
@@ -25,7 +24,7 @@ test("recovers previously submitted files when clicking the back button", async 
     },
   };
 
-  render(
+  const { user } = setup(
     <FileUpload
       id={componentId}
       handleSubmit={handleSubmit}
@@ -33,9 +32,7 @@ test("recovers previously submitted files when clicking the back button", async 
     />
   );
 
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith(uploadedFile);
 });
@@ -50,7 +47,7 @@ test("recovers previously submitted files when clicking the back button even if 
     },
   };
 
-  render(
+  const { user } = setup(
     <FileUpload
       fn={dataField}
       id={componentId}
@@ -59,9 +56,7 @@ test("recovers previously submitted files when clicking the back button even if 
     />
   );
 
-  await act(async () => {
-    userEvent.click(screen.getByTestId("continue-button"));
-  });
+  await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith(uploadedFile);
 });
@@ -87,7 +82,7 @@ it("should not have any accessibility violations", async () => {
   const handleSubmit = jest.fn();
   const componentId = uniqueId();
 
-  const { container } = render(
+  const { container } = setup(
     <FileUpload
       id={componentId}
       handleSubmit={handleSubmit}

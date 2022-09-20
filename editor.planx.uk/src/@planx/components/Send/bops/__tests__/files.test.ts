@@ -1,7 +1,7 @@
 import { Store } from "pages/FlowEditor/lib/store";
 
 import { PASSPORT_UPLOAD_KEY } from "../../../DrawBoundary/model";
-import { extractTagsFromPassportKey, getParams } from "../../bops";
+import { extractTagsFromPassportKey, getBOPSParams } from "../../bops";
 import type { FileTag } from "../../model";
 
 const flow: Store.flow = {
@@ -42,7 +42,7 @@ test("makes file object", () => {
     },
   };
 
-  const actual = getParams(breadcrumbs, flow, passport, "123").files;
+  const actual = getBOPSParams(breadcrumbs, flow, passport, "123").files;
 
   const expected = [
     {

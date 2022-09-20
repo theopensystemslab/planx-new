@@ -5,3 +5,7 @@
 import "@testing-library/jest-dom";
 import "jest-localstorage-mock";
 import "jest-axe/extend-expect";
+
+import { mockFade } from "testUtils";
+
+beforeAll(() => mockFade);

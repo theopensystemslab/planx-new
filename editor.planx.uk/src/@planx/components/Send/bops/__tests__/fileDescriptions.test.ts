@@ -1,6 +1,6 @@
 import { Store, vanillaStore } from "pages/FlowEditor/lib/store";
 
-import { getParams } from "..";
+import { getBOPSParams } from "..";
 
 const { getState, setState } = vanillaStore;
 
@@ -136,7 +136,7 @@ describe("BOPS files[*].applicant_description", () => {
 
         // if the user has uploaded multiple files for a specific key,
         // ensure that every file in the list has the same description
-        getParams(
+        getBOPSParams(
           breadcrumbs,
           flow,
           computePassport(),
