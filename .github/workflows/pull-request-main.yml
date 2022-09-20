@@ -14,6 +14,30 @@ env:
   NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
 jobs:
+  copy_secrets:
+    name: Setup environment variables
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
+        run: aws s3 cp s3://env-secretsf/.env ./
+      - name: Check if .env files exist
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: ".env"
+          # files: ".env, .env.staging, api.editor.planx/.env.test, editor.planx.uk/.env"
+      - name: Files exist 
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: echo All environment variable files successfully copied!
+
   integration_tests:
     name: Integration and E2E tests
     runs-on: ubuntu-20.04
