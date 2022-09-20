@@ -1,10 +1,13 @@
 /* eslint-disable no-restricted-imports */
 import { FadeProps } from "@material-ui/core/Fade";
+import { ThemeProvider } from "@mui/material";
 import { render, RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import { configureAxe } from "jest-axe";
 import React from "react";
+
+import globalTheme from "../src/theme";
 
 export const axe = configureAxe({
   rules: {
@@ -23,7 +26,7 @@ export const setup = (
   jsx: JSX.Element
 ): Record<"user", UserEvent> & RenderResult => ({
   user: userEvent.setup(),
-  ...render(jsx),
+  ...render(<ThemeProvider theme={globalTheme}>{jsx}</ThemeProvider>),
 });
 
 /**
