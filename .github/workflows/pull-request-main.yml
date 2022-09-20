@@ -143,7 +143,6 @@ jobs:
 
   hasura-change-summary:
     name: Hasura Change Summary
-    needs: [integration_tests, api_tests, test_and_build]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
