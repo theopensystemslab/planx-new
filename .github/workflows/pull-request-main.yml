@@ -233,12 +233,6 @@ jobs:
           pullrequest_id: ${{ env.PULLREQUEST_ID }}
           region: lhr
           tag: pullrequest
-      - name: Configure AWS credentials to setup environment variables
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-2
 
       # CREATE STEPS
 
@@ -256,28 +250,16 @@ jobs:
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
 
             apt-get install awscli -y
+             export AWS_ACCESS_KEY_ID=${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+             export AWS_REGION=eu-west-2
+
             aws s3 cp s3://pizza-secrets/root.env .env
             aws s3 cp s3://pizza-secrets/editor.env editor.planx.uk/.env
             aws s3 cp s3://pizza-secrets/api.env.test api.planx.uk/.env.test
 
             echo "
             ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
-            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }}
-            SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }}
-            BOPS_API_TOKEN=${{ secrets.STAGING_BOPS_API_TOKEN }}
-            GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE }}
-            GOV_UK_PAY_TOKEN_LAMBETH=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_LAMBETH }}
-            GOV_UK_PAY_TOKEN_SOUTHWARK=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_SOUTHWARK }}
-            UNIFORM_TOKEN_URL=https://staging.identity.idoxgroup.com/uaa/oauth/token
-            UNIFORM_SUBMISSION_URL=https://staging.identity.idoxgroup.com/agw/submission-api
-            UNIFORM_CLIENT_AYLESBURY_VALE=${{ secrets.STAGING_UNIFORM_CLIENT_AYLESBURY_VALE }}
-            UNIFORM_CLIENT_CHILTERN=${{ secrets.STAGING_UNIFORM_CLIENT_CHILTERN }}
-            UNIFORM_CLIENT_WYCOMBE=${{ secrets.STAGING_UNIFORM_CLIENT_WYCOMBE }}
-            UNIFORM_CLIENT_SOUTHWARK=${{ secrets.STAGING_UNIFORM_CLIENT_SOUTHWARK }}
-            UNIFORM_CLIENT_LAMBETH=${{ secrets.STAGING_UNIFORM_CLIENT_LAMBETH }}
-            GOVUK_NOTIFY_API_KEY=${{ secrets.GOVUK_NOTIFY_API_KEY }}
-            HASURA_PLANX_API_KEY=${{ secrets.HASURA_PLANX_API_KEY }}
-            SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}
             " > .env.temp
             cat .env .env.temp .env.staging > .env.prod
 
@@ -299,33 +281,12 @@ jobs:
             git add . && git stash
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
 
-            apt-get install awscli -y
-            export AWS_ACCESS_KEY_ID=${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
-            export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
-            export AWS_REGION=eu-west-2
-            
             aws s3 cp s3://pizza-secrets/root.env .env
             aws s3 cp s3://pizza-secrets/editor.env editor.planx.uk/.env
             aws s3 cp s3://pizza-secrets/api.env.test api.planx.uk/.env.test
 
             echo "
             ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
-            JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }}
-            SESSION_SECRET=${{ secrets.STAGING_SESSION_SECRET }}
-            BOPS_API_TOKEN=${{ secrets.STAGING_BOPS_API_TOKEN }}
-            GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_BUCKINGHAMSHIRE }}
-            GOV_UK_PAY_TOKEN_LAMBETH=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_LAMBETH }}
-            GOV_UK_PAY_TOKEN_SOUTHWARK=${{ secrets.STAGING_GOV_UK_PAY_TOKEN_SOUTHWARK }}
-            UNIFORM_TOKEN_URL=https://staging.identity.idoxgroup.com/uaa/oauth/token
-            UNIFORM_SUBMISSION_URL=https://staging.identity.idoxgroup.com/agw/submission-api
-            UNIFORM_CLIENT_AYLESBURY_VALE=${{ secrets.STAGING_UNIFORM_CLIENT_AYLESBURY_VALE }}
-            UNIFORM_CLIENT_CHILTERN=${{ secrets.STAGING_UNIFORM_CLIENT_CHILTERN }}
-            UNIFORM_CLIENT_WYCOMBE=${{ secrets.STAGING_UNIFORM_CLIENT_WYCOMBE }}
-            UNIFORM_CLIENT_SOUTHWARK=${{ secrets.STAGING_UNIFORM_CLIENT_SOUTHWARK }}
-            UNIFORM_CLIENT_LAMBETH=${{ secrets.STAGING_UNIFORM_CLIENT_LAMBETH }}
-            GOVUK_NOTIFY_API_KEY=${{ secrets.GOVUK_NOTIFY_API_KEY }}
-            HASURA_PLANX_API_KEY=${{ secrets.HASURA_PLANX_API_KEY }}
-            SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}
             " > .env.temp
             cat .env .env.temp .env.staging > .env.prod
 
