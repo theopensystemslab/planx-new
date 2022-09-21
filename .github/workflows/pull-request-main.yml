@@ -233,6 +233,12 @@ jobs:
           pullrequest_id: ${{ env.PULLREQUEST_ID }}
           region: lhr
           tag: pullrequest
+      - name: Configure AWS credentials to setup environment variables
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
 
       # CREATE STEPS
 
@@ -248,6 +254,10 @@ jobs:
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
+
+            aws s3 cp s3://pizza-secrets/root.env ./.env
+            aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
+            aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
 
             echo "
             ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
@@ -287,6 +297,10 @@ jobs:
             cd planx-new
             git add . && git stash
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
+
+            aws s3 cp s3://pizza-secrets/root.env ./.env
+            aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
+            aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
 
             echo "
             ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
