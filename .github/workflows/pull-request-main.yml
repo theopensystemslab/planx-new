@@ -14,15 +14,17 @@ env:
   NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
 jobs:
+  copy_secrets_test: 
+    - uses: ./.github/workflows/setup-secrets.yml
+      secrets:
+        pizza_aws_access_key_id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+        pizza_aws_secret_access_key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+
   integration_tests:
     name: Integration and E2E tests
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/workflows/setup-secrets.yml
-        secrets:
-          pizza_aws_access_key_id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
-          pizza_aws_secret_access_key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -49,10 +51,6 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/workflows/setup-secrets.yml
-        secrets: 
-          pizza_aws_access_key_id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
-          pizza_aws_secret_access_key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -70,10 +68,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/workflows/setup-secrets.yml
-        secrets: 
-          pizza_aws_access_key_id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
-          pizza_aws_secret_access_key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
