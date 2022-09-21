@@ -255,7 +255,7 @@ jobs:
             cd planx-new
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
 
-            sudo apt-get install awscli
+            apt-get install awscli -y
             aws s3 cp s3://pizza-secrets/root.env .env
             aws s3 cp s3://pizza-secrets/editor.env editor.planx.uk/.env
             aws s3 cp s3://pizza-secrets/api.env.test api.planx.uk/.env.test
@@ -299,7 +299,7 @@ jobs:
             git add . && git stash
             git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
 
-            sudo apt-get install awscli
+            apt-get install awscli -y
             aws s3 cp s3://pizza-secrets/root.env .env
             aws s3 cp s3://pizza-secrets/editor.env editor.planx.uk/.env
             aws s3 cp s3://pizza-secrets/api.env.test api.planx.uk/.env.test
