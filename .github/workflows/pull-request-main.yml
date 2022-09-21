@@ -16,9 +16,9 @@ env:
 jobs:
   call_workflow-setup-secrets:
     uses: ./.github/workflows/setup-secrets.yml
-      secrets:
-        pizza_aws_access_key_id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
-        pizza_aws_secret_access_key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+    secrets:
+      pizza_aws_access_key_id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+      pizza_aws_secret_access_key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
 
   integration_tests:
     name: Integration and E2E tests
