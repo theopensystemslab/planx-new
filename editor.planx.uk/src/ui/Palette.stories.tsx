@@ -41,7 +41,6 @@ const ColorGrid: React.FC<{ option: PaletteOption }> = (props) => {
     switch (props.option) {
       case "divider":
         return [theme.palette[props.option]];
-      // TODO: Check this out on Storybook
       case "mode":
         return [];
       default:

@@ -78,7 +78,6 @@ export default function SelectInput({
       variant="standard"
       value={value}
       className={classes.root}
-      // TODO: Check this out!
       classes={{
         select: classes.selectRoot,
         icon: classes.icon,
@@ -86,14 +85,12 @@ export default function SelectInput({
       onChange={onChange}
       IconComponent={ArrowIcon}
       input={<Input />}
-      // TODO: Check this out
       inputProps={{
         name,
         classes: {
           select: classes.select,
         },
       }}
-      // TODO: Check this out
       MenuProps={{
         anchorOrigin: {
           vertical: "bottom",
