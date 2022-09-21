@@ -9,7 +9,6 @@ editor.planx.uk/.eslintcache
 .envrc
 .env.prod
 .env.temp
-.env.staging
 api.planx.uk/.env.test
 editor.planx.uk/.env
 

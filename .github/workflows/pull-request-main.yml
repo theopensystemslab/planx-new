@@ -27,19 +27,22 @@ jobs:
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: aws s3 cp s3://env-secretsf/.env ./
+        run: | 
+          aws s3 cp s3://pizza-secrets/root.env ./.env
+          aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
+          aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
-          files: ".env"
-          # files: ".env, .env.staging, api.editor.planx/.env.test, editor.planx.uk/.env"
+          files: ".env, .env.staging, api.editor.planx/.env.test, editor.planx.uk/.env"
       - name: Files exist 
         if: steps.check_files.outputs.files_exists == 'true'
         run: echo All environment variable files successfully copied!
 
   integration_tests:
     name: Integration and E2E tests
+    needs: [copy_secrets]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -65,6 +68,7 @@ jobs:
 
   api_tests:
     name: API Tests
+    needs: [copy_secrets]
     runs-on: ubuntu-20.04
     timeout-minutes: 10
     steps:
@@ -83,6 +87,7 @@ jobs:
 
   test_and_build:
     name: Test and Build
+    needs: [copy_secrets]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
