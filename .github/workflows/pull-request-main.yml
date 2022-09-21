@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/workflows/setup-secrets.yml
-        secrets: 
+        secrets:
           pizza_aws_access_key_id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           pizza_aws_secret_access_key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
       - uses: pnpm/action-setup@v2.2.2
