@@ -14,17 +14,27 @@ env:
   NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
 jobs:
-  call_workflow-setup-secrets:
-    uses: ./.github/workflows/setup-secrets.yml
-    secrets:
-      pizza_aws_access_key_id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
-      pizza_aws_secret_access_key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
-
   integration_tests:
     name: Integration and E2E tests
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.pizza_aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.pizza_aws_secret_access_key }}
+          aws-region: eu-west-2
+      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
+        run: | 
+          aws s3 cp s3://pizza-secrets/root.env ./.env
+          aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
+          aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
+      - name: Check if .env files exist
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env"
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -51,6 +61,22 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.pizza_aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.pizza_aws_secret_access_key }}
+          aws-region: eu-west-2
+      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
+        run: | 
+          aws s3 cp s3://pizza-secrets/root.env ./.env
+          aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
+          aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
+      - name: Check if .env files exist
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env"
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -68,6 +94,22 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.pizza_aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.pizza_aws_secret_access_key }}
+          aws-region: eu-west-2
+      - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
+        run: | 
+          aws s3 cp s3://pizza-secrets/root.env ./.env
+          aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
+          aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
+      - name: Check if .env files exist
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env"
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
