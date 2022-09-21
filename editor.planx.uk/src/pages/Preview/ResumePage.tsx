@@ -184,7 +184,6 @@ const ResumePage: React.FC = () => {
   const continueApplication = (): void => {
     useStore.setState({
       saveToEmail: email,
-      sessionId: sessionId,
       path: ApplicationPath.SaveAndReturn,
     });
   };
@@ -228,6 +227,9 @@ const ResumePage: React.FC = () => {
       // Find this session, if found then handle reconciliation
       await axios.post(url, data).then((response) => {
         setReconciledData(response?.data);
+        useStore
+          .getState()
+          .resumeSession(response?.data?.reconciledSessionData);
         // Skip reconciliation page if applicant has started payment
         isPaymentCreated(response?.data)
           ? continueApplication()
