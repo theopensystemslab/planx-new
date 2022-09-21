@@ -43,7 +43,7 @@ jobs:
 
 
   integration_tests:
-    name: Integration and E2E tests
+    name: Run Integration and E2E tests
     runs-on: ubuntu-20.04
     needs: [changed_files]
     if: ${{(true == fromJSON(needs.changed_files.outputs.api)) || (true == fromJSON(needs.changed_files.outputs.e2e)) || (true == fromJSON(needs.changed_files.outputs.editor)) || (true == fromJSON(needs.changed_files.outputs.sharedb)) || (true == fromJSON(needs.changed_files.outputs.hasura))}}
@@ -70,7 +70,7 @@ jobs:
         working-directory: e2e
 
   api_tests:
-    name: API Tests
+    name: Run API Tests
     runs-on: ubuntu-20.04
     timeout-minutes: 10
     needs: [changed_files]
@@ -90,7 +90,7 @@ jobs:
         working-directory: api.planx.uk
 
   test_react:
-    name: React Tests
+    name: Run React Tests
     runs-on: ubuntu-20.04
     needs: [changed_files]
     if: ${{true == fromJSON(needs.changed_files.outputs.editor)}}
@@ -185,9 +185,8 @@ jobs:
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
 
-  preview:
-    name: Pulumi Preview
-    needs: build_react_app
+  pulumi_preview:
+    name: Run Pulumi Preview
     runs-on: ubuntu-20.04
     needs: [changed_files, build_react_app]
     if: ${{true == fromJSON(needs.changed_files.outputs.infrastructure)}}
@@ -225,7 +224,7 @@ jobs:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
   hasura-change-summary:
-    name: Hasura Change Summary
+    name: Generate Hasura Change Summary
     runs-on: ubuntu-20.04
     needs: [changed_files]
     if: ${{true == fromJSON(needs.changed_files.outputs.hasura)}}
@@ -385,7 +384,7 @@ jobs:
               - [ShareDB](https://sharedb.${{ env.FULL_DOMAIN }})
 
   healthcheck:
-    name: Healthcheck Pizza Services
+    name: Run Healthcheck on Pizza Services
     needs: [create_or_update_vultr_instance]
     runs-on: ubuntu-20.04
     steps:
