@@ -261,7 +261,6 @@ const ResumePage: React.FC = () => {
     [Status.Validating]: (
       <DelayedLoadingIndicator
         text={sessionId ? "Validating..." : "Sending..."}
-        msDelayBeforeVisible={0}
       />
     ),
     [Status.Validated]: (
