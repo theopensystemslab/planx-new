@@ -736,7 +736,7 @@ export = async () => {
 
 new aws.budgets.Budget("general-budget", {
   budgetType: "COST",
-  limitAmount: "300",
+  limitAmount: "400",
   limitUnit: "USD",
   timePeriodStart: "2020-05-01_00:00",
   timeUnit: "MONTHLY",
