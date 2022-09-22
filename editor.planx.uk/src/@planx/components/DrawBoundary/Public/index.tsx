@@ -146,13 +146,13 @@ export default function Component(props: Props) {
           </Box>
           {!props.hideFileUpload && (
             <div className={classes.uploadInstead}>
-              <button
+              <Button
                 data-testid="upload-file-button"
                 onClick={() => setPage("upload")}
                 disabled={Boolean(boundary)}
               >
                 Upload a location plan instead
-              </button>
+              </Button>
             </div>
           )}
           <p>

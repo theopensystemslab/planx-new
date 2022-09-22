@@ -44,7 +44,7 @@ export const linkStyle = {
  * Get Global theme options
  * The global theme is used in editor, and as the base theme in Preview/Unpublished which can be
  * merged with Team specific options
- * @returns {DeprecatedOptions}
+ * @returns {ThemeOptions}
  */
 export const getGlobalThemeOptions = (): ThemeOptions => {
   const themeOptions: ThemeOptions = {
@@ -121,6 +121,7 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
   };
 
   // Separately setting "components" allows us to refer back to the palette
+  // TODO: This workaround was required for MUI v4, but there might be a better way of achieving this now
   themeOptions.components = {
     MuiCssBaseline: {
       styleOverrides: {
