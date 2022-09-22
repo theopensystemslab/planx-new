@@ -14,8 +14,8 @@ env:
   NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
 jobs:
-  test_and_build:
-    name: Test and Build
+  build_react:
+    name: Build React
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -51,8 +51,6 @@ jobs:
         working-directory: editor.planx.uk
       - run: pnpm install --frozen-lockfile
         working-directory: editor.planx.uk
-      - run: pnpm test
-        working-directory: editor.planx.uk
       - run: pnpm build
         working-directory: editor.planx.uk
         env:
@@ -72,7 +70,7 @@ jobs:
 
   preview:
     name: Pulumi Up
-    needs: test_and_build
+    needs: build_react
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2

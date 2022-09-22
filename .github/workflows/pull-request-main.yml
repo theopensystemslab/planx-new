@@ -57,8 +57,8 @@ jobs:
         run: pnpm install --frozen-lockfile && pnpm test
         working-directory: api.planx.uk
 
-  test_and_build:
-    name: Test and Build React App
+  test_react:
+    name: React Tests
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -74,7 +74,33 @@ jobs:
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm test
         working-directory: ${{ env.EDITOR_DIRECTORY }}
+
+  build_react_app:
+    name: Build React App
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache build assets
+        id: cache-react-build-assets
+        uses: actions/cache@v3
+        with:
+          path: ./${{ env.EDITOR_DIRECTORY }}/build
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
+      - uses: pnpm/action-setup@v2.2.2
+        if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v2
+        if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - run: pnpm install --frozen-lockfile
+        if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
+        if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.EDITOR_DIRECTORY }}
         env:
           REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
@@ -86,7 +112,33 @@ jobs:
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           # needed because there's no API to change google's allowed OAuth URLs
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
+
+  build_storybook:
+    name: Build Storybook
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache build assets
+        id: cache-storybook-assets
+        uses: actions/cache@v3
+        with:
+          path: ./${{ env.EDITOR_DIRECTORY }}/build
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
+      - uses: pnpm/action-setup@v2.2.2
+        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v2
+        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - run: pnpm install --frozen-lockfile
+        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build-storybook
+        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.EDITOR_DIRECTORY }}
         # same env as above, if it's job.env it can't access existing env.[variable]
         env:
@@ -98,16 +150,10 @@ jobs:
           REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
-          if-no-files-found: error
 
   preview:
     name: Pulumi Preview
-    needs: [integration_tests, api_tests, test_and_build]
+    needs: build_react_app
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -127,11 +173,12 @@ jobs:
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
         working-directory: infrastructure/application
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v2
+      - name: Download React build assets
+        id: cache-react-build-assets
+        uses: actions/cache@v3
         with:
-          name: build
           path: ./${{ env.EDITOR_DIRECTORY }}/build
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
       - uses: pulumi/actions@v3
         with:
           command: preview
@@ -143,7 +190,6 @@ jobs:
 
   hasura-change-summary:
     name: Hasura Change Summary
-    needs: [integration_tests, api_tests, test_and_build]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -167,10 +213,8 @@ jobs:
           delete: true
 
   create_or_update_vultr_instance:
-    # XXX: Does nothing if the pizza instance or DNS entries exist,
-    #      see https://github.com/theopensystemslab/planx-new/pull/725
-    name: Create or Update Vultr Instance
-    needs: [integration_tests, api_tests, test_and_build]
+    name: Upsert Vultr Instance
+    needs: [build_react_app, build_storybook]
     runs-on: ubuntu-20.04
     steps:
       - name: Create Pizza (if it doesn't exist)
@@ -265,20 +309,28 @@ jobs:
 
       # CREATE & UPDATE STEPS
 
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: ./build
 
+      - uses: actions/checkout@v2
+      - name: Download React build assets
+        id: cache-react-build-assets
+        uses: actions/cache@v3
+        with:
+          path: ./${{ env.EDITOR_DIRECTORY }}/build
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
+      - name: Download Storybook build assets
+        id: cache-storybook-assets
+        uses: actions/cache@v3
+        with:
+          path: ./${{ env.EDITOR_DIRECTORY }}/build
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
       - name: upload built editor
         uses: appleboy/scp-action@master
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "./build"
-          target: "planx-new/${{ env.EDITOR_DIRECTORY }}"
+          source: "./${{ env.EDITOR_DIRECTORY }}/build"
+          target: "planx-new/"
           overwrite: true
 
       - uses: marocchino/sticky-pull-request-comment@v2
