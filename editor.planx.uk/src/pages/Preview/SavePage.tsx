@@ -26,10 +26,13 @@ const SaveSuccess: React.FC<{ saveToEmail?: string; expiryDate?: string }> = ({
     additionalOption="startNewApplication"
   >
     <Typography variant="body2">
-      We have sent a link to {saveToEmail}. Use the link to continue your application.
-      <br/><br/>
+      We have sent a link to {saveToEmail}. Use the link to continue your
+      application.
+      <br />
+      <br />
       You have until {expiryDate} to complete this application.
-      <br/><br/>
+      <br />
+      <br />
       Your application will be deleted if you do not complete it by this date.
     </Typography>
   </StatusPage>
@@ -37,14 +40,13 @@ const SaveSuccess: React.FC<{ saveToEmail?: string; expiryDate?: string }> = ({
 
 const SaveError: React.FC = () => {
   return (
-    <StatusPage
-      bannerHeading="Email not sent"
-      showDownloadLink
-    >
+    <StatusPage bannerHeading="Email not sent" showDownloadLink>
       <Typography variant="body2">
         We are having trouble sending emails at the moment.
-        <br/><br/>
-        We have saved your application. We will try to send the email again later.
+        <br />
+        <br />
+        We have saved your application. We will try to send the email again
+        later.
       </Typography>
     </StatusPage>
   );
@@ -80,9 +82,7 @@ const SavePage: React.FC = () => {
   }, []);
 
   return {
-    [Status.Sending]: (
-      <DelayedLoadingIndicator text={"Sending..."} msDelayBeforeVisible={0} />
-    ),
+    [Status.Sending]: <DelayedLoadingIndicator text={"Sending..."} />,
     [Status.Success]: (
       <SaveSuccess saveToEmail={saveToEmail} expiryDate={expiryDate} />
     ),

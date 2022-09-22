@@ -141,10 +141,7 @@ function Component(props: Props) {
             description={props.description || ""}
           />
           {x && y && longitude && latitude ? (
-            <DelayedLoadingIndicator
-              msDelayBeforeVisible={0}
-              text="Fetching data..."
-            />
+            <DelayedLoadingIndicator text="Fetching data..." />
           ) : (
             <div className={classes.errorSummary} role="status">
               <Typography variant="h5" component="h2" gutterBottom>
