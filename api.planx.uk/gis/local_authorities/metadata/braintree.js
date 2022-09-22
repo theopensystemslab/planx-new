@@ -139,9 +139,9 @@ const planningConstraints = {
     id: "PlanX/PlanX",
     serverIndex: 10,
     fields: ["OBJECTID", "PARISH", "INFORMATIO"],
-    neg: "is not subject to any Article 4 restrictions",
+    neg: "is not subject to local permitted development restrictions (known as Article 4 directions)",
     pos: (data) => ({
-      text: "is subject to Article 4 restriction(s)",
+      text: "is subject to local permitted development restrictions (known as Article 4 directions)",
       description: data.INFORMATIO,
     }),
     records: { // planx value to "PARISH" lookup

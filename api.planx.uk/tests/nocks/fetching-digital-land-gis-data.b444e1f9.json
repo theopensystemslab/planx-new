@@ -58,7 +58,7 @@
       "constraints": {
         "article4": {
           "value": true,
-          "text": "is subject to Article 4 restrictions",
+          "text": "is subject to local permitted development restrictions (known as Article 4 directions)",
           "data": [
             {
               "entry-date": "2022-04-28",
@@ -452,7 +452,7 @@
         },
         "article4": {
           "value": true,
-          "text": "is subject to Article 4 restrictions",
+          "text": "is subject to local permitted development restrictions (known as Article 4 directions)",
           "data": [
             {
               "entry-date": "2021-11-11",
@@ -764,7 +764,7 @@
         },
         "article4": {
           "value": true,
-          "text": "is subject to Article 4 restrictions",
+          "text": "is subject to local permitted development restrictions (known as Article 4 directions)",
           "data": [
             {
               "entry-date": "2021-10-29",
@@ -1016,7 +1016,7 @@
       "constraints": {
         "article4": {
           "value": true,
-          "text": "is subject to Article 4 restrictions",
+          "text": "is subject to local permitted development restrictions (known as Article 4 directions)",
           "data": [
             {
               "entry-date": "2022-04-07",
