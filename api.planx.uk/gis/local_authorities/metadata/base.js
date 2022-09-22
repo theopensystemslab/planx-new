@@ -1,5 +1,5 @@
 // planx schema variables and their attributes (in the future, maybe these are managed in Editor?)
-// flag as 'active' based on dataset status/availability here https://www.digital-land.info/dataset/
+// flag as 'active' based on dataset status/availability here https://www.planning.data.gov.uk/dataset/
 const baseSchema = {
   article4: {
     active: true,
@@ -54,7 +54,7 @@ const baseSchema = {
     neg: "is not in a Broad",
     pos: "is in a Broad",
     "digital-land-datasets": ["national-park"],
-    "digital-land-entities": [520007] // https://www.digital-land.info/entity/520007
+    "digital-land-entities": [520007] // https://www.planning.data.gov.uk/entity/520007
   },
   "designated.WHS": {
     active: true,
