@@ -237,7 +237,7 @@ describe("rollupResultLayer helper function", () => {
     // Arrange
     const input = {
       "article4": {
-        text: 'is subject to Article 4 Restriction(s)',
+        text: 'is subject to local permitted development restrictions (known as Article 4 directions)',
         description: 'BLACKFRIARS STREET 28,29,30, KING STREET 10 TO 15, MILL LANE 19,20',
         value: true,
         type: 'warning',
@@ -249,7 +249,7 @@ describe("rollupResultLayer helper function", () => {
         }
       },
       'article4.canterbury.hmo': {
-        text: 'is subject to Article 4 Restriction(s)',
+        text: 'is subject to local permitted development restrictions (known as Article 4 directions)',
         description: 'Canterbury and surrounding area',
         value: true,
         type: 'warning',

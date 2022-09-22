@@ -115,7 +115,7 @@ export default {
     },
     article4: {
       value: false,
-      text: "is not subject to any Article 4 restrictions",
+      text: "is not subject to local permitted development restrictions (known as Article 4 directions)",
     },
     "designated.AONB": {
       value: false,
