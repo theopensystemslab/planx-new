@@ -6,15 +6,17 @@
 
 - Staging: https://status.planx.dev
 - Production: https://status.planx.uk
-- GIS: https://gis-status.planx.uk (pass: `geography!`)
+- GIS & other data integrations: https://gis-status.planx.uk (ask for the password in Slack!)
 
 ### Running Locally
 
 1. [Download and install Docker](https://docs.docker.com/get-docker/) if you don't have it already
 
+1. Clone this repository. You'll need to get some additional environment variable files that aren't published here. Find instructions for copying those in 1password under the AWS Staging IAM user role entry.
+
 1. Run the following command to get everything (postgres, sharedb, api and hasura server processes) up and running `docker-compose up --build -d`
 
-1. Open [hasura's](https://hasura.io/) web console to check that your Google email address is in the accounts table http://localhost:7000/console/data/default/schema/public/tables/users/browse (password: "TODO"), if not then add it
+1. Open [Hasura's](https://hasura.io/) web console to check that your Google email address is in the users table, if not then add it
 
 1. Move into the editor directory `cd ../editor.planx.uk`
 
