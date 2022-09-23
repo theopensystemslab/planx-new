@@ -30,6 +30,7 @@ jobs:
           aws s3 cp s3://pizza-secrets/root.env ./.env
           aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
           aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
+          aws s3 cp s3://pizza-secrets/hasura.env.test ./hasura.planx.uk/.env.test
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
@@ -72,6 +73,7 @@ jobs:
           aws s3 cp s3://pizza-secrets/root.env ./.env
           aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
           aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
+          aws s3 cp s3://pizza-secrets/hasura.env.test ./hasura.planx.uk/.env.test
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
@@ -105,6 +107,7 @@ jobs:
           aws s3 cp s3://pizza-secrets/root.env ./.env
           aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
           aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
+          aws s3 cp s3://pizza-secrets/hasura.env.test ./hasura.planx.uk/.env.test
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
@@ -301,6 +304,7 @@ jobs:
             aws s3 cp s3://pizza-secrets/root.env .env
             aws s3 cp s3://pizza-secrets/editor.env editor.planx.uk/.env
             aws s3 cp s3://pizza-secrets/api.env.test api.planx.uk/.env.test
+            aws s3 cp s3://pizza-secrets/hasura.env.test hasura.planx.uk/.env.test
 
             echo "
             ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
@@ -333,6 +337,7 @@ jobs:
             aws s3 cp s3://pizza-secrets/root.env .env
             aws s3 cp s3://pizza-secrets/editor.env editor.planx.uk/.env
             aws s3 cp s3://pizza-secrets/api.env.test api.planx.uk/.env.test
+            aws s3 cp s3://pizza-secrets/hasura.env.test hasura.planx.uk/.env.test
 
             echo "
             ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
