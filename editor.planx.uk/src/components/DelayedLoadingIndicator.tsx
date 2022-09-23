@@ -18,7 +18,7 @@ const useClasses = makeStyles({
 const DelayedLoadingIndicator: React.FC<{
   msDelayBeforeVisible?: number;
   text?: string;
-}> = ({ msDelayBeforeVisible = 50, text }) => {
+}> = ({ msDelayBeforeVisible = 0, text }) => {
   const [visible, setVisible] = useState(false);
 
   const classes = useClasses();

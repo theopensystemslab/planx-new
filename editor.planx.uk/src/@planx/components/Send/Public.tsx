@@ -116,10 +116,7 @@ const SendComponent: React.FC<Props> = ({
   if (request.loading) {
     return (
       <Card>
-        <DelayedLoadingIndicator
-          text={`Submitting your application...`}
-          msDelayBeforeVisible={0}
-        />
+        <DelayedLoadingIndicator text={`Submitting your application...`} />
       </Card>
     );
   } else if (request.error) {
@@ -128,10 +125,7 @@ const SendComponent: React.FC<Props> = ({
   } else {
     return (
       <Card>
-        <DelayedLoadingIndicator
-          text="Finalising your submission..."
-          msDelayBeforeVisible={0}
-        />
+        <DelayedLoadingIndicator text="Finalising your submission..." />
       </Card>
     );
   }
