@@ -1,13 +1,10 @@
 const fetch = require("isomorphic-fetch");
 
-const HASURA_ADMIN_SECRET = "TODO";
-const HASURA_PORT = 7000;
-
 async function gqlAdmin(query, variables = {}) {
-  const res = await fetch(`http://0.0.0.0:${HASURA_PORT}/v1/graphql`, {
+  const res = await fetch(`http://0.0.0.0:${process.env.HASURA_PORT}/v1/graphql`, {
     method: "POST",
     headers: {
-      "X-Hasura-Admin-Secret": HASURA_ADMIN_SECRET,
+      "X-Hasura-Admin-Secret": process.env.HASURA_ADMIN_SECRET,
     },
     body: JSON.stringify({ query, variables }),
   });
@@ -19,7 +16,7 @@ async function gqlAdmin(query, variables = {}) {
 }
 
 async function gqlPublic(query, variables = {}, headers = {}) {
-  const res = await fetch(`http://0.0.0.0:${HASURA_PORT}/v1/graphql`, {
+  const res = await fetch(`http://0.0.0.0:${process.env.HASURA_PORT}/v1/graphql`, {
     method: "POST",
     headers: headers,
     body: JSON.stringify({ query: query, variables }),

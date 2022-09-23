@@ -11,6 +11,7 @@ editor.planx.uk/.eslintcache
 .env.temp
 api.planx.uk/.env.test
 editor.planx.uk/.env
+hasura.planx.uk/.env.test
 
 # IDE
 .vscode
