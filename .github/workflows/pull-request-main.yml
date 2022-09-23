@@ -14,9 +14,39 @@ env:
   NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
 jobs:
-  integration_tests:
-    name: Integration and E2E tests
+  changed_files:
+    name: Check file changes
     runs-on: ubuntu-20.04
+    outputs:
+      api: ${{ steps.api.outputs.changed }}
+      e2e: ${{ steps.e2e.outputs.changed }}
+      editor: ${{ steps.editor.outputs.changed }}
+      hasura: ${{ steps.hasura.outputs.changed }}
+      infrastructure: ${{ steps.infrastructure.outputs.changed }}
+      sharedb: ${{ steps.sharedb.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - id: api
+        run: echo "::set-output name=changed::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^api.planx.uk && echo 'true' || echo 'false')"
+      - id: e2e
+        run: echo "::set-output name=changed::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^e2e && echo 'true' || echo 'false')"
+      - id: editor
+        run: echo "::set-output name=changed::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^editor.planx.uk && echo 'true' || echo 'false')"
+      - id: hasura
+        run: echo "::set-output name=changed::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^hasura.planx.uk && echo 'true' || echo 'false')"
+      - id: infrastructure
+        run: echo "::set-output name=changed::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^infrastructure && echo 'true' || echo 'false')"
+      - id: sharedb
+        run: echo "::set-output name=changed::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^sharedb.planx.uk && echo 'true' || echo 'false')"
+
+
+  integration_tests:
+    name: Run Integration and E2E tests
+    runs-on: ubuntu-20.04
+    needs: [changed_files]
+    if: ${{(true == fromJSON(needs.changed_files.outputs.api)) || (true == fromJSON(needs.changed_files.outputs.e2e)) || (true == fromJSON(needs.changed_files.outputs.editor)) || (true == fromJSON(needs.changed_files.outputs.sharedb)) || (true == fromJSON(needs.changed_files.outputs.hasura))}}
     steps:
       - uses: actions/checkout@v2
       - name: Configure AWS credentials
@@ -56,9 +86,11 @@ jobs:
         working-directory: e2e
 
   api_tests:
-    name: API Tests
+    name: Run API Tests
     runs-on: ubuntu-20.04
     timeout-minutes: 10
+    needs: [changed_files]
+    if: ${{true == fromJSON(needs.changed_files.outputs.api)}}
     steps:
       - uses: actions/checkout@v2
       - name: Configure AWS credentials
@@ -90,8 +122,10 @@ jobs:
         working-directory: api.planx.uk
 
   test_react:
-    name: React Tests
+    name: Run React Tests
     runs-on: ubuntu-20.04
+    needs: [changed_files]
+    if: ${{true == fromJSON(needs.changed_files.outputs.editor)}}
     steps:
       - uses: actions/checkout@v2
       - name: Configure AWS credentials
@@ -199,10 +233,11 @@ jobs:
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
 
-  preview:
-    name: Pulumi Preview
-    needs: build_react_app
+  pulumi_preview:
+    name: Run Pulumi Preview
     runs-on: ubuntu-20.04
+    needs: [changed_files, build_react_app]
+    if: ${{true == fromJSON(needs.changed_files.outputs.infrastructure)}}
     steps:
       - uses: actions/checkout@v2
       - name: Configure AWS Credentials
@@ -237,8 +272,10 @@ jobs:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
   hasura-change-summary:
-    name: Hasura Change Summary
+    name: Generate Hasura Change Summary
     runs-on: ubuntu-20.04
+    needs: [changed_files]
+    if: ${{true == fromJSON(needs.changed_files.outputs.hasura)}}
     steps:
       - uses: actions/checkout@v2
       - uses: Fieldguide/action-hasura-change-summary@v2
@@ -248,7 +285,7 @@ jobs:
           hasura_endpoint: https://hasura.${{ env.FULL_DOMAIN }}
           project_dir: ./hasura.planx.uk
       - uses: marocchino/sticky-pull-request-comment@v2
-        if: ${{ steps.hasura-change.outputs.change_html != '' }}
+        if: ${{steps.hasura-change.outputs.change_html != ''}}
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: hasura-change-summary
@@ -381,7 +418,7 @@ jobs:
               - [ShareDB](https://sharedb.${{ env.FULL_DOMAIN }})
 
   healthcheck:
-    name: Healthcheck Pizza Services
+    name: Run Healthcheck on Pizza Services
     needs: [create_or_update_vultr_instance]
     runs-on: ubuntu-20.04
     steps:
