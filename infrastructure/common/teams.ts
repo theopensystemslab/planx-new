@@ -12,7 +12,7 @@ interface TeamSecrets {
 interface Team {
   // Must match "team_slug" in the PlanX "teams" table
   name: string;
-  // Must match "name" in the Digital Land dataset "local-authority-district" (https://www.digital-land.info/dataset/local-authority-district)
+  // Must match "name" in the Digital Land dataset "local-authority-district" (https://www.planning.data.gov.uk/dataset/local-authority-district)
   uniformInstances?: string[];
 };
 

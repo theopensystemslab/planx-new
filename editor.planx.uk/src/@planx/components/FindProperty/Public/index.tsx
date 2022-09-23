@@ -66,8 +66,8 @@ function Component(props: Props) {
   options.append("dataset", "local-authority-district");
   options.append("dataset", "region");
 
-  // https://www.digital-land.info/docs#/Search%20entity
-  const root = `https://www.digital-land.info/entity.json?`;
+  // https://www.planning.data.gov.uk/docs#/Search%20entity
+  const root = `https://www.planning.data.gov.uk/entity.json?`;
   const digitalLandEndpoint = root + options;
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data } = useSWR(

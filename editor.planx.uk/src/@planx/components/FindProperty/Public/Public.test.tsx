@@ -22,7 +22,7 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
 
 jest.spyOn(SWR, "default").mockImplementation((url: any) => {
   return {
-    data: url()?.startsWith("https://www.digital-land")
+    data: url()?.startsWith("https://www.planning.data.gov.uk")
       ? localAuthorityMock
       : null,
   } as any;

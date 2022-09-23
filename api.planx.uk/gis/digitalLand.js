@@ -20,7 +20,7 @@ const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
 /**
  * 
  * Query planning constraints datasets that intersect a given geometry and return results in the planx schema format
- *   using the Digital Land API https://www.digital-land.info/
+ *   using the Digital Land API https://www.planning.data.gov.uk/
  * 
  * @param localAuthority (string) - planx team name used to link granular Article 4 metadata
  * @param geom (string) - WKT POLYGON or POINT, prioritized drawn site boundary and fallsback to unbuffered address point
@@ -42,7 +42,7 @@ async function go(localAuthority, geom, extras) {
   });
 
   try {
-    // set up request query params per https://www.digital-land.info/docs#/
+    // set up request query params per https://www.planning.data.gov.uk/docs
     let options = {
       entries: "current",
       geometry: geom,
@@ -53,7 +53,7 @@ async function go(localAuthority, geom, extras) {
     let datasets = `&dataset=${[...new Set(activeDatasets)].join(`&dataset=`)}`;
 
     // fetch records from digital land, will return '{ count: 0, entities: [], links: {..} }' if no intersections
-    let url = `https://www.digital-land.info/entity.json?${new URLSearchParams(options)}${datasets}`;
+    let url = `https://www.planning.data.gov.uk/entity.json?${new URLSearchParams(options)}${datasets}`;
     const res = await fetch(url)
       .then(response => response.json())
       .catch(error => console.log(error));
