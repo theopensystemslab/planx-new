@@ -7,18 +7,22 @@ import Close from "@material-ui/icons/Close";
 import FormatBold from "@material-ui/icons/FormatBold";
 import FormatItalic from "@material-ui/icons/FormatItalic";
 import LinkIcon from "@material-ui/icons/Link";
+import Title from "@material-ui/icons/Title";
 import Bold from "@tiptap/extension-bold";
+import BulletList from "@tiptap/extension-bullet-list";
 import Document from "@tiptap/extension-document";
 import HardBreak from "@tiptap/extension-hard-break";
 import Heading from "@tiptap/extension-heading";
 import History from "@tiptap/extension-history";
 import Italic from "@tiptap/extension-italic";
 import Link from "@tiptap/extension-link";
+import ListItem from "@tiptap/extension-list-item";
+import OrderedList from "@tiptap/extension-ordered-list";
 import Paragraph from "@tiptap/extension-paragraph";
 import ExtensionPlaceholder from "@tiptap/extension-placeholder";
 import Text from "@tiptap/extension-text";
 import { generateHTML, generateJSON } from "@tiptap/html";
-import { BubbleMenu,EditorContent, useEditor } from "@tiptap/react";
+import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
 import React, {
   type FC,
   ChangeEvent,
@@ -47,6 +51,9 @@ const commonExtensions = [
   Heading.configure({
     levels: [1, 2],
   }),
+  BulletList,
+  OrderedList,
+  ListItem,
 ];
 
 const RichTextInput2: FC<Props> = (props) => {
@@ -149,6 +156,15 @@ const RichTextInput2: FC<Props> = (props) => {
                 size="small"
                 color={editor.isActive("bold") ? "primary" : undefined}
                 onClick={() => {
+                  editor.chain().focus().toggleHeading({ level: 1 }).run();
+                }}
+              >
+                <Title />
+              </IconButton>
+              <IconButton
+                size="small"
+                color={editor.isActive("bold") ? "primary" : undefined}
+                onClick={() => {
                   editor.chain().focus().toggleBold().run();
                 }}
               >
@@ -169,6 +185,8 @@ const RichTextInput2: FC<Props> = (props) => {
             size="small"
             color={editor.isActive("link") ? "primary" : undefined}
             onClick={() => {
+              const selectionText = editor.state.selection.content().toJSON();
+              console.log(selectionText);
               if (!addingLink) {
                 if (editor.isActive("link")) {
                   editor.chain().focus().unsetLink().run();
