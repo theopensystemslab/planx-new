@@ -1,14 +1,23 @@
-# PlanX
+# Plan✕
 
-## https://editor.planx.uk
+Plan✕ is a platform for creating and publishing digital planning services. Learn more about how it's currently being used here: https://www.ripa.digital/
 
-### Status pages
+## Status pages
 
-- Staging: https://status.planx.dev
 - Production: https://status.planx.uk
 - GIS & other data integrations: https://gis-status.planx.uk (ask for the password in Slack!)
 
-### Running Locally
+## Our stack
+
+planx-new is a monorepo containing our full application stack. Here's a quick summary of what you'll find here:
+
+- `api.planx.uk` is a Node/Express server and REST endpoints 
+- `editor.planx.uk` is our React frontend, which consists of two main environments: an "editor" for service designers and a "preview" for public applicants. Our components are written with Material UI and follow GOV.UK design patterns
+- [`hasura.planx.uk`](https://hasura.io/) is a GraphQL engine for our PostgreSQL database
+- [`sharedb.planx.uk`](https://github.com/share/sharedb) is a library for realtime document collaboration based on JSON Operational Transformation (OT) used in our "editor" environment
+- `infrastructure` is [Pulumi](https://www.pulumi.com/) infrastructure-as-code for configuring and managing our AWS environments
+
+## Running Locally
 
 1. [Download and install Docker](https://docs.docker.com/get-docker/) if you don't have it already
 
@@ -26,7 +35,7 @@
 
 1. Start the dev server! `pnpm start`, open http://localhost:3000 and login with your GMail/Google email address
 
-#### Analytics
+### Analytics
 
 Running `docker-compose up` won't spin up [metabase](https://www.metabase.com/).
 To spin it up, run:
@@ -34,7 +43,7 @@ To spin it up, run:
   `docker-compose --profile analytics up`
 
 
-#### Documentation
+### Documentation
 
 This project uses Architecture Decision Records (ADRs) to record significant changes and decisions. Further details of this can be (found here)[https://github.com/theopensystemslab/planx-new/blob/main/doc/architecture/decisions/0001-record-architecture-decisions.md].
 
