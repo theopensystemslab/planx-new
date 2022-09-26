@@ -1,0 +1,66 @@
+{
+  "_root": {
+    "edges": ["question"]
+  },
+  "clone": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "I am a clone",
+      "resetButton": false
+    },
+    "type": 8
+  },
+  "leftNotice": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "Left!",
+      "resetButton": false
+    },
+    "type": 8
+  },
+  "rightConfirmation": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "I am still the right branch",
+      "resetButton": false
+    },
+    "type": 8
+  },
+  "rightNotice": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "Right!",
+      "resetButton": false
+    },
+    "type": 8
+  },
+  "leftChoice": {
+    "data": {
+      "text": "Left"
+    },
+    "type": 200,
+    "edges": ["leftNotice", "clone", "leftConfirmation"]
+  },
+  "rightChoice": {
+    "data": {
+      "text": "Right"
+    },
+    "type": 200,
+    "edges": ["rightNotice", "clone", "rightConfirmation"]
+  },
+  "leftConfirmation": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "I am still the left branch",
+      "resetButton": false
+    },
+    "type": 8
+  },
+  "question": {
+    "data": {
+      "text": "Which branch?"
+    },
+    "type": 100,
+    "edges": ["leftChoice", "rightChoice"]
+  }
+}

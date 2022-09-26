@@ -440,17 +440,21 @@ export const makeUnique =
       _makeUnique(id, parent, { idFn }, true);
     });
 
+/**
+ * Depth first sort of graph
+ * XXX: Clones will appear in all possible graph positions
+ */
 const dfs = (graph: Graph) => (startId: string) => {
-  const visited = new Set([startId]);
+  const visited: string[] = [];
   const crawlFrom = (id: string) => {
     if (!graph[id]) return;
-    visited.add(id);
+    visited.push(id);
     graph[id].edges?.forEach((childId) => {
       crawlFrom(childId);
     });
   };
   crawlFrom(startId);
-  return [...visited];
+  return visited;
 };
 
 const memoizedNodesIdsByGraph = new WeakMap<Graph, string[]>();
@@ -464,7 +468,13 @@ export const sortIdsDepthFirst =
 
     memoizedNodesIdsByGraph.set(graph, allNodeIdsSorted);
 
-    return Array.from(nodeIds).sort(
-      (a, b) => allNodeIdsSorted.indexOf(a) - allNodeIdsSorted.indexOf(b)
-    );
+    const nodeIdArray = Array.from(nodeIds);
+
+    // Return order of nodes within their graph subsection
+    // This prevents clones from being sorted incorrectly (i.e. by their first appearance in the graph)
+    return nodeIdArray.sort((a, b) => {
+      const startNodeIndex = allNodeIdsSorted.indexOf(nodeIdArray[0]);
+      const graphSubsection = allNodeIdsSorted.slice(startNodeIndex);
+      return graphSubsection.indexOf(a) - graphSubsection.indexOf(b);
+    });
   };
