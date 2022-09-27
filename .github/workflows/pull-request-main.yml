@@ -60,11 +60,12 @@ jobs:
           aws s3 cp s3://pizza-secrets/root.env ./.env
           aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
           aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
+          aws s3 cp s3://pizza-secrets/hasura.env.test ./hasura.planx.uk/.env.test
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env"
+          files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env, hasura.planx.uk/.env.test"
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -104,11 +105,12 @@ jobs:
           aws s3 cp s3://pizza-secrets/root.env ./.env
           aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
           aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
+          aws s3 cp s3://pizza-secrets/hasura.env.test ./hasura.planx.uk/.env.test
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env"
+          files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env, hasura.planx.uk/.env.test"
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -139,11 +141,12 @@ jobs:
           aws s3 cp s3://pizza-secrets/root.env ./.env
           aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
           aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
+          aws s3 cp s3://pizza-secrets/hasura.env.test ./hasura.planx.uk/.env.test
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env"
+          files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env, hasura.planx.uk/.env.test"
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -338,6 +341,7 @@ jobs:
             aws s3 cp s3://pizza-secrets/root.env .env
             aws s3 cp s3://pizza-secrets/editor.env editor.planx.uk/.env
             aws s3 cp s3://pizza-secrets/api.env.test api.planx.uk/.env.test
+            aws s3 cp s3://pizza-secrets/hasura.env.test hasura.planx.uk/.env.test
 
             echo "
             ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
@@ -370,6 +374,7 @@ jobs:
             aws s3 cp s3://pizza-secrets/root.env .env
             aws s3 cp s3://pizza-secrets/editor.env editor.planx.uk/.env
             aws s3 cp s3://pizza-secrets/api.env.test api.planx.uk/.env.test
+            aws s3 cp s3://pizza-secrets/hasura.env.test hasura.planx.uk/.env.test
 
             echo "
             ROOT_DOMAIN=${{ env.FULL_DOMAIN }}

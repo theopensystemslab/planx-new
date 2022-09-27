@@ -1,3 +1,5 @@
+require("dotenv").config({ path: "../hasura.planx.uk/.env.test" });
+
 import assert from "assert";
 import { RequestMock, Selector } from "testcafe";
 import { getAdminJWT, gqlAdmin, setJWT } from "../common.js";

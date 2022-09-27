@@ -1,6 +1,11 @@
 # hasura.planx.uk
 
-This the configuration directory for [Hasura](https://hasura.io), which is our GraphQL API layer that securely exposes data in our postgres database.
+This is the configuration directory for [Hasura](https://hasura.io), our GraphQL API layer that securely exposes data in our postgres database.
+
+### Running locally
+
+- `pnpm i` installs dependencies
+- `pnpm start` opens Hasura's web console (requires planx-new/.env, see main README for how to setup secrets)
 
 ### Tests
 
