@@ -71,13 +71,16 @@ const RichTextInput2: FC<Props> = (props) => {
     editable: Boolean(props.onChange),
   });
 
-  const [addingLink, setAddingLink] = useState<{ draft: string } | null>(null);
+  const [addingLink, setAddingLink] = useState<{
+    draft: string;
+    selectionHtml: string | null;
+  } | null>(null);
 
   // Cache internal string value
   const internalValue = useRef<string | null>(null);
 
   const handleUpdate = useCallback(
-    (transaction) => {
+    (transaction: any) => {
       if (!props.onChange) {
         return;
       }
@@ -118,6 +121,21 @@ const RichTextInput2: FC<Props> = (props) => {
     };
   }, [editor, handleUpdate]);
 
+  const getSelectionHtml = () => {
+    if (!editor) {
+      return null;
+    }
+    try {
+      const selectionDocument = {
+        type: "doc",
+        content: [editor.state.selection.content().toJSON().content[0]],
+      };
+      return generateHTML(selectionDocument, commonExtensions);
+    } catch (err) {
+      return null;
+    }
+  };
+
   return (
     <>
       {editor && (
@@ -128,6 +146,11 @@ const RichTextInput2: FC<Props> = (props) => {
         >
           {addingLink ? (
             <Input
+              errorMessage={
+                addingLink.selectionHtml === "<p>click here</p>"
+                  ? "Please set link over descriptive piece of content."
+                  : undefined
+              }
               innerRef={(el) => {
                 el?.querySelector("input")?.focus();
               }}
@@ -145,9 +168,13 @@ const RichTextInput2: FC<Props> = (props) => {
               }}
               value={addingLink.draft}
               onChange={(ev) => {
-                setAddingLink({
-                  draft: ev.target.value,
-                });
+                setAddingLink(
+                  (prev) =>
+                    prev && {
+                      ...prev,
+                      draft: ev.target.value,
+                    }
+                );
               }}
             />
           ) : (
@@ -185,13 +212,12 @@ const RichTextInput2: FC<Props> = (props) => {
             size="small"
             color={editor.isActive("link") ? "primary" : undefined}
             onClick={() => {
-              const selectionText = editor.state.selection.content().toJSON();
-              console.log(selectionText);
               if (!addingLink) {
                 if (editor.isActive("link")) {
                   editor.chain().focus().unsetLink().run();
                 } else {
                   setAddingLink({
+                    selectionHtml: getSelectionHtml(),
                     draft: "https://",
                   });
                 }
