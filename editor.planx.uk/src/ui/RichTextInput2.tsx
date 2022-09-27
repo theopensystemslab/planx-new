@@ -17,20 +17,29 @@ import History from "@tiptap/extension-history";
 import Italic from "@tiptap/extension-italic";
 import Link from "@tiptap/extension-link";
 import ListItem from "@tiptap/extension-list-item";
+import Mention from "@tiptap/extension-mention";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Paragraph from "@tiptap/extension-paragraph";
 import ExtensionPlaceholder from "@tiptap/extension-placeholder";
 import Text from "@tiptap/extension-text";
 import { generateHTML, generateJSON } from "@tiptap/html";
-import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
+import {
+  BubbleMenu,
+  EditorContent,
+  ReactRenderer,
+  useEditor,
+} from "@tiptap/react";
 import React, {
   type FC,
   ChangeEvent,
+  forwardRef,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useRef,
   useState,
 } from "react";
+import tippy from "tippy.js";
 
 import Input from "./Input";
 
@@ -56,12 +65,28 @@ const commonExtensions = [
   ListItem,
 ];
 
+const conversionExtensions = [
+  ...commonExtensions,
+
+  Mention.configure({
+    HTMLAttributes: {
+      class: "pass",
+    },
+  }),
+];
+
 const RichTextInput2: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
   const editor = useEditor({
     extensions: [
       ...commonExtensions,
       History,
+      Mention.configure({
+        HTMLAttributes: {
+          class: "pass",
+        },
+        suggestion,
+      }),
       HardBreak,
       ExtensionPlaceholder.configure({
         placeholder: props.placeholder || "",
@@ -85,7 +110,7 @@ const RichTextInput2: FC<Props> = (props) => {
         return;
       }
       const doc = transaction.editor.getJSON();
-      const html = generateHTML(doc, commonExtensions);
+      const html = generateHTML(doc, conversionExtensions);
       internalValue.current = html;
       const changeEvent = {
         target: {
@@ -104,7 +129,8 @@ const RichTextInput2: FC<Props> = (props) => {
       return;
     }
     const editorValue =
-      internalValue.current || generateHTML(editor.getJSON(), commonExtensions);
+      internalValue.current ||
+      generateHTML(editor.getJSON(), conversionExtensions);
     if (props.value !== editorValue) {
       internalValue.current = stringValue;
       editor.commands.setContent(generateJSON(stringValue, commonExtensions));
@@ -130,7 +156,7 @@ const RichTextInput2: FC<Props> = (props) => {
         type: "doc",
         content: [editor.state.selection.content().toJSON().content[0]],
       };
-      return generateHTML(selectionDocument, commonExtensions);
+      return generateHTML(selectionDocument, conversionExtensions);
     } catch (err) {
       return null;
     }
@@ -251,5 +277,175 @@ const RichTextInput2: FC<Props> = (props) => {
     </>
   );
 };
+
+// Implemented based on the mention plugin example code snippets: https://tiptap.dev/api/nodes/mention
+const suggestion = {
+  items: ({ query }: { query: string }) => {
+    return [
+      "Lea Thompson",
+      "Cyndi Lauper",
+      "Tom Cruise",
+      "Madonna",
+      "Jerry Hall",
+      "Joan Collins",
+      "Winona Ryder",
+      "Christina Applegate",
+      "Alyssa Milano",
+      "Molly Ringwald",
+      "Ally Sheedy",
+      "Debbie Harry",
+      "Olivia Newton-John",
+      "Elton John",
+      "Michael J. Fox",
+      "Axl Rose",
+      "Emilio Estevez",
+      "Ralph Macchio",
+      "Rob Lowe",
+      "Jennifer Grey",
+      "Mickey Rourke",
+      "John Cusack",
+      "Matthew Broderick",
+      "Justine Bateman",
+      "Lisa Bonet",
+    ]
+      .filter((item) => item.toLowerCase().startsWith(query.toLowerCase()))
+      .slice(0, 5);
+  },
+
+  render: () => {
+    let component: any;
+    let popup: any;
+
+    return {
+      onStart: (props: any) => {
+        component = new ReactRenderer(MentionList, {
+          props,
+          editor: props.editor,
+        });
+
+        if (!props.clientRect) {
+          return;
+        }
+
+        popup = tippy("body", {
+          getReferenceClientRect: props.clientRect,
+          appendTo: () => document.body,
+          content: component.element,
+          showOnCreate: true,
+          interactive: true,
+          trigger: "manual",
+          placement: "bottom-start",
+        });
+      },
+
+      onUpdate(props: any) {
+        component.updateProps(props);
+
+        if (!props.clientRect) {
+          return;
+        }
+
+        popup[0].setProps({
+          getReferenceClientRect: props.clientRect,
+        });
+      },
+
+      onKeyDown(props: any) {
+        if (props.event.key === "Escape") {
+          popup[0].hide();
+          return true;
+        }
+
+        return component.ref?.onKeyDown(props);
+      },
+
+      onExit() {
+        popup[0].destroy();
+        component.destroy();
+      },
+    };
+  },
+};
+
+export interface Placeholder {
+  id: string;
+  label: string;
+}
+
+interface MentionListProps {
+  items: Placeholder[];
+  command: any;
+  onCreatePlaceholder: (val: string) => void;
+}
+
+// Implemented based on the mention plugin example code snippets: https://tiptap.dev/api/nodes/mention
+const MentionList = forwardRef((props: MentionListProps, ref) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const selectItem = (index: number) => {
+    const item = props.items[index];
+
+    if (item) {
+      props.command({ id: item });
+    }
+  };
+
+  const upHandler = () => {
+    setSelectedIndex(
+      (selectedIndex + props.items.length - 1) % props.items.length
+    );
+  };
+
+  const downHandler = () => {
+    setSelectedIndex((selectedIndex + 1) % props.items.length);
+  };
+
+  const enterHandler = () => {
+    selectItem(selectedIndex);
+  };
+
+  useEffect(() => setSelectedIndex(0), [props.items]);
+
+  useImperativeHandle(ref, () => ({
+    onKeyDown: ({ event }: any) => {
+      if (event.key === "ArrowUp") {
+        upHandler();
+        return true;
+      }
+
+      if (event.key === "ArrowDown") {
+        downHandler();
+        return true;
+      }
+
+      if (event.key === "Enter") {
+        enterHandler();
+        return true;
+      }
+
+      return false;
+    },
+  }));
+
+  return (
+    <div className="mention-items">
+      {props.items.length ? (
+        props.items.map((item: any, index: number) => (
+          <button
+            className={`mention-item ${
+              index === selectedIndex ? "mention-item-selected" : ""
+            }`}
+            key={index}
+            onClick={() => selectItem(index)}
+          >
+            {item}
+          </button>
+        ))
+      ) : (
+        <div className="mention-item-empty">No result</div>
+      )}
+    </div>
+  );
+});
 
 export default RichTextInput2;
