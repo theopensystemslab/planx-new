@@ -23,7 +23,3 @@ you can opt-out of type checking by setting the environment variable
 We use [Storybook](https://storybook.js.org/) for our UI component library.
 
 Start the development server `pnpm start-storybook`
-
-## Accessibility
-
-The public "preview" environments of our live services were last audited by the [Digital Accessibility Centre (DAC)](https://digitalaccessibilitycentre.org/) on 17th March 2022. At that time we were found to comply with all the requirements of the [Web Content Accessibility Guidelines (WCAG) version 2.1 AA](https://www.w3.org/TR/WCAG21/).
