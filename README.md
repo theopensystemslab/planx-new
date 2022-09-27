@@ -54,7 +54,7 @@ For maximum visibility and discoverability, we recommend using the [GitHub discu
 
 ### Accessibility
 
-Our public-facing live services were last audited by the [Digital Accessibility Centre (DAC)](https://digitalaccessibilitycentre.org/) on 17th March 2022. At that time we were found to comply with all the requirements of the [Web Content Accessibility Guidelines (WCAG) version 2.1 AA](https://www.w3.org/TR/WCAG21/).
+Our public-facing live services were last audited by the [Digital Accessibility Centre (DAC)](https://digitalaccessibilitycentre.org/) on 30th March 2022. At that time we were found to comply with all the requirements of the [Web Content Accessibility Guidelines (WCAG) version 2.1 AA](https://www.w3.org/TR/WCAG21/). You can [review our report here](https://drive.google.com/file/d/1bg3UvRq80H0R59avKpBAuQL1jxKG5tRZ/view).
 
 ### Security
 
