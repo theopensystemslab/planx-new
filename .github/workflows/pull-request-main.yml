@@ -55,8 +55,6 @@ jobs:
       - name: E2E Tests
         run: pnpm install --frozen-lockfile && pnpm test
         working-directory: e2e
-        env: 
-          REACT_APP_SHAREDB_URL: wss://localhost:7003
 
   api_tests:
     name: API Tests
