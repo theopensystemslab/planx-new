@@ -1,21 +1,16 @@
 # editor.planx.uk
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/5856b13f-3fad-44ec-ae6c-2c6502df1356/deploy-status)](https://app.netlify.com/sites/planx-new/deploys)
-
-This is a React App for planning officers and other people who need access to PlanX backend to log in and manage flows/services. It is not in the root `docker-compose*.yml` file(s) as it is deployed separately from those services.
+Editor is our React frontend, which consists of two main environments: an "editor" for service designers and a "preview" for public applicants. Our components are written with Material UI and broadly follow the [GOV.UK design system](https://design-system.service.gov.uk/) patterns. 
 
 ## Running locally
 
-This project uses [pnpm](https://github.com/pnpm/pnpm), to install it you can run `npm i -g pnpm@7.8.0`
+Install [pnpm](https://pnpm.io) if you don't already have it `npm install -g pnpm@7.8.0`
 
-Then install the project's dependencies
+Install the project's dependencies `pnpm install`
 
-`pnpm install`
+Start the development server `pnpm start`
 
-and start the development server
-
-`pnpm start`
-
+Run tests `pnpm test`
 
 ### Disabling type-checking
 
@@ -27,6 +22,8 @@ you can opt-out of type checking by setting the environment variable
 
 We use [Storybook](https://storybook.js.org/) for our UI component library.
 
-Start the development server
+Start the development server `pnpm start-storybook`
 
-`pnpm start-storybook`
+## Accessibility
+
+The public "preview" environments of our live services were last audited by the [Digital Accessibility Centre (DAC)](https://digitalaccessibilitycentre.org/) on 17th March 2022. At that time we were found to comply with all the requirements of the [Web Content Accessibility Guidelines (WCAG) version 2.1 AA](https://www.w3.org/TR/WCAG21/).
