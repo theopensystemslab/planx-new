@@ -1,3 +1,5 @@
+require("dotenv").config({ path: "./../.env.test" });
+
 expect.extend({
   // expects not to find any mutations containing the table name
   toHaveNoMutationsFor({ mutations }, tableName) {

@@ -20,25 +20,25 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 ## Running Locally
 
-1. [Download and install Docker](https://docs.docker.com/get-docker/) if you don't have it already
+1. Download and install the following dependencies if you don't have them already:
+- [Docker](https://docs.docker.com/get-docker/)
+- [PNPM](https://github.com/pnpm/pnpm) `npm install -g pnpm@7.8.0`
 
-1. Clone this repository. You'll need to get some additional environment variable files that aren't published here. Find instructions for copying those in 1password under the AWS Staging IAM user role entry.
+1. Clone this repository. You'll need to get some additional environment variable files that aren't published here. Find instructions for copying these in 1password under the AWS Staging IAM user role entry
 
 1. Run the following command to get everything (postgres, sharedb, api and hasura server processes) up and running `docker-compose up --build -d`
 
-1. Open [Hasura's](https://hasura.io/) web console to check that your Google email address is in the users table, if not then add it
+1. Move into the hasura directory `cd ../hasura.planx.uk` & install dependencies `pnpm i`
 
-1. Move into the editor directory `cd ../editor.planx.uk`
+1. Open [Hasura's](https://hasura.io/) web console `pnpm start` & check that your Google email address is in the `users` table, if not then add it
 
-1. Install [pnpm](https://github.com/pnpm/pnpm) if you don't have it `npm install -g pnpm@7.8.0`
+1. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`
 
-1. Install dependencies `pnpm i`
-
-1. Start the dev server! `pnpm start`, open http://localhost:3000 and login with your GMail/Google email address
+1. Start the dev server! `pnpm start` & open http://localhost:3000 & login with your GMail/Google email address
 
 ### Analytics
 
-Running `docker-compose up` won't spin up [metabase](https://www.metabase.com/).
+Running `docker-compose up` won't spin up [Metabase](https://www.metabase.com/).
 To spin it up, run:
 
   `docker-compose --profile analytics up`
@@ -49,3 +49,13 @@ To spin it up, run:
 This project uses Architecture Decision Records (ADRs) to record significant changes and decisions. Further details of this can be [found here](https://github.com/theopensystemslab/planx-new/blob/main/doc/architecture/decisions/0001-record-architecture-decisions.md).
 
 For maximum visibility and discoverability, we recommend using the [GitHub discussions board](https://github.com/theopensystemslab/planx-new/discussions) where possible.
+
+## Audits
+
+### Accessibility
+
+Our public-facing live services were last audited by the [Digital Accessibility Centre (DAC)](https://digitalaccessibilitycentre.org/) on 17th March 2022. At that time we were found to comply with all the requirements of the [Web Content Accessibility Guidelines (WCAG) version 2.1 AA](https://www.w3.org/TR/WCAG21/).
+
+### Security
+
+Our whole stack was last assessed by [Jumpsec](https://www.jumpsec.com/) on 27th July 2022. Their penetration test concluded that our infrastructure and application environments are securely configured to follow best practices. We have since additionally resolved a handful of low- and informational-risk issues uncovered during the assessment to maintain a high standard of security.
