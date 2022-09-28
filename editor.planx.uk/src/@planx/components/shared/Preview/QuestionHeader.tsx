@@ -1,8 +1,8 @@
-import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import React from "react";
 import MoreInfoIcon from "ui/icons/MoreInfo";
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     "& p": {
-      margin: `${theme.spacing(1)}px 0`,
+      margin: `${theme.spacing(1)} 0`,
     },
   },
   image: {
@@ -58,7 +58,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
 
   return (
     <Box mb={2}>
-      <Grid container justify="space-between" wrap="nowrap">
+      <Grid container justifyContent="space-between" wrap="nowrap">
         <Grid item>
           {title && (
             <Box letterSpacing="-0.02em" mr={1} pt={1.5}>
@@ -90,6 +90,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               aria-label={`See more information about "${title}"`}
               onClick={handleHelpClick}
               aria-haspopup="dialog"
+              size="large"
             >
               <MoreInfoIcon viewBox="0 0 30 30" />
             </IconButton>

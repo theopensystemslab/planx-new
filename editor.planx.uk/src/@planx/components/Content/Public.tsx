@@ -1,6 +1,6 @@
 import { mostReadable } from "@ctrl/tinycolor";
-import type { Theme } from "@material-ui/core/styles";
-import { makeStyles } from "@material-ui/core/styles";
+import type { Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import type { Content } from "@planx/components/Content/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";

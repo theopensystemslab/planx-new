@@ -12,9 +12,9 @@ import {
 } from "@draft-js-plugins/buttons";
 import PluginsEditor from "@draft-js-plugins/editor";
 import createInlineToolbarPlugin from "@draft-js-plugins/inline-toolbar";
-import Box from "@material-ui/core/Box";
-import { InputBaseProps } from "@material-ui/core/InputBase";
-import { makeStyles } from "@material-ui/core/styles";
+import Box from "@mui/material/Box";
+import { InputBaseProps } from "@mui/material/InputBase";
+import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import {
   CompositeDecorator,

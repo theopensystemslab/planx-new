@@ -1,7 +1,7 @@
-import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Check from "@material-ui/icons/CheckCircleOutlineOutlined";
+import Check from "@mui/icons-material/CheckCircleOutlineOutlined";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/ui";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -24,7 +24,7 @@ const useClasses = makeStyles((theme) => ({
         border: "none",
       },
       "& td": {
-        padding: `${theme.spacing(1.5)}px ${theme.spacing(1)}px`,
+        padding: `${theme.spacing(1.5)} ${theme.spacing(1)}`,
       },
     },
   },

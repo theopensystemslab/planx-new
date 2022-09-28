@@ -1,25 +1,24 @@
-import BorderColorIcon from "@material-ui/icons/BorderColor";
-import CallSplit from "@material-ui/icons/CallSplit";
-import CheckBoxOutlined from "@material-ui/icons/CheckBoxOutlined";
-import CloudUpload from "@material-ui/icons/CloudUpload";
-import Create from "@material-ui/icons/Create";
-import Event from "@material-ui/icons/Event";
-import ExposureZero from "@material-ui/icons/ExposureZero";
-import FunctionsIcon from "@material-ui/icons/Functions";
-import Home from "@material-ui/icons/Home";
-import InfoOutlined from "@material-ui/icons/InfoOutlined";
-import List from "@material-ui/icons/List";
-import MailOutlined from "@material-ui/icons/MailOutlined";
-import Map from "@material-ui/icons/Map";
-import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
-import PlaylistAdd from "@material-ui/icons/PlaylistAdd";
-import PlaylistAddCheck from "@material-ui/icons/PlaylistAddCheck";
-import RateReview from "@material-ui/icons/RateReview";
-import ReportProblemOutlined from "@material-ui/icons/ReportProblemOutlined";
-import SearchOutlined from "@material-ui/icons/SearchOutlined";
-import Send from "@material-ui/icons/Send";
-import SquareFoot from "@material-ui/icons/SquareFoot";
-import TextFields from "@material-ui/icons/TextFields";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import CallSplit from "@mui/icons-material/CallSplit";
+import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
+import CloudUpload from "@mui/icons-material/CloudUpload";
+import Create from "@mui/icons-material/Create";
+import Event from "@mui/icons-material/Event";
+import FunctionsIcon from "@mui/icons-material/Functions";
+import Home from "@mui/icons-material/Home";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import List from "@mui/icons-material/List";
+import Map from "@mui/icons-material/Map";
+import PaymentOutlined from "@mui/icons-material/PaymentOutlined";
+import Pin from "@mui/icons-material/Pin";
+import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
+import PlaylistAddCheck from "@mui/icons-material/PlaylistAddCheck";
+import RateReview from "@mui/icons-material/RateReview";
+import ReportProblemOutlined from "@mui/icons-material/ReportProblemOutlined";
+import SearchOutlined from "@mui/icons-material/SearchOutlined";
+import Send from "@mui/icons-material/Send";
+import SquareFoot from "@mui/icons-material/SquareFoot";
+import TextFields from "@mui/icons-material/TextFields";
 import { TYPES } from "@planx/components/types";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
@@ -67,7 +66,7 @@ export const ICONS: {
   [TYPES.Flow]: undefined,
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: ReportProblemOutlined,
-  [TYPES.NumberInput]: ExposureZero,
+  [TYPES.NumberInput]: Pin,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PlanningConstraints]: Map,
   [TYPES.Response]: undefined,

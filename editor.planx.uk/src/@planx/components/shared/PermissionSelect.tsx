@@ -1,4 +1,4 @@
-import MenuItem from "@material-ui/core/MenuItem";
+import MenuItem from "@mui/material/MenuItem";
 import flags from "pages/FlowEditor/data/flags";
 import React from "react";
 import type { Props as SelectInputProps } from "ui/SelectInput";

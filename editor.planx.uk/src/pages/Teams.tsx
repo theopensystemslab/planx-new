@@ -1,7 +1,8 @@
-import Box from "@material-ui/core/Box";
-import Card from "@material-ui/core/Card";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import { Theme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import React from "react";
 import { Link } from "react-navi";
 

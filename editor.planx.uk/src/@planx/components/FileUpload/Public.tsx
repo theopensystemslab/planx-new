@@ -1,11 +1,11 @@
-import Box from "@material-ui/core/Box";
-import ButtonBase from "@material-ui/core/ButtonBase";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import FileIcon from "@material-ui/icons/AttachFile";
-import DeleteIcon from "@material-ui/icons/Close";
-import CloudUpload from "@material-ui/icons/CloudUpload";
-import { visuallyHidden } from "@material-ui/utils";
+import FileIcon from "@mui/icons-material/AttachFile";
+import DeleteIcon from "@mui/icons-material/Close";
+import CloudUpload from "@mui/icons-material/CloudUpload";
+import Box from "@mui/material/Box";
+import ButtonBase from "@mui/material/ButtonBase";
+import IconButton from "@mui/material/IconButton";
+import makeStyles from "@mui/styles/makeStyles";
+import { visuallyHidden } from "@mui/utils";
 import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -47,8 +47,8 @@ const useStyles = makeStyles((theme) => ({
       position: "absolute",
       left: -theme.spacing(0.75),
       top: -theme.spacing(0.75),
-      width: `calc(100% + ${theme.spacing(1.5)}px)`,
-      height: `calc(100% + ${theme.spacing(1.5)}px)`,
+      width: `calc(100% + ${theme.spacing(1.5)})`,
+      height: `calc(100% + ${theme.spacing(1.5)})`,
       display: "block",
       border: `2px dashed ${theme.palette.secondary.light}`,
       opacity: 0,

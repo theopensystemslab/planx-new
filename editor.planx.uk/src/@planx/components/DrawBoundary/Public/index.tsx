@@ -1,9 +1,9 @@
 import "./map.css";
 
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
-import { visuallyHidden } from "@material-ui/utils";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import makeStyles from "@mui/styles/makeStyles";
+import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
@@ -146,13 +146,13 @@ export default function Component(props: Props) {
           </Box>
           {!props.hideFileUpload && (
             <div className={classes.uploadInstead}>
-              <button
+              <Button
                 data-testid="upload-file-button"
                 onClick={() => setPage("upload")}
                 disabled={Boolean(boundary)}
               >
                 Upload a location plan instead
-              </button>
+              </Button>
             </div>
           )}
           <p>

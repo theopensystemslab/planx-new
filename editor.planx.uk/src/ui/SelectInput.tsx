@@ -1,6 +1,6 @@
-import Select, { SelectProps } from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/core/styles";
-import ArrowIcon from "@material-ui/icons/KeyboardArrowDown";
+import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
+import Select, { SelectProps } from "@mui/material/Select";
+import makeStyles from "@mui/styles/makeStyles";
 import React, { ReactNode } from "react";
 
 import Input from "./Input";
@@ -33,13 +33,16 @@ const useClasses = makeStyles((theme) => ({
     right: theme.spacing(1.5),
     color: "rgba(0,0,0,0.25)",
   },
-  selectMenu: {
+  select: {
     backgroundColor: "transparent",
     "&:focus": {
       backgroundColor: "transparent",
     },
   },
-  paper: {
+  menuRoot: {
+    marginLeft: 42,
+  },
+  menuPaper: {
     border: `2px solid ${theme.palette.primary.light}`,
     borderTop: 0,
     marginTop: -2,
@@ -72,10 +75,11 @@ export default function SelectInput({
   const classes = useClasses();
   return (
     <Select
+      variant="standard"
       value={value}
       className={classes.root}
       classes={{
-        root: classes.selectRoot,
+        select: classes.selectRoot,
         icon: classes.icon,
       }}
       onChange={onChange}
@@ -84,17 +88,17 @@ export default function SelectInput({
       inputProps={{
         name,
         classes: {
-          selectMenu: classes.selectMenu,
+          select: classes.select,
         },
       }}
       MenuProps={{
-        getContentAnchorEl: null,
         anchorOrigin: {
           vertical: "bottom",
-          horizontal: "left",
+          horizontal: "right",
         },
         classes: {
-          paper: classes.paper,
+          root: classes.menuRoot,
+          paper: classes.menuPaper,
         },
       }}
       {...props}

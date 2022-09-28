@@ -1,8 +1,8 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import React, { useState } from "react";
 import AnalyticsChart from "ui/icons/AnalyticsChart";
 
@@ -39,7 +39,9 @@ const AnalyticsDisabledBanner: React.FC = () => {
             <Typography variant="body2">
               <b>Analytics off</b> This is a preview link for testing. No usage
               data is being recorded.{"  "}
-              <Link href={enableAnalytics()}>Go to normal link</Link>
+              <Link href={enableAnalytics()} underline="hover">
+                Go to normal link
+              </Link>
             </Typography>
           </Box>
           <Button onClick={() => setShowAnalyticsWarning(false)}>Hide</Button>

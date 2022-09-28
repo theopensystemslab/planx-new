@@ -1,8 +1,8 @@
-import Box from "@material-ui/core/Box";
-import ButtonBase from "@material-ui/core/ButtonBase";
-import Collapse from "@material-ui/core/Collapse";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Box from "@mui/material/Box";
+import ButtonBase from "@mui/material/ButtonBase";
+import Collapse from "@mui/material/Collapse";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import React from "react";
 import Caret from "ui/icons/Caret";
@@ -44,7 +44,7 @@ const useClasses = makeStyles((theme) => ({
       width: theme.spacing(4.5),
       height: theme.spacing(4.5),
       display: "inline-block",
-      lineHeight: `${theme.spacing(4.5)}px`,
+      lineHeight: theme.spacing(4.5),
       border: `1px solid ${theme.palette.text.primary}`,
       backgroundColor: theme.palette.background.default,
       borderRadius: "50%",
@@ -53,7 +53,7 @@ const useClasses = makeStyles((theme) => ({
       textAlign: "center",
       zIndex: 2,
       [theme.breakpoints.up("sm")]: {
-        lineHeight: `${theme.spacing(4.5)}px`,
+        lineHeight: theme.spacing(4.5),
         width: theme.spacing(4.5),
         height: theme.spacing(4.5),
       },

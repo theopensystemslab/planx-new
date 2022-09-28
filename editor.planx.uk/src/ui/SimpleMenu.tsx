@@ -1,7 +1,7 @@
-import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import MoreVert from "@material-ui/icons/MoreVert";
+import MoreVert from "@mui/icons-material/MoreVert";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import React, { useState } from "react";
 
 interface Props {
@@ -24,6 +24,7 @@ export default function SimpleMenu({ items, ...restProps }: Props): FCReturn {
           setAnchorEl(ev.currentTarget);
         }}
         aria-label="Options"
+        size="large"
       >
         <MoreVert />
       </IconButton>

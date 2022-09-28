@@ -1,6 +1,6 @@
-import InputBase, { InputBaseProps } from "@material-ui/core/InputBase";
-import type { Theme } from "@material-ui/core/styles";
-import { makeStyles } from "@material-ui/core/styles";
+import InputBase, { InputBaseProps } from "@mui/material/InputBase";
+import type { Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import React, { ChangeEvent, forwardRef } from "react";
 import { borderedFocusStyle } from "theme";

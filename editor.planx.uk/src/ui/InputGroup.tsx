@@ -1,8 +1,8 @@
-import Box from "@material-ui/core/Box";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import Delete from "@material-ui/icons/Delete";
-import DragHandle from "@material-ui/icons/DragHandle";
+import Delete from "@mui/icons-material/Delete";
+import DragHandle from "@mui/icons-material/DragHandle";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
@@ -183,6 +183,7 @@ export default function InputGroup({
             className={classes.deleteBtn}
             onClick={deleteInputGroup}
             aria-label="Delete"
+            size="large"
           >
             <Delete />
           </IconButton>

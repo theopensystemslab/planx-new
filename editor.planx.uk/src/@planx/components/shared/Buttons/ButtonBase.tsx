@@ -1,5 +1,5 @@
-import MuiButtonBase from "@material-ui/core/ButtonBase";
-import { makeStyles } from "@material-ui/core/styles";
+import MuiButtonBase from "@mui/material/ButtonBase";
+import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import React from "react";
 

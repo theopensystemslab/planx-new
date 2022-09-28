@@ -6,8 +6,12 @@ import "react-toastify/dist/ReactToastify.css";
 import "./app.css";
 
 import { ApolloProvider } from "@apollo/client";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { ThemeProvider } from "@material-ui/core/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import {
+  StyledEngineProvider,
+  Theme,
+  ThemeProvider,
+} from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
 import jwtDecode from "jwt-decode";
 import { getCookie, setCookie } from "lib/cookie";
@@ -23,6 +27,10 @@ import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import globalTheme from "./theme";
+
+declare module "@mui/styles/defaultTheme" {
+  interface DefaultTheme extends Theme {}
+}
 
 const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
@@ -85,15 +93,17 @@ const Layout: React.FC<{
   }, []);
 
   return (
-    <ThemeProvider theme={globalTheme}>
-      <NotFoundBoundary render={() => <ErrorPage title="Not found" />}>
-        {!!isLoading ? (
-          <DelayedLoadingIndicator msDelayBeforeVisible={500} />
-        ) : (
-          children
-        )}
-      </NotFoundBoundary>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={globalTheme}>
+        <NotFoundBoundary render={() => <ErrorPage title="Not found" />}>
+          {!!isLoading ? (
+            <DelayedLoadingIndicator msDelayBeforeVisible={500} />
+          ) : (
+            children
+          )}
+        </NotFoundBoundary>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

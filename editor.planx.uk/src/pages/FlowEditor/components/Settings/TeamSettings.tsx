@@ -1,14 +1,14 @@
-import Avatar from "@material-ui/core/Avatar";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Add from "@material-ui/icons/Add";
-import Close from "@material-ui/icons/Close";
+import Add from "@mui/icons-material/Add";
+import Close from "@mui/icons-material/Close";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
@@ -44,7 +44,12 @@ const TeamMember = ({ name, email, userRole }: any) => {
   const classes = teamStyles();
   return (
     <Box mb={1.5}>
-      <Grid container spacing={2} justify="flex-start" alignItems="center">
+      <Grid
+        container
+        spacing={2}
+        justifyContent="flex-start"
+        alignItems="center"
+      >
         <Grid item>
           <Avatar className={classes.avatar}>{name[0]}</Avatar>
         </Grid>
@@ -64,7 +69,7 @@ const TeamMember = ({ name, email, userRole }: any) => {
           </SelectInput>
         </Grid>
         <Grid item>
-          <IconButton aria-label="Remove">
+          <IconButton aria-label="Remove" size="large">
             <Close />
           </IconButton>
         </Grid>
@@ -113,7 +118,7 @@ const Team: React.FC<ITeam> = () => {
         <Grid
           container
           spacing={2}
-          justify="space-between"
+          justifyContent="space-between"
           alignItems="center"
           wrap="nowrap"
         >

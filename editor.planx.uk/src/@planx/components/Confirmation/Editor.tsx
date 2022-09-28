@@ -1,4 +1,4 @@
-import Box from "@material-ui/core/Box";
+import Box from "@mui/material/Box";
 import { EditorProps, ICONS } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";

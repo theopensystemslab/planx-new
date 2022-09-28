@@ -95,17 +95,17 @@ test
     Selector("input").withAttribute("placeholder", "Text"),
     "Is this a test?"
   );
-  await t.click(Selector("span").withText("add new"));
+  await t.click(Selector("button").withText("add new"));
   await t.typeText(
     Selector("input").withAttribute("placeholder", "Option"),
     "Yes"
   );
-  await t.click(Selector("span").withText("add new"));
+  await t.click(Selector("button").withText("add new"));
   await t.typeText(
     Selector("input").withAttribute("placeholder", "Option").nth(1),
     "No"
   );
-  await t.click(Selector("span").withText("Create question"));
+  await t.click(Selector("button").withText("Create question"));
 
   // Add a notice to the "Yes" path
   const yesPath = Selector("li").withAttribute("class", "hanger").nth(1);
@@ -123,7 +123,7 @@ test
     Selector("input").withAttribute("placeholder", "Notice"),
     yesNoticeResult
   );
-  await t.click(Selector("span").withText("Create notice"));
+  await t.click(Selector("button").withText("Create notice"));
 
   // Add a notice to the "No" path
   const noPath = Selector("li")
@@ -146,7 +146,7 @@ test
     Selector("input").withAttribute("placeholder", "Notice"),
     noNoticeResult
   );
-  await t.click(Selector("span").withText("Create notice"));
+  await t.click(Selector("button").withText("Create notice"));
 
   // Open preview URL
   const previewUrl = await Selector("a")

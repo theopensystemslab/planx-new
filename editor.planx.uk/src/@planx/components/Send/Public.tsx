@@ -1,5 +1,5 @@
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";

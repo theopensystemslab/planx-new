@@ -1,7 +1,8 @@
 import { mostReadable } from "@ctrl/tinycolor";
-import Button from "@material-ui/core/Button";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import ErrorOutline from "@material-ui/icons/ErrorOutline";
+import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import Button from "@mui/material/Button";
+import { Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import type { Notice } from "@planx/components/Notice/model";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -37,7 +38,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
       opacity: 0.3,
     },
     padding: theme.spacing(2),
-    paddingLeft: theme.spacing(2) + 10,
+    paddingLeft: `calc(${theme.spacing(2)} + 10px)`,
   },
   content: {
     flex: 1,
@@ -50,7 +51,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   description: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: 400,
-    margin: `${theme.spacing(2)}px 0 0 0`,
+    margin: `${theme.spacing(2)} 0 0 0`,
     "& a": {
       color: "inherit",
     },
@@ -83,7 +84,6 @@ const NoticeComponent: React.FC<Props> = (props) => {
         {props.resetButton && (
           <Button
             variant="contained"
-            color="default"
             size="large"
             type="submit"
             onClick={props.resetPreview}

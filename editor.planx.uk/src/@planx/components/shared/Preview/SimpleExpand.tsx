@@ -1,7 +1,8 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Collapse from "@material-ui/core/Collapse";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Collapse from "@mui/material/Collapse";
+import { Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import React from "react";
 
 const useClasses = makeStyles((theme: Theme) => ({

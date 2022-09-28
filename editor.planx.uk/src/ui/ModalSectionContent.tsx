@@ -1,6 +1,6 @@
-import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import makeStyles from "@mui/styles/makeStyles";
 import React from "react";
 
 interface Props {
@@ -29,7 +29,7 @@ export const useClasses = makeStyles((theme) => ({
     fontWeight: 600,
   },
   leftGutter: {
-    flex: `0 0 ${theme.spacing(6)}px`,
+    flex: `0 0 ${theme.spacing(6)}`,
     textAlign: "center",
   },
 }));

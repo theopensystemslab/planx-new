@@ -1,5 +1,8 @@
-import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
-import { ThemeOptions } from "@material-ui/core/styles";
+import {
+  createTheme,
+  responsiveFontSizes,
+  ThemeOptions,
+} from "@mui/material/styles";
 
 import { TeamTheme } from "./types";
 
@@ -110,19 +113,6 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
         xl: 1920,
       },
     },
-    props: {
-      MuiButton: {
-        // Removes default box shadow on buttons
-        disableElevation: true,
-        disableFocusRipple: true,
-      },
-      MuiPaper: {
-        elevation: 0,
-      },
-      MuiIconButton: {
-        disableFocusRipple: true,
-      },
-    },
     transitions: {
       duration: {
         enteringScreen: 400,
@@ -130,89 +120,118 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
     },
   };
 
-  // Separately setting "overrides" allows us to refer back to the palette
-  themeOptions.overrides = {
+  // Separately setting "components" allows us to refer back to the palette
+  // TODO: This workaround was required for MUI v4, but there might be a better way of achieving this now
+  themeOptions.components = {
     MuiCssBaseline: {
-      "@global": {
+      styleOverrides: {
         body: {
           backgroundColor: "#efefef",
+          fontSize: "0.875rem",
+          lineHeight: 1.43,
+          letterSpacing: "0.01071em",
         },
       },
     },
     MuiButtonBase: {
-      root: {
-        fontFamily: "inherit",
-        "&:focus-visible": {
-          ...focusStyle(themeOptions.palette?.action?.focus),
-          // !important is required here as setting disableElevation = true removes boxShadow
-          boxShadow: `0 -2px ${themeOptions.palette?.action?.focus}, 0 4px black !important`,
-          // Hover should not overwrite focus
-          "&:hover": focusStyle(themeOptions.palette?.action?.focus),
+      styleOverrides: {
+        root: {
+          fontFamily: "inherit",
+          "&:focus-visible": {
+            ...focusStyle(themeOptions.palette?.action?.focus),
+            // !important is required here as setting disableElevation = true removes boxShadow
+            boxShadow: `0 -2px ${themeOptions.palette?.action?.focus}, 0 4px black !important`,
+            // Hover should not overwrite focus
+            "&:hover": focusStyle(themeOptions.palette?.action?.focus),
+          },
         },
       },
     },
     MuiListItemIcon: {
-      root: {
-        color: "inherit",
+      styleOverrides: {
+        root: {
+          color: "inherit",
+        },
       },
     },
     MuiLink: {
-      root: {
-        ...linkStyle,
-        "&:focus-visible": focusStyle(themeOptions.palette?.action?.focus),
+      styleOverrides: {
+        root: {
+          ...linkStyle,
+          "&:focus-visible": focusStyle(themeOptions.palette?.action?.focus),
+        },
       },
     },
     MuiButton: {
-      root: {
-        borderRadius: 0,
-        textTransform: "none",
+      defaultProps: {
+        // Removes default box shadow on buttons
+        disableElevation: true,
+        disableFocusRipple: true,
       },
-      text: {
-        color: "rgba(0,0,0,0.4)",
-        "&:hover": {
-          color: "rgba(0,0,0,1)",
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+          textTransform: "none",
         },
-      },
-      containedSizeLarge: {
-        fontWeight: 700,
+        text: {
+          color: "rgba(0,0,0,0.4)",
+          "&:hover": {
+            color: "rgba(0,0,0,1)",
+          },
+        },
+        containedSizeLarge: {
+          fontWeight: 700,
+        },
       },
     },
     MuiIconButton: {
-      root: {
-        borderRadius: 0,
-        "&:focus-visible": {
-          ...focusStyle(themeOptions.palette?.action?.focus),
-          "& svg": {
-            color: "black",
+      defaultProps: {
+        disableFocusRipple: true,
+      },
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+          "&:focus-visible": {
+            ...focusStyle(themeOptions.palette?.action?.focus),
+            "& svg": {
+              color: "black",
+            },
           },
         },
+      },
+    },
+    MuiPaper: {
+      defaultProps: {
+        elevation: 0,
       },
     },
     ...({
       MUIRichTextEditor: {
-        root: {
-          padding: 0,
-        },
-        container: {
-          // Disable margins to allow a container <Box/>
-          margin: 0,
-          focus: {
-            outline: "none",
+        styleOverrides: {
+          root: {
+            padding: 0,
           },
-        },
-        editor: {
-          backgroundColor: "#fff",
-          padding: "4px 10px",
-          minHeight: 48,
-          fontSize: 15,
-        },
-        placeHolder: {
-          fontSize: 15,
-          padding: "4px 10px",
-          color: "#9a9a9a",
-        },
-        inlineToolbar: {
-          boxShadow: "0 1px 6px 0 rgba(0, 0, 0, 0.2)",
+          container: {
+            // Disable margins to allow a container <Box/>
+            margin: 0,
+            focus: {
+              outline: "none",
+            },
+          },
+          editor: {
+            backgroundColor: "#fff",
+            padding: "4px 10px",
+            minHeight: 48,
+            fontSize: 15,
+          },
+          placeHolder: {
+            fontSize: 15,
+            padding: "4px 10px",
+            color: "#9a9a9a",
+          },
+          inlineToolbar: {
+            boxShadow: "0 1px 6px 0 rgba(0, 0, 0, 0.2)",
+          },
         },
       },
       // Make TypeScript happy by 'casting away' unrecognized override keys
@@ -243,34 +262,40 @@ export const getTeamThemeOptions = (
         focus: focus,
       },
     },
-    overrides: {
+    components: {
       MuiButtonBase: {
-        root: {
-          "&:focus-visible": {
-            ...focusStyle(focus),
-            // !important is required here as setting disableElevation = true removes boxShadow
-            boxShadow: `0 -2px ${focus}, 0 4px black !important`,
-            "&:hover": focusStyle(focus),
+        styleOverrides: {
+          root: {
+            "&:focus-visible": {
+              ...focusStyle(focus),
+              // !important is required here as setting disableElevation = true removes boxShadow
+              boxShadow: `0 -2px ${focus}, 0 4px black !important`,
+              "&:hover": focusStyle(focus),
+            },
           },
         },
       },
       MuiLink: {
-        root: {
-          "&:focus-visible": {
-            backgroundColor: focus,
-            boxShadow: `0 -2px ${focus}, 0 4px black`,
+        styleOverrides: {
+          root: {
+            "&:focus-visible": {
+              backgroundColor: focus,
+              boxShadow: `0 -2px ${focus}, 0 4px black`,
+            },
           },
         },
       },
       MuiIconButton: {
-        root: {
-          "&:focus-visible": focusStyle(focus),
+        styleOverrides: {
+          root: {
+            "&:focus-visible": focusStyle(focus),
+          },
         },
       },
     },
   };
 };
 
-const globalTheme = createMuiTheme(getGlobalThemeOptions());
+const globalTheme = createTheme(getGlobalThemeOptions());
 
 export default responsiveFontSizes(globalTheme);

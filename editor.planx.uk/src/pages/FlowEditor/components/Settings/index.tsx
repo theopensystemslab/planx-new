@@ -1,12 +1,13 @@
-import AppBar from "@material-ui/core/AppBar";
-import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
-import Close from "@material-ui/icons/Close";
+import Close from "@mui/icons-material/Close";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import { Theme } from "@mui/material/styles";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import makeStyles from "@mui/styles/makeStyles";
 import { HEADER_HEIGHT } from "components/Header";
 import React from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
@@ -57,7 +58,7 @@ interface LinkTabProps {
   href?: string;
 }
 
-const tabStyles = makeStyles((theme: Theme) => ({
+const tabStyles = makeStyles(() => ({
   tab: {
     position: "relative",
     zIndex: 1,
@@ -124,10 +125,11 @@ const NavTabs: React.FC<{ tab?: string; settings?: FlowSettings }> = (
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="default" elevation={0}>
+      <AppBar position="static" color="default" enableColorOnDark elevation={0}>
         <Grid container wrap="nowrap">
           <Grid item xs={12}>
             <Tabs
+              textColor="inherit"
               indicatorColor="primary"
               variant="fullWidth"
               value={value}
@@ -166,6 +168,7 @@ const NavTabs: React.FC<{ tab?: string; settings?: FlowSettings }> = (
               component={Link}
               href={flowBaseRoute}
               aria-label="Close"
+              size="large"
             >
               <Close />
             </IconButton>

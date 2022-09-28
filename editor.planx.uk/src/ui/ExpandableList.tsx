@@ -1,6 +1,6 @@
-import MuiButtonBase from "@material-ui/core/ButtonBase";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import MuiButtonBase from "@mui/material/ButtonBase";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import classnames from "classnames";
 import React, { ReactNode } from "react";
 
@@ -16,7 +16,7 @@ const useListClasses = makeStyles((theme) => ({
 
 const useItemClasses = makeStyles((theme) => ({
   root: {
-    padding: `${theme.spacing(1)}px ${theme.spacing(1.5)}px`,
+    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
   },
   title: {
     alignItems: "flex-start",

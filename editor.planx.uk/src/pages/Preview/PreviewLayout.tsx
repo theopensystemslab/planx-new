@@ -1,12 +1,13 @@
-import Box from "@material-ui/core/Box";
-import Link from "@material-ui/core/Link";
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 import {
-  createMuiTheme,
-  makeStyles,
+  createTheme,
+  StyledEngineProvider,
   Theme,
   ThemeProvider,
-} from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+} from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import ErrorFallback from "components/ErrorFallback";
 import { clearLocalFlow } from "lib/local";
 import { merge } from "lodash";
@@ -30,6 +31,10 @@ import {
 import ResumePage from "./ResumePage";
 import SaveAndReturn from "./SaveAndReturn";
 import SavePage from "./SavePage";
+
+declare module "@mui/styles/defaultTheme" {
+  interface DefaultTheme extends Theme {}
+}
 
 const useClasses = makeStyles((theme) => ({
   mainContainer: {
@@ -142,35 +147,37 @@ const PreviewLayout: React.FC<{
   const generatePreviewTheme = (): Theme => {
     const globalOptions = getGlobalThemeOptions();
     const teamOptions = getTeamThemeOptions(team.theme);
-    return createMuiTheme(merge(globalOptions, teamOptions));
+    return createTheme(merge(globalOptions, teamOptions));
   };
 
   return (
-    <ThemeProvider theme={generatePreviewTheme}>
-      <Header
-        team={team}
-        handleRestart={handleRestart}
-        variant={headerVariant}
-      />
-      <Box id="main-content" className={classes.mainContainer}>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          {
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={generatePreviewTheme}>
+        <Header
+          team={team}
+          handleRestart={handleRestart}
+          variant={headerVariant}
+        />
+        <Box id="main-content" className={classes.mainContainer}>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
             {
-              [AppPath.SingleSession]: children,
-              [AppPath.Save]: <SavePage />,
-              [AppPath.Resume]: <ResumePage />,
-              [AppPath.SaveAndReturn]: (
-                <SaveAndReturn>{children}</SaveAndReturn>
-              ),
-            }[path]
-          }
-        </ErrorBoundary>
-      </Box>
-      <PublicFooter
-        footerContent={footerContent}
-        settings={settings}
-      ></PublicFooter>
-    </ThemeProvider>
+              {
+                [AppPath.SingleSession]: children,
+                [AppPath.Save]: <SavePage />,
+                [AppPath.Resume]: <ResumePage />,
+                [AppPath.SaveAndReturn]: (
+                  <SaveAndReturn>{children}</SaveAndReturn>
+                ),
+              }[path]
+            }
+          </ErrorBoundary>
+        </Box>
+        <PublicFooter
+          footerContent={footerContent}
+          settings={settings}
+        ></PublicFooter>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

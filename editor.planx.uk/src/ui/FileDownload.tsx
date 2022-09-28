@@ -1,5 +1,5 @@
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
 import React from "react";
 
 export interface Props {
@@ -8,30 +8,26 @@ export interface Props {
   text?: string;
 }
 
-const useClasses = makeStyles((theme) => ({
-  download: {
-    marginTop: theme.spacing(1),
-    textAlign: "right",
-    "& button": {
-      background: "none",
-      "border-style": "none",
-      color: theme.palette.text.primary,
-      cursor: "pointer",
-      fontSize: "inherit",
-      fontFamily: "inherit",
-      textDecoration: "underline",
-      padding: theme.spacing(2),
-    },
-    "& button:hover": {
-      backgroundColor: theme.palette.background.paper,
-    },
+const Root = styled("div")(({ theme }) => ({
+  marginTop: theme.spacing(1),
+  textAlign: "right",
+  "& button": {
+    background: "none",
+    "border-style": "none",
+    color: theme.palette.text.primary,
+    cursor: "pointer",
+    fontSize: "inherit",
+    fontFamily: "inherit",
+    textDecoration: "underline",
+    padding: theme.spacing(2),
+  },
+  "& button:hover": {
+    backgroundColor: theme.palette.background.paper,
   },
 }));
 
 // Render a button which lets the applicant download their application data as a CSV
 export default function FileDownload(props: Props): FCReturn {
-  const classes = useClasses();
-
   const downloadCsv = (filename: string, content: string) => {
     const csv = "data:text/csv;charset=utf-8," + content;
     const data = encodeURI(csv);
@@ -43,7 +39,7 @@ export default function FileDownload(props: Props): FCReturn {
   };
 
   return (
-    <div className={classes.download}>
+    <Root>
       <Button
         onClick={async () => {
           await fetch(`${process.env.REACT_APP_API_URL}/download-application`, {
@@ -61,6 +57,6 @@ export default function FileDownload(props: Props): FCReturn {
       >
         {props.text || "Download your application (.csv)"}
       </Button>
-    </div>
+    </Root>
   );
 }

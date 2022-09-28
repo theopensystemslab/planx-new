@@ -1,8 +1,9 @@
 import { FeedbackFish } from "@feedback-fish/react";
-import Box from "@material-ui/core/Box";
-import ButtonBase from "@material-ui/core/ButtonBase";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Box from "@mui/material/Box";
+import ButtonBase from "@mui/material/ButtonBase";
+import { Theme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import React from "react";
 
 const useClasses = makeStyles((theme: Theme) => ({
@@ -16,7 +17,7 @@ const useClasses = makeStyles((theme: Theme) => ({
       },
     },
     [theme.breakpoints.up("sm")]: {
-      padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+      padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
     },
   },
   betaIcon: {

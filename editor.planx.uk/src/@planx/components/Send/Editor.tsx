@@ -1,5 +1,5 @@
-import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import { useFormik } from "formik";
 import React from "react";
 import ChecklistItem from "ui/ChecklistItem";

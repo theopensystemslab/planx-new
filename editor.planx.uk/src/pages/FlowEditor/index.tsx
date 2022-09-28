@@ -1,7 +1,8 @@
 import "./components/Settings";
 import "./floweditor.scss";
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import React, { useRef } from "react";
 
 import { rootFlowPath } from "../../routes/utils";

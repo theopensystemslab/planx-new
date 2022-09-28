@@ -1,9 +1,9 @@
-import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Close from "@material-ui/icons/Close";
+import Close from "@mui/icons-material/Close";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
 import { NotFoundError } from "navi";
 import { PreviewContext } from "pages/Preview/Context";
 import React from "react";

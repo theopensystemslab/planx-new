@@ -1,5 +1,5 @@
-import InputBase, { InputBaseProps } from "@material-ui/core/InputBase";
-import { makeStyles } from "@material-ui/core/styles";
+import InputBase, { InputBaseProps } from "@mui/material/InputBase";
+import makeStyles from "@mui/styles/makeStyles";
 import React from "react";
 
 const useClasses = makeStyles((theme) => ({

@@ -1,7 +1,7 @@
-import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
-import { useTheme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
 
@@ -41,7 +41,7 @@ const ColorGrid: React.FC<{ option: PaletteOption }> = (props) => {
     switch (props.option) {
       case "divider":
         return [theme.palette[props.option]];
-      case "type":
+      case "mode":
         return [];
       default:
         return Object.keys(theme.palette[props.option]);

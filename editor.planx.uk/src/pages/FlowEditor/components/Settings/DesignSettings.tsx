@@ -1,7 +1,7 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Switch, { SwitchProps } from "@material-ui/core/Switch";
-import Typography from "@material-ui/core/Typography";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Switch, { SwitchProps } from "@mui/material/Switch";
+import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import React from "react";
 import ColorPicker from "ui/ColorPicker";

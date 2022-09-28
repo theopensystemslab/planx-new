@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import { ERROR_MESSAGE } from "@planx/components/shared/constants";
 import React, { ReactElement } from "react";
 
