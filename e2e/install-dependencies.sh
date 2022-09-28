@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
-set -xe
 
 SCRIPT_DIR=$(dirname "$0")
 . "$SCRIPT_DIR/../.env"
+
+set -xe
 
 (cd "${SCRIPT_DIR}/../hasura.planx.uk" && pnpm install)
 (cd "${SCRIPT_DIR}/../editor.planx.uk" && pnpm install && pnpm build)
