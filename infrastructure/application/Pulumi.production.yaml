@@ -7,9 +7,9 @@ config:
   application:bops-api-token:
     secure: AAABALRtSjQMRjERtkHs6WBOI7MBMw4bFOuHO8qLLPe9Pfg8Nlbp61XalZA1pmXsRt/T+59fGcdqbKA5WRkOZVibhFo=
   application:cloudflare-zone-id: a9b9933f28e786ec4cfd4bb596f5a519
-  application:google-client-id: 987324067365-anl1o207sphdeu28i6nk2e6brec8fh4b.apps.googleusercontent.com
+  application:google-client-id: 987324067365-vpsk3kgeq5n32ihjn760ihf8l7m5rhh8.apps.googleusercontent.com
   application:google-client-secret:
-    secure: AAABALntYyY84++A0XpyAVtDxhiCeAMv/vN1A1VxGZ2beTzyAqHeEicfpvKwCOQisgQ0wnBLomQ=
+    secure: AAABAN5E+De3A3HtpLVaSNTDwk9Uz4r2d5g8SIRVbNOd2fj3eU+lGJXjVbEAnxezr14hwabbfwW2ptjcFzqkhG7OmQ==
   application:gov-uk-pay-token-buckinghamshire:
     secure: AAABAA0ya8JhmFcgwuuf5i+XiJZ/uDp4SEGplUiiojyZzDtbjlZZfd8tNw8PjqKHzMBIhgyB2gHSsx9D/FV+cxxBa1AfIFtcj/l3rIrkK9jeG+yXtHnsLKr7MsZUqi6SdFft
   application:gov-uk-pay-token-lambeth:
