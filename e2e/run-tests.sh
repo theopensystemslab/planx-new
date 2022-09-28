@@ -24,4 +24,5 @@ else
   HEADLESS=":headless"
 fi
 
+set +x
 JWT_SECRET=$JWT_SECRET testcafe "${BROWSER}${HEADLESS}" './tests/*.js'
