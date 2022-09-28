@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
-set -xe
-
 SCRIPT_DIR=$(dirname "$0")
 . "$SCRIPT_DIR/../.env"
+
+set -xe
 
 if [ -z "${CI}" ]; then
   # Kill all subprocesses on exit (e.g. pnpm dlx serve) -- https://unix.stackexchange.com/a/67552/141425
@@ -24,4 +24,5 @@ else
   HEADLESS=":headless"
 fi
 
+set +x
 JWT_SECRET=$JWT_SECRET testcafe "${BROWSER}${HEADLESS}" './tests/*.js'
