@@ -83,7 +83,7 @@ jobs:
         run: pnpm install --frozen-lockfile && pnpm test
         working-directory: hasura.planx.uk/tests
       - name: E2E Tests
-        run: pnpm install --frozen-lockfile && pnpm test
+        run: pnpm install --frozen-lockfile && pnpm cypress install && pnpm test
         working-directory: e2e
 
   api_tests:
