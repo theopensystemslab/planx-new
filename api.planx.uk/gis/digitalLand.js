@@ -1,21 +1,16 @@
 require("isomorphic-fetch");
-import { GraphQLClient } from "graphql-request";
 
 const { addDesignatedVariable, omitGeometry } = require("./helpers");
 import { baseSchema } from "./local_authorities/metadata/base.js";
+import { adminGraphQLClient as client } from "../hasura";
 
 const localAuthorityMetadata = {
   "buckinghamshire": require("./local_authorities/metadata/buckinghamshire.js"),
   "canterbury": require("./local_authorities/metadata/canterbury.js"),
+  "doncaster": require("./local_authorities/metadata/doncaster.js"),
   "lambeth": require("./local_authorities/metadata/lambeth.js"),
   "southwark": require("./local_authorities/metadata/southwark.js"),
 };
-
-const client = new GraphQLClient(process.env.HASURA_GRAPHQL_URL, {
-  headers: {
-    "x-hasura-admin-secret": process.env.HASURA_GRAPHQL_ADMIN_SECRET,
-  },
-});
 
 /**
  * 
