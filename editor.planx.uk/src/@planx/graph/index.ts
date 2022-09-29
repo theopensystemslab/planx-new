@@ -1,4 +1,5 @@
 import { enablePatches, produceWithPatches } from "immer";
+import { intersection } from "lodash";
 import difference from "lodash/difference";
 import trim from "lodash/trim";
 import zip from "lodash/zip";
@@ -468,13 +469,13 @@ export const sortIdsDepthFirst =
 
     memoizedNodesIdsByGraph.set(graph, allNodeIdsSorted);
 
-    const nodeIdArray = Array.from(nodeIds);
-
     // Return order of nodes within their graph subsection
     // This prevents clones from being sorted incorrectly (i.e. by their first appearance in the graph)
-    return nodeIdArray.sort((a, b) => {
-      const startNodeIndex = allNodeIdsSorted.indexOf(nodeIdArray[0]);
-      const graphSubsection = allNodeIdsSorted.slice(startNodeIndex);
-      return graphSubsection.indexOf(a) - graphSubsection.indexOf(b);
-    });
+    const currentNodeIndex = allNodeIdsSorted.indexOf(
+      nodeIds.values().next().value
+    );
+    const graphSubsection = allNodeIdsSorted.slice(currentNodeIndex);
+    const int = intersection([...nodeIds], graphSubsection);
+
+    return Array.from(nodeIds).sort((a, b) => int.indexOf(a) - int.indexOf(b));
   };
