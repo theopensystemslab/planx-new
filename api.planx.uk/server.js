@@ -326,7 +326,7 @@ app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
         if (govUkResponse?.payment_provider !== "sandbox") {
           try {
             const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL);
-            const payMessage = `:coin: New GOV Pay payment *${govUkResponse.payment_id}* [${req.params.localAuthority}]`;
+            const payMessage = `:coin: New GOV Pay payment *${govUkResponse.payment_id}* with status *${govUkResponse.state.status}* [${req.params.localAuthority}]`;
             await slack.send(payMessage);
             console.log("Payment notification posted to Slack");
           } catch (error) {
