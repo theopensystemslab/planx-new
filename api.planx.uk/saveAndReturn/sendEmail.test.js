@@ -38,6 +38,17 @@ describe("Send Email endpoint", () => {
         sessionId: 123,
       }
     });
+
+    queryMock.mockQuery({
+      name: "SetupEmailNotifications",
+      data: {
+        update_lowcal_sessions_by_pk: { id: 123, has_user_saved: true }
+      },
+      variables: {
+        sessionId: 123,
+      }
+    });
+
   });
 
   describe("'Save' template", () => {
@@ -68,6 +79,7 @@ describe("Send Email endpoint", () => {
         .expect(200)
         .then((response) => {
           expect(response.body).toHaveProperty("expiryDate");
+          expect(response.body).toHaveProperty("hasUserSaved", true);
         });
     });
 

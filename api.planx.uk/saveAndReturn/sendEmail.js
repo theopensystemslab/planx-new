@@ -1,4 +1,4 @@
-import { sendSingleApplicationEmail } from "./utils";
+import { sendSingleApplicationEmail, setupEmailEventTriggers } from "./utils";
 
 const sendSaveAndReturnEmail = async (req, res, next) => {
   try {
@@ -10,6 +10,7 @@ const sendSaveAndReturnEmail = async (req, res, next) => {
         message: "Required value missing"
       });
     const response = await sendSingleApplicationEmail(template, email, sessionId);
+    response.hasUserSaved = await setupEmailEventTriggers(sessionId);
     return res.json(response);
   } catch (error) {
     return next({
