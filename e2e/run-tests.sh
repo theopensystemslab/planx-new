@@ -15,14 +15,12 @@ pnpm dlx serve ../editor.planx.uk/build \
   --config "$(pwd)/serve.json" `# https://github.com/vercel/serve/issues/662` \
   --no-clipboard --no-port-switching --listen 3000 >/dev/null &
 
-# use chrome or chromium
-BROWSER=$(testcafe --list-browsers | grep "^chrom" | head -1)
-
 if [ -z "${CI}" ]; then
-  HEADLESS=""
+  MODE="open"
 else
-  HEADLESS=":headless"
+  MODE="run"
 fi
 
 set +x
-JWT_SECRET=$JWT_SECRET testcafe "${BROWSER}${HEADLESS}" './tests/*.js'
+JWT_SECRET=$JWT_SECRET HASURA_PROXY_PORT=$HASURA_PROXY_PORT HASURA_GRAPHQL_ADMIN_SECRET=$HASURA_GRAPHQL_ADMIN_SECRET cypress "${MODE}"
+
