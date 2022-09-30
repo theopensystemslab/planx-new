@@ -307,6 +307,30 @@ const stringifyWithRootKeysSortedAlphabetically = (ob = {}) =>
       )
   );
 
+// Update lowcal_sessions.email_event_triggers_setup column to kick-off the setup_lowcal_expiry_events & 
+// setup_lowcal_reminder_events event triggers in Hasura
+const setupEmailEventTriggers = async (sessionId) => {
+  try {
+    const client = adminGraphQLClient;
+    const mutation = gql`
+      mutation SetupEmailNotifications($sessionId: uuid!) {
+        update_lowcal_sessions_by_pk(pk_columns: {id: $sessionId}, _set: {has_user_saved: true}) {
+          id
+          has_user_saved
+        }
+      }
+    `
+    const { data: {
+      update_lowcal_sessions_by_pk: {
+        email_event_triggers_setup: isEmailEmailEventTriggersSetup
+      }
+    }} = await client.request(mutation, { sessionId });
+    return isEmailEmailEventTriggersSetup;
+  } catch (error) {
+    throw new Error(`Error setting up email notifications for session ${sessionId}`);
+  };
+};
+
 export {
   getSaveAndReturnPublicHeaders,
   sendEmail,
@@ -319,4 +343,5 @@ export {
   calculateExpiryDate,
   getHumanReadableProjectType,
   stringifyWithRootKeysSortedAlphabetically,
+  setupEmailEventTriggers,
 };

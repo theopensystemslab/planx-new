@@ -219,8 +219,9 @@
     - name: setup_lowcal_expiry_events
       definition:
         enable_manual: false
-        insert:
-          columns: '*'
+        update:
+          columns:
+            - email_event_triggers_setup
       retry_conf:
         num_retries: 3
         interval_sec: 10
@@ -230,24 +231,27 @@
         - name: authorization
           value_from_env: HASURA_PLANX_API_KEY
       request_transform:
-        body: |-
-          {
-            "createdAt": {{$body.event.data.new.created_at}},
-            "payload": {
-              "sessionId": {{$body.event.data.new.id}},
-              "email": {{$body.event.data.new.email}}
+        body:
+          action: transform
+          template: |-
+            {
+              "createdAt": {{$body.event.data.new.created_at}},
+              "payload": {
+                "sessionId": {{$body.event.data.new.id}},
+                "email": {{$body.event.data.new.email}}
+              }
             }
-          }
         url: '{{$base_url}}/webhooks/hasura/create-expiry-event'
         method: POST
-        version: 1
+        version: 2
         query_params: {}
         template_engine: Kriti
     - name: setup_lowcal_reminder_events
       definition:
         enable_manual: false
-        insert:
-          columns: '*'
+        update:
+          columns:
+            - email_event_triggers_setup
       retry_conf:
         num_retries: 3
         interval_sec: 10
@@ -257,17 +261,19 @@
         - name: authorization
           value_from_env: HASURA_PLANX_API_KEY
       request_transform:
-        body: |-
-          {
-            "createdAt": {{$body.event.data.new.created_at}},
-            "payload": {
-              "sessionId": {{$body.event.data.new.id}},
-              "email": {{$body.event.data.new.email}}
+        body:
+          action: transform
+          template: |-
+            {
+              "createdAt": {{$body.event.data.new.created_at}},
+              "payload": {
+                "sessionId": {{$body.event.data.new.id}},
+                "email": {{$body.event.data.new.email}}
+              }
             }
-          }
         url: '{{$base_url}}/webhooks/hasura/create-reminder-event'
         method: POST
-        version: 1
+        version: 2
         query_params: {}
         template_engine: Kriti
 - table:
