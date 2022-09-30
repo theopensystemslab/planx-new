@@ -320,11 +320,7 @@ const setupEmailEventTriggers = async (sessionId) => {
         }
       }
     `
-    const { data: {
-      update_lowcal_sessions_by_pk: {
-        has_user_saved: hasUserSaved
-      }
-    }} = await client.request(mutation, { sessionId });
+    const { update_lowcal_sessions_by_pk: { has_user_saved: hasUserSaved } } = await client.request(mutation, { sessionId });
     return hasUserSaved;
   } catch (error) {
     throw new Error(`Error setting up email notifications for session ${sessionId}`);

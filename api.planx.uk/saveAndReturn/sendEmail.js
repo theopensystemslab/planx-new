@@ -10,7 +10,7 @@ const sendSaveAndReturnEmail = async (req, res, next) => {
         message: "Required value missing"
       });
     const response = await sendSingleApplicationEmail(template, email, sessionId);
-    response.hasUserSaved = setupEmailEventTriggers(sessionId);
+    response.hasUserSaved = await setupEmailEventTriggers(sessionId);
     return res.json(response);
   } catch (error) {
     return next({
