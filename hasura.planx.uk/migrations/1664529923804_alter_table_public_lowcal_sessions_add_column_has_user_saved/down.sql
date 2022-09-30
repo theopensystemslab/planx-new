@@ -1,3 +1,3 @@
-COMMENT ON COLUMN "public"."lowcal_sessions"."email_event_triggers_setup" IS NULL;
+COMMENT ON COLUMN "public"."lowcal_sessions"."has_user_saved" IS NULL;
 
-ALTER TABLE "public"."lowcal_sessions" DROP COLUMN "email_event_triggers_setup";
+ALTER TABLE "public"."lowcal_sessions" DROP COLUMN "has_user_saved";

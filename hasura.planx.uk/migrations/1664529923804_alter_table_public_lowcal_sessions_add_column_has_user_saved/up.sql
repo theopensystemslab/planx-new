@@ -1,4 +1,4 @@
-alter table "public"."lowcal_sessions" add column "email_event_triggers_setup" boolean
+alter table "public"."lowcal_sessions" add column "has_user_saved" boolean
  not null default 'false';
 
-COMMENT ON COLUMN "public"."lowcal_sessions"."email_event_triggers_setup" IS E'Tracks if email reminder and expiry events have beeen setup for session';
+COMMENT ON COLUMN "public"."lowcal_sessions"."has_user_saved" IS E'Tracks if email reminder and expiry events have been setup for session';

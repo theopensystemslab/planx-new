@@ -221,7 +221,7 @@
         enable_manual: false
         update:
           columns:
-            - email_event_triggers_setup
+            - has_user_saved
       retry_conf:
         num_retries: 3
         interval_sec: 10
@@ -251,7 +251,7 @@
         enable_manual: false
         update:
           columns:
-            - email_event_triggers_setup
+            - has_user_saved
       retry_conf:
         num_retries: 3
         interval_sec: 10

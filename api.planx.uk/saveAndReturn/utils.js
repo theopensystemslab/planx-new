@@ -307,7 +307,7 @@ const stringifyWithRootKeysSortedAlphabetically = (ob = {}) =>
       )
   );
 
-// Update lowcal_sessions.email_event_triggers_setup column to kick-off the setup_lowcal_expiry_events & 
+// Update lowcal_sessions.has_user_saved column to kick-off the setup_lowcal_expiry_events & 
 // setup_lowcal_reminder_events event triggers in Hasura
 const setupEmailEventTriggers = async (sessionId) => {
   try {
@@ -322,10 +322,10 @@ const setupEmailEventTriggers = async (sessionId) => {
     `
     const { data: {
       update_lowcal_sessions_by_pk: {
-        email_event_triggers_setup: isEmailEmailEventTriggersSetup
+        has_user_saved: hasUserSaved
       }
     }} = await client.request(mutation, { sessionId });
-    return isEmailEmailEventTriggersSetup;
+    return hasUserSaved;
   } catch (error) {
     throw new Error(`Error setting up email notifications for session ${sessionId}`);
   };
