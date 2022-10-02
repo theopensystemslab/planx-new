@@ -1,9 +1,10 @@
-import "./RichTextEditor2.css";
+import "./RichTextInput2.css";
 
 import IconButton from "@material-ui/core/IconButton";
 import { InputBaseProps } from "@material-ui/core/InputBase";
 import Check from "@material-ui/icons/Check";
 import Close from "@material-ui/icons/Close";
+import Error from "@material-ui/icons/Error";
 import FormatBold from "@material-ui/icons/FormatBold";
 import FormatItalic from "@material-ui/icons/FormatItalic";
 import LinkIcon from "@material-ui/icons/Link";
@@ -40,6 +41,7 @@ import React, {
   useState,
 } from "react";
 import tippy from "tippy.js";
+import create from "zustand";
 
 import Input from "./Input";
 
@@ -58,7 +60,7 @@ const commonExtensions = [
   Italic,
   Link,
   Heading.configure({
-    levels: [1, 2],
+    levels: [1, 2, 3],
   }),
   BulletList,
   OrderedList,
@@ -67,13 +69,36 @@ const commonExtensions = [
 
 const conversionExtensions = [
   ...commonExtensions,
-
   Mention.configure({
     HTMLAttributes: {
       class: "pass",
     },
   }),
 ];
+
+interface VariablesState {
+  variables: string[];
+  addVariable: (newVariable: string) => void;
+}
+
+const selectionHtmlError = (selectionHtml: string) =>
+  selectionHtml === "<p>click here</p>"
+    ? "Please set link over descriptive piece of content."
+    : undefined;
+
+const useVariablesStore = create<VariablesState>((set) => ({
+  variables: [],
+  addVariable: (newVariable: string) =>
+    set((state) => ({ variables: [...state.variables, newVariable] })),
+}));
+
+export const toHtml = (doc: any) => {
+  return generateHTML(doc, conversionExtensions);
+};
+
+export const fromHtml = (htmlString: string) => {
+  return generateJSON(htmlString, conversionExtensions);
+};
 
 const RichTextInput2: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
@@ -92,7 +117,7 @@ const RichTextInput2: FC<Props> = (props) => {
         placeholder: props.placeholder || "",
       }),
     ],
-    content: generateJSON(stringValue, commonExtensions),
+    content: fromHtml(stringValue),
     editable: Boolean(props.onChange),
   });
 
@@ -110,7 +135,7 @@ const RichTextInput2: FC<Props> = (props) => {
         return;
       }
       const doc = transaction.editor.getJSON();
-      const html = generateHTML(doc, conversionExtensions);
+      const html = toHtml(doc);
       internalValue.current = html;
       const changeEvent = {
         target: {
@@ -128,12 +153,10 @@ const RichTextInput2: FC<Props> = (props) => {
     if (!editor) {
       return;
     }
-    const editorValue =
-      internalValue.current ||
-      generateHTML(editor.getJSON(), conversionExtensions);
+    const editorValue = internalValue.current || toHtml(editor.getJSON());
     if (props.value !== editorValue) {
       internalValue.current = stringValue;
-      editor.commands.setContent(generateJSON(stringValue, commonExtensions));
+      editor.commands.setContent(fromHtml(stringValue));
     }
   }, [stringValue]);
 
@@ -156,7 +179,7 @@ const RichTextInput2: FC<Props> = (props) => {
         type: "doc",
         content: [editor.state.selection.content().toJSON().content[0]],
       };
-      return generateHTML(selectionDocument, conversionExtensions);
+      return toHtml(selectionDocument);
     } catch (err) {
       return null;
     }
@@ -172,11 +195,6 @@ const RichTextInput2: FC<Props> = (props) => {
         >
           {addingLink ? (
             <Input
-              errorMessage={
-                addingLink.selectionHtml === "<p>click here</p>"
-                  ? "Please set link over descriptive piece of content."
-                  : undefined
-              }
               innerRef={(el) => {
                 el?.querySelector("input")?.focus();
               }}
@@ -234,11 +252,49 @@ const RichTextInput2: FC<Props> = (props) => {
               </IconButton>
             </>
           )}
-          <IconButton
-            size="small"
-            color={editor.isActive("link") ? "primary" : undefined}
-            onClick={() => {
-              if (!addingLink) {
+          {addingLink ? (
+            <>
+              {(() => {
+                const error =
+                  addingLink.selectionHtml &&
+                  selectionHtmlError(addingLink.selectionHtml);
+                return error ? (
+                  <IconButton size="small">
+                    <Error />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      editor
+                        .chain()
+                        .focus()
+                        .toggleLink({
+                          href: addingLink.draft,
+                        })
+                        .run();
+                      setAddingLink(null);
+                    }}
+                  >
+                    <Check />
+                  </IconButton>
+                );
+              })()}
+
+              <IconButton
+                size="small"
+                onClick={() => {
+                  setAddingLink(null);
+                }}
+              >
+                <Close />
+              </IconButton>
+            </>
+          ) : (
+            <IconButton
+              size="small"
+              color={editor.isActive("link") ? "primary" : undefined}
+              onClick={() => {
                 if (editor.isActive("link")) {
                   editor.chain().focus().unsetLink().run();
                 } else {
@@ -247,28 +303,9 @@ const RichTextInput2: FC<Props> = (props) => {
                     draft: "https://",
                   });
                 }
-              } else {
-                editor
-                  .chain()
-                  .focus()
-                  .toggleLink({
-                    href: addingLink.draft,
-                  })
-                  .run();
-                setAddingLink(null);
-              }
-            }}
-          >
-            {addingLink ? <Check /> : <LinkIcon />}
-          </IconButton>
-          {addingLink && (
-            <IconButton
-              size="small"
-              onClick={() => {
-                setAddingLink(null);
               }}
             >
-              <Close />
+              <LinkIcon />
             </IconButton>
           )}
         </BubbleMenu>
@@ -281,34 +318,11 @@ const RichTextInput2: FC<Props> = (props) => {
 // Implemented based on the mention plugin example code snippets: https://tiptap.dev/api/nodes/mention
 const suggestion = {
   items: ({ query }: { query: string }) => {
-    return [
-      "Lea Thompson",
-      "Cyndi Lauper",
-      "Tom Cruise",
-      "Madonna",
-      "Jerry Hall",
-      "Joan Collins",
-      "Winona Ryder",
-      "Christina Applegate",
-      "Alyssa Milano",
-      "Molly Ringwald",
-      "Ally Sheedy",
-      "Debbie Harry",
-      "Olivia Newton-John",
-      "Elton John",
-      "Michael J. Fox",
-      "Axl Rose",
-      "Emilio Estevez",
-      "Ralph Macchio",
-      "Rob Lowe",
-      "Jennifer Grey",
-      "Mickey Rourke",
-      "John Cusack",
-      "Matthew Broderick",
-      "Justine Bateman",
-      "Lisa Bonet",
-    ]
-      .filter((item) => item.toLowerCase().startsWith(query.toLowerCase()))
+    return useVariablesStore
+      .getState()
+      .variables.filter((item) =>
+        item.toLowerCase().includes(query.toLowerCase())
+      )
       .slice(0, 5);
   },
 
@@ -374,12 +388,14 @@ export interface Placeholder {
 
 interface MentionListProps {
   items: Placeholder[];
+  query: string;
   command: any;
   onCreatePlaceholder: (val: string) => void;
 }
 
 // Implemented based on the mention plugin example code snippets: https://tiptap.dev/api/nodes/mention
 const MentionList = forwardRef((props: MentionListProps, ref) => {
+  const variablesStore = useVariablesStore();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const selectItem = (index: number) => {
@@ -429,7 +445,18 @@ const MentionList = forwardRef((props: MentionListProps, ref) => {
 
   return (
     <div className="mention-items">
-      {props.items.length ? (
+      {props.query.length > 0 && (
+        <button
+          className="mention-add-button"
+          onClick={() => {
+            props.command({ id: props.query });
+            variablesStore.addVariable(props.query);
+          }}
+        >
+          + Add <span className="pass">@{props.query}</span>
+        </button>
+      )}
+      {props.items.length > 0 ? (
         props.items.map((item: any, index: number) => (
           <button
             className={`mention-item ${
@@ -438,11 +465,11 @@ const MentionList = forwardRef((props: MentionListProps, ref) => {
             key={index}
             onClick={() => selectItem(index)}
           >
-            {item}
+            <span className="pass">@{item}</span>
           </button>
         ))
       ) : (
-        <div className="mention-item-empty">No result</div>
+        <p className="mention-items-empty">No results</p>
       )}
     </div>
   );
