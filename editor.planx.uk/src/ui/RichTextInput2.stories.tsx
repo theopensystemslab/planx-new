@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 import { Meta } from "@storybook/react/types-6-0";
 import React, { useState } from "react";
 
-import RichTextInput2 from "./RichTextInput2";
+import RichTextInput2, { fromHtml } from "./RichTextInput2";
 
 const metadata: Meta = {
   title: "Design System/Atoms/Form Elements/RichTextInput2",
@@ -22,7 +22,9 @@ export const Basic = () => {
     <Box marginTop={3}>
       <Button
         onClick={() => {
-          setValue("I am reset");
+          setValue(
+            `<p>Hello, and <span data-type="mention" class="pass" data-id="Apples">@Apples</span> <a target="_blank" rel="noopener noreferrer nofollow" href="https://opensystemslab.org">OSL</a></p>`
+          );
         }}
       >
         Reset from the outside
@@ -36,7 +38,19 @@ export const Basic = () => {
       />
       <Box>
         <p>HTML result:</p>
-        <textarea style={{ display: "block", width: "100%" }} value={value} />
+        <textarea
+          style={{ display: "block", width: "100%", height: 120 }}
+          value={value}
+          readOnly
+        />
+      </Box>
+      <Box>
+        <p>JSON result:</p>
+        <textarea
+          style={{ display: "block", width: "100%", height: 120 }}
+          value={JSON.stringify(fromHtml(value), null, 2)}
+          readOnly
+        />
       </Box>
     </Box>
   );
