@@ -121,6 +121,11 @@ const sendToBOPS = async (req, res, next) => {
   }
 };
 
+/**
+ * Query the BOPS audit table to see if we already have an application for this session
+ * @param {string} sessionId 
+ * @returns {object|undefined} bops_applications.response
+ */
 async function checkBOPSAuditTable(sessionId) {
   const application = await client.request(
     `

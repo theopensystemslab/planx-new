@@ -35,6 +35,16 @@ const sendToUniform = async (req, res, next) => {
     });
   }
 
+  // confirm that this session has not already been successfully submitted
+  const submittedApp = await checkUniformAuditTable(payload?.sessionId);
+  if (submittedApp?.submissionStatus === "PENDING" && submittedApp?.canDownload) {
+    res.status(200).send({
+      sessionId: payload?.sessionId,
+      idoxSubmissionId: submittedApp?.submissionId,
+      message: `Skipping send, already successfully submitted`,
+    });
+  }
+
   try {
     const { clientId, clientSecret } = getUniformClient(req.params.localAuthority);
     // Setup - Create the zip folder
@@ -114,6 +124,32 @@ const sendToUniform = async (req, res, next) => {
       message: `Failed to send to Uniform. ${error}`,
     });
   }
+};
+
+/**
+ * Query the Uniform audit table to see if we already have an application for this session
+ * @param {string} sessionId 
+ * @returns {object|undefined} uniform_applications.response
+ */
+async function checkUniformAuditTable(sessionId) {
+  const application = await client.request(
+    `
+      query FindApplication(
+        $submission_reference: String = ""
+      ) {
+        uniform_applications(where: {
+          submission_reference: {_eq: $submission_reference}
+        }) {
+          response
+        }
+      }
+    `,
+    {
+      submission_reference: sessionId
+    }
+  );
+
+  return application?.uniform_applications[0]?.response;
 };
 
 /**
