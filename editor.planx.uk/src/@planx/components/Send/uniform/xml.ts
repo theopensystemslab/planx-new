@@ -102,7 +102,10 @@ export function makeXmlString(
     `;
   };
 
-  const getApplicantAddress = () =>
+  /**
+   * Applicant address should always be submitted, regardless of resident status
+   */
+  const getApplicantAddress = (): UserData =>
     passport.data?.resident?.[0]
       ? passport.data?.["_address"]
       : passport.data?.["applicant.address"];
@@ -157,16 +160,16 @@ export function makeXmlString(
         <common:ExternalAddress>
           <common:InternationalAddress>
             <apd:IntAddressLine>${
-              escape(getApplicantAddress()?.["line1"])
+              escape(getApplicantAddress().line1)
             }</apd:IntAddressLine>
             <apd:IntAddressLine>${
-              escape(getApplicantAddress()?.["line2"])
+              escape(getApplicantAddress().line2)
             }</apd:IntAddressLine>
             <apd:IntAddressLine>${
-              escape(getApplicantAddress()?.["town"])
+              escape(getApplicantAddress().town)
             }</apd:IntAddressLine>
             <apd:IntAddressLine>${
-              escape(getApplicantAddress()?.["county"])
+              escape(getApplicantAddress().county)
             }</apd:IntAddressLine>
             <apd:Country>${escape(getApplicantAddress()?.["country"])}</apd:Country>
             <apd:InternationalPostCode>${
