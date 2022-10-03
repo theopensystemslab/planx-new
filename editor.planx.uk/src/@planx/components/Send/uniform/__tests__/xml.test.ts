@@ -165,9 +165,9 @@ describe("Uniform Translator", () => {
   const sessionId = "123";
   const files: string[] = [];
 
-  it("maps the 'ApplicationTo' value", () => {
+  it("maps the 'applicationTo' value", () => {
     const passport: Store.passport = {
-      data: { "uniform.ApplicationTo": ["TEST123"] },
+      data: { "uniform.applicationTo": ["TEST123"] },
     };
 
     const xml = makeXmlString(passport, sessionId, files);
@@ -180,11 +180,11 @@ describe("Uniform Translator", () => {
     expect(applicationTo).toBe("TEST123");
   });
 
-  it("maps the 'ApplicationScenario' value for an Existing LDC", () => {
+  it("maps the 'applicationScenario' value for an Existing LDC", () => {
     const passport: Store.passport = {
       data: {
-        "uniform.ScenarioNumber": ["14"],
-        "uniform.ConsentRegime": ["Certificate of Lawfulness"],
+        "uniform.scenarioNumber": ["14"],
+        "uniform.consentRegime": ["Certificate of Lawfulness"],
         "application.type": "ldc.existing",
       },
     };
@@ -204,11 +204,11 @@ describe("Uniform Translator", () => {
     expect(consentRegime).toBe("Certificate of Lawfulness");
   });
 
-  it("maps the 'ApplicationScenario' value for a Proposed LDC", () => {
+  it("maps the 'applicationScenario' value for a Proposed LDC", () => {
     const passport: Store.passport = {
       data: {
-        "uniform.ScenarioNumber": ["15"],
-        "uniform.ConsentRegime": ["Certificate of Lawfulness"],
+        "uniform.scenarioNumber": ["15"],
+        "uniform.consentRegime": ["Certificate of Lawfulness"],
         "application.type": "ldc.proposed",
       },
     };
@@ -228,9 +228,9 @@ describe("Uniform Translator", () => {
     expect(consentRegime).toBe("Certificate of Lawfulness");
   });
 
-  it("maps the 'SiteVisit' value", () => {
+  it("maps the 'siteVisit' value", () => {
     const passport: Store.passport = {
-      data: { "uniform.SiteVisit": ["true"] },
+      data: { "uniform.siteVisit": ["true"] },
     };
 
     const xml = makeXmlString(passport, sessionId, files);
@@ -243,9 +243,9 @@ describe("Uniform Translator", () => {
     expect(siteVisit).toBe(true);
   });
 
-  it("maps the 'IsRelated' value with a connection", () => {
+  it("maps the 'isRelated' value with a connection", () => {
     const passport: Store.passport = {
-      data: { "uniform.IsRelated": ["true"] },
+      data: { "uniform.isRelated": ["true"] },
     };
 
     const xml = makeXmlString(passport, sessionId, files);
@@ -258,9 +258,9 @@ describe("Uniform Translator", () => {
     expect(isRelated).toBe(true);
   });
 
-  it("maps the 'IsRelated' value without a connection", () => {
+  it("maps the 'isRelated' value without a connection", () => {
     const passport: Store.passport = {
-      data: { "uniform.IsRelated": ["false"] },
+      data: { "uniform.isRelated": ["false"] },
     };
     
     const xml = makeXmlString(passport, sessionId, files);
@@ -273,9 +273,9 @@ describe("Uniform Translator", () => {
     expect(isRelated).toBe(false);
   });
 
-  it("maps the 'PersonRole' value for an Agent", () => {
+  it("maps the 'personRole' value for an Agent", () => {
     const passport: Store.passport = {
-      data: { "uniform.PersonRole": ["Agent"] },
+      data: { "uniform.personRole": ["Agent"] },
     };
 
     const xml = makeXmlString(passport, sessionId, files);
@@ -288,9 +288,9 @@ describe("Uniform Translator", () => {
     expect(personRole).toBe("Agent");
   });
 
-  it("maps the 'PersonRole' value for an Applicant", () => {
+  it("maps the 'personRole' value for an Applicant", () => {
     const passport: Store.passport = {
-      data: { "uniform.PersonRole": ["Applicant"] },
+      data: { "uniform.personRole": ["Applicant"] },
     };
 
     const xml = makeXmlString(passport, sessionId, files);

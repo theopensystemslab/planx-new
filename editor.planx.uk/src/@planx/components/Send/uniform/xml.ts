@@ -83,7 +83,7 @@ export function makeXmlString(
                 )}</common:Reference>
               </common:SupportingInformation>
               <common:ProposedUseStatus>${
-                passport.data?.["uniform.ProposedUseStatus"]?.[0]
+                passport.data?.["uniform.proposedUseStatus"]?.[0]
               }</common:ProposedUseStatus>
               <common:LawfulDevCertificateReason>${
                 escape(passport.data?.["proposal.description"]
@@ -126,7 +126,7 @@ export function makeXmlString(
       <portaloneapp:SchemaVersion>1.3</portaloneapp:SchemaVersion>
       <portaloneapp:ApplicationHeader>
         <portaloneapp:ApplicationTo>${
-          passport.data?.["uniform.ApplicationTo"]?.[0]
+          passport.data?.["uniform.applicationTo"]?.[0]
         }</portaloneapp:ApplicationTo>
         <portaloneapp:DateSubmitted>${proposalCompletionDate}</portaloneapp:DateSubmitted>
         <portaloneapp:RefNum>${sessionId}</portaloneapp:RefNum>
@@ -275,12 +275,12 @@ export function makeXmlString(
       </portaloneapp:SiteLocation>
       <portaloneapp:ApplicationScenario>
         <portaloneapp:ScenarioNumber>${parseInt(
-          passport.data?.["uniform.ScenarioNumber"]?.[0]
+          passport.data?.["uniform.scenarioNumber"]?.[0]
         )}</portaloneapp:ScenarioNumber>
       </portaloneapp:ApplicationScenario>
       <portaloneapp:ConsentRegimes>
         <portaloneapp:ConsentRegime>${
-          passport.data?.["uniform.ConsentRegime"]?.[0]
+          passport.data?.["uniform.consentRegime"]?.[0]
         }</portaloneapp:ConsentRegime>
       </portaloneapp:ConsentRegimes>
       <portaloneapp:ApplicationData>
@@ -291,7 +291,7 @@ export function makeXmlString(
         </portaloneapp:Advice>
         <portaloneapp:SiteVisit>
           <common:SeeSite>${
-            passport.data?.["uniform.SiteVisit"]?.[0]
+            passport.data?.["uniform.siteVisit"]?.[0]
           }</common:SeeSite>
           <common:VisitContactDetails>
             <common:ContactAgent/>
@@ -301,7 +301,7 @@ export function makeXmlString(
       </portaloneapp:ApplicationData>
       <portaloneapp:DeclarationOfInterest>
         <common:IsRelated>${
-          passport.data?.["uniform.IsRelated"]?.[0]
+          passport.data?.["uniform.isRelated"]?.[0]
         }</common:IsRelated>
       </portaloneapp:DeclarationOfInterest>
       <portaloneapp:Declaration>
@@ -310,7 +310,7 @@ export function makeXmlString(
           passport.data?.["application.declaration.accurate"]
         }</common:DeclarationMade>
         <common:Signatory PersonRole="${
-          passport.data?.["uniform.PersonRole"]?.[0]
+          passport.data?.["uniform.personRole"]?.[0]
         }"/>
       </portaloneapp:Declaration>
     </portaloneapp:Proposal>
