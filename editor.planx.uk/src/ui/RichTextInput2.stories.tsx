@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 import { Meta } from "@storybook/react/types-6-0";
 import React, { useState } from "react";
 
-import RichTextInput2, { fromHtml } from "./RichTextInput2";
+import RichTextInput2, { fromHtml, injectVariables } from "./RichTextInput2";
 
 const metadata: Meta = {
   title: "Design System/Atoms/Form Elements/RichTextInput2",
@@ -44,6 +44,15 @@ export const Basic = () => {
           readOnly
         />
       </Box>
+      <Box>
+        <p>Interpolated HTML result:</p>
+        <textarea
+          style={{ display: "block", width: "100%", height: 120 }}
+          value={injectVariables(value, { name: "Gary" })}
+          readOnly
+        />
+      </Box>
+
       <Box>
         <p>JSON result:</p>
         <textarea
