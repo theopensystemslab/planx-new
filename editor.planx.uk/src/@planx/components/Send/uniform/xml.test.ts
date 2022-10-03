@@ -48,7 +48,7 @@ describe("Passport to Uniform XML conversion", () => {
   it("should populate the address for a 'resident' application", () => {
     const passport: Store.passport = {
       data: {
-        resident: [true],
+        resident: ["true"],
         _address: harryPotterAddress,
       },
     };
@@ -74,7 +74,7 @@ describe("Passport to Uniform XML conversion", () => {
   it("should populate the address for a 'non-resident' application", () => {
     const passport: Store.passport = {
       data: {
-        resident: [false],
+        resident: ["false"],
         _address: harryPotterAddress,
         "applicant.address": sherlockHolmesAddress,
       },

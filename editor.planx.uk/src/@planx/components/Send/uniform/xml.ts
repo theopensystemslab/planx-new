@@ -106,7 +106,7 @@ export function makeXmlString(
    * Applicant address should always be submitted, regardless of resident status
    */
   const getApplicantAddress = (): UserData =>
-    passport.data?.resident?.[0]
+    passport.data?.resident?.[0]?.toLowerCase() === "true"
       ? passport.data?.["_address"]
       : passport.data?.["applicant.address"];
 
@@ -159,22 +159,24 @@ export function makeXmlString(
         )}</common:OrgName>
         <common:ExternalAddress>
           <common:InternationalAddress>
-            <apd:IntAddressLine>${
-              escape(getApplicantAddress().line1)
-            }</apd:IntAddressLine>
-            <apd:IntAddressLine>${
-              escape(getApplicantAddress().line2)
-            }</apd:IntAddressLine>
-            <apd:IntAddressLine>${
-              escape(getApplicantAddress().town)
-            }</apd:IntAddressLine>
-            <apd:IntAddressLine>${
-              escape(getApplicantAddress().county)
-            }</apd:IntAddressLine>
-            <apd:Country>${escape(getApplicantAddress()?.["country"])}</apd:Country>
-            <apd:InternationalPostCode>${
-              escape(getApplicantAddress()?.["postcode"])
-            }</apd:InternationalPostCode>
+            <apd:IntAddressLine>${escape(
+              getApplicantAddress()?.line1
+            )}</apd:IntAddressLine>
+            <apd:IntAddressLine>${escape(
+              getApplicantAddress()?.line2
+            )}</apd:IntAddressLine>
+            <apd:IntAddressLine>${escape(
+              getApplicantAddress()?.town
+            )}</apd:IntAddressLine>
+            <apd:IntAddressLine>${escape(
+              getApplicantAddress()?.county
+            )}</apd:IntAddressLine>
+            <apd:Country>${escape(
+              getApplicantAddress()?.["country"]
+            )}</apd:Country>
+            <apd:InternationalPostCode>${escape(
+              getApplicantAddress()?.["postcode"]
+            )}</apd:InternationalPostCode>
           </common:InternationalAddress>
         </common:ExternalAddress>
         <common:ContactDetails PreferredContactMedium="E-Mail">
