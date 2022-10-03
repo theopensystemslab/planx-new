@@ -1,7 +1,6 @@
 import { XMLParser, XMLValidator } from "fast-xml-parser";
 
 import { Store } from "./../../../../../pages/FlowEditor/lib/store/index";
-import { UniformInstance } from "./../applicationType";
 import { makeXmlString } from "./../xml";
 
 const parser = new XMLParser();
@@ -18,7 +17,6 @@ describe("makeXmlString constructor", () => {
       passport,
       sessionId,
       files,
-      UniformInstance.Aylesbury
     );
     const isValid = XMLValidator.validate(xmlString);
     expect(isValid).toBe(true);
@@ -35,7 +33,6 @@ describe("correctly sets planx sessionId as the Uniform reference number", () =>
       passport,
       sessionId,
       files,
-      UniformInstance.Lambeth
     );
     const expectedRefNum: String = "1234-abcdef-567-ghijklm";
 
@@ -67,7 +64,6 @@ describe("correctly sets proposal completion date", () => {
       passport,
       sessionId,
       files,
-      UniformInstance.Lambeth
     );
     const expectedCompletionDate: String = "2022-01-01";
 
@@ -88,7 +84,6 @@ describe("correctly sets proposal completion date", () => {
       passport,
       sessionId,
       files,
-      UniformInstance.Lambeth
     );
     const expectedCompletionDate: String = formattedNow;
 
@@ -119,7 +114,6 @@ describe("correctly sets payment details", () => {
       passport,
       sessionId,
       files,
-      UniformInstance.Lambeth
     );
     const expectedPayment = {
       "common:PaymentMethod": "OnlineViaPortal",
@@ -145,7 +139,6 @@ describe("correctly sets payment details", () => {
       passport,
       sessionId,
       files,
-      UniformInstance.Lambeth
     );
     const expectedPayment = {
       "common:PaymentMethod": "OnlineViaPortal",
@@ -161,5 +154,152 @@ describe("correctly sets payment details", () => {
       ];
 
     expect(resultPayment).toMatchObject(expectedPayment);
+  });
+});
+
+// This tests that the passport values added in the "Open System Lab/Uniform Translator" flow
+// are mapped as expected into the XML for Uniform submission
+// https://editor.planx.uk/opensystemslab/uniform-translator
+describe("Uniform Translator", () => {
+  const parser = new XMLParser({ ignoreAttributes: false });
+  const sessionId = "123";
+  const files: string[] = [];
+
+  it("maps the 'ApplicationTo' value", () => {
+    const passport: Store.passport = {
+      data: { "uniform.ApplicationTo": ["TEST123"] },
+    };
+
+    const xml = makeXmlString(passport, sessionId, files);
+  
+    const result = parser.parse(xml);
+    const applicationTo =
+      result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
+        "portaloneapp:ApplicationTo"
+      ];
+    expect(applicationTo).toBe("TEST123");
+  });
+
+  it("maps the 'ApplicationScenario' value for an Existing LDC", () => {
+    const passport: Store.passport = {
+      data: {
+        "uniform.ScenarioNumber": ["14"],
+        "uniform.ConsentRegime": ["Certificate of Lawfulness"],
+        "application.type": "ldc.existing",
+      },
+    };
+
+    const xml = makeXmlString(passport, sessionId, files);
+
+    const result = parser.parse(xml);
+    const scenarioNumber =
+      result["portaloneapp:Proposal"]["portaloneapp:ApplicationScenario"][
+        "portaloneapp:ScenarioNumber"
+      ];
+    const consentRegime =
+      result["portaloneapp:Proposal"]["portaloneapp:ConsentRegimes"][
+        "portaloneapp:ConsentRegime"
+      ];
+    expect(scenarioNumber).toBe(14);
+    expect(consentRegime).toBe("Certificate of Lawfulness");
+  });
+
+  it("maps the 'ApplicationScenario' value for a Proposed LDC", () => {
+    const passport: Store.passport = {
+      data: {
+        "uniform.ScenarioNumber": ["15"],
+        "uniform.ConsentRegime": ["Certificate of Lawfulness"],
+        "application.type": "ldc.proposed",
+      },
+    };
+
+    const xml = makeXmlString(passport, sessionId, files);
+
+    const result = parser.parse(xml);
+    const scenarioNumber =
+      result["portaloneapp:Proposal"]["portaloneapp:ApplicationScenario"][
+        "portaloneapp:ScenarioNumber"
+      ];
+    const consentRegime =
+      result["portaloneapp:Proposal"]["portaloneapp:ConsentRegimes"][
+        "portaloneapp:ConsentRegime"
+      ];
+    expect(scenarioNumber).toBe(15);
+    expect(consentRegime).toBe("Certificate of Lawfulness");
+  });
+
+  it("maps the 'SiteVisit' value", () => {
+    const passport: Store.passport = {
+      data: { "uniform.SiteVisit": ["true"] },
+    };
+
+    const xml = makeXmlString(passport, sessionId, files);
+
+    const result = parser.parse(xml);
+    const siteVisit =
+      result["portaloneapp:Proposal"]["portaloneapp:ApplicationData"][
+        "portaloneapp:SiteVisit"
+      ]["common:SeeSite"];
+    expect(siteVisit).toBe(true);
+  });
+
+  it("maps the 'IsRelated' value with a connection", () => {
+    const passport: Store.passport = {
+      data: { "uniform.IsRelated": ["true"] },
+    };
+
+    const xml = makeXmlString(passport, sessionId, files);
+
+    const result = parser.parse(xml);
+    const isRelated =
+      result["portaloneapp:Proposal"]["portaloneapp:DeclarationOfInterest"][
+        "common:IsRelated"
+      ];
+    expect(isRelated).toBe(true);
+  });
+
+  it("maps the 'IsRelated' value without a connection", () => {
+    const passport: Store.passport = {
+      data: { "uniform.IsRelated": ["false"] },
+    };
+    
+    const xml = makeXmlString(passport, sessionId, files);
+
+    const result = parser.parse(xml);
+    const isRelated =
+      result["portaloneapp:Proposal"]["portaloneapp:DeclarationOfInterest"][
+        "common:IsRelated"
+      ];
+    expect(isRelated).toBe(false);
+  });
+
+  it("maps the 'PersonRole' value for an Agent", () => {
+    const passport: Store.passport = {
+      data: { "uniform.PersonRole": ["Agent"] },
+    };
+
+    const xml = makeXmlString(passport, sessionId, files);
+
+    const result = parser.parse(xml);
+    const personRole =
+      result["portaloneapp:Proposal"]["portaloneapp:Declaration"][
+        "common:Signatory"
+      ]["@_PersonRole"];
+    expect(personRole).toBe("Agent");
+  });
+
+  it("maps the 'PersonRole' value for an Applicant", () => {
+    const passport: Store.passport = {
+      data: { "uniform.PersonRole": ["Applicant"] },
+    };
+
+    const xml = makeXmlString(passport, sessionId, files);
+    
+    const result = parser.parse(xml);
+    const personRole =
+      result["portaloneapp:Proposal"]["portaloneapp:Declaration"][
+        "common:Signatory"
+      ]["@_PersonRole"];
+    expect(personRole).toBe("Applicant");
   });
 });
