@@ -13,20 +13,20 @@ const sendToBOPS = async (req, res, next) => {
     });
   }
 
+  // confirm that this session has not already been successfully submitted before proceeding
+  const submittedApp = await checkBOPSAuditTable(payload?.planx_debug_data?.session_id);
+  if (submittedApp?.message === "Application created") {
+    res.status(200).send({
+      sessionId: payload?.planx_debug_data?.session_id,
+      bopsId: submittedApp?.id,
+      message: `Skipping send, already successfully submitted`,
+    });
+  }
+
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy
   //   XXX: we check this outside of the proxy because domain-specific errors (eg 404 "No Local Authority Found") won't bubble up, rather the proxy will throw its' own "Network Error"
   const isSupported = ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].includes(req.params.localAuthority.toUpperCase());
   if (isSupported) {
-    // confirm that this session has not already been successfully submitted
-    const submittedApp = await checkBOPSAuditTable(payload?.planx_debug_data?.session_id);
-    if (submittedApp?.message === "Application created") {
-      res.status(200).send({
-        sessionId: payload?.planx_debug_data?.session_id,
-        bopsId: submittedApp?.id,
-        message: `Skipping send, already successfully submitted`,
-      });
-    }
-
     // a local or staging API instance should send to the BOPS staging endpoint
     // production should send to the BOPS production endpoint
     const domain = `https://${req.params.localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
@@ -124,7 +124,7 @@ const sendToBOPS = async (req, res, next) => {
 /**
  * Query the BOPS audit table to see if we already have an application for this session
  * @param {string} sessionId 
- * @returns {object|undefined} bops_applications.response
+ * @returns {object|undefined} most recent bops_applications.response
  */
 async function checkBOPSAuditTable(sessionId) {
   const application = await client.request(
@@ -132,9 +132,12 @@ async function checkBOPSAuditTable(sessionId) {
       query FindApplication(
         $session_id: String = ""
       ) {
-        bops_applications(where: {
-          session_id: {_eq: $session_id}
-        }) {
+        bops_applications(
+          where: {
+            session_id: {_eq: $session_id}
+          },
+          order_by: {created_at: desc}
+        ) {
           response
         }
       }

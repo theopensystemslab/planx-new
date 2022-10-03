@@ -24,7 +24,7 @@ const sendToUniform = async (req, res, next) => {
       status: 400,
       message: "Idox/Uniform connector is not enabled for this local authority"
     });
-  } 
+  }
   
   // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload } = req.body;
@@ -35,7 +35,7 @@ const sendToUniform = async (req, res, next) => {
     });
   }
 
-  // confirm that this session has not already been successfully submitted
+  // confirm that this session has not already been successfully submitted before proceeding
   const submittedApp = await checkUniformAuditTable(payload?.sessionId);
   if (submittedApp?.submissionStatus === "PENDING" && submittedApp?.canDownload) {
     res.status(200).send({
@@ -129,7 +129,7 @@ const sendToUniform = async (req, res, next) => {
 /**
  * Query the Uniform audit table to see if we already have an application for this session
  * @param {string} sessionId 
- * @returns {object|undefined} uniform_applications.response
+ * @returns {object|undefined} most recent uniform_applications.response
  */
 async function checkUniformAuditTable(sessionId) {
   const application = await client.request(
@@ -137,9 +137,12 @@ async function checkUniformAuditTable(sessionId) {
       query FindApplication(
         $submission_reference: String = ""
       ) {
-        uniform_applications(where: {
-          submission_reference: {_eq: $submission_reference}
-        }) {
+        uniform_applications(
+          where: {
+            submission_reference: {_eq: $submission_reference}
+          },
+          order_by: {created_at: desc}
+        ) {
           response
         }
       }
