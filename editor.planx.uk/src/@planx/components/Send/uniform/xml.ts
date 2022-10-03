@@ -102,6 +102,14 @@ export function makeXmlString(
     `;
   };
 
+  const getApplicantAddress = () =>
+    passport.data?.resident?.[0]
+      ? passport.data?.["_address"]
+      : passport.data?.["applicant.address"];
+
+  const isRelated =
+    passport.data?.["application.declaration.connection"] !== "none";
+
   // this string template represents the full proposal.xml schema including prefixes
   // XML Schema Definitions for reference:
   // -- https://ecab.planningportal.co.uk/uploads/schema/OneAppProposal-v2-0-1.xsd
@@ -148,24 +156,22 @@ export function makeXmlString(
         )}</common:OrgName>
         <common:ExternalAddress>
           <common:InternationalAddress>
-            <apd:IntAddressLine>${escape(
-              passport.data?.["applicant.address"]?.["line1"]
-            )}</apd:IntAddressLine>
-            <apd:IntAddressLine>${escape(
-              passport.data?.["applicant.address"]?.["line2"]
-            )}</apd:IntAddressLine>
-            <apd:IntAddressLine>${escape(
-              passport.data?.["applicant.address"]?.["town"]
-            )}</apd:IntAddressLine>
-            <apd:IntAddressLine>${escape(
-              passport.data?.["applicant.address"]?.["county"]
-            )}</apd:IntAddressLine>
-            <apd:Country>${escape(
-              passport.data?.["applicant.address"]?.["country"]
-            )}</apd:Country>
-            <apd:InternationalPostCode>${escape(
-              passport.data?.["applicant.address"]?.["postcode"]
-            )}</apd:InternationalPostCode>
+            <apd:IntAddressLine>${
+              escape(getApplicantAddress()?.["line1"])
+            }</apd:IntAddressLine>
+            <apd:IntAddressLine>${
+              escape(getApplicantAddress()?.["line2"])
+            }</apd:IntAddressLine>
+            <apd:IntAddressLine>${
+              escape(getApplicantAddress()?.["town"])
+            }</apd:IntAddressLine>
+            <apd:IntAddressLine>${
+              escape(getApplicantAddress()?.["county"])
+            }</apd:IntAddressLine>
+            <apd:Country>${escape(getApplicantAddress()?.["country"])}</apd:Country>
+            <apd:InternationalPostCode>${
+              escape(getApplicantAddress()?.["postcode"])
+            }</apd:InternationalPostCode>
           </common:InternationalAddress>
         </common:ExternalAddress>
         <common:ContactDetails PreferredContactMedium="E-Mail">
