@@ -30,6 +30,7 @@ import {
   ReactRenderer,
   useEditor,
 } from "@tiptap/react";
+import { map } from "ramda";
 import React, {
   type FC,
   ChangeEvent,
@@ -99,6 +100,47 @@ export const toHtml = (doc: any) => {
 export const fromHtml = (htmlString: string) => {
   return generateJSON(htmlString, conversionExtensions);
 };
+
+export const injectVariables = (
+  htmlString: string,
+  vars: Record<string, string>
+) => {
+  const doc = fromHtml(htmlString);
+  return toHtml(
+    modifyDeep((node) => {
+      return node.type === "mention"
+        ? {
+            ...node,
+            type: "text",
+            text: vars[node.attrs.id] || "Unknown",
+            attrs: undefined,
+          }
+        : null;
+    })(doc)
+  );
+};
+
+/**
+ * Traverse a nested object/array and apply a modification at each level. If the modifier returns `null`, leave the result unchanged.
+ */
+const modifyDeep =
+  (fn: (field: any) => any) =>
+  (val: any): any => {
+    if (!val) {
+      return val;
+    }
+    const mod = fn(val);
+    if (mod) {
+      return mod;
+    }
+    if (Array.isArray(val)) {
+      return map(modifyDeep(fn), val);
+    }
+    if (typeof val === "object") {
+      return map(modifyDeep(fn), val);
+    }
+    return val;
+  };
 
 const RichTextInput2: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
