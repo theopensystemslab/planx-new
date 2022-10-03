@@ -106,9 +106,11 @@ export function makeXmlString(
               ${
                 /* Currently hardcoded, will later be a variable controlled by SetValue component */ ""
               }
-              <common:ProposedUseStatus>permanent</common:ProposedUseStatus>
-              <common:LawfulDevCertificateReason>${escape(
-                passport.data?.["proposal.description"]
+              <common:ProposedUseStatus>${
+                passport.data?.uniform?.ProposedUseStatus
+              }</common:ProposedUseStatus>
+              <common:LawfulDevCertificateReason>${
+                escape(passport.data?.["proposal.description"]
               )}</common:LawfulDevCertificateReason>
             </portaloneapp:GroundsCPU>
           </portaloneapp:ProposedUseApplication>
