@@ -7,15 +7,12 @@ import {
   appTypeLookup,
   PlanXAppTypes,
   UniformAppTypes,
-  UniformInstance,
-  UniformLPACodes,
 } from "./applicationType";
 
 export function makeXmlString(
   passport: Store.passport,
   sessionId: string,
-  files: string[],
-  uniformInstance: UniformInstance
+  files: string[]
 ) {
   const payment = passport.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
 
@@ -28,9 +25,6 @@ export function makeXmlString(
   } else {
     proposalCompletionDate = new Date(Date.now()).toISOString().split("T")[0];
   }
-
-  // TODO: Set in flow using SetValue component instead?
-  const lpaCode = UniformLPACodes[uniformInstance];
 
   // XXX: "proxy" is not supported by Uniform and will be cast to "Agent"
   const personRole =
@@ -156,7 +150,9 @@ export function makeXmlString(
     <portaloneapp:Proposal xmlns:portaloneapp="http://www.govtalk.gov.uk/planning/OneAppProposal-2006" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bs7666="http://www.govtalk.gov.uk/people/bs7666" xmlns:org="http://www.govtalk.gov.uk/financial/OrganisationIdentifiers" xmlns:pdt="http://www.govtalk.gov.uk/people/PersonDescriptives" xmlns:apd="http://www.govtalk.gov.uk/people/AddressAndPersonalDetails" xmlns:core="http://www.govtalk.gov.uk/core" xmlns:common="http://www.govtalk.gov.uk/planning/OneAppCommon-2006" Version="1.3">
       <portaloneapp:SchemaVersion>1.3</portaloneapp:SchemaVersion>
       <portaloneapp:ApplicationHeader>
-        <portaloneapp:ApplicationTo>${lpaCode}</portaloneapp:ApplicationTo>
+        <portaloneapp:ApplicationTo>${
+          passport.data?.uniform?.ApplicationTo[0]
+        }</portaloneapp:ApplicationTo>
         <portaloneapp:DateSubmitted>${proposalCompletionDate}</portaloneapp:DateSubmitted>
         <portaloneapp:RefNum>${sessionId}</portaloneapp:RefNum>
         <portaloneapp:FormattedRefNum>${sessionId}</portaloneapp:FormattedRefNum>

@@ -1,4 +1,3 @@
-import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
@@ -13,7 +12,6 @@ import { PublicProps } from "../ui";
 import { getBOPSParams } from "./bops";
 import { DEFAULT_DESTINATION, Destination, Send } from "./model";
 import { getUniformParams } from "./uniform";
-import { UniformInstance } from "./uniform/applicationType";
 
 export type Props = PublicProps<Send>;
 
@@ -40,7 +38,6 @@ const SendComponent: React.FC<Props> = ({
     state.computePassport(),
     state.sessionId,
   ]);
-  const classes = useStyles();
 
   let teamSlug = useTeamSlug();
   let combinedEventsPayload: any = {};
@@ -70,13 +67,7 @@ const SendComponent: React.FC<Props> = ({
 
     combinedEventsPayload[Destination.Uniform] = {
       localAuthority: teamSlug,
-      body: getUniformParams(
-        breadcrumbs,
-        flow,
-        passport,
-        sessionId,
-        teamSlug as UniformInstance
-      ),
+      body: getUniformParams(breadcrumbs, flow, passport, sessionId),
     };
   }
 
