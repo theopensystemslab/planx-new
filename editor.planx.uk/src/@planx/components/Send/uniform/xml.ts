@@ -60,34 +60,19 @@ export function makeXmlString(
         <portaloneapp:CertificateLawfulness>
           <portaloneapp:ProposedUseApplication>
             <portaloneapp:DescriptionCPU>
-              ${/* Get answer from Alastair here*/ ""}
-              <common:IsUseChange>true</common:IsUseChange>
-              <common:ProposedUseDescription>${escape(
-                passport.data?.["proposal.description"]
-              )}</common:ProposedUseDescription>
-              <common:ExistingUseDescription>${escape(
-                passport.data?.["proposal.description"]
-              )}</common:ExistingUseDescription>
-              <common:IsUseStarted>${
-                passport.data?.["proposal.started"]
-              }</common:IsUseStarted>
+              <common:IsUseChange>${passport.data?.["uniform.isUseChange"]?.[0]}</common:IsUseChange>
+              <common:ProposedUseDescription>${escape(passport.data?.["proposal.description"])}</common:ProposedUseDescription>
+              <common:ExistingUseDescription>${escape(passport.data?.["proposal.description"])}</common:ExistingUseDescription>
+              <common:IsUseStarted>${passport.data?.["proposal.started"]}</common:IsUseStarted>
             </portaloneapp:DescriptionCPU>
             <portaloneapp:GroundsCPU>
-              <common:UseLawfulnessReason>${escape(
-                passport.data?.["proposal.description"]
-              )}</common:UseLawfulnessReason>
+              <common:UseLawfulnessReason>${escape(passport.data?.["proposal.description"])}</common:UseLawfulnessReason>
               <common:SupportingInformation>
                 <common:AdditionalInformation>true</common:AdditionalInformation>
-                <common:Reference>${escape(
-                  passport.data?.["proposal.description"]
-                )}</common:Reference>
+                <common:Reference>${escape(passport.data?.["proposal.description"])}</common:Reference>
               </common:SupportingInformation>
-              <common:ProposedUseStatus>${
-                passport.data?.["uniform.proposedUseStatus"]?.[0]
-              }</common:ProposedUseStatus>
-              <common:LawfulDevCertificateReason>${
-                escape(passport.data?.["proposal.description"]
-              )}</common:LawfulDevCertificateReason>
+              <common:ProposedUseStatus>${passport.data?.["uniform.proposedUseStatus"]?.[0]}</common:ProposedUseStatus>
+              <common:LawfulDevCertificateReason>${escape(passport.data?.["proposal.description"])}</common:LawfulDevCertificateReason>
             </portaloneapp:GroundsCPU>
           </portaloneapp:ProposedUseApplication>
         </portaloneapp:CertificateLawfulness>

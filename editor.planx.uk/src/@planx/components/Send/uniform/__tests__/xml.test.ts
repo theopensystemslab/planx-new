@@ -302,4 +302,22 @@ describe("Uniform Translator", () => {
       ]["@_PersonRole"];
     expect(personRole).toBe("Applicant");
   });
+
+  it("maps the 'isUseChange' value", () => {
+    const passport: Store.passport = {
+      data: {
+        "uniform.isUseChange": ["true"],
+        "application.type": ["ldc.proposed"],
+      },
+    };
+    const xml = makeXmlString(passport, sessionId, files);
+    const result = parser.parse(xml);
+    const isUseChange =
+      result["portaloneapp:Proposal"]["portaloneapp:ApplicationData"][
+        "portaloneapp:CertificateLawfulness"
+      ]["portaloneapp:ProposedUseApplication"]["portaloneapp:DescriptionCPU"][
+        "common:IsUseChange"
+      ];
+    expect(isUseChange).toBe(true);
+  });
 });
