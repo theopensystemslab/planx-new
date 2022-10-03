@@ -308,7 +308,9 @@ export function makeXmlString(
           }</common:HaveSoughtAdvice>
         </portaloneapp:Advice>
         <portaloneapp:SiteVisit>
-          <common:SeeSite>false</common:SeeSite>
+          <common:SeeSite>${
+            passport.data?.uniform?.SiteVisit[0]
+          }</common:SeeSite>
           <common:VisitContactDetails>
             <common:ContactAgent/>
           </common:VisitContactDetails>
