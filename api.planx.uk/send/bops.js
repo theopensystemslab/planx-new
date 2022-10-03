@@ -1,26 +1,36 @@
-import {
-  responseInterceptor,
-  fixRequestBody,
-} from "http-proxy-middleware";
-import { adminGraphQLClient } from "../hasura";
+import { responseInterceptor } from "http-proxy-middleware";
+import { adminGraphQLClient as client } from "../hasura";
 import { useProxy } from "../server";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 
-const client = adminGraphQLClient;
+const sendToBOPS = async (req, res, next) => {
+  // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
+  const { payload } = req.body;
+  if (!payload) {
+    next({
+      status: 400,
+      message: `Missing application payload data to send to BOPS`,
+    });
+  }
 
-const sendToBOPS = (req, res, next) => {
+  // confirm that this session has not already been successfully submitted before proceeding
+  const submittedApp = await checkBOPSAuditTable(payload?.planx_debug_data?.session_id);
+  if (submittedApp?.message === "Application created") {
+    res.status(200).send({
+      sessionId: payload?.planx_debug_data?.session_id,
+      bopsId: submittedApp?.id,
+      message: `Skipping send, already successfully submitted`,
+    });
+  }
+
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy
   //   XXX: we check this outside of the proxy because domain-specific errors (eg 404 "No Local Authority Found") won't bubble up, rather the proxy will throw its' own "Network Error"
   const isSupported = ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].includes(req.params.localAuthority.toUpperCase());
-
   if (isSupported) {
     // a local or staging API instance should send to the BOPS staging endpoint
     // production should send to the BOPS production endpoint
     const domain = `https://${req.params.localAuthority}.${process.env.BOPS_API_ROOT_DOMAIN}`;
     const target = `${domain}/api/v1/planning_applications`;
-
-    // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
-    const { payload } = req.body;
 
     useProxy({
       headers: {
@@ -109,6 +119,35 @@ const sendToBOPS = (req, res, next) => {
       message: `Back-office Planning System (BOPS) is not enabled for this local authority`,
     });
   }
+};
+
+/**
+ * Query the BOPS audit table to see if we already have an application for this session
+ * @param {string} sessionId 
+ * @returns {object|undefined} most recent bops_applications.response
+ */
+async function checkBOPSAuditTable(sessionId) {
+  const application = await client.request(
+    `
+      query FindApplication(
+        $session_id: String = ""
+      ) {
+        bops_applications(
+          where: {
+            session_id: {_eq: $session_id}
+          },
+          order_by: {created_at: desc}
+        ) {
+          response
+        }
+      }
+    `,
+    {
+      session_id: sessionId
+    }
+  );
+
+  return application?.bops_applications[0]?.response;
 };
 
 export { sendToBOPS };

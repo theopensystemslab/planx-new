@@ -18,6 +18,15 @@ import app from "../server";
 
     beforeEach(() => {
       queryMock.mockQuery({
+        name: "FindApplication",
+        matchOnVariables: false,
+        data: {
+          bops_applications: []
+        },
+        variables: { sessionId: 123 },
+      });
+
+      queryMock.mockQuery({
         name: "CreateApplication",
         matchOnVariables: false,
         data: {
