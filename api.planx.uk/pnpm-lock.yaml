@@ -42,7 +42,7 @@ specifiers:
   nock: ^13.2.9
   node-dev: ^7.4.3
   notifications-node-client: ^5.1.1
-  passport: ^0.5.3
+  passport: ^0.6.0
   passport-google-oauth20: ^2.0.0
   pino-noir: ^2.2.1
   prettier: ~2.7.1
@@ -80,7 +80,7 @@ dependencies:
   mime: 3.0.0
   nanoid: 3.3.4
   notifications-node-client: 5.1.1
-  passport: 0.5.3
+  passport: 0.6.0
   passport-google-oauth20: 2.0.0
   pino-noir: 2.2.1
   slack-notify: 2.0.3
@@ -4507,12 +4507,13 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: false
 
-  /passport/0.5.3:
-    resolution: {integrity: sha512-gGc+70h4gGdBWNsR3FuV3byLDY6KBTJAIExGFXTpQaYfbbcHCBlRRKx7RBQSpqEqc5Hh2qVzRs7ssvSfOpkUEA==}
+  /passport/0.6.0:
+    resolution: {integrity: sha512-0fe+p3ZnrWRW74fe8+SvCyf4a3Pb2/h7gFkQ8yTJpAO50gDzlfjZUZTO1k5Eg9kUct22OxHLqDZoKUWRHOh9ug==}
     engines: {node: '>= 0.4.0'}
     dependencies:
       passport-strategy: 1.0.0
       pause: 0.0.1
+      utils-merge: 1.0.1
     dev: false
 
   /path-exists/4.0.0:
