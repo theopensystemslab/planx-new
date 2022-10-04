@@ -1,16 +1,22 @@
 {
-  "name": "scripts",
+  "name": "seed-database",
   "private": true,
   "license": "MPL-2.0",
-  "dependencies": {
-    "graphql": "^16.5.0",
-    "graphql-request": "^4.3.0"
-  },
+  "type": "module",
   "scripts": {
-    "upsert-flows": "node ./upsert-production-flows"
+    "upsert-flows": "node --experimental-specifier-resolution=node ./upsert-production-flows"
   },
   "engines": {
     "node": "^16",
     "pnpm": "^7.8.0"
+  },
+  "dependencies": {
+    "graphql": "^16.5.0",
+    "graphql-request": "^4.3.0",
+    "lodash": "^4.17.21",
+    "p-throttle": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.184"
   }
 }
