@@ -9,7 +9,6 @@ on:
 
 env:
   DOMAIN: planx.pizza
-  PULLREQUEST_ID: ${{ github.event.number }}
 
 jobs:
   teardown_pizza:
