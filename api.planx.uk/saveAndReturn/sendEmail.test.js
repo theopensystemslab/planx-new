@@ -79,7 +79,6 @@ describe("Send Email endpoint", () => {
         .expect(200)
         .then((response) => {
           expect(response.body).toHaveProperty("expiryDate");
-          expect(response.body).toHaveProperty("hasUserSaved", true);
         });
     });
 
