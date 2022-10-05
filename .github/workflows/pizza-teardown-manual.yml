@@ -1,4 +1,4 @@
-name: Pizza Teardown
+name: Pizza Teardown (Manual)
 on:
   workflow_dispatch:
     inputs:
