@@ -108,6 +108,7 @@ const sendSingleApplicationEmail = async (template, email, sessionId) => {
       reference: null,
       emailReplyToId: team.notifyPersonalisation.emailReplyToId,
     };
+    if (!session.has_user_saved) await setupEmailEventTriggers(sessionId);
     return await sendEmail(template, email, config);
   } catch (error) {
     throw Error(error.message)
@@ -309,6 +310,7 @@ const stringifyWithRootKeysSortedAlphabetically = (ob = {}) =>
 
 // Update lowcal_sessions.has_user_saved column to kick-off the setup_lowcal_expiry_events & 
 // setup_lowcal_reminder_events event triggers in Hasura
+// Should only run once on initial save of a session
 const setupEmailEventTriggers = async (sessionId) => {
   try {
     const client = adminGraphQLClient;
@@ -339,5 +341,4 @@ export {
   calculateExpiryDate,
   getHumanReadableProjectType,
   stringifyWithRootKeysSortedAlphabetically,
-  setupEmailEventTriggers,
 };
