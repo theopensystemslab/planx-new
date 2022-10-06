@@ -7,7 +7,7 @@ const airbrake =
     ? new Notifier({
         projectId: Number(process.env.AIRBRAKE_PROJECT_ID),
         projectKey: process.env.AIRBRAKE_PROJECT_KEY,
-        environment: process.env.API_URL_EXT.endsWith("planx.uk")
+        environment: process.env.API_URL_EXT!.endsWith("planx.uk")
           ? "production"
           : "staging",
       })

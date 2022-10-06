@@ -1,9 +1,9 @@
 import { adminGraphQLClient } from "./hasura";
-
+import { Flow, Node } from "./types";
 const client = adminGraphQLClient;
 
 // Get a flow's data (unflattened, without external portal nodes)
-const getFlowData = async (id) => {
+const getFlowData = async (id: string): Promise<Flow> => {
   const data = await client.request(
     `
       query GetFlowData($id: uuid!) {
@@ -20,7 +20,7 @@ const getFlowData = async (id) => {
 };
 
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
-const getMostRecentPublishedFlow = async (id) => {
+const getMostRecentPublishedFlow = async (id: string) => {
   const data = await client.request(
     `
       query GetMostRecentPublishedFlow($id: uuid!) {
@@ -39,7 +39,7 @@ const getMostRecentPublishedFlow = async (id) => {
 
 // Get the snapshot of the published flow for a certain point in time (flattened, with external portal nodes)
 //   created_at refers to published date, value passed in as param should be lowcal_session.updated_at
-const getPublishedFlowByDate = async (id, created_at) => {
+const getPublishedFlowByDate = async (id: string, created_at: number) => {
   const data = await client.request(
     `
       query GetPublishedFlowByDate($id: uuid!, $created_at: timestamptz!) {
@@ -55,17 +55,18 @@ const getPublishedFlowByDate = async (id, created_at) => {
       }
     `,
     {
-      id, created_at
+      id,
+      created_at,
     }
   );
 
   return data.flows_by_pk.published_flows?.[0]?.data;
-}
+};
 
 // Flatten a flow's data to include main content & portals in a single JSON representation
 // XXX: getFlowData & dataMerged are currently repeated in ../editor.planx.uk/src/lib/dataMergedHotfix.ts
 //        in order to load frontend /preview routes for flows that are not published
-const dataMerged = async (id, ob = {}) => {
+const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
   // get the primary flow data
   const { slug, data } = await getFlowData(id);
 
@@ -77,11 +78,11 @@ const dataMerged = async (id, ob = {}) => {
         type: 300,
         data: { text: slug },
       };
-    } else if (node.type === 310 && !ob[node.data.flowId]) {
-      await dataMerged(node.data.flowId, ob);
+    } else if (node.type === 310 && !ob[node.data?.flowId]) {
+      await dataMerged(node.data?.flowId, ob);
       ob[nodeId] = {
         type: 300,
-        edges: [node.data.flowId],
+        edges: [node.data?.flowId],
       };
     } else {
       ob[nodeId] = node;
@@ -97,7 +98,11 @@ const dataMerged = async (id, ob = {}) => {
  * @param {object} newFlow - the new flow data
  * @returns {object} - the new flow data with child nodes included
  */
- const getChildren = (node, originalFlow, newFlow) => {
+const getChildren = (
+  node: Node,
+  originalFlow: Flow["data"],
+  newFlow: Flow["data"]
+) => {
   if (node.edges) {
     node.edges.forEach((edgeId) => {
       if (!Object.keys(newFlow).includes(edgeId)) {
@@ -116,13 +121,13 @@ const dataMerged = async (id, ob = {}) => {
  * @param {string} replaceValue
  * @returns {object} flowData with updated node ids
  */
- const makeUniqueFlow = (flowData, replaceValue) => {
+const makeUniqueFlow = (flowData: Flow["data"], replaceValue: string) => {
   const charactersToReplace = replaceValue.length;
 
   Object.keys(flowData).forEach((node) => {
     // if this node has edges, rename them (includes _root.edges)
     if (flowData[node]["edges"]) {
-      const newEdges = flowData[node]["edges"].map(
+      const newEdges = flowData[node]["edges"]?.map(
         (edge) => edge.slice(0, -charactersToReplace) + replaceValue
       );
       delete flowData[node]["edges"];
@@ -140,4 +145,11 @@ const dataMerged = async (id, ob = {}) => {
   return flowData;
 };
 
-export { getFlowData, getMostRecentPublishedFlow, getPublishedFlowByDate, dataMerged, getChildren, makeUniqueFlow };
+export {
+  getFlowData,
+  getMostRecentPublishedFlow,
+  getPublishedFlowByDate,
+  dataMerged,
+  getChildren,
+  makeUniqueFlow,
+};
