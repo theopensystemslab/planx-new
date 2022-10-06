@@ -108,7 +108,8 @@ const sendSingleApplicationEmail = async (template, email, sessionId) => {
       reference: null,
       emailReplyToId: team.notifyPersonalisation.emailReplyToId,
     };
-    if (!session.has_user_saved) await setupEmailEventTriggers(sessionId);
+    const firstSave = !session.has_user_saved
+    if (firstSave) await setupEmailEventTriggers(sessionId);
     return await sendEmail(template, email, config);
   } catch (error) {
     throw Error(error.message)
