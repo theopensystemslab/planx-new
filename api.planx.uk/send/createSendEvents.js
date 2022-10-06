@@ -26,7 +26,7 @@ const createSendEvents = async (req, res, next) => {
       combinedResponse["uniform"] = uniformEvent;
     }
 
-    res.json(combinedResponse);
+    return res.json(combinedResponse);
   } catch (error) {
     return next({
       error,

@@ -20,7 +20,7 @@ const client = adminGraphQLClient;
  */
 const sendToUniform = async (req, res, next) => {
   if (!getUniformClient(req.params.localAuthority)) {
-    next({
+    return next({
       status: 400,
       message: "Idox/Uniform connector is not enabled for this local authority"
     });
@@ -29,7 +29,7 @@ const sendToUniform = async (req, res, next) => {
   // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload } = req.body;
   if (!payload?.xml || !payload?.sessionId) {
-    next({
+    return next({
       status: 400,
       message: "Missing application data to send to Uniform"
     });
@@ -38,7 +38,7 @@ const sendToUniform = async (req, res, next) => {
   // confirm that this session has not already been successfully submitted before proceeding
   const submittedApp = await checkUniformAuditTable(payload?.sessionId);
   if (submittedApp?.submissionStatus === "PENDING" && submittedApp?.canDownload) {
-    res.status(200).send({
+    return res.status(200).send({
       sessionId: payload?.sessionId,
       idoxSubmissionId: submittedApp?.submissionId,
       message: `Skipping send, already successfully submitted`,
@@ -103,23 +103,23 @@ const sendToUniform = async (req, res, next) => {
         // Mark session as submitted so that reminder and expiry emails are not triggered
         markSessionAsSubmitted(payload?.sessionId);
 
-        res.status(200).send({
+        return res.status(200).send({
           message: `Successfully created a Uniform submission`,
           zipAttached: attachmentAdded,
           application: application.insert_uniform_applications_one,
         });
       } else {
-        res.status(403).send({
+        return res.status(403).send({
           message: `Authenticated to Uniform, but failed to create submission`,
         });
       }
     } else {
-      res.status(401).send({
+      return res.status(401).send({
         message: `Failed to authenticate to Uniform`,
       });
     }
   } catch (error) {
-    next({
+    return next({
       error,
       message: `Failed to send to Uniform. ${error}`,
     });
