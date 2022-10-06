@@ -7,7 +7,7 @@ const sendToBOPS = async (req, res, next) => {
   // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload } = req.body;
   if (!payload) {
-    next({
+    return next({
       status: 400,
       message: `Missing application payload data to send to BOPS`,
     });
@@ -16,7 +16,7 @@ const sendToBOPS = async (req, res, next) => {
   // confirm that this session has not already been successfully submitted before proceeding
   const submittedApp = await checkBOPSAuditTable(payload?.planx_debug_data?.session_id);
   if (submittedApp?.message === "Application created") {
-    res.status(200).send({
+    return res.status(200).send({
       sessionId: payload?.planx_debug_data?.session_id,
       bopsId: submittedApp?.id,
       message: `Skipping send, already successfully submitted`,
@@ -114,7 +114,7 @@ const sendToBOPS = async (req, res, next) => {
       ),
     })(req, res);
   } else {
-    next({
+    return next({
       status: 400,
       message: `Back-office Planning System (BOPS) is not enabled for this local authority`,
     });
