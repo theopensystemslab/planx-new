@@ -228,3 +228,62 @@ test("valid node types are serialized correctly for BOPS", () => {
 
   expect(actual).toStrictEqual(expected);
 });
+
+test("removed nodes are skipped", () => {
+  const breadcrumbsWithAdditionalNode = {
+    ...breadcrumbs,
+    AFoFsXSDog: {
+      auto: false,
+      data: {
+        text: "Breadcrumb which no longer exists in the flow",
+      },
+    },
+  };
+
+  const expected = {
+    feedback: {
+      find_property: "test",
+    },
+    proposal_details: [
+      {
+        question: "address question",
+        responses: [{ value: "line1, line, town, county, postcode" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "checklist",
+        responses: [{ value: "1" }, { value: "2" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "expandable checklist question",
+        responses: [{ value: "c1" }, { value: "c2" }, { value: "c3" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "date question",
+        responses: [{ value: "1999-01-01" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "number question",
+        responses: [{ value: "500" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "regular question",
+        responses: [{ value: "a1" }],
+        metadata: { portal_name: "_root" },
+      },
+      {
+        question: "text question",
+        responses: [{ value: "testanswer" }],
+        metadata: { portal_name: "_root" },
+      },
+    ],
+  };
+
+  const actual = makePayload(flow, breadcrumbsWithAdditionalNode);
+
+  expect(actual).toStrictEqual(expected);
+});
