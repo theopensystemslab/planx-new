@@ -109,6 +109,8 @@ export const makePayload = (
 
   const proposal_details = Object.entries(breadcrumbs)
     .map(([id, bc]) => {
+      // Skip nodes that may be in the breadcrumbs which are no longer in flow
+      if (!flow[id]) return;
       const { edges = [], ...question } = flow[id];
 
       try {
