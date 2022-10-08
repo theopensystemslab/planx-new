@@ -144,6 +144,11 @@ const modifyDeep =
 
 const RichTextInput2: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
+
+  useEffect(() => {
+    console.log(props.value);
+  }, []);
+
   const editor = useEditor({
     extensions: [
       ...commonExtensions,
@@ -237,9 +242,6 @@ const RichTextInput2: FC<Props> = (props) => {
         >
           {addingLink ? (
             <Input
-              innerRef={(el) => {
-                el?.querySelector("input")?.focus();
-              }}
               onKeyDown={(ev) => {
                 if (ev.key === "Enter") {
                   editor
