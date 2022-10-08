@@ -35,6 +35,7 @@ import React, {
 
 // import { borderedFocusStyle } from "theme";
 import ErrorWrapper from "./ErrorWrapper";
+import RichTextInput2 from "./RichTextInput2";
 
 interface Props extends InputBaseProps {
   className?: string;
@@ -198,4 +199,4 @@ const RichTextInput: React.FC<Props> = (props) => {
   );
 };
 
-export default RichTextInput;
+export default RichTextInput2;
