@@ -5,18 +5,23 @@ import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import cors from "cors";
 import { stringify } from "csv-stringify";
-import express from "express";
-import { expressjwt } from "express-jwt";
+import express, { CookieOptions, ErrorRequestHandler, Response } from "express";
+import { expressjwt, Request } from "express-jwt";
 import noir from "pino-noir";
 import { URL } from "url";
 import { Server } from "http";
 import passport from "passport";
 import { sign } from "jsonwebtoken";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import {
+  Strategy as GoogleStrategy,
+  Profile,
+  VerifyCallback,
+} from "passport-google-oauth20";
 import {
   createProxyMiddleware,
   responseInterceptor,
   fixRequestBody,
+  Options,
 } from "http-proxy-middleware";
 import helmet from "helmet";
 import SlackNotify from "slack-notify";
@@ -61,8 +66,8 @@ router.get("/login/failed", (_req, _res, next) => {
 
 // When logout, redirect to client
 router.get("/logout", (req, res) => {
-  req.logout();
-  res.redirect(process.env.EDITOR_URL_EXT);
+  req.logout(() => {});
+  res.redirect(process.env.EDITOR_URL_EXT!);
 });
 
 // GET /google
@@ -72,9 +77,9 @@ router.get("/logout", (req, res) => {
 //   redirecting the user to google.com.  After authorization, Google
 //   will redirect the user back to this application at /auth/google/callback
 
-const handleSuccess = (req, res) => {
+const handleSuccess = (req: Request, res: Response) => {
   if (req.user) {
-    const { returnTo = process.env.EDITOR_URL_EXT } = req.session;
+    const { returnTo = process.env.EDITOR_URL_EXT } = req.session!;
 
     const domain = (() => {
       if (process.env.NODE_ENV === "production") {
@@ -98,9 +103,11 @@ const handleSuccess = (req, res) => {
       // editor.planx.dev/login, editor.planx.uk, or localhost:PORT
       // (if this code is running in development). With the respective
       // domain set in the cookie.
-      const cookie = {
+      const cookie: CookieOptions = {
         domain,
-        maxAge: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+        maxAge: new Date(
+          new Date().setFullYear(new Date().getFullYear() + 1)
+        ).getTime(),
         httpOnly: false,
       };
 
@@ -131,7 +138,7 @@ const handleSuccess = (req, res) => {
 };
 
 router.get("/google", (req, res, next) => {
-  req.session.returnTo = req.get("Referrer");
+  req.session!.returnTo = req.get("Referrer");
   return passport.authenticate("google", {
     scope: ["profile", "email"],
   })(req, res, next);
@@ -145,7 +152,7 @@ router.get(
 
 const client = adminGraphQLClient;
 
-const buildJWT = async (profile, done) => {
+const buildJWT = async (profile: Profile, done: VerifyCallback) => {
   const { email } = profile._json;
 
   const { users } = await client.request(
@@ -179,13 +186,13 @@ const buildJWT = async (profile, done) => {
     };
 
     done(null, {
-      jwt: sign(data, process.env.JWT_SECRET),
+      jwt: sign(data, process.env.JWT_SECRET!),
     });
   } else {
     done({
       status: 404,
       message: `User (${email}) not found. Do you need to log in to a different Google Account?`,
-    });
+    } as any);
   }
 };
 
@@ -193,8 +200,8 @@ passport.use(
   "google",
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientID: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       callbackURL: `${process.env.API_URL_EXT}/auth/google/callback`,
     },
     async function (_accessToken, _refreshToken, profile, done) {
@@ -207,7 +214,7 @@ passport.serializeUser(function (user, cb) {
   cb(null, user);
 });
 
-passport.deserializeUser(function (obj, cb) {
+passport.deserializeUser(function (obj: Express.User, cb) {
   cb(null, obj);
 });
 
@@ -231,12 +238,7 @@ app.use(
   })
 );
 
-app.use(
-  json({
-    extended: true,
-    limit: "100mb",
-  })
-);
+app.use(json({ limit: "100mb" }));
 
 // Converts req.headers.cookie: string, to req.cookies: Record<string, string>
 app.use(cookieParser());
@@ -246,7 +248,7 @@ app.use(cookieParser());
 //      https://github.com/theopensystemslab/planx-new/pull/555#issue-684435760
 // TODO: requestProperty can now be set. This might resolve the above issue.
 const useJWT = expressjwt({
-  secret: process.env.JWT_SECRET,
+  secret: process.env.JWT_SECRET!,
   algorithms: ["HS256"],
   credentialsRequired: true,
   requestProperty: "user",
@@ -300,7 +302,7 @@ app.post("/pay/:localAuthority", (req, res, next) => {
         pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
       },
       req
-    )(req, res);
+    )(req, res, next);
   } else {
     next({
       status: 400,
@@ -325,12 +327,13 @@ app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
         // if it's a prod payment, notify #planx-notifcations so we can monitor for subsequent submissions
         if (govUkResponse?.payment_provider !== "sandbox") {
           try {
-            const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL);
+            const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
             const payMessage = `:coin: New GOV Pay payment *${govUkResponse.payment_id}* with status *${govUkResponse.state.status}* [${req.params.localAuthority}]`;
             await slack.send(payMessage);
             console.log("Payment notification posted to Slack");
           } catch (error) {
-            return next(error);
+            next(error);
+            return "";
           }
         }
 
@@ -343,7 +346,7 @@ app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
       }),
     },
     req
-  )(req, res);
+  )(req, res, next);
 });
 
 // needed for storing original URL to redirect to in login flow
@@ -396,11 +399,11 @@ app.get("/me", useJWT, async function (req, res, next) {
           updated_at
         }
       }`,
-      { id: req.user.sub }
+      { id: req.user?.sub }
     );
 
     if (!user.users_by_pk)
-      next({ status: 404, message: `User (${req.user.sub}) not found` });
+      next({ status: 404, message: `User (${req.user?.sub}) not found` });
 
     res.json(user.users_by_pk);
   } catch (err) {
@@ -507,7 +510,7 @@ app.post("/sign-s3-upload", async (req, res, next) => {
   }
 });
 
-const trackAnalyticsLogExit = async (id, isUserExit) => {
+const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
   try {
     const result = await client.request(
       `
@@ -546,7 +549,7 @@ const trackAnalyticsLogExit = async (id, isUserExit) => {
     // We need to catch this exception here otherwise the exception would become an unhandle rejection which brings down the whole node.js process
     console.error(
       "There's been an error while recording metrics for analytics but because this thread is non-blocking we didn't reject the request",
-      e.stack
+      (e as Error).stack
     );
   }
 
@@ -582,35 +585,34 @@ app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
 app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
 
+const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
+  const { status = 500, message = "Something went wrong" } = (() => {
+    if (errorObject.error && airbrake) {
+      airbrake.notify(errorObject.error);
+      return {
+        ...errorObject,
+        message: errorObject.message.concat(", this error has been logged"),
+      };
+    } else {
+      return errorObject;
+    }
+  })();
+
+  res.status(status).send({
+    error: message,
+  });
+};
+
 // Handle any server errors that were passed with next(err)
 // Order is significant, this should be the final app.use()
-app.use(
-  // XXX: including all 4 function params appears to be a requirement?
-  function errorHandler(errorObject, _req, res, _next) {
-    const { status = 500, message = "Something went wrong" } = (() => {
-      if (errorObject.error && airbrake) {
-        airbrake.notify(errorObject.error);
-        return {
-          ...errorObject,
-          message: errorObject.message.concat(", this error has been logged"),
-        };
-      } else {
-        return errorObject;
-      }
-    })();
-
-    res.status(status).send({
-      error: message,
-    });
-  }
-);
+app.use(errorHandler);
 
 const server = new Server(app);
 
 server.keepAliveTimeout = 30000; // 30s
 server.headersTimeout = 35000; // 35s
 
-export function useProxy(options = {}) {
+export function useProxy(options: Partial<Options> = {}) {
   return createProxyMiddleware({
     changeOrigin: true,
     logLevel: LOG_LEVEL,
@@ -624,12 +626,12 @@ export function useProxy(options = {}) {
   });
 }
 
-function usePayProxy(options, req) {
+function usePayProxy(options: Partial<Options>, req: Request) {
   return useProxy({
     target: "https://publicapi.payments.service.gov.uk/v1/payments",
     onProxyReq: fixRequestBody,
     headers: {
-      ...req.headers,
+      ...(req.headers as NodeJS.Dict<string | string[]>),
       Authorization: `Bearer ${
         process.env[
           `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
@@ -641,3 +643,13 @@ function usePayProxy(options, req) {
 }
 
 export default server;
+
+// declaring User in a d.ts file is overwritten by other files
+declare global {
+  namespace Express {
+    interface User {
+      jwt: string;
+      sub?: string;
+    }
+  }
+}
