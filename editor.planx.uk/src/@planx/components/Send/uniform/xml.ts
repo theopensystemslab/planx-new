@@ -1,3 +1,4 @@
+import { escape } from "lodash";
 import { GovUKPayment } from "types";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
@@ -54,7 +55,7 @@ export function makeXmlString(
     const uniqueFilename = file.split("/").slice(-2).join("-");
     userUploadedFiles.push(`
       <common:FileAttachment>
-        <common:FileName>${uniqueFilename}</common:FileName>
+        <common:FileName>${escape(uniqueFilename)}</common:FileName>
         <common:Reference>Other</common:Reference>
       </common:FileAttachment>
     `);
@@ -86,38 +87,38 @@ export function makeXmlString(
         <portaloneapp:CertificateLawfulness>
           <portaloneapp:ProposedUseApplication>
             <portaloneapp:DescriptionCPU>
-              <common:OperationsDescription>${
+              <common:OperationsDescription>${escape(
                 passport.data?.["proposal.description"]
-              }</common:OperationsDescription>
+              )}</common:OperationsDescription>
               ${/* Get answer from Alastair here*/ ""}
               <common:IsUseChange>true</common:IsUseChange>
-              <common:ProposedUseDescription>${
+              <common:ProposedUseDescription>${escape(
                 passport.data?.["proposal.description"]
-              }</common:ProposedUseDescription>
-              <common:ExistingUseDescription>${
+              )}</common:ProposedUseDescription>
+              <common:ExistingUseDescription>${escape(
                 passport.data?.["proposal.description"]
-              }</common:ExistingUseDescription>
+              )}</common:ExistingUseDescription>
               <common:IsUseStarted>${
                 passport.data?.["proposal.started"]
               }</common:IsUseStarted>
             </portaloneapp:DescriptionCPU>
             <portaloneapp:GroundsCPU>
-              <common:UseLawfulnessReason>${
+              <common:UseLawfulnessReason>${escape(
                 passport.data?.["proposal.description"]
-              }</common:UseLawfulnessReason>
+              )}</common:UseLawfulnessReason>
               <common:SupportingInformation>
                 <common:AdditionalInformation>true</common:AdditionalInformation>
-                <common:Reference>${
+                <common:Reference>${escape(
                   passport.data?.["proposal.description"]
-                }</common:Reference>
+                )}</common:Reference>
               </common:SupportingInformation>
               ${
                 /* Currently hardcoded, will later be a variable controlled by SetValue component */ ""
               }
               <common:ProposedUseStatus>permanent</common:ProposedUseStatus>
-              <common:LawfulDevCertificateReason>${
+              <common:LawfulDevCertificateReason>${escape(
                 passport.data?.["proposal.description"]
-              }</common:LawfulDevCertificateReason>
+              )}</common:LawfulDevCertificateReason>
             </portaloneapp:GroundsCPU>
           </portaloneapp:ProposedUseApplication>
         </portaloneapp:CertificateLawfulness>
@@ -128,13 +129,19 @@ export function makeXmlString(
       <portaloneapp:CertificateLawfulness>
         <portaloneapp:ExistingUseApplication>
           <portaloneapp:CategoryCEU/>
-          <portaloneapp:DescriptionCEU>${passport.data?.["proposal.description"]}</portaloneapp:DescriptionCEU>
+          <portaloneapp:DescriptionCEU>${escape(
+            passport.data?.["proposal.description"]
+          )}</portaloneapp:DescriptionCEU>
           <portaloneapp:GroundsCEU>
             <common:GroundsCategory/>
-            <common:CertificateLawfulnessReason>${passport.data?.["proposal.description"]}</common:CertificateLawfulnessReason>
+            <common:CertificateLawfulnessReason>${escape(
+              passport.data?.["proposal.description"]
+            )}</common:CertificateLawfulnessReason>
           </portaloneapp:GroundsCEU>
           <portaloneapp:InformationCEU>
-            <common:UseBegunDate>${passport.data?.["proposal.started.date"]}</common:UseBegunDate>
+            <common:UseBegunDate>${
+              passport.data?.["proposal.started.date"]
+            }</common:UseBegunDate>
           </portaloneapp:InformationCEU>
         </portaloneapp:ExistingUseApplication>
       </portaloneapp:CertificateLawfulness>
@@ -173,39 +180,39 @@ export function makeXmlString(
       </portaloneapp:FileAttachments>
       <portaloneapp:Applicant>
         <common:PersonName>
-          <pdt:PersonNameTitle>${
+          <pdt:PersonNameTitle>${escape(
             passport.data?.["applicant.title"]
-          }</pdt:PersonNameTitle>
-          <pdt:PersonGivenName>${
+          )}</pdt:PersonNameTitle>
+          <pdt:PersonGivenName>${escape(
             passport.data?.["applicant.name.first"]
-          }</pdt:PersonGivenName>
-          <pdt:PersonFamilyName>${
+          )}</pdt:PersonGivenName>
+          <pdt:PersonFamilyName>${escape(
             passport.data?.["applicant.name.last"]
-          }</pdt:PersonFamilyName>
+          )}</pdt:PersonFamilyName>
         </common:PersonName>
-        <common:OrgName>${
+        <common:OrgName>${escape(
           passport.data?.["applicant.company.name"]
-        }</common:OrgName>
+        )}</common:OrgName>
         <common:ExternalAddress>
           <common:InternationalAddress>
-            <apd:IntAddressLine>${
+            <apd:IntAddressLine>${escape(
               passport.data?.["applicant.address"]?.["line1"]
-            }</apd:IntAddressLine>
-            <apd:IntAddressLine>${
+            )}</apd:IntAddressLine>
+            <apd:IntAddressLine>${escape(
               passport.data?.["applicant.address"]?.["line2"]
-            }</apd:IntAddressLine>
-            <apd:IntAddressLine>${
+            )}</apd:IntAddressLine>
+            <apd:IntAddressLine>${escape(
               passport.data?.["applicant.address"]?.["town"]
-            }</apd:IntAddressLine>
-            <apd:IntAddressLine>${
+            )}</apd:IntAddressLine>
+            <apd:IntAddressLine>${escape(
               passport.data?.["applicant.address"]?.["county"]
-            }</apd:IntAddressLine>
-            <apd:Country>${
+            )}</apd:IntAddressLine>
+            <apd:Country>${escape(
               passport.data?.["applicant.address"]?.["country"]
-            }</apd:Country>
-            <apd:InternationalPostCode>${
+            )}</apd:Country>
+            <apd:InternationalPostCode>${escape(
               passport.data?.["applicant.address"]?.["postcode"]
-            }</apd:InternationalPostCode>
+            )}</apd:InternationalPostCode>
           </common:InternationalAddress>
         </common:ExternalAddress>
         <common:ContactDetails PreferredContactMedium="E-Mail">
@@ -215,47 +222,47 @@ export function makeXmlString(
             }</apd:EmailAddress>
           </common:Email>
           <common:Telephone TelUse="work" TelPreferred="no" TelMobile="yes">
-            <apd:TelNationalNumber>${
+            <apd:TelNationalNumber>${escape(
               passport.data?.["applicant.phone.primary"]
-            }</apd:TelNationalNumber>
+            )}</apd:TelNationalNumber>
           </common:Telephone>
         </common:ContactDetails>
       </portaloneapp:Applicant>
       <portaloneapp:Agent>
         <common:PersonName>
-        <pdt:PersonNameTitle>${
+        <pdt:PersonNameTitle>${escape(
           passport.data?.["applicant.agent.title"]
-        }</pdt:PersonNameTitle>
-        <pdt:PersonGivenName>${
+        )}</pdt:PersonNameTitle>
+        <pdt:PersonGivenName>${escape(
           passport.data?.["applicant.agent.name.first"]
-        }</pdt:PersonGivenName>
-        <pdt:PersonFamilyName>${
+        )}</pdt:PersonGivenName>
+        <pdt:PersonFamilyName>${escape(
           passport.data?.["applicant.agent.name.last"]
-        }</pdt:PersonFamilyName>
+        )}</pdt:PersonFamilyName>
         </common:PersonName>
-        <common:OrgName>${
+        <common:OrgName>${escape(
           passport.data?.["applicant.agent.company.name"]
-        }</common:OrgName>
+        )}</common:OrgName>
         <common:ExternalAddress>
           <common:InternationalAddress>
-          <apd:IntAddressLine>${
+          <apd:IntAddressLine>${escape(
             passport.data?.["applicant.agent.address"]?.["line1"]
-          }</apd:IntAddressLine>
-          <apd:IntAddressLine>${
+          )}</apd:IntAddressLine>
+          <apd:IntAddressLine>${escape(
             passport.data?.["applicant.agent.address"]?.["line2"]
-          }</apd:IntAddressLine>
-          <apd:IntAddressLine>${
+          )}</apd:IntAddressLine>
+          <apd:IntAddressLine>${escape(
             passport.data?.["applicant.agent.address"]?.["town"]
-          }</apd:IntAddressLine>
-          <apd:IntAddressLine>${
+          )}</apd:IntAddressLine>
+          <apd:IntAddressLine>${escape(
             passport.data?.["applicant.agent.address"]?.["county"]
-          }</apd:IntAddressLine>
-          <apd:Country>${
+          )}</apd:IntAddressLine>
+          <apd:Country>${escape(
             passport.data?.["applicant.agent.address"]?.["country"]
-          }</apd:Country>
-          <apd:InternationalPostCode>${
+          )}</apd:Country>
+          <apd:InternationalPostCode>${escape(
             passport.data?.["applicant.agent.address"]?.["postcode"]
-          }</apd:InternationalPostCode>
+          )}</apd:InternationalPostCode>
           </common:InternationalAddress>
         </common:ExternalAddress>
         <common:ContactDetails PreferredContactMedium="E-Mail">
@@ -265,28 +272,30 @@ export function makeXmlString(
             }</apd:EmailAddress>
           </common:Email>
           <common:Telephone TelUse="work" TelPreferred="no" TelMobile="yes">
-            <apd:TelNationalNumber>${
+            <apd:TelNationalNumber>${escape(
               passport.data?.["applicant.agent.phone.primary"]
-            }</apd:TelNationalNumber>
+            )}</apd:TelNationalNumber>
           </common:Telephone>
         </common:ContactDetails>
       </portaloneapp:Agent>
       <portaloneapp:SiteLocation>
         <bs7666:BS7666Address>
           <bs7666:PAON>
-            <bs7666:Description>${
+            <bs7666:Description>${escape(
               passport.data?.["_address"]?.["pao"]
-            }</bs7666:Description>
+            )}</bs7666:Description>
           </bs7666:PAON>
-          <bs7666:StreetDescription>${
+          <bs7666:StreetDescription>${escape(
             passport.data?.["_address"]?.["street"]
-          }</bs7666:StreetDescription>
-          <bs7666:Town>${passport.data?.["_address"]?.["town"]}</bs7666:Town>
+          )}</bs7666:StreetDescription>
+          <bs7666:Town>${escape(
+            passport.data?.["_address"]?.["town"]
+          )}</bs7666:Town>
           <bs7666:AdministrativeArea/>
           <bs7666:PostTown/>
-          <bs7666:PostCode>${
+          <bs7666:PostCode>${escape(
             passport.data?.["_address"]?.["postcode"]
-          }</bs7666:PostCode>
+          )}</bs7666:PostCode>
           <bs7666:UniquePropertyReferenceNumber>${
             passport.data?.["_address"]?.["uprn"]
           }</bs7666:UniquePropertyReferenceNumber>
