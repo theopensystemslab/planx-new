@@ -36,6 +36,7 @@ const DelayedLoadingIndicator: React.FC<{
       role="alert"
       aria-busy="true"
       aria-live="assertive"
+      data-testid="delayed-loading-indicator"
     >
       <CircularProgress aria-label="Loading" />
       <Typography variant="body2" className={classes.text}>
