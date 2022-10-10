@@ -3,7 +3,8 @@
     "files": true
   },
   "files": [
-    "@types/index.d.ts"
+    "@types/index.d.ts",
+    "./dist"
   ],
   "compilerOptions": {
     "allowJs": true,
