@@ -19,7 +19,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm install -g pnpm
         working-directory: scripts/seed-database
-      - run: pnpm i
+      - run: pnpm install
         working-directory: scripts/seed-database
       - run: node ./upsert-production-flows.js --overwrite
         working-directory: scripts/seed-database
