@@ -87,37 +87,34 @@ export function makeXmlString(
         <portaloneapp:CertificateLawfulness>
           <portaloneapp:ProposedUseApplication>
             <portaloneapp:DescriptionCPU>
-              <common:OperationsDescription>OperationsDescription - ${
-                escape(passport.data?.["proposal.description"]
-              )}</common:OperationsDescription>
               ${/* Get answer from Alastair here*/ ""}
               <common:IsUseChange>true</common:IsUseChange>
-              <common:ProposedUseDescription>ProposedUseDescription - ${
-                escape(passport.data?.["proposal.description"]
+              <common:ProposedUseDescription>${escape(
+                passport.data?.["proposal.description"]
               )}</common:ProposedUseDescription>
-              <common:ExistingUseDescription>ExistingUseDescription - ${
-                escape(passport.data?.["proposal.description"]
+              <common:ExistingUseDescription>${escape(
+                passport.data?.["proposal.description"]
               )}</common:ExistingUseDescription>
               <common:IsUseStarted>${
                 passport.data?.["proposal.started"]
               }</common:IsUseStarted>
             </portaloneapp:DescriptionCPU>
             <portaloneapp:GroundsCPU>
-              <common:UseLawfulnessReason>UseLawfulnessReason - ${
-                escape(passport.data?.["proposal.description"]
+              <common:UseLawfulnessReason>${escape(
+                passport.data?.["proposal.description"]
               )}</common:UseLawfulnessReason>
               <common:SupportingInformation>
                 <common:AdditionalInformation>true</common:AdditionalInformation>
-                <common:Reference>Reference - ${
-                  escape(passport.data?.["proposal.description"]
+                <common:Reference>${escape(
+                  passport.data?.["proposal.description"]
                 )}</common:Reference>
               </common:SupportingInformation>
               ${
                 /* Currently hardcoded, will later be a variable controlled by SetValue component */ ""
               }
               <common:ProposedUseStatus>permanent</common:ProposedUseStatus>
-              <common:LawfulDevCertificateReason>LawfulDevCertificateReason - ${
-                escape(passport.data?.["proposal.description"]
+              <common:LawfulDevCertificateReason>${escape(
+                passport.data?.["proposal.description"]
               )}</common:LawfulDevCertificateReason>
             </portaloneapp:GroundsCPU>
           </portaloneapp:ProposedUseApplication>
@@ -129,10 +126,14 @@ export function makeXmlString(
       <portaloneapp:CertificateLawfulness>
         <portaloneapp:ExistingUseApplication>
           <portaloneapp:CategoryCEU/>
-          <portaloneapp:DescriptionCEU>DescriptionCEU - ${escape(passport.data?.["proposal.description"])}</portaloneapp:DescriptionCEU>
+          <portaloneapp:DescriptionCEU>${escape(
+            passport.data?.["proposal.description"]
+          )}</portaloneapp:DescriptionCEU>
           <portaloneapp:GroundsCEU>
             <common:GroundsCategory/>
-            <common:CertificateLawfulnessReason>CertificateLawfulnessReason - ${escape(passport.data?.["proposal.description"])}</common:CertificateLawfulnessReason>
+            <common:CertificateLawfulnessReason>${escape(
+              passport.data?.["proposal.description"]
+            )}</common:CertificateLawfulnessReason>
           </portaloneapp:GroundsCEU>
           <portaloneapp:InformationCEU>
             <common:UseBegunDate>${
