@@ -13,6 +13,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2021",
+    "typeRoots": ["./node_modules/@types", "./@types"]
   },
   "exclude": ["node_modules", "./dist/**/*"]
 }
