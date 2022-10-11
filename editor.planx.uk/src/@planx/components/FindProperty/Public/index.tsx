@@ -28,7 +28,7 @@ import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 import { fetchCurrentTeam } from "utils";
 
-import type { Address, FindProperty } from "../model";
+import type { FindProperty, SiteAddress } from "../model";
 import { DEFAULT_TITLE } from "../model";
 
 // these queries are exported because tests require them
@@ -48,7 +48,7 @@ export default Component;
 
 function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
-  const [address, setAddress] = useState<Address | undefined>();
+  const [address, setAddress] = useState<SiteAddress | undefined>();
   const [localAuthorityDistricts, setLocalAuthorityDistricts] = useState<
     string[] | undefined
   >();
@@ -181,7 +181,7 @@ function Component(props: Props) {
 }
 
 function GetAddress(props: {
-  setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>;
+  setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
   title?: string;
   description?: string;
   initialPostcode?: string;
@@ -367,7 +367,7 @@ function GetAddress(props: {
   );
 }
 
-interface Option extends Address {
+interface Option extends SiteAddress {
   title: string;
 }
 

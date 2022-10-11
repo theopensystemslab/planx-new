@@ -13,7 +13,7 @@ export const parseFindProperty = (
   ...parseMoreInformation(data),
 });
 
-export interface Address {
+export interface SiteAddress {
   uprn: string;
   blpu_code: string;
   latitude: number;
