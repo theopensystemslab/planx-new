@@ -87,9 +87,6 @@ export function makeXmlString(
         <portaloneapp:CertificateLawfulness>
           <portaloneapp:ProposedUseApplication>
             <portaloneapp:DescriptionCPU>
-              <common:OperationsDescription>${escape(
-                passport.data?.["proposal.description"]
-              )}</common:OperationsDescription>
               ${/* Get answer from Alastair here*/ ""}
               <common:IsUseChange>true</common:IsUseChange>
               <common:ProposedUseDescription>${escape(
