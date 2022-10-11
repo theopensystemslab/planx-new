@@ -1,4 +1,7 @@
+import { PersonAddress } from "@planx/components/AddressInput/model";
+import { SiteAddress } from "@planx/components/FindProperty/model";
 import { XMLParser, XMLValidator } from "fast-xml-parser";
+import { get } from "lodash";
 
 import { Store } from "./../../../../../pages/FlowEditor/lib/store/index";
 import { makeXmlString } from "./../xml";
@@ -319,5 +322,89 @@ describe("Uniform Translator", () => {
         "common:IsUseChange"
       ];
     expect(isUseChange).toBe(true);
+  });
+});
+
+describe("Applicant address", () => {
+  const harryPotterAddress: Partial<SiteAddress> = {
+    pao: "4",
+    street: "Privet Drive",
+    postcode: "GU22 7QQ",
+    town: "Little Whinging",
+    uprn: "31071980",
+  };
+  const sherlockHolmesAddress: PersonAddress = {
+    country: "UK",
+    county: "Greater London",
+    line1: "221b Baker Street",
+    line2: "",
+    postcode: "NW1 6XE",
+    town: "Marylebone",
+  };
+  const sessionId = "123";
+  const files: string[] = [];
+  const applicantAddressKey =
+    "portaloneapp:Proposal.portaloneapp:Applicant.common:ExternalAddress";
+
+  it("should populate the address for a 'resident' application", () => {
+    const passport: Store.passport = {
+      data: {
+        resident: ["true"],
+        _address: harryPotterAddress,
+      },
+    };
+    const xml = makeXmlString(
+      passport,
+      sessionId,
+      files,
+      UniformInstance.Lambeth
+    );
+    let result = parser.parse(xml);
+    const expectedAddress = {
+      "bs7666:BS7666Address": {
+        "bs7666:AdministrativeArea": "",
+        "bs7666:PAON": {
+          "bs7666:Description": 4,
+        },
+        "bs7666:PostCode": "GU22 7QQ",
+        "bs7666:PostTown": "",
+        "bs7666:StreetDescription": "Privet Drive",
+        "bs7666:Town": "Little Whinging",
+        "bs7666:UniquePropertyReferenceNumber": 31071980,
+      },
+    };
+    const resultAddress = get(result, applicantAddressKey);
+    expect(resultAddress).toMatchObject(expectedAddress);
+  });
+
+  it("should populate the address for a 'non-resident' application", () => {
+    const passport: Store.passport = {
+      data: {
+        resident: ["false"],
+        _address: harryPotterAddress,
+        "applicant.address": sherlockHolmesAddress,
+      },
+    };
+    const xml = makeXmlString(
+      passport,
+      sessionId,
+      files,
+      UniformInstance.Lambeth
+    );
+    let result = parser.parse(xml);
+    const expectedAddress = {
+      "common:InternationalAddress": {
+        "apd:IntAddressLine": [
+          "221b Baker Street",
+          "",
+          "Marylebone",
+          "Greater London",
+        ],
+        "apd:Country": "UK",
+        "apd:InternationalPostCode": "NW1 6XE",
+      },
+    };
+    const resultAddress = get(result, applicantAddressKey);
+    expect(resultAddress).toMatchObject(expectedAddress);
   });
 });
