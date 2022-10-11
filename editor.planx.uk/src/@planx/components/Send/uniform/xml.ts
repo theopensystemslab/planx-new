@@ -1,3 +1,4 @@
+import { SiteAddress } from "@planx/components/FindProperty/model";
 import { escape } from "lodash";
 import { GovUKPayment } from "types";
 
@@ -103,12 +104,57 @@ export function makeXmlString(
   };
 
   /**
+   * Returns a BS7666Address node representing the site address
+   */
+  const getSiteAddress = (): string => {
+    const siteAddress: SiteAddress = passport.data?.["_address"];
+    return `
+      <bs7666:BS7666Address>
+        <bs7666:PAON>
+          <bs7666:Description>${escape(siteAddress?.pao)}</bs7666:Description>
+        </bs7666:PAON>
+        <bs7666:StreetDescription>${escape(
+          siteAddress?.street
+        )}</bs7666:StreetDescription>
+        <bs7666:Town>${escape(siteAddress?.town)}</bs7666:Town>
+        <bs7666:AdministrativeArea/>
+        <bs7666:PostTown/>
+        <bs7666:PostCode>${escape(siteAddress?.postcode)}</bs7666:PostCode>
+        <bs7666:UniquePropertyReferenceNumber>${
+          siteAddress?.uprn
+        }</bs7666:UniquePropertyReferenceNumber>
+      </bs7666:BS7666Address>
+    `;
+  };
+
+  /**
+   * Return an InternationalAddress node representing a personal address
+   */
+  const getAddressForPerson = (
+    person: "applicant.agent" | "applicant"
+  ): string => {
+    const address: PersonAddress = passport.data?.[`${person}.address`];
+    return `
+      <common:InternationalAddress>
+        <apd:IntAddressLine>${escape(address?.line1)}</apd:IntAddressLine>
+        <apd:IntAddressLine>${escape(address?.line2)}</apd:IntAddressLine>
+        <apd:IntAddressLine>${escape(address?.town)}</apd:IntAddressLine>
+        <apd:IntAddressLine>${escape(address?.county)}</apd:IntAddressLine>
+        <apd:Country>${escape(address?.country)}</apd:Country>
+        <apd:InternationalPostCode>${escape(
+          address?.postcode
+        )}</apd:InternationalPostCode>
+      </common:InternationalAddress>
+    `;
+  };
+
+  /**
    * Applicant address should always be submitted, regardless of resident status
    */
-  const getApplicantAddress = (): UserData =>
-    passport.data?.resident?.[0]?.toLowerCase() === "true"
-      ? passport.data?.["_address"]
-      : passport.data?.["applicant.address"];
+  const getApplicantAddress = () => {
+    const isResident = passport.data?.resident?.[0]?.toLowerCase() === "true";
+    return isResident ? getSiteAddress() : getAddressForPerson("applicant");
+  };
 
   const isRelated =
     passport.data?.["application.declaration.connection"] !== "none";
@@ -158,26 +204,7 @@ export function makeXmlString(
           passport.data?.["applicant.company.name"]
         )}</common:OrgName>
         <common:ExternalAddress>
-          <common:InternationalAddress>
-            <apd:IntAddressLine>${escape(
-              getApplicantAddress()?.line1
-            )}</apd:IntAddressLine>
-            <apd:IntAddressLine>${escape(
-              getApplicantAddress()?.line2
-            )}</apd:IntAddressLine>
-            <apd:IntAddressLine>${escape(
-              getApplicantAddress()?.town
-            )}</apd:IntAddressLine>
-            <apd:IntAddressLine>${escape(
-              getApplicantAddress()?.county
-            )}</apd:IntAddressLine>
-            <apd:Country>${escape(
-              getApplicantAddress()?.["country"]
-            )}</apd:Country>
-            <apd:InternationalPostCode>${escape(
-              getApplicantAddress()?.["postcode"]
-            )}</apd:InternationalPostCode>
-          </common:InternationalAddress>
+          ${getApplicantAddress()}
         </common:ExternalAddress>
         <common:ContactDetails PreferredContactMedium="E-Mail">
           <common:Email EmailUsage="work" EmailPreferred="yes">
@@ -208,26 +235,7 @@ export function makeXmlString(
           passport.data?.["applicant.agent.company.name"]
         )}</common:OrgName>
         <common:ExternalAddress>
-          <common:InternationalAddress>
-          <apd:IntAddressLine>${escape(
-            passport.data?.["applicant.agent.address"]?.["line1"]
-          )}</apd:IntAddressLine>
-          <apd:IntAddressLine>${escape(
-            passport.data?.["applicant.agent.address"]?.["line2"]
-          )}</apd:IntAddressLine>
-          <apd:IntAddressLine>${escape(
-            passport.data?.["applicant.agent.address"]?.["town"]
-          )}</apd:IntAddressLine>
-          <apd:IntAddressLine>${escape(
-            passport.data?.["applicant.agent.address"]?.["county"]
-          )}</apd:IntAddressLine>
-          <apd:Country>${escape(
-            passport.data?.["applicant.agent.address"]?.["country"]
-          )}</apd:Country>
-          <apd:InternationalPostCode>${escape(
-            passport.data?.["applicant.agent.address"]?.["postcode"]
-          )}</apd:InternationalPostCode>
-          </common:InternationalAddress>
+          ${getAddressForPerson("applicant.agent")}
         </common:ExternalAddress>
         <common:ContactDetails PreferredContactMedium="E-Mail">
           <common:Email EmailUsage="work" EmailPreferred="yes">
@@ -243,27 +251,7 @@ export function makeXmlString(
         </common:ContactDetails>
       </portaloneapp:Agent>
       <portaloneapp:SiteLocation>
-        <bs7666:BS7666Address>
-          <bs7666:PAON>
-            <bs7666:Description>${escape(
-              passport.data?.["_address"]?.["pao"]
-            )}</bs7666:Description>
-          </bs7666:PAON>
-          <bs7666:StreetDescription>${escape(
-            passport.data?.["_address"]?.["street"]
-          )}</bs7666:StreetDescription>
-          <bs7666:Town>${escape(
-            passport.data?.["_address"]?.["town"]
-          )}</bs7666:Town>
-          <bs7666:AdministrativeArea/>
-          <bs7666:PostTown/>
-          <bs7666:PostCode>${escape(
-            passport.data?.["_address"]?.["postcode"]
-          )}</bs7666:PostCode>
-          <bs7666:UniquePropertyReferenceNumber>${
-            passport.data?.["_address"]?.["uprn"]
-          }</bs7666:UniquePropertyReferenceNumber>
-        </bs7666:BS7666Address>
+        ${getSiteAddress()}
         <common:SiteGridRefence>
           <bs7666:X>${Math.round(passport.data?.["_address"]?.["x"])}</bs7666:X>
           <bs7666:Y>${Math.round(passport.data?.["_address"]?.["y"])}</bs7666:Y>
