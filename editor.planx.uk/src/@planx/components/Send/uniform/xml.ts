@@ -152,7 +152,8 @@ export function makeXmlString(
    * Applicant address should always be submitted, regardless of resident status
    */
   const getApplicantAddress = () => {
-    const isResident = passport.data?.resident?.[0]?.toLowerCase() === "true";
+    const isResident =
+      passport.data?.["applicant.resident"]?.[0]?.toLowerCase() === "true";
     return isResident ? getSiteAddress() : getAddressForPerson("applicant");
   };
 

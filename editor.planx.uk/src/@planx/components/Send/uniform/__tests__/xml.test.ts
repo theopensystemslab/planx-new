@@ -349,7 +349,7 @@ describe("Applicant address", () => {
   it("should populate the address for a 'resident' application", () => {
     const passport: Store.passport = {
       data: {
-        resident: ["true"],
+        "applicant.resident": ["true"],
         _address: harryPotterAddress,
       },
     };
@@ -380,7 +380,7 @@ describe("Applicant address", () => {
   it("should populate the address for a 'non-resident' application", () => {
     const passport: Store.passport = {
       data: {
-        resident: ["false"],
+        "applicant.resident": ["false"],
         _address: harryPotterAddress,
         "applicant.address": sherlockHolmesAddress,
       },
