@@ -1,4 +1,4 @@
-import { groupBy, cloneDeep } from "lodash";
+import groupBy from "lodash/groupBy";
 import { GraphQLClient } from "graphql-request";
 import pThrottle from 'p-throttle';
 const args = process.argv.slice(2);
