@@ -361,16 +361,9 @@ describe("Applicant address", () => {
     );
     let result = parser.parse(xml);
     const expectedAddress = {
-      "bs7666:BS7666Address": {
-        "bs7666:AdministrativeArea": "",
-        "bs7666:PAON": {
-          "bs7666:Description": 4,
-        },
-        "bs7666:PostCode": "GU22 7QQ",
-        "bs7666:PostTown": "",
-        "bs7666:StreetDescription": "Privet Drive",
-        "bs7666:Town": "Little Whinging",
-        "bs7666:UniquePropertyReferenceNumber": 31071980,
+      "common:InternationalAddress": {
+        "apd:IntAddressLine": [4, "Privet Drive", "Little Whinging", ""],
+        "apd:InternationalPostCode": "GU22 7QQ",
       },
     };
     const resultAddress = get(result, applicantAddressKey);

@@ -28,6 +28,15 @@ export function makeXmlString(
     proposalCompletionDate = new Date(Date.now()).toISOString().split("T")[0];
   }
 
+  // XXX: "proxy" is not supported by Uniform and will be cast to "Agent"
+  const personRole =
+    passport.data?.["user.role"] === "applicant" ? "Applicant" : "Agent";
+
+  const isRelated =
+    passport.data?.["application.declaration.connection"] !== "none";
+
+  const siteAddress: SiteAddress = passport.data?.["_address"];
+
   // format file attachments
   const requiredFiles = `
     <common:FileAttachment>
@@ -104,28 +113,14 @@ export function makeXmlString(
   };
 
   /**
-   * Returns a BS7666Address node representing the site address
+   * Map a SiteAddress to a PersonAddress
    */
-  const getSiteAddress = (): string => {
-    const siteAddress: SiteAddress = passport.data?.["_address"];
-    return `
-      <bs7666:BS7666Address>
-        <bs7666:PAON>
-          <bs7666:Description>${escape(siteAddress?.pao)}</bs7666:Description>
-        </bs7666:PAON>
-        <bs7666:StreetDescription>${escape(
-          siteAddress?.street
-        )}</bs7666:StreetDescription>
-        <bs7666:Town>${escape(siteAddress?.town)}</bs7666:Town>
-        <bs7666:AdministrativeArea/>
-        <bs7666:PostTown/>
-        <bs7666:PostCode>${escape(siteAddress?.postcode)}</bs7666:PostCode>
-        <bs7666:UniquePropertyReferenceNumber>${
-          siteAddress?.uprn
-        }</bs7666:UniquePropertyReferenceNumber>
-      </bs7666:BS7666Address>
-    `;
-  };
+  const getPersonAddressFromSiteAddress = (): PersonAddress => ({
+    line1: siteAddress?.pao,
+    line2: siteAddress?.street,
+    town: siteAddress?.town,
+    postcode: siteAddress?.postcode,
+  });
 
   /**
    * Return an InternationalAddress node representing a personal address
@@ -133,32 +128,29 @@ export function makeXmlString(
   const getAddressForPerson = (
     person: "applicant.agent" | "applicant"
   ): string => {
-    const address: PersonAddress = passport.data?.[`${person}.address`];
-    return `
-      <common:InternationalAddress>
-        <apd:IntAddressLine>${escape(address?.line1)}</apd:IntAddressLine>
-        <apd:IntAddressLine>${escape(address?.line2)}</apd:IntAddressLine>
-        <apd:IntAddressLine>${escape(address?.town)}</apd:IntAddressLine>
-        <apd:IntAddressLine>${escape(address?.county)}</apd:IntAddressLine>
-        <apd:Country>${escape(address?.country)}</apd:Country>
-        <apd:InternationalPostCode>${escape(
-          address?.postcode
-        )}</apd:InternationalPostCode>
-      </common:InternationalAddress>
-    `;
-  };
-
-  /**
-   * Applicant address should always be submitted, regardless of resident status
-   */
-  const getApplicantAddress = () => {
     const isResident =
       passport.data?.["applicant.resident"]?.[0]?.toLowerCase() === "true";
-    return isResident ? getSiteAddress() : getAddressForPerson("applicant");
+    // Passports of resident applicants will not have an "application.address" value
+    // This must be mapped from their siteAddress
+    const address =
+      person === "applicant" && isResident
+        ? getPersonAddressFromSiteAddress()
+        : passport.data?.[`${person}.address`];
+    return `
+      <common:ExternalAddress>
+        <common:InternationalAddress>
+          <apd:IntAddressLine>${escape(address?.line1)}</apd:IntAddressLine>
+          <apd:IntAddressLine>${escape(address?.line2)}</apd:IntAddressLine>
+          <apd:IntAddressLine>${escape(address?.town)}</apd:IntAddressLine>
+          <apd:IntAddressLine>${escape(address?.county)}</apd:IntAddressLine>
+          <apd:Country>${escape(address?.country)}</apd:Country>
+          <apd:InternationalPostCode>${escape(
+            address?.postcode
+          )}</apd:InternationalPostCode>
+        </common:InternationalAddress>
+      </common:ExternalAddress>
+    `;
   };
-
-  const isRelated =
-    passport.data?.["application.declaration.connection"] !== "none";
 
   // this string template represents the full proposal.xml schema including prefixes
   // XML Schema Definitions for reference:
@@ -204,9 +196,7 @@ export function makeXmlString(
         <common:OrgName>${escape(
           passport.data?.["applicant.company.name"]
         )}</common:OrgName>
-        <common:ExternalAddress>
-          ${getApplicantAddress()}
-        </common:ExternalAddress>
+        ${getAddressForPerson("applicant")}
         <common:ContactDetails PreferredContactMedium="E-Mail">
           <common:Email EmailUsage="work" EmailPreferred="yes">
             <apd:EmailAddress>${
@@ -235,9 +225,7 @@ export function makeXmlString(
         <common:OrgName>${escape(
           passport.data?.["applicant.agent.company.name"]
         )}</common:OrgName>
-        <common:ExternalAddress>
-          ${getAddressForPerson("applicant.agent")}
-        </common:ExternalAddress>
+        ${getAddressForPerson("applicant.agent")}
         <common:ContactDetails PreferredContactMedium="E-Mail">
           <common:Email EmailUsage="work" EmailPreferred="yes">
             <apd:EmailAddress>${
@@ -252,10 +240,24 @@ export function makeXmlString(
         </common:ContactDetails>
       </portaloneapp:Agent>
       <portaloneapp:SiteLocation>
-        ${getSiteAddress()}
+        <bs7666:BS7666Address>
+          <bs7666:PAON>
+            <bs7666:Description>${escape(siteAddress?.pao)}</bs7666:Description>
+          </bs7666:PAON>
+          <bs7666:StreetDescription>${escape(
+            siteAddress?.street
+          )}</bs7666:StreetDescription>
+          <bs7666:Town>${escape(siteAddress?.town)}</bs7666:Town>
+          <bs7666:AdministrativeArea/>
+          <bs7666:PostTown/>
+          <bs7666:PostCode>${escape(siteAddress?.postcode)}</bs7666:PostCode>
+          <bs7666:UniquePropertyReferenceNumber>${
+            siteAddress?.uprn
+          }</bs7666:UniquePropertyReferenceNumber>
+        </bs7666:BS7666Address>
         <common:SiteGridRefence>
-          <bs7666:X>${Math.round(passport.data?.["_address"]?.["x"])}</bs7666:X>
-          <bs7666:Y>${Math.round(passport.data?.["_address"]?.["y"])}</bs7666:Y>
+          <bs7666:X>${Math.round(siteAddress?.["x"])}</bs7666:X>
+          <bs7666:Y>${Math.round(siteAddress?.["y"])}</bs7666:Y>
         </common:SiteGridRefence>
       </portaloneapp:SiteLocation>
       <portaloneapp:ApplicationScenario>
