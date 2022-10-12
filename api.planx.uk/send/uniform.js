@@ -8,6 +8,7 @@ import str from "string-to-stream";
 import { stringify } from "csv-stringify";
 import { adminGraphQLClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
+import { escape } from "lodash";
 
 const client = adminGraphQLClient;
 
@@ -178,11 +179,9 @@ async function createZip(stringXml, csv, files, sessionId) {
     // download any user-uploaded files from S3 to the tmp directory, add them to the zip
     if (files) {
       for (let file of files) {
-        // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
-        // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
-        // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-        const uniqueFilename = file.split("/").slice(-2).join("-");
-        const filePath = path.join(tmpDir, uniqueFilename);
+        // Must match filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
+        const filename = escape(file.split("/").pop());
+        const filePath = path.join(tmpDir, filename);
         await downloadFile(file, filePath, zip);
       }
     }

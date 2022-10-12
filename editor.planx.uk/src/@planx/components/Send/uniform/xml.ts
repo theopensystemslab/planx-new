@@ -51,11 +51,12 @@ export function makeXmlString(
 
   const userUploadedFiles: string[] = [];
   files?.forEach((file) => {
-    // Must match the unique filename in api.planx.uk/send.js
-    const uniqueFilename = file.split("/").slice(-2).join("-");
+    // Must match filename in api.planx.uk/send/uniform.js
+    const [id, filename] = file.split("/").slice(-2);
     userUploadedFiles.push(`
       <common:FileAttachment>
-        <common:FileName>${escape(uniqueFilename)}</common:FileName>
+        <common:Identifier>${id}</common:Identifier>
+        <common:FileName>${escape(filename)}</common:FileName>
         <common:Reference>Other</common:Reference>
       </common:FileAttachment>
     `);
