@@ -1,4 +1,4 @@
-import { groupBy, cloneDeep } from "lodash";
+import _ from "lodash";
 import { GraphQLClient } from "graphql-request";
 import pThrottle from 'p-throttle';
 const args = process.argv.slice(2);
@@ -84,12 +84,12 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
     const {
       false: teamsToUpsertById,
       true: teamsToUpsertBySlug
-    } = groupBy(productionTeams, (team) => localTeamsSlugs.includes(team.slug));
+    } = _.groupBy(productionTeams, (team) => localTeamsSlugs.includes(team.slug));
 
     const {
       false: flowsToUpsertById,
       true: flowsToUpsertBySlug
-    } = groupBy(
+    } = _.groupBy(
       // XXX: overwrite flow version to match operation version and prevent sharedb sync errors
       productionFlows.map(flow => ({ ...flow, version: 1, })),
       (flow) => localFlows.some(localFlow =>
