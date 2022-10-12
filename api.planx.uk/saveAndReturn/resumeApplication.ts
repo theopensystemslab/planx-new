@@ -1,31 +1,40 @@
+import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import { adminGraphQLClient } from "../hasura";
-import { sendEmail, convertSlugToName, getResumeLink, calculateExpiryDate, getHumanReadableProjectType } from "./utils";
+import { LowCalSession, Team } from "../types";
+import {
+  sendEmail,
+  convertSlugToName,
+  getResumeLink,
+  calculateExpiryDate,
+  getHumanReadableProjectType,
+} from "./utils";
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
- * @param {object} req 
- * @param {object} res 
- * @param {object} next 
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
  */
-const resumeApplication = async (req, res, next) => {
+const resumeApplication = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { teamSlug, email } = req.body.payload;
     if (!teamSlug || !email)
       return next({
         status: 400,
-        message: "Required value missing"
+        message: "Required value missing",
       });
 
-    const { team, sessions } = await validateRequest(teamSlug, email, res);
+    const { team, sessions } = await validateRequest(teamSlug, email);
     // Protect against phishing by returning a positive response even if no matching sessions found
     if (!sessions.length) return res.json({ message: "Success" });
 
     const config = {
-      personalisation: await getPersonalisation(
-        sessions,
-        team
-      ),
+      personalisation: await getPersonalisation(sessions, team),
       reference: null,
       emailReplyToId: team.notifyPersonalisation.emailReplyToId,
     };
@@ -34,19 +43,25 @@ const resumeApplication = async (req, res, next) => {
   } catch (error) {
     return next({
       error,
-      message: `Failed to send "Resume" email. ${error.message}`
+      message: `Failed to send "Resume" email. ${(error as Error).message}`,
     });
   }
 };
 
 /**
  * Validate that there are sessions matching the request
- * XXX: Admin role is required here as we are relying on the combination of email 
+ * XXX: Admin role is required here as we are relying on the combination of email
  * address + inbox access to "secure" these requests
- * @param {string} teamSlug 
- * @param {string} email 
+ * @param {string} teamSlug
+ * @param {string} email
  */
-const validateRequest = async (teamSlug, email) => {
+const validateRequest = async (
+  teamSlug: string,
+  email: string
+): Promise<{
+  team: Team;
+  sessions: LowCalSession[];
+}> => {
   try {
     const client = adminGraphQLClient;
     const query = gql`
@@ -74,8 +89,11 @@ const validateRequest = async (teamSlug, email) => {
           domain
         }
       }
-    `
-    const { lowcal_sessions, teams } = await client.request(query, { teamSlug, email: email.toLowerCase() });
+    `;
+    const { lowcal_sessions, teams } = await client.request(query, {
+      teamSlug,
+      email: email.toLowerCase(),
+    });
 
     if (!teams?.length) throw Error;
 
@@ -84,17 +102,14 @@ const validateRequest = async (teamSlug, email) => {
       sessions: lowcal_sessions,
     };
   } catch (error) {
-    throw Error("Unable to validate request")
+    throw Error("Unable to validate request");
   }
 };
 
 /**
  * Construct personalisation object required for the "Resume" Notify template
- * @param {array} sessions 
- * @param {object} team
- * @returns {object}
  */
-const getPersonalisation = async (sessions, team) => {
+const getPersonalisation = async (sessions: LowCalSession[], team: Team) => {
   return {
     teamName: team.name,
     content: await buildContentFromSessions(sessions, team),
@@ -105,16 +120,16 @@ const getPersonalisation = async (sessions, team) => {
 /**
  * Build the main content of the "Resume" email
  * A formatted list of all open applications, including magic link to resume
- * @param {array} sessions 
- * @param {object} team
- * @returns {string}
  */
-const buildContentFromSessions = async (sessions, team) => {
-  const contentBuilder = async (session) => {
+const buildContentFromSessions = async (
+  sessions: LowCalSession[],
+  team: Team
+): Promise<string> => {
+  const contentBuilder = async (session: LowCalSession) => {
     const service = convertSlugToName(session.flow.slug);
     const address = session.data?.passport?.data?._address?.single_line_address;
     const projectType = await getHumanReadableProjectType(session);
-    const resumeLink = getResumeLink(session, team, session.flow.slug)
+    const resumeLink = getResumeLink(session, team, session.flow.slug);
     const expiryDate = calculateExpiryDate(session.created_at);
 
     return `Service: ${service}

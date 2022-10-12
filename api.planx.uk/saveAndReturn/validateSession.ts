@@ -1,18 +1,27 @@
 import { gql } from "graphql-request";
+import { NextFunction, Request, Response } from "express";
 import * as jsondiffpatch from "jsondiffpatch";
 import { publicGraphQLClient } from "../hasura";
 import { getMostRecentPublishedFlow, getPublishedFlowByDate } from "../helpers";
-import { getSaveAndReturnPublicHeaders, stringifyWithRootKeysSortedAlphabetically } from "./utils";
+import {
+  getSaveAndReturnPublicHeaders,
+  stringifyWithRootKeysSortedAlphabetically,
+} from "./utils";
+import { Breadcrumb, LowCalSession, Node } from "../types";
 
 const client = publicGraphQLClient;
 
-const validateSession = async (req, res, next) => {
+const validateSession = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { email, sessionId } = req.body.payload;
     if (!email || !sessionId)
       return next({
         status: 400,
-        message: "Required value missing"
+        message: "Required value missing",
       });
 
     let sessionData = await findSession(sessionId, email.toLowerCase());
@@ -36,24 +45,25 @@ const validateSession = async (req, res, next) => {
       if (!currentFlow || !savedFlow) {
         return next({
           status: 404,
-          message: "Unable to find a published version of this flow"
+          message: "Unable to find a published version of this flow",
         });
       }
 
       const delta = jsondiffpatch.diff(currentFlow, savedFlow);
       // if there have been content changes, make a list of the alteredNodes
       if (delta) {
-        const alteredNodes = Object.keys(delta).map((key) => ({
+        const alteredNodes: Node[] = Object.keys(delta).map((key) => ({
           id: key,
-          ...currentFlow[key]
+          ...currentFlow[key],
         }));
         if (alteredNodes.length) {
-          let removedBreadcrumbs = {};
+          let removedBreadcrumbs: Breadcrumb = {};
           alteredNodes.forEach((node) => {
             // if the session breadcrumbs include any altered content, remove those breadcrumbs so the user will be re-prompted to answer those questions
-            if (Object.keys(sessionData.data.breadcrumbs).includes(node.id)) {
-              removedBreadcrumbs[node.id] = sessionData.data.breadcrumbs[node.id];
-              delete sessionData.data.breadcrumbs[node.id];
+            if (Object.keys(sessionData.data.breadcrumbs).includes(node.id!)) {
+              removedBreadcrumbs[node.id!] =
+                sessionData.data.breadcrumbs[node.id!];
+              delete sessionData.data.breadcrumbs[node.id!];
             }
           });
 
@@ -66,7 +76,9 @@ const validateSession = async (req, res, next) => {
                 // check if a removed breadcrumb has a passport var based on the published content at save point
                 if (savedFlow[nodeId]?.data?.[key]) {
                   // if it does, remove that passport variable from our sessionData so we don't auto-answer changed questions before the user sees them
-                  delete sessionData.data.passport.data[currentFlow[nodeId].data[key]];
+                  delete sessionData.data.passport?.data?.[
+                    currentFlow[nodeId].data[key]
+                  ];
                 }
               });
             });
@@ -77,11 +89,18 @@ const validateSession = async (req, res, next) => {
 
           // update the lowcal_session.data to match our updated in-memory sessionData.data
           //   XX: apply sorting to match the original get/set methods used in editor.planx.uk/src/lib/lowcalStorage.ts
-          const sortedSessionData = stringifyWithRootKeysSortedAlphabetically(sessionData.data);
-          const reconciledSessionData = await updateLowcalSessionData(sessionId, JSON.parse(sortedSessionData), email);
+          const sortedSessionData = stringifyWithRootKeysSortedAlphabetically(
+            sessionData.data
+          );
+          const reconciledSessionData = await updateLowcalSessionData(
+            sessionId,
+            JSON.parse(sortedSessionData),
+            email
+          );
 
           res.status(200).json({
-            message: "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
+            message:
+              "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
             alteredNodes,
             removedBreadcrumbs,
             reconciledSessionData,
@@ -98,41 +117,44 @@ const validateSession = async (req, res, next) => {
     } else {
       return next({
         status: 404,
-        message: "Unable to find your session"
+        message: "Unable to find your session",
       });
     }
   } catch (error) {
     return next({
       error,
-      message: "Failed to validate session"
+      message: "Failed to validate session",
     });
-  };
+  }
 };
 
-const findSession = async (sessionId, email) => {
+const findSession = async (
+  sessionId: string,
+  email: string
+): Promise<LowCalSession> => {
   const query = gql`
     query FindSession {
       lowcal_sessions {
         data
         updated_at
       }
-    }`;
+    }
+  `;
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
   const response = await client.request(query, null, headers);
   return response.lowcal_sessions?.[0];
 };
 
-const updateLowcalSessionData = async (sessionId, data, email) => {
+const updateLowcalSessionData = async (
+  sessionId: string,
+  data: LowCalSession,
+  email: string
+) => {
   const query = gql`
-    mutation UpdateLowcalSessionData(
-      $sessionId: uuid!,
-      $data: jsonb!,
-    ) {
+    mutation UpdateLowcalSessionData($sessionId: uuid!, $data: jsonb!) {
       update_lowcal_sessions_by_pk(
-        pk_columns: {id: $sessionId},
-        _set: {
-          data: $data,
-        },
+        pk_columns: { id: $sessionId }
+        _set: { data: $data }
       ) {
         id
         data
