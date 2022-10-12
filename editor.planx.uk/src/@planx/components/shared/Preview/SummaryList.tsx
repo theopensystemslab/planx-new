@@ -79,6 +79,7 @@ const components: {
   [TYPES.Statement]: Question,
   [TYPES.TaskList]: undefined,
   [TYPES.TextInput]: TextInput,
+  [TYPES.TextInputGroup]: undefined,
 };
 
 interface SummaryListProps {

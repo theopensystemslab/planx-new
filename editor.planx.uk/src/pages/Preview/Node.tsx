@@ -20,6 +20,7 @@ import Send from "@planx/components/Send/Public";
 import SetValue from "@planx/components/SetValue/Public";
 import TaskList from "@planx/components/TaskList/Public";
 import TextInput from "@planx/components/TextInput/Public";
+import TextInputGroup from "@planx/components/TextInputGroup/Public";
 import { TYPES } from "@planx/components/types";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
@@ -221,6 +222,9 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.TextInput:
       return <TextInput {...allProps} />;
+
+    case TYPES.TextInputGroup:
+      return <TextInputGroup {...allProps} />;
 
     case TYPES.AddressInput:
       return <AddressInput {...allProps} />;

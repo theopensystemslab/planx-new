@@ -9,6 +9,7 @@ export enum TYPES {
   Statement = 100, // Question/DropDown
   Checklist = 105,
   TextInput = 110,
+  TextInputGroup = 115,
   DateInput = 120,
   AddressInput = 130,
   FileUpload = 140,

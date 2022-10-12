@@ -21,6 +21,7 @@ import Send from "@planx/components/Send/Editor";
 import SetValue from "@planx/components/SetValue/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
 import TextInput from "@planx/components/TextInput/Editor";
+import TextInputGroup from "@planx/components/TextInputGroup/Editor";
 import { TYPES } from "@planx/components/types";
 import React from "react";
 
@@ -55,6 +56,7 @@ const components: {
   "set-value": SetValue,
   "task-list": TaskList,
   "text-input": TextInput,
+  "text-input-group": TextInputGroup,
 };
 
 export default components;

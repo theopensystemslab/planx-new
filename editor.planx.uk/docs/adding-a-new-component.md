@@ -59,7 +59,7 @@ case TYPES.SetValue:
   return <SetValue {...allProps} />;
 ````
 
-`src/@planx/components/Review/Public/Presentational.tsx`
+`src/@planx/components/shared/Preview/SummaryList.tsx`
 
 `[TYPES.SetValue]: undefined,`
 

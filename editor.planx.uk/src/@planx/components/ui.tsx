@@ -4,6 +4,7 @@ import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import Create from "@mui/icons-material/Create";
 import Event from "@mui/icons-material/Event";
+import FeedIcon from "@mui/icons-material/Feed";
 import FunctionsIcon from "@mui/icons-material/Functions";
 import Home from "@mui/icons-material/Home";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
@@ -77,6 +78,7 @@ export const ICONS: {
   [TYPES.Statement]: CallSplit,
   [TYPES.TaskList]: List,
   [TYPES.TextInput]: Create,
+  [TYPES.TextInputGroup]: FeedIcon,
 } as const;
 
 interface MoreInformationProps {
