@@ -3,19 +3,17 @@ import { GovUKPayment } from "types";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { GOV_PAY_PASSPORT_KEY } from "../../Pay/model";
-import {
-  appTypeLookup,
-  PlanXAppTypes,
-  UniformAppTypes,
-  UniformInstance,
-  UniformLPACodes,
-} from "./applicationType";
+
+/**
+ * Application types in PlanX
+ * Value for passport variable "application.type"
+ */
+export type PlanXAppTypes = "ldc.existing" | "ldc.proposed";
 
 export function makeXmlString(
   passport: Store.passport,
   sessionId: string,
-  files: string[],
-  uniformInstance: UniformInstance
+  files: string[]
 ) {
   const payment = passport.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
 
@@ -28,13 +26,6 @@ export function makeXmlString(
   } else {
     proposalCompletionDate = new Date(Date.now()).toISOString().split("T")[0];
   }
-
-  // TODO: Set in flow using SetValue component instead?
-  const lpaCode = UniformLPACodes[uniformInstance];
-
-  // XXX: "proxy" is not supported by Uniform and will be cast to "Agent"
-  const personRole =
-    passport.data?.["user.role"] === "applicant" ? "Applicant" : "Agent";
 
   // format file attachments
   const requiredFiles = `
@@ -61,24 +52,6 @@ export function makeXmlString(
     `);
   });
 
-  const getApplicationType = (): string => {
-    const passportValue =
-      passport.data?.["application.type"]?.[0] || "ldc.existing";
-    const planXAppType: PlanXAppTypes = passportValue.startsWith("ldc.existing")
-      ? "ldc.existing"
-      : "ldc.proposed";
-    const uniformAppType: UniformAppTypes = appTypeLookup[planXAppType];
-
-    return `
-      <portaloneapp:ApplicationScenario>
-        <portaloneapp:ScenarioNumber>${uniformAppType.scenarioNumber}</portaloneapp:ScenarioNumber>
-      </portaloneapp:ApplicationScenario>
-      <portaloneapp:ConsentRegimes>
-        <portaloneapp:ConsentRegime>${uniformAppType.consentRegime}</portaloneapp:ConsentRegime>
-      </portaloneapp:ConsentRegimes>
-    `;
-  };
-
   const getCertificateOfLawfulness = () => {
     const planXAppType: PlanXAppTypes =
       passport.data?.["application.type"]?.[0];
@@ -87,35 +60,19 @@ export function makeXmlString(
         <portaloneapp:CertificateLawfulness>
           <portaloneapp:ProposedUseApplication>
             <portaloneapp:DescriptionCPU>
-              ${/* Get answer from Alastair here*/ ""}
-              <common:IsUseChange>true</common:IsUseChange>
-              <common:ProposedUseDescription>${escape(
-                passport.data?.["proposal.description"]
-              )}</common:ProposedUseDescription>
-              <common:ExistingUseDescription>${escape(
-                passport.data?.["proposal.description"]
-              )}</common:ExistingUseDescription>
-              <common:IsUseStarted>${
-                passport.data?.["proposal.started"]
-              }</common:IsUseStarted>
+              <common:IsUseChange>${passport.data?.["uniform.isUseChange"]?.[0]}</common:IsUseChange>
+              <common:ProposedUseDescription>${escape(passport.data?.["proposal.description"])}</common:ProposedUseDescription>
+              <common:ExistingUseDescription>${escape(passport.data?.["proposal.description"])}</common:ExistingUseDescription>
+              <common:IsUseStarted>${passport.data?.["proposal.started"]}</common:IsUseStarted>
             </portaloneapp:DescriptionCPU>
             <portaloneapp:GroundsCPU>
-              <common:UseLawfulnessReason>${escape(
-                passport.data?.["proposal.description"]
-              )}</common:UseLawfulnessReason>
+              <common:UseLawfulnessReason>${escape(passport.data?.["proposal.description"])}</common:UseLawfulnessReason>
               <common:SupportingInformation>
                 <common:AdditionalInformation>true</common:AdditionalInformation>
-                <common:Reference>${escape(
-                  passport.data?.["proposal.description"]
-                )}</common:Reference>
+                <common:Reference>${escape(passport.data?.["proposal.description"])}</common:Reference>
               </common:SupportingInformation>
-              ${
-                /* Currently hardcoded, will later be a variable controlled by SetValue component */ ""
-              }
-              <common:ProposedUseStatus>permanent</common:ProposedUseStatus>
-              <common:LawfulDevCertificateReason>${escape(
-                passport.data?.["proposal.description"]
-              )}</common:LawfulDevCertificateReason>
+              <common:ProposedUseStatus>${passport.data?.["uniform.proposedUseStatus"]?.[0]}</common:ProposedUseStatus>
+              <common:LawfulDevCertificateReason>${escape(passport.data?.["proposal.description"])}</common:LawfulDevCertificateReason>
             </portaloneapp:GroundsCPU>
           </portaloneapp:ProposedUseApplication>
         </portaloneapp:CertificateLawfulness>
@@ -145,9 +102,6 @@ export function makeXmlString(
     `;
   };
 
-  const isRelated =
-    passport.data?.["application.declaration.connection"] !== "none";
-
   // this string template represents the full proposal.xml schema including prefixes
   // XML Schema Definitions for reference:
   // -- https://ecab.planningportal.co.uk/uploads/schema/OneAppProposal-v2-0-1.xsd
@@ -156,7 +110,9 @@ export function makeXmlString(
     <portaloneapp:Proposal xmlns:portaloneapp="http://www.govtalk.gov.uk/planning/OneAppProposal-2006" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bs7666="http://www.govtalk.gov.uk/people/bs7666" xmlns:org="http://www.govtalk.gov.uk/financial/OrganisationIdentifiers" xmlns:pdt="http://www.govtalk.gov.uk/people/PersonDescriptives" xmlns:apd="http://www.govtalk.gov.uk/people/AddressAndPersonalDetails" xmlns:core="http://www.govtalk.gov.uk/core" xmlns:common="http://www.govtalk.gov.uk/planning/OneAppCommon-2006" Version="1.3">
       <portaloneapp:SchemaVersion>1.3</portaloneapp:SchemaVersion>
       <portaloneapp:ApplicationHeader>
-        <portaloneapp:ApplicationTo>${lpaCode}</portaloneapp:ApplicationTo>
+        <portaloneapp:ApplicationTo>${
+          passport.data?.["uniform.applicationTo"]?.[0]
+        }</portaloneapp:ApplicationTo>
         <portaloneapp:DateSubmitted>${proposalCompletionDate}</portaloneapp:DateSubmitted>
         <portaloneapp:RefNum>${sessionId}</portaloneapp:RefNum>
         <portaloneapp:FormattedRefNum>${sessionId}</portaloneapp:FormattedRefNum>
@@ -302,7 +258,16 @@ export function makeXmlString(
           <bs7666:Y>${Math.round(passport.data?.["_address"]?.["y"])}</bs7666:Y>
         </common:SiteGridRefence>
       </portaloneapp:SiteLocation>
-      ${getApplicationType()}
+      <portaloneapp:ApplicationScenario>
+        <portaloneapp:ScenarioNumber>${parseInt(
+          passport.data?.["uniform.scenarioNumber"]?.[0]
+        )}</portaloneapp:ScenarioNumber>
+      </portaloneapp:ApplicationScenario>
+      <portaloneapp:ConsentRegimes>
+        <portaloneapp:ConsentRegime>${
+          passport.data?.["uniform.consentRegime"]?.[0]
+        }</portaloneapp:ConsentRegime>
+      </portaloneapp:ConsentRegimes>
       <portaloneapp:ApplicationData>
         <portaloneapp:Advice>
           <common:HaveSoughtAdvice>${
@@ -310,7 +275,9 @@ export function makeXmlString(
           }</common:HaveSoughtAdvice>
         </portaloneapp:Advice>
         <portaloneapp:SiteVisit>
-          <common:SeeSite>false</common:SeeSite>
+          <common:SeeSite>${
+            passport.data?.["uniform.siteVisit"]?.[0]
+          }</common:SeeSite>
           <common:VisitContactDetails>
             <common:ContactAgent/>
           </common:VisitContactDetails>
@@ -318,14 +285,18 @@ export function makeXmlString(
         ${getCertificateOfLawfulness()}
       </portaloneapp:ApplicationData>
       <portaloneapp:DeclarationOfInterest>
-        <common:IsRelated>${isRelated}</common:IsRelated>
+        <common:IsRelated>${
+          passport.data?.["uniform.isRelated"]?.[0]
+        }</common:IsRelated>
       </portaloneapp:DeclarationOfInterest>
       <portaloneapp:Declaration>
         <common:DeclarationDate>${proposalCompletionDate}</common:DeclarationDate>
         <common:DeclarationMade>${
           passport.data?.["application.declaration.accurate"]
         }</common:DeclarationMade>
-        <common:Signatory PersonRole="${personRole}"/>
+        <common:Signatory PersonRole="${
+          passport.data?.["uniform.personRole"]?.[0]
+        }"/>
       </portaloneapp:Declaration>
     </portaloneapp:Proposal>
   `;
