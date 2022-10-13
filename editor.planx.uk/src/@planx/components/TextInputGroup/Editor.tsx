@@ -36,7 +36,7 @@ const TextInputGroupComponent: React.FC<Props> = (props) => {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent
-          title="Text Input"
+          title="Text Input Group"
           Icon={ICONS[TYPES.TextInputGroup]}
         >
           <InputRow>
@@ -56,15 +56,29 @@ const TextInputGroupComponent: React.FC<Props> = (props) => {
               onChange={formik.handleChange}
             />
           </InputRow>
+        </ModalSectionContent>
+      </ModalSection>
+      <ModalSection>
+        <ModalSectionContent>
           <InputRow>
-            <Input
-              // required
-              format="data"
-              name="fn"
-              value={formik.values.fn}
-              placeholder="Data Field"
-              onChange={formik.handleChange}
-            />
+            <InputRow>
+              <Input
+                format="large"
+                name="label"
+                placeholder="Label"
+                onChange={formik.handleChange}
+              />
+            </InputRow>
+            <InputRow>
+              <Input
+                // required
+                format="data"
+                name="fn"
+                value={formik.values.fn}
+                placeholder="Data Field"
+                onChange={formik.handleChange}
+              />
+            </InputRow>
           </InputRow>
           <InputRow>
             <Radio

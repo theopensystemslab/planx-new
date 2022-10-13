@@ -101,6 +101,13 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question {...allProps} text={node?.data?.title ?? "Text input"} />
       );
+    case TYPES.TextInputGroup:
+      return (
+        <Question
+          {...allProps}
+          text={node?.data?.title ?? "Text input group"}
+        />
+      );
 
     case TYPES.Response:
       return <Option {...allProps} />;
