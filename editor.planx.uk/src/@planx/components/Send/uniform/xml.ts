@@ -1,3 +1,4 @@
+import { Address } from "@planx/components/AddressInput/model";
 import { SiteAddress } from "@planx/components/FindProperty/model";
 import { escape } from "lodash";
 import { GovUKPayment } from "types";
@@ -27,13 +28,6 @@ export function makeXmlString(
   } else {
     proposalCompletionDate = new Date(Date.now()).toISOString().split("T")[0];
   }
-
-  // XXX: "proxy" is not supported by Uniform and will be cast to "Agent"
-  const personRole =
-    passport.data?.["user.role"] === "applicant" ? "Applicant" : "Agent";
-
-  const isRelated =
-    passport.data?.["application.declaration.connection"] !== "none";
 
   const siteAddress: SiteAddress = passport.data?.["_address"];
 
@@ -70,19 +64,35 @@ export function makeXmlString(
         <portaloneapp:CertificateLawfulness>
           <portaloneapp:ProposedUseApplication>
             <portaloneapp:DescriptionCPU>
-              <common:IsUseChange>${passport.data?.["uniform.isUseChange"]?.[0]}</common:IsUseChange>
-              <common:ProposedUseDescription>${escape(passport.data?.["proposal.description"])}</common:ProposedUseDescription>
-              <common:ExistingUseDescription>${escape(passport.data?.["proposal.description"])}</common:ExistingUseDescription>
-              <common:IsUseStarted>${passport.data?.["proposal.started"]}</common:IsUseStarted>
+              <common:IsUseChange>${
+                passport.data?.["uniform.isUseChange"]?.[0]
+              }</common:IsUseChange>
+              <common:ProposedUseDescription>${escape(
+                passport.data?.["proposal.description"]
+              )}</common:ProposedUseDescription>
+              <common:ExistingUseDescription>${escape(
+                passport.data?.["proposal.description"]
+              )}</common:ExistingUseDescription>
+              <common:IsUseStarted>${
+                passport.data?.["proposal.started"]
+              }</common:IsUseStarted>
             </portaloneapp:DescriptionCPU>
             <portaloneapp:GroundsCPU>
-              <common:UseLawfulnessReason>${escape(passport.data?.["proposal.description"])}</common:UseLawfulnessReason>
+              <common:UseLawfulnessReason>${escape(
+                passport.data?.["proposal.description"]
+              )}</common:UseLawfulnessReason>
               <common:SupportingInformation>
                 <common:AdditionalInformation>true</common:AdditionalInformation>
-                <common:Reference>${escape(passport.data?.["proposal.description"])}</common:Reference>
+                <common:Reference>${escape(
+                  passport.data?.["proposal.description"]
+                )}</common:Reference>
               </common:SupportingInformation>
-              <common:ProposedUseStatus>${passport.data?.["uniform.proposedUseStatus"]?.[0]}</common:ProposedUseStatus>
-              <common:LawfulDevCertificateReason>${escape(passport.data?.["proposal.description"])}</common:LawfulDevCertificateReason>
+              <common:ProposedUseStatus>${
+                passport.data?.["uniform.proposedUseStatus"]?.[0]
+              }</common:ProposedUseStatus>
+              <common:LawfulDevCertificateReason>${escape(
+                passport.data?.["proposal.description"]
+              )}</common:LawfulDevCertificateReason>
             </portaloneapp:GroundsCPU>
           </portaloneapp:ProposedUseApplication>
         </portaloneapp:CertificateLawfulness>
@@ -113,14 +123,24 @@ export function makeXmlString(
   };
 
   /**
-   * Map a SiteAddress to a PersonAddress
+   * Generate an Address based on a SiteAddress
    */
-  const getPersonAddressFromSiteAddress = (): PersonAddress => ({
-    line1: siteAddress?.pao,
-    line2: siteAddress?.street,
-    town: siteAddress?.town,
-    postcode: siteAddress?.postcode,
-  });
+  const getAddressFromSiteAddress = (): string => `
+    <common:ExternalAddress>
+      <common:InternationalAddress>
+        ${siteAddress.title
+          ?.split(", ")
+          .map(
+            (addressLine) =>
+              `<apd:IntAddressLine>${escape(addressLine)}</apd:IntAddressLine>`
+          )}
+        <apd:Country></apd:Country>
+        <apd:InternationalPostCode>${escape(
+          siteAddress?.postcode
+        )}</apd:InternationalPostCode>
+      </common:InternationalAddress>
+    </common:ExternalAddress>
+  `;
 
   /**
    * Return an InternationalAddress node representing a personal address
@@ -131,11 +151,10 @@ export function makeXmlString(
     const isResident =
       passport.data?.["applicant.resident"]?.[0]?.toLowerCase() === "true";
     // Passports of resident applicants will not have an "application.address" value
-    // This must be mapped from their siteAddress
-    const address =
-      person === "applicant" && isResident
-        ? getPersonAddressFromSiteAddress()
-        : passport.data?.[`${person}.address`];
+    // This must be generated from their siteAddress
+    if (person === "applicant" && isResident)
+      return getAddressFromSiteAddress();
+    const address: Address = passport.data?.[`${person}.address`];
     return `
       <common:ExternalAddress>
         <common:InternationalAddress>

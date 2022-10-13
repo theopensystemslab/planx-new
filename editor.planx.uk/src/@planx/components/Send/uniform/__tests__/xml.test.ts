@@ -1,4 +1,4 @@
-import { PersonAddress } from "@planx/components/AddressInput/model";
+import { Address } from "@planx/components/AddressInput/model";
 import { SiteAddress } from "@planx/components/FindProperty/model";
 import { XMLParser, XMLValidator } from "fast-xml-parser";
 import { get } from "lodash";
@@ -16,11 +16,7 @@ describe("makeXmlString constructor", () => {
     const passport: Store.passport = {
       data: { "proposal.description": `< > & " '` },
     };
-    const xmlString = makeXmlString(
-      passport,
-      sessionId,
-      files,
-    );
+    const xmlString = makeXmlString(passport, sessionId, files);
     const isValid = XMLValidator.validate(xmlString);
     expect(isValid).toBe(true);
   });
@@ -32,11 +28,7 @@ describe("correctly sets planx sessionId as the Uniform reference number", () =>
   const passport: Store.passport = { data: {} };
 
   it("sets sessionId", () => {
-    const xml = makeXmlString(
-      passport,
-      sessionId,
-      files,
-    );
+    const xml = makeXmlString(passport, sessionId, files);
     const expectedRefNum: String = "1234-abcdef-567-ghijklm";
 
     let result = parser.parse(xml);
@@ -63,11 +55,7 @@ describe("correctly sets proposal completion date", () => {
     const passport: Store.passport = {
       data: { "proposal.completion.date": "2022-01-01" },
     };
-    const xml = makeXmlString(
-      passport,
-      sessionId,
-      files,
-    );
+    const xml = makeXmlString(passport, sessionId, files);
     const expectedCompletionDate: String = "2022-01-01";
 
     let result = parser.parse(xml);
@@ -83,11 +71,7 @@ describe("correctly sets proposal completion date", () => {
     const passport: Store.passport = {
       data: { "proposal.description": "test" },
     };
-    const xml = makeXmlString(
-      passport,
-      sessionId,
-      files,
-    );
+    const xml = makeXmlString(passport, sessionId, files);
     const expectedCompletionDate: String = formattedNow;
 
     let result = parser.parse(xml);
@@ -113,11 +97,7 @@ describe("correctly sets payment details", () => {
         },
       },
     };
-    const xml = makeXmlString(
-      passport,
-      sessionId,
-      files,
-    );
+    const xml = makeXmlString(passport, sessionId, files);
     const expectedPayment = {
       "common:PaymentMethod": "OnlineViaPortal",
       "common:AmountDue": 103,
@@ -138,11 +118,7 @@ describe("correctly sets payment details", () => {
     const passport: Store.passport = {
       data: { "proposal.description": "test" },
     };
-    const xml = makeXmlString(
-      passport,
-      sessionId,
-      files,
-    );
+    const xml = makeXmlString(passport, sessionId, files);
     const expectedPayment = {
       "common:PaymentMethod": "OnlineViaPortal",
       "common:AmountDue": 0,
@@ -174,7 +150,7 @@ describe("Uniform Translator", () => {
     };
 
     const xml = makeXmlString(passport, sessionId, files);
-  
+
     const result = parser.parse(xml);
     const applicationTo =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
@@ -265,7 +241,7 @@ describe("Uniform Translator", () => {
     const passport: Store.passport = {
       data: { "uniform.isRelated": ["false"] },
     };
-    
+
     const xml = makeXmlString(passport, sessionId, files);
 
     const result = parser.parse(xml);
@@ -297,7 +273,7 @@ describe("Uniform Translator", () => {
     };
 
     const xml = makeXmlString(passport, sessionId, files);
-    
+
     const result = parser.parse(xml);
     const personRole =
       result["portaloneapp:Proposal"]["portaloneapp:Declaration"][
@@ -327,13 +303,10 @@ describe("Uniform Translator", () => {
 
 describe("Applicant address", () => {
   const harryPotterAddress: Partial<SiteAddress> = {
-    pao: "4",
-    street: "Privet Drive",
+    title: "4, Privet Drive, Little Whinging, Surrey",
     postcode: "GU22 7QQ",
-    town: "Little Whinging",
-    uprn: "31071980",
   };
-  const sherlockHolmesAddress: PersonAddress = {
+  const sherlockHolmesAddress: Address = {
     country: "UK",
     county: "Greater London",
     line1: "221b Baker Street",
@@ -353,16 +326,11 @@ describe("Applicant address", () => {
         _address: harryPotterAddress,
       },
     };
-    const xml = makeXmlString(
-      passport,
-      sessionId,
-      files,
-      UniformInstance.Lambeth
-    );
+    const xml = makeXmlString(passport, sessionId, files);
     let result = parser.parse(xml);
     const expectedAddress = {
       "common:InternationalAddress": {
-        "apd:IntAddressLine": [4, "Privet Drive", "Little Whinging", ""],
+        "apd:IntAddressLine": [4, "Privet Drive", "Little Whinging", "Surrey"],
         "apd:InternationalPostCode": "GU22 7QQ",
       },
     };
@@ -378,12 +346,7 @@ describe("Applicant address", () => {
         "applicant.address": sherlockHolmesAddress,
       },
     };
-    const xml = makeXmlString(
-      passport,
-      sessionId,
-      files,
-      UniformInstance.Lambeth
-    );
+    const xml = makeXmlString(passport, sessionId, files);
     let result = parser.parse(xml);
     const expectedAddress = {
       "common:InternationalAddress": {

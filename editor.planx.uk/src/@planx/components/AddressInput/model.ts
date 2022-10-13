@@ -3,7 +3,7 @@ import { object, string } from "yup";
 
 import { MoreInformation, parseMoreInformation } from "../shared";
 
-export type PersonAddress = {
+export type Address = {
   line1: string;
   line2?: string;
   town: string;
@@ -12,7 +12,7 @@ export type PersonAddress = {
   country?: string;
 };
 
-export const userDataSchema: SchemaOf<PersonAddress> = object({
+export const userDataSchema: SchemaOf<Address> = object({
   line1: string().required("Address line 1 is required"),
   line2: string(),
   town: string().required("Town is required"),
