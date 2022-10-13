@@ -18,6 +18,7 @@ export const SLUGS: {
   [TYPES.InternalPortal]: "internal-portal",
   [TYPES.Notice]: "notice",
   [TYPES.NumberInput]: "number-input",
+  [TYPES.Page]: "page",
   [TYPES.Pay]: "pay",
   [TYPES.PlanningConstraints]: "planning-constraints",
   [TYPES.Response]: "question",

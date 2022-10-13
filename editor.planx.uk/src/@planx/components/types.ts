@@ -17,7 +17,7 @@ export enum TYPES {
   Content = 250,
   InternalPortal = 300,
   ExternalPortal = 310,
-  // Page = 350,
+  Page = 350,
   SetValue = 380,
   Pay = 400,
   Filter = 500,

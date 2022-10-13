@@ -416,7 +416,7 @@ export const previewStore = (
 
           const passport = computePassport();
 
-          if (node.type === TYPES.InternalPortal) {
+          if (node.type === TYPES.InternalPortal || node.type === TYPES.Page) {
             return nodeIdsConnectedFrom(id);
           }
 

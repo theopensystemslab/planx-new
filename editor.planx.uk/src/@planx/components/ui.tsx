@@ -3,6 +3,7 @@ import CallSplit from "@mui/icons-material/CallSplit";
 import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import Create from "@mui/icons-material/Create";
+import Description from "@mui/icons-material/Description";
 import Event from "@mui/icons-material/Event";
 import FunctionsIcon from "@mui/icons-material/Functions";
 import Home from "@mui/icons-material/Home";
@@ -67,6 +68,7 @@ export const ICONS: {
   [TYPES.InternalPortal]: undefined,
   [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NumberInput]: Pin,
+  [TYPES.Page]: Description,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PlanningConstraints]: Map,
   [TYPES.Response]: undefined,

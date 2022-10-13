@@ -8,6 +8,7 @@ import Breadcrumb from "./Breadcrumb";
 import Checklist from "./Checklist";
 import Filter from "./Filter";
 import Option from "./Option";
+import Page from "./Page";
 import Portal from "./Portal";
 import Question from "./Question";
 
@@ -117,6 +118,8 @@ const Node: React.FC<any> = (props) => {
       return <Question {...allProps} text={node?.data?.title ?? "Address"} />;
     case TYPES.Flow:
       return null;
+    case TYPES.Page:
+      return <Page {...props} text={node?.data?.title ?? "Page"} />;
     default:
       console.error({ nodeNotFound: props });
       return exhaustiveCheck(type);
