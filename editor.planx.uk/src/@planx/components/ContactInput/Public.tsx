@@ -108,6 +108,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
       <InputLabel label="Phone number">
         <Input
           name="phone"
+          type="phone"
           value={formik.values.phone}
           bordered
           errorMessage={formik.errors.phone}
@@ -124,6 +125,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
         <InputRowItem>
           <Input
             name="email"
+            type="email"
             value={formik.values.email}
             bordered
             errorMessage={formik.errors.email}
