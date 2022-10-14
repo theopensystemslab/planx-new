@@ -1,3 +1,5 @@
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import { TYPES } from "@planx/components/types";
 import {
   EditorProps,
@@ -69,6 +71,18 @@ const TextInputGroupComponent: React.FC<Props> = (props) => {
                 onChange={formik.handleChange}
               />
             </InputRow>
+          </InputRow>
+          <InputRow>
+            <InputRow>
+              <Input
+                name="warning"
+                value={formik.values.warning}
+                placeholder="Validation warning (eg `<Label> is required`)"
+                onChange={formik.handleChange}
+              />
+            </InputRow>
+          </InputRow>
+          <InputRow>
             <InputRow>
               <Input
                 // required
@@ -105,7 +119,22 @@ const TextInputGroupComponent: React.FC<Props> = (props) => {
                 formik.setFieldValue("type", newType);
               }}
             />
+            <Radio
+              options={[
+                {
+                  value: "required",
+                  label: "Required",
+                },
+              ]}
+              value={formik.values.required}
+              onChange={(newValue) => {
+                formik.setFieldValue("required", newValue);
+              }}
+            />
           </InputRow>
+          <Box mt={1}>
+            <Button>add another field</Button>
+          </Box>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation

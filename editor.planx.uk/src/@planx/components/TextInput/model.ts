@@ -62,6 +62,8 @@ export interface TextInput extends MoreInformation {
   description?: string;
   fn?: string;
   type?: TextInputType;
+  required?: any;
+  warning?: string;
 }
 
 export const parseTextInput = (
@@ -71,5 +73,7 @@ export const parseTextInput = (
   description: data?.description,
   fn: data?.fn,
   type: data?.type,
+  required: data?.required,
+  warning: data?.warning,
   ...parseMoreInformation(data),
 });
