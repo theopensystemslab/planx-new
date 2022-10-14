@@ -2,6 +2,7 @@ import AddressInput from "@planx/components/AddressInput/Public";
 import Calculate from "@planx/components/Calculate/Public";
 import Checklist from "@planx/components/Checklist/Public";
 import Confirmation from "@planx/components/Confirmation/Public";
+import ContactInput from "@planx/components/ContactInput/Public";
 import Content from "@planx/components/Content/Public";
 import DateInput from "@planx/components/DateInput/Public";
 import DrawBoundary from "@planx/components/DrawBoundary/Public";
@@ -224,6 +225,9 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.AddressInput:
       return <AddressInput {...allProps} />;
+
+    case TYPES.ContactInput:
+      return <ContactInput {...allProps} />;
 
     case TYPES.PlanningConstraints:
       return <PlanningConstraints {...allProps} />;

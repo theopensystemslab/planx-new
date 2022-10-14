@@ -11,6 +11,7 @@ export enum TYPES {
   TextInput = 110,
   DateInput = 120,
   AddressInput = 130,
+  ContactInput = 135,
   FileUpload = 140,
   NumberInput = 150,
   Response = 200,

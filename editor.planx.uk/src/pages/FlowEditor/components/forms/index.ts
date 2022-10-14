@@ -2,6 +2,7 @@ import AddressInput from "@planx/components/AddressInput/Editor";
 import Calculate from "@planx/components/Calculate/Editor";
 import Checklist from "@planx/components/Checklist/Editor";
 import Confirmation from "@planx/components/Confirmation/Editor";
+import ContactInput from "@planx/components/ContactInput/Editor";
 import Content from "@planx/components/Content/Editor";
 import DateInput from "@planx/components/DateInput/Editor";
 import DrawBoundary from "@planx/components/DrawBoundary/Editor";
@@ -35,6 +36,7 @@ const components: {
   calculate: Calculate,
   checklist: Checklist,
   confirmation: Confirmation,
+  "contact-input": ContactInput,
   content: Content,
   "date-input": DateInput,
   "draw-boundary": DrawBoundary,

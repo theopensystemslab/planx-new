@@ -61,6 +61,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.Send:
     case TYPES.SetValue:
     case TYPES.TaskList:
+    case TYPES.ContactInput:
       return false;
 
     case TYPES.AddressInput:

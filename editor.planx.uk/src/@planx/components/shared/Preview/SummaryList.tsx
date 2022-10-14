@@ -57,6 +57,7 @@ const components: {
   [TYPES.AddressInput]: AddressInput,
   [TYPES.Calculate]: undefined,
   [TYPES.Checklist]: Checklist,
+  [TYPES.ContactInput]: ContactInput,
   [TYPES.Content]: undefined,
   [TYPES.Confirmation]: undefined,
   [TYPES.DateInput]: DateInput,
@@ -323,6 +324,34 @@ function AddressInput(props: ComponentProps) {
             {country}
           </>
         ) : null}
+      </dd>
+    </>
+  );
+}
+
+function ContactInput(props: ComponentProps) {
+  const { title, firstName, lastName, organisation, phone, email } =
+    getAnswersByNode(props);
+
+  return (
+    <>
+      <dt>{props.node.data.title ?? "Contact"}</dt>
+      <dd>
+        {title}
+        <br />
+        {firstName}
+        <br />
+        {lastName}
+        <br />
+        {organisation ? (
+          <>
+            {organisation}
+            <br />
+          </>
+        ) : null}
+        {phone}
+        <br />
+        {email}
       </dd>
     </>
   );
