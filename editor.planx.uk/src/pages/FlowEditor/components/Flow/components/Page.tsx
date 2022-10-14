@@ -23,8 +23,8 @@ const Page: React.FC<Props> = (props: any) => {
 
   const parent = getParentId(props.parent);
 
-  const allowedNodeTypes = [];
-  console.log("dragging node", props.id, flow[props.id]?.type);
+  // TODO: Limit Page to non-branching component types, show something in the editor if an invalid type is dragged in
+  const allowedNodeTypes = [TYPES.TextInput, TYPES.NumberInput, TYPES.Content];
 
   const [{ isDragging }, drag] = useDrag({
     item: {

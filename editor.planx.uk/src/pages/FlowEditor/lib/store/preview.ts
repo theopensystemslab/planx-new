@@ -421,9 +421,12 @@ export const previewStore = (
           }
 
           if (node.type === TYPES.Page && node.edges?.length) {
-            node.edges.forEach((edgeId) => {
-              return nodeIdsConnectedFrom(edgeId);
-            });
+            // TODO: figure out what to do here - my hunch is something like
+            //   - the container Page should be the only component registered in "nextNode" & "back" computations
+            //   - the Page's "edges" are really just a concern of the Public/Preview component?
+            //       - handleSubmit should write all individual passport values
+            //       - mark each edge nodeId as "visited" so it's individually skipped by graph
+            console.log("page stuff here");
           }
 
           const fn = node.type === TYPES.Filter ? "flag" : node.data?.fn;

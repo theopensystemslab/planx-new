@@ -9,7 +9,6 @@ import type { Page, UserData } from "./model";
 
 export type Props = PublicProps<Page, UserData>;
 
-// TODO: fix this data field bug for all components
 const PageComponent: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
@@ -29,6 +28,7 @@ const PageComponent: React.FC<Props> = (props) => {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
+      {/* TODO: Render child nodes, rollup handleSubmits to this outer card */}
     </Card>
   );
 };
