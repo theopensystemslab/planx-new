@@ -125,22 +125,27 @@ export function makeXmlString(
   /**
    * Generate an Address based on a SiteAddress
    */
-  const getAddressFromSiteAddress = (): string => `
-    <common:ExternalAddress>
+  const getAddressFromSiteAddress = (): string => {
+    const addressLines: string = siteAddress.title
+      ?.split(", ")
+      .map(
+        (addressLine) =>
+          `<apd:IntAddressLine>${escape(addressLine)}</apd:IntAddressLine>`
+      )
+      .join("\n");
+
+    return `
+      <common:ExternalAddress>
       <common:InternationalAddress>
-        ${siteAddress.title
-          ?.split(", ")
-          .map(
-            (addressLine) =>
-              `<apd:IntAddressLine>${escape(addressLine)}</apd:IntAddressLine>`
-          )}
+        ${addressLines}
         <apd:Country></apd:Country>
         <apd:InternationalPostCode>${escape(
           siteAddress?.postcode
         )}</apd:InternationalPostCode>
       </common:InternationalAddress>
     </common:ExternalAddress>
-  `;
+    `;
+  };
 
   /**
    * Return an InternationalAddress node representing a personal address
