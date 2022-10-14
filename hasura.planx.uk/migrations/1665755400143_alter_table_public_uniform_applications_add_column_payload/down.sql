@@ -1,0 +1,1 @@
+ALTER TABLE "public"."uniform_applications" DROP COLUMN "payload";

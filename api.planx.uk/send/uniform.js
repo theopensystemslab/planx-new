@@ -8,6 +8,7 @@ import str from "string-to-stream";
 import { stringify } from "csv-stringify";
 import { adminGraphQLClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
+import { gql } from "graphql-request";
 
 const client = adminGraphQLClient;
 
@@ -69,34 +70,36 @@ const sendToUniform = async (req, res, next) => {
         }
 
         const submissionDetails = await retrieveSubmission(token, idoxSubmissionId);
-        const application = await client.request(
-          `
-            mutation CreateUniformApplication(
-              $idox_submission_id: String = "",
-              $submission_reference: String = "",
-              $destination: String = "",
-              $response: jsonb = "",
-            ) {
-              insert_uniform_applications_one(object: {
-                idox_submission_id: $idox_submission_id,
-                submission_reference: $submission_reference,
-                destination: $destination,
-                response: $response,
-              }) {
-                id
-                idox_submission_id
-                submission_reference
-                destination
-                response
-                created_at
-              }
+        const application = await client.request(gql`
+          mutation CreateUniformApplication(
+            $idox_submission_id: String = "",
+            $submission_reference: String = "",
+            $destination: String = "",
+            $response: jsonb = "",
+            $payload: jsonb = "",
+          ) {
+            insert_uniform_applications_one(object: {
+              idox_submission_id: $idox_submission_id,
+              submission_reference: $submission_reference,
+              destination: $destination,
+              response: $response,
+              payload: $payload
+            }) {
+              id
+              idox_submission_id
+              submission_reference
+              destination
+              response
+              created_at
             }
-          `,
+          }
+        `,
           {
             idox_submission_id: idoxSubmissionId,
             submission_reference: payload?.sessionId,
             destination: req.params.localAuthority,
             response: submissionDetails,
+            payload: req.body.payload,
           }
         );
 
