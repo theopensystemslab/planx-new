@@ -9,6 +9,7 @@ import FileUpload from "@planx/components/FileUpload/Public";
 import FindProperty from "@planx/components/FindProperty/Public";
 import Notice from "@planx/components/Notice/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
+import Page from "@planx/components/Page/Public";
 import { GOV_PAY_PASSPORT_KEY } from "@planx/components/Pay/model";
 import Pay from "@planx/components/Pay/Public";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Public";
@@ -161,6 +162,9 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.NumberInput:
       return <NumberInput {...allProps} />;
 
+    case TYPES.Page:
+      return <Page {...allProps} />;
+
     case TYPES.Pay:
       return <Pay {...allProps} />;
 
@@ -233,7 +237,6 @@ const Node: React.FC<any> = (props: Props) => {
     case TYPES.Flow:
     case TYPES.InternalPortal:
     case TYPES.Response:
-    case TYPES.Page:
     case undefined:
       return null;
     default:

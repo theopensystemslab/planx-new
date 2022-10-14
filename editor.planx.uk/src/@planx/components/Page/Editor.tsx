@@ -1,5 +1,10 @@
 import { TYPES } from "@planx/components/types";
-import { ICONS } from "@planx/components/ui";
+import {
+  EditorProps,
+  ICONS,
+  InternalNotes,
+  MoreInformation,
+} from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
@@ -8,28 +13,16 @@ import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
 
-interface Props {
-  id?: string;
-  handleSubmit?: any;
-  node?: {
-    data?: {
-      title?: string;
-      description?: string;
-    };
-  };
-}
+import { Page, parsePage } from "./model";
+
+export type Props = EditorProps<TYPES.Page, Page>;
 
 const PageForm: React.FC<Props> = (props) => {
   const formik = useFormik({
-    initialValues: {
-      title: props.node?.data?.title || "",
-      description: props.node?.data?.description || "",
-    },
-    onSubmit: (values) => {
+    initialValues: parsePage(props.node?.data),
+    onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.Page, data: values });
-      } else {
-        alert(JSON.stringify(values, null, 2));
+        props.handleSubmit({ type: TYPES.Page, data: newValues });
       }
     },
   });
@@ -47,7 +40,6 @@ const PageForm: React.FC<Props> = (props) => {
               value={formik.values.title}
             />
           </InputRow>
-
           <InputRow>
             <RichTextInput
               name="description"
@@ -58,6 +50,18 @@ const PageForm: React.FC<Props> = (props) => {
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
+      <MoreInformation
+        changeField={formik.handleChange}
+        definitionImg={formik.values.definitionImg}
+        howMeasured={formik.values.howMeasured}
+        policyRef={formik.values.policyRef}
+        info={formik.values.info}
+      />
+      <InternalNotes
+        name="notes"
+        value={formik.values.notes}
+        onChange={formik.handleChange}
+      />
     </form>
   );
 };

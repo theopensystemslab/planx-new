@@ -416,8 +416,14 @@ export const previewStore = (
 
           const passport = computePassport();
 
-          if (node.type === TYPES.InternalPortal || node.type === TYPES.Page) {
+          if (node.type === TYPES.InternalPortal) {
             return nodeIdsConnectedFrom(id);
+          }
+
+          if (node.type === TYPES.Page && node.edges?.length) {
+            node.edges.forEach((edgeId) => {
+              return nodeIdsConnectedFrom(edgeId);
+            });
           }
 
           const fn = node.type === TYPES.Filter ? "flag" : node.data?.fn;
