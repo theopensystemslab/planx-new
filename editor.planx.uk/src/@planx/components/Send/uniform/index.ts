@@ -5,7 +5,7 @@ import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
 import { findGeoJSON } from "../helpers";
 import { CSVData } from "../model";
-import { makeXmlString } from "./xml";
+import { OLD_makeXmlString } from "./xml";
 
 type UniformFile = {
   name: string;
@@ -51,12 +51,7 @@ export function getUniformParams(
 
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString({
-      passport,
-      sessionId,
-      files: uniqueFiles,
-      hasBoundary,
-    }),
+    xml: OLD_makeXmlString(passport, sessionId, uniqueFiles, hasBoundary),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
     geojson: geoJSONBoundary,
     files: uniqueFiles,
