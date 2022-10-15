@@ -7,7 +7,6 @@ import Error from "@material-ui/icons/Error";
 import FormatBold from "@material-ui/icons/FormatBold";
 import FormatItalic from "@material-ui/icons/FormatItalic";
 import LinkIcon from "@material-ui/icons/Link";
-import Title from "@material-ui/icons/Title";
 import { type InputBaseProps } from "@mui/material/InputBase";
 import Bold from "@tiptap/extension-bold";
 import BulletList from "@tiptap/extension-bullet-list";
@@ -269,12 +268,29 @@ const RichTextInput2: React.FC<Props> = (props) => {
             <>
               <IconButton
                 size="small"
-                color={editor.isActive("bold") ? "primary" : undefined}
+                color={
+                  editor.isActive("heading", { level: 1 })
+                    ? "primary"
+                    : undefined
+                }
                 onClick={() => {
                   editor.chain().focus().toggleHeading({ level: 1 }).run();
                 }}
               >
-                <Title />
+                <strong>H1</strong>
+              </IconButton>
+              <IconButton
+                size="small"
+                color={
+                  editor.isActive("heading", { level: 2 })
+                    ? "primary"
+                    : undefined
+                }
+                onClick={() => {
+                  editor.chain().focus().toggleHeading({ level: 2 }).run();
+                }}
+              >
+                <strong>H2</strong>
               </IconButton>
               <IconButton
                 size="small"
