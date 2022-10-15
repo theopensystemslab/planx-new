@@ -1,10 +1,10 @@
-import { SiteAddress } from "@planx/components/FindProperty/model";
 import { XMLBuilder, XmlBuilderOptionsOptional } from "fast-xml-parser";
 
-import { Store } from "./../../../../../pages/FlowEditor/lib/store/index";
-import { GovUKPayment } from "./../../../../../types";
-import { Address } from "./../../../AddressInput/model";
-import { GOV_PAY_PASSPORT_KEY } from "./../../../Pay/model";
+import { Store } from "../../../../../pages/FlowEditor/lib/store/index";
+import { GovUKPayment } from "../../../../../types";
+import { Address } from "../../../AddressInput/model";
+import { GOV_PAY_PASSPORT_KEY } from "../../../Pay/model";
+import { SiteAddress } from "./../../../FindProperty/model";
 import {
   ApplicantOrAgent,
   ExistingUseApplication,
@@ -25,16 +25,18 @@ export class UniformPayload implements IUniformPayload {
   sessionId: string;
   passport: Store.passport;
   files: string[];
+  hasBoundary: boolean;
 
   proposalCompletionDate: string;
   siteAddress: SiteAddress;
 
   "portaloneapp:Proposal": Proposal;
 
-  constructor(sessionId: string, passport: Store.passport, files: string[]) {
+  constructor(sessionId: string, passport: Store.passport, files: string[], hasBoundary: boolean) {
     this.sessionId = sessionId;
     this.passport = passport;
     this.files = files;
+    this.hasBoundary = hasBoundary;
 
     this.proposalCompletionDate = this.setProposalCompletionDate();
     this.siteAddress = passport.data?.["_address"];
@@ -231,21 +233,32 @@ export class UniformPayload implements IUniformPayload {
     "_xmlns:common": "http://www.govtalk.gov.uk/planning/OneAppCommon-2006",
   });
 
-  private getRequiredFiles = (): FileAttachment[] => [
-    {
-      "common:Identifier": "N10049",
-      "common:FileName": "proposal.xml",
-      "common:Reference": "Schema XML File",
-    },
-    {
-      "common:FileName": "application.csv",
+  // TODO: check func naming conventions here
+  private getRequiredFiles = (): FileAttachment[] => {
+    const files = [
+      {
+        "common:Identifier": "N10049",
+        "common:FileName": "proposal.xml",
+        "common:Reference": "Schema XML File",
+      },
+      {
+        "common:FileName": "application.csv",
+        "common:Reference": "Other",
+      },
+    ];
+    if (this.hasBoundary) files.push({
+      "common:FileName": "boundary.geojson",
       "common:Reference": "Other",
-    },
-  ];
+    })
+    return files;
+  }
+  
 
   private getUserUploadedFiles = (): FileAttachment[] =>
     this.files.map((file) => {
-      const uniqueFilename = file.split("/").slice(-2).join("-");
+      const uniqueFilename = decodeURIComponent(
+        file.split("/").slice(-2).join("-")
+      );
       return {
         "common:FileName": uniqueFilename,
         "common:Reference": "Other",
