@@ -1,7 +1,6 @@
 import "./RichTextInput2.css";
 
 import IconButton from "@material-ui/core/IconButton";
-import { InputBaseProps } from "@material-ui/core/InputBase";
 import Check from "@material-ui/icons/Check";
 import Close from "@material-ui/icons/Close";
 import Error from "@material-ui/icons/Error";
@@ -9,6 +8,7 @@ import FormatBold from "@material-ui/icons/FormatBold";
 import FormatItalic from "@material-ui/icons/FormatItalic";
 import LinkIcon from "@material-ui/icons/Link";
 import Title from "@material-ui/icons/Title";
+import { type InputBaseProps } from "@mui/material/InputBase";
 import Bold from "@tiptap/extension-bold";
 import BulletList from "@tiptap/extension-bullet-list";
 import Document from "@tiptap/extension-document";
@@ -142,7 +142,7 @@ const modifyDeep =
     return val;
   };
 
-const RichTextInput2: FC<Props> = (props) => {
+const RichTextInput2: React.FC<Props> = (props) => {
   const stringValue = String(props.value || "");
 
   useEffect(() => {

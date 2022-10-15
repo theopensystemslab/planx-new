@@ -13,7 +13,7 @@ import {
 import PluginsEditor from "@draft-js-plugins/editor";
 import createInlineToolbarPlugin from "@draft-js-plugins/inline-toolbar";
 import Box from "@mui/material/Box";
-import { InputBaseProps } from "@mui/material/InputBase";
+import { type InputBaseProps } from "@mui/material/InputBase";
 import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import {
