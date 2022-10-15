@@ -12,6 +12,7 @@ import Popover from "@mui/material/Popover";
 import Toolbar from "@mui/material/Toolbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import makeStyles from "@mui/styles/makeStyles";
+import { makeXmlString2 } from "@planx/components/Send/uniform/xml2";
 import { Route } from "navi";
 import React, { useRef, useState } from "react";
 import {
@@ -356,6 +357,7 @@ const Header: React.FC<{
   const classes = useStyles();
   const headerRef = useRef<HTMLDivElement>(null);
   const route = useCurrentRoute();
+  makeXmlString2({}, "sessionId", []);
 
   return (
     <AppBar
