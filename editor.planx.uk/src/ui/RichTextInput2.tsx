@@ -3,9 +3,12 @@ import "./RichTextInput2.css";
 import IconButton from "@material-ui/core/IconButton";
 import Check from "@material-ui/icons/Check";
 import Close from "@material-ui/icons/Close";
+import Delete from "@material-ui/icons/Delete";
 import Error from "@material-ui/icons/Error";
 import FormatBold from "@material-ui/icons/FormatBold";
 import FormatItalic from "@material-ui/icons/FormatItalic";
+import FormatListBulleted from "@material-ui/icons/FormatListBulleted";
+import FormatListNumbered from "@material-ui/icons/FormatListNumbered";
 import LinkIcon from "@material-ui/icons/Link";
 import { type InputBaseProps } from "@mui/material/InputBase";
 import Bold from "@tiptap/extension-bold";
@@ -141,12 +144,9 @@ const modifyDeep =
     return val;
   };
 
+const initialUrlValue = "https://";
 const RichTextInput2: React.FC<Props> = (props) => {
   const stringValue = String(props.value || "");
-
-  useEffect(() => {
-    console.log(props.value);
-  }, []);
 
   const editor = useEditor({
     extensions: [
@@ -231,6 +231,18 @@ const RichTextInput2: React.FC<Props> = (props) => {
     }
   };
 
+  const urlInputRef = useRef<{ focus: () => void; select: () => void }>(null);
+
+  useEffect(() => {
+    if (addingLink) {
+      urlInputRef.current?.focus();
+      const href = editor?.getAttributes("link")?.href || initialUrlValue;
+      if (href !== initialUrlValue) {
+        urlInputRef.current?.select();
+      }
+    }
+  }, [addingLink]);
+
   return (
     <>
       {editor && (
@@ -241,6 +253,7 @@ const RichTextInput2: React.FC<Props> = (props) => {
         >
           {addingLink ? (
             <Input
+              ref={urlInputRef}
               onKeyDown={(ev) => {
                 if (ev.key === "Enter") {
                   editor
@@ -310,6 +323,24 @@ const RichTextInput2: React.FC<Props> = (props) => {
               >
                 <FormatItalic />
               </IconButton>
+              <IconButton
+                size="small"
+                color={editor.isActive("bulletList") ? "primary" : undefined}
+                onClick={() => {
+                  editor.chain().focus().toggleBulletList().run();
+                }}
+              >
+                <FormatListBulleted />
+              </IconButton>
+              <IconButton
+                size="small"
+                color={editor.isActive("orderedList") ? "primary" : undefined}
+                onClick={() => {
+                  editor.chain().focus().toggleOrderedList().run();
+                }}
+              >
+                <FormatListNumbered />
+              </IconButton>
             </>
           )}
           {addingLink ? (
@@ -340,7 +371,16 @@ const RichTextInput2: React.FC<Props> = (props) => {
                   </IconButton>
                 );
               })()}
-
+              <IconButton
+                size="small"
+                disabled={!editor.isActive("link")}
+                onClick={() => {
+                  editor.chain().focus().unsetLink().run();
+                  setAddingLink(null);
+                }}
+              >
+                <Delete />
+              </IconButton>
               <IconButton
                 size="small"
                 onClick={() => {
@@ -356,11 +396,16 @@ const RichTextInput2: React.FC<Props> = (props) => {
               color={editor.isActive("link") ? "primary" : undefined}
               onClick={() => {
                 if (editor.isActive("link")) {
-                  editor.chain().focus().unsetLink().run();
+                  const href =
+                    editor.getAttributes("link")?.href || initialUrlValue;
+                  setAddingLink({
+                    selectionHtml: getSelectionHtml(),
+                    draft: href,
+                  });
                 } else {
                   setAddingLink({
                     selectionHtml: getSelectionHtml(),
-                    draft: "https://",
+                    draft: initialUrlValue,
                   });
                 }
               }}
