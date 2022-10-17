@@ -12,9 +12,6 @@ import {
 
 /**
  * Send a "Resume" email to an applicant which list all open applications for a given council (team)
- * @param {object} req
- * @param {object} res
- * @param {object} next
  */
 const resumeApplication = async (
   req: Request,
@@ -52,8 +49,6 @@ const resumeApplication = async (
  * Validate that there are sessions matching the request
  * XXX: Admin role is required here as we are relying on the combination of email
  * address + inbox access to "secure" these requests
- * @param {string} teamSlug
- * @param {string} email
  */
 const validateRequest = async (
   teamSlug: string,

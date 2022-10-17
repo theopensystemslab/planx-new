@@ -25,9 +25,6 @@ export type Template = keyof typeof emailTemplates;
 
 /**
  * Send email using the GovUK Notify client
- * @param {string} template
- * @param {string} emailAddress
- * @param {object} config
  */
 const sendEmail = async (
   template: Template,
@@ -66,10 +63,6 @@ const convertSlugToName = (slug: string): string =>
 
 /**
  * Build the magic link which will be sent to users via email to continue their application
- * @param {object} session
- * @param {object} team
- * @param {string} flowSlug
- * @returns {string}
  */
 const getResumeLink = (
   session: {
@@ -193,8 +186,6 @@ interface SessionDetails {
 
 /**
  * Parse session details into an object which will be read by email template
- * @param {string} session
- * @returns {object}
  */
 const getSessionDetails = async (
   session: LowCalSession
@@ -212,10 +203,6 @@ const getSessionDetails = async (
 
 /**
  * Build a personalisation object which is read by email templates
- * @param {string} session
- * @param {string} flowSlug
- * @param {object} team
- * @returns {object}
  */
 const getPersonalisation = (
   session: SessionDetails,
@@ -258,7 +245,6 @@ const softDeleteSession = async (sessionId: string) => {
 /**
  * Mark a lowcal_session record as submitted
  * Sessions older than a week cleaned up nightly by cron job delete_expired_sessions on Hasura
- * @param {string} sessionId
  */
 const markSessionAsSubmitted = async (sessionId: string) => {
   try {
@@ -332,8 +318,6 @@ const getSaveAndReturnPublicHeaders = (sessionId: string, email: string) => ({
 /**
  * Helper method to preserve session data order during reconciliation
  * XXX: This function is also maintained at editor.planx.uk/src/lib/lowcalStorage.ts
- * @param {object} ob
- * @returns { string }
  */
 const stringifyWithRootKeysSortedAlphabetically = (ob = {}) =>
   JSON.stringify(
