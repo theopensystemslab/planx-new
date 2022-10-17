@@ -1,3 +1,7 @@
+// Models the XML payload required by Uniform to process PlanX applications
+// XML Schema Definitions for reference:
+// -- https://ecab.planningportal.co.uk/uploads/schema/OneAppProposal-v2-0-1.xsd
+// -- https://ecab.planningportal.co.uk/uploads/schema/OneAppCommon/OneAppCommon-2-0-1.xsd
 export interface IUniformPayload {
   "portaloneapp:Proposal": Proposal;
 }

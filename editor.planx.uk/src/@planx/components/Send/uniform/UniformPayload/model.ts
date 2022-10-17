@@ -1,4 +1,4 @@
-import { XMLBuilder, XmlBuilderOptionsOptional } from "fast-xml-parser";
+import { XMLBuilder, XmlBuilderOptions } from "fast-xml-parser";
 
 import { Store } from "../../../../../pages/FlowEditor/lib/store/index";
 import { GovUKPayment } from "../../../../../types";
@@ -299,7 +299,7 @@ export class UniformPayload implements IUniformPayload {
       "?xml": xmlDeclaration,
       "portaloneapp:Proposal": this["portaloneapp:Proposal"],
     };
-    const buildOptions: XmlBuilderOptionsOptional = {
+    const buildOptions: Partial<XmlBuilderOptions> = {
       ignoreAttributes: false,
       attributeNamePrefix: "_",
       format: true,
