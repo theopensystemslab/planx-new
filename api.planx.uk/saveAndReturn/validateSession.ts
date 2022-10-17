@@ -60,7 +60,10 @@ const validateSession = async (
           let removedBreadcrumbs: Breadcrumb = {};
           alteredNodes.forEach((node) => {
             // if the session breadcrumbs include any altered content, remove those breadcrumbs so the user will be re-prompted to answer those questions
-            if (Object.keys(sessionData.data.breadcrumbs).includes(node.id!)) {
+            if (
+              sessionData &&
+              Object.keys(sessionData.data.breadcrumbs).includes(node.id!)
+            ) {
               removedBreadcrumbs[node.id!] =
                 sessionData.data.breadcrumbs[node.id!];
               delete sessionData.data.breadcrumbs[node.id!];
@@ -74,7 +77,7 @@ const validateSession = async (
             planx_keys.forEach((key) => {
               Object.keys(removedBreadcrumbs).forEach((nodeId) => {
                 // check if a removed breadcrumb has a passport var based on the published content at save point
-                if (savedFlow[nodeId]?.data?.[key]) {
+                if (sessionData && savedFlow[nodeId]?.data?.[key]) {
                   // if it does, remove that passport variable from our sessionData so we don't auto-answer changed questions before the user sees them
                   delete sessionData.data.passport?.data?.[
                     currentFlow[nodeId].data[key]
@@ -131,7 +134,7 @@ const validateSession = async (
 const findSession = async (
   sessionId: string,
   email: string
-): Promise<LowCalSession> => {
+): Promise<LowCalSession | undefined> => {
   const query = gql`
     query FindSession {
       lowcal_sessions {

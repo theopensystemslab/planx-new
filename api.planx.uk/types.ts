@@ -39,16 +39,19 @@ export interface Passport {
 }
 
 export interface LowCalSession {
-  govUkPayment: any;
   data: {
     passport: Passport;
     breadcrumbs: Breadcrumb;
-    govUkPayment: GovUKPayment;
+    govUkPayment?: GovUKPayment;
     id: string;
   };
   id: string;
+  email: string;
+  flow_id: string;
   created_at: string;
   updated_at: string;
+  submitted_at: string | null;
+  deleted_at: string | null;
   has_user_saved: boolean;
   flow: {
     slug: string;
@@ -57,7 +60,6 @@ export interface LowCalSession {
 
 export interface NotifyConfig {
   personalisation: {
-    has_user_saved?: boolean | undefined;
     address?: any;
     projectType?: string;
     id?: string;
@@ -78,7 +80,7 @@ export interface NotifyConfig {
 // https://docs.payments.service.gov.uk/making_payments/#receiving-the-api-response
 export interface GovUKPayment {
   amount: number;
-  reference: string;
+  reference?: string;
   state: {
     // https://docs.payments.service.gov.uk/api_reference/#status-and-finished
     status:
@@ -93,8 +95,8 @@ export interface GovUKPayment {
     finished: boolean;
   };
   payment_id: string;
-  created_date: string;
-  _links: {
+  created_date?: string;
+  _links?: {
     self: {
       href: string;
       method: string;
