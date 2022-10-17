@@ -55,6 +55,9 @@ interface Props extends InputBaseProps {
   errorMessage?: string;
 }
 
+const passportClassName = "passport";
+
+// Shared tiptap editor extensions
 const commonExtensions = [
   Document,
   Paragraph,
@@ -70,11 +73,12 @@ const commonExtensions = [
   ListItem,
 ];
 
+// Tiptap editor extensions used to convert between HTML and Prosemirror document state (used internally by tiptap)
 const conversionExtensions = [
   ...commonExtensions,
   Mention.configure({
     HTMLAttributes: {
-      class: "pass",
+      class: passportClassName,
     },
   }),
 ];
@@ -84,11 +88,14 @@ interface VariablesState {
   addVariable: (newVariable: string) => void;
 }
 
-const selectionHtmlError = (selectionHtml: string) =>
+// Specify whether a selection is unsuitable for ensuring accessible links
+const linkSelectionError = (selectionHtml: string) =>
   selectionHtml === "<p>click here</p>"
     ? "Please set link over descriptive piece of content."
     : undefined;
 
+// Maintain a store of variables as they are created in the '@'-mention plugin, making them available in memory for next time.
+// TODO: explore instantiating from a hard-coded list, or persisting in either the backend or local storage.
 const useVariablesStore = create<VariablesState>((set) => ({
   variables: [],
   addVariable: (newVariable: string) =>
@@ -123,7 +130,8 @@ export const injectVariables = (
 };
 
 /**
- * Traverse a nested object/array and apply a modification at each level. If the modifier returns `null`, leave the result unchanged.
+ * Traverse a nested object/array and apply a modification at each level. If the modifier returns `null`, it leaves the result unchanged.
+ * Used to inject placeholder values into a document structure.
  */
 const modifyDeep =
   (fn: (field: any) => any) =>
@@ -145,6 +153,7 @@ const modifyDeep =
   };
 
 const initialUrlValue = "https://";
+
 const RichTextInput2: React.FC<Props> = (props) => {
   const stringValue = String(props.value || "");
 
@@ -154,7 +163,8 @@ const RichTextInput2: React.FC<Props> = (props) => {
       History,
       Mention.configure({
         HTMLAttributes: {
-          class: "pass",
+          // Mark mention tags with the 'pass' CSS class (short for passport)
+          class: passportClassName,
         },
         suggestion,
       }),
@@ -175,6 +185,7 @@ const RichTextInput2: React.FC<Props> = (props) => {
   // Cache internal string value
   const internalValue = useRef<string | null>(null);
 
+  // Handle update events
   const handleUpdate = useCallback(
     (transaction: any) => {
       if (!props.onChange) {
@@ -194,6 +205,16 @@ const RichTextInput2: React.FC<Props> = (props) => {
     [props.onChange]
   );
 
+  useEffect(() => {
+    if (!editor) {
+      return;
+    }
+    editor.on("update", handleUpdate);
+    return () => {
+      editor.off("update", handleUpdate);
+    };
+  }, [editor, handleUpdate]);
+
   // Update editor content if change is initiated from the parent props (not in sync with internal state)
   useEffect(() => {
     if (!editor) {
@@ -206,16 +227,7 @@ const RichTextInput2: React.FC<Props> = (props) => {
     }
   }, [stringValue]);
 
-  useEffect(() => {
-    if (!editor) {
-      return;
-    }
-    editor.on("update", handleUpdate);
-    return () => {
-      editor.off("update", handleUpdate);
-    };
-  }, [editor, handleUpdate]);
-
+  // Returns the HTML snippet under the current selection, typically wrapped in a <p> tag, e.g. '<p>selected text</p>'
   const getSelectionHtml = () => {
     if (!editor) {
       return null;
@@ -233,15 +245,18 @@ const RichTextInput2: React.FC<Props> = (props) => {
 
   const urlInputRef = useRef<{ focus: () => void; select: () => void }>(null);
 
+  const isAddingLink = Boolean(addingLink);
+
+  // Focus/select the URL input field value when it appears in the UI
   useEffect(() => {
-    if (addingLink) {
+    if (isAddingLink) {
       urlInputRef.current?.focus();
       const href = editor?.getAttributes("link")?.href || initialUrlValue;
       if (href !== initialUrlValue) {
         urlInputRef.current?.select();
       }
     }
-  }, [addingLink]);
+  }, [isAddingLink]);
 
   return (
     <>
@@ -348,7 +363,7 @@ const RichTextInput2: React.FC<Props> = (props) => {
               {(() => {
                 const error =
                   addingLink.selectionHtml &&
-                  selectionHtmlError(addingLink.selectionHtml);
+                  linkSelectionError(addingLink.selectionHtml);
                 return error ? (
                   <IconButton size="small">
                     <Error />
@@ -432,7 +447,7 @@ const suggestion = {
   },
 
   render: () => {
-    let component: any;
+    let component: undefined | ReactRenderer<any, any>;
     let popup: any;
 
     return {
@@ -458,7 +473,7 @@ const suggestion = {
       },
 
       onUpdate(props: any) {
-        component.updateProps(props);
+        component?.updateProps(props);
 
         if (!props.clientRect) {
           return;
@@ -475,12 +490,12 @@ const suggestion = {
           return true;
         }
 
-        return component.ref?.onKeyDown(props);
+        return component?.ref?.onKeyDown(props);
       },
 
       onExit() {
         popup[0].destroy();
-        component.destroy();
+        component?.destroy();
       },
     };
   },
@@ -558,7 +573,7 @@ const MentionList = forwardRef((props: MentionListProps, ref) => {
             variablesStore.addVariable(props.query);
           }}
         >
-          + Add <span className="pass">@{props.query}</span>
+          + Add <span className={passportClassName}>@{props.query}</span>
         </button>
       )}
       {props.items.length > 0 ? (
@@ -570,7 +585,7 @@ const MentionList = forwardRef((props: MentionListProps, ref) => {
             key={index}
             onClick={() => selectItem(index)}
           >
-            <span className="pass">@{item}</span>
+            <span className={passportClassName}>@{item}</span>
           </button>
         ))
       ) : (
