@@ -12,7 +12,7 @@ Plan✕ is a platform for creating and publishing digital planning services. Lea
 
 planx-new is a monorepo containing our full application stack. Here's a quick summary of what you'll find here:
 
-- `api.planx.uk` is a Node/Express server and REST endpoints 
+- `api.planx.uk` is a Node/Express server and REST endpoints
 - `editor.planx.uk` is our React frontend, which consists of two main environments: an "editor" for service designers and a "preview" for public applicants. Our components are written with Material UI and broadly follow GOV.UK design patterns
 - `hasura.planx.uk` is a [Hasura](https://hasura.io/) GraphQL engine for our PostgreSQL database
 - `sharedb.planx.uk` is our implementation of [ShareDB](https://github.com/share/sharedb), a library for realtime document collaboration based on JSON Operational Transformation (OT) used in our "editor" environment
@@ -28,13 +28,22 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 1. Run the following command to get everything (postgres, sharedb, api and hasura server processes) up and running `docker-compose up --build -d`
 
-1. Move into the hasura directory `cd ../hasura.planx.uk` & install dependencies `pnpm i`
+1. Move into the hasura directory `cd ../hasura.planx.uk` & install dependencies `pnpm i`. 
 
 1. Open [Hasura's](https://hasura.io/) web console `pnpm start` & check that your Google email address is in the `users` table, if not then add it
 
-1. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`
+1. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`. 
 
 1. Start the dev server! `pnpm start` & open http://localhost:3000 & login with your GMail/Google email address
+
+
+### Troubleshooting
+
+If you run into trouble, you may want to try the following:
+
+* Ensure you have a local `.env` file with up-to-date keys etc (see relevant `.env.example` files for reference and 1Password for an initial `.env` file).
+* The Hasura CLI may require a postinstall step which can be run manually with `cd node_modules/hasura-cli && pnpm postinstall`.
+
 
 ### Analytics
 
