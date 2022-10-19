@@ -92,7 +92,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
               aria-haspopup="dialog"
               size="large"
             >
-              <MoreInfoIcon viewBox="0 0 30 30" />
+              <MoreInfoIcon />
             </IconButton>
           </Grid>
         )}
@@ -123,7 +123,6 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           </MoreInfoSection>
         )}
       </MoreInfo>
-
       {img && <img src={img} alt="question" className={classes.image} />}
     </Box>
   );
