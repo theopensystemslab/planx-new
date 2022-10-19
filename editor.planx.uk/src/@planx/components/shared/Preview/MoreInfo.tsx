@@ -63,7 +63,7 @@ interface IMoreInfo {
 const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => (
   <Root
     anchor="right"
-    drawerWidth={400}
+    drawerWidth={600}
     aria-modal="true"
     role="dialog"
     aria-label="Further information about this question and the policies pertaining to it"
