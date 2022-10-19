@@ -1,6 +1,6 @@
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import { Box } from "@mui/material";
-import { styled } from "@mui/styles";
+import { styled } from "@mui/material/styles";
 import React from "react";
 
 export default function MoreInfoIcon() {
