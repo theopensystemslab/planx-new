@@ -44,7 +44,6 @@ export const linkStyle = {
  * Get Global theme options
  * The global theme is used in editor, and as the base theme in Preview/Unpublished which can be
  * merged with Team specific options
- * @returns {ThemeOptions}
  */
 export const getGlobalThemeOptions = (): ThemeOptions => {
   const themeOptions: ThemeOptions = {
@@ -193,8 +192,12 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
           borderRadius: 0,
           "&:focus-visible": {
             ...focusStyle(themeOptions.palette?.action?.focus),
-            "& svg": {
+            "& svg, div": {
               color: "black",
+              borderColor: "black",
+            },
+            "&>*:hover": {
+              backgroundColor: "transparent",
             },
           },
         },
@@ -245,8 +248,6 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
  * Get team specific theme options
  * Pass in TeamTheme to customise the palette and associated overrides
  * Rules here will only apply in the Preview and Unpublished routes
- * @param {TeamTheme} theme
- * @returns {ThemeOptions}
  */
 export const getTeamThemeOptions = (
   theme: TeamTheme | undefined
