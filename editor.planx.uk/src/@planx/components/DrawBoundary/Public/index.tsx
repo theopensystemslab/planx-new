@@ -1,8 +1,6 @@
-import "./map.css";
-
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -21,28 +19,39 @@ import Upload, { FileUpload } from "./Upload";
 export type Props = PublicProps<DrawBoundary>;
 export type SelectedFile = FileUpload;
 
-const useClasses = makeStyles((theme) => ({
-  map: {
-    padding: theme.spacing(1, 0),
+const MapContainer = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(1, 0),
+  width: "100%",
+  height: "50vh",
+  [theme.breakpoints.up("md")]: {
+    height: "80vh",
+    width: "80vw",
+    position: "relative",
+    left: "calc(-40vw + 50%)",
   },
-  hidden: { display: "none" },
-  uploadInstead: {
-    textAlign: "right",
-    marginTop: theme.spacing(1),
-    "& button": {
-      background: "none",
-      "border-style": "none",
-      color: theme.palette.text.primary,
-      cursor: "pointer",
-      fontSize: "medium",
-      padding: theme.spacing(2),
-    },
-    "& button:hover": {
-      backgroundColor: theme.palette.background.paper,
-    },
-    "& button:disabled": {
-      color: theme.palette.text.disabled,
-    },
+  "& my-map": {
+    width: "100%",
+    height: "100%",
+  },
+}));
+
+const AlternateOption = styled("div")(({ theme }) => ({
+  textAlign: "right",
+  marginTop: theme.spacing(1),
+}));
+
+const AlternateOptionButton = styled(Button)(({ theme }) => ({
+  background: "none",
+  borderStyle: "none",
+  color: theme.palette.text.primary,
+  cursor: "pointer",
+  fontSize: "medium",
+  padding: theme.spacing(2),
+  "& :hover": {
+    backgroundColor: theme.palette.background.paper,
+  },
+  "& :disabled": {
+    color: theme.palette.text.disabled,
   },
 }));
 
@@ -57,7 +66,6 @@ export default function Component(props: Props) {
   const startPage = previousFile ? "upload" : "draw";
   const [page, setPage] = useState<"draw" | "upload">(startPage);
   const passport = useStore((state) => state.computePassport());
-  const classes = useClasses();
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [selectedFile, setSelectedFile] = useState<SelectedFile | undefined>(
     previousFile
@@ -118,9 +126,9 @@ export default function Component(props: Props) {
             howMeasured={props.howMeasured}
             definitionImg={props.definitionImg}
           />
-          <Box className={classes.map}>
+          <MapContainer>
             <p style={visuallyHidden}>
-              An interactive map centered on your address, with a red pointer to
+              An interactive map centred on your address, with a red pointer to
               draw your site outline. Click to place points and connect the
               lines to make your site. Once you've closed the site shape, click
               and drag the lines to modify it.
@@ -143,17 +151,17 @@ export default function Component(props: Props) {
               longitude={Number(passport?.data?._address?.longitude)}
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
-          </Box>
+          </MapContainer>
           {!props.hideFileUpload && (
-            <div className={classes.uploadInstead}>
-              <Button
+            <AlternateOption>
+              <AlternateOptionButton
                 data-testid="upload-file-button"
                 onClick={() => setPage("upload")}
                 disabled={Boolean(boundary)}
               >
                 Upload a location plan instead
-              </Button>
-            </div>
+              </AlternateOptionButton>
+            </AlternateOption>
           )}
           <p>
             The boundary you have drawn has an area of{" "}
@@ -163,7 +171,7 @@ export default function Component(props: Props) {
       );
     } else if (page === "upload") {
       return (
-        <div>
+        <>
           <QuestionHeader
             title={props.titleForUploading}
             description={props.descriptionForUploading}
@@ -173,15 +181,15 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <Upload setFile={setSelectedFile} initialFile={selectedFile} />
-          <div className={classes.uploadInstead}>
-            <Button
+          <AlternateOption>
+            <AlternateOptionButton
               onClick={() => setPage("draw")}
               disabled={Boolean(selectedFile?.url)}
             >
               Draw the boundary on a map instead
-            </Button>
-          </div>
-        </div>
+            </AlternateOptionButton>
+          </AlternateOption>
+        </>
       );
     }
   }
