@@ -7,6 +7,7 @@ import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
+import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import React, { useEffect, useRef, useState } from "react";
 
 import {
@@ -19,21 +20,31 @@ import Upload, { FileUpload } from "./Upload";
 export type Props = PublicProps<DrawBoundary>;
 export type SelectedFile = FileUpload;
 
-const MapContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1, 0),
-  width: "100%",
-  height: "50vh",
-  [theme.breakpoints.up("md")]: {
-    height: "80vh",
-    width: "80vw",
-    position: "relative",
-    left: "calc(-40vw + 50%)",
-  },
-  "& my-map": {
+interface MapContainerProps {
+  environment: PreviewEnvironment;
+}
+
+const MapContainer = styled(Box)<MapContainerProps>(
+  ({ theme, environment }) => ({
+    padding: theme.spacing(1, 0),
     width: "100%",
-    height: "100%",
-  },
-}));
+    height: "50vh",
+    // Only increase map size in Preview & Unpublished routes
+    [theme.breakpoints.up("md")]:
+      environment === "standalone"
+        ? {
+            height: "80vh",
+            width: "80vw",
+            position: "relative",
+            left: "calc(-40vw + 50%)",
+          }
+        : {},
+    "& my-map": {
+      width: "100%",
+      height: "100%",
+    },
+  })
+);
 
 const AlternateOption = styled("div")(({ theme }) => ({
   textAlign: "right",
@@ -71,6 +82,7 @@ export default function Component(props: Props) {
     previousFile
   );
   const [area, setArea] = useState<number | undefined>(previousArea);
+  const environment = useStore((state) => state.previewEnvironment);
 
   useEffect(() => {
     if (isMounted.current) setSelectedFile(undefined);
@@ -126,7 +138,7 @@ export default function Component(props: Props) {
             howMeasured={props.howMeasured}
             definitionImg={props.definitionImg}
           />
-          <MapContainer>
+          <MapContainer environment={environment}>
             <p style={visuallyHidden}>
               An interactive map centred on your address, with a red pointer to
               draw your site outline. Click to place points and connect the
