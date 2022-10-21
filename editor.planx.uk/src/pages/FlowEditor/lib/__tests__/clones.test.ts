@@ -1,41 +1,100 @@
 import { vanillaStore } from "../store";
 const { getState, setState } = vanillaStore;
-import flow from "./mocks/flowWithClones.json";
+import forwardsFlow from "./mocks/flowWithClones.json";
+import reverseFlow from "./mocks/flowWithReverseClones.json";
+
+const { record, previousCard, currentCard, upcomingCardIds, resetPreview } =
+  getState();
 
 beforeEach(() => {
-  getState().resetPreview();
+  resetPreview();
 });
 
-describe("Clone order in flow", () => {
+describe("Clone order in flow (forwards)", () => {
   test("Left branch is ordered correctly", () => {
-    setState({ flow });
-    getState().record("question", { answers: ["leftChoice"] });
-    getState().record("leftChoice", { answers: ["leftNotice"] });
+    setState({ flow: forwardsFlow });
+    record("question", { answers: ["leftChoice"] });
+    record("leftChoice", { answers: ["leftNotice"] });
     // Left branch is structure as expected
-    expect(getState().upcomingCardIds()).toEqual([
+    expect(upcomingCardIds()).toEqual([
       "leftNotice",
       "clone",
       "leftConfirmation",
     ]);
-    getState().record("leftNotice", { answers: ["clone"] });
-    getState().record("clone", { answers: ["leftConfirmation"] });
-    getState().record("leftConfirmation", { answers: ["finalCard"] });
-    expect(getState().upcomingCardIds()).toHaveLength(0);
+    record("leftNotice", { answers: ["clone"] });
+    record("clone", { answers: ["leftConfirmation"] });
+    record("leftConfirmation", { answers: ["finalNode"] });
+    expect(upcomingCardIds()).toHaveLength(0);
   });
 
   test("Right branch is ordered correctly", () => {
-    setState({ flow });
-    getState().record("question", { answers: ["rightChoice"] });
-    getState().record("rightChoice", { answers: ["rightNotice"] });
+    setState({ flow: forwardsFlow });
+    record("question", { answers: ["rightChoice"] });
+    record("rightChoice", { answers: ["rightNotice"] });
     // Right branch is structured as expected
-    expect(getState().upcomingCardIds()).toEqual([
+    expect(upcomingCardIds()).toEqual([
       "rightNotice",
       "clone",
       "rightConfirmation",
     ]);
-    getState().record("rightNotice", { answers: ["clone"] });
-    getState().record("clone", { answers: ["rightConfirmation"] });
-    getState().record("rightConfirmation", { answers: ["finalCard"] });
-    expect(getState().upcomingCardIds()).toHaveLength(0);
+    record("rightNotice", { answers: ["clone"] });
+    record("clone", { answers: ["rightConfirmation"] });
+    record("rightConfirmation", { answers: ["finalNode"] });
+    expect(upcomingCardIds()).toHaveLength(0);
+  });
+});
+
+describe("Clone order in flow (backwards)", () => {
+  test("Left branch is ordered correctly", () => {
+    setState({ flow: reverseFlow });
+
+    const initialUpcomingCards = ["question", "finalNode"];
+    expect(upcomingCardIds()).toEqual(initialUpcomingCards);
+
+    // Traverse forward to final node
+    record("question", { answers: ["leftChoice"] });
+    record("clone", { answers: ["finalNode"] });
+    expect(currentCard()?.id).toBe("finalNode");
+
+    // Traverse back one-by-one to first node
+    let previous = previousCard(currentCard());
+    expect(previous).toBe("clone");
+    record(previous!);
+
+    previous = previousCard(currentCard());
+    expect(previous).toBe("question");
+    record(previous!);
+
+    // State is back to where we started
+    expect(upcomingCardIds()).toEqual(initialUpcomingCards);
+  });
+
+  test("Right branch is ordered correctly", () => {
+    setState({ flow: reverseFlow });
+
+    const initialUpcomingCards = ["question", "finalNode"];
+    expect(upcomingCardIds()).toEqual(initialUpcomingCards);
+
+    // Traverse forward to final node
+    record("question", { answers: ["rightChoice"] });
+    record("rightNotice", { answers: ["clone"] });
+    record("clone", { answers: ["finalNode"] });
+    expect(currentCard()?.id).toBe("finalNode");
+
+    // Traverse back one-by-one to first node
+    let previous = previousCard(currentCard());
+    expect(previous).toBe("clone");
+    record(previous!);
+
+    previous = previousCard(currentCard());
+    expect(previous).toBe("rightNotice");
+    record(previous!);
+
+    previous = previousCard(currentCard());
+    expect(previous).toBe("question");
+    record(previous!);
+
+    // State is back to where we started
+    expect(upcomingCardIds()).toEqual(initialUpcomingCards);
   });
 });

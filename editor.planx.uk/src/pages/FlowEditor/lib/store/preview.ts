@@ -161,6 +161,7 @@ export const previewStore = (
     if (node?.id && shouldUpdateMemoizedValues) {
       memoizedBreadcrumb = breadcrumbs;
       const sorted = sortIdsDepthFirst(flow)(new Set([node.id, ...goBackable]));
+      // TODO: This is the incorrect assumption! This does not allow us to go "back" from a clone (which is not the first one)
       const currentCardIndex = sorted.indexOf(node.id);
       previousCardId =
         currentCardIndex > 0 ? sorted[currentCardIndex - 1] : sorted[0];
