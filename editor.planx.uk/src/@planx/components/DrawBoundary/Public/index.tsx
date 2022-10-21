@@ -33,10 +33,8 @@ const MapContainer = styled(Box)<MapContainerProps>(
     [theme.breakpoints.up("md")]:
       environment === "standalone"
         ? {
-            height: "80vh",
-            width: "80vw",
-            position: "relative",
-            left: "calc(-40vw + 50%)",
+            height: "70vh",
+            minWidth: "65vw",
           }
         : {},
     "& my-map": {
