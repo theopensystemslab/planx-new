@@ -1,6 +1,6 @@
 import { enablePatches, produceWithPatches } from "immer";
-import { intersection } from "lodash";
 import difference from "lodash/difference";
+import intersection from "lodash/intersection";
 import trim from "lodash/trim";
 import zip from "lodash/zip";
 import { customAlphabet } from "nanoid-good";
