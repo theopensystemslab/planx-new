@@ -19,8 +19,19 @@ let flowWithPassportComponents = cloneDeep(
 ) as Store.flow;
 let flowWithAutoAnswers = cloneDeep(flowWithAutoAnswersMock) as Store.flow;
 
+const {
+  record,
+  upcomingCardIds,
+  currentCard,
+  resetPreview,
+  hasPaid,
+  previousCard,
+  changeAnswer,
+  computePassport,
+} = getState();
+
 beforeEach(() => {
-  getState().resetPreview();
+  resetPreview();
   breadcrumbsDependentOnPassport = cloneDeep(
     breadcrumbsDependentOnPassportMock
   ) as Store.breadcrumbs;
@@ -55,15 +66,15 @@ test("it lists upcoming cards", () => {
     },
   });
 
-  expect(getState().upcomingCardIds()).toEqual(["a"]);
+  expect(upcomingCardIds()).toEqual(["a"]);
 
-  getState().record("a", { answers: ["c"] });
+  record("a", { answers: ["c"] });
 
-  expect(getState().upcomingCardIds()).toEqual(["d"]);
+  expect(upcomingCardIds()).toEqual(["d"]);
 
-  getState().record("d", { answers: ["e", "f"] });
+  record("d", { answers: ["e", "f"] });
 
-  expect(getState().upcomingCardIds()).toEqual([]);
+  expect(upcomingCardIds()).toEqual([]);
 });
 
 test("notice", () => {
@@ -78,7 +89,7 @@ test("notice", () => {
     },
   });
 
-  expect(getState().upcomingCardIds()).toEqual(["a"]);
+  expect(upcomingCardIds()).toEqual(["a"]);
 });
 
 test("crawling with portals", () => {
@@ -101,7 +112,7 @@ test("crawling with portals", () => {
     },
   });
 
-  expect(getState().upcomingCardIds()).toEqual(["c", "b"]);
+  expect(upcomingCardIds()).toEqual(["c", "b"]);
 });
 
 describe("error handling", () => {
@@ -125,7 +136,7 @@ describe("error handling", () => {
       },
     });
 
-    expect(() => getState().record("x", {})).toThrowError("id not found");
+    expect(() => record("x", {})).toThrowError("id not found");
   });
 });
 
@@ -154,14 +165,14 @@ test("record(id, undefined) clears up breadcrumbs", () => {
       f: { type: TYPES.Response },
     },
   });
-  getState().record("a", { answers: ["c"] });
-  getState().record("d", { answers: ["e", "f"] });
+  record("a", { answers: ["c"] });
+  record("d", { answers: ["e", "f"] });
   expect(getState().breadcrumbs).toEqual({
     a: { answers: ["c"], auto: false },
     d: { answers: ["e", "f"], auto: false },
   });
 
-  getState().record("a");
+  record("a");
 
   expect(getState().breadcrumbs).toEqual({});
 });
@@ -188,16 +199,16 @@ test("hasPaid is updated if a Pay component has been recorded", () => {
     },
   });
 
-  getState().record("a", { answers: ["c"] });
-  expect(getState().hasPaid()).toBe(false);
+  record("a", { answers: ["c"] });
+  expect(hasPaid()).toBe(false);
 
-  getState().record("c", {});
+  record("c", {});
   expect(getState().breadcrumbs).toEqual({
     a: { answers: ["c"], auto: false },
     c: { auto: false },
   });
 
-  expect(getState().hasPaid()).toBe(true);
+  expect(hasPaid()).toBe(true);
 });
 
 describe("removeOrphansFromBreadcrumbs", () => {
@@ -304,7 +315,7 @@ describe("record", () => {
       cachedBreadcrumbs: cachedBreadcrumbs,
     });
 
-    getState().record("findProperty", userData);
+    record("findProperty", userData);
 
     const expectedBreadcrumbs = {
       findProperty: userData,
@@ -318,7 +329,7 @@ describe("record", () => {
     expect(getState().cachedBreadcrumbs).toEqual(expectedCachedBreadcrumbs);
   });
 
-  test("should remove Planning contraints from cachedBreadcrumbs", () => {
+  test("should remove Planning constraints from cachedBreadcrumbs", () => {
     const cachedBreadcrumbs = {
       ...breadcrumbsDependentOnPassport,
     } as Store.cachedBreadcrumbs;
@@ -350,7 +361,7 @@ describe("record", () => {
       cachedBreadcrumbs: cachedBreadcrumbs,
     });
 
-    getState().record("drawBoundary", userData);
+    record("drawBoundary", userData);
 
     const expectedBreadcrumbs = {
       drawBoundary: userData,
@@ -379,7 +390,7 @@ describe("record", () => {
       _nodesPendingEdit,
     });
 
-    getState().record("findProperty", {
+    record("findProperty", {
       answers: [],
       auto: false,
       data: {
@@ -391,7 +402,7 @@ describe("record", () => {
       },
     });
 
-    expect(getState().currentCard()?.id).toEqual("drawBoundary");
+    expect(currentCard()?.id).toEqual("drawBoundary");
   });
 
   test("should clear _nodesPendingEdit after edition", () => {
@@ -409,7 +420,7 @@ describe("record", () => {
       _nodesPendingEdit,
     });
 
-    getState().record("planningConstraints", {
+    record("planningConstraints", {
       answers: [],
       auto: false,
       data: {
@@ -423,8 +434,10 @@ describe("record", () => {
   });
 });
 
-describe("previousCard", () => {
-  test("To be the card before the current one", () => {
+describe.only("previousCard", () => {
+  test.only("To be the card before the current one", () => {
+    // I don't believe that these are valid breadcrumbs for this flow
+    // Is this because breadcrumb order can change after a review component?
     const breadcrumbs = {
       findProperty: breadcrumbsDependentOnPassport.findProperty,
       text: breadcrumbsDependentOnPassport.text,
@@ -438,7 +451,8 @@ describe("previousCard", () => {
       _nodesPendingEdit: [],
     });
 
-    expect(getState().previousCard(getState().currentCard())).toEqual("text");
+    expect(currentCard()?.id).toEqual("drawBoundary");
+    expect(previousCard(currentCard())).toEqual("text");
   });
 
   test("To be last pushed to the breadcrumbs when changing answer", () => {
@@ -455,9 +469,7 @@ describe("previousCard", () => {
       _nodesPendingEdit,
     });
 
-    expect(getState().previousCard(getState().currentCard())).toEqual(
-      "findProperty"
-    );
+    expect(previousCard(currentCard())).toEqual("findProperty");
   });
 });
 
@@ -474,7 +486,7 @@ describe("changeAnswer", () => {
       breadcrumbs,
     });
 
-    getState().changeAnswer("findProperty");
+    changeAnswer("findProperty");
 
     expect(getState().changedNode).toEqual("findProperty");
   });
@@ -489,8 +501,8 @@ describe("changeAnswer", () => {
       cachedBreadcrumbs: {},
     });
 
-    getState().changeAnswer("text");
-    getState().record("text", {
+    changeAnswer("text");
+    record("text", {
       ...breadcrumbs.text,
       auto: false,
       data: {
@@ -534,15 +546,15 @@ describe("changeAnswer", () => {
     });
 
     // Assert our initial passport state is correct
-    expect(getState().computePassport()).toEqual({
+    expect(computePassport()).toEqual({
       data: {
         "application.fee.exemption.disability": ["true"],
       },
     });
 
     // Change the question answer from "Yes" to "No"
-    getState().changeAnswer("rCjETwjwE3");
-    getState().record("rCjETwjwE3", {
+    changeAnswer("rCjETwjwE3");
+    record("rCjETwjwE3", {
       answers: ["ykNZocRJtQ"],
       auto: false,
     });
@@ -550,7 +562,7 @@ describe("changeAnswer", () => {
     expect(getState().changedNode).toEqual("rCjETwjwE3");
 
     // Confirm the passport has updated to reflect new answer and has not retained previous answer
-    expect(getState().computePassport()).toEqual({
+    expect(computePassport()).toEqual({
       data: {
         "application.fee.exemption.disability": ["false"],
       },
