@@ -69,7 +69,7 @@ describe("Clone order in flow (backwards)", () => {
     expect(upcomingCardIds()).toEqual(initialUpcomingCards);
   });
 
-  test("Right branch is ordered correctly", () => {
+  test.skip("Right branch is ordered correctly", () => {
     setState({ flow: reverseFlow });
 
     const initialUpcomingCards = ["question", "finalNode"];
