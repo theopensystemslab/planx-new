@@ -60,13 +60,14 @@ import app from "../server";
       nock(
         `https://southwark.${bopsApiRootDomain}/api/v1/planning_applications`
       )
-        .post("")
-        .reply(200, {
-          application: "0000123",
-        });
-
+      .post("")
+      .reply(200, {
+        application: "0000123",
+      });
+      
       await supertest(app)
         .post("/bops/southwark")
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
         .send({ payload: { applicationId: 123, planx_debug_data: { session_id: 123 } }})
         .expect(200)
         .then((res) => {
@@ -74,6 +75,13 @@ import app from "../server";
             application: { id: 22, bopsResponse: { application: "0000123" } },
           });
         });
+    });
+
+    it("requires auth", async () => {      
+      await supertest(app)
+        .post("/bops/southwark")
+        .send({ payload: { applicationId: 123, planx_debug_data: { session_id: 123 } }})
+        .expect(401)
     });
   });
 });
