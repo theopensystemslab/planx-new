@@ -8,8 +8,8 @@ import { SiteAddress } from "./../../../FindProperty/model";
 import {
   ApplicantOrAgent,
   ExistingUseApplication,
+  ExternalAddress,
   FileAttachment,
-  InternationalAddress,
   IUniformPayload,
   Payment,
   Proposal,
@@ -170,8 +170,8 @@ export class UniformPayload implements IUniformPayload {
   ): ApplicantOrAgent => ({
     "common:PersonName": {
       "pdt:PersonNameTitle": this.passport.data?.[`${person}.title`],
-      "pdt:PersonGivenName": this.passport.data?.[`${person}.first`],
-      "pdt:PersonFamilyName": this.passport.data?.[`${person}.last`],
+      "pdt:PersonGivenName": this.passport.data?.[`${person}.name.first`],
+      "pdt:PersonFamilyName": this.passport.data?.[`${person}.name.last`],
     },
     "common:OrgName": this.passport.data?.[`${person}.company.name`],
     "common:ContactDetails": {
@@ -189,14 +189,12 @@ export class UniformPayload implements IUniformPayload {
       },
       _PreferredContactMedium: "E-Mail",
     },
-    "common:ExternalAddress": {
-      "common:InternationalAddress": this.getAddressForPerson(person),
-    },
+    "common:ExternalAddress": this.getAddressForPerson(person),
   });
 
   private getAddressForPerson = (
     person: "applicant.agent" | "applicant"
-  ): InternationalAddress => {
+  ): ExternalAddress => {
     const isResident =
       this.passport.data?.["applicant.resident"]?.[0]?.toLowerCase() === "true";
     // Passports of resident applicants will not have an "application.address" value
@@ -205,20 +203,24 @@ export class UniformPayload implements IUniformPayload {
       return this.getAddressFromSiteAddress();
     const address: Address = this.passport.data?.[`${person}.address`];
     return {
-      "apd:IntAddressLine": [
-        address?.line1,
-        address?.line2,
-        address?.town,
-        address?.county,
-      ].filter(Boolean) as string[],
-      "apd:Country": address?.country,
-      "apd:InternationalPostCode": address?.postcode,
+      "common:InternationalAddress": {
+        "apd:IntAddressLine": [
+          address?.line1,
+          address?.line2,
+          address?.town,
+          address?.county,
+        ].filter(Boolean) as string[],
+        "apd:Country": address?.country,
+        "apd:InternationalPostCode": address?.postcode,
+      },
     };
   };
 
-  private getAddressFromSiteAddress = (): InternationalAddress => ({
-    "apd:IntAddressLine": this.siteAddress.title?.split(", "),
-    "apd:InternationalPostCode": this.siteAddress?.postcode,
+  private getAddressFromSiteAddress = (): ExternalAddress => ({
+    "common:InternationalAddress": {
+      "apd:IntAddressLine": this.siteAddress.title?.split(", "),
+      "apd:InternationalPostCode": this.siteAddress?.postcode,
+    },
   });
 
   private getNamespaces = () => ({
