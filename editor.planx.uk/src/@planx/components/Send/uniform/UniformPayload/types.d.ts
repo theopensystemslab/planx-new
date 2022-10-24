@@ -59,7 +59,7 @@ export interface FileAttachment {
 export interface ApplicantOrAgent {
   "common:PersonName": PersonName;
   "common:OrgName": string;
-  "common:ExternalAddress": ExternalAddress;
+  "common:ExternalAddress"?: ExternalAddress;
   "common:ContactDetails": ContactDetails;
 }
 

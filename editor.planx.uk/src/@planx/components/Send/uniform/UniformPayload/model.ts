@@ -194,7 +194,7 @@ export class UniformPayload implements IUniformPayload {
 
   private getAddressForPerson = (
     person: "applicant.agent" | "applicant"
-  ): ExternalAddress => {
+  ): ExternalAddress | undefined => {
     const isResident =
       this.passport.data?.["applicant.resident"]?.[0]?.toLowerCase() === "true";
     // Passports of resident applicants will not have an "application.address" value
@@ -202,18 +202,19 @@ export class UniformPayload implements IUniformPayload {
     if (person === "applicant" && isResident)
       return this.getAddressFromSiteAddress();
     const address: Address = this.passport.data?.[`${person}.address`];
-    return {
-      "common:InternationalAddress": {
-        "apd:IntAddressLine": [
-          address?.line1,
-          address?.line2,
-          address?.town,
-          address?.county,
-        ].filter(Boolean) as string[],
-        "apd:Country": address?.country,
-        "apd:InternationalPostCode": address?.postcode,
-      },
-    };
+    if (address)
+      return {
+        "common:InternationalAddress": {
+          "apd:IntAddressLine": [
+            address?.line1,
+            address?.line2,
+            address?.town,
+            address?.county,
+          ].filter(Boolean) as string[],
+          "apd:Country": address?.country,
+          "apd:InternationalPostCode": address?.postcode,
+        },
+      };
   };
 
   private getAddressFromSiteAddress = (): ExternalAddress => ({
