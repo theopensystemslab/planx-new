@@ -70,8 +70,7 @@ export default function Component(props: Props) {
     props.previouslySubmittedData?.data?.[props.dataFieldBoundary];
   const previousArea =
     props.previouslySubmittedData?.data?.[props.dataFieldArea];
-  const previousFile =
-    props.previouslySubmittedData?.data?.[PASSPORT_UPLOADED_FILE_KEY];
+  const previousFile = props.previouslySubmittedData?.data?.cachedFile;
   const startPage = previousFile ? "upload" : "draw";
   const [page, setPage] = useState<"draw" | "upload">(startPage);
   const passport = useStore((state) => state.computePassport());
@@ -222,6 +221,16 @@ export default function Component(props: Props) {
             : undefined,
         [PASSPORT_UPLOADED_FILE_KEY]:
           selectedFile && propsDataFieldUrl ? selectedFile : undefined,
+        cachedFile: selectedFile
+          ? {
+              ...selectedFile,
+              file: {
+                path: selectedFile.file.path,
+                size: selectedFile.file.size,
+                type: selectedFile.file.type,
+              },
+            }
+          : undefined,
       };
     })();
 

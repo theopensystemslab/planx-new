@@ -8,16 +8,26 @@ test("recovers previously submitted files when clicking the back button", async 
   const handleSubmit = jest.fn();
   const previouslySubmittedData = {
     "proposal.drawing.locationPlan":
-      "http://127.0.0.1:9000/planx-temp/tdgg8gvf/file.pdf",
+      "http://localhost:7002/file/private/slb56xfv/placeholder.png",
     "property.uploadedFile": {
       file: {
-        path: "file.pdf",
-        type: "application.pdf",
+        path: "placeholder.png",
+        size: 6146,
       },
       status: "success",
       progress: 1,
-      id: "g5Xy36kAGY2k9xoTxtk_i",
-      url: "http://127.0.0.1:9000/planx-temp/tdgg8gvf/file.pdf",
+      id: "43sDL_JNJ6JgYxd_WUYW-",
+      url: "http://localhost:7002/file/private/slb56xfv/placeholder.png",
+    },
+    cachedFile: {
+      file: {
+        path: "placeholder.png",
+        size: 6146,
+      },
+      status: "success",
+      progress: 1,
+      id: "43sDL_JNJ6JgYxd_WUYW-",
+      url: "http://localhost:7002/file/private/slb56xfv/placeholder.png",
     },
   };
 
@@ -39,7 +49,7 @@ test("recovers previously submitted files when clicking the back button", async 
   await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({
-    data: previouslySubmittedData,
+    data: expect.objectContaining(previouslySubmittedData),
   });
 });
 
