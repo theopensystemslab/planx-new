@@ -8,6 +8,7 @@ specifiers:
   '@pulumi/docker': ^3.2.0
   '@pulumi/postgresql': ^3.4.0
   '@pulumi/pulumi': ^3.33.2
+  '@pulumi/random': ^4.8.2
   '@types/mime': ^2.0.3
   '@types/node': ^17.0.38
   '@types/tldjs': ^2.3.1
@@ -22,6 +23,7 @@ dependencies:
   '@pulumi/docker': 3.2.0
   '@pulumi/postgresql': 3.4.0
   '@pulumi/pulumi': 3.33.2
+  '@pulumi/random': 4.8.2
   '@types/mime': 2.0.3
   mime: 3.0.0
   tldjs: 2.3.1
@@ -179,6 +181,13 @@ packages:
 
   /@pulumi/query/0.3.0:
     resolution: {integrity: sha512-xfo+yLRM2zVjVEA4p23IjQWzyWl1ZhWOGobsBqRpIarzLvwNH/RAGaoehdxlhx4X92302DrpdIFgTICMN4P38w==}
+    dev: false
+
+  /@pulumi/random/4.8.2:
+    resolution: {integrity: sha512-XDQ2OV+VW5Bpn9nxVqsEiKD3DAEeMd8ngZPLpioJWCiHzsBMSrYfP97MkdGDaBsDvS6/NL1Bvk0VQXXooFl3Yw==}
+    requiresBuild: true
+    dependencies:
+      '@pulumi/pulumi': 3.33.2
     dev: false
 
   /@types/aws-lambda/8.10.75:

@@ -6,8 +6,9 @@ import ButtonBase from "@mui/material/ButtonBase";
 import IconButton from "@mui/material/IconButton";
 import makeStyles from "@mui/styles/makeStyles";
 import { visuallyHidden } from "@mui/utils";
-import { uploadFile } from "api/upload";
+import { uploadPrivateFile } from "api/upload";
 import classNames from "classnames";
+import ImagePreview from "components/ImagePreview";
 import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
@@ -143,7 +144,7 @@ export default function FileUpload(props: Props) {
     multiple: false,
     onDrop: ([file]: FileWithPath[]) => {
       // XXX: This is a non-blocking promise chain
-      uploadFile(file, {
+      uploadPrivateFile(file, {
         onProgress: (progress) => {
           setSlot((_file: any) => ({ ..._file, progress }));
         },
@@ -191,7 +192,8 @@ export default function FileUpload(props: Props) {
             aria-valuenow={slot?.progress || 0}
           />
           <Box className={classes.filePreview}>
-            {slot?.file.type.includes("image") ? (
+            {slot?.file instanceof File &&
+            slot?.file?.type?.includes("image") ? (
               <ImagePreview file={slot?.file} />
             ) : (
               <FileIcon />
@@ -248,17 +250,6 @@ export default function FileUpload(props: Props) {
       </ButtonBase>
     </>
   );
-}
-
-function ImagePreview({ file }: any) {
-  const { current: url } = React.useRef(URL.createObjectURL(file));
-  useEffect(() => {
-    return () => {
-      // Cleanup to free up memory
-      URL.revokeObjectURL(url);
-    };
-  }, [url]);
-  return <img src={url} alt="" />;
 }
 
 function formatBytes(a: any, b = 2) {

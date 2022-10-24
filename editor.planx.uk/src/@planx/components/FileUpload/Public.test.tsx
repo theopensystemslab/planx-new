@@ -64,17 +64,18 @@ test("recovers previously submitted files when clicking the back button even if 
 test.todo("cannot continue until uploads have finished");
 
 const dummyFile = {
-  url: "http://127.0.0.1:9000/planx-temp/4oh73out/PXL_20210327_122515714.pdf",
-  filename: "PXL_20210327_122515714.pdf",
+  url: "http://localhost:7002/file/private/y2uubi9x/placeholder.png",
+  filename: "placeholder.png",
   cachedSlot: {
     file: {
-      path: "PXL_20210327_122515714.pdf",
-      type: "application/pdf",
+      path: "placeholder.png",
+      type: "image/png",
+      size: 6146,
     },
     status: "success",
     progress: 1,
-    id: "2vBmuynz-3D_EN-H2gF2E",
-    url: "http://127.0.0.1:9000/planx-temp/4oh73out/PXL_20210327_122515714.pdf",
+    id: "oPd5GUV_T-bWZWJb0wGs8",
+    url: "http://localhost:7002/file/private/y2uubi9x/placeholder.png",
   },
 };
 

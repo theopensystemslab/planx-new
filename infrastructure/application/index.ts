@@ -9,6 +9,7 @@ import * as postgres from "@pulumi/postgresql";
 import * as mime from "mime";
 import * as tldjs from "tldjs";
 import * as url from "url";
+import * as random from "@pulumi/random";
 
 import { generateTeamSecrets } from "./utils/generateTeamSecrets";
 import { createHasuraService } from "./services/hasura";
@@ -287,6 +288,10 @@ export = async () => {
     sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     certificateArn: certificates.requireOutput("certificateArn"),
   });
+  // How to rotate this secret: https://github.com/pulumi/pulumi-random/issues/234
+  const fileApiKey = new random.RandomPassword("file-api-key", {
+    length: 44,
+  }).result;
   const apiService = new awsx.ecs.FargateService("api", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -313,6 +318,10 @@ export = async () => {
             value: pulumi.interpolate`${apiBucket.bucket}`,
           },
           { name: "AWS_S3_ACL", value: "public-read" },
+          {
+            name: "FILE_API_KEY",
+            value: fileApiKey,
+          },
           {
             name: "GOOGLE_CLIENT_ID",
             value: config.require("google-client-id"),
@@ -736,6 +745,7 @@ export = async () => {
 
   return {
     customDomains,
+    fileApiKey,
   };
 };
 

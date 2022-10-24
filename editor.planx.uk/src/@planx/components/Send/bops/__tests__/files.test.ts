@@ -24,8 +24,19 @@ test("makes file object", () => {
       data: {
         "property.drawing.elevation": [
           {
-            url: "http://example.com/planning-application-location-plan.jpeg",
-            filename: "planning-application-location-plan.jpeg",
+            url: "http://localhost:7002/file/private/y2uubi9x/placeholder.png",
+            filename: "placeholder.png",
+            cachedSlot: {
+              file: {
+                path: "placeholder.png",
+                type: "image/png",
+                size: 6146,
+              },
+              status: "success",
+              progress: 1,
+              id: "oPd5GUV_T-bWZWJb0wGs8",
+              url: "http://localhost:7002/file/private/y2uubi9x/placeholder.png",
+            },
           },
         ],
       },
@@ -35,8 +46,19 @@ test("makes file object", () => {
     data: {
       "property.drawing.elevation": [
         {
-          url: "http://example.com/planning-application-location-plan.jpeg",
-          filename: "planning-application-location-plan.jpeg",
+          url: "http://localhost:7002/file/private/y2uubi9x/placeholder.png",
+          filename: "placeholder.png",
+          cachedSlot: {
+            file: {
+              path: "placeholder.png",
+              type: "image/png",
+              size: 6146,
+            },
+            status: "success",
+            progress: 1,
+            id: "oPd5GUV_T-bWZWJb0wGs8",
+            url: "http://localhost:7002/file/private/y2uubi9x/placeholder.png",
+          },
         },
       ],
     },
@@ -45,10 +67,9 @@ test("makes file object", () => {
   const actual = getBOPSParams(breadcrumbs, flow, passport, "123").files;
 
   const expected = [
-    {
-      filename: "http://example.com/planning-application-location-plan.jpeg",
-      tags: ["Existing", "Elevation"],
-    },
+    expect.objectContaining({
+      filename: "http://localhost:7002/file/private/y2uubi9x/placeholder.png",
+    }),
   ];
 
   expect(actual).toEqual(expected);

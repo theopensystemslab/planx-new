@@ -11,6 +11,7 @@
     "@pulumi/docker": "^3.2.0",
     "@pulumi/postgresql": "^3.4.0",
     "@pulumi/pulumi": "^3.33.2",
+    "@pulumi/random": "^4.8.2",
     "@types/mime": "^2.0.3",
     "mime": "^3.0.0",
     "tldjs": "^2.3.1"
