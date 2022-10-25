@@ -97,30 +97,31 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
       )
     );
 
-    console.log("Inserting flows and teams...")
-    await localClient.request(
-      getInsertMutation({
-        teamConstraint: 'teams_pkey',
-        flowConstraint: 'flows_pkey',
-      }),
-      {
-        teams: teamsToUpsertById || [],
-        flows: flowsToUpsertById || [],
-      }
-    );
+    console.log("Inserting flows and teams...");
 
-    await localClient.request(
-      getInsertMutation({
-        teamConstraint: 'teams_slug_key',
-        flowConstraint: 'flows_team_id_slug_key',
-      }),
-      {
-        teams: teamsToUpsertBySlug || [],
-        flows: flowsToUpsertBySlug || []
-      }
-    );
+    await Promise.all([
+      localClient.request(
+        getInsertTeamsMutation('teams_pkey'),
+        { teams: teamsToUpsertById || [] }
+      ),
+      localClient.request(
+        getInsertTeamsMutation('teams_slug_key'),
+        { teams: teamsToUpsertBySlug || [] }
+      ),
+    ]);
 
-    await insertOperations(localClient)(flowsToUpsertById);
+    await Promise.all([
+      localClient.request(
+        getInsertFlowsMutation('flows_pkey'),
+        { flows: flowsToUpsertById || [], }
+      ),
+      localClient.request(
+        getInsertFlowsMutation('flows_team_id_slug_key'),
+        { flows: flowsToUpsertBySlug || [], }
+      ),
+    ]);
+
+    await insertOperations(localClient)(flowsToUpsertById || []);
 
     console.log('Fetching published flows...');
     // throttling is needed to prevent errors when fetching a large amount of data
@@ -138,20 +139,26 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
   }
 })()
 
-const getInsertMutation = ({ teamConstraint, flowConstraint }) => `
-  mutation InsertFlowsAndTeams(
-    $teams: [teams_insert_input!]!,
-    $flows: [flows_insert_input!]!,
+const getInsertTeamsMutation = (constraint) => `
+  mutation InsertTeams(
+    $teams: [teams_insert_input!]!, 
   ) {
     insert_teams(
       objects: $teams,
-      on_conflict: {constraint: ${teamConstraint}, update_columns: [name, settings, theme]}
+      on_conflict: {constraint: ${constraint}, update_columns: [name, settings, theme, id, notify_personalisation]}
     ) {
       affected_rows
     }
+  }
+`;
+
+const getInsertFlowsMutation = (constraint) => `
+  mutation InsertFlows(
+    $flows: [flows_insert_input!]!,
+  ) {
     insert_flows(
       objects: $flows,
-      on_conflict: {constraint: ${flowConstraint}, update_columns: [data, slug, team_id]}
+      on_conflict: {constraint: ${constraint}, update_columns: [data, slug, team_id]}
     ) {
       affected_rows
     }

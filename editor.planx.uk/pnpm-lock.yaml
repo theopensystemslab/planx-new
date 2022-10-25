@@ -62,7 +62,7 @@ specifiers:
   '@mui/material': ^5.10.5
   '@mui/styles': ^5.10.3
   '@mui/utils': ^5.10.3
-  '@opensystemslab/map': 0.6.1
+  '@opensystemslab/map': ^0.6.1
   '@react-theming/storybook-addon': ^1.1.7
   '@storybook/addon-actions': ^6.5.10
   '@storybook/addon-essentials': ^6.5.10

@@ -1,8 +1,6 @@
-import "./map.css";
-
 import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 import {
   DESCRIPTION_TEXT,
@@ -180,6 +178,23 @@ function Component(props: Props) {
   }
 }
 
+const AutocompleteWrapper = styled(Box)(({ theme }) => ({
+  // Autocomplete style overrides
+  "--autocomplete__label__font-size": "18px",
+  "--autocomplete__input__padding": "6px 40px 7px 12px",
+  "--autocomplete__input__font-size": "15px",
+  "--autocomplete__input__height": "50px",
+  "--autocomplete__dropdown-arrow-down__top": "16px",
+  "--autocomplete__dropdown-arrow-down__z-index": "2",
+  "--autocomplete__option__font-size": "15px",
+  "--autocomplete__option__padding": "6px 12px 7px 12px",
+  "--autocomplete__menu__max-height": "336px",
+  "--autocomplete__option__border-bottom": `solid 1px ${theme.palette.grey[800]}`,
+  "--autocomplete__option__hover-border-color": theme.palette.primary.main,
+  "--autocomplete__option__hover-background-color": theme.palette.primary.main,
+  "--autocomplete__font-family": theme.typography.fontFamily,
+}));
+
 function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
   title?: string;
@@ -259,27 +274,6 @@ function GetAddress(props: {
     };
   }, [sanitizedPostcode, setSelectedOption]);
 
-  // Autocomplete overrides
-  const useStyles = makeStyles((theme) => ({
-    autocomplete: {
-      "--autocomplete__label__font-size": "18px",
-      "--autocomplete__input__padding": "6px 40px 7px 12px",
-      "--autocomplete__input__font-size": "15px",
-      "--autocomplete__input__height": "50px",
-      "--autocomplete__dropdown-arrow-down__top": "16px",
-      "--autocomplete__dropdown-arrow-down__z-index": "2",
-      "--autocomplete__option__font-size": "15px",
-      "--autocomplete__option__padding": "6px 12px 7px 12px",
-      "--autocomplete__menu__max-height": "336px",
-      "--autocomplete__option__border-bottom": `solid 1px ${theme.palette.grey[800]}`,
-      "--autocomplete__option__hover-border-color": theme.palette.primary.main,
-      "--autocomplete__option__hover-background-color":
-        theme.palette.primary.main,
-      "--autocomplete__font-family": theme.typography.fontFamily,
-    },
-  }));
-  const classes = useStyles();
-
   const handleCheckPostcode = () => {
     if (!sanitizedPostcode) setShowPostcodeError(true);
   };
@@ -314,7 +308,7 @@ function GetAddress(props: {
         title={props.title || DEFAULT_TITLE}
         description={props.description || ""}
       />
-      <Box className={classes.autocomplete}>
+      <AutocompleteWrapper>
         <InputLabel label="Postcode" htmlFor="postcode-input">
           <Input
             required
@@ -358,7 +352,7 @@ function GetAddress(props: {
             labelStyle="static"
           />
         )}
-      </Box>
+      </AutocompleteWrapper>
       <ExternalPlanningSiteDialog
         purpose={DialogPurpose.MissingAddress}
         teamSettings={props.teamSettings}
@@ -371,20 +365,18 @@ interface Option extends SiteAddress {
   title: string;
 }
 
-const useClasses = makeStyles((theme) => ({
-  map: {
-    padding: theme.spacing(1, 0),
+const MapContainer = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(1, 0),
+  "& my-map": {
+    width: "100%",
+    height: "50vh",
   },
-  constraint: {
-    borderLeft: `3px solid rgba(0,0,0,0.3)`,
-    padding: theme.spacing(1, 1.5),
-    marginBottom: theme.spacing(0.5),
-  },
-  propertyDetail: {
-    display: "flex",
-    justifyContent: "flex-start",
-    borderBottom: `1px solid ${theme.palette.background.paper}`,
-  },
+}));
+
+const PropertyDetail = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "flex-start",
+  borderBottom: `1px solid ${theme.palette.background.paper}`,
 }));
 
 export function PropertyInformation(props: any) {
@@ -398,7 +390,6 @@ export function PropertyInformation(props: any) {
     teamColor,
     previousFeedback,
   } = props;
-  const styles = useClasses();
   const formik = useFormik({
     initialValues: {
       feedback: previousFeedback || "",
@@ -417,9 +408,9 @@ export function PropertyInformation(props: any) {
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
-      <Box className={styles.map}>
+      <MapContainer>
         <p style={visuallyHidden}>
-          A static map centered on the property address, showing the Ordnance
+          A static map centred on the property address, showing the Ordnance
           Survey basemap features.
         </p>
         {/* @ts-ignore */}
@@ -435,17 +426,17 @@ export function PropertyInformation(props: any) {
           markerLongitude={lng}
           // markerColor={teamColor} // defaults to black
         />
-      </Box>
+      </MapContainer>
       <Box component="dl" mb={3}>
         {propertyDetails.map(({ heading, detail }: any) => (
-          <Box className={styles.propertyDetail} key={heading}>
+          <PropertyDetail key={heading}>
             <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
               {heading}
             </Box>
             <Box component="dd" flexGrow={1} py={1}>
               {detail}
             </Box>
-          </Box>
+          </PropertyDetail>
         ))}
       </Box>
       <Box color="text.secondary" textAlign="right">
