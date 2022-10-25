@@ -29,17 +29,17 @@ jobs:
         with:
           fetch-depth: 0
       - id: api
-        run: echo "::set-output name=changed::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^api.planx.uk && echo 'true' || echo 'false')"
+        run: echo "{changed}={$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^api.planx.uk && echo 'true' || echo 'false')}" >> $GITHUB_OUTPUT
       - id: e2e
-        run: echo "::set-output name=changed::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^e2e && echo 'true' || echo 'false')"
+        run: echo "{changed}={$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^e2e && echo 'true' || echo 'false')}" >> $GITHUB_OUTPUT
       - id: editor
-        run: echo "::set-output name=changed::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^editor.planx.uk && echo 'true' || echo 'false')"
+        run: echo "{changed}={$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^editor.planx.uk && echo 'true' || echo 'false')}" >> $GITHUB_OUTPUT
       - id: hasura
-        run: echo "::set-output name=changed::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^hasura.planx.uk && echo 'true' || echo 'false')"
+        run: echo "{changed}={$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^hasura.planx.uk && echo 'true' || echo 'false')}" >> $GITHUB_OUTPUT
       - id: infrastructure
-        run: echo "::set-output name=changed::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^infrastructure && echo 'true' || echo 'false')"
+        run: echo "{changed}={$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^infrastructure && echo 'true' || echo 'false')}" >> $GITHUB_OUTPUT
       - id: sharedb
-        run: echo "::set-output name=changed::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^sharedb.planx.uk && echo 'true' || echo 'false')"
+        run: echo "{changed}={$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep --quiet ^sharedb.planx.uk && echo 'true' || echo 'false')}" >> $GITHUB_OUTPUT
 
 
   integration_tests:
