@@ -1,6 +1,6 @@
 import { responseInterceptor } from "http-proxy-middleware";
 import { adminGraphQLClient as client } from "../hasura";
-import { useProxy } from "../server";
+import { useProxy } from "../proxy";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 
 const sendToBOPS = async (req, res, next) => {
