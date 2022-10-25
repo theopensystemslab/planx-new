@@ -62,7 +62,7 @@ specifiers:
   '@mui/material': ^5.10.5
   '@mui/styles': ^5.10.3
   '@mui/utils': ^5.10.3
-  '@opensystemslab/map': ^0.5.9
+  '@opensystemslab/map': ^0.6.1
   '@react-theming/storybook-addon': ^1.1.7
   '@storybook/addon-actions': ^6.5.10
   '@storybook/addon-essentials': ^6.5.10
@@ -180,7 +180,7 @@ dependencies:
   '@mui/material': 5.10.6_vbxcdxy3bftsefaguotlgalomu
   '@mui/styles': 5.10.6_7v64pk2mkrohwh22gx7lrz5ive
   '@mui/utils': 5.10.6_react@18.2.0
-  '@opensystemslab/map': 0.5.9
+  '@opensystemslab/map': 0.6.1
   array-move: 4.0.0
   axios: 0.27.2
   camelcase-keys: 8.0.1
@@ -3176,8 +3176,8 @@ packages:
       mkdirp: 1.0.4
     dev: true
 
-  /@opensystemslab/map/0.5.9:
-    resolution: {integrity: sha512-2UnC1kwlIQ5Cd+arNUX340D3CRgeNG02cH0Qco6s9nZIoDYye+SQrrOhy3bvnhfNr6/XKO0VxnGrZe0GlLKM1A==}
+  /@opensystemslab/map/0.6.1:
+    resolution: {integrity: sha512-er4r4ViRwJNxQDyxYchanr8JaV4Ow02i6KfckvncTW5hKGrcc/bEOHS9F+kjy2w3Y3/mAT3t2dZ+ifQxv+0Cfg==}
     engines: {node: ^16, pnpm: ^7.8.0}
     dependencies:
       '@turf/union': 6.5.0
