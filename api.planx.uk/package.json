@@ -36,7 +36,7 @@
   },
   "scripts": {
     "dev": "ts-node-dev --files src/index.ts",
-    "start": "node ./dist/index.js",
+    "start": "node ./dist/src/index.js",
     "test": "TZ=Europe/London jest",
     "test:watch": "TZ=Europe/London jest --watch",
     "build": "rimraf ./dist && npx tsc"
