@@ -6,7 +6,8 @@
 //   1. init       - this sets up app configuration for all routes
 //   2. cookieless - this adds routes that are available without cookies
 //   3. secure     - this adds authenticated routes
+//   4. error      - this adds catchall middleware for error handling
 
-import app from "./secure";
+import app from "./error";
 
 export default app;
