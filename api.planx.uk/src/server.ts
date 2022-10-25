@@ -5,7 +5,6 @@ import cookieSession from "cookie-session";
 import { stringify } from "csv-stringify";
 import express, { CookieOptions, ErrorRequestHandler, Response } from "express";
 import { expressjwt, Request } from "express-jwt";
-import noir from "pino-noir";
 import { URL } from "url";
 import { Server } from "http";
 import passport from "passport";
@@ -21,7 +20,6 @@ import {
   fixRequestBody,
   Options,
 } from "http-proxy-middleware";
-import helmet from "helmet";
 import SlackNotify from "slack-notify";
 
 import { signS3Upload } from "./s3";
@@ -47,7 +45,7 @@ import {
   createExpiryEvent,
 } from "./webhooks/lowcalSessionEvents";
 import { adminGraphQLClient } from "./hasura";
-import { sendEmailLimiter, apiLimiter } from "./rateLimit";
+import { sendEmailLimiter } from "./rateLimit";
 import { sendToBOPS } from "./send/bops";
 import { createSendEvents } from "./send/createSendEvents";
 import { sendToUniform } from "./send/uniform";
