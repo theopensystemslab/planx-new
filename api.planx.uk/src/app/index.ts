@@ -3,9 +3,10 @@
 //
 // This file exposes the express app after middlewar has been applied in a meaningful order:
 //
-//   1. init.ts - this sets up app configuration for all routes
+//   1. init       - this sets up app configuration for all routes
 //   2. cookieless - this adds routes that are available without cookies
+//   3. secure     - this adds authenticated routes
 
-import app from "./cookieless";
+import app from "./secure";
 
 export default app;

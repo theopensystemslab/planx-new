@@ -12,6 +12,7 @@ import { useProxy } from "../proxy";
 import { sendToUniform } from "../send/uniform";
 import { sendToBOPS } from "../send/bops";
 import { createSendEvents } from "../send/createSendEvents";
+import { useHasuraAuth } from "../auth";
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
 app.post("/create-send-events/:sessionId", createSendEvents);
