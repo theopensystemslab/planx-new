@@ -1,7 +1,7 @@
 import supertest from "supertest";
 
-import { queryMock } from "../tests/graphqlQueryMock";
-import { authHeader } from "../tests/mockJWT";
+import { queryMock } from "../../tests/graphqlQueryMock";
+import { authHeader } from "../../tests/mockJWT";
 import app from "../server";
 
 beforeEach(() => {

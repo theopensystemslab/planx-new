@@ -1,6 +1,6 @@
 import nock from "nock";
 import supertest from "supertest";
-import { queryMock } from "../tests/graphqlQueryMock";
+import { queryMock } from "../../tests/graphqlQueryMock";
 import app from "../server";
 
 [

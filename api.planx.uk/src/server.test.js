@@ -1,8 +1,8 @@
 import nock from "nock";
 import supertest from "supertest";
-import loadOrRecordNockRequests from "./tests/loadOrRecordNockRequests";
+import loadOrRecordNockRequests from "../tests/loadOrRecordNockRequests";
 
-import { queryMock } from "./tests/graphqlQueryMock";
+import { queryMock } from "../tests/graphqlQueryMock";
 import app from "./server";
 
 it("works", async () => {

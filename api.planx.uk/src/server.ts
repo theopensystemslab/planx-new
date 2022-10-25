@@ -1,9 +1,7 @@
 import "isomorphic-fetch";
-import { json, urlencoded } from "body-parser";
+import { urlencoded } from "body-parser";
 import assert from "assert";
-import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
-import cors from "cors";
 import { stringify } from "csv-stringify";
 import express, { CookieOptions, ErrorRequestHandler, Response } from "express";
 import { expressjwt, Request } from "express-jwt";
@@ -38,6 +36,7 @@ import {
 } from "./saveAndReturn";
 import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
 import { useHasuraAuth, useSendEmailAuth } from "./auth";
+import app from "./app/init";
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -218,31 +217,6 @@ passport.deserializeUser(function (obj: Express.User, cb) {
   cb(null, obj);
 });
 
-const app = express();
-
-app.set("trust proxy", 1);
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
-
-app.use(
-  cors({
-    credentials: true,
-    methods: "*",
-  })
-);
-
-app.use(json({ limit: "100mb" }));
-
-// Converts req.headers.cookie: string, to req.cookies: Record<string, string>
-app.use(cookieParser());
-
 // XXX: Currently not checking for JWT and including req.user in every
 //      express endpoint because authentication also uses req.user. More info:
 //      https://github.com/theopensystemslab/planx-new/pull/555#issue-684435760
@@ -257,20 +231,6 @@ const useJWT = expressjwt({
     req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1] ??
     req.query?.token,
 });
-
-if (process.env.NODE_ENV !== "test") {
-  app.use(
-    require("express-pino-logger")({
-      serializers: noir(["req.headers.authorization"], "**REDACTED**"),
-    })
-  );
-}
-
-// Rate limit requests per IP address
-app.use(apiLimiter);
-
-// Secure Express by setting various HTTP headers
-app.use(helmet());
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
 app.post("/create-send-events/:sessionId", createSendEvents);
