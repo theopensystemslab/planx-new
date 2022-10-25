@@ -30,13 +30,13 @@ const MapContainer = styled(Box)<MapContainerProps>(
     width: "100%",
     height: "50vh",
     // Only increase map size in Preview & Unpublished routes
-    [theme.breakpoints.up("md")]:
-      environment === "standalone"
-        ? {
-            height: "70vh",
-            minWidth: "65vw",
-          }
-        : {},
+    // [theme.breakpoints.up("md")]:
+    //   environment === "standalone"
+    //     ? {
+    //         height: "70vh",
+    //         minWidth: "65vw",
+    //       }
+    //     : {},
     "& my-map": {
       width: "100%",
       height: "100%",
@@ -154,6 +154,7 @@ export default function Component(props: Props) {
               id="draw-boundary-map"
               drawMode
               drawPointer="dot"
+              // drawPointer="crosshair"
               drawGeojsonData={JSON.stringify(boundary)}
               zoom={20}
               maxZoom={23}
