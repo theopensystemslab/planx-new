@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import app from "../server";
+import app from "../app";
 import { queryMock } from "../../tests/graphqlQueryMock";
 import {
   mockFlow,

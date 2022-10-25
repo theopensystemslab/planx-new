@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import app from "../src/server";
+import app from "../src/app";
 import nock from "nock";
 
 const { get, post } = supertest(app);
