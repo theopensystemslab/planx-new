@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import React from "react";
 import MoreInfoIcon from "ui/icons/MoreInfo";
@@ -21,21 +21,20 @@ interface IQuestionHeader {
   definitionImg?: string;
   img?: string;
 }
+const Description = styled(Box)(({ theme }) => ({
+  "& p": {
+    margin: `${theme.spacing(1)} 0`,
+  },
+}));
 
-const useStyles = makeStyles((theme) => ({
-  iconButton: {
-    "&:hover": {
-      backgroundColor: "transparent",
-    },
+const StyledIconButton = styled(IconButton)(() => ({
+  "&:hover": {
+    backgroundColor: "transparent",
   },
-  description: {
-    "& p": {
-      margin: `${theme.spacing(1)} 0`,
-    },
-  },
-  image: {
-    maxWidth: "100%",
-  },
+}));
+
+const Image = styled("img")(() => ({
+  maxWidth: "100%",
 }));
 
 const QuestionHeader: React.FC<IQuestionHeader> = ({
@@ -48,7 +47,6 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
   img,
 }) => {
   const [open, setOpen] = React.useState(false);
-  const classes = useStyles();
   const { trackHelpClick } = useAnalyticsTracking();
 
   const handleHelpClick = () => {
@@ -73,27 +71,26 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
             </Box>
           )}
           {description && (
-            <Box className={classes.description}>
+            <Description>
               <ReactMarkdownOrHtml
                 source={description}
                 id={DESCRIPTION_TEXT}
                 openLinksOnNewTab
               />
-            </Box>
+            </Description>
           )}
         </Grid>
         {!!(info || policyRef || howMeasured) && (
           <Grid item>
-            <IconButton
-              className={classes.iconButton}
+            <StyledIconButton
               title={`More information`}
               aria-label={`See more information about "${title}"`}
               onClick={handleHelpClick}
               aria-haspopup="dialog"
               size="large"
             >
-              <MoreInfoIcon viewBox="0 0 30 30" />
-            </IconButton>
+              <MoreInfoIcon />
+            </StyledIconButton>
           </Grid>
         )}
       </Grid>
@@ -111,20 +108,13 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         {howMeasured && (
           <MoreInfoSection title="How is it defined?">
             <>
-              {definitionImg && (
-                <img
-                  src={definitionImg}
-                  alt="definition"
-                  className={classes.image}
-                />
-              )}
+              {definitionImg && <Image src={definitionImg} alt="definition" />}
               <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab />
             </>
           </MoreInfoSection>
         )}
       </MoreInfo>
-
-      {img && <img src={img} alt="question" className={classes.image} />}
+      {img && <Image src={img} alt="question" />}
     </Box>
   );
 };

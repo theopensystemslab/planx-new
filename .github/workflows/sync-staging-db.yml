@@ -16,6 +16,9 @@ jobs:
         uses: pulumi/setup-pulumi@v2
       - run: |
           echo "HASURA_GRAPHQL_ADMIN_SECRET=$(pulumi config get hasura-admin-secret --stack staging)" >> $GITHUB_ENV
+        working-directory: infrastructure/application
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE_VERSION }}

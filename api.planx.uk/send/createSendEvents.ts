@@ -1,10 +1,17 @@
+import { NextFunction, Request, Response } from 'express';
 import { createScheduledEvent } from "../hasura/metadata";
 
+interface CombinedResponse {
+  bops?: Record<string, string>;
+  uniform?: Record<string, string>;
+}
+
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
-const createSendEvents = async (req, res, next) => {
+const createSendEvents = async (req: Request, res: Response, next: NextFunction): 
+  Promise<NextFunction | Response | void> => {
   try {
     const now = new Date();
-    let combinedResponse = {};
+    let combinedResponse: CombinedResponse = {};
 
     if ("bops" in req.body) {
       const bopsEvent = await createScheduledEvent({

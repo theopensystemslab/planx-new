@@ -382,6 +382,7 @@ export const editorStore = (
           ) {
             affected_rows
             returning {
+              id
               slug
               settings
             }

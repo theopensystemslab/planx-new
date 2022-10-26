@@ -275,13 +275,15 @@ app.use(helmet());
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
 app.post("/create-send-events/:sessionId", createSendEvents);
 
+assert(process.env.HASURA_PLANX_API_KEY);
+
 assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
-app.post("/bops/:localAuthority", sendToBOPS);
+app.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
 
 assert(process.env.UNIFORM_TOKEN_URL);
 assert(process.env.UNIFORM_SUBMISSION_URL);
-app.post("/uniform/:localAuthority", sendToUniform);
+app.post("/uniform/:localAuthority", useHasuraAuth, sendToUniform);
 
 ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
   assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
@@ -578,7 +580,6 @@ app.post(
 app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
-assert(process.env.HASURA_PLANX_API_KEY);
 app.use("/webhooks/hasura", useHasuraAuth);
 app.post("/webhooks/hasura/delete-expired-sessions", hardDeleteSessions);
 app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
