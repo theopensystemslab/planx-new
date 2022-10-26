@@ -191,7 +191,7 @@ export default function FileUpload(props: Props) {
             aria-valuenow={slot?.progress || 0}
           />
           <Box className={classes.filePreview}>
-            {slot?.file.type.includes("image") ? (
+            {slot?.file?.type?.includes("image") ? (
               <ImagePreview file={slot?.file} />
             ) : (
               <FileIcon />
