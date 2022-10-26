@@ -1,6 +1,6 @@
 import { ErrorRequestHandler } from "express";
 import airbrake from "../airbrake";
-import app from "./secure";
+import app from "./authenticated";
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {

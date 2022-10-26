@@ -4,7 +4,7 @@ import { stringify } from "csv-stringify";
 import { adminGraphQLClient as client } from "../hasura";
 import { useHasuraAuth, useSendEmailAuth } from "../auth";
 import cookieSession from "cookie-session";
-import app from "./cookieless";
+import app from "./public";
 import router from "../auth/routes";
 import passport from "../auth/passport";
 import { useJWT } from "../auth/jwt";
