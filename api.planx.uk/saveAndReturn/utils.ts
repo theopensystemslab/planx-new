@@ -55,8 +55,6 @@ const sendEmail = async (
 /**
  * Converts a flow's slug to a pretty name
  * XXX: This relies on pretty names not having dashes in them, which may not always be true (e.g. Na h-Eileanan Siar, Stoke-on-Trent)
- * @param {string} slug
- * @returns {string}
  */
 const convertSlugToName = (slug: string): string =>
   slug[0].toUpperCase() + slug.substring(1).replaceAll("-", " ");
@@ -77,11 +75,8 @@ const getResumeLink = (
 
 /**
  * Construct a link to the service
- * @param {object} team
- * @param {string} flowSlug
- * @returns {string}
  */
-const getServiceLink = (team: Team, flowSlug: String) => {
+const getServiceLink = (team: Team, flowSlug: String): string => {
   // Link to custom domain
   if (team.domain) return `https://${team.domain}/${flowSlug}`;
   // Fallback to PlanX domain
@@ -90,10 +85,8 @@ const getServiceLink = (team: Team, flowSlug: String) => {
 
 /**
  * Return formatted expiry date, based on created_at timestamptz
- * @param {string} date
- * @returns {string}
  */
-const calculateExpiryDate = (createdAt: string) => {
+const calculateExpiryDate = (createdAt: string): string => {
   const expiryDate = addDays(Date.parse(createdAt), DAYS_UNTIL_EXPIRY);
   const formattedExpiryDate = format(expiryDate, "dd MMMM yyyy");
   return formattedExpiryDate;
@@ -101,9 +94,6 @@ const calculateExpiryDate = (createdAt: string) => {
 
 /**
  * Sends "Save", "Remind", and "Expiry" emails to Save & Return users
- * @param {string} template
- * @param {string} email
- * @param {string} sessionId
  */
 const sendSingleApplicationEmail = async (
   template: Template,
@@ -120,7 +110,7 @@ const sendSingleApplicationEmail = async (
       reference: null,
       emailReplyToId: team.notifyPersonalisation.emailReplyToId,
     };
-    const firstSave = !session.has_user_saved;
+    const firstSave = !session.hasUserSaved;
     if (firstSave) await setupEmailEventTriggers(sessionId);
     return await sendEmail(template, email, config);
   } catch (error) {
@@ -131,9 +121,6 @@ const sendSingleApplicationEmail = async (
 /**
  * Ensure that request for an email relating to a "single session" is valid
  * (e.g. Save, Expiry, Reminder)
- * @param {string} email
- * @param {string} sessionId
- * @returns {object}
  */
 const validateSingleSessionRequest = async (
   email: string,
@@ -147,6 +134,7 @@ const validateSingleSessionRequest = async (
           id
           data
           created_at
+          has_user_saved
           flow {
             slug
             team {
@@ -177,7 +165,7 @@ const validateSingleSessionRequest = async (
 };
 
 interface SessionDetails {
-  has_user_saved?: boolean;
+  hasUserSaved: boolean;
   address: any;
   projectType: string;
   id: string;
@@ -198,6 +186,7 @@ const getSessionDetails = async (
     projectType: projectTypes || "Project type not submitted",
     id: session.id,
     expiryDate: calculateExpiryDate(session.created_at),
+    hasUserSaved: session.has_user_saved
   };
 };
 
@@ -267,10 +256,8 @@ const markSessionAsSubmitted = async (sessionId: string) => {
 
 /**
  * Get formatted list of the session's project types
- * @param {array} session
- * @returns {string}
  */
-const getHumanReadableProjectType = async (session: LowCalSession) => {
+const getHumanReadableProjectType = async (session: LowCalSession): Promise<string | void>=> {
   const rawProjectType =
     session?.data?.passport?.data?.["proposal.projectType"];
   if (!rawProjectType) return;
