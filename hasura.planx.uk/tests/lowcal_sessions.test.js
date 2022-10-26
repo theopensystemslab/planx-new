@@ -273,7 +273,11 @@ describe("lowcal_sessions", () => {
         const res = await gqlPublic(`
           query SelectAllLowcalSessions {
             lowcal_sessions {
+              created_at
+              data
+              has_user_saved
               id
+              updated_at
             }
           }
         `, null, headers);
