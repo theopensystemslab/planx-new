@@ -2,7 +2,7 @@ import supertest from "supertest";
 
 import { queryMock } from "../../tests/graphqlQueryMock";
 import { authHeader } from "../../tests/mockJWT";
-import app from "../app";
+import app from "../routes";
 
 beforeEach(() => {
   queryMock.mockQuery({

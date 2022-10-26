@@ -2,7 +2,6 @@ import express, { CookieOptions, Response } from "express";
 import { Request } from "express-jwt";
 import { URL } from "url";
 import passport from "passport";
-import { adminGraphQLClient as client } from "../hasura";
 
 const router = express.Router();
 

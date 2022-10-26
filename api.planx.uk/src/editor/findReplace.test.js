@@ -2,7 +2,7 @@ import supertest from "supertest";
 
 import { queryMock } from "../../tests/graphqlQueryMock";
 import { authHeader } from "../../tests/mockJWT";
-import app from "../app";
+import app from "../routes";
 
 beforeEach(() => {
   queryMock.mockQuery({
@@ -11,7 +11,7 @@ beforeEach(() => {
     data: {
       flows_by_pk: {
         data: mockFlowData,
-        slug: "test"
+        slug: "test",
       },
     },
   });
@@ -22,7 +22,7 @@ beforeEach(() => {
     data: {
       update_flows_by_pk: {
         data: replacedFlowData,
-        slug: "test"
+        slug: "test",
       },
     },
   });

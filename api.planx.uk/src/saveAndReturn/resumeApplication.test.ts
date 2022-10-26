@@ -1,6 +1,6 @@
 import { LowCalSession, Team } from './../types';
 import supertest from "supertest";
-import app from "../app";
+import app from "../routes";
 import { queryMock } from "../../tests/graphqlQueryMock";
 import { mockLowcalSession, mockTeam } from "../../tests/mocks/saveAndReturnMocks";
 import { buildContentFromSessions } from "./resumeApplication";

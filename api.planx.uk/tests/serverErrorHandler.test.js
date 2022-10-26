@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import app from "../src/app";
+import app from "../src/routes";
 import nock from "nock";
 
 const { get, post } = supertest(app);
@@ -20,7 +20,12 @@ describe("bad requests", () => {
   test(`app.get("/pay/:localAuthority/:paymentId")`, (done) => {
     nock("https://publicapi.payments.service.gov.uk")
       .get("/v1/payments/1")
-      .reply(400, { payment_id: 123, amount: 0, state: "paid", payment_provider: "sandbox" });
+      .reply(400, {
+        payment_id: 123,
+        amount: 0,
+        state: "paid",
+        payment_provider: "sandbox",
+      });
 
     get("/pay/wrong/1").expect(400, done);
   });

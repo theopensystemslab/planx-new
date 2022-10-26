@@ -3,7 +3,7 @@ import supertest from "supertest";
 import loadOrRecordNockRequests from "../tests/loadOrRecordNockRequests";
 
 import { queryMock } from "../tests/graphqlQueryMock";
-import app from "./app";
+import app from "./routes";
 
 it("works", async () => {
   await supertest(app)

@@ -7,7 +7,7 @@ export function useProxy(options: Partial<Options> = {}) {
   return createProxyMiddleware({
     changeOrigin: true,
     logLevel: LOG_LEVEL,
-    onError: (err, req, res, target) => {
+    onError: (_err, _req, res, _target) => {
       res.json({
         status: 500,
         message: "Something went wrong",
