@@ -1,8 +1,9 @@
 import SlackNotify from 'slack-notify';
+import { Request, Response, NextFunction } from 'express';
 
-const sendSlackNotification = (req, res, next) => {
+const sendSlackNotification = (req: Request, res: Response, next: NextFunction): NextFunction | Response | void  => {
   const supportedTypes = ["bops-submission", "uniform-submission"];
-  if (!req.body?.event || !req.query?.type || !supportedTypes.includes(req.query.type)) {
+  if (!req.body?.event || !req.query?.type || !supportedTypes.includes(req.query.type as string)) {
     return res.status(404).send({
       message: "Missing info required to send a Slack notification"
     });
@@ -10,7 +11,7 @@ const sendSlackNotification = (req, res, next) => {
 
   try {
     // hook into the #planx-notifications channel
-    const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL);
+    const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
 
     const data = req.body?.event?.data?.new;
 
@@ -18,7 +19,7 @@ const sendSlackNotification = (req, res, next) => {
       const isBOPSStaging = data?.destination_url?.includes("staging");
       if (isBOPSStaging) {
         return res.status(200).send({
-          message: `Staging application submitted, skipping Slack notication`
+          message: `Staging application submitted, skipping Slack notification`
         });
       }
 
@@ -34,7 +35,7 @@ const sendSlackNotification = (req, res, next) => {
       const isUniformStaging = data?.response?.["_links"]?.self?.href?.includes("staging");
       if (isUniformStaging) {
         return res.status(200).send({
-          message: `Staging application submitted, skipping Slack notication`
+          message: `Staging application submitted, skipping Slack notification`
         });
       }
 

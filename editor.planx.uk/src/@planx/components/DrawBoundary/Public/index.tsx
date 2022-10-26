@@ -1,14 +1,13 @@
-import "./map.css";
-
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
+import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import React, { useEffect, useRef, useState } from "react";
 
 import {
@@ -21,28 +20,47 @@ import Upload, { FileUpload } from "./Upload";
 export type Props = PublicProps<DrawBoundary>;
 export type SelectedFile = FileUpload;
 
-const useClasses = makeStyles((theme) => ({
-  map: {
+interface MapContainerProps {
+  environment: PreviewEnvironment;
+}
+
+const MapContainer = styled(Box)<MapContainerProps>(
+  ({ theme, environment }) => ({
     padding: theme.spacing(1, 0),
+    width: "100%",
+    height: "50vh",
+    // Only increase map size in Preview & Unpublished routes
+    [theme.breakpoints.up("md")]:
+      environment === "standalone"
+        ? {
+            height: "70vh",
+            minWidth: "65vw",
+          }
+        : {},
+    "& my-map": {
+      width: "100%",
+      height: "100%",
+    },
+  })
+);
+
+const AlternateOption = styled("div")(({ theme }) => ({
+  textAlign: "right",
+  marginTop: theme.spacing(1),
+}));
+
+const AlternateOptionButton = styled(Button)(({ theme }) => ({
+  background: "none",
+  borderStyle: "none",
+  color: theme.palette.text.primary,
+  cursor: "pointer",
+  fontSize: "medium",
+  padding: theme.spacing(2),
+  "& :hover": {
+    backgroundColor: theme.palette.background.paper,
   },
-  hidden: { display: "none" },
-  uploadInstead: {
-    textAlign: "right",
-    marginTop: theme.spacing(1),
-    "& button": {
-      background: "none",
-      "border-style": "none",
-      color: theme.palette.text.primary,
-      cursor: "pointer",
-      fontSize: "medium",
-      padding: theme.spacing(2),
-    },
-    "& button:hover": {
-      backgroundColor: theme.palette.background.paper,
-    },
-    "& button:disabled": {
-      color: theme.palette.text.disabled,
-    },
+  "& :disabled": {
+    color: theme.palette.text.disabled,
   },
 }));
 
@@ -57,12 +75,12 @@ export default function Component(props: Props) {
   const startPage = previousFile ? "upload" : "draw";
   const [page, setPage] = useState<"draw" | "upload">(startPage);
   const passport = useStore((state) => state.computePassport());
-  const classes = useClasses();
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [selectedFile, setSelectedFile] = useState<SelectedFile | undefined>(
     previousFile
   );
   const [area, setArea] = useState<number | undefined>(previousArea);
+  const environment = useStore((state) => state.previewEnvironment);
 
   useEffect(() => {
     if (isMounted.current) setSelectedFile(undefined);
@@ -118,9 +136,9 @@ export default function Component(props: Props) {
             howMeasured={props.howMeasured}
             definitionImg={props.definitionImg}
           />
-          <Box className={classes.map}>
+          <MapContainer environment={environment}>
             <p style={visuallyHidden}>
-              An interactive map centered on your address, with a red pointer to
+              An interactive map centred on your address, with a red pointer to
               draw your site outline. Click to place points and connect the
               lines to make your site. Once you've closed the site shape, click
               and drag the lines to modify it.
@@ -135,7 +153,8 @@ export default function Component(props: Props) {
             <my-map
               id="draw-boundary-map"
               drawMode
-              drawPointer="dot"
+              // drawPointer="dot"
+              drawPointer="crosshair"
               drawGeojsonData={JSON.stringify(boundary)}
               zoom={20}
               maxZoom={23}
@@ -144,17 +163,17 @@ export default function Component(props: Props) {
               resetControlImage="trash"
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
-          </Box>
+          </MapContainer>
           {!props.hideFileUpload && (
-            <div className={classes.uploadInstead}>
-              <Button
+            <AlternateOption>
+              <AlternateOptionButton
                 data-testid="upload-file-button"
                 onClick={() => setPage("upload")}
                 disabled={Boolean(boundary)}
               >
                 Upload a location plan instead
-              </Button>
-            </div>
+              </AlternateOptionButton>
+            </AlternateOption>
           )}
           <p>
             The boundary you have drawn has an area of{" "}
@@ -164,7 +183,7 @@ export default function Component(props: Props) {
       );
     } else if (page === "upload") {
       return (
-        <div>
+        <>
           <QuestionHeader
             title={props.titleForUploading}
             description={props.descriptionForUploading}
@@ -174,15 +193,15 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <Upload setFile={setSelectedFile} initialFile={selectedFile} />
-          <div className={classes.uploadInstead}>
-            <Button
+          <AlternateOption>
+            <AlternateOptionButton
               onClick={() => setPage("draw")}
               disabled={Boolean(selectedFile?.url)}
             >
               Draw the boundary on a map instead
-            </Button>
-          </div>
-        </div>
+            </AlternateOptionButton>
+          </AlternateOption>
+        </>
       );
     }
   }
