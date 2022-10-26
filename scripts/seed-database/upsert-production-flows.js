@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { GraphQLClient } from "graphql-request";
+import { gql, GraphQLClient } from "graphql-request";
 import pThrottle from 'p-throttle';
 const args = process.argv.slice(2);
 
@@ -59,69 +59,23 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
       }
     `);
 
-    const {
-      teams: localTeams,
-      flows: localFlows,
-    } = await localClient.request(`
-      query GetAllFlowsAndTeams {
-        flows {
-          id
-          slug
-          team_id
-        }
-        teams {
-          id
-          slug
-        }
-      }
-    `);
-
-    // Teams and Flows have 2 unique fields: `id` and `slug`, but the upsert `on_conflict` query only allows us to check for one of them.
-    // So if both fields exist in the current database, the query will fail.
-    // To prevent errors, we upsert production data in two different queries, filtering them by `id` and `slug`.
-
-    const localTeamsSlugs = localTeams.map(team => team.slug);
-    const {
-      false: teamsToUpsertById,
-      true: teamsToUpsertBySlug
-    } = _.groupBy(productionTeams, (team) => localTeamsSlugs.includes(team.slug));
-
-    const {
-      false: flowsToUpsertById,
-      true: flowsToUpsertBySlug
-    } = _.groupBy(
-      // XXX: overwrite flow version to match operation version and prevent sharedb sync errors
-      productionFlows.map(flow => ({ ...flow, version: 1, })),
-      (flow) => localFlows.some(localFlow =>
-        localFlow.slug === flow.slug && localFlow.team_id === flow.team_id
-      )
-    );
+    await localClient.request(deleteFlowsAndTeamsQuery);
 
     console.log("Inserting flows and teams...");
 
-    await Promise.all([
-      localClient.request(
-        getInsertTeamsMutation('teams_pkey'),
-        { teams: teamsToUpsertById || [] }
-      ),
-      localClient.request(
-        getInsertTeamsMutation('teams_slug_key'),
-        { teams: teamsToUpsertBySlug || [] }
-      ),
-    ]);
+    await localClient.request(
+      insertTeamsMutation,
+      { teams: productionTeams || [] }
+    );
 
-    await Promise.all([
-      localClient.request(
-        getInsertFlowsMutation('flows_pkey'),
-        { flows: flowsToUpsertById || [], }
-      ),
-      localClient.request(
-        getInsertFlowsMutation('flows_team_id_slug_key'),
-        { flows: flowsToUpsertBySlug || [], }
-      ),
-    ]);
+    await localClient.request(
+      insertFlowsMutation,
+      { flows: productionFlows || [], }
+    );
 
-    await insertOperations(localClient)(flowsToUpsertById || []);
+    console.log('Inserting Operations...');
+
+    await insertOperations(localClient)(productionFlows || []);
 
     console.log('Fetching published flows...');
     // throttling is needed to prevent errors when fetching a large amount of data
@@ -139,26 +93,44 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
   }
 })()
 
-const getInsertTeamsMutation = (constraint) => `
+const deleteFlowsAndTeamsQuery = gql`
+  mutation CleanDatabase {
+    delete_analytics_logs(where: {}){
+      affected_rows
+    }
+    delete_published_flows(where: {}){
+      affected_rows
+    }
+    delete_operations(where: {}){
+      affected_rows
+    }
+    delete_flows(where: {}) {
+      affected_rows
+    }
+    delete_teams(where: {}) {
+      affected_rows
+    }
+  }
+`;
+
+const insertTeamsMutation = gql`
   mutation InsertTeams(
     $teams: [teams_insert_input!]!, 
   ) {
     insert_teams(
       objects: $teams,
-      on_conflict: {constraint: ${constraint}, update_columns: [name, settings, theme, id, notify_personalisation]}
     ) {
       affected_rows
     }
   }
 `;
 
-const getInsertFlowsMutation = (constraint) => `
+const insertFlowsMutation = gql`
   mutation InsertFlows(
     $flows: [flows_insert_input!]!,
   ) {
     insert_flows(
       objects: $flows,
-      on_conflict: {constraint: ${constraint}, update_columns: [data, slug, team_id]}
     ) {
       affected_rows
     }
