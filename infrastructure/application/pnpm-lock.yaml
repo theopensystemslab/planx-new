@@ -1,5 +1,10 @@
 lockfileVersion: 5.4
 
+overrides:
+  path-parse@<1.0.7: '>=1.0.7'
+  protobufjs@>=6.10.0 <6.10.3: '>=6.10.3'
+  minimatch@<3.0.5: '>=3.0.5'
+
 specifiers:
   '@nodelib/fs.walk': ^1.2.8
   '@pulumi/aws': ^5.6.0
