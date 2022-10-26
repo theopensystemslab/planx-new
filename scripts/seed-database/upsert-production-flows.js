@@ -95,7 +95,13 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
 
 const deleteFlowsAndTeamsQuery = gql`
   mutation CleanDatabase {
+    delete_session_backups(where: {}){
+      affected_rows
+    }
     delete_analytics_logs(where: {}){
+      affected_rows
+    }
+    delete_analytics(where: {}){
       affected_rows
     }
     delete_published_flows(where: {}){
@@ -182,11 +188,7 @@ const insertPublishedFlowMutation = (publishedFlow, graphQLClient) => {
       $publishedFlow: published_flows_insert_input!
     ) {
       insert_published_flows_one(
-        object: $publishedFlow,
-        on_conflict: {
-          constraint: published_flows_pkey,
-          update_columns: [data, flow_id, summary, publisher_id, created_at]
-        }
+        object: $publishedFlow
       ) {
         id
       }
@@ -204,7 +206,7 @@ const insertOperations = (localClient) => async (flows) => {
 
   await localClient.request(`
     mutation InsertOperations($operations: [operations_insert_input!]!) {
-      insert_operations(objects: $operations, on_conflict: {constraint: operations_flow_id_version_key, update_columns: data}) {
+      insert_operations(objects: $operations) {
         affected_rows
       }
     }
