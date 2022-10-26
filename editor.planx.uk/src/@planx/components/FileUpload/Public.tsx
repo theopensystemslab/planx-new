@@ -316,7 +316,7 @@ function Dropzone(props: any) {
               aria-valuenow={progress}
             />
             <Box className={classes.filePreview}>
-              {file.type.includes("image") ? (
+              {file.type?.includes("image") ? (
                 <ImagePreview file={file} url={url} />
               ) : (
                 <FileIcon />
