@@ -6,11 +6,9 @@ import noir from "pino-noir";
 import helmet from "helmet";
 import { apiLimiter } from "../rateLimit";
 
-const app = express();
+const init = express.Router();
 
-app.set("trust proxy", 1);
-
-app.use((req, res, next) => {
+init.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin);
   res.header(
     "Access-Control-Allow-Headers",
@@ -19,20 +17,20 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(
+init.use(
   cors({
     credentials: true,
     methods: "*",
   })
 );
 
-app.use(json({ limit: "100mb" }));
+init.use(json({ limit: "100mb" }));
 
 // Converts req.headers.cookie: string, to req.cookies: Record<string, string>
-app.use(cookieParser());
+init.use(cookieParser());
 
 if (process.env.NODE_ENV !== "test") {
-  app.use(
+  init.use(
     require("express-pino-logger")({
       serializers: noir(["req.headers.authorization"], "**REDACTED**"),
     })
@@ -40,9 +38,9 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 // Rate limit requests per IP address
-app.use(apiLimiter);
+init.use(apiLimiter);
 
 // Secure Express by setting various HTTP headers
-app.use(helmet());
+init.use(helmet());
 
-export default app;
+export default init;

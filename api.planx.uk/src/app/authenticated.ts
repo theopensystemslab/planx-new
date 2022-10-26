@@ -1,10 +1,10 @@
+import express from "express";
 import assert from "assert";
 import { urlencoded } from "body-parser";
 import { stringify } from "csv-stringify";
 import { adminGraphQLClient as client } from "../hasura";
 import { useHasuraAuth, useSendEmailAuth } from "../auth";
 import cookieSession from "cookie-session";
-import app from "./public";
 import router from "../auth/routes";
 import passport from "../auth/passport";
 import { useJWT } from "../auth/jwt";
@@ -26,8 +26,10 @@ import {
   createExpiryEvent,
 } from "../webhooks/lowcalSessionEvents";
 
+let authenticated = express.Router();
+
 // needed for storing original URL to redirect to in login flow
-app.use(
+authenticated.use(
   cookieSession({
     maxAge: 24 * 60 * 60 * 100,
     name: "session",
@@ -35,15 +37,15 @@ app.use(
   })
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(urlencoded({ extended: true }));
+authenticated.use(passport.initialize());
+authenticated.use(passport.session());
+authenticated.use(urlencoded({ extended: true }));
 
-app.use("/auth", router);
+authenticated.use("/auth", router);
 
-app.use("/gis", router);
+authenticated.use("/gis", router);
 
-app.get("/hasura", async function (_req, res, next) {
+authenticated.get("/hasura", async function (_req, res, next) {
   try {
     const data = await client.request(
       `query GetTeams {
@@ -58,7 +60,7 @@ app.get("/hasura", async function (_req, res, next) {
   }
 });
 
-app.get("/me", useJWT, async function (req, res, next) {
+authenticated.get("/me", useJWT, async function (req, res, next) {
   // useJWT will return 401 if the JWT is missing or malformed
   if (!req.user?.sub)
     next({ status: 401, message: "User ID missing from JWT" });
@@ -88,36 +90,40 @@ app.get("/me", useJWT, async function (req, res, next) {
   }
 });
 
-app.get("/gis", (_req, res, next) => {
+authenticated.get("/gis", (_req, res, next) => {
   next({
     status: 400,
     message: "Please specify a local authority",
   });
 });
 
-app.get("/gis/:localAuthority", locationSearch());
+authenticated.get("/gis/:localAuthority", locationSearch());
 
-app.get("/", (_req, res) => {
+authenticated.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production
-app.get("/throw-error", () => {
+authenticated.get("/throw-error", () => {
   throw new Error("custom error");
 });
 
-app.post("/flows/:flowId/diff", useJWT, diffFlow);
+authenticated.post("/flows/:flowId/diff", useJWT, diffFlow);
 
-app.post("/flows/:flowId/publish", useJWT, publishFlow);
+authenticated.post("/flows/:flowId/publish", useJWT, publishFlow);
 
 // use with query params `find` (required) and `replace` (optional)
-app.post("/flows/:flowId/search", useJWT, findAndReplaceInFlow);
+authenticated.post("/flows/:flowId/search", useJWT, findAndReplaceInFlow);
 
-app.get("/flows/:flowId/copy-portal/:portalNodeId", useJWT, copyPortalAsFlow);
+authenticated.get(
+  "/flows/:flowId/copy-portal/:portalNodeId",
+  useJWT,
+  copyPortalAsFlow
+);
 
 // unauthenticated because accessing flow schema only, no user data
-app.get("/flows/:flowId/download-schema", async (req, res, next) => {
+authenticated.get("/flows/:flowId/download-schema", async (req, res, next) => {
   try {
     const schema = await client.request(
       `
@@ -151,7 +157,7 @@ app.get("/flows/:flowId/download-schema", async (req, res, next) => {
 });
 
 // allows an applicant to download their application data on the Confirmation page
-app.post("/download-application", async (req, res, next) => {
+authenticated.post("/download-application", async (req, res, next) => {
   if (!req.body) {
     res.send({
       message: "Missing application `data` to download",
@@ -170,7 +176,7 @@ app.post("/download-application", async (req, res, next) => {
   }
 });
 
-app.post("/sign-s3-upload", async (req, res, next) => {
+authenticated.post("/sign-s3-upload", async (req, res, next) => {
   if (!req.body.filename) next({ status: 422, message: "missing filename" });
 
   try {
@@ -233,33 +239,42 @@ const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
   return;
 };
 
-app.post("/analytics/log-user-exit", async (req, res, next) => {
+authenticated.post("/analytics/log-user-exit", async (req, res, next) => {
   const analyticsLogId = Number(req.query.analyticsLogId);
   if (analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, true);
   res.send();
 });
 
-app.post("/analytics/log-user-resume", async (req, res, next) => {
+authenticated.post("/analytics/log-user-resume", async (req, res, next) => {
   const analyticsLogId = Number(req.query.analyticsLogId);
   if (analyticsLogId > 0) trackAnalyticsLogExit(analyticsLogId, false);
   res.send();
 });
 
 assert(process.env.GOVUK_NOTIFY_API_KEY);
-app.post(
+authenticated.post(
   "/send-email/:template",
   sendEmailLimiter,
   useSendEmailAuth,
   sendSaveAndReturnEmail
 );
-app.post("/resume-application", sendEmailLimiter, resumeApplication);
-app.post("/validate-session", validateSession);
+authenticated.post("/resume-application", sendEmailLimiter, resumeApplication);
+authenticated.post("/validate-session", validateSession);
 
 assert(process.env.HASURA_PLANX_API_KEY);
-app.use("/webhooks/hasura", useHasuraAuth);
-app.post("/webhooks/hasura/delete-expired-sessions", hardDeleteSessions);
-app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
-app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
-app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
+authenticated.use("/webhooks/hasura", useHasuraAuth);
+authenticated.post(
+  "/webhooks/hasura/delete-expired-sessions",
+  hardDeleteSessions
+);
+authenticated.post(
+  "/webhooks/hasura/create-reminder-event",
+  createReminderEvent
+);
+authenticated.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
+authenticated.post(
+  "/webhooks/hasura/send-slack-notification",
+  sendSlackNotification
+);
 
-export default app;
+export default authenticated;

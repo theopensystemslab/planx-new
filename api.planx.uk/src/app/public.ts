@@ -1,4 +1,4 @@
-import app from "./init";
+import express from "express";
 import assert from "assert";
 import {
   createProxyMiddleware,
@@ -14,18 +14,20 @@ import { sendToBOPS } from "../send/bops";
 import { createSendEvents } from "../send/createSendEvents";
 import { useHasuraAuth } from "../auth";
 
+const publicRoutes = express.Router();
+
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
-app.post("/create-send-events/:sessionId", createSendEvents);
+publicRoutes.post("/create-send-events/:sessionId", createSendEvents);
 
 assert(process.env.HASURA_PLANX_API_KEY);
 
 assert(process.env.BOPS_API_ROOT_DOMAIN);
 assert(process.env.BOPS_API_TOKEN);
-app.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
+publicRoutes.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
 
 assert(process.env.UNIFORM_TOKEN_URL);
 assert(process.env.UNIFORM_SUBMISSION_URL);
-app.post("/uniform/:localAuthority", useHasuraAuth, sendToUniform);
+publicRoutes.post("/uniform/:localAuthority", useHasuraAuth, sendToUniform);
 
 ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
   assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
@@ -33,7 +35,7 @@ app.post("/uniform/:localAuthority", useHasuraAuth, sendToUniform);
 
 // used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
 // returns the url to make a gov uk payment
-app.post("/pay/:localAuthority", (req, res, next) => {
+publicRoutes.post("/pay/:localAuthority", (req, res, next) => {
   // confirm that this local authority (aka team) has a pay token configured before creating the proxy
   const isSupported =
     process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
@@ -59,7 +61,7 @@ assert(process.env.SLACK_WEBHOOK_URL);
 
 // used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
 // fetches the status of the payment
-app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
+publicRoutes.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
   // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
   usePayProxy(
     {
@@ -109,4 +111,4 @@ function usePayProxy(options: Partial<Options>, req: Request) {
   });
 }
 
-export default app;
+export default publicRoutes;
