@@ -1,59 +1,29 @@
 import supertest from "supertest";
 import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
-import { mockFlow, mockLowcalSession } from "../tests/mocks/saveAndReturnMocks";
+import { 
+  mockFlow, 
+  mockGetHumanReadableProjectType, 
+  mockLowcalSession, 
+  mockSetupEmailNotifications, 
+  mockSoftDeleteLowcalSession, 
+  mockValidateSingleSessionRequest 
+} from "../tests/mocks/saveAndReturnMocks";
 
 // https://docs.notifications.service.gov.uk/node.html#email-addresses
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk"
+const SAVE_ENDPOINT = "/send-email/save"
 
 describe("Send Email endpoint", () => {
   beforeEach(() => {
     queryMock.reset();
-    queryMock.mockQuery({
-      name: "GetHumanReadableProjectType",
-      data: {
-        project_types: [
-          { description: "New office premises" }
-        ],
-      },
-      variables: {
-        rawList: ["new.office"],
-      }
-    });
-
-    queryMock.mockQuery({
-      name: "ValidateSingleSessionRequest",
-      data: {
-        flows_by_pk: mockFlow,
-        lowcal_sessions: [mockLowcalSession]
-      }
-    });
-
-    queryMock.mockQuery({
-      name: "SoftDeleteLowcalSession",
-      data: {
-        update_lowcal_sessions_by_pk: { id: 123 }
-      },
-      variables: {
-        sessionId: 123,
-      }
-    });
-
-    queryMock.mockQuery({
-      name: "SetupEmailNotifications",
-      data: {
-        update_lowcal_sessions_by_pk: { id: 123, has_user_saved: true }
-      },
-      variables: {
-        sessionId: 123,
-      }
-    });
-
+    queryMock.mockQuery(mockGetHumanReadableProjectType);
+    queryMock.mockQuery(mockValidateSingleSessionRequest);
+    queryMock.mockQuery(mockSoftDeleteLowcalSession);
+    queryMock.mockQuery(mockSetupEmailNotifications);
   });
 
   describe("'Save' template", () => {
-    const SAVE_ENDPOINT = "/send-email/save"
-
     it("throws an error if required data is missing", async () => {
       const missingEmail = { payload: { sessionId: 123 } };
       const missingSessionId = { payload: { email: "test" } };
@@ -210,5 +180,43 @@ describe("Send Email endpoint", () => {
       const softDeleteSessionMock = queryMock.getCalls().find(mock => mock.id === "SoftDeleteLowcalSession");
       expect(softDeleteSessionMock?.response.data.update_lowcal_sessions_by_pk.id).toEqual(123);
     });
+  });
+});
+
+describe("Setting up send email events", () => {
+  const callsToSetupEventsMutation = () => queryMock.getCalls().filter(mock => mock.id === "SetupEmailNotifications").length
+  const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
+
+  beforeEach(() => {
+    queryMock.reset();
+    queryMock.mockQuery(mockGetHumanReadableProjectType);
+    queryMock.mockQuery(mockSoftDeleteLowcalSession);
+    queryMock.mockQuery(mockSetupEmailNotifications);
+  });
+
+  test("Initial save sets ups email notifications", async () => {
+    queryMock.mockQuery(mockValidateSingleSessionRequest);
+
+    await supertest(app)
+      .post(SAVE_ENDPOINT)
+      .send(data)
+      .expect(200)
+    expect(callsToSetupEventsMutation()).toBe(1);
+  });
+
+  test("Subsequent calls do not set up email notifications", async () => {
+    queryMock.mockQuery({
+      name: "ValidateSingleSessionRequest",
+      data: {
+        flows_by_pk: mockFlow,
+        lowcal_sessions: [{ ...mockLowcalSession, has_user_saved: true }]
+      }
+    });
+    
+    await supertest(app)
+      .post(SAVE_ENDPOINT)
+      .send(data)
+      .expect(200)
+    expect(callsToSetupEventsMutation()).toBe(0);
   });
 });
