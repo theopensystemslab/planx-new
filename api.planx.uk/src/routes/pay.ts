@@ -27,7 +27,7 @@ router.post("/pay/:localAuthority", (req, res, next) => {
       req
     )(req, res, next);
   } else {
-    next({
+    return next({
       status: 400,
       message: `GOV.UK Pay is not enabled for this local authority`,
     });
@@ -53,6 +53,7 @@ router.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
             await slack.send(payMessage);
             console.log("Payment notification posted to Slack");
           } catch (error) {
+            // TODO - what is the expected behaviour here?
             next(error);
             return "";
           }

@@ -7,7 +7,7 @@ let router = express.Router();
 router.use("/gis", oAuthRouter);
 
 router.get("/gis", (_req, _res, next) => {
-  next({
+  return next({
     status: 400,
     message: "Please specify a local authority",
   });

@@ -38,7 +38,7 @@ router.get("/flows/:flowId/download-schema", async (req, res, next) => {
     );
 
     if (schema.get_flow_schema.length < 1) {
-      next({
+      return next({
         status: 404,
         message:
           "Can't find a schema for this flow. Make sure it's published or try a different flow id.",

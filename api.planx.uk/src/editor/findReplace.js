@@ -44,14 +44,15 @@ const getMatches = (flowData, searchTerm, replaceValue = undefined) => {
 const findAndReplaceInFlow = async (req, res, next) => {
   try {
     if (!req.user?.sub)
-      next({ status: 401, message: "User ID missing from JWT" });
+      return next({ status: 401, message: "User ID missing from JWT" });
 
     const flow = await getFlowData(req.params.flowId);
-    if (!flow) next({ status: 401, message: "Unknown flowId" });
+    if (!flow)
+      return next({ status: 401, message: "Unknown flowId" });
 
     const { find, replace } = req.query;
     if (!find)
-      next({
+      return next({
         status: 401,
         message: `Expected at least one query parameter "find"`,
       });
@@ -115,7 +116,8 @@ const findAndReplaceInFlow = async (req, res, next) => {
       });
     }
   } catch (error) {
-    next(error);
+    console.log(error);
+    return next(error);
   }
 };
 

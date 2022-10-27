@@ -7,7 +7,7 @@ const router = express.Router();
 
 // when login failed, send failed msg
 router.get("/login/failed", (_req, _res, next) => {
-  next({
+  return next({
     status: 401,
     message: "user failed to authenticate.",
   });

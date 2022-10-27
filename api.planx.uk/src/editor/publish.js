@@ -5,7 +5,7 @@ import { dataMerged, getMostRecentPublishedFlow } from "../helpers";
 
 const diffFlow = async (req, res, next) => {
   if (!req.user?.sub)
-    next({ status: 401, message: "User ID missing from JWT" });
+    return next({ status: 401, message: "User ID missing from JWT" });
 
   try {
     const flattenedFlow = await dataMerged(req.params.flowId);
@@ -29,13 +29,13 @@ const diffFlow = async (req, res, next) => {
       });
     }
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
 const publishFlow = async (req, res, next) => {
   if (!req.user?.sub)
-    next({ status: 401, message: "User ID missing from JWT" });
+    return next({ status: 401, message: "User ID missing from JWT" });
 
   try {
     const flattenedFlow = await dataMerged(req.params.flowId);
@@ -93,7 +93,7 @@ const publishFlow = async (req, res, next) => {
       });
     }
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 

@@ -18,7 +18,8 @@ const isEqual = (provided: string = "", expected: string): boolean => {
  */
 const useHasuraAuth = (req: Request, _res: Response, next: NextFunction): NextFunction | void => {
   const isAuthenticated = isEqual(req.headers.authorization, process.env.HASURA_PLANX_API_KEY!);
-  if (!isAuthenticated) return next({ status: 401, message: "Unauthorised" });
+  if (!isAuthenticated)
+    return next({ status: 401, message: "Unauthorised" });
   next();
 };
 

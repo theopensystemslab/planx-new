@@ -26,7 +26,7 @@ router.use("/auth", oauthRouter);
 router.get("/me", useJWT, async function (req, res, next) {
   // useJWT will return 401 if the JWT is missing or malformed
   if (!req.user?.sub)
-    next({ status: 401, message: "User ID missing from JWT" });
+    return next({ status: 401, message: "User ID missing from JWT" });
 
   try {
     const user = await client.request(
@@ -45,7 +45,7 @@ router.get("/me", useJWT, async function (req, res, next) {
     );
 
     if (!user.users_by_pk)
-      next({ status: 404, message: `User (${req.user?.sub}) not found` });
+      return next({ status: 404, message: `User (${req.user?.sub}) not found` });
 
     res.json(user.users_by_pk);
   } catch (err) {

@@ -55,7 +55,7 @@ const locationSearch = () => async (req, res, next) => {
       const resp = await locationSearchWithoutTimeout(req.params.localAuthority, req.query);
       res.send(resp);
     } catch (err) {
-      next({
+      return next({
         status: 500,
         message: err ? err : "unknown error",
       });
@@ -71,13 +71,13 @@ const locationSearch = () => async (req, res, next) => {
       );
       res.send(resp);
     } catch (err) {
-      next({
+      return next({
         status: 500,
         message: err ? err : "unknown error",
       });
     }
   } else {
-    next({
+    return next({
       status: 400,
       message: `${req.params.localAuthority} is not a supported local authority`,
     });
