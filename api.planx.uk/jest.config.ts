@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   transform: {
     "^.+\\.js$": [
       "esbuild-jest",
@@ -10,5 +10,12 @@ module.exports = {
   setupFilesAfterEnv: ["./jest.setup.js"],
   preset: "ts-jest",
   testEnvironment: "node",
-  testPathIgnorePatterns: ["dist/*"]
+  testPathIgnorePatterns: ["dist/*"],
+  coverageThreshold: {
+    global: {
+      functions: 45,
+    },
+  },
+  coverageReporters: ["lcov"],
+  coverageDirectory: "./coverage",
 };
