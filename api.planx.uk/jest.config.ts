@@ -11,11 +11,12 @@ export default {
   preset: "ts-jest",
   testEnvironment: "node",
   testPathIgnorePatterns: ["dist/*"],
+  collectCoverage: true,
   coverageThreshold: {
     global: {
       functions: 45,
     },
   },
-  coverageReporters: ["lcov"],
+  coverageReporters: ["lcov", "text-summary"],
   coverageDirectory: "./coverage",
 };
