@@ -1,6 +1,6 @@
 import express from "express";
 import { stringify } from "csv-stringify";
-import { adminGraphQLClient as client } from "../hasura";
+import { publicGraphQLClient as client } from "../hasura";
 import { createSendEvents } from "../send/createSendEvents";
 import { resumeApplication, validateSession } from "../saveAndReturn";
 import { sendEmailLimiter } from "../rateLimit";
@@ -29,7 +29,7 @@ router.get("/hasura", async function (_req, res, next) {
     );
     res.json(data);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 });
 
