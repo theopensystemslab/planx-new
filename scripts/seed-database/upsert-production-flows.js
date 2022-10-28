@@ -47,6 +47,8 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           team_id
           settings
           version
+          created_at
+          updated_at
         }
         teams {
           id
