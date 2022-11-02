@@ -4,6 +4,7 @@ import { createScheduledEvent } from "../hasura/metadata";
 interface CombinedResponse {
   bops?: Record<string, string>;
   uniform?: Record<string, string>;
+  email?: Record<string, string>;
 }
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
@@ -31,6 +32,16 @@ const createSendEvents = async (req: Request, res: Response, next: NextFunction)
         comment: `uniform_submission_${req.params.sessionId}`,
       });
       combinedResponse["uniform"] = uniformEvent;
+    }
+
+    if ("email" in req.body) {
+      const emailSubmissionEvent = await createScheduledEvent({
+        webhook: `{{HASURA_PLANX_API_URL}}/email-submission/${req.body.email.localAuthority}`,
+        schedule_at: now,
+        payload: req.body.email.body,
+        comment: `email_submission_${req.params.sessionId}`,
+      });
+      combinedResponse["email"] = emailSubmissionEvent;
     }
 
     return res.json(combinedResponse);

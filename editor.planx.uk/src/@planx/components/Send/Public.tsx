@@ -11,7 +11,7 @@ import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
 import { PublicProps } from "../ui";
 import { getBOPSParams } from "./bops";
 import { DEFAULT_DESTINATION, Destination, Send } from "./model";
-import { getUniformParams } from "./uniform";
+import { getUniformParams, makeCsvData } from "./uniform";
 
 export type Props = PublicProps<Send>;
 
@@ -71,6 +71,17 @@ const SendComponent: React.FC<Props> = ({
     };
   }
 
+  // Format application user data for email
+  if (destinations.includes(Destination.Email)) {
+    combinedEventsPayload[Destination.Email] = {
+      localAuthority: teamSlug,
+      body: {
+        sessionId: sessionId,
+        csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
+      },
+    };
+  }
+
   // Send makes a single request to create scheduled events in Hasura, then those events make the actual submission requests with retries etc
   const url = `${process.env.REACT_APP_API_URL}/create-send-events/${sessionId}`;
   const request: any = useAsync(async () =>
@@ -100,6 +111,16 @@ const SendComponent: React.FC<Props> = ({
     ) {
       props.handleSubmit(
         makeData(props, request.value.uniform?.event_id, "uniformSendEventId")
+      );
+    }
+
+    if (
+      destinations.includes(Destination.Email) &&
+      isReady &&
+      props.handleSubmit
+    ) {
+      props.handleSubmit(
+        makeData(props, request.value.email?.event_id, "emailSendEventId")
       );
     }
   }, [request.loading, request.error, request.value]);

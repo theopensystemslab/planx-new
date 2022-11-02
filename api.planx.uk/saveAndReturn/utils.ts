@@ -10,6 +10,7 @@ const singleSessionEmailTemplates = {
   save: process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID,
   reminder: process.env.GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID,
   expiry: process.env.GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID,
+  submit: process.env.GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID,
 };
 
 const multipleSessionEmailTemplates = {

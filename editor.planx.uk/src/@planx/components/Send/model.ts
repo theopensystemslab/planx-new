@@ -3,6 +3,7 @@ import { MoreInformation, parseMoreInformation } from "../shared";
 export enum Destination {
   BOPS = "bops",
   Uniform = "uniform",
+  Email = "email",
 }
 
 export interface Send extends MoreInformation {

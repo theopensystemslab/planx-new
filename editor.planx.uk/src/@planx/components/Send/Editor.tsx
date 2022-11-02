@@ -49,6 +49,10 @@ const SendComponent: React.FC<Props> = (props) => {
       value: Destination.Uniform,
       label: "Uniform",
     },
+    {
+      value: Destination.Email,
+      label: "Email to planning office",
+    },
   ];
 
   const changeCheckbox = (value: Destination) => (_checked: any) => {

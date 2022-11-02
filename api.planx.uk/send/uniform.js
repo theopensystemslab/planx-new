@@ -386,9 +386,9 @@ async function retrieveSubmission(token, submissionId) {
  * 
  * @param {string} url - s3 URL
  * @param {string} path - file name for download
- * @param {string} folder - AdmZip archive
+ * @param {AdmZip | string} folder - AdmZip archive
  */
-const downloadFile = async (url, path, folder) => {
+export const downloadFile = async (url, path, folder) => {
   const res = await fetch(url);
   const fileStream = fs.createWriteStream(path);
 
@@ -407,7 +407,7 @@ const downloadFile = async (url, path, folder) => {
  * 
  * @param {string} path - file name
  */
-const deleteFile = (path) => {
+export const deleteFile = (path) => {
   if (fs.existsSync(path)) {
     fs.unlinkSync(path);
   } else {
@@ -433,4 +433,4 @@ const getUniformClient = (localAuthority) => {
   return { clientId, clientSecret };
 };
 
-export { sendToUniform };
+export { sendToUniform, downloadFile, deleteFile };

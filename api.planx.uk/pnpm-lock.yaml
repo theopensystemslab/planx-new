@@ -9,6 +9,7 @@ overrides:
 specifiers:
   '@airbrake/node': ^2.1.7
   '@babel/preset-typescript': ^7.18.6
+  '@types/adm-zip': ^0.5.0
   '@types/body-parser': ^1.19.2
   '@types/cookie-parser': ^1.4.3
   '@types/cookie-session': ^2.0.44
@@ -98,7 +99,8 @@ dependencies:
   string-to-stream: 3.0.1
 
 devDependencies:
-  '@babel/preset-typescript': 7.18.6_@babel+core@7.15.0
+  '@babel/preset-typescript': 7.18.6
+  '@types/adm-zip': 0.5.0
   '@types/body-parser': 1.19.2
   '@types/cookie-parser': 1.4.3
   '@types/cookie-session': 2.0.44
@@ -122,7 +124,7 @@ devDependencies:
   prettier: 2.7.1
   rimraf: 3.0.2
   supertest: 6.2.4
-  ts-jest: 28.0.7_apsjjld53x5nuipdvkrcv7krlq
+  ts-jest: 28.0.7_e4vlsll2vsrxuwy4jhlvxjbksa
   ts-node-dev: 2.0.0_ow5yu25silzxcp7pmv7jv4j54m
   typescript: 4.7.4
 
@@ -233,13 +235,12 @@ packages:
       semver: 6.3.0
     dev: true
 
-  /@babel/helper-create-class-features-plugin/7.18.9_@babel+core@7.15.0:
+  /@babel/helper-create-class-features-plugin/7.18.9:
     resolution: {integrity: sha512-WvypNAYaVh23QcjpMR24CwZY2Nz6hqdOcFdPbNpV56hL5H6KiFheO7Xm1aPdlLQ7d5emYZX7VZwPp9x3z+2opw==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0
     dependencies:
-      '@babel/core': 7.15.0
       '@babel/helper-annotate-as-pure': 7.18.6
       '@babel/helper-environment-visitor': 7.18.9
       '@babel/helper-function-name': 7.18.9
@@ -526,6 +527,15 @@ packages:
       '@babel/helper-plugin-utils': 7.18.9
     dev: true
 
+  /@babel/plugin-syntax-typescript/7.18.6:
+    resolution: {integrity: sha512-mAWAuq4rvOepWCBid55JuRNvpTNf2UGVgoz4JV0fXEKolsVZDzsa4NqCef758WZJj/GDu0gVGItjKFiClTAmZA==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/helper-plugin-utils': 7.18.9
+    dev: true
+
   /@babel/plugin-syntax-typescript/7.18.6_@babel+core@7.15.0:
     resolution: {integrity: sha512-mAWAuq4rvOepWCBid55JuRNvpTNf2UGVgoz4JV0fXEKolsVZDzsa4NqCef758WZJj/GDu0gVGItjKFiClTAmZA==}
     engines: {node: '>=6.9.0'}
@@ -551,30 +561,28 @@ packages:
       - supports-color
     dev: true
 
-  /@babel/plugin-transform-typescript/7.18.12_@babel+core@7.15.0:
+  /@babel/plugin-transform-typescript/7.18.12:
     resolution: {integrity: sha512-2vjjam0cum0miPkenUbQswKowuxs/NjMwIKEq0zwegRxXk12C9YOF9STXnaUptITOtOJHKHpzvvWYOjbm6tc0w==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/core': 7.15.0
-      '@babel/helper-create-class-features-plugin': 7.18.9_@babel+core@7.15.0
+      '@babel/helper-create-class-features-plugin': 7.18.9
       '@babel/helper-plugin-utils': 7.18.9
-      '@babel/plugin-syntax-typescript': 7.18.6_@babel+core@7.15.0
+      '@babel/plugin-syntax-typescript': 7.18.6
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@babel/preset-typescript/7.18.6_@babel+core@7.15.0:
+  /@babel/preset-typescript/7.18.6:
     resolution: {integrity: sha512-s9ik86kXBAnD760aybBucdpnLsAt0jK1xqJn2juOn9lkOvSHV60os5hxoVJsPzMQxvnUJFAlkont2DvvaYEBtQ==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/core': 7.15.0
       '@babel/helper-plugin-utils': 7.18.9
       '@babel/helper-validator-option': 7.18.6
-      '@babel/plugin-transform-typescript': 7.18.12_@babel+core@7.15.0
+      '@babel/plugin-transform-typescript': 7.18.12
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1000,6 +1008,12 @@ packages:
 
   /@tsconfig/node16/1.0.3:
     resolution: {integrity: sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==}
+    dev: true
+
+  /@types/adm-zip/0.5.0:
+    resolution: {integrity: sha512-FCJBJq9ODsQZUNURo5ILAQueuA8WJhRvuihS3ke2iI25mJlfV2LK8jG2Qj2z2AWg8U0FtWWqBHVRetceLskSaw==}
+    dependencies:
+      '@types/node': 16.11.47
     dev: true
 
   /@types/babel__core/7.1.15:
@@ -5442,7 +5456,7 @@ packages:
     hasBin: true
     dev: true
 
-  /ts-jest/28.0.7_apsjjld53x5nuipdvkrcv7krlq:
+  /ts-jest/28.0.7_e4vlsll2vsrxuwy4jhlvxjbksa:
     resolution: {integrity: sha512-wWXCSmTwBVmdvWrOpYhal79bDpioDy4rTT+0vyUnE3ZzM7LOAAGG9NXwzkEL/a516rQEgnMmS/WKP9jBPCVJyA==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     hasBin: true
@@ -5463,7 +5477,6 @@ packages:
       esbuild:
         optional: true
     dependencies:
-      '@babel/core': 7.15.0
       bs-logger: 0.2.6
       esbuild: 0.14.49
       fast-json-stable-stringify: 2.1.0

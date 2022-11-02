@@ -51,6 +51,7 @@ import { adminGraphQLClient } from "./hasura";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 import { sendToBOPS } from "./send/bops";
 import { createSendEvents } from "./send/createSendEvents";
+import { downloadApplicationFiles, sendToEmail } from "./send/email";
 import { sendToUniform } from "./send/uniform";
 import { sendSlackNotification } from "./webhooks/sendNotifications";
 
@@ -284,6 +285,10 @@ app.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
 assert(process.env.UNIFORM_TOKEN_URL);
 assert(process.env.UNIFORM_SUBMISSION_URL);
 app.post("/uniform/:localAuthority", useHasuraAuth, sendToUniform);
+
+app.post("/email-submission/:localAuthority", useHasuraAuth, sendToEmail);
+
+app.get("/download-application-files/:sessionId", downloadApplicationFiles);
 
 ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
   assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
