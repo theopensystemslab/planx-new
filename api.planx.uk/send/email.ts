@@ -36,7 +36,7 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
           serviceName: "TBD",
           sessionId: payload.sessionId,
           applicantEmail: "TBD",
-          downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}`,
+          downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${settings.sendToEmail}&localAuthority=${req.params.localAuthority}`,
         }
       };
 
@@ -60,15 +60,24 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
 };
 
 const downloadApplicationFiles = async(req: Request, res: Response, next: NextFunction) => {
-  const sessionId = req.params?.sessionId;
-  if (!sessionId) {
+  const sessionId: string = req.params?.sessionId;
+  if (!sessionId || !req.query?.email || !req.query?.localAuthority) {
     return next({
       status: 400,
-      message: "Missing sessionId param"
+      message: "Missing values required to access application files"
     });
   }
 
   try {
+    // Confirm that the provided email matches the stored team settings for the provided localAuthority
+    const settings = await getTeamSettings(req.query.localAuthority as string);
+    if (settings?.sendToEmail != req.query.email) {
+      return next({
+        status: 403,
+        message: "Provided email address is not enabled to access application files"
+      });
+    }
+
     // Fetch this lowcal_session's data
     const sessionData = await getSessionData(sessionId);
     if (sessionData) {
