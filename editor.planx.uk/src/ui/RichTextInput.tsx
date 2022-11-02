@@ -11,6 +11,7 @@ import FormatListBulleted from "@material-ui/icons/FormatListBulleted";
 import FormatListNumbered from "@material-ui/icons/FormatListNumbered";
 import LinkIcon from "@material-ui/icons/Link";
 import { type InputBaseProps } from "@mui/material/InputBase";
+import { type Editor,type JSONContent } from "@tiptap/core";
 import Bold from "@tiptap/extension-bold";
 import BulletList from "@tiptap/extension-bullet-list";
 import Document from "@tiptap/extension-document";
@@ -43,7 +44,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import tippy from "tippy.js";
+import tippy, { type Instance } from "tippy.js";
 import create from "zustand";
 
 import Input from "./Input";
@@ -102,7 +103,7 @@ const useVariablesStore = create<VariablesState>((set) => ({
     set((state) => ({ variables: [...state.variables, newVariable] })),
 }));
 
-export const toHtml = (doc: any) => {
+export const toHtml = (doc: JSONContent) => {
   return generateHTML(doc, conversionExtensions);
 };
 
@@ -134,8 +135,8 @@ export const injectVariables = (
  * Used to inject placeholder values into a document structure.
  */
 const modifyDeep =
-  (fn: (field: any) => any) =>
-  (val: any): any => {
+  (fn: (field: Value) => Value) =>
+  (val: Value): Value => {
     if (!val) {
       return val;
     }
@@ -152,9 +153,27 @@ const modifyDeep =
     return val;
   };
 
+// Generic value that `modifyDeep` works off of. Since it can be object, array or primitive, any typing more accurate than `any` is not compiling at the moment.
+// TODO: find a better typing alternative
+type Value = any;
+
 const initialUrlValue = "https://";
 
-const RichTextInput: React.FC<Props> = (props) => {
+const contentHierarchy = (doc: JSONContent): string[] => {
+  const tags = (doc.content || [])
+    .map((d: JSONContent) => {
+      if (d.type === "paragraph") {
+        return "p";
+      } else if (d.type === "heading") {
+        return "h" + (d.attrs?.level || "1");
+      }
+      return null;
+    })
+    .filter((val: string | null): val is string => Boolean(val));
+  return tags;
+};
+
+const RichTextInput: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
 
   const editor = useEditor({
@@ -185,17 +204,35 @@ const RichTextInput: React.FC<Props> = (props) => {
   // Cache internal string value
   const internalValue = useRef<string | null>(null);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!internalValue.current) {
+        return;
+      }
+      const doc = fromHtml(internalValue.current || "");
+      console.log(contentHierarchy(doc));
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   // Handle update events
   const handleUpdate = useCallback(
-    (transaction: any) => {
+    (transaction: { editor: Editor }) => {
       if (!props.onChange) {
         return;
       }
       const doc = transaction.editor.getJSON();
       const html = toHtml(doc);
       internalValue.current = html;
+      // Cast as an HTML input change event to conform to input field API's
       const changeEvent = {
         target: {
+          name: props.name,
+          value: html,
+        },
+        currentTarget: {
           name: props.name,
           value: html,
         },
@@ -448,7 +485,7 @@ const suggestion = {
 
   render: () => {
     let component: undefined | ReactRenderer<any, any>;
-    let popup: any;
+    let popup: Instance[] | undefined;
 
     return {
       onStart: (props: any) => {
@@ -479,14 +516,14 @@ const suggestion = {
           return;
         }
 
-        popup[0].setProps({
+        popup?.[0]?.setProps({
           getReferenceClientRect: props.clientRect,
         });
       },
 
       onKeyDown(props: any) {
         if (props.event.key === "Escape") {
-          popup[0].hide();
+          popup?.[0]?.hide();
           return true;
         }
 
@@ -494,7 +531,7 @@ const suggestion = {
       },
 
       onExit() {
-        popup[0].destroy();
+        popup?.[0]?.destroy();
         component?.destroy();
       },
     };
