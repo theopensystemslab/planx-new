@@ -1,5 +1,5 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { Meta } from "@storybook/react/types-6-0";
@@ -24,7 +24,7 @@ export const Basic = () => {
     <Grid container>
       <Grid xs={4}>
         <Button
-          variant="contained"
+          variant="outlined"
           onClick={() => {
             setValue(
               `<p>Hello, and <span data-type="mention" class="pass" data-id="Apples">@Apples</span> <a target="_blank" rel="noopener noreferrer nofollow" href="https://opensystemslab.org">OSL</a></p>`
@@ -36,13 +36,16 @@ export const Basic = () => {
       </Grid>
       <Grid xs={8}>
         <Stack spacing={4}>
-          <RichTextInput
-            placeholder="Add something"
-            value={value}
-            onChange={(ev) => {
-              setValue(ev.target.value);
-            }}
-          />
+          <Box>
+            <p>Editor</p>
+            <RichTextInput
+              placeholder="Add something"
+              value={value}
+              onChange={(ev) => {
+                setValue(ev.target.value);
+              }}
+            />
+          </Box>
           <Box>
             <p>HTML result:</p>
             <textarea
