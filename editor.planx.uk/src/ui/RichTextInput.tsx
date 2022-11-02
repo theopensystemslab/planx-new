@@ -285,7 +285,7 @@ const RichTextInput: FC<Props> = (props) => {
 
   const [contentHierarchyError, setContentHierarchyError] = useState<
     string | null
-  >(null);
+  >(getContentHierarchyError(fromHtml(stringValue)));
 
   // Handle update events
   const handleUpdate = useCallback(
@@ -333,7 +333,9 @@ const RichTextInput: FC<Props> = (props) => {
     const editorValue = internalValue.current || toHtml(editor.getJSON());
     if (props.value !== editorValue) {
       internalValue.current = stringValue;
-      editor.commands.setContent(fromHtml(stringValue));
+      const doc = fromHtml(stringValue);
+      setContentHierarchyError(getContentHierarchyError(doc));
+      editor.commands.setContent(doc);
     }
   }, [stringValue]);
 
