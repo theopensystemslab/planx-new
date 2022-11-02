@@ -200,11 +200,11 @@ const getContentHierarchyError = (doc: JSONContent): string | null => {
 const PopupError: FC<{ id: string; error: string }> = (props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handlePopoverClose = () => {
+  const handleClose = () => {
     setAnchorEl(null);
   };
 
@@ -212,11 +212,7 @@ const PopupError: FC<{ id: string; error: string }> = (props) => {
 
   return (
     <Box>
-      <IconButton
-        size="small"
-        onMouseEnter={handlePopoverOpen}
-        onMouseLeave={handlePopoverClose}
-      >
+      <IconButton size="small" onClick={handleOpen}>
         <Error />
       </IconButton>
       <Popover
@@ -227,16 +223,12 @@ const PopupError: FC<{ id: string; error: string }> = (props) => {
           padding: 10,
         }}
         open={open}
+        onClose={handleClose}
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "left",
+          horizontal: "right",
         }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        onClose={handlePopoverClose}
       >
         <Typography variant="body2" sx={{ padding: 1 }}>
           {props.error}
@@ -363,7 +355,7 @@ const RichTextInput: FC<Props> = (props) => {
   }, [isAddingLink]);
 
   return (
-    <>
+    <Box sx={{ position: "relative" }}>
       {editor && (
         <BubbleMenu
           editor={editor}
@@ -534,9 +526,11 @@ const RichTextInput: FC<Props> = (props) => {
       )}
       <EditorContent editor={editor} />
       {contentHierarchyError && (
-        <PopupError id="content-error" error={contentHierarchyError} />
+        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
+          <PopupError id="content-error" error={contentHierarchyError} />
+        </Box>
       )}
-    </>
+    </Box>
   );
 };
 
