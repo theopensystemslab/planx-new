@@ -36,7 +36,6 @@ import {
   ReactRenderer,
   useEditor,
 } from "@tiptap/react";
-import { findIndex } from "ramda";
 import { map } from "ramda";
 import React, {
   type FC,
@@ -69,7 +68,10 @@ const commonExtensions = [
   Text,
   Bold,
   Italic,
-  Link,
+  Link.configure({
+    openOnClick: false,
+    autolink: false,
+  }),
   Heading.configure({
     levels: [1, 2, 3],
   }),
