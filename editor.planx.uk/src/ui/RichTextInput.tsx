@@ -163,35 +163,38 @@ type Value = any;
 
 const initialUrlValue = "https://";
 
-type ContentItem = "h1" | "h2" | "p";
+const getContentHierarchyError = (doc: JSONContent): string | null => {
+  let h1Index: number = -1;
+  let h2Index: number = -1;
 
-const getContentHierarchy = (doc: JSONContent): ContentItem[] => {
-  const tags = (doc.content || [])
-    .map((d: JSONContent) => {
-      if (d.type === "paragraph") {
-        return "p";
-      } else if (d.type === "heading") {
-        return d.attrs?.level === 1 ? "h1" : "h2";
+  let error: string | null = null;
+
+  (doc.content || []).forEach((d: JSONContent, index) => {
+    if (d.type === "paragraph") {
+      return;
+    } else if (d.type === "heading") {
+      const level = d.attrs?.level === 1 ? 1 : 2;
+      if (level === 1) {
+        if (h1Index === -1 && h2Index !== -1) {
+          error = "A level 1 heading must come before a level 2 heading.";
+        } else if (index !== 0) {
+          error = "The level 1 heading must come first in the document.";
+        }
+        h1Index = index;
+        return;
       }
-      return null;
-    })
-    .filter((val: ContentItem | null): val is ContentItem => Boolean(val));
-  return tags;
-};
+      if (level === 2) {
+        if (h1Index === -1) {
+          error = "A level 1 heading must come before a level 2 heading.";
+        }
+        h2Index = index;
+        return;
+      }
+    }
+    return null;
+  });
 
-const getContentHierarchyError = (hierarchy: ContentItem[]): string | null => {
-  const h1Index = findIndex((item) => item === "h1", hierarchy);
-  const h2Index = findIndex((item) => item === "h2", hierarchy);
-  if (h2Index !== -1 && h1Index === -1) {
-    return "You must start with a level 1 heading.";
-  }
-  if (h1Index !== -1 && h1Index !== 0) {
-    return "The level 1 heading must come first in the document.";
-  }
-  if (h2Index !== -1 && h1Index !== -1 && h2Index < h1Index) {
-    return "The level 1 heading must come before the level 2 heading.";
-  }
-  return null;
+  return error;
 };
 
 const PopupError: FC<{ id: string; error: string }> = (props) => {
@@ -219,7 +222,7 @@ const PopupError: FC<{ id: string; error: string }> = (props) => {
       <Popover
         id="popover"
         sx={{
-          zIndex: "tooltip",
+          zIndex: 100000,
           maxWidth: "xs",
           padding: 10,
         }}
@@ -274,12 +277,9 @@ const RichTextInput: FC<Props> = (props) => {
   // Cache internal string value
   const internalValue = useRef<string | null>(null);
 
-  const [contentHierarchy, setContentHierarchy] = useState<
-    ContentItem[] | null
+  const [contentHierarchyError, setContentHierarchyError] = useState<
+    string | null
   >(null);
-
-  const contentHierarchyError =
-    contentHierarchy && getContentHierarchyError(contentHierarchy);
 
   // Handle update events
   const handleUpdate = useCallback(
@@ -289,7 +289,7 @@ const RichTextInput: FC<Props> = (props) => {
       }
       const doc = transaction.editor.getJSON();
 
-      setContentHierarchy(getContentHierarchy(doc));
+      setContentHierarchyError(getContentHierarchyError(doc));
 
       const html = toHtml(doc);
       internalValue.current = html;
