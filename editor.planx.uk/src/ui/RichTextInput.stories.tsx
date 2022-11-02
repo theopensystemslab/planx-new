@@ -5,7 +5,7 @@ import Stack from "@mui/material/Stack";
 import { Meta } from "@storybook/react/types-6-0";
 import React, { useState } from "react";
 
-import RichTextInput, { fromHtml, injectVariables } from "./RichTextInput";
+import RichTextInput, { fromHtml } from "./RichTextInput";
 
 const metadata: Meta = {
   title: "Design System/Atoms/Form Elements/RichTextInput",
@@ -54,15 +54,6 @@ export const Basic = () => {
               readOnly
             />
           </Box>
-          <Box>
-            <p>Interpolated HTML result:</p>
-            <textarea
-              style={{ display: "block", width: "100%", height: 120 }}
-              value={injectVariables(value, { name: "Gary" })}
-              readOnly
-            />
-          </Box>
-
           <Box>
             <p>JSON result:</p>
             <textarea
