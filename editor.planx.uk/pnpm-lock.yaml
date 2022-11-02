@@ -81,7 +81,7 @@ specifiers:
   '@tiptap/extension-heading': 2.0.0-beta.29
   '@tiptap/extension-history': 2.0.0-beta.26
   '@tiptap/extension-italic': 2.0.0-beta.28
-  '@tiptap/extension-link': 2.0.0-beta.43
+  '@tiptap/extension-link': 2.0.0-beta.199
   '@tiptap/extension-list-item': 2.0.0-beta.196
   '@tiptap/extension-mention': 2.0.0-beta.103
   '@tiptap/extension-ordered-list': 2.0.0-beta.196
@@ -200,7 +200,7 @@ dependencies:
   '@tiptap/extension-heading': 2.0.0-beta.29_ngwxlaqnk6fwzlupw2ne24im6m
   '@tiptap/extension-history': 2.0.0-beta.26_ngwxlaqnk6fwzlupw2ne24im6m
   '@tiptap/extension-italic': 2.0.0-beta.28_ngwxlaqnk6fwzlupw2ne24im6m
-  '@tiptap/extension-link': 2.0.0-beta.43_ngwxlaqnk6fwzlupw2ne24im6m
+  '@tiptap/extension-link': 2.0.0-beta.199_ngwxlaqnk6fwzlupw2ne24im6m
   '@tiptap/extension-list-item': 2.0.0-beta.196_ngwxlaqnk6fwzlupw2ne24im6m
   '@tiptap/extension-mention': 2.0.0-beta.103_ngwxlaqnk6fwzlupw2ne24im6m
   '@tiptap/extension-ordered-list': 2.0.0-beta.196_ngwxlaqnk6fwzlupw2ne24im6m
@@ -5139,15 +5139,15 @@ packages:
       '@tiptap/core': 2.0.0-beta.183
     dev: false
 
-  /@tiptap/extension-link/2.0.0-beta.43_ngwxlaqnk6fwzlupw2ne24im6m:
-    resolution: {integrity: sha512-AYueqfTW713KGVfWSWhVbj4ObeWudgawikm3m0uYcKSdsAz/CfEvOD2/NA0uyQzlxmYLA6Pf8HMxoKGN+O4Cmg==}
+  /@tiptap/extension-link/2.0.0-beta.199_ngwxlaqnk6fwzlupw2ne24im6m:
+    resolution: {integrity: sha512-zwXDg+zsHhn2a4rJkFd/pND4zUfJ2RCgyrkBqAL+nimSiknaSsIw4NpnZTZFWze9i3NDcc2BNngDNovoEIEukg==}
     peerDependencies:
-      '@tiptap/core': ^2.0.0-beta.1
+      '@tiptap/core': ^2.0.0-beta.193
     dependencies:
       '@tiptap/core': 2.0.0-beta.183
       linkifyjs: 3.0.5
       prosemirror-model: 1.18.1
-      prosemirror-state: 1.4.1
+      prosemirror-state: 1.4.2
     dev: false
 
   /@tiptap/extension-list-item/2.0.0-beta.196_ngwxlaqnk6fwzlupw2ne24im6m:
