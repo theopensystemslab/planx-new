@@ -94,10 +94,19 @@ interface VariablesState {
 }
 
 // Specify whether a selection is unsuitable for ensuring accessible links
-const linkSelectionError = (selectionHtml: string) =>
-  selectionHtml === "<p>click here</p>"
-    ? "Links must be set over text that accurately describes what the link is for. Avoid generic language such as 'click here'."
-    : undefined;
+const linkSelectionError = (selectionHtml: string): string | null => {
+  if (selectionHtml.startsWith("<p>") && selectionHtml.endsWith("</p>")) {
+    const text = selectionHtml.slice(3, -4);
+    const lowercaseText = text.toLowerCase();
+    if (lowercaseText.includes("click") || lowercaseText.includes("here")) {
+      return "Links must be set over text that accurately describes what the link is for. Avoid generic language such as 'click here'.";
+    }
+    if (text[0] && text[0] !== text[0].toUpperCase() && text.length < 8) {
+      return "Make sure the link text accurately describes the what the link is for.";
+    }
+  }
+  return null;
+};
 
 // Maintain a store of variables as they are created in the '@'-mention plugin, making them available in memory for next time.
 // TODO: explore instantiating from a hard-coded list, or persisting in either the backend or local storage.
@@ -177,6 +186,9 @@ const getContentHierarchyError = (doc: JSONContent): string | null => {
       if (level === 1) {
         if (h1Index === -1 && h2Index !== -1) {
           error = "A level 1 heading must come before a level 2 heading.";
+        } else if (h1Index !== -1) {
+          error =
+            "There cannot be more than one level 1 heading in the document.";
         } else if (index !== 0) {
           error = "The level 1 heading must come first in the document.";
         }
