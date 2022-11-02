@@ -315,13 +315,19 @@ const RichTextInput: FC<Props> = (props) => {
     [props.onChange]
   );
 
+  const handleSelectionUpdate = useCallback(() => {
+    setAddingLink(null);
+  }, [setAddingLink]);
+
   useEffect(() => {
     if (!editor) {
       return;
     }
     editor.on("update", handleUpdate);
+    editor.on("selectionUpdate", handleSelectionUpdate);
     return () => {
       editor.off("update", handleUpdate);
+      editor.off("selectionUpdate", handleSelectionUpdate);
     };
   }, [editor, handleUpdate]);
 
