@@ -36,6 +36,7 @@ import {
   ReactRenderer,
   useEditor,
 } from "@tiptap/react";
+import { findIndex } from "ramda";
 import { map } from "ramda";
 import React, {
   type FC,
@@ -162,18 +163,35 @@ type Value = any;
 
 const initialUrlValue = "https://";
 
-const contentHierarchy = (doc: JSONContent): string[] => {
+type ContentItem = "h1" | "h2" | "p";
+
+const getContentHierarchy = (doc: JSONContent): ContentItem[] => {
   const tags = (doc.content || [])
     .map((d: JSONContent) => {
       if (d.type === "paragraph") {
         return "p";
       } else if (d.type === "heading") {
-        return "h" + (d.attrs?.level || "1");
+        return d.attrs?.level === 1 ? "h1" : "h2";
       }
       return null;
     })
-    .filter((val: string | null): val is string => Boolean(val));
+    .filter((val: ContentItem | null): val is ContentItem => Boolean(val));
   return tags;
+};
+
+const getContentHierarchyError = (hierarchy: ContentItem[]): string | null => {
+  const h1Index = findIndex((item) => item === "h1", hierarchy);
+  const h2Index = findIndex((item) => item === "h2", hierarchy);
+  if (h2Index !== -1 && h1Index === -1) {
+    return "You must start with a level 1 heading.";
+  }
+  if (h1Index !== -1 && h1Index !== 0) {
+    return "The level 1 heading must come first in the document.";
+  }
+  if (h2Index !== -1 && h1Index !== -1 && h2Index < h1Index) {
+    return "The level 1 heading must come before the level 2 heading.";
+  }
+  return null;
 };
 
 const PopupError: FC<{ id: string; error: string }> = (props) => {
@@ -256,18 +274,12 @@ const RichTextInput: FC<Props> = (props) => {
   // Cache internal string value
   const internalValue = useRef<string | null>(null);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!internalValue.current) {
-        return;
-      }
-      const doc = fromHtml(internalValue.current || "");
-      console.log(contentHierarchy(doc));
-    }, 1000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+  const [contentHierarchy, setContentHierarchy] = useState<
+    ContentItem[] | null
+  >(null);
+
+  const contentHierarchyError =
+    contentHierarchy && getContentHierarchyError(contentHierarchy);
 
   // Handle update events
   const handleUpdate = useCallback(
@@ -276,6 +288,9 @@ const RichTextInput: FC<Props> = (props) => {
         return;
       }
       const doc = transaction.editor.getJSON();
+
+      setContentHierarchy(getContentHierarchy(doc));
+
       const html = toHtml(doc);
       internalValue.current = html;
       // Cast as an HTML input change event to conform to input field API's
@@ -518,6 +533,9 @@ const RichTextInput: FC<Props> = (props) => {
         </BubbleMenu>
       )}
       <EditorContent editor={editor} />
+      {contentHierarchyError && (
+        <PopupError id="content-error" error={contentHierarchyError} />
+      )}
     </>
   );
 };
