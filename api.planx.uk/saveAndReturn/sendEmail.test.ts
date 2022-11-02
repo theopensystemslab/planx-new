@@ -127,7 +127,7 @@ describe("Send Email endpoint", () => {
         .send(data)
         .expect(400)
         .then(response => {
-          expect(response.body).toHaveProperty("error", 'Invalid template - must be one of [save, reminder, expiry]');
+          expect(response.body).toHaveProperty("error", 'Invalid template - must be one of [save, reminder, expiry, submit]');
         });
     });
   });

@@ -388,7 +388,7 @@ async function retrieveSubmission(token, submissionId) {
  * @param {string} path - file name for download
  * @param {AdmZip | string} folder - AdmZip archive
  */
-export const downloadFile = async (url, path, folder) => {
+const downloadFile = async (url, path, folder) => {
   const res = await fetch(url);
   const fileStream = fs.createWriteStream(path);
 
@@ -407,7 +407,7 @@ export const downloadFile = async (url, path, folder) => {
  * 
  * @param {string} path - file name
  */
-export const deleteFile = (path) => {
+const deleteFile = (path) => {
   if (fs.existsSync(path)) {
     fs.unlinkSync(path);
   } else {
