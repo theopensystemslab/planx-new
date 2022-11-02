@@ -1,17 +1,20 @@
 import "./RichTextInput.css";
 
 import IconButton from "@material-ui/core/IconButton";
-import Check from "@material-ui/icons/Check";
-import Close from "@material-ui/icons/Close";
-import Delete from "@material-ui/icons/Delete";
-import Error from "@material-ui/icons/Error";
-import FormatBold from "@material-ui/icons/FormatBold";
-import FormatItalic from "@material-ui/icons/FormatItalic";
-import FormatListBulleted from "@material-ui/icons/FormatListBulleted";
-import FormatListNumbered from "@material-ui/icons/FormatListNumbered";
-import LinkIcon from "@material-ui/icons/Link";
+import Check from "@mui/icons-material/Check";
+import Close from "@mui/icons-material/Close";
+import Delete from "@mui/icons-material/Delete";
+import Error from "@mui/icons-material/Error";
+import FormatBold from "@mui/icons-material/FormatBold";
+import FormatItalic from "@mui/icons-material/FormatItalic";
+import FormatListBulleted from "@mui/icons-material/FormatListBulleted";
+import FormatListNumbered from "@mui/icons-material/FormatListNumbered";
+import LinkIcon from "@mui/icons-material/Link";
+import Box from "@mui/material/Box";
 import { type InputBaseProps } from "@mui/material/InputBase";
-import { type Editor,type JSONContent } from "@tiptap/core";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import { type Editor, type JSONContent } from "@tiptap/core";
 import Bold from "@tiptap/extension-bold";
 import BulletList from "@tiptap/extension-bullet-list";
 import Document from "@tiptap/extension-document";
@@ -92,7 +95,7 @@ interface VariablesState {
 // Specify whether a selection is unsuitable for ensuring accessible links
 const linkSelectionError = (selectionHtml: string) =>
   selectionHtml === "<p>click here</p>"
-    ? "Please set link over descriptive piece of content."
+    ? "Links must be set over text that accurately describes what the link is for. Avoid generic language such as 'click here'."
     : undefined;
 
 // Maintain a store of variables as they are created in the '@'-mention plugin, making them available in memory for next time.
@@ -171,6 +174,55 @@ const contentHierarchy = (doc: JSONContent): string[] => {
     })
     .filter((val: string | null): val is string => Boolean(val));
   return tags;
+};
+
+const PopupError: FC<{ id: string; error: string }> = (props) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
+  return (
+    <Box>
+      <IconButton
+        size="small"
+        onMouseEnter={handlePopoverOpen}
+        onMouseLeave={handlePopoverClose}
+      >
+        <Error />
+      </IconButton>
+      <Popover
+        id="popover"
+        sx={{
+          zIndex: "tooltip",
+          maxWidth: "xs",
+          padding: 10,
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        onClose={handlePopoverClose}
+      >
+        <Typography variant="body2" sx={{ padding: 1 }}>
+          {props.error}
+        </Typography>
+      </Popover>
+    </Box>
+  );
 };
 
 const RichTextInput: FC<Props> = (props) => {
@@ -402,9 +454,7 @@ const RichTextInput: FC<Props> = (props) => {
                   addingLink.selectionHtml &&
                   linkSelectionError(addingLink.selectionHtml);
                 return error ? (
-                  <IconButton size="small">
-                    <Error />
-                  </IconButton>
+                  <PopupError id="link-popup" error={error} />
                 ) : (
                   <IconButton
                     size="small"

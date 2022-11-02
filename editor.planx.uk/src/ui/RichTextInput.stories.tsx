@@ -1,5 +1,7 @@
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
 import { Meta } from "@storybook/react/types-6-0";
 import React, { useState } from "react";
 
@@ -19,49 +21,56 @@ export const Basic = () => {
   );
 
   return (
-    <Box marginTop={3}>
-      <Button
-        onClick={() => {
-          setValue(
-            `<p>Hello, and <span data-type="mention" class="pass" data-id="Apples">@Apples</span> <a target="_blank" rel="noopener noreferrer nofollow" href="https://opensystemslab.org">OSL</a></p>`
-          );
-        }}
-      >
-        Reset from the outside
-      </Button>
-      <RichTextInput
-        placeholder="Add something"
-        value={value}
-        onChange={(ev) => {
-          setValue(ev.target.value);
-        }}
-      />
-      <Box>
-        <p>HTML result:</p>
-        <textarea
-          style={{ display: "block", width: "100%", height: 120 }}
-          value={value}
-          readOnly
-        />
-      </Box>
-      <Box>
-        <p>Interpolated HTML result:</p>
-        <textarea
-          style={{ display: "block", width: "100%", height: 120 }}
-          value={injectVariables(value, { name: "Gary" })}
-          readOnly
-        />
-      </Box>
+    <Grid container>
+      <Grid xs={4}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setValue(
+              `<p>Hello, and <span data-type="mention" class="pass" data-id="Apples">@Apples</span> <a target="_blank" rel="noopener noreferrer nofollow" href="https://opensystemslab.org">OSL</a></p>`
+            );
+          }}
+        >
+          Reset from the outside
+        </Button>
+      </Grid>
+      <Grid xs={8}>
+        <Stack spacing={4}>
+          <RichTextInput
+            placeholder="Add something"
+            value={value}
+            onChange={(ev) => {
+              setValue(ev.target.value);
+            }}
+          />
+          <Box>
+            <p>HTML result:</p>
+            <textarea
+              style={{ display: "block", width: "100%", height: 120 }}
+              value={value}
+              readOnly
+            />
+          </Box>
+          <Box>
+            <p>Interpolated HTML result:</p>
+            <textarea
+              style={{ display: "block", width: "100%", height: 120 }}
+              value={injectVariables(value, { name: "Gary" })}
+              readOnly
+            />
+          </Box>
 
-      <Box>
-        <p>JSON result:</p>
-        <textarea
-          style={{ display: "block", width: "100%", height: 120 }}
-          value={JSON.stringify(fromHtml(value), null, 2)}
-          readOnly
-        />
-      </Box>
-    </Box>
+          <Box>
+            <p>JSON result:</p>
+            <textarea
+              style={{ display: "block", width: "100%", height: 120 }}
+              value={JSON.stringify(fromHtml(value), null, 2)}
+              readOnly
+            />
+          </Box>
+        </Stack>
+      </Grid>
+    </Grid>
   );
 };
 
