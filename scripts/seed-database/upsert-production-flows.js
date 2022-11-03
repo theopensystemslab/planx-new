@@ -46,7 +46,6 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           slug
           team_id
           settings
-          version
           created_at
           updated_at
         }
@@ -72,7 +71,12 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
 
     await localClient.request(
       insertFlowsMutation,
-      { flows: productionFlows || [], }
+      {
+        flows: productionFlows?.map(flow => ({
+          ...flow,
+          version: 1,
+        })) || [],
+      }
     );
 
     console.log('Inserting Operations...');
