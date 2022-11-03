@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { GraphQLClient } from "graphql-request";
+import { gql, GraphQLClient } from "graphql-request";
 import pThrottle from 'p-throttle';
 const args = process.argv.slice(2);
 
@@ -46,7 +46,8 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           slug
           team_id
           settings
-          version
+          created_at
+          updated_at
         }
         teams {
           id
@@ -59,68 +60,28 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
       }
     `);
 
-    const {
-      teams: localTeams,
-      flows: localFlows,
-    } = await localClient.request(`
-      query GetAllFlowsAndTeams {
-        flows {
-          id
-          slug
-          team_id
-        }
-        teams {
-          id
-          slug
-        }
-      }
-    `);
+    await localClient.request(deleteFlowsAndTeamsQuery);
 
-    // Teams and Flows have 2 unique fields: `id` and `slug`, but the upsert `on_conflict` query only allows us to check for one of them.
-    // So if both fields exist in the current database, the query will fail.
-    // To prevent errors, we upsert production data in two different queries, filtering them by `id` and `slug`.
+    console.log("Inserting flows and teams...");
 
-    const localTeamsSlugs = localTeams.map(team => team.slug);
-    const {
-      false: teamsToUpsertById,
-      true: teamsToUpsertBySlug
-    } = _.groupBy(productionTeams, (team) => localTeamsSlugs.includes(team.slug));
-
-    const {
-      false: flowsToUpsertById,
-      true: flowsToUpsertBySlug
-    } = _.groupBy(
-      // XXX: overwrite flow version to match operation version and prevent sharedb sync errors
-      productionFlows.map(flow => ({ ...flow, version: 1, })),
-      (flow) => localFlows.some(localFlow =>
-        localFlow.slug === flow.slug && localFlow.team_id === flow.team_id
-      )
-    );
-
-    console.log("Inserting flows and teams...")
     await localClient.request(
-      getInsertMutation({
-        teamConstraint: 'teams_pkey',
-        flowConstraint: 'flows_pkey',
-      }),
-      {
-        teams: teamsToUpsertById || [],
-        flows: flowsToUpsertById || [],
-      }
+      insertTeamsMutation,
+      { teams: productionTeams || [] }
     );
 
     await localClient.request(
-      getInsertMutation({
-        teamConstraint: 'teams_slug_key',
-        flowConstraint: 'flows_team_id_slug_key',
-      }),
+      insertFlowsMutation,
       {
-        teams: teamsToUpsertBySlug || [],
-        flows: flowsToUpsertBySlug || []
+        flows: productionFlows?.map(flow => ({
+          ...flow,
+          version: 1,
+        })) || [],
       }
     );
 
-    await insertOperations(localClient)(flowsToUpsertById);
+    console.log('Inserting Operations...');
+
+    await insertOperations(localClient)(productionFlows || []);
 
     console.log('Fetching published flows...');
     // throttling is needed to prevent errors when fetching a large amount of data
@@ -138,20 +99,50 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
   }
 })()
 
-const getInsertMutation = ({ teamConstraint, flowConstraint }) => `
-  mutation InsertFlowsAndTeams(
-    $teams: [teams_insert_input!]!,
-    $flows: [flows_insert_input!]!,
+const deleteFlowsAndTeamsQuery = gql`
+  mutation CleanDatabase {
+    delete_session_backups(where: {}){
+      affected_rows
+    }
+    delete_analytics_logs(where: {}){
+      affected_rows
+    }
+    delete_analytics(where: {}){
+      affected_rows
+    }
+    delete_published_flows(where: {}){
+      affected_rows
+    }
+    delete_operations(where: {}){
+      affected_rows
+    }
+    delete_flows(where: {}) {
+      affected_rows
+    }
+    delete_teams(where: {}) {
+      affected_rows
+    }
+  }
+`;
+
+const insertTeamsMutation = gql`
+  mutation InsertTeams(
+    $teams: [teams_insert_input!]!, 
   ) {
     insert_teams(
       objects: $teams,
-      on_conflict: {constraint: ${teamConstraint}, update_columns: [name, settings, theme]}
     ) {
       affected_rows
     }
+  }
+`;
+
+const insertFlowsMutation = gql`
+  mutation InsertFlows(
+    $flows: [flows_insert_input!]!,
+  ) {
     insert_flows(
       objects: $flows,
-      on_conflict: {constraint: ${flowConstraint}, update_columns: [data, slug, team_id]}
     ) {
       affected_rows
     }
@@ -203,11 +194,7 @@ const insertPublishedFlowMutation = (publishedFlow, graphQLClient) => {
       $publishedFlow: published_flows_insert_input!
     ) {
       insert_published_flows_one(
-        object: $publishedFlow,
-        on_conflict: {
-          constraint: published_flows_pkey,
-          update_columns: [data, flow_id, summary, publisher_id, created_at]
-        }
+        object: $publishedFlow
       ) {
         id
       }
@@ -225,7 +212,7 @@ const insertOperations = (localClient) => async (flows) => {
 
   await localClient.request(`
     mutation InsertOperations($operations: [operations_insert_input!]!) {
-      insert_operations(objects: $operations, on_conflict: {constraint: operations_flow_id_version_key, update_columns: data}) {
+      insert_operations(objects: $operations) {
         affected_rows
       }
     }

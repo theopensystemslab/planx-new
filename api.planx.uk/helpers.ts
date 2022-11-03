@@ -25,7 +25,7 @@ const getMostRecentPublishedFlow = async (id: string) => {
     `
       query GetMostRecentPublishedFlow($id: uuid!) {
         flows_by_pk(id: $id) {
-          published_flows(limit: 1, order_by: { id: desc }) {
+          published_flows(limit: 1, order_by: { created_at: desc }) {
             data
           }
         }
@@ -39,7 +39,7 @@ const getMostRecentPublishedFlow = async (id: string) => {
 
 // Get the snapshot of the published flow for a certain point in time (flattened, with external portal nodes)
 //   created_at refers to published date, value passed in as param should be lowcal_session.updated_at
-const getPublishedFlowByDate = async (id: string, created_at: number) => {
+const getPublishedFlowByDate = async (id: string, created_at: string) => {
   const data = await client.request(
     `
       query GetPublishedFlowByDate($id: uuid!, $created_at: timestamptz!) {

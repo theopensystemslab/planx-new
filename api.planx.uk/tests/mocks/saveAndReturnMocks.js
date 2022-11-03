@@ -1,4 +1,4 @@
-const mockTeam = {
+export const mockTeam = {
   slug: "test-team",
   name: "Test Team",
   notifyPersonalisation: {
@@ -9,8 +9,9 @@ const mockTeam = {
   }
 };
 
-const mockLowcalSession = {
+export const mockLowcalSession = {
   id: 123,
+  has_user_saved: false,
   data: {
     passport: {
       data: {
@@ -28,9 +29,47 @@ const mockLowcalSession = {
   created_at: "2022-01-04T01:02:03.865452+00:00",
 };
 
-const mockFlow = {
+export const mockFlow = {
   slug: "slug",
   team: mockTeam,
 };
 
-export { mockFlow, mockLowcalSession, mockTeam }
+export const mockGetHumanReadableProjectType = {
+  name: "GetHumanReadableProjectType",
+  data: {
+    project_types: [
+      { description: "New office premises" }
+    ],
+  },
+  variables: {
+    rawList: ["new.office"],
+  }
+}
+
+export const mockValidateSingleSessionRequest = {
+  name: "ValidateSingleSessionRequest",
+  data: {
+    flows_by_pk: mockFlow,
+    lowcal_sessions: [mockLowcalSession]
+  }
+}
+
+export const mockSoftDeleteLowcalSession = {
+  name: "SoftDeleteLowcalSession",
+  data: {
+    update_lowcal_sessions_by_pk: { id: 123 }
+  },
+  variables: {
+    sessionId: 123,
+  }
+}
+
+export const mockSetupEmailNotifications = {
+  name: "SetupEmailNotifications",
+  data: {
+    update_lowcal_sessions_by_pk: { id: 123, has_user_saved: true }
+  },
+  variables: {
+    sessionId: 123,
+  }
+}

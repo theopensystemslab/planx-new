@@ -1,14 +1,13 @@
-const { addDays } = require("date-fns");
-const { createScheduledEvent } = require("../hasura/metadata");
-const { DAYS_UNTIL_EXPIRY } = require("../saveAndReturn/utils");
+import { addDays } from 'date-fns';
+import { Request, Response, NextFunction } from 'express';
+
+import { createScheduledEvent } from '../hasura/metadata';
+import { DAYS_UNTIL_EXPIRY } from '../saveAndReturn/utils';
 
 /**
  * Create a "reminder" event for a lowcal_session record
- * @param {object} req 
- * @param {object} res 
- * @param {object} next 
  */
-const createReminderEvent = async (req, res, next) => {
+const createReminderEvent = async (req: Request, res: Response, next: NextFunction): Promise<NextFunction | void> => {
   try {
     const { createdAt, payload } = req.body
     if (!createdAt || !payload)
@@ -33,11 +32,8 @@ const createReminderEvent = async (req, res, next) => {
 
 /**
  * Create an "expiry" event for a lowcal_session record
- * @param {object} req 
- * @param {object} res 
- * @param {object} next 
  */
-const createExpiryEvent = async (req, res, next) => {
+const createExpiryEvent = async (req: Request, res: Response, next: NextFunction): Promise<NextFunction | void> => {
   try {
     const { createdAt, payload } = req.body
     if (!createdAt || !payload)
@@ -50,12 +46,12 @@ const createExpiryEvent = async (req, res, next) => {
       schedule_at: addDays(Date.parse(createdAt), DAYS_UNTIL_EXPIRY),
       payload: payload,
       comment: `expiry_${payload.sessionId}`,
-    }, next);
+    });
     res.json(response);
   } catch (error) {
     return next({
       error,
-      message: `Failed to create expiry event. Error: ${error.message}`,
+      message: `Failed to create expiry event. Error: ${(error as Error).message}`,
     });
   };
 };

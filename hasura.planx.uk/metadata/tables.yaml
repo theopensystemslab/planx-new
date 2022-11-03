@@ -186,6 +186,7 @@
         columns:
           - created_at
           - data
+          - has_user_saved
           - id
           - updated_at
         filter:

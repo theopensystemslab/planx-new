@@ -1,3 +1,4 @@
+import { LowCalSession, Team } from './../types';
 import supertest from "supertest";
 import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
@@ -6,6 +7,10 @@ import { buildContentFromSessions } from "./resumeApplication";
 
 const ENDPOINT = "/resume-application";
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk"
+
+type DeepPartial<T> = T extends object ? {
+  [P in keyof T]?: DeepPartial<T[P]>;
+} : T;
 
 describe("buildContentFromSessions function", () => {
 
@@ -25,7 +30,7 @@ describe("buildContentFromSessions function", () => {
   });
 
   it("should return correctly formatted content for a single session", async () => {
-    const sessions = [{
+    const sessions: DeepPartial<LowCalSession>[] = [{
       data: {
         passport: {
           data: {
@@ -36,7 +41,7 @@ describe("buildContentFromSessions function", () => {
           }
         }
       },
-      id: 123,
+      id: "123",
       created_at: "2022-05-01T01:02:03.865452+00:00",
       flow: {
         slug: "apply-for-a-lawful-development-certificate"
@@ -48,11 +53,11 @@ describe("buildContentFromSessions function", () => {
       Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(await buildContentFromSessions(sessions, { slug: "team" })).toEqual(result);
+    expect(await buildContentFromSessions(sessions as LowCalSession[], { slug: "team" } as Team)).toEqual(result);
   });
 
   it("should return correctly formatted content for multiple session", async () => {
-    const sessions = [{
+    const sessions: DeepPartial<LowCalSession>[] = [{
       data: {
         passport: {
           data: {
@@ -63,7 +68,7 @@ describe("buildContentFromSessions function", () => {
           }
         }
       },
-      id: 123,
+      id: "123",
       created_at: "2022-05-01T01:02:03.865452+00:00",
       flow: {
         slug: "apply-for-a-lawful-development-certificate"
@@ -80,7 +85,7 @@ describe("buildContentFromSessions function", () => {
           }
         }
       },
-      id: 456,
+      id: "456",
       created_at: "2022-05-01T01:02:03.865452+00:00",
       flow: {
         slug: "apply-for-a-lawful-development-certificate"
@@ -97,7 +102,7 @@ describe("buildContentFromSessions function", () => {
           }
         }
       },
-      id: 789,
+      id: "789",
       created_at: "2022-05-01T01:02:03.865452+00:00",
       flow: {
         slug: "apply-for-a-lawful-development-certificate"
@@ -116,11 +121,11 @@ describe("buildContentFromSessions function", () => {
       Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=789`
-    expect(await buildContentFromSessions(sessions, { slug: "team" })).toEqual(result)
+    expect(await buildContentFromSessions(sessions as LowCalSession[], { slug: "team" } as Team)).toEqual(result)
   });
 
   it("should handle an empty address field", async () => {
-    const sessions = [{
+    const sessions: DeepPartial<LowCalSession>[] = [{
       data: {
         passport: {
           // Missing address
@@ -129,7 +134,7 @@ describe("buildContentFromSessions function", () => {
           }
         }
       },
-      id: 123,
+      id: "123",
       created_at: "2022-05-01T01:02:03.865452+00:00",
       flow: {
         slug: "apply-for-a-lawful-development-certificate"
@@ -141,11 +146,11 @@ describe("buildContentFromSessions function", () => {
       Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(await buildContentFromSessions(sessions, { slug: "team" })).toEqual(result);
+    expect(await buildContentFromSessions(sessions as LowCalSession[], { slug: "team" } as Team)).toEqual(result);
   });
 
   it("should handle an empty project type field", async () => {
-    const sessions = [{
+    const sessions: DeepPartial<LowCalSession>[] = [{
       data: {
         passport: {
           data: {
@@ -156,7 +161,7 @@ describe("buildContentFromSessions function", () => {
           }
         }
       },
-      id: 123,
+      id: "123",
       created_at: "2022-05-01T01:02:03.865452+00:00",
       flow: {
         slug: "apply-for-a-lawful-development-certificate"
@@ -168,7 +173,7 @@ describe("buildContentFromSessions function", () => {
       Project type: Project type not submitted
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(await buildContentFromSessions(sessions, { slug: "team" })).toEqual(result);
+    expect(await buildContentFromSessions(sessions as LowCalSession[], { slug: "team" } as Team)).toEqual(result);
   });
 
 });
