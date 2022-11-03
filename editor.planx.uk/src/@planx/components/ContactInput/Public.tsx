@@ -34,6 +34,20 @@ export default function ContactInputComponent(props: Props): FCReturn {
       email: "",
     },
     onSubmit: (values) => {
+      // // map values to expected granular passport variable names before submitting
+      // values["name.first"] = values.firstName;
+      // delete values.firstName;
+
+      // values["name.last"] = values.lastName;
+      // delete values.lastName;
+
+      // values["company.name"] = values.organisation;
+      // delete values.organisation;
+
+      // values["phone.primary"] = values.phone;
+      // delete values.phone;
+
+      // update passport on submit
       props.handleSubmit?.(makeData(props, values));
     },
     validateOnBlur: false,
@@ -74,6 +88,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
           bordered
           errorMessage={formik.errors.firstName}
           onChange={formik.handleChange}
+          id={`${props.id}-firstName`}
           inputProps={{
             "aria-describedby": formik.errors.firstName
               ? `${ERROR_MESSAGE}-${props.id}-firstName`
@@ -130,6 +145,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
             bordered
             errorMessage={formik.errors.email}
             onChange={formik.handleChange}
+            id={`${props.id}`}
             inputProps={{
               "aria-describedby": formik.errors.email
                 ? `${ERROR_MESSAGE}-${props.id}-email`
