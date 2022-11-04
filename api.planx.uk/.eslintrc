@@ -7,5 +7,30 @@
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
-  "rules": {}
+  "rules": {
+    "@typescript-eslint/no-non-null-assertion": "warn",
+  },
+  "globals": {
+    "require": "readonly",
+    "process": "readonly",
+    "__dirname": "readonly",
+    "console": "readonly",
+    "setTimeout": "readonly",
+    "clearTimeout": "readonly",
+    "Buffer": "readonly",
+    "Headers": "readonly",
+    "querystring": "readonly",
+    "URLSearchParams": "readonly",
+    "exports": "readonly",
+    "fetch": "readonly",
+    "test": "readonly",
+    "describe": "readonly",
+    "it": "readonly",
+    "expect": "readonly",
+    "beforeAll": "readonly",
+    "beforeEach": "readonly",
+    "afterAll": "readonly",
+    "afterEach": "readonly",
+  },
+  "ignorePatterns": "dist/**"
 }
