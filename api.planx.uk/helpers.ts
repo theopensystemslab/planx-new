@@ -25,7 +25,7 @@ const getMostRecentPublishedFlow = async (id: string) => {
     `
       query GetMostRecentPublishedFlow($id: uuid!) {
         flows_by_pk(id: $id) {
-          published_flows(limit: 1, order_by: { created_at: desc }) {
+          published_flows(limit: 1, order_by: { id: desc }) {
             data
           }
         }
