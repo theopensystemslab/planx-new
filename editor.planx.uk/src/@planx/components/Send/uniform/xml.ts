@@ -208,28 +208,28 @@ export function makeXmlString(
       <portaloneapp:Applicant>
         <common:PersonName>
           <pdt:PersonNameTitle>${escape(
-            passport.data?.["applicant.title"]
+            passport.data?.applicant?.title
           )}</pdt:PersonNameTitle>
           <pdt:PersonGivenName>${escape(
-            passport.data?.["applicant.name.first"]
+            passport.data?.applicant?.["name.first"]
           )}</pdt:PersonGivenName>
           <pdt:PersonFamilyName>${escape(
-            passport.data?.["applicant.name.last"]
+            passport.data?.applicant?.["name.last"]
           )}</pdt:PersonFamilyName>
         </common:PersonName>
         <common:OrgName>${escape(
-          passport.data?.["applicant.company.name"]
+          passport.data?.applicant?.["company.name"]
         )}</common:OrgName>
         ${getAddressForPerson("applicant")}
         <common:ContactDetails PreferredContactMedium="E-Mail">
           <common:Email EmailUsage="work" EmailPreferred="yes">
             <apd:EmailAddress>${
-              passport.data?.["applicant.email"]
+              passport.data?.applicant?.email
             }</apd:EmailAddress>
           </common:Email>
           <common:Telephone TelUse="work" TelPreferred="no" TelMobile="yes">
             <apd:TelNationalNumber>${escape(
-              passport.data?.["applicant.phone.primary"]
+              passport.data?.applicant?.["phone.primary"]
             )}</apd:TelNationalNumber>
           </common:Telephone>
         </common:ContactDetails>
@@ -237,28 +237,28 @@ export function makeXmlString(
       <portaloneapp:Agent>
         <common:PersonName>
         <pdt:PersonNameTitle>${escape(
-          passport.data?.["applicant.agent.title"]
+          passport.data?.["applicant.agent"]?.title
         )}</pdt:PersonNameTitle>
         <pdt:PersonGivenName>${escape(
-          passport.data?.["applicant.agent.name.first"]
+          passport.data?.["applicant.agent"]?.["name.first"]
         )}</pdt:PersonGivenName>
         <pdt:PersonFamilyName>${escape(
-          passport.data?.["applicant.agent.name.last"]
+          passport.data?.["applicant.agent"]?.["name.last"]
         )}</pdt:PersonFamilyName>
         </common:PersonName>
         <common:OrgName>${escape(
-          passport.data?.["applicant.agent.company.name"]
+          passport.data?.["applicant.agent"]?.["company.name"]
         )}</common:OrgName>
         ${getAddressForPerson("applicant.agent")}
         <common:ContactDetails PreferredContactMedium="E-Mail">
           <common:Email EmailUsage="work" EmailPreferred="yes">
             <apd:EmailAddress>${
-              passport.data?.["applicant.agent.email"]
+              passport.data?.["applicant.agent"]?.email
             }</apd:EmailAddress>
           </common:Email>
           <common:Telephone TelUse="work" TelPreferred="no" TelMobile="yes">
             <apd:TelNationalNumber>${escape(
-              passport.data?.["applicant.agent.phone.primary"]
+              passport.data?.["applicant.agent"]?.["phone.primary"]
             )}</apd:TelNationalNumber>
           </common:Telephone>
         </common:ContactDetails>

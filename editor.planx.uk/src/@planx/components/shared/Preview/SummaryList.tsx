@@ -337,11 +337,7 @@ function ContactInput(props: ComponentProps) {
     <>
       <dt>{props.node.data.title ?? "Contact"}</dt>
       <dd>
-        {title}
-        <br />
-        {firstName}
-        <br />
-        {lastName}
+        {title + " " + firstName + " " + lastName}
         <br />
         {organisation ? (
           <>

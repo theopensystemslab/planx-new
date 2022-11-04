@@ -7,8 +7,10 @@ describe("useStagingUrlIfTestApplication()", () => {
   test("replaces URL if test user", () => {
     const url = useStagingUrlIfTestApplication({
       data: {
-        "applicant.name.first": "Test ",
-        "applicant.name.last": "test",
+        applicant: {
+          "name.first": "Test",
+          "name.last": "Test",
+        },
       },
     })("https://api.editor.planx.uk/bops/southwark");
 
@@ -18,8 +20,10 @@ describe("useStagingUrlIfTestApplication()", () => {
   test("doesn't replace URL if not a test user", () => {
     const url = useStagingUrlIfTestApplication({
       data: {
-        "applicant.name.first": "Regular",
-        "applicant.name.last": "User",
+        applicant: {
+          "name.first": "Regular",
+          "name.last": "User",
+        },
       },
     })("https://api.editor.planx.uk/pay");
 

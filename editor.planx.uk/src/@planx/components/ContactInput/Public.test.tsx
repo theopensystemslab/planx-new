@@ -38,6 +38,11 @@ test("submits contact data", async () => {
         organisation: "DLUHC",
         phone: "0123456789",
         email: "jane@gov.uk",
+        // handleSubmit has also mapped props to expected passport variables
+        "name.first": "Jane",
+        "name.last": "Doe",
+        "company.name": "DLUHC",
+        "phone.primary": "0123456789",
       },
     },
   });
@@ -61,6 +66,10 @@ test("recovers previously submitted text when clicking the back button", async (
             organisation: "",
             phone: "0123456789",
             email: "jane@gov.uk",
+            "name.first": "Jane",
+            "name.last": "Doe",
+            "company.name": "",
+            "phone.primary": "0123456789",
           },
         },
       }}
@@ -82,6 +91,11 @@ test("recovers previously submitted text when clicking the back button", async (
         organisation: "Local planning authority",
         phone: "0123456789",
         email: "jane@gov.uk",
+        // handleSubmit has also mapped props to expected passport variables
+        "name.first": "Jane",
+        "name.last": "Doe",
+        "company.name": "Local planning authority",
+        "phone.primary": "0123456789",
       },
     },
   });
@@ -107,6 +121,10 @@ test("recovers previously submitted text when clicking the back button when a pa
             organisation: "",
             phone: "0123456789",
             email: "jane@gov.uk",
+            "name.first": "Jane",
+            "name.last": "Doe",
+            "company.name": "",
+            "phone.primary": "0123456789",
           },
         },
       }}
@@ -128,6 +146,11 @@ test("recovers previously submitted text when clicking the back button when a pa
         organisation: "Local planning authority",
         phone: "0123456789",
         email: "jane@gov.uk",
+        // handleSubmit has also mapped props to expected passport variables
+        "name.first": "Jane",
+        "name.last": "Doe",
+        "company.name": "Local planning authority",
+        "phone.primary": "0123456789",
       },
     },
   });

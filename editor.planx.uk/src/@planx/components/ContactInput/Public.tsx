@@ -21,6 +21,10 @@ interface FormProps {
   organisation: string;
   phone: string;
   email: string;
+  "name.first"?: string;
+  "name.last"?: string;
+  "company.name"?: string;
+  "phone.primary"?: string;
 }
 
 export default function ContactInputComponent(props: Props): FCReturn {
@@ -34,18 +38,11 @@ export default function ContactInputComponent(props: Props): FCReturn {
       email: "",
     },
     onSubmit: (values) => {
-      // // map values to expected granular passport variable names before submitting
-      // values["name.first"] = values.firstName;
-      // delete values.firstName;
-
-      // values["name.last"] = values.lastName;
-      // delete values.lastName;
-
-      // values["company.name"] = values.organisation;
-      // delete values.organisation;
-
-      // values["phone.primary"] = values.phone;
-      // delete values.phone;
+      // map internal props to expected granular passport keys before submitting
+      values["name.first"] = values.firstName;
+      values["name.last"] = values.lastName;
+      values["company.name"] = values.organisation;
+      values["phone.primary"] = values.phone;
 
       // update passport on submit
       props.handleSubmit?.(makeData(props, values));
@@ -145,7 +142,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
             bordered
             errorMessage={formik.errors.email}
             onChange={formik.handleChange}
-            id={`${props.id}`}
+            id={`${props.id}-email`}
             inputProps={{
               "aria-describedby": formik.errors.email
                 ? `${ERROR_MESSAGE}-${props.id}-email`

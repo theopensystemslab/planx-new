@@ -25,16 +25,6 @@ import {
 } from "../model";
 
 export const bopsDictionary = {
-  applicant_first_name: "applicant.name.first",
-  applicant_last_name: "applicant.name.last",
-  applicant_phone: "applicant.phone.primary",
-  applicant_email: "applicant.email",
-
-  agent_first_name: "applicant.agent.name.first",
-  agent_last_name: "applicant.agent.name.last",
-  agent_phone: "applicant.agent.phone.primary",
-  agent_email: "applicant.agent.email",
-
   description: "proposal.description",
 };
 
@@ -61,7 +51,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.Send:
     case TYPES.SetValue:
     case TYPES.TaskList:
-    case TYPES.ContactInput:
+    case TYPES.ContactInput: // these passport fields are set at top level in section 1c below, so don't need to be duplicated in proposal_details
       return false;
 
     case TYPES.AddressInput:
@@ -262,6 +252,25 @@ export function getBOPSParams(
     }
   } catch (err) {
     console.error({ boundary_geojson: err });
+  }
+
+  // 1c. applicant or agent top-level contact details
+
+  const applicant = passport.data?.applicant;
+  const agent = passport.data?.["applicant.agent"];
+
+  if (applicant) {
+    data.applicant_first_name = applicant["name.first"];
+    data.applicant_last_name = applicant["name.last"];
+    data.applicant_phone = applicant["phone.primary"];
+    data.applicant_email = applicant["email"];
+  }
+
+  if (agent) {
+    data.agent_first_name = agent["name.first"];
+    data.agent_last_name = agent["name.last"];
+    data.agent_phone = agent["phone.primary"];
+    data.agent_email = agent["email"];
   }
 
   // 2. files
