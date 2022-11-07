@@ -1,8 +1,10 @@
+
 import supertest from "supertest";
 
 import { queryMock } from "../tests/graphqlQueryMock";
 import { authHeader } from "../tests/mockJWT";
 import app from "../server";
+import { Flow } from "../types";
 
 beforeEach(() => {
   queryMock.mockQuery({
@@ -101,7 +103,7 @@ it("updates flow data and returns matches if there are matches", async () => {
     });
 });
 
-const mockFlowData = {
+const mockFlowData: Flow["data"] = {
   _root: {
     edges: ["RRQwM2zAgy", "vcTgmVQAre", "QsEdip17H5"],
   },
@@ -162,7 +164,7 @@ const mockFlowData = {
   },
 };
 
-const replacedFlowData = {
+const replacedFlowData: Flow["data"] = {
   _root: {
     edges: ["RRQwM2zAgy", "vcTgmVQAre", "QsEdip17H5"],
   },
