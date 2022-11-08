@@ -93,7 +93,6 @@ specifiers:
   '@tiptap/suggestion': 2.0.0-beta.199
   '@turf/helpers': ^6.5.0
   '@types/draft-js': ^0.11.9
-  '@types/geojson': ^7946.0.10
   '@types/jest': ^27.4.3
   '@types/jest-axe': ^3.5.4
   '@types/lodash': ^4.14.182
@@ -280,7 +279,6 @@ devDependencies:
   '@testing-library/user-event': 14.4.3
   '@turf/helpers': 6.5.0
   '@types/draft-js': 0.11.9
-  '@types/geojson': 7946.0.10
   '@types/jest': 27.5.2
   '@types/jest-axe': 3.5.4
   '@types/lodash': 4.14.182
@@ -5369,10 +5367,6 @@ packages:
 
   /@types/estree/0.0.51:
     resolution: {integrity: sha512-CuPgU6f3eT/XgKKPqKd/gLZV1Xmvf1a2R5POBOGQa6uv82xpls89HU5zKeVoyR8XzHd1RGNOlQlvUe3CFkjWNQ==}
-    dev: true
-
-  /@types/geojson/7946.0.10:
-    resolution: {integrity: sha512-Nmh0K3iWQJzniTuPRcJn5hxXkfB1T1pgB89SBig5PlJQU5yocazeu4jATJlaA0GYFKWMqDdvYemoSnF2pXgLVA==}
     dev: true
 
   /@types/glob/7.2.0:

@@ -5,7 +5,7 @@ import { findGeoJSON } from "./helpers";
 
 describe("findGeoJSON", () => {
   it("finds the first GeoJSON object when only one exists", () => {
-    const geojson: GeoJSON = {
+    const geojson = {
       type: "Feature",
       properties: {},
       geometry: {
@@ -37,7 +37,7 @@ describe("findGeoJSON", () => {
   });
 
   it("finds the first GeoJSON object when multiple exist", () => {
-    const geojson: GeoJSON = {
+    const geojson = {
       type: "Feature",
       properties: {},
       geometry: {

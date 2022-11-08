@@ -4,7 +4,7 @@ import { Store } from "pages/FlowEditor/lib/store";
 export function findGeoJSON(
   flow: Store.flow,
   breadcrumbs: Store.breadcrumbs
-): GeoJSON | undefined {
+): { type: "Feature" } | undefined {
   const boundaryQuestionID = Object.keys(breadcrumbs).find(
     (questionId) => flow[questionId]?.type === TYPES.DrawBoundary
   );
