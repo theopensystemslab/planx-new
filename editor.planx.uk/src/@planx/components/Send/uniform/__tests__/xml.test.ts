@@ -2,9 +2,9 @@ import { Address } from "@planx/components/AddressInput/model";
 import { SiteAddress } from "@planx/components/FindProperty/model";
 import { XMLParser, XMLValidator } from "fast-xml-parser";
 import { get } from "lodash";
-import { Store } from "pages/FlowEditor/lib/store/index";
 
-import { makeXmlString } from "./xml";
+import { Store } from "./../../../../../pages/FlowEditor/lib/store/index";
+import { makeXmlString } from "./../xml";
 
 const parser = new XMLParser();
 

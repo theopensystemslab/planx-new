@@ -1,11 +1,8 @@
 import { UploadFileResponse } from "api/upload";
 import omit from "lodash/omit";
 
-import { uploadFile } from "../../../../api/upload";
 import { Store } from "../../../../pages/FlowEditor/lib/store";
-import { TYPES } from "../../types";
 import { getBOPSParams } from "../bops";
-import { findGeoJSON } from "../helpers";
 import { CSVData } from "../model";
 import { makeXmlString } from "./xml";
 
@@ -52,7 +49,6 @@ export function getUniformParams(
   return {
     xml: makeXmlString(passport, sessionId, uniqueFiles),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
-    geojson: findGeoJSON(flow, breadcrumbs),
     files: uniqueFiles,
     sessionId,
   };
