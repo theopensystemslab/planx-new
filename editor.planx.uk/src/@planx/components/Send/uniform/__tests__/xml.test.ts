@@ -364,3 +364,64 @@ describe("Applicant address", () => {
     expect(resultAddress).toMatchObject(expectedAddress);
   });
 });
+
+describe("Applicant contact details", () => {
+  const sessionId = "123";
+  const files: string[] = [];
+
+  const applicantKey: string = "portaloneapp:Proposal.portaloneapp:Applicant";
+  const expectedApplicant = {
+    "common:PersonName": {
+      "pdt:PersonNameTitle": "Mme",
+      "pdt:PersonGivenName": "Jane",
+      "pdt:PersonFamilyName": "Doe",
+    },
+    "common:OrgName": "DLUHC",
+    "common:ContactDetails": {
+      "common:Email": {
+        "apd:EmailAddress": "jane@test.com",
+      },
+      "common:Telephone": {
+        "apd:TelNationalNumber": 123456789,
+      },
+    },
+  };
+
+  it("should populate the Applicant when TextInput components are used", () => {
+    const passport: Store.passport = {
+      data: {
+        "applicant.title": "Mme",
+        "applicant.name.first": "Jane",
+        "applicant.name.last": "Doe",
+        "applicant.company.name": "DLUHC",
+        "applicant.phone.primary": "0123456789",
+        "applicant.email": "jane@test.com",
+      },
+    };
+
+    const xml = makeXmlString(passport, sessionId, files);
+    let result = parser.parse(xml);
+    const resultApplicant = get(result, applicantKey);
+    expect(resultApplicant).toMatchObject(expectedApplicant);
+  });
+
+  it("should populate the Applicant when a ContactInput component is used", () => {
+    const passport: Store.passport = {
+      data: {
+        applicant: {
+          title: "Mme",
+          "name.first": "Jane",
+          "name.last": "Doe",
+          "company.name": "DLUHC",
+          "phone.primary": "0123456789",
+          email: "jane@test.com",
+        },
+      },
+    };
+
+    const xml = makeXmlString(passport, sessionId, files);
+    let result = parser.parse(xml);
+    const resultApplicant = get(result, applicantKey);
+    expect(resultApplicant).toMatchObject(expectedApplicant);
+  });
+});

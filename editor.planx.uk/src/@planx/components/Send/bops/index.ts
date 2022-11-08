@@ -25,6 +25,17 @@ import {
 } from "../model";
 
 export const bopsDictionary = {
+  // applicant or agent details provided via individual TextInput components
+  applicant_first_name: "applicant.name.first",
+  applicant_last_name: "applicant.name.last",
+  applicant_phone: "applicant.phone.primary",
+  applicant_email: "applicant.email",
+
+  agent_first_name: "applicant.agent.name.first",
+  agent_last_name: "applicant.agent.name.last",
+  agent_phone: "applicant.agent.phone.primary",
+  agent_email: "applicant.agent.email",
+
   description: "proposal.description",
 };
 
@@ -51,7 +62,6 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.Send:
     case TYPES.SetValue:
     case TYPES.TaskList:
-    case TYPES.ContactInput: // these passport fields are set at top level in section 1c below, so don't need to be duplicated in proposal_details
       return false;
 
     case TYPES.AddressInput:
@@ -60,6 +70,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.NumberInput:
     case TYPES.Statement:
     case TYPES.TextInput:
+    case TYPES.ContactInput:
       return true;
 
     default:
@@ -149,6 +160,7 @@ export const makePayload = (
             return Object.values(bc.data ?? {}).map((x) => String(x));
           case TYPES.Checklist:
           case TYPES.Statement:
+          case TYPES.ContactInput:
           default:
             return bc.answers ?? [];
         }
@@ -254,7 +266,7 @@ export function getBOPSParams(
     console.error({ boundary_geojson: err });
   }
 
-  // 1c. applicant or agent top-level contact details
+  // 1c. applicant or agent details provided via a ContactInput component
 
   const applicant = passport.data?.applicant;
   const agent = passport.data?.["applicant.agent"];
@@ -340,7 +352,10 @@ export function getBOPSParams(
 
   const bopsData = removeNilValues(
     Object.entries(bopsDictionary).reduce((acc, [bopsField, planxField]) => {
-      acc[bopsField as keyof BOPSFullPayload] = passport.data?.[planxField];
+      if (!Object.keys(data).includes(bopsField)) {
+        // only set this key if we haven't set it already (eg contact fields may be set via ContactInput or TextInput)
+        acc[bopsField as keyof BOPSFullPayload] = passport.data?.[planxField];
+      }
       return acc;
     }, {} as Partial<BOPSFullPayload>)
   );
