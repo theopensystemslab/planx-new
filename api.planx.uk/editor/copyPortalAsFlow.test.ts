@@ -3,6 +3,7 @@ import supertest from "supertest";
 import { queryMock } from "../tests/graphqlQueryMock";
 import { authHeader } from "../tests/mockJWT";
 import app from "../server";
+import { Flow } from "../types";
 
 beforeEach(() => {
   queryMock.mockQuery({
@@ -45,203 +46,203 @@ it("returns transformed, unique flow data for a valid internal portal", async ()
 });
 
 // a "parent" flow with at least one internal portal
-const mockFlowData = {
-  "_root": {
-    "edges": [
+const mockFlowData: Flow["data"] = {
+  _root: {
+    edges: [
       "eyOm0NyDSl",
       "y5gQKVzLaj"
     ]
   },
-  "eyOm0NyDSl": {
-    "type": 100,
-    "data": {
-      "text": "Enter the portal?"
+  eyOm0NyDSl: {
+    type: 100,
+    data: {
+      text: "Enter the portal?"
     },
-    "edges": [
+    edges: [
       "C3P6oywglW",
       "hpvbLNPrce"
     ]
   },
-  "C3P6oywglW": {
-    "type": 200,
-    "data": {
-      "text": "Yes"
+  C3P6oywglW: {
+    type: 200,
+    data: {
+      text: "Yes"
     },
-    "edges": [
+    edges: [
       "MgCe3pSTrt"
     ]
   },
-  "hpvbLNPrce": {
-    "type": 200,
-    "data": {
-      "text": "No thanks"
+  hpvbLNPrce: {
+    type: 200,
+    data: {
+      text: "No thanks"
     }
   },
-  "MgCe3pSTrt": {
-    "type": 300,
-    "data": {
-      "text": "Portal to outer space"
+  MgCe3pSTrt: {
+    type: 300,
+    data: {
+      text: "Portal to outer space"
     },
-    "edges": [
+    edges: [
       "5nFnUmawC4"
     ]
   },
-  "y5gQKVzLaj": {
-    "type": 8,
-    "data": {
-      "title": "You've reached the end",
-      "color": "#EFEFEF",
-      "resetButton": true
+  y5gQKVzLaj: {
+    type: 8,
+    data: {
+      title: "You've reached the end",
+      color: "#EFEFEF",
+      resetButton: true
     }
   },
   "5nFnUmawC4": {
-    "type": 100,
-    "data": {
-      "text": "What's your favorite constellation?"
+    type: 100,
+    data: {
+      text: "What's your favorite constellation?"
     },
-    "edges": [
+    edges: [
       "JZfAPwmfAY",
       "piEuo7Si3R",
       "HuGIVdJyro",
       "MTXe1zns7x"
     ]
   },
-  "JZfAPwmfAY": {
-    "type": 200,
-    "data": {
-      "text": "Andromeda"
+  JZfAPwmfAY: {
+    type: 200,
+    data: {
+      text: "Andromeda"
     }
   },
-  "piEuo7Si3R": {
-    "type": 200,
-    "data": {
-      "text": "Cassiopeia"
+  piEuo7Si3R: {
+    type: 200,
+    data: {
+      text: "Cassiopeia"
     }
   },
-  "HuGIVdJyro": {
-    "type": 200,
-    "data": {
-      "text": "Ursa Major"
+  HuGIVdJyro: {
+    type: 200,
+    data: {
+      text: "Ursa Major"
     },
-    "edges": [
+    edges: [
       "Df5Od4hIAH"
     ]
   },
-  "MTXe1zns7x": {
-    "type": 200,
-    "data": {
-      "text": "Ursa Minor"
+  MTXe1zns7x: {
+    type: 200,
+    data: {
+      text: "Ursa Minor"
     }
   },
-  "Df5Od4hIAH": {
-    "type": 105,
-    "data": {
-      "allRequired": false,
-      "text": "Do you know it by any of these names?"
+  Df5Od4hIAH: {
+    type: 105,
+    data: {
+      allRequired: false,
+      text: "Do you know it by any of these names?"
     },
-    "edges": [
+    edges: [
       "HCnJOuOA1v",
       "Lj4EM4SCwJ",
       "0G7cGXpSQ7"
     ]
   },
-  "HCnJOuOA1v": {
-    "data": {
-      "text": "Big Dipper"
+  HCnJOuOA1v: {
+    data: {
+      text: "Big Dipper"
     },
-    "type": 200
+    type: 200
   },
-  "Lj4EM4SCwJ": {
-    "data": {
-      "text": "The Plough"
+  Lj4EM4SCwJ: {
+    data: {
+      text: "The Plough"
     },
-    "type": 200
+    type: 200
   },
   "0G7cGXpSQ7": {
-    "data": {
-      "text": "Summer Triangle"
+    data: {
+      text: "Summer Triangle"
     },
-    "type": 200
+    type: 200
   }
 };
 
 // the new flow based on the portal & its' children: the portal node has been renamed to _root and all other node_ids have been made unique by replacing last 3 characters
 const mockCopyPortalResponse = {
-  "message":"Successfully copied internal portal: Portal to outer space",
-  "data":{
-     "_root":{
-        "edges":[
+  message: "Successfully copied internal portal: Portal to outer space",
+  data: {
+     _root: {
+        edges: [
            "5nFnUmaPor"
         ]
      },
-     "5nFnUmaPor":{
-        "data":{
-           "text":"What's your favorite constellation?"
+     "5nFnUmaPor": {
+        data: {
+           text: "What's your favorite constellation?"
         },
-        "type":100,
-        "edges":[
+        type: 100,
+        edges: [
            "JZfAPwmPor",
            "piEuo7SPor",
            "HuGIVdJPor",
            "MTXe1znPor"
         ]
      },
-     "JZfAPwmPor":{
-        "data":{
-           "text":"Andromeda"
+     JZfAPwmPor: {
+        data: {
+           text: "Andromeda"
         },
-        "type":200
+        type: 200
      },
-     "piEuo7SPor":{
-        "data":{
-           "text":"Cassiopeia"
+     piEuo7SPor: {
+        data: {
+           text:"Cassiopeia"
         },
-        "type":200
+        type:200
      },
-     "HuGIVdJPor":{
-        "data":{
-           "text":"Ursa Major"
+     HuGIVdJPor: {
+        data: {
+           text: "Ursa Major"
         },
-        "type":200,
-        "edges":[
+        type: 200,
+        edges: [
            "Df5Od4hPor"
         ]
      },
-     "Df5Od4hPor":{
-        "data":{
-           "text":"Do you know it by any of these names?",
-           "allRequired":false
+     Df5Od4hPor: {
+        data: {
+           text: "Do you know it by any of these names?",
+           allRequired: false
         },
-        "type":105,
-        "edges":[
+        type: 105,
+        edges:[
            "HCnJOuOPor",
            "Lj4EM4SPor",
            "0G7cGXpPor"
         ]
      },
-     "HCnJOuOPor":{
-        "data":{
-           "text":"Big Dipper"
+     HCnJOuOPor: {
+        data: {
+           text: "Big Dipper"
         },
-        "type":200
+        type: 200
      },
-     "Lj4EM4SPor":{
-        "data":{
-           "text":"The Plough"
+     Lj4EM4SPor: {
+        data: {
+           text: "The Plough"
         },
-        "type":200
+        type: 200
      },
-     "0G7cGXpPor":{
-        "data":{
-           "text":"Summer Triangle"
+     "0G7cGXpPor": {
+        data: {
+           text: "Summer Triangle"
         },
-        "type":200
+        type:200
      },
-     "MTXe1znPor":{
-        "data":{
-           "text":"Ursa Minor"
+     MTXe1znPor: {
+        data: {
+           text: "Ursa Minor"
         },
-        "type":200
+        type: 200
      }
   }
 };

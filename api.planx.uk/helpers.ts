@@ -1,3 +1,4 @@
+import { gql } from 'graphql-request';
 import { adminGraphQLClient } from "./hasura";
 import { Flow, Node } from "./types";
 const client = adminGraphQLClient;
@@ -5,7 +6,7 @@ const client = adminGraphQLClient;
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id: string): Promise<Flow> => {
   const data = await client.request(
-    `
+    gql`
       query GetFlowData($id: uuid!) {
         flows_by_pk(id: $id) {
           slug
@@ -22,7 +23,7 @@ const getFlowData = async (id: string): Promise<Flow> => {
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
 const getMostRecentPublishedFlow = async (id: string) => {
   const data = await client.request(
-    `
+    gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
         flows_by_pk(id: $id) {
           published_flows(limit: 1, order_by: { id: desc }) {
@@ -41,7 +42,7 @@ const getMostRecentPublishedFlow = async (id: string) => {
 //   created_at refers to published date, value passed in as param should be lowcal_session.updated_at
 const getPublishedFlowByDate = async (id: string, created_at: string) => {
   const data = await client.request(
-    `
+    gql`
       query GetPublishedFlowByDate($id: uuid!, $created_at: timestamptz!) {
         flows_by_pk(id: $id) {
           published_flows(
@@ -93,16 +94,12 @@ const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
 
 /**
  * For any node with edges, recursively find all of its' children nodes and return them as their own flow-like data structure
- * @param {object} node
- * @param {object} originalFlow - the original parent flow data
- * @param {object} newFlow - the new flow data
- * @returns {object} - the new flow data with child nodes included
  */
 const getChildren = (
   node: Node,
   originalFlow: Flow["data"],
   newFlow: Flow["data"]
-) => {
+): Flow["data"] => {
   if (node.edges) {
     node.edges.forEach((edgeId) => {
       if (!Object.keys(newFlow).includes(edgeId)) {
@@ -117,11 +114,8 @@ const getChildren = (
 
 /**
  * For a given flow, make it unique by renaming its' node ids (replace last n characters) while preserving its' content
- * @param {object} flowData
- * @param {string} replaceValue
- * @returns {object} flowData with updated node ids
  */
-const makeUniqueFlow = (flowData: Flow["data"], replaceValue: string) => {
+const makeUniqueFlow = (flowData: Flow["data"], replaceValue: string): Flow["data"] => {
   const charactersToReplace = replaceValue.length;
 
   Object.keys(flowData).forEach((node) => {
