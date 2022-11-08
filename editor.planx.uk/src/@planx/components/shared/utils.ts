@@ -63,8 +63,16 @@ export const useStagingUrlIfTestApplication =
   (passport: Store.passport) => (urlThatMightBeReplaced: string) => {
     if (
       [
+        // contact info collected via ContactInput
         passport.data?.applicant?.["name.first"],
         passport.data?.applicant?.["name.last"],
+      ]
+        .map((x) => String(x).toLowerCase().trim())
+        .join("|") === "test|test" ||
+      [
+        // contact info collected via TextInput
+        passport.data?.["applicant.name.first"],
+        passport.data?.["applicant.name.last"],
       ]
         .map((x) => String(x).toLowerCase().trim())
         .join("|") === "test|test"
