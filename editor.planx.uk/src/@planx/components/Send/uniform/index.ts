@@ -3,9 +3,9 @@ import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
+import { findGeoJSON } from "../helpers";
 import { CSVData } from "../model";
 import { makeXmlString } from "./xml";
-import { findGeoJSON } from "../helpers";
 
 type UniformFile = {
   name: string;
