@@ -21,7 +21,7 @@ const getFlowData = async (id: string): Promise<Flow> => {
 };
 
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
-const getMostRecentPublishedFlow = async (id: string) => {
+const getMostRecentPublishedFlow = async (id: string): Promise<Flow["data"]> => {
   const data = await client.request(
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {

@@ -1,11 +1,16 @@
 import * as jsondiffpatch from "jsondiffpatch";
-
+import { Request, Response, NextFunction } from 'express';
 import { adminGraphQLClient as client } from "../hasura";
 import { dataMerged, getMostRecentPublishedFlow } from "../helpers";
+import { gql } from "graphql-request";
 
-const diffFlow = async (req, res, next) => {
+const diffFlow = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | NextFunction | void> => {
   if (!req.user?.sub)
-    next({ status: 401, message: "User ID missing from JWT" });
+    return next({ status: 401, message: "User ID missing from JWT" });
 
   try {
     const flattenedFlow = await dataMerged(req.params.flowId);
@@ -33,9 +38,13 @@ const diffFlow = async (req, res, next) => {
   }
 };
 
-const publishFlow = async (req, res, next) => {
+const publishFlow = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | NextFunction | void> => {
   if (!req.user?.sub)
-    next({ status: 401, message: "User ID missing from JWT" });
+    return next({ status: 401, message: "User ID missing from JWT" });
 
   try {
     const flattenedFlow = await dataMerged(req.params.flowId);
@@ -45,7 +54,7 @@ const publishFlow = async (req, res, next) => {
 
     if (delta) {
       const response = await client.request(
-        `
+        gql`
           mutation PublishFlow(
             $data: jsonb = {},
             $flow_id: uuid,
