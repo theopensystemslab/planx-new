@@ -1,4 +1,3 @@
-
 import supertest from "supertest";
 
 import { queryMock } from "../tests/graphqlQueryMock";
