@@ -48,6 +48,14 @@ export function makeXmlString({
       <common:FileName>application.csv</common:FileName>
       <common:Reference>Other</common:Reference>
     </common:FileAttachment>
+    <common:FileAttachment>
+      <common:FileName>boundary.geojson</common:FileName>
+      <common:Reference>Other</common:Reference>
+    </common:FileAttachment>
+    <common:FileAttachment>
+      <common:FileName>review.html</common:FileName>
+      <common:Reference>Other</common:Reference>
+    </common:FileAttachment>
   `;
 
   const getGeneratedFiles = (includeGeoJSON: boolean) => {
