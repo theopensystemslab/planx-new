@@ -4,6 +4,7 @@ RUN npm install -g hasura-cli
 WORKDIR /scripts/
 RUN npm install -g pnpm@7.8.0
 COPY pnpm-lock.yaml .
+RUN apk add postgresql-client
 
 RUN pnpm fetch --prod
 ADD . .
