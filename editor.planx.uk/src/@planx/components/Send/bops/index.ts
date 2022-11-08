@@ -14,6 +14,7 @@ import { PASSPORT_UPLOAD_KEY } from "../../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY, toPence } from "../../Pay/model";
 import { removeNilValues } from "../../shared/utils";
 import { TYPES } from "../../types";
+import { findGeoJSON } from "../helpers";
 import {
   BOPSFullPayload,
   FileTag,
@@ -243,7 +244,7 @@ export function getBOPSParams(
 
   // 1b. property boundary
   const geojson = findGeoJSON(flow, breadcrumbs);
-  if (geoJSON) data.boundary_geojson = geojson;
+  if (geojson) data.boundary_geojson = geojson;
 
   // 2. files
 

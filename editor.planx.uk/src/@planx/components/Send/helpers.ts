@@ -8,9 +8,8 @@ export function findGeoJSON(
   const boundaryQuestionID = Object.keys(breadcrumbs).find(
     (questionId) => flow[questionId]?.type === TYPES.DrawBoundary
   );
-  const boundaryBreadcrumb = breadcrumbs[boundaryQuestionID];
-  if (boundaryBreadcrumb) {
-    const { data: breadcrumbData } = boundaryBreadcrumb;
+  if (boundaryQuestionID) {
+    const { data: breadcrumbData } = breadcrumbs[boundaryQuestionID];
     if (breadcrumbData) {
       // scan the breadcrumb's data object (what got saved to passport)
       // and extract the first instance of any geojson that's found
