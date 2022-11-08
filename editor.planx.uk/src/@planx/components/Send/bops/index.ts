@@ -242,26 +242,8 @@ export function getBOPSParams(
   }
 
   // 1b. property boundary
-
-  try {
-    // find the first draw boundary component breadcrumb
-    const boundaryBreadcrumb = Object.entries(breadcrumbs).find(
-      ([questionId]) => flow[questionId]?.type === TYPES.DrawBoundary
-    );
-    if (boundaryBreadcrumb) {
-      const [, { data: breadcrumbData }] = boundaryBreadcrumb;
-      if (breadcrumbData) {
-        // scan the breadcrumb's data object (what got saved to passport)
-        // and extract the first instance of any geojson that's found
-        const geojson = Object.values(breadcrumbData).find(
-          (v) => v?.type === "Feature"
-        );
-        if (geojson) data.boundary_geojson = geojson;
-      }
-    }
-  } catch (err) {
-    console.error({ boundary_geojson: err });
-  }
+  const geojson = findGeoJSON(flow, breadcrumbs);
+  if (geoJSON) data.boundary_geojson = geojson;
 
   // 2. files
 

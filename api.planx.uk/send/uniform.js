@@ -1,5 +1,6 @@
 require("isomorphic-fetch");
 import os from "os";
+import { writeFile } from "node:fs/promises";
 import path from "path";
 import FormData from "form-data";
 import fs from "fs";
@@ -30,7 +31,7 @@ const sendToUniform = async (req, res, next) => {
 
   // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload } = req.body;
-  if (!payload?.xml || !payload?.sessionId) {
+  if (!payload || !payload.xml || !payload.sessionId) {
     return next({
       status: 400,
       message: "Missing application data to send to Uniform",
@@ -55,12 +56,7 @@ const sendToUniform = async (req, res, next) => {
       req.params.localAuthority
     );
     // Setup - Create the zip folder
-    const zipPath = await createZip(
-      payload?.xml,
-      payload?.csv,
-      payload?.files,
-      payload?.sessionId
-    );
+    const zipPath = await createZip(payload);
 
     // Request 1/3 - Authenticate
     const {
@@ -192,7 +188,7 @@ async function checkUniformAuditTable(sessionId) {
  * @param {string} sessionId
  * @returns {Promise} - name of zip
  */
-async function createZip(stringXml, csv, files, sessionId) {
+async function createZip({ xml: stringXml, csv, geojson, files, sessionId }) {
   // initiate an empty zip folder
   const zip = new AdmZip();
 
@@ -232,6 +228,13 @@ async function createZip(stringXml, csv, files, sessionId) {
 
   zip.addLocalFile(csvPath);
   deleteFile(csvPath);
+
+  // build a temporary GeoJSON file
+  const geojsonPath = path.join(tmpDir, "boundary.json");
+  await writeFile(geojsonPath, JSON.stringify(geojson, null, 2));
+  zip.addLocalFile(geojsonPath);
+  deleteFile(geojsonPath);
+
   // build the XML file from a string, write it locally, add it to the zip
   //   must be named "proposal.xml" to be processed by Uniform
   const xmlPath = "proposal.xml";
