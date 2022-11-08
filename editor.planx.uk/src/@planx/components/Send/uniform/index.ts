@@ -5,6 +5,7 @@ import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
 import { CSVData } from "../model";
 import { makeXmlString } from "./xml";
+import { findGeoJSON } from "../helpers";
 
 type UniformFile = {
   name: string;
@@ -49,6 +50,7 @@ export function getUniformParams(
   return {
     xml: makeXmlString(passport, sessionId, uniqueFiles),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
+    geojson: findGeoJSON(flow, breadcrumbs),
     files: uniqueFiles,
     sessionId,
   };
