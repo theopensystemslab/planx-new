@@ -439,7 +439,7 @@ app.get("/gis", (_req, res, next) => {
   });
 });
 
-app.get("/gis/:localAuthority", locationSearch());
+app.get("/gis/:localAuthority", locationSearch);
 
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
