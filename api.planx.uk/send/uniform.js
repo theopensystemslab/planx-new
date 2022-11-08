@@ -229,11 +229,13 @@ async function createZip({ xml: stringXml, csv, geojson, files, sessionId }) {
   zip.addLocalFile(csvPath);
   deleteFile(csvPath);
 
-  // build a temporary GeoJSON file
-  const geojsonPath = path.join(tmpDir, "boundary.json");
-  await writeFile(geojsonPath, JSON.stringify(geojson, null, 2));
-  zip.addLocalFile(geojsonPath);
-  deleteFile(geojsonPath);
+  // build an optional GeoJSON file for validators
+  if (geojson) {
+    const geojsonPath = path.join(tmpDir, "boundary.json");
+    await writeFile(geojsonPath, JSON.stringify(geojson, null, 2));
+    zip.addLocalFile(geojsonPath);
+    deleteFile(geojsonPath);
+  }
 
   // build the XML file from a string, write it locally, add it to the zip
   //   must be named "proposal.xml" to be processed by Uniform
