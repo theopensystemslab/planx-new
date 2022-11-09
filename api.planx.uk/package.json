@@ -20,6 +20,7 @@
     "form-data": "^4.0.0",
     "graphql": "^16.5.0",
     "graphql-request": "^4.3.0",
+    "graphql-voyager": "1.0.0-rc.31",
     "helmet": "^5.1.1",
     "http-proxy-middleware": "^2.0.6",
     "isomorphic-fetch": "^3.0.0",
