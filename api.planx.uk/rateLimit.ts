@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-
-const rateLimit = require("express-rate-limit");
+import rateLimit from "express-rate-limit";
 
 // Broad limiter to prevent egregious abuse
 const apiLimiter = rateLimit({

@@ -72,7 +72,7 @@ const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
   const { slug, data } = await getFlowData(id);
 
   // recursively get and flatten internal portals (type 300) & external portals (type 310)
-  for (let [nodeId, node] of Object.entries(data)) {
+  for (const [nodeId, node] of Object.entries(data)) {
     if (nodeId === "_root" && Object.keys(ob).length > 0) {
       ob[id] = {
         ...node,
