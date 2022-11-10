@@ -1,15 +1,19 @@
-import { subDays } from 'date-fns';
-import { Request, Response, NextFunction } from 'express';
-import { gql } from 'graphql-request';
+import { subDays } from "date-fns";
+import { Request, Response, NextFunction } from "express";
+import { gql } from "graphql-request";
 
-import { LowCalSession } from './../types';
-import { adminGraphQLClient } from '../hasura';
+import { LowCalSession } from "./../types";
+import { adminGraphQLClient } from "../hasura";
 
 /**
  * Called by Hasura cron job `delete_expired_sessions` on a nightly basis
  * See hasura.planx.uk/metadata/cron_triggers.yaml
  */
-const hardDeleteSessions = async (_req: Request, res: Response, next: NextFunction): Promise<NextFunction | void>  => {
+const hardDeleteSessions = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const mutation = gql`
       mutation HardDeleteExpiredSessions($oneWeekAgo: timestamptz) {
@@ -26,18 +30,23 @@ const hardDeleteSessions = async (_req: Request, res: Response, next: NextFuncti
           }
         }
       }
-    `
+    `;
     const oneWeekAgo = subDays(new Date(), 7);
-    const { delete_lowcal_sessions } = await adminGraphQLClient.request(mutation, { oneWeekAgo });
+    const { delete_lowcal_sessions } = await adminGraphQLClient.request(
+      mutation,
+      { oneWeekAgo }
+    );
     res.json({
-      deletedSessions: delete_lowcal_sessions.returning.map((session: LowCalSession) => session.id),
+      deletedSessions: delete_lowcal_sessions.returning.map(
+        (session: LowCalSession) => session.id
+      ),
     });
   } catch (error) {
     return next({
       error,
-      message: `Failed to delete sessions. ${(error as Error).message}`
+      message: `Failed to delete sessions. ${(error as Error).message}`,
     });
-  };
+  }
 };
 
 export { hardDeleteSessions };

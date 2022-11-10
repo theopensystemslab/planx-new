@@ -1,7 +1,7 @@
 import SlackNotify from 'slack-notify';
 import { Request, Response, NextFunction } from 'express';
 
-const sendSlackNotification = (req: Request, res: Response, next: NextFunction): NextFunction | Response | void  => {
+const sendSlackNotification = (req: Request, res: Response, next: NextFunction): Response | void  => {
   const supportedTypes = ["bops-submission", "uniform-submission"];
   if (!req.body?.event || !req.query?.type || !supportedTypes.includes(req.query.type as string)) {
     return res.status(404).send({

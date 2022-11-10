@@ -20,7 +20,7 @@ const useHasuraAuth = (
   req: Request,
   _res: Response,
   next: NextFunction
-): NextFunction | void => {
+): void => {
   const isAuthenticated = isEqual(
     req.headers.authorization,
     process.env.HASURA_PLANX_API_KEY!
@@ -36,7 +36,7 @@ const useSendEmailAuth = (
   req: Request,
   res: Response,
   next: NextFunction
-): NextFunction | void => {
+): void => {
   switch (req.params.template) {
     case "reminder":
     case "expiry":

@@ -9,7 +9,7 @@ describe("locationSearchWithTimeout", () => {
     jest.useRealTimers();
   });
 
-  test("a successful call", async () => {
+  test("a successful call", () => {
     const timeout = 500;
     const localAuthority = "braintree";
     const promise = locationSearchWithTimeout(
