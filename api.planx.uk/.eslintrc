@@ -23,6 +23,7 @@
     "URLSearchParams": "readonly",
     "exports": "readonly",
     "fetch": "readonly",
+    "jest": "readonly",
     "test": "readonly",
     "describe": "readonly",
     "it": "readonly",
