@@ -159,6 +159,9 @@ export default function Component(props: Props) {
               maxZoom={23}
               latitude={Number(passport?.data?._address?.latitude)}
               longitude={Number(passport?.data?._address?.longitude)}
+              showMarker
+              markerLatitude={Number(passport?.data?._address?.latitude)}
+              markerLongitude={Number(passport?.data?._address?.longitude)}
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
           </MapContainer>
