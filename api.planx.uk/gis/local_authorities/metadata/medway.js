@@ -33,8 +33,8 @@ const planningConstraints = {
       "article4.medway.newRoad.3": "New Road Chatham(3)",
       "article4.medway.newRoad.4": "New Road Chatham(4)",
       "article4.medway.newRoad.1": "New Road Chatham(1)",
-      "article4.medway.starHill":	"Star Hill to Sun Pier",
-      "article4.medway.gillinghamPark":	"Gillingham Park",
+      "article4.medway.starHill": "Star Hill to Sun Pier",
+      "article4.medway.gillinghamPark": "Gillingham Park",
       "article4.medway.upperUpnor.1": "Upper Upnor(1)",
       "article4.medway.upperUpnor.2": "Upper Upnor(2)",
       "article4.medway.upperUpnor.6": "Upper Upnor(6)",
@@ -51,7 +51,7 @@ const planningConstraints = {
       "article4.medway.wattsAvenue": "Watts Avenue",
       "article4.medway.upperUpnor.3": "Upper Upnor(3)",
       "article4.medway.upperUpnor.4": "Upper Upnor(4)",
-      "article4.medway.elmhavenMarina":	"LAND BETWEEN ELMHAVEN MARINA AND CEMEX"
+      "article4.medway.elmhavenMarina": "LAND BETWEEN ELMHAVEN MARINA AND CEMEX"
     },
   },
 };
