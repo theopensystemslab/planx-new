@@ -80,7 +80,7 @@ const validateSession = async (
                 if (sessionData && savedFlow[nodeId]?.data?.[key]) {
                   // if it does, remove that passport variable from our sessionData so we don't auto-answer changed questions before the user sees them
                   delete sessionData.data.passport?.data?.[
-                    currentFlow[nodeId].data[key]
+                    currentFlow[nodeId].data?.[key]
                   ];
                 }
               });
