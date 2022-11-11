@@ -60,6 +60,8 @@ function Component(props: Props) {
     "canterbury",
     "doncaster",
     "lambeth",
+    "medway",
+    "newcastle",
     "southwark",
   ];
 

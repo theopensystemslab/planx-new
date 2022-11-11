@@ -5,7 +5,12 @@ import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import cors from "cors";
 import { stringify } from "csv-stringify";
-import express, { CookieOptions, ErrorRequestHandler, Response } from "express";
+import express, {
+  CookieOptions,
+  ErrorRequestHandler,
+  NextFunction,
+  Response,
+} from "express";
 import { expressjwt, Request } from "express-jwt";
 import noir from "pino-noir";
 import { URL } from "url";
@@ -24,9 +29,9 @@ import {
   Options,
 } from "http-proxy-middleware";
 import helmet from "helmet";
+import multer from "multer";
 import SlackNotify from "slack-notify";
 
-import { signS3Upload } from "./s3";
 import { locationSearch } from "./gis/index";
 import { diffFlow, publishFlow } from "./editor/publish";
 import { findAndReplaceInFlow } from "./editor/findReplace";
@@ -49,6 +54,12 @@ import {
 } from "./webhooks/lowcalSessionEvents";
 import { adminGraphQLClient } from "./hasura";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
+import {
+  privateDownloadController,
+  privateUploadController,
+  publicDownloadController,
+  publicUploadController,
+} from "./s3";
 import { sendToBOPS } from "./send/bops";
 import { createSendEvents } from "./send/createSendEvents";
 import { sendToUniform } from "./send/uniform";
@@ -257,6 +268,14 @@ const useJWT = expressjwt({
     req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1] ??
     req.query?.token,
 });
+
+assert(process.env.FILE_API_KEY, "Missing environment variable 'FILE_API_KEY'");
+const useFilePermission = (req: Request, res: Response, next: NextFunction) => {
+  if (req.headers["api-key"] !== process.env.FILE_API_KEY) {
+    return next({ status: 403, message: "forbidden" });
+  }
+  return next();
+};
 
 if (process.env.NODE_ENV !== "test") {
   app.use(
@@ -495,22 +514,25 @@ app.post("/download-application", async (req, res, next) => {
   }
 });
 
-app.post("/sign-s3-upload", async (req, res, next) => {
-  if (!req.body.filename) next({ status: 422, message: "missing filename" });
+app.post(
+  "/private-file-upload",
+  multer().single("file"),
+  privateUploadController
+);
 
-  try {
-    const { fileType, url, acl } = await signS3Upload(req.body.filename);
+app.post(
+  "/public-file-upload",
+  multer().single("file"),
+  publicUploadController
+);
 
-    res.json({
-      upload_to: url,
-      public_readonly_url_will_be: url.split("?")[0],
-      file_type: fileType,
-      acl,
-    });
-  } catch (err) {
-    next(err);
-  }
-});
+app.get("/file/public/:fileKey/:fileName", publicDownloadController);
+
+app.get(
+  "/file/private/:fileKey/:fileName",
+  useFilePermission,
+  privateDownloadController
+);
 
 const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
   try {

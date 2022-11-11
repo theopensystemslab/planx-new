@@ -1,9 +1,15 @@
+import { UploadFileResponse } from "api/upload";
 import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
 import { CSVData } from "../model";
 import { makeXmlString } from "./xml";
+
+type UniformFile = {
+  name: string;
+  url: string;
+};
 
 export function getUniformParams(
   breadcrumbs: Store.breadcrumbs,
@@ -12,7 +18,7 @@ export function getUniformParams(
   sessionId: string
 ) {
   // make a list of all S3 URLs & filenames from uploaded files
-  const files: { url: string; name: string }[] = [];
+  const files: UniformFile[] = [];
   Object.entries(passport.data || {})
     // add any files uploaded via a FileUpload component
     .filter(([, v]: any) => v?.[0]?.url)

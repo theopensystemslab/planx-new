@@ -4,7 +4,7 @@ import ButtonBase from "@mui/material/ButtonBase";
 import CircularProgress from "@mui/material/CircularProgress";
 import Tooltip from "@mui/material/Tooltip";
 import makeStyles from "@mui/styles/makeStyles";
-import { uploadFile } from "api/upload";
+import { uploadPublicFile } from "api/upload";
 import React, { useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 
@@ -52,7 +52,7 @@ export default function FileUpload(props: Props): FCReturn {
       setStatus({
         type: "loading",
       });
-      uploadFile(file)
+      uploadPublicFile(file)
         .then((res) => {
           setStatus({
             type: "none",

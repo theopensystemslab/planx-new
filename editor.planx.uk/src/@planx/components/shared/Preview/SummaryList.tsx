@@ -222,9 +222,7 @@ function FileUpload(props: ComponentProps) {
         <ul>
           {getAnswersByNode(props)?.map((file: any, i: number) => (
             <li key={i}>
-              <Link target="_blank" href={file.url} underline="hover">
-                {file.filename}
-              </Link>
+              <span data-testid="file-upload-name">{file.filename}</span>
             </li>
           ))}
         </ul>
@@ -247,6 +245,8 @@ function DrawBoundary(props: ComponentProps) {
   const geodata = props.userData?.data?.[props.node.data?.dataFieldBoundary];
   const locationPlan = props.userData?.data?.[PASSPORT_UPLOAD_KEY];
 
+  const fileName = locationPlan ? locationPlan.split("/").pop() : "";
+
   if (!geodata && !locationPlan && !props.node.data?.hideFileUpload) {
     // XXX: we always expect to have data, this is for temporary debugging
     console.error(props);
@@ -259,10 +259,10 @@ function DrawBoundary(props: ComponentProps) {
     <>
       <dt>Site boundary</dt>
       <dd>
-        {locationPlan && (
-          <a target="_blank" href={locationPlan}>
-            Your uploaded location plan
-          </a>
+        {fileName && (
+          <span data-testid="uploaded-plan-name">
+            Your uploaded location plan: <b>{fileName}</b>
+          </span>
         )}
         {geodata && (
           <>

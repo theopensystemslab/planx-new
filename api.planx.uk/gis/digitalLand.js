@@ -9,6 +9,7 @@ const localAuthorityMetadata = {
   "canterbury": require("./local_authorities/metadata/canterbury.js"),
   "doncaster": require("./local_authorities/metadata/doncaster.js"),
   "lambeth": require("./local_authorities/metadata/lambeth.js"),
+  "medway": require("./local_authorities/metadata/medway.js"),
   "southwark": require("./local_authorities/metadata/southwark.js"),
 };
 
