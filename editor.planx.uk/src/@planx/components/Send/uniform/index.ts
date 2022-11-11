@@ -46,11 +46,14 @@ export function getUniformParams(
     }
   });
 
+  const geoJSONBoundary = findGeoJSON(flow, breadcrumbs);
+  const hasBoundary = !!geoJSONBoundary;
+
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString(passport, sessionId, uniqueFiles),
+    xml: makeXmlString({ passport, sessionId, uniqueFiles, hasBoundary }),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
-    geojson: findGeoJSON(flow, breadcrumbs),
+    geojson: geoJSONBoundary,
     files: uniqueFiles,
     sessionId,
   };

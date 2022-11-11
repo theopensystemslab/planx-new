@@ -17,9 +17,11 @@ const mockPipe = {
     },
   })),
 };
-jest.mock("csv-stringify", () => ({
-  stringify: jest.fn().mockImplementation(() => mockPipe),
-}));
+jest.mock("csv-stringify", () => {
+  return {
+    stringify: jest.fn().mockImplementation(() => mockPipe),
+  };
+});
 jest.mock("string-to-stream", () => {
   return jest.fn().mockImplementation(() => mockPipe);
 });
@@ -42,7 +44,7 @@ describe("createZip", () => {
     const expectedBuffer = Buffer.from(JSON.stringify(input, null, 2));
     await createZip(payload);
     expect(mockAddFile).toHaveBeenCalledWith(
-      "boundaryGeoJSON.json",
+      "boundary.geojson",
       expectedBuffer
     );
     expect(mockWriteZip).toHaveBeenCalledTimes(1);

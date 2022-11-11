@@ -237,7 +237,7 @@ export async function createZip({
   // build an optional GeoJSON file for validators
   if (geojson) {
     const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-    zip.addFile("boundaryGeoJSON.json", geoBuff);
+    zip.addFile("boundary.geojson", geoBuff);
   }
   // build the XML file from a string, write it locally, add it to the zip
   //   must be named "proposal.xml" to be processed by Uniform
