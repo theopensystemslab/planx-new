@@ -238,6 +238,7 @@ export class UniformPayload implements IUniformPayload {
 
   // TODO: check func naming conventions here
   private getRequiredFiles = (): FileAttachment[] => {
+    // TODO: Test if "N10049" is a required value. Schema suggests that it isn't.
     const files = [
       {
         "common:Identifier": "N10049",
