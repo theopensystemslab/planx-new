@@ -1,9 +1,14 @@
 import { getFlowData, getChildren, makeUniqueFlow } from "../helpers";
+import { Request, Response, NextFunction } from 'express';
+import { Flow } from "../types";
 
 /**
  * Copies an internal portal and transforms it to be an independent flow
  */
-const copyPortalAsFlow = async (req, res, next) => {
+const copyPortalAsFlow = async (
+  req: Request,
+  res: Response,
+  next: NextFunction) => {
   try {
     if (!req.user?.sub) {
       return next({ status: 401, message: "User ID missing from JWT" });
@@ -22,8 +27,8 @@ const copyPortalAsFlow = async (req, res, next) => {
     }
 
     // set the portal node as the new "_root", then extract all its' children from the parent flow and add them to the new flow data object
-    let portalData = { "_root": { "edges": flow.data[portalId]?.edges }};
-    Object.entries(portalData).forEach(([nodeId, node]) => {
+    let portalData: Flow["data"] = { "_root": { "edges": flow.data[portalId]?.edges }};
+    Object.entries(portalData).forEach(([ _nodeId, node ]) => {
       portalData = getChildren(node, flow.data, portalData);
     });
 

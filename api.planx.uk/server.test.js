@@ -30,6 +30,17 @@ it("mocks hasura", async () => {
     });
 });
 
+describe("authentication", () => {
+  test("Failed login endpoint", async () => {
+    await supertest(app)
+      .get("/auth/login/failed")
+      .expect(401)
+      .then((res) => {
+        expect(res.body).toEqual({ error: "user failed to authenticate." });
+      });
+  })
+});
+
 describe("sending a payment to GOV.UK Pay", () => {
   const govUKResponse = {
     amount: 12,
