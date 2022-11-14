@@ -8,6 +8,8 @@ config:
     secure: AAABAJx2KnnFeuEmwRB5VyE790TeYxiKmWFuVXVY8Lb7+HDNRYND8Pfd9d61zjwPzi9Jf2ZlT0OH++1MXYafhdQO28Y=
   application:cloudflare-zone-id:
     secure: AAABAPZz/bzFCZEZd+jzPpYP4HXAOLYQmLGf2YLQE2YPfMBUtDC83KCo2l2DJ4AL4OKL+jFFx8wrrJc6DDwXJQ==
+  application:file-api-key:
+    secure: AAABAIlFjgYIudcnHtUDvT5IXS9qV86IH4T1hEf2UBS7HyWb+DqDyYtH+l743A0MZFn5fy9l1BaQsi3svv1Rxsc4GGQunnxqJ2p2vQ==
   application:google-client-id: 987324067365-vpsk3kgeq5n32ihjn760ihf8l7m5rhh8.apps.googleusercontent.com
   application:google-client-secret:
     secure: AAABAGQuqQDU4S+vR+cQaFoa6xAeWU9clVaNonQ/dq0R8Dke+o0y7ALOmYMy4fOX4Pa6HiZl85npU/cbwy8HdMYaiA==
