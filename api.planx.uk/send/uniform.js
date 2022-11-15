@@ -1,5 +1,6 @@
-require("isomorphic-fetch");
+import "isomorphic-fetch";
 import os from "os";
+import { Buffer } from "node:buffer";
 import path from "path";
 import FormData from "form-data";
 import fs from "fs";
@@ -55,12 +56,7 @@ const sendToUniform = async (req, res, next) => {
       req.params.localAuthority
     );
     // Setup - Create the zip folder
-    const zipPath = await createZip(
-      payload?.xml,
-      payload?.csv,
-      payload?.files,
-      payload?.sessionId
-    );
+    const zipPath = await createZip(payload);
 
     // Request 1/3 - Authenticate
     const {
@@ -192,7 +188,13 @@ async function checkUniformAuditTable(sessionId) {
  * @param {string} sessionId
  * @returns {Promise} - name of zip
  */
-async function createZip(stringXml, csv, files, sessionId) {
+export async function createZip({
+  xml: stringXml,
+  csv,
+  geojson,
+  files,
+  sessionId,
+}) {
   // initiate an empty zip folder
   const zip = new AdmZip();
 
@@ -229,9 +231,14 @@ async function createZip(stringXml, csv, files, sessionId) {
     csvStream.on("error", reject);
     csvStream.on("finish", resolve);
   });
-
   zip.addLocalFile(csvPath);
   deleteFile(csvPath);
+
+  // build an optional GeoJSON file for validators
+  if (geojson) {
+    const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
+    zip.addFile("boundary.geojson", geoBuff);
+  }
   // build the XML file from a string, write it locally, add it to the zip
   //   must be named "proposal.xml" to be processed by Uniform
   const xmlPath = "proposal.xml";
