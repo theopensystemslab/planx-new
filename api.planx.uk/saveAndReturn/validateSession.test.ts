@@ -9,7 +9,7 @@ describe("Validate Session endpoint", () => {
     const missingEmail = { payload: { sessionId: 123 } };
     const missingSessionId = { payload: { email: "test" } };
 
-    for (let invalidBody of [missingEmail, missingSessionId]) {
+    for (const invalidBody of [missingEmail, missingSessionId]) {
       supertest(app)
         .post(ENDPOINT)
         .send(invalidBody)

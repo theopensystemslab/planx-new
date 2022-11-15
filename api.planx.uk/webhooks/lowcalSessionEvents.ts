@@ -7,7 +7,7 @@ import { DAYS_UNTIL_EXPIRY } from '../saveAndReturn/utils';
 /**
  * Create a "reminder" event for a lowcal_session record
  */
-const createReminderEvent = async (req: Request, res: Response, next: NextFunction): Promise<NextFunction | void> => {
+const createReminderEvent = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { createdAt, payload } = req.body
     if (!createdAt || !payload)
@@ -33,7 +33,7 @@ const createReminderEvent = async (req: Request, res: Response, next: NextFuncti
 /**
  * Create an "expiry" event for a lowcal_session record
  */
-const createExpiryEvent = async (req: Request, res: Response, next: NextFunction): Promise<NextFunction | void> => {
+const createExpiryEvent = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { createdAt, payload } = req.body
     if (!createdAt || !payload)
