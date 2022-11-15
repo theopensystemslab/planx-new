@@ -288,6 +288,10 @@ export = async () => {
     sslPolicy: "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
     certificateArn: certificates.requireOutput("certificateArn"),
   });
+  // How to rotate this secret: https://github.com/pulumi/pulumi-random/issues/234
+  const fileApiKey = new random.RandomPassword("file-api-key", {
+    length: 44,
+  }).result;
   const apiService = new awsx.ecs.FargateService("api", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -316,7 +320,7 @@ export = async () => {
           { name: "AWS_S3_ACL", value: "public-read" },
           {
             name: "FILE_API_KEY",
-            value: config.require("file-api-key"),
+            value: fileApiKey,
           },
           {
             name: "GOOGLE_CLIENT_ID",
@@ -741,6 +745,7 @@ export = async () => {
 
   return {
     customDomains,
+    fileApiKey,
   };
 };
 
