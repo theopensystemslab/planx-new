@@ -434,10 +434,8 @@ describe("record", () => {
   });
 });
 
-describe.only("previousCard", () => {
-  test.only("To be the card before the current one", () => {
-    // I don't believe that these are valid breadcrumbs for this flow
-    // Is this because breadcrumb order can change after a review component?
+describe("previousCard", () => {
+  test("To be the card before the current one", () => {
     const breadcrumbs = {
       findProperty: breadcrumbsDependentOnPassport.findProperty,
       text: breadcrumbsDependentOnPassport.text,

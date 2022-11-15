@@ -64,7 +64,7 @@ case TYPES.SetValue:
 `[TYPES.SetValue]: undefined,`
 
 `src/@planx/components/ui.tsx`
-import PlaylistAdd from "@material-ui/icons/PlaylistAdd";
+import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
 [TYPES.SetValue]: PlaylistAdd,
 
 `src/pages/FlowEditor/components/Flow/components/Node.tsx`

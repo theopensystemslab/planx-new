@@ -12,11 +12,17 @@ import { GOV_PAY_PASSPORT_KEY } from "../../Pay/model";
  */
 export type PlanXAppTypes = "ldc.existing" | "ldc.proposed";
 
-export function makeXmlString(
-  passport: Store.passport,
-  sessionId: string,
-  files: string[]
-) {
+export function makeXmlString({
+  passport,
+  sessionId,
+  files,
+  hasBoundary,
+}: {
+  passport: Store.passport;
+  sessionId: string;
+  files: string[];
+  hasBoundary: boolean;
+}) {
   const payment = passport.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
 
   // ensure that date is valid and in yyyy-mm-dd format
@@ -43,6 +49,16 @@ export function makeXmlString(
       <common:Reference>Other</common:Reference>
     </common:FileAttachment>
   `;
+
+  const getGeneratedFiles = (includeGeoJSON: boolean) => {
+    return includeGeoJSON
+      ? `
+      <common:FileAttachment>
+        <common:FileName>boundary.geojson</common:FileName>
+        <common:Reference>Other</common:Reference>
+      </common:FileAttachment>`
+      : "";
+  };
 
   const userUploadedFiles: string[] = [];
   files?.forEach((file) => {
@@ -203,6 +219,7 @@ export function makeXmlString(
       </portaloneapp:ApplicationHeader>
       <portaloneapp:FileAttachments>
         ${requiredFiles}
+        ${getGeneratedFiles(hasBoundary)}
         ${userUploadedFiles.join("")}
       </portaloneapp:FileAttachments>
       <portaloneapp:Applicant>

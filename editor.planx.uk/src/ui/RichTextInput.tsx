@@ -1,6 +1,5 @@
 import "./RichTextInput.css";
 
-import IconButton from "@material-ui/core/IconButton";
 import Check from "@mui/icons-material/Check";
 import Close from "@mui/icons-material/Close";
 import Delete from "@mui/icons-material/Delete";
@@ -11,6 +10,7 @@ import FormatListBulleted from "@mui/icons-material/FormatListBulleted";
 import FormatListNumbered from "@mui/icons-material/FormatListNumbered";
 import LinkIcon from "@mui/icons-material/Link";
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 import { type InputBaseProps } from "@mui/material/InputBase";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
@@ -36,7 +36,6 @@ import {
   ReactRenderer,
   useEditor,
 } from "@tiptap/react";
-import { map } from "ramda";
 import React, {
   type FC,
   ChangeEvent,

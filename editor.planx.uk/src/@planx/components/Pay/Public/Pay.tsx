@@ -157,6 +157,9 @@ function Component(props: Props) {
 
       if (!state.status) throw new Error("Corrupted response from GOV.UK");
 
+      // Update local state with the refetched payment state
+      if (govUkPayment) setGovUkPayment({ ...govUkPayment, state });
+
       switch (state.status) {
         case "success":
           handleSuccess();
