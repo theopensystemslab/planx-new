@@ -2,7 +2,6 @@ import type { SchemaOf } from "yup";
 import { object, string } from "yup";
 
 import { MoreInformation, parseMoreInformation } from "../shared";
-import { emailRegex } from "../TextInput/model";
 
 export type Contact = {
   title?: string;
@@ -19,17 +18,7 @@ export const userDataSchema: SchemaOf<Contact> = object({
   lastName: string().required("Last name is required"),
   organisation: string(),
   phone: string().required("Phone number is required"),
-  email: string()
-    .required("Email is required")
-    .test({
-      name: "valid",
-      message: (() => {
-        return "Enter a valid email";
-      })(),
-      test: (value: string | undefined) => {
-        return Boolean(value && emailRegex.test(value));
-      },
-    }),
+  email: string().email("Enter a valid email").required("Email is required"),
 });
 
 export interface ContactInput extends MoreInformation {
