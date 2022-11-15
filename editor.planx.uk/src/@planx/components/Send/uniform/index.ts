@@ -1,4 +1,3 @@
-import { UploadFileResponse } from "api/upload";
 import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
@@ -7,11 +6,6 @@ import { findGeoJSON } from "../helpers";
 import { CSVData } from "../model";
 import { makeXmlString } from "./xml";
 
-type UniformFile = {
-  name: string;
-  url: string;
-};
-
 export function getUniformParams(
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
@@ -19,7 +13,7 @@ export function getUniformParams(
   sessionId: string
 ) {
   // make a list of all S3 URLs & filenames from uploaded files
-  const files: UniformFile[] = [];
+  const files: { url: string; name: string }[] = [];
   Object.entries(passport.data || {})
     // add any files uploaded via a FileUpload component
     .filter(([, v]: any) => v?.[0]?.url)
@@ -51,7 +45,12 @@ export function getUniformParams(
 
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString({ passport, sessionId, files: uniqueFiles, hasBoundary }),
+    xml: makeXmlString({
+      passport,
+      sessionId,
+      files: uniqueFiles,
+      hasBoundary,
+    }),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
     geojson: geoJSONBoundary,
     files: uniqueFiles,

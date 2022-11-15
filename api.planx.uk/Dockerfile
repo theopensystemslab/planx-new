@@ -32,7 +32,7 @@ ENV NODE_ENV development
 ADD . .
 
 RUN pnpm fetch
-RUN pnpm install --recursive --offline -f
+RUN pnpm install --recursive --offline 
 COPY . .
 
 CMD ["pnpm", "dev"]

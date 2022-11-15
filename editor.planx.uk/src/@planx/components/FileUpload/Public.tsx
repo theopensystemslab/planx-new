@@ -9,9 +9,8 @@ import { visuallyHidden } from "@mui/utils";
 import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
-import { uploadPrivateFile } from "api/upload";
+import { uploadFile } from "api/upload";
 import classNames from "classnames";
-import ImagePreview from "components/ImagePreview";
 import { nanoid } from "nanoid";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
@@ -243,7 +242,7 @@ function Dropzone(props: any) {
           ...acceptedFiles.map((file) => {
             // XXX: This is a non-blocking promise chain
             //      If a file is removed while it's being uploaded, nothing should break because we're using map()
-            uploadPrivateFile(file, {
+            uploadFile(file, {
               onProgress: (progress) => {
                 setSlots((_files: any) =>
                   _files.map((_file: any) =>
@@ -317,7 +316,7 @@ function Dropzone(props: any) {
               aria-valuenow={progress}
             />
             <Box className={classes.filePreview}>
-              {file instanceof File && file?.type?.includes("image") ? (
+              {file.type?.includes("image") ? (
                 <ImagePreview file={file} url={url} />
               ) : (
                 <FileIcon />
@@ -375,6 +374,20 @@ function Dropzone(props: any) {
       </ButtonBase>
     </>
   );
+}
+
+function ImagePreview({ file, url: parentUrl }: any) {
+  const { current: url } = React.useRef(
+    file instanceof File ? URL.createObjectURL(file) : parentUrl
+  );
+
+  useEffect(() => {
+    return () => {
+      // Cleanup to free up memory
+      URL.revokeObjectURL(url);
+    };
+  }, [url]);
+  return <img src={url} alt="" />;
 }
 
 function formatBytes(a: any, b = 2) {
