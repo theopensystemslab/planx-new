@@ -24,7 +24,7 @@ const validateSession = async (
         message: "Required value missing",
       });
 
-    let sessionData = await findSession(sessionId, email.toLowerCase());
+    const sessionData = await findSession(sessionId, email.toLowerCase());
 
     if (sessionData) {
       // if a user has paid, skip reconciliation steps and return *without* calling updateLowcalSessionData
@@ -57,7 +57,7 @@ const validateSession = async (
           ...currentFlow[key],
         }));
         if (alteredNodes.length) {
-          let removedBreadcrumbs: Breadcrumb = {};
+          const removedBreadcrumbs: Breadcrumb = {};
           alteredNodes.forEach((node) => {
             // if the session breadcrumbs include any altered content, remove those breadcrumbs so the user will be re-prompted to answer those questions
             if (

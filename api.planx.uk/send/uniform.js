@@ -5,8 +5,8 @@ import FormData from "form-data";
 import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
-import stringify from "csv-stringify";
-import { getFileFromS3 } from "../s3";
+import { stringify } from "csv-stringify";
+import { getFileFromS3 } from "../s3/getFile";
 import { adminGraphQLClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
@@ -39,7 +39,10 @@ const sendToUniform = async (req, res, next) => {
 
   // confirm that this session has not already been successfully submitted before proceeding
   const submittedApp = await checkUniformAuditTable(payload?.sessionId);
-  if (submittedApp?.submissionStatus === "PENDING" && submittedApp?.canDownload) {
+  if (
+    submittedApp?.submissionStatus === "PENDING" &&
+    submittedApp?.canDownload
+  ) {
     return res.status(200).send({
       sessionId: payload?.sessionId,
       idoxSubmissionId: submittedApp?.submissionId,
@@ -86,31 +89,37 @@ const sendToUniform = async (req, res, next) => {
           deleteFile(zipPath);
         }
 
-        const submissionDetails = await retrieveSubmission(token, idoxSubmissionId);
-        const application = await client.request(gql`
-          mutation CreateUniformApplication(
-            $idox_submission_id: String = "",
-            $submission_reference: String = "",
-            $destination: String = "",
-            $response: jsonb = "",
-            $payload: jsonb = "",
-          ) {
-            insert_uniform_applications_one(object: {
-              idox_submission_id: $idox_submission_id,
-              submission_reference: $submission_reference,
-              destination: $destination,
-              response: $response,
-              payload: $payload
-            }) {
-              id
-              idox_submission_id
-              submission_reference
-              destination
-              response
-              created_at
+        const submissionDetails = await retrieveSubmission(
+          token,
+          idoxSubmissionId
+        );
+        const application = await client.request(
+          gql`
+            mutation CreateUniformApplication(
+              $idox_submission_id: String = ""
+              $submission_reference: String = ""
+              $destination: String = ""
+              $response: jsonb = ""
+              $payload: jsonb = ""
+            ) {
+              insert_uniform_applications_one(
+                object: {
+                  idox_submission_id: $idox_submission_id
+                  submission_reference: $submission_reference
+                  destination: $destination
+                  response: $response
+                  payload: $payload
+                }
+              ) {
+                id
+                idox_submission_id
+                submission_reference
+                destination
+                response
+                created_at
+              }
             }
-          }
-        `,
+          `,
           {
             idox_submission_id: idoxSubmissionId,
             submission_reference: payload?.sessionId,
@@ -194,63 +203,59 @@ async function createZip(stringXml, csv, files, sessionId) {
     tmpDir = folder;
   });
 
-  try {
-    // download any user-uploaded files from S3 to the tmp directory, add them to the zip
-    if (files) {
-      for (let file of files) {
-        // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
-        // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
-        const s3SplittedPath = file.split("/").slice(-2);
+  // download any user-uploaded files from S3 to the tmp directory, add them to the zip
+  if (files) {
+    for (let file of files) {
+      // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
+      // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
+      const s3SplittedPath = file.split("/").slice(-2);
 
-        // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-        const uniqueFilename = s3SplittedPath.join("-");
-        const filePath = path.join(tmpDir, uniqueFilename);
-        await downloadFile(s3SplittedPath.join("/"), filePath, zip);
-      }
+      // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
+      const uniqueFilename = s3SplittedPath.join("-");
+      const filePath = path.join(tmpDir, uniqueFilename);
+      await downloadFile(s3SplittedPath.join("/"), filePath, zip);
     }
-
-    // build a CSV, write it to the tmp directory, add it to the zip
-    const csvPath = path.join(tmpDir, "application.csv");
-    const csvFile = fs.createWriteStream(csvPath);
-
-    const csvStream = stringify(csv, {
-      columns: ["question", "responses", "metadata"],
-      header: true,
-    }).pipe(csvFile);
-    await new Promise((resolve, reject) => {
-      csvStream.on("error", reject);
-      csvStream.on("finish", resolve);
-    });
-
-    zip.addLocalFile(csvPath);
-    deleteFile(csvPath);
-    // build the XML file from a string, write it locally, add it to the zip
-    //   must be named "proposal.xml" to be processed by Uniform
-    const xmlPath = "proposal.xml";
-    const xmlFile = fs.createWriteStream(xmlPath);
-
-    const xmlStream = str(stringXml.trim()).pipe(xmlFile);
-    await new Promise((resolve, reject) => {
-      xmlStream.on("error", reject);
-      xmlStream.on("finish", resolve);
-    });
-
-    zip.addLocalFile(xmlPath);
-    deleteFile(xmlPath);
-
-    // generate & save zip locally
-    const zipName = `ripa-test-${sessionId}.zip`;
-    zip.writeZip(zipName);
-
-    // cleanup tmp directory
-    fs.rm(tmpDir, { recursive: true }, (err) => {
-      if (err) throw err;
-    });
-
-    return zipName;
-  } catch (err) {
-    throw err;
   }
+
+  // build a CSV, write it to the tmp directory, add it to the zip
+  const csvPath = path.join(tmpDir, "application.csv");
+  const csvFile = fs.createWriteStream(csvPath);
+
+  const csvStream = stringify(csv, {
+    columns: ["question", "responses", "metadata"],
+    header: true,
+  }).pipe(csvFile);
+  await new Promise((resolve, reject) => {
+    csvStream.on("error", reject);
+    csvStream.on("finish", resolve);
+  });
+
+  zip.addLocalFile(csvPath);
+  deleteFile(csvPath);
+  // build the XML file from a string, write it locally, add it to the zip
+  //   must be named "proposal.xml" to be processed by Uniform
+  const xmlPath = "proposal.xml";
+  const xmlFile = fs.createWriteStream(xmlPath);
+
+  const xmlStream = str(stringXml.trim()).pipe(xmlFile);
+  await new Promise((resolve, reject) => {
+    xmlStream.on("error", reject);
+    xmlStream.on("finish", resolve);
+  });
+
+  zip.addLocalFile(xmlPath);
+  deleteFile(xmlPath);
+
+  // generate & save zip locally
+  const zipName = `ripa-test-${sessionId}.zip`;
+  zip.writeZip(zipName);
+
+  // cleanup tmp directory
+  fs.rm(tmpDir, { recursive: true }, (err) => {
+    if (err) throw err;
+  });
+
+  return zipName;
 }
 
 /**
@@ -280,13 +285,9 @@ async function authenticate(clientId, clientSecret) {
     redirect: "follow",
   };
 
-  try {
-    return await fetch(authEndpoint, authOptions).then((response) =>
-      response.json()
-    );
-  } catch (err) {
-    throw err;
-  }
+  return await fetch(authEndpoint, authOptions).then((response) =>
+    response.json()
+  );
 }
 
 /**
@@ -329,20 +330,16 @@ async function createSubmission(
     redirect: "follow",
   };
 
-  try {
-    return await fetch(createSubmissionEndpoint, createSubmissionOptions).then(
-      (response) => {
-        // successful submission returns 201 Created without body
-        if (response.status === 201) {
-          // parse & return the submissionId
-          const resourceLink = response.headers.get("location");
-          return resourceLink.split("/").pop();
-        }
+  return await fetch(createSubmissionEndpoint, createSubmissionOptions).then(
+    (response) => {
+      // successful submission returns 201 Created without body
+      if (response.status === 201) {
+        // parse & return the submissionId
+        const resourceLink = response.headers.get("location");
+        return resourceLink.split("/").pop();
       }
-    );
-  } catch (err) {
-    throw err;
-  }
+    }
+  );
 }
 
 /**
@@ -377,18 +374,14 @@ async function attachArchive(token, submissionId, zipPath) {
     redirect: "follow",
   };
 
-  try {
-    return await fetch(attachArchiveEndpoint, attachArchiveOptions).then(
-      (response) => {
-        // successful upload returns 204 No Content without body
-        if (response.status === 204) {
-          return true;
-        }
+  return await fetch(attachArchiveEndpoint, attachArchiveOptions).then(
+    (response) => {
+      // successful upload returns 204 No Content without body
+      if (response.status === 204) {
+        return true;
       }
-    );
-  } catch (err) {
-    throw err;
-  }
+    }
+  );
 }
 
 /**
@@ -411,14 +404,9 @@ async function retrieveSubmission(token, submissionId) {
     redirect: "follow",
   };
 
-  try {
-    return await fetch(
-      getSubmissionEndpoint,
-      getSubmissionOptions
-    ).then((response) => response.json());
-  } catch (err) {
-    throw err;
-  }
+  return await fetch(getSubmissionEndpoint, getSubmissionOptions).then(
+    (response) => response.json()
+  );
 }
 
 /**
@@ -461,7 +449,7 @@ const getUniformClient = (localAuthority) => {
   const regex = new RegExp(/\W+/g);
   const client =
     process.env[
-    "UNIFORM_CLIENT_" + localAuthority.replace(regex, "_").toUpperCase()
+      "UNIFORM_CLIENT_" + localAuthority.replace(regex, "_").toUpperCase()
     ];
 
   // If we can't find secrets, return undefined to trigger a 400 error using next() in sendToUniform()

@@ -200,7 +200,7 @@ describe("Resume Application endpoint", () => {
     const missingEmail = { payload: { teamSlug: "test" } };
     const missingTeamSlug = { payload: { email: "test" } };
 
-    for (let invalidBody of [missingEmail, missingTeamSlug]) {
+    for (const invalidBody of [missingEmail, missingTeamSlug]) {
       await supertest(app)
         .post(ENDPOINT)
         .send(invalidBody)

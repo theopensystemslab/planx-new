@@ -2,7 +2,12 @@ import InputBase, { InputBaseProps } from "@mui/material/InputBase";
 import type { Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
-import React, { ChangeEvent, forwardRef } from "react";
+import React, {
+  ChangeEvent,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { borderedFocusStyle } from "theme";
 
 import ErrorWrapper from "./ErrorWrapper";
@@ -62,6 +67,8 @@ export const useClasses = makeStyles<Theme, Props>((theme) => ({
 export default forwardRef((props: Props, ref): FCReturn => {
   const classes = useClasses(props);
 
+  const container = useRef<HTMLDivElement | null>(null);
+
   const {
     format,
     bordered,
@@ -71,6 +78,19 @@ export default forwardRef((props: Props, ref): FCReturn => {
     id,
     ...restProps
   } = props;
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      focus: () => {
+        container.current?.querySelector("input")?.focus();
+      },
+      select: () => {
+        container.current?.querySelector("input")?.select();
+      },
+    }),
+    []
+  );
 
   return (
     <ErrorWrapper error={errorMessage} id={id}>
@@ -92,6 +112,7 @@ export default forwardRef((props: Props, ref): FCReturn => {
           "aria-describedby": ariaDescribedBy,
         }}
         id={id}
+        ref={container}
         {...restProps}
       />
     </ErrorWrapper>

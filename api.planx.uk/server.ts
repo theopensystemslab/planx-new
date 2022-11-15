@@ -13,6 +13,7 @@ import express, {
 } from "express";
 import { expressjwt, Request } from "express-jwt";
 import noir from "pino-noir";
+import pinoLogger from "express-pino-logger";
 import { URL } from "url";
 import { Server } from "http";
 import passport from "passport";
@@ -77,7 +78,9 @@ router.get("/login/failed", (_req, _res, next) => {
 
 // When logout, redirect to client
 router.get("/logout", (req, res) => {
-  req.logout(() => {});
+  req.logout(() => {
+    // do nothing
+  });
   res.redirect(process.env.EDITOR_URL_EXT!);
 });
 
@@ -279,7 +282,7 @@ const useFilePermission = (req: Request, res: Response, next: NextFunction) => {
 
 if (process.env.NODE_ENV !== "test") {
   app.use(
-    require("express-pino-logger")({
+    pinoLogger({
       serializers: noir(["req.headers.authorization"], "**REDACTED**"),
     })
   );
@@ -439,7 +442,7 @@ app.get("/gis", (_req, res, next) => {
   });
 });
 
-app.get("/gis/:localAuthority", locationSearch());
+app.get("/gis/:localAuthority", locationSearch);
 
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
@@ -667,6 +670,7 @@ function usePayProxy(options: Partial<Options>, req: Request) {
 
 export default server;
 
+/* eslint-disable @typescript-eslint/no-namespace */
 // declaring User in a d.ts file is overwritten by other files
 declare global {
   namespace Express {

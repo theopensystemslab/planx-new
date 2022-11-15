@@ -1,8 +1,8 @@
-import { Flow } from './../types';
+import { Flow } from "./../types";
 import { adminGraphQLClient as client } from "../hasura";
 import { gql } from "graphql-request";
 import { getFlowData } from "../helpers";
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 
 interface MatchResult {
   matches: Flow["data"];
@@ -13,12 +13,16 @@ interface MatchResult {
  * Find and return the node ids and specific data properties that match a given search term,
  *    and return an updated copy of the flow data if a replaceValue is provided, else return the original flowData
  */
-const getMatches = (flowData: Flow["data"], searchTerm: string, replaceValue: string | undefined = undefined): MatchResult => {
+const getMatches = (
+  flowData: Flow["data"],
+  searchTerm: string,
+  replaceValue: string | undefined = undefined
+): MatchResult => {
   const matches: MatchResult["matches"] = {};
 
   const nodes = Object.keys(flowData).filter((key) => key !== "_root");
   nodes.forEach((node) => {
-    const data = flowData[node]["data"]
+    const data = flowData[node]["data"];
     if (data) {
       // search all "data" properties independent of component type (eg `fn`, `val`, `text`)
       const keys = Object.keys(data);
@@ -31,7 +35,7 @@ const getMatches = (flowData: Flow["data"], searchTerm: string, replaceValue: st
             },
           };
           // if a replaceValue is provided, additionally update the flowData
-          if (Boolean(replaceValue)) {
+          if (replaceValue) {
             data[k] = replaceValue;
           }
         }
@@ -88,16 +92,8 @@ const findAndReplaceInFlow = async (
       // if matches, proceed with mutation to update flow data
       const response = await client.request(
         gql`
-          mutation UpdateFlow(
-            $data: jsonb = {},
-            $id: uuid!,
-          ) {
-            update_flows_by_pk(
-              pk_columns: {id: $id},
-              _set: {
-                data: $data,
-              },
-            ) {
+          mutation UpdateFlow($data: jsonb = {}, $id: uuid!) {
+            update_flows_by_pk(pk_columns: { id: $id }, _set: { data: $data }) {
               id
               slug
               data
