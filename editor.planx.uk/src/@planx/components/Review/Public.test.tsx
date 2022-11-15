@@ -2,7 +2,6 @@ import { screen } from "@testing-library/react";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { axe, setup } from "testUtils";
-import waitForExpect from "wait-for-expect";
 
 import Review from "./Public/Presentational";
 
@@ -135,11 +134,7 @@ it("should render file upload filename", async () => {
 
   const element = getByTestId("file-upload-name");
 
-  await act(async () => {
-    await waitForExpect(() => {
-      expect(element).toHaveTextContent(mockLink);
-    });
-  });
+  await expect(element).toHaveTextContent(mockLink);
 });
 
 it("should render uploaded location plan link", async () => {
@@ -157,11 +152,7 @@ it("should render uploaded location plan link", async () => {
 
   const element = getByTestId("uploaded-plan-name");
 
-  await act(async () => {
-    await waitForExpect(() => {
-      expect(element).toBeInTheDocument();
-    });
-  });
+  await expect(element).toBeInTheDocument();
 });
 
 const fileUploadBreadcrumbs = {

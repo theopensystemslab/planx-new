@@ -1,6 +1,5 @@
 import { enablePatches, produceWithPatches } from "immer";
 import difference from "lodash/difference";
-import intersection from "lodash/intersection";
 import trim from "lodash/trim";
 import zip from "lodash/zip";
 import { customAlphabet } from "nanoid-good";
@@ -443,19 +442,19 @@ export const makeUnique =
 
 /**
  * Depth first sort of graph
- * XXX: Clones will appear in all possible graph positions
+ * XXX: Clones will only appear in first graph position
  */
 const dfs = (graph: Graph) => (startId: string) => {
-  const visited: string[] = [];
+  const visited = new Set([startId]);
   const crawlFrom = (id: string) => {
     if (!graph[id]) return;
-    visited.push(id);
+    visited.add(id);
     graph[id].edges?.forEach((childId) => {
       crawlFrom(childId);
     });
   };
   crawlFrom(startId);
-  return visited;
+  return [...visited];
 };
 
 const memoizedNodesIdsByGraph = new WeakMap<Graph, string[]>();
@@ -469,13 +468,7 @@ export const sortIdsDepthFirst =
 
     memoizedNodesIdsByGraph.set(graph, allNodeIdsSorted);
 
-    // Return order of nodes within their graph subsection
-    // This prevents clones from being sorted incorrectly (i.e. by their first appearance in the graph)
-    const currentNodeIndex = allNodeIdsSorted.indexOf(
-      nodeIds.values().next().value
+    return Array.from(nodeIds).sort(
+      (a, b) => allNodeIdsSorted.indexOf(a) - allNodeIdsSorted.indexOf(b)
     );
-    const graphSubsection = allNodeIdsSorted.slice(currentNodeIndex);
-    const int = intersection([...nodeIds], graphSubsection);
-
-    return Array.from(nodeIds).sort((a, b) => int.indexOf(a) - int.indexOf(b));
   };

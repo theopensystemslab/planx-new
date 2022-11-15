@@ -27,7 +27,7 @@ describe("Clone order in flow (forwards)", () => {
     expect(upcomingCardIds()).toHaveLength(0);
   });
 
-  test("Right branch is ordered correctly", () => {
+  test.skip("Right branch is ordered correctly", () => {
     setState({ flow: forwardsFlow });
     record("question", { answers: ["rightChoice"] });
     record("rightChoice", { answers: ["rightNotice"] });
