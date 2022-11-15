@@ -10,11 +10,11 @@
       {
         "paths": [
           {
-            "name": "@material-ui/core",
+            "name": "@mui/material",
             "message": "See https://github.com/theopensystemslab/planx-new/pull/140"
           },
           {
-            "name": "@material-ui/icons",
+            "name": "@mui/icons-material",
             "message": "See https://github.com/theopensystemslab/planx-new/pull/140"
           },
           {
@@ -31,7 +31,7 @@
             "message": "Please import setup() from testUtils to render test component"
           }
         ],
-        "patterns": ["@material-ui/*/*/*", "!@material-ui/core/test-utils/*"]
+        "patterns": ["@mui/*/*/*"]
       }
     ]
   }
