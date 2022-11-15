@@ -1,0 +1,59 @@
+{
+  "name": "DocumentReview",
+  "type": "module",
+  "license": "MPL-2.0",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/document-review.js",
+  "exports": {
+    ".": {
+      "import": "./dist/document-review.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
+    "@vitejs/plugin-react": "^2.2.0",
+    "eslint": "^8.27.0",
+    "typescript": "^4.8.4",
+    "vite": "^3.2.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "engines": {
+    "node": "^16",
+    "pnpm": "^7.8.0"
+  },
+  "pnpm": {
+    "overrides": {}
+  }
+}

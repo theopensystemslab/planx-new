@@ -7,7 +7,7 @@ import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
-import { generateDocViewStream } from "../docView";
+import { generateDocumentReviewStream } from "./documentReview";
 import { adminGraphQLClient } from "../hasura";
 import { getFileFromS3 } from "../s3/getFile";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
@@ -232,16 +232,22 @@ export async function createZip({
   zip.addLocalFile(csvPath);
   deleteFile(csvPath);
 
-  // build an optional GeoJSON file for validators
-  if (geojson) {
-    const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-    zip.addFile("boundary.geojson", geoBuff);
-  }
+  // build the XML file from a string, write it locally, add it to the zip
+  //   must be named "proposal.xml" to be processed by Uniform
+  const xmlPath = "proposal.xml";
+  const xmlFile = fs.createWriteStream(xmlPath);
+  const xmlStream = str(stringXml.trim()).pipe(xmlFile);
+  await new Promise((resolve, reject) => {
+    xmlStream.on("error", reject);
+    xmlStream.on("finish", resolve);
+  });
+  zip.addLocalFile(xmlPath);
+  deleteFile(xmlPath);
 
   // build an HTML Document Viewer
   const docViewPath = path.join(tmpDir, "review.html");
   const docViewFile = fs.createWriteStream(docViewPath);
-  const docViewStream = generateDocViewStream({ csv }).pipe(docViewFile);
+  const docViewStream = generateDocumentReviewStream({ csv }).pipe(docViewFile);
   await new Promise((resolve, reject) => {
     docViewStream.on("error", reject);
     docViewStream.on("finish", resolve);
@@ -249,19 +255,11 @@ export async function createZip({
   zip.addLocalFile(docViewPath);
   deleteFile(docViewPath);
 
-  // build the XML file from a string, write it locally, add it to the zip
-  //   must be named "proposal.xml" to be processed by Uniform
-  const xmlPath = "proposal.xml";
-  const xmlFile = fs.createWriteStream(xmlPath);
-
-  const xmlStream = str(stringXml.trim()).pipe(xmlFile);
-  await new Promise((resolve, reject) => {
-    xmlStream.on("error", reject);
-    xmlStream.on("finish", resolve);
-  });
-
-  zip.addLocalFile(xmlPath);
-  deleteFile(xmlPath);
+  // build an optional GeoJSON file for validators
+  if (geojson) {
+    const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
+    zip.addFile("boundary.geojson", geoBuff);
+  }
 
   // generate & save zip locally
   const zipName = `ripa-test-${sessionId}.zip`;

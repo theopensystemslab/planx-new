@@ -23,9 +23,9 @@ jest.mock("csv-stringify", () => {
     stringify: jest.fn().mockImplementation(() => mockPipe),
   };
 });
-jest.mock("../docView", () => {
+jest.mock("./documentReview", () => {
   return {
-    generateDocViewStream: jest.fn().mockImplementation(() => mockPipe),
+    generateDocumentReviewStream: jest.fn().mockImplementation(() => mockPipe),
   };
 });
 jest.mock("string-to-stream", () => {

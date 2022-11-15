@@ -35,18 +35,17 @@
     "pino-noir": "^2.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-server": "^0.8.1",
     "slack-notify": "^2.0.3",
     "string-to-stream": "^3.0.1"
   },
   "scripts": {
     "dev": "ts-node-dev --files index.ts",
     "start": "node ./dist/index.js",
-    "lint": "eslint '**/*.{js,ts}'",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
     "test": "TZ=Europe/London jest",
     "test:coverage": "TZ=Europe/London jest; open ./coverage/lcov-report/index.html",
     "test:watch": "TZ=Europe/London jest --coverage=false --watch",
-    "build": "rimraf ./dist && npx tsc --jsx react-jsx"
+    "build": "rimraf ./dist && npx tsc"
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
@@ -66,8 +65,6 @@
     "@types/node": "^16.18.2",
     "@types/passport": "^1.0.11",
     "@types/passport-google-oauth20": "^2.0.11",
-    "@types/react": "^18.0.25",
-    "@types/react-dom": "^18.0.8",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
