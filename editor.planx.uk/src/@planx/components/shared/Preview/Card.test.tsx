@@ -1,4 +1,4 @@
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import { act, screen, waitFor } from "@testing-library/react";
 import { FullStore, vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
