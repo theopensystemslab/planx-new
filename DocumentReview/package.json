@@ -1,5 +1,5 @@
 {
-  "name": "DocumentReview",
+  "name": "document-review",
   "type": "module",
   "license": "MPL-2.0",
   "private": true,
@@ -7,6 +7,7 @@
     "dist"
   ],
   "main": "./dist/document-review.js",
+  "types": "./types/DocumentReview.d.ts",
   "exports": {
     ".": {
       "import": "./dist/document-review.js"

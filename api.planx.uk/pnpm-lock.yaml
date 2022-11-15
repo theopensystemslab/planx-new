@@ -25,6 +25,8 @@ specifiers:
   '@types/node': ^16.18.2
   '@types/passport': ^1.0.11
   '@types/passport-google-oauth20': ^2.0.11
+  '@types/react': ^18.0.25
+  '@types/react-dom': ^18.0.9
   '@types/supertest': ^2.0.12
   '@typescript-eslint/eslint-plugin': ^5.42.0
   '@typescript-eslint/parser': ^5.42.0
@@ -37,6 +39,7 @@ specifiers:
   cors: ^2.8.5
   csv-stringify: ^6.2.0
   date-fns: ^2.29.1
+  document-review: link:../DocumentReview
   dotenv: ^16.0.1
   esbuild: ^0.14.49
   esbuild-jest: ^0.5.0
@@ -89,6 +92,7 @@ dependencies:
   cors: 2.8.5
   csv-stringify: 6.2.0
   date-fns: 2.29.1
+  document-review: link:../DocumentReview
   express: 4.18.1
   express-jwt: 7.7.5
   express-pino-logger: 7.0.0
@@ -132,6 +136,8 @@ devDependencies:
   '@types/node': 16.18.2
   '@types/passport': 1.0.11
   '@types/passport-google-oauth20': 2.0.11
+  '@types/react': 18.0.25
+  '@types/react-dom': 18.0.9
   '@types/supertest': 2.0.12
   '@typescript-eslint/eslint-plugin': 5.42.0_rnqigvs2sy7hjbduhyswa7hitq
   '@typescript-eslint/parser': 5.42.0_t7ph7dpvh7g5bfovntuojbuu4i
@@ -1426,11 +1432,29 @@ packages:
     resolution: {integrity: sha512-GSCjjH6mDS8jgpT22rEOkZVqZcYj7i9AHJu4ntpvoohEpa0mLAKP/Kz3POMKqABaFsS4TyNHOeoyWpzycddcoQ==}
     dev: false
 
+  /@types/prop-types/15.7.5:
+    resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
+    dev: true
+
   /@types/qs/6.9.7:
     resolution: {integrity: sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==}
 
   /@types/range-parser/1.2.4:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
+
+  /@types/react-dom/18.0.9:
+    resolution: {integrity: sha512-qnVvHxASt/H7i+XG1U1xMiY5t+IHcPGUK7TDMDzom08xa7e86eCeKOiLZezwCKVxJn6NEiiy2ekgX8aQssjIKg==}
+    dependencies:
+      '@types/react': 18.0.25
+    dev: true
+
+  /@types/react/18.0.25:
+    resolution: {integrity: sha512-xD6c0KDT4m7n9uD4ZHi02lzskaiqcBxf4zi+tXZY98a04wvc0hi/TcCPC2FOESZi51Nd7tlUeOJY8RofL799/g==}
+    dependencies:
+      '@types/prop-types': 15.7.5
+      '@types/scheduler': 0.16.2
+      csstype: 3.1.1
+    dev: true
 
   /@types/request/2.48.7:
     resolution: {integrity: sha512-GWP9AZW7foLd4YQxyFZDBepl0lPsWLMEXDZUjQ/c1gqVPDPECrRZyEzuhJdnPWioFCq3Tv0qoGpMD6U+ygd4ZA==}
@@ -1440,6 +1464,10 @@ packages:
       '@types/tough-cookie': 4.0.1
       form-data: 2.5.1
     dev: false
+
+  /@types/scheduler/0.16.2:
+    resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
+    dev: true
 
   /@types/semver/7.3.13:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
@@ -2400,6 +2428,10 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+    dev: true
+
+  /csstype/3.1.1:
+    resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
     dev: true
 
   /csv-stringify/6.2.0:

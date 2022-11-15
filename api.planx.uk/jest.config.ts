@@ -1,4 +1,6 @@
 export default {
+  testEnvironment: "node",
+  preset: "ts-jest",
   transform: {
     "^.+\\.js$": [
       "esbuild-jest",
@@ -7,10 +9,12 @@ export default {
       },
     ],
   },
-  setupFilesAfterEnv: ["./jest.setup.js"],
-  preset: "ts-jest",
-  testEnvironment: "node",
   testPathIgnorePatterns: ["dist/*"],
+  moduleNameMapper: {
+    // resolution override for linked module
+    "document-review": "<rootDir>/../DocumentReview",
+  },
+  setupFilesAfterEnv: ["./jest.setup.js"],
   collectCoverage: true,
   coverageThreshold: {
     global: {

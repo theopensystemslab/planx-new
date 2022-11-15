@@ -413,7 +413,7 @@ describe("file handling", () => {
 
   it("includes a generated review file", () => {
     const expectedReviewFileDeclaration = {
-      "common:FileName": "review.htm",
+      "common:FileName": "review.html",
       "common:Reference": "Other",
     };
     const xmlString = makeXmlString({
