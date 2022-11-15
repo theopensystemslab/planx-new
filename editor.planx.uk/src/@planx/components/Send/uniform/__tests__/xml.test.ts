@@ -411,6 +411,26 @@ describe("file handling", () => {
     );
   });
 
+  it("includes a generated review file", () => {
+    const expectedReviewFileDeclaration = {
+      "common:FileName": "review.htm",
+      "common:Reference": "Other",
+    };
+    const xmlString = makeXmlString({
+      passport,
+      sessionId,
+      files,
+      hasBoundary: false,
+    });
+    const isValid = XMLValidator.validate(xmlString);
+    expect(isValid).toBe(true);
+    let result = parser.parse(xmlString);
+    const fileAttachments = get(result, fileAttachmentsKey);
+    expect(fileAttachments).toEqual(
+      expect.arrayContaining([expectedReviewFileDeclaration])
+    );
+  });
+
   it("includes a generated boundary geojson file when possible", () => {
     const expectedBoundaryFileDeclaration = {
       "common:FileName": "boundary.geojson",

@@ -48,24 +48,23 @@ export function makeXmlString({
       <common:FileName>application.csv</common:FileName>
       <common:Reference>Other</common:Reference>
     </common:FileAttachment>
-    <common:FileAttachment>
-      <common:FileName>boundary.geojson</common:FileName>
-      <common:Reference>Other</common:Reference>
-    </common:FileAttachment>
-    <common:FileAttachment>
-      <common:FileName>review.html</common:FileName>
-      <common:Reference>Other</common:Reference>
-    </common:FileAttachment>
   `;
 
   const getGeneratedFiles = (includeGeoJSON: boolean) => {
-    return includeGeoJSON
-      ? `
+    const reviewHTML = `
+      <common:FileAttachment>
+        <common:FileName>review.html</common:FileName>
+        <common:Reference>Other</common:Reference>
+      </common:FileAttachment>
+    `;
+    const boundaryGeoJSON = `
       <common:FileAttachment>
         <common:FileName>boundary.geojson</common:FileName>
         <common:Reference>Other</common:Reference>
-      </common:FileAttachment>`
-      : "";
+      </common:FileAttachment>
+    `;
+    const allFiles = reviewHTML + boundaryGeoJSON;
+    return includeGeoJSON ? allFiles : reviewHTML;
   };
 
   const userUploadedFiles: string[] = [];
