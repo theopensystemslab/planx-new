@@ -9,12 +9,13 @@ import ContactInput from "./Public";
 
 test("submits contact data", async () => {
   const handleSubmit = jest.fn();
+  const dataField = "applicant";
 
   const { user } = setup(
     <ContactInput
       handleSubmit={handleSubmit}
       title="Enter your contact details"
-      fn="applicant"
+      fn={dataField}
     />
   );
 
@@ -22,7 +23,7 @@ test("submits contact data", async () => {
     "Title (optional)": "Mme",
     "First name": "Jane",
     "Last name": "Doe",
-    "Organisation (optional)": "DLUHC",
+    "Organisation (optional)": "Local planning authority",
     "Phone number": "0123456789",
     "Email address": "jane@gov.uk",
   });
@@ -31,19 +32,23 @@ test("submits contact data", async () => {
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
-      applicant: {
-        title: "Mme",
-        firstName: "Jane",
-        lastName: "Doe",
-        organisation: "DLUHC",
-        phone: "0123456789",
-        email: "jane@gov.uk",
-        // handleSubmit has also mapped props to expected passport variables
-        "name.first": "Jane",
-        "name.last": "Doe",
-        "company.name": "DLUHC",
-        "phone.primary": "0123456789",
+      [`_contact.${dataField}`]: {
+        [dataField]: {
+          title: "Mme",
+          firstName: "Jane",
+          lastName: "Doe",
+          organisation: "Local planning authority",
+          phone: "0123456789",
+          email: "jane@gov.uk",
+        },
       },
+      // handleSubmit has also mapped internal values to top-level expected passport variables
+      [`${dataField}.title`]: "Mme",
+      [`${dataField}.name.first`]: "Jane",
+      [`${dataField}.name.last`]: "Doe",
+      [`${dataField}.company.name`]: "Local planning authority",
+      [`${dataField}.phone.primary`]: "0123456789",
+      [`${dataField}.email`]: "jane@gov.uk",
     },
   });
 });
@@ -51,26 +56,31 @@ test("submits contact data", async () => {
 test("recovers previously submitted text when clicking the back button", async () => {
   const handleSubmit = jest.fn();
   const componentId = uniqueId();
+  const dataField = "applicant";
 
   const { user } = setup(
     <ContactInput
       handleSubmit={handleSubmit}
       title="Enter your contact details"
       id={componentId}
+      fn={dataField}
       previouslySubmittedData={{
         data: {
-          [componentId]: {
-            title: "Mme",
-            firstName: "Jane",
-            lastName: "Doe",
-            organisation: "",
-            phone: "0123456789",
-            email: "jane@gov.uk",
-            "name.first": "Jane",
-            "name.last": "Doe",
-            "company.name": "",
-            "phone.primary": "0123456789",
+          [`_contact.${dataField}`]: {
+            [dataField]: {
+              title: "Mme",
+              firstName: "Jane",
+              lastName: "Doe",
+              organisation: "",
+              phone: "0123456789",
+              email: "jane@gov.uk",
+            },
           },
+          [`${dataField}.title`]: "Mme",
+          [`${dataField}.name.first`]: "Jane",
+          [`${dataField}.name.last`]: "Doe",
+          [`${dataField}.phone.primary`]: "0123456789",
+          [`${dataField}.email`]: "jane@gov.uk",
         },
       }}
     />
@@ -84,19 +94,23 @@ test("recovers previously submitted text when clicking the back button", async (
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
-      [componentId]: {
-        title: "Mme",
-        firstName: "Jane",
-        lastName: "Doe",
-        organisation: "Local planning authority",
-        phone: "0123456789",
-        email: "jane@gov.uk",
-        // handleSubmit has also mapped props to expected passport variables
-        "name.first": "Jane",
-        "name.last": "Doe",
-        "company.name": "Local planning authority",
-        "phone.primary": "0123456789",
+      [`_contact.${dataField}`]: {
+        [dataField]: {
+          title: "Mme",
+          firstName: "Jane",
+          lastName: "Doe",
+          organisation: "Local planning authority",
+          phone: "0123456789",
+          email: "jane@gov.uk",
+        },
       },
+      // handleSubmit has also mapped internal values to top-level expected passport variables
+      [`${dataField}.title`]: "Mme",
+      [`${dataField}.name.first`]: "Jane",
+      [`${dataField}.name.last`]: "Doe",
+      [`${dataField}.company.name`]: "Local planning authority",
+      [`${dataField}.phone.primary`]: "0123456789",
+      [`${dataField}.email`]: "jane@gov.uk",
     },
   });
 });
@@ -114,18 +128,21 @@ test("recovers previously submitted text when clicking the back button when a pa
       id={componentId}
       previouslySubmittedData={{
         data: {
-          [dataField]: {
-            title: "Mme",
-            firstName: "Jane",
-            lastName: "Doe",
-            organisation: "",
-            phone: "0123456789",
-            email: "jane@gov.uk",
-            "name.first": "Jane",
-            "name.last": "Doe",
-            "company.name": "",
-            "phone.primary": "0123456789",
+          [`_contact.${dataField}`]: {
+            [dataField]: {
+              title: "Mme",
+              firstName: "Jane",
+              lastName: "Doe",
+              organisation: "",
+              phone: "0123456789",
+              email: "jane@gov.uk",
+            },
           },
+          [`${dataField}.title`]: "Mme",
+          [`${dataField}.name.first`]: "Jane",
+          [`${dataField}.name.last`]: "Doe",
+          [`${dataField}.phone.primary`]: "0123456789",
+          [`${dataField}.email`]: "jane@gov.uk",
         },
       }}
     />
@@ -139,19 +156,23 @@ test("recovers previously submitted text when clicking the back button when a pa
 
   expect(handleSubmit).toHaveBeenCalledWith({
     data: {
-      [dataField]: {
-        title: "Mme",
-        firstName: "Jane",
-        lastName: "Doe",
-        organisation: "Local planning authority",
-        phone: "0123456789",
-        email: "jane@gov.uk",
-        // handleSubmit has also mapped props to expected passport variables
-        "name.first": "Jane",
-        "name.last": "Doe",
-        "company.name": "Local planning authority",
-        "phone.primary": "0123456789",
+      [`_contact.${dataField}`]: {
+        [dataField]: {
+          title: "Mme",
+          firstName: "Jane",
+          lastName: "Doe",
+          organisation: "Local planning authority",
+          phone: "0123456789",
+          email: "jane@gov.uk",
+        },
       },
+      // handleSubmit has also mapped internal values to top-level expected passport variables
+      [`${dataField}.title`]: "Mme",
+      [`${dataField}.name.first`]: "Jane",
+      [`${dataField}.name.last`]: "Doe",
+      [`${dataField}.company.name`]: "Local planning authority",
+      [`${dataField}.phone.primary`]: "0123456789",
+      [`${dataField}.email`]: "jane@gov.uk",
     },
   });
 });

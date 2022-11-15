@@ -25,7 +25,7 @@ import {
 } from "../model";
 
 export const bopsDictionary = {
-  // applicant or agent details provided via individual TextInput components
+  // applicant or agent details provided via TextInput(s) or ContactInput component
   applicant_first_name: "applicant.name.first",
   applicant_last_name: "applicant.name.last",
   applicant_phone: "applicant.phone.primary",
@@ -266,25 +266,6 @@ export function getBOPSParams(
     console.error({ boundary_geojson: err });
   }
 
-  // 1c. applicant or agent details provided via a ContactInput component
-
-  const applicant = passport.data?.applicant;
-  const agent = passport.data?.["applicant.agent"];
-
-  if (applicant) {
-    data.applicant_first_name = applicant["name.first"];
-    data.applicant_last_name = applicant["name.last"];
-    data.applicant_phone = applicant["phone.primary"];
-    data.applicant_email = applicant["email"];
-  }
-
-  if (agent) {
-    data.agent_first_name = agent["name.first"];
-    data.agent_last_name = agent["name.last"];
-    data.agent_phone = agent["phone.primary"];
-    data.agent_email = agent["email"];
-  }
-
   // 2. files
 
   Object.entries(passport.data || {})
@@ -352,10 +333,7 @@ export function getBOPSParams(
 
   const bopsData = removeNilValues(
     Object.entries(bopsDictionary).reduce((acc, [bopsField, planxField]) => {
-      if (!Object.keys(data).includes(bopsField)) {
-        // only set this key if we haven't set it already (eg contact fields may be set via ContactInput or TextInput)
-        acc[bopsField as keyof BOPSFullPayload] = passport.data?.[planxField];
-      }
+      acc[bopsField as keyof BOPSFullPayload] = passport.data?.[planxField];
       return acc;
     }, {} as Partial<BOPSFullPayload>)
   );

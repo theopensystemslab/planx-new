@@ -8,28 +8,19 @@ import InputLabel from "ui/InputLabel";
 import InputRowItem from "ui/InputRowItem";
 
 import { ERROR_MESSAGE } from "../shared/constants";
-import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { Contact, ContactInput } from "./model";
 import { userDataSchema } from "./model";
 
 export type Props = PublicProps<ContactInput, Contact>;
 
-interface FormProps {
-  title: string;
-  firstName: string;
-  lastName: string;
-  organisation: string;
-  phone: string;
-  email: string;
-  "name.first": string;
-  "name.last": string;
-  "company.name": string;
-  "phone.primary": string;
-}
-
 export default function ContactInputComponent(props: Props): FCReturn {
-  const formik = useFormik<FormProps>({
-    initialValues: getPreviouslySubmittedData(props) ?? {
+  const previouslySubmittedData =
+    props.fn &&
+    props.previouslySubmittedData?.data?.[`_contact.${props.fn}`]?.[
+      `${props.fn}`
+    ];
+  const formik = useFormik<Contact>({
+    initialValues: previouslySubmittedData ?? {
       title: "",
       firstName: "",
       lastName: "",
@@ -38,14 +29,26 @@ export default function ContactInputComponent(props: Props): FCReturn {
       email: "",
     },
     onSubmit: (values) => {
-      // map internal props to expected granular passport keys before submitting
-      values["name.first"] = values.firstName;
-      values["name.last"] = values.lastName;
-      values["company.name"] = values.organisation;
-      values["phone.primary"] = values.phone;
+      // map values to the existing/expected passport structure to minimize conditional handling later in Send schemas, etc
+      const newPassportData: any = {};
+      newPassportData[`${props.fn}.title`] = values.title;
+      newPassportData[`${props.fn}.name.first`] = values.firstName;
+      newPassportData[`${props.fn}.name.last`] = values.lastName;
+      newPassportData[`${props.fn}.company.name`] = values.organisation;
+      newPassportData[`${props.fn}.phone.primary`] = values.phone;
+      newPassportData[`${props.fn}.email`] = values.email;
+
+      const passportData = {
+        [`_contact.${props.fn}`]: { [`${props.fn}`]: values },
+        ...newPassportData,
+      };
+
+      const submissionData: any = {
+        data: passportData,
+      };
 
       // update passport on submit
-      props.handleSubmit?.(makeData(props, values));
+      props.handleSubmit?.(submissionData);
     },
     validateOnBlur: false,
     validateOnChange: false,

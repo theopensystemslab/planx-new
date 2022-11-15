@@ -379,7 +379,7 @@ describe("Applicant contact details", () => {
     "common:OrgName": "DLUHC",
     "common:ContactDetails": {
       "common:Email": {
-        "apd:EmailAddress": "jane@test.com",
+        "apd:EmailAddress": "jane@gov.uk",
       },
       "common:Telephone": {
         "apd:TelNationalNumber": 123456789,
@@ -395,7 +395,7 @@ describe("Applicant contact details", () => {
         "applicant.name.last": "Doe",
         "applicant.company.name": "DLUHC",
         "applicant.phone.primary": "0123456789",
-        "applicant.email": "jane@test.com",
+        "applicant.email": "jane@gov.uk",
       },
     };
 
@@ -408,14 +408,22 @@ describe("Applicant contact details", () => {
   it("should populate the Applicant when a ContactInput component is used", () => {
     const passport: Store.passport = {
       data: {
-        applicant: {
-          title: "Mme",
-          "name.first": "Jane",
-          "name.last": "Doe",
-          "company.name": "DLUHC",
-          "phone.primary": "0123456789",
-          email: "jane@test.com",
+        "_contact.applicant": {
+          applicant: {
+            title: "Mme",
+            firstName: "Jane",
+            lastName: "Doe",
+            organisation: "Local planning authority",
+            phone: "0123456789",
+            email: "jane@gov.uk",
+          },
         },
+        "applicant.title": "Mme",
+        "applicant.name.first": "Jane",
+        "applicant.name.last": "Doe",
+        "applicant.company.name": "DLUHC",
+        "applicant.phone.primary": "0123456789",
+        "applicant.email": "jane@gov.uk",
       },
     };
 

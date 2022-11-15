@@ -1,6 +1,8 @@
 import isNil from "lodash/isNil";
 import { Store } from "pages/FlowEditor/lib/store";
 
+import { bopsDictionary } from "../Send/bops";
+
 export const validateEmail = (email: string) => {
   // eslint-disable-next-line
   let regex =
@@ -63,16 +65,8 @@ export const useStagingUrlIfTestApplication =
   (passport: Store.passport) => (urlThatMightBeReplaced: string) => {
     if (
       [
-        // contact info collected via ContactInput
-        passport.data?.applicant?.["name.first"],
-        passport.data?.applicant?.["name.last"],
-      ]
-        .map((x) => String(x).toLowerCase().trim())
-        .join("|") === "test|test" ||
-      [
-        // contact info collected via TextInput
-        passport.data?.["applicant.name.first"],
-        passport.data?.["applicant.name.last"],
+        passport.data?.[bopsDictionary.applicant_first_name],
+        passport.data?.[bopsDictionary.applicant_last_name],
       ]
         .map((x) => String(x).toLowerCase().trim())
         .join("|") === "test|test"

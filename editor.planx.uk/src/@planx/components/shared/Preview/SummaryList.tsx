@@ -1,5 +1,4 @@
 import ButtonBase from "@mui/material/ButtonBase";
-import Link from "@mui/material/Link";
 import makeStyles from "@mui/styles/makeStyles";
 import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
@@ -330,18 +329,15 @@ function AddressInput(props: ComponentProps) {
 }
 
 function ContactInput(props: ComponentProps) {
+  const fn = props?.node?.data?.fn;
   const { title, firstName, lastName, organisation, phone, email } =
-    getAnswersByNode(props);
+    props.userData?.data?.[`_contact.${fn}`]?.[fn];
 
   return (
     <>
       <dt>{props.node.data.title ?? "Contact"}</dt>
       <dd>
-        {title ? (
-          <>{title + " " + firstName + " " + lastName}</>
-        ) : (
-          <>{firstName + " " + lastName}</>
-        )}
+        {[title, firstName, lastName].filter(Boolean).join(" ").trim()}
         <br />
         {organisation ? (
           <>
