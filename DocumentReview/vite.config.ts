@@ -8,7 +8,6 @@ export default defineConfig({
     target: 'modules',
     lib: {
       entry: resolve(__dirname, 'src/DocumentReview.tsx'),
-      formats: ['es'],
       name: 'DocumentReview',
       fileName: 'document-review'
     },
