@@ -17,7 +17,7 @@ describe("locationSearchWithTimeout", () => {
       { x: 50, y: 50, siteBoundary: "[]" },
       timeout
     );
-    expect(promise).resolves.toStrictEqual(expect.any(Object));
+    return expect(promise).resolves.toStrictEqual(expect.any(Object));
   });
 
   test("an immediate timeout", async () => {
