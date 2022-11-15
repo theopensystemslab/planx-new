@@ -21,10 +21,10 @@ interface FormProps {
   organisation: string;
   phone: string;
   email: string;
-  "name.first"?: string;
-  "name.last"?: string;
-  "company.name"?: string;
-  "phone.primary"?: string;
+  "name.first": string;
+  "name.last": string;
+  "company.name": string;
+  "phone.primary": string;
 }
 
 export default function ContactInputComponent(props: Props): FCReturn {
@@ -61,7 +61,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
-      <InputLabel label="Title">
+      <InputLabel label="Title (optional)">
         <InputRowItem width="40%">
           <Input
             name="title"
@@ -69,12 +69,6 @@ export default function ContactInputComponent(props: Props): FCReturn {
             bordered
             errorMessage={formik.errors.title}
             onChange={formik.handleChange}
-            id={`${props.id}-title`}
-            inputProps={{
-              "aria-describedby": formik.errors.title
-                ? `${ERROR_MESSAGE}-${props.id}-title`
-                : "",
-            }}
           />
         </InputRowItem>
       </InputLabel>

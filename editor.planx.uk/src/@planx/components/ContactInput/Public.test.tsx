@@ -19,7 +19,7 @@ test("submits contact data", async () => {
   );
 
   await fillInFieldsUsingLabel(user, {
-    Title: "Mme",
+    "Title (optional)": "Mme",
     "First name": "Jane",
     "Last name": "Doe",
     "Organisation (optional)": "DLUHC",
@@ -159,7 +159,7 @@ test("recovers previously submitted text when clicking the back button when a pa
 it("should not have any accessibility violations on initial load", async () => {
   const { container, user } = setup(<ContactInput title="title" />);
   await fillInFieldsUsingLabel(user, {
-    Title: "Mme",
+    "Title (optional)": "Mme",
     "First name": "Jane",
     "Last name": "Doe",
     "Organisation (optional)": "DLUHC",
@@ -175,13 +175,7 @@ it("should not have any accessibility violations while in the error state", asyn
     <ContactInput title="Enter your contact details" id="testId" />
   );
 
-  const requiredContactElements = [
-    "title",
-    "firstName",
-    "lastName",
-    "phone",
-    "email",
-  ];
+  const requiredContactElements = ["firstName", "lastName", "phone", "email"];
 
   requiredContactElements.forEach((el) => {
     const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId-${el}`);

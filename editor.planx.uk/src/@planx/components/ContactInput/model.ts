@@ -5,7 +5,7 @@ import { MoreInformation, parseMoreInformation } from "../shared";
 import { emailRegex } from "../TextInput/model";
 
 export type Contact = {
-  title: string;
+  title?: string;
   firstName: string;
   lastName: string;
   organisation?: string;
@@ -14,7 +14,7 @@ export type Contact = {
 };
 
 export const userDataSchema: SchemaOf<Contact> = object({
-  title: string().required("Title is required"),
+  title: string(),
   firstName: string().required("First name is required"),
   lastName: string().required("Last name is required"),
   organisation: string(),
