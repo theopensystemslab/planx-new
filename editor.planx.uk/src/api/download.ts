@@ -1,7 +1,7 @@
 export { downloadFile, getPrivateFileURL };
 
 function getPrivateFileURL(fileKey: string) {
-  return `${process.env.REACT_APP_API_URL}/file/private/${fileKey}`;
+  return `${process.env.REACT_APP_API_URL}/file/private/${encodeURI(fileKey)}`;
 }
 
 async function downloadFile(fileKey: string, fileHash: string) {

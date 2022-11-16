@@ -10,7 +10,7 @@ async function uploadPublicFile(
 ) {
   const { data } = await handleUpload(file, { onProgress, path: "public" });
 
-  return `${process.env.REACT_APP_API_URL}/file/public/${data.key}`;
+  return `${process.env.REACT_APP_API_URL}/file/public/${encodeURI(data.key)}`;
 }
 
 async function uploadPrivateFile(
@@ -19,7 +19,7 @@ async function uploadPrivateFile(
 ) {
   const { data } = await handleUpload(file, { onProgress, path: "private" });
 
-  return `${process.env.REACT_APP_API_URL}/file/private/${data.key}`;
+  return `${process.env.REACT_APP_API_URL}/file/private/${encodeURI(data.key)}`;
 }
 
 function handleUpload(
