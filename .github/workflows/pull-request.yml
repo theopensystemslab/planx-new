@@ -438,3 +438,18 @@ jobs:
       - name: Editor healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://${{ env.FULL_DOMAIN }}; do sleep 1; done"
+
+  lighthouse:
+    name: Lighthouse
+    needs: [create_or_update_vultr_instance]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Audit URLs using Lighthouse
+        uses: treosh/lighthouse-ci-action@v9
+        with:
+          urls: | 
+            https://${{ env.FULL_DOMAIN }}/buckinghamshire/find-out-if-you-need-planning-permission/preview
+          # budgetPath: ./budget.json # test performance budgets
+          uploadArtifacts: true # save results as an action artifacts
+          temporaryPublicStorage: true # upload lighthouse report to the temporary storage
