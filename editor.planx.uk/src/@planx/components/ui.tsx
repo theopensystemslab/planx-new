@@ -99,7 +99,7 @@ export const MoreInformation = ({
       <ModalSectionContent title="More Information" Icon={InfoOutlined}>
         <InputGroup label="Why it matters">
           <InputRow>
-            <RichTextInput
+            <Input
               multiline
               name="info"
               value={info}
@@ -110,7 +110,7 @@ export const MoreInformation = ({
         </InputGroup>
         <InputGroup label="Policy source">
           <InputRow>
-            <RichTextInput
+            <Input
               multiline
               name="policyRef"
               value={policyRef}
@@ -121,7 +121,7 @@ export const MoreInformation = ({
         </InputGroup>
         <InputGroup label="How it is defined?">
           <InputRow>
-            <RichTextInput
+            <Input
               multiline
               name="howMeasured"
               value={howMeasured}

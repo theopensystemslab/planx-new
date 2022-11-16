@@ -241,6 +241,8 @@ const RichTextInput: FC<Props> = (props) => {
     string | null
   >(getContentHierarchyError(fromHtml(stringValue)));
 
+  console.log("rendering");
+
   // Handle update events
   const handleUpdate = useCallback(
     (transaction: { editor: Editor }) => {

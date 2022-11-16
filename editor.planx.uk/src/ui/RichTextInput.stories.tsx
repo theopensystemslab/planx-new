@@ -3,8 +3,11 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { Meta } from "@storybook/react/types-6-0";
+import { range } from "ramda";
 import React, { useState } from "react";
 
+import Input from "./Input";
+import ListManager from "./ListManager";
 import RichTextInput, { fromHtml } from "./RichTextInput";
 
 const metadata: Meta = {
@@ -14,6 +17,8 @@ const metadata: Meta = {
     controls: { hideNoControlsWarning: true },
   },
 };
+
+export default metadata;
 
 export const Basic = () => {
   const [value, setValue] = useState<string>(
@@ -68,4 +73,57 @@ export const Basic = () => {
   );
 };
 
-export default metadata;
+interface Item {
+  title: string;
+  body: string;
+  enabled: boolean;
+}
+
+const ItemEditor: React.FC<{
+  value: Item;
+  onChange: (newValue: Item) => void;
+}> = (props) => {
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <Stack spacing={0.5}>
+        <Input
+          value={props.value.title}
+          onChange={(ev) => {
+            props.onChange({
+              ...props.value,
+              title: ev.target.value,
+            });
+          }}
+        />
+        <RichTextInput
+          placeholder="Add something"
+          value={props.value.body}
+          onChange={(ev) => {
+            props.onChange({
+              ...props.value,
+              body: ev.target.value,
+            });
+          }}
+        />
+      </Stack>
+    </Box>
+  );
+};
+
+export const Performance = () => {
+  const [items, setItems] = useState<Item[]>(
+    range(0, 200).map(() => ({
+      title: "Title",
+      body: "Body",
+      enabled: true,
+    }))
+  );
+  return (
+    <ListManager
+      values={items}
+      onChange={setItems}
+      newValue={() => ({ title: "", body: "", enabled: false })}
+      Editor={ItemEditor}
+    ></ListManager>
+  );
+};

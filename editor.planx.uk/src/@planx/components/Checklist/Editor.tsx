@@ -372,7 +372,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
             </InputRow>
 
             <InputRow>
-              <RichTextInput
+              <Input
                 name="description"
                 value={formik.values.description}
                 placeholder="Description"

@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import makeStyles from "@mui/styles/makeStyles";
 import { arrayMoveImmutable } from "array-move";
+import { update } from "ramda";
 import React, { useRef } from "react";
 import {
   DragDropContext,
@@ -15,7 +16,7 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 
-import { removeAt, setAt } from "../utils";
+import { removeAt } from "../utils";
 
 export interface EditorProps<T> {
   index?: number;
@@ -70,7 +71,7 @@ export default function ListManager<T, EditorExtraProps>(
                 index={index}
                 value={item}
                 onChange={(newItem) => {
-                  props.onChange(setAt(index, newItem, props.values));
+                  props.onChange(update(index, newItem, props.values));
                 }}
                 {...(props.editorExtraProps || {})}
               />
@@ -149,7 +150,7 @@ export default function ListManager<T, EditorExtraProps>(
                         index={index}
                         value={item}
                         onChange={(newItem) => {
-                          props.onChange(setAt(index, newItem, props.values));
+                          props.onChange(update(index, newItem, props.values));
                         }}
                         {...(props.editorExtraProps || {})}
                       />
