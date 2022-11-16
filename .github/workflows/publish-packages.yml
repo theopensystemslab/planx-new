@@ -1,16 +1,26 @@
-name: Test Packages
+name: Publish Packages
 on:
   pull_request:
     types:
-      - opened
-      - reopened
-      - synchronize
+      - closed
+    branches:
+      - main
+      - ben/document-viewer
     paths:
       - 'packages/**'
+    # do not run if anything other than packages have changed
+    # packages must be changed in isolation
+    paths-ignore:
+      - 'api.planx.uk/**'
+      - 'hasura.planx.uk/**'
+      - 'infrastructure/**'
+      - 'editor.planx.uk/**'
+      - 'sharedb.planx.uk/**'
 
 jobs:
   changes:
     name: Check package changes
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -75,3 +85,9 @@ jobs:
         id: pnpm-ci
         run: pnpm ci
         working-directory: ./packages/${{ matrix.project }}
+
+      # WIP
+      #- name: Publish Package
+      #  id: pnpm-publish
+      #  run: pnpm publish
+      #  working-directory: ./packages/${{ matrix.project }}
