@@ -1,5 +1,5 @@
 {
-  "name": "document-review",
+  "name": "@planx/document-review",
   "type": "module",
   "version": "0.1.0",
   "license": "MPL-2.0",
