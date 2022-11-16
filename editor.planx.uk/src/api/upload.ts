@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { encodeS3URI } from "./encode";
+
 export { uploadPrivateFile, uploadPublicFile };
 
 export type UploadFileResponse = string;
@@ -10,7 +12,9 @@ async function uploadPublicFile(
 ) {
   const { data } = await handleUpload(file, { onProgress, path: "public" });
 
-  return `${process.env.REACT_APP_API_URL}/file/public/${data.key}`;
+  return `${process.env.REACT_APP_API_URL}/file/public/${encodeS3URI(
+    data.key
+  )}`;
 }
 
 async function uploadPrivateFile(
@@ -19,7 +23,9 @@ async function uploadPrivateFile(
 ) {
   const { data } = await handleUpload(file, { onProgress, path: "private" });
 
-  return `${process.env.REACT_APP_API_URL}/file/private/${data.key}`;
+  return `${process.env.REACT_APP_API_URL}/file/private/${encodeS3URI(
+    data.key
+  )}`;
 }
 
 function handleUpload(
