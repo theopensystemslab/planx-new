@@ -17,6 +17,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "ci": "pnpm lint",
     "build": "tsc && vite build",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix"
   },

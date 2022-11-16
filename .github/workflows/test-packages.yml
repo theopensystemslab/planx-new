@@ -1,0 +1,85 @@
+name: Test Packages
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - 'packages/**'
+    # do not run if anything other than packages have changed
+    # this means packages can only be changed in isolation
+    paths-ignore:
+      - 'api.planx.uk/**'
+      - 'hasura.planx.uk/**'
+      - 'infrastructure/**'
+      - 'editor.planx.uk/**'
+      - 'sharedb.planx.uk/**'
+
+jobs:
+  changes:
+    name: Check package changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      document-review: ${{ steps.filter.outputs.document-review }}
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            document-review:
+              - 'packages/document-review/**'
+
+  # All packages are assumed to have a `ci` script that runs any relevant CI tests
+  test:
+    name: Test Packages
+    runs-on: ubuntu-latest
+    needs: [changes]
+    strategy:
+      matrix:
+        project: ${{ needs.changes.outputs }}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        id: install-node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install pnpm
+        id: install-pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+        working-directory: ./packages/${{ matrix.project }}
+
+      - name: Setup pnpm cache
+        id: setup-pnpm-cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-${{ matrix.project }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.project }}-pnpm-store-
+
+      - name: Install dependencies
+        id: install-packages
+        run: pnpm install
+        working-directory: ./packages/${{ matrix.project }}
+
+      - name: Run CI Script
+        id: pnpm-ci
+        run: pnpm ci
+        working-directory: ./packages/${{ matrix.project }}
