@@ -9,29 +9,15 @@ on:
       - 'packages/**'
 
 jobs:
-  changes:
-    name: Check package changes
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-    outputs:
-      document-review: ${{ steps.filter.outputs.document-review }}
-    steps:
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
-            document-review:
-              - 'packages/document-review/**'
-
   # All packages are assumed to have a `ci` script that runs any relevant CI tests
   test:
     name: Test Packages
     runs-on: ubuntu-latest
-    needs: [changes]
     strategy:
       matrix:
-        project: ${{ needs.changes.outputs }}
+        # FIXME: this approch supports multiple packages but will run for every package when any change.
+        project: 
+          - "document-review"
     steps:
       - name: Checkout
         id: checkout
