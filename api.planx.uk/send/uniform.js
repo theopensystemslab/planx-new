@@ -7,7 +7,6 @@ import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
-import { getFileFromS3 } from "../s3/getFile";
 import { adminGraphQLClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
@@ -422,7 +421,7 @@ async function retrieveSubmission(token, submissionId) {
  * @param {string} folder - AdmZip archive
  */
 const downloadFile = async (url, path, folder) => {
-   const res = await fetch(url, { headers: { 'api-key': process.env.FILE_API_KEY } });
+  const res = await fetch(url, { headers: { 'api-key': process.env.FILE_API_KEY } });
   const fileStream = fs.createWriteStream(path);
 
   res.body.pipe(fileStream);
