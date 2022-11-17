@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@airbrake/node": "^2.1.7",
+    "@opensystemslab/planx-document-review": "github:theopensystemslab/planx-document-review",
     "adm-zip": "^0.5.9",
     "aws-sdk": "^2.1180.0",
     "axios": "^0.27.2",

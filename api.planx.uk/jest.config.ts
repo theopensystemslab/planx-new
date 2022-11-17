@@ -10,10 +10,6 @@ export default {
     ],
   },
   testPathIgnorePatterns: ["dist/*"],
-  moduleNameMapper: {
-    // resolution override for linked module
-    "document-review": "<rootDir>/../DocumentReview",
-  },
   setupFilesAfterEnv: ["./jest.setup.js"],
   collectCoverage: true,
   coverageThreshold: {

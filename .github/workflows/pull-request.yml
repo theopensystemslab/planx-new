@@ -4,8 +4,6 @@ on:
     types: [opened, synchronize]
     branches:
       - main
-    paths-ignore:
-      - 'packages/**'
 
 env:
   DOMAIN: planx.pizza
