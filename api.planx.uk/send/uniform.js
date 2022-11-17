@@ -8,6 +8,7 @@ import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
 import { adminGraphQLClient } from "../hasura";
+import { getFileFromS3 } from "../s3/getFile";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
 
@@ -421,21 +422,16 @@ async function retrieveSubmission(token, submissionId) {
  * @param {string} folder - AdmZip archive
  */
 const downloadFile = async (url, path, folder) => {
-  const res = await fetch(url, { headers: { 'api-key': process.env.FILE_API_KEY } });
-  if (res.ok) {
-    const fileStream = fs.createWriteStream(path);
-    res.body.pipe(fileStream);
-
-    await new Promise((resolve, reject) => {
-      fileStream.on("error", reject);
-      fileStream.on("finish", resolve);
-    });
+    // Files are stored decoded on S3, but encoded in our passport, ensure the key matches S3 before fetching it
+  const s3Key = url.split("/").slice(-2).join("/");
+  const decodedS3Key = decodeURIComponent(s3Key);
   
-    folder.addLocalFile(path);
-    deleteFile(path);
-  } else {
-    console.log(`Failed to successfully download ${url}, skipping this file`);
-  }
+  const { body } = await getFileFromS3(decodedS3Key);
+  
+  fs.writeFileSync(path, body);
+
+  folder.addLocalFile(path);
+  deleteFile(path);
 };
 
 /**
