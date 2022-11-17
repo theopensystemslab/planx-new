@@ -422,16 +422,20 @@ async function retrieveSubmission(token, submissionId) {
  */
 const downloadFile = async (url, path, folder) => {
   const res = await fetch(url, { headers: { 'api-key': process.env.FILE_API_KEY } });
-  const fileStream = fs.createWriteStream(path);
+  if (res.ok) {
+    const fileStream = fs.createWriteStream(path);
+    res.body.pipe(fileStream);
 
-  res.body.pipe(fileStream);
-  await new Promise((resolve, reject) => {
-    fileStream.on("error", reject);
-    fileStream.on("finish", resolve);
-  });
-
-  folder.addLocalFile(path);
-  deleteFile(path);
+    await new Promise((resolve, reject) => {
+      fileStream.on("error", reject);
+      fileStream.on("finish", resolve);
+    });
+  
+    folder.addLocalFile(path);
+    deleteFile(path);
+  } else {
+    console.log(`Failed to successfully download ${url}, skipping this file`);
+  }
 };
 
 /**
