@@ -160,7 +160,7 @@ export const previewStore = (
     //      so we should call them only when needed to prevent UI slowness.
     if (node?.id && shouldUpdateMemoizedValues) {
       memoizedBreadcrumb = breadcrumbs;
-      const sorted = sortIdsDepthFirst(flow)(new Set([...goBackable, node.id]));
+      const sorted = sortIdsDepthFirst(flow)(new Set([node.id, ...goBackable]));
       const currentCardIndex = sorted.indexOf(node.id);
       previousCardId =
         currentCardIndex > 0 ? sorted[currentCardIndex - 1] : sorted[0];

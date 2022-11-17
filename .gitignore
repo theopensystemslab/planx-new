@@ -3,6 +3,7 @@ node_modules/
 editor.planx.uk/.eslintcache
 /minio-data
 .pnpm-debug.log
+.DS_Store
 
 # Secrets
 .env

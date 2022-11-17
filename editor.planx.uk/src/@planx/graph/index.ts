@@ -440,6 +440,10 @@ export const makeUnique =
       _makeUnique(id, parent, { idFn }, true);
     });
 
+/**
+ * Depth first sort of graph
+ * XXX: Clones will only appear in first graph position
+ */
 const dfs = (graph: Graph) => (startId: string) => {
   const visited = new Set([startId]);
   const crawlFrom = (id: string) => {

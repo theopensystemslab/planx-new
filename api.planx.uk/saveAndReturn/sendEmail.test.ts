@@ -28,7 +28,7 @@ describe("Send Email endpoint", () => {
       const missingEmail = { payload: { sessionId: 123 } };
       const missingSessionId = { payload: { email: "test" } };
 
-      for (let invalidBody of [missingEmail, missingSessionId]) {
+      for (const invalidBody of [missingEmail, missingSessionId]) {
         await supertest(app)
           .post(SAVE_ENDPOINT)
           .send(invalidBody)
@@ -134,7 +134,7 @@ describe("Send Email endpoint", () => {
 
   describe("Templates which require authorisation", () => {
     it("returns 401 UNAUTHORIZED if no auth header is provided", async () => {
-      for (let template of ["reminder", "expiry"]) {
+      for (const template of ["reminder", "expiry"]) {
         const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
         await supertest(app)
           .post(`/send-email/${template}`)
@@ -144,7 +144,7 @@ describe("Send Email endpoint", () => {
     });
 
     it("returns 401 UNAUTHORIZED if no incorrect auth header is provided", async () => {
-      for (let template of ["reminder", "expiry"]) {
+      for (const template of ["reminder", "expiry"]) {
         const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
         await supertest(app)
           .post(`/send-email/${template}`)
@@ -155,7 +155,7 @@ describe("Send Email endpoint", () => {
     });
 
     it("returns 200 OK if the correct headers are used", async () => {
-      for (let template of ["reminder", "expiry"]) {
+      for (const template of ["reminder", "expiry"]) {
         const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
         await supertest(app)
           .post(`/send-email/${template}`)

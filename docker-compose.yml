@@ -104,7 +104,7 @@ services:
       context: ./scripts/seed-database
       dockerfile: Dockerfile
     volumes:
-       - "./hasura.planx.uk/:/hasura"
+      - "./hasura.planx.uk/:/hasura"
     restart: "no"
     depends_on:
       hasura-proxy:
@@ -114,6 +114,7 @@ services:
       HASURA_GRAPHQL_URL: http://hasura-proxy:7000/v1/graphql
       HASURA_GRAPHQL_ENDPOINT: http://hasura-proxy:7000/
       PRODUCTION_GRAPHQL_URL: 'https://hasura.editor.planx.uk/v1/graphql'
+      PG_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
   api:
     restart: unless-stopped
     build:
@@ -171,6 +172,7 @@ services:
       GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID}
       GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID}
       HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
+      FILE_API_KEY: ${FILE_API_KEY}
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
 
   sharedb:

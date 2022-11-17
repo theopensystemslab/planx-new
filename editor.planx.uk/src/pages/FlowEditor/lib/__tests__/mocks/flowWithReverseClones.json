@@ -1,0 +1,50 @@
+{
+  "_root": {
+    "edges": ["question", "finalNode"]
+  },
+  "rightChoice": {
+    "data": {
+      "text": "Right"
+    },
+    "type": 200,
+    "edges": ["rightNotice", "clone"]
+  },
+  "rightNotice": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "This branch is different",
+      "resetButton": false
+    },
+    "type": 8
+  },
+  "finalNode": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "Great!",
+      "resetButton": true
+    },
+    "type": 8
+  },
+  "question": {
+    "data": {
+      "text": "Which branch?"
+    },
+    "type": 100,
+    "edges": ["leftChoice", "rightChoice"]
+  },
+  "leftChoice": {
+    "data": {
+      "text": "Left"
+    },
+    "type": 200,
+    "edges": ["clone"]
+  },
+  "clone": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "This is a clone",
+      "resetButton": false
+    },
+    "type": 8
+  }
+}

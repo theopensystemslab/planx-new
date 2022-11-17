@@ -68,8 +68,8 @@
         insert:
           columns: '*'
       retry_conf:
-        num_retries: 3
-        interval_sec: 10
+        num_retries: 1
+        interval_sec: 30
         timeout_sec: 60
       webhook_from_env: HASURA_PLANX_API_URL
       headers:
@@ -399,8 +399,8 @@
         insert:
           columns: '*'
       retry_conf:
-        num_retries: 3
-        interval_sec: 10
+        num_retries: 1
+        interval_sec: 30
         timeout_sec: 60
       webhook_from_env: HASURA_PLANX_API_URL
       headers:

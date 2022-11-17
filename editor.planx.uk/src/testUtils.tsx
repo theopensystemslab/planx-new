@@ -1,6 +1,5 @@
 /* eslint-disable no-restricted-imports */
-import { FadeProps } from "@material-ui/core/Fade";
-import { ThemeProvider } from "@mui/material";
+import { FadeProps, ThemeProvider } from "@mui/material";
 import { render, RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";

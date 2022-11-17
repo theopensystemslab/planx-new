@@ -1,34 +1,42 @@
+import { Flow } from "./../types";
 import { adminGraphQLClient as client } from "../hasura";
+import { gql } from "graphql-request";
 import { getFlowData } from "../helpers";
+import { Request, Response, NextFunction } from "express";
+
+interface MatchResult {
+  matches: Flow["data"];
+  flowData: Flow["data"];
+}
 
 /**
  * Find and return the node ids and specific data properties that match a given search term,
  *    and return an updated copy of the flow data if a replaceValue is provided, else return the original flowData
- *
- * @param {object} flowData - flow data object
- * @param {string} searchTerm - string to "find"
- * @param {string} replaceValue - optional string to "replace" the searchTerm
- * @returns {object}
  */
-const getMatches = (flowData, searchTerm, replaceValue = undefined) => {
-  const matches = {};
+const getMatches = (
+  flowData: Flow["data"],
+  searchTerm: string,
+  replaceValue: string | undefined = undefined
+): MatchResult => {
+  const matches: MatchResult["matches"] = {};
 
   const nodes = Object.keys(flowData).filter((key) => key !== "_root");
   nodes.forEach((node) => {
-    if (flowData[node]["data"]) {
+    const data = flowData[node]["data"];
+    if (data) {
       // search all "data" properties independent of component type (eg `fn`, `val`, `text`)
-      let keys = Object.keys(flowData[node]["data"]);
+      const keys = Object.keys(data);
       keys.forEach((k) => {
         // if any value strictly matches the searchTerm, add that node id & key to the matches object
-        if (flowData[node]["data"][k] === searchTerm) {
+        if (data[k] === searchTerm) {
           matches[node] = {
             data: {
-              [k]: flowData[node]["data"][k],
+              [k]: data[k],
             },
           };
           // if a replaceValue is provided, additionally update the flowData
-          if (Boolean(replaceValue)) {
-            flowData[node]["data"][k] = replaceValue;
+          if (replaceValue) {
+            data[k] = replaceValue;
           }
         }
       });
@@ -41,17 +49,21 @@ const getMatches = (flowData, searchTerm, replaceValue = undefined) => {
   };
 };
 
-const findAndReplaceInFlow = async (req, res, next) => {
+const findAndReplaceInFlow = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | NextFunction | void> => {
   try {
     if (!req.user?.sub)
-      next({ status: 401, message: "User ID missing from JWT" });
+      return next({ status: 401, message: "User ID missing from JWT" });
 
     const flow = await getFlowData(req.params.flowId);
-    if (!flow) next({ status: 401, message: "Unknown flowId" });
+    if (!flow) return next({ status: 401, message: "Unknown flowId" });
 
-    const { find, replace } = req.query;
+    const { find, replace } = req.query as Record<string, string>;
     if (!find)
-      next({
+      return next({
         status: 401,
         message: `Expected at least one query parameter "find"`,
       });
@@ -79,17 +91,9 @@ const findAndReplaceInFlow = async (req, res, next) => {
 
       // if matches, proceed with mutation to update flow data
       const response = await client.request(
-        `
-          mutation UpdateFlow(
-            $data: jsonb = {},
-            $id: uuid!,
-          ) {
-            update_flows_by_pk(
-              pk_columns: {id: $id},
-              _set: {
-                data: $data,
-              },
-            ) {
+        gql`
+          mutation UpdateFlow($data: jsonb = {}, $id: uuid!) {
+            update_flows_by_pk(pk_columns: { id: $id }, _set: { data: $data }) {
               id
               slug
               data

@@ -9,6 +9,7 @@ import * as postgres from "@pulumi/postgresql";
 import * as mime from "mime";
 import * as tldjs from "tldjs";
 import * as url from "url";
+import * as random from "@pulumi/random";
 
 import { generateTeamSecrets } from "./utils/generateTeamSecrets";
 import { createHasuraService } from "./services/hasura";
@@ -313,6 +314,10 @@ export = async () => {
             value: pulumi.interpolate`${apiBucket.bucket}`,
           },
           { name: "AWS_S3_ACL", value: "public-read" },
+          {
+            name: "FILE_API_KEY",
+            value: config.require("file-api-key"),
+          },
           {
             name: "GOOGLE_CLIENT_ID",
             value: config.require("google-client-id"),

@@ -12,7 +12,7 @@ const createSendEvents = async (req: Request, res: Response, next: NextFunction)
   Promise<NextFunction | Response | void> => {
   try {
     const now = new Date();
-    let combinedResponse: CombinedResponse = {};
+    const combinedResponse: CombinedResponse = {};
 
     if ("bops" in req.body) {
       const bopsEvent = await createScheduledEvent({

@@ -1,11 +1,13 @@
-require("isomorphic-fetch");
+import "isomorphic-fetch";
 import os from "os";
+import { Buffer } from "node:buffer";
 import path from "path";
 import FormData from "form-data";
 import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
+import { getFileFromS3 } from "../s3/getFile";
 import { adminGraphQLClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
@@ -14,7 +16,7 @@ const client = adminGraphQLClient;
 
 /**
  * Submits application data to Uniform
- * 
+ *
  *   first, create a zip folder containing an XML (Idox's schema), CSV (our format), and any user-uploaded files
  *   then, make requests to Uniform's "Submission API" to authenticate, create a submission, and attach the zip to the submission
  *   finally, insert a record into uniform_applications for future auditing
@@ -23,22 +25,25 @@ const sendToUniform = async (req, res, next) => {
   if (!getUniformClient(req.params.localAuthority)) {
     return next({
       status: 400,
-      message: "Idox/Uniform connector is not enabled for this local authority"
+      message: "Idox/Uniform connector is not enabled for this local authority",
     });
   }
-  
+
   // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload } = req.body;
   if (!payload?.xml || !payload?.sessionId) {
     return next({
       status: 400,
-      message: "Missing application data to send to Uniform"
+      message: "Missing application data to send to Uniform",
     });
   }
 
   // confirm that this session has not already been successfully submitted before proceeding
   const submittedApp = await checkUniformAuditTable(payload?.sessionId);
-  if (submittedApp?.submissionStatus === "PENDING" && submittedApp?.canDownload) {
+  if (
+    submittedApp?.submissionStatus === "PENDING" &&
+    submittedApp?.canDownload
+  ) {
     return res.status(200).send({
       sessionId: payload?.sessionId,
       idoxSubmissionId: submittedApp?.submissionId,
@@ -47,53 +52,70 @@ const sendToUniform = async (req, res, next) => {
   }
 
   try {
-    const { clientId, clientSecret } = getUniformClient(req.params.localAuthority);
+    const { clientId, clientSecret } = getUniformClient(
+      req.params.localAuthority
+    );
     // Setup - Create the zip folder
-    const zipPath = await createZip(payload?.xml, payload?.csv, payload?.files, payload?.sessionId);
+    const zipPath = await createZip(payload);
 
     // Request 1/3 - Authenticate
     const {
       access_token: token,
       "organisation-name": organisation,
-      "organisation-id": organisationId
+      "organisation-id": organisationId,
     } = await authenticate(clientId, clientSecret);
 
     // 2/3 - Create a submission
     if (token) {
-      const idoxSubmissionId = await createSubmission(token, organisation, organisationId, payload?.sessionId);
+      const idoxSubmissionId = await createSubmission(
+        token,
+        organisation,
+        organisationId,
+        payload?.sessionId
+      );
 
       // 3/3 - Attach the zip & create an audit entry
       if (idoxSubmissionId) {
-        const attachmentAdded = await attachArchive(token, idoxSubmissionId, zipPath);
+        const attachmentAdded = await attachArchive(
+          token,
+          idoxSubmissionId,
+          zipPath
+        );
         if (attachmentAdded) {
           deleteFile(zipPath);
         }
 
-        const submissionDetails = await retrieveSubmission(token, idoxSubmissionId);
-        const application = await client.request(gql`
-          mutation CreateUniformApplication(
-            $idox_submission_id: String = "",
-            $submission_reference: String = "",
-            $destination: String = "",
-            $response: jsonb = "",
-            $payload: jsonb = "",
-          ) {
-            insert_uniform_applications_one(object: {
-              idox_submission_id: $idox_submission_id,
-              submission_reference: $submission_reference,
-              destination: $destination,
-              response: $response,
-              payload: $payload
-            }) {
-              id
-              idox_submission_id
-              submission_reference
-              destination
-              response
-              created_at
+        const submissionDetails = await retrieveSubmission(
+          token,
+          idoxSubmissionId
+        );
+        const application = await client.request(
+          gql`
+            mutation CreateUniformApplication(
+              $idox_submission_id: String = ""
+              $submission_reference: String = ""
+              $destination: String = ""
+              $response: jsonb = ""
+              $payload: jsonb = ""
+            ) {
+              insert_uniform_applications_one(
+                object: {
+                  idox_submission_id: $idox_submission_id
+                  submission_reference: $submission_reference
+                  destination: $destination
+                  response: $response
+                  payload: $payload
+                }
+              ) {
+                id
+                idox_submission_id
+                submission_reference
+                destination
+                response
+                created_at
+              }
             }
-          }
-        `,
+          `,
           {
             idox_submission_id: idoxSubmissionId,
             submission_reference: payload?.sessionId,
@@ -131,7 +153,7 @@ const sendToUniform = async (req, res, next) => {
 
 /**
  * Query the Uniform audit table to see if we already have an application for this session
- * @param {string} sessionId 
+ * @param {string} sessionId
  * @returns {object|undefined} most recent uniform_applications.response
  */
 async function checkUniformAuditTable(sessionId) {
@@ -151,22 +173,28 @@ async function checkUniformAuditTable(sessionId) {
       }
     `,
     {
-      submission_reference: sessionId
+      submission_reference: sessionId,
     }
   );
 
   return application?.uniform_applications[0]?.response;
-};
+}
 
 /**
  * Creates a zip folder containing the documents required by Uniform
  * @param {any} stringXml - a string representation of the XML schema, resulting file must be named "proposal.xml"
  * @param {any} csv - an array of objects representing our custom CSV format
- * @param {string[]} files - an array of the S3 URLs for any user-uploaded files
+ * @param {object[]} files - an array of user-uploaded files
  * @param {string} sessionId
  * @returns {Promise} - name of zip
  */
-async function createZip(stringXml, csv, files, sessionId) {
+export async function createZip({
+  xml: stringXml,
+  csv,
+  geojson,
+  files,
+  sessionId,
+}) {
   // initiate an empty zip folder
   const zip = new AdmZip();
 
@@ -177,65 +205,70 @@ async function createZip(stringXml, csv, files, sessionId) {
     tmpDir = folder;
   });
 
-  try {
-    // download any user-uploaded files from S3 to the tmp directory, add them to the zip
-    if (files) {
-      for (let file of files) {
-        // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
-        // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
-        // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-        const uniqueFilename = file.split("/").slice(-2).join("-");
-        const filePath = path.join(tmpDir, uniqueFilename);
-        await downloadFile(file, filePath, zip);
-      }
+  // download any user-uploaded files from S3 to the tmp directory, add them to the zip
+  if (files) {
+    for (let file of files) {
+      // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
+      // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
+      const s3SplittedPath = file.split("/").slice(-2);
+
+      // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
+      const uniqueFilename = s3SplittedPath.join("-");
+      const filePath = path.join(tmpDir, uniqueFilename);
+      await downloadFile(s3SplittedPath.join("/"), filePath, zip);
     }
-
-    // build a CSV, write it to the tmp directory, add it to the zip
-    const csvPath = path.join(tmpDir, "application.csv");
-    const csvFile = fs.createWriteStream(csvPath);
-
-    const csvStream = stringify(csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
-    await new Promise((resolve, reject) => {
-      csvStream.on("error", reject);
-      csvStream.on("finish", resolve);
-    });
-
-    zip.addLocalFile(csvPath);
-    deleteFile(csvPath);
-
-    // build the XML file from a string, write it locally, add it to the zip
-    //   must be named "proposal.xml" to be processed by Uniform
-    const xmlPath = "proposal.xml";
-    const xmlFile = fs.createWriteStream(xmlPath);
-
-    const xmlStream = str(stringXml.trim()).pipe(xmlFile);
-    await new Promise((resolve, reject) => {
-      xmlStream.on("error", reject);
-      xmlStream.on("finish", resolve);
-    });
-
-    zip.addLocalFile(xmlPath);
-    deleteFile(xmlPath);
-
-    // generate & save zip locally
-    const zipName = `ripa-test-${sessionId}.zip`;
-    zip.writeZip(zipName);
-
-    // cleanup tmp directory
-    fs.rm(tmpDir, { recursive: true }, (err) => {
-      if (err) throw err;
-    });
-
-    return zipName;
-  } catch (err) {
-    throw err;
   }
-};
+
+  // build a CSV, write it to the tmp directory, add it to the zip
+  const csvPath = path.join(tmpDir, "application.csv");
+  const csvFile = fs.createWriteStream(csvPath);
+
+  const csvStream = stringify(csv, {
+    columns: ["question", "responses", "metadata"],
+    header: true,
+  }).pipe(csvFile);
+  await new Promise((resolve, reject) => {
+    csvStream.on("error", reject);
+    csvStream.on("finish", resolve);
+  });
+  zip.addLocalFile(csvPath);
+  deleteFile(csvPath);
+
+  // build an optional GeoJSON file for validators
+  if (geojson) {
+    const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
+    zip.addFile("boundary.geojson", geoBuff);
+  }
+  // build the XML file from a string, write it locally, add it to the zip
+  //   must be named "proposal.xml" to be processed by Uniform
+  const xmlPath = "proposal.xml";
+  const xmlFile = fs.createWriteStream(xmlPath);
+
+  const xmlStream = str(stringXml.trim()).pipe(xmlFile);
+  await new Promise((resolve, reject) => {
+    xmlStream.on("error", reject);
+    xmlStream.on("finish", resolve);
+  });
+
+  zip.addLocalFile(xmlPath);
+  deleteFile(xmlPath);
+
+  // generate & save zip locally
+  const zipName = `ripa-test-${sessionId}.zip`;
+  zip.writeZip(zipName);
+
+  // cleanup tmp directory
+  fs.rm(tmpDir, { recursive: true }, (err) => {
+    if (err) throw err;
+  });
+
+  return zipName;
+}
 
 /**
  * Logs in to the Idox Submission API using a username/password
  *   and returns an access token
- * 
+ *
  * @param {string} clientId - idox-generated client ID
  * @param {string} clientSecret - idox-generated client secret
  * @returns {Promise} - access token
@@ -246,7 +279,9 @@ async function authenticate(clientId, clientSecret) {
   const authOptions = {
     method: "POST",
     headers: new Headers({
-      "Authorization": 'Basic ' + Buffer.from(clientId + ":" + clientSecret).toString("base64"),
+      Authorization:
+        "Basic " +
+        Buffer.from(clientId + ":" + clientSecret).toString("base64"),
       "Content-type": "application/x-www-form-urlencoded",
     }),
     body: new URLSearchParams({
@@ -257,76 +292,82 @@ async function authenticate(clientId, clientSecret) {
     redirect: "follow",
   };
 
-  try {
-    return await fetch(authEndpoint, authOptions)
-      .then(response => response.json());
-  } catch (err) {
-    throw err;
-  }
-};
+  return await fetch(authEndpoint, authOptions).then((response) =>
+    response.json()
+  );
+}
 
 /**
  * Creates a submission (submissionReference is unique value provided by RIPA & must match XML <portaloneapp:RefNum>)
  *   and returns a submissionId parsed from the resource link
- * 
+ *
  * @param {string} token - access token retrieved from idox authentication
  * @param {string} organisation - idox-generated organisation name
  * @param {number} organisationId - idox-generated organisation id
  * @param {string} sessionId - ripa-generated sessionId
  * @returns {Promise} - idox-generated submissionId
  */
-async function createSubmission(token, organisation, organisationId, sessionId = "TEST") {
-  const createSubmissionEndpoint = process.env.UNIFORM_SUBMISSION_URL + "/secure/submission";
+async function createSubmission(
+  token,
+  organisation,
+  organisationId,
+  sessionId = "TEST"
+) {
+  const createSubmissionEndpoint =
+    process.env.UNIFORM_SUBMISSION_URL + "/secure/submission";
   const isStaging = process.env.UNIFORM_SUBMISSION_URL.includes("staging");
 
   const createSubmissionOptions = {
     method: "POST",
     headers: new Headers({
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       "Content-type": "application/json",
     }),
     body: JSON.stringify({
-      "entity": "dc",
-      "module": "dc",
-      "organisation": organisation,
-      "organisationId": organisationId,
-      "submissionReference": sessionId,
-      "description": isStaging ? "Staging submission from PlanX" : "Production submission from PlanX",
-      "submissionProcessorType": "API"
+      entity: "dc",
+      module: "dc",
+      organisation: organisation,
+      organisationId: organisationId,
+      submissionReference: sessionId,
+      description: isStaging
+        ? "Staging submission from PlanX"
+        : "Production submission from PlanX",
+      submissionProcessorType: "API",
     }),
     redirect: "follow",
   };
 
-  try {
-    return await fetch(createSubmissionEndpoint, createSubmissionOptions)
-      .then(response => {
-        // successful submission returns 201 Created without body
-        if (response.status === 201) {
-          // parse & return the submissionId
-          const resourceLink = response.headers.get("location");
-          return resourceLink.split("/").pop();
-        }
-      });
-  } catch (err) {
-    throw err;
-  }
-};
+  return await fetch(createSubmissionEndpoint, createSubmissionOptions).then(
+    (response) => {
+      // successful submission returns 201 Created without body
+      if (response.status === 201) {
+        // parse & return the submissionId
+        const resourceLink = response.headers.get("location");
+        return resourceLink.split("/").pop();
+      }
+    }
+  );
+}
 
 /**
  * Uploads and attaches a zip folder to an existing submission
- * 
- * @param {string} token - access token retrieved from idox authentication 
- * @param {string} submissionId - idox-generated UUID returned in the resource link of the submission 
+ *
+ * @param {string} token - access token retrieved from idox authentication
+ * @param {string} submissionId - idox-generated UUID returned in the resource link of the submission
  * @param {string} zipPath - file path to an existing zip folder (2GB limit)
  * @returns {Promise} - "zipAttached" boolean for our audit record because retrieveSubmission response will include archive.href regardless
  */
 async function attachArchive(token, submissionId, zipPath) {
   if (!fs.existsSync(zipPath)) {
-    console.log(`Zip does not exist, cannot attach to idox_submission_id ${submissionId}`);
+    console.log(
+      `Zip does not exist, cannot attach to idox_submission_id ${submissionId}`
+    );
     return false;
   }
 
-  const attachArchiveEndpoint = process.env.UNIFORM_SUBMISSION_URL + `/secure/submission/${submissionId}/archive`;
+  const attachArchiveEndpoint =
+    process.env.UNIFORM_SUBMISSION_URL +
+    `/secure/submission/${submissionId}/archive`;
 
   const formData = new FormData();
   formData.append("file", fs.createReadStream(zipPath));
@@ -334,69 +375,58 @@ async function attachArchive(token, submissionId, zipPath) {
   const attachArchiveOptions = {
     method: "POST",
     headers: new Headers({
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     }),
     body: formData,
     redirect: "follow",
   };
 
-  try {
-    return await fetch(attachArchiveEndpoint, attachArchiveOptions)
-      .then(response => {
-        // successful upload returns 204 No Content without body
-        if (response.status === 204) {
-          return true;
-        }
-      });
-  } catch (err) {
-    throw err;
-  }
-};
-
+  return await fetch(attachArchiveEndpoint, attachArchiveOptions).then(
+    (response) => {
+      // successful upload returns 204 No Content without body
+      if (response.status === 204) {
+        return true;
+      }
+    }
+  );
+}
 
 /**
  * Gets details about an existing submission to store for auditing purposes
  *   since neither createSubmission nor attachArchive requests return a meaningful response body
- * 
+ *
  * @param {string} token - access token retrieved from idox authentication
  * @param {string} submissionId - idox-generated UUID returned in the resource link of the submission
  * @returns {Promise}
  */
 async function retrieveSubmission(token, submissionId) {
-  const getSubmissionEndpoint = process.env.UNIFORM_SUBMISSION_URL + `/secure/submission/${submissionId}`
+  const getSubmissionEndpoint =
+    process.env.UNIFORM_SUBMISSION_URL + `/secure/submission/${submissionId}`;
 
   const getSubmissionOptions = {
     method: "GET",
     headers: new Headers({
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     }),
     redirect: "follow",
   };
 
-  try {
-    return await fetch(getSubmissionEndpoint, getSubmissionOptions)
-      .then(response => response.json());
-  } catch (err) {
-    throw err;
-  }
-};
+  return await fetch(getSubmissionEndpoint, getSubmissionOptions).then(
+    (response) => response.json()
+  );
+}
 
 /**
  * Helper method to locally download S3 files, add them to the zip, then clean them up
- * 
- * @param {string} url - s3 URL
+ *
+ * @param {string} filePath - s3 `path/key` to file
  * @param {string} path - file name for download
  * @param {AdmZip | string} folder - AdmZip archive
  */
-const downloadFile = async (url, path, folder) => {
-  const res = await fetch(url);
-  const fileStream = fs.createWriteStream(path);
+const downloadFile = async (filePath, path, folder) => {
+  const { body } = await getFileFromS3(filePath);
 
-  res.body.pipe(fileStream);
-  await new Promise((resolve, reject) => {
-    fileStream.on("error", reject);
-    fileStream.on("finish", resolve);
-  });
+  fs.writeFileSync(path, body);
 
   folder.addLocalFile(path);
   deleteFile(path);
@@ -404,7 +434,7 @@ const downloadFile = async (url, path, folder) => {
 
 /**
  * Helper method to clean up files temporarily stored locally
- * 
+ *
  * @param {string} path - file name
  */
 const deleteFile = (path) => {
@@ -417,14 +447,17 @@ const deleteFile = (path) => {
 
 /**
  * Get id and secret of Uniform client which matches the provided Local Authority
- * @param {string} localAuthority 
+ * @param {string} localAuthority
  * @returns {object}
  */
 const getUniformClient = (localAuthority) => {
   // Greedily match any non-word characters
   // XXX: Matches regex used in IAC (getCustomerSecrets.ts)
-  const regex = new RegExp(/\W+/g)
-  const client = process.env["UNIFORM_CLIENT_" + localAuthority.replace(regex, "_").toUpperCase()];
+  const regex = new RegExp(/\W+/g);
+  const client =
+    process.env[
+      "UNIFORM_CLIENT_" + localAuthority.replace(regex, "_").toUpperCase()
+    ];
 
   // If we can't find secrets, return undefined to trigger a 400 error using next() in sendToUniform()
   if (!client) return undefined;
