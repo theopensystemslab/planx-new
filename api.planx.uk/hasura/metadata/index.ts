@@ -57,7 +57,7 @@ const createScheduledEvent = async (args: RequiredScheduledEventArgs) => {
           value_from_env: "HASURA_PLANX_API_KEY"
         }],
         retry_conf: {
-          num_retries: 3,
+          num_retries: 1,
         },
       },
     });
