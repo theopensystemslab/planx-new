@@ -210,12 +210,10 @@ export async function createZip({
     for (let file of files) {
       // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
       // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
-      const s3SplittedPath = file.split("/").slice(-2);
-
       // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-      const uniqueFilename = s3SplittedPath.join("-");
+      const uniqueFilename = file.split("/").slice(-2).join("-");
       const filePath = path.join(tmpDir, uniqueFilename);
-      await downloadFile(s3SplittedPath.join("/"), filePath, zip);
+      await downloadFile(file, filePath, zip);
     }
   }
 
@@ -419,14 +417,19 @@ async function retrieveSubmission(token, submissionId) {
 /**
  * Helper method to locally download S3 files, add them to the zip, then clean them up
  *
- * @param {string} filePath - s3 `path/key` to file
+ * @param {string} url - our file URL, eg api.planx.uk/file/private/path/key
  * @param {string} path - file name for download
  * @param {string} folder - AdmZip archive
  */
-const downloadFile = async (filePath, path, folder) => {
-  const { body } = await getFileFromS3(filePath);
+const downloadFile = async (url, path, folder) => {
+   const res = await fetch(url, { headers: { 'api-key': process.env.FILE_API_KEY } });
+  const fileStream = fs.createWriteStream(path);
 
-  fs.writeFileSync(path, body);
+  res.body.pipe(fileStream);
+  await new Promise((resolve, reject) => {
+    fileStream.on("error", reject);
+    fileStream.on("finish", resolve);
+  });
 
   folder.addLocalFile(path);
   deleteFile(path);
