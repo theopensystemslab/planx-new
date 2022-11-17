@@ -229,10 +229,15 @@ const mockGetObject = jest.fn(() => ({
   promise: () => Promise.resolve(getObjectResponse)
 }))
 
+const mockGetSignedUrl = jest.fn((_operation, params) => (
+  `https://test-bucket.s3.eu-west-2.amazonaws.com/${params.Key}?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-SignedHeaders=host`
+))
+
 const s3Mock = () => {
   return {
     putObject: mockPutObject,
     getObject: mockGetObject,
+    getSignedUrl: mockGetSignedUrl,
   };
 };
 
@@ -278,7 +283,7 @@ describe("File upload", () => {
       .then(res => {
         expect(res.body).toEqual({
           file_type: 'text/plain',
-          key: expect.stringContaining('some_file.txt'),
+          fileUrl: expect.stringContaining('some_file.txt'),
         });
         expect(mockPutObject).toHaveBeenCalledTimes(1);
       });
@@ -303,7 +308,7 @@ describe("File upload", () => {
       .then(res => {
         expect(res.body).toEqual({
           file_type: 'text/plain',
-          key: expect.stringContaining('some_file.txt'),
+          fileUrl: expect.stringContaining('some_file.txt'),
         });
         expect(mockPutObject).toHaveBeenCalledTimes(1);
       });
