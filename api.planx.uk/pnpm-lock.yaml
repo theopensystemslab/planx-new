@@ -19,6 +19,7 @@ specifiers:
   '@types/express-pino-logger': ^4.0.3
   '@types/jest': ^28.1.8
   '@types/jsonwebtoken': ^8.5.9
+  '@types/lodash': ^4.14.189
   '@types/mime': ^3.0.1
   '@types/multer': ^1.4.7
   '@types/node': ^16.18.2
@@ -56,6 +57,7 @@ specifiers:
   json-stringify-pretty-compact: ^3.0.0
   jsondiffpatch: ^0.4.1
   jsonwebtoken: ^8.5.1
+  lodash: ^4.17.21
   mime: ^3.0.0
   multer: ^1.4.4
   nanoid: ^3.3.4
@@ -97,6 +99,7 @@ dependencies:
   isomorphic-fetch: 3.0.0
   jsondiffpatch: 0.4.1
   jsonwebtoken: 8.5.1
+  lodash: 4.17.21
   mime: 3.0.0
   multer: 1.4.4
   nanoid: 3.3.4
@@ -119,6 +122,7 @@ devDependencies:
   '@types/express-pino-logger': 4.0.3
   '@types/jest': 28.1.8
   '@types/jsonwebtoken': 8.5.9
+  '@types/lodash': 4.14.189
   '@types/mime': 3.0.1
   '@types/multer': 1.4.7
   '@types/node': 16.18.2
@@ -1331,6 +1335,10 @@ packages:
 
   /@types/keygrip/1.0.2:
     resolution: {integrity: sha512-GJhpTepz2udxGexqos8wgaBx4I/zWIDPh/KOGEwAqtuGDkOUJu5eFvwmdBX4AmB8Odsr+9pHCQqiAqDL/yKMKw==}
+    dev: true
+
+  /@types/lodash/4.14.189:
+    resolution: {integrity: sha512-kb9/98N6X8gyME9Cf7YaqIMvYGnBSWqEci6tiettE6iJWH1XdJz/PO8LB0GtLCG7x8dU3KWhZT+lA1a35127tA==}
     dev: true
 
   /@types/mime/1.3.2:
@@ -4901,7 +4909,6 @@ packages:
 
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /lru-cache/6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
