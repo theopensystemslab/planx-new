@@ -134,6 +134,7 @@ services:
       retries: 5
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
+      GRAPHQL_URL_EXT: ${GRAPHQL_URL_EXT}
       HASURA_GRAPHQL_URL: http://hasura-proxy:7000/v1/graphql
       HASURA_METADATA_URL: http://hasura-proxy:7000/v1/metadata 
       JWT_SECRET: ${JWT_SECRET}
