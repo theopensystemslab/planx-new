@@ -44,7 +44,6 @@ import {
 } from "./saveAndReturn";
 import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
 import { useHasuraAuth, useSendEmailAuth } from "./auth";
-import { express as voyagerMiddleware } from "graphql-voyager/middleware";
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -55,6 +54,7 @@ import {
   createExpiryEvent,
 } from "./webhooks/lowcalSessionEvents";
 import { adminGraphQLClient } from "./hasura";
+import graphQLVoyagerHandler from "./hasura/voyager";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 import {
   privateDownloadController,
@@ -456,22 +456,10 @@ app.get("/throw-error", () => {
   throw new Error("custom error");
 });
 
-app.get("/api", (_req, res) => {
-  res.json({ yes: true });
-});
+app.get("/introspect", graphQLVoyagerHandler());
 
-app.get("/api/yes", useJWT, function (_req, res, _next) {
-  res.json({ yes: true });
-});
-
-app.get("/api/voyager", useJWT, (req, _res, next) => {
-  if (!req.user?.sub)
-    return next({ status: 401, message: "User ID missing from JWT" });
-
-  assert(process.env.HASURA_GRAPHQL_URL);
-  const gqlUrl: string = process.env.HASURA_GRAPHQL_URL!;
-  voyagerMiddleware({ endpointUrl: gqlUrl });
-});
+const gqlKey: string | undefined = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
+app.get("/introspect/admin", useJWT, graphQLVoyagerHandler(gqlKey));
 
 app.post("/flows/:flowId/diff", useJWT, diffFlow);
 
