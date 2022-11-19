@@ -1,7 +1,7 @@
 import SlackNotify from 'slack-notify';
 import { Request, Response, NextFunction } from 'express';
 
-const sendSlackNotification = (req: Request, res: Response, next: NextFunction): Response | void  => {
+const sendSlackNotification = async (req: Request, res: Response, next: NextFunction): Promise<Response | void>  => {
   const supportedTypes = ["bops-submission", "uniform-submission"];
   if (!req.body?.event || !req.query?.type || !supportedTypes.includes(req.query.type as string)) {
     return res.status(404).send({
@@ -24,11 +24,8 @@ const sendSlackNotification = (req: Request, res: Response, next: NextFunction):
       }
 
       const bopsMessage = `:incoming_envelope: New BOPS submission *${data?.bops_id}* [${data?.destination_url}]`;
-      slack.send(bopsMessage)
-        .then(() => {
-          res.status(200).send({ message: "Posted to Slack", data: bopsMessage });
-        })
-        .catch(error => next(error));
+      await slack.send(bopsMessage);
+      return res.status(200).send({ message: "Posted to Slack", data: bopsMessage });
     }
     
     if (req.query.type === "uniform-submission") {
@@ -40,11 +37,8 @@ const sendSlackNotification = (req: Request, res: Response, next: NextFunction):
       }
 
       const uniformMessage = `:incoming_envelope: New Uniform submission *${data?.idox_submission_id}* [${data?.response?.organisation}]`;
-      slack.send(uniformMessage)
-        .then(() => {
-          res.status(200).send({ message: "Posted to Slack", data: uniformMessage });
-        })
-        .catch(error => next(error));
+      await slack.send(uniformMessage);
+      return res.status(200).send({ message: "Posted to Slack", data: uniformMessage });
     }
   } catch (error) {
     return next({
