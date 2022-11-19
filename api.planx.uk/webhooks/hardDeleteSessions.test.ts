@@ -3,12 +3,13 @@ import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
 
 const { post } = supertest(app);
+const ENDPOINT = "/webhooks/hasura/delete-expired-sessions";
 
 describe("Delete expired sessions webhook", () => {
   afterEach(() => queryMock.reset());
 
   it("fails without correct authentication", () => {
-    post("/webhooks/hasura/delete-expired-sessions")
+    post(ENDPOINT)
       .expect(401)
       .then((response) => {
         expect(response.body).toEqual({
@@ -33,7 +34,7 @@ describe("Delete expired sessions webhook", () => {
       ]
     });
 
-    await post("/webhooks/hasura/delete-expired-sessions")
+    await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
       .expect(200)
       .then((response) => {
@@ -55,7 +56,7 @@ describe("Delete expired sessions webhook", () => {
       ]
     });
 
-    await post("/webhooks/hasura/delete-expired-sessions")
+    await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
       .expect(500)
       .then((response) => {
