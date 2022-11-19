@@ -1,12 +1,8 @@
 import supertest from "supertest";
 import app from "../server";
-// import Axios from "axios";
 import { createScheduledEvent } from "../hasura/metadata";
 
 const { post } = supertest(app);
-
-// jest.mock("axios")
-// const mockedAxios = Axios as jest.Mocked<typeof Axios>
 
 jest.mock("../hasura/metadata")
 const mockedCreateScheduledEvent = createScheduledEvent as jest.MockedFunction<typeof createScheduledEvent>;
