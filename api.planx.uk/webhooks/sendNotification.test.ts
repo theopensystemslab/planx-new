@@ -1,6 +1,6 @@
 import supertest from "supertest";
 import app from "../server";
-// import SlackNotify from "slack-notify";
+import SlackNotify from "slack-notify";
 
 const ENDPOINT = "/webhooks/hasura/send-slack-notification";
 
@@ -80,7 +80,7 @@ describe("Send Slack notifications endpoint", () => {
         event: {
           data: {
             new: {
-              // destination_url: "https://www.bops-staging.com",
+              destination_url: "https://www.bops-production.com",
             }
           }
         }
@@ -96,7 +96,7 @@ describe("Send Slack notifications endpoint", () => {
               response: {
                 _links: {
                   self: {
-                    href: "https://www.bops-staging.com"
+                    href: "https://www.uniform-staging.com"
                   }
                 }
               }
@@ -111,7 +111,7 @@ describe("Send Slack notifications endpoint", () => {
               response: {
                 _links: {
                   self: {
-                    // href: "https://www.bops-staging.com"
+                    href: "https://www.uniform-production.com"
                   }
                 }
               }
@@ -144,6 +144,7 @@ describe("Send Slack notifications endpoint", () => {
           .send(destination.prodBody)
           .expect(200)
           .then((response) => {
+            expect(SlackNotify).toHaveBeenCalledWith(process.env.SLACK_WEBHOOK_URL);
             expect(mockSend).toHaveBeenCalledTimes(1);
             expect(response.body.message).toBe("Posted to Slack");
           });
