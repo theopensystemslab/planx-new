@@ -7,8 +7,8 @@ import path from "path";
 
 import { adminGraphQLClient } from "../hasura";
 import { sendEmail } from "../saveAndReturn/utils";
-import { NotifyConfig } from "../types";
-import { deleteFile, downloadFile } from "./uniform";
+import { EmailSubmissionNotifyConfig } from "../types";
+import { deleteFile, downloadFile } from "./helpers";
 
 const client = adminGraphQLClient;
 
@@ -30,7 +30,7 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
       const updatedSessionData = await appendSessionData(payload.sessionId, payload.csv);
 
       // TODO Prepare/improve email template
-      const config: NotifyConfig = {
+      const config: EmailSubmissionNotifyConfig = {
         personalisation: {
           emailReplyToId: "TBD",
           serviceName: "TBD",
@@ -44,7 +44,7 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
       const response = await sendEmail("submit", settings.sendToEmail, config);
       return res.json(response);
 
-      // TODO Mark lowcal_session as submitted, create/update audit table (which triggers Slack notification)
+      // TODO Mark lowcal_session as submitted, create/update audit table (and setup Slack notification trigger?)
     } else {
       return next({
         status: 400,

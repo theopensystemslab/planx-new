@@ -58,26 +58,33 @@ export interface LowCalSession {
   };
 }
 
-export interface NotifyConfig {
+export interface SaveAndReturnNotifyConfig {
   personalisation: {
     address?: any;
-    projectType?: string;
-    id?: string;
-    expiryDate?: string;
-    helpEmail?: string;
-    helpPhone?: string;
-    helpOpeningHours?: string;
     emailReplyToId: string;
+    expiryDate?: string;
+    helpEmail: string;
+    helpOpeningHours: string;
+    helpPhone: string;
+    id?: string;
+    projectType?: string;
     resumeLink?: string;
     serviceLink?: string;
     serviceName?: string;
-    teamName?: string;
-    sessionId?: string;
-    applicantEmail?: string;
-    downloadLink?: string;
+    teamName: string;
   };
-  reference?: any;
-  emailReplyToId?: any;
+}
+
+export interface EmailSubmissionNotifyConfig {
+  personalisation: {
+    applicantEmail: string;
+    downloadLink: string;
+    emailReplyToId: string;
+    expiryDate?: string;
+    id?: string;
+    serviceName: string;
+    sessionId: string;
+  };
 }
 
 // https://docs.payments.service.gov.uk/making_payments/#receiving-the-api-response

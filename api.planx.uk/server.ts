@@ -353,11 +353,12 @@ app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
       onProxyRes: responseInterceptor(async (responseBuffer) => {
         const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
 
-        // if it's a prod payment, notify #planx-notifcations so we can monitor for subsequent submissions
+        // if it's a prod payment, notify #planx-notifications so we can monitor for subsequent submissions
         if (govUkResponse?.payment_provider !== "sandbox") {
           try {
             const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
-            const payMessage = `:coin: New GOV Pay payment *${govUkResponse.payment_id}* with status *${govUkResponse.state.status}* [${req.params.localAuthority}]`;
+            const getStatus = (state: Record<string, string>) => state.status + (state.message ? ` (${state.message})` : "")
+            const payMessage = `:coin: New GOV Pay payment *${govUkResponse.payment_id}* with status *${getStatus(govUkResponse.state)}* [${req.params.localAuthority}]`;
             await slack.send(payMessage);
             console.log("Payment notification posted to Slack");
           } catch (error) {

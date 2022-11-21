@@ -7,10 +7,10 @@ import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
-import { getFileFromS3 } from "../s3/getFile";
 import { adminGraphQLClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
+import { deleteFile, downloadFile } from "./helpers";
 
 const client = adminGraphQLClient;
 
@@ -210,12 +210,10 @@ export async function createZip({
     for (let file of files) {
       // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
       // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
-      const s3SplittedPath = file.split("/").slice(-2);
-
       // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-      const uniqueFilename = s3SplittedPath.join("-");
+      const uniqueFilename = file.split("/").slice(-2).join("-");
       const filePath = path.join(tmpDir, uniqueFilename);
-      await downloadFile(s3SplittedPath.join("/"), filePath, zip);
+      await downloadFile(file, filePath, zip);
     }
   }
 
@@ -415,35 +413,6 @@ async function retrieveSubmission(token, submissionId) {
     (response) => response.json()
   );
 }
-
-/**
- * Helper method to locally download S3 files, add them to the zip, then clean them up
- *
- * @param {string} filePath - s3 `path/key` to file
- * @param {string} path - file name for download
- * @param {AdmZip | string} folder - AdmZip archive
- */
-const downloadFile = async (filePath, path, folder) => {
-  const { body } = await getFileFromS3(filePath);
-
-  fs.writeFileSync(path, body);
-
-  folder.addLocalFile(path);
-  deleteFile(path);
-};
-
-/**
- * Helper method to clean up files temporarily stored locally
- *
- * @param {string} path - file name
- */
-const deleteFile = (path) => {
-  if (fs.existsSync(path)) {
-    fs.unlinkSync(path);
-  } else {
-    console.log(`Didn't find ${path}, nothing to delete`);
-  }
-};
 
 /**
  * Get id and secret of Uniform client which matches the provided Local Authority

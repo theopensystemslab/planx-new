@@ -1,7 +1,7 @@
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
 import { publicGraphQLClient, adminGraphQLClient } from "../hasura";
-import { LowCalSession, NotifyConfig, Team } from "../types";
+import { EmailSubmissionNotifyConfig, LowCalSession, SaveAndReturnNotifyConfig, Team } from "../types";
 import { notifyClient } from "./notify";
 
 const DAYS_UNTIL_EXPIRY = 28;
@@ -30,7 +30,7 @@ export type Template = keyof typeof emailTemplates;
 const sendEmail = async (
   template: Template,
   emailAddress: string,
-  config: NotifyConfig
+  config: SaveAndReturnNotifyConfig | EmailSubmissionNotifyConfig
 ) => {
   const templateId = emailTemplates[template];
   if (!templateId) throw new Error("Template ID is required");

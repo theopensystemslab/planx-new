@@ -2,6 +2,7 @@ import { responseInterceptor } from "http-proxy-middleware";
 import { adminGraphQLClient as client } from "../hasura";
 import { useProxy } from "../server";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
+import omit from "lodash/omit"
 
 const sendToBOPS = async (req, res, next) => {
   // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
@@ -97,7 +98,7 @@ const sendToBOPS = async (req, res, next) => {
               bops_id: bopsResponse.id,
               destination_url: target,
               request: payload,
-              req_headers: req.headers,
+              req_headers: omit(req.headers, ["authorization"]),
               response: bopsResponse,
               response_headers: proxyRes.headers,
               session_id: payload?.planx_debug_data?.session_id,
