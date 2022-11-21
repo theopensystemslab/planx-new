@@ -57,6 +57,7 @@ import { copyFlow } from "./editor/copyFlow";
 import { moveFlow } from "./editor/moveFlow";
 import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
 import { usePayProxy } from "./proxy/pay";
+import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
 
 const router = express.Router();
 
@@ -437,6 +438,8 @@ app.get("/gis/:localAuthority", locationSearch);
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
+
+app.get("/admin/feedback", useJWT, downloadFeedbackCSV)
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production
