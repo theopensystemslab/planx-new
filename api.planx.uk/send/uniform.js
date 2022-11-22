@@ -211,7 +211,7 @@ export async function createZip({
       // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
       // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
       // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-      const uniqueFilename = file.split("/").slice(-2).join("-");
+      const uniqueFilename = decodeURIComponent(file.split("/").slice(-2).join("-"));
       const filePath = path.join(tmpDir, uniqueFilename);
       await downloadFile(file, filePath, zip);
     }
