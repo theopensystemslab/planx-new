@@ -247,7 +247,11 @@ export async function createZip({
   // build an HTML Document Viewer
   const docViewPath = path.join(tmpDir, "review.html");
   const docViewFile = fs.createWriteStream(docViewPath);
-  const docViewStream = generateDocumentReviewStream({ csv }).pipe(docViewFile);
+  const docViewStream = generateDocumentReviewStream({
+    csv,
+    files,
+    geojson,
+  }).pipe(docViewFile);
   await new Promise((resolve, reject) => {
     docViewStream.on("error", reject);
     docViewStream.on("finish", resolve);
@@ -432,12 +436,12 @@ async function retrieveSubmission(token, submissionId) {
  * @param {string} folder - AdmZip archive
  */
 const downloadFile = async (url, path, folder) => {
-    // Files are stored decoded on S3, but encoded in our passport, ensure the key matches S3 before fetching it
+  // Files are stored decoded on S3, but encoded in our passport, ensure the key matches S3 before fetching it
   const s3Key = url.split("/").slice(-2).join("/");
   const decodedS3Key = decodeURIComponent(s3Key);
-  
+
   const { body } = await getFileFromS3(decodedS3Key);
-  
+
   fs.writeFileSync(path, body);
 
   folder.addLocalFile(path);
