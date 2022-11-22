@@ -50,7 +50,7 @@ export function makeXmlString({
     </common:FileAttachment>
   `;
 
-  const getGeneratedFiles = (includeGeoJSON: boolean) => {
+  const getOptionalFiles = (includeGeoJSON: boolean) => {
     const reviewHTML = `
       <common:FileAttachment>
         <common:FileName>review.html</common:FileName>
@@ -228,7 +228,7 @@ export function makeXmlString({
       </portaloneapp:ApplicationHeader>
       <portaloneapp:FileAttachments>
         ${requiredFiles}
-        ${getGeneratedFiles(hasBoundary)}
+        ${getOptionalFiles(hasBoundary)}
         ${userUploadedFiles.join("")}
       </portaloneapp:FileAttachments>
       <portaloneapp:Applicant>
