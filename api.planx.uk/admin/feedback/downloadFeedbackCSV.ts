@@ -40,6 +40,11 @@ type ParsedFeedback = Feedback & {
   [key in MetadataKey]?: string | Record<string, string>
 }
 
+interface QueryParams {
+  cookie: string
+  projectId: string
+}
+
 export const downloadFeedbackCSV = async (
   req: Request,
   res: Response,
@@ -48,11 +53,13 @@ export const downloadFeedbackCSV = async (
   if (!req.user?.sub)
     return next({ status: 401, message: "User ID missing from JWT" });
 
-  if (!req.query.cookie)
-    return next({ status: 401, message: "Missing cookie" });
+  if (!req.query.cookie || !req.query.projectId)
+    return next({ status: 401, message: "Missing cookie and/or projectId" });
+
+  const { cookie, projectId } = req.query as unknown as QueryParams;
 
   try {
-    const feedback = await fetchFeedback(req.query.cookie as string);
+    const feedback = await fetchFeedback(cookie, projectId);
     const parsedFeedback = parseFeedback(feedback);
     const csvStream = stringify(parsedFeedback, { header: true })
     res.header("Content-type", "text/csv");
@@ -62,7 +69,7 @@ export const downloadFeedbackCSV = async (
   }
 };
 
-const fetchFeedback = async (cookie: string): Promise<Feedback[]> => {
+const fetchFeedback = async (cookie: string, projectId: string): Promise<Feedback[]> => {
   const feedbackFishGraphQLEndpoint = "https://graphcdn.api.feedback.fish/"
   const body = {
     query: gql`query getFeedback($projectId: String!) { 
@@ -77,7 +84,7 @@ const fetchFeedback = async (cookie: string): Promise<Feedback[]> => {
     }`,
     operationName: "getFeedback",
     variables: {
-      projectId: process.env.REACT_APP_FEEDBACK_FISH_ID
+      projectId: projectId
     }
   }
 
