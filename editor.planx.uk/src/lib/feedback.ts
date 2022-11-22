@@ -1,10 +1,11 @@
 import { useStore } from "pages/FlowEditor/lib/store";
-import { useCurrentRoute } from "react-navi";
 
 export const submitFeedback = (
   text: string,
-  metadata?: { [key: string]: any }
+  reason: string,
+  componentMetadata?: { [key: string]: any }
 ) => {
+  const standardMetadata = getFeedbackMetadata();
   fetch("https://api.feedback.fish/feedback", {
     method: "POST",
     headers: {
@@ -13,23 +14,29 @@ export const submitFeedback = (
     body: JSON.stringify({
       projectId: process.env.REACT_APP_FEEDBACK_FISH_ID,
       text,
-      metadata,
+      reason,
+      // FeedbackFish requires that Record<string, string> be passed as metadata
+      metadata: {
+        ...standardMetadata,
+        componentMetadata: JSON.stringify(componentMetadata),
+      },
     }),
   }).catch((err) => console.error(err));
 };
 
 export const getFeedbackMetadata = (): Record<string, string> => {
-  const [currentCard, passport] = useStore((state) => [
-    state.currentCard(),
-    state.computePassport().data,
-  ]);
-  const { flowName: service, team } = useCurrentRoute().data;
+  const currentCard = useStore.getState().currentCard();
+  const passportData = useStore.getState().computePassport().data;
+  const [team, service] = window.location.pathname
+    .split("/")
+    .map((value) => value.replaceAll("-", " "))
+    .slice(1, 3);
 
   const feedbackMetadata = {
-    address: passport?._address?.single_line_address,
-    uprn: passport?._address?.uprn,
+    address: passportData?._address?.single_line_address,
+    uprn: passportData?._address?.uprn,
     title: currentCard?.data?.title || currentCard?.data?.text,
-    data: currentCard?.data,
+    data: JSON.stringify(currentCard?.data),
     service,
     team,
   };

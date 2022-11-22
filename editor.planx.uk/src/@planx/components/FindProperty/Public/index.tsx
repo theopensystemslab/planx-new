@@ -396,10 +396,11 @@ export function PropertyInformation(props: any) {
     },
     onSubmit: (values) => {
       if (values.feedback) {
-        submitFeedback(values.feedback, {
-          reason: "Inaccurate property details",
-          property: propertyDetails,
-        });
+        submitFeedback(
+          values.feedback,
+          "Inaccurate property details",
+          propertyDetails
+        );
       }
       handleSubmit?.(values);
     },
