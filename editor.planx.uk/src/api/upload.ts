@@ -1,4 +1,6 @@
+import { useStagingUrlIfTestApplication } from "@planx/components/shared/utils";
 import axios from "axios";
+import { useStore } from "pages/FlowEditor/lib/store";
 
 import { encodeS3URI } from "./encode";
 
@@ -22,10 +24,11 @@ async function uploadPrivateFile(
   { onProgress }: { onProgress?: (p: any) => void } = {}
 ) {
   const { data } = await handleUpload(file, { onProgress, path: "private" });
+  const passport = useStore.getState().computePassport();
 
-  return `${process.env.REACT_APP_API_URL}/file/private/${encodeS3URI(
-    data.key
-  )}`;
+  return useStagingUrlIfTestApplication(passport)(
+    `${process.env.REACT_APP_API_URL}/file/private/${encodeS3URI(data.key)}`
+  );
 }
 
 function handleUpload(
@@ -40,14 +43,19 @@ function handleUpload(
   formData.append("file", file);
   formData.append("filename", file.name);
 
+  const passport = useStore.getState().computePassport();
+
+  // Private uploads for test applicaitons should be handled by the staging environment
   const paths = {
-    public: "public-file-upload",
-    private: "private-file-upload",
+    public: `${process.env.REACT_APP_API_URL}/public-file-upload`,
+    private: useStagingUrlIfTestApplication(passport)(
+      `${process.env.REACT_APP_API_URL}/private-file-upload`
+    ),
   };
 
   const endpoint = paths[path];
 
-  return axios.post(`${process.env.REACT_APP_API_URL}/${endpoint}`, formData, {
+  return axios.post(endpoint, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
