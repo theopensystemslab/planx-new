@@ -35,6 +35,7 @@ export const getFeedbackMetadata = (): Record<string, string> => {
   const feedbackMetadata = {
     address: passportData?._address?.single_line_address,
     uprn: passportData?._address?.uprn,
+    "project-type": passportData?.proposal?.projectType,
     title: currentCard?.data?.title || currentCard?.data?.text,
     data: JSON.stringify(currentCard?.data),
     service,

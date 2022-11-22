@@ -14,7 +14,7 @@ interface Feedback {
   metadata?: Metadata[]
 }
 
-const METADATA_KEYS = ["address", "uprn", "title", "data", "service", "team", "componentMetadata", "reason"] as const;
+const METADATA_KEYS = ["address", "uprn", "title", "data", "service", "team", "componentMetadata", "reason", "project-type"] as const;
 
 type MetadataKey = typeof METADATA_KEYS[number]
 
