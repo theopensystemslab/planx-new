@@ -38,7 +38,7 @@ export function makeXmlString({
   const siteAddress: SiteAddress = passport.data?.["_address"];
 
   // format file attachments
-  const requiredFiles = `
+  const getRequiredFiles = `
     <common:FileAttachment>
       <common:Identifier>N10049</common:Identifier>
       <common:FileName>proposal.xml</common:FileName>
@@ -67,7 +67,7 @@ export function makeXmlString({
     return includeGeoJSON ? allFiles : reviewHTML;
   };
 
-  const userUploadedFiles: string[] = [];
+  const getUserUploadedFiles: string[] = [];
   files?.forEach((file) => {
     // We download and add the unique decoded filename to the zip in api.planx.uk/send/uniform, so ensure the schema filename matches
     const uniqueFilename = decodeURIComponent(
@@ -227,9 +227,9 @@ export function makeXmlString({
         </portaloneapp:Payment>
       </portaloneapp:ApplicationHeader>
       <portaloneapp:FileAttachments>
-        ${requiredFiles}
+        ${getRequiredFiles}
         ${getOptionalFiles(hasBoundary)}
-        ${userUploadedFiles.join("")}
+        ${getUserUploadedFiles.join("")}
       </portaloneapp:FileAttachments>
       <portaloneapp:Applicant>
         <common:PersonName>
