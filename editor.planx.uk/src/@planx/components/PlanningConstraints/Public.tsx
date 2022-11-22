@@ -175,7 +175,7 @@ const useClasses = makeStyles((theme) => ({
     border: `5px solid #E91B0C`,
     "& button": {
       background: "none",
-      "border-style": "none",
+      borderStyle: "none",
       color: "#E91B0C",
       cursor: "pointer",
       fontSize: "medium",

@@ -13,7 +13,7 @@ const Root = styled("div")(({ theme }) => ({
   textAlign: "right",
   "& button": {
     background: "none",
-    "border-style": "none",
+    borderStyle: "none",
     color: theme.palette.text.primary,
     cursor: "pointer",
     fontSize: "inherit",
