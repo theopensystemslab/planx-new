@@ -38,7 +38,7 @@ export function makeXmlString({
   const siteAddress: SiteAddress = passport.data?.["_address"];
 
   // format file attachments
-  const getRequiredFiles = `
+  const getRequiredFiles = () => `
     <common:FileAttachment>
       <common:Identifier>N10049</common:Identifier>
       <common:FileName>proposal.xml</common:FileName>
@@ -79,7 +79,9 @@ export function makeXmlString({
         <common:Reference>Other</common:Reference>
       </common:FileAttachment>
     `);
-  });
+    });
+    return userUploadedFiles.join("");
+  };
 
   const getCertificateOfLawfulness = () => {
     const planXAppType: PlanXAppTypes =
@@ -227,9 +229,9 @@ export function makeXmlString({
         </portaloneapp:Payment>
       </portaloneapp:ApplicationHeader>
       <portaloneapp:FileAttachments>
-        ${getRequiredFiles}
+        ${getRequiredFiles()}
         ${getOptionalFiles(hasBoundary)}
-        ${getUserUploadedFiles.join("")}
+        ${getUserUploadedFiles()}
       </portaloneapp:FileAttachments>
       <portaloneapp:Applicant>
         <common:PersonName>
