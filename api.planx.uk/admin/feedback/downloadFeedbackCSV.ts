@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import Axios from "axios";
 import { stringify } from "csv-stringify";
 
-interface Feedback {
+export interface Feedback {
   id: number
   text: string
   category: string
@@ -47,9 +47,6 @@ export const downloadFeedbackCSV = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (!req.user?.sub)
-    return next({ status: 401, message: "User ID missing from JWT" });
-
   if (!req.query.cookie)
     return next({ status: 401, message: "Missing cookie" });
 
@@ -104,7 +101,7 @@ const fetchFeedback = async (cookie: string): Promise<Feedback[]> => {
   }
 };
 
-const parseFeedback = (feedback: Feedback[]): ParsedFeedback[] => {
+export const parseFeedback = (feedback: Feedback[]): ParsedFeedback[] => {
   const parsedFeedback: ParsedFeedback[] = [...feedback];
   return parsedFeedback.map(item => {
     item.metadata?.forEach(({ key, value }) => item[key] = value);
