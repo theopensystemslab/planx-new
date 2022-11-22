@@ -29,7 +29,7 @@ import {
   fixRequestBody,
   Options,
 } from "http-proxy-middleware";
-import helmet from "helmet";
+import helmet, { HelmetOptions } from "helmet";
 import multer from "multer";
 import SlackNotify from "slack-notify";
 
@@ -292,7 +292,11 @@ if (process.env.NODE_ENV !== "test") {
 app.use(apiLimiter);
 
 // Secure Express by setting various HTTP headers
-app.use(helmet());
+const helmetOptions: HelmetOptions = {
+  // Allow public images to be served via API
+  crossOriginResourcePolicy: { policy: "same-site" }
+}
+app.use(helmet(helmetOptions));
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
 app.post("/create-send-events/:sessionId", createSendEvents);
