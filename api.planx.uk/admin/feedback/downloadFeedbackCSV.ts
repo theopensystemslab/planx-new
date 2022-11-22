@@ -14,7 +14,9 @@ interface Feedback {
   metadata?: Metadata[]
 }
 
-type MetadataKey = "address" | "uprn" | "title" | "data" | "service" | "team"
+const METADATA_KEYS = ["address", "uprn", "title", "data", "service", "team", "componentMetadata", "reason"] as const;
+
+type MetadataKey = typeof METADATA_KEYS[number]
 
 interface Metadata {
   key: MetadataKey
@@ -61,7 +63,19 @@ export const downloadFeedbackCSV = async (
   try {
     const feedback = await fetchFeedback(cookie, projectId);
     const parsedFeedback = parseFeedback(feedback);
-    const csvStream = stringify(parsedFeedback, { header: true })
+    const csvStream = stringify(parsedFeedback, { 
+      header: true, 
+      columns: [
+        "id",
+        "text",
+        "category",
+        "createdAt",
+        "location",
+        "screenshotUrl",
+        "device",
+        ...METADATA_KEYS
+      ] 
+    });
     res.header("Content-type", "text/csv");
     csvStream.pipe(res);
   } catch (error) {
