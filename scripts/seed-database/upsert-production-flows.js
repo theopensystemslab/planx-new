@@ -19,7 +19,7 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
     const shouldOverwrite = args?.includes('-o') || args?.includes('--overwrite');
 
     if (!shouldOverwrite) {
-      const { flows: localFlows } = await localClient.request(`
+      const { flows: localFlows } = await localClient.request(gql`
         query GetAllFlows {
           flows {
             id
@@ -38,7 +38,7 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
     const {
       flows: productionFlows,
       teams: productionTeams,
-    } = await productionClient.request(`
+    } = await productionClient.request(gql`
       query GetAllFlowsAndTeams {
         flows {
           id
@@ -165,8 +165,8 @@ const syncPublishedFlow = (productionClient, localClient) => async (flowId) => {
 
 const publishedFlowsByFlowIdQuery = async (flowId, graphQLClient) => {
   try {
-    const data = await graphQLClient.request(
-      `query GetPublishedFlowByFlowId($id: uuid!) {
+    const data = await graphQLClient.request(gql`
+      query GetPublishedFlowByFlowId($id: uuid!) {
         published_flows(
           where: {flow_id: {_eq: $id}},
           limit: 2,
@@ -189,7 +189,7 @@ const publishedFlowsByFlowIdQuery = async (flowId, graphQLClient) => {
 }
 
 const insertPublishedFlowMutation = (publishedFlow, graphQLClient) => {
-  return graphQLClient.request(`
+  return graphQLClient.request(gql`
     mutation InsertPublishedFlow(
       $publishedFlow: published_flows_insert_input!
     ) {
@@ -210,7 +210,7 @@ const insertPublishedFlowMutation = (publishedFlow, graphQLClient) => {
 const insertOperations = (localClient) => async (flows) => {
   const operations = flows.map(flow => buildOperationPayload(flow));
 
-  await localClient.request(`
+  await localClient.request(gql`
     mutation InsertOperations($operations: [operations_insert_input!]!) {
       insert_operations(objects: $operations) {
         affected_rows
