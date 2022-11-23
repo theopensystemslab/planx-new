@@ -124,7 +124,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
   
         // Download files from S3 and add them to the zip folder
         if (files.length > 0) {
-          for (let file of files) {
+          for (const file of files) {
             // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
             // This ensures that all uploaded files are present in the zip, even if they are duplicates
             const uniqueFilename = file.split("/").slice(-2).join("-");
