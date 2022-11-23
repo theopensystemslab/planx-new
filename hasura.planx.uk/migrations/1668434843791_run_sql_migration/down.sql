@@ -1,1 +1,0 @@
-DROP FUNCTION get_published_flow_version;

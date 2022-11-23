@@ -26,7 +26,7 @@ const getMostRecentPublishedFlow = async (id: string): Promise<Flow["data"]> => 
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
         flows_by_pk(id: $id) {
-          published_flows(limit: 1, order_by: { version: desc }) {
+          published_flows(limit: 1, order_by: { created_at: desc }) {
             data
           }
         }
@@ -47,7 +47,7 @@ const getPublishedFlowByDate = async (id: string, created_at: string) => {
         flows_by_pk(id: $id) {
           published_flows(
             limit: 1,
-            order_by: { version: desc },
+            order_by: { created_at: desc },
             where: { created_at: {_lte: $created_at} }
           ) {
             data

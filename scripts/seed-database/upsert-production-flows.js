@@ -170,7 +170,7 @@ const publishedFlowsByFlowIdQuery = async (flowId, graphQLClient) => {
         published_flows(
           where: {flow_id: {_eq: $id}},
           limit: 2,
-          order_by: {version: desc}
+          order_by: {created_at: desc}
         ) {
           id
           data

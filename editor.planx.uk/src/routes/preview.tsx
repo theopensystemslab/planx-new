@@ -67,7 +67,7 @@ const routes = compose(
               settings
             }
             settings
-            published_flows(limit: 1, order_by: { version: desc }) {
+            published_flows(limit: 1, order_by: { created_at: desc }) {
               data
             }
           }

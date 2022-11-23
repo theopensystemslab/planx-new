@@ -310,13 +310,6 @@
     - name: user
       using:
         foreign_key_constraint_on: publisher_id
-  computed_fields:
-    - name: version
-      definition:
-        function:
-          schema: public
-          name: get_published_flow_version
-      comment: Get flow version (at time of publishing) from the Operations table
   select_permissions:
     - role: public
       permission:

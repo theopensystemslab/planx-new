@@ -265,7 +265,7 @@ export const editorStore = (
       query: gql`
         query GetFlow($id: uuid) {
           flows(limit: 1, where: { id: { _eq: $id } }) {
-            published_flows(order_by: { version: desc }, limit: 1) {
+            published_flows(order_by: { created_at: desc }, limit: 1) {
               created_at
             }
           }
@@ -284,7 +284,7 @@ export const editorStore = (
       query: gql`
         query GetFlow($id: uuid) {
           flows(limit: 1, where: { id: { _eq: $id } }) {
-            published_flows(order_by: { version: desc }, limit: 1) {
+            published_flows(order_by: { created_at: desc }, limit: 1) {
               user {
                 first_name
                 last_name
