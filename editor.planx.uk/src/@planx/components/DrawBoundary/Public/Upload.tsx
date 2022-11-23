@@ -187,9 +187,7 @@ export default function FileUpload(props: Props) {
             className={classes.progress}
             width={`${Math.min(Math.ceil(slot?.progress * 100), 100)}%`}
             role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={slot?.progress || 0}
+            aria-valuenow={slot?.progress * 100 || 0}
           />
           <Box className={classes.filePreview}>
             {slot?.file instanceof File &&

@@ -63,12 +63,12 @@ export function makeXmlString({
   const userUploadedFiles: string[] = [];
   files?.forEach((file) => {
     // We download and add the unique decoded filename to the zip in api.planx.uk/send/uniform, so ensure the schema filename matches
-    const uniqueFilename = file.split("/").slice(-2).join("-");
+    const uniqueFilename = decodeURIComponent(
+      file.split("/").slice(-2).join("-")
+    );
     userUploadedFiles.push(`
       <common:FileAttachment>
-        <common:FileName>${escape(
-          decodeURIComponent(uniqueFilename)
-        )}</common:FileName>
+        <common:FileName>${escape(uniqueFilename)}</common:FileName>
         <common:Reference>Other</common:Reference>
       </common:FileAttachment>
     `);
