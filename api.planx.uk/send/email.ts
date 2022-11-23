@@ -6,7 +6,7 @@ import os from "os";
 import path from "path";
 
 import { adminGraphQLClient } from "../hasura";
-import { sendEmail } from "../saveAndReturn/utils";
+import { convertSlugToName, sendEmail } from "../saveAndReturn/utils";
 import { EmailSubmissionNotifyConfig } from "../types";
 import { deleteFile, downloadFile } from "./helpers";
 
@@ -15,7 +15,7 @@ const client = adminGraphQLClient;
 const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
   // `/email-submission/:localAuthority` is only called via Hasura's scheduled event webhook, so body is wrapped in a "payload" key
   const { payload } = req.body;
-  if (!payload?.sessionId || !payload?.csv) {
+  if (!payload?.sessionId || !payload?.csv || !payload?.email) {
     return next({
       status: 400,
       message: `Missing application payload data to send to email`,
@@ -33,9 +33,9 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
       const config: EmailSubmissionNotifyConfig = {
         personalisation: {
           emailReplyToId: "TBD",
-          serviceName: "TBD",
+          serviceName: "Test",
           sessionId: payload.sessionId,
-          applicantEmail: "TBD",
+          applicantEmail: payload.email,
           downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${settings.sendToEmail}&localAuthority=${req.params.localAuthority}`,
         }
       };

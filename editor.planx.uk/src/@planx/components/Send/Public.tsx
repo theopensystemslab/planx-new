@@ -32,11 +32,12 @@ const SendComponent: React.FC<Props> = ({
   destinations = [DEFAULT_DESTINATION],
   ...props
 }) => {
-  const [breadcrumbs, flow, passport, sessionId] = useStore((state) => [
+  const [breadcrumbs, flow, passport, sessionId, email] = useStore((state) => [
     state.breadcrumbs,
     state.flow,
     state.computePassport(),
     state.sessionId,
+    state.saveToEmail,
   ]);
 
   let teamSlug = useTeamSlug();
@@ -77,6 +78,7 @@ const SendComponent: React.FC<Props> = ({
       localAuthority: teamSlug,
       body: {
         sessionId: sessionId,
+        email: email,
         csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
       },
     };
