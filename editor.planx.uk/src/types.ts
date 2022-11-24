@@ -24,7 +24,6 @@ export interface Team {
 export interface TeamTheme {
   primary?: string;
   logo?: string;
-  focus?: string;
 }
 
 export interface TeamSettings {
