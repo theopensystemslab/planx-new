@@ -34,12 +34,13 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
       }
     }
 
-    console.log('Fetching teams and flows...');
+    console.log('Fetching flows, teams, and users from production...');
     const {
       flows: productionFlows,
       teams: productionTeams,
+      users: productionUsers,
     } = await productionClient.request(gql`
-      query GetAllFlowsAndTeams {
+      query GetData {
         flows {
           id
           data
@@ -57,18 +58,20 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           theme
           notify_personalisation
         }
+        users {
+          id
+          first_name
+          last_name
+          email
+          is_admin
+        }
       }
     `);
 
-    await localClient.request(deleteFlowsAndTeamsQuery);
+    // ensure local database is empty before inserting
+    await localClient.request(deleteDataMutation);
 
-    console.log("Inserting flows and teams...");
-
-    await localClient.request(
-      insertTeamsMutation,
-      { teams: productionTeams || [] }
-    );
-
+    console.log("Inserting flows, teams, and users locally...");
     await localClient.request(
       insertFlowsMutation,
       {
@@ -78,12 +81,19 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
         })) || [],
       }
     );
+    await localClient.request(
+      insertTeamsMutation,
+      { teams: productionTeams || [] }
+    );
+    await localClient.request(
+      insertUsersMutation,
+      { users: productionUsers || [] }
+    );
 
-    console.log('Inserting Operations...');
-
+    console.log('Inserting operations locally...');
     await insertOperations(localClient)(productionFlows || []);
 
-    console.log('Fetching published flows...');
+    console.log('Fetching published flows from production...');
     // throttling is needed to prevent errors when fetching a large amount of data
     const throttledSync = pThrottle({ limit: 10, interval: 5000 })(
       syncPublishedFlow(productionClient, localClient)
@@ -91,15 +101,14 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
 
     await Promise.all(productionFlows.map(async flow => throttledSync(flow.id)));
 
-    console.log("Production flows and teams inserted successfully.");
+    console.log("Production flows, teams, and users inserted into local instance successfully.");
   } catch (err) {
-    console.log(err)
-    console.error('It was not possible to insert flows and teams.')
+    console.error(`Error inserting local data: ${err}`);
     process.exit(1)
   }
-})()
+})();
 
-const deleteFlowsAndTeamsQuery = gql`
+const deleteDataMutation = gql`
   mutation CleanDatabase {
     delete_session_backups(where: {}){
       affected_rows
@@ -120,6 +129,9 @@ const deleteFlowsAndTeamsQuery = gql`
       affected_rows
     }
     delete_teams(where: {}) {
+      affected_rows
+    }
+    delete_users(where: {}) {
       affected_rows
     }
   }
@@ -143,6 +155,18 @@ const insertFlowsMutation = gql`
   ) {
     insert_flows(
       objects: $flows,
+    ) {
+      affected_rows
+    }
+  }
+`;
+
+const insertUsersMutation = gql`
+  mutation InsertUsers(
+    $users: [users_insert_input!]!,
+  ) {
+    insert_users(
+      objects: $users,
     ) {
       affected_rows
     }
