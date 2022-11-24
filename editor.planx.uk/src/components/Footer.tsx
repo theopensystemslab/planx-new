@@ -5,12 +5,13 @@ import ButtonBase from "@mui/material/ButtonBase";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import classnames from "classnames";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-navi";
-import { focusStyle } from "theme";
+import { Link as ReactNaviLink } from "react-navi";
+import { focusStyle, linkStyle } from "theme";
 
 const useClasses = makeStyles((theme) => ({
   root: {
@@ -22,14 +23,9 @@ const useClasses = makeStyles((theme) => ({
     columnGap: theme.spacing(3),
   },
   link: {
+    ...linkStyle(),
     textTransform: "capitalize",
-    color: "inherit",
-    whiteSpace: "nowrap",
-    textDecoration: "underline",
-    "&:hover": {
-      textDecoration: "none",
-    },
-    // Consistently style MuiLink and ReactNavi link components
+    color: "white",
     "&:focus-visible": focusStyle(theme.palette.action.focus),
   },
   bold: {
@@ -129,9 +125,11 @@ export default function Footer(props: Props) {
 
             <FeedbackFish projectId={feedbackFishId}>
               <ButtonBase>
-                <Typography variant="body2" className={classes.link}>
-                  Feedback
-                </Typography>
+                <Link>
+                  <Typography variant="body2" className={classes.link}>
+                    Feedback
+                  </Typography>
+                </Link>
               </ButtonBase>
             </FeedbackFish>
           </>
@@ -160,8 +158,14 @@ function FooterItem(props: {
   );
 
   return props.href ? (
-    <Link href={props.href} prefetch={false} className={classes.link}>
-      {title}
+    <Link>
+      <ReactNaviLink
+        href={props.href}
+        prefetch={false}
+        className={classes.link}
+      >
+        {title}
+      </ReactNaviLink>
     </Link>
   ) : (
     <ButtonBase onClick={props.onClick} className={classes.link}>
