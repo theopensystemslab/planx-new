@@ -1,4 +1,3 @@
-import ButtonBase from "@mui/material/ButtonBase";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -17,15 +16,13 @@ const SaveResumeButton: React.FC = () => {
   return (
     <>
       <Typography variant="body2">or</Typography>
-      <ButtonBase onClick={onClick}>
-        <Link>
-          <Typography variant="body2">
-            {Boolean(saveToEmail)
-              ? "Save and return to this application later"
-              : "Resume an application you have already started"}
-          </Typography>
-        </Link>
-      </ButtonBase>
+      <Link component={"button"} onClick={onClick}>
+        <Typography variant="body2">
+          {Boolean(saveToEmail)
+            ? "Save and return to this application later"
+            : "Resume an application you have already started"}
+        </Typography>
+      </Link>
     </>
   );
 };

@@ -2,14 +2,11 @@ import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { focusStyle, linkStyle } from "theme";
+import { linkStyle } from "theme";
 
 const useClasses = makeStyles((theme) => ({
   htmlRoot: {
-    "& a": {
-      ...linkStyle(theme.palette.primary.main),
-      "&:focus-visible": focusStyle(theme.palette.action.focus),
-    },
+    "& a": linkStyle(theme.palette.primary.main),
     "& h2": theme.typography.h3,
     "& h3": theme.typography.h5,
   },

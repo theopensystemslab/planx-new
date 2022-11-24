@@ -1,7 +1,6 @@
 import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import ButtonBase from "@mui/material/ButtonBase";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,7 +10,6 @@ import makeStyles from "@mui/styles/makeStyles";
 import classnames from "classnames";
 import React, { useEffect, useState } from "react";
 import { Link as ReactNaviLink } from "react-navi";
-import { focusStyle, linkStyle } from "theme";
 
 const useClasses = makeStyles((theme) => ({
   root: {
@@ -23,10 +21,7 @@ const useClasses = makeStyles((theme) => ({
     columnGap: theme.spacing(3),
   },
   link: {
-    ...linkStyle(),
     textTransform: "capitalize",
-    color: "white",
-    "&:focus-visible": focusStyle(theme.palette.action.focus),
   },
   bold: {
     fontWeight: 800,
@@ -124,13 +119,9 @@ export default function Footer(props: Props) {
             )}
 
             <FeedbackFish projectId={feedbackFishId}>
-              <ButtonBase>
-                <Link>
-                  <Typography variant="body2" className={classes.link}>
-                    Feedback
-                  </Typography>
-                </Link>
-              </ButtonBase>
+              <Link color="inherit" component="button">
+                <Typography variant="body2">Feedback</Typography>
+              </Link>
             </FeedbackFish>
           </>
         )}
@@ -151,25 +142,23 @@ function FooterItem(props: {
   const title = (
     <Typography
       variant="body2"
-      className={classnames(classes.link, props.bold && classes.bold)}
+      className={classnames(props.bold && classes.bold)}
     >
       {props.title.toLowerCase()}
     </Typography>
   );
-
   return props.href ? (
-    <Link>
-      <ReactNaviLink
-        href={props.href}
-        prefetch={false}
-        className={classes.link}
-      >
-        {title}
-      </ReactNaviLink>
+    <Link
+      color="inherit"
+      component={ReactNaviLink}
+      href={props.href}
+      prefetch={false}
+    >
+      {title}
     </Link>
   ) : (
-    <ButtonBase onClick={props.onClick} className={classes.link}>
+    <Link color="inherit" component={"button"} onClick={props.onClick}>
       {title}
-    </ButtonBase>
+    </Link>
   );
 }

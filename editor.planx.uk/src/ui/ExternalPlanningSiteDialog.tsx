@@ -54,7 +54,6 @@ const getTitleAndContent = (
               <p>
                 Please feel free to{" "}
                 <Link
-                  underline="always"
                   href={`mailto:${
                     settings?.supportEmail
                   }?subject=${encodeURIComponent(

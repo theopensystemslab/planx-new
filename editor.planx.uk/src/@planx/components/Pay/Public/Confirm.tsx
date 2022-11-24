@@ -1,13 +1,13 @@
 import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import ButtonBase from "@mui/material/ButtonBase";
 import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
 import Drawer from "@mui/material/Drawer";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
@@ -50,10 +50,6 @@ const useStyles = makeStyles((theme) => ({
     border: 0,
     boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
     padding: theme.spacing(2),
-  },
-  link: {
-    color: theme.palette.primary.main,
-    textDecoration: "underline",
   },
   errorSummary: {
     marginTop: theme.spacing(1),
@@ -166,9 +162,9 @@ function SuggestionDrawer() {
 
   return (
     <>
-      <ButtonBase className={classes.link} onClick={handleLinkClick}>
+      <Link component={"button"} onClick={handleLinkClick}>
         Tell us other ways you'd like to pay in the future
-      </ButtonBase>
+      </Link>
       <Drawer
         variant="persistent"
         anchor="right"
@@ -220,9 +216,9 @@ function SuggestionDrawer() {
             value={text}
           />
           <p style={{ textAlign: "right" }}>
-            <ButtonBase onClick={() => setIsOpen(false)} tabIndex={0}>
+            <Link component={"button"} onClick={() => setIsOpen(false)}>
               Save
-            </ButtonBase>
+            </Link>
           </p>
         </div>
       </Drawer>

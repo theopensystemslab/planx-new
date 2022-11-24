@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import ButtonBase from "@mui/material/ButtonBase";
 import Link from "@mui/material/Link";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -24,8 +23,7 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme) => ({
-  linkButton: {
-    // ...linkStyle(theme.palette.primary.main),
+  link: {
     marginTop: theme.spacing(2.5),
   },
 }));
@@ -95,14 +93,13 @@ const StatusPage: React.FC<Props> = ({
         {additionalOption === "startNewApplication" && (
           <>
             <Typography variant="body2">or</Typography>
-            <ButtonBase
-              className={classes.linkButton}
+            <Link
+              component={"button"}
               onClick={startNewApplication}
+              className={classes.link}
             >
-              <Link>
-                <Typography variant="body2">Start new application</Typography>
-              </Link>
-            </ButtonBase>
+              <Typography variant="body2">Start new application</Typography>
+            </Link>
           </>
         )}
       </Card>

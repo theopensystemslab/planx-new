@@ -91,7 +91,6 @@ const PublicFooter: React.FC<{
           All content is available under the{" "}
           <Link
             href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
-            underline="always"
             color="inherit"
             target="_blank"
           >
