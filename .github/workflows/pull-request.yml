@@ -415,6 +415,8 @@ jobs:
         with:
           header: vultr
           message: |
+            ## Pizza
+
             Deployed ${{ github.sha }} to https://${{ env.FULL_DOMAIN }}.
 
             Useful links:
@@ -465,7 +467,7 @@ jobs:
             const text = manifests
               .map((m) => `> ${m.url}\n${getMarkdown(m.summary)}\n- [Full report](${links[m.url]})`)
               .join("\n\n");
-            core.setOutput("text", `## Lighthouse:\n\n${text}`);
+            core.setOutput("text", `## Lighthouse\n\n${text}`);
 
             function getMarkdown(summary) {
               return Object.entries(summary)
