@@ -460,8 +460,8 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const links = JSON.parse("${{steps.LHCIAction.outputs.links}}");
-            const manifests = JSON.parse("${{steps.LHCIAction.outputs.manifest}}");
+            const links = JSON.parse('${{steps.LHCIAction.outputs.links}}');
+            const manifests = JSON.parse('${{steps.LHCIAction.outputs.manifest}}');
             const text = manifests
               .map((m) => `${m.url}\n- [Report](${links[m.url]})\n${getMarkdown(m.summary)}`)
               .join("\n\n");
