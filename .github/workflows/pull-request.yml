@@ -463,9 +463,9 @@ jobs:
             const links = JSON.parse('${{steps.LHCIAction.outputs.links}}');
             const manifests = JSON.parse('${{steps.LHCIAction.outputs.manifest}}');
             const text = manifests
-              .map((m) => `${m.url}\n- [Report](${links[m.url]})\n${getMarkdown(m.summary)}`)
+              .map((m) => `> ${m.url}\n${getMarkdown(m.summary)\n- [Full report](${links[m.url]})}`)
               .join("\n\n");
-            core.setOutput("text", `Lighthouse:\n\n${text}`);
+            core.setOutput("text", `## Lighthouse:\n\n${text}`);
 
             function getMarkdown(summary) {
               return Object.entries(summary)
