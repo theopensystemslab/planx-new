@@ -27,7 +27,8 @@ export const borderedFocusStyle = (focusColour: string = GOVUK_YELLOW) => ({
   boxShadow: "inset 0 0 0 2px black",
 });
 
-export const linkStyle = {
+export const linkStyle = (primaryColor?: string) => ({
+  color: primaryColor || "inherit",
   textDecoration: "underline",
   textDecorationThickness: "1px",
   textUnderlineOffset: "0.1em",
@@ -38,7 +39,7 @@ export const linkStyle = {
     textDecorationSkipInk: "none", // Chromium, Firefox
     textDecorationSkip: "none", // Safari
   },
-};
+});
 
 /**
  * Get Global theme options
@@ -156,7 +157,6 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
     MuiLink: {
       styleOverrides: {
         root: {
-          ...linkStyle,
           "&:focus-visible": focusStyle(themeOptions.palette?.action?.focus),
         },
       },
@@ -248,6 +248,7 @@ export const getTeamThemeOptions = (
       MuiLink: {
         styleOverrides: {
           root: {
+            ...linkStyle(theme?.primary),
             "&:focus-visible": {
               backgroundColor: focus,
               boxShadow: `0 -2px ${focus}, 0 4px black`,
