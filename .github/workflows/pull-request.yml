@@ -455,10 +455,24 @@ jobs:
           # budgetPath: ./budget.json # test performance budgets
           uploadArtifacts: true # save results as an action artifacts
           temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+      - name: Interpolate comment text
+        id: text
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const links = JSON.parse("${{steps.LHCIAction.outputs.links}}");
+            const manifests = JSON.parse("${{steps.LHCIAction.outputs.manifest}}");
+            const text = manifests
+              .map((m) => `${m.url}\n- [Report](${links[m.url]})\n${getMarkdown(m.summary)}`)
+              .join("\n\n");
+            core.setOutput("text", `Lighthouse:\n\n${text}`);
+
+            function getMarkdown(summary) {
+              return Object.entries(summary)
+                .map(([name, value]) => `- ${name}: ${value}`)
+                .join("\n");
+            }
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: lighthouse
-          message: |
-            Links: ${{steps.LHCIAction.outputs.links}}
-            Manifest: ${{steps.LHCIAction.outputs.manifest}} }
-            Deployed ${{ github.sha }} to https://${{ env.FULL_DOMAIN }}.
+          message: ${{steps.text.outputs.text}}
