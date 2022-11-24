@@ -1,13 +1,13 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ButtonBase from "@mui/material/ButtonBase";
+import Link from "@mui/material/Link";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { linkStyle } from "theme";
 import Banner from "ui/Banner";
 
 import { makeCsvData } from "../../@planx/components/Send/uniform";
@@ -25,7 +25,7 @@ interface Props {
 
 const useStyles = makeStyles((theme) => ({
   linkButton: {
-    ...linkStyle,
+    // ...linkStyle(theme.palette.primary.main),
     marginTop: theme.spacing(2.5),
   },
 }));
@@ -99,7 +99,9 @@ const StatusPage: React.FC<Props> = ({
               className={classes.linkButton}
               onClick={startNewApplication}
             >
-              <Typography variant="body2">Start new application</Typography>
+              <Link>
+                <Typography variant="body2">Start new application</Typography>
+              </Link>
             </ButtonBase>
           </>
         )}
