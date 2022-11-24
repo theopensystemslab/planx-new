@@ -2,12 +2,12 @@ import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { focusStyle } from "theme";
+import { focusStyle, linkStyle } from "theme";
 
 const useClasses = makeStyles((theme) => ({
   htmlRoot: {
     "& a": {
-      color: "inherit",
+      ...linkStyle(theme.palette.primary.main),
       "&:focus-visible": focusStyle(theme.palette.action.focus),
     },
     "& h2": theme.typography.h3,
