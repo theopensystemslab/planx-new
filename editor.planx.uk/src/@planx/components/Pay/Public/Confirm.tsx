@@ -8,10 +8,12 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
+import Banner from "ui/Banner";
 import Input from "ui/Input";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
@@ -21,23 +23,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     "& *": {
       fontFamily: "Inter, sans-serif",
-    },
-  },
-  banner: {
-    background: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    textAlign: "center",
-    padding: theme.spacing(4),
-    width: "100%",
-    marginTop: theme.spacing(3),
-    "& p": {
-      textAlign: "left",
-    },
-    "& a": {
-      color: theme.palette.primary.contrastText,
-    },
-    "& .marginBottom": {
-      marginBottom: theme.spacing(3),
     },
   },
   drawerPaper: {
@@ -69,6 +54,7 @@ interface Props {
 
 export default function Confirm(props: Props) {
   const classes = useStyles();
+  const theme = useTheme();
 
   return (
     <Box textAlign="left" width="100%">
@@ -78,7 +64,12 @@ export default function Confirm(props: Props) {
         </Typography>
       </Container>
 
-      <div className={classes.banner}>
+      <Banner
+        color={{
+          background: theme.palette.primary.main,
+          text: theme.palette.primary.contrastText,
+        }}
+      >
         <Container maxWidth="md">
           <Typography
             variant="h5"
@@ -100,7 +91,7 @@ export default function Confirm(props: Props) {
             <ReactMarkdownOrHtml source={props.description} openLinksOnNewTab />
           </Typography>
         </Container>
-      </div>
+      </Banner>
 
       {!props.error ? (
         <Card>
@@ -148,8 +139,7 @@ function SuggestionDrawer() {
   ];
 
   const [isOpen, setIsOpen] = React.useState(false);
-  const [checkboxes, setCheckboxes] = React.useState(
-    // { [name]: false }
+  const [_checkboxes, setCheckboxes] = React.useState(
     Object.fromEntries(OTHER_OPTIONS.map(({ name }) => [name, false]))
   );
   const [text, setText] = React.useState("");
@@ -163,7 +153,9 @@ function SuggestionDrawer() {
   return (
     <>
       <Link component="button" onClick={handleLinkClick}>
-        Tell us other ways you'd like to pay in the future
+        <Typography variant="body2">
+          Tell us other ways you'd like to pay in the future
+        </Typography>
       </Link>
       <Drawer
         variant="persistent"

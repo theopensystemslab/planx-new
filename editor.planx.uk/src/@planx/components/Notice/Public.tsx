@@ -52,10 +52,13 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: 400,
     margin: `${theme.spacing(2)} 0 0 0`,
-    // TODO: tackle this...!
-    // Handle all "& a" instances
     "& a": {
-      color: "inherit",
+      color: (props) =>
+        mostReadable(props.color, [theme.palette.primary.main], {
+          includeFallbackColors: true,
+          level: "AA",
+          size: "small",
+        })?.toHexString(),
     },
   },
 }));
