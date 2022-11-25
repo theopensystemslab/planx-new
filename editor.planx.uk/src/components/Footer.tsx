@@ -157,7 +157,7 @@ function FooterItem(props: {
       {title}
     </Link>
   ) : (
-    <Link color="inherit" component={"button"} onClick={props.onClick}>
+    <Link color="inherit" component="button" onClick={props.onClick}>
       {title}
     </Link>
   );

@@ -162,7 +162,7 @@ function SuggestionDrawer() {
 
   return (
     <>
-      <Link component={"button"} onClick={handleLinkClick}>
+      <Link component="button" onClick={handleLinkClick}>
         Tell us other ways you'd like to pay in the future
       </Link>
       <Drawer
@@ -216,7 +216,7 @@ function SuggestionDrawer() {
             value={text}
           />
           <p style={{ textAlign: "right" }}>
-            <Link component={"button"} onClick={() => setIsOpen(false)}>
+            <Link component="button" onClick={() => setIsOpen(false)}>
               Save
             </Link>
           </p>

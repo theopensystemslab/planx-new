@@ -118,7 +118,7 @@ function SummaryList(props: SummaryListProps) {
                   <dd>
                     <Link
                       onClick={() => handleClick(nodeId)}
-                      component={"button"}
+                      component="button"
                     >
                       Change
                       <span style={visuallyHidden}>

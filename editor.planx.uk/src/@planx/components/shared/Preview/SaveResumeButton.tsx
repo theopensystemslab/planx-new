@@ -16,7 +16,7 @@ const SaveResumeButton: React.FC = () => {
   return (
     <>
       <Typography variant="body2">or</Typography>
-      <Link component={"button"} onClick={onClick}>
+      <Link component="button" onClick={onClick}>
         <Typography variant="body2">
           {Boolean(saveToEmail)
             ? "Save and return to this application later"

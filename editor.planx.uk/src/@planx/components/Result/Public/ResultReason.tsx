@@ -139,7 +139,7 @@ const ResultReason: React.FC<IResultReason> = ({
         {showChangeButton && (
           <Link
             className={classes.changeLink}
-            component={"button"}
+            component="button"
             onClick={(event) => {
               event.stopPropagation();
               changeAnswer(id);

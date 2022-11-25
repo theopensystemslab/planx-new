@@ -94,7 +94,7 @@ const StatusPage: React.FC<Props> = ({
           <>
             <Typography variant="body2">or</Typography>
             <Link
-              component={"button"}
+              component="button"
               onClick={startNewApplication}
               className={classes.link}
             >
