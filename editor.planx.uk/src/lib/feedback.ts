@@ -27,6 +27,7 @@ export const submitFeedback = (
 export const getFeedbackMetadata = (): Record<string, string> => {
   const currentCard = useStore.getState().currentCard();
   const passportData = useStore.getState().computePassport().data;
+  const breadcrumbs = useStore.getState().breadcrumbs;
   const [team, service] = window.location.pathname
     .split("/")
     .map((value) => value.replaceAll("-", " "))
@@ -38,6 +39,7 @@ export const getFeedbackMetadata = (): Record<string, string> => {
     "project-type": passportData?.proposal?.projectType,
     title: currentCard?.data?.title || currentCard?.data?.text,
     data: JSON.stringify(currentCard?.data),
+    breadcrumbs: JSON.stringify(breadcrumbs),
     service,
     team,
   };
