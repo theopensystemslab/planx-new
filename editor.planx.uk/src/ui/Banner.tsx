@@ -1,4 +1,3 @@
-import { mostReadable } from "@ctrl/tinycolor";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { Theme } from "@mui/material/styles";
@@ -6,20 +5,19 @@ import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import classnames from "classnames";
 import React from "react";
+import { getContrastTextColor } from "styleUtils";
 
 const useClasses = makeStyles<Theme, BannerProps>((theme) => ({
   root: {
     position: "relative",
     width: "100%",
     minHeight: theme.spacing(10),
-    // Ensure sufficient contrast between links and banner background colour
     "& a": {
       color: (props) =>
-        mostReadable(
+        getContrastTextColor(
           props.color?.background || theme.palette.background.paper,
-          [theme.palette.primary.main],
-          { includeFallbackColors: true, level: "AA", size: "small" }
-        )?.toHexString(),
+          theme.palette.primary.main
+        ),
     },
   },
   defaultColor: {
