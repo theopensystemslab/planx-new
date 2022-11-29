@@ -177,8 +177,8 @@ export default function Component(props: Props) {
             </AlternateOption>
           )}
           <p>
-            The boundary you have drawn has an area of{" "}
-            <strong>{area ?? 0} m²</strong>
+            The outline you have drawn has an area of{" "}
+            <strong>{area?.toLocaleString("en-GB") ?? 0} m²</strong>
           </p>
         </>
       );
@@ -218,6 +218,10 @@ export default function Component(props: Props) {
           boundary && props.dataFieldBoundary ? boundary : undefined,
         [props.dataFieldArea]:
           boundary && props.dataFieldBoundary ? area : undefined,
+        [`${props.dataFieldArea}.hectares`]:
+          boundary && area && props.dataFieldBoundary
+            ? area / 10000
+            : undefined,
         [propsDataFieldUrl]:
           selectedFile?.url && propsDataFieldUrl
             ? selectedFile?.url
