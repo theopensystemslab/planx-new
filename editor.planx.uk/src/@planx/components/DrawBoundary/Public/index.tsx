@@ -177,7 +177,7 @@ export default function Component(props: Props) {
             </AlternateOption>
           )}
           <p>
-            The outline you have drawn has an area of{" "}
+            The site outline you have drawn is{" "}
             <strong>{area?.toLocaleString("en-GB") ?? 0} m²</strong>
           </p>
         </>
