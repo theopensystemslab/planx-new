@@ -1,6 +1,11 @@
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Collapse from "@mui/material/Collapse";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import ListSubheader from "@mui/material/ListSubheader";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
@@ -11,15 +16,15 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
 import capitalize from "lodash/capitalize";
+import groupBy from "lodash/groupBy";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
 import { stringify } from "wkt";
 
-import FeedbackInput from "../shared/FeedbackInput";
 import type { PlanningConstraints } from "./model";
 
 type Props = PublicProps<PlanningConstraints>;
@@ -251,29 +256,58 @@ function PlanningConstraintsInformation(props: any) {
 function ConstraintsList({ data, refreshConstraints }: any) {
   const classes = useClasses();
   const error = data.error || undefined;
-  const constraints = Object.values(data).filter(({ text }: any) => text);
 
-  // Order constraints so that { value: true } ones come first
-  constraints.sort(function (a: any, b: any) {
-    return b.value - a.value;
+  const constraints: any[] = Object.values(data)
+    .filter(({ text }: any) => text) // only display constraints with a "text" entry
+    .sort((a: any, b: any) => {
+      return b.value - a.value;
+    }); // display { value: true } constraints first
+
+  // group constraints by category, preserving previous sort (categories with positive constraints will display first, rather than static category order)
+  const groupedConstraints = groupBy(constraints, (constraint: any) => {
+    return constraint.category;
   });
 
-  const visibleConstraints = constraints.map((con: any) => (
-    <Constraint key={con.text} style={{ fontWeight: con.value ? 700 : 500 }}>
-      {ReactHtmlParser(con.text)}
-    </Constraint>
-  ));
+  // TODO: confirm/figure out accessible heirarchy for list with subheaders
+  const groupedVisibleConstraints = Object.keys(groupedConstraints).map(
+    (category: string) => (
+      <ListSubheader
+        disableGutters
+        disableSticky
+        color="primary"
+        component="div"
+        key={category}
+        style={{ fontWeight: 700, padding: 0 }}
+      >
+        {category}
+        {groupedConstraints[category].map((con: any) => (
+          <Constraint
+            key={con.text}
+            style={{
+              fontWeight: con.value ? 700 : 500,
+              paddingTop: 0,
+              paddingBottom: 0,
+            }}
+            collapsible={con.value}
+            data={con.value ? con.data : null}
+          >
+            {ReactHtmlParser(con.text)}
+          </Constraint>
+        ))}
+      </ListSubheader>
+    )
+  );
 
-  // Display constraints for valid teams, or message if unsupported local authority (eg api returned '{}')
+  // Display constraints for valid teams or show a message if unsupported local authority (eg api returned '{}')
   return (
     <Box mb={3}>
-      {visibleConstraints.length > 0 ? (
+      {groupedVisibleConstraints.length > 0 ? (
         <>
           <Typography variant="h5" component="h2" gutterBottom>
             This property
           </Typography>
           <List dense disablePadding>
-            {visibleConstraints}
+            {groupedVisibleConstraints}
           </List>
         </>
       ) : (
@@ -305,16 +339,77 @@ function ConstraintsList({ data, refreshConstraints }: any) {
 function Constraint({ children, ...props }: any) {
   const classes = useClasses();
   const theme = useTheme();
-  return (
-    <ListItem dense disableGutters>
-      <Box
-        className={classes.constraint}
-        bgcolor="background.paper"
-        color={theme.palette.text.primary}
-        {...props}
-      >
-        {children}
-      </Box>
-    </ListItem>
-  );
+  const [showConstraintData, setShowConstraintData] = useState<boolean>(false);
+
+  if (props.collapsible) {
+    // "Positive" constraint will expand to show more details
+    // TODO: confirm/figure out best design & accessible heirarchy for expandable lists
+    return (
+      <ListItem dense disableGutters>
+        <Box
+          className={classes.constraint}
+          bgcolor="background.paper"
+          color={theme.palette.text.primary}
+          {...props}
+        >
+          {children}
+          <Button
+            style={{ margin: 0, padding: 0 }}
+            onClick={() =>
+              setShowConstraintData((showConstraintData) => !showConstraintData)
+            }
+          >
+            {showConstraintData && props.data.length > 0 ? (
+              <ExpandLess />
+            ) : (
+              <ExpandMore />
+            )}
+          </Button>
+          <Collapse in={showConstraintData}>
+            <List dense disablePadding>
+              {props.data.map((record: any) => (
+                <ListItem
+                  key={record.entity}
+                  dense
+                  disableGutters
+                  style={{ paddingTop: 0, paddingBottom: 0 }}
+                >
+                  <Box
+                    style={{ fontWeight: 500, paddingTop: 0, paddingBottom: 0 }}
+                  >
+                    {record.name}{" "}
+                    {record.name && record["documentation-url"] ? (
+                      <span>
+                        [
+                        <a href={record["documentation-url"]} target="_blank">
+                          Source (opens in a new tab)
+                        </a>
+                        ]
+                      </span>
+                    ) : (
+                      ``
+                    )}
+                  </Box>
+                </ListItem>
+              ))}
+            </List>
+          </Collapse>
+        </Box>
+      </ListItem>
+    );
+  } else {
+    return (
+      // "Negative" constraint is a static list item
+      <ListItem dense disableGutters>
+        <Box
+          className={classes.constraint}
+          bgcolor="background.paper"
+          color={theme.palette.text.primary}
+          {...props}
+        >
+          {children}
+        </Box>
+      </ListItem>
+    );
+  }
 }

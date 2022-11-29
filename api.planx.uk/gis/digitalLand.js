@@ -97,6 +97,7 @@ async function go(localAuthority, geom, extras) {
           value: true,
           text: baseSchema[key].pos,
           data: [omitGeometry(entity)],
+          category: baseSchema[key].category,
         };
       }
     });
@@ -110,7 +111,7 @@ async function go(localAuthority, geom, extras) {
       baseSchema[key]["active"] && !Object.keys(formattedResult).includes(key)
   );
   nots.forEach((not) => {
-    formattedResult[not] = { value: false, text: baseSchema[not].neg };
+    formattedResult[not] = { value: false, text: baseSchema[not].neg, category: baseSchema[not].category };
   });
 
   // --- DESIGNATED LAND ---
