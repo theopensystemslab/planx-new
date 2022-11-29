@@ -67,18 +67,19 @@ export function makeXmlString({
     return includeGeoJSON ? allFiles : reviewHTML;
   };
 
-  const getUserUploadedFiles: string[] = [];
-  files?.forEach((file) => {
-    // We download and add the unique decoded filename to the zip in api.planx.uk/send/uniform, so ensure the schema filename matches
-    const uniqueFilename = decodeURIComponent(
-      file.split("/").slice(-2).join("-")
-    );
-    userUploadedFiles.push(`
-      <common:FileAttachment>
-        <common:FileName>${escape(uniqueFilename)}</common:FileName>
-        <common:Reference>Other</common:Reference>
-      </common:FileAttachment>
-    `);
+  const getUserUploadedFiles = (): string => {
+    const userUploadedFiles: string[] = [];
+    files?.forEach((file) => {
+      // We download and add the unique decoded filename to the zip in api.planx.uk/send/uniform, so ensure the schema filename matches
+      const uniqueFilename = decodeURIComponent(
+        file.split("/").slice(-2).join("-")
+      );
+      userUploadedFiles.push(`
+        <common:FileAttachment>
+          <common:FileName>${escape(uniqueFilename)}</common:FileName>
+          <common:Reference>Other</common:Reference>
+        </common:FileAttachment>
+      `);
     });
     return userUploadedFiles.join("");
   };
