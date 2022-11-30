@@ -19,7 +19,6 @@ import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
 import { stringify } from "wkt";
 
-import FeedbackInput from "../shared/FeedbackInput";
 import type { PlanningConstraints } from "./model";
 
 type Props = PublicProps<PlanningConstraints>;

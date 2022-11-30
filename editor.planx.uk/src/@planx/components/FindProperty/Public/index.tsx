@@ -439,7 +439,7 @@ export function PropertyInformation(props: any) {
           </PropertyDetail>
         ))}
       </Box>
-      <Box color="text.secondary" textAlign="right">
+      <Box textAlign="right">
         <FeedbackInput
           text="Report an inaccuracy"
           handleChange={formik.handleChange}

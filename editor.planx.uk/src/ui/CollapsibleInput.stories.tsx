@@ -9,11 +9,10 @@ const metadata: Meta = {
   component: CollapsibleInput,
 };
 
-export const Basic: Story<Props> = (args: Props) => {
+export const Basic: Story<Props> = (_args: Props) => {
   const [text, setText] = useState("");
   return (
     <FeedbackInput
-      // {...args}
       text="Is this result inaccurate? **tell us why**"
       handleChange={(ev) => {
         setText(ev.target.value);
