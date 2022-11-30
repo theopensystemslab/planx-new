@@ -3,6 +3,8 @@ import {
   responsiveFontSizes,
   ThemeOptions,
 } from "@mui/material/styles";
+// eslint-disable-next-line no-restricted-imports
+import createPalette from "@mui/material/styles/createPalette";
 
 import { TeamTheme } from "./types";
 
@@ -49,6 +51,30 @@ export const linkStyle = (primaryColor?: string) => ({
  * merged with Team specific options
  */
 export const getGlobalThemeOptions = (): ThemeOptions => {
+  const palette = createPalette({
+    primary: {
+      main: "#000661",
+      contrastText: "#fff",
+    },
+    background: {
+      default: "#fff",
+      paper: "#f2f2f2",
+    },
+    secondary: {
+      main: "#EFEFEF",
+    },
+    text: {
+      secondary: "rgba(0,0,0,0.6)",
+    },
+    action: {
+      selected: "#F8F8F8",
+      focus: GOVUK_YELLOW,
+    },
+    error: {
+      main: "#E91B0C",
+    },
+  });
+
   const themeOptions: ThemeOptions = {
     typography: {
       fontFamily: "'Inter', Arial",
@@ -83,29 +109,7 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
         fontSize: 15,
       },
     },
-    palette: {
-      primary: {
-        main: "#000661",
-        contrastText: "#fff",
-      },
-      background: {
-        default: "#fff",
-        paper: "#f2f2f2",
-      },
-      secondary: {
-        main: "#EFEFEF",
-      },
-      text: {
-        secondary: "rgba(0,0,0,0.6)",
-      },
-      action: {
-        selected: "#F8F8F8",
-        focus: GOVUK_YELLOW,
-      },
-      error: {
-        main: "#E91B0C",
-      },
-    },
+    palette,
     breakpoints: {
       values: {
         xs: 0,
@@ -196,6 +200,17 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
       MuiPaper: {
         defaultProps: {
           elevation: 0,
+        },
+      },
+      MuiLink: {
+        styleOverrides: {
+          root: {
+            "&:disabled": {
+              color: palette.text.disabled,
+              cursor: "default",
+              textDecoration: "none",
+            },
+          },
         },
       },
     },

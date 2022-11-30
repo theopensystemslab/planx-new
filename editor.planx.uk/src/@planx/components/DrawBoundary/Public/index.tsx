@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -43,26 +44,6 @@ const MapContainer = styled(Box)<MapContainerProps>(
     },
   })
 );
-
-const AlternateOption = styled("div")(({ theme }) => ({
-  textAlign: "right",
-  marginTop: theme.spacing(1),
-}));
-
-const AlternateOptionButton = styled(Button)(({ theme }) => ({
-  background: "none",
-  borderStyle: "none",
-  color: theme.palette.text.primary,
-  cursor: "pointer",
-  fontSize: "medium",
-  padding: theme.spacing(2),
-  "& :hover": {
-    backgroundColor: theme.palette.background.paper,
-  },
-  "& :disabled": {
-    color: theme.palette.text.disabled,
-  },
-}));
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);
@@ -164,17 +145,20 @@ export default function Component(props: Props) {
               markerLongitude={Number(passport?.data?._address?.longitude)}
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
-            {!props.hideFileUpload && (
-              <AlternateOption>
-                <AlternateOptionButton
-                  data-testid="upload-file-button"
-                  onClick={() => setPage("upload")}
-                  disabled={Boolean(boundary)}
-                >
+          {!props.hideFileUpload && (
+            <Box sx={{ textAlign: "right" }}>
+              <Link
+                component="button"
+                onClick={() => setPage("upload")}
+                disabled={Boolean(boundary)}
+                data-testid="upload-file-button"
+              >
+                <Typography variant="body2">
                   Upload a location plan instead
-                </AlternateOptionButton>
-              </AlternateOption>
-            )}
+                </Typography>
+              </Link>
+            </Box>
+          )}
           </MapContainer>
           <p>
             The site outline you have drawn is{" "}
@@ -194,14 +178,17 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <Upload setFile={setSelectedFile} initialFile={selectedFile} />
-          <AlternateOption>
-            <AlternateOptionButton
+          <Box sx={{ textAlign: "right" }}>
+            <Link
+              component="button"
               onClick={() => setPage("draw")}
               disabled={Boolean(selectedFile?.url)}
             >
-              Draw the boundary on a map instead
-            </AlternateOptionButton>
-          </AlternateOption>
+              <Typography variant="body2">
+                Draw the boundary on a map instead
+              </Typography>
+            </Link>
+          </Box>
         </>
       );
     }
