@@ -24,9 +24,6 @@ const infoSectionStyles = makeStyles((theme) => ({
     "& em": {
       fontStyle: "italic",
     },
-    "& a": {
-      color: theme.palette.text.primary,
-    },
   },
 }));
 

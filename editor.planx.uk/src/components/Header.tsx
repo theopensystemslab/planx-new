@@ -5,6 +5,7 @@ import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
@@ -13,7 +14,11 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import makeStyles from "@mui/styles/makeStyles";
 import { Route } from "navi";
 import React, { useRef, useState } from "react";
-import { Link, useCurrentRoute, useNavigation } from "react-navi";
+import {
+  Link as ReactNaviLink,
+  useCurrentRoute,
+  useNavigation,
+} from "react-navi";
 import { borderedFocusStyle, focusStyle } from "theme";
 import { Team } from "types";
 import Reset from "ui/icons/Reset";
@@ -72,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
   },
   logoLink: {
     display: "inline-block",
-    "&:focus-visible": borderedFocusStyle(theme.palette.action.focus),
+    "&:focus-visible": borderedFocusStyle,
   },
   skipLink: {
     width: "100vw",
@@ -89,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
       // bring it into view when accessed by tab
       transform: "translateY(0%)",
       position: "relative",
-      ...focusStyle(theme.palette.action.focus),
+      ...focusStyle,
     },
   },
   analyticsWarning: {
@@ -129,13 +134,13 @@ const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
     <img alt={altText} src={team?.theme?.logo} className={classes.logo} />
   );
   return team?.settings?.homepage ? (
-    <a
+    <Link
       href={team.settings.homepage}
       target="_blank"
       className={classes.logoLink}
     >
       {logo}
-    </a>
+    </Link>
   ) : (
     logo
   );
@@ -160,6 +165,7 @@ const Breadcrumbs: React.FC<{
         <>
           {" / "}
           <Link
+            component={ReactNaviLink}
             href={`/${route.data.team}`}
             prefetch={false}
             className={classes.breadcrumb}
@@ -172,6 +178,7 @@ const Breadcrumbs: React.FC<{
         <>
           {" / "}
           <Link
+            component={ReactNaviLink}
             href={rootFlowPath(false)}
             prefetch={false}
             className={classes.breadcrumb}

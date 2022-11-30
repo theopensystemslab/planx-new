@@ -97,14 +97,6 @@ const useClasses = makeStyles((theme) => ({
         marginBottom: 0,
       },
     },
-    "& a": {
-      color: "#22589e",
-      fontWeight: 400,
-      textDecoration: "underline",
-      "&:hover": {
-        textDecoration: "none",
-      },
-    },
   },
   numberedList: {
     listStyle: "none",

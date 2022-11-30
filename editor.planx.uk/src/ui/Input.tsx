@@ -60,8 +60,7 @@ export const useClasses = makeStyles<Theme, Props>((theme) => ({
   adornedEnd: {
     paddingRight: 2,
   },
-  focused: (props) =>
-    props.bordered ? borderedFocusStyle(theme.palette.action.focus) : {},
+  focused: (props) => (props.bordered ? borderedFocusStyle : {}),
 }));
 
 export default forwardRef((props: Props, ref): FCReturn => {
