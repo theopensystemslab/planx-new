@@ -70,7 +70,7 @@ function DrawBoundaryComponent(props: Props) {
               />
             </InputRow>
           </InputGroup>
-          <InputGroup label="Area data field">
+          <InputGroup label="Area data field (square metres)">
             <InputRow>
               <Input
                 name="dataFieldArea"
