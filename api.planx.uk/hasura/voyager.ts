@@ -1,31 +1,129 @@
-import assert from "assert";
+import { GraphQLClient } from "graphql-request";
 import { express as voyagerMiddleware } from "graphql-voyager/middleware";
 import { NextFunction, Response, Request } from "express";
 
-assert(process.env.GRAPHQL_URL_EXT);
-export default function graphQLVoyagerHandler(
-  adminKey: string | undefined = undefined
-) {
+export function graphQLVoyagerHandler(args: {
+  graphQLURL: string;
+  validateUser: boolean;
+}) {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (adminKey && !req.user?.sub)
+    if (args.validateUser && !req.user?.sub)
       return next({ status: 401, message: "User ID missing from JWT" });
-
     res.header(
       "Content-Security-Policy",
       "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net"
     );
     res.header("Content-Security-Policy", "worker-src blob:");
-
-    const headers: any = {
-      "content-type": "application/json",
-    };
-    if (adminKey) headers["x-hasura-admin-secret"] = adminKey;
-
-    const graphQLURL: string = process.env.GRAPHQL_URL_EXT!;
-
     return voyagerMiddleware({
-      endpointUrl: graphQLURL,
-      headersJS: JSON.stringify(headers),
+      endpointUrl: args.graphQLURL,
     })(req, res);
   };
+}
+
+export function introspectionHandler(args: {
+  graphQLClient: GraphQLClient;
+  validateUser: boolean;
+}) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    if (args.validateUser && !req.user?.sub)
+      return next({ status: 401, message: "User ID missing from JWT" });
+    const introspection = await args.graphQLClient.request(
+      getIntrospectionQuery()
+    );
+    return res.json({ data: introspection });
+  };
+}
+
+function getIntrospectionQuery(): string {
+  return `query IntrospectionQuery {
+      __schema {
+        queryType { name }
+        mutationType { name }
+        subscriptionType { name }
+        types {
+          ...FullType
+        }
+        directives {
+          name
+          description
+          locations
+          args {
+            ...InputValue
+          }
+        }
+      }
+    }
+
+    fragment FullType on __Type {
+      kind
+      name
+      description
+      fields(includeDeprecated: true) {
+        name
+        description
+        args {
+          ...InputValue
+        }
+        type {
+          ...TypeRef
+        }
+        isDeprecated
+        deprecationReason
+      }
+      inputFields {
+        ...InputValue
+      }
+      interfaces {
+        ...TypeRef
+      }
+      enumValues(includeDeprecated: true) {
+        name
+        description
+        isDeprecated
+        deprecationReason
+      }
+      possibleTypes {
+        ...TypeRef
+      }
+    }
+
+    fragment InputValue on __InputValue {
+      name
+      description
+      type { ...TypeRef }
+      defaultValue
+    }
+
+    fragment TypeRef on __Type {
+      kind
+      name
+      ofType {
+        kind
+        name
+        ofType {
+          kind
+          name
+          ofType {
+            kind
+            name
+            ofType {
+              kind
+              name
+              ofType {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                  ofType {
+                    kind
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }`;
 }
