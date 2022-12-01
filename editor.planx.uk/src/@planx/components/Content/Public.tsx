@@ -6,6 +6,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
+import { getContrastTextColor } from "styleUtils";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 export type Props = PublicProps<Content>;
@@ -21,6 +22,10 @@ const useClasses = makeStyles<Theme, StyleProps>((theme) => ({
     color: (props) =>
       mostReadable(props.color || "#fff", ["#fff", "#000"])?.toHexString() ||
       "#000",
+    "& a": {
+      color: (props) =>
+        getContrastTextColor(props.color || "#fff", theme.palette.primary.main),
+    },
   },
 }));
 
