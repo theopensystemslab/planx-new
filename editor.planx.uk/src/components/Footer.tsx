@@ -5,24 +5,28 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Link from "@mui/material/Link";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
-import classnames from "classnames";
 import React, { useEffect, useState } from "react";
 import { Link as ReactNaviLink } from "react-navi";
 
-const useClasses = makeStyles((theme) => ({
-  root: {
-    color: theme.palette.common.white,
-    backgroundColor: theme.palette.common.black,
-    padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
+const Root = styled("footer")(({ theme }) => ({
+  color: theme.palette.common.white,
+  backgroundColor: theme.palette.common.black,
+  padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
+}));
+
+const ButtonGroup = styled(Box)(({ theme }) => ({
+  columnGap: theme.spacing(3),
+  textTransform: "capitalize",
+  display: "flex",
+  flexWrap: "wrap",
+  [theme.breakpoints.up("xs")]: {
+    flexDirection: "column",
   },
-  buttonGroup: {
-    columnGap: theme.spacing(3),
-    textTransform: "capitalize",
-  },
-  bold: {
-    fontWeight: 800,
+  [theme.breakpoints.up("md")]: {
+    flexDirection: "row",
   },
 }));
 
@@ -40,7 +44,6 @@ export interface Props {
 
 export default function Footer(props: Props) {
   const { items, children } = props;
-  const classes = useClasses();
   const [feedbackPrivacyNoteVisible, setFeedbackPrivacyNoteVisible] =
     useState(false);
 
@@ -82,13 +85,8 @@ export default function Footer(props: Props) {
   };
 
   return (
-    <footer className={classes.root}>
-      <Box
-        display="flex"
-        flexWrap="wrap"
-        flexDirection={{ xs: "column", md: "row" }}
-        className={classes.buttonGroup}
-      >
+    <Root>
+      <ButtonGroup>
         {items
           ?.filter((item) => item.title)
           .map((item) => (
@@ -123,9 +121,9 @@ export default function Footer(props: Props) {
             </FeedbackFish>
           </>
         )}
-      </Box>
+      </ButtonGroup>
       <Box py={4}>{children}</Box>
-    </footer>
+    </Root>
   );
 }
 
@@ -135,12 +133,10 @@ function FooterItem(props: {
   onClick?: () => void;
   bold?: boolean;
 }) {
-  const classes = useClasses();
-
   const title = (
     <Typography
       variant="body2"
-      className={classnames(props.bold && classes.bold)}
+      sx={{ fontWeight: props.bold ? 800 : "regular" }}
     >
       {props.title.toLowerCase()}
     </Typography>
