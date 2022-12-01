@@ -461,7 +461,6 @@ app.get("/throw-error", () => {
   throw new Error("custom error");
 });
 
-assert(process.env.GRAPHQL_URL_EXT);
 app.all(
   "/introspect",
   introspectionHandler({
