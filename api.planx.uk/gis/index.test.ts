@@ -9,7 +9,7 @@ describe("locationSearchWithTimeout", () => {
     jest.useRealTimers();
   });
 
-  test("a successful call", () => {
+  test("a successful call", async () => {
     const timeout = 500;
     const localAuthority = "braintree";
     const promise = locationSearchWithTimeout(
@@ -17,7 +17,7 @@ describe("locationSearchWithTimeout", () => {
       { x: 50, y: 50, siteBoundary: "[]" },
       timeout
     );
-    return expect(promise).resolves.toStrictEqual(expect.any(Object));
+    await expect(promise).resolves.toStrictEqual(expect.any(Object));
   });
 
   test("an immediate timeout", async () => {
