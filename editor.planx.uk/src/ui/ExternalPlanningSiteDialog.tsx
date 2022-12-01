@@ -1,33 +1,15 @@
-import Button from "@mui/material/Button";
-import ButtonBase from "@mui/material/ButtonBase";
+import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import { visuallyHidden } from "@mui/utils";
 import React from "react";
 import { useState } from "react";
 import { TeamSettings } from "types";
 import { fetchCurrentTeam } from "utils";
-
-const useClasses = makeStyles((theme) => ({
-  container: {
-    display: "flex",
-    justifyContent: "end",
-  },
-  button: {
-    padding: theme.spacing(2),
-    "&:hover": {
-      backgroundColor: theme.palette.background.paper,
-    },
-  },
-  externalLink: {
-    textDecoration: "none",
-  },
-}));
 
 export enum DialogPurpose {
   MissingProjectType,
@@ -80,7 +62,6 @@ export default function ExternalPlanningSiteDialog({
   purpose,
   teamSettings,
 }: Props): FCReturn {
-  const classes = useClasses();
   const [isOpen, setIsOpen] = useState(false);
   const toggleModal = () => setIsOpen(!isOpen);
   const settings = teamSettings || fetchCurrentTeam()?.settings;
@@ -99,26 +80,27 @@ export default function ExternalPlanningSiteDialog({
             </p>
           </DialogContent>
           <DialogActions>
-            <Button onClick={toggleModal}>Return to application</Button>
             <Link
-              href={settings?.externalPlanningSite?.url}
-              target="_blank"
-              className={classes.externalLink}
-              underline="hover"
+              component="button"
+              onClick={toggleModal}
+              sx={{ paddingRight: 2 }}
             >
-              <Button>
+              <Typography variant="body2">Return to application</Typography>
+            </Link>
+            <Link href={settings?.externalPlanningSite?.url} target="_blank">
+              <Typography variant="body2">
                 Go to {settings?.externalPlanningSite?.name}
                 <span style={visuallyHidden}> (opens in a new tab)</span>
-              </Button>
+              </Typography>
             </Link>
           </DialogActions>
         </Dialog>
       )}
-      <div className={classes.container}>
-        <ButtonBase onClick={toggleModal} className={classes.button}>
+      <Box sx={{ textAlign: "right" }}>
+        <Link component="button" onClick={toggleModal}>
           <Typography variant="body2">{title}</Typography>
-        </ButtonBase>
-      </div>
+        </Link>
+      </Box>
     </>
   );
 }
