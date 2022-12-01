@@ -4,6 +4,7 @@ import DocumentReview from "@opensystemslab/planx-document-review";
 
 export const generateDocumentReviewStream = (props: any) => {
   return renderToPipeableStream(
-    React.createElement(DocumentReview, props, null)
+    React.createElement(DocumentReview, props, null),
+    { bootstrapScripts: ["https://cdn.jsdelivr.net/npm/@opensystemslab/map"] }
   );
 };
