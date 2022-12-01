@@ -19,8 +19,6 @@ const useClasses = makeStyles((theme) => ({
   },
   buttonGroup: {
     columnGap: theme.spacing(3),
-  },
-  link: {
     textTransform: "capitalize",
   },
   bold: {
