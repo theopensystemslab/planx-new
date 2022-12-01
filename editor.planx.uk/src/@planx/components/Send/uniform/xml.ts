@@ -38,7 +38,7 @@ export function makeXmlString({
   const siteAddress: SiteAddress = passport.data?.["_address"];
 
   // format file attachments
-  const requiredFiles = `
+  const getRequiredFiles = () => `
     <common:FileAttachment>
       <common:Identifier>N10049</common:Identifier>
       <common:FileName>proposal.xml</common:FileName>
@@ -50,29 +50,39 @@ export function makeXmlString({
     </common:FileAttachment>
   `;
 
-  const getGeneratedFiles = (includeGeoJSON: boolean) => {
-    return includeGeoJSON
-      ? `
+  const getOptionalFiles = (includeGeoJSON: boolean) => {
+    const reviewHTML = `
+      <common:FileAttachment>
+        <common:FileName>review.html</common:FileName>
+        <common:Reference>Other</common:Reference>
+      </common:FileAttachment>
+    `;
+    const boundaryGeoJSON = `
       <common:FileAttachment>
         <common:FileName>boundary.geojson</common:FileName>
         <common:Reference>Other</common:Reference>
-      </common:FileAttachment>`
-      : "";
+      </common:FileAttachment>
+    `;
+    const allFiles = reviewHTML + boundaryGeoJSON;
+    return includeGeoJSON ? allFiles : reviewHTML;
   };
 
-  const userUploadedFiles: string[] = [];
-  files?.forEach((file) => {
-    // We download and add the unique decoded filename to the zip in api.planx.uk/send/uniform, so ensure the schema filename matches
-    const uniqueFilename = decodeURIComponent(
-      file.split("/").slice(-2).join("-")
-    );
-    userUploadedFiles.push(`
-      <common:FileAttachment>
-        <common:FileName>${escape(uniqueFilename)}</common:FileName>
-        <common:Reference>Other</common:Reference>
-      </common:FileAttachment>
-    `);
-  });
+  const getUserUploadedFiles = (): string => {
+    const userUploadedFiles: string[] = [];
+    files?.forEach((file) => {
+      // We download and add the unique decoded filename to the zip in api.planx.uk/send/uniform, so ensure the schema filename matches
+      const uniqueFilename = decodeURIComponent(
+        file.split("/").slice(-2).join("-")
+      );
+      userUploadedFiles.push(`
+        <common:FileAttachment>
+          <common:FileName>${escape(uniqueFilename)}</common:FileName>
+          <common:Reference>Other</common:Reference>
+        </common:FileAttachment>
+      `);
+    });
+    return userUploadedFiles.join("");
+  };
 
   const getCertificateOfLawfulness = () => {
     const planXAppType: PlanXAppTypes =
@@ -220,9 +230,9 @@ export function makeXmlString({
         </portaloneapp:Payment>
       </portaloneapp:ApplicationHeader>
       <portaloneapp:FileAttachments>
-        ${requiredFiles}
-        ${getGeneratedFiles(hasBoundary)}
-        ${userUploadedFiles.join("")}
+        ${getRequiredFiles()}
+        ${getOptionalFiles(hasBoundary)}
+        ${getUserUploadedFiles()}
       </portaloneapp:FileAttachments>
       <portaloneapp:Applicant>
         <common:PersonName>

@@ -2,11 +2,12 @@ import { createZip } from "./uniform";
 
 jest.mock("fs");
 const mockAddFile = jest.fn();
+const mockAddLocalFile = jest.fn();
 const mockWriteZip = jest.fn();
 jest.mock("adm-zip", () => {
   return jest.fn().mockImplementation(() => ({
     addFile: mockAddFile,
-    addLocalFile: jest.fn(),
+    addLocalFile: mockAddLocalFile,
     writeZip: mockWriteZip,
   }));
 });
@@ -22,6 +23,11 @@ jest.mock("csv-stringify", () => {
     stringify: jest.fn().mockImplementation(() => mockPipe),
   };
 });
+jest.mock("./documentReview", () => {
+  return {
+    generateDocumentReviewStream: jest.fn().mockImplementation(() => mockPipe),
+  };
+});
 jest.mock("string-to-stream", () => {
   return jest.fn().mockImplementation(() => mockPipe);
 });
@@ -29,7 +35,20 @@ jest.mock("string-to-stream", () => {
 describe("createZip", () => {
   beforeEach(() => {
     mockAddFile.mockClear();
+    mockAddLocalFile.mockClear();
     mockWriteZip.mockClear();
+  });
+
+  test("the document viewer is added to zip", async () => {
+    const payload = {
+      xml: "<xml></xml>",
+      csv: [["1", "2", "3"]],
+      files: [],
+      sessionId: "123",
+    };
+    await createZip(payload);
+    expect(mockAddLocalFile).toHaveBeenCalledWith("review.html");
+    expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
 
   test("geojson is added to zip", async () => {

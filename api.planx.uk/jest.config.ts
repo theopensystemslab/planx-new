@@ -1,4 +1,6 @@
 export default {
+  testEnvironment: "node",
+  preset: "ts-jest",
   transform: {
     "^.+\\.js$": [
       "esbuild-jest",
@@ -7,10 +9,8 @@ export default {
       },
     ],
   },
-  setupFilesAfterEnv: ["./jest.setup.js"],
-  preset: "ts-jest",
-  testEnvironment: "node",
   testPathIgnorePatterns: ["dist/*"],
+  setupFilesAfterEnv: ["./jest.setup.js"],
   collectCoverage: true,
   coverageThreshold: {
     global: {
