@@ -30,13 +30,13 @@ const MapContainer = styled(Box)<MapContainerProps>(
     width: "100%",
     height: "50vh",
     // Only increase map size in Preview & Unpublished routes
-    // [theme.breakpoints.up("md")]:
-    //   environment === "standalone"
-    //     ? {
-    //         height: "70vh",
-    //         minWidth: "65vw",
-    //       }
-    //     : {},
+    [theme.breakpoints.up("md")]:
+      environment === "standalone"
+        ? {
+            height: "70vh",
+            minWidth: "65vw",
+          }
+        : {},
     "& my-map": {
       width: "100%",
       height: "100%",
@@ -164,18 +164,18 @@ export default function Component(props: Props) {
               markerLongitude={Number(passport?.data?._address?.longitude)}
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
+            {!props.hideFileUpload && (
+              <AlternateOption>
+                <AlternateOptionButton
+                  data-testid="upload-file-button"
+                  onClick={() => setPage("upload")}
+                  disabled={Boolean(boundary)}
+                >
+                  Upload a location plan instead
+                </AlternateOptionButton>
+              </AlternateOption>
+            )}
           </MapContainer>
-          {!props.hideFileUpload && (
-            <AlternateOption>
-              <AlternateOptionButton
-                data-testid="upload-file-button"
-                onClick={() => setPage("upload")}
-                disabled={Boolean(boundary)}
-              >
-                Upload a location plan instead
-              </AlternateOptionButton>
-            </AlternateOption>
-          )}
           <p>
             The site outline you have drawn is{" "}
             <strong>{area?.toLocaleString("en-GB") ?? 0} m²</strong>
