@@ -27,7 +27,7 @@ interface MapContainerProps {
 
 const MapContainer = styled(Box)<MapContainerProps>(
   ({ theme, environment }) => ({
-    padding: theme.spacing(1, 0),
+    padding: theme.spacing(1, 0, 6, 0),
     width: "100%",
     height: "50vh",
     // Only increase map size in Preview & Unpublished routes
@@ -44,6 +44,12 @@ const MapContainer = styled(Box)<MapContainerProps>(
     },
   })
 );
+
+const MapFooter = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  paddingTop: theme.spacing(3),
+}));
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);
@@ -144,25 +150,25 @@ export default function Component(props: Props) {
               markerLongitude={Number(passport?.data?._address?.longitude)}
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
-          {!props.hideFileUpload && (
-            <Box sx={{ textAlign: "right" }}>
-              <Link
-                component="button"
-                onClick={() => setPage("upload")}
-                disabled={Boolean(boundary)}
-                data-testid="upload-file-button"
-              >
+            {!props.hideFileUpload && (
+              <MapFooter>
                 <Typography variant="body2">
-                  Upload a location plan instead
+                  The site outline you have drawn is{" "}
+                  <strong>{area?.toLocaleString("en-GB") ?? 0} m²</strong>
                 </Typography>
-              </Link>
-            </Box>
-          )}
+                <Link
+                  component="button"
+                  onClick={() => setPage("upload")}
+                  disabled={Boolean(boundary)}
+                  data-testid="upload-file-button"
+                >
+                  <Typography variant="body2">
+                    Upload a location plan instead
+                  </Typography>
+                </Link>
+              </MapFooter>
+            )}
           </MapContainer>
-          <p>
-            The site outline you have drawn is{" "}
-            <strong>{area?.toLocaleString("en-GB") ?? 0} m²</strong>
-          </p>
         </>
       );
     } else if (page === "upload") {
