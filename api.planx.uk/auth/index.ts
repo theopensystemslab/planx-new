@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import crypto from "crypto";
 import { singleSessionEmailTemplates } from "../saveAndReturn/utils";
+import assert from "assert";
 
 /**
  * Validate that a provided string (e.g. API key) matches the expected value
@@ -26,7 +27,7 @@ const useHasuraAuth = (
     process.env.HASURA_PLANX_API_KEY!
   );
   if (!isAuthenticated) return next({ status: 401, message: "Unauthorised" });
-  next();
+  return next();
 };
 
 /**
@@ -58,4 +59,21 @@ const useSendEmailAuth = (
   }
 };
 
-export { useHasuraAuth, useSendEmailAuth };
+/**
+ * Validate that a request for a private file has the correct authentication
+ */
+assert(process.env.FILE_API_KEY, "Missing environment variable 'FILE_API_KEY'");
+const useFilePermission = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): void => {
+  const isAuthenticated = isEqual(
+    req.headers["api-key"] as string,
+    process.env.FILE_API_KEY!,
+  );
+  if (!isAuthenticated) return next({ status: 401, message: "Unauthorised" });
+  return next();
+};
+
+export { useHasuraAuth, useSendEmailAuth, useFilePermission };
