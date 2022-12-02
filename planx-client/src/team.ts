@@ -12,7 +12,6 @@ export async function createTeam(
     homepage: string;
   }
 ) {
-  // create team record
   const { data, errors } = await request(
     `mutation CreateTeam ($name: String!, $slug: String!, $theme: jsonb!, $settings: jsonb!, $notify_personalisation: jsonb!) {
         insert_teams_one(object: {

@@ -8,12 +8,14 @@
     "moduleResolution": "node",
     "noImplicitAny": true,
     "resolveJsonModule": true,
-    "rootDir": ".",
+    "rootDir": "./src",
     "skipLibCheck": true,
     "strict": true,
     "target": "es2021",
     "typeRoots": ["./node_modules/@types", "./@types"],
-    "noEmit": true
+    "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "./types"
   },
   "exclude": ["node_modules", "./dist/**/*"]
 }

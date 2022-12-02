@@ -26,7 +26,7 @@ export default class Client {
     primaryColor: string;
     homepage: string;
   }) {
-    const slug = slugify(args.name);
+    const slug = args.slug ? args.slug : slugify(args.name);
     return team.createTeam(this.request, { ...args, slug });
   }
 
