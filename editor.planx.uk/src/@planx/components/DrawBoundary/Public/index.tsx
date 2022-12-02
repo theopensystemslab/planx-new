@@ -133,8 +133,7 @@ export default function Component(props: Props) {
             <my-map
               id="draw-boundary-map"
               drawMode
-              drawPointer="dot"
-              // drawPointer="crosshair"
+              drawPointer="crosshair"
               drawGeojsonData={JSON.stringify(boundary)}
               zoom={20}
               maxZoom={23}
