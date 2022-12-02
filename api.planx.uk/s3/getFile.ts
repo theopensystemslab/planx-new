@@ -22,6 +22,7 @@ export const getFileFromS3 = async (fileId: string) => {
       Expires: file.Expires,
       "Last-Modified": file.LastModified,
       ETag: file.ETag,
+      "cross-origin-resource-policy": "cross-site",
     },
   };
 };

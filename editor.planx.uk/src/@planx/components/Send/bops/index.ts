@@ -155,13 +155,22 @@ export const makePayload = (
             } catch (err) {
               return [JSON.stringify(bc.data)];
             }
+          case TYPES.ContactInput:
+            try {
+              // skip returning internal _contact data object, just return main key values
+              const contactObject = Object.values(bc.data!).filter(
+                (x) => typeof x === "string"
+              );
+              return [Object.values(contactObject).join(" ")];
+            } catch (err) {
+              return [JSON.stringify(bc.data)];
+            }
           case TYPES.DateInput:
           case TYPES.NumberInput:
           case TYPES.TextInput:
             return Object.values(bc.data ?? {}).map((x) => String(x));
           case TYPES.Checklist:
           case TYPES.Statement:
-          case TYPES.ContactInput:
           default:
             return bc.answers ?? [];
         }

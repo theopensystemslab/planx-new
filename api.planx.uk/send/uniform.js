@@ -7,8 +7,8 @@ import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
-import { getFileFromS3 } from "../s3/getFile";
 import { adminGraphQLClient } from "../hasura";
+import { getFileFromS3 } from "../s3/getFile";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
 
@@ -210,12 +210,10 @@ export async function createZip({
     for (let file of files) {
       // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
       // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
-      const s3SplittedPath = file.split("/").slice(-2);
-
       // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-      const uniqueFilename = s3SplittedPath.join("-");
+      const uniqueFilename = decodeURIComponent(file.split("/").slice(-2).join("-"));
       const filePath = path.join(tmpDir, uniqueFilename);
-      await downloadFile(s3SplittedPath.join("/"), filePath, zip);
+      await downloadFile(file, filePath, zip);
     }
   }
 
@@ -419,13 +417,17 @@ async function retrieveSubmission(token, submissionId) {
 /**
  * Helper method to locally download S3 files, add them to the zip, then clean them up
  *
- * @param {string} filePath - s3 `path/key` to file
+ * @param {string} url - our file URL, eg api.planx.uk/file/private/path/key
  * @param {string} path - file name for download
  * @param {string} folder - AdmZip archive
  */
-const downloadFile = async (filePath, path, folder) => {
-  const { body } = await getFileFromS3(filePath);
-
+const downloadFile = async (url, path, folder) => {
+    // Files are stored decoded on S3, but encoded in our passport, ensure the key matches S3 before fetching it
+  const s3Key = url.split("/").slice(-2).join("/");
+  const decodedS3Key = decodeURIComponent(s3Key);
+  
+  const { body } = await getFileFromS3(decodedS3Key);
+  
   fs.writeFileSync(path, body);
 
   folder.addLocalFile(path);

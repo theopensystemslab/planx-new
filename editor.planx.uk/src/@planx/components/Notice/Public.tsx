@@ -8,6 +8,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";
+import { getContrastTextColor } from "styleUtils";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 export type Props = PublicProps<Notice>;
@@ -53,7 +54,8 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     fontWeight: 400,
     margin: `${theme.spacing(2)} 0 0 0`,
     "& a": {
-      color: "inherit",
+      color: (props) =>
+        getContrastTextColor(props.color, theme.palette.primary.main),
     },
   },
 }));

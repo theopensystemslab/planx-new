@@ -62,8 +62,10 @@ export function makeXmlString({
 
   const userUploadedFiles: string[] = [];
   files?.forEach((file) => {
-    // Must match the unique filename in api.planx.uk/send.js
-    const uniqueFilename = file.split("/").slice(-2).join("-");
+    // We download and add the unique decoded filename to the zip in api.planx.uk/send/uniform, so ensure the schema filename matches
+    const uniqueFilename = decodeURIComponent(
+      file.split("/").slice(-2).join("-")
+    );
     userUploadedFiles.push(`
       <common:FileAttachment>
         <common:FileName>${escape(uniqueFilename)}</common:FileName>

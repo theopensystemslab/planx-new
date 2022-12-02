@@ -127,6 +127,15 @@ export const fromHtml = (htmlString: string) => {
 
 const initialUrlValue = "https://";
 
+// Makes sure that if the user pastes a full URL into the input, the pre-populated `https://` is removed
+// e.g. https://https://something.com -> https://something.com
+const trimUrlValue = (url: string) => {
+  if (url.startsWith(`${initialUrlValue}${initialUrlValue}`)) {
+    return url.slice(initialUrlValue.length);
+  }
+  return url;
+};
+
 const getContentHierarchyError = (doc: JSONContent): string | null => {
   let h1Index: number = -1;
   let h2Index: number = -1;
@@ -358,7 +367,7 @@ const RichTextInput: FC<Props> = (props) => {
                   (prev) =>
                     prev && {
                       ...prev,
-                      draft: ev.target.value,
+                      draft: trimUrlValue(ev.target.value),
                     }
                 );
               }}

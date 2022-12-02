@@ -312,9 +312,7 @@ function Dropzone(props: any) {
               className={classes.progress}
               width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
               role="progressbar"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={progress}
+              aria-valuenow={progress * 100 || 0}
             />
             <Box className={classes.filePreview}>
               {file instanceof File && file?.type?.includes("image") ? (

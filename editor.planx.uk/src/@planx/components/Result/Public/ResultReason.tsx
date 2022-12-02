@@ -2,7 +2,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
-import ButtonBase from "@mui/material/ButtonBase";
+import Link from "@mui/material/Link";
 import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
@@ -39,10 +39,9 @@ const useClasses = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(2),
     color: theme.palette.text.primary,
   },
-  changeButton: {
+  changeLink: {
     marginLeft: theme.spacing(2),
     marginBottom: theme.spacing(0.5),
-    textDecoration: "underline",
   },
   removeTopBorder: {
     "&:before": {
@@ -138,8 +137,9 @@ const ResultReason: React.FC<IResultReason> = ({
       </Accordion>
       <Box>
         {showChangeButton && (
-          <ButtonBase
-            className={classes.changeButton}
+          <Link
+            className={classes.changeLink}
+            component="button"
             onClick={(event) => {
               event.stopPropagation();
               changeAnswer(id);
@@ -149,7 +149,7 @@ const ResultReason: React.FC<IResultReason> = ({
             <span style={visuallyHidden}>
               your response to {question.data.text || "this question"}
             </span>
-          </ButtonBase>
+          </Link>
         )}
       </Box>
     </Box>

@@ -39,7 +39,7 @@ const AnalyticsDisabledBanner: React.FC = () => {
             <Typography variant="body2">
               <b>Analytics off</b> This is a preview link for testing. No usage
               data is being recorded.{"  "}
-              <Link href={enableAnalytics()} underline="hover">
+              <Link href={enableAnalytics()} color="inherit">
                 Go to normal link
               </Link>
             </Typography>
