@@ -13,7 +13,7 @@ export const uploadPublicFile = async (
   const { params, key, fileType } = generateFileParams(file, filename);
 
   await s3.putObject(params).promise();
-  const fileUrl = await buildFileUrl(key, "public")
+  const fileUrl = buildFileUrl(key, "public")
 
   return {
     file_type: fileType,
@@ -34,7 +34,7 @@ export const uploadPrivateFile = async (
   };
 
   await s3.putObject(params).promise();
-  const fileUrl = await buildFileUrl(key, "private")
+  const fileUrl = buildFileUrl(key, "private")
 
   return {
     file_type: fileType,
@@ -43,9 +43,10 @@ export const uploadPrivateFile = async (
 };
 
 // Construct an API URL for the uploaded file
-const buildFileUrl = async (key: string, path: "public" | "private") => {
+const buildFileUrl = (key: string, path: "public" | "private") => {
   const s3 = s3Factory();
-  const s3Url = await new URL(s3.getSignedUrl('getObject', { Key: key }));
+  const s3Url = new URL(s3.getSignedUrl('getObject', { Key: key }));
+  // URL.pathname has a leading "/"
   const fileUrl = `${process.env.API_URL_EXT}/file/${path}${s3Url.pathname}`
   return fileUrl;
 };

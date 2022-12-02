@@ -34,11 +34,6 @@ jest.mock("aws-sdk/clients/s3", () => {
   })
 });
 
-jest.mock("nanoid", () => ({
-  ...(jest.requireActual("nanoid")),
-  customAlphabet: jest.fn(() => () => "nanoid")
-}))
-
 describe("File upload", () => {
   beforeEach(() => {
     jest.clearAllMocks()
