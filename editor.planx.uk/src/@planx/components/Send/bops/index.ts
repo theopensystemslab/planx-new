@@ -26,6 +26,7 @@ import {
 } from "../model";
 
 export const bopsDictionary = {
+  // applicant or agent details provided via TextInput(s) or ContactInput component
   applicant_first_name: "applicant.name.first",
   applicant_last_name: "applicant.name.last",
   applicant_phone: "applicant.phone.primary",
@@ -70,6 +71,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.NumberInput:
     case TYPES.Statement:
     case TYPES.TextInput:
+    case TYPES.ContactInput:
       return true;
 
     default:
@@ -150,6 +152,16 @@ export const makePayload = (
                 (x) => x.postcode
               );
               return [Object.values(addressObject).join(", ")];
+            } catch (err) {
+              return [JSON.stringify(bc.data)];
+            }
+          case TYPES.ContactInput:
+            try {
+              // skip returning internal _contact data object, just return main key values
+              const contactObject = Object.values(bc.data!).filter(
+                (x) => typeof x === "string"
+              );
+              return [Object.values(contactObject).join(" ")];
             } catch (err) {
               return [JSON.stringify(bc.data)];
             }

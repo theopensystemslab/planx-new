@@ -49,6 +49,7 @@ const components: {
   [TYPES.AddressInput]: AddressInput,
   [TYPES.Calculate]: undefined,
   [TYPES.Checklist]: Checklist,
+  [TYPES.ContactInput]: ContactInput,
   [TYPES.Content]: undefined,
   [TYPES.Confirmation]: undefined,
   [TYPES.DateInput]: DateInput,
@@ -315,6 +316,31 @@ function AddressInput(props: ComponentProps) {
             {country}
           </>
         ) : null}
+      </dd>
+    </>
+  );
+}
+
+function ContactInput(props: ComponentProps) {
+  const fn = props?.node?.data?.fn;
+  const { title, firstName, lastName, organisation, phone, email } =
+    props.userData?.data?.[`_contact.${fn}`]?.[fn];
+
+  return (
+    <>
+      <dt>{props.node.data.title ?? "Contact"}</dt>
+      <dd>
+        {[title, firstName, lastName].filter(Boolean).join(" ").trim()}
+        <br />
+        {organisation ? (
+          <>
+            {organisation}
+            <br />
+          </>
+        ) : null}
+        {phone}
+        <br />
+        {email}
       </dd>
     </>
   );

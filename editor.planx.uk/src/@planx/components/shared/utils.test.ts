@@ -18,8 +18,10 @@ describe("useStagingUrlIfTestApplication()", () => {
   test("doesn't replace URL if not a test user", () => {
     const url = useStagingUrlIfTestApplication({
       data: {
-        "applicant.name.first": "Regular",
-        "applicant.name.last": "User",
+        applicant: {
+          "name.first": "Regular",
+          "name.last": "User",
+        },
       },
     })("https://api.editor.planx.uk/pay");
 

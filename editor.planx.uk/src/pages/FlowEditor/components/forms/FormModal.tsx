@@ -57,6 +57,7 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.NumberInput}>Number Input</option>
         <option value={TYPES.DateInput}>Date Input</option>
         <option value={TYPES.AddressInput}>Address Input</option>
+        <option value={TYPES.ContactInput}>Contact Input</option>
       </optgroup>
       <optgroup label="Information">
         <option value={TYPES.TaskList}>Task List</option>

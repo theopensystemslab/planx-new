@@ -376,6 +376,85 @@ describe("Applicant address", () => {
   });
 });
 
+describe("Applicant contact details", () => {
+  const sessionId = "123";
+  const files: string[] = [];
+
+  const applicantKey: string = "portaloneapp:Proposal.portaloneapp:Applicant";
+  const expectedApplicant = {
+    "common:PersonName": {
+      "pdt:PersonNameTitle": "Mme",
+      "pdt:PersonGivenName": "Jane",
+      "pdt:PersonFamilyName": "Doe",
+    },
+    "common:OrgName": "DLUHC",
+    "common:ContactDetails": {
+      "common:Email": {
+        "apd:EmailAddress": "jane@gov.uk",
+      },
+      "common:Telephone": {
+        "apd:TelNationalNumber": 123456789,
+      },
+    },
+  };
+
+  it("should populate the Applicant when TextInput components are used", () => {
+    const passport: Store.passport = {
+      data: {
+        "applicant.title": "Mme",
+        "applicant.name.first": "Jane",
+        "applicant.name.last": "Doe",
+        "applicant.company.name": "DLUHC",
+        "applicant.phone.primary": "0123456789",
+        "applicant.email": "jane@gov.uk",
+      },
+    };
+
+    const xml = makeXmlString({
+      passport,
+      sessionId,
+      files,
+      hasBoundary: false,
+    });
+    let result = parser.parse(xml);
+    const resultApplicant = get(result, applicantKey);
+    expect(resultApplicant).toMatchObject(expectedApplicant);
+  });
+
+  it("should populate the Applicant when a ContactInput component is used", () => {
+    const passport: Store.passport = {
+      data: {
+        "_contact.applicant": {
+          applicant: {
+            title: "Mme",
+            firstName: "Jane",
+            lastName: "Doe",
+            organisation: "Local planning authority",
+            phone: "0123456789",
+            email: "jane@gov.uk",
+          },
+        },
+        "applicant.title": "Mme",
+        "applicant.name.first": "Jane",
+        "applicant.name.last": "Doe",
+        "applicant.company.name": "DLUHC",
+        "applicant.phone.primary": "0123456789",
+        "applicant.email": "jane@gov.uk",
+      },
+    };
+
+    const xml = makeXmlString({
+      passport,
+      sessionId,
+      files,
+      hasBoundary: false,
+    });
+    let result = parser.parse(xml);
+    const resultApplicant = get(result, applicantKey);
+    expect(resultApplicant).toMatchObject(expectedApplicant);
+  });
+});
+
 describe("file handling", () => {
   const sessionId = "123";
   const files: string[] = [];
