@@ -148,6 +148,7 @@ export default function Component(props: Props) {
               showMarker
               markerLatitude={Number(passport?.data?._address?.latitude)}
               markerLongitude={Number(passport?.data?._address?.longitude)}
+              resetControlImage="trash"
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
             {!props.hideFileUpload && (
