@@ -21,6 +21,13 @@ import {
  */
 export type PlanXAppTypes = "ldc.existing" | "ldc.proposed";
 
+interface UniformPayloadRequiredArgs {
+  sessionId: string;
+  passport: Store.passport;
+  files: string[];
+  hasBoundary: boolean;
+}
+
 export class UniformPayload implements IUniformPayload {
   sessionId: string;
   passport: Store.passport;
@@ -32,12 +39,12 @@ export class UniformPayload implements IUniformPayload {
 
   "portaloneapp:Proposal": Proposal;
 
-  constructor(
-    sessionId: string,
-    passport: Store.passport,
-    files: string[],
-    hasBoundary: boolean
-  ) {
+  constructor({
+    sessionId,
+    passport,
+    files,
+    hasBoundary,
+  }: UniformPayloadRequiredArgs) {
     this.sessionId = sessionId;
     this.passport = passport;
     this.files = files;

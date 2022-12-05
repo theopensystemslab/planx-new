@@ -1,4 +1,3 @@
-import { UploadFileResponse } from "api/upload";
 import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
@@ -59,14 +58,18 @@ export function getUniformParams(
   };
 }
 
-// TODO: object args
 export function makeXmlString(
   passport: Store.passport,
   sessionId: string,
   files: string[],
-  hasBoundary: boolean,
+  hasBoundary: boolean
 ): string {
-  const payload = new UniformPayload(sessionId, passport, files, hasBoundary);
+  const payload = new UniformPayload({
+    sessionId,
+    passport,
+    files,
+    hasBoundary,
+  });
   const xml = payload.buildXML();
   return xml;
 }
