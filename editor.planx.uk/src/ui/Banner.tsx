@@ -1,15 +1,24 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import classnames from "classnames";
 import React from "react";
+import { getContrastTextColor } from "styleUtils";
 
-const useClasses = makeStyles((theme) => ({
+const useClasses = makeStyles<Theme, BannerProps>((theme) => ({
   root: {
     position: "relative",
     width: "100%",
     minHeight: theme.spacing(10),
+    "& a": {
+      color: (props) =>
+        getContrastTextColor(
+          props.color?.background || theme.palette.background.paper,
+          theme.palette.primary.main
+        ),
+    },
   },
   defaultColor: {
     backgroundColor: theme.palette.background.paper,
@@ -22,14 +31,16 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-function Banner(props: {
-  heading: string;
+interface BannerProps {
+  heading?: string;
   Icon?: any;
   iconTitle?: string;
   color?: { background: string; text: string };
   children?: React.ReactNode;
-}) {
-  const classes = useClasses();
+}
+
+function Banner(props: BannerProps) {
+  const classes = useClasses(props);
 
   return (
     <Box
@@ -46,7 +57,7 @@ function Banner(props: {
         {props.Icon && (
           <props.Icon className={classes.icon} titleAccess={props.iconTitle} />
         )}
-        <Typography variant="h1">{props.heading}</Typography>
+        {props.heading && <Typography variant="h1">{props.heading}</Typography>}
         {props.children}
       </Container>
     </Box>

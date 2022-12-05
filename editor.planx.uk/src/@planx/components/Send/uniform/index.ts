@@ -51,7 +51,12 @@ export function getUniformParams(
 
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString({ passport, sessionId, files: uniqueFiles, hasBoundary }),
+    xml: makeXmlString({
+      passport,
+      sessionId,
+      files: uniqueFiles,
+      hasBoundary,
+    }),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
     geojson: geoJSONBoundary,
     files: uniqueFiles,

@@ -7,6 +7,7 @@ import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
+import { generateDocumentReviewStream } from "./documentReview";
 import { adminGraphQLClient } from "../hasura";
 import { getFileFromS3 } from "../s3/getFile";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
@@ -220,7 +221,6 @@ export async function createZip({
   // build a CSV, write it to the tmp directory, add it to the zip
   const csvPath = path.join(tmpDir, "application.csv");
   const csvFile = fs.createWriteStream(csvPath);
-
   const csvStream = stringify(csv, {
     columns: ["question", "responses", "metadata"],
     header: true,
@@ -232,24 +232,38 @@ export async function createZip({
   zip.addLocalFile(csvPath);
   deleteFile(csvPath);
 
-  // build an optional GeoJSON file for validators
-  if (geojson) {
-    const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-    zip.addFile("boundary.geojson", geoBuff);
-  }
   // build the XML file from a string, write it locally, add it to the zip
   //   must be named "proposal.xml" to be processed by Uniform
   const xmlPath = "proposal.xml";
   const xmlFile = fs.createWriteStream(xmlPath);
-
   const xmlStream = str(stringXml.trim()).pipe(xmlFile);
   await new Promise((resolve, reject) => {
     xmlStream.on("error", reject);
     xmlStream.on("finish", resolve);
   });
-
   zip.addLocalFile(xmlPath);
   deleteFile(xmlPath);
+
+  // build an HTML Document Viewer
+  const docViewPath = path.join(tmpDir, "review.html");
+  const docViewFile = fs.createWriteStream(docViewPath);
+  const docViewStream = generateDocumentReviewStream({
+    csv,
+    files,
+    geojson,
+  }).pipe(docViewFile);
+  await new Promise((resolve, reject) => {
+    docViewStream.on("error", reject);
+    docViewStream.on("finish", resolve);
+  });
+  zip.addLocalFile(docViewPath);
+  deleteFile(docViewPath);
+
+  // build an optional GeoJSON file for validators
+  if (geojson) {
+    const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
+    zip.addFile("boundary.geojson", geoBuff);
+  }
 
   // generate & save zip locally
   const zipName = `ripa-test-${sessionId}.zip`;
@@ -422,12 +436,12 @@ async function retrieveSubmission(token, submissionId) {
  * @param {string} folder - AdmZip archive
  */
 const downloadFile = async (url, path, folder) => {
-    // Files are stored decoded on S3, but encoded in our passport, ensure the key matches S3 before fetching it
+  // Files are stored decoded on S3, but encoded in our passport, ensure the key matches S3 before fetching it
   const s3Key = url.split("/").slice(-2).join("/");
   const decodedS3Key = decodeURIComponent(s3Key);
-  
+
   const { body } = await getFileFromS3(decodedS3Key);
-  
+
   fs.writeFileSync(path, body);
 
   folder.addLocalFile(path);

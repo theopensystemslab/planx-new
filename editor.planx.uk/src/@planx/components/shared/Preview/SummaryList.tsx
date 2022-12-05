@@ -1,4 +1,3 @@
-import ButtonBase from "@mui/material/ButtonBase";
 import Link from "@mui/material/Link";
 import makeStyles from "@mui/styles/makeStyles";
 import { visuallyHidden } from "@mui/utils";
@@ -40,14 +39,7 @@ const useStyles = makeStyles((theme) => ({
     "& >:nth-child(3n+3)": {
       // right column
       textAlign: "right",
-      "& a": {
-        textDecoration: "underline",
-        cursor: "pointer",
-      },
     },
-  },
-  button: {
-    textDecoration: "underline",
   },
 }));
 
@@ -57,6 +49,7 @@ const components: {
   [TYPES.AddressInput]: AddressInput,
   [TYPES.Calculate]: undefined,
   [TYPES.Checklist]: Checklist,
+  [TYPES.ContactInput]: ContactInput,
   [TYPES.Content]: undefined,
   [TYPES.Confirmation]: undefined,
   [TYPES.DateInput]: DateInput,
@@ -92,7 +85,7 @@ interface SummaryListProps {
 // For applicable component types, display a list of their question & answers with a "change" link
 //  ref https://design-system.service.gov.uk/components/summary-list/
 function SummaryList(props: SummaryListProps) {
-  const { grid, button } = useStyles();
+  const { grid } = useStyles();
 
   const handleClick = (nodeId: string) => {
     props.changeAnswer(nodeId);
@@ -124,15 +117,15 @@ function SummaryList(props: SummaryListProps) {
                 />
                 {props.showChangeButton ? (
                   <dd>
-                    <ButtonBase
-                      className={button}
+                    <Link
                       onClick={() => handleClick(nodeId)}
+                      component="button"
                     >
                       Change
                       <span style={visuallyHidden}>
                         {node.data?.title || node.data?.text || "this answer"}
                       </span>
-                    </ButtonBase>
+                    </Link>
                   </dd>
                 ) : (
                   <dd>
@@ -323,6 +316,31 @@ function AddressInput(props: ComponentProps) {
             {country}
           </>
         ) : null}
+      </dd>
+    </>
+  );
+}
+
+function ContactInput(props: ComponentProps) {
+  const fn = props?.node?.data?.fn;
+  const { title, firstName, lastName, organisation, phone, email } =
+    props.userData?.data?.[`_contact.${fn}`]?.[fn];
+
+  return (
+    <>
+      <dt>{props.node.data.title ?? "Contact"}</dt>
+      <dd>
+        {[title, firstName, lastName].filter(Boolean).join(" ").trim()}
+        <br />
+        {organisation ? (
+          <>
+            {organisation}
+            <br />
+          </>
+        ) : null}
+        {phone}
+        <br />
+        {email}
       </dd>
     </>
   );

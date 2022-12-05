@@ -1,10 +1,9 @@
 import Warning from "@mui/icons-material/WarningOutlined";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
-import { useTheme } from "@mui/material/styles";
+import Link from "@mui/material/Link";
+import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import FeedbackInput from "@planx/components/shared/FeedbackInput";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
@@ -39,25 +38,14 @@ interface Response {
   hidden: boolean;
 }
 
-const useClasses = makeStyles((theme) => ({
-  readMore: {
-    color: theme.palette.text.primary,
-    textDecoration: "underline",
-  },
-  disclaimerContent: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    color: theme.palette.text.primary,
-  },
-  disclaimerHeading: {
-    marginRight: theme.spacing(1),
-    color: theme.palette.text.primary,
-  },
-  button: {
-    color: theme.palette.text.primary,
-    padding: theme.spacing(0.5),
-  },
+const DisclaimerContent = styled(Typography)(({ theme }) => ({
+  marginTop: theme.spacing(1),
+  marginBottom: theme.spacing(1),
 }));
+
+const DisclaimerHeading = styled(Typography)(({ theme }) => ({
+  marginRight: theme.spacing(1),
+})) as typeof Typography;
 
 const Responses = ({
   responses,
@@ -124,7 +112,6 @@ const Result: React.FC<Props> = ({
     Boolean(handleSubmit)
   );
 
-  const classes = useClasses();
   const theme = useTheme();
 
   useEffect(() => {
@@ -176,33 +163,28 @@ const Result: React.FC<Props> = ({
             <Warning titleAccess="Warning" color="primary" />
             <Box ml={1}>
               <Box display="flex" alignItems="center">
-                <Typography
+                <DisclaimerHeading
                   variant="h6"
                   component="h3"
-                  color="inherit"
-                  className={classes.disclaimerHeading}
+                  color="text.primary"
                 >
                   {disclaimer.heading}
-                </Typography>
-                <Button
-                  className={classes.button}
+                </DisclaimerHeading>
+                <Link
+                  component="button"
                   onClick={() =>
                     setShowDisclaimer((showDisclaimer) => !showDisclaimer)
                   }
                 >
-                  <Typography variant="body2" className={classes.readMore}>
+                  <Typography variant="body2">
                     Read {showDisclaimer ? "less" : "more"}
                   </Typography>
-                </Button>
+                </Link>
               </Box>
               <Collapse in={showDisclaimer}>
-                <Typography
-                  variant="body2"
-                  color="inherit"
-                  className={classes.disclaimerContent}
-                >
+                <DisclaimerContent variant="body2" color="text.primary">
                   {disclaimer.content}
-                </Typography>
+                </DisclaimerContent>
               </Collapse>
             </Box>
           </Box>

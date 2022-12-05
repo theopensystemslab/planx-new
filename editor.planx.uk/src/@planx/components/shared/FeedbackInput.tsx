@@ -1,4 +1,5 @@
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/styles";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import CollapsibleInput from "ui/CollapsibleInput";
@@ -9,10 +10,16 @@ interface Props {
   text: string;
 }
 
+const StyledReactMarkdown = styled(ReactMarkdown)(() => ({
+  "& p": {
+    margin: 0,
+  },
+}));
+
 const FeedbackInput: React.FC<Props> = ({ text, ...componentProps }: Props) => (
   <CollapsibleInput {...componentProps} name="feedback">
     <Typography variant="body2" color="inherit" component="div">
-      <ReactMarkdown>{text}</ReactMarkdown>
+      <StyledReactMarkdown>{text}</StyledReactMarkdown>
     </Typography>
   </CollapsibleInput>
 );
