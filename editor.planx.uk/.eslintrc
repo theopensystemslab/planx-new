@@ -1,7 +1,16 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["simple-import-sort", "jsx-a11y", "testing-library"],
-  "extends": ["plugin:jsx-a11y/recommended", "plugin:testing-library/react"],
+  "plugins": [
+    "simple-import-sort",
+    "jsx-a11y",
+    "testing-library",
+    "jest"
+  ],
+  "extends": [
+    "plugin:jsx-a11y/recommended",
+    "plugin:testing-library/react",
+    "plugin:jest/recommended"
+  ],
   "rules": {
     "simple-import-sort/imports": "warn",
     "simple-import-sort/exports": "warn",
