@@ -56,7 +56,7 @@ describe("error handling", () => {
         },
         a: {},
       })
-    ).toThrowError("id not found");
+    ).toThrow("id not found");
   });
 
   test("invalid toParent", () => {
@@ -67,7 +67,7 @@ describe("error handling", () => {
         },
         a: {},
       })
-    ).toThrowError("toParent not found");
+    ).toThrow("toParent not found");
   });
 
   test("invalid toBefore", () => {
@@ -79,7 +79,7 @@ describe("error handling", () => {
         a: {},
         b: {},
       })
-    ).toThrowError("toBefore does not exist in toParent");
+    ).toThrow("toBefore does not exist in toParent");
   });
 
   test("cannot create cycles", () => {
@@ -93,7 +93,7 @@ describe("error handling", () => {
         },
         b: {},
       })
-    ).toThrowError("cycle");
+    ).toThrow("cycle");
   });
 
   test("cannot share same parent", () => {
@@ -104,6 +104,6 @@ describe("error handling", () => {
         },
         a: {},
       })
-    ).toThrowError("same parent");
+    ).toThrow("same parent");
   });
 });

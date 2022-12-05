@@ -105,7 +105,7 @@ const testScenarios = {
 describe("BOPS files[*].applicant_description", () => {
   Object.entries(testScenarios).forEach(
     ([name, { expected, breadcrumbs: testScenarioBreadcrumbs }]) => {
-      test(name, () => {
+      test(`${name}`, () => {
         const { resetPreview, computePassport, sessionId } = getState();
 
         // Set the store's state for the test scenario

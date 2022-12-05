@@ -1,4 +1,3 @@
-import { screen } from "@testing-library/react";
 import * as axios from "axios";
 import React from "react";
 import { axe, setup } from "testUtils";
@@ -18,15 +17,6 @@ jest.spyOn(axios, "default").mockImplementation((url: any) => {
 });
 
 it.todo("renders correctly");
-// it.todo("renders correctly", async () => {
-//   const { user } = setup(
-//     <SendComponent
-//       title="Send"
-//       destinations={[Destination.BOPS, Destination.Uniform]}
-//     />
-//   );
-//   expect(screen.getByTestId("delayed-loading-indicator")).toBeInTheDocument();
-// });
 
 it.todo("sets :localAuthority API param correctly based on team or passport");
 
