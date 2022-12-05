@@ -335,7 +335,7 @@ describe("File download", () => {
     await supertest(app)
       .get("/file/public/somekey/file_name.txt")
       .expect(200)
-      .then(res => {
+      .then(() => {
         expect(mockGetObject).toHaveBeenCalledTimes(1);
       })
   });

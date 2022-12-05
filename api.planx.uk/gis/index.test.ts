@@ -23,15 +23,12 @@ describe("locationSearchWithTimeout", () => {
   test("an immediate timeout", async () => {
     const timeout = 500;
     const localAuthority = "braintree";
-    try {
-      await locationSearchWithTimeout(
+    const promise = locationSearchWithTimeout(
         localAuthority,
         { x: 50, y: 50, siteBoundary: "[]" },
         timeout
       );
       jest.runAllTimers();
-    } catch (e) {
-      expect(e).toMatch("location search timeout");
-    }
+      await expect(promise).rejects.toEqual("location search timeout");
   });
 });

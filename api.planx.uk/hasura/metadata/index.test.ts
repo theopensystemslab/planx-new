@@ -13,7 +13,7 @@ const mockScheduledEvent: RequiredScheduledEventArgs = {
 
 test("createScheduledEvent returns an error if request fails", async() => {
   mockAxios.post.mockRejectedValue(new Error());
-  await expect(createScheduledEvent(mockScheduledEvent)).rejects.toThrowError();
+  await expect(createScheduledEvent(mockScheduledEvent)).rejects.toThrow();
 });
 
 test("createScheduledEvent returns response data on success", async() => {
