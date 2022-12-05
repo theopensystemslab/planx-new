@@ -67,6 +67,7 @@ const commonExtensions = [
   Text,
   Bold,
   Italic,
+  HardBreak,
   Link.configure({
     openOnClick: false,
     autolink: false,
@@ -228,7 +229,6 @@ const RichTextInput: FC<Props> = (props) => {
         },
         suggestion,
       }),
-      HardBreak,
       ExtensionPlaceholder.configure({
         placeholder: props.placeholder || "",
       }),
