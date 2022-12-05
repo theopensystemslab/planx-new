@@ -4,12 +4,11 @@ import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
-
-import theme from "../theme";
+import { defaultTheme } from "theme";
 
 // The `PaletteOptions` exported by Material-UI are expressed as an interface,
 // so this gets us a union type
-type PaletteOption = keyof typeof theme.palette;
+type PaletteOption = keyof typeof defaultTheme.palette;
 
 const metadata: Meta = {
   title: "Design System/Palette",
@@ -71,7 +70,7 @@ const ColorGrid: React.FC<{ option: PaletteOption }> = (props) => {
 };
 
 export const Index = () => {
-  const options = Object.keys(theme.palette) as PaletteOption[];
+  const options = Object.keys(defaultTheme.palette) as PaletteOption[];
   return (
     <>
       {options.map((option, i) => (
