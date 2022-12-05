@@ -32,7 +32,12 @@ export class UniformPayload implements IUniformPayload {
 
   "portaloneapp:Proposal": Proposal;
 
-  constructor(sessionId: string, passport: Store.passport, files: string[], hasBoundary: boolean) {
+  constructor(
+    sessionId: string,
+    passport: Store.passport,
+    files: string[],
+    hasBoundary: boolean
+  ) {
     this.sessionId = sessionId;
     this.passport = passport;
     this.files = files;
@@ -57,7 +62,7 @@ export class UniformPayload implements IUniformPayload {
       },
       "portaloneapp:FileAttachments": {
         "common:FileAttachment": [
-          ...this.getRequiredFiles(),
+          ...this.getGeneratedFiles(),
           ...this.getUserUploadedFiles(),
         ],
       },
@@ -236,8 +241,7 @@ export class UniformPayload implements IUniformPayload {
     "_xmlns:common": "http://www.govtalk.gov.uk/planning/OneAppCommon-2006",
   });
 
-  // TODO: check func naming conventions here
-  private getRequiredFiles = (): FileAttachment[] => {
+  private getGeneratedFiles = (): FileAttachment[] => {
     // TODO: Test if "N10049" is a required value. Schema suggests that it isn't.
     const files = [
       {
@@ -249,14 +253,18 @@ export class UniformPayload implements IUniformPayload {
         "common:FileName": "application.csv",
         "common:Reference": "Other",
       },
+      {
+        "common:FileName": "review.html",
+        "common:Reference": "Other",
+      },
     ];
-    if (this.hasBoundary) files.push({
-      "common:FileName": "boundary.geojson",
-      "common:Reference": "Other",
-    })
+    if (this.hasBoundary)
+      files.push({
+        "common:FileName": "boundary.geojson",
+        "common:Reference": "Other",
+      });
     return files;
-  }
-  
+  };
 
   private getUserUploadedFiles = (): FileAttachment[] =>
     this.files.map((file) => {
