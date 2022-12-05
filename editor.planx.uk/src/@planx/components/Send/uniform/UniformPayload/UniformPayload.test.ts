@@ -43,7 +43,7 @@ describe("correctly sets planx sessionId as the Uniform reference number", () =>
     ).buildXML();
     const expectedRefNum: String = "1234-abcdef-567-ghijklm";
 
-    let result = parser.parse(xml);
+    const result = parser.parse(xml);
     const resultRefNum =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:RefNum"
@@ -76,7 +76,7 @@ describe("correctly sets proposal completion date", () => {
     ).buildXML();
     const expectedCompletionDate: String = "2022-01-01";
 
-    let result = parser.parse(xml);
+    const result = parser.parse(xml);
     const resultCompletionDate =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:DateSubmitted"
@@ -97,7 +97,7 @@ describe("correctly sets proposal completion date", () => {
     ).buildXML();
     const expectedCompletionDate: String = formattedNow;
 
-    let result = parser.parse(xml);
+    const result = parser.parse(xml);
     const resultCompletionDate =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:DateSubmitted"
@@ -134,7 +134,7 @@ describe("correctly sets payment details", () => {
       "common:Currency": "GBP",
     };
 
-    let result = parser.parse(xml);
+    const result = parser.parse(xml);
     const resultPayment =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:Payment"
@@ -160,7 +160,7 @@ describe("correctly sets payment details", () => {
       "common:Currency": "GBP",
     };
 
-    let result = parser.parse(xml);
+    const result = parser.parse(xml);
     const resultPayment =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:Payment"
@@ -413,7 +413,7 @@ describe("Applicant address", () => {
       files,
       hasBoundary
     ).buildXML();
-    let result = parser.parse(xml);
+    const result = parser.parse(xml);
     const expectedAddress = {
       "common:InternationalAddress": {
         "apd:IntAddressLine": [4, "Privet Drive", "Little Whinging", "Surrey"],
@@ -438,7 +438,7 @@ describe("Applicant address", () => {
       files,
       hasBoundary
     ).buildXML();
-    let result = parser.parse(xml);
+    const result = parser.parse(xml);
     const expectedAddress = {
       "common:InternationalAddress": {
         "apd:IntAddressLine": [
@@ -458,6 +458,7 @@ describe("Applicant address", () => {
 describe("Applicant contact details", () => {
   const sessionId = "123";
   const files: string[] = [];
+  const hasBoundary = false;
 
   const applicantKey: string = "portaloneapp:Proposal.portaloneapp:Applicant";
   const expectedApplicant = {
@@ -489,13 +490,13 @@ describe("Applicant contact details", () => {
       },
     };
 
-    const xml = makeXmlString({
-      passport,
+    const xml = new UniformPayload(
       sessionId,
+      passport,
       files,
-      hasBoundary: false,
-    });
-    let result = parser.parse(xml);
+      hasBoundary
+    ).buildXML();
+    const result = parser.parse(xml);
     const resultApplicant = get(result, applicantKey);
     expect(resultApplicant).toMatchObject(expectedApplicant);
   });
@@ -522,13 +523,13 @@ describe("Applicant contact details", () => {
       },
     };
 
-    const xml = makeXmlString({
-      passport,
+    const xml = new UniformPayload(
       sessionId,
+      passport,
       files,
-      hasBoundary: false,
-    });
-    let result = parser.parse(xml);
+      hasBoundary
+    ).buildXML();
+    const result = parser.parse(xml);
     const resultApplicant = get(result, applicantKey);
     expect(resultApplicant).toMatchObject(expectedApplicant);
   });
@@ -562,7 +563,7 @@ describe("file handling", () => {
     ).buildXML();
     const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
-    let result = parser.parse(xml);
+    const result = parser.parse(xml);
     const fileAttachments = get(result, fileAttachmentsKey);
     expect(fileAttachments).toEqual(
       expect.arrayContaining(expectedFileDeclarations)
@@ -574,15 +575,15 @@ describe("file handling", () => {
       "common:FileName": "review.html",
       "common:Reference": "Other",
     };
-    const xmlString = makeXmlString({
-      passport,
+    const xml = new UniformPayload(
       sessionId,
+      passport,
       files,
-      hasBoundary: false,
-    });
-    const isValid = XMLValidator.validate(xmlString);
+      hasBoundary
+    ).buildXML();
+    const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
-    let result = parser.parse(xmlString);
+    const result = parser.parse(xml);
     const fileAttachments = get(result, fileAttachmentsKey);
     expect(fileAttachments).toEqual(
       expect.arrayContaining([expectedReviewFileDeclaration])
@@ -603,7 +604,7 @@ describe("file handling", () => {
     ).buildXML();
     const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
-    let result = parser.parse(xml);
+    const result = parser.parse(xml);
     const fileAttachments = get(result, fileAttachmentsKey);
     expect(fileAttachments).toEqual(
       expect.arrayContaining([expectedBoundaryFileDeclaration])
@@ -623,7 +624,7 @@ describe("file handling", () => {
     ).buildXML();
     const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
-    let result = parser.parse(xml);
+    const result = parser.parse(xml);
     const fileAttachments = get(result, fileAttachmentsKey);
     expect(fileAttachments).not.toEqual(
       expect.arrayContaining([expectedBoundaryFileDeclaration])
