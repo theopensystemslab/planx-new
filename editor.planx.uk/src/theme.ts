@@ -8,6 +8,7 @@ import {
 import createPalette, {
   PaletteOptions,
 } from "@mui/material/styles/createPalette";
+import { deepmerge } from "@mui/utils";
 
 const GOVUK_YELLOW = "#FFDD00";
 
@@ -73,12 +74,12 @@ export const linkStyle = (primaryColor?: string) => ({
 });
 
 const getThemeOptions = (primaryColor: string): ThemeOptions => {
-  const palette = createPalette({
-    ...DEFAULT_PALETTE,
+  const teamPalette: Partial<PaletteOptions> = {
     primary: {
       main: primaryColor,
     },
-  });
+  };
+  const palette = createPalette(deepmerge(DEFAULT_PALETTE, teamPalette));
 
   const themeOptions: ThemeOptions = {
     typography: {
