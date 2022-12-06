@@ -36,7 +36,7 @@ const validateSession = async (
           removedBreadcrumbs: null,
           reconciledSessionData: sessionData.data,
         };
-        await createAuditEntry(sessionId, responseData);
+        await createAuditEntry(sessionId, responseData, true);
         return res.status(200).json(responseData);
       }
 
@@ -111,7 +111,7 @@ const validateSession = async (
             removedBreadcrumbs,
             reconciledSessionData,
           };
-          await createAuditEntry(sessionId, responseData);
+          await createAuditEntry(sessionId, responseData, false);
           return res.status(200).json(responseData);
         }
       } else {
@@ -121,7 +121,7 @@ const validateSession = async (
           removedBreadcrumbs: null,
           reconciledSessionData: sessionData.data,
         };
-        await createAuditEntry(sessionId, responseData);
+        await createAuditEntry(sessionId, responseData, false);
         return res.status(200).json(responseData);
       }
     } else {
@@ -181,13 +181,15 @@ const updateLowcalSessionData = async (
 const createAuditEntry = async (
   sessionId: string,
   data: any,
+  reconciliationSkipped: boolean,
 ) => {
   return await adminClient.request(
     gql`
-      mutation InsertReconciliationRequests($session_id: String = "", $response: jsonb = {}) {
+      mutation InsertReconciliationRequests($session_id: String = "", $response: jsonb = {}, $reconciliation_skipped: boolean = false) {
         insert_reconciliation_requests_one(object: {
           session_id: $session_id,
           response: $response,
+          reconciliation_skipped: $reconciliation_skipped,
         }) {
           id
         }
@@ -196,6 +198,7 @@ const createAuditEntry = async (
     {
       session_id: sessionId,
       response: data,
+      reconciliation_skipped: reconciliationSkipped,
     }
   );
 };
