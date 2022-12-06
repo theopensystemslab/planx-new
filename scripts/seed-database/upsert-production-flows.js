@@ -1,7 +1,26 @@
-import _ from "lodash";
 import { gql, GraphQLClient } from "graphql-request";
-import pThrottle from 'p-throttle';
-const args = process.argv.slice(2);
+import pLimit from 'p-limit';
+import meow from 'meow';
+
+const DEFAULT_LIMIT = 10;
+
+const cli = meow(`
+	Options
+	  --overwrite, -o  Overwrites existing flows and teams
+    --limit, -l      Rate limit for published flows insertion (Default: ${DEFAULT_LIMIT})
+`, {
+  importMeta: import.meta,
+  flags: {
+    overwrite: {
+      type: 'boolean',
+      alias: 'o',
+    },
+    limit: {
+      type: 'number',
+      alias: 'l'
+    }
+  }
+});
 
 const PRODUCTION_GRAPHQL_URL = 'https://hasura.editor.planx.uk/v1/graphql';
 const LOCAL_GRAPHQL_URL = process.env.HASURA_GRAPHQL_URL;
@@ -16,7 +35,8 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
       },
     });
 
-    const shouldOverwrite = args?.includes('-o') || args?.includes('--overwrite');
+    const shouldOverwrite = cli.flags.overwrite;
+    const rateLimit = cli.flags.limit || DEFAULT_LIMIT;
 
     if (!shouldOverwrite) {
       const { flows: localFlows } = await localClient.request(gql`
@@ -85,11 +105,11 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
 
     console.log('Fetching published flows...');
     // throttling is needed to prevent errors when fetching a large amount of data
-    const throttledSync = pThrottle({ limit: 10, interval: 5000 })(
-      syncPublishedFlow(productionClient, localClient)
-    );
+    const limit = pLimit(rateLimit);
+    const rateLimitedSync = (flowId) =>
+      limit(() => syncPublishedFlow(productionClient, localClient, flowId));
 
-    await Promise.all(productionFlows.map(async flow => throttledSync(flow.id)));
+    await Promise.all(productionFlows.map(async flow => rateLimitedSync(flow.id)));
 
     console.log("Production flows and teams inserted successfully.");
   } catch (err) {
@@ -149,8 +169,10 @@ const insertFlowsMutation = gql`
   }
 `;
 
-const syncPublishedFlow = (productionClient, localClient) => async (flowId) => {
+const syncPublishedFlow = async (productionClient, localClient, flowId) => {
   const publishedFlows = await publishedFlowsByFlowIdQuery(flowId, productionClient);
+
+  console.log(`Inserting ${publishedFlows.length} published flows for flow id ${flowId}`);
 
   await Promise.all(publishedFlows.map(
     async publishedFlow => insertPublishedFlowMutation(

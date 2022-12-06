@@ -8,7 +8,6 @@ import { stringify } from "csv-stringify";
 import express, {
   CookieOptions,
   ErrorRequestHandler,
-  NextFunction,
   Response,
 } from "express";
 import { expressjwt, Request } from "express-jwt";
@@ -43,7 +42,7 @@ import {
   sendSaveAndReturnEmail,
 } from "./saveAndReturn";
 import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
-import { useHasuraAuth, useSendEmailAuth } from "./auth";
+import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -271,14 +270,6 @@ const useJWT = expressjwt({
     req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1] ??
     req.query?.token,
 });
-
-assert(process.env.FILE_API_KEY, "Missing environment variable 'FILE_API_KEY'");
-const useFilePermission = (req: Request, res: Response, next: NextFunction) => {
-  if (req.headers["api-key"] !== process.env.FILE_API_KEY) {
-    return next({ status: 403, message: "forbidden" });
-  }
-  return next();
-};
 
 if (process.env.NODE_ENV !== "test") {
   app.use(

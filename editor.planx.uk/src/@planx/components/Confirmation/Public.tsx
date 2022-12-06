@@ -24,7 +24,7 @@ const useClasses = makeStyles((theme) => ({
         border: "none",
       },
       "& td": {
-        padding: `${theme.spacing(1.5)} ${theme.spacing(1)}`,
+        padding: theme.spacing(1.5, 1),
       },
     },
   },
