@@ -2,7 +2,7 @@ CREATE TABLE "public"."reconciliation_requests" (
   "id" serial NOT NULL, 
   "session_id" text, 
   "response" jsonb, 
-  "reconciliation_skipped" boolean NOT NULL DEFAULT FALSE, 
+  "message" text, 
   "created_at" timestamptz NOT NULL DEFAULT now(), 
   PRIMARY KEY ("id") , UNIQUE ("id")
 );

@@ -9,7 +9,7 @@ import {
 } from "./utils";
 import { Breadcrumb, LowCalSession, Node } from "../types";
 
-const client = publicGraphQLClient;
+const publicClient = publicGraphQLClient;
 const adminClient = adminGraphQLClient;
 
 const validateSession = async (
@@ -36,7 +36,7 @@ const validateSession = async (
           removedBreadcrumbs: null,
           reconciledSessionData: sessionData.data,
         };
-        await createAuditEntry(sessionId, responseData, true);
+        await createAuditEntry(sessionId, responseData, responseData.message);
         return res.status(200).json(responseData);
       }
 
@@ -111,7 +111,7 @@ const validateSession = async (
             removedBreadcrumbs,
             reconciledSessionData,
           };
-          await createAuditEntry(sessionId, responseData, false);
+          await createAuditEntry(sessionId, responseData, responseData.message);
           return res.status(200).json(responseData);
         }
       } else {
@@ -121,7 +121,7 @@ const validateSession = async (
           removedBreadcrumbs: null,
           reconciledSessionData: sessionData.data,
         };
-        await createAuditEntry(sessionId, responseData, false);
+        await createAuditEntry(sessionId, responseData, responseData.message);
         return res.status(200).json(responseData);
       }
     } else {
@@ -151,7 +151,7 @@ const findSession = async (
     }
   `;
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
-  const response = await client.request(query, null, headers);
+  const response = await publicClient.request(query, null, headers);
   return response.lowcal_sessions?.[0];
 };
 
@@ -174,22 +174,22 @@ const updateLowcalSessionData = async (
     }
   `;
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
-  const response = await client.request(query, { sessionId, data }, headers);
+  const response = await publicClient.request(query, { sessionId, data }, headers);
   return response.update_lowcal_sessions_by_pk?.data;
 };
 
 const createAuditEntry = async (
   sessionId: string,
   data: any,
-  reconciliationSkipped: boolean,
+  message: string,
 ) => {
   return await adminClient.request(
     gql`
-      mutation InsertReconciliationRequests($session_id: String = "", $response: jsonb = {}, $reconciliation_skipped: Boolean = false) {
+      mutation InsertReconciliationRequests($session_id: String = "", $response: jsonb = {}, $message: String = "") {
         insert_reconciliation_requests_one(object: {
           session_id: $session_id,
           response: $response,
-          reconciliation_skipped: $reconciliation_skipped,
+          message: $message,
         }) {
           id
         }
@@ -198,7 +198,7 @@ const createAuditEntry = async (
     {
       session_id: sessionId,
       response: data,
-      reconciliation_skipped: reconciliationSkipped,
+      message: message,
     }
   );
 };
