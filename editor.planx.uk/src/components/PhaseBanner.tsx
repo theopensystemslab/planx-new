@@ -13,7 +13,7 @@ const useClasses = makeStyles((theme: Theme) => ({
     display: "flex",
     justifyContent: "start",
     [theme.breakpoints.up("sm")]: {
-      padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+      padding: theme.spacing(1, 2),
     },
   },
   betaIcon: {

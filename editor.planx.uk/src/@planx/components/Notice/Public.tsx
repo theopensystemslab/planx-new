@@ -52,7 +52,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   description: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: 400,
-    margin: `${theme.spacing(2)} 0 0 0`,
+    margin: theme.spacing(2, 0, 0, 0),
     "& a": {
       color: (props) =>
         getContrastTextColor(props.color, theme.palette.primary.main),
