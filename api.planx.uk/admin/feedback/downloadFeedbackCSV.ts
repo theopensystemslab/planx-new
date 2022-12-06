@@ -101,11 +101,16 @@ const fetchFeedback = async (cookie: string): Promise<Feedback[]> => {
   }
 };
 
+const generateMetadata = (feedback: ParsedFeedback): ParsedFeedback => {
+  // Transform metadata into kv pairs
+  feedback.metadata?.forEach(({ key, value }) => feedback[key] = value)
+  // Drop redundant raw metadata
+  delete feedback.metadata;
+  return feedback;
+};
+
 export const parseFeedback = (feedback: Feedback[]): ParsedFeedback[] => {
   const parsedFeedback: ParsedFeedback[] = [...feedback];
-  return parsedFeedback.map(item => {
-    item.metadata?.forEach(({ key, value }) => item[key] = value);
-    delete item.metadata;
-    return item;
-  })
+  parsedFeedback.map(generateMetadata);
+  return parsedFeedback
 };
