@@ -1,14 +1,42 @@
 import {
   createTheme,
   responsiveFontSizes,
+  Theme,
   ThemeOptions,
 } from "@mui/material/styles";
 // eslint-disable-next-line no-restricted-imports
-import createPalette from "@mui/material/styles/createPalette";
-
-import { TeamTheme } from "./types";
+import createPalette, {
+  PaletteOptions,
+} from "@mui/material/styles/createPalette";
+import { deepmerge } from "@mui/utils";
 
 const GOVUK_YELLOW = "#FFDD00";
+
+const DEFAULT_PRIMARY_COLOR = "#000661";
+
+const DEFAULT_PALETTE: Partial<PaletteOptions> = {
+  primary: {
+    main: DEFAULT_PRIMARY_COLOR,
+    contrastText: "#fff",
+  },
+  background: {
+    default: "#fff",
+    paper: "#f2f2f2",
+  },
+  secondary: {
+    main: "#EFEFEF",
+  },
+  text: {
+    secondary: "rgba(0,0,0,0.6)",
+  },
+  action: {
+    selected: "#F8F8F8",
+    focus: GOVUK_YELLOW,
+  },
+  error: {
+    main: "#E91B0C",
+  },
+};
 
 // GOVUK Focus style
 // https://design-system.service.gov.uk/get-started/focus-states/
@@ -45,35 +73,13 @@ export const linkStyle = (primaryColor?: string) => ({
   "&:focus-visible": focusStyle,
 });
 
-/**
- * Get Global theme options
- * The global theme is used in editor, and as the base theme in Preview/Unpublished which can be
- * merged with Team specific options
- */
-export const getGlobalThemeOptions = (): ThemeOptions => {
-  const palette = createPalette({
+const getThemeOptions = (primaryColor: string): ThemeOptions => {
+  const teamPalette: Partial<PaletteOptions> = {
     primary: {
-      main: "#000661",
-      contrastText: "#fff",
+      main: primaryColor,
     },
-    background: {
-      default: "#fff",
-      paper: "#f2f2f2",
-    },
-    secondary: {
-      main: "#EFEFEF",
-    },
-    text: {
-      secondary: "rgba(0,0,0,0.6)",
-    },
-    action: {
-      selected: "#F8F8F8",
-      focus: GOVUK_YELLOW,
-    },
-    error: {
-      main: "#E91B0C",
-    },
-  });
+  };
+  const palette = createPalette(deepmerge(DEFAULT_PALETTE, teamPalette));
 
   const themeOptions: ThemeOptions = {
     typography: {
@@ -205,6 +211,7 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
       MuiLink: {
         styleOverrides: {
           root: {
+            ...linkStyle(palette.primary.main),
             "&:disabled": {
               color: palette.text.disabled,
               cursor: "default",
@@ -219,33 +226,16 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
   return themeOptions;
 };
 
-/**
- * Get team specific theme options
- * Pass in TeamTheme to customise the palette and associated overrides
- * Rules here will only apply in the Preview and Unpublished routes
- */
-export const getTeamThemeOptions = (
-  theme: TeamTheme | undefined
-): ThemeOptions => {
-  const primary = theme?.primary || "#2c2c2c";
-  return {
-    palette: {
-      primary: {
-        main: primary,
-      },
-    },
-    components: {
-      MuiLink: {
-        styleOverrides: {
-          root: {
-            ...linkStyle(theme?.primary),
-          },
-        },
-      },
-    },
-  };
+// Generate a MUI theme based on a team's primary color
+const generateTeamTheme = (
+  primaryColor: string = DEFAULT_PRIMARY_COLOR
+): Theme => {
+  const themeOptions = getThemeOptions(primaryColor);
+  const theme = responsiveFontSizes(createTheme(themeOptions));
+  return theme;
 };
 
-const globalTheme = createTheme(getGlobalThemeOptions());
+// A static MUI theme based on PlanX's default palette
+const defaultTheme = generateTeamTheme(DEFAULT_PRIMARY_COLOR);
 
-export default responsiveFontSizes(globalTheme);
+export { defaultTheme, generateTeamTheme };

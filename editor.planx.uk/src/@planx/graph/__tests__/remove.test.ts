@@ -57,7 +57,7 @@ describe("error handling", () => {
   test("invalid id", () => {
     expect(() => {
       remove("b", "_root")();
-    }).toThrowError("id not found");
+    }).toThrow("id not found");
   });
 
   test("invalid parent", () => {
@@ -71,6 +71,6 @@ describe("error handling", () => {
         },
         a: {},
       });
-    }).toThrowError("parent not found");
+    }).toThrow("parent not found");
   });
 });

@@ -130,9 +130,9 @@ test("date fields have a max length set", async () => {
   const month = screen.getByPlaceholderText("MM") as HTMLInputElement;
   const year = screen.getByPlaceholderText("YYYY") as HTMLInputElement;
 
-  expect(day.maxLength === 2);
-  expect(month.maxLength === 2);
-  expect(year.maxLength === 4);
+  expect(day.maxLength).toBe(2);
+  expect(month.maxLength).toBe(2);
+  expect(year.maxLength).toBe(4);
 });
 
 test("padding on input", () => {

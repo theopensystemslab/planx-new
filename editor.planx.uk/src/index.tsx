@@ -26,7 +26,7 @@ import { ToastContainer } from "react-toastify";
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
-import globalTheme from "./theme";
+import { defaultTheme } from "./theme";
 
 declare module "@mui/styles/defaultTheme" {
   interface DefaultTheme extends Theme {}
@@ -94,7 +94,7 @@ const Layout: React.FC<{
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={globalTheme}>
+      <ThemeProvider theme={defaultTheme}>
         <NotFoundBoundary render={() => <ErrorPage title="Not found" />}>
           {!!isLoading ? (
             <DelayedLoadingIndicator msDelayBeforeVisible={500} />

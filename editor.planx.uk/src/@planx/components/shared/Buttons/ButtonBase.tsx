@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   selected: {
-    backgroundColor: `${theme.palette.primary.main}`,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
   },
 }));

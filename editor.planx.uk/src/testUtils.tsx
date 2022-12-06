@@ -6,7 +6,7 @@ import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import { configureAxe } from "jest-axe";
 import React from "react";
 
-import globalTheme from "../src/theme";
+import { defaultTheme } from "../src/theme";
 
 export const axe = configureAxe({
   rules: {
@@ -25,7 +25,7 @@ export const setup = (
   jsx: JSX.Element
 ): Record<"user", UserEvent> & RenderResult => ({
   user: userEvent.setup(),
-  ...render(<ThemeProvider theme={globalTheme}>{jsx}</ThemeProvider>),
+  ...render(<ThemeProvider theme={defaultTheme}>{jsx}</ThemeProvider>),
 });
 
 /**

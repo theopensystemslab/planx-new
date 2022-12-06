@@ -23,7 +23,7 @@ interface IQuestionHeader {
 }
 const Description = styled(Box)(({ theme }) => ({
   "& p": {
-    margin: `${theme.spacing(1)} 0`,
+    margin: theme.spacing(1, 0),
   },
 }));
 

@@ -69,7 +69,7 @@ export const dateSchema = () => {
     "valid",
     "Enter a valid date in DD.MM.YYYY format",
     (date: string | undefined) => {
-      // test() runs regardless of required status, so don't fail it if it's undefined
+      // test runs regardless of required status, so don't fail it if it's undefined
       return Boolean(!date || isDateValid(date));
     }
   );

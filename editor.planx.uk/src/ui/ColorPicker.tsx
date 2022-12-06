@@ -21,7 +21,7 @@ const useClasses = makeStyles((theme) => ({
   },
   inline: {
     height: 50,
-    padding: `${theme.spacing(2)} 0`,
+    padding: theme.spacing(2, 0),
     "& $popover": {
       top: "calc(100% - 4px)",
     },

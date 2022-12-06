@@ -16,7 +16,7 @@ const useListClasses = makeStyles((theme) => ({
 
 const useItemClasses = makeStyles((theme) => ({
   root: {
-    padding: `${theme.spacing(1)} ${theme.spacing(1.5)}`,
+    padding: theme.spacing(1, 1.5),
   },
   title: {
     alignItems: "flex-start",
