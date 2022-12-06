@@ -13,14 +13,14 @@ In order to support various downstream integrations, we require a set of pattern
 
 Integration patterns should be:
 
-| **Open**          	 | teams should be able to pass session data to any 3rd party platform they choose to integrate with.
-| **Reusable**         | where possible, integrations should be reusable between teams.
-| **Configurable**     | integrations should support team level configuration options.
-| **Low Maintainence** | the design should allow the PlanX team to avoid having to make any changes in response to downstream consumer change.
-| **Adaptable**        | the design should enable the session payload to be enriched over time without requiring downstream consumer changes.
-| **Extensible**       | the design should allow the PlanX team to add global "send" integrations (e.g. send to email).
-| **Flexible**         | the design should support the limited capabilities of legacy 3rd party platforms.
-| **Explicit**         | the design should ensure that any 3rd party data access is always explicitly granted by the editors of each individual service (i.e. via the Send component).
+| **Open**             | teams should be able to pass session data to any 3rd party platform they choose to integrate with.                                                            |
+| **Reusable**         | where possible, integrations should be reusable between teams.                                                                                                |
+| **Configurable**     | integrations should support team level configuration options.                                                                                                 |
+| **Low Maintainence** | the design should allow the PlanX team to avoid having to make any changes in response to downstream consumer change.                                         |
+| **Adaptable**        | the design should enable the session payload to be enriched over time without requiring downstream consumer changes.                                          |
+| **Extensible**       | the design should allow the PlanX team to add global "send" integrations (e.g. send to email).                                                                |
+| **Flexible**         | the design should support the limited capabilities of legacy 3rd party platforms.                                                                             |
+| **Explicit**         | the design should ensure that any 3rd party data access is always explicitly granted by the editors of each individual service (i.e. via the Send component). |
 
 Integrations represent the boundary of PlanX services and allow the platform to focus entirely on service design. As such, designing robust interfaces for this function is critical for ensuring team effort remains focused on the core value proposition of the platform and not on supporting and maintaining a growing number of changing integrations.
 
@@ -67,17 +67,17 @@ sequenceDiagram
 
 **The Webhook Pattern**:
 
-| 1 | A session Event is sent to all configured Webhook URLs which match a configured pattern
-| 2 | The downstream consumers react to the webhook and send a corrosponding API request to the Integrations API using their API Key and Secret Token
-| 3 | The Integrations API responds with the requested session data
+| 1 | A session Event is sent to all configured Webhook URLs which match a configured pattern                                                         |
+| 2 | The downstream consumers react to the webhook and send a corrosponding API request to the Integrations API using their API Key and Secret Token |
+| 3 | The Integrations API responds with the requested session data                                                                                   |
 
 **The Connector Pattern**:
 
-| 4       | A session Event is sent to a connector service (internal to PlanX)
-| 5       | The connector service finds matching connections with their associated credentials and configurations
-| 6       | The connector service uses the appropriate credentials to request session data
-| 7       | The Integration API responds with session data
-| 8 and 9 | The connector service executes a stored function that may transform the data and send the data to a passive consumer.
+| 4       | A session Event is sent to a connector service (internal to PlanX)                                                    |
+| 5       | The connector service finds matching connections with their associated credentials and configurations                 |
+| 6       | The connector service uses the appropriate credentials to request session data                                        |
+| 7       | The Integration API responds with session data                                                                        |
+| 8 and 9 | The connector service executes a stored function that may transform the data and send the data to a passive consumer. |
 
 ### Webhooks
 
@@ -85,10 +85,10 @@ When an end-user accesses a service, their completed session (at the point of th
 
 ```typescript
 const sessionEvent = {
-	id: "64608023-8592-449b-8fa0-00aed82c734c",
-	team: "Open Systems Lab",
-	flow: an-application-flow,
-	paymentID: "d06ab578-c9d9-4bed-b1b3-0dd6245b7efd",
+  id: "64608023-8592-449b-8fa0-00aed82c734c",
+  team: "Open Systems Lab",
+  flow: an-application-flow,
+  paymentID: "d06ab578-c9d9-4bed-b1b3-0dd6245b7efd",
 }
 
 ```
@@ -103,16 +103,15 @@ Session events may optionally have a configuration object that is identical for 
 
 ```typescript
 const sessionEvent = {
-	id: "64608023-8592-449b-8fa0-00aed82c734c",
-	team: "Open Systems Lab",
-	flow: an-application-flow,
-	paymentID: "d06ab578-c9d9-4bed-b1b3-0dd6245b7efd",
-	config: {
-		platformKey: "123",
-		teamKey: "abc",
-	}
+  id: "64608023-8592-449b-8fa0-00aed82c734c",
+  team: "Open Systems Lab",
+  flow: an-application-flow,
+  paymentID: "d06ab578-c9d9-4bed-b1b3-0dd6245b7efd",
+  config: {
+    platformKey: "123",
+    teamKey: "abc",
+  }
 }
-
 ```
 
 #### Pattern Matching
