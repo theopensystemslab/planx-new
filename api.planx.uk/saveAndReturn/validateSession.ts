@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
 import { NextFunction, Request, Response } from "express";
 import * as jsondiffpatch from "jsondiffpatch";
-import { publicGraphQLClient } from "../hasura";
+import { adminGraphQLClient, publicGraphQLClient } from "../hasura";
 import { getMostRecentPublishedFlow, getPublishedFlowByDate } from "../helpers";
 import {
   getSaveAndReturnPublicHeaders,
@@ -10,6 +10,7 @@ import {
 import { Breadcrumb, LowCalSession, Node } from "../types";
 
 const client = publicGraphQLClient;
+const adminClient = adminGraphQLClient;
 
 const validateSession = async (
   req: Request,
@@ -29,12 +30,14 @@ const validateSession = async (
     if (sessionData) {
       // if a user has paid, skip reconciliation steps and return *without* calling updateLowcalSessionData
       if (sessionData.data.govUkPayment?.state?.status === "created") {
-        return res.status(200).json({
+        const responseData = {
           message: "Payment process initiated, skipping reconciliation",
           alteredNodes: null,
           removedBreadcrumbs: null,
           reconciledSessionData: sessionData.data,
-        });
+        };
+        await createAuditEntry(sessionId, responseData);
+        return res.status(200).json(responseData);
       }
 
       // reconcile content changes between the published flow state at point of resuming and when the applicant last left off
@@ -101,21 +104,25 @@ const validateSession = async (
             email
           );
 
-          res.status(200).json({
+          const responseData = {
             message:
               "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
             alteredNodes,
             removedBreadcrumbs,
             reconciledSessionData,
-          });
+          };
+          await createAuditEntry(sessionId, responseData);
+          return res.status(200).json(responseData);
         }
       } else {
-        res.status(200).json({
+        const responseData = {
           message: "No content changes since last save point",
           alteredNodes: null,
           removedBreadcrumbs: null,
           reconciledSessionData: sessionData.data,
-        });
+        };
+        await createAuditEntry(sessionId, responseData);
+        return res.status(200).json(responseData);
       }
     } else {
       return next({
@@ -169,6 +176,28 @@ const updateLowcalSessionData = async (
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
   const response = await client.request(query, { sessionId, data }, headers);
   return response.update_lowcal_sessions_by_pk?.data;
+};
+
+const createAuditEntry = async (
+  sessionId: string,
+  data: any,
+) => {
+  return await adminClient.request(
+    gql`
+      mutation InsertReconciliationRequests($session_id: String = "", $response: jsonb = {}) {
+        insert_reconciliation_requests_one(object: {
+          session_id: $session_id,
+          response: $response,
+        }) {
+          id
+        }
+      }
+    `, 
+    {
+      session_id: sessionId,
+      response: data,
+    }
+  );
 };
 
 export { validateSession };
