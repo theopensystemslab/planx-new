@@ -7,14 +7,13 @@ import DialogContent from "@mui/material/DialogContent";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import React, { useEffect, useState } from "react";
 import { Link as ReactNaviLink } from "react-navi";
 
 const Root = styled("footer")(({ theme }) => ({
   color: theme.palette.common.white,
   backgroundColor: theme.palette.common.black,
-  padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
+  padding: theme.spacing(2, 4),
 }));
 
 const ButtonGroup = styled(Box)(({ theme }) => ({
