@@ -45,6 +45,7 @@ specifiers:
   esbuild-jest: ^0.5.0
   eslint: ^8.26.0
   eslint-config-prettier: ^8.5.0
+  eslint-plugin-jest: ^27.1.6
   express: ^4.18.1
   express-jwt: ^7.7.5
   express-pino-logger: ^7.0.0
@@ -83,7 +84,7 @@ specifiers:
 
 dependencies:
   '@airbrake/node': 2.1.7
-  '@opensystemslab/planx-document-review': github.com/theopensystemslab/planx-document-review/8b1adf0ee9ee4db9bb2810c5ecbdb9fe51ba09b4_ijtjzzzckndhine2hcxl76eshe
+  '@opensystemslab/planx-document-review': github.com/theopensystemslab/planx-document-review/32bb1aaf556b27ef49d48f49ef828e3bf63d7b11_ijtjzzzckndhine2hcxl76eshe
   adm-zip: 0.5.9
   aws-sdk: 2.1180.0
   axios: 0.27.2
@@ -146,6 +147,7 @@ devDependencies:
   esbuild-jest: 0.5.0_esbuild@0.14.49
   eslint: 8.26.0
   eslint-config-prettier: 8.5.0_eslint@8.26.0
+  eslint-plugin-jest: 27.1.6_ynqv6mvh4pxgygspegwy6l2zm4
   graphql-query-test-mock: 0.12.1_nock@13.2.9
   jest: 28.1.3_@types+node@16.18.2
   json-stringify-pretty-compact: 3.0.0
@@ -3355,6 +3357,28 @@ packages:
       eslint: '>=7.0.0'
     dependencies:
       eslint: 8.26.0
+    dev: true
+
+  /eslint-plugin-jest/27.1.6_ynqv6mvh4pxgygspegwy6l2zm4:
+    resolution: {integrity: sha512-XA7RFLSrlQF9IGtAmhddkUkBuICCTuryfOTfCSWcZHiHb69OilIH05oozH2XA6CEOtztnOd0vgXyvxZodkxGjg==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': ^5.0.0
+      eslint: ^7.0.0 || ^8.0.0
+      jest: '*'
+    peerDependenciesMeta:
+      '@typescript-eslint/eslint-plugin':
+        optional: true
+      jest:
+        optional: true
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 5.42.0_rnqigvs2sy7hjbduhyswa7hitq
+      '@typescript-eslint/utils': 5.42.0_t7ph7dpvh7g5bfovntuojbuu4i
+      eslint: 8.26.0
+      jest: 28.1.3_@types+node@16.18.2
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
     dev: true
 
   /eslint-scope/5.1.1:
@@ -6696,6 +6720,7 @@ packages:
 
   /sourcemap-codec/1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
+    deprecated: Please use @jridgewell/sourcemap-codec instead
     dev: false
 
   /split-string/3.1.0:
@@ -7453,9 +7478,9 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/theopensystemslab/planx-document-review/8b1adf0ee9ee4db9bb2810c5ecbdb9fe51ba09b4_ijtjzzzckndhine2hcxl76eshe:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-review/tar.gz/8b1adf0ee9ee4db9bb2810c5ecbdb9fe51ba09b4}
-    id: github.com/theopensystemslab/planx-document-review/8b1adf0ee9ee4db9bb2810c5ecbdb9fe51ba09b4
+  github.com/theopensystemslab/planx-document-review/32bb1aaf556b27ef49d48f49ef828e3bf63d7b11_ijtjzzzckndhine2hcxl76eshe:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-review/tar.gz/32bb1aaf556b27ef49d48f49ef828e3bf63d7b11}
+    id: github.com/theopensystemslab/planx-document-review/32bb1aaf556b27ef49d48f49ef828e3bf63d7b11
     name: '@opensystemslab/planx-document-review'
     version: 1.1.1
     engines: {node: ^16, pnpm: ^7.8.0}

@@ -12,8 +12,8 @@ describe("Create reminder event webhook", () => {
 
   afterEach(() => jest.resetAllMocks());
 
-  it("fails without correct authentication", () => {
-    post(ENDPOINT)
+  it("fails without correct authentication", async () => {
+    await post(ENDPOINT)
       .expect(401)
       .then((response) => {
         expect(response.body).toEqual({
@@ -84,8 +84,8 @@ describe("Create expiry event webhook", () => {
 
   afterEach(() => jest.resetAllMocks());
 
-  it("fails without correct authentication", () => {
-    post(ENDPOINT)
+  it("fails without correct authentication", async() => {
+    await post(ENDPOINT)
       .expect(401)
       .then((response) => {
         expect(response.body).toEqual({

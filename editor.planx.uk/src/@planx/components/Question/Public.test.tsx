@@ -121,30 +121,6 @@ it("should not have any accessibility violations", async () => {
   expect(results).toHaveNoViolations();
 });
 
-it("should not have any accessibility violations", async () => {
-  const handleSubmit = jest.fn();
-  const { container } = setup(
-    <Question
-      text="Best food"
-      responses={[
-        {
-          id: "pizza_id",
-          responseKey: "pizza",
-          title: "Pizza",
-        },
-        {
-          id: "celery_id",
-          responseKey: "celery",
-          title: "Celery",
-        },
-      ]}
-      handleSubmit={handleSubmit}
-    />
-  );
-  const results = await axe(container);
-  expect(results).toHaveNoViolations();
-});
-
 it("renders correctly with responses containing comments", async () => {
   const handleSubmit = jest.fn();
 

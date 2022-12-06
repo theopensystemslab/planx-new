@@ -81,7 +81,7 @@ describe("error handling", () => {
         },
         a: {},
       })
-    ).toThrowError("id not found");
+    ).toThrow("id not found");
   });
 
   test("invalid parent", () => {
@@ -93,7 +93,7 @@ describe("error handling", () => {
         a: {},
         b: {},
       })
-    ).toThrowError("parent not found");
+    ).toThrow("parent not found");
   });
 
   test("invalid toParent", () => {
@@ -104,7 +104,7 @@ describe("error handling", () => {
         },
         a: {},
       })
-    ).toThrowError("toParent not found");
+    ).toThrow("toParent not found");
   });
 
   test("invalid toBefore", () => {
@@ -116,7 +116,7 @@ describe("error handling", () => {
         a: {},
         b: {},
       })
-    ).toThrowError("toBefore does not exist in toParent");
+    ).toThrow("toBefore does not exist in toParent");
   });
 
   test("parent does not connect to id", () => {
@@ -128,7 +128,7 @@ describe("error handling", () => {
         a: {},
         b: {},
       })
-    ).toThrowError("parent does not connect to id");
+    ).toThrow("parent does not connect to id");
   });
 
   test("cannot create cycles", () => {
@@ -142,7 +142,7 @@ describe("error handling", () => {
         },
         b: {},
       })
-    ).toThrowError("cycle");
+    ).toThrow("cycle");
   });
 
   test("cannot move a clone to same parent", () => {
@@ -156,6 +156,6 @@ describe("error handling", () => {
         },
         clone: {},
       })
-    ).toThrowError("same parent");
+    ).toThrow("same parent");
   });
 });

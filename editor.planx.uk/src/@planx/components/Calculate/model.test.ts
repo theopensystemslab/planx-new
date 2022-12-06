@@ -1,5 +1,3 @@
-import assert from "assert";
-
 import * as model from "./model";
 
 describe("getVariables", () => {
@@ -8,21 +6,21 @@ describe("getVariables", () => {
     const actual = getVariables("a+1");
 
     const expected = new Set(["a"]);
-    assert(isSetsEqual(actual, expected));
+    expect(isSetsEqual(actual, expected)).toBe(true);
   });
 
   test("extracts variables with dots", () => {
     const actual = getVariables("a.b+1");
 
     const expected = new Set(["a.b"]);
-    assert(isSetsEqual(actual, expected));
+    expect(isSetsEqual(actual, expected)).toBe(true);
   });
 
   test("ignores native functions", () => {
     const actual = getVariables("sqrt(a)");
 
     const expected = new Set(["a"]);
-    assert(isSetsEqual(actual, expected));
+    expect(isSetsEqual(actual, expected)).toBe(true);
   });
 });
 
@@ -35,7 +33,7 @@ describe("evaluate", () => {
     const actual = evaluate(formula, scope);
 
     const expected = 2;
-    assert.strictEqual(actual, expected);
+    expect(expected).toEqual(actual);
   });
 
   test("calculates variables", () => {
@@ -45,21 +43,21 @@ describe("evaluate", () => {
     const actual = evaluate(formula, scope);
 
     const expected = 2;
-    assert.strictEqual(actual, expected);
+    expect(expected).toEqual(actual);
   });
 
   test("interpolates nested variables", () => {
     const actual = evaluate("a.b.c+1", { "a.b.c": 1 });
 
     const expected = 2;
-    assert.strictEqual(actual, expected);
+    expect(expected).toEqual(actual);
   });
 
   test("works with data fields that have underscore in the name", () => {
     const actual = evaluate("a.b_c.d+1", { "a.b_c.d": 1 });
 
     const expected = 2;
-    assert.strictEqual(actual, expected);
+    expect(expected).toEqual(actual);
   });
 
   test("calculates a more complex example", () => {
@@ -74,21 +72,21 @@ describe("evaluate", () => {
     const actual = evaluate(formula, scope);
 
     const expected = 1.5;
-    assert.strictEqual(actual, expected);
+    expect(expected).toEqual(actual);
   });
 
   test("defaults to default values", () => {
     const actual = evaluate("a+b+c", { a: 5, c: 5 }, { b: 5 });
 
     const expected = 15;
-    assert.strictEqual(actual, expected);
+    expect(expected).toEqual(actual);
   });
 
   test("defaults work with nested variables", () => {
     const actual = evaluate("a.b.c", {}, { "a.b.c": 10 });
 
     const expected = 10;
-    assert.strictEqual(actual, expected);
+    expect(expected).toEqual(actual);
   });
 });
 

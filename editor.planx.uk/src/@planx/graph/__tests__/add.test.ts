@@ -220,17 +220,17 @@ test("with parent, before item", () => {
 
 describe("error handling", () => {
   test("invalid parent", () => {
-    expect(() => add({ id: "c" }, { parent: "x" })()).toThrowError(
+    expect(() => add({ id: "c" }, { parent: "x" })()).toThrow(
       "parent not found"
     );
   });
 
   test("id already exists", () => {
-    expect(() => add({ id: "_root" })()).toThrowError("id exists");
+    expect(() => add({ id: "_root" })()).toThrow("id exists");
 
-    expect(() =>
-      add({ id: "a" })({ _root: { edges: ["a"] }, a: {} })
-    ).toThrowError("id exists");
+    expect(() => add({ id: "a" })({ _root: { edges: ["a"] }, a: {} })).toThrow(
+      "id exists"
+    );
   });
 
   test("invalid before item", () => {
@@ -243,6 +243,6 @@ describe("error handling", () => {
         a: {},
         b: {},
       })
-    ).toThrowError("before not found");
+    ).toThrow("before not found");
   });
 });

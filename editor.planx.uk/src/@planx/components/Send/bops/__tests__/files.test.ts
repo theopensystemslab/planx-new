@@ -222,7 +222,7 @@ describe("It extracts tags for", () => {
   };
 
   Object.entries(data).forEach(([example, { key, tags }]) => {
-    test(example, () => {
+    test(`${example}`, () => {
       expect(extractTagsFromPassportKey(key)).toStrictEqual(tags);
     });
   });

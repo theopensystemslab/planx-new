@@ -402,6 +402,6 @@ describe("error handling", () => {
         },
         a: {},
       })
-    ).toThrowError("id not found");
+    ).toThrow("id not found");
   });
 });
