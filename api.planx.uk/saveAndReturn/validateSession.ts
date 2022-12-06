@@ -185,7 +185,7 @@ const createAuditEntry = async (
 ) => {
   return await adminClient.request(
     gql`
-      mutation InsertReconciliationRequests($session_id: String = "", $response: jsonb = {}, $reconciliation_skipped: boolean = false) {
+      mutation InsertReconciliationRequests($session_id: String = "", $response: jsonb = {}, $reconciliation_skipped: Boolean = false) {
         insert_reconciliation_requests_one(object: {
           session_id: $session_id,
           response: $response,
