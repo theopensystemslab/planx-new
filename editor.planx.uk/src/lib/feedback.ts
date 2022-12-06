@@ -25,9 +25,11 @@ export const submitFeedback = (
 };
 
 export const getFeedbackMetadata = (): Record<string, string> => {
-  const currentCard = useStore.getState().currentCard();
-  const passportData = useStore.getState().computePassport().data;
-  const breadcrumbs = useStore.getState().breadcrumbs;
+  const { currentCard, computePassport, breadcrumbs } = useStore.getState();
+
+  const passportData = computePassport().data;
+  const nodeData = currentCard()?.data;
+
   const [team, service] = window.location.pathname
     .split("/")
     .map((value) => value.replaceAll("-", " "))
@@ -37,8 +39,8 @@ export const getFeedbackMetadata = (): Record<string, string> => {
     address: passportData?._address?.single_line_address,
     uprn: passportData?._address?.uprn,
     "project-type": passportData?.proposal?.projectType,
-    title: currentCard?.data?.title || currentCard?.data?.text,
-    data: JSON.stringify(currentCard?.data),
+    title: nodeData?.title || nodeData.text,
+    data: JSON.stringify(nodeData),
     breadcrumbs: JSON.stringify(breadcrumbs),
     service,
     team,
