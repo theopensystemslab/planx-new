@@ -18,7 +18,7 @@ export const submitFeedback = (
       // FeedbackFish requires that Record<string, string> be passed as metadata
       metadata: {
         ...standardMetadata,
-        componentMetadata: JSON.stringify(componentMetadata),
+        "component-metadata": JSON.stringify(componentMetadata),
       },
     }),
   }).catch((err) => console.error(err));
@@ -39,7 +39,7 @@ export const getFeedbackMetadata = (): Record<string, string> => {
     address: passportData?._address?.single_line_address,
     uprn: passportData?._address?.uprn,
     "project-type": passportData?.proposal?.projectType,
-    title: nodeData?.title || nodeData.text,
+    title: nodeData?.title || nodeData?.text,
     data: JSON.stringify(nodeData),
     breadcrumbs: JSON.stringify(breadcrumbs),
     service,
