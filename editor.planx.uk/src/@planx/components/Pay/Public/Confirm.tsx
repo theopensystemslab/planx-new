@@ -1,15 +1,12 @@
-import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Drawer from "@mui/material/Drawer";
 import FormGroup from "@mui/material/FormGroup";
-import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-import { Theme } from "@mui/material/styles";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
+import MoreInfo from "@planx/components/shared/Preview/MoreInfo";
 import React from "react";
 import Banner from "ui/Banner";
 import ChecklistItem from "ui/ChecklistItem";
@@ -23,18 +20,6 @@ const ErrorSummary = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
   border: `5px solid ${theme.palette.error.main}`,
 }));
-
-const drawerPaperSx = (theme: Theme) => ({
-  boxSizing: "border-box",
-  width: 300,
-  [theme.breakpoints.only("xs")]: {
-    width: "100%",
-  },
-  backgroundColor: theme.palette.background.default,
-  border: 0,
-  boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
-  padding: theme.spacing(2),
-});
 
 interface Props {
   title?: string;
@@ -121,7 +106,6 @@ export default function Confirm(props: Props) {
 }
 
 function SuggestionDrawer() {
-  const theme = useTheme();
   const OTHER_OPTIONS = [
     { name: "Apple", label: "Apple Pay" },
     { name: "BACs", label: "Bank transfer by BACs" },
@@ -137,31 +121,15 @@ function SuggestionDrawer() {
   }>(Object.fromEntries(OTHER_OPTIONS.map(({ name }) => [name, false])));
   const [text, setText] = React.useState("");
 
-  const handleLinkClick = () => {
-    setIsOpen((x) => !x);
-  };
-
   return (
     <>
-      <Link component="button" onClick={handleLinkClick}>
+      <Link component="button" onClick={() => setIsOpen(!isOpen)}>
         <Typography variant="body2">
           Tell us other ways you'd like to pay in the future
         </Typography>
       </Link>
-      <Drawer
-        variant="persistent"
-        anchor="right"
-        open={isOpen}
-        PaperProps={{ sx: drawerPaperSx(theme) }}
-      >
+      <MoreInfo open={isOpen} handleClose={() => setIsOpen(!isOpen)}>
         <Box>
-          <IconButton
-            onClick={() => setIsOpen(false)}
-            aria-label="Close Panel"
-            size="large"
-          >
-            <CloseIcon />
-          </IconButton>
           <p>
             What other types of payment would you like this service to accept in
             the future:
@@ -205,7 +173,7 @@ function SuggestionDrawer() {
             </Link>
           </Box>
         </Box>
-      </Drawer>
+      </MoreInfo>
     </>
   );
 }
