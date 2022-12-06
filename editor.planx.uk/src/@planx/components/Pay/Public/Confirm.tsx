@@ -1,10 +1,8 @@
 import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
 import Drawer from "@mui/material/Drawer";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
@@ -14,6 +12,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 import Banner from "ui/Banner";
+import ChecklistItem from "ui/ChecklistItem";
 import Input from "ui/Input";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
@@ -139,9 +138,9 @@ function SuggestionDrawer() {
   ];
 
   const [isOpen, setIsOpen] = React.useState(false);
-  const [_checkboxes, setCheckboxes] = React.useState(
-    Object.fromEntries(OTHER_OPTIONS.map(({ name }) => [name, false]))
-  );
+  const [checkboxes, setCheckboxes] = React.useState<{
+    [key: string]: boolean;
+  }>(Object.fromEntries(OTHER_OPTIONS.map(({ name }) => [name, false])));
   const [text, setText] = React.useState("");
 
   const classes = useStyles();
@@ -178,19 +177,18 @@ function SuggestionDrawer() {
             the future:
           </p>
           <FormGroup row>
-            {OTHER_OPTIONS.map((p, i) => (
-              <FormControlLabel
-                key={i}
-                control={<Checkbox name={p.name} />}
-                label={p.label}
-                onChange={(event: React.ChangeEvent<{}>) => {
-                  if (event.target) {
-                    setCheckboxes((acc) => ({
-                      ...acc,
-                      [p.name]: (event.target as any).checked,
-                    }));
-                  }
-                }}
+            {OTHER_OPTIONS.map((option) => (
+              <ChecklistItem
+                label={option.label}
+                checked={checkboxes[option.name]}
+                id={option.name}
+                key={option.name}
+                onChange={() =>
+                  setCheckboxes({
+                    ...checkboxes,
+                    [option.name]: !checkboxes[option.name],
+                  })
+                }
               />
             ))}
           </FormGroup>
