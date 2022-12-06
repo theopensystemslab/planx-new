@@ -13,14 +13,14 @@ In order to support various downstream integrations, we require a set of pattern
 
 Integration patterns should be:
 
-	* **Open**          	 - teams should be able to pass session data to any 3rd party platform they choose to integrate with.
-	* **Reusable**         - where possible, integrations should be reusable between teams.
-  * **Configurable**     - integrations should support team level configuration options.
-	* **Low Maintainence** - the design should allow the PlanX team to avoid having to make any changes in response to downstream consumer change.
-	* **Adaptable**        - the design should enable the session payload to be enriched over time without requiring downstream consumer changes.
-	* **Extensible**       - the design should allow the PlanX team to add global "send" integrations (e.g. send to email).
-	* **Flexible**         - the design should support the limited capabilities of legacy 3rd party platforms.
-  * **Explicit**         - the design should ensure that any 3rd party data access is always explicitly granted by the editors of each individual service (i.e. via the Send component).
+| **Open**          	 | teams should be able to pass session data to any 3rd party platform they choose to integrate with.
+| **Reusable**         | where possible, integrations should be reusable between teams.
+| **Configurable**     | integrations should support team level configuration options.
+| **Low Maintainence** | the design should allow the PlanX team to avoid having to make any changes in response to downstream consumer change.
+| **Adaptable**        | the design should enable the session payload to be enriched over time without requiring downstream consumer changes.
+| **Extensible**       | the design should allow the PlanX team to add global "send" integrations (e.g. send to email).
+| **Flexible**         | the design should support the limited capabilities of legacy 3rd party platforms.
+| **Explicit**         | the design should ensure that any 3rd party data access is always explicitly granted by the editors of each individual service (i.e. via the Send component).
 
 Integrations represent the boundary of PlanX services and allow the platform to focus entirely on service design. As such, designing robust interfaces for this function is critical for ensuring team effort remains focused on the core value proposition of the platform and not on supporting and maintaining a growing number of changing integrations.
 
@@ -38,45 +38,46 @@ The flow for each of these patterns can be described in the following sequence d
 
 ```mermaid
 sequenceDiagram
-    autonumber
-    participant Source as Event Source [PlanX]
-    participant API as Integrations API [PlanX]
-    participant Service as Connector Service [PlanX]
-    participant Reactive as Reactive Consumer
-    participant Passive as Passive Consumer
-    alt Webhook pattern where data is pulled
-        rect rgb(200,230,200)
-            Source --)+ Reactive: Session event
-            activate Reactive
-            Reactive ->>- API: Authenticated request
-            activate API
-            API ->>- Reactive: Session data response
-        end
-    else Connector pattern where data is pushed
-        rect rgb(255, 215, 215)
-            Source --)+ Service: Session event
-            Service ->> Service: Find matching targets
-            Service ->>+ API: Authenticated request
-            API ->>- Service: Session data response
-            Service ->> Service: Apply transformations (hosted function)
-            Service ->>- Passive: Session data
-        end
+  autonumber
+  participant Source as Event Source [PlanX]
+  participant API as Integrations API [PlanX]
+  participant Service as Connector Service [PlanX]
+  participant Reactive as Reactive Consumer
+  participant Passive as Passive Consumer
+  alt Webhook pattern where data is pulled
+    rect rgb(200,230,200)
+      Source --)+ Reactive: Session event
+      activate Reactive
+      Reactive ->>- API: Authenticated request
+      activate API
+      API ->>- Reactive: Session data response
+    end
+  else Connector pattern where data is pushed
+    rect rgb(255, 215, 215)
+      Source --)+ Service: Session event
+      Service ->> Service: Find matching targets
+      Service ->>+ API: Authenticated request
+      API ->>- Service: Session data response
+      Service ->> Service: Apply transformations (hosted function)
+      Service ->>- Passive: Session data
+    end
+  end
 ```
 [editable diagram](https://mermaid.live/edit#pako:eNqNVNuO2jAQ_RXLT4s2QblsQsjDSqgXaR8qofLQqqUPJhmI1cROfaGliH_vJISwEWRVSyBfzhmfOePMkWYyB5pSDb8siAzec7ZTrFoLgoNZI4WtNqDO65opwzNeM2HISlqVAWGafNjDdf19WTLx9cctfrF8acAvwgBeYLgUut0bJaxA7fn5hndSCMiMVP3mKOszsMzwfUvr58jXtrqXxZJp3aEv0yGYlYZ8gU0h5U8kGgNKkN8FKCA5M4xwTWpblpCf0c1QqJSo3eYh8DwnCPHneZPrcTM6r1x38tiLTDE3FCAFgcbPIaGFMAM9enjcJ-o-P7uNqylZWFNgGJ4hK0dNWF09FhQJw5OmLm2oW3Ft1gp0jS69UgGicwBKDa_qNWaZLu5bFkUOCfzz3xumdc_gTc8uTwUTueI_cpGTipms4GJHDFM7MHqU9_jfXvaO3SgbMWxU4aKuywMxigm9larqvpSHQurm8q0VWbMzGY3kXh7yUMK9UomcOhRfesV4ji3g2GyvKeZawZqmOM1hy2xp1nQtTght2sHqIDKaGmXBobbGyJeOQdMtw9o7FHKOlf90bittd3EofmvfpLxicE3TI_1DUz8Ip9FsHodRHHi-P_PnDj3QdO5NoyBM5lEQh_HMT5KTQ_-2Ebxpknizp_ApiSIviX3PP_0DFlN6mA)
 
 **The Webhook Pattern**:
 
-	* 1 - A session Event is sent to all configured Webhook URLs which match a configured pattern
-	* 2 - The downstream consumers react to the webhook and send a corrosponding API request to the Integrations API using their API Key and Secret Token
-	* 3 - The Integrations API responds with the requested session data
+| 1 | A session Event is sent to all configured Webhook URLs which match a configured pattern
+| 2 | The downstream consumers react to the webhook and send a corrosponding API request to the Integrations API using their API Key and Secret Token
+| 3 | The Integrations API responds with the requested session data
 
 **The Connector Pattern**:
 
-	* 4       - A session Event is sent to a connector service (internal to PlanX)
-	* 5       - The connector service finds matching connections with their associated credentials and configurations
-	* 6       - The connector service uses the appropriate credentials to request session data
-	* 7       - The Integration API responds with session data
-	* 8 and 9 - The connector service executes a stored function that may transform the data and send the data to a passive consumer.
+| 4       | A session Event is sent to a connector service (internal to PlanX)
+| 5       | The connector service finds matching connections with their associated credentials and configurations
+| 6       | The connector service uses the appropriate credentials to request session data
+| 7       | The Integration API responds with session data
+| 8 and 9 | The connector service executes a stored function that may transform the data and send the data to a passive consumer.
 
 ### Webhooks
 
