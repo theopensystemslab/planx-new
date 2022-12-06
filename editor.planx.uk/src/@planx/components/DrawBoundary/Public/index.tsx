@@ -31,13 +31,17 @@ const MapContainer = styled(Box)<MapContainerProps>(
     width: "100%",
     height: "50vh",
     // Only increase map size in Preview & Unpublished routes
-    [theme.breakpoints.up("md")]:
-      environment === "standalone"
-        ? {
-            height: "70vh",
-            minWidth: "65vw",
-          }
-        : {},
+    ...(environment === "standalone" && {
+      [theme.breakpoints.up("md")]: {
+        height: "70vh",
+      },
+      [theme.breakpoints.up("lg")]: {
+        width: "calc(100% + 200px)",
+      },
+      [theme.breakpoints.up("xl")]: {
+        width: "calc(100% + 400px)",
+      },
+    }),
     "& my-map": {
       width: "100%",
       height: "100%",
