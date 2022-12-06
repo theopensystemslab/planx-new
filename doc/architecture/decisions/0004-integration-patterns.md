@@ -36,7 +36,7 @@ Where downstream consumers cannot support webhooks directly, PlanX can host 3rd 
 
 ### Overview
 
-The flow for each of these patterns can be described in the following sequence diagram where steps 1 to 3 show the **webhook** pattern and steps 4 to 9 show the **webhook** pattern:
+The flow for each of these patterns can be described in the following sequence diagram where steps 1 to 3 show the **webhook** pattern and steps 4 to 9 show the **connector** pattern:
 
 ```mermaid
 sequenceDiagram
