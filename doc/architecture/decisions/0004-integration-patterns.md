@@ -1,7 +1,7 @@
 # Integration Patterns
 
-Status: Draft
-Date: December 2022
+- Status: Draft
+- Date: December 2022
 
 ## Context
 
@@ -36,7 +36,7 @@ Where downstream consumers cannot support webhooks directly, PlanX can host 3rd 
 
 ### Overview
 
-The flow for each of these patterns can be described in the following sequence diagram where steps 1 to 6 show the **connector** pattern and steps 7 to 9 show the **webhook** pattern:
+The flow for each of these patterns can be described in the following sequence diagram where steps 1 to 3 show the **webhook** pattern and steps 4 to 9 show the **webhook** pattern:
 
 ```mermaid
 sequenceDiagram
@@ -234,3 +234,4 @@ sequenceDiagram
   * We need to review the Send component UX for adding integrations into a flow to ensure it can support an arbitary number of integration options
   * The Send component needs to know which integration options to present for a given flow. Perhaps it could only showing valid options for that passport schema.
   * Existing Send implementations should be refactored to use the connector service
+  * The Event Source will need to implement some kind of retry logic and store an event delivery audit log
