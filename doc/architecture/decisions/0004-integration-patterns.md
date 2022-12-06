@@ -13,6 +13,8 @@ In order to support various downstream integrations, we require a set of pattern
 
 Integration patterns should be:
 
+| Characteristic       | Description                                                                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Open**             | teams should be able to pass session data to any 3rd party platform they choose to integrate with.                                                            |
 | **Reusable**         | where possible, integrations should be reusable between teams.                                                                                                |
 | **Configurable**     | integrations should support team level configuration options.                                                                                                 |
@@ -67,12 +69,16 @@ sequenceDiagram
 
 **The Webhook Pattern**:
 
-| 1 | A session Event is sent to all configured Webhook URLs which match a configured pattern                                                         |
-| 2 | The downstream consumers react to the webhook and send a corrosponding API request to the Integrations API using their API Key and Secret Token |
-| 3 | The Integrations API responds with the requested session data                                                                                   |
+| Step | Description                                                                                                                                     |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | A session Event is sent to all configured Webhook URLs which match a configured pattern                                                         |
+| 2    | The downstream consumers react to the webhook and send a corrosponding API request to the Integrations API using their API Key and Secret Token |
+| 3    | The Integrations API responds with the requested session data                                                                                   |
 
 **The Connector Pattern**:
 
+| Step    | Description                                                                                                           |
+| ------- | --------------------------------------------------------------------------------------------------------------------- |
 | 4       | A session Event is sent to a connector service (internal to PlanX)                                                    |
 | 5       | The connector service finds matching connections with their associated credentials and configurations                 |
 | 6       | The connector service uses the appropriate credentials to request session data                                        |
