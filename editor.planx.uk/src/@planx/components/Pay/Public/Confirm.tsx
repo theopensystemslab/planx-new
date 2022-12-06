@@ -6,9 +6,9 @@ import Drawer from "@mui/material/Drawer";
 import FormGroup from "@mui/material/FormGroup";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-import { useTheme } from "@mui/material/styles";
+import { Theme } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 import Banner from "ui/Banner";
@@ -18,29 +18,23 @@ import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& *": {
-      fontFamily: "Inter, sans-serif",
-    },
-  },
-  drawerPaper: {
-    boxSizing: "border-box",
-    width: 300,
-    [theme.breakpoints.only("xs")]: {
-      width: "100%",
-    },
-    backgroundColor: theme.palette.background.default,
-    border: 0,
-    boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
-    padding: theme.spacing(2),
-  },
-  errorSummary: {
-    marginTop: theme.spacing(1),
-    padding: theme.spacing(3),
-    border: `5px solid #E91B0C`,
-  },
+const ErrorSummary = styled(Box)(({ theme }) => ({
+  marginTop: theme.spacing(1),
+  padding: theme.spacing(3),
+  border: `5px solid ${theme.palette.error.main}`,
 }));
+
+const drawerPaperSx = (theme: Theme) => ({
+  boxSizing: "border-box",
+  width: 300,
+  [theme.breakpoints.only("xs")]: {
+    width: "100%",
+  },
+  backgroundColor: theme.palette.background.default,
+  border: 0,
+  boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
+  padding: theme.spacing(2),
+});
 
 interface Props {
   title?: string;
@@ -52,7 +46,6 @@ interface Props {
 }
 
 export default function Confirm(props: Props) {
-  const classes = useStyles();
   const theme = useTheme();
 
   return (
@@ -94,7 +87,7 @@ export default function Confirm(props: Props) {
 
       {!props.error ? (
         <Card>
-          <div className={classes.root}>
+          <Box>
             <Typography variant="h3">How to pay</Typography>
             <Box py={3}>
               <Button
@@ -108,11 +101,11 @@ export default function Confirm(props: Props) {
             </Box>
 
             <SuggestionDrawer />
-          </div>
+          </Box>
         </Card>
       ) : (
         <Card handleSubmit={props.onConfirm} isValid>
-          <div className={classes.errorSummary} role="status">
+          <ErrorSummary role="status">
             <Typography variant="h5" component="h3" gutterBottom>
               {props.error}
             </Typography>
@@ -120,7 +113,7 @@ export default function Confirm(props: Props) {
               Click continue to skip payment and proceed with your application
               for testing.
             </Typography>
-          </div>
+          </ErrorSummary>
         </Card>
       )}
     </Box>
@@ -128,6 +121,7 @@ export default function Confirm(props: Props) {
 }
 
 function SuggestionDrawer() {
+  const theme = useTheme();
   const OTHER_OPTIONS = [
     { name: "Apple", label: "Apple Pay" },
     { name: "BACs", label: "Bank transfer by BACs" },
@@ -142,8 +136,6 @@ function SuggestionDrawer() {
     [key: string]: boolean;
   }>(Object.fromEntries(OTHER_OPTIONS.map(({ name }) => [name, false])));
   const [text, setText] = React.useState("");
-
-  const classes = useStyles();
 
   const handleLinkClick = () => {
     setIsOpen((x) => !x);
@@ -160,11 +152,9 @@ function SuggestionDrawer() {
         variant="persistent"
         anchor="right"
         open={isOpen}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
+        PaperProps={{ sx: drawerPaperSx(theme) }}
       >
-        <div>
+        <Box>
           <IconButton
             onClick={() => setIsOpen(false)}
             aria-label="Close Panel"
@@ -205,12 +195,16 @@ function SuggestionDrawer() {
             }}
             value={text}
           />
-          <p style={{ textAlign: "right" }}>
-            <Link component="button" onClick={() => setIsOpen(false)}>
+          <Box sx={{ textAlign: "right", mt: 2 }}>
+            <Link
+              component="button"
+              variant="body2"
+              onClick={() => setIsOpen(false)}
+            >
               Save
             </Link>
-          </p>
-        </div>
+          </Box>
+        </Box>
       </Drawer>
     </>
   );
