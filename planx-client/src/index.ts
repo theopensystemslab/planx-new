@@ -1,22 +1,25 @@
-import slugify from "lodash.kababcase";
-import { graphQLClient } from "./graphql";
-import { user } from "./user";
-import { team } from "./team";
+import slugify from "lodash.kebabcase";
+import { graphQLClient, Request } from "./graphql";
+import { createUser } from "./user";
+import { createTeam } from "./team";
+import { createFlow, publishFlow } from "./flow";
 
-const defaultURL = `http://localhost:${HASURA_PROXY_PORT}/v1/graphql`;
+const defaultURL = process.env.HASURA_GRAPHQL_URL;
 
 export default class Client {
+  request: Request;
+
   constructor(args: { hasuraSecret: string; targetURL: string | undefined }) {
-    this.url = args.targetURL || defaultURL;
-    this.request = graphQLClient(args.hasuraSecret);
+    const url: string = args.targetURL ? args.targetURL : defaultURL!;
+    this.request = graphQLClient({ url, secret: args.hasuraSecret });
   }
 
   async createUser(args: {
     firstName: string;
     lastName: string;
-    userEmail: string;
+    email: string;
   }) {
-    return user.createUser(this.request, args);
+    return createUser(this.request, args);
   }
 
   async createTeam(args: {
@@ -27,10 +30,14 @@ export default class Client {
     homepage: string;
   }) {
     const slug = args.slug ? args.slug : slugify(args.name);
-    return team.createTeam(this.request, { ...args, slug });
+    return createTeam(this.request, { ...args, slug });
   }
 
-  async createFlow(args: { name: string }) {
-    return team.createTeam(this.request, args);
+  async createFlow(args: { teamId: number; slug: string }) {
+    return createFlow(this.request, args);
+  }
+
+  async publishFlow(args: { flowId: string }) {
+    return publishFlow(this.request, args);
   }
 }

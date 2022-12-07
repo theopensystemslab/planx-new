@@ -2,24 +2,23 @@ import { Request } from "./graphql";
 
 export async function createUser(
   request: Request,
-  args: { firstName: string; lastName: string; userEmail: string }
+  args: { firstName: string; lastName: string; email: string }
 ) {
-  const { data, errors } = await request(
+  const { insert_users_one: response } = await request(
     `mutation CreateUser ($first_name: String!, $last_name: String!, $email: String!) {
         insert_users_one(object: {
           first_name: $first_name, 
           last_name: $last_name, 
           email: $email
         }) {
-          email
+          id
         }
       }`,
     {
       first_name: args.firstName,
       last_name: args.lastName,
-      email: args.userEmail,
+      email: args.email,
     }
   );
-  if (errors) throw new Error("ERROR: createUser", errors);
-  return { ...data.insert_users_one };
+  return response;
 }

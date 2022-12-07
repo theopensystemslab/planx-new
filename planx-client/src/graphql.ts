@@ -1,23 +1,27 @@
 import axios from "axios";
+import log from "./logger";
 
-export async function graphQLClient(args: {
-  url: string;
-  secret: string;
-}): Request {
-  return async (query, variables) => {
-    return await axios({
+export function graphQLClient(args: { url: string; secret: string }): Request {
+  return async (query, variables): Promise<any> => {
+    const response = await axios({
       method: "POST",
       url: args.url,
       headers: {
         "X-Hasura-Admin-Secret": args.secret,
       },
-      responseType: "json",
       data: {
         query,
         variables,
       },
     });
+    const { data, errors } = response.data;
+    if (errors) {
+      log(errors);
+      const messages = errors.map((e: { message: string }) => e.message);
+      throw new Error(messages);
+    }
+    return data;
   };
 }
 
-export type Request = (string, string) => string;
+export type Request = (query: string, variables: object) => Promise<any>;
