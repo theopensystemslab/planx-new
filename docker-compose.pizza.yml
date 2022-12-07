@@ -19,6 +19,9 @@ services:
       virtual.tls: ${TLS_EMAIL}
 
   api:
+    volumes:
+      - "/api/node_modules"
+      - "/api/dist"
     labels:
       virtual.host: api.${ROOT_DOMAIN}
       virtual.port: ${API_PORT}
