@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import {
-  createTheme,
   StyledEngineProvider,
   Theme,
   ThemeProvider,
@@ -10,13 +9,12 @@ import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import ErrorFallback from "components/ErrorFallback";
 import { clearLocalFlow } from "lib/local";
-import { merge } from "lodash";
 import { NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useCurrentRoute } from "react-navi";
-import { getGlobalThemeOptions, getTeamThemeOptions } from "theme";
+import { generateTeamTheme } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
@@ -91,7 +89,6 @@ const PublicFooter: React.FC<{
           All content is available under the{" "}
           <Link
             href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
-            underline="always"
             color="inherit"
             target="_blank"
           >
@@ -141,18 +138,11 @@ const PreviewLayout: React.FC<{
     }
   };
 
-  /**
-   * Generates a MuiTheme by deep merging global and team ThemeOptions
-   */
-  const generatePreviewTheme = (): Theme => {
-    const globalOptions = getGlobalThemeOptions();
-    const teamOptions = getTeamThemeOptions(team.theme);
-    return createTheme(merge(globalOptions, teamOptions));
-  };
+  const teamTheme = generateTeamTheme(team.theme?.primary);
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={generatePreviewTheme}>
+      <ThemeProvider theme={teamTheme}>
         <Header
           team={team}
           handleRestart={handleRestart}

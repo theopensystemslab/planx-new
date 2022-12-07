@@ -138,7 +138,7 @@ describe("validations", () => {
       },
     ];
     for (const scenario of scenarios) {
-      test(scenario.action, async () => {
+      test(`${scenario.action}`, async () => {
         const handleSubmit = jest.fn();
 
         setup(

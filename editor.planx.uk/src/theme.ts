@@ -1,33 +1,65 @@
 import {
   createTheme,
   responsiveFontSizes,
+  Theme,
   ThemeOptions,
 } from "@mui/material/styles";
-
-import { TeamTheme } from "./types";
+// eslint-disable-next-line no-restricted-imports
+import createPalette, {
+  PaletteOptions,
+} from "@mui/material/styles/createPalette";
+import { deepmerge } from "@mui/utils";
 
 const GOVUK_YELLOW = "#FFDD00";
+
+const DEFAULT_PRIMARY_COLOR = "#000661";
+
+const DEFAULT_PALETTE: Partial<PaletteOptions> = {
+  primary: {
+    main: DEFAULT_PRIMARY_COLOR,
+    contrastText: "#fff",
+  },
+  background: {
+    default: "#fff",
+    paper: "#f2f2f2",
+  },
+  secondary: {
+    main: "#EFEFEF",
+  },
+  text: {
+    secondary: "rgba(0,0,0,0.6)",
+  },
+  action: {
+    selected: "#F8F8F8",
+    focus: GOVUK_YELLOW,
+  },
+  error: {
+    main: "#E91B0C",
+  },
+};
 
 // GOVUK Focus style
 // https://design-system.service.gov.uk/get-started/focus-states/
 // https://github.com/alphagov/govuk-frontend/blob/main/src/govuk/helpers/_focused.scss
-export const focusStyle = (focusColour: string = GOVUK_YELLOW) => ({
+export const focusStyle = {
   color: "black",
-  backgroundColor: focusColour,
-  boxShadow: `0 -2px ${focusColour}, 0 4px black`,
+  backgroundColor: GOVUK_YELLOW,
+  boxShadow: `0 -2px ${GOVUK_YELLOW}, 0 4px black`,
   textDecoration: "none",
   outline: "3px solid transparent",
-});
+};
 
 // Ensure that if the element already has a border, the border gets thicker
-export const borderedFocusStyle = (focusColour: string = GOVUK_YELLOW) => ({
-  outline: `3px solid ${focusColour}`,
+export const borderedFocusStyle = {
+  outline: `3px solid ${GOVUK_YELLOW}`,
   outlineOffset: 0,
   zIndex: 1,
   boxShadow: "inset 0 0 0 2px black",
-});
+  backgroundColor: "transparent",
+};
 
-export const linkStyle = {
+export const linkStyle = (primaryColor?: string) => ({
+  color: primaryColor || "inherit",
   textDecoration: "underline",
   textDecorationThickness: "1px",
   textUnderlineOffset: "0.1em",
@@ -38,14 +70,17 @@ export const linkStyle = {
     textDecorationSkipInk: "none", // Chromium, Firefox
     textDecorationSkip: "none", // Safari
   },
-};
+  "&:focus-visible": focusStyle,
+});
 
-/**
- * Get Global theme options
- * The global theme is used in editor, and as the base theme in Preview/Unpublished which can be
- * merged with Team specific options
- */
-export const getGlobalThemeOptions = (): ThemeOptions => {
+const getThemeOptions = (primaryColor: string): ThemeOptions => {
+  const teamPalette: Partial<PaletteOptions> = {
+    primary: {
+      main: primaryColor,
+    },
+  };
+  const palette = createPalette(deepmerge(DEFAULT_PALETTE, teamPalette));
+
   const themeOptions: ThemeOptions = {
     typography: {
       fontFamily: "'Inter', Arial",
@@ -80,29 +115,7 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
         fontSize: 15,
       },
     },
-    palette: {
-      primary: {
-        main: "#000661",
-        contrastText: "#fff",
-      },
-      background: {
-        default: "#fff",
-        paper: "#f2f2f2",
-      },
-      secondary: {
-        main: "#EFEFEF",
-      },
-      text: {
-        secondary: "rgba(0,0,0,0.6)",
-      },
-      action: {
-        selected: "#F8F8F8",
-        focus: GOVUK_YELLOW,
-      },
-      error: {
-        main: "#E91B0C",
-      },
-    },
+    palette,
     breakpoints: {
       values: {
         xs: 0,
@@ -117,95 +130,95 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
         enteringScreen: 400,
       },
     },
-  };
-
-  // Separately setting "components" allows us to refer back to the palette
-  // TODO: This workaround was required for MUI v4, but there might be a better way of achieving this now
-  themeOptions.components = {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          backgroundColor: "#efefef",
-          fontSize: "0.875rem",
-          lineHeight: 1.43,
-          letterSpacing: "0.01071em",
-        },
-      },
-    },
-    MuiButtonBase: {
-      styleOverrides: {
-        root: {
-          fontFamily: "inherit",
-          "&:focus-visible": {
-            ...focusStyle(themeOptions.palette?.action?.focus),
-            // !important is required here as setting disableElevation = true removes boxShadow
-            boxShadow: `0 -2px ${themeOptions.palette?.action?.focus}, 0 4px black !important`,
-            // Hover should not overwrite focus
-            "&:hover": focusStyle(themeOptions.palette?.action?.focus),
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            backgroundColor: "#efefef",
+            fontSize: "0.875rem",
+            lineHeight: 1.43,
+            letterSpacing: "0.01071em",
           },
         },
       },
-    },
-    MuiListItemIcon: {
-      styleOverrides: {
-        root: {
-          color: "inherit",
-        },
-      },
-    },
-    MuiLink: {
-      styleOverrides: {
-        root: {
-          ...linkStyle,
-          "&:focus-visible": focusStyle(themeOptions.palette?.action?.focus),
-        },
-      },
-    },
-    MuiButton: {
-      defaultProps: {
-        // Removes default box shadow on buttons
-        disableElevation: true,
-        disableFocusRipple: true,
-      },
-      styleOverrides: {
-        root: {
-          borderRadius: 0,
-          textTransform: "none",
-        },
-        text: {
-          color: "rgba(0,0,0,0.4)",
-          "&:hover": {
-            color: "rgba(0,0,0,1)",
-          },
-        },
-        containedSizeLarge: {
-          fontWeight: 700,
-        },
-      },
-    },
-    MuiIconButton: {
-      defaultProps: {
-        disableFocusRipple: true,
-      },
-      styleOverrides: {
-        root: {
-          borderRadius: 0,
-          "&:focus-visible": {
-            ...focusStyle(themeOptions.palette?.action?.focus),
-            "& svg, div": {
-              color: "black",
-              borderColor: "black",
-            },
-            "&>*:hover": {
-              backgroundColor: "transparent",
+      MuiButtonBase: {
+        styleOverrides: {
+          root: {
+            fontFamily: "inherit",
+            "&:focus-visible": {
+              ...focusStyle,
+              // !important is required here as setting disableElevation = true removes boxShadow
+              boxShadow: `0 -2px ${GOVUK_YELLOW}, 0 4px black !important`,
+              // Hover should not overwrite focus
+              "&:hover": focusStyle,
             },
           },
         },
       },
-    },
-    MuiPaper: {
-      defaultProps: {
-        elevation: 0,
+      MuiListItemIcon: {
+        styleOverrides: {
+          root: {
+            color: "inherit",
+          },
+        },
+      },
+      MuiButton: {
+        defaultProps: {
+          // Removes default box shadow on buttons
+          disableElevation: true,
+          disableFocusRipple: true,
+        },
+        styleOverrides: {
+          root: {
+            borderRadius: 0,
+            textTransform: "none",
+          },
+          text: {
+            color: "rgba(0,0,0,0.4)",
+            "&:hover": {
+              color: "rgba(0,0,0,1)",
+            },
+          },
+          containedSizeLarge: {
+            fontWeight: 700,
+          },
+        },
+      },
+      MuiIconButton: {
+        defaultProps: {
+          disableFocusRipple: true,
+        },
+        styleOverrides: {
+          root: {
+            borderRadius: 0,
+            "&:focus-visible": {
+              "& svg, div": {
+                color: "black",
+                borderColor: "black",
+              },
+              "&>*:hover": {
+                backgroundColor: "transparent",
+              },
+            },
+          },
+        },
+      },
+      MuiPaper: {
+        defaultProps: {
+          elevation: 0,
+        },
+      },
+      MuiLink: {
+        styleOverrides: {
+          root: {
+            ...linkStyle(palette.primary.main),
+            "&:disabled": {
+              color: palette.text.disabled,
+              cursor: "default",
+              textDecoration: "none",
+            },
+          },
+        },
       },
     },
   };
@@ -213,59 +226,16 @@ export const getGlobalThemeOptions = (): ThemeOptions => {
   return themeOptions;
 };
 
-/**
- * Get team specific theme options
- * Pass in TeamTheme to customise the palette and associated overrides
- * Rules here will only apply in the Preview and Unpublished routes
- */
-export const getTeamThemeOptions = (
-  theme: TeamTheme | undefined
-): ThemeOptions => {
-  const primary = theme?.primary || "#2c2c2c";
-  const focus = theme?.focus || GOVUK_YELLOW;
-  return {
-    palette: {
-      primary: {
-        main: primary,
-      },
-      action: {
-        focus: focus,
-      },
-    },
-    components: {
-      MuiButtonBase: {
-        styleOverrides: {
-          root: {
-            "&:focus-visible": {
-              ...focusStyle(focus),
-              // !important is required here as setting disableElevation = true removes boxShadow
-              boxShadow: `0 -2px ${focus}, 0 4px black !important`,
-              "&:hover": focusStyle(focus),
-            },
-          },
-        },
-      },
-      MuiLink: {
-        styleOverrides: {
-          root: {
-            "&:focus-visible": {
-              backgroundColor: focus,
-              boxShadow: `0 -2px ${focus}, 0 4px black`,
-            },
-          },
-        },
-      },
-      MuiIconButton: {
-        styleOverrides: {
-          root: {
-            "&:focus-visible": focusStyle(focus),
-          },
-        },
-      },
-    },
-  };
+// Generate a MUI theme based on a team's primary color
+const generateTeamTheme = (
+  primaryColor: string = DEFAULT_PRIMARY_COLOR
+): Theme => {
+  const themeOptions = getThemeOptions(primaryColor);
+  const theme = responsiveFontSizes(createTheme(themeOptions));
+  return theme;
 };
 
-const globalTheme = createTheme(getGlobalThemeOptions());
+// A static MUI theme based on PlanX's default palette
+const defaultTheme = generateTeamTheme(DEFAULT_PRIMARY_COLOR);
 
-export default responsiveFontSizes(globalTheme);
+export { defaultTheme, generateTeamTheme };

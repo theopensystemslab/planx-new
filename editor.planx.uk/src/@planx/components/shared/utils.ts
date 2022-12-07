@@ -5,7 +5,8 @@ import { bopsDictionary } from "../Send/bops";
 
 export const validateEmail = (email: string) => {
   // eslint-disable-next-line
-  let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  let regex =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return regex.test(email);
 };
 
@@ -60,24 +61,23 @@ export const makeData = <T>(
  * // otherwise
  * // => "https://api.editor.planx.uk/test"
  */
-export const useStagingUrlIfTestApplication = (passport: Store.passport) => (
-  urlThatMightBeReplaced: string
-) => {
-  if (
-    [
-      passport.data?.[bopsDictionary.applicant_first_name],
-      passport.data?.[bopsDictionary.applicant_last_name],
-    ]
-      .map((x) => String(x).toLowerCase().trim())
-      .join("|") === "test|test"
-  ) {
-    const url = new URL(urlThatMightBeReplaced);
-    url.hostname = url.hostname.replace("planx.uk", "planx.dev");
-    return url.href;
-  }
+export const useStagingUrlIfTestApplication =
+  (passport: Store.passport) => (urlThatMightBeReplaced: string) => {
+    if (
+      [
+        passport.data?.[bopsDictionary.applicant_first_name],
+        passport.data?.[bopsDictionary.applicant_last_name],
+      ]
+        .map((x) => String(x).toLowerCase().trim())
+        .join("|") === "test|test"
+    ) {
+      const url = new URL(urlThatMightBeReplaced);
+      url.hostname = url.hostname.replace("planx.uk", "planx.dev");
+      return url.href;
+    }
 
-  return urlThatMightBeReplaced;
-};
+    return urlThatMightBeReplaced;
+  };
 
 export const getPreviouslySubmittedData = ({
   id,

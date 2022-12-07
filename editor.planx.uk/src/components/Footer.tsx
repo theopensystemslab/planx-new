@@ -1,39 +1,31 @@
 import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import ButtonBase from "@mui/material/ButtonBase";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import Link from "@mui/material/Link";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
-import classnames from "classnames";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-navi";
-import { focusStyle } from "theme";
+import { Link as ReactNaviLink } from "react-navi";
 
-const useClasses = makeStyles((theme) => ({
-  root: {
-    color: theme.palette.common.white,
-    backgroundColor: theme.palette.common.black,
-    padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
+const Root = styled("footer")(({ theme }) => ({
+  color: theme.palette.common.white,
+  backgroundColor: theme.palette.common.black,
+  padding: theme.spacing(2, 4),
+}));
+
+const ButtonGroup = styled(Box)(({ theme }) => ({
+  columnGap: theme.spacing(3),
+  textTransform: "capitalize",
+  display: "flex",
+  flexWrap: "wrap",
+  [theme.breakpoints.up("xs")]: {
+    flexDirection: "column",
   },
-  buttonGroup: {
-    columnGap: theme.spacing(3),
-  },
-  link: {
-    textTransform: "capitalize",
-    color: "inherit",
-    whiteSpace: "nowrap",
-    textDecoration: "underline",
-    "&:hover": {
-      textDecoration: "none",
-    },
-    // Consistently style MuiLink and ReactNavi link components
-    "&:focus-visible": focusStyle(theme.palette.action.focus),
-  },
-  bold: {
-    fontWeight: 800,
+  [theme.breakpoints.up("md")]: {
+    flexDirection: "row",
   },
 }));
 
@@ -51,7 +43,6 @@ export interface Props {
 
 export default function Footer(props: Props) {
   const { items, children } = props;
-  const classes = useClasses();
   const [feedbackPrivacyNoteVisible, setFeedbackPrivacyNoteVisible] =
     useState(false);
 
@@ -93,13 +84,8 @@ export default function Footer(props: Props) {
   };
 
   return (
-    <footer className={classes.root}>
-      <Box
-        display="flex"
-        flexWrap="wrap"
-        flexDirection={{ xs: "column", md: "row" }}
-        className={classes.buttonGroup}
-      >
+    <Root>
+      <ButtonGroup>
         {items
           ?.filter((item) => item.title)
           .map((item) => (
@@ -128,17 +114,15 @@ export default function Footer(props: Props) {
             )}
 
             <FeedbackFish projectId={feedbackFishId}>
-              <ButtonBase>
-                <Typography variant="body2" className={classes.link}>
-                  Feedback
-                </Typography>
-              </ButtonBase>
+              <Link color="inherit" component="button">
+                <Typography variant="body2">Feedback</Typography>
+              </Link>
             </FeedbackFish>
           </>
         )}
-      </Box>
+      </ButtonGroup>
       <Box py={4}>{children}</Box>
-    </footer>
+    </Root>
   );
 }
 
@@ -148,24 +132,26 @@ function FooterItem(props: {
   onClick?: () => void;
   bold?: boolean;
 }) {
-  const classes = useClasses();
-
   const title = (
     <Typography
       variant="body2"
-      className={classnames(classes.link, props.bold && classes.bold)}
+      sx={{ fontWeight: props.bold ? 800 : "regular" }}
     >
       {props.title.toLowerCase()}
     </Typography>
   );
-
   return props.href ? (
-    <Link href={props.href} prefetch={false} className={classes.link}>
+    <Link
+      color="inherit"
+      component={ReactNaviLink}
+      href={props.href}
+      prefetch={false}
+    >
       {title}
     </Link>
   ) : (
-    <ButtonBase onClick={props.onClick} className={classes.link}>
+    <Link color="inherit" component="button" onClick={props.onClick}>
       {title}
-    </ButtonBase>
+    </Link>
   );
 }

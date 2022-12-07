@@ -8,7 +8,6 @@ import { stringify } from "csv-stringify";
 import express, {
   CookieOptions,
   ErrorRequestHandler,
-  NextFunction,
   Response,
 } from "express";
 import { expressjwt, Request } from "express-jwt";
@@ -43,7 +42,7 @@ import {
   sendSaveAndReturnEmail,
 } from "./saveAndReturn";
 import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
-import { useHasuraAuth, useSendEmailAuth } from "./auth";
+import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
 
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
@@ -53,7 +52,8 @@ import {
   createReminderEvent,
   createExpiryEvent,
 } from "./webhooks/lowcalSessionEvents";
-import { adminGraphQLClient } from "./hasura";
+import { adminGraphQLClient, publicGraphQLClient } from "./hasura";
+import { graphQLVoyagerHandler, introspectionHandler } from "./hasura/voyager";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 import {
   privateDownloadController,
@@ -273,14 +273,6 @@ const useJWT = expressjwt({
     req.query?.token,
 });
 
-assert(process.env.FILE_API_KEY, "Missing environment variable 'FILE_API_KEY'");
-const useFilePermission = (req: Request, res: Response, next: NextFunction) => {
-  if (req.headers["api-key"] !== process.env.FILE_API_KEY) {
-    return next({ status: 403, message: "forbidden" });
-  }
-  return next();
-};
-
 if (process.env.NODE_ENV !== "test") {
   app.use(
     pinoLogger({
@@ -357,8 +349,13 @@ app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
         if (govUkResponse?.payment_provider !== "sandbox") {
           try {
             const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
-            const getStatus = (state: Record<string, string>) => state.status + (state.message ? ` (${state.message})` : "")
-            const payMessage = `:coin: New GOV Pay payment *${govUkResponse.payment_id}* with status *${getStatus(govUkResponse.state)}* [${req.params.localAuthority}]`;
+            const getStatus = (state: Record<string, string>) =>
+              state.status + (state.message ? ` (${state.message})` : "");
+            const payMessage = `:coin: New GOV Pay payment *${
+              govUkResponse.payment_id
+            }* with status *${getStatus(govUkResponse.state)}* [${
+              req.params.localAuthority
+            }]`;
             await slack.send(payMessage);
             console.log("Payment notification posted to Slack");
           } catch (error) {
@@ -459,6 +456,31 @@ app.get("/", (_req, res) => {
 app.get("/throw-error", () => {
   throw new Error("custom error");
 });
+
+app.all(
+  "/introspect",
+  introspectionHandler({
+    graphQLClient: publicGraphQLClient,
+    validateUser: false,
+  })
+);
+app.get(
+  "/introspect/graph",
+  graphQLVoyagerHandler({ graphQLURL: "/introspect", validateUser: false })
+);
+app.all(
+  "/introspect-all",
+  useJWT,
+  introspectionHandler({
+    graphQLClient: adminGraphQLClient,
+    validateUser: true,
+  })
+);
+app.get(
+  "/introspect-all/graph",
+  useJWT,
+  graphQLVoyagerHandler({ graphQLURL: "/introspect-all", validateUser: true })
+);
 
 app.post("/flows/:flowId/diff", useJWT, diffFlow);
 

@@ -2,6 +2,7 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CallSplit from "@mui/icons-material/CallSplit";
 import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
 import CloudUpload from "@mui/icons-material/CloudUpload";
+import ContactPage from "@mui/icons-material/ContactPage";
 import Create from "@mui/icons-material/Create";
 import Event from "@mui/icons-material/Event";
 import FunctionsIcon from "@mui/icons-material/Functions";
@@ -55,6 +56,7 @@ export const ICONS: {
   [TYPES.AddressInput]: Home,
   [TYPES.Calculate]: FunctionsIcon,
   [TYPES.Checklist]: CheckBoxOutlined,
+  [TYPES.ContactInput]: ContactPage,
   [TYPES.Content]: TextFields,
   [TYPES.Confirmation]: TextFields,
   [TYPES.DateInput]: Event,

@@ -19,11 +19,6 @@ jobs:
         working-directory: infrastructure/application
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-      - run: |
-          echo "PG_URL=$(pulumi stack output --stack staging --show-secrets dbRootUrl)" >> $GITHUB_ENV
-        working-directory: infrastructure/data
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -31,7 +26,7 @@ jobs:
         working-directory: scripts/seed-database
       - run: pnpm install
         working-directory: scripts/seed-database
-      - run: node ./upsert-production-flows.js --overwrite
+      - run: node ./upsert-production-flows.js --overwrite --limit 1
         working-directory: scripts/seed-database
         env:
           HASURA_GRAPHQL_URL: https://hasura.editor.planx.dev/v1/graphql

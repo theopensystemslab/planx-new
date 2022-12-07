@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
@@ -26,17 +27,17 @@ interface MapContainerProps {
 
 const MapContainer = styled(Box)<MapContainerProps>(
   ({ theme, environment }) => ({
-    padding: theme.spacing(1, 0),
+    padding: theme.spacing(1, 0, 6, 0),
     width: "100%",
     height: "50vh",
     // Only increase map size in Preview & Unpublished routes
-    // [theme.breakpoints.up("md")]:
-    //   environment === "standalone"
-    //     ? {
-    //         height: "70vh",
-    //         minWidth: "65vw",
-    //       }
-    //     : {},
+    [theme.breakpoints.up("md")]:
+      environment === "standalone"
+        ? {
+            height: "70vh",
+            minWidth: "65vw",
+          }
+        : {},
     "& my-map": {
       width: "100%",
       height: "100%",
@@ -44,24 +45,10 @@ const MapContainer = styled(Box)<MapContainerProps>(
   })
 );
 
-const AlternateOption = styled("div")(({ theme }) => ({
-  textAlign: "right",
-  marginTop: theme.spacing(1),
-}));
-
-const AlternateOptionButton = styled(Button)(({ theme }) => ({
-  background: "none",
-  borderStyle: "none",
-  color: theme.palette.text.primary,
-  cursor: "pointer",
-  fontSize: "medium",
-  padding: theme.spacing(2),
-  "& :hover": {
-    backgroundColor: theme.palette.background.paper,
-  },
-  "& :disabled": {
-    color: theme.palette.text.disabled,
-  },
+const MapFooter = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  paddingTop: theme.spacing(3),
 }));
 
 export default function Component(props: Props) {
@@ -152,8 +139,7 @@ export default function Component(props: Props) {
             <my-map
               id="draw-boundary-map"
               drawMode
-              drawPointer="dot"
-              // drawPointer="crosshair"
+              drawPointer="crosshair"
               drawGeojsonData={JSON.stringify(boundary)}
               zoom={20}
               maxZoom={23}
@@ -162,24 +148,28 @@ export default function Component(props: Props) {
               showMarker
               markerLatitude={Number(passport?.data?._address?.latitude)}
               markerLongitude={Number(passport?.data?._address?.longitude)}
+              resetControlImage="trash"
               osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
             />
+            {!props.hideFileUpload && (
+              <MapFooter>
+                <Typography variant="body2">
+                  The site outline you have drawn is{" "}
+                  <strong>{area?.toLocaleString("en-GB") ?? 0} m²</strong>
+                </Typography>
+                <Link
+                  component="button"
+                  onClick={() => setPage("upload")}
+                  disabled={Boolean(boundary)}
+                  data-testid="upload-file-button"
+                >
+                  <Typography variant="body2">
+                    Upload a location plan instead
+                  </Typography>
+                </Link>
+              </MapFooter>
+            )}
           </MapContainer>
-          {!props.hideFileUpload && (
-            <AlternateOption>
-              <AlternateOptionButton
-                data-testid="upload-file-button"
-                onClick={() => setPage("upload")}
-                disabled={Boolean(boundary)}
-              >
-                Upload a location plan instead
-              </AlternateOptionButton>
-            </AlternateOption>
-          )}
-          <p>
-            The boundary you have drawn has an area of{" "}
-            <strong>{area ?? 0} m²</strong>
-          </p>
         </>
       );
     } else if (page === "upload") {
@@ -194,14 +184,17 @@ export default function Component(props: Props) {
             definitionImg={props.definitionImg}
           />
           <Upload setFile={setSelectedFile} initialFile={selectedFile} />
-          <AlternateOption>
-            <AlternateOptionButton
+          <Box sx={{ textAlign: "right" }}>
+            <Link
+              component="button"
               onClick={() => setPage("draw")}
               disabled={Boolean(selectedFile?.url)}
             >
-              Draw the boundary on a map instead
-            </AlternateOptionButton>
-          </AlternateOption>
+              <Typography variant="body2">
+                Draw the boundary on a map instead
+              </Typography>
+            </Link>
+          </Box>
         </>
       );
     }
@@ -218,6 +211,10 @@ export default function Component(props: Props) {
           boundary && props.dataFieldBoundary ? boundary : undefined,
         [props.dataFieldArea]:
           boundary && props.dataFieldBoundary ? area : undefined,
+        [`${props.dataFieldArea}.hectares`]:
+          boundary && area && props.dataFieldBoundary
+            ? area / 10000
+            : undefined,
         [propsDataFieldUrl]:
           selectedFile?.url && propsDataFieldUrl
             ? selectedFile?.url

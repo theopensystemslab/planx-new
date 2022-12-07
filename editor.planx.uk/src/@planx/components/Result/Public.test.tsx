@@ -172,16 +172,3 @@ describe("showing and hiding change capabilities", () => {
     });
   });
 });
-
-it("should not have any accessibility violations", async () => {
-  const { container } = setup(
-    <Result
-      headingColor={{ text: "#000", background: "#fff" }}
-      responses={[]}
-      headingTitle="title"
-      reasonsTitle="reasons"
-    />
-  );
-  const results = await axe(container);
-  expect(results).toHaveNoViolations();
-});

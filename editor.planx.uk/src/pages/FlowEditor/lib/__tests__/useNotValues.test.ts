@@ -114,7 +114,7 @@ describe("if I initially pick", () => {
     setState({ flow });
   });
 
-  test.only("lion, it should display 'lion'", () => {
+  test("lion, it should display 'lion'", () => {
     getState().record("NS7QFc7Cjc", { answers: ["TDIbLrdTdd"] });
     expect(getState().upcomingCardIds()).toEqual(["Sd38UCC8Cg"]);
   });

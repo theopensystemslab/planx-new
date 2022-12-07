@@ -7,6 +7,7 @@ import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
+import { generateDocumentReviewStream } from "./documentReview";
 import { adminGraphQLClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
@@ -220,7 +221,6 @@ export async function createZip({
   // build a CSV, write it to the tmp directory, add it to the zip
   const csvPath = path.join(tmpDir, "application.csv");
   const csvFile = fs.createWriteStream(csvPath);
-
   const csvStream = stringify(csv, {
     columns: ["question", "responses", "metadata"],
     header: true,
@@ -232,24 +232,38 @@ export async function createZip({
   zip.addLocalFile(csvPath);
   deleteFile(csvPath);
 
-  // build an optional GeoJSON file for validators
-  if (geojson) {
-    const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-    zip.addFile("boundary.geojson", geoBuff);
-  }
   // build the XML file from a string, write it locally, add it to the zip
   //   must be named "proposal.xml" to be processed by Uniform
   const xmlPath = "proposal.xml";
   const xmlFile = fs.createWriteStream(xmlPath);
-
   const xmlStream = str(stringXml.trim()).pipe(xmlFile);
   await new Promise((resolve, reject) => {
     xmlStream.on("error", reject);
     xmlStream.on("finish", resolve);
   });
-
   zip.addLocalFile(xmlPath);
   deleteFile(xmlPath);
+
+  // build an HTML Document Viewer
+  const docViewPath = path.join(tmpDir, "review.html");
+  const docViewFile = fs.createWriteStream(docViewPath);
+  const docViewStream = generateDocumentReviewStream({
+    csv,
+    files,
+    geojson,
+  }).pipe(docViewFile);
+  await new Promise((resolve, reject) => {
+    docViewStream.on("error", reject);
+    docViewStream.on("finish", resolve);
+  });
+  zip.addLocalFile(docViewPath);
+  deleteFile(docViewPath);
+
+  // build an optional GeoJSON file for validators
+  if (geojson) {
+    const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
+    zip.addFile("boundary.geojson", geoBuff);
+  }
 
   // generate & save zip locally
   const zipName = `ripa-test-${sessionId}.zip`;
@@ -435,4 +449,4 @@ const getUniformClient = (localAuthority) => {
   return { clientId, clientSecret };
 };
 
-export { sendToUniform, downloadFile, deleteFile };
+export { sendToUniform };

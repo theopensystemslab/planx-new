@@ -1,6 +1,7 @@
 import { FeedbackFish } from "@feedback-fish/react";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
+import Link from "@mui/material/Link";
 import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
@@ -11,13 +12,8 @@ const useClasses = makeStyles((theme: Theme) => ({
     backgroundColor: "white",
     display: "flex",
     justifyContent: "start",
-    "&:hover": {
-      "& span": {
-        textDecoration: "underline",
-      },
-    },
     [theme.breakpoints.up("sm")]: {
-      padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+      padding: theme.spacing(1, 2),
     },
   },
   betaIcon: {
@@ -60,7 +56,7 @@ export default function PhaseBanner(): FCReturn {
           PUBLIC BETA
         </Box>
         <Typography variant="body2" color="textPrimary">
-          This is a new service. Your <span>feedback</span> will help us improve
+          This is a new service. Your <Link>feedback</Link> will help us improve
           it.
         </Typography>
       </ButtonBase>

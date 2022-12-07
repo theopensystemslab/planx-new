@@ -8,8 +8,8 @@ const ENDPOINT = "/webhooks/hasura/delete-expired-sessions";
 describe("Delete expired sessions webhook", () => {
   afterEach(() => queryMock.reset());
 
-  it("fails without correct authentication", () => {
-    post(ENDPOINT)
+  it("fails without correct authentication", async () => {
+    await post(ENDPOINT)
       .expect(401)
       .then((response) => {
         expect(response.body).toEqual({

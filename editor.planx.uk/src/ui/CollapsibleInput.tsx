@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
-import makeStyles from "@mui/styles/makeStyles";
+import Link from "@mui/material/Link";
 import React, { useState } from "react";
 import Input from "ui/Input";
 
@@ -12,29 +11,18 @@ export interface Props {
   name: string;
 }
 
-const useClasses = makeStyles((theme) => ({
-  button: {
-    color: theme.palette.text.primary,
-    padding: 0,
-  },
-  submit: {
-    marginTop: theme.spacing(2),
-  },
-}));
-
 const CollapsibleInput: React.FC<Props> = (props: Props) => {
   const [expanded, setExpanded] = useState(false);
-  const classes = useClasses();
 
   return (
     <>
-      <Button
-        className={classes.button}
+      <Link
+        component="button"
         onClick={() => setExpanded((x) => !x)}
-        disableRipple
+        sx={{ marginBottom: 2 }}
       >
         {props.children}
-      </Button>
+      </Link>
       <Collapse in={expanded}>
         <Box py={0.5}>
           <Input

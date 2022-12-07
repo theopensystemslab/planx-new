@@ -1,5 +1,7 @@
-import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import React from "react";
 
 export interface Props {
@@ -8,22 +10,9 @@ export interface Props {
   text?: string;
 }
 
-const Root = styled("div")(({ theme }) => ({
+const Root = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(1),
   textAlign: "right",
-  "& button": {
-    background: "none",
-    borderStyle: "none",
-    color: theme.palette.text.primary,
-    cursor: "pointer",
-    fontSize: "inherit",
-    fontFamily: "inherit",
-    textDecoration: "underline",
-    padding: theme.spacing(2),
-  },
-  "& button:hover": {
-    backgroundColor: theme.palette.background.paper,
-  },
 }));
 
 // Render a button which lets the applicant download their application data as a CSV
@@ -40,7 +29,8 @@ export default function FileDownload(props: Props): FCReturn {
 
   return (
     <Root>
-      <Button
+      <Link
+        component="button"
         onClick={async () => {
           await fetch(`${process.env.REACT_APP_API_URL}/download-application`, {
             method: "POST",
@@ -55,8 +45,10 @@ export default function FileDownload(props: Props): FCReturn {
             .catch((error) => console.log(error));
         }}
       >
-        {props.text || "Download your application (.csv)"}
-      </Button>
+        <Typography variant="body2">
+          {props.text || "Download your application (.csv)"}
+        </Typography>
+      </Link>
     </Root>
   );
 }
