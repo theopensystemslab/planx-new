@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { styled } from "@mui/material/styles";
+import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
@@ -25,23 +25,32 @@ interface MapContainerProps {
   environment: PreviewEnvironment;
 }
 
+/**
+ * Generate a style which increases the map size as the window grows
+ * and maintains a consistent right margin
+ */
+const dynamicMapSizeStyle = (theme: Theme): Record<string, any> => {
+  const mainContainerWidth = `${theme.breakpoints.values.md}px`;
+  const mainContainerMargin = `((100vw - ${mainContainerWidth}) / 2)`;
+  const mapMarginRight = "100px";
+
+  const style = {
+    [theme.breakpoints.up("md")]: {
+      height: "70vh",
+      width: `calc(${mainContainerMargin} + ${mainContainerWidth} - ${mapMarginRight})`,
+    },
+  };
+
+  return style;
+};
+
 const MapContainer = styled(Box)<MapContainerProps>(
   ({ theme, environment }) => ({
     padding: theme.spacing(1, 0, 6, 0),
     width: "100%",
     height: "50vh",
     // Only increase map size in Preview & Unpublished routes
-    ...(environment === "standalone" && {
-      [theme.breakpoints.up("md")]: {
-        height: "70vh",
-      },
-      [theme.breakpoints.up("lg")]: {
-        width: "calc(100% + 200px)",
-      },
-      [theme.breakpoints.up("xl")]: {
-        width: "calc(100% + 400px)",
-      },
-    }),
+    ...(environment === "standalone" && { ...dynamicMapSizeStyle(theme) }),
     "& my-map": {
       width: "100%",
       height: "100%",
