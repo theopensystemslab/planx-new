@@ -32,7 +32,7 @@ interface MapContainerProps {
 const dynamicMapSizeStyle = (theme: Theme): Record<string, any> => {
   const mainContainerWidth = `${theme.breakpoints.values.md}px`;
   const mainContainerMargin = `((100vw - ${mainContainerWidth}) / 2)`;
-  const mapMarginRight = "100px";
+  const mapMarginRight = "150px";
 
   const style = {
     [theme.breakpoints.up("md")]: {
