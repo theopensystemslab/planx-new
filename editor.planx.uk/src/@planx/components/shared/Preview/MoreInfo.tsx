@@ -14,33 +14,33 @@ interface StyledDrawerProps extends DrawerProps {
   drawerWidth: number;
 }
 
-const Root = styled(Drawer)<StyledDrawerProps>(
-  ({ theme, drawerWidth, open }) => ({
+const Root = styled(Drawer, {
+  shouldForwardProp: (prop) => prop !== "drawerWidth",
+})<StyledDrawerProps>(({ theme, drawerWidth, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  color: theme.palette.text.primary,
+  transition: theme.transitions.create("margin", {
+    easing: theme.transitions.easing.easeOut,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  marginRight: open ? 0 : -drawerWidth,
+  [theme.breakpoints.only("xs")]: {
+    width: "100%",
+    marginRight: "-100%",
+  },
+
+  [`& .${classes.drawerPaper}`]: {
     width: drawerWidth,
-    flexShrink: 0,
-    color: theme.palette.text.primary,
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginRight: open ? 0 : -drawerWidth,
+    backgroundColor: theme.palette.background.default,
+    border: 0,
+    boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
     [theme.breakpoints.only("xs")]: {
       width: "100%",
-      marginRight: "-100%",
     },
-
-    [`& .${classes.drawerPaper}`]: {
-      width: drawerWidth,
-      backgroundColor: theme.palette.background.default,
-      border: 0,
-      boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
-      [theme.breakpoints.only("xs")]: {
-        width: "100%",
-      },
-      padding: theme.spacing(1),
-    },
-  })
-);
+    padding: theme.spacing(1),
+  },
+}));
 
 const DrawerContent = styled("div")(() => ({
   padding: "0.5rem 1.75rem 1rem",
