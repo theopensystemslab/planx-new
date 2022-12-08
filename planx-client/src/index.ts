@@ -18,7 +18,7 @@ export default class Client {
     firstName: string;
     lastName: string;
     email: string;
-  }) {
+  }): Promise<number> {
     return createUser(this.request, args);
   }
 
@@ -28,16 +28,19 @@ export default class Client {
     logo: string;
     primaryColor: string;
     homepage: string;
-  }) {
+  }): Promise<number> {
     const slug = args.slug ? args.slug : slugify(args.name);
     return createTeam(this.request, { ...args, slug });
   }
 
-  async createFlow(args: { teamId: number; slug: string }) {
+  async createFlow(args: { teamId: number; slug: string }): Promise<string> {
     return createFlow(this.request, args);
   }
 
-  async publishFlow(args: { flowId: string }) {
+  async publishFlow(args: {
+    flow: { id: string; data: object };
+    publisherId: number;
+  }): Promise<number> {
     return publishFlow(this.request, args);
   }
 }

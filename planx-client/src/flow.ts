@@ -3,7 +3,7 @@ import { Request } from "./graphql";
 export async function createFlow(
   request: Request,
   args: { teamId: number; slug: string }
-) {
+): Promise<string> {
   const { insert_flows_one: response } = await request(
     `
       mutation CreateFlow($teamId: Int!, $flowSlug: String!) {
@@ -17,10 +17,13 @@ export async function createFlow(
       flowSlug: args.slug,
     }
   );
-  return response;
+  return response.id;
 }
 
-export async function publishFlow(request: Request, args: { flowId: string }) {
+export async function publishFlow(
+  request: Request,
+  args: { flow: { id: string; data: object }; publisherId: number }
+): Promise<number> {
   const { insert_published_flows_one: response } = await request(
     `
       mutation InsertPublishedFlow(
@@ -34,9 +37,13 @@ export async function publishFlow(request: Request, args: { flowId: string }) {
       }
     `,
     {
-      publishedFlow: { flow_id: args.flowId },
+      publishedFlow: {
+        flow_id: args.flow.id,
+        data: args.flow.data,
+        publisher_id: args.publisherId,
+      },
     }
   );
 
-  return response;
+  return response.id;
 }

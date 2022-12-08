@@ -1,6 +1,7 @@
 import { Request } from "./graphql";
 import defaultSettings from "./defaults/settings.json";
 import defaultNotifyPersonalisation from "./defaults/notify.json";
+import log from "./logger";
 
 export async function createTeam(
   request: Request,
@@ -11,9 +12,27 @@ export async function createTeam(
     primaryColor: string;
     homepage: string;
   }
-) {
-  const { insert_teams_one: response } = await request(
-    `mutation CreateTeam ($name: String!, $slug: String!, $theme: jsonb!, $settings: jsonb!, $notify_personalisation: jsonb!) {
+): Promise<number> {
+  const input = {
+    name: args.name,
+    slug: args.slug,
+    theme: {
+      logo: args.logo,
+      primary: args.primaryColor,
+    },
+    settings: {
+      ...defaultSettings,
+      homepage: args.homepage,
+    },
+    notify_personalisation: JSON.stringify({
+      ...defaultNotifyPersonalisation,
+    }),
+  };
+  log("createTeam input", input);
+  let teamID;
+  try {
+    const { insert_teams_one: response } = await request(
+      `mutation CreateTeam ($name: String!, $slug: String!, $theme: jsonb!, $settings: jsonb!, $notify_personalisation: jsonb!) {
         insert_teams_one(object: {
           name: $name, 
           slug: $slug, 
@@ -24,21 +43,12 @@ export async function createTeam(
           id
         }
       }`,
-    {
-      name: args.name,
-      slug: args.slug,
-      theme: {
-        logo: args.logo,
-        primary: args.primaryColor,
-      },
-      settings: {
-        ...defaultSettings,
-        homepage: args.homepage,
-      },
-      notify_personalisation: {
-        ...defaultNotifyPersonalisation,
-      },
-    }
-  );
-  return response;
+      input
+    );
+    teamID = response.id;
+  } catch (e) {
+    log(e);
+    throw e;
+  }
+  return teamID;
 }
