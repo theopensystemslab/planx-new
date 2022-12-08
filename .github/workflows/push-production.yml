@@ -127,5 +127,7 @@ jobs:
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
+          SLACK_USERNAME: PlanX Deploy
+          SLACK_COLOR: #42AC6A
           SLACK_TITLE: ${{ env.DEPLOYMENT_ENVIRONMENT }} deploy
           SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}
