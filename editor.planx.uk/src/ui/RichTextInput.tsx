@@ -36,6 +36,7 @@ import {
   ReactRenderer,
   useEditor,
 } from "@tiptap/react";
+import { map } from "ramda";
 import React, {
   type FC,
   ChangeEvent,
@@ -149,7 +150,7 @@ export const injectVariables = (
  * Traverse a nested object/array and apply a modification at each level. If the modifier returns `null`, it leaves the result unchanged.
  * Used to inject placeholder values into a document structure.
  */
-const modifyDeep =
+export const modifyDeep =
   (fn: (field: Value) => Value) =>
   (val: Value): Value => {
     if (!val) {
