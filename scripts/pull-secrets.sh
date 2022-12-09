@@ -1,4 +1,6 @@
-#!/usr/bin/env sh
+#!/bin/bash
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 aws s3 cp s3://pizza-secrets/root.env ./../.env
 aws s3 cp s3://pizza-secrets/api.env.test ./../api.planx.uk/.env
