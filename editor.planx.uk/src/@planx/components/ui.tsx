@@ -71,6 +71,7 @@ export const ICONS: {
   [TYPES.NumberInput]: Pin,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PlanningConstraints]: Map,
+  [TYPES.PropertyInformation]: Map,
   [TYPES.Response]: undefined,
   [TYPES.Result]: PlaylistAddCheck,
   [TYPES.Review]: RateReview,

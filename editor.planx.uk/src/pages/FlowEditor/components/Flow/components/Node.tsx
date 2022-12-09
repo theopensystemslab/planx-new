@@ -117,6 +117,13 @@ const Node: React.FC<any> = (props) => {
       return <Question {...allProps} text={node?.data?.title ?? "Address"} />;
     case TYPES.ContactInput:
       return <Question {...allProps} text={node?.data?.title ?? "Contact"} />;
+    case TYPES.PropertyInformation:
+      return (
+        <Question
+          {...allProps}
+          text={node?.data?.title ?? "Property information"}
+        />
+      );
     case TYPES.Flow:
       return null;
     default:
