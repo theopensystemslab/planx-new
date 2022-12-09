@@ -346,5 +346,9 @@ export function AddressSelection(props: any) {
     },
   });
 
-  return <Card handleSubmit={formik.handleSubmit} isValid></Card>;
+  return (
+    <Card handleSubmit={formik.handleSubmit} isValid>
+      <></>
+    </Card>
+  );
 }
