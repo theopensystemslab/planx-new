@@ -59,7 +59,7 @@ import { moveFlow } from "./editor/moveFlow";
 import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
 import { usePayProxy } from "./proxy/pay";
 import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
-import { sanitiseApplicationData } from "./webhooks/deleteApplicationData";
+import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
 
 const router = express.Router();
 
