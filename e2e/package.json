@@ -3,7 +3,7 @@
   "scripts": {
     "test:cypress": "./run-tests.sh",
     "test:playwright": "./run-playwright-tests.sh",
-    "check": "tsc && eslint './playwright/*.{js,ts}'",
+    "check:playwright": "tsc && eslint './playwright/*.{js,ts}'",
     "postinstall": "./install-dependencies.sh"
   },
   "dependencies": {
