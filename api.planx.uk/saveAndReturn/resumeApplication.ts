@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
+import { Lowcal_Sessions } from "../types";
 import { adminGraphQLClient } from "../hasura";
-import { LowCalSession, Team } from "../types";
 import {
   sendEmail,
   convertSlugToName,
   getResumeLink,
   calculateExpiryDate,
   getHumanReadableProjectType,
+  ModifiedTeams,
 } from "./utils";
 
 /**
@@ -54,8 +55,8 @@ const validateRequest = async (
   teamSlug: string,
   email: string
 ): Promise<{
-  team: Team;
-  sessions: LowCalSession[];
+  team: ModifiedTeams;
+  sessions: Lowcal_Sessions[];
 }> => {
   try {
     const client = adminGraphQLClient;
@@ -104,7 +105,7 @@ const validateRequest = async (
 /**
  * Construct personalisation object required for the "Resume" Notify template
  */
-const getPersonalisation = async (sessions: LowCalSession[], team: Team) => {
+ const getPersonalisation = async (sessions: Lowcal_Sessions[], team: ModifiedTeams) => {
   return {
     teamName: team.name,
     content: await buildContentFromSessions(sessions, team),
@@ -117,14 +118,14 @@ const getPersonalisation = async (sessions: LowCalSession[], team: Team) => {
  * A formatted list of all open applications, including magic link to resume
  */
 const buildContentFromSessions = async (
-  sessions: LowCalSession[],
-  team: Team
+  sessions: Lowcal_Sessions[],
+  team: ModifiedTeams
 ): Promise<string> => {
-  const contentBuilder = async (session: LowCalSession) => {
-    const service = convertSlugToName(session.flow.slug);
+  const contentBuilder = async (session: Lowcal_Sessions) => {
+    const service = convertSlugToName(session.flow?.slug || '');
     const address = session.data?.passport?.data?._address?.single_line_address;
     const projectType = await getHumanReadableProjectType(session);
-    const resumeLink = getResumeLink(session, team, session.flow.slug);
+    const resumeLink = getResumeLink(session, team, session.flow?.slug || "");
     const expiryDate = calculateExpiryDate(session.created_at);
 
     return `Service: ${service}

@@ -3,7 +3,7 @@ import supertest from "supertest";
 import { queryMock } from "../tests/graphqlQueryMock";
 import { authHeader } from "../tests/mockJWT";
 import app from "../server";
-import { Flow } from "../types";
+import { Flows } from "../types";
 
 beforeEach(() => {
   queryMock.mockQuery({
@@ -12,7 +12,7 @@ beforeEach(() => {
     data: {
       flows_by_pk: {
         data: mockFlowData,
-        slug: "test"
+        slug: "test",
       },
     },
   });
@@ -23,7 +23,7 @@ beforeEach(() => {
     data: {
       update_flows_by_pk: {
         data: replacedFlowData,
-        slug: "test"
+        slug: "test",
       },
     },
   });
@@ -102,7 +102,7 @@ it("updates flow data and returns matches if there are matches", async () => {
     });
 });
 
-const mockFlowData: Flow["data"] = {
+const mockFlowData: Flows["data"] = {
   _root: {
     edges: ["RRQwM2zAgy", "vcTgmVQAre", "QsEdip17H5"],
   },
@@ -163,7 +163,7 @@ const mockFlowData: Flow["data"] = {
   },
 };
 
-const replacedFlowData: Flow["data"] = {
+const replacedFlowData: Flows["data"] = {
   _root: {
     edges: ["RRQwM2zAgy", "vcTgmVQAre", "QsEdip17H5"],
   },

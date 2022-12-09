@@ -1,3 +1,6 @@
+import * as GraphQLTypes from "./generated/graphqlTypes";
+export * from "./generated/graphqlTypes";
+
 export interface Node {
   id?: string;
   data?: Record<string, any>;
@@ -5,9 +8,7 @@ export interface Node {
   type?: number;
 }
 
-export interface Flow {
-  id: string;
-  slug: string;
+export interface Flows extends GraphQLTypes.Flows {
   data: {
     [key: string]: Node;
   };
@@ -22,40 +23,8 @@ export interface UserData {
 
 export type Breadcrumb = Record<string, UserData>;
 
-export interface Team {
-  slug: string;
-  name: string;
-  domain?: string;
-  notifyPersonalisation: {
-    helpEmail: string;
-    helpPhone: string;
-    helpOpeningHours: string;
-    emailReplyToId: string;
-  };
-}
-
 export interface Passport {
   data?: Record<string, any>;
-}
-
-export interface LowCalSession {
-  data: {
-    passport: Passport;
-    breadcrumbs: Breadcrumb;
-    govUkPayment?: GovUKPayment;
-    id: string;
-  };
-  id: string;
-  email: string;
-  flow_id: string;
-  created_at: string;
-  updated_at: string;
-  submitted_at: string | null;
-  deleted_at: string | null;
-  has_user_saved: boolean;
-  flow: {
-    slug: string;
-  };
 }
 
 export interface NotifyConfig {

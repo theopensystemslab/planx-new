@@ -1,4 +1,4 @@
-import { LowCalSession, Team } from './../types';
+import { Teams, Lowcal_Sessions } from './../types';
 import supertest from "supertest";
 import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
@@ -30,7 +30,7 @@ describe("buildContentFromSessions function", () => {
   });
 
   it("should return correctly formatted content for a single session", async () => {
-    const sessions: DeepPartial<LowCalSession>[] = [{
+    const sessions: DeepPartial<Lowcal_Sessions>[] = [{
       data: {
         passport: {
           data: {
@@ -53,11 +53,11 @@ describe("buildContentFromSessions function", () => {
       Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(await buildContentFromSessions(sessions as LowCalSession[], { slug: "team" } as Team)).toEqual(result);
+    expect(await buildContentFromSessions(sessions as Lowcal_Sessions[], { slug: "team" } as Teams)).toEqual(result);
   });
 
   it("should return correctly formatted content for multiple session", async () => {
-    const sessions: DeepPartial<LowCalSession>[] = [{
+    const sessions: DeepPartial<Lowcal_Sessions>[] = [{
       data: {
         passport: {
           data: {
@@ -121,11 +121,11 @@ describe("buildContentFromSessions function", () => {
       Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=789`
-    expect(await buildContentFromSessions(sessions as LowCalSession[], { slug: "team" } as Team)).toEqual(result)
+    expect(await buildContentFromSessions(sessions as Lowcal_Sessions[], { slug: "team" } as Teams)).toEqual(result)
   });
 
   it("should handle an empty address field", async () => {
-    const sessions: DeepPartial<LowCalSession>[] = [{
+    const sessions: DeepPartial<Lowcal_Sessions>[] = [{
       data: {
         passport: {
           // Missing address
@@ -146,11 +146,11 @@ describe("buildContentFromSessions function", () => {
       Project type: New office premises
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(await buildContentFromSessions(sessions as LowCalSession[], { slug: "team" } as Team)).toEqual(result);
+    expect(await buildContentFromSessions(sessions as Lowcal_Sessions[], { slug: "team" } as Teams)).toEqual(result);
   });
 
   it("should handle an empty project type field", async () => {
-    const sessions: DeepPartial<LowCalSession>[] = [{
+    const sessions: DeepPartial<Lowcal_Sessions>[] = [{
       data: {
         passport: {
           data: {
@@ -173,7 +173,7 @@ describe("buildContentFromSessions function", () => {
       Project type: Project type not submitted
       Expiry Date: 29 May 2022
       Link: example.com/team/apply-for-a-lawful-development-certificate/preview?sessionId=123`
-    expect(await buildContentFromSessions(sessions as LowCalSession[], { slug: "team" } as Team)).toEqual(result);
+    expect(await buildContentFromSessions(sessions as Lowcal_Sessions[], { slug: "team" } as Teams)).toEqual(result);
   });
 
 });

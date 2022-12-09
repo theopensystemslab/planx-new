@@ -3,7 +3,7 @@ import supertest from "supertest";
 import { queryMock } from "../tests/graphqlQueryMock";
 import { authHeader } from "../tests/mockJWT";
 import app from "../server";
-import { Flow } from "../types";
+import { Flows } from "../types";
 
 beforeEach(() => {
   queryMock.mockQuery({
@@ -114,7 +114,7 @@ it("updates published flow and returns altered nodes if there have been changes"
     });
 });
 
-const mockFlowData: Flow["data"] = {
+const mockFlowData: Flows["data"] = {
   _root: {
     edges: [
       "RYYckLE2cH",

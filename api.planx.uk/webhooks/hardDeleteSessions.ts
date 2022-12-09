@@ -2,7 +2,7 @@ import { subDays } from "date-fns";
 import { Request, Response, NextFunction } from "express";
 import { gql } from "graphql-request";
 
-import { LowCalSession } from "./../types";
+import { Lowcal_Sessions } from "./../types";
 import { adminGraphQLClient } from "../hasura";
 
 /**
@@ -38,7 +38,7 @@ const hardDeleteSessions = async (
     );
     res.json({
       deletedSessions: delete_lowcal_sessions.returning.map(
-        (session: LowCalSession) => session.id
+        (session: Lowcal_Sessions) => session.id
       ),
     });
   } catch (error) {

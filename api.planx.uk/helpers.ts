@@ -1,10 +1,10 @@
 import { gql } from 'graphql-request';
 import { adminGraphQLClient } from "./hasura";
-import { Flow, Node } from "./types";
+import { Node, Flows } from "./types";
 const client = adminGraphQLClient;
 
 // Get a flow's data (unflattened, without external portal nodes)
-const getFlowData = async (id: string): Promise<Flow> => {
+const getFlowData = async (id: string): Promise<Flows> => {
   const data = await client.request(
     gql`
       query GetFlowData($id: uuid!) {
@@ -21,7 +21,7 @@ const getFlowData = async (id: string): Promise<Flow> => {
 };
 
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
-const getMostRecentPublishedFlow = async (id: string): Promise<Flow["data"]> => {
+const getMostRecentPublishedFlow = async (id: string): Promise<Flows["data"]> => {
   const data = await client.request(
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
@@ -71,6 +71,8 @@ const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
   // get the primary flow data
   const { slug, data } = await getFlowData(id);
 
+  if (!data) return ob;
+
   // recursively get and flatten internal portals (type 300) & external portals (type 310)
   for (const [nodeId, node] of Object.entries(data)) {
     if (nodeId === "_root" && Object.keys(ob).length > 0) {
@@ -97,12 +99,12 @@ const dataMerged = async (id: string, ob: Record<string, any> = {}) => {
  */
 const getChildren = (
   node: Node,
-  originalFlow: Flow["data"],
-  newFlow: Flow["data"]
-): Flow["data"] => {
-  if (node.edges) {
+  originalFlow: Flows["data"],
+  newFlow: Flows["data"]
+): Flows['data'] => {
+  if (node.edges && originalFlow) {
     node.edges.forEach((edgeId) => {
-      if (!Object.keys(newFlow).includes(edgeId)) {
+      if (newFlow && !Object.keys(newFlow).includes(edgeId)) {
         newFlow[edgeId] = originalFlow[edgeId];
         getChildren(originalFlow[edgeId], originalFlow, newFlow);
       }
@@ -115,7 +117,7 @@ const getChildren = (
 /**
  * For a given flow, make it unique by renaming its' node ids (replace last n characters) while preserving its' content
  */
-const makeUniqueFlow = (flowData: Flow["data"], replaceValue: string): Flow["data"] => {
+ const makeUniqueFlow = (flowData: Record<string, Node>, replaceValue: string) => {
   const charactersToReplace = replaceValue.length;
 
   Object.keys(flowData).forEach((node) => {

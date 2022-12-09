@@ -1,7 +1,8 @@
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
+import { Lowcal_Sessions, Teams } from "../types";
 import { publicGraphQLClient, adminGraphQLClient } from "../hasura";
-import { LowCalSession, NotifyConfig, Team } from "../types";
+import { NotifyConfig } from "../types";
 import { notifyClient } from "./notify";
 
 const DAYS_UNTIL_EXPIRY = 28;
@@ -22,6 +23,10 @@ const emailTemplates = {
 };
 
 export type Template = keyof typeof emailTemplates;
+
+export interface ModifiedTeams extends Omit<Teams, "notify_personalisation"> {
+  notifyPersonalisation?: Teams["notify_personalisation"];
+}
 
 /**
  * Send email using the GovUK Notify client
@@ -66,7 +71,7 @@ const getResumeLink = (
   session: {
     id: string;
   },
-  team: Team,
+  team: Teams,
   flowSlug: string
 ) => {
   const serviceLink = getServiceLink(team, flowSlug);
@@ -76,7 +81,7 @@ const getResumeLink = (
 /**
  * Construct a link to the service
  */
-const getServiceLink = (team: Team, flowSlug: string): string => {
+const getServiceLink = (team: Teams, flowSlug: string): string => {
   // Link to custom domain
   if (team.domain) return `https://${team.domain}/${flowSlug}`;
   // Fallback to PlanX domain
@@ -106,7 +111,7 @@ const sendSingleApplicationEmail = async (
       sessionId
     );
     const config = {
-      personalisation: getPersonalisation(session, flowSlug, team),
+      personalisation: getPersonalisation(session, flowSlug!, team),
       reference: null,
       emailReplyToId: team.notifyPersonalisation.emailReplyToId,
     };
@@ -150,13 +155,15 @@ const validateSingleSessionRequest = async (
     const headers = getSaveAndReturnPublicHeaders(sessionId, email);
     const {
       lowcal_sessions: [session],
+    }: {
+      lowcal_sessions: Lowcal_Sessions[];
     } = await client.request(query, null, headers);
 
     if (!session) throw Error(`Unable to find session: ${sessionId}`);
 
     return {
-      flowSlug: session.flow.slug,
-      team: session.flow.team,
+      flowSlug: session.flow?.slug,
+      team: session.flow?.team as ModifiedTeams,
       session: await getSessionDetails(session),
     };
   } catch (error) {
@@ -176,7 +183,7 @@ interface SessionDetails {
  * Parse session details into an object which will be read by email template
  */
 const getSessionDetails = async (
-  session: LowCalSession
+  session: Lowcal_Sessions
 ): Promise<SessionDetails> => {
   const projectTypes = await getHumanReadableProjectType(session);
   const address = session?.data?.passport?.data?._address?.single_line_address;
@@ -186,7 +193,7 @@ const getSessionDetails = async (
     projectType: projectTypes || "Project type not submitted",
     id: session.id,
     expiryDate: calculateExpiryDate(session.created_at),
-    hasUserSaved: session.has_user_saved
+    hasUserSaved: session.has_user_saved,
   };
 };
 
@@ -196,7 +203,7 @@ const getSessionDetails = async (
 const getPersonalisation = (
   session: SessionDetails,
   flowSlug: string,
-  team: Team
+  team: ModifiedTeams
 ) => {
   return {
     resumeLink: getResumeLink(session, team, flowSlug),
@@ -257,7 +264,9 @@ const markSessionAsSubmitted = async (sessionId: string) => {
 /**
  * Get formatted list of the session's project types
  */
-const getHumanReadableProjectType = async (session: LowCalSession): Promise<string | void>=> {
+const getHumanReadableProjectType = async (
+  session: Lowcal_Sessions
+): Promise<string | void> => {
   const rawProjectType =
     session?.data?.passport?.data?.["proposal.projectType"];
   if (!rawProjectType) return;

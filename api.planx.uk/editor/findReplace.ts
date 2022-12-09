@@ -1,12 +1,12 @@
-import { Flow } from "./../types";
+import { Flows } from "./../types";
 import { adminGraphQLClient as client } from "../hasura";
 import { gql } from "graphql-request";
 import { getFlowData } from "../helpers";
 import { Request, Response, NextFunction } from "express";
 
 interface MatchResult {
-  matches: Flow["data"];
-  flowData: Flow["data"];
+  matches: Flows["data"];
+  flowData: Flows["data"];
 }
 
 /**
@@ -14,7 +14,7 @@ interface MatchResult {
  *    and return an updated copy of the flow data if a replaceValue is provided, else return the original flowData
  */
 const getMatches = (
-  flowData: Flow["data"],
+  flowData: Flows["data"],
   searchTerm: string,
   replaceValue: string | undefined = undefined
 ): MatchResult => {

@@ -7,7 +7,7 @@ import {
   getSaveAndReturnPublicHeaders,
   stringifyWithRootKeysSortedAlphabetically,
 } from "./utils";
-import { Breadcrumb, LowCalSession, Node } from "../types";
+import { Breadcrumb, Lowcal_Sessions, Node } from "../types";
 
 const publicClient = publicGraphQLClient;
 const adminClient = adminGraphQLClient;
@@ -141,7 +141,7 @@ const validateSession = async (
 const findSession = async (
   sessionId: string,
   email: string
-): Promise<LowCalSession | undefined> => {
+): Promise<Lowcal_Sessions | undefined> => {
   const query = gql`
     query FindSession {
       lowcal_sessions {
@@ -157,7 +157,7 @@ const findSession = async (
 
 const updateLowcalSessionData = async (
   sessionId: string,
-  data: LowCalSession,
+  data: Lowcal_Sessions,
   email: string
 ) => {
   const query = gql`
