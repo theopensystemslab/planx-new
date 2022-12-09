@@ -22,6 +22,12 @@ Start the development server `pnpm dev`
 
 Run tests `pnpm test`
 
+## Updating Types from GraphQL
+
+1. Run the Hasura container (e.g. `docker compose up`)
+1. Execute `pnpm generate-types`
+
+
 ## Prior art
 
 https://github.com/theopensystemslab/planx-api
