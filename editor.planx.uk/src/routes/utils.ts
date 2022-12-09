@@ -51,7 +51,6 @@ export const setPath = (flowData: Record<string, any>, req: NaviRequest) => {
 //      So I've hard-coded these domain names until a better solution comes along.
 //
 const PREVIEW_ONLY_DOMAINS = [
-  "1036.planx.pizza",
   "planningservices.buckinghamshire.gov.uk",
   "planningservices.lambeth.gov.uk",
   "planningservices.southwark.gov.uk",
