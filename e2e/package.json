@@ -1,7 +1,9 @@
 {
+  "private": true,
   "scripts": {
     "test:cypress": "./run-tests.sh",
     "test:playwright": "./run-playwright-tests.sh",
+    "check": "tsc && eslint './playwright/*.{js,ts}'",
     "postinstall": "./install-dependencies.sh"
   },
   "dependencies": {
@@ -15,7 +17,13 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
-    "@types/node": "^16.18.6"
+    "@types/node": "^18.11.12",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
+    "eslint": "^8.29.0",
+    "node:process": "link:@types/node:process",
+    "prettier": "^2.8.1",
+    "typescript": "^4.9.4"
   },
   "engines": {
     "node": "^16",

@@ -3,6 +3,7 @@
   "description": "A declarative interface for PlanX data operations",
   "private": true,
   "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
   "scripts": {
     "build": "rimraf ./types ./dist && npx tsc",
     "lint": "eslint 'src/**/*.{js,ts}'"

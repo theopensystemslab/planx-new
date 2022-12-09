@@ -33,7 +33,11 @@ export default class Client {
     return createTeam(this.request, { ...args, slug });
   }
 
-  async createFlow(args: { teamId: number; slug: string }): Promise<string> {
+  async createFlow(args: {
+    teamId: number;
+    slug: string;
+    data?: object;
+  }): Promise<string> {
     return createFlow(this.request, args);
   }
 

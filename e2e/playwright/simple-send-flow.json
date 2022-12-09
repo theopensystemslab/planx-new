@@ -10,6 +10,7 @@
     "type": 100,
     "edges": ["hblS8XRf5z", "fhLnbq9mIZ", "s57pJoq7RD"]
   },
+
   "hblS8XRf5z": {
     "data": {
       "val": "a",
@@ -31,6 +32,7 @@
     },
     "type": 200
   },
+
   "mhsohJY1EE": {
     "data": {
       "text": "Question 2"
@@ -40,18 +42,21 @@
   },
   "YoQYqeaDeK": {
     "data": {
+      "val": "one",
       "text": "One"
     },
     "type": 200
   },
   "xFHtpoX8NI": {
     "data": {
+      "val": "two",
       "text": "Two"
     },
     "type": 200
   },
   "zKW1X9QpAp": {
     "data": {
+      "val": "three",
       "text": "Three"
     },
     "type": 200
