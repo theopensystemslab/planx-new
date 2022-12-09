@@ -11,6 +11,7 @@ import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
+import OptionButton from "ui/OptionButton";
 import RichTextInput from "ui/RichTextInput";
 
 import type { FindProperty } from "./model";
@@ -53,6 +54,19 @@ function FindPropertyComponent(props: Props) {
               value={formik.values.description}
               onChange={formik.handleChange}
             />
+          </InputRow>
+          <InputRow>
+            <OptionButton
+              selected={formik.values.allowNewAddresses}
+              onClick={() => {
+                formik.setFieldValue(
+                  "allowNewAddresses",
+                  !formik.values.allowNewAddresses
+                );
+              }}
+            >
+              Allow users to plot new addresses without a UPRN
+            </OptionButton>
           </InputRow>
         </ModalSectionContent>
       </ModalSection>

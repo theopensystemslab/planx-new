@@ -1,6 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import {
   DESCRIPTION_TEXT,
@@ -24,6 +26,7 @@ import ExternalPlanningSiteDialog, {
 } from "ui/ExternalPlanningSiteDialog";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
+import InputRow from "ui/InputRow";
 import { fetchCurrentTeam } from "utils";
 
 import type { FindProperty, SiteAddress } from "../model";
@@ -46,6 +49,8 @@ export default Component;
 
 function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
+  const startPage = "os-address";
+  const [page, setPage] = useState<"os-address" | "new-address">(startPage);
   const [address, setAddress] = useState<SiteAddress | undefined>();
   const [localAuthorityDistricts, setLocalAuthorityDistricts] = useState<
     string[] | undefined
@@ -97,7 +102,7 @@ function Component(props: Props) {
     }
   }, [data]);
 
-  if (!address && Boolean(team)) {
+  if (!address && Boolean(team) && page === "os-address") {
     return (
       <GetAddress
         title={props.title}
@@ -107,6 +112,18 @@ function Component(props: Props) {
         initialSelectedAddress={previouslySubmittedData?._address}
         teamSettings={team?.settings}
         id={props.id}
+        setPage={setPage}
+      />
+    );
+  } else if (!address && Boolean(team) && page === "new-address") {
+    return (
+      <PlotNewAddress
+        title={props.title}
+        description={props.description}
+        setAddress={setAddress}
+        teamSettings={team?.settings}
+        id={props.id}
+        setPage={setPage}
       />
     );
   } else if (address) {
@@ -199,10 +216,12 @@ function GetAddress(props: {
   setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
   title?: string;
   description?: string;
+  allowNewAddresses?: boolean;
   initialPostcode?: string;
   initialSelectedAddress?: Option;
   teamSettings?: TeamSettings;
   id?: string;
+  setPage: React.Dispatch<React.SetStateAction<"os-address" | "new-address">>;
 }) {
   const [postcode, setPostcode] = useState<string | null>(
     props.initialPostcode ?? null
@@ -353,10 +372,130 @@ function GetAddress(props: {
           />
         )}
       </AutocompleteWrapper>
-      <ExternalPlanningSiteDialog
-        purpose={DialogPurpose.MissingAddress}
-        teamSettings={props.teamSettings}
-      ></ExternalPlanningSiteDialog>
+      {props.allowNewAddresses ? (
+        <ExternalPlanningSiteDialog
+          purpose={DialogPurpose.MissingAddress}
+          teamSettings={props.teamSettings}
+        ></ExternalPlanningSiteDialog>
+      ) : (
+        <Box sx={{ textAlign: "right" }}>
+          <Link
+            component="button"
+            onClick={() => props.setPage("new-address")}
+            disabled={Boolean(sanitizedPostcode) && Boolean(selectedOption)}
+          >
+            <Typography variant="body2">
+              The site does not have an address
+            </Typography>
+          </Link>
+        </Box>
+      )}
+    </Card>
+  );
+}
+
+function PlotNewAddress(props: any) {
+  const [longitude, setLongitude] = useState<number | undefined>();
+  const [latitude, setLatitude] = useState<number | undefined>();
+
+  useEffect(() => {
+    const geojsonChangeHandler = ({ detail: geojson }: any) => {
+      if (geojson.features) {
+        // only a single point can be drawn, so get first feature in geojson "FeatureCollection"
+        const feature = geojson.features[0];
+        const coordinates = feature?.geometry?.coordinates;
+        setLongitude(coordinates[0]);
+        setLatitude(coordinates[1]);
+      } else {
+        // if the user clicks 'reset' to erase the drawing, geojson will be empty object, so set boundary to undefined
+        setLongitude(undefined);
+        setLatitude(undefined);
+      }
+    };
+
+    const map: any = document.getElementById("plot-new-address-map");
+    map?.addEventListener("geojsonChange", geojsonChangeHandler);
+
+    return function cleanup() {
+      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
+    };
+  }, [setLongitude, setLatitude]);
+
+  return (
+    <Card
+      handleSubmit={() => console.log("continue")}
+      isValid={Boolean(latitude) && Boolean(longitude)}
+    >
+      <QuestionHeader
+        title={props.title || DEFAULT_TITLE}
+        description={props.description || ""}
+      />
+      <MapContainer>
+        <p style={visuallyHidden}>
+          A static map centred on the property address, showing the Ordnance
+          Survey basemap features.
+        </p>
+        {/* @ts-ignore */}
+        <my-map
+          id="plot-new-address-map"
+          zoom={14}
+          drawMode
+          drawType="Point"
+          resetControlImage="trash"
+          showScale
+          showNorthArrow
+          osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+        />
+      </MapContainer>
+      <InputRow>
+        <InputLabel label="Easting (X)">
+          <Input name="easting" bordered disabled id="easting" />
+        </InputLabel>
+        <InputLabel label="Northing (Y)">
+          <Input name="northing" bordered disabled id="northing" />
+        </InputLabel>
+      </InputRow>
+      <InputRow>
+        <InputLabel label="Longitude">
+          <Input
+            name="longitude"
+            bordered
+            disabled
+            value={longitude}
+            id="longitude"
+          />
+        </InputLabel>
+        <InputLabel label="Latitude">
+          <Input
+            name="latitude"
+            bordered
+            disabled
+            value={latitude}
+            id="latitude"
+          />
+        </InputLabel>
+      </InputRow>
+      <InputLabel label="Describe this site">
+        <Input
+          name="newAddress"
+          bordered
+          onChange={() => {
+            console.log("change");
+          }}
+          id="newAddressInput"
+        />
+      </InputLabel>
+      <Box sx={{ textAlign: "right" }}>
+        <Link
+          component="button"
+          onClick={() => props.setPage("os-address")}
+          disabled={false}
+        >
+          <Typography variant="body2">
+            I want to select an existing address
+          </Typography>
+        </Link>
+      </Box>
     </Card>
   );
 }
