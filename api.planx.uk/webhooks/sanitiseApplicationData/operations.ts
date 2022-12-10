@@ -1,0 +1,125 @@
+import { gql } from "graphql-request";
+import { subMonths } from "date-fns";
+
+import { Operation, OperationResult } from "./types";
+import { adminGraphQLClient } from "../../hasura";
+
+const RETENTION_PERIOD_MONTHS = 6;
+const REDACTED = "**REDACTED**";
+export const getRetentionPeriod = () => subMonths(new Date(), RETENTION_PERIOD_MONTHS);
+
+/**
+ * List of data sanitation operations
+ * XXX: Analytics logs do not contain application data
+ */
+ export const getOperations = (): Operation[] => ([
+  // Raw application data
+  sanitiseLowcalSessions,
+
+  // Audit records
+  sanitiseSessionBackups,
+  // sanitiseUniformApplications,
+  // sanitiseBopsApplications,
+  // sanitiseReconciliationRequests,
+
+  // Event logs
+  // deleteHasuraEventLogs,
+]);
+
+export const operationHandler = async (operation: Operation): Promise<OperationResult> => {
+  let operationResult: OperationResult = {
+    operationName: operation.name,
+    result: "failure"
+  };
+
+  try {
+    const result = await operation()
+    operationResult = {
+      ...operationResult,
+      result: "success",
+      deleteCount: result.length,
+    };
+  } catch (error) {
+    operationResult = {
+      ...operationResult,
+      errorMessage: (error as Error).message,
+    }
+  };
+
+  return operationResult;
+}
+
+export const sanitiseLowcalSessions: Operation = async () => {
+  const mutation = gql`
+    mutation SanitiseLowcalSessions($retentionPeriod: timestamptz, $REDACTED: String) {
+      update_lowcal_sessions(
+        # TODO: add sanitised_at column
+        _set: { data: {} , email: $REDACTED, 
+        # sanitised_at: "now()" 
+        }
+        where: {
+          _or: [
+            { deleted_at: { _lt: $retentionPeriod } }
+            { submitted_at: { _lt: $retentionPeriod } }
+          ]
+        }
+      ) {
+        returning {
+          id
+        }
+      } 
+    }
+  `;
+  const { update_lowcal_sessions: {
+    returning: result
+  } } = await adminGraphQLClient.request(
+    mutation,
+    { retentionPeriod: getRetentionPeriod(), REDACTED },
+  );
+  return result;
+};
+
+export const sanitiseSessionBackups: Operation = async () => {
+  const mutation = gql`
+    mutation SanitiseSessionBackups($retentionPeriod: timestamptz) {
+      update_session_backups(
+        # TODO: add sanitised_at column
+        _set: { flow_data: null, user_data: null
+        # sanitised_at: "now()" 
+        }
+        where: {
+          # TODO: Setup foreign key and use lowcal_session dates?
+          created_at: { _lt: $retentionPeriod }
+        }
+      ) {
+        returning {
+          id
+        }
+      } 
+    }
+  `;
+  const { update_session_backups: {
+    returning: result
+  } } = await adminGraphQLClient.request(
+    mutation,
+    { retentionPeriod: getRetentionPeriod() },
+  );
+  return result;
+};
+
+// const sanitiseUniformApplications: Operation = async () => {
+
+// };
+
+// const sanitiseBopsApplications: Operation = async () => {
+
+// };
+
+// const sanitiseReconciliationRequests: Operation = async () => {
+  
+// };
+
+// const deleteHasuraEventLogs: Operation = async () => {
+  // https://hasura.io/docs/latest/api-reference/schema-api/run-sql/
+  // https://hasura.io/docs/latest/event-triggers/clean-up/
+// };
