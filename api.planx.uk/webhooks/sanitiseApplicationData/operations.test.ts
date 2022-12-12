@@ -1,21 +1,26 @@
+import { runSQL } from "../../hasura/schema";
 import { queryMock } from "../../tests/graphqlQueryMock";
-import { 
-  mockIds, 
-  mockSanitiseBOPSApplicationsMutation, 
-  mockSanitiseLowcalSessionsMutation, 
-  mockSanitiseReconciliationRequestsMutation, 
-  mockSanitiseSessionBackupsMutation, 
+import {
+  mockIds,
+  mockSanitiseBOPSApplicationsMutation,
+  mockSanitiseLowcalSessionsMutation,
+  mockSanitiseReconciliationRequestsMutation,
+  mockSanitiseSessionBackupsMutation,
   mockSanitiseUniformApplicationsMutation,
 } from "./mocks/queries";
-import { 
-  getRetentionPeriod, 
-  operationHandler, 
-  sanitiseBOPSApplications, 
-  sanitiseLowcalSessions, 
-  sanitiseReconciliationRequests, 
-  sanitiseSessionBackups, 
+import {
+  deleteHasuraEventLogs,
+  getRetentionPeriod,
+  operationHandler,
+  sanitiseBOPSApplications,
+  sanitiseLowcalSessions,
+  sanitiseReconciliationRequests,
+  sanitiseSessionBackups,
   sanitiseUniformApplications,
 } from "./operations";
+
+jest.mock("../../hasura/schema")
+const mockRunSQL = runSQL as jest.MockedFunction<typeof runSQL>;
 
 describe("'operationHandler' helper function", () => {
   it("returns a success result when an operation succeeds", async () => {
@@ -52,34 +57,47 @@ describe("getRetentionPeriod helper function", () => {
 });
 
 describe("Data sanitation operations", () => {
-  const testCases = [
-    {
-      operation: sanitiseLowcalSessions,
-      query: mockSanitiseLowcalSessionsMutation,
-    },
-    {
-      operation: sanitiseSessionBackups,
-      query: mockSanitiseSessionBackupsMutation,
-    },
-    {
-      operation: sanitiseUniformApplications,
-      query: mockSanitiseUniformApplicationsMutation,
-    },
-    {
-      operation: sanitiseBOPSApplications,
-      query: mockSanitiseBOPSApplicationsMutation,
-    },
-    {
-      operation: sanitiseReconciliationRequests,
-      query: mockSanitiseReconciliationRequestsMutation,
-    },
-  ];
+  describe("GraphQL queries", () => {
+    const testCases = [
+      {
+        operation: sanitiseLowcalSessions,
+        query: mockSanitiseLowcalSessionsMutation,
+      },
+      {
+        operation: sanitiseSessionBackups,
+        query: mockSanitiseSessionBackupsMutation,
+      },
+      {
+        operation: sanitiseUniformApplications,
+        query: mockSanitiseUniformApplicationsMutation,
+      },
+      {
+        operation: sanitiseBOPSApplications,
+        query: mockSanitiseBOPSApplicationsMutation,
+      },
+      {
+        operation: sanitiseReconciliationRequests,
+        query: mockSanitiseReconciliationRequestsMutation,
+      },
+    ];
 
-  for (const { operation, query } of testCases) {
-    test(`${operation.name} returns a QueryResult on success`, async () => {
-      queryMock.mockQuery(query);
-      const result = await operation();
+    for (const { operation, query } of testCases) {
+      test(`${operation.name} returns a QueryResult on success`, async () => {
+        queryMock.mockQuery(query);
+        const result = await operation();
+        expect(result).toEqual(mockIds);
+      });
+    };
+  });
+  
+  describe("deleteHasuraEventLogs", () => {
+    it("returns a QueryResult on success", async () => {
+      mockRunSQL.mockResolvedValue({
+        result: [ ["id"], [mockIds[0]], [mockIds[1]], [mockIds[2]]]
+      })
+      const result = await deleteHasuraEventLogs();
+      expect(mockRunSQL).toHaveBeenCalled();
       expect(result).toEqual(mockIds);
-    })
-  }
+    });
+  });
 });

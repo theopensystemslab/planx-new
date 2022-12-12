@@ -3,6 +3,7 @@ import { subMonths } from "date-fns";
 
 import { Operation, OperationResult } from "./types";
 import { adminGraphQLClient } from "../../hasura";
+import { runSQL } from "../../hasura/schema";
 
 const RETENTION_PERIOD_MONTHS = 6;
 export const getRetentionPeriod = () => subMonths(new Date(), RETENTION_PERIOD_MONTHS);
@@ -22,7 +23,7 @@ export const getRetentionPeriod = () => subMonths(new Date(), RETENTION_PERIOD_M
   sanitiseReconciliationRequests,
 
   // Event logs
-  // deleteHasuraEventLogs,
+  deleteHasuraEventLogs,
 ]);
 
 export const operationHandler = async (operation: Operation): Promise<OperationResult> => {
@@ -194,7 +195,20 @@ export const sanitiseReconciliationRequests: Operation = async () => {
   return result;
 };
 
-// export const deleteHasuraEventLogs: Operation = async () => {
-  // https://hasura.io/docs/latest/api-reference/schema-api/run-sql/
-  // https://hasura.io/docs/latest/event-triggers/clean-up/
-// };
+/**
+ * Call Hasura Schema API to delete logs
+ * Docs: https://hasura.io/docs/latest/event-triggers/clean-up/
+ */
+export const deleteHasuraEventLogs: Operation = async () => {
+  const response = await runSQL(`
+    DELETE FROM hdb_catalog.event_invocation_logs
+    WHERE created_at < now() - interval '6 months';
+    
+    DELETE FROM hdb_catalog.event_log
+    WHERE (delivered = true OR error = true)
+    AND created_at < now() - interval '6 months'
+    RETURNING id;
+  `);
+  const [ _column_name, ...ids] = response.result.flat()
+  return ids || [];
+};
