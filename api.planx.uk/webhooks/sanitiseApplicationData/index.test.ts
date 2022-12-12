@@ -1,6 +1,14 @@
+import SlackNotify from 'slack-notify';
 import supertest from "supertest";
 import app from "../../server";
 import * as operations from "./operations";
+
+const mockSend = jest.fn()
+jest.mock('slack-notify', () =>
+  jest.fn().mockImplementation(() => {
+    return { send: mockSend };
+  }),
+);
 
 const { post } = supertest(app);
 
@@ -64,7 +72,12 @@ describe("Sanitise application data webhook", () => {
               count: 3,
             }),
           ])
-        )
+        );
+
+        expect(SlackNotify).toHaveBeenCalledWith(process.env.SLACK_WEBHOOK_URL);
+        expect(mockSend).toHaveBeenCalledWith(expect.objectContaining({
+          text: expect.stringMatching(/mockConstructor succeeded/)
+        }));
       });
   });
 
@@ -103,7 +116,12 @@ describe("Sanitise application data webhook", () => {
               count: 3,
             }),
           ])
-        )
+        );
+
+        expect(SlackNotify).toHaveBeenCalledWith(process.env.SLACK_WEBHOOK_URL);
+        expect(mockSend).toHaveBeenCalledWith(expect.objectContaining({
+          text: expect.stringMatching(/Error: Query failed!/)
+        }));
       });
   });
 
