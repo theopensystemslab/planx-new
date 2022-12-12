@@ -32,7 +32,6 @@ import {
   validateSession,
   sendSaveAndReturnEmail,
 } from "./saveAndReturn";
-import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
 import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
 
 import airbrake from "./airbrake";
@@ -634,7 +633,6 @@ app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
 app.use("/webhooks/hasura", useHasuraAuth);
-app.post("/webhooks/hasura/delete-expired-sessions", hardDeleteSessions);
 app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
 app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
