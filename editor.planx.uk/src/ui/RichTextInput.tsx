@@ -95,6 +95,8 @@ interface VariablesState {
   addVariable: (newVariable: string) => void;
 }
 
+export const emptyContent: string = "<p></p>";
+
 // Specify whether a selection is unsuitable for ensuring accessible links
 const linkSelectionError = (selectionHtml: string): string | null => {
   if (selectionHtml.startsWith("<p>") && selectionHtml.endsWith("</p>")) {
@@ -119,11 +121,15 @@ const useVariablesStore = create<VariablesState>((set) => ({
 }));
 
 export const toHtml = (doc: JSONContent) => {
-  return generateHTML(doc, conversionExtensions);
+  const outgoingHtml = generateHTML(doc, conversionExtensions);
+  return outgoingHtml === emptyContent ? "" : outgoingHtml;
 };
 
 export const fromHtml = (htmlString: string) => {
-  return generateJSON(htmlString, conversionExtensions);
+  return generateJSON(
+    htmlString === "" ? emptyContent : htmlString,
+    conversionExtensions
+  );
 };
 
 const initialUrlValue = "https://";
