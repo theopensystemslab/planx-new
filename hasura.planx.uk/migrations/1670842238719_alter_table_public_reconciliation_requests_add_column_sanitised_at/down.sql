@@ -1,4 +1,0 @@
--- Could not auto-generate a down migration.
--- Please write an appropriate down migration for the SQL below:
--- alter table "public"."reconciliation_requests" add column "sanitised_at" timestamptz
---  null;
