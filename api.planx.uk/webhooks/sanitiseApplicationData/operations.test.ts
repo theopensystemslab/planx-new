@@ -1,11 +1,11 @@
 import { queryMock } from "../../tests/graphqlQueryMock";
-import { mockIds, mockSanitiseLowcalSessionsMutation, mockSanitiseSessionBackupsMutation } from "./mocks/queries";
-import { getRetentionPeriod, operationHandler, sanitiseLowcalSessions, sanitiseSessionBackups } from "./operations";
+import { mockIds, mockSanitiseLowcalSessionsMutation, mockSanitiseSessionBackupsMutation, mockSanitiseUniformApplicationsMutation } from "./mocks/queries";
+import { getRetentionPeriod, operationHandler, sanitiseLowcalSessions, sanitiseSessionBackups, sanitiseUniformApplications } from "./operations";
 
 describe("'operationHandler' helper function", () => {
   it("returns a success result when an operation succeeds", async () => {
     const successOperation = jest.fn().mockResolvedValue([
-        "123", "abc", "456", "xyz"
+      "123", "abc", "456", "xyz"
     ]);
     await expect(operationHandler(successOperation)).resolves.toEqual({
       operationName: "mockConstructor",
@@ -46,9 +46,13 @@ describe("Data sanitation operations", () => {
       operation: sanitiseSessionBackups,
       query: mockSanitiseSessionBackupsMutation,
     },
+    {
+      operation: sanitiseUniformApplications,
+      query: mockSanitiseUniformApplicationsMutation,
+    },
   ];
 
-  for(const { operation, query } of testCases) {
+  for (const { operation, query } of testCases) {
     test(`${operation.name} returns a QueryResult on success`, async () => {
       queryMock.mockQuery(query);
       const result = await operation();

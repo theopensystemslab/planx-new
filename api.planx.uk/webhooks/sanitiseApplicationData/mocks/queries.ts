@@ -21,3 +21,15 @@ export const mockSanitiseSessionBackupsMutation = {
     }
   },
 };
+
+export const mockSanitiseUniformApplicationsMutation = {
+  name: "SanitiseUniformApplications",
+  matchOnVariables: false,
+  data: {
+    update_uniform_applications: {
+      returning: mockIds,
+    }
+  },
+};
+
+
