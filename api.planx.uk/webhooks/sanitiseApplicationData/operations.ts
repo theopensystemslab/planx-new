@@ -92,7 +92,6 @@ export const sanitiseSessionBackups: Operation = async () => {
         }
         where: {
           sanitised_at: { _is_null: true }
-          # TODO: Setup foreign key and use lowcal_session dates?
           created_at: { _lt: $retentionPeriod }
         }
       ) {
