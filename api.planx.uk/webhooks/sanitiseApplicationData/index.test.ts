@@ -52,15 +52,15 @@ describe("Sanitise application data webhook", () => {
         expect(response.body).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              result: "success",
+              status: "success",
               count: 1,
             }),
             expect.objectContaining({
-              result: "success",
+              status: "success",
               count: 2,
             }),
             expect.objectContaining({
-              result: "success",
+              status: "success",
               count: 3,
             }),
           ])
@@ -91,15 +91,15 @@ describe("Sanitise application data webhook", () => {
         expect(response.body).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              result: "success",
+              status: "success",
               count: 1,
             }),
             expect.objectContaining({
-              result: "failure",
+              status: "failure",
               errorMessage: "Query failed!"
             }),
             expect.objectContaining({
-              result: "success",
+              status: "success",
               count: 3,
             }),
           ])
@@ -130,15 +130,15 @@ describe("Sanitise application data webhook", () => {
         expect(response.body).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              result: "failure",
+              status: "failure",
               errorMessage: "Query failed!"
             }),
             expect.objectContaining({
-              result: "failure",
+              status: "failure",
               errorMessage: "Query failed!"
             }),
             expect.objectContaining({
-              result: "failure",
+              status: "failure",
               errorMessage: "Query failed!"
             }),
           ])

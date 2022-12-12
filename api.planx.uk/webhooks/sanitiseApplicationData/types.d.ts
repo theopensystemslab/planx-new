@@ -1,6 +1,6 @@
 export interface OperationResult {
   operationName: string;
-  result: "success" | "failure";
+  status: "processing" | "success" | "failure";
   count?: number;
   errorMessage?: string;
 };

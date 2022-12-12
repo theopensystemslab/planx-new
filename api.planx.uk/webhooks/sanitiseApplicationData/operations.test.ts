@@ -29,7 +29,7 @@ describe("'operationHandler' helper function", () => {
     ]);
     await expect(operationHandler(successOperation)).resolves.toEqual({
       operationName: "mockConstructor",
-      result: "success",
+      status: "success",
       count: 4,
     });
   });
@@ -38,7 +38,7 @@ describe("'operationHandler' helper function", () => {
     const failureOperation = jest.fn().mockRejectedValue(new Error("Something went wrong"))
     await expect(operationHandler(failureOperation)).resolves.toEqual({
       operationName: "mockConstructor",
-      result: "failure",
+      status: "failure",
       errorMessage: "Something went wrong",
     });
   });

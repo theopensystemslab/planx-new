@@ -29,19 +29,20 @@ export const getRetentionPeriod = () => subMonths(new Date(), RETENTION_PERIOD_M
 export const operationHandler = async (operation: Operation): Promise<OperationResult> => {
   let operationResult: OperationResult = {
     operationName: operation.name,
-    result: "failure"
+    status: "processing"
   };
 
   try {
     const result = await operation()
     operationResult = {
       ...operationResult,
-      result: "success",
+      status: "success",
       count: result.length,
     };
   } catch (error) {
     operationResult = {
       ...operationResult,
+      status: "failure",
       errorMessage: (error as Error).message,
     }
   };
@@ -209,5 +210,5 @@ export const deleteHasuraEventLogs: Operation = async () => {
     RETURNING id;
   `);
   const [ _column_name, ...ids] = response.result.flat()
-  return ids || [];
+  return ids;
 };

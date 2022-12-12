@@ -3,8 +3,6 @@ import { Request, Response, NextFunction } from "express";
 import { getOperations, operationHandler } from "./operations";
 import { OperationResult } from "./types";
 
-// TODO: sanitised_at or deleted_at column on all tables?
-
 /**
  * Called by Hasura cron job `sanitise_application_data` on a nightly basis
  * See hasura.planx.uk/metadata/cron_triggers.yaml
@@ -25,8 +23,8 @@ export const sanitiseApplicationData = async (
       message: `Failed to sanitise application data. ${(error as Error).message}`,
     });
   }
-  const operationFailed = results.find(operation => operation.result === "failure");
+  const operationFailed = results.find(result => result.status === "failure");
   if (operationFailed) res.status(500)
-  // TODO: Slack notification
+  // TODO: Slack notification to internal channel?
   return res.json(results);
 };
