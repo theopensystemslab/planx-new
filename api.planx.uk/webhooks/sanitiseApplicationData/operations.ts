@@ -20,7 +20,7 @@ export const getRetentionPeriod = () => subMonths(new Date(), RETENTION_PERIOD_M
   sanitiseSessionBackups,
   sanitiseUniformApplications,
   sanitiseBOPSApplications,
-  // sanitiseReconciliationRequests,
+  sanitiseReconciliationRequests,
 
   // Event logs
   // deleteHasuraEventLogs,
@@ -167,9 +167,33 @@ export const sanitiseBOPSApplications: Operation = async () => {
   return result;
 };
 
-// export const sanitiseReconciliationRequests: Operation = async () => {
-  
-// };
+export const sanitiseReconciliationRequests: Operation = async () => {
+  const mutation = gql`
+    mutation SanitiseReconciliationRequests($retentionPeriod: timestamptz) {
+      update_reconciliation_requests(
+        _set: { 
+          response: null
+          sanitised_at: "now()"
+        }
+        where: {
+          sanitised_at: { _is_null: true }
+          created_at: { _lt: $retentionPeriod }
+        }
+      ) {
+        returning {
+          id
+        }
+      } 
+    }
+  `;
+  const { update_reconciliation_requests: {
+    returning: result
+  } } = await adminGraphQLClient.request(
+    mutation,
+    { retentionPeriod: getRetentionPeriod() },
+  );
+  return result;
+};
 
 // export const deleteHasuraEventLogs: Operation = async () => {
   // https://hasura.io/docs/latest/api-reference/schema-api/run-sql/

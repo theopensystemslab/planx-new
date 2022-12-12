@@ -42,4 +42,12 @@ export const mockSanitiseBOPSApplicationsMutation = {
   },
 };
 
-
+export const mockSanitiseReconciliationRequestsMutation = {
+  name: "SanitiseReconciliationRequests",
+  matchOnVariables: false,
+  data: {
+    update_reconciliation_requests: {
+      returning: mockIds,
+    }
+  },
+};
