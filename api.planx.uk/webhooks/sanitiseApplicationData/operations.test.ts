@@ -25,7 +25,7 @@ describe("'operationHandler' helper function", () => {
     await expect(operationHandler(successOperation)).resolves.toEqual({
       operationName: "mockConstructor",
       result: "success",
-      deleteCount: 4,
+      count: 4,
     });
   });
 

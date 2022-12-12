@@ -53,15 +53,15 @@ describe("Sanitise application data webhook", () => {
           expect.arrayContaining([
             expect.objectContaining({
               result: "success",
-              deleteCount: 1,
+              count: 1,
             }),
             expect.objectContaining({
               result: "success",
-              deleteCount: 2,
+              count: 2,
             }),
             expect.objectContaining({
               result: "success",
-              deleteCount: 3,
+              count: 3,
             }),
           ])
         )
@@ -92,7 +92,7 @@ describe("Sanitise application data webhook", () => {
           expect.arrayContaining([
             expect.objectContaining({
               result: "success",
-              deleteCount: 1,
+              count: 1,
             }),
             expect.objectContaining({
               result: "failure",
@@ -100,7 +100,7 @@ describe("Sanitise application data webhook", () => {
             }),
             expect.objectContaining({
               result: "success",
-              deleteCount: 3,
+              count: 3,
             }),
           ])
         )

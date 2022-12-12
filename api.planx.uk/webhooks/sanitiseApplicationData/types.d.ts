@@ -1,7 +1,7 @@
 export interface OperationResult {
   operationName: string;
   result: "success" | "failure";
-  deleteCount?: number;
+  count?: number;
   errorMessage?: string;
 };
 

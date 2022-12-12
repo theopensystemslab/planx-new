@@ -5,7 +5,6 @@ import { Operation, OperationResult } from "./types";
 import { adminGraphQLClient } from "../../hasura";
 
 const RETENTION_PERIOD_MONTHS = 6;
-const REDACTED = "**REDACTED**";
 export const getRetentionPeriod = () => subMonths(new Date(), RETENTION_PERIOD_MONTHS);
 
 /**
@@ -37,7 +36,7 @@ export const operationHandler = async (operation: Operation): Promise<OperationR
     operationResult = {
       ...operationResult,
       result: "success",
-      deleteCount: result.length,
+      count: result.length,
     };
   } catch (error) {
     operationResult = {
@@ -51,11 +50,11 @@ export const operationHandler = async (operation: Operation): Promise<OperationR
 
 export const sanitiseLowcalSessions: Operation = async () => {
   const mutation = gql`
-    mutation SanitiseLowcalSessions($retentionPeriod: timestamptz, $REDACTED: String) {
+    mutation SanitiseLowcalSessions($retentionPeriod: timestamptz) {
       update_lowcal_sessions(
         _set: { 
           data: {}
-          email: $REDACTED
+          email: ""
           sanitised_at: "now()"
         }
         where: {
@@ -76,7 +75,7 @@ export const sanitiseLowcalSessions: Operation = async () => {
     returning: result
   } } = await adminGraphQLClient.request(
     mutation,
-    { retentionPeriod: getRetentionPeriod(), REDACTED },
+    { retentionPeriod: getRetentionPeriod() },
   );
   return result;
 };
