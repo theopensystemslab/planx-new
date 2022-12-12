@@ -19,7 +19,7 @@ export const getRetentionPeriod = () => subMonths(new Date(), RETENTION_PERIOD_M
   // Audit records
   sanitiseSessionBackups,
   sanitiseUniformApplications,
-  // sanitiseBopsApplications,
+  sanitiseBOPSApplications,
   // sanitiseReconciliationRequests,
 
   // Event logs
@@ -139,9 +139,33 @@ export const sanitiseUniformApplications: Operation = async () => {
   return result;
 };
 
-// export const sanitiseBopsApplications: Operation = async () => {
-
-// };
+export const sanitiseBOPSApplications: Operation = async () => {
+  const mutation = gql`
+    mutation SanitiseBOPSApplications($retentionPeriod: timestamptz) {
+      update_bops_applications(
+        _set: { 
+          request: {}
+          sanitised_at: "now()"
+        }
+        where: {
+          sanitised_at: { _is_null: true }
+          created_at: { _lt: $retentionPeriod }
+        }
+      ) {
+        returning {
+          id
+        }
+      } 
+    }
+  `;
+  const { update_bops_applications: {
+    returning: result
+  } } = await adminGraphQLClient.request(
+    mutation,
+    { retentionPeriod: getRetentionPeriod() },
+  );
+  return result;
+};
 
 // export const sanitiseReconciliationRequests: Operation = async () => {
   

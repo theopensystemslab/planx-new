@@ -32,4 +32,14 @@ export const mockSanitiseUniformApplicationsMutation = {
   },
 };
 
+export const mockSanitiseBOPSApplicationsMutation = {
+  name: "SanitiseBOPSApplications",
+  matchOnVariables: false,
+  data: {
+    update_bops_applications: {
+      returning: mockIds,
+    }
+  },
+};
+
 

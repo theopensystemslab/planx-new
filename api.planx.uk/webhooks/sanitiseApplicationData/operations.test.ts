@@ -1,6 +1,6 @@
 import { queryMock } from "../../tests/graphqlQueryMock";
-import { mockIds, mockSanitiseLowcalSessionsMutation, mockSanitiseSessionBackupsMutation, mockSanitiseUniformApplicationsMutation } from "./mocks/queries";
-import { getRetentionPeriod, operationHandler, sanitiseLowcalSessions, sanitiseSessionBackups, sanitiseUniformApplications } from "./operations";
+import { mockIds, mockSanitiseBOPSApplicationsMutation, mockSanitiseLowcalSessionsMutation, mockSanitiseSessionBackupsMutation, mockSanitiseUniformApplicationsMutation } from "./mocks/queries";
+import { getRetentionPeriod, operationHandler, sanitiseBOPSApplications, sanitiseLowcalSessions, sanitiseSessionBackups, sanitiseUniformApplications } from "./operations";
 
 describe("'operationHandler' helper function", () => {
   it("returns a success result when an operation succeeds", async () => {
@@ -49,6 +49,10 @@ describe("Data sanitation operations", () => {
     {
       operation: sanitiseUniformApplications,
       query: mockSanitiseUniformApplicationsMutation,
+    },
+    {
+      operation: sanitiseBOPSApplications,
+      query: mockSanitiseBOPSApplicationsMutation,
     },
   ];
 
