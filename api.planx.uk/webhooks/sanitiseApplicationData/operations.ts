@@ -53,11 +53,13 @@ export const sanitiseLowcalSessions: Operation = async () => {
   const mutation = gql`
     mutation SanitiseLowcalSessions($retentionPeriod: timestamptz, $REDACTED: String) {
       update_lowcal_sessions(
-        # TODO: add sanitised_at column
-        _set: { data: {} , email: $REDACTED, 
-        # sanitised_at: "now()" 
+        _set: { 
+          data: {}
+          email: $REDACTED
+          sanitised_at: "now()"
         }
         where: {
+          sanitised_at: { _is_null: true }
           _or: [
             { deleted_at: { _lt: $retentionPeriod } }
             { submitted_at: { _lt: $retentionPeriod } }
@@ -83,11 +85,13 @@ export const sanitiseSessionBackups: Operation = async () => {
   const mutation = gql`
     mutation SanitiseSessionBackups($retentionPeriod: timestamptz) {
       update_session_backups(
-        # TODO: add sanitised_at column
-        _set: { flow_data: null, user_data: null
-        # sanitised_at: "now()" 
+        _set: {
+          flow_data: null
+          user_data: null
+          sanitised_at: "now()"
         }
         where: {
+          sanitised_at: { _is_null: true }
           # TODO: Setup foreign key and use lowcal_session dates?
           created_at: { _lt: $retentionPeriod }
         }
@@ -107,19 +111,19 @@ export const sanitiseSessionBackups: Operation = async () => {
   return result;
 };
 
-// const sanitiseUniformApplications: Operation = async () => {
+// export const sanitiseUniformApplications: Operation = async () => {
 
 // };
 
-// const sanitiseBopsApplications: Operation = async () => {
+// export const sanitiseBopsApplications: Operation = async () => {
 
 // };
 
-// const sanitiseReconciliationRequests: Operation = async () => {
+// export const sanitiseReconciliationRequests: Operation = async () => {
   
 // };
 
-// const deleteHasuraEventLogs: Operation = async () => {
+// export const deleteHasuraEventLogs: Operation = async () => {
   // https://hasura.io/docs/latest/api-reference/schema-api/run-sql/
   // https://hasura.io/docs/latest/event-triggers/clean-up/
 // };
