@@ -62,3 +62,38 @@ describe(`sending an application by email to a planning office`, () => {
       });
   });
 });
+
+describe(`downloading application data received by email`, () => {
+  beforeEach(() => {
+    queryMock.mockQuery({
+      name: "GetTeamSettings",
+      matchOnVariables: false,
+      data: {
+        teams: [{ settings: { "sendToEmail": "planners@southwark.gov.uk" } }]
+      },
+      variables: { slug: "southwark" },
+    });
+  });
+
+  it("errors if required query params are missing", async() => {
+    await supertest(app)
+      .get("/download-application-files/123?email=planning_office@test.com")
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toEqual({
+          error: "Missing values required to access application files"
+        });
+      });
+  });
+
+  it.skip("errors if email query param does not match the stored database value for this team", async() => {
+    await supertest(app)
+      .get("/download-application-files/123?email=wrong@southwark.gov.uk&localAuthority=southwark")
+      .expect(403)
+      .then((res) => {
+        expect(res.body).toEqual({
+          error: "Provided email address is not enabled to access application files"
+        });
+      });
+  });
+});
