@@ -1,6 +1,7 @@
 import { gql } from 'graphql-request';
 import { adminGraphQLClient } from "./hasura";
 import { Flow, Node } from "./types";
+
 const client = adminGraphQLClient;
 
 // Get a flow's data (unflattened, without external portal nodes)
@@ -11,6 +12,7 @@ const getFlowData = async (id: string): Promise<Flow> => {
         flows_by_pk(id: $id) {
           slug
           data
+          team_id
         }
       }
       `,
@@ -18,6 +20,51 @@ const getFlowData = async (id: string): Promise<Flow> => {
   );
 
   return data.flows_by_pk;
+};
+
+// Insert a new flow into the `flows` table
+const insertFlow = async (teamId: number, slug: string, flowData: Flow["data"]) => {
+  const data = await client.request(
+    gql`
+      mutation InsertFlow ($team_id: Int!, $slug: String!, $data: jsonb = {}, $version: Int!) {
+        insert_flows_one(object: {
+          team_id: $team_id,
+          slug: $slug,
+          data: $data,
+          version: $version
+        }) {
+          id
+        }
+      }
+    `,
+    {
+      team_id: teamId,
+      slug: slug,
+      data: flowData,
+      version: 1,
+    }
+  );
+
+  if (data) await createAssociatedOperation(data?.insert_flows_one?.id);
+  return data?.insert_flows_one;
+};
+
+// Add a row to `operations` for an inserted flow, otherwise ShareDB throws a silent error when opening the flow in the UI
+const createAssociatedOperation = async (flowId: Flow["id"]) => {
+  const data = await client.request(
+    gql`
+      mutation InsertOperation ($flow_id: uuid!, $data: jsonb = {}) {
+        insert_operations_one(object: { flow_id: $flow_id, version: 1, data: $data }) {
+          id
+        }
+      }
+    `,
+    {
+      flow_id: flowId,
+    }
+  );
+
+  return data?.insert_operations_one;
 };
 
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
@@ -146,4 +193,5 @@ export {
   dataMerged,
   getChildren,
   makeUniqueFlow,
+  insertFlow,
 };

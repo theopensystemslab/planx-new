@@ -55,6 +55,7 @@ export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: any) => void;
   connect: (src: Store.nodeId, tgt: Store.nodeId, object?: any) => void;
   connectTo: (id: Store.nodeId) => void;
+  copyFlow: (flowId: string, teamId: number) => Promise<any>;
   copyNode: (id: Store.nodeId) => void;
   createFlow: (teamId: any, newSlug: any) => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
@@ -137,6 +138,22 @@ export const editorStore = (
 
     doc.on("op", (_op: any, isLocalOp?: boolean) =>
       isLocalOp ? cloneStateFromLocalOps() : cloneStateFromRemoteOps()
+    );
+  },
+
+  copyFlow: async (flowId, teamId) => {
+    const token = getCookie("jwt");
+
+    return axios.post(
+      `${process.env.REACT_APP_API_URL}/flows/${flowId}/copy`,
+      {
+        insert: true,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
   },
 
