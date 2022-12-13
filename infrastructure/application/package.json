@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "@nodelib/fs.walk": "^1.2.8",
-    "@pulumi/aws": "^5.6.0",
+    "@pulumi/aws": "^5.23.0",
     "@pulumi/awsx": "^0.40.0",
     "@pulumi/cloudflare": "^4.7.0",
     "@pulumi/docker": "^3.2.0",
