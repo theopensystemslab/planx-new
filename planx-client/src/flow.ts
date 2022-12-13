@@ -2,12 +2,12 @@ import { Request } from "./graphql";
 
 export async function createFlow(
   request: Request,
-  args: { teamId: number; slug: string; data?: object }
+  args: { teamId: number; slug: string; data?: object; version?: number }
 ): Promise<string> {
   const { insert_flows_one: response } = await request(
     `
       mutation CreateFlow($teamId: Int!, $flowSlug: String!, $data: jsonb) {
-        insert_flows_one(object: { team_id: $teamId, slug: $flowSlug, data: $data }) {
+        insert_flows_one(object: { team_id: $teamId, slug: $flowSlug, data: $data, version: 1 }) {
           id
         }
       }
