@@ -1,4 +1,4 @@
-import { airbrake } from "airbrake";
+import { reportError } from "airbrake";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -171,8 +171,7 @@ function Component(props: Props) {
       // XXX: There's probably been an issue fetching the payment status,
       //      but there's a chance that the user might've made a successful
       //      payment. We silently log the error and the service continues.
-      airbrake?.notify(err);
-      console.error(err);
+      reportError(err);
     }
   };
 
