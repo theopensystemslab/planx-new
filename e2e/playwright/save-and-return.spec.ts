@@ -96,12 +96,10 @@ async function returnToSession({ page, context, sessionId }) {
 async function saveSession({ page, client, context }): string {
   const text = "Save and return to this application later";
   await page.locator(`button :has-text("${text}")`).click();
-  await page.waitForLoadState("domcontentloaded");
-  /* FIXME: when the API returns a 500 (as it does in CI), this causes a failure */
-  //await page.waitForResponse(
-  //  (response) => response.status() === 200
-  //  //response.url().includes("/send-email/save") && response.status() === 200
-  //);
+  await page.waitForResponse((response) => {
+    console.log("response: ", response.url(), "status: ", response.url());
+    return response.url().includes("/send-email/save");
+  });
   const sessionId = await findSessionId(client, context);
   test.fail(!sessionId, "sessionId not found");
   return sessionId;
