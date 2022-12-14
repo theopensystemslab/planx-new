@@ -23,15 +23,16 @@ const getFlowData = async (id: string): Promise<Flow> => {
 };
 
 // Insert a new flow into the `flows` table
-const insertFlow = async (teamId: number, slug: string, flowData: Flow["data"]) => {
+const insertFlow = async (teamId: number, slug: string, flowData: Flow["data"], creatorId?: number) => {
   const data = await client.request(
     gql`
-      mutation InsertFlow ($team_id: Int!, $slug: String!, $data: jsonb = {}, $version: Int!) {
+      mutation InsertFlow ($team_id: Int!, $slug: String!, $data: jsonb = {}, $version: Int!, $creator_id: Int) {
         insert_flows_one(object: {
           team_id: $team_id,
           slug: $slug,
           data: $data,
-          version: $version
+          version: $version,
+          creator_id: $creator_id
         }) {
           id
         }
@@ -42,6 +43,7 @@ const insertFlow = async (teamId: number, slug: string, flowData: Flow["data"]) 
       slug: slug,
       data: flowData,
       version: 1,
+      creator_id: creatorId,
     }
   );
 
