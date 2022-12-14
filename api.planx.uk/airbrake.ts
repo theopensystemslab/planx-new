@@ -2,11 +2,13 @@ import { Notifier } from "@airbrake/node";
 
 export const reportError = getErrorLogger().notify;
 
-const log = process.env.DEBUG
-  ? console.log
-  : () => {
-      /* silence */
-    };
+function log() {
+  return process.env.DEBUG
+    ? console.log
+    : () => {
+        /* silence */
+      };
+}
 
 function getErrorLogger(): ErrorLogger {
   const hasConfig =
