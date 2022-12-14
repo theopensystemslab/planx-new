@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  test-ready:
+    image: alpine:3.17
+    restart: unless-stopped
+    depends_on:
+      minio:
+        condition: service_healthy
+      sharedb:
+        condition: service_started
+      api:
+        condition: service_healthy
+    entrypoint: sh
+    command: -c "echo ready for testing"
