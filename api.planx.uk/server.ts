@@ -47,7 +47,7 @@ import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
 // debug, info, warn, error, silent
 const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
-import airbrake from "./airbrake";
+import { reportError } from "./airbrake";
 import {
   createReminderEvent,
   createExpiryEvent,
@@ -636,13 +636,14 @@ app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
-    if (errorObject.error && airbrake) {
-      airbrake.notify(errorObject.error);
+    if (errorObject.error) {
+      reportError(errorObject.error)
       return {
         ...errorObject,
         message: errorObject.message.concat(", this error has been logged"),
       };
     } else {
+      reportError(errorObject)
       return errorObject;
     }
   })();
