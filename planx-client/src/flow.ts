@@ -2,7 +2,7 @@ import { Request } from "./graphql";
 
 export async function createFlow(
   request: Request,
-  args: { teamId: number; slug: string; data?: object; version?: number }
+  args: { teamId: number; slug: string; data?: object }
 ): Promise<string> {
   const { insert_flows_one: response } = await request(
     `
