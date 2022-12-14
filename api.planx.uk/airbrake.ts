@@ -2,6 +2,12 @@ import { Notifier } from "@airbrake/node";
 
 export const reportError = getErrorLogger().notify;
 
+const log = process.env.DEBUG
+  ? console.log
+  : () => {
+      /* silence */
+    };
+
 function getErrorLogger(): ErrorLogger {
   const hasConfig =
     process.env.NODE_ENV === "production" &&
@@ -10,11 +16,11 @@ function getErrorLogger(): ErrorLogger {
     process.env.AIRBRAKE_PROJECT_KEY;
 
   if (!hasConfig) {
-    console.log("Airbrake not configured");
+    log("Airbrake not configured");
     return {
       notify: (error) => {
-        console.log(error);
-        console.log("Error was not sent to Airbrake");
+        log(error);
+        log("Error was not sent to Airbrake");
       },
     };
   }
