@@ -10,10 +10,10 @@ function getErrorLogger(): ErrorLogger {
     process.env.AIRBRAKE_PROJECT_KEY;
 
   if (!hasConfig) {
-    console.error("Airbrake not configured");
+    console.log("Airbrake not configured");
     return {
       notify: (error) => {
-        console.error(error);
+        console.log(error);
         console.log("Error was not sent to Airbrake");
       },
     };
