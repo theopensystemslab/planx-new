@@ -214,5 +214,19 @@ services:
       timeout: 20s
       retries: 3
 
+  test-ready:
+    image: alpine:3.17
+    depends_on:
+      minio:
+        condition: service_healthy
+      sharedb:
+        condition: service_started
+      api:
+        condition: service_healthy
+      seed-database:
+        condition: service_completed_successfully
+    entrypoint: sh
+    command: -c "echo ready for testing"
+
 volumes:
   data:
