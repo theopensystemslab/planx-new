@@ -5,6 +5,7 @@ export const reportError = getErrorLogger().notify;
 function getErrorLogger(): ErrorLogger {
   const hasConfig =
     process.env.NODE_ENV === "production" &&
+    process.env.API_URL_EXT &&
     process.env.AIRBRAKE_PROJECT_ID &&
     process.env.AIRBRAKE_PROJECT_KEY;
 
@@ -19,8 +20,8 @@ function getErrorLogger(): ErrorLogger {
   }
 
   return new Notifier({
-    projectId: Number(process.env.AIRBRAKE_PROJECT_ID),
-    projectKey: process.env.AIRBRAKE_PROJECT_KEY,
+    projectId: Number(process.env.AIRBRAKE_PROJECT_ID!),
+    projectKey: process.env.AIRBRAKE_PROJECT_KEY!,
     environment: process.env.API_URL_EXT!.endsWith("planx.uk")
       ? "production"
       : "staging",
