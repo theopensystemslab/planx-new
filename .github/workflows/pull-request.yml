@@ -76,7 +76,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: ./scripts/start-containers-for-tests.sh
-      - run: ./hasura.planx.uk/run-postgres-tests.sh
+      - name: Postgres Tests
+        run: ./hasura.planx.uk/run-postgres-tests.sh
       - run: pnpm i -g hasura-cli
       - name: Hasura Tests
         run: pnpm install --frozen-lockfile && pnpm test
