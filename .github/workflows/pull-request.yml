@@ -90,7 +90,9 @@ jobs:
       - name: Playwright Tests
         run:  pnpm test:playwright
         working-directory: e2e
-      - uses: actions/upload-artifact@v3
+      - name: Archive Playwright Test Results
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v3
         with:
           name: playwright-report
           path: e2e/playwright-report/
