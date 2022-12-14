@@ -75,7 +75,8 @@ jobs:
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: ./scripts/start-containers-for-tests.sh
+      - name: Start test containers
+        run: ./scripts/start-containers-for-tests.sh
       - name: Postgres Tests
         run: ./hasura.planx.uk/run-postgres-tests.sh
       - run: pnpm i -g hasura-cli
