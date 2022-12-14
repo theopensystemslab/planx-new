@@ -4,7 +4,7 @@
 // POST data payloads accepted by the BOPS API, see:
 // https://southwark.preview.bops.services/api-docs/index.html
 
-import { airbrake } from "airbrake";
+import { reportError } from "airbrake";
 import { flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
@@ -134,8 +134,7 @@ export const makePayload = (
           }
         }
       } catch (err) {
-        console.error(err);
-        airbrake?.notify(err);
+        reportError(err);
       }
 
       // exclude answers that have been extracted into the root object
@@ -361,8 +360,8 @@ export function getBOPSParams(
       override: passport?.data?.["application.resultOverride.reason"],
     });
   } catch (err) {
-    console.error("unable to get flag result", err);
-    airbrake?.notify(err);
+    console.error("unable to get flag result");
+    reportError(err);
   }
 
   // 9. user role
@@ -397,8 +396,7 @@ export function getBOPSParams(
         err,
       },
     ];
-    console.error(errPayload);
-    airbrake?.notify(errPayload);
+    reportError(errPayload);
   }
 
   return {
