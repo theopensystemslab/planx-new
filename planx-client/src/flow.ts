@@ -18,6 +18,7 @@ export async function createFlow(
       data: args.data,
     }
   );
+  await createAssociatedOperation(request, { flowId: response.id });
   return response.id;
 }
 
@@ -46,5 +47,23 @@ export async function publishFlow(
     }
   );
 
+  return response.id;
+}
+
+// Add a row to `operations` for an inserted flow, otherwise ShareDB throws a silent error when opening the flow in the UI
+async function createAssociatedOperation(
+  request: Request,
+  args: { flowId: string }
+): Promise<number> {
+  const { insert_operations_one: response } = await request(
+    `
+    mutation InsertOperation ($flowId: uuid!, $data: jsonb = {}) {
+      insert_operations_one(object: { flow_id: $flowId, version: 1, data: $data }) {
+        id
+      }
+    }
+    `,
+    { flowId: args.flowId }
+  );
   return response.id;
 }

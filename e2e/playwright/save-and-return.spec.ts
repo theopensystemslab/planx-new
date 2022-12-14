@@ -97,7 +97,6 @@ async function saveSession({ page, client, context }): string {
   const text = "Save and return to this application later";
   await page.locator(`button :has-text("${text}")`).click();
   await page.waitForResponse((response) => {
-    console.log("response: ", response.url(), "status: ", response.url());
     return response.url().includes("/send-email/save");
   });
   const sessionId = await findSessionId(client, context);
@@ -150,7 +149,6 @@ function getInitialContext() {
 }
 
 function getClient(): Client {
-  // check env
   assert(process.env.HASURA_GRAPHQL_URL);
   assert(process.env.HASURA_GRAPHQL_ADMIN_SECRET);
 

@@ -1,6 +1,6 @@
 {
   "rewrites": [
     { "source": "*", "destination": "/index.html" },
-    { "source": "/static/:match*", "destination": "/static/:match*" }
+    { "source": "/static/:a/:b", "destination": "/static/:a/:b" }
   ]
 }
