@@ -25,7 +25,7 @@ apt-get install docker-ce docker-ce-cli containerd.io -y
 curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
-docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.pizza.yml up --build -d
+docker-compose --env-file .env.pizza -f docker-compose.yml -f docker-compose.pizza.yml up --build -d
 
 # install hasura cli
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash

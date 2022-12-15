@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 set -e
 
@@ -12,11 +12,11 @@ echo "ROOT_DIR=${ROOT_DIR}"
 cd "$ROOT_DIR" || exit
 
 # Destroy all previous containers and data (just in case)
-docker-compose down --volumes --remove-orphans
+docker compose down --volumes --remove-orphans
 
 trap 'echo "Cleaning up…" ; docker-compose down --volumes --remove-orphans' TERM INT
 
 echo "Starting docker…"
-DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml -f docker-compose.e2e.yml up --build -d test-ready
+DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml -f docker-compose.e2e.yml --profile mock-services up --build -d test-ready
 
 echo "All containers ready."

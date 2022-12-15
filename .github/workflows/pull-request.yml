@@ -346,12 +346,10 @@ jobs:
 
             ./scripts/pull-secrets.sh
 
-            echo "
-            ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
-            " > .env.temp
-            cat .env .env.temp .env.staging > .env.prod
+            echo "ROOT_DOMAIN=${{ env.FULL_DOMAIN }}" > .env.temp
+            cat .env .env.temp .env.staging > .env.pizza
 
-            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} sh scripts/pullrequest/create.sh
+            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/create.sh
 
       # UPDATE STEPS
 
@@ -376,12 +374,10 @@ jobs:
 
             ./scripts/pull-secrets.sh
 
-            echo "
-            ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
-            " > .env.temp
-            cat .env .env.temp .env.staging > .env.prod
+            echo "ROOT_DOMAIN=${{ env.FULL_DOMAIN }}" > .env.temp
+            cat .env .env.temp .env.staging > .env.pizza
 
-            sh scripts/pullrequest/update.sh
+            ./scripts/pullrequest/update.sh
 
       # CREATE & UPDATE STEPS
 
@@ -429,15 +425,17 @@ jobs:
     needs: [create_or_update_vultr_instance]
     runs-on: ubuntu-20.04
     steps:
-      - name: API healthcheck
-        run: |
-          timeout 150s bash -c "until curl --fail https://api.${{ env.FULL_DOMAIN }}; do sleep 1; done"
-      - name: Hasura healthcheck
-        run: |
-          timeout 150s bash -c "until curl --fail https://hasura.${{ env.FULL_DOMAIN }}/healthz; do sleep 1; done"
       - name: Editor healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://${{ env.FULL_DOMAIN }}; do sleep 1; done"
+
+      - name: Hasura healthcheck
+        run: |
+          timeout 150s bash -c "until curl --fail https://hasura.${{ env.FULL_DOMAIN }}/healthz; do sleep 1; done"
+
+      - name: API healthcheck
+        run: |
+          timeout 150s bash -c "until curl --fail https://api.${{ env.FULL_DOMAIN }}; do sleep 1; done"
 
   lighthouse:
     name: Lighthouse

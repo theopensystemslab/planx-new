@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  postgres:
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  hasura:
+    volumes:
+      - "./hasura.planx.uk/metadata:/hasura-metadata"
+      - "./hasura.planx.uk/migrations:/hasura-migrations"
+    env_file: "./.env"
+
+  api:
+    build:
+      target: development
+    volumes:
+      - "./api.planx.uk:/api"
+    env_file: "./.env"
+
+  sharedb:
+    volumes:
+      - "./sharedb.planx.uk:/sharedb"
+      - "/sharedb/node_modules"
+    env_file: "./.env"
+
+  # used as an S3 service mock
+  minio:
+    image: minio/minio:RELEASE.2021-08-31T05-46-54Z
+    ports:
+      - ${MINIO_PORT}:9000
+      - ${MINIO_ADMIN_PORT}:9001
+    volumes:
+      - ./minio-data:/data
+    environment:
+      # use these credentials to login the dashboard or upload files as S3 replacement
+      MINIO_ROOT_USER: ${AWS_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${AWS_SECRET_KEY}
+    entrypoint: sh
+    command: -c "mkdir -p /data/${AWS_S3_BUCKET} && minio server --console-address ':9001' /data"
+    deploy:
+      restart_policy:
+        condition: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+volumes:
+  data:
