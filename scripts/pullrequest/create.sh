@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -o errexit -o pipefail
 
 echo "root:$SSH_PASSWORD" | chpasswd
 
@@ -21,9 +22,12 @@ echo \
 apt-get update -y
 apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
 
-docker compose --env-file .env.pizza -f docker-compose.yml -f docker-compose.pizza.yml up --build -d
-
 # install hasura cli
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
-cd hasura.planx.uk || exit 1
+
+# start services
+docker compose --env-file .env.pizza -f docker-compose.yml -f docker-compose.pizza.yml up --build --wait
+
+# insert hasura seeds
+cd hasura.planx.uk
 hasura seed apply --envfile ./../.env
