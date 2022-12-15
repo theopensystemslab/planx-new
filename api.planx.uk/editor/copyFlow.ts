@@ -28,7 +28,7 @@ const copyFlow = async (
       const newSlug = flow.slug + "-copy";
       const creatorId = parseInt(req.user.sub, 10);
       // Insert the flow and an associated operation
-      await insertFlow(flow.team_id, newSlug, uniqueFlowData, creatorId);
+      await insertFlow(flow.team_id, newSlug, uniqueFlowData, creatorId, req.params.flowId);
     }
 
     res.status(200).send({
