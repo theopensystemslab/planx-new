@@ -627,7 +627,7 @@ app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
 app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
 
-app.use("/proxy/ordnance-survey/", useOrdnanceSurveyProxy);
+app.use("/proxy/ordnance-survey", useOrdnanceSurveyProxy);
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {

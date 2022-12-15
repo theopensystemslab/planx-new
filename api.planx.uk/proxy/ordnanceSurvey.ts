@@ -1,7 +1,7 @@
 import { useProxy } from './index';
 import { NextFunction, Request, Response } from "express";
 
-const OS_DOMAIN = "https://api.os.uk";
+export const OS_DOMAIN = "https://api.os.uk";
 
 export const useOrdnanceSurveyProxy = async (
   req: Request,
@@ -14,7 +14,7 @@ export const useOrdnanceSurveyProxy = async (
   })(req, res, next)
 );
 
-const appendAPIKey = (fullPath: string, req: Request): string => {
+export const appendAPIKey = (fullPath: string, req: Request): string => {
   const [path, params] = fullPath.split("?");
   // Append API key
   const updatedParams = new URLSearchParams(params);
