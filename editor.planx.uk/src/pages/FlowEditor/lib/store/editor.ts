@@ -15,6 +15,8 @@ import { client } from "lib/graphql";
 import debounce from "lodash/debounce";
 import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
+import { customAlphabet } from "nanoid-good";
+import en from "nanoid-good/locale/en";
 import type { FlowSettings, TextContent } from "types";
 import type { GetState, SetState } from "zustand/vanilla";
 
@@ -55,6 +57,7 @@ export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: any) => void;
   connect: (src: Store.nodeId, tgt: Store.nodeId, object?: any) => void;
   connectTo: (id: Store.nodeId) => void;
+  copyFlow: (flowId: string) => Promise<any>;
   copyNode: (id: Store.nodeId) => void;
   createFlow: (teamId: any, newSlug: any) => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
@@ -137,6 +140,31 @@ export const editorStore = (
 
     doc.on("op", (_op: any, isLocalOp?: boolean) =>
       isLocalOp ? cloneStateFromLocalOps() : cloneStateFromRemoteOps()
+    );
+  },
+
+  copyFlow: async (flowId: string) => {
+    const token = getCookie("jwt");
+
+    // when copying a flow, we make nodeIds unique by replacing part of the original nodeId string.
+    //   the onboarding script will often provide a meaningful string reflecting the team name (eg "LAM"),
+    //     but when accessed from the editor we generate a string using the same method as in src/@planx/graph/index.ts
+    const randomReplacementCharacters = customAlphabet(en)(
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+      5 // a full nodeId is 10 characters long
+    );
+
+    return axios.post(
+      `${process.env.REACT_APP_API_URL}/flows/${flowId}/copy`,
+      {
+        replaceValue: randomReplacementCharacters(),
+        insert: true,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
   },
 
