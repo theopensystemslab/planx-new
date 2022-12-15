@@ -65,6 +65,7 @@ import { sendToBOPS } from "./send/bops";
 import { createSendEvents } from "./send/createSendEvents";
 import { sendToUniform } from "./send/uniform";
 import { sendSlackNotification } from "./webhooks/sendNotifications";
+import { copyFlow } from "./editor/copyFlow";
 
 const router = express.Router();
 
@@ -476,6 +477,8 @@ app.get(
   useJWT,
   graphQLVoyagerHandler({ graphQLURL: "/introspect-all", validateUser: true })
 );
+
+app.post("/flows/:flowId/copy", useJWT, copyFlow);
 
 app.post("/flows/:flowId/diff", useJWT, diffFlow);
 
