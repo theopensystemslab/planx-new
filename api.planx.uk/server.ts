@@ -478,7 +478,6 @@ app.get(
   graphQLVoyagerHandler({ graphQLURL: "/introspect-all", validateUser: true })
 );
 
-// use with query param `insert=true` (optional)
 app.post("/flows/:flowId/copy", useJWT, copyFlow);
 
 app.post("/flows/:flowId/diff", useJWT, diffFlow);
