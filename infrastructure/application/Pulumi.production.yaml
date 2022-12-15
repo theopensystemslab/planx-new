@@ -30,6 +30,8 @@ config:
     secure: AAABAKQ6L5aOwZWpj9YOsaW8bOOukjt1mZuTgdKjM/3nSmF/0nM/f9c9W9DXygUFj2wtq5/iugo1UTS0+bhEn8Dr9k1Qzr2EmuGpQw==
   application:metabasePgPassword:
     secure: AAABAN1bRAyO0jk0n4rfVAntYPWNat+naRsld87v3I18Bn9Iu5HGHmdKyF8Z0qpKoa7Sm88hmxlYsOb9wxQi0Yxtl7sdGZvodD6iLg==
+  application:ordnance-survey-api-key:
+    secure: AAABAE+wD6ahxO45tq/JWp6odrHX9jOhdjlMsCqS6kFqBgJ+3T56fOSgpZ26nEftv9IwWZQh/v93tRtTDEb+uw==
   application:session-secret:
     secure: AAABACeZpncVIdwarlb/J9qtaPqUob0YwbaOVDNEgfhSJ71aq0pkZml1EP+JqMKvyhkG483LcIiGzEh/ZDJehMu2
   application:slack-webhook-url:

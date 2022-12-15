@@ -170,6 +170,7 @@ services:
       HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
       FILE_API_KEY: ${FILE_API_KEY}
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
+      ORDNANCE_SURVEY_API_KEY: ${ORDNANCE_SURVEY_API_KEY}
 
   sharedb:
     restart: unless-stopped

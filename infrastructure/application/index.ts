@@ -391,6 +391,10 @@ export = async () => {
             name: "SLACK_WEBHOOK_URL",
             value: config.require("slack-webhook-url"),
           },
+          {
+            name: "ORDNANCE_SURVEY_API_KEY",
+            value: config.require("ordnance-survey-api-key"),
+          },
           ...generateTeamSecrets(config),
         ],
       },
