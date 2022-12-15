@@ -26,7 +26,9 @@ apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 
 # start services
-docker compose --env-file .env.pizza -f docker-compose.yml -f docker-compose.pizza.yml up --build --wait
+docker compose --env-file .env.pizza \
+  -f docker-compose.yml -f docker-compose.pizza.yml \
+  up --build --wait
 
 # insert hasura seeds
 cd hasura.planx.uk
