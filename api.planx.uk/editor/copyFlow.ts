@@ -12,15 +12,18 @@ const copyFlow = async (
       return next({ status: 401, message: "User ID missing from JWT" });
     }
 
+    if (!req.params?.flowId || !req.body?.replaceValue) {
+      return next({ status: 400, message: "Missing required values to proceed" });
+    }
+
     // Fetch the original flow
     const flow: Flow = await getFlowData(req.params.flowId);
 
-    // Ensure the newly copied flow has unique nodeIds
-    const randomReplacementCharacters = Math.random().toString(36).slice(2,6);
-    const uniqueFlowData = makeUniqueFlow(flow.data, randomReplacementCharacters);
+    // Generate new flow data which is an exact "content" copy of the original but with unique nodeIds
+    const uniqueFlowData = makeUniqueFlow(flow.data, req.body.replaceValue);
 
     // Check if copied flow data should be inserted into `flows` table, or just returned for reference
-    const shouldInsert = Boolean(req.body?.insert);
+    const shouldInsert = req.body?.insert as boolean || false;
     if (shouldInsert) {
       const newSlug = flow.slug + "-copy";
       const creatorId = parseInt(req.user.sub, 10);
@@ -31,7 +34,7 @@ const copyFlow = async (
     res.status(200).send({
       message: `Successfully copied ${flow.slug}`,
       inserted: shouldInsert,
-      replaceValue: randomReplacementCharacters,
+      replaceValue: req.body.replaceValue,
       data: uniqueFlowData,
     });
   } catch (error) {

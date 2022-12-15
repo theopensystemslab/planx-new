@@ -195,10 +195,10 @@ const FooterLinks = () => (
 interface FlowItemProps {
   flow: any;
   teamId: number;
-  onSuccess: () => void;
+  refreshFlows: () => void;
 }
 
-const FlowItem: React.FC<FlowItemProps> = ({ flow, teamId, onSuccess }) => {
+const FlowItem: React.FC<FlowItemProps> = ({ flow, teamId, refreshFlows }) => {
   const classes = useStyles();
   const [deleting, setDeleting] = useState(false);
   const handleDelete = () => {
@@ -207,15 +207,15 @@ const FlowItem: React.FC<FlowItemProps> = ({ flow, teamId, onSuccess }) => {
       .deleteFlow(teamId, flow.slug)
       .then(() => {
         setDeleting(false);
-        onSuccess();
+        refreshFlows();
       });
   };
   const handleCopy = () => {
     useStore
       .getState()
-      .copyFlow(flow.id, teamId)
+      .copyFlow(flow.id)
       .then(() => {
-        onSuccess();
+        refreshFlows();
       });
   };
 
@@ -276,7 +276,7 @@ const FlowItem: React.FC<FlowItemProps> = ({ flow, teamId, onSuccess }) => {
                     },
                   });
 
-                  onSuccess();
+                  refreshFlows();
                 }
               },
               label: "Rename",
@@ -331,7 +331,7 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
                 flow={flow}
                 key={flow.slug}
                 teamId={id}
-                onSuccess={() => {
+                refreshFlows={() => {
                   fetchFlows();
                 }}
               />
