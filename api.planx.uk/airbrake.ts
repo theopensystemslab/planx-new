@@ -2,9 +2,9 @@ import { Notifier } from "@airbrake/node";
 
 export const reportError = getErrorLogger().notify;
 
-function log() {
+function log(...args: any[]) {
   return process.env.DEBUG
-    ? console.log
+    ? console.log(...args)
     : () => {
         /* silence */
       };
