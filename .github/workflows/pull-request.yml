@@ -346,7 +346,7 @@ jobs:
 
             ./scripts/pull-secrets.sh
 
-            echo "ROOT_DOMAIN=${{ env.FULL_DOMAIN }}" > .env.temp
+            echo -e "ROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
 
             SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/create.sh
@@ -374,7 +374,7 @@ jobs:
 
             ./scripts/pull-secrets.sh
 
-            echo "ROOT_DOMAIN=${{ env.FULL_DOMAIN }}" > .env.temp
+            echo -e "ROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
 
             ./scripts/pullrequest/update.sh
