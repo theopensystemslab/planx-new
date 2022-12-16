@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "test:cypress": "./run-tests.sh",
-    "test:playwright": "./run-playwright-tests.sh",
+    "test:playwright": "playwright test",
     "check:playwright": "tsc && eslint './playwright/*.{js,ts}'",
     "test:server": "serve ../editor.planx.uk/build --single --listen 3000",
     "postinstall": "./install-dependencies.sh"
