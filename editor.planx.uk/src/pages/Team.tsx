@@ -195,10 +195,16 @@ const FooterLinks = () => (
 interface FlowItemProps {
   flow: any;
   teamId: number;
+  teamSlug: string;
   refreshFlows: () => void;
 }
 
-const FlowItem: React.FC<FlowItemProps> = ({ flow, teamId, refreshFlows }) => {
+const FlowItem: React.FC<FlowItemProps> = ({
+  flow,
+  teamId,
+  teamSlug,
+  refreshFlows,
+}) => {
   const classes = useStyles();
   const [deleting, setDeleting] = useState(false);
   const handleDelete = () => {
@@ -214,6 +220,14 @@ const FlowItem: React.FC<FlowItemProps> = ({ flow, teamId, refreshFlows }) => {
     useStore
       .getState()
       .copyFlow(flow.id)
+      .then(() => {
+        refreshFlows();
+      });
+  };
+  const handleMove = (newTeam: string) => {
+    useStore
+      .getState()
+      .moveFlow(flow.id, newTeam)
       .then(() => {
         refreshFlows();
       });
@@ -288,6 +302,21 @@ const FlowItem: React.FC<FlowItemProps> = ({ flow, teamId, refreshFlows }) => {
               },
             },
             {
+              label: "Move",
+              onClick: () => {
+                const newTeam = prompt("New team");
+                if (newTeam) {
+                  if (slugify(newTeam) === teamSlug) {
+                    alert(
+                      `This flow already belongs to ${teamSlug}, skipping move`
+                    );
+                  } else {
+                    handleMove(slugify(newTeam));
+                  }
+                }
+              },
+            },
+            {
               label: "Delete",
               onClick: () => {
                 setDeleting(true);
@@ -331,6 +360,7 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
                 flow={flow}
                 key={flow.slug}
                 teamId={id}
+                teamSlug={slug}
                 refreshFlows={() => {
                   fetchFlows();
                 }}

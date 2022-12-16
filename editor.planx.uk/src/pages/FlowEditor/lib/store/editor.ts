@@ -67,6 +67,7 @@ export interface EditorStore extends Store.Store {
   lastPublished: (flowId: string) => Promise<string>;
   lastPublisher: (flowId: string) => Promise<string>;
   makeUnique: (id: Store.nodeId, parent?: Store.nodeId) => void;
+  moveFlow: (flowId: string, teamSlug: string) => Promise<any>;
   moveNode: (
     id: Store.nodeId,
     parent?: Store.nodeId,
@@ -334,6 +335,27 @@ export const editorStore = (
   makeUnique: (id, parent) => {
     const [, ops] = makeUnique(id, parent)(get().flow);
     send(ops);
+  },
+
+  moveFlow(flowId: string, teamSlug: string) {
+    const token = getCookie("jwt");
+
+    return axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/flows/${flowId}/move/${teamSlug}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => alert(res?.data?.message))
+      .catch((error) =>
+        alert(
+          "Failed to move this flow. Make sure you're entering a valid team name and try again"
+        )
+      );
   },
 
   moveNode(
