@@ -43,7 +43,7 @@ it("returns an error if authorization headers are not set", async () => {
 });
 
 // debug why this is returning 500
-it.todo("moves a flow to a new team", async () => {
+it.skip("moves a flow to a new team", async () => {
   await supertest(app)
     .post("/flows/1/move/new-team")
     .set(authHeader())
