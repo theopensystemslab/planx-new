@@ -5,13 +5,15 @@ echo "root:$SSH_PASSWORD" | chpasswd
 
 apt-get update -y
 
-# create swap
-# https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-20-04
-fallocate -l 2G /swapfile
-chmod 600 /swapfile
-mkswap /swapfile
-swapon /swapfile
-echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab
+# check if swap space is available
+swapon --show
+## create swap
+## https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-20-04
+#fallocate -l 2G /swapfile
+#chmod 600 /swapfile
+#mkswap /swapfile
+#swapon /swapfile
+#echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab
 
 # install docker
 apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
