@@ -39,7 +39,7 @@ services:
     volumes:
       - "/api/node_modules"
       - "/api/dist"
-    env_file: "./env.pizza"
+    env_file: "./.env.pizza"
     labels:
       virtual.host: api.${ROOT_DOMAIN}
       virtual.port: ${API_PORT}
