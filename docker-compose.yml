@@ -111,6 +111,7 @@ services:
     restart: unless-stopped
     build:
       context: ./api.planx.uk
+      target: production
     depends_on:
       hasura-proxy:
         condition: service_healthy

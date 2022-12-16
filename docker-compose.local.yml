@@ -9,7 +9,7 @@ services:
     volumes:
       - "./hasura.planx.uk/metadata:/hasura-metadata"
       - "./hasura.planx.uk/migrations:/hasura-migrations"
-    env_file: "./env"
+    env_file: "./.env"
 
   api:
     build:
