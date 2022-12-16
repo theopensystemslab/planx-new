@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -o errexit -o pipefail
 
+# run from project root
+cd "$(dirname $0)/../.."
+
 # set env for this shell
 set -o allexport
 source .env.pizza

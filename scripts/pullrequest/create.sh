@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -o errexit -o pipefail
 
+# run from project root
+cd "$(dirname $0)/../.."
+
 echo "root:$SSH_PASSWORD" | chpasswd
 
 apt-get update -y
@@ -35,4 +38,4 @@ docker compose \
 
 # insert hasura seeds
 cd hasura.planx.uk
-hasura seed apply --envfile ./../.env
+hasura seed apply --envfile .env
