@@ -7,7 +7,7 @@ cd "$(dirname $0)/../.."
 # set env for this shell
 set -o allexport
 source .env.pizza
-export DOCKER_BUILDKIT=1
+DOCKER_BUILDKIT=1
 set +o allexport
 
 docker compose \

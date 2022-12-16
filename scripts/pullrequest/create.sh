@@ -27,7 +27,7 @@ curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 # set env for this shell
 set -o allexport
 source .env.pizza
-export DOCKER_BUILDKIT=1
+DOCKER_BUILDKIT=1
 set +o allexport
 
 # start services
