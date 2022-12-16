@@ -64,11 +64,15 @@ services:
       retries: 10
     restart: unless-stopped
     environment:
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
+      HASURA_GRAPHQL_CORS_DOMAIN: ${HASURA_GRAPHQL_CORS_DOMAIN}
       HASURA_GRAPHQL_DATABASE_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       HASURA_GRAPHQL_JWT_SECRET: '{ "type": "HS256", "key": "${JWT_SECRET}" }'
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
+      HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
+      HASURA_PLANX_API_URL: ${HASURA_PLANX_API_URL}
 
   hasura-proxy:
     build:

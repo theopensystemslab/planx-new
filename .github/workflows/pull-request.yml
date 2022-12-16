@@ -348,8 +348,6 @@ jobs:
 
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
-            set -o allexport
-            set -o allexport
 
             SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/create.sh
 
@@ -427,17 +425,18 @@ jobs:
     needs: [create_or_update_vultr_instance]
     runs-on: ubuntu-22.04
     steps:
-      - name: Editor healthcheck
+      - name: API healthcheck
         run: |
-          timeout 150s bash -c "until curl --fail https://${{ env.FULL_DOMAIN }}; do sleep 1; done"
+          timeout 150s bash -c "until curl --fail https://api.${{ env.FULL_DOMAIN }}; do sleep 1; done"
 
       - name: Hasura healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://hasura.${{ env.FULL_DOMAIN }}/healthz; do sleep 1; done"
 
-      - name: API healthcheck
+      - name: Editor healthcheck
         run: |
-          timeout 150s bash -c "until curl --fail https://api.${{ env.FULL_DOMAIN }}; do sleep 1; done"
+          timeout 150s bash -c "until curl --fail https://${{ env.FULL_DOMAIN }}; do sleep 1; done"
+
 
   lighthouse:
     name: Lighthouse

@@ -13,7 +13,6 @@ services:
       virtual.tls: ${TLS_EMAIL}
 
   hasura:
-    env_file: "./.env.pizza"
     labels:
       virtual.port: 8080
       virtual.tls: ${TLS_EMAIL}
