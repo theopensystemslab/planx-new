@@ -5,15 +5,9 @@ echo "root:$SSH_PASSWORD" | chpasswd
 
 apt-get update -y
 
-# check if swap space is available
+# check if swap space is available - see link for more on updating swap:
+# https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-22-04
 swapon --show
-## create swap
-## https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-20-04
-#fallocate -l 2G /swapfile
-#chmod 600 /swapfile
-#mkswap /swapfile
-#swapon /swapfile
-#echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab
 
 # install docker
 apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
@@ -27,9 +21,16 @@ apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
 # install hasura cli
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 
+# set env for this shell
+set -o allexport
+source .env.pizza
+export DOCKER_BUILDKIT=1
+set +o allexport
+
 # start services
-docker compose --env-file .env.pizza \
-  -f docker-compose.yml -f docker-compose.pizza.yml \
+docker compose \
+  -f docker-compose.yml \
+  -f docker-compose.pizza.yml \
   up --build --wait
 
 # insert hasura seeds
