@@ -14,7 +14,6 @@ function setupContainers(){
   DOCKER_BUILDKIT=1 docker compose \
     -f docker-compose.yml \
     -f docker-compose.e2e.yml \
-    --env-file .env \
 		--profile mock-services \
     up --build --wait test-ready
 

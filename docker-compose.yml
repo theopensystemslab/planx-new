@@ -124,6 +124,7 @@ services:
       timeout: 3s
       retries: 5
     environment:
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_URL: http://hasura-proxy:7000/v1/graphql
       HASURA_METADATA_URL: http://hasura-proxy:7000/v1/metadata 
       HASURA_SCHEMA_URL: http://hasura-proxy:7000/v2/query
@@ -159,10 +160,10 @@ services:
       GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID}
       GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID}
       GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID}
+      ORDNANCE_SURVEY_API_KEY: ${ORDNANCE_SURVEY_API_KEY}
       HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
       FILE_API_KEY: ${FILE_API_KEY}
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
-      ORDNANCE_SURVEY_API_KEY: ${ORDNANCE_SURVEY_API_KEY}
 
   sharedb:
     restart: unless-stopped
@@ -178,6 +179,7 @@ services:
     ports:
       - ${SHAREDB_PORT}:8000
     environment:
+      JWT_SECRET: ${JWT_SECRET}
       PG_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
 
   # used as an S3 service mock

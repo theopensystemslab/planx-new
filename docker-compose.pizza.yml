@@ -29,7 +29,6 @@ services:
     volumes:
       - "/api/node_modules"
       - "/api/dist"
-    env_file: "./.env.pizza"
     labels:
       virtual.host: api.${ROOT_DOMAIN}
       virtual.port: ${API_PORT}
@@ -38,7 +37,6 @@ services:
       NODE_ENV: "pizza"
 
   sharedb:
-    env_file: "./.env.pizza"
     labels:
       virtual.host: sharedb.${ROOT_DOMAIN}
       virtual.port: 8000

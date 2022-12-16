@@ -9,20 +9,17 @@ services:
     volumes:
       - "./hasura.planx.uk/metadata:/hasura-metadata"
       - "./hasura.planx.uk/migrations:/hasura-migrations"
-    env_file: "./.env"
 
   api:
     build:
       target: development
     volumes:
       - "./api.planx.uk:/api"
-    env_file: "./.env"
 
   sharedb:
     volumes:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
-    env_file: "./.env"
 
 volumes:
   postgres_data:
