@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml up -d",
-    "stop": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml down --remove-orphans -v"
+    "up": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml up -d",
+    "down": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml down --remove-orphans -v"
   }
 }
