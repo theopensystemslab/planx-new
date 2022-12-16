@@ -5,6 +5,8 @@ version: "3.8"
 
 services:
   postgres:
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     labels:
       virtual.host: postgres.${ROOT_DOMAIN}
       virtual.port: 5432
@@ -75,5 +77,6 @@ services:
       - 443:443
 
 volumes:
+  postgres_data:
   caddy_data:
   caddy_config:

@@ -17,6 +17,6 @@ docker compose down --volumes --remove-orphans
 trap 'echo "Cleaning up…" ; docker-compose down --volumes --remove-orphans' TERM INT
 
 echo "Starting docker…"
-DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml -f docker-compose.e2e.yml --profile mock-services up --build -d test-ready
+DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml -f docker-compose.e2e.yml --profile mock-services up --build --wait test-ready
 
 echo "All containers ready."
