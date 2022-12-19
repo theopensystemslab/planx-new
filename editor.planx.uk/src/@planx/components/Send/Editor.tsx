@@ -1,5 +1,7 @@
+import Warning from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import React from "react";
 import ChecklistItem from "ui/ChecklistItem";
@@ -103,6 +105,15 @@ const SendComponent: React.FC<Props> = (props) => {
                 ))}
               </Grid>
             </ErrorWrapper>
+          </Box>
+          <Box display="flex" mt={2}>
+            <Warning titleAccess="Warning" color="primary" fontSize="large" />
+            <Typography variant="body2" ml={1}>
+              API tokens are required to submit successfully to the selected
+              destinations. Check in with PlanX developers before launching your
+              service to make sure that tokens are available and configured for
+              your environment.
+            </Typography>
           </Box>
         </ModalSectionContent>
       </ModalSection>

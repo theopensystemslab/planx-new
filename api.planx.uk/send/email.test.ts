@@ -5,22 +5,38 @@ import app from "../server";
 describe(`sending an application by email to a planning office`, () => {
   beforeEach(() => {
     queryMock.mockQuery({
-      name: "GetTeamSettings",
+      name: "getTeamSettings",
       matchOnVariables: false,
       data: {
         teams: [{ settings: { "sendToEmail": "planners@southwark.gov.uk" } }]
       },
       variables: { slug: "southwark" },
     });
-  });
 
-  // TODO mock all queries
+    queryMock.mockQuery({
+      name: "getSessionData",
+      matchOnVariables: false,
+      data: {
+        lowcal_sessions_by_pk: { data: {} }
+      },
+      variables: { id: "123" },
+    });
+
+    queryMock.mockQuery({
+      name: "appendSessionData",
+      matchOnVariables: false,
+      data: {
+        update_lowcal_sessions_by_pk: { data: {} }
+      },
+      variables: { id: "123", data: { "csv": [] }},
+    });
+  });
 
   it.skip("proxies request and returns hasura id", async () => {
     await supertest(app)
       .post("/email-submission/southwark")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-      .send({ payload: { sessionId: 123, email: "applicant@test.com", csv: [] }})
+      .send({ payload: { sessionId: "123", email: "applicant@test.com", csv: [] }})
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
@@ -32,7 +48,7 @@ describe(`sending an application by email to a planning office`, () => {
   it("fails without authorization header", async () => {
     await supertest(app)
       .post("/email-submission/southwark")
-      .send({ payload: { sessionId: 123, email: "applicant@test.com", csv: [] }})
+      .send({ payload: { sessionId: "123", email: "applicant@test.com", csv: [] }})
       .expect(401);
   });
 
@@ -53,7 +69,7 @@ describe(`sending an application by email to a planning office`, () => {
     await supertest(app)
       .post("/email-submission/other-council")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-      .send({ payload: { sessionId: 123, email: "applicant@test.com", csv: [] }})
+      .send({ payload: { sessionId: "123", email: "applicant@test.com", csv: [] }})
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
