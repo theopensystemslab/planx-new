@@ -1,14 +1,8 @@
 import { screen } from "@testing-library/react";
 import React from "react";
-import { act } from "react-dom/test-utils";
 import { axe, setup } from "testUtils";
 
 import Review from "./Public/Presentational";
-
-jest.mock("../../../api/download.ts", () => ({
-  __esModule: true,
-  downloadFile: jest.fn(() => Promise.resolve({})),
-}));
 
 test("renders correctly", async () => {
   const handleSubmit = jest.fn();

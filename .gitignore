@@ -17,3 +17,6 @@ hasura.planx.uk/.env.test
 # IDE
 .vscode
 .devcontainer
+/test-results/
+/playwright-report/
+/playwright/.cache/
