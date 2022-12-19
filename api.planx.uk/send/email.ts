@@ -2,6 +2,7 @@ import AdmZip from "adm-zip";
 import { stringify } from "csv-stringify";
 import { NextFunction, Request, Response } from "express";
 import fs from "fs";
+import { gql } from "graphql-request";
 import os from "os";
 import path from "path";
 
@@ -165,7 +166,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
 
 async function getTeamSettings(localAuthority: string) {
   const response = await client.request(
-    `
+    gql`
       query getTeamSettings(
         $slug: String
       ) {
@@ -184,7 +185,7 @@ async function getTeamSettings(localAuthority: string) {
 
 async function getSessionData(sessionId: string) {
   const response = await client.request(
-    `
+    gql`
       query getSessionData(
         $id: uuid!
       ) {
@@ -205,7 +206,7 @@ async function getSessionData(sessionId: string) {
 
 async function appendSessionData(sessionId: string, csvData: any) {
   const response = await client.request(
-    `
+    gql`
       mutation appendSessionData(
         $id: uuid!
         $data: jsonb
