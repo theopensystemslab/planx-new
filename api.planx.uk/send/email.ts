@@ -25,7 +25,7 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
 
   try {
     // Confirm this local authority (aka team) has an email configured in teams.settings
-    const settings = await getTeamSettings(req.params.localAuthority);
+    const { settings, notify_personalisation } = await getTeamSettings(req.params.localAuthority);
     if (settings?.sendToEmail) {
       // Append formatted "csv" data to lowcal_session.data so it's available later to the download-application-files endpoint
       const updatedSessionData = await appendSessionData(payload.sessionId, payload.csv);
@@ -33,7 +33,7 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
       // TODO Prepare/improve email template
       const config: EmailSubmissionNotifyConfig = {
         personalisation: {
-          emailReplyToId: "TBD",
+          emailReplyToId: notify_personalisation.emailReplyToId,
           serviceName: "Test",
           sessionId: payload.sessionId,
           applicantEmail: payload.email,
@@ -71,7 +71,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
 
   try {
     // Confirm that the provided email matches the stored team settings for the provided localAuthority
-    const settings = await getTeamSettings(req.query.localAuthority as string);
+    const { settings, notify_personalisation } = await getTeamSettings(req.query.localAuthority as string);
     if (settings?.sendToEmail != req.query.email) {
       return next({
         status: 403,
@@ -172,6 +172,7 @@ async function getTeamSettings(localAuthority: string) {
       ) {
         teams(where: {slug: {_eq: $slug}}) {
           settings
+          notify_personalisation
         }
       }
     `,
@@ -180,7 +181,7 @@ async function getTeamSettings(localAuthority: string) {
     }
   );
 
-  return response?.teams[0]?.settings;
+  return response?.teams[0];
 }
 
 async function getSessionData(sessionId: string) {
