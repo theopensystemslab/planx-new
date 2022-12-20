@@ -11,21 +11,21 @@ beforeEach(() => {
       slug: "new-team",
     },
     data: {
-      teams: {
-        id: 1,
-      },
+      teams: [{
+        id: "1",
+      }],
     },
   });
 
   queryMock.mockQuery({
     name: "UpdateFlow",
     variables: {
-      id: 1,
-      team_id: 2,
+      id: "1",
+      team_id: "1",
     },
     data: {
       update_flows_by_pk: {
-        id: 2,
+        id: "1",
       },
     },
   });
@@ -42,8 +42,7 @@ it("returns an error if authorization headers are not set", async () => {
     });
 });
 
-// debug why this is returning 500
-it.skip("moves a flow to a new team", async () => {
+it("moves a flow to a new team", async () => {
   await supertest(app)
     .post("/flows/1/move/new-team")
     .set(authHeader())
