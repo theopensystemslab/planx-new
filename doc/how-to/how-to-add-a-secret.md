@@ -10,7 +10,7 @@ This guide will demonstrate how to -
 ## Process
 
 **Setup**
-1. Generate a secret [using the existing process](how-to-generate-a-secret.md), or obtain one from a third-party integration
+1. Generate a secret using the existing process (TODO: create and link a how-to if proposal excepted), or obtain one from a third-party integration
 2. Add to your local `.env` file for local development
    - Note: This file is never checked into our public repository and is listed in our `.gitignore` config
 3. Document the secret in `.env.example`
