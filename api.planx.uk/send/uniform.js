@@ -9,9 +9,9 @@ import str from "string-to-stream";
 import { stringify } from "csv-stringify";
 import { generateDocumentReviewStream } from "./documentReview";
 import { adminGraphQLClient } from "../hasura";
-import { getFileFromS3 } from "../s3/getFile";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
+import { deleteFile, downloadFile } from "./helpers";
 
 const client = adminGraphQLClient;
 
@@ -427,39 +427,6 @@ async function retrieveSubmission(token, submissionId) {
     (response) => response.json()
   );
 }
-
-/**
- * Helper method to locally download S3 files, add them to the zip, then clean them up
- *
- * @param {string} url - our file URL, eg api.planx.uk/file/private/path/key
- * @param {string} path - file name for download
- * @param {string} folder - AdmZip archive
- */
-const downloadFile = async (url, path, folder) => {
-  // Files are stored decoded on S3, but encoded in our passport, ensure the key matches S3 before fetching it
-  const s3Key = url.split("/").slice(-2).join("/");
-  const decodedS3Key = decodeURIComponent(s3Key);
-
-  const { body } = await getFileFromS3(decodedS3Key);
-
-  fs.writeFileSync(path, body);
-
-  folder.addLocalFile(path);
-  deleteFile(path);
-};
-
-/**
- * Helper method to clean up files temporarily stored locally
- *
- * @param {string} path - file name
- */
-const deleteFile = (path) => {
-  if (fs.existsSync(path)) {
-    fs.unlinkSync(path);
-  } else {
-    console.log(`Didn't find ${path}, nothing to delete`);
-  }
-};
 
 /**
  * Get id and secret of Uniform client which matches the provided Local Authority
