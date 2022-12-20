@@ -2,7 +2,7 @@
 
 API is a Node/Express server and REST endpoints. We're in the process of migrating this directory to Typescript.
 
-Our API handles functionality like:
+Our API handles functionality like: 
 - Logging into the editor via Google
 - Publishing service content
 - Uploading files to S3
@@ -21,10 +21,6 @@ Install the project's dependencies `pnpm install`
 Start the development server `pnpm dev`
 
 Run tests `pnpm test`
-
-## Debugging
-
-Setting the environment variable `DEBUG` to any truthy value turns on verbose console output for debugging.
 
 ## Prior art
 
