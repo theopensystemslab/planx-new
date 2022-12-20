@@ -86,11 +86,12 @@ git push --force
 
 ### Troubleshooting
 
-If the commit history of `main` and `production` diverge and `production` contains commit hashes that are NOT on main, try running this command to reset and then follow the original deploy steps above:
+If the commit history of `main` and `production` diverge and `production` contains commit hashes that are NOT on main, try running this command from `production` to reset and then follow the original deploy steps above:
 ```bash
-git reset --hard <most recent commit hash matching main> && git push --force
+git reset --hard <most recent commit hash **matching** main> && git push --force
 ```
 
+You'll have to temporarily turn off branch protection rules to make this change, so run it by another dev to confirm.
 
 ## Audits
 
