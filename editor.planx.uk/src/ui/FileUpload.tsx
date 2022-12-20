@@ -114,7 +114,7 @@ export default function FileUpload(props: Props): FCReturn {
       }}
       {...getRootProps()}
     >
-      <input data-testid="upload-file-input" {...getInputProps()} />
+      <input {...getInputProps()} />
       <Image />
     </ButtonBase>
   );

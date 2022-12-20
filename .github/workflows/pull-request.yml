@@ -81,27 +81,8 @@ jobs:
       - name: Hasura Tests
         run: pnpm install --frozen-lockfile && pnpm test
         working-directory: hasura.planx.uk/tests
-      - name: Install Playwright dependencies
-        run: pnpm install --frozen-lockfile
-        working-directory: e2e
-      - name: Install Playwright Browsers
-        run: pnpm playwright install --with-deps
-        working-directory: e2e
-      - name: Playwright Tests
-        run:  pnpm test:playwright
-        working-directory: e2e
-      - uses: actions/upload-artifact@v3
-        with:
-          name: playwright-report
-          path: e2e/playwright-report/
-          retention-days: 3
-      - uses: actions/upload-artifact@v3
-        with:
-          name: playwright-video
-          path: e2e/test-results/
-          retention-days: 3
-      - name: Cypress Tests
-        run: pnpm cypress install && pnpm test:cypress
+      - name: E2E Tests
+        run: pnpm install --frozen-lockfile && pnpm cypress install && pnpm test
         working-directory: e2e
 
   api_tests:

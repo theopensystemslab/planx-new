@@ -225,7 +225,7 @@ export default function FileUpload(props: Props) {
         className={classNames(classes.root, isDragActive && classes.dragActive)}
         {...getRootProps()}
       >
-        <input data-testid="upload-boundary-input" {...getInputProps()} />
+        <input {...getInputProps()} />
         <Box pl={3} pr={4} color="text.secondary">
           <CloudUpload />
         </Box>
