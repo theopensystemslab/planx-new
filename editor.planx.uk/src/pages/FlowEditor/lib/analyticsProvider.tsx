@@ -116,7 +116,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       mutation: gql`
         mutation InsertNewAnalyticsLog(
           $flow_direction: String
-          $analytics_id: Int
+          $analytics_id: bigint
           $metadata: jsonb
           $node_type: Int
           $node_title: String
