@@ -7,6 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { getFeedbackMetadata } from "lib/feedback";
 import React, { useEffect, useState } from "react";
 import { Link as ReactNaviLink } from "react-navi";
 
@@ -83,6 +84,8 @@ export default function Footer(props: Props) {
     e.stopPropagation();
   };
 
+  const metadata = getFeedbackMetadata();
+
   return (
     <Root>
       <ButtonGroup>
@@ -112,8 +115,7 @@ export default function Footer(props: Props) {
                 </DialogActions>
               </Dialog>
             )}
-
-            <FeedbackFish projectId={feedbackFishId}>
+            <FeedbackFish projectId={feedbackFishId} metadata={metadata}>
               <Link color="inherit" component="button">
                 <Typography variant="body2">Feedback</Typography>
               </Link>
