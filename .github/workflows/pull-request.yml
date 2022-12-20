@@ -64,7 +64,6 @@ jobs:
         uses: andstor/file-existence-action@v1
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env, hasura.planx.uk/.env.test"
-          fail: true
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -106,7 +105,6 @@ jobs:
         uses: andstor/file-existence-action@v1
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env, hasura.planx.uk/.env.test"
-          fail: true
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -139,7 +137,6 @@ jobs:
         uses: andstor/file-existence-action@v1
         with:
           files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env, hasura.planx.uk/.env.test"
-          fail: true
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
