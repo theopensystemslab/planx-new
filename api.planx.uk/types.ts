@@ -11,6 +11,7 @@ export interface Flow {
   data: {
     [key: string]: Node;
   };
+  team_id: number;
 }
 
 export interface UserData {

@@ -118,12 +118,14 @@ services:
     restart: unless-stopped
     build:
       context: ./api.planx.uk
-      target: development
+      target: production
     depends_on:
       hasura-proxy:
         condition: service_healthy
     volumes:
       - "./api.planx.uk:/api"
+      - "/api/node_modules"
+      - "/api/dist"
     ports:
       - ${API_PORT}:${API_PORT}
     healthcheck:
