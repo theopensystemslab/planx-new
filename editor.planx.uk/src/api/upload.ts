@@ -2,6 +2,8 @@ import { useStagingUrlIfTestApplication } from "@planx/components/shared/utils";
 import axios from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 
+import { encodeS3URI } from "./encode";
+
 export { uploadPrivateFile, uploadPublicFile };
 
 export type UploadFileResponse = string;
@@ -12,7 +14,9 @@ async function uploadPublicFile(
 ) {
   const { data } = await handleUpload(file, { onProgress, path: "public" });
 
-  return data.fileUrl;
+  return `${process.env.REACT_APP_API_URL}/file/public/${encodeS3URI(
+    data.key
+  )}`;
 }
 
 async function uploadPrivateFile(
@@ -20,8 +24,11 @@ async function uploadPrivateFile(
   { onProgress }: { onProgress?: (p: any) => void } = {}
 ) {
   const { data } = await handleUpload(file, { onProgress, path: "private" });
+  const passport = useStore.getState().computePassport();
 
-  return data.fileUrl;
+  return useStagingUrlIfTestApplication(passport)(
+    `${process.env.REACT_APP_API_URL}/file/private/${encodeS3URI(data.key)}`
+  );
 }
 
 function handleUpload(
