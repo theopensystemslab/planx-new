@@ -7,7 +7,6 @@ import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import React from "react";
 import MoreInfoIcon from "ui/icons/MoreInfo";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
-import { emptyContent } from "ui/RichTextInput";
 
 import { DESCRIPTION_TEXT } from "../constants";
 import MoreInfo from "./MoreInfo";
@@ -96,24 +95,24 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
         )}
       </Grid>
       <MoreInfo open={open} handleClose={() => setOpen(false)}>
-        {info && info !== emptyContent ? (
+        {info && (
           <MoreInfoSection title="Why does it matter?">
             <ReactMarkdownOrHtml source={info} openLinksOnNewTab />
           </MoreInfoSection>
-        ) : undefined}
-        {policyRef && policyRef !== emptyContent ? (
+        )}
+        {policyRef && (
           <MoreInfoSection title="Source">
             <ReactMarkdownOrHtml source={policyRef} openLinksOnNewTab />
           </MoreInfoSection>
-        ) : undefined}
-        {howMeasured && howMeasured !== emptyContent ? (
+        )}
+        {howMeasured && (
           <MoreInfoSection title="How is it defined?">
             <>
               {definitionImg && <Image src={definitionImg} alt="definition" />}
               <ReactMarkdownOrHtml source={howMeasured} openLinksOnNewTab />
             </>
           </MoreInfoSection>
-        ) : undefined}
+        )}
       </MoreInfo>
       {img && <Image src={img} alt="question" />}
     </Box>
