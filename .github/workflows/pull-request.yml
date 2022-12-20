@@ -58,7 +58,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: ./scripts/pull-secrets.sh
+        run: | 
+          aws s3 cp s3://pizza-secrets/root.env ./.env
+          aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
+          aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
+          aws s3 cp s3://pizza-secrets/hasura.env.test ./hasura.planx.uk/.env.test
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
@@ -99,7 +103,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: ./scripts/pull-secrets.sh
+        run: | 
+          aws s3 cp s3://pizza-secrets/root.env ./.env
+          aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
+          aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
+          aws s3 cp s3://pizza-secrets/hasura.env.test ./hasura.planx.uk/.env.test
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
@@ -131,7 +139,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: ./scripts/pull-secrets.sh
+        run: | 
+          aws s3 cp s3://pizza-secrets/root.env ./.env
+          aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
+          aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
+          aws s3 cp s3://pizza-secrets/hasura.env.test ./hasura.planx.uk/.env.test
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
@@ -328,7 +340,10 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
 
-            ./scripts/pull-secrets.sh
+            aws s3 cp s3://pizza-secrets/root.env .env
+            aws s3 cp s3://pizza-secrets/editor.env editor.planx.uk/.env
+            aws s3 cp s3://pizza-secrets/api.env.test api.planx.uk/.env.test
+            aws s3 cp s3://pizza-secrets/hasura.env.test hasura.planx.uk/.env.test
 
             echo "
             ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
@@ -358,7 +373,10 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
 
-            ./scripts/pull-secrets.sh
+            aws s3 cp s3://pizza-secrets/root.env .env
+            aws s3 cp s3://pizza-secrets/editor.env editor.planx.uk/.env
+            aws s3 cp s3://pizza-secrets/api.env.test api.planx.uk/.env.test
+            aws s3 cp s3://pizza-secrets/hasura.env.test hasura.planx.uk/.env.test
 
             echo "
             ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
