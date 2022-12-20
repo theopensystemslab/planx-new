@@ -2,6 +2,14 @@ import { Notifier } from "@airbrake/browser";
 
 export const reportError = getErrorLogger().notify;
 
+function log(...args: any[]) {
+  return process.env.DEBUG
+    ? console.log(...args)
+    : () => {
+        /* silence */
+      };
+}
+
 // forward all JS errors to airbrake.io
 function getErrorLogger(): ErrorLogger {
   const hasConfig =
@@ -10,11 +18,11 @@ function getErrorLogger(): ErrorLogger {
     process.env.REACT_APP_AIRBRAKE_PROJECT_KEY;
 
   if (!hasConfig) {
-    console.error("Airbrake not configured");
+    log("Airbrake not configured");
     return {
       notify: (error) => {
-        console.error(error);
-        console.log("Error was not sent to Airbrake");
+        log(error);
+        log("Error was not sent to Airbrake");
       },
     };
   }
