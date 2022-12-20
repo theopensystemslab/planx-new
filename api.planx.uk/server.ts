@@ -54,6 +54,7 @@ import { createSendEvents } from "./send/createSendEvents";
 import { sendToUniform } from "./send/uniform";
 import { sendSlackNotification } from "./webhooks/sendNotifications";
 import { copyFlow } from "./editor/copyFlow";
+import { moveFlow } from "./editor/moveFlow";
 import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
 import { usePayProxy } from "./proxy/pay";
 
@@ -471,6 +472,8 @@ app.get(
 app.post("/flows/:flowId/copy", useJWT, copyFlow);
 
 app.post("/flows/:flowId/diff", useJWT, diffFlow);
+
+app.post("/flows/:flowId/move/:teamSlug", useJWT, moveFlow);
 
 app.post("/flows/:flowId/publish", useJWT, publishFlow);
 

@@ -24,6 +24,7 @@ export interface UserData {
 export type Breadcrumb = Record<string, UserData>;
 
 export interface Team {
+  id: number;
   slug: string;
   name: string;
   domain?: string;
