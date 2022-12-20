@@ -5,8 +5,14 @@ import { IncomingMessage } from 'http';
 export const OS_DOMAIN = "https://api.os.uk";
 
 const MAP_ALLOWLIST: RegExp[] = [
-  /http:\/\/(127\.0\.0\.1|localhost):(5173|7007)\//i, // Local development
-  /https:\/\/.*\.netlify\.app\//i, // Docs
+  // Local development
+  /^http:\/\/(127\.0\.0\.1|localhost):(5173|7007)\/$/i,
+  // Documentation
+  /^https:\/\/.*\.netlify\.app\/$/i,
+  // PlanX
+  /^https:\/\/.*planx\.(pizza|dev|uk)\/$/i,
+  // Custom domains
+  /^https:\/\/.*(\.gov\.uk\/)$/i,
 ];
 
 export const useOrdnanceSurveyProxy = async (
@@ -21,22 +27,15 @@ export const useOrdnanceSurveyProxy = async (
 
   return useProxy({
     target: OS_DOMAIN,
-    onProxyRes: (proxyRes, req) => setCORPHeaders(proxyRes, req),
+    onProxyRes: (proxyRes) => setCORPHeaders(proxyRes),
     pathRewrite: (fullPath, req) => appendAPIKey(fullPath, req)
   })(req, res, next)
 };
 
-const isValid = (req: Request): boolean => isAllowListed(req) || isPlanX(req);
+const isValid = (req: Request): boolean => MAP_ALLOWLIST.some(re => re.test(req.headers?.referer as string));
 
-const isAllowListed = (req: Request): boolean => MAP_ALLOWLIST.some(re => re.test(req.headers?.referer as string));
-
-const isPlanX = (req: Request): boolean => Boolean(req.headers.referer?.match(/^https:\/\/.*planx\.(pizza|dev|uk)\//i)?.length);
-
-/**
- * Allow cross-origin resources on allowed sites, fallback to same-site for PlanX
- */
-const setCORPHeaders = (proxyRes: IncomingMessage, req: Request): void => {
-  proxyRes.headers["Cross-Origin-Resource-Policy"] = isAllowListed(req) ? "cross-origin" : "same-site";
+const setCORPHeaders = (proxyRes: IncomingMessage): void => {
+  proxyRes.headers["Cross-Origin-Resource-Policy"] = "cross-origin"
 }
 
 export const appendAPIKey = (fullPath: string, req: Request): string => {

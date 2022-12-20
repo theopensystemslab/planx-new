@@ -100,7 +100,24 @@ describe("Ordnance Survey proxy endpoint", () => {
           expect(response.body).toEqual({
             test: "returned tile"
           });
-          expect(response.headers["cross-origin-resource-policy"]).toEqual("same-site")
+          expect(response.headers["cross-origin-resource-policy"]).toEqual("cross-origin")
+        });
+    });
+
+    it("allows requests from custom domains", async () => {
+      nock(OS_DOMAIN)
+        .get(TILE_PATH)
+        .query({ key: process.env.ORDNANCE_SURVEY_API_KEY })
+        .reply(200, { test: "returned tile" });
+
+      await get(ENDPOINT + TILE_PATH)
+        .set({ referer: "https://planningservices.buckinghamshire.gov.uk/" })
+        .expect(200)
+        .then(response => {
+          expect(response.body).toEqual({
+            test: "returned tile"
+          });
+          expect(response.headers["cross-origin-resource-policy"]).toEqual("cross-origin")
         });
     });
   });
