@@ -3,7 +3,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import React from "react";
 
-import { reportError } from "../airbrake";
+import { airbrake } from "../airbrake";
 
 const useStyles = makeStyles((theme) => ({
   errorSummary: {
@@ -14,7 +14,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ErrorFallback(props: { error: Error }) {
-  reportError(props.error);
+  console.error(props.error);
+  airbrake?.notify(props.error);
 
   const classes = useStyles();
 
