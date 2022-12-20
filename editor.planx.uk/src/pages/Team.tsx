@@ -195,10 +195,16 @@ const FooterLinks = () => (
 interface FlowItemProps {
   flow: any;
   teamId: number;
-  refreshFlows: () => void;
+  onDeleteSuccess: () => void;
+  onRenameSuccess: () => void;
 }
 
-const FlowItem: React.FC<FlowItemProps> = ({ flow, teamId, refreshFlows }) => {
+const FlowItem: React.FC<FlowItemProps> = ({
+  flow,
+  teamId,
+  onDeleteSuccess,
+  onRenameSuccess,
+}) => {
   const classes = useStyles();
   const [deleting, setDeleting] = useState(false);
   const handleDelete = () => {
@@ -207,18 +213,9 @@ const FlowItem: React.FC<FlowItemProps> = ({ flow, teamId, refreshFlows }) => {
       .deleteFlow(teamId, flow.slug)
       .then(() => {
         setDeleting(false);
-        refreshFlows();
+        onDeleteSuccess();
       });
   };
-  const handleCopy = () => {
-    useStore
-      .getState()
-      .copyFlow(flow.id)
-      .then(() => {
-        refreshFlows();
-      });
-  };
-
   return (
     <>
       {deleting && (
@@ -276,16 +273,10 @@ const FlowItem: React.FC<FlowItemProps> = ({ flow, teamId, refreshFlows }) => {
                     },
                   });
 
-                  refreshFlows();
+                  onRenameSuccess();
                 }
               },
               label: "Rename",
-            },
-            {
-              label: "Copy",
-              onClick: () => {
-                handleCopy();
-              },
             },
             {
               label: "Delete",
@@ -331,7 +322,10 @@ const Team: React.FC<{ id: number; slug: string }> = ({ id, slug }) => {
                 flow={flow}
                 key={flow.slug}
                 teamId={id}
-                refreshFlows={() => {
+                onDeleteSuccess={() => {
+                  fetchFlows();
+                }}
+                onRenameSuccess={() => {
                   fetchFlows();
                 }}
               />
