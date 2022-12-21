@@ -34,7 +34,7 @@ jobs:
             api:
               - 'api.planx.uk/**'
             e2e:
-              - 'api.planx.uk/**'
+              - 'e2e/**'
             hasura:
               - 'hasura.planx.uk/**'
             infrastructure:
