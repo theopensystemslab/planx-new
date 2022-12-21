@@ -1,4 +1,7 @@
-import { incrementHeaderElements } from "./ReactMarkdownOrHtml";
+import {
+  incrementHeaderElements,
+  replaceEscapedTags,
+} from "./ReactMarkdownOrHtml";
 
 describe("Header element incrementor", () => {
   it("should return HTML unaltered if it does not contain H1 or H2 tags", () => {
@@ -71,5 +74,32 @@ describe("Header element incrementor", () => {
     `;
     const result = incrementHeaderElements(input);
     expect(result).toEqual(expectedOutput);
+  });
+});
+
+describe("Escaped tag replacer", () => {
+  it("should replace escaped text with HTML tags", () => {
+    const input = `
+      &lt;h1&gt;H1 Element&lt;/h1&gt;
+      &lt;br /&gt;
+      <p>this is bold -&gt &lt;b&gt;text&lt;/b&gt;</p>
+      &lt;&gt;
+    `;
+
+    expect(replaceEscapedTags(input)).toEqual(`
+      <h1>H1 Element</h1>
+      <br />
+      <p>this is bold -&gt <b>text</b></p>
+      &lt;&gt;
+    `);
+  });
+
+  it("should keep string unchanged", () => {
+    const input = `
+      <h1>H1 Element</h1>
+      Unchanged &lt;&gt; &lt; &gt; &lt;/&gt;
+    `;
+
+    expect(replaceEscapedTags(input)).toEqual(input);
   });
 });

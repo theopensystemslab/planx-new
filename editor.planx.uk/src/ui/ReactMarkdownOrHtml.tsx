@@ -23,6 +23,11 @@ export const incrementHeaderElements = (source: string): string => {
   return source.replace(regex, incrementer);
 };
 
+// Replace &lt; and &gt; with < and > to render correct HTML tags when text is escaped in Rich Text Editor
+export const replaceEscapedTags = (source: string): string => {
+  return source.replaceAll(/&lt;(?=\/?[a-z]+\/?)([/a-z1-9 ]+?)&gt;/g, "<$1>");
+};
+
 export default function ReactMarkdownOrHtml(props: {
   source?: string;
   className?: string;
@@ -34,10 +39,16 @@ export default function ReactMarkdownOrHtml(props: {
   if (typeof props.source !== "string") {
     return null;
   }
-  if (props.source.includes("</")) {
-    const replaceTarget = props.openLinksOnNewTab
-      ? props.source.replaceAll(`target="_self"`, `target="_blank" external`)
-      : props.source;
+
+  const isHTMLContent = ["</", "/>"].some((tag) => props.source?.includes(tag));
+
+  if (isHTMLContent) {
+    const replaceTarget = replaceEscapedTags(
+      props.openLinksOnNewTab
+        ? props.source.replaceAll(`target="_self"`, `target="_blank" external`)
+        : props.source
+    );
+
     const incrementHeaders = props.manuallyIncrementHeaders
       ? replaceTarget
       : incrementHeaderElements(replaceTarget);
