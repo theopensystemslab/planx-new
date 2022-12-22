@@ -19,6 +19,6 @@ jobs:
         PERSONAL_ACCESS_TOKEN: ${{ github.token }}
       run: |
         set -xe
-        git clone "https://theopensystemslab:${PERSONAL_ACCESS_TOKEN}@github.com/planx-new.git" planx-new
+        git clone "https://theopensystemslab:${PERSONAL_ACCESS_TOKEN}@github.com/theopensystemslab/planx-new.git" planx-new
         cd planx-new || exit 1
         git push --force origin origin/main:production
