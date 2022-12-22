@@ -6,7 +6,7 @@ export const OS_DOMAIN = "https://api.os.uk";
 
 const MAP_ALLOWLIST: RegExp[] = [
   // Local development
-  /^http:\/\/(127\.0\.0\.1|localhost):(5173|7007)\/$/i,
+  /^http:\/\/(127\.0\.0\.1|localhost):(3000|5173|6006|7007)\/$/i,
   // Documentation
   /^https:\/\/.*\.netlify\.app\/$/i,
   // PlanX

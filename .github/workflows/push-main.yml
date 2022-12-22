@@ -54,7 +54,6 @@ jobs:
       - run: pnpm build
         working-directory: editor.planx.uk
         env:
-          REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_API_URL: https://api.editor.planx.dev
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.editor.planx.dev/v1/graphql

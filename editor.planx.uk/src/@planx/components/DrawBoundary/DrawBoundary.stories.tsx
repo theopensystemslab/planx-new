@@ -24,7 +24,7 @@ export const MapOnly = () => {
         drawMode
         zoom={19}
         maxZoom={20}
-        osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+        osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
       />
     </>
   );
