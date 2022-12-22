@@ -1,20 +1,20 @@
 import { vanillaStore } from "../store";
 import flowWithBranchingFilters from "./mocks/flowWithBranchingFilters.json";
-import flowWithSingleFilter from "./mocks/flowWithSingleFilter.json";
+import flowWithRootFilter from "./mocks/flowWithRootFilter.json";
 
 const { getState, setState } = vanillaStore;
 const { upcomingCardIds, resetPreview, record, currentCard, collectedFlags } =
   getState();
 
 // https://i.imgur.com/k0kkKox.png
-describe("Single filter", () => {
+describe("A filter on the root of the graph", () => {
   beforeEach(() => {
     resetPreview();
   });
 
   test.skip("don't expand filters before visiting them (A)", () => {
     setState({
-      flow: flowWithSingleFilter,
+      flow: flowWithRootFilter,
     });
 
     expect(upcomingCardIds()).toEqual([
@@ -26,7 +26,7 @@ describe("Single filter", () => {
 
   test("immune path (B)", () => {
     setState({
-      flow: flowWithSingleFilter,
+      flow: flowWithRootFilter,
       breadcrumbs: {
         d5SxIWZej9: {
           auto: false,
@@ -40,7 +40,7 @@ describe("Single filter", () => {
 
   test("not immune path (C)", () => {
     setState({
-      flow: flowWithSingleFilter,
+      flow: flowWithRootFilter,
       breadcrumbs: {
         d5SxIWZej9: {
           auto: false,
@@ -53,7 +53,7 @@ describe("Single filter", () => {
   });
 });
 
-describe("Branching filters", () => {
+describe("A filter on a branch", () => {
   beforeEach(() => {
     resetPreview();
     setState({ flow: flowWithBranchingFilters });
