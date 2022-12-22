@@ -83,6 +83,12 @@ Here are the broad catergory of changes -
 | **Event Metadata** | Indefinite | 6 months from creation date, then deleted | 
 | **Feedback** | Indefinite | Indefinite
 
+
+### Timetable
+The new policy will be implemented once this proposal has been accepted. This means that records over 6 months old at the point the feature is merged to production will be sanitised or deleted.
+
+An automated scheduled task will run each night to sanitise and delete records which meet the agreed criteria.
+
 ### What does "Sanitation" mean?
 Currently, we would simply remove / delete and user data (e.g. email, breadcrumbs, passport) whilst retaining the remainder of the metadata associated with a record (such as `id`, `created_at`). This would allow to still have enough information to resconstruct user journeys if required to do so for auditing purposes.
 
