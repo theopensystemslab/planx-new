@@ -1,163 +1,80 @@
-import type { Store } from "../store";
 import { vanillaStore } from "../store";
+import flowWithBranchingFilters from "./mocks/flowWithBranchingFilters.json";
+import flowWithRootFilter from "./mocks/flowWithRootFilter.json";
 
 const { getState, setState } = vanillaStore;
+const { upcomingCardIds, resetPreview, record, currentCard, collectedFlags } =
+  getState();
 
 // https://i.imgur.com/k0kkKox.png
-
-const flow: Store.flow = {
-  _root: {
-    edges: ["d5SxIWZej9", "LAz2YqYChs", "nroxFPM2Jx"],
-  },
-  LAz2YqYChs: {
-    type: 500,
-    data: {
-      fn: "flag",
-    },
-    edges: [
-      "IK6gNsf8iF",
-      "gOLt5Yd4Fy",
-      "wgWEaXVfBt",
-      "QKSqXyhvQW",
-      "AM6b72H0aV",
-      "o3H1U1k6v6",
-      "VkqLPBX1mQ",
-      "udy3cmVDMh",
-    ],
-  },
-  IK6gNsf8iF: {
-    type: 200,
-    data: {
-      text: "Immune",
-      val: "IMMUNE",
-    },
-    edges: ["TmpbJgjGPH"],
-  },
-  gOLt5Yd4Fy: {
-    type: 200,
-    data: {
-      text: "Missing information",
-      val: "MISSING_INFO",
-    },
-  },
-  wgWEaXVfBt: {
-    type: 200,
-    data: {
-      text: "Permission needed",
-      val: "PLANNING_PERMISSION_REQUIRED",
-    },
-  },
-  QKSqXyhvQW: {
-    type: 200,
-    data: {
-      text: "Prior approval",
-      val: "PRIOR_APPROVAL",
-    },
-  },
-  AM6b72H0aV: {
-    type: 200,
-    data: {
-      text: "Notice",
-      val: "PP-NOTICE",
-    },
-  },
-  o3H1U1k6v6: {
-    type: 200,
-    data: {
-      text: "Permitted development",
-      val: "NO_APP_REQUIRED",
-    },
-  },
-  VkqLPBX1mQ: {
-    type: 200,
-    data: {
-      text: "Not development",
-      val: "PP-NOT_DEVELOPMENT",
-    },
-  },
-  udy3cmVDMh: {
-    type: 200,
-    data: {
-      text: "(No Result)",
-    },
-    edges: ["lOrm4XmVGv"],
-  },
-  d5SxIWZej9: {
-    type: 100,
-    data: {
-      text: "is this project immune?",
-    },
-    edges: ["FZ1kmhT37j", "ZTZqcDAOoG"],
-  },
-  FZ1kmhT37j: {
-    type: 200,
-    data: {
-      text: "yes",
-      flag: "IMMUNE",
-    },
-  },
-  ZTZqcDAOoG: {
-    type: 200,
-    data: {
-      text: "no",
-    },
-  },
-  TmpbJgjGPH: {
-    type: 250,
-    data: {
-      content: "<p>this project is immune</p>\n",
-    },
-  },
-  lOrm4XmVGv: {
-    type: 250,
-    data: {
-      content: "<p>this project is not immune</p>\n",
-    },
-  },
-  nroxFPM2Jx: {
-    type: 250,
-    data: {
-      content: "<p>last thing</p>\n",
-    },
-  },
-};
-
-test.skip("don't expand filters before visiting them (A)", () => {
-  setState({
-    flow,
+describe("A filter on the root of the graph", () => {
+  beforeEach(() => {
+    resetPreview();
   });
 
-  expect(getState().upcomingCardIds()).toEqual([
-    "d5SxIWZej9",
-    "LAz2YqYChs",
-    "nroxFPM2Jx",
-  ]);
+  test.skip("don't expand filters before visiting them (A)", () => {
+    setState({
+      flow: flowWithRootFilter,
+    });
+
+    expect(upcomingCardIds()).toEqual([
+      "d5SxIWZej9",
+      "LAz2YqYChs",
+      "nroxFPM2Jx",
+    ]);
+  });
+
+  test("immune path (B)", () => {
+    setState({
+      flow: flowWithRootFilter,
+      breadcrumbs: {
+        d5SxIWZej9: {
+          auto: false,
+          answers: ["FZ1kmhT37j"],
+        },
+      },
+    });
+
+    expect(upcomingCardIds()).toEqual(["TmpbJgjGPH", "nroxFPM2Jx"]);
+  });
+
+  test("not immune path (C)", () => {
+    setState({
+      flow: flowWithRootFilter,
+      breadcrumbs: {
+        d5SxIWZej9: {
+          auto: false,
+          answers: ["ZTZqcDAOoG"],
+        },
+      },
+    });
+
+    expect(upcomingCardIds()).toEqual(["lOrm4XmVGv", "nroxFPM2Jx"]);
+  });
 });
 
-test("immune path (B)", () => {
-  setState({
-    flow,
-    breadcrumbs: {
-      d5SxIWZej9: {
-        auto: false,
-        answers: ["FZ1kmhT37j"],
-      },
-    },
+describe("A filter on a branch", () => {
+  beforeEach(() => {
+    resetPreview();
+    setState({ flow: flowWithBranchingFilters });
   });
 
-  expect(getState().upcomingCardIds()).toEqual(["TmpbJgjGPH", "nroxFPM2Jx"]);
-});
+  test.skip("Picking up flag routes me correctly through the second filter", () => {
+    let visitedNodes = () => Object.keys(getState().breadcrumbs);
 
-test("not immune path (C)", () => {
-  setState({
-    flow,
-    breadcrumbs: {
-      d5SxIWZej9: {
-        auto: false,
-        answers: ["ZTZqcDAOoG"],
-      },
-    },
+    // Traverse forward to pick up an "IMMUNE" flag
+    record("pickFlag", { answers: ["setImmunity"] });
+    record("immunityPath1", { answers: [] });
+    expect(collectedFlags("immunityPath1", visitedNodes())).toStrictEqual([
+      "IMMUNE",
+    ]);
+
+    // Traverse forward through next filter
+    record("fork", { answers: ["filter2"] });
+
+    // XXX: Test fails here
+    // The currentCard returns as "immunityFlag2" which we should not land on -
+    // the flags on the first filter are skipped, we go direct from "immunityPath1" to "fork"
+    expect(currentCard()?.id).toBe("immunityPath2");
   });
-
-  expect(getState().upcomingCardIds()).toEqual(["lOrm4XmVGv", "nroxFPM2Jx"]);
 });

@@ -1,0 +1,115 @@
+{
+  "fork": {
+    "data": {
+      "text": "This is a question that forks"
+    },
+    "type": 100,
+    "edges": ["noFilterPath", "filterPath"]
+  },
+  "_root": {
+    "edges": ["pickFlag", "filter1", "fork", "finalNode"]
+  },
+  "filter1": {
+    "data": {
+      "fn": "flag"
+    },
+    "type": 500,
+    "edges": ["immunityFlag1", "noResultFlag1"]
+  },
+  "filter2": {
+    "data": {
+      "fn": "flag"
+    },
+    "type": 500,
+    "edges": ["immunityFlag2", "noResultFlag2"]
+  },
+  "pickFlag": {
+    "data": {
+      "text": "Pick up a planning permission flag"
+    },
+    "type": 100,
+    "edges": ["setImmunity"]
+  },
+  "finalNode": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "End of the line!",
+      "resetButton": false
+    },
+    "type": 8
+  },
+  "noResultPath1": {
+    "data": {
+      "content": "<p>No result path 1</p>"
+    },
+    "type": 250
+  },
+  "filterPath": {
+    "data": {
+      "text": "Path with filter"
+    },
+    "type": 200,
+    "edges": ["filter2"]
+  },
+  "setImmunity": {
+    "data": {
+      "flag": "IMMUNE",
+      "text": "Immunity"
+    },
+    "type": 200
+  },
+  "noFilterPath": {
+    "data": {
+      "text": "No filter path"
+    },
+    "type": 200
+  },
+  "noResultPath2": {
+    "data": {
+      "content": "<p>No result path 2</p>"
+    },
+    "type": 250
+  },
+  "immunityFlag1": {
+    "data": {
+      "val": "IMMUNE",
+      "text": "Immune"
+    },
+    "type": 200,
+    "edges": ["immunityPath1"]
+  },
+  "immunityFlag2": {
+    "data": {
+      "val": "IMMUNE",
+      "text": "Immune"
+    },
+    "type": 200,
+    "edges": ["immunityPath2"]
+  },
+  "immunityPath1": {
+    "data": {
+      "content": "<p>Immunity path 1</p>"
+    },
+    "type": 250
+  },
+  "immunityPath2": {
+    "data": {
+      "content": "<p>Immunity path 2</p>"
+    },
+    "type": 250
+  },
+  "noResultFlag1": {
+    "data": {
+      "text": "(No Result)"
+    },
+    "type": 200,
+    "edges": ["noResultPath1"]
+  },
+  "noResultFlag2": {
+    "data": {
+      "text": "(No Result)"
+    },
+    "type": 200,
+    "edges": ["noResultPath2"]
+  }
+}
