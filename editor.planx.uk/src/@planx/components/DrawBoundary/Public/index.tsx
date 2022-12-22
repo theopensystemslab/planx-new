@@ -164,12 +164,12 @@ export default function Component(props: Props) {
               resetControlImage="trash"
               osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
             />
-            {!props.hideFileUpload && (
-              <MapFooter>
-                <Typography variant="body2">
-                  The site outline you have drawn is{" "}
-                  <strong>{area?.toLocaleString("en-GB") ?? 0} m²</strong>
-                </Typography>
+            <MapFooter>
+              <Typography variant="body2">
+                The site outline you have drawn is{" "}
+                <strong>{area?.toLocaleString("en-GB") ?? 0} m²</strong>
+              </Typography>
+              {!props.hideFileUpload && (
                 <Link
                   component="button"
                   onClick={() => setPage("upload")}
@@ -180,8 +180,8 @@ export default function Component(props: Props) {
                     Upload a location plan instead
                   </Typography>
                 </Link>
-              </MapFooter>
-            )}
+              )}
+            </MapFooter>
           </MapContainer>
         </>
       );
