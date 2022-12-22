@@ -24,10 +24,13 @@ export const sanitiseApplicationData = async (
       message: `Failed to sanitise application data. ${(error as Error).message}`,
     });
   }
-  await postToSlack(results);
   
   const operationFailed = results.find(result => result.status === "failure");
-  if (operationFailed) res.status(500)
+  if (operationFailed) { 
+    await postToSlack(results);
+    res.status(500)
+  };
+
   return res.json(results);
 };
 

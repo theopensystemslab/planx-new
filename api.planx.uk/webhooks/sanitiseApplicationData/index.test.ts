@@ -73,11 +73,6 @@ describe("Sanitise application data webhook", () => {
             }),
           ])
         );
-
-        expect(SlackNotify).toHaveBeenCalledWith(process.env.SLACK_WEBHOOK_URL);
-        expect(mockSend).toHaveBeenCalledWith(expect.objectContaining({
-          text: expect.stringMatching(/mockConstructor succeeded/)
-        }));
       });
   });
 
