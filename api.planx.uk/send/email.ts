@@ -9,6 +9,7 @@ import path from "path";
 import { adminGraphQLClient } from "../hasura";
 import { convertSlugToName, sendEmail } from "../saveAndReturn/utils";
 import { EmailSubmissionNotifyConfig } from "../types";
+import { generateDocumentReviewStream } from "./documentReview";
 import { deleteFile, downloadFile } from "./helpers";
 
 const client = adminGraphQLClient;
@@ -106,7 +107,26 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
         zip.addLocalFile(csvPath);
         deleteFile(csvPath);
       }
-      
+
+      // If the user drew a red line boundary, add a geojson file and a html map-viewer
+      const geojson = sessionData.passport?.data?.["property.boundary.site"];
+      if (geojson) {
+        const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
+        zip.addFile("boundary.geojson", geoBuff);
+
+        const mapViewPath = path.join(tmpDir, "map.html");
+        const mapViewFile = fs.createWriteStream(mapViewPath);
+        const mapViewStream = generateDocumentReviewStream({ geojson }).pipe(mapViewFile);
+
+        await new Promise((resolve, reject) => {
+          mapViewStream.on("error", reject);
+          mapViewStream.on("finish", resolve);
+        });
+
+        zip.addLocalFile(mapViewPath);
+        deleteFile(mapViewPath);
+      }
+
       // Next iterate through the passport and pull out the urls of any user-uploaded files
       if (sessionData.passport) {
         const files: string[] = [];

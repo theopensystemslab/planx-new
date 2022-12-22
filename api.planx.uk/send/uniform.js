@@ -185,6 +185,7 @@ async function checkUniformAuditTable(sessionId) {
  * Creates a zip folder containing the documents required by Uniform
  * @param {any} stringXml - a string representation of the XML schema, resulting file must be named "proposal.xml"
  * @param {any} csv - an array of objects representing our custom CSV format
+ * @param {any} geojson - the site boundary geojson if the user drew, empty if they uploaded a location plan
  * @param {object[]} files - an array of user-uploaded files
  * @param {string} sessionId
  * @returns {Promise} - name of zip
