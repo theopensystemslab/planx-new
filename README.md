@@ -62,26 +62,17 @@ For maximum visibility and discoverability, we recommend using the [GitHub discu
 
 ## Deployments
 
-Our `main` branch is deployed to AWS staging (editor.planx.dev) and `production` is deployed to our AWS production environment (editor.planx.uk or a custom subdomain like planningservices.{council}.gov.uk) using Github Actions. 
+Our `main` branch is deployed to AWS staging (editor.planx.dev) and `production` is deployed to our AWS production environment (i.e. editor.planx.uk and the custom subdomain like planningservices.{council}.gov.uk) using Github Actions. 
 
-We work in feature branches and open pull requests against `main`. Pull requests will spin up a Vultr server running Docker to test the whole stack (eg database migrations, API changes, frontend changes, Storybook, etc) and generate unique links that can be shared for user-acceptance tesing. Pull request environments use the domain pattern <service>.<PR#>.planx.pizza and are often simply referred to as "pizzas". The only changes which cannot be fully tested on a pizza are changes related to Pulumi infrastructure-as-code because this is only deployed in AWS environments, not via Docker.
+We work in feature branches and open pull requests against `main`. Pull requests will spin up a Vultr server running Docker to test the whole stack (eg database migrations, API changes, frontend changes, Storybook, etc) and generate unique links that can be shared for user-acceptance tesing. Pull request environments use the domain pattern `<service>.<PR#>.planx.pizza` and are often simply referred to as "pizzas". The only changes which cannot be fully tested on a pizza are changes related to Pulumi infrastructure-as-code because this is only deployed in AWS environments, not via Docker.
 
-We aim to keep a linear commit history between `main` and `production` branches in Github. We "Squash & merge" pull request commits into `main`, and then force push to `production` via the command line following these steps:
+We aim to keep a linear commit history between `main` and `production` branches in Github. We "Squash & merge" pull request commits into `main`.
 
-1. Open a PR in the web interface from `main` into `production` to generate a visual diff and request approval from @planx team
-- DO NOT MERGE this PR via the web interface using any method ("Squash" or "Rebase") because Github will generate its' own commit hashes in either instance
-- Branch protection rules are in place to restrict running the commands in the next step without explicit "approval" generated via this PR
+(EDIT: Automatic deployments are on pause and planned to resume after the holidays) Automatic production deployments happen every Tuesday, Wednesday, Thursday, and Friday at 9am, at which time `main` is pushed to `production` (which triggers a deployment).
 
-1. Once approved, switch to your command line and run these commands (starting on `main` branch)
-```bash
-git fetch --all
-git checkout production
-git pull
-git rebase origin/main
-git push --force
-```
+You can manually trigger a production deployments by going to [the Deploy to Production](https://github.com/theopensystemslab/planx-new/actions/workflows/cron-deploy-to-production.yml) action and clicking `Run workflow`.
 
-1. On success, the PR you opened will automatically close and display as "merged", a Slack notification will be sent to #planx-deployments channel, and the `production` branch should read "This branch is up to date with main."
+Once a deployment is completed, a Slack notification will be sent to the #planx-deployments channel, and the `production` branch should read "This branch is up to date with main."
 
 
 ### Troubleshooting
