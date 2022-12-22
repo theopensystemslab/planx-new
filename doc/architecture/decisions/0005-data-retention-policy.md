@@ -27,6 +27,7 @@ gantt
 
     section User Data
     Lowcal Session: 2022-01-01, 35d
+    Uploaded files: 2022-01-14, 2022-12-31
     Session backups: after uj1, 2022-12-31
 
     section Audit Logs
@@ -53,6 +54,7 @@ gantt
     section User Data
     Lowcal Session: 2022-01-01, 210d
     Lowcal Session (Sanitised): 2022-12-31
+    Uploaded files: 2022-01-14, 182d
     Session backups: after uj1, 182d
     Session backups (Sanitised): 2022-12-31
 
@@ -75,9 +77,10 @@ Here are the broad catergory of changes -
 
 || Current Retention Period | Proposed Retention Period |
 |---|---|---|
-| **User Data**| Lowcal Sessions - 7 days, then deleted. Session Backups - Indefinite | 6 months, then sanitised and held indefinitely |
-| **Audit Logs** | Indefinite | 6 months, then sanitised and held indefinitely |
-| **Event Metadata** | Indefinite | 6 months, then deleted | 
+| **User Data**| Lowcal Sessions - 7 days, then deleted. Session Backups - Indefinite | 6 months from submission date, then sanitised and held indefinitely |
+| **Uploaded Files**| Indefinite | 6 months from upload date |
+| **Audit Logs** | Indefinite | 6 months from submission date, then sanitised and held indefinitely |
+| **Event Metadata** | Indefinite | 6 months from creation date, then deleted | 
 | **Feedback** | Indefinite | Indefinite
 
 ### What does "Sanitation" mean?
@@ -89,6 +92,7 @@ In future, a more fine grained approach could be implemented to only sanitise pe
  - Is 6 months too long?
  - Do we actually need Session Backups now that we have Lowcal Sessions?
  - Is there value in retaining reconciliation events indefinately?
+ - Files and reconciliation events will be deleted 6 months from their creation, as opposed to 6 months from the submission of their associated applications. This would be an MVP implementation and we could use foreign keys to ensure everything is removed 6 months from application submission. Is this fine for now?
 
 ## Consequences
 
