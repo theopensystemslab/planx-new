@@ -165,6 +165,7 @@ specifiers:
   react-navi-helmet-async: ^0.15.0
   react-refresh: ^0.14.0
   react-scripts: ^5.0.1
+  react-snowfall: ^1.2.1
   react-toastify: ^9.0.8
   react-use: ^17.4.0
   reconnecting-websocket: ^4.4.0
@@ -256,6 +257,7 @@ dependencies:
   react-navi: 0.15.0_navi@0.15.0+react@18.2.0
   react-navi-helmet-async: 0.15.0_e4zufcmuewgygmkt4h2ll6yape
   react-scripts: 5.0.1_kwg5n3kie4k7un3jwvoet3477e
+  react-snowfall: 1.2.1_biqbaboplfbrettd7655fr4n2y
   react-toastify: 9.0.8_biqbaboplfbrettd7655fr4n2y
   react-use: 17.4.0_biqbaboplfbrettd7655fr4n2y
   reconnecting-websocket: 4.4.0
@@ -15994,6 +15996,17 @@ packages:
       - webpack-cli
       - webpack-hot-middleware
       - webpack-plugin-serve
+
+  /react-snowfall/1.2.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-d2UR3nDq3F0DJGaTfJ0QNbBo76UZHtT9wHFj+ePxAl4FgSxWBhxB/Bjn06f5iDBwhgwiZ7CZmv3lwfNvjo6a+w==}
+    peerDependencies:
+      react: "^16.8 ||\_17.x || 18.x"
+      react-dom: ^16.8 || 17.x || 18.x
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-fast-compare: 3.2.0
+    dev: false
 
   /react-textarea-autosize/6.1.0_react@18.2.0:
     resolution: {integrity: sha512-F6bI1dgib6fSvG8so1HuArPUv+iVEfPliuLWusLF+gAKz0FbB4jLrWUrTAeq1afnPT2c9toEZYUdz/y1uKMy4A==}

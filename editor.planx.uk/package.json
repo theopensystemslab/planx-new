@@ -72,6 +72,7 @@
     "react-navi": "^0.15.0",
     "react-navi-helmet-async": "^0.15.0",
     "react-scripts": "^5.0.1",
+    "react-snowfall": "^1.2.1",
     "react-toastify": "^9.0.8",
     "react-use": "^17.4.0",
     "reconnecting-websocket": "^4.4.0",

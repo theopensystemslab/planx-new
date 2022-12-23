@@ -21,6 +21,7 @@ import React, { Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
 import HelmetProvider from "react-navi-helmet-async";
+import Snowfall from "react-snowfall";
 import { ToastContainer } from "react-toastify";
 
 import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
@@ -115,6 +116,14 @@ root.render(
           <HelmetProvider>
             <Layout>
               <CssBaseline />
+              <Snowfall
+                style={{
+                  zIndex: 2000,
+                  position: "fixed",
+                  width: "100vw",
+                  height: "100vh",
+                }}
+              />
               <Suspense fallback={null}>
                 <View />
               </Suspense>
