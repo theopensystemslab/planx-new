@@ -1,6 +1,6 @@
 # Plan✕
 
-Plan✕ is a platform for creating and publishing digital planning services. Learn more about how it's currently being used here: https://www.ripa.digital/
+Plan✕ is a platform for creating and publishing digital planning services. Learn more about how it's currently being used here: https://opendigitalplanning.org/
 
 ## Status pages
 
