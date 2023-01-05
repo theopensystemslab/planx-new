@@ -323,6 +323,9 @@
         filter: {}
 - table:
     schema: public
+    name: reconciliation_requests
+- table:
+    schema: public
     name: session_backups
   object_relationships:
     - name: flow

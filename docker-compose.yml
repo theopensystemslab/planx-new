@@ -118,7 +118,7 @@ services:
     restart: unless-stopped
     build:
       context: ./api.planx.uk
-      target: development
+      target: production
     depends_on:
       hasura-proxy:
         condition: service_healthy
@@ -169,9 +169,11 @@ services:
       GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID}
       GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID}
       GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID}
+      GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID: ${GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID}
       HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
       FILE_API_KEY: ${FILE_API_KEY}
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
+      ORDNANCE_SURVEY_API_KEY: ${ORDNANCE_SURVEY_API_KEY}
 
   sharedb:
     restart: unless-stopped

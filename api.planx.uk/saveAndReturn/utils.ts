@@ -1,7 +1,7 @@
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
 import { publicGraphQLClient, adminGraphQLClient } from "../hasura";
-import { LowCalSession, NotifyConfig, Team } from "../types";
+import { EmailSubmissionNotifyConfig, LowCalSession, SaveAndReturnNotifyConfig, Team } from "../types";
 import { notifyClient } from "./notify";
 
 const DAYS_UNTIL_EXPIRY = 28;
@@ -10,6 +10,7 @@ const singleSessionEmailTemplates = {
   save: process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID,
   reminder: process.env.GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID,
   expiry: process.env.GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID,
+  submit: process.env.GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID,
 };
 
 const multipleSessionEmailTemplates = {
@@ -29,7 +30,7 @@ export type Template = keyof typeof emailTemplates;
 const sendEmail = async (
   template: Template,
   emailAddress: string,
-  config: NotifyConfig
+  config: SaveAndReturnNotifyConfig | EmailSubmissionNotifyConfig
 ) => {
   const templateId = emailTemplates[template];
   if (!templateId) throw new Error("Template ID is required");

@@ -11,6 +11,7 @@ export interface Flow {
   data: {
     [key: string]: Node;
   };
+  team_id: number;
 }
 
 export interface UserData {
@@ -23,6 +24,7 @@ export interface UserData {
 export type Breadcrumb = Record<string, UserData>;
 
 export interface Team {
+  id: number;
   slug: string;
   name: string;
   domain?: string;
@@ -58,23 +60,33 @@ export interface LowCalSession {
   };
 }
 
-export interface NotifyConfig {
+export interface SaveAndReturnNotifyConfig {
   personalisation: {
     address?: any;
-    projectType?: string;
-    id?: string;
+    emailReplyToId: string;
     expiryDate?: string;
     helpEmail: string;
-    helpPhone: string;
     helpOpeningHours: string;
-    emailReplyToId: string;
+    helpPhone: string;
+    id?: string;
+    projectType?: string;
     resumeLink?: string;
     serviceLink?: string;
     serviceName?: string;
     teamName: string;
   };
-  reference?: any;
-  emailReplyToId?: any;
+}
+
+export interface EmailSubmissionNotifyConfig {
+  personalisation: {
+    applicantEmail: string;
+    downloadLink: string;
+    emailReplyToId: string;
+    expiryDate?: string;
+    id?: string;
+    serviceName: string;
+    sessionId: string;
+  };
 }
 
 // https://docs.payments.service.gov.uk/making_payments/#receiving-the-api-response

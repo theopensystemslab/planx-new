@@ -54,7 +54,6 @@ jobs:
       - run: pnpm build
         working-directory: editor.planx.uk
         env:
-          REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_API_URL: https://api.editor.planx.uk
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.editor.planx.uk/v1/graphql
@@ -127,5 +126,7 @@ jobs:
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
+          SLACK_USERNAME: PlanX Deploy
+          SLACK_COLOR: "#42AC6A"
           SLACK_TITLE: ${{ env.DEPLOYMENT_ENVIRONMENT }} deploy
           SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}

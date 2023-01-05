@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { styled } from "@mui/material/styles";
+import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
@@ -25,19 +25,32 @@ interface MapContainerProps {
   environment: PreviewEnvironment;
 }
 
+/**
+ * Generate a style which increases the map size as the window grows
+ * and maintains a consistent right margin
+ */
+const dynamicMapSizeStyle = (theme: Theme): Record<string, any> => {
+  const mainContainerWidth = `${theme.breakpoints.values.md}px`;
+  const mainContainerMargin = `((100vw - ${mainContainerWidth}) / 2)`;
+  const mapMarginRight = "150px";
+
+  const style = {
+    [theme.breakpoints.up("md")]: {
+      height: "70vh",
+      width: `calc(${mainContainerMargin} + ${mainContainerWidth} - ${mapMarginRight})`,
+    },
+  };
+
+  return style;
+};
+
 const MapContainer = styled(Box)<MapContainerProps>(
   ({ theme, environment }) => ({
     padding: theme.spacing(1, 0, 6, 0),
     width: "100%",
     height: "50vh",
     // Only increase map size in Preview & Unpublished routes
-    [theme.breakpoints.up("md")]:
-      environment === "standalone"
-        ? {
-            height: "70vh",
-            minWidth: "65vw",
-          }
-        : {},
+    ...(environment === "standalone" && { ...dynamicMapSizeStyle(theme) }),
     "& my-map": {
       width: "100%",
       height: "100%",
@@ -149,14 +162,14 @@ export default function Component(props: Props) {
               markerLatitude={Number(passport?.data?._address?.latitude)}
               markerLongitude={Number(passport?.data?._address?.longitude)}
               resetControlImage="trash"
-              osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+              osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
             />
-            {!props.hideFileUpload && (
-              <MapFooter>
-                <Typography variant="body2">
-                  The site outline you have drawn is{" "}
-                  <strong>{area?.toLocaleString("en-GB") ?? 0} m²</strong>
-                </Typography>
+            <MapFooter>
+              <Typography variant="body2">
+                The site outline you have drawn is{" "}
+                <strong>{area?.toLocaleString("en-GB") ?? 0} m²</strong>
+              </Typography>
+              {!props.hideFileUpload && (
                 <Link
                   component="button"
                   onClick={() => setPage("upload")}
@@ -167,8 +180,8 @@ export default function Component(props: Props) {
                     Upload a location plan instead
                   </Typography>
                 </Link>
-              </MapFooter>
-            )}
+              )}
+            </MapFooter>
           </MapContainer>
         </>
       );

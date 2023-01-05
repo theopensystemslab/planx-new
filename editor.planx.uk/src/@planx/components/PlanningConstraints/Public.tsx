@@ -215,10 +215,11 @@ function PlanningConstraintsInformation(props: any) {
     },
     onSubmit: (values) => {
       if (values.feedback) {
-        submitFeedback(values.feedback, {
-          reason: "Inaccurate planning constraints",
-          constraints: constraints,
-        });
+        submitFeedback(
+          values.feedback,
+          "Inaccurate planning constraints",
+          constraints
+        );
       }
       handleSubmit?.(values);
     },

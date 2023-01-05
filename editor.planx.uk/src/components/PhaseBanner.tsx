@@ -5,7 +5,8 @@ import Link from "@mui/material/Link";
 import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
-import React from "react";
+import { getFeedbackMetadata } from "lib/feedback";
+import React, { useEffect, useState } from "react";
 
 const useClasses = makeStyles((theme: Theme) => ({
   root: {
@@ -31,9 +32,18 @@ const useClasses = makeStyles((theme: Theme) => ({
 export default function PhaseBanner(): FCReturn {
   const classes = useClasses();
   const feedbackFishId = process.env.REACT_APP_FEEDBACK_FISH_ID || "";
+  const [metadata, setMetadata] = useState<Record<string, string>>();
+
+  useEffect(() => {
+    const handleMessage = () => setMetadata(getFeedbackMetadata());
+    window.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
 
   return (
-    <FeedbackFish projectId={feedbackFishId}>
+    <FeedbackFish projectId={feedbackFishId} metadata={metadata}>
       <ButtonBase
         aria-label="This is a new service. Click here to provide feedback."
         className={classes.root}

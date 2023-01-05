@@ -34,7 +34,7 @@ jobs:
             api:
               - 'api.planx.uk/**'
             e2e:
-              - 'api.planx.uk/**'
+              - 'e2e/**'
             hasura:
               - 'hasura.planx.uk/**'
             infrastructure:
@@ -58,16 +58,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: | 
-          aws s3 cp s3://pizza-secrets/root.env ./.env
-          aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
-          aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
-          aws s3 cp s3://pizza-secrets/hasura.env.test ./hasura.planx.uk/.env.test
+        run: ./scripts/pull-secrets.sh
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          fail: true
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -84,8 +81,27 @@ jobs:
       - name: Hasura Tests
         run: pnpm install --frozen-lockfile && pnpm test
         working-directory: hasura.planx.uk/tests
-      - name: E2E Tests
-        run: pnpm install --frozen-lockfile && pnpm cypress install && pnpm test
+      - name: Install Playwright dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: e2e
+      - name: Install Playwright Browsers
+        run: pnpm playwright install --with-deps
+        working-directory: e2e
+      - name: Playwright Tests
+        run:  pnpm test:playwright
+        working-directory: e2e
+      - uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: e2e/playwright-report/
+          retention-days: 3
+      - uses: actions/upload-artifact@v3
+        with:
+          name: playwright-video
+          path: e2e/test-results/
+          retention-days: 3
+      - name: Cypress Tests
+        run: pnpm cypress install && pnpm test:cypress
         working-directory: e2e
 
   api_tests:
@@ -103,16 +119,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: | 
-          aws s3 cp s3://pizza-secrets/root.env ./.env
-          aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
-          aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
-          aws s3 cp s3://pizza-secrets/hasura.env.test ./hasura.planx.uk/.env.test
+        run: ./scripts/pull-secrets.sh
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          fail: true
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -139,16 +152,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
       - name: Copy .env files from Staging S3 to the current working directory with AWS CLI
-        run: | 
-          aws s3 cp s3://pizza-secrets/root.env ./.env
-          aws s3 cp s3://pizza-secrets/editor.env ./editor.planx.uk/.env
-          aws s3 cp s3://pizza-secrets/api.env.test ./api.planx.uk/.env.test
-          aws s3 cp s3://pizza-secrets/hasura.env.test ./hasura.planx.uk/.env.test
+        run: ./scripts/pull-secrets.sh
       - name: Check if .env files exist
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, editor.planx.uk/.env, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          fail: true
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -195,7 +205,6 @@ jobs:
           REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           # needed because there's no API to change google's allowed OAuth URLs
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
@@ -234,7 +243,6 @@ jobs:
           REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_ORDNANCE_SURVEY_KEY: ${{ secrets.ORDNANCE_SURVEY_KEY }}
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
 
@@ -340,10 +348,7 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
 
-            aws s3 cp s3://pizza-secrets/root.env .env
-            aws s3 cp s3://pizza-secrets/editor.env editor.planx.uk/.env
-            aws s3 cp s3://pizza-secrets/api.env.test api.planx.uk/.env.test
-            aws s3 cp s3://pizza-secrets/hasura.env.test hasura.planx.uk/.env.test
+            ./scripts/pull-secrets.sh
 
             echo "
             ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
@@ -373,10 +378,7 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
             export AWS_REGION=eu-west-2
 
-            aws s3 cp s3://pizza-secrets/root.env .env
-            aws s3 cp s3://pizza-secrets/editor.env editor.planx.uk/.env
-            aws s3 cp s3://pizza-secrets/api.env.test api.planx.uk/.env.test
-            aws s3 cp s3://pizza-secrets/hasura.env.test hasura.planx.uk/.env.test
+            ./scripts/pull-secrets.sh
 
             echo "
             ROOT_DOMAIN=${{ env.FULL_DOMAIN }}

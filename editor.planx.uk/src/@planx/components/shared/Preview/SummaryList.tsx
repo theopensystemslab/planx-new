@@ -268,7 +268,7 @@ function DrawBoundary(props: ComponentProps) {
               geojsonColor="#ff0000"
               geojsonFill
               geojsonBuffer="20"
-              osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+              osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
               hideResetControl
               staticMode
               style={{ width: "100%", height: "30vh" }}
