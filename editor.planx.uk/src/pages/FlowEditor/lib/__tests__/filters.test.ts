@@ -118,9 +118,9 @@ describe("Nodes on a filter path should only be auto-answered when the path matc
       auto: true,
     });
 
-    // make sure the auto-answerable question from the permitted development filter path is not in our breadcrumbs nor upcoming card ids
+    // make sure the auto-answerable question and its child from the permitted development filter path is not in our breadcrumbs nor upcoming card ids
     expect(visitedNodes()).not.toContain("AaEuHnVUb4");
-    expect(upcomingCardIds).not.toContain("AaEuHnVUb4");
+    expect(upcomingCardIds).not.toContain("xjcujhpzjs");
   });
 
   test.skip("Filter path nodes are auto-answered correctly when a lower order flag is picked up first", () => {
@@ -148,8 +148,8 @@ describe("Nodes on a filter path should only be auto-answered when the path matc
     });
 
     // TEST-GENERATED BREADCRUMBS DO NOT MATCH PRODUCTION BREADCRUMBS, THIS SHOULD BE FAILING
-    // make sure the auto-answerable question from the permitted development filter path is not in our breadcrumbs nor upcoming card ids
+    // make sure the auto-answerable question and its child from the permitted development filter path is not in our breadcrumbs nor upcoming card ids
     expect(visitedNodes()).not.toContain("AaEuHnVUb4");
-    expect(upcomingCardIds).not.toContain("AaEuHnVUb4");
+    expect(upcomingCardIds).not.toContain("xjcujhpzjs");
   });
 });
