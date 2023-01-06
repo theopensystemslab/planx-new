@@ -1,0 +1,248 @@
+{
+  "_root": {
+    "edges": [
+      "zlKQyPuKsl",
+      "Ve90wVIXsV",
+      "TiIuAVIXsV",
+      "yYSKdVIXsV",
+      "rkqKFVIXsV"
+    ]
+  },
+  "AwAJxVIXsV": {
+    "data": {
+      "val": "IMMUNE",
+      "text": "Immune"
+    },
+    "type": 200
+  },
+  "CXV6wVIXsV": {
+    "data": {
+      "val": "PP-NOT_DEVELOPMENT",
+      "text": "Not development"
+    },
+    "type": 200
+  },
+  "D79fwVIXsV": {
+    "data": {
+      "val": "PRIOR_APPROVAL",
+      "text": "Prior approval"
+    },
+    "type": 200
+  },
+  "DtoqgVIXsV": {
+    "data": {
+      "val": "PP-NOTICE",
+      "text": "Notice"
+    },
+    "type": 200
+  },
+  "GxTpoVIXsV": {
+    "data": {
+      "val": "MISSING_INFO",
+      "text": "Missing information"
+    },
+    "type": 200
+  },
+  "O91ogVIXsV": {
+    "data": {
+      "val": "PLANNING_PERMISSION_REQUIRED",
+      "text": "Permission needed"
+    },
+    "type": 200,
+    "edges": ["seN42VIXsV", "1ShlhWrXPl"]
+  },
+  "OPOWoVIXsV": {
+    "data": {
+      "flag": "PLANNING_PERMISSION_REQUIRED",
+      "text": "Permission needed"
+    },
+    "type": 200
+  },
+  "TiIuAVIXsV": {
+    "data": {
+      "text": "Pick another flag"
+    },
+    "type": 100,
+    "edges": ["OPOWoVIXsV", "hdaeOVIXsV"]
+  },
+  "Ve90wVIXsV": {
+    "data": {
+      "text": "Pick a flag"
+    },
+    "type": 100,
+    "edges": ["d98AoVIXsV", "pghecgQLgs"]
+  },
+  "d98AoVIXsV": {
+    "data": {
+      "flag": "PLANNING_PERMISSION_REQUIRED",
+      "text": "Permission needed",
+      "val": "permissionNeeded"
+    },
+    "type": 200
+  },
+  "hdaeOVIXsV": {
+    "data": {
+      "flag": "NO_APP_REQUIRED",
+      "text": "Permitted dev"
+    },
+    "type": 200
+  },
+  "qmEBoVIXsV": {
+    "data": {
+      "val": "NO_APP_REQUIRED",
+      "text": "Permitted development"
+    },
+    "type": 200,
+    "edges": ["seN42VIXsV", "AaEuHnVUb4"]
+  },
+  "rkqKFVIXsV": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "End of service!",
+      "resetButton": true
+    },
+    "type": 8
+  },
+  "seN42VIXsV": {
+    "data": {
+      "flagSet": "Planning permission"
+    },
+    "type": 3
+  },
+  "yG4jGVIXsV": {
+    "data": {
+      "text": "(No Result)"
+    },
+    "type": 200
+  },
+  "yYSKdVIXsV": {
+    "data": {
+      "fn": "flag"
+    },
+    "type": 500,
+    "edges": [
+      "AwAJxVIXsV",
+      "GxTpoVIXsV",
+      "O91ogVIXsV",
+      "D79fwVIXsV",
+      "DtoqgVIXsV",
+      "qmEBoVIXsV",
+      "CXV6wVIXsV",
+      "yG4jGVIXsV"
+    ]
+  },
+  "zlKQyPuKsl": {
+    "type": 100,
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is it a listed building?"
+    },
+    "edges": ["8ONxTMoU0b", "qW1jzS1qPy"]
+  },
+  "8ONxTMoU0b": {
+    "type": 200,
+    "data": {
+      "text": "Yes",
+      "val": "listed",
+      "flag": "LB-REQUIRED"
+    }
+  },
+  "qW1jzS1qPy": {
+    "type": 200,
+    "data": {
+      "text": "No",
+      "flag": "LB-NOT_REQUIRED"
+    }
+  },
+  "P9yPvn8JLs": {
+    "type": 250,
+    "data": {
+      "content": "<p>Listed and permitted dev path</p>"
+    }
+  },
+  "1ShlhWrXPl": {
+    "type": 100,
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is any part of the property listed? (PN path)"
+    },
+    "edges": ["gUNLEiv4yh", "tesCNavKYo"]
+  },
+  "gUNLEiv4yh": {
+    "type": 200,
+    "data": {
+      "text": "Yes",
+      "val": "listed"
+    },
+    "edges": ["sSL8kEJ558", "g8efNSpw8h"]
+  },
+  "sSL8kEJ558": {
+    "type": 3,
+    "data": {
+      "flagSet": "Listed building consent",
+      "overrides": {}
+    }
+  },
+  "tesCNavKYo": {
+    "type": 200,
+    "data": {
+      "text": "No"
+    },
+    "edges": ["qSJ2jpVVXb"]
+  },
+  "qSJ2jpVVXb": {
+    "data": {
+      "content": "<p>Not listed and permission needed path</p>"
+    },
+    "type": 250
+  },
+  "AaEuHnVUb4": {
+    "type": 100,
+    "data": {
+      "fn": "property.constraints.planning",
+      "text": "Is any part of the property listed? (PD path)"
+    },
+    "edges": ["hcYEJL5mTW", "WbVIceFvVw"]
+  },
+  "hcYEJL5mTW": {
+    "type": 200,
+    "data": {
+      "text": "Yes",
+      "val": "listed"
+    },
+    "edges": ["Qy3Okt81xb", "P9yPvn8JLs"]
+  },
+  "Qy3Okt81xb": {
+    "type": 3,
+    "data": {
+      "flagSet": "Listed building consent"
+    }
+  },
+  "WbVIceFvVw": {
+    "type": 200,
+    "data": {
+      "text": "No"
+    },
+    "edges": ["xjcujhpzjs"]
+  },
+  "xjcujhpzjs": {
+    "data": {
+      "content": "<p>Not listed and permitted dev path</p>"
+    },
+    "type": 250
+  },
+  "pghecgQLgs": {
+    "type": 200,
+    "data": {
+      "text": "Permitted dev",
+      "val": "permittedDev",
+      "flag": "NO_APP_REQUIRED"
+    }
+  },
+  "g8efNSpw8h": {
+    "type": 250,
+    "data": {
+      "content": "<p>Listed and permission needed path</p>"
+    }
+  }
+}
