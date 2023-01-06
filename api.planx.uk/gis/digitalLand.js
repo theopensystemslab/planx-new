@@ -98,6 +98,7 @@ async function go(localAuthority, geom, extras) {
           text: baseSchema[key].pos,
           data: [omitGeometry(entity)],
           category: baseSchema[key].category,
+          key: key,
         };
       }
     });
@@ -185,7 +186,23 @@ async function go(localAuthority, geom, extras) {
     }
   }
 
-  return { url: url, constraints: formattedResult };
+  // --- METADATA ---
+  // additionally fetch metadata from Digital Land's "dataset" endpoint for extra context
+  let metadata = {};
+  const urls = activeDatasets.map((dataset) => `https://www.planning.data.gov.uk/dataset/${dataset}.json`);
+  await Promise.all(urls.map(url => 
+    fetch(url)
+      .then(response => response.json())
+      .catch(error => console.log(error))
+  )).then((responses) => {
+    responses.forEach((response) => {
+      // get the planx variable that corresponds to this 'dataset', should never be null because we only requested known datasets
+      const key = Object.keys(baseSchema).find((key) => baseSchema[key]["digital-land-datasets"].includes(response.dataset));
+      metadata[key] = response;
+    });
+  }).catch(error => console.log(error));
+
+  return { url: url, constraints: formattedResult, metadata: metadata };
 }
 
 async function locationSearch(localAuthority, geom, extras) {

@@ -3,6 +3,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
+import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
@@ -23,6 +24,7 @@ import ReactHtmlParser from "react-html-parser";
 import { useCurrentRoute } from "react-navi";
 import useSWR from "swr";
 import CollapsibleInput from "ui/CollapsibleInput";
+import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 import { stringify } from "wkt";
 
 import type { PlanningConstraints } from "./model";
@@ -105,6 +107,8 @@ function Component(props: Props) {
   const constraints: Record<string, any> | undefined =
     data?.constraints || data;
 
+  const metadata: Record<string, any> | undefined = data?.metadata;
+
   return (
     <>
       {!isValidating && constraints ? (
@@ -113,6 +117,7 @@ function Component(props: Props) {
           description={props.description || ""}
           fn={props.fn}
           constraints={constraints}
+          metadata={metadata}
           previousFeedback={props.previouslySubmittedData?.feedback}
           handleSubmit={(values: { feedback?: string }) => {
             const _nots: any = {};
@@ -204,6 +209,7 @@ function PlanningConstraintsInformation(props: any) {
     title,
     description,
     constraints,
+    metadata,
     handleSubmit,
     refreshConstraints,
     sourcedFromDigitalLand,
@@ -230,6 +236,7 @@ function PlanningConstraintsInformation(props: any) {
       <QuestionHeader title={title} description={description} />
       <ConstraintsList
         data={constraints}
+        metadata={metadata}
         refreshConstraints={refreshConstraints}
       />
       {sourcedFromDigitalLand && (
@@ -254,7 +261,7 @@ function PlanningConstraintsInformation(props: any) {
   );
 }
 
-function ConstraintsList({ data, refreshConstraints }: any) {
+function ConstraintsList({ data, metadata, refreshConstraints }: any) {
   const classes = useClasses();
   const error = data.error || undefined;
 
@@ -291,6 +298,7 @@ function ConstraintsList({ data, refreshConstraints }: any) {
             }}
             collapsible={con.value}
             data={con.value ? con.data : null}
+            metadata={metadata[con.key]}
           >
             {ReactHtmlParser(con.text)}
           </Constraint>
@@ -367,33 +375,60 @@ function Constraint({ children, ...props }: any) {
             )}
           </Button>
           <Collapse in={showConstraintData}>
-            <List dense disablePadding>
-              {props.data.map((record: any) => (
-                <ListItem
-                  key={record.entity}
+            {props.data.length > 0 && (
+              <>
+                <Typography variant="body2" component="h2" fontWeight={700}>
+                  Entities that intersect with your property
+                </Typography>
+                <List
                   dense
-                  disableGutters
-                  style={{ paddingTop: 0, paddingBottom: 0 }}
+                  disablePadding
+                  sx={{ listStyleType: "disc", pl: 4 }}
                 >
-                  <Box
-                    style={{ fontWeight: 500, paddingTop: 0, paddingBottom: 0 }}
-                  >
-                    {record.name}{" "}
-                    {record.name && record["documentation-url"] ? (
-                      <span>
-                        [
-                        <a href={record["documentation-url"]} target="_blank">
-                          Source (opens in a new tab)
-                        </a>
-                        ]
-                      </span>
-                    ) : (
-                      ``
-                    )}
-                  </Box>
-                </ListItem>
-              ))}
-            </List>
+                  {props.data.map(
+                    (record: any) =>
+                      record.name && (
+                        <ListItem
+                          key={record.entity}
+                          dense
+                          disableGutters
+                          sx={{ display: "list-item" }}
+                        >
+                          <Box style={{ fontWeight: 500, lineHeight: 1 }}>
+                            {record.name}{" "}
+                            {record.name && record["documentation-url"] && (
+                              <span>
+                                (
+                                <Link
+                                  href={record["documentation-url"]}
+                                  target="_blank"
+                                >
+                                  Source
+                                </Link>
+                                )
+                              </span>
+                            )}
+                          </Box>
+                        </ListItem>
+                      )
+                  )}
+                </List>
+              </>
+            )}
+            <Typography
+              variant="body2"
+              component="h2"
+              fontWeight={700}
+              paddingTop={2}
+            >
+              How it is defined
+            </Typography>
+            <Typography variant="body2">
+              <ReactMarkdownOrHtml
+                source={props.metadata?.text}
+                openLinksOnNewTab
+              />
+            </Typography>
           </Collapse>
         </Box>
       </ListItem>
