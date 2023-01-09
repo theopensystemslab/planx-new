@@ -7,6 +7,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import MoreInfo from "@planx/components/shared/Preview/MoreInfo";
+import { submitFeedback } from "lib/feedback";
 import React from "react";
 import Banner from "ui/Banner";
 import ChecklistItem from "ui/ChecklistItem";
@@ -121,6 +122,11 @@ function SuggestionDrawer() {
   }>(Object.fromEntries(OTHER_OPTIONS.map(({ name }) => [name, false])));
   const [text, setText] = React.useState("");
 
+  const sendFeedback = () => {
+    submitFeedback(text, "Alternate payment methods", checkboxes);
+    setIsOpen(false);
+  };
+
   return (
     <>
       <Link component="button" onClick={() => setIsOpen(!isOpen)}>
@@ -167,7 +173,7 @@ function SuggestionDrawer() {
             <Link
               component="button"
               variant="body2"
-              onClick={() => setIsOpen(false)}
+              onClick={() => sendFeedback()}
             >
               Save
             </Link>
