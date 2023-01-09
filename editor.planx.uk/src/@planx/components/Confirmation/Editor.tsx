@@ -70,7 +70,9 @@ export default function ConfirmationEditor(props: Props) {
         </ul>`,
       contactInfo:
         props.node?.data?.contactInfo ||
-        "You can contact us at **planning@lambeth.gov.uk**<br/>What did you think of this service? Please give us your feedback using the link in the footer below.",
+        `You can contact us at <em>planning@lambeth.gov.uk</em>
+          <br/><br/>
+          What did you think of this service? Please give us your feedback using the link in the footer below.`,
       ...parseNextSteps(props.node?.data),
     },
     onSubmit: (values) => {
