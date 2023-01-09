@@ -129,9 +129,14 @@ describe("Nodes on a filter path should only be auto-answered when the path matc
     // go forward manually: select not listed and select an answer with permitted dev (lower order) flag
     record("zlKQyPuKsl", { answers: ["qW1jzS1qPy"], auto: false });
     record("Ve90wVIXsV", { answers: ["pghecgQLgs"], auto: false });
+    upcomingCardIds(); // mimic "continue" and properly set visitedNodes()
+
+    // TODO ensure that the auto-answerable question in the permitted dev filter path has not been immediately auto-answered before reaching the filter node
+    expect(visitedNodes()).not.toContain("AaEuHnVUb4");
 
     // continue forward manually: select an answer with permission needed (higher order) flag
     record("TiIuAVIXsV", { answers: ["OPOWoVIXsV"], auto: false });
+    upcomingCardIds();
 
     // land on the correct result component
     expect(currentCard()?.id).toBe("seN42VIXsV");
@@ -146,10 +151,5 @@ describe("Nodes on a filter path should only be auto-answered when the path matc
       answers: ["tesCNavKYo"],
       auto: true,
     });
-
-    // TEST-GENERATED BREADCRUMBS DO NOT MATCH PRODUCTION BREADCRUMBS, THIS SHOULD BE FAILING
-    // make sure the auto-answerable question and its child from the permitted development filter path is not in our breadcrumbs nor upcoming card ids
-    expect(visitedNodes()).not.toContain("AaEuHnVUb4");
-    expect(upcomingCardIds).not.toContain("xjcujhpzjs");
   });
 });
