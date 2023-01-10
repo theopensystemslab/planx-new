@@ -47,9 +47,9 @@ jobs:
         working-directory: e2e
       - name: Install Playwright Browsers
         run: pnpm playwright install --with-deps
+        working-directory: e2e
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
-        working-directory: e2e
       - name: Playwright Tests
         run:  pnpm test:playwright
         working-directory: e2e
