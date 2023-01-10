@@ -1,0 +1,1 @@
+comment on column "public"."flows"."submission_templates" is E'A comma seperated list of template names used to generate additional submission documents. Valid template names are defined in @opensystemslab/planx-document-templates.';
