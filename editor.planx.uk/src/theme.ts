@@ -9,6 +9,7 @@ import createPalette, {
   PaletteOptions,
 } from "@mui/material/styles/createPalette";
 import { deepmerge } from "@mui/utils";
+import { hasFeatureFlag } from "lib/featureFlags";
 
 const GOVUK_YELLOW = "#FFDD00";
 
@@ -226,11 +227,23 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
   return themeOptions;
 };
 
+const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
+  const themeOptions = getThemeOptions(primaryColor);
+  const altThemeOptions: ThemeOptions = {
+    typography: {
+      fontFamily: "Arial",
+    },
+  };
+  return deepmerge(themeOptions, altThemeOptions);
+};
+
 // Generate a MUI theme based on a team's primary color
 const generateTeamTheme = (
   primaryColor: string = DEFAULT_PRIMARY_COLOR
 ): Theme => {
-  const themeOptions = getThemeOptions(primaryColor);
+  const themeOptions = hasFeatureFlag("ALT_THEME")
+    ? getAltThemeOptions(primaryColor)
+    : getThemeOptions(primaryColor);
   const theme = responsiveFontSizes(createTheme(themeOptions));
   return theme;
 };

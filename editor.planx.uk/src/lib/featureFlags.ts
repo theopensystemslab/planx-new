@@ -1,5 +1,8 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = ["DISABLE_SAVE_AND_RETURN"] as const;
+const AVAILABLE_FEATURE_FLAGS = [
+  "DISABLE_SAVE_AND_RETURN",
+  "ALT_THEME",
+] as const;
 
 type featureFlag = typeof AVAILABLE_FEATURE_FLAGS[number];
 
