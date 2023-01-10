@@ -56,9 +56,10 @@ test.describe("Save and return", () => {
       await answerQuestion({ page, questionGroup: "Question 1", answer: "A" });
 
       const sessionId = await saveSession({ page, client, context });
+      if (!sessionId) test.fail();
       await returnToSession({ page, context, sessionId });
 
-      const reviewTitle = await page.locator("h1", { name: "Review" });
+      const reviewTitle = await page.locator("h1", { hasText: "Resume your application" });
       await expect(reviewTitle).toBeVisible();
     });
 
@@ -76,6 +77,7 @@ test.describe("Save and return", () => {
       await expect(secondQuestion).toBeVisible();
 
       const sessionId = await saveSession({ page, client, context });
+      if (!sessionId) test.fail();
       await returnToSession({ page, context, sessionId });
 
       // skip review page
@@ -93,14 +95,17 @@ async function returnToSession({ page, context, sessionId }) {
   await page.getByTestId("continue-button").click();
 }
 
-async function saveSession({ page, client, context }): string {
+async function saveSession({
+  page,
+  client,
+  context,
+}): Promise<string | undefined> {
   const text = "Save and return to this application later";
   await page.locator(`button :has-text("${text}")`).click();
   await page.waitForResponse((response) => {
     return response.url().includes("/send-email/save");
   });
   const sessionId = await findSessionId(client, context);
-  test.fail(!sessionId, "sessionId not found");
   return sessionId;
 }
 
@@ -110,7 +115,7 @@ async function fillInEmail({ page, context }) {
   await page.getByTestId("continue-button").click();
 }
 
-async function findQuestionGroup({ page, questionGroup }): Locator {
+async function findQuestionGroup({ page, questionGroup }): Promise<Locator> {
   return await page.getByRole("group", {
     name: questionGroup,
   });
@@ -154,7 +159,7 @@ function getClient(): Client {
 
   const API = process.env.HASURA_GRAPHQL_URL!.replace(
     "${HASURA_PROXY_PORT}",
-    process.env.HASURA_PROXY_PORT
+    process.env.HASURA_PROXY_PORT!
   );
   const SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET!;
   return new Client({

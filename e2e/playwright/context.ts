@@ -188,25 +188,16 @@ export interface InitialContext {
   };
 }
 
-export interface Context {
+type Context = InitialContext & {
   user: {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    email: string;
+    id?: string;
   };
   team: {
-    id?: number;
-    name: string;
+    id?: string;
     slug: string;
-    logo: string;
-    primaryColor: string;
-    homepage: string;
-  };
+  }
   flow: {
     id?: string;
     publishedFlowId?: number;
-    slug: string;
-    data?: object;
-  };
+  }
 }

@@ -40,7 +40,7 @@ const config: PlaywrightTestConfig = {
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
     /* Store visual feedback from errors */
-    video: "on-first-retry",
+    video: "retain-on-failure",
   },
   /* Run your local dev server before starting the tests */
   webServer: {
