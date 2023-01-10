@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -37,6 +38,11 @@ const useStyles = makeStyles<Theme>((theme) => ({
 
 const Teams: React.FC<Props> = ({ teams }) => {
   const classes = useStyles();
+
+  const throwError = () => {
+    throw Error("Test Airbrake");
+  };
+
   return (
     <Box className={classes.root}>
       <Box className={classes.dashboard}>
@@ -44,6 +50,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
           <Typography variant="h1" gutterBottom>
             Select a team
           </Typography>
+          <Button onClick={throwError}>Throw an error!</Button>
         </Box>
         {teams.map(({ name, slug }) => (
           <Link
