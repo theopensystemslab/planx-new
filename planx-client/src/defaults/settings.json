@@ -1,0 +1,9 @@
+{
+  "settings": {
+    "homepage": "https://example.com",
+    "externalPlanningSite": {
+      "url": "https://planningportal.co.uk",
+      "name": "Planning Portal"
+    }
+  }
+}

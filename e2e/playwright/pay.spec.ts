@@ -3,7 +3,6 @@ import { gqlAdmin, insertTestUser } from "./utils";
 
 import publishedFlow from "./assets/payFlowPublishedFlow.json";
 
-const URL = "http://localhost:3000";
 const TEAM_SLUG = "buckinghamshire";
 const FLOW_SLUG = "pay-test";
 
@@ -129,7 +128,7 @@ async function navigateToPayComponent({
   page: Page;
   mode: "preview" | "unpublished";
 }) {
-  await page.goto(`${URL}/${TEAM_SLUG}/${FLOW_SLUG}/${mode}?analytics=false`);
+  await page.goto(`/${TEAM_SLUG}/${FLOW_SLUG}/${mode}?analytics=false`);
 
   await page.getByLabel("Pay test").fill("Test");
   await page.getByTestId("continue-button").click();

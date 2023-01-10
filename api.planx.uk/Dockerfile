@@ -6,15 +6,13 @@ RUN npm install -g pnpm@7.8.0
 
 ADD . .
 
-RUN pnpm fetch 
+RUN pnpm fetch
 # see https://pnpm.io/cli/fetch
 RUN pnpm install --recursive --offline
 RUN pnpm build
 RUN pnpm prune --production
 
 COPY . .
-
-EXPOSE 4000
 
 FROM node:16.13.1-alpine as production
 WORKDIR /api
