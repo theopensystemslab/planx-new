@@ -96,20 +96,16 @@ services:
       retries: 3
 
   seed-database:
-    build:
-      context: ./scripts/seed-database
+    image: postgis/postgis:12-3.0-alpine
     volumes:
-      - "./hasura.planx.uk/:/hasura"
+      - "./scripts/seed-database:/app"
+    working_dir: "/app"
+    entrypoint: sh
+    command: -c "./container.sh postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE} ${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}"
     restart: "no"
     depends_on:
       hasura-proxy:
         condition: service_healthy
-    environment:
-      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_URL: http://hasura-proxy:7000/v1/graphql
-      HASURA_GRAPHQL_ENDPOINT: http://hasura-proxy:7000/
-      PRODUCTION_GRAPHQL_URL: 'https://hasura.editor.planx.uk/v1/graphql'
-
   api:
     restart: unless-stopped
     build:
