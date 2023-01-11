@@ -112,7 +112,12 @@ async function go(localAuthority, geom, extras) {
       baseSchema[key]["active"] && !Object.keys(formattedResult).includes(key)
   );
   nots.forEach((not) => {
-    formattedResult[not] = { value: false, text: baseSchema[not].neg, category: baseSchema[not].category };
+    formattedResult[not] = { 
+      value: false, 
+      text: baseSchema[not].neg, 
+      category: baseSchema[not].category, 
+      key: not,
+    };
   });
 
   // --- DESIGNATED LAND ---

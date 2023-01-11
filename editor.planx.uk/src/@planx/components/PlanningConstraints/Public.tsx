@@ -296,7 +296,6 @@ function ConstraintsList({ data, metadata, refreshConstraints }: any) {
               paddingTop: 0,
               paddingBottom: 0,
             }}
-            collapsible={con.value}
             data={con.value ? con.data : null}
             metadata={metadata[con.key]}
           >
@@ -350,102 +349,78 @@ function Constraint({ children, ...props }: any) {
   const theme = useTheme();
   const [showConstraintData, setShowConstraintData] = useState<boolean>(false);
 
-  if (props.collapsible) {
-    // "Positive" constraint will expand to show more details
-    // TODO: confirm/figure out best design & accessible heirarchy for expandable lists
-    return (
-      <ListItem dense disableGutters>
-        <Box
-          className={classes.constraint}
-          bgcolor="background.paper"
-          color={theme.palette.text.primary}
-          {...props}
+  return (
+    <ListItem dense disableGutters>
+      <Box
+        className={classes.constraint}
+        bgcolor="background.paper"
+        color={theme.palette.text.primary}
+        {...props}
+      >
+        {children}
+        <Button
+          style={{ margin: 0, padding: 0 }}
+          onClick={() =>
+            setShowConstraintData((showConstraintData) => !showConstraintData)
+          }
         >
-          {children}
-          <Button
-            style={{ margin: 0, padding: 0 }}
-            onClick={() =>
-              setShowConstraintData((showConstraintData) => !showConstraintData)
-            }
-          >
-            {showConstraintData && props.data.length > 0 ? (
-              <ExpandLess />
-            ) : (
-              <ExpandMore />
-            )}
-          </Button>
-          <Collapse in={showConstraintData}>
-            {props.data.length > 0 && (
-              <>
-                <Typography variant="body2" component="h2" fontWeight={700}>
-                  Entities that intersect with your property
-                </Typography>
-                <List
-                  dense
-                  disablePadding
-                  sx={{ listStyleType: "disc", pl: 4 }}
-                >
-                  {props.data.map(
-                    (record: any) =>
-                      record.name && (
-                        <ListItem
-                          key={record.entity}
-                          dense
-                          disableGutters
-                          sx={{ display: "list-item" }}
-                        >
-                          <Box style={{ fontWeight: 500, lineHeight: 1 }}>
-                            {record.name}{" "}
-                            {record.name && record["documentation-url"] && (
-                              <span>
-                                (
-                                <Link
-                                  href={record["documentation-url"]}
-                                  target="_blank"
-                                >
-                                  Source
-                                </Link>
-                                )
-                              </span>
-                            )}
-                          </Box>
-                        </ListItem>
-                      )
-                  )}
-                </List>
-              </>
-            )}
-            <Typography
-              variant="body2"
-              component="h2"
-              fontWeight={700}
-              paddingTop={2}
-            >
-              How it is defined
-            </Typography>
-            <Typography variant="body2">
-              <ReactMarkdownOrHtml
-                source={props.metadata?.text}
-                openLinksOnNewTab
-              />
-            </Typography>
-          </Collapse>
-        </Box>
-      </ListItem>
-    );
-  } else {
-    return (
-      // "Negative" constraint is a static list item
-      <ListItem dense disableGutters>
-        <Box
-          className={classes.constraint}
-          bgcolor="background.paper"
-          color={theme.palette.text.primary}
-          {...props}
-        >
-          {children}
-        </Box>
-      </ListItem>
-    );
-  }
+          {showConstraintData ? <ExpandLess /> : <ExpandMore />}
+        </Button>
+        <Collapse in={showConstraintData}>
+          {props.data?.length > 0 && (
+            <>
+              <Typography variant="body2" component="h2" fontWeight={700}>
+                Entities that intersect with your property
+              </Typography>
+              <List
+                dense
+                disablePadding
+                sx={{ listStyleType: "disc", pl: 4, pb: 2 }}
+              >
+                {props.data.map(
+                  (record: any) =>
+                    record.name && (
+                      <ListItem
+                        key={record.entity}
+                        dense
+                        disableGutters
+                        sx={{ display: "list-item" }}
+                      >
+                        <Box style={{ fontWeight: 500, lineHeight: 1 }}>
+                          {record.name}{" "}
+                          {record.name && record["documentation-url"] && (
+                            <span>
+                              (
+                              <Link
+                                href={record["documentation-url"]}
+                                target="_blank"
+                              >
+                                Source
+                              </Link>
+                              )
+                            </span>
+                          )}
+                        </Box>
+                      </ListItem>
+                    )
+                )}
+              </List>
+            </>
+          )}
+          <Typography variant="body2" component="h2" fontWeight={700}>
+            How it is defined
+          </Typography>
+          <Typography variant="body2">
+            <ReactMarkdownOrHtml
+              source={props.metadata?.text?.replaceAll(
+                "(/",
+                "(https://www.planning.data.gov.uk/"
+              )}
+              openLinksOnNewTab
+            />
+          </Typography>
+        </Collapse>
+      </Box>
+    </ListItem>
+  );
 }
