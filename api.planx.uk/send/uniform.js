@@ -1,5 +1,6 @@
 import "isomorphic-fetch";
 import os from "os";
+import { reportError } from "../airbrake";
 import { Buffer } from "node:buffer";
 import path from "path";
 import FormData from "form-data";
@@ -211,7 +212,9 @@ export async function createZip({
       // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
       // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
       // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-      const uniqueFilename = decodeURIComponent(file.split("/").slice(-2).join("-"));
+      const uniqueFilename = decodeURIComponent(
+        file.split("/").slice(-2).join("-")
+      );
       const filePath = path.join(tmpDir, uniqueFilename);
       await downloadFile(file, filePath, zip);
     }
@@ -224,16 +227,12 @@ export async function createZip({
     columns: ["question", "responses", "metadata"],
     header: true,
   }).pipe(csvFile);
-  await new Promise((resolve, reject) => {
-    csvStream.on("error", reject);
-    csvStream.on("finish", resolve);
-  });
+  await waitForStream(csvStream);
   zip.addLocalFile(csvPath);
   deleteFile(csvPath);
 
-  // build the XML file from a string, write it locally, add it to the zip
-  //   must be named "proposal.xml" to be processed by Uniform
-  const xmlPath = "proposal.xml";
+  // add a XML uniform submission file to zip
+  const xmlPath = "proposal.xml"; //  must be named "proposal.xml" to be processed by Uniform
   const xmlFile = fs.createWriteStream(xmlPath);
   const xmlStream = str(stringXml.trim()).pipe(xmlFile);
   await new Promise((resolve, reject) => {
@@ -243,28 +242,58 @@ export async function createZip({
   zip.addLocalFile(xmlPath);
   deleteFile(xmlPath);
 
-  // build an HTML Document Viewer
-  const docViewPath = path.join(tmpDir, "review.html");
-  const docViewFile = fs.createWriteStream(docViewPath);
-  const docViewStream = generateDocumentReviewStream({
-    csv,
+  // generate and add an HTML overview document for the submission to zip
+  const overviewPath = path.join(tmpDir, "overview.html");
+  const overviewFile = fs.createWriteStream(overviewPath);
+  const overviewStream = generateHTMLOverviewStream({
+    planXExportData,
     files,
-    geojson,
-  }).pipe(docViewFile);
-  await new Promise((resolve, reject) => {
-    docViewStream.on("error", reject);
-    docViewStream.on("finish", resolve);
-  });
-  zip.addLocalFile(docViewPath);
-  deleteFile(docViewPath);
+  }).pipe(overviewFile);
+  await waitForStream(overviewStream);
+  zip.addLocalFile(overviewPath);
+  deleteFile(overviewPath);
 
-  // build an optional GeoJSON file for validators
+  // add an optional GeoJSON file to zip
   if (geojson) {
     const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
     zip.addFile("boundary.geojson", geoBuff);
+
+    // generate and add an HTML boundary document for the submission to zip
+    const boundaryPath = path.join(tmpDir, "boundary.html");
+    const boundaryFile = fs.createWriteStream(boundaryPath);
+    const boundaryStream = generateHTMLMapStream(geojson).pipe(boundaryFile);
+    await waitForStream(boundaryStream);
+    zip.addLocalFile(boundaryPath);
+    deleteFile(boundaryPath);
   }
 
-  // generate & save zip locally
+  // generate and add additional submission documents
+  for (const templateName of templateNames) {
+    let isTemplateSupported = false;
+    try {
+      isTemplateSupported = hasRequiredDataForTemplate({
+        templateName,
+        planXExportData,
+      });
+    } catch {
+      reportError(
+        `The template "${templateName}" could not be generated with the supplied data`
+      );
+    }
+    if (isTemplateSupported) {
+      const templatePath = path.join(tmpDir, `${templateName}.docx`);
+      const templateFile = fs.createWriteStream(templatePath);
+      const templateStream = generateDocxTemplateStream({
+        templateName,
+        planXExportData,
+      }).pipe(templateFile);
+      await waitForStream(templateStream);
+      zip.addLocalFile(templatePath);
+      deleteFile(templatePath);
+    }
+  }
+
+  // create the zip file
   const zipName = `ripa-test-${sessionId}.zip`;
   zip.writeZip(zipName);
 
@@ -274,6 +303,13 @@ export async function createZip({
   });
 
   return zipName;
+}
+
+async function waitForStream(stream) {
+  return await new Promise((resolve, reject) => {
+    stream.on("error", reject);
+    stream.on("finish", resolve);
+  });
 }
 
 /**
@@ -425,6 +461,23 @@ async function retrieveSubmission(token, submissionId) {
   return await fetch(getSubmissionEndpoint, getSubmissionOptions).then(
     (response) => response.json()
   );
+}
+
+async function getSubmissionTemplates(sessionId) {
+  const templates = await client.request(
+    gql`
+      query GetSubmissionTemplateName($sessionId: UUID!) {
+        lowcal_sessions(where: { id: { _eq: $sessionId } }) {
+          flow {
+            submission_templates
+          }
+        }
+      }
+    `,
+    { sessionId }
+  );
+  if (!templates || templates == "") return [];
+  return templates.split(",");
 }
 
 /**
