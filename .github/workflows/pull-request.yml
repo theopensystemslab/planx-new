@@ -117,7 +117,7 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Run API Tests
-        run: pnpm install --frozen-lockfile && pnpm lint --quiet && pnpm test
+        run: pnpm install --frozen-lockfile && pnpm check --quiet && pnpm test
         working-directory: api.planx.uk
 
   test_react:

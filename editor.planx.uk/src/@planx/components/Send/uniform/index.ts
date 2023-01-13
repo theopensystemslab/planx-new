@@ -3,7 +3,6 @@ import omit from "lodash/omit";
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
 import type { CSVData as PlanXExportData } from "../model";
-import { UniformPayload } from "./UniformPayload/model";
 
 type UniformFile = {
   name: string;

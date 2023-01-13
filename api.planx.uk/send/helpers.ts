@@ -1,5 +1,6 @@
 import AdmZip from "adm-zip";
 import fs from "fs";
+import type { Passport } from "./UniformPayload/types";
 
 import { getFileFromS3 } from "../s3/getFile";
 
@@ -36,9 +37,8 @@ export function deleteFile(path: string) {
   }
 }
 
-// TODO
 export function findGeoJSON(
-  _passport: unknown
+  passport: Passport
 ): { type: "Feature" } | undefined {
-  return;
+  return passport.data["property.boundary.site"];
 }
