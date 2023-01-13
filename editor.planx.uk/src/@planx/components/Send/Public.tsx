@@ -12,7 +12,7 @@ import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
 import { PublicProps } from "../ui";
 import { getBOPSParams } from "./bops";
 import { DEFAULT_DESTINATION, Destination, Send } from "./model";
-import { getUniformParams, makeCsvData } from "./uniform";
+import { generatePlanXExportData, getUniformParams } from "./uniform";
 
 export type Props = PublicProps<Send>;
 
@@ -82,7 +82,7 @@ const SendComponent: React.FC<Props> = ({
       body: {
         sessionId: sessionId,
         email: email,
-        csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
+        csv: generatePlanXExportData(breadcrumbs, flow, passport, sessionId),
         flowName: route?.data?.flowName,
       },
     };

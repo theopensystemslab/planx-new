@@ -10,7 +10,7 @@ import path from "path";
 import { adminGraphQLClient } from "../hasura";
 import { markSessionAsSubmitted, sendEmail } from "../saveAndReturn/utils";
 import { EmailSubmissionNotifyConfig } from "../types";
-import { generateDocumentReviewStream } from "./documentReview";
+import { generateHTMLMapStream } from "@opensystemslab/planx-document-templates";
 import { deleteFile, downloadFile } from "./helpers";
 
 const client = adminGraphQLClient;
@@ -129,7 +129,9 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
 
         const mapViewPath = path.join(tmpDir, "map.html");
         const mapViewFile = fs.createWriteStream(mapViewPath);
-        const mapViewStream = generateDocumentReviewStream({ geojson }).pipe(mapViewFile);
+        const mapViewStream = generateHTMLMapStream({ geojson }).pipe(
+          mapViewFile
+        );
 
         await new Promise((resolve, reject) => {
           mapViewStream.on("error", reject);
@@ -150,7 +152,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
               files.push(url);
             });
           });
-        
+
         // Additionally check if they uploaded a location plan instead of drawing
         if (sessionData.passport?.data?.["proposal.drawing.locationPlan"]) {
           files.push(sessionData.passport.data["proposal.drawing.locationPlan"]);

@@ -7,11 +7,17 @@ import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
-import { generateDocumentReviewStream } from "./documentReview";
+import {
+  hasRequiredDataForTemplate,
+  generateDocxTemplateStream,
+  generateHTMLMapStream,
+  generateHTMLOverviewStream,
+} from "@opensystemslab/planx-document-templates";
 import { adminGraphQLClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
-import { deleteFile, downloadFile } from "./helpers";
+import { deleteFile, downloadFile, findGeoJSON } from "./helpers";
+import { UniformPayload } from "./UniformPayload/model";
 
 const client = adminGraphQLClient;
 
@@ -32,7 +38,7 @@ const sendToUniform = async (req, res, next) => {
 
   // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload } = req.body;
-  if (!payload?.xml || !payload?.sessionId) {
+  if (!payload?.sessionId || !payload?.passport || !payload.planXExportData) {
     return next({
       status: 400,
       message: "Missing application data to send to Uniform",
@@ -56,8 +62,14 @@ const sendToUniform = async (req, res, next) => {
     const { clientId, clientSecret } = getUniformClient(
       req.params.localAuthority
     );
+
     // Setup - Create the zip folder
-    const zipPath = await createZip(payload);
+    const zipPath = await createUniformSubmissionZip({
+      sessionId: payload.sessionId,
+      passport: payload.passport,
+      planXExportData: payload.planXExportData,
+      files: payload.files,
+    });
 
     // Request 1/3 - Authenticate
     const {
@@ -183,20 +195,20 @@ async function checkUniformAuditTable(sessionId) {
 
 /**
  * Creates a zip folder containing the documents required by Uniform
- * @param {any} stringXml - a string representation of the XML schema, resulting file must be named "proposal.xml"
- * @param {any} csv - an array of objects representing our custom CSV format
- * @param {any} geojson - the site boundary geojson if the user drew, empty if they uploaded a location plan
+ * @param {any} data - an array of objects representing our custom PlanX data export format
  * @param {object[]} files - an array of user-uploaded files
  * @param {string} sessionId
  * @returns {Promise} - name of zip
  */
-export async function createZip({
-  xml: stringXml,
-  csv,
-  geojson,
-  files,
+export async function createUniformSubmissionZip({
   sessionId,
+  passport,
+  planXExportData,
+  files,
 }) {
+  const { geojson, templateNames, uniformSubmissionXML } =
+    await generateAdditionalSubmissionData({ sessionId, passport, files });
+
   // initiate an empty zip folder
   const zip = new AdmZip();
 
@@ -219,10 +231,10 @@ export async function createZip({
     }
   }
 
-  // build a CSV, write it to the tmp directory, add it to the zip
+  // add a CSV file with submission data to zip
   const csvPath = path.join(tmpDir, "application.csv");
   const csvFile = fs.createWriteStream(csvPath);
-  const csvStream = stringify(csv, {
+  const csvStream = stringify(planXExportData, {
     columns: ["question", "responses", "metadata"],
     header: true,
   }).pipe(csvFile);
@@ -237,33 +249,39 @@ export async function createZip({
   //   must be named "proposal.xml" to be processed by Uniform
   const xmlPath = "proposal.xml";
   const xmlFile = fs.createWriteStream(xmlPath);
-  const xmlStream = str(stringXml.trim()).pipe(xmlFile);
   await new Promise((resolve, reject) => {
     xmlStream.on("error", reject);
     xmlStream.on("finish", resolve);
   });
+  const xmlStream = str(uniformSubmissionXML.trim()).pipe(xmlFile);
   zip.addLocalFile(xmlPath);
   deleteFile(xmlPath);
 
   // build an HTML Document Viewer
-  const docViewPath = path.join(tmpDir, "review.html");
-  const docViewFile = fs.createWriteStream(docViewPath);
-  const docViewStream = generateDocumentReviewStream({
-    csv,
+  const overviewPath = path.join(tmpDir, "overview.html");
+  const overviewFile = fs.createWriteStream(overviewPath);
+  const overviewStream = generateHTMLOverviewStream({
+    planXExportData,
     files,
-    geojson,
-  }).pipe(docViewFile);
   await new Promise((resolve, reject) => {
     docViewStream.on("error", reject);
     docViewStream.on("finish", resolve);
   });
-  zip.addLocalFile(docViewPath);
-  deleteFile(docViewPath);
+  }).pipe(overviewFile);
+  zip.addLocalFile(overviewPath);
+  deleteFile(overviewPath);
 
   // build an optional GeoJSON file for validators
   if (geojson) {
     const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
     zip.addFile("boundary.geojson", geoBuff);
+    // generate and add an HTML boundary document for the submission to zip
+    const boundaryPath = path.join(tmpDir, "boundary.html");
+    const boundaryFile = fs.createWriteStream(boundaryPath);
+    const boundaryStream = generateHTMLMapStream(geojson).pipe(boundaryFile);
+    await waitForStream(boundaryStream);
+    zip.addLocalFile(boundaryPath);
+    deleteFile(boundaryPath);
   }
 
   // generate & save zip locally
@@ -276,6 +294,48 @@ export async function createZip({
   });
 
   return zipName;
+}
+
+async function generateAdditionalSubmissionData({
+  sessionId,
+  passport,
+  files,
+}) {
+  const geojson = findGeoJSON(passport);
+
+  const templateNames = await getSubmissionTemplates(sessionId);
+
+  const uniformSubmissionXML = generateUniformSubmissionXML({
+    sessionId,
+    passport,
+    files,
+    hasBoundary: !!geojson,
+    templates: templateNames,
+  });
+
+  return {
+    geojson,
+    templateNames,
+    uniformSubmissionXML,
+  };
+}
+
+export function generateUniformSubmissionXML({
+  sessionId,
+  passport,
+  files,
+  hasBoundary,
+  templates,
+}) {
+  const payload = new UniformPayload({
+    sessionId,
+    passport,
+    files,
+    hasBoundary,
+    templates,
+  });
+  const xml = payload.buildXML();
+  return xml;
 }
 
 /**

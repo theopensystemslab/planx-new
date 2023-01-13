@@ -1,11 +1,10 @@
-import { Address } from "@planx/components/AddressInput/model";
-import { SiteAddress } from "@planx/components/FindProperty/model";
 import { X2jOptionsOptional, XMLParser, XMLValidator } from "fast-xml-parser";
-import { get } from "lodash";
-
-import { Store } from "../../../../../pages/FlowEditor/lib/store/index";
+import get from "lodash/get";
 import { UniformPayload } from "./model";
-import {
+import type {
+  Address,
+  SiteAddress,
+  Passport,
   ApplicantOrAgent,
   FileAttachment,
   ProposedUseApplication,
@@ -25,7 +24,7 @@ describe("UniformPayload", () => {
   const hasBoundary = false;
 
   it("safely escapes special XML characters", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: { "proposal.description": `< > & " '` },
     };
     const xml = new UniformPayload({
@@ -43,7 +42,7 @@ describe("Reference number", () => {
   const sessionId = "1234-abcdef-567-ghijklm";
   const files: string[] = [];
   const hasBoundary = false;
-  const passport: Store.passport = { data: {} };
+  const passport: Passport = { data: {} };
 
   it("sets sessionId as a reference number", () => {
     const xml = new UniformPayload({
@@ -52,7 +51,7 @@ describe("Reference number", () => {
       files,
       hasBoundary,
     }).buildXML();
-    const expectedRefNum: String = "1234-abcdef-567-ghijklm";
+    const expectedRefNum = "1234-abcdef-567-ghijklm";
 
     const result: UniformPayload = parser.parse(xml);
     const resultRefNum =
@@ -76,7 +75,7 @@ describe("Proposal completion date", () => {
   const formattedNow = new Date(Date.now()).toISOString().split("T")[0];
 
   it("reads from `proposal.completion.date` passport variable if it exists", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: { "proposal.completion.date": "2022-01-01" },
     };
     const xml = new UniformPayload({
@@ -85,7 +84,7 @@ describe("Proposal completion date", () => {
       files,
       hasBoundary,
     }).buildXML();
-    const expectedCompletionDate: String = "2022-01-01";
+    const expectedCompletionDate = "2022-01-01";
 
     const result: UniformPayload = parser.parse(xml);
     const resultCompletionDate =
@@ -97,7 +96,7 @@ describe("Proposal completion date", () => {
   });
 
   it("defaults to now if `proposal.completion.date` passport variable is missing", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: { "proposal.description": "test" },
     };
     const xml = new UniformPayload({
@@ -106,7 +105,7 @@ describe("Proposal completion date", () => {
       files,
       hasBoundary,
     }).buildXML();
-    const expectedCompletionDate: String = formattedNow;
+    const expectedCompletionDate: string = formattedNow;
 
     const result: UniformPayload = parser.parse(xml);
     const resultCompletionDate =
@@ -124,7 +123,7 @@ describe("Payment details", () => {
   const hasBoundary = false;
 
   it("reads from Pay passport variables if they exist", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: {
         "application.fee.payable": 103,
         "application.fee.reference.govPay": {
@@ -155,7 +154,7 @@ describe("Payment details", () => {
   });
 
   it("defaults to 0 if resubmission or if Pay passport variables are missing", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: { "proposal.description": "test" },
     };
     const xml = new UniformPayload({
@@ -190,7 +189,7 @@ describe("Uniform Translator", () => {
   const hasBoundary = false;
 
   it("maps the 'applicationTo' value", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: { "uniform.applicationTo": ["TEST123"] },
     };
 
@@ -210,7 +209,7 @@ describe("Uniform Translator", () => {
   });
 
   it("maps the 'applicationScenario' value for an Existing LDC", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: {
         "uniform.scenarioNumber": ["14"],
         "uniform.consentRegime": ["Certificate of Lawfulness"],
@@ -239,7 +238,7 @@ describe("Uniform Translator", () => {
   });
 
   it("maps the 'applicationScenario' value for a Proposed LDC", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: {
         "uniform.scenarioNumber": ["15"],
         "uniform.consentRegime": ["Certificate of Lawfulness"],
@@ -268,7 +267,7 @@ describe("Uniform Translator", () => {
   });
 
   it("maps the 'siteVisit' value", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: { "uniform.siteVisit": ["true"] },
     };
 
@@ -288,7 +287,7 @@ describe("Uniform Translator", () => {
   });
 
   it("maps the 'isRelated' value with a connection", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: { "uniform.isRelated": ["true"] },
     };
 
@@ -308,7 +307,7 @@ describe("Uniform Translator", () => {
   });
 
   it("maps the 'isRelated' value without a connection", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: { "uniform.isRelated": ["false"] },
     };
 
@@ -328,7 +327,7 @@ describe("Uniform Translator", () => {
   });
 
   it("maps the 'personRole' value for an Agent", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: { "uniform.personRole": ["Agent"] },
     };
 
@@ -348,7 +347,7 @@ describe("Uniform Translator", () => {
   });
 
   it("maps the 'personRole' value for an Applicant", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: { "uniform.personRole": ["Applicant"] },
     };
 
@@ -368,7 +367,7 @@ describe("Uniform Translator", () => {
   });
 
   it("maps the 'isUseChange' value", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: {
         "uniform.isUseChange": ["true"],
         "application.type": ["ldc.proposed"],
@@ -413,7 +412,7 @@ describe("Applicant address", () => {
     "portaloneapp:Proposal.portaloneapp:Applicant.common:ExternalAddress";
 
   it("should populate the address for a 'resident' application", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: {
         "applicant.resident": ["true"],
         _address: harryPotterAddress,
@@ -433,12 +432,12 @@ describe("Applicant address", () => {
         "apd:InternationalPostCode": "GU22 7QQ",
       },
     };
-    const resultAddress: Address = get(result, applicantAddressKey);
+    const resultAddress = get(result, applicantAddressKey);
     expect(resultAddress).toMatchObject(expectedAddress);
   });
 
   it("should populate the address for a 'non-resident' application", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: {
         "applicant.resident": ["false"],
         _address: harryPotterAddress,
@@ -464,7 +463,7 @@ describe("Applicant address", () => {
         "apd:InternationalPostCode": "NW1 6XE",
       },
     };
-    const resultAddress: Address = get(result, applicantAddressKey);
+    const resultAddress = get(result, applicantAddressKey);
     expect(resultAddress).toMatchObject(expectedAddress);
   });
 });
@@ -474,7 +473,7 @@ describe("Applicant contact details", () => {
   const files: string[] = [];
   const hasBoundary = false;
 
-  const applicantKey: string = "portaloneapp:Proposal.portaloneapp:Applicant";
+  const applicantKey = "portaloneapp:Proposal.portaloneapp:Applicant";
   const expectedApplicant: ApplicantOrAgent = {
     "common:PersonName": {
       "pdt:PersonNameTitle": "Mme",
@@ -499,7 +498,7 @@ describe("Applicant contact details", () => {
   };
 
   it("should populate the Applicant when TextInput components are used", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: {
         "applicant.title": "Mme",
         "applicant.name.first": "Jane",
@@ -522,7 +521,7 @@ describe("Applicant contact details", () => {
   });
 
   it("should populate the Applicant when a ContactInput component is used", () => {
-    const passport: Store.passport = {
+    const passport: Passport = {
       data: {
         "_contact.applicant": {
           applicant: {
@@ -558,7 +557,7 @@ describe("Applicant contact details", () => {
 describe("File handling", () => {
   const sessionId = "123";
   const files: string[] = [];
-  const passport: Store.passport = { data: {} };
+  const passport: Passport = { data: {} };
   const hasBoundary = false;
   const fileAttachmentsKey =
     "portaloneapp:Proposal.portaloneapp:FileAttachments.common:FileAttachment";

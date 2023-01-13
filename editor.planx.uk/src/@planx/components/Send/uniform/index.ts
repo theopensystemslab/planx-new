@@ -2,8 +2,7 @@ import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
-import { findGeoJSON } from "../helpers";
-import { CSVData } from "../model";
+import type { CSVData as PlanXExportData } from "../model";
 import { UniformPayload } from "./UniformPayload/model";
 
 type UniformFile = {
@@ -45,43 +44,30 @@ export function getUniformParams(
     }
   });
 
-  const geoJSONBoundary = findGeoJSON(flow, breadcrumbs);
-  const hasBoundary = !!geoJSONBoundary;
+  const planXExportData = generatePlanXExportData(
+    breadcrumbs,
+    flow,
+    passport,
+    sessionId
+  );
 
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString(passport, sessionId, uniqueFiles, hasBoundary),
-    csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
-    geojson: geoJSONBoundary,
+    sessionId,
+    passport, // TODO passing the passport should be redundant if PlanXExportData includes all relevant data
+    planXExportData,
     files: uniqueFiles,
-    sessionId,
   };
-}
-
-export function makeXmlString(
-  passport: Store.passport,
-  sessionId: string,
-  files: string[],
-  hasBoundary: boolean
-): string {
-  const payload = new UniformPayload({
-    sessionId,
-    passport,
-    files,
-    hasBoundary,
-  });
-  const xml = payload.buildXML();
-  return xml;
 }
 
 // create a CSV data structure based on the payload we send to BOPs
 //   (also used in Confirmation component for user-downloadable copy of app data)
-export function makeCsvData(
+export function generatePlanXExportData(
   breadcrumbs: Store.breadcrumbs,
   flow: Store.flow,
   passport: Store.passport,
   sessionId: string
-): CSVData {
+): PlanXExportData {
   const bopsData = getBOPSParams(breadcrumbs, flow, passport, sessionId);
 
   // format dedicated BOPs properties as list of questions & responses to match proposal_details

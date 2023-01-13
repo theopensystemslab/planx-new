@@ -6,7 +6,7 @@
     "lib": ["es2021"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "outDir": "./dist",
     "resolveJsonModule": true,
     "rootDir": ".",

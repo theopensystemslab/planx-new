@@ -1,3 +1,72 @@
+export type Passport = { data: Record<string, any> };
+
+export type Address = {
+  line1: string;
+  line2?: string;
+  town: string;
+  county?: string;
+  postcode: string;
+  country?: string;
+};
+
+export interface SiteAddress {
+  uprn: string;
+  blpu_code: string;
+  latitude: number;
+  longitude: number;
+  organisation: string | null;
+  sao: string | null;
+  pao: string;
+  street: string;
+  town: string;
+  postcode: string;
+  x: number;
+  y: number;
+  planx_description: string;
+  planx_value: string;
+  single_line_address: string;
+  title: string;
+}
+
+// https://docs.payments.service.gov.uk/making_payments/#receiving-the-api-response
+export interface GovUKPayment {
+  amount: number;
+  reference: string;
+  state: {
+    // https://docs.payments.service.gov.uk/api_reference/#status-and-finished
+    status:
+      | "created"
+      | "started"
+      | "submitted"
+      | "capturable"
+      | "success"
+      | "failed"
+      | "cancelled"
+      | "error";
+    finished: boolean;
+  };
+  payment_id: string;
+  created_date: string;
+  _links: {
+    self: {
+      href: string;
+      method: string;
+    };
+    next_url?: {
+      href: string;
+      method: string;
+    };
+    next_url_post: {
+      type: string;
+      params: {
+        chargeTokenId: string;
+      };
+      href: string;
+      method: string;
+    };
+  };
+}
+
 // Models the XML payload required by Uniform to process PlanX applications
 // XML Schema Definitions for reference:
 // -- https://ecab.planningportal.co.uk/uploads/schema/OneAppProposal-v2-0-1.xsd

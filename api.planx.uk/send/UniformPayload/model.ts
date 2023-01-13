@@ -1,11 +1,9 @@
 import { XMLBuilder, XmlBuilderOptions } from "fast-xml-parser";
-
-import { Store } from "../../../../../pages/FlowEditor/lib/store/index";
-import { GovUKPayment } from "../../../../../types";
-import { Address } from "../../../AddressInput/model";
-import { GOV_PAY_PASSPORT_KEY } from "../../../Pay/model";
-import { SiteAddress } from "./../../../FindProperty/model";
 import {
+  Passport,
+  Address,
+  SiteAddress,
+  GovUKPayment,
   ApplicantOrAgent,
   ExistingUseApplication,
   ExternalAddress,
@@ -16,23 +14,27 @@ import {
   ProposedUseApplication,
 } from "./types";
 
+const GOV_PAY_PASSPORT_KEY = "application.fee.reference.govPay" as const;
+
 /**
  * Available values for passport variable "application.type"
  */
 export type PlanXAppTypes = "ldc.existing" | "ldc.proposed";
 
-interface UniformPayloadRequiredArgs {
+interface UniformPayloadArgs {
   sessionId: string;
-  passport: Store.passport;
+  passport: Passport;
   files: string[];
   hasBoundary: boolean;
+  templates?: string[] | undefined;
 }
 
 export class UniformPayload implements IUniformPayload {
   sessionId: string;
-  passport: Store.passport;
+  passport: Passport;
   files: string[];
   hasBoundary: boolean;
+  templates: string[];
 
   proposalCompletionDate: string;
   siteAddress: SiteAddress;
@@ -44,11 +46,13 @@ export class UniformPayload implements IUniformPayload {
     passport,
     files,
     hasBoundary,
-  }: UniformPayloadRequiredArgs) {
+    templates,
+  }: UniformPayloadArgs) {
     this.sessionId = sessionId;
     this.passport = passport;
     this.files = files;
     this.hasBoundary = hasBoundary;
+    this.templates = templates || [];
 
     this.proposalCompletionDate = this.setProposalCompletionDate();
     this.siteAddress = passport.data?.["_address"];
@@ -261,15 +265,25 @@ export class UniformPayload implements IUniformPayload {
         "common:Reference": "Other",
       },
       {
-        "common:FileName": "review.html",
+        "common:FileName": "overview.html",
         "common:Reference": "Other",
       },
     ];
-    if (this.hasBoundary)
+
+    if (this.hasBoundary) {
       files.push({
         "common:FileName": "boundary.geojson",
         "common:Reference": "Other",
       });
+    }
+
+    for (const templateName of this.templates) {
+      files.push({
+        "common:FileName": templateName,
+        "common:Reference": "Other",
+      });
+    }
+
     return files;
   };
 

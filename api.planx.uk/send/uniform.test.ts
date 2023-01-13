@@ -1,4 +1,4 @@
-import { createZip } from "./uniform";
+import { createUniformSubmissionZip } from "./uniform";
 
 jest.mock("fs");
 const mockAddFile = jest.fn();
@@ -32,22 +32,24 @@ jest.mock("string-to-stream", () => {
   return jest.fn().mockImplementation(() => mockPipe);
 });
 
-describe("createZip", () => {
+describe("createUniformSubmissionZip", () => {
   beforeEach(() => {
     mockAddFile.mockClear();
     mockAddLocalFile.mockClear();
     mockWriteZip.mockClear();
   });
 
-  test("the document viewer is added to zip", async () => {
+  test("the overview document is added to zip", async () => {
     const payload = {
       xml: "<xml></xml>",
       csv: [["1", "2", "3"]],
       files: [],
       sessionId: "123",
     };
-    await createZip(payload);
-    expect(mockAddLocalFile).toHaveBeenCalledWith("review.html");
+    await createUniformSubmissionZip(payload); // TODO: now need to mock the submission API call
+    expect(mockAddLocalFile).toHaveBeenCalledWith("overview.html");
+    expect(mockWriteZip).toHaveBeenCalledTimes(1);
+  });
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
 
@@ -61,7 +63,7 @@ describe("createZip", () => {
       sessionId: "123",
     };
     const expectedBuffer = Buffer.from(JSON.stringify(input, null, 2));
-    await createZip(payload);
+    await createUniformSubmissionZip(payload);
     expect(mockAddFile).toHaveBeenCalledWith(
       "boundary.geojson",
       expectedBuffer
@@ -77,7 +79,7 @@ describe("createZip", () => {
       files: [],
       sessionId: "123",
     };
-    await createZip(payload);
+    await createUniformSubmissionZip(payload);
     expect(mockAddFile).not.toHaveBeenCalled();
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
