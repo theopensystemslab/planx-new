@@ -9,7 +9,7 @@ import {
   ApplicantOrAgent,
   FileAttachment,
   ProposedUseApplication,
-} from "./types.d";
+} from "./types";
 
 // Match build options in UniformPayload.buildXML()
 const parseOptions: X2jOptionsOptional = {
@@ -590,11 +590,13 @@ describe("File handling", () => {
     );
   });
 
-  it("includes a generated review file", () => {
-    const expectedReviewFileDeclaration = {
-      "common:FileName": "review.html",
-      "common:Reference": "Other",
-    };
+  it("includes auto generated files", () => {
+    const expectedReviewFileDeclarations = [
+      {
+        "common:FileName": "overview.html",
+        "common:Reference": "Other",
+      },
+    ];
     const xml = new UniformPayload({
       sessionId,
       passport,
@@ -606,16 +608,22 @@ describe("File handling", () => {
     const result: UniformPayload = parser.parse(xml);
     const fileAttachments: FileAttachment[] = get(result, fileAttachmentsKey);
     expect(fileAttachments).toEqual(
-      expect.arrayContaining([expectedReviewFileDeclaration])
+      expect.arrayContaining(expectedReviewFileDeclarations)
     );
   });
 
-  it("includes a generated boundary geojson file when possible", () => {
+  it("includes generated boundary GeoJSON and HTML files when possible", () => {
     const hasBoundary = true;
-    const expectedBoundaryFileDeclaration = {
-      "common:FileName": "boundary.geojson",
-      "common:Reference": "Other",
-    };
+    const expectedBoundaryFileDeclarations = [
+      {
+        "common:FileName": "boundary.geojson",
+        "common:Reference": "Other",
+      },
+      {
+        "common:FileName": "boundary.html",
+        "common:Reference": "Other",
+      },
+    ];
     const xml = new UniformPayload({
       sessionId,
       passport,
@@ -627,15 +635,11 @@ describe("File handling", () => {
     const result: UniformPayload = parser.parse(xml);
     const fileAttachments: FileAttachment[] = get(result, fileAttachmentsKey);
     expect(fileAttachments).toEqual(
-      expect.arrayContaining([expectedBoundaryFileDeclaration])
+      expect.arrayContaining(expectedBoundaryFileDeclarations)
     );
   });
 
   it("does not include a boundary geojson file when not possible", () => {
-    const expectedBoundaryFileDeclaration = {
-      "common:FileName": "boundary.geojson",
-      "common:Reference": "Other",
-    };
     const xml = new UniformPayload({
       sessionId,
       passport,
@@ -647,7 +651,12 @@ describe("File handling", () => {
     const result: UniformPayload = parser.parse(xml);
     const fileAttachments: FileAttachment[] = get(result, fileAttachmentsKey);
     expect(fileAttachments).not.toEqual(
-      expect.arrayContaining([expectedBoundaryFileDeclaration])
+      expect.arrayContaining([
+        {
+          "common:FileName": "boundary.geojson",
+          "common:Reference": "Other",
+        },
+      ])
     );
   });
 });

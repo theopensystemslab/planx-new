@@ -1,6 +1,5 @@
 import "isomorphic-fetch";
 import os from "os";
-import { reportError } from "../airbrake";
 import { Buffer } from "node:buffer";
 import path from "path";
 import FormData from "form-data";
@@ -8,11 +7,16 @@ import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
-import { generateDocumentReviewStream } from "./documentReview";
+import {
+  hasRequiredDataForTemplate,
+  generateDocxTemplateStream,
+  generateHTMLMapStream,
+  generateHTMLOverviewStream,
+} from "@opensystemslab/planx-document-template";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
-import { deleteFile, downloadFile } from "./helpers";
+import { deleteFile, downloadFile, findGeoJSON } from "./helpers";
 
 /**
  * Submits application data to Uniform
@@ -51,12 +55,26 @@ const sendToUniform = async (req, res, next) => {
     });
   }
 
+  // generate submission documents and data
+  const { geojson, templateNames } = await generateSubmissionData({
+    sessionId: payload.sessionId,
+    passport: payload.passport,
+  });
+
   try {
     const { clientId, clientSecret } = getUniformClient(
       req.params.localAuthority
     );
     // Setup - Create the zip folder
-    const zipPath = await createZip(payload);
+    const zipPath = await createUniformSubmissionZip({
+      sessionId: payload.sessionId,
+      passport: payload.passport,
+      csv: payload.csv,
+      files: payload.files,
+      geojson,
+      templateNames,
+      uniformSubmissionXML: payload.xml,
+    });
 
     // Request 1/3 - Authenticate
     const {
@@ -159,14 +177,10 @@ const sendToUniform = async (req, res, next) => {
 async function checkUniformAuditTable(sessionId) {
   const application = await adminClient.request(
     gql`
-      query FindApplication(
-        $submission_reference: String = ""
-      ) {
+      query FindApplication($submission_reference: String = "") {
         uniform_applications(
-          where: {
-            submission_reference: {_eq: $submission_reference}
-          },
-          order_by: {created_at: desc}
+          where: { submission_reference: { _eq: $submission_reference } }
+          order_by: { created_at: desc }
         ) {
           response
         }
@@ -189,12 +203,14 @@ async function checkUniformAuditTable(sessionId) {
  * @param {string} sessionId
  * @returns {Promise} - name of zip
  */
-export async function createZip({
-  xml: stringXml,
+export async function createUniformSubmissionZip({
   csv,
-  geojson,
   files,
   sessionId,
+  passport,
+  geojson,
+  templateNames,
+  uniformSubmissionXML,
 }) {
   // initiate an empty zip folder
   const zip = new AdmZip();
@@ -234,7 +250,7 @@ export async function createZip({
   // add a XML uniform submission file to zip
   const xmlPath = "proposal.xml"; //  must be named "proposal.xml" to be processed by Uniform
   const xmlFile = fs.createWriteStream(xmlPath);
-  const xmlStream = str(stringXml.trim()).pipe(xmlFile);
+  const xmlStream = str(uniformSubmissionXML.trim()).pipe(xmlFile);
   await new Promise((resolve, reject) => {
     xmlStream.on("error", reject);
     xmlStream.on("finish", resolve);
@@ -245,10 +261,7 @@ export async function createZip({
   // generate and add an HTML overview document for the submission to zip
   const overviewPath = path.join(tmpDir, "overview.html");
   const overviewFile = fs.createWriteStream(overviewPath);
-  const overviewStream = generateHTMLOverviewStream({
-    planXExportData,
-    files,
-  }).pipe(overviewFile);
+  const overviewStream = generateHTMLOverviewStream(csv).pipe(overviewFile);
   await waitForStream(overviewStream);
   zip.addLocalFile(overviewPath);
   deleteFile(overviewPath);
@@ -273,19 +286,19 @@ export async function createZip({
     try {
       isTemplateSupported = hasRequiredDataForTemplate({
         templateName,
-        planXExportData,
+        passport,
       });
-    } catch {
-      reportError(
-        `The template "${templateName}" could not be generated with the supplied data`
+    } catch (e) {
+      throw new Error(
+        `The template "${templateName}" could not be generated with the supplied data:\n${e}`
       );
     }
     if (isTemplateSupported) {
-      const templatePath = path.join(tmpDir, `${templateName}.docx`);
+      const templatePath = path.join(tmpDir, templateName);
       const templateFile = fs.createWriteStream(templatePath);
       const templateStream = generateDocxTemplateStream({
         templateName,
-        planXExportData,
+        passport,
       }).pipe(templateFile);
       await waitForStream(templateStream);
       zip.addLocalFile(templatePath);
@@ -303,6 +316,15 @@ export async function createZip({
   });
 
   return zipName;
+}
+
+async function generateSubmissionData({ sessionId, passport }) {
+  const geojson = findGeoJSON(passport);
+  const templateNames = await getSubmissionTemplates(sessionId);
+  return {
+    geojson,
+    templateNames,
+  };
 }
 
 async function waitForStream(stream) {
@@ -464,10 +486,10 @@ async function retrieveSubmission(token, submissionId) {
 }
 
 async function getSubmissionTemplates(sessionId) {
-  const templates = await client.request(
+  const response = await adminClient.request(
     gql`
-      query GetSubmissionTemplateName($sessionId: UUID!) {
-        lowcal_sessions(where: { id: { _eq: $sessionId } }) {
+      query GetSubmissionTemplateNames($sessionId: uuid!) {
+        lowcal_sessions_by_pk(id: $sessionId) {
           flow {
             submission_templates
           }
@@ -476,6 +498,7 @@ async function getSubmissionTemplates(sessionId) {
     `,
     { sessionId }
   );
+  const templates = response.lowcal_sessions_by_pk?.flow?.submission_templates;
   if (!templates || templates == "") return [];
   return templates.split(",");
 }

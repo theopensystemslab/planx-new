@@ -9,7 +9,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Banner from "ui/Banner";
 
-import { makeCsvData } from "../../@planx/components/Send/uniform";
+import { generatePlanXExportData } from "../../@planx/components/Send/uniform";
 import FileDownload from "../../ui/FileDownload";
 
 interface Props {
@@ -45,7 +45,7 @@ const StatusPage: React.FC<Props> = ({
   ]);
 
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform
-  const data = makeCsvData(breadcrumbs, flow, passport, sessionId);
+  const data = generatePlanXExportData(breadcrumbs, flow, passport, sessionId);
 
   const theme = useTheme();
   const classes = useStyles();

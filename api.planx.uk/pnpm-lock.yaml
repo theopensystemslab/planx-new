@@ -10,7 +10,7 @@ specifiers:
   '@airbrake/node': ^2.1.7
   '@babel/core': ^7.19.6
   '@babel/preset-typescript': ^7.18.6
-  '@opensystemslab/planx-document-review': git://github.com/theopensystemslab/planx-document-review.git#v1.1.3
+  '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#v1.0.0
   '@types/adm-zip': ^0.5.0
   '@types/body-parser': ^1.19.2
   '@types/cookie-parser': ^1.4.3
@@ -86,7 +86,7 @@ specifiers:
 
 dependencies:
   '@airbrake/node': 2.1.7
-  '@opensystemslab/planx-document-review': github.com/theopensystemslab/planx-document-review/da94e9034391c5048dc42d6ec136934e434afe53_xst6vvc5tesqnjxmhgpj2yxoqy
+  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/0ce82c00e9247c2e1d7539d128ed667223589d81_xst6vvc5tesqnjxmhgpj2yxoqy
   adm-zip: 0.5.9
   aws-sdk: 2.1180.0
   axios: 0.27.2
@@ -1784,6 +1784,10 @@ packages:
   /@types/node/16.18.3:
     resolution: {integrity: sha512-jh6m0QUhIRcZpNv7Z/rpN+ZWXOicUUQbSoWks7Htkbb9IjFQj4kzcX/xFCkjstCj5flMsN8FiSvt+q+Tcs4Llg==}
 
+  /@types/node/18.11.19:
+    resolution: {integrity: sha512-YUgMWAQBWLObABqrvx8qKO1enAvBUdjZOAWQ5grBAkp5LQv45jBvYKZ3oFS9iKRCQyFjqw6iuEa1vmFqtxYLZw==}
+    dev: false
+
   /@types/oauth/0.9.1:
     resolution: {integrity: sha512-a1iY62/a3yhZ7qH7cNUsxoI3U/0Fe9+RnuFrpTKr+0WVOzbKlSLojShCKe20aOD1Sppv+i8Zlq0pLDuTJnwS4A==}
     dependencies:
@@ -3130,6 +3134,17 @@ packages:
     dependencies:
       esutils: 2.0.3
     dev: true
+
+  /docx/7.8.2:
+    resolution: {integrity: sha512-ptaiVZunYO04z113E/jR3yZx7/VaeUap2CHM9V1YwlmGygJ2W8y2KBmAsVgzlzs+qT7+3d5W3Q7+57BgvGiL+Q==}
+    engines: {node: '>=10'}
+    dependencies:
+      '@types/node': 18.11.19
+      jszip: 3.10.1
+      nanoid: 3.3.4
+      xml: 1.0.1
+      xml-js: 1.6.11
+    dev: false
 
   /dom-helpers/3.4.0:
     resolution: {integrity: sha512-LnuPJ+dwqKDIyotW1VzmOZ5TONUN7CwkCR5hrgawTUbkBGYdeoNLZo6nNfGkCrjtE1nXXaj7iMMpDa8/d9WoIA==}
@@ -4484,6 +4499,10 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
+  /immediate/3.0.6:
+    resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
+    dev: false
+
   /import-fresh/3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -5525,6 +5544,15 @@ packages:
       warning: 3.0.0
     dev: false
 
+  /jszip/3.10.1:
+    resolution: {integrity: sha512-xXDvecyTpGLrqFrvkrUSoxxfJI5AH7U8zxxtVclpsUtMCq4JQ290LY8AW5c7Ggnr/Y/oK+bQMbqK2qmtk3pN4g==}
+    dependencies:
+      lie: 3.3.0
+      pako: 1.0.11
+      readable-stream: 2.3.7
+      setimmediate: 1.0.5
+    dev: false
+
   /jwa/1.4.1:
     resolution: {integrity: sha512-qiLX/xhEEFKUAJ6FiBMbes3w9ATzyk5W7Hvzpa/SLYdxNtng+gcurvrI7TbACjIXlsJyr05/S1oUhZrc63evQA==}
     dependencies:
@@ -5588,6 +5616,12 @@ packages:
       prelude-ls: 1.2.1
       type-check: 0.4.0
     dev: true
+
+  /lie/3.3.0:
+    resolution: {integrity: sha512-UaiMJzeWRlEujzAuw5LokY1L5ecNQYZKfmyZ9L7wDHb/p5etKaxXhohBcrw0EYby+G/NA52vRSN4N39dxHAIwQ==}
+    dependencies:
+      immediate: 3.0.6
+    dev: false
 
   /lines-and-columns/1.1.6:
     resolution: {integrity: sha512-8ZmlJFVK9iCmtLz19HpSsR8HaAMWBT284VMNednLwlIMDP2hJDCIhUp0IZ2xUcZ+Ob6BM0VvCSJwzASDM45NLQ==}
@@ -6187,6 +6221,10 @@ packages:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
     engines: {node: '>=6'}
     dev: true
+
+  /pako/1.0.11:
+    resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
+    dev: false
 
   /parent-module/1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -6815,6 +6853,10 @@ packages:
 
   /sax/1.2.1:
     resolution: {integrity: sha1-e45lYZCyKOgaZq6nSEgNgozS03o=}
+    dev: false
+
+  /sax/1.2.4:
+    resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
     dev: false
 
   /scheduler/0.23.0:
@@ -7748,6 +7790,17 @@ packages:
       signal-exit: 3.0.7
     dev: true
 
+  /xml-js/1.6.11:
+    resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}
+    hasBin: true
+    dependencies:
+      sax: 1.2.4
+    dev: false
+
+  /xml/1.0.1:
+    resolution: {integrity: sha512-huCv9IH9Tcf95zuYCsQraZtWnJvBtLVE0QHMOs8bWyZAFZNDcYjsPq1nEx8jKA9y+Beo9v+7OBPRisQTjinQMw==}
+    dev: false
+
   /xml2js/0.4.19:
     resolution: {integrity: sha512-esZnJZJOiJR9wWKMyuvSE1y6Dq5LCuJanqhxslH2bxM6duahNZ+HMpCLhBQGZkbX6xRf8x1Y2eJlgt2q3qo49Q==}
     dependencies:
@@ -7818,11 +7871,11 @@ packages:
       - debug
     dev: false
 
-  github.com/theopensystemslab/planx-document-review/da94e9034391c5048dc42d6ec136934e434afe53_xst6vvc5tesqnjxmhgpj2yxoqy:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-review/tar.gz/da94e9034391c5048dc42d6ec136934e434afe53}
-    id: github.com/theopensystemslab/planx-document-review/da94e9034391c5048dc42d6ec136934e434afe53
-    name: '@opensystemslab/planx-document-review'
-    version: 1.1.3
+  github.com/theopensystemslab/planx-document-templates/0ce82c00e9247c2e1d7539d128ed667223589d81_xst6vvc5tesqnjxmhgpj2yxoqy:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/0ce82c00e9247c2e1d7539d128ed667223589d81}
+    id: github.com/theopensystemslab/planx-document-templates/0ce82c00e9247c2e1d7539d128ed667223589d81
+    name: '@opensystemslab/planx-document-templates'
+    version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
     dependencies:
       '@emotion/react': 11.10.5_takfibhgln2hmpgjqbypfep64a
@@ -7830,6 +7883,7 @@ packages:
       '@lit-labs/ssr': 2.3.0
       '@mui/material': 5.11.7_rqh7qj4464ntrqrt6banhaqg4q
       '@rollup/plugin-commonjs': 23.0.7
+      docx: 7.8.2
       lodash.startcase: 4.4.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0

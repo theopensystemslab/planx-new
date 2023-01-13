@@ -263,11 +263,26 @@ export class UniformPayload implements IUniformPayload {
         "common:Reference": "Other",
       },
     ];
-    if (this.hasBoundary)
+
+    if (this.hasBoundary) {
       files.push({
         "common:FileName": "boundary.geojson",
         "common:Reference": "Other",
       });
+      files.push({
+        "common:FileName": "boundary.html",
+        "common:Reference": "Other",
+      });
+    }
+
+    // TODO add template support
+    //for (const templateName of this.templates) {
+    //  files.push({
+    //    "common:FileName": templateName,
+    //    "common:Reference": "Other",
+    //  });
+    //}
+
     return files;
   };
 

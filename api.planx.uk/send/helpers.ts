@@ -1,5 +1,6 @@
 import AdmZip from "adm-zip";
 import fs from "fs";
+import type { Passport } from "./UniformPayload/types";
 
 import airbrake from "../airbrake";
 import { getFileFromS3 } from "../s3/getFile";
@@ -37,6 +38,13 @@ export function deleteFile(path: string) {
   } else {
     console.log(`Didn't find ${path}, nothing to delete`);
   }
+}
+
+// TODO: business logic like this should ultimately live in planx-client
+export function findGeoJSON(
+  passport: Passport
+): { type: "Feature" } | undefined {
+  return passport.data["property.boundary.site"];
 }
 
 export async function logPaymentStatus({

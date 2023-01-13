@@ -1,4 +1,5 @@
-import { createZip } from "./uniform";
+import { queryMock } from "../tests/graphqlQueryMock";
+import { createUniformSubmissionZip } from "./uniform";
 
 jest.mock("fs");
 const mockAddFile = jest.fn();
@@ -18,50 +19,88 @@ const mockPipe = {
     },
   })),
 };
+jest.mock("@opensystemslab/planx-document-templates", () => {
+  return {
+    generateHTMLOverviewStream: jest.fn().mockImplementation(() => mockPipe),
+    generateHTMLMapStream: jest.fn().mockImplementation(() => mockPipe),
+  };
+});
 jest.mock("csv-stringify", () => {
   return {
     stringify: jest.fn().mockImplementation(() => mockPipe),
-  };
-});
-jest.mock("./documentReview", () => {
-  return {
-    generateDocumentReviewStream: jest.fn().mockImplementation(() => mockPipe),
   };
 });
 jest.mock("string-to-stream", () => {
   return jest.fn().mockImplementation(() => mockPipe);
 });
 
-describe("createZip", () => {
+describe("createUniformSubmissionZip", () => {
   beforeEach(() => {
     mockAddFile.mockClear();
     mockAddLocalFile.mockClear();
     mockWriteZip.mockClear();
+    queryMock.mockQuery({
+      name: "GetSubmissionTemplateNames",
+      matchOnVariables: false,
+      data: {
+        lowcal_sessions: {
+          data: {
+            flow: {
+              submission_templates: "template1.docx",
+            },
+          },
+        },
+      },
+    });
   });
 
   test("the document viewer is added to zip", async () => {
     const payload = {
-      xml: "<xml></xml>",
-      csv: [["1", "2", "3"]],
+      sessionId: "1234",
+      passport: { data: {} },
+      planXExportData: [],
       files: [],
-      sessionId: "123",
+      geojson: null,
+      templateNames: [],
+      uniformSubmissionXML: "",
     };
-    await createZip(payload);
-    expect(mockAddLocalFile).toHaveBeenCalledWith("review.html");
+    await createUniformSubmissionZip(payload);
+    expect(mockAddLocalFile).toHaveBeenCalledWith("overview.html");
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
 
-  test("geojson is added to zip", async () => {
-    const input = { x: 1, y: 50 };
-    const payload = {
-      xml: "<xml></xml>",
-      csv: [["1", "2", "3"]],
-      geojson: input,
-      files: [],
-      sessionId: "123",
+  test("boundary GeoJSON is added to zip", async () => {
+    const geojson = {
+      type: "Feature",
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-0.07626448954420499, 51.48571252157308],
+            [-0.0762916416717913, 51.48561932090584],
+            [-0.07614058275089933, 51.485617225458554],
+            [-0.07611118911905082, 51.4857099488319],
+            [-0.07626448954420499, 51.48571252157308],
+          ],
+        ],
+      },
+      properties: null,
     };
-    const expectedBuffer = Buffer.from(JSON.stringify(input, null, 2));
-    await createZip(payload);
+    const payload = {
+      sessionId: "1234",
+      passport: {
+        data: {
+          "property.boundary.site": geojson,
+        },
+      },
+      planXExportData: [],
+      files: [],
+      geojson,
+      templateNames: [],
+      uniformSubmissionXML: "",
+    };
+    const expectedBuffer = Buffer.from(JSON.stringify(geojson, null, 2));
+    await createUniformSubmissionZip(payload);
     expect(mockAddFile).toHaveBeenCalledWith(
       "boundary.geojson",
       expectedBuffer
@@ -69,16 +108,51 @@ describe("createZip", () => {
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
 
-  test("geojson is excluded when not present", async () => {
-    const payload = {
-      xml: "<xml></xml>",
-      csv: [["1", "2", "3"]],
-      geojson: undefined,
-      files: [],
-      sessionId: "123",
+  test("the boundary document is added to zip", async () => {
+    const geojson = {
+      type: "Feature",
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-0.07626448954420499, 51.48571252157308],
+            [-0.0762916416717913, 51.48561932090584],
+            [-0.07614058275089933, 51.485617225458554],
+            [-0.07611118911905082, 51.4857099488319],
+            [-0.07626448954420499, 51.48571252157308],
+          ],
+        ],
+      },
+      properties: null,
     };
-    await createZip(payload);
-    expect(mockAddFile).not.toHaveBeenCalled();
+    const payload = {
+      sessionId: "1234",
+      passport: { data: {} },
+      planXExportData: [],
+      files: [],
+      geojson,
+      templateNames: [],
+      uniformSubmissionXML: "",
+    };
+    await createUniformSubmissionZip(payload);
+    expect(mockAddLocalFile).toHaveBeenCalledWith("boundary.html");
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
+
+  test("geojson is excluded when not present", async () => {
+    const payload = {
+      sessionId: "1234",
+      passport: { data: {} },
+      planXExportData: [],
+      files: [],
+      geojson: null,
+      templateNames: [],
+      uniformSubmissionXML: "",
+    };
+    await createUniformSubmissionZip(payload);
+    expect(mockAddLocalFile).not.toHaveBeenCalledWith("boundary.html");
+    expect(mockWriteZip).toHaveBeenCalledTimes(1);
+  });
+
+  test.todo("a template generated document is added to zip");
 });
