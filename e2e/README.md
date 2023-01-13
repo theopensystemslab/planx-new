@@ -4,8 +4,8 @@ More info about e2e tests is available in our [testing approach documentation](h
 
 ## Playwight tests
 
-run `pnpm test:playwright` to run the Playwright end-to-end suite.
+run `pnpm test` to run the Playwright end-to-end suite.
 
 ## Debugging
 
-run `DEBUG=true pnpm test:playwright` to run with debug logging (useful for setup and teardown issues)
+run `DEBUG=true pnpm test` to run with debug logging (useful for setup and teardown issues)
