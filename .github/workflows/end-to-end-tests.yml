@@ -51,7 +51,7 @@ jobs:
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: Playwright Tests
-        run:  pnpm test:playwright
+        run:  pnpm test
         working-directory: e2e
       - name: Archive Playwright Test Results
         if: ${{ failure() }}
