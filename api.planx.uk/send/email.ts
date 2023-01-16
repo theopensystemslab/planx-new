@@ -7,7 +7,7 @@ import os from "os";
 import path from "path";
 
 import { adminGraphQLClient } from "../hasura";
-import { convertSlugToName, sendEmail } from "../saveAndReturn/utils";
+import { markSessionAsSubmitted, sendEmail } from "../saveAndReturn/utils";
 import { EmailSubmissionNotifyConfig } from "../types";
 import { generateDocumentReviewStream } from "./documentReview";
 import { deleteFile, downloadFile } from "./helpers";
@@ -35,7 +35,7 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
       const config: EmailSubmissionNotifyConfig = {
         personalisation: {
           emailReplyToId: notify_personalisation.emailReplyToId,
-          serviceName: "Test",
+          serviceName: payload?.flowName[0]?.toUpperCase() || "PlanX",
           sessionId: payload.sessionId,
           applicantEmail: payload.email,
           downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${settings.sendToEmail}&localAuthority=${req.params.localAuthority}`,
@@ -44,9 +44,21 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
 
       // Send the email
       const response = await sendEmail("submit", settings.sendToEmail, config);
-      return res.json(response);
+      if (response?.message === "Success") {
+        // Mark session as submitted so that reminder and expiry emails are not triggered
+        markSessionAsSubmitted(payload.sessionId);
 
-      // TODO Mark lowcal_session as submitted, create/update audit table (and setup Slack notification trigger?)
+        // TODO create audit table entry? setup event trigger for slack notification on new row?
+
+        return res.status(200).send({
+          message: `Successfully sent "Submit" email`,
+        });
+      } else {
+        return next({
+          status: 500,
+          message: `Failed to send "Submit" email: ${response?.message}`,
+        });
+      }
     } else {
       return next({
         status: 400,
