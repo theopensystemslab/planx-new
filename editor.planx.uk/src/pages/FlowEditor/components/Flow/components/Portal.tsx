@@ -10,6 +10,7 @@ import { Link } from "react-navi";
 import { rootFlowPath } from "../../../../../routes/utils";
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
+import Question from "./Question";
 
 const ExternalPortal: React.FC<any> = React.memo(
   (props) => {
@@ -44,12 +45,18 @@ const ExternalPortal: React.FC<any> = React.memo(
     });
 
     // If the flow referenced by an external portal has been deleted (eg !data),
-    //   still show a "Corrupted!" node so that editors have a visual cue to "delete".
-    //   The flow schema will still contain a node reference to this portal causing dataMerged to fail
-
-    // if (!data?.flows_by_pk) {
-    //   return null;
-    // }
+    //   still show a "Corrupted" node so that editors have a visual cue to "delete".
+    //   Until deleted, the flow schema will still contain a node reference to this portal causing dataMerged to fail
+    if (!data?.flows_by_pk) {
+      return (
+        <Question
+          hasFailed
+          type="Error"
+          id={props.id}
+          text="Corrupted external portal: flow no longer exists"
+        />
+      );
+    }
 
     const handleContext = (e: React.MouseEvent) => {
       e.preventDefault();
