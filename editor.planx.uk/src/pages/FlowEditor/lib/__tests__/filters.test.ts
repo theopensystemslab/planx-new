@@ -1,163 +1,155 @@
-import type { Store } from "../store";
+import { visitInParallel } from "graphql";
+
 import { vanillaStore } from "../store";
+import flowWithAutoAnsweredFilterPaths from "./mocks/flowWithAutoAnsweredFilterPaths.json";
+import flowWithBranchingFilters from "./mocks/flowWithBranchingFilters.json";
+import flowWithRootFilter from "./mocks/flowWithRootFilter.json";
 
 const { getState, setState } = vanillaStore;
+const {
+  upcomingCardIds,
+  resetPreview,
+  record,
+  currentCard,
+  collectedFlags,
+  resultData,
+} = getState();
 
 // https://i.imgur.com/k0kkKox.png
-
-const flow: Store.flow = {
-  _root: {
-    edges: ["d5SxIWZej9", "LAz2YqYChs", "nroxFPM2Jx"],
-  },
-  LAz2YqYChs: {
-    type: 500,
-    data: {
-      fn: "flag",
-    },
-    edges: [
-      "IK6gNsf8iF",
-      "gOLt5Yd4Fy",
-      "wgWEaXVfBt",
-      "QKSqXyhvQW",
-      "AM6b72H0aV",
-      "o3H1U1k6v6",
-      "VkqLPBX1mQ",
-      "udy3cmVDMh",
-    ],
-  },
-  IK6gNsf8iF: {
-    type: 200,
-    data: {
-      text: "Immune",
-      val: "IMMUNE",
-    },
-    edges: ["TmpbJgjGPH"],
-  },
-  gOLt5Yd4Fy: {
-    type: 200,
-    data: {
-      text: "Missing information",
-      val: "MISSING_INFO",
-    },
-  },
-  wgWEaXVfBt: {
-    type: 200,
-    data: {
-      text: "Permission needed",
-      val: "PLANNING_PERMISSION_REQUIRED",
-    },
-  },
-  QKSqXyhvQW: {
-    type: 200,
-    data: {
-      text: "Prior approval",
-      val: "PRIOR_APPROVAL",
-    },
-  },
-  AM6b72H0aV: {
-    type: 200,
-    data: {
-      text: "Notice",
-      val: "PP-NOTICE",
-    },
-  },
-  o3H1U1k6v6: {
-    type: 200,
-    data: {
-      text: "Permitted development",
-      val: "NO_APP_REQUIRED",
-    },
-  },
-  VkqLPBX1mQ: {
-    type: 200,
-    data: {
-      text: "Not development",
-      val: "PP-NOT_DEVELOPMENT",
-    },
-  },
-  udy3cmVDMh: {
-    type: 200,
-    data: {
-      text: "(No Result)",
-    },
-    edges: ["lOrm4XmVGv"],
-  },
-  d5SxIWZej9: {
-    type: 100,
-    data: {
-      text: "is this project immune?",
-    },
-    edges: ["FZ1kmhT37j", "ZTZqcDAOoG"],
-  },
-  FZ1kmhT37j: {
-    type: 200,
-    data: {
-      text: "yes",
-      flag: "IMMUNE",
-    },
-  },
-  ZTZqcDAOoG: {
-    type: 200,
-    data: {
-      text: "no",
-    },
-  },
-  TmpbJgjGPH: {
-    type: 250,
-    data: {
-      content: "<p>this project is immune</p>\n",
-    },
-  },
-  lOrm4XmVGv: {
-    type: 250,
-    data: {
-      content: "<p>this project is not immune</p>\n",
-    },
-  },
-  nroxFPM2Jx: {
-    type: 250,
-    data: {
-      content: "<p>last thing</p>\n",
-    },
-  },
-};
-
-test.skip("don't expand filters before visiting them (A)", () => {
-  setState({
-    flow,
+describe("A filter on the root of the graph", () => {
+  beforeEach(() => {
+    resetPreview();
   });
 
-  expect(getState().upcomingCardIds()).toEqual([
-    "d5SxIWZej9",
-    "LAz2YqYChs",
-    "nroxFPM2Jx",
-  ]);
+  test.skip("don't expand filters before visiting them (A)", () => {
+    setState({
+      flow: flowWithRootFilter,
+    });
+
+    expect(upcomingCardIds()).toEqual([
+      "d5SxIWZej9",
+      "LAz2YqYChs",
+      "nroxFPM2Jx",
+    ]);
+  });
+
+  test("immune path (B)", () => {
+    setState({
+      flow: flowWithRootFilter,
+      breadcrumbs: {
+        d5SxIWZej9: {
+          auto: false,
+          answers: ["FZ1kmhT37j"],
+        },
+      },
+    });
+
+    expect(upcomingCardIds()).toEqual(["TmpbJgjGPH", "nroxFPM2Jx"]);
+  });
+
+  test("not immune path (C)", () => {
+    setState({
+      flow: flowWithRootFilter,
+      breadcrumbs: {
+        d5SxIWZej9: {
+          auto: false,
+          answers: ["ZTZqcDAOoG"],
+        },
+      },
+    });
+
+    expect(upcomingCardIds()).toEqual(["lOrm4XmVGv", "nroxFPM2Jx"]);
+  });
 });
 
-test("immune path (B)", () => {
-  setState({
-    flow,
-    breadcrumbs: {
-      d5SxIWZej9: {
-        auto: false,
-        answers: ["FZ1kmhT37j"],
-      },
-    },
+describe("A filter on a branch", () => {
+  beforeEach(() => {
+    resetPreview();
+    setState({ flow: flowWithBranchingFilters });
   });
 
-  expect(getState().upcomingCardIds()).toEqual(["TmpbJgjGPH", "nroxFPM2Jx"]);
+  test.skip("Picking up flag routes me correctly through the second filter", () => {
+    let visitedNodes = () => Object.keys(getState().breadcrumbs);
+
+    // Traverse forward to pick up an "IMMUNE" flag
+    record("pickFlag", { answers: ["setImmunity"] });
+    record("immunityPath1", { answers: [] });
+    expect(collectedFlags("immunityPath1", visitedNodes())).toStrictEqual([
+      "IMMUNE",
+    ]);
+
+    // Traverse forward through next filter
+    record("fork", { answers: ["filter2"] });
+
+    // XXX: Test fails here
+    // The currentCard returns as "immunityFlag2" which we should not land on -
+    // the flags on the first filter are skipped, we go direct from "immunityPath1" to "fork"
+    expect(currentCard()?.id).toBe("immunityPath2");
+  });
 });
 
-test("not immune path (C)", () => {
-  setState({
-    flow,
-    breadcrumbs: {
-      d5SxIWZej9: {
-        auto: false,
-        answers: ["ZTZqcDAOoG"],
-      },
-    },
+describe("Nodes on a filter path should only be auto-answered when the path matches the result", () => {
+  beforeEach(() => {
+    resetPreview();
+    setState({ flow: flowWithAutoAnsweredFilterPaths }); // https://editor.planx.uk/testing/flag-order-test-with-autoanswer
   });
 
-  expect(getState().upcomingCardIds()).toEqual(["lOrm4XmVGv", "nroxFPM2Jx"]);
+  test("Filter path nodes are auto-answered correctly when the highest order flag is picked up first", () => {
+    let visitedNodes = () => Object.keys(getState().breadcrumbs);
+
+    // go forward manually: select not listed and select an answer with permission needed (higher order) flag
+    record("zlKQyPuKsl", { answers: ["qW1jzS1qPy"], auto: false });
+    record("Ve90wVIXsV", { answers: ["d98AoVIXsV"], auto: false }); // as we pick up this flag, later nodes in matching filter path are auto-answered immediately
+
+    // continue forward manually: select an answer with permitted development (lower order) flag
+    record("TiIuAVIXsV", { answers: ["hdaeOVIXsV"], auto: false });
+
+    // land on the correct result component
+    expect(currentCard()?.id).toBe("seN42VIXsV");
+    expect(getState().resultData()["Planning permission"]).toHaveProperty(
+      "flag.value",
+      "PLANNING_PERMISSION_REQUIRED"
+    );
+
+    // expect the auto-answered question on the permission needed filter path to be in our breadcrumbs
+    expect(visitedNodes()).toContain("1ShlhWrXPl");
+    expect(getState().breadcrumbs["1ShlhWrXPl"]).toEqual({
+      answers: ["tesCNavKYo"],
+      auto: true,
+    });
+
+    // make sure the auto-answerable question and its child from the permitted development filter path is not in our breadcrumbs nor upcoming card ids
+    expect(visitedNodes()).not.toContain("AaEuHnVUb4");
+    expect(upcomingCardIds).not.toContain("xjcujhpzjs");
+  });
+
+  test.skip("Filter path nodes are auto-answered correctly when a lower order flag is picked up first", () => {
+    let visitedNodes = () => Object.keys(getState().breadcrumbs);
+
+    // go forward manually: select not listed and select an answer with permitted dev (lower order) flag
+    record("zlKQyPuKsl", { answers: ["qW1jzS1qPy"], auto: false });
+    record("Ve90wVIXsV", { answers: ["pghecgQLgs"], auto: false });
+    upcomingCardIds(); // mimic "continue" and properly set visitedNodes()
+
+    // TODO ensure that the auto-answerable question in the permitted dev filter path has not been immediately auto-answered before reaching the filter node
+    expect(visitedNodes()).not.toContain("AaEuHnVUb4");
+
+    // continue forward manually: select an answer with permission needed (higher order) flag
+    record("TiIuAVIXsV", { answers: ["OPOWoVIXsV"], auto: false });
+    upcomingCardIds();
+
+    // land on the correct result component
+    expect(currentCard()?.id).toBe("seN42VIXsV");
+    expect(getState().resultData()["Planning permission"]).toHaveProperty(
+      "flag.value",
+      "PLANNING_PERMISSION_REQUIRED"
+    );
+
+    // expect the auto-answered question on the permission needed filter path to be in our breadcrumbs
+    expect(visitedNodes()).toContain("1ShlhWrXPl");
+    expect(getState().breadcrumbs["1ShlhWrXPl"]).toEqual({
+      answers: ["tesCNavKYo"],
+      auto: true,
+    });
+  });
 });

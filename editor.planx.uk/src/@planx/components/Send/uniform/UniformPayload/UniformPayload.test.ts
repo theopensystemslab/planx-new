@@ -1,14 +1,25 @@
 import { Address } from "@planx/components/AddressInput/model";
 import { SiteAddress } from "@planx/components/FindProperty/model";
-import { XMLParser, XMLValidator } from "fast-xml-parser";
+import { X2jOptionsOptional, XMLParser, XMLValidator } from "fast-xml-parser";
 import { get } from "lodash";
 
-import { Store } from "./../../../../../pages/FlowEditor/lib/store/index";
-import { makeXmlString } from "./../xml";
+import { Store } from "../../../../../pages/FlowEditor/lib/store/index";
+import { UniformPayload } from "./model";
+import {
+  ApplicantOrAgent,
+  FileAttachment,
+  ProposedUseApplication,
+} from "./types.d";
 
-const parser = new XMLParser();
+// Match build options in UniformPayload.buildXML()
+const parseOptions: X2jOptionsOptional = {
+  ignoreAttributes: false,
+  attributeNamePrefix: "_",
+};
 
-describe("makeXmlString constructor", () => {
+const parser = new XMLParser(parseOptions);
+
+describe("UniformPayload", () => {
   const sessionId = "123";
   const files: string[] = [];
   const hasBoundary = false;
@@ -17,28 +28,33 @@ describe("makeXmlString constructor", () => {
     const passport: Store.passport = {
       data: { "proposal.description": `< > & " '` },
     };
-    const xmlString = makeXmlString({
-      passport,
+    const xml = new UniformPayload({
       sessionId,
+      passport,
       files,
       hasBoundary,
-    });
-    const isValid = XMLValidator.validate(xmlString);
+    }).buildXML();
+    const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
   });
 });
 
-describe("correctly sets planx sessionId as the Uniform reference number", () => {
+describe("Reference number", () => {
   const sessionId = "1234-abcdef-567-ghijklm";
   const files: string[] = [];
   const hasBoundary = false;
   const passport: Store.passport = { data: {} };
 
-  it("sets sessionId", () => {
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+  it("sets sessionId as a reference number", () => {
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
     const expectedRefNum: String = "1234-abcdef-567-ghijklm";
 
-    let result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const resultRefNum =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:RefNum"
@@ -53,7 +69,7 @@ describe("correctly sets planx sessionId as the Uniform reference number", () =>
   });
 });
 
-describe("correctly sets proposal completion date", () => {
+describe("Proposal completion date", () => {
   const sessionId = "123";
   const files: string[] = [];
   const hasBoundary = false;
@@ -63,10 +79,15 @@ describe("correctly sets proposal completion date", () => {
     const passport: Store.passport = {
       data: { "proposal.completion.date": "2022-01-01" },
     };
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
     const expectedCompletionDate: String = "2022-01-01";
 
-    let result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const resultCompletionDate =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:DateSubmitted"
@@ -79,10 +100,15 @@ describe("correctly sets proposal completion date", () => {
     const passport: Store.passport = {
       data: { "proposal.description": "test" },
     };
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
     const expectedCompletionDate: String = formattedNow;
 
-    let result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const resultCompletionDate =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:DateSubmitted"
@@ -92,7 +118,7 @@ describe("correctly sets proposal completion date", () => {
   });
 });
 
-describe("correctly sets payment details", () => {
+describe("Payment details", () => {
   const sessionId = "123";
   const files: string[] = [];
   const hasBoundary = false;
@@ -106,7 +132,12 @@ describe("correctly sets payment details", () => {
         },
       },
     };
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
     const expectedPayment = {
       "common:PaymentMethod": "OnlineViaPortal",
       "common:AmountDue": 103,
@@ -114,7 +145,7 @@ describe("correctly sets payment details", () => {
       "common:Currency": "GBP",
     };
 
-    let result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const resultPayment =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:Payment"
@@ -127,7 +158,12 @@ describe("correctly sets payment details", () => {
     const passport: Store.passport = {
       data: { "proposal.description": "test" },
     };
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
     const expectedPayment = {
       "common:PaymentMethod": "OnlineViaPortal",
       "common:AmountDue": 0,
@@ -135,7 +171,7 @@ describe("correctly sets payment details", () => {
       "common:Currency": "GBP",
     };
 
-    let result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const resultPayment =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:Payment"
@@ -149,7 +185,6 @@ describe("correctly sets payment details", () => {
 // are mapped as expected into the XML for Uniform submission
 // https://editor.planx.uk/opensystemslab/uniform-translator
 describe("Uniform Translator", () => {
-  const parser = new XMLParser({ ignoreAttributes: false });
   const sessionId = "123";
   const files: string[] = [];
   const hasBoundary = false;
@@ -159,9 +194,14 @@ describe("Uniform Translator", () => {
       data: { "uniform.applicationTo": ["TEST123"] },
     };
 
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
 
-    const result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const applicationTo =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:ApplicationTo"
@@ -178,9 +218,14 @@ describe("Uniform Translator", () => {
       },
     };
 
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
 
-    const result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const scenarioNumber =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationScenario"][
         "portaloneapp:ScenarioNumber"
@@ -202,9 +247,14 @@ describe("Uniform Translator", () => {
       },
     };
 
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
 
-    const result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const scenarioNumber =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationScenario"][
         "portaloneapp:ScenarioNumber"
@@ -222,9 +272,14 @@ describe("Uniform Translator", () => {
       data: { "uniform.siteVisit": ["true"] },
     };
 
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
 
-    const result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const siteVisit =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationData"][
         "portaloneapp:SiteVisit"
@@ -237,9 +292,14 @@ describe("Uniform Translator", () => {
       data: { "uniform.isRelated": ["true"] },
     };
 
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
 
-    const result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const isRelated =
       result["portaloneapp:Proposal"]["portaloneapp:DeclarationOfInterest"][
         "common:IsRelated"
@@ -252,9 +312,14 @@ describe("Uniform Translator", () => {
       data: { "uniform.isRelated": ["false"] },
     };
 
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
 
-    const result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const isRelated =
       result["portaloneapp:Proposal"]["portaloneapp:DeclarationOfInterest"][
         "common:IsRelated"
@@ -267,13 +332,18 @@ describe("Uniform Translator", () => {
       data: { "uniform.personRole": ["Agent"] },
     };
 
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
 
-    const result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const personRole =
       result["portaloneapp:Proposal"]["portaloneapp:Declaration"][
         "common:Signatory"
-      ]["@_PersonRole"];
+      ]["_PersonRole"];
     expect(personRole).toBe("Agent");
   });
 
@@ -282,13 +352,18 @@ describe("Uniform Translator", () => {
       data: { "uniform.personRole": ["Applicant"] },
     };
 
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
 
-    const result = parser.parse(xml);
+    const result: UniformPayload = parser.parse(xml);
     const personRole =
       result["portaloneapp:Proposal"]["portaloneapp:Declaration"][
         "common:Signatory"
-      ]["@_PersonRole"];
+      ]["_PersonRole"];
     expect(personRole).toBe("Applicant");
   });
 
@@ -299,14 +374,21 @@ describe("Uniform Translator", () => {
         "application.type": ["ldc.proposed"],
       },
     };
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
-    const result = parser.parse(xml);
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
+
+    const result: UniformPayload = parser.parse(xml);
+    const certificateOfLawfulness = result["portaloneapp:Proposal"][
+      "portaloneapp:ApplicationData"
+    ]["portaloneapp:CertificateLawfulness"] as ProposedUseApplication;
     const isUseChange =
-      result["portaloneapp:Proposal"]["portaloneapp:ApplicationData"][
-        "portaloneapp:CertificateLawfulness"
-      ]["portaloneapp:ProposedUseApplication"]["portaloneapp:DescriptionCPU"][
-        "common:IsUseChange"
-      ];
+      certificateOfLawfulness["portaloneapp:ProposedUseApplication"][
+        "portaloneapp:DescriptionCPU"
+      ]["common:IsUseChange"];
     expect(isUseChange).toBe(true);
   });
 });
@@ -337,15 +419,21 @@ describe("Applicant address", () => {
         _address: harryPotterAddress,
       },
     };
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
-    let result = parser.parse(xml);
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
+
+    const result: UniformPayload = parser.parse(xml);
     const expectedAddress = {
       "common:InternationalAddress": {
         "apd:IntAddressLine": [4, "Privet Drive", "Little Whinging", "Surrey"],
         "apd:InternationalPostCode": "GU22 7QQ",
       },
     };
-    const resultAddress = get(result, applicantAddressKey);
+    const resultAddress: Address = get(result, applicantAddressKey);
     expect(resultAddress).toMatchObject(expectedAddress);
   });
 
@@ -357,13 +445,18 @@ describe("Applicant address", () => {
         "applicant.address": sherlockHolmesAddress,
       },
     };
-    const xml = makeXmlString({ passport, sessionId, files, hasBoundary });
-    let result = parser.parse(xml);
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+      hasBoundary,
+    }).buildXML();
+
+    const result: UniformPayload = parser.parse(xml);
     const expectedAddress = {
       "common:InternationalAddress": {
         "apd:IntAddressLine": [
           "221b Baker Street",
-          "",
           "Marylebone",
           "Greater London",
         ],
@@ -371,7 +464,7 @@ describe("Applicant address", () => {
         "apd:InternationalPostCode": "NW1 6XE",
       },
     };
-    const resultAddress = get(result, applicantAddressKey);
+    const resultAddress: Address = get(result, applicantAddressKey);
     expect(resultAddress).toMatchObject(expectedAddress);
   });
 });
@@ -379,9 +472,10 @@ describe("Applicant address", () => {
 describe("Applicant contact details", () => {
   const sessionId = "123";
   const files: string[] = [];
+  const hasBoundary = false;
 
   const applicantKey: string = "portaloneapp:Proposal.portaloneapp:Applicant";
-  const expectedApplicant = {
+  const expectedApplicant: ApplicantOrAgent = {
     "common:PersonName": {
       "pdt:PersonNameTitle": "Mme",
       "pdt:PersonGivenName": "Jane",
@@ -391,10 +485,16 @@ describe("Applicant contact details", () => {
     "common:ContactDetails": {
       "common:Email": {
         "apd:EmailAddress": "jane@gov.uk",
+        _EmailUsage: "work",
+        _EmailPreferred: "yes",
       },
       "common:Telephone": {
         "apd:TelNationalNumber": 123456789,
+        _TelUse: "work",
+        _TelPreferred: "no",
+        _TelMobile: "yes",
       },
+      _PreferredContactMedium: "E-Mail",
     },
   };
 
@@ -410,14 +510,14 @@ describe("Applicant contact details", () => {
       },
     };
 
-    const xml = makeXmlString({
-      passport,
+    const xml = new UniformPayload({
       sessionId,
+      passport,
       files,
-      hasBoundary: false,
-    });
-    let result = parser.parse(xml);
-    const resultApplicant = get(result, applicantKey);
+      hasBoundary,
+    }).buildXML();
+    const result: UniformPayload = parser.parse(xml);
+    const resultApplicant: ApplicantOrAgent = get(result, applicantKey);
     expect(resultApplicant).toMatchObject(expectedApplicant);
   });
 
@@ -443,19 +543,19 @@ describe("Applicant contact details", () => {
       },
     };
 
-    const xml = makeXmlString({
-      passport,
+    const xml = new UniformPayload({
       sessionId,
+      passport,
       files,
-      hasBoundary: false,
-    });
-    let result = parser.parse(xml);
-    const resultApplicant = get(result, applicantKey);
+      hasBoundary,
+    }).buildXML();
+    const result: UniformPayload = parser.parse(xml);
+    const resultApplicant: ApplicantOrAgent = get(result, applicantKey);
     expect(resultApplicant).toMatchObject(expectedApplicant);
   });
 });
 
-describe("file handling", () => {
+describe("File handling", () => {
   const sessionId = "123";
   const files: string[] = [];
   const passport: Store.passport = { data: {} };
@@ -475,16 +575,16 @@ describe("file handling", () => {
         "common:Reference": "Schema XML File",
       },
     ];
-    const xmlString = makeXmlString({
-      passport,
+    const xml = new UniformPayload({
       sessionId,
+      passport,
       files,
       hasBoundary,
-    });
-    const isValid = XMLValidator.validate(xmlString);
+    }).buildXML();
+    const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
-    let result = parser.parse(xmlString);
-    const fileAttachments = get(result, fileAttachmentsKey);
+    const result: UniformPayload = parser.parse(xml);
+    const fileAttachments: FileAttachment[] = get(result, fileAttachmentsKey);
     expect(fileAttachments).toEqual(
       expect.arrayContaining(expectedFileDeclarations)
     );
@@ -495,36 +595,37 @@ describe("file handling", () => {
       "common:FileName": "review.html",
       "common:Reference": "Other",
     };
-    const xmlString = makeXmlString({
-      passport,
+    const xml = new UniformPayload({
       sessionId,
+      passport,
       files,
-      hasBoundary: false,
-    });
-    const isValid = XMLValidator.validate(xmlString);
+      hasBoundary,
+    }).buildXML();
+    const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
-    let result = parser.parse(xmlString);
-    const fileAttachments = get(result, fileAttachmentsKey);
+    const result: UniformPayload = parser.parse(xml);
+    const fileAttachments: FileAttachment[] = get(result, fileAttachmentsKey);
     expect(fileAttachments).toEqual(
       expect.arrayContaining([expectedReviewFileDeclaration])
     );
   });
 
   it("includes a generated boundary geojson file when possible", () => {
+    const hasBoundary = true;
     const expectedBoundaryFileDeclaration = {
       "common:FileName": "boundary.geojson",
       "common:Reference": "Other",
     };
-    const xmlString = makeXmlString({
-      passport,
+    const xml = new UniformPayload({
       sessionId,
+      passport,
       files,
-      hasBoundary: true,
-    });
-    const isValid = XMLValidator.validate(xmlString);
+      hasBoundary,
+    }).buildXML();
+    const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
-    let result = parser.parse(xmlString);
-    const fileAttachments = get(result, fileAttachmentsKey);
+    const result: UniformPayload = parser.parse(xml);
+    const fileAttachments: FileAttachment[] = get(result, fileAttachmentsKey);
     expect(fileAttachments).toEqual(
       expect.arrayContaining([expectedBoundaryFileDeclaration])
     );
@@ -535,16 +636,16 @@ describe("file handling", () => {
       "common:FileName": "boundary.geojson",
       "common:Reference": "Other",
     };
-    const xmlString = makeXmlString({
-      passport,
+    const xml = new UniformPayload({
       sessionId,
+      passport,
       files,
-      hasBoundary: false,
-    });
-    const isValid = XMLValidator.validate(xmlString);
+      hasBoundary,
+    }).buildXML();
+    const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
-    let result = parser.parse(xmlString);
-    const fileAttachments = get(result, fileAttachmentsKey);
+    const result: UniformPayload = parser.parse(xml);
+    const fileAttachments: FileAttachment[] = get(result, fileAttachmentsKey);
     expect(fileAttachments).not.toEqual(
       expect.arrayContaining([expectedBoundaryFileDeclaration])
     );

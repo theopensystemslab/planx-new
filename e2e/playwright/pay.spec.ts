@@ -3,7 +3,6 @@ import { gqlAdmin, insertTestUser } from "./utils";
 
 import publishedFlow from "./assets/payFlowPublishedFlow.json";
 
-const URL = "http://localhost:3000";
 const TEAM_SLUG = "buckinghamshire";
 const FLOW_SLUG = "pay-test";
 
@@ -44,10 +43,9 @@ test.describe("Payment flow", async () => {
     await navigateToPayComponent({ page, mode: "preview" });
 
     await page.getByText("Pay using GOV.UK Pay").click();
-
     await fillGovUkCardDetails(page)(SUCCESS_CARD_NUMBER);
     await page.locator("#confirm").click();
-    const paymentRef = await awaitForPaymentResponse(page);
+    const { payment_id: paymentRef } = await awaitForPaymentResponse(page);
 
     expect(paymentRef).toBeTruthy();
     expect(await page.getByText(paymentRef!).textContent()).toBeTruthy();
@@ -57,13 +55,41 @@ test.describe("Payment flow", async () => {
     await navigateToPayComponent({ page, mode: "preview" });
 
     await page.getByText("Pay using GOV.UK Pay").click();
-
     await fillGovUkCardDetails(page)(INVALID_CARD_NUMBER);
     await page.locator("#return-url").click();
+    const { payment_id: failedPaymentRef } = await awaitForPaymentResponse(
+      page
+    );
+
+    expect(failedPaymentRef).toBeTruthy();
+
     await page.getByText("Retry payment").click();
     await fillGovUkCardDetails(page)(SUCCESS_CARD_NUMBER);
     await page.locator("#confirm").click();
-    const paymentRef = await awaitForPaymentResponse(page);
+    const { payment_id: paymentRef } = await awaitForPaymentResponse(page);
+
+    expect(paymentRef).toBeTruthy();
+    expect(await page.getByText(paymentRef!).textContent()).toBeTruthy();
+  });
+
+  test("Should retry and succeed a cancelled GOV.UK payment", async ({
+    page,
+  }) => {
+    await navigateToPayComponent({ page, mode: "preview" });
+
+    await page.getByText("Pay using GOV.UK Pay").click();
+    await page.locator("#cancel-payment").click();
+    await page.locator("#return-url").click();
+    const { payment_id: failedPaymentRef, state } =
+      await awaitForPaymentResponse(page);
+
+    expect(failedPaymentRef).toBeTruthy();
+    expect(state.status).toBe("failed");
+
+    await page.getByText("Retry payment").click();
+    await fillGovUkCardDetails(page)(SUCCESS_CARD_NUMBER);
+    await page.locator("#confirm").click();
+    const { payment_id: paymentRef } = await awaitForPaymentResponse(page);
 
     expect(paymentRef).toBeTruthy();
     expect(await page.getByText(paymentRef!).textContent()).toBeTruthy();
@@ -102,24 +128,25 @@ async function navigateToPayComponent({
   page: Page;
   mode: "preview" | "unpublished";
 }) {
-  await page.goto(`${URL}/${TEAM_SLUG}/${FLOW_SLUG}/${mode}?analytics=false`);
+  await page.goto(`/${TEAM_SLUG}/${FLOW_SLUG}/${mode}?analytics=false`);
 
   await page.getByLabel("Pay test").fill("Test");
   await page.getByTestId("continue-button").click();
 }
 
 async function awaitForPaymentResponse(page: Page) {
-  let paymentRef: string | undefined;
+  let response: Record<string, any> = {};
 
-  await page.waitForResponse((resp) => {
+  await page.waitForResponse(async (resp) => {
     if (resp.url().includes(`pay/${TEAM_SLUG}/`) && resp.ok()) {
-      paymentRef = resp.url().split("/").pop();
+      response = await resp.json();
+
       return true;
     }
     return false;
   });
 
-  return paymentRef;
+  return response;
 }
 
 async function createFlow({

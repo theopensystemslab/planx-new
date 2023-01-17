@@ -1,11 +1,10 @@
-import { UploadFileResponse } from "api/upload";
 import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
 import { findGeoJSON } from "../helpers";
 import { CSVData } from "../model";
-import { makeXmlString } from "./xml";
+import { UniformPayload } from "./UniformPayload/model";
 
 type UniformFile = {
   name: string;
@@ -51,17 +50,28 @@ export function getUniformParams(
 
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString({
-      passport,
-      sessionId,
-      files: uniqueFiles,
-      hasBoundary,
-    }),
+    xml: makeXmlString(passport, sessionId, uniqueFiles, hasBoundary),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
     geojson: geoJSONBoundary,
     files: uniqueFiles,
     sessionId,
   };
+}
+
+export function makeXmlString(
+  passport: Store.passport,
+  sessionId: string,
+  files: string[],
+  hasBoundary: boolean
+): string {
+  const payload = new UniformPayload({
+    sessionId,
+    passport,
+    files,
+    hasBoundary,
+  });
+  const xml = payload.buildXML();
+  return xml;
 }
 
 // create a CSV data structure based on the payload we send to BOPs

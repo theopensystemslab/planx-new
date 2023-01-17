@@ -1,6 +1,6 @@
 # Plan✕
 
-Plan✕ is a platform for creating and publishing digital planning services. Learn more about how it's currently being used here: https://www.ripa.digital/
+Plan✕ is a platform for creating and publishing digital planning services. Learn more about how it's currently being used here: https://opendigitalplanning.org/
 
 ## Status pages
 
@@ -58,6 +58,31 @@ To spin it up, run:
 This project uses Architecture Decision Records (ADRs) to record significant changes and decisions. Further details of this can be [found here](https://github.com/theopensystemslab/planx-new/blob/main/doc/architecture/decisions/0001-record-architecture-decisions.md).
 
 For maximum visibility and discoverability, we recommend using the [GitHub discussions board](https://github.com/theopensystemslab/planx-new/discussions) where possible.
+
+
+## Deployments
+
+Our `main` branch is deployed to AWS staging (editor.planx.dev) and `production` is deployed to our AWS production environment (i.e. editor.planx.uk and the custom subdomain like planningservices.{council}.gov.uk) using Github Actions. 
+
+We work in feature branches and open pull requests against `main`. Pull requests will spin up a Vultr server running Docker to test the whole stack (eg database migrations, API changes, frontend changes, Storybook, etc) and generate unique links that can be shared for user-acceptance tesing. Pull request environments use the domain pattern `<service>.<PR#>.planx.pizza` and are often simply referred to as "pizzas". The only changes which cannot be fully tested on a pizza are changes related to Pulumi infrastructure-as-code because this is only deployed in AWS environments, not via Docker.
+
+We aim to keep a linear commit history between `main` and `production` branches in Github. We "Squash & merge" pull request commits into `main`.
+
+(EDIT: Automatic deployments are on pause and planned to resume after the holidays) Automatic production deployments happen every Tuesday, Wednesday, Thursday, and Friday at 9am, at which time `main` is pushed to `production` (which triggers a deployment).
+
+You can manually trigger a production deployments by going to [the Deploy to Production](https://github.com/theopensystemslab/planx-new/actions/workflows/cron-deploy-to-production.yml) action and clicking `Run workflow`.
+
+Once a deployment is completed, a Slack notification will be sent to the #planx-deployments channel, and the `production` branch should read "This branch is up to date with main."
+
+
+### Troubleshooting
+
+If the commit history of `main` and `production` diverge and `production` contains commit hashes that are NOT on main, try running this command from `production` to reset and then follow the original deploy steps above:
+```bash
+git reset --hard <most recent commit hash **matching** main> && git push --force
+```
+
+You'll have to temporarily turn off branch protection rules to make this change, so run it by another dev to confirm.
 
 ## Audits
 

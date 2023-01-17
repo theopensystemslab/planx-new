@@ -18,12 +18,7 @@ import {
   Profile,
   VerifyCallback,
 } from "passport-google-oauth20";
-import {
-  createProxyMiddleware,
-  responseInterceptor,
-  fixRequestBody,
-  Options,
-} from "http-proxy-middleware";
+import { responseInterceptor } from "http-proxy-middleware";
 import helmet from "helmet";
 import multer from "multer";
 import SlackNotify from "slack-notify";
@@ -39,9 +34,6 @@ import {
 } from "./saveAndReturn";
 import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
 import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
-
-// debug, info, warn, error, silent
-const LOG_LEVEL = process.env.NODE_ENV === "test" ? "silent" : "debug";
 
 import { reportError } from "./airbrake";
 import {
@@ -59,9 +51,14 @@ import {
 } from "./s3";
 import { sendToBOPS } from "./send/bops";
 import { createSendEvents } from "./send/createSendEvents";
+import { downloadApplicationFiles, sendToEmail } from "./send/email";
 import { sendToUniform } from "./send/uniform";
 import { sendSlackNotification } from "./webhooks/sendNotifications";
 import { copyFlow } from "./editor/copyFlow";
+import { moveFlow } from "./editor/moveFlow";
+import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
+import { usePayProxy } from "./proxy/pay";
+import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
 
 const router = express.Router();
 
@@ -296,6 +293,10 @@ assert(process.env.UNIFORM_TOKEN_URL);
 assert(process.env.UNIFORM_SUBMISSION_URL);
 app.post("/uniform/:localAuthority", useHasuraAuth, sendToUniform);
 
+app.post("/email-submission/:localAuthority", useHasuraAuth, sendToEmail);
+
+app.get("/download-application-files/:sessionId", downloadApplicationFiles);
+
 ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].forEach((authority) => {
   assert(process.env[`GOV_UK_PAY_TOKEN_${authority}`]);
 });
@@ -443,6 +444,8 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
+app.get("/admin/feedback", useJWT, downloadFeedbackCSV)
+
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production
 app.get("/throw-error", () => {
@@ -477,6 +480,8 @@ app.get(
 app.post("/flows/:flowId/copy", useJWT, copyFlow);
 
 app.post("/flows/:flowId/diff", useJWT, diffFlow);
+
+app.post("/flows/:flowId/move/:teamSlug", useJWT, moveFlow);
 
 app.post("/flows/:flowId/publish", useJWT, publishFlow);
 
@@ -633,6 +638,8 @@ app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
 app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
 
+app.use("/proxy/ordnance-survey", useOrdnanceSurveyProxy);
+
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
     if (errorObject.error) {
@@ -656,36 +663,6 @@ const server = new Server(app);
 
 server.keepAliveTimeout = 30000; // 30s
 server.headersTimeout = 35000; // 35s
-
-export function useProxy(options: Partial<Options> = {}) {
-  return createProxyMiddleware({
-    changeOrigin: true,
-    logLevel: LOG_LEVEL,
-    onError: (err, req, res, target) => {
-      res.json({
-        status: 500,
-        message: "Something went wrong",
-      });
-    },
-    ...options,
-  });
-}
-
-function usePayProxy(options: Partial<Options>, req: Request) {
-  return useProxy({
-    target: "https://publicapi.payments.service.gov.uk/v1/payments",
-    onProxyReq: fixRequestBody,
-    headers: {
-      ...(req.headers as NodeJS.Dict<string | string[]>),
-      Authorization: `Bearer ${
-        process.env[
-          `GOV_UK_PAY_TOKEN_${req.params.localAuthority}`.toUpperCase()
-        ]
-      }`,
-    },
-    ...options,
-  });
-}
 
 export default server;
 

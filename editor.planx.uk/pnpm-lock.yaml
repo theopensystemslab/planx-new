@@ -59,7 +59,7 @@ specifiers:
   '@mui/material': ^5.10.5
   '@mui/styles': ^5.10.3
   '@mui/utils': ^5.10.3
-  '@opensystemslab/map': ^0.6.2
+  '@opensystemslab/map': ^0.6.3
   '@react-theming/storybook-addon': ^1.1.7
   '@storybook/addon-actions': ^6.5.10
   '@storybook/addon-essentials': ^6.5.10
@@ -198,7 +198,7 @@ dependencies:
   '@mui/material': 5.10.6_vbxcdxy3bftsefaguotlgalomu
   '@mui/styles': 5.10.6_7v64pk2mkrohwh22gx7lrz5ive
   '@mui/utils': 5.10.6_react@18.2.0
-  '@opensystemslab/map': 0.6.2
+  '@opensystemslab/map': 0.6.3
   '@tiptap/core': 2.0.0-beta.204
   '@tiptap/extension-bold': 2.0.0-beta.204_bv566pzu4gfcw3675d5jwhi56i
   '@tiptap/extension-bubble-menu': 2.0.0-beta.204_bv566pzu4gfcw3675d5jwhi56i
@@ -3085,8 +3085,8 @@ packages:
       mkdirp: 1.0.4
     dev: true
 
-  /@opensystemslab/map/0.6.2:
-    resolution: {integrity: sha512-v2aSGfeAMR3oNwMsNRdIk3HykvMFBnHqD4EscmuI+n2qxkWZ9LDTdFDDkLyl9/9dkDAQ6MAeU5BZbm9vdEYBzg==}
+  /@opensystemslab/map/0.6.3:
+    resolution: {integrity: sha512-wHb75VMtM0rD2pRxfTs+J9vxCDjUSWpu2uZpCeuNSDVWosCloFpSq7SRLaO9h32sFEpmF7MaW+x72ZAVjAtPCA==}
     engines: {node: ^16, pnpm: ^7.8.0}
     dependencies:
       '@turf/union': 6.5.0

@@ -388,8 +388,16 @@ export = async () => {
             value: "9619f89d-5d33-4cb0-a365-42c431ea9db3",
           },
           {
+            name: "GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID",
+            value: "7e77bdae-7379-4dd8-a8cc-086a0029163c",
+          },
+          {
             name: "SLACK_WEBHOOK_URL",
             value: config.require("slack-webhook-url"),
+          },
+          {
+            name: "ORDNANCE_SURVEY_API_KEY",
+            value: config.require("ordnance-survey-api-key"),
           },
           ...generateTeamSecrets(config),
         ],

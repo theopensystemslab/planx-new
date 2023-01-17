@@ -1,5 +1,4 @@
-/// <reference types="cypress" />
-
+// @ts-nocheck
 const TEAM_NAME = "test-team";
 const USER_EMAIL = "test@test.com";
 const SERVICE_NAME = "test-service";

@@ -38,7 +38,7 @@ function handleUpload(
 
   const passport = useStore.getState().computePassport();
 
-  // Private uploads for test applicaitons should be handled by the staging environment
+  // Private uploads for test applications should be handled by the staging environment
   const paths = {
     public: `${process.env.REACT_APP_API_URL}/public-file-upload`,
     private: useStagingUrlIfTestApplication(passport)(

@@ -366,7 +366,7 @@ function GetAddress(props: {
             data-testid="address-autocomplete-web-component"
             postcode={sanitizedPostcode}
             initialAddress={selectedOption?.title || ""}
-            osPlacesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+            osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
             arrowStyle="light"
             labelStyle="static"
           />
@@ -535,10 +535,11 @@ export function PropertyInformation(props: any) {
     },
     onSubmit: (values) => {
       if (values.feedback) {
-        submitFeedback(values.feedback, {
-          reason: "Inaccurate property details",
-          property: propertyDetails,
-        });
+        submitFeedback(
+          values.feedback,
+          "Inaccurate property details",
+          propertyDetails
+        );
       }
       handleSubmit?.(values);
     },
@@ -558,7 +559,7 @@ export function PropertyInformation(props: any) {
           zoom={19.5}
           latitude={lat}
           longitude={lng}
-          osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+          osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
           hideResetControl
           showMarker
           markerLatitude={lat}
