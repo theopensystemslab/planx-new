@@ -26,6 +26,7 @@ interface UniformPayloadRequiredArgs {
   passport: Store.passport;
   files: string[];
   hasBoundary: boolean;
+  templateNames?: string[] | undefined;
 }
 
 export class UniformPayload implements IUniformPayload {
@@ -33,6 +34,7 @@ export class UniformPayload implements IUniformPayload {
   passport: Store.passport;
   files: string[];
   hasBoundary: boolean;
+  templateNames: string[];
 
   proposalCompletionDate: string;
   siteAddress: SiteAddress;
@@ -44,11 +46,13 @@ export class UniformPayload implements IUniformPayload {
     passport,
     files,
     hasBoundary,
-  }: UniformPayloadRequiredArgs) {
+    templateNames,
+  }: UniformPayloadArgs) {
     this.sessionId = sessionId;
     this.passport = passport;
     this.files = files;
     this.hasBoundary = hasBoundary;
+    this.templateNames = templateNames || [];
 
     this.proposalCompletionDate = this.setProposalCompletionDate();
     this.siteAddress = passport.data?.["_address"];
@@ -275,13 +279,12 @@ export class UniformPayload implements IUniformPayload {
       });
     }
 
-    // TODO add template support
-    //for (const templateName of this.templates) {
-    //  files.push({
-    //    "common:FileName": templateName,
-    //    "common:Reference": "Other",
-    //  });
-    //}
+    for (const templateName of this.templateNames) {
+      files.push({
+        "common:FileName": templateName,
+        "common:Reference": "Other",
+      });
+    }
 
     return files;
   };
