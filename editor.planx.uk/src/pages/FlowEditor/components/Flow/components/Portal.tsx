@@ -43,9 +43,13 @@ const ExternalPortal: React.FC<any> = React.memo(
       }),
     });
 
-    if (!data?.flows_by_pk) {
-      return null;
-    }
+    // If the flow referenced by an external portal has been deleted (eg !data),
+    //   still show a "Corrupted!" node so that editors have a visual cue to "delete".
+    //   The flow schema will still contain a node reference to this portal causing dataMerged to fail
+
+    // if (!data?.flows_by_pk) {
+    //   return null;
+    // }
 
     const handleContext = (e: React.MouseEvent) => {
       e.preventDefault();
