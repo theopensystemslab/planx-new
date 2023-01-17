@@ -3,6 +3,7 @@ import { stringify } from "csv-stringify";
 import { NextFunction, Request, Response } from "express";
 import fs from "fs";
 import { gql } from "graphql-request";
+import capitalize from "lodash/capitalize";
 import os from "os";
 import path from "path";
 
@@ -35,7 +36,7 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
       const config: EmailSubmissionNotifyConfig = {
         personalisation: {
           emailReplyToId: notify_personalisation.emailReplyToId,
-          serviceName: payload?.flowName[0]?.toUpperCase() || "PlanX",
+          serviceName: capitalize(payload?.flowName) || "PlanX",
           sessionId: payload.sessionId,
           applicantEmail: payload.email,
           downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${settings.sendToEmail}&localAuthority=${req.params.localAuthority}`,
