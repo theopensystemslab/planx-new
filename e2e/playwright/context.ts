@@ -1,33 +1,78 @@
+import assert from "node:assert";
 import Client from "planx-client";
 
-const log = process.env.DEBUG
-  ? console.log
-  : () => {
-      // silent
-    };
+export interface Context {
+  user?: {
+    id: string;
+  };
+  team?: {
+    id: string;
+  };
+  flow?: {
+    id: string;
+    publishedFlowId?: number;
+  };
+}
 
 export async function setUpTestContext(
   client: Client,
-  initialContext: InitialContext
+  initialContext: {
+    user?: {
+      firstName: string;
+      lastName: string;
+      email: string;
+    };
+    team?: {
+      name: string;
+      slug?: string;
+      logo: string;
+      primaryColor: string;
+      homepage: string;
+    };
+    flow?: {
+      slug: string;
+      data?: object;
+    };
+  }
 ): Promise<Context> {
   const context: any = initialContext;
-  context.user.id = await client.createUser(context.user);
-  context.team.id = await client.createTeam(context.team);
-  context.flow.id = await client.createFlow({
-    slug: context.flow.slug,
-    teamId: context.team.id,
-    data: context.flow.data,
-  });
-  context.flow.publishedId = await client.publishFlow({
-    flow: context.flow,
-    publisherId: context.user.id,
-  });
+  if (context.user) {
+    context.user.id = await client.createUser(context.user);
+  }
+  if (context.team) {
+    context.team.id = await client.createTeam(context.team);
+  }
+  if (context.flow?.slug && context.team?.id) {
+    context.flow.id = await client.createFlow({
+      slug: context.flow.slug,
+      teamId: context.team.id,
+      data: context.flow.data,
+    });
+    context.flow.publishedId = await client.publishFlow({
+      flow: context.flow,
+      publisherId: context.user.id,
+    });
+  }
   return context;
+}
+
+export async function tearDownTestContext(client: Client, context: Context) {
+  if (context.flow) {
+    await deleteSession(client, context);
+    await deletePublishedFlow(client, context);
+    await deleteFlow(client, context);
+  }
+  if (context.user) {
+    await deleteUser(client, context);
+  }
+  if (context.team) {
+    await deleteTeam(client, context);
+  }
 }
 
 export async function findSessionId(
   client: Client,
-  context: Context
+  context
 ): Promise<string | undefined> {
   // get the flow id which may have a session
   const { flows: flowResponse } = await client.request(
@@ -36,7 +81,7 @@ export async function findSessionId(
           id
         }
       }`,
-    { slug: context.flow.slug }
+    { slug: context.flow?.slug }
   );
   if (!flowResponse.length || !flowResponse[0].id) {
     return;
@@ -49,22 +94,39 @@ export async function findSessionId(
           id
         }
       }`,
-    { flowId, email: context.user.email }
+    { flowId, email: context.user?.email }
   );
   if (response.length && response[0].id) {
     return response[0].id;
   }
 }
 
-export async function tearDownTestContext(client: Client, context: Context) {
-  await deleteSession(client, context);
-  await deletePublishedFlow(client, context);
-  await deleteFlow(client, context);
-  await deleteUser(client, context);
-  await deleteTeam(client, context);
+export function getClient(): Client {
+  assert(process.env.HASURA_GRAPHQL_URL);
+  assert(process.env.HASURA_GRAPHQL_ADMIN_SECRET);
+
+  const API = process.env.HASURA_GRAPHQL_URL!.replace(
+    "${HASURA_PROXY_PORT}",
+    process.env.HASURA_PROXY_PORT!
+  );
+  const SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET!;
+  return new Client({
+    hasuraSecret: SECRET,
+    targetURL: API,
+  });
 }
 
-async function deleteSession(client: Client, context: Context) {
+async function deleteSession(client: Client, context) {
+  if (context.flow?.id) {
+    await client.request(
+      `mutation DeleteSessionBackups( $flowId: uuid!) {
+        delete_session_backups(where: { flow_id: { _eq: $flowId } }){
+          affected_rows
+        }
+      }`,
+      { flowId: context.flow?.id }
+    );
+  }
   const sessionId = await findSessionId(client, context);
   if (sessionId) {
     log(`deleting session id: ${sessionId}`);
@@ -80,124 +142,192 @@ async function deleteSession(client: Client, context: Context) {
 }
 
 async function deletePublishedFlow(client: Client, context: Context) {
-  const { published_flows: response } = await client.request(
-    `query GetPublishedFlowBySlug( $slug: String!) {
-        published_flows(where: {flow: {slug: {_eq: $slug}}}) {
-          id
-        }
-      }`,
-    { slug: context.flow.slug }
-  );
-  if (response.length && response[0].id) {
-    log(
-      `deleting flow ${context.flow.slug} publishedFlowId: ${response[0].id}`
-    );
+  if (context.flow?.publishedFlowId) {
+    log(`deleting published flow ${context.flow?.publishedFlowId}`);
     await client.request(
       `mutation DeleteTestPublishedFlow( $publishedFlowId: Int!) {
         delete_published_flows_by_pk(id: $publishedFlowId) {
           id
         }
       }`,
-      { publishedFlowId: response[0].id }
+      { publishedFlowId: context.flow?.publishedFlowId }
     );
   }
 }
 
 async function deleteFlow(client: Client, context: Context) {
-  const { flows: response } = await client.request(
-    `query GetFlowBySlug( $slug: String!) {
-        flows(where: {slug: {_eq: $slug}}) {
-          id
-        }
-      }`,
-    { slug: context.flow.slug }
-  );
-  if (response.length && response[0].id) {
-    log(`deleting flow ${context.flow.slug} flowId: ${response[0].id}`);
+  if (context.flow?.id) {
+    log(`deleting flow ${context.flow?.id}`);
     await client.request(
-      `mutation DeleteTestFlow( $flowId: uuid!) {
+      `mutation DeleteTestFlow($flowId: uuid!) {
         delete_flows_by_pk(id: $flowId) {
           id
         }
       }`,
-      { flowId: response[0].id }
+      { flowId: context.flow?.id }
     );
+  } else if (context.flow?.slug) {
+    // try deleting via slug (when cleaning up from a previously failed test)
+    const { flows: response } = await client.request(
+      `query GetFlowBySlug($slug: String!) {
+        flows(where: {slug: {_eq: $slug}}) {
+            id
+          }
+        }`,
+      { slug: context.flow?.slug }
+    );
+    if (response.length && response[0].id) {
+      log(`deleting flow ${context.flow?.slug} flowId: ${response[0].id}`);
+      await client.request(
+        `mutation DeleteTestFlow( $flowId: uuid!) {
+          delete_flows_by_pk(id: $flowId) {
+            id
+          }
+        }`,
+        { flowId: response[0].id }
+      );
+    }
   }
 }
 
 async function deleteUser(client: Client, context: Context) {
-  const { users: response } = await client.request(
-    `query GetUserByEmail( $email: String!) {
-        users(where: {email: {_eq: $email}}) {
-          id
-        }
-      }`,
-    { email: context.user.email }
-  );
-  if (response.length && response[0].id) {
-    log(`deleting user ${context.user.email} userId: ${response[0].id}`);
+  if (context.user?.id) {
+    log(`deleting user ${context.user?.id}`);
     await client.request(
-      `mutation DeleteTestUser( $userId: Int!) {
+      `mutation DeleteTestUser($userId: Int!) {
         delete_users_by_pk(id: $userId) {
           id
         }
       }`,
-      { userId: response[0].id }
+      { userId: context.user?.id }
     );
+  } else if (context.user?.email) {
+    // try deleting via email (when cleaning up from a previously failed test)
+    const { users: response } = await client.request(
+      `query GetUserByEmail($email: String!) {
+        users(where: {email: {_eq: $email}}) {
+          id
+        }
+      }`,
+      { email: context.user?.email }
+    );
+    if (response.length && response[0].id) {
+      log(`deleting user ${context.user?.email} userId: ${response[0].id}`);
+      await client.request(
+        `mutation DeleteTestUser($userId: Int!) {
+          delete_users_by_pk(id: $userId) {
+            id
+          }
+        }`,
+        { userId: response[0].id }
+      );
+    }
   }
 }
 
 async function deleteTeam(client: Client, context: Context) {
-  const { teams: response } = await client.request(
-    `query GetTeamBySlug( $slug: String!) {
-        teams(where: {slug: {_eq: $slug}}) {
-          id
-        }
-      }`,
-    { slug: context.team.slug }
-  );
-  if (response.length && response[0].id) {
-    log(`deleting team ${context.team.slug} teamId: ${response[0].id}`);
+  if (context.team?.id) {
+    log(`deleting team ${context.team?.id}`);
     await client.request(
       `mutation DeleteTestTeam( $teamId: Int!) {
         delete_teams_by_pk(id: $teamId) {
           id
         }
       }`,
-      { teamId: response[0].id }
+      { teamId: context.team?.id }
     );
+  } else if (context.team?.slug) {
+    // try deleting via slug (when cleaning up from a previously failed test)
+    const { teams: response } = await client.request(
+      `query GetTeamBySlug( $slug: String!) {
+           teams(where: {slug: {_eq: $slug}}) {
+               id
+             }
+           }`,
+      { slug: context.team?.slug }
+    );
+    if (response.length && response[0].id) {
+      log(`deleting team ${context.team?.slug} teamId: ${response[0].id}`);
+      await client.request(
+        `mutation DeleteTestTeam( $teamId: Int!) {
+        delete_teams_by_pk(id: $teamId) {
+          id
+        }
+      }`,
+        { teamId: response[0].id }
+      );
+    }
   }
 }
 
-export interface InitialContext {
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
-  team: {
-    name: string;
-    slug?: string;
-    logo: string;
-    primaryColor: string;
-    homepage: string;
-  };
-  flow: {
-    slug: string;
-    data?: object;
-  };
+function log(...args: any[]) {
+  process.env.DEBUG
+    ? console.log(...args)
+    : () => {
+        // silent
+      };
 }
 
-type Context = InitialContext & {
-  user: {
-    id?: string;
-  };
-  team: {
-    id?: string;
-    slug: string;
-  }
-  flow: {
-    id?: string;
-    publishedFlowId?: number;
-  }
+/* TODO
+async function getAnalyticsByFlowId(flowId: string): Promise<number[]> {
+  const {
+    data: { analytics },
+  } = await gqlAdmin(
+    `
+      query Analytics($flowIds: [uuid!]!) {
+      analytics(where: { flow_id: { _in: $flowIds } }) {
+          id
+        }
+      }
+    `,
+    {
+      flowIds: [flowId],
+    }
+  );
+
+  return analytics?.map(({ id }) => id) || [];
 }
+
+async function deleteTestData({
+  teamId,
+  flowId,
+  publishedFlowId,
+  userId,
+  analyticsIds,
+}: {
+  teamId: number;
+  flowId: string;
+  publishedFlowId: string;
+  userId: number;
+  analyticsIds: number[];
+}) {
+  await gqlAdmin(
+    `
+      mutation DeleteTestRegisters(
+        $teams: [Int!]!,
+        $flows: [uuid!]!,
+        $publishedFlows: [Int!]!,
+        $userIds: [Int!]!,
+        $analyticsIds: [bigint!]!
+      ) {
+        delete_analytics_logs(where: { analytics_id: { _in: $analyticsIds } }) {
+          affected_rows
+        }
+        delete_analytics(where: { id: { _in: $analyticsIds } }) {
+          affected_rows
+        }
+        delete_session_backups(where: { flow_id: { _in: $flows } }){
+          affected_rows
+        }
+      }
+    `,
+    {
+      teams: [teamId],
+      flows: [flowId],
+      publishedFlows: [publishedFlowId],
+      userIds: [userId],
+      analyticsIds: analyticsIds,
+    }
+  );
+}
+*/

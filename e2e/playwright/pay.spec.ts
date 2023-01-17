@@ -1,49 +1,57 @@
-import { test, expect, type Page } from "@playwright/test";
-import { gqlAdmin, insertTestUser } from "./utils";
+import { test, expect } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import payFlow from "./flows/pay-flow.json";
+import { getClient, setUpTestContext, tearDownTestContext } from "./context";
 
-import publishedFlow from "./assets/payFlowPublishedFlow.json";
-
-const TEAM_SLUG = "buckinghamshire";
-const FLOW_SLUG = "pay-test";
-
+let context: any = {
+  user: {
+    firstName: "test",
+    lastName: "test",
+    email: "e2epaytest@test.com",
+  },
+  team: {
+    name: "E2E Pay Test Team",
+    slug: "e2e-pay-test-team",
+    logo: "https://placedog.net/250/250",
+    primaryColor: "#000000",
+    homepage: "example.com",
+  },
+  flow: {
+    slug: "pay-test",
+    data: payFlow,
+  },
+};
+const previewURL = `/${context.team.slug}/${context.flow.slug}/preview?analytics=false`;
 // Test card numbers to be used in gov.uk sandbox environment
 // reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account
-const SUCCESS_CARD_NUMBER = "4444333322221111";
-const INVALID_CARD_NUMBER = "4000000000000002";
+const cards = {
+  successful_card_number: "4444333322221111",
+  invalid_card_number: "4000000000000002",
+};
 
 test.describe("Payment flow", async () => {
-  const USER_EMAIL = "test@test.com";
+  const client = getClient();
 
-  let userId = 0;
-  let teamId = 0;
-  let flowId = "";
-  let publishedFlowId = "";
-
-  test.beforeEach(async () => {
-    userId = await insertTestUser(USER_EMAIL);
-    teamId = await createTeam(TEAM_SLUG);
-    flowId = await createFlow({ teamId, flowSlug: FLOW_SLUG });
-    publishedFlowId = await insertPublishedFlow({ flowId });
+  test.beforeAll(async () => {
+    try {
+      context = await setUpTestContext(client, context);
+    } catch (e) {
+      await tearDownTestContext(client, context);
+      throw e;
+    }
   });
 
-  test.afterEach(async () => {
-    const analyticsIds = await getAnalyticsByFlowId(flowId);
-    await deleteTestData({
-      teamId,
-      flowId,
-      publishedFlowId,
-      userId,
-      analyticsIds,
-    });
+  test.afterAll(async () => {
+    await tearDownTestContext(client, context);
   });
 
   test("Should pay within GOV.UK Pay and reach the Confirmation page", async ({
     page,
   }) => {
-    await navigateToPayComponent({ page, mode: "preview" });
+    await navigateToPayComponent({ page });
 
     await page.getByText("Pay using GOV.UK Pay").click();
-    await fillGovUkCardDetails(page)(SUCCESS_CARD_NUMBER);
+    await fillGovUkCardDetails(page)(cards.successful_card_number);
     await page.locator("#confirm").click();
     const { payment_id: paymentRef } = await awaitForPaymentResponse(page);
 
@@ -52,10 +60,10 @@ test.describe("Payment flow", async () => {
   });
 
   test("Should retry and succeed a failed GOV.UK payment", async ({ page }) => {
-    await navigateToPayComponent({ page, mode: "preview" });
+    await navigateToPayComponent({ page });
 
     await page.getByText("Pay using GOV.UK Pay").click();
-    await fillGovUkCardDetails(page)(INVALID_CARD_NUMBER);
+    await fillGovUkCardDetails(page)(cards.invalid_card_number);
     await page.locator("#return-url").click();
     const { payment_id: failedPaymentRef } = await awaitForPaymentResponse(
       page
@@ -64,7 +72,7 @@ test.describe("Payment flow", async () => {
     expect(failedPaymentRef).toBeTruthy();
 
     await page.getByText("Retry payment").click();
-    await fillGovUkCardDetails(page)(SUCCESS_CARD_NUMBER);
+    await fillGovUkCardDetails(page)(cards.successful_card_number);
     await page.locator("#confirm").click();
     const { payment_id: paymentRef } = await awaitForPaymentResponse(page);
 
@@ -75,7 +83,7 @@ test.describe("Payment flow", async () => {
   test("Should retry and succeed a cancelled GOV.UK payment", async ({
     page,
   }) => {
-    await navigateToPayComponent({ page, mode: "preview" });
+    await navigateToPayComponent({ page });
 
     await page.getByText("Pay using GOV.UK Pay").click();
     await page.locator("#cancel-payment").click();
@@ -87,7 +95,7 @@ test.describe("Payment flow", async () => {
     expect(state.status).toBe("failed");
 
     await page.getByText("Retry payment").click();
-    await fillGovUkCardDetails(page)(SUCCESS_CARD_NUMBER);
+    await fillGovUkCardDetails(page)(cards.successful_card_number);
     await page.locator("#confirm").click();
     const { payment_id: paymentRef } = await awaitForPaymentResponse(page);
 
@@ -121,15 +129,8 @@ function fillGovUkCardDetails(page: Page) {
   };
 }
 
-async function navigateToPayComponent({
-  page,
-  mode,
-}: {
-  page: Page;
-  mode: "preview" | "unpublished";
-}) {
-  await page.goto(`/${TEAM_SLUG}/${FLOW_SLUG}/${mode}?analytics=false`);
-
+async function navigateToPayComponent({ page }: { page: Page }) {
+  await page.goto(previewURL);
   await page.getByLabel("Pay test").fill("Test");
   await page.getByTestId("continue-button").click();
 }
@@ -147,145 +148,4 @@ async function awaitForPaymentResponse(page: Page) {
   });
 
   return response;
-}
-
-async function createFlow({
-  teamId,
-  flowSlug,
-}: {
-  teamId: number;
-  flowSlug: string;
-}) {
-  const {
-    data: { insert_flows_one },
-  } = await gqlAdmin(
-    `
-      mutation CreateFlow($teamId: Int!, $flowSlug: String!) {
-        insert_flows_one(object: { team_id: $teamId, slug: $flowSlug }) {
-          id
-        }
-      }
-    `,
-    {
-      teamId: teamId,
-      flowSlug: flowSlug,
-    }
-  );
-
-  return insert_flows_one.id;
-}
-
-async function createTeam(slug: string) {
-  const {
-    data: { insert_teams_one },
-  } = await gqlAdmin(
-    `
-      mutation CreateTeam ($slug: String!) {
-        insert_teams_one(object: { name: $slug, slug: $slug }) {
-          id
-        }
-      }
-    `,
-    {
-      slug: slug,
-    }
-  );
-  return insert_teams_one.id;
-}
-
-async function getAnalyticsByFlowId(flowId: string): Promise<number[]> {
-  const {
-    data: { analytics },
-  } = await gqlAdmin(
-    `
-      query Analytics($flowIds: [uuid!]!) {
-      analytics(where: { flow_id: { _in: $flowIds } }) {
-          id
-        }
-      }
-    `,
-    {
-      flowIds: [flowId],
-    }
-  );
-
-  return analytics?.map(({ id }) => id) || [];
-}
-
-async function insertPublishedFlow({ flowId }: { flowId: string }) {
-  const {
-    data: { insert_published_flows_one },
-  } = await gqlAdmin(
-    `
-      mutation InsertPublishedFlow(
-        $publishedFlow: published_flows_insert_input!,
-      ) {
-        insert_published_flows_one(
-          object: $publishedFlow
-        ) {
-          id
-        }
-      }
-    `,
-    {
-      publishedFlow: { ...publishedFlow, flow_id: flowId },
-    }
-  );
-
-  return insert_published_flows_one.id;
-}
-
-async function deleteTestData({
-  teamId,
-  flowId,
-  publishedFlowId,
-  userId,
-  analyticsIds,
-}: {
-  teamId: number;
-  flowId: string;
-  publishedFlowId: string;
-  userId: number;
-  analyticsIds: number[];
-}) {
-  await gqlAdmin(
-    `
-      mutation DeleteTestRegisters(
-        $teams: [Int!]!,
-        $flows: [uuid!]!,
-        $publishedFlows: [Int!]!,
-        $userIds: [Int!]!,
-        $analyticsIds: [bigint!]!
-      ) {
-        delete_analytics_logs(where: { analytics_id: { _in: $analyticsIds } }) {
-          affected_rows
-        }
-        delete_analytics(where: { id: { _in: $analyticsIds } }) {
-          affected_rows
-        }
-        delete_session_backups(where: { flow_id: { _in: $flows } }){
-          affected_rows
-        }
-        delete_published_flows(where: { id: { _in: $publishedFlows } }) {
-          affected_rows
-        }
-        delete_flows(where: { id: { _in: $flows } }) {
-          affected_rows
-        }
-        delete_teams(where: { id: { _in: $teams } }) {
-          affected_rows
-        }
-        delete_users(where: { id: { _in: $userIds } }) {
-          affected_rows
-        }
-      }
-    `,
-    {
-      teams: [teamId],
-      flows: [flowId],
-      publishedFlows: [publishedFlowId],
-      userIds: [userId],
-      analyticsIds: analyticsIds,
-    }
-  );
 }

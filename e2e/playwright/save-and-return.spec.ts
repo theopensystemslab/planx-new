@@ -1,9 +1,7 @@
-import assert from "node:assert";
 import { test, expect, Locator } from "@playwright/test";
-import Client from "planx-client";
-import simpleSendFlow from "./simple-send-flow.json";
+import simpleSendFlow from "./flows/simple-send-flow.json";
 import {
-  InitialContext,
+  getClient,
   findSessionId,
   setUpTestContext,
   tearDownTestContext,
@@ -15,17 +13,17 @@ test.describe("Save and return", () => {
   let previewURL;
 
   test.beforeAll(async () => {
-    try {
-      context = await setUpTestContext(client, context);
-    } catch (error) {
-      await tearDownTestContext(client, context);
-      throw error;
-    }
+    context = await setUpTestContext(client, context);
     previewURL = `/${context.team.slug}/${context.flow.slug}/preview?analytics=false`;
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(client, context);
+    try {
+      context = await setUpTestContext(client, context);
+    } catch (e) {
+      await tearDownTestContext(client, context);
+      throw e;
+    }
   });
 
   test.describe("email", () => {
@@ -59,7 +57,9 @@ test.describe("Save and return", () => {
       if (!sessionId) test.fail();
       await returnToSession({ page, context, sessionId });
 
-      const reviewTitle = await page.locator("h1", { hasText: "Resume your application" });
+      const reviewTitle = await page.locator("h1", {
+        hasText: "Resume your application",
+      });
       await expect(reviewTitle).toBeVisible();
     });
 
@@ -132,7 +132,7 @@ async function answerQuestion({ page, questionGroup, answer }) {
 }
 
 function getInitialContext() {
-  const context: InitialContext = {
+  const context = {
     user: {
       firstName: "test",
       lastName: "test",
@@ -151,19 +151,4 @@ function getInitialContext() {
     },
   };
   return context;
-}
-
-function getClient(): Client {
-  assert(process.env.HASURA_GRAPHQL_URL);
-  assert(process.env.HASURA_GRAPHQL_ADMIN_SECRET);
-
-  const API = process.env.HASURA_GRAPHQL_URL!.replace(
-    "${HASURA_PROXY_PORT}",
-    process.env.HASURA_PROXY_PORT!
-  );
-  const SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET!;
-  return new Client({
-    hasuraSecret: SECRET,
-    targetURL: API,
-  });
 }
