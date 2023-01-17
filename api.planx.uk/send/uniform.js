@@ -354,14 +354,14 @@ export function generateUniformSubmissionXML({
   passport,
   files,
   hasBoundary,
-  templates,
+  templateNames,
 }) {
   const payload = new UniformPayload({
     sessionId,
     passport,
     files,
     hasBoundary,
-    templates,
+    templateNames,
   });
   const xml = payload.buildXML();
   return xml;
