@@ -3,6 +3,7 @@ import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
+import { useCurrentRoute } from "react-navi";
 import { useAsync } from "react-use";
 
 import { useTeamSlug } from "../shared/hooks";
@@ -73,6 +74,8 @@ const SendComponent: React.FC<Props> = ({
   }
 
   // Format application user data for email
+  const route = useCurrentRoute();
+
   if (destinations.includes(Destination.Email)) {
     combinedEventsPayload[Destination.Email] = {
       localAuthority: teamSlug,
@@ -80,6 +83,7 @@ const SendComponent: React.FC<Props> = ({
         sessionId: sessionId,
         email: email,
         csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
+        flowName: route?.data?.flowName,
       },
     };
   }
