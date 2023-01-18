@@ -117,16 +117,6 @@ export function getClient(): Client {
 }
 
 async function deleteSession(client: Client, context) {
-  if (context.flow?.id) {
-    await client.request(
-      `mutation DeleteSessionBackups( $flowId: uuid!) {
-        delete_session_backups(where: { flow_id: { _eq: $flowId } }){
-          affected_rows
-        }
-      }`,
-      { flowId: context.flow?.id }
-    );
-  }
   const sessionId = await findSessionId(client, context);
   if (sessionId) {
     log(`deleting session id: ${sessionId}`);
@@ -157,6 +147,17 @@ async function deletePublishedFlow(client: Client, context: Context) {
 
 async function deleteFlow(client: Client, context: Context) {
   if (context.flow?.id) {
+    log(
+      `deleting any session backups associated with flow: ${context.flow?.id}`
+    );
+    await client.request(
+      `mutation DeleteSessionBackups( $flowId: uuid!) {
+        delete_session_backups(where: { flow_id: { _eq: $flowId } }){
+          affected_rows
+        }
+      }`,
+      { flowId: context.flow?.id }
+    );
     log(`deleting flow ${context.flow?.id}`);
     await client.request(
       `mutation DeleteTestFlow($flowId: uuid!) {

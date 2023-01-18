@@ -9,21 +9,37 @@ import {
 
 test.describe("Save and return", () => {
   const client = getClient();
-  let context: any = getInitialContext();
-  let previewURL;
+  let context: any = {
+    user: {
+      firstName: "test",
+      lastName: "test",
+      email: "e2etest@test.com",
+    },
+    team: {
+      name: "E2E Test Team",
+      slug: "e2e-test-team",
+      logo: "https://placedog.net/250/250",
+      primaryColor: "#F30415",
+      homepage: "example.com",
+    },
+    flow: {
+      slug: "e2e-save-and-return-test-flow",
+      data: simpleSendFlow,
+    },
+  };
+  const previewURL = `/${context.team.slug}/${context.flow.slug}/preview?analytics=false`;
 
   test.beforeAll(async () => {
-    context = await setUpTestContext(client, context);
-    previewURL = `/${context.team.slug}/${context.flow.slug}/preview?analytics=false`;
-  });
-
-  test.afterAll(async () => {
     try {
       context = await setUpTestContext(client, context);
     } catch (e) {
       await tearDownTestContext(client, context);
       throw e;
     }
+  });
+
+  test.afterAll(async () => {
+    await tearDownTestContext(client, context);
   });
 
   test.describe("email", () => {
@@ -129,26 +145,4 @@ async function answerQuestion({ page, questionGroup, answer }) {
     (response) =>
       response.url().includes("graphql") && response.status() === 200
   );
-}
-
-function getInitialContext() {
-  const context = {
-    user: {
-      firstName: "test",
-      lastName: "test",
-      email: "e2etest@test.com",
-    },
-    team: {
-      name: "E2E Test Team",
-      slug: "e2e-test-team",
-      logo: "https://placedog.net/250/250",
-      primaryColor: "#F30415",
-      homepage: "example.com",
-    },
-    flow: {
-      slug: "e2e-save-and-return-test-flow",
-      data: simpleSendFlow,
-    },
-  };
-  return context;
 }
