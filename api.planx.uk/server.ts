@@ -35,7 +35,7 @@ import {
 import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
 import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
 
-import { reportError } from "./airbrake";
+import airbrake from "./airbrake";
 import {
   createReminderEvent,
   createExpiryEvent,
@@ -640,14 +640,25 @@ app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
 
 app.use("/proxy/ordnance-survey", useOrdnanceSurveyProxy);
 
+app.get("/error", async (res, req, next) => {
+  try {
+    throw Error("This is a test error")
+  } catch (error) {
+    next(error)
+  }
+})
+
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
-    if (errorObject.error) {
-      reportError(errorObject.error);
+    if (errorObject instanceof Error && airbrake) {
+      airbrake.notify(errorObject);
+      return {
+        ...errorObject,
+        message: errorObject.message.concat(", this error has been logged"),
+      };
+    } else {
       return errorObject;
     }
-    reportError(errorObject);
-    return errorObject;
   })();
 
   res.status(status).send({
