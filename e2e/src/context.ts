@@ -1,4 +1,5 @@
 import assert from "node:assert";
+import { sign } from "jsonwebtoken";
 import Client from "planx-client";
 
 export interface Context {
@@ -12,6 +13,20 @@ export interface Context {
     id: string;
     publishedFlowId?: number;
   };
+}
+export function generateAuthenticationToken(userId) {
+  assert(process.env.JWT_SECRET);
+  return sign(
+    {
+      sub: `${userId}`,
+      "https://hasura.io/jwt/claims": {
+        "x-hasura-allowed-roles": ["admin"],
+        "x-hasura-default-role": "admin",
+        "x-hasura-user-id": `${userId}`,
+      },
+    },
+    process.env.JWT_SECRET
+  );
 }
 
 export async function setUpTestContext(
@@ -39,7 +54,9 @@ export async function setUpTestContext(
   if (context.user) {
     context.user.id = await client.createUser(context.user);
   }
-  if (context.team) {
+  if (context.team?.findBySlug) {
+    context.team.id = await findTeamBySlug(client, context.team?.findBySlug);
+  } else if (context.team) {
     context.team.id = await client.createTeam(context.team);
   }
   if (context.flow?.slug && context.team?.id) {
@@ -65,7 +82,7 @@ export async function tearDownTestContext(client: Client, context: Context) {
   if (context.user) {
     await deleteUser(client, context);
   }
-  if (context.team) {
+  if (context.team && !context.team?.findBySlug) {
     await deleteTeam(client, context);
   }
 }
@@ -258,6 +275,23 @@ async function deleteTeam(client: Client, context: Context) {
         { teamId: response[0].id }
       );
     }
+  }
+}
+
+async function findTeamBySlug(
+  client: Client,
+  slug: string
+): Promise<string | undefined> {
+  const { teams: response } = await client.request(
+    `query FindTeamBySlug($slug: String!) {
+        teams(where: {slug: {_eq: $slug}}) {
+          id
+        }
+      }`,
+    { slug }
+  );
+  if (response.length && response[0].id) {
+    return response[0].id;
   }
 }
 

@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import type { PlaywrightTestConfig } from "@playwright/test";
 import { devices } from "@playwright/test";
 
@@ -14,13 +14,13 @@ dotenv.config({ path: "../.env" });
 const config: PlaywrightTestConfig = {
   testDir: "./src",
   /* Maximum time one test can run for. */
-  timeout: 5 * 1000,
+  timeout: 15 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 2.5 * 1000,
+    timeout: 5 * 1000,
   },
   /* Run tests in files in parallel */
   fullyParallel: false,
@@ -34,7 +34,7 @@ const config: PlaywrightTestConfig = {
   reporter: "line",
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-    actionTimeout: 0,
+    actionTimeout: 5 * 1000,
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.EDITOR_URL_EXT,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
