@@ -127,9 +127,9 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
         const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
         zip.addFile("boundary.geojson", geoBuff);
 
-        const mapViewPath = path.join(tmpDir, "map.html");
+        const mapViewPath = path.join(tmpDir, "application.html");
         const mapViewFile = fs.createWriteStream(mapViewPath);
-        const mapViewStream = generateDocumentReviewStream({ geojson }).pipe(mapViewFile);
+        const mapViewStream = generateDocumentReviewStream({ csv: sessionData?.csv, files: [], geojson: geojson }).pipe(mapViewFile);
 
         await new Promise((resolve, reject) => {
           mapViewStream.on("error", reject);
