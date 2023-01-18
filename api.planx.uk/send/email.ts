@@ -127,17 +127,17 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
         const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
         zip.addFile("boundary.geojson", geoBuff);
 
-        const mapViewPath = path.join(tmpDir, "application.html");
-        const mapViewFile = fs.createWriteStream(mapViewPath);
-        const mapViewStream = generateDocumentReviewStream({ csv: sessionData?.csv, files: [], geojson: geojson }).pipe(mapViewFile);
+        // const mapViewPath = path.join(tmpDir, "application.html");
+        // const mapViewFile = fs.createWriteStream(mapViewPath);
+        // const mapViewStream = generateDocumentReviewStream({ csv: sessionData?.csv, files: [], geojson: geojson }).pipe(mapViewFile);
 
-        await new Promise((resolve, reject) => {
-          mapViewStream.on("error", reject);
-          mapViewStream.on("finish", resolve);
-        });
+        // await new Promise((resolve, reject) => {
+        //   mapViewStream.on("error", reject);
+        //   mapViewStream.on("finish", resolve);
+        // });
 
-        zip.addLocalFile(mapViewPath);
-        deleteFile(mapViewPath);
+        // zip.addLocalFile(mapViewPath);
+        // deleteFile(mapViewPath);
       }
 
       // Next iterate through the passport and pull out the urls of any user-uploaded files
