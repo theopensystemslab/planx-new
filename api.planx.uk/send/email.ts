@@ -121,7 +121,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
         deleteFile(csvPath);
       }
 
-      // If the user drew a red line boundary, add a geojson file and a html map-viewer
+      // If the user drew a red line boundary, add a geojson file and HTML to display map
       const geojson = sessionData.passport?.data?.["property.boundary.site"];
       if (geojson) {
         const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));

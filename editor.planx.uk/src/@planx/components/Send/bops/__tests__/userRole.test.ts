@@ -1,7 +1,17 @@
 import { Store } from "pages/FlowEditor/lib/store";
+import * as ReactNavi from "react-navi";
 
 import { USER_ROLES } from "../../model";
 import { getBOPSParams } from "..";
+
+jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
+  () =>
+    ({
+      data: {
+        flowName: "apply for a lawful development certificate",
+      },
+    } as any)
+);
 
 // https://i.imgur.com/KhUnUte.png
 const flow: Store.flow = {

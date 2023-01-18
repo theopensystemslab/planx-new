@@ -232,10 +232,11 @@ export function getBOPSParams(
 ) {
   const data = {} as BOPSFullPayload;
 
-  // Default application type expected by BOPS
+  // Default application type accepted by BOPS
   data.application_type = "lawfulness_certificate";
 
   // Overwrite application type if this isn't an LDC (relies on LDC flows having consistent slug)
+  //   eg because makeCsvData which is used acrossed services calls this method
   const flowName = useCurrentRoute()?.data?.flowName;
   if (flowName && flowName !== "apply for a lawful development certificate") {
     data.application_type = capitalize(flowName);
