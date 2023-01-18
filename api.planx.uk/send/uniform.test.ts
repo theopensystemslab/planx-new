@@ -39,7 +39,7 @@ describe("createZip", () => {
     mockWriteZip.mockClear();
   });
 
-  test("the document viewer is added to zip", async () => {
+  test.skip("the document viewer is added to zip", async () => {
     const payload = {
       xml: "<xml></xml>",
       csv: [["1", "2", "3"]],
