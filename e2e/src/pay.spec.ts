@@ -33,6 +33,7 @@ test.describe("Payment flow", async () => {
     try {
       context = await setUpTestContext(client, context);
     } catch (e) {
+      // ensure proper teardown if setup fails
       await tearDownTestContext(client, context);
       throw e;
     }
