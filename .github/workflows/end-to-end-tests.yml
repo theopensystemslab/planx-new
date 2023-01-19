@@ -8,7 +8,6 @@ on:
       - main
     types:
       - ready_for_review
-      - review_requested
   workflow_dispatch:
   schedule:
      - cron:  '30 7 * * *'
