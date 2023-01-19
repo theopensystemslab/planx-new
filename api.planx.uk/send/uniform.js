@@ -246,19 +246,19 @@ export async function createZip({
   deleteFile(xmlPath);
 
   // build an HTML Document Viewer
-  const docViewPath = path.join(tmpDir, "review.html");
-  const docViewFile = fs.createWriteStream(docViewPath);
-  const docViewStream = generateDocumentReviewStream({
-    csv,
-    files,
-    geojson,
-  }).pipe(docViewFile);
-  await new Promise((resolve, reject) => {
-    docViewStream.on("error", reject);
-    docViewStream.on("finish", resolve);
-  });
-  zip.addLocalFile(docViewPath);
-  deleteFile(docViewPath);
+  // const docViewPath = path.join(tmpDir, "review.html");
+  // const docViewFile = fs.createWriteStream(docViewPath);
+  // const docViewStream = generateDocumentReviewStream({
+  //   csv,
+  //   files,
+  //   geojson,
+  // }).pipe(docViewFile);
+  // await new Promise((resolve, reject) => {
+  //   docViewStream.on("error", reject);
+  //   docViewStream.on("finish", resolve);
+  // });
+  // zip.addLocalFile(docViewPath);
+  // deleteFile(docViewPath);
 
   // build an optional GeoJSON file for validators
   if (geojson) {

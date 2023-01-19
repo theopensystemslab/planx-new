@@ -121,15 +121,15 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
         deleteFile(csvPath);
       }
 
-      // If the user drew a red line boundary, add a geojson file and HTML to display map
+      // If the user drew a red line boundary, add a geojson file and a html map-viewer
       const geojson = sessionData.passport?.data?.["property.boundary.site"];
       if (geojson) {
         const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
         zip.addFile("boundary.geojson", geoBuff);
 
-        // const mapViewPath = path.join(tmpDir, "application.html");
+        // const mapViewPath = path.join(tmpDir, "map.html");
         // const mapViewFile = fs.createWriteStream(mapViewPath);
-        // const mapViewStream = generateDocumentReviewStream({ csv: sessionData?.csv, files: [], geojson: geojson }).pipe(mapViewFile);
+        // const mapViewStream = generateDocumentReviewStream({ geojson }).pipe(mapViewFile);
 
         // await new Promise((resolve, reject) => {
         //   mapViewStream.on("error", reject);
