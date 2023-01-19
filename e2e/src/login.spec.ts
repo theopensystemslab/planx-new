@@ -1,11 +1,6 @@
 import { test, expect } from "@playwright/test";
-import type { Page, Browser } from "@playwright/test";
-import {
-  generateAuthenticationToken,
-  getClient,
-  setUpTestContext,
-  tearDownTestContext,
-} from "./context";
+import { createAuthenticatedSession } from "./helpers";
+import { getClient, setUpTestContext, tearDownTestContext } from "./context";
 
 test.describe("Login", () => {
   const client = getClient();
@@ -83,24 +78,3 @@ test.describe("Login", () => {
     await expect(page.getByText(toastText)).not.toBeVisible();
   });
 });
-
-async function createAuthenticatedSession({
-  browser,
-  userId,
-}: {
-  browser: Browser;
-  userId: number;
-}): Page {
-  const browserContext = await browser.newContext();
-  const page = await browserContext.newPage();
-  const token = generateAuthenticationToken(`${userId}`);
-  await browserContext.addCookies([
-    {
-      name: "jwt",
-      domain: "localhost",
-      path: "/",
-      value: token,
-    },
-  ]);
-  return page;
-}

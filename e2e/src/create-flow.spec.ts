@@ -1,11 +1,6 @@
 import { test, expect } from "@playwright/test";
-import type { Page, Browser } from "@playwright/test";
-import {
-  generateAuthenticationToken,
-  getClient,
-  setUpTestContext,
-  tearDownTestContext,
-} from "./context";
+import { getClient, setUpTestContext, tearDownTestContext } from "./context";
+import { getTeamPage, createAuthenticatedSession } from "./helpers";
 
 test.describe("Navigation", () => {
   const client = getClient();
@@ -43,9 +38,12 @@ test.describe("Navigation", () => {
   });
 
   test("Create a flow", async ({ browser }) => {
-    const page = await login({ browser, userId: context.user.id });
+    const page = await getTeamPage({
+      browser,
+      userId: context.user.id,
+      teamName: context.team.name,
+    });
 
-    await page.locator("h2", { hasText: context.team.name }).click();
     page.on("dialog", (dialog) => dialog.accept(serviceProps.name));
     await page.locator("button", { hasText: "Add a new service" }).click();
 
@@ -96,7 +94,10 @@ test.describe("Navigation", () => {
   });
 
   test("Preview a created flow", async ({ browser }) => {
-    const page = await login({ browser, userId: context.user.id });
+    const page = await createAuthenticatedSession({
+      browser,
+      userId: context.user.id,
+    });
     await page.goto(
       `/${context.team.slug}/${serviceProps.slug}/preview?analytics=false`
     );
@@ -115,42 +116,3 @@ test.describe("Navigation", () => {
     await expect(page.locator("h3", "Sorry this is a test")).toBeVisible();
   });
 });
-
-async function login({
-  browser,
-  userId,
-}: {
-  browser: Browser;
-  userId: number;
-}): Page {
-  const page = await createAuthenticatedSession({
-    browser,
-    userId,
-  });
-  await page.goto("/");
-  await page.waitForResponse((response) => {
-    return response.url().includes("/graphql");
-  });
-  return page;
-}
-
-async function createAuthenticatedSession({
-  browser,
-  userId,
-}: {
-  browser: Browser;
-  userId: number;
-}): Page {
-  const browserContext = await browser.newContext();
-  const page = await browserContext.newPage();
-  const token = generateAuthenticationToken(`${userId}`);
-  await browserContext.addCookies([
-    {
-      name: "jwt",
-      domain: "localhost",
-      path: "/",
-      value: token,
-    },
-  ]);
-  return page;
-}
