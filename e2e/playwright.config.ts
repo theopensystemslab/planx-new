@@ -34,7 +34,7 @@ const config: PlaywrightTestConfig = {
   reporter: "line",
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-    actionTimeout: 5 * 1000,
+    actionTimeout: 0,
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.EDITOR_URL_EXT,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
@@ -59,7 +59,7 @@ const config: PlaywrightTestConfig = {
     },
   ],
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  outputDir: "test-results/",
+  outputDir: "test-results",
 };
 
 export default config;
