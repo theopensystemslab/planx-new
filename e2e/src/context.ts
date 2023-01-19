@@ -14,20 +14,6 @@ export interface Context {
     publishedFlowId?: number;
   };
 }
-export function generateAuthenticationToken(userId) {
-  assert(process.env.JWT_SECRET);
-  return sign(
-    {
-      sub: `${userId}`,
-      "https://hasura.io/jwt/claims": {
-        "x-hasura-allowed-roles": ["admin"],
-        "x-hasura-default-role": "admin",
-        "x-hasura-user-id": `${userId}`,
-      },
-    },
-    process.env.JWT_SECRET
-  );
-}
 
 export async function setUpTestContext(
   client: Client,
@@ -85,6 +71,21 @@ export async function tearDownTestContext(client: Client, context: Context) {
   if (context.team && !context.team?.findBySlug) {
     await deleteTeam(client, context);
   }
+}
+
+export function generateAuthenticationToken(userId) {
+  assert(process.env.JWT_SECRET);
+  return sign(
+    {
+      sub: `${userId}`,
+      "https://hasura.io/jwt/claims": {
+        "x-hasura-allowed-roles": ["admin"],
+        "x-hasura-default-role": "admin",
+        "x-hasura-user-id": `${userId}`,
+      },
+    },
+    process.env.JWT_SECRET
+  );
 }
 
 export async function findSessionId(
@@ -302,67 +303,3 @@ function log(...args: any[]) {
         // silent
       };
 }
-
-/* TODO
-async function getAnalyticsByFlowId(flowId: string): Promise<number[]> {
-  const {
-    data: { analytics },
-  } = await gqlAdmin(
-    `
-      query Analytics($flowIds: [uuid!]!) {
-      analytics(where: { flow_id: { _in: $flowIds } }) {
-          id
-        }
-      }
-    `,
-    {
-      flowIds: [flowId],
-    }
-  );
-
-  return analytics?.map(({ id }) => id) || [];
-}
-
-async function deleteTestData({
-  teamId,
-  flowId,
-  publishedFlowId,
-  userId,
-  analyticsIds,
-}: {
-  teamId: number;
-  flowId: string;
-  publishedFlowId: string;
-  userId: number;
-  analyticsIds: number[];
-}) {
-  await gqlAdmin(
-    `
-      mutation DeleteTestRegisters(
-        $teams: [Int!]!,
-        $flows: [uuid!]!,
-        $publishedFlows: [Int!]!,
-        $userIds: [Int!]!,
-        $analyticsIds: [bigint!]!
-      ) {
-        delete_analytics_logs(where: { analytics_id: { _in: $analyticsIds } }) {
-          affected_rows
-        }
-        delete_analytics(where: { id: { _in: $analyticsIds } }) {
-          affected_rows
-        }
-        delete_session_backups(where: { flow_id: { _in: $flows } }){
-          affected_rows
-        }
-      }
-    `,
-    {
-      teams: [teamId],
-      flows: [flowId],
-      publishedFlows: [publishedFlowId],
-      userIds: [userId],
-      analyticsIds: analyticsIds,
-    }
-  );
-}
-*/
