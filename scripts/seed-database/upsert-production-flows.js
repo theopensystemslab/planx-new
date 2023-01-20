@@ -72,7 +72,6 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
         teams {
           id
           name
-          settings
           slug
           theme
           notify_personalisation
