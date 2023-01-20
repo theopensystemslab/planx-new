@@ -4,7 +4,7 @@ Date: 2022-12-20
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -62,7 +62,6 @@ gantt
     Submission audit logs: after uj1, 182d
     Submission audit logs (Sanitised): 2022-12-31
     Reconciliation audit logs: 2022-01-14, 182d
-    Reconciliation audit logs (Sanitised): 2022-12-31
 
     section Event Metadata
     Submission Event Metadata: after uj1, 182d
@@ -79,7 +78,7 @@ Here are the broad catergory of changes -
 |---|---|---|
 | **User Data**| Lowcal Sessions - 7 days, then deleted. Session Backups - Indefinite | 6 months from submission date, then sanitised and held indefinitely |
 | **Uploaded Files**| Indefinite | 6 months from upload date |
-| **Audit Logs** | Indefinite | 6 months from submission date, then sanitised and held indefinitely |
+| **Audit Logs** | Indefinite | Submission Logs - 6 months from submission date, then sanitised and held indefinitely. <br /> Reconciliation Logs - 6 months from submission date, then deleted  |
 | **Event Metadata** | Indefinite | 6 months from creation date, then deleted | 
 | **Feedback** | Indefinite | Indefinite
 
