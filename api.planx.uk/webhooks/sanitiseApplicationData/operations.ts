@@ -170,13 +170,8 @@ export const sanitiseBOPSApplications: Operation = async () => {
 export const sanitiseReconciliationRequests: Operation = async () => {
   const mutation = gql`
     mutation SanitiseReconciliationRequests($retentionPeriod: timestamptz) {
-      update_reconciliation_requests(
-        _set: { 
-          response: null
-          sanitised_at: "now()"
-        }
+      delete_reconciliation_requests(
         where: {
-          sanitised_at: { _is_null: true }
           created_at: { _lt: $retentionPeriod }
         }
       ) {
