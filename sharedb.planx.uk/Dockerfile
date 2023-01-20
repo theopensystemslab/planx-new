@@ -4,7 +4,6 @@ FROM node:16.13.1-alpine as base
 WORKDIR /sharedb
 RUN npm install -g pnpm@7.8.0
 COPY pnpm-lock.yaml .
-EXPOSE 4000
 
 FROM base as production
 ENV NODE_ENV production
