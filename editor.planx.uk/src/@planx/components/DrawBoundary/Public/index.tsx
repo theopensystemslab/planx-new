@@ -92,9 +92,9 @@ export default function Component(props: Props) {
     };
 
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
-      if (geojson.features) {
+      if (geojson["EPSG:3857"]?.features) {
         // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
-        setBoundary(geojson.features[0]);
+        setBoundary(geojson["EPSG:3857"].features[0]);
       } else {
         // if the user clicks 'reset' to erase the drawing, geojson will be empty object, so set boundary to undefined
         setBoundary(undefined);
