@@ -14,8 +14,6 @@ RUN pnpm prune --production
 
 COPY . .
 
-EXPOSE 4000
-
 FROM node:16.13.1-alpine as production
 WORKDIR /api
 ENV NODE_ENV production
