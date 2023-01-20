@@ -348,6 +348,10 @@ export = async () => {
             value: pulumi.interpolate`https://hasura.${DOMAIN}/v1/metadata`,
           },
           {
+            name: "HASURA_SCHEMA_URL",
+            value: pulumi.interpolate`https://hasura.${DOMAIN}/v2/query`,
+          },
+          {
             name: "HASURA_PLANX_API_KEY",
             value: config.require("hasura-planx-api-key"),
           },
