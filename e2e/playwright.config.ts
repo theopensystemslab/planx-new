@@ -14,7 +14,7 @@ dotenv.config({ path: "../.env" });
 const config: PlaywrightTestConfig = {
   testDir: "./src",
   /* Maximum time one test can run for. */
-  timeout: 60 * 1000,
+  timeout: 30 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -46,8 +46,7 @@ const config: PlaywrightTestConfig = {
   webServer: {
     command: `pnpm test:server`,
     port: 3000,
-    /* Only spin up a webserver if needed */
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false
   },
   /* Configure projects for major browsers */
   projects: [
