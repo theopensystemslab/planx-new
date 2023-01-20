@@ -1,9 +1,7 @@
-import assert from "node:assert";
 import { test, expect, Locator } from "@playwright/test";
-import Client from "planx-client";
-import simpleSendFlow from "./simple-send-flow.json";
+import simpleSendFlow from "./flows/simple-send-flow.json";
 import {
-  InitialContext,
+  getClient,
   findSessionId,
   setUpTestContext,
   tearDownTestContext,
@@ -11,17 +9,33 @@ import {
 
 test.describe("Save and return", () => {
   const client = getClient();
-  let context: any = getInitialContext();
-  let previewURL;
+  let context: any = {
+    user: {
+      firstName: "test",
+      lastName: "test",
+      email: "e2etest@test.com",
+    },
+    team: {
+      name: "E2E Test Team",
+      slug: "e2e-test-team",
+      logo: "https://placedog.net/250/250",
+      primaryColor: "#F30415",
+      homepage: "example.com",
+    },
+    flow: {
+      slug: "e2e-save-and-return-test-flow",
+      data: simpleSendFlow,
+    },
+  };
+  const previewURL = `/${context.team.slug}/${context.flow.slug}/preview?analytics=false`;
 
   test.beforeAll(async () => {
     try {
       context = await setUpTestContext(client, context);
-    } catch (error) {
+    } catch (e) {
       await tearDownTestContext(client, context);
-      throw error;
+      throw e;
     }
-    previewURL = `/${context.team.slug}/${context.flow.slug}/preview?analytics=false`;
   });
 
   test.afterAll(async () => {
@@ -59,7 +73,9 @@ test.describe("Save and return", () => {
       if (!sessionId) test.fail();
       await returnToSession({ page, context, sessionId });
 
-      const reviewTitle = await page.locator("h1", { hasText: "Resume your application" });
+      const reviewTitle = await page.locator("h1", {
+        hasText: "Resume your application",
+      });
       await expect(reviewTitle).toBeVisible();
     });
 
@@ -129,41 +145,4 @@ async function answerQuestion({ page, questionGroup, answer }) {
     (response) =>
       response.url().includes("graphql") && response.status() === 200
   );
-}
-
-function getInitialContext() {
-  const context: InitialContext = {
-    user: {
-      firstName: "test",
-      lastName: "test",
-      email: "e2etest@test.com",
-    },
-    team: {
-      name: "E2E Test Team",
-      slug: "e2e-test-team",
-      logo: "https://placedog.net/250/250",
-      primaryColor: "#F30415",
-      homepage: "example.com",
-    },
-    flow: {
-      slug: "e2e-save-and-return-test-flow",
-      data: simpleSendFlow,
-    },
-  };
-  return context;
-}
-
-function getClient(): Client {
-  assert(process.env.HASURA_GRAPHQL_URL);
-  assert(process.env.HASURA_GRAPHQL_ADMIN_SECRET);
-
-  const API = process.env.HASURA_GRAPHQL_URL!.replace(
-    "${HASURA_PROXY_PORT}",
-    process.env.HASURA_PROXY_PORT!
-  );
-  const SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET!;
-  return new Client({
-    hasuraSecret: SECRET,
-    targetURL: API,
-  });
 }

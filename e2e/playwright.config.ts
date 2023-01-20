@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import type { PlaywrightTestConfig } from "@playwright/test";
 import { devices } from "@playwright/test";
 
@@ -12,15 +12,15 @@ dotenv.config({ path: "../.env" });
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
-  testDir: "./playwright",
+  testDir: "./src",
   /* Maximum time one test can run for. */
-  timeout: 2 * 30 * 1000,
+  timeout: 30 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 5 * 1000,
+    timeout: 15 * 1000,
   },
   /* Run tests in files in parallel */
   fullyParallel: false,
@@ -28,8 +28,8 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  /* Opt out of parallel tests */
+  workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "line",
   use: {
@@ -46,8 +46,7 @@ const config: PlaywrightTestConfig = {
   webServer: {
     command: `pnpm test:server`,
     port: 3000,
-    /* Only spin up a webserver if needed */
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
   },
   /* Configure projects for major browsers */
   projects: [
@@ -59,7 +58,7 @@ const config: PlaywrightTestConfig = {
     },
   ],
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  outputDir: "test-results/",
+  outputDir: "test-results",
 };
 
 export default config;
