@@ -11,7 +11,11 @@ let context: any = {
     email: "e2epaytest@test.com",
   },
   team: {
-    findBySlug: TEAM_SLUG,
+    name: "Buckinghamshire",
+    slug: "buckinghamshire",
+    logo: "https://placedog.net/250/250",
+    primaryColor: "#F30415",
+    homepage: "example.com",
   },
   flow: {
     slug: "pay-test",

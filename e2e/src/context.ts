@@ -40,9 +40,7 @@ export async function setUpTestContext(
   if (context.user) {
     context.user.id = await client.createUser(context.user);
   }
-  if (context.team?.findBySlug) {
-    context.team.id = await findTeamBySlug(client, context.team?.findBySlug);
-  } else if (context.team) {
+  if (context.team) {
     context.team.id = await client.createTeam(context.team);
   }
   if (context.flow?.slug && context.team?.id) {
@@ -68,7 +66,7 @@ export async function tearDownTestContext(client: Client, context: Context) {
   if (context.user) {
     await deleteUser(client, context);
   }
-  if (context.team && !context.team?.findBySlug) {
+  if (context.team) {
     await deleteTeam(client, context);
   }
 }
@@ -276,23 +274,6 @@ async function deleteTeam(client: Client, context: Context) {
         { teamId: response[0].id }
       );
     }
-  }
-}
-
-async function findTeamBySlug(
-  client: Client,
-  slug: string
-): Promise<string | undefined> {
-  const { teams: response } = await client.request(
-    `query FindTeamBySlug($slug: String!) {
-        teams(where: {slug: {_eq: $slug}}) {
-          id
-        }
-      }`,
-    { slug }
-  );
-  if (response.length && response[0].id) {
-    return response[0].id;
   }
 }
 
