@@ -25,7 +25,7 @@ export const USER_ROLES = ["applicant", "agent", "proxy"] as const;
 // See minimum POST schema for /api/v1/planning_applications
 // https://ripa.bops.services/api-docs/index.html
 interface BOPSMinimumPayload {
-  application_type: "lawfulness_certificate";
+  application_type: "lawfulness_certificate" | string;
   site: {
     uprn: string;
     address_1: string;
