@@ -202,7 +202,7 @@ export default function PickOSAddress(props: PickOSAddressProps) {
           />
         )}
       </AutocompleteWrapper>
-      {props.allowNewAddresses ? (
+      {!props.allowNewAddresses ? (
         <ExternalPlanningSiteDialog
           purpose={DialogPurpose.MissingAddress}
           teamSettings={props.teamSettings}

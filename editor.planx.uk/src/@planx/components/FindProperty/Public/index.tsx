@@ -105,6 +105,7 @@ function Component(props: Props) {
         initialSelectedAddress={previouslySubmittedData?._address}
         teamSettings={team?.settings}
         id={props.id}
+        allowNewAddresses={props.allowNewAddresses}
         setPage={setPage}
       />
     );
