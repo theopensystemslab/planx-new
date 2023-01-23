@@ -36,6 +36,7 @@ test("renders correctly", async () => {
       <FindProperty
         description="Find your property"
         title="Type your postal code"
+        allowNewAddresses={false}
         handleSubmit={handleSubmit}
       />
     </MockedProvider>
@@ -66,6 +67,7 @@ test("it displays an error if you submit an invalid postcode", async () => {
       <FindProperty
         description="Find your property"
         title="Type your postal code"
+        allowNewAddresses={false}
         handleSubmit={handleSubmit}
       />
     </MockedProvider>
@@ -110,6 +112,7 @@ test("recovers previously submitted address when clicking the back button", asyn
       <FindProperty
         description="Find your property"
         title="Type your postal code"
+        allowNewAddresses={false}
         handleSubmit={handleSubmit}
         previouslySubmittedData={{
           data: previousData,
@@ -134,6 +137,7 @@ it("should not have any accessibility violations", async () => {
       <FindProperty
         description="Find your property"
         title="Type your postal code"
+        allowNewAddresses={false}
         handleSubmit={handleSubmit}
       />
     </MockedProvider>
@@ -157,6 +161,7 @@ it("updates the address-autocomplete props when the postcode is changed", async 
       <FindProperty
         description="Find your property"
         title="Type your postal code"
+        allowNewAddresses={false}
       />
     </MockedProvider>
   );
