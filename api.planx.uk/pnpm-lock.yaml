@@ -86,7 +86,7 @@ specifiers:
 
 dependencies:
   '@airbrake/node': 2.1.7
-  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/41303a563727a61ed68a39406e650e01ed9747e1_jzv7rnwsgseitriorngd2zrk2i
+  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/ae8c2891a381b4b0c1312da7b02a3e25485c218f_jzv7rnwsgseitriorngd2zrk2i
   adm-zip: 0.5.9
   aws-sdk: 2.1180.0
   axios: 0.27.2
@@ -676,15 +676,15 @@ packages:
       - supports-color
     dev: true
 
-  /@babel/runtime/7.20.6:
-    resolution: {integrity: sha512-Q+8MqP7TiHMWzSfwiJwXCjyf4GYA4Dgw3emg/7xmwsdLJOZUp+nMqcOwOzzYheuM1rhDu8FSj2l0aoMygEuXuA==}
+  /@babel/runtime/7.20.13:
+    resolution: {integrity: sha512-gt3PKXs0DBoL9xCvOIIZ2NEqAGZqHjAnmVbfQtB620V0uReIQutpel14KcneZuer7UioY8ALKZ7iocavvzTNFA==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.11
     dev: false
 
-  /@babel/runtime/7.20.7:
-    resolution: {integrity: sha512-UF0tvkUtxwAgZ5W/KrkHf0Rn0fdnLDU9ScxBrEVNUprE/MzirjK4MJUX1/BVDv00Sv8cljtukVK1aky++X1SjQ==}
+  /@babel/runtime/7.20.6:
+    resolution: {integrity: sha512-Q+8MqP7TiHMWzSfwiJwXCjyf4GYA4Dgw3emg/7xmwsdLJOZUp+nMqcOwOzzYheuM1rhDu8FSj2l0aoMygEuXuA==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.11
@@ -1406,8 +1406,8 @@ packages:
       react-is: 16.13.1
     dev: false
 
-  /@mui/base/5.0.0-alpha.113_ib3m5ricvtkl2cll7qpr2f6lvq:
-    resolution: {integrity: sha512-XSjvyQWATM8uk+EJZvYna8D21kOXC42lwb3q4K70btuGieKlCIQLaHTTDV2OfD4+JfT4o3NJy3I4Td2co31RZA==}
+  /@mui/base/5.0.0-alpha.114_ib3m5ricvtkl2cll7qpr2f6lvq:
+    resolution: {integrity: sha512-ZpsG2I+zTOAnVTj3Un7TxD2zKRA2OhEPGMcWs/9ylPlS6VuGQSXowPooZiqarjT7TZ0+1bOe8titk/t8dLFiGw==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
@@ -1417,7 +1417,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.20.7
+      '@babel/runtime': 7.20.13
       '@emotion/is-prop-valid': 1.2.0
       '@mui/types': 7.2.3_@types+react@18.0.26
       '@mui/utils': 5.11.2_react@18.2.0
@@ -1430,12 +1430,12 @@ packages:
       react-is: 18.2.0
     dev: false
 
-  /@mui/core-downloads-tracker/5.11.4:
-    resolution: {integrity: sha512-jWVwGM3vG4O0sXcW0VcIl+njCWbGCBF5vvjRpuKJajrz51AD7D6+fP1SkInZXVk5pRHf6Bnk/Yj9Of9gXxb/hA==}
+  /@mui/core-downloads-tracker/5.11.5:
+    resolution: {integrity: sha512-MIuWGjitOsugpRhp64CQY3ZEVMIu9M/L9ioql6QLSkz73+bGIlC9FEhfi670/GZ8pQIIGmtiGGwofYzlwEWjig==}
     dev: false
 
-  /@mui/material/5.11.4_lskpmcsdi7ipu6qpuapyu56ihm:
-    resolution: {integrity: sha512-ZL/czK9ynrQJ6uyDwQgK+j7m1iKA1XKPON+rEPupwAu/bJ1XJxD+H/H2bkMM8UpOkzaucx/WuMbJJGQ60l7gBg==}
+  /@mui/material/5.11.5_lskpmcsdi7ipu6qpuapyu56ihm:
+    resolution: {integrity: sha512-5fzjBbRYaB5MoEpvA32oalAWltOZ3/kSyuovuVmPc6UF6AG42lTtbdMLpdCygurFSGUMZYTg4Cjij52fKlDDgg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@emotion/react': ^11.5.0
@@ -1451,12 +1451,12 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.20.7
+      '@babel/runtime': 7.20.13
       '@emotion/react': 11.10.5_vxtkgrldwlig4u66iz5soeq2cu
       '@emotion/styled': 11.10.5_chax5e5do4qurmadqge7kxayfu
-      '@mui/base': 5.0.0-alpha.113_ib3m5ricvtkl2cll7qpr2f6lvq
-      '@mui/core-downloads-tracker': 5.11.4
-      '@mui/system': 5.11.4_ogriz7mfahdh34qnfautfro5yu
+      '@mui/base': 5.0.0-alpha.114_ib3m5ricvtkl2cll7qpr2f6lvq
+      '@mui/core-downloads-tracker': 5.11.5
+      '@mui/system': 5.11.5_ogriz7mfahdh34qnfautfro5yu
       '@mui/types': 7.2.3_@types+react@18.0.26
       '@mui/utils': 5.11.2_react@18.2.0
       '@types/react': 18.0.26
@@ -1480,7 +1480,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.20.7
+      '@babel/runtime': 7.20.13
       '@mui/utils': 5.11.2_react@18.2.0
       '@types/react': 18.0.26
       prop-types: 15.8.1
@@ -1500,7 +1500,7 @@ packages:
       '@emotion/styled':
         optional: true
     dependencies:
-      '@babel/runtime': 7.20.7
+      '@babel/runtime': 7.20.13
       '@emotion/cache': 11.10.5
       '@emotion/react': 11.10.5_vxtkgrldwlig4u66iz5soeq2cu
       '@emotion/styled': 11.10.5_chax5e5do4qurmadqge7kxayfu
@@ -1509,8 +1509,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@mui/system/5.11.4_ogriz7mfahdh34qnfautfro5yu:
-    resolution: {integrity: sha512-fE2Ts33V5zh7ouciwXgMm/a6sLvjIj9OMeojuHNYY7BStTxparC/Fp9CNUZNJwt76U6ZJC59aYScFSRQKbW08g==}
+  /@mui/system/5.11.5_ogriz7mfahdh34qnfautfro5yu:
+    resolution: {integrity: sha512-KNVsJ0sgRRp2XBqhh4wPS5aacteqjwxgiYTVwVnll2fgkgunZKo3DsDiGMrFlCg25ZHA3Ax58txWGE9w58zp0w==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@emotion/react': ^11.5.0
@@ -1525,7 +1525,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.20.7
+      '@babel/runtime': 7.20.13
       '@emotion/react': 11.10.5_vxtkgrldwlig4u66iz5soeq2cu
       '@emotion/styled': 11.10.5_chax5e5do4qurmadqge7kxayfu
       '@mui/private-theming': 5.11.2_kzbn2opkn2327fwg5yzwzya5o4
@@ -1556,7 +1556,7 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
     dependencies:
-      '@babel/runtime': 7.20.7
+      '@babel/runtime': 7.20.13
       '@types/prop-types': 15.7.5
       '@types/react-is': 17.0.3
       prop-types: 15.8.1
@@ -3205,7 +3205,7 @@ packages:
   /dom-helpers/5.2.1:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
     dependencies:
-      '@babel/runtime': 7.20.7
+      '@babel/runtime': 7.20.13
       csstype: 3.1.1
     dev: false
 
@@ -6717,7 +6717,7 @@ packages:
       react: '>=16.6.0'
       react-dom: '>=16.6.0'
     dependencies:
-      '@babel/runtime': 7.20.7
+      '@babel/runtime': 7.20.13
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
@@ -7968,9 +7968,9 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/theopensystemslab/planx-document-templates/41303a563727a61ed68a39406e650e01ed9747e1_jzv7rnwsgseitriorngd2zrk2i:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/41303a563727a61ed68a39406e650e01ed9747e1}
-    id: github.com/theopensystemslab/planx-document-templates/41303a563727a61ed68a39406e650e01ed9747e1
+  github.com/theopensystemslab/planx-document-templates/ae8c2891a381b4b0c1312da7b02a3e25485c218f_jzv7rnwsgseitriorngd2zrk2i:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/ae8c2891a381b4b0c1312da7b02a3e25485c218f}
+    id: github.com/theopensystemslab/planx-document-templates/ae8c2891a381b4b0c1312da7b02a3e25485c218f
     name: '@opensystemslab/planx-document-templates'
     version: 0.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
@@ -7978,7 +7978,7 @@ packages:
       '@emotion/react': 11.10.5_vxtkgrldwlig4u66iz5soeq2cu
       '@emotion/styled': 11.10.5_chax5e5do4qurmadqge7kxayfu
       '@lit-labs/ssr': 2.3.0
-      '@mui/material': 5.11.4_lskpmcsdi7ipu6qpuapyu56ihm
+      '@mui/material': 5.11.5_lskpmcsdi7ipu6qpuapyu56ihm
       '@rollup/plugin-commonjs': 23.0.7
       docx: 7.8.2
       lodash.get: 4.4.2
