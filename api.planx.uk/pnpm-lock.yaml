@@ -10,7 +10,7 @@ specifiers:
   '@airbrake/node': ^2.1.7
   '@babel/core': ^7.19.6
   '@babel/preset-typescript': ^7.18.6
-  '@opensystemslab/planx-document-review': git://github.com/theopensystemslab/planx-document-review.git#v1.1.2
+  '@opensystemslab/planx-document-review': git://github.com/theopensystemslab/planx-document-review.git#v1.1.3
   '@types/adm-zip': ^0.5.0
   '@types/body-parser': ^1.19.2
   '@types/cookie-parser': ^1.4.3
@@ -85,7 +85,7 @@ specifiers:
 
 dependencies:
   '@airbrake/node': 2.1.7
-  '@opensystemslab/planx-document-review': github.com/theopensystemslab/planx-document-review/e79e00325c8bf3e3c6e9f06c89e028a670982591_jzv7rnwsgseitriorngd2zrk2i
+  '@opensystemslab/planx-document-review': github.com/theopensystemslab/planx-document-review/1abbdfe036b71a5431606dede708b9b65a854809_jzv7rnwsgseitriorngd2zrk2i
   adm-zip: 0.5.9
   aws-sdk: 2.1180.0
   axios: 0.27.2
@@ -7864,11 +7864,11 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/theopensystemslab/planx-document-review/e79e00325c8bf3e3c6e9f06c89e028a670982591_jzv7rnwsgseitriorngd2zrk2i:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-review/tar.gz/e79e00325c8bf3e3c6e9f06c89e028a670982591}
-    id: github.com/theopensystemslab/planx-document-review/e79e00325c8bf3e3c6e9f06c89e028a670982591
+  github.com/theopensystemslab/planx-document-review/1abbdfe036b71a5431606dede708b9b65a854809_jzv7rnwsgseitriorngd2zrk2i:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-review/tar.gz/1abbdfe036b71a5431606dede708b9b65a854809}
+    id: github.com/theopensystemslab/planx-document-review/1abbdfe036b71a5431606dede708b9b65a854809
     name: '@opensystemslab/planx-document-review'
-    version: 1.1.2
+    version: 1.1.3
     engines: {node: ^16, pnpm: ^7.8.0}
     dependencies:
       '@emotion/react': 11.10.5_vxtkgrldwlig4u66iz5soeq2cu
