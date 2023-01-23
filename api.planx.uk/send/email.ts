@@ -121,23 +121,26 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
         deleteFile(csvPath);
       }
 
-      // If the user drew a red line boundary, add a geojson file and a html map-viewer
+      // If the user drew a red line boundary, add a geojson file
       const geojson = sessionData.passport?.data?.["property.boundary.site"];
       if (geojson) {
         const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
         zip.addFile("boundary.geojson", geoBuff);
+      }
 
-        const mapViewPath = path.join(tmpDir, "map.html");
-        const mapViewFile = fs.createWriteStream(mapViewPath);
-        const mapViewStream = generateDocumentReviewStream({ geojson }).pipe(mapViewFile);
-
+      // As long as we csv data or geojson, add a HTML document viewer for human-readability
+      if (sessionData.csv || geojson) {
+        const htmlPath = path.join(tmpDir, "application.html");
+        const htmlFile = fs.createWriteStream(htmlPath);
+        const htmlStream = generateDocumentReviewStream({ csv: sessionData?.csv, geojson: geojson }).pipe(htmlFile);
+  
         await new Promise((resolve, reject) => {
-          mapViewStream.on("error", reject);
-          mapViewStream.on("finish", resolve);
+          htmlStream.on("error", reject);
+          htmlStream.on("finish", resolve);
         });
-
-        zip.addLocalFile(mapViewPath);
-        deleteFile(mapViewPath);
+  
+        zip.addLocalFile(htmlPath);
+        deleteFile(htmlPath);
       }
 
       // Next iterate through the passport and pull out the urls of any user-uploaded files

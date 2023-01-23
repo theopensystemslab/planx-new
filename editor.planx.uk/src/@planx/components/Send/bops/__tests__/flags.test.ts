@@ -1,6 +1,16 @@
 import { Store } from "pages/FlowEditor/lib/store";
+import * as ReactNavi from "react-navi";
 
 import { getBOPSParams } from "..";
+
+jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
+  () =>
+    ({
+      data: {
+        flowName: "apply for a lawful development certificate",
+      },
+    } as any)
+);
 
 // PlanX ALWAYS sends a flag result & optional override description (test 2)
 // to BOPS, even if (1) no flag result component is shown to the applicant,

@@ -32,10 +32,9 @@ import {
   validateSession,
   sendSaveAndReturnEmail,
 } from "./saveAndReturn";
-import { hardDeleteSessions } from "./webhooks/hardDeleteSessions";
 import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
 
-import { reportError } from "./airbrake";
+import airbrake from "./airbrake";
 import {
   createReminderEvent,
   createExpiryEvent,
@@ -59,6 +58,7 @@ import { moveFlow } from "./editor/moveFlow";
 import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
 import { usePayProxy } from "./proxy/pay";
 import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
+import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
 
 const router = express.Router();
 
@@ -633,21 +633,32 @@ app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
 app.use("/webhooks/hasura", useHasuraAuth);
-app.post("/webhooks/hasura/delete-expired-sessions", hardDeleteSessions);
 app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
 app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
+app.post("/webhooks/hasura/sanitise-application-data", sanitiseApplicationData);
 
 app.use("/proxy/ordnance-survey", useOrdnanceSurveyProxy);
 
+app.get("/error", async (res, req, next) => {
+  try {
+    throw Error("This is a test error")
+  } catch (error) {
+    next(error)
+  }
+})
+
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
-    if (errorObject.error) {
-      reportError(errorObject.error);
+    if (errorObject instanceof Error && airbrake) {
+      airbrake.notify(errorObject);
+      return {
+        ...errorObject,
+        message: errorObject.message.concat(", this error has been logged"),
+      };
+    } else {
       return errorObject;
     }
-    reportError(errorObject);
-    return errorObject;
   })();
 
   res.status(status).send({

@@ -211,7 +211,7 @@ const getPersonalisation = (
 
 /**
  * Mark a lowcal_session record as deleted
- * Sessions older than a week cleaned up nightly by cron job delete_expired_sessions on Hasura
+ * Sessions older than 6 months cleaned up nightly by cron job sanitise_application_data on Hasura
  */
 const softDeleteSession = async (sessionId: string) => {
   try {
@@ -234,7 +234,7 @@ const softDeleteSession = async (sessionId: string) => {
 
 /**
  * Mark a lowcal_session record as submitted
- * Sessions older than a week cleaned up nightly by cron job delete_expired_sessions on Hasura
+ * Sessions older than 6 months cleaned up nightly by cron job sanitise_application_data on Hasura
  */
 const markSessionAsSubmitted = async (sessionId: string) => {
   try {

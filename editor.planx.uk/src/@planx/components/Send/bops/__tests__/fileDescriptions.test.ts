@@ -1,8 +1,18 @@
 import { Store, vanillaStore } from "pages/FlowEditor/lib/store";
+import * as ReactNavi from "react-navi";
 
 import { getBOPSParams } from "..";
 
 const { getState, setState } = vanillaStore;
+
+jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
+  () =>
+    ({
+      data: {
+        flowName: "apply for a lawful development certificate",
+      },
+    } as any)
+);
 
 // https://i.imgur.com/MsCF14s.png
 const flow: Store.flow = {
