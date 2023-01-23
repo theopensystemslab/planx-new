@@ -4,7 +4,7 @@ import {
   mockIds,
   mockSanitiseBOPSApplicationsMutation,
   mockSanitiseLowcalSessionsMutation,
-  mockSanitiseReconciliationRequestsMutation,
+  mockDeleteReconciliationRequestsMutation,
   mockSanitiseSessionBackupsMutation,
   mockSanitiseUniformApplicationsMutation,
 } from "./mocks/queries";
@@ -14,7 +14,7 @@ import {
   operationHandler,
   sanitiseBOPSApplications,
   sanitiseLowcalSessions,
-  sanitiseReconciliationRequests,
+  deleteReconciliationRequests,
   sanitiseSessionBackups,
   sanitiseUniformApplications,
 } from "./operations";
@@ -76,8 +76,8 @@ describe("Data sanitation operations", () => {
         query: mockSanitiseBOPSApplicationsMutation,
       },
       {
-        operation: sanitiseReconciliationRequests,
-        query: mockSanitiseReconciliationRequestsMutation,
+        operation: deleteReconciliationRequests,
+        query: mockDeleteReconciliationRequestsMutation,
       },
     ];
 

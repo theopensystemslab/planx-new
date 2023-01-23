@@ -20,7 +20,7 @@ export const getRetentionPeriod = () => subMonths(new Date(), RETENTION_PERIOD_M
   sanitiseSessionBackups,
   sanitiseUniformApplications,
   sanitiseBOPSApplications,
-  sanitiseReconciliationRequests,
+  deleteReconciliationRequests,
 
   // Event logs
   deleteHasuraEventLogs,
@@ -167,9 +167,9 @@ export const sanitiseBOPSApplications: Operation = async () => {
   return result;
 };
 
-export const sanitiseReconciliationRequests: Operation = async () => {
+export const deleteReconciliationRequests: Operation = async () => {
   const mutation = gql`
-    mutation SanitiseReconciliationRequests($retentionPeriod: timestamptz) {
+    mutation DeleteReconciliationRequests($retentionPeriod: timestamptz) {
       delete_reconciliation_requests(
         where: {
           created_at: { _lt: $retentionPeriod }
@@ -181,7 +181,7 @@ export const sanitiseReconciliationRequests: Operation = async () => {
       } 
     }
   `;
-  const { update_reconciliation_requests: {
+  const { delete_reconciliation_requests: {
     returning: result
   } } = await adminGraphQLClient.request(
     mutation,
