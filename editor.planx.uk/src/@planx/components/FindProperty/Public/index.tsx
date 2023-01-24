@@ -463,16 +463,19 @@ export function PropertyInformation(props: any) {
         />
       </MapContainer>
       <Box component="dl" mb={3}>
-        {propertyDetails.map(({ heading, detail }: any) => (
-          <PropertyDetail key={heading}>
-            <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
-              {heading}
-            </Box>
-            <Box component="dd" flexGrow={1} py={1}>
-              {detail}
-            </Box>
-          </PropertyDetail>
-        ))}
+        {propertyDetails.map(
+          ({ heading, detail }: any) =>
+            detail && (
+              <PropertyDetail key={heading}>
+                <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
+                  {heading}
+                </Box>
+                <Box component="dd" flexGrow={1} py={1}>
+                  {detail}
+                </Box>
+              </PropertyDetail>
+            )
+        )}
       </Box>
       <Box textAlign="right">
         <FeedbackInput
