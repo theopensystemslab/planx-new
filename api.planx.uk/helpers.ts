@@ -190,7 +190,7 @@ const makeUniqueFlow = (flowData: Flow["data"], replaceValue: string): Flow["dat
   return flowData;
 };
 
-const getEnvironment = (): string | void => {
+const getEnvironment = (): string | undefined => {
   const url = new URL(process.env.API_URL_EXT!);
   if (url.hostname.endsWith(".uk")) return "Production"
   if (url.hostname.endsWith(".dev")) return "Staging"
