@@ -5,6 +5,7 @@
 // https://southwark.preview.bops.services/api-docs/index.html
 
 import { reportError } from "airbrake";
+import { property } from "lodash";
 import capitalize from "lodash/capitalize";
 import { flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
@@ -255,7 +256,9 @@ export function getBOPSParams(
       address.single_line_address?.split(`, ${address.town}`)[0] ||
       address.title;
 
-    site.town = address.town;
+    site.town =
+      address.town ||
+      passport.data?.["property.localAuthorityDistrict"]?.join(", ");
     site.postcode = address.postcode;
 
     site.latitude = address.latitude;
