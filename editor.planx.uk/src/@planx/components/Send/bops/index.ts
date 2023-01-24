@@ -249,15 +249,22 @@ export function getBOPSParams(
   if (address) {
     const site = {} as BOPSFullPayload["site"];
 
-    site.uprn = String(address.uprn);
+    site.uprn = address.uprn && String(address.uprn);
 
-    site.address_1 = address.single_line_address.split(`, ${address.town}`)[0];
+    site.address_1 =
+      address.single_line_address?.split(`, ${address.town}`)[0] ||
+      address.title;
 
     site.town = address.town;
     site.postcode = address.postcode;
 
     site.latitude = address.latitude;
     site.longitude = address.longitude;
+
+    site.x = address.x;
+    site.y = address.y;
+
+    site.source = address.source; // reflects "os" or "proposed"
 
     data.site = site;
   }
