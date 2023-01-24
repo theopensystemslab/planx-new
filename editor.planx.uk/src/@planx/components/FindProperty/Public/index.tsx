@@ -393,7 +393,6 @@ function PickOSAddress(props: PickOSAddressProps) {
         <Box sx={{ textAlign: "right" }}>
           <Link
             component="button"
-            data-testid="switch-page"
             onClick={() => props.setPage("new-address")}
             disabled={Boolean(sanitizedPostcode) && Boolean(selectedOption)}
           >
