@@ -5,10 +5,10 @@ import app from "../server";
 describe(`sending an application by email to a planning office`, () => {
   beforeEach(() => {
     queryMock.mockQuery({
-      name: "getTeamSettings",
+      name: "getTeamEmailSettings",
       matchOnVariables: false,
       data: {
-        teams: [{ settings: { "sendToEmail": "planners@southwark.gov.uk" } }]
+        teams: [{ submission_email: "planners@southwark.gov.uk" }]
       },
       variables: { slug: "southwark" },
     });
@@ -65,7 +65,7 @@ describe(`sending an application by email to a planning office`, () => {
       });
   });
 
-  it.skip("errors if this team does not have a 'sendToEmail' configured in teams.settings", async () => {      
+  it.skip("errors if this team does not have a 'submission_email' configured in teams", async () => {      
     await supertest(app)
       .post("/email-submission/other-council")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
@@ -82,10 +82,10 @@ describe(`sending an application by email to a planning office`, () => {
 describe(`downloading application data received by email`, () => {
   beforeEach(() => {
     queryMock.mockQuery({
-      name: "GetTeamSettings",
+      name: "GetTeamEmailSettings",
       matchOnVariables: false,
       data: {
-        teams: [{ settings: { "sendToEmail": "planners@southwark.gov.uk" } }]
+        teams: [{ submission_email: "planners@southwark.gov.uk" }]
       },
       variables: { slug: "southwark" },
     });
