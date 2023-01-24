@@ -95,7 +95,7 @@ export default function Component(props: Props) {
             howMeasured={props.howMeasured}
             definitionImg={props.definitionImg}
           />
-          <MapContainer environment={environment} interactive>
+          <MapContainer environment={environment} size="large">
             <p style={visuallyHidden}>
               An interactive map centred on your address, with a red pointer to
               draw your site outline. Click to place points and connect the

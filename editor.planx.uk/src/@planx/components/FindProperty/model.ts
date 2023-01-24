@@ -1,3 +1,6 @@
+import type { SchemaOf } from "yup";
+import { object, string } from "yup";
+
 import { MoreInformation, parseMoreInformation } from "../shared";
 
 export interface FindProperty extends MoreInformation {
@@ -44,6 +47,16 @@ export interface SiteAddress extends MinimumSiteAddress {
   planx_description?: string; // joined via table blpu_codes
   planx_value?: string; // joined via table blpu_codes
 }
+
+export type NewAddressInputs = {
+  siteDescription: string;
+};
+
+export const userDataSchema: SchemaOf<NewAddressInputs> = object({
+  siteDescription: string().required(
+    "Enter a site description to proceed. For example, `Land at...`"
+  ),
+});
 
 export const DEFAULT_TITLE = "Find the property" as const;
 export const DEFAULT_NEW_ADDRESS_TITLE = "Propose a new address" as const;

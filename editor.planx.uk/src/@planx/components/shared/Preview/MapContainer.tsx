@@ -4,7 +4,7 @@ import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 
 interface MapContainerProps {
   environment: PreviewEnvironment;
-  interactive?: boolean;
+  size?: "large";
 }
 
 /**
@@ -27,13 +27,13 @@ const dynamicMapSizeStyle = (theme: Theme): Record<string, any> => {
 };
 
 export const MapContainer = styled(Box)<MapContainerProps>(
-  ({ theme, environment, interactive }) => ({
+  ({ theme, environment, size }) => ({
     padding: theme.spacing(1, 0, 6, 0),
     width: "100%",
     height: "50vh",
-    // Only increase map size in Preview & Unpublished routes for "interactive" maps like drawing
-    ...(environment === "standalone" &&
-      Boolean(interactive) && { ...dynamicMapSizeStyle(theme) }),
+    // Only increase map size in Preview & Unpublished routes
+    ...(size === "large" &&
+      environment === "standalone" && { ...dynamicMapSizeStyle(theme) }),
     "& my-map": {
       width: "100%",
       height: "100%",
