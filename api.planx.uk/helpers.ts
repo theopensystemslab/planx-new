@@ -1,3 +1,4 @@
+import assert from "assert";
 import { gql } from 'graphql-request';
 import { adminGraphQLClient } from "./hasura";
 import { Flow, Node } from "./types";
@@ -189,6 +190,14 @@ const makeUniqueFlow = (flowData: Flow["data"], replaceValue: string): Flow["dat
   return flowData;
 };
 
+const getEnvironment = (): string | void => {
+  const url = new URL(process.env.API_URL_EXT!);
+  if (url.hostname.endsWith(".uk")) return "Production"
+  if (url.hostname.endsWith(".dev")) return "Staging"
+  if (url.hostname.endsWith(".pizza")) return `Pizza ${url.href.split(".")[1]}`
+  if (url.href.includes("localhost")) return "Development"
+};
+
 export {
   getFlowData,
   getMostRecentPublishedFlow,
@@ -197,4 +206,5 @@ export {
   getChildren,
   makeUniqueFlow,
   insertFlow,
+  getEnvironment,
 };
