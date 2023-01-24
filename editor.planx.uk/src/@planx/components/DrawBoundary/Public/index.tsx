@@ -1,14 +1,17 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { styled, Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
+import {
+  MapContainer,
+  MapFooter,
+} from "@planx/components/shared/Preview/MapContainer";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
 import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import React, { useEffect, useRef, useState } from "react";
 
 import {
@@ -20,49 +23,6 @@ import Upload, { FileUpload } from "./Upload";
 
 export type Props = PublicProps<DrawBoundary>;
 export type SelectedFile = FileUpload;
-
-interface MapContainerProps {
-  environment: PreviewEnvironment;
-}
-
-/**
- * Generate a style which increases the map size as the window grows
- * and maintains a consistent right margin
- */
-const dynamicMapSizeStyle = (theme: Theme): Record<string, any> => {
-  const mainContainerWidth = `${theme.breakpoints.values.md}px`;
-  const mainContainerMargin = `((100vw - ${mainContainerWidth}) / 2)`;
-  const mapMarginRight = "150px";
-
-  const style = {
-    [theme.breakpoints.up("md")]: {
-      height: "70vh",
-      width: `calc(${mainContainerMargin} + ${mainContainerWidth} - ${mapMarginRight})`,
-    },
-  };
-
-  return style;
-};
-
-const MapContainer = styled(Box)<MapContainerProps>(
-  ({ theme, environment }) => ({
-    padding: theme.spacing(1, 0, 6, 0),
-    width: "100%",
-    height: "50vh",
-    // Only increase map size in Preview & Unpublished routes
-    ...(environment === "standalone" && { ...dynamicMapSizeStyle(theme) }),
-    "& my-map": {
-      width: "100%",
-      height: "100%",
-    },
-  })
-);
-
-const MapFooter = styled(Box)(({ theme }) => ({
-  display: "flex",
-  justifyContent: "space-between",
-  paddingTop: theme.spacing(3),
-}));
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);
@@ -135,7 +95,7 @@ export default function Component(props: Props) {
             howMeasured={props.howMeasured}
             definitionImg={props.definitionImg}
           />
-          <MapContainer environment={environment}>
+          <MapContainer environment={environment} interactive>
             <p style={visuallyHidden}>
               An interactive map centred on your address, with a red pointer to
               draw your site outline. Click to place points and connect the

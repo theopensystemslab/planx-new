@@ -3,7 +3,7 @@ import { MoreInformation, parseMoreInformation } from "../shared";
 export interface FindProperty extends MoreInformation {
   title: string;
   description: string;
-  allowNewAddresses: boolean;
+  allowNewAddresses?: boolean;
   newAddressTitle?: string;
   newAddressDescription?: string;
 }
@@ -20,6 +20,7 @@ export const parseFindProperty = (
 });
 
 // Minimum-required address details if proposing a new non-UPRN address
+//   these fields also satisfy component dependencies like DrawBoundary & PlanningConstraints
 export interface MinimumSiteAddress {
   latitude: number;
   longitude: number;
@@ -29,7 +30,7 @@ export interface MinimumSiteAddress {
   source: "os" | "proposed";
 }
 
-// SiteAddress type reflects selecting a known address from the OS Places API "LPI" datasource
+// Full SiteAddress reflects selecting a known address from the OS Places API "LPI" datasource
 export interface SiteAddress extends MinimumSiteAddress {
   uprn?: string;
   blpu_code?: string;
