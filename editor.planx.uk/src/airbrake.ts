@@ -1,7 +1,7 @@
 import { Notifier } from "@airbrake/browser";
 import { isLiveEnv } from "utils";
 
-export const reportError = getErrorLogger().notify;
+export const logger = getErrorLogger();
 
 function log(...args: any[]) {
   return process.env.DEBUG
