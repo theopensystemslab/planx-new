@@ -4,7 +4,8 @@ jest.mock("@airbrake/browser");
 
 describe("logger", () => {
   const originalEnv = process.env;
-  let logSpy, windowSpy;
+  let logSpy: jest.SpyInstance;
+  let windowSpy: jest.SpyInstance;
 
   beforeEach(() => {
     process.env = originalEnv;
@@ -14,7 +15,7 @@ describe("logger", () => {
 
   afterEach(() => {
     jest.resetModules();
-    Notifier.mockRestore();
+    (Notifier as any).mockRestore();
     logSpy.mockRestore();
     windowSpy.mockRestore();
   });
@@ -46,13 +47,21 @@ describe("logger", () => {
   });
 
   test("Notifier is not configured for development environments", () => {
-    process.env = Object.assign({
-      DEBUG: "true",
-    });
     // instantiate the logger after env variables set
     const { logger } = require("./airbrake");
     expect(Notifier).not.toHaveBeenCalled();
     logger.notify({ some: "value" });
     expect(logSpy).toHaveBeenCalledWith({ some: "value" });
+  });
+
+  test("logs are suppressed when SUPRESS_LOGS is set", () => {
+    process.env = Object.assign({
+      SUPRESS_LOGS: "true",
+    });
+    // instantiate the logger after env variables set
+    const { logger } = require("./airbrake");
+    expect(Notifier).not.toHaveBeenCalled();
+    logger.notify({ some: "value" });
+    expect(logSpy).not.toHaveBeenCalledWith({ some: "value" });
   });
 });
