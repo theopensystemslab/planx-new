@@ -121,9 +121,6 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
 
 const deleteFlowsAndTeamsQuery = gql`
   mutation CleanDatabase {
-    delete_session_backups(where: {}){
-      affected_rows
-    }
     delete_analytics_logs(where: {}){
       affected_rows
     }
