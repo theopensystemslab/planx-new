@@ -28,11 +28,11 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 1. Run the following command to get everything (postgres, sharedb, api and hasura server processes) up and running `docker-compose up --build -d`
 
-1. Move into the hasura directory `cd ../hasura.planx.uk` & install dependencies `pnpm i`. 
+1. Move into the hasura directory `cd ../hasura.planx.uk` & install dependencies `pnpm i`.
 
 1. Open [Hasura's](https://hasura.io/) web console `pnpm start` & check that your Google email address is in the `users` table, if not then add it
 
-1. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`. 
+1. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`.
 
 1. Start the dev server! `pnpm start` & open http://localhost:3000 & login with your GMail/Google email address
 
@@ -59,12 +59,13 @@ This project uses Architecture Decision Records (ADRs) to record significant cha
 
 For maximum visibility and discoverability, we recommend using the [GitHub discussions board](https://github.com/theopensystemslab/planx-new/discussions) where possible.
 
-
 ## Deployments
 
-Our `main` branch is deployed to AWS staging (editor.planx.dev) and `production` is deployed to our AWS production environment (i.e. editor.planx.uk and the custom subdomain like planningservices.{council}.gov.uk) using Github Actions. 
+Our `main` branch is deployed to AWS staging (editor.planx.dev) and `production` is deployed to our AWS production environment (i.e. editor.planx.uk and the custom subdomain like planningservices.{council}.gov.uk) using Github Actions.
 
 We work in feature branches and open pull requests against `main`. Pull requests will spin up a Vultr server running Docker to test the whole stack (eg database migrations, API changes, frontend changes, Storybook, etc) and generate unique links that can be shared for user-acceptance tesing. Pull request environments use the domain pattern `<service>.<PR#>.planx.pizza` and are often simply referred to as "pizzas". The only changes which cannot be fully tested on a pizza are changes related to Pulumi infrastructure-as-code because this is only deployed in AWS environments, not via Docker.
+
+Pull requests will automatically deploy to a new pizza. To skip pizza deployments, add the `[skip pizza]` flag to your commit message.
 
 We aim to keep a linear commit history between `main` and `production` branches in Github. We "Squash & merge" pull request commits into `main`.
 

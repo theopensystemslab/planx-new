@@ -298,7 +298,7 @@ jobs:
     name: Upsert Vultr Instance
     needs: [build_react_app, build_storybook]
     runs-on: ubuntu-20.04
-    if: ${{ success() && contains(github.event.head_commit.message, '[no pizza]') != true }}
+    if: ${{ success() && contains(github.event.head_commit.message, '[skip pizza]') != true }}
     steps:
       - name: Create Pizza (if it doesn't exist)
         id: create
