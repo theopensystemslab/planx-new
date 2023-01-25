@@ -31,7 +31,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 1. Move into the hasura directory `cd ../hasura.planx.uk` & install dependencies `pnpm i`.
 
-1. Open [Hasura's](https://hasura.io/) web console `http://localhost:7000` & check that your Google email address is in the `users` table, if not then add it
+1. Open [Hasura's](https://hasura.io/) web console (`cd hasura.planx.uk` then `pnpm start`) & check that your Google email address is in the `users` table, if not then add it
 
 1. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`.
 
