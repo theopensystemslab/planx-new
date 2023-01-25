@@ -1,23 +1,16 @@
 import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-import { visuallyHidden } from "@mui/utils";
 import {
   DESCRIPTION_TEXT,
   ERROR_MESSAGE,
 } from "@planx/components/shared/constants";
-import FeedbackInput from "@planx/components/shared/FeedbackInput";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
-import { useFormik } from "formik";
-import { submitFeedback } from "lib/feedback";
 import find from "lodash/find";
-import { useStore } from "pages/FlowEditor/lib/store";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
-import useSWR from "swr";
 import { TeamSettings } from "types";
 import ExternalPlanningSiteDialog, {
   DialogPurpose,
@@ -42,63 +35,35 @@ export const FETCH_BLPU_CODES = gql`
 
 type Props = PublicProps<FindProperty>;
 
+interface Option extends SiteAddress {
+  title: string;
+}
+
 export default Component;
 
 function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
   const [address, setAddress] = useState<SiteAddress | undefined>();
-  const [localAuthorityDistricts, setLocalAuthorityDistricts] = useState<
-    string[] | undefined
-  >();
-  const [regions, setRegions] = useState<string[] | undefined>();
-  const flow = useStore((state) => state.flow);
   const team = fetchCurrentTeam();
 
-  // if we have an address point, check which local authority district(s) & region it's located in via Digital Land
-  let options = new URLSearchParams({
-    entries: "all", // includes historic
-    geometry: `POINT(${address?.longitude} ${address?.latitude})`,
-    geometry_relation: "intersects",
-    limit: "100",
-  });
-  options.append("dataset", "local-authority-district");
-  options.append("dataset", "region");
+  return (
+    <Card
+      isValid={Boolean(address)}
+      handleSubmit={() => {
+        if (address) {
+          const newPassportData: any = {};
 
-  // https://www.planning.data.gov.uk/docs#/Search%20entity
-  const root = `https://www.planning.data.gov.uk/entity.json?`;
-  const digitalLandEndpoint = root + options;
-  const fetcher = (url: string) => fetch(url).then((r) => r.json());
-  const { data } = useSWR(
-    () =>
-      address?.latitude && address?.longitude ? digitalLandEndpoint : null,
-    fetcher,
-    {
-      shouldRetryOnError: true,
-      errorRetryInterval: 500,
-      errorRetryCount: 1,
-    }
-  );
-
-  useEffect(() => {
-    if (address && data) {
-      if (data.count > 0) {
-        const lads: string[] = [];
-        const regions: string[] = [];
-        data.entities.forEach((entity: any) => {
-          if (entity.dataset === "local-authority-district") {
-            lads.push(entity.name);
-          } else if (entity.dataset === "region") {
-            regions.push(entity.name);
+          newPassportData["_address"] = address;
+          if (address.planx_value) {
+            newPassportData["property.type"] = address.planx_value;
           }
-        });
-        setLocalAuthorityDistricts([...new Set(lads)]);
-        setRegions([...new Set(regions)]);
-      }
-    }
-  }, [data]);
 
-  if (!address && Boolean(team)) {
-    return (
+          props.handleSubmit?.({ data: { ...newPassportData } });
+        } else {
+          throw Error("Should not have been clickable");
+        }
+      }}
+    >
       <GetAddress
         title={props.title}
         description={props.description}
@@ -108,74 +73,8 @@ function Component(props: Props) {
         teamSettings={team?.settings}
         id={props.id}
       />
-    );
-  } else if (address) {
-    return (
-      <PropertyInformation
-        previousFeedback={props.previouslySubmittedData?.feedback}
-        handleSubmit={({ feedback }: { feedback?: string }) => {
-          if (flow && address) {
-            const newPassportData: any = {};
-
-            if (address?.planx_value) {
-              newPassportData["property.type"] = [address.planx_value];
-            }
-
-            if (localAuthorityDistricts) {
-              newPassportData["property.localAuthorityDistrict"] =
-                localAuthorityDistricts;
-            }
-
-            if (regions) {
-              newPassportData["property.region"] = regions;
-            }
-
-            const passportData = {
-              _address: address,
-              ...newPassportData,
-            };
-
-            const submissionData: any = {
-              data: passportData,
-            };
-
-            if (feedback) {
-              submissionData.feedback = feedback;
-            }
-
-            props.handleSubmit?.(submissionData);
-          } else {
-            throw Error("Should not have been clickable");
-          }
-        }}
-        lng={address.longitude}
-        lat={address.latitude}
-        title="About the property"
-        description="This is the information we currently have about the property"
-        propertyDetails={[
-          {
-            heading: "Address",
-            detail: address.title,
-          },
-          {
-            heading: "Postcode",
-            detail: address.postcode,
-          },
-          {
-            heading: "Local planning authority",
-            detail: localAuthorityDistricts?.join(", ") || team?.name,
-          },
-          {
-            heading: "Building type", // XXX: does this heading still make sense for infra?
-            detail: address.planx_description,
-          },
-        ]}
-        teamColor={team?.theme?.primary || "#2c2c2c"}
-      />
-    );
-  } else {
-    return <DelayedLoadingIndicator text="Fetching property information..." />;
-  }
+    </Card>
+  );
 }
 
 const AutocompleteWrapper = styled(Box)(({ theme }) => ({
@@ -229,7 +128,7 @@ function GetAddress(props: {
       const selectedAddress: Record<string, any> | undefined =
         detail?.address?.LPI;
       if (selectedAddress) {
-        setSelectedOption({
+        props.setAddress({
           uprn: selectedAddress.UPRN.padStart(12, "0"),
           blpu_code: selectedAddress.BLPU_STATE_CODE,
           latitude: selectedAddress.LAT,
@@ -272,7 +171,7 @@ function GetAddress(props: {
         addressSelectionHandler
       );
     };
-  }, [sanitizedPostcode, setSelectedOption]);
+  }, [sanitizedPostcode, setSelectedOption, props.setAddress]);
 
   const handleCheckPostcode = () => {
     if (!sanitizedPostcode) setShowPostcodeError(true);
@@ -300,10 +199,7 @@ function GetAddress(props: {
   };
 
   return (
-    <Card
-      handleSubmit={() => props.setAddress(selectedOption)}
-      isValid={Boolean(selectedOption)}
-    >
+    <>
       <QuestionHeader
         title={props.title || DEFAULT_TITLE}
         description={props.description || ""}
@@ -357,96 +253,6 @@ function GetAddress(props: {
         purpose={DialogPurpose.MissingAddress}
         teamSettings={props.teamSettings}
       ></ExternalPlanningSiteDialog>
-    </Card>
-  );
-}
-
-interface Option extends SiteAddress {
-  title: string;
-}
-
-const MapContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1, 0),
-  "& my-map": {
-    width: "100%",
-    height: "50vh",
-  },
-}));
-
-const PropertyDetail = styled(Box)(({ theme }) => ({
-  display: "flex",
-  justifyContent: "flex-start",
-  borderBottom: `1px solid ${theme.palette.background.paper}`,
-}));
-
-export function PropertyInformation(props: any) {
-  const {
-    title,
-    description,
-    propertyDetails,
-    lat,
-    lng,
-    handleSubmit,
-    teamColor,
-    previousFeedback,
-  } = props;
-  const formik = useFormik({
-    initialValues: {
-      feedback: previousFeedback || "",
-    },
-    onSubmit: (values) => {
-      if (values.feedback) {
-        submitFeedback(
-          values.feedback,
-          "Inaccurate property details",
-          propertyDetails
-        );
-      }
-      handleSubmit?.(values);
-    },
-  });
-
-  return (
-    <Card handleSubmit={formik.handleSubmit} isValid>
-      <QuestionHeader title={title} description={description} />
-      <MapContainer>
-        <p style={visuallyHidden}>
-          A static map centred on the property address, showing the Ordnance
-          Survey basemap features.
-        </p>
-        {/* @ts-ignore */}
-        <my-map
-          id="property-information-map"
-          zoom={19.5}
-          latitude={lat}
-          longitude={lng}
-          osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
-          hideResetControl
-          showMarker
-          markerLatitude={lat}
-          markerLongitude={lng}
-          // markerColor={teamColor} // defaults to black
-        />
-      </MapContainer>
-      <Box component="dl" mb={3}>
-        {propertyDetails.map(({ heading, detail }: any) => (
-          <PropertyDetail key={heading}>
-            <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
-              {heading}
-            </Box>
-            <Box component="dd" flexGrow={1} py={1}>
-              {detail}
-            </Box>
-          </PropertyDetail>
-        ))}
-      </Box>
-      <Box textAlign="right">
-        <FeedbackInput
-          text="Report an inaccuracy"
-          handleChange={formik.handleChange}
-          value={formik.values.feedback}
-        />
-      </Box>
-    </Card>
+    </>
   );
 }
