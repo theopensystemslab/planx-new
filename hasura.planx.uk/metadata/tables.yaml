@@ -289,6 +289,13 @@
         foreign_key_constraint_on: flow_id
 - table:
     schema: public
+    name: payment_status
+- table:
+    schema: public
+    name: payment_status_enum
+  is_enum: true
+- table:
+    schema: public
     name: planning_constraints_requests
 - table:
     schema: public
