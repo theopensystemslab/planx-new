@@ -48,7 +48,6 @@ export interface PreviewStore extends Store.Store {
   };
   resumeSession: (session: Session) => void;
   sessionId: string;
-  sendSessionDataToHasura: () => void;
   upcomingCardIds: () => Store.nodeId[];
   isFinalCard: () => boolean;
   govUkPayment?: GovUKPayment;
@@ -343,43 +342,6 @@ export const previewStore = (
   },
 
   sessionId: uuidV4(),
-
-  async sendSessionDataToHasura() {
-    try {
-      const { breadcrumbs, computePassport, flow, id, sessionId } = get();
-
-      await client.mutate({
-        mutation: gql`
-          mutation CreateSessionBackup(
-            $session_id: uuid
-            $flow_id: uuid
-            $flow_data: jsonb
-            $user_data: jsonb
-          ) {
-            insert_session_backups_one(
-              object: {
-                session_id: $session_id
-                flow_id: $flow_id
-                flow_data: $flow_data
-                user_data: $user_data
-              }
-            ) {
-              id
-            }
-          }
-        `,
-        variables: {
-          session_id: sessionId,
-          flow_id: id,
-          flow_data: flow,
-          user_data: {
-            breadcrumbs,
-            passport: computePassport(),
-          },
-        },
-      });
-    } catch (e) {}
-  },
 
   upcomingCardIds() {
     const { flow, breadcrumbs, computePassport, collectedFlags } = get();
