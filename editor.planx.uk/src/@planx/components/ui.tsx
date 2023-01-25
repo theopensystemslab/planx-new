@@ -9,6 +9,7 @@ import FunctionsIcon from "@mui/icons-material/Functions";
 import Home from "@mui/icons-material/Home";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import List from "@mui/icons-material/List";
+import LocationOnOutlined from "@mui/icons-material/LocationOnOutlined";
 import Map from "@mui/icons-material/Map";
 import PaymentOutlined from "@mui/icons-material/PaymentOutlined";
 import Pin from "@mui/icons-material/Pin";
@@ -71,6 +72,7 @@ export const ICONS: {
   [TYPES.NumberInput]: Pin,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PlanningConstraints]: Map,
+  [TYPES.PropertyInformation]: LocationOnOutlined,
   [TYPES.Response]: undefined,
   [TYPES.Result]: PlaylistAddCheck,
   [TYPES.Review]: RateReview,

@@ -64,6 +64,7 @@ const components: {
   [TYPES.NumberInput]: NumberInput,
   [TYPES.Pay]: undefined,
   [TYPES.PlanningConstraints]: undefined,
+  [TYPES.PropertyInformation]: undefined,
   [TYPES.Response]: Debug,
   [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,

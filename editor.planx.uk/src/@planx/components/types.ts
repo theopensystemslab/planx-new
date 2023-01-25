@@ -6,6 +6,7 @@ export enum TYPES {
   FindProperty = 9,
   DrawBoundary = 10,
   PlanningConstraints = 11,
+  PropertyInformation = 12,
   Statement = 100, // Question/DropDown
   Checklist = 105,
   TextInput = 110,

@@ -13,6 +13,7 @@ import NumberInput from "@planx/components/NumberInput/Public";
 import { GOV_PAY_PASSPORT_KEY } from "@planx/components/Pay/model";
 import Pay from "@planx/components/Pay/Public";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Public";
+import PropertyInformation from "@planx/components/PropertyInformation/Public";
 import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
 import Review from "@planx/components/Review/Public";
@@ -231,6 +232,9 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.PlanningConstraints:
       return <PlanningConstraints {...allProps} />;
+
+    case TYPES.PropertyInformation:
+      return <PropertyInformation {...allProps} />;
 
     case TYPES.ExternalPortal:
     case TYPES.Filter:

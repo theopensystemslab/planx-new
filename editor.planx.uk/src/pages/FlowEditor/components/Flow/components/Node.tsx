@@ -70,6 +70,13 @@ const Node: React.FC<any> = (props) => {
           text={node?.data?.title ?? "Planning constraints"}
         />
       );
+    case TYPES.PropertyInformation:
+      return (
+        <Question
+          {...allProps}
+          text={node?.data?.title ?? "Property information"}
+        />
+      );
     case TYPES.Result:
       return (
         <Question
