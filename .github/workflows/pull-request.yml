@@ -157,6 +157,7 @@ jobs:
   build_react_app:
     name: Build React App
     runs-on: ubuntu-20.04
+    if: ${{ needs.changes.outputs.editor == 'true' }}
     steps:
       - uses: actions/checkout@v2
       - name: Cache build assets
@@ -194,6 +195,7 @@ jobs:
   build_storybook:
     name: Build Storybook
     runs-on: ubuntu-20.04
+    if: ${{ needs.changes.outputs.editor == 'true' }}
     steps:
       - uses: actions/checkout@v2
       - name: Cache build assets
@@ -436,7 +438,7 @@ jobs:
         uses: treosh/lighthouse-ci-action@v9
         id: LHCIAction
         with:
-          urls: | 
+          urls: |
             https://${{ env.FULL_DOMAIN }}/buckinghamshire/find-out-if-you-need-planning-permission/preview
             https://${{ env.FULL_DOMAIN }}/testing/lighthouse-canary-flow/unpublished
           # budgetPath: ./budget.json # test performance budgets
