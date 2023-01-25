@@ -35,6 +35,7 @@
     "passport": "^0.5.3",
     "passport-google-oauth20": "^2.0.0",
     "pino-noir": "^2.2.1",
+    "planx-client": "file:shared/planx-client-1.0.0.tgz",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "slack-notify": "^2.0.3",
@@ -67,8 +68,8 @@
     "@types/node": "^16.18.2",
     "@types/passport": "^1.0.11",
     "@types/passport-google-oauth20": "^2.0.11",
-    "@types/react": "^18.0.25",
-    "@types/react-dom": "^18.0.9",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
@@ -92,6 +93,10 @@
   },
   "pnpm": {
     "peerDependencyRules": {
+      "allowAny": [
+        "react",
+        "react-dom"
+      ],
       "allowedVersions": {
         "nock": "13"
       }

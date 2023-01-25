@@ -2,9 +2,10 @@
 
 This package is a declarative boundary between the data access layer (GraphQL/Hasura/Postgres) and the PlanX domain.
 
-Currently, this package is not published but it is linked to project folders (i.e. `pnpm link planx-client`).
+Currently, this package is not published but it is copied and linked to project folders (i.e. `pnpm link planx-client`).
 
-Updates for linked project folders (e.g. `e2e`) requires running a build to make changes available: `pnpm build`
+To Update, run `pnpm distribute` which will build and install a local version of this package into each dependent project.
+Optionally, you can distribute (copy files) to a specific location with `pnpm distribute ../api.planx.uk` (where the last argument is a relative path to a directory from the project root).
 
 ## Debugging
 

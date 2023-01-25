@@ -1,7 +1,24 @@
 import { Request } from "./graphql";
-import defaultSettings from "./defaults/settings.json";
-import defaultNotifyPersonalisation from "./defaults/notify.json";
 import log from "./logger";
+
+const defaultNotifyPersonalisation = {
+  notify_personalisation: {
+    helpEmail: "example@council.gov.uk",
+    helpPhone: "(01234) 567890",
+    emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
+    helpOpeningHours: "Monday - Friday, 9am - 5pm",
+  },
+};
+
+const defaultSettings = {
+  settings: {
+    homepage: "https://example.com",
+    externalPlanningSite: {
+      url: "https://planningportal.co.uk",
+      name: "Planning Portal",
+    },
+  },
+};
 
 export async function createTeam(
   request: Request,
