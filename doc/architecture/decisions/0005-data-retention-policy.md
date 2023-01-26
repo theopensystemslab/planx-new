@@ -10,6 +10,8 @@ Accepted
 
 We have agreed that we need to implement a data retention policy, and the basics of this has been created in [#1325](https://github.com/theopensystemslab/planx-new/pull/1325).
 
+This document and policy specifically covers user data related to applications submitted via PlanX. Further documents will lay out our policies on Flow Data and Analytics.
+
 As part of this, it surfaced that we do not have an agreed and formalised data retention policy which lives outside of the code to serve as a reference.
 
 ## Decision
