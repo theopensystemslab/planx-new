@@ -114,7 +114,7 @@ function Component(props: Props) {
       return;
     }
 
-    if (govUkPayment.state.status === PaymentStatus.Success) {
+    if (govUkPayment.state.status === PaymentStatus.success) {
       handleSuccess();
     } else {
       dispatch(Action.IncompletePaymentFound);
@@ -137,24 +137,31 @@ function Component(props: Props) {
   };
 
   const normalizePaymentResponse = (responseData: any): GovUKPayment => {
-    const payment: GovUKPayment = responseData;
-    if (!payment.state.status)
+    if (!responseData?.state?.status)
       throw new Error("Corrupted response from GOV.UK");
-    const normalizedPayment = {
-      ...payment,
-      amount: toDecimal(payment.amount),
-    };
-    return normalizedPayment;
+    let payment: GovUKPayment = responseData;
+    if (payment.amount)
+      payment = {
+        ...payment,
+        amount: toDecimal(payment.amount),
+      };
+    return payment;
   };
 
-  const resolvePaymentResponse = (responseData: any): GovUKPayment => {
+  const resolvePaymentResponse = async (
+    responseData: any
+  ): Promise<GovUKPayment> => {
     const payment = normalizePaymentResponse(responseData);
     setGovUkPayment(payment);
-    createPaymentStatus({
-      teamSlug,
-      paymentId: payment.payment_id,
-      status: payment.state.status,
-    });
+    try {
+      await createPaymentStatus({
+        teamSlug,
+        paymentId: payment.payment_id,
+        status: PaymentStatus[payment.state.status],
+      });
+    } catch (e) {
+      reportError({ error: e, payment });
+    }
     return payment;
   };
 
@@ -168,8 +175,11 @@ function Component(props: Props) {
 
       // Update local state with the refetched payment state
       if (govUkPayment) {
-        const payment = resolvePaymentResponse({ ...govUkPayment, state });
-        if (payment.state.status === PaymentStatus.Success) {
+        const payment = await resolvePaymentResponse({
+          ...govUkPayment,
+          state,
+        });
+        if (state.status === PaymentStatus.success) {
           handleSuccess();
           return;
         }
@@ -192,15 +202,15 @@ function Component(props: Props) {
     }
 
     switch (govUkPayment.state.status) {
-      case PaymentStatus.Cancelled:
-      case PaymentStatus.Error:
-      case PaymentStatus.Failed: {
+      case PaymentStatus.cancelled:
+      case PaymentStatus.error:
+      case PaymentStatus.failed: {
         startNewPayment();
         break;
       }
-      case PaymentStatus.Started:
-      case PaymentStatus.Created:
-      case PaymentStatus.Submitted: {
+      case PaymentStatus.started:
+      case PaymentStatus.created:
+      case PaymentStatus.submitted: {
         if (govUkPayment._links.next_url?.href) {
           window.location.replace(govUkPayment._links.next_url.href);
         } else {
@@ -225,8 +235,8 @@ function Component(props: Props) {
 
     await axios
       .post(govUkPayUrlForTeam, createPayload(fee, sessionId))
-      .then((res) => {
-        const payment = resolvePaymentResponse(res.data);
+      .then(async (res) => {
+        const payment = await resolvePaymentResponse(res.data);
         if (payment._links.next_url?.href)
           window.location.replace(payment._links.next_url.href);
       })

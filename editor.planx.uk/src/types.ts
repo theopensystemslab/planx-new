@@ -109,14 +109,14 @@ export interface GovUKPayment {
 }
 
 export enum PaymentStatus {
-  Created = "created",
-  Started = "started",
-  Submitted = "submitted",
-  Capturable = "capturable",
-  Success = "success",
-  Failed = "failed",
-  Cancelled = "cancelled",
-  Error = "error",
+  created = "created",
+  started = "started",
+  submitted = "submitted",
+  capturable = "capturable",
+  success = "success",
+  failed = "failed",
+  cancelled = "cancelled",
+  error = "error",
 }
 
 /**

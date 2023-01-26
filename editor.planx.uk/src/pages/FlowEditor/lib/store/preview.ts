@@ -367,15 +367,15 @@ export const previewStore = (
           $teamSlug: String!
           $status: payment_status_enum_enum
         ) {
-          insert_payment_status_one(
-            object: {
+          insert_payment_status(
+            objects: {
               session_id: $sessionId
               payment_id: $paymentId
               team_slug: $teamSlug
               status: $status
             }
           ) {
-            session_id
+            affected_rows
           }
         }
       `,
@@ -383,6 +383,7 @@ export const previewStore = (
         sessionId,
         teamSlug,
         paymentId,
+        status,
       },
     });
   },
