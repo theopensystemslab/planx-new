@@ -26,9 +26,9 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    // Confirm this local authority (aka team) has an email configured in teams.settings
-    const { settings, notify_personalisation } = await getTeamSettings(req.params.localAuthority);
-    if (settings?.sendToEmail) {
+    // Confirm this local authority (aka team) has an email configured in teams.submission_email
+    const { submission_email: sendToEmail, notify_personalisation } = await getTeamEmailSettings(req.params.localAuthority);
+    if (sendToEmail) {
       // Append formatted "csv" data to lowcal_session.data so it's available later to the download-application-files endpoint
       const updatedSessionData = await appendSessionData(payload.sessionId, payload.csv);
 
@@ -39,12 +39,12 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
           serviceName: capitalize(payload?.flowName) || "PlanX",
           sessionId: payload.sessionId,
           applicantEmail: payload.email,
-          downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${settings.sendToEmail}&localAuthority=${req.params.localAuthority}`,
+          downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${sendToEmail}&localAuthority=${req.params.localAuthority}`,
         }
       };
 
       // Send the email
-      const response = await sendEmail("submit", settings.sendToEmail, config);
+      const response = await sendEmail("submit", sendToEmail, config);
       if (response?.message === "Success") {
         // Mark session as submitted so that reminder and expiry emails are not triggered
         markSessionAsSubmitted(payload.sessionId);
@@ -85,8 +85,8 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
 
   try {
     // Confirm that the provided email matches the stored team settings for the provided localAuthority
-    const { settings, notify_personalisation } = await getTeamSettings(req.query.localAuthority as string);
-    if (settings?.sendToEmail != req.query.email) {
+    const { submission_email: sendToEmail, notify_personalisation } = await getTeamEmailSettings(req.query.localAuthority as string);
+    if (sendToEmail != req.query.email) {
       return next({
         status: 403,
         message: "Provided email address is not enabled to access application files"
@@ -200,14 +200,14 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
   }
 };
 
-async function getTeamSettings(localAuthority: string) {
+async function getTeamEmailSettings(localAuthority: string) {
   const response = await client.request(
     gql`
-      query getTeamSettings(
+      query getTeamEmailSettings(
         $slug: String
       ) {
         teams(where: {slug: {_eq: $slug}}) {
-          settings
+          submission_email
           notify_personalisation
         }
       }
