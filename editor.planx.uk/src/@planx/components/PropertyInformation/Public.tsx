@@ -61,6 +61,7 @@ function Component(props: Props) {
     state.computePassport().data?._address,
     state.computePassport().data?.["property.type"],
   ]);
+
   const team = fetchCurrentTeam();
   const classes = useClasses();
 
@@ -161,7 +162,11 @@ function Component(props: Props) {
 
   if (!address) {
     return (
-      <div className={classes.errorSummary} role="status">
+      <div
+        className={classes.errorSummary}
+        role="status"
+        data-testid="error-summary-invalid-graph"
+      >
         <Typography variant="h5" component="h2" gutterBottom>
           Invalid graph
         </Typography>

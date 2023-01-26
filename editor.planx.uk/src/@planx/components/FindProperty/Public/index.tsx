@@ -11,7 +11,6 @@ import { PublicProps } from "@planx/components/ui";
 import find from "lodash/find";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
-import { TeamSettings } from "types";
 import ExternalPlanningSiteDialog, {
   DialogPurpose,
 } from "ui/ExternalPlanningSiteDialog";
@@ -39,11 +38,21 @@ interface Option extends SiteAddress {
   title: string;
 }
 
+interface PickOsAddressProps {
+  setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
+  initialPostcode?: string;
+  initialSelectedAddress?: Option;
+  id?: string;
+  description?: string;
+}
+
 export default Component;
 
 function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
-  const [address, setAddress] = useState<SiteAddress | undefined>();
+  const [address, setAddress] = useState<SiteAddress | undefined>(
+    previouslySubmittedData?._address
+  );
   const team = fetchCurrentTeam();
 
   return (
@@ -52,27 +61,26 @@ function Component(props: Props) {
       handleSubmit={() => {
         if (address) {
           const newPassportData: any = {};
-
           newPassportData["_address"] = address;
-          if (address.planx_value) {
-            newPassportData["property.type"] = address.planx_value;
+          if (address?.planx_value) {
+            newPassportData["property.type"] = [address.planx_value];
           }
-
           props.handleSubmit?.({ data: { ...newPassportData } });
-        } else {
-          throw Error("Should not have been clickable");
         }
       }}
     >
-      <GetAddress
-        title={props.title}
-        description={props.description}
+      <QuestionHeader
+        title={props.title || DEFAULT_TITLE}
+        description={props.description || ""}
+      />
+      <PickOsAddress
         setAddress={setAddress}
         initialPostcode={previouslySubmittedData?._address.postcode}
         initialSelectedAddress={previouslySubmittedData?._address}
-        teamSettings={team?.settings}
         id={props.id}
+        description={props.description || ""}
       />
+      <ExternalPlanningSiteDialog purpose={DialogPurpose.MissingAddress} />
     </Card>
   );
 }
@@ -94,15 +102,7 @@ const AutocompleteWrapper = styled(Box)(({ theme }) => ({
   "--autocomplete__font-family": theme.typography.fontFamily,
 }));
 
-function GetAddress(props: {
-  setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
-  title?: string;
-  description?: string;
-  initialPostcode?: string;
-  initialSelectedAddress?: Option;
-  teamSettings?: TeamSettings;
-  id?: string;
-}) {
+function PickOsAddress(props: PickOsAddressProps) {
   const [postcode, setPostcode] = useState<string | null>(
     props.initialPostcode ?? null
   );
@@ -171,7 +171,7 @@ function GetAddress(props: {
         addressSelectionHandler
       );
     };
-  }, [sanitizedPostcode, setSelectedOption, props.setAddress]);
+  }, [sanitizedPostcode, selectedOption]);
 
   const handleCheckPostcode = () => {
     if (!sanitizedPostcode) setShowPostcodeError(true);
@@ -182,12 +182,14 @@ function GetAddress(props: {
   const handlePostcodeInputChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    // Reset the address on change of postcode - ensures no visual mismatch between address and postcode
     if (selectedOption) {
+      // Reset the selected address on change of postcode to ensures no visual mismatch between address and postcode
       setSelectedOption(undefined);
+      // Disable the "Continue" button if changing postcode before selecting new address after having come "back"
+      props.setAddress(undefined);
     }
 
-    // Validate and set Postcode
+    // Validate and set postcode
     const input = e.target.value;
     if (parse(input.trim()).valid) {
       setSanitizedPostcode(toNormalised(input.trim()));
@@ -199,60 +201,50 @@ function GetAddress(props: {
   };
 
   return (
-    <>
-      <QuestionHeader
-        title={props.title || DEFAULT_TITLE}
-        description={props.description || ""}
-      />
-      <AutocompleteWrapper>
-        <InputLabel label="Postcode" htmlFor="postcode-input">
-          <Input
-            required
-            bordered
-            name="postcode"
-            id="postcode-input"
-            value={postcode || ""}
-            errorMessage={
+    <AutocompleteWrapper>
+      <InputLabel label="Postcode" htmlFor="postcode-input">
+        <Input
+          required
+          bordered
+          name="postcode"
+          id="postcode-input"
+          value={postcode || ""}
+          errorMessage={
+            showPostcodeError && !sanitizedPostcode
+              ? "Enter a valid UK postcode"
+              : ""
+          }
+          onChange={(e) => handlePostcodeInputChange(e)}
+          onKeyUp={({ key }) => {
+            if (key === "Enter") handleCheckPostcode();
+          }}
+          onBlur={handleCheckPostcode}
+          style={{ marginBottom: "20px" }}
+          inputProps={{
+            maxLength: 8,
+            "aria-describedby": [
+              props.description ? DESCRIPTION_TEXT : "",
               showPostcodeError && !sanitizedPostcode
-                ? "Enter a valid UK postcode"
-                : ""
-            }
-            onChange={(e) => handlePostcodeInputChange(e)}
-            onKeyUp={({ key }) => {
-              if (key === "Enter") handleCheckPostcode();
-            }}
-            onBlur={handleCheckPostcode}
-            style={{ marginBottom: "20px" }}
-            inputProps={{
-              maxLength: 8,
-              "aria-describedby": [
-                props.description ? DESCRIPTION_TEXT : "",
-                showPostcodeError && !sanitizedPostcode
-                  ? `${ERROR_MESSAGE}-${props.id}`
-                  : "",
-              ]
-                .filter(Boolean)
-                .join(" "),
-            }}
-          />
-        </InputLabel>
-        {sanitizedPostcode && (
-          /* @ts-ignore */
-          <address-autocomplete
-            id="address-autocomplete"
-            data-testid="address-autocomplete-web-component"
-            postcode={sanitizedPostcode}
-            initialAddress={selectedOption?.title || ""}
-            osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
-            arrowStyle="light"
-            labelStyle="static"
-          />
-        )}
-      </AutocompleteWrapper>
-      <ExternalPlanningSiteDialog
-        purpose={DialogPurpose.MissingAddress}
-        teamSettings={props.teamSettings}
-      ></ExternalPlanningSiteDialog>
-    </>
+                ? `${ERROR_MESSAGE}-${props.id}`
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" "),
+          }}
+        />
+      </InputLabel>
+      {sanitizedPostcode && (
+        /* @ts-ignore */
+        <address-autocomplete
+          id="address-autocomplete"
+          data-testid="address-autocomplete-web-component"
+          postcode={sanitizedPostcode}
+          initialAddress={selectedOption?.title || ""}
+          osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
+          arrowStyle="light"
+          labelStyle="static"
+        />
+      )}
+    </AutocompleteWrapper>
   );
 }
