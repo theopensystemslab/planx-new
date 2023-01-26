@@ -9,11 +9,10 @@ describe("payment_status", () => {
 
     test("can INSERT records", () => {
       expect(i.mutations).toContain("insert_payment_status");
-      expect(i.mutations).toContain("insert_payment_status_one");
     });
 
-    test("can QUERY records", () => {
-      expect(i.queries).toContain("payment_status"); // "permissions" limit to 1 row only and only "id" column
+    test("cannot QUERY records", () => {
+      expect(i.queries).not.toContain("payment_status");
     });
 
     test("cannot DELETE records", () => {
