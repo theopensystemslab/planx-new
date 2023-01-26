@@ -290,6 +290,15 @@
 - table:
     schema: public
     name: payment_status
+  insert_permissions:
+    - role: public
+      permission:
+        check: {}
+        columns:
+          - payment_id
+          - session_id
+          - status
+          - team_slug
 - table:
     schema: public
     name: payment_status_enum

@@ -1,4 +1,4 @@
-CREATE TABLE "public"."payment_status" ("session_id" uuid NOT NULL, "payment_id" text NOT NULL, "status" text NOT NULL, "team_slug" text NOT NULL, "created_at" timestamptz NOT NULL DEFAULT now(), "updated_at" timestamptz NOT NULL DEFAULT now(), PRIMARY KEY ("session_id"), FOREIGN KEY ("status") REFERENCES "public"."payment_status_enum"("value") ON UPDATE no action ON DELETE no action, FOREIGN KEY ("team_slug") REFERENCES "public"."teams"("slug") ON UPDATE no action ON DELETE no action);
+CREATE TABLE "public"."payment_status" ("session_id" uuid NOT NULL, "payment_id" text NOT NULL, "status" text NOT NULL, "team_slug" text NOT NULL, "created_at" timestamptz NOT NULL DEFAULT now(), "updated_at" timestamptz NOT NULL DEFAULT now(), FOREIGN KEY ("status") REFERENCES "public"."payment_status_enum"("value") ON UPDATE no action ON DELETE no action, FOREIGN KEY ("team_slug") REFERENCES "public"."teams"("slug") ON UPDATE no action ON DELETE no action);
 COMMENT ON TABLE "public"."payment_status" IS E'Session payment status';
 CREATE OR REPLACE FUNCTION "public"."set_current_timestamp_updated_at"()
 RETURNS TRIGGER AS $$
