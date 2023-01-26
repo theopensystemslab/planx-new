@@ -83,16 +83,7 @@ export interface GovUKPayment {
   amount: number;
   reference: string;
   state: {
-    // https://docs.payments.service.gov.uk/api_reference/#status-and-finished
-    status:
-      | "created"
-      | "started"
-      | "submitted"
-      | "capturable"
-      | "success"
-      | "failed"
-      | "cancelled"
-      | "error";
+    status: PaymentStatus;
     finished: boolean;
   };
   payment_id: string;
@@ -115,6 +106,17 @@ export interface GovUKPayment {
       method: string;
     };
   };
+}
+
+export enum PaymentStatus {
+  Created = "created",
+  Started = "started",
+  Submitted = "submitted",
+  Capturable = "capturable",
+  Success = "success",
+  Failed = "failed",
+  Cancelled = "cancelled",
+  Error = "error",
 }
 
 /**

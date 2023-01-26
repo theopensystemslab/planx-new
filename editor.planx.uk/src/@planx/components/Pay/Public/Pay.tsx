@@ -5,6 +5,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
 import type { GovUKPayment } from "types";
+import { PaymentStatus } from "types";
 
 import { useTeamSlug } from "../../shared/hooks";
 import { makeData, useStagingUrlIfTestApplication } from "../../shared/utils";
@@ -50,6 +51,7 @@ function Component(props: Props) {
     passport,
     environment,
     sendSessionDataToHasura,
+    createPaymentStatus,
   ] = useStore((state) => [
     state.sessionId,
     state.govUkPayment,
@@ -57,6 +59,7 @@ function Component(props: Props) {
     state.computePassport(),
     state.previewEnvironment,
     state.sendSessionDataToHasura,
+    state.createPaymentStatus,
   ]);
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
@@ -111,7 +114,7 @@ function Component(props: Props) {
       return;
     }
 
-    if (govUkPayment.state.status === "success") {
+    if (govUkPayment.state.status === PaymentStatus.Success) {
       handleSuccess();
     } else {
       dispatch(Action.IncompletePaymentFound);
@@ -133,40 +136,45 @@ function Component(props: Props) {
     props.handleSubmit(makeData(props, govUkPayment, GOV_PAY_PASSPORT_KEY));
   };
 
-  const updatePayment = (responseData: any): GovUKPayment => {
+  const normalizePaymentResponse = (responseData: any): GovUKPayment => {
     const payment: GovUKPayment = responseData;
-
+    if (!payment.state.status)
+      throw new Error("Corrupted response from GOV.UK");
     const normalizedPayment = {
       ...payment,
       amount: toDecimal(payment.amount),
     };
-
-    setGovUkPayment(normalizedPayment);
-
     return normalizedPayment;
+  };
+
+  const resolvePaymentResponse = (responseData: any): GovUKPayment => {
+    const payment = normalizePaymentResponse(responseData);
+    setGovUkPayment(payment);
+    createPaymentStatus({
+      teamSlug,
+      paymentId: payment.payment_id,
+      status: payment.state.status,
+    });
+    return payment;
   };
 
   const refetchPayment = async (id: string) => {
     try {
       const {
         data: { state },
-      } = await axios.get<
-        // API response has sensitive info filtered out
-        Pick<GovUKPayment, "payment_id" | "amount" | "state">
-      >(`${govUkPayUrlForTeam}/${id}`);
-
-      if (!state.status) throw new Error("Corrupted response from GOV.UK");
+      } = await axios.get<Pick<GovUKPayment, "state">>(
+        `${govUkPayUrlForTeam}/${id}`
+      );
 
       // Update local state with the refetched payment state
-      if (govUkPayment) setGovUkPayment({ ...govUkPayment, state });
-
-      switch (state.status) {
-        case "success":
+      if (govUkPayment) {
+        const payment = resolvePaymentResponse({ ...govUkPayment, state });
+        if (payment.state.status === PaymentStatus.Success) {
           handleSuccess();
-          break;
-        default:
-          dispatch(Action.IncompletePaymentConfirmed);
+          return;
+        }
       }
+      dispatch(Action.IncompletePaymentConfirmed);
     } catch (err) {
       // XXX: There's probably been an issue fetching the payment status,
       //      but there's a chance that the user might've made a successful
@@ -184,16 +192,25 @@ function Component(props: Props) {
     }
 
     switch (govUkPayment.state.status) {
-      case "cancelled":
-      case "error":
-      case "failed":
+      case PaymentStatus.Cancelled:
+      case PaymentStatus.Error:
+      case PaymentStatus.Failed: {
         startNewPayment();
         break;
-      case "started":
-      case "created":
-      case "submitted":
-        if (govUkPayment._links.next_url?.href)
+      }
+      case PaymentStatus.Started:
+      case PaymentStatus.Created:
+      case PaymentStatus.Submitted: {
+        if (govUkPayment._links.next_url?.href) {
           window.location.replace(govUkPayment._links.next_url.href);
+        } else {
+          reportError("Payment did not include a 'next_url' link.");
+        }
+        break;
+      }
+      default: {
+        reportError("Unhandled payment status");
+      }
     }
   };
 
@@ -209,8 +226,7 @@ function Component(props: Props) {
     await axios
       .post(govUkPayUrlForTeam, createPayload(fee, sessionId))
       .then((res) => {
-        const payment = updatePayment(res.data);
-
+        const payment = resolvePaymentResponse(res.data);
         if (payment._links.next_url?.href)
           window.location.replace(payment._links.next_url.href);
       })

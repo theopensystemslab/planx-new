@@ -10,12 +10,12 @@ import isEqual from "lodash/isEqual";
 import isNil from "lodash/isNil";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
-import type { Flag, GovUKPayment, Session } from "types";
 import { v4 as uuidV4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
-import { ApplicationPath } from "./../../../../types";
+import type { Flag, GovUKPayment, Session } from "./../../../../types";
+import { ApplicationPath, PaymentStatus } from "./../../../../types";
 import type { Store } from ".";
 import type { SharedStore } from "./shared";
 
@@ -49,9 +49,13 @@ export interface PreviewStore extends Store.Store {
   resumeSession: (session: Session) => void;
   sessionId: string;
   sendSessionDataToHasura: () => void;
+  createPaymentStatus: (args: {
+    paymentId: string;
+    teamSlug: string;
+    status: PaymentStatus;
+  }) => Promise<void>;
   upcomingCardIds: () => Store.nodeId[];
   isFinalCard: () => boolean;
-  // temporary measure for storing payment fee & id between gov uk redirect
   govUkPayment?: GovUKPayment;
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
   cachedBreadcrumbs?: Store.cachedBreadcrumbs;
@@ -344,6 +348,44 @@ export const previewStore = (
   },
 
   sessionId: uuidV4(),
+
+  async createPaymentStatus({
+    paymentId,
+    teamSlug,
+    status,
+  }: {
+    paymentId: string;
+    teamSlug: string;
+    status: PaymentStatus;
+  }): Promise<void> {
+    const { sessionId } = get();
+    await client.mutate({
+      mutation: gql`
+        mutation CreatePaymentStatus(
+          $sessionId: uuid!
+          $paymentId: String!
+          $teamSlug: String!
+          $status: payment_status_enum_enum
+        ) {
+          insert_payment_status_one(
+            object: {
+              session_id: $sessionId
+              payment_id: $paymentId
+              team_slug: $teamSlug
+              status: $status
+            }
+          ) {
+            session_id
+          }
+        }
+      `,
+      variables: {
+        sessionId,
+        teamSlug,
+        paymentId,
+      },
+    });
+  },
 
   async sendSessionDataToHasura() {
     try {
