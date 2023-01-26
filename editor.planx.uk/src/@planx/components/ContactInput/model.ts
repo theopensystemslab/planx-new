@@ -14,11 +14,15 @@ export type Contact = {
 
 export const userDataSchema: SchemaOf<Contact> = object({
   title: string(),
-  firstName: string().required("First name is required"),
-  lastName: string().required("Last name is required"),
+  firstName: string().required("Enter a first name"),
+  lastName: string().required("Enter a last name"),
   organisation: string(),
-  phone: string().required("Phone number is required"),
-  email: string().email("Enter a valid email").required("Email is required"),
+  phone: string().required("Enter a phone number"),
+  email: string()
+    .email(
+      "Enter an email address in the correct format, like name@example.com"
+    )
+    .required("Enter an email address"),
 });
 
 export interface ContactInput extends MoreInformation {
