@@ -13,11 +13,11 @@ export type Address = {
 };
 
 export const userDataSchema: SchemaOf<Address> = object({
-  line1: string().required("Address line 1 is required"),
+  line1: string().required("Enter the first line of an address"),
   line2: string(),
-  town: string().required("Town is required"),
+  town: string().required("Enter a town"),
   county: string(),
-  postcode: string().required("Postcode is required"),
+  postcode: string().required("Enter a postcode"),
   country: string(),
 });
 
