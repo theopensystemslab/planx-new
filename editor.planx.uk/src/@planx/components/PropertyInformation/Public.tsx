@@ -6,12 +6,9 @@ import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
-import { useFormik } from "formik";
-import { property } from "lodash";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
-import React, { useEffect, useState } from "react";
-import useSWR from "swr";
+import React from "react";
 import { Team } from "types";
 import { fetchCurrentTeam } from "utils";
 
@@ -42,60 +39,25 @@ const ErrorSummaryContainer = styled(Box)(({ theme }) => ({
 
 function Component(props: PublicProps<PropertyInformation>) {
   const team = fetchCurrentTeam();
-  const [localAuthorityDistricts, setLocalAuthorityDistricts] = useState<
-    string[] | undefined
-  >();
-  const [regions, setRegions] = useState<string[] | undefined>();
-  const [address, propertyType, flow, breadcrumbs, changeAnswer, record] =
-    useStore((state) => [
-      state.computePassport().data?._address,
-      state.computePassport().data?.["property.type"],
-      state.flow,
-      state.breadcrumbs,
-      state.changeAnswer,
-      state.record,
-    ]);
-
-  // Fetch supplemental address info via Digital Land
-  let options = new URLSearchParams({
-    entries: "all", // includes historic
-    geometry: `POINT(${address?.longitude} ${address?.latitude})`,
-    geometry_relation: "intersects",
-    limit: "100",
-  });
-  options.append("dataset", "local-authority-district");
-  options.append("dataset", "region");
-
-  // https://www.planning.data.gov.uk/docs#/Search%20entity
-  const root = `https://www.planning.data.gov.uk/entity.json?`;
-  const digitalLandEndpoint = root + options;
-  const fetcher = (url: string) => fetch(url).then((r) => r.json());
-  const { data, error, mutate, isValidating } = useSWR(
-    () =>
-      address?.latitude && address?.longitude ? digitalLandEndpoint : null,
-    fetcher,
-    {
-      shouldRetryOnError: true,
-      errorRetryInterval: 500,
-      errorRetryCount: 1,
-    }
-  );
-
-  useEffect(() => {
-    if (address && data?.count > 0) {
-      const lads: string[] = [];
-      const regions: string[] = [];
-      data.entities.forEach((entity: any) => {
-        if (entity.dataset === "local-authority-district") {
-          lads.push(entity.name);
-        } else if (entity.dataset === "region") {
-          regions.push(entity.name);
-        }
-      });
-      setLocalAuthorityDistricts([...new Set(lads)]);
-      setRegions([...new Set(regions)]);
-    }
-  }, [data]);
+  const [
+    address,
+    propertyType,
+    localAuthorityDistrict,
+    region,
+    flow,
+    breadcrumbs,
+    changeAnswer,
+    record,
+  ] = useStore((state) => [
+    state.computePassport().data?._address,
+    state.computePassport().data?.["property.type"],
+    state.computePassport().data?.["property.localAuthorityDistrict"],
+    state.computePassport().data?.["property.region"],
+    state.flow,
+    state.breadcrumbs,
+    state.changeAnswer,
+    state.record,
+  ]);
 
   return address ? (
     <Presentational
@@ -103,8 +65,8 @@ function Component(props: PublicProps<PropertyInformation>) {
       description={props.description}
       address={address}
       propertyType={propertyType}
-      localAuthorityDistricts={localAuthorityDistricts}
-      regions={regions}
+      localAuthorityDistrict={localAuthorityDistrict}
+      region={region}
       team={team}
       flow={flow}
       breadcrumbs={breadcrumbs}
@@ -135,8 +97,8 @@ interface PresentationalProps {
   description: string;
   address?: SiteAddress;
   propertyType?: string;
-  localAuthorityDistricts?: string[];
-  regions?: string[];
+  localAuthorityDistrict?: string[];
+  region?: string[];
   team?: Team;
   flow?: Store.flow;
   breadcrumbs?: Store.breadcrumbs;
@@ -159,8 +121,8 @@ function Presentational(props: PresentationalProps) {
     description,
     address,
     propertyType,
-    localAuthorityDistricts,
-    regions,
+    localAuthorityDistrict,
+    region,
     team,
     flow,
     breadcrumbs,
@@ -168,24 +130,6 @@ function Presentational(props: PresentationalProps) {
     record,
     handleSubmit,
   } = props;
-  const formik = useFormik({
-    initialValues: {},
-    onSubmit: () => {
-      const newPassportData: any = {};
-      if (localAuthorityDistricts) {
-        newPassportData["property.localAuthorityDistrict"] =
-          localAuthorityDistricts;
-      }
-      if (regions) {
-        newPassportData["property.region"] = regions;
-      }
-
-      handleSubmit?.({
-        data: newPassportData,
-      });
-    },
-  });
-
   const propertyDetails: PropertyDetail[] = [
     {
       heading: "Address",
@@ -197,10 +141,10 @@ function Presentational(props: PresentationalProps) {
     },
     {
       heading: "Local planning authority",
-      detail: [...new Set(localAuthorityDistricts)]?.join(", ") || team?.name,
+      detail: localAuthorityDistrict?.join(", ") || team?.name,
     },
     {
-      heading: "Building or property type",
+      heading: "Property type",
       detail: propertyType,
       showChangeButton: true,
       fn: "property.type",
@@ -208,7 +152,7 @@ function Presentational(props: PresentationalProps) {
   ];
 
   return (
-    <Card handleSubmit={formik.handleSubmit} isValid>
+    <Card handleSubmit={handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
       <MapContainer>
         <p style={visuallyHidden}>
@@ -236,7 +180,6 @@ function Presentational(props: PresentationalProps) {
           breadcrumbs={breadcrumbs}
           changeAnswer={changeAnswer}
           record={record}
-          handleSubmit={handleSubmit}
         />
       )}
     </Card>
@@ -256,7 +199,6 @@ interface PropertyDetailsProps {
   breadcrumbs?: Store.breadcrumbs;
   changeAnswer: (id: string) => void;
   record: (id: Store.nodeId, userData?: Store.userData) => void;
-  handleSubmit?: handleSubmit;
 }
 
 const PropertyDetail = styled(Box)(({ theme }) => ({
@@ -266,8 +208,9 @@ const PropertyDetail = styled(Box)(({ theme }) => ({
 }));
 
 function PropertyDetails(props: PropertyDetailsProps) {
-  const { data, flow, breadcrumbs, changeAnswer, record, handleSubmit } = props;
+  const { data, flow, breadcrumbs, changeAnswer, record } = props;
 
+  // TODO
   const propertyTypeNodeId = "EOcNxo5xLH";
   const findPropertyNodeId = "yBRu34inRV";
 
@@ -288,7 +231,7 @@ function PropertyDetails(props: PropertyDetailsProps) {
                 onClick={(event) => {
                   event.stopPropagation();
 
-                  // omit existing property.type key from breadcrumbs in whichever component originally set it
+                  // TODO omit existing property.type key from breadcrumbs in whichever component originally set it
                   record(findPropertyNodeId, {
                     data: {
                       _address: {
@@ -309,10 +252,12 @@ function PropertyDetails(props: PropertyDetailsProps) {
                           "47, COBOURG ROAD, LONDON, SOUTHWARK, SE5 0HU",
                         title: "47, COBOURG ROAD, LONDON",
                       },
+                      "property.localAuthorityDistrict": ["Southwark"],
+                      "property.region": ["London"],
                     },
                   });
 
-                  // travel backwards to the first node that sets the property.type key (nodeId is in breadcrumbs, auto-true)
+                  // TODO travel backwards to the first node that sets the property.type key (nodeId is in breadcrumbs, auto-true)
                   changeAnswer(propertyTypeNodeId);
                 }}
               >

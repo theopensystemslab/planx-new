@@ -11,6 +11,7 @@ import { PublicProps } from "@planx/components/ui";
 import find from "lodash/find";
 import { parse, toNormalised } from "postcode";
 import React, { useEffect, useState } from "react";
+import useSWR from "swr";
 import ExternalPlanningSiteDialog, {
   DialogPurpose,
 } from "ui/ExternalPlanningSiteDialog";
@@ -53,11 +54,56 @@ function Component(props: Props) {
   const [address, setAddress] = useState<SiteAddress | undefined>(
     previouslySubmittedData?._address
   );
+  const [localAuthorityDistricts, setLocalAuthorityDistricts] = useState<
+    string[] | undefined
+  >();
+  const [regions, setRegions] = useState<string[] | undefined>();
   const team = fetchCurrentTeam();
+
+  // Fetch supplemental address info via Digital Land
+  let options = new URLSearchParams({
+    entries: "all", // includes historic
+    geometry: `POINT(${address?.longitude} ${address?.latitude})`,
+    geometry_relation: "intersects",
+    limit: "100",
+  });
+  options.append("dataset", "local-authority-district");
+  options.append("dataset", "region");
+
+  // https://www.planning.data.gov.uk/docs#/Search%20entity
+  const root = `https://www.planning.data.gov.uk/entity.json?`;
+  const digitalLandEndpoint = root + options;
+  const fetcher = (url: string) => fetch(url).then((r) => r.json());
+  const { data, error, mutate, isValidating } = useSWR(
+    () =>
+      address?.latitude && address?.longitude ? digitalLandEndpoint : null,
+    fetcher,
+    {
+      shouldRetryOnError: true,
+      errorRetryInterval: 500,
+      errorRetryCount: 1,
+    }
+  );
+
+  useEffect(() => {
+    if (address && data?.count > 0) {
+      const lads: string[] = [];
+      const regions: string[] = [];
+      data.entities.forEach((entity: any) => {
+        if (entity.dataset === "local-authority-district") {
+          lads.push(entity.name);
+        } else if (entity.dataset === "region") {
+          regions.push(entity.name);
+        }
+      });
+      setLocalAuthorityDistricts([...new Set(lads)]);
+      setRegions([...new Set(regions)]);
+    }
+  }, [data, address]);
 
   return (
     <Card
-      isValid={Boolean(address)}
+      isValid={Boolean(address) && !isValidating}
       handleSubmit={() => {
         if (address) {
           const newPassportData: any = {};
@@ -65,6 +111,15 @@ function Component(props: Props) {
           if (address?.planx_value) {
             newPassportData["property.type"] = [address.planx_value];
           }
+
+          if (localAuthorityDistricts) {
+            newPassportData["property.localAuthorityDistrict"] =
+              localAuthorityDistricts;
+          }
+          if (regions) {
+            newPassportData["property.region"] = regions;
+          }
+
           props.handleSubmit?.({ data: { ...newPassportData } });
         }
       }}
