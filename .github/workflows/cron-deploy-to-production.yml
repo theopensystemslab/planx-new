@@ -1,10 +1,9 @@
 name: "Automatic production deployment"
 
 on:
-  # TODO: Enable CRON after the holiday season
-  # schedule:
-  #   # “At 09:00 on every day-of-week from Tuesday through Friday.” 
-  #   -   cron: "0 9 * * 2-5"
+  schedule:
+    # “At 09:00 on every day-of-week from Tuesday through Friday.” 
+    -   cron: "0 9 * * 2-5"
   workflow_dispatch:
 
 jobs:
