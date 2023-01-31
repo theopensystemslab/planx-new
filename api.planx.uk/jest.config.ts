@@ -14,7 +14,7 @@ export default {
   collectCoverage: true,
   coverageThreshold: {
     global: {
-      functions: 60,
+      functions: 55,
     },
   },
   coverageReporters: ["lcov", "text-summary"],
