@@ -108,6 +108,7 @@ export interface GovUKPayment {
   };
 }
 
+// https://docs.payments.service.gov.uk/api_reference/#status-and-finished
 export enum PaymentStatus {
   created = "created",
   started = "started",
@@ -117,6 +118,7 @@ export enum PaymentStatus {
   failed = "failed",
   cancelled = "cancelled",
   error = "error",
+  unknown = "unknown", // used when response status is not valid
 }
 
 /**

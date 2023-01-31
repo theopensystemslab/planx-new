@@ -15,3 +15,5 @@ INSERT INTO "public"."payment_status_enum" ("value", "comment") VALUES (E'failed
 INSERT INTO "public"."payment_status_enum" ("value", "comment") VALUES (E'cancelled', E'payment cancelled');
 
 INSERT INTO "public"."payment_status_enum" ("value", "comment") VALUES (E'error', E'payment failed due to a system error');
+
+INSERT INTO "public"."payment_status_enum" ("value", "comment") VALUES (E'unknown', E'status not known');

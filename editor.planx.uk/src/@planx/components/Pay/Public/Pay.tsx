@@ -157,7 +157,7 @@ function Component(props: Props) {
       await createPaymentStatus({
         teamSlug,
         paymentId: payment.payment_id,
-        status: PaymentStatus[payment.state.status],
+        status: PaymentStatus[payment.state.status] || PaymentStatus.unknown,
       });
     } catch (e) {
       reportError({ error: e, payment });
