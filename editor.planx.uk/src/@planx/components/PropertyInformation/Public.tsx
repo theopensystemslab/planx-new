@@ -6,8 +6,7 @@ import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
-import omit from "lodash/omit";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
 import { Team } from "types";
@@ -40,25 +39,13 @@ const ErrorSummaryContainer = styled(Box)(({ theme }) => ({
 
 function Component(props: PublicProps<PropertyInformation>) {
   const team = fetchCurrentTeam();
-  const [
-    address,
-    propertyType,
-    localAuthorityDistrict,
-    region,
-    flow,
-    breadcrumbs,
-    changeAnswer,
-    record,
-  ] = useStore((state) => [
-    state.computePassport().data?._address,
-    state.computePassport().data?.["property.type"],
-    state.computePassport().data?.["property.localAuthorityDistrict"],
-    state.computePassport().data?.["property.region"],
-    state.flow,
-    state.breadcrumbs,
-    state.changeAnswer,
-    state.record,
-  ]);
+  const [address, propertyType, localAuthorityDistrict, overrideAnswer] =
+    useStore((state) => [
+      state.computePassport().data?._address,
+      state.computePassport().data?.["property.type"],
+      state.computePassport().data?.["property.localAuthorityDistrict"],
+      state.overrideAnswer,
+    ]);
 
   return address ? (
     <Presentational
@@ -67,12 +54,8 @@ function Component(props: PublicProps<PropertyInformation>) {
       address={address}
       propertyType={propertyType}
       localAuthorityDistrict={localAuthorityDistrict}
-      region={region}
       team={team}
-      flow={flow}
-      breadcrumbs={breadcrumbs}
-      changeAnswer={changeAnswer}
-      record={record}
+      overrideAnswer={overrideAnswer}
       handleSubmit={props.handleSubmit}
     />
   ) : (
@@ -99,12 +82,8 @@ interface PresentationalProps {
   address?: SiteAddress;
   propertyType?: string;
   localAuthorityDistrict?: string[];
-  region?: string[];
   team?: Team;
-  flow?: Store.flow;
-  breadcrumbs?: Store.breadcrumbs;
-  changeAnswer: (id: string) => void;
-  record: (id: Store.nodeId, userData?: Store.userData) => void;
+  overrideAnswer: (fn: string) => void;
   handleSubmit?: handleSubmit;
 }
 
@@ -123,12 +102,8 @@ function Presentational(props: PresentationalProps) {
     address,
     propertyType,
     localAuthorityDistrict,
-    region,
     team,
-    flow,
-    breadcrumbs,
-    changeAnswer,
-    record,
+    overrideAnswer,
     handleSubmit,
   } = props;
   const propertyDetails: PropertyDetail[] = [
@@ -146,7 +121,7 @@ function Presentational(props: PresentationalProps) {
     },
     {
       heading: "Property type",
-      detail: propertyType,
+      detail: propertyType || "Unknown",
       showChangeButton: true,
       fn: "property.type",
     },
@@ -177,10 +152,7 @@ function Presentational(props: PresentationalProps) {
       {propertyDetails && (
         <PropertyDetails
           data={propertyDetails}
-          flow={flow}
-          breadcrumbs={breadcrumbs}
-          changeAnswer={changeAnswer}
-          record={record}
+          overrideAnswer={overrideAnswer}
         />
       )}
     </Card>
@@ -196,13 +168,11 @@ interface PropertyDetail {
 
 interface PropertyDetailsProps {
   data: PropertyDetail[];
-  flow?: Store.flow;
-  breadcrumbs?: Store.breadcrumbs;
-  changeAnswer: (id: string) => void;
-  record: (id: Store.nodeId, userData?: Store.userData) => void;
+  overrideAnswer: (fn: string) => void;
 }
 
-const SummaryTable = styled(Box)(({ theme }) => ({
+// Borrows and tweaks grid style from Review page's `SummaryList`
+const PropertyDetailsList = styled(Box)(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "1fr 2fr 100px",
   marginTop: theme.spacing(2),
@@ -234,36 +204,22 @@ const SummaryTable = styled(Box)(({ theme }) => ({
 }));
 
 function PropertyDetails(props: PropertyDetailsProps) {
-  const { data, flow, breadcrumbs, changeAnswer, record } = props;
-
-  // TODO
-  const overwriteFn = "property.type";
-  const propertyTypeNodeId = "EOcNxo5xLH";
-  const findPropertyNodeId = "yBRu34inRV";
+  const { data, overrideAnswer } = props;
 
   return (
-    <SummaryTable component="dl">
-      {data.map(({ heading, detail, showChangeButton }: PropertyDetail) => (
+    <PropertyDetailsList component="dl">
+      {data.map(({ heading, detail, showChangeButton, fn }: PropertyDetail) => (
         <React.Fragment key={heading}>
           <Box component="dt">{heading}</Box>
           <Box component="dd">{detail}</Box>
-          {showChangeButton ? (
+          {showChangeButton && fn ? (
             <Box component="dd">
               <Link
                 component="button"
                 onClick={(event) => {
                   event.stopPropagation();
-
-                  // TODO omit existing property.type key from breadcrumbs in whichever component originally set it
-                  record(findPropertyNodeId, {
-                    data: omit(
-                      breadcrumbs?.[findPropertyNodeId]?.data,
-                      overwriteFn
-                    ),
-                  });
-
-                  // TODO travel backwards to the first node that sets the property.type key (nodeId is in breadcrumbs, auto = true)
-                  changeAnswer(propertyTypeNodeId);
+                  // Specify the passport key (eg data.fn, data.val) that should be overwritten
+                  overrideAnswer(fn);
                 }}
               >
                 Change
@@ -274,11 +230,11 @@ function PropertyDetails(props: PropertyDetailsProps) {
             </Box>
           ) : (
             <Box component="dd">
-              {/** ensure there's always a third column to not break styling, even when showChange is false */}
+              {/** ensure there's always a third column to not break styling, even when showChangeButton is false */}
             </Box>
           )}
         </React.Fragment>
       ))}
-    </SummaryTable>
+    </PropertyDetailsList>
   );
 }

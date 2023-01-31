@@ -8,6 +8,7 @@ import difference from "lodash/difference";
 import flatten from "lodash/flatten";
 import isEqual from "lodash/isEqual";
 import isNil from "lodash/isNil";
+import omit from "lodash/omit";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
 import type { Flag, GovUKPayment, Session } from "types";
@@ -63,6 +64,7 @@ export interface PreviewStore extends Store.Store {
   _nodesPendingEdit: string[];
   path: ApplicationPath;
   saveToEmail?: string;
+  overrideAnswer: (fn: string) => void;
 }
 
 export const previewStore = (
@@ -596,6 +598,42 @@ export const previewStore = (
   path: ApplicationPath.SingleSession,
 
   saveToEmail: undefined,
+
+  overrideAnswer: (fn: string) => {
+    // Similar to 'changeAnswer', but enables navigating backwards to and overriding a previously **auto-answered** question which would typically be hidden
+    const { breadcrumbs, flow, record, changeAnswer } = get();
+
+    // Iterate through breadcrumbs and find the first nodeId that submitted this passport value (eg FindProperty)
+    let originalNodeId;
+    Object.entries(breadcrumbs).forEach(([nodeId, breadcrumb]) => {
+      if (breadcrumb.data && fn in breadcrumb.data) {
+        originalNodeId = nodeId;
+        return;
+      }
+    });
+
+    if (originalNodeId) {
+      // Omit existing fn from breadcrumbs in whichever component originally set it, so it won't be auto-answered in future
+      record(originalNodeId, {
+        data: omit(breadcrumbs?.[originalNodeId]?.data, fn),
+      });
+    }
+
+    // Iterate through breadcrumbs and find the first nodeId that will set this passport value (eg Question "What type of property is it?")
+    //   leave this node's data intact in the breadcrumbs so that the original answer is highlighted later
+    let overrideNodeId;
+    Object.entries(breadcrumbs).forEach(([nodeId, breadcrumb]) => {
+      if (flow[nodeId].data?.fn === fn || flow[nodeId].data?.val === fn) {
+        overrideNodeId = nodeId;
+        return;
+      }
+    });
+
+    if (overrideNodeId) {
+      // Travel backwards to the "override" nodeId to manually re-answer this question, therefore re-setting the passport value onSubmit
+      changeAnswer(overrideNodeId);
+    }
+  },
 });
 
 const knownNots = (
