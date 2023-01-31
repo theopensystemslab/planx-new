@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
@@ -6,6 +7,7 @@ import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
+import find from "lodash/find";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
@@ -13,6 +15,7 @@ import { Team } from "types";
 import { fetchCurrentTeam } from "utils";
 
 import { SiteAddress } from "../FindProperty/model";
+import { FETCH_BLPU_CODES } from "../FindProperty/Public";
 import type { PropertyInformation } from "./model";
 
 export default Component;
@@ -46,6 +49,7 @@ function Component(props: PublicProps<PropertyInformation>) {
       state.computePassport().data?.["property.localAuthorityDistrict"],
       state.overrideAnswer,
     ]);
+  const { data: blpuCodes } = useQuery(FETCH_BLPU_CODES);
 
   return address ? (
     <Presentational
@@ -54,6 +58,7 @@ function Component(props: PublicProps<PropertyInformation>) {
       address={address}
       propertyType={propertyType}
       localAuthorityDistrict={localAuthorityDistrict}
+      blpuCodes={blpuCodes}
       team={team}
       overrideAnswer={overrideAnswer}
       handleSubmit={props.handleSubmit}
@@ -83,6 +88,7 @@ interface PresentationalProps {
   propertyType?: string;
   localAuthorityDistrict?: string[];
   team?: Team;
+  blpuCodes?: any;
   overrideAnswer: (fn: string) => void;
   handleSubmit?: handleSubmit;
 }
@@ -103,6 +109,7 @@ function Presentational(props: PresentationalProps) {
     propertyType,
     localAuthorityDistrict,
     team,
+    blpuCodes,
     overrideAnswer,
     handleSubmit,
   } = props;
@@ -121,7 +128,11 @@ function Presentational(props: PresentationalProps) {
     },
     {
       heading: "Property type",
-      detail: propertyType || "Unknown",
+      detail:
+        find(blpuCodes?.blpu_codes, { value: propertyType?.[0] })
+          ?.description ||
+        propertyType?.[0] ||
+        "Unknown",
       showChangeButton: true,
       fn: "property.type",
     },
@@ -230,7 +241,7 @@ function PropertyDetails(props: PropertyDetailsProps) {
             </Box>
           ) : (
             <Box component="dd">
-              {/** ensure there's always a third column to not break styling, even when showChangeButton is false */}
+              {/** ensure there's always a third column to not break styling, even if showChangeButton is false */}
             </Box>
           )}
         </React.Fragment>
