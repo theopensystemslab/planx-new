@@ -12,8 +12,9 @@ const networking = new pulumi.StackReference(`planx/networking/${env}`);
 
 const db = new aws.rds.Instance("app", {
   engine: "postgres",
-  // Available versions: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts.General.version12
-  engineVersion: "12.3",
+  // Available versions:
+  // $ aws rds describe-db-engine-versions --default-only --engine postgres
+  engineVersion: "14.6",
   // Available instance types: https://aws.amazon.com/rds/instance-types/
   instanceClass: env === "production" ? "db.t3.medium" : "db.t3.micro",
   allocatedStorage: env === "production" ? 100 : 20,
