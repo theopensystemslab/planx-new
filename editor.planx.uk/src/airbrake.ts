@@ -4,7 +4,7 @@ import { isLiveEnv } from "utils";
 export const logger = getErrorLogger();
 
 function log(...args: any[]) {
-  return process.env.SUPRESS_LOGS
+  return process.env.SUPPRESS_LOGS
     ? () => {
         /* silence */
       }

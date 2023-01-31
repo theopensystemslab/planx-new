@@ -54,9 +54,9 @@ describe("logger", () => {
     expect(logSpy).toHaveBeenCalledWith({ some: "value" });
   });
 
-  test("logs are suppressed when SUPRESS_LOGS is set", () => {
+  test("logs are suppressed when SUPPRESS_LOGS is set", () => {
     process.env = Object.assign({
-      SUPRESS_LOGS: "true",
+      SUPPRESS_LOGS: "true",
     });
     // instantiate the logger after env variables set
     const { logger } = require("./airbrake");
