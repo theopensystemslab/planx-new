@@ -202,10 +202,35 @@ interface PropertyDetailsProps {
   record: (id: Store.nodeId, userData?: Store.userData) => void;
 }
 
-const PropertyDetail = styled(Box)(({ theme }) => ({
-  display: "flex",
-  justifyContent: "flex-start",
-  borderBottom: `1px solid ${theme.palette.background.paper}`,
+const SummaryTable = styled(Box)(({ theme }) => ({
+  display: "grid",
+  gridTemplateColumns: "1fr 2fr 100px",
+  marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(2),
+  "& > *": {
+    borderBottom: `1px solid ${theme.palette.background.paper}`,
+    paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    verticalAlign: "top",
+    margin: 0,
+  },
+  "& ul": {
+    listStylePosition: "inside",
+    padding: 0,
+    margin: 0,
+  },
+  "& >:nth-child(3n+1)": {
+    // left column
+    fontWeight: 700,
+  },
+  "& >:nth-child(3n+2)": {
+    // middle column
+    paddingLeft: "10px",
+  },
+  "& >:nth-child(3n+3)": {
+    // right column
+    textAlign: "right",
+  },
 }));
 
 function PropertyDetails(props: PropertyDetailsProps) {
@@ -217,17 +242,13 @@ function PropertyDetails(props: PropertyDetailsProps) {
   const findPropertyNodeId = "yBRu34inRV";
 
   return (
-    <Box component="dl" mb={3}>
+    <SummaryTable component="dl">
       {data.map(({ heading, detail, showChangeButton }: PropertyDetail) => (
-        <PropertyDetail key={heading}>
-          <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
-            {heading}
-          </Box>
-          <Box component="dd" flexGrow={1} py={1}>
-            {detail}
-          </Box>
-          {showChangeButton && (
-            <Box component="dd" py={1}>
+        <React.Fragment key={heading}>
+          <Box component="dt">{heading}</Box>
+          <Box component="dd">{detail}</Box>
+          {showChangeButton ? (
+            <Box component="dd">
               <Link
                 component="button"
                 onClick={(event) => {
@@ -241,7 +262,7 @@ function PropertyDetails(props: PropertyDetailsProps) {
                     ),
                   });
 
-                  // TODO travel backwards to the first node that sets the property.type key (nodeId is in breadcrumbs, auto-true)
+                  // TODO travel backwards to the first node that sets the property.type key (nodeId is in breadcrumbs, auto = true)
                   changeAnswer(propertyTypeNodeId);
                 }}
               >
@@ -251,9 +272,13 @@ function PropertyDetails(props: PropertyDetailsProps) {
                 </span>
               </Link>
             </Box>
+          ) : (
+            <Box component="dd">
+              {/** ensure there's always a third column to not break styling, even when showChange is false */}
+            </Box>
           )}
-        </PropertyDetail>
+        </React.Fragment>
       ))}
-    </Box>
+    </SummaryTable>
   );
 }
