@@ -6,6 +6,7 @@ import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
+import omit from "lodash/omit";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React from "react";
@@ -211,6 +212,7 @@ function PropertyDetails(props: PropertyDetailsProps) {
   const { data, flow, breadcrumbs, changeAnswer, record } = props;
 
   // TODO
+  const overwriteFn = "property.type";
   const propertyTypeNodeId = "EOcNxo5xLH";
   const findPropertyNodeId = "yBRu34inRV";
 
@@ -233,28 +235,10 @@ function PropertyDetails(props: PropertyDetailsProps) {
 
                   // TODO omit existing property.type key from breadcrumbs in whichever component originally set it
                   record(findPropertyNodeId, {
-                    data: {
-                      _address: {
-                        uprn: "200003453480",
-                        blpu_code: "2",
-                        latitude: 51.4859056,
-                        longitude: -0.0760466,
-                        organisation: null,
-                        pao: "47",
-                        street: "COBOURG ROAD",
-                        town: "LONDON",
-                        postcode: "SE5 0HU",
-                        x: 533683,
-                        y: 178083,
-                        planx_description: "HMO Parent",
-                        planx_value: "residential.HMO.parent",
-                        single_line_address:
-                          "47, COBOURG ROAD, LONDON, SOUTHWARK, SE5 0HU",
-                        title: "47, COBOURG ROAD, LONDON",
-                      },
-                      "property.localAuthorityDistrict": ["Southwark"],
-                      "property.region": ["London"],
-                    },
+                    data: omit(
+                      breadcrumbs?.[findPropertyNodeId]?.data,
+                      overwriteFn
+                    ),
                   });
 
                   // TODO travel backwards to the first node that sets the property.type key (nodeId is in breadcrumbs, auto-true)

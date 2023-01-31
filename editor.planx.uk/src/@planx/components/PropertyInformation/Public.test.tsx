@@ -5,19 +5,10 @@ import * as ReactNavi from "react-navi";
 import * as SWR from "swr";
 import { setup } from "testUtils";
 
-import localAuthorityMock from "./mocks/localAuthorityMock";
 import teamMock from "./mocks/teamMock";
 import PropertyInformation from "./Public";
 
 const TEAM = "southwark";
-
-jest.spyOn(SWR, "default").mockImplementation((url: any) => {
-  return {
-    data: url()?.startsWith("https://www.planning.data.gov.uk")
-      ? localAuthorityMock
-      : null,
-  } as any;
-});
 
 jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
   () =>

@@ -2,12 +2,22 @@ import { MockedProvider } from "@apollo/client/testing";
 import { screen } from "@testing-library/react";
 import React from "react";
 import * as ReactNavi from "react-navi";
+import * as SWR from "swr";
 import { axe, setup } from "testUtils";
 
 import FindProperty from "./";
 import findAddressReturnMock from "./mocks/findAddressReturnMock";
+import localAuthorityMock from "./mocks/localAuthorityMock";
 
 const TEAM = "canterbury";
+
+jest.spyOn(SWR, "default").mockImplementation((url: any) => {
+  return {
+    data: url()?.startsWith("https://www.planning.data.gov.uk")
+      ? localAuthorityMock
+      : null,
+  } as any;
+});
 
 jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
   () =>
@@ -91,6 +101,8 @@ test("recovers previously submitted address when clicking the back button", asyn
       local_custodian_code: "SOUTHWARK",
     },
     "property.type": ["residential.HMO.parent"],
+    "property.localAuthorityDistrict": ["Southwark"],
+    "property.region": ["London"],
   };
 
   const { user } = setup(
