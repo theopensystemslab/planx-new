@@ -91,7 +91,7 @@ The new policy will be implemented once this proposal has been accepted. This me
 An automated scheduled task will run each night to sanitise and delete records which meet the agreed criteria.
 
 ### What does "Sanitation" mean?
-Currently, we would simply remove / delete and user data (e.g. email, breadcrumbs, passport) whilst retaining the remainder of the metadata associated with a record (such as `id`, `created_at`). This would allow to still have enough information to resconstruct user journeys if required to do so for auditing purposes.
+Currently, we would simply remove / delete and user data (e.g. email, breadcrumbs, passport) whilst retaining the remainder of the metadata associated with a record (such as `id`, `created_at`). This would allow to still have enough information to reconstruct high level user journeys if required to do so for auditing purposes. We would no longer have the fine-grained ability to understand the application question by question.
 
 In future, a more fine grained approach could be implemented to only sanitise personally identifiable data using tags.
 
