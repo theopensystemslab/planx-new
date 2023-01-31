@@ -9,7 +9,6 @@ import * as postgres from "@pulumi/postgresql";
 import * as mime from "mime";
 import * as tldjs from "tldjs";
 import * as url from "url";
-import * as random from "@pulumi/random";
 
 import { generateTeamSecrets } from "./utils/generateTeamSecrets";
 import { createHasuraService } from "./services/hasura";
@@ -304,7 +303,7 @@ export = async () => {
         memory: 1024 /*MB*/,
         portMappings: [apiListenerHttps],
         environment: [
-          { name: "NODE_ENV", value: "production" },
+          { name: "NODE_ENV", value: env },
           { name: "EDITOR_URL_EXT", value: `https://${DOMAIN}` },
           { name: "AWS_S3_REGION", value: apiBucket.region },
           { name: "AWS_ACCESS_KEY", value: apiUserAccessKey.id },
