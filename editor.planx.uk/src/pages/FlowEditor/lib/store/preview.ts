@@ -819,7 +819,11 @@ export const removeNodesDependentOnPassport = (
   breadcrumbsWithoutPassportData: Store.breadcrumbs;
   removedNodeIds: string[];
 } => {
-  const DEPENDENT_TYPES = [TYPES.PlanningConstraints, TYPES.DrawBoundary];
+  const DEPENDENT_TYPES = [
+    TYPES.PlanningConstraints,
+    TYPES.DrawBoundary,
+    TYPES.PropertyInformation,
+  ];
   const newBreadcrumbs = { ...breadcrumbs };
   const removedNodeIds = Object.entries(flow).reduce((acc, [id, value]) => {
     if (
