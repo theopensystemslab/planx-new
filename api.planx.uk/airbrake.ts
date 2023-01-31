@@ -1,15 +1,14 @@
 import { Notifier } from "@airbrake/node";
+import { isLiveEnv } from "./helpers";
 
 const airbrake =
-  process.env.NODE_ENV === "production" &&
+  isLiveEnv() &&
     process.env.AIRBRAKE_PROJECT_ID &&
     process.env.AIRBRAKE_PROJECT_KEY
     ? new Notifier({
       projectId: Number(process.env.AIRBRAKE_PROJECT_ID),
       projectKey: process.env.AIRBRAKE_PROJECT_KEY,
-      environment: process.env.API_URL_EXT!.endsWith("planx.uk")
-        ? "production"
-        : "staging",
+      environment: process.env.NODE_ENV!
     })
     : undefined;
 

@@ -189,6 +189,8 @@ const makeUniqueFlow = (flowData: Flow["data"], replaceValue: string): Flow["dat
   return flowData;
 };
 
+const isLiveEnv = () => (["production", "staging", "pizza"].includes(process.env.NODE_ENV || ""));
+
 export {
   getFlowData,
   getMostRecentPublishedFlow,
@@ -197,4 +199,5 @@ export {
   getChildren,
   makeUniqueFlow,
   insertFlow,
+  isLiveEnv,
 };
