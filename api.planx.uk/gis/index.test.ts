@@ -9,10 +9,9 @@ describe("locationSearchWithTimeout", () => {
     jest.useRealTimers();
   });
 
-  // Braintree is not an active team
-  test.skip("a successful call", async () => {
+  test("a successful call", async () => {
     const timeout = 500;
-    const localAuthority = "braintree";
+    const localAuthority = "buckinghamshire";
     const promise = locationSearchWithTimeout(
       localAuthority,
       { x: 50, y: 50, siteBoundary: "[]" },
@@ -21,9 +20,9 @@ describe("locationSearchWithTimeout", () => {
     await expect(promise).resolves.toStrictEqual(expect.any(Object));
   });
 
-  test.skip("an immediate timeout", async () => {
+  test("an immediate timeout", async () => {
     const timeout = 500;
-    const localAuthority = "braintree";
+    const localAuthority = "buckinghamshire";
     const promise = locationSearchWithTimeout(
         localAuthority,
         { x: 50, y: 50, siteBoundary: "[]" },
