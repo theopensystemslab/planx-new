@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 
 import { getOperations, operationHandler } from "./operations";
 import { OperationResult } from "./types";
+import { getFormattedEnvironment } from '../../helpers';
 
 /**
  * Called by Hasura cron job `sanitise_application_data` on a nightly basis
@@ -39,11 +40,11 @@ const postToSlack = async (results: OperationResult[]) => {
   const text = results.map(result => result.status === "failure" 
     ? `:x: ${result.operationName} failed. Error: ${result.errorMessage}` 
     : `:white_check_mark: ${result.operationName} succeeded`)
-  const environment = process.env.NODE_ENV;
+  const env = getFormattedEnvironment();
 
   await slack.send({
     channel: "#planx-notifications-internal",
     text: text.join("\n"),
-    username: `Data Sanitation Cron Job (${environment})`
+    username: `Data Sanitation Cron Job (${env})`
   });
 };
