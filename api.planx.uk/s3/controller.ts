@@ -52,10 +52,6 @@ export const publicDownloadController = async (
 ) => {
   const filePath = buildFilePath(req.params.fileKey, req.params.fileName);
 
-  if (!filePath) {
-    return next({ status: 404, message: "file not found" });
-  }
-
   try {
     const { body, headers, isPrivate } = await getFileFromS3(filePath);
 
@@ -74,10 +70,6 @@ export const privateDownloadController = async (
   next: NextFunction
 ) => {
   const filePath = buildFilePath(req.params.fileKey, req.params.fileName);
-
-  if (!filePath) {
-    return next({ status: 404, message: "file not found" });
-  }
 
   try {
     const { body, headers } = await getFileFromS3(filePath);

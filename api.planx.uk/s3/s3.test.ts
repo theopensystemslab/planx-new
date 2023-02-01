@@ -77,6 +77,18 @@ describe("File upload", () => {
     expect(mockGetSignedUrl).toHaveBeenCalledTimes(1);
   });
 
+  it("public-file-upload - should not upload without filename", async () => {
+    await supertest(app)
+      .post("/public-file-upload")
+      .field("filename", "")
+      .attach("file", Buffer.from("some data"), "some_file.txt")
+      .expect(422)
+      .then(res => {
+        expect(mockPutObject).not.toHaveBeenCalled();
+        expect(res.body.error).toBe("missing filename")
+      })
+  });
+
   it("public-file-upload - should not upload without file", async () => {
     await supertest(app)
       .post("/public-file-upload")
@@ -121,7 +133,7 @@ describe("File download", () => {
 
   it("file/public - should not download with incomplete path", async () => {
     await supertest(app)
-      .get("/file/public/somekey")
+      .get("/file/public/someKey")
       .expect(404)
   });
 
@@ -152,6 +164,13 @@ describe("File download", () => {
       });
   });
 
+  it("file/private - should not download with incomplete path", async () => {
+    await supertest(app)
+      .get("/file/private/someKey")
+      .set({ "api-key": "test" })
+      .expect(404)
+  });
+
   it("file/private - should not download if file is private", async () => {
     const filePath = "somekey/file_name.txt"
     getObjectResponse = {
@@ -168,6 +187,22 @@ describe("File download", () => {
         expect(mockGetObject).toHaveBeenCalledTimes(1);
         expect(res.body.error).toBe("bad request")
       });
+  });
+
+  it("file/private - should not download if user is unauthorised", async () => {
+    const filePath = "somekey/file_name.txt"
+
+    getObjectResponse = {
+      ...getObjectResponse,
+      Metadata: {
+        is_private: "true"
+      }
+    }
+
+    await supertest(app)
+      .get(`/file/private/${filePath}`)
+      .set({ "api-key": "INVALID" })
+      .expect(401);
   });
 
   it("file/private - should download file", async () => {

@@ -28,10 +28,6 @@ function useMinio() {
 export function buildFilePath(
   fileKey: string,
   fileName: string
-): string | null {
-  if (!fileKey || !fileName) {
-    return null;
-  }
-
+): string {
   return `${fileKey}/${fileName}`;
 }
