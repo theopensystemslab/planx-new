@@ -6,6 +6,9 @@ import "@testing-library/jest-dom";
 import "jest-localstorage-mock";
 import "jest-axe/extend-expect";
 
+import dotenv from "dotenv";
 import { mockFade } from "testUtils";
+
+dotenv.config({ path: "./.env.test" });
 
 beforeAll(() => mockFade);
