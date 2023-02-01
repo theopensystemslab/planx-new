@@ -55,6 +55,7 @@ function Component(props: PublicProps<PropertyInformation>) {
     <Presentational
       title={props.title}
       description={props.description}
+      showPropertyTypeOverride={props.showPropertyTypeOverride}
       address={address}
       propertyType={propertyType}
       localAuthorityDistrict={localAuthorityDistrict}
@@ -84,8 +85,9 @@ function Component(props: PublicProps<PropertyInformation>) {
 interface PresentationalProps {
   title: string;
   description: string;
+  showPropertyTypeOverride?: boolean;
   address?: SiteAddress;
-  propertyType?: string;
+  propertyType?: string[];
   localAuthorityDistrict?: string[];
   team?: Team;
   blpuCodes?: any;
@@ -101,10 +103,12 @@ const MapContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-function Presentational(props: PresentationalProps) {
+// Export this component for testing visual presentation with mocked props
+export function Presentational(props: PresentationalProps) {
   const {
     title,
     description,
+    showPropertyTypeOverride,
     address,
     propertyType,
     localAuthorityDistrict,
@@ -133,7 +137,6 @@ function Presentational(props: PresentationalProps) {
           ?.description ||
         propertyType?.[0] ||
         "Unknown",
-      showChangeButton: true,
       fn: "property.type",
     },
   ];
@@ -163,6 +166,7 @@ function Presentational(props: PresentationalProps) {
       {propertyDetails && (
         <PropertyDetails
           data={propertyDetails}
+          showPropertyTypeOverride={showPropertyTypeOverride}
           overrideAnswer={overrideAnswer}
         />
       )}
@@ -173,12 +177,12 @@ function Presentational(props: PresentationalProps) {
 interface PropertyDetail {
   heading: string;
   detail: any;
-  showChangeButton?: boolean;
   fn?: string;
 }
 
 interface PropertyDetailsProps {
   data: PropertyDetail[];
+  showPropertyTypeOverride?: boolean;
   overrideAnswer: (fn: string) => void;
 }
 
@@ -215,15 +219,15 @@ const PropertyDetailsList = styled(Box)(({ theme }) => ({
 }));
 
 function PropertyDetails(props: PropertyDetailsProps) {
-  const { data, overrideAnswer } = props;
+  const { data, showPropertyTypeOverride, overrideAnswer } = props;
 
   return (
     <PropertyDetailsList component="dl">
-      {data.map(({ heading, detail, showChangeButton, fn }: PropertyDetail) => (
+      {data.map(({ heading, detail, fn }: PropertyDetail) => (
         <React.Fragment key={heading}>
           <Box component="dt">{heading}</Box>
           <Box component="dd">{detail}</Box>
-          {showChangeButton && fn ? (
+          {showPropertyTypeOverride && fn ? (
             <Box component="dd">
               <Link
                 component="button"
@@ -241,7 +245,7 @@ function PropertyDetails(props: PropertyDetailsProps) {
             </Box>
           ) : (
             <Box component="dd">
-              {/** ensure there's always a third column to not break styling, even if showChangeButton is false */}
+              {/** ensure there's always a third column to not break styling, even if "Change" is hidden */}
             </Box>
           )}
         </React.Fragment>

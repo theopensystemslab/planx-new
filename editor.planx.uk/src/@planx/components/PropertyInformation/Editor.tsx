@@ -1,11 +1,17 @@
 import { TYPES } from "@planx/components/types";
-import { EditorProps, ICONS, InternalNotes } from "@planx/components/ui";
+import {
+  EditorProps,
+  ICONS,
+  InternalNotes,
+  MoreInformation,
+} from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
+import OptionButton from "ui/OptionButton";
 import RichTextInput from "ui/RichTextInput";
 
 import { parseContent, PropertyInformation } from "./model";
@@ -49,8 +55,26 @@ function PropertyInformation(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
+          <OptionButton
+            selected={formik.values.showPropertyTypeOverride}
+            onClick={() => {
+              formik.setFieldValue(
+                "showPropertyTypeOverride",
+                !formik.values.showPropertyTypeOverride
+              );
+            }}
+          >
+            Show users a "change" link to override the property type
+          </OptionButton>
         </ModalSectionContent>
       </ModalSection>
+      <MoreInformation
+        changeField={formik.handleChange}
+        definitionImg={formik.values.definitionImg}
+        howMeasured={formik.values.howMeasured}
+        policyRef={formik.values.policyRef}
+        info={formik.values.info}
+      />
       <InternalNotes
         name="notes"
         value={formik.values.notes}
