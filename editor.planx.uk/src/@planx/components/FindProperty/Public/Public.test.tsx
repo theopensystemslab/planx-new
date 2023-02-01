@@ -11,14 +11,6 @@ import localAuthorityMock from "./mocks/localAuthorityMock";
 
 const TEAM = "canterbury";
 
-jest.spyOn(SWR, "default").mockImplementation((url: any) => {
-  return {
-    data: url()?.startsWith("https://www.planning.data.gov.uk")
-      ? localAuthorityMock
-      : null,
-  } as any;
-});
-
 jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
   () =>
     ({
@@ -27,6 +19,14 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
       },
     } as any)
 );
+
+jest.spyOn(SWR, "default").mockImplementation((url: any) => {
+  return {
+    data: url()?.startsWith("https://www.planning.data.gov.uk")
+      ? localAuthorityMock
+      : null,
+  } as any;
+});
 
 test("renders correctly", async () => {
   const handleSubmit = jest.fn();
