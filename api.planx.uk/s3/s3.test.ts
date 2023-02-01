@@ -2,15 +2,11 @@ import supertest from "supertest";
 
 import app from "../server";
 
-const mockPutObject = jest.fn(() => ({
-  promise: () => Promise.resolve()
-}))
+let mockPutObject: jest.Mocked<any>;
 
 let getObjectResponse = {};
 
-const mockGetObject = jest.fn(() => ({
-  promise: () => Promise.resolve(getObjectResponse)
-}))
+let mockGetObject: jest.Mocked<any>;
 
 const mockGetSignedUrl = jest.fn(() => {
   const randomFolderName = "nanoid";
@@ -36,7 +32,11 @@ jest.mock("aws-sdk/clients/s3", () => {
 
 describe("File upload", () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.clearAllMocks();
+
+    mockPutObject = jest.fn(() => ({
+      promise: () => Promise.resolve()
+    }))
   })
 
   it("private-file-upload - should not upload without filename", async () => {
@@ -77,6 +77,22 @@ describe("File upload", () => {
     expect(mockGetSignedUrl).toHaveBeenCalledTimes(1);
   });
 
+  it("private-file-upload - should handle S3 error", async () => {
+    mockPutObject = jest.fn(() => ({
+      promise: () => Promise.reject(new Error("S3 error!"))
+    }))
+
+    await supertest(app)
+      .post("/private-file-upload")
+      .field("filename", "some_file.txt")
+      .attach("file", Buffer.from("some data"), "some_file.txt")
+      .expect(500)
+      .then(res => {
+        expect(res.body).toEqual({ error: "S3 error!" });
+      });
+    expect(mockPutObject).toHaveBeenCalledTimes(1);
+  });
+
   it("public-file-upload - should not upload without filename", async () => {
     await supertest(app)
       .post("/public-file-upload")
@@ -114,6 +130,22 @@ describe("File upload", () => {
     expect(mockPutObject).toHaveBeenCalledTimes(1);
     expect(mockGetSignedUrl).toHaveBeenCalledTimes(1);
   });
+
+  it("public-file-upload - should handle S3 error", async () => {
+    mockPutObject = jest.fn(() => ({
+      promise: () => Promise.reject(new Error("S3 error!"))
+    }))
+
+    await supertest(app)
+      .post("/public-file-upload")
+      .field("filename", "some_file.txt")
+      .attach("file", Buffer.from("some data"), "some_file.txt")
+      .expect(500)
+      .then(res => {
+        expect(res.body).toEqual({ error: "S3 error!" });
+      });
+    expect(mockPutObject).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe("File download", () => {
@@ -129,6 +161,10 @@ describe("File download", () => {
       ETag: "a4c57ed39e8d869d636ccf5fc34a65a1",
     };
     jest.clearAllMocks()
+
+    mockGetObject = jest.fn(() => ({
+      promise: () => Promise.resolve(getObjectResponse)
+    }))
   })
 
   it("file/public - should not download with incomplete path", async () => {
@@ -162,6 +198,22 @@ describe("File download", () => {
         expect(mockGetObject).toHaveBeenCalledTimes(1);
         expect(res.body.error).toBe("bad request")
       });
+  });
+
+  it("file/public - should handle S3 error", async () => {
+    mockGetObject = jest.fn(() => ({
+      promise: () => Promise.reject(new Error("S3 error!"))
+    }))
+
+    await supertest(app)
+      .get("/file/public/someKey/someFile.txt")
+      .field("filename", "some_file.txt")
+      .attach("file", Buffer.from("some data"), "some_file.txt")
+      .expect(500)
+      .then(res => {
+        expect(res.body).toEqual({ error: "S3 error!" });
+      });
+    expect(mockGetObject).toHaveBeenCalledTimes(1);
   });
 
   it("file/private - should not download with incomplete path", async () => {
@@ -222,5 +274,22 @@ describe("File download", () => {
       .then(() => {
         expect(mockGetObject).toHaveBeenCalledTimes(1);
       });
+  });
+
+  it("file/private - should handle S3 error", async () => {
+    mockGetObject = jest.fn(() => ({
+      promise: () => Promise.reject(new Error("S3 error!"))
+    }))
+
+    await supertest(app)
+      .get("/file/private/someKey/someFile.txt")
+      .set({ "api-key": "test" })
+      .field("filename", "some_file.txt")
+      .attach("file", Buffer.from("some data"), "some_file.txt")
+      .expect(500)
+      .then(res => {
+        expect(res.body).toEqual({ error: "S3 error!" });
+      });
+    expect(mockGetObject).toHaveBeenCalledTimes(1);
   });
 });
