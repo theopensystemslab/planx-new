@@ -62,7 +62,7 @@ export const hasFeatureFlag = (featureFlag: featureFlag) =>
   has: hasFeatureFlag,
 };
 
-if (process.env.NODE_ENV !== "test") {
+if (process.env.REACT_APP_ENV !== "test") {
   // log current flag status on page load
   console.debug(
     activeFeatureFlags.size > 0

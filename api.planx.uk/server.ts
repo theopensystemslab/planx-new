@@ -59,6 +59,7 @@ import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
 import { usePayProxy } from "./proxy/pay";
 import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
 import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
+import { isLiveEnv } from "./helpers";
 
 const router = express.Router();
 
@@ -90,7 +91,7 @@ const handleSuccess = (req: Request, res: Response) => {
     const { returnTo = process.env.EDITOR_URL_EXT } = req.session!;
 
     const domain = (() => {
-      if (process.env.NODE_ENV === "production") {
+      if (isLiveEnv()) {
         if (returnTo?.includes("editor.planx.")) {
           // user is logging in to staging from editor.planx.dev
           // or production from editor.planx.uk
@@ -119,7 +120,7 @@ const handleSuccess = (req: Request, res: Response) => {
         httpOnly: false,
       };
 
-      if (process.env.NODE_ENV === "production") {
+      if (isLiveEnv()) {
         cookie.secure = true;
         cookie.sameSite = "none";
       }

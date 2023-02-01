@@ -117,6 +117,7 @@ specifiers:
   craco-esbuild: ^0.5.1
   css-loader: ^6.7.1
   date-fns: ^2.29.1
+  dotenv: ^16.0.3
   esbuild: ^0.14.54
   esbuild-jest: ^0.5.0
   eslint: ^8.28.0
@@ -224,6 +225,7 @@ dependencies:
   classnames: 2.3.1
   core-js: 3.24.1
   date-fns: 2.29.1
+  dotenv: 16.0.3
   fast-xml-parser: 4.0.11
   formik: 2.2.9_react@18.2.0
   graphql: 16.5.0
@@ -311,7 +313,7 @@ devDependencies:
   esbuild: 0.14.54
   esbuild-jest: 0.5.0_esbuild@0.14.54
   eslint: 8.29.0
-  eslint-plugin-jest: 27.1.6_ixh6nceclvqov4hcu5gszby2fi
+  eslint-plugin-jest: 27.1.6_kkv2tsnmg5we6ee3ny4vbvytka
   eslint-plugin-jsx-a11y: 6.6.1_eslint@8.29.0
   eslint-plugin-simple-import-sort: 7.0.0_eslint@8.29.0
   eslint-plugin-testing-library: 5.6.0_ixh6nceclvqov4hcu5gszby2fi
@@ -8757,6 +8759,11 @@ packages:
     resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
     engines: {node: '>=10'}
 
+  /dotenv/16.0.3:
+    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+    engines: {node: '>=12'}
+    dev: false
+
   /dotenv/8.2.0:
     resolution: {integrity: sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==}
     engines: {node: '>=8'}
@@ -9373,7 +9380,7 @@ packages:
       - supports-color
       - typescript
 
-  /eslint-plugin-jest/27.1.6_ixh6nceclvqov4hcu5gszby2fi:
+  /eslint-plugin-jest/27.1.6_kkv2tsnmg5we6ee3ny4vbvytka:
     resolution: {integrity: sha512-XA7RFLSrlQF9IGtAmhddkUkBuICCTuryfOTfCSWcZHiHb69OilIH05oozH2XA6CEOtztnOd0vgXyvxZodkxGjg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     peerDependencies:
@@ -9388,6 +9395,7 @@ packages:
     dependencies:
       '@typescript-eslint/utils': 5.36.1_ixh6nceclvqov4hcu5gszby2fi
       eslint: 8.29.0
+      jest: 27.4.5
     transitivePeerDependencies:
       - supports-color
       - typescript
