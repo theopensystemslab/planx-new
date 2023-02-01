@@ -1,4 +1,5 @@
 import { gql } from 'graphql-request';
+import { capitalize } from 'lodash';
 import { adminGraphQLClient } from "./hasura";
 import { Flow, Node } from "./types";
 
@@ -190,6 +191,17 @@ const makeUniqueFlow = (flowData: Flow["data"], replaceValue: string): Flow["dat
 };
 
 const isLiveEnv = () => (["production", "staging", "pizza"].includes(process.env.NODE_ENV || ""));
+/**
+ * Get current environment, formatted for display
+ */
+const getFormattedEnvironment = (): string => {
+  let environment = process.env.NODE_ENV;
+  if (environment === "pizza") {
+    const pizzaNumber = new URL(process.env.API_URL_EXT!).href.split(".")[1]
+    environment += ` ${pizzaNumber}`
+  };
+  return capitalize(environment);
+};
 
 export {
   getFlowData,
@@ -200,4 +212,5 @@ export {
   makeUniqueFlow,
   insertFlow,
   isLiveEnv,
+  getFormattedEnvironment,
 };
