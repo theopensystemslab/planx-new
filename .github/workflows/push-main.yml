@@ -60,6 +60,7 @@ jobs:
           REACT_APP_SHAREDB_URL: wss://sharedb.editor.planx.dev
           REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
+          REACT_APP_ENV: staging
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
