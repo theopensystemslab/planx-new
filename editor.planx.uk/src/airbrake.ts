@@ -1,14 +1,14 @@
 import { Notifier } from "@airbrake/browser";
 import { isLiveEnv } from "utils";
 
-export const reportError = getErrorLogger().notify;
+export const logger = getErrorLogger();
 
 function log(...args: any[]) {
-  return process.env.DEBUG
-    ? console.log(...args)
-    : () => {
+  return process.env.SUPPRESS_LOGS
+    ? () => {
         /* silence */
-      };
+      }
+    : console.log(...args);
 }
 
 // forward all JS errors to airbrake.io

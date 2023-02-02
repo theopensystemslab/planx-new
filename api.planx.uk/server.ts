@@ -60,6 +60,7 @@ import { usePayProxy } from "./proxy/pay";
 import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
 import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
 import { isLiveEnv } from "./helpers";
+import { logPaymentStatus } from "./send/helpers";
 
 const router = express.Router();
 
@@ -309,12 +310,31 @@ app.post("/pay/:localAuthority", (req, res, next) => {
   const isSupported =
     process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
 
+  const flowId = req.query?.flowId as string | undefined;
+  const sessionId = req.query?.sessionId as string | undefined;
+  const teamSlug = req.params.localAuthority;
+
   if (isSupported) {
     // drop req.params.localAuthority from the path when redirecting
     // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
     usePayProxy(
       {
         pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
+        selfHandleResponse: true,
+        onProxyRes: responseInterceptor(
+          async (responseBuffer, _proxyRes, _req, _res) => {
+            const responseString = responseBuffer.toString("utf8");
+            const govUkResponse = JSON.parse(responseString);
+            await logPaymentStatus({
+              sessionId,
+              flowId,
+              teamSlug,
+              govUkResponse,
+            });
+            return JSON.stringify(govUkResponse);
+            return responseBuffer;
+          }
+        ),
       },
       req
     )(req, res, next);
@@ -331,6 +351,10 @@ assert(process.env.SLACK_WEBHOOK_URL);
 // used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
 // fetches the status of the payment
 app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
+  const flowId = req.query?.flowId as string | undefined;
+  const sessionId = req.query?.sessionId as string | undefined;
+  const teamSlug = req.params.localAuthority;
+
   // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
   usePayProxy(
     {
@@ -338,6 +362,13 @@ app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
       selfHandleResponse: true,
       onProxyRes: responseInterceptor(async (responseBuffer) => {
         const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+
+        await logPaymentStatus({
+          sessionId,
+          flowId,
+          teamSlug,
+          govUkResponse,
+        });
 
         // if it's a prod payment, notify #planx-notifications so we can monitor for subsequent submissions
         if (govUkResponse?.payment_provider !== "sandbox") {
@@ -445,7 +476,7 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
-app.get("/admin/feedback", useJWT, downloadFeedbackCSV)
+app.get("/admin/feedback", useJWT, downloadFeedbackCSV);
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production
@@ -643,11 +674,11 @@ app.use("/proxy/ordnance-survey", useOrdnanceSurveyProxy);
 
 app.get("/error", async (res, req, next) => {
   try {
-    throw Error("This is a test error")
+    throw Error("This is a test error");
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {

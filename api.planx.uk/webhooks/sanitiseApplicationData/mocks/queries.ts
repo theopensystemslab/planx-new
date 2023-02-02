@@ -12,16 +12,6 @@ export const mockSanitiseLowcalSessionsMutation = {
   },
 };
 
-export const mockSanitiseSessionBackupsMutation = {
-  name: "SanitiseSessionBackups",
-  matchOnVariables: false,
-  data: {
-    update_session_backups: {
-      returning: mockIds,
-    }
-  },
-};
-
 export const mockSanitiseUniformApplicationsMutation = {
   name: "SanitiseUniformApplications",
   matchOnVariables: false,

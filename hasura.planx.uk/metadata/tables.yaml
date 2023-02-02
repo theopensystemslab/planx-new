@@ -119,13 +119,6 @@
           table:
             schema: public
             name: published_flows
-    - name: session_backups
-      using:
-        foreign_key_constraint_on:
-          column: flow_id
-          table:
-            schema: public
-            name: session_backups
   computed_fields:
     - name: data_merged
       definition:
@@ -289,6 +282,13 @@
         foreign_key_constraint_on: flow_id
 - table:
     schema: public
+    name: payment_status
+- table:
+    schema: public
+    name: payment_status_enum
+  is_enum: true
+- table:
+    schema: public
     name: planning_constraints_requests
 - table:
     schema: public
@@ -324,29 +324,6 @@
 - table:
     schema: public
     name: reconciliation_requests
-- table:
-    schema: public
-    name: session_backups
-  object_relationships:
-    - name: flow
-      using:
-        foreign_key_constraint_on: flow_id
-  insert_permissions:
-    - role: public
-      permission:
-        check: {}
-        columns:
-          - flow_data
-          - flow_id
-          - session_id
-          - user_data
-  select_permissions:
-    - role: public
-      permission:
-        columns:
-          - id
-        filter: {}
-        limit: 1
 - table:
     schema: public
     name: team_members
