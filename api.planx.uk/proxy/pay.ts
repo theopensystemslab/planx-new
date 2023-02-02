@@ -16,4 +16,4 @@ export const usePayProxy = (options: Partial<Options>, req: Request) => {
     },
     ...options,
   });
-}
+};

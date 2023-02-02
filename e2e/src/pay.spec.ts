@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { log } from "./helpers";
 import type { Page } from "@playwright/test";
 import payFlow from "./flows/pay-flow.json";
 import { getClient, setUpTestContext, tearDownTestContext } from "./context";
@@ -60,6 +61,13 @@ test.describe("Payment flow", async () => {
     const { payment_id: paymentRef } = await waitForPaymentResponse(page);
     expect(paymentRef).toBeTruthy();
     expect(await page.getByText(paymentRef!).textContent()).toBeTruthy();
+    expect(
+      await hasPaymentStatus({
+        status: "success",
+        paymentId: paymentRef,
+        client,
+      })
+    ).toBe(true);
   });
 
   test("Should retry and succeed a failed GOV.UK payment", async ({ page }) => {
@@ -70,6 +78,13 @@ test.describe("Payment flow", async () => {
     await page.locator("#return-url").click();
     const { payment_id: failedPaymentRef } = await waitForPaymentResponse(page);
     expect(failedPaymentRef).toBeTruthy();
+    expect(
+      await hasPaymentStatus({
+        status: "failed",
+        paymentId: failedPaymentRef,
+        client,
+      })
+    ).toBe(true);
 
     await page.getByText("Retry payment").click();
     await fillGovUkCardDetails({
@@ -80,6 +95,13 @@ test.describe("Payment flow", async () => {
     const { payment_id: paymentRef } = await waitForPaymentResponse(page);
     expect(paymentRef).toBeTruthy();
     expect(await page.getByText(paymentRef!).textContent()).toBeTruthy();
+    expect(
+      await hasPaymentStatus({
+        status: "success",
+        paymentId: paymentRef,
+        client,
+      })
+    ).toBe(true);
   });
 
   test("Should retry and succeed a cancelled GOV.UK payment", async ({
@@ -95,6 +117,13 @@ test.describe("Payment flow", async () => {
 
     expect(failedPaymentRef).toBeTruthy();
     expect(state.status).toBe("failed");
+    expect(
+      await hasPaymentStatus({
+        status: "failed",
+        paymentId: failedPaymentRef,
+        client,
+      })
+    ).toBe(true);
 
     await page.getByText("Retry payment").click();
     await fillGovUkCardDetails({
@@ -106,6 +135,13 @@ test.describe("Payment flow", async () => {
 
     expect(paymentRef).toBeTruthy();
     expect(await page.getByText(paymentRef!).textContent()).toBeTruthy();
+    expect(
+      await hasPaymentStatus({
+        status: "success",
+        paymentId: paymentRef,
+        client,
+      })
+    ).toBe(true);
   });
 });
 
@@ -145,4 +181,31 @@ async function waitForPaymentResponse(page: Page): Promise<null | object> {
       return response.url().includes(`pay/${TEAM_SLUG}`);
     })
     .then((req) => req.json());
+}
+
+async function hasPaymentStatus({
+  status,
+  paymentId,
+  client,
+}: {
+  status: string;
+  paymentId: string;
+  client: Client;
+}): Promise<boolean> {
+  try {
+    const { payment_status: response } = await client.request(
+      `query GetPaymentStatus($paymentId: String!, $status: payment_status_enum_enum!) {
+        payment_status(where: {payment_id: {_eq: $paymentId}, status: {_eq: $status}}) {
+          status
+        }
+      }`,
+      { paymentId, status }
+    );
+    if (response.length === 1 && response[0].status) {
+      return response[0].status === status;
+    }
+  } catch (e) {
+    log(`Payment status not found:`, e);
+  }
+  return false;
 }
