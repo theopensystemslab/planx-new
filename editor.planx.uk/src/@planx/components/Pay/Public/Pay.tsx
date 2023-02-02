@@ -51,7 +51,6 @@ function Component(props: Props) {
     setGovUkPayment,
     passport,
     environment,
-    sendSessionDataToHasura,
   ] = useStore((state) => [
     state.id,
     state.sessionId,
@@ -59,7 +58,6 @@ function Component(props: Props) {
     state.setGovUkPayment,
     state.computePassport(),
     state.previewEnvironment,
-    state.sendSessionDataToHasura,
   ]);
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
@@ -129,15 +127,6 @@ function Component(props: Props) {
       refetchPayment(govUkPayment.payment_id);
     }
   }, []);
-
-  // if this is the public-facing preview and Pay component is loading
-  if (environment === "standalone" && state.status === "indeterminate") {
-    // XXX: When the pay component is initially loaded, send the user's
-    //      session info to storage in case there's an issue with payment flow.
-    //      Will be called when this component is shown, or if it's skipped.
-    //      Will fail silently if there's an issue with the HTTP request.
-    sendSessionDataToHasura();
-  }
 
   const handleSuccess = () => {
     dispatch(Action.Success);
