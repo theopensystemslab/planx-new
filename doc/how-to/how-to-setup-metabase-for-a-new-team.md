@@ -43,7 +43,10 @@ query GetFlowIDsForTeam {
 
 ![Screenshot - Enable sharing](./images/setup-metabase/enable_sharing.png)
 
-7. Share the public dashboard link with the relevant team
+7. Share the public dashboard link with the relevant team directly
 
 ![Screenshot - Share Dashboard link with team](./images/setup-metabase/share_with_team.png)
 
+8. Update "ODP Useful Links" document on Notion
+* Link: https://www.notion.so/opensystemslab/Open-Digital-Planning-Useful-links-176e31a4d1274c82959d83fe503d274f
+* Dashboards are listed under PlanX > BETA services & analytics > {Council})
