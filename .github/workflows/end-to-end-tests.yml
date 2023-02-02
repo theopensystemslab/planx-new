@@ -7,8 +7,10 @@ on:
     branches:
       - main
   workflow_run:
-    workflows: [Pull Request]
-    types: [completed]
+    workflows: 
+      - Pull Request
+    types: 
+      - completed
   schedule:
      - cron:  '30 7 * * *'
   workflow_dispatch:
