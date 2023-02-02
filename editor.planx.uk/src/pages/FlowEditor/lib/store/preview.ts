@@ -49,11 +49,6 @@ export interface PreviewStore extends Store.Store {
   resumeSession: (session: Session) => void;
   sessionId: string;
   sendSessionDataToHasura: () => void;
-  createPaymentStatus: (args: {
-    paymentId: string;
-    teamSlug: string;
-    status: PaymentStatus;
-  }) => Promise<void>;
   upcomingCardIds: () => Store.nodeId[];
   isFinalCard: () => boolean;
   govUkPayment?: GovUKPayment;
@@ -348,45 +343,6 @@ export const previewStore = (
   },
 
   sessionId: uuidV4(),
-
-  async createPaymentStatus({
-    paymentId,
-    teamSlug,
-    status,
-  }: {
-    paymentId: string;
-    teamSlug: string;
-    status: PaymentStatus;
-  }): Promise<void> {
-    const { sessionId } = get();
-    await client.mutate({
-      mutation: gql`
-        mutation CreatePaymentStatus(
-          $sessionId: uuid!
-          $paymentId: String!
-          $teamSlug: String!
-          $status: payment_status_enum_enum
-        ) {
-          insert_payment_status(
-            objects: {
-              session_id: $sessionId
-              payment_id: $paymentId
-              team_slug: $teamSlug
-              status: $status
-            }
-          ) {
-            affected_rows
-          }
-        }
-      `,
-      variables: {
-        sessionId,
-        teamSlug,
-        paymentId,
-        status,
-      },
-    });
-  },
 
   async sendSessionDataToHasura() {
     try {

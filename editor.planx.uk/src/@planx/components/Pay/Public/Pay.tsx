@@ -45,29 +45,37 @@ enum Action {
 
 function Component(props: Props) {
   const [
+    flowId,
     sessionId,
     govUkPayment,
     setGovUkPayment,
     passport,
     environment,
     sendSessionDataToHasura,
-    createPaymentStatus,
   ] = useStore((state) => [
+    state.id,
     state.sessionId,
     state.govUkPayment,
     state.setGovUkPayment,
     state.computePassport(),
     state.previewEnvironment,
     state.sendSessionDataToHasura,
-    state.createPaymentStatus,
   ]);
 
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
   const teamSlug = useTeamSlug();
-  const govUkPayUrlForTeam = useStagingUrlIfTestApplication(passport)(
-    `${GOV_UK_PAY_URL}/${teamSlug}`
-  );
+
+  const getGovUkPayUrlForTeam = (paymentId?: string | undefined) => {
+    const baseURL = useStagingUrlIfTestApplication(passport)(
+      `${GOV_UK_PAY_URL}/${teamSlug}`
+    );
+    const queryString = `?sessionId=${sessionId}&flowId=${flowId}`;
+    if (paymentId) {
+      return `${baseURL}/${paymentId}${queryString}`;
+    }
+    return `${baseURL}${queryString}`;
+  };
 
   // Handles UI states
   const reducer = (_state: ComponentState, action: Action): ComponentState => {
@@ -153,15 +161,6 @@ function Component(props: Props) {
   ): Promise<GovUKPayment> => {
     const payment = normalizePaymentResponse(responseData);
     setGovUkPayment(payment);
-    try {
-      await createPaymentStatus({
-        teamSlug,
-        paymentId: payment.payment_id,
-        status: PaymentStatus[payment.state.status] || PaymentStatus.unknown,
-      });
-    } catch (e) {
-      reportError({ error: e, payment });
-    }
     return payment;
   };
 
@@ -170,7 +169,7 @@ function Component(props: Props) {
       const {
         data: { state },
       } = await axios.get<Pick<GovUKPayment, "state">>(
-        `${govUkPayUrlForTeam}/${id}`
+        getGovUkPayUrlForTeam(id)
       );
 
       // Update local state with the refetched payment state
@@ -232,9 +231,8 @@ function Component(props: Props) {
       handleSuccess();
       return;
     }
-
     await axios
-      .post(govUkPayUrlForTeam, createPayload(fee, sessionId))
+      .post(getGovUkPayUrlForTeam(), createPayload(fee, sessionId))
       .then(async (res) => {
         const payment = await resolvePaymentResponse(res.data);
         if (payment._links.next_url?.href)
