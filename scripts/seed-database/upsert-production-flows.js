@@ -74,6 +74,7 @@ const LOCAL_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
           name
           slug
           theme
+          settings
           notify_personalisation
         }
       }

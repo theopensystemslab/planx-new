@@ -80,3 +80,6 @@ export const fetchCurrentTeam = (): Team | undefined => {
   });
   return data?.teams[0];
 };
+
+export const isLiveEnv = () =>
+  ["production", "staging", "pizza"].includes(process.env.NODE_ENV || "");

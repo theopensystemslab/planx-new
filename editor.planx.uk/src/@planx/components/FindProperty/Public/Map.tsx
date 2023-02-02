@@ -19,7 +19,7 @@ import InputLabel from "ui/InputLabel";
 
 import {
   DEFAULT_NEW_ADDRESS_TITLE,
-  NewAddressInputs,
+  ProposedAddressInputs,
   SiteAddress,
   userDataSchema,
 } from "../model";
@@ -40,7 +40,7 @@ export const DescriptionInput = styled(Box)(({ theme }) => ({
 }));
 
 export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
-  const formik = useFormik<NewAddressInputs>({
+  const formik = useFormik<ProposedAddressInputs>({
     initialValues: {
       siteDescription: props.initialProposedAddress?.title || "",
     },
@@ -66,12 +66,16 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
       if (geojson["EPSG:3857"]?.features && geojson["EPSG:27700"]?.features) {
+        // only a single point can be plotted, so get first feature in geojson "FeatureCollection" per projection
+        const [longitude, latitude] =
+          geojson["EPSG:3857"].features[0]?.geometry?.coordinates;
+        const [x, y] = geojson["EPSG:27700"].features[0]?.geometry?.coordinates;
+
         setProposedAddress({
-          // only a single point can be plotted, so get first feature in geojson "FeatureCollection" per projection
-          longitude: geojson["EPSG:3857"].features[0]?.geometry?.coordinates[0],
-          latitude: geojson["EPSG:3857"].features[0]?.geometry?.coordinates[1],
-          x: geojson["EPSG:27700"].features[0]?.geometry?.coordinates[0],
-          y: geojson["EPSG:27700"].features[0]?.geometry?.coordinates[1],
+          latitude,
+          longitude,
+          x,
+          y,
           title: formik.values.siteDescription || "",
           source: "proposed",
         });
@@ -122,8 +126,10 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           <Typography variant="body2">
             The coordinate location of your address point is:{" "}
             <strong>
-              {proposedAddress?.x?.toFixed(5) || 0} Easting (X),{" "}
-              {proposedAddress?.y?.toFixed(5) || 0} Northing (Y)
+              {(proposedAddress?.x && Math.round(proposedAddress.x)) || 0}{" "}
+              Easting (X),{" "}
+              {(proposedAddress?.y && Math.round(proposedAddress.y)) || 0}{" "}
+              Northing (Y)
             </strong>
           </Typography>
           <Link

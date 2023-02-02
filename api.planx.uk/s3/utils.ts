@@ -1,4 +1,5 @@
 import S3 from "aws-sdk/clients/s3";
+import { isLiveEnv } from "../helpers";
 
 export function s3Factory() {
   return new S3({
@@ -11,7 +12,7 @@ export function s3Factory() {
 }
 
 function useMinio() {
-  if (process.env.NODE_ENV === "production") {
+  if (isLiveEnv()) {
     // Points to AWS
     return {};
   } else {
@@ -27,10 +28,6 @@ function useMinio() {
 export function buildFilePath(
   fileKey: string,
   fileName: string
-): string | null {
-  if (!fileKey || !fileName) {
-    return null;
-  }
-
+): string {
   return `${fileKey}/${fileName}`;
 }

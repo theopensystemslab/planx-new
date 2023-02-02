@@ -48,11 +48,11 @@ export interface SiteAddress extends MinimumSiteAddress {
   planx_value?: string; // joined via table blpu_codes
 }
 
-export type NewAddressInputs = {
+export type ProposedAddressInputs = {
   siteDescription: string;
 };
 
-export const userDataSchema: SchemaOf<NewAddressInputs> = object({
+export const userDataSchema: SchemaOf<ProposedAddressInputs> = object({
   siteDescription: string().required(
     "Enter a site description to proceed. For example, `Land at...`"
   ),

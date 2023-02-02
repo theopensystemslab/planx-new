@@ -26,6 +26,8 @@ services:
       virtual.host: api.${ROOT_DOMAIN}
       virtual.port: ${API_PORT}
       virtual.tls: ${TLS_EMAIL}
+    environment:
+      NODE_ENV: "pizza"
 
   sharedb:
     labels:

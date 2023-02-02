@@ -192,7 +192,7 @@ function FindProperty(props: ComponentProps) {
         <dd>
           {`${title}`}
           <br />
-          {`${x.toFixed(5)} Easting (X), ${y.toFixed(5)} Northing (Y)`}
+          {`${Math.round(x)} Easting (X), ${Math.round(y)} Northing (Y)`}
         </dd>
       </>
     );

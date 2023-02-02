@@ -190,6 +190,7 @@ jobs:
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           # needed because there's no API to change google's allowed OAuth URLs
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
+          REACT_APP_ENV: pizza
 
   build_storybook:
     name: Build Storybook
