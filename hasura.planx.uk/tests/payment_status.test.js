@@ -7,8 +7,8 @@ describe("payment_status", () => {
       i = await introspectAs("public");
     });
 
-    test("can INSERT records", () => {
-      expect(i.mutations).toContain("insert_payment_status");
+    test("cannot INSERT records", () => {
+      expect(i.mutations).not.toContain("insert_payment_status");
     });
 
     test("cannot QUERY records", () => {
