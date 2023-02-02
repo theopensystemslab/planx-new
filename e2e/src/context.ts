@@ -1,6 +1,7 @@
 import assert from "node:assert";
+import { log } from "./helpers";
 import { sign } from "jsonwebtoken";
-import Client from "planx-client";
+import { Client } from "planx-client";
 
 export interface Context {
   user?: {
@@ -275,12 +276,4 @@ async function deleteTeam(client: Client, context: Context) {
       );
     }
   }
-}
-
-function log(...args: any[]) {
-  process.env.DEBUG
-    ? console.log(...args)
-    : () => {
-        // silent
-      };
 }

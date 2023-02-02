@@ -10,12 +10,12 @@ import isEqual from "lodash/isEqual";
 import isNil from "lodash/isNil";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
-import type { Flag, GovUKPayment, Session } from "types";
 import { v4 as uuidV4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
-import { ApplicationPath } from "./../../../../types";
+import type { Flag, GovUKPayment, Session } from "./../../../../types";
+import { ApplicationPath, PaymentStatus } from "./../../../../types";
 import type { Store } from ".";
 import type { SharedStore } from "./shared";
 
@@ -51,7 +51,6 @@ export interface PreviewStore extends Store.Store {
   sendSessionDataToHasura: () => void;
   upcomingCardIds: () => Store.nodeId[];
   isFinalCard: () => boolean;
-  // temporary measure for storing payment fee & id between gov uk redirect
   govUkPayment?: GovUKPayment;
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
   cachedBreadcrumbs?: Store.cachedBreadcrumbs;
