@@ -1,6 +1,4 @@
-export const mockIds = [
-  "id1", "id2", "id3"
-];
+export const mockIds = ["id1", "id2", "id3"];
 
 export const mockSanitiseLowcalSessionsMutation = {
   name: "SanitiseLowcalSessions",
@@ -8,7 +6,7 @@ export const mockSanitiseLowcalSessionsMutation = {
   data: {
     update_lowcal_sessions: {
       returning: mockIds,
-    }
+    },
   },
 };
 
@@ -18,7 +16,7 @@ export const mockSanitiseUniformApplicationsMutation = {
   data: {
     update_uniform_applications: {
       returning: mockIds,
-    }
+    },
   },
 };
 
@@ -28,7 +26,7 @@ export const mockSanitiseBOPSApplicationsMutation = {
   data: {
     update_bops_applications: {
       returning: mockIds,
-    }
+    },
   },
 };
 
@@ -38,6 +36,6 @@ export const mockDeleteReconciliationRequestsMutation = {
   data: {
     delete_reconciliation_requests: {
       returning: mockIds,
-    }
+    },
   },
 };

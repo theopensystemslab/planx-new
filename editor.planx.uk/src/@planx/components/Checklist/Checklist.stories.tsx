@@ -76,8 +76,7 @@ WithImages.args = {
       data: {
         val: "a",
         text: "Apples",
-        img:
-          "https://www.applesfromny.com/wp-content/uploads/2020/05/Jonagold_NYAS-Apples2.png",
+        img: "https://www.applesfromny.com/wp-content/uploads/2020/05/Jonagold_NYAS-Apples2.png",
       },
     },
     {
@@ -85,8 +84,7 @@ WithImages.args = {
       data: {
         val: "b",
         text: "Bananas",
-        img:
-          "https://images.everydayhealth.com/images/diet-nutrition/how-many-calories-are-in-a-banana-1440x810.jpg",
+        img: "https://images.everydayhealth.com/images/diet-nutrition/how-many-calories-are-in-a-banana-1440x810.jpg",
       },
     },
     { id: "c", data: { val: "c", text: "Canteloupes" } },

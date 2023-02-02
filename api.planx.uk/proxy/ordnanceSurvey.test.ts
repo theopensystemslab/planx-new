@@ -19,10 +19,10 @@ describe("Ordnance Survey proxy endpoint", () => {
     await get(ENDPOINT + TILE_PATH)
       .set({ referer: "https://123.planx.pizza/" })
       .expect(200)
-      .then(response => {
+      .then((response) => {
         expect(response.body).toEqual({
-          test: "returned tile"
-        })
+          test: "returned tile",
+        });
       });
   });
 
@@ -35,10 +35,10 @@ describe("Ordnance Survey proxy endpoint", () => {
     await get(ENDPOINT + TILE_PATH + "?srs=3857")
       .set({ referer: "https://www.planx.dev/" })
       .expect(200)
-      .then(response => {
+      .then((response) => {
         expect(response.body).toEqual({
-          test: "returned tile"
-        })
+          test: "returned tile",
+        });
       });
   });
 
@@ -51,10 +51,10 @@ describe("Ordnance Survey proxy endpoint", () => {
     await get(ENDPOINT + TILE_PATH)
       .set({ referer: "https://www.planx.uk/" })
       .expect(401)
-      .then(response => {
+      .then((response) => {
         expect(response.body).toEqual({
-          test: "failed request"
-        })
+          test: "failed request",
+        });
       });
   });
 
@@ -63,10 +63,10 @@ describe("Ordnance Survey proxy endpoint", () => {
       await get(ENDPOINT + TILE_PATH)
         .set({ referer: "https://www.invalid-site.com/" })
         .expect(401)
-        .then(response => {
+        .then((response) => {
           expect(response.body).toEqual({
-            error: "Unauthorised"
-          })
+            error: "Unauthorised",
+          });
         });
     });
 
@@ -79,11 +79,13 @@ describe("Ordnance Survey proxy endpoint", () => {
       await get(ENDPOINT + TILE_PATH)
         .set({ referer: "https://oslmap.netlify.app/" })
         .expect(200)
-        .then(response => {
+        .then((response) => {
           expect(response.body).toEqual({
-            test: "returned tile"
+            test: "returned tile",
           });
-          expect(response.headers["cross-origin-resource-policy"]).toEqual("cross-origin")
+          expect(response.headers["cross-origin-resource-policy"]).toEqual(
+            "cross-origin"
+          );
         });
     });
 
@@ -96,11 +98,13 @@ describe("Ordnance Survey proxy endpoint", () => {
       await get(ENDPOINT + TILE_PATH)
         .set({ referer: "https://www.planx.dev/" })
         .expect(200)
-        .then(response => {
+        .then((response) => {
           expect(response.body).toEqual({
-            test: "returned tile"
+            test: "returned tile",
           });
-          expect(response.headers["cross-origin-resource-policy"]).toEqual("cross-origin")
+          expect(response.headers["cross-origin-resource-policy"]).toEqual(
+            "cross-origin"
+          );
         });
     });
 
@@ -113,11 +117,13 @@ describe("Ordnance Survey proxy endpoint", () => {
       await get(ENDPOINT + TILE_PATH)
         .set({ referer: "https://planningservices.buckinghamshire.gov.uk/" })
         .expect(200)
-        .then(response => {
+        .then((response) => {
           expect(response.body).toEqual({
-            test: "returned tile"
+            test: "returned tile",
           });
-          expect(response.headers["cross-origin-resource-policy"]).toEqual("cross-origin")
+          expect(response.headers["cross-origin-resource-policy"]).toEqual(
+            "cross-origin"
+          );
         });
     });
   });
@@ -127,18 +133,18 @@ describe("appendAPIKey helper function", () => {
   const PROXY_PATH = "/proxy/ordnance-survey";
   const REQUEST_PATH = "/test/path";
   const mockReq = {
-    baseUrl: PROXY_PATH
+    baseUrl: PROXY_PATH,
   } as Request;
 
   it("appends the OS API key to the request path", () => {
-    const testURL = PROXY_PATH + REQUEST_PATH
+    const testURL = PROXY_PATH + REQUEST_PATH;
     const result = appendAPIKey(testURL, mockReq);
-    expect(result).toEqual("/test/path?key=test")
+    expect(result).toEqual("/test/path?key=test");
   });
 
   it("appends the OS API key to the request path (with query params)", () => {
     const testURL = PROXY_PATH + REQUEST_PATH + "?srs=3857";
     const result = appendAPIKey(testURL, mockReq);
-    expect(result).toEqual("/test/path?srs=3857&key=test")
-  })
-})
+    expect(result).toEqual("/test/path?srs=3857&key=test");
+  });
+});

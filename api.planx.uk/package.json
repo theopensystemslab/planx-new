@@ -41,9 +41,9 @@
     "string-to-stream": "^3.0.1"
   },
   "scripts": {
-    "dev": "ts-node-dev --files index.ts",
+    "dev": "ts-node-dev --files ./index.ts",
     "start": "node ./dist/index.js",
-    "lint": "eslint '**/*.{js,ts}'",
+    "lint": "eslint './**/*.{js,ts}'",
     "test": "TZ=Europe/London jest",
     "test:coverage": "TZ=Europe/London jest; open ./coverage/lcov-report/index.html",
     "test:watch": "TZ=Europe/London jest --coverage=false --watch",

@@ -24,11 +24,11 @@ describe("locationSearchWithTimeout", () => {
     const timeout = 500;
     const localAuthority = "braintree";
     const promise = locationSearchWithTimeout(
-        localAuthority,
-        { x: 50, y: 50, siteBoundary: "[]" },
-        timeout
-      );
-      jest.runAllTimers();
-      await expect(promise).rejects.toEqual("location search timeout");
+      localAuthority,
+      { x: 50, y: 50, siteBoundary: "[]" },
+      timeout
+    );
+    jest.runAllTimers();
+    await expect(promise).rejects.toEqual("location search timeout");
   });
 });

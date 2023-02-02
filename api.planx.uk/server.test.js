@@ -38,7 +38,7 @@ describe("authentication", () => {
       .then((res) => {
         expect(res.body).toEqual({ error: "user failed to authenticate." });
       });
-  })
+  });
 });
 
 describe("sending a payment to GOV.UK Pay", () => {
@@ -172,7 +172,11 @@ describe.skip("fetching GIS data from local authorities directly", () => {
   locations.forEach((location) => {
     it(`returns MVP planning constraints for ${location.council}`, async () => {
       await supertest(app)
-        .get(`/gis/${location.council}?x=${location.x}&y=${location.y}&siteBoundary=${JSON.stringify(location.siteBoundary)}`)
+        .get(
+          `/gis/${location.council}?x=${location.x}&y=${
+            location.y
+          }&siteBoundary=${JSON.stringify(location.siteBoundary)}`
+        )
         .expect(200)
         .then((res) => {
           expect(res.body["article4"]).toBeDefined();
@@ -187,7 +191,7 @@ describe.skip("fetching GIS data from Digital Land for supported local authoriti
   const locations = [
     {
       council: "buckinghamshire",
-      geom: "POINT(-1.0498956 51.8547901)"
+      geom: "POINT(-1.0498956 51.8547901)",
     },
     {
       council: "canterbury",
@@ -213,7 +217,9 @@ describe.skip("fetching GIS data from Digital Land for supported local authoriti
         .then((res) => {
           expect(res.body["constraints"]["article4"]).toBeDefined();
           expect(res.body["constraints"]["listed"]).toBeDefined();
-          expect(res.body["constraints"]["designated.conservationArea"]).toBeDefined();
+          expect(
+            res.body["constraints"]["designated.conservationArea"]
+          ).toBeDefined();
         });
     }, 20_000); // 20s request timeout
   });

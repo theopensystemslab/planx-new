@@ -4,7 +4,6 @@ import app from "../server";
 const ENDPOINT = "/validate-session";
 
 describe("Validate Session endpoint", () => {
-
   it("throws an error if required data is missing", async () => {
     const missingEmail = { payload: { sessionId: 123 } };
     const missingSessionId = { payload: { email: "test" } };
@@ -14,9 +13,12 @@ describe("Validate Session endpoint", () => {
         .post(ENDPOINT)
         .send(invalidBody)
         .expect(400)
-        .then(response => {
-          expect(response.body).toHaveProperty("error", "Required value missing");
-        })
+        .then((response) => {
+          expect(response.body).toHaveProperty(
+            "error",
+            "Required value missing"
+          );
+        });
     }
   });
 

@@ -21,7 +21,7 @@ import app from "../server";
         name: "FindApplication",
         matchOnVariables: false,
         data: {
-          bops_applications: []
+          bops_applications: [],
         },
         variables: { sessionId: 123 },
       });
@@ -42,7 +42,7 @@ import app from "../server";
         name: "MarkSessionAsSubmitted",
         matchOnVariables: false,
         data: {
-          update_lowcal_sessions_by_pk: { id: 123 }
+          update_lowcal_sessions_by_pk: { id: 123 },
         },
         variables: { sessionId: 123 },
       });
@@ -60,15 +60,20 @@ import app from "../server";
       nock(
         `https://southwark.${bopsApiRootDomain}/api/v1/planning_applications`
       )
-      .post("")
-      .reply(200, {
-        application: "0000123",
-      });
-      
+        .post("")
+        .reply(200, {
+          application: "0000123",
+        });
+
       await supertest(app)
         .post("/bops/southwark")
         .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-        .send({ payload: { applicationId: 123, planx_debug_data: { session_id: 123 } }})
+        .send({
+          payload: {
+            applicationId: 123,
+            planx_debug_data: { session_id: 123 },
+          },
+        })
         .expect(200)
         .then((res) => {
           expect(res.body).toEqual({
@@ -77,11 +82,16 @@ import app from "../server";
         });
     });
 
-    it("requires auth", async () => {      
+    it("requires auth", async () => {
       await supertest(app)
         .post("/bops/southwark")
-        .send({ payload: { applicationId: 123, planx_debug_data: { session_id: 123 } }})
-        .expect(401)
+        .send({
+          payload: {
+            applicationId: 123,
+            planx_debug_data: { session_id: 123 },
+          },
+        })
+        .expect(401);
     });
   });
 });

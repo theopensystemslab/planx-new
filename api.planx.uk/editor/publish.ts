@@ -1,5 +1,5 @@
 import * as jsondiffpatch from "jsondiffpatch";
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 import { adminGraphQLClient as client } from "../hasura";
 import { dataMerged, getMostRecentPublishedFlow } from "../helpers";
 import { gql } from "graphql-request";
@@ -21,11 +21,11 @@ const diffFlow = async (
     if (delta) {
       const alteredNodes = Object.keys(delta).map((key) => ({
         id: key,
-        ...flattenedFlow[key]
+        ...flattenedFlow[key],
       }));
 
       res.json({
-        alteredNodes
+        alteredNodes,
       });
     } else {
       res.json({
@@ -56,17 +56,19 @@ const publishFlow = async (
       const response = await client.request(
         gql`
           mutation PublishFlow(
-            $data: jsonb = {},
-            $flow_id: uuid,
-            $publisher_id: Int,
-            $summary: String,
+            $data: jsonb = {}
+            $flow_id: uuid
+            $publisher_id: Int
+            $summary: String
           ) {
-            insert_published_flows_one(object: {
-              data: $data,
-              flow_id: $flow_id,
-              publisher_id: $publisher_id,
-              summary: $summary,
-            }) {
+            insert_published_flows_one(
+              object: {
+                data: $data
+                flow_id: $flow_id
+                publisher_id: $publisher_id
+                summary: $summary
+              }
+            ) {
               id
               flow_id
               publisher_id

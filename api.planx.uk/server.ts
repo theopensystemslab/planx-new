@@ -332,7 +332,6 @@ app.post("/pay/:localAuthority", (req, res, next) => {
               govUkResponse,
             });
             return JSON.stringify(govUkResponse);
-            return responseBuffer;
           }
         ),
       },

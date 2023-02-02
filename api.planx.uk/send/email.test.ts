@@ -8,7 +8,7 @@ describe(`sending an application by email to a planning office`, () => {
       name: "getTeamEmailSettings",
       matchOnVariables: false,
       data: {
-        teams: [{ submission_email: "planners@southwark.gov.uk" }]
+        teams: [{ submission_email: "planners@southwark.gov.uk" }],
       },
       variables: { slug: "southwark" },
     });
@@ -17,7 +17,7 @@ describe(`sending an application by email to a planning office`, () => {
       name: "getSessionData",
       matchOnVariables: false,
       data: {
-        lowcal_sessions_by_pk: { data: {} }
+        lowcal_sessions_by_pk: { data: {} },
       },
       variables: { id: "123" },
     });
@@ -26,9 +26,9 @@ describe(`sending an application by email to a planning office`, () => {
       name: "appendSessionData",
       matchOnVariables: false,
       data: {
-        update_lowcal_sessions_by_pk: { data: {} }
+        update_lowcal_sessions_by_pk: { data: {} },
       },
-      variables: { id: "123", data: { "csv": [] }},
+      variables: { id: "123", data: { csv: [] } },
     });
   });
 
@@ -36,7 +36,9 @@ describe(`sending an application by email to a planning office`, () => {
     await supertest(app)
       .post("/email-submission/southwark")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-      .send({ payload: { sessionId: "123", email: "applicant@test.com", csv: [] }})
+      .send({
+        payload: { sessionId: "123", email: "applicant@test.com", csv: [] },
+      })
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
@@ -48,7 +50,9 @@ describe(`sending an application by email to a planning office`, () => {
   it("fails without authorization header", async () => {
     await supertest(app)
       .post("/email-submission/southwark")
-      .send({ payload: { sessionId: "123", email: "applicant@test.com", csv: [] }})
+      .send({
+        payload: { sessionId: "123", email: "applicant@test.com", csv: [] },
+      })
       .expect(401);
   });
 
@@ -56,24 +60,26 @@ describe(`sending an application by email to a planning office`, () => {
     await supertest(app)
       .post("/email-submission/southwark")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-      .send({ payload: { email: "applicant@test.com", csv: [] }})
+      .send({ payload: { email: "applicant@test.com", csv: [] } })
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
-          error: "Missing application payload data to send to email"
+          error: "Missing application payload data to send to email",
         });
       });
   });
 
-  it.skip("errors if this team does not have a 'submission_email' configured in teams", async () => {      
+  it.skip("errors if this team does not have a 'submission_email' configured in teams", async () => {
     await supertest(app)
       .post("/email-submission/other-council")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
-      .send({ payload: { sessionId: "123", email: "applicant@test.com", csv: [] }})
+      .send({
+        payload: { sessionId: "123", email: "applicant@test.com", csv: [] },
+      })
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
-          error: "Send to email is not enabled for this local authority."
+          error: "Send to email is not enabled for this local authority.",
         });
       });
   });
@@ -85,30 +91,33 @@ describe(`downloading application data received by email`, () => {
       name: "GetTeamEmailSettings",
       matchOnVariables: false,
       data: {
-        teams: [{ submission_email: "planners@southwark.gov.uk" }]
+        teams: [{ submission_email: "planners@southwark.gov.uk" }],
       },
       variables: { slug: "southwark" },
     });
   });
 
-  it("errors if required query params are missing", async() => {
+  it("errors if required query params are missing", async () => {
     await supertest(app)
       .get("/download-application-files/123?email=planning_office@test.com")
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
-          error: "Missing values required to access application files"
+          error: "Missing values required to access application files",
         });
       });
   });
 
-  it.skip("errors if email query param does not match the stored database value for this team", async() => {
+  it.skip("errors if email query param does not match the stored database value for this team", async () => {
     await supertest(app)
-      .get("/download-application-files/123?email=wrong@southwark.gov.uk&localAuthority=southwark")
+      .get(
+        "/download-application-files/123?email=wrong@southwark.gov.uk&localAuthority=southwark"
+      )
       .expect(403)
       .then((res) => {
         expect(res.body).toEqual({
-          error: "Provided email address is not enabled to access application files"
+          error:
+            "Provided email address is not enabled to access application files",
         });
       });
   });

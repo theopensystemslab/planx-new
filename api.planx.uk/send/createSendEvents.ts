@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from "express";
 import { createScheduledEvent } from "../hasura/metadata";
 
 interface CombinedResponse {
@@ -8,8 +8,11 @@ interface CombinedResponse {
 }
 
 // Create "One-off Scheduled Events" in Hasura from Send component for selected destinations
-const createSendEvents = async (req: Request, res: Response, next: NextFunction): 
-  Promise<NextFunction | Response | void> => {
+const createSendEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<NextFunction | Response | void> => {
   try {
     const now = new Date();
     const combinedResponse: CombinedResponse = {};

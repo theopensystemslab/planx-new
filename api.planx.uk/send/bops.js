@@ -1,7 +1,7 @@
 import { responseInterceptor } from "http-proxy-middleware";
 import { adminGraphQLClient as client } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
-import omit from "lodash/omit"
+import omit from "lodash/omit";
 import { useProxy } from "../proxy";
 
 const sendToBOPS = async (req, res, next) => {
@@ -15,7 +15,9 @@ const sendToBOPS = async (req, res, next) => {
   }
 
   // confirm that this session has not already been successfully submitted before proceeding
-  const submittedApp = await checkBOPSAuditTable(payload?.planx_debug_data?.session_id);
+  const submittedApp = await checkBOPSAuditTable(
+    payload?.planx_debug_data?.session_id
+  );
   if (submittedApp?.message === "Application created") {
     return res.status(200).send({
       sessionId: payload?.planx_debug_data?.session_id,
@@ -26,7 +28,9 @@ const sendToBOPS = async (req, res, next) => {
 
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy
   //   XXX: we check this outside of the proxy because domain-specific errors (eg 404 "No Local Authority Found") won't bubble up, rather the proxy will throw its' own "Network Error"
-  const isSupported = ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].includes(req.params.localAuthority.toUpperCase());
+  const isSupported = ["BUCKINGHAMSHIRE", "LAMBETH", "SOUTHWARK"].includes(
+    req.params.localAuthority.toUpperCase()
+  );
   if (isSupported) {
     // a local or staging API instance should send to the BOPS staging endpoint
     // production should send to the BOPS production endpoint
@@ -47,18 +51,18 @@ const sendToBOPS = async (req, res, next) => {
         if (!req.body || !Object.keys(req.body).length) {
           return;
         }
-        
-        const contentType = proxyReq.getHeader('Content-Type');
+
+        const contentType = proxyReq.getHeader("Content-Type");
         const writeBody = (bodyData) => {
-          proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+          proxyReq.setHeader("Content-Length", Buffer.byteLength(bodyData));
           proxyReq.write(bodyData);
         };
 
-        if (contentType === 'application/json') {
+        if (contentType === "application/json") {
           writeBody(JSON.stringify(req.body?.payload));
         }
 
-        if (contentType === 'application/x-www-form-urlencoded') {
+        if (contentType === "application/x-www-form-urlencoded") {
           writeBody(querystring.stringify(req.body?.payload));
         }
       },
@@ -124,7 +128,7 @@ const sendToBOPS = async (req, res, next) => {
 
 /**
  * Query the BOPS audit table to see if we already have an application for this session
- * @param {string} sessionId 
+ * @param {string} sessionId
  * @returns {object|undefined} most recent bops_applications.response
  */
 async function checkBOPSAuditTable(sessionId) {
@@ -144,11 +148,11 @@ async function checkBOPSAuditTable(sessionId) {
       }
     `,
     {
-      session_id: sessionId
+      session_id: sessionId,
     }
   );
 
   return application?.bops_applications[0]?.response;
-};
+}
 
 export { sendToBOPS };

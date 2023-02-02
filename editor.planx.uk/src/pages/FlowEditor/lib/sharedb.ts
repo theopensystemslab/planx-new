@@ -7,7 +7,7 @@ const socket = new ReconnectingWebSocket(
   process.env.REACT_APP_SHAREDB_URL || ""
 );
 
-const connection = new sharedb.Connection((socket as unknown) as Socket);
+const connection = new sharedb.Connection(socket as unknown as Socket);
 
 export const getConnection = (id: string) => connection.get("flows", id);
 

@@ -70,7 +70,7 @@ const useFilePermission = (
 ): void => {
   const isAuthenticated = isEqual(
     req.headers["api-key"] as string,
-    process.env.FILE_API_KEY!,
+    process.env.FILE_API_KEY!
   );
   if (!isAuthenticated) return next({ status: 401, message: "Unauthorised" });
   return next();

@@ -3,7 +3,7 @@ export interface OperationResult {
   status: "processing" | "success" | "failure";
   count?: number;
   errorMessage?: string;
-};
+}
 
 export type QueryResult = string[];
 

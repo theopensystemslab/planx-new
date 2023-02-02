@@ -15,5 +15,5 @@
     "target": "es2021",
     "typeRoots": ["./node_modules/@types", "./@types"]
   },
-  "exclude": ["node_modules", "./dist/**/*"]
+  "exclude": ["node_modules", "./coverage", "./jest*.ts", "./dist/**/*"]
 }

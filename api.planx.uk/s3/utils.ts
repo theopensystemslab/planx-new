@@ -25,9 +25,6 @@ function useMinio() {
   }
 }
 
-export function buildFilePath(
-  fileKey: string,
-  fileName: string
-): string {
+export function buildFilePath(fileKey: string, fileName: string): string {
   return `${fileKey}/${fileName}`;
 }

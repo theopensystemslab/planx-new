@@ -1,7 +1,12 @@
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
 import { publicGraphQLClient, adminGraphQLClient } from "../hasura";
-import { EmailSubmissionNotifyConfig, LowCalSession, SaveAndReturnNotifyConfig, Team } from "../types";
+import {
+  EmailSubmissionNotifyConfig,
+  LowCalSession,
+  SaveAndReturnNotifyConfig,
+  Team,
+} from "../types";
 import { notifyClient } from "./notify";
 
 const DAYS_UNTIL_EXPIRY = 28;
@@ -187,7 +192,7 @@ const getSessionDetails = async (
     projectType: projectTypes || "Project type not submitted",
     id: session.id,
     expiryDate: calculateExpiryDate(session.created_at),
-    hasUserSaved: session.has_user_saved
+    hasUserSaved: session.has_user_saved,
   };
 };
 
@@ -258,7 +263,9 @@ const markSessionAsSubmitted = async (sessionId: string) => {
 /**
  * Get formatted list of the session's project types
  */
-const getHumanReadableProjectType = async (session: LowCalSession): Promise<string | void>=> {
+const getHumanReadableProjectType = async (
+  session: LowCalSession
+): Promise<string | void> => {
   const rawProjectType =
     session?.data?.passport?.data?.["proposal.projectType"];
   if (!rawProjectType) return;

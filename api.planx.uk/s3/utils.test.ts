@@ -15,10 +15,13 @@ describe("s3 Factory", () => {
     expect(s3Factory()).toHaveProperty("endpoint.host", "127.0.0.1:9000");
   });
 
-  ["pizza", "staging", "production"].forEach(env => {
+  ["pizza", "staging", "production"].forEach((env) => {
     it(`does not use Minio config on ${env} environment`, () => {
       process.env.NODE_ENV = env;
-      expect(s3Factory()).toHaveProperty("endpoint.host", "s3.eu-west-2.amazonaws.com");
+      expect(s3Factory()).toHaveProperty(
+        "endpoint.host",
+        "s3.eu-west-2.amazonaws.com"
+      );
     });
   });
-})
+});

@@ -7,7 +7,8 @@ const baseSchema = {
     pos: "is subject to local permitted development restrictions (known as Article 4 directions)",
     "digital-land-datasets": ["article-4-direction-area"],
   },
-  "article4.caz": { // will be renamed to `article4.localAuthority.caz` when applicable
+  "article4.caz": {
+    // will be renamed to `article4.localAuthority.caz` when applicable
     active: true,
     neg: "is not in the Central Activities Zone",
     pos: "is in the Central Activities Zone",
@@ -19,13 +20,13 @@ const baseSchema = {
     pos: "is, or is within, a Listed Building",
     "digital-land-datasets": ["listed-building", "listed-building-outline"], // HE publishes points, LPAs publish polygons
   },
-  "locallyListed": {
+  locallyListed: {
     active: false,
     neg: "is not, or is not within, a Locally Listed Building",
     pos: "is, or is within, a Locally Listed Building",
     "digital-land-datasets": ["locally-listed-building"],
   },
-  "registeredPark": {
+  registeredPark: {
     active: true,
     neg: "is not in a Historic Park or Garden",
     pos: "is in a Historic Park or Garden",
@@ -35,7 +36,7 @@ const baseSchema = {
     active: true,
     neg: "is not in a Conservation Area",
     pos: "is in a Conservation Area",
-    "digital-land-datasets": ["conservation-area"]
+    "digital-land-datasets": ["conservation-area"],
   },
   "designated.AONB": {
     active: true,
@@ -54,13 +55,16 @@ const baseSchema = {
     neg: "is not in a Broad",
     pos: "is in a Broad",
     "digital-land-datasets": ["national-park"],
-    "digital-land-entities": [520007] // https://www.planning.data.gov.uk/entity/520007
+    "digital-land-entities": [520007], // https://www.planning.data.gov.uk/entity/520007
   },
   "designated.WHS": {
     active: true,
     neg: "is not an UNESCO World Heritage Site",
     pos: "is, or is within, an UNESCO World Heritage Site",
-    "digital-land-datasets": ["world-heritage-site", "world-heritage-site-buffer-zone"],
+    "digital-land-datasets": [
+      "world-heritage-site",
+      "world-heritage-site-buffer-zone",
+    ],
   },
   "designated.SPA": {
     active: true,
@@ -68,7 +72,7 @@ const baseSchema = {
     pos: "is in a Special Protection Area (SPA)",
     "digital-land-datasets": ["special-protection-area"],
   },
-  "monument": {
+  monument: {
     active: true,
     neg: "is not the site of a Scheduled Monument",
     pos: "is the site of a Scheduled Monument",
@@ -78,7 +82,11 @@ const baseSchema = {
     active: true,
     neg: "is not in a Tree Preservation Order (TPO) Zone",
     pos: "is in a Tree Preservation Order (TPO) Zone",
-    "digital-land-datasets": ["tree", "tree-preservation-order", "tree-preservation-zone"], // "tree" is points, "-zone" is polygons
+    "digital-land-datasets": [
+      "tree",
+      "tree-preservation-order",
+      "tree-preservation-zone",
+    ], // "tree" is points, "-zone" is polygons
   },
   "nature.SSSI": {
     active: true,
@@ -130,6 +138,4 @@ const baseSchema = {
   },
 };
 
-export {
-  baseSchema
-};
+export { baseSchema };

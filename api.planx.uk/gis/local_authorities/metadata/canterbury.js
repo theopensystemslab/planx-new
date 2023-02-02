@@ -45,7 +45,8 @@ const planningConstraints = {
       "article4.canterbury.hoath.b": "Article 4 Direction No 24 2003",
       "article4.canterbury.ickham.a": "Article 4 Direction No 25 2003",
       "article4.canterbury.ickham.b": "Article 4 Direction No 27 2003",
-      "article4.canterbury.ickhamWickhambreaux": "Article 4 Direction No 9 2003",
+      "article4.canterbury.ickhamWickhambreaux":
+        "Article 4 Direction No 9 2003",
       "article4.canterbury.kemberlandWood": "Article 4 Direction No 1 1979",
       "article4.canterbury.kingston": "Article 4 Direction No 26 2003",
       "article4.canterbury.littlebourne": "Article 4 Direction No 28 2003",
@@ -60,8 +61,10 @@ const planningConstraints = {
       "article4.canterbury.petham.b": "Article 4 Direction No 32 2003",
       "article4.canterbury.sandpitWood": "Article 4 Direction 1989",
       "article4.canterbury.southWhitstable": "Article 4 Direction No 33 2003",
-      "article4.canterbury.stMartinsHospital.a": "Article 4 Direction No 1 2004",
-      "article4.canterbury.stMartinsHospital.b": "Article 4 Direction No 1 2004",
+      "article4.canterbury.stMartinsHospital.a":
+        "Article 4 Direction No 1 2004",
+      "article4.canterbury.stMartinsHospital.b":
+        "Article 4 Direction No 1 2004",
       "article4.canterbury.stodmarsh": "Article 4 Direction No 35 2003",
       "article4.canterbury.sturry": "Article 4 Direction No 36 2003",
       "article4.canterbury.tylerHill": "Article 4 Direction No 37 2003",
@@ -77,7 +80,8 @@ const planningConstraints = {
       "article4.canterbury.whitstable.a": "Article 4 Direction No 14 2003",
       "article4.canterbury.whitstable.b": "Article 4 Direction No 33 2003",
       "article4.canterbury.whitstableBeach": "Article 4 Direction 2003",
-      "article4.canterbury.whitstableConservation": "Article 4 Direction 1996 - Whi",
+      "article4.canterbury.whitstableConservation":
+        "Article 4 Direction 1996 - Whi",
       "article4.canterbury.womenswold.a": "Article 4 Direction No 16 2003",
       "article4.canterbury.womenswold.b": "Article 4 Direction No 42 2003",
       "article4.canterbury.yorkletts": "Article 4 Direction No 2 1976",
@@ -85,6 +89,4 @@ const planningConstraints = {
   },
 };
 
-export {
-  planningConstraints,
-};
+export { planningConstraints };

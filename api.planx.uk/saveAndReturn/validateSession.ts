@@ -174,27 +174,37 @@ const updateLowcalSessionData = async (
     }
   `;
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
-  const response = await publicClient.request(query, { sessionId, data }, headers);
+  const response = await publicClient.request(
+    query,
+    { sessionId, data },
+    headers
+  );
   return response.update_lowcal_sessions_by_pk?.data;
 };
 
 const createAuditEntry = async (
   sessionId: string,
   data: any,
-  message: string,
+  message: string
 ) => {
   return await adminClient.request(
     gql`
-      mutation InsertReconciliationRequests($session_id: String = "", $response: jsonb = {}, $message: String = "") {
-        insert_reconciliation_requests_one(object: {
-          session_id: $session_id,
-          response: $response,
-          message: $message,
-        }) {
+      mutation InsertReconciliationRequests(
+        $session_id: String = ""
+        $response: jsonb = {}
+        $message: String = ""
+      ) {
+        insert_reconciliation_requests_one(
+          object: {
+            session_id: $session_id
+            response: $response
+            message: $message
+          }
+        ) {
           id
         }
       }
-    `, 
+    `,
     {
       session_id: sessionId,
       response: data,

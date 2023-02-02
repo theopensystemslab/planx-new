@@ -49,7 +49,7 @@ it("returns an error if authorization headers are not set", async () => {
     .expect(401)
     .then((res) => {
       expect(res.body).toEqual({
-        error: "No authorization token was found"
+        error: "No authorization token was found",
       });
     });
 });
@@ -66,7 +66,7 @@ it("returns an error if required replacement characters are not provided in the 
     .expect(400)
     .then((res) => {
       expect(res.body).toEqual({
-        error: "Missing required values to proceed"
+        error: "Missing required values to proceed",
       });
     });
 });
@@ -105,84 +105,72 @@ it("inserts copied unique flow data", async () => {
 
 // the original flow
 const mockFlowData: Flow["data"] = {
-  "_root": {
-    "edges": [
-      "rUilJQTag1",
-      "kNX8Rej9rk"
-    ]
+  _root: {
+    edges: ["rUilJQTag1", "kNX8Rej9rk"],
   },
-  "rUilJQTag1": {
-    "type": 100,
-    "data": {
-      "text": "Copy or paste?"
+  rUilJQTag1: {
+    type: 100,
+    data: {
+      text: "Copy or paste?",
     },
-    "edges": [
-      "Yh7t91FisE",
-      "h8DSw40zNr"
-    ]
+    edges: ["Yh7t91FisE", "h8DSw40zNr"],
   },
-  "Yh7t91FisE": {
-    "type": 200,
-    "data": {
-      "text": "Copy"
-    }
+  Yh7t91FisE: {
+    type: 200,
+    data: {
+      text: "Copy",
+    },
   },
-  "h8DSw40zNr": {
-    "type": 200,
-    "data": {
-      "text": "Paste"
-    }
+  h8DSw40zNr: {
+    type: 200,
+    data: {
+      text: "Paste",
+    },
   },
-  "kNX8Rej9rk": {
-    "type": 110,
-    "data": {
-      "title": "Why do you want to copy this flow?",
-      "type": "short"
-    }
-  }
+  kNX8Rej9rk: {
+    type: 110,
+    data: {
+      title: "Why do you want to copy this flow?",
+      type: "short",
+    },
+  },
 };
 
 // the copied flow data with unique nodeIds using the replaceValue
 const mockCopiedFlowData: Flow["data"] = {
-  "_root": {
-    edges: [
-      "rUilJQT3ST",
-      "kNX8ReT3ST"
-    ]
+  _root: {
+    edges: ["rUilJQT3ST", "kNX8ReT3ST"],
   },
-  "rUilJQT3ST": {
-    "type": 100,
-    "data": {
-      "text": "Copy or paste?"
+  rUilJQT3ST: {
+    type: 100,
+    data: {
+      text: "Copy or paste?",
     },
-    "edges": [
-      "Yh7t91T3ST",
-      "h8DSw4T3ST"
-    ]
+    edges: ["Yh7t91T3ST", "h8DSw4T3ST"],
   },
-  "Yh7t91T3ST": {
-    "type": 200,
-    "data": {
-      "text": "Copy"
-    }
+  Yh7t91T3ST: {
+    type: 200,
+    data: {
+      text: "Copy",
+    },
   },
-  "h8DSw4T3ST": {
-    "type": 200,
-    "data": {
-      "text": "Paste"
-    }
+  h8DSw4T3ST: {
+    type: 200,
+    data: {
+      text: "Paste",
+    },
   },
-  "kNX8ReT3ST": {
-    "type": 110,
-    "data": {
-      "title": "Why do you want to copy this flow?",
-      "type": "short"
-    }
-  }
+  kNX8ReT3ST: {
+    type: 110,
+    data: {
+      title: "Why do you want to copy this flow?",
+      type: "short",
+    },
+  },
 };
 
 const mockCopyFlowResponse = {
-  message: `Successfully copied undefined`, // 'undefined' just reflects that we haven't mocked a flow.name here! 
+  message: `Successfully copied undefined`, // 'undefined' just reflects that we haven't mocked a flow.name here!
   inserted: false,
   replaceValue: "T3ST",
   data: mockCopiedFlowData,
