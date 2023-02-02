@@ -4,7 +4,7 @@
 // POST data payloads accepted by the BOPS API, see:
 // https://southwark.preview.bops.services/api-docs/index.html
 
-import { reportError } from "airbrake";
+import { logger } from "airbrake";
 import capitalize from "lodash/capitalize";
 import { flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
@@ -136,7 +136,7 @@ export const makePayload = (
           }
         }
       } catch (err) {
-        reportError(err);
+        logger.notify(err);
       }
 
       // exclude answers that have been extracted into the root object
@@ -370,7 +370,7 @@ export function getBOPSParams(
     });
   } catch (err) {
     console.error("unable to get flag result");
-    reportError(err);
+    logger.notify(err);
   }
 
   // 9. user role
@@ -405,7 +405,7 @@ export function getBOPSParams(
         err,
       },
     ];
-    reportError(errPayload);
+    logger.notify(errPayload);
   }
 
   return {
