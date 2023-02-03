@@ -23,7 +23,7 @@ import { Flow, PublishedFlow } from "../../types";
  * 
  */
 
-const findPropertyType: number = 9;
+const findPropertyType = 9;
 
 const defaultPropertyInformationNode: Record<"type" | "data", any> = {
   "type": 12,
