@@ -71,7 +71,7 @@ beforeEach(() => {
 
   queryMock.mockQuery({
     name: "UpdateFlow",
-    matchOnVariables: true,
+    matchOnVariables: false, // TODO mock uniqueId() and set to 'true'
     variables: {
       id: "1",
       data: flowDataAfterMigration,
@@ -85,7 +85,7 @@ beforeEach(() => {
 
   queryMock.mockQuery({
     name: "UpdatePublishedFlow",
-    matchOnVariables: true,
+    matchOnVariables: false, // TODO same as above
     variables: {
       id: 1,
       data: flowDataAfterMigration,

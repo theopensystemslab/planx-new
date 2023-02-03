@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { gql } from "graphql-request";
+import { customAlphabet } from "nanoid-good";
+import en from "nanoid-good/locale/en";
+
 import { adminGraphQLClient as client } from "../../hasura";
 import { Flow, PublishedFlow } from "../../types";
-
 
 /**
  * This migration ran in February 2023
@@ -32,6 +34,12 @@ const defaultPropertyInformationNode: Record<"type" | "data", any> = {
   }
 };
 
+// aligns with editor.planx.uk/src/@planx/graph
+const uniqueId = customAlphabet(en)(
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+  10
+);
+
 const splitFindProperty = async (
   req: Request,
   res: Response,
@@ -55,14 +63,14 @@ const splitFindProperty = async (
 
       // only proceed if this flow has a FindProperty node
       if (findPropertyNodeId) {
-        // TODO generate a unique PropertyInformation nodeId
-        const newNodeId = "TESTTESTTEST";
+        // generate a unique nodeId for PropertyInformation
+        const newNodeId = uniqueId();
 
         // insert the new PropertyInformation node into the flow
         Object.keys(flowData).forEach(async (nodeId) => {
           if (findPropertyNodeId && flowData[nodeId]?.edges?.includes(findPropertyNodeId)) {
             // order that new nodeId is inserted into edges matters
-            let newNodeIndex = (flowData[nodeId]?.edges?.indexOf(findPropertyNodeId) || 0) + 1;
+            const newNodeIndex = (flowData[nodeId]?.edges?.indexOf(findPropertyNodeId) || 0) + 1;
             flowData[nodeId]?.edges?.splice(newNodeIndex, 0, newNodeId);
 
             // order of flow keys does not matter, we can just tack onto the end
@@ -75,7 +83,8 @@ const splitFindProperty = async (
             if (publishedFlowData) {
               Object.keys(publishedFlowData).forEach(async (nodeId) => {
                 if (findPropertyNodeId && publishedFlowData[nodeId]?.edges?.includes(findPropertyNodeId)) {
-                  let newNodeIndex = (publishedFlowData[nodeId]?.edges?.indexOf(findPropertyNodeId) || 0) + 1;
+                  // this index may differ between flow and published_flow because of flattening
+                  const newNodeIndex = (publishedFlowData[nodeId]?.edges?.indexOf(findPropertyNodeId) || 0) + 1;
                   publishedFlowData[nodeId]?.edges?.splice(newNodeIndex, 0, newNodeId);
                   publishedFlowData[newNodeId] = defaultPropertyInformationNode;
                   await updatePublishedFlowData(publishedFlowId, publishedFlowData);
@@ -88,7 +97,7 @@ const splitFindProperty = async (
     });
 
     res.send({ 
-      message: "Migration successful",
+      message: "Migration successful", // TODO make this meaningful
       flows: flows,
     });
   } catch (error) {
