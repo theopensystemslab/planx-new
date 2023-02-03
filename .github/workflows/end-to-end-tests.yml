@@ -4,8 +4,7 @@ on:
     branches:
       - main
   workflow_run:
-    workflows: 
-      - Pull Request
+    workflows: [Pull Request]
     types:
       - completed
 
