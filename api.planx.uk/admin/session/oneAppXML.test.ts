@@ -5,7 +5,7 @@ import { authHeader } from "../../tests/mockJWT";
 
 const endpoint = (strings: TemplateStringsArray) => `/admin/session/${strings[0]}/xml`;
 
-describe("Download feedback CSV endpoint", () => {
+describe("OneApp XML endpoint", () => {
   beforeEach(() => {
     queryMock.mockQuery({
       name: "GetUniformApplicationBySessionID",

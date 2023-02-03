@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
 import { Request, Response, NextFunction } from "express";
-import { adminGraphQLClient } from "../../hasura";
+import { adminGraphQLClient as client } from "../../hasura"
 
 export const getOneAppXML = async (
   req: Request,
@@ -18,7 +18,6 @@ export const getOneAppXML = async (
 
 const fetchSessionXML = async (sessionId: string) => {
   try {
-    const client = adminGraphQLClient;
     const query = gql`
       query GetUniformApplicationBySessionID($submission_reference: String) {
         uniform_applications(
