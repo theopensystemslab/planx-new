@@ -7,6 +7,9 @@ on:
     workflows: [Pull Request]
     types:
       - completed
+   workflow_dispatch:
+   schedule:
+      - cron:  '30 7 * * *'
 
 env:
   PNPM_VERSION: 7.8.0
