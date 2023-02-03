@@ -12,6 +12,14 @@ export interface Flow {
     [key: string]: Node;
   };
   team_id: number;
+  published_flows?: PublishedFlow[];
+}
+
+export interface PublishedFlow {
+  id: number;
+  data: {
+    [key: string]: Node;
+  };
 }
 
 export interface UserData {

@@ -61,6 +61,7 @@ import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
 import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
 import { isLiveEnv } from "./helpers";
 import { logPaymentStatus } from "./send/helpers";
+import { splitFindProperty } from "./admin/migrations/splitFindProperty";
 
 const router = express.Router();
 
@@ -477,6 +478,8 @@ app.get("/", (_req, res) => {
 });
 
 app.get("/admin/feedback", useJWT, downloadFeedbackCSV);
+
+app.get("/admin/splitFindProperty/:flowId", useJWT, splitFindProperty);
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production
