@@ -61,6 +61,7 @@ import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
 import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
 import { isLiveEnv } from "./helpers";
 import { logPaymentStatus } from "./send/helpers";
+import { getOneAppXML } from "./admin/session/oneAppXML";
 
 const router = express.Router();
 
@@ -476,7 +477,9 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
-app.get("/admin/feedback", useJWT, downloadFeedbackCSV);
+app.use("/admin", useJWT)
+app.get("/admin/feedback", downloadFeedbackCSV);
+app.get("/admin/session/:sessionId/xml", getOneAppXML);
 
 // XXX: leaving this in temporarily as a testing endpoint to ensure it
 //      works correctly in staging and production
