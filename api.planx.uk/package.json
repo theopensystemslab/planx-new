@@ -95,7 +95,11 @@
     "peerDependencyRules": {
       "allowedVersions": {
         "nock": "13"
-      }
+      },
+      "allowAny": [
+        "react",
+        "react-dom"
+      ]
     },
     "overrides": {
       "passport-oauth2@<1.6.1": ">=1.6.1",
