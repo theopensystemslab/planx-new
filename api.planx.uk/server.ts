@@ -62,6 +62,7 @@ import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
 import { isLiveEnv } from "./helpers";
 import { logPaymentStatus } from "./send/helpers";
 import { getOneAppXML } from "./admin/session/oneAppXML";
+import { gql } from "graphql-request";
 
 const router = express.Router();
 
@@ -165,7 +166,7 @@ const buildJWT = async (profile: Profile, done: VerifyCallback) => {
   const { email } = profile._json;
 
   const { users } = await adminClient.request(
-    `
+    gql`
     query ($email: String!) {
       users(where: {email: {_eq: $email}}, limit: 1) {
         id
@@ -420,7 +421,7 @@ app.use("/gis", router);
 app.get("/hasura", async function (_req, res, next) {
   try {
     const data = await adminClient.request(
-      `query GetTeams {
+      gql`query GetTeams {
         teams {
           id
         }
@@ -439,7 +440,7 @@ app.get("/me", useJWT, async function (req, res, next) {
 
   try {
     const user = await adminClient.request(
-      `query ($id: Int!) {
+      gql`query ($id: Int!) {
         users_by_pk(id: $id) {
           id
           first_name
@@ -526,8 +527,7 @@ app.get("/flows/:flowId/copy-portal/:portalNodeId", useJWT, copyPortalAsFlow);
 // unauthenticated because accessing flow schema only, no user data
 app.get("/flows/:flowId/download-schema", async (req, res, next) => {
   try {
-    const schema = await adminClient.request(
-      `
+    const schema = await adminClient.request(gql`
       query ($flow_id: String!) {
         get_flow_schema(args: {published_flow_id: $flow_id}) {
           node
@@ -599,8 +599,7 @@ app.get(
 
 const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
   try {
-    const result = await adminClient.request(
-      `
+    const result = await adminClient.request(gql`
       mutation UpdateAnalyticsLogUserExit($id: bigint!, $user_exit: Boolean) {
         update_analytics_logs_by_pk(
           pk_columns: {id: $id},
@@ -619,8 +618,7 @@ const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
     );
 
     const analytics_id = result.update_analytics_logs_by_pk.analytics_id;
-    await adminClient.request(
-      `
+    await adminClient.request(gql`
       mutation SetAnalyticsEndedDate($id: bigint!, $ended_at: timestamptz) {
         update_analytics_by_pk(pk_columns: {id: $id}, _set: {ended_at: $ended_at}) {
           id
