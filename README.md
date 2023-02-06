@@ -18,6 +18,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 - `sharedb.planx.uk` is our implementation of [ShareDB](https://github.com/share/sharedb), a library for realtime document collaboration based on JSON Operational Transformation (OT) used in our "editor" environment
 - `infrastructure` is [Pulumi](https://www.pulumi.com/) infrastructure-as-code for configuring and managing our AWS environments
 
+
 ## Running Locally
 
 1. Download and install the following dependencies if you don't have them already:
@@ -26,15 +27,15 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 1. Clone this repository. You'll need to get some additional environment variable files that aren't published here. Find instructions for copying these in 1password under the AWS Staging IAM user role entry
 
-1. Run the following command to get everything (postgres, sharedb, api and hasura server processes) up and running `docker-compose up --build -d`
+1. Run `pnpm docker:up` from the project root to get everything (postgres, sharedb, api and hasura server processes) up and running and `pnpm docker:down` to stop all services. `pnpm docker:down-hard` will remove volumes (i.e. database data) and can be a useful hard reset when necessary.
 
 1. Move into the hasura directory `cd ../hasura.planx.uk` & install dependencies `pnpm i`.
 
-1. Open [Hasura's](https://hasura.io/) web console `pnpm start` & check that your Google email address is in the `users` table, if not then add it
+1. Open [Hasura's](https://hasura.io/) web console (`cd hasura.planx.uk` then `pnpm start`) & check that your Google email address is in the `users` table, if not then add it
 
 1. Move into the editor directory `cd ../editor.planx.uk` & install dependencies `pnpm i`.
 
-1. Start the dev server! `pnpm start` & open http://localhost:3000 & login with your GMail/Google email address
+1. Start the editor dev server! `pnpm start` & open `http://localhost:3000` & login with your GMail/Google email address
 
 
 ### Troubleshooting
@@ -42,15 +43,14 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 If you run into trouble, you may want to try the following:
 
 * Ensure you have a local `.env` file with up-to-date keys etc (see relevant `.env.example` files for reference and 1Password for an initial `.env` file).
-* The Hasura CLI may require a postinstall step which can be run manually with `cd node_modules/hasura-cli && pnpm postinstall`.
 
 
 ### Analytics
 
-Running `docker-compose up` won't spin up [Metabase](https://www.metabase.com/).
+Running `docker compose up` won't spin up [Metabase](https://www.metabase.com/).
 To spin it up, run:
 
-  `docker-compose --profile analytics up`
+  `docker compose --profile analytics up`
 
 
 ### Documentation

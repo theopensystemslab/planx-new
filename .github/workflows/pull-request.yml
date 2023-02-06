@@ -18,7 +18,7 @@ env:
 jobs:
   changes:
     name: Check file changes
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     permissions:
       pull-requests: read
     outputs:
@@ -56,7 +56,7 @@ jobs:
 
   integration_tests:
     name: Run Integration tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [changes]
     if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
     steps:
@@ -96,7 +96,7 @@ jobs:
 
   api_tests:
     name: Run API Tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     needs: [changes]
     if: ${{ needs.changes.outputs.api == 'true' }}
@@ -135,7 +135,7 @@ jobs:
 
   test_react:
     name: Run React Tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [changes]
     if: ${{ needs.changes.outputs.editor == 'true' }}
     steps:
@@ -171,7 +171,7 @@ jobs:
 
   build_react_app:
     name: Build React App
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [changes]
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
@@ -214,7 +214,7 @@ jobs:
 
   build_storybook:
     name: Build Storybook
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [changes]
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
@@ -256,7 +256,7 @@ jobs:
 
   pulumi_preview:
     name: Run Pulumi Preview
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [changes, build_react_app]
     if: ${{ needs.changes.outputs.infrastructure == 'true' }}
     steps:
@@ -294,7 +294,7 @@ jobs:
 
   hasura-change-summary:
     name: Generate Hasura Change Summary
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [changes]
     if: ${{ needs.changes.outputs.hasura == 'true' }}
     steps:
@@ -321,7 +321,7 @@ jobs:
   create_or_update_vultr_instance:
     name: Upsert Vultr Instance
     needs: [changes, build_react_app, build_storybook]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: "${{ success() && !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - name: Create Pizza (if it doesn't exist)
@@ -331,7 +331,7 @@ jobs:
           action: create
           api_key: ${{ secrets.VULTR_API_KEY }}
           domain: ${{ env.DOMAIN }}
-          os_id: 387
+          os_id: 1743
           plan: vc2-1c-1gb
           pullrequest_id: ${{ env.PULLREQUEST_ID }}
           region: lhr
@@ -359,12 +359,10 @@ jobs:
 
             ./scripts/pull-secrets.sh
 
-            echo "
-            ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
-            " > .env.temp
-            cat .env .env.temp .env.staging > .env.prod
+            echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
+            cat .env .env.temp .env.staging > .env.pizza
 
-            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} sh scripts/pullrequest/create.sh
+            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/create.sh
 
       # UPDATE STEPS
 
@@ -389,12 +387,10 @@ jobs:
 
             ./scripts/pull-secrets.sh
 
-            echo "
-            ROOT_DOMAIN=${{ env.FULL_DOMAIN }}
-            " > .env.temp
-            cat .env .env.temp .env.staging > .env.prod
+            echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
+            cat .env .env.temp .env.staging > .env.pizza
 
-            sh scripts/pullrequest/update.sh
+            ./scripts/pullrequest/update.sh
 
       # CREATE & UPDATE STEPS
 
@@ -440,22 +436,25 @@ jobs:
   healthcheck:
     name: Run Healthcheck on Pizza Services
     needs: [create_or_update_vultr_instance]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: API healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://api.${{ env.FULL_DOMAIN }}; do sleep 1; done"
+
       - name: Hasura healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://hasura.${{ env.FULL_DOMAIN }}/healthz; do sleep 1; done"
+
       - name: Editor healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://${{ env.FULL_DOMAIN }}; do sleep 1; done"
 
+
   lighthouse:
     name: Lighthouse
     needs: [create_or_update_vultr_instance]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: Audit URLs using Lighthouse
