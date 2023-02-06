@@ -68,8 +68,8 @@
     "@types/node": "^16.18.2",
     "@types/passport": "^1.0.11",
     "@types/passport-google-oauth20": "^2.0.11",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
@@ -93,10 +93,6 @@
   },
   "pnpm": {
     "peerDependencyRules": {
-      "allowAny": [
-        "react",
-        "react-dom"
-      ],
       "allowedVersions": {
         "nock": "13"
       }

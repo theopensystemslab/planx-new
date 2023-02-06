@@ -336,10 +336,6 @@ devDependencies:
   typescript: 4.7.4
   webpack: 5.75.0_esbuild@0.14.54
 
-dependenciesMeta:
-  planx-client:
-    injected: true
-
 packages:
 
   /@adobe/css-tools/4.0.1:

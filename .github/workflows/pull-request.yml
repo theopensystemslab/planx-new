@@ -83,7 +83,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
@@ -127,10 +127,10 @@ jobs:
       - run: pnpm distribute ../api.planx.uk
         working-directory: planx-client
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
         working-directory: api.planx.uk
       - name: Run API Tests
-        run: pnpm install --no-frozen-lockfile && pnpm lint --quiet && pnpm test
+        run: pnpm install --frozen-lockfile && pnpm lint --quiet && pnpm test
         working-directory: api.planx.uk
 
   test_react:
@@ -162,7 +162,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
         working-directory: ${{ env.EDITOR_DIRECTORY }}
@@ -195,7 +195,7 @@ jobs:
       - run: pnpm distribute ../${{ env.EDITOR_DIRECTORY }}
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         working-directory: planx-client
-      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm install --frozen-lockfile
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
@@ -238,7 +238,7 @@ jobs:
       - run: pnpm distribute ../${{ env.EDITOR_DIRECTORY }}
         if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
         working-directory: planx-client
-      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm install --frozen-lockfile
         if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build-storybook
@@ -517,7 +517,7 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Install Playwright
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
         working-directory: e2e
       - name: Install Playwright Dependencies
         run: pnpm playwright install --with-deps
