@@ -5,6 +5,19 @@
     "docker:down": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml down",
     "docker:recreate": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml up -d --build --force-recreate",
     "docker:destroy": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml down --remove-orphans -v",
-    "docker:tests": "./scripts/start-containers-for-tests.sh"
+    "docker:tests": "./scripts/start-containers-for-tests.sh",
+    "prepare": "husky install ./.husky"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "prettier": "^2.8.4"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ],
+    "**/*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
+      "prettier --write"
+    ]
   }
 }

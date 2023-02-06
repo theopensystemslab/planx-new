@@ -202,7 +202,7 @@
       "prettier --write"
     ],
     "src/**/*.{ts,tsx}": [
-      "scripts/tsc-lint.sh"
+      "./scripts/tsc-lint.sh"
     ]
   },
   "pnpm": {
