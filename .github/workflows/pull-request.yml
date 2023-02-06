@@ -517,7 +517,7 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Install Playwright
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
         working-directory: e2e
       - name: Install Playwright Dependencies
         run: pnpm playwright install --with-deps
