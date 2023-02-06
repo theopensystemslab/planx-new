@@ -166,6 +166,7 @@ jobs:
     name: Build React App
     runs-on: ubuntu-20.04
     needs: [changes]
+    if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - uses: actions/checkout@v2
       - name: Cache build assets
@@ -205,6 +206,7 @@ jobs:
     name: Build Storybook
     runs-on: ubuntu-20.04
     needs: [changes]
+    if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - uses: actions/checkout@v2
       - name: Cache build assets
