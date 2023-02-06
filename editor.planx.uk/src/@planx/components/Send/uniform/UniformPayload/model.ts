@@ -25,7 +25,6 @@ interface UniformPayloadRequiredArgs {
   sessionId: string;
   passport: Store.passport;
   files: string[];
-  hasBoundary: boolean;
   templateNames?: string[] | undefined;
 }
 
@@ -33,7 +32,6 @@ export class UniformPayload implements IUniformPayload {
   sessionId: string;
   passport: Store.passport;
   files: string[];
-  hasBoundary: boolean;
   templateNames: string[];
 
   proposalCompletionDate: string;
@@ -45,13 +43,11 @@ export class UniformPayload implements IUniformPayload {
     sessionId,
     passport,
     files,
-    hasBoundary,
     templateNames,
   }: UniformPayloadArgs) {
     this.sessionId = sessionId;
     this.passport = passport;
     this.files = files;
-    this.hasBoundary = hasBoundary;
     this.templateNames = templateNames || [];
 
     this.proposalCompletionDate = this.setProposalCompletionDate();
@@ -263,12 +259,12 @@ export class UniformPayload implements IUniformPayload {
         "common:Reference": "Other",
       },
       {
-        "common:FileName": "review.html",
+        "common:FileName": "overview.html",
         "common:Reference": "Other",
       },
     ];
 
-    if (this.hasBoundary) {
+    if (this.passport.data["property.boundary.site"]) {
       files.push({
         "common:FileName": "boundary.geojson",
         "common:Reference": "Other",

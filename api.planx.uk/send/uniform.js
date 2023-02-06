@@ -55,25 +55,18 @@ const sendToUniform = async (req, res, next) => {
     });
   }
 
-  // generate submission documents and data
-  const { geojson, templateNames } = await generateSubmissionData({
-    sessionId: payload.sessionId,
-    passport: payload.passport,
-  });
-
   try {
     const { clientId, clientSecret } = getUniformClient(
       req.params.localAuthority
     );
+
     // Setup - Create the zip folder
     const zipPath = await createUniformSubmissionZip({
       sessionId: payload.sessionId,
       passport: payload.passport,
       csv: payload.csv,
       files: payload.files,
-      geojson,
-      templateNames,
-      uniformSubmissionXML: payload.xml,
+      xml: payload.xml,
     });
 
     // Request 1/3 - Authenticate
@@ -208,10 +201,14 @@ export async function createUniformSubmissionZip({
   files,
   sessionId,
   passport,
-  geojson,
-  templateNames,
-  uniformSubmissionXML,
+  xml,
 }) {
+  // generate submission documents and data
+  const { geojson, templateNames } = await generateSubmissionData({
+    sessionId,
+    passport,
+  });
+
   // initiate an empty zip folder
   const zip = new AdmZip();
 
@@ -250,7 +247,7 @@ export async function createUniformSubmissionZip({
   // add a XML uniform submission file to zip
   const xmlPath = "proposal.xml"; //  must be named "proposal.xml" to be processed by Uniform
   const xmlFile = fs.createWriteStream(xmlPath);
-  const xmlStream = str(uniformSubmissionXML.trim()).pipe(xmlFile);
+  const xmlStream = str(xml.trim()).pipe(xmlFile);
   await new Promise((resolve, reject) => {
     xmlStream.on("error", reject);
     xmlStream.on("finish", resolve);

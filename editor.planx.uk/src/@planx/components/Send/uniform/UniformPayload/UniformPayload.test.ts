@@ -22,7 +22,6 @@ const parser = new XMLParser(parseOptions);
 describe("UniformPayload", () => {
   const sessionId = "123";
   const files: string[] = [];
-  const hasBoundary = false;
 
   it("safely escapes special XML characters", () => {
     const passport: Store.passport = {
@@ -32,7 +31,6 @@ describe("UniformPayload", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
     const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
@@ -42,7 +40,6 @@ describe("UniformPayload", () => {
 describe("Reference number", () => {
   const sessionId = "1234-abcdef-567-ghijklm";
   const files: string[] = [];
-  const hasBoundary = false;
   const passport: Store.passport = { data: {} };
 
   it("sets sessionId as a reference number", () => {
@@ -50,7 +47,6 @@ describe("Reference number", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
     const expectedRefNum: String = "1234-abcdef-567-ghijklm";
 
@@ -72,7 +68,6 @@ describe("Reference number", () => {
 describe("Proposal completion date", () => {
   const sessionId = "123";
   const files: string[] = [];
-  const hasBoundary = false;
   const formattedNow = new Date(Date.now()).toISOString().split("T")[0];
 
   it("reads from `proposal.completion.date` passport variable if it exists", () => {
@@ -83,7 +78,6 @@ describe("Proposal completion date", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
     const expectedCompletionDate: String = "2022-01-01";
 
@@ -104,7 +98,6 @@ describe("Proposal completion date", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
     const expectedCompletionDate: String = formattedNow;
 
@@ -121,7 +114,6 @@ describe("Proposal completion date", () => {
 describe("Payment details", () => {
   const sessionId = "123";
   const files: string[] = [];
-  const hasBoundary = false;
 
   it("reads from Pay passport variables if they exist", () => {
     const passport: Store.passport = {
@@ -136,7 +128,6 @@ describe("Payment details", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
     const expectedPayment = {
       "common:PaymentMethod": "OnlineViaPortal",
@@ -162,7 +153,6 @@ describe("Payment details", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
     const expectedPayment = {
       "common:PaymentMethod": "OnlineViaPortal",
@@ -187,7 +177,6 @@ describe("Payment details", () => {
 describe("Uniform Translator", () => {
   const sessionId = "123";
   const files: string[] = [];
-  const hasBoundary = false;
 
   it("maps the 'applicationTo' value", () => {
     const passport: Store.passport = {
@@ -198,7 +187,6 @@ describe("Uniform Translator", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
 
     const result: UniformPayload = parser.parse(xml);
@@ -222,7 +210,6 @@ describe("Uniform Translator", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
 
     const result: UniformPayload = parser.parse(xml);
@@ -251,7 +238,6 @@ describe("Uniform Translator", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
 
     const result: UniformPayload = parser.parse(xml);
@@ -276,7 +262,6 @@ describe("Uniform Translator", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
 
     const result: UniformPayload = parser.parse(xml);
@@ -296,7 +281,6 @@ describe("Uniform Translator", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
 
     const result: UniformPayload = parser.parse(xml);
@@ -316,7 +300,6 @@ describe("Uniform Translator", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
 
     const result: UniformPayload = parser.parse(xml);
@@ -336,7 +319,6 @@ describe("Uniform Translator", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
 
     const result: UniformPayload = parser.parse(xml);
@@ -356,7 +338,6 @@ describe("Uniform Translator", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
 
     const result: UniformPayload = parser.parse(xml);
@@ -378,7 +359,6 @@ describe("Uniform Translator", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
 
     const result: UniformPayload = parser.parse(xml);
@@ -408,7 +388,6 @@ describe("Applicant address", () => {
   };
   const sessionId = "123";
   const files: string[] = [];
-  const hasBoundary = false;
   const applicantAddressKey =
     "portaloneapp:Proposal.portaloneapp:Applicant.common:ExternalAddress";
 
@@ -423,7 +402,6 @@ describe("Applicant address", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
 
     const result: UniformPayload = parser.parse(xml);
@@ -449,7 +427,6 @@ describe("Applicant address", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
 
     const result: UniformPayload = parser.parse(xml);
@@ -472,7 +449,6 @@ describe("Applicant address", () => {
 describe("Applicant contact details", () => {
   const sessionId = "123";
   const files: string[] = [];
-  const hasBoundary = false;
 
   const applicantKey: string = "portaloneapp:Proposal.portaloneapp:Applicant";
   const expectedApplicant: ApplicantOrAgent = {
@@ -514,7 +490,6 @@ describe("Applicant contact details", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
     const result: UniformPayload = parser.parse(xml);
     const resultApplicant: ApplicantOrAgent = get(result, applicantKey);
@@ -547,7 +522,6 @@ describe("Applicant contact details", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
     const result: UniformPayload = parser.parse(xml);
     const resultApplicant: ApplicantOrAgent = get(result, applicantKey);
@@ -559,7 +533,6 @@ describe("File handling", () => {
   const sessionId = "123";
   const files: string[] = [];
   const passport: Store.passport = { data: {} };
-  const hasBoundary = false;
   const fileAttachmentsKey =
     "portaloneapp:Proposal.portaloneapp:FileAttachments.common:FileAttachment";
 
@@ -579,7 +552,6 @@ describe("File handling", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
     const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
@@ -601,7 +573,6 @@ describe("File handling", () => {
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
     const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
@@ -612,8 +583,7 @@ describe("File handling", () => {
     );
   });
 
-  it("includes generated boundary GeoJSON and HTML files when possible", () => {
-    const hasBoundary = true;
+  it("includes generated boundary GeoJSON and HTML files when 'property.boundary.site' is present in the passport", () => {
     const expectedBoundaryFileDeclarations = [
       {
         "common:FileName": "boundary.geojson",
@@ -626,9 +596,13 @@ describe("File handling", () => {
     ];
     const xml = new UniformPayload({
       sessionId,
-      passport,
+      passport: {
+        data: {
+          ...passport.data,
+          "property.boundary.site": {},
+        },
+      },
       files,
-      hasBoundary,
     }).buildXML();
     const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
@@ -639,12 +613,11 @@ describe("File handling", () => {
     );
   });
 
-  it("does not include a boundary geojson file when not possible", () => {
+  it("does not include a boundary geojson file when 'property.boundary.site' is not present in the passport", () => {
     const xml = new UniformPayload({
       sessionId,
       passport,
       files,
-      hasBoundary,
     }).buildXML();
     const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);

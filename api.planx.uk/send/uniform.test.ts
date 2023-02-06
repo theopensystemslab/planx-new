@@ -58,11 +58,11 @@ describe("createUniformSubmissionZip", () => {
     const payload = {
       sessionId: "1234",
       passport: { data: {} },
-      planXExportData: [],
+      csv: [],
       files: [],
       geojson: null,
       templateNames: [],
-      uniformSubmissionXML: "",
+      xml: "",
     };
     await createUniformSubmissionZip(payload);
     expect(mockAddLocalFile).toHaveBeenCalledWith("overview.html");
@@ -93,11 +93,11 @@ describe("createUniformSubmissionZip", () => {
           "property.boundary.site": geojson,
         },
       },
-      planXExportData: [],
+      csv: [],
       files: [],
       geojson,
       templateNames: [],
-      uniformSubmissionXML: "",
+      xml: "",
     };
     const expectedBuffer = Buffer.from(JSON.stringify(geojson, null, 2));
     await createUniformSubmissionZip(payload);
@@ -127,12 +127,15 @@ describe("createUniformSubmissionZip", () => {
     };
     const payload = {
       sessionId: "1234",
-      passport: { data: {} },
-      planXExportData: [],
+      passport: {
+        data: {
+          "property.boundary.site": geojson,
+        },
+      },
+      csv: [],
       files: [],
       geojson,
-      templateNames: [],
-      uniformSubmissionXML: "",
+      xml: "",
     };
     await createUniformSubmissionZip(payload);
     expect(mockAddLocalFile).toHaveBeenCalledWith("boundary.html");
@@ -143,11 +146,9 @@ describe("createUniformSubmissionZip", () => {
     const payload = {
       sessionId: "1234",
       passport: { data: {} },
-      planXExportData: [],
+      csv: [],
       files: [],
-      geojson: null,
-      templateNames: [],
-      uniformSubmissionXML: "",
+      xml: "",
     };
     await createUniformSubmissionZip(payload);
     expect(mockAddLocalFile).not.toHaveBeenCalledWith("boundary.html");

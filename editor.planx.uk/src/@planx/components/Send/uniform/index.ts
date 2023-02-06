@@ -2,7 +2,6 @@ import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
-import { findGeoJSON } from "../helpers";
 import { CSVData } from "../model";
 import { UniformPayload } from "./UniformPayload/model";
 
@@ -45,15 +44,12 @@ export function getUniformParams(
     }
   });
 
-  const geoJSONBoundary = findGeoJSON(flow, breadcrumbs);
-  const hasBoundary = !!geoJSONBoundary;
-
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString(passport, sessionId, uniqueFiles, hasBoundary),
+    xml: makeXmlString(passport, sessionId, uniqueFiles),
     csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
-    geojson: geoJSONBoundary,
     files: uniqueFiles,
+    passport,
     sessionId,
   };
 }
@@ -61,14 +57,12 @@ export function getUniformParams(
 export function makeXmlString(
   passport: Store.passport,
   sessionId: string,
-  files: string[],
-  hasBoundary: boolean
+  files: string[]
 ): string {
   const payload = new UniformPayload({
     sessionId,
     passport,
     files,
-    hasBoundary,
   });
   const xml = payload.buildXML();
   return xml;
