@@ -28,7 +28,15 @@ jobs:
       hasura: ${{ steps.filter.outputs.hasura }}
       infrastructure: ${{ steps.filter.outputs.infrastructure }}
       sharedb: ${{ steps.filter.outputs.sharedb }}
+      commit: ${{ steps.commit.outputs.commit }}
     steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Get commit message
+        id: commit
+        run: |
+          echo "commit=$(git show -s --format=%s)" >> $GITHUB_OUTPUT
       - uses: dorny/paths-filter@v2
         id: filter
         with:
@@ -157,6 +165,8 @@ jobs:
   build_react_app:
     name: Build React App
     runs-on: ubuntu-20.04
+    needs: [changes]
+    if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - uses: actions/checkout@v2
       - name: Cache build assets
@@ -195,6 +205,8 @@ jobs:
   build_storybook:
     name: Build Storybook
     runs-on: ubuntu-20.04
+    needs: [changes]
+    if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - uses: actions/checkout@v2
       - name: Cache build assets
@@ -295,8 +307,9 @@ jobs:
 
   create_or_update_vultr_instance:
     name: Upsert Vultr Instance
-    needs: [build_react_app, build_storybook]
+    needs: [changes, build_react_app, build_storybook]
     runs-on: ubuntu-20.04
+    if: "${{ success() && !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - name: Create Pizza (if it doesn't exist)
         id: create
@@ -436,7 +449,7 @@ jobs:
         uses: treosh/lighthouse-ci-action@v9
         id: LHCIAction
         with:
-          urls: | 
+          urls: |
             https://${{ env.FULL_DOMAIN }}/buckinghamshire/find-out-if-you-need-planning-permission/preview
             https://${{ env.FULL_DOMAIN }}/testing/lighthouse-canary-flow/unpublished
           # budgetPath: ./budget.json # test performance budgets
