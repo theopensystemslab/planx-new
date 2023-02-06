@@ -3,11 +3,22 @@ import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import omit from "lodash/omit"
 import { useProxy } from "../proxy";
+import { NextFunction, Request, Response } from 'express';
 import { gql } from "graphql-request";
 
-const sendToBOPS = async (req, res, next) => {
+interface BOPSFullPayload {
+  planx_debug_data: {
+    session_id: string
+  }
+}
+
+interface SendToBOPSRequest {
+  payload: BOPSFullPayload
+}
+
+const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
   // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
-  const { payload } = req.body;
+  const { payload }: SendToBOPSRequest = req.body;
   if (!payload) {
     return next({
       status: 400,
@@ -36,21 +47,21 @@ const sendToBOPS = async (req, res, next) => {
 
     useProxy({
       headers: {
-        ...req.headers,
+        ...(req.headers as Record<string, string | string[]>),
         Authorization: `Bearer ${process.env.BOPS_API_TOKEN}`,
       },
       pathRewrite: () => "",
       target,
       selfHandleResponse: true,
-      onProxyReq: (proxyReq, req, res) => {
+      onProxyReq: (proxyReq, req, _res) => {
         // make sure req.body.payload is parsed in the proxy request too
         //   ref https://github.com/chimurai/http-proxy-middleware/issues/320
         if (!req.body || !Object.keys(req.body).length) {
           return;
         }
-        
+
         const contentType = proxyReq.getHeader('Content-Type');
-        const writeBody = (bodyData) => {
+        const writeBody = (bodyData: string) => {
           proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
           proxyReq.write(bodyData);
         };
@@ -60,11 +71,11 @@ const sendToBOPS = async (req, res, next) => {
         }
 
         if (contentType === 'application/x-www-form-urlencoded') {
-          writeBody(querystring.stringify(req.body?.payload));
+          writeBody(new URLSearchParams(req.body?.payload).toString());
         }
       },
       onProxyRes: responseInterceptor(
-        async (responseBuffer, proxyRes, req, res) => {
+        async (responseBuffer, proxyRes, req, _res) => {
           // Mark session as submitted so that reminder and expiry emails are not triggered
           markSessionAsSubmitted(payload?.planx_debug_data?.session_id);
 
@@ -113,7 +124,7 @@ const sendToBOPS = async (req, res, next) => {
           });
         }
       ),
-    })(req, res);
+    })(req, res, next);
   } else {
     return next({
       status: 400,
@@ -124,10 +135,8 @@ const sendToBOPS = async (req, res, next) => {
 
 /**
  * Query the BOPS audit table to see if we already have an application for this session
- * @param {string} sessionId 
- * @returns {object|undefined} most recent bops_applications.response
  */
-async function checkBOPSAuditTable(sessionId) {
+async function checkBOPSAuditTable(sessionId: string): Promise<Record<string, string>> {
   const application = await adminClient.request(gql`
     query FindApplication(
       $session_id: String = ""
