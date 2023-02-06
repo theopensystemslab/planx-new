@@ -1,8 +1,9 @@
 import { responseInterceptor } from "http-proxy-middleware";
-import { adminGraphQLClient as client } from "../hasura";
+import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import omit from "lodash/omit"
 import { useProxy } from "../proxy";
+import { gql } from "graphql-request";
 
 const sendToBOPS = async (req, res, next) => {
   // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
@@ -69,31 +70,30 @@ const sendToBOPS = async (req, res, next) => {
 
           const bopsResponse = JSON.parse(responseBuffer.toString("utf8"));
 
-          const applicationId = await client.request(
-            `
-              mutation CreateApplication(
-                $bops_id: String = "",
-                $destination_url: String = "",
-                $request: jsonb = "",
-                $req_headers: jsonb = "",
-                $response: jsonb = "",
-                $response_headers: jsonb = "",
-                $session_id: String = "",
-              ) {
-                insert_bops_applications_one(object: {
-                  bops_id: $bops_id,
-                  destination_url: $destination_url,
-                  request: $request,
-                  req_headers: $req_headers,
-                  response: $response,
-                  response_headers: $response_headers,
-                  session_id: $session_id,
-                }) {
-                  id
-                  bops_id
-                }
+          const applicationId = await adminClient.request(gql`
+            mutation CreateApplication(
+              $bops_id: String = "",
+              $destination_url: String = "",
+              $request: jsonb = "",
+              $req_headers: jsonb = "",
+              $response: jsonb = "",
+              $response_headers: jsonb = "",
+              $session_id: String = "",
+            ) {
+              insert_bops_applications_one(object: {
+                bops_id: $bops_id,
+                destination_url: $destination_url,
+                request: $request,
+                req_headers: $req_headers,
+                response: $response,
+                response_headers: $response_headers,
+                session_id: $session_id,
+              }) {
+                id
+                bops_id
               }
-            `,
+            }
+          `,
             {
               bops_id: bopsResponse.id,
               destination_url: target,
@@ -128,21 +128,19 @@ const sendToBOPS = async (req, res, next) => {
  * @returns {object|undefined} most recent bops_applications.response
  */
 async function checkBOPSAuditTable(sessionId) {
-  const application = await client.request(
-    `
-      query FindApplication(
-        $session_id: String = ""
+  const application = await adminClient.request(gql`
+    query FindApplication(
+      $session_id: String = ""
+    ) {
+      bops_applications(
+        where: {
+          session_id: {_eq: $session_id}
+        },
+        order_by: {created_at: desc}
       ) {
-        bops_applications(
-          where: {
-            session_id: {_eq: $session_id}
-          },
-          order_by: {created_at: desc}
-        ) {
-          response
-        }
+        response
       }
-    `,
+    }`,
     {
       session_id: sessionId
     }

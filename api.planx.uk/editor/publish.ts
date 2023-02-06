@@ -1,6 +1,6 @@
 import * as jsondiffpatch from "jsondiffpatch";
 import { Request, Response, NextFunction } from 'express';
-import { adminGraphQLClient as client } from "../hasura";
+import { adminGraphQLClient as adminClient } from "../hasura";
 import { dataMerged, getMostRecentPublishedFlow } from "../helpers";
 import { gql } from "graphql-request";
 
@@ -53,7 +53,7 @@ const publishFlow = async (
     const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
 
     if (delta) {
-      const response = await client.request(
+      const response = await adminClient.request(
         gql`
           mutation PublishFlow(
             $data: jsonb = {},

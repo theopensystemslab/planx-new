@@ -1,5 +1,5 @@
 import { Flow } from "./../types";
-import { adminGraphQLClient as client } from "../hasura";
+import { adminGraphQLClient as adminClient } from "../hasura";
 import { gql } from "graphql-request";
 import { getFlowData } from "../helpers";
 import { Request, Response, NextFunction } from "express";
@@ -90,7 +90,7 @@ const findAndReplaceInFlow = async (
       }
 
       // if matches, proceed with mutation to update flow data
-      const response = await client.request(
+      const response = await adminClient.request(
         gql`
           mutation UpdateFlow($data: jsonb = {}, $id: uuid!) {
             update_flows_by_pk(pk_columns: { id: $id }, _set: { data: $data }) {

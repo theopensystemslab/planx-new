@@ -7,13 +7,12 @@ import capitalize from "lodash/capitalize";
 import os from "os";
 import path from "path";
 
-import { adminGraphQLClient } from "../hasura";
+import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted, sendEmail } from "../saveAndReturn/utils";
 import { EmailSubmissionNotifyConfig } from "../types";
 import { generateDocumentReviewStream } from "./documentReview";
 import { deleteFile, downloadFile } from "./helpers";
 
-const client = adminGraphQLClient;
 
 const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
   // `/email-submission/:localAuthority` is only called via Hasura's scheduled event webhook, so body is wrapped in a "payload" key
@@ -201,7 +200,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
 };
 
 async function getTeamEmailSettings(localAuthority: string) {
-  const response = await client.request(
+  const response = await adminClient.request(
     gql`
       query getTeamEmailSettings(
         $slug: String
@@ -221,7 +220,7 @@ async function getTeamEmailSettings(localAuthority: string) {
 }
 
 async function getSessionData(sessionId: string) {
-  const response = await client.request(
+  const response = await adminClient.request(
     gql`
       query getSessionData(
         $id: uuid!
@@ -242,7 +241,7 @@ async function getSessionData(sessionId: string) {
 };
 
 async function appendSessionData(sessionId: string, csvData: any) {
-  const response = await client.request(
+  const response = await adminClient.request(
     gql`
       mutation appendSessionData(
         $id: uuid!
