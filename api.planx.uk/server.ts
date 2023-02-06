@@ -331,7 +331,6 @@ app.post("/pay/:localAuthority", (req, res, next) => {
               teamSlug,
               govUkResponse,
             });
-            return JSON.stringify(govUkResponse);
             return responseBuffer;
           }
         ),
