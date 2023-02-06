@@ -7,13 +7,12 @@ import capitalize from "lodash/capitalize";
 import os from "os";
 import path from "path";
 
-import { adminGraphQLClient } from "../hasura";
+import { adminGraphQLClient as client } from "../hasura";
 import { markSessionAsSubmitted, sendEmail } from "../saveAndReturn/utils";
 import { EmailSubmissionNotifyConfig } from "../types";
 import { generateDocumentReviewStream } from "./documentReview";
 import { deleteFile, downloadFile } from "./helpers";
 
-const client = adminGraphQLClient;
 
 const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
   // `/email-submission/:localAuthority` is only called via Hasura's scheduled event webhook, so body is wrapped in a "payload" key

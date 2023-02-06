@@ -1,9 +1,7 @@
 import { gql } from 'graphql-request';
 import { capitalize } from 'lodash';
-import { adminGraphQLClient } from "./hasura";
+import { adminGraphQLClient as client } from "./hasura";
 import { Flow, Node } from "./types";
-
-const client = adminGraphQLClient;
 
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id: string): Promise<Flow> => {

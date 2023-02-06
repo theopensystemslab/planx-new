@@ -8,12 +8,10 @@ import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
 import { generateDocumentReviewStream } from "./documentReview";
-import { adminGraphQLClient } from "../hasura";
+import { adminGraphQLClient as client } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
 import { deleteFile, downloadFile } from "./helpers";
-
-const client = adminGraphQLClient;
 
 /**
  * Submits application data to Uniform

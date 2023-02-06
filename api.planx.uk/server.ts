@@ -39,7 +39,7 @@ import {
   createReminderEvent,
   createExpiryEvent,
 } from "./webhooks/lowcalSessionEvents";
-import { adminGraphQLClient, publicGraphQLClient } from "./hasura";
+import { adminGraphQLClient as adminClient, publicGraphQLClient as publicClient } from "./hasura";
 import { graphQLVoyagerHandler, introspectionHandler } from "./hasura/voyager";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 import {
@@ -161,12 +161,10 @@ router.get(
   handleSuccess
 );
 
-const client = adminGraphQLClient;
-
 const buildJWT = async (profile: Profile, done: VerifyCallback) => {
   const { email } = profile._json;
 
-  const { users } = await client.request(
+  const { users } = await adminClient.request(
     `
     query ($email: String!) {
       users(where: {email: {_eq: $email}}, limit: 1) {
@@ -421,7 +419,7 @@ app.use("/gis", router);
 
 app.get("/hasura", async function (_req, res, next) {
   try {
-    const data = await client.request(
+    const data = await adminClient.request(
       `query GetTeams {
         teams {
           id
@@ -440,7 +438,7 @@ app.get("/me", useJWT, async function (req, res, next) {
     next({ status: 401, message: "User ID missing from JWT" });
 
   try {
-    const user = await client.request(
+    const user = await adminClient.request(
       `query ($id: Int!) {
         users_by_pk(id: $id) {
           id
@@ -490,7 +488,7 @@ app.get("/throw-error", () => {
 app.all(
   "/introspect",
   introspectionHandler({
-    graphQLClient: publicGraphQLClient,
+    graphQLClient: publicClient,
     validateUser: false,
   })
 );
@@ -502,7 +500,7 @@ app.all(
   "/introspect-all",
   useJWT,
   introspectionHandler({
-    graphQLClient: adminGraphQLClient,
+    graphQLClient: adminClient,
     validateUser: true,
   })
 );
@@ -528,7 +526,7 @@ app.get("/flows/:flowId/copy-portal/:portalNodeId", useJWT, copyPortalAsFlow);
 // unauthenticated because accessing flow schema only, no user data
 app.get("/flows/:flowId/download-schema", async (req, res, next) => {
   try {
-    const schema = await client.request(
+    const schema = await adminClient.request(
       `
       query ($flow_id: String!) {
         get_flow_schema(args: {published_flow_id: $flow_id}) {
@@ -601,7 +599,7 @@ app.get(
 
 const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
   try {
-    const result = await client.request(
+    const result = await adminClient.request(
       `
       mutation UpdateAnalyticsLogUserExit($id: bigint!, $user_exit: Boolean) {
         update_analytics_logs_by_pk(
@@ -621,7 +619,7 @@ const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
     );
 
     const analytics_id = result.update_analytics_logs_by_pk.analytics_id;
-    await client.request(
+    await adminClient.request(
       `
       mutation SetAnalyticsEndedDate($id: bigint!, $ended_at: timestamptz) {
         update_analytics_by_pk(pk_columns: {id: $id}, _set: {ended_at: $ended_at}) {
