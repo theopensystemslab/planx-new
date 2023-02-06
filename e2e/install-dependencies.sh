@@ -5,8 +5,8 @@ SCRIPT_DIR=$(dirname "$0")
 
 set -e
 
-(cd "${SCRIPT_DIR}/../editor.planx.uk" && pnpm install && pnpm build)
-(cd "${SCRIPT_DIR}/../planx-client" && pnpm install && pnpm build)
+(cd "${SCRIPT_DIR}/../editor.planx.uk" && pnpm install --no-frozen-lock && pnpm build)
+(cd "${SCRIPT_DIR}/../planx-client" && pnpm install --no-frozen-lock && pnpm build)
 
 if [ -z "${CI}" ]; then
   echo "Please make sure you have Chrome installed on this machine."
