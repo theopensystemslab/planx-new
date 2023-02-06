@@ -3,10 +3,7 @@ on:
   push:
     branches:
       - main
-  workflow_run:
-    workflows: [Pull Request]
-    types:
-      - completed
+  workflow_dispatch:
 
 env:
   PNPM_VERSION: 7.8.0
@@ -16,7 +13,6 @@ jobs:
   end_to_end_tests:
     name: E2E tests
     runs-on: ubuntu-20.04
-    if: ${{ github.ref == 'refs/heads/main' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
