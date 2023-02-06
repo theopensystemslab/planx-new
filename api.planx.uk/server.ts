@@ -439,8 +439,8 @@ app.get("/me", useJWT, async function (req, res, next) {
     next({ status: 401, message: "User ID missing from JWT" });
 
   try {
-    const user = await adminClient.request(
-      gql`query ($id: Int!) {
+    const user = await adminClient.request(gql`
+      query ($id: Int!) {
         users_by_pk(id: $id) {
           id
           first_name

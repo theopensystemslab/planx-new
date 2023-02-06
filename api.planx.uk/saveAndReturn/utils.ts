@@ -150,7 +150,7 @@ const validateSingleSessionRequest = async (
     const headers = getSaveAndReturnPublicHeaders(sessionId, email);
     const {
       lowcal_sessions: [session],
-    } = await adminClient.request(query, null, headers);
+    } = await publicClient.request(query, null, headers);
 
     if (!session) throw Error(`Unable to find session: ${sessionId}`);
 

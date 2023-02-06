@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
-import { adminGraphQLClient as client } from "../hasura";
+import { adminGraphQLClient as adminClient } from "../hasura";
 import { LowCalSession, Team } from "../types";
 import {
   sendEmail,
@@ -84,7 +84,7 @@ const validateRequest = async (
         }
       }
     `;
-    const { lowcal_sessions, teams } = await client.request(query, {
+    const { lowcal_sessions, teams } = await adminClient.request(query, {
       teamSlug,
       email: email.toLowerCase(),
     });

@@ -1,11 +1,11 @@
 import { gql } from 'graphql-request';
 import { capitalize } from 'lodash';
-import { adminGraphQLClient as client } from "./hasura";
+import { adminGraphQLClient as adminClient } from "./hasura";
 import { Flow, Node } from "./types";
 
 // Get a flow's data (unflattened, without external portal nodes)
 const getFlowData = async (id: string): Promise<Flow> => {
-  const data = await client.request(
+  const data = await adminClient.request(
     gql`
       query GetFlowData($id: uuid!) {
         flows_by_pk(id: $id) {
@@ -23,7 +23,7 @@ const getFlowData = async (id: string): Promise<Flow> => {
 
 // Insert a new flow into the `flows` table
 const insertFlow = async (teamId: number, slug: string, flowData: Flow["data"], creatorId?: number, copiedFrom?: Flow["id"]) => {
-  const data = await client.request(
+  const data = await adminClient.request(
     gql`
       mutation InsertFlow ($team_id: Int!, $slug: String!, $data: jsonb = {}, $creator_id: Int, $copied_from: uuid) {
         insert_flows_one(object: {
@@ -53,7 +53,7 @@ const insertFlow = async (teamId: number, slug: string, flowData: Flow["data"], 
 
 // Add a row to `operations` for an inserted flow, otherwise ShareDB throws a silent error when opening the flow in the UI
 const createAssociatedOperation = async (flowId: Flow["id"]) => {
-  const data = await client.request(
+  const data = await adminClient.request(
     gql`
       mutation InsertOperation ($flow_id: uuid!, $data: jsonb = {}) {
         insert_operations_one(object: { flow_id: $flow_id, version: 1, data: $data }) {
@@ -71,7 +71,7 @@ const createAssociatedOperation = async (flowId: Flow["id"]) => {
 
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
 const getMostRecentPublishedFlow = async (id: string): Promise<Flow["data"]> => {
-  const data = await client.request(
+  const data = await adminClient.request(
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
         flows_by_pk(id: $id) {
@@ -90,7 +90,7 @@ const getMostRecentPublishedFlow = async (id: string): Promise<Flow["data"]> => 
 // Get the snapshot of the published flow for a certain point in time (flattened, with external portal nodes)
 //   created_at refers to published date, value passed in as param should be lowcal_session.updated_at
 const getPublishedFlowByDate = async (id: string, created_at: string) => {
-  const data = await client.request(
+  const data = await adminClient.request(
     gql`
       query GetPublishedFlowByDate($id: uuid!, $created_at: timestamptz!) {
         flows_by_pk(id: $id) {
