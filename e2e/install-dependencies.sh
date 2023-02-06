@@ -3,9 +3,8 @@
 SCRIPT_DIR=$(dirname "$0")
 . "$SCRIPT_DIR/../.env"
 
-set -xe
+set -e
 
-(cd "${SCRIPT_DIR}/../hasura.planx.uk" && pnpm install)
 (cd "${SCRIPT_DIR}/../editor.planx.uk" && pnpm install && pnpm build)
 (cd "${SCRIPT_DIR}/../planx-client" && pnpm install && pnpm build)
 

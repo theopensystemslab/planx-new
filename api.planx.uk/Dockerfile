@@ -1,36 +1,42 @@
-# 16.13.1 = LTS
+## BASE ##
+# 16.13.1 = LTS (outdated: LTS is now node 18)
 FROM node:16.13.1-alpine as base
+
+RUN apk add --no-cache git # required for fetching git dependencies
 
 WORKDIR /api
 RUN npm install -g pnpm@7.8.0
 
-ADD . .
+# install cachable shared package
+COPY shared ./shared
+RUN pnpm install ./shared/planx-client*
+RUN cd node_modules/planx-client && pnpm install && pnpm build
 
-RUN pnpm fetch
+# update package cache using lockfile
 # see https://pnpm.io/cli/fetch
-RUN pnpm install --recursive --offline
+COPY pnpm-lock.yaml ./
+RUN pnpm fetch
+
+# copy and install everything else using cache where possible
+COPY . ./
+RUN pnpm install --recursive --prefer-offline
+
 RUN pnpm build
 RUN pnpm prune --production
 
-COPY . .
-
 FROM node:16.13.1-alpine as production
 WORKDIR /api
-ENV NODE_ENV production
 
+## PRODUCTION ##
+ENV NODE_ENV production
 COPY --from=base /api/package.json ./package.json
 COPY --from=base /api/dist ./dist
 COPY --from=base /api/node_modules ./node_modules
-
 CMD ["npm", "start"]
 
+## DEVELOPMENT ##
 FROM base as development
 ENV NODE_ENV development
-
-ADD . .
-
-RUN pnpm fetch
-RUN pnpm install --recursive --offline -f
-COPY . .
-
+# reinstall pruned development dependencies
+RUN pnpm install --development
 CMD ["pnpm", "dev"]

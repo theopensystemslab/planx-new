@@ -8,7 +8,6 @@ specifiers:
   axios: ^1.2.1
   eslint: ^8.29.0
   lodash.kebabcase: ^4.1.1
-  node:process: link:@types/node:process
   prettier: ^2.8.0
   rimraf: ^3.0.2
   typescript: ^4.9.3
@@ -23,7 +22,6 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 5.45.1_tdm6ms4ntwhlpozn7kjqrhum74
   '@typescript-eslint/parser': 5.45.1_s5ps7njkmjlaqajutnox5ntcla
   eslint: 8.29.0
-  node:process: link:@types/node:process
   prettier: 2.8.0
   rimraf: 3.0.2
   typescript: 4.9.3
