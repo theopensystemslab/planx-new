@@ -11,7 +11,7 @@ import FileDownload from "ui/FileDownload";
 import NumberedList from "ui/NumberedList";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
-import { generatePlanXExportData } from "../Send/uniform";
+import { makeCsvData } from "../Send/uniform";
 import type { Confirmation } from "./model";
 
 const useClasses = makeStyles((theme) => ({
@@ -44,7 +44,7 @@ export default function ConfirmationComponent(props: Props) {
   ]);
 
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform
-  const data = generatePlanXExportData(breadcrumbs, flow, passport, sessionId);
+  const data = makeCsvData(breadcrumbs, flow, passport, sessionId);
 
   const classes = useClasses();
 

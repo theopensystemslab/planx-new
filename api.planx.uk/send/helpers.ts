@@ -1,9 +1,10 @@
 import AdmZip from "adm-zip";
 import fs from "fs";
+import { gql } from "graphql-request";
+
 import airbrake from "../airbrake";
 import { getFileFromS3 } from "../s3/getFile";
 import { adminGraphQLClient } from "../hasura";
-import { gql } from "graphql-request";
 
 /**
  * Helper method to locally download S3 files, add them to the zip, then clean them up

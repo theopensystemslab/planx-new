@@ -7,17 +7,17 @@ import capitalize from "lodash/capitalize";
 import os from "os";
 import path from "path";
 
-import { adminGraphQLClient as adminClient } from "../hasura";
-import { markSessionAsSubmitted, sendEmail } from "../saveAndReturn/utils";
-import { EmailSubmissionNotifyConfig } from "../types";
 import {
   generateHTMLMapStream,
   generateHTMLOverviewStream,
 } from "@opensystemslab/planx-document-templates";
+import { adminGraphQLClient as adminClient } from "../hasura";
+import { markSessionAsSubmitted, sendEmail } from "../saveAndReturn/utils";
+import { EmailSubmissionNotifyConfig } from "../types";
 import { deleteFile, downloadFile } from "./helpers";
 
 
-const sendToEmail = async (req: Request, res: Response, next: NextFunction) => {
+const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
   // `/email-submission/:localAuthority` is only called via Hasura's scheduled event webhook, so body is wrapped in a "payload" key
   const { payload } = req.body;
   if (!payload?.sessionId || !payload?.csv || !payload?.email) {
@@ -29,14 +29,10 @@ const sendToEmail = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     // Confirm this local authority (aka team) has an email configured in teams.submission_email
-    const { submission_email: sendToEmail, notify_personalisation } =
-      await getTeamEmailSettings(req.params.localAuthority);
+    const { submission_email: sendToEmail, notify_personalisation } = await getTeamEmailSettings(req.params.localAuthority);
     if (sendToEmail) {
       // Append formatted "csv" data to lowcal_session.data so it's available later to the download-application-files endpoint
-      const updatedSessionData = await appendSessionData(
-        payload.sessionId,
-        payload.csv
-      );
+      const updatedSessionData = await appendSessionData(payload.sessionId, payload.csv);
 
       // TODO Prepare/improve email template
       const config: EmailSubmissionNotifyConfig = {
@@ -46,7 +42,7 @@ const sendToEmail = async (req: Request, res: Response, next: NextFunction) => {
           sessionId: payload.sessionId,
           applicantEmail: payload.email,
           downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${sendToEmail}&localAuthority=${req.params.localAuthority}`,
-        },
+        }
       };
 
       // Send the email
@@ -69,7 +65,7 @@ const sendToEmail = async (req: Request, res: Response, next: NextFunction) => {
     } else {
       return next({
         status: 400,
-        message: "Send to email is not enabled for this local authority.",
+        message: "Send to email is not enabled for this local authority."
       });
     }
   } catch (error) {
@@ -80,28 +76,22 @@ const sendToEmail = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const downloadApplicationFiles = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const downloadApplicationFiles = async(req: Request, res: Response, next: NextFunction) => {
   const sessionId: string = req.params?.sessionId;
   if (!sessionId || !req.query?.email || !req.query?.localAuthority) {
     return next({
       status: 400,
-      message: "Missing values required to access application files",
+      message: "Missing values required to access application files"
     });
   }
 
   try {
     // Confirm that the provided email matches the stored team settings for the provided localAuthority
-    const { submission_email: sendToEmail, notify_personalisation } =
-      await getTeamEmailSettings(req.query.localAuthority as string);
+    const { submission_email: sendToEmail, notify_personalisation } = await getTeamEmailSettings(req.query.localAuthority as string);
     if (sendToEmail != req.query.email) {
       return next({
         status: 403,
-        message:
-          "Provided email address is not enabled to access application files",
+        message: "Provided email address is not enabled to access application files"
       });
     }
 
@@ -123,10 +113,7 @@ const downloadApplicationFiles = async (
         const csvPath = path.join(tmpDir, "application.csv");
         const csvFile = fs.createWriteStream(csvPath);
 
-        const csvStream = stringify(sessionData.csv, {
-          columns: ["question", "responses", "metadata"],
-          header: true,
-        }).pipe(csvFile);
+        const csvStream = stringify(sessionData.csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
         await new Promise((resolve, reject) => {
           csvStream.on("error", reject);
           csvStream.on("finish", resolve);
@@ -180,14 +167,12 @@ const downloadApplicationFiles = async (
               files.push(url);
             });
           });
-
+        
         // Additionally check if they uploaded a location plan instead of drawing
         if (sessionData.passport?.data?.["proposal.drawing.locationPlan"]) {
-          files.push(
-            sessionData.passport.data["proposal.drawing.locationPlan"]
-          );
+          files.push(sessionData.passport.data["proposal.drawing.locationPlan"]);
         }
-
+  
         // Download files from S3 and add them to the zip folder
         if (files.length > 0) {
           for (const file of files) {
@@ -206,9 +191,9 @@ const downloadApplicationFiles = async (
 
       // Send it to the client
       const zipData = zip.toBuffer();
-      res.set("Content-Type", "application/octet-stream");
-      res.set("Content-Disposition", `attachment; filename=${zipName}`);
-      res.set("Content-Length", zipData.length.toString());
+      res.set('Content-Type','application/octet-stream');
+      res.set('Content-Disposition',`attachment; filename=${zipName}`);
+      res.set('Content-Length',zipData.length.toString());
       res.status(200).send(zipData);
 
       // Clean up the local zip file
@@ -218,7 +203,7 @@ const downloadApplicationFiles = async (
     } else {
       return next({
         status: 400,
-        message: "Failed to find session data for this sessionId",
+        message: "Failed to find session data for this sessionId"
       });
     }
   } catch (error) {
@@ -232,15 +217,17 @@ const downloadApplicationFiles = async (
 async function getTeamEmailSettings(localAuthority: string) {
   const response = await adminClient.request(
     gql`
-      query getTeamEmailSettings($slug: String) {
-        teams(where: { slug: { _eq: $slug } }) {
+      query getTeamEmailSettings(
+        $slug: String
+      ) {
+        teams(where: {slug: {_eq: $slug}}) {
           submission_email
           notify_personalisation
         }
       }
     `,
     {
-      slug: localAuthority,
+      slug: localAuthority
     }
   );
 
@@ -250,27 +237,34 @@ async function getTeamEmailSettings(localAuthority: string) {
 async function getSessionData(sessionId: string) {
   const response = await adminClient.request(
     gql`
-      query getSessionData($id: uuid!) {
-        lowcal_sessions_by_pk(id: $id) {
+      query getSessionData(
+        $id: uuid!
+      ) {
+        lowcal_sessions_by_pk(
+          id: $id
+        ) {
           data
         }
       }
     `,
     {
-      id: sessionId,
+      id: sessionId
     }
   );
 
   return response?.lowcal_sessions_by_pk?.data;
-}
+};
 
 async function appendSessionData(sessionId: string, csvData: any) {
   const response = await adminClient.request(
     gql`
-      mutation appendSessionData($id: uuid!, $data: jsonb) {
+      mutation appendSessionData(
+        $id: uuid!
+        $data: jsonb
+      ) {
         update_lowcal_sessions_by_pk(
-          pk_columns: { id: $id }
-          _append: { data: $data }
+          pk_columns: {id: $id},
+          _append: {data: $data}
         ) {
           data
         }
@@ -278,7 +272,7 @@ async function appendSessionData(sessionId: string, csvData: any) {
     `,
     {
       id: sessionId,
-      data: { csv: csvData },
+      data: { "csv": csvData }
     }
   );
 
