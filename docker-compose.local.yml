@@ -5,11 +5,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  hasura:
-    volumes:
-      - "./hasura.planx.uk/metadata:/hasura-metadata"
-      - "./hasura.planx.uk/migrations:/hasura-migrations"
-
   api:
     build:
       target: development
