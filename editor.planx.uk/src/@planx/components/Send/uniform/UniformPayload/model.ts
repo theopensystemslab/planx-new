@@ -21,7 +21,7 @@ import {
  */
 export type PlanXAppTypes = "ldc.existing" | "ldc.proposed";
 
-interface UniformPayloadRequiredArgs {
+interface UniformPayloadArgs {
   sessionId: string;
   passport: Store.passport;
   files: string[];
@@ -264,7 +264,7 @@ export class UniformPayload implements IUniformPayload {
       },
     ];
 
-    if (this.passport.data["property.boundary.site"]) {
+    if (this.passport.data?.["property.boundary.site"]) {
       files.push({
         "common:FileName": "boundary.geojson",
         "common:Reference": "Other",
