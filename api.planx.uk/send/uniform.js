@@ -12,11 +12,11 @@ import {
   generateDocxTemplateStream,
   generateHTMLMapStream,
   generateHTMLOverviewStream,
-} from "@opensystemslab/planx-document-template";
+} from "@opensystemslab/planx-document-templates";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
-import { deleteFile, downloadFile, findGeoJSON } from "./helpers";
+import { deleteFile, downloadFile } from "./helpers";
 
 /**
  * Submits application data to Uniform
@@ -319,7 +319,8 @@ export async function createUniformSubmissionZip({
 }
 
 async function generateSubmissionData({ sessionId, passport }) {
-  const geojson = findGeoJSON(passport);
+  const geojson = passport.data["property.boundary.site"];
+
   const templateNames = await getSubmissionTemplates(sessionId);
   return {
     geojson,
