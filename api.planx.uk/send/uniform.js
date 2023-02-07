@@ -16,7 +16,7 @@ import {
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
-import { deleteFile, downloadFile } from "./helpers";
+import { deleteFile, downloadFile, resolveStream } from "./helpers";
 
 /**
  * Submits application data to Uniform
@@ -240,7 +240,7 @@ export async function createUniformSubmissionZip({
     columns: ["question", "responses", "metadata"],
     header: true,
   }).pipe(csvFile);
-  await waitForStream(csvStream);
+  await resolveStream(csvStream);
   zip.addLocalFile(csvPath);
   deleteFile(csvPath);
 
@@ -248,10 +248,7 @@ export async function createUniformSubmissionZip({
   const xmlPath = "proposal.xml"; //  must be named "proposal.xml" to be processed by Uniform
   const xmlFile = fs.createWriteStream(xmlPath);
   const xmlStream = str(xml.trim()).pipe(xmlFile);
-  await new Promise((resolve, reject) => {
-    xmlStream.on("error", reject);
-    xmlStream.on("finish", resolve);
-  });
+  await resolveStream(xmlStream);
   zip.addLocalFile(xmlPath);
   deleteFile(xmlPath);
 
@@ -259,7 +256,7 @@ export async function createUniformSubmissionZip({
   const overviewPath = path.join(tmpDir, "overview.html");
   const overviewFile = fs.createWriteStream(overviewPath);
   const overviewStream = generateHTMLOverviewStream(csv).pipe(overviewFile);
-  await waitForStream(overviewStream);
+  await resolveStream(overviewStream);
   zip.addLocalFile(overviewPath);
   deleteFile(overviewPath);
 
@@ -272,7 +269,7 @@ export async function createUniformSubmissionZip({
     const boundaryPath = path.join(tmpDir, "boundary.html");
     const boundaryFile = fs.createWriteStream(boundaryPath);
     const boundaryStream = generateHTMLMapStream(geojson).pipe(boundaryFile);
-    await waitForStream(boundaryStream);
+    await resolveStream(boundaryStream);
     zip.addLocalFile(boundaryPath);
     deleteFile(boundaryPath);
   }
@@ -297,7 +294,7 @@ export async function createUniformSubmissionZip({
         templateName,
         passport,
       }).pipe(templateFile);
-      await waitForStream(templateStream);
+      await resolveStream(templateStream);
       zip.addLocalFile(templatePath);
       deleteFile(templatePath);
     }
@@ -323,13 +320,6 @@ async function generateSubmissionData({ sessionId, passport }) {
     geojson,
     templateNames,
   };
-}
-
-async function waitForStream(stream) {
-  return await new Promise((resolve, reject) => {
-    stream.on("error", reject);
-    stream.on("finish", resolve);
-  });
 }
 
 /**

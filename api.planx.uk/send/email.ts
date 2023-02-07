@@ -14,7 +14,7 @@ import {
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted, sendEmail } from "../saveAndReturn/utils";
 import { EmailSubmissionNotifyConfig } from "../types";
-import { deleteFile, downloadFile } from "./helpers";
+import { deleteFile, downloadFile, resolveStream } from "./helpers";
 
 
 const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
@@ -114,11 +114,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
         const csvFile = fs.createWriteStream(csvPath);
 
         const csvStream = stringify(sessionData.csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
-        await new Promise((resolve, reject) => {
-          csvStream.on("error", reject);
-          csvStream.on("finish", resolve);
-        });
-
+        await resolveStream(csvStream);
         zip.addLocalFile(csvPath);
         deleteFile(csvPath);
       }
@@ -134,10 +130,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
         const boundaryFile = fs.createWriteStream(boundaryPath);
         const boundaryStream =
           generateHTMLMapStream(geojson).pipe(boundaryFile);
-        await new Promise((resolve, reject) => {
-          boundaryStream.on("error", reject);
-          boundaryStream.on("finish", resolve);
-        });
+        await resolveStream(boundaryStream);
         zip.addLocalFile(boundaryPath);
         deleteFile(boundaryPath);
       }
@@ -149,10 +142,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
         const htmlStream = generateHTMLOverviewStream(sessionData.csv).pipe(
           htmlFile
         );
-        await new Promise((resolve, reject) => {
-          htmlStream.on("error", reject);
-          htmlStream.on("finish", resolve);
-        });
+        await resolveStream(htmlStream);
         zip.addLocalFile(htmlPath);
         deleteFile(htmlPath);
       }
