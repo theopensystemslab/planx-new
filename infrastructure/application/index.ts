@@ -100,14 +100,6 @@ export = async () => {
     securityGroups: [
       new awsx.ec2.SecurityGroup("metabase-custom-port", {
         vpc,
-        ingress: [
-          {
-            protocol: "tcp",
-            cidrBlocks: ["0.0.0.0/0"],
-            fromPort: 443,
-            toPort: 443,
-          },
-        ],
         egress: [
           {
             protocol: "tcp",
