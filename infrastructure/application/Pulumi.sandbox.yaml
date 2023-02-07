@@ -1,7 +1,7 @@
 config:
   application:airbrake-project-id: "329753"
-  application:airbrake-project-key: |-
-    388fe6f4cc0d6644c923500d5672a5b6
+  application:airbrake-project-key:
+    secure: AAABAO8NgmVNdkwajWpiKwi+dxGicFACbAQzK66FREUCp+OUbSRyNAb9dSQHq/n9fZb8xWBdvYBCQ9eBr2jqPQ==
   application:bops-api-root-domain: bops-staging.services
   application:bops-api-token:
     secure: AAABAHLQf7CFOK073geL2TbTYycQCzPYUy3Xi66UniwIrTlOAqve2YBikJXzMJ2xS9v4dGUZMUmwUba0OpTz8KAMXJ8=
