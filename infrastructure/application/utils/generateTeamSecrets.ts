@@ -1,11 +1,11 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as awsx from "@pulumi/awsx";
 
-import { teams } from './../../common/teams';
+import { teams } from "../../common/teams";
 
 // Greedily match any non-word characters
 // XXX: Matches regex used in api.planx.uk/send.js
-const regex = new RegExp(/\W+/g)
+const regex = new RegExp(/\W+/g);
 
 /**
  * Format string for "name" field
@@ -19,17 +19,26 @@ const name = (name: string) => name.replace(regex, "_").toUpperCase();
  */
 const value = (value: string) => value.replace(regex, "-").toLowerCase();
 
-export const generateTeamSecrets = (config: pulumi.Config): awsx.ecs.KeyValuePair[] => {
+export const generateTeamSecrets = (
+  config: pulumi.Config,
+  env: String
+): awsx.ecs.KeyValuePair[] => {
   const secrets: awsx.ecs.KeyValuePair[] = [];
-  teams.forEach(team => {
+  teams.forEach((team) => {
     secrets.push({
       name: `GOV_UK_PAY_TOKEN_${name(team.name)}`,
-      value: config.require(`gov-uk-pay-token-${value(team.name)}`),
+      value:
+        env === "sandbox"
+          ? "sandbox"
+          : config.require(`gov-uk-pay-token-${value(team.name)}`),
     });
-    team.uniformInstances?.forEach(instance => {
+    team.uniformInstances?.forEach((instance) => {
       secrets.push({
         name: `UNIFORM_CLIENT_${name(instance)}`,
-        value: config.require(`uniform-client-${value(instance)}`),
+        value:
+          env === "sandbox"
+            ? "sandbox"
+            : config.require(`uniform-client-${value(instance)}`),
       });
     });
   });

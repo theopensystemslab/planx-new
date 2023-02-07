@@ -394,7 +394,7 @@ export = async () => {
             name: "ORDNANCE_SURVEY_API_KEY",
             value: config.require("ordnance-survey-api-key"),
           },
-          ...generateTeamSecrets(config),
+          ...generateTeamSecrets(config, env),
         ],
       },
     },
