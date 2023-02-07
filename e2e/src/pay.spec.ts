@@ -3,6 +3,10 @@ import { log } from "./helpers";
 import type { Page } from "@playwright/test";
 import payFlow from "./flows/pay-flow.json";
 import { getClient, setUpTestContext, tearDownTestContext } from "./context";
+import { waitForPaymentResponse } from "./payUtils/awaitForPaymentResponse";
+import { fillGovUkCardDetails } from "./payUtils/fillGovUkCardDetails";
+import { cards } from "./constants";
+import Client from "planx-client";
 
 const TEAM_SLUG = "buckinghamshire"; // local authority with GOV Pay enabled
 let context: any = {
@@ -24,12 +28,6 @@ let context: any = {
   },
 };
 const previewURL = `/${TEAM_SLUG}/${context.flow.slug}/preview?analytics=false`;
-// Test card numbers to be used in gov.uk sandbox environment
-// reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account
-const cards = {
-  successful_card_number: "4444333322221111",
-  invalid_card_number: "4000000000000002",
-};
 
 test.describe("Payment flow", async () => {
   const client = getClient();
@@ -58,7 +56,10 @@ test.describe("Payment flow", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { payment_id: paymentRef } = await waitForPaymentResponse(page);
+    const { payment_id: paymentRef } = await waitForPaymentResponse({
+      page,
+      teamSlug: TEAM_SLUG,
+    });
     expect(paymentRef).toBeTruthy();
     expect(await page.getByText(paymentRef!).textContent()).toBeTruthy();
     expect(
@@ -76,7 +77,10 @@ test.describe("Payment flow", async () => {
     await page.getByText("Pay using GOV.UK Pay").click();
     await fillGovUkCardDetails({ page, cardNumber: cards.invalid_card_number });
     await page.locator("#return-url").click();
-    const { payment_id: failedPaymentRef } = await waitForPaymentResponse(page);
+    const { payment_id: failedPaymentRef } = await waitForPaymentResponse({
+      page,
+      teamSlug: TEAM_SLUG,
+    });
     expect(failedPaymentRef).toBeTruthy();
     expect(
       await hasPaymentStatus({
@@ -92,7 +96,10 @@ test.describe("Payment flow", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { payment_id: paymentRef } = await waitForPaymentResponse(page);
+    const { payment_id: paymentRef } = await waitForPaymentResponse({
+      page,
+      teamSlug: TEAM_SLUG,
+    });
     expect(paymentRef).toBeTruthy();
     expect(await page.getByText(paymentRef!).textContent()).toBeTruthy();
     expect(
@@ -113,7 +120,7 @@ test.describe("Payment flow", async () => {
     await page.locator("#cancel-payment").click();
     await page.locator("#return-url").click();
     const { payment_id: failedPaymentRef, state } =
-      await waitForPaymentResponse(page);
+      await waitForPaymentResponse({ page, teamSlug: TEAM_SLUG });
 
     expect(failedPaymentRef).toBeTruthy();
     expect(state.status).toBe("failed");
@@ -131,7 +138,10 @@ test.describe("Payment flow", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { payment_id: paymentRef } = await waitForPaymentResponse(page);
+    const { payment_id: paymentRef } = await waitForPaymentResponse({
+      page,
+      teamSlug: TEAM_SLUG,
+    });
 
     expect(paymentRef).toBeTruthy();
     expect(await page.getByText(paymentRef!).textContent()).toBeTruthy();
@@ -145,42 +155,10 @@ test.describe("Payment flow", async () => {
   });
 });
 
-async function fillGovUkCardDetails({
-  page,
-  cardNumber,
-}: {
-  page: Page;
-  cardNumber: string;
-}) {
-  await page.locator("#card-no").fill(cardNumber);
-  await page.getByLabel("Month").fill("12");
-  await page.getByLabel("Year").fill("2099");
-  await page.getByLabel("Name on card").fill("Test t Test");
-  await page.getByLabel("Card security code", { exact: false }).fill("123");
-
-  await page.locator("#address-line-1").fill("Test");
-  await page.locator("#address-line-2").fill("123");
-
-  await page.getByLabel("Town or city").fill("Test");
-  await page.getByLabel("Postcode").fill("HP111BB");
-  await page
-    .getByLabel("Email")
-    .fill("simulate-delivered@notifications.service.gov.uk");
-  await page.locator("button#submit-card-details").click();
-}
-
 async function navigateToPayComponent(page: Page) {
   await page.goto(previewURL);
   await page.getByLabel("Pay test").fill("Test");
   await page.getByTestId("continue-button").click();
-}
-
-async function waitForPaymentResponse(page: Page): Promise<null | object> {
-  return await page
-    .waitForResponse((response) => {
-      return response.url().includes(`pay/${TEAM_SLUG}`);
-    })
-    .then((req) => req.json());
 }
 
 async function hasPaymentStatus({
