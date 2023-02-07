@@ -1,5 +1,5 @@
-import { gql } from 'graphql-request';
-import { capitalize } from 'lodash';
+import { gql } from "graphql-request";
+import { capitalize } from "lodash";
 import { adminGraphQLClient as adminClient } from "./hasura";
 import { Flow, Node } from "./types";
 
@@ -14,7 +14,7 @@ const getFlowData = async (id: string): Promise<Flow> => {
           team_id
         }
       }
-      `,
+    `,
     { id }
   );
 
@@ -22,18 +22,32 @@ const getFlowData = async (id: string): Promise<Flow> => {
 };
 
 // Insert a new flow into the `flows` table
-const insertFlow = async (teamId: number, slug: string, flowData: Flow["data"], creatorId?: number, copiedFrom?: Flow["id"]) => {
+const insertFlow = async (
+  teamId: number,
+  slug: string,
+  flowData: Flow["data"],
+  creatorId?: number,
+  copiedFrom?: Flow["id"]
+) => {
   const data = await adminClient.request(
     gql`
-      mutation InsertFlow ($team_id: Int!, $slug: String!, $data: jsonb = {}, $creator_id: Int, $copied_from: uuid) {
-        insert_flows_one(object: {
-          team_id: $team_id,
-          slug: $slug,
-          data: $data,
-          version: 1,
-          creator_id: $creator_id
-          copied_from: $copied_from
-        }) {
+      mutation InsertFlow(
+        $team_id: Int!
+        $slug: String!
+        $data: jsonb = {}
+        $creator_id: Int
+        $copied_from: uuid
+      ) {
+        insert_flows_one(
+          object: {
+            team_id: $team_id
+            slug: $slug
+            data: $data
+            version: 1
+            creator_id: $creator_id
+            copied_from: $copied_from
+          }
+        ) {
           id
         }
       }
@@ -55,8 +69,10 @@ const insertFlow = async (teamId: number, slug: string, flowData: Flow["data"], 
 const createAssociatedOperation = async (flowId: Flow["id"]) => {
   const data = await adminClient.request(
     gql`
-      mutation InsertOperation ($flow_id: uuid!, $data: jsonb = {}) {
-        insert_operations_one(object: { flow_id: $flow_id, version: 1, data: $data }) {
+      mutation InsertOperation($flow_id: uuid!, $data: jsonb = {}) {
+        insert_operations_one(
+          object: { flow_id: $flow_id, version: 1, data: $data }
+        ) {
           id
         }
       }
@@ -70,7 +86,9 @@ const createAssociatedOperation = async (flowId: Flow["id"]) => {
 };
 
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
-const getMostRecentPublishedFlow = async (id: string): Promise<Flow["data"]> => {
+const getMostRecentPublishedFlow = async (
+  id: string
+): Promise<Flow["data"]> => {
   const data = await adminClient.request(
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
@@ -95,9 +113,9 @@ const getPublishedFlowByDate = async (id: string, created_at: string) => {
       query GetPublishedFlowByDate($id: uuid!, $created_at: timestamptz!) {
         flows_by_pk(id: $id) {
           published_flows(
-            limit: 1,
-            order_by: { created_at: desc },
-            where: { created_at: {_lte: $created_at} }
+            limit: 1
+            order_by: { created_at: desc }
+            where: { created_at: { _lte: $created_at } }
           ) {
             data
           }
@@ -164,7 +182,10 @@ const getChildren = (
 /**
  * For a given flow, make it unique by renaming its' node ids (replace last n characters) while preserving its' content
  */
-const makeUniqueFlow = (flowData: Flow["data"], replaceValue: string): Flow["data"] => {
+const makeUniqueFlow = (
+  flowData: Flow["data"],
+  replaceValue: string
+): Flow["data"] => {
   const charactersToReplace = replaceValue.length;
 
   Object.keys(flowData).forEach((node) => {
@@ -188,16 +209,19 @@ const makeUniqueFlow = (flowData: Flow["data"], replaceValue: string): Flow["dat
   return flowData;
 };
 
-const isLiveEnv = () => (["production", "staging", "pizza"].includes(process.env.NODE_ENV || ""));
+const isLiveEnv = () =>
+  ["production", "staging", "pizza", "sandbox"].includes(
+    process.env.NODE_ENV || ""
+  );
 /**
  * Get current environment, formatted for display
  */
 const getFormattedEnvironment = (): string => {
   let environment = process.env.NODE_ENV;
   if (environment === "pizza") {
-    const pizzaNumber = new URL(process.env.API_URL_EXT!).href.split(".")[1]
-    environment += ` ${pizzaNumber}`
-  };
+    const pizzaNumber = new URL(process.env.API_URL_EXT!).href.split(".")[1];
+    environment += ` ${pizzaNumber}`;
+  }
   return capitalize(environment);
 };
 
