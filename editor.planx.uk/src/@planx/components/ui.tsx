@@ -3,6 +3,7 @@ import CallSplit from "@mui/icons-material/CallSplit";
 import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import ContactPage from "@mui/icons-material/ContactPage";
+import CopyAll from "@mui/icons-material/CopyAll";
 import Create from "@mui/icons-material/Create";
 import Event from "@mui/icons-material/Event";
 import FunctionsIcon from "@mui/icons-material/Functions";
@@ -62,7 +63,7 @@ export const ICONS: {
   [TYPES.Confirmation]: TextFields,
   [TYPES.DateInput]: Event,
   [TYPES.DrawBoundary]: SquareFoot,
-  [TYPES.ExternalPortal]: undefined,
+  [TYPES.ExternalPortal]: CopyAll,
   [TYPES.FileUpload]: CloudUpload,
   [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: SearchOutlined,

@@ -1,6 +1,6 @@
 import { format, addDays } from "date-fns";
 import { gql } from "graphql-request";
-import { publicGraphQLClient, adminGraphQLClient } from "../hasura";
+import { publicGraphQLClient as publicClient, adminGraphQLClient as adminClient } from "../hasura";
 import { EmailSubmissionNotifyConfig, LowCalSession, SaveAndReturnNotifyConfig, Team } from "../types";
 import { notifyClient } from "./notify";
 
@@ -128,7 +128,6 @@ const validateSingleSessionRequest = async (
   sessionId: string
 ) => {
   try {
-    const client = publicGraphQLClient;
     const query = gql`
       query ValidateSingleSessionRequest {
         lowcal_sessions {
@@ -151,7 +150,7 @@ const validateSingleSessionRequest = async (
     const headers = getSaveAndReturnPublicHeaders(sessionId, email);
     const {
       lowcal_sessions: [session],
-    } = await client.request(query, null, headers);
+    } = await publicClient.request(query, null, headers);
 
     if (!session) throw Error(`Unable to find session: ${sessionId}`);
 
@@ -215,7 +214,6 @@ const getPersonalisation = (
  */
 const softDeleteSession = async (sessionId: string) => {
   try {
-    const client = adminGraphQLClient;
     const mutation = gql`
       mutation SoftDeleteLowcalSession($sessionId: uuid!) {
         update_lowcal_sessions_by_pk(
@@ -226,7 +224,7 @@ const softDeleteSession = async (sessionId: string) => {
         }
       }
     `;
-    await client.request(mutation, { sessionId });
+    await adminClient.request(mutation, { sessionId });
   } catch (error) {
     throw new Error(`Error deleting session ${sessionId}`);
   }
@@ -238,7 +236,6 @@ const softDeleteSession = async (sessionId: string) => {
  */
 const markSessionAsSubmitted = async (sessionId: string) => {
   try {
-    const client = adminGraphQLClient;
     const mutation = gql`
       mutation MarkSessionAsSubmitted($sessionId: uuid!) {
         update_lowcal_sessions_by_pk(
@@ -249,7 +246,7 @@ const markSessionAsSubmitted = async (sessionId: string) => {
         }
       }
     `;
-    await client.request(mutation, { sessionId });
+    await adminClient.request(mutation, { sessionId });
   } catch (error) {
     throw new Error(`Error marking session ${sessionId} as submitted`);
   }
@@ -279,7 +276,6 @@ const getHumanReadableProjectType = async (session: LowCalSession): Promise<stri
 const getReadableProjectTypeFromRaw = async (
   rawList: string[]
 ): Promise<string[]> => {
-  const client = publicGraphQLClient;
   const query = gql`
     query GetHumanReadableProjectType($rawList: [String!]) {
       project_types(where: { value: { _in: $rawList } }) {
@@ -287,7 +283,7 @@ const getReadableProjectTypeFromRaw = async (
       }
     }
   `;
-  const { project_types } = await client.request(query, { rawList });
+  const { project_types } = await publicClient.request(query, { rawList });
   const list = project_types.map(
     (result: { description: string }) => result.description
   );
@@ -325,7 +321,6 @@ const stringifyWithRootKeysSortedAlphabetically = (ob = {}) =>
 // Should only run once on initial save of a session
 const setupEmailEventTriggers = async (sessionId: string) => {
   try {
-    const client = adminGraphQLClient;
     const mutation = gql`
       mutation SetupEmailNotifications($sessionId: uuid!) {
         update_lowcal_sessions_by_pk(
@@ -339,7 +334,7 @@ const setupEmailEventTriggers = async (sessionId: string) => {
     `;
     const {
       update_lowcal_sessions_by_pk: { has_user_saved: hasUserSaved },
-    } = await client.request(mutation, { sessionId });
+    } = await adminClient.request(mutation, { sessionId });
     return hasUserSaved;
   } catch (error) {
     throw new Error(

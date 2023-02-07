@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  postgres:
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      target: development
+    volumes:
+      - "./api.planx.uk:/api"
+
+  sharedb:
+    volumes:
+      - "./sharedb.planx.uk:/sharedb"
+      - "/sharedb/node_modules"
+
+volumes:
+  postgres_data:

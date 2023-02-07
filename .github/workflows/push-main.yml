@@ -16,7 +16,7 @@ env:
 jobs:
   build_react:
     name: Build React
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -71,7 +71,7 @@ jobs:
   preview:
     name: Pulumi Up
     needs: build_react
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -105,7 +105,7 @@ jobs:
   notifications:
     name: Notifications
     needs: preview
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       # Airbrake notification - https://airbrake.io/docs/features/deploy-tracking

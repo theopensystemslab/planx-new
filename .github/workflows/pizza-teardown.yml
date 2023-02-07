@@ -9,7 +9,7 @@ env:
 
 jobs:
   teardown_pizza:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Remove vultr resources
         uses: theopensystemslab/vultr-action@v1.15
