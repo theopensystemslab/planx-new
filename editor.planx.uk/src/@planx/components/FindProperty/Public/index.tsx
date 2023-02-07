@@ -13,6 +13,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { MapContainer } from "@planx/components/shared/Preview/MapContainer";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
+import { GeoJSONObject } from "@turf/helpers";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
@@ -74,6 +75,7 @@ function Component(props: Props) {
     string[] | undefined
   >();
   const [regions, setRegions] = useState<string[] | undefined>();
+  const [boundary, setBoundary] = useState<GeoJSONObject | undefined>();
 
   const flow = useStore((state) => state.flow);
   const team = fetchCurrentTeam();
@@ -103,6 +105,21 @@ function Component(props: Props) {
     }
   );
 
+  // if allowNewAddresses is on, fetch the boundary geojson for this team to position the map view or default to London
+  //   example value for team.settings.boundary is https://www.planning.data.gov.uk/entity/8600093.geojson
+  const { data: geojson } = useSWR(
+    () =>
+      props.allowNewAddresses && team?.settings?.boundary
+        ? team.settings?.boundary
+        : null,
+    fetcher,
+    {
+      shouldRetryOnError: true,
+      errorRetryInterval: 500,
+      errorRetryCount: 1,
+    }
+  );
+
   useEffect(() => {
     if (address && data) {
       if (data.count > 0) {
@@ -119,7 +136,11 @@ function Component(props: Props) {
         setRegions([...new Set(regions)]);
       }
     }
-  }, [data]);
+
+    if (geojson?.type) {
+      setBoundary(geojson);
+    }
+  }, [data, geojson]);
 
   if (!address && Boolean(team) && page === "os-address") {
     return (
@@ -143,6 +164,7 @@ function Component(props: Props) {
         setAddress={setAddress}
         initialProposedAddress={previouslySubmittedData?._address}
         teamSettings={team?.settings}
+        boundary={boundary}
         id={props.id}
         setPage={setPage}
       />

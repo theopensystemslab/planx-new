@@ -36,6 +36,7 @@ export interface TeamSettings {
     url: string;
   };
   supportEmail?: string;
+  boundary?: string;
 }
 
 export interface GlobalSettings {

@@ -10,6 +10,7 @@ import {
   MapFooter,
 } from "@planx/components/shared/Preview/MapContainer";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import { GeoJSONObject } from "@turf/helpers";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -29,6 +30,7 @@ interface PlotNewAddressProps {
   description?: string;
   initialProposedAddress?: SiteAddress;
   teamSettings?: TeamSettings;
+  boundary?: GeoJSONObject | undefined;
   id?: string;
   setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
   setPage: React.Dispatch<React.SetStateAction<"os-address" | "new-address">>;
@@ -117,10 +119,13 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           zoom={14}
           drawMode
           drawType="Point"
+          geojsonData={JSON.stringify(props?.boundary)}
+          geojsonColor="#efefef"
+          geojsonBuffer="10"
           resetControlImage="trash"
           showScale
           showNorthArrow
-          osVectorTilesApiKey={process.env.REACT_APP_ORDNANCE_SURVEY_KEY}
+          osProxyEndpoint={`${process.env.REACT_APP_API_URL}/proxy/ordnance-survey`}
         />
         <MapFooter>
           <Typography variant="body2">
