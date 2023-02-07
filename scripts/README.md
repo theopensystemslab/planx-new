@@ -6,7 +6,7 @@ This is useful to debug scenarios where bugs depend on content (i.e. on flow dat
 It upserts teams and flows if the flows table is empty.
 Beware that all teams will be deleted and replaced by the teams on production.
 
-To run it, either run `pnpm upsert-flows` or `docker-compose up` from the root folder.
+To run it, either run `pnpm upsert-flows` or `docker compose up` from the root folder.
 
 ## `pull-secrets`
 This script is used to pull secrets required for local development of PlanX to a local machine.

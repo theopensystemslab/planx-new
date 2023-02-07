@@ -10,12 +10,12 @@ import isEqual from "lodash/isEqual";
 import isNil from "lodash/isNil";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
-import type { Flag, GovUKPayment, Session } from "types";
 import { v4 as uuidV4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
-import { ApplicationPath } from "./../../../../types";
+import type { Flag, GovUKPayment, Session } from "./../../../../types";
+import { ApplicationPath, PaymentStatus } from "./../../../../types";
 import type { Store } from ".";
 import type { SharedStore } from "./shared";
 
@@ -48,10 +48,8 @@ export interface PreviewStore extends Store.Store {
   };
   resumeSession: (session: Session) => void;
   sessionId: string;
-  sendSessionDataToHasura: () => void;
   upcomingCardIds: () => Store.nodeId[];
   isFinalCard: () => boolean;
-  // temporary measure for storing payment fee & id between gov uk redirect
   govUkPayment?: GovUKPayment;
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
   cachedBreadcrumbs?: Store.cachedBreadcrumbs;
@@ -344,43 +342,6 @@ export const previewStore = (
   },
 
   sessionId: uuidV4(),
-
-  async sendSessionDataToHasura() {
-    try {
-      const { breadcrumbs, computePassport, flow, id, sessionId } = get();
-
-      await client.mutate({
-        mutation: gql`
-          mutation CreateSessionBackup(
-            $session_id: uuid
-            $flow_id: uuid
-            $flow_data: jsonb
-            $user_data: jsonb
-          ) {
-            insert_session_backups_one(
-              object: {
-                session_id: $session_id
-                flow_id: $flow_id
-                flow_data: $flow_data
-                user_data: $user_data
-              }
-            ) {
-              id
-            }
-          }
-        `,
-        variables: {
-          session_id: sessionId,
-          flow_id: id,
-          flow_data: flow,
-          user_data: {
-            breadcrumbs,
-            passport: computePassport(),
-          },
-        },
-      });
-    } catch (e) {}
-  },
 
   upcomingCardIds() {
     const { flow, breadcrumbs, computePassport, collectedFlags } = get();

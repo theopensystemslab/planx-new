@@ -1,6 +1,16 @@
 import type { Page, Browser } from "@playwright/test";
 import { generateAuthenticationToken } from "./context";
 
+// utility functions
+
+export function log(...args: any[]) {
+  process.env.DEBUG
+    ? console.log(...args)
+    : () => {
+      // silent
+    };
+}
+
 // a collection of useful playwright actions
 
 export async function createAuthenticatedSession({

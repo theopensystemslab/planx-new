@@ -6,10 +6,10 @@ import { createFlow, publishFlow } from "./flow";
 
 const defaultURL = process.env.HASURA_GRAPHQL_URL;
 
-export default class Client {
+export class Client {
   request: Request;
 
-  constructor(args: { hasuraSecret: string; targetURL: string | undefined }) {
+  constructor(args: { hasuraSecret: string; targetURL?: string | undefined }) {
     const url: string = args.targetURL ? args.targetURL : defaultURL!;
     this.request = graphQLClient({ url, secret: args.hasuraSecret });
   }
