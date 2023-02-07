@@ -84,6 +84,13 @@
         template_engine: Kriti
 - table:
     schema: public
+    name: document_template
+  is_enum: true
+- table:
+    schema: public
+    name: flow_document_templates
+- table:
+    schema: public
     name: flow_schemas
   select_permissions:
     - role: public
