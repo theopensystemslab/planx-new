@@ -19,3 +19,4 @@ hasura.planx.uk/.env.test
 /test-results/
 /playwright-report/
 /playwright/.cache/
+api.planx.uk/tmp/

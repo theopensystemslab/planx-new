@@ -1,7 +1,8 @@
 import "isomorphic-fetch";
 import { addDesignatedVariable, omitGeometry } from "./helpers";
 import { baseSchema } from "./local_authorities/metadata/base.js";
-import { adminGraphQLClient as client } from "../hasura";
+import { adminGraphQLClient as adminClient } from "../hasura";
+import { gql } from "graphql-request";
 
 const localAuthorityMetadata = {
   buckinghamshire: require("./local_authorities/metadata/buckinghamshire.js"),
@@ -56,22 +57,21 @@ async function go(localAuthority, geom, extras) {
 
   // if analytics are "on", store an audit record of the raw response
   if (extras?.analytics !== "false") {
-    const record = await client.request(
-      `
-          mutation CreatePlanningConstraintsRequest(
-            $destination_url: String = "",
-            $response: jsonb = {},
-            $session_id: String = "",
-          ) {
-            insert_planning_constraints_requests_one(object: {
-              destination_url: $destination_url,
-              response: $response
-              session_id: $session_id,
-            }) {
-              id
-            }
-          }
-        `,
+    const record = await adminClient.request(gql`
+      mutation CreatePlanningConstraintsRequest(
+        $destination_url: String = "",
+        $response: jsonb = {},
+        $session_id: String = "",
+      ) {
+        insert_planning_constraints_requests_one(object: {
+          destination_url: $destination_url,
+          response: $response
+          session_id: $session_id,
+        }) {
+          id
+        }
+      }
+    `,
       {
         destination_url: url,
         response: res,

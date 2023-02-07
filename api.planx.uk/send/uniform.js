@@ -8,12 +8,10 @@ import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
 import { generateDocumentReviewStream } from "./documentReview";
-import { adminGraphQLClient } from "../hasura";
+import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
 import { deleteFile, downloadFile } from "./helpers";
-
-const client = adminGraphQLClient;
 
 /**
  * Submits application data to Uniform
@@ -90,7 +88,7 @@ const sendToUniform = async (req, res, next) => {
           token,
           idoxSubmissionId
         );
-        const application = await client.request(
+        const application = await adminClient.request(
           gql`
             mutation CreateUniformApplication(
               $idox_submission_id: String = ""
@@ -158,8 +156,8 @@ const sendToUniform = async (req, res, next) => {
  * @returns {object|undefined} most recent uniform_applications.response
  */
 async function checkUniformAuditTable(sessionId) {
-  const application = await client.request(
-    `
+  const application = await adminClient.request(
+    gql`
       query FindApplication(
         $submission_reference: String = ""
       ) {
