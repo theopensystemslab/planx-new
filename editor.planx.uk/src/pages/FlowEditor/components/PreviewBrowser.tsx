@@ -202,6 +202,12 @@ const PreviewBrowser: React.FC<{
                   );
                   setDialogOpen(true);
                 } catch (error) {
+                  setLastPublishedTitle(
+                    "Error checking for changes to publish"
+                  );
+                  alert(
+                    `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`
+                  );
                   console.log(error);
                 }
               }}

@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
 import { NextFunction, Request, Response } from "express";
 import * as jsondiffpatch from "jsondiffpatch";
-import { adminGraphQLClient, publicGraphQLClient } from "../hasura";
+import { adminGraphQLClient as adminClient, publicGraphQLClient as publicClient } from "../hasura";
 import { getMostRecentPublishedFlow, getPublishedFlowByDate } from "../helpers";
 import {
   getSaveAndReturnPublicHeaders,
@@ -9,8 +9,6 @@ import {
 } from "./utils";
 import { Breadcrumb, LowCalSession, Node } from "../types";
 
-const publicClient = publicGraphQLClient;
-const adminClient = adminGraphQLClient;
 
 const validateSession = async (
   req: Request,

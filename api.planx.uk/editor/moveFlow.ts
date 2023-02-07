@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { gql } from 'graphql-request';
-import { adminGraphQLClient as client } from "../hasura";
+import { adminGraphQLClient as adminClient } from "../hasura";
 import { Flow, Team } from "../types";
 
 const moveFlow = async (
@@ -38,7 +38,7 @@ const moveFlow = async (
 };
 
 const getTeamIdBySlug = async (slug: Team["slug"]): Promise<Team["id"]> => {
-  const data = await client.request(
+  const data = await adminClient.request(
     gql`
       query GetTeam ($slug: String!) {
         teams(where: {
@@ -57,7 +57,7 @@ const getTeamIdBySlug = async (slug: Team["slug"]): Promise<Team["id"]> => {
 };
 
 const updateFlow = async (flowId: Flow["id"], teamId: Team["id"]): Promise<Flow["id"]> => {
-  const data = await client.request(
+  const data = await adminClient.request(
     gql`
       mutation UpdateFlow ($id: uuid!, $team_id: Int!) {
         update_flows_by_pk(

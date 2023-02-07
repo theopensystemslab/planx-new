@@ -1,7 +1,12 @@
 version: "3.8"
 
+# If you change anything here (e.g. environment variables)
+# remember to cascade the change to `infrastructure/`
+
 services:
   postgres:
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     labels:
       virtual.host: postgres.${ROOT_DOMAIN}
       virtual.port: 5432
@@ -19,6 +24,8 @@ services:
       virtual.tls: ${TLS_EMAIL}
 
   api:
+    build:
+      target: production
     volumes:
       - "/api/node_modules"
       - "/api/dist"
@@ -34,9 +41,6 @@ services:
       virtual.host: sharedb.${ROOT_DOMAIN}
       virtual.port: 8000
       virtual.tls: ${TLS_EMAIL}
-
-  minio:
-    entrypoint: ["echo", "minio disabled"]
 
   editor:
     image: pierrezemb/gostatic
@@ -59,5 +63,6 @@ services:
       - 443:443
 
 volumes:
+  postgres_data:
   caddy_data:
   caddy_config:
