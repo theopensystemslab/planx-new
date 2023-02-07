@@ -629,7 +629,7 @@ export = async () => {
   const cdn = createCdn({ domain: DOMAIN, acmCertificateArn: sslCert.arn });
 
   const frontendDnsRecord = new cloudflare.Record("frontend", {
-    name: tldjs.getSubdomain(DOMAIN) ?? "@",
+    name: tldjs.getSubdomain(DOMAIN) || "@",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
     value: cdn.domainName,
