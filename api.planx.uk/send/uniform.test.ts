@@ -65,7 +65,7 @@ describe("createUniformSubmissionZip", () => {
       xml: "",
     };
     await createUniformSubmissionZip(payload);
-    expect(mockAddLocalFile).toHaveBeenCalledWith("overview.html");
+    expect(mockAddLocalFile).toHaveBeenCalledWith("overview.htm");
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
 
@@ -138,7 +138,7 @@ describe("createUniformSubmissionZip", () => {
       xml: "",
     };
     await createUniformSubmissionZip(payload);
-    expect(mockAddLocalFile).toHaveBeenCalledWith("boundary.html");
+    expect(mockAddLocalFile).toHaveBeenCalledWith("boundary.htm");
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
 

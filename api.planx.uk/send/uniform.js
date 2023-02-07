@@ -253,7 +253,7 @@ export async function createUniformSubmissionZip({
   deleteFile(xmlPath);
 
   // generate and add an HTML overview document for the submission to zip
-  const overviewPath = path.join(tmpDir, "overview.html");
+  const overviewPath = path.join(tmpDir, "overview.htm");
   const overviewFile = fs.createWriteStream(overviewPath);
   const overviewStream = generateHTMLOverviewStream(csv).pipe(overviewFile);
   await resolveStream(overviewStream);
@@ -266,7 +266,7 @@ export async function createUniformSubmissionZip({
     zip.addFile("boundary.geojson", geoBuff);
 
     // generate and add an HTML boundary document for the submission to zip
-    const boundaryPath = path.join(tmpDir, "boundary.html");
+    const boundaryPath = path.join(tmpDir, "boundary.htm");
     const boundaryFile = fs.createWriteStream(boundaryPath);
     const boundaryStream = generateHTMLMapStream(geojson).pipe(boundaryFile);
     await resolveStream(boundaryStream);
