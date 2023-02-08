@@ -154,7 +154,7 @@ async function navigateToPayComponent({
   await page.getByLabel("Confirm email address").fill(TEST_EMAIL);
   await page.getByTestId("continue-button").click();
 
-  await page.getByLabel("Postcode").fill("HP111BB");
+  await page.getByLabel("Postcode").fill("SE12QH");
 
   await page.waitForResponse((resp) => resp.url().includes("postcode"));
 
@@ -162,7 +162,7 @@ async function navigateToPayComponent({
 
   await page
     .getByText(
-      "BUCKINGHAMSHIRE COUNCIL, COUNCIL OFFICES, QUEEN VICTORIA ROAD, HIGH WYCOMBE"
+      "SOUTHWARK COUNCIL, 160, TOOLEY STREET, LONDON"
     )
     .click();
 
