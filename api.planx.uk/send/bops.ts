@@ -1,4 +1,4 @@
-import { responseInterceptor } from "http-proxy-middleware";
+import { fixRequestBody, responseInterceptor } from "http-proxy-middleware";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import omit from "lodash/omit"
@@ -59,26 +59,10 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     pathRewrite: () => "",
     target,
     selfHandleResponse: true,
-    onProxyReq: (proxyReq, req, _res) => {
-      // make sure req.body.payload is parsed in the proxy request too
-      //   ref https://github.com/chimurai/http-proxy-middleware/issues/320
-      if (!req.body || !Object.keys(req.body).length) {
-        return;
-      }
-
-      const contentType = proxyReq.getHeader('Content-Type');
-      const writeBody = (bodyData: string) => {
-        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-        proxyReq.write(bodyData);
-      };
-
-      if (contentType === 'application/json') {
-        writeBody(JSON.stringify(req.body?.payload));
-      }
-
-      if (contentType === 'application/x-www-form-urlencoded') {
-        writeBody(new URLSearchParams(req.body?.payload).toString());
-      }
+    onProxyReq: (proxyReq, req) => {
+      // Only forward the payload BoPS, not the entire Hasura event
+      req.body = payload;
+      fixRequestBody(proxyReq, req);
     },
     onProxyRes: responseInterceptor(
       async (responseBuffer, proxyRes, req, _res) => {
@@ -139,7 +123,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
 async function checkBOPSAuditTable(sessionId: string): Promise<Record<string, string>> {
   const application = await adminClient.request(gql`
     query FindApplication(
-      $session_id: String = ""
+    $session_id: String = ""
     ) {
       bops_applications(
         where: {
