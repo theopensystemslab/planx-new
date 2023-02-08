@@ -189,3 +189,70 @@ it("updates the address-autocomplete props when the postcode is changed", async 
   const continueButton = screen.getByTestId("continue-button");
   expect(continueButton).toBeDisabled();
 });
+
+test("it opens the external planning site dialog by default if you don't have an address", async () => {
+  const handleSubmit = jest.fn();
+
+  const { user } = setup(
+    <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        handleSubmit={handleSubmit}
+      />
+    </MockedProvider>
+  );
+
+  await user.click(
+    await screen.findByText("The site does not have an address")
+  );
+
+  // confirm we can open & close the dialog
+  expect(
+    screen.getByTestId("external-planning-site-dialog")
+  ).toBeInTheDocument();
+  await user.click(await screen.findByText("Return to application"));
+
+  // land back on the autocomplete page
+  expect(await screen.findByText("Type your postal code")).toBeInTheDocument();
+
+  expect(screen.getByTestId("continue-button")).toBeDisabled();
+  expect(handleSubmit).not.toHaveBeenCalled();
+});
+
+test("renders correctly when allowing non-UPRN addresses", async () => {
+  const handleSubmit = jest.fn();
+
+  const { user } = setup(
+    <MockedProvider mocks={findAddressReturnMock} addTypename={false}>
+      <FindProperty
+        description="Find your property"
+        title="Type your postal code"
+        allowNewAddresses
+        newAddressTitle="Plot a new address"
+        handleSubmit={handleSubmit}
+      />
+    </MockedProvider>
+  );
+
+  // starts on address-autocomplete page
+  expect(await screen.findByText("Type your postal code")).toBeInTheDocument();
+
+  // click the link to switch pages
+  await user.click(
+    await screen.findByText("The site does not have an address")
+  );
+
+  // confirm we've switched pages
+  expect(await screen.findByText("Plot a new address")).toBeInTheDocument();
+
+  const map = screen.getByTestId("map-web-component");
+  expect(map).toBeInTheDocument();
+
+  const descriptionInput = screen.getByTestId("new-address-input");
+  expect(descriptionInput).toBeInTheDocument();
+
+  // expect continue to be disabled because an address has not been selected
+  expect(screen.getByTestId("continue-button")).toBeDisabled();
+  expect(handleSubmit).not.toHaveBeenCalled();
+});

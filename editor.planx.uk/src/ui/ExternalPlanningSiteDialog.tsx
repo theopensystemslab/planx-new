@@ -69,7 +69,11 @@ export default function ExternalPlanningSiteDialog({
   return (
     <>
       {isOpen && (
-        <Dialog open onClose={toggleModal}>
+        <Dialog
+          open
+          onClose={toggleModal}
+          data-testid="external-planning-site-dialog"
+        >
           <DialogTitle>{title}</DialogTitle>
           <DialogContent>
             {content}

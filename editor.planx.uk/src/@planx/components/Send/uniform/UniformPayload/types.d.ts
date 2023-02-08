@@ -76,7 +76,7 @@ export interface ExternalAddress {
 export interface InternationalAddress {
   "apd:IntAddressLine": string[];
   "apd:Country"?: string;
-  "apd:InternationalPostCode": string;
+  "apd:InternationalPostCode"?: string;
 }
 
 export interface ContactDetails {
@@ -104,12 +104,12 @@ export interface SiteLocation {
 
 export interface Bs7666Bs7666Address {
   "bs7666:PAON": Bs7666Paon;
-  "bs7666:StreetDescription": string;
-  "bs7666:Town": string;
+  "bs7666:StreetDescription"?: string;
+  "bs7666:Town"?: string;
   "bs7666:AdministrativeArea"?: string;
   "bs7666:PostTown"?: string;
-  "bs7666:PostCode": string;
-  "bs7666:UniquePropertyReferenceNumber": string;
+  "bs7666:PostCode"?: string;
+  "bs7666:UniquePropertyReferenceNumber"?: string;
 }
 
 export interface Bs7666Paon {

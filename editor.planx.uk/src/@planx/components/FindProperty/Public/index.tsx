@@ -1,6 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import {
   DESCRIPTION_TEXT,
@@ -8,8 +10,10 @@ import {
 } from "@planx/components/shared/constants";
 import FeedbackInput from "@planx/components/shared/FeedbackInput";
 import Card from "@planx/components/shared/Preview/Card";
+import { MapContainer } from "@planx/components/shared/Preview/MapContainer";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { PublicProps } from "@planx/components/ui";
+import { GeoJSONObject } from "@turf/helpers";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
@@ -26,10 +30,10 @@ import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 import { fetchCurrentTeam } from "utils";
 
-import type { FindProperty, SiteAddress } from "../model";
-import { DEFAULT_TITLE } from "../model";
+import { DEFAULT_TITLE, FindProperty, SiteAddress } from "../model";
+import PlotNewAddress from "./Map";
 
-// these queries are exported because tests require them
+// This query is exported because tests require it
 export const FETCH_BLPU_CODES = gql`
   {
     blpu_codes {
@@ -42,27 +46,49 @@ export const FETCH_BLPU_CODES = gql`
 
 type Props = PublicProps<FindProperty>;
 
+interface PickOSAddressProps {
+  title?: string;
+  description?: string;
+  allowNewAddresses?: boolean;
+  initialPostcode?: string;
+  initialSelectedAddress?: SiteAddress;
+  teamSettings?: TeamSettings;
+  id?: string;
+  setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
+  setPage: React.Dispatch<React.SetStateAction<"os-address" | "new-address">>;
+}
+
 export default Component;
 
 function Component(props: Props) {
   const previouslySubmittedData = props.previouslySubmittedData?.data;
+  const previouslySubmittedAddressSource =
+    props.previouslySubmittedData?.data?._address?.source;
+  const startPage =
+    previouslySubmittedAddressSource === "proposed"
+      ? "new-address"
+      : "os-address";
+
+  const [page, setPage] = useState<"os-address" | "new-address">(startPage);
   const [address, setAddress] = useState<SiteAddress | undefined>();
   const [localAuthorityDistricts, setLocalAuthorityDistricts] = useState<
     string[] | undefined
   >();
   const [regions, setRegions] = useState<string[] | undefined>();
+  const [boundary, setBoundary] = useState<GeoJSONObject | undefined>();
+
   const flow = useStore((state) => state.flow);
   const team = fetchCurrentTeam();
 
-  // if we have an address point, check which local authority district(s) & region it's located in via Digital Land
+  // Use the address point to fetch the Local Authority District(s) & region via Digital Land
   let options = new URLSearchParams({
-    entries: "all", // includes historic
+    entries: "all", // includes historic for pre-merger LADs (eg Wycombe etc for Uniform connector mappings)
     geometry: `POINT(${address?.longitude} ${address?.latitude})`,
     geometry_relation: "intersects",
     limit: "100",
   });
   options.append("dataset", "local-authority-district");
-  options.append("dataset", "region");
+  options.append("dataset", "region"); // proxy for Greater London Authority (GLA) boundary
 
   // https://www.planning.data.gov.uk/docs#/Search%20entity
   const root = `https://www.planning.data.gov.uk/entity.json?`;
@@ -71,6 +97,21 @@ function Component(props: Props) {
   const { data } = useSWR(
     () =>
       address?.latitude && address?.longitude ? digitalLandEndpoint : null,
+    fetcher,
+    {
+      shouldRetryOnError: true,
+      errorRetryInterval: 500,
+      errorRetryCount: 1,
+    }
+  );
+
+  // if allowNewAddresses is on, fetch the boundary geojson for this team to position the map view or default to London
+  //   example value for team.settings.boundary is https://www.planning.data.gov.uk/entity/8600093.geojson
+  const { data: geojson } = useSWR(
+    () =>
+      props.allowNewAddresses && team?.settings?.boundary
+        ? team.settings?.boundary
+        : null,
     fetcher,
     {
       shouldRetryOnError: true,
@@ -97,9 +138,13 @@ function Component(props: Props) {
     }
   }, [data]);
 
-  if (!address && Boolean(team)) {
+  useEffect(() => {
+    if (geojson) setBoundary(geojson);
+  }, [geojson]);
+
+  if (!address && Boolean(team) && page === "os-address") {
     return (
-      <GetAddress
+      <PickOSAddress
         title={props.title}
         description={props.description}
         setAddress={setAddress}
@@ -107,6 +152,21 @@ function Component(props: Props) {
         initialSelectedAddress={previouslySubmittedData?._address}
         teamSettings={team?.settings}
         id={props.id}
+        allowNewAddresses={props.allowNewAddresses}
+        setPage={setPage}
+      />
+    );
+  } else if (!address && Boolean(team) && page === "new-address") {
+    return (
+      <PlotNewAddress
+        title={props.newAddressTitle}
+        description={props.newAddressDescription}
+        setAddress={setAddress}
+        initialProposedAddress={previouslySubmittedData?._address}
+        teamSettings={team?.settings}
+        boundary={boundary}
+        id={props.id}
+        setPage={setPage}
       />
     );
   } else if (address) {
@@ -195,15 +255,7 @@ const AutocompleteWrapper = styled(Box)(({ theme }) => ({
   "--autocomplete__font-family": theme.typography.fontFamily,
 }));
 
-function GetAddress(props: {
-  setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
-  title?: string;
-  description?: string;
-  initialPostcode?: string;
-  initialSelectedAddress?: Option;
-  teamSettings?: TeamSettings;
-  id?: string;
-}) {
+function PickOSAddress(props: PickOSAddressProps) {
   const [postcode, setPostcode] = useState<string | null>(
     props.initialPostcode ?? null
   );
@@ -211,7 +263,7 @@ function GetAddress(props: {
     (props.initialPostcode && toNormalised(props.initialPostcode.trim())) ??
       null
   );
-  const [selectedOption, setSelectedOption] = useState<Option | undefined>(
+  const [selectedOption, setSelectedOption] = useState<SiteAddress | undefined>(
     props.initialSelectedAddress ?? undefined
   );
   const [showPostcodeError, setShowPostcodeError] = useState<boolean>(false);
@@ -259,6 +311,7 @@ function GetAddress(props: {
           title: selectedAddress.ADDRESS.split(
             `, ${selectedAddress.ADMINISTRATIVE_AREA}`
           )[0], // display value used in autocomplete dropdown & FindProperty
+          source: "os",
         });
       }
     };
@@ -353,25 +406,27 @@ function GetAddress(props: {
           />
         )}
       </AutocompleteWrapper>
-      <ExternalPlanningSiteDialog
-        purpose={DialogPurpose.MissingAddress}
-        teamSettings={props.teamSettings}
-      ></ExternalPlanningSiteDialog>
+      {!props.allowNewAddresses ? (
+        <ExternalPlanningSiteDialog
+          purpose={DialogPurpose.MissingAddress}
+          teamSettings={props.teamSettings}
+        ></ExternalPlanningSiteDialog>
+      ) : (
+        <Box sx={{ textAlign: "right" }}>
+          <Link
+            component="button"
+            onClick={() => props.setPage("new-address")}
+            disabled={Boolean(sanitizedPostcode) && Boolean(selectedOption)}
+          >
+            <Typography variant="body2">
+              The site does not have an address
+            </Typography>
+          </Link>
+        </Box>
+      )}
     </Card>
   );
 }
-
-interface Option extends SiteAddress {
-  title: string;
-}
-
-const MapContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1, 0),
-  "& my-map": {
-    width: "100%",
-    height: "50vh",
-  },
-}));
 
 const PropertyDetail = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -405,11 +460,12 @@ export function PropertyInformation(props: any) {
       handleSubmit?.(values);
     },
   });
+  const environment = useStore((state) => state.previewEnvironment);
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
-      <MapContainer>
+      <MapContainer environment={environment}>
         <p style={visuallyHidden}>
           A static map centred on the property address, showing the Ordnance
           Survey basemap features.
@@ -429,16 +485,19 @@ export function PropertyInformation(props: any) {
         />
       </MapContainer>
       <Box component="dl" mb={3}>
-        {propertyDetails.map(({ heading, detail }: any) => (
-          <PropertyDetail key={heading}>
-            <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
-              {heading}
-            </Box>
-            <Box component="dd" flexGrow={1} py={1}>
-              {detail}
-            </Box>
-          </PropertyDetail>
-        ))}
+        {propertyDetails.map(
+          ({ heading, detail }: any) =>
+            detail && (
+              <PropertyDetail key={heading}>
+                <Box component="dt" fontWeight={700} flex={"0 0 35%"} py={1}>
+                  {heading}
+                </Box>
+                <Box component="dd" flexGrow={1} py={1}>
+                  {detail}
+                </Box>
+              </PropertyDetail>
+            )
+        )}
       </Box>
       <Box textAlign="right">
         <FeedbackInput
