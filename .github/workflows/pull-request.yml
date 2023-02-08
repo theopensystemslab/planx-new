@@ -12,8 +12,8 @@ on:
 
 env:
   DOMAIN: planx.pizza
-  FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
-  PULLREQUEST_ID: ${{ github.event.number }}
+  FULL_DOMAIN: ${{ github.event.pull_request.number }}.planx.pizza
+  PULLREQUEST_ID: ${{ github.event.pull_request.number }}
   EDITOR_DIRECTORY: editor.planx.uk
   PNPM_VERSION: 7.8.0
   NODE_VERSION: 16.13.1 # 16.13.1 = LTS
