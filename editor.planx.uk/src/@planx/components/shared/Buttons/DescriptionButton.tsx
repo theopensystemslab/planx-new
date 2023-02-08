@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useWindowSize } from "react-use";
 
 import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
@@ -14,20 +14,24 @@ export interface Props extends ButtonProps {
 
 export default function DescriptionButton(props: Props) {
   const { title, description } = props;
+  const [buttonWidth, setButtonWidth] = useState(0);
   const buttonRef = useRef<HTMLDivElement>();
   // rerender component on windowSize change
   useWindowSize();
 
+  useEffect(() => {
+    setButtonWidth(buttonRef.current?.offsetWidth || 0);
+  });
+
   return (
     <ButtonBase {...props}>
       <Box
-        // @ts-ignore-next-line - material ui did not include `ref` to the types definition
         ref={buttonRef}
         display="flex"
         flexDirection="column"
         alignItems="flex-start"
         height="100%"
-        minHeight={buttonRef.current?.offsetWidth}
+        minHeight={buttonWidth}
         width="100%"
         position="relative"
         p={2}
