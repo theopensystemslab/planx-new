@@ -168,7 +168,8 @@ async function navigateToPayComponent({
 
   await page.getByTestId("continue-button").click();
 
-  await page.getByTestId("continue-button").click();
+  // new, separate PropertyInformation node will not be in this flow yet, so there's one less "Continue" click expected here now
+  // await page.getByTestId("continue-button").click();
 
   await clickButtonWithTextAndContinue("Yes");
 
