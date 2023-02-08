@@ -136,11 +136,11 @@ function Component(props: Props) {
         setRegions([...new Set(regions)]);
       }
     }
+  }, [data]);
 
-    if (geojson?.type) {
-      setBoundary(geojson);
-    }
-  }, [data, geojson]);
+  useEffect(() => {
+    if (geojson) setBoundary(geojson);
+  }, [geojson]);
 
   if (!address && Boolean(team) && page === "os-address") {
     return (
