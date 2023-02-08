@@ -6,9 +6,6 @@ on:
       - synchronize
     branches:
       - main
-  workflow_dispatch:
-  schedule:
-    - cron: '30 7 * * *'
 
 env:
   DOMAIN: planx.pizza
