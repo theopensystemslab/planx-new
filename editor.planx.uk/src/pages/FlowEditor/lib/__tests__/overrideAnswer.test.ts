@@ -18,6 +18,12 @@ test("it clears the correct breadcrumb and navigates back to the right node", as
   expect(Object.keys(addressData)).toHaveLength(3);
   expect(Object.keys(addressData)).not.toContain("property.type");
 
+  // confirm we've stored a copy of the original value in the first node that set it
+  const overrideData: any = afterOverrideBreadcrumb?.["ZcIDY8Ak5t"]?.override;
+  expect(overrideData).toEqual({
+    "property.type": ["residential.dwelling.house.semiDetached"],
+  });
+
   // confirm we've navigated back to the right node
   expect(currentCard()?.id).toEqual("IuTOXkwbGk");
 });

@@ -227,10 +227,11 @@ function PropertyDetails(props: PropertyDetailsProps) {
         <React.Fragment key={heading}>
           <Box component="dt">{heading}</Box>
           <Box component="dd">{detail}</Box>
-          {showPropertyTypeOverride && fn ? (
-            <Box component="dd">
+          <Box component="dd">
+            {showPropertyTypeOverride && fn ? (
               <Link
                 component="button"
+                style={{ font: "inherit" }}
                 onClick={(event) => {
                   event.stopPropagation();
                   // Specify the passport key (eg data.fn, data.val) that should be overwritten
@@ -242,12 +243,10 @@ function PropertyDetails(props: PropertyDetailsProps) {
                   your {heading || "this value"}
                 </span>
               </Link>
-            </Box>
-          ) : (
-            <Box component="dd">
-              {/** ensure there's always a third column to not break styling, even if "Change" is hidden */}
-            </Box>
-          )}
+            ) : (
+              ``
+            )}
+          </Box>
         </React.Fragment>
       ))}
     </PropertyDetailsList>
