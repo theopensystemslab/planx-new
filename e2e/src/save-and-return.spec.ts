@@ -2,6 +2,7 @@ import { test, expect, Locator } from "@playwright/test";
 import simpleSendFlow from "./flows/simple-send-flow.json";
 import {
   getClient,
+  getGraphQLClient,
   findSessionId,
   setUpTestContext,
   tearDownTestContext,
@@ -9,6 +10,7 @@ import {
 
 test.describe("Save and return", () => {
   const client = getClient();
+  const adminGQLClient = getGraphQLClient();
   let context: any = {
     user: {
       firstName: "test",
@@ -33,13 +35,13 @@ test.describe("Save and return", () => {
     try {
       context = await setUpTestContext(client, context);
     } catch (e) {
-      await tearDownTestContext(client, context);
+      await tearDownTestContext(context);
       throw e;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(client, context);
+    await tearDownTestContext(context);
   });
 
   test.describe("email", () => {
@@ -69,7 +71,7 @@ test.describe("Save and return", () => {
       await fillInEmail({ page, context });
       await answerQuestion({ page, questionGroup: "Question 1", answer: "A" });
 
-      const sessionId = await saveSession({ page, client, context });
+      const sessionId = await saveSession({ page, adminGQLClient, context });
       if (!sessionId) test.fail();
       await returnToSession({ page, context, sessionId });
 
@@ -92,7 +94,7 @@ test.describe("Save and return", () => {
       });
       await expect(secondQuestion).toBeVisible();
 
-      const sessionId = await saveSession({ page, client, context });
+      const sessionId = await saveSession({ page, adminGQLClient, context });
       if (!sessionId) test.fail();
       await returnToSession({ page, context, sessionId });
 
@@ -113,7 +115,7 @@ async function returnToSession({ page, context, sessionId }) {
 
 async function saveSession({
   page,
-  client,
+  adminGQLClient,
   context,
 }): Promise<string | undefined> {
   const text = "Save and return to this application later";
@@ -121,7 +123,7 @@ async function saveSession({
   await page.waitForResponse((response) => {
     return response.url().includes("/send-email/save");
   });
-  const sessionId = await findSessionId(client, context);
+  const sessionId = await findSessionId(adminGQLClient, context);
   return sessionId;
 }
 

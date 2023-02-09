@@ -2,6 +2,7 @@ import assert from "node:assert";
 import { log } from "./helpers";
 import { sign } from "jsonwebtoken";
 import { Client } from "planx-client";
+import { GraphQLClient } from "graphql-request";
 
 export interface Context {
   user?: {
@@ -58,17 +59,18 @@ export async function setUpTestContext(
   return context;
 }
 
-export async function tearDownTestContext(client: Client, context: Context) {
+export async function tearDownTestContext(context: Context) {
+  const adminGQLClient = getGraphQLClient();
   if (context.flow) {
-    await deleteSession(client, context);
-    await deletePublishedFlow(client, context);
-    await deleteFlow(client, context);
+    await deleteSession(adminGQLClient, context);
+    await deletePublishedFlow(adminGQLClient, context);
+    await deleteFlow(adminGQLClient, context);
   }
   if (context.user) {
-    await deleteUser(client, context);
+    await deleteUser(adminGQLClient, context);
   }
   if (context.team) {
-    await deleteTeam(client, context);
+    await deleteTeam(adminGQLClient, context);
   }
 }
 
@@ -87,37 +89,6 @@ export function generateAuthenticationToken(userId) {
   );
 }
 
-export async function findSessionId(
-  client: Client,
-  context
-): Promise<string | undefined> {
-  // get the flow id which may have a session
-  const { flows: flowResponse } = await client.request(
-    `query GetFlowBySlug( $slug: String!) {
-        flows(where: {slug: {_eq: $slug}}) {
-          id
-        }
-      }`,
-    { slug: context.flow?.slug }
-  );
-  if (!flowResponse.length || !flowResponse[0].id) {
-    return;
-  }
-  const flowId = flowResponse[0].id;
-  // get the session id
-  const { lowcal_sessions: response } = await client.request(
-    `query GetSession( $flowId: uuid!, $email: String!) {
-        lowcal_sessions(where: {flow_id: {_eq: $flowId}, email: {_eq: $email}}) {
-          id
-        }
-      }`,
-    { flowId, email: context.user?.email }
-  );
-  if (response.length && response[0].id) {
-    return response[0].id;
-  }
-}
-
 export function getClient(): Client {
   assert(process.env.HASURA_GRAPHQL_URL);
   assert(process.env.HASURA_GRAPHQL_ADMIN_SECRET);
@@ -133,11 +104,54 @@ export function getClient(): Client {
   });
 }
 
-async function deleteSession(client: Client, context) {
-  const sessionId = await findSessionId(client, context);
+// used for teardown only
+export function getGraphQLClient(): GraphQLClient {
+  const API = process.env.HASURA_GRAPHQL_URL!.replace(
+    "${HASURA_PROXY_PORT}",
+    process.env.HASURA_PROXY_PORT!
+  );
+  const SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET!;
+  return new GraphQLClient(API, {
+    headers: { "X-Hasura-Admin-Secret": SECRET },
+  });
+}
+
+export async function findSessionId(
+  admingGQLClient: GraphQLClient,
+  context
+): Promise<string | undefined> {
+  // get the flow id which may have a session
+  const { flows: flowResponse } = await admingGQLClient.request(
+    `query GetFlowBySlug( $slug: String!) {
+        flows(where: {slug: {_eq: $slug}}) {
+          id
+        }
+      }`,
+    { slug: context.flow?.slug }
+  );
+  if (!flowResponse.length || !flowResponse[0].id) {
+    return;
+  }
+  const flowId = flowResponse[0].id;
+  // get the session id
+  const { lowcal_sessions: response } = await admingGQLClient.request(
+    `query GetSession( $flowId: uuid!, $email: String!) {
+        lowcal_sessions(where: {flow_id: {_eq: $flowId}, email: {_eq: $email}}) {
+          id
+        }
+      }`,
+    { flowId, email: context.user?.email }
+  );
+  if (response.length && response[0].id) {
+    return response[0].id;
+  }
+}
+
+async function deleteSession(admingGQLClient: GraphQLClient, context) {
+  const sessionId = await findSessionId(admingGQLClient, context);
   if (sessionId) {
     log(`deleting session id: ${sessionId}`);
-    await client.request(
+    await admingGQLClient.request(
       `mutation DeleteTestSession( $sessionId: uuid!) {
         delete_lowcal_sessions_by_pk(id: $sessionId) {
           id
@@ -148,10 +162,13 @@ async function deleteSession(client: Client, context) {
   }
 }
 
-async function deletePublishedFlow(client: Client, context: Context) {
+async function deletePublishedFlow(
+  admingGQLClient: GraphQLClient,
+  context: Context
+) {
   if (context.flow?.publishedFlowId) {
     log(`deleting published flow ${context.flow?.publishedFlowId}`);
-    await client.request(
+    await admingGQLClient.request(
       `mutation DeleteTestPublishedFlow( $publishedFlowId: Int!) {
         delete_published_flows_by_pk(id: $publishedFlowId) {
           id
@@ -162,10 +179,10 @@ async function deletePublishedFlow(client: Client, context: Context) {
   }
 }
 
-async function deleteFlow(client: Client, context: Context) {
+async function deleteFlow(admingGQLClient: GraphQLClient, context: Context) {
   if (context.flow?.id) {
     log(`deleting flow ${context.flow?.id}`);
-    await client.request(
+    await admingGQLClient.request(
       `mutation DeleteTestFlow($flowId: uuid!) {
         delete_flows_by_pk(id: $flowId) {
           id
@@ -175,7 +192,7 @@ async function deleteFlow(client: Client, context: Context) {
     );
   } else if (context.flow?.slug) {
     // try deleting via slug (when cleaning up from a previously failed test)
-    const { flows: response } = await client.request(
+    const { flows: response } = await admingGQLClient.request(
       `query GetFlowBySlug($slug: String!) {
         flows(where: {slug: {_eq: $slug}}) {
             id
@@ -185,7 +202,7 @@ async function deleteFlow(client: Client, context: Context) {
     );
     if (response.length && response[0].id) {
       log(`deleting flow ${context.flow?.slug} flowId: ${response[0].id}`);
-      await client.request(
+      await admingGQLClient.request(
         `mutation DeleteTestFlow( $flowId: uuid!) {
           delete_flows_by_pk(id: $flowId) {
             id
@@ -197,10 +214,10 @@ async function deleteFlow(client: Client, context: Context) {
   }
 }
 
-async function deleteUser(client: Client, context: Context) {
+async function deleteUser(admingGQLClient: GraphQLClient, context: Context) {
   if (context.user?.id) {
     log(`deleting user ${context.user?.id}`);
-    await client.request(
+    await admingGQLClient.request(
       `mutation DeleteTestUser($userId: Int!) {
         delete_users_by_pk(id: $userId) {
           id
@@ -210,7 +227,7 @@ async function deleteUser(client: Client, context: Context) {
     );
   } else if (context.user?.email) {
     // try deleting via email (when cleaning up from a previously failed test)
-    const { users: response } = await client.request(
+    const { users: response } = await admingGQLClient.request(
       `query GetUserByEmail($email: String!) {
         users(where: {email: {_eq: $email}}) {
           id
@@ -220,7 +237,7 @@ async function deleteUser(client: Client, context: Context) {
     );
     if (response.length && response[0].id) {
       log(`deleting user ${context.user?.email} userId: ${response[0].id}`);
-      await client.request(
+      await admingGQLClient.request(
         `mutation DeleteTestUser($userId: Int!) {
           delete_users_by_pk(id: $userId) {
             id
@@ -232,10 +249,10 @@ async function deleteUser(client: Client, context: Context) {
   }
 }
 
-async function deleteTeam(client: Client, context: Context) {
+async function deleteTeam(admingGQLClient: GraphQLClient, context: Context) {
   if (context.team?.id) {
     log(`deleting team ${context.team?.id}`);
-    await client.request(
+    await admingGQLClient.request(
       `mutation DeleteTestTeam( $teamId: Int!) {
         delete_teams_by_pk(id: $teamId) {
           id
@@ -245,7 +262,7 @@ async function deleteTeam(client: Client, context: Context) {
     );
   } else if (context.team?.slug) {
     // try deleting via slug (when cleaning up from a previously failed test)
-    const { teams: response } = await client.request(
+    const { teams: response } = await admingGQLClient.request(
       `query GetTeamBySlug( $slug: String!) {
            teams(where: {slug: {_eq: $slug}}) {
                id
@@ -255,7 +272,7 @@ async function deleteTeam(client: Client, context: Context) {
     );
     if (response.length && response[0].id) {
       log(`deleting team ${context.team?.slug} teamId: ${response[0].id}`);
-      await client.request(
+      await admingGQLClient.request(
         `mutation DeleteTestTeam( $teamId: Int!) {
         delete_teams_by_pk(id: $teamId) {
           id
