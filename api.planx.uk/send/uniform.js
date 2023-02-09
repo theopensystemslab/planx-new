@@ -14,7 +14,6 @@ import {
   generateHTMLOverviewStream,
 } from "@opensystemslab/planx-document-templates";
 import { adminGraphQLClient as adminClient } from "../hasura";
-import { adminClient as adminDomainClient } from "../client";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
 import { deleteFile, downloadFile, resolveStream } from "./helpers";
@@ -36,7 +35,7 @@ const sendToUniform = async (req, res, next) => {
 
   // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload } = req.body;
-  if (!payload?.xml || !payload?.sessionId || !payload?.flowId) {
+  if (!payload?.xml || !payload?.sessionId) {
     return next({
       status: 400,
       message: "Missing application data to send to Uniform",
@@ -64,7 +63,7 @@ const sendToUniform = async (req, res, next) => {
     // Setup - Create the zip folder
     const zipPath = await createUniformSubmissionZip({
       sessionId: payload.sessionId,
-      flowId: payload.flowId,
+      templateNames: payload.templateNames,
       passport: payload.passport,
       csv: payload.csv,
       files: payload.files,
@@ -194,7 +193,7 @@ async function checkUniformAuditTable(sessionId) {
  * @param {any} csv - an array of objects representing our custom CSV format
  * @param {object[]} files - an array of user-uploaded files
  * @param {string} sessionId
- * @param {string} flowId
+ * @param {string[]} templateNames
  * @param {{ data: any }} passport
  * @param {any} xml - a string representation of the XML schema, resulting file must be named "proposal.xml"
  * @returns {Promise} - name of zip
@@ -203,7 +202,7 @@ export async function createUniformSubmissionZip({
   csv,
   files,
   sessionId,
-  flowId,
+  templateNames,
   passport,
   xml,
 }) {
@@ -251,7 +250,7 @@ export async function createUniformSubmissionZip({
   deleteFile(xmlPath);
 
   // generate and add an HTML overview document for the submission to zip
-  const overviewPath = path.join(tmpDir, "overview.htm");
+  const overviewPath = path.join(tmpDir, "Overview.htm");
   const overviewFile = fs.createWriteStream(overviewPath);
   const overviewStream = generateHTMLOverviewStream(csv).pipe(overviewFile);
   await resolveStream(overviewStream);
@@ -262,10 +261,10 @@ export async function createUniformSubmissionZip({
   const geojson = passport.data["property.boundary.site"];
   if (geojson) {
     const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-    zip.addFile("boundary.geojson", geoBuff);
+    zip.addFile("BoundaryGeoJSON.geojson", geoBuff);
 
     // generate and add an HTML boundary document for the submission to zip
-    const boundaryPath = path.join(tmpDir, "boundary.htm");
+    const boundaryPath = path.join(tmpDir, "LocationPlan.htm");
     const boundaryFile = fs.createWriteStream(boundaryPath);
     const boundaryStream = generateHTMLMapStream(geojson).pipe(boundaryFile);
     await resolveStream(boundaryStream);
@@ -274,13 +273,12 @@ export async function createUniformSubmissionZip({
   }
 
   // generate and add additional submission documents
-  const templateNames = await adminDomainClient.getDocumentTemplateNames(flowId);
   for (const templateName of templateNames) {
     let isTemplateSupported = false;
     try {
       isTemplateSupported = hasRequiredDataForTemplate({
-        templateName,
         passport,
+        templateName,
       });
     } catch (e) {
       throw new Error(
@@ -288,11 +286,11 @@ export async function createUniformSubmissionZip({
       );
     }
     if (isTemplateSupported) {
-      const templatePath = path.join(tmpDir, templateName);
+      const templatePath = path.join(tmpDir, `${templateName}.doc`);
       const templateFile = fs.createWriteStream(templatePath);
       const templateStream = generateDocxTemplateStream({
-        templateName,
         passport,
+        templateName,
       }).pipe(templateFile);
       await resolveStream(templateStream);
       zip.addLocalFile(templatePath);

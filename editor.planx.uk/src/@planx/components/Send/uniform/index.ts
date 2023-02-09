@@ -10,12 +10,21 @@ type UniformFile = {
   url: string;
 };
 
-export function getUniformParams(
-  breadcrumbs: Store.breadcrumbs,
-  flow: Store.flow,
-  passport: Store.passport,
-  sessionId: string
-) {
+export function getUniformParams({
+  breadcrumbs,
+  flow,
+  flowName,
+  passport,
+  sessionId,
+  templateNames,
+}: {
+  breadcrumbs: Store.breadcrumbs;
+  flow: Store.flow;
+  flowName: string;
+  passport: Store.passport;
+  sessionId: string;
+  templateNames: string[];
+}) {
   // make a list of all S3 URLs & filenames from uploaded files
   const files: UniformFile[] = [];
   Object.entries(passport.data || {})
@@ -46,24 +55,36 @@ export function getUniformParams(
 
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString(passport, sessionId, uniqueFiles),
-    csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
+    xml: makeXmlString({
+      passport,
+      sessionId,
+      files: uniqueFiles,
+      templateNames,
+    }),
+    csv: makeCsvData({ breadcrumbs, flow, flowName, passport, sessionId }),
     files: uniqueFiles,
     passport,
     sessionId,
-    flowId: flow.id,
+    templateNames,
   };
 }
 
-export function makeXmlString(
-  passport: Store.passport,
-  sessionId: string,
-  files: string[]
-): string {
+export function makeXmlString({
+  passport,
+  sessionId,
+  files,
+  templateNames = [],
+}: {
+  passport: Store.passport;
+  sessionId: string;
+  files: string[];
+  templateNames?: string[];
+}): string {
   const payload = new UniformPayload({
     sessionId,
     passport,
     files,
+    templateNames,
   });
   const xml = payload.buildXML();
   return xml;
@@ -71,13 +92,26 @@ export function makeXmlString(
 
 // create a CSV data structure based on the payload we send to BOPs
 //   (also used in Confirmation component for user-downloadable copy of app data)
-export function makeCsvData(
-  breadcrumbs: Store.breadcrumbs,
-  flow: Store.flow,
-  passport: Store.passport,
-  sessionId: string
-): CSVData {
-  const bopsData = getBOPSParams(breadcrumbs, flow, passport, sessionId);
+export function makeCsvData({
+  breadcrumbs,
+  flow,
+  passport,
+  sessionId,
+  flowName,
+}: {
+  breadcrumbs: Store.breadcrumbs;
+  flow: Store.flow;
+  passport: Store.passport;
+  sessionId: string;
+  flowName: string;
+}): CSVData {
+  const bopsData = getBOPSParams({
+    breadcrumbs,
+    flow,
+    flowName,
+    passport,
+    sessionId,
+  });
 
   // format dedicated BOPs properties as list of questions & responses to match proposal_details
   //   omitting debug data and keys already in confirmation details

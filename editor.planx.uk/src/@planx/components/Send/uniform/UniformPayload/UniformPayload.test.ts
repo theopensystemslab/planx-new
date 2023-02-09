@@ -565,7 +565,7 @@ describe("File handling", () => {
   it("includes auto generated files", () => {
     const expectedReviewFileDeclarations = [
       {
-        "common:FileName": "overview.html",
+        "common:FileName": "Overview.htm",
         "common:Reference": "Other",
       },
     ];
@@ -586,11 +586,11 @@ describe("File handling", () => {
   it("includes generated boundary GeoJSON and HTML files when 'property.boundary.site' is present in the passport", () => {
     const expectedBoundaryFileDeclarations = [
       {
-        "common:FileName": "boundary.geojson",
+        "common:FileName": "BoundaryGeoJSON.geojson",
         "common:Reference": "Other",
       },
       {
-        "common:FileName": "boundary.html",
+        "common:FileName": "LocationPlan.htm",
         "common:Reference": "Other",
       },
     ];
@@ -626,10 +626,36 @@ describe("File handling", () => {
     expect(fileAttachments).not.toEqual(
       expect.arrayContaining([
         {
-          "common:FileName": "boundary.geojson",
+          "common:FileName": "BoundaryGeoJSON.geojson",
           "common:Reference": "Other",
         },
       ])
+    );
+  });
+
+  it("includes template doc files when the flow has document templates", () => {
+    const expectedBoundaryFileDeclarations = [
+      {
+        "common:FileName": "LDCE.doc",
+        "common:Reference": "Other",
+      },
+      {
+        "common:FileName": "LDCE_redacted.doc",
+        "common:Reference": "Other",
+      },
+    ];
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      templateNames: ["LDCE", "LDCE_redacted"],
+      files,
+    }).buildXML();
+    const isValid = XMLValidator.validate(xml);
+    expect(isValid).toBe(true);
+    const result: UniformPayload = parser.parse(xml);
+    const fileAttachments: FileAttachment[] = get(result, fileAttachmentsKey);
+    expect(fileAttachments).toEqual(
+      expect.arrayContaining(expectedBoundaryFileDeclarations)
     );
   });
 });

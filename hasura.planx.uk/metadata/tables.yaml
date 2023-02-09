@@ -89,6 +89,13 @@
 - table:
     schema: public
     name: flow_document_templates
+  select_permissions:
+    - role: public
+      permission:
+        columns:
+          - document_template
+          - flow
+        filter: {}
 - table:
     schema: public
     name: flow_schemas

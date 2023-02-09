@@ -259,25 +259,25 @@ export class UniformPayload implements IUniformPayload {
         "common:Reference": "Other",
       },
       {
-        "common:FileName": "overview.html",
+        "common:FileName": "Overview.htm",
         "common:Reference": "Other",
       },
     ];
 
     if (this.passport.data?.["property.boundary.site"]) {
       files.push({
-        "common:FileName": "boundary.geojson",
+        "common:FileName": "BoundaryGeoJSON.geojson",
         "common:Reference": "Other",
       });
       files.push({
-        "common:FileName": "boundary.html",
+        "common:FileName": "LocationPlan.htm",
         "common:Reference": "Other",
       });
     }
 
     for (const templateName of this.templateNames) {
       files.push({
-        "common:FileName": templateName,
+        "common:FileName": `${templateName}.doc`,
         "common:Reference": "Other",
       });
     }

@@ -6,6 +6,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/ui";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { useCurrentRoute } from "react-navi";
 import Banner from "ui/Banner";
 import FileDownload from "ui/FileDownload";
 import NumberedList from "ui/NumberedList";
@@ -42,9 +43,17 @@ export default function ConfirmationComponent(props: Props) {
     state.computePassport(),
     state.sessionId,
   ]);
+  const route = useCurrentRoute();
+  const flowName = route.data.flowName;
 
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform
-  const data = makeCsvData(breadcrumbs, flow, passport, sessionId);
+  const data = makeCsvData({
+    breadcrumbs,
+    flow,
+    flowName,
+    passport,
+    sessionId,
+  });
 
   const classes = useClasses();
 
