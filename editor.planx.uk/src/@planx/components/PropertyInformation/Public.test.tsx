@@ -5,7 +5,10 @@ import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
 
 import teamMock from "./mocks/teamMock";
-import PropertyInformation, { Presentational } from "./Public";
+import PropertyInformation, {
+  Presentational,
+  PresentationalProps,
+} from "./Public";
 
 const TEAM = "southwark";
 
@@ -18,7 +21,7 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
     } as any)
 );
 
-const defaultPresentationalProps = {
+const defaultPresentationalProps: PresentationalProps = {
   title: "About the property",
   description: "This is the information we currently have about the property",
   address: {
@@ -42,17 +45,15 @@ const defaultPresentationalProps = {
   },
   propertyType: ["residential.HMO.parent"],
   localAuthorityDistrict: ["Southwark"],
+  overrideAnswer: jest.fn(),
 };
 
 test("renders a warning for editors if address data is not in state", async () => {
-  const handleSubmit = jest.fn();
-
   const { user } = setup(
     <MockedProvider mocks={teamMock} addTypename={false}>
       <PropertyInformation
         title="About the property"
         description="This is the information we currently have about the property"
-        handleSubmit={handleSubmit}
       />
     </MockedProvider>
   );
@@ -62,14 +63,12 @@ test("renders a warning for editors if address data is not in state", async () =
 
 test("renders correctly when property override is enabled", async () => {
   const handleSubmit = jest.fn();
-  const overrideAnswer = jest.fn();
 
   const { user } = setup(
     <MockedProvider mocks={teamMock} addTypename={false}>
       <Presentational
         {...defaultPresentationalProps}
         showPropertyTypeOverride={true}
-        overrideAnswer={overrideAnswer}
         handleSubmit={handleSubmit}
       />
     </MockedProvider>
@@ -87,14 +86,12 @@ test("renders correctly when property override is enabled", async () => {
 
 test("renders correctly when property override is toggled off", async () => {
   const handleSubmit = jest.fn();
-  const overrideAnswer = jest.fn();
 
   const { user } = setup(
     <MockedProvider mocks={teamMock} addTypename={false}>
       <Presentational
         {...defaultPresentationalProps}
         showPropertyTypeOverride={false}
-        overrideAnswer={overrideAnswer}
         handleSubmit={handleSubmit}
       />
     </MockedProvider>
@@ -111,17 +108,12 @@ test("renders correctly when property override is toggled off", async () => {
 });
 
 test("retains previously submitted feedback when going back", async () => {
-  const handleSubmit = jest.fn();
-  const overrideAnswer = jest.fn();
-
   const { user } = setup(
     <MockedProvider mocks={teamMock} addTypename={false}>
       <Presentational
         {...defaultPresentationalProps}
         showPropertyTypeOverride={false}
         previousFeedback="My property type is wrong"
-        overrideAnswer={overrideAnswer}
-        handleSubmit={handleSubmit}
       />
     </MockedProvider>
   );

@@ -122,7 +122,28 @@ function Component(props: Props) {
   }, [geojson]);
 
   function getPageBody() {
-    if (page === "os-address") {
+    if (props.allowNewAddresses && page === "new-address") {
+      return (
+        <>
+          <QuestionHeader
+            title={props.newAddressTitle || DEFAULT_NEW_ADDRESS_TITLE}
+            description={props.newAddressDescription || ""}
+          />
+          <PlotNewAddress
+            setAddress={setAddress}
+            setPage={setPage}
+            initialProposedAddress={
+              previouslySubmittedData?._address?.source === "proposed" &&
+              previouslySubmittedData?._address
+            }
+            boundary={boundary}
+            id={props.id}
+            description={props.newAddressDescription || ""}
+          />
+        </>
+      );
+    } else {
+      // default to page === "os-address"
       return (
         <>
           <QuestionHeader
@@ -161,26 +182,6 @@ function Component(props: Props) {
               </Link>
             </Box>
           )}
-        </>
-      );
-    } else if (props.allowNewAddresses && page === "new-address") {
-      return (
-        <>
-          <QuestionHeader
-            title={props.newAddressTitle || DEFAULT_NEW_ADDRESS_TITLE}
-            description={props.newAddressDescription || ""}
-          />
-          <PlotNewAddress
-            setAddress={setAddress}
-            setPage={setPage}
-            initialProposedAddress={
-              previouslySubmittedData?._address?.source === "proposed" &&
-              previouslySubmittedData?._address
-            }
-            boundary={boundary}
-            id={props.id}
-            description={props.newAddressDescription || ""}
-          />
         </>
       );
     }

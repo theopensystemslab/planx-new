@@ -86,7 +86,8 @@ function Component(props: PublicProps<PropertyInformation>) {
   );
 }
 
-interface PresentationalProps {
+// Exported for tests
+export interface PresentationalProps {
   title: string;
   description: string;
   showPropertyTypeOverride?: boolean;

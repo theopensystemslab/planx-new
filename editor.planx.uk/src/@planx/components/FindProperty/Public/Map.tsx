@@ -132,8 +132,11 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           <Typography variant="body2">
             The coordinate location of your address point is:{" "}
             <strong>
-              {(coordinates?.x && Math.round(coordinates.x)) || 0} Easting (X),{" "}
-              {(coordinates?.y && Math.round(coordinates.y)) || 0} Northing (Y)
+              {`${
+                (coordinates?.x && Math.round(coordinates.x)) || 0
+              } Easting (X), ${
+                (coordinates?.y && Math.round(coordinates.y)) || 0
+              } Northing (Y)`}
             </strong>
           </Typography>
           <Link
