@@ -1,9 +1,11 @@
 import supertest from "supertest";
 
 import app from "../server";
+import { deleteFilesByURL } from "./deleteFile";
 
 let mockPutObject: jest.Mocked<() => void>;
 let mockGetObject: jest.Mocked<() => void>;
+let mockDeleteObjects: jest.Mocked<() => void>;
 let getObjectResponse = {};
 
 const mockGetSignedUrl = jest.fn(() => {
@@ -19,6 +21,7 @@ const s3Mock = () => {
     putObject: mockPutObject,
     getObject: mockGetObject,
     getSignedUrl: mockGetSignedUrl,
+    deleteObjects: mockDeleteObjects,
   };
 };
 
@@ -302,4 +305,52 @@ describe("File download", () => {
       expect(mockGetObject).toHaveBeenCalledTimes(1);
     });
   });
+});
+
+describe("File delete", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  })
+
+  it("deletes files by URL", async () => {
+    mockDeleteObjects = jest.fn(() => ({
+      promise: () => Promise.resolve()
+    }))
+    const fileURLs = [
+      "https://api.planx.dev/file/private/abc/123",
+      "https://api.planx.dev/file/private/def/456",
+    ];
+    const result = await deleteFilesByURL(fileURLs);
+
+    expect(result).toHaveLength(2)
+    expect(mockDeleteObjects).toHaveBeenCalledTimes(1)
+    expect(mockDeleteObjects).toHaveBeenCalledWith(
+      expect.objectContaining({ 
+        Delete: expect.objectContaining({ 
+          Objects: expect.arrayContaining([
+            expect.objectContaining({ Key: "abc/123" }),
+            expect.objectContaining({ Key: "def/456" }),
+          ])
+        })
+      })
+    )
+  });
+
+  it("throw an error if S3 fails to delete the file", async () => {
+    mockDeleteObjects = jest.fn(() => ({
+      promise: () => { throw Error() }
+    }))
+    const fileURLs = [
+      "https://api.planx.dev/file/private/abc/123",
+      "https://api.planx.dev/file/private/def/456",
+    ];
+
+    await expect(deleteFilesByURL(fileURLs)).rejects.toThrow(
+      expect.objectContaining({ 
+        message: expect.stringMatching(
+          /Failed to delete S3 files/
+        )
+      })
+    )
+  })
 });
