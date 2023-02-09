@@ -17,11 +17,11 @@ export default function DescriptionButton(props: Props) {
   const [buttonWidth, setButtonWidth] = useState(0);
   const buttonRef = useRef<HTMLDivElement>();
   // rerender component on windowSize change
-  useWindowSize();
+  const { height, width } = useWindowSize();
 
   useEffect(() => {
     setButtonWidth(buttonRef.current?.offsetWidth || 0);
-  });
+  }, [height, width]);
 
   return (
     <ButtonBase {...props}>
