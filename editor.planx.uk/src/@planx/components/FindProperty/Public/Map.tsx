@@ -138,8 +138,10 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           </Typography>
           <Link
             component="button"
-            onClick={() => props.setPage("os-address")}
-            disabled={false}
+            onClick={() => {
+              props.setPage("os-address");
+              props.setAddress(undefined);
+            }}
           >
             <Typography variant="body2">
               I want to select an existing address

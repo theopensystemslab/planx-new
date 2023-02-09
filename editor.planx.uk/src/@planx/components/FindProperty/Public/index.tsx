@@ -150,8 +150,10 @@ function Component(props: Props) {
             <Box sx={{ textAlign: "right" }}>
               <Link
                 component="button"
-                onClick={() => setPage("new-address")}
-                disabled={Boolean(address)}
+                onClick={() => {
+                  setPage("new-address");
+                  setAddress(undefined);
+                }}
               >
                 <Typography variant="body2">
                   The site does not have an address
