@@ -14,6 +14,7 @@ import {
   generateHTMLOverviewStream,
 } from "@opensystemslab/planx-document-templates";
 import { adminGraphQLClient as adminClient } from "../hasura";
+import { adminClient as adminDomainClient } from "../client";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
 import { deleteFile, downloadFile, resolveStream } from "./helpers";
@@ -35,7 +36,7 @@ const sendToUniform = async (req, res, next) => {
 
   // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const { payload } = req.body;
-  if (!payload?.xml || !payload?.sessionId) {
+  if (!payload?.xml || !payload?.sessionId || !payload?.flowId) {
     return next({
       status: 400,
       message: "Missing application data to send to Uniform",
@@ -63,6 +64,7 @@ const sendToUniform = async (req, res, next) => {
     // Setup - Create the zip folder
     const zipPath = await createUniformSubmissionZip({
       sessionId: payload.sessionId,
+      flowId: payload.flowId,
       passport: payload.passport,
       csv: payload.csv,
       files: payload.files,
@@ -189,26 +191,22 @@ async function checkUniformAuditTable(sessionId) {
 
 /**
  * Creates a zip folder containing the documents required by Uniform
- * @param {any} stringXml - a string representation of the XML schema, resulting file must be named "proposal.xml"
  * @param {any} csv - an array of objects representing our custom CSV format
- * @param {any} geojson - the site boundary geojson if the user drew, empty if they uploaded a location plan
  * @param {object[]} files - an array of user-uploaded files
  * @param {string} sessionId
+ * @param {string} flowId
+ * @param {{ data: any }} passport
+ * @param {any} xml - a string representation of the XML schema, resulting file must be named "proposal.xml"
  * @returns {Promise} - name of zip
  */
 export async function createUniformSubmissionZip({
   csv,
   files,
   sessionId,
+  flowId,
   passport,
   xml,
 }) {
-  // generate submission documents and data
-  const { geojson, templateNames } = await generateSubmissionData({
-    sessionId,
-    passport,
-  });
-
   // initiate an empty zip folder
   const zip = new AdmZip();
 
@@ -261,6 +259,7 @@ export async function createUniformSubmissionZip({
   deleteFile(overviewPath);
 
   // add an optional GeoJSON file to zip
+  const geojson = passport.data["property.boundary.site"];
   if (geojson) {
     const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
     zip.addFile("boundary.geojson", geoBuff);
@@ -275,6 +274,7 @@ export async function createUniformSubmissionZip({
   }
 
   // generate and add additional submission documents
+  const templateNames = await adminDomainClient.getDocumentTemplateNames(flowId);
   for (const templateName of templateNames) {
     let isTemplateSupported = false;
     try {
@@ -310,16 +310,6 @@ export async function createUniformSubmissionZip({
   });
 
   return zipName;
-}
-
-async function generateSubmissionData({ sessionId, passport }) {
-  const geojson = passport.data["property.boundary.site"];
-
-  const templateNames = await getSubmissionTemplates(sessionId);
-  return {
-    geojson,
-    templateNames,
-  };
 }
 
 /**
@@ -471,24 +461,6 @@ async function retrieveSubmission(token, submissionId) {
   return await fetch(getSubmissionEndpoint, getSubmissionOptions).then(
     (response) => response.json()
   );
-}
-
-async function getSubmissionTemplates(sessionId) {
-  const response = await adminClient.request(
-    gql`
-      query GetSubmissionTemplateNames($sessionId: uuid!) {
-        lowcal_sessions_by_pk(id: $sessionId) {
-          flow {
-            submission_templates
-          }
-        }
-      }
-    `,
-    { sessionId }
-  );
-  const templates = response.lowcal_sessions_by_pk?.flow?.submission_templates;
-  if (!templates || templates == "") return [];
-  return templates.split(",");
 }
 
 /**

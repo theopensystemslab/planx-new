@@ -7893,7 +7893,7 @@ packages:
     dev: true
 
   file:shared/planx-client-1.0.0.tgz:
-    resolution: {integrity: sha512-SdJD4oZAZoh9z/Dr4Vb9cceX4z9cALMdLoul9e0ycLTPOXFQk6dkjMPOh5ixJiMlhRQTnJ30/2aKJKCieAhuWw==, tarball: file:shared/planx-client-1.0.0.tgz}
+    resolution: {integrity: sha512-FfRrIq6icJUJ19ecf340GYjAu6pLaggM/9K17PtzKsPiwVQDb+Sp0s60Yp+G7NovR+zjg5UlkOM58UuMzRO+dQ==, tarball: file:shared/planx-client-1.0.0.tgz}
     name: planx-client
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}

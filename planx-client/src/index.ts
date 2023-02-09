@@ -3,6 +3,7 @@ import { graphQLClient, Request } from "./graphql";
 import { createUser } from "./user";
 import { createTeam } from "./team";
 import { createFlow, publishFlow } from "./flow";
+import { getDocumentTemplateNames } from "./document-templates";
 
 const defaultURL = process.env.HASURA_GRAPHQL_URL;
 
@@ -46,5 +47,9 @@ export class Client {
     publisherId: number;
   }): Promise<number> {
     return publishFlow(this.request, args);
+  }
+
+  async getDocumentTemplateNames(flowId: string): Promise<string[]> {
+    return getDocumentTemplateNames(this.request, flowId);
   }
 }

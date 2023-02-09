@@ -51,6 +51,7 @@ export function getUniformParams(
     files: uniqueFiles,
     passport,
     sessionId,
+    flowId: flow.id,
   };
 }
 
