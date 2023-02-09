@@ -33,7 +33,7 @@ const getPassportDataForSession = async (sessionId: string): Promise<Passport["d
   }
 }
 
-const extractFileURLsFromPassportData = (passportData: Record<string, any>) => {
+export const extractFileURLsFromPassportData = (passportData: Record<string, any>) => {
   const isFileUploadQuestion = (question: Question) => has(question[0], "url");
   const getFileURLs = (questionWithFiles: Question) => questionWithFiles.map(question => question.url);
 
