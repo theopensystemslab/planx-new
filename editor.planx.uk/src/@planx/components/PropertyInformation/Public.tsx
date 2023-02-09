@@ -198,7 +198,6 @@ export function Presentational(props: PresentationalProps) {
             text="Report an inaccuracy"
             handleChange={formik.handleChange}
             value={formik.values.feedback}
-            data-testid="property-feedback"
           />
         </Box>
       )}
@@ -252,10 +251,11 @@ const PropertyDetailsList = styled(Box)(({ theme }) => ({
 
 function PropertyDetails(props: PropertyDetailsProps) {
   const { data, showPropertyTypeOverride, overrideAnswer } = props;
+  const filteredData = data.filter((d) => Boolean(d.detail));
 
   return (
     <PropertyDetailsList component="dl">
-      {data.map(({ heading, detail, fn }: PropertyDetail) => (
+      {filteredData.map(({ heading, detail, fn }: PropertyDetail) => (
         <React.Fragment key={heading}>
           <Box component="dt">{heading}</Box>
           <Box component="dd">{detail}</Box>
