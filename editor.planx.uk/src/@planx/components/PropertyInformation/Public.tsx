@@ -7,6 +7,8 @@ import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
+import { useFormik } from "formik";
+import { submitFeedback } from "lib/feedback";
 import find from "lodash/find";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
@@ -16,6 +18,7 @@ import { fetchCurrentTeam } from "utils";
 
 import type { SiteAddress } from "../FindProperty/model";
 import { FETCH_BLPU_CODES } from "../FindProperty/Public";
+import FeedbackInput from "../shared/FeedbackInput";
 import type { PropertyInformation } from "./model";
 
 export default Component;
@@ -61,6 +64,7 @@ function Component(props: PublicProps<PropertyInformation>) {
       localAuthorityDistrict={localAuthorityDistrict}
       blpuCodes={blpuCodes}
       team={team}
+      previousFeedback={props.previouslySubmittedData?.feedback}
       overrideAnswer={overrideAnswer}
       handleSubmit={props.handleSubmit}
     />
@@ -89,8 +93,9 @@ interface PresentationalProps {
   address?: SiteAddress;
   propertyType?: string[];
   localAuthorityDistrict?: string[];
-  team?: Team;
   blpuCodes?: any;
+  team?: Team;
+  previousFeedback?: string;
   overrideAnswer: (fn: string) => void;
   handleSubmit?: handleSubmit;
 }
@@ -112,11 +117,28 @@ export function Presentational(props: PresentationalProps) {
     address,
     propertyType,
     localAuthorityDistrict,
-    team,
     blpuCodes,
+    team,
+    previousFeedback,
     overrideAnswer,
     handleSubmit,
   } = props;
+  const formik = useFormik({
+    initialValues: {
+      feedback: previousFeedback || "",
+    },
+    onSubmit: (values) => {
+      if (values.feedback) {
+        submitFeedback(
+          values.feedback,
+          "Inaccurate property details",
+          propertyDetails
+        );
+      }
+      handleSubmit?.(values);
+    },
+  });
+
   const propertyDetails: PropertyDetail[] = [
     {
       heading: "Address",
@@ -142,7 +164,7 @@ export function Presentational(props: PresentationalProps) {
   ];
 
   return (
-    <Card handleSubmit={handleSubmit} isValid>
+    <Card handleSubmit={formik.handleSubmit} isValid>
       <QuestionHeader title={title} description={description} />
       <MapContainer>
         <p style={visuallyHidden}>
@@ -169,6 +191,16 @@ export function Presentational(props: PresentationalProps) {
           showPropertyTypeOverride={showPropertyTypeOverride}
           overrideAnswer={overrideAnswer}
         />
+      )}
+      {!showPropertyTypeOverride && (
+        <Box textAlign="right">
+          <FeedbackInput
+            text="Report an inaccuracy"
+            handleChange={formik.handleChange}
+            value={formik.values.feedback}
+            data-testid="property-feedback"
+          />
+        </Box>
       )}
     </Card>
   );

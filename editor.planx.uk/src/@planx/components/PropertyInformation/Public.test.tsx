@@ -60,7 +60,7 @@ test("renders a warning for editors if address data is not in state", async () =
   expect(screen.getByTestId("error-summary-invalid-graph")).toBeInTheDocument();
 });
 
-test("renders correctly", async () => {
+test("renders correctly when property override is enabled", async () => {
   const handleSubmit = jest.fn();
   const overrideAnswer = jest.fn();
 
@@ -77,13 +77,15 @@ test("renders correctly", async () => {
 
   expect(screen.getByText("About the property")).toBeInTheDocument();
   expect(screen.getByText("Property type")).toBeInTheDocument();
+
   expect(screen.getByText("Change")).toBeInTheDocument();
+  expect(screen.queryByText("Report an inaccuracy")).not.toBeInTheDocument();
 
   await user.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalledTimes(1);
 });
 
-test("hides 'change' link if the editor has not selected the override option", async () => {
+test("renders correctly when property override is toggled off", async () => {
   const handleSubmit = jest.fn();
   const overrideAnswer = jest.fn();
 
@@ -100,8 +102,33 @@ test("hides 'change' link if the editor has not selected the override option", a
 
   expect(screen.getByText("About the property")).toBeInTheDocument();
   expect(screen.getByText("Property type")).toBeInTheDocument();
+
   expect(screen.queryByText("Change")).not.toBeInTheDocument();
+  expect(screen.getByText("Report an inaccuracy")).toBeInTheDocument();
 
   await user.click(screen.getByTestId("continue-button"));
   expect(handleSubmit).toHaveBeenCalledTimes(1);
+});
+
+test("retains previously submitted feedback when going back", async () => {
+  const handleSubmit = jest.fn();
+  const overrideAnswer = jest.fn();
+
+  const { user } = setup(
+    <MockedProvider mocks={teamMock} addTypename={false}>
+      <Presentational
+        {...defaultPresentationalProps}
+        showPropertyTypeOverride={false}
+        previousFeedback="My property type is wrong"
+        overrideAnswer={overrideAnswer}
+        handleSubmit={handleSubmit}
+      />
+    </MockedProvider>
+  );
+
+  expect(screen.getByText("Report an inaccuracy")).toBeInTheDocument();
+
+  // expand the feedback input
+  await user.click(screen.getByText("Report an inaccuracy"));
+  expect(screen.getByText("My property type is wrong")).toBeInTheDocument();
 });
