@@ -3,6 +3,7 @@ import { graphQLClient } from "./graphql";
 import { createUser } from "./user";
 import { createTeam } from "./team";
 import { createFlow, publishFlow } from "./flow";
+import type { GraphQLClient } from "graphql-request";
 import { getDocumentTemplateNames } from "./document-templates";
 
 const defaultURL = process.env.HASURA_GRAPHQL_URL;
