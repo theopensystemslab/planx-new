@@ -168,19 +168,36 @@ function Question(props: ComponentProps) {
 }
 
 function FindProperty(props: ComponentProps) {
-  const { postcode, single_line_address, town } = props.passport.data?._address;
-  return (
-    <>
-      <dt>Property</dt>
-      <dd>
-        {`${single_line_address.split(`, ${town}`)[0]}`}
-        <br />
-        {town}
-        <br />
-        {postcode}
-      </dd>
-    </>
-  );
+  const { source } = props.passport.data?._address;
+
+  if (source === "os") {
+    const { postcode, single_line_address, town } =
+      props.passport.data?._address;
+    return (
+      <>
+        <dt>Property</dt>
+        <dd>
+          {`${single_line_address.split(`, ${town}`)[0]}`}
+          <br />
+          {town}
+          <br />
+          {postcode}
+        </dd>
+      </>
+    );
+  } else {
+    const { x, y, title } = props.passport.data?._address;
+    return (
+      <>
+        <dt>Proposed address</dt>
+        <dd>
+          {`${title}`}
+          <br />
+          {`${Math.round(x)} Easting (X), ${Math.round(y)} Northing (Y)`}
+        </dd>
+      </>
+    );
+  }
 }
 
 function Checklist(props: ComponentProps) {

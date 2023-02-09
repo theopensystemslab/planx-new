@@ -11,10 +11,15 @@ import Input from "ui/Input";
 import InputRow from "ui/InputRow";
 import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
+import OptionButton from "ui/OptionButton";
 import RichTextInput from "ui/RichTextInput";
 
 import type { FindProperty } from "./model";
-import { DEFAULT_TITLE, parseFindProperty } from "./model";
+import {
+  DEFAULT_NEW_ADDRESS_TITLE,
+  DEFAULT_TITLE,
+  parseFindProperty,
+} from "./model";
 
 export type Props = EditorProps<TYPES.FindProperty, FindProperty>;
 
@@ -54,6 +59,44 @@ function FindPropertyComponent(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
+        </ModalSectionContent>
+        <ModalSectionContent>
+          <InputRow>
+            <OptionButton
+              selected={formik.values.allowNewAddresses}
+              onClick={() => {
+                formik.setFieldValue(
+                  "allowNewAddresses",
+                  !formik.values.allowNewAddresses
+                );
+              }}
+            >
+              Allow users to plot new addresses without a UPRN
+            </OptionButton>
+          </InputRow>
+          {formik.values.allowNewAddresses ? (
+            <>
+              <InputRow>
+                <Input
+                  format="large"
+                  placeholder={DEFAULT_NEW_ADDRESS_TITLE}
+                  name="newAddressTitle"
+                  value={formik.values.newAddressTitle}
+                  onChange={formik.handleChange}
+                />
+              </InputRow>
+              <InputRow>
+                <RichTextInput
+                  name="newAddressDescription"
+                  placeholder="Description"
+                  value={formik.values.newAddressDescription}
+                  onChange={formik.handleChange}
+                />
+              </InputRow>
+            </>
+          ) : (
+            <></>
+          )}
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation

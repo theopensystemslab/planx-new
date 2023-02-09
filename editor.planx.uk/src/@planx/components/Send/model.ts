@@ -27,13 +27,16 @@ export const USER_ROLES = ["applicant", "agent", "proxy"] as const;
 interface BOPSMinimumPayload {
   application_type: "lawfulness_certificate" | string;
   site: {
-    uprn: string;
+    uprn?: string;
     address_1: string;
     address_2?: string;
-    town: string;
-    postcode: string;
+    town?: string;
+    postcode?: string;
     latitude: string;
     longitude: string;
+    x: string;
+    y: string;
+    source: string;
   };
   applicant_email: string;
 }

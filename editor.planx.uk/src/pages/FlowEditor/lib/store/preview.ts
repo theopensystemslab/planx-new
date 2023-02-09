@@ -15,7 +15,7 @@ import { v4 as uuidV4 } from "uuid";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
-import type { Flag, GovUKPayment, Session } from "./../../../../types";
+import type { Flag, GovUKPayment, Node, Session } from "./../../../../types";
 import { ApplicationPath, PaymentStatus } from "./../../../../types";
 import type { Store } from ".";
 import type { SharedStore } from "./shared";
@@ -260,15 +260,26 @@ export const previewStore = (
 
     if (userData) {
       // add breadcrumb
-      const { answers = [], data = {}, auto = false, feedback } = userData;
+      const {
+        answers = [],
+        data = {},
+        auto = false,
+        override,
+        feedback,
+      } = userData;
 
       const breadcrumb: Store.userData = { auto: Boolean(auto) };
       if (answers?.length > 0) breadcrumb.answers = answers;
       if (feedback) breadcrumb.feedback = feedback;
 
       const filteredData = objectWithoutNullishValues(data);
-
       if (Object.keys(filteredData).length > 0) breadcrumb.data = filteredData;
+
+      if (override) {
+        const filteredOverride = objectWithoutNullishValues(override);
+        if (Object.keys(filteredOverride).length > 0)
+          breadcrumb.override = filteredOverride;
+      }
 
       let cacheWithoutOrphans = removeOrphansFromBreadcrumbs({
         id,
@@ -564,8 +575,12 @@ export const previewStore = (
     // Similar to 'changeAnswer', but enables navigating backwards to and overriding a previously **auto-answered** question which would typically be hidden
     const { breadcrumbs, flow, record, changeAnswer } = get();
 
-    // Iterate through breadcrumbs and find the first nodeId that submitted this passport value (eg FindProperty)
-    let originalNodeId;
+    // The first nodeId that set the passport value (fn) being changed (eg FindProperty)
+    let originalNodeId: Node["id"] | undefined;
+    // The first nodeId that is configured by an editor to manually set the passport value being changed (eg Question "What type of property is it?")
+    let overrideNodeId: Node["id"] | undefined;
+
+    // Iterate through breadcrumbs and find the originalNodeId
     Object.entries(breadcrumbs).forEach(([nodeId, breadcrumb]) => {
       if (breadcrumb.data && fn in breadcrumb.data) {
         originalNodeId = nodeId;
@@ -574,16 +589,19 @@ export const previewStore = (
     });
 
     if (originalNodeId) {
-      // Omit existing fn from breadcrumbs in whichever component originally set it, so it won't be auto-answered in future
+      // Omit existing passport value from breadcrumbs.data in whichever node originally set it, so it won't be auto-answered in future
+      //   and keep a receipt of the original value in breadcrumbs.override
       record(originalNodeId, {
         data: omit(breadcrumbs?.[originalNodeId]?.data, fn),
+        override: {
+          [fn]: breadcrumbs?.[originalNodeId]?.data?.[fn],
+        },
       });
     }
 
-    // Iterate through breadcrumbs and find the first nodeId that will set this passport value (eg Question "What type of property is it?")
+    // Iterate through breadcrumbs and find the overrideNodeId, which has likely been auto-answered by the originalNodeId
     //   leave this node's data intact in the breadcrumbs so that the original answer is highlighted later
-    let overrideNodeId;
-    Object.entries(breadcrumbs).forEach(([nodeId, breadcrumb]) => {
+    Object.entries(breadcrumbs).forEach(([nodeId, _breadcrumb]) => {
       if (flow[nodeId].data?.fn === fn || flow[nodeId].data?.val === fn) {
         overrideNodeId = nodeId;
         return;
@@ -593,6 +611,8 @@ export const previewStore = (
     if (overrideNodeId) {
       // Travel backwards to the "override" nodeId to manually re-answer this question, therefore re-setting the passport value onSubmit
       changeAnswer(overrideNodeId);
+    } else {
+      throw new Error("overrideNodeId not found");
     }
   },
 });

@@ -26,6 +26,7 @@ export interface UserData {
   answers?: Array<string>;
   data?: Record<string, any>;
   auto?: boolean;
+  override?: Record<string, any>;
   feedback?: string;
 }
 

@@ -78,7 +78,8 @@ export class UniformPayload implements IUniformPayload {
       "portaloneapp:SiteLocation": {
         "bs7666:BS7666Address": {
           "bs7666:PAON": {
-            "bs7666:Description": this.siteAddress?.pao,
+            "bs7666:Description":
+              this.siteAddress?.pao || this.siteAddress?.title,
           },
           "bs7666:StreetDescription": this.siteAddress?.street,
           "bs7666:Town": this.siteAddress?.town,
