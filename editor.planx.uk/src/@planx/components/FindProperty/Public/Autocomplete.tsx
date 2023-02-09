@@ -99,6 +99,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
           title: selectedAddress.ADDRESS.split(
             `, ${selectedAddress.ADMINISTRATIVE_AREA}`
           )[0], // display value used in autocomplete dropdown & FindProperty
+          source: "os",
         });
       }
     };

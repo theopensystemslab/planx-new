@@ -38,6 +38,7 @@ const defaultPresentationalProps = {
     title: "103 COBOURG ROAD, LONDON",
     planx_description: "HMO Parent",
     planx_value: "residential.HMO.parent",
+    source: "os",
   },
   propertyType: ["residential.HMO.parent"],
   localAuthorityDistrict: ["Southwark"],
