@@ -4,6 +4,7 @@
     "docker:up": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml up --quiet-pull --renew-anon-volumes -d",
     "docker:down": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml down",
     "docker:recreate": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml up -d --build --force-recreate",
-    "docker:destroy": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml down --remove-orphans -v"
+    "docker:destroy": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml down --remove-orphans -v",
+    "docker:tests": "./scripts/start-containers-for-tests.sh"
   }
 }

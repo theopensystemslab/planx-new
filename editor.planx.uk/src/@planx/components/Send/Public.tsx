@@ -49,7 +49,7 @@ const SendComponent: React.FC<Props> = ({
   );
   let teamSlug = useTeamSlug();
   const route = useCurrentRoute();
-  const flowName = route.data.flowName;
+  const flowName = route?.data?.flowName;
 
   // Send makes a single request to create scheduled events in Hasura, then those events make the actual submission requests with retries etc
   const url = `${process.env.REACT_APP_API_URL}/create-send-events/${sessionId}`;

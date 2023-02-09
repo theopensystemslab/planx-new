@@ -46,7 +46,7 @@ const StatusPage: React.FC<Props> = ({
   ]);
 
   const route = useCurrentRoute();
-  const flowName = route.data.flowName;
+  const flowName = route?.data?.flowName;
 
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform
   const data = makeCsvData({

@@ -1,6 +1,5 @@
 import slugify from "lodash.kebabcase";
 import { graphQLClient } from "./graphql";
-import type { GraphQLClient } from "graphql-request";
 import { createUser } from "./user";
 import { createTeam } from "./team";
 import { createFlow, publishFlow } from "./flow";

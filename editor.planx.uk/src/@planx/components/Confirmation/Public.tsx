@@ -44,7 +44,7 @@ export default function ConfirmationComponent(props: Props) {
     state.sessionId,
   ]);
   const route = useCurrentRoute();
-  const flowName = route.data.flowName;
+  const flowName = route?.data?.flowName;
 
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform
   const data = makeCsvData({

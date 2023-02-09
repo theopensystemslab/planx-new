@@ -14,8 +14,4 @@ const adminGraphQLClient = new GraphQLClient(process.env.HASURA_GRAPHQL_URL!, {
  */
 const publicGraphQLClient = new GraphQLClient(process.env.HASURA_GRAPHQL_URL!);
 
-export {
-  adminGraphQLClient,
-  publicGraphQLClient,
-};
-
+export { adminGraphQLClient, publicGraphQLClient };
