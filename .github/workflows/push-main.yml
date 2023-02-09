@@ -69,7 +69,7 @@ jobs:
           path: ./editor.planx.uk/build
           if-no-files-found: error
 
-  preview:
+  pulumi:
     name: Pulumi Up
     needs: build_react
     runs-on: ubuntu-22.04
@@ -105,7 +105,7 @@ jobs:
 
   notifications:
     name: Notifications
-    needs: preview
+    needs: pulumi
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
