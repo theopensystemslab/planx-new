@@ -52,6 +52,10 @@ const flowDataAfterMigration: Flow["data"] = {
   }
 };
 
+jest.mock("nanoid-good", () => ({
+  customAlphabet: jest.fn().mockImplementation(() => () => () => "TESTTESTTEST"),
+}));
+
 beforeEach(() => {
   queryMock.mockQuery({
     name: "GetFlowAndPublishedFlowData",
@@ -71,7 +75,7 @@ beforeEach(() => {
 
   queryMock.mockQuery({
     name: "UpdateFlow",
-    matchOnVariables: false, // TODO mock uniqueId() and set to 'true'
+    matchOnVariables: true,
     variables: {
       id: "1",
       data: flowDataAfterMigration,
@@ -85,7 +89,7 @@ beforeEach(() => {
 
   queryMock.mockQuery({
     name: "UpdatePublishedFlow",
-    matchOnVariables: false, // TODO same as above
+    matchOnVariables: true,
     variables: {
       id: 1,
       data: flowDataAfterMigration,
@@ -100,7 +104,7 @@ beforeEach(() => {
 
 it("returns an error if authorization headers are not set", async () => {
   await supertest(app)
-    .get("/admin/splitFindProperty/1")
+    .get("/admin/migrate/splitFindProperty/1")
     .expect(401)
     .then((res) => {
       expect(res.body).toEqual({
@@ -111,7 +115,7 @@ it("returns an error if authorization headers are not set", async () => {
 
 it("successfully inserts a PropertyInformation node into the flow and published flow data", async () => {
   await supertest(app)
-    .get("/admin/splitFindProperty/1")
+    .get("/admin/migrate/splitFindProperty/1")
     .set(authHeader())
     .expect(200);
 });
