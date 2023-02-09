@@ -576,17 +576,11 @@ export const previewStore = (
     const { breadcrumbs, flow, record, changeAnswer } = get();
 
     // The first nodeId that set the passport value (fn) being changed (eg FindProperty)
-    let originalNodeId: Node["id"] | undefined;
-    // The first nodeId that is configured by an editor to manually set the passport value being changed (eg Question "What type of property is it?")
-    let overrideNodeId: Node["id"] | undefined;
-
-    // Iterate through breadcrumbs and find the originalNodeId
-    Object.entries(breadcrumbs).forEach(([nodeId, breadcrumb]) => {
-      if (breadcrumb.data && fn in breadcrumb.data) {
-        originalNodeId = nodeId;
-        return;
-      }
-    });
+    const originalNodeId: Node["id"] | undefined = Object.entries(
+      breadcrumbs
+    ).find(
+      ([_nodeId, breadcrumb]) => breadcrumb.data && fn in breadcrumb.data
+    )?.[0];
 
     if (originalNodeId) {
       // Omit existing passport value from breadcrumbs.data in whichever node originally set it, so it won't be auto-answered in future
@@ -599,14 +593,14 @@ export const previewStore = (
       });
     }
 
-    // Iterate through breadcrumbs and find the overrideNodeId, which has likely been auto-answered by the originalNodeId
-    //   leave this node's data intact in the breadcrumbs so that the original answer is highlighted later
-    Object.entries(breadcrumbs).forEach(([nodeId, _breadcrumb]) => {
-      if (flow[nodeId].data?.fn === fn || flow[nodeId].data?.val === fn) {
-        overrideNodeId = nodeId;
-        return;
-      }
-    });
+    // The first nodeId that is configured by an editor to manually set the passport value being changed (eg Question "What type of property is it?").
+    //   This node has likely been auto-answered by the originalNodeId and we leave its' breadcrumbs.data intact so that the original answer is highlighted later
+    const overrideNodeId: Node["id"] | undefined = Object.entries(
+      breadcrumbs
+    ).find(
+      ([nodeId, _breadcrumb]) =>
+        flow[nodeId].data?.fn === fn || flow[nodeId].data?.val === fn
+    )?.[0];
 
     if (overrideNodeId) {
       // Travel backwards to the "override" nodeId to manually re-answer this question, therefore re-setting the passport value onSubmit
