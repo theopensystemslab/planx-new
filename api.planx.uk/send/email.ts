@@ -137,7 +137,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
 
       // As long as we csv data, add a HTML overview document for human-readability
       if (sessionData.csv) {
-        const htmlPath = path.join(tmpDir, "overview.html");
+        const htmlPath = path.join(tmpDir, "application.html");
         const htmlFile = fs.createWriteStream(htmlPath);
         const htmlStream = generateHTMLOverviewStream(sessionData.csv).pipe(
           htmlFile

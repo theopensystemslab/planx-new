@@ -17,5 +17,5 @@
     "declaration": true,
     "declarationDir": "./types"
   },
-  "exclude": ["./dist/**/*"]
+  "exclude": ["node_modules", "./dist/**/*"]
 }
