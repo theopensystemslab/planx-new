@@ -15,9 +15,12 @@ export const sanitiseApplicationData = async (
   next: NextFunction
 ): Promise<Response | void> => {
   const operations = getOperations();
-  let results: OperationResult[] = [];
+  const results: OperationResult[] = [];
   try {
-    results = await Promise.all(operations.map(operationHandler));
+    for (const operation of operations) {
+      const result = await operationHandler(operation)
+      results.push(result)
+    }
   } catch (error) {
     // Unhandled error, flag with Airbrake
     return next({
