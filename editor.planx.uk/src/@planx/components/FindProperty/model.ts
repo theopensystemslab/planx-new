@@ -1,6 +1,3 @@
-import type { SchemaOf } from "yup";
-import { object, string } from "yup";
-
 import { MoreInformation, parseMoreInformation } from "../shared";
 
 export interface FindProperty extends MoreInformation {
@@ -22,7 +19,12 @@ export const parseFindProperty = (
   ...parseMoreInformation(data),
 });
 
-// Minimum-required address details if proposing a new non-UPRN address
+// Addresses can come from two sources:
+//   1. Ordnance Survey provides _known_ addresses that have a UPRN
+//   2. Applicants propose _new_ addresses that do not yet have a UPRN
+type AddressSources = "os" | "proposed";
+
+// Minimum-required address details if proposing an address
 //   these fields also satisfy component dependencies like DrawBoundary & PlanningConstraints
 export interface MinimumSiteAddress {
   latitude: number;
@@ -30,10 +32,10 @@ export interface MinimumSiteAddress {
   x: number;
   y: number;
   title: string;
-  source: "os" | "proposed";
+  source: AddressSources;
 }
 
-// Full SiteAddress reflects selecting a known address from the OS Places API "LPI" datasource
+// Full SiteAddress reflects selecting a record from the OS Places API "LPI" datasource
 export interface SiteAddress extends MinimumSiteAddress {
   uprn?: string;
   blpu_code?: string;
@@ -47,16 +49,6 @@ export interface SiteAddress extends MinimumSiteAddress {
   planx_description?: string; // joined via table blpu_codes
   planx_value?: string; // joined via table blpu_codes
 }
-
-export type ProposedAddressInputs = {
-  siteDescription: string;
-};
-
-export const userDataSchema: SchemaOf<ProposedAddressInputs> = object({
-  siteDescription: string().required(
-    "Enter a site description to proceed. For example, `Land at...`"
-  ),
-});
 
 export const DEFAULT_TITLE = "Find the property" as const;
 export const DEFAULT_NEW_ADDRESS_TITLE = "Propose a new address" as const;

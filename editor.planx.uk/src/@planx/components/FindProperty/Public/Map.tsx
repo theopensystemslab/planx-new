@@ -3,38 +3,37 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import styled from "@mui/styles/styled";
 import { visuallyHidden } from "@mui/utils";
-import { ERROR_MESSAGE } from "@planx/components/shared/constants";
-import Card from "@planx/components/shared/Preview/Card";
+import {
+  DESCRIPTION_TEXT,
+  ERROR_MESSAGE,
+} from "@planx/components/shared/constants";
 import {
   MapContainer,
   MapFooter,
 } from "@planx/components/shared/Preview/MapContainer";
-import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import { GeoJSONObject } from "@turf/helpers";
-import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
-import { TeamSettings } from "types";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 
-import {
-  DEFAULT_NEW_ADDRESS_TITLE,
-  ProposedAddressInputs,
-  SiteAddress,
-  userDataSchema,
-} from "../model";
+import type { SiteAddress } from "../model";
 
 interface PlotNewAddressProps {
-  title?: string;
-  description?: string;
-  initialProposedAddress?: SiteAddress;
-  teamSettings?: TeamSettings;
-  boundary?: GeoJSONObject | undefined;
-  id?: string;
   setAddress: React.Dispatch<React.SetStateAction<SiteAddress | undefined>>;
   setPage: React.Dispatch<React.SetStateAction<"os-address" | "new-address">>;
+  initialProposedAddress?: SiteAddress;
+  boundary?: GeoJSONObject | undefined;
+  id?: string;
+  description?: string;
 }
+
+type Coordinates = {
+  longitude: number;
+  latitude: number;
+  x: number;
+  y: number;
+};
 
 export const DescriptionInput = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(1),
@@ -42,26 +41,21 @@ export const DescriptionInput = styled(Box)(({ theme }) => ({
 }));
 
 export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
-  const formik = useFormik<ProposedAddressInputs>({
-    initialValues: {
-      siteDescription: props.initialProposedAddress?.title || "",
-    },
-    onSubmit: (values) => {
-      if (proposedAddress) {
-        props.setAddress({
-          ...proposedAddress,
-          title: formik.values.siteDescription,
-        });
-      }
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    validationSchema: userDataSchema,
-  });
-
-  const [proposedAddress, setProposedAddress] = useState<
-    SiteAddress | undefined
-  >(props.initialProposedAddress ?? undefined);
+  const [coordinates, setCoordinates] = useState<Coordinates | undefined>(
+    props.initialProposedAddress
+      ? {
+          longitude: props.initialProposedAddress.longitude,
+          latitude: props.initialProposedAddress.latitude,
+          x: props.initialProposedAddress.x,
+          y: props.initialProposedAddress.y,
+        }
+      : undefined
+  );
+  const [siteDescription, setSiteDescription] = useState<string | null>(
+    props.initialProposedAddress?.title ?? null
+  );
+  const [showSiteDescriptionError, setShowSiteDescriptionError] =
+    useState<boolean>(false);
 
   const environment = useStore((state) => state.previewEnvironment);
 
@@ -72,18 +66,10 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
         const [longitude, latitude] =
           geojson["EPSG:3857"].features[0]?.geometry?.coordinates;
         const [x, y] = geojson["EPSG:27700"].features[0]?.geometry?.coordinates;
-
-        setProposedAddress({
-          latitude,
-          longitude,
-          x,
-          y,
-          title: formik.values.siteDescription || "",
-          source: "proposed",
-        });
+        setCoordinates({ longitude, latitude, x, y });
       } else {
         // triggered if a user "clears" their point on the map
-        setProposedAddress(undefined);
+        setCoordinates(undefined);
       }
     };
 
@@ -93,19 +79,34 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
     return function cleanup() {
       map?.removeEventListener("geojsonChange", geojsonChangeHandler);
     };
-  }, [setProposedAddress]);
+  }, [setCoordinates]);
+
+  useEffect(() => {
+    // when we have all required address parts, call setAddress to enable the "Continue" button
+    if (siteDescription && coordinates) {
+      props.setAddress({
+        ...coordinates,
+        title: siteDescription,
+        source: "proposed",
+      });
+    } else {
+      props.setAddress(undefined);
+    }
+  }, [coordinates, siteDescription]);
+
+  const handleSiteDescriptionCheck = () => {
+    if (!siteDescription) setShowSiteDescriptionError(true);
+  };
+
+  const handleSiteDescriptionInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const input = e.target.value;
+    setSiteDescription(input);
+  };
 
   return (
-    <Card
-      handleSubmit={formik.handleSubmit}
-      isValid={
-        Boolean(proposedAddress) && Boolean(formik.values.siteDescription)
-      }
-    >
-      <QuestionHeader
-        title={props.title || DEFAULT_NEW_ADDRESS_TITLE}
-        description={props.description || ""}
-      />
+    <>
       <MapContainer environment={environment} size="large">
         <p style={visuallyHidden}>
           An interactive map centred on the local authority district, showing
@@ -131,16 +132,19 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
           <Typography variant="body2">
             The coordinate location of your address point is:{" "}
             <strong>
-              {(proposedAddress?.x && Math.round(proposedAddress.x)) || 0}{" "}
-              Easting (X),{" "}
-              {(proposedAddress?.y && Math.round(proposedAddress.y)) || 0}{" "}
-              Northing (Y)
+              {`${
+                (coordinates?.x && Math.round(coordinates.x)) || 0
+              } Easting (X), ${
+                (coordinates?.y && Math.round(coordinates.y)) || 0
+              } Northing (Y)`}
             </strong>
           </Typography>
           <Link
             component="button"
-            onClick={() => props.setPage("os-address")}
-            disabled={false}
+            onClick={() => {
+              props.setPage("os-address");
+              props.setAddress(undefined);
+            }}
           >
             <Typography variant="body2">
               I want to select an existing address
@@ -149,22 +153,39 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
         </MapFooter>
       </MapContainer>
       <DescriptionInput data-testid="new-address-input">
-        <InputLabel label="Describe this site">
+        <InputLabel
+          label="Describe this site"
+          htmlFor={`${props.id}-siteDescription`}
+        >
           <Input
-            name="siteDescription"
-            value={formik.values.siteDescription}
+            required
             bordered
-            errorMessage={formik.errors.siteDescription}
-            onChange={formik.handleChange}
+            name="siteDescription"
             id={`${props.id}-siteDescription`}
+            value={siteDescription || ""}
+            errorMessage={
+              showSiteDescriptionError && !siteDescription
+                ? `Enter a site description such as "Land at..."`
+                : ""
+            }
+            onChange={(e) => handleSiteDescriptionInputChange(e)}
+            onKeyUp={({ key }) => {
+              if (key === "Enter") handleSiteDescriptionCheck();
+            }}
+            onBlur={handleSiteDescriptionCheck}
             inputProps={{
-              "aria-describedby": formik.errors.siteDescription
-                ? `${ERROR_MESSAGE}-${props.id}-siteDescription`
-                : "",
+              "aria-describedby": [
+                props.description ? DESCRIPTION_TEXT : "",
+                showSiteDescriptionError && !siteDescription
+                  ? `${ERROR_MESSAGE}-${props.id}`
+                  : "",
+              ]
+                .filter(Boolean)
+                .join(" "),
             }}
           />
         </InputLabel>
       </DescriptionInput>
-    </Card>
+    </>
   );
 }

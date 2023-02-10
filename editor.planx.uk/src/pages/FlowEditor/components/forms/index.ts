@@ -15,6 +15,7 @@ import Notice from "@planx/components/Notice/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
 import Pay from "@planx/components/Pay/Editor";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Editor";
+import PropertyInformation from "@planx/components/PropertyInformation/Editor";
 import Question from "@planx/components/Question/Editor";
 import Result from "@planx/components/Result/Editor";
 import Review from "@planx/components/Review/Editor";
@@ -50,6 +51,7 @@ const components: {
   "number-input": NumberInput,
   pay: Pay,
   "planning-constraints": PlanningConstraints,
+  "property-information": PropertyInformation,
   question: Question,
   result: Result,
   review: Review,
