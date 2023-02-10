@@ -53,6 +53,13 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question {...allProps} text={node?.data?.title ?? "File upload"} />
       );
+    case TYPES.MultipleFileUpload:
+      return (
+        <Question
+          {...allProps}
+          text={node?.data?.title ?? "Multiple file upload"}
+        />
+      );
     case TYPES.Filter:
       return <Filter {...allProps} text="(Flags Filter)" />;
     case TYPES.FindProperty:

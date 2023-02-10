@@ -52,6 +52,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.DrawBoundary:
     case TYPES.ExternalPortal:
     case TYPES.FileUpload:
+    case TYPES.MultipleFileUpload:
     case TYPES.Filter:
     case TYPES.FindProperty:
     case TYPES.Flow:

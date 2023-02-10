@@ -56,6 +56,7 @@ const components: {
   [TYPES.DrawBoundary]: DrawBoundary,
   [TYPES.ExternalPortal]: undefined,
   [TYPES.FileUpload]: FileUpload,
+  [TYPES.MultipleFileUpload]: undefined,
   [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: FindProperty,
   [TYPES.Flow]: undefined,
