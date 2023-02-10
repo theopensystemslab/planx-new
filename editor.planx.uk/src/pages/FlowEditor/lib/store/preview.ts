@@ -657,7 +657,7 @@ export const removeOrphansFromBreadcrumbs = ({
   | Store.cachedBreadcrumbs
   | Store.breadcrumbs => {
   const idsToRemove =
-    flow[id].edges?.filter(
+    flow[id]?.edges?.filter(
       (edge) => !(userData?.answers ?? []).includes(edge)
     ) ?? [];
 
