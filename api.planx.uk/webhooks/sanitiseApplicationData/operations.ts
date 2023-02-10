@@ -58,7 +58,7 @@ export const operationHandler = async (
 /**
  * Return list of session IDs which are now ready for sanitation
  */
-const getExpiredSessionIds = async (): Promise<string[]> => {
+export const getExpiredSessionIds = async (): Promise<string[]> => {
   const query = gql`
     query GetSessionIds($retentionPeriod: timestamptz) {
       lowcal_sessions(where: {
@@ -81,21 +81,16 @@ const getExpiredSessionIds = async (): Promise<string[]> => {
  * Delete files on S3 which are associated with an application
  * This cannot currently be managed via lifecycle rules on the Bucket
  */
-const deleteApplicationFiles: Operation = async () => {
+export const deleteApplicationFiles: Operation = async () => {
   const deletedFiles: string[] = [];
 
   const sessionIds = await getExpiredSessionIds();
   for (const sessionId of sessionIds) {
-    try {
-      const files = await getFilesForSession(sessionId)
-      if (files.length) {
-        const deleted = await deleteFilesByURL(files)
-        deletedFiles.concat(deleted);
-      }
+    const files = await getFilesForSession(sessionId)
+    if (files.length) {
+      const deleted = await deleteFilesByURL(files)
+      deletedFiles.push(...deleted);
     }
-    catch (error) {
-      throw Error(`Error deleting files for session ${sessionId}: ${error}`)
-    };
   };
 
   return deletedFiles;
