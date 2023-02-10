@@ -84,17 +84,17 @@ function SetValueComponent(props: Props) {
 
 ## Editor configurations
 
-1. `src/pages/FlowEditor/components/forms/FormModal.tsx`
-
-```jsx
-  <option value={TYPES.SetValue}>SetValue</option>
-```
-
 1. `src/@planx/components/ui.tsx`
 
 ```typescript 
 import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
 [TYPES.SetValue]: PlaylistAdd,
+```
+
+1. `src/pages/FlowEditor/data/types.ts`
+
+```typescript
+[TYPES.SetValue]: "set-value",
 ```
 
 1. `src/pages/FlowEditor/components/Flow/components/Node.tsx`
@@ -104,10 +104,10 @@ case TYPES.SetValue:
   return <Question {...allProps} text="Set Value" />;
 ```
 
-1. `src/pages/FlowEditor/data/types.ts`
+1. `src/pages/FlowEditor/components/forms/FormModal.tsx`
 
-```typescript
-[TYPES.SetValue]: "set-value",
+```jsx
+  <option value={TYPES.SetValue}>SetValue</option>
 ```
 
 1. `src/pages/FlowEditor/components/forms/index.ts`
