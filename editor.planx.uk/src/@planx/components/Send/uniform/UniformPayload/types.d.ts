@@ -126,7 +126,25 @@ export interface ApplicationScenario {
 }
 
 export interface ConsentRegimes {
-  "portaloneapp:ConsentRegime": string;
+  "portaloneapp:ConsentRegime":
+    | "Householder"
+    | "Full"
+    | "Outline"
+    | "Conservation Area"
+    | "Listed Building"
+    | "Advertisement"
+    | "Certificate of Lawfulness"
+    | "Reserved Matters"
+    | "Prior Approval"
+    | "Work to Trees"
+    | "Regulation 3"
+    | "Trees (TPO)"
+    | "Trees (Conservation Area)"
+    | "Hedgerows"
+    | "Non-Material Amendment"
+    | "Trees and Hedgerows"
+    | "Minerals"
+    | "Waste";
 }
 
 export interface ApplicationData {
