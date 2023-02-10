@@ -1,8 +1,7 @@
-import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
 import { TYPES } from "@planx/components/types";
 import { sortIdsDepthFirst } from "@planx/graph";
-import { client } from "lib/graphql";
+import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import difference from "lodash/difference";
 import flatten from "lodash/flatten";
@@ -16,7 +15,7 @@ import type { GetState, SetState } from "zustand/vanilla";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
 import type { Flag, GovUKPayment, Node, Session } from "./../../../../types";
-import { ApplicationPath, PaymentStatus } from "./../../../../types";
+import { ApplicationPath } from "./../../../../types";
 import type { Store } from ".";
 import type { SharedStore } from "./shared";
 
@@ -656,6 +655,13 @@ export const removeOrphansFromBreadcrumbs = ({
 }: RemoveOrphansFromBreadcrumbsProps):
   | Store.cachedBreadcrumbs
   | Store.breadcrumbs => {
+  // this will prevent a user from "Continuing", therefore log error don't throw it
+  if (!flow[id]) {
+    logger.notify(
+      `Error removing orphans from breadcrumbs, nodeId "${id}" is missing from flow and likely corrupted`
+    );
+  }
+
   const idsToRemove =
     flow[id]?.edges?.filter(
       (edge) => !(userData?.answers ?? []).includes(edge)
