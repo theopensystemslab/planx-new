@@ -187,6 +187,7 @@ specifiers:
   webpack: ^5.75.0
   wkt: ^0.1.1
   yup: ^0.32.11
+  zod: ^3.20.6
   zustand: ^4.3.3
 
 dependencies:
@@ -274,6 +275,7 @@ dependencies:
   uuid: 8.3.2
   wkt: 0.1.1
   yup: 0.32.11
+  zod: 3.20.6
   zustand: 4.3.3_immer@9.0.15+react@18.2.0
 
 devDependencies:
@@ -19928,6 +19930,10 @@ packages:
 
   /zen-observable/0.8.15:
     resolution: {integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==}
+    dev: false
+
+  /zod/3.20.6:
+    resolution: {integrity: sha512-oyu0m54SGCtzh6EClBVqDDlAYRz4jrVtKwQ7ZnsEmMI9HnzuZFj8QFwAY1M5uniIYACdGvv0PBWPF2kO0aNofA==}
     dev: false
 
   /zustand/4.3.3_immer@9.0.15+react@18.2.0:

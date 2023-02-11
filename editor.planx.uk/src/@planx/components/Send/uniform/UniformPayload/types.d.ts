@@ -1,225 +1,85 @@
-// Models the XML payload required by Uniform to process PlanX applications
-// XML Schema Definitions for reference:
-// -- https://ecab.planningportal.co.uk/uploads/schema/OneAppProposal-v2-0-1.xsd
-// -- https://ecab.planningportal.co.uk/uploads/schema/OneAppCommon/OneAppCommon-2-0-1.xsd
-export interface IUniformPayload {
-  "portaloneapp:Proposal": Proposal;
-}
+import { z } from "zod";
 
-export interface Proposal {
-  "portaloneapp:SchemaVersion": number;
-  "portaloneapp:ApplicationHeader": ApplicationHeader;
-  "portaloneapp:FileAttachments": FileAttachments;
-  "portaloneapp:Applicant": ApplicantOrAgent;
-  "portaloneapp:Agent": ApplicantOrAgent;
-  "portaloneapp:SiteLocation": SiteLocation;
-  "portaloneapp:ApplicationScenario": ApplicationScenario;
-  "portaloneapp:ConsentRegimes": ConsentRegimes;
-  "portaloneapp:ApplicationData": ApplicationData;
-  "portaloneapp:DeclarationOfInterest": DeclarationOfInterest;
-  "portaloneapp:Declaration": Declaration;
-  "_xmlns:portaloneapp": string;
-  "_xmlns:xsi": string;
-  "_xmlns:bs7666": string;
-  "_xmlns:org": string;
-  "_xmlns:pdt": string;
-  "_xmlns:apd": string;
-  "_xmlns:core": string;
-  "_xmlns:common": string;
-  _Version: string;
-}
+import * as schema from "./schema";
 
-export interface ApplicationHeader {
-  "portaloneapp:ApplicationTo": string;
-  "portaloneapp:DateSubmitted": string;
-  "portaloneapp:RefNum": string;
-  "portaloneapp:FormattedRefNum": string;
-  "portaloneapp:ApplicationVersion": number;
-  "portaloneapp:AttachmentsChanged": boolean;
-  "portaloneapp:Payment": Payment;
-}
+export type Payment = z.infer<typeof schema.paymentSchema>;
 
-export interface Payment {
-  "common:PaymentMethod": string;
-  "common:AmountDue": number;
-  "common:AmountPaid": number;
-  "common:Currency": string;
-}
+export type FileAttachment = z.infer<typeof schema.fileAttachmentSchema>;
 
-export interface FileAttachments {
-  "common:FileAttachment": FileAttachment[];
-}
+export type PersonName = z.infer<typeof schema.personNameSchema>;
 
-export interface FileAttachment {
-  "common:Identifier"?: string;
-  "common:FileName": string;
-  "common:Reference": string;
-}
+export type InternationalAddress = z.infer<
+  typeof schema.internationalAddressSchema
+>;
 
-export interface ApplicantOrAgent {
-  "common:PersonName": PersonName;
-  "common:OrgName": string;
-  "common:ExternalAddress"?: ExternalAddress;
-  "common:ContactDetails": ContactDetails;
-}
+export type Email = z.infer<typeof schema.emailSchema>;
 
-export interface PersonName {
-  "pdt:PersonNameTitle": string;
-  "pdt:PersonGivenName": string;
-  "pdt:PersonFamilyName": string;
-}
+export type Telephone = z.infer<typeof schema.telephoneSchema>;
 
-export interface ExternalAddress {
-  "common:InternationalAddress": InternationalAddress;
-}
+export type Bs7666Paon = z.infer<typeof schema.bs7666PaonSchema>;
 
-export interface InternationalAddress {
-  "apd:IntAddressLine": string[];
-  "apd:Country"?: string;
-  "apd:InternationalPostCode"?: string;
-}
+export type SiteGridRefence = z.infer<typeof schema.siteGridRefenceSchema>;
 
-export interface ContactDetails {
-  "common:Email": Email;
-  "common:Telephone": Telephone;
-  _PreferredContactMedium: string;
-}
+export type ApplicationScenario = z.infer<
+  typeof schema.applicationScenarioSchema
+>;
 
-export interface Email {
-  "apd:EmailAddress": string;
-  _EmailUsage: string;
-  _EmailPreferred: string;
-}
+export type ConsentRegimes = z.infer<typeof schema.consentRegimesSchema>;
 
-export interface Telephone {
-  "apd:TelNationalNumber": number;
-  _TelUse: string;
-  _TelPreferred: string;
-  _TelMobile: string;
-}
-export interface SiteLocation {
-  "bs7666:BS7666Address": Bs7666Bs7666Address;
-  "common:SiteGridRefence": SiteGridRefence;
-}
+export type Advice = z.infer<typeof schema.adviceSchema>;
 
-export interface Bs7666Bs7666Address {
-  "bs7666:PAON": Bs7666Paon;
-  "bs7666:StreetDescription"?: string;
-  "bs7666:Town"?: string;
-  "bs7666:AdministrativeArea"?: string;
-  "bs7666:PostTown"?: string;
-  "bs7666:PostCode"?: string;
-  "bs7666:UniquePropertyReferenceNumber"?: string;
-}
+export type VisitContactDetails = z.infer<
+  typeof schema.visitContactDetailsSchema
+>;
 
-export interface Bs7666Paon {
-  "bs7666:Description": string;
-}
+export type GroundsCEU = z.infer<typeof schema.groundsCEUSchema>;
 
-export interface SiteGridRefence {
-  "bs7666:X": number;
-  "bs7666:Y": number;
-}
+export type InformationCEU = z.infer<typeof schema.informationCEUSchema>;
 
-export interface ApplicationScenario {
-  "portaloneapp:ScenarioNumber": string;
-}
+export type DescriptionCpu = z.infer<typeof schema.descriptionCpuSchema>;
 
-export interface ConsentRegimes {
-  "portaloneapp:ConsentRegime":
-    | "Householder"
-    | "Full"
-    | "Outline"
-    | "Conservation Area"
-    | "Listed Building"
-    | "Advertisement"
-    | "Certificate of Lawfulness"
-    | "Reserved Matters"
-    | "Prior Approval"
-    | "Work to Trees"
-    | "Regulation 3"
-    | "Trees (TPO)"
-    | "Trees (Conservation Area)"
-    | "Hedgerows"
-    | "Non-Material Amendment"
-    | "Trees and Hedgerows"
-    | "Minerals"
-    | "Waste";
-}
+export type SupportingInformation = z.infer<
+  typeof schema.supportingInformationSchema
+>;
 
-export interface ApplicationData {
-  "portaloneapp:Advice": Advice;
-  "portaloneapp:SiteVisit": SiteVisit;
-  "portaloneapp:CertificateLawfulness":
-    | ExistingUseApplication
-    | ProposedUseApplication;
-}
+export type DeclarationOfInterest = z.infer<
+  typeof schema.declarationOfInterestSchema
+>;
 
-export interface Advice {
-  "common:HaveSoughtAdvice": string;
-}
+export type Signatory = z.infer<typeof schema.signatorySchema>;
 
-export interface SiteVisit {
-  "common:SeeSite": string;
-  "common:VisitContactDetails": VisitContactDetails;
-}
+export type ApplicationHeader = z.infer<typeof schema.applicationHeaderSchema>;
 
-export interface VisitContactDetails {
-  "common:ContactAgent": string;
-}
+export type FileAttachments = z.infer<typeof schema.fileAttachmentsSchema>;
 
-export interface ExistingUseApplication {
-  "portaloneapp:ExistingUseApplication": {
-    "portaloneapp:DescriptionCEU": string;
-    "portaloneapp:GroundsCEU": GroundsCEU;
-    "portaloneapp:InformationCEU": InformationCEU;
-  };
-}
+export type ExternalAddress = z.infer<typeof schema.externalAddressSchema>;
 
-export interface GroundsCEU {
-  "common:CertificateLawfulnessReason": string;
-}
+export type ContactDetails = z.infer<typeof schema.contactDetailsSchema>;
 
-export interface InformationCEU {
-  "common:UseBegunDate": string;
-}
+export type Bs7666Bs7666Address = z.infer<
+  typeof schema.bs7666Bs7666AddressSchema
+>;
 
-export interface ProposedUseApplication {
-  "portaloneapp:ProposedUseApplication": {
-    "portaloneapp:DescriptionCPU": DescriptionCpu;
-    "portaloneapp:GroundsCPU": GroundsCpu;
-  };
-}
+export type SiteVisit = z.infer<typeof schema.siteVisitSchema>;
 
-export interface DescriptionCpu {
-  "common:IsUseChange": string;
-  "common:ProposedUseDescription": string;
-  "common:ExistingUseDescription": string;
-  "common:IsUseStarted": string;
-}
+export type ExistingUseApplication = z.infer<
+  typeof schema.existingUseApplicationSchema
+>;
 
-export interface GroundsCpu {
-  "common:UseLawfulnessReason": string;
-  "common:SupportingInformation": SupportingInformation;
-  "common:ProposedUseStatus": string;
-  "common:LawfulDevCertificateReason": string;
-}
+export type GroundsCpu = z.infer<typeof schema.groundsCpuSchema>;
 
-export interface SupportingInformation {
-  "common:AdditionalInformation": boolean;
-  "common:Reference": string;
-}
+export type Declaration = z.infer<typeof schema.declarationSchema>;
 
-export interface DeclarationOfInterest {
-  "common:IsRelated": string;
-}
+export type ApplicantOrAgent = z.infer<typeof schema.applicantOrAgentSchema>;
 
-export interface Declaration {
-  "common:DeclarationDate": string;
-  "common:DeclarationMade": string;
-  "common:Signatory": Signatory;
-}
+export type SiteLocation = z.infer<typeof schema.siteLocationSchema>;
 
-export interface Signatory {
-  _PersonRole: string;
-}
+export type ProposedUseApplication = z.infer<
+  typeof schema.proposedUseApplicationSchema
+>;
+
+export type ApplicationData = z.infer<typeof schema.applicationDataSchema>;
+
+export type Proposal = z.infer<typeof schema.proposalSchema>;
+
+export type IUniformPayload = z.infer<typeof schema.iUniformPayloadSchema>;
