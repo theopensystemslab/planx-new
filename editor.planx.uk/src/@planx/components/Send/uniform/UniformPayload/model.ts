@@ -74,8 +74,8 @@ export class UniformPayload implements IUniformPayload {
           ...this.getUserUploadedFiles(),
         ],
       },
-      "portaloneapp:Applicant": this.getApplicantOrAgent("applicant"),
-      "portaloneapp:Agent": this.getApplicantOrAgent("applicant.agent"),
+      "portaloneapp:Applicant": this.getApplicant(),
+      "portaloneapp:Agent": this.getAgent(),
       "portaloneapp:SiteLocation": {
         "bs7666:BS7666Address": {
           "bs7666:PAON": {
@@ -103,7 +103,7 @@ export class UniformPayload implements IUniformPayload {
       "portaloneapp:ApplicationData": {
         "portaloneapp:Advice": {
           "common:HaveSoughtAdvice":
-            this.passport.data?.["application.preAppAdvice"],
+            this.passport.data?.["application.preAppAdvice"]?.[0],
         },
         "portaloneapp:SiteVisit": {
           "common:SeeSite": this.passport.data?.["uniform.siteVisit"]?.[0],
@@ -117,7 +117,7 @@ export class UniformPayload implements IUniformPayload {
       "portaloneapp:Declaration": {
         "common:DeclarationDate": this.proposalCompletionDate,
         "common:DeclarationMade":
-          this.passport.data?.["application.declaration.accurate"],
+          this.passport.data?.["application.declaration.accurate"][0],
         "common:Signatory": {
           _PersonRole: this.passport.data?.["uniform.personRole"]?.[0],
         },
@@ -148,7 +148,7 @@ export class UniformPayload implements IUniformPayload {
           this.passport.data?.["proposal.description"],
         "common:ExistingUseDescription":
           this.passport.data?.["proposal.description"],
-        "common:IsUseStarted": this.passport.data?.["proposal.started"],
+        "common:IsUseStarted": this.passport.data?.["proposal.started"]?.[0],
       },
       "portaloneapp:GroundsCPU": {
         "common:UseLawfulnessReason":
@@ -179,32 +179,46 @@ export class UniformPayload implements IUniformPayload {
     },
   });
 
+  private getApplicant = (): ApplicantOrAgent => {
+    return this.getApplicantOrAgent("applicant");
+  };
+
+  private getAgent = (): ApplicantOrAgent | undefined => {
+    const isAgentInPassport = Boolean(
+      this.passport.data?.["applicant.agent.name.first"]
+    );
+    if (!isAgentInPassport) return;
+    return this.getApplicantOrAgent("applicant.agent");
+  };
+
   private getApplicantOrAgent = (
     person: "applicant.agent" | "applicant"
-  ): ApplicantOrAgent => ({
-    "common:PersonName": {
-      "pdt:PersonNameTitle": this.passport.data?.[`${person}.title`],
-      "pdt:PersonGivenName": this.passport.data?.[`${person}.name.first`],
-      "pdt:PersonFamilyName": this.passport.data?.[`${person}.name.last`],
-    },
-    "common:OrgName": this.passport.data?.[`${person}.company.name`],
-    "common:ContactDetails": {
-      "common:Email": {
-        "apd:EmailAddress": this.passport.data?.[`${person}.email`],
-        _EmailUsage: "work",
-        _EmailPreferred: "yes",
+  ): ApplicantOrAgent => {
+    return {
+      "common:PersonName": {
+        "pdt:PersonNameTitle": this.passport.data?.[`${person}.title`],
+        "pdt:PersonGivenName": this.passport.data?.[`${person}.name.first`],
+        "pdt:PersonFamilyName": this.passport.data?.[`${person}.name.last`],
       },
-      "common:Telephone": {
-        "apd:TelNationalNumber":
-          this.passport.data?.[`${person}.phone.primary`],
-        _TelUse: "work",
-        _TelPreferred: "no",
-        _TelMobile: "yes",
+      "common:OrgName": this.passport.data?.[`${person}.company.name`],
+      "common:ContactDetails": {
+        "common:Email": {
+          "apd:EmailAddress": this.passport.data?.[`${person}.email`],
+          _EmailUsage: "work",
+          _EmailPreferred: "yes",
+        },
+        "common:Telephone": {
+          "apd:TelNationalNumber":
+            this.passport.data?.[`${person}.phone.primary`],
+          _TelUse: "work",
+          _TelPreferred: "no",
+          _TelMobile: "yes",
+        },
+        _PreferredContactMedium: "E-Mail",
       },
-      _PreferredContactMedium: "E-Mail",
-    },
-    "common:ExternalAddress": this.getAddressForPerson(person),
-  });
+      "common:ExternalAddress": this.getAddressForPerson(person),
+    };
+  };
 
   private getAddressForPerson = (
     person: "applicant.agent" | "applicant"

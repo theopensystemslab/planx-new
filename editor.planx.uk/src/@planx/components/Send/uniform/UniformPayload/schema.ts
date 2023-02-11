@@ -16,7 +16,7 @@ export const fileAttachmentSchema = z.object({
 });
 
 export const personNameSchema = z.object({
-  "pdt:PersonNameTitle": z.string(),
+  "pdt:PersonNameTitle": z.string().optional(),
   "pdt:PersonGivenName": z.string(),
   "pdt:PersonFamilyName": z.string(),
 });
@@ -34,7 +34,7 @@ export const emailSchema = z.object({
 });
 
 export const telephoneSchema = z.object({
-  "apd:TelNationalNumber": z.number(),
+  "apd:TelNationalNumber": z.string(),
   _TelUse: z.string(),
   _TelPreferred: z.string(),
   _TelMobile: z.string(),
@@ -45,12 +45,12 @@ export const bs7666PaonSchema = z.object({
 });
 
 export const siteGridRefenceSchema = z.object({
-  "bs7666:X": z.number(),
-  "bs7666:Y": z.number(),
+  "bs7666:X": z.number().positive(),
+  "bs7666:Y": z.number().positive(),
 });
 
 export const applicationScenarioSchema = z.object({
-  "portaloneapp:ScenarioNumber": z.string(),
+  "portaloneapp:ScenarioNumber": z.union([z.literal("14"), z.literal("15")]),
 });
 
 export const consentRegimesSchema = z.object({
@@ -89,14 +89,14 @@ export const groundsCEUSchema = z.object({
 });
 
 export const informationCEUSchema = z.object({
-  "common:UseBegunDate": z.string(),
+  "common:UseBegunDate": z.string().optional(),
 });
 
 export const descriptionCpuSchema = z.object({
-  "common:IsUseChange": z.string(),
+  "common:IsUseChange": z.string().optional(),
   "common:ProposedUseDescription": z.string(),
   "common:ExistingUseDescription": z.string(),
-  "common:IsUseStarted": z.string(),
+  "common:IsUseStarted": z.string().optional(),
 });
 
 export const supportingInformationSchema = z.object({
@@ -174,8 +174,8 @@ export const declarationSchema = z.object({
 
 export const applicantOrAgentSchema = z.object({
   "common:PersonName": personNameSchema,
-  "common:OrgName": z.string(),
-  "common:ExternalAddress": externalAddressSchema.optional(),
+  "common:OrgName": z.string().optional(),
+  "common:ExternalAddress": externalAddressSchema,
   "common:ContactDetails": contactDetailsSchema,
 });
 
@@ -205,7 +205,7 @@ export const proposalSchema = z.object({
   "portaloneapp:ApplicationHeader": applicationHeaderSchema,
   "portaloneapp:FileAttachments": fileAttachmentsSchema,
   "portaloneapp:Applicant": applicantOrAgentSchema,
-  "portaloneapp:Agent": applicantOrAgentSchema,
+  "portaloneapp:Agent": applicantOrAgentSchema.or(z.undefined()),
   "portaloneapp:SiteLocation": siteLocationSchema,
   "portaloneapp:ApplicationScenario": applicationScenarioSchema,
   "portaloneapp:ConsentRegimes": consentRegimesSchema,
