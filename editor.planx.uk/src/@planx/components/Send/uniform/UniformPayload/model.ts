@@ -5,6 +5,7 @@ import { GovUKPayment } from "../../../../../types";
 import { Address } from "../../../AddressInput/model";
 import { GOV_PAY_PASSPORT_KEY } from "../../../Pay/model";
 import { SiteAddress } from "./../../../FindProperty/model";
+import { iUniformPayloadSchema } from "./schema";
 import {
   ApplicantOrAgent,
   ExistingUseApplication,
@@ -322,14 +323,16 @@ export class UniformPayload implements IUniformPayload {
 
   public buildXML = (): string => {
     const xmlDeclaration = {
-      _version: "1.0",
-      _encoding: "UTF-8",
-      _standalone: "yes",
+      "?xml": {
+        _version: "1.0",
+        _encoding: "UTF-8",
+        _standalone: "yes",
+      },
     };
-    const payload = {
-      "?xml": xmlDeclaration,
+    const validatedProposal = iUniformPayloadSchema.parse({
       "portaloneapp:Proposal": this["portaloneapp:Proposal"],
-    };
+    });
+
     const buildOptions: Partial<XmlBuilderOptions> = {
       ignoreAttributes: false,
       attributeNamePrefix: "_",
@@ -337,7 +340,11 @@ export class UniformPayload implements IUniformPayload {
       suppressEmptyNode: true,
     };
     const builder = new XMLBuilder(buildOptions);
-    const xml = builder.build(payload);
+
+    const xml = builder.build({
+      ...xmlDeclaration,
+      ...validatedProposal,
+    });
     return xml;
   };
 }
