@@ -6,7 +6,11 @@ import { GovUKPayment } from "../../../../../types";
 import { Address } from "../../../AddressInput/model";
 import { GOV_PAY_PASSPORT_KEY } from "../../../Pay/model";
 import { SiteAddress } from "./../../../FindProperty/model";
-import { iUniformPayloadSchema, proposalSchema } from "./schema";
+import {
+  iUniformPayloadSchema,
+  proposalSchema,
+  xmlDeclarationSchema,
+} from "./schema";
 import {
   ApplicantOrAgent,
   ExistingUseApplication,
@@ -16,6 +20,7 @@ import {
   Payment,
   Proposal,
   ProposedUseApplication,
+  XmlDeclaration,
 } from "./types";
 
 /**
@@ -40,6 +45,7 @@ export class UniformPayload implements IUniformPayload {
   siteAddress: SiteAddress;
 
   "portaloneapp:Proposal": Proposal;
+  "?xml": XmlDeclaration;
 
   constructor({
     sessionId,
@@ -52,9 +58,12 @@ export class UniformPayload implements IUniformPayload {
     this.files = files;
     this.templateNames = templateNames || [];
 
+    // Shorthand references
     this.proposalCompletionDate = this.setProposalCompletionDate();
     this.siteAddress = passport.data?.["_address"];
 
+    // Properties of IUniformPayload
+    this["?xml"] = xmlDeclarationSchema.parse({});
     this["portaloneapp:Proposal"] = proposalSchema.parse({
       "portaloneapp:ApplicationHeader": {
         "portaloneapp:ApplicationTo":
@@ -305,30 +314,20 @@ export class UniformPayload implements IUniformPayload {
     };
   };
 
-  public buildXML = (): string => {
-    const xmlDeclaration = {
-      "?xml": {
-        _version: "1.0",
-        _encoding: "UTF-8",
-        _standalone: "yes",
-      },
-    };
-    const validatedProposal = iUniformPayloadSchema.parse({
-      "portaloneapp:Proposal": this["portaloneapp:Proposal"],
-    });
-
+  private getXMLBuilder = (): XMLBuilder => {
     const buildOptions: Partial<XmlBuilderOptions> = {
       ignoreAttributes: false,
       attributeNamePrefix: "_",
       format: true,
       suppressEmptyNode: true,
     };
-    const builder = new XMLBuilder(buildOptions);
+    return new XMLBuilder(buildOptions);
+  };
 
-    const xml = builder.build({
-      ...xmlDeclaration,
-      ...validatedProposal,
-    });
+  public buildXML = (): string => {
+    const validatedProposal = iUniformPayloadSchema.parse(this);
+    const xmlBuilder = this.getXMLBuilder();
+    const xml = xmlBuilder.build(validatedProposal);
     return xml;
   };
 }

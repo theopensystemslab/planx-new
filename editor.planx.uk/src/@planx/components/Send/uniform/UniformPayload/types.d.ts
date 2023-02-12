@@ -82,4 +82,6 @@ export type ApplicationData = z.infer<typeof schema.applicationDataSchema>;
 
 export type Proposal = z.infer<typeof schema.proposalSchema>;
 
+export type XmlDeclaration = z.infer<typeof schema.xmlDeclarationSchema>;
+
 export type IUniformPayload = z.infer<typeof schema.iUniformPayloadSchema>;
