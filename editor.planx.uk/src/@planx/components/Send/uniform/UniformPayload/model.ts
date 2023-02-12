@@ -1,11 +1,12 @@
 import { XMLBuilder, XmlBuilderOptions } from "fast-xml-parser";
+import type { PartialDeep } from "type-fest";
 
 import { Store } from "../../../../../pages/FlowEditor/lib/store/index";
 import { GovUKPayment } from "../../../../../types";
 import { Address } from "../../../AddressInput/model";
 import { GOV_PAY_PASSPORT_KEY } from "../../../Pay/model";
 import { SiteAddress } from "./../../../FindProperty/model";
-import { iUniformPayloadSchema } from "./schema";
+import { iUniformPayloadSchema, proposalSchema } from "./schema";
 import {
   ApplicantOrAgent,
   ExistingUseApplication,
@@ -54,18 +55,13 @@ export class UniformPayload implements IUniformPayload {
     this.proposalCompletionDate = this.setProposalCompletionDate();
     this.siteAddress = passport.data?.["_address"];
 
-    this["portaloneapp:Proposal"] = {
-      ...this.getNamespaces(),
-      _Version: "1.3",
-      "portaloneapp:SchemaVersion": 1.3,
+    this["portaloneapp:Proposal"] = proposalSchema.parse({
       "portaloneapp:ApplicationHeader": {
         "portaloneapp:ApplicationTo":
           this.passport.data?.["uniform.applicationTo"]?.[0],
         "portaloneapp:DateSubmitted": this.proposalCompletionDate,
         "portaloneapp:RefNum": this.sessionId,
         "portaloneapp:FormattedRefNum": this.sessionId,
-        "portaloneapp:ApplicationVersion": 1,
-        "portaloneapp:AttachmentsChanged": false,
         "portaloneapp:Payment": this.getPayment(),
       },
       "portaloneapp:FileAttachments": {
@@ -117,7 +113,7 @@ export class UniformPayload implements IUniformPayload {
       "portaloneapp:Declaration": {
         "common:DeclarationDate": this.proposalCompletionDate,
         "common:DeclarationMade":
-          this.passport.data?.["application.declaration.accurate"][0],
+          this.passport.data?.["application.declaration.accurate"]?.[0],
         "common:Signatory": {
           _PersonRole: this.passport.data?.["uniform.personRole"]?.[0],
         },
@@ -125,7 +121,7 @@ export class UniformPayload implements IUniformPayload {
       "portaloneapp:DeclarationOfInterest": {
         "common:IsRelated": passport.data?.["uniform.isRelated"]?.[0],
       },
-    };
+    });
   }
 
   private getCertificateOfLawfulness = ():
@@ -179,11 +175,11 @@ export class UniformPayload implements IUniformPayload {
     },
   });
 
-  private getApplicant = (): ApplicantOrAgent => {
+  private getApplicant = (): PartialDeep<ApplicantOrAgent> => {
     return this.getApplicantOrAgent("applicant");
   };
 
-  private getAgent = (): ApplicantOrAgent | undefined => {
+  private getAgent = (): PartialDeep<ApplicantOrAgent> | undefined => {
     const isAgentInPassport = Boolean(
       this.passport.data?.["applicant.agent.name.first"]
     );
@@ -193,7 +189,7 @@ export class UniformPayload implements IUniformPayload {
 
   private getApplicantOrAgent = (
     person: "applicant.agent" | "applicant"
-  ): ApplicantOrAgent => {
+  ): PartialDeep<ApplicantOrAgent> => {
     return {
       "common:PersonName": {
         "pdt:PersonNameTitle": this.passport.data?.[`${person}.title`],
@@ -204,17 +200,11 @@ export class UniformPayload implements IUniformPayload {
       "common:ContactDetails": {
         "common:Email": {
           "apd:EmailAddress": this.passport.data?.[`${person}.email`],
-          _EmailUsage: "work",
-          _EmailPreferred: "yes",
         },
         "common:Telephone": {
           "apd:TelNationalNumber":
             this.passport.data?.[`${person}.phone.primary`],
-          _TelUse: "work",
-          _TelPreferred: "no",
-          _TelMobile: "yes",
         },
-        _PreferredContactMedium: "E-Mail",
       },
       "common:ExternalAddress": this.getAddressForPerson(person),
     };
@@ -249,19 +239,7 @@ export class UniformPayload implements IUniformPayload {
     },
   });
 
-  private getNamespaces = () => ({
-    "_xmlns:portaloneapp":
-      "http://www.govtalk.gov.uk/planning/OneAppProposal-2006",
-    "_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-    "_xmlns:bs7666": "http://www.govtalk.gov.uk/people/bs7666",
-    "_xmlns:org": "http://www.govtalk.gov.uk/financial/OrganisationIdentifiers",
-    "_xmlns:pdt": "http://www.govtalk.gov.uk/people/PersonDescriptives",
-    "_xmlns:apd": "http://www.govtalk.gov.uk/people/AddressAndPersonalDetails",
-    "_xmlns:core": "http://www.govtalk.gov.uk/core",
-    "_xmlns:common": "http://www.govtalk.gov.uk/planning/OneAppCommon-2006",
-  });
-
-  private getGeneratedFiles = (): FileAttachment[] => {
+  private getGeneratedFiles = (): Partial<FileAttachment>[] => {
     // TODO: Test if "N10049" is a required value. Schema suggests that it isn't.
     const files = [
       {
@@ -271,43 +249,37 @@ export class UniformPayload implements IUniformPayload {
       },
       {
         "common:FileName": "application.csv",
-        "common:Reference": "Other",
       },
       {
         "common:FileName": "Overview.htm",
-        "common:Reference": "Other",
       },
     ];
 
     if (this.passport.data?.["property.boundary.site"]) {
       files.push({
         "common:FileName": "LocationPlanGeoJSON.geojson",
-        "common:Reference": "Other",
       });
       files.push({
         "common:FileName": "LocationPlan.htm",
-        "common:Reference": "Other",
       });
     }
 
     for (const templateName of this.templateNames) {
       files.push({
         "common:FileName": `${templateName}.doc`,
-        "common:Reference": "Other",
       });
     }
 
     return files;
   };
 
-  private getUserUploadedFiles = (): FileAttachment[] =>
+  private getUserUploadedFiles = (): Partial<FileAttachment>[] =>
     this.files.map((file) => {
       const uniqueFilename = decodeURIComponent(
         file.split("/").slice(-2).join("-")
       );
       return {
         "common:FileName": uniqueFilename,
-        "common:Reference": "Other",
       };
     });
 
@@ -325,13 +297,11 @@ export class UniformPayload implements IUniformPayload {
     return proposalCompletionDate;
   };
 
-  private getPayment = (): Payment => {
+  private getPayment = (): Partial<Payment> => {
     const payment = this.passport.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
     return {
-      "common:PaymentMethod": "OnlineViaPortal",
-      "common:AmountDue": this.passport.data?.["application.fee.payable"] || 0,
-      "common:AmountPaid": payment?.amount || 0,
-      "common:Currency": "GBP",
+      "common:AmountDue": this.passport.data?.["application.fee.payable"],
+      "common:AmountPaid": payment?.amount,
     };
   };
 

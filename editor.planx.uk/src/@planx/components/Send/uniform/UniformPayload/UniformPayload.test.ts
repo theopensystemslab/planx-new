@@ -16,11 +16,6 @@ import {
 const parseOptions: X2jOptionsOptional = {
   ignoreAttributes: false,
   attributeNamePrefix: "_",
-  // numberParseOptions: {
-  //   hex: false,
-  //   leadingZeros: true,
-  //   skipLike: /[0-9]/
-  // },
 };
 
 const parser = new XMLParser(parseOptions);

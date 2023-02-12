@@ -3,16 +3,16 @@ import { z } from "zod";
 // Models the XML payload required by Uniform to process PlanX applications
 
 export const paymentSchema = z.object({
-  "common:PaymentMethod": z.string(),
-  "common:AmountDue": z.number(),
-  "common:AmountPaid": z.number(),
-  "common:Currency": z.string(),
+  "common:PaymentMethod": z.string().default("OnlineViaPortal"),
+  "common:AmountDue": z.number().default(0),
+  "common:AmountPaid": z.number().default(0),
+  "common:Currency": z.string().default("GBP"),
 });
 
 export const fileAttachmentSchema = z.object({
   "common:Identifier": z.string().optional(),
   "common:FileName": z.string(),
-  "common:Reference": z.string(),
+  "common:Reference": z.string().default("Other"),
 });
 
 export const personNameSchema = z.object({
@@ -29,15 +29,15 @@ export const internationalAddressSchema = z.object({
 
 export const emailSchema = z.object({
   "apd:EmailAddress": z.string(),
-  _EmailUsage: z.string(),
-  _EmailPreferred: z.string(),
+  _EmailUsage: z.string().default("work"),
+  _EmailPreferred: z.string().default("yes"),
 });
 
 export const telephoneSchema = z.object({
   "apd:TelNationalNumber": z.string(),
-  _TelUse: z.string(),
-  _TelPreferred: z.string(),
-  _TelMobile: z.string(),
+  _TelUse: z.string().default("work"),
+  _TelPreferred: z.string().default("no"),
+  _TelMobile: z.string().default("yes"),
 });
 
 export const bs7666PaonSchema = z.object({
@@ -117,8 +117,8 @@ export const applicationHeaderSchema = z.object({
   "portaloneapp:DateSubmitted": z.string(),
   "portaloneapp:RefNum": z.string(),
   "portaloneapp:FormattedRefNum": z.string(),
-  "portaloneapp:ApplicationVersion": z.number(),
-  "portaloneapp:AttachmentsChanged": z.boolean(),
+  "portaloneapp:ApplicationVersion": z.number().default(1),
+  "portaloneapp:AttachmentsChanged": z.boolean().default(false),
   "portaloneapp:Payment": paymentSchema,
 });
 
@@ -133,7 +133,7 @@ export const externalAddressSchema = z.object({
 export const contactDetailsSchema = z.object({
   "common:Email": emailSchema,
   "common:Telephone": telephoneSchema,
-  _PreferredContactMedium: z.string(),
+  _PreferredContactMedium: z.string().default("E-Mail"),
 });
 
 export const bs7666Bs7666AddressSchema = z.object({
@@ -201,7 +201,7 @@ export const applicationDataSchema = z.object({
 });
 
 export const proposalSchema = z.object({
-  "portaloneapp:SchemaVersion": z.number(),
+  "portaloneapp:SchemaVersion": z.number().default(1.3),
   "portaloneapp:ApplicationHeader": applicationHeaderSchema,
   "portaloneapp:FileAttachments": fileAttachmentsSchema,
   "portaloneapp:Applicant": applicantOrAgentSchema,
@@ -212,15 +212,27 @@ export const proposalSchema = z.object({
   "portaloneapp:ApplicationData": applicationDataSchema,
   "portaloneapp:DeclarationOfInterest": declarationOfInterestSchema,
   "portaloneapp:Declaration": declarationSchema,
-  "_xmlns:portaloneapp": z.string(),
-  "_xmlns:xsi": z.string(),
-  "_xmlns:bs7666": z.string(),
-  "_xmlns:org": z.string(),
-  "_xmlns:pdt": z.string(),
-  "_xmlns:apd": z.string(),
-  "_xmlns:core": z.string(),
-  "_xmlns:common": z.string(),
-  _Version: z.string(),
+  "_xmlns:portaloneapp": z
+    .string()
+    .default("http://www.govtalk.gov.uk/planning/OneAppProposal-2006"),
+  "_xmlns:xsi": z.string().default("http://www.w3.org/2001/XMLSchema-instance"),
+  "_xmlns:bs7666": z
+    .string()
+    .default("http://www.govtalk.gov.uk/people/bs7666"),
+  "_xmlns:org": z
+    .string()
+    .default("http://www.govtalk.gov.uk/financial/OrganisationIdentifiers"),
+  "_xmlns:pdt": z
+    .string()
+    .default("http://www.govtalk.gov.uk/people/PersonDescriptives"),
+  "_xmlns:apd": z
+    .string()
+    .default("http://www.govtalk.gov.uk/people/AddressAndPersonalDetails"),
+  "_xmlns:core": z.string().default("http://www.govtalk.gov.uk/core"),
+  "_xmlns:common": z
+    .string()
+    .default("http://www.govtalk.gov.uk/planning/OneAppCommon-2006"),
+  _Version: z.string().default("1.3"),
 });
 
 export const iUniformPayloadSchema = z.object({
