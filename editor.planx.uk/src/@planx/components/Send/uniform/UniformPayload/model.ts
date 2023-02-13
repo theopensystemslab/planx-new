@@ -43,6 +43,7 @@ export class UniformPayload implements IUniformPayload {
 
   proposalCompletionDate: string;
   siteAddress: SiteAddress;
+  stringToBool: (value: string | undefined) => boolean | undefined;
 
   "portaloneapp:Proposal": Proposal;
   "?xml": XmlDeclaration;
@@ -61,6 +62,9 @@ export class UniformPayload implements IUniformPayload {
     // Shorthand references
     this.proposalCompletionDate = this.setProposalCompletionDate();
     this.siteAddress = passport.data?.["_address"];
+    this.stringToBool = (value) => {
+      if (value) return value.toLowerCase() === "true";
+    };
 
     // Properties of IUniformPayload
     this["?xml"] = xmlDeclarationSchema.parse({});
@@ -107,11 +111,14 @@ export class UniformPayload implements IUniformPayload {
       },
       "portaloneapp:ApplicationData": {
         "portaloneapp:Advice": {
-          "common:HaveSoughtAdvice":
-            this.passport.data?.["application.preAppAdvice"]?.[0],
+          "common:HaveSoughtAdvice": this.stringToBool(
+            this.passport.data?.["application.preAppAdvice"]?.[0]
+          ),
         },
         "portaloneapp:SiteVisit": {
-          "common:SeeSite": this.passport.data?.["uniform.siteVisit"]?.[0],
+          "common:SeeSite": this.stringToBool(
+            this.passport.data?.["uniform.siteVisit"]?.[0]
+          ),
           // TODO: Can we just drop this?
           "common:VisitContactDetails": {
             "common:ContactAgent": "",
@@ -128,7 +135,9 @@ export class UniformPayload implements IUniformPayload {
         },
       },
       "portaloneapp:DeclarationOfInterest": {
-        "common:IsRelated": passport.data?.["uniform.isRelated"]?.[0],
+        "common:IsRelated": this.stringToBool(
+          this.passport.data?.["uniform.isRelated"]?.[0]
+        ),
       },
     });
   }
@@ -149,13 +158,16 @@ export class UniformPayload implements IUniformPayload {
     (): PartialDeep<ProposedUseApplication> => ({
       "portaloneapp:ProposedUseApplication": {
         "portaloneapp:DescriptionCPU": {
-          "common:IsUseChange":
-            this.passport.data?.["uniform.isUseChange"]?.[0],
+          "common:IsUseChange": this.stringToBool(
+            this.passport.data?.["uniform.isUseChange"]?.[0]
+          ),
           "common:ProposedUseDescription":
             this.passport.data?.["proposal.description"],
           "common:ExistingUseDescription":
             this.passport.data?.["proposal.description"],
-          "common:IsUseStarted": this.passport.data?.["proposal.started"]?.[0],
+          "common:IsUseStarted": this.stringToBool(
+            this.passport.data?.["proposal.started"]?.[0]
+          ),
         },
         "portaloneapp:GroundsCPU": {
           "common:UseLawfulnessReason":

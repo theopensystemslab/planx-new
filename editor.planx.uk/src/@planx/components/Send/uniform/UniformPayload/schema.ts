@@ -77,7 +77,7 @@ export const consentRegimesSchema = z.object({
 });
 
 export const adviceSchema = z.object({
-  "common:HaveSoughtAdvice": z.string(),
+  "common:HaveSoughtAdvice": z.boolean(),
 });
 
 export const visitContactDetailsSchema = z.object({
@@ -93,19 +93,19 @@ export const informationCEUSchema = z.object({
 });
 
 export const descriptionCpuSchema = z.object({
-  "common:IsUseChange": z.string().optional(),
+  "common:IsUseChange": z.boolean().optional(),
   "common:ProposedUseDescription": z.string(),
   "common:ExistingUseDescription": z.string(),
-  "common:IsUseStarted": z.string().optional(),
+  "common:IsUseStarted": z.boolean().optional(),
 });
 
 export const supportingInformationSchema = z.object({
-  "common:AdditionalInformation": z.boolean(),
+  "common:AdditionalInformation": z.boolean().default(true),
   "common:Reference": z.string(),
 });
 
 export const declarationOfInterestSchema = z.object({
-  "common:IsRelated": z.string(),
+  "common:IsRelated": z.boolean(),
 });
 
 export const signatorySchema = z.object({
@@ -147,7 +147,7 @@ export const bs7666Bs7666AddressSchema = z.object({
 });
 
 export const siteVisitSchema = z.object({
-  "common:SeeSite": z.string(),
+  "common:SeeSite": z.boolean(),
   "common:VisitContactDetails": visitContactDetailsSchema,
 });
 
