@@ -50,7 +50,10 @@ export const siteGridRefenceSchema = z.object({
 });
 
 export const applicationScenarioSchema = z.object({
-  "portaloneapp:ScenarioNumber": z.union([z.literal("14"), z.literal("15")]),
+  "portaloneapp:ScenarioNumber": z.union([
+    z.literal("14").describe("Existing LDC"),
+    z.literal("15").describe("Proposed LDC"),
+  ]),
 });
 
 export const consentRegimesSchema = z.object({
