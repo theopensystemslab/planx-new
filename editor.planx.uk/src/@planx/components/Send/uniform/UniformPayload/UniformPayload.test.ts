@@ -4,7 +4,7 @@ import { X2jOptionsOptional, XMLParser, XMLValidator } from "fast-xml-parser";
 import { get } from "lodash";
 
 import { Store } from "../../../../../pages/FlowEditor/lib/store/index";
-import { mockPassportData } from "./mocks/passport";
+import { mockProposedLDCPassportData } from "./mocks/passport";
 import { UniformPayload } from "./model";
 import {
   ApplicantOrAgent,
@@ -28,7 +28,7 @@ describe("UniformPayload", () => {
   it("safely escapes special XML characters", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "proposal.description": `< > & " '`,
       },
     };
@@ -45,7 +45,7 @@ describe("UniformPayload", () => {
 describe("Reference number", () => {
   const sessionId = "1234-abcdef-567-ghijklm";
   const files: string[] = [];
-  const passport: Store.passport = { data: mockPassportData };
+  const passport: Store.passport = { data: mockProposedLDCPassportData };
 
   it("sets sessionId as a reference number", () => {
     const xml = new UniformPayload({
@@ -78,7 +78,7 @@ describe("Proposal completion date", () => {
   it("reads from `proposal.completion.date` passport variable if it exists", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "proposal.completion.date": "2022-01-01",
       },
     };
@@ -101,7 +101,7 @@ describe("Proposal completion date", () => {
   it("defaults to now if `proposal.completion.date` passport variable is missing", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "proposal.description": "test",
       },
     };
@@ -129,7 +129,7 @@ describe("Payment details", () => {
   it("reads from Pay passport variables if they exist", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "application.fee.payable": 103,
         "application.fee.reference.govPay": {
           amount: 103,
@@ -160,7 +160,7 @@ describe("Payment details", () => {
   it("defaults to 0 if resubmission or if Pay passport variables are missing", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "proposal.description": "test",
       },
     };
@@ -196,7 +196,7 @@ describe("Uniform Translator", () => {
   it("maps the 'applicationTo' value", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "uniform.applicationTo": ["TEST123"],
       },
     };
@@ -218,7 +218,7 @@ describe("Uniform Translator", () => {
   it("maps the 'applicationScenario' value for an Existing LDC", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "uniform.scenarioNumber": ["14"],
         "uniform.consentRegime": ["Certificate of Lawfulness"],
         "application.type": "ldc.existing",
@@ -247,7 +247,7 @@ describe("Uniform Translator", () => {
   it("maps the 'applicationScenario' value for a Proposed LDC", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "uniform.scenarioNumber": ["15"],
         "uniform.consentRegime": ["Certificate of Lawfulness"],
         "application.type": "ldc.proposed",
@@ -276,7 +276,7 @@ describe("Uniform Translator", () => {
   it("maps the 'siteVisit' value", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "uniform.siteVisit": ["true"],
       },
     };
@@ -298,7 +298,7 @@ describe("Uniform Translator", () => {
   it("maps the 'isRelated' value with a connection", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "uniform.isRelated": ["true"],
       },
     };
@@ -320,7 +320,7 @@ describe("Uniform Translator", () => {
   it("maps the 'isRelated' value without a connection", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "uniform.isRelated": ["false"],
       },
     };
@@ -342,7 +342,7 @@ describe("Uniform Translator", () => {
   it("maps the 'personRole' value for an Agent", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "uniform.personRole": ["Agent"],
       },
     };
@@ -364,7 +364,7 @@ describe("Uniform Translator", () => {
   it("maps the 'personRole' value for an Applicant", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "uniform.personRole": ["Applicant"],
       },
     };
@@ -386,7 +386,7 @@ describe("Uniform Translator", () => {
   it("maps the 'isUseChange' value", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "uniform.isUseChange": ["true"],
         "application.type": ["ldc.proposed"],
       },
@@ -432,7 +432,7 @@ describe("Applicant address", () => {
   it("should populate the address for a 'resident' application", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "applicant.resident": ["true"],
         _address: harryPotterAddress,
       },
@@ -457,7 +457,7 @@ describe("Applicant address", () => {
   it("should populate the address for a 'non-resident' application", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "applicant.resident": ["false"],
         _address: harryPotterAddress,
         "applicant.address": sherlockHolmesAddress,
@@ -523,7 +523,7 @@ describe("Applicant contact details", () => {
   it("should populate the Applicant when TextInput components are used", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "applicant.title": "Mme",
         "applicant.name.first": "Jane",
         "applicant.name.last": "Doe",
@@ -546,7 +546,7 @@ describe("Applicant contact details", () => {
   it("should populate the Applicant when a ContactInput component is used", () => {
     const passport: Store.passport = {
       data: {
-        ...mockPassportData,
+        ...mockProposedLDCPassportData,
         "_contact.applicant": {
           applicant: {
             title: "Mme",
@@ -580,7 +580,7 @@ describe("Applicant contact details", () => {
 describe("File handling", () => {
   const sessionId = "123";
   const files: string[] = [];
-  const passport: Store.passport = { data: mockPassportData };
+  const passport: Store.passport = { data: mockProposedLDCPassportData };
   const fileAttachmentsKey =
     "portaloneapp:Proposal.portaloneapp:FileAttachments.common:FileAttachment";
 

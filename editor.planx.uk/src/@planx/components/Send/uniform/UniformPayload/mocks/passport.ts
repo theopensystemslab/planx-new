@@ -1,4 +1,5 @@
-export const mockPassportData = {
+// Mock passport generated on Bucks' LDC service on 10/02/23
+export const mockProposedLDCPassportData = {
   _nots: {
     "property.constraints.planning": [
       "article4",
