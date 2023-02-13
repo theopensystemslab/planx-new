@@ -6,11 +6,7 @@ import { GovUKPayment } from "../../../../../types";
 import { Address } from "../../../AddressInput/model";
 import { GOV_PAY_PASSPORT_KEY } from "../../../Pay/model";
 import { SiteAddress } from "./../../../FindProperty/model";
-import {
-  iUniformPayloadSchema,
-  proposalSchema,
-  xmlDeclarationSchema,
-} from "./schema";
+import { iUniformPayloadSchema } from "./schema";
 import {
   ApplicantOrAgent,
   ExistingUseApplication,
@@ -18,9 +14,7 @@ import {
   FileAttachment,
   IUniformPayload,
   Payment,
-  Proposal,
   ProposedUseApplication,
-  XmlDeclaration,
 } from "./types";
 
 /**
@@ -35,7 +29,7 @@ interface UniformPayloadArgs {
   templateNames?: string[] | undefined;
 }
 
-export class UniformPayload implements IUniformPayload {
+export class UniformPayload {
   sessionId: string;
   passport: Store.passport;
   files: string[];
@@ -43,10 +37,7 @@ export class UniformPayload implements IUniformPayload {
 
   proposalCompletionDate: string;
   siteAddress: SiteAddress;
-  stringToBool: (value: string | undefined) => boolean | undefined;
-
-  "portaloneapp:Proposal": Proposal;
-  "?xml": XmlDeclaration;
+  payload: PartialDeep<IUniformPayload>;
 
   constructor({
     sessionId,
@@ -59,16 +50,18 @@ export class UniformPayload implements IUniformPayload {
     this.files = files;
     this.templateNames = templateNames || [];
 
-    // Shorthand references
     this.proposalCompletionDate = this.setProposalCompletionDate();
     this.siteAddress = passport.data?.["_address"];
-    this.stringToBool = (value) => {
-      if (value) return value.toLowerCase() === "true";
-    };
+    this.payload = this.mapPassportToUniformPayload();
+  }
 
-    // Properties of IUniformPayload
-    this["?xml"] = xmlDeclarationSchema.parse({});
-    this["portaloneapp:Proposal"] = proposalSchema.parse({
+  private stringToBool = (value: string): boolean | undefined => {
+    if (value) return value.toLowerCase() === "true";
+  };
+
+  private mapPassportToUniformPayload = (): PartialDeep<IUniformPayload> => ({
+    "?xml": {},
+    "portaloneapp:Proposal": {
       "portaloneapp:ApplicationHeader": {
         "portaloneapp:ApplicationTo":
           this.passport.data?.["uniform.applicationTo"]?.[0],
@@ -79,8 +72,8 @@ export class UniformPayload implements IUniformPayload {
       },
       "portaloneapp:FileAttachments": {
         "common:FileAttachment": [
-          ...this.getGeneratedFiles(),
-          ...this.getUserUploadedFiles(),
+          ...(this.getGeneratedFiles() as FileAttachment[]),
+          ...(this.getUserUploadedFiles() as FileAttachment[]),
         ],
       },
       "portaloneapp:Applicant": this.getApplicant(),
@@ -139,9 +132,8 @@ export class UniformPayload implements IUniformPayload {
           this.passport.data?.["uniform.isRelated"]?.[0]
         ),
       },
-    });
-  }
-
+    },
+  });
   private getCertificateOfLawfulness = ():
     | PartialDeep<ProposedUseApplication>
     | ExistingUseApplication => {
@@ -338,9 +330,9 @@ export class UniformPayload implements IUniformPayload {
   };
 
   public buildXML = (): string => {
-    const validatedProposal = iUniformPayloadSchema.parse(this);
+    const validatedPayload = iUniformPayloadSchema.parse(this.payload);
     const xmlBuilder = this.getXMLBuilder();
-    const xml = xmlBuilder.build(validatedProposal);
+    const xml = xmlBuilder.build(validatedPayload);
     return xml;
   };
 }

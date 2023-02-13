@@ -9,6 +9,7 @@ import { UniformPayload } from "./model";
 import {
   ApplicantOrAgent,
   FileAttachment,
+  IUniformPayload,
   ProposedUseApplication,
 } from "./types";
 
@@ -54,7 +55,7 @@ describe("Reference number", () => {
     }).buildXML();
     const expectedRefNum: String = "1234-abcdef-567-ghijklm";
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const resultRefNum =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:RefNum"
@@ -88,7 +89,7 @@ describe("Proposal completion date", () => {
     }).buildXML();
     const expectedCompletionDate: String = "2022-01-01";
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const resultCompletionDate =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:DateSubmitted"
@@ -111,7 +112,7 @@ describe("Proposal completion date", () => {
     }).buildXML();
     const expectedCompletionDate: String = formattedNow;
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const resultCompletionDate =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:DateSubmitted"
@@ -147,7 +148,7 @@ describe("Payment details", () => {
       "common:Currency": "GBP",
     };
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const resultPayment =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:Payment"
@@ -175,7 +176,7 @@ describe("Payment details", () => {
       "common:Currency": "GBP",
     };
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const resultPayment =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:Payment"
@@ -206,7 +207,7 @@ describe("Uniform Translator", () => {
       files,
     }).buildXML();
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const applicationTo =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationHeader"][
         "portaloneapp:ApplicationTo"
@@ -230,7 +231,7 @@ describe("Uniform Translator", () => {
       files,
     }).buildXML();
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const scenarioNumber =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationScenario"][
         "portaloneapp:ScenarioNumber"
@@ -259,7 +260,7 @@ describe("Uniform Translator", () => {
       files,
     }).buildXML();
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const scenarioNumber =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationScenario"][
         "portaloneapp:ScenarioNumber"
@@ -286,7 +287,7 @@ describe("Uniform Translator", () => {
       files,
     }).buildXML();
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const siteVisit =
       result["portaloneapp:Proposal"]["portaloneapp:ApplicationData"][
         "portaloneapp:SiteVisit"
@@ -308,7 +309,7 @@ describe("Uniform Translator", () => {
       files,
     }).buildXML();
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const isRelated =
       result["portaloneapp:Proposal"]["portaloneapp:DeclarationOfInterest"][
         "common:IsRelated"
@@ -330,7 +331,7 @@ describe("Uniform Translator", () => {
       files,
     }).buildXML();
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const isRelated =
       result["portaloneapp:Proposal"]["portaloneapp:DeclarationOfInterest"][
         "common:IsRelated"
@@ -352,7 +353,7 @@ describe("Uniform Translator", () => {
       files,
     }).buildXML();
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const personRole =
       result["portaloneapp:Proposal"]["portaloneapp:Declaration"][
         "common:Signatory"
@@ -374,7 +375,7 @@ describe("Uniform Translator", () => {
       files,
     }).buildXML();
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const personRole =
       result["portaloneapp:Proposal"]["portaloneapp:Declaration"][
         "common:Signatory"
@@ -396,7 +397,7 @@ describe("Uniform Translator", () => {
       files,
     }).buildXML();
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const certificateOfLawfulness = result["portaloneapp:Proposal"][
       "portaloneapp:ApplicationData"
     ]["portaloneapp:CertificateLawfulness"] as ProposedUseApplication;
@@ -442,7 +443,7 @@ describe("Applicant address", () => {
       files,
     }).buildXML();
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const expectedAddress = {
       "common:InternationalAddress": {
         "apd:IntAddressLine": [4, "Privet Drive", "Little Whinging", "Surrey"],
@@ -468,7 +469,7 @@ describe("Applicant address", () => {
       files,
     }).buildXML();
 
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const expectedAddress = {
       "common:InternationalAddress": {
         "apd:IntAddressLine": [
@@ -537,7 +538,7 @@ describe("Applicant contact details", () => {
       passport,
       files,
     }).buildXML();
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const resultApplicant: ApplicantOrAgent = get(result, applicantKey);
     expect(resultApplicant).toMatchObject(expectedApplicant);
   });
@@ -570,7 +571,7 @@ describe("Applicant contact details", () => {
       passport,
       files,
     }).buildXML();
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const resultApplicant: ApplicantOrAgent = get(result, applicantKey);
     expect(resultApplicant).toMatchObject(expectedApplicant);
   });
@@ -602,7 +603,7 @@ describe("File handling", () => {
     }).buildXML();
     const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const fileAttachments: FileAttachment[] = get(result, fileAttachmentsKey);
     expect(fileAttachments).toEqual(
       expect.arrayContaining(expectedFileDeclarations)
@@ -623,7 +624,7 @@ describe("File handling", () => {
     }).buildXML();
     const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const fileAttachments: FileAttachment[] = get(result, fileAttachmentsKey);
     expect(fileAttachments).toEqual(
       expect.arrayContaining(expectedReviewFileDeclarations)
@@ -653,7 +654,7 @@ describe("File handling", () => {
     }).buildXML();
     const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const fileAttachments: FileAttachment[] = get(result, fileAttachmentsKey);
     expect(fileAttachments).toEqual(
       expect.arrayContaining(expectedBoundaryFileDeclarations)
@@ -668,7 +669,7 @@ describe("File handling", () => {
     }).buildXML();
     const isValid = XMLValidator.validate(xml);
     expect(isValid).toBe(true);
-    const result: UniformPayload = parser.parse(xml);
+    const result: IUniformPayload = parser.parse(xml);
     const fileAttachments: FileAttachment[] = get(result, fileAttachmentsKey);
     expect(fileAttachments).not.toEqual(
       expect.arrayContaining([

@@ -28,7 +28,7 @@ export const internationalAddressSchema = z.object({
 });
 
 export const emailSchema = z.object({
-  "apd:EmailAddress": z.string(),
+  "apd:EmailAddress": z.string().email(),
   _EmailUsage: z.string().default("work"),
   _EmailPreferred: z.string().default("yes"),
 });
