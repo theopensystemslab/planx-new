@@ -134,7 +134,7 @@ export class UniformPayload implements IUniformPayload {
   }
 
   private getCertificateOfLawfulness = ():
-    | ProposedUseApplication
+    | PartialDeep<ProposedUseApplication>
     | ExistingUseApplication => {
     const planXAppType: PlanXAppTypes =
       this.passport.data?.["application.type"]?.[0];
@@ -145,30 +145,31 @@ export class UniformPayload implements IUniformPayload {
 
   // TODO: A lot of duplication here I'm sure we can tidy up
   // Test this once we are confident we have reached feature parity
-  private getProposedUseApplication = (): ProposedUseApplication => ({
-    "portaloneapp:ProposedUseApplication": {
-      "portaloneapp:DescriptionCPU": {
-        "common:IsUseChange": this.passport.data?.["uniform.isUseChange"]?.[0],
-        "common:ProposedUseDescription":
-          this.passport.data?.["proposal.description"],
-        "common:ExistingUseDescription":
-          this.passport.data?.["proposal.description"],
-        "common:IsUseStarted": this.passport.data?.["proposal.started"]?.[0],
-      },
-      "portaloneapp:GroundsCPU": {
-        "common:UseLawfulnessReason":
-          this.passport.data?.["proposal.description"],
-        "common:SupportingInformation": {
-          "common:AdditionalInformation": true,
-          "common:Reference": this.passport.data?.["proposal.description"],
+  private getProposedUseApplication =
+    (): PartialDeep<ProposedUseApplication> => ({
+      "portaloneapp:ProposedUseApplication": {
+        "portaloneapp:DescriptionCPU": {
+          "common:IsUseChange":
+            this.passport.data?.["uniform.isUseChange"]?.[0],
+          "common:ProposedUseDescription":
+            this.passport.data?.["proposal.description"],
+          "common:ExistingUseDescription":
+            this.passport.data?.["proposal.description"],
+          "common:IsUseStarted": this.passport.data?.["proposal.started"]?.[0],
         },
-        "common:ProposedUseStatus":
-          this.passport.data?.["uniform.proposedUseStatus"]?.[0],
-        "common:LawfulDevCertificateReason":
-          this.passport.data?.["proposal.description"],
+        "portaloneapp:GroundsCPU": {
+          "common:UseLawfulnessReason":
+            this.passport.data?.["proposal.description"],
+          "common:SupportingInformation": {
+            "common:Reference": this.passport.data?.["proposal.description"],
+          },
+          "common:ProposedUseStatus":
+            this.passport.data?.["uniform.proposedUseStatus"]?.[0],
+          "common:LawfulDevCertificateReason":
+            this.passport.data?.["proposal.description"],
+        },
       },
-    },
-  });
+    });
 
   private getExistingUseApplication = (): ExistingUseApplication => ({
     "portaloneapp:ExistingUseApplication": {
