@@ -17,6 +17,7 @@ export const SLUGS: {
   [TYPES.FindProperty]: "find-property-merged",
   [TYPES.Flow]: "flow",
   [TYPES.InternalPortal]: "internal-portal",
+  [TYPES.MultipleFileUpload]: "multiple-file-upload",
   [TYPES.Notice]: "notice",
   [TYPES.NumberInput]: "number-input",
   [TYPES.Pay]: "pay",

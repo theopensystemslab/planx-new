@@ -11,6 +11,7 @@ import FileUpload from "@planx/components/FileUpload/Editor";
 import Filter from "@planx/components/Filter/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
 import InternalPortal from "@planx/components/InternalPortal/Editor";
+import MultipleFileUpload from "@planx/components/MultipleFileUpload/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
 import Pay from "@planx/components/Pay/Editor";
@@ -47,6 +48,7 @@ const components: {
   "find-property-merged": FindProperty,
   flow: EmptyComponent,
   "internal-portal": InternalPortal,
+  "multiple-file-upload": MultipleFileUpload,
   notice: Notice,
   "number-input": NumberInput,
   pay: Pay,
