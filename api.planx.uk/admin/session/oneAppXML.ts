@@ -19,10 +19,11 @@ export const getOneAppXML = async (
 const fetchSessionXML = async (sessionId: string) => {
   try {
     const query = gql`
-      query GetUniformApplicationBySessionID($submission_reference: String) {
+      query GetMostRecentUniformApplicationBySessionID($submission_reference: String) {
         uniform_applications(
           where: { submission_reference: { _eq: $submission_reference } },
-          order_by: { created_at: desc }
+          order_by: { created_at: desc },
+          limit: 1
         ) {
           payload(path: "xml")
         }
