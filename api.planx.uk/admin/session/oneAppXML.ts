@@ -21,7 +21,8 @@ const fetchSessionXML = async (sessionId: string) => {
     const query = gql`
       query GetUniformApplicationBySessionID($submission_reference: String) {
         uniform_applications(
-          where: { submission_reference: { _eq: $submission_reference } }
+          where: { submission_reference: { _eq: $submission_reference } },
+          order_by: { created_at: desc }
         ) {
           payload(path: "xml")
         }
