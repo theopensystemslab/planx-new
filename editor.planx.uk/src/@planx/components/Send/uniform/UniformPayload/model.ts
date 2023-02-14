@@ -87,8 +87,8 @@ export class UniformPayload implements IUniformPayload {
           "bs7666:UniquePropertyReferenceNumber": this.siteAddress?.uprn,
         },
         "common:SiteGridRefence": {
-          "bs7666:X": this.siteAddress?.x,
-          "bs7666:Y": this.siteAddress?.y,
+          "bs7666:X": Math.round(this.siteAddress?.x),
+          "bs7666:Y": Math.round(this.siteAddress?.y),
         },
       },
       "portaloneapp:ApplicationScenario": {
