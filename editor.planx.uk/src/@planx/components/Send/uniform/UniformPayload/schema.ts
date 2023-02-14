@@ -45,8 +45,8 @@ export const bs7666PaonSchema = z.object({
 });
 
 export const siteGridRefenceSchema = z.object({
-  "bs7666:X": z.number().positive(),
-  "bs7666:Y": z.number().positive(),
+  "bs7666:X": z.number().int().nonnegative().lt(10000000),
+  "bs7666:Y": z.number().int().nonnegative().lt(10000000),
 });
 
 export const applicationScenarioSchema = z.object({
