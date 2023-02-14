@@ -1,6 +1,5 @@
 import * as axios from "axios";
 import React from "react";
-import * as ReactNavi from "react-navi";
 import { axe, setup } from "testUtils";
 
 import hasuraEventsResponseMock from "./mocks/hasuraEventsResponseMock";
@@ -16,15 +15,6 @@ jest.spyOn(axios, "default").mockImplementation((url: any) => {
       : null,
   } as any;
 });
-
-jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-  () =>
-    ({
-      data: {
-        flowName: "apply for a lawful development certificate",
-      },
-    } as any)
-);
 
 it.todo("renders correctly");
 

@@ -117,11 +117,11 @@ export function getGraphQLClient(): GraphQLClient {
 }
 
 export async function findSessionId(
-  admingGQLClient: GraphQLClient,
+  adminGQLClient: GraphQLClient,
   context
 ): Promise<string | undefined> {
   // get the flow id which may have a session
-  const { flows: flowResponse } = await admingGQLClient.request(
+  const { flows: flowResponse } = await adminGQLClient.request(
     `query GetFlowBySlug( $slug: String!) {
         flows(where: {slug: {_eq: $slug}}) {
           id
@@ -134,7 +134,7 @@ export async function findSessionId(
   }
   const flowId = flowResponse[0].id;
   // get the session id
-  const { lowcal_sessions: response } = await admingGQLClient.request(
+  const { lowcal_sessions: response } = await adminGQLClient.request(
     `query GetSession( $flowId: uuid!, $email: String!) {
         lowcal_sessions(where: {flow_id: {_eq: $flowId}, email: {_eq: $email}}) {
           id
@@ -147,11 +147,11 @@ export async function findSessionId(
   }
 }
 
-async function deleteSession(admingGQLClient: GraphQLClient, context) {
-  const sessionId = await findSessionId(admingGQLClient, context);
+async function deleteSession(adminGQLClient: GraphQLClient, context) {
+  const sessionId = await findSessionId(adminGQLClient, context);
   if (sessionId) {
     log(`deleting session id: ${sessionId}`);
-    await admingGQLClient.request(
+    await adminGQLClient.request(
       `mutation DeleteTestSession( $sessionId: uuid!) {
         delete_lowcal_sessions_by_pk(id: $sessionId) {
           id
@@ -163,12 +163,12 @@ async function deleteSession(admingGQLClient: GraphQLClient, context) {
 }
 
 async function deletePublishedFlow(
-  admingGQLClient: GraphQLClient,
+  adminGQLClient: GraphQLClient,
   context: Context
 ) {
   if (context.flow?.publishedFlowId) {
     log(`deleting published flow ${context.flow?.publishedFlowId}`);
-    await admingGQLClient.request(
+    await adminGQLClient.request(
       `mutation DeleteTestPublishedFlow( $publishedFlowId: Int!) {
         delete_published_flows_by_pk(id: $publishedFlowId) {
           id
@@ -179,10 +179,10 @@ async function deletePublishedFlow(
   }
 }
 
-async function deleteFlow(admingGQLClient: GraphQLClient, context: Context) {
+async function deleteFlow(adminGQLClient: GraphQLClient, context: Context) {
   if (context.flow?.id) {
     log(`deleting flow ${context.flow?.id}`);
-    await admingGQLClient.request(
+    await adminGQLClient.request(
       `mutation DeleteTestFlow($flowId: uuid!) {
         delete_flows_by_pk(id: $flowId) {
           id
@@ -192,7 +192,7 @@ async function deleteFlow(admingGQLClient: GraphQLClient, context: Context) {
     );
   } else if (context.flow?.slug) {
     // try deleting via slug (when cleaning up from a previously failed test)
-    const { flows: response } = await admingGQLClient.request(
+    const { flows: response } = await adminGQLClient.request(
       `query GetFlowBySlug($slug: String!) {
         flows(where: {slug: {_eq: $slug}}) {
             id
@@ -202,7 +202,7 @@ async function deleteFlow(admingGQLClient: GraphQLClient, context: Context) {
     );
     if (response.length && response[0].id) {
       log(`deleting flow ${context.flow?.slug} flowId: ${response[0].id}`);
-      await admingGQLClient.request(
+      await adminGQLClient.request(
         `mutation DeleteTestFlow( $flowId: uuid!) {
           delete_flows_by_pk(id: $flowId) {
             id
@@ -214,10 +214,10 @@ async function deleteFlow(admingGQLClient: GraphQLClient, context: Context) {
   }
 }
 
-async function deleteUser(admingGQLClient: GraphQLClient, context: Context) {
+async function deleteUser(adminGQLClient: GraphQLClient, context: Context) {
   if (context.user?.id) {
     log(`deleting user ${context.user?.id}`);
-    await admingGQLClient.request(
+    await adminGQLClient.request(
       `mutation DeleteTestUser($userId: Int!) {
         delete_users_by_pk(id: $userId) {
           id
@@ -227,7 +227,7 @@ async function deleteUser(admingGQLClient: GraphQLClient, context: Context) {
     );
   } else if (context.user?.email) {
     // try deleting via email (when cleaning up from a previously failed test)
-    const { users: response } = await admingGQLClient.request(
+    const { users: response } = await adminGQLClient.request(
       `query GetUserByEmail($email: String!) {
         users(where: {email: {_eq: $email}}) {
           id
@@ -237,7 +237,7 @@ async function deleteUser(admingGQLClient: GraphQLClient, context: Context) {
     );
     if (response.length && response[0].id) {
       log(`deleting user ${context.user?.email} userId: ${response[0].id}`);
-      await admingGQLClient.request(
+      await adminGQLClient.request(
         `mutation DeleteTestUser($userId: Int!) {
           delete_users_by_pk(id: $userId) {
             id
@@ -249,10 +249,10 @@ async function deleteUser(admingGQLClient: GraphQLClient, context: Context) {
   }
 }
 
-async function deleteTeam(admingGQLClient: GraphQLClient, context: Context) {
+async function deleteTeam(adminGQLClient: GraphQLClient, context: Context) {
   if (context.team?.id) {
     log(`deleting team ${context.team?.id}`);
-    await admingGQLClient.request(
+    await adminGQLClient.request(
       `mutation DeleteTestTeam( $teamId: Int!) {
         delete_teams_by_pk(id: $teamId) {
           id
@@ -262,7 +262,7 @@ async function deleteTeam(admingGQLClient: GraphQLClient, context: Context) {
     );
   } else if (context.team?.slug) {
     // try deleting via slug (when cleaning up from a previously failed test)
-    const { teams: response } = await admingGQLClient.request(
+    const { teams: response } = await adminGQLClient.request(
       `query GetTeamBySlug( $slug: String!) {
            teams(where: {slug: {_eq: $slug}}) {
                id
@@ -272,7 +272,7 @@ async function deleteTeam(admingGQLClient: GraphQLClient, context: Context) {
     );
     if (response.length && response[0].id) {
       log(`deleting team ${context.team?.slug} teamId: ${response[0].id}`);
-      await admingGQLClient.request(
+      await adminGQLClient.request(
         `mutation DeleteTestTeam( $teamId: Int!) {
         delete_teams_by_pk(id: $teamId) {
           id

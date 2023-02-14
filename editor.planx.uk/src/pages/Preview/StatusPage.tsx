@@ -7,10 +7,10 @@ import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { useCurrentRoute } from "react-navi";
 import Banner from "ui/Banner";
 
 import { makeCsvData } from "../../@planx/components/Send/uniform";
+import { useFlowName } from "../../@planx/components/shared/hooks";
 import FileDownload from "../../ui/FileDownload";
 
 interface Props {
@@ -45,8 +45,7 @@ const StatusPage: React.FC<Props> = ({
     state.sessionId,
   ]);
 
-  const route = useCurrentRoute();
-  const flowName = route?.data?.flowName;
+  const flowName = useFlowName();
 
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform
   const data = makeCsvData({

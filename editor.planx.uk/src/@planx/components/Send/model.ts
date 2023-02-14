@@ -27,7 +27,6 @@ export const USER_ROLES = ["applicant", "agent", "proxy"] as const;
 
 export function getCombinedEventsPayload({
   destinations,
-  route,
   teamSlug,
   breadcrumbs,
   flow,
@@ -38,7 +37,6 @@ export function getCombinedEventsPayload({
   templateNames,
 }: {
   destinations: Destination[];
-  route: { data?: { flowName?: string } };
   teamSlug: string;
   breadcrumbs: Store.breadcrumbs;
   flow: Store.flow;

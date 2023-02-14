@@ -7,7 +7,7 @@ import { useCurrentRoute } from "react-navi";
 import { useAsync } from "react-use";
 
 import { publicClient } from "../../../client";
-import { useTeamSlug } from "../shared/hooks";
+import { useFlowName,useTeamSlug } from "../shared/hooks";
 import Card from "../shared/Preview/Card";
 import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
 import { PublicProps } from "../ui";
@@ -48,8 +48,7 @@ const SendComponent: React.FC<Props> = ({
     ]
   );
   let teamSlug = useTeamSlug();
-  const route = useCurrentRoute();
-  const flowName = route?.data?.flowName;
+  const flowName = useFlowName();
 
   // Send makes a single request to create scheduled events in Hasura, then those events make the actual submission requests with retries etc
   const url = `${process.env.REACT_APP_API_URL}/create-send-events/${sessionId}`;
@@ -59,7 +58,6 @@ const SendComponent: React.FC<Props> = ({
 
     const combinedEventsPayload = getCombinedEventsPayload({
       destinations,
-      route,
       teamSlug,
       breadcrumbs,
       flow,

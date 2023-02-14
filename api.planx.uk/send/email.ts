@@ -126,7 +126,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
         zip.addFile("boundary.geojson", geoBuff);
 
         // generate and add an HTML boundary document
-        const boundaryPath = path.join(tmpDir, "boundary.html");
+        const boundaryPath = path.join(tmpDir, "LocationPlan.html");
         const boundaryFile = fs.createWriteStream(boundaryPath);
         const boundaryStream =
           generateHTMLMapStream(geojson).pipe(boundaryFile);
