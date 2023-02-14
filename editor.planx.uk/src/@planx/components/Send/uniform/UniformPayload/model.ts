@@ -1,5 +1,7 @@
+import { logger } from "airbrake";
 import { XMLBuilder, XmlBuilderOptions } from "fast-xml-parser";
 import type { PartialDeep } from "type-fest";
+import { ZodError } from "zod";
 
 import { Store } from "../../../../../pages/FlowEditor/lib/store/index";
 import { GovUKPayment } from "../../../../../types";
@@ -329,10 +331,23 @@ export class UniformPayload {
     return new XMLBuilder(buildOptions);
   };
 
-  public buildXML = (): string => {
-    const validatedPayload = iUniformPayloadSchema.parse(this.payload);
-    const xmlBuilder = this.getXMLBuilder();
-    const xml = xmlBuilder.build(validatedPayload);
-    return xml;
+  public buildXML = (): string | undefined => {
+    try {
+      const validatedPayload = iUniformPayloadSchema.parse(this.payload);
+      const xmlBuilder = this.getXMLBuilder();
+      const xml: string = xmlBuilder.build(validatedPayload);
+      return xml;
+    } catch (error) {
+      // Fail silently, do not notify applicant of failure
+      if (error instanceof ZodError) {
+        logger.notify(
+          `Invalid Uniform Payload for session ${this.sessionId}. Errors: ${error}`
+        );
+        return;
+      }
+      logger.notify(
+        `Unhandled exception when building XML for session ${this.sessionId}. Errors: ${error}`
+      );
+    }
   };
 }

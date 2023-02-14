@@ -98,7 +98,7 @@ export function makeXmlString({
   sessionId: string;
   files: string[];
   templateNames?: string[];
-}): string {
+}): string | undefined {
   const payload = new UniformPayload({
     sessionId,
     passport,
