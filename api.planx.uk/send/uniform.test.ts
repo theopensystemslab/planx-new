@@ -90,7 +90,7 @@ describe("createUniformSubmissionZip", () => {
     const expectedBuffer = Buffer.from(JSON.stringify(geojson, null, 2));
     await createUniformSubmissionZip(payload);
     expect(mockAddFile).toHaveBeenCalledWith(
-      "BoundaryGeoJSON.geojson",
+      "LocationPlanGeoJSON.geojson",
       expectedBuffer
     );
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
@@ -141,7 +141,7 @@ describe("createUniformSubmissionZip", () => {
     };
     await createUniformSubmissionZip(payload);
     expect(mockAddLocalFile).not.toHaveBeenCalledWith("LocationPlan.htm");
-    expect(mockAddLocalFile).not.toHaveBeenCalledWith("BoundaryGeoJSON.geojson");
+    expect(mockAddLocalFile).not.toHaveBeenCalledWith("LocationPlanGeoJSON.geojson");
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
 

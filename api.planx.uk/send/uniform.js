@@ -261,7 +261,7 @@ export async function createUniformSubmissionZip({
   const geojson = passport.data["property.boundary.site"];
   if (geojson) {
     const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-    zip.addFile("BoundaryGeoJSON.geojson", geoBuff);
+    zip.addFile("LocationPlanGeoJSON.geojson", geoBuff);
 
     // generate and add an HTML boundary document for the submission to zip
     const boundaryPath = path.join(tmpDir, "LocationPlan.htm");

@@ -586,7 +586,7 @@ describe("File handling", () => {
   it("includes generated boundary GeoJSON and HTML files when 'property.boundary.site' is present in the passport", () => {
     const expectedBoundaryFileDeclarations = [
       {
-        "common:FileName": "BoundaryGeoJSON.geojson",
+        "common:FileName": "LocationPlanGeoJSON.geojson",
         "common:Reference": "Other",
       },
       {
@@ -626,7 +626,7 @@ describe("File handling", () => {
     expect(fileAttachments).not.toEqual(
       expect.arrayContaining([
         {
-          "common:FileName": "BoundaryGeoJSON.geojson",
+          "common:FileName": "LocationPlanGeoJSON.geojson",
           "common:Reference": "Other",
         },
       ])

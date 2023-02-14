@@ -266,7 +266,7 @@ export class UniformPayload implements IUniformPayload {
 
     if (this.passport.data?.["property.boundary.site"]) {
       files.push({
-        "common:FileName": "BoundaryGeoJSON.geojson",
+        "common:FileName": "LocationPlanGeoJSON.geojson",
         "common:Reference": "Other",
       });
       files.push({
