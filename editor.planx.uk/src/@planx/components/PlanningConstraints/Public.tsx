@@ -95,13 +95,28 @@ function Component(props: Props) {
     }
   );
 
-  // XXX handle both/either Digital Land response and custom GIS hookup responses
-  const constraints: Record<string, any> | undefined =
-    data?.constraints || data;
+  // If we have a siteBoundary, additionally fetch classified roads (available nationally), but skip if we only have an address point
+  const classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads?geom=${wktPolygon}`;
+  const {
+    data: roads,
+    error: errorRoads,
+    mutate: mutateRoads,
+    isValidating: isValidatingRoads,
+  } = useSWR(() => (wktPolygon ? classifiedRoadsEndpoint : null), fetcher, {
+    shouldRetryOnError: true,
+    errorRetryInterval: 500,
+    errorRetryCount: 1,
+  });
+
+  // XXX handle both/either Digital Land response and custom GIS hookup responses; merge roads for a unified list of constraints
+  const constraints: Record<string, any> | undefined = {
+    ...(data?.constraints || data),
+    ...roads,
+  };
 
   return (
     <>
-      {!isValidating && constraints ? (
+      {!isValidating && !isValidatingRoads && constraints ? (
         <PlanningConstraintsInformation
           title={props.title}
           description={props.description || ""}

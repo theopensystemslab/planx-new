@@ -63,6 +63,7 @@ import { isLiveEnv } from "./helpers";
 import { logPaymentStatus } from "./send/helpers";
 import { getOneAppXML } from "./admin/session/oneAppXML";
 import { gql } from "graphql-request";
+import { classifiedRoadsSearch } from "./gis/classifiedRoads";
 
 const router = express.Router();
 
@@ -470,6 +471,8 @@ app.get("/gis", (_req, res, next) => {
 });
 
 app.get("/gis/:localAuthority", locationSearch);
+
+app.get("/roads", classifiedRoadsSearch);
 
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
