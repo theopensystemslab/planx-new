@@ -10,9 +10,9 @@ Let's add a `SetValue` component
 SetValue = 380,
 ```
 
-1. `mkdir src/@planx/components/SetValue`
+2. `mkdir src/@planx/components/SetValue`
 
-1. `model.ts`
+3. `model.ts`
 
 ```typescript
 import { MoreInformation, parseMoreInformation } from "../shared";
@@ -29,7 +29,7 @@ export const parseContent = (
 });
 ```
 
-1. `Editor.tsx`
+4. `Editor.tsx`
 
 ```typescript
 type Props = EditorProps<TYPES.SetValue, SetValue>;
@@ -55,7 +55,7 @@ function SetValueComponent(props: Props) {
 }
 ```
 
-1. `Public.tsx`
+5. `Public.tsx`
 
 ```typescript
 import { PublicProps } from "@planx/components/ui";
@@ -75,7 +75,7 @@ function SetValueComponent(props: Props) {
 }
 ```
 
-1. `Public.test.tsx`
+6. `Public.test.tsx`
 
 ```typescript
 // SetValue doesn't have a /preview representation, but for
@@ -91,26 +91,26 @@ import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
 [TYPES.SetValue]: PlaylistAdd,
 ```
 
-1. `src/pages/FlowEditor/data/types.ts`
+2. `src/pages/FlowEditor/data/types.ts`
 
 ```typescript
 [TYPES.SetValue]: "set-value",
 ```
 
-1. `src/pages/FlowEditor/components/Flow/components/Node.tsx`
+3. `src/pages/FlowEditor/components/Flow/components/Node.tsx`
 
 ```typescript
 case TYPES.SetValue:
   return <Question {...allProps} text="Set Value" />;
 ```
 
-1. `src/pages/FlowEditor/components/forms/FormModal.tsx`
+4. `src/pages/FlowEditor/components/forms/FormModal.tsx`
 
 ```jsx
   <option value={TYPES.SetValue}>SetValue</option>
 ```
 
-1. `src/pages/FlowEditor/components/forms/index.ts`
+5. `src/pages/FlowEditor/components/forms/index.ts`
 
 ```typescript
 import SetValue from "@planx/components/SetValue/Editor";
@@ -122,7 +122,7 @@ set: SetValueComponent,
 
 1. `src/pages/Preview/Node.tsx`
 
-If/how should this component appear to applicants? (eg wrapped in a Card)
+If/how should this component appear to applicants?
 
 ```typescript
 import SetValue from "@planx/components/SetValue/Public";
@@ -131,7 +131,7 @@ case TYPES.SetValue:
   return <SetValue {...allProps} />;
 ```
 
-1. `src/@planx/components/shared/Preview/SummaryList`
+2. `src/@planx/components/shared/Preview/SummaryList`
 
 If/how should this component appear on the Review page?
 
@@ -139,7 +139,7 @@ If/how should this component appear on the Review page?
 [TYPES.SetValue]: undefined,
 ```
 
-1. `src/@planx/components/Send/bops/index`
+3. `src/@planx/components/Send/bops/index`
 
 If/how should this component be formatted in Send data formats such as BOPS?
 
