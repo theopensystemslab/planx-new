@@ -1,4 +1,3 @@
-import { queryMock } from "../tests/graphqlQueryMock";
 import { createUniformSubmissionZip } from "./uniform";
 
 jest.mock("fs");
@@ -19,9 +18,10 @@ const mockPipe = {
     },
   })),
 };
+const mockHasRequiredDataForTemplate = jest.fn(() => true);
 jest.mock("@opensystemslab/planx-document-templates", () => {
   return {
-    hasRequiredDataForTemplate: jest.fn().mockImplementation(() => true),
+    hasRequiredDataForTemplate: jest.fn(() => mockHasRequiredDataForTemplate()),
     generateDocxTemplateStream: jest.fn().mockImplementation(() => mockPipe),
     generateHTMLOverviewStream: jest.fn().mockImplementation(() => mockPipe),
     generateHTMLMapStream: jest.fn().mockImplementation(() => mockPipe),
@@ -41,6 +41,7 @@ describe("createUniformSubmissionZip", () => {
     mockAddFile.mockClear();
     mockAddLocalFile.mockClear();
     mockWriteZip.mockClear();
+    mockHasRequiredDataForTemplate.mockClear();
   });
 
   test("the document viewer is added to zip", async () => {
@@ -141,9 +142,40 @@ describe("createUniformSubmissionZip", () => {
     };
     await createUniformSubmissionZip(payload);
     expect(mockAddLocalFile).not.toHaveBeenCalledWith("LocationPlan.htm");
-    expect(mockAddLocalFile).not.toHaveBeenCalledWith("LocationPlanGeoJSON.geojson");
+    expect(mockAddLocalFile).not.toHaveBeenCalledWith(
+      "LocationPlanGeoJSON.geojson"
+    );
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
 
-  test.todo("a template generated document is added to zip");
+  test("a document template is added when the template is supported", async () => {
+    const payload = {
+      sessionId: "1234",
+      passport: { data: {} },
+      csv: [],
+      files: [],
+      templateNames: ["X", "Y"],
+      xml: "",
+    };
+    await createUniformSubmissionZip(payload);
+    expect(mockAddLocalFile).toHaveBeenCalledWith("X.doc");
+    expect(mockAddLocalFile).toHaveBeenCalledWith("Y.doc");
+  });
+
+  test("a document template is not added when the template is not supported", async () => {
+    mockHasRequiredDataForTemplate
+      .mockReturnValueOnce(false)
+      .mockReturnValueOnce(true);
+    const payload = {
+      sessionId: "1234",
+      passport: { data: {} },
+      csv: [],
+      files: [],
+      templateNames: ["X", "Y"],
+      xml: "",
+    };
+    await createUniformSubmissionZip(payload);
+    expect(mockAddLocalFile).not.toHaveBeenCalledWith("X.doc");
+    expect(mockAddLocalFile).toHaveBeenCalledWith("Y.doc");
+  });
 });

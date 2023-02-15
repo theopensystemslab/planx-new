@@ -1,3 +1,4 @@
+import { hasRequiredDataForTemplate } from "@opensystemslab/planx-document-templates";
 import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
@@ -53,19 +54,37 @@ export function getUniformParams({
     }
   });
 
+  // only include templates that are supported
+  const filteredTemplateNames = templateNames.filter((name) => {
+    if (!passport.data) return false;
+    try {
+      hasRequiredDataForTemplate({
+        passport: { data: passport.data! },
+        templateName: name,
+      });
+    } catch (e) {
+      console.log(
+        `Template "${name}" could not be generated so has been skipped`
+      );
+      console.log(e);
+      return false;
+    }
+    return true;
+  });
+
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
     xml: makeXmlString({
       passport,
       sessionId,
       files: uniqueFiles,
-      templateNames,
+      templateNames: filteredTemplateNames,
     }),
     csv: makeCsvData({ breadcrumbs, flow, flowName, passport, sessionId }),
     files: uniqueFiles,
     passport,
     sessionId,
-    templateNames,
+    templateNames: filteredTemplateNames,
   };
 }
 

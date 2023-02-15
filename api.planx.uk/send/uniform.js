@@ -282,7 +282,8 @@ export async function createUniformSubmissionZip({
       });
     } catch (e) {
       console.log(`Template "${templateName}" could not be generated so has been skipped`);
-      if (e.message) console.log(e.message)
+      console.log(e)
+      continue
     }
     if (isTemplateSupported) {
       const templatePath = path.join(tmpDir, `${templateName}.doc`);
