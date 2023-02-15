@@ -162,6 +162,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "mkdir -p build && build-storybook --quiet --output-dir ./build/storybook",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
+    "check": "pnpm lint && prettier -c src",
     "prepare": "cd .. && husky install editor.planx.uk/.husky"
   },
   "eslintConfig": {

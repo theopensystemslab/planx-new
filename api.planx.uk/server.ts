@@ -39,10 +39,7 @@ import {
   createReminderEvent,
   createExpiryEvent,
 } from "./webhooks/lowcalSessionEvents";
-import {
-  adminGraphQLClient as adminClient,
-  publicGraphQLClient as publicClient,
-} from "./hasura";
+import { adminGraphQLClient as adminClient, publicGraphQLClient as publicClient } from "./hasura";
 import { graphQLVoyagerHandler, introspectionHandler } from "./hasura/voyager";
 import { sendEmailLimiter, apiLimiter } from "./rateLimit";
 import {
@@ -170,12 +167,11 @@ const buildJWT = async (profile: Profile, done: VerifyCallback) => {
 
   const { users } = await adminClient.request(
     gql`
-      query ($email: String!) {
-        users(where: { email: { _eq: $email } }, limit: 1) {
-          id
-        }
+    query ($email: String!) {
+      users(where: {email: {_eq: $email}}, limit: 1) {
+        id
       }
-    `,
+    }`,
     { email }
   );
 
@@ -424,13 +420,11 @@ app.use("/gis", router);
 app.get("/hasura", async function (_req, res, next) {
   try {
     const data = await adminClient.request(
-      gql`
-        query GetTeams {
-          teams {
-            id
-          }
+      gql`query GetTeams {
+        teams {
+          id
         }
-      `
+      }`
     );
     res.json(data);
   } catch (err) {
@@ -444,20 +438,18 @@ app.get("/me", useJWT, async function (req, res, next) {
     next({ status: 401, message: "User ID missing from JWT" });
 
   try {
-    const user = await adminClient.request(
-      gql`
-        query ($id: Int!) {
-          users_by_pk(id: $id) {
-            id
-            first_name
-            last_name
-            email
-            is_admin
-            created_at
-            updated_at
-          }
+    const user = await adminClient.request(gql`
+      query ($id: Int!) {
+        users_by_pk(id: $id) {
+          id
+          first_name
+          last_name
+          email
+          is_admin
+          created_at
+          updated_at
         }
-      `,
+      }`,
       { id: req.user?.sub }
     );
 
@@ -483,7 +475,7 @@ app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
 
-app.use("/admin", useJWT);
+app.use("/admin", useJWT)
 app.get("/admin/feedback", downloadFeedbackCSV);
 app.get("/admin/session/:sessionId/xml", getOneAppXML);
 
@@ -534,17 +526,15 @@ app.get("/flows/:flowId/copy-portal/:portalNodeId", useJWT, copyPortalAsFlow);
 // unauthenticated because accessing flow schema only, no user data
 app.get("/flows/:flowId/download-schema", async (req, res, next) => {
   try {
-    const schema = await adminClient.request(
-      gql`
-        query ($flow_id: String!) {
-          get_flow_schema(args: { published_flow_id: $flow_id }) {
-            node
-            type
-            text
-            planx_variable
-          }
+    const schema = await adminClient.request(gql`
+      query ($flow_id: String!) {
+        get_flow_schema(args: {published_flow_id: $flow_id}) {
+          node
+          type
+          text
+          planx_variable
         }
-      `,
+      }`,
       { flow_id: req.params.flowId }
     );
 
@@ -608,19 +598,18 @@ app.get(
 
 const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
   try {
-    const result = await adminClient.request(
-      gql`
-        mutation UpdateAnalyticsLogUserExit($id: bigint!, $user_exit: Boolean) {
-          update_analytics_logs_by_pk(
-            pk_columns: { id: $id }
-            _set: { user_exit: $user_exit }
-          ) {
-            id
-            user_exit
-            analytics_id
-          }
+    const result = await adminClient.request(gql`
+      mutation UpdateAnalyticsLogUserExit($id: bigint!, $user_exit: Boolean) {
+        update_analytics_logs_by_pk(
+          pk_columns: {id: $id},
+          _set: {user_exit: $user_exit}
+        ) {
+          id
+          user_exit
+          analytics_id
         }
-      `,
+      }
+    `,
       {
         id,
         user_exit: isUserExit,
@@ -628,17 +617,13 @@ const trackAnalyticsLogExit = async (id: number, isUserExit: boolean) => {
     );
 
     const analytics_id = result.update_analytics_logs_by_pk.analytics_id;
-    await adminClient.request(
-      gql`
-        mutation SetAnalyticsEndedDate($id: bigint!, $ended_at: timestamptz) {
-          update_analytics_by_pk(
-            pk_columns: { id: $id }
-            _set: { ended_at: $ended_at }
-          ) {
-            id
-          }
+    await adminClient.request(gql`
+      mutation SetAnalyticsEndedDate($id: bigint!, $ended_at: timestamptz) {
+        update_analytics_by_pk(pk_columns: {id: $id}, _set: {ended_at: $ended_at}) {
+          id
         }
-      `,
+      }
+    `,
       {
         id: analytics_id,
         ended_at: isUserExit ? new Date().toISOString() : null,

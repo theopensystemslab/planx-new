@@ -33,11 +33,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - uses: pnpm/action-setup@v2.2.2
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - name: Check Code
-        run: pnpm check
       - name: Get commit message
         id: commit
         run: |
@@ -134,8 +129,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         working-directory: api.planx.uk
+      - run: pnpm install --frozen-lockfile
+        working-directory: api.planx.uk
+      - name: Code check
+        run: pnpm check
+        working-directory: api.planx.uk
       - name: Run API Tests
-        run: pnpm install --frozen-lockfile && pnpm check --quiet && pnpm test
+        run: pnpm test
         working-directory: api.planx.uk
 
   test_react:
@@ -204,6 +204,9 @@ jobs:
         working-directory: planx-client
       - run: pnpm install --frozen-lockfile
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - name: Code check
+        run: pnpm check
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
