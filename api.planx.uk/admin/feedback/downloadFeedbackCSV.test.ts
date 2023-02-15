@@ -1,4 +1,4 @@
-import { Feedback, parseFeedback } from './downloadFeedbackCSV';
+import { Feedback, parseFeedback } from "./downloadFeedbackCSV";
 import supertest from "supertest";
 import app from "../../server";
 import { authHeader } from "../../tests/mockJWT";
@@ -19,12 +19,12 @@ const mockFeedback: Feedback = {
   device: {
     client: {
       name: "Chrome",
-      version: "123"
+      version: "123",
     },
     os: {
       name: "Linux",
-      version: "123"
-    }
+      version: "123",
+    },
   },
   metadata: [
     {
@@ -37,14 +37,14 @@ const mockFeedback: Feedback = {
     },
     {
       key: "team",
-      value: "test team"
+      value: "test team",
     },
     {
       key: "service",
-      value: "test service"
-    }
-  ]
-}
+      value: "test service",
+    },
+  ],
+};
 
 describe("Download feedback CSV endpoint", () => {
   afterEach(() => jest.clearAllMocks());
@@ -53,9 +53,11 @@ describe("Download feedback CSV endpoint", () => {
     await supertest(app)
       .get(ENDPOINT)
       .expect(401)
-      .then(res => expect(res.body).toEqual({
-        error: "No authorization token was found",
-      }));
+      .then((res) =>
+        expect(res.body).toEqual({
+          error: "No authorization token was found",
+        })
+      );
   });
 
   it("requires the 'cookie' query parameter", async () => {
@@ -63,7 +65,7 @@ describe("Download feedback CSV endpoint", () => {
       .get(ENDPOINT)
       .set(authHeader())
       .expect(401)
-      .then(res => expect(res.body).toEqual({ error: "Missing cookie" }));
+      .then((res) => expect(res.body).toEqual({ error: "Missing cookie" }));
   });
 
   it("returns an error if request to FeedbackFish fails", async () => {
@@ -73,12 +75,16 @@ describe("Download feedback CSV endpoint", () => {
       .set(authHeader())
       .query({ cookie: "test cookie" })
       .expect(500)
-      .then(res => expect(res.body.error).toMatch(/FeedbackFish query failed!/));
+      .then((res) =>
+        expect(res.body.error).toMatch(/FeedbackFish query failed!/)
+      );
   });
 
   it("passes the provided cookie to FeedbackFish", async () => {
-    mockAxios.post.mockResolvedValue({ data: { data: { feedback: [ mockFeedback ] } } });
-    const cookie = "test cookie"
+    mockAxios.post.mockResolvedValue({
+      data: { data: { feedback: [mockFeedback] } },
+    });
+    const cookie = "test cookie";
     await supertest(app)
       .get(ENDPOINT)
       .set(authHeader())
@@ -87,15 +93,17 @@ describe("Download feedback CSV endpoint", () => {
       .then(() => {
         expect(mockAxios.post).toHaveBeenCalledWith(
           expect.stringContaining("https"),
-          expect.objectContaining({ query: expect.stringContaining("query") }), 
+          expect.objectContaining({ query: expect.stringContaining("query") }),
           { headers: { cookie } }
-        )
+        );
       });
   });
 
   it("returns a CSV file", async () => {
-    mockAxios.post.mockResolvedValue({ data: { data: { feedback: [ mockFeedback ] } } });
-    const cookie = "test cookie"
+    mockAxios.post.mockResolvedValue({
+      data: { data: { feedback: [mockFeedback] } },
+    });
+    const cookie = "test cookie";
     await supertest(app)
       .get(ENDPOINT)
       .set(authHeader())
@@ -107,8 +115,8 @@ describe("Download feedback CSV endpoint", () => {
 
 describe("parseFeedback helper function", () => {
   it("correctly parses FeedbackFish data", () => {
-    const { metadata, ...restMockFeedback } = mockFeedback
-    const result = parseFeedback([mockFeedback])
+    const { metadata, ...restMockFeedback } = mockFeedback;
+    const result = parseFeedback([mockFeedback]);
 
     // Metadata is parsed from query result
     expect(result[0]).toMatchObject({
@@ -120,12 +128,12 @@ describe("parseFeedback helper function", () => {
 
     // Standard values from FeedbackFish are maintained
     expect(result[0]).toMatchObject({
-      ...restMockFeedback
+      ...restMockFeedback,
     });
 
     // Raw metadata from FeedbackFish is stripped out
     expect(result[0]).not.toMatchObject({
-      metadata
+      metadata,
     });
-  })
+  });
 });

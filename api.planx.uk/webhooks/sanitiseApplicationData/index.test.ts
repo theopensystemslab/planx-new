@@ -1,13 +1,13 @@
-import SlackNotify from 'slack-notify';
+import SlackNotify from "slack-notify";
 import supertest from "supertest";
 import app from "../../server";
 import * as operations from "./operations";
 
-const mockSend = jest.fn()
-jest.mock('slack-notify', () =>
+const mockSend = jest.fn();
+jest.mock("slack-notify", () =>
   jest.fn().mockImplementation(() => {
     return { send: mockSend };
-  }),
+  })
 );
 
 const { post } = supertest(app);
@@ -34,7 +34,9 @@ describe("Sanitise application data webhook", () => {
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
       .expect(500)
-      .then((response) => expect(response.body.error).toMatch(/Unhandled error!/))
+      .then((response) =>
+        expect(response.body.error).toMatch(/Unhandled error!/)
+      );
   });
 
   it("returns a 200 when all operations are successful", async () => {
@@ -43,11 +45,11 @@ describe("Sanitise application data webhook", () => {
     const mockOperation3 = jest.fn().mockResolvedValue(["abc", "def", "ghi"]);
 
     const mockGetOperations = jest.spyOn(operations, "getOperations");
-    mockGetOperations.mockImplementation(() => ([
+    mockGetOperations.mockImplementation(() => [
       mockOperation1,
       mockOperation2,
       mockOperation3,
-    ]));
+    ]);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
@@ -78,15 +80,17 @@ describe("Sanitise application data webhook", () => {
 
   it("returns a 500 when only a single operation fails", async () => {
     const mockOperation1 = jest.fn().mockResolvedValue(["123"]);
-    const mockOperation2 = jest.fn().mockRejectedValue(new Error("Query failed!"));
+    const mockOperation2 = jest
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
     const mockOperation3 = jest.fn().mockResolvedValue(["abc", "def", "ghi"]);
 
     const mockGetOperations = jest.spyOn(operations, "getOperations");
-    mockGetOperations.mockImplementation(() => ([
+    mockGetOperations.mockImplementation(() => [
       mockOperation1,
       mockOperation2,
       mockOperation3,
-    ]));
+    ]);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
@@ -104,7 +108,7 @@ describe("Sanitise application data webhook", () => {
             }),
             expect.objectContaining({
               status: "failure",
-              errorMessage: "Query failed!"
+              errorMessage: "Query failed!",
             }),
             expect.objectContaining({
               status: "success",
@@ -114,23 +118,31 @@ describe("Sanitise application data webhook", () => {
         );
 
         expect(SlackNotify).toHaveBeenCalledWith(process.env.SLACK_WEBHOOK_URL);
-        expect(mockSend).toHaveBeenCalledWith(expect.objectContaining({
-          text: expect.stringMatching(/Error: Query failed!/)
-        }));
+        expect(mockSend).toHaveBeenCalledWith(
+          expect.objectContaining({
+            text: expect.stringMatching(/Error: Query failed!/),
+          })
+        );
       });
   });
 
   it("returns a 500 if all operations fail", async () => {
-    const mockOperation1 = jest.fn().mockRejectedValue(new Error("Query failed!"));
-    const mockOperation2 = jest.fn().mockRejectedValue(new Error("Query failed!"));
-    const mockOperation3 = jest.fn().mockRejectedValue(new Error("Query failed!"));
+    const mockOperation1 = jest
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
+    const mockOperation2 = jest
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
+    const mockOperation3 = jest
+      .fn()
+      .mockRejectedValue(new Error("Query failed!"));
 
     const mockGetOperations = jest.spyOn(operations, "getOperations");
-    mockGetOperations.mockImplementation(() => ([
+    mockGetOperations.mockImplementation(() => [
       mockOperation1,
       mockOperation2,
       mockOperation3,
-    ]));
+    ]);
 
     await post(ENDPOINT)
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY })
@@ -144,18 +156,18 @@ describe("Sanitise application data webhook", () => {
           expect.arrayContaining([
             expect.objectContaining({
               status: "failure",
-              errorMessage: "Query failed!"
+              errorMessage: "Query failed!",
             }),
             expect.objectContaining({
               status: "failure",
-              errorMessage: "Query failed!"
+              errorMessage: "Query failed!",
             }),
             expect.objectContaining({
               status: "failure",
-              errorMessage: "Query failed!"
+              errorMessage: "Query failed!",
             }),
           ])
-        )
+        );
       });
   });
 });
