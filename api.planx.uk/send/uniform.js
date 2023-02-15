@@ -281,9 +281,8 @@ export async function createUniformSubmissionZip({
         templateName,
       });
     } catch (e) {
-      throw new Error(
-        `The template "${templateName}" could not be generated with the supplied data:\n${e}`
-      );
+      console.log(`Template "${templateName}" could not be generated so has been skipped`);
+      if (e.message) console.log(e.message)
     }
     if (isTemplateSupported) {
       const templatePath = path.join(tmpDir, `${templateName}.doc`);
