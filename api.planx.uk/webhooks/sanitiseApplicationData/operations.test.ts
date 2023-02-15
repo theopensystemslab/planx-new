@@ -75,7 +75,7 @@ describe("getRetentionPeriod helper function", () => {
 describe("getExpiredSessionIds helper function", () => {
   test("it returns formatted session ids", async () => {
     queryMock.mockQuery({
-      name: "GetSessionIds",
+      name: "GetExpiredSessionIds",
       matchOnVariables: false,
       data: {
         lowcal_sessions: [

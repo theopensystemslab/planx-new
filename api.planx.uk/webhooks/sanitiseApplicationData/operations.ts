@@ -60,7 +60,7 @@ export const operationHandler = async (
  */
 export const getExpiredSessionIds = async (): Promise<string[]> => {
   const query = gql`
-    query GetSessionIds($retentionPeriod: timestamptz) {
+    query GetExpiredSessionIds($retentionPeriod: timestamptz) {
       lowcal_sessions(where: {
         submitted_at: {_lt: $retentionPeriod}
         # "sanitised_at" check currently disabled - will be enabled after initial sanitation operation succeeds

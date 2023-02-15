@@ -45,7 +45,7 @@ export const mockDeleteReconciliationRequestsMutation = {
 };
 
 export const mockGetExpiredSessionIdsQuery = {
-  name: "GetSessionIds",
+  name: "GetExpiredSessionIds",
   matchOnVariables: false,
   data: {
     lowcal_sessions: [
