@@ -6,7 +6,8 @@
     "docker:recreate": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml up -d --build --force-recreate",
     "docker:destroy": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml down --remove-orphans -v",
     "docker:tests": "./scripts/start-containers-for-tests.sh",
-    "prepare": "husky install ./.husky"
+    "prepare": "husky install ./.husky",
+    "check": "./scripts/check-projects.sh"
   },
   "devDependencies": {
     "husky": "^8.0.3",

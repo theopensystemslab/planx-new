@@ -18,10 +18,10 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 - `sharedb.planx.uk` is our implementation of [ShareDB](https://github.com/share/sharedb), a library for realtime document collaboration based on JSON Operational Transformation (OT) used in our "editor" environment
 - `infrastructure` is [Pulumi](https://www.pulumi.com/) infrastructure-as-code for configuring and managing our AWS environments
 
-
 ## Running Locally
 
 1. Download and install the following dependencies if you don't have them already:
+
 - [Docker](https://docs.docker.com/get-docker/)
 - [PNPM](https://github.com/pnpm/pnpm) `npm install -g pnpm@7.8.0`
 
@@ -37,27 +37,34 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 1. Start the editor dev server! `pnpm start` & open `http://localhost:3000` & login with your GMail/Google email address
 
-
 ### Troubleshooting
 
 If you run into trouble, you may want to try the following:
 
-* Ensure you have a local `.env` file with up-to-date keys etc (see relevant `.env.example` files for reference and 1Password for an initial `.env` file).
-
+- Ensure you have a local `.env` file with up-to-date keys etc (see relevant `.env.example` files for reference and 1Password for an initial `.env` file).
 
 ### Analytics
 
 Running `docker compose up` won't spin up [Metabase](https://www.metabase.com/).
 To spin it up, run:
 
-  `docker compose --profile analytics up`
-
+`docker compose --profile analytics up`
 
 ### Documentation
 
 This project uses Architecture Decision Records (ADRs) to record significant changes and decisions. Further details of this can be [found here](https://github.com/theopensystemslab/planx-new/blob/main/doc/architecture/decisions/0001-record-architecture-decisions.md).
 
 For maximum visibility and discoverability, we recommend using the [GitHub discussions board](https://github.com/theopensystemslab/planx-new/discussions) where possible.
+
+## Development Tools
+
+### Code Formatting
+
+Code in this repository is linted with eslint and formatted with prettier.
+
+You can install a pre-commit hooks to ensure your code is formatted correctly before pushing any changes with `pnpm prepare` at the root of the project (you may need to run `pnpm install` first).
+
+Code is also checked in CI so these pre-commit hooks may save you an additional round of code changes.
 
 ## Deployments
 
@@ -75,10 +82,10 @@ You can manually trigger a production deployments by going to [the Deploy to Pro
 
 Once a deployment is completed, a Slack notification will be sent to the #planx-deployments channel, and the `production` branch should read "This branch is up to date with main."
 
-
 ### Troubleshooting
 
 If the commit history of `main` and `production` diverge and `production` contains commit hashes that are NOT on main, try running this command from `production` to reset and then follow the original deploy steps above:
+
 ```bash
 git reset --hard <most recent commit hash **matching** main> && git push --force
 ```
