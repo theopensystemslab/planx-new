@@ -1,17 +1,22 @@
 import slugify from "lodash.kebabcase";
-import { graphQLClient, Request } from "./graphql";
+import { graphQLClient } from "./graphql";
 import { createUser } from "./user";
 import { createTeam } from "./team";
 import { createFlow, publishFlow } from "./flow";
+import type { GraphQLClient } from "graphql-request";
+import { getDocumentTemplateNames } from "./document-templates";
 
 const defaultURL = process.env.HASURA_GRAPHQL_URL;
 
 export class Client {
-  request: Request;
+  client: GraphQLClient;
 
-  constructor(args: { hasuraSecret: string; targetURL?: string | undefined }) {
+  constructor(args: {
+    hasuraSecret?: string | undefined;
+    targetURL?: string | undefined;
+  }) {
     const url: string = args.targetURL ? args.targetURL : defaultURL!;
-    this.request = graphQLClient({ url, secret: args.hasuraSecret });
+    this.client = graphQLClient({ url, secret: args.hasuraSecret });
   }
 
   async createUser(args: {
@@ -19,7 +24,7 @@ export class Client {
     lastName: string;
     email: string;
   }): Promise<number> {
-    return createUser(this.request, args);
+    return createUser(this.client, args);
   }
 
   async createTeam(args: {
@@ -30,7 +35,7 @@ export class Client {
     homepage: string;
   }): Promise<number> {
     const slug = args.slug ? args.slug : slugify(args.name);
-    return createTeam(this.request, { ...args, slug });
+    return createTeam(this.client, { ...args, slug });
   }
 
   async createFlow(args: {
@@ -38,13 +43,17 @@ export class Client {
     slug: string;
     data?: object;
   }): Promise<string> {
-    return createFlow(this.request, args);
+    return createFlow(this.client, args);
   }
 
   async publishFlow(args: {
     flow: { id: string; data: object };
     publisherId: number;
   }): Promise<number> {
-    return publishFlow(this.request, args);
+    return publishFlow(this.client, args);
+  }
+
+  async getDocumentTemplateNames(flowId: string): Promise<string[]> {
+    return getDocumentTemplateNames(this.client, flowId);
   }
 }

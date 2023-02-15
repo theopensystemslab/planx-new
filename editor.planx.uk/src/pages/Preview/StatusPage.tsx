@@ -10,6 +10,7 @@ import React from "react";
 import Banner from "ui/Banner";
 
 import { makeCsvData } from "../../@planx/components/Send/uniform";
+import { useFlowName } from "../../@planx/components/shared/hooks";
 import FileDownload from "../../ui/FileDownload";
 
 interface Props {
@@ -44,8 +45,16 @@ const StatusPage: React.FC<Props> = ({
     state.sessionId,
   ]);
 
+  const flowName = useFlowName();
+
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform
-  const data = makeCsvData(breadcrumbs, flow, passport, sessionId);
+  const data = makeCsvData({
+    breadcrumbs,
+    flow,
+    flowName,
+    passport,
+    sessionId,
+  });
 
   const theme = useTheme();
   const classes = useStyles();

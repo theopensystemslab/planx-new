@@ -21,18 +21,18 @@ import {
  */
 export type PlanXAppTypes = "ldc.existing" | "ldc.proposed";
 
-interface UniformPayloadRequiredArgs {
+interface UniformPayloadArgs {
   sessionId: string;
   passport: Store.passport;
   files: string[];
-  hasBoundary: boolean;
+  templateNames?: string[] | undefined;
 }
 
 export class UniformPayload implements IUniformPayload {
   sessionId: string;
   passport: Store.passport;
   files: string[];
-  hasBoundary: boolean;
+  templateNames: string[];
 
   proposalCompletionDate: string;
   siteAddress: SiteAddress;
@@ -43,12 +43,12 @@ export class UniformPayload implements IUniformPayload {
     sessionId,
     passport,
     files,
-    hasBoundary,
-  }: UniformPayloadRequiredArgs) {
+    templateNames,
+  }: UniformPayloadArgs) {
     this.sessionId = sessionId;
     this.passport = passport;
     this.files = files;
-    this.hasBoundary = hasBoundary;
+    this.templateNames = templateNames || [];
 
     this.proposalCompletionDate = this.setProposalCompletionDate();
     this.siteAddress = passport.data?.["_address"];
@@ -259,15 +259,29 @@ export class UniformPayload implements IUniformPayload {
         "common:Reference": "Other",
       },
       {
-        "common:FileName": "review.html",
+        "common:FileName": "Overview.htm",
         "common:Reference": "Other",
       },
     ];
-    if (this.hasBoundary)
+
+    if (this.passport.data?.["property.boundary.site"]) {
       files.push({
-        "common:FileName": "boundary.geojson",
+        "common:FileName": "LocationPlanGeoJSON.geojson",
         "common:Reference": "Other",
       });
+      files.push({
+        "common:FileName": "LocationPlan.htm",
+        "common:Reference": "Other",
+      });
+    }
+
+    for (const templateName of this.templateNames) {
+      files.push({
+        "common:FileName": `${templateName}.doc`,
+        "common:Reference": "Other",
+      });
+    }
+
     return files;
   };
 

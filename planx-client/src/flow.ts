@@ -1,11 +1,12 @@
-import { Request } from "./graphql";
+import { gql } from "graphql-request";
+import type { GraphQLClient } from "graphql-request";
 
 export async function createFlow(
-  request: Request,
+  client: GraphQLClient,
   args: { teamId: number; slug: string; data?: object }
 ): Promise<string> {
-  const { insert_flows_one: response } = await request(
-    `
+  const { insert_flows_one: response } = await client.request(
+    gql`
       mutation CreateFlow($teamId: Int!, $flowSlug: String!, $data: jsonb) {
         insert_flows_one(object: { team_id: $teamId, slug: $flowSlug, data: $data, version: 1 }) {
           id
@@ -18,16 +19,16 @@ export async function createFlow(
       data: args.data,
     }
   );
-  await createAssociatedOperation(request, { flowId: response.id });
+  await createAssociatedOperation(client, { flowId: response.id });
   return response.id;
 }
 
 export async function publishFlow(
-  request: Request,
+  client: GraphQLClient,
   args: { flow: { id: string; data: object }; publisherId: number }
 ): Promise<number> {
-  const { insert_published_flows_one: response } = await request(
-    `
+  const { insert_published_flows_one: response } = await client.request(
+    gql`
       mutation InsertPublishedFlow(
         $publishedFlow: published_flows_insert_input!,
       ) {
@@ -52,11 +53,11 @@ export async function publishFlow(
 
 // Add a row to `operations` for an inserted flow, otherwise ShareDB throws a silent error when opening the flow in the UI
 async function createAssociatedOperation(
-  request: Request,
+  client: GraphQLClient,
   args: { flowId: string }
 ): Promise<number> {
-  const { insert_operations_one: response } = await request(
-    `
+  const { insert_operations_one: response } = await client.request(
+    gql`
     mutation InsertOperation ($flowId: uuid!, $data: jsonb = {}) {
       insert_operations_one(object: { flow_id: $flowId, version: 1, data: $data }) {
         id

@@ -7,11 +7,14 @@ import capitalize from "lodash/capitalize";
 import os from "os";
 import path from "path";
 
+import {
+  generateHTMLMapStream,
+  generateHTMLOverviewStream,
+} from "@opensystemslab/planx-document-templates";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted, sendEmail } from "../saveAndReturn/utils";
 import { EmailSubmissionNotifyConfig } from "../types";
-import { generateDocumentReviewStream } from "./documentReview";
-import { deleteFile, downloadFile } from "./helpers";
+import { deleteFile, downloadFile, resolveStream } from "./helpers";
 
 
 const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
@@ -111,11 +114,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
         const csvFile = fs.createWriteStream(csvPath);
 
         const csvStream = stringify(sessionData.csv, { columns: ["question", "responses", "metadata"], header: true }).pipe(csvFile);
-        await new Promise((resolve, reject) => {
-          csvStream.on("error", reject);
-          csvStream.on("finish", resolve);
-        });
-
+        await resolveStream(csvStream);
         zip.addLocalFile(csvPath);
         deleteFile(csvPath);
       }
@@ -125,19 +124,25 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
       if (geojson) {
         const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
         zip.addFile("boundary.geojson", geoBuff);
+
+        // generate and add an HTML boundary document
+        const boundaryPath = path.join(tmpDir, "LocationPlan.html");
+        const boundaryFile = fs.createWriteStream(boundaryPath);
+        const boundaryStream =
+          generateHTMLMapStream(geojson).pipe(boundaryFile);
+        await resolveStream(boundaryStream);
+        zip.addLocalFile(boundaryPath);
+        deleteFile(boundaryPath);
       }
 
-      // As long as we csv data or geojson, add a HTML document viewer for human-readability
-      if (sessionData.csv || geojson) {
+      // As long as we csv data, add a HTML overview document for human-readability
+      if (sessionData.csv) {
         const htmlPath = path.join(tmpDir, "application.html");
         const htmlFile = fs.createWriteStream(htmlPath);
-        const htmlStream = generateDocumentReviewStream({ csv: sessionData?.csv, geojson: geojson }).pipe(htmlFile);
-  
-        await new Promise((resolve, reject) => {
-          htmlStream.on("error", reject);
-          htmlStream.on("finish", resolve);
-        });
-  
+        const htmlStream = generateHTMLOverviewStream(sessionData.csv).pipe(
+          htmlFile
+        );
+        await resolveStream(htmlStream);
         zip.addLocalFile(htmlPath);
         deleteFile(htmlPath);
       }

@@ -2,7 +2,12 @@ import { test, expect } from "@playwright/test";
 import { log } from "./helpers";
 import type { Page } from "@playwright/test";
 import payFlow from "./flows/pay-flow.json";
-import { getClient, setUpTestContext, tearDownTestContext } from "./context";
+import {
+  getClient,
+  getGraphQLClient,
+  setUpTestContext,
+  tearDownTestContext,
+} from "./context";
 
 const TEAM_SLUG = "buckinghamshire"; // local authority with GOV Pay enabled
 let context: any = {
@@ -33,19 +38,20 @@ const cards = {
 
 test.describe("Payment flow", async () => {
   const client = getClient();
+  const adminGQLClient = getGraphQLClient();
 
   test.beforeAll(async () => {
     try {
       context = await setUpTestContext(client, context);
     } catch (e) {
       // ensure proper teardown if setup fails
-      await tearDownTestContext(client, context);
+      await tearDownTestContext(context);
       throw e;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(client, context);
+    await tearDownTestContext(context);
   });
 
   test("Should pay within GOV.UK Pay and reach the Confirmation page", async ({
@@ -65,7 +71,7 @@ test.describe("Payment flow", async () => {
       await hasPaymentStatus({
         status: "success",
         paymentId: paymentRef,
-        client,
+        adminGQLClient,
       })
     ).toBe(true);
   });
@@ -82,7 +88,7 @@ test.describe("Payment flow", async () => {
       await hasPaymentStatus({
         status: "failed",
         paymentId: failedPaymentRef,
-        client,
+        adminGQLClient,
       })
     ).toBe(true);
 
@@ -99,7 +105,7 @@ test.describe("Payment flow", async () => {
       await hasPaymentStatus({
         status: "success",
         paymentId: paymentRef,
-        client,
+        adminGQLClient,
       })
     ).toBe(true);
   });
@@ -121,7 +127,7 @@ test.describe("Payment flow", async () => {
       await hasPaymentStatus({
         status: "failed",
         paymentId: failedPaymentRef,
-        client,
+        adminGQLClient,
       })
     ).toBe(true);
 
@@ -139,7 +145,7 @@ test.describe("Payment flow", async () => {
       await hasPaymentStatus({
         status: "success",
         paymentId: paymentRef,
-        client,
+        adminGQLClient,
       })
     ).toBe(true);
   });
@@ -186,14 +192,14 @@ async function waitForPaymentResponse(page: Page): Promise<null | object> {
 async function hasPaymentStatus({
   status,
   paymentId,
-  client,
+  adminGQLClient,
 }: {
   status: string;
   paymentId: string;
   client: Client;
 }): Promise<boolean> {
   try {
-    const { payment_status: response } = await client.request(
+    const { payment_status: response } = await adminGQLClient.request(
       `query GetPaymentStatus($paymentId: String!, $status: payment_status_enum_enum!) {
         payment_status(where: {payment_id: {_eq: $paymentId}, status: {_eq: $status}}) {
           status

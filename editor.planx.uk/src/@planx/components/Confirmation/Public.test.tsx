@@ -1,7 +1,17 @@
 import React from "react";
+import * as ReactNavi from "react-navi";
 import { axe, setup } from "testUtils";
 
 import ConfirmationComponent from "./Public";
+
+jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
+  () =>
+    ({
+      data: {
+        flowName: "apply for a lawful development certificate",
+      },
+    } as any)
+);
 
 it("should not have any accessibility violations", async () => {
   const { container } = setup(

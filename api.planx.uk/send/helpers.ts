@@ -1,10 +1,10 @@
 import AdmZip from "adm-zip";
 import fs from "fs";
+import { gql } from "graphql-request";
 
 import airbrake from "../airbrake";
 import { getFileFromS3 } from "../s3/getFile";
 import { adminGraphQLClient } from "../hasura";
-import { gql } from "graphql-request";
 
 /**
  * Helper method to locally download S3 files, add them to the zip, then clean them up
@@ -35,8 +35,17 @@ export function deleteFile(path: string) {
   if (fs.existsSync(path)) {
     fs.unlinkSync(path);
   } else {
-    console.log(`Didn't find ${path}, nothing to delete`);
+    log(`Didn't find ${path}, nothing to delete`);
   }
+}
+
+export async function resolveStream(stream: {
+  on: (event: string, callback: (value: unknown) => void) => void;
+}) {
+  return await new Promise((resolve, reject) => {
+    stream.on("error", reject);
+    stream.on("finish", resolve);
+  });
 }
 
 export async function logPaymentStatus({
@@ -87,7 +96,14 @@ function reportError(obj: object) {
     airbrake.notify(obj);
     return;
   }
-  console.log(obj);
+  log(obj);
+}
+
+// tmp logger
+function log(event: object | string) {
+  if (!process.env.SUPPRESS_LOGS) {
+    console.log(event);
+  }
 }
 
 // TODO: this would ideally live in planx-clint

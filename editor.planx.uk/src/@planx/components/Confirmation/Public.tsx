@@ -12,6 +12,7 @@ import NumberedList from "ui/NumberedList";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import { makeCsvData } from "../Send/uniform";
+import { useFlowName } from "../shared/hooks";
 import type { Confirmation } from "./model";
 
 const useClasses = makeStyles((theme) => ({
@@ -42,9 +43,16 @@ export default function ConfirmationComponent(props: Props) {
     state.computePassport(),
     state.sessionId,
   ]);
+  const flowName = useFlowName();
 
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform
-  const data = makeCsvData(breadcrumbs, flow, passport, sessionId);
+  const data = makeCsvData({
+    breadcrumbs,
+    flow,
+    flowName,
+    passport,
+    sessionId,
+  });
 
   const classes = useClasses();
 
