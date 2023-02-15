@@ -18,11 +18,11 @@ In the near future, this process should be replaced by a re-submission API which
 
 2. Identify the cause of the failure. Uniform logs, or a response from BoPS can prove helpful here. 
 
-3. If relevant, fix the problem with the payload or the API (e.g. malformed XML, missing values) before proceeding with a re-submission.
+3. Get the payload data. This can be found in the `payload` column of the `uniform_applications` or `bops_applications` tables. Keep a copy of this JSON for later steps.
 
-4. Get the payload data. This can be found in the `payload` column of the `uniform_applications` or `bops_applications` tables. Keep a copy of this JSON for later steps.
+4. If relevant, fix the problem with the payload or the API (e.g. malformed XML, missing values) before proceeding with a re-submission.
 
-5. Update existing audit table to allow re-submission.
+5. Update existing audit table to allow re-submission (necessary because send endpoints have a built-in check to avoid unintentional duplications).
    * `uniform_applications.response.submissionStatus` should be changed from `"PENDING"` to `"FAILED"`
    * `bops_application.response.message` should be changed from `"Application created"` to `"FAILED"`
  
@@ -38,7 +38,7 @@ In the near future, this process should be replaced by a re-submission API which
 7. Prepare the payload copied from Step 3. Ensure the structure is correct, see example - 
 
 ```json
-{ 
+{
   "payload: {
     ** PAYLOAD_JSON **
   }
@@ -68,11 +68,11 @@ We will verify that the payment is valid, manually record the payment informatio
   * Method = GET
   * Auth is required via a Bearer Token. You can get this from Pulumi with pulumi config get gov-uk-pay-token-<LOCAL_AUTHORITY>
 
-### Proceed with the submission
+#### Proceed with the submission
 
-1. Copy `lowcal_sessions.data` and paste it into something like https://jsonlint.com/; we need to edit the passport & breadcrumbs to reflect a payment:
+1. Copy `lowcal_sessions.data` and paste it into something like https://jsonlint.com/; we need to edit the passport & breadcrumbs to reflect a payment if it doesn't already:
   * in the passport, add one object variable: ```{ "application.fee.reference.govPay" : { "amount": <fee>, "payment_id": "<payment-reference>" }}```
-      * fee should match existing variable "application.fee.payable" & payment reference comes from prior steps
+      * fee should match existing variable `"application.fee.payable"` & payment reference comes from prior steps
   * in the breadcrumbs, add an entry for the Pay node (find the correct id by opening that node in its' respective flow): eg ```"R72aEBuc3F": { "auto": true }```,
   * add a top-level key ```"govUkPayment": { "state": { "status": "created" }}``` to skip the "resume" page during reconciliation
 
