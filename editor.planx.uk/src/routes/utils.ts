@@ -82,8 +82,3 @@ export const getTeamFromDomain = pMemoize(async (domain: string) => {
 
   return teams?.[0]?.slug;
 });
-
-// NB: In the database `flowName` and `slug` are (now) synonymous.
-export const extractFlowNameFromReq = (req: NaviRequest<object>) => {
-  return req.params.flow?.replaceAll?.("-", " ");
-};

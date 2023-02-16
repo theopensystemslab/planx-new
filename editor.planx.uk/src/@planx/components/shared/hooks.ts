@@ -14,11 +14,6 @@ export const useTeamSlug = () => {
   return route?.data?.team;
 };
 
-export const useFlowName = () => {
-  const route = useCurrentRoute();
-  return route?.data?.flowName;
-};
-
 export type UseFileUrlProps =
   | { file: File }
   | { url: string }

@@ -5,10 +5,8 @@
 // https://southwark.preview.bops.services/api-docs/index.html
 
 import { logger } from "airbrake";
-import capitalize from "lodash/capitalize";
 import { flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
-import { useCurrentRoute } from "react-navi";
 import { GovUKPayment } from "types";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
@@ -245,9 +243,9 @@ export function getBOPSParams({
   data.application_type = "lawfulness_certificate";
 
   // Overwrite application type if this isn't an LDC (relies on LDC flows having consistent slug)
-  //   eg because makeCsvData which is used acrossed services calls this method
-  if (flowName && flowName !== "apply for a lawful development certificate") {
-    data.application_type = capitalize(flowName);
+  //   eg because makeCsvData which is used across services calls this method
+  if (flowName && flowName !== "Apply for a lawful development certificate") {
+    data.application_type = flowName;
   }
 
   // 1a. address
