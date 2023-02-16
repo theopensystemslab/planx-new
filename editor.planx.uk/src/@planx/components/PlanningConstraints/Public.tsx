@@ -7,6 +7,9 @@ import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
+import buffer from "@turf/buffer";
+import flip from "@turf/flip";
+import { Feature, Polygon, Properties } from "@turf/helpers";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
@@ -95,8 +98,21 @@ function Component(props: Props) {
     }
   );
 
-  // If we have a siteBoundary, additionally fetch classified roads (available nationally), but skip if we only have an address point
-  const classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads?geom=${wktPolygon}`;
+  // If we have a siteBoundary, additionally fetch classified roads (available nationally) using the buffered siteBoundary,
+  //   skip if we only have an address point because we can't confidently buffer
+  const bufferRadiusInMeters = 7;
+  const bufferedSiteBoundary: Feature<Polygon, Properties> = buffer(
+    siteBoundary,
+    bufferRadiusInMeters,
+    { units: "meters", steps: 0 }
+  );
+
+  // Flip the buffered polygon coordinates from [x, y] to [y, x].
+  const flipped: Feature<Polygon, Properties> = flip(bufferedSiteBoundary);
+  // Format the flipped coordinates as a space-delimited string for the OGC XML filter param
+  const ogcCoordinates: string = flipped.geometry.coordinates[0].join(" ");
+
+  const classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads?geom=${ogcCoordinates}`;
   const {
     data: roads,
     error: errorRoads,
