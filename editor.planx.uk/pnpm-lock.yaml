@@ -20025,7 +20025,7 @@ packages:
     dev: true
 
   file:shared/planx-client-1.0.0.tgz:
-    resolution: {integrity: sha512-ZK3ui84biJXQ/wcNqiIKhtBXIpvphvAtpIcpGf8uJjsb5UdzanptM63f7FgWoreNRV9UkXIyae4gdVHMzMaTHw==, tarball: file:shared/planx-client-1.0.0.tgz}
+    resolution: {integrity: sha512-W4AsYPLsPSkbyajO6U6FPogr+GmjdERBPxOS+ckNHn3nkQ34uXkOp/WyDzirULDjmuncSplWRd2z8F/roBcieQ==, tarball: file:shared/planx-client-1.0.0.tgz}
     name: planx-client
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
