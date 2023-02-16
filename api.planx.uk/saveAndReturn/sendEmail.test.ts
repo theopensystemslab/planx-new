@@ -127,14 +127,16 @@ describe("Send Email endpoint", () => {
         .send(data)
         .expect(400)
         .then(response => {
-          expect(response.body).toHaveProperty("error", 'Invalid template - must be one of [save, reminder, expiry, submit]');
+          expect(response.body).toHaveProperty("error", 'Invalid template - must be one of [save, reminder, expiry, submit, confirmation]');
         });
     });
   });
 
   describe("Templates which require authorisation", () => {
+    const templates = ["reminder", "expiry", "confirmation"];
+
     it("returns 401 UNAUTHORIZED if no auth header is provided", async () => {
-      for (const template of ["reminder", "expiry"]) {
+      for (const template of templates) {
         const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
         await supertest(app)
           .post(`/send-email/${template}`)
@@ -144,7 +146,7 @@ describe("Send Email endpoint", () => {
     });
 
     it("returns 401 UNAUTHORIZED if no incorrect auth header is provided", async () => {
-      for (const template of ["reminder", "expiry"]) {
+      for (const template of templates) {
         const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
         await supertest(app)
           .post(`/send-email/${template}`)
@@ -155,7 +157,7 @@ describe("Send Email endpoint", () => {
     });
 
     it("returns 200 OK if the correct headers are used", async () => {
-      for (const template of ["reminder", "expiry"]) {
+      for (const template of templates) {
         const data = { payload: { sessionId: 123, email: TEST_EMAIL } };
         await supertest(app)
           .post(`/send-email/${template}`)
