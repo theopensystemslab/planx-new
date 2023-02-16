@@ -10,7 +10,7 @@ concurrency: production_environment
 
 env:
   DEPLOYMENT_ENVIRONMENT: production
-  PNPM_VERSION: 7.8.0
+  PNPM_VERSION: 7.27.0
   NODE_VERSION: 16.13.1 # 16.13.1 = LTS
 
 jobs:

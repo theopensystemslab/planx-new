@@ -2,7 +2,7 @@ FROM node:16.13.1-alpine
 RUN npm install -g hasura-cli
 
 WORKDIR /scripts/
-RUN npm install -g pnpm@7.8.0
+RUN npm install -g pnpm@7.27.0
 COPY pnpm-lock.yaml .
 
 RUN pnpm fetch --prod

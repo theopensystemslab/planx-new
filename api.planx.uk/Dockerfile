@@ -5,7 +5,7 @@ FROM node:16.13.1-alpine as base
 RUN apk add --no-cache git # required for fetching git dependencies
 
 WORKDIR /api
-RUN npm install -g pnpm@7.8.0
+RUN npm install -g pnpm@7.27.0
 
 # install cachable shared package
 COPY shared ./shared
