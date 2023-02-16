@@ -2,11 +2,7 @@ import "isomorphic-fetch";
 
 const PASSPORT_FN = "roads.classified";
 
-export const classifiedRoadsSearch = async (
-  req,
-  res,
-  next
-) => {
+export const classifiedRoadsSearch = async (req, res, next) => {
   try {
     if (!req.query.geom)
       return next({ status: 401, message: "Missing required query param `?geom=`" });
@@ -15,7 +11,7 @@ export const classifiedRoadsSearch = async (
     //   that intersect with the buffered site boundary (polygon) coordinates
     //   ref https://labs.os.uk/public/os-data-hub-examples/os-features-api/wfs-example-intersects#maplibre-gl-js
     const xml = `
-      <ogc:Filter">
+      <ogc:Filter>
         <ogc:Intersects>
         <ogc:PropertyName>SHAPE</ogc:PropertyName>
           <gml:Polygon srsName="EPSG:4326">
@@ -42,18 +38,34 @@ export const classifiedRoadsSearch = async (
     };
 
     const url = `https://api.os.uk/features/v1/wfs?${new URLSearchParams(params).toString()}`;
-    const response = await fetch(url)
+    const features = await fetch(url)
       .then(res => res.json())
+      .then(data => {
+        if (!data.features?.length) return;
+        
+        // Filter out any intersecting roads that are not classified
+        const classifiedFeatures = data.features.filter((feature) => feature.properties["RoadClassification"] !== "Unclassified");
+        return classifiedFeatures;
+      })
       .catch(error => console.log(error));
 
-    // format the response to align with "planning constraints"
-    return res.json({
-      [PASSPORT_FN]: {
-        value: true,
-        text: "is on a Classified Road",
-        data: response?.features,
-      }
-    });
+    // Return a response object that's the same shape as a planning constraint
+    if (features?.length) {
+      return res.json({
+        [PASSPORT_FN]: {
+          value: true,
+          text: `is on a Classified Road (${features[0].properties["RoadName1"]})`,
+          data: features,
+        }
+      });
+    } else {
+      return res.json({
+        [PASSPORT_FN]: {
+          value: false,
+          text: "is not on a Classified Road",
+        }
+      });
+    }
   } catch (error) {
     return next({ message: "Failed to fetch classified roads: " + error?.message });
   }

@@ -78,6 +78,7 @@ function Component(props: Props) {
     version: 1,
   };
 
+  // Fetch planning constraints data for a given local authority
   const root: string = `${process.env.REACT_APP_API_URL}/gis/${team}?`;
   const teamGisEndpoint: string =
     root +
@@ -99,26 +100,30 @@ function Component(props: Props) {
   );
 
   // If we have a siteBoundary, additionally fetch classified roads (available nationally) using the buffered siteBoundary,
-  //   skip if we only have an address point because we can't confidently buffer
-  const bufferRadiusInMeters = 7;
-  const bufferedSiteBoundary: Feature<Polygon, Properties> = buffer(
-    siteBoundary,
-    bufferRadiusInMeters,
-    { units: "meters", steps: 0 }
-  );
+  //   skip if we only have an address point because we can't confidently buffer (applicant will see question instead)
+  let classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads`;
+  if (siteBoundary) {
+    const bufferRadiusInMeters = 10; // avg road width is 5-7m
+    const bufferedSiteBoundary: Feature<Polygon, Properties> = buffer(
+      siteBoundary,
+      bufferRadiusInMeters,
+      { units: "meters", steps: 0 }
+    );
 
-  // Flip the buffered polygon coordinates from [x, y] to [y, x].
-  const flipped: Feature<Polygon, Properties> = flip(bufferedSiteBoundary);
-  // Format the flipped coordinates as a space-delimited string for the OGC XML filter param
-  const ogcCoordinates: string = flipped.geometry.coordinates[0].join(" ");
+    // Flip the buffered polygon coordinates from [x, y] to [y, x].
+    const flipped: Feature<Polygon, Properties> = flip(bufferedSiteBoundary);
 
-  const classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads?geom=${ogcCoordinates}`;
+    // Format the flipped coordinates as a space-delimited string for the OGC XML filter param
+    const ogcCoordinates: string = flipped.geometry.coordinates[0].join(" ");
+    classifiedRoadsEndpoint += `?geom=${ogcCoordinates}`;
+  }
+
   const {
     data: roads,
     error: errorRoads,
     mutate: mutateRoads,
     isValidating: isValidatingRoads,
-  } = useSWR(() => (wktPolygon ? classifiedRoadsEndpoint : null), fetcher, {
+  } = useSWR(() => (siteBoundary ? classifiedRoadsEndpoint : null), fetcher, {
     shouldRetryOnError: true,
     errorRetryInterval: 500,
     errorRetryCount: 1,
