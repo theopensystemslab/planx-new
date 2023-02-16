@@ -226,12 +226,19 @@ export const makePayload = (
   return { proposal_details, feedback };
 };
 
-export function getBOPSParams(
-  breadcrumbs: Store.breadcrumbs,
-  flow: Store.flow,
-  passport: Store.passport,
-  sessionId: string
-) {
+export function getBOPSParams({
+  breadcrumbs,
+  flow,
+  passport,
+  sessionId,
+  flowName,
+}: {
+  breadcrumbs: Store.breadcrumbs;
+  flow: Store.flow;
+  passport: Store.passport;
+  sessionId: string;
+  flowName: string;
+}) {
   const data = {} as BOPSFullPayload;
 
   // Default application type accepted by BOPS
@@ -239,7 +246,6 @@ export function getBOPSParams(
 
   // Overwrite application type if this isn't an LDC (relies on LDC flows having consistent slug)
   //   eg because makeCsvData which is used acrossed services calls this method
-  const flowName = useCurrentRoute()?.data?.flowName;
   if (flowName && flowName !== "apply for a lawful development certificate") {
     data.application_type = capitalize(flowName);
   }

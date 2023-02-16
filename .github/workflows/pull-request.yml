@@ -130,7 +130,7 @@ jobs:
         run: pnpm install --frozen-lockfile
         working-directory: api.planx.uk
       - name: Run API Tests
-        run: pnpm install --frozen-lockfile && pnpm lint --quiet && pnpm test
+        run: pnpm install --frozen-lockfile && pnpm check --quiet && pnpm test
         working-directory: api.planx.uk
 
   test_react:
@@ -162,6 +162,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
+      - run: pnpm distribute ../${{ env.EDITOR_DIRECTORY }}
+        working-directory: planx-client
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build

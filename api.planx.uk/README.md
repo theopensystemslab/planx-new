@@ -22,10 +22,6 @@ Start the development server `pnpm dev`
 
 Run tests `pnpm test`
 
-## Debugging
-
-Setting the environment variable `DEBUG` to any truthy value turns on verbose console output for debugging.
-
 ## Prior art
 
 https://github.com/theopensystemslab/planx-api

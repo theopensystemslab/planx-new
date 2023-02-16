@@ -29,8 +29,15 @@ test("sends flag result despite no result component", () => {
   const passport: Store.passport = {
     data: {},
   };
+  const flowName = "apply for a lawful development certificate";
 
-  const actual = getBOPSParams(breadcrumbs, flow, passport, sessionId);
+  const actual = getBOPSParams({
+    breadcrumbs,
+    flow,
+    passport,
+    sessionId,
+    flowName,
+  });
 
   const expected = {
     application_type: "lawfulness_certificate",
@@ -83,8 +90,15 @@ test("sends override description with flag result", () => {
       "application.resultOverride.reason": "i don't agree",
     },
   };
+  const flowName = "apply for a lawful development certificate";
 
-  const actual = getBOPSParams(breadcrumbs, flow, passport, sessionId);
+  const actual = getBOPSParams({
+    breadcrumbs,
+    flow,
+    passport,
+    sessionId,
+    flowName,
+  });
 
   const expected = {
     application_type: "lawfulness_certificate",
@@ -132,8 +146,15 @@ test("sends 'no result' to BOPS when there is no collected flag", () => {
   const passport: Store.passport = {
     data: {},
   };
+  const flowName = "apply for a lawful development certificate";
 
-  const actual = getBOPSParams(breadcrumbs, flow, passport, sessionId);
+  const actual = getBOPSParams({
+    breadcrumbs,
+    flow,
+    passport,
+    sessionId,
+    flowName,
+  });
 
   const expected = {
     application_type: "lawfulness_certificate",

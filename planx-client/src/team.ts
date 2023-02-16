@@ -1,5 +1,5 @@
-import { Request } from "./graphql";
-import log from "./logger";
+import { gql } from "graphql-request";
+import type { GraphQLClient } from "graphql-request";
 
 const defaultNotifyPersonalisation = {
   notify_personalisation: {
@@ -21,7 +21,7 @@ const defaultSettings = {
 };
 
 export async function createTeam(
-  request: Request,
+  client: GraphQLClient,
   args: {
     name: string;
     slug: string;
@@ -45,27 +45,29 @@ export async function createTeam(
       ...defaultNotifyPersonalisation,
     }),
   };
-  log("createTeam input", input);
-  let teamID;
-  try {
-    const { insert_teams_one: response } = await request(
-      `mutation CreateTeam ($name: String!, $slug: String!, $theme: jsonb!, $settings: jsonb!, $notify_personalisation: jsonb!) {
-        insert_teams_one(object: {
-          name: $name, 
-          slug: $slug, 
-          theme: $theme, 
-          settings: $settings, 
-          notify_personalisation: $notify_personalisation
-        }) {
+  const { insert_teams_one: response } = await client.request(
+    gql`
+      mutation CreateTeam(
+        $name: String!
+        $slug: String!
+        $theme: jsonb!
+        $settings: jsonb!
+        $notify_personalisation: jsonb!
+      ) {
+        insert_teams_one(
+          object: {
+            name: $name
+            slug: $slug
+            theme: $theme
+            settings: $settings
+            notify_personalisation: $notify_personalisation
+          }
+        ) {
           id
         }
-      }`,
-      input
-    );
-    teamID = response.id;
-  } catch (e) {
-    log(e);
-    throw e;
-  }
-  return teamID;
+      }
+    `,
+    input
+  );
+  return response.id;
 }

@@ -146,12 +146,13 @@ describe("BOPS files[*].applicant_description", () => {
 
         // if the user has uploaded multiple files for a specific key,
         // ensure that every file in the list has the same description
-        getBOPSParams(
+        getBOPSParams({
           breadcrumbs,
           flow,
-          computePassport(),
-          sessionId
-        ).files?.forEach((file) => {
+          passport: computePassport(),
+          sessionId,
+          flowName: "apply for a lawful development certificate",
+        }).files?.forEach((file) => {
           expect(file.applicant_description).toStrictEqual(expected);
         });
       });

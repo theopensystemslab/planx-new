@@ -7,11 +7,16 @@ import fs from "fs";
 import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
-import { generateDocumentReviewStream } from "./documentReview";
+import {
+  hasRequiredDataForTemplate,
+  generateDocxTemplateStream,
+  generateHTMLMapStream,
+  generateHTMLOverviewStream,
+} from "@opensystemslab/planx-document-templates";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
-import { deleteFile, downloadFile } from "./helpers";
+import { deleteFile, downloadFile, resolveStream } from "./helpers";
 
 /**
  * Submits application data to Uniform
@@ -54,8 +59,16 @@ const sendToUniform = async (req, res, next) => {
     const { clientId, clientSecret } = getUniformClient(
       req.params.localAuthority
     );
+
     // Setup - Create the zip folder
-    const zipPath = await createZip(payload);
+    const zipPath = await createUniformSubmissionZip({
+      sessionId: payload.sessionId,
+      templateNames: payload.templateNames,
+      passport: payload.passport,
+      csv: payload.csv,
+      files: payload.files,
+      xml: payload.xml,
+    });
 
     // Request 1/3 - Authenticate
     const {
@@ -158,14 +171,10 @@ const sendToUniform = async (req, res, next) => {
 async function checkUniformAuditTable(sessionId) {
   const application = await adminClient.request(
     gql`
-      query FindApplication(
-        $submission_reference: String = ""
-      ) {
+      query FindApplication($submission_reference: String = "") {
         uniform_applications(
-          where: {
-            submission_reference: {_eq: $submission_reference}
-          },
-          order_by: {created_at: desc}
+          where: { submission_reference: { _eq: $submission_reference } }
+          order_by: { created_at: desc }
         ) {
           response
         }
@@ -181,19 +190,21 @@ async function checkUniformAuditTable(sessionId) {
 
 /**
  * Creates a zip folder containing the documents required by Uniform
- * @param {any} stringXml - a string representation of the XML schema, resulting file must be named "proposal.xml"
  * @param {any} csv - an array of objects representing our custom CSV format
- * @param {any} geojson - the site boundary geojson if the user drew, empty if they uploaded a location plan
  * @param {object[]} files - an array of user-uploaded files
  * @param {string} sessionId
+ * @param {string[]} templateNames
+ * @param {{ data: any }} passport
+ * @param {any} xml - a string representation of the XML schema, resulting file must be named "proposal.xml"
  * @returns {Promise} - name of zip
  */
-export async function createZip({
-  xml: stringXml,
+export async function createUniformSubmissionZip({
   csv,
-  geojson,
   files,
   sessionId,
+  templateNames,
+  passport,
+  xml,
 }) {
   // initiate an empty zip folder
   const zip = new AdmZip();
@@ -211,7 +222,9 @@ export async function createZip({
       // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
       // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
       // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
-      const uniqueFilename = decodeURIComponent(file.split("/").slice(-2).join("-"));
+      const uniqueFilename = decodeURIComponent(
+        file.split("/").slice(-2).join("-")
+      );
       const filePath = path.join(tmpDir, uniqueFilename);
       await downloadFile(file, filePath, zip);
     }
@@ -224,47 +237,68 @@ export async function createZip({
     columns: ["question", "responses", "metadata"],
     header: true,
   }).pipe(csvFile);
-  await new Promise((resolve, reject) => {
-    csvStream.on("error", reject);
-    csvStream.on("finish", resolve);
-  });
+  await resolveStream(csvStream);
   zip.addLocalFile(csvPath);
   deleteFile(csvPath);
 
-  // build the XML file from a string, write it locally, add it to the zip
-  //   must be named "proposal.xml" to be processed by Uniform
-  const xmlPath = "proposal.xml";
+  // add a XML uniform submission file to zip
+  const xmlPath = "proposal.xml"; //  must be named "proposal.xml" to be processed by Uniform
   const xmlFile = fs.createWriteStream(xmlPath);
-  const xmlStream = str(stringXml.trim()).pipe(xmlFile);
-  await new Promise((resolve, reject) => {
-    xmlStream.on("error", reject);
-    xmlStream.on("finish", resolve);
-  });
+  const xmlStream = str(xml.trim()).pipe(xmlFile);
+  await resolveStream(xmlStream);
   zip.addLocalFile(xmlPath);
   deleteFile(xmlPath);
 
-  // build an HTML Document Viewer
-  const docViewPath = path.join(tmpDir, "review.html");
-  const docViewFile = fs.createWriteStream(docViewPath);
-  const docViewStream = generateDocumentReviewStream({
-    csv,
-    files,
-    geojson,
-  }).pipe(docViewFile);
-  await new Promise((resolve, reject) => {
-    docViewStream.on("error", reject);
-    docViewStream.on("finish", resolve);
-  });
-  zip.addLocalFile(docViewPath);
-  deleteFile(docViewPath);
+  // generate and add an HTML overview document for the submission to zip
+  const overviewPath = path.join(tmpDir, "Overview.htm");
+  const overviewFile = fs.createWriteStream(overviewPath);
+  const overviewStream = generateHTMLOverviewStream(csv).pipe(overviewFile);
+  await resolveStream(overviewStream);
+  zip.addLocalFile(overviewPath);
+  deleteFile(overviewPath);
 
-  // build an optional GeoJSON file for validators
+  // add an optional GeoJSON file to zip
+  const geojson = passport.data["property.boundary.site"];
   if (geojson) {
     const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
-    zip.addFile("boundary.geojson", geoBuff);
+    zip.addFile("LocationPlanGeoJSON.geojson", geoBuff);
+
+    // generate and add an HTML boundary document for the submission to zip
+    const boundaryPath = path.join(tmpDir, "LocationPlan.htm");
+    const boundaryFile = fs.createWriteStream(boundaryPath);
+    const boundaryStream = generateHTMLMapStream(geojson).pipe(boundaryFile);
+    await resolveStream(boundaryStream);
+    zip.addLocalFile(boundaryPath);
+    deleteFile(boundaryPath);
   }
 
-  // generate & save zip locally
+  // generate and add additional submission documents
+  for (const templateName of templateNames) {
+    let isTemplateSupported = false;
+    try {
+      isTemplateSupported = hasRequiredDataForTemplate({
+        passport,
+        templateName,
+      });
+    } catch (e) {
+      console.log(`Template "${templateName}" could not be generated so has been skipped`);
+      console.log(e)
+      continue
+    }
+    if (isTemplateSupported) {
+      const templatePath = path.join(tmpDir, `${templateName}.doc`);
+      const templateFile = fs.createWriteStream(templatePath);
+      const templateStream = generateDocxTemplateStream({
+        passport,
+        templateName,
+      }).pipe(templateFile);
+      await resolveStream(templateStream);
+      zip.addLocalFile(templatePath);
+      deleteFile(templatePath);
+    }
+  }
+
+  // create the zip file
   const zipName = `ripa-test-${sessionId}.zip`;
   zip.writeZip(zipName);
 

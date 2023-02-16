@@ -28,13 +28,13 @@ test.describe("Navigation", () => {
       context = await setUpTestContext(client, context);
     } catch (error) {
       // ensure proper teardown if setup fails
-      await tearDownTestContext(client, context);
+      await tearDownTestContext(context);
       throw error;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(client, context);
+    await tearDownTestContext(context);
   });
 
   test("Create a flow", async ({ browser }) => {
