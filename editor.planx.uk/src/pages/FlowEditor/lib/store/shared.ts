@@ -1,4 +1,5 @@
 import { ROOT_NODE_KEY } from "@planx/graph";
+import { capitalize } from "lodash";
 import type { GetState, SetState } from "zustand/vanilla";
 
 import type { Store } from ".";
@@ -70,8 +71,8 @@ export const sharedStore = (
   },
 
   setFlow({ id, flow, flowSlug }) {
-    set({ id, flow, flowSlug });
-    set({ flowName: flowSlug.replaceAll?.("-", " ") });
+    const flowName = capitalize(flowSlug.replaceAll?.("-", " "));
+    set({ id, flow, flowSlug, flowName });
   },
 
   wasVisited(id) {

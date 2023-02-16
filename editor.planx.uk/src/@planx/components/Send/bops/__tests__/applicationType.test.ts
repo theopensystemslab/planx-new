@@ -21,7 +21,7 @@ describe("application_type is set correctly based on flowName", () => {
       flow: {},
       passport: {},
       sessionId: "session-123",
-      flowName: "apply for a lawful development certificate",
+      flowName: "Apply for a lawful development certificate",
     });
     expect(result.application_type).toEqual(default_application_type);
   });
@@ -32,7 +32,7 @@ describe("application_type is set correctly based on flowName", () => {
       flow: {},
       passport: {},
       sessionId: "session-123",
-      flowName: "apply for prior approval",
+      flowName: "Apply for prior approval",
     });
     expect(result.application_type).toEqual("Apply for prior approval");
   });

@@ -110,9 +110,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 700,
     paddingLeft: theme.spacing(2),
     paddingBottom: theme.spacing(1),
-    "&::first-letter": {
-      textTransform: "capitalize",
-    },
   },
 }));
 
@@ -214,7 +211,7 @@ const PublicToolbar: React.FC<{
         ) : (
           <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
         )}
-        {showCenteredServiceTitle && <ServiceTitle route={route} />}
+        {showCenteredServiceTitle && <ServiceTitle />}
         <IconButton
           color="secondary"
           onClick={handleRestart}
@@ -224,18 +221,16 @@ const PublicToolbar: React.FC<{
           <Reset color="secondary" />
         </IconButton>
       </Toolbar>
-      {!showCenteredServiceTitle && <ServiceTitle route={route} />}
+      {!showCenteredServiceTitle && <ServiceTitle />}
       <AnalyticsDisabledBanner />
       <PhaseBanner />
     </>
   );
 };
 
-const ServiceTitle: React.FC<{
-  route: Route;
-}> = ({ route }) => {
+const ServiceTitle: React.FC = () => {
   const classes = useStyles();
-  const { flowName } = route.data;
+  const flowName = useStore((state) => state.flowName);
 
   return (
     <span data-testid="service-title" className={classes.serviceTitle}>

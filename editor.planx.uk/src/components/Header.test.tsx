@@ -1,5 +1,7 @@
 import { screen } from "@testing-library/react";
+import { vanillaStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
 import { axe, setup } from "testUtils";
 import { Team } from "types";
@@ -30,7 +32,6 @@ jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
         username: "Test User",
         team: mockTeam1.slug,
         flow: "test-flow",
-        flowName: "test flow",
       },
     } as any)
 );
@@ -85,8 +86,11 @@ describe("Header Component - Public Routes", () => {
     expect(screen.getByText("Plan✕")).toBeInTheDocument();
   });
 
-  it("parses the url pathname and displays a service title", () => {
+  it("displays service title from the store", () => {
     setup(<Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>);
+    const { setState } = vanillaStore;
+    act(() => setState({ flowName: "test flow" }));
+
     expect(screen.getByTestId("service-title")).toBeInTheDocument();
     expect(screen.getByText("test flow")).toBeInTheDocument();
   });
