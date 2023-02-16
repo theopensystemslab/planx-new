@@ -63,7 +63,7 @@ export default function PhaseBanner(): FCReturn {
           fontWeight={600}
           className={classes.betaIcon}
         >
-          PUBLIC BETA
+          TEST TEST
         </Box>
         <Typography variant="body2" color="textPrimary">
           This is a new service. Your <Link>feedback</Link> will help us improve
