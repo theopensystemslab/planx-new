@@ -395,6 +395,10 @@ export = async () => {
             value: "7e77bdae-7379-4dd8-a8cc-086a0029163c",
           },
           {
+            name: "GOVUK_NOTIFY_CONFIRMATION_EMAIL_TEMPLATE_ID",
+            value: "8b82b606-defa-4daa-8fdb-e78b852b8ffb",
+          },
+          {
             name: "SLACK_WEBHOOK_URL",
             value: config.require("slack-webhook-url"),
           },
