@@ -8,10 +8,20 @@ export interface SharedStore extends Store.Store {
   breadcrumbs: Store.breadcrumbs;
   childNodesOf: (id?: Store.nodeId) => Store.node[];
   flow: Store.flow;
+  flowSlug: string;
+  flowName: string;
   id: string;
   getNode: (id: Store.nodeId) => Store.node;
   resetPreview: () => void;
-  setFlow: (id: string, flow: Store.flow) => void;
+  setFlow: ({
+    id,
+    flow,
+    flowSlug,
+  }: {
+    id: string;
+    flow: Store.flow;
+    flowSlug: string;
+  }) => void;
   wasVisited: (id: Store.nodeId) => boolean;
   previewEnvironment: PreviewEnvironment;
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
@@ -29,6 +39,10 @@ export const sharedStore = (
   },
 
   flow: {},
+
+  flowSlug: "",
+
+  flowName: "",
 
   id: "",
   previewEnvironment: "standalone",
@@ -55,8 +69,9 @@ export const sharedStore = (
     });
   },
 
-  setFlow(id, flow) {
-    set({ id, flow });
+  setFlow({ id, flow, flowSlug }) {
+    set({ id, flow, flowSlug });
+    set({ flowName: flowSlug.replaceAll?.("-", " ") });
   },
 
   wasVisited(id) {

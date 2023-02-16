@@ -21,7 +21,7 @@ import React from "react";
 import { View } from "react-navi";
 import { Flow, GlobalSettings, Maybe } from "types";
 
-import { extractFlowNameFromReq, getTeamFromDomain, setPath } from "./utils";
+import { getTeamFromDomain, setPath } from "./utils";
 
 const routes = compose(
   withData(async (req) => {
@@ -33,11 +33,11 @@ const routes = compose(
       mountpath: req.mountpath,
       team: req.params.team || externalDomainTeam,
       isPreviewOnlyDomain: Boolean(externalDomainTeam),
-      flowName: extractFlowNameFromReq(req),
     };
   }),
 
   withView(async (req) => {
+    const flowSlug = req.params.flow.split(",")[0];
     const externalTeamName = await getTeamFromDomain(window.location.hostname);
 
     // XXX: Prevents accessing a different team than the one associated with the custom domain.
@@ -78,7 +78,7 @@ const routes = compose(
         }
       `,
       variables: {
-        flowSlug: req.params.flow.split(",")[0],
+        flowSlug,
         teamSlug: req.params.team || externalTeamName,
       },
     });
@@ -99,7 +99,7 @@ const routes = compose(
 
     // XXX: necessary as long as not every flow is published; aim to remove dataMergedHotfix.ts in future
     // load pre-flattened published flow if exists, else load & flatten flow
-    useStore.getState().setFlow(flow.id, flowData);
+    useStore.getState().setFlow({ id: flow.id, flow: flowData, flowSlug });
 
     return (
       <PreviewContext.Provider value={{ flow, globalSettings }}>
