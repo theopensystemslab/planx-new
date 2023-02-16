@@ -11,6 +11,7 @@ const singleSessionEmailTemplates = {
   reminder: process.env.GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID,
   expiry: process.env.GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID,
   submit: process.env.GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID,
+  confirmation: process.env.GOVUK_NOTIFY_CONFIRMATION_EMAIL_TEMPLATE_ID,
 };
 
 const multipleSessionEmailTemplates = {
@@ -94,7 +95,7 @@ const calculateExpiryDate = (createdAt: string): string => {
 };
 
 /**
- * Sends "Save", "Remind", and "Expiry" emails to Save & Return users
+ * Sends "Save", "Remind", "Expiry" and "Confirmation" emails to Save & Return users
  */
 const sendSingleApplicationEmail = async (
   template: Template,

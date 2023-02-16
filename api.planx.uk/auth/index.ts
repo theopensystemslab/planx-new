@@ -41,6 +41,7 @@ const useSendEmailAuth = (
   switch (req.params.template) {
     case "reminder":
     case "expiry":
+    case "confirmation":
       // Requires authorization - can only be triggered by Hasura scheduled events
       return useHasuraAuth(req, res, next);
     case "save":
