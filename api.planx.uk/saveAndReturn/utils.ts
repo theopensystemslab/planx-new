@@ -1,26 +1,42 @@
 import { format, addDays } from "date-fns";
-import { gql } from "graphql-request";
+import { gql, GraphQLClient } from "graphql-request";
 import { publicGraphQLClient as publicClient, adminGraphQLClient as adminClient } from "../hasura";
 import { EmailSubmissionNotifyConfig, LowCalSession, SaveAndReturnNotifyConfig, Team } from "../types";
 import { notifyClient } from "./notify";
 
 const DAYS_UNTIL_EXPIRY = 28;
 
-const singleSessionEmailTemplates = {
+/**
+ * Triggered by applicants when saving
+ * Validated using email address & sessionId
+ */
+const publicEmailTemplates = {
   save: process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID,
-  reminder: process.env.GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID,
-  expiry: process.env.GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID,
-  submit: process.env.GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID,
-  confirmation: process.env.GOVUK_NOTIFY_CONFIRMATION_EMAIL_TEMPLATE_ID,
 };
 
-const multipleSessionEmailTemplates = {
+/**
+ * Triggered by applicants when resuming
+ * Validated using email address & inbox (magic link)
+ */
+const hybridEmailTemplates = {
   resume: process.env.GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID,
 };
 
+/**
+ * Triggered by Hasura scheduled events
+ * Validated with the useHasuraAuth() middleware
+ */
+const privateEmailTemplates = {
+  reminder: process.env.GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID,
+  expiry: process.env.GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID,
+  confirmation: process.env.GOVUK_NOTIFY_CONFIRMATION_EMAIL_TEMPLATE_ID,
+  submit: process.env.GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID,
+};
+
 const emailTemplates = {
-  ...singleSessionEmailTemplates,
-  ...multipleSessionEmailTemplates,
+  ...publicEmailTemplates,
+  ...hybridEmailTemplates,
+  ...privateEmailTemplates,
 };
 
 export type Template = keyof typeof emailTemplates;
@@ -105,7 +121,8 @@ const sendSingleApplicationEmail = async (
   try {
     const { flowSlug, team, session } = await validateSingleSessionRequest(
       email,
-      sessionId
+      sessionId,
+      template,
     );
     const config = {
       personalisation: getPersonalisation(session, flowSlug, team),
@@ -126,7 +143,8 @@ const sendSingleApplicationEmail = async (
  */
 const validateSingleSessionRequest = async (
   email: string,
-  sessionId: string
+  sessionId: string,
+  template: Template,
 ) => {
   try {
     const query = gql`
@@ -148,10 +166,11 @@ const validateSingleSessionRequest = async (
         }
       }
     `;
+    const client = getClientForTemplate(template);
     const headers = getSaveAndReturnPublicHeaders(sessionId, email);
     const {
       lowcal_sessions: [session],
-    } = await publicClient.request(query, null, headers);
+    } = await client.request(query, null, headers);
 
     if (!session) throw Error(`Unable to find session: ${sessionId}`);
 
@@ -164,6 +183,10 @@ const validateSingleSessionRequest = async (
     throw Error(`Unable to validate request. ${(error as Error).message}`);
   }
 };
+
+const getClientForTemplate = (template: Template): GraphQLClient => (
+  template in privateEmailTemplates ? adminClient : publicClient
+);
 
 interface SessionDetails {
   hasUserSaved: boolean;
@@ -350,7 +373,6 @@ export {
   convertSlugToName,
   getResumeLink,
   sendSingleApplicationEmail,
-  singleSessionEmailTemplates,
   markSessionAsSubmitted,
   DAYS_UNTIL_EXPIRY,
   calculateExpiryDate,
