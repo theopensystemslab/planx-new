@@ -1,7 +1,6 @@
 import { test, expect, Locator } from "@playwright/test";
 import simpleSendFlow from "./flows/simple-send-flow.json";
 import {
-  getClient,
   getGraphQLClient,
   findSessionId,
   setUpTestContext,
@@ -9,7 +8,6 @@ import {
 } from "./context";
 
 test.describe("Save and return", () => {
-  const client = getClient();
   const adminGQLClient = getGraphQLClient();
   let context: any = {
     user: {
@@ -33,7 +31,7 @@ test.describe("Save and return", () => {
 
   test.beforeAll(async () => {
     try {
-      context = await setUpTestContext(client, context);
+      context = await setUpTestContext(context);
     } catch (e) {
       await tearDownTestContext(context);
       throw e;

@@ -57,7 +57,7 @@
     "natsort": "^2.0.3",
     "navi": "^0.15.0",
     "p-memoize": "^7.1.0",
-    "planx-client": "file:shared/planx-client-1.0.0.tgz",
+    "core": "file:shared/core-1.0.0.tgz",
     "postcode": "^5.1.0",
     "prop-types": "^15.5.8",
     "ramda": "^0.28.0",

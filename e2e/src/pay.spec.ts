@@ -3,7 +3,6 @@ import { log } from "./helpers";
 import type { Page } from "@playwright/test";
 import payFlow from "./flows/pay-flow.json";
 import {
-  getClient,
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
@@ -37,12 +36,11 @@ const cards = {
 };
 
 test.describe("Payment flow", async () => {
-  const client = getClient();
   const adminGQLClient = getGraphQLClient();
 
   test.beforeAll(async () => {
     try {
-      context = await setUpTestContext(client, context);
+      context = await setUpTestContext(context);
     } catch (e) {
       // ensure proper teardown if setup fails
       await tearDownTestContext(context);
@@ -196,7 +194,7 @@ async function hasPaymentStatus({
 }: {
   status: string;
   paymentId: string;
-  client: Client;
+  client: GraphQLClient;
 }): Promise<boolean> {
   try {
     const { payment_status: response } = await adminGQLClient.request(

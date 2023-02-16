@@ -35,7 +35,7 @@
     "passport": "^0.5.3",
     "passport-google-oauth20": "^2.0.0",
     "pino-noir": "^2.2.1",
-    "planx-client": "file:shared/planx-client-1.0.0.tgz",
+    "core": "file:shared/core-1.0.0.tgz",
     "slack-notify": "^2.0.3",
     "string-to-stream": "^3.0.1"
   },

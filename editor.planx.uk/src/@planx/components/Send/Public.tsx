@@ -5,7 +5,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 
-import { publicClient } from "../../../client";
+import { _public } from "../../../client";
 import { useTeamSlug } from "../shared/hooks";
 import Card from "../shared/Preview/Card";
 import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
@@ -52,7 +52,7 @@ const SendComponent: React.FC<Props> = ({
   const url = `${process.env.REACT_APP_API_URL}/create-send-events/${sessionId}`;
   const request: any = useAsync(async () => {
     // fetch template names for the Uniform XML
-    const templateNames = await publicClient.getDocumentTemplateNames(flowId);
+    const templateNames = await _public.getDocumentTemplateNames(flowId);
 
     const combinedEventsPayload = getCombinedEventsPayload({
       destinations,

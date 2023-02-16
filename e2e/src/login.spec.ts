@@ -1,9 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { createAuthenticatedSession } from "./helpers";
-import { getClient, setUpTestContext, tearDownTestContext } from "./context";
+import { setUpTestContext, tearDownTestContext } from "./context";
 
 test.describe("Login", () => {
-  const client = getClient();
   let context: any = {
     user: {
       firstName: "test",
@@ -20,7 +19,7 @@ test.describe("Login", () => {
 
   test.beforeAll(async () => {
     try {
-      context = await setUpTestContext(client, context);
+      context = await setUpTestContext(context);
     } catch (error) {
       // ensure proper teardown if setup fails
       await tearDownTestContext(context);
