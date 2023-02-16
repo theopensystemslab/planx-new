@@ -31,7 +31,7 @@ do
   cd ${destination}
   pnpm add ./shared/${pack}
   cd ${destination}/node_modules/planx-client
-  pnpm install
+  pnpm install --frozen-lockfile
   pnpm build
   cd ${project_root}
 
