@@ -1,7 +1,7 @@
 import { TYPES } from "@planx/components/types";
 import { isPreviewOnlyDomain } from "routes/utils";
 import create, { UseBoundStore } from "zustand";
-import vanillaCreate, { StoreApi } from "zustand/vanilla";
+import { createStore, StoreApi } from "zustand/vanilla";
 
 import type { EditorStore, EditorUIStore } from "./editor";
 import type { NavigationStore } from "./navigation";
@@ -57,7 +57,7 @@ interface PlanXStores {
  * Cast to FullStore for autocomplete and linting
  */
 const createPublicStore = (): StoreApi<FullStore> =>
-  vanillaCreate<PublicStore>((...args) => ({
+  createStore<PublicStore>((...args) => ({
     ...sharedStore(...args),
     ...previewStore(...args),
     ...navigationStore(...args),
@@ -68,7 +68,7 @@ const createPublicStore = (): StoreApi<FullStore> =>
  */
 const createFullStore = (): StoreApi<FullStore> => {
   const { editorStore, editorUIStore } = require("./editor");
-  return vanillaCreate<FullStore>((...args) => ({
+  return createStore<FullStore>((...args) => ({
     ...sharedStore(...args),
     ...previewStore(...args),
     ...navigationStore(...args),

@@ -1,4 +1,4 @@
-import { StateCreator } from "zustand/vanilla";
+import type { StateCreator } from "zustand";
 
 export interface NavigationStore {
   navTest: string;

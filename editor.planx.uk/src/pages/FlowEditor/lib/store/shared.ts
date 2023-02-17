@@ -1,6 +1,6 @@
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { capitalize } from "lodash";
-import type { GetState, SetState, StateCreator } from "zustand/vanilla";
+import type { StateCreator } from "zustand";
 
 import type { Store } from ".";
 

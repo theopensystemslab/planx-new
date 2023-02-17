@@ -18,7 +18,7 @@ import omitBy from "lodash/omitBy";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import type { FlowSettings, TextContent } from "types";
-import type { StateCreator } from "zustand/vanilla";
+import type { StateCreator } from "zustand";
 
 import { FlowLayout } from "../../components/Flow";
 import { connectToDB, getConnection } from "./../sharedb";

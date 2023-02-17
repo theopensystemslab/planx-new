@@ -11,7 +11,7 @@ import omit from "lodash/omit";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
 import { v4 as uuidV4 } from "uuid";
-import type { StateCreator } from "zustand/vanilla";
+import type { StateCreator } from "zustand";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
 import type { Flag, GovUKPayment, Node, Session } from "./../../../../types";
