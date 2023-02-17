@@ -1,6 +1,6 @@
 import { TYPES } from "@planx/components/types";
 import { isPreviewOnlyDomain } from "routes/utils";
-import create from "zustand";
+import create, { UseBoundStore } from "zustand";
 import vanillaCreate, { StoreApi } from "zustand/vanilla";
 
 import type { EditorStore, EditorUIStore } from "./editor";
@@ -43,25 +43,39 @@ export type PublicStore = SharedStore & PreviewStore;
 
 export type FullStore = PublicStore & EditorStore & EditorUIStore;
 
-export const { vanillaStore, useStore } = (() => {
-  const vanillaStore: StoreApi<FullStore> = (() => {
-    if (isPreviewOnlyDomain || window?.location?.href?.includes("/preview")) {
-      // if accessing the public preview, don't load editor store files
-      return vanillaCreate<PublicStore>((...args) => ({
-        ...sharedStore(...args),
-        ...previewStore(...args),
-      })) as unknown as StoreApi<FullStore>;
-    } else {
-      // if accessing the editor then load ALL store files
-      const { editorStore, editorUIStore } = require("./editor");
-      return vanillaCreate<FullStore>((...args) => ({
-        ...sharedStore(...args),
-        ...previewStore(...args),
-        ...editorStore(...args),
-        ...editorUIStore(...args),
-      }));
-    }
-  })();
+interface PlanXStores {
+  // Non-React implementation (e.g. for use in tests)
+  vanillaStore: StoreApi<FullStore>;
+  // React hook
+  useStore: UseBoundStore<StoreApi<FullStore>>;
+}
+
+const createPublicStore = () =>
+  // if accessing the public preview, don't load editor store files
+  vanillaCreate<PublicStore>((...args) => ({
+    ...sharedStore(...args),
+    ...previewStore(...args),
+  }));
+
+const createFullStore = () => {
+  // if accessing the editor then load ALL store files
+  const { editorStore, editorUIStore } = require("./editor");
+  return vanillaCreate<FullStore>((...args) => ({
+    ...sharedStore(...args),
+    ...previewStore(...args),
+    ...editorStore(...args),
+    ...editorUIStore(...args),
+  }));
+};
+
+const isPublic =
+  isPreviewOnlyDomain || window?.location?.href?.includes("/preview");
+
+export const { vanillaStore, useStore }: PlanXStores = (() => {
+  const vanillaStore: StoreApi<FullStore> = (() =>
+    isPublic
+      ? (createPublicStore() as StoreApi<FullStore>)
+      : createFullStore())();
 
   return { vanillaStore, useStore: create(vanillaStore) };
 })();
