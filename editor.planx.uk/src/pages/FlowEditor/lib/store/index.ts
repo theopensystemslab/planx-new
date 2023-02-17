@@ -52,16 +52,21 @@ interface PlanXStores {
   useStore: UseBoundStore<StoreApi<FullStore>>;
 }
 
-const createPublicStore = () =>
-  // if accessing the public preview, don't load editor store files
+/**
+ * If accessing the public preview, don't load editor store files
+ * Cast to FullStore for autocomplete and linting
+ */
+const createPublicStore = (): StoreApi<FullStore> =>
   vanillaCreate<PublicStore>((...args) => ({
     ...sharedStore(...args),
     ...previewStore(...args),
     ...navigationStore(...args),
-  }));
+  })) as StoreApi<FullStore>;
 
-const createFullStore = () => {
-  // if accessing the editor then load ALL store files
+/**
+ * If accessing the editor then load ALL store files
+ */
+const createFullStore = (): StoreApi<FullStore> => {
   const { editorStore, editorUIStore } = require("./editor");
   return vanillaCreate<FullStore>((...args) => ({
     ...sharedStore(...args),
@@ -76,9 +81,7 @@ const isPublic =
 
 export const { vanillaStore, useStore }: PlanXStores = (() => {
   const vanillaStore: StoreApi<FullStore> = (() =>
-    isPublic
-      ? (createPublicStore() as StoreApi<FullStore>)
-      : createFullStore())();
+    isPublic ? createPublicStore() : createFullStore())();
 
   return { vanillaStore, useStore: create(vanillaStore) };
 })();
