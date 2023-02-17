@@ -1,6 +1,7 @@
 import "isomorphic-fetch";
 
-const PASSPORT_FN = "roads.classified";
+// Passport key comes from Digital Planning Schemas googlesheet
+export const PASSPORT_FN = "road.classified";
 
 export const classifiedRoadsSearch = async (req, res, next) => {
   try {

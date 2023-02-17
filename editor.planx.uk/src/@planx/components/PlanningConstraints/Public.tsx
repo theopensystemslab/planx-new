@@ -181,7 +181,11 @@ function Component(props: Props) {
           {x && y && longitude && latitude ? (
             <DelayedLoadingIndicator text="Fetching data..." />
           ) : (
-            <div className={classes.errorSummary} role="status">
+            <div
+              className={classes.errorSummary}
+              role="status"
+              data-testid="error-summary-invalid-graph"
+            >
               <Typography variant="h5" component="h2" gutterBottom>
                 Invalid graph
               </Typography>
@@ -228,7 +232,7 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-function PlanningConstraintsInformation(props: any) {
+export function PlanningConstraintsInformation(props: any) {
   const classes = useClasses();
   const {
     title,
@@ -313,7 +317,11 @@ function ConstraintsList({ data, refreshConstraints }: any) {
           </List>
         </>
       ) : (
-        <div className={classes.errorSummary} role="status">
+        <div
+          className={classes.errorSummary}
+          role="status"
+          data-testid="error-summary-no-info"
+        >
           <Typography variant="h5" component="h2" gutterBottom>
             No information available
           </Typography>
