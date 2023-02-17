@@ -20,7 +20,7 @@ const baseSchema = {
     "digital-land-datasets": ["listed-building", "listed-building-outline"], // HE publishes points, LPAs publish polygons
   },
   "locallyListed": {
-    active: false,
+    active: true,
     neg: "is not, or is not within, a Locally Listed Building",
     pos: "is, or is within, a Locally Listed Building",
     "digital-land-datasets": ["locally-listed-building"],
