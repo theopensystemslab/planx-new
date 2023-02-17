@@ -71,6 +71,7 @@ const createFullStore = (): StoreApi<FullStore> => {
   return vanillaCreate<FullStore>((...args) => ({
     ...sharedStore(...args),
     ...previewStore(...args),
+    ...navigationStore(...args),
     ...editorStore(...args),
     ...editorUIStore(...args),
   }));

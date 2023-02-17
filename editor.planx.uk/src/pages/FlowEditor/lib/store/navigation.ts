@@ -11,6 +11,6 @@ export const navigationStore: StateCreator<
   [],
   NavigationStore
 > = (set) => ({
-  navTest: "hello",
+  navTest: "default value",
   setNavTest: (navTest: string) => set({ navTest }),
 });
