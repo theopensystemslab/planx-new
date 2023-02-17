@@ -11,7 +11,7 @@ import omit from "lodash/omit";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
 import { v4 as uuidV4 } from "uuid";
-import type { GetState, SetState } from "zustand/vanilla";
+import type { StateCreator } from "zustand/vanilla";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
 import type { Flag, GovUKPayment, Node, Session } from "./../../../../types";
@@ -64,10 +64,12 @@ export interface PreviewStore extends Store.Store {
   overrideAnswer: (fn: string) => void;
 }
 
-export const previewStore = (
-  set: SetState<PreviewStore>,
-  get: GetState<SharedStore & PreviewStore>
-): PreviewStore => ({
+export const previewStore: StateCreator<
+  SharedStore & PreviewStore,
+  [],
+  [],
+  PreviewStore
+> = (set, get) => ({
   setAnalyticsId(analyticsId) {
     set({ analyticsId });
   },

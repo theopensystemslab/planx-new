@@ -18,7 +18,7 @@ import omitBy from "lodash/omitBy";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import type { FlowSettings, TextContent } from "types";
-import type { GetState, SetState } from "zustand/vanilla";
+import type { StateCreator } from "zustand/vanilla";
 
 import { FlowLayout } from "../../components/Flow";
 import { connectToDB, getConnection } from "./../sharedb";
@@ -34,16 +34,18 @@ const send = (ops: Array<any>) => {
   }
 };
 
-export interface EditorUIStore extends Store.Store {
+export interface EditorUIStore {
   flowLayout: FlowLayout;
   showPreview: boolean;
   togglePreview: () => void;
 }
 
-export const editorUIStore = (
-  set: SetState<EditorUIStore>,
-  get: GetState<SharedStore & EditorUIStore>
-): EditorUIStore => ({
+export const editorUIStore: StateCreator<
+  SharedStore & EditorUIStore,
+  [],
+  [],
+  EditorUIStore
+> = (set, get) => ({
   flowLayout: FlowLayout.TOP_DOWN,
 
   showPreview: true,
@@ -86,10 +88,12 @@ export interface EditorStore extends Store.Store {
   updateNode: (node: any, relationships?: any) => void;
 }
 
-export const editorStore = (
-  set: SetState<EditorStore>,
-  get: GetState<SharedStore & EditorStore>
-): EditorStore => ({
+export const editorStore: StateCreator<
+  SharedStore & EditorStore,
+  [],
+  [],
+  EditorStore
+> = (set, get) => ({
   addNode: (
     { id = undefined, type, data },
     { children = undefined, parent = ROOT_NODE_KEY, before = undefined } = {}
