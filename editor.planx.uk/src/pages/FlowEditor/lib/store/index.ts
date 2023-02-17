@@ -4,6 +4,8 @@ import create, { UseBoundStore } from "zustand";
 import vanillaCreate, { StoreApi } from "zustand/vanilla";
 
 import type { EditorStore, EditorUIStore } from "./editor";
+import type { NavigationStore } from "./navigation";
+import { navigationStore } from "./navigation";
 import type { PreviewStore } from "./preview";
 import { previewStore } from "./preview";
 import type { SharedStore } from "./shared";
@@ -39,7 +41,7 @@ export declare namespace Store {
 //      frontend because they do things like connect to sharedb, which is
 //      not something that public users should be concerned with.
 
-export type PublicStore = SharedStore & PreviewStore;
+export type PublicStore = SharedStore & PreviewStore & NavigationStore;
 
 export type FullStore = PublicStore & EditorStore & EditorUIStore;
 
@@ -55,6 +57,7 @@ const createPublicStore = () =>
   vanillaCreate<PublicStore>((...args) => ({
     ...sharedStore(...args),
     ...previewStore(...args),
+    ...navigationStore(...args),
   }));
 
 const createFullStore = () => {
