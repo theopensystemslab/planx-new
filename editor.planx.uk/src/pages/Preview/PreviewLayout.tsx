@@ -8,6 +8,7 @@ import {
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import ErrorFallback from "components/ErrorFallback";
+import PhaseBanner from "components/PhaseBanner";
 import { clearLocalFlow } from "lib/local";
 import { NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -80,24 +81,27 @@ const PublicFooter: React.FC<{
       Boolean(item)
   );
   return (
-    <Footer items={[...footerItems]}>
-      <Box display="flex" alignItems="center">
-        <Box pr={3} display="flex">
-          <img src={Logo} alt="Open Government License Logo" />
+    <Box>
+      <PhaseBanner />
+      <Footer items={[...footerItems]}>
+        <Box display="flex" alignItems="center">
+          <Box pr={3} display="flex">
+            <img src={Logo} alt="Open Government License Logo" />
+          </Box>
+          <Typography variant="body2">
+            All content is available under the{" "}
+            <Link
+              href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+              color="inherit"
+              target="_blank"
+            >
+              Open Government Licence v3
+            </Link>
+            , except where otherwise stated
+          </Typography>
         </Box>
-        <Typography variant="body2">
-          All content is available under the{" "}
-          <Link
-            href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
-            color="inherit"
-            target="_blank"
-          >
-            Open Government Licence v3
-          </Link>
-          , except where otherwise stated
-        </Typography>
-      </Box>
-    </Footer>
+      </Footer>
+    </Box>
   );
 };
 

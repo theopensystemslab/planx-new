@@ -26,13 +26,11 @@ import Reset from "ui/icons/Reset";
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
-import PhaseBanner from "./PhaseBanner";
 
 export const HEADER_HEIGHT = 75;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // backgroundColor: "#2c2c2c",
     color: "#fff",
   },
   breadcrumbs: {
@@ -223,7 +221,6 @@ const PublicToolbar: React.FC<{
       </Toolbar>
       {!showCenteredServiceTitle && <ServiceTitle />}
       <AnalyticsDisabledBanner />
-      <PhaseBanner />
     </>
   );
 };
