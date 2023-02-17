@@ -6,6 +6,7 @@ import {
   ThemeProvider,
 } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import ErrorFallback from "components/ErrorFallback";
 import PhaseBanner from "components/PhaseBanner";
@@ -35,17 +36,15 @@ declare module "@mui/styles/defaultTheme" {
   interface DefaultTheme extends Theme {}
 }
 
-const useClasses = makeStyles((theme) => ({
-  mainContainer: {
-    borderTop: `1px solid ${theme.palette.grey[300]}`,
-    paddingTop: theme.spacing(5),
-    display: "flex",
-    flex: "1 0 auto",
-    flexDirection: "column",
-    alignItems: "center",
-    backgroundColor: "white",
-    position: "relative",
-  },
+const MainContainer = styled(Box)(({ theme }) => ({
+  borderTop: `1px solid ${theme.palette.grey[300]}`,
+  paddingTop: theme.spacing(5),
+  display: "flex",
+  flex: "1 0 auto",
+  flexDirection: "column",
+  alignItems: "center",
+  backgroundColor: "white",
+  position: "relative",
 }));
 
 const PublicFooter: React.FC<{
@@ -112,7 +111,6 @@ const PreviewLayout: React.FC<{
   footerContent?: { [key: string]: TextContent };
   headerVariant: HeaderVariant;
 }> = ({ team, children, settings, footerContent, headerVariant }) => {
-  const classes = useClasses();
   const path = useStore((state) => state.path);
   const id = useStore((state) => state.id);
 
@@ -152,7 +150,7 @@ const PreviewLayout: React.FC<{
           handleRestart={handleRestart}
           variant={headerVariant}
         />
-        <Box id="main-content" className={classes.mainContainer}>
+        <MainContainer id="main-content">
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             {
               {
@@ -165,7 +163,7 @@ const PreviewLayout: React.FC<{
               }[path]
             }
           </ErrorBoundary>
-        </Box>
+        </MainContainer>
         <PublicFooter
           footerContent={footerContent}
           settings={settings}
