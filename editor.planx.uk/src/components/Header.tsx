@@ -11,7 +11,7 @@ import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 import Toolbar from "@mui/material/Toolbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/styles";
 import { Route } from "navi";
 import React, { useRef, useState } from "react";
 import {
@@ -29,86 +29,91 @@ import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
 
 export const HEADER_HEIGHT = 75;
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    color: "#fff",
-  },
-  breadcrumbs: {
-    cursor: "pointer",
-  },
-  breadcrumb: {
-    color: "#fff",
-    textDecoration: "none",
-  },
-  toolbar: {
-    marginTop: theme.spacing(1),
-    height: HEADER_HEIGHT,
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  profileSection: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  popover: {
+const Root = styled(AppBar)(() => ({
+  color: "#fff",
+}));
+
+const BreadcrumbsRoot = styled(Box)(() => ({
+  cursor: "pointer",
+  fontSize: 20,
+}));
+
+const BreadcrumbLink = styled(ReactNaviLink)(() => ({
+  color: "#fff",
+  textDecoration: "none",
+}));
+
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+  marginTop: theme.spacing(1),
+  height: HEADER_HEIGHT,
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+}));
+
+const ProfileSection = styled(Toolbar)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginRight: theme.spacing(2),
+}));
+
+const StyledPopover = styled(Popover)(() => ({
+  ["& .$popoverPaper"]: {
     boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
     backgroundColor: "#2c2c2c",
     borderRadius: 0,
   },
-  paper: {
-    backgroundColor: "#2c2c2c",
-    color: "#fff",
-    borderRadius: 0,
-    boxShadow: "none",
-    minWidth: 180,
-    "& li": {
-      padding: theme.spacing(1.5, 2),
-    },
+}));
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#2c2c2c",
+  color: "#fff",
+  borderRadius: 0,
+  boxShadow: "none",
+  minWidth: 180,
+  "& li": {
+    padding: theme.spacing(1.5, 2),
   },
-  logo: {
-    height: HEADER_HEIGHT - 5,
-    width: "100%",
-    maxWidth: 140,
-    objectFit: "contain",
+}));
+
+const Logo = styled("img")(() => ({
+  height: HEADER_HEIGHT - 5,
+  width: "100%",
+  maxWidth: 140,
+  objectFit: "contain",
+}));
+
+const LogoLink = styled(Link)(() => ({
+  display: "inline-block",
+  "&:focus-visible": borderedFocusStyle,
+}));
+
+const SkipLink = styled("a")(({ theme }) => ({
+  tabIndex: 0,
+  width: "100vw",
+  height: HEADER_HEIGHT / 2,
+  backgroundColor: "#2c2c2c",
+  color: "#fff",
+  textDecoration: "underline",
+  padding: theme.spacing(1),
+  paddingLeft: theme.spacing(3),
+  // translate off-screen with absolute position
+  position: "absolute",
+  transform: "translateY(-100%)",
+  "&:focus": {
+    // bring it into view when accessed by tab
+    transform: "translateY(0%)",
+    position: "relative",
+    ...focusStyle,
   },
-  logoLink: {
-    display: "inline-block",
-    "&:focus-visible": borderedFocusStyle,
-  },
-  skipLink: {
-    width: "100vw",
-    height: HEADER_HEIGHT / 2,
-    backgroundColor: "#2c2c2c",
-    color: "#fff",
-    textDecoration: "underline",
-    padding: theme.spacing(1),
-    paddingLeft: theme.spacing(3),
-    // translate off-screen with absolute position
-    position: "absolute",
-    transform: "translateY(-100%)",
-    "&:focus": {
-      // bring it into view when accessed by tab
-      transform: "translateY(0%)",
-      position: "relative",
-      ...focusStyle,
-    },
-  },
-  analyticsWarning: {
-    display: "flex",
-    backgroundColor: "#FFFB00",
-    padding: "0 24px",
-    color: "#070707",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  serviceTitle: {
-    fontSize: "1.25em",
-    fontWeight: 700,
-    paddingLeft: theme.spacing(2),
-    paddingBottom: theme.spacing(1),
-  },
+}));
+
+const ServiceTitleRoot = styled("span")(({ theme }) => ({
+  fontSize: "1.25em",
+  fontWeight: 700,
+  paddingLeft: theme.spacing(2),
+  paddingBottom: theme.spacing(1),
 }));
 
 /**
@@ -121,21 +126,14 @@ export enum HeaderVariant {
 }
 
 const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
-  const classes = useStyles();
   const altText = team?.settings?.homepage
     ? `${team.name} Homepage (opens in a new tab)`
     : `${team?.name} Logo`;
-  const logo = (
-    <img alt={altText} src={team?.theme?.logo} className={classes.logo} />
-  );
+  const logo = <Logo alt={altText} src={team?.theme?.logo} />;
   return team?.settings?.homepage ? (
-    <Link
-      href={team.settings.homepage}
-      target="_blank"
-      className={classes.logoLink}
-    >
+    <LogoLink href={team.settings.homepage} target="_blank">
       {logo}
-    </Link>
+    </LogoLink>
   ) : (
     logo
   );
@@ -144,54 +142,48 @@ const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
 const Breadcrumbs: React.FC<{
   route: Route;
   handleClick?: (href: string) => void;
-}> = ({ route, handleClick }) => {
-  const classes = useStyles();
-  return (
-    <Box className={classes.breadcrumbs} fontSize={20}>
-      <ButtonBase
-        component="span"
-        color="#999"
-        onClick={() => handleClick && handleClick("/")}
-      >
-        Plan✕
-      </ButtonBase>
+}> = ({ route, handleClick }) => (
+  <BreadcrumbsRoot>
+    <ButtonBase
+      component="span"
+      color="#999"
+      onClick={() => handleClick && handleClick("/")}
+    >
+      Plan✕
+    </ButtonBase>
 
-      {route.data.team && (
-        <>
-          {" / "}
-          <Link
-            component={ReactNaviLink}
-            href={`/${route.data.team}`}
-            prefetch={false}
-            className={classes.breadcrumb}
-          >
-            {route.data.team}
-          </Link>
-        </>
-      )}
-      {route.data.flow && (
-        <>
-          {" / "}
-          <Link
-            component={ReactNaviLink}
-            href={rootFlowPath(false)}
-            prefetch={false}
-            className={classes.breadcrumb}
-          >
-            {route.data.flow}
-          </Link>
-        </>
-      )}
-    </Box>
-  );
-};
+    {route.data.team && (
+      <>
+        {" / "}
+        <Link
+          component={BreadcrumbLink}
+          href={`/${route.data.team}`}
+          prefetch={false}
+        >
+          {route.data.team}
+        </Link>
+      </>
+    )}
+    {route.data.flow && (
+      <>
+        {" / "}
+        <Link
+          component={BreadcrumbLink}
+          href={rootFlowPath(false)}
+          prefetch={false}
+        >
+          {route.data.flow}
+        </Link>
+      </>
+    )}
+  </BreadcrumbsRoot>
+);
 
 const PublicToolbar: React.FC<{
   team?: Team;
   handleRestart?: () => void;
   route: Route;
 }> = ({ team, handleRestart, route }) => {
-  const classes = useStyles();
   const { navigate } = useNavigation();
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
@@ -200,10 +192,8 @@ const PublicToolbar: React.FC<{
 
   return (
     <>
-      <a tabIndex={0} className={classes.skipLink} href="#main-content">
-        Skip to main content
-      </a>
-      <Toolbar className={classes.toolbar}>
+      <SkipLink href="#main-content">Skip to main content</SkipLink>
+      <StyledToolbar>
         {team?.theme?.logo ? (
           <TeamLogo team={team}></TeamLogo>
         ) : (
@@ -218,7 +208,7 @@ const PublicToolbar: React.FC<{
         >
           <Reset color="secondary" />
         </IconButton>
-      </Toolbar>
+      </StyledToolbar>
       {!showCenteredServiceTitle && <ServiceTitle />}
       <AnalyticsDisabledBanner />
     </>
@@ -226,13 +216,10 @@ const PublicToolbar: React.FC<{
 };
 
 const ServiceTitle: React.FC = () => {
-  const classes = useStyles();
   const flowName = useStore((state) => state.flowName);
 
   return (
-    <span data-testid="service-title" className={classes.serviceTitle}>
-      {flowName}
-    </span>
+    <ServiceTitleRoot data-testid="service-title">{flowName}</ServiceTitleRoot>
   );
 };
 
@@ -243,7 +230,6 @@ const EditorToolbar: React.FC<{
   const [open, setOpen] = useState(false);
   const togglePreview = useStore((state) => state.togglePreview);
 
-  const classes = useStyles();
   const { navigate } = useNavigation();
 
   const handleClose = () => {
@@ -261,11 +247,11 @@ const EditorToolbar: React.FC<{
 
   return (
     <>
-      <Toolbar className={classes.toolbar}>
+      <StyledToolbar>
         <Breadcrumbs route={route} handleClick={handleClick}></Breadcrumbs>
         <Box display="flex" alignItems="center">
           {route.data.username && (
-            <Box className={classes.profileSection} mr={2}>
+            <ProfileSection>
               {route.data.flow && (
                 <IconButton
                   color="inherit"
@@ -288,16 +274,16 @@ const EditorToolbar: React.FC<{
               >
                 <KeyboardArrowDown />
               </IconButton>
-            </Box>
+            </ProfileSection>
           )}
         </Box>
-      </Toolbar>
-      <Popover
+      </StyledToolbar>
+      <StyledPopover
         open={open}
         anchorEl={headerRef.current}
         onClose={handleClose}
         classes={{
-          paper: classes.popover,
+          paper: "$popoverPaper",
         }}
         anchorOrigin={{
           vertical: "bottom",
@@ -308,7 +294,7 @@ const EditorToolbar: React.FC<{
           horizontal: "right",
         }}
       >
-        <Paper className={classes.paper}>
+        <StyledPaper>
           {/*
           <MenuItem onClick={() => handleClick("/")}>Service settings</MenuItem>
           <MenuItem onClick={() => handleClick("/")}>My dashboard</MenuItem>
@@ -333,8 +319,8 @@ const EditorToolbar: React.FC<{
           )}
 
           <MenuItem onClick={() => navigate("/logout")}>Log out</MenuItem>
-        </Paper>
-      </Popover>
+        </StyledPaper>
+      </StyledPopover>
     </>
   );
 };
@@ -345,15 +331,13 @@ const Header: React.FC<{
   handleRestart?: () => void;
   variant: HeaderVariant;
 }> = ({ bgcolor = "#2c2c2c", team, handleRestart, variant }) => {
-  const classes = useStyles();
   const headerRef = useRef<HTMLDivElement>(null);
   const route = useCurrentRoute();
 
   return (
-    <AppBar
+    <Root
       position="static"
       elevation={0}
-      className={classes.root}
       color="transparent"
       ref={headerRef}
       style={{
@@ -369,7 +353,7 @@ const Header: React.FC<{
           route={route}
         />
       )}
-    </AppBar>
+    </Root>
   );
 };
 
