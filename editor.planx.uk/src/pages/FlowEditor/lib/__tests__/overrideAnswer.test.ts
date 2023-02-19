@@ -56,6 +56,7 @@ test("it clears the correct breadcrumb and navigates back to the right node", as
 });
 
 // mimic having completed a FindProperty search and landing on PropertyInformation
+//   reminder breadcrumb order is _not_ guaranteed, eg "FirstPropertyTypeQuestionNodeId" may be last entry
 const propertySearchBreadcrumb = {
   FindPropertyNodeId: {
     auto: false,
@@ -84,12 +85,12 @@ const propertySearchBreadcrumb = {
       "property.region": ["South East"],
     },
   },
-  FirstPropertyTypeQuestionNodeId: {
-    answers: ["HouseResponseNodeId"],
-    auto: true,
-  },
   SecondPropertyTypeQuestionNodeId: {
     answers: ["SemiDetachedResponseNodeId"],
+    auto: true,
+  },
+  FirstPropertyTypeQuestionNodeId: {
+    answers: ["HouseResponseNodeId"],
     auto: true,
   },
 };
