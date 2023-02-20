@@ -1,5 +1,5 @@
 {
-  "name": "planx-client",
+  "name": "core",
   "private": true,
   "version": "1.0.0",
   "description": "A declarative interface for PlanX data operations",
