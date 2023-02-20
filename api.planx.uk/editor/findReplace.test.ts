@@ -12,7 +12,7 @@ beforeEach(() => {
     data: {
       flows_by_pk: {
         data: mockFlowData,
-        slug: "test"
+        slug: "test",
       },
     },
   });
@@ -23,7 +23,7 @@ beforeEach(() => {
     data: {
       update_flows_by_pk: {
         data: replacedFlowData,
-        slug: "test"
+        slug: "test",
       },
     },
   });

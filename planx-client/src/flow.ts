@@ -8,7 +8,9 @@ export async function createFlow(
   const { insert_flows_one: response } = await client.request(
     gql`
       mutation CreateFlow($teamId: Int!, $flowSlug: String!, $data: jsonb) {
-        insert_flows_one(object: { team_id: $teamId, slug: $flowSlug, data: $data, version: 1 }) {
+        insert_flows_one(
+          object: { team_id: $teamId, slug: $flowSlug, data: $data, version: 1 }
+        ) {
           id
         }
       }
@@ -30,11 +32,9 @@ export async function publishFlow(
   const { insert_published_flows_one: response } = await client.request(
     gql`
       mutation InsertPublishedFlow(
-        $publishedFlow: published_flows_insert_input!,
+        $publishedFlow: published_flows_insert_input!
       ) {
-        insert_published_flows_one(
-          object: $publishedFlow
-        ) {
+        insert_published_flows_one(object: $publishedFlow) {
           id
         }
       }
@@ -58,11 +58,13 @@ async function createAssociatedOperation(
 ): Promise<number> {
   const { insert_operations_one: response } = await client.request(
     gql`
-    mutation InsertOperation ($flowId: uuid!, $data: jsonb = {}) {
-      insert_operations_one(object: { flow_id: $flowId, version: 1, data: $data }) {
-        id
+      mutation InsertOperation($flowId: uuid!, $data: jsonb = {}) {
+        insert_operations_one(
+          object: { flow_id: $flowId, version: 1, data: $data }
+        ) {
+          id
+        }
       }
-    }
     `,
     { flowId: args.flowId }
   );

@@ -7,7 +7,7 @@ import { useCurrentRoute } from "react-navi";
 import { useAsync } from "react-use";
 
 import { publicClient } from "../../../client";
-import { useFlowName,useTeamSlug } from "../shared/hooks";
+import { useFlowName, useTeamSlug } from "../shared/hooks";
 import Card from "../shared/Preview/Card";
 import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
 import { PublicProps } from "../ui";

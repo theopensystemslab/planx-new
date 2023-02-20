@@ -31,6 +31,4 @@ const planningConstraints = {
   },
 };
 
-export {
-  planningConstraints,
-};
+export { planningConstraints };

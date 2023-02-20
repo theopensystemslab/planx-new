@@ -97,8 +97,7 @@ Basic.args = {
       question: {
         id: "3333",
         data: {
-          text:
-            "A question with more information and a policy reference and it's really long",
+          text: "A question with more information and a policy reference and it's really long",
           info: "Some more information",
           policyRef: "https://beta.planx.uk/southwark",
         },

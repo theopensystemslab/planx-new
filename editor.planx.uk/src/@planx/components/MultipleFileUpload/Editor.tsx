@@ -13,7 +13,7 @@ import ModalSection from "ui/ModalSection";
 import ModalSectionContent from "ui/ModalSectionContent";
 import RichTextInput from "ui/RichTextInput";
 
-import { MultipleFileUpload,parseContent } from "./model";
+import { MultipleFileUpload, parseContent } from "./model";
 
 type Props = EditorProps<TYPES.MultipleFileUpload, MultipleFileUpload>;
 

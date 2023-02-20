@@ -1,6 +1,6 @@
-import { useProxy } from './index';
+import { useProxy } from "./index";
 import { NextFunction, Request, Response } from "express";
-import { IncomingMessage } from 'http';
+import { IncomingMessage } from "http";
 
 export const OS_DOMAIN = "https://api.os.uk";
 
@@ -20,23 +20,25 @@ export const useOrdnanceSurveyProxy = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (!isValid(req)) return next({
-    status: 401,
-    message: "Unauthorised"
-  })
+  if (!isValid(req))
+    return next({
+      status: 401,
+      message: "Unauthorised",
+    });
 
   return useProxy({
     target: OS_DOMAIN,
     onProxyRes: (proxyRes) => setCORPHeaders(proxyRes),
-    pathRewrite: (fullPath, req) => appendAPIKey(fullPath, req)
-  })(req, res, next)
+    pathRewrite: (fullPath, req) => appendAPIKey(fullPath, req),
+  })(req, res, next);
 };
 
-const isValid = (req: Request): boolean => MAP_ALLOWLIST.some(re => re.test(req.headers?.referer as string));
+const isValid = (req: Request): boolean =>
+  MAP_ALLOWLIST.some((re) => re.test(req.headers?.referer as string));
 
 const setCORPHeaders = (proxyRes: IncomingMessage): void => {
-  proxyRes.headers["Cross-Origin-Resource-Policy"] = "cross-origin"
-}
+  proxyRes.headers["Cross-Origin-Resource-Policy"] = "cross-origin";
+};
 
 export const appendAPIKey = (fullPath: string, req: Request): string => {
   const [path, params] = fullPath.split("?");

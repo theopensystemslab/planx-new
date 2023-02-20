@@ -17,14 +17,14 @@ import {
   sanitiseUniformApplications,
 } from "./operations";
 
-jest.mock("../../hasura/schema")
+jest.mock("../../hasura/schema");
 const mockRunSQL = runSQL as jest.MockedFunction<typeof runSQL>;
 
 describe("'operationHandler' helper function", () => {
   it("returns a success result when an operation succeeds", async () => {
-    const successOperation = jest.fn().mockResolvedValue([
-      "123", "abc", "456", "xyz"
-    ]);
+    const successOperation = jest
+      .fn()
+      .mockResolvedValue(["123", "abc", "456", "xyz"]);
     await expect(operationHandler(successOperation)).resolves.toEqual({
       operationName: "mockConstructor",
       status: "success",
@@ -33,7 +33,9 @@ describe("'operationHandler' helper function", () => {
   });
 
   it("returns a failure result when an operation fails", async () => {
-    const failureOperation = jest.fn().mockRejectedValue(new Error("Something went wrong"))
+    const failureOperation = jest
+      .fn()
+      .mockRejectedValue(new Error("Something went wrong"));
     await expect(operationHandler(failureOperation)).resolves.toEqual({
       operationName: "mockConstructor",
       status: "failure",
@@ -81,14 +83,14 @@ describe("Data sanitation operations", () => {
         const result = await operation();
         expect(result).toEqual(mockIds);
       });
-    };
+    }
   });
-  
+
   describe("deleteHasuraEventLogs", () => {
     it("returns a QueryResult on success", async () => {
       mockRunSQL.mockResolvedValue({
-        result: [ ["id"], [mockIds[0]], [mockIds[1]], [mockIds[2]]]
-      })
+        result: [["id"], [mockIds[0]], [mockIds[1]], [mockIds[2]]],
+      });
       const result = await deleteHasuraEventLogs();
       expect(mockRunSQL).toHaveBeenCalled();
       expect(result).toEqual(mockIds);

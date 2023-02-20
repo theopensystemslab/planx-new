@@ -8,7 +8,7 @@ export async function getDocumentTemplateNames(
   const { flow_document_templates: response } = await client.request(
     gql`
       query GetDocumentTemplateNames($flowId: uuid!) {
-        flow_document_templates(where: {flow: {_eq: $flowId}}) {
+        flow_document_templates(where: { flow: { _eq: $flowId } }) {
           document_template
         }
       }

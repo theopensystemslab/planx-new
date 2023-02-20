@@ -14,7 +14,8 @@ const planningConstraints = {
     //   * exact match of Digital Land's entity.reference
     records: {
       "article4.medway.bromptonLines": "Brompton Lines",
-      "article4.medway.elmhavenMarina": "LAND BETWEEN ELMHAVEN MARINA AND CEMEX",
+      "article4.medway.elmhavenMarina":
+        "LAND BETWEEN ELMHAVEN MARINA AND CEMEX",
       "article4.medway.gillinghamPark": "Gillingham Park",
       "article4.medway.historicRochester.1": "Historic Rochester(1)",
       "article4.medway.historicRochester.2": "Historic Rochester(2)",
@@ -51,11 +52,9 @@ const planningConstraints = {
       "article4.medway.upperUpnor.9": "Upper Upnor(9)",
       "article4.medway.upperUpnor.10": "Upper Upnor(10)",
       "article4.medway.upperUpnor.11": "Upper Upnor(11)",
-      "article4.medway.wattsAvenue": "Watts Avenue"
+      "article4.medway.wattsAvenue": "Watts Avenue",
     },
   },
 };
 
-export {
-  planningConstraints,
-};
+export { planningConstraints };
