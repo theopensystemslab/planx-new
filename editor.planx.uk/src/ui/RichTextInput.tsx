@@ -48,7 +48,7 @@ import React, {
   useState,
 } from "react";
 import tippy, { type Instance } from "tippy.js";
-import create from "zustand";
+import { create } from "zustand";
 
 import Input from "./Input";
 
@@ -115,7 +115,7 @@ const linkSelectionError = (selectionHtml: string): string | null => {
 
 // Maintain a store of variables as they are created in the '@'-mention plugin, making them available in memory for next time.
 // TODO: explore instantiating from a hard-coded list, or persisting in either the backend or local storage.
-const useVariablesStore = create<VariablesState>((set) => ({
+const useVariablesStore = create<VariablesState>()((set) => ({
   variables: [],
   addVariable: (newVariable: string) =>
     set((state) => ({ variables: [...state.variables, newVariable] })),

@@ -1,6 +1,6 @@
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { capitalize } from "lodash";
-import type { GetState, SetState } from "zustand/vanilla";
+import type { StateCreator } from "zustand";
 
 import type { Store } from ".";
 
@@ -28,10 +28,10 @@ export interface SharedStore extends Store.Store {
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
 }
 
-export const sharedStore = (
-  set: SetState<SharedStore>,
-  get: GetState<SharedStore>
-): SharedStore => ({
+export const sharedStore: StateCreator<SharedStore, [], [], SharedStore> = (
+  set,
+  get
+) => ({
   breadcrumbs: {},
 
   childNodesOf(id = ROOT_NODE_KEY) {

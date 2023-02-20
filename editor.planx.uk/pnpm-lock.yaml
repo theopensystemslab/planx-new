@@ -187,7 +187,7 @@ specifiers:
   webpack: ^5.75.0
   wkt: ^0.1.1
   yup: ^0.32.11
-  zustand: ^4.1.1
+  zustand: ^4.3.3
 
 dependencies:
   '@airbrake/browser': 2.1.7
@@ -274,7 +274,7 @@ dependencies:
   uuid: 8.3.2
   wkt: 0.1.1
   yup: 0.32.11
-  zustand: 4.1.1_immer@9.0.15+react@18.2.0
+  zustand: 4.3.3_immer@9.0.15+react@18.2.0
 
 devDependencies:
   '@babel/core': 7.16.5
@@ -19930,8 +19930,8 @@ packages:
     resolution: {integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==}
     dev: false
 
-  /zustand/4.1.1_immer@9.0.15+react@18.2.0:
-    resolution: {integrity: sha512-h4F3WMqsZgvvaE0n3lThx4MM81Ls9xebjvrABNzf5+jb3/03YjNTSgZXeyrvXDArMeV9untvWXRw1tY+ntPYbA==}
+  /zustand/4.3.3_immer@9.0.15+react@18.2.0:
+    resolution: {integrity: sha512-x2jXq8S0kfLGNwGh87nhRfEc2eZy37tSatpSoSIN+O6HIaBhgQHSONV/F9VNrNcBcKQu/E80K1DeHDYQC/zCrQ==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       immer: '>=9.0'
