@@ -1,6 +1,6 @@
 import { TYPES } from "@planx/components/types";
 import { isPreviewOnlyDomain } from "routes/utils";
-import create, { UseBoundStore } from "zustand";
+import { create, UseBoundStore } from "zustand";
 import { createStore, StoreApi } from "zustand/vanilla";
 
 import type { EditorStore, EditorUIStore } from "./editor";
