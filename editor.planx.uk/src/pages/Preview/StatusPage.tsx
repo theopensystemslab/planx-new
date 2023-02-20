@@ -37,15 +37,24 @@ const StatusPage: React.FC<Props> = ({
   additionalOption,
   children,
 }) => {
-  const [breadcrumbs, flow, passport, sessionId] = useStore((state) => [
-    state.breadcrumbs,
-    state.flow,
-    state.computePassport(),
-    state.sessionId,
-  ]);
+  const [breadcrumbs, flow, passport, sessionId, flowName] = useStore(
+    (state) => [
+      state.breadcrumbs,
+      state.flow,
+      state.computePassport(),
+      state.sessionId,
+      state.flowName,
+    ]
+  );
 
   // make a CSV data structure based on the payloads we Send to BOPs/Uniform
-  const data = makeCsvData(breadcrumbs, flow, passport, sessionId);
+  const data = makeCsvData({
+    breadcrumbs,
+    flow,
+    flowName,
+    passport,
+    sessionId,
+  });
 
   const theme = useTheme();
   const classes = useStyles();

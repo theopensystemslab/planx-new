@@ -5,10 +5,8 @@
 // https://southwark.preview.bops.services/api-docs/index.html
 
 import { logger } from "airbrake";
-import capitalize from "lodash/capitalize";
 import { flatFlags } from "pages/FlowEditor/data/flags";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
-import { useCurrentRoute } from "react-navi";
 import { GovUKPayment } from "types";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
@@ -52,6 +50,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.DrawBoundary:
     case TYPES.ExternalPortal:
     case TYPES.FileUpload:
+    case TYPES.MultipleFileUpload:
     case TYPES.Filter:
     case TYPES.FindProperty:
     case TYPES.Flow:
@@ -59,6 +58,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.Notice:
     case TYPES.Pay:
     case TYPES.PlanningConstraints:
+    case TYPES.PropertyInformation:
     case TYPES.Response:
     case TYPES.Result:
     case TYPES.Review:
@@ -224,22 +224,28 @@ export const makePayload = (
   return { proposal_details, feedback };
 };
 
-export function getBOPSParams(
-  breadcrumbs: Store.breadcrumbs,
-  flow: Store.flow,
-  passport: Store.passport,
-  sessionId: string
-) {
+export function getBOPSParams({
+  breadcrumbs,
+  flow,
+  passport,
+  sessionId,
+  flowName,
+}: {
+  breadcrumbs: Store.breadcrumbs;
+  flow: Store.flow;
+  passport: Store.passport;
+  sessionId: string;
+  flowName: string;
+}) {
   const data = {} as BOPSFullPayload;
 
   // Default application type accepted by BOPS
   data.application_type = "lawfulness_certificate";
 
   // Overwrite application type if this isn't an LDC (relies on LDC flows having consistent slug)
-  //   eg because makeCsvData which is used acrossed services calls this method
-  const flowName = useCurrentRoute()?.data?.flowName;
-  if (flowName && flowName !== "apply for a lawful development certificate") {
-    data.application_type = capitalize(flowName);
+  //   eg because makeCsvData which is used across services calls this method
+  if (flowName && flowName !== "Apply for a lawful development certificate") {
+    data.application_type = flowName;
   }
 
   // 1a. address

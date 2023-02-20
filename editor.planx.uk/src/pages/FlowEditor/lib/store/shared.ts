@@ -1,5 +1,6 @@
 import { ROOT_NODE_KEY } from "@planx/graph";
-import type { GetState, SetState } from "zustand/vanilla";
+import { capitalize } from "lodash";
+import type { StateCreator } from "zustand";
 
 import type { Store } from ".";
 
@@ -8,19 +9,29 @@ export interface SharedStore extends Store.Store {
   breadcrumbs: Store.breadcrumbs;
   childNodesOf: (id?: Store.nodeId) => Store.node[];
   flow: Store.flow;
+  flowSlug: string;
+  flowName: string;
   id: string;
   getNode: (id: Store.nodeId) => Store.node;
   resetPreview: () => void;
-  setFlow: (id: string, flow: Store.flow) => void;
+  setFlow: ({
+    id,
+    flow,
+    flowSlug,
+  }: {
+    id: string;
+    flow: Store.flow;
+    flowSlug: string;
+  }) => void;
   wasVisited: (id: Store.nodeId) => boolean;
   previewEnvironment: PreviewEnvironment;
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
 }
 
-export const sharedStore = (
-  set: SetState<SharedStore>,
-  get: GetState<SharedStore>
-): SharedStore => ({
+export const sharedStore: StateCreator<SharedStore, [], [], SharedStore> = (
+  set,
+  get
+) => ({
   breadcrumbs: {},
 
   childNodesOf(id = ROOT_NODE_KEY) {
@@ -29,6 +40,10 @@ export const sharedStore = (
   },
 
   flow: {},
+
+  flowSlug: "",
+
+  flowName: "",
 
   id: "",
   previewEnvironment: "standalone",
@@ -55,8 +70,9 @@ export const sharedStore = (
     });
   },
 
-  setFlow(id, flow) {
-    set({ id, flow });
+  setFlow({ id, flow, flowSlug }) {
+    const flowName = capitalize(flowSlug.replaceAll?.("-", " "));
+    set({ id, flow, flowSlug, flowName });
   },
 
   wasVisited(id) {

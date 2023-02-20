@@ -1,21 +1,21 @@
-import { gql } from "@apollo/client";
 import tinycolor from "@ctrl/tinycolor";
 import { TYPES } from "@planx/components/types";
 import { sortIdsDepthFirst } from "@planx/graph";
-import { client } from "lib/graphql";
+import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import difference from "lodash/difference";
 import flatten from "lodash/flatten";
 import isEqual from "lodash/isEqual";
 import isNil from "lodash/isNil";
+import omit from "lodash/omit";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
 import { v4 as uuidV4 } from "uuid";
-import type { GetState, SetState } from "zustand/vanilla";
+import type { StateCreator } from "zustand";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
-import type { Flag, GovUKPayment, Session } from "./../../../../types";
-import { ApplicationPath, PaymentStatus } from "./../../../../types";
+import type { Flag, GovUKPayment, Node, Session } from "./../../../../types";
+import { ApplicationPath } from "./../../../../types";
 import type { Store } from ".";
 import type { SharedStore } from "./shared";
 
@@ -61,12 +61,15 @@ export interface PreviewStore extends Store.Store {
   _nodesPendingEdit: string[];
   path: ApplicationPath;
   saveToEmail?: string;
+  overrideAnswer: (fn: string) => void;
 }
 
-export const previewStore = (
-  set: SetState<PreviewStore>,
-  get: GetState<SharedStore & PreviewStore>
-): PreviewStore => ({
+export const previewStore: StateCreator<
+  SharedStore & PreviewStore,
+  [],
+  [],
+  PreviewStore
+> = (set, get) => ({
   setAnalyticsId(analyticsId) {
     set({ analyticsId });
   },
@@ -258,15 +261,26 @@ export const previewStore = (
 
     if (userData) {
       // add breadcrumb
-      const { answers = [], data = {}, auto = false, feedback } = userData;
+      const {
+        answers = [],
+        data = {},
+        auto = false,
+        override,
+        feedback,
+      } = userData;
 
       const breadcrumb: Store.userData = { auto: Boolean(auto) };
       if (answers?.length > 0) breadcrumb.answers = answers;
       if (feedback) breadcrumb.feedback = feedback;
 
       const filteredData = objectWithoutNullishValues(data);
-
       if (Object.keys(filteredData).length > 0) breadcrumb.data = filteredData;
+
+      if (override) {
+        const filteredOverride = objectWithoutNullishValues(override);
+        if (Object.keys(filteredOverride).length > 0)
+          breadcrumb.override = filteredOverride;
+      }
 
       let cacheWithoutOrphans = removeOrphansFromBreadcrumbs({
         id,
@@ -557,6 +571,45 @@ export const previewStore = (
   path: ApplicationPath.SingleSession,
 
   saveToEmail: undefined,
+
+  overrideAnswer: (fn: string) => {
+    // Similar to 'changeAnswer', but enables navigating backwards to and overriding a previously **auto-answered** question which would typically be hidden
+    const { breadcrumbs, flow, record, changeAnswer } = get();
+
+    // The first nodeId that set the passport value (fn) being changed (eg FindProperty)
+    const originalNodeId: Node["id"] | undefined = Object.entries(
+      breadcrumbs
+    ).find(
+      ([_nodeId, breadcrumb]) => breadcrumb.data && fn in breadcrumb.data
+    )?.[0];
+
+    if (originalNodeId) {
+      // Omit existing passport value from breadcrumbs.data in whichever node originally set it, so it won't be auto-answered in future
+      //   and keep a receipt of the original value in breadcrumbs.override
+      record(originalNodeId, {
+        data: omit(breadcrumbs?.[originalNodeId]?.data, fn),
+        override: {
+          [fn]: breadcrumbs?.[originalNodeId]?.data?.[fn],
+        },
+      });
+    }
+
+    // The first nodeId that is configured by an editor to manually set the passport value being changed (eg Question "What type of property is it?").
+    //   This node has likely been auto-answered by the originalNodeId and we leave its' breadcrumbs.data intact so that the original answer is highlighted later
+    const overrideNodeId: Node["id"] | undefined = Object.entries(
+      breadcrumbs
+    ).find(
+      ([nodeId, _breadcrumb]) =>
+        flow[nodeId].data?.fn === fn || flow[nodeId].data?.val === fn
+    )?.[0];
+
+    if (overrideNodeId) {
+      // Travel backwards to the "override" nodeId to manually re-answer this question, therefore re-setting the passport value onSubmit
+      changeAnswer(overrideNodeId);
+    } else {
+      throw new Error("overrideNodeId not found");
+    }
+  },
 });
 
 const knownNots = (
@@ -604,8 +657,15 @@ export const removeOrphansFromBreadcrumbs = ({
 }: RemoveOrphansFromBreadcrumbsProps):
   | Store.cachedBreadcrumbs
   | Store.breadcrumbs => {
+  // this will prevent a user from "Continuing", therefore log error don't throw it
+  if (!flow[id]) {
+    logger.notify(
+      `Error removing orphans from breadcrumbs, nodeId "${id}" is missing from flow and likely corrupted`
+    );
+  }
+
   const idsToRemove =
-    flow[id].edges?.filter(
+    flow[id]?.edges?.filter(
       (edge) => !(userData?.answers ?? []).includes(edge)
     ) ?? [];
 
@@ -780,7 +840,11 @@ export const removeNodesDependentOnPassport = (
   breadcrumbsWithoutPassportData: Store.breadcrumbs;
   removedNodeIds: string[];
 } => {
-  const DEPENDENT_TYPES = [TYPES.PlanningConstraints, TYPES.DrawBoundary];
+  const DEPENDENT_TYPES = [
+    TYPES.PlanningConstraints,
+    TYPES.DrawBoundary,
+    TYPES.PropertyInformation,
+  ];
   const newBreadcrumbs = { ...breadcrumbs };
   const removedNodeIds = Object.entries(flow).reduce((acc, [id, value]) => {
     if (

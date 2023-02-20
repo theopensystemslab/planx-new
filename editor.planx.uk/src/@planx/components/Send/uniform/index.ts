@@ -1,8 +1,8 @@
+import { hasRequiredDataForTemplate } from "@opensystemslab/planx-document-templates";
 import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
-import { findGeoJSON } from "../helpers";
 import { CSVData } from "../model";
 import { UniformPayload } from "./UniformPayload/model";
 
@@ -11,12 +11,21 @@ type UniformFile = {
   url: string;
 };
 
-export function getUniformParams(
-  breadcrumbs: Store.breadcrumbs,
-  flow: Store.flow,
-  passport: Store.passport,
-  sessionId: string
-) {
+export function getUniformParams({
+  breadcrumbs,
+  flow,
+  flowName,
+  passport,
+  sessionId,
+  templateNames,
+}: {
+  breadcrumbs: Store.breadcrumbs;
+  flow: Store.flow;
+  flowName: string;
+  passport: Store.passport;
+  sessionId: string;
+  templateNames: string[];
+}) {
   // make a list of all S3 URLs & filenames from uploaded files
   const files: UniformFile[] = [];
   Object.entries(passport.data || {})
@@ -45,30 +54,56 @@ export function getUniformParams(
     }
   });
 
-  const geoJSONBoundary = findGeoJSON(flow, breadcrumbs);
-  const hasBoundary = !!geoJSONBoundary;
+  // only include templates that are supported
+  const filteredTemplateNames = templateNames.filter((name) => {
+    if (!passport.data) return false;
+    try {
+      hasRequiredDataForTemplate({
+        passport: { data: passport.data! },
+        templateName: name,
+      });
+    } catch (e) {
+      console.log(
+        `Template "${name}" could not be generated so has been skipped`
+      );
+      console.log(e);
+      return false;
+    }
+    return true;
+  });
 
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString(passport, sessionId, uniqueFiles, hasBoundary),
-    csv: makeCsvData(breadcrumbs, flow, passport, sessionId),
-    geojson: geoJSONBoundary,
+    xml: makeXmlString({
+      passport,
+      sessionId,
+      files: uniqueFiles,
+      templateNames: filteredTemplateNames,
+    }),
+    csv: makeCsvData({ breadcrumbs, flow, flowName, passport, sessionId }),
     files: uniqueFiles,
+    passport,
     sessionId,
+    templateNames: filteredTemplateNames,
   };
 }
 
-export function makeXmlString(
-  passport: Store.passport,
-  sessionId: string,
-  files: string[],
-  hasBoundary: boolean
-): string {
+export function makeXmlString({
+  passport,
+  sessionId,
+  files,
+  templateNames = [],
+}: {
+  passport: Store.passport;
+  sessionId: string;
+  files: string[];
+  templateNames?: string[];
+}): string | undefined {
   const payload = new UniformPayload({
     sessionId,
     passport,
     files,
-    hasBoundary,
+    templateNames,
   });
   const xml = payload.buildXML();
   return xml;
@@ -76,13 +111,26 @@ export function makeXmlString(
 
 // create a CSV data structure based on the payload we send to BOPs
 //   (also used in Confirmation component for user-downloadable copy of app data)
-export function makeCsvData(
-  breadcrumbs: Store.breadcrumbs,
-  flow: Store.flow,
-  passport: Store.passport,
-  sessionId: string
-): CSVData {
-  const bopsData = getBOPSParams(breadcrumbs, flow, passport, sessionId);
+export function makeCsvData({
+  breadcrumbs,
+  flow,
+  passport,
+  sessionId,
+  flowName,
+}: {
+  breadcrumbs: Store.breadcrumbs;
+  flow: Store.flow;
+  passport: Store.passport;
+  sessionId: string;
+  flowName: string;
+}): CSVData {
+  const bopsData = getBOPSParams({
+    breadcrumbs,
+    flow,
+    flowName,
+    passport,
+    sessionId,
+  });
 
   // format dedicated BOPs properties as list of questions & responses to match proposal_details
   //   omitting debug data and keys already in confirmation details

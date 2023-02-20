@@ -1,10 +1,14 @@
+import { logger } from "airbrake";
 import { XMLBuilder, XmlBuilderOptions } from "fast-xml-parser";
+import type { PartialDeep } from "type-fest";
+import { ZodError } from "zod";
 
 import { Store } from "../../../../../pages/FlowEditor/lib/store/index";
 import { GovUKPayment } from "../../../../../types";
 import { Address } from "../../../AddressInput/model";
 import { GOV_PAY_PASSPORT_KEY } from "../../../Pay/model";
 import { SiteAddress } from "./../../../FindProperty/model";
+import { iUniformPayloadSchema } from "./schema";
 import {
   ApplicantOrAgent,
   ExistingUseApplication,
@@ -12,7 +16,6 @@ import {
   FileAttachment,
   IUniformPayload,
   Payment,
-  Proposal,
   ProposedUseApplication,
 } from "./types";
 
@@ -21,60 +24,62 @@ import {
  */
 export type PlanXAppTypes = "ldc.existing" | "ldc.proposed";
 
-interface UniformPayloadRequiredArgs {
+interface UniformPayloadArgs {
   sessionId: string;
   passport: Store.passport;
   files: string[];
-  hasBoundary: boolean;
+  templateNames?: string[] | undefined;
 }
 
-export class UniformPayload implements IUniformPayload {
+export class UniformPayload {
   sessionId: string;
   passport: Store.passport;
   files: string[];
-  hasBoundary: boolean;
+  templateNames: string[];
 
   proposalCompletionDate: string;
   siteAddress: SiteAddress;
-
-  "portaloneapp:Proposal": Proposal;
+  payload: PartialDeep<IUniformPayload>;
 
   constructor({
     sessionId,
     passport,
     files,
-    hasBoundary,
-  }: UniformPayloadRequiredArgs) {
+    templateNames,
+  }: UniformPayloadArgs) {
     this.sessionId = sessionId;
     this.passport = passport;
     this.files = files;
-    this.hasBoundary = hasBoundary;
+    this.templateNames = templateNames || [];
 
     this.proposalCompletionDate = this.setProposalCompletionDate();
     this.siteAddress = passport.data?.["_address"];
+    this.payload = this.mapPassportToUniformPayload();
+  }
 
-    this["portaloneapp:Proposal"] = {
-      ...this.getNamespaces(),
-      _Version: "1.3",
-      "portaloneapp:SchemaVersion": 1.3,
+  private stringToBool = (value: string): boolean | undefined => {
+    if (value) return value.toLowerCase() === "true";
+  };
+
+  private mapPassportToUniformPayload = (): PartialDeep<IUniformPayload> => ({
+    "?xml": {},
+    "portaloneapp:Proposal": {
       "portaloneapp:ApplicationHeader": {
         "portaloneapp:ApplicationTo":
           this.passport.data?.["uniform.applicationTo"]?.[0],
         "portaloneapp:DateSubmitted": this.proposalCompletionDate,
         "portaloneapp:RefNum": this.sessionId,
         "portaloneapp:FormattedRefNum": this.sessionId,
-        "portaloneapp:ApplicationVersion": 1,
-        "portaloneapp:AttachmentsChanged": false,
         "portaloneapp:Payment": this.getPayment(),
       },
       "portaloneapp:FileAttachments": {
         "common:FileAttachment": [
-          ...this.getGeneratedFiles(),
-          ...this.getUserUploadedFiles(),
+          ...(this.getGeneratedFiles() as FileAttachment[]),
+          ...(this.getUserUploadedFiles() as FileAttachment[]),
         ],
       },
-      "portaloneapp:Applicant": this.getApplicantOrAgent("applicant"),
-      "portaloneapp:Agent": this.getApplicantOrAgent("applicant.agent"),
+      "portaloneapp:Applicant": this.getApplicant(),
+      "portaloneapp:Agent": this.getAgent(),
       "portaloneapp:SiteLocation": {
         "bs7666:BS7666Address": {
           "bs7666:PAON": {
@@ -87,8 +92,8 @@ export class UniformPayload implements IUniformPayload {
           "bs7666:UniquePropertyReferenceNumber": this.siteAddress?.uprn,
         },
         "common:SiteGridRefence": {
-          "bs7666:X": this.siteAddress?.x,
-          "bs7666:Y": this.siteAddress?.y,
+          "bs7666:X": Math.round(this.siteAddress?.x),
+          "bs7666:Y": Math.round(this.siteAddress?.y),
         },
       },
       "portaloneapp:ApplicationScenario": {
@@ -101,11 +106,14 @@ export class UniformPayload implements IUniformPayload {
       },
       "portaloneapp:ApplicationData": {
         "portaloneapp:Advice": {
-          "common:HaveSoughtAdvice":
-            this.passport.data?.["application.preAppAdvice"],
+          "common:HaveSoughtAdvice": this.stringToBool(
+            this.passport.data?.["application.preAppAdvice"]?.[0]
+          ),
         },
         "portaloneapp:SiteVisit": {
-          "common:SeeSite": this.passport.data?.["uniform.siteVisit"]?.[0],
+          "common:SeeSite": this.stringToBool(
+            this.passport.data?.["uniform.siteVisit"]?.[0]
+          ),
           // TODO: Can we just drop this?
           "common:VisitContactDetails": {
             "common:ContactAgent": "",
@@ -116,19 +124,20 @@ export class UniformPayload implements IUniformPayload {
       "portaloneapp:Declaration": {
         "common:DeclarationDate": this.proposalCompletionDate,
         "common:DeclarationMade":
-          this.passport.data?.["application.declaration.accurate"],
+          this.passport.data?.["application.declaration.accurate"]?.[0],
         "common:Signatory": {
           _PersonRole: this.passport.data?.["uniform.personRole"]?.[0],
         },
       },
       "portaloneapp:DeclarationOfInterest": {
-        "common:IsRelated": passport.data?.["uniform.isRelated"]?.[0],
+        "common:IsRelated": this.stringToBool(
+          this.passport.data?.["uniform.isRelated"]?.[0]
+        ),
       },
-    };
-  }
-
+    },
+  });
   private getCertificateOfLawfulness = ():
-    | ProposedUseApplication
+    | PartialDeep<ProposedUseApplication>
     | ExistingUseApplication => {
     const planXAppType: PlanXAppTypes =
       this.passport.data?.["application.type"]?.[0];
@@ -139,30 +148,34 @@ export class UniformPayload implements IUniformPayload {
 
   // TODO: A lot of duplication here I'm sure we can tidy up
   // Test this once we are confident we have reached feature parity
-  private getProposedUseApplication = (): ProposedUseApplication => ({
-    "portaloneapp:ProposedUseApplication": {
-      "portaloneapp:DescriptionCPU": {
-        "common:IsUseChange": this.passport.data?.["uniform.isUseChange"]?.[0],
-        "common:ProposedUseDescription":
-          this.passport.data?.["proposal.description"],
-        "common:ExistingUseDescription":
-          this.passport.data?.["proposal.description"],
-        "common:IsUseStarted": this.passport.data?.["proposal.started"],
-      },
-      "portaloneapp:GroundsCPU": {
-        "common:UseLawfulnessReason":
-          this.passport.data?.["proposal.description"],
-        "common:SupportingInformation": {
-          "common:AdditionalInformation": true,
-          "common:Reference": this.passport.data?.["proposal.description"],
+  private getProposedUseApplication =
+    (): PartialDeep<ProposedUseApplication> => ({
+      "portaloneapp:ProposedUseApplication": {
+        "portaloneapp:DescriptionCPU": {
+          "common:IsUseChange": this.stringToBool(
+            this.passport.data?.["uniform.isUseChange"]?.[0]
+          ),
+          "common:ProposedUseDescription":
+            this.passport.data?.["proposal.description"],
+          "common:ExistingUseDescription":
+            this.passport.data?.["proposal.description"],
+          "common:IsUseStarted": this.stringToBool(
+            this.passport.data?.["proposal.started"]?.[0]
+          ),
         },
-        "common:ProposedUseStatus":
-          this.passport.data?.["uniform.proposedUseStatus"]?.[0],
-        "common:LawfulDevCertificateReason":
-          this.passport.data?.["proposal.description"],
+        "portaloneapp:GroundsCPU": {
+          "common:UseLawfulnessReason":
+            this.passport.data?.["proposal.description"],
+          "common:SupportingInformation": {
+            "common:Reference": this.passport.data?.["proposal.description"],
+          },
+          "common:ProposedUseStatus":
+            this.passport.data?.["uniform.proposedUseStatus"]?.[0],
+          "common:LawfulDevCertificateReason":
+            this.passport.data?.["proposal.description"],
+        },
       },
-    },
-  });
+    });
 
   private getExistingUseApplication = (): ExistingUseApplication => ({
     "portaloneapp:ExistingUseApplication": {
@@ -178,32 +191,40 @@ export class UniformPayload implements IUniformPayload {
     },
   });
 
+  private getApplicant = (): PartialDeep<ApplicantOrAgent> => {
+    return this.getApplicantOrAgent("applicant");
+  };
+
+  private getAgent = (): PartialDeep<ApplicantOrAgent> | undefined => {
+    const isAgentInPassport = Boolean(
+      this.passport.data?.["applicant.agent.name.first"]
+    );
+    if (!isAgentInPassport) return;
+    return this.getApplicantOrAgent("applicant.agent");
+  };
+
   private getApplicantOrAgent = (
     person: "applicant.agent" | "applicant"
-  ): ApplicantOrAgent => ({
-    "common:PersonName": {
-      "pdt:PersonNameTitle": this.passport.data?.[`${person}.title`],
-      "pdt:PersonGivenName": this.passport.data?.[`${person}.name.first`],
-      "pdt:PersonFamilyName": this.passport.data?.[`${person}.name.last`],
-    },
-    "common:OrgName": this.passport.data?.[`${person}.company.name`],
-    "common:ContactDetails": {
-      "common:Email": {
-        "apd:EmailAddress": this.passport.data?.[`${person}.email`],
-        _EmailUsage: "work",
-        _EmailPreferred: "yes",
+  ): PartialDeep<ApplicantOrAgent> => {
+    return {
+      "common:PersonName": {
+        "pdt:PersonNameTitle": this.passport.data?.[`${person}.title`],
+        "pdt:PersonGivenName": this.passport.data?.[`${person}.name.first`],
+        "pdt:PersonFamilyName": this.passport.data?.[`${person}.name.last`],
       },
-      "common:Telephone": {
-        "apd:TelNationalNumber":
-          this.passport.data?.[`${person}.phone.primary`],
-        _TelUse: "work",
-        _TelPreferred: "no",
-        _TelMobile: "yes",
+      "common:OrgName": this.passport.data?.[`${person}.company.name`],
+      "common:ContactDetails": {
+        "common:Email": {
+          "apd:EmailAddress": this.passport.data?.[`${person}.email`],
+        },
+        "common:Telephone": {
+          "apd:TelNationalNumber":
+            this.passport.data?.[`${person}.phone.primary`],
+        },
       },
-      _PreferredContactMedium: "E-Mail",
-    },
-    "common:ExternalAddress": this.getAddressForPerson(person),
-  });
+      "common:ExternalAddress": this.getAddressForPerson(person),
+    };
+  };
 
   private getAddressForPerson = (
     person: "applicant.agent" | "applicant"
@@ -234,19 +255,7 @@ export class UniformPayload implements IUniformPayload {
     },
   });
 
-  private getNamespaces = () => ({
-    "_xmlns:portaloneapp":
-      "http://www.govtalk.gov.uk/planning/OneAppProposal-2006",
-    "_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-    "_xmlns:bs7666": "http://www.govtalk.gov.uk/people/bs7666",
-    "_xmlns:org": "http://www.govtalk.gov.uk/financial/OrganisationIdentifiers",
-    "_xmlns:pdt": "http://www.govtalk.gov.uk/people/PersonDescriptives",
-    "_xmlns:apd": "http://www.govtalk.gov.uk/people/AddressAndPersonalDetails",
-    "_xmlns:core": "http://www.govtalk.gov.uk/core",
-    "_xmlns:common": "http://www.govtalk.gov.uk/planning/OneAppCommon-2006",
-  });
-
-  private getGeneratedFiles = (): FileAttachment[] => {
+  private getGeneratedFiles = (): Partial<FileAttachment>[] => {
     // TODO: Test if "N10049" is a required value. Schema suggests that it isn't.
     const files = [
       {
@@ -256,29 +265,37 @@ export class UniformPayload implements IUniformPayload {
       },
       {
         "common:FileName": "application.csv",
-        "common:Reference": "Other",
       },
       {
-        "common:FileName": "review.html",
-        "common:Reference": "Other",
+        "common:FileName": "Overview.htm",
       },
     ];
-    if (this.hasBoundary)
+
+    if (this.passport.data?.["property.boundary.site"]) {
       files.push({
-        "common:FileName": "boundary.geojson",
-        "common:Reference": "Other",
+        "common:FileName": "LocationPlanGeoJSON.geojson",
       });
+      files.push({
+        "common:FileName": "LocationPlan.htm",
+      });
+    }
+
+    for (const templateName of this.templateNames) {
+      files.push({
+        "common:FileName": `${templateName}.doc`,
+      });
+    }
+
     return files;
   };
 
-  private getUserUploadedFiles = (): FileAttachment[] =>
+  private getUserUploadedFiles = (): Partial<FileAttachment>[] =>
     this.files.map((file) => {
       const uniqueFilename = decodeURIComponent(
         file.split("/").slice(-2).join("-")
       );
       return {
         "common:FileName": uniqueFilename,
-        "common:Reference": "Other",
       };
     });
 
@@ -296,34 +313,41 @@ export class UniformPayload implements IUniformPayload {
     return proposalCompletionDate;
   };
 
-  private getPayment = (): Payment => {
+  private getPayment = (): Partial<Payment> => {
     const payment = this.passport.data?.[GOV_PAY_PASSPORT_KEY] as GovUKPayment;
     return {
-      "common:PaymentMethod": "OnlineViaPortal",
-      "common:AmountDue": this.passport.data?.["application.fee.payable"] || 0,
-      "common:AmountPaid": payment?.amount || 0,
-      "common:Currency": "GBP",
+      "common:AmountDue": this.passport.data?.["application.fee.payable"],
+      "common:AmountPaid": payment?.amount,
     };
   };
 
-  public buildXML = (): string => {
-    const xmlDeclaration = {
-      _version: "1.0",
-      _encoding: "UTF-8",
-      _standalone: "yes",
-    };
-    const payload = {
-      "?xml": xmlDeclaration,
-      "portaloneapp:Proposal": this["portaloneapp:Proposal"],
-    };
+  private getXMLBuilder = (): XMLBuilder => {
     const buildOptions: Partial<XmlBuilderOptions> = {
       ignoreAttributes: false,
       attributeNamePrefix: "_",
       format: true,
       suppressEmptyNode: true,
     };
-    const builder = new XMLBuilder(buildOptions);
-    const xml = builder.build(payload);
-    return xml;
+    return new XMLBuilder(buildOptions);
+  };
+
+  public buildXML = (): string | undefined => {
+    try {
+      const validatedPayload = iUniformPayloadSchema.parse(this.payload);
+      const xmlBuilder = this.getXMLBuilder();
+      const xml: string = xmlBuilder.build(validatedPayload);
+      return xml;
+    } catch (error) {
+      // Fail silently, do not notify applicant of failure
+      if (error instanceof ZodError) {
+        logger.notify(
+          `Invalid Uniform Payload for session ${this.sessionId}. Errors: ${error}`
+        );
+        return;
+      }
+      logger.notify(
+        `Unhandled exception when building XML for session ${this.sessionId}. Errors: ${error}`
+      );
+    }
   };
 }

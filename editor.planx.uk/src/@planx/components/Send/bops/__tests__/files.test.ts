@@ -1,18 +1,8 @@
 import { Store } from "pages/FlowEditor/lib/store";
-import * as ReactNavi from "react-navi";
 
 import { PASSPORT_UPLOAD_KEY } from "../../../DrawBoundary/model";
 import { extractTagsFromPassportKey, getBOPSParams } from "../../bops";
 import type { FileTag } from "../../model";
-
-jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-  () =>
-    ({
-      data: {
-        flowName: "apply for a lawful development certificate",
-      },
-    } as any)
-);
 
 const flow: Store.flow = {
   _root: {
@@ -74,7 +64,13 @@ test("makes file object", () => {
     },
   };
 
-  const actual = getBOPSParams(breadcrumbs, flow, passport, "123").files;
+  const actual = getBOPSParams({
+    breadcrumbs,
+    flow,
+    passport,
+    sessionId: "123",
+    flowName: "Apply for a lawful development certificate",
+  }).files;
 
   const expected = [
     expect.objectContaining({

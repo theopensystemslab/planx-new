@@ -8,7 +8,7 @@ const endpoint = (strings: TemplateStringsArray) => `/admin/session/${strings[0]
 describe("OneApp XML endpoint", () => {
   beforeEach(() => {
     queryMock.mockQuery({
-      name: "GetUniformApplicationBySessionID",
+      name: "GetMostRecentUniformApplicationBySessionID",
       variables: {
         submission_reference: "abc123",
       },
@@ -20,7 +20,7 @@ describe("OneApp XML endpoint", () => {
     });
 
     queryMock.mockQuery({
-      name: "GetUniformApplicationBySessionID",
+      name: "GetMostRecentUniformApplicationBySessionID",
       variables: {
         submission_reference: "xyz789",
       },

@@ -6,8 +6,10 @@ import {
   ThemeProvider,
 } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import ErrorFallback from "components/ErrorFallback";
+import PhaseBanner from "components/PhaseBanner";
 import { clearLocalFlow } from "lib/local";
 import { NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -34,17 +36,15 @@ declare module "@mui/styles/defaultTheme" {
   interface DefaultTheme extends Theme {}
 }
 
-const useClasses = makeStyles((theme) => ({
-  mainContainer: {
-    borderTop: `1px solid ${theme.palette.grey[300]}`,
-    paddingTop: theme.spacing(5),
-    display: "flex",
-    flex: "1 0 auto",
-    flexDirection: "column",
-    alignItems: "center",
-    backgroundColor: "white",
-    position: "relative",
-  },
+const MainContainer = styled(Box)(({ theme }) => ({
+  borderTop: `1px solid ${theme.palette.grey[300]}`,
+  paddingTop: theme.spacing(5),
+  display: "flex",
+  flex: "1 0 auto",
+  flexDirection: "column",
+  alignItems: "center",
+  backgroundColor: "white",
+  position: "relative",
 }));
 
 const PublicFooter: React.FC<{
@@ -80,24 +80,27 @@ const PublicFooter: React.FC<{
       Boolean(item)
   );
   return (
-    <Footer items={[...footerItems]}>
-      <Box display="flex" alignItems="center">
-        <Box pr={3} display="flex">
-          <img src={Logo} alt="Open Government License Logo" />
+    <Box>
+      <PhaseBanner />
+      <Footer items={[...footerItems]}>
+        <Box display="flex" alignItems="center">
+          <Box pr={3} display="flex">
+            <img src={Logo} alt="Open Government License Logo" />
+          </Box>
+          <Typography variant="body2">
+            All content is available under the{" "}
+            <Link
+              href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+              color="inherit"
+              target="_blank"
+            >
+              Open Government Licence v3
+            </Link>
+            , except where otherwise stated
+          </Typography>
         </Box>
-        <Typography variant="body2">
-          All content is available under the{" "}
-          <Link
-            href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
-            color="inherit"
-            target="_blank"
-          >
-            Open Government Licence v3
-          </Link>
-          , except where otherwise stated
-        </Typography>
-      </Box>
-    </Footer>
+      </Footer>
+    </Box>
   );
 };
 
@@ -108,7 +111,6 @@ const PreviewLayout: React.FC<{
   footerContent?: { [key: string]: TextContent };
   headerVariant: HeaderVariant;
 }> = ({ team, children, settings, footerContent, headerVariant }) => {
-  const classes = useClasses();
   const path = useStore((state) => state.path);
   const id = useStore((state) => state.id);
 
@@ -148,7 +150,7 @@ const PreviewLayout: React.FC<{
           handleRestart={handleRestart}
           variant={headerVariant}
         />
-        <Box id="main-content" className={classes.mainContainer}>
+        <MainContainer id="main-content">
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             {
               {
@@ -161,7 +163,7 @@ const PreviewLayout: React.FC<{
               }[path]
             }
           </ErrorBoundary>
-        </Box>
+        </MainContainer>
         <PublicFooter
           footerContent={footerContent}
           settings={settings}

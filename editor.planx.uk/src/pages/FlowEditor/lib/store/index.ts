@@ -1,9 +1,11 @@
 import { TYPES } from "@planx/components/types";
 import { isPreviewOnlyDomain } from "routes/utils";
-import create from "zustand";
-import vanillaCreate, { GetState, SetState, StoreApi } from "zustand/vanilla";
+import create, { UseBoundStore } from "zustand";
+import { createStore, StoreApi } from "zustand/vanilla";
 
 import type { EditorStore, EditorUIStore } from "./editor";
+import type { NavigationStore } from "./navigation";
+import { navigationStore } from "./navigation";
 import type { PreviewStore } from "./preview";
 import { previewStore } from "./preview";
 import type { SharedStore } from "./shared";
@@ -17,6 +19,7 @@ export declare namespace Store {
     answers?: Array<string>;
     data?: Record<string, any>;
     auto?: boolean;
+    override?: Record<string, any>;
     feedback?: string;
   };
   export type breadcrumbs = Record<nodeId, userData>;
@@ -38,33 +41,48 @@ export declare namespace Store {
 //      frontend because they do things like connect to sharedb, which is
 //      not something that public users should be concerned with.
 
-export type PublicStore = SharedStore & PreviewStore;
+export type PublicStore = SharedStore & PreviewStore & NavigationStore;
 
 export type FullStore = PublicStore & EditorStore & EditorUIStore;
 
-export const { vanillaStore, useStore } = (() => {
-  const vanillaStore: StoreApi<FullStore> = (() => {
-    if (isPreviewOnlyDomain || window?.location?.href?.includes("/preview")) {
-      // if accessing the public preview, don't load editor store files
-      return vanillaCreate<PublicStore>(
-        (set: SetState<any>, get: GetState<any>) => ({
-          ...sharedStore(set, get),
-          ...previewStore(set, get),
-        })
-      ) as unknown as StoreApi<FullStore>;
-    } else {
-      // if accessing the editor then load ALL store files
-      const { editorStore, editorUIStore } = require("./editor");
-      return vanillaCreate<FullStore>(
-        (set: SetState<any>, get: GetState<any>) => ({
-          ...sharedStore(set, get),
-          ...previewStore(set, get),
-          ...editorStore(set, get),
-          ...editorUIStore(set, get),
-        })
-      );
-    }
-  })();
+interface PlanXStores {
+  // Non-React implementation (e.g. for use in tests)
+  vanillaStore: StoreApi<FullStore>;
+  // React hook
+  useStore: UseBoundStore<StoreApi<FullStore>>;
+}
+
+/**
+ * If accessing the public preview, don't load editor store files
+ * Cast to FullStore for autocomplete and linting
+ */
+const createPublicStore = (): StoreApi<FullStore> =>
+  createStore<PublicStore>((...args) => ({
+    ...sharedStore(...args),
+    ...previewStore(...args),
+    ...navigationStore(...args),
+  })) as StoreApi<FullStore>;
+
+/**
+ * If accessing the editor then load ALL store files
+ */
+const createFullStore = (): StoreApi<FullStore> => {
+  const { editorStore, editorUIStore } = require("./editor");
+  return createStore<FullStore>((...args) => ({
+    ...sharedStore(...args),
+    ...previewStore(...args),
+    ...navigationStore(...args),
+    ...editorStore(...args),
+    ...editorUIStore(...args),
+  }));
+};
+
+const isPublic =
+  isPreviewOnlyDomain || window?.location?.href?.includes("/preview");
+
+export const { vanillaStore, useStore }: PlanXStores = (() => {
+  const vanillaStore: StoreApi<FullStore> = (() =>
+    isPublic ? createPublicStore() : createFullStore())();
 
   return { vanillaStore, useStore: create(vanillaStore) };
 })();
