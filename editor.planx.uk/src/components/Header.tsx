@@ -59,7 +59,7 @@ const ProfileSection = styled(Toolbar)(({ theme }) => ({
 }));
 
 const StyledPopover = styled(Popover)(() => ({
-  ["& .$popoverPaper"]: {
+  ["& .MuiPopover-paper"]: {
     boxShadow: "4px 4px 0px rgba(150, 150, 150, 0.5)",
     backgroundColor: "#2c2c2c",
     borderRadius: 0,
@@ -282,9 +282,6 @@ const EditorToolbar: React.FC<{
         open={open}
         anchorEl={headerRef.current}
         onClose={handleClose}
-        classes={{
-          paper: "$popoverPaper",
-        }}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "right",
