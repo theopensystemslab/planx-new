@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import crypto from "crypto";
-import { singleSessionEmailTemplates } from "../saveAndReturn/utils";
 import assert from "assert";
 
 /**
@@ -39,21 +38,18 @@ const useSendEmailAuth = (
   next: NextFunction
 ): void => {
   switch (req.params.template) {
+    // Requires authorization - can only be triggered by Hasura scheduled events
     case "reminder":
     case "expiry":
-      // Requires authorization - can only be triggered by Hasura scheduled events
+    case "confirmation":
       return useHasuraAuth(req, res, next);
+    // Public access
     case "save":
-      // Public access
       return next();
     default: {
-      // Invalid template
-      const validTemplates = Object.keys(singleSessionEmailTemplates);
       return next({
         status: 400,
-        message: `Invalid template - must be one of [${validTemplates.join(
-          ", "
-        )}]`,
+        message: "Invalid template",
       });
     }
   }

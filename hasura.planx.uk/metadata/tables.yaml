@@ -224,6 +224,35 @@
                 _is_null: true
         check: {}
   event_triggers:
+    - name: email_user_submission_confirmation
+      definition:
+        enable_manual: false
+        update:
+          columns:
+            - submitted_at
+      retry_conf:
+        num_retries: 0
+        interval_sec: 10
+        timeout_sec: 60
+      webhook_from_env: HASURA_PLANX_API_URL
+      headers:
+        - name: authorization
+          value_from_env: HASURA_PLANX_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "payload": {
+                "sessionId": {{$body.event.data.new.id}},
+                "email": {{$body.event.data.new.email}}
+              }
+            }
+        url: '{{$base_url}}/send-email/confirmation'
+        method: POST
+        version: 2
+        query_params: {}
+        template_engine: Kriti
     - name: setup_lowcal_expiry_events
       definition:
         enable_manual: false
