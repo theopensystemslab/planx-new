@@ -22,7 +22,7 @@ const data = new pulumi.StackReference(`planx/data/${env}`);
 
 // The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the CloudFlare API token is missing.
 // You can generate tokens here: https://dash.cloudflare.com/profile/api-tokens
-new pulumi.Config("cloudflare").require("apiToken");
+new pulumi.Config("cloudflare").requireSecret("apiToken");
 
 const CUSTOM_DOMAINS =
   env === "production"
@@ -71,7 +71,7 @@ export = async () => {
     database: pgRoot.path!.substring(1) as string,
     superuser: false,
   });
-  const metabasePgPassword = config.require("metabasePgPassword");
+  const metabasePgPassword = config.requireSecret("metabasePgPassword");
   const role = new postgres.Role(
     "metabase",
     {
@@ -100,14 +100,6 @@ export = async () => {
     securityGroups: [
       new awsx.ec2.SecurityGroup("metabase-custom-port", {
         vpc,
-        ingress: [
-          {
-            protocol: "tcp",
-            cidrBlocks: ["0.0.0.0/0"],
-            fromPort: 443,
-            toPort: 443,
-          },
-        ],
         egress: [
           {
             protocol: "tcp",
@@ -182,7 +174,7 @@ export = async () => {
           // https://www.metabase.com/docs/latest/operations-guide/encrypting-database-details-at-rest.html
           {
             name: "MB_ENCRYPTION_SECRET_KEY",
-            value: config.require("metabase-encryption-secret-key"),
+            value: config.requireSecret("metabase-encryption-secret-key"),
           },
         ],
       },
@@ -315,7 +307,7 @@ export = async () => {
           { name: "AWS_S3_ACL", value: "public-read" },
           {
             name: "FILE_API_KEY",
-            value: config.require("file-api-key"),
+            value: config.requireSecret("file-api-key"),
           },
           {
             name: "GOOGLE_CLIENT_ID",
@@ -323,20 +315,20 @@ export = async () => {
           },
           {
             name: "GOOGLE_CLIENT_SECRET",
-            value: config.require("google-client-secret"),
+            value: config.requireSecret("google-client-secret"),
           },
-          { name: "SESSION_SECRET", value: config.require("session-secret") },
+          { name: "SESSION_SECRET", value: config.requireSecret("session-secret") },
           { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
           {
             name: "BOPS_API_ROOT_DOMAIN",
-            value: config.require("bops-api-root-domain"),
+            value: config.requireSecret("bops-api-root-domain"),
           },
-          { name: "BOPS_API_TOKEN", value: config.require("bops-api-token") },
-          { name: "JWT_SECRET", value: config.require("jwt-secret") },
+          { name: "BOPS_API_TOKEN", value: config.requireSecret("bops-api-token") },
+          { name: "JWT_SECRET", value: config.requireSecret("jwt-secret") },
           { name: "PORT", value: String(API_PORT) },
           {
             name: "HASURA_GRAPHQL_ADMIN_SECRET",
-            value: config.require("hasura-admin-secret"),
+            value: config.requireSecret("hasura-admin-secret"),
           },
           {
             name: "HASURA_GRAPHQL_URL",
@@ -352,27 +344,27 @@ export = async () => {
           },
           {
             name: "HASURA_PLANX_API_KEY",
-            value: config.require("hasura-planx-api-key"),
+            value: config.requireSecret("hasura-planx-api-key"),
           },
           {
             name: "AIRBRAKE_PROJECT_ID",
-            value: config.require("airbrake-project-id"),
+            value: config.requireSecret("airbrake-project-id"),
           },
           {
             name: "AIRBRAKE_PROJECT_KEY",
-            value: config.require("airbrake-project-key"),
+            value: config.requireSecret("airbrake-project-key"),
           },
           {
             name: "UNIFORM_TOKEN_URL",
-            value: config.require("uniform-token-url"),
+            value: config.requireSecret("uniform-token-url"),
           },
           {
             name: "UNIFORM_SUBMISSION_URL",
-            value: config.require("uniform-submission-url"),
+            value: config.requireSecret("uniform-submission-url"),
           },
           {
             name: "GOVUK_NOTIFY_API_KEY",
-            value: config.require("govuk-notify-api-key"),
+            value: config.requireSecret("govuk-notify-api-key"),
           },
           {
             name: "GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID",
@@ -400,13 +392,13 @@ export = async () => {
           },
           {
             name: "SLACK_WEBHOOK_URL",
-            value: config.require("slack-webhook-url"),
+            value: config.requireSecret("slack-webhook-url"),
           },
           {
             name: "ORDNANCE_SURVEY_API_KEY",
-            value: config.require("ordnance-survey-api-key"),
+            value: config.requireSecret("ordnance-survey-api-key"),
           },
-          ...generateTeamSecrets(config),
+          ...generateTeamSecrets(config, env),
         ],
       },
     },
@@ -417,7 +409,7 @@ export = async () => {
       ? `api.${tldjs.getSubdomain(DOMAIN)}`
       : "api",
     type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
+    zoneId: config.requireSecret("cloudflare-zone-id"),
     value: apiListenerHttps.endpoint.hostname,
     ttl: 1,
     proxied: false,
@@ -476,7 +468,7 @@ export = async () => {
           { name: "PORT", value: String(SHAREDB_PORT) },
           {
             name: "JWT_SECRET",
-            value: config.require("jwt-secret"),
+            value: config.requireSecret("jwt-secret"),
           },
           {
             name: "PG_URL",
@@ -633,7 +625,7 @@ export = async () => {
   const cdn = createCdn({ domain: DOMAIN, acmCertificateArn: sslCert.arn });
 
   const frontendDnsRecord = new cloudflare.Record("frontend", {
-    name: tldjs.getSubdomain(DOMAIN) ?? "@",
+    name: tldjs.getSubdomain(DOMAIN) || "@",
     type: "CNAME",
     zoneId: config.require("cloudflare-zone-id"),
     value: cdn.domainName,
