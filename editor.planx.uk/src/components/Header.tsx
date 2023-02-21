@@ -10,6 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/styles";
 import { Route } from "navi";
@@ -116,6 +117,22 @@ const ServiceTitleRoot = styled("span")(({ theme }) => ({
   paddingBottom: theme.spacing(1),
 }));
 
+const StyledNavBar = styled("nav")(({ theme }) => ({
+  backgroundColor: theme.palette.primary.dark,
+  padding: theme.spacing(1.5),
+  paddingLeft: theme.spacing(4),
+  fontSize: 16,
+}));
+
+const SectionName = styled(Typography)(({ theme }) => ({
+  fontSize: "inherit",
+  fontWeight: "bold",
+}));
+
+const SectionCount = styled(Typography)(({ theme }) => ({
+  fontSize: "inherit",
+}));
+
 /**
  * Describes the differing headers, based on the primary routes through which a flow can be interacted with
  */
@@ -179,6 +196,18 @@ const Breadcrumbs: React.FC<{
   </BreadcrumbsRoot>
 );
 
+const NavBar: React.FC = () => {
+  const isVisible = true;
+  return (
+    isVisible && (
+      <StyledNavBar>
+        <SectionCount>Section 1 of 6</SectionCount>
+        <SectionName>About your project</SectionName>
+      </StyledNavBar>
+    )
+  );
+};
+
 const PublicToolbar: React.FC<{
   team?: Team;
   handleRestart?: () => void;
@@ -210,6 +239,7 @@ const PublicToolbar: React.FC<{
         </IconButton>
       </StyledToolbar>
       {!showCenteredServiceTitle && <ServiceTitle />}
+      <NavBar />
       <AnalyticsDisabledBanner />
     </>
   );
