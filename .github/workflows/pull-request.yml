@@ -225,7 +225,7 @@ jobs:
         id: cache-storybook-assets
         uses: actions/cache@v3
         with:
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
+          path: ./${{ env.EDITOR_DIRECTORY }}/build/storybook
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-storybook
       - uses: pnpm/action-setup@v2.2.2
         if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
@@ -408,7 +408,7 @@ jobs:
         id: cache-storybook-assets
         uses: actions/cache@v3
         with:
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
+          path: ./${{ env.EDITOR_DIRECTORY }}/build/storybook
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-storybook
       - name: upload built editor
         uses: appleboy/scp-action@master
