@@ -1,5 +1,5 @@
 import { TYPES } from "@planx/components/types";
-import { EditorProps, InternalNotes } from "@planx/components/ui";
+import { EditorProps, ICONS, InternalNotes } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import Input from "ui/Input";
@@ -27,7 +27,10 @@ function SectionComponent(props: Props) {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Section marker title">
+        <ModalSectionContent
+          title="Section marker title"
+          Icon={ICONS[TYPES.Section]}
+        >
           <InputRow>
             <Input
               required
