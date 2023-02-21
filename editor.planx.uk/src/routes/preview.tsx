@@ -100,6 +100,7 @@ const routes = compose(
     // XXX: necessary as long as not every flow is published; aim to remove dataMergedHotfix.ts in future
     // load pre-flattened published flow if exists, else load & flatten flow
     useStore.getState().setFlow({ id: flow.id, flow: flowData, flowSlug });
+    useStore.getState().initNavigationStore();
 
     return (
       <PreviewContext.Provider value={{ flow, globalSettings }}>
