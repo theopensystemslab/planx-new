@@ -82,7 +82,7 @@ specifiers:
 
 dependencies:
   '@airbrake/node': 2.1.7
-  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/88911cc98abdb058086f56dae4e2fb69c0546498_@babel+core@7.19.6
+  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/e9411b5e2535ca511e508d298e1e8171caddc573_@babel+core@7.19.6
   adm-zip: 0.5.9
   aws-sdk: 2.1180.0
   axios: 0.27.2
@@ -7906,7 +7906,7 @@ packages:
     dev: true
 
   file:shared/core-1.0.0.tgz:
-    resolution: {integrity: sha512-G2n/IbC7IEwKxMoE+aTHXwhTFGSvwNd9YydWGeOVy2vnArpKakBXFsJSj0KWbfkpaVn8ZraWpUH3jAVWfm0Jjg==, tarball: file:shared/core-1.0.0.tgz}
+    resolution: {integrity: sha512-mixgxIrPpLImU2jE33WhCJKTCOWeaGy8fQLgn078iIOc7VITNEBwlr+UB6SMTp8XK6kZy9dsBBgqe5GhpeCbfQ==, tarball: file:shared/core-1.0.0.tgz}
     name: core
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
@@ -7918,12 +7918,14 @@ packages:
       - encoding
     dev: false
 
-  github.com/theopensystemslab/planx-document-templates/88911cc98abdb058086f56dae4e2fb69c0546498_@babel+core@7.19.6:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/88911cc98abdb058086f56dae4e2fb69c0546498}
-    id: github.com/theopensystemslab/planx-document-templates/88911cc98abdb058086f56dae4e2fb69c0546498
+  github.com/theopensystemslab/planx-document-templates/e9411b5e2535ca511e508d298e1e8171caddc573_@babel+core@7.19.6:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/e9411b5e2535ca511e508d298e1e8171caddc573}
+    id: github.com/theopensystemslab/planx-document-templates/e9411b5e2535ca511e508d298e1e8171caddc573
     name: '@opensystemslab/planx-document-templates'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
+    prepare: true
+    requiresBuild: true
     dependencies:
       '@emotion/react': 11.10.5_otspjrsspon4ofp37rshhlhp2y
       '@emotion/styled': 11.10.5_tt3r6vn4t4dcl62jlv4a63dmru
