@@ -28,7 +28,7 @@ import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
 
-export const HEADER_HEIGHT = 75;
+export const HEADER_HEIGHT = 74;
 
 const Root = styled(AppBar)(() => ({
   color: "#fff",
@@ -45,6 +45,8 @@ const BreadcrumbLink = styled(ReactNaviLink)(() => ({
 }));
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+  paddingLeft: theme.spacing(4),
+  paddingRight: theme.spacing(4),
   marginTop: theme.spacing(1),
   height: HEADER_HEIGHT,
   display: "flex",
@@ -118,6 +120,7 @@ const ServiceTitleRoot = styled("span")(({ theme }) => ({
 }));
 
 const StyledNavBar = styled("nav")(({ theme }) => ({
+  height: HEADER_HEIGHT,
   backgroundColor: theme.palette.primary.dark,
   padding: theme.spacing(1.5),
   paddingLeft: theme.spacing(4),
