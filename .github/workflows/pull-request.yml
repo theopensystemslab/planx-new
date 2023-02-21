@@ -125,7 +125,7 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm distribute ../api.planx.uk
-        working-directory: planx-client
+        working-directory: core
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         working-directory: api.planx.uk
@@ -163,7 +163,7 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm distribute ../${{ env.EDITOR_DIRECTORY }}
-        working-directory: planx-client
+        working-directory: core
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
@@ -196,7 +196,7 @@ jobs:
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm distribute ../${{ env.EDITOR_DIRECTORY }}
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
-        working-directory: planx-client
+        working-directory: core
       - run: pnpm install --frozen-lockfile
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.EDITOR_DIRECTORY }}
@@ -239,7 +239,7 @@ jobs:
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm distribute ../${{ env.EDITOR_DIRECTORY }}
         if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
-        working-directory: planx-client
+        working-directory: core
       - run: pnpm install --frozen-lockfile
         if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.EDITOR_DIRECTORY }}
@@ -463,10 +463,11 @@ jobs:
         uses: treosh/lighthouse-ci-action@v9
         id: LHCIAction
         with:
-          urls: |
+          urls: | 
+            https://editor.planx.dev/buckinghamshire/find-out-if-you-need-planning-permission/preview
             https://${{ env.FULL_DOMAIN }}/buckinghamshire/find-out-if-you-need-planning-permission/preview
+            https://editor.planx.dev/testing/lighthouse-canary-flow/unpublished
             https://${{ env.FULL_DOMAIN }}/testing/lighthouse-canary-flow/unpublished
-          # budgetPath: ./budget.json # test performance budgets
           uploadArtifacts: true # save results as an action artifacts
           temporaryPublicStorage: true # upload lighthouse report to the temporary storage
       - name: Interpolate comment text
@@ -476,15 +477,38 @@ jobs:
           script: |
             const links = JSON.parse('${{steps.LHCIAction.outputs.links}}');
             const manifests = JSON.parse('${{steps.LHCIAction.outputs.manifest}}');
-            const text = manifests
-              .map((m) => `> ${m.url}\n${getMarkdown(m.summary)}\n- [Full report](${links[m.url]})`)
-              .join("\n\n");
+
+            const text = getMarkdown(manifests, links);
             core.setOutput("text", `## Lighthouse\n\n${text}`);
 
-            function getMarkdown(summary) {
-              return Object.entries(summary)
-                .map(([name, value]) => `- ${name}: ${value}`)
-                .join("\n");
+
+            function getMarkdown(manifests, links) {
+              const urls = [
+                `buckinhamshire/FOIYNPP`,
+                `testing/canary`,
+              ];
+
+              const s = manifests.map(manifest => manifest.summary);
+              const attributes = Object.keys(s[0]);
+
+              const rows = attributes.map((attr, i) => {
+
+                const FOIYNPPDiff = (s[0][attr] - s[1][attr]).toFixed(2);
+                const FOIYNPP = `[${s[0][attr]}](${manifests[0].url}) - [${s[1][attr]}](${manifests[1].url}) = [${FOIYNPPDiff}](${links[manifests[1].url]})`;
+
+                const canaryDiff = (s[2][attr] - s[3][attr]).toFixed(2);
+                const canary = `[${s[2][attr]}](${manifests[2].url}) - [${s[3][attr]}](${manifests[3].url}) = [${canaryDiff}](${links[manifests[3].url]})`;
+                return `| ${attr} | ${FOIYNPP} | ${canary}`;
+              }).join('|\n');
+
+              const urlHeader = urls.join(' | ');
+              const middleColumns = urls.map(() => ':---:').join('|');
+
+              return `
+              |  | ${urlHeader} |
+              |------------|${middleColumns}|
+              ${rows}|
+              `;
             }
       - uses: marocchino/sticky-pull-request-comment@v2
         with:

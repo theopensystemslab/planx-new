@@ -23,14 +23,14 @@ do
   mkdir -p ${destination}/shared
 
   # remove any previous version
-  rm -rf ${destination}/node_modules/planx-client
-  rm -rf ${destination}/shared/planx-client*
+  rm -rf ${destination}/node_modules/core
+  rm -rf ${destination}/shared/core*
 
   # install a current build
   cp -f ${pack} ${destination}/shared
   cd ${destination}
   pnpm add ./shared/${pack}
-  cd ${destination}/node_modules/planx-client
+  cd ${destination}/node_modules/core
   pnpm install --frozen-lockfile
   pnpm build
   cd ${project_root}

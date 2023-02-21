@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import { log } from "./helpers";
 import { sign } from "jsonwebtoken";
-import { Client } from "planx-client";
+import { CoreDomainClient } from "core";
 import { GraphQLClient } from "graphql-request";
 
 export interface Context {
@@ -17,41 +17,39 @@ export interface Context {
   };
 }
 
-export async function setUpTestContext(
-  client: Client,
-  initialContext: {
-    user?: {
-      firstName: string;
-      lastName: string;
-      email: string;
-    };
-    team?: {
-      name: string;
-      slug?: string;
-      logo: string;
-      primaryColor: string;
-      homepage: string;
-    };
-    flow?: {
-      slug: string;
-      data?: object;
-    };
-  }
-): Promise<Context> {
+export async function setUpTestContext(initialContext: {
+  user?: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+  team?: {
+    name: string;
+    slug?: string;
+    logo: string;
+    primaryColor: string;
+    homepage: string;
+  };
+  flow?: {
+    slug: string;
+    data?: object;
+  };
+}): Promise<Context> {
+  const core = getCoreDomainClient();
   const context: any = initialContext;
   if (context.user) {
-    context.user.id = await client.createUser(context.user);
+    context.user.id = await core.createUser(context.user);
   }
   if (context.team) {
-    context.team.id = await client.createTeam(context.team);
+    context.team.id = await core.createTeam(context.team);
   }
   if (context.flow?.slug && context.team?.id) {
-    context.flow.id = await client.createFlow({
+    context.flow.id = await core.createFlow({
       slug: context.flow.slug,
       teamId: context.team.id,
       data: context.flow.data,
     });
-    context.flow.publishedId = await client.publishFlow({
+    context.flow.publishedId = await core.publishFlow({
       flow: context.flow,
       publisherId: context.user.id,
     });
@@ -89,7 +87,7 @@ export function generateAuthenticationToken(userId) {
   );
 }
 
-export function getClient(): Client {
+export function getCoreDomainClient(): CoreDomainClient {
   assert(process.env.HASURA_GRAPHQL_URL);
   assert(process.env.HASURA_GRAPHQL_ADMIN_SECRET);
 
@@ -98,7 +96,7 @@ export function getClient(): Client {
     process.env.HASURA_PROXY_PORT!
   );
   const SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET!;
-  return new Client({
+  return new CoreDomainClient({
     hasuraSecret: SECRET,
     targetURL: API,
   });

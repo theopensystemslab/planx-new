@@ -13,7 +13,7 @@
     "graphql-request": "^5.1.0",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
-    "planx-client": "link:../planx-client",
+    "core": "link:../core",
     "serve": "^14.1.2"
   },
   "devDependencies": {

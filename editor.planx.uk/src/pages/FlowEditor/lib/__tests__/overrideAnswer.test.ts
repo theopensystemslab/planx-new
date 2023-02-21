@@ -2,35 +2,63 @@ import { vanillaStore } from "../store";
 
 const { getState, setState } = vanillaStore;
 
-const { overrideAnswer, currentCard } = getState();
+const { overrideAnswer, currentCard, upcomingCardIds, record } = getState();
 
 test("it clears the correct breadcrumb and navigates back to the right node", async () => {
+  // set up initial state, confirm our passport computes as expected
   setState({
     flow: flowWithPropertyTypeOverride,
     breadcrumbs: propertySearchBreadcrumb,
   });
+  const initialPassport = getState().computePassport();
+  expect(initialPassport.data).toHaveProperty(
+    ["property.type"],
+    ["residential.dwelling.house.semiDetached"]
+  );
 
+  // override answer
   overrideAnswer("property.type");
 
   // confirm we've cleared the provided passport variable from the first node that set it
   const afterOverrideBreadcrumb = getState().breadcrumbs;
-  const addressData: any = afterOverrideBreadcrumb?.["ZcIDY8Ak5t"]?.data;
-  expect(Object.keys(addressData)).toHaveLength(3);
-  expect(Object.keys(addressData)).not.toContain("property.type");
+  const addressBreadcrumb: any =
+    afterOverrideBreadcrumb?.["FindPropertyNodeId"]?.data;
+  expect(Object.keys(addressBreadcrumb)).toHaveLength(3);
+  expect(addressBreadcrumb).not.toHaveProperty(["property.type"]);
+
+  const afterOverridePassport = getState().computePassport();
+  expect(afterOverridePassport.data).toBeDefined();
+  expect(afterOverridePassport.data).not.toHaveProperty(["property.type"]);
 
   // confirm we've stored a copy of the original value in the first node that set it
-  const overrideData: any = afterOverrideBreadcrumb?.["ZcIDY8Ak5t"]?.override;
+  const overrideData: any =
+    afterOverrideBreadcrumb?.["FindPropertyNodeId"]?.override;
   expect(overrideData).toEqual({
     "property.type": ["residential.dwelling.house.semiDetached"],
   });
 
-  // confirm we've navigated back to the right node
-  expect(currentCard()?.id).toEqual("IuTOXkwbGk");
+  // confirm we've navigated back to the right node, and that PropertyInformation is queued up again in upcoming cards
+  expect(currentCard()?.id).toEqual("FirstPropertyTypeQuestionNodeId");
+  expect(upcomingCardIds()).toContain("PropertyInformationNodeId");
+
+  // select a new answer, confirm our passport has updated
+  record("FirstPropertyTypeQuestionNodeId", {
+    answers: ["FlatResponseNodeId"],
+  });
+  expect(upcomingCardIds()).toEqual(["PropertyInformationNodeId"]);
+  expect(upcomingCardIds()).not.toContain("SecondPropertyTypeQuestionNodeId");
+
+  const afterAnswerPassport = getState().computePassport();
+  expect(afterAnswerPassport.data).toHaveProperty(
+    ["property.type"],
+    ["residential.dwelling.flat"]
+  );
 });
 
-// mimic having completed a property search and landing on PropertyInformation
+// mimic having completed a FindProperty search and landing on PropertyInformation
+//   reminder breadcrumb order is _not_ guaranteed, eg "FirstPropertyTypeQuestionNodeId" may be last entry
 const propertySearchBreadcrumb = {
-  ZcIDY8Ak5t: {
+  FindPropertyNodeId: {
     auto: false,
     data: {
       _address: {
@@ -57,54 +85,92 @@ const propertySearchBreadcrumb = {
       "property.region": ["South East"],
     },
   },
-  IuTOXkwbGk: {
-    answers: ["mZGNiRT2bc"],
+  SecondPropertyTypeQuestionNodeId: {
+    answers: ["SemiDetachedResponseNodeId"],
+    auto: true,
+  },
+  FirstPropertyTypeQuestionNodeId: {
+    answers: ["HouseResponseNodeId"],
     auto: true,
   },
 };
 
 const flowWithPropertyTypeOverride = {
   _root: {
-    edges: ["ZcIDY8Ak5t", "IuTOXkwbGk", "ju7Lg0BgJ0"],
+    edges: [
+      "FindPropertyNodeId",
+      "FirstPropertyTypeQuestionNodeId",
+      "PropertyInformationNodeId",
+    ],
   },
-  ZcIDY8Ak5t: {
+  FlatResponseNodeId: {
+    data: {
+      val: "residential.dwelling.flat",
+      text: "Flat",
+    },
+    type: 200,
+  },
+  FirstPropertyTypeQuestionNodeId: {
+    data: {
+      fn: "property.type",
+      text: "What type of property is it?",
+    },
+    type: 100,
+    edges: ["HouseResponseNodeId", "FlatResponseNodeId", "Qn8eJF7JRN"],
+  },
+  Qn8eJF7JRN: {
+    data: {
+      text: "Neither a house nor a flat",
+    },
+    type: 200,
+  },
+  FindPropertyNodeId: {
     type: 9,
   },
-  ju7Lg0BgJ0: {
-    type: 12,
+  PropertyInformationNodeId: {
     data: {
       title: "About the property",
       description:
         "This is the information we currently have about the property",
       showPropertyTypeOverride: true,
     },
+    type: 12,
   },
-  IuTOXkwbGk: {
+  HouseResponseNodeId: {
+    data: {
+      val: "residential.dwelling.house",
+      text: "House",
+    },
+    type: 200,
+    edges: ["SecondPropertyTypeQuestionNodeId"],
+  },
+  SecondPropertyTypeQuestionNodeId: {
     type: 100,
     data: {
       fn: "property.type",
-      text: "What type of property is it?",
+      text: "What type of house is it?",
     },
-    edges: ["mZGNiRT2bc", "5tAEd1U7jb", "Qn8eJF7JRN"],
+    edges: ["uKbMIB3Ou7", "SemiDetachedResponseNodeId", "X4Tq79FrNT"],
   },
-  mZGNiRT2bc: {
+  uKbMIB3Ou7: {
     type: 200,
     data: {
-      text: "House",
-      val: "residential.dwelling.house",
+      text: "Detached",
+      val: "residential.dwelling.house.detached",
     },
   },
-  "5tAEd1U7jb": {
+  SemiDetachedResponseNodeId: {
     type: 200,
     data: {
-      text: "Flat",
-      val: "residential.dwelling.flat",
+      text: "Semi-detached",
+      val: "residential.dwelling.house.semiDetached",
     },
   },
-  Qn8eJF7JRN: {
+  X4Tq79FrNT: {
     type: 200,
     data: {
-      text: "Neither a house nor a flat",
+      text: "End terrace",
+      val: "residential.dwelling.house.terrace.end",
     },
   },
 };

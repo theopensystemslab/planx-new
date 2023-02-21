@@ -1,0 +1,36 @@
+config:
+  application:airbrake-project-id: "329753"
+  application:airbrake-project-key:
+    secure: AAABAO8NgmVNdkwajWpiKwi+dxGicFACbAQzK66FREUCp+OUbSRyNAb9dSQHq/n9fZb8xWBdvYBCQ9eBr2jqPQ==
+  application:bops-api-root-domain: bops-staging.services
+  application:bops-api-token:
+    secure: AAABAHLQf7CFOK073geL2TbTYycQCzPYUy3Xi66UniwIrTlOAqve2YBikJXzMJ2xS9v4dGUZMUmwUba0OpTz8KAMXJ8=
+  application:cloudflare-zone-id: 9cdfc35484748e96b0ed2b1d303a694f
+  application:file-api-key:
+    secure: AAABAK75LzZkxv9S1kx8w+DR9aVnIS/64z5SiPUdyC8XvNEhBCuSwmYlo6Q+dyay8wtMk+SQzHspppLfiI5BcK/4YYNPZTijIrgIwA==
+  application:google-client-id: 987324067365-vpsk3kgeq5n32ihjn760ihf8l7m5rhh8.apps.googleusercontent.com
+  application:google-client-secret:
+    secure: AAABAAYYW3KQvsCuEPpxIWCB8Nrs6kfYIFcgxCoBknmYs9s2TOifXvhbW2YEzp8rNBvwmOz78sm49i0W5LxjpdZAkQ==
+  application:govuk-notify-api-key:
+    secure: AAABAN6by1UpKop5de/dlYA003xrp1LMzLG60J2asKxioUMoUS0SsP7N+1KT53aKnux45aUZ6J+ryYpGge4+FkDhEZEC85Sw0+q/bMzKy1VER9BFIU6Qzxr/shdSVwzOW1ZZQNc/Q1cZjfY4umGbEiBipz1f
+  application:hasura-admin-secret:
+    secure: AAABADc3VLm2XyLMC0Ap/5n9dk7qZnu2QdE4UYLHWbjtukjefJxLD85nQpPftKH7yPWF8FyS4wETj3xoLux+EVcRkwkP8674E/3shA==
+  application:hasura-planx-api-key:
+    secure: AAABAKVQcDltAw2qwW7xlZJ22Squvgir7cRker6goWiV194dWlaGtmwOPjC0HZXexoYfm8O4pFSSRCLQZhan/Ta1/vY=
+  application:jwt-secret:
+    secure: AAABAOIyX8iQxrly6pxlhc5k05qHmz2HvQS6Pi0HEGDGyT3F4hnat6SUc9AF4Q0hszW+/+qn7tZ3Vnavq6/jBAAITVSQ+EDvXFMaMg==
+  application:metabase-encryption-secret-key:
+    secure: AAABADD9S3yimUNDyeHEz7tUW80VrQ3KCmeshMK+HvBg4j8uvwWvrQ48uGVjW+i0RZMmeAGdsqMtyBi4KQfBizNT0lJBrWS4SMf6VA==
+  application:metabasePgPassword:
+    secure: AAABAHGBg6KBmGvFkCFvTHV2ZZue7qABz36u1Uc/p07Te9F6CxAGyh6fqJGEg8XfqNlzHwxhPUjuEA+wd4EgOMRqMN1a93eBdkdBVw==
+  application:ordnance-survey-api-key:
+    secure: AAABAFOo/4XWkrVjKSBcYGxaJzwiAMAhEpR4HOetm9f6r6x2PBHsK4/8Tf9XYGACKtjbjpqmTk5S1Jd5Z5WdWQ==
+  application:session-secret:
+    secure: AAABANgFXfc2ZZ2PtBUIWsc9xEF0PdBXlCkjLrIpKgap9fMEPisJoUK6L8+qQtxTGNswGoHSsiYttCQU4JygWCSjLd/bB7FoBgI3lw==
+  application:slack-webhook-url:
+    secure: AAABAK+2TCk3O3T6fai/7ahl1a/QOs4P/bNnrLUV7VqewfAU6ZjYsgUIhJ3kgHaeHLndloMD6R3ytRI3DwCxyiL78UIiPOwmkxUBdZr0IOerOqPZzTwpILCHNUC4UOXCdg3Ipj6u3r7ntU5sPkGt
+  application:uniform-submission-url: https://staging.identity.idoxgroup.com/agw/submission-api
+  application:uniform-token-url:
+    secure: AAABAOJAT0wX/byM7wyaXGB+H4m0NnEmaJP8NiM2u+7orIYvIM5yQfDb1GEAgoyMWRSn+7KFDYnCIvf5BNTyIHt1Usbr3R0rClm+zFbEZCuPV8ef2I8=
+  cloudflare:apiToken:
+    secure: AAABAPDjpKRV8PLulg+5kQfu5roxHWLgDH/zGT2+J+SKprEZJaJyLxr+98Q6oNcoX9h+/9elmdK9S4dFeBpZ/zQeMmPTdd+h

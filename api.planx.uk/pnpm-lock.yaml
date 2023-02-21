@@ -35,6 +35,7 @@ specifiers:
   body-parser: ^1.20.0
   cookie-parser: ^1.4.6
   cookie-session: ^1.4.0
+  core: file:shared/core-1.0.0.tgz
   cors: ^2.8.5
   csv-stringify: ^6.2.0
   date-fns: ^2.29.1
@@ -70,7 +71,6 @@ specifiers:
   passport: ^0.5.3
   passport-google-oauth20: ^2.0.0
   pino-noir: ^2.2.1
-  planx-client: file:shared/planx-client-1.0.0.tgz
   prettier: ~2.7.1
   rimraf: ^3.0.2
   slack-notify: ^2.0.3
@@ -89,6 +89,7 @@ dependencies:
   body-parser: 1.20.0
   cookie-parser: 1.4.6
   cookie-session: 1.4.0
+  core: file:shared/core-1.0.0.tgz
   cors: 2.8.5
   csv-stringify: 6.2.0
   date-fns: 2.29.1
@@ -113,7 +114,6 @@ dependencies:
   passport: 0.5.3
   passport-google-oauth20: 2.0.0
   pino-noir: 2.2.1
-  planx-client: file:shared/planx-client-1.0.0.tgz
   slack-notify: 2.0.3
   string-to-stream: 3.0.1
 
@@ -7905,9 +7905,9 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  file:shared/planx-client-1.0.0.tgz:
-    resolution: {integrity: sha512-W4AsYPLsPSkbyajO6U6FPogr+GmjdERBPxOS+ckNHn3nkQ34uXkOp/WyDzirULDjmuncSplWRd2z8F/roBcieQ==, tarball: file:shared/planx-client-1.0.0.tgz}
-    name: planx-client
+  file:shared/core-1.0.0.tgz:
+    resolution: {integrity: sha512-G2n/IbC7IEwKxMoE+aTHXwhTFGSvwNd9YydWGeOVy2vnArpKakBXFsJSj0KWbfkpaVn8ZraWpUH3jAVWfm0Jjg==, tarball: file:shared/core-1.0.0.tgz}
+    name: core
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
     dependencies:

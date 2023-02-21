@@ -2,23 +2,20 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/styles";
 import React, { useState } from "react";
 import AnalyticsChart from "ui/icons/AnalyticsChart";
 
-const useStyles = makeStyles((theme) => ({
-  analyticsWarning: {
-    display: "flex",
-    backgroundColor: "#FFFB00",
-    padding: "0 24px",
-    color: "#070707",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
+const AnalyticsWarning = styled(Box)(() => ({
+  display: "flex",
+  backgroundColor: "#FFFB00",
+  padding: "0 24px",
+  color: "#070707",
+  justifyContent: "space-between",
+  alignItems: "center",
 }));
 
 const AnalyticsDisabledBanner: React.FC = () => {
-  const classes = useStyles();
   const [showAnalyticsWarning, setShowAnalyticsWarning] = useState(true);
 
   const isAnalyticsDisabled = () =>
@@ -33,7 +30,7 @@ const AnalyticsDisabledBanner: React.FC = () => {
   return (
     <>
       {isAnalyticsDisabled() && showAnalyticsWarning && (
-        <Box className={classes.analyticsWarning}>
+        <AnalyticsWarning>
           <Box display="flex" alignItems="center">
             <AnalyticsChart />
             <Typography variant="body2">
@@ -45,7 +42,7 @@ const AnalyticsDisabledBanner: React.FC = () => {
             </Typography>
           </Box>
           <Button onClick={() => setShowAnalyticsWarning(false)}>Hide</Button>
-        </Box>
+        </AnalyticsWarning>
       )}
     </>
   );

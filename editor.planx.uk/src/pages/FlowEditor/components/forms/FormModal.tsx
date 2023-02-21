@@ -78,6 +78,7 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.Filter}>Filter</option>
         <option value={TYPES.InternalPortal}>Internal Portal</option>
         <option value={TYPES.ExternalPortal}>External Portal</option>
+        <option value={TYPES.Section}>Section</option>
         <option value={TYPES.SetValue}>Set Value</option>
       </optgroup>
       <optgroup label="Payment">

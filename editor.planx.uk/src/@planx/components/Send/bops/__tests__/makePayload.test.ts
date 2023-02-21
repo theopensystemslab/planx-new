@@ -1,16 +1,6 @@
 import { Store } from "pages/FlowEditor/lib/store";
-import * as ReactNavi from "react-navi";
 
 import { makePayload } from "..";
-
-jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-  () =>
-    ({
-      data: {
-        flowName: "apply for a lawful development certificate",
-      },
-    } as any)
-);
 
 const flow: Store.flow = {
   _root: {

@@ -4,40 +4,40 @@ import "isomorphic-fetch";
 export const PASSPORT_FN = "road.classified";
 
 export const classifiedRoadsSearch = async (req, res, next) => {
+  if (!req.query.geom)
+    return next({ status: 401, message: "Missing required query param `?geom=`" });
+
+  // Create an OGC XML filter parameter value which will select the road features (lines)
+  //   that intersect with the buffered site boundary (polygon) coordinates
+  //   ref https://labs.os.uk/public/os-data-hub-examples/os-features-api/wfs-example-intersects#maplibre-gl-js
+  const xml = `
+    <ogc:Filter>
+      <ogc:Intersects>
+      <ogc:PropertyName>SHAPE</ogc:PropertyName>
+        <gml:Polygon srsName="EPSG:4326">
+          <gml:outerBoundaryIs>
+            <gml:LinearRing>
+              <gml:coordinates>${req.query.geom}</gml:coordinates>
+            </gml:LinearRing>
+          </gml:outerBoundaryIs>
+        </gml:Polygon>
+      </ogc:Intersects>
+    </ogc:Filter>
+  `;
+
+  // Define WFS parameters object
+  const params = {
+    service: "WFS",
+    request: "GetFeature",
+    version: "2.0.0",
+    typeNames: "Highways_RoadLink", // sourced from OS MasterMap Highways Network, uniquely includes "RoadClassification" attribute
+    outputFormat: "GEOJSON",
+    srsName: "urn:ogc:def:crs:EPSG::4326",
+    filter: xml,
+    key: process.env.ORDNANCE_SURVEY_API_KEY || "",
+  };
+
   try {
-    if (!req.query.geom)
-      return next({ status: 401, message: "Missing required query param `?geom=`" });
-
-    // Create an OGC XML filter parameter value which will select the road features (lines)
-    //   that intersect with the buffered site boundary (polygon) coordinates
-    //   ref https://labs.os.uk/public/os-data-hub-examples/os-features-api/wfs-example-intersects#maplibre-gl-js
-    const xml = `
-      <ogc:Filter>
-        <ogc:Intersects>
-        <ogc:PropertyName>SHAPE</ogc:PropertyName>
-          <gml:Polygon srsName="EPSG:4326">
-            <gml:outerBoundaryIs>
-              <gml:LinearRing>
-                <gml:coordinates>${req.query.geom}</gml:coordinates>
-              </gml:LinearRing>
-            </gml:outerBoundaryIs>
-          </gml:Polygon>
-        </ogc:Intersects>
-      </ogc:Filter>
-    `;
-
-    // Define WFS parameters object
-    const params = {
-      service: "WFS",
-      request: "GetFeature",
-      version: "2.0.0",
-      typeNames: "Highways_RoadLink", // sourced from OS MasterMap Highways Network, uniquely includes "RoadClassification" attribute
-      outputFormat: "GEOJSON",
-      srsName: "urn:ogc:def:crs:EPSG::4326",
-      filter: xml,
-      key: process.env.ORDNANCE_SURVEY_API_KEY || "",
-    };
-
     const url = `https://api.os.uk/features/v1/wfs?${new URLSearchParams(params).toString()}`;
     const features = await fetch(url)
       .then(res => res.json())
@@ -45,17 +45,18 @@ export const classifiedRoadsSearch = async (req, res, next) => {
         if (!data.features?.length) return;
         
         // Filter out any intersecting roads that are not classified
-        const classifiedFeatures = data.features.filter((feature) => feature.properties["RoadClassification"] !== "Unclassified");
+        //   find all possible values on page 43 https://www.ordnancesurvey.co.uk/documents/os-mastermap-highways-network-roads-technical-specification.pdf 
+        //   XX in future consider doing this directly in XML using <ogc:PropertyIsNotEqualTo>
+        const classifiedFeatures = data.features.filter((feature) => !["Unclassified", "Not Classified", "Unknown"].includes(feature.properties["RoadClassification"]));
         return classifiedFeatures;
-      })
-      .catch(error => console.log(error));
+      });
 
     // Return a response object that's the same shape as a planning constraint
     if (features?.length) {
       return res.json({
         [PASSPORT_FN]: {
           value: true,
-          text: `is on a Classified Road (${features[0].properties["RoadName1"]})`,
+          text: `is on a Classified Road (${features[0].properties["RoadName1"]} - ${features[0].properties["RoadClassification"]})`,
           data: features,
         }
       });

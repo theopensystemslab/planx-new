@@ -11,7 +11,7 @@ import omit from "lodash/omit";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
 import { v4 as uuidV4 } from "uuid";
-import type { GetState, SetState } from "zustand/vanilla";
+import type { StateCreator } from "zustand";
 
 import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
 import type { Flag, GovUKPayment, Node, Session } from "./../../../../types";
@@ -64,10 +64,12 @@ export interface PreviewStore extends Store.Store {
   overrideAnswer: (fn: string) => void;
 }
 
-export const previewStore = (
-  set: SetState<PreviewStore>,
-  get: GetState<SharedStore & PreviewStore>
-): PreviewStore => ({
+export const previewStore: StateCreator<
+  SharedStore & PreviewStore,
+  [],
+  [],
+  PreviewStore
+> = (set, get) => ({
   setAnalyticsId(analyticsId) {
     set({ analyticsId });
   },
@@ -574,9 +576,12 @@ export const previewStore = (
     // Similar to 'changeAnswer', but enables navigating backwards to and overriding a previously **auto-answered** question which would typically be hidden
     const { breadcrumbs, flow, record, changeAnswer } = get();
 
+    // Order of breadcrumb insertion is not guaranteed, sort upfront to match flow order so that later "find()" methods behave as expected
+    const sortedBreadcrumbs = sortBreadcrumbs(breadcrumbs, flow);
+
     // The first nodeId that set the passport value (fn) being changed (eg FindProperty)
     const originalNodeId: Node["id"] | undefined = Object.entries(
-      breadcrumbs
+      sortedBreadcrumbs
     ).find(
       ([_nodeId, breadcrumb]) => breadcrumb.data && fn in breadcrumb.data
     )?.[0];
@@ -595,7 +600,7 @@ export const previewStore = (
     // The first nodeId that is configured by an editor to manually set the passport value being changed (eg Question "What type of property is it?").
     //   This node has likely been auto-answered by the originalNodeId and we leave its' breadcrumbs.data intact so that the original answer is highlighted later
     const overrideNodeId: Node["id"] | undefined = Object.entries(
-      breadcrumbs
+      sortedBreadcrumbs
     ).find(
       ([nodeId, _breadcrumb]) =>
         flow[nodeId].data?.fn === fn || flow[nodeId].data?.val === fn

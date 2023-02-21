@@ -69,6 +69,7 @@ const components: {
   [TYPES.Response]: Debug,
   [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,
+  [TYPES.Section]: undefined,
   [TYPES.Send]: undefined,
   [TYPES.SetValue]: undefined,
   [TYPES.Statement]: Question,

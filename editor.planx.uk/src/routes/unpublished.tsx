@@ -22,17 +22,18 @@ import { View } from "react-navi";
 import { Flow, GlobalSettings, Maybe } from "types";
 
 import { setPath } from "./utils";
-import { extractFlowNameFromReq, getTeamFromDomain } from "./utils";
+import { getTeamFromDomain } from "./utils";
 
 const routes = compose(
   withData(async (req) => ({
     mountpath: req.mountpath,
     team:
       req.params.team || (await getTeamFromDomain(window.location.hostname)),
-    flowName: extractFlowNameFromReq(req),
   })),
 
   withView(async (req) => {
+    const flowSlug = req.params.flow.split(",")[0];
+
     const { data } = await client.query({
       query: gql`
         query GetFlow($flowSlug: String!, $teamSlug: String!) {
@@ -57,7 +58,7 @@ const routes = compose(
         }
       `,
       variables: {
-        flowSlug: req.params.flow.split(",")[0],
+        flowSlug,
         teamSlug:
           req.params.team ||
           (await getTeamFromDomain(window.location.hostname)),
@@ -73,7 +74,7 @@ const routes = compose(
     if (!flow) throw new NotFoundError();
 
     const flowData = await dataMerged(flow.id);
-    useStore.getState().setFlow(flow.id, flowData);
+    useStore.getState().setFlow({ id: flow.id, flow: flowData, flowSlug });
 
     setPath(flowData, req);
 
