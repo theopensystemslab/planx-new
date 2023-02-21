@@ -20,3 +20,10 @@ hasura.planx.uk/.env.test
 /playwright-report/
 /playwright/.cache/
 api.planx.uk/tmp/
+
+# Shared modules
+api.planx.uk/shared/*
+editor.planx.uk/shared/*
+
+# track empty/ignored directories containing .gitkeep
+!.gitkeep
