@@ -17,5 +17,5 @@ export const navigationStore: StateCreator<
   currentSectionIndex: 1,
   totalSectionCount: 6,
   currentSectionTitle: "About your project",
-  isNavBarVisible: hasFeatureFlag("NAVIGATION_BAR"),
+  isNavBarVisible: hasFeatureFlag("NAVIGATION_UI"),
 });
