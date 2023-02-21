@@ -62,6 +62,7 @@ function isTypeForBopsPayload(type?: TYPES) {
     case TYPES.Response:
     case TYPES.Result:
     case TYPES.Review:
+    case TYPES.Section:
     case TYPES.Send:
     case TYPES.SetValue:
     case TYPES.TaskList:

@@ -93,6 +93,10 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.Review:
       return <Question {...allProps} text={node?.data?.title ?? "Review"} />;
+    case TYPES.Section:
+      return (
+        <Question {...allProps} text={node?.data?.title ?? "Section marker"} />
+      );
     case TYPES.Send:
       return <Question {...allProps} text={node?.data?.title ?? "Send"} />;
     case TYPES.SetValue:

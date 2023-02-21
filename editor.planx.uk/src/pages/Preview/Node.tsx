@@ -18,6 +18,7 @@ import PropertyInformation from "@planx/components/PropertyInformation/Public";
 import Question from "@planx/components/Question/Public";
 import Result from "@planx/components/Result/Public";
 import Review from "@planx/components/Review/Public";
+import Section from "@planx/components/Section/Public";
 import { getWorkStatus } from "@planx/components/Send/bops";
 import Send from "@planx/components/Send/Public";
 import SetValue from "@planx/components/SetValue/Public";
@@ -194,6 +195,9 @@ const Node: React.FC<any> = (props: Props) => {
 
     case TYPES.Review:
       return <Review {...allProps} />;
+
+    case TYPES.Section:
+      return <Section {...allProps} />;
 
     case TYPES.Send:
       return <Send {...allProps} />;

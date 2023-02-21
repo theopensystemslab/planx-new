@@ -20,6 +20,7 @@ import PropertyInformation from "@planx/components/PropertyInformation/Editor";
 import Question from "@planx/components/Question/Editor";
 import Result from "@planx/components/Result/Editor";
 import Review from "@planx/components/Review/Editor";
+import Section from "@planx/components/Section/Editor";
 import Send from "@planx/components/Send/Editor";
 import SetValue from "@planx/components/SetValue/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
@@ -57,6 +58,7 @@ const components: {
   question: Question,
   result: Result,
   review: Review,
+  section: Section,
   send: Send,
   "set-value": SetValue,
   "task-list": TaskList,

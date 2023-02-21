@@ -26,6 +26,7 @@ export const SLUGS: {
   [TYPES.Response]: "question",
   [TYPES.Result]: "result",
   [TYPES.Review]: "review",
+  [TYPES.Section]: "section",
   [TYPES.Send]: "send",
   [TYPES.SetValue]: "set-value",
   [TYPES.Statement]: "question",

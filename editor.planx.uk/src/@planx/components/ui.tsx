@@ -22,6 +22,7 @@ import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import Send from "@mui/icons-material/Send";
 import SquareFoot from "@mui/icons-material/SquareFoot";
 import TextFields from "@mui/icons-material/TextFields";
+import ViewAgenda from "@mui/icons-material/ViewAgenda";
 import { TYPES } from "@planx/components/types";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { handleSubmit } from "pages/Preview/Node";
@@ -78,6 +79,7 @@ export const ICONS: {
   [TYPES.Response]: undefined,
   [TYPES.Result]: PlaylistAddCheck,
   [TYPES.Review]: RateReview,
+  [TYPES.Section]: ViewAgenda,
   [TYPES.Send]: Send,
   [TYPES.SetValue]: PlaylistAdd,
   [TYPES.Statement]: CallSplit,
