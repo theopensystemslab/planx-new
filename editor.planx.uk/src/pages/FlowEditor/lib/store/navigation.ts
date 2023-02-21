@@ -1,8 +1,11 @@
+import { hasFeatureFlag } from "lib/featureFlags";
 import type { StateCreator } from "zustand";
 
 export interface NavigationStore {
-  navTest: string;
-  setNavTest: (navTest: string) => void;
+  currentSectionIndex: number;
+  totalSectionCount: number;
+  currentSectionTitle: string;
+  isNavBarVisible: boolean;
 }
 
 export const navigationStore: StateCreator<
@@ -11,6 +14,8 @@ export const navigationStore: StateCreator<
   [],
   NavigationStore
 > = (set) => ({
-  navTest: "default value",
-  setNavTest: (navTest: string) => set({ navTest }),
+  currentSectionIndex: 1,
+  totalSectionCount: 6,
+  currentSectionTitle: "About your project",
+  isNavBarVisible: hasFeatureFlag("NAVIGATION_BAR"),
 });

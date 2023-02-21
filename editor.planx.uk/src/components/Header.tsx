@@ -200,14 +200,26 @@ const Breadcrumbs: React.FC<{
 );
 
 const NavBar: React.FC = () => {
-  const isVisible = true;
+  const [
+    currentSectionIndex,
+    totalSectionCount,
+    currentSectionTitle,
+    isNavBarVisible,
+  ] = useStore((state) => [
+    state.currentSectionIndex,
+    state.totalSectionCount,
+    state.currentSectionTitle,
+    state.isNavBarVisible,
+  ]);
   return (
-    isVisible && (
-      <StyledNavBar>
-        <SectionCount>Section 1 of 6</SectionCount>
-        <SectionName>About your project</SectionName>
-      </StyledNavBar>
-    )
+    <>
+      {isNavBarVisible && (
+        <StyledNavBar>
+          <SectionCount>{`Section ${currentSectionIndex} of ${totalSectionCount}`}</SectionCount>
+          <SectionName>{currentSectionTitle}</SectionName>
+        </StyledNavBar>
+      )}
+    </>
   );
 };
 
