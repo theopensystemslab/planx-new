@@ -1,3 +1,4 @@
+import { TYPES } from "@planx/components/types";
 import { enablePatches, produceWithPatches } from "immer";
 import difference from "lodash/difference";
 import trim from "lodash/trim";
@@ -37,7 +38,7 @@ const isSomething = (x: any): boolean =>
   x !== null && x !== undefined && x !== "";
 
 const isSectionNodeType = (id: string, graph: Graph): boolean =>
-  graph[id]?.type === 360;
+  graph[id]?.type === TYPES.Section;
 
 const sanitize = (x: any) => {
   if ((x && typeof x === "string") || x instanceof String) {
