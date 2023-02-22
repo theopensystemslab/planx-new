@@ -4,6 +4,9 @@ set -o errexit -o errtrace
 # run from project root
 cd "$(dirname $0)/.."
 
+# run preinstall script to set up local dependencies
+pnpm preinstall
+
 trap 'echo "Cleaning up…" ; docker compose logs api; docker compose down --volumes --remove-orphans' ERR
 
 function setupContainers(){
