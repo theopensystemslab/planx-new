@@ -183,7 +183,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-react
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
       - uses: pnpm/action-setup@v2.2.2
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
@@ -245,7 +245,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-react
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
       - uses: pulumi/actions@v3
         with:
           command: preview
@@ -363,7 +363,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-react
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
       - name: upload built editor
         uses: appleboy/scp-action@master
         with:
@@ -384,7 +384,7 @@ jobs:
 
             Useful links:
               - [Editor](https://${{ env.FULL_DOMAIN }})
-              - [Storybook](https://storybook.${{ env.FULL_DOMAIN }}
+              - [Storybook](https://storybook.${{ env.FULL_DOMAIN }})
               - [Hasura](https://hasura.${{ env.FULL_DOMAIN }})
               - [API](https://api.${{ env.FULL_DOMAIN }})
               - [ShareDB](https://sharedb.${{ env.FULL_DOMAIN }})
