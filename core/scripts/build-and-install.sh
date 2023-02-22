@@ -38,6 +38,9 @@ do
   cp -f ${core_dir}/${pack} ${destination}/shared
   cd ${destination}
   pnpm add ./shared/${pack}
+  cd ./node_modules/core
+  pnpm install
+  pnpm build
   cd ${root_dir}
 
   echo installed into ${destination}
