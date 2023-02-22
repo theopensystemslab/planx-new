@@ -36,6 +36,9 @@ export const isClone = (id: string, graph: Graph): boolean =>
 const isSomething = (x: any): boolean =>
   x !== null && x !== undefined && x !== "";
 
+const isSectionNodeType = (id: string, graph: Graph): boolean =>
+  graph[id]?.type === 360;
+
 const sanitize = (x: any) => {
   if ((x && typeof x === "string") || x instanceof String) {
     return trim(x.replace(/[\u200B-\u200D\uFEFF↵]/g, ""));
@@ -158,6 +161,13 @@ const _add = (
 
   draft[id] = sanitize(nodeData);
 
+  if (isSectionNodeType(id, draft) && parent !== ROOT_NODE_KEY) {
+    alert(
+      "cannot add sections to branches, must be on center of graph. close this window & try again"
+    );
+    throw new Error("cannot add sections on brances");
+  }
+
   if (before) {
     const idx = parentNode.edges.indexOf(before);
     if (idx >= 0) {
@@ -209,6 +219,8 @@ export const clone =
       else if (!draft[toParent]) throw new Error("toParent not found");
       else if (draft[toParent].edges?.includes(id))
         throw new Error("cannot clone to same parent");
+      else if (isSectionNodeType(id, graph))
+        throw new Error("cannot clone sections");
 
       const toParentNode = draft[toParent];
 
@@ -250,6 +262,11 @@ export const move =
 
       const parentNode = draft[parent];
       parentNode.edges = parentNode.edges || [];
+
+      if (isSectionNodeType(id, graph) && toParent !== ROOT_NODE_KEY)
+        throw new Error(
+          "cannot move sections onto branches, must be on center of graph"
+        );
 
       let idx = parentNode.edges.indexOf(id);
       if (idx >= 0) {
