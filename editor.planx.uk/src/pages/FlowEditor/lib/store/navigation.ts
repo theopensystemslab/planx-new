@@ -1,5 +1,6 @@
 import { TYPES } from "@planx/components/types";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { findLast } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { StateCreator } from "zustand";
 
@@ -13,12 +14,13 @@ interface SectionNode extends Store.node {
 
 export interface NavigationStore {
   currentSectionIndex: number;
-  totalSectionCount?: number;
+  sectionCount: number;
   currentSectionTitle?: string;
-  isNavBarVisible: boolean;
-  sectionNodes: SectionNode[];
+  hasSections: boolean;
+  sectionNodes: Record<string, SectionNode>;
   initNavigationStore: () => void;
-  updateSection: (newTitle: string) => void;
+  updateSectionData: () => void;
+  filterFlowByType: (type: TYPES) => Store.flow;
 }
 
 export const navigationStore: StateCreator<
@@ -27,36 +29,69 @@ export const navigationStore: StateCreator<
   [],
   NavigationStore
 > = (set, get) => ({
-  currentSectionIndex: 0,
+  currentSectionIndex: 1,
 
-  totalSectionCount: undefined,
+  sectionCount: 0,
 
   currentSectionTitle: undefined,
 
-  isNavBarVisible: false,
+  hasSections: false,
 
-  sectionNodes: [],
+  sectionNodes: {},
 
+  /**
+   * Set up initial values to populate store
+   * Called by setFlow() as we require a flow from the DB before proceeding
+   */
   initNavigationStore: () => {
-    const flow = get().flow;
-    const sectionNodes = Object.values(flow).filter(
-      (node) => node.type === TYPES.Section
-    ) as SectionNode[];
+    const sectionNodes = get().filterFlowByType(TYPES.Section) as Record<
+      string,
+      SectionNode
+    >;
+    const sectionCount = Object.keys(sectionNodes).length;
+    const hasSections = Boolean(
+      sectionCount && hasFeatureFlag("NAVIGATION_UI")
+    );
+    const currentSectionTitle = Object.values(sectionNodes)[0]?.data.title;
 
-    if (sectionNodes.length && hasFeatureFlag("NAVIGATION_UI")) {
-      set({
-        sectionNodes: sectionNodes,
-        totalSectionCount: sectionNodes.length,
-        currentSectionTitle: sectionNodes[0].data.title,
-        isNavBarVisible: true,
-      });
-    }
+    set({
+      sectionNodes,
+      sectionCount,
+      hasSections,
+      currentSectionTitle,
+    });
   },
 
-  updateSection: (newTitle) => {
-    set({ currentSectionTitle: newTitle });
-    const newSectionIndex =
-      get().sectionNodes.findIndex((node) => node.data.title === newTitle) || 0;
-    set({ currentSectionIndex: newSectionIndex + 1 });
+  /**
+   *
+   */
+  updateSectionData: () => {
+    const { breadcrumbs, sectionNodes, hasSections } = get();
+    // Sections not being used, do not proceed
+    if (!hasSections) return;
+
+    const breadcrumbIds = Object.keys(breadcrumbs);
+    const sectionIds = Object.keys(sectionNodes);
+    let mostRecentSectionId = findLast(breadcrumbIds, (breadcrumbId: string) =>
+      sectionIds.includes(breadcrumbId)
+    );
+
+    // This should not happen - if we have sections, we should have a most recent section
+    // Failing noisily for now will help identify issues whilst this is being developed & tested
+    // TODO: Fail more gracefully once feature is complete
+    if (!mostRecentSectionId) throw Error("Error finding mostRecentSectionId");
+
+    // Update section
+    const currentSectionTitle = sectionNodes[mostRecentSectionId].data.title;
+    const currentSectionIndex = sectionIds.indexOf(mostRecentSectionId) + 1;
+    set({ currentSectionTitle, currentSectionIndex });
+  },
+
+  filterFlowByType: (type: TYPES): Store.flow => {
+    const flow = get().flow;
+    const filteredFlow = Object.fromEntries(
+      Object.entries(flow).filter(([_key, value]) => value.type === type)
+    );
+    return filteredFlow;
   },
 });
