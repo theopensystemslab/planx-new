@@ -163,9 +163,9 @@ const _add = (
 
   if (isSectionNodeType(id, draft) && parent !== ROOT_NODE_KEY) {
     alert(
-      "cannot add sections to branches, must be on center of graph. close this window & try again"
+      "cannot add sections on branches or in portals, must be on center of main graph. close this window & try again"
     );
-    throw new Error("cannot add sections on brances");
+    throw new Error("cannot add sections on branches or in portals");
   }
 
   if (before) {

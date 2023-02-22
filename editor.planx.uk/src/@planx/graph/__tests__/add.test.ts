@@ -218,6 +218,28 @@ test("with parent, before item", () => {
   ]);
 });
 
+test("can add sections on the root of the graph", () => {
+  const [graph, ops] = add(
+    { id: "sectionNodeId", type: 360 },
+    { before: "b", parent: "_root" }
+  )({
+    _root: { edges: ["a", "b"] },
+    a: {},
+    b: {},
+  });
+  expect(graph).toEqual({
+    _root: { edges: ["a", "sectionNodeId", "b"] },
+    a: {},
+    b: {},
+    sectionNodeId: { type: 360 },
+  });
+  expect(ops).toEqual([
+    { ld: "b", li: "sectionNodeId", p: ["_root", "edges", 1] },
+    { li: "b", p: ["_root", "edges", 2] },
+    { oi: { type: 360 }, p: ["sectionNodeId"] },
+  ]);
+});
+
 describe("error handling", () => {
   test("invalid parent", () => {
     expect(() => add({ id: "c" }, { parent: "x" })()).toThrow(
@@ -244,5 +266,18 @@ describe("error handling", () => {
         b: {},
       })
     ).toThrow("before not found");
+  });
+
+  test("cannot add sections in positions with non-root parents", () => {
+    expect(() =>
+      add(
+        { type: 360, data: { title: "Section 1" } },
+        { parent: "b" }
+      )({
+        _root: { edges: ["a", "b"] },
+        a: {},
+        b: {},
+      })
+    ).toThrow("cannot add sections on branches or in portals");
   });
 });
