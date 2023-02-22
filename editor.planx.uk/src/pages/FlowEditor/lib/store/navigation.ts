@@ -63,7 +63,8 @@ export const navigationStore: StateCreator<
   },
 
   /**
-   *
+   * Update title and index on record()
+   * Triggered when going backewards, forwards, or changing answer
    */
   updateSectionData: () => {
     const { breadcrumbs, sectionNodes, hasSections } = get();
@@ -72,8 +73,9 @@ export const navigationStore: StateCreator<
 
     const breadcrumbIds = Object.keys(breadcrumbs);
     const sectionIds = Object.keys(sectionNodes);
-    let mostRecentSectionId = findLast(breadcrumbIds, (breadcrumbId: string) =>
-      sectionIds.includes(breadcrumbId)
+    const mostRecentSectionId = findLast(
+      breadcrumbIds,
+      (breadcrumbId: string) => sectionIds.includes(breadcrumbId)
     );
 
     // This should not happen - if we have sections, we should have a most recent section
@@ -87,10 +89,17 @@ export const navigationStore: StateCreator<
     set({ currentSectionTitle, currentSectionIndex });
   },
 
+  /**
+   * Get a subset of the full flow, by type
+   * Returned in correct order, based on _root node's edges
+   */
   filterFlowByType: (type: TYPES): Store.flow => {
     const flow = get().flow;
+    const rootEdges = flow._root.edges || [];
     const filteredFlow = Object.fromEntries(
-      Object.entries(flow).filter(([_key, value]) => value.type === type)
+      Object.entries(flow)
+        .filter(([_key, value]) => value.type === type)
+        .sort(([idA], [idB]) => rootEdges.indexOf(idA) - rootEdges.indexOf(idB))
     );
     return filteredFlow;
   },
