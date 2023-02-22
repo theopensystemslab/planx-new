@@ -210,7 +210,7 @@ const NavBar: React.FC = () => {
   return (
     <>
       {hasSections && (
-        <StyledNavBar>
+        <StyledNavBar data-testid="navigation-bar">
           <SectionCount>{`Section ${currentSectionIndex} of ${sectionCount}`}</SectionCount>
           <SectionName>{currentSectionTitle}</SectionName>
         </StyledNavBar>
