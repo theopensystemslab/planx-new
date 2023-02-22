@@ -101,6 +101,7 @@ const routes = compose(
           }) as any;
         }
 
+        useStore.getState().setFlowSlug(slug);
         await useStore.getState().connectTo(flow.id);
       }
 

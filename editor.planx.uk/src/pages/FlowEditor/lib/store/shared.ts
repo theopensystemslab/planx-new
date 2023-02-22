@@ -3,6 +3,7 @@ import { capitalize } from "lodash";
 import type { StateCreator } from "zustand";
 
 import type { Store } from ".";
+import { NavigationStore } from "./navigation";
 
 export type PreviewEnvironment = "editor" | "standalone";
 export interface SharedStore extends Store.Store {
@@ -26,12 +27,15 @@ export interface SharedStore extends Store.Store {
   wasVisited: (id: Store.nodeId) => boolean;
   previewEnvironment: PreviewEnvironment;
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
+  setFlowSlug: (flowSlug: string) => void;
 }
 
-export const sharedStore: StateCreator<SharedStore, [], [], SharedStore> = (
-  set,
-  get
-) => ({
+export const sharedStore: StateCreator<
+  SharedStore & NavigationStore,
+  [],
+  [],
+  SharedStore
+> = (set, get) => ({
   breadcrumbs: {},
 
   childNodesOf(id = ROOT_NODE_KEY) {
@@ -73,6 +77,7 @@ export const sharedStore: StateCreator<SharedStore, [], [], SharedStore> = (
   setFlow({ id, flow, flowSlug }) {
     const flowName = capitalize(flowSlug.replaceAll?.("-", " "));
     set({ id, flow, flowSlug, flowName });
+    get().initNavigationStore();
   },
 
   wasVisited(id) {
@@ -82,5 +87,9 @@ export const sharedStore: StateCreator<SharedStore, [], [], SharedStore> = (
         ...(answers || []),
       ])
     ).has(id);
+  },
+
+  setFlowSlug(flowSlug) {
+    set({ flowSlug });
   },
 });
