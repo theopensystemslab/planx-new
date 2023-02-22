@@ -13,6 +13,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/styles";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { Route } from "navi";
 import React, { useRef, useState } from "react";
 import {
@@ -21,7 +22,7 @@ import {
   useNavigation,
 } from "react-navi";
 import { borderedFocusStyle, focusStyle } from "theme";
-import { Team } from "types";
+import { ApplicationPath, Team } from "types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
@@ -130,6 +131,7 @@ const StyledNavBar = styled("nav")(({ theme }) => ({
 const SectionName = styled(Typography)(({ theme }) => ({
   fontSize: "inherit",
   fontWeight: "bold",
+  textTransform: "capitalize",
 }));
 
 const SectionCount = styled(Typography)(({ theme }) => ({
@@ -200,16 +202,32 @@ const Breadcrumbs: React.FC<{
 );
 
 const NavBar: React.FC = () => {
-  const [currentSectionIndex, sectionCount, currentSectionTitle, hasSections] =
-    useStore((state) => [
-      state.currentSectionIndex,
-      state.sectionCount,
-      state.currentSectionTitle,
-      state.hasSections,
-    ]);
+  const [
+    currentSectionIndex,
+    sectionCount,
+    currentSectionTitle,
+    hasSections,
+    saveToEmail,
+    applicationPath,
+  ] = useStore((state) => [
+    state.currentSectionIndex,
+    state.sectionCount,
+    state.currentSectionTitle,
+    state.hasSections,
+    state.saveToEmail,
+    state.applicationPath,
+  ]);
+  const isSaveAndReturnLandingPage =
+    applicationPath !== ApplicationPath.SingleSession &&
+    !Boolean(saveToEmail) &&
+    !hasFeatureFlag("DISABLE_SAVE_AND_RETURN");
+  const isContentPage = useCurrentRoute()?.data?.isContentPage;
+  const isVisible =
+    hasSections && !isSaveAndReturnLandingPage && !isContentPage;
+
   return (
     <>
-      {hasSections && (
+      {isVisible && (
         <StyledNavBar data-testid="navigation-bar">
           <SectionCount>{`Section ${currentSectionIndex} of ${sectionCount}`}</SectionCount>
           <SectionName>{currentSectionTitle}</SectionName>
