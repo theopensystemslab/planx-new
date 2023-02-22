@@ -183,7 +183,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-react
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
       - uses: pnpm/action-setup@v2.2.2
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
@@ -203,6 +203,9 @@ jobs:
       - run: pnpm build
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - run: pnpm build-storybook
+        if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
         env:
           REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
@@ -213,48 +216,6 @@ jobs:
           # needed because there's no API to change google's allowed OAuth URLs
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
           REACT_APP_ENV: pizza
-
-  build_storybook:
-    name: Build Storybook
-    runs-on: ubuntu-22.04
-    needs: [changes]
-    if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
-    steps:
-      - uses: actions/checkout@v2
-      - name: Cache build assets
-        id: cache-storybook-assets
-        uses: actions/cache@v3
-        with:
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-storybook
-      - uses: pnpm/action-setup@v2.2.2
-        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - uses: actions/setup-node@v2
-        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm distribute ../${{ env.EDITOR_DIRECTORY }}
-        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
-        working-directory: core
-      - run: pnpm install --frozen-lockfile
-        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm build-storybook
-        if: steps.cache-storybook-assets.outputs.cache-hit != 'true'
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-        # same env as above, if it's job.env it can't access existing env.[variable]
-        env:
-          REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
-          REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
-          REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
-          REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
-          REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
-          REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
 
   pulumi_preview:
     name: Run Pulumi Preview
@@ -284,7 +245,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-react
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
       - uses: pulumi/actions@v3
         with:
           command: preview
@@ -322,7 +283,7 @@ jobs:
 
   create_or_update_vultr_instance:
     name: Upsert Vultr Instance
-    needs: [changes, build_react_app, build_storybook]
+    needs: [changes, build_react_app]
     runs-on: ubuntu-22.04
     if: "${{ success() && !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
@@ -396,20 +357,13 @@ jobs:
 
       # CREATE & UPDATE STEPS
 
-
       - uses: actions/checkout@v2
       - name: Download React build assets
         id: cache-react-build-assets
         uses: actions/cache@v3
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-react
-      - name: Download Storybook build assets
-        id: cache-storybook-assets
-        uses: actions/cache@v3
-        with:
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}-storybook
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
       - name: upload built editor
         uses: appleboy/scp-action@master
         with:
@@ -430,7 +384,7 @@ jobs:
 
             Useful links:
               - [Editor](https://${{ env.FULL_DOMAIN }})
-              - [Storybook](https://${{ env.FULL_DOMAIN }}/storybook)
+              - [Storybook](https://storybook.${{ env.FULL_DOMAIN }})
               - [Hasura](https://hasura.${{ env.FULL_DOMAIN }})
               - [API](https://api.${{ env.FULL_DOMAIN }})
               - [ShareDB](https://sharedb.${{ env.FULL_DOMAIN }})
