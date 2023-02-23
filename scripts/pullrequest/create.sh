@@ -24,6 +24,12 @@ apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
 # install hasura cli
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 
+
+# set up core dependency
+cd core
+pnpm i && pnpm distribute api.planx.uk
+cd ..
+
 # set env for this shell
 set -o allexport
 source .env.pizza
