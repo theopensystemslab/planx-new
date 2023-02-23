@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { dataMerged, getMostRecentPublishedFlow } from "../helpers";
 import { gql } from "graphql-request";
+import intersection from "lodash/intersection";
 
 const diffFlow = async (
   req: Request,
@@ -24,17 +25,17 @@ const diffFlow = async (
         ...flattenedFlow[key]
       }));
 
-      res.json({
+      return res.json({
         alteredNodes
       });
     } else {
-      res.json({
+      return res.json({
         alteredNodes: null,
         message: "No new changes",
       });
     }
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
@@ -48,6 +49,18 @@ const publishFlow = async (
 
   try {
     const flattenedFlow = await dataMerged(req.params.flowId);
+
+    // Check the flattened flow to ensure that all sections (type 360) are still in valid positions (eg within `_root: { edges: [...]}`, not the edge of a portal)
+    //   If any are not, don't proceed with publishing and return a message to display in the Editor
+    const sectionTypeNodeIds = Object.entries(flattenedFlow).filter(([_nodeId, nodeData]) => nodeData?.type === 360).map(([nodeId, _nodeData]) => nodeId);
+    const intersectingNodeIds = intersection(flattenedFlow["_root"].edges, sectionTypeNodeIds);
+    if (intersectingNodeIds.length !== sectionTypeNodeIds.length) {
+      return res.json({
+        alteredNodes: null,
+        message: "Error publishing: found Sections in one or more External Portals"
+      });
+    }
+
     const mostRecent = await getMostRecentPublishedFlow(req.params.flowId);
 
     const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
@@ -92,17 +105,17 @@ const publishFlow = async (
         ...publishedFlow[key],
       }));
 
-      res.json({
+      return res.json({
         alteredNodes,
       });
     } else {
-      res.json({
+      return res.json({
         alteredNodes: null,
         message: "No new changes",
       });
     }
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
