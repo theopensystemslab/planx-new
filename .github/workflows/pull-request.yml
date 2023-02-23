@@ -83,7 +83,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm distribute ${{ env.EDITOR_DIRECTORY }}
+      - run: pnpm distribute -y ${{ env.EDITOR_DIRECTORY }}
         working-directory: core
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
@@ -126,7 +126,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm distribute api.planx.uk
+      - run: pnpm distribute -y api.planx.uk
         working-directory: core
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -164,7 +164,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm distribute ${{ env.EDITOR_DIRECTORY }}
+      - run: pnpm distribute -y ${{ env.EDITOR_DIRECTORY }}
         working-directory: core
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.EDITOR_DIRECTORY }}
@@ -196,7 +196,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm distribute ${{ env.EDITOR_DIRECTORY }}
+      - run: pnpm distribute -y ${{ env.EDITOR_DIRECTORY }}
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         working-directory: core
       - run: pnpm install --frozen-lockfile
