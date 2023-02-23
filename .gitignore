@@ -22,7 +22,8 @@ hasura.planx.uk/.env.test
 api.planx.uk/tmp/
 
 # Shared modules
-api.planx.uk/shared/*
+# the shared folder is required for the docker image
+# in the api but can be built on-the-fly for the editor
 editor.planx.uk/shared/*
 
 # track empty/ignored directories containing .gitkeep

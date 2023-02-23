@@ -126,8 +126,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm distribute -y api.planx.uk
-        working-directory: core
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         working-directory: api.planx.uk

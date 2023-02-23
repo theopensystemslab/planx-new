@@ -8,7 +8,6 @@ WORKDIR /api
 RUN npm install -g pnpm@7.8.0
 
 # install shared package
-# NOTE: this is only available after running pnpm distribute from ../core
 COPY shared ./shared
 RUN pnpm install ./shared/core*
 RUN cd node_modules/core && pnpm install && pnpm build
