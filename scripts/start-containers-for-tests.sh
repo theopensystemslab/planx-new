@@ -5,8 +5,7 @@ set -o errexit -o errtrace
 cd "$(dirname $0)/.."
 
 # set up local dependencies for the editor
-cd core && pnpm distribute -y editor.planx.uk
-cd ../
+pnpm distribute -y editor.planx.uk
 
 trap 'echo "Cleaning up…" ; docker compose logs api; docker compose down --volumes --remove-orphans' ERR
 
