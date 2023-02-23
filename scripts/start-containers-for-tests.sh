@@ -4,8 +4,9 @@ set -o errexit -o errtrace
 # run from project root
 cd "$(dirname $0)/.."
 
-# run preinstall script to set up local dependencies
-pnpm preinstall
+# set up local dependencies for the editor
+cd core && pnpm distribute -y editor.planx.uk
+cd ../
 
 trap 'echo "Cleaning up…" ; docker compose logs api; docker compose down --volumes --remove-orphans' ERR
 

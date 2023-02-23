@@ -23,7 +23,7 @@ then
   target=${@:-api.planx.uk editor.planx.uk}
 
   echo "You are about to create a new distribution of the core package."
-  echo "This will require a lockfile changes"
+  echo "This will require lockfile changes in these packages: ${target}"
   read -r -p "Are you sure? [y/n] " response
   if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
   then

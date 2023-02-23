@@ -164,7 +164,8 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "mkdir -p build && build-storybook --quiet --output-dir ./build/storybook",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
-    "prepare": "cd .. && husky install editor.planx.uk/.husky"
+    "prepare": "cd .. && husky install editor.planx.uk/.husky",
+    "reset:core": "git checkout HEAD pnpm-lock.yaml"
   },
   "eslintConfig": {
     "extends": [
