@@ -26,6 +26,7 @@ let context = {
     slug: "pay-test",
     data: payFlow,
   },
+  sessionIds: [], // used to collect and clean up sessions
 };
 const previewURL = `/${context.team.slug}/${context.flow.slug}/preview?analytics=false`;
 // Test card numbers to be used in gov.uk sandbox environment
@@ -54,6 +55,7 @@ test.describe("Payment flow", async () => {
 
   test("a successful payment", async ({ page }) => {
     const sessionId = await navigateToPayComponent(page);
+    context.sessionIds.push(sessionId);
 
     await page.getByText("Pay using GOV.UK Pay").click();
     await fillGovUkCardDetails({
@@ -61,8 +63,10 @@ test.describe("Payment flow", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId } = await waitForPaymentResponse(page);
+    const { paymentId, status } = await waitForPaymentResponse(page);
     expect(paymentId).toBeTruthy();
+
+    // ensure a audit log entry was created
     expect(
       await hasPaymentStatus({
         status: "success",
@@ -84,13 +88,18 @@ test.describe("Payment flow", async () => {
 
   test("a retry attempt for a failed GOV.UK payment", async ({ page }) => {
     const sessionId = await navigateToPayComponent(page);
+    context.sessionIds.push(sessionId);
 
     await page.getByText("Pay using GOV.UK Pay").click();
     await fillGovUkCardDetails({ page, cardNumber: cards.invalid_card_number });
     await page.locator("#return-url").click();
 
-    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(page);
+    const { paymentId: failedPaymentRef, status } =
+      await waitForPaymentResponse(page);
     expect(failedPaymentRef).toBeTruthy();
+    expect(status).toBe("failed");
+
+    // ensure a audit log entry was created
     expect(
       await hasPaymentStatus({
         status: "failed",
@@ -114,6 +123,8 @@ test.describe("Payment flow", async () => {
     await page.locator("#confirm").click();
     const { paymentId } = await waitForPaymentResponse(page);
     expect(paymentId).toBeTruthy();
+
+    // ensure a audit log entry was created
     expect(
       await hasPaymentStatus({
         status: "success",
@@ -135,6 +146,7 @@ test.describe("Payment flow", async () => {
 
   test("a retry attempt for a cancelled GOV.UK payment", async ({ page }) => {
     const sessionId = await navigateToPayComponent(page);
+    context.sessionIds.push(sessionId);
 
     await page.getByText("Pay using GOV.UK Pay").click();
     await page.locator("#cancel-payment").click();
@@ -144,6 +156,8 @@ test.describe("Payment flow", async () => {
     );
     expect(failedPaymentRef).toBeTruthy();
     expect(state?.status).toBe("failed");
+
+    // ensure a audit log entry was created
     expect(
       await hasPaymentStatus({
         status: "failed", // note: GovPay returns "failed" rather than "cancelled"
@@ -160,6 +174,8 @@ test.describe("Payment flow", async () => {
     await page.locator("#confirm").click();
     const { paymentId } = await waitForPaymentResponse(page);
     expect(paymentId).toBeTruthy();
+
+    // ensure a audit log entry was created
     expect(
       await hasPaymentStatus({
         status: "success",
@@ -179,8 +195,11 @@ test.describe("Payment flow", async () => {
     await expect(page.getByText(paymentId!)).toBeVisible();
   });
 
-  test("a retry attempt for an abandoned GOV.UK payment", async ({ page }) => {
+  test.only("a retry attempt for an abandoned GOV.UK payment", async ({
+    page,
+  }) => {
     const sessionId = await navigateToPayComponent(page);
+    context.sessionIds.push(sessionId);
 
     await page.getByText("Pay using GOV.UK Pay").click();
     await fillGovUkCardDetails({
@@ -191,26 +210,46 @@ test.describe("Payment flow", async () => {
     // abandon the payment and return to PlanX
     await page.goto(previewURL);
 
+    // ensure that data stored in the session matches the latest payment attempt
+    const initialSession = await findSession({
+      adminGQLClient,
+      sessionId,
+    });
+    expect(initialSession?.data?.govUkPayment?.state?.status).toEqual(
+      "created"
+    );
+    // ensure a audit log entry was created
+    expect(
+      await hasPaymentStatus({
+        status: "created",
+        paymentId: initialSession?.data?.govUkPayment?.payment_id,
+        adminGQLClient,
+      })
+    ).toBe(true);
+
     // retry the payment
     await page.getByText("Retry payment").click();
     await page.getByText("Continue with your payment").click();
     await page.locator("#confirm").click();
+
     const { paymentId } = await waitForPaymentResponse(page);
     expect(paymentId).toBeTruthy();
+
+    // ensure a audit log entry was created
     expect(
       await hasPaymentStatus({
         status: "success",
-        paymentId: paymentId,
+        paymentId,
         adminGQLClient,
       })
     ).toBe(true);
 
     // ensure that data stored in the session matches the latest payment attempt
-    const session = await findSession({
+    const updatedSession = await findSession({
       adminGQLClient,
       sessionId,
     });
-    expect(session?.data?.govUkPayment?.payment_id).toEqual(paymentId);
+    expect(updatedSession?.data?.govUkPayment?.payment_id).toEqual(paymentId);
 
     await expect(page.getByText("Application sent")).toBeVisible();
     await expect(page.getByText(paymentId!)).toBeVisible();
@@ -220,6 +259,7 @@ test.describe("Payment flow", async () => {
     page,
   }) => {
     const sessionId = await navigateToPayComponent(page);
+    context.sessionIds.push(sessionId);
 
     // begin a payment
     await page.getByText("Pay using GOV.UK Pay").click();
@@ -242,7 +282,8 @@ test.describe("Payment flow", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId: actualPaymentId } = await waitForPaymentResponse(page);
+    const { paymentId: actualPaymentId, status: actualStatus } =
+      await waitForPaymentResponse(page);
 
     // ensure that data stored in the session matches the latest payment attempt
     const session = await findSession({
@@ -258,7 +299,9 @@ test.describe("Payment flow", async () => {
   test("navigating back to the pay component after a successful payment", async ({
     page,
   }) => {
-    await navigateToPayComponent(page);
+    const sessionId = await navigateToPayComponent(page);
+    context.sessionIds.push(sessionId);
+
     await page.getByText("Pay using GOV.UK Pay").click();
     await fillGovUkCardDetails({
       page,
@@ -371,7 +414,10 @@ async function findSession({
 }: {
   sessionId: string;
   adminGQLClient: GraphQLClient;
-}): Promise<{ data: { govUkPayment: { payment_id: string } } } | undefined> {
+}): Promise<
+  | { data: { govUkPayment: { payment_id: string; state: { satus: string } } } }
+  | undefined
+> {
   const { lowcal_sessions: response } = await adminGQLClient.request(
     gql`
       query FindLowcalSesion($sessionId: uuid!) {
