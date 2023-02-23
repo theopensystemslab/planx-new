@@ -54,6 +54,40 @@ it("does not update if there are no new changes", async () => {
     });
 });
 
+it("does not update if there are sections in an external portal", async () => {
+  const alteredFlow = {
+    ...mockFlowData,
+    "externalPortalNodeId": {
+      edges: ["sectionNodeId"],
+      type: 310,
+    },
+    "sectionNodeId": {
+      type: 360,
+    },
+  };
+
+  queryMock.mockQuery({
+    name: "GetFlowData",
+    matchOnVariables: false,
+    data: {
+      flows_by_pk: {
+        data: alteredFlow,
+      },
+    },
+  });
+
+  await supertest(app)
+  .post("/flows/1/publish")
+  .set(authHeader())
+  .expect(200)
+  .then((res) => {
+    expect(res.body).toEqual({
+      alteredNodes: null,
+      message: "Error publishing: found Sections in one or more External Portals",
+    });
+  });
+});
+
 it("updates published flow and returns altered nodes if there have been changes", async () => {
   const alteredFlow = {
     ...mockFlowData,
