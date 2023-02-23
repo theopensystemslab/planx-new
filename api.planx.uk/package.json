@@ -46,7 +46,8 @@
     "test": "TZ=Europe/London jest",
     "test:coverage": "TZ=Europe/London jest; open ./coverage/lcov-report/index.html",
     "test:watch": "TZ=Europe/London jest --coverage=false --watch",
-    "build": "rimraf ./dist && npx tsc"
+    "build": "rimraf ./dist && npx tsc",
+    "preinstall": "pnpm install ./shared/core*"
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
