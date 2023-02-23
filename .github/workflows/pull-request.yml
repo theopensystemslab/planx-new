@@ -13,7 +13,7 @@ env:
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
   PNPM_VERSION: 7.8.0
-  NODE_VERSION: 16.13.1 # 16.13.1 = LTS
+  NODE_VERSION: 16.13.1  # 16.13.1 = LTS
 
 jobs:
   changes:
@@ -172,60 +172,10 @@ jobs:
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
   build_react_app:
+    uses: ./.github/workflows/build-react.yml
     name: Build React App
-    runs-on: ubuntu-22.04
     needs: [changes]
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
-    steps:
-      - uses: actions/checkout@v2
-      - name: Cache build assets
-        id: cache-react-build-assets
-        uses: actions/cache@v3
-        with:
-          path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
-      - uses: pnpm/action-setup@v2.2.2
-        if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - uses: actions/setup-node@v2
-        if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm distribute ../${{ env.EDITOR_DIRECTORY }}
-        if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
-        working-directory: core
-      - run: pnpm install --frozen-lockfile
-        if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm build
-        if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
-        env:
-          REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
-          REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
-          REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
-          REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
-          REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
-          # needed because there's no API to change google's allowed OAuth URLs
-          REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
-          REACT_APP_ENV: pizza
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm build-storybook
-        if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
-        working-directory: ${{ env.EDITOR_DIRECTORY }}
-        env:
-          # same env as above, if it's job.env it can't access existing env.[variable]
-          REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
-          REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
-          REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
-          REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
-          REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
-          REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
-          REACT_APP_ENV: pizza
 
   pulumi_preview:
     name: Run Pulumi Preview
@@ -427,13 +377,13 @@ jobs:
         uses: treosh/lighthouse-ci-action@v9
         id: LHCIAction
         with:
-          urls: | 
+          urls: |
             https://editor.planx.dev/buckinghamshire/find-out-if-you-need-planning-permission/preview
             https://${{ env.FULL_DOMAIN }}/buckinghamshire/find-out-if-you-need-planning-permission/preview
             https://editor.planx.dev/testing/lighthouse-canary-flow/unpublished
             https://${{ env.FULL_DOMAIN }}/testing/lighthouse-canary-flow/unpublished
-          uploadArtifacts: true # save results as an action artifacts
-          temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+          uploadArtifacts: true  # save results as an action artifacts
+          temporaryPublicStorage: true  # upload lighthouse report to the temporary storage
       - name: Interpolate comment text
         id: text
         uses: actions/github-script@v6
