@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/styles";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { capitalize } from "lodash";
 import { Route } from "navi";
 import React, { useRef, useState } from "react";
 import {
@@ -128,13 +129,12 @@ const StyledNavBar = styled("nav")(({ theme }) => ({
   fontSize: 16,
 }));
 
-const SectionName = styled(Typography)(({ theme }) => ({
+const SectionName = styled(Typography)(() => ({
   fontSize: "inherit",
   fontWeight: "bold",
-  textTransform: "capitalize",
 }));
 
-const SectionCount = styled(Typography)(({ theme }) => ({
+const SectionCount = styled(Typography)(() => ({
   fontSize: "inherit",
 }));
 
@@ -230,7 +230,7 @@ const NavBar: React.FC = () => {
       {isVisible && (
         <StyledNavBar data-testid="navigation-bar">
           <SectionCount>{`Section ${currentSectionIndex} of ${sectionCount}`}</SectionCount>
-          <SectionName>{currentSectionTitle}</SectionName>
+          <SectionName>{capitalize(currentSectionTitle)}</SectionName>
         </StyledNavBar>
       )}
     </>
