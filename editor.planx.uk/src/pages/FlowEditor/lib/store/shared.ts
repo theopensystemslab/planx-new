@@ -12,7 +12,7 @@ export interface SharedStore extends Store.Store {
   flowSlug: string;
   flowName: string;
   id: string;
-  getNode: (id: Store.nodeId) => Store.node;
+  getNode: (id: Store.nodeId) => Store.node | undefined;
   resetPreview: () => void;
   setFlow: ({
     id,
@@ -53,9 +53,11 @@ export const sharedStore: StateCreator<SharedStore, [], [], SharedStore> = (
   },
 
   getNode(id) {
+    const node = get().flow[id];
+    if (!node) return;
     return {
       id,
-      ...get().flow[id],
+      ...node,
     };
   },
 
