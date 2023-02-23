@@ -60,7 +60,7 @@ specifiers:
   '@mui/styles': 5.11.9
   '@mui/utils': 5.11.9
   '@opensystemslab/map': ^0.7.1
-  '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#main
+  '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#e0642be
   '@react-theming/storybook-addon': ^1.1.7
   '@storybook/addon-actions': ^6.5.10
   '@storybook/addon-essentials': ^6.5.10
@@ -204,7 +204,7 @@ dependencies:
   '@mui/styles': 5.11.9_7v64pk2mkrohwh22gx7lrz5ive
   '@mui/utils': 5.11.9_react@18.2.0
   '@opensystemslab/map': 0.7.1
-  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/14661ef925057a2d23c5cb6f6ce5bf0b3066e085_bmxldjpgqrh5iboessqya77r7u
+  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/e0642be_a7krn2kytpcoapplqdxaq5aiqm
   '@tiptap/core': 2.0.0-beta.204
   '@tiptap/extension-bold': 2.0.0-beta.204_bv566pzu4gfcw3675d5jwhi56i
   '@tiptap/extension-bubble-menu': 2.0.0-beta.204_bv566pzu4gfcw3675d5jwhi56i
@@ -321,7 +321,7 @@ devDependencies:
   esbuild: 0.14.54
   esbuild-jest: 0.5.0_esbuild@0.14.54
   eslint: 8.29.0
-  eslint-plugin-jest: 27.1.6_kkv2tsnmg5we6ee3ny4vbvytka
+  eslint-plugin-jest: 27.1.6_ixh6nceclvqov4hcu5gszby2fi
   eslint-plugin-jsx-a11y: 6.6.1_eslint@8.29.0
   eslint-plugin-simple-import-sort: 7.0.0_eslint@8.29.0
   eslint-plugin-testing-library: 5.6.0_ixh6nceclvqov4hcu5gszby2fi
@@ -3545,7 +3545,7 @@ packages:
       '@rollup/pluginutils': 3.1.0_rollup@2.61.1
       rollup: 2.61.1
 
-  /@rollup/plugin-commonjs/23.0.7_rollup@2.61.1:
+  /@rollup/plugin-commonjs/23.0.7:
     resolution: {integrity: sha512-hsSD5Qzyuat/swzrExGG5l7EuIlPhwTsT7KwKbSCQzIcJWjRxiimi/0tyMYY2bByitNb3i1p+6JWEDGa0NvT0Q==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -3554,13 +3554,12 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2_rollup@2.61.1
+      '@rollup/pluginutils': 5.0.2
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 8.1.0
       is-reference: 1.2.1
       magic-string: 0.27.0
-      rollup: 2.61.1
     dev: false
 
   /@rollup/plugin-node-resolve/11.2.1_rollup@2.61.1:
@@ -3597,7 +3596,7 @@ packages:
       picomatch: 2.3.1
       rollup: 2.61.1
 
-  /@rollup/pluginutils/5.0.2_rollup@2.61.1:
+  /@rollup/pluginutils/5.0.2:
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -3609,7 +3608,6 @@ packages:
       '@types/estree': 1.0.0
       estree-walker: 2.0.2
       picomatch: 2.3.1
-      rollup: 2.61.1
     dev: false
 
   /@rushstack/eslint-patch/1.1.0:
@@ -9701,7 +9699,7 @@ packages:
       - supports-color
       - typescript
 
-  /eslint-plugin-jest/27.1.6_kkv2tsnmg5we6ee3ny4vbvytka:
+  /eslint-plugin-jest/27.1.6_ixh6nceclvqov4hcu5gszby2fi:
     resolution: {integrity: sha512-XA7RFLSrlQF9IGtAmhddkUkBuICCTuryfOTfCSWcZHiHb69OilIH05oozH2XA6CEOtztnOd0vgXyvxZodkxGjg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     peerDependencies:
@@ -9716,7 +9714,6 @@ packages:
     dependencies:
       '@typescript-eslint/utils': 5.36.1_ixh6nceclvqov4hcu5gszby2fi
       eslint: 8.29.0
-      jest: 27.4.5
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -19978,9 +19975,9 @@ packages:
       - encoding
     dev: false
 
-  github.com/theopensystemslab/planx-document-templates/14661ef925057a2d23c5cb6f6ce5bf0b3066e085_bmxldjpgqrh5iboessqya77r7u:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/14661ef925057a2d23c5cb6f6ce5bf0b3066e085}
-    id: github.com/theopensystemslab/planx-document-templates/14661ef925057a2d23c5cb6f6ce5bf0b3066e085
+  github.com/theopensystemslab/planx-document-templates/e0642be_a7krn2kytpcoapplqdxaq5aiqm:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/e0642be}
+    id: github.com/theopensystemslab/planx-document-templates/e0642be
     name: '@opensystemslab/planx-document-templates'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
@@ -19991,7 +19988,7 @@ packages:
       '@emotion/styled': 11.10.5_plnv2cpmczbmhwm5z24cqg42la
       '@lit-labs/ssr': 2.3.0
       '@mui/material': 5.11.9_o3jv4iu7e2dnl425vnr2xredky
-      '@rollup/plugin-commonjs': 23.0.7_rollup@2.61.1
+      '@rollup/plugin-commonjs': 23.0.7
       docx: 7.8.2
       lodash.startcase: 4.4.0
       react: 18.2.0

@@ -9,4 +9,3 @@ declare module "draftjs-to-html";
 declare module "mathjs";
 declare module "@opensystemslab/map";
 declare module "wkt";
-declare module "@opensystemslab/planx-document-templates";
