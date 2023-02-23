@@ -4,7 +4,6 @@ import { adminGraphQLClient as adminClient } from "../hasura";
 import { dataMerged, getMostRecentPublishedFlow } from "../helpers";
 import { gql } from "graphql-request";
 import intersection from "lodash/intersection";
-import { flattenDeep } from "lodash";
 
 const diffFlow = async (
   req: Request,
