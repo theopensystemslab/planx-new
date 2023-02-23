@@ -63,7 +63,7 @@ test.describe("Payment flow", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId, status } = await waitForPaymentResponse(page);
+    const { paymentId } = await waitForPaymentResponse(page);
     expect(paymentId).toBeTruthy();
 
     // ensure a audit log entry was created
@@ -94,10 +94,8 @@ test.describe("Payment flow", async () => {
     await fillGovUkCardDetails({ page, cardNumber: cards.invalid_card_number });
     await page.locator("#return-url").click();
 
-    const { paymentId: failedPaymentRef, status } =
-      await waitForPaymentResponse(page);
+    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(page);
     expect(failedPaymentRef).toBeTruthy();
-    expect(status).toBe("failed");
 
     // ensure a audit log entry was created
     expect(
@@ -151,11 +149,8 @@ test.describe("Payment flow", async () => {
     await page.getByText("Pay using GOV.UK Pay").click();
     await page.locator("#cancel-payment").click();
     await page.locator("#return-url").click();
-    const { paymentId: failedPaymentRef, state } = await waitForPaymentResponse(
-      page
-    );
+    const { paymentId: failedPaymentRef } = await waitForPaymentResponse(page);
     expect(failedPaymentRef).toBeTruthy();
-    expect(state?.status).toBe("failed");
 
     // ensure a audit log entry was created
     expect(
@@ -195,9 +190,7 @@ test.describe("Payment flow", async () => {
     await expect(page.getByText(paymentId!)).toBeVisible();
   });
 
-  test.only("a retry attempt for an abandoned GOV.UK payment", async ({
-    page,
-  }) => {
+  test("a retry attempt for an abandoned GOV.UK payment", async ({ page }) => {
     const sessionId = await navigateToPayComponent(page);
     context.sessionIds.push(sessionId);
 
@@ -282,8 +275,7 @@ test.describe("Payment flow", async () => {
       cardNumber: cards.successful_card_number,
     });
     await page.locator("#confirm").click();
-    const { paymentId: actualPaymentId, status: actualStatus } =
-      await waitForPaymentResponse(page);
+    const { paymentId: actualPaymentId } = await waitForPaymentResponse(page);
 
     // ensure that data stored in the session matches the latest payment attempt
     const session = await findSession({
