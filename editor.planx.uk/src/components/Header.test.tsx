@@ -141,12 +141,7 @@ describe("Header Component - Public Routes", () => {
       });
 
       it("does not display if the feature flag is disabled", () => {
-        act(() =>
-          setState({
-            flow: flowWithThreeSections,
-            saveToEmail: "test@test.com",
-          })
-        );
+        act(() => setState({ flow: flowWithThreeSections }));
         act(() => getState().initNavigationStore());
         setup(
           <Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>
@@ -158,12 +153,7 @@ describe("Header Component - Public Routes", () => {
 
       it("displays if the feature flag is enabled", () => {
         toggleFeatureFlag("NAVIGATION_UI");
-        act(() =>
-          setState({
-            flow: flowWithThreeSections,
-            saveToEmail: "test@test.com",
-          })
-        );
+        act(() => setState({ flow: flowWithThreeSections }));
         act(() => getState().initNavigationStore());
         setup(
           <Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>
@@ -175,12 +165,7 @@ describe("Header Component - Public Routes", () => {
 
       it("display the correct information from the store", () => {
         toggleFeatureFlag("NAVIGATION_UI");
-        act(() =>
-          setState({
-            flow: flowWithThreeSections,
-            saveToEmail: "test@test.com",
-          })
-        );
+        act(() => setState({ flow: flowWithThreeSections }));
         act(() => getState().initNavigationStore());
         setup(
           <Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>
@@ -192,12 +177,7 @@ describe("Header Component - Public Routes", () => {
 
       it("should not have any accessibility violations", async () => {
         toggleFeatureFlag("NAVIGATION_UI");
-        act(() =>
-          setState({
-            flow: flowWithThreeSections,
-            saveToEmail: "test@test.com",
-          })
-        );
+        act(() => setState({ flow: flowWithThreeSections }));
         act(() => getState().initNavigationStore());
         const { container } = setup(
           <Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>

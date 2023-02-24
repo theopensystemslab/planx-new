@@ -208,17 +208,17 @@ const NavBar: React.FC = () => {
     currentSectionTitle,
     hasSections,
     saveToEmail,
-    applicationPath,
+    path,
   ] = useStore((state) => [
     state.currentSectionIndex,
     state.sectionCount,
     state.currentSectionTitle,
     state.hasSections,
     state.saveToEmail,
-    state.applicationPath,
+    state.path,
   ]);
   const isSaveAndReturnLandingPage =
-    applicationPath !== ApplicationPath.SingleSession &&
+    path !== ApplicationPath.SingleSession &&
     !Boolean(saveToEmail) &&
     !hasFeatureFlag("DISABLE_SAVE_AND_RETURN");
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
