@@ -8,7 +8,8 @@
   "scripts": {
     "distribute": "./scripts/build-and-install.sh",
     "build": "rimraf ./types ./dist && npx tsc",
-    "lint": "eslint 'src/**/*.{js,ts}'"
+    "lint": "eslint 'src/**/*.{js,ts}'",
+    "postinstall": "pnpm i -D rimraf && pnpm build"
   },
   "dependencies": {
     "graphql": "^16.6.0",

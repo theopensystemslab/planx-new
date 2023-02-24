@@ -52,19 +52,16 @@ do
   mkdir -p ${destination}/shared
 
   # remove any previous version
-  [ -e ${destination}/node_modules/core ] && rm -rf ${destination}/node_modules/core
-  rm -rf ${destination}/shared/core*
+  [ -e ${destination}/node_modules/core ] && rm -r ${destination}/node_modules/core
+  [ -e ${destination}/shared/core* ] && rm -r ${destination}/shared/core*
 
   # install a current build
   cp -f ${core_dir}/${pack} ${destination}/shared
   cd ${destination}
-  pnpm add ./shared/${pack}
-  cd node_modules/core
-  pnpm install --frozen-lockfile --ignore-scripts
-  pnpm build
-  cd ${root_dir}
-
+  pnpm install ./shared/${pack}
   echo installed into ${destination}
+
+  cd ${root_dir}
 done
 
 # clean-up

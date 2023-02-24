@@ -7906,7 +7906,7 @@ packages:
     dev: true
 
   file:shared/core-1.0.0.tgz:
-    resolution: {integrity: sha512-kz4KL8gEO5QFclcsqA2btDA5wgU1HAlmcVGSu+As8R0Ph3o0NAaiczBLTWjCZQ9ksdk7tBW4xgZsRtKv73KnrA==, tarball: file:shared/core-1.0.0.tgz}
+    resolution: {integrity: sha512-rHEGASnKGIARrwgqiRZ4ArwF2nh8nnnUDkMOdU57JpZKcnPG2v49MbUJqFO+Zrbp5w0vGsr619NUkcDghTF8FA==, tarball: file:shared/core-1.0.0.tgz}
     name: core
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}

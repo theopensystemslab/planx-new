@@ -19963,7 +19963,7 @@ packages:
     dev: true
 
   file:shared/core-1.0.0.tgz:
-    resolution: {integrity: sha512-brL9OXCsoQXd3nED4HO38CyEQBHQ6rQBT/EmJCu6prBGOWUN0kdYKZQfmAXnBGQBeoV/b1oLue6kGcBWrfpA0g==, tarball: file:shared/core-1.0.0.tgz}
+    resolution: {integrity: sha512-rHEGASnKGIARrwgqiRZ4ArwF2nh8nnnUDkMOdU57JpZKcnPG2v49MbUJqFO+Zrbp5w0vGsr619NUkcDghTF8FA==, tarball: file:shared/core-1.0.0.tgz}
     name: core
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
