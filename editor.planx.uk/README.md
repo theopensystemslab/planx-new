@@ -6,7 +6,7 @@ Editor is our React frontend, which consists of two main environments: an "edito
 
 Install [pnpm](https://pnpm.io) if you don't already have it `npm install -g pnpm@7.8.0`
 
-Install the project's dependencies `pnpm install`
+Run `pnpm distribute editor.planx.uk` from the project root to install internal dependencies then `pnpm install` from this directory to install the rest of the project's dependencies.
 
 Start the development server `pnpm start`
 

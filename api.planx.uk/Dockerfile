@@ -10,7 +10,6 @@ RUN npm install -g pnpm@7.8.0
 # install shared package
 COPY shared ./shared
 RUN pnpm install ./shared/core*
-RUN cd node_modules/core && pnpm install && pnpm build
 
 # update package cache using lockfile
 # see https://pnpm.io/cli/fetch
