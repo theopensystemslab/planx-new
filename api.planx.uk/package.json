@@ -47,7 +47,7 @@
     "test:coverage": "TZ=Europe/London jest; open ./coverage/lcov-report/index.html",
     "test:watch": "TZ=Europe/London jest --coverage=false --watch",
     "build": "rimraf ./dist && npx tsc",
-    "preinstall": "pnpm install ./shared/core*",
+    "preinstall": "pnpm install ./shared/core* && cd node_modules/core && pnpm i -D rimraf && pnpm build",
     "reset:core": "git checkout HEAD pnpm-lock.yaml shared/"
   },
   "devDependencies": {

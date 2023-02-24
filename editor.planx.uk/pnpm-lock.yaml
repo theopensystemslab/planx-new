@@ -19963,10 +19963,11 @@ packages:
     dev: true
 
   file:shared/core-1.0.0.tgz:
-    resolution: {integrity: sha512-rHEGASnKGIARrwgqiRZ4ArwF2nh8nnnUDkMOdU57JpZKcnPG2v49MbUJqFO+Zrbp5w0vGsr619NUkcDghTF8FA==, tarball: file:shared/core-1.0.0.tgz}
+    resolution: {integrity: sha512-hp8AzBLpYoX0zK0u7u6E/K0vsbC8TCj0OrHiqZKYhAtZ8ZsvO8abgy14F9Fe3sAMDinQXYyXwe9D1ks4ft9dSQ==, tarball: file:shared/core-1.0.0.tgz}
     name: core
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
+    requiresBuild: true
     dependencies:
       graphql: 16.6.0
       graphql-request: 5.1.0_graphql@16.6.0
