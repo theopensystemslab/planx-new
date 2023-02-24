@@ -1,5 +1,5 @@
 import Link from "@mui/material/Link";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { TYPES } from "@planx/components/types";
@@ -9,37 +9,35 @@ import React from "react";
 
 export default SummaryList;
 
-const useStyles = makeStyles((theme) => ({
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 2fr 100px",
-    gridRowGap: "10px",
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-    "& > *": {
-      borderBottom: "1px solid grey",
-      paddingBottom: theme.spacing(2),
-      paddingTop: theme.spacing(2),
-      verticalAlign: "top",
-      margin: 0,
-    },
-    "& ul": {
-      listStylePosition: "inside",
-      padding: 0,
-      margin: 0,
-    },
-    "& >:nth-child(3n+1)": {
-      // left column
-      fontWeight: 700,
-    },
-    "& >:nth-child(3n+2)": {
-      // middle column
-      paddingLeft: "10px",
-    },
-    "& >:nth-child(3n+3)": {
-      // right column
-      textAlign: "right",
-    },
+const Grid = styled("dl")(({ theme }) => ({
+  display: "grid",
+  gridTemplateColumns: "1fr 2fr 100px",
+  gridRowGap: "10px",
+  marginTop: theme.spacing(4),
+  marginBottom: theme.spacing(4),
+  "& > *": {
+    borderBottom: "1px solid grey",
+    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+    verticalAlign: "top",
+    margin: 0,
+  },
+  "& ul": {
+    listStylePosition: "inside",
+    padding: 0,
+    margin: 0,
+  },
+  "& dt": {
+    // left column
+    fontWeight: 700,
+  },
+  "& dd:nth-of-type(n)": {
+    // middle column
+    paddingLeft: "10px",
+  },
+  "& dd:nth-of-type(2n)": {
+    // right column
+    textAlign: "right",
   },
 }));
 
@@ -88,14 +86,12 @@ interface SummaryListProps {
 // For applicable component types, display a list of their question & answers with a "change" link
 //  ref https://design-system.service.gov.uk/components/summary-list/
 function SummaryList(props: SummaryListProps) {
-  const { grid } = useStyles();
-
   const handleClick = (nodeId: string) => {
     props.changeAnswer(nodeId);
   };
 
   return (
-    <dl className={grid}>
+    <Grid>
       {
         // XXX: This works because since ES2015 key order is guaranteed to be the insertion order
         Object.entries(props.breadcrumbs)
@@ -139,7 +135,7 @@ function SummaryList(props: SummaryListProps) {
             );
           })
       }
-    </dl>
+    </Grid>
   );
 }
 

@@ -236,15 +236,15 @@ const PropertyDetailsList = styled(Box)(({ theme }) => ({
     padding: 0,
     margin: 0,
   },
-  "& >:nth-child(3n+1)": {
+  "& dt": {
     // left column
     fontWeight: 700,
   },
-  "& >:nth-child(3n+2)": {
+  "& dd:nth-of-type(n)": {
     // middle column
     paddingLeft: "10px",
   },
-  "& >:nth-child(3n+3)": {
+  "& dd:nth-of-type(2n)": {
     // right column
     textAlign: "right",
   },
