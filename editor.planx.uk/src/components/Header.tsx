@@ -10,8 +10,11 @@ import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/styles";
+import { hasFeatureFlag } from "lib/featureFlags";
+import { capitalize } from "lodash";
 import { Route } from "navi";
 import React, { useRef, useState } from "react";
 import {
@@ -20,14 +23,14 @@ import {
   useNavigation,
 } from "react-navi";
 import { borderedFocusStyle, focusStyle } from "theme";
-import { Team } from "types";
+import { ApplicationPath, Team } from "types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../routes/utils";
 import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
 
-export const HEADER_HEIGHT = 75;
+export const HEADER_HEIGHT = 74;
 
 const Root = styled(AppBar)(() => ({
   color: "#fff",
@@ -44,6 +47,8 @@ const BreadcrumbLink = styled(ReactNaviLink)(() => ({
 }));
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+  paddingLeft: theme.spacing(4),
+  paddingRight: theme.spacing(4),
   marginTop: theme.spacing(1),
   height: HEADER_HEIGHT,
   display: "flex",
@@ -116,6 +121,23 @@ const ServiceTitleRoot = styled("span")(({ theme }) => ({
   paddingBottom: theme.spacing(1),
 }));
 
+const StyledNavBar = styled("nav")(({ theme }) => ({
+  height: HEADER_HEIGHT,
+  backgroundColor: theme.palette.primary.dark,
+  padding: theme.spacing(1.5),
+  paddingLeft: theme.spacing(4),
+  fontSize: 16,
+}));
+
+const SectionName = styled(Typography)(() => ({
+  fontSize: "inherit",
+  fontWeight: "bold",
+}));
+
+const SectionCount = styled(Typography)(() => ({
+  fontSize: "inherit",
+}));
+
 /**
  * Describes the differing headers, based on the primary routes through which a flow can be interacted with
  */
@@ -179,6 +201,42 @@ const Breadcrumbs: React.FC<{
   </BreadcrumbsRoot>
 );
 
+const NavBar: React.FC = () => {
+  const [
+    currentSectionIndex,
+    sectionCount,
+    currentSectionTitle,
+    hasSections,
+    saveToEmail,
+    path,
+  ] = useStore((state) => [
+    state.currentSectionIndex,
+    state.sectionCount,
+    state.currentSectionTitle,
+    state.hasSections,
+    state.saveToEmail,
+    state.path,
+  ]);
+  const isSaveAndReturnLandingPage =
+    path !== ApplicationPath.SingleSession &&
+    !Boolean(saveToEmail) &&
+    !hasFeatureFlag("DISABLE_SAVE_AND_RETURN");
+  const isContentPage = useCurrentRoute()?.data?.isContentPage;
+  const isVisible =
+    hasSections && !isSaveAndReturnLandingPage && !isContentPage;
+
+  return (
+    <>
+      {isVisible && (
+        <StyledNavBar data-testid="navigation-bar">
+          <SectionCount>{`Section ${currentSectionIndex} of ${sectionCount}`}</SectionCount>
+          <SectionName>{capitalize(currentSectionTitle)}</SectionName>
+        </StyledNavBar>
+      )}
+    </>
+  );
+};
+
 const PublicToolbar: React.FC<{
   team?: Team;
   handleRestart?: () => void;
@@ -210,6 +268,7 @@ const PublicToolbar: React.FC<{
         </IconButton>
       </StyledToolbar>
       {!showCenteredServiceTitle && <ServiceTitle />}
+      <NavBar />
       <AnalyticsDisabledBanner />
     </>
   );

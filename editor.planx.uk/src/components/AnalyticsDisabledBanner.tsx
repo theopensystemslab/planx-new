@@ -6,10 +6,10 @@ import { styled } from "@mui/styles";
 import React, { useState } from "react";
 import AnalyticsChart from "ui/icons/AnalyticsChart";
 
-const AnalyticsWarning = styled(Box)(() => ({
+const AnalyticsWarning = styled(Box)(({ theme }) => ({
   display: "flex",
   backgroundColor: "#FFFB00",
-  padding: "0 24px",
+  padding: `0 ${theme.spacing(4)}`,
   color: "#070707",
   justifyContent: "space-between",
   alignItems: "center",
