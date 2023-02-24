@@ -97,7 +97,7 @@ const newNode = route(async (req) => {
 });
 
 // If nodeId is invalid (e.g. a deleted node), fall back to flow
-const validateEdit = (route: Matcher<object, object>) =>
+const validateNodeRoute = (route: Matcher<object, object>) =>
   map((req) => {
     const { team, flow, id } = req.params;
     const node = useStore.getState().getNode(id);
@@ -105,7 +105,7 @@ const validateEdit = (route: Matcher<object, object>) =>
     return route;
   });
 
-const editNode = validateEdit(
+const editNode = validateNodeRoute(
   route(async (req) => {
     const { id, before = undefined, parent = undefined } = req.params;
 
