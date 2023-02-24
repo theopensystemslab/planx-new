@@ -2,7 +2,17 @@ import { gql } from "@apollo/client";
 import { TYPES } from "@planx/components/types";
 import ErrorFallback from "components/ErrorFallback";
 import natsort from "natsort";
-import { compose, lazy, mount, route, withData, withView } from "navi";
+import {
+  compose,
+  lazy,
+  map,
+  Matcher,
+  mount,
+  redirect,
+  route,
+  withData,
+  withView,
+} from "navi";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -86,58 +96,69 @@ const newNode = route(async (req) => {
   };
 });
 
-const editNode = route(async (req) => {
-  const { id, before = undefined, parent = undefined } = req.params;
+// If nodeId is invalid (e.g. a deleted node), fall back to flow
+const validateNodeRoute = (route: Matcher<object, object>) =>
+  map((req) => {
+    const { team, flow, id } = req.params;
+    const node = useStore.getState().getNode(id);
+    if (!node) return redirect(`/${team}/${flow}`);
+    return route;
+  });
 
-  const node = useStore.getState().getNode(id) as {
-    type: TYPES;
-    [key: string]: any;
-  };
+const editNode = validateNodeRoute(
+  route(async (req) => {
+    const { id, before = undefined, parent = undefined } = req.params;
 
-  const extraProps = {} as any;
+    const node = useStore.getState().getNode(id) as {
+      type: TYPES;
+      [key: string]: any;
+    };
 
-  if (node.type === TYPES.ExternalPortal)
-    extraProps.flows = await getExternalPortals();
+    const extraProps = {} as any;
 
-  const type = SLUGS[node.type];
+    if (node.type === TYPES.ExternalPortal)
+      extraProps.flows = await getExternalPortals();
 
-  if (type === "checklist" || type === "question") {
-    const childNodes = useStore.getState().childNodesOf(id);
-    if (node.data?.categories) {
-      extraProps.groupedOptions = mapAccum(
-        (index: number, category: { title: string; count: number }) => [
-          index + category.count,
-          {
-            title: category.title,
-            children: childNodes.slice(index, index + category.count),
-          },
-        ],
-        0,
-        node.data.categories
-      )[1];
-    } else {
-      extraProps.options = childNodes;
+    const type = SLUGS[node.type];
+
+    if (type === "checklist" || type === "question") {
+      const childNodes = useStore.getState().childNodesOf(id);
+      if (node.data?.categories) {
+        extraProps.groupedOptions = mapAccum(
+          (index: number, category: { title: string; count: number }) => [
+            index + category.count,
+            {
+              title: category.title,
+              children: childNodes.slice(index, index + category.count),
+            },
+          ],
+          0,
+          node.data.categories
+        )[1];
+      } else {
+        extraProps.options = childNodes;
+      }
     }
-  }
 
-  return {
-    title: makeTitle(`Edit ${type}`),
-    view: (
-      <FormModal
-        type={type}
-        Component={components[type]}
-        extraProps={extraProps}
-        node={node}
-        id={id}
-        handleDelete={() => {
-          useStore.getState().removeNode(id, parent!);
-        }}
-        before={before}
-        parent={parent}
-      />
-    ),
-  };
-});
+    return {
+      title: makeTitle(`Edit ${type}`),
+      view: (
+        <FormModal
+          type={type}
+          Component={components[type]}
+          extraProps={extraProps}
+          node={node}
+          id={id}
+          handleDelete={() => {
+            useStore.getState().removeNode(id, parent!);
+          }}
+          before={before}
+          parent={parent}
+        />
+      ),
+    };
+  })
+);
 
 const nodeRoutes = mount({
   "/new/:before": newNode,
