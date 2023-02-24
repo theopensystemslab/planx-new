@@ -106,4 +106,16 @@ describe("error handling", () => {
       })
     ).toThrow("same parent");
   });
+
+  test("cannot clone sections", () => {
+    expect(() =>
+      clone("sectionNodeId", { toParent: "a" })({
+        _root: {
+          edges: ["a", "sectionNodeId"],
+        },
+        a: {},
+        sectionNodeId: { type: 360 },
+      })
+    ).toThrow("cannot clone sections");
+  });
 });

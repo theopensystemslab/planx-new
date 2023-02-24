@@ -21,6 +21,27 @@ test("move within same parent", () => {
   ]);
 });
 
+test("move sections within same root parent", () => {
+  const [graph, ops] = move("sectionNodeId", "_root", { toBefore: "a" })({
+    _root: {
+      edges: ["a", "sectionNodeId"],
+    },
+    a: {},
+    sectionNodeId: { type: 360 },
+  });
+  expect(graph).toEqual({
+    _root: {
+      edges: ["sectionNodeId", "a"],
+    },
+    a: {},
+    sectionNodeId: { type: 360 },
+  });
+  expect(ops).toEqual([
+    { ld: "a", li: "sectionNodeId", p: ["_root", "edges", 0] },
+    { ld: "sectionNodeId", li: "a", p: ["_root", "edges", 1] },
+  ]);
+});
+
 describe("different parent", () => {
   test("move", () => {
     const [graph, ops] = move("b", "_root", { toParent: "a" })({
@@ -157,5 +178,17 @@ describe("error handling", () => {
         clone: {},
       })
     ).toThrow("same parent");
+  });
+
+  test("cannot move a section onto non-root parent", () => {
+    expect(() =>
+      move("sectionNodeId", "_root", { toParent: "a" })({
+        _root: {
+          edges: ["a", "sectionNodeId"],
+        },
+        a: {},
+        sectionNodeId: { type: 360 },
+      })
+    ).toThrow("cannot move sections onto branches, must be on center of graph");
   });
 });

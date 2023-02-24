@@ -54,6 +54,73 @@ it("does not update if there are no new changes", async () => {
     });
 });
 
+it("does not update if there are sections in an external portal", async () => {
+  const alteredFlow = {
+    ...mockFlowData,
+    "externalPortalNodeId": {
+      edges: ["newSectionNodeId"],
+      type: 310,
+    },
+    "newSectionNodeId": {
+      type: 360,
+    },
+  };
+
+  queryMock.mockQuery({
+    name: "GetFlowData",
+    matchOnVariables: false,
+    data: {
+      flows_by_pk: {
+        data: alteredFlow,
+      },
+    },
+  });
+
+  await supertest(app)
+    .post("/flows/1/publish")
+    .set(authHeader())
+    .expect(200)
+    .then((res) => {
+      expect(res.body).toEqual({
+        alteredNodes: null,
+        message: "Error publishing: found Sections in one or more External Portals, but Sections are only allowed in main flow",
+      });
+    });
+});
+
+it("does not update if there are sections, but there is not a section in the first position", async () => {
+  const flowWithSections: Flow["data"] = {
+    _root: {
+      edges: ["questionNode", "sectionNode"]
+    },
+    questionNode: {},
+    sectionNode: {
+      type: 360,
+    },
+  };
+
+  queryMock.mockQuery({
+    name: "GetFlowData",
+    matchOnVariables: false,
+    data: {
+      flows_by_pk: {
+        data: flowWithSections,
+      },
+    },
+  });
+
+  await supertest(app)
+    .post("/flows/1/publish")
+    .set(authHeader())
+    .expect(200)
+    .then((res) => {
+      expect(res.body).toEqual({
+        alteredNodes: null,
+        message: "Error publishing: when using Sections, your flow needs to start with a Section",
+      });
+    });
+});
+
 it("updates published flow and returns altered nodes if there have been changes", async () => {
   const alteredFlow = {
     ...mockFlowData,
@@ -117,6 +184,7 @@ it("updates published flow and returns altered nodes if there have been changes"
 const mockFlowData: Flow["data"] = {
   _root: {
     edges: [
+      "sectionNodeId",
       "RYYckLE2cH",
       "R99ncwKifm",
       "3qssvGXmMO",
@@ -125,6 +193,12 @@ const mockFlowData: Flow["data"] = {
       "4CJgXe8Ttl",
       "dnVqd6zt4N",
     ],
+  },
+  "sectionNodeId": {
+    type: 360,
+    data: {
+      title: "Section 1",
+    },
   },
   "3qssvGXmMO": {
     type: 9,
