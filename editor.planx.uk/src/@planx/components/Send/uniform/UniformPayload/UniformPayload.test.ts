@@ -39,7 +39,7 @@ describe("UniformPayload", () => {
     expect(xml).not.toBeUndefined();
     const isValid = XMLValidator.validate(xml!);
     expect(isValid).toBe(true);
-    const declaration = xml.slice(0, 56);
+    const declaration = xml!.slice(0, 56);
     const expectedDeclaration = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n`;
     expect(declaration).toEqual(expectedDeclaration);
   });
