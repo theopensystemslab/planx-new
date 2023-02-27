@@ -206,6 +206,8 @@
                 _is_null: true
             - deleted_at:
                 _is_null: true
+            - email:
+                _neq: ""
   update_permissions:
     - role: public
       permission:
