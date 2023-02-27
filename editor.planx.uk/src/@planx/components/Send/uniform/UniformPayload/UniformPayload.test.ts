@@ -25,6 +25,25 @@ describe("UniformPayload", () => {
   const sessionId = "123";
   const files: string[] = [];
 
+  it("generates an xml declaration at the top of the document", () => {
+    const passport: Store.passport = {
+      data: {
+        ...mockProposedLDCPassportData,
+      },
+    };
+    const xml = new UniformPayload({
+      sessionId,
+      passport,
+      files,
+    }).buildXML();
+    expect(xml).not.toBeUndefined();
+    const isValid = XMLValidator.validate(xml!);
+    expect(isValid).toBe(true);
+    const declaration = xml.slice(0, 56);
+    const expectedDeclaration = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n`;
+    expect(declaration).toEqual(expectedDeclaration);
+  });
+
   it("safely escapes special XML characters", () => {
     const passport: Store.passport = {
       data: {

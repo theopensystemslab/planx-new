@@ -62,7 +62,6 @@ export class UniformPayload {
   };
 
   private mapPassportToUniformPayload = (): PartialDeep<IUniformPayload> => ({
-    "?xml": {},
     "portaloneapp:Proposal": {
       "portaloneapp:ApplicationHeader": {
         "portaloneapp:ApplicationTo":
@@ -332,11 +331,12 @@ export class UniformPayload {
   };
 
   public buildXML = (): string | undefined => {
+    const xmlDeclaration = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n`;
     try {
       const validatedPayload = iUniformPayloadSchema.parse(this.payload);
       const xmlBuilder = this.getXMLBuilder();
       const xml: string = xmlBuilder.build(validatedPayload);
-      return xml;
+      return xmlDeclaration + xml;
     } catch (error) {
       // Fail silently, do not notify applicant of failure
       if (error instanceof ZodError) {
