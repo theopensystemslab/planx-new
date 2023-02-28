@@ -12,6 +12,10 @@ Start the development server `pnpm start`
 
 Run tests `pnpm test`
 
+Development notes:
+
+ - if you need to test or pull new changes from @opensystemslab/planx-document-templates, make sure to update the commit hash in package.json first
+
 ### Disabling type-checking
 
 If your IDE does type checking for you and you want to save some CPU resources,
