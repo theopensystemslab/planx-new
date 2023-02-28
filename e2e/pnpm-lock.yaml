@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@opensystemslab/core': git://github.com/theopensystemslab/planx-core.git#main
+  '@opensystemslab/core': git://github.com/theopensystemslab/planx-core.git#edd196e
   '@playwright/test': ^1.28.1
   '@types/node': ^18.11.14
   '@typescript-eslint/eslint-plugin': ^5.46.1
@@ -18,7 +18,7 @@ specifiers:
   typescript: ^4.9.4
 
 dependencies:
-  '@opensystemslab/core': github.com/theopensystemslab/planx-core/edd196e472e7ed14ce8b35d81820405cdabfb6ab
+  '@opensystemslab/core': github.com/theopensystemslab/planx-core/edd196e
   axios: 1.2.1
   dotenv: 16.0.2
   graphql: 16.6.0
@@ -1621,8 +1621,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/theopensystemslab/planx-core/edd196e472e7ed14ce8b35d81820405cdabfb6ab:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/edd196e472e7ed14ce8b35d81820405cdabfb6ab}
+  github.com/theopensystemslab/planx-core/edd196e:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/edd196e}
     name: '@opensystemslab/core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
