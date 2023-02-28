@@ -39,9 +39,10 @@ export default function Component(props: Props) {
   ]);
 
   useEffect(() => {
+    // if the feature flag is toggled off, hide this node (by auto-answering it) when navigating through a flow
     !showSection &&
       props.handleSubmit?.({
-        auto: true, // hides this node when navigating through cards in a flow if the feature flag is toggled off
+        auto: true,
       });
   }, []);
 
