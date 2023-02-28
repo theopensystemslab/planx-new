@@ -15,59 +15,17 @@ env:
 
 jobs:
   build_react:
-    name: Build React
-    runs-on: ubuntu-22.04
+    name: Build React App
+    needs: [changes]
+    if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
+    uses: ./.github/workflows/build-react.yml
+    with:
+      target: editor.planx.dev
+      environment: staging
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      # https://docs.github.com/en/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows#using-the-cache-action
-      - name: NPM cache
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-npm
-        with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - name: PNPM cache
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pnpm
-        with:
-          # pnpm cache files are stored in `~/.local/share/pnpm/store` on Linux
-          path: ~/.local/share/pnpm/store
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - run: npm install -g pnpm@${{ env.PNPM_VERSION }}
-      - run: pnpm distribute ../editor.planx.uk
-        working-directory: core
-      - run: pnpm install --frozen-lockfile
-        working-directory: editor.planx.uk
       - run: pnpm build
         working-directory: editor.planx.uk
         env:
-          REACT_APP_API_URL: https://api.editor.planx.dev
-          REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
-          REACT_APP_HASURA_URL: https://hasura.editor.planx.dev/v1/graphql
-          REACT_APP_SHAREDB_URL: wss://sharedb.editor.planx.dev
-          REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
-          REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
-          REACT_APP_ENV: staging
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          path: ./editor.planx.uk/build
-          if-no-files-found: error
 
   pulumi:
     name: Pulumi Up

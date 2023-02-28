@@ -1,8 +1,11 @@
 on:
   workflow_call:
     inputs:
-      example:
-        required: false
+      target:
+        required: true
+        type: string
+      environment:
+        required: true
         type: string
 
 jobs:
@@ -10,21 +13,24 @@ jobs:
     name: Build React App
     runs-on: ubuntu-22.04
     steps:
+      - name: test conditional env
+        run: |
+          echo "${{ true && 'true' || 'false' }}"
+          echo "${{ false && 'true' || 'false' }}"
+          echo "${{ true && 'something' || '' }}"
+          echo "${{ false && 'something' || '' }}"
       - uses: actions/checkout@v2
       - uses: cardinalby/export-env-action@v2
         with:
           envFile: '.github/workflows/constants.env'
           expand: true
           expandWithJobEnv: true
-      - name: print all env vars
-        run: |
-          env
       - name: Cache build assets
         id: cache-react-build-assets
         uses: actions/cache@v3
         with:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
-          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
+          key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}-${{ inputs.target }}
       - uses: pnpm/action-setup@v2.2.2
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
@@ -46,14 +52,21 @@ jobs:
         env:
           REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
-          REACT_APP_API_URL: https://api.${{ github.event.number }}.${{ env.DOMAIN }}
+          REACT_APP_API_URL: https://api.${{ inputs.target }}
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
-          REACT_APP_HASURA_URL: https://hasura.${{ github.event.number }}.${{ env.DOMAIN }}/v1/graphql
-          REACT_APP_SHAREDB_URL: wss://sharedb.${{ github.event.number }}.${{ env.DOMAIN }}
+          REACT_APP_HASURA_URL: https://hasura.${{ inputs.target }}/v1/graphql
+          REACT_APP_SHAREDB_URL: wss://sharedb.${{ inputs.target }}
+          # TODO: this shouldn't be set for staging
           # needed because there's no API to change google's allowed OAuth URLs
-          REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
-          REACT_APP_ENV: pizza
+          REACT_APP_GOOGLE_OAUTH_OVERRIDE: "${{ inputs.environment == 'pizza' && 'https://api.editor.planx.dev' || '' }}"
+          REACT_APP_ENV: ${{ inputs.environment }}
         working-directory: ${{ env.EDITOR_DIRECTORY }}
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: ./editor.planx.uk/build
+          if-no-files-found: error
       - run: pnpm build-storybook
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.EDITOR_DIRECTORY }}
@@ -66,4 +79,4 @@ jobs:
           REACT_APP_HASURA_URL: https://hasura.${{ github.event.number }}.${{ env.DOMAIN }}/v1/graphql
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ github.event.number }}.${{ env.DOMAIN }}
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
-          REACT_APP_ENV: pizza
+          REACT_APP_ENV: ${{ inputs.environment }}
