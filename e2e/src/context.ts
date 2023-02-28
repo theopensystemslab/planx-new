@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import { log } from "./helpers";
 import { sign } from "jsonwebtoken";
-import { CoreDomainClient } from "@opensystemslab/core";
+import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { GraphQLClient } from "graphql-request";
 
 export interface Context {

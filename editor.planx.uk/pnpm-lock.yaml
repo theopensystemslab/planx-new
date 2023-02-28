@@ -59,8 +59,8 @@ specifiers:
   '@mui/material': 5.11.9
   '@mui/styles': 5.11.9
   '@mui/utils': 5.11.9
-  '@opensystemslab/core': git://github.com/theopensystemslab/planx-core.git#edd196e
   '@opensystemslab/map': ^0.7.1
+  '@opensystemslab/planx-core': git://github.com/theopensystemslab/planx-core.git#5e932c3
   '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#e0642be
   '@react-theming/storybook-addon': ^1.1.7
   '@storybook/addon-actions': ^6.5.10
@@ -203,8 +203,8 @@ dependencies:
   '@mui/material': 5.11.9_vbxcdxy3bftsefaguotlgalomu
   '@mui/styles': 5.11.9_7v64pk2mkrohwh22gx7lrz5ive
   '@mui/utils': 5.11.9_react@18.2.0
-  '@opensystemslab/core': github.com/theopensystemslab/planx-core/edd196e
   '@opensystemslab/map': 0.7.1
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/5e932c3
   '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/e0642be_a7krn2kytpcoapplqdxaq5aiqm
   '@tiptap/core': 2.0.0-beta.204
   '@tiptap/extension-bold': 2.0.0-beta.204_bv566pzu4gfcw3675d5jwhi56i
@@ -19962,9 +19962,9 @@ packages:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
     dev: true
 
-  github.com/theopensystemslab/planx-core/edd196e:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/edd196e}
-    name: '@opensystemslab/core'
+  github.com/theopensystemslab/planx-core/5e932c3:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5e932c3}
+    name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
     prepare: true
