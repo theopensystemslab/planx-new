@@ -1,4 +1,4 @@
-import { CoreDomainClient } from "core";
+import { CoreDomainClient } from "@opensystemslab/core";
 /**
  * core doesn't expose a graphql interface like the graphql/hasura clients do
  * instead, it encapsulates query and business logic to only expose declarative interfaces

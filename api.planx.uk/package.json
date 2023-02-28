@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@airbrake/node": "^2.1.7",
+    "@opensystemslab/core": "git://github.com/theopensystemslab/planx-core.git#main",
     "@opensystemslab/planx-document-templates": "git://github.com/theopensystemslab/planx-document-templates#e0642be",
     "adm-zip": "^0.5.9",
     "aws-sdk": "^2.1180.0",
@@ -35,7 +36,6 @@
     "passport": "^0.5.3",
     "passport-google-oauth20": "^2.0.0",
     "pino-noir": "^2.2.1",
-    "core": "file:shared/core-1.0.0.tgz",
     "slack-notify": "^2.0.3",
     "string-to-stream": "^3.0.1"
   },
