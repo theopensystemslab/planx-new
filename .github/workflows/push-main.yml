@@ -17,7 +17,6 @@ jobs:
   build_react:
     name: Build React App
     needs: [changes]
-    if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     uses: ./.github/workflows/build-react.yml
     with:
       target: editor.planx.dev

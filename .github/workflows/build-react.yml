@@ -47,12 +47,12 @@ jobs:
           REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
           REACT_APP_API_URL: https://api.${{ inputs.target }}
+          REACT_APP_ENV: ${{ inputs.environment }}
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.${{ inputs.target }}/v1/graphql
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ inputs.target }}
           # needed because there's no API to change google's allowed OAuth URLs
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: "${{ inputs.environment == 'pizza' && 'https://api.editor.planx.dev' || '' }}"
-          REACT_APP_ENV: ${{ inputs.environment }}
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
