@@ -9,8 +9,6 @@ on:
 
 env:
   DOMAIN: planx.pizza
-  FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
-  PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
   PNPM_VERSION: 7.8.0
   NODE_VERSION: 16.13.1  # 16.13.1 = LTS
@@ -226,7 +224,7 @@ jobs:
         id: hasura-change
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          hasura_endpoint: https://hasura.${{ env.FULL_DOMAIN }}
+          hasura_endpoint: https://hasura.${{ github.event.number }}.${{ env.DOMAIN }}
           project_dir: ./hasura.planx.uk
       - uses: marocchino/sticky-pull-request-comment@v2
         if: ${{steps.hasura-change.outputs.change_html != ''}}
@@ -256,7 +254,7 @@ jobs:
           domain: ${{ env.DOMAIN }}
           os_id: 1743
           plan: vc2-1c-1gb
-          pullrequest_id: ${{ env.PULLREQUEST_ID }}
+          pullrequest_id: ${{ github.event.number }}
           region: lhr
           tag: pullrequest
 
@@ -266,14 +264,14 @@ jobs:
         name: Create commands
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ env.FULL_DOMAIN }}
+          host: ${{ github.event.number }}.${{ env.DOMAIN }}
           username: root
           password: ${{ steps.create.outputs.default_password }}
           command_timeout: 20m
           script: |
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
-            git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
+            git fetch origin "pull/${{ github.event.number }}/head" && git checkout FETCH_HEAD
 
             apt-get install awscli -y
             export AWS_ACCESS_KEY_ID=${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
@@ -282,7 +280,7 @@ jobs:
 
             ./scripts/pull-secrets.sh
 
-            echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
+            echo -e "\nROOT_DOMAIN=${{ github.event.number }}.${{ env.DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
 
             SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/create.sh
@@ -293,7 +291,7 @@ jobs:
         name: Update commands
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ env.FULL_DOMAIN }}
+          host: ${{ github.event.number }}.${{ env.DOMAIN }}
           username: root
           password: ${{ secrets.SSH_PASSWORD }}
           command_timeout: 10m
@@ -301,7 +299,7 @@ jobs:
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git add . && git stash
-            git fetch origin "pull/${{ env.PULLREQUEST_ID }}/head" && git checkout FETCH_HEAD
+            git fetch origin "pull/${{ github.event.number }}/head" && git checkout FETCH_HEAD
 
             apt-get install awscli -y
             export AWS_ACCESS_KEY_ID=${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
@@ -310,7 +308,7 @@ jobs:
 
             ./scripts/pull-secrets.sh
 
-            echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
+            echo -e "\nROOT_DOMAIN=${{ github.event.number }}.${{ env.DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
 
             ./scripts/pullrequest/update.sh
@@ -327,7 +325,7 @@ jobs:
       - name: upload built editor
         uses: appleboy/scp-action@master
         with:
-          host: ${{ env.FULL_DOMAIN }}
+          host: ${{ github.event.number }}.${{ env.DOMAIN }}
           username: root
           password: ${{ secrets.SSH_PASSWORD }}
           source: "./${{ env.EDITOR_DIRECTORY }}/build"
@@ -340,14 +338,14 @@ jobs:
           message: |
             ## Pizza
 
-            Deployed ${{ github.sha }} to https://${{ env.FULL_DOMAIN }}.
+            Deployed ${{ github.sha }} to https://${{ github.event.number }}.${{ env.DOMAIN }}.
 
             Useful links:
-              - [Editor](https://${{ env.FULL_DOMAIN }})
-              - [Storybook](https://storybook.${{ env.FULL_DOMAIN }})
-              - [Hasura](https://hasura.${{ env.FULL_DOMAIN }})
-              - [API](https://api.${{ env.FULL_DOMAIN }})
-              - [ShareDB](https://sharedb.${{ env.FULL_DOMAIN }})
+              - [Editor](https://${{ github.event.number }}.${{ env.DOMAIN }})
+              - [Storybook](https://storybook.${{ github.event.number }}.${{ env.DOMAIN }})
+              - [Hasura](https://hasura.${{ github.event.number }}.${{ env.DOMAIN }})
+              - [API](https://api.${{ github.event.number }}.${{ env.DOMAIN }})
+              - [ShareDB](https://sharedb.${{ github.event.number }}.${{ env.DOMAIN }})
 
   healthcheck:
     name: Run Healthcheck on Pizza Services
@@ -356,15 +354,15 @@ jobs:
     steps:
       - name: API healthcheck
         run: |
-          timeout 150s bash -c "until curl --fail https://api.${{ env.FULL_DOMAIN }}; do sleep 1; done"
+          timeout 150s bash -c "until curl --fail https://api.${{ github.event.number }}.${{ env.DOMAIN }}; do sleep 1; done"
 
       - name: Hasura healthcheck
         run: |
-          timeout 150s bash -c "until curl --fail https://hasura.${{ env.FULL_DOMAIN }}/healthz; do sleep 1; done"
+          timeout 150s bash -c "until curl --fail https://hasura.${{ github.event.number }}.${{ env.DOMAIN }}/healthz; do sleep 1; done"
 
       - name: Editor healthcheck
         run: |
-          timeout 150s bash -c "until curl --fail https://${{ env.FULL_DOMAIN }}; do sleep 1; done"
+          timeout 150s bash -c "until curl --fail https://${{ github.event.number }}.${{ env.DOMAIN }}; do sleep 1; done"
 
 
   lighthouse:
@@ -379,9 +377,9 @@ jobs:
         with:
           urls: |
             https://editor.planx.dev/buckinghamshire/find-out-if-you-need-planning-permission/preview
-            https://${{ env.FULL_DOMAIN }}/buckinghamshire/find-out-if-you-need-planning-permission/preview
+            https://${{ github.event.number }}.${{ env.DOMAIN }}/buckinghamshire/find-out-if-you-need-planning-permission/preview
             https://editor.planx.dev/testing/lighthouse-canary-flow/unpublished
-            https://${{ env.FULL_DOMAIN }}/testing/lighthouse-canary-flow/unpublished
+            https://${{ github.event.number }}.${{ env.DOMAIN }}/testing/lighthouse-canary-flow/unpublished
           uploadArtifacts: true  # save results as an action artifacts
           temporaryPublicStorage: true  # upload lighthouse report to the temporary storage
       - name: Interpolate comment text
