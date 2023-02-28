@@ -238,13 +238,6 @@ export const proposalSchema = z.object({
   _Version: z.string().default("1.3"),
 });
 
-export const xmlDeclarationSchema = z.object({
-  _version: z.string().default("1.0"),
-  _encoding: z.string().default("UTF-8"),
-  _standalone: z.string().default("yes"),
-});
-
 export const iUniformPayloadSchema = z.object({
   "portaloneapp:Proposal": proposalSchema,
-  "?xml": xmlDeclarationSchema,
 });
