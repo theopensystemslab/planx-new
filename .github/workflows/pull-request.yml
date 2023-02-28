@@ -170,7 +170,7 @@ jobs:
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
   build_react_app:
-    name: Build React App
+    name: React App
     needs: [changes]
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     uses: ./.github/workflows/build-react.yml

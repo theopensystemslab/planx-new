@@ -10,7 +10,7 @@ on:
 
 jobs:
   build_react:
-    name: Build React App
+    name: Build
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2

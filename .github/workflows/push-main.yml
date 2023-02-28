@@ -15,7 +15,7 @@ env:
 
 jobs:
   build_react:
-    name: Build React App
+    name: React App
     needs: [changes]
     uses: ./.github/workflows/build-react.yml
     with:
