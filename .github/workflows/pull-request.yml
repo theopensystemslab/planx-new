@@ -176,11 +176,6 @@ jobs:
     needs: [changes]
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     uses: ./.github/workflows/build-react.yml
-    with:
-      PNPM_VERSION: ${{ env.PNPM_VERSION }}
-      EDITOR_DIRECTORY: ${{ env.EDITOR_DIRECTORY }}
-      NODE_VERSION: ${{ env.NODE_VERSION }}
-      FULL_DOMAIN: ${{ env.FULL_DOMAIN }}
 
   pulumi_preview:
     name: Run Pulumi Preview

@@ -1,17 +1,8 @@
 on:
   workflow_call:
     inputs:
-      PNPM_VERSION:
-        required: true
-        type: string
-      EDITOR_DIRECTORY:
-        required: true
-        type: string
-      NODE_VERSION:
-        required: true
-        type: string
-      FULL_DOMAIN:
-        required: true
+      example:
+        required: false
         type: string
 
 jobs:
@@ -20,51 +11,59 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
+      - uses: cardinalby/export-env-action@v2
+        with:
+          envFile: '.github/workflows/constants.env'
+          expand: true
+          expandWithJobEnv: true
+      - name: print all env vars
+        run: |
+          env
       - name: Cache build assets
         id: cache-react-build-assets
         uses: actions/cache@v3
         with:
-          path: ./${{ inputs.EDITOR_DIRECTORY }}/build
+          path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**') }}
       - uses: pnpm/action-setup@v2.2.2
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
-          version: ${{ inputs.PNPM_VERSION }}
+          version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v2
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
-          node-version: ${{ inputs.NODE_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
-      - run: pnpm distribute ../${{ inputs.EDITOR_DIRECTORY }}
+      - run: pnpm distribute ../${{ env.EDITOR_DIRECTORY }}
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         working-directory: core
       - run: pnpm install --frozen-lockfile
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
-        working-directory: ${{ inputs.EDITOR_DIRECTORY }}
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         env:
           REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
-          REACT_APP_API_URL: https://api.${{ inputs.FULL_DOMAIN }}
+          REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
-          REACT_APP_HASURA_URL: https://hasura.${{ inputs.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_SHAREDB_URL: wss://sharedb.${{ inputs.FULL_DOMAIN }}
+          REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
+          REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           # needed because there's no API to change google's allowed OAuth URLs
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
           REACT_APP_ENV: pizza
-        working-directory: ${{ inputs.EDITOR_DIRECTORY }}
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build-storybook
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
-        working-directory: ${{ inputs.EDITOR_DIRECTORY }}
+        working-directory: ${{ env.EDITOR_DIRECTORY }}
         env:
           # same env as above, if it's job.env it can't access existing env.[variable]
           REACT_APP_AIRBRAKE_PROJECT_ID: ${{ secrets.AIRBRAKE_PROJECT_ID }}
           REACT_APP_AIRBRAKE_PROJECT_KEY: ${{ secrets.AIRBRAKE_PROJECT_KEY }}
-          REACT_APP_API_URL: https://api.${{ inputs.FULL_DOMAIN }}
+          REACT_APP_API_URL: https://api.${{ env.FULL_DOMAIN }}
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
-          REACT_APP_HASURA_URL: https://hasura.${{ inputs.FULL_DOMAIN }}/v1/graphql
-          REACT_APP_SHAREDB_URL: wss://sharedb.${{ inputs.FULL_DOMAIN }}
+          REACT_APP_HASURA_URL: https://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
+          REACT_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
           REACT_APP_ENV: pizza
