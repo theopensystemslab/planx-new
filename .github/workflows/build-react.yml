@@ -13,12 +13,6 @@ jobs:
     name: Build React App
     runs-on: ubuntu-22.04
     steps:
-      - name: test conditional env
-        run: |
-          echo "${{ true && 'true' || 'false' }}"
-          echo "${{ false && 'true' || 'false' }}"
-          echo "${{ true && 'something' || '' }}"
-          echo "${{ false && 'something' || '' }}"
       - uses: actions/checkout@v2
       - uses: cardinalby/export-env-action@v2
         with:
@@ -56,7 +50,6 @@ jobs:
           REACT_APP_FEEDBACK_FISH_ID: 65f02de00b90d1
           REACT_APP_HASURA_URL: https://hasura.${{ inputs.target }}/v1/graphql
           REACT_APP_SHAREDB_URL: wss://sharedb.${{ inputs.target }}
-          # TODO: this shouldn't be set for staging
           # needed because there's no API to change google's allowed OAuth URLs
           REACT_APP_GOOGLE_OAUTH_OVERRIDE: "${{ inputs.environment == 'pizza' && 'https://api.editor.planx.dev' || '' }}"
           REACT_APP_ENV: ${{ inputs.environment }}
