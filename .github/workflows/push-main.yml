@@ -22,10 +22,6 @@ jobs:
     with:
       target: editor.planx.dev
       environment: staging
-    steps:
-      - run: pnpm build
-        working-directory: editor.planx.uk
-        env:
 
   pulumi:
     name: Pulumi Up

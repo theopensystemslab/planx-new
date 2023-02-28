@@ -175,7 +175,10 @@ jobs:
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     uses: ./.github/workflows/build-react.yml
     with:
-      target: "${{ github.event.number }}.${{ env.DOMAIN }}"
+      # TODO: replace `planx.pizza` for `${{ env.DOMAIN }}`
+      #       although it's not possible to use env variables in `with` section
+      #       you might be able to use `env` section to set `DOMAIN` variable
+      target: "${{ github.event.number }}.planx.pizza"
       environment: "pizza"
 
   pulumi_preview:
