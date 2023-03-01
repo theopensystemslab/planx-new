@@ -61,7 +61,7 @@ specifiers:
   '@mui/utils': 5.11.9
   '@opensystemslab/map': ^0.7.1
   '@opensystemslab/planx-core': git://github.com/theopensystemslab/planx-core.git#5e932c3
-  '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#e0642be
+  '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#c6dee14
   '@react-theming/storybook-addon': ^1.1.7
   '@storybook/addon-actions': ^6.5.10
   '@storybook/addon-essentials': ^6.5.10
@@ -205,7 +205,7 @@ dependencies:
   '@mui/utils': 5.11.9_react@18.2.0
   '@opensystemslab/map': 0.7.1
   '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/5e932c3
-  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/e0642be_a7krn2kytpcoapplqdxaq5aiqm
+  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/c6dee14_a7krn2kytpcoapplqdxaq5aiqm
   '@tiptap/core': 2.0.0-beta.204
   '@tiptap/extension-bold': 2.0.0-beta.204_bv566pzu4gfcw3675d5jwhi56i
   '@tiptap/extension-bubble-menu': 2.0.0-beta.204_bv566pzu4gfcw3675d5jwhi56i
@@ -19977,9 +19977,9 @@ packages:
       - encoding
     dev: false
 
-  github.com/theopensystemslab/planx-document-templates/e0642be_a7krn2kytpcoapplqdxaq5aiqm:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/e0642be}
-    id: github.com/theopensystemslab/planx-document-templates/e0642be
+  github.com/theopensystemslab/planx-document-templates/c6dee14_a7krn2kytpcoapplqdxaq5aiqm:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/c6dee14}
+    id: github.com/theopensystemslab/planx-document-templates/c6dee14
     name: '@opensystemslab/planx-document-templates'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
