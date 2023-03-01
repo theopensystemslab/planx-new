@@ -58,7 +58,7 @@ export function getUniformParams({
   const filteredTemplateNames = templateNames.filter((name) => {
     if (!passport.data) return false;
     try {
-      hasRequiredDataForTemplate({
+      return hasRequiredDataForTemplate({
         passport: { data: passport.data! },
         templateName: name,
       });
