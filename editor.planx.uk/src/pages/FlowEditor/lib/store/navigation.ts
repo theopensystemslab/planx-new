@@ -6,7 +6,7 @@ import type { StateCreator } from "zustand";
 
 import { SharedStore } from "./shared";
 
-interface SectionNode extends Store.node {
+export interface SectionNode extends Store.node {
   data: {
     title: string;
   };

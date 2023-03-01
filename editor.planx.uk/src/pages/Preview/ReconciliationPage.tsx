@@ -5,7 +5,7 @@ import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
-import SummaryList from "@planx/components/shared/Preview/SummaryList";
+import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
@@ -78,12 +78,13 @@ const ReconciliationPage: React.FC<Props> = ({
         <Typography variant="h3" component="h2">
           Review your answers so far
         </Typography>
-        <SummaryList
+        <SummaryListsBySections
           breadcrumbs={sortedBreadcrumbs}
           flow={flow}
           passport={data?.reconciledSessionData?.passport}
           changeAnswer={changeAnswer}
           showChangeButton={false}
+          sectionComponent="h3"
         />
         {buttonText && (
           <Button
