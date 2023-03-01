@@ -48,8 +48,6 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - run: npm install -g pnpm@${{ env.PNPM_VERSION }}
-      - run: pnpm distribute ../editor.planx.uk
-        working-directory: core
       - run: pnpm install --frozen-lockfile
         working-directory: editor.planx.uk
       - run: pnpm build
