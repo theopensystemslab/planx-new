@@ -73,15 +73,12 @@ export const navigationStore: StateCreator<
 
     const breadcrumbIds = Object.keys(breadcrumbs);
     const sectionIds = Object.keys(sectionNodes);
-    const mostRecentSectionId = findLast(
-      breadcrumbIds,
-      (breadcrumbId: string) => sectionIds.includes(breadcrumbId)
-    );
 
-    // This should not happen - if we have sections, we should have a most recent section
-    // Failing noisily for now will help identify issues whilst this is being developed & tested
-    // TODO: Fail more gracefully once feature is complete
-    if (!mostRecentSectionId) throw Error("Error finding mostRecentSectionId");
+    // Fallback to the first sectionId, which allows us to have a mostRecentSectionId on the first node ("Card") before it exists in breadcrumbs (eg "Continue" hasn't been clicked yet)
+    const mostRecentSectionId =
+      findLast(breadcrumbIds, (breadcrumbId: string) =>
+        sectionIds.includes(breadcrumbId)
+      ) || sectionIds[0];
 
     // Update section
     const currentSectionTitle = sectionNodes[mostRecentSectionId].data.title;
