@@ -77,12 +77,7 @@ const components: {
   [TYPES.TextInput]: TextInput,
 };
 
-interface SummaryListsBySectionsProps {
-  breadcrumbs: Store.breadcrumbs;
-  flow: Store.flow;
-  passport: Store.passport;
-  changeAnswer: (id: Store.nodeId) => void;
-  showChangeButton: boolean;
+interface SummaryListsBySectionsProps extends SummaryListProps {
   sectionComponent: React.ElementType<any> | undefined;
 }
 
