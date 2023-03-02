@@ -6,7 +6,8 @@ import flowWithoutSections from "./mocks/flowWithClones.json";
 import flowWithThreeSections from "./mocks/flowWithThreeSections.json";
 
 const { getState, setState } = vanillaStore;
-const { filterFlowByType, initNavigationStore, record } = getState();
+const { filterFlowByType, initNavigationStore, record, sectionStatuses } =
+  getState();
 
 let initialState: FullStore;
 
@@ -148,4 +149,54 @@ test("updateSectionData() updates section title and index correctly", () => {
   ({ currentSectionTitle, currentSectionIndex } = getState());
   expect(currentSectionIndex).toBe(3);
   expect(currentSectionTitle).toEqual("Third section");
+});
+
+test("calculateSectionStatuses() gets the initial statuses of all sections in a flow", () => {
+  setState({ flow: flowWithThreeSections });
+  initNavigationStore();
+
+  // Get initial statuses
+  const statuses = sectionStatuses();
+
+  // There's a status entry per section node in the test flow
+  expect(Object.keys(statuses)).toHaveLength(3);
+
+  // Initial statuses are calculated correctly
+  expect(statuses).toEqual({
+    firstSection: "READY TO START",
+    secondSection: "CANNOT START YET",
+    thirdSection: "CANNOT START YET",
+  });
+});
+
+test("sectionStatuses() updates the status of sections in a flow as you navigate forwards", () => {
+  setState({ flow: flowWithThreeSections });
+  initNavigationStore();
+
+  // Navigate forwards
+  record("firstSection", { auto: false });
+  record("firstQuestion", { answers: ["firstAnswer"] });
+
+  // Get statuses
+  const statuses = sectionStatuses();
+
+  // Confirm statuses have been updated correctly
+  expect(statuses).toEqual({
+    firstSection: "COMPLETED",
+    secondSection: "READY TO START",
+    thirdSection: "CANNOT START YET",
+  });
+
+  // Navigate forwards again
+  record("secondSection", { auto: false });
+  record("secondQuestion", { answers: ["secondAnswer"] });
+
+  const newStatuses = sectionStatuses();
+
+  // Confirm statuses have been updated correctly
+  expect(newStatuses).toEqual({
+    firstSection: "COMPLETED",
+    secondSection: "COMPLETED",
+    thirdSection: "READY TO START",
+  });
 });

@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import type { PublicProps } from "@planx/components/ui";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { SectionStatus } from "pages/FlowEditor/lib/store/navigation";
 import React, { useEffect } from "react";
 
 import Card from "../shared/Preview/Card";
@@ -11,13 +12,6 @@ import QuestionHeader from "../shared/Preview/QuestionHeader";
 import type { Section } from "./model";
 
 export type Props = PublicProps<Section>;
-
-enum SectionStatus {
-  NotStarted = "CANNOT START YET",
-  ReadyToStart = "READY TO START",
-  Completed = "COMPLETED",
-  NeedsUpdated = "NEEDS UPDATED", // future reconciliation scenario, not used yet
-}
 
 export default function Component(props: Props) {
   const showSection = hasFeatureFlag("NAVIGATION_UI");
@@ -27,15 +21,15 @@ export default function Component(props: Props) {
     currentSectionIndex,
     sectionCount,
     sectionNodes,
+    sectionStatuses,
     currentCard,
-    upcomingCardIds,
   ] = useStore((state) => [
     state.flowName,
     state.currentSectionIndex,
     state.sectionCount,
     state.sectionNodes,
+    state.sectionStatuses(),
     state.currentCard(),
-    state.upcomingCardIds(),
   ]);
 
   useEffect(() => {
@@ -45,20 +39,6 @@ export default function Component(props: Props) {
         auto: true,
       });
   }, []);
-
-  const getStatus = (
-    sectionId: string,
-    currentCardId: string | undefined,
-    upcomingCardIds: string[] | undefined
-  ): SectionStatus => {
-    if (currentCardId === sectionId) {
-      return SectionStatus.ReadyToStart;
-    } else if (upcomingCardIds?.includes(sectionId)) {
-      return SectionStatus.NotStarted;
-    } else {
-      return SectionStatus.Completed;
-    }
-  };
 
   return !showSection ? null : (
     <Card isValid handleSubmit={props.handleSubmit}>
@@ -80,8 +60,8 @@ export default function Component(props: Props) {
           <React.Fragment key={sectionId}>
             <dt>{sectionNode.data.title}</dt>
             <dd>
-              <Tag>
-                {getStatus(sectionId, currentCard?.id, upcomingCardIds)}
+              <Tag title={sectionStatuses[sectionId]}>
+                {sectionStatuses[sectionId]}
               </Tag>
             </dd>
           </React.Fragment>
@@ -91,12 +71,29 @@ export default function Component(props: Props) {
   );
 }
 
-const Tag = styled("div")(({ theme }) => ({
-  backgroundColor: "lightgrey",
+const tagBackgroundColor: Record<string, string> = {
+  [SectionStatus.NotStarted]: "#F3F2F1",
+  [SectionStatus.ReadyToStart]: "#E6E7F3", // team light?
+  [SectionStatus.Completed]: "#00703C",
+};
+
+const tagTextColor: Record<string, string> = {
+  [SectionStatus.NotStarted]: "#505A5F",
+  [SectionStatus.ReadyToStart]: "#222E73", // team dark?
+  [SectionStatus.Completed]: "#FFFFFF",
+};
+
+const Tag = styled("div", {
+  // Configure which props should be forwarded on DOM
+  shouldForwardProp: (prop) => prop !== "title",
+})(({ title, theme }) => ({
+  backgroundColor: title ? tagBackgroundColor[title] : theme.palette.grey[300],
+  color: title ? tagTextColor[title] : theme.palette.text.primary,
+  fontWeight: 600,
   paddingTop: theme.spacing(0.5),
   paddingBottom: theme.spacing(0.5),
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
+  paddingLeft: theme.spacing(1.5),
+  paddingRight: theme.spacing(1.5),
 }));
 
 const Grid = styled("dl")(({ theme }) => ({
