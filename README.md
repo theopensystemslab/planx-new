@@ -27,7 +27,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 1. Clone this repository. You'll need to get some additional environment variable files that aren't published here. Find instructions for copying these in 1password under the AWS Staging IAM user role entry
 
-1. Run `pnpm docker:up` from the project root to get everything (postgres, sharedb, api and hasura server processes) up and running and `pnpm docker:down` to stop all services. `pnpm docker:down-hard` will remove volumes (i.e. database data) and can be a useful hard reset when necessary.
+1. Run `pnpm docker:up` from the project root to get everything (postgres, sharedb, api and hasura server processes) up and running and `pnpm docker:down` to stop all services. `pnpm docker:destroy` will remove volumes (i.e. database data) and can be a useful hard reset when necessary.
 
 1. Move into the hasura directory `cd ../hasura.planx.uk` & install dependencies `pnpm i`.
 
