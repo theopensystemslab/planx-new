@@ -1,6 +1,8 @@
 import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import visuallyHidden from "@mui/utils/visuallyHidden";
 import type { PublicProps } from "@planx/components/ui";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -15,21 +17,20 @@ export type Props = PublicProps<Section>;
 
 export default function Component(props: Props) {
   const showSection = hasFeatureFlag("NAVIGATION_UI");
-
   const [
-    flowName,
     currentSectionIndex,
     sectionCount,
     sectionNodes,
     sectionStatuses,
     currentCard,
+    changeAnswer,
   ] = useStore((state) => [
-    state.flowName,
     state.currentSectionIndex,
     state.sectionCount,
     state.sectionNodes,
     state.sectionStatuses(),
     state.currentCard(),
+    state.changeAnswer,
   ]);
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export default function Component(props: Props) {
 
   return !showSection ? null : (
     <Card isValid handleSubmit={props.handleSubmit}>
-      <QuestionHeader title={flowName} />
+      <QuestionHeader title={props.title} />
       <Box sx={{ lineHeight: ".5em" }}>
         <Typography variant="body1" component="h2" sx={{ fontWeight: "bold" }}>
           Application incomplete.
@@ -58,7 +59,22 @@ export default function Component(props: Props) {
       <DescriptionList>
         {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
           <React.Fragment key={sectionId}>
-            <dt>{sectionNode.data.title}</dt>
+            <dt>
+              {sectionStatuses[sectionId] === SectionStatus.Completed ? (
+                <Link
+                  onClick={() => changeAnswer(sectionId)}
+                  component="button"
+                  sx={{ fontFamily: "inherit", fontSize: "inherit" }}
+                >
+                  {sectionNode.data.title}
+                  <span style={visuallyHidden}>
+                    {`Change ${sectionNode.data.title}`}
+                  </span>
+                </Link>
+              ) : (
+                sectionNode.data.title
+              )}
+            </dt>
             <dd>
               <Tag title={sectionStatuses[sectionId]}>
                 {sectionStatuses[sectionId]}
