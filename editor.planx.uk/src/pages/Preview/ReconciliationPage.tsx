@@ -85,6 +85,7 @@ const ReconciliationPage: React.FC<Props> = ({
           changeAnswer={changeAnswer}
           showChangeButton={false}
           sectionComponent="h3"
+          showStatusTag={true}
         />
         {buttonText && (
           <Button

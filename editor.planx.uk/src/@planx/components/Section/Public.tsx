@@ -103,7 +103,7 @@ const tagTextColor: Record<string, string> = {
   [SectionStatus.Completed]: "#FFFFFF",
 };
 
-const Tag = styled("div", {
+export const Tag = styled("div", {
   // Configure which props should be forwarded on DOM
   shouldForwardProp: (prop) => prop !== "title",
 })(({ title, theme }) => ({

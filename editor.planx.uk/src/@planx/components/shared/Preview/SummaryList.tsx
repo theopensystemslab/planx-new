@@ -1,8 +1,10 @@
+import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
+import { Tag } from "@planx/components/Section/Public";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
 import pick from "lodash/pick";
@@ -79,12 +81,14 @@ const components: {
 
 interface SummaryListsBySectionsProps extends SummaryListProps {
   sectionComponent: React.ElementType<any> | undefined;
+  showStatusTag?: boolean;
 }
 
 function SummaryListsBySections(props: SummaryListsBySectionsProps) {
-  const [hasSections, sectionNodes] = useStore((state) => [
+  const [hasSections, sectionNodes, sectionStatuses] = useStore((state) => [
     state.hasSections,
     state.sectionNodes,
+    state.sectionStatuses(),
   ]);
 
   // if this flow has sections, split the breadcrumbs up by sections,
@@ -118,9 +122,16 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     <>
       {sortedBreadcrumbsBySection.map((sectionBreadcrumbs, i) => (
         <React.Fragment key={i}>
-          <Typography component={props.sectionComponent || "h2"} variant="h5">
-            {props.flow[`${Object.keys(sectionBreadcrumbs)[0]}`]?.data?.title}
-          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography component={props.sectionComponent || "h2"} variant="h5">
+              {props.flow[`${Object.keys(sectionBreadcrumbs)[0]}`]?.data?.title}
+            </Typography>
+            {props.showStatusTag ? (
+              <Tag title={sectionStatuses[Object.keys(sectionBreadcrumbs)[0]]}>
+                {sectionStatuses[Object.keys(sectionBreadcrumbs)[0]]}
+              </Tag>
+            ) : null}
+          </Box>
           <SummaryList
             breadcrumbs={sectionBreadcrumbs}
             flow={props.flow}
