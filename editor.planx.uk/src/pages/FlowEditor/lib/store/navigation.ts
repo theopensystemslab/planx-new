@@ -16,6 +16,7 @@ interface SectionNode extends Store.node {
 export enum SectionStatus {
   NotStarted = "CANNOT START YET",
   ReadyToStart = "READY TO START",
+  Started = "STARTED",
   Completed = "COMPLETED",
   NeedsUpdated = "NEEDS UPDATED", // future reconciliation scenario, not used yet
 }
@@ -115,11 +116,18 @@ export const navigationStore: StateCreator<
    *   ** will need to become aware of all breadcrumbs within a section in the near future for "back" rather than only currentCard & upcomingCardIds
    */
   sectionStatuses: (): Record<string, SectionStatus> => {
-    const { sectionNodes, currentCard, upcomingCardIds } = get();
+    const { sectionNodes, currentCard, upcomingCardIds, cachedBreadcrumbs } =
+      get();
 
     const sectionStatuses: Record<string, SectionStatus> = {};
     Object.keys(sectionNodes).forEach((sectionId) => {
-      if (currentCard()?.id === sectionId) {
+      if (
+        currentCard()?.id === sectionId &&
+        cachedBreadcrumbs &&
+        Object.keys(cachedBreadcrumbs).includes(sectionId)
+      ) {
+        sectionStatuses[sectionId] = SectionStatus.Started;
+      } else if (currentCard()?.id === sectionId) {
         sectionStatuses[sectionId] = SectionStatus.ReadyToStart;
       } else if (upcomingCardIds()?.includes(sectionId)) {
         sectionStatuses[sectionId] = SectionStatus.NotStarted;

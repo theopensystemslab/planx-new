@@ -18,6 +18,7 @@ export type Props = PublicProps<Section>;
 export default function Component(props: Props) {
   const showSection = hasFeatureFlag("NAVIGATION_UI");
   const [
+    flowName,
     currentSectionIndex,
     sectionCount,
     sectionNodes,
@@ -25,6 +26,7 @@ export default function Component(props: Props) {
     currentCard,
     changeAnswer,
   ] = useStore((state) => [
+    state.flowName,
     state.currentSectionIndex,
     state.sectionCount,
     state.sectionNodes,
@@ -43,7 +45,7 @@ export default function Component(props: Props) {
 
   return !showSection ? null : (
     <Card isValid handleSubmit={props.handleSubmit}>
-      <QuestionHeader title={props.title} />
+      <QuestionHeader title={flowName} />
       <Box sx={{ lineHeight: ".5em" }}>
         <Typography variant="body1" component="h2" sx={{ fontWeight: "bold" }}>
           Application incomplete.
@@ -90,12 +92,14 @@ export default function Component(props: Props) {
 const tagBackgroundColor: Record<string, string> = {
   [SectionStatus.NotStarted]: "#F3F2F1",
   [SectionStatus.ReadyToStart]: "#E6E7F3", // team light?
+  [SectionStatus.Started]: "#222E73", // team dark?
   [SectionStatus.Completed]: "#00703C",
 };
 
 const tagTextColor: Record<string, string> = {
   [SectionStatus.NotStarted]: "#505A5F",
   [SectionStatus.ReadyToStart]: "#222E73", // team dark?
+  [SectionStatus.Started]: "#E6E7F3", // team light?
   [SectionStatus.Completed]: "#FFFFFF",
 };
 
