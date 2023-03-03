@@ -14,7 +14,7 @@ REMOTE_PG="$2"
 psql --command="\\COPY (SELECT * FROM users) TO '/tmp/users.csv' (FORMAT CSV, DELIMITER ';')" "${REMOTE_PG}"
 
 # fetch teams
-psql --command="\\COPY (SELECT id, name, slug, theme, settings, domain FROM teams) TO '/tmp/teams.csv' (FORMAT CSV, DELIMITER ';')" "${REMOTE_PG}"
+psql --command="\\COPY (SELECT id, name, slug, theme, settings, notify_personalisation, domain FROM teams) TO '/tmp/teams.csv' (FORMAT CSV, DELIMITER ';')" "${REMOTE_PG}"
 
 # fetch flows
 psql --command="\\COPY (SELECT * FROM flows) TO '/tmp/flows.csv' (FORMAT CSV, DELIMITER ';')" "${REMOTE_PG}"
