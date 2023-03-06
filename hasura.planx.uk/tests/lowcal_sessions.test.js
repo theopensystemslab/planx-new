@@ -22,7 +22,34 @@ describe("lowcal_sessions", () => {
 
   describe("public role queries and mutations", () => {
     const flowId = uuidV4();
-    const [ alice1, bob1, bob2, mallory1 ] = [...Array(4)].map(() => uuidV4());
+    const [
+      alice1,
+      alice2,
+      bob1,
+      bob2,
+      mallory1,
+      anon1
+    ] = [...Array(6)].map(() => uuidV4());
+
+    const insertSession = `
+      mutation InsertLowcalSession(
+        $sessionId: uuid!,
+        $data: jsonb!,
+        $email: String!,
+      ) {
+        insert_lowcal_sessions_one(
+          object: {
+            id: $sessionId
+            data: $data
+            email: $email
+            flow_id: "${flowId}"
+          }
+        ) {
+          id
+          data
+        }
+      }
+    `;
 
     const updateByPK = `
       mutation UpdateLowcalSessionDataByPK(
@@ -103,6 +130,40 @@ describe("lowcal_sessions", () => {
       `);
       assert.strictEqual(res.data.delete_lowcal_sessions.affected_rows, ids.length);
     });
+
+    describe("INSERT without permission", () => {
+      test("Anonymous users can insert a session with an empty email", async () => {
+        const headers = {
+          "x-hasura-lowcal-session-id": anon1,
+          "x-hasura-lowcal-email": ""
+        };
+        const payload = {
+          email: "",
+          sessionId: anon1,
+          data: { x: 1 }
+        }
+        const res = await gqlPublic(insertSession, payload, headers);
+        expect(res).not.toHaveProperty("errors");
+        expect(res.data.insert_lowcal_sessions_one).not.toBeNull();
+        expect(res.data.insert_lowcal_sessions_one.id).toEqual(anon1);
+        expect(res.data.insert_lowcal_sessions_one.data).toHaveProperty("x", 1);
+      });
+
+      test("Alice cannot insert a session with an email that doesn't match headers", async () => {
+        const headers = {
+          "x-hasura-lowcal-session-id": alice2,
+          "x-hasura-lowcal-email": "helloalice@opensystemslab.io"
+        };
+        const payload = {
+          email: "alice@opensystemslab.io", // not the same as in header
+          sessionId: alice2,
+          data: { x: 1 }
+        }
+        const res = await gqlPublic(insertSession, payload, headers);
+        expect(res).toHaveProperty("errors");
+        expect(res.errors[0].message).toContain('check constraint of an insert/update permission has failed');
+      });
+    })
 
     describe("UPDATE without permission", () => {
       test("cannot update without 'x-hasura-lowcal-session-id' header", async () => {
@@ -193,10 +254,42 @@ describe("lowcal_sessions", () => {
         expect(res.data.update_lowcal_sessions.returning).toHaveLength(1);
         expect(res.data.update_lowcal_sessions.returning[0].id).toEqual(bob1);
       });
+
+      test("Alice can update (but not select) her own existing session with an empty email ", async () => {
+        const headers = {
+          "x-hasura-lowcal-session-id": alice1,
+          "x-hasura-lowcal-email": ""
+        };
+        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, headers);
+        expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
+      });
+
+      test("Anonymous users can upsert their own session with an empty email", async () => {
+        const headers = {
+          "x-hasura-lowcal-session-id": anon1,
+          "x-hasura-lowcal-email": ""
+        };
+
+        // inital insert (upsert)
+        const res1 = await gqlPublic(updateByPK, { sessionId: anon1, data: { x: 1 } }, headers);
+        expect(res1.data.update_lowcal_sessions_by_pk).not.toBeNull();
+        expect(res1.data.update_lowcal_sessions_by_pk.id).toEqual(anon1);
+        expect(res1.data.update_lowcal_sessions_by_pk.data).toHaveProperty("x", 1);
+
+        // update 1
+        const res2 = await gqlPublic(updateByPK, { sessionId: anon1, data: { y: 2 } }, headers);
+        expect(res2.data.update_lowcal_sessions_by_pk).not.toBeNull();
+        expect(res2.data.update_lowcal_sessions_by_pk.id).toEqual(anon1);
+        expect(res2.data.update_lowcal_sessions_by_pk.data).toHaveProperty("y", 2);
+
+        // update 2
+        const res3 = await gqlPublic(updateByPK, { sessionId: anon1, data: {} }, headers);
+        expect(res3.data.update_lowcal_sessions_by_pk).not.toBeNull();
+        expect(res3.data.update_lowcal_sessions_by_pk.data).toEqual({});
+      });
     });
     
     describe("UPDATE with permission", () => {
-
       test("Alice can update her session", async () => {
         const headers = {
           "x-hasura-lowcal-session-id": alice1,
@@ -206,6 +299,16 @@ describe("lowcal_sessions", () => {
         expect(res.data.update_lowcal_sessions_by_pk).not.toBeNull();
         expect(res.data.update_lowcal_sessions_by_pk.id).toEqual(alice1);
         expect(res.data.update_lowcal_sessions_by_pk.data).toHaveProperty("x", 1);
+      });
+
+      test("Alice can update her session with an empty email", async () => {
+        const headers = {
+          "x-hasura-lowcal-session-id": alice1,
+          "x-hasura-lowcal-email": ""
+        };
+        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, headers);
+        expect(res).not.toHaveProperty("errors");
+        expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
       });
     });
 
@@ -283,6 +386,25 @@ describe("lowcal_sessions", () => {
         `, null, headers);
         expect(res.data.lowcal_sessions).toHaveLength(1);
         expect(res.data.lowcal_sessions[0].id).toEqual(alice1)
+      });
+
+      test("Anonymous users cannot select their own session", async () => {
+        const headers = {
+          "x-hasura-lowcal-session-id": anon1,
+          "x-hasura-lowcal-email": ""
+        };
+        const res = await gqlPublic(`
+          query SelectAllLowcalSessions {
+            lowcal_sessions {
+              created_at
+              data
+              has_user_saved
+              id
+              updated_at
+            }
+          }
+        `, null, headers);
+        expect(res.data.lowcal_sessions).toHaveLength(0);
       });
     });
   });
