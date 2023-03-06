@@ -2,6 +2,7 @@ import supertest from "supertest";
 import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
 import {
+  mockFlow,
   mockLowcalSession,
   mockFindSession,
   mockNotFoundSession,
@@ -10,7 +11,7 @@ import {
   stubInsertReconciliationRequests,
   stubUpdateLowcalSessionData,
 } from "../tests/mocks/saveAndReturnMocks";
-import type { Flow } from "../types";
+import type { Flow, Breadcrumb } from "../types";
 
 const validateSessionPath = "/validate-session";
 
@@ -20,7 +21,7 @@ describe("Validate Session endpoint", () => {
   });
 
   it("throws an error if required data is missing", async () => {
-    queryMock.mockQuery(mockFindSession);
+    queryMock.mockQuery(mockFindSession());
 
     const missingEmail = {
       payload: { sessionId: mockLowcalSession.id },
@@ -63,7 +64,7 @@ describe("Validate Session endpoint", () => {
   });
 
   it("returns a 200 OK for a valid session", async () => {
-    mockQueryWithFlowDiff({ oldFlow: {}, newFlow: {} });
+    mockQueryWithFlowDiff({ oldFlow: mockFlow.data, newFlow: mockFlow.data });
 
     const data = {
       payload: {
@@ -133,9 +134,9 @@ describe("Validate Session endpoint", () => {
 
     const expectedDiff = [
       {
+        id: "question",
         data: { fn: "question", text: "Is it '1' or '2'" },
         edges: ["one", "two"],
-        id: "question",
         type: 100,
       },
       { data: { text: "1", val: "answer" }, id: "one", type: 200 },
@@ -155,16 +156,137 @@ describe("Validate Session endpoint", () => {
         expect(response.body).toHaveProperty("removedBreadcrumbs", {});
       });
   });
+
+  it("removes section breadcrumbs when a section has changed", async () => {
+    const oldFlow = {
+      _root: {
+        edges: ["section1", "question1", "section2", "question2"],
+      },
+      section1: {
+        data: {
+          title: "Section One",
+        },
+        type: 360,
+      },
+      question1: {
+        data: { fn: "question", text: "Is it 'one' or 'two'" },
+        type: 100,
+        edges: ["one", "two"],
+      },
+      one: {
+        data: { val: "answer", text: "One" },
+        type: 200,
+      },
+      two: {
+        data: { val: "answer", text: "Two" },
+        type: 200,
+      },
+      section: {
+        data: {
+          title: "Section Two",
+        },
+        type: 360,
+      },
+      section2: {
+        data: {
+          title: "Section One",
+        },
+        type: 360,
+      },
+      question2: {
+        data: { fn: "question", text: "Is it 'A' or 'B'" },
+        type: 100,
+        edges: ["a", "b"],
+      },
+      a: {
+        data: { val: "answer", text: "A" },
+        type: 200,
+      },
+      b: {
+        data: { val: "answer", text: "B" },
+        type: 200,
+      },
+    };
+    const newFlow = {
+      ...oldFlow,
+      question1: {
+        data: { fn: "question", text: 'Is it "One" or "Two"' },
+        type: 100,
+        edges: ["one", "two"],
+      },
+    };
+    const breadcrumbs: Breadcrumb = {
+      section1: {
+        auto: false,
+      },
+      question1: {
+        auto: false,
+        answers: ["two"],
+      },
+      section2: {
+        auto: false,
+      },
+      question2: {
+        auto: false,
+        answers: ["b"],
+      },
+    };
+    mockQueryWithFlowDiff({ oldFlow, newFlow, breadcrumbs });
+
+    const data = {
+      payload: {
+        sessionId: mockLowcalSession.id,
+        email: mockLowcalSession.email,
+      },
+    };
+
+    const expectedDiff = [
+      {
+        id: "question1",
+        data: { fn: "question", text: 'Is it "One" or "Two"' },
+        type: 100,
+        edges: ["one", "two"],
+      },
+    ];
+
+    const expectedMessage =
+      "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.";
+
+    const expectedRemovedBreadcrumbs = {
+      section1: {
+        auto: false,
+      },
+      question1: {
+        auto: false,
+        answers: ["two"],
+      },
+    };
+
+    await supertest(app)
+      .post(validateSessionPath)
+      .send(data)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toHaveProperty("alteredNodes", expectedDiff);
+        expect(response.body).toHaveProperty("message", expectedMessage);
+        expect(response.body).toHaveProperty(
+          "removedBreadcrumbs",
+          expectedRemovedBreadcrumbs
+        );
+      });
+  });
 });
 
 function mockQueryWithFlowDiff({
   oldFlow,
   newFlow,
+  breadcrumbs,
 }: {
   oldFlow: Flow["data"];
   newFlow: Flow["data"];
+  breadcrumbs?: Breadcrumb;
 }) {
-  queryMock.mockQuery(mockFindSession);
+  queryMock.mockQuery(mockFindSession(breadcrumbs));
   queryMock.mockQuery(mockGetPublishedFlowByDate(oldFlow));
   queryMock.mockQuery(mockGetMostRecentPublishedFlow(newFlow));
   queryMock.mockQuery(stubInsertReconciliationRequests);

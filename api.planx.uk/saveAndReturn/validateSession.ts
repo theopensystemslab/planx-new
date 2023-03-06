@@ -10,7 +10,9 @@ import {
   getSaveAndReturnPublicHeaders,
   stringifyWithRootKeysSortedAlphabetically,
 } from "./utils";
-import { Breadcrumb, LowCalSession, Node } from "../types";
+import { sortBreadcrumbs } from "@opensystemslab/planx-core";
+import type { EnrichedCrumb } from "@opensystemslab/planx-core";
+import type { Breadcrumb, LowCalSession, Node } from "../types";
 
 export async function validateSession(
   req: Request,
@@ -54,6 +56,11 @@ export async function validateSession(
         });
       }
 
+      const sortedBreadcrumbs = sortBreadcrumbs(
+        savedFlow,
+        sessionData.data.breadcrumbs
+      );
+
       const delta = jsondiffpatch.diff(currentFlow, savedFlow);
       // if there have been content changes, make a list of the alteredNodes
       if (delta) {
@@ -65,13 +72,23 @@ export async function validateSession(
           const removedBreadcrumbs: Breadcrumb = {};
           alteredNodes.forEach((node) => {
             // if the session breadcrumbs include any altered content, remove those breadcrumbs so the user will be re-prompted to answer those questions
-            if (
-              sessionData &&
-              Object.keys(sessionData.data.breadcrumbs).includes(node.id!)
-            ) {
+            const alteredBreadcrumb = sortedBreadcrumbs.find(
+              (crumb: EnrichedCrumb) => crumb.id == node.id!
+            );
+            if (alteredBreadcrumb) {
+              // remove altered node
               removedBreadcrumbs[node.id!] =
                 sessionData.data.breadcrumbs[node.id!];
               delete sessionData.data.breadcrumbs[node.id!];
+
+              // also remove the associated section from breadcrumbs
+              if (alteredBreadcrumb.sectionId) {
+                removedBreadcrumbs[alteredBreadcrumb.sectionId] =
+                  sessionData.data.breadcrumbs[alteredBreadcrumb.sectionId];
+                delete sessionData.data.breadcrumbs[
+                  alteredBreadcrumb.sectionId
+                ];
+              }
             }
           });
 
