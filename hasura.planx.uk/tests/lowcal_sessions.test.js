@@ -211,6 +211,15 @@ describe("lowcal_sessions", () => {
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
       });
 
+      test("Alice can update (but not select) her own existing session with an empty email ", async () => {
+        const headers = {
+          "x-hasura-lowcal-session-id": alice1,
+          "x-hasura-lowcal-email": ""
+        };
+        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, headers);
+        expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
+      });
+
       test("Mallory cannot update Alice's session", async () => {
         const headers = {
           "x-hasura-lowcal-session-id": uuidV4(),
@@ -253,15 +262,6 @@ describe("lowcal_sessions", () => {
         `, null, headers);
         expect(res.data.update_lowcal_sessions.returning).toHaveLength(1);
         expect(res.data.update_lowcal_sessions.returning[0].id).toEqual(bob1);
-      });
-
-      test("Alice can update (but not select) her own existing session with an empty email ", async () => {
-        const headers = {
-          "x-hasura-lowcal-session-id": alice1,
-          "x-hasura-lowcal-email": ""
-        };
-        const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, headers);
-        expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
       });
 
       test("Anonymous users can upsert their own session with an empty email", async () => {

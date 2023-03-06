@@ -210,13 +210,6 @@
                 _is_null: true
             - deleted_at:
                 _is_null: true
-        check:
-          email:
-            _and:
-              - email:
-                _eq: x-hasura-lowcal-email
-              - email:
-                  _neq: ""
   update_permissions:
     - role: public
       permission:
@@ -233,9 +226,7 @@
                 _is_null: true
             - deleted_at:
                 _is_null: true
-        check:
-          email:
-            _eq: x-hasura-lowcal-email
+        check: {}
   event_triggers:
     - name: email_user_submission_confirmation
       definition:
