@@ -211,7 +211,7 @@ describe("lowcal_sessions", () => {
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
       });
 
-      test("Alice can update (but not select) her own existing session with an empty email ", async () => {
+      test("Alice cannot update her own existing session with an empty email ", async () => {
         const headers = {
           "x-hasura-lowcal-session-id": alice1,
           "x-hasura-lowcal-email": ""
@@ -301,7 +301,7 @@ describe("lowcal_sessions", () => {
         expect(res.data.update_lowcal_sessions_by_pk.data).toHaveProperty("x", 1);
       });
 
-      test("Alice can update her session with an empty email", async () => {
+      test("Alice cannot update her session with an empty email", async () => {
         const headers = {
           "x-hasura-lowcal-session-id": alice1,
           "x-hasura-lowcal-email": ""
