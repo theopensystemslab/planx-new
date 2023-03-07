@@ -4,7 +4,7 @@ TRUNCATE TABLE users, teams CASCADE;
 
 \COPY users FROM '/tmp/users.csv' (FORMAT CSV, DELIMITER ';');
 
-\COPY teams (id, name, slug, theme, settings, domain) FROM '/tmp/teams.csv' (FORMAT CSV, DELIMITER ';')
+\COPY teams (id, name, slug, theme, settings, domain, notify_personalisation) FROM '/tmp/teams.csv' (FORMAT CSV, DELIMITER ';')
 
 \COPY flows FROM '/tmp/flows.csv' (FORMAT CSV, DELIMITER ';');
 UPDATE flows SET version = 1;
