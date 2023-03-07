@@ -1,6 +1,6 @@
 import { TYPES } from "@planx/components/types";
 import { hasFeatureFlag } from "lib/featureFlags";
-import { findLast } from "lodash";
+import { findLast, pick } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { StateCreator } from "zustand";
 
@@ -21,6 +21,7 @@ export interface NavigationStore {
   initNavigationStore: () => void;
   updateSectionData: () => void;
   filterFlowByType: (type: TYPES) => Store.flow;
+  getSortedBreadcrumbsBySection: () => Store.breadcrumbs[];
 }
 
 export const navigationStore: StateCreator<
@@ -99,5 +100,37 @@ export const navigationStore: StateCreator<
         .sort(([idA], [idB]) => rootEdges.indexOf(idA) - rootEdges.indexOf(idB))
     );
     return filteredFlow;
+  },
+
+  // if this flow has sections, split the breadcrumbs up by sections,
+  //    so we can render section node titles as h2s and the following nodes as individual SummaryLists
+  getSortedBreadcrumbsBySection: () => {
+    const { breadcrumbs, sectionNodes, hasSections } = get();
+    const sortedBreadcrumbsBySection: Store.breadcrumbs[] = [];
+    if (hasSections) {
+      const sortedNodeIdsBySection: string[][] = [];
+      Object.keys(sectionNodes).forEach((sectionId, i) => {
+        const nextSectionId: string = Object.keys(sectionNodes)[i + 1];
+        const isLastSection: boolean =
+          Object.keys(sectionNodes).pop() === sectionId;
+
+        // get the nodeIds in order for each section, where the first nodeId in an array should always be a section type
+        sortedNodeIdsBySection.push(
+          Object.keys(breadcrumbs).slice(
+            Object.keys(breadcrumbs).indexOf(sectionId),
+            isLastSection
+              ? undefined
+              : Object.keys(breadcrumbs).indexOf(nextSectionId)
+          )
+        );
+      });
+
+      // chunk the breadcrumbs based on the nodeIds in a given section
+      sortedNodeIdsBySection.forEach((nodeIds) => {
+        sortedBreadcrumbsBySection.push(pick(breadcrumbs, nodeIds));
+      });
+    }
+
+    return sortedBreadcrumbsBySection;
   },
 });

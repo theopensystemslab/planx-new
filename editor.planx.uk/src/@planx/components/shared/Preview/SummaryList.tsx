@@ -5,7 +5,6 @@ import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
-import pick from "lodash/pick";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -82,41 +81,16 @@ interface SummaryListsBySectionsProps extends SummaryListProps {
 }
 
 function SummaryListsBySections(props: SummaryListsBySectionsProps) {
-  const [hasSections, sectionNodes] = useStore((state) => [
+  const [hasSections, getSortedBreadcrumbsBySection] = useStore((state) => [
     state.hasSections,
-    state.sectionNodes,
+    state.getSortedBreadcrumbsBySection,
   ]);
 
-  // if this flow has sections, split the breadcrumbs up by sections,
-  //    so we can render section node titles as h2s and the following nodes as individual SummaryLists
-  const sortedBreadcrumbsBySection: Store.breadcrumbs[] = [];
-  if (hasSections) {
-    const sortedNodeIdsBySection: string[][] = [];
-    Object.keys(sectionNodes).forEach((sectionId, i) => {
-      const nextSectionId: string = Object.keys(sectionNodes)[i + 1];
-      const isLastSection: boolean =
-        Object.keys(sectionNodes).pop() === sectionId;
-
-      // get the nodeIds in order for each section, where the first nodeId in an array should always be a section type
-      sortedNodeIdsBySection.push(
-        Object.keys(props.breadcrumbs).slice(
-          Object.keys(props.breadcrumbs).indexOf(sectionId),
-          isLastSection
-            ? undefined
-            : Object.keys(props.breadcrumbs).indexOf(nextSectionId)
-        )
-      );
-    });
-
-    // chunk the breadcrumbs based on the nodeIds in a given section
-    sortedNodeIdsBySection.forEach((nodeIds) => {
-      sortedBreadcrumbsBySection.push(pick(props.breadcrumbs, nodeIds));
-    });
-  }
+  const sections = getSortedBreadcrumbsBySection();
 
   return hasSections ? (
     <>
-      {sortedBreadcrumbsBySection.map((sectionBreadcrumbs, i) => (
+      {sections.map((sectionBreadcrumbs, i) => (
         <React.Fragment key={i}>
           <Typography component={props.sectionComponent || "h2"} variant="h5">
             {props.flow[`${Object.keys(sectionBreadcrumbs)[0]}`]?.data?.title}
