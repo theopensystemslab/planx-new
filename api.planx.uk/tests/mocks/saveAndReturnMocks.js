@@ -47,7 +47,6 @@ export const mockFindSession = {
   },
   variables: {
     sessionId: mockLowcalSession.id,
-    email: mockLowcalSession.email,
   },
 };
 
@@ -58,7 +57,6 @@ export const mockNotFoundSession = {
   },
   variables: {
     sessionId: "not-found-id",
-    email: mockLowcalSession.email,
   },
 };
 
