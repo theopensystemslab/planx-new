@@ -1,9 +1,12 @@
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
+import Link from "@mui/material/Link";
+import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import visuallyHidden from "@mui/utils/visuallyHidden";
 import type { PublicProps } from "@planx/components/ui";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { SectionStatus } from "pages/FlowEditor/lib/store/navigation";
 import React, { useEffect } from "react";
 
 import Card from "../shared/Preview/Card";
@@ -12,30 +15,24 @@ import type { Section } from "./model";
 
 export type Props = PublicProps<Section>;
 
-enum SectionStatus {
-  NotStarted = "CANNOT START YET",
-  ReadyToStart = "READY TO START",
-  Completed = "COMPLETED",
-  NeedsUpdated = "NEEDS UPDATED", // future reconciliation scenario, not used yet
-}
-
 export default function Component(props: Props) {
   const showSection = hasFeatureFlag("NAVIGATION_UI");
-
   const [
     flowName,
     currentSectionIndex,
     sectionCount,
     sectionNodes,
+    sectionStatuses,
     currentCard,
-    upcomingCardIds,
+    changeAnswer,
   ] = useStore((state) => [
     state.flowName,
     state.currentSectionIndex,
     state.sectionCount,
     state.sectionNodes,
+    state.sectionStatuses(),
     state.currentCard(),
-    state.upcomingCardIds(),
+    state.changeAnswer,
   ]);
 
   useEffect(() => {
@@ -45,20 +42,6 @@ export default function Component(props: Props) {
         auto: true,
       });
   }, []);
-
-  const getStatus = (
-    sectionId: string,
-    currentCardId: string | undefined,
-    upcomingCardIds: string[] | undefined
-  ): SectionStatus => {
-    if (currentCardId === sectionId) {
-      return SectionStatus.ReadyToStart;
-    } else if (upcomingCardIds?.includes(sectionId)) {
-      return SectionStatus.NotStarted;
-    } else {
-      return SectionStatus.Completed;
-    }
-  };
 
   return !showSection ? null : (
     <Card isValid handleSubmit={props.handleSubmit}>
@@ -78,10 +61,25 @@ export default function Component(props: Props) {
       <DescriptionList>
         {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
           <React.Fragment key={sectionId}>
-            <dt>{sectionNode.data.title}</dt>
+            <dt>
+              {sectionStatuses[sectionId] === SectionStatus.Completed ? (
+                <Link
+                  onClick={() => changeAnswer(sectionId)}
+                  component="button"
+                  sx={{ fontFamily: "inherit", fontSize: "inherit" }}
+                >
+                  {sectionNode.data.title}
+                  <span style={visuallyHidden}>
+                    {`Change ${sectionNode.data.title}`}
+                  </span>
+                </Link>
+              ) : (
+                sectionNode.data.title
+              )}
+            </dt>
             <dd>
-              <Tag>
-                {getStatus(sectionId, currentCard?.id, upcomingCardIds)}
+              <Tag title={sectionStatuses[sectionId]}>
+                {sectionStatuses[sectionId]}
               </Tag>
             </dd>
           </React.Fragment>
@@ -91,12 +89,39 @@ export default function Component(props: Props) {
   );
 }
 
-const Tag = styled("div")(({ theme }) => ({
-  backgroundColor: "lightgrey",
+const getTagBackgroundColor = (theme: Theme, title: string): string => {
+  const backgroundColors: Record<string, string> = {
+    [SectionStatus.NotStarted]: "#F3F2F1",
+    [SectionStatus.InProgress]: theme.palette.primary.main,
+    [SectionStatus.Completed]: "#00703C",
+  };
+
+  return backgroundColors[title];
+};
+
+const getTagTextColor = (theme: Theme, title: string): string => {
+  const textColors: Record<string, string> = {
+    [SectionStatus.NotStarted]: "#505A5F",
+    [SectionStatus.InProgress]: theme.palette.primary.contrastText,
+    [SectionStatus.Completed]: "#FFFFFF",
+  };
+
+  return textColors[title];
+};
+
+const Tag = styled("div", {
+  // Configure which props should be forwarded on DOM
+  shouldForwardProp: (prop) => prop !== "title",
+})(({ title, theme }) => ({
+  backgroundColor: title
+    ? getTagBackgroundColor(theme, title)
+    : theme.palette.grey[300],
+  color: title ? getTagTextColor(theme, title) : theme.palette.text.primary,
+  fontWeight: 600,
   paddingTop: theme.spacing(0.5),
   paddingBottom: theme.spacing(0.5),
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
+  paddingLeft: theme.spacing(1.5),
+  paddingRight: theme.spacing(1.5),
 }));
 
 const Grid = styled("dl")(({ theme }) => ({

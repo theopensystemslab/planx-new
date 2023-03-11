@@ -4,12 +4,20 @@ import { findLast, pick } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { StateCreator } from "zustand";
 
+import { PreviewStore } from "./preview";
 import { SharedStore } from "./shared";
 
 export interface SectionNode extends Store.node {
   data: {
     title: string;
   };
+}
+
+export enum SectionStatus {
+  NotStarted = "CANNOT START YET",
+  InProgress = "IN PROGRESS",
+  Completed = "COMPLETED",
+  NeedsUpdated = "NEW INFORMATION NEEDED", // future reconciliation scenario, not used yet
 }
 
 export interface NavigationStore {
@@ -21,11 +29,12 @@ export interface NavigationStore {
   initNavigationStore: () => void;
   updateSectionData: () => void;
   filterFlowByType: (type: TYPES) => Store.flow;
+  sectionStatuses: () => Record<string, SectionStatus>;
   getSortedBreadcrumbsBySection: () => Store.breadcrumbs[];
 }
 
 export const navigationStore: StateCreator<
-  NavigationStore & SharedStore,
+  NavigationStore & SharedStore & PreviewStore,
   [],
   [],
   NavigationStore
@@ -65,7 +74,7 @@ export const navigationStore: StateCreator<
 
   /**
    * Update title and index on record()
-   * Triggered when going backewards, forwards, or changing answer
+   * Triggered when going backwards, forwards, or changing answer
    */
   updateSectionData: () => {
     const { breadcrumbs, sectionNodes, hasSections } = get();
@@ -100,6 +109,32 @@ export const navigationStore: StateCreator<
         .sort(([idA], [idB]) => rootEdges.indexOf(idA) - rootEdges.indexOf(idB))
     );
     return filteredFlow;
+  },
+
+  /**
+   * Calculate the status of each section node based on the current position in a flow
+   *   ** will need to become aware of all breadcrumbs within a section in the near future for "back" rather than only currentCard & upcomingCardIds
+   */
+  sectionStatuses: (): Record<string, SectionStatus> => {
+    const { sectionNodes, currentCard, upcomingCardIds, cachedBreadcrumbs } =
+      get();
+
+    const sectionStatuses: Record<string, SectionStatus> = {};
+    Object.keys(sectionNodes).forEach((sectionId) => {
+      if (
+        currentCard()?.id === sectionId ||
+        (cachedBreadcrumbs &&
+          Object.keys(cachedBreadcrumbs).includes(sectionId))
+      ) {
+        sectionStatuses[sectionId] = SectionStatus.InProgress;
+      } else if (upcomingCardIds()?.includes(sectionId)) {
+        sectionStatuses[sectionId] = SectionStatus.NotStarted;
+      } else {
+        sectionStatuses[sectionId] = SectionStatus.Completed;
+      }
+    });
+
+    return sectionStatuses;
   },
 
   // if this flow has sections, split the breadcrumbs up by sections,
