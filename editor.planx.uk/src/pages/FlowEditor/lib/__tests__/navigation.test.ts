@@ -163,7 +163,7 @@ test("calculateSectionStatuses() gets the initial statuses of all sections in a 
 
   // Initial statuses are calculated correctly
   expect(statuses).toEqual({
-    firstSection: "READY TO START",
+    firstSection: "IN PROGRESS",
     secondSection: "CANNOT START YET",
     thirdSection: "CANNOT START YET",
   });
@@ -183,7 +183,7 @@ test("sectionStatuses() updates the status of sections in a flow as you navigate
   // Confirm statuses have been updated correctly
   expect(statuses).toEqual({
     firstSection: "COMPLETED",
-    secondSection: "READY TO START",
+    secondSection: "IN PROGRESS",
     thirdSection: "CANNOT START YET",
   });
 
@@ -197,6 +197,6 @@ test("sectionStatuses() updates the status of sections in a flow as you navigate
   expect(newStatuses).toEqual({
     firstSection: "COMPLETED",
     secondSection: "COMPLETED",
-    thirdSection: "READY TO START",
+    thirdSection: "IN PROGRESS",
   });
 });
