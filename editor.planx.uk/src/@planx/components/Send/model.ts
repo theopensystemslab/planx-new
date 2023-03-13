@@ -161,6 +161,7 @@ export interface QuestionMetaData {
     text?: string;
   }>;
   portal_name?: string;
+  section_name?: string;
   feedback?: string;
 }
 
