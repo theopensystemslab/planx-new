@@ -578,7 +578,8 @@ export = async () => {
           certificateBody: config.requireSecret(`ssl-${name}-cert`),
           // File starting with `-----BEGIN CERTIFICATE-----`
           // AWS calls it "Chain" but it's usually called "intermediate"
-          certificateChain: config.requireSecret(`ssl-${name}-chain`),
+          // This is optional, not all teams will provide one
+          certificateChain: config.getSecret(`ssl-${name}-chain`),
         },
         {
           provider: usEast1,
