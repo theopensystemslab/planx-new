@@ -84,11 +84,13 @@ export const navigationStore: StateCreator<
     const breadcrumbIds = Object.keys(breadcrumbs);
     const sectionIds = Object.keys(sectionNodes);
 
-    // Fallback to the first sectionId, which allows us to have a mostRecentSectionId on the first node ("Card") before it exists in breadcrumbs (eg "Continue" hasn't been clicked yet)
-    const mostRecentSectionId =
-      findLast(breadcrumbIds, (breadcrumbId: string) =>
-        sectionIds.includes(breadcrumbId)
-      ) || sectionIds[0];
+    const mostRecentSectionId = findLast(
+      breadcrumbIds,
+      (breadcrumbId: string) => sectionIds.includes(breadcrumbId)
+    );
+
+    // No sections in breadcrumbs, first section values already set in store
+    if (!mostRecentSectionId) return;
 
     // Update section
     const currentSectionTitle = sectionNodes[mostRecentSectionId].data.title;
