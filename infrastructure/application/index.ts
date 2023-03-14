@@ -43,6 +43,11 @@ const CUSTOM_DOMAINS =
           domain: "planningservices.doncaster.gov.uk",
           name: "doncaster",
         },
+        // Disabled until we have an updated certificate, this is currently causing production deploys to fail
+        // {
+        //   domain: "planningservices.medway.gov.uk",
+        //   name: "medway",
+        // },
       ]
     : [];
 
@@ -574,7 +579,8 @@ export = async () => {
           certificateBody: config.requireSecret(`ssl-${name}-cert`),
           // File starting with `-----BEGIN CERTIFICATE-----`
           // AWS calls it "Chain" but it's usually called "intermediate"
-          certificateChain: config.requireSecret(`ssl-${name}-chain`),
+          // This is optional, not all teams will provide one
+          certificateChain: config.getSecret(`ssl-${name}-chain`),
         },
         {
           provider: usEast1,

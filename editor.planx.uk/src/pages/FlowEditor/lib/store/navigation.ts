@@ -1,6 +1,6 @@
 import { TYPES } from "@planx/components/types";
 import { hasFeatureFlag } from "lib/featureFlags";
-import { findLast } from "lodash";
+import { findLast, pick } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { StateCreator } from "zustand";
 
@@ -15,10 +15,9 @@ export interface SectionNode extends Store.node {
 
 export enum SectionStatus {
   NotStarted = "CANNOT START YET",
-  ReadyToStart = "READY TO START",
-  Started = "STARTED",
+  InProgress = "IN PROGRESS",
   Completed = "COMPLETED",
-  NeedsUpdated = "NEEDS UPDATED", // future reconciliation scenario, not used yet
+  NeedsUpdated = "NEW INFORMATION NEEDED", // future reconciliation scenario, not used yet
 }
 
 export interface NavigationStore {
@@ -31,6 +30,8 @@ export interface NavigationStore {
   updateSectionData: () => void;
   filterFlowByType: (type: TYPES) => Store.flow;
   sectionStatuses: () => Record<string, SectionStatus>;
+  getSortedBreadcrumbsBySection: () => Store.breadcrumbs[];
+  getSectionForNode: (nodeId: string) => SectionNode;
 }
 
 export const navigationStore: StateCreator<
@@ -84,11 +85,13 @@ export const navigationStore: StateCreator<
     const breadcrumbIds = Object.keys(breadcrumbs);
     const sectionIds = Object.keys(sectionNodes);
 
-    // Fallback to the first sectionId, which allows us to have a mostRecentSectionId on the first node ("Card") before it exists in breadcrumbs (eg "Continue" hasn't been clicked yet)
-    const mostRecentSectionId =
-      findLast(breadcrumbIds, (breadcrumbId: string) =>
-        sectionIds.includes(breadcrumbId)
-      ) || sectionIds[0];
+    const mostRecentSectionId = findLast(
+      breadcrumbIds,
+      (breadcrumbId: string) => sectionIds.includes(breadcrumbId)
+    );
+
+    // No sections in breadcrumbs, first section values already set in store
+    if (!mostRecentSectionId) return;
 
     // Update section
     const currentSectionTitle = sectionNodes[mostRecentSectionId].data.title;
@@ -122,13 +125,11 @@ export const navigationStore: StateCreator<
     const sectionStatuses: Record<string, SectionStatus> = {};
     Object.keys(sectionNodes).forEach((sectionId) => {
       if (
-        currentCard()?.id === sectionId &&
-        cachedBreadcrumbs &&
-        Object.keys(cachedBreadcrumbs).includes(sectionId)
+        currentCard()?.id === sectionId ||
+        (cachedBreadcrumbs &&
+          Object.keys(cachedBreadcrumbs).includes(sectionId))
       ) {
-        sectionStatuses[sectionId] = SectionStatus.Started;
-      } else if (currentCard()?.id === sectionId) {
-        sectionStatuses[sectionId] = SectionStatus.ReadyToStart;
+        sectionStatuses[sectionId] = SectionStatus.InProgress;
       } else if (upcomingCardIds()?.includes(sectionId)) {
         sectionStatuses[sectionId] = SectionStatus.NotStarted;
       } else {
@@ -137,5 +138,48 @@ export const navigationStore: StateCreator<
     });
 
     return sectionStatuses;
+  },
+
+  // if this flow has sections, split the breadcrumbs up by sections,
+  //    so we can render section node titles as h2s and the following nodes as individual SummaryLists
+  getSortedBreadcrumbsBySection: () => {
+    const { breadcrumbs, sectionNodes, hasSections } = get();
+    const sortedBreadcrumbsBySection: Store.breadcrumbs[] = [];
+    if (hasSections) {
+      const sortedNodeIdsBySection: string[][] = [];
+      Object.keys(sectionNodes).forEach((sectionId, i) => {
+        const nextSectionId: string = Object.keys(sectionNodes)[i + 1];
+        const isLastSection: boolean =
+          Object.keys(sectionNodes).pop() === sectionId;
+
+        // get the nodeIds in order for each section, where the first nodeId in an array should always be a section type
+        sortedNodeIdsBySection.push(
+          Object.keys(breadcrumbs).slice(
+            Object.keys(breadcrumbs).indexOf(sectionId),
+            isLastSection
+              ? undefined
+              : Object.keys(breadcrumbs).indexOf(nextSectionId)
+          )
+        );
+      });
+
+      // chunk the breadcrumbs based on the nodeIds in a given section
+      sortedNodeIdsBySection.forEach((nodeIds) => {
+        sortedBreadcrumbsBySection.push(pick(breadcrumbs, nodeIds));
+      });
+    }
+
+    return sortedBreadcrumbsBySection;
+  },
+
+  getSectionForNode: (nodeId: string): SectionNode => {
+    const { getSortedBreadcrumbsBySection, sectionNodes } = get();
+    const sections = getSortedBreadcrumbsBySection();
+    const sectionIndex = sections.findIndex((section) =>
+      Object.keys(section).includes(nodeId)
+    );
+    const sectionId = Object.keys(sectionNodes)[sectionIndex];
+    const section = sectionNodes[sectionId];
+    return section;
   },
 });

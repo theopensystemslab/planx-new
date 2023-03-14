@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { styled } from "@mui/material/styles";
+import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 import type { PublicProps } from "@planx/components/ui";
@@ -18,6 +18,7 @@ export type Props = PublicProps<Section>;
 export default function Component(props: Props) {
   const showSection = hasFeatureFlag("NAVIGATION_UI");
   const [
+    flow,
     flowName,
     currentSectionIndex,
     sectionCount,
@@ -26,6 +27,7 @@ export default function Component(props: Props) {
     currentCard,
     changeAnswer,
   ] = useStore((state) => [
+    state.flow,
     state.flowName,
     state.currentSectionIndex,
     state.sectionCount,
@@ -42,6 +44,14 @@ export default function Component(props: Props) {
         auto: true,
       });
   }, []);
+
+  const changeFirstAnswerInSection = (sectionId: string) => {
+    const sectionIndex = flow._root.edges?.indexOf(sectionId);
+    if (sectionIndex !== undefined) {
+      const firstNodeInSection = flow._root.edges?.[sectionIndex + 1];
+      if (firstNodeInSection) changeAnswer(firstNodeInSection);
+    }
+  };
 
   return !showSection ? null : (
     <Card isValid handleSubmit={props.handleSubmit}>
@@ -64,7 +74,7 @@ export default function Component(props: Props) {
             <dt>
               {sectionStatuses[sectionId] === SectionStatus.Completed ? (
                 <Link
-                  onClick={() => changeAnswer(sectionId)}
+                  onClick={() => changeFirstAnswerInSection(sectionId)}
                   component="button"
                   sx={{ fontFamily: "inherit", fontSize: "inherit" }}
                 >
@@ -89,26 +99,34 @@ export default function Component(props: Props) {
   );
 }
 
-const tagBackgroundColor: Record<string, string> = {
-  [SectionStatus.NotStarted]: "#F3F2F1",
-  [SectionStatus.ReadyToStart]: "#E6E7F3", // team light?
-  [SectionStatus.Started]: "#222E73", // team dark?
-  [SectionStatus.Completed]: "#00703C",
+const getTagBackgroundColor = (theme: Theme, title: string): string => {
+  const backgroundColors: Record<string, string> = {
+    [SectionStatus.NotStarted]: "#F3F2F1",
+    [SectionStatus.InProgress]: theme.palette.primary.main,
+    [SectionStatus.Completed]: "#00703C",
+  };
+
+  return backgroundColors[title];
 };
 
-const tagTextColor: Record<string, string> = {
-  [SectionStatus.NotStarted]: "#505A5F",
-  [SectionStatus.ReadyToStart]: "#222E73", // team dark?
-  [SectionStatus.Started]: "#E6E7F3", // team light?
-  [SectionStatus.Completed]: "#FFFFFF",
+const getTagTextColor = (theme: Theme, title: string): string => {
+  const textColors: Record<string, string> = {
+    [SectionStatus.NotStarted]: "#505A5F",
+    [SectionStatus.InProgress]: theme.palette.primary.contrastText,
+    [SectionStatus.Completed]: "#FFFFFF",
+  };
+
+  return textColors[title];
 };
 
 export const Tag = styled("div", {
   // Configure which props should be forwarded on DOM
   shouldForwardProp: (prop) => prop !== "title",
 })(({ title, theme }) => ({
-  backgroundColor: title ? tagBackgroundColor[title] : theme.palette.grey[300],
-  color: title ? tagTextColor[title] : theme.palette.text.primary,
+  backgroundColor: title
+    ? getTagBackgroundColor(theme, title)
+    : theme.palette.grey[300],
+  color: title ? getTagTextColor(theme, title) : theme.palette.text.primary,
   fontWeight: 600,
   paddingTop: theme.spacing(0.5),
   paddingBottom: theme.spacing(0.5),
