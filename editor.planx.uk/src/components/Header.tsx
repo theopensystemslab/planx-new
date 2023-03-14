@@ -17,6 +17,7 @@ import { TYPES } from "@planx/components/types";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { capitalize } from "lodash";
 import { Route } from "navi";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import React, { useRef, useState } from "react";
 import {
   Link as ReactNaviLink,
@@ -204,7 +205,6 @@ const Breadcrumbs: React.FC<{
 
 const NavBar: React.FC = () => {
   const [
-    currentCard,
     currentSectionIndex,
     sectionCount,
     sectionNodes,
@@ -213,7 +213,6 @@ const NavBar: React.FC = () => {
     saveToEmail,
     path,
   ] = useStore((state) => [
-    state.currentCard(),
     state.currentSectionIndex,
     state.sectionCount,
     state.sectionNodes,
@@ -229,15 +228,13 @@ const NavBar: React.FC = () => {
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
   const isVisible =
     hasSections && !isSaveAndReturnLandingPage && !isContentPage;
-  const isSectionCard = currentCard?.type == TYPES.Section;
+  const { node } = useAnalyticsTracking();
+  const isSectionCard = node?.type == TYPES.Section;
 
   // Section data is calculated from breadcrumbs, but we want section cards to appear as the first node in their sections
   // We can read data from currentCard() instead of the NavigationStore to acheive this
   const [title, index] = isSectionCard
-    ? [
-        currentCard.data.title,
-        Object.keys(sectionNodes).indexOf(currentCard.id!) + 1,
-      ]
+    ? [node.data.title, Object.keys(sectionNodes).indexOf(node.id!) + 1]
     : [currentSectionTitle, currentSectionIndex];
 
   return (
