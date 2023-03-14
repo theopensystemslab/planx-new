@@ -13,6 +13,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/styles";
+import { TYPES } from "@planx/components/types";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { capitalize } from "lodash";
 import { Route } from "navi";
@@ -203,15 +204,19 @@ const Breadcrumbs: React.FC<{
 
 const NavBar: React.FC = () => {
   const [
+    currentCard,
     currentSectionIndex,
     sectionCount,
+    sectionNodes,
     currentSectionTitle,
     hasSections,
     saveToEmail,
     path,
   ] = useStore((state) => [
+    state.currentCard(),
     state.currentSectionIndex,
     state.sectionCount,
+    state.sectionNodes,
     state.currentSectionTitle,
     state.hasSections,
     state.saveToEmail,
@@ -224,13 +229,23 @@ const NavBar: React.FC = () => {
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
   const isVisible =
     hasSections && !isSaveAndReturnLandingPage && !isContentPage;
+  const isSectionCard = currentCard?.type == TYPES.Section;
+
+  // Section data is calculated from breadcrumbs, but we want section cards to appear as the first node in their sections
+  // We can read data from currentCard() instead of the NavigationStore to acheive this
+  const [title, index] = isSectionCard
+    ? [
+        currentCard.data.title,
+        Object.keys(sectionNodes).indexOf(currentCard.id!) + 1,
+      ]
+    : [currentSectionTitle, currentSectionIndex];
 
   return (
     <>
       {isVisible && (
         <StyledNavBar data-testid="navigation-bar">
-          <SectionCount>{`Section ${currentSectionIndex} of ${sectionCount}`}</SectionCount>
-          <SectionName>{capitalize(currentSectionTitle)}</SectionName>
+          <SectionCount>{`Section ${index} of ${sectionCount}`}</SectionCount>
+          <SectionName>{capitalize(title)}</SectionName>
         </StyledNavBar>
       )}
     </>
