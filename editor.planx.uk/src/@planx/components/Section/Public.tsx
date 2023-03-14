@@ -18,6 +18,7 @@ export type Props = PublicProps<Section>;
 export default function Component(props: Props) {
   const showSection = hasFeatureFlag("NAVIGATION_UI");
   const [
+    flow,
     flowName,
     currentSectionIndex,
     sectionCount,
@@ -26,6 +27,7 @@ export default function Component(props: Props) {
     currentCard,
     changeAnswer,
   ] = useStore((state) => [
+    state.flow,
     state.flowName,
     state.currentSectionIndex,
     state.sectionCount,
@@ -42,6 +44,14 @@ export default function Component(props: Props) {
         auto: true,
       });
   }, []);
+
+  const changeFirstAnswerInSection = (sectionId: string) => {
+    const sectionIndex = flow._root.edges?.indexOf(sectionId);
+    if (sectionIndex !== undefined) {
+      const firstNodeInSection = flow._root.edges?.[sectionIndex + 1];
+      if (firstNodeInSection) changeAnswer(firstNodeInSection);
+    }
+  };
 
   return !showSection ? null : (
     <Card isValid handleSubmit={props.handleSubmit}>
@@ -64,7 +74,7 @@ export default function Component(props: Props) {
             <dt>
               {sectionStatuses[sectionId] === SectionStatus.Completed ? (
                 <Link
-                  onClick={() => changeAnswer(sectionId)}
+                  onClick={() => changeFirstAnswerInSection(sectionId)}
                   component="button"
                   sx={{ fontFamily: "inherit", fontSize: "inherit" }}
                 >
