@@ -31,6 +31,7 @@ export interface NavigationStore {
   filterFlowByType: (type: TYPES) => Store.flow;
   sectionStatuses: () => Record<string, SectionStatus>;
   getSortedBreadcrumbsBySection: () => Store.breadcrumbs[];
+  getSectionForNode: (nodeId: string) => SectionNode;
 }
 
 export const navigationStore: StateCreator<
@@ -169,5 +170,16 @@ export const navigationStore: StateCreator<
     }
 
     return sortedBreadcrumbsBySection;
+  },
+
+  getSectionForNode: (nodeId: string): SectionNode => {
+    const { getSortedBreadcrumbsBySection, sectionNodes } = get();
+    const sections = getSortedBreadcrumbsBySection();
+    const sectionIndex = sections.findIndex((section) =>
+      Object.keys(section).includes(nodeId)
+    );
+    const sectionId = Object.keys(sectionNodes)[sectionIndex];
+    const section = sectionNodes[sectionId];
+    return section;
   },
 });

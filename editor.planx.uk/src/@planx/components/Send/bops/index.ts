@@ -6,6 +6,7 @@
 
 import { logger } from "airbrake";
 import { flatFlags } from "pages/FlowEditor/data/flags";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
 
@@ -107,6 +108,17 @@ const addPortalName = (
   return metadata;
 };
 
+const addSectionName = (
+  id: string,
+  metadata: QuestionMetaData
+): QuestionMetaData => {
+  const { hasSections, getSectionForNode } = useStore.getState();
+  if (hasSections) {
+    metadata.section_name = getSectionForNode(id).data.title;
+  }
+  return metadata;
+};
+
 export const makePayload = (
   flow: Store.flow,
   breadcrumbs: Store.breadcrumbs
@@ -183,7 +195,7 @@ export const makePayload = (
         const metadata: ResponseMetaData = {};
 
         if (flow[id]) {
-          // XXX: this is how we get the text represenation of a node until
+          // XXX: this is how we get the text representation of a node until
           //      we have a more standardised way of retrieving it. More info
           //      https://github.com/theopensystemslab/planx-new/discussions/386
           value = flow[id].data?.text ?? flow[id].data?.title ?? "";
@@ -215,6 +227,7 @@ export const makePayload = (
         ];
       }
       metadata = addPortalName(id, flow, metadata);
+      metadata = addSectionName(id, metadata);
 
       if (Object.keys(metadata).length > 0) ob.metadata = metadata;
 
