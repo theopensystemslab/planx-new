@@ -1,4 +1,4 @@
 version: 2
-endpoint: http://localhost:7000
+endpoint: http://localhost:${HASURA_PROXY_PORT}
 metadata_directory: metadata
 admin_secret: ${HASURA_ADMIN_SECRET}
