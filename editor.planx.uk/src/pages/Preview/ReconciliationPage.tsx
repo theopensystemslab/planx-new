@@ -4,8 +4,8 @@ import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
+import { SectionsOverviewList } from "@planx/components/Section/Public";
 import Card from "@planx/components/shared/Preview/Card";
-import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
@@ -35,9 +35,10 @@ const ReconciliationPage: React.FC<Props> = ({
   buttonText,
   onButtonClick,
 }) => {
-  const [flow, changeAnswer] = useStore((state) => [
+  const [flow, sectionNodes, sectionStatuses] = useStore((state) => [
     state.flow,
-    state.changeAnswer,
+    state.sectionNodes,
+    state.sectionStatuses(),
   ]);
 
   const sortedBreadcrumbs = sortBreadcrumbs(
@@ -78,14 +79,10 @@ const ReconciliationPage: React.FC<Props> = ({
         <Typography variant="h3" component="h2">
           Review your answers so far
         </Typography>
-        <SummaryListsBySections
-          breadcrumbs={sortedBreadcrumbs}
-          flow={flow}
-          passport={data?.reconciledSessionData?.passport}
-          changeAnswer={changeAnswer}
-          showChangeButton={false}
-          sectionComponent="h3"
-          showStatusTag={true}
+        <SectionsOverviewList
+          sectionNodes={sectionNodes}
+          sectionStatuses={sectionStatuses}
+          showChange={false}
         />
         {buttonText && (
           <Button

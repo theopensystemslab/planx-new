@@ -6,7 +6,10 @@ import visuallyHidden from "@mui/utils/visuallyHidden";
 import type { PublicProps } from "@planx/components/ui";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { SectionStatus } from "pages/FlowEditor/lib/store/navigation";
+import {
+  SectionNode,
+  SectionStatus,
+} from "pages/FlowEditor/lib/store/navigation";
 import React, { useEffect } from "react";
 
 import Card from "../shared/Preview/Card";
@@ -68,34 +71,63 @@ export default function Component(props: Props) {
           } of ${sectionCount} sections`}
         </Typography>
       </Box>
-      <DescriptionList>
-        {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
-          <React.Fragment key={sectionId}>
-            <dt>
-              {sectionStatuses[sectionId] === SectionStatus.Completed ? (
-                <Link
-                  onClick={() => changeFirstAnswerInSection(sectionId)}
-                  component="button"
-                  sx={{ fontFamily: "inherit", fontSize: "inherit" }}
-                >
-                  {sectionNode.data.title}
-                  <span style={visuallyHidden}>
-                    {`Change ${sectionNode.data.title}`}
-                  </span>
-                </Link>
-              ) : (
-                sectionNode.data.title
-              )}
-            </dt>
-            <dd>
-              <Tag title={sectionStatuses[sectionId]}>
-                {sectionStatuses[sectionId]}
-              </Tag>
-            </dd>
-          </React.Fragment>
-        ))}
-      </DescriptionList>
+      <SectionsOverviewList
+        sectionNodes={sectionNodes}
+        sectionStatuses={sectionStatuses}
+        showChange={true}
+        changeFirstAnswerInSection={changeFirstAnswerInSection}
+      />
     </Card>
+  );
+}
+
+interface SectionsOverviewListProps {
+  sectionNodes: Record<string, SectionNode>;
+  sectionStatuses: Record<string, SectionStatus>;
+  showChange: boolean;
+  changeFirstAnswerInSection?: (sectionId: string) => void;
+}
+
+export function SectionsOverviewList(props: SectionsOverviewListProps) {
+  const {
+    sectionNodes,
+    sectionStatuses,
+    showChange,
+    changeFirstAnswerInSection,
+  } = props;
+
+  return (
+    <DescriptionList>
+      {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
+        <React.Fragment key={sectionId}>
+          <dt>
+            {showChange &&
+            sectionStatuses[sectionId] === SectionStatus.Completed ? (
+              <Link
+                onClick={() =>
+                  changeFirstAnswerInSection &&
+                  changeFirstAnswerInSection(sectionId)
+                }
+                component="button"
+                sx={{ fontFamily: "inherit", fontSize: "inherit" }}
+              >
+                {sectionNode.data.title}
+                <span style={visuallyHidden}>
+                  {`Change ${sectionNode.data.title}`}
+                </span>
+              </Link>
+            ) : (
+              sectionNode.data.title
+            )}
+          </dt>
+          <dd>
+            <Tag title={sectionStatuses[sectionId]}>
+              {sectionStatuses[sectionId]}
+            </Tag>
+          </dd>
+        </React.Fragment>
+      ))}
+    </DescriptionList>
   );
 }
 
