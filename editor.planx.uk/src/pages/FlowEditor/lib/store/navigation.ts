@@ -55,7 +55,7 @@ export const navigationStore: StateCreator<
    * Called by setFlow() as we require a flow from the DB before proceeding
    */
   initNavigationStore: () => {
-    let sectionNodes = get().filterFlowByType(TYPES.Section) as Record<
+    const sectionNodes = get().filterFlowByType(TYPES.Section) as Record<
       string,
       SectionNode
     >;
