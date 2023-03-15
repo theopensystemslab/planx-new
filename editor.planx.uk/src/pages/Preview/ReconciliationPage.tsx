@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import { SectionsOverviewList } from "@planx/components/Section/Public";
 import Card from "@planx/components/shared/Preview/Card";
+import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
@@ -35,11 +36,14 @@ const ReconciliationPage: React.FC<Props> = ({
   buttonText,
   onButtonClick,
 }) => {
-  const [flow, sectionNodes, sectionStatuses] = useStore((state) => [
-    state.flow,
-    state.sectionNodes,
-    state.sectionStatuses,
-  ]);
+  const [flow, hasSections, sectionNodes, sectionStatuses, changeAnswer] =
+    useStore((state) => [
+      state.flow,
+      state.hasSections,
+      state.sectionNodes,
+      state.sectionStatuses,
+      state.changeAnswer,
+    ]);
 
   const sortedBreadcrumbs = sortBreadcrumbs(
     data?.reconciledSessionData?.breadcrumbs,
@@ -88,13 +92,24 @@ const ReconciliationPage: React.FC<Props> = ({
             </Box>
           )}
         <Typography variant="h3" component="h2">
-          Review your answers so far
+          Review your {hasSections ? "progress" : "answers"} so far
         </Typography>
-        <SectionsOverviewList
-          sectionNodes={sectionNodes}
-          sectionStatuses={reconciledSectionStatuses}
-          showChange={false}
-        />
+        {hasSections ? (
+          <SectionsOverviewList
+            sectionNodes={sectionNodes}
+            sectionStatuses={reconciledSectionStatuses}
+            showChange={false}
+          />
+        ) : (
+          <SummaryListsBySections
+            breadcrumbs={sortedBreadcrumbs}
+            flow={flow}
+            passport={data?.reconciledSessionData?.passport}
+            changeAnswer={changeAnswer}
+            showChangeButton={false}
+            sectionComponent="h3"
+          />
+        )}
         {buttonText && (
           <Button
             variant="contained"
