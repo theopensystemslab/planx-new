@@ -14,7 +14,7 @@ const db = new aws.rds.Instance("app", {
   engine: "postgres",
   // Available versions:
   // $ aws rds describe-db-engine-versions --default-only --engine postgres
-  engineVersion: "14.6",
+  engineVersion: "12.11",
   // Available instance types: https://aws.amazon.com/rds/instance-types/
   instanceClass: env === "production" ? "db.t3.medium" : "db.t3.micro",
   allocatedStorage: env === "production" ? 100 : 20,
