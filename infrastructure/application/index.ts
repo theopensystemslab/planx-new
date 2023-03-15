@@ -43,11 +43,10 @@ const CUSTOM_DOMAINS =
           domain: "planningservices.doncaster.gov.uk",
           name: "doncaster",
         },
-        // Disabled until we have an updated certificate, this is currently causing production deploys to fail
-        // {
-        //   domain: "planningservices.medway.gov.uk",
-        //   name: "medway",
-        // },
+        {
+          domain: "planningservices.medway.gov.uk",
+          name: "medway",
+        },
       ]
     : [];
 
