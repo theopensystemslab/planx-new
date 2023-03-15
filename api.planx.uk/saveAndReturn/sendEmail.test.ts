@@ -265,6 +265,7 @@ describe("Setting up send email events", () => {
         flows_by_pk: mockFlow,
         lowcal_sessions: [{ ...mockLowcalSession, has_user_saved: true }],
       },
+      matchOnVariables: false,
     });
 
     await supertest(app).post(SAVE_ENDPOINT).send(data).expect(200);
