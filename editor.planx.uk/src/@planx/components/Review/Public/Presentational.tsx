@@ -48,7 +48,6 @@ function Component(props: Props) {
           changeAnswer={props.changeAnswer}
           showChangeButton={props.showChangeButton}
           sectionComponent="h2"
-          showStatusTag={true}
         />
       </div>
     </Card>

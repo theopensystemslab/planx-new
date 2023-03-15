@@ -136,6 +136,7 @@ const getTagBackgroundColor = (theme: Theme, title: string): string => {
     [SectionStatus.NotStarted]: "#F3F2F1",
     [SectionStatus.InProgress]: theme.palette.primary.main,
     [SectionStatus.Completed]: "#00703C",
+    [SectionStatus.NeedsUpdated]: theme.palette.action.focus, // GOV UK YELLOW for now, check Figma
   };
 
   return backgroundColors[title];
@@ -146,6 +147,7 @@ const getTagTextColor = (theme: Theme, title: string): string => {
     [SectionStatus.NotStarted]: "#505A5F",
     [SectionStatus.InProgress]: theme.palette.primary.contrastText,
     [SectionStatus.Completed]: "#FFFFFF",
+    [SectionStatus.NeedsUpdated]: "#000",
   };
 
   return textColors[title];

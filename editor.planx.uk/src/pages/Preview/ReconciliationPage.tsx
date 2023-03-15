@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import { SectionsOverviewList } from "@planx/components/Section/Public";
 import Card from "@planx/components/shared/Preview/Card";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
 import Banner from "ui/Banner";
@@ -38,12 +38,23 @@ const ReconciliationPage: React.FC<Props> = ({
   const [flow, sectionNodes, sectionStatuses] = useStore((state) => [
     state.flow,
     state.sectionNodes,
-    state.sectionStatuses(),
+    state.sectionStatuses,
   ]);
 
   const sortedBreadcrumbs = sortBreadcrumbs(
     data?.reconciledSessionData?.breadcrumbs,
     flow
+  );
+
+  const alteredNodeIds: string[] = [];
+  data?.alteredNodes?.forEach((node: Store.node) => {
+    if (node?.id) alteredNodeIds.push(node.id);
+  });
+
+  // Calculate the section statuses based on the response data from /validate-session, before it's been updated in app state
+  const reconciledSectionStatuses = sectionStatuses(
+    sortedBreadcrumbs,
+    alteredNodeIds
   );
 
   const theme = useTheme();
@@ -81,7 +92,7 @@ const ReconciliationPage: React.FC<Props> = ({
         </Typography>
         <SectionsOverviewList
           sectionNodes={sectionNodes}
-          sectionStatuses={sectionStatuses}
+          sectionStatuses={reconciledSectionStatuses}
           showChange={false}
         />
         {buttonText && (

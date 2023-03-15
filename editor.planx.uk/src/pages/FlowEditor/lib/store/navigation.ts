@@ -29,7 +29,10 @@ export interface NavigationStore {
   initNavigationStore: () => void;
   updateSectionData: () => void;
   filterFlowByType: (type: TYPES) => Store.flow;
-  sectionStatuses: () => Record<string, SectionStatus>;
+  sectionStatuses: (
+    breadcrumbs?: Store.breadcrumbs,
+    updatedNodeIds?: string[]
+  ) => Record<string, SectionStatus>;
   getSortedBreadcrumbsBySection: () => Store.breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
 }
@@ -115,21 +118,39 @@ export const navigationStore: StateCreator<
   },
 
   /**
-   * Calculate the status of each section node based on the current position in a flow
+   * Calculate the status of each section node based on the current position in a flow (eg state.cachedBreadcrumbs) or provided breadcrumbs (eg on reconciliation)
    *   ** will need to become aware of all breadcrumbs within a section in the near future for "back" rather than only currentCard & upcomingCardIds
    */
-  sectionStatuses: (): Record<string, SectionStatus> => {
-    const { sectionNodes, currentCard, upcomingCardIds, cachedBreadcrumbs } =
-      get();
+  sectionStatuses: (
+    breadcrumbs?: Store.breadcrumbs,
+    updatedNodeIds?: string[]
+  ): Record<string, SectionStatus> => {
+    const {
+      sectionNodes,
+      currentCard,
+      upcomingCardIds,
+      cachedBreadcrumbs,
+      getSectionForNode,
+    } = get();
+
+    // Default to cachedBreadcrumbs unless a breadcrumbs-like object is explicitly provided (eg on reconciliation, before app state has been updated)
+    if (!breadcrumbs) breadcrumbs = cachedBreadcrumbs;
 
     const sectionStatuses: Record<string, SectionStatus> = {};
     Object.keys(sectionNodes).forEach((sectionId) => {
       if (
         currentCard()?.id === sectionId ||
-        (cachedBreadcrumbs &&
-          Object.keys(cachedBreadcrumbs).includes(sectionId))
+        (breadcrumbs && Object.keys(breadcrumbs).includes(sectionId))
       ) {
         sectionStatuses[sectionId] = SectionStatus.InProgress;
+      } else if (updatedNodeIds && updatedNodeIds.length > 0) {
+        // TODO figure out how to calculate this status (probably should be first condition)
+        //   this currently fails because getSectionForNode relies on breadcrumbs, but updatedNodeIds are no longer in the breadcrumbs, so updatedSectionId is undefined
+        updatedNodeIds.forEach((nodeId) => {
+          let updatedSectionId = getSectionForNode(nodeId)?.id;
+          if (updatedSectionId)
+            sectionStatuses[updatedSectionId] = SectionStatus.NeedsUpdated;
+        });
       } else if (upcomingCardIds()?.includes(sectionId)) {
         sectionStatuses[sectionId] = SectionStatus.NotStarted;
       } else {
