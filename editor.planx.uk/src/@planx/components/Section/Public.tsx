@@ -153,7 +153,7 @@ const getTagTextColor = (theme: Theme, title: string): string => {
   return textColors[title];
 };
 
-export const Tag = styled("div", {
+const Tag = styled("div", {
   // Configure which props should be forwarded on DOM
   shouldForwardProp: (prop) => prop !== "title",
 })(({ title, theme }) => ({

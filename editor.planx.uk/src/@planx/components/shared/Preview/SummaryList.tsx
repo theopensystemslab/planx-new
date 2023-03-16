@@ -4,7 +4,6 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
-import { Tag } from "@planx/components/Section/Public";
 import { TYPES } from "@planx/components/types";
 import format from "date-fns/format";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
@@ -80,7 +79,6 @@ const components: {
 
 interface SummaryListsBySectionsProps extends SummaryListProps {
   sectionComponent: React.ElementType<any> | undefined;
-  showStatusTag?: boolean;
 }
 
 function SummaryListsBySections(props: SummaryListsBySectionsProps) {
@@ -106,11 +104,6 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
             <Typography component={props.sectionComponent || "h2"} variant="h5">
               {props.flow[`${Object.keys(sectionBreadcrumbs)[0]}`]?.data?.title}
             </Typography>
-            {props.showStatusTag ? (
-              <Tag title={sectionStatuses[Object.keys(sectionBreadcrumbs)[0]]}>
-                {sectionStatuses[Object.keys(sectionBreadcrumbs)[0]]}
-              </Tag>
-            ) : null}
           </Box>
           <SummaryList
             breadcrumbs={sectionBreadcrumbs}
