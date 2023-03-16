@@ -86,8 +86,8 @@ describe("Validate Session endpoint", () => {
       });
   });
 
-  it("shows a diff for changed nodes", async () => {
-    const oldFlow = {
+  it("returns changed nodes and invalidated breadcrumbs when the flow has been updated", async () => {
+    const oldFlow: Flow["data"] = {
       _root: {
         edges: ["question"],
       },
@@ -105,7 +105,7 @@ describe("Validate Session endpoint", () => {
         type: 200,
       },
     };
-    const newFlow = {
+    const newFlow: Flow["data"] = {
       _root: {
         edges: ["question"],
       },
@@ -157,8 +157,8 @@ describe("Validate Session endpoint", () => {
       });
   });
 
-  it("removes section breadcrumbs when a section has changed", async () => {
-    const oldFlow = {
+  it("returns changed nodes and invalidated breadcrumbs when a flow with sections has been updated", async () => {
+    const oldFlow: Flow["data"] = {
       _root: {
         edges: ["section1", "question1", "section2", "question2"],
       },
@@ -181,15 +181,9 @@ describe("Validate Session endpoint", () => {
         data: { val: "answer", text: "Two" },
         type: 200,
       },
-      section: {
-        data: {
-          title: "Section Two",
-        },
-        type: 360,
-      },
       section2: {
         data: {
-          title: "Section One",
+          title: "Section Two",
         },
         type: 360,
       },
@@ -207,12 +201,21 @@ describe("Validate Session endpoint", () => {
         type: 200,
       },
     };
-    const newFlow = {
+    const newFlow: Flow["data"] = {
       ...oldFlow,
+      _root: {
+        edges: ["section1", "question1", "section2", "question2", "section3"],
+      },
       question1: {
         data: { fn: "question", text: 'Is it "One" or "Two"' },
         type: 100,
         edges: ["one", "two"],
+      },
+      section3: {
+        data: {
+          title: "Section Three",
+        },
+        type: 360,
       },
     };
     const breadcrumbs: Breadcrumb = {
@@ -242,17 +245,28 @@ describe("Validate Session endpoint", () => {
 
     const expectedDiff = [
       {
+        id: "_root",
+        edges: ["section1", "question1", "section2", "question2", "section3"],
+      },
+      {
         id: "question1",
         data: { fn: "question", text: 'Is it "One" or "Two"' },
         type: 100,
         edges: ["one", "two"],
+      },
+      {
+        id: "section3",
+        data: {
+          title: "Section Three",
+        },
+        type: 360,
       },
     ];
 
     const expectedMessage =
       "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.";
 
-    const expectedRemovedBreadcrumbs = {
+    const expectedRemovedBreadcrumbs: Breadcrumb = {
       section1: {
         auto: false,
       },
@@ -261,6 +275,140 @@ describe("Validate Session endpoint", () => {
         answers: ["two"],
       },
     };
+
+    await supertest(app)
+      .post(validateSessionPath)
+      .send(data)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toHaveProperty("alteredNodes", expectedDiff);
+        expect(response.body).toHaveProperty("message", expectedMessage);
+        expect(response.body).toHaveProperty(
+          "removedBreadcrumbs",
+          expectedRemovedBreadcrumbs
+        );
+      });
+  });
+
+  it("returns changed nodes and invalidated breadcrumbs when a flow without sections has sections added", async () => {
+    const oldFlow: Flow["data"] = {
+      _root: {
+        edges: ["question1", "question2"],
+      },
+      question1: {
+        data: { fn: "question", text: "Is it 'one' or 'two'" },
+        type: 100,
+        edges: ["one", "two"],
+      },
+      one: {
+        data: { val: "answer", text: "One" },
+        type: 200,
+      },
+      two: {
+        data: { val: "answer", text: "Two" },
+        type: 200,
+      },
+      question2: {
+        data: { fn: "question", text: "Is it 'A' or 'B'" },
+        type: 100,
+        edges: ["a", "b"],
+      },
+      a: {
+        data: { val: "answer", text: "A" },
+        type: 200,
+      },
+      b: {
+        data: { val: "answer", text: "B" },
+        type: 200,
+      },
+    };
+    const newFlow: Flow["data"] = {
+      _root: {
+        edges: ["section1", "question1", "section2", "question2"],
+      },
+      section1: {
+        data: {
+          title: "Section One",
+        },
+        type: 360,
+      },
+      question1: {
+        data: { fn: "question", text: "Is it 'one' or 'two'" },
+        type: 100,
+        edges: ["one", "two"],
+      },
+      one: {
+        data: { val: "answer", text: "One" },
+        type: 200,
+      },
+      two: {
+        data: { val: "answer", text: "Two" },
+        type: 200,
+      },
+      section2: {
+        data: {
+          title: "Section Two",
+        },
+        type: 360,
+      },
+      question2: {
+        data: { fn: "question", text: "Is it 'A' or 'B'" },
+        type: 100,
+        edges: ["a", "b"],
+      },
+      a: {
+        data: { val: "answer", text: "A" },
+        type: 200,
+      },
+      b: {
+        data: { val: "answer", text: "B" },
+        type: 200,
+      },
+    };
+    const breadcrumbs: Breadcrumb = {
+      question1: {
+        auto: false,
+        answers: ["two"],
+      },
+      question2: {
+        auto: false,
+        answers: ["b"],
+      },
+    };
+    mockQueryWithFlowDiff({ oldFlow, newFlow, breadcrumbs });
+
+    const data = {
+      payload: {
+        sessionId: mockLowcalSession.id,
+        email: mockLowcalSession.email,
+      },
+    };
+
+    const expectedDiff = [
+      {
+        id: "_root",
+        edges: ["section1", "question1", "section2", "question2"],
+      },
+      {
+        id: "section1",
+        data: {
+          title: "Section One",
+        },
+        type: 360,
+      },
+      {
+        id: "section2",
+        data: {
+          title: "Section Two",
+        },
+        type: 360,
+      },
+    ];
+
+    const expectedMessage =
+      "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.";
+
+    const expectedRemovedBreadcrumbs: Breadcrumb = {};
 
     await supertest(app)
       .post(validateSessionPath)
