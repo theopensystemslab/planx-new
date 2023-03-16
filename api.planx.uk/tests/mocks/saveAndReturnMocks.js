@@ -120,6 +120,9 @@ export const mockValidateSingleSessionRequest = {
     flows_by_pk: mockFlow,
     lowcal_sessions: [mockLowcalSession],
   },
+  variables: {
+    sessionId: mockLowcalSession.id,
+  },
 };
 
 export const mockSoftDeleteLowcalSession = {
