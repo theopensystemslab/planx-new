@@ -10,7 +10,7 @@ specifiers:
   '@airbrake/node': ^2.1.7
   '@babel/core': ^7.19.6
   '@babel/preset-typescript': ^7.18.6
-  '@opensystemslab/planx-core': git://github.com/theopensystemslab/planx-core.git#1cfd019
+  '@opensystemslab/planx-core': git://github.com/theopensystemslab/planx-core.git#aa46c2e
   '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#c6dee14
   '@types/adm-zip': ^0.5.0
   '@types/body-parser': ^1.19.2
@@ -83,7 +83,7 @@ specifiers:
 
 dependencies:
   '@airbrake/node': 2.1.7
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/1cfd019
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/aa46c2e
   '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/c6dee14_@babel+core@7.19.6
   adm-zip: 0.5.9
   aws-sdk: 2.1180.0
@@ -7911,8 +7911,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/theopensystemslab/planx-core/1cfd019:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/1cfd019}
+  github.com/theopensystemslab/planx-core/aa46c2e:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aa46c2e}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}

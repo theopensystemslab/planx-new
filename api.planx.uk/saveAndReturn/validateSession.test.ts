@@ -157,10 +157,123 @@ describe("Validate Session endpoint", () => {
       });
   });
 
+  // TODO this may be an existing issue or it may be my misunderstanding of how this should work
+  it.skip("returns changed nodes and invalidated breadcrumbs when a flow has updated only nested nodes (answers but not questions)", async () => {
+    const oldFlow: Flow["data"] = {
+      _root: {
+        edges: ["question1", "question2"],
+      },
+      question1: {
+        data: { fn: "question", text: "Is it 'one' or 'two'" },
+        type: 100,
+        edges: ["one", "two"],
+      },
+      one: {
+        data: { val: "answer", text: "One" },
+        type: 200,
+      },
+      two: {
+        data: { val: "answer", text: "Two" },
+        type: 200,
+      },
+      question2: {
+        data: { fn: "question", text: "Is it 'A' or 'B'" },
+        type: 100,
+        edges: ["a", "b"],
+      },
+      a: {
+        data: { val: "answer", text: "A" },
+        type: 200,
+      },
+      b: {
+        data: { val: "answer", text: "B" },
+        type: 200,
+      },
+    };
+    const newFlow: Flow["data"] = {
+      ...oldFlow,
+      one: {
+        data: { val: "answer", text: "One (1)" },
+        type: 200,
+      },
+      two: {
+        data: { val: "answer", text: "Two (2)" },
+        type: 200,
+      },
+      b: {
+        data: { val: "answer", text: "B or Other" },
+        type: 200,
+      },
+    };
+    const breadcrumbs: Breadcrumb = {
+      question1: {
+        auto: false,
+        answers: ["two"],
+      },
+      question2: {
+        auto: false,
+        answers: ["b"],
+      },
+    };
+    mockQueryWithFlowDiff({ oldFlow, newFlow, breadcrumbs });
+
+    const data = {
+      payload: {
+        sessionId: mockLowcalSession.id,
+        email: mockLowcalSession.email,
+      },
+    };
+
+    const expectedDiff = [
+      {
+        id: "one",
+        data: { val: "answer", text: "One (1)" },
+        type: 200,
+      },
+      {
+        id: "two",
+        data: { val: "answer", text: "Two (2)" },
+        type: 200,
+      },
+      {
+        id: "b",
+        data: { val: "answer", text: "B or Other" },
+        type: 200,
+      },
+    ];
+
+    const expectedMessage =
+      "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.";
+
+    const expectedRemovedBreadcrumbs: Breadcrumb = {
+      question1: {
+        auto: false,
+        answers: ["two"],
+      },
+      question2: {
+        auto: false,
+        answers: ["b"],
+      },
+    };
+
+    await supertest(app)
+      .post(validateSessionPath)
+      .send(data)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toHaveProperty("alteredNodes", expectedDiff);
+        expect(response.body).toHaveProperty("message", expectedMessage);
+        expect(response.body).toHaveProperty(
+          "removedBreadcrumbs",
+          expectedRemovedBreadcrumbs
+        );
+      });
+  });
+
   it("returns changed nodes and invalidated breadcrumbs when a flow with sections has been updated", async () => {
     const oldFlow: Flow["data"] = {
       _root: {
-        edges: ["section1", "question1", "section2", "question2"],
+        edges: ["section1", "question1", "question2", "section2", "question3"],
       },
       section1: {
         data: {
@@ -181,13 +294,26 @@ describe("Validate Session endpoint", () => {
         data: { val: "answer", text: "Two" },
         type: 200,
       },
+      question2: {
+        data: { fn: "question", text: "yes or no" },
+        type: 100,
+        edges: ["yes", "no"],
+      },
+      yes: {
+        data: { val: "answer", text: "Yes" },
+        type: 200,
+      },
+      no: {
+        data: { val: "answer", text: "No" },
+        type: 200,
+      },
       section2: {
         data: {
           title: "Section Two",
         },
         type: 360,
       },
-      question2: {
+      question3: {
         data: { fn: "question", text: "Is it 'A' or 'B'" },
         type: 100,
         edges: ["a", "b"],
@@ -203,19 +329,15 @@ describe("Validate Session endpoint", () => {
     };
     const newFlow: Flow["data"] = {
       ...oldFlow,
-      _root: {
-        edges: ["section1", "question1", "section2", "question2", "section3"],
-      },
       question1: {
         data: { fn: "question", text: 'Is it "One" or "Two"' },
         type: 100,
         edges: ["one", "two"],
       },
-      section3: {
-        data: {
-          title: "Section Three",
-        },
-        type: 360,
+      question2: {
+        data: { fn: "question", text: '"Yes" or "No"' },
+        type: 100,
+        edges: ["yes", "no"],
       },
     };
     const breadcrumbs: Breadcrumb = {
@@ -226,10 +348,14 @@ describe("Validate Session endpoint", () => {
         auto: false,
         answers: ["two"],
       },
+      question2: {
+        auto: false,
+        answers: ["no"],
+      },
       section2: {
         auto: false,
       },
-      question2: {
+      question3: {
         auto: false,
         answers: ["b"],
       },
@@ -245,21 +371,16 @@ describe("Validate Session endpoint", () => {
 
     const expectedDiff = [
       {
-        id: "_root",
-        edges: ["section1", "question1", "section2", "question2", "section3"],
-      },
-      {
         id: "question1",
         data: { fn: "question", text: 'Is it "One" or "Two"' },
         type: 100,
         edges: ["one", "two"],
       },
       {
-        id: "section3",
-        data: {
-          title: "Section Three",
-        },
-        type: 360,
+        id: "question2",
+        data: { fn: "question", text: '"Yes" or "No"' },
+        type: 100,
+        edges: ["yes", "no"],
       },
     ];
 
@@ -273,6 +394,10 @@ describe("Validate Session endpoint", () => {
       question1: {
         auto: false,
         answers: ["two"],
+      },
+      question2: {
+        auto: false,
+        answers: ["no"],
       },
     };
 

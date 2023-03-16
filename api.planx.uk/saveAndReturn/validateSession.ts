@@ -66,10 +66,8 @@ export async function validateSession(
         }));
         if (alteredNodes.length) {
           // each EnrichedCrumb will include a sectionId where relevant (used later)
-          const enrichedAndOrderedBreadcrumbs: Array<EnrichedCrumb> = sortBreadcrumbs(
-            savedFlow,
-            sessionData.data.breadcrumbs
-          );
+          const enrichedAndOrderedBreadcrumbs: Array<EnrichedCrumb> =
+            sortBreadcrumbs(savedFlow, sessionData.data.breadcrumbs);
           const removedBreadcrumbs: Breadcrumb = {};
           alteredNodes.forEach((node) => {
             // if the session breadcrumbs include any altered content,
@@ -77,7 +75,7 @@ export async function validateSession(
             const affectedBreadcrumb = enrichedAndOrderedBreadcrumbs.find(
               (crumb: EnrichedCrumb) => crumb.id == node.id!
             );
-            if (affectedBreadcrumb) {
+            if (affectedBreadcrumb && sessionData.data.breadcrumbs[node.id!]) {
               // remove affected breadcrumbs
               removedBreadcrumbs[node.id!] =
                 sessionData.data.breadcrumbs[node.id!];
@@ -85,7 +83,10 @@ export async function validateSession(
 
               // also remove the associated section
               const affectedSectionId = affectedBreadcrumb.sectionId;
-              if (affectedSectionId) {
+              if (
+                affectedSectionId &&
+                sessionData.data.breadcrumbs[affectedSectionId]
+              ) {
                 removedBreadcrumbs[affectedSectionId] =
                   sessionData.data.breadcrumbs[affectedSectionId];
                 delete sessionData.data.breadcrumbs[affectedSectionId];
