@@ -7,8 +7,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import { SectionsOverviewList } from "@planx/components/Section/Public";
 import Card from "@planx/components/shared/Preview/Card";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
-import { TYPES } from "@planx/components/types";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
 import Banner from "ui/Banner";
@@ -51,21 +50,12 @@ const ReconciliationPage: React.FC<Props> = ({
     flow
   );
 
-  // Assumes that reconciliation API has handled removing the associated section breadcrumb for each updated node
-  //   and returned them as part of `removedBreadcrumbs` so we can accurately set sectionStatuses
-  const updatedSectionNodeIds: string[] = [];
-  if (data?.removedBreadcrumbs) {
-    Object.keys(data.removedBreadcrumbs)?.forEach((nodeId: string) => {
-      if (flow[nodeId]?.type === TYPES.Section) {
-        updatedSectionNodeIds.push(nodeId);
-      }
-    });
-  }
-
   // Calculate the section statuses based on the response data from /validate-session, before it's been updated in app state
+  const removedNodeIds: string[] | undefined =
+    data?.removedBreadcrumbs && Object.keys(data.removedBreadcrumbs);
   const reconciledSectionStatuses = sectionStatuses(
     sortedBreadcrumbs,
-    updatedSectionNodeIds
+    removedNodeIds
   );
 
   const theme = useTheme();

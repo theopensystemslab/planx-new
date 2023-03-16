@@ -209,9 +209,8 @@ test("sectionStatuses() applies the NEW INFORMATION NEEDED status if a section w
   record("firstSection", { auto: false });
   record("firstQuestion", { answers: ["firstAnswer"] });
 
-  // Get statuses - passing the optional arguments to mimic the first section being flagged as changed during reconciliation (eg was renamed or similar)
-  //   first argument = undefined means we'll fallback to using state.cachedBreadcrumbs to calculate all other statuses
-  const statuses = sectionStatuses(undefined, ["firstSection"]);
+  // Mimic "reconciliation" process and pretend that the firstSection & firstQuestion have been updated in content, and therefore removed from breadcrumbs leaving an empty object
+  const statuses = sectionStatuses({}, ["firstSection", "firstQuestion"]);
 
   expect(statuses).toEqual({
     firstSection: "NEW INFORMATION NEEDED", // no longer considered COMPLETED
