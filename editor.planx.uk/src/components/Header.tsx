@@ -204,38 +204,28 @@ const Breadcrumbs: React.FC<{
 );
 
 const NavBar: React.FC = () => {
-  const [
-    currentSectionIndex,
-    sectionCount,
-    sectionNodes,
-    currentSectionTitle,
-    hasSections,
-    saveToEmail,
-    path,
-  ] = useStore((state) => [
-    state.currentSectionIndex,
-    state.sectionCount,
-    state.sectionNodes,
-    state.currentSectionTitle,
-    state.hasSections,
-    state.saveToEmail,
-    state.path,
-  ]);
+  const [index, sectionCount, title, hasSections, saveToEmail, path] = useStore(
+    (state) => [
+      state.currentSectionIndex,
+      state.sectionCount,
+      state.currentSectionTitle,
+      state.hasSections,
+      state.saveToEmail,
+      state.path,
+    ]
+  );
   const isSaveAndReturnLandingPage =
     path !== ApplicationPath.SingleSession &&
     !Boolean(saveToEmail) &&
     !hasFeatureFlag("DISABLE_SAVE_AND_RETURN");
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
-  const isVisible =
-    hasSections && !isSaveAndReturnLandingPage && !isContentPage;
   const { node } = useAnalyticsTracking();
   const isSectionCard = node?.type == TYPES.Section;
-
-  // Section data is calculated from breadcrumbs, but we want section cards to appear as the first node in their sections
-  // We can read data from currentCard() instead of the NavigationStore to acheive this
-  const [title, index] = isSectionCard
-    ? [node.data.title, Object.keys(sectionNodes).indexOf(node.id!) + 1]
-    : [currentSectionTitle, currentSectionIndex];
+  const isVisible =
+    hasSections &&
+    !isSaveAndReturnLandingPage &&
+    !isContentPage &&
+    !isSectionCard;
 
   return (
     <>
