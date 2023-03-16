@@ -151,7 +151,7 @@ test("updateSectionData() updates section title and index correctly", () => {
   expect(currentSectionTitle).toEqual("Third section");
 });
 
-test("calculateSectionStatuses() gets the initial statuses of all sections in a flow", () => {
+test("SectionStatuses() gets the initial statuses of all sections in a flow", () => {
   setState({ flow: flowWithThreeSections });
   initNavigationStore();
 
@@ -198,5 +198,24 @@ test("sectionStatuses() updates the status of sections in a flow as you navigate
     firstSection: "COMPLETED",
     secondSection: "COMPLETED",
     thirdSection: "IN PROGRESS",
+  });
+});
+
+test("sectionStatuses() applies the NEW INFORMATION NEEDED status if a section was updated during reconciliation", () => {
+  setState({ flow: flowWithThreeSections });
+  initNavigationStore();
+
+  // Navigate forwards
+  record("firstSection", { auto: false });
+  record("firstQuestion", { answers: ["firstAnswer"] });
+
+  // Get statuses - passing the optional arguments to mimic the first section being flagged as changed during reconciliation (eg was renamed or similar)
+  //   first argument = undefined means we'll fallback to using state.cachedBreadcrumbs to calculate all other statuses
+  const statuses = sectionStatuses(undefined, ["firstSection"]);
+
+  expect(statuses).toEqual({
+    firstSection: "NEW INFORMATION NEEDED", // no longer considered COMPLETED
+    secondSection: "IN PROGRESS",
+    thirdSection: "CANNOT START YET",
   });
 });
