@@ -49,17 +49,13 @@ export async function validateSession(
         getMostRecentPublishedFlow(sessionData.data.id),
         getPublishedFlowByDate(sessionData.data.id, sessionData.updated_at),
       ]);
+
       if (!currentFlow || !savedFlow) {
         return next({
           status: 404,
           message: "Unable to find a published version of this flow",
         });
       }
-
-      const sortedBreadcrumbs = sortBreadcrumbs(
-        savedFlow,
-        sessionData.data.breadcrumbs
-      );
 
       const delta = jsondiffpatch.diff(currentFlow, savedFlow);
       // if there have been content changes, make a list of the alteredNodes
@@ -69,25 +65,30 @@ export async function validateSession(
           ...currentFlow[key],
         }));
         if (alteredNodes.length) {
+          // each EnrichedCrumb will include a sectionId where relevant (used later)
+          const enrichedAndOrderedBreadcrumbs: Array<EnrichedCrumb> = sortBreadcrumbs(
+            savedFlow,
+            sessionData.data.breadcrumbs
+          );
           const removedBreadcrumbs: Breadcrumb = {};
           alteredNodes.forEach((node) => {
-            // if the session breadcrumbs include any altered content, remove those breadcrumbs so the user will be re-prompted to answer those questions
-            const alteredBreadcrumb = sortedBreadcrumbs.find(
+            // if the session breadcrumbs include any altered content,
+            // remove those breadcrumbs so the user will be re-prompted to answer those questions
+            const affectedBreadcrumb = enrichedAndOrderedBreadcrumbs.find(
               (crumb: EnrichedCrumb) => crumb.id == node.id!
             );
-            if (alteredBreadcrumb) {
-              // remove altered node
+            if (affectedBreadcrumb) {
+              // remove affected breadcrumbs
               removedBreadcrumbs[node.id!] =
                 sessionData.data.breadcrumbs[node.id!];
               delete sessionData.data.breadcrumbs[node.id!];
 
-              // also remove the associated section from breadcrumbs
-              if (alteredBreadcrumb.sectionId) {
-                removedBreadcrumbs[alteredBreadcrumb.sectionId] =
-                  sessionData.data.breadcrumbs[alteredBreadcrumb.sectionId];
-                delete sessionData.data.breadcrumbs[
-                  alteredBreadcrumb.sectionId
-                ];
+              // also remove the associated section
+              const affectedSectionId = affectedBreadcrumb.sectionId;
+              if (affectedSectionId) {
+                removedBreadcrumbs[affectedSectionId] =
+                  sessionData.data.breadcrumbs[affectedSectionId];
+                delete sessionData.data.breadcrumbs[affectedSectionId];
               }
             }
           });
