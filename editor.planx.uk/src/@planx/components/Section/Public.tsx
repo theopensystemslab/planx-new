@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { styled, Theme } from "@mui/material/styles";
+import { lighten, styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 import type { PublicProps } from "@planx/components/ui";
@@ -133,9 +133,9 @@ export function SectionsOverviewList(props: SectionsOverviewListProps) {
 
 const getTagBackgroundColor = (theme: Theme, title: string): string => {
   const backgroundColors: Record<string, string> = {
-    [SectionStatus.NotStarted]: "#F3F2F1",
-    [SectionStatus.InProgress]: theme.palette.primary.main,
-    [SectionStatus.Completed]: "#00703C",
+    [SectionStatus.NotStarted]: theme.palette.grey[200],
+    [SectionStatus.InProgress]: lighten(theme.palette.primary.main, 0.9),
+    [SectionStatus.Completed]: theme.palette.success.main,
     [SectionStatus.NeedsUpdated]: theme.palette.action.focus, // GOV UK YELLOW for now, check Figma
   };
 
@@ -144,9 +144,11 @@ const getTagBackgroundColor = (theme: Theme, title: string): string => {
 
 const getTagTextColor = (theme: Theme, title: string): string => {
   const textColors: Record<string, string> = {
-    [SectionStatus.NotStarted]: "#505A5F",
-    [SectionStatus.InProgress]: theme.palette.primary.contrastText,
-    [SectionStatus.Completed]: "#FFFFFF",
+    [SectionStatus.NotStarted]: theme.palette.getContrastText(
+      theme.palette.grey[200]
+    ),
+    [SectionStatus.InProgress]: theme.palette.primary.main,
+    [SectionStatus.Completed]: "#FFF",
     [SectionStatus.NeedsUpdated]: "#000",
   };
 
@@ -157,10 +159,8 @@ const Tag = styled("div", {
   // Configure which props should be forwarded on DOM
   shouldForwardProp: (prop) => prop !== "title",
 })(({ title, theme }) => ({
-  backgroundColor: title
-    ? getTagBackgroundColor(theme, title)
-    : theme.palette.grey[300],
-  color: title ? getTagTextColor(theme, title) : theme.palette.text.primary,
+  backgroundColor: title ? getTagBackgroundColor(theme, title) : undefined,
+  color: title ? getTagTextColor(theme, title) : undefined,
   fontWeight: 600,
   paddingTop: theme.spacing(0.5),
   paddingBottom: theme.spacing(0.5),
@@ -170,7 +170,7 @@ const Tag = styled("div", {
 
 const Grid = styled("dl")(({ theme }) => ({
   display: "grid",
-  gridTemplateColumns: "1fr 175px",
+  gridTemplateColumns: "1fr 200px",
   gridRowGap: "5px",
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(2),

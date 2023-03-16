@@ -163,9 +163,9 @@ test("SectionStatuses() gets the initial statuses of all sections in a flow", ()
 
   // Initial statuses are calculated correctly
   expect(statuses).toEqual({
-    firstSection: "IN PROGRESS",
-    secondSection: "CANNOT START YET",
-    thirdSection: "CANNOT START YET",
+    firstSection: "READY TO CONTINUE",
+    secondSection: "CANNOT CONTINUE YET",
+    thirdSection: "CANNOT CONTINUE YET",
   });
 });
 
@@ -183,8 +183,8 @@ test("sectionStatuses() updates the status of sections in a flow as you navigate
   // Confirm statuses have been updated correctly
   expect(statuses).toEqual({
     firstSection: "COMPLETED",
-    secondSection: "IN PROGRESS",
-    thirdSection: "CANNOT START YET",
+    secondSection: "READY TO CONTINUE",
+    thirdSection: "CANNOT CONTINUE YET",
   });
 
   // Navigate forwards again
@@ -197,7 +197,7 @@ test("sectionStatuses() updates the status of sections in a flow as you navigate
   expect(newStatuses).toEqual({
     firstSection: "COMPLETED",
     secondSection: "COMPLETED",
-    thirdSection: "IN PROGRESS",
+    thirdSection: "READY TO CONTINUE",
   });
 });
 
@@ -215,7 +215,7 @@ test("sectionStatuses() applies the NEW INFORMATION NEEDED status if a section w
 
   expect(statuses).toEqual({
     firstSection: "NEW INFORMATION NEEDED", // no longer considered COMPLETED
-    secondSection: "IN PROGRESS",
-    thirdSection: "CANNOT START YET",
+    secondSection: "READY TO CONTINUE",
+    thirdSection: "CANNOT CONTINUE YET",
   });
 });

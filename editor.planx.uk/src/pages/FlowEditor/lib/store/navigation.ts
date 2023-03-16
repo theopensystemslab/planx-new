@@ -14,10 +14,10 @@ export interface SectionNode extends Store.node {
 }
 
 export enum SectionStatus {
-  NotStarted = "CANNOT START YET",
-  InProgress = "IN PROGRESS",
+  NotStarted = "CANNOT CONTINUE YET",
+  InProgress = "READY TO CONTINUE",
   Completed = "COMPLETED",
-  NeedsUpdated = "NEW INFORMATION NEEDED", // future reconciliation scenario, not used yet
+  NeedsUpdated = "NEW INFORMATION NEEDED",
 }
 
 export interface NavigationStore {
