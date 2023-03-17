@@ -119,11 +119,11 @@ export const navigationStore: StateCreator<
 
   /**
    * Calculate the status of each section node based on the current position in a flow (eg state.cachedBreadcrumbs) or provided breadcrumbs (eg on reconciliation)
-   *   Pass updatedSectionNodeIds on reconiliation to ensure we set an accurrate status for every previously seen section because updated sections are removed from breadcrumbs during reconciliation
+   *   Pass removedNodeIds on reconiliation to ensure we set an accurrate status for every previously seen section because updated sections are removed from breadcrumbs during reconciliation
    */
   sectionStatuses: (
     breadcrumbs?: Store.breadcrumbs,
-    updatedSectionNodeIds?: string[]
+    removedNodeIds?: string[]
   ): Record<string, SectionStatus> => {
     const { sectionNodes, currentCard, upcomingCardIds, cachedBreadcrumbs } =
       get();
@@ -133,8 +133,8 @@ export const navigationStore: StateCreator<
 
     const sectionStatuses: Record<string, SectionStatus> = {};
     Object.keys(sectionNodes).forEach((sectionId) => {
-      if (updatedSectionNodeIds?.includes(sectionId)) {
-        // We only expect to receive updatedSectionNodeIds argument on reconciliation, therefore
+      if (removedNodeIds?.includes(sectionId)) {
+        // We only expect to receive removedNodeIds argument on reconciliation, therefore
         //   this status should never apply to regular forwards/back/change navigation
         sectionStatuses[sectionId] = SectionStatus.NeedsUpdated;
       } else if (
