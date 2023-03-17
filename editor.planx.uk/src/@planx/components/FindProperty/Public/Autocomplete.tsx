@@ -96,9 +96,12 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
               code: selectedAddress.CLASSIFICATION_CODE,
             })?.value || null,
           single_line_address: selectedAddress.ADDRESS,
-          title: selectedAddress.ADDRESS.split(
-            `, ${selectedAddress.ADMINISTRATIVE_AREA}`
-          )[0], // display value used in autocomplete dropdown & FindProperty
+          title: selectedAddress.ADDRESS.slice(
+            0,
+            selectedAddress.ADDRESS.lastIndexOf(
+              `, ${selectedAddress.ADMINISTRATIVE_AREA}`
+            )
+          ), // display value shown on PropertyInformation, should match <address-autocomplete /> options formatting
           source: "os",
         });
       }
