@@ -1,4 +1,5 @@
-import "isomorphic-fetch";
+import axios, { AxiosRequestConfig } from 'axios';
+import { NextFunction, Request, Response } from 'express';
 import os from "os";
 import { Buffer } from "node:buffer";
 import path from "path";
@@ -17,6 +18,31 @@ import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
 import { deleteFile, downloadFile, resolveStream } from "./helpers";
+import { Passport } from '../types';
+import { PlanXExportData } from '@opensystemslab/planx-document-templates/types/types';
+
+interface UniformClient {
+  clientId: string,
+  clientSecret: string,
+}
+
+interface UniformApplication { 
+  submissionStatus?: string,
+  canDownload?: boolean,
+  submissionId?: string,
+}
+
+interface RawUniformAuthResponse {
+  access_token: string,
+  "organisation-name": string,
+  "organisation-id": string,
+}
+
+interface UniformAuthResponse {
+  token: string,
+  organisation: string,
+  organisationId: string,
+}
 
 /**
  * Submits application data to Uniform
@@ -25,7 +51,7 @@ import { deleteFile, downloadFile, resolveStream } from "./helpers";
  *   then, make requests to Uniform's "Submission API" to authenticate, create a submission, and attach the zip to the submission
  *   finally, insert a record into uniform_applications for future auditing
  */
-const sendToUniform = async (req, res, next) => {
+const sendToUniform = async (req: Request, res: Response, next: NextFunction) => {
   if (!getUniformClient(req.params.localAuthority)) {
     return next({
       status: 400,
@@ -56,7 +82,7 @@ const sendToUniform = async (req, res, next) => {
   }
 
   try {
-    const { clientId, clientSecret } = getUniformClient(
+    const uniformClient = getUniformClient(
       req.params.localAuthority
     );
 
@@ -71,11 +97,7 @@ const sendToUniform = async (req, res, next) => {
     });
 
     // Request 1/3 - Authenticate
-    const {
-      access_token: token,
-      "organisation-name": organisation,
-      "organisation-id": organisationId,
-    } = await authenticate(clientId, clientSecret);
+    const { token, organisation, organisationId } = await authenticate(uniformClient);
 
     // 2/3 - Create a submission
     if (token) {
@@ -165,10 +187,8 @@ const sendToUniform = async (req, res, next) => {
 
 /**
  * Query the Uniform audit table to see if we already have an application for this session
- * @param {string} sessionId
- * @returns {object|undefined} most recent uniform_applications.response
  */
-async function checkUniformAuditTable(sessionId) {
+async function checkUniformAuditTable(sessionId: string): Promise<UniformApplication> {
   const application = await adminClient.request(
     gql`
       query FindApplication($submission_reference: String = "") {
@@ -190,13 +210,6 @@ async function checkUniformAuditTable(sessionId) {
 
 /**
  * Creates a zip folder containing the documents required by Uniform
- * @param {any} csv - an array of objects representing our custom CSV format
- * @param {object[]} files - an array of user-uploaded files
- * @param {string} sessionId
- * @param {string[]} templateNames
- * @param {{ data: any }} passport
- * @param {any} xml - a string representation of the XML schema, resulting file must be named "proposal.xml"
- * @returns {Promise} - name of zip
  */
 export async function createUniformSubmissionZip({
   csv,
@@ -205,6 +218,13 @@ export async function createUniformSubmissionZip({
   templateNames,
   passport,
   xml,
+}: {
+  csv: PlanXExportData[],
+  files: string[],
+  sessionId: string,
+  templateNames: string[],
+  passport: Passport,
+  xml: string,
 }) {
   // initiate an empty zip folder
   const zip = new AdmZip();
@@ -218,7 +238,7 @@ export async function createUniformSubmissionZip({
 
   // download any user-uploaded files from S3 to the tmp directory, add them to the zip
   if (files) {
-    for (let file of files) {
+    for (const file of files) {
       // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
       // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
       // Must match unique filename in editor.planx.uk/src/@planx/components/Send/uniform/xml.ts
@@ -313,62 +333,55 @@ export async function createUniformSubmissionZip({
 /**
  * Logs in to the Idox Submission API using a username/password
  *   and returns an access token
- *
- * @param {string} clientId - idox-generated client ID
- * @param {string} clientSecret - idox-generated client secret
- * @returns {Promise} - access token
  */
-async function authenticate(clientId, clientSecret) {
-  const authEndpoint = process.env.UNIFORM_TOKEN_URL;
-
-  const authOptions = {
+async function authenticate({ clientId, clientSecret }: UniformClient): Promise<UniformAuthResponse> {
+  const authConfig: AxiosRequestConfig = {
     method: "POST",
-    headers: new Headers({
+    url: process.env.UNIFORM_TOKEN_URL!,
+    headers: {
       Authorization:
         "Basic " +
         Buffer.from(clientId + ":" + clientSecret).toString("base64"),
       "Content-type": "application/x-www-form-urlencoded",
-    }),
-    body: new URLSearchParams({
+    },
+    data: new URLSearchParams({
       client_id: clientId,
       client_secret: clientSecret,
       grant_type: "client_credentials",
-    }),
-    redirect: "follow",
+    })
   };
 
-  return await fetch(authEndpoint, authOptions).then((response) =>
-    response.json()
-  );
+  const response = await axios.request<RawUniformAuthResponse>(authConfig);
+  const uniformAuthResponse: UniformAuthResponse = {
+    token: response.data.access_token,
+    organisation: response.data["organisation-name"],
+    organisationId: response.data["organisation-id"]
+  }
+  return uniformAuthResponse;
 }
 
 /**
  * Creates a submission (submissionReference is unique value provided by RIPA & must match XML <portaloneapp:RefNum>)
  *   and returns a submissionId parsed from the resource link
- *
- * @param {string} token - access token retrieved from idox authentication
- * @param {string} organisation - idox-generated organisation name
- * @param {number} organisationId - idox-generated organisation id
- * @param {string} sessionId - ripa-generated sessionId
- * @returns {Promise} - idox-generated submissionId
  */
 async function createSubmission(
-  token,
-  organisation,
-  organisationId,
+  token: string,
+  organisation: string,
+  organisationId: string,
   sessionId = "TEST"
-) {
+): Promise<string | undefined> {
   const createSubmissionEndpoint =
     process.env.UNIFORM_SUBMISSION_URL + "/secure/submission";
-  const isStaging = process.env.UNIFORM_SUBMISSION_URL.includes("staging");
+  const isStaging = process.env.UNIFORM_SUBMISSION_URL?.includes("staging");
 
-  const createSubmissionOptions = {
+  const createSubmissionConfig: AxiosRequestConfig = {
+    url: createSubmissionEndpoint,
     method: "POST",
-    headers: new Headers({
+    headers: {
       Authorization: `Bearer ${token}`,
       "Content-type": "application/json",
-    }),
-    body: JSON.stringify({
+    },
+    data: JSON.stringify({
       entity: "dc",
       module: "dc",
       organisation: organisation,
@@ -379,30 +392,22 @@ async function createSubmission(
         : "Production submission from PlanX",
       submissionProcessorType: "API",
     }),
-    redirect: "follow",
   };
 
-  return await fetch(createSubmissionEndpoint, createSubmissionOptions).then(
-    (response) => {
-      // successful submission returns 201 Created without body
-      if (response.status === 201) {
-        // parse & return the submissionId
-        const resourceLink = response.headers.get("location");
-        return resourceLink.split("/").pop();
-      }
-    }
-  );
+  const response = await axios.request(createSubmissionConfig);
+  // successful submission returns 201 Created without body
+  if (response.status === 201) {
+    // parse & return the submissionId
+    const resourceLink = response.headers.location;
+    const submissionId = resourceLink.split("/").pop();
+    return submissionId;
+  }
 }
 
 /**
  * Uploads and attaches a zip folder to an existing submission
- *
- * @param {string} token - access token retrieved from idox authentication
- * @param {string} submissionId - idox-generated UUID returned in the resource link of the submission
- * @param {string} zipPath - file path to an existing zip folder (2GB limit)
- * @returns {Promise} - "zipAttached" boolean for our audit record because retrieveSubmission response will include archive.href regardless
  */
-async function attachArchive(token, submissionId, zipPath) {
+async function attachArchive(token: string, submissionId: string, zipPath: string): Promise<boolean> {
   if (!fs.existsSync(zipPath)) {
     console.log(
       `Zip does not exist, cannot attach to idox_submission_id ${submissionId}`
@@ -417,56 +422,45 @@ async function attachArchive(token, submissionId, zipPath) {
   const formData = new FormData();
   formData.append("file", fs.createReadStream(zipPath));
 
-  const attachArchiveOptions = {
+  const attachArchiveConfig: AxiosRequestConfig = {
+    url: attachArchiveEndpoint,
     method: "POST",
-    headers: new Headers({
+    headers: {
       Authorization: `Bearer ${token}`,
-    }),
-    body: formData,
-    redirect: "follow",
+    },
+    data: formData,
   };
 
-  return await fetch(attachArchiveEndpoint, attachArchiveOptions).then(
-    (response) => {
-      // successful upload returns 204 No Content without body
-      if (response.status === 204) {
-        return true;
-      }
-    }
-  );
+  const response = await axios.request(attachArchiveConfig)
+  // successful upload returns 204 No Content without body
+  const isSuccess = response.status === 204
+  return isSuccess
 }
 
 /**
  * Gets details about an existing submission to store for auditing purposes
  *   since neither createSubmission nor attachArchive requests return a meaningful response body
- *
- * @param {string} token - access token retrieved from idox authentication
- * @param {string} submissionId - idox-generated UUID returned in the resource link of the submission
- * @returns {Promise}
  */
-async function retrieveSubmission(token, submissionId) {
+async function retrieveSubmission(token: string, submissionId: string): Promise<UniformApplication> {
   const getSubmissionEndpoint =
     process.env.UNIFORM_SUBMISSION_URL + `/secure/submission/${submissionId}`;
 
-  const getSubmissionOptions = {
+  const getSubmissionConfig: AxiosRequestConfig = {
+    url: getSubmissionEndpoint,
     method: "GET",
-    headers: new Headers({
+    headers: {
       Authorization: `Bearer ${token}`,
-    }),
-    redirect: "follow",
+    },
   };
 
-  return await fetch(getSubmissionEndpoint, getSubmissionOptions).then(
-    (response) => response.json()
-  );
+  const response = await axios.request(getSubmissionConfig);
+  return response.data;
 }
 
 /**
  * Get id and secret of Uniform client which matches the provided Local Authority
- * @param {string} localAuthority
- * @returns {object}
  */
-const getUniformClient = (localAuthority) => {
+const getUniformClient = (localAuthority: string): UniformClient => {
   // Greedily match any non-word characters
   // XXX: Matches regex used in IAC (getCustomerSecrets.ts)
   const regex = new RegExp(/\W+/g);
@@ -475,8 +469,7 @@ const getUniformClient = (localAuthority) => {
       "UNIFORM_CLIENT_" + localAuthority.replace(regex, "_").toUpperCase()
     ];
 
-  // If we can't find secrets, return undefined to trigger a 400 error using next() in sendToUniform()
-  if (!client) return undefined;
+  if (!client) throw Error(`Unable to get Uniform client for ${localAuthority}`);
 
   const [clientId, clientSecret] = client.split(":");
   return { clientId, clientSecret };
