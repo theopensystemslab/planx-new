@@ -20,6 +20,7 @@ import { gql } from "graphql-request";
 import { deleteFile, downloadFile, resolveStream } from "./helpers";
 import { Passport } from '../types';
 import { PlanXExportData } from '@opensystemslab/planx-document-templates/types/types';
+import { _admin } from "../client";
 
 interface UniformClient {
   clientId: string,
@@ -181,7 +182,6 @@ export async function createUniformSubmissionZip({
   sessionId,
   templateNames,
   passport,
-  xml,
 }: SendToUniformPayload) {
   // initiate an empty zip folder
   const zip = new AdmZip();
@@ -218,13 +218,7 @@ export async function createUniformSubmissionZip({
   zip.addLocalFile(csvPath);
   deleteFile(csvPath);
 
-  // add a XML uniform submission file to zip
-  const xmlPath = "proposal.xml"; //  must be named "proposal.xml" to be processed by Uniform
-  const xmlFile = fs.createWriteStream(xmlPath);
-  const xmlStream = str(xml.trim()).pipe(xmlFile);
-  await resolveStream(xmlStream);
-  zip.addLocalFile(xmlPath);
-  deleteFile(xmlPath);
+  await addOneAppXMLToZip(zip, sessionId);
 
   // generate and add an HTML overview document for the submission to zip
   const overviewPath = path.join(tmpDir, "Overview.htm");
@@ -484,6 +478,20 @@ const createUniformApplicationAuditRecord = async ({
     });
 
   return application.insert_uniform_applications_one;
+};
+
+const addOneAppXMLToZip = async (zip: AdmZip, sessionId: string) => {
+  try {
+    const xmlPath = "proposal.xml"; //  must be named "proposal.xml" to be processed by Uniform
+    const xmlFile = fs.createWriteStream(xmlPath);
+    const xml = await _admin.generateOneAppXML(sessionId);
+    const xmlStream = str(xml.trim()).pipe(xmlFile);
+    await resolveStream(xmlStream);
+    zip.addLocalFile(xmlPath);
+    deleteFile(xmlPath);
+  } catch (error) {
+    throw Error(`Failed to generate OneApp XML. Error - ${error}`)
+  }
 }
 
 export { sendToUniform };

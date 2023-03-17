@@ -34,7 +34,6 @@ export function getCombinedEventsPayload({
   passport,
   sessionId,
   email,
-  templateNames,
 }: {
   destinations: Destination[];
   teamSlug: string;
@@ -44,7 +43,6 @@ export function getCombinedEventsPayload({
   passport: Store.passport;
   sessionId: string;
   email: string | undefined;
-  templateNames: string[];
 }) {
   let combinedEventsPayload: any = {};
 
@@ -77,7 +75,6 @@ export function getCombinedEventsPayload({
       flowName,
       passport,
       sessionId,
-      templateNames,
     });
 
     combinedEventsPayload[Destination.Uniform] = {

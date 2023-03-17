@@ -27,6 +27,13 @@ jest.mock("@opensystemslab/planx-document-templates", () => {
     generateHTMLMapStream: jest.fn().mockImplementation(() => mockPipe),
   };
 });
+jest.mock("@opensystemslab/planx-core", () => {
+  return {
+    CoreDomainClient: jest.fn().mockImplementation(() => ({
+      generateOneAppXML: jest.fn().mockResolvedValue("<dummy:xml></dummy:xml>"),
+    }))
+  }
+});
 jest.mock("csv-stringify", () => {
   return {
     stringify: jest.fn().mockImplementation(() => mockPipe),
