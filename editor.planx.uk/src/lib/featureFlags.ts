@@ -78,3 +78,8 @@ if (process.env.REACT_APP_ENV !== "test") {
       : `🎏 no active feature flags`
   );
 }
+
+// TEMP: automatically enable sections on this pizza for UAT
+if (process.env.REACT_APP_ENV === "pizza") {
+  toggleFeatureFlag("NAVIGATION_UI");
+}
