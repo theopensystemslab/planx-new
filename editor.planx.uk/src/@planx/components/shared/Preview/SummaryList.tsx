@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -92,9 +93,11 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
     <>
       {sections.map((sectionBreadcrumbs, i) => (
         <React.Fragment key={i}>
-          <Typography component={props.sectionComponent || "h2"} variant="h5">
-            {props.flow[`${Object.keys(sectionBreadcrumbs)[0]}`]?.data?.title}
-          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography component={props.sectionComponent || "h2"} variant="h5">
+              {props.flow[`${Object.keys(sectionBreadcrumbs)[0]}`]?.data?.title}
+            </Typography>
+          </Box>
           <SummaryList
             breadcrumbs={sectionBreadcrumbs}
             flow={props.flow}
