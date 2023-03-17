@@ -82,15 +82,8 @@ interface SummaryListsBySectionsProps extends SummaryListProps {
 }
 
 function SummaryListsBySections(props: SummaryListsBySectionsProps) {
-  const [
-    hasSections,
-    sectionNodes,
-    sectionStatuses,
-    getSortedBreadcrumbsBySection,
-  ] = useStore((state) => [
+  const [hasSections, getSortedBreadcrumbsBySection] = useStore((state) => [
     state.hasSections,
-    state.sectionNodes,
-    state.sectionStatuses(),
     state.getSortedBreadcrumbsBySection,
   ]);
 
