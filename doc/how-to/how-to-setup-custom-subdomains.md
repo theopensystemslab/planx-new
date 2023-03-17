@@ -8,7 +8,15 @@ This guide will walk through the process of setting a custom domain for a new te
 ## Process ⚙️
 1. **PlanX** - Provide IT team with documentation listing what's required. This is part of the onboarding process and briefly outlines the process. Documentation - https://www.notion.so/opensystemslab/IT-systems-services-d4f8b88fb9694f33a24411801150c793
 
-2. **PlanX** - Provide IT team with Certificate Signing Request (CSR) if requested. The IT team will need to tell us what to put in [in each of the fields](https://en.wikipedia.org/wiki/Certificate_signing_request#Procedure).
+    > ⚠️ **Requirements**
+    >
+    > AWS CloudFront has a few restrictions which are listed in the public documentation above which are shared with the IT Team, notably - 
+    >  - Keys can be a maximum of 2048-bit ([AWS Docs](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html))
+    >  - Self signed certificates are not accepted ([AWS Docs](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https-cloudfront-to-custom-origin.html))
+    >
+    > The steps below will show how to validate the above.
+
+2. **PlanX** - Provide IT team with Certificate Signing Request (CSR) if requested. The IT team will need to tell us what to put [in each of the fields](https://en.wikipedia.org/wiki/Certificate_signing_request#Procedure).
 
     **How to generate a CSR**
     ```shell
@@ -69,9 +77,7 @@ This guide will walk through the process of setting a custom domain for a new te
         cat chain.cert | pulumi config set ssl-{team}-chain --stack production --secret
         ```
 
-        To validate the above steps, check `infrastructure/application/Pulumi.production.yaml` which will list the above secrets for the team in an encrypted format.
-
-        At this stage we can execute `pulumi preview` from the application layer to check for any issues with the config.
+        To validate that you have successfully added the secrets to Pulumi, check `infrastructure/application/Pulumi.production.yaml` which will list the above secrets for the team in an encrypted format.
 
 7. **PlanX** - Deploy to production in order to create ACM records and CloudFront CDN
 
