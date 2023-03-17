@@ -53,6 +53,15 @@ interface UniformApplication {
   created_at: string,
 }
 
+interface SendToUniformPayload {
+  sessionId: string,
+  templateNames: string[],
+  passport: Passport,
+  csv: PlanXExportData[],
+  files: string[],
+  xml: string,
+}
+
 /**
  * Submits application data to Uniform
  *
@@ -68,12 +77,10 @@ const sendToUniform = async (req: Request, res: Response, next: NextFunction) =>
       status: 400,
       message: "Idox/Uniform connector is not enabled for this local authority",
     });
-  }
-
-  //TODO Type for payload
+  };
 
   // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
-  const { payload } = req.body;
+  const payload: SendToUniformPayload = req.body.payload;
   if (!payload?.xml || !payload?.sessionId) {
     return next({
       status: 400,
@@ -107,14 +114,7 @@ const sendToUniform = async (req: Request, res: Response, next: NextFunction) =>
     );
 
     // 3/4 - Create & attach the zip
-    const zipPath = await createUniformSubmissionZip({
-      sessionId: payload.sessionId,
-      templateNames: payload.templateNames,
-      passport: payload.passport,
-      csv: payload.csv,
-      files: payload.files,
-      xml: payload.xml,
-    });
+    const zipPath = await createUniformSubmissionZip(payload);
 
     const attachmentAdded = await attachArchive(
       token,
@@ -184,14 +184,7 @@ export async function createUniformSubmissionZip({
   templateNames,
   passport,
   xml,
-}: {
-  csv: PlanXExportData[],
-  files: string[],
-  sessionId: string,
-  templateNames: string[],
-  passport: Passport,
-  xml: string,
-}) {
+}: SendToUniformPayload) {
   // initiate an empty zip folder
   const zip = new AdmZip();
 
@@ -453,7 +446,7 @@ const createUniformApplicationAuditRecord = async ({
   submissionDetails,
 }: {
   idoxSubmissionId: string,
-  payload: Record<string, any>,
+  payload: SendToUniformPayload,
   localAuthority: string,
   submissionDetails: UniformSubmissionResponse,
   }): Promise<UniformApplication> => {
