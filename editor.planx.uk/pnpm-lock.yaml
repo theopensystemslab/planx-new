@@ -59,7 +59,7 @@ specifiers:
   '@mui/material': 5.11.9
   '@mui/styles': 5.11.9
   '@mui/utils': 5.11.9
-  '@opensystemslab/map': ^0.7.3
+  '@opensystemslab/map': ^0.7.4
   '@opensystemslab/planx-core': git://github.com/theopensystemslab/planx-core.git#5e932c3
   '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#c6dee14
   '@react-theming/storybook-addon': ^1.1.7
@@ -203,7 +203,7 @@ dependencies:
   '@mui/material': 5.11.9_vbxcdxy3bftsefaguotlgalomu
   '@mui/styles': 5.11.9_7v64pk2mkrohwh22gx7lrz5ive
   '@mui/utils': 5.11.9_react@18.2.0
-  '@opensystemslab/map': 0.7.3
+  '@opensystemslab/map': 0.7.4
   '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/5e932c3
   '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/c6dee14_a7krn2kytpcoapplqdxaq5aiqm
   '@tiptap/core': 2.0.0-beta.204
@@ -3321,8 +3321,8 @@ packages:
       mkdirp: 1.0.4
     dev: true
 
-  /@opensystemslab/map/0.7.3:
-    resolution: {integrity: sha512-rD+DD8bXHJm6v7ALDCSHRRXLNiJFgQIHJ7cbrmIUPK9BCWEE90QXCvbe/vop19R1zqZ/xrO1fgsJfUaNXRMehA==}
+  /@opensystemslab/map/0.7.4:
+    resolution: {integrity: sha512-iAwyLNUNJFgD882eug1JdVuMnKXtJuZXN08ncSLp62XH1NinKqiSea0KdGgMQmzY52UYiJJi5N8+snQP/CG0jw==}
     engines: {node: ^16, pnpm: ^7.8.0}
     dependencies:
       '@turf/union': 6.5.0
