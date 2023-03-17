@@ -10,7 +10,9 @@ import {
   getSaveAndReturnPublicHeaders,
   stringifyWithRootKeysSortedAlphabetically,
 } from "./utils";
-import { Breadcrumb, LowCalSession, Node } from "../types";
+import { sortBreadcrumbs } from "@opensystemslab/planx-core";
+import type { EnrichedCrumb } from "@opensystemslab/planx-core";
+import type { Breadcrumb, LowCalSession, Node } from "../types";
 
 export async function validateSession(
   req: Request,
@@ -47,6 +49,7 @@ export async function validateSession(
         getMostRecentPublishedFlow(sessionData.data.id),
         getPublishedFlowByDate(sessionData.data.id, sessionData.updated_at),
       ]);
+
       if (!currentFlow || !savedFlow) {
         return next({
           status: 404,
@@ -62,16 +65,32 @@ export async function validateSession(
           ...currentFlow[key],
         }));
         if (alteredNodes.length) {
+          // each EnrichedCrumb will include a sectionId where relevant (used later)
+          const enrichedAndOrderedBreadcrumbs: Array<EnrichedCrumb> =
+            sortBreadcrumbs(savedFlow, sessionData.data.breadcrumbs);
           const removedBreadcrumbs: Breadcrumb = {};
           alteredNodes.forEach((node) => {
-            // if the session breadcrumbs include any altered content, remove those breadcrumbs so the user will be re-prompted to answer those questions
-            if (
-              sessionData &&
-              Object.keys(sessionData.data.breadcrumbs).includes(node.id!)
-            ) {
+            // if the session breadcrumbs include any altered content,
+            // remove those breadcrumbs so the user will be re-prompted to answer those questions
+            const affectedBreadcrumb = enrichedAndOrderedBreadcrumbs.find(
+              (crumb: EnrichedCrumb) => crumb.id == node.id!
+            );
+            if (affectedBreadcrumb && sessionData.data.breadcrumbs[node.id!]) {
+              // remove affected breadcrumbs
               removedBreadcrumbs[node.id!] =
                 sessionData.data.breadcrumbs[node.id!];
               delete sessionData.data.breadcrumbs[node.id!];
+
+              // also remove the associated section
+              const affectedSectionId = affectedBreadcrumb.sectionId;
+              if (
+                affectedSectionId &&
+                sessionData.data.breadcrumbs[affectedSectionId]
+              ) {
+                removedBreadcrumbs[affectedSectionId] =
+                  sessionData.data.breadcrumbs[affectedSectionId];
+                delete sessionData.data.breadcrumbs[affectedSectionId];
+              }
             }
           });
 
