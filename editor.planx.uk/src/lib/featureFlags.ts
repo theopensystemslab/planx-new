@@ -14,7 +14,8 @@ type featureFlag = typeof AVAILABLE_FEATURE_FLAGS[number];
 const activeFeatureFlags = (() => {
   let flags: Set<featureFlag> = new Set();
   try {
-    const existingFlags = localStorage.getItem("FEATURE_FLAGS");
+    // TEMP: automatically enable sections for UAT, revert this change before merging
+    const existingFlags = "NAVIGATION_UI";
     if (existingFlags) {
       flags = new Set(JSON.parse(existingFlags));
     }
@@ -77,9 +78,4 @@ if (process.env.REACT_APP_ENV !== "test") {
           .join(", ")}`
       : `🎏 no active feature flags`
   );
-}
-
-// TEMP: automatically enable sections on this pizza for UAT
-if (process.env.REACT_APP_ENV === "pizza") {
-  toggleFeatureFlag("NAVIGATION_UI");
 }
