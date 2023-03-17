@@ -14,8 +14,7 @@ type featureFlag = typeof AVAILABLE_FEATURE_FLAGS[number];
 const activeFeatureFlags = (() => {
   let flags: Set<featureFlag> = new Set();
   try {
-    // TEMP: automatically enable sections for UAT, revert this change before merging
-    const existingFlags = "NAVIGATION_UI";
+    const existingFlags = localStorage.getItem("FEATURE_FLAGS");
     if (existingFlags) {
       flags = new Set(JSON.parse(existingFlags));
     }

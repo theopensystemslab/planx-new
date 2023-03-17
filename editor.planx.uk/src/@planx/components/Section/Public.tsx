@@ -19,7 +19,7 @@ import type { Section } from "./model";
 export type Props = PublicProps<Section>;
 
 export default function Component(props: Props) {
-  const showSection = hasFeatureFlag("NAVIGATION_UI");
+  const showSection = true;
   const [
     flow,
     flowName,

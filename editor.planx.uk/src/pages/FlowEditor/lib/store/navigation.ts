@@ -63,9 +63,7 @@ export const navigationStore: StateCreator<
       SectionNode
     >;
     const sectionCount = Object.keys(sectionNodes).length;
-    const hasSections = Boolean(
-      sectionCount && hasFeatureFlag("NAVIGATION_UI")
-    );
+    const hasSections = Boolean(sectionCount);
     const currentSectionTitle = Object.values(sectionNodes)[0]?.data.title;
 
     set({
