@@ -99,6 +99,7 @@ services:
     image: postgis/postgis:12-3.0-alpine
     volumes:
       - "./scripts/seed-database:/app"
+    profiles: ["seed"]
     working_dir: "/app"
     entrypoint: sh
     command: -c "./container.sh postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE} ${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}"
