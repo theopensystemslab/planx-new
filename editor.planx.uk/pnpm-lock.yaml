@@ -95,6 +95,8 @@ specifiers:
   '@tiptap/html': 2.0.0-beta.204
   '@tiptap/react': 2.0.0-beta.204
   '@tiptap/suggestion': 2.0.0-beta.204
+  '@turf/buffer': ^6.5.0
+  '@turf/flip': ^6.5.0
   '@turf/helpers': ^6.5.0
   '@types/draft-js': ^0.11.9
   '@types/jest': ^27.4.3
@@ -225,6 +227,8 @@ dependencies:
   '@tiptap/html': 2.0.0-beta.204
   '@tiptap/react': 2.0.0-beta.204_z5f4pk2xasrno4tu55p73jy46e
   '@tiptap/suggestion': 2.0.0-beta.204_bv566pzu4gfcw3675d5jwhi56i
+  '@turf/buffer': 6.5.0
+  '@turf/flip': 6.5.0
   array-move: 4.0.0
   axios: 0.27.2
   camelcase-keys: 8.0.1
@@ -5482,6 +5486,46 @@ packages:
     resolution: {integrity: sha512-eZxlbI8GZscaGS7kkc/trHTT5xgrjH3/1n2JDwusC9iahPKWMRvRjJSAN5mCXviuTGQ/lHnhvv8Q1YTpnfz9gA==}
     dev: true
 
+  /@turf/bbox/6.5.0:
+    resolution: {integrity: sha512-RBbLaao5hXTYyyg577iuMtDB8ehxMlUqHEJiMs8jT1GHkFhr6sYre3lmLsPeYEi/ZKj5TP5tt7fkzNdJ4GIVyw==}
+    dependencies:
+      '@turf/helpers': 6.5.0
+      '@turf/meta': 6.5.0
+    dev: false
+
+  /@turf/buffer/6.5.0:
+    resolution: {integrity: sha512-qeX4N6+PPWbKqp1AVkBVWFerGjMYMUyencwfnkCesoznU6qvfugFHNAngNqIBVnJjZ5n8IFyOf+akcxnrt9sNg==}
+    dependencies:
+      '@turf/bbox': 6.5.0
+      '@turf/center': 6.5.0
+      '@turf/helpers': 6.5.0
+      '@turf/meta': 6.5.0
+      '@turf/projection': 6.5.0
+      d3-geo: 1.7.1
+      turf-jsts: 1.2.3
+    dev: false
+
+  /@turf/center/6.5.0:
+    resolution: {integrity: sha512-T8KtMTfSATWcAX088rEDKjyvQCBkUsLnK/Txb6/8WUXIeOZyHu42G7MkdkHRoHtwieLdduDdmPLFyTdG5/e7ZQ==}
+    dependencies:
+      '@turf/bbox': 6.5.0
+      '@turf/helpers': 6.5.0
+    dev: false
+
+  /@turf/clone/6.5.0:
+    resolution: {integrity: sha512-mzVtTFj/QycXOn6ig+annKrM6ZlimreKYz6f/GSERytOpgzodbQyOgkfwru100O1KQhhjSudKK4DsQ0oyi9cTw==}
+    dependencies:
+      '@turf/helpers': 6.5.0
+    dev: false
+
+  /@turf/flip/6.5.0:
+    resolution: {integrity: sha512-oyikJFNjt2LmIXQqgOGLvt70RgE2lyzPMloYWM7OR5oIFGRiBvqVD2hA6MNw6JewIm30fWZ8DQJw1NHXJTJPbg==}
+    dependencies:
+      '@turf/clone': 6.5.0
+      '@turf/helpers': 6.5.0
+      '@turf/meta': 6.5.0
+    dev: false
+
   /@turf/helpers/6.5.0:
     resolution: {integrity: sha512-VbI1dV5bLFzohYYdgqwikdMVpe7pJ9X3E+dlr425wa2/sMJqYDhTO++ec38/pcPvPE6oD9WEEeU3Xu3gza+VPw==}
 
@@ -5489,6 +5533,20 @@ packages:
     resolution: {integrity: sha512-Wv8PRNCtPD31UVbdJE/KVAWKe7l6US+lJItRR/HOEW3eh+U/JwRCSUl/KZ7bmjM/C+zLNoreM2TU6OoLACs4eg==}
     dependencies:
       '@turf/helpers': 6.5.0
+    dev: false
+
+  /@turf/meta/6.5.0:
+    resolution: {integrity: sha512-RrArvtsV0vdsCBegoBtOalgdSOfkBrTJ07VkpiCnq/491W67hnMWmDu7e6Ztw0C3WldRYTXkg3SumfdzZxLBHA==}
+    dependencies:
+      '@turf/helpers': 6.5.0
+    dev: false
+
+  /@turf/projection/6.5.0:
+    resolution: {integrity: sha512-/Pgh9mDvQWWu8HRxqpM+tKz8OzgauV+DiOcr3FCjD6ubDnrrmMJlsf6fFJmggw93mtVPrZRL6yyi9aYCQBOIvg==}
+    dependencies:
+      '@turf/clone': 6.5.0
+      '@turf/helpers': 6.5.0
+      '@turf/meta': 6.5.0
     dev: false
 
   /@turf/union/6.5.0:
@@ -8653,6 +8711,16 @@ packages:
   /cyclist/1.0.1:
     resolution: {integrity: sha512-NJGVKPS81XejHcLhaLJS7plab0fK3slPh11mESeeDq2W4ZI5kUKK/LRRdVDvjJseojbPB7ZwjnyOybg3Igea/A==}
     dev: true
+
+  /d3-array/1.2.4:
+    resolution: {integrity: sha512-KHW6M86R+FUPYGb3R5XiYjXPq7VzwxZ22buHhAEVG5ztoEcZZMLov530mmccaqA1GghZArjQV46fuc8kUqhhHw==}
+    dev: false
+
+  /d3-geo/1.7.1:
+    resolution: {integrity: sha512-O4AempWAr+P5qbk2bC2FuN/sDW4z+dN2wDf9QV3bxQt4M5HfOEeXLgJ/UKQW0+o1Dj8BE+L5kiDbdWUMjsmQpw==}
+    dependencies:
+      d3-array: 1.2.4
+    dev: false
 
   /damerau-levenshtein/1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
@@ -18779,6 +18847,10 @@ packages:
   /tty-browserify/0.0.0:
     resolution: {integrity: sha512-JVa5ijo+j/sOoHGjw0sxw734b1LhBkQ3bvUGNdxnVXDCX81Yx7TFgnZygxrIIWn23hbfTaMYLwRmAxFyDuFmIw==}
     dev: true
+
+  /turf-jsts/1.2.3:
+    resolution: {integrity: sha512-Ja03QIJlPuHt4IQ2FfGex4F4JAr8m3jpaHbFbQrgwr7s7L6U8ocrHiF3J1+wf9jzhGKxvDeaCAnGDot8OjGFyA==}
+    dev: false
 
   /type-check/0.3.2:
     resolution: {integrity: sha512-ZCmOJdvOWDBYJlzAoFkC+Q0+bUyEOS1ltgp1MGU03fqHG+dbi9tBFU2Rd9QKiDZFAYrhPh2JUf7rZRIuHRKtOg==}

@@ -7,6 +7,9 @@ import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
+import buffer from "@turf/buffer";
+import flip from "@turf/flip";
+import { Feature, Polygon, Properties } from "@turf/helpers";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
@@ -26,12 +29,13 @@ type Props = PublicProps<PlanningConstraints>;
 export default Component;
 
 function Component(props: Props) {
-  const [x, y, longitude, latitude, siteBoundary] = useStore((state) => [
+  const [x, y, longitude, latitude, siteBoundary, usrn] = useStore((state) => [
     state.computePassport().data?._address?.x,
     state.computePassport().data?._address?.y,
     state.computePassport().data?._address?.longitude,
     state.computePassport().data?._address?.latitude,
     state.computePassport().data?.["property.boundary.site"],
+    state.computePassport().data?._address?.usrn,
   ]);
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
@@ -75,6 +79,7 @@ function Component(props: Props) {
     version: 1,
   };
 
+  // Fetch planning constraints data for a given local authority
   const root: string = `${process.env.REACT_APP_API_URL}/gis/${team}?`;
   const teamGisEndpoint: string =
     root +
@@ -95,13 +100,35 @@ function Component(props: Props) {
     }
   );
 
-  // XXX handle both/either Digital Land response and custom GIS hookup responses
-  const constraints: Record<string, any> | undefined =
-    data?.constraints || data;
+  console.log("usrn", usrn);
+
+  // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
+  //   skip if the applicant plotted a new address on the map
+  let classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads`;
+  const {
+    data: roads,
+    error: errorRoads,
+    mutate: mutateRoads,
+    isValidating: isValidatingRoads,
+  } = useSWR(
+    () => (usrn ? classifiedRoadsEndpoint + `?usrn=${usrn}` : null),
+    fetcher,
+    {
+      shouldRetryOnError: true,
+      errorRetryInterval: 500,
+      errorRetryCount: 1,
+    }
+  );
+
+  // XXX handle both/either Digital Land response and custom GIS hookup responses; merge roads for a unified list of constraints
+  const constraints: Record<string, any> | undefined = {
+    ...(data?.constraints || data),
+    ...roads,
+  };
 
   return (
     <>
-      {!isValidating && constraints ? (
+      {!isValidating && !isValidatingRoads && constraints ? (
         <PlanningConstraintsInformation
           title={props.title}
           description={props.description || ""}
@@ -145,7 +172,11 @@ function Component(props: Props) {
           {x && y && longitude && latitude ? (
             <DelayedLoadingIndicator text="Fetching data..." />
           ) : (
-            <div className={classes.errorSummary} role="status">
+            <div
+              className={classes.errorSummary}
+              role="status"
+              data-testid="error-summary-invalid-graph"
+            >
               <Typography variant="h5" component="h2" gutterBottom>
                 Invalid graph
               </Typography>
@@ -192,7 +223,7 @@ const useClasses = makeStyles((theme) => ({
   },
 }));
 
-function PlanningConstraintsInformation(props: any) {
+export function PlanningConstraintsInformation(props: any) {
   const classes = useClasses();
   const {
     title,
@@ -277,7 +308,11 @@ function ConstraintsList({ data, refreshConstraints }: any) {
           </List>
         </>
       ) : (
-        <div className={classes.errorSummary} role="status">
+        <div
+          className={classes.errorSummary}
+          role="status"
+          data-testid="error-summary-no-info"
+        >
           <Typography variant="h5" component="h2" gutterBottom>
             No information available
           </Typography>

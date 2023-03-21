@@ -38,6 +38,7 @@ export interface MinimumSiteAddress {
 // Full SiteAddress reflects selecting a record from the OS Places API "LPI" datasource
 export interface SiteAddress extends MinimumSiteAddress {
   uprn?: string;
+  usrn?: string;
   blpu_code?: string;
   organisation?: string | null;
   sao?: string | null;
