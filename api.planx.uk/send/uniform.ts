@@ -237,7 +237,7 @@ export async function createUniformSubmissionZip({
   deleteFile(overviewPath);
 
   // add an optional GeoJSON file to zip
-  const geojson = passport.data["property.boundary.site"];
+  const geojson = passport?.data["property.boundary.site"];
   if (geojson) {
     const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
     zip.addFile("LocationPlanGeoJSON.geojson", geoBuff);
@@ -252,28 +252,30 @@ export async function createUniformSubmissionZip({
   }
 
   // generate and add additional submission documents
-  for (const templateName of templateNames) {
-    let isTemplateSupported = false;
-    try {
-      isTemplateSupported = hasRequiredDataForTemplate({
-        passport,
-        templateName,
-      });
-    } catch (e) {
-      console.log(`Template "${templateName}" could not be generated so has been skipped`);
-      console.log(e)
-      continue
-    }
-    if (isTemplateSupported) {
-      const templatePath = path.join(tmpDir, `${templateName}.doc`);
-      const templateFile = fs.createWriteStream(templatePath);
-      const templateStream = generateDocxTemplateStream({
-        passport,
-        templateName,
-      }).pipe(templateFile);
-      await resolveStream(templateStream);
-      zip.addLocalFile(templatePath);
-      deleteFile(templatePath);
+  if (templateNames?.length) { 
+    for (const templateName of templateNames) {
+      let isTemplateSupported = false;
+      try {
+        isTemplateSupported = hasRequiredDataForTemplate({
+          passport,
+          templateName,
+        });
+      } catch (e) {
+        console.log(`Template "${templateName}" could not be generated so has been skipped`);
+        console.log(e)
+        continue
+      }
+      if (isTemplateSupported) {
+        const templatePath = path.join(tmpDir, `${templateName}.doc`);
+        const templateFile = fs.createWriteStream(templatePath);
+        const templateStream = generateDocxTemplateStream({
+          passport,
+          templateName,
+        }).pipe(templateFile);
+        await resolveStream(templateStream);
+        zip.addLocalFile(templatePath);
+        deleteFile(templatePath);
+      }
     }
   }
 
