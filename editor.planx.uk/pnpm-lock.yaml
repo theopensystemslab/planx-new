@@ -61,7 +61,7 @@ specifiers:
   '@mui/utils': 5.11.9
   '@opensystemslab/map': ^0.7.4
   '@opensystemslab/planx-core': git://github.com/theopensystemslab/planx-core.git#5e932c3
-  '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#c6dee14
+  '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#debaeca
   '@react-theming/storybook-addon': ^1.1.7
   '@storybook/addon-actions': ^6.5.10
   '@storybook/addon-essentials': ^6.5.10
@@ -207,7 +207,7 @@ dependencies:
   '@mui/utils': 5.11.9_react@18.2.0
   '@opensystemslab/map': 0.7.4
   '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/5e932c3
-  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/c6dee14_a7krn2kytpcoapplqdxaq5aiqm
+  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca_a7krn2kytpcoapplqdxaq5aiqm
   '@tiptap/core': 2.0.0-beta.204
   '@tiptap/extension-bold': 2.0.0-beta.204_bv566pzu4gfcw3675d5jwhi56i
   '@tiptap/extension-bubble-menu': 2.0.0-beta.204_bv566pzu4gfcw3675d5jwhi56i
@@ -13352,6 +13352,10 @@ packages:
     resolution: {integrity: sha512-ff3BX/tSioo+XojX4MOsOMhJw0nZoUEF011LX8g8d3gvjVbxd89cCio4BCXronjxcTUIJUoqKEUA+n4CqvvRPw==}
     dev: true
 
+  /lodash.groupby/4.6.0:
+    resolution: {integrity: sha512-5dcWxm23+VAoz+awKmBaiBvzox8+RqMgFhi7UvX9DHZr2HdxHXM/Wrf8cfKpsW37RNrvtPn6hSwNqurSILbmJw==}
+    dev: false
+
   /lodash.kebabcase/4.1.1:
     resolution: {integrity: sha512-N8XRTIMMqqDgSy4VLKPnJ/+hpGZN+PHQiJnSenYqPaVV/NCqEogTnAdZLQiGKhxX+JCs8waWq2t1XHWKOmlY8g==}
     dev: false
@@ -20159,9 +20163,9 @@ packages:
       - encoding
     dev: false
 
-  github.com/theopensystemslab/planx-document-templates/c6dee14_a7krn2kytpcoapplqdxaq5aiqm:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/c6dee14}
-    id: github.com/theopensystemslab/planx-document-templates/c6dee14
+  github.com/theopensystemslab/planx-document-templates/debaeca_a7krn2kytpcoapplqdxaq5aiqm:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/debaeca}
+    id: github.com/theopensystemslab/planx-document-templates/debaeca
     name: '@opensystemslab/planx-document-templates'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
@@ -20174,6 +20178,7 @@ packages:
       '@mui/material': 5.11.9_o3jv4iu7e2dnl425vnr2xredky
       '@rollup/plugin-commonjs': 23.0.7
       docx: 7.8.2
+      lodash.groupby: 4.6.0
       lodash.startcase: 4.4.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0

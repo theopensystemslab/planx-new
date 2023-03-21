@@ -11,7 +11,7 @@ specifiers:
   '@babel/core': ^7.19.6
   '@babel/preset-typescript': ^7.18.6
   '@opensystemslab/planx-core': git://github.com/theopensystemslab/planx-core.git#aa46c2e
-  '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#c6dee14
+  '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#debaeca
   '@types/adm-zip': ^0.5.0
   '@types/body-parser': ^1.19.2
   '@types/cookie-parser': ^1.4.3
@@ -84,7 +84,7 @@ specifiers:
 dependencies:
   '@airbrake/node': 2.1.7
   '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/aa46c2e
-  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/c6dee14_@babel+core@7.19.6
+  '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca_@babel+core@7.19.6
   adm-zip: 0.5.9
   aws-sdk: 2.1180.0
   axios: 0.27.2
@@ -5701,6 +5701,10 @@ packages:
       p-locate: 5.0.0
     dev: true
 
+  /lodash.groupby/4.6.0:
+    resolution: {integrity: sha512-5dcWxm23+VAoz+awKmBaiBvzox8+RqMgFhi7UvX9DHZr2HdxHXM/Wrf8cfKpsW37RNrvtPn6hSwNqurSILbmJw==}
+    dev: false
+
   /lodash.includes/4.3.0:
     resolution: {integrity: sha1-YLuYqHy5I8aMoeUTJUgzFISfVT8=}
     dev: false
@@ -7926,9 +7930,9 @@ packages:
       - encoding
     dev: false
 
-  github.com/theopensystemslab/planx-document-templates/c6dee14_@babel+core@7.19.6:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/c6dee14}
-    id: github.com/theopensystemslab/planx-document-templates/c6dee14
+  github.com/theopensystemslab/planx-document-templates/debaeca_@babel+core@7.19.6:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-document-templates/tar.gz/debaeca}
+    id: github.com/theopensystemslab/planx-document-templates/debaeca
     name: '@opensystemslab/planx-document-templates'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
@@ -7941,6 +7945,7 @@ packages:
       '@mui/material': 5.11.9_5rzy53przelm5jchjmb5vr6dxy
       '@rollup/plugin-commonjs': 23.0.7
       docx: 7.8.2
+      lodash.groupby: 4.6.0
       lodash.startcase: 4.4.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
