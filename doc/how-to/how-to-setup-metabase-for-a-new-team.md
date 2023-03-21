@@ -7,7 +7,7 @@ Metabase is set up and running on both Staging and Production environments, but 
 
 
 ## Process
-1. Log into the Production Metabase service at https://metabase.editor.planx.dev/. Login details are stored on the OSL 1Password account.
+1. Log into the Production Metabase service at https://metabase.editor.planx.uk/. Login details are stored on the OSL 1Password account.
 
 2. Create new Collection for the team
 
@@ -20,7 +20,7 @@ Metabase is set up and running on both Staging and Production environments, but 
 
 ![Screenshot - FlowID variable](./images/setup-metabase/flow_id.png)
 ![Screenshot - Updating the default value for FlowID](./images/setup-metabase/default_value.png)
-*Edit Dashboard > FlowID > Default Value > Done > Save*
+*Edit Dashboard > FlowID > Default Value > Enter > Done > Save*
 
 This variable ensures that the dashboard is looking at analytics and statistics for the correct flow.
 
