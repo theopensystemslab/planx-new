@@ -31,6 +31,15 @@ interface Props {
   error?: string;
 }
 
+const PayText = styled(Box)(({ theme }) => ({
+  gap: theme.spacing(3),
+  display: "flex",
+  flexDirection: "column",
+  "& > *": {
+    alignSelf: "self-start",
+  },
+}));
+
 export default function Confirm(props: Props) {
   const theme = useTheme();
 
@@ -73,21 +82,26 @@ export default function Confirm(props: Props) {
 
       {!props.error ? (
         <Card>
-          <Box>
+          <PayText>
             <Typography variant="h3">How to pay</Typography>
-            <Box py={3}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                onClick={props.onConfirm}
-              >
-                {props.buttonTitle || "Pay using GOV.UK Pay"}
-              </Button>
-            </Box>
-
+            <Typography variant="body2">
+              You can pay for your application by using GOV.UK Pay.
+            </Typography>
+            <Typography variant="body2">
+              Your application will be sent after you have paid the fee. Wait
+              until you see an application sent message before closing your
+              browser.
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={props.onConfirm}
+            >
+              {props.buttonTitle || "Pay using GOV.UK Pay"}
+            </Button>
             <SuggestionDrawer />
-          </Box>
+          </PayText>
         </Card>
       ) : (
         <Card handleSubmit={props.onConfirm} isValid>

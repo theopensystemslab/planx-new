@@ -53,6 +53,7 @@ const Node: React.FC<any> = (props: Props) => {
     resetPreview,
     sessionId,
     cachedBreadcrumbs,
+    flowName,
   ] = useStore((state) => [
     state.childNodesOf,
     state.resultData,
@@ -62,6 +63,7 @@ const Node: React.FC<any> = (props: Props) => {
     state.resetPreview,
     state.sessionId,
     state.cachedBreadcrumbs,
+    state.flowName,
   ]);
 
   const handleSubmit = isFinalCard ? undefined : props.handleSubmit;
@@ -111,14 +113,12 @@ const Node: React.FC<any> = (props: Props) => {
         passport.data?.[GOV_PAY_PASSPORT_KEY];
 
       const details = {
-        "Planning Application Reference": payment?.reference ?? sessionId,
+        "Planning application reference": payment?.reference ?? sessionId,
 
-        "Property Address": passport.data?._address?.title,
+        "Property address": passport.data?._address?.title,
 
         "Application type": [
-          // XXX: application type currently hardcoded as it's the only one being
-          //      tested, but this will need to become dynamic.
-          "Application for a Certificate of Lawfulness",
+          flowName.replace("Apply", "Application"),
           getWorkStatus(passport),
         ]
           .filter(Boolean)

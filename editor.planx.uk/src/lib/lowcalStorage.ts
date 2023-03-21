@@ -97,7 +97,8 @@ class LowcalStorage {
       variables: {
         id,
         data: JSON.parse(value),
-        email: useStore.getState().saveToEmail,
+        // email may be absent for non save and return journeys
+        email: useStore.getState().saveToEmail || "",
         flowId: useStore.getState().id,
       },
       ...getPublicContext(id),
@@ -145,7 +146,9 @@ const getPublicContext = (sessionId: string) => ({
   context: {
     headers: {
       "x-hasura-lowcal-session-id": sessionId,
-      "x-hasura-lowcal-email": useStore.getState().saveToEmail?.toLowerCase(),
+      "x-hasura-lowcal-email":
+        // email may be absent for non save and return journeys
+        useStore.getState().saveToEmail?.toLowerCase() || "",
     },
   },
 });

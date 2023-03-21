@@ -4,7 +4,8 @@
   "private": true,
   "dependencies": {
     "@airbrake/node": "^2.1.7",
-    "@opensystemslab/planx-document-templates": "git://github.com/theopensystemslab/planx-document-templates#main",
+    "@opensystemslab/planx-core": "git://github.com/theopensystemslab/planx-core.git#aa46c2e",
+    "@opensystemslab/planx-document-templates": "git://github.com/theopensystemslab/planx-document-templates#debaeca",
     "adm-zip": "^0.5.9",
     "aws-sdk": "^2.1180.0",
     "axios": "^0.27.2",
@@ -35,7 +36,6 @@
     "passport": "^0.5.3",
     "passport-google-oauth20": "^2.0.0",
     "pino-noir": "^2.2.1",
-    "core": "file:shared/core-1.0.0.tgz",
     "slack-notify": "^2.0.3",
     "string-to-stream": "^3.0.1"
   },
@@ -67,6 +67,7 @@
     "@types/passport": "^1.0.11",
     "@types/passport-google-oauth20": "^2.0.11",
     "@types/supertest": "^2.0.12",
+    "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
     "dotenv": "^16.0.1",

@@ -1,10 +1,11 @@
 import { logger } from "airbrake";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import { setLocalFlow } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
-import type { GovUKPayment } from "types";
+import type { GovUKPayment, Passport, Session } from "types";
 import { PaymentStatus } from "types";
 
 import { useTeamSlug } from "../../shared/hooks";
@@ -47,6 +48,7 @@ function Component(props: Props) {
   const [
     flowId,
     sessionId,
+    breadcrumbs,
     govUkPayment,
     setGovUkPayment,
     passport,
@@ -54,26 +56,14 @@ function Component(props: Props) {
   ] = useStore((state) => [
     state.id,
     state.sessionId,
+    state.breadcrumbs,
     state.govUkPayment,
     state.setGovUkPayment,
     state.computePassport(),
     state.previewEnvironment,
   ]);
-
-  const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
-
   const teamSlug = useTeamSlug();
-
-  const getGovUkPayUrlForTeam = (paymentId?: string | undefined) => {
-    const baseURL = useStagingUrlIfTestApplication(passport)(
-      `${GOV_UK_PAY_URL}/${teamSlug}`
-    );
-    const queryString = `?sessionId=${sessionId}&flowId=${flowId}`;
-    if (paymentId) {
-      return `${baseURL}/${paymentId}${queryString}`;
-    }
-    return `${baseURL}${queryString}`;
-  };
+  const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
   // Handles UI states
   const reducer = (_state: ComponentState, action: Action): ComponentState => {
@@ -124,7 +114,7 @@ function Component(props: Props) {
       handleSuccess();
     } else {
       dispatch(Action.IncompletePaymentFound);
-      refetchPayment(govUkPayment.payment_id);
+      refetchPayment();
     }
   }, []);
 
@@ -136,12 +126,8 @@ function Component(props: Props) {
   const normalizePaymentResponse = (responseData: any): GovUKPayment => {
     if (!responseData?.state?.status)
       throw new Error("Corrupted response from GOV.UK");
-    let payment: GovUKPayment = responseData;
-    if (payment.amount)
-      payment = {
-        ...payment,
-        amount: toDecimal(payment.amount),
-      };
+    let payment: GovUKPayment = { ...responseData };
+    payment.amount = toDecimal(payment.amount);
     return payment;
   };
 
@@ -150,15 +136,29 @@ function Component(props: Props) {
   ): Promise<GovUKPayment> => {
     const payment = normalizePaymentResponse(responseData);
     setGovUkPayment(payment);
+    // save a record of the session with the latest payment for debugging purposes
+    await saveSession({
+      breadcrumbs,
+      id: flowId,
+      passport,
+      sessionId,
+      govUkPayment: payment,
+    });
     return payment;
   };
 
-  const refetchPayment = async (id: string) => {
+  const refetchPayment = async () => {
     try {
       const {
         data: { state },
       } = await axios.get<Pick<GovUKPayment, "state">>(
-        getGovUkPayUrlForTeam(id)
+        getGovUkPayUrlForTeam({
+          sessionId,
+          flowId,
+          teamSlug,
+          passport,
+          paymentId: govUkPayment?.payment_id,
+        })
       );
 
       // Update local state with the refetched payment state
@@ -185,7 +185,7 @@ function Component(props: Props) {
     dispatch(Action.ResumePayment);
 
     if (!govUkPayment) {
-      startNewPayment();
+      await startNewPayment();
       return;
     }
 
@@ -193,7 +193,7 @@ function Component(props: Props) {
       case PaymentStatus.cancelled:
       case PaymentStatus.error:
       case PaymentStatus.failed: {
-        startNewPayment();
+        await startNewPayment();
         break;
       }
       case PaymentStatus.started:
@@ -221,7 +221,10 @@ function Component(props: Props) {
       return;
     }
     await axios
-      .post(getGovUkPayUrlForTeam(), createPayload(fee, sessionId))
+      .post(
+        getGovUkPayUrlForTeam({ sessionId, flowId, teamSlug, passport }),
+        createPayload(fee, sessionId)
+      )
       .then(async (res) => {
         const payment = await resolvePaymentResponse(res.data);
         if (payment._links.next_url?.href)
@@ -268,6 +271,35 @@ function Component(props: Props) {
       ) : (
         <DelayedLoadingIndicator text={state.displayText || state.status} />
       )}
+      {/* session id exposed for testing purposes */}
+      <span data-testid="sessionId" data-sessionid={sessionId}></span>
     </>
   );
+}
+
+async function saveSession(session: Session) {
+  await setLocalFlow(session.sessionId, session);
+}
+
+function getGovUkPayUrlForTeam({
+  sessionId,
+  flowId,
+  teamSlug,
+  passport,
+  paymentId,
+}: {
+  sessionId: string;
+  flowId: string;
+  teamSlug: string;
+  passport: Passport;
+  paymentId?: string;
+}): string {
+  const baseURL = useStagingUrlIfTestApplication(passport)(
+    `${GOV_UK_PAY_URL}/${teamSlug}`
+  );
+  const queryString = `?sessionId=${sessionId}&flowId=${flowId}`;
+  if (paymentId) {
+    return `${baseURL}/${paymentId}${queryString}`;
+  }
+  return `${baseURL}${queryString}`;
 }

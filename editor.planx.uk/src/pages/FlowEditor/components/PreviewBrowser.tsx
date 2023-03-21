@@ -262,7 +262,8 @@ const PreviewBrowser: React.FC<{
                       setLastPublishedTitle(
                         publishedFlow?.data.alteredNodes
                           ? `Successfully published changes to ${publishedFlow.data.alteredNodes.length} node(s)`
-                          : "No new changes to publish"
+                          : `${publishedFlow?.data?.message}` ||
+                              "No new changes to publish"
                       );
                     } catch (error) {
                       setLastPublishedTitle("Error trying to publish");

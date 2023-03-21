@@ -1,27 +1,33 @@
 import { gql } from "graphql-request";
 import { NextFunction, Request, Response } from "express";
 import * as jsondiffpatch from "jsondiffpatch";
-import { adminGraphQLClient as adminClient, publicGraphQLClient as publicClient } from "../hasura";
+import {
+  adminGraphQLClient as adminClient,
+  publicGraphQLClient as publicClient,
+} from "../hasura";
 import { getMostRecentPublishedFlow, getPublishedFlowByDate } from "../helpers";
 import {
   getSaveAndReturnPublicHeaders,
   stringifyWithRootKeysSortedAlphabetically,
 } from "./utils";
-import { Breadcrumb, LowCalSession, Node } from "../types";
+import { sortBreadcrumbs } from "@opensystemslab/planx-core";
+import type { EnrichedCrumb } from "@opensystemslab/planx-core";
+import type { Breadcrumb, LowCalSession, Node } from "../types";
 
-
-const validateSession = async (
+export async function validateSession(
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+) {
   try {
     const { email, sessionId } = req.body.payload;
-    if (!email || !sessionId)
+
+    if (!email || !sessionId) {
       return next({
         status: 400,
         message: "Required value missing",
       });
+    }
 
     const sessionData = await findSession(sessionId, email.toLowerCase());
 
@@ -43,6 +49,7 @@ const validateSession = async (
         getMostRecentPublishedFlow(sessionData.data.id),
         getPublishedFlowByDate(sessionData.data.id, sessionData.updated_at),
       ]);
+
       if (!currentFlow || !savedFlow) {
         return next({
           status: 404,
@@ -58,16 +65,32 @@ const validateSession = async (
           ...currentFlow[key],
         }));
         if (alteredNodes.length) {
+          // each EnrichedCrumb will include a sectionId where relevant (used later)
+          const enrichedAndOrderedBreadcrumbs: Array<EnrichedCrumb> =
+            sortBreadcrumbs(savedFlow, sessionData.data.breadcrumbs);
           const removedBreadcrumbs: Breadcrumb = {};
           alteredNodes.forEach((node) => {
-            // if the session breadcrumbs include any altered content, remove those breadcrumbs so the user will be re-prompted to answer those questions
-            if (
-              sessionData &&
-              Object.keys(sessionData.data.breadcrumbs).includes(node.id!)
-            ) {
+            // if the session breadcrumbs include any altered content,
+            // remove those breadcrumbs so the user will be re-prompted to answer those questions
+            const affectedBreadcrumb = enrichedAndOrderedBreadcrumbs.find(
+              (crumb: EnrichedCrumb) => crumb.id == node.id!
+            );
+            if (affectedBreadcrumb && sessionData.data.breadcrumbs[node.id!]) {
+              // remove affected breadcrumbs
               removedBreadcrumbs[node.id!] =
                 sessionData.data.breadcrumbs[node.id!];
               delete sessionData.data.breadcrumbs[node.id!];
+
+              // also remove the associated section
+              const affectedSectionId = affectedBreadcrumb.sectionId;
+              if (
+                affectedSectionId &&
+                sessionData.data.breadcrumbs[affectedSectionId]
+              ) {
+                removedBreadcrumbs[affectedSectionId] =
+                  sessionData.data.breadcrumbs[affectedSectionId];
+                delete sessionData.data.breadcrumbs[affectedSectionId];
+              }
             }
           });
 
@@ -134,22 +157,22 @@ const validateSession = async (
       message: "Failed to validate session",
     });
   }
-};
+}
 
 const findSession = async (
   sessionId: string,
   email: string
 ): Promise<LowCalSession | undefined> => {
   const query = gql`
-    query FindSession {
-      lowcal_sessions {
+    query FindSession($sessionId: uuid!) {
+      lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
         data
         updated_at
       }
     }
   `;
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
-  const response = await publicClient.request(query, null, headers);
+  const response = await publicClient.request(query, { sessionId }, headers);
   return response.lowcal_sessions?.[0];
 };
 
@@ -164,35 +187,42 @@ const updateLowcalSessionData = async (
         pk_columns: { id: $sessionId }
         _set: { data: $data }
       ) {
-        id
         data
-        created_at
-        updated_at
       }
     }
   `;
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
-  const response = await publicClient.request(query, { sessionId, data }, headers);
+  const response = await publicClient.request(
+    query,
+    { sessionId, data },
+    headers
+  );
   return response.update_lowcal_sessions_by_pk?.data;
 };
 
 const createAuditEntry = async (
   sessionId: string,
   data: any,
-  message: string,
+  message: string
 ) => {
   return await adminClient.request(
     gql`
-      mutation InsertReconciliationRequests($session_id: String = "", $response: jsonb = {}, $message: String = "") {
-        insert_reconciliation_requests_one(object: {
-          session_id: $session_id,
-          response: $response,
-          message: $message,
-        }) {
+      mutation InsertReconciliationRequests(
+        $session_id: String = ""
+        $response: jsonb = {}
+        $message: String = ""
+      ) {
+        insert_reconciliation_requests_one(
+          object: {
+            session_id: $session_id
+            response: $response
+            message: $message
+          }
+        ) {
           id
         }
       }
-    `, 
+    `,
     {
       session_id: sessionId,
       response: data,
@@ -200,5 +230,3 @@ const createAuditEntry = async (
     }
   );
 };
-
-export { validateSession };

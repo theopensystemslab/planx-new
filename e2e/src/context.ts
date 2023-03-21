@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import { log } from "./helpers";
 import { sign } from "jsonwebtoken";
-import { CoreDomainClient } from "core";
+import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { GraphQLClient } from "graphql-request";
 
 export interface Context {
@@ -146,6 +146,18 @@ export async function findSessionId(
 }
 
 async function deleteSession(adminGQLClient: GraphQLClient, context) {
+  if (context.sessionIds) {
+    for (const sessionId of context.sessionIds) {
+      await adminGQLClient.request(
+        `mutation DeleteTestSession( $sessionId: uuid!) {
+          delete_lowcal_sessions_by_pk(id: $sessionId) {
+            id
+          }
+        }`,
+        { sessionId }
+      );
+    }
+  }
   const sessionId = await findSessionId(adminGQLClient, context);
   if (sessionId) {
     log(`deleting session id: ${sessionId}`);
@@ -155,7 +167,7 @@ async function deleteSession(adminGQLClient: GraphQLClient, context) {
           id
         }
       }`,
-      { sessionId: sessionId }
+      { sessionId }
     );
   }
 }

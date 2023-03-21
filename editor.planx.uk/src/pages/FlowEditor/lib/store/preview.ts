@@ -17,6 +17,7 @@ import { DEFAULT_FLAG_CATEGORY, flatFlags } from "../../data/flags";
 import type { Flag, GovUKPayment, Node, Session } from "./../../../../types";
 import { ApplicationPath } from "./../../../../types";
 import type { Store } from ".";
+import { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Statement];
@@ -65,7 +66,7 @@ export interface PreviewStore extends Store.Store {
 }
 
 export const previewStore: StateCreator<
-  SharedStore & PreviewStore,
+  SharedStore & PreviewStore & NavigationStore,
   [],
   [],
   PreviewStore
@@ -255,6 +256,7 @@ export const previewStore: StateCreator<
       cachedBreadcrumbs,
       _nodesPendingEdit,
       changedNode,
+      updateSectionData,
     } = get();
 
     if (!flow[id]) throw new Error("id not found");
@@ -344,6 +346,7 @@ export const previewStore: StateCreator<
         });
       }
     }
+    updateSectionData();
   },
 
   resultData(flagSet, overrides) {
@@ -353,6 +356,7 @@ export const previewStore: StateCreator<
 
   resumeSession(args) {
     set(args as Partial<PreviewStore>);
+    get().updateSectionData();
   },
 
   sessionId: uuidV4(),

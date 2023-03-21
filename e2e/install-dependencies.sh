@@ -5,7 +5,6 @@ SCRIPT_DIR=$(dirname "$0")
 
 set -e
 
-(cd "${SCRIPT_DIR}/../core" && pnpm install && pnpm build && pnpm distribute)
 (cd "${SCRIPT_DIR}/../editor.planx.uk" && pnpm install && pnpm build)
 
 if [ -z "${CI}" ]; then
