@@ -165,6 +165,7 @@ services:
       FILE_API_KEY: ${FILE_API_KEY}
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
       ORDNANCE_SURVEY_API_KEY: ${ORDNANCE_SURVEY_API_KEY}
+      MINIO_PORT: ${MINIO_PORT}
 
   sharedb:
     restart: unless-stopped

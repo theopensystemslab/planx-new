@@ -18,7 +18,7 @@ function useMinio() {
   } else {
     // Points to Minio
     return {
-      endpoint: "http://127.0.0.1:9000",
+      endpoint: `http://minio:${process.env.MINIO_PORT}`,
       s3ForcePathStyle: true,
       signatureVersion: "v4",
     };

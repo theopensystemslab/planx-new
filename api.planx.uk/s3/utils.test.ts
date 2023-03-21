@@ -12,7 +12,7 @@ describe("s3 Factory", () => {
   });
 
   it("returns Minio config for local development", () => {
-    expect(s3Factory()).toHaveProperty("endpoint.host", "127.0.0.1:9000");
+    expect(s3Factory()).toHaveProperty("endpoint.host", "minio");
   });
 
   ["pizza", "staging", "production"].forEach(env => {
