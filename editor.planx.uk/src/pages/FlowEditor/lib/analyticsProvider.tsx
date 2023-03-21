@@ -109,7 +109,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     const metadata = getNodeMetadata();
     const node_title =
       node?.type === TYPES.Content
-        ? "Content"
+        ? getContentTitle(node)
         : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
 
     const result = await client.mutate({
@@ -205,6 +205,20 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 };
+
+/**
+ * Generate meaningful title for content analytic log
+ */
+function getContentTitle(node: Store.node): string {
+  const dom = new DOMParser().parseFromString(node.data.content, "text/html");
+  const text = dom.body.textContent;
+  if (!text) return `Content: ${node.id}`;
+  const TITLE_LENGTH = 50;
+  const truncate = (data: string) =>
+    data.length > TITLE_LENGTH ? data.substring(0, TITLE_LENGTH) + "..." : data;
+  const title = truncate(text);
+  return title;
+}
 
 export function useAnalyticsTracking() {
   return useContext(analyticsContext);
