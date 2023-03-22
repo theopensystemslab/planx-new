@@ -7,17 +7,6 @@ import { client } from "./graphql";
 let current: string | null;
 
 class LowcalStorage {
-  // /** Returns the number of key/value pairs. */
-  // readonly length: number;
-
-  // [name: string]: any;
-
-  // /** Returns the name of the nth key, or null if n is greater than or equal to the number of key/value pairs. */
-  // async key(index: number) {
-  // }
-
-  // async clear() {}
-
   getItem = memoize(async (key: string): Promise<string | null> => {
     console.debug({ getItem: key });
     const id = getSessionId(key);
@@ -37,8 +26,7 @@ class LowcalStorage {
     try {
       const session: Session = data.lowcal_sessions_by_pk?.data;
       if (!session) return null;
-      current = stringifyWithRootKeysSortedAlphabetically(session) || null;
-      return current;
+      return JSON.stringify(session);
     } catch (err) {
       return null;
     }
@@ -122,7 +110,6 @@ const memoize = <T extends Function>(fn: T) => {
   }) as unknown as T;
 };
 
-// XX: This function is also maintained at api.planx.uk/saveAndReturn/utils.js
 export const stringifyWithRootKeysSortedAlphabetically = (
   ob: Record<string, unknown> = {}
 ): string | undefined =>

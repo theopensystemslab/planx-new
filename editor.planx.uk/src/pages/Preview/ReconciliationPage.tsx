@@ -10,12 +10,12 @@ import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList
 import { useStore } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
+import type { ReconciliationResponse } from "types";
 import Banner from "ui/Banner";
 
 interface Props {
   bannerHeading: string;
-  diffMessage: string;
-  data: any;
+  reconciliationResponse: ReconciliationResponse;
   buttonText?: string;
   onButtonClick?: () => void;
 }
@@ -31,8 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ReconciliationPage: React.FC<Props> = ({
   bannerHeading,
-  diffMessage,
-  data,
+  reconciliationResponse,
   buttonText,
   onButtonClick,
 }) => {
@@ -46,16 +45,14 @@ const ReconciliationPage: React.FC<Props> = ({
     ]);
 
   const sortedBreadcrumbs = sortBreadcrumbs(
-    data?.reconciledSessionData?.breadcrumbs,
+    reconciliationResponse.reconciledSessionData.breadcrumbs,
     flow
   );
 
   // Calculate the section statuses based on the response data from /validate-session, before it's been updated in app state
-  const removedNodeIds: string[] | undefined =
-    data?.removedBreadcrumbs && Object.keys(data.removedBreadcrumbs);
   const reconciledSectionStatuses = sectionStatuses(
     sortedBreadcrumbs,
-    removedNodeIds
+    reconciliationResponse.removedBreadcrumbIds
   );
 
   const theme = useTheme();
@@ -74,20 +71,19 @@ const ReconciliationPage: React.FC<Props> = ({
       </Box>
       <Card>
         {/* Only show a warning if the content change has affected the user's path */}
-        {data?.removedBreadcrumbs &&
-          Object.keys(data.removedBreadcrumbs).length > 0 && (
-            <Box display="flex" mb={4}>
-              <Warning
-                titleAccess="Warning"
-                color="primary"
-                fontSize="large"
-                className={classes.warningIcon}
-              />
-              <Typography variant="body2" className={classes.warningMessage}>
-                {diffMessage}
-              </Typography>
-            </Box>
-          )}
+        {(reconciliationResponse.removedBreadcrumbIds || []).length > 0 && (
+          <Box display="flex" mb={4}>
+            <Warning
+              titleAccess="Warning"
+              color="primary"
+              fontSize="large"
+              className={classes.warningIcon}
+            />
+            <Typography variant="body2" className={classes.warningMessage}>
+              {reconciliationResponse.message}
+            </Typography>
+          </Box>
+        )}
         <Typography variant="h3" component="h2">
           Review your {hasSections ? "progress" : "answers"} so far
         </Typography>
@@ -101,7 +97,7 @@ const ReconciliationPage: React.FC<Props> = ({
           <SummaryListsBySections
             breadcrumbs={sortedBreadcrumbs}
             flow={flow}
-            passport={data?.reconciledSessionData?.passport}
+            passport={reconciliationResponse.reconciledSessionData.passport}
             changeAnswer={changeAnswer}
             showChangeButton={false}
             sectionComponent="h3"

@@ -73,6 +73,10 @@ describe("Validate Session endpoint", () => {
       },
     };
 
+    const expectedSessionData = {
+      ...mockLowcalSession.data,
+    };
+
     const expectedMessage = "No content changes since last save point";
 
     await supertest(app)
@@ -80,9 +84,11 @@ describe("Validate Session endpoint", () => {
       .send(data)
       .expect(200)
       .then((response) => {
-        expect(response.body).toHaveProperty("alteredNodes", null);
         expect(response.body).toHaveProperty("message", expectedMessage);
-        expect(response.body).toHaveProperty("removedBreadcrumbs", null);
+        expect(response.body).toHaveProperty(
+          "reconciledSessionData",
+          expectedSessionData
+        );
       });
   });
 
@@ -143,6 +149,10 @@ describe("Validate Session endpoint", () => {
       { data: { text: "2", val: "answer" }, id: "two", type: 200 },
     ];
 
+    const expectedSessionData = {
+      ...mockLowcalSession.data,
+    };
+
     const expectedMessage =
       "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.";
 
@@ -151,14 +161,17 @@ describe("Validate Session endpoint", () => {
       .send(data)
       .expect(200)
       .then((response) => {
-        expect(response.body).toHaveProperty("alteredNodes", expectedDiff);
         expect(response.body).toHaveProperty("message", expectedMessage);
-        expect(response.body).toHaveProperty("removedBreadcrumbs", {});
+        expect(response.body).toHaveProperty("alteredNodes", expectedDiff);
+        expect(response.body).toHaveProperty("removedBreadcrumbIds", []);
+        expect(response.body).toHaveProperty(
+          "reconciledSessionData",
+          expectedSessionData
+        );
       });
   });
 
-  // TODO this may be an existing issue or it may be my misunderstanding of how this should work
-  it.skip("returns changed nodes and invalidated breadcrumbs when a flow has updated only nested nodes (answers but not questions)", async () => {
+  it("returns changed nodes and invalidated breadcrumbs when a flow has updated only nested nodes (answers but not questions)", async () => {
     const oldFlow: Flow["data"] = {
       _root: {
         edges: ["question1", "question2"],
@@ -242,30 +255,28 @@ describe("Validate Session endpoint", () => {
       },
     ];
 
+    const expectedSessionData = {
+      ...mockLowcalSession.data,
+      breadcrumbs: {},
+    };
+
     const expectedMessage =
       "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.";
-
-    const expectedRemovedBreadcrumbs: Breadcrumb = {
-      question1: {
-        auto: false,
-        answers: ["two"],
-      },
-      question2: {
-        auto: false,
-        answers: ["b"],
-      },
-    };
 
     await supertest(app)
       .post(validateSessionPath)
       .send(data)
       .expect(200)
       .then((response) => {
-        expect(response.body).toHaveProperty("alteredNodes", expectedDiff);
         expect(response.body).toHaveProperty("message", expectedMessage);
+        expect(response.body).toHaveProperty("alteredNodes", expectedDiff);
         expect(response.body).toHaveProperty(
-          "removedBreadcrumbs",
-          expectedRemovedBreadcrumbs
+          "removedBreadcrumbIds",
+          expect.arrayContaining(["question1", "question2"])
+        );
+        expect(response.body).toHaveProperty(
+          "reconciledSessionData",
+          expectedSessionData
         );
       });
   });
@@ -384,33 +395,36 @@ describe("Validate Session endpoint", () => {
       },
     ];
 
-    const expectedMessage =
-      "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.";
-
-    const expectedRemovedBreadcrumbs: Breadcrumb = {
-      section1: {
-        auto: false,
-      },
-      question1: {
-        auto: false,
-        answers: ["two"],
-      },
-      question2: {
-        auto: false,
-        answers: ["no"],
+    const expectedSessionData = {
+      ...mockLowcalSession.data,
+      breadcrumbs: {
+        section2: {
+          auto: false,
+        },
+        question3: {
+          auto: false,
+          answers: ["b"],
+        },
       },
     };
+
+    const expectedMessage =
+      "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.";
 
     await supertest(app)
       .post(validateSessionPath)
       .send(data)
       .expect(200)
       .then((response) => {
-        expect(response.body).toHaveProperty("alteredNodes", expectedDiff);
         expect(response.body).toHaveProperty("message", expectedMessage);
+        expect(response.body).toHaveProperty("alteredNodes", expectedDiff);
         expect(response.body).toHaveProperty(
-          "removedBreadcrumbs",
-          expectedRemovedBreadcrumbs
+          "removedBreadcrumbIds",
+          expect.arrayContaining(["section1", "question1", "question2"])
+        );
+        expect(response.body).toHaveProperty(
+          "reconciledSessionData",
+          expectedSessionData
         );
       });
   });
@@ -530,21 +544,25 @@ describe("Validate Session endpoint", () => {
       },
     ];
 
+    const expectedSessionData = {
+      ...mockLowcalSession.data,
+      breadcrumbs,
+    };
+
     const expectedMessage =
       "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.";
-
-    const expectedRemovedBreadcrumbs: Breadcrumb = {};
 
     await supertest(app)
       .post(validateSessionPath)
       .send(data)
       .expect(200)
       .then((response) => {
-        expect(response.body).toHaveProperty("alteredNodes", expectedDiff);
         expect(response.body).toHaveProperty("message", expectedMessage);
+        expect(response.body).toHaveProperty("alteredNodes", expectedDiff);
+        expect(response.body).toHaveProperty("removedBreadcrumbIds", []);
         expect(response.body).toHaveProperty(
-          "removedBreadcrumbs",
-          expectedRemovedBreadcrumbs
+          "reconciledSessionData",
+          expectedSessionData
         );
       });
   });

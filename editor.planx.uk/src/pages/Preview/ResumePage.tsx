@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { useCurrentRoute } from "react-navi";
+import type { ReconciliationResponse, Session } from "types";
 import { ApplicationPath, SendEmailPayload } from "types";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
@@ -108,14 +109,13 @@ const EmailSuccess: React.FC = () => {
 };
 
 const ValidationSuccess: React.FC<{
-  data: any;
+  reconciliationResponse: ReconciliationResponse;
   continueApplication: () => void;
-}> = ({ data, continueApplication }) => {
+}> = ({ reconciliationResponse, continueApplication }) => {
   return (
     <ReconciliationPage
       bannerHeading="Resume your application"
-      diffMessage={data?.message || ""}
-      data={data}
+      reconciliationResponse={reconciliationResponse}
       buttonText="Continue"
       onButtonClick={() => continueApplication()}
     ></ReconciliationPage>
@@ -171,9 +171,8 @@ const ResumePage: React.FC = () => {
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
   const [email, setEmail] = useState<string>(getInitialEmailValue());
   const sessionId = useCurrentRoute().url.query.sessionId;
-  const [reconciledData, setReconciledData] = useState<
-    Record<any, any> | undefined
-  >();
+  const [reconciliationResponse, setReconciliationResponse] =
+    useState<ReconciliationResponse>();
 
   useEffect(() => {
     if (email) handleSubmit();
@@ -212,10 +211,8 @@ const ResumePage: React.FC = () => {
    * Check if applicant has initialised the payment process
    * XXX: Pay component is still responsible for validating payment status and updating passport
    */
-  const isPaymentCreated = (data: Record<string, any>): boolean => {
-    return (
-      data?.reconciledSessionData?.govUkPayment?.state?.status === "created"
-    );
+  const isPaymentCreated = (data: Session): boolean => {
+    return data.govUkPayment?.state?.status === "created";
   };
 
   /**
@@ -229,16 +226,18 @@ const ResumePage: React.FC = () => {
     try {
       // Find this session, if found then handle reconciliation
       await axios.post(url, data).then((response) => {
-        setReconciledData(response?.data);
-        useStore
-          .getState()
-          .resumeSession(response?.data?.reconciledSessionData);
-        // Skip reconciliation page if applicant has started payment
-        isPaymentCreated(response?.data)
-          ? continueApplication()
-          : setPageStatus(Status.Validated);
+        if (response.data) {
+          const reconciledSessionData = response.data.reconciledSessionData;
+          setReconciliationResponse(response.data);
+          useStore.getState().resumeSession(reconciledSessionData);
+          // Skip reconciliation page if applicant has started payment
+          isPaymentCreated(reconciledSessionData)
+            ? continueApplication()
+            : setPageStatus(Status.Validated);
+        }
       });
     } catch (error) {
+      console.debug(error);
       setPageStatus(Status.InvalidSession);
     }
   };
@@ -268,7 +267,7 @@ const ResumePage: React.FC = () => {
     ),
     [Status.Validated]: (
       <ValidationSuccess
-        data={reconciledData}
+        reconciliationResponse={reconciliationResponse!}
         continueApplication={continueApplication}
       />
     ),

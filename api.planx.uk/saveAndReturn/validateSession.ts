@@ -6,17 +6,28 @@ import {
   publicGraphQLClient as publicClient,
 } from "../hasura";
 import { getMostRecentPublishedFlow, getPublishedFlowByDate } from "../helpers";
+import { getSaveAndReturnPublicHeaders } from "./utils";
 import {
-  getSaveAndReturnPublicHeaders,
-  stringifyWithRootKeysSortedAlphabetically,
-} from "./utils";
-import { sortBreadcrumbs } from "@opensystemslab/planx-core";
+  sortBreadcrumbs,
+  normalizeFlow,
+  ComponentType,
+} from "@opensystemslab/planx-core";
 import type {
-  OrderedBreadcrumbs,
   NormalizedCrumb,
+  FlowGraph,
 } from "@opensystemslab/planx-core/types";
-import type { Breadcrumb, LowCalSession, Node } from "../types";
+import type { Breadcrumb, LowCalSession, Flow, Node } from "../types";
 
+export interface ValidationResponse {
+  message: string;
+  reconciledSessionData: LowCalSession["data"];
+  alteredNodes?: Node[];
+  removedBreadcrumbIds?: string[];
+}
+
+// TODO - ensure reconciliation handles:
+//  * collected flags
+//  * auto-answered component dependencies like FindProp/Draw/PlanningConstraints
 export async function validateSession(
   req: Request,
   res: Response,
@@ -32,131 +43,134 @@ export async function validateSession(
       });
     }
 
-    const sessionData = await findSession(sessionId, email.toLowerCase());
+    const fetchedSessionData = await findSession(
+      sessionId,
+      email.toLowerCase()
+    );
 
-    if (sessionData) {
-      // if a user has paid, skip reconciliation steps and return *without* calling updateLowcalSessionData
-      if (sessionData.data.govUkPayment?.state?.status === "created") {
-        const responseData = {
-          message: "Payment process initiated, skipping reconciliation",
-          alteredNodes: null,
-          removedBreadcrumbs: null,
-          reconciledSessionData: sessionData.data,
-        };
-        await createAuditEntry(sessionId, responseData, responseData.message);
-        return res.status(200).json(responseData);
-      }
-
-      // reconcile content changes between the published flow state at point of resuming and when the applicant last left off
-      const [currentFlow, savedFlow] = await Promise.all([
-        getMostRecentPublishedFlow(sessionData.data.id),
-        getPublishedFlowByDate(sessionData.data.id, sessionData.updated_at),
-      ]);
-
-      if (!currentFlow || !savedFlow) {
-        return next({
-          status: 404,
-          message: "Unable to find a published version of this flow",
-        });
-      }
-
-      const delta = jsondiffpatch.diff(currentFlow, savedFlow);
-      // if there have been content changes, make a list of the alteredNodes
-      if (delta) {
-        const alteredNodes: Node[] = Object.keys(delta).map((key) => ({
-          id: key,
-          ...currentFlow[key],
-        }));
-        if (alteredNodes.length) {
-          // each NormalizedCrumb will include a sectionId where relevant (used later)
-          const orderedBreadcrumbs: OrderedBreadcrumbs = sortBreadcrumbs(
-            savedFlow,
-            sessionData.data.breadcrumbs
-          );
-          const removedBreadcrumbs: Breadcrumb = {};
-          alteredNodes.forEach((node) => {
-            // if the session breadcrumbs include any altered content,
-            // remove those breadcrumbs so the user will be re-prompted to answer those questions
-            const affectedBreadcrumb = orderedBreadcrumbs.find(
-              (crumb: NormalizedCrumb) => crumb.id == node.id!
-            );
-            if (affectedBreadcrumb && sessionData.data.breadcrumbs[node.id!]) {
-              // remove affected breadcrumbs
-              removedBreadcrumbs[node.id!] =
-                sessionData.data.breadcrumbs[node.id!];
-              delete sessionData.data.breadcrumbs[node.id!];
-
-              // also remove the associated section
-              const affectedSectionId = affectedBreadcrumb.sectionId;
-              if (
-                affectedSectionId &&
-                sessionData.data.breadcrumbs[affectedSectionId]
-              ) {
-                removedBreadcrumbs[affectedSectionId] =
-                  sessionData.data.breadcrumbs[affectedSectionId];
-                delete sessionData.data.breadcrumbs[affectedSectionId];
-              }
-            }
-          });
-
-          // if we removed user breadcrumbs, check if those breadcrumbs have associated passport variables
-          if (Object.keys(removedBreadcrumbs).length) {
-            // a flow schema can store the planx variable name under any of these keys
-            const planx_keys = ["fn", "val", "output", "dataFieldBoundary"];
-            planx_keys.forEach((key) => {
-              Object.keys(removedBreadcrumbs).forEach((nodeId) => {
-                // check if a removed breadcrumb has a passport var based on the published content at save point
-                if (sessionData && savedFlow[nodeId]?.data?.[key]) {
-                  // if it does, remove that passport variable from our sessionData so we don't auto-answer changed questions before the user sees them
-                  delete sessionData.data.passport?.data?.[
-                    currentFlow[nodeId].data?.[key]
-                  ];
-                }
-              });
-            });
-          }
-
-          // TODO: FUTURE RECONCILIATION CHECKS
-          //   **what about collected flags? what about `auto: true`? component dependencies like FindProp/Draw/PlanningConstraints?
-
-          // update the lowcal_session.data to match our updated in-memory sessionData.data
-          //   XX: apply sorting to match the original get/set methods used in editor.planx.uk/src/lib/lowcalStorage.ts
-          const sortedSessionData = stringifyWithRootKeysSortedAlphabetically(
-            sessionData.data
-          );
-          const reconciledSessionData = await updateLowcalSessionData(
-            sessionId,
-            JSON.parse(sortedSessionData),
-            email
-          );
-
-          const responseData = {
-            message:
-              "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
-            alteredNodes,
-            removedBreadcrumbs,
-            reconciledSessionData,
-          };
-          await createAuditEntry(sessionId, responseData, responseData.message);
-          return res.status(200).json(responseData);
-        }
-      } else {
-        const responseData = {
-          message: "No content changes since last save point",
-          alteredNodes: null,
-          removedBreadcrumbs: null,
-          reconciledSessionData: sessionData.data,
-        };
-        await createAuditEntry(sessionId, responseData, responseData.message);
-        return res.status(200).json(responseData);
-      }
-    } else {
+    if (!fetchedSessionData) {
       return next({
         status: 404,
         message: "Unable to find your session",
       });
     }
+
+    const sessionData = fetchedSessionData.data!;
+
+    // if a user has paid, skip reconciliation
+    const userHasPaid = sessionData?.govUkPayment?.state?.status === "created";
+    if (userHasPaid) {
+      const responseData: ValidationResponse = {
+        message: "Payment process initiated, skipping reconciliation",
+        alteredNodes: [],
+        reconciledSessionData: sessionData,
+      };
+      await createAuditEntry(sessionId, responseData, responseData.message);
+      return res.status(200).json(responseData);
+    }
+
+    // reconcile content changes between the published flow state at point of resuming and when the applicant last left off
+    const [currentFlow, savedFlow] = await Promise.all([
+      getMostRecentPublishedFlow(sessionData.id),
+      getPublishedFlowByDate(sessionData.id, fetchedSessionData.updated_at!),
+    ]);
+
+    if (!currentFlow || !savedFlow) {
+      return next({
+        status: 404,
+        message: "Unable to find a published version of this flow",
+      });
+    }
+
+    const delta = jsondiffpatch.diff(currentFlow, savedFlow) || {};
+    const alteredNodeIds: string[] = Object.keys(delta);
+
+    let alteredNodes: Node[] = [];
+    if (alteredNodeIds.length > 0) {
+      alteredNodes = alteredNodeIds.map((id) => ({
+        ...currentFlow[id],
+        id,
+      }));
+    }
+
+    // create ordered breadcrumbs to be able to look up section IDs later
+    const orderedBreadcrumbs: NormalizedCrumb[] = sortBreadcrumbs(
+      normalizeFlow(currentFlow as FlowGraph),
+      sessionData.breadcrumbs
+    );
+
+    // update breadcrumbs
+    const removedBreadcrumbIds: string[] = [];
+    alteredNodes.forEach((node) => {
+      // remove existing breadcrumbs to mark updated questions as unanswered
+      if (sessionData.breadcrumbs[node.id!]) {
+        removedBreadcrumbIds.push(node.id!);
+        delete sessionData.breadcrumbs[node.id!];
+      }
+
+      // remove parent breadcrumbs of answers to mark questions
+      // with updated responses as unanswered
+      if (node.type == ComponentType.Answer) {
+        const parent: NormalizedCrumb | undefined = orderedBreadcrumbs.find(
+          (crumb: NormalizedCrumb) => crumb.answers?.includes(node.id!)
+        );
+        if (parent && sessionData.breadcrumbs[parent.id!]) {
+          removedBreadcrumbIds.push(parent.id!);
+          delete sessionData.breadcrumbs[parent.id!];
+        }
+      }
+
+      // also remove the associated section to mark it as incomplete
+      const crumb: NormalizedCrumb | undefined = orderedBreadcrumbs.find(
+        (crumb) => crumb.id === node.id!
+      );
+      if (
+        crumb &&
+        crumb?.sectionId &&
+        sessionData.breadcrumbs[crumb.sectionId!]
+      ) {
+        removedBreadcrumbIds.push(crumb.sectionId!);
+        delete sessionData.breadcrumbs[crumb.sectionId!];
+      }
+    });
+
+    // update passport data
+    removedBreadcrumbIds.forEach((nodeId) => {
+      // a flow schema can store the planx variable name under any of these keys
+      const planx_keys = ["fn", "val", "output", "dataFieldBoundary"];
+      planx_keys.forEach((key) => {
+        // check if a removed breadcrumb has a passport var based on the published content at save point
+        if (sessionData && savedFlow[nodeId]?.data?.[key]) {
+          // if it does, remove that passport variable from our session so we don't auto-answer changed questions before the user sees them
+          delete sessionData.passport?.data?.[savedFlow[nodeId].data?.[key]];
+        }
+      });
+    });
+
+    if (!alteredNodes || alteredNodes.length === 0) {
+      const responseData: ValidationResponse = {
+        message: "No content changes since last save point",
+        reconciledSessionData: sessionData,
+      };
+      await createAuditEntry(sessionId, responseData, responseData.message);
+      return res.status(200).json(responseData);
+    }
+
+    // store modified session data
+    await updateLowcalSessionData(sessionId, sessionData, email);
+
+    const responseData: ValidationResponse = {
+      message:
+        "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
+      alteredNodes,
+      removedBreadcrumbIds,
+      reconciledSessionData: sessionData,
+    };
+
+    await createAuditEntry(sessionId, responseData, responseData.message);
+    return res.status(200).json(responseData);
   } catch (error) {
+    console.log(error);
     return next({
       error,
       message: "Failed to validate session",
@@ -164,10 +178,10 @@ export async function validateSession(
   }
 }
 
-const findSession = async (
+async function findSession(
   sessionId: string,
   email: string
-): Promise<LowCalSession | undefined> => {
+): Promise<Partial<LowCalSession> | undefined> {
   const query = gql`
     query FindSession($sessionId: uuid!) {
       lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
@@ -179,13 +193,13 @@ const findSession = async (
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
   const response = await publicClient.request(query, { sessionId }, headers);
   return response.lowcal_sessions?.[0];
-};
+}
 
-const updateLowcalSessionData = async (
+async function updateLowcalSessionData(
   sessionId: string,
-  data: LowCalSession,
+  data: LowCalSession["data"],
   email: string
-) => {
+): Promise<LowCalSession> {
   const query = gql`
     mutation UpdateLowcalSessionData($sessionId: uuid!, $data: jsonb!) {
       update_lowcal_sessions_by_pk(
@@ -203,13 +217,13 @@ const updateLowcalSessionData = async (
     headers
   );
   return response.update_lowcal_sessions_by_pk?.data;
-};
+}
 
-const createAuditEntry = async (
+async function createAuditEntry(
   sessionId: string,
-  data: any,
+  data: ValidationResponse,
   message: string
-) => {
+): Promise<Record<"insert_reconciliation_requests_one", string>> {
   return await adminClient.request(
     gql`
       mutation InsertReconciliationRequests(
@@ -234,4 +248,4 @@ const createAuditEntry = async (
       message: message,
     }
   );
-};
+}
