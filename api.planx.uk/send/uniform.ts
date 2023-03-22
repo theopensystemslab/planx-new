@@ -60,7 +60,6 @@ interface SendToUniformPayload {
   passport: Passport,
   csv: PlanXExportData[],
   files: string[],
-  xml: string,
 }
 
 /**
@@ -82,7 +81,7 @@ const sendToUniform = async (req: Request, res: Response, next: NextFunction) =>
 
   // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
   const payload: SendToUniformPayload = req.body.payload;
-  if (!payload?.xml || !payload?.sessionId) {
+  if (!payload?.sessionId) {
     return next({
       status: 400,
       message: "Missing application data to send to Uniform",
