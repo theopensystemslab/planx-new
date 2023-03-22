@@ -26,6 +26,7 @@ export const classifiedRoadsSearch = async (req, res, next) => {
     typeNames: "Highways_RoadLink", // sourced from OS MasterMap Highways Network, uniquely includes "RoadClassification" attribute
     outputFormat: "GEOJSON",
     srsName: "urn:ogc:def:crs:EPSG::4326",
+    count: 1, // USRN can match many road segments, but all should share the same classification, so limit to first result
     filter: xml,
     key: process.env.ORDNANCE_SURVEY_API_KEY || "",
   };

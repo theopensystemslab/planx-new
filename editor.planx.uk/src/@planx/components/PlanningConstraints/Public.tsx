@@ -100,8 +100,6 @@ function Component(props: Props) {
     }
   );
 
-  console.log("usrn", usrn);
-
   // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
   //   skip if the applicant plotted a new address on the map
   let classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads`;
