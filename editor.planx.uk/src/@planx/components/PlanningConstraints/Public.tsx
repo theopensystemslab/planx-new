@@ -7,9 +7,6 @@ import makeStyles from "@mui/styles/makeStyles";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
 import type { PublicProps } from "@planx/components/ui";
-import buffer from "@turf/buffer";
-import flip from "@turf/flip";
-import { Feature, Polygon, Properties } from "@turf/helpers";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { submitFeedback } from "lib/feedback";
@@ -101,7 +98,7 @@ function Component(props: Props) {
   );
 
   // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
-  //   skip if the applicant plotted a new address on the map
+  //   skip if the applicant plotted a new non-UPRN address on the map
   let classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads`;
   const {
     data: roads,
