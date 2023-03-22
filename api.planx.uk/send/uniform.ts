@@ -121,6 +121,7 @@ const sendToUniform = async (req: Request, res: Response, next: NextFunction) =>
       idoxSubmissionId,
       zipPath
     );
+    if (attachmentAdded) deleteFile(zipPath);
 
     // 4/4 - Get submission details and create audit record
     const submissionDetails = await retrieveSubmission(
@@ -174,9 +175,6 @@ async function checkUniformAuditTable(sessionId: string): Promise<UniformSubmiss
   return application?.uniform_applications[0]?.response;
 }
 
-/**
- * Creates a zip folder containing the documents required by Uniform
- */
 export async function createUniformSubmissionZip({
   csv,
   files,
@@ -398,8 +396,7 @@ async function attachArchive(token: string, submissionId: string, zipPath: strin
 
   const response = await axios.request(attachArchiveConfig)
   // successful upload returns 204 No Content without body
-  const isSuccess = response.status === 204
-  if (isSuccess) deleteFile(zipPath);
+  const isSuccess = response.status === 204;
   return isSuccess
 }
 
