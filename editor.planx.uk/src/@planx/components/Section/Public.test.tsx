@@ -12,6 +12,11 @@ describe("Section component", () => {
 
     setup(<Section title="Section one" handleSubmit={handleSubmit} />);
 
+    expect(
+      screen.queryByText("Application incomplete.")
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Continue")).not.toBeInTheDocument();
+
     // handleSubmit is still called by useEffect to set auto = true so the Section isn't seen in card sequence
     expect(handleSubmit).toHaveBeenCalled();
   });
@@ -66,16 +71,15 @@ describe("SectionsOverviewList component", () => {
     section2: SectionStatus.InProgress,
     section3: SectionStatus.NotStarted,
   };
+  const defaultProps = {
+    sectionNodes: mockSectionNodes,
+    sectionStatuses: mockSectionStatuses,
+    showChange: true,
+  };
 
   it("renders correctly when the NAVIGATION_UI feature flag is toggled on", () => {
     toggleFeatureFlag("NAVIGATION_UI");
-    setup(
-      <SectionsOverviewList
-        sectionNodes={mockSectionNodes}
-        sectionStatuses={mockSectionStatuses}
-        showChange={true}
-      />
-    );
+    setup(<SectionsOverviewList {...defaultProps} />);
 
     expect(screen.getByText("Section one")).toBeInTheDocument();
     expect(screen.getByRole("button")).toHaveTextContent("Section one");
@@ -88,15 +92,17 @@ describe("SectionsOverviewList component", () => {
     expect(screen.getByText(SectionStatus.NotStarted)).toBeInTheDocument();
   });
 
+  it("does not link section header text when showChange is false", () => {
+    toggleFeatureFlag("NAVIGATION_UI");
+    setup(<SectionsOverviewList {...defaultProps} showChange={false} />);
+
+    expect(screen.getByText("Section one")).toBeInTheDocument();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
   it("should not have any accessiblity violations", async () => {
     toggleFeatureFlag("NAVIGATION_UI");
-    const { container } = setup(
-      <SectionsOverviewList
-        sectionNodes={mockSectionNodes}
-        sectionStatuses={mockSectionStatuses}
-        showChange={true}
-      />
-    );
+    const { container } = setup(<SectionsOverviewList {...defaultProps} />);
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
