@@ -211,7 +211,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
  */
 function getContentTitle(node: Store.node): string {
   const dom = new DOMParser().parseFromString(node.data.content, "text/html");
-  const text = dom.body.textContent;
+  const h1 = dom.body.getElementsByTagName("h1")[0]?.textContent;
+  const text = h1 || dom.body.textContent;
   if (!text) return `Content: ${node.id}`;
   const TITLE_LENGTH = 50;
   const truncate = (data: string) =>
