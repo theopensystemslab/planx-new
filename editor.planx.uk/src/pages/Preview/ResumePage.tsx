@@ -175,8 +175,6 @@ const ResumePage: React.FC = () => {
     Record<any, any> | undefined
   >();
 
-  console.log(pageStatus, email, sessionId);
-
   useEffect(() => {
     if (email) handleSubmit();
   }, [email]);
