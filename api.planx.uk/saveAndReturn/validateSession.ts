@@ -10,8 +10,11 @@ import {
   getSaveAndReturnPublicHeaders,
   stringifyWithRootKeysSortedAlphabetically,
 } from "./utils";
-import { sortBreadcrumbs } from "@opensystemslab/planx-core";
-import type { EnrichedCrumb } from "@opensystemslab/planx-core";
+import { normalizeFlow, sortBreadcrumbs } from "@opensystemslab/planx-core";
+import type {
+  OrderedBreadcrumbs,
+  NormalizedCrumb,
+} from "@opensystemslab/planx-core";
 import type { Breadcrumb, LowCalSession, Node } from "../types";
 
 export async function validateSession(
@@ -65,15 +68,17 @@ export async function validateSession(
           ...currentFlow[key],
         }));
         if (alteredNodes.length) {
-          // each EnrichedCrumb will include a sectionId where relevant (used later)
-          const enrichedAndOrderedBreadcrumbs: Array<EnrichedCrumb> =
-            sortBreadcrumbs(savedFlow, sessionData.data.breadcrumbs);
+          // each NormalizedCrumb will include a sectionId where relevant (used later)
+          const orderedBreadcrumbs: OrderedBreadcrumbs = sortBreadcrumbs(
+            normalizeFlow(savedFlow),
+            sessionData.data.breadcrumbs
+          );
           const removedBreadcrumbs: Breadcrumb = {};
           alteredNodes.forEach((node) => {
             // if the session breadcrumbs include any altered content,
             // remove those breadcrumbs so the user will be re-prompted to answer those questions
-            const affectedBreadcrumb = enrichedAndOrderedBreadcrumbs.find(
-              (crumb: EnrichedCrumb) => crumb.id == node.id!
+            const affectedBreadcrumb = orderedBreadcrumbs.find(
+              (crumb: NormalizedCrumb) => crumb.id == node.id!
             );
             if (affectedBreadcrumb && sessionData.data.breadcrumbs[node.id!]) {
               // remove affected breadcrumbs

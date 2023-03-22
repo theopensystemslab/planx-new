@@ -10,7 +10,7 @@ specifiers:
   '@airbrake/node': ^2.1.7
   '@babel/core': ^7.19.6
   '@babel/preset-typescript': ^7.18.6
-  '@opensystemslab/planx-core': git://github.com/theopensystemslab/planx-core.git#aa46c2e
+  '@opensystemslab/planx-core': git://github.com/theopensystemslab/planx-core.git#ee9dbc8
   '@opensystemslab/planx-document-templates': git://github.com/theopensystemslab/planx-document-templates#debaeca
   '@types/adm-zip': ^0.5.0
   '@types/body-parser': ^1.19.2
@@ -83,7 +83,7 @@ specifiers:
 
 dependencies:
   '@airbrake/node': 2.1.7
-  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/aa46c2e
+  '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/ee9dbc8
   '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca_@babel+core@7.19.6
   adm-zip: 0.5.9
   aws-sdk: 2.1180.0
@@ -3936,6 +3936,13 @@ packages:
       punycode: 1.4.1
     dev: false
 
+  /fast-xml-parser/4.1.3:
+    resolution: {integrity: sha512-LsNDahCiCcJPe8NO7HijcnukHB24tKbfDDA5IILx9dmW3Frb52lhbeX6MPNUSvyGNfav2VTYpJ/OqkRoVLrh2Q==}
+    hasBin: true
+    dependencies:
+      strnum: 1.0.5
+    dev: false
+
   /fastq/1.13.0:
     resolution: {integrity: sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw==}
     dependencies:
@@ -5701,8 +5708,16 @@ packages:
       p-locate: 5.0.0
     dev: true
 
+  /lodash.get/4.4.2:
+    resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    dev: false
+
   /lodash.groupby/4.6.0:
     resolution: {integrity: sha512-5dcWxm23+VAoz+awKmBaiBvzox8+RqMgFhi7UvX9DHZr2HdxHXM/Wrf8cfKpsW37RNrvtPn6hSwNqurSILbmJw==}
+    dev: false
+
+  /lodash.has/4.5.2:
+    resolution: {integrity: sha512-rnYUdIo6xRCJnQmbVFEwcxF144erlD+M3YcJUVesflU9paQaE8p+fJDcIQrlMYbxoANFL+AB9hZrzSBBk5PL+g==}
     dev: false
 
   /lodash.includes/4.3.0:
@@ -7269,6 +7284,10 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /strnum/1.0.5:
+    resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}
+    dev: false
+
   /stylis/4.1.3:
     resolution: {integrity: sha512-GP6WDNWf+o403jrEp9c5jibKavrtLW+/qYGhFxFrG8maXhwTBI7gLLhiBb0o7uFccWN+EOS9aMO6cGHWAO07OA==}
     dev: false
@@ -7584,6 +7603,11 @@ packages:
     resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
     engines: {node: '>=10'}
     dev: true
+
+  /type-fest/3.6.1:
+    resolution: {integrity: sha512-htXWckxlT6U4+ilVgweNliPqlsVSSucbxVexRYllyMVJDtf5rTjv6kF/s+qAd4QSL1BZcnJPEJavYBPQiWuZDA==}
+    engines: {node: '>=14.16'}
+    dev: false
 
   /type-is/1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
@@ -7915,17 +7939,26 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/theopensystemslab/planx-core/aa46c2e:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/aa46c2e}
+  /zod/3.21.4:
+    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+    dev: false
+
+  github.com/theopensystemslab/planx-core/ee9dbc8:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ee9dbc8}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     engines: {node: ^16, pnpm: ^7.8.0}
     prepare: true
     requiresBuild: true
     dependencies:
+      fast-xml-parser: 4.1.3
       graphql: 16.6.0
       graphql-request: 5.1.0_graphql@16.6.0
+      lodash.get: 4.4.2
+      lodash.has: 4.5.2
       lodash.kebabcase: 4.1.1
+      type-fest: 3.6.1
+      zod: 3.21.4
     transitivePeerDependencies:
       - encoding
     dev: false
