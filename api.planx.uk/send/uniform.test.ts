@@ -31,11 +31,12 @@ jest.mock("@opensystemslab/planx-document-templates", () => {
   };
 });
 
-const mockGenerateOneAppXML = jest.fn().mockResolvedValue("<dummy:xml></dummy:xml>")
+const mockGenerateOneAppXML = jest.fn().mockResolvedValue("<dummy:xml></dummy:xml>");
 jest.mock("@opensystemslab/planx-core", () => {
   return {
     CoreDomainClient: jest.fn().mockImplementation(() => ({
       generateOneAppXML: () => mockGenerateOneAppXML(),
+      getDocumentTemplateNamesForSession: jest.fn().mockResolvedValue(["X", "Y"]),
     }))
   }
 });
@@ -65,7 +66,6 @@ describe("createUniformSubmissionZip", () => {
       csv: [],
       files: [],
       geojson: null,
-      templateNames: [],
     };
     await createUniformSubmissionZip(payload);
     expect(mockAddLocalFile).toHaveBeenCalledWith("Overview.htm");
@@ -98,7 +98,6 @@ describe("createUniformSubmissionZip", () => {
       },
       csv: [],
       files: [],
-      templateNames: [],
     };
     const expectedBuffer = Buffer.from(JSON.stringify(geojson, null, 2));
     await createUniformSubmissionZip(payload);
@@ -135,7 +134,6 @@ describe("createUniformSubmissionZip", () => {
       },
       csv: [],
       files: [],
-      templateNames: [],
     };
     await createUniformSubmissionZip(payload);
     expect(mockAddLocalFile).toHaveBeenCalledWith("LocationPlan.htm");
@@ -148,7 +146,6 @@ describe("createUniformSubmissionZip", () => {
       passport: { data: {} },
       csv: [],
       files: [],
-      templateNames: [],
     };
     await createUniformSubmissionZip(payload);
     expect(mockAddLocalFile).not.toHaveBeenCalledWith("LocationPlan.htm");
@@ -164,7 +161,6 @@ describe("createUniformSubmissionZip", () => {
       passport: { data: {} },
       csv: [],
       files: [],
-      templateNames: ["X", "Y"],
     };
     await createUniformSubmissionZip(payload);
     expect(mockAddLocalFile).toHaveBeenCalledWith("X.doc");
@@ -180,7 +176,6 @@ describe("createUniformSubmissionZip", () => {
       passport: { data: {} },
       csv: [],
       files: [],
-      templateNames: ["X", "Y"],
     };
     await createUniformSubmissionZip(payload);
     expect(mockAddLocalFile).not.toHaveBeenCalledWith("X.doc");
@@ -194,7 +189,6 @@ describe("createUniformSubmissionZip", () => {
       passport: { data: {} },
       csv: [],
       files: [],
-      templateNames: ["X", "Y"],
     };
     await expect(createUniformSubmissionZip(payload)).rejects.toThrow(/Failed to generate OneApp XML/);
   });

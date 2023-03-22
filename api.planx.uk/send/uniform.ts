@@ -56,7 +56,6 @@ interface UniformApplication {
 
 interface SendToUniformPayload {
   sessionId: string,
-  templateNames: string[],
   passport: Passport,
   csv: PlanXExportData[],
   files: string[],
@@ -179,7 +178,6 @@ export async function createUniformSubmissionZip({
   csv,
   files,
   sessionId,
-  templateNames,
   passport,
 }: SendToUniformPayload) {
   // initiate an empty zip folder
@@ -217,7 +215,8 @@ export async function createUniformSubmissionZip({
   zip.addLocalFile(csvPath);
   deleteFile(csvPath);
 
-  await addOneAppXMLToZip(zip, sessionId);
+  await addOneAppXMLToZip(zip, tmpDir, sessionId);
+  await addTemplateFilesToZip(zip, tmpDir, sessionId, passport);
 
   // generate and add an HTML overview document for the submission to zip
   const overviewPath = path.join(tmpDir, "Overview.htm");
@@ -240,34 +239,6 @@ export async function createUniformSubmissionZip({
     await resolveStream(boundaryStream);
     zip.addLocalFile(boundaryPath);
     deleteFile(boundaryPath);
-  }
-
-  // generate and add additional submission documents
-  if (templateNames?.length) { 
-    for (const templateName of templateNames) {
-      let isTemplateSupported = false;
-      try {
-        isTemplateSupported = hasRequiredDataForTemplate({
-          passport,
-          templateName,
-        });
-      } catch (e) {
-        console.log(`Template "${templateName}" could not be generated so has been skipped`);
-        console.log(e)
-        continue
-      }
-      if (isTemplateSupported) {
-        const templatePath = path.join(tmpDir, `${templateName}.doc`);
-        const templateFile = fs.createWriteStream(templatePath);
-        const templateStream = generateDocxTemplateStream({
-          passport,
-          templateName,
-        }).pipe(templateFile);
-        await resolveStream(templateStream);
-        zip.addLocalFile(templatePath);
-        deleteFile(templatePath);
-      }
-    }
   }
 
   // create the zip file
@@ -479,9 +450,9 @@ const createUniformApplicationAuditRecord = async ({
   return application.insert_uniform_applications_one;
 };
 
-const addOneAppXMLToZip = async (zip: AdmZip, sessionId: string) => {
+const addOneAppXMLToZip = async (zip: AdmZip, tmpDir: string, sessionId: string) => {
   try {
-    const xmlPath = "proposal.xml"; //  must be named "proposal.xml" to be processed by Uniform
+    const xmlPath = path.join(tmpDir, "proposal.xml"); // must be named "proposal.xml" to be processed by Uniform
     const xmlFile = fs.createWriteStream(xmlPath);
     const xml = await _admin.generateOneAppXML(sessionId);
     const xmlStream = str(xml.trim()).pipe(xmlFile);
@@ -490,6 +461,36 @@ const addOneAppXMLToZip = async (zip: AdmZip, sessionId: string) => {
     deleteFile(xmlPath);
   } catch (error) {
     throw Error(`Failed to generate OneApp XML. Error - ${error}`)
+  }
+}
+
+const addTemplateFilesToZip = async (zip: AdmZip, tmpDir: string, sessionId: string, passport: Passport) => {
+  const templateNames = await _admin.getDocumentTemplateNamesForSession(sessionId);
+  if (templateNames?.length) {
+    for (const templateName of templateNames) {
+      let isTemplateSupported = false;
+      try {
+        isTemplateSupported = hasRequiredDataForTemplate({
+          passport,
+          templateName,
+        });
+      } catch (e) {
+        console.log(`Template "${templateName}" could not be generated so has been skipped`);
+        console.log(e)
+        continue
+      }
+      if (isTemplateSupported) {
+        const templatePath = path.join(tmpDir, `${templateName}.doc`);
+        const templateFile = fs.createWriteStream(templatePath);
+        const templateStream = generateDocxTemplateStream({
+          passport,
+          templateName,
+        }).pipe(templateFile);
+        await resolveStream(templateStream);
+        zip.addLocalFile(templatePath);
+        deleteFile(templatePath);
+      }
+    }
   }
 }
 
