@@ -178,7 +178,7 @@ const findSession = async (
   `;
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
   const response = await publicClient.request(query, { sessionId }, headers);
-  return response.lowcal_sessions?.[0];
+  return response?.lowcal_sessions_by_pk;
 };
 
 const updateLowcalSessionData = async (
