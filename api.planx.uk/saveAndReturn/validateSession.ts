@@ -170,7 +170,7 @@ const findSession = async (
 ): Promise<LowCalSession | undefined> => {
   const query = gql`
     query FindSession($sessionId: uuid!) {
-      lowcal_sessions_by_pk(id: $sessionId) {
+      lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
         data
         updated_at
       }
@@ -178,7 +178,7 @@ const findSession = async (
   `;
   const headers = getSaveAndReturnPublicHeaders(sessionId, email);
   const response = await publicClient.request(query, { sessionId }, headers);
-  return response?.lowcal_sessions_by_pk;
+  return response.lowcal_sessions?.[0];
 };
 
 const updateLowcalSessionData = async (
