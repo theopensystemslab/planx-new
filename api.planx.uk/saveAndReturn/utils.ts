@@ -157,7 +157,7 @@ const validateSingleSessionRequest = async (
   try {
     const query = gql`
       query ValidateSingleSessionRequest($sessionId: uuid!) {
-        lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
+        lowcal_sessions_by_pk(id: $sessionId) {
           id
           data
           created_at

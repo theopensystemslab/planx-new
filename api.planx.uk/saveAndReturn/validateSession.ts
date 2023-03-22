@@ -170,7 +170,7 @@ const findSession = async (
 ): Promise<LowCalSession | undefined> => {
   const query = gql`
     query FindSession($sessionId: uuid!) {
-      lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
+      lowcal_sessions_by_pk(id: $sessionId) {
         data
         updated_at
       }
