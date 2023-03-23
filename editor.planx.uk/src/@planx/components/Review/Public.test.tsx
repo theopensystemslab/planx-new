@@ -225,15 +225,17 @@ const uploadedPlansBreadcrumb = {
     auto: false,
     data: {
       "proposal.drawing.locationPlan": uploadedPlanUrl,
-      "property.uploadedFile": {
-        file: {
-          path: "fut.email.png",
+      "property.uploadedFile": [
+        {
+          file: {
+            path: "fut.email.png",
+          },
+          status: "success",
+          progress: 1,
+          id: "u6jFS4xJ-MM9Gsg1o2ZsI",
+          url: uploadedPlanUrl,
         },
-        status: "success",
-        progress: 1,
-        id: "u6jFS4xJ-MM9Gsg1o2ZsI",
-        url: uploadedPlanUrl,
-      },
+      ],
     },
   },
 };
@@ -260,9 +262,11 @@ const uploadedPlansPassport = {
     "property.type": ["residential.dwelling.house.terrace"],
     "property.localAuthorityDistrict": ["Southwark"],
     "property.region": ["London"],
-    "proposal.drawing.locationPlan": {
-      url: uploadedPlanUrl,
-    },
+    "proposal.drawing.locationPlan": [
+      {
+        url: uploadedPlanUrl,
+      },
+    ],
     "property.uploadedFile": {
       file: {
         path: "fut.email.png",
