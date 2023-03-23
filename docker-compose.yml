@@ -125,9 +125,9 @@ services:
       retries: 5
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_URL: http://hasura-proxy:7000/v1/graphql
-      HASURA_METADATA_URL: http://hasura-proxy:7000/v1/metadata 
-      HASURA_SCHEMA_URL: http://hasura-proxy:7000/v2/query
+      HASURA_GRAPHQL_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v1/graphql
+      HASURA_METADATA_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v1/metadata 
+      HASURA_SCHEMA_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v2/query
       JWT_SECRET: ${JWT_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}

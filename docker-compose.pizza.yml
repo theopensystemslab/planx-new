@@ -20,7 +20,7 @@ services:
   hasura-proxy:
     labels:
       virtual.host: hasura.${ROOT_DOMAIN}
-      virtual.port: 7000
+      virtual.port: ${HASURA_PROXY_PORT}
       virtual.tls-email: ${TLS_EMAIL}
 
   api:
