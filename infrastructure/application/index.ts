@@ -500,7 +500,7 @@ export = async () => {
     bucket: DOMAIN,
     website: {
       indexDocument: "index.html",
-      errorDocument: "index.html",
+      errorDocument: "error.html",
     },
   });
 
