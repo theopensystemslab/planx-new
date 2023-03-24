@@ -3,7 +3,7 @@
   "scripts": {
     "test": "playwright test",
     "check": "tsc && eslint './src/*.{js,ts}'",
-    "test:server": "serve ../editor.planx.uk/build --single --listen 3000",
+    "test:server": "NODE_ENV=test serve ../editor.planx.uk/build --single --listen 3000",
     "postinstall": "./install-dependencies.sh"
   },
   "dependencies": {

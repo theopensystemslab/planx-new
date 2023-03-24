@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
+import { SectionsOverviewList } from "@planx/components/Section/Public";
 import Card from "@planx/components/shared/Preview/Card";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -35,14 +36,26 @@ const ReconciliationPage: React.FC<Props> = ({
   buttonText,
   onButtonClick,
 }) => {
-  const [flow, changeAnswer] = useStore((state) => [
-    state.flow,
-    state.changeAnswer,
-  ]);
+  const [flow, hasSections, sectionNodes, sectionStatuses, changeAnswer] =
+    useStore((state) => [
+      state.flow,
+      state.hasSections,
+      state.sectionNodes,
+      state.sectionStatuses,
+      state.changeAnswer,
+    ]);
 
   const sortedBreadcrumbs = sortBreadcrumbs(
     data?.reconciledSessionData?.breadcrumbs,
     flow
+  );
+
+  // Calculate the section statuses based on the response data from /validate-session, before it's been updated in app state
+  const removedNodeIds: string[] | undefined =
+    data?.removedBreadcrumbs && Object.keys(data.removedBreadcrumbs);
+  const reconciledSectionStatuses = sectionStatuses(
+    sortedBreadcrumbs,
+    removedNodeIds
   );
 
   const theme = useTheme();
@@ -76,16 +89,24 @@ const ReconciliationPage: React.FC<Props> = ({
             </Box>
           )}
         <Typography variant="h3" component="h2">
-          Review your answers so far
+          Review your {hasSections ? "progress" : "answers"} so far
         </Typography>
-        <SummaryListsBySections
-          breadcrumbs={sortedBreadcrumbs}
-          flow={flow}
-          passport={data?.reconciledSessionData?.passport}
-          changeAnswer={changeAnswer}
-          showChangeButton={false}
-          sectionComponent="h3"
-        />
+        {hasSections ? (
+          <SectionsOverviewList
+            sectionNodes={sectionNodes}
+            sectionStatuses={reconciledSectionStatuses}
+            showChange={false}
+          />
+        ) : (
+          <SummaryListsBySections
+            breadcrumbs={sortedBreadcrumbs}
+            flow={flow}
+            passport={data?.reconciledSessionData?.passport}
+            changeAnswer={changeAnswer}
+            showChangeButton={false}
+            sectionComponent="h3"
+          />
+        )}
         {buttonText && (
           <Button
             variant="contained"

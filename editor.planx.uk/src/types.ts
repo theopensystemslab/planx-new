@@ -150,3 +150,7 @@ export type Session = {
   id: SharedStore["id"];
   govUkPayment?: GovUKPayment;
 };
+
+// re-export store types
+export interface Passport extends Store.passport {}
+export interface Breadcrumbs extends Store.breadcrumbs {}

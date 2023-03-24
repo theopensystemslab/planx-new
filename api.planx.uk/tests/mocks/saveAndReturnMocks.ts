@@ -1,6 +1,8 @@
 import { v4 as uuidV4 } from "uuid";
+import type { Flow } from "../../types";
 
 export const mockTeam = {
+  id: 1,
   slug: "test-team",
   name: "Test Team",
   notifyPersonalisation: {
@@ -34,21 +36,37 @@ export const mockLowcalSession = {
   created_at: "2022-01-04T01:02:03.865452+00:00",
 };
 
-export const mockFlow = {
+export const mockFlow: Flow = {
   id: "dcfd4f07-76da-4b67-9822-2aca92b27551",
   slug: "slug",
-  team: mockTeam,
+  team_id: mockTeam.id,
+  data: {
+    _root: {
+      edges: ["one"],
+    },
+    one: {
+      data: {},
+    },
+  },
 };
 
-export const mockFindSession = {
+export const mockFindSession = (breadcrumbs = {}) => ({
   name: "FindSession",
   data: {
-    lowcal_sessions: [mockLowcalSession],
+    lowcal_sessions: [
+      {
+        ...mockLowcalSession,
+        data: {
+          ...mockLowcalSession.data,
+          breadcrumbs,
+        },
+      },
+    ],
   },
   variables: {
     sessionId: mockLowcalSession.id,
   },
-};
+});
 
 export const mockNotFoundSession = {
   name: "FindSession",
@@ -60,7 +78,7 @@ export const mockNotFoundSession = {
   },
 };
 
-export const mockGetMostRecentPublishedFlow = (data) => ({
+export const mockGetMostRecentPublishedFlow = (data: Flow["data"]) => ({
   name: "GetMostRecentPublishedFlow",
   data: {
     flows_by_pk: {
@@ -90,7 +108,7 @@ export const stubUpdateLowcalSessionData = {
   matchOnVariables: false,
 };
 
-export const mockGetPublishedFlowByDate = (data) => ({
+export const mockGetPublishedFlowByDate = (data: Flow["data"]) => ({
   name: "GetPublishedFlowByDate",
   data: {
     flows_by_pk: {
@@ -119,6 +137,9 @@ export const mockValidateSingleSessionRequest = {
   data: {
     flows_by_pk: mockFlow,
     lowcal_sessions: [mockLowcalSession],
+  },
+  variables: {
+    sessionId: mockLowcalSession.id,
   },
 };
 

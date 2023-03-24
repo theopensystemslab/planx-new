@@ -1,7 +1,15 @@
 import { format, addDays } from "date-fns";
 import { gql, GraphQLClient } from "graphql-request";
-import { publicGraphQLClient as publicClient, adminGraphQLClient as adminClient } from "../hasura";
-import { EmailSubmissionNotifyConfig, LowCalSession, SaveAndReturnNotifyConfig, Team } from "../types";
+import {
+  publicGraphQLClient as publicClient,
+  adminGraphQLClient as adminClient,
+} from "../hasura";
+import {
+  EmailSubmissionNotifyConfig,
+  LowCalSession,
+  SaveAndReturnNotifyConfig,
+  Team,
+} from "../types";
 import { notifyClient } from "./notify";
 
 const DAYS_UNTIL_EXPIRY = 28;
@@ -122,7 +130,7 @@ const sendSingleApplicationEmail = async (
     const { flowSlug, team, session } = await validateSingleSessionRequest(
       email,
       sessionId,
-      template,
+      template
     );
     const config = {
       personalisation: getPersonalisation(session, flowSlug, team),
@@ -144,12 +152,12 @@ const sendSingleApplicationEmail = async (
 const validateSingleSessionRequest = async (
   email: string,
   sessionId: string,
-  template: Template,
+  template: Template
 ) => {
   try {
     const query = gql`
-      query ValidateSingleSessionRequest {
-        lowcal_sessions {
+      query ValidateSingleSessionRequest($sessionId: uuid!) {
+        lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
           id
           data
           created_at
@@ -170,7 +178,7 @@ const validateSingleSessionRequest = async (
     const headers = getSaveAndReturnPublicHeaders(sessionId, email);
     const {
       lowcal_sessions: [session],
-    } = await client.request(query, null, headers);
+    } = await client.request(query, { sessionId }, headers);
 
     if (!session) throw Error(`Unable to find session: ${sessionId}`);
 
@@ -184,9 +192,8 @@ const validateSingleSessionRequest = async (
   }
 };
 
-const getClientForTemplate = (template: Template): GraphQLClient => (
-  template in privateEmailTemplates ? adminClient : publicClient
-);
+const getClientForTemplate = (template: Template): GraphQLClient =>
+  template in privateEmailTemplates ? adminClient : publicClient;
 
 interface SessionDetails {
   hasUserSaved: boolean;
@@ -210,7 +217,7 @@ const getSessionDetails = async (
     projectType: projectTypes || "Project type not submitted",
     id: session.id,
     expiryDate: calculateExpiryDate(session.created_at),
-    hasUserSaved: session.has_user_saved
+    hasUserSaved: session.has_user_saved,
   };
 };
 
@@ -279,7 +286,9 @@ const markSessionAsSubmitted = async (sessionId: string) => {
 /**
  * Get formatted list of the session's project types
  */
-const getHumanReadableProjectType = async (session: LowCalSession): Promise<string | void>=> {
+const getHumanReadableProjectType = async (
+  session: LowCalSession
+): Promise<string | void> => {
   const rawProjectType =
     session?.data?.passport?.data?.["proposal.projectType"];
   if (!rawProjectType) return;

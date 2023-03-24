@@ -151,7 +151,7 @@ test("updateSectionData() updates section title and index correctly", () => {
   expect(currentSectionTitle).toEqual("Third section");
 });
 
-test("calculateSectionStatuses() gets the initial statuses of all sections in a flow", () => {
+test("SectionStatuses() gets the initial statuses of all sections in a flow", () => {
   setState({ flow: flowWithThreeSections });
   initNavigationStore();
 
@@ -163,9 +163,9 @@ test("calculateSectionStatuses() gets the initial statuses of all sections in a 
 
   // Initial statuses are calculated correctly
   expect(statuses).toEqual({
-    firstSection: "IN PROGRESS",
-    secondSection: "CANNOT START YET",
-    thirdSection: "CANNOT START YET",
+    firstSection: "READY TO CONTINUE",
+    secondSection: "CANNOT CONTINUE YET",
+    thirdSection: "CANNOT CONTINUE YET",
   });
 });
 
@@ -183,8 +183,8 @@ test("sectionStatuses() updates the status of sections in a flow as you navigate
   // Confirm statuses have been updated correctly
   expect(statuses).toEqual({
     firstSection: "COMPLETED",
-    secondSection: "IN PROGRESS",
-    thirdSection: "CANNOT START YET",
+    secondSection: "READY TO CONTINUE",
+    thirdSection: "CANNOT CONTINUE YET",
   });
 
   // Navigate forwards again
@@ -197,6 +197,24 @@ test("sectionStatuses() updates the status of sections in a flow as you navigate
   expect(newStatuses).toEqual({
     firstSection: "COMPLETED",
     secondSection: "COMPLETED",
-    thirdSection: "IN PROGRESS",
+    thirdSection: "READY TO CONTINUE",
+  });
+});
+
+test("sectionStatuses() applies the NEW INFORMATION NEEDED status if a section was updated during reconciliation", () => {
+  setState({ flow: flowWithThreeSections });
+  initNavigationStore();
+
+  // Navigate forwards
+  record("firstSection", { auto: false });
+  record("firstQuestion", { answers: ["firstAnswer"] });
+
+  // Mimic "reconciliation" process and pretend that the firstSection & firstQuestion have been updated in content, and therefore removed from breadcrumbs leaving an empty object
+  const statuses = sectionStatuses({}, ["firstSection", "firstQuestion"]);
+
+  expect(statuses).toEqual({
+    firstSection: "NEW INFORMATION NEEDED", // no longer considered COMPLETED
+    secondSection: "READY TO CONTINUE",
+    thirdSection: "CANNOT CONTINUE YET",
   });
 });

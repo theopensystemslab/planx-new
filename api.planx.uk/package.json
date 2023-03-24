@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@airbrake/node": "^2.1.7",
-    "@opensystemslab/planx-core": "git://github.com/theopensystemslab/planx-core.git#5e932c3",
-    "@opensystemslab/planx-document-templates": "git://github.com/theopensystemslab/planx-document-templates#c6dee14",
+    "@opensystemslab/planx-core": "git://github.com/theopensystemslab/planx-core.git#bb8b820",
+    "@opensystemslab/planx-document-templates": "git://github.com/theopensystemslab/planx-document-templates#debaeca",
     "adm-zip": "^0.5.9",
     "aws-sdk": "^2.1180.0",
     "axios": "^0.27.2",
@@ -67,6 +67,7 @@
     "@types/passport": "^1.0.11",
     "@types/passport-google-oauth20": "^2.0.11",
     "@types/supertest": "^2.0.12",
+    "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
     "dotenv": "^16.0.1",
