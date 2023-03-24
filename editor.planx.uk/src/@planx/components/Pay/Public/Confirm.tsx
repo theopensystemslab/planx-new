@@ -56,6 +56,9 @@ export default function Confirm(props: Props) {
   const [page, setPage] = useState<"Pay" | "InviteToPay">("Pay");
   const [nomineeName, setNomineeName] = useState<string | undefined>();
   const [nomineeEmail, setNomineeEmail] = useState<string | undefined>();
+  const [validatedNomineeEmail, setValidatedNomineeEmail] = useState<
+    string | undefined
+  >();
   const [showNomineeEmailError, setShowNomineeEmailError] =
     useState<boolean>(false);
 
@@ -80,8 +83,11 @@ export default function Confirm(props: Props) {
   };
 
   const handleNomineeEmailCheck = () => {
-    if (!nomineeEmail || !emailRegex.test(nomineeEmail))
+    if (!nomineeEmail || !emailRegex.test(nomineeEmail)) {
       setShowNomineeEmailError(true);
+    } else {
+      setValidatedNomineeEmail(nomineeEmail);
+    }
   };
 
   const payBody = () => (
@@ -111,6 +117,7 @@ export default function Confirm(props: Props) {
                   component="button"
                   onClick={changePage}
                   disabled={Boolean(props?.paymentStatus)}
+                  data-testid="nominate-page-link"
                 >
                   <Typography variant="body2">
                     Nominate someone else to pay for this application
@@ -124,7 +131,7 @@ export default function Confirm(props: Props) {
         </Card>
       ) : (
         <Card handleSubmit={props.onConfirm} isValid>
-          <ErrorSummary role="status">
+          <ErrorSummary role="status" data-testid="error-summary">
             <Typography variant="h5" component="h3" gutterBottom>
               {props.error}
             </Typography>
@@ -171,7 +178,7 @@ export default function Confirm(props: Props) {
             id="nomineeEmail"
             value={nomineeEmail || ""}
             errorMessage={
-              showNomineeEmailError && !nomineeEmail
+              showNomineeEmailError && !validatedNomineeEmail
                 ? `Enter an email address in the correct format, like name@example.com`
                 : ""
             }
@@ -183,7 +190,7 @@ export default function Confirm(props: Props) {
             inputProps={{
               "aria-describedby": [
                 "Nominate someone else to pay for this application - email",
-                showNomineeEmailError
+                showNomineeEmailError && !validatedNomineeEmail
                   ? `Enter an email address in the correct format`
                   : "",
               ]
