@@ -157,12 +157,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
               files.push(url);
             });
           });
-        
-        // Additionally check if they uploaded a location plan instead of drawing
-        if (sessionData.passport?.data?.["proposal.drawing.locationPlan"]) {
-          files.push(sessionData.passport.data["proposal.drawing.locationPlan"]);
-        }
-  
+
         // Download files from S3 and add them to the zip folder
         if (files.length > 0) {
           for (const file of files) {
