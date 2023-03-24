@@ -1,6 +1,7 @@
 import { logger } from "airbrake";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { setLocalFlow } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { handleSubmit } from "pages/Preview/Node";
@@ -267,6 +268,12 @@ function Component(props: Props) {
               ? "GOV.UK Pay is not enabled for this local authority"
               : undefined
           }
+          showInviteToPay={
+            props.allowInviteToPay &&
+            state.status !== "unsupported_team" &&
+            hasFeatureFlag("INVITE_TO_PAY")
+          }
+          paymentStatus={govUkPayment?.state?.status}
         />
       ) : (
         <DelayedLoadingIndicator text={state.displayText || state.status} />
