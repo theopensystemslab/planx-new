@@ -89,12 +89,16 @@
 - table:
     schema: public
     name: flow_document_templates
+  object_relationships:
+    - name: flow
+      using:
+        foreign_key_constraint_on: flow_id
   select_permissions:
     - role: public
       permission:
         columns:
           - document_template
-          - flow
+          - flow_id
         filter: {}
 - table:
     schema: public
@@ -119,6 +123,13 @@
       using:
         foreign_key_constraint_on: team_id
   array_relationships:
+    - name: document_templates
+      using:
+        foreign_key_constraint_on:
+          column: flow_id
+          table:
+            schema: public
+            name: flow_document_templates
     - name: operations
       using:
         foreign_key_constraint_on:
@@ -181,14 +192,14 @@
   insert_permissions:
     - role: public
       permission:
+        check:
+          email:
+            _eq: x-hasura-lowcal-email
         columns:
           - data
           - email
           - flow_id
           - id
-        check:
-          email:
-            _eq: x-hasura-lowcal-email
   select_permissions:
     - role: public
       permission:

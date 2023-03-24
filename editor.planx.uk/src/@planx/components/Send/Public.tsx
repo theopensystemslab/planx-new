@@ -5,7 +5,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { useAsync } from "react-use";
 
-import { _public } from "../../../client";
 import { useTeamSlug } from "../shared/hooks";
 import Card from "../shared/Preview/Card";
 import { makeData, useStagingUrlIfTestApplication } from "../shared/utils";
@@ -18,19 +17,6 @@ import {
 } from "./model";
 
 export type Props = PublicProps<Send>;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& *": {
-      fontFamily: "Inter, sans-serif",
-    },
-  },
-  errorSummary: {
-    marginTop: theme.spacing(1),
-    padding: theme.spacing(3),
-    border: `5px solid #E91B0C`,
-  },
-}));
 
 const SendComponent: React.FC<Props> = ({
   destinations = [DEFAULT_DESTINATION],
@@ -51,9 +37,6 @@ const SendComponent: React.FC<Props> = ({
   // Send makes a single request to create scheduled events in Hasura, then those events make the actual submission requests with retries etc
   const url = `${process.env.REACT_APP_API_URL}/create-send-events/${sessionId}`;
   const request: any = useAsync(async () => {
-    // fetch template names for the Uniform XML
-    const templateNames = await _public.getDocumentTemplateNames(flowId);
-
     const combinedEventsPayload = getCombinedEventsPayload({
       destinations,
       teamSlug,
@@ -63,7 +46,6 @@ const SendComponent: React.FC<Props> = ({
       passport,
       sessionId,
       email,
-      templateNames,
     });
 
     return axios.post(
