@@ -4,11 +4,6 @@ import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
 import { CSVData } from "../model";
 
-type UniformFile = {
-  name: string;
-  url: string;
-};
-
 export function getUniformParams({
   breadcrumbs,
   flow,
@@ -22,38 +17,9 @@ export function getUniformParams({
   passport: Store.passport;
   sessionId: string;
 }) {
-  // make a list of all S3 URLs & filenames from uploaded files
-  const files: UniformFile[] = [];
-  Object.entries(passport.data || {})
-    // add any files uploaded via a FileUpload component
-    .filter(([, v]: any) => v?.[0]?.url)
-    .forEach(([key, arr]) => {
-      (arr as any[]).forEach(({ url, filename }) => {
-        try {
-          files.push({ url: url, name: filename });
-        } catch (err) {}
-      });
-    });
-
-  // additionally add the property boundary file if the user didn't draw
-  if (passport?.data?.["property.uploadedFile"]) {
-    const boundaryFile = passport.data["property.uploadedFile"];
-    files.push({ url: boundaryFile.url, name: boundaryFile.file.path });
-  }
-
-  // applicants may upload the same file in multiple slots,
-  //  but we only want to send a single copy of each file to Uniform
-  const uniqueFiles: string[] = [];
-  files.forEach((file) => {
-    if (!uniqueFiles.includes(file.url)) {
-      uniqueFiles.push(file.url);
-    }
-  });
-
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
     csv: makeCsvData({ breadcrumbs, flow, flowName, passport, sessionId }),
-    files: uniqueFiles,
     passport,
     sessionId,
   };

@@ -34,6 +34,9 @@ jest.mock("@opensystemslab/planx-document-templates", () => {
 const mockGenerateOneAppXML = jest.fn().mockResolvedValue("<dummy:xml></dummy:xml>");
 jest.mock("@opensystemslab/planx-core", () => {
   return {
+    Passport: jest.fn().mockImplementation(() => ({
+      getFiles: jest.fn().mockImplementation(() => []),
+    })),
     CoreDomainClient: jest.fn().mockImplementation(() => ({
       generateOneAppXML: () => mockGenerateOneAppXML(),
       getDocumentTemplateNamesForSession: jest.fn().mockResolvedValue(["X", "Y"]),
