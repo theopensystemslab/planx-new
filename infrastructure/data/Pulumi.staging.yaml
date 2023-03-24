@@ -1,4 +1,4 @@
 config:
   aws:region: eu-west-2
   data:db-password:
-    secure: AAABAEsQNs60gXhWC+qP2ZRkhkq2g52XbzbkTnR2K7MqMF0dzPCNvSro4Zs041AKks75gqwhkPT53bSQ5bs8Aw==
+    secure: AAABALUU0VTDdIvX286ULdrgdRgBwpiLEoA8C4sWbqD2XlBKVV13vjaSKnsoNXkcHe+byQavA5kYRnbDbAqD4bJPSePK/rQYFUoo5FFEPQ95yTjeZFyMVg==
