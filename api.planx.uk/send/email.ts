@@ -204,7 +204,7 @@ async function getTeamEmailSettings(localAuthority: string) {
 async function getSessionData(sessionId: string) {
   const response = await adminClient.request(
     gql`
-      query getSessionData(
+      query GetSessionData(
         $id: uuid!
       ) {
         lowcal_sessions_by_pk(
@@ -225,7 +225,7 @@ async function getSessionData(sessionId: string) {
 async function appendSessionData(sessionId: string, csvData: any) {
   const response = await adminClient.request(
     gql`
-      mutation appendSessionData(
+      mutation AppendSessionData(
         $id: uuid!
         $data: jsonb
       ) {

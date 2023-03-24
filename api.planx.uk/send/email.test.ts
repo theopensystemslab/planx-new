@@ -1,6 +1,18 @@
 import supertest from "supertest";
 import { queryMock } from "../tests/graphqlQueryMock";
 import app from "../server";
+import * as helpers from "./helpers";
+
+jest.mock("@opensystemslab/planx-core", () => {
+  return {
+    Passport: jest.fn().mockImplementation(() => ({
+      getFiles: jest.fn().mockImplementation(() => []),
+    })),
+    CoreDomainClient: jest.fn().mockImplementation(() => ({
+      getDocumentTemplateNamesForSession: jest.fn()
+    }))
+  }
+});
 
 describe(`sending an application by email to a planning office`, () => {
   beforeEach(() => {
@@ -17,7 +29,7 @@ describe(`sending an application by email to a planning office`, () => {
     });
 
     queryMock.mockQuery({
-      name: "getSessionData",
+      name: "GetSessionData",
       matchOnVariables: false,
       data: {
         lowcal_sessions_by_pk: { data: {} }
@@ -26,7 +38,7 @@ describe(`sending an application by email to a planning office`, () => {
     });
 
     queryMock.mockQuery({
-      name: "appendSessionData",
+      name: "AppendSessionData",
       matchOnVariables: false,
       data: {
         update_lowcal_sessions_by_pk: { data: {} }
@@ -113,6 +125,15 @@ describe(`downloading application data received by email`, () => {
       },
       variables: { slug: "southwark" },
     });
+
+    queryMock.mockQuery({
+      name: "GetSessionData",
+      matchOnVariables: false,
+      data: {
+        lowcal_sessions_by_pk: { data: { passport: { test: "dummy data" } } }
+      },
+      variables: { id: "123" },
+    });
   });
 
   it("errors if required query params are missing", async() => {
@@ -136,4 +157,15 @@ describe(`downloading application data received by email`, () => {
         });
       });
   });
+
+ it("calls addTemplateFilesToZip()", async () => {
+    const spy = jest.spyOn(helpers, "addTemplateFilesToZip")
+
+    await supertest(app)
+      .get("/download-application-files/123?email=planners@southwark.gov.uk&localAuthority=southwark")
+      .expect(200)
+      .then(() => {
+        expect(spy).toHaveBeenCalled();
+      });
+ })
 });
