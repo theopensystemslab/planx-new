@@ -181,14 +181,14 @@
   insert_permissions:
     - role: public
       permission:
+        check:
+          email:
+            _eq: x-hasura-lowcal-email
         columns:
           - data
           - email
           - flow_id
           - id
-        check:
-          email:
-            _eq: x-hasura-lowcal-email
   select_permissions:
     - role: public
       permission:
@@ -327,6 +327,22 @@
     - name: flow
       using:
         foreign_key_constraint_on: flow_id
+- table:
+    schema: public
+    name: payment_requests
+  object_relationships:
+    - name: session
+      using:
+        foreign_key_constraint_on: session_id
+  select_permissions:
+    - role: public
+      permission:
+        columns:
+          - created_at
+          - payment_requests_id
+          - session_preview_data
+        filter: {}
+        limit: 1
 - table:
     schema: public
     name: payment_status
