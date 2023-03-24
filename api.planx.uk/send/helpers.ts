@@ -1,10 +1,16 @@
 import AdmZip from "adm-zip";
 import fs from "fs";
 import { gql } from "graphql-request";
-
+import path from "path";
 import airbrake from "../airbrake";
 import { getFileFromS3 } from "../s3/getFile";
 import { adminGraphQLClient } from "../hasura";
+import {
+  hasRequiredDataForTemplate,
+  generateDocxTemplateStream,
+} from "@opensystemslab/planx-document-templates";
+import { _admin } from "../client";
+import { Passport } from '../types';
 
 /**
  * Helper method to locally download S3 files, add them to the zip, then clean them up
@@ -106,7 +112,7 @@ function log(event: object | string) {
   }
 }
 
-// TODO: this would ideally live in planx-clint
+// TODO: this would ideally live in planx-client
 async function insertPaymentStatus({
   flowId,
   sessionId,
@@ -150,4 +156,37 @@ async function insertPaymentStatus({
       status,
     }
   );
+}
+
+export const addTemplateFilesToZip = async (
+  { zip, tmpDir, passport, sessionId }: 
+  { zip: AdmZip, tmpDir: string, passport: Passport, sessionId: string }
+) => {
+  const templateNames = await _admin.getDocumentTemplateNamesForSession(sessionId);
+  if (templateNames?.length) {
+    for (const templateName of templateNames) {
+      let isTemplateSupported = false;
+      try {
+        isTemplateSupported = hasRequiredDataForTemplate({
+          passport,
+          templateName,
+        });
+      } catch (e) {
+        console.log(`Template "${templateName}" could not be generated so has been skipped`);
+        console.log(e)
+        continue
+      }
+      if (isTemplateSupported) {
+        const templatePath = path.join(tmpDir, `${templateName}.doc`);
+        const templateFile = fs.createWriteStream(templatePath);
+        const templateStream = generateDocxTemplateStream({
+          passport,
+          templateName,
+        }).pipe(templateFile);
+        await resolveStream(templateStream);
+        zip.addLocalFile(templatePath);
+        deleteFile(templatePath);
+      }
+    }
+  }
 }

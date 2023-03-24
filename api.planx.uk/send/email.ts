@@ -14,7 +14,7 @@ import {
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted, sendEmail } from "../saveAndReturn/utils";
 import { EmailSubmissionNotifyConfig } from "../types";
-import { deleteFile, downloadFile, resolveStream } from "./helpers";
+import { addTemplateFilesToZip, deleteFile, downloadFile, resolveStream } from "./helpers";
 import { Passport } from '@opensystemslab/planx-core';
 
 const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
@@ -152,11 +152,11 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
     }
 
     if (sessionData.passport) {
-      const passport = new Passport(sessionData.passport);
-      await downloadPassportFiles(zip, tmpDir, passport);
-    }
+      await addTemplateFilesToZip({ zip, tmpDir, passport: sessionData.passport, sessionId });
 
-    // TODO: Add template files
+      const passport = new Passport(sessionData.passport);
+      await downloadPassportFiles({ zip, tmpDir, passport });
+    }
 
     // Generate and save the zip locally
     const zipName = `${sessionId}.zip`;
@@ -247,9 +247,8 @@ async function appendSessionData(sessionId: string, csvData: any) {
 }
 
 async function downloadPassportFiles(
-  zip: AdmZip,
-  tmpDir: string,
-  passport: Passport
+  { zip, tmpDir, passport }:
+  { zip: AdmZip, tmpDir: string, passport: Passport }
 ) {
   const files = passport.getFiles();
   // Download files from S3 and add them to the zip folder
