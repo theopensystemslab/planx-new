@@ -29,7 +29,7 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
 
   try {
     // Confirm this local authority (aka team) has an email configured in teams.submission_email
-    const { submission_email: sendToEmail, notify_personalisation } = await getTeamEmailSettings(req.params.localAuthority);
+    const { sendToEmail, notifyPersonalisation } = await getTeamEmailSettings(req.params.localAuthority);
     if (!sendToEmail) {
       return next({
         status: 400,
@@ -43,7 +43,7 @@ const sendToEmail = async(req: Request, res: Response, next: NextFunction) => {
     // TODO Prepare/improve email template
     const config: EmailSubmissionNotifyConfig = {
       personalisation: {
-        emailReplyToId: notify_personalisation.emailReplyToId,
+        emailReplyToId: notifyPersonalisation.emailReplyToId,
         serviceName: capitalize(payload?.flowName) || "PlanX",
         sessionId: payload.sessionId,
         applicantEmail: payload.email,
@@ -86,7 +86,7 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
 
   try {
     // Confirm that the provided email matches the stored team settings for the provided localAuthority
-    const { submission_email: sendToEmail } = await getTeamEmailSettings(req.query.localAuthority as string);
+    const { sendToEmail } = await getTeamEmailSettings(req.query.localAuthority as string);
     if (sendToEmail !== req.query.email) {
       return next({
         status: 403,
@@ -184,12 +184,12 @@ const downloadApplicationFiles = async(req: Request, res: Response, next: NextFu
 async function getTeamEmailSettings(localAuthority: string) {
   const response = await adminClient.request(
     gql`
-      query getTeamEmailSettings(
+      query GetTeamEmailSettings(
         $slug: String
       ) {
         teams(where: {slug: {_eq: $slug}}) {
-          submission_email
-          notify_personalisation
+          sendToEmail: submission_email
+          notifyPersonalisation: notify_personalisation
         }
       }
     `,
