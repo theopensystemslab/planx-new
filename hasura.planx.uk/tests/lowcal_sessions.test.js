@@ -270,7 +270,7 @@ describe("lowcal_sessions", () => {
           "x-hasura-lowcal-email": ""
         };
 
-        // inital insert (upsert)
+        // initial insert (upsert)
         const res1 = await gqlPublic(updateByPK, { sessionId: anon1, data: { x: 1 } }, headers);
         expect(res1.data.update_lowcal_sessions_by_pk).not.toBeNull();
         expect(res1.data.update_lowcal_sessions_by_pk.id).toEqual(anon1);
