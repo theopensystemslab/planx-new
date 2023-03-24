@@ -41,6 +41,15 @@ interface Props {
   error?: string;
 }
 
+const PayText = styled(Box)(({ theme }) => ({
+  gap: theme.spacing(2),
+  display: "flex",
+  flexDirection: "column",
+  "& > *": {
+    alignSelf: "self-start",
+  },
+}));
+
 export default function Confirm(props: Props) {
   const theme = useTheme();
 
@@ -79,36 +88,39 @@ export default function Confirm(props: Props) {
     <>
       {!props.error ? (
         <Card>
-          <Typography variant="h3">{props.instructionsTitle}</Typography>
-          <Typography variant="body2">
-            <ReactMarkdownOrHtml
-              source={props.instructionsDescription}
-              openLinksOnNewTab
-            />
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={props.onConfirm}
-          >
-            {props.buttonTitle || "Pay using GOV.UK Pay"}
-          </Button>
-          {props.showInviteToPay && (
-            <>
-              <Typography variant="body2">or</Typography>
-              <Link
-                component="button"
-                onClick={changePage}
-                disabled={Boolean(props?.paymentStatus)}
-              >
-                <Typography variant="body2">
-                  Nominate someone else to pay for this application
-                </Typography>
-              </Link>
-            </>
-          )}
-          {/* <SuggestionDrawer /> */}
+          <PayText>
+            <Typography variant="h3">{props.instructionsTitle}</Typography>
+            <Typography variant="body2">
+              <ReactMarkdownOrHtml
+                source={props.instructionsDescription}
+                openLinksOnNewTab
+              />
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={props.onConfirm}
+            >
+              {props.buttonTitle || "Pay using GOV.UK Pay"}
+            </Button>
+            {props.showInviteToPay ? (
+              <>
+                <Typography variant="body2">or</Typography>
+                <Link
+                  component="button"
+                  onClick={changePage}
+                  disabled={Boolean(props?.paymentStatus)}
+                >
+                  <Typography variant="body2">
+                    Nominate someone else to pay for this application
+                  </Typography>
+                </Link>
+              </>
+            ) : (
+              <SuggestionDrawer />
+            )}
+          </PayText>
         </Card>
       ) : (
         <Card handleSubmit={props.onConfirm} isValid>
