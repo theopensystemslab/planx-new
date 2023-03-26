@@ -14,11 +14,7 @@ import type { Geometry } from "@turf/helpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 
-import {
-  DrawBoundary,
-  PASSPORT_UPLOAD_KEY,
-  PASSPORT_UPLOADED_FILE_KEY,
-} from "../model";
+import { DrawBoundary, PASSPORT_UPLOAD_KEY } from "../model";
 import Upload, { FileUpload } from "./Upload";
 
 export type Props = PublicProps<DrawBoundary>;
@@ -175,9 +171,6 @@ export default function Component(props: Props) {
 
   function handleSubmit() {
     const data: Store.userData["data"] = (() => {
-      // XXX: we haven't added a custom upload field name in the editor yet
-      const propsDataFieldUrl = PASSPORT_UPLOAD_KEY;
-
       // set userData depending if user draws boundary or uploads file
       return {
         [props.dataFieldBoundary]:
@@ -188,12 +181,7 @@ export default function Component(props: Props) {
           boundary && area && props.dataFieldBoundary
             ? area / 10000
             : undefined,
-        [propsDataFieldUrl]:
-          selectedFile?.url && propsDataFieldUrl
-            ? selectedFile?.url
-            : undefined,
-        [PASSPORT_UPLOADED_FILE_KEY]:
-          selectedFile && propsDataFieldUrl ? [selectedFile] : undefined,
+        [PASSPORT_UPLOAD_KEY]: selectedFile ? [selectedFile] : undefined,
         cachedFile: selectedFile
           ? [
               {

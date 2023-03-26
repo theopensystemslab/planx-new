@@ -224,8 +224,7 @@ const uploadedPlansBreadcrumb = {
   EO6DzPso8o: {
     auto: false,
     data: {
-      "proposal.drawing.locationPlan": uploadedPlanUrl,
-      "property.uploadedFile": [
+      "proposal.drawing.locationPlan": [
         {
           file: {
             path: "fut.email.png",
@@ -264,18 +263,15 @@ const uploadedPlansPassport = {
     "property.region": ["London"],
     "proposal.drawing.locationPlan": [
       {
+        file: {
+          path: "fut.email.png",
+        },
+        status: "success",
+        progress: 1,
+        id: "u6jFS4xJ-MM9Gsg1o2ZsI",
         url: uploadedPlanUrl,
       },
     ],
-    "property.uploadedFile": {
-      file: {
-        path: "fut.email.png",
-      },
-      status: "success",
-      progress: 1,
-      id: "u6jFS4xJ-MM9Gsg1o2ZsI",
-      url: uploadedPlanUrl,
-    },
   },
 };
 

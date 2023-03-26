@@ -7,9 +7,7 @@ import DrawBoundary from "./";
 test("recovers previously submitted files when clicking the back button", async () => {
   const handleSubmit = jest.fn();
   const previouslySubmittedData = {
-    "proposal.drawing.locationPlan":
-      "http://localhost:7002/file/private/slb56xfv/placeholder.png",
-    "property.uploadedFile": [
+    "proposal.drawing.locationPlan": [
       {
         file: {
           path: "placeholder.png",
