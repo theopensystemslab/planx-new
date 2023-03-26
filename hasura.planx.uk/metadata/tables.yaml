@@ -339,7 +339,7 @@
       permission:
         columns:
           - created_at
-          - payment_requests_id
+          - payment_request_id
           - session_preview_data
         filter: {}
         limit: 1
