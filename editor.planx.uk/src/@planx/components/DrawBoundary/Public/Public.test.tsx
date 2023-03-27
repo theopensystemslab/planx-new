@@ -9,26 +9,30 @@ test("recovers previously submitted files when clicking the back button", async 
   const previouslySubmittedData = {
     "proposal.drawing.locationPlan":
       "http://localhost:7002/file/private/slb56xfv/placeholder.png",
-    "property.uploadedFile": {
-      file: {
-        path: "placeholder.png",
-        size: 6146,
+    "property.uploadedFile": [
+      {
+        file: {
+          path: "placeholder.png",
+          size: 6146,
+        },
+        status: "success",
+        progress: 1,
+        id: "43sDL_JNJ6JgYxd_WUYW-",
+        url: "http://localhost:7002/file/private/slb56xfv/placeholder.png",
       },
-      status: "success",
-      progress: 1,
-      id: "43sDL_JNJ6JgYxd_WUYW-",
-      url: "http://localhost:7002/file/private/slb56xfv/placeholder.png",
-    },
-    cachedFile: {
-      file: {
-        path: "placeholder.png",
-        size: 6146,
+    ],
+    cachedFile: [
+      {
+        file: {
+          path: "placeholder.png",
+          size: 6146,
+        },
+        status: "success",
+        progress: 1,
+        id: "43sDL_JNJ6JgYxd_WUYW-",
+        url: "http://localhost:7002/file/private/slb56xfv/placeholder.png",
       },
-      status: "success",
-      progress: 1,
-      id: "43sDL_JNJ6JgYxd_WUYW-",
-      url: "http://localhost:7002/file/private/slb56xfv/placeholder.png",
-    },
+    ],
   };
 
   const { user } = setup(
