@@ -6,13 +6,17 @@ import {
   mount,
   NaviRequest,
   NotFoundError,
+  redirect,
   route,
+  withData,
   withView,
 } from "navi";
+import { useStore } from "pages/FlowEditor/lib/store";
 import StandalonePage from "pages/layout/Standalone";
 import InviteToPay from "pages/Pay/InviteToPay";
 import MakePayment from "pages/Pay/MakePayment";
 import { PaymentRequest } from "pages/Pay/types";
+import { PreviewContext } from "pages/Preview/Context";
 import React from "react";
 import { View } from "react-navi";
 import { GlobalSettings, Maybe } from "types";
@@ -20,6 +24,18 @@ import { GlobalSettings, Maybe } from "types";
 import { getTeamFromDomain, makeTitle } from "./utils";
 
 const payRoutes = compose(
+  withData(async (req) => {
+    const externalDomainTeam = await getTeamFromDomain(
+      window.location.hostname
+    );
+
+    return {
+      mountpath: req.mountpath,
+      team: req.params.team || externalDomainTeam,
+      isPreviewOnlyDomain: Boolean(externalDomainTeam),
+    };
+  }),
+
   withView(async (req) => {
     const flowSlug = req.params.flow.split(",")[0];
     const externalTeamName = await getTeamFromDomain(window.location.hostname);
@@ -72,14 +88,18 @@ const payRoutes = compose(
     const settings = data.flows[0].settings;
     const footerContent = data.global_settings.footer_content;
 
+    useStore.getState().setFlowNameFromSlug(flowSlug);
+
     return (
-      <StandalonePage
-        team={team}
-        footerContent={footerContent}
-        settings={settings}
-      >
-        <View />
-      </StandalonePage>
+      <PreviewContext.Provider value={{ globalSettings }}>
+        <StandalonePage
+          team={team}
+          footerContent={footerContent}
+          settings={settings}
+        >
+          <View />
+        </StandalonePage>
+      </PreviewContext.Provider>
     );
   }),
 
@@ -98,6 +118,12 @@ const payRoutes = compose(
         view: <InviteToPay {...paymentRequest} />,
       };
     }),
+    "/pages/:page": redirect(
+      (req) => `../../../preview/pages/${req.params.page}`
+    ),
+    "/invite/pages/:page": redirect(
+      (req) => `../../../../preview/pages/${req.params.page}`
+    ),
   })
 );
 
