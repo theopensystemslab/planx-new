@@ -237,6 +237,8 @@
                 _is_null: true
             - deleted_at:
                 _is_null: true
+            - read_only:
+                _ne: true
         check: {}
   event_triggers:
     - name: email_user_submission_confirmation

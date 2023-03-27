@@ -28,8 +28,9 @@ describe("lowcal_sessions", () => {
       bob1,
       bob2,
       mallory1,
+      robert1,
       anon1
-    ] = [...Array(6)].map(() => uuidV4());
+    ] = [...Array(7)].map(() => uuidV4());
 
     const insertSession = `
       mutation InsertLowcalSession(
@@ -107,6 +108,13 @@ describe("lowcal_sessions", () => {
                 flow_id: "${flowId}"
                 id: "${mallory1}"
               }
+              {
+                email: "robert@opensystemslab.io"
+                data: { r: 1 }
+                read_only: true
+                flow_id: "${flowId}"
+                id: "${robert1}"
+              }
             ]
           ) {
             returning {
@@ -117,7 +125,7 @@ describe("lowcal_sessions", () => {
       `
       let res = await gqlAdmin(query);
       ids = res.data.insert_lowcal_sessions.returning.map((row) => row.id);
-      assert.strictEqual(ids.length, 4);
+      assert.strictEqual(ids.length, 5);
     });
   
     afterAll(async () => {
@@ -307,6 +315,16 @@ describe("lowcal_sessions", () => {
           "x-hasura-lowcal-email": ""
         };
         const res = await gqlPublic(updateByPK, { sessionId: alice1, data: { x: 1 } }, headers);
+        expect(res).not.toHaveProperty("errors");
+        expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
+      });
+
+      test("Robert cannot update his read-only session", async () => {
+        const headers = {
+          "x-hasura-lowcal-session-id": robert1,
+          "x-hasura-lowcal-email": "robert@opensystemslab.io"
+        };
+        const res = await gqlPublic(updateByPK, { sessionId: robert1, data: { x: 1 } }, headers);
         expect(res).not.toHaveProperty("errors");
         expect(res.data.update_lowcal_sessions_by_pk).toBeNull();
       });
