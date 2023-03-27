@@ -18,7 +18,7 @@ import { hasFeatureFlag } from "lib/featureFlags";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
-import React, { useRef, useState } from "react";
+import React, { RefObject, useRef, useState } from "react";
 import {
   Link as ReactNaviLink,
   useCurrentRoute,
@@ -147,6 +147,7 @@ export enum HeaderVariant {
   Preview,
   Unpublished,
   Editor,
+  Standalone,
 }
 
 const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
@@ -243,7 +244,8 @@ const PublicToolbar: React.FC<{
   team?: Team;
   handleRestart?: () => void;
   route: Route;
-}> = ({ team, handleRestart, route }) => {
+  showResetButton?: boolean;
+}> = ({ team, handleRestart, route, showResetButton = true }) => {
   const { navigate } = useNavigation();
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
@@ -260,14 +262,18 @@ const PublicToolbar: React.FC<{
           <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
         )}
         {showCenteredServiceTitle && <ServiceTitle />}
-        <IconButton
-          color="secondary"
-          onClick={handleRestart}
-          aria-label="Restart Application"
-          size="large"
-        >
-          <Reset color="secondary" />
-        </IconButton>
+        {showResetButton ? (
+          <IconButton
+            color="secondary"
+            onClick={handleRestart}
+            aria-label="Restart Application"
+            size="large"
+          >
+            <Reset color="secondary" />
+          </IconButton>
+        ) : (
+          <Box />
+        )}
       </StyledToolbar>
       {!showCenteredServiceTitle && <ServiceTitle />}
       <NavBar />
@@ -383,6 +389,41 @@ const EditorToolbar: React.FC<{
   );
 };
 
+interface RenderToolbarProps {
+  variant: HeaderVariant;
+  headerRef: RefObject<HTMLDivElement>;
+  team?: Team;
+  handleRestart?: () => void;
+}
+
+const renderToolbar: React.FC<RenderToolbarProps> = ({
+  variant,
+  headerRef,
+  team,
+  handleRestart,
+}) => {
+  const route = useCurrentRoute();
+
+  switch (variant) {
+    case HeaderVariant.Editor:
+      return (
+        <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>
+      );
+    case HeaderVariant.Standalone:
+      return (
+        <PublicToolbar team={team} route={route} showResetButton={false} />
+      );
+    default:
+      return (
+        <PublicToolbar
+          team={team}
+          handleRestart={handleRestart}
+          route={route}
+        />
+      );
+  }
+};
+
 const Header: React.FC<{
   bgcolor?: string;
   team?: Team;
@@ -390,8 +431,6 @@ const Header: React.FC<{
   variant: HeaderVariant;
 }> = ({ bgcolor = "#2c2c2c", team, handleRestart, variant }) => {
   const headerRef = useRef<HTMLDivElement>(null);
-  const route = useCurrentRoute();
-
   return (
     <Root
       position="static"
@@ -402,15 +441,7 @@ const Header: React.FC<{
         backgroundColor: team?.theme?.primary || bgcolor,
       }}
     >
-      {variant === HeaderVariant.Editor ? (
-        <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>
-      ) : (
-        <PublicToolbar
-          team={team}
-          handleRestart={handleRestart}
-          route={route}
-        />
-      )}
+      {renderToolbar({ variant, headerRef, team, handleRestart })}
     </Root>
   );
 };

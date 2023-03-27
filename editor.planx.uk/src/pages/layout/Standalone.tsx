@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import {
   styled,
   StyledEngineProvider,
-  Theme,
   ThemeProvider,
 } from "@mui/material/styles";
 import ErrorFallback from "components/ErrorFallback";
@@ -42,7 +41,7 @@ const StandalonePage: React.FC<PropsWithChildren<StandalonePageProps>> = ({
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={teamTheme}>
-        <Header team={team} variant={HeaderVariant.Preview} />
+        <Header team={team} variant={HeaderVariant.Standalone} />
         <MainContainer id="main-content">
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             {children}
