@@ -52,7 +52,7 @@ const payRoutes = compose(
 
     const { data } = await client.query({
       query: gql`
-        query GetTeamAndSettings($flowSlug: String!, $teamSlug: String!) {
+        query GetStandalonePageData($flowSlug: String!, $teamSlug: String!) {
           flows(
             limit: 1
             where: {
@@ -69,8 +69,8 @@ const payRoutes = compose(
             settings
           }
 
-          global_settings {
-            footer_content
+          globalSettings: global_settings {
+            footerContent: footer_content
           }
         }
       `,
@@ -80,13 +80,14 @@ const payRoutes = compose(
       },
     });
 
-    const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
-      data.global_settings[0]
-    );
+    const {
+      flows: [{ team, settings }],
+      globalSettings: [{ footerContent }],
+    } = data;
 
-    const team = data.flows[0].team;
-    const settings = data.flows[0].settings;
-    const footerContent = data.global_settings.footer_content;
+    const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
+      data.globalSettings[0]
+    );
 
     useStore.getState().setFlowNameFromSlug(flowSlug);
 
@@ -138,17 +139,14 @@ const getPaymentRequest = async (req: NaviRequest) => {
 const fetchPaymentRequest = async (paymentRequestId: string) => {
   try {
     const {
-      data: { payment_requests_by_pk: paymentRequest },
+      data: { paymentRequest },
     } = await client.query({
       query: gql`
         query GetAllPaymentRequests($id: uuid!) {
-          payment_requests_by_pk(payment_request_id: $id) {
+          paymentRequest: payment_requests_by_pk(payment_request_id: $id) {
             sessionPreviewData: session_preview_data
             paymentRequestId: payment_request_id
             createdAt: created_at
-          }
-          global_settings {
-            footer_content
           }
         }
       `,
