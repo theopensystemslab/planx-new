@@ -1,14 +1,88 @@
+import camelcaseKeys from "camelcase-keys";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
-import { compose, mount, NaviRequest, NotFoundError, route } from "navi";
+import {
+  compose,
+  mount,
+  NaviRequest,
+  NotFoundError,
+  route,
+  withView,
+} from "navi";
+import StandalonePage from "pages/layout/Standalone";
 import InviteToPay from "pages/Pay/InviteToPay";
 import MakePayment from "pages/Pay/MakePayment";
 import { PaymentRequest } from "pages/Pay/types";
 import React from "react";
+import { View } from "react-navi";
+import { GlobalSettings, Maybe } from "types";
 
-import { makeTitle } from "./utils";
+import { getTeamFromDomain, makeTitle } from "./utils";
 
 const payRoutes = compose(
+  withView(async (req) => {
+    const flowSlug = req.params.flow.split(",")[0];
+    const externalTeamName = await getTeamFromDomain(window.location.hostname);
+
+    // XXX: Prevents accessing a different team than the one associated with the custom domain.
+    //      e.g. Custom domain is for Southwark but URL is looking for Lambeth
+    //      e.g. https://planningservices.southwark.gov.uk/lambeth/some-flow/preview
+    if (
+      req.params.team &&
+      externalTeamName &&
+      externalTeamName !== req.params.team
+    )
+      throw new NotFoundError();
+
+    const { data } = await client.query({
+      query: gql`
+        query GetTeamAndSettings($flowSlug: String!, $teamSlug: String!) {
+          flows(
+            limit: 1
+            where: {
+              slug: { _eq: $flowSlug }
+              team: { slug: { _eq: $teamSlug } }
+            }
+          ) {
+            id
+            team {
+              theme
+              name
+              settings
+            }
+            settings
+          }
+
+          global_settings {
+            footer_content
+          }
+        }
+      `,
+      variables: {
+        flowSlug,
+        teamSlug: req.params.team || externalTeamName,
+      },
+    });
+
+    const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
+      data.global_settings[0]
+    );
+
+    const team = data.flows[0].team;
+    const settings = data.flows[0].settings;
+    const footerContent = data.global_settings.footer_content;
+
+    return (
+      <StandalonePage
+        team={team}
+        footerContent={footerContent}
+        settings={settings}
+      >
+        <View />
+      </StandalonePage>
+    );
+  }),
+
   mount({
     "/": route(async (req) => {
       const paymentRequest = await getPaymentRequest(req);
@@ -46,6 +120,9 @@ const fetchPaymentRequest = async (paymentRequestId: string) => {
             sessionPreviewData: session_preview_data
             paymentRequestId: payment_request_id
             createdAt: created_at
+          }
+          global_settings {
+            footer_content
           }
         }
       `,

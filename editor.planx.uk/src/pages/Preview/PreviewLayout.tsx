@@ -47,7 +47,7 @@ const MainContainer = styled(Box)(({ theme }) => ({
   position: "relative",
 }));
 
-const PublicFooter: React.FC<{
+export const PublicFooter: React.FC<{
   settings?: FlowSettings;
   footerContent?: { [key: string]: TextContent };
 }> = ({ footerContent, settings }) => {
