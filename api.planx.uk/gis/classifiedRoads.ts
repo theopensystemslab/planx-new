@@ -37,7 +37,7 @@ type PlanningConstraintBody = {
 };
 
 // Passport key comes from Digital Planning Schemas googlesheet
-export const PASSPORT_FN: string = "road.classified";
+export const PASSPORT_FN = "road.classified";
 
 export const classifiedRoadsSearch = async (
   req: Request, 
@@ -49,7 +49,7 @@ export const classifiedRoadsSearch = async (
 
   // Create an OGC XML filter parameter value which will select the road features (lines) that match an USRN
   //   ref https://labs.os.uk/public/os-data-hub-examples/os-features-api/wfs-example-topo-toid-search#maplibre-gl-js
-  const xml: string = `
+  const xml = `
     <ogc:Filter>
       <ogc:PropertyIsLike wildCard="%" singleChar="#" escapeChar="!">
         <ogc:PropertyName>FormsPartOf</ogc:PropertyName>
@@ -72,7 +72,7 @@ export const classifiedRoadsSearch = async (
   };
 
   try {
-    const url: string = `https://api.os.uk/features/v1/wfs?${new URLSearchParams(params).toString()}`;
+    const url = `https://api.os.uk/features/v1/wfs?${new URLSearchParams(params).toString()}`;
     const features: OSFeatures["features"] = await fetch(url)
       .then((res: Response) => res.json())
       .then((data: OSFeatures) => {
