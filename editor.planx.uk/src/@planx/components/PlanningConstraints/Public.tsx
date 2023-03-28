@@ -26,14 +26,13 @@ type Props = PublicProps<PlanningConstraints>;
 export default Component;
 
 function Component(props: Props) {
-  const [x, y, longitude, latitude, siteBoundary, usrn] = useStore((state) => [
-    state.computePassport().data?._address?.x,
-    state.computePassport().data?._address?.y,
-    state.computePassport().data?._address?.longitude,
-    state.computePassport().data?._address?.latitude,
-    state.computePassport().data?.["property.boundary.site"],
-    state.computePassport().data?._address?.usrn,
-  ]);
+  const siteBoundary = useStore(
+    (state) => state.computePassport().data?.["property.boundary.site"]
+  );
+  const { x, y, longitude, latitude, usrn } = useStore(
+    (state) => state.computePassport().data?._address
+  );
+
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
 
@@ -99,7 +98,7 @@ function Component(props: Props) {
 
   // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
   //   skip if the applicant plotted a new non-UPRN address on the map
-  let classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads`;
+  const classifiedRoadsEndpoint: string = `${process.env.REACT_APP_API_URL}/roads`;
   const {
     data: roads,
     error: errorRoads,
