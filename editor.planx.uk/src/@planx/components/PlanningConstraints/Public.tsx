@@ -29,9 +29,8 @@ function Component(props: Props) {
   const siteBoundary = useStore(
     (state) => state.computePassport().data?.["property.boundary.site"]
   );
-  const { x, y, longitude, latitude, usrn } = useStore(
-    (state) => state.computePassport().data?._address
-  );
+  const { x, y, longitude, latitude, usrn } =
+    useStore((state) => state.computePassport().data?._address) || {};
 
   const route = useCurrentRoute();
   const team = route?.data?.team ?? route.data.mountpath.split("/")[1];
