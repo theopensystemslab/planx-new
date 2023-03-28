@@ -5,9 +5,15 @@ import type { MoreInformation } from "../shared";
 
 export interface Pay extends MoreInformation {
   title?: string;
+  bannerTitle?: string;
   description?: string;
   color?: string;
   fn?: string;
+  instructionsTitle?: string;
+  instructionsDescription?: string;
+  allowInviteToPay?: boolean;
+  inviteToPayTitle?: string;
+  inviteToPayDescription?: string;
 }
 
 // https://docs.payments.service.gov.uk/making_payments/#creating-a-payment

@@ -7,11 +7,14 @@ import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import MoreInfo from "@planx/components/shared/Preview/MoreInfo";
+import { emailRegex } from "@planx/components/TextInput/model";
 import { submitFeedback } from "lib/feedback";
-import React from "react";
+import React, { useState } from "react";
+import { PaymentStatus } from "types";
 import Banner from "ui/Banner";
 import ChecklistItem from "ui/ChecklistItem";
 import Input from "ui/Input";
+import InputLabel from "ui/InputLabel";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
@@ -24,15 +27,22 @@ const ErrorSummary = styled(Box)(({ theme }) => ({
 
 interface Props {
   title?: string;
+  bannerTitle?: string;
   description?: string;
   fee: number;
+  instructionsTitle?: string;
+  instructionsDescription?: string;
+  showInviteToPay?: boolean;
+  inviteToPayTitle?: string;
+  inviteToPayDescription?: string;
+  paymentStatus?: PaymentStatus;
   buttonTitle?: string;
   onConfirm: () => void;
   error?: string;
 }
 
 const PayText = styled(Box)(({ theme }) => ({
-  gap: theme.spacing(3),
+  gap: theme.spacing(2),
   display: "flex",
   flexDirection: "column",
   "& > *": {
@@ -43,54 +53,61 @@ const PayText = styled(Box)(({ theme }) => ({
 export default function Confirm(props: Props) {
   const theme = useTheme();
 
-  return (
-    <Box textAlign="left" width="100%">
-      <Container maxWidth="md">
-        <Typography variant="h1" gutterBottom align="left">
-          {props.title}
-        </Typography>
-      </Container>
+  const [page, setPage] = useState<"Pay" | "InviteToPay">("Pay");
+  const [nomineeName, setNomineeName] = useState<string | undefined>();
+  const [nomineeEmail, setNomineeEmail] = useState<string | undefined>();
+  const [validatedNomineeEmail, setValidatedNomineeEmail] = useState<
+    string | undefined
+  >();
+  const [showNomineeEmailError, setShowNomineeEmailError] =
+    useState<boolean>(false);
 
-      <Banner
-        color={{
-          background: theme.palette.primary.main,
-          text: theme.palette.primary.contrastText,
-        }}
-      >
-        <Container maxWidth="md">
-          <Typography
-            variant="h5"
-            gutterBottom
-            className="marginBottom"
-            component="h2"
-          >
-            The planning fee for this application is
-          </Typography>
-          <Typography
-            variant="h1"
-            gutterBottom
-            className="marginBottom"
-            component="span"
-          >
-            {formattedPriceWithCurrencySymbol(props.fee)}
-          </Typography>
-          <Typography variant="h4" component="span">
-            <ReactMarkdownOrHtml source={props.description} openLinksOnNewTab />
-          </Typography>
-        </Container>
-      </Banner>
+  const changePage = () => {
+    if (page === "Pay" && !Boolean(props.paymentStatus)) {
+      setPage("InviteToPay");
+    } else {
+      setPage("Pay");
+    }
+  };
 
+  const handleNomineeInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    name: string
+  ) => {
+    const input = e.target.value;
+    if (name === "nomineeName") {
+      setNomineeName(input);
+    } else if (name === "nomineeEmail") {
+      setNomineeEmail(input);
+    }
+  };
+
+  const handleNomineeEmailCheck = () => {
+    if (!nomineeEmail || !emailRegex.test(nomineeEmail)) {
+      setShowNomineeEmailError(true);
+    } else {
+      setValidatedNomineeEmail(nomineeEmail);
+    }
+  };
+
+  const payBody = () => (
+    <>
       {!props.error ? (
         <Card>
           <PayText>
-            <Typography variant="h3">How to pay</Typography>
-            <Typography variant="body2">
-              You can pay for your application by using GOV.UK Pay.
+            <Typography variant="h3">
+              {props.instructionsTitle || "How to pay"}
             </Typography>
             <Typography variant="body2">
-              Your application will be sent after you have paid the fee. Wait
-              until you see an application sent message before closing your
-              browser.
+              <ReactMarkdownOrHtml
+                source={
+                  props.instructionsDescription ||
+                  `<p>You can pay for your application by using GOV.UK Pay.</p>\
+                   <p>Your application will be sent after you have paid the fee. \
+                   Wait until you see an application sent message before closing your browser.</p>`
+                }
+                openLinksOnNewTab
+              />
             </Typography>
             <Button
               variant="contained"
@@ -100,12 +117,28 @@ export default function Confirm(props: Props) {
             >
               {props.buttonTitle || "Pay using GOV.UK Pay"}
             </Button>
-            <SuggestionDrawer />
+            {props.showInviteToPay ? (
+              <>
+                <Typography variant="body2">or</Typography>
+                <Link
+                  component="button"
+                  onClick={changePage}
+                  disabled={Boolean(props?.paymentStatus)}
+                  data-testid="nominate-page-link"
+                >
+                  <Typography variant="body2">
+                    Nominate someone else to pay for this application
+                  </Typography>
+                </Link>
+              </>
+            ) : (
+              <SuggestionDrawer />
+            )}
           </PayText>
         </Card>
       ) : (
         <Card handleSubmit={props.onConfirm} isValid>
-          <ErrorSummary role="status">
+          <ErrorSummary role="status" data-testid="error-summary">
             <Typography variant="h5" component="h3" gutterBottom>
               {props.error}
             </Typography>
@@ -116,6 +149,130 @@ export default function Confirm(props: Props) {
           </ErrorSummary>
         </Card>
       )}
+    </>
+  );
+
+  const nominateBody = () => (
+    <Card>
+      <Typography variant="h3">{props.inviteToPayTitle}</Typography>
+      <Typography variant="body2">
+        <ReactMarkdownOrHtml
+          source={props.inviteToPayDescription}
+          openLinksOnNewTab
+        />
+      </Typography>
+      <Box>
+        <InputLabel label="Full name (optional)" htmlFor="nomineeName">
+          <Input
+            bordered
+            name="nomineeName"
+            id="nomineeName"
+            value={nomineeName || ""}
+            onChange={(e) => handleNomineeInputChange(e, "nomineeName")}
+            inputProps={{
+              "aria-describedby":
+                "Nominate someone else to pay for this application - full name",
+            }}
+          />
+        </InputLabel>
+      </Box>
+      <Box sx={{ marginBottom: theme.spacing(2) }}>
+        <InputLabel label="Email" htmlFor="nomineeEmail">
+          <Input
+            required
+            bordered
+            name="nomineeEmail"
+            id="nomineeEmail"
+            value={nomineeEmail || ""}
+            errorMessage={
+              showNomineeEmailError && !validatedNomineeEmail
+                ? `Enter an email address in the correct format, like name@example.com`
+                : ""
+            }
+            onChange={(e) => handleNomineeInputChange(e, "nomineeEmail")}
+            onKeyUp={({ key }) => {
+              if (key === "Enter") handleNomineeEmailCheck();
+            }}
+            onBlur={handleNomineeEmailCheck}
+            inputProps={{
+              "aria-describedby": [
+                "Nominate someone else to pay for this application - email",
+                showNomineeEmailError && !validatedNomineeEmail
+                  ? `Enter an email address in the correct format`
+                  : "",
+              ]
+                .filter(Boolean)
+                .join(" "),
+            }}
+          />
+        </InputLabel>
+      </Box>
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        onClick={() => console.log("TODO")}
+      >
+        {"Email your nominee"}
+      </Button>
+      {props.showInviteToPay && (
+        <>
+          <Typography variant="body2">or</Typography>
+          <Link
+            component="button"
+            onClick={changePage}
+            disabled={Boolean(props?.paymentStatus)}
+          >
+            <Typography variant="body2">
+              Pay for this application myself instead
+            </Typography>
+          </Link>
+        </>
+      )}
+    </Card>
+  );
+
+  return (
+    <Box textAlign="left" width="100%">
+      <>
+        <Container maxWidth="md">
+          <Typography variant="h1" gutterBottom align="left">
+            {props.title}
+          </Typography>
+        </Container>
+        <Banner
+          color={{
+            background: theme.palette.primary.main,
+            text: theme.palette.primary.contrastText,
+          }}
+        >
+          <Container maxWidth="md">
+            <Typography
+              variant="h5"
+              gutterBottom
+              className="marginBottom"
+              component="h2"
+            >
+              {props.bannerTitle || "The planning fee for this application is"}
+            </Typography>
+            <Typography
+              variant="h1"
+              gutterBottom
+              className="marginBottom"
+              component="span"
+            >
+              {formattedPriceWithCurrencySymbol(props.fee)}
+            </Typography>
+            <Typography variant="h4" component="span">
+              <ReactMarkdownOrHtml
+                source={props.description}
+                openLinksOnNewTab
+              />
+            </Typography>
+          </Container>
+        </Banner>
+        {page === "Pay" ? payBody() : nominateBody()}
+      </>
     </Box>
   );
 }
