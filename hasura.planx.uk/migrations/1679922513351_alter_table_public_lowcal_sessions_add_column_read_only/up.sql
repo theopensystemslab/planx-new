@@ -1,1 +1,1 @@
-ALTER TABLE "public"."lowcal_sessions" ADD COLUMN "read_only" BOOLEAN NOT NULL DEFAULT 'false';
+ALTER TABLE "public"."lowcal_sessions" ADD COLUMN "locked_at" TIMESTAMPTZ NULL;

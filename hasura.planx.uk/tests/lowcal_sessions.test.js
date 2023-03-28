@@ -111,7 +111,7 @@ describe("lowcal_sessions", () => {
               {
                 email: "robert@opensystemslab.io"
                 data: { r: 1 }
-                read_only: true
+                locked_at: "2022-03-28T17:30:15+01:00"
                 flow_id: "${flowId}"
                 id: "${robert1}"
               }
