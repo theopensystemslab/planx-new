@@ -1,7 +1,7 @@
 export class ServerError extends Error {
   message: string;
   status: number;
-  cause: unknown;
+  cause: unknown | undefined;
 
   constructor({
     message,

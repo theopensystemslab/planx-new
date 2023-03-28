@@ -69,7 +69,6 @@ export async function inviteToPay(
       payeeEmail,
     });
   } catch (e: unknown) {
-    console.log(e);
     return next(
       new ServerError({
         message: "Could not initiate payment request",
