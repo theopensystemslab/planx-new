@@ -32,4 +32,3 @@ export const DEFAULT_PASSPORT_AREA_KEY = "property.boundary.area" as const;
 export const DEFAULT_TITLE = "Draw the boundary of the property" as const;
 export const DEFAULT_TITLE_FOR_UPLOADING = "Upload a location plan" as const;
 export const PASSPORT_UPLOAD_KEY = "proposal.drawing.locationPlan" as const; // not added to editor yet
-export const PASSPORT_UPLOADED_FILE_KEY = "property.uploadedFile";
