@@ -1,19 +1,15 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import {
+  styled,
   StyledEngineProvider,
-  Theme,
   ThemeProvider,
 } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import ErrorFallback from "components/ErrorFallback";
 import PhaseBanner from "components/PhaseBanner";
-import { clearLocalFlow } from "lib/local";
-import { NotFoundError } from "navi";
-import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import { PreviewContext } from "pages/Preview/Context";
+import React, { PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useCurrentRoute } from "react-navi";
 import { generateTeamTheme } from "theme";
@@ -22,18 +18,21 @@ import Logo from "ui/images/OGLLogo.svg";
 import Footer from "../../components/Footer";
 import Header, { HeaderVariant } from "../../components/Header";
 import {
-  ApplicationPath as AppPath,
+  Flow,
   FlowSettings,
   FOOTER_ITEMS,
+  GlobalSettings,
   Team,
   TextContent,
 } from "../../types";
-import ResumePage from "./ResumePage";
-import SaveAndReturn from "./SaveAndReturn";
-import SavePage from "./SavePage";
 
-declare module "@mui/styles/defaultTheme" {
-  interface DefaultTheme extends Theme {}
+interface StandalonePageProps {
+  team: Team;
+  footerContent?: { [key: string]: TextContent };
+  settings?: FlowSettings;
+  context: "Unpublished" | "Preview" | "Pay";
+  flow?: Flow;
+  globalSettings?: GlobalSettings;
 }
 
 const MainContainer = styled(Box)(({ theme }) => ({
@@ -104,73 +103,41 @@ export const PublicFooter: React.FC<{
   );
 };
 
-const PreviewLayout: React.FC<{
-  team: Team;
-  children?: any;
-  settings?: FlowSettings;
-  footerContent?: { [key: string]: TextContent };
-  headerVariant: HeaderVariant;
-}> = ({ team, children, settings, footerContent, headerVariant }) => {
-  const path = useStore((state) => state.path);
-  const id = useStore((state) => state.id);
-
-  // Manually check for route errors
-  // We're not yet within the NaviView which will automatically handle this
-  // Save & Return "wrapper" must be resolved first
-  const route = useCurrentRoute();
-  if (route.error) throw new NotFoundError();
-
-  const handleRestart = async () => {
-    if (
-      confirm(
-        "Are you sure you want to restart? This will delete your previous answers"
-      )
-    ) {
-      if (path === AppPath.SingleSession) {
-        clearLocalFlow(id);
-        window.location.reload();
-      } else {
-        // Save & Return flow
-        // don't delete old flow for now
-        // await NEW_LOCAL.clearLocalFlow(sessionId)
-        const url = new URL(window.location.href);
-        url.searchParams.delete("sessionId");
-        window.location.href = url.href;
-      }
-    }
-  };
-
+const PublicLayout: React.FC<PropsWithChildren<StandalonePageProps>> = ({
+  team,
+  children,
+  footerContent,
+  settings,
+  context,
+  flow,
+  globalSettings,
+}) => {
   const teamTheme = generateTeamTheme(team.theme?.primary);
+  // get better name for this! check blue trello
+  const headerVariant = {
+    Pay: HeaderVariant.Standalone,
+    Preview: HeaderVariant.Preview,
+    Unpublished: HeaderVariant.Unpublished,
+  }[context];
 
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={teamTheme}>
-        <Header
-          team={team}
-          handleRestart={handleRestart}
-          variant={headerVariant}
-        />
-        <MainContainer id="main-content">
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            {
-              {
-                [AppPath.SingleSession]: children,
-                [AppPath.Save]: <SavePage />,
-                [AppPath.Resume]: <ResumePage />,
-                [AppPath.SaveAndReturn]: (
-                  <SaveAndReturn>{children}</SaveAndReturn>
-                ),
-              }[path]
-            }
-          </ErrorBoundary>
-        </MainContainer>
-        <PublicFooter
-          footerContent={footerContent}
-          settings={settings}
-        ></PublicFooter>
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <PreviewContext.Provider value={{ flow, globalSettings }}>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={teamTheme}>
+          <Header team={team} variant={headerVariant} />
+          <MainContainer id="main-content">
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              {children}
+            </ErrorBoundary>
+          </MainContainer>
+          <PublicFooter
+            footerContent={footerContent}
+            settings={settings}
+          ></PublicFooter>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </PreviewContext.Provider>
   );
 };
 
-export default PreviewLayout;
+export default PublicLayout;

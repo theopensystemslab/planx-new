@@ -15,6 +15,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/styles";
 import { TYPES } from "@planx/components/types";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
@@ -242,15 +243,35 @@ const NavBar: React.FC = () => {
 
 const PublicToolbar: React.FC<{
   team?: Team;
-  handleRestart?: () => void;
   route: Route;
   showResetButton?: boolean;
-}> = ({ team, handleRestart, route, showResetButton = true }) => {
+}> = ({ team, route, showResetButton = true }) => {
   const { navigate } = useNavigation();
+  const { path, id } = useStore();
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
-  const showCenteredServiceTitle = useMediaQuery("(min-width:600px)");
+  const showCentredServiceTitle = useMediaQuery("(min-width:600px)");
+
+  const handleRestart = async () => {
+    if (
+      confirm(
+        "Are you sure you want to restart? This will delete your previous answers"
+      )
+    ) {
+      if (path === ApplicationPath.SingleSession) {
+        clearLocalFlow(id);
+        window.location.reload();
+      } else {
+        // Save & Return flow
+        // don't delete old flow for now
+        // await NEW_LOCAL.clearLocalFlow(sessionId)
+        const url = new URL(window.location.href);
+        url.searchParams.delete("sessionId");
+        window.location.href = url.href;
+      }
+    }
+  };
 
   return (
     <>
@@ -261,7 +282,7 @@ const PublicToolbar: React.FC<{
         ) : (
           <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
         )}
-        {showCenteredServiceTitle && <ServiceTitle />}
+        {showCentredServiceTitle && <ServiceTitle />}
         {showResetButton ? (
           <IconButton
             color="secondary"
@@ -275,7 +296,7 @@ const PublicToolbar: React.FC<{
           <Box />
         )}
       </StyledToolbar>
-      {!showCenteredServiceTitle && <ServiceTitle />}
+      {!showCentredServiceTitle && <ServiceTitle />}
       <NavBar />
       <AnalyticsDisabledBanner />
     </>
@@ -393,14 +414,12 @@ interface RenderToolbarProps {
   variant: HeaderVariant;
   headerRef: RefObject<HTMLDivElement>;
   team?: Team;
-  handleRestart?: () => void;
 }
 
 const renderToolbar: React.FC<RenderToolbarProps> = ({
   variant,
   headerRef,
   team,
-  handleRestart,
 }) => {
   const route = useCurrentRoute();
 
@@ -414,22 +433,15 @@ const renderToolbar: React.FC<RenderToolbarProps> = ({
         <PublicToolbar team={team} route={route} showResetButton={false} />
       );
     default:
-      return (
-        <PublicToolbar
-          team={team}
-          handleRestart={handleRestart}
-          route={route}
-        />
-      );
+      return <PublicToolbar team={team} route={route} />;
   }
 };
 
 const Header: React.FC<{
   bgcolor?: string;
   team?: Team;
-  handleRestart?: () => void;
   variant: HeaderVariant;
-}> = ({ bgcolor = "#2c2c2c", team, handleRestart, variant }) => {
+}> = ({ bgcolor = "#2c2c2c", team, variant }) => {
   const headerRef = useRef<HTMLDivElement>(null);
   return (
     <Root
@@ -441,7 +453,7 @@ const Header: React.FC<{
         backgroundColor: team?.theme?.primary || bgcolor,
       }}
     >
-      {renderToolbar({ variant, headerRef, team, handleRestart })}
+      {renderToolbar({ variant, headerRef, team })}
     </Root>
   );
 };
