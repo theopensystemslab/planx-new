@@ -18,9 +18,10 @@ import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
 import { deleteFile, downloadFile, resolveStream } from "./helpers";
-import { Passport } from '../types';
-import { PlanXExportData } from '@opensystemslab/planx-document-templates/types/types';
+import { Passport as IPassport } from "../types";
+import { PlanXExportData } from "@opensystemslab/planx-document-templates/types/types";
 import { _admin } from "../client";
+import { Passport } from "@opensystemslab/planx-core"
 
 interface UniformClient {
   clientId: string,
@@ -56,9 +57,8 @@ interface UniformApplication {
 
 interface SendToUniformPayload {
   sessionId: string,
-  passport: Passport,
+  passport: IPassport,
   csv: PlanXExportData[],
-  files: string[],
 }
 
 /**
@@ -176,7 +176,6 @@ async function checkUniformAuditTable(sessionId: string): Promise<UniformSubmiss
 
 export async function createUniformSubmissionZip({
   csv,
-  files,
   sessionId,
   passport,
 }: SendToUniformPayload) {
@@ -191,7 +190,8 @@ export async function createUniformSubmissionZip({
   });
 
   // download any user-uploaded files from S3 to the tmp directory, add them to the zip
-  if (files) {
+  const files = new Passport(passport).getFiles();
+  if (files.length) {
     for (const file of files) {
       // Ensure unique filename by combining original filename and S3 folder name, which is a nanoid
       // Uniform requires all uploaded files to be present in the zip, even if they are duplicates
@@ -464,7 +464,7 @@ const addOneAppXMLToZip = async (zip: AdmZip, tmpDir: string, sessionId: string)
   }
 }
 
-const addTemplateFilesToZip = async (zip: AdmZip, tmpDir: string, sessionId: string, passport: Passport) => {
+const addTemplateFilesToZip = async (zip: AdmZip, tmpDir: string, sessionId: string, passport: IPassport) => {
   const templateNames = await _admin.getDocumentTemplateNamesForSession(sessionId);
   if (templateNames?.length) {
     for (const templateName of templateNames) {

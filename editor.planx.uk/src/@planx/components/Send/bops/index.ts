@@ -11,7 +11,6 @@ import { getResultData } from "pages/FlowEditor/lib/store/preview";
 import { GovUKPayment } from "types";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
-import { PASSPORT_UPLOAD_KEY } from "../../DrawBoundary/model";
 import { GOV_PAY_PASSPORT_KEY, toPence } from "../../Pay/model";
 import { removeNilValues } from "../../shared/utils";
 import { TYPES } from "../../types";

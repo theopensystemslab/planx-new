@@ -297,7 +297,7 @@ function DrawBoundary(props: ComponentProps) {
   const geodata = props.userData?.data?.[props.node.data?.dataFieldBoundary];
   const locationPlan = props.userData?.data?.[PASSPORT_UPLOAD_KEY];
 
-  const fileName = locationPlan ? locationPlan.split("/").pop() : "";
+  const fileName = locationPlan ? locationPlan[0].url.split("/").pop() : "";
 
   if (!geodata && !locationPlan && !props.node.data?.hideFileUpload) {
     // XXX: we always expect to have data, this is for temporary debugging
