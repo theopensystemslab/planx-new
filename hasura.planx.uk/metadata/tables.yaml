@@ -339,10 +339,11 @@
       permission:
         columns:
           - created_at
-          - payment_request_id
+          - id
           - session_preview_data
-        filter: {}
-        limit: 1
+        filter:
+          id:
+            _eq: x-hasura-payment-request-id
 - table:
     schema: public
     name: payment_status

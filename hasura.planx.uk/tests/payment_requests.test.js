@@ -36,20 +36,34 @@ describe("payment_requests", () => {
 
       test("can QUERY records", () => {
         expect(i.queries).toContain("payment_requests");
+        expect(i.queries).toContain("payment_requests_by_pk");
       });
 
-      test("can only query a single record", async () => {
+      test("requires x-hasura-payment-request-id to query", async() => {
         const query = `
           query GetAllPaymentRequests {
             payment_requests {
-              payment_request_id
+              id
             }
           }
         `
         const publicRes = await gqlPublic(query);
-        const adminRes = await gqlAdmin(query);
+        expect(publicRes.errors[0].message).toMatch(/missing session variable: "x-hasura-payment-request-id"/)
+      });
+
+      test("can only access records with a known id", async () => {
+        const query = `
+          query GetAllPaymentRequests {
+            payment_requests {
+              id
+            }
+          }
+        `
+        const headers = {
+          "x-hasura-payment-request-id": paymentRequestIds[0],
+        };
+        const publicRes = await gqlPublic(query, null, headers);
         assert.strictEqual(publicRes.data.payment_requests.length, 1);
-        assert.strictEqual(adminRes.data.payment_requests.length, 2);
       });
 
       test("can only access certain columns", async () => {
@@ -66,7 +80,7 @@ describe("payment_requests", () => {
         expect(publicRes).toHaveProperty("errors");
 
         const adminRes = await gqlAdmin(query);
-        assert.strictEqual(adminRes.data.payment_requests.length, 2);
+        expect(adminRes).not.toHaveProperty("errors");
       });
     });
   });
@@ -121,14 +135,16 @@ const insertPaymentRequests = async (sessionIds, paymentRequestIds) => {
       insert_payment_requests(
         objects: [
           {
-            payee_email: "test1@opensystemslab.io", 
-            payment_request_id: "${paymentRequestIds[0]}", 
+            payee_email: "test1@opensystemslab.io",
+            payee_name: "test1"
+            id: "${paymentRequestIds[0]}", 
             session_id: "${sessionIds[0]}", 
             session_preview_data: { test1: "test1" }
           },
           {
             payee_email: "test2@opensystemslab.io",
-            payment_request_id: "${paymentRequestIds[1]}", 
+            payee_name: "test2"
+            id: "${paymentRequestIds[1]}", 
             session_id: "${sessionIds[1]}", 
             session_preview_data: { test2: "test2" }
           }
@@ -136,13 +152,13 @@ const insertPaymentRequests = async (sessionIds, paymentRequestIds) => {
       )
       {
         returning {
-          payment_request_id
+          id
         }
       }
     }
   `
   const res = await gqlAdmin(query);
-  ids = res.data.insert_payment_requests.returning.map((row) => row.payment_request_id);
+  ids = res.data.insert_payment_requests.returning.map((row) => row.id);
   assert.strictEqual(ids.length, 2);
 };
 
