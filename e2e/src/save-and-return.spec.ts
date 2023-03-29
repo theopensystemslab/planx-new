@@ -1,5 +1,10 @@
 import { test, expect } from "@playwright/test";
 import simpleSendFlow from "./flows/simple-send-flow.json";
+import { GraphQLClient, gql } from "graphql-request";
+import {
+  simpleSendFlow,
+  modifiedSimpleSendFlow,
+} from "./flows/save-and-return-flows";
 import {
   getGraphQLClient,
   setUpTestContext,
@@ -122,7 +127,69 @@ test.describe("Save and return", () => {
       });
       await expect(secondQuestion).toBeVisible();
     });
+  });
+
+  test.describe("session reconciliation", () => {
+    test("the application resumes from the first modified question", async ({
+      page,
+    }) => {
+      await page.goto(previewURL);
+      await fillInEmail({ page, context });
+
+      const firstQuestion = await findQuestionGroup({
+        page,
+        questionGroup: "Question 1",
+      });
+      await expect(firstQuestion).toBeVisible();
+      await answerQuestion({ page, questionGroup: "Question 1", answer: "A" });
+
+      const secondQuestion = await findQuestionGroup({
+        page,
+        questionGroup: "Question 2",
+      });
+      await expect(secondQuestion).toBeVisible();
+
+      const sessionId = await saveSession({ page, adminGQLClient, context });
+      if (!sessionId) test.fail();
+
+      // flow is updated between sessions
+      await modifyFlow(adminGQLClient, context);
+
+      await returnToSession({ page, context, sessionId });
+
+      // skip review page
+      await page.getByRole("button", { name: "Continue" }).click();
+
+      const modifiedFirstQuestion = await findQuestionGroup({
+        page,
+        questionGroup: "Question One",
+      });
+      await expect(modifiedFirstQuestion).toBeVisible();
+    });
 
     // TODO "changes to a section are not displayed as changed during reconciliation"
   });
 });
+
+async function modifyFlow(adminGQLClient: GraphQLClient, context: Context) {
+  await adminGQLClient.request(
+    gql`
+      mutation UpdateTestFlow($flowId: uuid!, $userId: Int!, $data: jsonb!) {
+        update_flows_by_pk(pk_columns: { id: $flowId }, _set: { data: $data }) {
+          id
+          data
+        }
+        insert_published_flows_one(
+          object: { flow_id: $flowId, data: $data, publisher_id: $userId }
+        ) {
+          id
+        }
+      }
+    `,
+    {
+      flowId: context.flow.id,
+      userId: context.user.id,
+      data: modifiedSimpleSendFlow,
+    }
+  );
+}

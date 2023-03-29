@@ -107,10 +107,7 @@ const getMostRecentPublishedFlow = async (
 
 // Get the snapshot of the published flow for a certain point in time (flattened, with external portal nodes)
 //   created_at refers to published date, value passed in as param should be lowcal_session.updated_at
-const getPublishedFlowByDate = async (
-  id: string,
-  created_at: string
-): Promise<Flow["data"]> => {
+const getPublishedFlowByDate = async (id: string, created_at: string) => {
   const data = await adminClient.request(
     gql`
       query GetPublishedFlowByDate($id: uuid!, $created_at: timestamptz!) {

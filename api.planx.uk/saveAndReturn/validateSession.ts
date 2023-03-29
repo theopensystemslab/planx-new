@@ -1,22 +1,19 @@
 import { gql } from "graphql-request";
 import { NextFunction, Request, Response } from "express";
-import * as jsondiffpatch from "jsondiffpatch";
 import {
   adminGraphQLClient as adminClient,
   publicGraphQLClient as publicClient,
 } from "../hasura";
-import { getMostRecentPublishedFlow, getPublishedFlowByDate } from "../helpers";
 import { getSaveAndReturnPublicHeaders } from "./utils";
-import {
-  sortBreadcrumbs,
-  normalizeFlow,
-  ComponentType,
-} from "@opensystemslab/planx-core";
+import { getMostRecentPublishedFlow } from "../helpers";
+import { sortBreadcrumbs as normalizedBreadcrumbSort } from "@opensystemslab/planx-core";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import type {
   NormalizedCrumb,
+  OrderedBreadcrumbs,
   FlowGraph,
 } from "@opensystemslab/planx-core/types";
-import type { Breadcrumb, LowCalSession, Flow, Node } from "../types";
+import type { LowCalSession, PublishedFlow, Node } from "../types";
 
 export interface ValidationResponse {
   message: string;
@@ -43,19 +40,17 @@ export async function validateSession(
       });
     }
 
-    const fetchedSessionData = await findSession(
+    const fetchedSession = await findSession({
       sessionId,
-      email.toLowerCase()
-    );
-
-    if (!fetchedSessionData) {
+      email: email.toLowerCase(),
+    });
+    if (!fetchedSession) {
       return next({
         status: 404,
         message: "Unable to find your session",
       });
     }
-
-    const sessionData = fetchedSessionData.data!;
+    const sessionData = { ...fetchedSession.data! };
 
     // if a user has paid, skip reconciliation
     const userHasPaid = sessionData?.govUkPayment?.state?.status === "created";
@@ -69,35 +64,34 @@ export async function validateSession(
       return res.status(200).json(responseData);
     }
 
-    // reconcile content changes between the published flow state at point of resuming and when the applicant last left off
-    const [currentFlow, savedFlow] = await Promise.all([
-      getMostRecentPublishedFlow(sessionData.id),
-      getPublishedFlowByDate(sessionData.id, fetchedSessionData.updated_at!),
-    ]);
+    // fetch the latest flow diffs for this session's flow
+    const flowDiff = await diffLatestPublishedFlow({
+      flowId: fetchedSession.flow_id!,
+      since: fetchedSession.updated_at!,
+    });
 
-    if (!currentFlow || !savedFlow) {
-      return next({
-        status: 404,
-        message: "Unable to find a published version of this flow",
-      });
+    if (!flowDiff) {
+      const responseData: ValidationResponse = {
+        message: "No content changes since last save point",
+        reconciledSessionData: sessionData,
+      };
+      await createAuditEntry(sessionId, responseData, responseData.message);
+      return res.status(200).json(responseData);
     }
 
-    const delta = jsondiffpatch.diff(currentFlow, savedFlow) || {};
-    const alteredNodeIds: string[] = Object.keys(delta);
-
-    let alteredNodes: Node[] = [];
-    if (alteredNodeIds.length > 0) {
-      alteredNodes = alteredNodeIds.map((id) => ({
-        ...currentFlow[id],
-        id,
-      }));
-    }
+    // fetch the full flow to order breadcrumbs
+    const currentFlow = await getMostRecentPublishedFlow(sessionData.id);
 
     // create ordered breadcrumbs to be able to look up section IDs later
-    const orderedBreadcrumbs: NormalizedCrumb[] = sortBreadcrumbs(
-      normalizeFlow(currentFlow as FlowGraph),
+    const orderedBreadcrumbs: OrderedBreadcrumbs = normalizedBreadcrumbSort(
+      currentFlow as FlowGraph,
       sessionData.breadcrumbs
     );
+
+    const alteredNodes = Object.entries(flowDiff).map(([nodeId, node]) => ({
+      ...node,
+      id: nodeId,
+    }));
 
     // update breadcrumbs
     const removedBreadcrumbIds: string[] = [];
@@ -108,15 +102,15 @@ export async function validateSession(
         delete sessionData.breadcrumbs[node.id!];
       }
 
-      // remove parent breadcrumbs of answers to mark questions
-      // with updated responses as unanswered
-      if (node.type == ComponentType.Answer) {
-        const parent: NormalizedCrumb | undefined = orderedBreadcrumbs.find(
-          (crumb: NormalizedCrumb) => crumb.answers?.includes(node.id!)
-        );
-        if (parent && sessionData.breadcrumbs[parent.id!]) {
-          removedBreadcrumbIds.push(parent.id!);
-          delete sessionData.breadcrumbs[parent.id!];
+      // if an answer has changed, find it's question and remove that from breadcrumbs
+      if (node.type === ComponentType.Answer) {
+        const [parentId, _] =
+          Object.entries(currentFlow).find(([_, currentNode]) =>
+            currentNode.edges?.includes(node.id!)
+          ) || [];
+        if (parentId && sessionData.breadcrumbs[parentId!]) {
+          removedBreadcrumbIds.push(parentId!);
+          delete sessionData.breadcrumbs[parentId!];
         }
       }
 
@@ -134,27 +128,19 @@ export async function validateSession(
       }
     });
 
+    // TODO - it would be nicer to recompute the passport from the modified breadcrumbs
     // update passport data
     removedBreadcrumbIds.forEach((nodeId) => {
       // a flow schema can store the planx variable name under any of these keys
       const planx_keys = ["fn", "val", "output", "dataFieldBoundary"];
       planx_keys.forEach((key) => {
         // check if a removed breadcrumb has a passport var based on the published content at save point
-        if (sessionData && savedFlow[nodeId]?.data?.[key]) {
+        if (sessionData && flowDiff[nodeId]?.data?.[key]) {
           // if it does, remove that passport variable from our session so we don't auto-answer changed questions before the user sees them
-          delete sessionData.passport?.data?.[savedFlow[nodeId].data?.[key]];
+          delete sessionData.passport?.data?.[flowDiff[nodeId].data?.[key]];
         }
       });
     });
-
-    if (!alteredNodes || alteredNodes.length === 0) {
-      const responseData: ValidationResponse = {
-        message: "No content changes since last save point",
-        reconciledSessionData: sessionData,
-      };
-      await createAuditEntry(sessionId, responseData, responseData.message);
-      return res.status(200).json(responseData);
-    }
 
     // store modified session data
     await updateLowcalSessionData(sessionId, sessionData, email);
@@ -178,21 +164,56 @@ export async function validateSession(
   }
 }
 
-async function findSession(
-  sessionId: string,
-  email: string
-): Promise<Partial<LowCalSession> | undefined> {
-  const query = gql`
-    query FindSession($sessionId: uuid!) {
-      lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
-        data
-        updated_at
+async function diffLatestPublishedFlow({
+  flowId,
+  since,
+}: {
+  flowId: string;
+  since: string;
+}): Promise<PublishedFlow["data"] | null> {
+  const response: {
+    diff_latest_published_flow: { data: PublishedFlow["data"] | null };
+  } = await adminClient.request(
+    gql`
+      query GetFlowDiff($flowId: uuid!, $since: timestamptz!) {
+        diff_latest_published_flow(
+          args: { source_flow_id: $flowId, since: $since }
+        ) {
+          data
+        }
       }
-    }
-  `;
-  const headers = getSaveAndReturnPublicHeaders(sessionId, email);
-  const response = await publicClient.request(query, { sessionId }, headers);
-  return response.lowcal_sessions?.[0];
+    `,
+    { flowId, since }
+  );
+  return response.diff_latest_published_flow.data;
+}
+
+async function findSession({
+  sessionId,
+  email,
+}: {
+  sessionId: string;
+  email: string;
+}): Promise<Partial<LowCalSession> | undefined> {
+  const response: { lowcal_sessions: Partial<LowCalSession>[] } =
+    await adminClient.request(
+      gql`
+        query FindSession($sessionId: uuid!, $email: String!) {
+          lowcal_sessions(
+            where: { id: { _eq: $sessionId }, email: { _eq: $email } }
+            limit: 1
+          ) {
+            flow_id
+            data
+            updated_at
+          }
+        }
+      `,
+      { sessionId, email }
+    );
+  return response.lowcal_sessions.length
+    ? response.lowcal_sessions[0]
+    : undefined;
 }
 
 async function updateLowcalSessionData(
