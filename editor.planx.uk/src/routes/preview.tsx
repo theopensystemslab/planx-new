@@ -4,7 +4,7 @@ import Questions from "pages/Preview/Questions";
 import React from "react";
 
 import { getTeamFromDomain, validateTeamRoute } from "./utils";
-import { previewView } from "./views/preview";
+import { publishedView } from "./views/published";
 
 const routes = compose(
   withData(async (req) => {
@@ -21,7 +21,7 @@ const routes = compose(
 
   withView(async (req) => {
     await validateTeamRoute(req);
-    return await previewView(req);
+    return await publishedView(req);
   }),
 
   mount({

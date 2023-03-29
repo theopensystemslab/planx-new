@@ -61,7 +61,7 @@ test.describe("Save and return", () => {
     });
   });
 
-  test.describe("resuming a saved applciation", () => {
+  test.describe("resuming a saved application", () => {
     test("the application presents a review screen on return", async ({
       page,
     }) => {

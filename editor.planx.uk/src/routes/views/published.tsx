@@ -25,16 +25,17 @@ interface PreviewFlow extends Flow {
  * View wrapper for /preview and /:flowSlug (on custom domains)
  * Fetches all necessary data, and sets up Save & Return layout
  */
-export const previewView = async (req: NaviRequest) => {
+export const publishedView = async (req: NaviRequest) => {
   const flowSlug = req.params.flow.split(",")[0];
   const teamSlug =
     req.params.team || (await getTeamFromDomain(window.location.hostname));
   const data = await fetchDataForPublishedView(flowSlug, teamSlug);
+  console.log({ data });
 
   const flow = data.flows[0];
-  if (!flow) throw new NotFoundError();
+  if (!flow) throw new NotFoundError(req.originalUrl);
 
-  const publishedFlow = flow.publishedFlows[0].data;
+  const publishedFlow = flow.publishedFlows[0]?.data;
   const flowData = publishedFlow ? publishedFlow : await dataMerged(flow.id);
   setPath(flowData, req);
 
