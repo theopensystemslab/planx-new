@@ -13,9 +13,12 @@ import { getTeamFromDomain, setPath } from "routes/utils";
 import { Flow, GlobalSettings, Maybe } from "types";
 
 interface PublishedViewData {
-  flows: Flow[];
-  publishedFlows: Record<"data", Flow>[];
+  flows: PreviewFlow[];
   globalSettings: GlobalSettings[];
+}
+
+interface PreviewFlow extends Flow {
+  publishedFlows: Record<"data", Flow>[];
 }
 
 /**
@@ -28,15 +31,11 @@ export const previewView = async (req: NaviRequest) => {
     req.params.team || (await getTeamFromDomain(window.location.hostname));
   const data = await fetchDataForPublishedView(flowSlug, teamSlug);
 
-  const {
-    flows: [flow],
-    publishedFlows: [{ data: publishedFlow }],
-  } = data;
-
+  const flow = data.flows[0];
   if (!flow) throw new NotFoundError();
 
+  const publishedFlow = flow.publishedFlows[0].data;
   const flowData = publishedFlow ? publishedFlow : await dataMerged(flow.id);
-
   setPath(flowData, req);
 
   // XXX: necessary as long as not every flow is published; aim to remove dataMergedHotfix.ts in future
