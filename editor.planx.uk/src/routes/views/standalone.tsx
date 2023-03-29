@@ -6,60 +6,28 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import PublicLayout from "pages/layout/PublicLayout";
 import React from "react";
 import { View } from "react-navi";
-import { GlobalSettings, Maybe } from "types";
+import { Flow, GlobalSettings, Maybe } from "types";
 
 import { getTeamFromDomain } from "../utils";
 
+interface StandaloneViewData {
+  flows: Pick<Flow, "team" | "settings">[];
+  globalSettings: GlobalSettings[];
+}
+
 /**
- * Docs: What exactly is this??
+ * View wrapper for standalone routes (e.g. Pay)
+ * Fetches all necessary data, and sets up layout for a standalone page
  */
 const standaloneView = async (req: NaviRequest) => {
   const flowSlug = req.params.flow.split(",")[0];
-  const externalTeamName = await getTeamFromDomain(window.location.hostname);
-
-  // XXX: Prevents accessing a different team than the one associated with the custom domain.
-  //      e.g. Custom domain is for Southwark but URL is looking for Lambeth
-  //      e.g. https://planningservices.southwark.gov.uk/lambeth/some-flow/preview
-  if (
-    req.params.team &&
-    externalTeamName &&
-    externalTeamName !== req.params.team
-  )
-    throw new NotFoundError();
-
-  const { data } = await client.query({
-    query: gql`
-      query GetStandaloneData($flowSlug: String!, $teamSlug: String!) {
-        flows(
-          limit: 1
-          where: {
-            slug: { _eq: $flowSlug }
-            team: { slug: { _eq: $teamSlug } }
-          }
-        ) {
-          id
-          team {
-            theme
-            name
-            settings
-          }
-          settings
-        }
-
-        globalSettings: global_settings {
-          footerContent: footer_content
-        }
-      }
-    `,
-    variables: {
-      flowSlug,
-      teamSlug: req.params.team || externalTeamName,
-    },
-  });
+  const teamSlug =
+    req.params.team || (await getTeamFromDomain(window.location.hostname));
+  const data = await fetchDataForStandaloneView(flowSlug, teamSlug);
 
   const {
     flows: [{ team, settings }],
-    globalSettings: { footerContent },
+    globalSettings: [{ footerContent }],
   } = data;
 
   const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
@@ -78,6 +46,47 @@ const standaloneView = async (req: NaviRequest) => {
       <View />
     </PublicLayout>
   );
+};
+
+const fetchDataForStandaloneView = async (
+  flowSlug: string,
+  teamSlug: string
+): Promise<StandaloneViewData> => {
+  try {
+    const result = await client.query({
+      query: gql`
+        query GetStandaloneData($flowSlug: String!, $teamSlug: String!) {
+          flows(
+            limit: 1
+            where: {
+              slug: { _eq: $flowSlug }
+              team: { slug: { _eq: $teamSlug } }
+            }
+          ) {
+            id
+            team {
+              theme
+              name
+              settings
+            }
+            settings
+          }
+
+          globalSettings: global_settings {
+            footerContent: footer_content
+          }
+        }
+      `,
+      variables: {
+        flowSlug,
+        teamSlug,
+      },
+    });
+    return result.data;
+  } catch (error) {
+    console.error(error);
+    throw new NotFoundError();
+  }
 };
 
 export default standaloneView;

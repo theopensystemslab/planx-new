@@ -16,7 +16,7 @@ import MakePayment from "pages/Pay/MakePayment";
 import { PaymentRequest } from "pages/Pay/types";
 import React from "react";
 
-import { getTeamFromDomain, makeTitle } from "./utils";
+import { getTeamFromDomain, makeTitle, validateTeamRoute } from "./utils";
 import standaloneView from "./views/standalone";
 
 const payRoutes = compose(
@@ -33,8 +33,9 @@ const payRoutes = compose(
   }),
 
   withView(async (req) => {
+    await validateTeamRoute(req);
     useStore.getState().previewEnvironment = "pay";
-    await standaloneView(req);
+    return await standaloneView(req);
   }),
 
   mount({

@@ -1,7 +1,7 @@
 import { TYPES as NodeTypes } from "@planx/components/types";
 import gql from "graphql-tag";
 import { hasFeatureFlag } from "lib/featureFlags";
-import { NaviRequest } from "navi";
+import { NaviRequest, NotFoundError } from "navi";
 import pMemoize from "p-memoize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
@@ -83,3 +83,18 @@ export const getTeamFromDomain = pMemoize(async (domain: string) => {
 
   return teams?.[0]?.slug;
 });
+
+/**
+ * Prevents accessing a different team than the one associated with the custom domain.
+ * e.g. Custom domain is for Southwark but URL is looking for Lambeth
+ * e.g. https://planningservices.southwark.gov.uk/lambeth/some-flow/preview
+ */
+export const validateTeamRoute = async (req: NaviRequest) => {
+  const externalTeamName = await getTeamFromDomain(window.location.hostname);
+  if (
+    req.params.team &&
+    externalTeamName &&
+    externalTeamName !== req.params.team
+  )
+    throw new NotFoundError(req.originalUrl);
+};

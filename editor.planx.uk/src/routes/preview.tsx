@@ -3,7 +3,7 @@ import ContentPage from "pages/Preview/ContentPage";
 import Questions from "pages/Preview/Questions";
 import React from "react";
 
-import { getTeamFromDomain } from "./utils";
+import { getTeamFromDomain, validateTeamRoute } from "./utils";
 import { previewView } from "./views/preview";
 
 const routes = compose(
@@ -19,7 +19,10 @@ const routes = compose(
     };
   }),
 
-  withView(async (req) => previewView(req)),
+  withView(async (req) => {
+    await validateTeamRoute(req);
+    return await previewView(req);
+  }),
 
   mount({
     "/": route({
