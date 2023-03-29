@@ -1,12 +1,18 @@
 import { NextFunction, Request, Response } from "express";
-import { validate as validateUUID, version as getUUIDVersion } from "uuid";
 import type {
   Session,
   PaymentRequest,
-} from "@opensystemslab/planx-core/types/types";
+  KeyPath,
+} from "@opensystemslab/planx-core";
 
 import { ServerError } from "../errors";
 import { _admin } from "../client";
+
+const defaultSessionPreviewKeys: Array<KeyPath> = [
+  ["address", "title"],
+  ["applicant.agent.name.first"],
+  ["applicant.agent.name.last"],
+];
 
 export async function inviteToPay(
   req: Request,
@@ -14,16 +20,15 @@ export async function inviteToPay(
   next: NextFunction
 ) {
   const sessionId = req.params.sessionId;
-  const payeeEmail = req.body.payeeEmail;
-
-  if (!isValidIdFormat(sessionId)) {
-    return next(
-      new ServerError({
-        message: "invalid sessionId parameter",
-        status: 400,
-      })
-    );
-  }
+  const {
+    payeeEmail,
+    agentName,
+    sessionPreviewKeys = defaultSessionPreviewKeys,
+  }: {
+    payeeEmail: string;
+    agentName: string;
+    sessionPreviewKeys: Array<KeyPath>;
+  } = req.body;
 
   if (!payeeEmail) {
     return next(
@@ -34,8 +39,22 @@ export async function inviteToPay(
     );
   }
 
-  const session: Session = await _admin.getSessionById(sessionId);
+  if (!agentName) {
+    return next(
+      new ServerError({
+        message: "JSON body must contain agentName",
+        status: 400,
+      })
+    );
+  }
 
+  let session: Session | undefined;
+  try {
+    session = await _admin.getSessionById(sessionId);
+  } catch (e) {
+    console.log(e);
+    session = undefined;
+  }
   if (!session) {
     return next(
       new ServerError({
@@ -45,29 +64,20 @@ export async function inviteToPay(
     );
   }
 
-  // posts to this endpoint are expected to occur only for valid scenarios
-  // any validation errors are logged but undisclosed to the caller
-  const canInviteToPay = validateSessionIsEligibleForInviteToPay({
-    email: payeeEmail,
-    session,
-  });
-  if (!canInviteToPay) {
-    return next(
-      new ServerError({
-        message: "invalid invite to pay session",
-        status: 422,
-      })
-    );
-  }
-
   let paymentRequest: PaymentRequest | undefined;
   try {
     // make session read-only before creating a payment request
-    await _admin.lockSession(sessionId);
-    paymentRequest = await _admin.createPaymentRequest({
-      sessionId,
-      payeeEmail,
-    });
+    const locked: boolean = await _admin.lockSession(sessionId);
+    if (locked) {
+      paymentRequest = await _admin.createPaymentRequest({
+        sessionId,
+        agentName,
+        payeeEmail,
+        sessionPreviewKeys,
+      });
+    } else {
+      throw new Error("Session was not locked");
+    }
   } catch (e: unknown) {
     return next(
       new ServerError({
@@ -79,23 +89,4 @@ export async function inviteToPay(
   }
 
   res.json(paymentRequest);
-}
-
-export function validateSessionIsEligibleForInviteToPay({
-  email,
-  session,
-}: {
-  email: string;
-  session: Session;
-}): boolean {
-  // TODO
-  // validate breadcrumbs
-  // - includes Pay
-  // - payee email
-  // - flow is complete (session is locked)
-  return !!email && !!session;
-}
-
-function isValidIdFormat(id: string): boolean {
-  return validateUUID(id) && getUUIDVersion(id) === 4;
 }

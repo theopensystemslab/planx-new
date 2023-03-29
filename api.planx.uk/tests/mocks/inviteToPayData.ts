@@ -1,8 +1,4 @@
-import type {
-  Session,
-  PaymentRequest,
-  PaymentRequestSessionPreview,
-} from "@opensystemslab/planx-core/types/types";
+import type { Session, PaymentRequest } from "@opensystemslab/planx-core";
 
 export const validEmail = "the-payee@opensystemslab.io";
 
@@ -12,7 +8,7 @@ export const notFoundSession: Partial<Session> = {
 
 export const validSession: Session = {
   id: "e62fc9fd-4acb-4bdd-9dbb-01fb996c656c",
-  flowId: "", // TODO
+  flowId: "741a2372-b0b4-4f30-98a8-7c98c6464954",
   data: {
     id: "e62fc9fd-4acb-4bdd-9dbb-01fb996c656c",
     passport: {
@@ -23,21 +19,28 @@ export const validSession: Session = {
         "applicant.agent.name.first": "Jo",
         "applicant.agent.name.last": "Smith",
         "proposal.projectType": "new.office",
+        someKey: "someValue",
+        some: {
+          nested: {
+            set: [1, 2, 3],
+          },
+        },
       },
     },
-    breadcrumbs: {}, // TODO
+    breadcrumbs: {},
   },
 };
 
-export const paymentRequestSessionPreview: PaymentRequestSessionPreview = {
-  agentName: "Jo Smith",
-  address: "1 House, Street, Town, City, PO27 0DE",
-  projectType: "new.office",
-};
+export const paymentRequestSessionPreview: PaymentRequest["sessionPreviewData"] =
+  {
+    agentName: "Jo Smith",
+    address: "1 House, Street, Town, City, PO27 0DE",
+    projectType: "new.office",
+  };
 
 export const newPaymentRequest: PaymentRequest = {
   id: "09655c28-3f34-4619-9385-cd57312acc44",
   sessionId: validSession.id,
   payeeEmail: validEmail,
-  data: paymentRequestSessionPreview,
+  sessionPreviewData: paymentRequestSessionPreview,
 };

@@ -1,9 +1,10 @@
 import supertest from "supertest";
-import app from "../server";
 import { queryMock } from "../tests/graphqlQueryMock";
+import app from "../server";
 import {
   validSessionQueryMock,
   notFoundQueryMock,
+  checkSessionLockQueryMock,
   lockSessionQueryMock,
   createPaymentRequestQueryMock,
 } from "../tests/mocks/inviteToPayMocks";
@@ -14,20 +15,17 @@ import {
   newPaymentRequest,
 } from "../tests/mocks/inviteToPayData";
 
-describe("validateSessionIsEligibleForInviteToPay", () => {
-  test.todo("session validation");
-});
-
 describe("Invite to pay API route", () => {
   const inviteToPayBaseRoute = "/invite-to-pay";
   const validSessionURL = `${inviteToPayBaseRoute}/${validSession.id}`;
   const notFoundSessionURL = `${inviteToPayBaseRoute}/${notFoundSession.id}`;
-  const validPostBody = { payeeEmail: validEmail };
+  const validPostBody = { payeeEmail: validEmail, agentName: "Some Agent" };
 
   beforeEach(() => {
     queryMock.mockQuery(validSessionQueryMock);
     queryMock.mockQuery(lockSessionQueryMock);
     queryMock.mockQuery(notFoundQueryMock);
+    queryMock.mockQuery(checkSessionLockQueryMock);
     queryMock.mockQuery(createPaymentRequestQueryMock);
   });
 
@@ -52,14 +50,16 @@ describe("Invite to pay API route", () => {
       await supertest(app).post("/invite-to-pay").expect(404);
     });
 
-    test("an invalid UUID", async () => {
+    test("a missing agent name", async () => {
+      const invalidPostBody = {};
       await supertest(app)
-        .post("/invite-to-pay/abc")
+        .post(validSessionURL)
+        .send(invalidPostBody)
         .expect(400)
         .then((response) => {
           expect(response.body).toHaveProperty(
             "error",
-            "invalid sessionId parameter"
+            "JSON body must contain payeeEmail"
           );
         });
     });
@@ -87,5 +87,31 @@ describe("Invite to pay API route", () => {
           expect(response.body).toHaveProperty("error", "session not found");
         });
     });
+
+    test("a custom set of sessionPreviewKeys", async () => {
+      await supertest(app)
+        .post(validSessionURL)
+        .send({
+          ...validPostBody,
+          sessionPreviewKeys: [["someKey"], ["some", "nested", "set"]],
+        })
+        .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual({
+            ...newPaymentRequest,
+            sessionPreviewData: {
+              someKey: "someValue",
+              some: {
+                nested: {
+                  set: [1, 2, 3],
+                },
+              },
+            },
+          });
+        });
+    });
+
+    test.todo("a session that could not be locked");
+    test.todo("a session that has already been locked");
   });
 });

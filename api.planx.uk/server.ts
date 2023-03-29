@@ -684,17 +684,16 @@ app.get("/error", async (res, req, next) => {
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
-    if (airbrake) {
+    if (airbrake && (err instanceof Error || err instanceof ServerError)) {
       airbrake.notify(err);
-    } else {
-      console.log("Error: ", err);
-    }
-    if (err instanceof Error || err instanceof ServerError) {
       return {
         ...err,
         message: err.message.concat(", this error has been logged"),
       };
     } else {
+      if (Boolean(process.env.DEBUG) === true) {
+        console.log("Error: ", err);
+      }
       return err;
     }
   })();

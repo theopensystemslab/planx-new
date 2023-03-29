@@ -33,7 +33,22 @@ export const validSessionQueryMock = {
 export const lockSessionQueryMock = {
   name: "LockSession",
   data: {
-    read_only: true,
+    update_lowcal_sessions_by_pk: {
+      locked_at: new Date("28 May 2023 12:00 UTC+1").toISOString(),
+    },
+  },
+  ignoreThesePropertiesInVariables: ["timestamp"],
+  variables: {
+    id: validSession.id,
+  },
+};
+
+export const checkSessionLockQueryMock = {
+  name: "CheckSessionLock",
+  data: {
+    lowcal_sessions_by_pk: {
+      locked_at: null,
+    },
   },
   variables: {
     id: validSession.id,
