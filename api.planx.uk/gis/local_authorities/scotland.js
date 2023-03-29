@@ -1,4 +1,5 @@
 import "isomorphic-fetch";
+import https from "https";
 import {
   getQueryableConstraints,
   makeEsriUrl,
@@ -29,7 +30,10 @@ async function search(
     geometryType,
   });
 
-  return fetch(url)
+  const agent = new https.Agent({
+    rejectUnauthorized: false
+  });
+  return fetch(url, { agent })
     .then((response) => response.text())
     .then((data) => [featureName, data])
     .catch((error) => {
