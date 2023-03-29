@@ -16,7 +16,7 @@ import { generateTeamTheme } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
-import Header, { HeaderVariant } from "../../components/Header";
+import Header from "../../components/Header";
 import {
   Flow,
   FlowSettings,
@@ -26,11 +26,10 @@ import {
   TextContent,
 } from "../../types";
 
-interface StandalonePageProps {
+interface PublicLayoutProps {
   team: Team;
   footerContent?: { [key: string]: TextContent };
   settings?: FlowSettings;
-  context: "Unpublished" | "Preview" | "Pay";
   flow?: Flow;
   globalSettings?: GlobalSettings;
 }
@@ -46,7 +45,7 @@ const MainContainer = styled(Box)(({ theme }) => ({
   position: "relative",
 }));
 
-export const PublicFooter: React.FC<{
+const PublicFooter: React.FC<{
   settings?: FlowSettings;
   footerContent?: { [key: string]: TextContent };
 }> = ({ footerContent, settings }) => {
@@ -103,28 +102,21 @@ export const PublicFooter: React.FC<{
   );
 };
 
-const PublicLayout: React.FC<PropsWithChildren<StandalonePageProps>> = ({
+const PublicLayout: React.FC<PropsWithChildren<PublicLayoutProps>> = ({
   team,
   children,
   footerContent,
   settings,
-  context,
   flow,
   globalSettings,
 }) => {
   const teamTheme = generateTeamTheme(team.theme?.primary);
-  // get better name for this! check blue trello
-  const headerVariant = {
-    Pay: HeaderVariant.Standalone,
-    Preview: HeaderVariant.Preview,
-    Unpublished: HeaderVariant.Unpublished,
-  }[context];
 
   return (
     <PreviewContext.Provider value={{ flow, globalSettings }}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={teamTheme}>
-          <Header team={team} variant={headerVariant} />
+          <Header team={team} />
           <MainContainer id="main-content">
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               {children}

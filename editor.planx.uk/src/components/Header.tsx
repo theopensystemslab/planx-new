@@ -9,7 +9,7 @@ import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
-import Toolbar from "@mui/material/Toolbar";
+import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/styles";
@@ -49,7 +49,7 @@ const BreadcrumbLink = styled(ReactNaviLink)(() => ({
   textDecoration: "none",
 }));
 
-const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
   paddingLeft: theme.spacing(4),
   paddingRight: theme.spacing(4),
   marginTop: theme.spacing(1),
@@ -59,7 +59,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: "center",
 }));
 
-const ProfileSection = styled(Toolbar)(({ theme }) => ({
+const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
@@ -140,16 +140,6 @@ const SectionName = styled(Typography)(() => ({
 const SectionCount = styled(Typography)(() => ({
   fontSize: "inherit",
 }));
-
-/**
- * Describes the differing headers, based on the primary routes through which a flow can be interacted with
- */
-export enum HeaderVariant {
-  Preview,
-  Unpublished,
-  Editor,
-  Standalone,
-}
 
 const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
   const altText = team?.settings?.homepage
@@ -410,25 +400,21 @@ const EditorToolbar: React.FC<{
   );
 };
 
-interface RenderToolbarProps {
-  variant: HeaderVariant;
+interface ToolbarProps {
   headerRef: RefObject<HTMLDivElement>;
   team?: Team;
 }
 
-const renderToolbar: React.FC<RenderToolbarProps> = ({
-  variant,
-  headerRef,
-  team,
-}) => {
+const Toolbar: React.FC<ToolbarProps> = ({ headerRef, team }) => {
   const route = useCurrentRoute();
+  const previewEnvironment = useStore((state) => state.previewEnvironment);
 
-  switch (variant) {
-    case HeaderVariant.Editor:
+  switch (previewEnvironment) {
+    case "editor":
       return (
         <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>
       );
-    case HeaderVariant.Standalone:
+    case "pay":
       return (
         <PublicToolbar team={team} route={route} showResetButton={false} />
       );
@@ -440,8 +426,7 @@ const renderToolbar: React.FC<RenderToolbarProps> = ({
 const Header: React.FC<{
   bgcolor?: string;
   team?: Team;
-  variant: HeaderVariant;
-}> = ({ bgcolor = "#2c2c2c", team, variant }) => {
+}> = ({ bgcolor = "#2c2c2c", team }) => {
   const headerRef = useRef<HTMLDivElement>(null);
   return (
     <Root
@@ -453,7 +438,7 @@ const Header: React.FC<{
         backgroundColor: team?.theme?.primary || bgcolor,
       }}
     >
-      {renderToolbar({ variant, headerRef, team })}
+      <Toolbar headerRef={headerRef} team={team}></Toolbar>
     </Root>
   );
 };

@@ -85,7 +85,6 @@ export const previewView = async (req: NaviRequest) => {
       team={flow.team}
       footerContent={globalSettings?.footerContent}
       settings={flow.settings}
-      context="Preview"
       globalSettings={globalSettings}
       flow={flow}
     >

@@ -10,6 +10,7 @@ import {
   withData,
   withView,
 } from "navi";
+import { useStore } from "pages/FlowEditor/lib/store";
 import InviteToPay from "pages/Pay/InviteToPay";
 import MakePayment from "pages/Pay/MakePayment";
 import { PaymentRequest } from "pages/Pay/types";
@@ -31,7 +32,10 @@ const payRoutes = compose(
     };
   }),
 
-  withView(async (req) => await standaloneView(req)),
+  withView(async (req) => {
+    useStore.getState().previewEnvironment = "pay";
+    await standaloneView(req);
+  }),
 
   mount({
     "/": route(async (req) => {

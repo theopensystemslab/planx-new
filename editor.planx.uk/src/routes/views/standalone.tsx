@@ -73,7 +73,6 @@ const standaloneView = async (req: NaviRequest) => {
       team={team}
       footerContent={footerContent}
       settings={settings}
-      context="Pay"
       globalSettings={globalSettings}
     >
       <View />
