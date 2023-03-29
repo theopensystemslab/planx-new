@@ -91,7 +91,6 @@ async function go(x, y, siteBoundary, extras) {
         return acc;
       },
       {
-        ...preCheckedLayers,
         ...extras,
       }
     );

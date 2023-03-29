@@ -45,7 +45,4 @@ const planningConstraints = {
   tpo: { value: false },
 };
 
-export {
-  planningConstraints,
-  A4_KEY
-};
+export { planningConstraints };
