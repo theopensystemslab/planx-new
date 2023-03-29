@@ -26,8 +26,7 @@ const standaloneView = async (req: NaviRequest) => {
   const data = await fetchDataForStandaloneView(flowSlug, teamSlug);
 
   const {
-    flows: [{ team, settings }],
-    globalSettings: [{ footerContent }],
+    flows: [{ team, settings: flowSettings }],
   } = data;
 
   const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
@@ -39,8 +38,8 @@ const standaloneView = async (req: NaviRequest) => {
   return (
     <PublicLayout
       team={team}
-      footerContent={footerContent}
-      settings={settings}
+      footerContent={globalSettings?.footerContent}
+      flowSettings={flowSettings}
       globalSettings={globalSettings}
     >
       <View />

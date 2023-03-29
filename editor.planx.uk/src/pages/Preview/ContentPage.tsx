@@ -67,7 +67,7 @@ function ContentPage(props: { page: string }) {
   // Determine if the content is a flow setting or a global setting, and only show it if it isn't hidden
   const content = (() => {
     if (isFooterItem) {
-      const flowSetting = context?.flow?.settings?.elements?.[props.page];
+      const flowSetting = context?.flowSettings?.elements?.[props.page];
 
       if (!flowSetting?.show) return;
 

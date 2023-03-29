@@ -31,7 +31,6 @@ export const previewView = async (req: NaviRequest) => {
   const {
     flows: [flow],
     publishedFlows: [{ data: publishedFlow }],
-    globalSettings: [{ footerContent }],
   } = data;
 
   if (!flow) throw new NotFoundError();
@@ -51,10 +50,9 @@ export const previewView = async (req: NaviRequest) => {
   return (
     <PublicLayout
       team={flow.team}
-      footerContent={footerContent}
-      settings={flow.settings}
+      footerContent={globalSettings?.footerContent}
+      flowSettings={flow.settings}
       globalSettings={globalSettings}
-      flow={flow}
     >
       <SaveAndReturnLayout>
         <View />

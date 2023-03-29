@@ -76,7 +76,7 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     state.setPreviewEnvironment,
   ]);
   const isStandalone = previewEnvironment === "standalone";
-  const flow = useContext(PreviewContext)?.flow;
+  const flowSettings = useContext(PreviewContext)?.flowSettings;
   const { createAnalytics, node } = useAnalyticsTracking();
   const classes = useClasses();
   const [gotFlow, setGotFlow] = useState(false);
@@ -184,9 +184,7 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
             node={node}
             key={node.id}
             handleSubmit={handleSubmit(node.id!)}
-            settings={
-              previewEnvironment === "editor" ? settings : flow?.settings
-            }
+            settings={previewEnvironment === "editor" ? settings : flowSettings}
           />
         </ErrorBoundary>
       )}

@@ -41,9 +41,8 @@ export const unpublishedView = async (req: NaviRequest) => {
     <PublicLayout
       team={flow.team}
       footerContent={globalSettings?.footerContent}
-      settings={flow.settings}
+      flowSettings={flow.settings}
       globalSettings={globalSettings}
-      flow={flow}
     >
       <View />
     </PublicLayout>

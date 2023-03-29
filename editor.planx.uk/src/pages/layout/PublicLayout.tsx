@@ -18,7 +18,6 @@ import Logo from "ui/images/OGLLogo.svg";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import {
-  Flow,
   FlowSettings,
   FOOTER_ITEMS,
   GlobalSettings,
@@ -29,8 +28,7 @@ import {
 interface PublicLayoutProps {
   team: Team;
   footerContent?: { [key: string]: TextContent };
-  settings?: FlowSettings;
-  flow?: Flow;
+  flowSettings?: FlowSettings;
   globalSettings?: GlobalSettings;
 }
 
@@ -46,15 +44,15 @@ const MainContainer = styled(Box)(({ theme }) => ({
 }));
 
 const PublicFooter: React.FC<{
-  settings?: FlowSettings;
+  flowSettings?: FlowSettings;
   footerContent?: { [key: string]: TextContent };
-}> = ({ footerContent, settings }) => {
+}> = ({ footerContent, flowSettings }) => {
   const { data } = useCurrentRoute();
 
   const makeHref = (path: string) => [data.mountpath, "pages", path].join("/");
 
   const flowSettingsContent = FOOTER_ITEMS.map((key) => {
-    const setting = settings?.elements && settings?.elements[key];
+    const setting = flowSettings?.elements && flowSettings?.elements[key];
 
     if (setting?.show) {
       return {
@@ -106,14 +104,13 @@ const PublicLayout: React.FC<PropsWithChildren<PublicLayoutProps>> = ({
   team,
   children,
   footerContent,
-  settings,
-  flow,
+  flowSettings,
   globalSettings,
 }) => {
   const teamTheme = generateTeamTheme(team.theme?.primary);
 
   return (
-    <PreviewContext.Provider value={{ flow, globalSettings }}>
+    <PreviewContext.Provider value={{ flowSettings, globalSettings }}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={teamTheme}>
           <Header team={team} />
@@ -124,7 +121,7 @@ const PublicLayout: React.FC<PropsWithChildren<PublicLayoutProps>> = ({
           </MainContainer>
           <PublicFooter
             footerContent={footerContent}
-            settings={settings}
+            flowSettings={flowSettings}
           ></PublicFooter>
         </ThemeProvider>
       </StyledEngineProvider>
