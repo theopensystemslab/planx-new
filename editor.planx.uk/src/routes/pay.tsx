@@ -34,7 +34,6 @@ const payRoutes = compose(
 
   withView(async (req) => {
     await validateTeamRoute(req);
-    useStore.getState().previewEnvironment = "pay";
     return await standaloneView(req);
   }),
 

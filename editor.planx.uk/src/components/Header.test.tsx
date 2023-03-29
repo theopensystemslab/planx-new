@@ -1,7 +1,6 @@
 import { screen } from "@testing-library/react";
 import { hasFeatureFlag, toggleFeatureFlag } from "lib/featureFlags";
 import { vanillaStore } from "pages/FlowEditor/lib/store";
-import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import * as ReactNavi from "react-navi";
@@ -27,21 +26,6 @@ const mockTeam2: Team = {
   slug: "closedsystemslab",
 };
 
-jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-  () =>
-    ({
-      url: {
-        href: "test",
-        pathname: "/opensystemslab/test-flow/preview",
-      },
-      data: {
-        username: "Test User",
-        team: mockTeam1.slug,
-        flow: "test-flow",
-      },
-    } as any)
-);
-
 jest.spyOn(ReactNavi, "useNavigation").mockImplementation(
   () =>
     ({
@@ -53,7 +37,26 @@ jest.spyOn(ReactNavi, "useNavigation").mockImplementation(
 
 describe("Header Component - Editor Route", () => {
   beforeAll(() => {
-    act(() => setState({ previewEnvironment: "editor" }));
+    setState({ previewEnvironment: "editor" });
+
+    jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
+      () =>
+        ({
+          url: {
+            href: "test",
+            pathname: "/team-name/flow-name",
+          },
+          data: {
+            username: "Test User",
+            team: mockTeam1.slug,
+            flow: "test-flow",
+          },
+        } as any)
+    );
+  });
+
+  afterAll(() => {
+    setState({ previewEnvironment: "standalone" });
   });
 
   it("displays breadcrumbs", () => {
@@ -76,13 +79,22 @@ describe("Header Component - Editor Route", () => {
   });
 });
 
-for (const previewEnvironment of ["standalone", "pay"]) {
-  describe(`Header Component - ${previewEnvironment} Routes`, () => {
+for (const route of ["/preview", "/unpublished", "/pay", "/invite"]) {
+  describe(`Header Component - ${route} Routes`, () => {
     beforeAll(() => {
-      act(() =>
-        setState({
-          previewEnvironment: previewEnvironment as PreviewEnvironment,
-        })
+      jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
+        () =>
+          ({
+            url: {
+              href: "test",
+              pathname: "/opensystemslab/test-flow" + route,
+            },
+            data: {
+              username: "Test User",
+              team: mockTeam1.slug,
+              flow: "test-flow",
+            },
+          } as any)
       );
     });
 
@@ -120,6 +132,23 @@ for (const previewEnvironment of ["standalone", "pay"]) {
 }
 
 describe("Section navigation bar", () => {
+  beforeAll(() => {
+    jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
+      () =>
+        ({
+          url: {
+            href: "test",
+            pathname: "/team-name/flow-name/preview",
+          },
+          data: {
+            username: "Test User",
+            team: mockTeam1.slug,
+            flow: "test-flow",
+          },
+        } as any)
+    );
+  });
+
   describe("Flow without sections", () => {
     it("does not display if the feature flag is disabled", () => {
       setup(<Header team={mockTeam1}></Header>);

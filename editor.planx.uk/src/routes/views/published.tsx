@@ -30,7 +30,6 @@ export const publishedView = async (req: NaviRequest) => {
   const teamSlug =
     req.params.team || (await getTeamFromDomain(window.location.hostname));
   const data = await fetchDataForPublishedView(flowSlug, teamSlug);
-  console.log({ data });
 
   const flow = data.flows[0];
   if (!flow) throw new NotFoundError(req.originalUrl);
@@ -103,7 +102,7 @@ const fetchDataForPublishedView = async (
     });
     return result.data;
   } catch (error) {
-    console.error();
+    console.error(error);
     throw new NotFoundError();
   }
 };

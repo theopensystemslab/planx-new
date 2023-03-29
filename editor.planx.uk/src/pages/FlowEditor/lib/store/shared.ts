@@ -5,7 +5,7 @@ import type { StateCreator } from "zustand";
 import type { Store } from ".";
 import { NavigationStore } from "./navigation";
 
-export type PreviewEnvironment = "editor" | "standalone" | "pay";
+export type PreviewEnvironment = "editor" | "standalone";
 export interface SharedStore extends Store.Store {
   breadcrumbs: Store.breadcrumbs;
   childNodesOf: (id?: Store.nodeId) => Store.node[];

@@ -55,8 +55,19 @@ const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
   marginTop: theme.spacing(1),
   height: HEADER_HEIGHT,
   display: "flex",
-  justifyContent: "space-between",
   alignItems: "center",
+}));
+
+const LeftBox = styled(Box)(() => ({
+  display: "flex",
+  flex: 1,
+  justifyContent: "start",
+}));
+
+const RightBox = styled(Box)(() => ({
+  display: "flex",
+  flex: 1,
+  justifyContent: "end",
 }));
 
 const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
@@ -267,24 +278,26 @@ const PublicToolbar: React.FC<{
     <>
       <SkipLink href="#main-content">Skip to main content</SkipLink>
       <StyledToolbar>
-        {team?.theme?.logo ? (
-          <TeamLogo team={team}></TeamLogo>
-        ) : (
-          <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
-        )}
+        <LeftBox>
+          {team?.theme?.logo ? (
+            <TeamLogo team={team}></TeamLogo>
+          ) : (
+            <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
+          )}
+        </LeftBox>
         {showCentredServiceTitle && <ServiceTitle />}
-        {showResetButton ? (
-          <IconButton
-            color="secondary"
-            onClick={handleRestart}
-            aria-label="Restart Application"
-            size="large"
-          >
-            <Reset color="secondary" />
-          </IconButton>
-        ) : (
-          <Box />
-        )}
+        <RightBox>
+          {showResetButton && (
+            <IconButton
+              color="secondary"
+              onClick={handleRestart}
+              aria-label="Restart Application"
+              size="large"
+            >
+              <Reset color="secondary" />
+            </IconButton>
+          )}
+        </RightBox>
       </StyledToolbar>
       {!showCentredServiceTitle && <ServiceTitle />}
       <NavBar />
@@ -326,8 +339,10 @@ const EditorToolbar: React.FC<{
   return (
     <>
       <StyledToolbar>
-        <Breadcrumbs route={route} handleClick={handleClick}></Breadcrumbs>
-        <Box display="flex" alignItems="center">
+        <LeftBox>
+          <Breadcrumbs route={route} handleClick={handleClick}></Breadcrumbs>
+        </LeftBox>
+        <RightBox>
           {route.data.username && (
             <ProfileSection>
               {route.data.flow && (
@@ -354,7 +369,7 @@ const EditorToolbar: React.FC<{
               </IconButton>
             </ProfileSection>
           )}
-        </Box>
+        </RightBox>
       </StyledToolbar>
       <StyledPopover
         open={open}
@@ -407,19 +422,26 @@ interface ToolbarProps {
 
 const Toolbar: React.FC<ToolbarProps> = ({ headerRef, team }) => {
   const route = useCurrentRoute();
-  const previewEnvironment = useStore((state) => state.previewEnvironment);
+  const path = route.url.pathname.split("/").slice(-1)[0];
+  const [flowSlug, previewEnvironment] = useStore((state) => [
+    state.flowSlug,
+    state.previewEnvironment,
+  ]);
 
-  switch (previewEnvironment) {
-    case "editor":
-      return (
-        <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>
-      );
-    case "pay":
+  // Editor and custom domains share a path, so we need to rely on previewEnvironment
+  if (previewEnvironment === "editor" && path !== "unpublished") {
+    return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
+  }
+
+  switch (path) {
+    case flowSlug: // Custom domains
+    case "preview":
+    case "unpublished":
+      return <PublicToolbar team={team} route={route} />;
+    default:
       return (
         <PublicToolbar team={team} route={route} showResetButton={false} />
       );
-    default:
-      return <PublicToolbar team={team} route={route} />;
   }
 };
 

@@ -85,7 +85,7 @@ const fetchDataForUnpublishedView = async (
     });
     return result.data;
   } catch (error) {
-    console.error();
+    console.error(error);
     throw new NotFoundError();
   }
 };
