@@ -79,7 +79,7 @@ describe("Header Component - Editor Route", () => {
   });
 });
 
-for (const route of ["/preview", "/unpublished", "/pay", "/invite"]) {
+for (const route of ["/preview", "/unpublished", "/pay", "/nominate"]) {
   describe(`Header Component - ${route} Routes`, () => {
     beforeAll(() => {
       jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(

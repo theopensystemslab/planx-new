@@ -10,7 +10,6 @@ import {
   withData,
   withView,
 } from "navi";
-import { useStore } from "pages/FlowEditor/lib/store";
 import InviteToPay from "pages/Pay/InviteToPay";
 import MakePayment from "pages/Pay/MakePayment";
 import { PaymentRequest } from "pages/Pay/types";
@@ -45,24 +44,24 @@ const payRoutes = compose(
         view: <MakePayment {...paymentRequest} />,
       };
     }),
-    "/invite": route(async (req) => {
+    "/nominate": route(async (req) => {
       const paymentRequest = await getPaymentRequest(req);
       return {
-        title: makeTitle("Invite to pay"),
+        title: makeTitle("Nominate to pay"),
         view: <InviteToPay {...paymentRequest} />,
       };
     }),
     "/pages/:page": redirect(
       (req) => `../../../preview/pages/${req.params.page}`
     ),
-    "/invite/pages/:page": redirect(
+    "/nominate/pages/:page": redirect(
       (req) => `../../../../preview/pages/${req.params.page}`
     ),
   })
 );
 
 const getPaymentRequest = async (req: NaviRequest) => {
-  const paymentRequestId = req.params["payment-request-id"];
+  const paymentRequestId = req.params["paymentRequestId"];
   if (!paymentRequestId) throw new NotFoundError(req.originalUrl);
   const data: PaymentRequest = await fetchPaymentRequest(paymentRequestId);
   if (!data) throw new NotFoundError(req.originalUrl);

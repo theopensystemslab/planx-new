@@ -12,7 +12,7 @@ const InviteToPay: React.FC<PaymentRequest> = ({
   return (
     <Box>
       <Typography variant="h1" gutterBottom>
-        Invite to pay
+        Nominate to pay
       </Typography>
       <Typography variant="body1">
         {JSON.stringify(sessionPreviewData, null, 4)}
