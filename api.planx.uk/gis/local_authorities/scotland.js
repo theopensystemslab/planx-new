@@ -30,6 +30,9 @@ async function search(
     geometryType,
   });
 
+  // XX Fetching layers from the scotGovDomain map server throws 
+  //   `FetchError: Unable to verify first certificate / Unable to verify leaf signature`
+  //   unless this agent is set; will raise issue with TPX team and aim to remove post demo sprint
   const agent = new https.Agent({
     rejectUnauthorized: false
   });
@@ -49,7 +52,6 @@ async function go(x, y, siteBoundary, extras) {
   const geom = setEsriGeometry(geomType, x, y, 0.05, siteBoundary);
 
   const results = await Promise.all(
-    // TODO: Better to have logic here to iterate over listed buildings and TPOs?
     Object.keys(gisLayers).map((layer) =>
       search(
         gisLayers[layer].source,

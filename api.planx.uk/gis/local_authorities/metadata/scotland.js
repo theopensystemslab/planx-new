@@ -2,7 +2,7 @@
 TEST ONLY currently for TPX Impact
 */
 
-const scottGovDomain = "https://maps.gov.scot/server";
+const scotGovDomain = "https://maps.gov.scot/server";
 const inspireHESDomain = "https://inspire.hes.scot/arcgis";
 
 const planningConstraints = {
@@ -21,7 +21,7 @@ const planningConstraints = {
   },
   "designated.nationalPark.cairngorms": {
     key: "designated.nationalPark.cairngorms",
-    source: scottGovDomain,
+    source: scotGovDomain,
     id: "ScotGov/ProtectedSites",
     serverIndex: 0,
     fields: ["objectid", "npcode", "npname"],
@@ -33,7 +33,7 @@ const planningConstraints = {
   },
   "designated.nationalPark.lochLomondTrossachs": {
     key: "designated.nationalPark.lochLomondTrossachs",
-    source: scottGovDomain,
+    source: scotGovDomain,
     id: "ScotGov/ProtectedSites",
     serverIndex: 1,
     fields: ["objectid", "npcode", "npname"],
@@ -45,7 +45,7 @@ const planningConstraints = {
   },
   "designated.nationalScenicArea": {
     key: "designated.nationalScenicArea",
-    source: scottGovDomain,
+    source: scotGovDomain,
     id: "ScotGov/ProtectedSites",
     serverIndex: 3,
     fields: ["objectid", "nsacode", "nsaname"],
