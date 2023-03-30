@@ -55,7 +55,7 @@ gantt
     section User Data
     Lowcal Session: 2022-01-01, 210d
     Lowcal Session (Sanitised): 2022-12-31
-    Uploaded files: 2022-01-14, 182d
+    Uploaded files: 2022-01-14, 210d
 
     section Audit Logs
     Submission audit logs: after uj1, 182d
@@ -76,7 +76,7 @@ Here are the broad catergory of changes -
 |                    | Current Retention Period                | Proposed Retention Period                                                              |
 | ---                | ---                                     | ---                                                                                    |
 | **User Data**      | Lowcal Sessions - 7 days, then deleted. | 6 months from submission date, then sanitised and held indefinitely                    |
-| **Uploaded Files** | Indefinite                              | 6 months from upload date                                                              |
+| **Uploaded Files** | Indefinite                              | 6 months from submission date                                                              |
 | **Audit Logs**     | Indefinite                              | Submission Logs - 6 months from submission date, then sanitised and held indefinitely. <br /> Reconciliation Logs - 6 months from submission date, then deleted               |
 | **Event Metadata** | Indefinite                              | 6 months from creation date, then deleted                                              |
 | **Feedback**       | Indefinite                              | Indefinite
@@ -91,11 +91,6 @@ An automated scheduled task will run each night to sanitise and delete records w
 Currently, we would simply remove / delete and user data (e.g. email, breadcrumbs, passport) whilst retaining the remainder of the metadata associated with a record (such as `id`, `created_at`). This would allow to still have enough information to reconstruct high level user journeys if required to do so for auditing purposes. We would no longer have the fine-grained ability to understand the application question by question.
 
 In future, a more fine grained approach could be implemented to only sanitise personally identifiable data using tags.
-
-## Questions
- - Is 6 months too long?
- - Is there value in retaining reconciliation events indefinately?
- - Files and reconciliation events will be deleted 6 months from their creation, as opposed to 6 months from the submission of their associated applications. This would be an MVP implementation and we could use foreign keys to ensure everything is removed 6 months from application submission. Is this fine for now?
 
 ## Consequences
 

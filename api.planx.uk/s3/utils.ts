@@ -31,3 +31,12 @@ export function buildFilePath(
 ): string {
   return `${fileKey}/${fileName}`;
 }
+
+/**
+ * Return an S3 key in the fileKey/fileName format, based on a file's API URL
+ */
+export function getS3KeyFromURL(fileURL: string): string {
+  const [folder, file] = new URL(fileURL).pathname.split("/").slice(-2)
+  const key = [folder, file].map(decodeURIComponent).join("/");
+  return key;
+}

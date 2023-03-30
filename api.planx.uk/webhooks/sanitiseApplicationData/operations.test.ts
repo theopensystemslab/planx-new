@@ -6,6 +6,8 @@ import {
   mockSanitiseLowcalSessionsMutation,
   mockDeleteReconciliationRequestsMutation,
   mockSanitiseUniformApplicationsMutation,
+  mockGetExpiredSessionIdsQuery,
+  mockGetPassportDataForSessionQuery,
 } from "./mocks/queries";
 import {
   deleteHasuraEventLogs,
@@ -15,10 +17,26 @@ import {
   sanitiseLowcalSessions,
   deleteReconciliationRequests,
   sanitiseUniformApplications,
+  getExpiredSessionIds,
+  deleteApplicationFiles,
 } from "./operations";
 
 jest.mock("../../hasura/schema")
 const mockRunSQL = runSQL as jest.MockedFunction<typeof runSQL>;
+
+const s3Mock = () => {
+  return {
+    deleteObjects: jest.fn(() => ({
+      promise: () => Promise.resolve()
+    }))
+  };
+};
+
+jest.mock("aws-sdk/clients/s3", () => {
+  return jest.fn().mockImplementation(() => {
+    return s3Mock();
+  })
+});
 
 describe("'operationHandler' helper function", () => {
   it("returns a success result when an operation succeeds", async () => {
@@ -54,8 +72,23 @@ describe("getRetentionPeriod helper function", () => {
   });
 });
 
+describe("getExpiredSessionIds helper function", () => {
+  test("it returns formatted session ids", async () => {
+    queryMock.mockQuery({
+      name: "GetExpiredSessionIds",
+      matchOnVariables: false,
+      data: {
+        lowcal_sessions: [
+          { id: "123" }, { id: "456" }, { id:"789" }
+        ],
+      },
+    });
+    expect(await getExpiredSessionIds()).toEqual(["123", "456", "789"])
+  })
+});
+
 describe("Data sanitation operations", () => {
-  describe("GraphQL queries", () => {
+  describe("Simple GraphQL queries", () => {
     const testCases = [
       {
         operation: sanitiseLowcalSessions,
@@ -92,6 +125,17 @@ describe("Data sanitation operations", () => {
       const result = await deleteHasuraEventLogs();
       expect(mockRunSQL).toHaveBeenCalled();
       expect(result).toEqual(mockIds);
+    });
+  });
+
+  describe("deleteApplicationFiles", () => {
+    it("returns a QueryResult on success", async () => {
+      queryMock.mockQuery(mockGetExpiredSessionIdsQuery)
+      queryMock.mockQuery(mockGetPassportDataForSessionQuery)
+      const deletedFiles = await deleteApplicationFiles();
+      const filePerMockSessionCount = 7
+      const fileCount = mockIds.length * filePerMockSessionCount
+      expect(deletedFiles).toHaveLength(fileCount)
     });
   });
 });

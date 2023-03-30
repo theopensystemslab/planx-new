@@ -1,3 +1,5 @@
+import { multipleFilesMultipleQuestions } from "../../../session/mocks/passports";
+
 export const mockIds = [
   "id1", "id2", "id3"
 ];
@@ -40,4 +42,24 @@ export const mockDeleteReconciliationRequestsMutation = {
       returning: mockIds,
     }
   },
+};
+
+export const mockGetExpiredSessionIdsQuery = {
+  name: "GetExpiredSessionIds",
+  matchOnVariables: false,
+  data: {
+    lowcal_sessions: [
+      { id: "id1" }, { id: "id2" }, { id: "id3" }
+    ],
+  },
+};
+
+export const mockGetPassportDataForSessionQuery = {
+  name: "GetPassportDataForSession",
+  matchOnVariables: false,
+  data: {
+    lowcal_sessions_by_pk: {
+      data: multipleFilesMultipleQuestions
+    }
+  }
 };
