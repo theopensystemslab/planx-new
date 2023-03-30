@@ -1,16 +1,5 @@
-#!/usr/bin/env bash
-set -o errexit -o pipefail
-
-# run from project root
-cd "$(dirname $0)/../.."
-
-# set env for this shell
-set -o allexport
-source .env.pizza
-DOCKER_BUILDKIT=1
-set +o allexport
-
-docker compose \
+#!/bin/bash
+DOCKER_BUILDKIT=1 docker-compose --env-file .env.prod \
   -f docker-compose.yml \
   -f docker-compose.pizza.yml \
-  up --build --renew-anon-volumes --force-recreate --remove-orphans --wait
+  up --build --renew-anon-volumes --force-recreate --remove-orphans -d
