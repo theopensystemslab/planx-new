@@ -5,6 +5,7 @@
 // https://southwark.preview.bops.services/api-docs/index.html
 
 import { logger } from "airbrake";
+import { isEmpty } from "lodash";
 import { flatFlags } from "pages/FlowEditor/data/flags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { getResultData } from "pages/FlowEditor/lib/store/preview";
@@ -402,25 +403,18 @@ export function getBOPSParams({
 
   if (userRole && USER_ROLES.includes(userRole)) data.user_role = userRole;
 
-  // 10. proposal completion date
-  try {
-    const dateString = passport?.data?.["proposal.completion.date"];
-    if (dateString) {
-      // ensure that date is valid and in yyyy-mm-dd format
-      data.proposal_completion_date = new Date(dateString)
-        .toISOString()
-        .split("T")[0];
-    }
-  } catch (err) {
-    const errPayload = [
-      "unable to parse completion date",
-      {
-        date: passport?.data?.["proposal.completion.date"],
-        err,
-      },
-    ];
-    logger.notify(errPayload);
-  }
+  // 10. Works
+  const works: BOPSFullPayload["works"] = {};
+
+  const startedDate = parseDate(passport?.data?.["proposal.started.date"]);
+  if (startedDate) works.start_date = startedDate;
+
+  const completionDate = parseDate(
+    passport?.data?.["proposal.completion.date"]
+  );
+  if (completionDate) works.finish_date = completionDate;
+
+  if (!isEmpty(works)) data.works = works;
 
   return {
     ...data,
@@ -432,6 +426,18 @@ export function getBOPSParams({
     },
   };
 }
+
+const parseDate = (dateString: string | undefined): string | undefined => {
+  try {
+    if (dateString) {
+      // ensure that date is valid and in yyyy-mm-dd format
+      return new Date(dateString).toISOString().split("T")[0];
+    }
+  } catch (err) {
+    const errPayload = ["Unable to parse date", { dateString, err }];
+    logger.notify(errPayload);
+  }
+};
 
 export const getWorkStatus = (passport: Store.passport) => {
   // XXX: toString() is explained in XXX block above
