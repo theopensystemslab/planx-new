@@ -1,5 +1,6 @@
 const localAuthorities = {
   braintree: require("./local_authorities/braintree"),
+  scotland: require("./local_authorities/scotland"),
   digitalLand: require("./digitalLand"),
 };
 
