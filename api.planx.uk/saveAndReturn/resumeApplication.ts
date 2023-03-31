@@ -1,3 +1,4 @@
+import { SiteAddress } from '@opensystemslab/planx-core/types/types';
 import { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import { adminGraphQLClient as adminClient } from "../hasura";
@@ -121,13 +122,14 @@ const buildContentFromSessions = async (
 ): Promise<string> => {
   const contentBuilder = async (session: LowCalSession) => {
     const service = convertSlugToName(session.flow.slug);
-    const address = session.data?.passport?.data?._address?.single_line_address;
+    const address: SiteAddress | undefined = session.data?.passport?.data?._address;
+    const addressLine = address?.single_line_address || address?.title;
     const projectType = await getHumanReadableProjectType(session);
     const resumeLink = getResumeLink(session, team, session.flow.slug);
     const expiryDate = calculateExpiryDate(session.created_at);
 
     return `Service: ${service}
-      Address: ${address || "Address not submitted"}
+      Address: ${addressLine || "Address not submitted"}
       Project type: ${projectType || "Project type not submitted"}
       Expiry Date: ${expiryDate}
       Link: ${resumeLink}`;
