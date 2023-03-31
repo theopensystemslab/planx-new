@@ -9,16 +9,17 @@ import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
-import Toolbar from "@mui/material/Toolbar";
+import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/styles";
 import { TYPES } from "@planx/components/types";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
-import React, { useRef, useState } from "react";
+import React, { RefObject, useRef, useState } from "react";
 import {
   Link as ReactNaviLink,
   useCurrentRoute,
@@ -48,17 +49,28 @@ const BreadcrumbLink = styled(ReactNaviLink)(() => ({
   textDecoration: "none",
 }));
 
-const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+const StyledToolbar = styled(MuiToolbar)(({ theme }) => ({
   paddingLeft: theme.spacing(4),
   paddingRight: theme.spacing(4),
   marginTop: theme.spacing(1),
   height: HEADER_HEIGHT,
   display: "flex",
-  justifyContent: "space-between",
   alignItems: "center",
 }));
 
-const ProfileSection = styled(Toolbar)(({ theme }) => ({
+const LeftBox = styled(Box)(() => ({
+  display: "flex",
+  flex: 1,
+  justifyContent: "start",
+}));
+
+const RightBox = styled(Box)(() => ({
+  display: "flex",
+  flex: 1,
+  justifyContent: "end",
+}));
+
+const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
@@ -139,15 +151,6 @@ const SectionName = styled(Typography)(() => ({
 const SectionCount = styled(Typography)(() => ({
   fontSize: "inherit",
 }));
-
-/**
- * Describes the differing headers, based on the primary routes through which a flow can be interacted with
- */
-export enum HeaderVariant {
-  Preview,
-  Unpublished,
-  Editor,
-}
 
 const TeamLogo: React.FC<{ team?: Team }> = ({ team }) => {
   const altText = team?.settings?.homepage
@@ -241,35 +244,62 @@ const NavBar: React.FC = () => {
 
 const PublicToolbar: React.FC<{
   team?: Team;
-  handleRestart?: () => void;
   route: Route;
-}> = ({ team, handleRestart, route }) => {
+  showResetButton?: boolean;
+}> = ({ team, route, showResetButton = true }) => {
   const { navigate } = useNavigation();
+  const { path, id } = useStore();
 
   // Center the service title on desktop layouts, or drop it to second line on mobile
   // ref https://design-system.service.gov.uk/styles/page-template/
-  const showCenteredServiceTitle = useMediaQuery("(min-width:600px)");
+  const showCentredServiceTitle = useMediaQuery("(min-width:600px)");
+
+  const handleRestart = async () => {
+    if (
+      confirm(
+        "Are you sure you want to restart? This will delete your previous answers"
+      )
+    ) {
+      if (path === ApplicationPath.SingleSession) {
+        clearLocalFlow(id);
+        window.location.reload();
+      } else {
+        // Save & Return flow
+        // don't delete old flow for now
+        // await NEW_LOCAL.clearLocalFlow(sessionId)
+        const url = new URL(window.location.href);
+        url.searchParams.delete("sessionId");
+        window.location.href = url.href;
+      }
+    }
+  };
 
   return (
     <>
       <SkipLink href="#main-content">Skip to main content</SkipLink>
       <StyledToolbar>
-        {team?.theme?.logo ? (
-          <TeamLogo team={team}></TeamLogo>
-        ) : (
-          <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
-        )}
-        {showCenteredServiceTitle && <ServiceTitle />}
-        <IconButton
-          color="secondary"
-          onClick={handleRestart}
-          aria-label="Restart Application"
-          size="large"
-        >
-          <Reset color="secondary" />
-        </IconButton>
+        <LeftBox>
+          {team?.theme?.logo ? (
+            <TeamLogo team={team}></TeamLogo>
+          ) : (
+            <Breadcrumbs route={route} handleClick={navigate}></Breadcrumbs>
+          )}
+        </LeftBox>
+        {showCentredServiceTitle && <ServiceTitle />}
+        <RightBox>
+          {showResetButton && (
+            <IconButton
+              color="secondary"
+              onClick={handleRestart}
+              aria-label="Restart Application"
+              size="large"
+            >
+              <Reset color="secondary" />
+            </IconButton>
+          )}
+        </RightBox>
       </StyledToolbar>
-      {!showCenteredServiceTitle && <ServiceTitle />}
+      {!showCentredServiceTitle && <ServiceTitle />}
       <NavBar />
       <AnalyticsDisabledBanner />
     </>
@@ -309,8 +339,10 @@ const EditorToolbar: React.FC<{
   return (
     <>
       <StyledToolbar>
-        <Breadcrumbs route={route} handleClick={handleClick}></Breadcrumbs>
-        <Box display="flex" alignItems="center">
+        <LeftBox>
+          <Breadcrumbs route={route} handleClick={handleClick}></Breadcrumbs>
+        </LeftBox>
+        <RightBox>
           {route.data.username && (
             <ProfileSection>
               {route.data.flow && (
@@ -337,7 +369,7 @@ const EditorToolbar: React.FC<{
               </IconButton>
             </ProfileSection>
           )}
-        </Box>
+        </RightBox>
       </StyledToolbar>
       <StyledPopover
         open={open}
@@ -383,15 +415,41 @@ const EditorToolbar: React.FC<{
   );
 };
 
+interface ToolbarProps {
+  headerRef: RefObject<HTMLDivElement>;
+  team?: Team;
+}
+
+const Toolbar: React.FC<ToolbarProps> = ({ headerRef, team }) => {
+  const route = useCurrentRoute();
+  const path = route.url.pathname.split("/").slice(-1)[0];
+  const [flowSlug, previewEnvironment] = useStore((state) => [
+    state.flowSlug,
+    state.previewEnvironment,
+  ]);
+
+  // Editor and custom domains share a path, so we need to rely on previewEnvironment
+  if (previewEnvironment === "editor" && path !== "unpublished") {
+    return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
+  }
+
+  switch (path) {
+    case flowSlug: // Custom domains
+    case "preview":
+    case "unpublished":
+      return <PublicToolbar team={team} route={route} />;
+    default:
+      return (
+        <PublicToolbar team={team} route={route} showResetButton={false} />
+      );
+  }
+};
+
 const Header: React.FC<{
   bgcolor?: string;
   team?: Team;
-  handleRestart?: () => void;
-  variant: HeaderVariant;
-}> = ({ bgcolor = "#2c2c2c", team, handleRestart, variant }) => {
+}> = ({ bgcolor = "#2c2c2c", team }) => {
   const headerRef = useRef<HTMLDivElement>(null);
-  const route = useCurrentRoute();
-
   return (
     <Root
       position="static"
@@ -402,15 +460,7 @@ const Header: React.FC<{
         backgroundColor: team?.theme?.primary || bgcolor,
       }}
     >
-      {variant === HeaderVariant.Editor ? (
-        <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>
-      ) : (
-        <PublicToolbar
-          team={team}
-          handleRestart={handleRestart}
-          route={route}
-        />
-      )}
+      <Toolbar headerRef={headerRef} team={team}></Toolbar>
     </Root>
   );
 };

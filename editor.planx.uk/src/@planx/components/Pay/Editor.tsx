@@ -37,7 +37,7 @@ function Component(props: any) {
         props.node?.data?.inviteToPayTitle || "Details of your nominee",
       inviteToPayDescription:
         props.node?.data?.inviteToPayDescription ||
-        `<p>You can nominate someone else to pay for your application.</p>\
+        `<p>You can invite someone else to pay for your application.</p>\
          <p>They will receive an email with a link to pay using GOV.UK Pay that will be \
          valid for 28 days. Upon successful payment, this application will be \
          sent and you will both receive a confirmation email.</p>`,
@@ -123,7 +123,7 @@ function Component(props: any) {
                   );
                 }}
               >
-                Allow applicants to nominate someone else to pay
+                Allow applicants to invite someone else to pay
               </OptionButton>
             </InputRow>
             {formik.values.allowInviteToPay ? (

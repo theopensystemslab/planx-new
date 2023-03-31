@@ -9,7 +9,7 @@ import { Team } from "types";
 
 import flowWithoutSections from "../pages/FlowEditor/lib/__tests__/mocks/flowWithClones.json";
 import flowWithThreeSections from "../pages/FlowEditor/lib/__tests__/mocks/flowWithThreeSections.json";
-import Header, { HeaderVariant } from "./Header";
+import Header from "./Header";
 
 const { setState, getState } = vanillaStore;
 
@@ -26,21 +26,6 @@ const mockTeam2: Team = {
   slug: "closedsystemslab",
 };
 
-jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
-  () =>
-    ({
-      url: {
-        href: "test",
-        pathname: "/opensystemslab/test-flow/preview",
-      },
-      data: {
-        username: "Test User",
-        team: mockTeam1.slug,
-        flow: "test-flow",
-      },
-    } as any)
-);
-
 jest.spyOn(ReactNavi, "useNavigation").mockImplementation(
   () =>
     ({
@@ -51,141 +36,184 @@ jest.spyOn(ReactNavi, "useNavigation").mockImplementation(
 );
 
 describe("Header Component - Editor Route", () => {
+  beforeAll(() => {
+    setState({ previewEnvironment: "editor" });
+
+    jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
+      () =>
+        ({
+          url: {
+            href: "test",
+            pathname: "/team-name/flow-name",
+          },
+          data: {
+            username: "Test User",
+            team: mockTeam1.slug,
+            flow: "test-flow",
+          },
+        } as any)
+    );
+  });
+
+  afterAll(() => {
+    setState({ previewEnvironment: "standalone" });
+  });
+
   it("displays breadcrumbs", () => {
-    setup(<Header variant={HeaderVariant.Editor} team={mockTeam1}></Header>);
+    setup(<Header team={mockTeam1}></Header>);
     expect(screen.getByText("Plan✕")).toBeInTheDocument();
     expect(screen.getByText(mockTeam1.slug)).toBeInTheDocument();
     expect(screen.getByText("test-flow")).toBeInTheDocument();
   });
 
   it("displays avatar and settings", () => {
-    setup(<Header variant={HeaderVariant.Editor} team={mockTeam1}></Header>);
+    setup(<Header team={mockTeam1}></Header>);
     expect(screen.getByText("T")).toBeInTheDocument();
     expect(screen.getByLabelText("Toggle Menu")).toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
-    const { container } = setup(
-      <Header variant={HeaderVariant.Editor} team={mockTeam1}></Header>
-    );
+    const { container } = setup(<Header team={mockTeam1}></Header>);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 });
 
-describe("Header Component - Public Routes", () => {
-  it("displays a logo when available", () => {
-    setup(<Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>);
-    expect(screen.queryByText("Plan✕")).not.toBeInTheDocument();
-    expect(screen.getByAltText(`${mockTeam1.name} Logo`)).toHaveAttribute(
-      "src",
-      "logo.jpg"
-    );
-  });
-
-  it("falls back to the PlanX link when a logo is not present", () => {
-    setup(<Header variant={HeaderVariant.Preview} team={mockTeam2}></Header>);
-    expect(
-      screen.queryByAltText(`${mockTeam2.name} Logo`)
-    ).not.toBeInTheDocument();
-    expect(screen.getByText("Plan✕")).toBeInTheDocument();
-  });
-
-  it("displays service title from the store", () => {
-    setup(<Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>);
-    act(() => setState({ flowName: "test flow" }));
-
-    expect(screen.getByTestId("service-title")).toBeInTheDocument();
-    expect(screen.getByText("test flow")).toBeInTheDocument();
-  });
-
-  it("should not have any accessibility violations", async () => {
-    const { container } = setup(
-      <Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>
-    );
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
-
-  describe("Section navigation bar", () => {
-    describe("Flow without sections", () => {
-      it("does not display if the feature flag is disabled", () => {
-        setup(
-          <Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>
-        );
-        act(() => setState({ flow: flowWithoutSections }));
-        act(() => getState().initNavigationStore());
-
-        expect(hasFeatureFlag("NAVIGATION_UI")).toBe(false);
-        expect(screen.queryByTestId("navigation-bar")).not.toBeInTheDocument();
-      });
-
-      it("does not display if the feature flag is enabled", () => {
-        toggleFeatureFlag("NAVIGATION_UI");
-        setup(
-          <Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>
-        );
-        act(() => setState({ flow: flowWithoutSections }));
-        act(() => getState().initNavigationStore());
-
-        expect(hasFeatureFlag("NAVIGATION_UI")).toBe(true);
-        expect(screen.queryByTestId("navigation-bar")).not.toBeInTheDocument();
-      });
+for (const route of ["/preview", "/unpublished", "/pay", "/invite"]) {
+  describe(`Header Component - ${route} Routes`, () => {
+    beforeAll(() => {
+      jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
+        () =>
+          ({
+            url: {
+              href: "test",
+              pathname: "/opensystemslab/test-flow" + route,
+            },
+            data: {
+              username: "Test User",
+              team: mockTeam1.slug,
+              flow: "test-flow",
+            },
+          } as any)
+      );
     });
 
-    describe("Flow with sections", () => {
-      beforeEach(() => {
-        if (hasFeatureFlag("NAVIGATION_UI")) {
-          toggleFeatureFlag("NAVIGATION_UI");
-        }
-      });
+    it("displays a logo when available", () => {
+      setup(<Header team={mockTeam1}></Header>);
+      expect(screen.queryByText("Plan✕")).not.toBeInTheDocument();
+      expect(screen.getByAltText(`${mockTeam1.name} Logo`)).toHaveAttribute(
+        "src",
+        "logo.jpg"
+      );
+    });
 
-      it("does not display if the feature flag is disabled", () => {
-        act(() => setState({ flow: flowWithThreeSections }));
-        act(() => getState().initNavigationStore());
-        setup(
-          <Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>
-        );
+    it("falls back to the PlanX link when a logo is not present", () => {
+      setup(<Header team={mockTeam2}></Header>);
+      expect(
+        screen.queryByAltText(`${mockTeam2.name} Logo`)
+      ).not.toBeInTheDocument();
+      expect(screen.getByText("Plan✕")).toBeInTheDocument();
+    });
 
-        expect(hasFeatureFlag("NAVIGATION_UI")).toBe(false);
-        expect(screen.queryByTestId("navigation-bar")).not.toBeInTheDocument();
-      });
+    it("displays service title from the store", () => {
+      setup(<Header team={mockTeam1}></Header>);
+      act(() => setState({ flowName: "test flow" }));
 
-      it("displays if the feature flag is enabled", () => {
+      expect(screen.getByTestId("service-title")).toBeInTheDocument();
+      expect(screen.getByText("test flow")).toBeInTheDocument();
+    });
+
+    it("should not have any accessibility violations", async () => {
+      const { container } = setup(<Header team={mockTeam1}></Header>);
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+  });
+}
+
+describe("Section navigation bar", () => {
+  beforeAll(() => {
+    jest.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
+      () =>
+        ({
+          url: {
+            href: "test",
+            pathname: "/team-name/flow-name/preview",
+          },
+          data: {
+            username: "Test User",
+            team: mockTeam1.slug,
+            flow: "test-flow",
+          },
+        } as any)
+    );
+  });
+
+  describe("Flow without sections", () => {
+    it("does not display if the feature flag is disabled", () => {
+      setup(<Header team={mockTeam1}></Header>);
+      act(() => setState({ flow: flowWithoutSections }));
+      act(() => getState().initNavigationStore());
+
+      expect(hasFeatureFlag("NAVIGATION_UI")).toBe(false);
+      expect(screen.queryByTestId("navigation-bar")).not.toBeInTheDocument();
+    });
+
+    it("does not display if the feature flag is enabled", () => {
+      toggleFeatureFlag("NAVIGATION_UI");
+      setup(<Header team={mockTeam1}></Header>);
+      act(() => setState({ flow: flowWithoutSections }));
+      act(() => getState().initNavigationStore());
+
+      expect(hasFeatureFlag("NAVIGATION_UI")).toBe(true);
+      expect(screen.queryByTestId("navigation-bar")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("Flow with sections", () => {
+    beforeEach(() => {
+      if (hasFeatureFlag("NAVIGATION_UI")) {
         toggleFeatureFlag("NAVIGATION_UI");
-        act(() => setState({ flow: flowWithThreeSections }));
-        act(() => getState().initNavigationStore());
-        setup(
-          <Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>
-        );
+      }
+    });
 
-        expect(hasFeatureFlag("NAVIGATION_UI")).toBe(true);
-        expect(screen.getByTestId("navigation-bar")).toBeInTheDocument();
-      });
+    it("does not display if the feature flag is disabled", () => {
+      act(() => setState({ flow: flowWithThreeSections }));
+      act(() => getState().initNavigationStore());
+      setup(<Header team={mockTeam1}></Header>);
 
-      it("display the correct information from the store", () => {
-        toggleFeatureFlag("NAVIGATION_UI");
-        act(() => setState({ flow: flowWithThreeSections }));
-        act(() => getState().initNavigationStore());
-        setup(
-          <Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>
-        );
+      expect(hasFeatureFlag("NAVIGATION_UI")).toBe(false);
+      expect(screen.queryByTestId("navigation-bar")).not.toBeInTheDocument();
+    });
 
-        expect(screen.getByText("Section 1 of 3")).toBeInTheDocument();
-        expect(screen.getByText("First section")).toBeInTheDocument();
-      });
+    it("displays if the feature flag is enabled", () => {
+      toggleFeatureFlag("NAVIGATION_UI");
+      act(() => setState({ flow: flowWithThreeSections }));
+      act(() => getState().initNavigationStore());
+      setup(<Header team={mockTeam1}></Header>);
 
-      it("should not have any accessibility violations", async () => {
-        toggleFeatureFlag("NAVIGATION_UI");
-        act(() => setState({ flow: flowWithThreeSections }));
-        act(() => getState().initNavigationStore());
-        const { container } = setup(
-          <Header variant={HeaderVariant.Preview} team={mockTeam1}></Header>
-        );
+      expect(hasFeatureFlag("NAVIGATION_UI")).toBe(true);
+      expect(screen.getByTestId("navigation-bar")).toBeInTheDocument();
+    });
 
-        const results = await axe(container);
-        expect(results).toHaveNoViolations();
-      });
+    it("display the correct information from the store", () => {
+      toggleFeatureFlag("NAVIGATION_UI");
+      act(() => setState({ flow: flowWithThreeSections }));
+      act(() => getState().initNavigationStore());
+      setup(<Header team={mockTeam1}></Header>);
+
+      expect(screen.getByText("Section 1 of 3")).toBeInTheDocument();
+      expect(screen.getByText("First section")).toBeInTheDocument();
+    });
+
+    it("should not have any accessibility violations", async () => {
+      toggleFeatureFlag("NAVIGATION_UI");
+      act(() => setState({ flow: flowWithThreeSections }));
+      act(() => getState().initNavigationStore());
+      const { container } = setup(<Header team={mockTeam1}></Header>);
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
     });
   });
 });

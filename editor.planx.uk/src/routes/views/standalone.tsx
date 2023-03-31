@@ -1,0 +1,91 @@
+import camelcaseKeys from "camelcase-keys";
+import gql from "graphql-tag";
+import { client } from "lib/graphql";
+import { NaviRequest, NotFoundError } from "navi";
+import { useStore } from "pages/FlowEditor/lib/store";
+import PublicLayout from "pages/layout/PublicLayout";
+import React from "react";
+import { View } from "react-navi";
+import { Flow, GlobalSettings, Maybe } from "types";
+
+import { getTeamFromDomain } from "../utils";
+
+interface StandaloneViewData {
+  flows: Pick<Flow, "team" | "settings">[];
+  globalSettings: GlobalSettings[];
+}
+
+/**
+ * View wrapper for standalone routes (e.g. Pay)
+ * Fetches all necessary data, and sets up layout for a standalone page
+ */
+const standaloneView = async (req: NaviRequest) => {
+  const flowSlug = req.params.flow.split(",")[0];
+  const teamSlug =
+    req.params.team || (await getTeamFromDomain(window.location.hostname));
+  const data = await fetchDataForStandaloneView(flowSlug, teamSlug);
+
+  const {
+    flows: [{ team, settings: flowSettings }],
+  } = data;
+
+  const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
+    data.globalSettings[0]
+  );
+
+  useStore.getState().setFlowNameFromSlug(flowSlug);
+
+  return (
+    <PublicLayout
+      team={team}
+      footerContent={globalSettings?.footerContent}
+      flowSettings={flowSettings}
+      globalSettings={globalSettings}
+    >
+      <View />
+    </PublicLayout>
+  );
+};
+
+const fetchDataForStandaloneView = async (
+  flowSlug: string,
+  teamSlug: string
+): Promise<StandaloneViewData> => {
+  try {
+    const result = await client.query({
+      query: gql`
+        query GetStandaloneData($flowSlug: String!, $teamSlug: String!) {
+          flows(
+            limit: 1
+            where: {
+              slug: { _eq: $flowSlug }
+              team: { slug: { _eq: $teamSlug } }
+            }
+          ) {
+            id
+            team {
+              theme
+              name
+              settings
+            }
+            settings
+          }
+
+          globalSettings: global_settings {
+            footerContent: footer_content
+          }
+        }
+      `,
+      variables: {
+        flowSlug,
+        teamSlug,
+      },
+    });
+    return result.data;
+  } catch (error) {
+    console.error(error);
+    throw new NotFoundError();
+  }
+};
+
+export default standaloneView;

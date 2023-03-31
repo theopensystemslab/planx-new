@@ -28,6 +28,7 @@ export interface SharedStore extends Store.Store {
   previewEnvironment: PreviewEnvironment;
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
   setFlowSlug: (flowSlug: string) => void;
+  setFlowNameFromSlug: (flowSlug: string) => void;
 }
 
 export const sharedStore: StateCreator<
@@ -77,8 +78,8 @@ export const sharedStore: StateCreator<
   },
 
   setFlow({ id, flow, flowSlug }) {
-    const flowName = capitalize(flowSlug.replaceAll?.("-", " "));
-    set({ id, flow, flowSlug, flowName });
+    this.setFlowNameFromSlug(flowSlug);
+    set({ id, flow, flowSlug });
     get().initNavigationStore();
   },
 
@@ -93,5 +94,10 @@ export const sharedStore: StateCreator<
 
   setFlowSlug(flowSlug) {
     set({ flowSlug });
+  },
+
+  setFlowNameFromSlug(flowSlug) {
+    const flowName = capitalize(flowSlug.replaceAll?.("-", " "));
+    set({ flowName });
   },
 });
