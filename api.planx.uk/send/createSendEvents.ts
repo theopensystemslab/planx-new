@@ -25,17 +25,13 @@ const createSendEvents = async (req: Request, res: Response, next: NextFunction)
     }
 
     if ("uniform" in req.body) {
-      // Only send valid payloads to Uniform
-      // Fail silently - error already caught in frontend by Airbrake
-      if (req.body.uniform.body.xml) {
-        const uniformEvent = await createScheduledEvent({
-          webhook: `{{HASURA_PLANX_API_URL}}/uniform/${req.body.uniform.localAuthority}`,
-          schedule_at: now,
-          payload: req.body.uniform.body,
-          comment: `uniform_submission_${req.params.sessionId}`,
-        });
-        combinedResponse["uniform"] = uniformEvent;
-      }
+      const uniformEvent = await createScheduledEvent({
+        webhook: `{{HASURA_PLANX_API_URL}}/uniform/${req.body.uniform.localAuthority}`,
+        schedule_at: now,
+        payload: req.body.uniform.body,
+        comment: `uniform_submission_${req.params.sessionId}`,
+      });
+      combinedResponse["uniform"] = uniformEvent;
     }
 
     if ("email" in req.body) {
