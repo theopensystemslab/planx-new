@@ -154,65 +154,6 @@ export const noFiles = {
   "application.resubmission.original.applicationReference": "ff"
 }
 
-export const singleFileQuestion = {
-  ...noFiles,
-  "property.drawing.elevation": [
-    {
-      "url": "https://api.1434.planx.pizza/file/private/4senippj/Screenshot%202023-02-08%20at%2009.13.55.png",
-      "filename": "Screenshot 2023-02-08 at 09.13.55.png",
-      "cachedSlot": {
-        "id": "QZYeaycqQhpZoX7qd1Tns",
-        "url": "https://api.1434.planx.pizza/file/private/4senippj/Screenshot%202023-02-08%20at%2009.13.55.png",
-        "file": {
-          "path": "Screenshot 2023-02-08 at 09.13.55.png",
-          "size": 33803,
-          "type": "image/png"
-        },
-        "status": "success",
-        "progress": 1
-      }
-    }
-  ],
-}
-
-export const multipleFileQuestions = {
-  ...noFiles,
-  "property.drawing.elevation": [
-    {
-      "url": "https://api.1434.planx.pizza/file/private/4senippj/Screenshot%202023-02-08%20at%2009.13.55.png",
-      "filename": "Screenshot 2023-02-08 at 09.13.55.png",
-      "cachedSlot": {
-        "id": "QZYeaycqQhpZoX7qd1Tns",
-        "url": "https://api.1434.planx.pizza/file/private/4senippj/Screenshot%202023-02-08%20at%2009.13.55.png",
-        "file": {
-          "path": "Screenshot 2023-02-08 at 09.13.55.png",
-          "size": 33803,
-          "type": "image/png"
-        },
-        "status": "success",
-        "progress": 1
-      }
-    }
-  ],
-  "proposal.drawing.elevation": [
-    {
-      "url": "https://api.1434.planx.pizza/file/private/vsvv8987/Screenshot%202023-02-08%20at%2009.13.55.png",
-      "filename": "Screenshot 2023-02-08 at 09.13.55.png",
-      "cachedSlot": {
-        "id": "tUrm4syFWyH-oInuaDoiv",
-        "url": "https://api.1434.planx.pizza/file/private/vsvv8987/Screenshot%202023-02-08%20at%2009.13.55.png",
-        "file": {
-          "path": "Screenshot 2023-02-08 at 09.13.55.png",
-          "size": 33803,
-          "type": "image/png"
-        },
-        "status": "success",
-        "progress": 1
-      }
-    }
-  ],
-}
-
 export const multipleFilesMultipleQuestions = {
   ...noFiles,
   "property.drawing.elevation": [
