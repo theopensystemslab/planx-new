@@ -116,10 +116,10 @@ describe("Confirm component with inviteToPay", () => {
     paymentStatus: undefined,
   };
 
-  const invitePrompt = "Nominate someone else to pay for this application";
+  const invitePrompt = "Invite someone else to pay for this application";
   const payPrompt = "Pay for this application myself instead";
 
-  it("shows the nominate link and hides the SuggestionDrawer link", () => {
+  it("shows the invite link and hides the SuggestionDrawer link", () => {
     setup(<Confirm {...inviteProps} />);
 
     expect(screen.getByText(invitePrompt)).toBeInTheDocument();
@@ -128,7 +128,7 @@ describe("Confirm component with inviteToPay", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("switches pages when you click the nominate link", async () => {
+  it("switches pages when you click the invite link", async () => {
     const { user } = setup(<Confirm {...inviteProps} />);
 
     // Land on "Pay" page by default
@@ -160,7 +160,7 @@ describe("Confirm component with inviteToPay", () => {
     ).toBeInTheDocument();
   });
 
-  it("disables the nominate link if you already have an in-progress payment", async () => {
+  it("disables the invite link if you already have an in-progress payment", async () => {
     setup(
       <Confirm
         {...inviteProps}
@@ -171,10 +171,10 @@ describe("Confirm component with inviteToPay", () => {
 
     expect(screen.getByText("How to pay")).toBeInTheDocument();
     expect(screen.getByText("Retry payment")).toBeInTheDocument();
-    expect(screen.getByTestId("nominate-page-link")).toBeDisabled();
+    expect(screen.getByTestId("invite-page-link")).toBeDisabled();
   });
 
-  it("should not have any accessiblity violations", async () => {
+  it("should not have any accessibility violations", async () => {
     const { container } = setup(<Confirm {...inviteProps} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();

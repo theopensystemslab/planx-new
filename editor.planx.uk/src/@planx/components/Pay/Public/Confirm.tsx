@@ -124,10 +124,10 @@ export default function Confirm(props: Props) {
                   component="button"
                   onClick={changePage}
                   disabled={Boolean(props?.paymentStatus)}
-                  data-testid="nominate-page-link"
+                  data-testid="invite-page-link"
                 >
                   <Typography variant="body2">
-                    Nominate someone else to pay for this application
+                    Invite someone else to pay for this application
                   </Typography>
                 </Link>
               </>
@@ -152,7 +152,7 @@ export default function Confirm(props: Props) {
     </>
   );
 
-  const nominateBody = () => (
+  const inviteBody = () => (
     <Card>
       <Typography variant="h3">{props.inviteToPayTitle}</Typography>
       <Typography variant="body2">
@@ -171,7 +171,7 @@ export default function Confirm(props: Props) {
             onChange={(e) => handleNomineeInputChange(e, "nomineeName")}
             inputProps={{
               "aria-describedby":
-                "Nominate someone else to pay for this application - full name",
+                "Invite someone else to pay for this application - full name",
             }}
           />
         </InputLabel>
@@ -196,7 +196,7 @@ export default function Confirm(props: Props) {
             onBlur={handleNomineeEmailCheck}
             inputProps={{
               "aria-describedby": [
-                "Nominate someone else to pay for this application - email",
+                "Invite someone else to pay for this application - email",
                 showNomineeEmailError && !validatedNomineeEmail
                   ? `Enter an email address in the correct format`
                   : "",
@@ -271,7 +271,7 @@ export default function Confirm(props: Props) {
             </Typography>
           </Container>
         </Banner>
-        {page === "Pay" ? payBody() : nominateBody()}
+        {page === "Pay" ? payBody() : inviteBody()}
       </>
     </Box>
   );

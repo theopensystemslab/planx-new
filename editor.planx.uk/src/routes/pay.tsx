@@ -44,17 +44,17 @@ const payRoutes = compose(
         view: <MakePayment {...paymentRequest} />,
       };
     }),
-    "/nominate": route(async (req) => {
+    "/invite": route(async (req) => {
       const paymentRequest = await getPaymentRequest(req);
       return {
-        title: makeTitle("Nominate to pay"),
+        title: makeTitle("Invite to pay"),
         view: <InviteToPay {...paymentRequest} />,
       };
     }),
     "/pages/:page": redirect(
       (req) => `../../../preview/pages/${req.params.page}`
     ),
-    "/nominate/pages/:page": redirect(
+    "/invite/pages/:page": redirect(
       (req) => `../../../../preview/pages/${req.params.page}`
     ),
   })
