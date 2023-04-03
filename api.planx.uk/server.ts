@@ -63,7 +63,7 @@ import { isLiveEnv } from "./helpers";
 import { logPaymentStatus } from "./send/helpers";
 import { getOneAppXML } from "./admin/session/oneAppXML";
 import { gql } from "graphql-request";
-import { createPaymentExpiryEvents, createPaymentReminderEvents } from "./webhooks/paymentRequestEvents";
+import { createPaymentExpiryEvents, createPaymentInvitationEvents, createPaymentReminderEvents } from "./webhooks/paymentRequestEvents";
 
 const router = express.Router();
 
@@ -666,6 +666,7 @@ app.post("/validate-session", validateSession);
 app.use("/webhooks/hasura", useHasuraAuth);
 app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
+app.post("/webhooks/hasura/create-payment-invitation-events", createPaymentInvitationEvents);
 app.post("/webhooks/hasura/create-payment-reminder-events", createPaymentReminderEvents);
 app.post("/webhooks/hasura/create-payment-expiry-events", createPaymentExpiryEvents);
 app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
