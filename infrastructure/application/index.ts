@@ -67,7 +67,7 @@ export = async () => {
 
   // ----------------------- Metabase
   const pgRoot = url.parse(dbRootUrl);
-  const provider = new postgres.Provider("metabaseNew", {
+  const provider = new postgres.Provider("metabase", {
     host: pgRoot.hostname as string,
     port: Number(pgRoot.port),
     username: pgRoot.auth!.split(":")[0] as string,
