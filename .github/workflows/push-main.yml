@@ -97,7 +97,6 @@ jobs:
           stack-name: staging
           work-dir: infrastructure/application
           edit-pr-comment: true
-          refresh: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
