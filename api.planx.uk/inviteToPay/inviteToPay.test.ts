@@ -61,8 +61,8 @@ describe("Invite to pay API route", () => {
       await supertest(app).post("/invite-to-pay").expect(404);
     });
 
-    test("a missing agent name", async () => {
-      const invalidPostBody = {};
+    test("a missing payee name", async () => {
+      const invalidPostBody = { ...validPostBody, payeeName: null  };
       await supertest(app)
         .post(validSessionURL)
         .send(invalidPostBody)
@@ -70,13 +70,13 @@ describe("Invite to pay API route", () => {
         .then((response) => {
           expect(response.body).toHaveProperty(
             "error",
-            "JSON body must contain payeeEmail"
+            "JSON body must contain payeeName"
           );
         });
     });
 
     test("a missing payee email address", async () => {
-      const invalidPostBody = {};
+      const invalidPostBody = { ...validPostBody, payeeEmail: null  };
       await supertest(app)
         .post(validSessionURL)
         .send(invalidPostBody)

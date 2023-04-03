@@ -39,7 +39,7 @@ export async function inviteToPay(
 
   let paymentRequest: PaymentRequest | undefined;
   try {
-    // make session read-only before creating a payment request
+    // lock session before creating a payment request
     // createPaymentRequest will fail if the session fails to lock
     await _admin.lockSession(sessionId);
     paymentRequest = await _admin.createPaymentRequest({
