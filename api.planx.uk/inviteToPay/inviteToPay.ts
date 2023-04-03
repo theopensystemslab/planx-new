@@ -1,18 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import type {
-  Session,
-  PaymentRequest,
-  KeyPath,
-} from "@opensystemslab/planx-core";
+import type { PaymentRequest, KeyPath } from "@opensystemslab/planx-core";
 
 import { ServerError } from "../errors";
 import { _admin } from "../client";
-
-const defaultSessionPreviewKeys: Array<KeyPath> = [
-  ["address", "title"],
-  ["applicant.agent.name.first"],
-  ["applicant.agent.name.last"],
-];
 
 export async function inviteToPay(
   req: Request,
@@ -22,11 +12,11 @@ export async function inviteToPay(
   const sessionId = req.params.sessionId;
   const {
     payeeEmail,
-    agentName,
-    sessionPreviewKeys = defaultSessionPreviewKeys,
+    payeeName,
+    sessionPreviewKeys,
   }: {
     payeeEmail: string;
-    agentName: string;
+    payeeName: string;
     sessionPreviewKeys: Array<KeyPath>;
   } = req.body;
 
@@ -38,28 +28,11 @@ export async function inviteToPay(
       })
     );
   }
-
-  if (!agentName) {
+  if (!payeeName) {
     return next(
       new ServerError({
-        message: "JSON body must contain agentName",
+        message: "JSON body must contain payeeName",
         status: 400,
-      })
-    );
-  }
-
-  let session: Session | undefined;
-  try {
-    session = await _admin.getSessionById(sessionId);
-  } catch (e) {
-    console.log(e);
-    session = undefined;
-  }
-  if (!session) {
-    return next(
-      new ServerError({
-        message: "session not found",
-        status: 404,
       })
     );
   }
@@ -67,25 +40,31 @@ export async function inviteToPay(
   let paymentRequest: PaymentRequest | undefined;
   try {
     // make session read-only before creating a payment request
-    const locked: boolean = await _admin.lockSession(sessionId);
-    if (locked) {
-      paymentRequest = await _admin.createPaymentRequest({
-        sessionId,
-        agentName,
-        payeeEmail,
-        sessionPreviewKeys,
-      });
-    } else {
-      throw new Error("Session was not locked");
-    }
+    // createPaymentRequest will fail if the session fails to lock
+    await _admin.lockSession(sessionId);
+    paymentRequest = await _admin.createPaymentRequest({
+      sessionId,
+      payeeName,
+      payeeEmail,
+      sessionPreviewKeys,
+    });
   } catch (e: unknown) {
-    return next(
-      new ServerError({
-        message: "Could not initiate payment request",
-        status: 500,
-        cause: e,
-      })
-    );
+    if (e instanceof Error && e.message == "session not found") {
+      return next(
+        new ServerError({
+          message: "session not found",
+          status: 404,
+        })
+      );
+    } else {
+      return next(
+        new ServerError({
+          message: "Could not initiate payment request",
+          status: 500,
+          cause: e,
+        })
+      );
+    }
   }
 
   res.json(paymentRequest);

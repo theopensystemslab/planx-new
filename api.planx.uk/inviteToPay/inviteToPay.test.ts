@@ -4,14 +4,15 @@ import app from "../server";
 import {
   validSessionQueryMock,
   notFoundQueryMock,
-  checkSessionLockQueryMock,
+  notFoundLockSessionQueryMock,
+  detailedValidSessionQueryMock,
   lockSessionQueryMock,
   createPaymentRequestQueryMock,
 } from "../tests/mocks/inviteToPayMocks";
 import {
+  payee,
   validSession,
   notFoundSession,
-  validEmail,
   newPaymentRequest,
 } from "../tests/mocks/inviteToPayData";
 
@@ -19,13 +20,23 @@ describe("Invite to pay API route", () => {
   const inviteToPayBaseRoute = "/invite-to-pay";
   const validSessionURL = `${inviteToPayBaseRoute}/${validSession.id}`;
   const notFoundSessionURL = `${inviteToPayBaseRoute}/${notFoundSession.id}`;
-  const validPostBody = { payeeEmail: validEmail, agentName: "Some Agent" };
+  const validPostBody = {
+    payeeEmail: payee.email,
+    payeeName: payee.name,
+    sessionPreviewKeys: [
+      ["_address", "title"],
+      ["applicant.agent.name.first"],
+      ["applicant.agent.name.last"],
+      ["proposal.projectType"],
+    ],
+  };
 
   beforeEach(() => {
     queryMock.mockQuery(validSessionQueryMock);
     queryMock.mockQuery(lockSessionQueryMock);
     queryMock.mockQuery(notFoundQueryMock);
-    queryMock.mockQuery(checkSessionLockQueryMock);
+    queryMock.mockQuery(notFoundLockSessionQueryMock);
+    queryMock.mockQuery(detailedValidSessionQueryMock);
     queryMock.mockQuery(createPaymentRequestQueryMock);
   });
 
@@ -87,31 +98,5 @@ describe("Invite to pay API route", () => {
           expect(response.body).toHaveProperty("error", "session not found");
         });
     });
-
-    test("a custom set of sessionPreviewKeys", async () => {
-      await supertest(app)
-        .post(validSessionURL)
-        .send({
-          ...validPostBody,
-          sessionPreviewKeys: [["someKey"], ["some", "nested", "set"]],
-        })
-        .expect(200)
-        .then((response) => {
-          expect(response.body).toEqual({
-            ...newPaymentRequest,
-            sessionPreviewData: {
-              someKey: "someValue",
-              some: {
-                nested: {
-                  set: [1, 2, 3],
-                },
-              },
-            },
-          });
-        });
-    });
-
-    test.todo("a session that could not be locked");
-    test.todo("a session that has already been locked");
   });
 });

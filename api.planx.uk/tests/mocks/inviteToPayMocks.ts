@@ -1,13 +1,42 @@
 import {
   notFoundSession,
   validSession,
-  validEmail,
-  paymentRequestSessionPreview,
+  payee,
+  sessionPreviewData,
   newPaymentRequest,
 } from "./inviteToPayData";
 
-export const notFoundQueryMock = {
+export const validSessionQueryMock = {
   name: "GetSessionById",
+  data: {
+    lowcal_sessions_by_pk: {
+      id: validSession.id,
+      flowId: validSession.flowId,
+      data: validSession.data,
+    },
+  },
+  variables: {
+    id: validSession.id,
+  },
+};
+
+export const detailedValidSessionQueryMock = {
+  name: "GetSessionDetails",
+  data: {
+    lowcal_sessions_by_pk: {
+      id: validSession.id,
+      flowId: validSession.flowId,
+      lockedAt: new Date("28 May 2023 12:00 UTC+1").toISOString(),
+      data: validSession.data,
+    },
+  },
+  variables: {
+    id: validSession.id,
+  },
+};
+
+export const notFoundQueryMock = {
+  name: "GetSessionDetails",
   data: {
     lowcal_sessions_by_pk: null,
   },
@@ -16,17 +45,16 @@ export const notFoundQueryMock = {
   },
 };
 
-export const validSessionQueryMock = {
-  name: "GetSessionById",
+export const notFoundLockSessionQueryMock = {
+  name: "LockSession",
   data: {
-    lowcal_sessions_by_pk: {
-      id: validSession.id,
-      flow_id: validSession.flowId,
-      data: validSession.data,
+    update_lowcal_sessions_by_pk: {
+      locked_at: null,
     },
   },
+  ignoreThesePropertiesInVariables: ["timestamp"],
   variables: {
-    id: validSession.id,
+    id: notFoundSession.id,
   },
 };
 
@@ -43,18 +71,6 @@ export const lockSessionQueryMock = {
   },
 };
 
-export const checkSessionLockQueryMock = {
-  name: "CheckSessionLock",
-  data: {
-    lowcal_sessions_by_pk: {
-      locked_at: null,
-    },
-  },
-  variables: {
-    id: validSession.id,
-  },
-};
-
 export const createPaymentRequestQueryMock = {
   name: "CreatePaymentRequest",
   data: {
@@ -64,7 +80,8 @@ export const createPaymentRequestQueryMock = {
   },
   variables: {
     sessionId: validSession.id,
-    payeeEmail: validEmail,
-    data: paymentRequestSessionPreview,
+    payeeName: payee.name,
+    payeeEmail: payee.email,
+    sessionPreviewData: sessionPreviewData,
   },
 };
