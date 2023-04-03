@@ -931,10 +931,10 @@ packages:
       '@f/map-obj': 1.2.2
     dev: false
 
-  /@graphql-typed-document-node/core/3.2.0_graphql@16.6.0:
-    resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
+  /@graphql-typed-document-node/core/3.1.1_graphql@16.6.0:
+    resolution: {integrity: sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==}
     peerDependencies:
-      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 16.6.0
     dev: false
@@ -4312,12 +4312,12 @@ packages:
       - encoding
     dev: false
 
-  /graphql-request/5.2.0_graphql@16.6.0:
-    resolution: {integrity: sha512-pLhKIvnMyBERL0dtFI3medKqWOz/RhHdcgbZ+hMMIb32mEPa5MJSzS4AuXxfI4sRAu6JVVk5tvXuGfCWl9JYWQ==}
+  /graphql-request/5.1.0_graphql@16.6.0:
+    resolution: {integrity: sha512-0OeRVYigVwIiXhNmqnPDt+JhMzsjinxHE7TVy3Lm6jUzav0guVcL0lfSbi6jVTRAxcbwgyr6yrZioSHxf9gHzw==}
     peerDependencies:
       graphql: 14 - 16
     dependencies:
-      '@graphql-typed-document-node/core': 3.2.0_graphql@16.6.0
+      '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
       cross-fetch: 3.1.5
       extract-files: 9.0.0
       form-data: 3.0.1
@@ -7614,8 +7614,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /type-fest/3.7.2:
-    resolution: {integrity: sha512-f9BHrLjRJ4MYkfOsnC/53PNDzZJcVo14MqLp2+hXE39p5bgwqohxR5hDZztwxlbxmIVuvC2EFAKrAkokq23PLA==}
+  /type-fest/3.6.1:
+    resolution: {integrity: sha512-htXWckxlT6U4+ilVgweNliPqlsVSSucbxVexRYllyMVJDtf5rTjv6kF/s+qAd4QSL1BZcnJPEJavYBPQiWuZDA==}
     engines: {node: '>=14.16'}
     dev: false
 
@@ -7970,13 +7970,13 @@ packages:
     dependencies:
       fast-xml-parser: 4.1.3
       graphql: 16.6.0
-      graphql-request: 5.2.0_graphql@16.6.0
+      graphql-request: 5.1.0_graphql@16.6.0
       lodash.get: 4.4.2
       lodash.has: 4.5.2
       lodash.kebabcase: 4.1.1
       lodash.property: 4.4.2
       lodash.set: 4.3.2
-      type-fest: 3.7.2
+      type-fest: 3.6.1
       zod: 3.21.4
     transitivePeerDependencies:
       - encoding

@@ -682,19 +682,16 @@ app.get("/error", async (res, req, next) => {
   }
 });
 
-const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
+const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
-    if (airbrake && (err instanceof Error || err instanceof ServerError)) {
-      airbrake.notify(err);
+    if (airbrake && (errorObject instanceof Error || errorObject instanceof ServerError)) {
+      airbrake.notify(errorObject);
       return {
-        ...err,
-        message: err.message.concat(", this error has been logged"),
+        ...errorObject,
+        message: errorObject.message.concat(", this error has been logged"),
       };
     } else {
-      if (Boolean(process.env.DEBUG) === true) {
-        console.log("Error: ", err);
-      }
-      return err;
+      return errorObject;
     }
   })();
 
