@@ -376,6 +376,7 @@
           action: transform
           template: |-
             {
+              "createdAt": {{$body.event.data.new.created_at}},
               "payload": {
                 "paymentRequestId": {{$body.event.data.new.id}},
                 "sessionId": {{$body.event.data.new.session_id}},
@@ -405,6 +406,7 @@
           action: transform
           template: |-
             {
+              "createdAt": {{$body.event.data.new.created_at}},
               "payload": {
                 "paymentRequestId": {{$body.event.data.new.id}},
                 "sessionId": {{$body.event.data.new.session_id}},

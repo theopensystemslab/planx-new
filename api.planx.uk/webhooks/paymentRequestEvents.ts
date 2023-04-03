@@ -17,23 +17,23 @@ const createPaymentReminderEvents = async (req: Request, res: Response, next: Ne
       });
     const response = await Promise.all([
         createScheduledEvent({
-          webhook: "{{HASURA_PLANX_API_URL}}/send-email/reminder-to-pay",
+          webhook: "{{HASURA_PLANX_API_URL}}/send-email/payment-reminder",
           schedule_at: addDays(Date.parse(createdAt), (DAYS_UNTIL_EXPIRY - 7)),
           payload: payload,
-          comment: `reminder_to_pay_${payload.paymentRequestId}`,
+          comment: `payment_reminder_${payload.paymentRequestId}`,
         }),
         createScheduledEvent({
-          webhook: "{{HASURA_PLANX_API_URL}}/send-email/reminder-to-pay-agent",
+          webhook: "{{HASURA_PLANX_API_URL}}/send-email/payment-reminder-agent",
           schedule_at: addDays(Date.parse(createdAt), (DAYS_UNTIL_EXPIRY - 7)),
           payload: payload,
-          comment: `reminder_to_pay_agent_${payload.paymentRequestId}`,
+          comment: `payment_reminder_agent_${payload.paymentRequestId}`,
         }),
       ]);
     res.json(response);
   } catch (error) {
     return next({
       error,
-      message: `Failed to create reminder-to-pay events. Error: ${error}`,
+      message: `Failed to create payment reminder events. Error: ${error}`,
     });
   };
 };
@@ -51,23 +51,23 @@ const createPaymentExpiryEvents = async (req: Request, res: Response, next: Next
       });
     const response = await Promise.all([
       createScheduledEvent({
-        webhook: "{{HASURA_PLANX_API_URL}}/send-email/expired-payment-request",
+        webhook: "{{HASURA_PLANX_API_URL}}/send-email/payment-expiry",
         schedule_at: addDays(Date.parse(createdAt), DAYS_UNTIL_EXPIRY),
         payload: payload,
-        comment: `expired_payment_request_${payload.sessionId}`,
+        comment: `payment_expiry_${payload.paymentRequestId}`,
       }),
       createScheduledEvent({
-        webhook: "{{HASURA_PLANX_API_URL}}/send-email/expired-payment-request-agent",
+        webhook: "{{HASURA_PLANX_API_URL}}/send-email/payment-expiry-agent",
         schedule_at: addDays(Date.parse(createdAt), DAYS_UNTIL_EXPIRY),
         payload: payload,
-        comment: `expired_payment_request_agent_${payload.paymentRequestId}`,
+        comment: `payment_expiry_agent_${payload.paymentRequestId}`,
       }),
     ]);
     res.json(response);
   } catch (error) {
     return next({
       error,
-      message: `Failed to create expired-payment-request events. Error: ${(error as Error).message}`,
+      message: `Failed to create payment expiry events. Error: ${(error as Error).message}`,
     });
   };
 };
