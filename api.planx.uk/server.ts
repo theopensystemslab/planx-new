@@ -23,6 +23,7 @@ import helmet from "helmet";
 import multer from "multer";
 import SlackNotify from "slack-notify";
 
+import { ServerError } from "./errors";
 import { locationSearch } from "./gis/index";
 import { diffFlow, publishFlow } from "./editor/publish";
 import { findAndReplaceInFlow } from "./editor/findReplace";
@@ -32,6 +33,7 @@ import {
   validateSession,
   sendSaveAndReturnEmail,
 } from "./saveAndReturn";
+import { inviteToPay } from "./inviteToPay";
 import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
 
 import airbrake from "./airbrake";
@@ -662,6 +664,8 @@ app.post(
 app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
 
+app.post("/invite-to-pay/:sessionId", inviteToPay);
+
 app.use("/webhooks/hasura", useHasuraAuth);
 app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
@@ -680,13 +684,14 @@ app.get("/error", async (res, req, next) => {
 
 const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
   const { status = 500, message = "Something went wrong" } = (() => {
-    if (errorObject instanceof Error && airbrake) {
+    if (airbrake && (errorObject instanceof Error || errorObject instanceof ServerError)) {
       airbrake.notify(errorObject);
       return {
         ...errorObject,
         message: errorObject.message.concat(", this error has been logged"),
       };
     } else {
+      console.log(errorObject);
       return errorObject;
     }
   })();
