@@ -40,10 +40,17 @@ export async function inviteToPay(
   let paymentRequest: PaymentRequest | undefined;
   try {
     // lock session before creating a payment request
-    // createPaymentRequest will fail if the session fails to lock
     const locked = await _admin.lockSession(sessionId);
-    if (!locked) {
-      throw new Error("session could not be locked")
+    if (locked === null) {
+      return next(
+        new ServerError({
+          message: "session not found",
+          status: 404,
+        })
+      );
+    }
+    if (locked === false) {
+      throw new Error("session could not be locked");
     }
     paymentRequest = await _admin.createPaymentRequest({
       sessionId,
@@ -52,22 +59,13 @@ export async function inviteToPay(
       sessionPreviewKeys,
     });
   } catch (e: unknown) {
-    if (e instanceof Error && e.message == "session not found") {
-      return next(
-        new ServerError({
-          message: "session not found",
-          status: 404,
-        })
-      );
-    } else {
-      return next(
-        new ServerError({
-          message: "could not initiate payment request",
-          status: 500,
-          cause: e,
-        })
-      );
-    }
+    return next(
+      new ServerError({
+        message: "could not initiate payment request",
+        status: 500,
+        cause: e,
+      })
+    );
   }
 
   res.json(paymentRequest);

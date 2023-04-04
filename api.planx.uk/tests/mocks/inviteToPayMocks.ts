@@ -48,8 +48,8 @@ export const notFoundQueryMock = {
 export const notFoundLockSessionQueryMock = {
   name: "LockSession",
   data: {
-    update_lowcal_sessions_by_pk: {
-      locked_at: null,
+    update_lowcal_sessions: {
+      returning: [],
     },
   },
   ignoreThesePropertiesInVariables: ["timestamp"],
@@ -61,8 +61,12 @@ export const notFoundLockSessionQueryMock = {
 export const lockSessionQueryMock = {
   name: "LockSession",
   data: {
-    update_lowcal_sessions_by_pk: {
-      locked_at: new Date("28 May 2023 12:00 UTC+1").toISOString(),
+    update_lowcal_sessions: {
+      returning: [
+        {
+          locked_at: new Date("28 May 2023 12:00 UTC+1").toISOString(),
+        },
+      ],
     },
   },
   ignoreThesePropertiesInVariables: ["timestamp"],
