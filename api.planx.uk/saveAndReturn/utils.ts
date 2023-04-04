@@ -16,13 +16,11 @@ import { notifyClient } from "./notify";
 const DAYS_UNTIL_EXPIRY = 28;
 
 /**
- * Triggered by applicants when saving or inviting to pay
- * Validated using email address & sessionId or paymentRequestId
+ * Triggered by applicants when saving
+ * Validated using email address & sessionId
  */
 const publicEmailTemplates = {
   save: process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID,
-  "invite-to-pay": process.env.GOV_UK_NOTIFY_PAYMENT_REQUEST_EMAIL_TEMPLATE_ID,
-  "invite-to-pay-agent": process.env.GOV_UK_NOTIFY_PAYMENT_REQUEST_AGENT_EMAIL_TEMPLATE_ID,
 };
 
 /**
@@ -40,12 +38,14 @@ const hybridEmailTemplates = {
 const privateEmailTemplates = {
   reminder: process.env.GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID,
   expiry: process.env.GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID,
+  confirmation: process.env.GOVUK_NOTIFY_CONFIRMATION_EMAIL_TEMPLATE_ID,
+  submit: process.env.GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID,
+  "invite-to-pay": process.env.GOV_UK_NOTIFY_PAYMENT_REQUEST_EMAIL_TEMPLATE_ID,
+  "invite-to-pay-agent": process.env.GOV_UK_NOTIFY_PAYMENT_REQUEST_AGENT_EMAIL_TEMPLATE_ID,
   "payment-reminder": process.env.GOV_UK_PAYMENT_REMINDER_EMAIL_TEMPLATE_ID,
   "payment-reminder-agent": process.env.GOV_UK_PAYMENT_REMINDER_AGENT_EMAIL_TEMPLATE_ID,
   "payment-expiry": process.env.GOV_UK_PAYMENT_EXPIRY_EMAIL_TEMPLATE_ID,
   "payment-exipry-agent": process.env.GOV_UK_PAYMENT_EXPIRY_AGENT_EMAIL_TEMPLATE_ID,
-  confirmation: process.env.GOVUK_NOTIFY_CONFIRMATION_EMAIL_TEMPLATE_ID,
-  submit: process.env.GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID,
 };
 
 const emailTemplates = {
