@@ -52,7 +52,6 @@ export const notFoundLockSessionQueryMock = {
       returning: [],
     },
   },
-  ignoreThesePropertiesInVariables: ["timestamp"],
   variables: {
     id: notFoundSession.id,
   },
@@ -69,7 +68,6 @@ export const lockSessionQueryMock = {
       ],
     },
   },
-  ignoreThesePropertiesInVariables: ["timestamp"],
   variables: {
     id: validSession.id,
   },
