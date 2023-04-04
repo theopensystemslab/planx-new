@@ -218,3 +218,48 @@ test("sectionStatuses() applies the NEW INFORMATION NEEDED status if a section w
     thirdSection: "CANNOT CONTINUE YET",
   });
 });
+
+test("sectionStatuses() corrects multiple in-progress statuses on reconciliation to reflect completed sections", () => {
+  setState({ flow: flowWithThreeSections });
+  initNavigationStore();
+
+  // Navigate forwards
+  record("firstSection", { auto: false });
+  record("firstQuestion", { answers: ["firstAnswer"] });
+  record("secondSection", { auto: false });
+  record("secondQuestion", { answers: ["secondAnswer"] });
+
+  // Mimic "reconciliation" by explicitly passing breadcrumbs instead of relying on cachedBreadcrumbs, assume no content has changed
+  const breadcrumbs = getState().breadcrumbs;
+  const statuses = sectionStatuses(breadcrumbs);
+
+  expect(statuses).toEqual({
+    firstSection: "COMPLETED",
+    secondSection: "COMPLETED",
+    thirdSection: "READY TO CONTINUE",
+  });
+});
+
+test("sectionStatuses() applies the NEW INFORMATION NEEDED status and corrects multiple in-progress statuses on reconciliation", () => {
+  setState({ flow: flowWithThreeSections });
+  initNavigationStore();
+
+  // Navigate forwards
+  record("firstSection", { auto: false });
+  record("firstQuestion", { answers: ["firstAnswer"] });
+  record("secondSection", { auto: false });
+  record("secondQuestion", { answers: ["secondAnswer"] });
+
+  // Mimic "reconciliation" by explicitly passing breadcrumbs instead of relying on cachedBreadcrumbs and mocking updated content in firstSection
+  const breadcrumbs = getState().breadcrumbs;
+  const statuses = sectionStatuses(breadcrumbs, [
+    "firstSection",
+    "firstQuestion",
+  ]);
+
+  expect(statuses).toEqual({
+    firstSection: "NEW INFORMATION NEEDED",
+    secondSection: "COMPLETED",
+    thirdSection: "READY TO CONTINUE",
+  });
+});
