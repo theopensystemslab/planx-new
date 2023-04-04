@@ -73,6 +73,22 @@ export const lockSessionQueryMock = {
   },
 };
 
+export const unlockSessionQueryMock = {
+  name: "UnlockSession",
+  data: {
+    update_lowcal_sessions: {
+      returning: [
+        {
+          locked_at: null,
+        },
+      ],
+    },
+  },
+  variables: {
+    id: validSession.id,
+  },
+};
+
 export const createPaymentRequestQueryMock = {
   name: "CreatePaymentRequest",
   data: {

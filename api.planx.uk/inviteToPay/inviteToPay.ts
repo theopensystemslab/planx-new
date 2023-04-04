@@ -37,21 +37,28 @@ export async function inviteToPay(
     );
   }
 
+  // lock session before creating a payment request
+  const locked = await _admin.lockSession(sessionId);
+  if (locked === null) {
+    return next(
+      new ServerError({
+        message: "session not found",
+        status: 404,
+      })
+    );
+  }
+  if (locked === false) {
+    return next(
+      new ServerError({
+        message: "a payment request cannot be initiated for this session",
+        status: 500,
+        cause: new Error("session could not be locked"),
+      })
+    );
+  }
+
   let paymentRequest: PaymentRequest | undefined;
   try {
-    // lock session before creating a payment request
-    const locked = await _admin.lockSession(sessionId);
-    if (locked === null) {
-      return next(
-        new ServerError({
-          message: "session not found",
-          status: 404,
-        })
-      );
-    }
-    if (locked === false) {
-      throw new Error("session could not be locked");
-    }
     paymentRequest = await _admin.createPaymentRequest({
       sessionId,
       payeeName,
@@ -59,9 +66,11 @@ export async function inviteToPay(
       sessionPreviewKeys,
     });
   } catch (e: unknown) {
+    // revert the session lock on failure
+    await _admin.unlockSession(sessionId);
     return next(
       new ServerError({
-        message: "could not initiate payment request",
+        message: "could not initiate a payment request",
         status: 500,
         cause: e,
       })

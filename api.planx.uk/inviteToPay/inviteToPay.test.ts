@@ -7,6 +7,7 @@ import {
   notFoundLockSessionQueryMock,
   detailedValidSessionQueryMock,
   lockSessionQueryMock,
+  unlockSessionQueryMock,
   createPaymentRequestQueryMock,
 } from "../tests/mocks/inviteToPayMocks";
 import {
@@ -34,6 +35,7 @@ describe("Invite to pay API route", () => {
   beforeEach(() => {
     queryMock.mockQuery(validSessionQueryMock);
     queryMock.mockQuery(lockSessionQueryMock);
+    queryMock.mockQuery(unlockSessionQueryMock);
     queryMock.mockQuery(notFoundQueryMock);
     queryMock.mockQuery(notFoundLockSessionQueryMock);
     queryMock.mockQuery(detailedValidSessionQueryMock);
@@ -62,7 +64,7 @@ describe("Invite to pay API route", () => {
     });
 
     test("a missing payee name", async () => {
-      const invalidPostBody = { ...validPostBody, payeeName: null  };
+      const invalidPostBody = { ...validPostBody, payeeName: null };
       await supertest(app)
         .post(validSessionURL)
         .send(invalidPostBody)
@@ -76,7 +78,7 @@ describe("Invite to pay API route", () => {
     });
 
     test("a missing payee email address", async () => {
-      const invalidPostBody = { ...validPostBody, payeeEmail: null  };
+      const invalidPostBody = { ...validPostBody, payeeEmail: null };
       await supertest(app)
         .post(validSessionURL)
         .send(invalidPostBody)
