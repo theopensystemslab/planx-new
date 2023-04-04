@@ -41,7 +41,10 @@ export async function inviteToPay(
   try {
     // lock session before creating a payment request
     // createPaymentRequest will fail if the session fails to lock
-    await _admin.lockSession(sessionId);
+    const locked = await _admin.lockSession(sessionId);
+    if (!locked) {
+      throw new Error("session could not be locked")
+    }
     paymentRequest = await _admin.createPaymentRequest({
       sessionId,
       payeeName,
@@ -59,7 +62,7 @@ export async function inviteToPay(
     } else {
       return next(
         new ServerError({
-          message: "Could not initiate payment request",
+          message: "could not initiate payment request",
           status: 500,
           cause: e,
         })

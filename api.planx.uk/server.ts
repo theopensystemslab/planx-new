@@ -691,6 +691,7 @@ const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
         message: errorObject.message.concat(", this error has been logged"),
       };
     } else {
+      console.log(errorObject);
       return errorObject;
     }
   })();
