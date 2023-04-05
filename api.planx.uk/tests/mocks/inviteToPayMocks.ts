@@ -3,6 +3,7 @@ import {
   validSession,
   payee,
   sessionPreviewData,
+  flowGraph,
   newPaymentRequest,
   validPaymentRequest,
 } from "./inviteToPayData";
@@ -87,6 +88,20 @@ export const unlockSessionQueryMock = {
   },
   variables: {
     id: validSession.id,
+  },
+};
+
+export const getPublishedFlowDataQueryMock = {
+  name: "GetLatestPublishedFlowData",
+  data: {
+    published_flows: [
+      {
+        data: flowGraph,
+      },
+    ],
+  },
+  variables: {
+    flowId: validSession.flowId,
   },
 };
 

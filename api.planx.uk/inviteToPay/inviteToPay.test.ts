@@ -8,6 +8,7 @@ import {
   detailedValidSessionQueryMock,
   lockSessionQueryMock,
   unlockSessionQueryMock,
+  getPublishedFlowDataQueryMock,
   createPaymentRequestQueryMock,
 } from "../tests/mocks/inviteToPayMocks";
 import {
@@ -40,6 +41,7 @@ describe("Invite to pay API route", () => {
     queryMock.mockQuery(notFoundQueryMock);
     queryMock.mockQuery(notFoundLockSessionQueryMock);
     queryMock.mockQuery(detailedValidSessionQueryMock);
+    queryMock.mockQuery(getPublishedFlowDataQueryMock);
     queryMock.mockQuery(createPaymentRequestQueryMock);
   });
 

@@ -1,4 +1,8 @@
-import type { Session, PaymentRequest } from "@opensystemslab/planx-core";
+import type {
+  Session,
+  PaymentRequest,
+  FlowGraph,
+} from "@opensystemslab/planx-core/types/types";
 
 export const validEmail = "the-payee@opensystemslab.io";
 
@@ -27,7 +31,10 @@ export const validSession: Session = {
   data: {
     id: "e62fc9fd-4acb-4bdd-9dbb-01fb996c656c",
     passport: {
-      data: sessionPreviewData,
+      data: {
+        amountToPay: 5,
+        ...sessionPreviewData,
+      },
     },
     breadcrumbs: {},
   },
@@ -65,5 +72,36 @@ export const validPaymentRequest = {
         },
       },
     },
+  },
+};
+
+export const flowGraph: FlowGraph = {
+  _root: {
+    edges: ["NATwM9rXTQ", "fgl2iSPlB7"],
+  },
+  NATwM9rXTQ: {
+    data: {
+      fn: "amountToPay",
+      val: "5",
+    },
+    type: 380,
+  },
+  fgl2iSPlB7: {
+    data: {
+      fn: "amountToPay",
+      color: "#EFEFEF",
+      title: "Pay for your application",
+      bannerTitle: "The planning fee for this application is",
+      description:
+        "The planning fee covers the cost of processing your application",
+      allowInviteToPay: true,
+      inviteToPayTitle: "Details of your nominee",
+      instructionsTitle: "How to pay",
+      inviteToPayDescription:
+        "You can invite someone else to pay for your application.",
+      instructionsDescription:
+        "You can pay for your application by using GOV.UK Pay.",
+    },
+    type: 400,
   },
 };
