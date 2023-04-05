@@ -8,33 +8,20 @@ const sendSaveAndReturnEmail = async (
   next: NextFunction
 ) => {
   try {
-    const { email, sessionId, paymentRequestId } = req.body.payload;
+    const { email, sessionId } = req.body.payload;
     const template = req.params.template as Template;
-    if ((!email || !sessionId) || !paymentRequestId)
+    if (!email || !sessionId)
       return next({
         status: 400,
         message: "Required value missing",
       });
 
-    if (email && sessionId) {
-      const response = await sendSingleApplicationEmail(
-        template,
-        email,
-        sessionId
-      );
-      return res.json(response);
-    } else if (paymentRequestId) {
-      const response = await sendSinglePaymentEmail(
-        template,
-        paymentRequestId,
-      );
-      return res.json(response);
-    } else {
-      return next({
-        status: 400,
-        message: `Unhandled email template ${req.params.template}`
-      });
-    }
+    const response = await sendSingleApplicationEmail(
+      template,
+      email,
+      sessionId
+    );
+    return res.json(response);
   } catch (error) {
     return next({
       error,
