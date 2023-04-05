@@ -21,15 +21,17 @@ const sendSinglePaymentEmail = async (
         paymentRequestId: paymentRequestId,
         payeeEmail: payment.payee_email,
         payeeName: payment.payee_name,
-        agentName: "TODO",
-        paymentLink: `${payment.session.flow.team.domain}/${payment.session.flow.slug}/pay?paymentRequestId=${paymentRequestId}`,
-        fee: payment.session_preview_data.fee,
+        agentName: `{TODO}`,
+        paymentLink: `https://${payment.session.flow.team.domain}/${payment.session.flow.slug}/pay?paymentRequestId=${paymentRequestId}`,
+        fee: (payment.session_preview_data.fee).toLocaleString("en-GB", { style: "currency", currency: "GBP" }),
         projectType: payment.session_preview_data.projectType,
         address: payment.session_preview_data.address,
         expiryDate: calculateExpiryDate(payment.created_at),
       }
     };
-    return await sendEmail(template, payment.payee_email, config);
+
+    const recipient = template.includes("-agent") ? payment.session.email : payment.payee_email;
+    return await sendEmail(template, recipient, config);
   } catch (error) {
     throw Error((error as Error).message);
   }
@@ -50,6 +52,7 @@ const validatePaymentRequest = async (
           created_at
           paid_at
           session {
+            email
             flow {
               slug
               team {
