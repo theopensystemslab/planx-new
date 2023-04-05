@@ -15,14 +15,14 @@ jobs:
     steps:
       - name: Configure AWS credentials (Staging)
         uses: aws-actions/configure-aws-credentials@v1
-        if: ${{ github.event.inputs.environment == "staging" }}
+        if: ${{ github.event.inputs.environment == 'staging' }}
         with:
           aws-access-key-id: ${{ secrets.STAGING_PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.STAGING_PIZZA_AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
       - name: Configure AWS credentials (Production)
         uses: aws-actions/configure-aws-credentials@v1
-        if: ${{ github.event.inputs.environment == "production" }}
+        if: ${{ github.event.inputs.environment == 'production' }}
         with:
           aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
