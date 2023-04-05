@@ -61,21 +61,43 @@ export interface LowCalSession {
   };
 }
 
+// Minimum personalisation config shared across all applicant-facing Notify templates
+interface MinimumNotifyPersonalisation {
+  id: string; // sessionId
+  serviceName: string;
+  emailReplyToId: string;
+  helpEmail: string;
+  helpOpeningHours: string;
+  helpPhone: string;
+}
+
+interface InviteToPayNotifyPersonalisation extends MinimumNotifyPersonalisation {
+  paymentRequestId: string;
+  payeeEmail: string;
+  payeeName?: string;
+  agentName?: string;
+  paymentLink?: string;
+  fee?: string;
+  projectType?: string;
+  address?: any;
+  expiryDate?: string;
+}
+
+export interface InviteToPayNotifyConfig {
+  personalisation: InviteToPayNotifyPersonalisation;
+}
+
+interface SaveAndReturnNotifyPersonalisation extends MinimumNotifyPersonalisation {
+  teamName: string;
+  serviceLink?: string;
+  resumeLink?: string;
+  projectType?: string;
+  address?: any;
+  expiryDate?: string;
+}
+
 export interface SaveAndReturnNotifyConfig {
-  personalisation: {
-    address?: any;
-    emailReplyToId: string;
-    expiryDate?: string;
-    helpEmail: string;
-    helpOpeningHours: string;
-    helpPhone: string;
-    id?: string;
-    projectType?: string;
-    resumeLink?: string;
-    serviceLink?: string;
-    serviceName?: string;
-    teamName: string;
-  };
+  personalisation: SaveAndReturnNotifyPersonalisation;
 }
 
 export interface EmailSubmissionNotifyConfig {

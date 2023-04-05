@@ -7,6 +7,7 @@ import {
 } from "../hasura";
 import {
   EmailSubmissionNotifyConfig,
+  InviteToPayNotifyConfig,
   LowCalSession,
   SaveAndReturnNotifyConfig,
   Team,
@@ -62,7 +63,7 @@ export type Template = keyof typeof emailTemplates;
 const sendEmail = async (
   template: Template,
   emailAddress: string,
-  config: SaveAndReturnNotifyConfig | EmailSubmissionNotifyConfig
+  config: SaveAndReturnNotifyConfig | EmailSubmissionNotifyConfig | InviteToPayNotifyConfig
 ) => {
   const templateId = emailTemplates[template];
   if (!templateId) throw new Error("Template ID is required");
@@ -389,6 +390,7 @@ export {
   sendEmail,
   convertSlugToName,
   getResumeLink,
+  getClientForTemplate,
   sendSingleApplicationEmail,
   markSessionAsSubmitted,
   DAYS_UNTIL_EXPIRY,
