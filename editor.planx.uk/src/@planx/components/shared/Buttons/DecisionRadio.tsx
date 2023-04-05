@@ -1,30 +1,21 @@
+import { FormControlLabelProps } from "@material-ui/core";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import React from "react";
 
-export interface RadioProps {
-  id?: string;
-  responseKey?: string | number;
+export interface Props {
+  id: string;
   title: string;
-  description?: string;
-  onChange:
-    | ((event: React.SyntheticEvent<Element, Event>, checked: boolean) => void)
-    | undefined;
+  onChange: FormControlLabelProps["onChange"];
 }
 
-const DecisionRadio: React.FC<RadioProps> = ({
-  responseKey,
-  title,
-  ...props
-}) => {
-  return (
-    <FormControlLabel
-      value={props.id}
-      onChange={props.onChange}
-      control={<Radio />}
-      label={title}
-    />
-  );
-};
+const DecisionRadio: React.FC<Props> = ({ id, onChange, title }) => (
+  <FormControlLabel
+    value={id}
+    onChange={onChange}
+    control={<Radio />}
+    label={title}
+  />
+);
 
 export default DecisionRadio;

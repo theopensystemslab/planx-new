@@ -1,39 +1,37 @@
-import { FormLabel, styled } from "@material-ui/core";
+import { FormLabel, RadioProps, styled } from "@material-ui/core";
 import Box from "@mui/material/Box";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import { useRadioGroup } from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
-import React, { useEffect, useRef, useState } from "react";
-import { useWindowSize } from "react-use";
-
-import ButtonBase, { Props as ButtonProps } from "./ButtonBase";
+import React from "react";
 
 export interface Props {
   id?: string;
-  responseKey: string | number;
   title: string;
   description?: string;
-  onChange:
-    | ((event: React.SyntheticEvent<Element, Event>, checked: boolean) => void)
-    | undefined;
+  onChange: RadioProps["onChange"];
 }
 
 const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
-  backgroundColor: "yellow",
-  display: "block",
+  border: "2px lightgray solid",
+  padding: theme.spacing(1.5),
   cursor: "pointer",
+  display: "block",
+  height: "100%",
 }));
 
-export default function DescriptionRadio(props: Props) {
-  const { title, description } = props;
-  const radio = useRadioGroup();
+const DescriptionRadio: React.FC<Props> = ({
+  title,
+  description,
+  onChange,
+  id,
+}) => (
+  <StyledFormLabel>
+    <Box sx={{ paddingBottom: 2, display: "flex", alignItems: "center" }}>
+      <Radio value={id} onChange={onChange} />
+      <Typography>{title}</Typography>
+    </Box>
+    <Typography variant="body2">{description}</Typography>
+  </StyledFormLabel>
+);
 
-  return (
-    <StyledFormLabel>
-      {title}
-      <Radio value={props.id} onChange={props.onChange} />
-      {description}
-    </StyledFormLabel>
-  );
-}
+export default DescriptionRadio;

@@ -1,44 +1,38 @@
+import { FormLabel, RadioProps, styled } from "@material-ui/core";
 import Box from "@mui/material/Box";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
-export interface RadioProps {
+export interface Props {
   id?: string;
-  responseKey?: string | number;
   title: string;
   description?: string;
-  onChange:
-    | ((event: React.SyntheticEvent<Element, Event>, checked: boolean) => void)
-    | undefined;
+  onChange: RadioProps["onChange"];
 }
 
-const ImageRadio: React.FC<RadioProps> = ({
-  responseKey,
-  title,
-  description,
-  ...props
-}) => {
-  return (
-    <Box>
-      <FormControlLabel
-        value={props.id}
-        onChange={props.onChange}
-        control={<Radio />}
-        label={title}
-      />
-      {Boolean(description) && (
-        <Typography
-          variant="body2"
-          // className={classes.subtitle}
-          // id={descriptionId}
-        >
-          {description}
-        </Typography>
-      )}
+const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
+  border: "2px lightgray solid",
+  padding: theme.spacing(1.5),
+  cursor: "pointer",
+  display: "block",
+  height: "100%",
+}));
+
+const ImageRadio: React.FC<Props> = ({ title, description, onChange, id }) => (
+  <StyledFormLabel>
+    <img
+      src="https://placedog.net/250/250"
+      width="120"
+      height="90"
+      alt="HTML Dog"
+    />
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Radio value={id} onChange={onChange} />
+      <Typography>{title}</Typography>
     </Box>
-  );
-};
+    {description && <Typography variant="body2">{description}</Typography>}
+  </StyledFormLabel>
+);
 
 export default ImageRadio;

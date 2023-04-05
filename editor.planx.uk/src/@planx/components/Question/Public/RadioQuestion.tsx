@@ -64,20 +64,24 @@ const RadioQuestion: React.FC<IQuestion> = (props) => {
         definitionImg={props.definitionImg}
         img={props.img}
       />
-      <Grid container sx={{ backgroundColor: "pink" }}>
-        <FormControl sx={{ width: "100%" }}>
-          <FormHelperText style={visuallyHidden}>
-            {props.description ? DESCRIPTION_TEXT : ""}
-          </FormHelperText>
-          <FormLabel
-            style={visuallyHidden}
-            id={`radio-buttons-group-label-${props.id}`}
-          >
-            {props.text}
-          </FormLabel>
-          <RadioGroup
-            aria-labelledby={`radio-buttons-group-label-${props.id}`}
-            name={`radio-buttons-group-${props.id}`}
+      <FormControl sx={{ width: "100% " }}>
+        <FormHelperText style={visuallyHidden}>
+          {props.description ? DESCRIPTION_TEXT : ""}
+        </FormHelperText>
+        <FormLabel
+          style={visuallyHidden}
+          id={`radio-buttons-group-label-${props.id}`}
+        >
+          {props.text}
+        </FormLabel>
+        <RadioGroup
+          aria-labelledby={`radio-buttons-group-label-${props.id}`}
+          name={`radio-buttons-group-${props.id}`}
+        >
+          <Grid
+            container
+            spacing={layout === QuestionLayout.Descriptions ? 2 : 1}
+            alignItems="stretch"
           >
             {!props.text?.startsWith("Sorry") &&
               props.responses?.map((response) => {
@@ -122,9 +126,9 @@ const RadioQuestion: React.FC<IQuestion> = (props) => {
                     );
                 }
               })}
-          </RadioGroup>
-        </FormControl>
-      </Grid>
+          </Grid>
+        </RadioGroup>
+      </FormControl>
     </Card>
   );
 };
