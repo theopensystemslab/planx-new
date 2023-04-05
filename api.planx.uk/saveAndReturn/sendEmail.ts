@@ -11,12 +11,6 @@ const sendSaveAndReturnEmail = async (
     const { email, sessionId, paymentRequestId } = req.body.payload;
     const template = req.params.template as Template;
     
-    if (!email || !sessionId)
-      return next({
-        status: 400,
-        message: "Required value missing",
-      });
-
     if (paymentRequestId) {
       const response = await sendSinglePaymentEmail(
         template,
@@ -30,6 +24,11 @@ const sendSaveAndReturnEmail = async (
         sessionId
       );
       return res.json(response);
+    } else if (!email || !sessionId || !paymentRequestId) {
+      return next({
+        status: 400,
+        message: "Required value missing",
+      });
     }
   } catch (error) {
     return next({
