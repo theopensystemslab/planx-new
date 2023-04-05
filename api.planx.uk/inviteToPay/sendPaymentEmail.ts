@@ -22,7 +22,7 @@ const sendSinglePaymentEmail = async (
         payeeEmail: payment.payee_email,
         payeeName: payment.payee_name,
         agentName: "TODO",
-        paymentLink: `${payment.session.flow.team.domain}/${payment.flow.slug}/pay?paymentRequestId=${paymentRequestId}`,
+        paymentLink: `${payment.session.flow.team.domain}/${payment.session.flow.slug}/pay?paymentRequestId=${paymentRequestId}`,
         fee: payment.session_preview_data.fee,
         projectType: payment.session_preview_data.projectType,
         address: payment.session_preview_data.address,
