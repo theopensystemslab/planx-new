@@ -17,14 +17,20 @@ import type { LowCalSession, PublishedFlow, Node } from "../types";
 
 export interface ValidationResponse {
   message: string;
-  reconciledSessionData: LowCalSession["data"];
   alteredNodes?: Node[];
-  removedBreadcrumbIds?: string[];
+  reconciledSessionData: LowCalSession["data"];
+  removedBreadcrumbIds?: Array<string>;
 }
 
-// TODO - ensure reconciliation handles:
+type ReconciledSession = {
+  reconciledSessionData: LowCalSession["data"];
+  removedBreadcrumbIds: Array<string>;
+};
+
+// TODO - Ensure reconciliation handles:
 //  * collected flags
-//  * auto-answered component dependencies like FindProp/Draw/PlanningConstraints
+//  * auto-answered
+//  * component dependencies like FindProperty, DrawBoundary, PlanningConstraints
 export async function validateSession(
   req: Request,
   res: Response,
@@ -50,7 +56,9 @@ export async function validateSession(
         message: "Unable to find your session",
       });
     }
-    const sessionData = { ...fetchedSession.data! };
+    const sessionData = fetchedSession.data!;
+    const sessionUpdatedAt = fetchedSession.updated_at!;
+    const flowId = fetchedSession.flow_id!;
 
     // if a user has paid, skip reconciliation
     const userHasPaid = sessionData?.govUkPayment?.state?.status === "created";
@@ -66,8 +74,8 @@ export async function validateSession(
 
     // fetch the latest flow diffs for this session's flow
     const flowDiff = await diffLatestPublishedFlow({
-      flowId: fetchedSession.flow_id!,
-      since: fetchedSession.updated_at!,
+      flowId,
+      since: sessionUpdatedAt,
     });
 
     if (!flowDiff) {
@@ -79,78 +87,26 @@ export async function validateSession(
       return res.status(200).json(responseData);
     }
 
-    // fetch the full flow to order breadcrumbs
-    const currentFlow = await getMostRecentPublishedFlow(sessionData.id);
-
-    // create ordered breadcrumbs to be able to look up section IDs later
-    const orderedBreadcrumbs: OrderedBreadcrumbs = normalizedBreadcrumbSort(
-      currentFlow as FlowGraph,
-      sessionData.breadcrumbs
-    );
-
     const alteredNodes = Object.entries(flowDiff).map(([nodeId, node]) => ({
       ...node,
       id: nodeId,
     }));
 
-    // update breadcrumbs
-    const removedBreadcrumbIds: string[] = [];
-    alteredNodes.forEach((node) => {
-      // remove existing breadcrumbs to mark updated questions as unanswered
-      if (sessionData.breadcrumbs[node.id!]) {
-        removedBreadcrumbIds.push(node.id!);
-        delete sessionData.breadcrumbs[node.id!];
-      }
-
-      // if an answer has changed, find it's question and remove that from breadcrumbs
-      if (node.type === ComponentType.Answer) {
-        const [parentId, _] =
-          Object.entries(currentFlow).find(([_, currentNode]) =>
-            currentNode.edges?.includes(node.id!)
-          ) || [];
-        if (parentId && sessionData.breadcrumbs[parentId!]) {
-          removedBreadcrumbIds.push(parentId!);
-          delete sessionData.breadcrumbs[parentId!];
-        }
-      }
-
-      // also remove the associated section to mark it as incomplete
-      const crumb: NormalizedCrumb | undefined = orderedBreadcrumbs.find(
-        (crumb) => crumb.id === node.id!
-      );
-      if (
-        crumb &&
-        crumb?.sectionId &&
-        sessionData.breadcrumbs[crumb.sectionId!]
-      ) {
-        removedBreadcrumbIds.push(crumb.sectionId!);
-        delete sessionData.breadcrumbs[crumb.sectionId!];
-      }
-    });
-
-    // TODO - it would be nicer to recompute the passport from the modified breadcrumbs
-    // update passport data
-    removedBreadcrumbIds.forEach((nodeId) => {
-      // a flow schema can store the planx variable name under any of these keys
-      const planx_keys = ["fn", "val", "output", "dataFieldBoundary"];
-      planx_keys.forEach((key) => {
-        // check if a removed breadcrumb has a passport var based on the published content at save point
-        if (sessionData && flowDiff[nodeId]?.data?.[key]) {
-          // if it does, remove that passport variable from our session so we don't auto-answer changed questions before the user sees them
-          delete sessionData.passport?.data?.[flowDiff[nodeId].data?.[key]];
-        }
-      });
-    });
+    const { reconciledSessionData, removedBreadcrumbIds }: ReconciledSession =
+      await reconcileSessionData({ sessionData, alteredNodes });
 
     // store modified session data
     await updateLowcalSessionData(sessionId, sessionData, email);
 
+    const message =
+      "This service has been updated since you last saved your application." +
+      " We will ask you to answer any updated questions again when you continue.";
+
     const responseData: ValidationResponse = {
-      message:
-        "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
+      message,
       alteredNodes,
       removedBreadcrumbIds,
-      reconciledSessionData: sessionData,
+      reconciledSessionData,
     };
 
     await createAuditEntry(sessionId, responseData, responseData.message);
@@ -162,6 +118,79 @@ export async function validateSession(
       message: "Failed to validate session",
     });
   }
+}
+
+async function reconcileSessionData({
+  sessionData: originalData,
+  alteredNodes,
+}: {
+  sessionData: LowCalSession["data"];
+  alteredNodes: Array<Node>;
+}): Promise<ReconciledSession> {
+  const sessionData = { ...originalData }; // copy original data
+
+  // fetch the full flow to order breadcrumbs
+  const currentFlow = await getMostRecentPublishedFlow(sessionData.id);
+
+  // create ordered breadcrumbs to be able to look up section IDs later
+  const orderedBreadcrumbs: OrderedBreadcrumbs = normalizedBreadcrumbSort(
+    currentFlow as FlowGraph,
+    sessionData.breadcrumbs
+  );
+
+  // update breadcrumbs
+  const removedBreadcrumbIds: string[] = [];
+  alteredNodes.forEach((node) => {
+    // remove existing breadcrumbs to mark updated questions as unanswered
+    if (sessionData.breadcrumbs[node.id!]) {
+      removedBreadcrumbIds.push(node.id!);
+      delete sessionData.breadcrumbs[node.id!];
+    }
+
+    // if an answer has changed, find it's question and remove that from breadcrumbs
+    if (node.type === ComponentType.Answer) {
+      const [parentId, _] =
+        Object.entries(currentFlow).find(([_, currentNode]) =>
+          currentNode.edges?.includes(node.id!)
+        ) || [];
+      if (parentId && sessionData.breadcrumbs[parentId!]) {
+        removedBreadcrumbIds.push(parentId!);
+        delete sessionData.breadcrumbs[parentId!];
+      }
+    }
+
+    // also remove the associated section to mark it as incomplete
+    const crumb: NormalizedCrumb | undefined = orderedBreadcrumbs.find(
+      (crumb) => crumb.id === node.id!
+    );
+    if (
+      crumb &&
+      crumb?.sectionId &&
+      sessionData.breadcrumbs[crumb.sectionId!]
+    ) {
+      removedBreadcrumbIds.push(crumb.sectionId!);
+      delete sessionData.breadcrumbs[crumb.sectionId!];
+    }
+  });
+
+  // TODO - it would be nicer to recompute the passport from the modified breadcrumbs
+  // update passport data
+  removedBreadcrumbIds.forEach((nodeId) => {
+    // a flow schema can store the planx variable name under any of these keys
+    const planx_keys = ["fn", "val", "output", "dataFieldBoundary"];
+    planx_keys.forEach((key) => {
+      // check if a removed breadcrumb has a passport var based on the published content at save point
+      if (sessionData && currentFlow[nodeId]?.data?.[key]) {
+        // if it does, remove that passport variable from our session so we don't auto-answer changed questions before the user sees them
+        delete sessionData.passport?.data?.[currentFlow[nodeId].data?.[key]];
+      }
+    });
+  });
+
+  return {
+    reconciledSessionData: sessionData,
+    removedBreadcrumbIds,
+  };
 }
 
 async function diffLatestPublishedFlow({
