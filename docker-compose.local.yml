@@ -10,6 +10,8 @@ services:
       target: development
     volumes:
       - "./api.planx.uk:/api"
+    environment:
+      NODE_ENV: "development"
 
   sharedb:
     volumes:
