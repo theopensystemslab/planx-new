@@ -1,16 +1,15 @@
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
-import { useTheme } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
-import { emailRegex } from "@planx/components/TextInput/model";
-import { _public } from "client";
-import React, { useState } from "react";
+import { useFormik } from "formik";
+import React from "react";
 import { PaymentStatus } from "types";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
+import { object, string } from "yup";
 
 export interface InviteToPayFormProps {
   changePage: () => void;
@@ -19,40 +18,37 @@ export interface InviteToPayFormProps {
   paymentStatus?: PaymentStatus;
 }
 
+const validationSchema = object({
+  nomineeName: string().trim().required("Nominee name required"),
+  nomineeEmail: string()
+    .email(
+      "Enter an email address in the correct format, like name@example.com"
+    )
+    .required("Email address required"),
+});
+
+const StyledForm = styled("form")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: theme.spacing(2),
+}));
+
 const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   changePage,
   title,
   description,
   paymentStatus,
 }) => {
-  const [nomineeName, setNomineeName] = useState<string | undefined>();
-  const [nomineeEmail, setNomineeEmail] = useState<string | undefined>();
-  const [validatedNomineeEmail, setValidatedNomineeEmail] = useState<
-    string | undefined
-  >();
-  const [showNomineeEmailError, setShowNomineeEmailError] =
-    useState<boolean>(false);
-  const theme = useTheme();
-
-  const handleNomineeInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    name: string
-  ) => {
-    const input = e.target.value;
-    if (name === "nomineeName") {
-      setNomineeName(input);
-    } else if (name === "nomineeEmail") {
-      setNomineeEmail(input);
-    }
-  };
-
-  const handleNomineeEmailCheck = () => {
-    if (!nomineeEmail || !emailRegex.test(nomineeEmail)) {
-      setShowNomineeEmailError(true);
-    } else {
-      setValidatedNomineeEmail(nomineeEmail);
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      nomineeName: "",
+      nomineeEmail: "",
+    },
+    onSubmit: (values) => console.log(values),
+    validateOnChange: false,
+    validateOnBlur: false,
+    validationSchema,
+  });
 
   return (
     <Card>
@@ -60,44 +56,45 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
       <Typography variant="body2">
         <ReactMarkdownOrHtml source={description} openLinksOnNewTab />
       </Typography>
-      <Box>
+      <StyledForm onSubmit={formik.handleSubmit}>
         <InputLabel label="Full name (optional)" htmlFor="nomineeName">
           <Input
             bordered
             name="nomineeName"
             id="nomineeName"
-            value={nomineeName || ""}
-            onChange={(e) => handleNomineeInputChange(e, "nomineeName")}
+            value={formik.values.nomineeName}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            errorMessage={
+              Boolean(formik.touched.nomineeName && formik.errors.nomineeName)
+                ? formik.errors.nomineeName
+                : undefined
+            }
             inputProps={{
               "aria-describedby":
                 "Invite someone else to pay for this application - full name",
             }}
           />
         </InputLabel>
-      </Box>
-      <Box sx={{ marginBottom: theme.spacing(2) }}>
         <InputLabel label="Email" htmlFor="nomineeEmail">
           <Input
             required
             bordered
             name="nomineeEmail"
             id="nomineeEmail"
-            value={nomineeEmail || ""}
+            value={formik.values.nomineeEmail}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
             errorMessage={
-              showNomineeEmailError && !validatedNomineeEmail
-                ? `Enter an email address in the correct format, like name@example.com`
-                : ""
+              Boolean(formik.touched.nomineeEmail && formik.errors.nomineeEmail)
+                ? formik.errors.nomineeEmail
+                : undefined
             }
-            onChange={(e) => handleNomineeInputChange(e, "nomineeEmail")}
-            onKeyUp={({ key }) => {
-              if (key === "Enter") handleNomineeEmailCheck();
-            }}
-            onBlur={handleNomineeEmailCheck}
             inputProps={{
               "aria-describedby": [
                 "Invite someone else to pay for this application - email",
-                showNomineeEmailError && !validatedNomineeEmail
-                  ? `Enter an email address in the correct format`
+                formik.touched.nomineeEmail && formik.errors.nomineeEmail
+                  ? formik.errors.nomineeEmail
                   : "",
               ]
                 .filter(Boolean)
@@ -105,15 +102,16 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             }}
           />
         </InputLabel>
-      </Box>
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        onClick={() => console.log("Do something!")}
-      >
-        {"Email your nominee"}
-      </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          type="submit"
+          sx={{ alignSelf: "start" }}
+        >
+          {"Email your nominee"}
+        </Button>
+      </StyledForm>
       <Typography variant="body2">or</Typography>
       <Link
         component="button"
