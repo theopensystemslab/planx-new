@@ -1,7 +1,8 @@
-import { FormLabel, RadioProps, styled } from "@material-ui/core";
 import Box from "@mui/material/Box";
-import Radio from "@mui/material/Radio";
+import FormLabel from "@mui/material/FormLabel";
+import Radio, { RadioProps } from "@mui/material/Radio";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/styles";
 import React from "react";
 
 export interface Props {
@@ -25,7 +26,7 @@ const DescriptionRadio: React.FC<Props> = ({
   onChange,
   id,
 }) => (
-  <StyledFormLabel>
+  <StyledFormLabel focused={false}>
     <Box sx={{ paddingBottom: 2, display: "flex", alignItems: "center" }}>
       <Radio value={id} onChange={onChange} />
       <Typography>{title}</Typography>

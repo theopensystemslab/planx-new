@@ -1,12 +1,9 @@
-import { RadioProps } from "@material-ui/core";
 import ImageIcon from "@mui/icons-material/Image";
 import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
-import Radio from "@mui/material/Radio";
-import { Theme } from "@mui/material/styles";
+import Radio, { RadioProps } from "@mui/material/Radio";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import React, { useLayoutEffect, useRef, useState } from "react";
 
 export interface Props {
@@ -18,46 +15,64 @@ export interface Props {
   onChange: RadioProps["onChange"];
 }
 
-const useStyles = makeStyles<Theme>((theme) => {
-  return {
-    img: {
-      width: "100%",
-      height: "100%",
-      position: "absolute",
-      top: 0,
-      left: 0,
-      objectFit: "contain",
-      backgroundColor: "white",
-    },
-    key: {
-      opacity: 0.3,
-    },
-    keySelected: {
-      opacity: 0.7,
-    },
-    title: {
-      marginLeft: theme.spacing(1.5),
-    },
-    subtitle: {
-      marginTop: theme.spacing(1),
-    },
-    bold: {
-      fontWeight: "bold",
-    },
-    label: {
-      cursor: "pointer",
-    },
-    textLabelWrapper: {
-      width: "100%",
-      display: "flex",
-      flexDirection: "column",
-      flexGrow: 1,
-    },
-    imageButton: {
-      alignItems: "flex-start",
-    },
-  };
+const FallbackImage = styled(Box)({
+  alignItems: "center",
+  backgroundColor: "white",
+  display: "flex",
+  height: "100%",
+  justifyContent: "center",
+  left: 0,
+  objectFit: "contain",
+  position: "absolute",
+  top: 0,
+  width: "100%",
 });
+
+const Image = styled("img")({
+  alignItems: "center",
+  backgroundColor: "white",
+  display: "flex",
+  height: "100%",
+  justifyContent: "center",
+  left: 0,
+  objectFit: "contain",
+  position: "absolute",
+  top: 0,
+  width: "100%",
+});
+
+const ImageLabelRoot = styled(Box)(() => ({
+  width: "100%",
+  paddingTop: "100%",
+  position: "relative",
+  height: 0,
+  overflow: "hidden",
+  zIndex: 2,
+  borderBottom: "none",
+  bgcolor: "background.default",
+}));
+
+const TextLabelRoot = styled(Box)(() => ({
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  flexGrow: 1,
+  padding: 1,
+}));
+
+const TextLabelContainer = styled(Box)(() => ({
+  paddingBottom: 2,
+  display: "flex",
+  alignItems: "center",
+}));
+
+const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
+  border: "2px lightgray solid",
+  padding: theme.spacing(1.5),
+  cursor: "pointer",
+  display: "block",
+  height: "100%",
+}));
 
 const TextLabel = (props: Props): FCReturn => {
   const { title, id, onChange, description } = props;
@@ -77,64 +92,24 @@ const TextLabel = (props: Props): FCReturn => {
     }
   });
 
-  const classes = useStyles(props);
-
   return (
-    <Box
+    <TextLabelRoot
       {...({ ref: textContentEl } as any)}
-      alignItems={multiline ? "flex-start" : "center"}
-      px={1}
-      py={1}
-      className={classes.textLabelWrapper}
+      sx={{ alignItems: multiline ? "flex-start" : "center" }}
     >
-      <Box sx={{ paddingBottom: 2, display: "flex", alignItems: "center" }}>
+      <TextLabelContainer>
         <Radio value={id} onChange={onChange} />
         <Typography>{title}</Typography>
-      </Box>
+      </TextLabelContainer>
       <Typography variant="body2">{description}</Typography>
-    </Box>
+    </TextLabelRoot>
   );
-  // } else {
-  //   const descriptionId = description ? `${id}-description` : undefined;
-  //   return (
-  //     <ButtonBase
-  //       selected={props.selected}
-  //       onClick={props.onClick}
-  //       id={id}
-  //       className={classes.imageButton}
-  //     >
-  //       <Box {...({ ref: textContentEl } as any)} px={2.25} py={1.75}>
-  //         <Typography
-  //           variant="body1"
-  //           className={classes.bold}
-  //           aria-describedby={descriptionId}
-  //         >
-  //           {title}
-  //         </Typography>
-  //         {Boolean(description) && (
-  //           <Typography
-  //             variant="body2"
-  //             className={classes.subtitle}
-  //             id={descriptionId}
-  //           >
-  //             {description}
-  //           </Typography>
-  //         )}
-  //       </Box>
-  //     </ButtonBase>
-  //   );
-  // }
 };
 
-interface ImageLabelProps {
-  img?: string;
-  alt?: string;
-}
-
-const ImageLabel = (props: ImageLabelProps): FCReturn => {
-  const { img, alt } = props;
+const ImageLabel = (props: Props): FCReturn => {
+  const { img, title, description } = props;
+  const altText = description ? `${title} - ${description}` : title;
   const [imgError, setImgError] = useState(!(img && img.length));
-  const classes = useStyles(props);
   const onError = () => {
     if (!imgError) {
       setImgError(true);
@@ -142,66 +117,28 @@ const ImageLabel = (props: ImageLabelProps): FCReturn => {
   };
 
   return (
-    <Box
-      width="100%"
-      paddingTop="100%"
-      position="relative"
-      height={0}
-      overflow="hidden"
-      zIndex={2}
-      borderBottom="none"
-      bgcolor="background.default"
-    >
+    <ImageLabelRoot>
       {imgError ? (
-        <Box
-          className={classes.img}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          color="secondary.dark"
-        >
+        <FallbackImage>
           <ImageIcon />
-        </Box>
+        </FallbackImage>
       ) : (
-        <img
-          className={classes.img}
+        <Image
           src={img}
           onError={onError}
           // Use a null alt to indicate that this image can be ignored by screen readers
-          alt={alt || ""}
+          alt={altText || ""}
         />
       )}
-    </Box>
+    </ImageLabelRoot>
   );
 };
 
-const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
-  border: "2px lightgray solid",
-  padding: theme.spacing(1.5),
-  cursor: "pointer",
-  display: "block",
-  height: "100%",
-}));
-
-function ImageRadio(props: Props): FCReturn {
-  const { img, description, title } = props;
-
-  const altText = description ? `${title} - ${description}` : title;
-
-  return (
-    <StyledFormLabel>
-      <Box
-        display="flex"
-        flexDirection="column"
-        width="100%"
-        height="100%"
-        data-testid="image-button"
-      >
-        <ImageLabel img={img} alt={altText} />
-        <TextLabel {...props}></TextLabel>
-      </Box>
-    </StyledFormLabel>
-  );
-}
+const ImageRadio: React.FC<Props> = (props: Props) => (
+  <StyledFormLabel focused={false}>
+    <ImageLabel {...props} />
+    <TextLabel {...props} />
+  </StyledFormLabel>
+);
 
 export default ImageRadio;
