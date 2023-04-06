@@ -29,6 +29,7 @@ describe("Invite to pay API route", () => {
       ["applicant.agent.name.first"],
       ["applicant.agent.name.last"],
       ["proposal.projectType"],
+      ["fee"],
     ],
   };
 
