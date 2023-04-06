@@ -46,7 +46,7 @@ const privateEmailTemplates = {
   "payment-reminder": process.env.GOVUK_NOTIFY_PAYMENT_REMINDER_EMAIL_TEMPLATE_ID,
   "payment-reminder-agent": process.env.GOVUK_NOTIFY_PAYMENT_REMINDER_AGENT_EMAIL_TEMPLATE_ID,
   "payment-expiry": process.env.GOVUK_NOTIFY_PAYMENT_EXPIRY_EMAIL_TEMPLATE_ID,
-  "payment-exipry-agent": process.env.GOVUK_NOTIFY_PAYMENT_EXPIRY_AGENT_EMAIL_TEMPLATE_ID,
+  "payment-expiry-agent": process.env.GOVUK_NOTIFY_PAYMENT_EXPIRY_AGENT_EMAIL_TEMPLATE_ID,
 };
 
 const emailTemplates = {

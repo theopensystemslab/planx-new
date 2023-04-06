@@ -24,8 +24,8 @@ const sendSinglePaymentEmail = async (
         agentName: `{TODO}`,
         paymentLink: `https://${payment.session.flow.team.domain}/${payment.session.flow.slug}/pay?paymentRequestId=${paymentRequestId}`,
         fee: (payment.session_preview_data.fee).toLocaleString("en-GB", { style: "currency", currency: "GBP" }),
-        projectType: payment.session_preview_data.projectType,
-        address: payment.session_preview_data.address,
+        projectType: payment.session_preview_data?.["proposal.projectType"],
+        address: payment.session_preview_data?._address.title,
         expiryDate: calculateExpiryDate(payment.created_at),
       }
     };
