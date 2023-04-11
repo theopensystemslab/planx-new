@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { fixRequestBody, Options } from "http-proxy-middleware";
-import { useProxy } from ".";
+import { useProxy } from "../proxy";
 
 export const usePayProxy = (options: Partial<Options>, req: Request) => {
   return useProxy({
