@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
@@ -35,10 +36,11 @@ export interface InviteToPayFormProps {
 type CreatePaymentRequest = {
   payeeName: string;
   payeeEmail: string;
+  applicantName: string;
   sessionPreviewKeys: Array<KeyPath>;
 };
 
-type FormValues = Pick<CreatePaymentRequest, "payeeEmail" | "payeeName">;
+type FormValues = Omit<CreatePaymentRequest, "sessionPreviewKeys">;
 
 const validationSchema = object({
   payeeName: string().trim().required("Nominee name required"),
@@ -47,6 +49,7 @@ const validationSchema = object({
       "Enter an email address in the correct format, like name@example.com"
     )
     .required("Email address required"),
+  applicantName: string().trim().required("Your details required"),
 });
 
 const StyledForm = styled("form")(({ theme }) => ({
@@ -122,6 +125,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     initialValues: {
       payeeName: "",
       payeeEmail: "",
+      applicantName: "",
     },
     onSubmit: (values) => onSubmit(values),
     validateOnChange: false,
@@ -180,6 +184,38 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
               ]
                 .filter(Boolean)
                 .join(" "),
+            }}
+          />
+        </InputLabel>
+        <Box>
+          <Typography variant="h3" pt={3} pb={2}>
+            Your details
+          </Typography>
+          <Typography variant="body2">
+            How should we refer to you in communications with your nominee?
+          </Typography>
+        </Box>
+        <InputLabel
+          label="Your name or organisation name"
+          htmlFor="applicantName"
+        >
+          <Input
+            bordered
+            name="applicantName"
+            id="applicantName"
+            value={formik.values.applicantName}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            errorMessage={
+              Boolean(
+                formik.touched.applicantName && formik.errors.applicantName
+              )
+                ? formik.errors.applicantName
+                : undefined
+            }
+            inputProps={{
+              "aria-describedby":
+                "How should we refer to you in communications with your nominee?",
             }}
           />
         </InputLabel>
