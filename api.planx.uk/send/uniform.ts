@@ -356,6 +356,9 @@ async function attachArchive(token: string, submissionId: string, zipPath: strin
       Authorization: `Bearer ${token}`,
     },
     data: formData,
+    // Restrict to 1GB
+    maxBodyLength: 1e+9,
+    maxContentLength: 1e+9,
   };
 
   const response = await axios.request(attachArchiveConfig)
