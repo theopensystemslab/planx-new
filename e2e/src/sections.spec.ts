@@ -64,7 +64,6 @@ test.describe("Sections", () => {
   test.beforeEach(async ({ page }) => {
     const previewURL = `/${context.team?.slug}/${context.flow?.slug}/preview?analytics=false`;
     await page.goto(previewURL);
-    await page.evaluate('featureFlags.toggle("NAVIGATION_UI")');
   });
 
   test.afterAll(async () => {
