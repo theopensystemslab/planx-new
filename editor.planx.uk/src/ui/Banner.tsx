@@ -4,6 +4,7 @@ import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import classnames from "classnames";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
 
@@ -41,6 +42,7 @@ interface BannerProps {
 
 function Banner(props: BannerProps) {
   const classes = useClasses(props);
+  const isUsingAltTheme = hasFeatureFlag("ALT_THEME");
 
   return (
     <Box
@@ -49,8 +51,8 @@ function Banner(props: BannerProps) {
       color={props.color && props.color.text}
       display="flex"
       justifyContent="center"
-      textAlign="center"
-      px={2}
+      textAlign={isUsingAltTheme ? "left" : "center"}
+      px={isUsingAltTheme ? 0 : 2}
       py={6}
     >
       <Container maxWidth="md">
