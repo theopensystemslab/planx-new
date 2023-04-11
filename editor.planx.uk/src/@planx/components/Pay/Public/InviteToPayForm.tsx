@@ -8,13 +8,22 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
+import { useNavigation } from "react-navi";
 import useSWRMutation from "swr/mutation";
 import { PaymentStatus } from "types";
+import ErrorWrapper from "ui/ErrorWrapper";
 import Input from "ui/Input";
 import InputLabel from "ui/InputLabel";
 import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 import { object, string } from "yup";
+
+// Passport keys which will be used to display a preview of the session to the payee as part of their journey
+const SESSION_PREVIEW_KEYS = [
+  ["_address", "title"],
+  ["applicant.agent.name.first"],
+  ["applicant.agent.name.last"],
+  ["proposal.projectType"],
+];
 
 export interface InviteToPayFormProps {
   changePage: () => void;
@@ -46,6 +55,18 @@ const StyledForm = styled("form")(({ theme }) => ({
   gap: theme.spacing(3),
 }));
 
+const SubmitButton: React.FC = () => (
+  <Button
+    variant="contained"
+    color="primary"
+    size="large"
+    type="submit"
+    sx={{ alignSelf: "start" }}
+  >
+    {"Email your nominee"}
+  </Button>
+);
+
 const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   changePage,
   title,
@@ -53,17 +74,25 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   paymentStatus,
 }) => {
   const sessionId = useStore((state) => state.sessionId);
-  const route = useCurrentRoute();
   const navigation = useNavigation();
 
-  const postRequest = (url: string, { arg }: { arg: CreatePaymentRequest }) => {
-    return fetch(url, {
+  const postRequest = async (
+    url: string,
+    { arg }: { arg: CreatePaymentRequest }
+  ) => {
+    const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify(arg),
       headers: {
         "Content-Type": "application/json",
       },
-    }).then((res) => res.json());
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Error generating payment request for session ${sessionId}: ${error}`
+      );
+    }
+    return response.json();
   };
 
   const { trigger, isMutating, error } = useSWRMutation(
@@ -74,12 +103,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   const onSubmit = async (values: FormValues) => {
     const createPaymentRequest: CreatePaymentRequest = {
       ...values,
-      sessionPreviewKeys: [
-        ["_address", "title"],
-        // ["applicant.agent.name.first"],
-        // ["applicant.agent.name.last"],
-        // ["proposal.projectType"],
-      ],
+      sessionPreviewKeys: SESSION_PREVIEW_KEYS,
     };
     const paymentRequest: PaymentRequest = await trigger(createPaymentRequest);
     if (!error && paymentRequest.id)
@@ -159,15 +183,15 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             }}
           />
         </InputLabel>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          type="submit"
-          sx={{ alignSelf: "start" }}
-        >
-          {"Email your nominee"}
-        </Button>
+        {error ? (
+          <ErrorWrapper
+            error={"Error generating payment request, please try again"}
+          >
+            <SubmitButton />
+          </ErrorWrapper>
+        ) : (
+          <SubmitButton />
+        )}
       </StyledForm>
       <Typography variant="body2">or</Typography>
       <Link

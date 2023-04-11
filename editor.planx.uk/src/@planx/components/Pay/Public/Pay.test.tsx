@@ -100,7 +100,7 @@ describe("Confirm component without inviteToPay", () => {
     expect(handleSubmit).toHaveBeenCalled();
   });
 
-  it("should not have any accessiblity violations", async () => {
+  it("should not have any accessibility violations", async () => {
     const { container } = setup(<Confirm {...defaultProps} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -154,7 +154,7 @@ describe("Confirm component with inviteToPay", () => {
 
     await user.type(await screen.findByLabelText("Email"), "jess@{enter}");
     expect(
-      screen.getByText(
+      await screen.findByText(
         "Enter an email address in the correct format, like name@example.com"
       )
     ).toBeInTheDocument();

@@ -207,7 +207,7 @@ export default function Confirm(props: Props) {
 
   const inviteToPayFormProps: InviteToPayFormProps = {
     title: props.inviteToPayTitle,
-    description: props.inviteToPayTitle,
+    description: props.inviteToPayDescription,
     paymentStatus: props.paymentStatus,
     changePage,
   };
