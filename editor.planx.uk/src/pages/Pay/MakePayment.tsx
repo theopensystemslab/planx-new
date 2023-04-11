@@ -1,10 +1,16 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
-import { toDecimal } from "../../@planx/components/Pay/model";
+import {
+  formattedPriceWithCurrencySymbol,
+  toDecimal,
+  toPence,
+} from "../../@planx/components/Pay/model";
 import Confirm from "../../@planx/components/Pay/Public/Confirm";
 import { logger } from "../../airbrake";
+import DelayedLoadingIndicator from "../../components/DelayedLoadingIndicator";
 import { GovUKPayment, PaymentStatus } from "../../types";
 import type { PaymentRequest } from "./types";
 
@@ -35,54 +41,53 @@ enum PaymentState {
   NotStarted,
 }
 
-const MakePayment: React.FC<PaymentRequest> = ({
+export default function MakePayment({
   sessionPreviewData,
   createdAt,
   paymentRequestId,
   paymentAmount,
-}) => {
-  const [state, setState] = useState(States.Init);
+}: PaymentRequest) {
+  const [currentState, setState] = useState<typeof States[keyof typeof States]>(
+    States.Init
+  );
   const [loading, isLoading] = useState(true);
   const [payment, setPayment] = useState(
     sessionPreviewData.govUkPayment || undefined
   );
 
-  const updatePaymentState = async () => {
-    setState(States.Fetching);
-    fetchPayment().then((responseData: GovUKPayment) => {
-      resolvePaymentResponse(responseData);
-      isLoading(false);
-      switch (computePaymentState(payment)) {
-        case PaymentState.NotStarted:
-          setState(States.Ready);
-          break;
-        case PaymentState.Pending:
-          setState(States.ReadyToRetry);
-          break;
-        case PaymentState.Failed:
-          setState(States.ReadyToRetry);
-          setPayment(undefined);
-          break;
-        case PaymentState.Completed:
-          setState(States.Finished);
-          handleSuccess();
-          break;
-      }
-    });
-  };
+  useEffect(() => {
+    const updatePaymentState = async () => {
+      setState(States.Fetching);
+      fetchPayment({
+        paymentRequestId,
+        payment: sessionPreviewData.govUkPayment,
+      }).then((responseData: GovUKPayment | null) => {
+        if (responseData) resolvePaymentResponse(responseData);
+        isLoading(false);
+        switch (computePaymentState(responseData)) {
+          case PaymentState.NotStarted:
+            setState(States.Ready);
+            break;
+          case PaymentState.Pending:
+            setState(States.ReadyToRetry);
+            break;
+          case PaymentState.Failed:
+            setState(States.ReadyToRetry);
+            setPayment(undefined);
+            break;
+          case PaymentState.Completed:
+            setState(States.Finished);
+            handleSuccess();
+            break;
+        }
+      });
+    };
+    // synchronize payment state on load
+    updatePaymentState();
+  }, []);
 
-  // set-up initial payment state
-  updatePaymentState();
-
-  const readyAction = async () => {
-    isLoading(true);
-    if (state === States.Ready) {
-      await startNewPayment()
-        .then(resolvePaymentResponse)
-        .then(() => redirectToGovPay(payment));
-    } else if (state === States.ReadyToRetry) {
-      redirectToGovPay(payment);
-    }
+  const handleSuccess = () => {
+    // TODO - route to confirmation page
   };
 
   const resolvePaymentResponse = (responseData: GovUKPayment) => {
@@ -95,9 +100,16 @@ const MakePayment: React.FC<PaymentRequest> = ({
     setPayment(payment);
   };
 
-  const handleSuccess = async () => {
-    // TODO
-    // save payment details in lowcal session and update payment request
+  const readyAction = async () => {
+    isLoading(true);
+    if (currentState === States.Ready) {
+      await startNewPayment(paymentRequestId)
+        .then(resolvePaymentResponse)
+        .then(() => redirectToGovPay(payment))
+        .catch(logger.notify);
+    } else if (currentState === States.ReadyToRetry) {
+      redirectToGovPay(payment);
+    }
   };
 
   return (
@@ -124,39 +136,43 @@ const MakePayment: React.FC<PaymentRequest> = ({
         </tr>
       </table>
       <Typography variant="body1">
-        {!loading &&
-        (state === States.Ready || state === States.ReadyToRetry) ? (
+        {(currentState === States.Ready ||
+          currentState === States.ReadyToRetry) &&
+        !loading ? (
           <Confirm
             fee={paymentAmount}
-            onConfirm={() => readyAction()}
-            buttonTitle={state.button}
+            onConfirm={readyAction}
+            buttonTitle={currentState.button!}
             showInviteToPay={false}
-            paymentStatus={govUkPayment?.state?.status}
+            paymentStatus={sessionPreviewData.govUkPayment?.state?.status}
           />
         ) : (
-          <DelayedLoadingIndicator text={state.loading} />
+          <DelayedLoadingIndicator text={currentState.loading} />
         )}
       </Typography>
     </Box>
   );
-};
-
-// refetch payment from GovPay to confirm it's status
-async function fetchPayment(payload) {
-  // TODO
-  //return await axios.get<Pick<GovUKPayment, "state">>();
-  return Promise.reject();
 }
 
-// initiate a new payment with GovPay
-async function startNewPayment(payload): Promise<GovUKPayment> {
-  // TPDP
-  //await axios
-  //  .post("", {})
-  //  .then(async (res: GovUKPayment) => {
-  //    return res.data;
-  //  });
-  return Promise.reject();
+// refetch payment from GovPay (via proxy) to confirm it's status
+async function fetchPayment({
+  paymentRequestId,
+  payment,
+}: {
+  paymentRequestId: string;
+  payment?: GovUKPayment;
+}): Promise<GovUKPayment | null> {
+  if (!payment) return Promise.resolve(null);
+  const paymentURL = `${process.env.REACT_APP_API_URL}/payment-request/${paymentRequestId}/payment/${payment.payment_id}`;
+  return await axios.get(paymentURL);
+}
+
+// initiate a new payment with GovPay (via proxy)
+async function startNewPayment(
+  paymentRequestId: string
+): Promise<GovUKPayment> {
+  const paymentURL = `${process.env.REACT_APP_API_URL}/payment-request/${paymentRequestId}/pay?returnURL=${window.location.href}`;
+  return await axios.post(paymentURL);
 }
 
 // return to GovPay with an existing payment
@@ -170,7 +186,7 @@ function redirectToGovPay(payment?: GovUKPayment) {
   }
 }
 
-function computePaymentState(govUkPayment: GovUKPayment): PaymentState {
+function computePaymentState(govUkPayment: GovUKPayment | null): PaymentState {
   if (!govUkPayment) {
     return PaymentState.NotStarted;
   }
@@ -189,5 +205,3 @@ function computePaymentState(govUkPayment: GovUKPayment): PaymentState {
   // PaymentStatus.cancelled, PaymentStatus.error, PaymentStatus.failed,
   return PaymentState.Failed;
 }
-
-export default MakePayment;
