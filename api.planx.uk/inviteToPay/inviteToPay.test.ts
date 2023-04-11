@@ -13,9 +13,10 @@ import {
 } from "../tests/mocks/inviteToPayMocks";
 import {
   payee,
+  applicant,
   validSession,
   notFoundSession,
-  newPaymentRequest,
+  paymentRequestResponse,
 } from "../tests/mocks/inviteToPayData";
 
 describe("Invite to pay API route", () => {
@@ -23,15 +24,10 @@ describe("Invite to pay API route", () => {
   const validSessionURL = `${inviteToPayBaseRoute}/${validSession.id}`;
   const notFoundSessionURL = `${inviteToPayBaseRoute}/${notFoundSession.id}`;
   const validPostBody = {
+    applicantName: applicant.name,
     payeeEmail: payee.email,
     payeeName: payee.name,
-    sessionPreviewKeys: [
-      ["_address", "title"],
-      ["applicant.agent.name.first"],
-      ["applicant.agent.name.last"],
-      ["proposal.projectType"],
-      ["fee"],
-    ],
+    sessionPreviewKeys: [["_address", "title"], ["proposal.projectType"]],
   };
 
   beforeEach(() => {
@@ -56,7 +52,7 @@ describe("Invite to pay API route", () => {
         .send(validPostBody)
         .expect(200)
         .then((response) => {
-          expect(response.body).toEqual(newPaymentRequest);
+          expect(response.body).toEqual(paymentRequestResponse);
         });
     });
   });

@@ -11,6 +11,12 @@ export const payee = {
   email: validEmail,
 };
 
+export const applicant = {
+  name: "Applic Ant",
+};
+
+export const paymentAmount = 12000;
+
 export const notFoundSession: Partial<Session> = {
   id: "3da7734f-d5c5-4f69-a261-1b31c2adf6fc",
 };
@@ -19,8 +25,6 @@ export const sessionPreviewData = {
   _address: {
     title: "1 House, Street, Town, City, PO27 0DE",
   },
-  "applicant.agent.name.first": "Jo",
-  "applicant.agent.name.last": "Smith",
   "proposal.projectType": "new.office",
   "fee": 103,
 };
@@ -32,19 +36,26 @@ export const validSession: Session = {
     id: "e62fc9fd-4acb-4bdd-9dbb-01fb996c656c",
     passport: {
       data: {
-        amountToPay: 5,
+        amountToPay: paymentAmount,
         ...sessionPreviewData,
       },
     },
-    breadcrumbs: {},
+    // breadcrumbs is missing the pay component to refect current implementation
+    breadcrumbs: {
+      NATwM9rXTQ: {
+        auto: false,
+      },
+    },
   },
 };
 
-export const newPaymentRequest: PaymentRequest = {
+export const paymentRequestResponse: PaymentRequest = {
   id: "09655c28-3f34-4619-9385-cd57312acc44",
   sessionId: validSession.id,
+  applicantName: applicant.name,
   payeeName: payee.name,
   payeeEmail: payee.email,
+  paymentAmount,
   sessionPreviewData: sessionPreviewData,
 };
 
@@ -56,6 +67,7 @@ export const validPaymentRequest = {
   session_preview_data: sessionPreviewData,
   created_at: new Date("01 Apr 2023 12:00 UTC+1").toISOString(),
   paid_at: null,
+  payment_amount: paymentAmount,
   session: {
     email: "the-agent@opensystemslab.io",
     flow: {
@@ -82,7 +94,7 @@ export const flowGraph: FlowGraph = {
   NATwM9rXTQ: {
     data: {
       fn: "amountToPay",
-      val: "5",
+      val: paymentAmount,
     },
     type: 380,
   },

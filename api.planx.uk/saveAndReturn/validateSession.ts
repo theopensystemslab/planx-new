@@ -10,7 +10,7 @@ import {
   getSaveAndReturnPublicHeaders,
   stringifyWithRootKeysSortedAlphabetically,
 } from "./utils";
-import { normalizeFlow, sortBreadcrumbs } from "@opensystemslab/planx-core";
+import { sortBreadcrumbs } from "@opensystemslab/planx-core";
 import type {
   OrderedBreadcrumbs,
   NormalizedCrumb,
@@ -70,7 +70,7 @@ export async function validateSession(
         if (alteredNodes.length) {
           // each NormalizedCrumb will include a sectionId where relevant (used later)
           const orderedBreadcrumbs: OrderedBreadcrumbs = sortBreadcrumbs(
-            normalizeFlow(savedFlow),
+            savedFlow,
             sessionData.data.breadcrumbs
           );
           const removedBreadcrumbs: Breadcrumb = {};
