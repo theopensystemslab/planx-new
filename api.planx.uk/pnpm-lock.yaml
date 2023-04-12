@@ -19,6 +19,7 @@ specifiers:
   '@types/cors': ^2.8.12
   '@types/express': ^4.17.14
   '@types/express-pino-logger': ^4.0.3
+  '@types/isomorphic-fetch': ^0.0.36
   '@types/jest': ^28.1.8
   '@types/jsonwebtoken': ^8.5.9
   '@types/lodash': ^4.14.189
@@ -86,6 +87,7 @@ dependencies:
   '@airbrake/node': 2.1.7
   '@opensystemslab/planx-core': github.com/theopensystemslab/planx-core/5cf3c8b
   '@opensystemslab/planx-document-templates': github.com/theopensystemslab/planx-document-templates/debaeca_@babel+core@7.19.6
+  '@types/isomorphic-fetch': 0.0.36
   adm-zip: 0.5.9
   aws-sdk: 2.1354.0
   axios: 0.27.2
@@ -102,7 +104,7 @@ dependencies:
   form-data: 4.0.0
   graphql: 16.5.0
   graphql-request: 4.3.0_graphql@16.5.0
-  graphql-voyager: 1.0.0-rc.31_phmus7xcbidy3raesi6r6zwaqe
+  graphql-voyager: 1.0.0-rc.31_graphql@16.5.0
   helmet: 5.1.1
   http-proxy-middleware: 2.0.6_@types+express@4.17.14
   isomorphic-fetch: 3.0.0
@@ -1296,7 +1298,7 @@ packages:
       '@lit-labs/ssr-dom-shim': 1.0.0
     dev: false
 
-  /@material-ui/core/3.9.4_biqbaboplfbrettd7655fr4n2y:
+  /@material-ui/core/3.9.4:
     resolution: {integrity: sha512-r8QFLSexcYZbnqy/Hn4v8xzmAJV41yaodUVjmbGLi1iGDLG3+W941hEtEiBmxTRRqv2BdK3r4ijILcqKmDv/Sw==}
     engines: {node: '>=6.0.0'}
     peerDependencies:
@@ -1309,8 +1311,8 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.20.6
-      '@material-ui/system': 3.0.0-alpha.2_biqbaboplfbrettd7655fr4n2y
-      '@material-ui/utils': 3.0.0-alpha.3_biqbaboplfbrettd7655fr4n2y
+      '@material-ui/system': 3.0.0-alpha.2
+      '@material-ui/utils': 3.0.0-alpha.3
       '@types/jss': 9.5.8
       '@types/react-transition-group': 2.9.2
       brcast: 3.0.2
@@ -1331,15 +1333,13 @@ packages:
       normalize-scroll-left: 0.1.2
       popper.js: 1.16.1
       prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      react-event-listener: 0.6.6_react@18.2.0
-      react-transition-group: 2.9.0_biqbaboplfbrettd7655fr4n2y
-      recompose: 0.30.0_react@18.2.0
+      react-event-listener: 0.6.6
+      react-transition-group: 2.9.0
+      recompose: 0.30.0
       warning: 4.0.3
     dev: false
 
-  /@material-ui/system/3.0.0-alpha.2_biqbaboplfbrettd7655fr4n2y:
+  /@material-ui/system/3.0.0-alpha.2:
     resolution: {integrity: sha512-odmxQ0peKpP7RQBQ8koly06YhsPzcoVib1vByVPBH4QhwqBXuYoqlCjt02846fYspAqkrWzjxnWUD311EBbxOA==}
     engines: {node: '>=6.0.0'}
     peerDependencies:
@@ -1354,12 +1354,10 @@ packages:
       '@babel/runtime': 7.20.13
       deepmerge: 3.3.0
       prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
       warning: 4.0.3
     dev: false
 
-  /@material-ui/utils/3.0.0-alpha.3_biqbaboplfbrettd7655fr4n2y:
+  /@material-ui/utils/3.0.0-alpha.3:
     resolution: {integrity: sha512-rwMdMZptX0DivkqBuC+Jdq7BYTXwqKai5G5ejPpuEDKpWzi1Oxp+LygGw329FrKpuKeiqpcymlqJTjmy+quWng==}
     engines: {node: '>=6.0.0'}
     peerDependencies:
@@ -1373,8 +1371,6 @@ packages:
     dependencies:
       '@babel/runtime': 7.20.13
       prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
       react-is: 16.13.1
     dev: false
 
@@ -1754,6 +1750,10 @@ packages:
     resolution: {integrity: sha512-QsbSjA/fSk7xB+UXlCT3wHBy5ai9wOcNDWwZAtud+jXhwOM3l+EYZh8Lng4+/6n8uar0J7xILzqftJdJ/Wdfkw==}
     dependencies:
       '@types/node': 16.18.3
+    dev: false
+
+  /@types/isomorphic-fetch/0.0.36:
+    resolution: {integrity: sha512-ulw4d+vW1HKn4oErSmNN2HYEcHGq0N1C5exlrMM0CRqX1UUpFhGb5lwiom5j9KN3LBJJDLRmYIZz1ghm7FIzZw==}
     dev: false
 
   /@types/istanbul-lib-coverage/2.0.3:
@@ -4325,7 +4325,7 @@ packages:
       - encoding
     dev: false
 
-  /graphql-voyager/1.0.0-rc.31_phmus7xcbidy3raesi6r6zwaqe:
+  /graphql-voyager/1.0.0-rc.31_graphql@16.5.0:
     resolution: {integrity: sha512-eCaFL8niR3DZo1LUcFV8txwR+MDVIQsrFPmFC7Zwab8UyH5x3SLhx3aDrt998RVJRmY5aFP4q79RY2F3QtGRqA==}
     peerDependencies:
       graphql: '>=14.0.0'
@@ -4338,15 +4338,13 @@ packages:
         optional: true
     dependencies:
       '@f/animate': 1.0.1
-      '@material-ui/core': 3.9.4_biqbaboplfbrettd7655fr4n2y
+      '@material-ui/core': 3.9.4
       classnames: 2.3.2
       clipboard: 2.0.11
       commonmark: 0.29.3
       graphql: 16.5.0
       lodash: 4.17.21
       prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
       svg-pan-zoom: 3.6.1
       viz.js: 2.1.2
     dev: false
@@ -6653,7 +6651,7 @@ packages:
       scheduler: 0.23.0
     dev: false
 
-  /react-event-listener/0.6.6_react@18.2.0:
+  /react-event-listener/0.6.6:
     resolution: {integrity: sha512-+hCNqfy7o9wvO6UgjqFmBzARJS7qrNoda0VqzvOuioEpoEXKutiKuv92dSz6kP7rYLmyHPyYNLesi5t/aH1gfw==}
     peerDependencies:
       react: ^16.3.0
@@ -6663,7 +6661,6 @@ packages:
     dependencies:
       '@babel/runtime': 7.20.13
       prop-types: 15.8.1
-      react: 18.2.0
       warning: 4.0.3
     dev: false
 
@@ -6678,7 +6675,7 @@ packages:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
     dev: false
 
-  /react-transition-group/2.9.0_biqbaboplfbrettd7655fr4n2y:
+  /react-transition-group/2.9.0:
     resolution: {integrity: sha512-+HzNTCHpeQyl4MJ/bdE0u6XRMe9+XG/+aL4mCxVN4DnPBQ0/5bfHWPDuOZUzYdMj94daZaZdCCc1Dzt9R/xSSg==}
     peerDependencies:
       react: '>=15.0.0'
@@ -6692,8 +6689,6 @@ packages:
       dom-helpers: 3.4.0
       loose-envify: 1.4.0
       prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
       react-lifecycles-compat: 3.0.4
     dev: false
 
@@ -6765,7 +6760,7 @@ packages:
     engines: {node: '>= 12.13.0'}
     dev: false
 
-  /recompose/0.30.0_react@18.2.0:
+  /recompose/0.30.0:
     resolution: {integrity: sha512-ZTrzzUDa9AqUIhRk4KmVFihH0rapdCSMFXjhHbNrjAWxBuUD/guYlyysMnuHjlZC/KRiOKRtB4jf96yYSkKE8w==}
     peerDependencies:
       react: ^0.14.0 || ^15.0.0 || ^16.0.0
@@ -6777,7 +6772,6 @@ packages:
       change-emitter: 0.1.6
       fbjs: 0.8.18
       hoist-non-react-statics: 2.5.5
-      react: 18.2.0
       react-lifecycles-compat: 3.0.4
       symbol-observable: 1.2.0
     dev: false
