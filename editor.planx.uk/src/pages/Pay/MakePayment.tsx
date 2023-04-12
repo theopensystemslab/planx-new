@@ -102,13 +102,13 @@ export default function MakePayment({
 
   const readyAction = async () => {
     isLoading(true);
-    if (currentState === States.Ready) {
+    if (payment && currentState === States.ReadyToRetry) {
+      redirectToGovPay(payment);
+    } else {
       await startNewPayment(paymentRequestId)
         .then(resolvePaymentResponse)
         .then(() => redirectToGovPay(payment))
         .catch(logger.notify);
-    } else if (currentState === States.ReadyToRetry) {
-      redirectToGovPay(payment);
     }
   };
 
