@@ -20,6 +20,7 @@ export async function fetchPaymentRequestDetails(
     query GetPaymentRequestByID($paymentRequestId: uuid!) {
       payment_requests_by_pk(id: $paymentRequestId) {
         session_id
+        payment_amount
         session {
           flow_id
           flow {
@@ -51,7 +52,9 @@ export async function fetchPaymentRequestDetails(
   const flowId = payment_requests_by_pk.session?.flow_id;
   if (flowId) req.query.flowId = flowId;
 
-  //TODO paymentAmount
+  const paymentAmount = payment_requests_by_pk.payment_amount;
+  if (paymentAmount) req.params.paymentAmount = paymentAmount;
+
   next();
 }
 
@@ -70,7 +73,7 @@ export async function buildPaymentPayload(
     );
   }
   req.body = {
-    amount: 10, // TODO req.params.paymentAmount,
+    amount: req.params.paymentAmount,
     reference: req.query.sessionId,
     description: "New application (nominated payee)",
     return_url: req.query.returnURL,
