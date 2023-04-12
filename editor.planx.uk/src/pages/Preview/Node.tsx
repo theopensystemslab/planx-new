@@ -29,7 +29,7 @@ import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { DEFAULT_FLAG_CATEGORY } from "pages/FlowEditor/data/flags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-import type { FlowSettings, GovUKPayment } from "types";
+import type { GovUKPayment } from "types";
 
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
@@ -39,7 +39,6 @@ export type handleSubmit = (userData?: Store.userData | Event) => void;
 interface Props {
   handleSubmit: handleSubmit;
   node: Store.node;
-  settings?: FlowSettings;
   data?: any;
 }
 
@@ -54,6 +53,7 @@ const Node: React.FC<any> = (props: Props) => {
     sessionId,
     cachedBreadcrumbs,
     flowName,
+    flowSettings,
   ] = useStore((state) => [
     state.childNodesOf,
     state.resultData,
@@ -64,6 +64,7 @@ const Node: React.FC<any> = (props: Props) => {
     state.sessionId,
     state.cachedBreadcrumbs,
     state.flowName,
+    state.flowSettings,
   ]);
 
   const handleSubmit = isFinalCard ? undefined : props.handleSubmit;
@@ -189,7 +190,7 @@ const Node: React.FC<any> = (props: Props) => {
           description={displayText.description}
           reasonsTitle="Reasons"
           responses={responses}
-          disclaimer={props.settings?.elements?.legalDisclaimer}
+          disclaimer={flowSettings?.elements?.legalDisclaimer}
         />
       );
 

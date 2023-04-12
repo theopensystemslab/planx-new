@@ -1,4 +1,3 @@
-import camelcaseKeys from "camelcase-keys";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import { NaviRequest, NotFoundError } from "navi";
@@ -6,7 +5,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import PublicLayout from "pages/layout/PublicLayout";
 import React from "react";
 import { View } from "react-navi";
-import { Flow, GlobalSettings, Maybe } from "types";
+import { Flow, GlobalSettings } from "types";
 
 import { getTeamFromDomain } from "../utils";
 
@@ -27,19 +26,16 @@ const standaloneView = async (req: NaviRequest) => {
 
   const {
     flows: [{ team, settings: flowSettings }],
+    globalSettings,
   } = data;
-
-  const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
-    data.globalSettings[0]
-  );
 
   const state = useStore.getState();
   state.setFlowNameFromSlug(flowSlug);
-  state.setGlobalSettings(globalSettings);
+  state.setGlobalSettings(globalSettings[0]);
   state.setFlowSettings(flowSettings);
 
   return (
-    <PublicLayout team={team} footerContent={globalSettings?.footerContent}>
+    <PublicLayout team={team}>
       <View />
     </PublicLayout>
   );

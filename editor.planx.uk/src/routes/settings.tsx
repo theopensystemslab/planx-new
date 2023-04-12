@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import { compose, mount, redirect, route, withData } from "navi";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import Settings from "../pages/FlowEditor/components/Settings";
@@ -37,12 +38,13 @@ const flowSettingsRoutes = compose(
       });
 
       const settings: FlowSettings = data.flows[0].settings;
+      useStore.getState().setFlowSettings(settings);
 
       return {
         title: makeTitle(
           [req.params.team, req.params.flow, "Settings"].join("/")
         ),
-        view: <Settings tab={req.params.tab} settings={settings} />,
+        view: <Settings tab={req.params.tab} />,
       };
     }),
   })

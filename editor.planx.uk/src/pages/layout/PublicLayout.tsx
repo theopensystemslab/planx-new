@@ -8,6 +8,7 @@ import {
 import Typography from "@mui/material/Typography";
 import ErrorFallback from "components/ErrorFallback";
 import PhaseBanner from "components/PhaseBanner";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useCurrentRoute } from "react-navi";
@@ -16,11 +17,10 @@ import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { FlowSettings, FOOTER_ITEMS, Team, TextContent } from "../../types";
+import { FOOTER_ITEMS, Team } from "../../types";
 
 interface PublicLayoutProps {
   team: Team;
-  footerContent?: { [key: string]: TextContent };
 }
 
 const MainContainer = styled(Box)(({ theme }) => ({
@@ -34,11 +34,12 @@ const MainContainer = styled(Box)(({ theme }) => ({
   position: "relative",
 }));
 
-const PublicFooter: React.FC<{
-  flowSettings?: FlowSettings;
-  footerContent?: { [key: string]: TextContent };
-}> = ({ footerContent, flowSettings }) => {
+const PublicFooter: React.FC = () => {
   const { data } = useCurrentRoute();
+  const [flowSettings, globalSettings] = useStore((state) => [
+    state.flowSettings,
+    state.globalSettings,
+  ]);
 
   const makeHref = (path: string) => [data.mountpath, "pages", path].join("/");
 
@@ -54,8 +55,8 @@ const PublicFooter: React.FC<{
     }
   });
 
-  const globalFooterItems = footerContent
-    ? Object.entries(footerContent).map(([slug, item]) => ({
+  const globalFooterItems = globalSettings?.footerContent
+    ? Object.entries(globalSettings?.footerContent).map(([slug, item]) => ({
         title: item.heading,
         content: item.content,
         href: makeHref(slug),
@@ -94,7 +95,6 @@ const PublicFooter: React.FC<{
 const PublicLayout: React.FC<PropsWithChildren<PublicLayoutProps>> = ({
   team,
   children,
-  footerContent,
 }) => {
   const teamTheme = generateTeamTheme(team.theme?.primary);
 
@@ -107,7 +107,7 @@ const PublicLayout: React.FC<PropsWithChildren<PublicLayoutProps>> = ({
             {children}
           </ErrorBoundary>
         </MainContainer>
-        <PublicFooter footerContent={footerContent}></PublicFooter>
+        <PublicFooter />
       </ThemeProvider>
     </StyledEngineProvider>
   );

@@ -9,7 +9,7 @@ import { useAnalyticsTracking } from "pages/FlowEditor/lib/analyticsProvider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { ApplicationPath, FlowSettings } from "types";
+import { ApplicationPath } from "types";
 
 import ErrorFallback from "../../components/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
@@ -41,10 +41,9 @@ const useClasses = makeStyles((theme) => ({
 
 interface QuestionsProps {
   previewEnvironment: PreviewEnvironment;
-  settings?: FlowSettings;
 }
 
-const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
+const Questions = ({ previewEnvironment }: QuestionsProps) => {
   const [
     previousCard,
     record,
@@ -56,7 +55,6 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     govUkPayment,
     canGoBack,
     setPreviewEnvironment,
-    flowSettings,
   ] = useStore((state) => [
     state.previousCard,
     state.record,
@@ -68,7 +66,6 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
     state.govUkPayment,
     state.canGoBack,
     state.setPreviewEnvironment,
-    state.flowSettings,
   ]);
   const isStandalone = previewEnvironment === "standalone";
   const { createAnalytics, node } = useAnalyticsTracking();
@@ -178,7 +175,6 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
             node={node}
             key={node.id}
             handleSubmit={handleSubmit(node.id!)}
-            settings={previewEnvironment === "editor" ? settings : flowSettings}
           />
         </ErrorBoundary>
       )}

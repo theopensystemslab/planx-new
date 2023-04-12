@@ -203,16 +203,13 @@ const routes = compose(
 
   withView(async (req) => {
     const [flow, ...breadcrumbs] = req.params.flow.split(",");
-    const settings = await getFlowSettings(flow, req.params.team);
+    const settings: FlowSettings = await getFlowSettings(flow, req.params.team);
+    useStore.getState().setFlowSettings(settings);
+
     return (
       <>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <FlowEditor
-            key={flow}
-            flow={flow}
-            breadcrumbs={breadcrumbs}
-            settings={settings}
-          />
+          <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
         </ErrorBoundary>
         <View />
       </>

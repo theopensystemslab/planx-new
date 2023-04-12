@@ -1,4 +1,3 @@
-import camelcaseKeys from "camelcase-keys";
 import gql from "graphql-tag";
 import { dataMerged } from "lib/dataMergedHotfix";
 import { client } from "lib/graphql";
@@ -8,7 +7,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import PublicLayout from "pages/layout/PublicLayout";
 import React from "react";
 import { View } from "react-navi";
-import { Flow, GlobalSettings, Maybe } from "types";
+import { Flow, GlobalSettings } from "types";
 
 import { getTeamFromDomain } from "../utils";
 
@@ -32,21 +31,14 @@ export const unpublishedView = async (req: NaviRequest) => {
 
   const flowData = await dataMerged(flow.id);
 
-  const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
-    data.globalSettings[0]
-  );
-
   const state = useStore.getState();
   state.setFlow({ id: flow.id, flow: flowData, flowSlug });
   state.setFlowNameFromSlug(flowSlug);
-  state.setGlobalSettings(globalSettings);
+  state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
 
   return (
-    <PublicLayout
-      team={flow.team}
-      footerContent={globalSettings?.footerContent}
-    >
+    <PublicLayout team={flow.team}>
       <View />
     </PublicLayout>
   );
