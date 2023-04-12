@@ -21,8 +21,8 @@ const BG_COLOR_DEFAULT = "#FFFFFF";
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
 export const FONT_WEIGHT_BOLD = "700";
+export const LINE_HEIGHT_BASE = "1.33";
 const SPACING_TIGHT = "-0.02em";
-const LINE_HEIGHT_BASE = "1.33";
 
 const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   primary: {
