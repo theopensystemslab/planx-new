@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import { Template, calculateExpiryDate, convertSlugToName, getClientForTemplate, sendEmail } from "../saveAndReturn/utils";
+import { Template, calculateExpiryDate, convertSlugToName, getClientForTemplate, getHumanReadableProjectType, sendEmail } from "../saveAndReturn/utils";
 import { InviteToPayNotifyConfig } from "../types";
 
 const sendSinglePaymentEmail = async (
@@ -23,7 +23,7 @@ const sendSinglePaymentEmail = async (
         payeeName: payment.payee_name,
         agentName: `{TODO}`,
         paymentLink: `https://${payment.session.flow.team.domain}/${payment.session.flow.slug}/pay?paymentRequestId=${paymentRequestId}`,
-        fee: (payment.session_preview_data.fee).toLocaleString("en-GB", { style: "currency", currency: "GBP" }),
+        fee: Number(payment.session_preview_data?.fee).toLocaleString("en-GB", { style: "currency", currency: "GBP" }),
         projectType: payment.session_preview_data?.["proposal.projectType"],
         address: payment.session_preview_data?._address.title,
         expiryDate: calculateExpiryDate(payment.created_at),
