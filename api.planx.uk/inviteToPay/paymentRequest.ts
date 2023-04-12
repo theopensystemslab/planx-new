@@ -80,13 +80,17 @@ export async function buildPaymentPayload(
 
 export const fetchPaymentRequestViaProxy = fetchPaymentViaProxyWithCallback(
   async (req: Request, govUkResponse: GovUKPayment) => {
-    postPaymentNotificationToSlack(req, govUkResponse, "(invite to pay)");
-
-    if (govUkResponse?.state.status === "success") {
+    const paymentRequestId = req.params.paymentRequest;
+    if (paymentRequestId && govUkResponse?.state.status === "success") {
       const query = gql`
         mutation UpdatePaymentRequestPaidAt($paymentRequestId: uuid!) {
           update_payment_requests(
-            where: { id: { _eq: $paymentRequestId } }
+            where: {
+              _and: {
+                id: { _eq: $paymentRequestId }
+                paid_at: { _is_null: true }
+              }
+            }
             _set: { paid_at: "now()" }
           ) {
             affected_rows
@@ -94,14 +98,12 @@ export const fetchPaymentRequestViaProxy = fetchPaymentViaProxyWithCallback(
         }
       `;
       const { update_payment_requests } = await client.request(query, {
-        paymentRequestId: req.params.paymentRequest,
+        paymentRequestId,
       });
       if (!update_payment_requests?.affected_rows) {
-        throw new ServerError({
-          message: "payment request not updated",
-          status: 500,
-        });
+        console.log(`payment request ${paymentRequestId} not updated`);
       }
     }
+    await postPaymentNotificationToSlack(req, govUkResponse, "(invite to pay)");
   }
 );
