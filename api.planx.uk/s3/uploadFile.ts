@@ -2,6 +2,7 @@ import S3 from "aws-sdk/clients/s3";
 import { customAlphabet } from "nanoid";
 import { getType } from "mime";
 import { s3Factory } from "./utils";
+import { isLiveEnv } from "../helpers";
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 8);
 
 export const uploadPublicFile = async (
@@ -46,8 +47,11 @@ export const uploadPrivateFile = async (
 const buildFileUrl = (key: string, path: "public" | "private") => {
   const s3 = s3Factory();
   const s3Url = new URL(s3.getSignedUrl('getObject', { Key: key }));
+  let s3Pathname = s3Url.pathname
+  // Minio returns a pathname with bucket name prepended, remove this
+  if (!isLiveEnv()) s3Pathname = s3Pathname.replace(`/${process.env.AWS_S3_BUCKET}`, "")
   // URL.pathname has a leading "/"
-  const fileUrl = `${process.env.API_URL_EXT}/file/${path}${s3Url.pathname}`
+  const fileUrl = `${process.env.API_URL_EXT}/file/${path}${s3Pathname}`
   return fileUrl;
 };
 

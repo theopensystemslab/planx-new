@@ -43,7 +43,9 @@ export default function DescriptionButton(props: Props) {
           width="100%"
           pb={1}
         >
-          <Typography variant="h6">{title}</Typography>
+          <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+            {title}
+          </Typography>
         </Box>
         <Typography align="left" variant="body2">
           {description}

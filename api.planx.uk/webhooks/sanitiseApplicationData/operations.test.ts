@@ -24,6 +24,15 @@ import {
 jest.mock("../../hasura/schema")
 const mockRunSQL = runSQL as jest.MockedFunction<typeof runSQL>;
 
+const mockGetFiles = jest.fn();
+jest.mock("@opensystemslab/planx-core", () => {
+  return {
+    Passport: jest.fn().mockImplementation(() => ({
+      getFiles: mockGetFiles,
+    })),
+  }
+});
+
 const s3Mock = () => {
   return {
     deleteObjects: jest.fn(() => ({
@@ -132,9 +141,10 @@ describe("Data sanitation operations", () => {
     it("returns a QueryResult on success", async () => {
       queryMock.mockQuery(mockGetExpiredSessionIdsQuery)
       queryMock.mockQuery(mockGetPassportDataForSessionQuery)
+      const filesPerMockSessionCount = 7
+      mockGetFiles.mockResolvedValue(new Array(filesPerMockSessionCount))
       const deletedFiles = await deleteApplicationFiles();
-      const filePerMockSessionCount = 7
-      const fileCount = mockIds.length * filePerMockSessionCount
+      const fileCount = mockIds.length * filesPerMockSessionCount
       expect(deletedFiles).toHaveLength(fileCount)
     });
   });

@@ -31,7 +31,7 @@ import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
 import {
   resumeApplication,
   validateSession,
-  sendSaveAndReturnEmail,
+  routeSendEmailRequest,
 } from "./saveAndReturn";
 import { inviteToPay } from "./inviteToPay";
 import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
@@ -66,6 +66,7 @@ import { logPaymentStatus } from "./send/helpers";
 import { getOneAppXML } from "./admin/session/oneAppXML";
 import { gql } from "graphql-request";
 import { createPaymentExpiryEvents, createPaymentInvitationEvents, createPaymentReminderEvents } from "./webhooks/paymentRequestEvents";
+import { classifiedRoadsSearch } from "./gis/classifiedRoads";
 
 const router = express.Router();
 
@@ -474,6 +475,8 @@ app.get("/gis", (_req, res, next) => {
 
 app.get("/gis/:localAuthority", locationSearch);
 
+app.get("/roads", classifiedRoadsSearch);
+
 app.get("/", (_req, res) => {
   res.json({ hello: "world" });
 });
@@ -660,7 +663,7 @@ app.post(
   "/send-email/:template",
   sendEmailLimiter,
   useSendEmailAuth,
-  sendSaveAndReturnEmail
+  routeSendEmailRequest
 );
 app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);

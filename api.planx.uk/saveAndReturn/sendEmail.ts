@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { sendSingleApplicationEmail, Template } from "./utils";
 import { sendSinglePaymentEmail } from "../inviteToPay";
 
-const sendSaveAndReturnEmail = async (
+const routeSendEmailRequest = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -40,4 +40,4 @@ const sendSaveAndReturnEmail = async (
   }
 };
 
-export { sendSaveAndReturnEmail };
+export { routeSendEmailRequest };

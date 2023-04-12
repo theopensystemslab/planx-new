@@ -71,6 +71,7 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
       if (selectedAddress) {
         props.setAddress({
           uprn: selectedAddress.UPRN.padStart(12, "0"),
+          usrn: selectedAddress.USRN.padStart(8, "0"),
           blpu_code: selectedAddress.BLPU_STATE_CODE,
           latitude: selectedAddress.LAT,
           longitude: selectedAddress.LNG,
