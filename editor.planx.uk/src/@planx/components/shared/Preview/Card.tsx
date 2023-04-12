@@ -43,7 +43,12 @@ const Card: React.FC<Props> = ({
     path === ApplicationPath.SaveAndReturn && handleSubmit;
 
   return (
-    <Fade in={true} timeout={theme.transitions.duration.enteringScreen}>
+    <Fade
+      in={true}
+      timeout={theme.transitions.duration.enteringScreen}
+      mountOnEnter={true}
+      unmountOnExit={true}
+    >
       <Container maxWidth="md">
         <Box
           className={classes.container}
