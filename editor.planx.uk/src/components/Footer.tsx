@@ -157,7 +157,7 @@ function FooterItem(props: {
   const title = (
     <Typography
       variant="body2"
-      sx={{ fontWeight: props.bold ? 800 : "regular" }}
+      sx={{ fontWeight: props.bold ? 600 : "regular" }}
     >
       {props.title.toLowerCase()}
     </Typography>

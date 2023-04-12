@@ -70,7 +70,7 @@ const useClasses = makeStyles((theme) => ({
     },
   },
   summary: {
-    fontWeight: 700,
+    fontWeight: 600,
     minHeight: theme.spacing(6),
     padding: theme.spacing(2, 0),
     paddingLeft: theme.spacing(7),

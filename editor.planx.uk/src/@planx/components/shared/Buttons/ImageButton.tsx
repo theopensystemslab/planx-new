@@ -41,7 +41,7 @@ const useStyles = makeStyles<Theme, Partial<TextLabelProps>>((theme) => {
       marginTop: theme.spacing(1),
     },
     bold: {
-      fontWeight: "bold",
+      fontWeight: 600,
     },
     label: {
       cursor: "pointer",

@@ -60,7 +60,7 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
       <Grid container justifyContent="space-between" wrap="nowrap">
         <Grid item>
           {title && (
-            <Box letterSpacing="-0.02em" mr={1} pt={1.5}>
+            <Box mr={1} pt={1.5}>
               <Typography
                 variant="h3"
                 role="heading"
@@ -73,11 +73,13 @@ const QuestionHeader: React.FC<IQuestionHeader> = ({
           )}
           {description && (
             <Description>
-              <ReactMarkdownOrHtml
-                source={description}
-                id={DESCRIPTION_TEXT}
-                openLinksOnNewTab
-              />
+              <Typography variant="subtitle1">
+                <ReactMarkdownOrHtml
+                  source={description}
+                  id={DESCRIPTION_TEXT}
+                  openLinksOnNewTab
+                />
+              </Typography>
             </Description>
           )}
         </Grid>

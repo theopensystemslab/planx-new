@@ -19,7 +19,7 @@ const infoSectionStyles = makeStyles((theme) => ({
       marginTop: 0,
     },
     "& strong": {
-      fontWeight: 700,
+      fontWeight: 600,
     },
     "& em": {
       fontStyle: "italic",

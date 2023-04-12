@@ -45,12 +45,12 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     flex: 1,
   },
   title: {
-    fontSize: theme.typography.pxToRem(25),
-    fontWeight: 700,
+    fontSize: theme.typography.h3.fontSize,
+    fontWeight: 600,
     margin: 0,
   },
   description: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.body2.fontSize,
     fontWeight: 400,
     margin: theme.spacing(2, 0, 0, 0),
     "& a": {

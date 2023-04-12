@@ -22,7 +22,7 @@ const useClasses = makeStyles((theme) => ({
   errorText: {
     color: theme.palette.error.main,
     margin: 0,
-    fontWeight: "bold",
+    fontWeight: 600,
   },
 }));
 

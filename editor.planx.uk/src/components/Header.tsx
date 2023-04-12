@@ -145,7 +145,7 @@ const StyledNavBar = styled("nav")(({ theme }) => ({
 
 const SectionName = styled(Typography)(() => ({
   fontSize: "inherit",
-  fontWeight: "bold",
+  fontWeight: 600,
 }));
 
 const SectionCount = styled(Typography)(() => ({

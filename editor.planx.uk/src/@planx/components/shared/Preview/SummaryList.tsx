@@ -31,7 +31,7 @@ const Grid = styled("dl")(({ theme }) => ({
   },
   "& dt": {
     // left column
-    fontWeight: 700,
+    fontWeight: 600,
   },
   "& dd:nth-of-type(n)": {
     // middle column

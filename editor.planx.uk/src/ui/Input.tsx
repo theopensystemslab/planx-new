@@ -49,10 +49,10 @@ export const useClasses = makeStyles<Theme, Props>((theme) => ({
     height: 50,
     fontSize: 25,
     width: "100%",
-    fontWeight: 700,
+    fontWeight: 600,
   },
   bold: {
-    fontWeight: 700,
+    fontWeight: 600,
   },
   data: {
     backgroundColor: "#fafafa",

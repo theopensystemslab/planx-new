@@ -14,21 +14,29 @@ import { hasFeatureFlag } from "lib/featureFlags";
 const GOVUK_YELLOW = "#FFDD00";
 
 const DEFAULT_PRIMARY_COLOR = "#000661";
+const TEXT_COLOR_PRIMARY = "#0B0C0C";
+const TEXT_COLOR_SECONDARY = "#505A5F";
+const BG_COLOR_DEFAULT = "#FFFFFF";
+
+// Type styles
+const SEMI_BOLD = "600";
+const SPACING_TIGHT = "-0.02em";
 
 const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   primary: {
     main: DEFAULT_PRIMARY_COLOR,
-    contrastText: "#fff",
+    contrastText: BG_COLOR_DEFAULT,
   },
   background: {
-    default: "#fff",
-    paper: "#f2f2f2",
+    default: BG_COLOR_DEFAULT,
+    paper: "#F9F8F8",
   },
   secondary: {
-    main: "#EFEFEF",
+    main: "#B1B4B6",
   },
   text: {
-    secondary: "rgba(0,0,0,0.6)",
+    primary: TEXT_COLOR_PRIMARY,
+    secondary: TEXT_COLOR_SECONDARY,
   },
   action: {
     selected: "#F8F8F8",
@@ -233,10 +241,60 @@ const getThemeOptions = (primaryColor: string): ThemeOptions => {
 const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
   const themeOptions = getThemeOptions(primaryColor);
   const altThemeOptions: ThemeOptions = {
+    // Set default spacing unit to match GOV.UK
+    spacing: 10,
     typography: {
-      fontFamily: "Arial",
+      fontFamily: "'Inter', Arial, sans-serif",
+      h1: {
+        fontSize: "3rem",
+        letterSpacing: SPACING_TIGHT,
+        fontWeight: SEMI_BOLD,
+      },
+      h3: {
+        fontSize: "2.25rem",
+        letterSpacing: SPACING_TIGHT,
+        fontWeight: SEMI_BOLD,
+      },
+      h4: {
+        fontSize: "1.5rem",
+        fontWeight: SEMI_BOLD,
+      },
+      h5: {
+        fontSize: "1.188rem",
+        fontWeight: SEMI_BOLD,
+      },
+      h6: {
+        fontSize: "1rem",
+        fontWeight: SEMI_BOLD,
+      },
+      subtitle1: {
+        fontSize: "1.5rem",
+        lineHeight: 1.33,
+        color: TEXT_COLOR_SECONDARY,
+      },
+      body1: {
+        fontSize: "1.188rem",
+      },
+      body2: {
+        fontSize: "1rem",
+      },
     },
     components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          strong: {
+            fontWeight: SEMI_BOLD,
+          },
+          b: {
+            fontWeight: SEMI_BOLD,
+          },
+          body: {
+            backgroundColor: BG_COLOR_DEFAULT,
+            fontSize: "1rem",
+            lineHeight: 1.33,
+          },
+        },
+      },
       MuiRadio: {
         defaultProps: {
           disableFocusRipple: true,
@@ -244,6 +302,29 @@ const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
             "& .MuiSvgIcon-root": {
               fontSize: 32,
             },
+          },
+        },
+      },
+      MuiButtonBase: {
+        styleOverrides: {
+          root: {
+            "&:focus-visible": {
+              ...focusStyle,
+              boxShadow: `inset 0 -4px 0 black !important`,
+              "&:hover": focusStyle,
+            },
+          },
+        },
+      },
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.5)",
+            padding: "0.5em 1.1em",
+          },
+          containedSizeLarge: {
+            fontSize: "1.188rem",
+            fontWeight: SEMI_BOLD,
           },
         },
       },
