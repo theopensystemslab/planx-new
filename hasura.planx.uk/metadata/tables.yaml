@@ -351,8 +351,10 @@
     - role: public
       permission:
         columns:
+          - applicant_name
           - created_at
           - id
+          - payment_amount
           - session_preview_data
         filter:
           id:
