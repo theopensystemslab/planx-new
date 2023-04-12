@@ -38,20 +38,21 @@ export const publishedView = async (req: NaviRequest) => {
   const flowData = publishedFlow ? publishedFlow : await dataMerged(flow.id);
   setPath(flowData, req);
 
-  // XXX: necessary as long as not every flow is published; aim to remove dataMergedHotfix.ts in future
-  // load pre-flattened published flow if exists, else load & flatten flow
-  useStore.getState().setFlow({ id: flow.id, flow: flowData, flowSlug });
-
   const globalSettings: Maybe<GlobalSettings> = camelcaseKeys(
     data.globalSettings[0]
   );
+
+  const state = useStore.getState();
+  // XXX: necessary as long as not every flow is published; aim to remove dataMergedHotfix.ts in future
+  // load pre-flattened published flow if exists, else load & flatten flow
+  state.setFlow({ id: flow.id, flow: flowData, flowSlug });
+  state.setGlobalSettings(globalSettings);
+  state.setFlowSettings(flow.settings);
 
   return (
     <PublicLayout
       team={flow.team}
       footerContent={globalSettings?.footerContent}
-      flowSettings={flow.settings}
-      globalSettings={globalSettings}
     >
       <SaveAndReturnLayout>
         <View />

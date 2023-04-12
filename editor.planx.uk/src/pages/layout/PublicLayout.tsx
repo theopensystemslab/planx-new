@@ -8,7 +8,6 @@ import {
 import Typography from "@mui/material/Typography";
 import ErrorFallback from "components/ErrorFallback";
 import PhaseBanner from "components/PhaseBanner";
-import { PreviewContext } from "pages/Preview/Context";
 import React, { PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useCurrentRoute } from "react-navi";
@@ -17,19 +16,11 @@ import Logo from "ui/images/OGLLogo.svg";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import {
-  FlowSettings,
-  FOOTER_ITEMS,
-  GlobalSettings,
-  Team,
-  TextContent,
-} from "../../types";
+import { FlowSettings, FOOTER_ITEMS, Team, TextContent } from "../../types";
 
 interface PublicLayoutProps {
   team: Team;
   footerContent?: { [key: string]: TextContent };
-  flowSettings?: FlowSettings;
-  globalSettings?: GlobalSettings;
 }
 
 const MainContainer = styled(Box)(({ theme }) => ({
@@ -104,28 +95,21 @@ const PublicLayout: React.FC<PropsWithChildren<PublicLayoutProps>> = ({
   team,
   children,
   footerContent,
-  flowSettings,
-  globalSettings,
 }) => {
   const teamTheme = generateTeamTheme(team.theme?.primary);
 
   return (
-    <PreviewContext.Provider value={{ flowSettings, globalSettings }}>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={teamTheme}>
-          <Header team={team} />
-          <MainContainer id="main-content">
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
-              {children}
-            </ErrorBoundary>
-          </MainContainer>
-          <PublicFooter
-            footerContent={footerContent}
-            flowSettings={flowSettings}
-          ></PublicFooter>
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </PreviewContext.Provider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={teamTheme}>
+        <Header team={team} />
+        <MainContainer id="main-content">
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            {children}
+          </ErrorBoundary>
+        </MainContainer>
+        <PublicFooter footerContent={footerContent}></PublicFooter>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

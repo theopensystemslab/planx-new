@@ -33,15 +33,13 @@ const standaloneView = async (req: NaviRequest) => {
     data.globalSettings[0]
   );
 
-  useStore.getState().setFlowNameFromSlug(flowSlug);
+  const state = useStore.getState();
+  state.setFlowNameFromSlug(flowSlug);
+  state.setGlobalSettings(globalSettings);
+  state.setFlowSettings(flowSettings);
 
   return (
-    <PublicLayout
-      team={team}
-      footerContent={globalSettings?.footerContent}
-      flowSettings={flowSettings}
-      globalSettings={globalSettings}
-    >
+    <PublicLayout team={team} footerContent={globalSettings?.footerContent}>
       <View />
     </PublicLayout>
   );
