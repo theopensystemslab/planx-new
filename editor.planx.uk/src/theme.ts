@@ -236,6 +236,18 @@ const getAltThemeOptions = (primaryColor: string): ThemeOptions => {
     typography: {
       fontFamily: "Arial",
     },
+    components: {
+      MuiRadio: {
+        defaultProps: {
+          disableFocusRipple: true,
+          sx: {
+            "& .MuiSvgIcon-root": {
+              fontSize: 32,
+            },
+          },
+        },
+      },
+    },
   };
   return deepmerge(themeOptions, altThemeOptions);
 };
