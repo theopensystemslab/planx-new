@@ -1,3 +1,4 @@
+import { SiteAddress } from "@opensystemslab/planx-core/types/types";
 import { format, addDays } from "date-fns";
 import { gql, GraphQLClient } from "graphql-request";
 import {
@@ -210,10 +211,11 @@ const getSessionDetails = async (
   session: LowCalSession
 ): Promise<SessionDetails> => {
   const projectTypes = await getHumanReadableProjectType(session);
-  const address = session?.data?.passport?.data?._address?.single_line_address;
+  const address: SiteAddress | undefined = session.data?.passport?.data?._address;
+  const addressLine = address?.single_line_address || address?.title;
 
   return {
-    address: address || "Address not submitted",
+    address: addressLine || "Address not submitted",
     projectType: projectTypes || "Project type not submitted",
     id: session.id,
     expiryDate: calculateExpiryDate(session.created_at),

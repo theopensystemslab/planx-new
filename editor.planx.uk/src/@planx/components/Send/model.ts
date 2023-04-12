@@ -34,7 +34,6 @@ export function getCombinedEventsPayload({
   passport,
   sessionId,
   email,
-  templateNames,
 }: {
   destinations: Destination[];
   teamSlug: string;
@@ -44,7 +43,6 @@ export function getCombinedEventsPayload({
   passport: Store.passport;
   sessionId: string;
   email: string | undefined;
-  templateNames: string[];
 }) {
   let combinedEventsPayload: any = {};
 
@@ -77,7 +75,6 @@ export function getCombinedEventsPayload({
       flowName,
       passport,
       sessionId,
-      templateNames,
     });
 
     combinedEventsPayload[Destination.Uniform] = {
@@ -150,7 +147,10 @@ export interface BOPSFullPayload extends BOPSMinimumPayload {
   planx_debug_data?: Record<string, unknown>;
   // typeof arr[number] > https://steveholgado.com/typescript-types-from-arrays
   user_role?: typeof USER_ROLES[number];
-  proposal_completion_date?: string;
+  works?: {
+    start_date?: string;
+    finish_date?: string;
+  };
 }
 
 export interface QuestionMetaData {

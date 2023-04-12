@@ -38,7 +38,7 @@ export interface Team {
 }
 
 export interface Passport {
-  data?: Record<string, any>;
+  data: Record<string, any>;
 }
 
 export interface LowCalSession {

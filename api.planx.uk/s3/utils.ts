@@ -18,7 +18,7 @@ function useMinio() {
   } else {
     // Points to Minio
     return {
-      endpoint: "http://127.0.0.1:9000",
+      endpoint: `http://minio:${process.env.MINIO_PORT}`,
       s3ForcePathStyle: true,
       signatureVersion: "v4",
     };
@@ -30,4 +30,13 @@ export function buildFilePath(
   fileName: string
 ): string {
   return `${fileKey}/${fileName}`;
+}
+
+/**
+ * Return an S3 key in the fileKey/fileName format, based on a file's API URL
+ */
+export function getS3KeyFromURL(fileURL: string): string {
+  const [folder, file] = new URL(fileURL).pathname.split("/").slice(-2)
+  const key = [folder, file].map(decodeURIComponent).join("/");
+  return key;
 }

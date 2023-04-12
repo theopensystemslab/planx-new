@@ -117,11 +117,11 @@ export const navigationStore: StateCreator<
 
   /**
    * Calculate the status of each section node based on the current position in a flow (eg state.cachedBreadcrumbs) or provided breadcrumbs (eg on reconciliation)
-   *   Pass updatedSectionNodeIds on reconiliation to ensure we set an accurrate status for every previously seen section because updated sections are removed from breadcrumbs during reconciliation
+   *   Pass updatedNodeIds on reconiliation to ensure we set an accurrate status for every previously seen section because updated sections are removed from breadcrumbs during reconciliation
    */
   sectionStatuses: (
     breadcrumbs?: Store.breadcrumbs,
-    updatedSectionNodeIds?: string[]
+    updatedNodeIds?: string[]
   ): Record<string, SectionStatus> => {
     const { sectionNodes, currentCard, upcomingCardIds, cachedBreadcrumbs } =
       get();
@@ -131,7 +131,7 @@ export const navigationStore: StateCreator<
 
     const sectionStatuses: Record<string, SectionStatus> = {};
     Object.keys(sectionNodes).forEach((sectionId) => {
-      if (updatedSectionNodeIds?.includes(sectionId)) {
+      if (updatedNodeIds?.includes(sectionId)) {
         // We only expect to receive updatedSectionNodeIds argument on reconciliation, therefore
         //   this status should never apply to regular forwards/back/change navigation
         sectionStatuses[sectionId] = SectionStatus.NeedsUpdated;
@@ -146,6 +146,22 @@ export const navigationStore: StateCreator<
         sectionStatuses[sectionId] = SectionStatus.Completed;
       }
     });
+
+    // If there is more than one in-progress section, correct all but most recent one to display as complete
+    //   ** this scenario should only be possible on reconcilation when cachedBreadcrumbs are unavailable
+    if (
+      Object.values(sectionStatuses).filter(
+        (status) => status === SectionStatus.InProgress
+      ).length > 1
+    ) {
+      const inProgressSectionIds = Object.keys(sectionStatuses).filter(
+        (sectionId) => sectionStatuses[sectionId] === SectionStatus.InProgress
+      );
+      const completedSectionIds = inProgressSectionIds.slice(0, -1);
+      completedSectionIds.forEach((sectionId) => {
+        sectionStatuses[sectionId] = SectionStatus.Completed;
+      });
+    }
 
     return sectionStatuses;
   },

@@ -19,7 +19,7 @@ services:
 
   metabase:
     # if changing, also check infrastructure/application/index.ts
-    image: metabase/metabase:v0.43.4
+    image: metabase/metabase:v0.45.3
     profiles: ["analytics"]
     ports:
       - "${METABASE_PORT}:${METABASE_PORT}"
@@ -99,6 +99,7 @@ services:
     image: postgis/postgis:12-3.0-alpine
     volumes:
       - "./scripts/seed-database:/app"
+    profiles: ["seed"]
     working_dir: "/app"
     entrypoint: sh
     command: -c "./container.sh postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE} ${PRODUCTION_PG_URL_FOR_USER_GITHUB_ACTIONS}"
@@ -124,9 +125,9 @@ services:
       retries: 5
     environment:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_URL: http://hasura-proxy:7000/v1/graphql
-      HASURA_METADATA_URL: http://hasura-proxy:7000/v1/metadata 
-      HASURA_SCHEMA_URL: http://hasura-proxy:7000/v2/query
+      HASURA_GRAPHQL_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v1/graphql
+      HASURA_METADATA_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v1/metadata 
+      HASURA_SCHEMA_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v2/query
       JWT_SECRET: ${JWT_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
@@ -164,6 +165,7 @@ services:
       FILE_API_KEY: ${FILE_API_KEY}
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
       ORDNANCE_SURVEY_API_KEY: ${ORDNANCE_SURVEY_API_KEY}
+      MINIO_PORT: ${MINIO_PORT}
 
   sharedb:
     restart: unless-stopped

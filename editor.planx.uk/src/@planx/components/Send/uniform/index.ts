@@ -1,15 +1,8 @@
-import { hasRequiredDataForTemplate } from "@opensystemslab/planx-document-templates";
 import omit from "lodash/omit";
 
 import { Store } from "../../../../pages/FlowEditor/lib/store";
 import { getBOPSParams } from "../bops";
 import { CSVData } from "../model";
-import { UniformPayload } from "./UniformPayload/model";
-
-type UniformFile = {
-  name: string;
-  url: string;
-};
 
 export function getUniformParams({
   breadcrumbs,
@@ -17,96 +10,19 @@ export function getUniformParams({
   flowName,
   passport,
   sessionId,
-  templateNames,
 }: {
   breadcrumbs: Store.breadcrumbs;
   flow: Store.flow;
   flowName: string;
   passport: Store.passport;
   sessionId: string;
-  templateNames: string[];
 }) {
-  // make a list of all S3 URLs & filenames from uploaded files
-  const files: UniformFile[] = [];
-  Object.entries(passport.data || {})
-    // add any files uploaded via a FileUpload component
-    .filter(([, v]: any) => v?.[0]?.url)
-    .forEach(([key, arr]) => {
-      (arr as any[]).forEach(({ url, filename }) => {
-        try {
-          files.push({ url: url, name: filename });
-        } catch (err) {}
-      });
-    });
-
-  // additionally add the property boundary file if the user didn't draw
-  if (passport?.data?.["property.uploadedFile"]) {
-    const boundaryFile = passport.data["property.uploadedFile"];
-    files.push({ url: boundaryFile.url, name: boundaryFile.file.path });
-  }
-
-  // applicants may upload the same file in multiple slots,
-  //  but we only want to send a single copy of each file to Uniform
-  const uniqueFiles: string[] = [];
-  files.forEach((file) => {
-    if (!uniqueFiles.includes(file.url)) {
-      uniqueFiles.push(file.url);
-    }
-  });
-
-  // only include templates that are supported
-  const filteredTemplateNames = templateNames.filter((name) => {
-    if (!passport.data) return false;
-    try {
-      return hasRequiredDataForTemplate({
-        passport: { data: passport.data! },
-        templateName: name,
-      });
-    } catch (e) {
-      console.log(
-        `Template "${name}" could not be generated so has been skipped`
-      );
-      console.log(e);
-      return false;
-    }
-    return true;
-  });
-
   // this is the body we'll POST to the /uniform endpoint - the endpoint will handle file & .zip generation
   return {
-    xml: makeXmlString({
-      passport,
-      sessionId,
-      files: uniqueFiles,
-      templateNames: filteredTemplateNames,
-    }),
     csv: makeCsvData({ breadcrumbs, flow, flowName, passport, sessionId }),
-    files: uniqueFiles,
     passport,
     sessionId,
-    templateNames: filteredTemplateNames,
   };
-}
-
-export function makeXmlString({
-  passport,
-  sessionId,
-  files,
-  templateNames = [],
-}: {
-  passport: Store.passport;
-  sessionId: string;
-  files: string[];
-  templateNames?: string[];
-}): string | undefined {
-  const payload = new UniformPayload({
-    sessionId,
-    passport,
-    files,
-    templateNames,
-  });
-  const xml = payload.buildXML();
-  return xml;
 }
 
 // create a CSV data structure based on the payload we send to BOPs

@@ -26,7 +26,7 @@ const setEsriGeometry = (geometryType, x, y, radius, siteBoundary) => {
 // Build up the URL used to query an ESRI feature
 // Ref https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-.htm
 const makeEsriUrl = (domain, id, serverIndex = 0, overrideParams = {}) => {
-  let url = `${domain}/arcgis/rest/services/${id}/MapServer/${serverIndex}/query`;
+  let url = `${domain}/rest/services/${id}/MapServer/${serverIndex}/query`;
 
   const defaultParams = {
     where: "1=1",

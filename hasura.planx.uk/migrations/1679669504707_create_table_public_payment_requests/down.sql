@@ -1,0 +1,1 @@
+DROP TABLE "public"."payment_requests";

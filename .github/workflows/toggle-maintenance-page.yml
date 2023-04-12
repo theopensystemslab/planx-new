@@ -1,0 +1,31 @@
+name: Toggle PlanX maintenance page
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: string
+        description: Must be one of "staging" or "production"
+
+jobs:
+  toggle_maintenance_page:
+    name: Toggle maintenance page
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials (Staging)
+        uses: aws-actions/configure-aws-credentials@v1
+        if: ${{ github.event.inputs.environment == 'staging' }}
+        with:
+          aws-access-key-id: ${{ secrets.STAGING_PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.STAGING_PIZZA_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+      - name: Configure AWS credentials (Production)
+        uses: aws-actions/configure-aws-credentials@v1
+        if: ${{ github.event.inputs.environment == 'production' }}
+        with:
+          aws-access-key-id: ${{ secrets.PIZZA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIZZA_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+      - name: Run script
+        run: ./scripts/toggle-maintenance-page.sh ${{ github.event.inputs.environment }}
