@@ -9,7 +9,7 @@ export interface Props {
   onChange: FormControlLabelProps["onChange"];
 }
 
-const DecisionRadio: React.FC<Props> = ({ id, onChange, title }) => (
+const BasicRadio: React.FC<Props> = ({ id, onChange, title }) => (
   <FormControlLabel
     value={id}
     onChange={onChange}
@@ -18,4 +18,4 @@ const DecisionRadio: React.FC<Props> = ({ id, onChange, title }) => (
   />
 );
 
-export default DecisionRadio;
+export default BasicRadio;

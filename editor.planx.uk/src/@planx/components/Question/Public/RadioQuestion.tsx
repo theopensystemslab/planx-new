@@ -5,12 +5,12 @@ import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
 import { useTheme } from "@mui/styles";
 import { visuallyHidden } from "@mui/utils";
-import DecisionRadio from "@planx/components/shared/Buttons/DecisionRadio";
-import DescriptionRadio from "@planx/components/shared/Buttons/DescriptionRadio";
-import ImageRadio from "@planx/components/shared/Buttons/ImageRadio";
 import { DESCRIPTION_TEXT } from "@planx/components/shared/constants";
 import Card from "@planx/components/shared/Preview/Card";
 import QuestionHeader from "@planx/components/shared/Preview/QuestionHeader";
+import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
+import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio";
+import ImageRadio from "@planx/components/shared/Radio/ImageRadio";
 import { useFormik } from "formik";
 import React from "react";
 
@@ -96,10 +96,10 @@ const RadioQuestion: React.FC<IQuestion> = (props) => {
                   case QuestionLayout.Basic:
                     return (
                       <Grid item xs={12} key={response.id}>
-                        <DecisionRadio
+                        <BasicRadio
                           {...buttonProps}
                           {...response}
-                          data-testid="decision-radio"
+                          data-testid="basic-radio"
                         />
                       </Grid>
                     );
