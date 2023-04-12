@@ -17,7 +17,7 @@ export async function fetchPaymentRequestDetails(
   next: NextFunction
 ) {
   const query = gql`
-    query GetPaymentRequestByID($paymentRequestId: uuid!) {
+    query GetPaymentRequestDetails($paymentRequestId: uuid!) {
       payment_requests_by_pk(id: $paymentRequestId) {
         session_id
         payment_amount
