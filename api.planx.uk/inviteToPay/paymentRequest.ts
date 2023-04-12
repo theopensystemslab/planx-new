@@ -2,6 +2,11 @@ import { gql } from "graphql-request";
 import { NextFunction, Request, Response } from "express";
 import { adminGraphQLClient as client } from "../hasura";
 import { ServerError } from "../errors";
+import {
+  postPaymentNotificationToSlack,
+  fetchPaymentViaProxyWithCallback,
+} from "../pay";
+import type { GovUKPayment } from "../types";
 
 // middleware used by routes:
 //  * /payment-request/:paymentRequest/pay
@@ -73,32 +78,30 @@ export async function buildPaymentPayload(
   next();
 }
 
-// middleware used by /payment-request/:paymentRequest/pay
-export async function updatePaymentRequest(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  const query = gql`
-    mutation UpdatePaymentRequestPaidAt($paymentRequestId: uuid!) {
-      update_payment_requests(
-        where: { id: { _eq: $paymentRequestId } }
-        _set: { paid_at: "now()" }
-      ) {
-        affected_rows
+export const fetchPaymentRequestViaProxy = fetchPaymentViaProxyWithCallback(
+  async (req: Request, govUkResponse: GovUKPayment) => {
+    postPaymentNotificationToSlack(req, govUkResponse, "(invite to pay)");
+
+    if (govUkResponse?.state.status === "success") {
+      const query = gql`
+        mutation UpdatePaymentRequestPaidAt($paymentRequestId: uuid!) {
+          update_payment_requests(
+            where: { id: { _eq: $paymentRequestId } }
+            _set: { paid_at: "now()" }
+          ) {
+            affected_rows
+          }
+        }
+      `;
+      const { update_payment_requests } = await client.request(query, {
+        paymentRequestId: req.params.paymentRequest,
+      });
+      if (!update_payment_requests?.affected_rows) {
+        throw new ServerError({
+          message: "payment request not updated",
+          status: 500,
+        });
       }
     }
-  `;
-  const { update_payment_requests } = await client.request(query, {
-    paymentRequestId: req.params.paymentRequest,
-  });
-  if (!update_payment_requests?.affected_rows) {
-    return next(
-      new ServerError({
-        message: "payment request not updated",
-        status: 500,
-      })
-    );
   }
-  next();
-}
+);

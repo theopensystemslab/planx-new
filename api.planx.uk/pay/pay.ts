@@ -4,6 +4,7 @@ import { responseInterceptor } from "http-proxy-middleware";
 import SlackNotify from "slack-notify";
 import { logPaymentStatus } from "../send/helpers";
 import { usePayProxy } from "./proxy";
+import type { GovUKPayment } from "../types";
 
 assert(process.env.SLACK_WEBHOOK_URL);
 
@@ -55,57 +56,64 @@ export async function makePaymentViaProxy(
 
 // exposed as /pay/:localAuthority/:paymentId and also used as middleware
 // fetches the status of the payment
-export async function fetchPaymentViaProxy(
-  req: Request,
-  res: Response,
-  next: NextFunction
+export const fetchPaymentViaProxy = fetchPaymentViaProxyWithCallback(
+  async (req: Request, govUkPayment: GovUKPayment) =>
+    postPaymentNotificationToSlack(req, govUkPayment)
+);
+
+export function fetchPaymentViaProxyWithCallback(
+  callback: (req: Request, govUkPayment: GovUKPayment) => Promise<void>
 ) {
-  const flowId = req.query?.flowId as string | undefined;
-  const sessionId = req.query?.sessionId as string | undefined;
-  const teamSlug = req.params.localAuthority;
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const flowId = req.query?.flowId as string | undefined;
+    const sessionId = req.query?.sessionId as string | undefined;
+    const teamSlug = req.params.localAuthority;
 
-  // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
-  usePayProxy(
-    {
-      pathRewrite: () => `/${req.params.paymentId}`,
-      selfHandleResponse: true,
-      onProxyRes: responseInterceptor(async (responseBuffer) => {
-        const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+    // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
+    usePayProxy(
+      {
+        pathRewrite: () => `/${req.params.paymentId}`,
+        selfHandleResponse: true,
+        onProxyRes: responseInterceptor(async (responseBuffer) => {
+          const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
 
-        await logPaymentStatus({
-          sessionId,
-          flowId,
-          teamSlug,
-          govUkResponse,
-        });
+          await logPaymentStatus({
+            sessionId,
+            flowId,
+            teamSlug,
+            govUkResponse,
+          });
 
-        // if it's a prod payment, notify #planx-notifications so we can monitor for subsequent submissions
-        if (govUkResponse?.payment_provider !== "sandbox") {
           try {
-            const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
-            const getStatus = (state: Record<string, string>) =>
-              state.status + (state.message ? ` (${state.message})` : "");
-            const payMessage = `:coin: New GOV Pay payment *${
-              govUkResponse.payment_id
-            }* with status *${getStatus(govUkResponse.state)}* [${
-              req.params.localAuthority
-            }]`;
-            await slack.send(payMessage);
-            console.log("Payment notification posted to Slack");
-          } catch (error) {
-            next(error);
+            await callback(req, govUkResponse);
+          } catch (e) {
+            next(e);
             return "";
           }
-        }
 
-        // only return payment status, filter out PII
-        return JSON.stringify({
-          payment_id: govUkResponse.payment_id,
-          amount: govUkResponse.amount,
-          state: govUkResponse.state,
-        });
-      }),
-    },
-    req
-  )(req, res, next);
+          // only return payment status, filter out PII
+          return JSON.stringify({
+            payment_id: govUkResponse.payment_id,
+            amount: govUkResponse.amount,
+            state: govUkResponse.state,
+          });
+        }),
+      },
+      req
+    )(req, res, next);
+  };
+}
+
+export async function postPaymentNotificationToSlack(
+  req: Request,
+  govUkResponse: GovUKPayment,
+  label = ""
+) {
+  // if it's a prod payment, notify #planx-notifications so we can monitor for subsequent submissions
+  if (govUkResponse?.payment_provider !== "sandbox") {
+    const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
+    const payMessage = `:coin: New GOV Pay payment ${label} *${govUkResponse.payment_id}* with status *${govUkResponse.state.status}* [${req.params.localAuthority}]`;
+    await slack.send(payMessage);
+    console.log("Payment notification posted to Slack");
+  }
 }

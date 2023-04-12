@@ -128,6 +128,7 @@ export interface GovUKPayment {
     finished: boolean;
   };
   payment_id: string;
+  payment_provider: string;
   created_date?: string;
   _links?: {
     self: {

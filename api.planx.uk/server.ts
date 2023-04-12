@@ -36,7 +36,7 @@ import {
   inviteToPay,
   fetchPaymentRequestDetails,
   buildPaymentPayload,
-  updatePaymentRequest,
+  fetchPaymentRequestViaProxy
 } from "./inviteToPay";
 import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
 
@@ -320,13 +320,12 @@ app.post(
   fetchPaymentRequestDetails,
   buildPaymentPayload,
   makePaymentViaProxy,
-  updatePaymentRequest
 );
 
 app.get(
   "/payment-request/:paymentRequest/payment/:paymentId",
   fetchPaymentRequestDetails,
-  fetchPaymentViaProxy
+  fetchPaymentRequestViaProxy
 );
 
 // needed for storing original URL to redirect to in login flow
