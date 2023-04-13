@@ -406,7 +406,7 @@ export function getBOPSParams({
   // 10. Works
   const works: BOPSFullPayload["works"] = {};
 
-  const startedDate = parseDate(passport?.data?.["proposal.started.date"]);
+  const startedDate = parseDate(passport?.data?.["proposal.start.date"]);
   if (startedDate) works.start_date = startedDate;
 
   const completionDate = parseDate(

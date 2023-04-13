@@ -6,7 +6,7 @@ test("Start date is set in the payload when present in passport", () => {
     flow: {},
     passport: {
       data: {
-        "proposal.started.date": "2025-02-03",
+        "proposal.start.date": "2025-02-03",
       },
     },
     sessionId: "session-123",
