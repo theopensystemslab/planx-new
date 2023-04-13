@@ -112,7 +112,13 @@ export async function postPaymentNotificationToSlack(
   // if it's a prod payment, notify #planx-notifications so we can monitor for subsequent submissions
   if (govUkResponse?.payment_provider !== "sandbox") {
     const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
-    const payMessage = `:coin: New GOV Pay payment ${label} *${govUkResponse.payment_id}* with status *${govUkResponse.state.status}* [${req.params.localAuthority}]`;
+    const getStatus = (state: GovUKPayment["state"]) =>
+      state.status + (state.message ? ` (${state.message})` : "");
+    const payMessage = `:coin: New GOV Pay payment ${label} *${
+      govUkResponse.payment_id
+    }* with status *${getStatus(govUkResponse.state)}* [${
+      req.params.localAuthority
+    }]`;
     await slack.send(payMessage);
     console.log("Payment notification posted to Slack");
   }

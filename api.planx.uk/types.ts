@@ -115,7 +115,7 @@ export interface GovUKPayment {
   amount: number;
   reference?: string;
   state: {
-    // https://docs.payments.service.gov.uk/api_reference/#status-and-finished
+    // https://docs.payments.service.gov.uk/api_reference/#payment-status-meanings
     status:
       | "created"
       | "started"
@@ -126,6 +126,7 @@ export interface GovUKPayment {
       | "cancelled"
       | "error";
     finished: boolean;
+    message?: string;
   };
   payment_id: string;
   payment_provider: string;
