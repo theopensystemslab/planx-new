@@ -2,8 +2,11 @@ import {
   notFoundSession,
   validSession,
   payee,
+  applicant,
+  paymentAmount,
   sessionPreviewData,
-  newPaymentRequest,
+  flowGraph,
+  paymentRequestResponse,
   validPaymentRequest,
 } from "./inviteToPayData";
 
@@ -90,15 +93,31 @@ export const unlockSessionQueryMock = {
   },
 };
 
+export const getPublishedFlowDataQueryMock = {
+  name: "GetLatestPublishedFlowData",
+  data: {
+    published_flows: [
+      {
+        data: flowGraph,
+      },
+    ],
+  },
+  variables: {
+    flowId: validSession.flowId,
+  },
+};
+
 export const createPaymentRequestQueryMock = {
   name: "CreatePaymentRequest",
   data: {
     insert_payment_requests_one: {
-      ...newPaymentRequest,
+      ...paymentRequestResponse,
     },
   },
   variables: {
     sessionId: validSession.id,
+    applicantName: applicant.name,
+    paymentAmount,
     payeeName: payee.name,
     payeeEmail: payee.email,
     sessionPreviewData: sessionPreviewData,
@@ -109,10 +128,10 @@ export const validatePaymentRequestQueryMock = {
   name: "ValidatePaymentRequest",
   data: {
     payment_requests_by_pk: {
-      ...validPaymentRequest
-    }
+      ...validPaymentRequest,
+    },
   },
   variables: {
-    paymentRequestId: newPaymentRequest.id,
+    paymentRequestId: validPaymentRequest.id,
   },
 };

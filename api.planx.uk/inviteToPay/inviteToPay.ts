@@ -13,28 +13,29 @@ export async function inviteToPay(
   const {
     payeeEmail,
     payeeName,
+    applicantName,
     sessionPreviewKeys,
   }: {
     payeeEmail: string;
     payeeName: string;
+    applicantName: string;
     sessionPreviewKeys: Array<KeyPath>;
   } = req.body;
 
-  if (!payeeEmail) {
-    return next(
-      new ServerError({
-        message: "JSON body must contain payeeEmail",
-        status: 400,
-      })
-    );
-  }
-  if (!payeeName) {
-    return next(
-      new ServerError({
-        message: "JSON body must contain payeeName",
-        status: 400,
-      })
-    );
+  for (const [requiredFieldName, requiredFieldValue] of Object.entries({
+    sessionId,
+    applicantName,
+    payeeName,
+    payeeEmail,
+  })) {
+    if (!requiredFieldValue) {
+      return next(
+        new ServerError({
+          message: `JSON body must contain ${requiredFieldName}`,
+          status: 400,
+        })
+      );
+    }
   }
 
   // lock session before creating a payment request
@@ -61,6 +62,7 @@ export async function inviteToPay(
   try {
     paymentRequest = await _admin.createPaymentRequest({
       sessionId,
+      applicantName,
       payeeName,
       payeeEmail,
       sessionPreviewKeys,
