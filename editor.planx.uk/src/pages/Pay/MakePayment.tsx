@@ -88,6 +88,7 @@ export default function MakePayment({
 
   const handleSuccess = () => {
     // TODO - route to confirmation page
+    alert("payment succeded");
   };
 
   const resolvePaymentResponse = (responseData: GovUKPayment) => {
@@ -117,10 +118,11 @@ export default function MakePayment({
       <Typography variant="h1" gutterBottom>
         Pay for your application
       </Typography>
+      {/* TODO - this is just a placeholder */}
       <table>
         <tr>
           <th>Application type</th>
-          <td>{sessionPreviewData.serviceName}</td>
+          <td>...</td>
         </tr>
         <tr>
           <th>Fee</th>
@@ -128,11 +130,11 @@ export default function MakePayment({
         </tr>
         <tr>
           <th>Address</th>
-          <td>{sessionPreviewData.singleLineAddress}</td>
+          <td>...</td>
         </tr>
         <tr>
           <th>Project type</th>
-          <td>{sessionPreviewData.humanReadableProjectType}</td>
+          <td>...</td>
         </tr>
       </table>
       <Typography variant="body1">
@@ -181,7 +183,7 @@ function redirectToGovPay(payment?: GovUKPayment) {
     window.location.replace(payment._links.next_url.href);
   } else {
     logger.notify(
-      "Retry payment failed. The payment didn't exist or did not include a 'next_url' link."
+      "GovPay redirect failed. The payment didn't exist or did not include a 'next_url' link."
     );
   }
 }
