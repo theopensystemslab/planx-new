@@ -1,5 +1,3 @@
-import { inviteToPay } from "./inviteToPay";
-import { sendSinglePaymentEmail } from "./sendPaymentEmail";
-
-export { inviteToPay, sendSinglePaymentEmail };
-
+export * from "./inviteToPay";
+export * from "./paymentRequest";
+export { sendSinglePaymentEmail } from "./sendPaymentEmail";

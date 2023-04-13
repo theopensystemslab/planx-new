@@ -18,10 +18,8 @@ import {
   Profile,
   VerifyCallback,
 } from "passport-google-oauth20";
-import { responseInterceptor } from "http-proxy-middleware";
 import helmet from "helmet";
 import multer from "multer";
-import SlackNotify from "slack-notify";
 
 import { ServerError } from "./errors";
 import { locationSearch } from "./gis/index";
@@ -33,7 +31,13 @@ import {
   validateSession,
   routeSendEmailRequest,
 } from "./saveAndReturn";
-import { inviteToPay } from "./inviteToPay";
+import { makePaymentViaProxy, fetchPaymentViaProxy } from "./pay";
+import {
+  inviteToPay,
+  fetchPaymentRequestDetails,
+  buildPaymentPayload,
+  fetchPaymentRequestViaProxy
+} from "./inviteToPay";
 import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
 
 import airbrake from "./airbrake";
@@ -58,11 +62,9 @@ import { sendSlackNotification } from "./webhooks/sendNotifications";
 import { copyFlow } from "./editor/copyFlow";
 import { moveFlow } from "./editor/moveFlow";
 import { useOrdnanceSurveyProxy } from "./proxy/ordnanceSurvey";
-import { usePayProxy } from "./proxy/pay";
 import { downloadFeedbackCSV } from "./admin/feedback/downloadFeedbackCSV";
 import { sanitiseApplicationData } from "./webhooks/sanitiseApplicationData";
 import { isLiveEnv } from "./helpers";
-import { logPaymentStatus } from "./send/helpers";
 import { getOneAppXML } from "./admin/session/oneAppXML";
 import { gql } from "graphql-request";
 import { createPaymentExpiryEvents, createPaymentInvitationEvents, createPaymentReminderEvents } from "./webhooks/paymentRequestEvents";
@@ -308,101 +310,23 @@ app.get("/download-application-files/:sessionId", downloadApplicationFiles);
 });
 
 // used by startNewPayment() in @planx/components/Pay/Public/Pay.tsx
-// returns the url to make a gov uk payment
-app.post("/pay/:localAuthority", (req, res, next) => {
-  // confirm that this local authority (aka team) has a pay token configured before creating the proxy
-  const isSupported =
-    process.env[`GOV_UK_PAY_TOKEN_${req.params.localAuthority.toUpperCase()}`];
-
-  const flowId = req.query?.flowId as string | undefined;
-  const sessionId = req.query?.sessionId as string | undefined;
-  const teamSlug = req.params.localAuthority;
-
-  if (isSupported) {
-    // drop req.params.localAuthority from the path when redirecting
-    // so redirects to plain [GOV_UK_PAY_URL] with correct bearer token
-    usePayProxy(
-      {
-        pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
-        selfHandleResponse: true,
-        onProxyRes: responseInterceptor(
-          async (responseBuffer, _proxyRes, _req, _res) => {
-            const responseString = responseBuffer.toString("utf8");
-            const govUkResponse = JSON.parse(responseString);
-            await logPaymentStatus({
-              sessionId,
-              flowId,
-              teamSlug,
-              govUkResponse,
-            });
-            return responseBuffer;
-          }
-        ),
-      },
-      req
-    )(req, res, next);
-  } else {
-    next({
-      status: 400,
-      message: `GOV.UK Pay is not enabled for this local authority`,
-    });
-  }
-});
-
-assert(process.env.SLACK_WEBHOOK_URL);
+app.post("/pay/:localAuthority", makePaymentViaProxy);
 
 // used by refetchPayment() in @planx/components/Pay/Public/Pay.tsx
-// fetches the status of the payment
-app.get("/pay/:localAuthority/:paymentId", (req, res, next) => {
-  const flowId = req.query?.flowId as string | undefined;
-  const sessionId = req.query?.sessionId as string | undefined;
-  const teamSlug = req.params.localAuthority;
+app.get("/pay/:localAuthority/:paymentId", fetchPaymentViaProxy);
 
-  // will redirect to [GOV_UK_PAY_URL]/:paymentId with correct bearer token
-  usePayProxy(
-    {
-      pathRewrite: () => `/${req.params.paymentId}`,
-      selfHandleResponse: true,
-      onProxyRes: responseInterceptor(async (responseBuffer) => {
-        const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+app.post(
+  "/payment-request/:paymentRequest/pay",
+  fetchPaymentRequestDetails,
+  buildPaymentPayload,
+  makePaymentViaProxy,
+);
 
-        await logPaymentStatus({
-          sessionId,
-          flowId,
-          teamSlug,
-          govUkResponse,
-        });
-
-        // if it's a prod payment, notify #planx-notifications so we can monitor for subsequent submissions
-        if (govUkResponse?.payment_provider !== "sandbox") {
-          try {
-            const slack = SlackNotify(process.env.SLACK_WEBHOOK_URL!);
-            const getStatus = (state: Record<string, string>) =>
-              state.status + (state.message ? ` (${state.message})` : "");
-            const payMessage = `:coin: New GOV Pay payment *${
-              govUkResponse.payment_id
-            }* with status *${getStatus(govUkResponse.state)}* [${
-              req.params.localAuthority
-            }]`;
-            await slack.send(payMessage);
-            console.log("Payment notification posted to Slack");
-          } catch (error) {
-            next(error);
-            return "";
-          }
-        }
-
-        // only return payment status, filter out PII
-        return JSON.stringify({
-          payment_id: govUkResponse.payment_id,
-          amount: govUkResponse.amount,
-          state: govUkResponse.state,
-        });
-      }),
-    },
-    req
-  )(req, res, next);
-});
+app.get(
+  "/payment-request/:paymentRequest/payment/:paymentId",
+  fetchPaymentRequestDetails,
+  fetchPaymentRequestViaProxy
+);
 
 // needed for storing original URL to redirect to in login flow
 app.use(
