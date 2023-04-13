@@ -26,7 +26,6 @@ export const sessionPreviewData = {
     title: "1 House, Street, Town, City, PO27 0DE",
   },
   "proposal.projectType": "new.office",
-  "fee": 103,
 };
 
 export const validSession: Session = {
