@@ -4,7 +4,6 @@ import {
   payee,
   sessionPreviewData,
   newPaymentRequest,
-  validPaymentRequest,
 } from "./inviteToPayData";
 
 export const validSessionQueryMock = {
@@ -102,17 +101,5 @@ export const createPaymentRequestQueryMock = {
     payeeName: payee.name,
     payeeEmail: payee.email,
     sessionPreviewData: sessionPreviewData,
-  },
-};
-
-export const validatePaymentRequestQueryMock = {
-  name: "ValidatePaymentRequest",
-  data: {
-    payment_requests_by_pk: {
-      ...validPaymentRequest
-    }
-  },
-  variables: {
-    paymentRequestId: newPaymentRequest.id,
   },
 };

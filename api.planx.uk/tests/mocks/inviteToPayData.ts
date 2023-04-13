@@ -18,7 +18,6 @@ export const sessionPreviewData = {
   "applicant.agent.name.first": "Jo",
   "applicant.agent.name.last": "Smith",
   "proposal.projectType": "new.office",
-  "fee": 103,
 };
 
 export const validSession: Session = {
@@ -39,31 +38,4 @@ export const newPaymentRequest: PaymentRequest = {
   payeeName: payee.name,
   payeeEmail: payee.email,
   sessionPreviewData: sessionPreviewData,
-};
-
-export const validPaymentRequest = {
-  id: "09655c28-3f34-4619-9385-cd57312acc44",
-  payee_email: payee.email,
-  payee_name: payee.name,
-  session_id: validSession.id,
-  session_preview_data: sessionPreviewData,
-  created_at: new Date("01 Apr 2023 12:00 UTC+1").toISOString(),
-  paid_at: null,
-  session: {
-    email: "the-agent@opensystemslab.io",
-    flow: {
-      slug: "apply-for-a-lawful-development-certificate",
-      team: {
-        name: "Buckinghamshire",
-        slug: "buckinghamshire",
-        domain: "planningservices.buckinghamshire.gov.uk",
-        notify_personalisation: {
-          helpEmail: "help@council.gov.uk",
-          helpPhone: "123",
-          helpOpeningHours: "9a-5p",
-          emailReplyToId: "123",
-        },
-      },
-    },
-  },
 };
