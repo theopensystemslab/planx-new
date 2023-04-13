@@ -31,7 +31,7 @@ import { copyPortalAsFlow } from "./editor/copyPortalAsFlow";
 import {
   resumeApplication,
   validateSession,
-  routeSendEmailRequest,
+  sendSaveAndReturnEmail,
 } from "./saveAndReturn";
 import { inviteToPay } from "./inviteToPay";
 import { useFilePermission, useHasuraAuth, useSendEmailAuth } from "./auth";
@@ -65,7 +65,6 @@ import { isLiveEnv } from "./helpers";
 import { logPaymentStatus } from "./send/helpers";
 import { getOneAppXML } from "./admin/session/oneAppXML";
 import { gql } from "graphql-request";
-import { createPaymentExpiryEvents, createPaymentInvitationEvents, createPaymentReminderEvents } from "./webhooks/paymentRequestEvents";
 import { classifiedRoadsSearch } from "./gis/classifiedRoads";
 
 const router = express.Router();
@@ -663,7 +662,7 @@ app.post(
   "/send-email/:template",
   sendEmailLimiter,
   useSendEmailAuth,
-  routeSendEmailRequest
+  sendSaveAndReturnEmail
 );
 app.post("/resume-application", sendEmailLimiter, resumeApplication);
 app.post("/validate-session", validateSession);
@@ -673,9 +672,6 @@ app.post("/invite-to-pay/:sessionId", inviteToPay);
 app.use("/webhooks/hasura", useHasuraAuth);
 app.post("/webhooks/hasura/create-reminder-event", createReminderEvent);
 app.post("/webhooks/hasura/create-expiry-event", createExpiryEvent);
-app.post("/webhooks/hasura/create-payment-invitation-events", createPaymentInvitationEvents);
-app.post("/webhooks/hasura/create-payment-reminder-events", createPaymentReminderEvents);
-app.post("/webhooks/hasura/create-payment-expiry-events", createPaymentExpiryEvents);
 app.post("/webhooks/hasura/send-slack-notification", sendSlackNotification);
 app.post("/webhooks/hasura/sanitise-application-data", sanitiseApplicationData);
 

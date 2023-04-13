@@ -42,12 +42,6 @@ const useSendEmailAuth = (
     case "reminder":
     case "expiry":
     case "confirmation":
-    case "invite-to-pay":
-    case "invite-to-pay-agent":
-    case "payment-reminder":
-    case "payment-reminder-agent":
-    case "payment-expiry":
-    case "payment-expiry-agent":
       return useHasuraAuth(req, res, next);
     // Public access
     case "save":

@@ -1,9 +1,9 @@
 import { resumeApplication } from "./resumeApplication";
 import { validateSession } from "./validateSession";
-import { routeSendEmailRequest } from "./sendEmail";
+import { sendSaveAndReturnEmail } from "./sendEmail";
 
 export {
-  routeSendEmailRequest,
+  sendSaveAndReturnEmail,
   resumeApplication,
   validateSession,
 };
