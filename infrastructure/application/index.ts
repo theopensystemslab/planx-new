@@ -395,6 +395,30 @@ export = async () => {
             value: "8b82b606-defa-4daa-8fdb-e78b852b8ffb",
           },
           {
+            name: "GOVUK_NOTIFY_PAYMENT_REQUEST_EMAIL_TEMPLATE_ID",
+            value: "7bdbc880-4f4e-400b-a838-74de401dfa92",
+          },
+          {
+            name: "GOVUK_NOTIFY_PAYMENT_REQUEST_AGENT_EMAIL_TEMPLATE_ID",
+            value: "a964d10a-5442-42fa-b94b-b6623450cd68",
+          },
+          {
+            name: "GOVUK_NOTIFY_PAYMENT_REMINDER_EMAIL_TEMPLATE_ID",
+            value: "3208bf39-152d-4259-9064-ef5e192aeaa6",
+          },
+          {
+            name: "GOVUK_NOTIFY_PAYMENT_REMINDER_AGENT_EMAIL_TEMPLATE_ID",
+            value: "de02ca5c-fc1e-4360-8848-1f413bbd39e9",
+          },
+          {
+            name: "GOVUK_NOTIFY_PAYMENT_EXPIRY_EMAIL_TEMPLATE_ID",
+            value: "825d51cf-f018-46c7-b381-81472c9507f7",
+          },
+          {
+            name: "GOVUK_NOTIFY_PAYMENT_EXPIRY_AGENT_EMAIL_TEMPLATE_ID",
+            value: "92d9756b-d0ca-4d72-82c8-886c7af492fd",
+          },
+          {
             name: "SLACK_WEBHOOK_URL",
             value: config.requireSecret("slack-webhook-url"),
           },
