@@ -203,12 +203,12 @@ function Component(props: Props) {
         if (govUkPayment._links.next_url?.href) {
           window.location.replace(govUkPayment._links.next_url.href);
         } else {
-          reportError("Payment did not include a 'next_url' link.");
+          logger.notify("Payment did not include a 'next_url' link.");
         }
         break;
       }
       default: {
-        reportError("Unhandled payment status");
+        logger.notify("Unhandled payment status");
       }
     }
   };
