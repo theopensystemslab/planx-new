@@ -62,6 +62,7 @@ export const validPaymentRequest = {
   id: "09655c28-3f34-4619-9385-cd57312acc44",
   payee_email: payee.email,
   payee_name: payee.name,
+  applicant_name: applicant.name,
   session_id: validSession.id,
   session_preview_data: sessionPreviewData,
   created_at: new Date("01 Apr 2023 12:00 UTC+1").toISOString(),

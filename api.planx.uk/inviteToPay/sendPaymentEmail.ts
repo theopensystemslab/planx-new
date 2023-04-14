@@ -8,8 +8,8 @@ const sendSinglePaymentEmail = async (
 ) => {
   try {
     const payment = await validatePaymentRequest(paymentRequestId, template);
+    if (!payment) throw Error("Unable to send payment email, cannot find payment request");
     const humanReadableProjectType = await getHumanReadableProjectType(payment.session_preview_data);
-
 
     const config: InviteToPayNotifyConfig = {
       personalisation: {
