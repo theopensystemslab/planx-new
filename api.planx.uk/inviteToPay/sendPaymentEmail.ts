@@ -74,7 +74,7 @@ const validatePaymentRequest = async (
     const { payment_requests_by_pk: paymentRequest } = await client.request(query, { paymentRequestId }, headers);
 
     if (!paymentRequest) throw Error(`Unable to find payment request: ${paymentRequestId}`);
-    if (Boolean(paymentRequest?.paid_at)) throw Error(`Invalid payment request, already paid`);
+    if (paymentRequest?.paid_at) throw Error(`Invalid payment request, already paid`);
     
     return paymentRequest;
   } catch (error) {
