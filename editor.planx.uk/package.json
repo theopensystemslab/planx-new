@@ -34,6 +34,7 @@
     "@tiptap/extension-placeholder": "^2.0.3",
     "@tiptap/extension-text": "^2.0.3",
     "@tiptap/html": "^2.0.3",
+    "@tiptap/pm": "^2.0.3",
     "@tiptap/react": "^2.0.3",
     "@tiptap/suggestion": "^2.0.3",
     "array-move": "^4.0.0",
