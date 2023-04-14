@@ -1,11 +1,5 @@
 lockfileVersion: 5.4
 
-overrides:
-  passport-oauth2@<1.6.1: '>=1.6.1'
-  tmpl@<1.0.5: '>=1.0.5'
-  ansi-regex@>=5.0.0 <5.0.1: '>=5.0.1'
-  minimatch@<3.0.5: '>=3.0.5'
-
 specifiers:
   '@airbrake/node': ^2.1.8
   '@babel/core': ^7.21.4
