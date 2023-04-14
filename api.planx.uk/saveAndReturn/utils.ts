@@ -21,7 +21,7 @@ const DAYS_UNTIL_EXPIRY = 28;
  * Validated using email address & sessionId
  */
 const publicEmailTemplates = {
-  save: process.env.GOVUK_NOTIFY_SAVE_RETURN_EMAIL_TEMPLATE_ID,
+  save: "428c4dfd-a70b-44d6-9f81-b4f833d80405",
 };
 
 /**
@@ -29,7 +29,7 @@ const publicEmailTemplates = {
  * Validated using email address & inbox (magic link)
  */
 const hybridEmailTemplates = {
-  resume: process.env.GOVUK_NOTIFY_RESUME_EMAIL_TEMPLATE_ID,
+  resume: "c7202e07-08cf-468e-a6a4-ac528d60d2f7",
 };
 
 /**
@@ -37,16 +37,16 @@ const hybridEmailTemplates = {
  * Validated with the useHasuraAuth() middleware
  */
 const privateEmailTemplates = {
-  reminder: process.env.GOVUK_NOTIFY_REMINDER_EMAIL_TEMPLATE_ID,
-  expiry: process.env.GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID,
-  confirmation: process.env.GOVUK_NOTIFY_CONFIRMATION_EMAIL_TEMPLATE_ID,
-  submit: process.env.GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID,
-  "invite-to-pay": process.env.GOVUK_NOTIFY_PAYMENT_REQUEST_EMAIL_TEMPLATE_ID,
-  "invite-to-pay-agent": process.env.GOVUK_NOTIFY_PAYMENT_REQUEST_AGENT_EMAIL_TEMPLATE_ID,
-  "payment-reminder": process.env.GOVUK_NOTIFY_PAYMENT_REMINDER_EMAIL_TEMPLATE_ID,
-  "payment-reminder-agent": process.env.GOVUK_NOTIFY_PAYMENT_REMINDER_AGENT_EMAIL_TEMPLATE_ID,
-  "payment-expiry": process.env.GOVUK_NOTIFY_PAYMENT_EXPIRY_EMAIL_TEMPLATE_ID,
-  "payment-expiry-agent": process.env.GOVUK_NOTIFY_PAYMENT_EXPIRY_AGENT_EMAIL_TEMPLATE_ID,
+  reminder: "43be4c11-a406-4381-b2be-056a1127455d",
+  expiry: "9619f89d-5d33-4cb0-a365-42c431ea9db3",
+  confirmation: "8b82b606-defa-4daa-8fdb-e78b852b8ffb",
+  submit: "7e77bdae-7379-4dd8-a8cc-086a0029163c",
+  "invite-to-pay": "7bdbc880-4f4e-400b-a838-74de401dfa92",
+  "invite-to-pay-agent": "a964d10a-5442-42fa-b94b-b6623450cd68",
+  "payment-reminder": "3208bf39-152d-4259-9064-ef5e192aeaa6",
+  "payment-reminder-agent": "de02ca5c-fc1e-4360-8848-1f413bbd39e9",
+  "payment-expiry": "825d51cf-f018-46c7-b381-81472c9507f7",
+  "payment-expiry-agent": "92d9756b-d0ca-4d72-82c8-886c7af492fd",
 };
 
 const emailTemplates = {
