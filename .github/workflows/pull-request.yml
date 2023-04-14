@@ -409,7 +409,6 @@ jobs:
         run: |
           timeout 150s bash -c "until curl --fail https://${{ env.FULL_DOMAIN }}; do sleep 1; done"
 
-
   lighthouse:
     name: Lighthouse
     needs: [create_or_update_vultr_instance]
@@ -516,3 +515,10 @@ jobs:
           name: playwright-report
           path: e2e/test-results/
           retention-days: 3
+
+  failure_notification:
+    name: Send failure notification
+    if: failure()
+    uses: ./.github/workflows/action-failure.yml
+    with:
+      environment: pizza
