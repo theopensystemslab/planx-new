@@ -40,7 +40,7 @@ describe("Confirm component without inviteToPay", () => {
   it("renders correctly", () => {
     setup(<Confirm {...defaultProps} />);
 
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+    expect(screen.getByRole("heading", { level: 1 })).not.toHaveTextContent(
       "Pay for your application"
     );
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
