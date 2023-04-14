@@ -28,8 +28,11 @@ const SESSION_PREVIEW_KEYS = [
 
 export interface InviteToPayFormProps {
   changePage: () => void;
-  title?: string;
-  description?: string;
+  nomineeTitle?: string;
+  nomineeDescription?: string;
+  yourDetailsTitle?: string;
+  yourDetailsDescription?: string;
+  yourDetailsLabel?: string;
   paymentStatus?: PaymentStatus;
 }
 
@@ -72,8 +75,11 @@ const SubmitButton: React.FC = () => (
 
 const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   changePage,
-  title,
-  description,
+  nomineeTitle,
+  nomineeDescription,
+  yourDetailsTitle,
+  yourDetailsDescription,
+  yourDetailsLabel,
   paymentStatus,
 }) => {
   const sessionId = useStore((state) => state.sessionId);
@@ -137,9 +143,9 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
     <DelayedLoadingIndicator />
   ) : (
     <Card>
-      <Typography variant="h3">{title}</Typography>
+      <Typography variant="h3">{nomineeTitle}</Typography>
       <Typography variant="body2">
-        <ReactMarkdownOrHtml source={description} openLinksOnNewTab />
+        <ReactMarkdownOrHtml source={nomineeDescription} openLinksOnNewTab />
       </Typography>
       <StyledForm onSubmit={formik.handleSubmit}>
         <InputLabel label="Full name (optional)" htmlFor="payeeName">
@@ -189,16 +195,16 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
         </InputLabel>
         <Box>
           <Typography variant="h3" pt={3} pb={2}>
-            Your details
+            {yourDetailsTitle}
           </Typography>
           <Typography variant="body2">
-            How should we refer to you in communications with your nominee?
+            <ReactMarkdownOrHtml
+              source={yourDetailsDescription}
+              openLinksOnNewTab
+            />
           </Typography>
         </Box>
-        <InputLabel
-          label="Your name or organisation name"
-          htmlFor="applicantName"
-        >
+        <InputLabel label={yourDetailsLabel || ""} htmlFor="applicantName">
           <Input
             bordered
             name="applicantName"

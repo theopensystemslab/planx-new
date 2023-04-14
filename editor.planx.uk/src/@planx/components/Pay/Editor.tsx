@@ -1,4 +1,5 @@
-import { Pay } from "@planx/components/Pay/model";
+import Box from "@mui/material/Box";
+import { Pay, validationSchema } from "@planx/components/Pay/model";
 import { parseMoreInformation } from "@planx/components/shared";
 import { TYPES } from "@planx/components/types";
 import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
@@ -24,7 +25,6 @@ function Component(props: any) {
         `<p>The planning fee covers the cost of processing your application.\
          Find out more about how planning fees are calculated \
          <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">here</a>.</p>`,
-      color: props.node?.data?.color || "#EFEFEF",
       fn: props.node?.data?.fn,
       instructionsTitle: props.node?.data?.instructionsTitle || "How to pay",
       instructionsDescription:
@@ -32,15 +32,20 @@ function Component(props: any) {
         `<p>You can pay for your application by using GOV.UK Pay.</p>\
          <p>Your application will be sent after you have paid the fee. \
          Wait until you see an application sent message before closing your browser.</p>`,
-      allowInviteToPay: props.node?.data?.allowInviteToPay || true,
-      inviteToPayTitle:
-        props.node?.data?.inviteToPayTitle || "Details of your nominee",
-      inviteToPayDescription:
-        props.node?.data?.inviteToPayDescription ||
+      allowInviteToPay: props.node?.data?.allowInviteToPay ?? true,
+      nomineeTitle: props.node?.data?.nomineeTitle || "Details of your nominee",
+      nomineeDescription:
+        props.node?.data?.nomineeDescription ||
         `<p>You can invite someone else to pay for your application.</p>\
          <p>They will receive an email with a link to pay using GOV.UK Pay that will be \
          valid for 28 days. Upon successful payment, this application will be \
          sent and you will both receive a confirmation email.</p>`,
+      yourDetailsTitle: props.node?.data?.yourDetailsTitle || "Your details",
+      yourDetailsDescription:
+        props.node?.data?.yourDetailsDescription ||
+        "How should we refer to you in communications with your nominee?",
+      yourDetailsLabel:
+        props.node?.data?.yourDetailsLabel || "Your name or organisation name",
       ...parseMoreInformation(props.node?.data),
     },
     onSubmit: (newValues) => {
@@ -48,7 +53,9 @@ function Component(props: any) {
         props.handleSubmit({ type: TYPES.Pay, data: newValues });
       }
     },
-    validate: () => {},
+    validationSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
   });
 
   return (
@@ -83,7 +90,6 @@ function Component(props: any) {
           </InputRow>
           <InputRow>
             <Input
-              // required
               format="data"
               name="fn"
               value={formik.values.fn}
@@ -128,23 +134,57 @@ function Component(props: any) {
             </InputRow>
             {formik.values.allowInviteToPay ? (
               <>
-                <InputRow>
-                  <Input
-                    format="large"
-                    name="inviteToPayTitle"
-                    placeholder="Title"
-                    value={formik.values.inviteToPayTitle}
-                    onChange={formik.handleChange}
-                  />
-                </InputRow>
-                <InputRow>
-                  <RichTextInput
-                    name="inviteToPayDescription"
-                    placeholder="Description"
-                    value={formik.values.inviteToPayDescription}
-                    onChange={formik.handleChange}
-                  />
-                </InputRow>
+                <Box>
+                  <InputRow>
+                    <Input
+                      required
+                      format="large"
+                      name="nomineeTitle"
+                      placeholder="Title"
+                      value={formik.values.nomineeTitle}
+                      onChange={formik.handleChange}
+                    />
+                  </InputRow>
+                  <InputRow>
+                    <RichTextInput
+                      required
+                      name="nomineeDescription"
+                      placeholder="Description"
+                      value={formik.values.nomineeDescription}
+                      onChange={formik.handleChange}
+                    />
+                  </InputRow>
+                </Box>
+                <Box pt={4}>
+                  <InputRow>
+                    <Input
+                      required
+                      format="large"
+                      name="yourDetailsTitle"
+                      placeholder="Title"
+                      value={formik.values.yourDetailsTitle}
+                      onChange={formik.handleChange}
+                    />
+                  </InputRow>
+                  <InputRow>
+                    <RichTextInput
+                      required
+                      name="yourDetailsDescription"
+                      placeholder="Description"
+                      value={formik.values.yourDetailsDescription}
+                      onChange={formik.handleChange}
+                    />
+                  </InputRow>
+                  <InputRow>
+                    <Input
+                      required
+                      name="yourDetailsLabel"
+                      placeholder="Label"
+                      value={formik.values.yourDetailsLabel}
+                      onChange={formik.handleChange}
+                    />
+                  </InputRow>
+                </Box>
               </>
             ) : (
               <></>

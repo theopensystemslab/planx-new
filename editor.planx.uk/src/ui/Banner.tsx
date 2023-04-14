@@ -51,8 +51,7 @@ function Banner(props: BannerProps) {
       color={props.color && props.color.text}
       display="flex"
       justifyContent="center"
-      textAlign={isUsingAltTheme ? "left" : "center"}
-      px={isUsingAltTheme ? 0 : 2}
+      textAlign="left"
       py={6}
     >
       <Container maxWidth="md">

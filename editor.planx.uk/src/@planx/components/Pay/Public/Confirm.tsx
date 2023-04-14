@@ -18,7 +18,7 @@ import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 import { formattedPriceWithCurrencySymbol } from "../model";
 import InviteToPayForm, { InviteToPayFormProps } from "./InviteToPayForm";
 
-interface Props {
+export interface Props {
   title?: string;
   bannerTitle?: string;
   description?: string;
@@ -26,8 +26,11 @@ interface Props {
   instructionsTitle?: string;
   instructionsDescription?: string;
   showInviteToPay?: boolean;
-  inviteToPayTitle?: string;
-  inviteToPayDescription?: string;
+  nomineeTitle?: string;
+  nomineeDescription?: string;
+  yourDetailsTitle?: string;
+  yourDetailsDescription?: string;
+  yourDetailsLabel?: string;
   paymentStatus?: PaymentStatus;
   buttonTitle?: string;
   onConfirm: () => void;
@@ -206,8 +209,11 @@ export default function Confirm(props: Props) {
   };
 
   const inviteToPayFormProps: InviteToPayFormProps = {
-    title: props.inviteToPayTitle,
-    description: props.inviteToPayDescription,
+    nomineeTitle: props.nomineeTitle,
+    nomineeDescription: props.nomineeDescription,
+    yourDetailsTitle: props.yourDetailsTitle,
+    yourDetailsDescription: props.yourDetailsDescription,
+    yourDetailsLabel: props.yourDetailsLabel,
     paymentStatus: props.paymentStatus,
     changePage,
   };

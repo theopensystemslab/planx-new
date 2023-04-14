@@ -3,7 +3,7 @@ import React from "react";
 import { axe, setup } from "testUtils";
 import { PaymentStatus } from "types";
 
-import Confirm from "./Confirm";
+import Confirm, { Props } from "./Confirm";
 import Pay from "./Pay";
 
 it("renders correctly (is hidden) with <= £0 fee", () => {
@@ -108,11 +108,11 @@ describe("Confirm component without inviteToPay", () => {
 });
 
 describe("Confirm component with inviteToPay", () => {
-  const inviteProps = {
+  const inviteProps: Props = {
     ...defaultProps,
     showInviteToPay: true,
-    inviteToPayTitle: "Details of your nominee",
-    inviteToPayDescription: "Invite someone else to pay via GOV.UK Pay",
+    nomineeTitle: "Details of your nominee",
+    nomineeDescription: "Invite someone else to pay via GOV.UK Pay",
     paymentStatus: undefined,
   };
 
