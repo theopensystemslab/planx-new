@@ -217,7 +217,7 @@ interface SessionDetails {
 const getSessionDetails = async (
   session: LowCalSession
 ): Promise<SessionDetails> => {
-  const projectTypes = await getHumanReadableProjectType(session);
+  const projectTypes = await getHumanReadableProjectType(session?.data?.passport?.data);
   const address: SiteAddress | undefined = session.data?.passport?.data?._address;
   const addressLine = address?.single_line_address || address?.title;
 
@@ -296,10 +296,10 @@ const markSessionAsSubmitted = async (sessionId: string) => {
  * Get formatted list of the session's project types
  */
 const getHumanReadableProjectType = async (
-  session: LowCalSession
+  sessionData: LowCalSession["data"]["passport"]["data"] | Record<string, any>
 ): Promise<string | void> => {
   const rawProjectType =
-    session?.data?.passport?.data?.["proposal.projectType"];
+    sessionData?.["proposal.projectType"];
   if (!rawProjectType) return;
   // Get human readable values from db
   const humanReadableList = await getReadableProjectTypeFromRaw(rawProjectType);
