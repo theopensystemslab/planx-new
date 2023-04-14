@@ -16,7 +16,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: planx-notifications-internal
-          SLACK_USERNAME: PlanX Action Failure
+          SLACK_USERNAME: GitHub Actions
           SLACK_COLOR: "#FF5733"
           SLACK_TITLE: ${{ inputs.environment }} deploy failure
           SLACK_WEBHOOK: ${{ secrets.SLACK_DEPLOYMENT_WEBHOOK }}
