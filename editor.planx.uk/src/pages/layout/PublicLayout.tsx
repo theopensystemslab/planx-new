@@ -34,7 +34,6 @@ interface PublicLayoutProps {
 
 const MainContainer = styled(Box)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.grey[300]}`,
-  paddingTop: theme.spacing(5),
   display: "flex",
   flex: "1 0 auto",
   flexDirection: "column",

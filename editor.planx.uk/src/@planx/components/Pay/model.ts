@@ -1,5 +1,6 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath } from "types";
+import { boolean, object, string } from "yup";
 
 import type { MoreInformation } from "../shared";
 
@@ -12,8 +13,11 @@ export interface Pay extends MoreInformation {
   instructionsTitle?: string;
   instructionsDescription?: string;
   allowInviteToPay?: boolean;
-  inviteToPayTitle?: string;
-  inviteToPayDescription?: string;
+  nomineeTitle?: string;
+  nomineeDescription?: string;
+  yourDetailsTitle?: string;
+  yourDetailsDescription?: string;
+  yourDetailsLabel?: string;
 }
 
 // https://docs.payments.service.gov.uk/making_payments/#creating-a-payment
@@ -76,3 +80,33 @@ const getReturnURL = (sessionId: string): string => {
 export const GOV_UK_PAY_URL = `${process.env.REACT_APP_API_URL}/pay`;
 
 export const GOV_PAY_PASSPORT_KEY = "application.fee.reference.govPay" as const;
+
+export const validationSchema = object({
+  title: string().trim().required(),
+  bannerTitle: string().trim().required(),
+  description: string().trim().required(),
+  fn: string().trim().required(),
+  instructionsTitle: string().trim().required(),
+  instructionsDescription: string().trim().required(),
+  allowInviteToPay: boolean(),
+  nomineeTitle: string().trim().when("allowInviteToPay", {
+    is: true,
+    then: string().required(),
+  }),
+  nomineeDescription: string().trim().when("allowInviteToPay", {
+    is: true,
+    then: string().required(),
+  }),
+  yourDetailsTitle: string().trim().when("allowInviteToPay", {
+    is: true,
+    then: string().required(),
+  }),
+  yourDetailsDescription: string().trim().when("allowInviteToPay", {
+    is: true,
+    then: string().required(),
+  }),
+  yourDetailsLabel: string().trim().when("allowInviteToPay", {
+    is: true,
+    then: string().required(),
+  }),
+});

@@ -3,7 +3,7 @@ import React from "react";
 import { axe, setup } from "testUtils";
 import { PaymentStatus } from "types";
 
-import Confirm from "./Confirm";
+import Confirm, { Props } from "./Confirm";
 import Pay from "./Pay";
 
 it("renders correctly (is hidden) with <= £0 fee", () => {
@@ -100,7 +100,7 @@ describe("Confirm component without inviteToPay", () => {
     expect(handleSubmit).toHaveBeenCalled();
   });
 
-  it("should not have any accessiblity violations", async () => {
+  it("should not have any accessibility violations", async () => {
     const { container } = setup(<Confirm {...defaultProps} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -108,11 +108,11 @@ describe("Confirm component without inviteToPay", () => {
 });
 
 describe("Confirm component with inviteToPay", () => {
-  const inviteProps = {
+  const inviteProps: Props = {
     ...defaultProps,
     showInviteToPay: true,
-    inviteToPayTitle: "Details of your nominee",
-    inviteToPayDescription: "Invite someone else to pay via GOV.UK Pay",
+    nomineeTitle: "Details of your nominee",
+    nomineeDescription: "Invite someone else to pay via GOV.UK Pay",
     paymentStatus: undefined,
   };
 
@@ -154,7 +154,7 @@ describe("Confirm component with inviteToPay", () => {
 
     await user.type(await screen.findByLabelText("Email"), "jess@{enter}");
     expect(
-      screen.getByText(
+      await screen.findByText(
         "Enter an email address in the correct format, like name@example.com"
       )
     ).toBeInTheDocument();
