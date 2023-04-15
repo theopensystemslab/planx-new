@@ -167,7 +167,7 @@ const Questions = ({ previewEnvironment, settings }: QuestionsProps) => {
   );
 
   return (
-    <Box width="100%" role="main">
+    <Box width="100%" role="main" pt={5}>
       <ButtonBase
         className={classnames(classes.backButton, {
           [classes.hidden]: !showBackButton,

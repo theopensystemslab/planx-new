@@ -518,7 +518,9 @@ jobs:
 
   failure_notification:
     name: Send failure notification
+    needs: [healthcheck, lighthouse]
     if: failure()
     uses: ./.github/workflows/action-failure.yml
+    secrets: inherit
     with:
       environment: pizza
