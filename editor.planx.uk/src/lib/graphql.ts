@@ -19,7 +19,9 @@ const customFetch = async (
   init?: RequestInit
 ): Promise<Response> => {
   const fetchResult = await fetch(input, init);
-  const isSuccess = fetchResult.status >= 200 && fetchResult.status <= 299;
+  const isGraphQLError = fetchResult.body?.hasOwnProperty("errors");
+  const isSuccess =
+    isGraphQLError || (fetchResult.status >= 200 && fetchResult.status <= 299);
   if (isSuccess) {
     // NB: it's okay if toast.dismiss() gets called more than once
     toast.dismiss(toastId);

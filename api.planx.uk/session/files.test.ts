@@ -1,46 +1,15 @@
 import { queryMock } from "../tests/graphqlQueryMock";
-import { extractFileURLsFromPassportData, getFilesForSession } from "./files"
-import { multipleFileQuestions, multipleFilesMultipleQuestions, noFiles, singleFileQuestion } from "./mocks/passports"
+import { getFilesForSession } from "./files"
+import { multipleFilesMultipleQuestions } from "./mocks/passports"
 
-describe("extractFileURLsFromPassportData() helper function", () => {
-  it("handles Passports without files", () => {
-    const passportData = noFiles
-    expect(extractFileURLsFromPassportData(passportData)).toEqual([])
-  });
+const mockGetFiles = jest.fn();
 
-  it("handles Passports with a single file question", () => {
-    const passportData = singleFileQuestion
-    const result = extractFileURLsFromPassportData(passportData)
-    expect(result).toHaveLength(1)
-    expect(result).toEqual([
-      passportData["property.drawing.elevation"][0].url
-    ])
-  });
-
-  it("handles Passports with multiple file questions", () => {
-    const passportData = multipleFileQuestions;
-    const result = extractFileURLsFromPassportData(passportData)
-    expect(result).toHaveLength(2)
-    expect(result).toEqual([
-      passportData["property.drawing.elevation"][0].url,
-      passportData["proposal.drawing.elevation"][0].url,
-    ])
-  });
-
-  it("handles Passports with multiple files, across multiple questions", () => {
-    const passportData = multipleFilesMultipleQuestions;
-    const result = extractFileURLsFromPassportData(passportData)
-    expect(result).toHaveLength(7)
-    expect(result).toEqual([
-      passportData["property.drawing.elevation"][0].url,
-      passportData["property.drawing.elevation"][1].url,
-      passportData["proposal.drawing.elevation"][0].url,
-      passportData["property.drawing.sitePlan"][0].url,
-      passportData["property.drawing.sitePlan"][1].url,
-      passportData["property.drawing.sitePlan"][2].url,
-      passportData["proposal.drawing.sitePlan"][0].url,
-    ])
-  });
+jest.mock("@opensystemslab/planx-core", () => {
+  return {
+    Passport: jest.fn().mockImplementation(() => ({
+      getFiles: mockGetFiles,
+    })),
+  }
 });
 
 describe("getFilesForSession()", () => {
@@ -54,7 +23,7 @@ describe("getFilesForSession()", () => {
         },
       },
     });
-    
+    mockGetFiles.mockResolvedValue(new Array(0));
     expect(await getFilesForSession("sessionId")).toEqual([])
   });
 
@@ -68,7 +37,7 @@ describe("getFilesForSession()", () => {
         },
       },
     });
-
+    mockGetFiles.mockResolvedValue(new Array(7));
     expect(await getFilesForSession("sessionId")).toHaveLength(7);
   });
 

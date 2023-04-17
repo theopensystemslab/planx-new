@@ -137,6 +137,8 @@ const insertPaymentRequests = async (sessionIds, paymentRequestIds) => {
           {
             payee_email: "test1@opensystemslab.io",
             payee_name: "test1"
+            applicant_name: "Agent1"
+            payment_amount: 11700
             id: "${paymentRequestIds[0]}", 
             session_id: "${sessionIds[0]}", 
             session_preview_data: { test1: "test1" }
@@ -144,6 +146,8 @@ const insertPaymentRequests = async (sessionIds, paymentRequestIds) => {
           {
             payee_email: "test2@opensystemslab.io",
             payee_name: "test2"
+            applicant_name: "Agent1"
+            payment_amount: 10300
             id: "${paymentRequestIds[1]}", 
             session_id: "${sessionIds[1]}", 
             session_preview_data: { test2: "test2" }

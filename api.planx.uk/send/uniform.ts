@@ -9,17 +9,15 @@ import AdmZip from "adm-zip";
 import str from "string-to-stream";
 import { stringify } from "csv-stringify";
 import {
-  hasRequiredDataForTemplate,
-  generateDocxTemplateStream,
   generateHTMLMapStream,
   generateHTMLOverviewStream,
 } from "@opensystemslab/planx-document-templates";
 import { adminGraphQLClient as adminClient } from "../hasura";
 import { markSessionAsSubmitted } from "../saveAndReturn/utils";
 import { gql } from "graphql-request";
-import { deleteFile, downloadFile, resolveStream } from "./helpers";
 import { Passport as IPassport } from "../types";
 import { PlanXExportData } from "@opensystemslab/planx-document-templates/types/types";
+import { addTemplateFilesToZip, deleteFile, downloadFile, resolveStream } from "./helpers";
 import { _admin } from "../client";
 import { Passport } from "@opensystemslab/planx-core"
 
@@ -215,8 +213,8 @@ export async function createUniformSubmissionZip({
   zip.addLocalFile(csvPath);
   deleteFile(csvPath);
 
-  await addOneAppXMLToZip(zip, tmpDir, sessionId);
-  await addTemplateFilesToZip(zip, tmpDir, sessionId, passport);
+  await addOneAppXMLToZip({ zip, tmpDir, sessionId });
+  await addTemplateFilesToZip({ zip, tmpDir, passport, sessionId });
 
   // generate and add an HTML overview document for the submission to zip
   const overviewPath = path.join(tmpDir, "Overview.htm");
@@ -356,6 +354,9 @@ async function attachArchive(token: string, submissionId: string, zipPath: strin
       Authorization: `Bearer ${token}`,
     },
     data: formData,
+    // Restrict to 1GB
+    maxBodyLength: 1e+9,
+    maxContentLength: 1e+9,
   };
 
   const response = await axios.request(attachArchiveConfig)
@@ -450,7 +451,10 @@ const createUniformApplicationAuditRecord = async ({
   return application.insert_uniform_applications_one;
 };
 
-const addOneAppXMLToZip = async (zip: AdmZip, tmpDir: string, sessionId: string) => {
+const addOneAppXMLToZip = async (
+  { zip, tmpDir, sessionId }: 
+  { zip: AdmZip, tmpDir: string, sessionId: string }
+) => {
   try {
     const xmlPath = path.join(tmpDir, "proposal.xml"); // must be named "proposal.xml" to be processed by Uniform
     const xmlFile = fs.createWriteStream(xmlPath);
@@ -461,36 +465,6 @@ const addOneAppXMLToZip = async (zip: AdmZip, tmpDir: string, sessionId: string)
     deleteFile(xmlPath);
   } catch (error) {
     throw Error(`Failed to generate OneApp XML. Error - ${error}`)
-  }
-}
-
-const addTemplateFilesToZip = async (zip: AdmZip, tmpDir: string, sessionId: string, passport: IPassport) => {
-  const templateNames = await _admin.getDocumentTemplateNamesForSession(sessionId);
-  if (templateNames?.length) {
-    for (const templateName of templateNames) {
-      let isTemplateSupported = false;
-      try {
-        isTemplateSupported = hasRequiredDataForTemplate({
-          passport,
-          templateName,
-        });
-      } catch (e) {
-        console.log(`Template "${templateName}" could not be generated so has been skipped`);
-        console.log(e)
-        continue
-      }
-      if (isTemplateSupported) {
-        const templatePath = path.join(tmpDir, `${templateName}.doc`);
-        const templateFile = fs.createWriteStream(templatePath);
-        const templateStream = generateDocxTemplateStream({
-          passport,
-          templateName,
-        }).pipe(templateFile);
-        await resolveStream(templateStream);
-        zip.addLocalFile(templatePath);
-        deleteFile(templatePath);
-      }
-    }
   }
 }
 

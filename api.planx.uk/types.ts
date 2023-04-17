@@ -90,12 +90,32 @@ export interface EmailSubmissionNotifyConfig {
   };
 }
 
+export interface InviteToPayNotifyConfig {
+  personalisation: {
+    paymentRequestId: string;
+    payeeEmail: string;
+    payeeName?: string;
+    agentName?: string;
+    paymentLink?: string;
+    fee?: string;
+    projectType?: string;
+    address?: any;
+    expiryDate?: string;
+    id: string; // sessionId
+    serviceName: string;
+    emailReplyToId: string;
+    helpEmail: string;
+    helpOpeningHours: string;
+    helpPhone: string;
+  };
+}
+
 // https://docs.payments.service.gov.uk/making_payments/#receiving-the-api-response
 export interface GovUKPayment {
   amount: number;
   reference?: string;
   state: {
-    // https://docs.payments.service.gov.uk/api_reference/#status-and-finished
+    // https://docs.payments.service.gov.uk/api_reference/#payment-status-meanings
     status:
       | "created"
       | "started"
@@ -106,8 +126,10 @@ export interface GovUKPayment {
       | "cancelled"
       | "error";
     finished: boolean;
+    message?: string;
   };
   payment_id: string;
+  payment_provider: string;
   created_date?: string;
   _links?: {
     self: {

@@ -1,4 +1,5 @@
 import { createUniformSubmissionZip } from "./uniform";
+import * as helpers from "./helpers";
 
 jest.mock("fs");
 
@@ -158,7 +159,8 @@ describe("createUniformSubmissionZip", () => {
     expect(mockWriteZip).toHaveBeenCalledTimes(1);
   });
 
-  test("a document template is added when the template is supported", async () => {
+  it("calls addTemplateFilesToZip", async () => {
+    const spy = jest.spyOn(helpers, "addTemplateFilesToZip")
     const payload = {
       sessionId: "1234",
       passport: { data: {} },
@@ -166,24 +168,8 @@ describe("createUniformSubmissionZip", () => {
       files: [],
     };
     await createUniformSubmissionZip(payload);
-    expect(mockAddLocalFile).toHaveBeenCalledWith("X.doc");
-    expect(mockAddLocalFile).toHaveBeenCalledWith("Y.doc");
-  });
-
-  test("a document template is not added when the template is not supported", async () => {
-    mockHasRequiredDataForTemplate
-      .mockReturnValueOnce(false)
-      .mockReturnValueOnce(true);
-    const payload = {
-      sessionId: "1234",
-      passport: { data: {} },
-      csv: [],
-      files: [],
-    };
-    await createUniformSubmissionZip(payload);
-    expect(mockAddLocalFile).not.toHaveBeenCalledWith("X.doc");
-    expect(mockAddLocalFile).toHaveBeenCalledWith("Y.doc");
-  });
+    expect(spy).toHaveBeenCalled();
+  })
 
   it("throws an error when XML generation fails", async () => {
     mockGenerateOneAppXML.mockRejectedValue(new Error())

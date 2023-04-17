@@ -7,6 +7,7 @@ import {
 } from "../hasura";
 import {
   EmailSubmissionNotifyConfig,
+  InviteToPayNotifyConfig,
   LowCalSession,
   SaveAndReturnNotifyConfig,
   Team,
@@ -40,6 +41,12 @@ const privateEmailTemplates = {
   expiry: process.env.GOVUK_NOTIFY_EXPIRY_EMAIL_TEMPLATE_ID,
   confirmation: process.env.GOVUK_NOTIFY_CONFIRMATION_EMAIL_TEMPLATE_ID,
   submit: process.env.GOVUK_NOTIFY_SUBMISSION_EMAIL_TEMPLATE_ID,
+  "invite-to-pay": process.env.GOVUK_NOTIFY_PAYMENT_REQUEST_EMAIL_TEMPLATE_ID,
+  "invite-to-pay-agent": process.env.GOVUK_NOTIFY_PAYMENT_REQUEST_AGENT_EMAIL_TEMPLATE_ID,
+  "payment-reminder": process.env.GOVUK_NOTIFY_PAYMENT_REMINDER_EMAIL_TEMPLATE_ID,
+  "payment-reminder-agent": process.env.GOVUK_NOTIFY_PAYMENT_REMINDER_AGENT_EMAIL_TEMPLATE_ID,
+  "payment-expiry": process.env.GOVUK_NOTIFY_PAYMENT_EXPIRY_EMAIL_TEMPLATE_ID,
+  "payment-expiry-agent": process.env.GOVUK_NOTIFY_PAYMENT_EXPIRY_AGENT_EMAIL_TEMPLATE_ID,
 };
 
 const emailTemplates = {
@@ -56,7 +63,7 @@ export type Template = keyof typeof emailTemplates;
 const sendEmail = async (
   template: Template,
   emailAddress: string,
-  config: SaveAndReturnNotifyConfig | EmailSubmissionNotifyConfig
+  config: SaveAndReturnNotifyConfig | EmailSubmissionNotifyConfig | InviteToPayNotifyConfig
 ) => {
   const templateId = emailTemplates[template];
   if (!templateId) throw new Error("Template ID is required");
@@ -383,6 +390,7 @@ export {
   sendEmail,
   convertSlugToName,
   getResumeLink,
+  getClientForTemplate,
   sendSingleApplicationEmail,
   markSessionAsSubmitted,
   DAYS_UNTIL_EXPIRY,
