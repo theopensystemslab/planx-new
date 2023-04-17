@@ -19,12 +19,7 @@ import ReactMarkdownOrHtml from "ui/ReactMarkdownOrHtml";
 import { object, string } from "yup";
 
 // Passport keys which will be used to display a preview of the session to the payee as part of their journey
-const SESSION_PREVIEW_KEYS = [
-  ["_address", "title"],
-  ["applicant.agent.name.first"],
-  ["applicant.agent.name.last"],
-  ["proposal.projectType"],
-];
+const SESSION_PREVIEW_KEYS = [["_address", "title"], ["proposal.projectType"]];
 
 export interface InviteToPayFormProps {
   changePage: () => void;
@@ -148,7 +143,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
         <ReactMarkdownOrHtml source={nomineeDescription} openLinksOnNewTab />
       </Typography>
       <StyledForm onSubmit={formik.handleSubmit}>
-        <InputLabel label="Full name (optional)" htmlFor="payeeName">
+        <InputLabel label="Full name" htmlFor="payeeName">
           <Input
             bordered
             name="payeeName"
